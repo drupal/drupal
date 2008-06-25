@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.17 2008/05/15 21:30:02 dries Exp $
+// $Id: block.admin.inc,v 1.18 2008/06/25 09:52:41 dries Exp $
 
 /**
  * @file
@@ -123,8 +123,7 @@ function _block_compare($a, $b) {
     return $status;
   }
   // Sort by region (in the order defined by theme .info file).
-  $place = $regions[$a['region']] - $regions[$b['region']];
-  if ($place) {
+  if ((!empty($a['region']) && !empty($b['region'])) && ($place = ($regions[$a['region']] - $regions[$b['region']]))) {
     return $place;
   }
   // Sort by weight.
