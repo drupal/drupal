@@ -1,4 +1,4 @@
-/* $Id: print.css,v 1.6 2008/04/28 09:25:27 dries Exp $ */
+/* $Id: print.css,v 1.7 2008/06/25 09:12:25 dries Exp $ */
 
 body, input, textarea, select {
   color: #000;
@@ -7,7 +7,7 @@ body, input, textarea, select {
   font-size: 11pt;
 }
 
-ul.primary-links, ul.secondary-links,
+ul.main-menu, ul.secondary-menu,
 #header-region, .sidebar {
   display: none;
 }

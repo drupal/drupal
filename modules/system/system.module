@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.602 2008/05/07 19:17:50 dries Exp $
+// $Id: system.module,v 1.603 2008/06/25 09:12:25 dries Exp $
 
 /**
  * @file
@@ -928,8 +928,8 @@ function system_theme_default() {
       'node_user_picture',
       'search',
       'slogan',
-      'primary_links',
-      'secondary_links',
+      'main_menu',
+      'secondary_menu',
     ),
     'stylesheets' => array(
       'all' => array('style.css')

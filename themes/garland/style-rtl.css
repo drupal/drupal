@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.9 2008/04/10 10:28:23 dries Exp $ */
+/* $Id: style-rtl.css,v 1.10 2008/06/25 09:12:25 dries Exp $ */
 
 html {
   direction: rtl;
@@ -129,24 +129,24 @@ dl dd {
 /**
  * Primary navigation
  */
-ul.primary-links {
+ul.main-menu {
   float: left;
 width:70%;
 }
 
-ul.primary-links li {
+ul.main-menu li {
   float: right;
 }
 
 /**
  * Secondary navigation
  */
-ul.secondary-links {
+ul.secondary-menu {
   float: left;
   clear: left;
 }
 
-ul.secondary-links li {
+ul.secondary-menu li {
   float: right;
 }
 

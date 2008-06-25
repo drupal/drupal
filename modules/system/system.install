@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.254 2008/05/15 20:55:58 dries Exp $
+// $Id: system.install,v 1.255 2008/06/25 09:12:25 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3014,6 +3014,18 @@ function system_update_7008() {
     // Change the chorder column to weight in poll_choices.
     db_change_field($ret, 'poll_choices', 'chorder', 'weight', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'));
   }
+  return $ret;
+}
+
+/**
+ * Rename the variables for primary and secondary links.
+ *
+ */
+function system_update_7009() {
+  $ret = array();
+  $ret[] = update_sql("UPDATE {variable} SET name = 'menu_main_menu_source' WHERE name = 'menu_primary_links_source'");
+  $ret[] = update_sql("UPDATE {variable} SET name = 'menu_main_menu_source' WHERE name = 'menu_primary_links_source'");
+
   return $ret;
 }
 

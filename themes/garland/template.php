@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.18 2008/04/28 09:25:27 dries Exp $
+// $Id: template.php,v 1.19 2008/06/25 09:12:25 dries Exp $
 
 /**
  * Return a themed breadcrumb trail.
@@ -31,8 +31,8 @@ function garland_comment_wrapper($content, $node) {
  */
 function garland_preprocess_page(&$vars) {
   $vars['tabs2'] = menu_secondary_local_tasks();
-  $vars['primary_nav'] = isset($vars['primary_links']) ? theme('links', $vars['primary_links'], array('class' => 'links primary-links')) : FALSE;
-  $vars['secondary_nav'] = isset($vars['secondary_links']) ? theme('links', $vars['secondary_links'], array('class' => 'links secondary-links')) : FALSE;
+  $vars['primary_nav'] = isset($vars['main_menu']) ? theme('links', $vars['main_menu'], array('class' => 'links main-menu')) : FALSE;
+  $vars['secondary_nav'] = isset($vars['secondary_menu']) ? theme('links', $vars['secondary_menu'], array('class' => 'links secondary-menu')) : FALSE;
   $vars['ie_styles'] = garland_get_ie_styles();
 
   // Prepare header

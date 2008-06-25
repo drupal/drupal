@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.76 2008/05/10 07:32:02 dries Exp $
+// $Id: system.admin.inc,v 1.77 2008/06/25 09:12:25 dries Exp $
 
 /**
  * @file
@@ -370,8 +370,8 @@ function system_theme_settings(&$form_state, $key = '') {
     'comment_user_picture' => t('User pictures in comments'),
     'search'               => t('Search box'),
     'favicon'              => t('Shortcut icon'),
-    'primary_links'        => t('Primary links'),
-    'secondary_links'      => t('Secondary links'),
+    'main_menu'            => t('Main menu'),
+    'secondary_menu'      => t('Secondary menu'),
   );
 
   // Some features are not always available
