@@ -7,7 +7,7 @@ body, input, textarea, select {
   font-size: 11pt;
 }
 
-ul.primary-links, ul.secondary-links,
+ul.main-menu, ul.secondary-menu,
 #header-region, .sidebar {
   display: none;
 }

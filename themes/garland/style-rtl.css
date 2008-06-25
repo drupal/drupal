@@ -129,24 +129,24 @@ dl dd {
 /**
  * Primary navigation
  */
-ul.primary-links {
+ul.main-menu {
   float: left;
 width:70%;
 }
 
-ul.primary-links li {
+ul.main-menu li {
   float: right;
 }
 
 /**
  * Secondary navigation
  */
-ul.secondary-links {
+ul.secondary-menu {
   float: left;
   clear: left;
 }
 
-ul.secondary-links li {
+ul.secondary-menu li {
   float: right;
 }
 

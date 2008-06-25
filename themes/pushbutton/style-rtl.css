@@ -11,7 +11,7 @@ blockquote {
   text-align: right;
 }
 
-#primary-menu tr {
+#main-menu tr {
   background: transparent url(header-a.jpg) right bottom repeat;
 }
 
@@ -27,7 +27,7 @@ td#home a:hover img {
   background: transparent url(logo-hover-rtl.jpg) repeat;
 }
 
-#primary-menu .primary-links {
+#main-menu .main-menu {
   background: transparent url(header-b-rtl.jpg) right top no-repeat;
 }
 
@@ -41,7 +41,7 @@ ul.links li {
   border-left: none;
 }
 
-#subnavlist li, ul.primary-links li, ul.secondary-links li {
+#subnavlist li, ul.main-menu li, ul.secondary-menu li {
   border-right: 1px solid #fff;
   border-left: none;
 }

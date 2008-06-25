@@ -3018,6 +3018,18 @@ function system_update_7008() {
 }
 
 /**
+ * Rename the variables for primary and secondary links.
+ *
+ */
+function system_update_7009() {
+  $ret = array();
+  $ret[] = update_sql("UPDATE {variable} SET name = 'menu_main_menu_source' WHERE name = 'menu_primary_links_source'");
+  $ret[] = update_sql("UPDATE {variable} SET name = 'menu_main_menu_source' WHERE name = 'menu_primary_links_source'");
+
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */

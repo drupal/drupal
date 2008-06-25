@@ -545,7 +545,7 @@ body.two-sidebars #footer {
 /**
  * Primary navigation
  */
-ul.primary-links {
+ul.main-menu {
   margin: 0;
   padding: 0;
   float: right; /* LTR */
@@ -553,14 +553,14 @@ ul.primary-links {
   z-index: 4;
 }
 
-ul.primary-links li {
+ul.main-menu li {
   margin: 0;
   padding: 0;
   float: left; /* LTR */
   background-image: none;
 }
 
-ul.primary-links li a, ul.primary-links li a:link, ul.primary-links li a:visited {
+ul.main-menu li a, ul.main-menu li a:link, ul.main-menu li a:visited {
   display: block;
   margin: 0 1em;
   padding: .75em 0 0;
@@ -568,7 +568,7 @@ ul.primary-links li a, ul.primary-links li a:link, ul.primary-links li a:visited
   background: transparent url(images/bg-navigation-item.png) no-repeat 50% 0;
 }
 
-ul.primary-links li a:hover, ul.primary-links li a.active {
+ul.main-menu li a:hover, ul.main-menu li a.active {
   color: #fff;
   background: transparent url(images/bg-navigation-item-hover.png) no-repeat 50% 0;
 }
@@ -576,7 +576,7 @@ ul.primary-links li a:hover, ul.primary-links li a.active {
 /**
  * Secondary navigation
  */
-ul.secondary-links {
+ul.secondary-menu {
   margin: 0;
   padding: 18px 0 0;
   float: right; /* LTR */
@@ -585,14 +585,14 @@ ul.secondary-links {
   z-index: 4;
 }
 
-ul.secondary-links li {
+ul.secondary-menu li {
   margin: 0;
   padding: 0;
   float: left; /* LTR */
   background-image: none;
 }
 
-ul.secondary-links li a, ul.secondary-links li a:link, ul.secondary-links li a:visited {
+ul.secondary-menu li a, ul.secondary-menu li a:link, ul.secondary-menu li a:visited {
   display: block;
   margin: 0 1em;
   padding: .75em 0 0;
@@ -600,7 +600,7 @@ ul.secondary-links li a, ul.secondary-links li a:link, ul.secondary-links li a:v
   background: transparent;
 }
 
-ul.secondary-links li a:hover, ul.secondary-links li a.active {
+ul.secondary-menu li a:hover, ul.secondary-menu li a.active {
   color: #cde3f1;
   background: transparent;
 }

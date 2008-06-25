@@ -1251,28 +1251,28 @@ function menu_get_names($reset = FALSE) {
  * Return an array containing the names of system-defined (default) menus.
  */
 function menu_list_system_menus() {
-  return array('navigation', 'primary-links', 'secondary-links');
+  return array('navigation', 'main-menu', 'secondary-menu');
 }
 
 /**
- * Return an array of links to be rendered as the Primary links.
+ * Return an array of links to be rendered as the Main menu.
  */
-function menu_primary_links() {
-  return menu_navigation_links(variable_get('menu_primary_links_source', 'primary-links'));
+function menu_main_menu() {
+  return menu_navigation_links(variable_get('menu_main_menu_source', 'main-menu'));
 }
 
 /**
  * Return an array of links to be rendered as the Secondary links.
  */
-function menu_secondary_links() {
+function menu_secondary_menu() {
 
   // If the secondary menu source is set as the primary menu, we display the
   // second level of the primary menu.
-  if (variable_get('menu_secondary_links_source', 'secondary-links') == variable_get('menu_primary_links_source', 'primary-links')) {
-    return menu_navigation_links(variable_get('menu_primary_links_source', 'primary-links'), 1);
+  if (variable_get('menu_secondary_menu_source', 'secondary-menu') == variable_get('menu_main_menu_source', 'main-menu')) {
+    return menu_navigation_links(variable_get('menu_main_menu_source', 'main-menu'), 1);
   }
   else {
-    return menu_navigation_links(variable_get('menu_secondary_links_source', 'secondary-links'), 0);
+    return menu_navigation_links(variable_get('menu_secondary_menu_source', 'secondary-menu'), 0);
   }
 }
 

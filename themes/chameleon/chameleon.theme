@@ -50,15 +50,15 @@ function chameleon_page($content, $show_blocks = TRUE, $show_messages = TRUE) {
 
   $output .= "</div>\n";
 
-  $primary_links = theme('links', menu_primary_links(), array('class' => 'links', 'id' => 'navlist'));
-  $secondary_links = theme('links', menu_secondary_links(), array('class' => 'links', 'id' => 'subnavlist'));
-  if (isset($primary_links) || isset($secondary_links)) {
+  $main_menu = theme('links', menu_main_menu(), array('class' => 'links', 'id' => 'navlist'));
+  $secondary_menu = theme('links', menu_secondary_menu(), array('class' => 'links', 'id' => 'subnavlist'));
+  if (isset($main_menu) || isset($secondary_menu)) {
     $output .= ' <div class="navlinks">';
-    if (isset($primary_links)) {
-      $output .= $primary_links;
+    if (isset($main_menu)) {
+      $output .= $main_menu;
     }
-    if (isset($secondary_links)) {
-      $output .= $secondary_links;
+    if (isset($secondary_menu)) {
+      $output .= $secondary_menu;
     }
     $output .= " </div>\n";
   }

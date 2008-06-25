@@ -18,7 +18,7 @@ define('MENU_MAX_MENU_NAME_LENGTH_UI', 27);
 function menu_help($path, $arg) {
   switch ($path) {
     case 'admin/help#menu':
-      $output = '<p>' . t("The menu module provides an interface to control and customize Drupal's powerful menu system. Menus are a hierarchical collection of links, or menu items, used to navigate a website, and are positioned and displayed using Drupal's flexible block system. By default, three menus are created during installation: <em>Navigation</em>, <em>Primary links</em>, and <em>Secondary links</em>. The <em>Navigation</em> menu contains most links necessary for working with and navigating your site, and is often displayed in either the left or right sidebar. Most Drupal themes also provide support for <em>Primary links</em> and <em>Secondary links</em>, by displaying them in either the header or footer of each page. By default, <em>Primary links</em> and <em>Secondary links</em> contain no menu items but may be configured to contain custom menu items specific to your site.") . '</p>';
+      $output = '<p>' . t("The menu module provides an interface to control and customize Drupal's powerful menu system. Menus are a hierarchical collection of links, or menu items, used to navigate a website, and are positioned and displayed using Drupal's flexible block system. By default, three menus are created during installation: <em>Navigation</em>, <em>Main menu</em>, and <em>Secondary menu</em>. The <em>Navigation</em> menu contains most links necessary for working with and navigating your site, and is often displayed in either the left or right sidebar. Most Drupal themes also provide support for the <em>Main menu</em> and <em>Secondary menu</em>, by displaying them in either the header or footer of each page. By default, the <em>Main menu</em> and <em>Secondary menu</em> contain no menu items but may be configured to contain custom menu items specific to your site.") . '</p>';
       $output .= '<p>' . t('The <a href="@menu">menus page</a> displays all menus currently available on your site. Select a menu from this list to add or edit a menu item, or to rearrange items within the menu. Create new menus using the <a href="@add-menu">add menu page</a> (the block containing a new menu must also be enabled on the <a href="@blocks">blocks administration page</a>).', array('@menu' => url('admin/build/menu'), '@add-menu' => url('admin/build/menu/add'), '@blocks' => url('admin/build/block'))) . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@menu">Menu module</a>.', array('@menu' => 'http://drupal.org/handbook/modules/menu/')) . '</p>';
       return $output;
@@ -48,7 +48,7 @@ function menu_perm() {
 function menu_menu() {
   $items['admin/build/menu'] = array(
     'title' => 'Menus',
-    'description' => "Control your site's navigation menu, primary links and secondary links. as well as rename and reorganize menu items.",
+    'description' => "Control your site's Navigation menu, Main menu and Secondary menu. as well as rename and reorganize menu items.",
     'page callback' => 'menu_overview_page',
     'access callback' => 'user_access',
     'access arguments' => array('administer menu'),
@@ -310,7 +310,7 @@ function menu_nodeapi(&$node, $op) {
     case 'prepare':
       if (empty($node->menu)) {
         // Prepare the node for the edit form so that $node->menu always exists.
-        $menu_name = variable_get('menu_default_node_menu', 'primary-links');
+        $menu_name = variable_get('menu_default_node_menu', 'main-menu');
         $item = array();
         if (isset($node->nid)) {
           // Give priority to the default menu
@@ -387,7 +387,7 @@ function menu_form_alter(&$form, $form_state, $form_id) {
     $options = menu_parent_options(menu_get_menus(), $item);
     $default = $item['menu_name'] . ':' . $item['plid'];
     if (!isset($options[$default])) {
-      $default = 'primary-links:0';
+      $default = 'main-menu:0';
     }
     $form['menu']['parent'] = array(
       '#type' => 'select',

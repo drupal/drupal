@@ -75,12 +75,12 @@ pre {
 /*
 ** Page layout blocks / IDs
 */
-#primary-menu {
+#main-menu {
   border-collapse: separate;
   background-color: #e0edfb;
   border-bottom: 3px solid #69c;
 }
-#primary-menu tr {
+#main-menu tr {
   background: transparent url(header-a.jpg) left bottom repeat; /* LTR */
 }
 td#home {
@@ -96,17 +96,17 @@ td#home a:hover img {
   width: 144px;
   height: 63px;
 }
-.primary-links, .primary-links a:link, .primary-links a:visited {
+.main-menu, .main-menu a:link, .main-menu a:visited {
   color: #369;
 }
-.primary-links a:hover {
+.main-menu a:hover {
   color: #000;
 }
-#primary-menu .primary-links {
+#main-menu .main-menu {
   background: transparent url(header-b.jpg) left top no-repeat; /* LTR */
   font-size: 0.79em;
 }
-#primary-menu .primary-links h1, #primary-menu .primary-links h2, #primary-menu .primary-links h3 {
+#main-menu .main-menu h1, #main-menu .main-menu h2, #main-menu .main-menu h3 {
   font-size: 2.3em;
   color: #369;
 }
@@ -115,14 +115,14 @@ td#home a:hover img {
   background-color: #369;
   border-bottom: 3px solid #69c;
 }
-.secondary-links, .secondary-links a:link, .secondary-links a:visited {
+.secondary-menu, .secondary-menu a:link, .secondary-menu a:visited {
   color: #e4e9eb;
 }
-.secondary-links a:hover {
+.secondary-menu a:hover {
   color: #fff;
   text-decoration: underline;
 }
-#secondary-menu .secondary-links {
+#secondary-menu .secondary-menu {
   font-size: 0.85em;
 }
 ul.links li {
@@ -131,7 +131,7 @@ ul.links li {
 #navlist li {
   border-left: 1px solid #369; /* LTR */
 }
-#subnavlist li, ul.primary-links li, ul.secondary-links li {
+#subnavlist li, ul.main-menu li, ul.secondary-menu li {
   border-left: 1px solid #fff; /* LTR */
 }
 #navlist li.first, #subnavlist li.first, ul.links li.first {
@@ -330,14 +330,14 @@ table#footer-menu {
   padding: 5px;
   font-size: 0.75em;
 }
-#footer-menu .primary-links, #footer-menu a:link, #footer-menu a:visited {
+#footer-menu .main-menu, #footer-menu a:link, #footer-menu a:visited {
   color: #e4e9eb;
 }
 #footer-menu a:hover {
   color: #fff;
   text-decoration: underline;
 }
-#footer-menu .primary-links h1, #footer-menu .primary-links h2, #footer-menu .primary-links h3 {
+#footer-menu .main-menu h1, #footer-menu .main-menu h2, #footer-menu .main-menu h3 {
   font-size: 1.3em;
   color: #e4e9eb;
 }

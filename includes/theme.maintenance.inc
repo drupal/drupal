@@ -252,8 +252,8 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['logo']              = theme_get_setting('logo');
   $variables['messages']          = $variables['show_messages'] ? theme('status_messages') : '';
   $variables['mission']           = '';
-  $variables['primary_links']     = array();
-  $variables['secondary_links']   = array();
+  $variables['main_menu']         = array();
+  $variables['secondary_menu']    = array();
   $variables['search_box']        = '';
   $variables['site_name']         = (theme_get_setting('toggle_name') ? variable_get('site_name', 'Drupal') : '');
   $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? variable_get('site_slogan', '') : '');

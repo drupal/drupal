@@ -45,9 +45,9 @@
  *
  * Navigation:
  * - $search_box: HTML to display the search box, empty if search has been disabled.
- * - $primary_links (array): An array containing primary navigation links for the
+ * - $main_menu (array): An array containing the Main menu links for the
  *   site, if they have been configured.
- * - $secondary_links (array): An array containing secondary navigation links for
+ * - $secondary_menu (array): An array containing the Secondary menu links for
  *   the site, if they have been configured.
  *
  * Page content (in order of occurrance in the default page.tpl.php):
@@ -124,16 +124,16 @@
 
     <div id="container" class="clear-block">
 
-      <div id="navigation" class="menu <?php if (!empty($primary_links)) { print "withprimary"; } if (!empty($secondary_links)) { print " withsecondary"; } ?> ">
-        <?php if (!empty($primary_links)): ?>
-          <div id="primary" class="clear-block">
-            <?php print theme('links', $primary_links, array('class' => 'links primary-links')); ?>
+      <div id="navigation" class="menu <?php if (!empty($main_menu)) { print "withmain"; } if (!empty($secondary_menu)) { print " withsecondary"; } ?> ">
+        <?php if (!empty($main_menu)): ?>
+          <div id="main-menu" class="clear-block">
+            <?php print theme('links', $main_menu, array('class' => 'links main-menu')); ?>
           </div>
         <?php endif; ?>
 
-        <?php if (!empty($secondary_links)): ?>
-          <div id="secondary" class="clear-block">
-            <?php print theme('links', $secondary_links, array('class' => 'links secondary-links')); ?>
+        <?php if (!empty($secondary_menu)): ?>
+          <div id="secondary-menu" class="clear-block">
+            <?php print theme('links', $secondary_menu, array('class' => 'links secondary-menu')); ?>
           </div>
         <?php endif; ?>
       </div> <!-- /navigation -->

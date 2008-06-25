@@ -607,30 +607,30 @@ function menu_configure() {
   $form['menu_default_node_menu'] = array(
     '#type' => 'select',
     '#title' => t('Default menu for content'),
-    '#default_value' => variable_get('menu_default_node_menu', 'primary-links'),
+    '#default_value' => variable_get('menu_default_node_menu', 'main-menu'),
     '#options' => $menu_options,
     '#description' => t('Choose the menu to be the default in the menu options in the content authoring form.'),
   );
 
-  $primary = variable_get('menu_primary_links_source', 'primary-links');
-  $primary_options = array_merge($menu_options, array('' => t('No primary links')));
-  $form['menu_primary_links_source'] = array(
+  $main = variable_get('menu_main_menu_source', 'main-menu');
+  $main_options = array_merge($menu_options, array('' => t('No Main menu')));
+  $form['menu_main_menu_source'] = array(
     '#type' => 'select',
-    '#title' => t('Source for the primary links'),
-    '#default_value' => $primary,
-    '#options' => $primary_options,
+    '#title' => t('Source for the Main menu'),
+    '#default_value' => $main,
+    '#options' => $main_options,
     '#tree' => FALSE,
-    '#description' => t('Select what should be displayed as the primary links.'),
+    '#description' => t('Select what should be displayed as the Main menu.'),
   );
 
-  $secondary_options = array_merge($menu_options, array('' => t('No secondary links')));
-  $form["menu_secondary_links_source"] = array(
+  $secondary_options = array_merge($menu_options, array('' => t('No Secondary menu')));
+  $form["menu_secondary_menu_source"] = array(
     '#type' => 'select',
-    '#title' => t('Source for the secondary links'),
-    '#default_value' => variable_get('menu_secondary_links_source', 'secondary-links'),
+    '#title' => t('Source for the Secondary menu'),
+    '#default_value' => variable_get('menu_secondary_menu_source', 'secondary-menu'),
     '#options' => $secondary_options,
     '#tree' => FALSE,
-    '#description' => t('Select what should be displayed as the secondary links. You can choose the same menu for secondary links as for primary links (currently %primary). If you do this, the children of the active primary menu link will be displayed as secondary links.', array('%primary' => $primary_options[$primary])),
+    '#description' => t("Select the source for the Secondary menu. An advanced option allows you to use the same source for both Main menu (currently %main) and Secondary menu: if your source menu has two levels of hierarchy, the top level menu items will appear in the Main menu, and the children of the active item will appear in the Secondary menu." , array('%main' => $main_options[$main])),
   );
 
   return system_settings_form($form);
