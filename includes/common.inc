@@ -1406,23 +1406,23 @@ function drupal_attributes($attributes = array()) {
  *       used as is.
  * @param $options
  *   An associative array of additional options, with the following keys:
- *     'attributes'
+ *     - 'attributes'
  *       An associative array of HTML attributes to apply to the anchor tag.
- *     'query'
+ *     - 'query'
  *       A query string to append to the link, or an array of query key/value
  *       properties.
- *     'fragment'
+ *     - 'fragment'
  *       A fragment identifier (named anchor) to append to the link.
  *       Do not include the '#' character.
- *     'absolute' (default FALSE)
+ *     - 'absolute' (default FALSE)
  *       Whether to force the output to be an absolute link (beginning with
  *       http:). Useful for links that will be displayed outside the site, such
  *       as in an RSS feed.
- *     'html' (default FALSE)
+ *     - 'html' (default FALSE)
  *       Whether the title is HTML, or just plain-text. For example for making
  *       an image a link, this must be set to TRUE, or else you will see the
  *       escaped HTML.
- *     'alias' (default FALSE)
+ *     - 'alias' (default FALSE)
  *       Whether the given path is an alias already.
  * @return
  *   an HTML string containing a link to the given path.
