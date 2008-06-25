@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.44 2008/05/19 19:42:18 dries Exp $
+// $Id: drupal.js,v 1.45 2008/06/25 07:45:03 dries Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'themes': {}, 'locale': {} };
 
@@ -266,7 +266,7 @@ Drupal.ahahError = function(xmlhttp, uri) {
 // Global Killswitch on the <html> element
 if (Drupal.jsEnabled) {
   // Global Killswitch on the <html> element
-  document.documentElement.className = 'js';
+  $(document.documentElement).addClass('js');
   // 'js enabled' cookie
   document.cookie = 'has_js=1; path=/';
   // Attach all behaviors.
