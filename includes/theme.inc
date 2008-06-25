@@ -1009,7 +1009,7 @@ function theme_render_template($file, $variables) {
  * defaults for the template in case they are not filled in. If the default
  * implementation is a function, by convention it is named theme_HOOK().
  *
- * Each module should provide a default implementation for themes that
+ * Each module should provide a default implementation for theme_hooks that
  * it registers. This implementation may be either a function or a template;
  * if it is a function it must be specified via hook_theme(). By convention,
  * default implementations of theme hooks are named theme_HOOK. Default
