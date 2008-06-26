@@ -427,6 +427,10 @@ function simpletest_get_all_tests() {
       }
     }
 
+    foreach (file_scan_directory('includes/tests', '\.test$') as $file) {
+      $files[] = $file->filename;
+    }
+
     $existing_classes = get_declared_classes();
     foreach ($files as $file) {
       include_once($file);
@@ -459,6 +463,7 @@ function simpletest_categorize_tests($tests) {
     $info = $instance->getInfo();
     $groups[$info['group']][$test] = $instance;
   }
+  uksort($groups, 'strnatcasecmp');
   return $groups;
 }
 
