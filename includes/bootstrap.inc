@@ -1160,16 +1160,20 @@ function language_default($property = NULL) {
 
 /**
  * If Drupal is behind a reverse proxy, we use the X-Forwarded-For header
- * instead of $_SERVER['REMOTE_ADDR'], which would be the IP address
- * of the proxy server, and not the client's.
+ * instead of $_SERVER['REMOTE_ADDR'], which would be the IP address of 
+ * the proxy server, and not the client's.  If Drupal is run in a cluster
+ * we use the X-Cluster-Client-Ip header instead.
  *
+ * @param $reset
+ *   Reset the current IP address saved in static.
  * @return
- *   IP address of client machine, adjusted for reverse proxy.
+ *   IP address of client machine, adjusted for reverse proxy and/or cluster
+ *   environments.
  */
-function ip_address() {
+function ip_address($reset = false) {
   static $ip_address = NULL;
 
-  if (!isset($ip_address)) {
+  if (!isset($ip_address) || $reset) {
     $ip_address = $_SERVER['REMOTE_ADDR'];
     if (variable_get('reverse_proxy', 0) && array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
       // If an array of known reverse proxy IPs is provided, then trust
@@ -1180,6 +1184,13 @@ function ip_address() {
         // recently added one, i.e. the last one.
         $ip_address = array_pop(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']));
       }
+    }
+
+    // When Drupal is run in a cluster environment, REMOTE_ADDR contains the IP
+    // address of a server in the cluster, while the IP address of the client is
+    // stored in HTTP_X_CLUSTER_CLIENT_IP.
+    if (array_key_exists('HTTP_X_CLUSTER_CLIENT_IP', $_SERVER)) {
+      $ip_address = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
     }
   }
 
