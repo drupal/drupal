@@ -116,47 +116,44 @@ class UserValidationTestCase extends DrupalWebTestCase {
   }
 
   // Username validation.
-  function testMinLengthName() {
-    $name = '';
-    $result = user_validate_name($name);
-    $this->assertNotNull($result, 'Excessively short username');
+  function testUsernames() {
+    $test_cases = array( // '<username>' => array('<description>', 'assert<testName>'),
+      'foo'                    => array('Valid username', 'assertNull'),
+      'FOO'                    => array('Valid username', 'assertNull'),
+      'Foo O\'Bar'             => array('Valid username', 'assertNull'),
+      'foo@bar'                => array('Valid username', 'assertNull'),
+      'foo@example.com'        => array('Valid username', 'assertNull'),
+      'foo@-example.com'       => array('Valid username', 'assertNull'), // invalid domains are allowed in usernames
+      'þòøÇßªř€'               => array('Valid username', 'assertNull'),
+      'ᚠᛇᚻ᛫ᛒᛦᚦ'                => array('Valid UTF8 username', 'assertNull'), // runes
+      ' foo'                   => array('Username that starts with a space', 'assertNotNull'),
+      'foo '                   => array('Username that ends with a space', 'assertNotNull'),
+      'foo  bar'               => array('Username that contains 2 spaces \'&nbsp;&nbsp;\'', 'assertNotNull'),
+      ''                       => array('Empty username', 'assertNotNull'),
+      'foo/'                   => array('Invalid chars in username', 'assertNotNull'),
+      'foo' . chr(0) . 'bar'   => array('chr(0) in username', 'assertNotNull'), // NULL
+      'foo' . chr(13) . 'bar'  => array('chr(13) in username', 'assertNotNull'), // CR
+      str_repeat('x', USERNAME_MAX_LENGTH + 1) => array('Excessively long username', 'assertNotNull'),
+    );
+    foreach ($test_cases as $name => $test_case) {
+      list($description, $test) = $test_case;
+      $result = user_validate_name($name);
+      $this->$test($result, $description . ' ('. $name . '). %s');
+    }
   }
 
-  function testValidCharsName() {
-    $name = 'ab/';
-    $result = user_validate_name($name);
-    $this->assertNotNull($result, 'Invalid chars in username');
-  }
-
-  function testMaxLengthName() {
-    $name = str_repeat('a', 61);
-    $result = user_validate_name($name);
-    $this->assertNotNull($result, 'Excessively long username');
-  }
-
-  function testValidName() {
-    $name = 'abc';
-    $result = user_validate_name($name);
-    $this->assertNull($result, 'Valid username');
-  }
-
-  // Mail validation.
-  function testMinLengthMail() {
-    $name = '';
-    $result = user_validate_mail($name);
-    $this->assertNotNull($result, 'Empty mail');
-  }
-
-  function testInValidMail() {
-    $name = 'abc';
-    $result = user_validate_mail($name);
-    $this->assertNotNull($result, 'Invalid mail');
-  }
-
-  function testValidMail() {
-    $name = 'absdsdsdc@dsdsde.com';
-    $result = user_validate_mail($name);
-    $this->assertNull($result, 'Valid mail');
+  // Mail validation. More extensive tests can be found at common.test
+  function testMailAddresses() {
+    $test_cases = array( // '<username>' => array('<description>', 'assert<testName>'),
+      ''                => array('Empty mail address', 'assertNotNull'),
+      'foo'             => array('Invalid mail address', 'assertNotNull'),
+      'foo@example.com' => array('Valid mail address', 'assertNull'),
+    );
+    foreach ($test_cases as $name => $test_case) {
+      list($description, $test) = $test_case;
+      $result = user_validate_mail($name);
+      $this->$test($result, $description . ' (' . $name . '). %s');
+    }
   }
 }
 
