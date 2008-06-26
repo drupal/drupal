@@ -1,0 +1,83 @@
+<?php
+
+class BootstrapIPAddressTestCase extends DrupalWebTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('IP address test'),
+      'description' => t('Get the IP address from the current visitor from the server variables.'),
+      'group' => t('Bootstrap')
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    $this->oldserver = $_SERVER;
+
+    $this->remote_ip = '127.0.0.1';
+    $this->proxy_ip = '127.0.0.2';
+    $this->forwarded_ip = '127.0.0.3';
+    $this->cluster_ip = '127.0.0.4';
+    $this->untrusted_ip = '0.0.0.0';
+        
+    $_SERVER['REMOTE_ADDR'] = $this->remote_ip;
+    unset($_SERVER['HTTP_X_FORWARDED_FOR']);
+    unset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']);
+    
+    parent::setUp();
+  }
+  
+  /**
+   * Implementation of tearDown().
+   */
+  function tearDown() {
+    $_SERVER = $this->oldserver;
+    parent::tearDown();
+  }
+
+  /**
+   * testIPAddress
+   */
+  function testIPAddress() {
+    // Test the normal IP address.
+    $this->assertTrue(
+      ip_address(true) == $this->remote_ip,
+      t('Got remote IP address')
+    );
+    
+    // Proxy forwarding on but no proxy addresses defined.
+    variable_set('reverse_proxy', 1);
+    $this->assertTrue(
+      ip_address(true) == $this->remote_ip,
+      t('Proxy forwarding without trusted proxies got remote IP address')
+    );
+    
+    // Proxy forwarding on and proxy address not trusted.
+    variable_set('reverse_proxy_addresses', array($this->proxy_ip));
+    $_SERVER['REMOTE_ADDR'] = $this->untrusted_ip;
+    $this->assertTrue(
+      ip_address(true) == $this->untrusted_ip,
+      t('Proxy forwarding with untrusted proxy got remote IP address')
+    );
+
+    // Proxy forwarding on and proxy address trusted.
+    $_SERVER['REMOTE_ADDR'] = $this->proxy_ip;
+    $_SERVER['HTTP_X_FORWARDED_FOR'] = $this->forwarded_ip;
+    $this->assertTrue(
+      ip_address(true) == $this->forwarded_ip,
+      t('Proxy forwarding with trusted proxy got forwarded IP address')
+    );   
+    
+    // Cluster environment.
+    $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'] = $this->cluster_ip;
+    $this->assertTrue(
+      ip_address(true) == $this->cluster_ip,
+      t('Cluster environment got cluster client IP')
+    );
+  }
+}
