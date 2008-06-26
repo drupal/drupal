@@ -785,6 +785,7 @@ class DrupalWebTestCase {
     if (!$this->elements) {
       $this->fail(t('Parsed page successfully.'), t('Browser'));
     }
+
     return $this->elements;
   }
 
@@ -822,32 +823,26 @@ class DrupalWebTestCase {
    *   TRUE to be checked and FALSE to be unchecked.
    * @param $submit
    *   Value of the submit button.
-   * @param $tamper
-   *   If this is set to TRUE then you can post anything, otherwise hidden and
-   *   nonexistent fields are not posted.
+   * @param $options
+   *   Options to be forwarded to url().
    */
-  function drupalPost($path, $edit, $submit, $tamper = FALSE) {
+  function drupalPost($path, $edit, $submit, $options = array()) {
     $submit_matches = FALSE;
     if (isset($path)) {
-      $html = $this->drupalGet($path);
+      $html = $this->drupalGet($path, $options);
     }
     if ($this->parse()) {
       $edit_save = $edit;
       // Let's iterate over all the forms.
       $forms = $this->elements->xpath('//form');
       foreach ($forms as $form) {
-        if ($tamper) {
-          // @TODO: this will be Drupal specific. One needs to add the build_id
-          // and the token to $edit then $post that.
-        }
-        else {
-          // We try to set the fields of this form as specified in $edit.
-          $edit = $edit_save;
-          $post = array();
-          $upload = array();
-          $submit_matches = $this->handleForm($post, $edit, $upload, $submit, $form);
-          $action = isset($form['action']) ? $this->getAbsoluteUrl($form['action']) : $this->getUrl();
-        }
+        // We try to set the fields of this form as specified in $edit.
+        $edit = $edit_save;
+        $post = array();
+        $upload = array();
+        $submit_matches = $this->handleForm($post, $edit, $upload, $submit, $form);
+        $action = isset($form['action']) ? $this->getAbsoluteUrl($form['action']) : $this->getUrl();
+        
         // We post only if we managed to handle every field in edit and the
         // submit button matches.
         if (!$edit && $submit_matches) {
