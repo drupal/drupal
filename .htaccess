@@ -13,8 +13,13 @@ Options -Indexes
 # Follow symbolic links in this directory.
 Options +FollowSymLinks
 
-# Customized error messages.
+# Make Drupal handle any 404 errors.
 ErrorDocument 404 /index.php
+
+# Force simple error message for requests for non-existent favicon.ico.
+<Files favicon.ico>
+  ErrorDocument 404 "The requested file favicon.ico was not found."
+</Files>
 
 # Set the default handler.
 DirectoryIndex index.php
@@ -77,7 +82,8 @@ DirectoryIndex index.php
   # Rewrite URLs of the form 'index.php?q=x'.
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !=/favicon.ico
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.91 2008/02/21 19:45:47 dries Exp $
+# $Id: .htaccess,v 1.92 2008/06/26 19:19:44 dries Exp $
