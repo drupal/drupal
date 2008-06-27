@@ -356,11 +356,21 @@ function user_save($account, $array = array(), $category = 'account') {
  * Verify the syntax of the given name.
  */
 function user_validate_name($name) {
-  if (!strlen($name)) return t('You must enter a username.');
-  if (substr($name, 0, 1) == ' ') return t('The username cannot begin with a space.');
-  if (substr($name, -1) == ' ') return t('The username cannot end with a space.');
-  if (strpos($name, '  ') !== FALSE) return t('The username cannot contain multiple spaces in a row.');
-  if (ereg("[^\x80-\xF7 [:alnum:]@_.-]", $name)) return t('The username contains an illegal character.');
+  if (!$name) {
+    return t('You must enter a username.');
+  }
+  if (substr($name, 0, 1) == ' ') {
+    return t('The username cannot begin with a space.');
+  }
+  if (substr($name, -1) == ' ') {
+    return t('The username cannot end with a space.');
+  }
+  if (strpos($name, '  ') !== FALSE) {
+    return t('The username cannot contain multiple spaces in a row.');
+  }
+  if (preg_match('/[^\x{80}-\x{F7} a-z0-9@_.\'-]/i', $name)) {
+    return t('The username contains an illegal character.');
+  }
   if (preg_match('/[\x{80}-\x{A0}' .         // Non-printable ISO-8859-1 + NBSP
                    '\x{AD}' .                // Soft-hyphen
                    '\x{2000}-\x{200F}' .     // Various space characters
@@ -369,12 +379,13 @@ function user_validate_name($name) {
                    '\x{FEFF}' .              // Byte order mark
                    '\x{FF01}-\x{FF60}' .     // Full-width latin
                    '\x{FFF9}-\x{FFFD}' .     // Replacement characters
-                   '\x{0}]/u',               // NULL byte
+                   '\x{0}-\x{1F}]/u',        // NULL byte and control characters
                    $name)) {
     return t('The username contains an illegal character.');
   }
-  if (strpos($name, '@') !== FALSE && !eregi('@([0-9a-z](-?[0-9a-z])*.)+[a-z]{2}([zmuvtg]|fo|me)?$', $name)) return t('The username is not a valid authentication ID.');
-  if (strlen($name) > USERNAME_MAX_LENGTH) return t('The username %name is too long: it must be %max characters or less.', array('%name' => $name, '%max' => USERNAME_MAX_LENGTH));
+  if (drupal_strlen($name) > USERNAME_MAX_LENGTH) {
+    return t('The username %name is too long: it must be %max characters or less.', array('%name' => $name, '%max' => USERNAME_MAX_LENGTH));
+  }
 }
 
 function user_validate_mail($mail) {
@@ -1401,7 +1412,7 @@ function user_edit_form(&$form_state, $uid, $edit, $register = FALSE) {
       '#title' => t('Username'),
       '#default_value' => $edit['name'],
       '#maxlength' => USERNAME_MAX_LENGTH,
-      '#description' => t('Spaces are allowed; punctuation is not allowed except for periods, hyphens, and underscores.'),
+      '#description' => t('Spaces are allowed; punctuation is not allowed except for periods, hyphens, apostrophes, and underscores.'),
       '#required' => TRUE,
     );
   }
