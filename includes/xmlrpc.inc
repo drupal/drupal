@@ -67,10 +67,10 @@ function xmlrpc_value_calculate_type(&$xmlrpc_value) {
     return empty($xmlrpc_value->data) || range(0, count($xmlrpc_value->data) - 1) === array_keys($xmlrpc_value->data) ? 'array' : 'struct';
   }
   if (is_object($xmlrpc_value->data)) {
-    if ($xmlrpc_value->data->is_date) {
+    if (isset($xmlrpc_value->data->is_date)) {
       return 'date';
     }
-    if ($xmlrpc_value->data->is_base64) {
+    if (isset($xmlrpc_value->data->is_base64)) {
       return 'base64';
     }
     $xmlrpc_value->data = get_object_vars($xmlrpc_value->data);
