@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.50 2008/04/14 17:58:16 dries Exp $
+// $Id: xmlrpc.inc,v 1.51 2008/06/27 07:26:31 dries Exp $
 
 /**
  * @file
@@ -67,10 +67,10 @@ function xmlrpc_value_calculate_type(&$xmlrpc_value) {
     return empty($xmlrpc_value->data) || range(0, count($xmlrpc_value->data) - 1) === array_keys($xmlrpc_value->data) ? 'array' : 'struct';
   }
   if (is_object($xmlrpc_value->data)) {
-    if ($xmlrpc_value->data->is_date) {
+    if (isset($xmlrpc_value->data->is_date)) {
       return 'date';
     }
-    if ($xmlrpc_value->data->is_base64) {
+    if (isset($xmlrpc_value->data->is_base64)) {
       return 'base64';
     }
     $xmlrpc_value->data = get_object_vars($xmlrpc_value->data);
