@@ -18,7 +18,7 @@ ErrorDocument 404 /index.php
 
 # Force simple error message for requests for non-existent favicon.ico.
 <Files favicon.ico>
-  ErrorDocument 404 "The requested file favicon.ico was not found."
+  ErrorDocument 404 "The requested file favicon.ico was not found.
 </Files>
 
 # Set the default handler.
@@ -79,7 +79,7 @@ DirectoryIndex index.php
   # uncomment the following line:
   # RewriteBase /
 
-  # Rewrite URLs of the form 'index.php?q=x'.
+  # Rewrite URLs of the form 'x' to the form 'index.php?q=x'.
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_URI} !=/favicon.ico
