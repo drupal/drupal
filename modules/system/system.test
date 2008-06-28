@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.6 2008/06/09 16:33:20 dries Exp $
+// $Id: system.test,v 1.7 2008/06/28 19:19:08 dries Exp $
 
 class EnableDisableCoreTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -293,5 +293,28 @@ class AdminOverviewTestCase extends DrupalWebTestCase {
       $this->assertTrue(count($panels) == $found, t('Required panels found.'));
       $this->assertFalse($extra, t('No extra panels found.'));
     }
+  }
+}
+
+class AdminMetaTagTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Fingerprinting meta tag'),
+      'description' => t('Confirm that the fingerprinting meta tag appears as expected.'),
+      'group' => t('System')
+    );
+  }
+
+  /**
+   * Verify that the meta tag HTML is generated correctly.
+   */
+  public function testMetaTag() {
+    list($version,) = explode('.', VERSION);
+    $string = '<meta name="Generator" content="Drupal ' . $version. ' (http://drupal.org)" />';
+    $this->drupalGet('node');
+    $this->assertRaw($string, t('Fingerprinting meta tag generated correctly.'), t('System'));
   }
 }
