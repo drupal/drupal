@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.14 2008/06/25 09:12:24 dries Exp $
+// $Id: theme.maintenance.inc,v 1.15 2008/07/01 20:36:40 dries Exp $
 
 /**
  * @file
@@ -8,7 +8,7 @@
 
 /**
  * Sets up the theming system for site installs, updates and when the site is
- * in off-line mode. It also applies when the database is unavailable.
+ * in offline mode. It also applies when the database is unavailable.
  *
  * Minnelli is always used for the initial install and update operations. In
  * other cases, "settings.php" must have a "maintenance_theme" key set for the
