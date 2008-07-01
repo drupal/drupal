@@ -449,9 +449,7 @@ function list_themes($refresh = FALSE) {
     foreach ($themes as $theme) {
       foreach ($theme->info['stylesheets'] as $media => $stylesheets) {
         foreach ($stylesheets as $stylesheet => $path) {
-          if (file_exists($path)) {
-            $theme->stylesheets[$media][$stylesheet] = $path;
-          }
+          $theme->stylesheets[$media][$stylesheet] = $path;
         }
       }
       foreach ($theme->info['scripts'] as $script => $path) {
