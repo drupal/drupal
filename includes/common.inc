@@ -325,12 +325,12 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response
 }
 
 /**
- * Generates a site off-line message.
+ * Generates a site offline message.
  */
 function drupal_site_offline() {
   drupal_maintenance_theme();
   drupal_set_header('HTTP/1.1 503 Service unavailable');
-  drupal_set_title(t('Site off-line'));
+  drupal_set_title(t('Site offline'));
   print theme('maintenance_page', filter_xss_admin(variable_get('site_offline_message',
     t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal'))))));
 }

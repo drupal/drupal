@@ -1064,7 +1064,7 @@ function _drupal_bootstrap($phase) {
  * Enables use of the theme system without requiring database access.
  *
  * Loads and initializes the theme system for site installs, updates and when
- * the site is in off-line mode. This also applies when the database fails.
+ * the site is in offline mode. This also applies when the database fails.
  *
  * @see _drupal_maintenance_theme()
  */

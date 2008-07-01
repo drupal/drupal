@@ -175,8 +175,8 @@ ini_set('url_rewriter.tags',        '');
 #   'theme_default' => 'minnelli',
 #   'anonymous' => 'Visitor',
 /**
- * A custom theme can be set for the off-line page. This applies when the site
- * is explicitly set to off-line mode through the administration page or when
+ * A custom theme can be set for the offline page. This applies when the site
+ * is explicitly set to offline mode through the administration page or when
  * the database is inactive due to an error. It can be set through the
  * 'maintenance_theme' key. The template file should also be copied into the
  * theme. It is located inside 'modules/system/maintenance-page.tpl.php'.

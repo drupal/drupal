@@ -2413,26 +2413,26 @@ function menu_path_is_external($path) {
 }
 
 /**
- * Checks whether the site is off-line for maintenance.
+ * Checks whether the site is offline for maintenance.
  *
  * This function will log the current user out and redirect to front page
  * if the current user has no 'administer site configuration' permission.
  *
  * @return
- *   FALSE if the site is not off-line or its the login page or the user has
+ *   FALSE if the site is not offline or its the login page or the user has
  *     'administer site configuration' permission.
- *   TRUE for anonymous users not on the login page if the site is off-line.
+ *   TRUE for anonymous users not on the login page if the site is offline.
  */
 function _menu_site_is_offline() {
-  // Check if site is set to off-line mode.
+  // Check if site is set to offline mode.
   if (variable_get('site_offline', 0)) {
     // Check if the user has administration privileges.
     if (user_access('administer site configuration')) {
-      // Ensure that the off-line message is displayed only once [allowing for
+      // Ensure that the offline message is displayed only once [allowing for
       // page redirects], and specifically suppress its display on the site
       // maintenance page.
       if (drupal_get_normal_path($_GET['q']) != 'admin/settings/site-maintenance') {
-        drupal_set_message(t('Operating in off-line mode.'), 'status', FALSE);
+        drupal_set_message(t('Operating in offline mode.'), 'status', FALSE);
       }
     }
     else {

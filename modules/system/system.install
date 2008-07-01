@@ -210,7 +210,7 @@ function system_requirements($phase) {
     elseif ($phase == 'install') {
       // For the installer UI, we need different wording. 'value' will
       // be treated as version, so provide none there.
-      $description = $error . ' ' . $t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually, or ensure that the installer has the permissions to create it automatically. For more information, please see INSTALL.txt or the <a href="@handbook_url">on-line handbook</a>.', array('@handbook_url' => 'http://drupal.org/server-permissions'));
+      $description = $error . ' ' . $t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually, or ensure that the installer has the permissions to create it automatically. For more information, please see INSTALL.txt or the <a href="@handbook_url">online handbook</a>.', array('@handbook_url' => 'http://drupal.org/server-permissions'));
       $requirements['file system']['value'] = '';
     }
     if (!empty($description)) {

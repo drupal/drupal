@@ -1699,15 +1699,15 @@ function system_site_maintenance_settings() {
     '#type' => 'radios',
     '#title' => t('Site status'),
     '#default_value' => variable_get('site_offline', 0),
-    '#options' => array(t('Online'), t('Off-line')),
-    '#description' => t('When set to "Online", all visitors will be able to browse your site normally. When set to "Off-line", only users with the "administer site configuration" permission will be able to access your site to perform maintenance; all other visitors will see the site off-line message configured below. Authorized users can log in during "Off-line" mode directly via the <a href="@user-login">user login</a> page.', array('@user-login' => url('user'))),
+    '#options' => array(t('Online'), t('Offline')),
+    '#description' => t('When set to "Online", all visitors will be able to browse your site normally. When set to "Offline", only users with the "administer site configuration" permission will be able to access your site to perform maintenance; all other visitors will see the site offline message configured below. Authorized users can log in during "Offline" mode directly via the <a href="@user-login">user login</a> page.', array('@user-login' => url('user'))),
   );
 
   $form['site_offline_message'] = array(
     '#type' => 'textarea',
-    '#title' => t('Site off-line message'),
+    '#title' => t('Site offline message'),
     '#default_value' => variable_get('site_offline_message', t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal')))),
-    '#description' => t('Message to show visitors when the site is in off-line mode.')
+    '#description' => t('Message to show visitors when the site is in offline mode.')
   );
 
   return system_settings_form($form);

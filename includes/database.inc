@@ -169,7 +169,7 @@ function db_set_active($name = 'default') {
 /**
  * Helper function to show fatal database errors.
  *
- * Prints a themed maintenance page with the 'Site off-line' text,
+ * Prints a themed maintenance page with the 'Site offline' text,
  * adding the provided error message in the case of 'display_errors'
  * set to on. Ends the page request; no return.
  *
@@ -180,7 +180,7 @@ function _db_error_page($error = '') {
   global $db_type;
   drupal_maintenance_theme();
   drupal_set_header('HTTP/1.1 503 Service Unavailable');
-  drupal_set_title('Site off-line');
+  drupal_set_title('Site offline');
 
   $message = '<p>The site is currently not available due to technical problems. Please try again later. Thank you for your understanding.</p>';
   $message .= '<hr /><p><small>If you are the maintainer of this site, please check your database settings in the <code>settings.php</code> file and ensure that your hosting provider\'s database server is running. For more help, see the <a href="http://drupal.org/node/258">handbook</a>, or contact your hosting provider.</small></p>';
