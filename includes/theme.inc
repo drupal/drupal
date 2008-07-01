@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.428 2008/06/25 09:12:24 dries Exp $
+// $Id: theme.inc,v 1.429 2008/07/01 20:22:22 dries Exp $
 
 /**
  * @file
@@ -449,9 +449,7 @@ function list_themes($refresh = FALSE) {
     foreach ($themes as $theme) {
       foreach ($theme->info['stylesheets'] as $media => $stylesheets) {
         foreach ($stylesheets as $stylesheet => $path) {
-          if (file_exists($path)) {
-            $theme->stylesheets[$media][$stylesheet] = $path;
-          }
+          $theme->stylesheets[$media][$stylesheet] = $path;
         }
       }
       foreach ($theme->info['scripts'] as $script => $path) {
