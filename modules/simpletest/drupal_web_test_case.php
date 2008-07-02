@@ -805,7 +805,7 @@ class DrupalWebTestCase {
     // We re-using a CURL connection here.  If that connection still has certain
     // options set, it might change the GET into a POST.  Make sure we clear out
     // previous options.
-    $out = $this->curlExec(array(CURLOPT_URL => url($path, $options), CURLOPT_POST => FALSE, CURLOPT_POSTFIELDS => array()));
+    $out = $this->curlExec(array(CURLOPT_HTTPGET => TRUE, CURLOPT_URL => url($path, $options)));
     $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.
     return $out;
   }
