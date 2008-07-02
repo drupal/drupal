@@ -1160,7 +1160,7 @@ function language_default($property = NULL) {
 
 /**
  * If Drupal is behind a reverse proxy, we use the X-Forwarded-For header
- * instead of $_SERVER['REMOTE_ADDR'], which would be the IP address of 
+ * instead of $_SERVER['REMOTE_ADDR'], which would be the IP address of
  * the proxy server, and not the client's.  If Drupal is run in a cluster
  * we use the X-Cluster-Client-Ip header instead.
  *

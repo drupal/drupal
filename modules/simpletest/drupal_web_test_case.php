@@ -842,7 +842,7 @@ class DrupalWebTestCase {
         $upload = array();
         $submit_matches = $this->handleForm($post, $edit, $upload, $submit, $form);
         $action = isset($form['action']) ? $this->getAbsoluteUrl($form['action']) : $this->getUrl();
-        
+
         // We post only if we managed to handle every field in edit and the
         // submit button matches.
         if (!$edit && $submit_matches) {

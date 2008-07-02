@@ -51,6 +51,11 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
       $this->assertRaw(t('%recipient is an invalid e-mail address.', array('%recipient' => $invalid_recipient)), t('Caught invalid recipient (' . $invalid_recipient . ').'));
     }
 
+    // Test validation of empty category and recipients fields.
+    $this->addCategory($category = '', '', '', TRUE);
+    $this->assertText(t('Category field is required.'), t('Caught empty category field'));
+    $this->assertText(t('Recipients field is required.'), t('Caught empty recipients field.'));
+
     // Create valid categories.
     $recipients = array('simpletest@test.com', 'simpletest2@test.com', 'simpletest3@test.com');
     $this->addCategory($category = $this->randomName(16), implode(',', array($recipients[0])), '', TRUE);

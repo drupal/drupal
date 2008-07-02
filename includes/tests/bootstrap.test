@@ -24,14 +24,14 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
     $this->forwarded_ip = '127.0.0.3';
     $this->cluster_ip = '127.0.0.4';
     $this->untrusted_ip = '0.0.0.0';
-        
+
     $_SERVER['REMOTE_ADDR'] = $this->remote_ip;
     unset($_SERVER['HTTP_X_FORWARDED_FOR']);
     unset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']);
-    
+
     parent::setUp();
   }
-  
+
   /**
    * Implementation of tearDown().
    */
@@ -49,14 +49,14 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
       ip_address(true) == $this->remote_ip,
       t('Got remote IP address')
     );
-    
+
     // Proxy forwarding on but no proxy addresses defined.
     variable_set('reverse_proxy', 1);
     $this->assertTrue(
       ip_address(true) == $this->remote_ip,
       t('Proxy forwarding without trusted proxies got remote IP address')
     );
-    
+
     // Proxy forwarding on and proxy address not trusted.
     variable_set('reverse_proxy_addresses', array($this->proxy_ip));
     $_SERVER['REMOTE_ADDR'] = $this->untrusted_ip;
@@ -71,8 +71,8 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
     $this->assertTrue(
       ip_address(true) == $this->forwarded_ip,
       t('Proxy forwarding with trusted proxy got forwarded IP address')
-    );   
-    
+    );
+
     // Cluster environment.
     $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'] = $this->cluster_ip;
     $this->assertTrue(

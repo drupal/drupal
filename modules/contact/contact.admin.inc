@@ -79,18 +79,10 @@ function contact_admin_edit($form_state = array(), $op, $contact = NULL) {
  * Validate the contact category edit page form submission.
  */
 function contact_admin_edit_validate($form, &$form_state) {
-  if (empty($form_state['values']['category'])) {
-    form_set_error('category', t('You must enter a category.'));
-  }
-  if (empty($form_state['values']['recipients'])) {
-    form_set_error('recipients', t('You must enter one or more recipients.'));
-  }
-  else {
-    $recipients = explode(',', $form_state['values']['recipients']);
-    foreach ($recipients as $recipient) {
-      if (!valid_email_address(trim($recipient))) {
-        form_set_error('recipients', t('%recipient is an invalid e-mail address.', array('%recipient' => $recipient)));
-      }
+  $recipients = explode(',', $form_state['values']['recipients']);
+  foreach ($recipients as $recipient) {
+    if (!valid_email_address(trim($recipient))) {
+      form_set_error('recipients', t('%recipient is an invalid e-mail address.', array('%recipient' => $recipient)));
     }
   }
 }
