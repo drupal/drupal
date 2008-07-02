@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.19 2008/06/18 03:36:23 dries Exp $
+// $Id: cache.inc,v 1.20 2008/07/02 20:42:25 dries Exp $
 
 /**
  * Return data from the persistent cache. Data may be stored as either plain text or as serialized data.
@@ -102,7 +102,7 @@ function cache_get($cid, $table = 'cache') {
  */
 function cache_set($cid, $data, $table = 'cache', $expire = CACHE_PERMANENT, $headers = NULL) {
   $serialized = 0;
-  if (is_object($data) || is_array($data)) {
+  if (!is_string($data)) {
     $data = serialize($data);
     $serialized = 1;
   }
