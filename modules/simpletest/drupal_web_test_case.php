@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.22 2008/07/02 19:20:58 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.23 2008/07/02 19:34:13 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -256,17 +256,17 @@ class DrupalWebTestCase {
    */
   function run() {
     set_error_handler(array($this, 'errorHandler'));
-    $this->setUp();
     $methods = array();
     // Iterate through all the methods in this class.
     foreach (get_class_methods(get_class($this)) as $method) {
       // If the current method starts with "test", run it - it's a test.
       if (strtolower(substr($method, 0, 4)) == 'test') {
+        $this->setUp();
         $this->$method();
+        // Finish up.
+        $this->tearDown();
       }
     }
-    // Finish up.
-    $this->tearDown();
     restore_error_handler();
   }
 
