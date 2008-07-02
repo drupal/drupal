@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.23 2008/07/02 19:34:13 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.24 2008/07/02 20:05:11 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -842,7 +842,7 @@ class DrupalWebTestCase {
         $upload = array();
         $submit_matches = $this->handleForm($post, $edit, $upload, $submit, $form);
         $action = isset($form['action']) ? $this->getAbsoluteUrl($form['action']) : $this->getUrl();
-        
+
         // We post only if we managed to handle every field in edit and the
         // submit button matches.
         if (!$edit && $submit_matches) {

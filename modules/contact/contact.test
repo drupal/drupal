@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.test,v 1.5 2008/06/24 21:51:02 dries Exp $
+// $Id: contact.test,v 1.6 2008/07/02 20:05:11 dries Exp $
 
 /**
  * Test the sitewide contact form.
@@ -50,6 +50,11 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
       $this->addCategory($this->randomName(16), $invalid_recipient, '', FALSE);
       $this->assertRaw(t('%recipient is an invalid e-mail address.', array('%recipient' => $invalid_recipient)), t('Caught invalid recipient (' . $invalid_recipient . ').'));
     }
+
+    // Test validation of empty category and recipients fields.
+    $this->addCategory($category = '', '', '', TRUE);
+    $this->assertText(t('Category field is required.'), t('Caught empty category field'));
+    $this->assertText(t('Recipients field is required.'), t('Caught empty recipients field.'));
 
     // Create valid categories.
     $recipients = array('simpletest@test.com', 'simpletest2@test.com', 'simpletest3@test.com');
