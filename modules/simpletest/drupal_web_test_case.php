@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.21 2008/06/26 19:31:31 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.22 2008/07/02 19:20:58 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -805,7 +805,7 @@ class DrupalWebTestCase {
     // We re-using a CURL connection here.  If that connection still has certain
     // options set, it might change the GET into a POST.  Make sure we clear out
     // previous options.
-    $out = $this->curlExec(array(CURLOPT_URL => url($path, $options), CURLOPT_POST => FALSE, CURLOPT_POSTFIELDS => array()));
+    $out = $this->curlExec(array(CURLOPT_HTTPGET => TRUE, CURLOPT_URL => url($path, $options)));
     $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.
     return $out;
   }
