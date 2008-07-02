@@ -102,7 +102,7 @@ function cache_get($cid, $table = 'cache') {
  */
 function cache_set($cid, $data, $table = 'cache', $expire = CACHE_PERMANENT, $headers = NULL) {
   $serialized = 0;
-  if (is_object($data) || is_array($data)) {
+  if (!is_string($data)) {
     $data = serialize($data);
     $serialized = 1;
   }
