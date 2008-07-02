@@ -1,0 +1,387 @@
+<?php
+class CacheTestCase extends DrupalWebTestCase {
+  protected $default_table = 'cache';
+  protected $default_cid = 'test_temporary';
+  protected $default_value = 'CacheTest';
+  
+  /**
+   * Check whether or not a cache entry exists.
+   * 
+   * @param $cid
+   *   The cache id.
+   * @param $var
+   *   The variable the cache should contain.
+   * @param $table
+   *   The table the cache item was stored in.
+   * @return 
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function checkCacheExists($cid, $var, $table = null) {
+    if ($table == null) {
+      $table = $this->default_table;
+    }
+    
+    $cache = cache_get($cid, $table);
+    
+    return isset($cache->data) && $cache->data == $var;
+  }
+
+  /**
+   * Assert or a cache entry exists.
+   * 
+   * @param $message
+   *   Message to display.
+   * @param $var
+   *   The variable the cache should contain.
+   * @param $cid
+   *   The cache id.
+   * @param $table
+   *   The table the cache item was stored in.
+   */
+  protected function assertCacheExists($message, $var = NULL, $cid = NULL, $table = NULL) {
+    if ($table == NULL) {
+      $table = $this->default_table;
+    }
+    if ($cid == NULL) {
+      $cid = $this->default_cid;
+    }
+    if ($var == NULL) {
+      $var = $this->default_value;
+    }
+
+    $this->assertTrue($this->checkCacheExists($cid, $var, $table), $message);
+  }
+
+  /**
+   * Assert or a cache entry has been removed.
+   * 
+   * @param $message
+   *   Message to display.
+   * @param $cid
+   *   The cache id.
+   * @param $table
+   *   The table the cache item was stored in.
+   */
+  function assertCacheRemoved($message, $cid = NULL, $table = NULL) {
+    if ($table == NULL) {
+      $table = $this->default_table;
+    }
+    if ($cid == NULL) {
+      $cid = $this->default_cid;
+    }
+    
+    $cache = cache_get($cid, $table);
+    $this->assertFalse($cache, $message);  
+  }
+
+  /**
+   * Perform the general wipe.
+   * @param $table
+   *   The table to perform the wipe on.
+   */
+  protected function generalWipe($table = NULL) {
+    if ($table == NULL) {
+      $table = $this->default_table;
+    }
+    
+    cache_clear_all(NULL, $table);   
+  }
+  
+  /**
+   * Setup the lifetime settings for caching.
+   *
+   * @param $time
+   *   The time in seconds the cache should minimal live.
+   */
+  protected function setupLifetime($time) {
+    variable_set('cache_lifetime', $time);
+    variable_set('cache_flush', 0);    
+  } 
+}
+
+class CacheSavingCase extends CacheTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Cache saving test'),
+      'description' => t('Check our variables are saved and restored the right way.'),
+      'group' => t('Cache')
+    );
+  }
+
+  /**
+   * Test the saving and restoring of a string.
+   */
+  function testString() {
+    $this->checkVariable($this->randomName('100'));
+  }
+
+  /**
+   * Test the saving and restoring of an integer.
+   */
+  function testInteger() {
+    $this->checkVariable(100);
+  }
+
+  /**
+   * Test the saving and restoring of a double.
+   */
+  function testDouble() {
+    $this->checkVariable(1.29);
+  }
+
+  /**
+   * Test the saving and restoring of an array.
+   */
+  function testArray() {
+    $this->checkVariable(array('drupal1', 'drupal2' => 'drupal3', 'drupal4' => array('drupal5', 'drupal6')));
+  }
+
+  /**
+   * Test the saving and restoring of an object.
+   */
+  function testObject() {
+    $test_object = new StdClass();
+    $test_object->test1 = $this->randomName('100');
+    $test_object->test2 = 100;
+    $test_object->test3 = array('drupal1', 'drupal2' => 'drupal3', 'drupal4' => array('drupal5', 'drupal6'));
+    
+    cache_set('test_object', $test_object, 'cache');
+    $cache = cache_get('test_object', 'cache');
+    $this->assertTrue(isset($cache->data) && $cache->data == $test_object, t('Object is saved and restored properly.'));  
+  }
+
+  /*
+   * Check or a variable is stored and restored properly.
+   **/
+  function checkVariable($var) {
+    cache_set('test_var', $var, 'cache');
+    $cache = cache_get('test_var', 'cache');
+    $this->assertTrue(isset($cache->data) && $cache->data === $var, t('@type is saved and restored properly.', array('@type' => ucfirst(gettype($var)))));   
+  }
+}
+
+class CacheClearCase extends CacheTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Cache clear test'),
+      'description' => t('Check our clearing is done the proper way.'),
+      'group' => t('Cache')
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    $this->default_table = 'cache_page';
+    $this->default_value = $this->randomName(10);
+    
+    parent::setUp();
+  }
+  
+  /**
+   * Test clearing using a cid.
+   */
+  function testClearCid() {
+    cache_set('test_cid_clear', $this->default_value, $this->default_table);
+    
+    $this->assertCacheExists(t('Cache was set for clearing cid.'), $this->default_value, 'test_cid_clear');
+    cache_clear_all('test_cid_clear', $this->default_table);
+    
+    $this->assertCacheRemoved(t('Cache was removed after clearing cid.'), 'test_cid_clear');
+    
+    cache_set('test_cid_clear1', $this->default_value, $this->default_table);
+    cache_set('test_cid_clear2', $this->default_value, $this->default_table);
+    $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value) 
+                      && $this->checkCacheExists('test_cid_clear2', $this->default_value),
+                      t('Two caches were created for checking cid "*" with wildcard false.'));                      
+    cache_clear_all('*', $this->default_table);
+    $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value) 
+                      && $this->checkCacheExists('test_cid_clear2', $this->default_value),
+                      t('Two caches still exists after clearing cid "*" with wildcard false.'));    
+  }
+  
+  /**
+   * Test clearing using wildcard.
+   */
+  function testClearWildcard() {
+    cache_set('test_cid_clear1', $this->default_value, $this->default_table);
+    cache_set('test_cid_clear2', $this->default_value, $this->default_table);
+    $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value) 
+                      && $this->checkCacheExists('test_cid_clear2', $this->default_value),
+                      t('Two caches were created for checking cid "*" with wildcard true.'));                      
+    cache_clear_all('*', $this->default_table, TRUE);
+    $this->assertFalse($this->checkCacheExists('test_cid_clear1', $this->default_value) 
+                      || $this->checkCacheExists('test_cid_clear2', $this->default_value),
+                      t('Two caches removed after clearing cid "*" with wildcard true.'));
+                      
+    cache_set('test_cid_clear1', $this->default_value, $this->default_table);
+    cache_set('test_cid_clear2', $this->default_value, $this->default_table);
+    $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value) 
+                      && $this->checkCacheExists('test_cid_clear2', $this->default_value),
+                      t('Two caches were created for checking cid substring with wildcard true.'));                      
+    cache_clear_all('test_', $this->default_table, TRUE);
+    $this->assertFalse($this->checkCacheExists('test_cid_clear1', $this->default_value) 
+                      || $this->checkCacheExists('test_cid_clear2', $this->default_value),
+                      t('Two caches removed after clearing cid substring with wildcard true.'));
+  }
+}
+
+class CacheExpiryCase extends CacheTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Cache expire test'),
+      'description' => t('Check or the expiration of the cache is working properly'),
+      'group' => t('Cache')
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    $this->default_table = 'cache';
+    $this->default_cid = 'test_expiry';
+    $this->default_value = $this->randomName(10);
+
+    parent::setUp();
+  }
+
+  /**
+   * testTemporaryNoLifetime()
+   * Tests the expiry of data when the $expire is set to CACHE_TEMPORARY and lifetime is off.
+   *   - CACHE_TEMPORARY: Indicates that the item should be removed at the next
+   *     general cache wipe.
+   */
+  function testTemporaryNoLifetime() {
+    $this->setupLifetime(0);
+    cache_set($this->default_cid, $this->default_value, $this->default_table, CACHE_TEMPORARY);
+
+    $this->assertCacheExists(t('Temporary cache data without lifetime exists before wipe.'));
+    
+    $user->cache = isset($user->cache) ? $user->cache +2 : time() + 2;
+    $this->assertCacheExists(t('Temporary cache without lifetime valid after user cache expiration.'));
+    $user->cache = $user->cache - 2;
+    
+    $this->generalWipe();
+    $this->assertCacheRemoved(t('Temporary cache without lifetime does not exists after wipe.'));
+  }
+
+  /**
+   * testTemporaryLifetime()
+   * Tests the expiry of data when the $expire is set to CACHE_TEMPORARY and lifetime is on.
+   *   - CACHE_TEMPORARY: Indicates that the item should be removed at the next
+   *     general cache wipe.
+   */
+  function testTemporaryLifetime() {
+    $this->setupLifetime(5);
+    cache_set($this->default_cid, $this->default_value, $this->default_table, CACHE_TEMPORARY);
+    
+    $this->assertCacheExists(t('Temporary cache with lifetime data exists before wipe.'));   
+
+    $user->cache = isset($user->cache) ? $user->cache + 2 : time() + 2;
+    $this->assertCacheExists(t('Temporary cache without lifetime valid after user cache expiration.'));
+    $user->cache = $user->cache - 2;
+
+    $this->generalWipe();
+    $this->assertCacheRemoved(t('Temporary cache with lifetime does not exists after wipe.'));
+  }
+
+  /**
+   * testPermanentNoLifetime()
+   * Tests the expiry of data when the $expire is set to CACHE_PERMANENT and lifetime is off.
+   *   - CACHE_PERMANENT: Indicates that the item should never be removed unless
+   *     explicitly told to using cache_clear_all() with a cache ID.
+   */
+  function testPermanentNoLifetime() {
+    $this->setupLifetime(0);
+    cache_set($this->default_cid, $this->default_value, $this->default_table, CACHE_PERMANENT);
+    
+    $this->assertCacheExists(t('Permanent cache data without lifetime exists before wipe.'));
+    
+    $user->cache = isset($user->cache) ? $user->cache + 2 : time() + 2;
+    $this->assertCacheExists(t('Permanent cache without lifetime valid after user cache expiration.'));
+    $user->cache = $user->cache - 2;
+    
+    $this->generalWipe();
+    $this->assertCacheExists(t('Permanent cache without lifetime exists after wipe.'));
+  }
+
+  /**
+   * testPermanentLifetime()
+   * Tests the expiry of data when the $expire is set to CACHE_PERMANENT and lifetime is on.
+   *   - CACHE_PERMANENT: Indicates that the item should never be removed unless
+   *     explicitly told to using cache_clear_all() with a cache ID.
+   */
+  function testPermanentLifetime() {
+    $this->setupLifetime(5);
+    cache_set($this->default_cid, $this->default_value, $this->default_table, CACHE_PERMANENT);
+
+    $this->assertCacheExists(t('Permanent cache data with lifetime exists before wipe.'));
+
+    $user->cache = isset($user->cache) ? $user->cache + 2 : time() + 2;
+    $this->assertCacheExists(t('Permanent cache with lifetime valid after user cache expiration.'));
+    $user->cache = $user->cache - 2; 
+
+    $this->generalWipe();
+    $this->assertCacheExists(t('Permanent cache with lifetime exists after wipe.'));
+  }
+
+  /**
+   * testUnixTimestampNoLifetime()
+   * Tests the expiry of data when the $expire is set to unix timestamp and lifetime is off.
+   *   - A Unix timestamp: Indicates that the item should be kept at least until
+   *     the given time, after which it behaves like CACHE_TEMPORARY.
+   */
+  function testUnixTimestampNoLifetime() {
+    $this->setupLifetime(0);
+    cache_set($this->default_cid, $this->default_value, $this->default_table, time() + 1);
+    
+    $this->assertCacheExists(t('Unit timestamp cache data without lifetime exists before wipe.'));
+    $this->generalWipe();
+    $this->assertCacheExists(t('Unit timestamp cache without lifetime exists after wipe.'));
+    sleep(2); // expire
+    $this->assertCacheExists(t('Unit timestamp cache without lifetime exists after expiration.'));
+    
+    $user->cache = isset($user->cache) ? $user->cache + 2 : time() + 2;
+    $this->assertCacheExists(t('Unit timestamp cache without lifetime valid after user cache expiration.'));
+    $user->cache = $user->cache - 2;
+    
+    $this->generalWipe();    
+    $this->assertCacheRemoved(t('Unit timestamp cache without lifetime deleted after expiration and wipe.'));
+  }
+
+  /**
+   * testUnixTimestampLifetime()
+   * Tests the expiry of data when the $expire is set to unix timestamp and lifetime is on.
+   *   - A Unix timestamp: Indicates that the item should be kept at least until
+   *     the given time, after which it behaves like CACHE_TEMPORARY.
+   */
+  function testUnixTimestampLifetime() {
+    $this->setupLifetime(5);
+    cache_set($this->default_cid, $this->default_value, $this->default_table, time() + 1);
+    global $user;
+    
+    $this->assertCacheExists(t('Unit timestamp cache data without lifetime exists before wipe.'));
+    $this->generalWipe();
+    $this->assertCacheExists(t('Unit timestamp cache with lifetime exists after wipe.'));
+    sleep(2); // expire
+    $this->assertCacheExists(t('Unit timestamp cache with lifetime exists after expiration.'));
+    
+    $user->cache = $user->cache + 2;
+    $this->assertCacheRemoved(t('Unit timestamp cache with lifetime not valid after user cache expiration.'));
+    $user->cache = $user->cache - 2;
+    
+    $this->generalWipe();
+    $this->assertCacheRemoved(t('Unit timestamp cache with lifetime deleted after expiration and wipe.'));
+  }
+}
