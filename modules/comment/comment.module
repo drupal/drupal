@@ -41,16 +41,6 @@ define('COMMENT_MODE_THREADED_COLLAPSED', 3);
 define('COMMENT_MODE_THREADED_EXPANDED', 4);
 
 /**
- * Comments are ordered by date - newest first.
- */
-define('COMMENT_ORDER_NEWEST_FIRST', 1);
-
-/**
- * Comments are ordered by date - oldest first.
- */
-define('COMMENT_ORDER_OLDEST_FIRST', 2);
-
-/**
  * Anonymous posters cannot enter their contact information.
  */
 define('COMMENT_ANONYMOUS_MAYNOT_CONTACT', 0);
@@ -230,7 +220,6 @@ function comment_node_type($op, $info) {
   $settings = array(
     'comment',
     'comment_default_mode',
-    'comment_default_order',
     'comment_default_per_page',
     'comment_anonymous',
     'comment_subject_field',
@@ -350,35 +339,24 @@ function comment_get_recent($number = 10) {
 function comment_new_page_count($num_comments, $new_replies, $node) {
   $comments_per_page = _comment_get_display_setting('comments_per_page', $node);
   $mode = _comment_get_display_setting('mode', $node);
-  $order = _comment_get_display_setting('sort', $node);
   $pagenum = NULL;
   $flat = in_array($mode, array(COMMENT_MODE_FLAT_COLLAPSED, COMMENT_MODE_FLAT_EXPANDED));
-  if ($num_comments <= $comments_per_page || ($flat && $order == COMMENT_ORDER_NEWEST_FIRST)) {
-    // Only one page of comments or flat forum and newest first.
-    // First new comment will always be on first page.
+  if ($num_comments <= $comments_per_page) {
+    // Only one page of comments.
     $pageno = 0;
   }
+  elseif ($flat) {
+    // Flat comments.
+    $count = $num_comments - $new_replies;
+    $pageno =  $count / $comments_per_page;
+  }
   else {
-    if ($flat) {
-      // Flat comments and oldest first.
-      $count = $num_comments - $new_replies;
-    }
-    else {
-      // Threaded comments. See the documentation for comment_render().
-      if ($order == COMMENT_ORDER_NEWEST_FIRST) {
-        // Newest first: find the last thread with a new comment.
-        $result = db_query('(SELECT thread FROM {comments} WHERE nid = %d  AND status = 0 ORDER BY timestamp DESC LIMIT %d) ORDER BY thread DESC LIMIT 1', $node->nid, $new_replies);
-        $thread = db_result($result);
-        $result_count = db_query("SELECT COUNT(*) FROM {comments} WHERE nid = %d AND status = 0 AND thread > '" . $thread . "'", $node->nid);
-      }
-      else {
-        // Oldest first: find the first thread with a new comment.
-        $result = db_query('(SELECT thread FROM {comments} WHERE nid = %d  AND status = 0 ORDER BY timestamp DESC LIMIT %d) ORDER BY SUBSTRING(thread, 1, (LENGTH(thread) - 1)) LIMIT 1', $node->nid, $new_replies);
-        $thread = substr(db_result($result), 0, -1);
-        $result_count = db_query("SELECT COUNT(*) FROM {comments} WHERE nid = %d AND status = 0 AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < '" . $thread . "'", $node->nid);
-      }
-      $count = db_result($result_count);
-    }
+    // Threaded comments.
+    // Find the first thread with a new comment.
+    $result = db_query('(SELECT thread FROM {comments} WHERE nid = %d  AND status = 0 ORDER BY timestamp DESC LIMIT %d) ORDER BY SUBSTRING(thread, 1, (LENGTH(thread) - 1)) LIMIT 1', $node->nid, $new_replies);
+    $thread = substr(db_result($result), 0, -1);
+    $result_count = db_query("SELECT COUNT(*) FROM {comments} WHERE nid = %d AND status = 0 AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < '" . $thread . "'", $node->nid);
+    $count = db_result($result_count);
     $pageno =  $count / $comments_per_page;
   }
 
@@ -510,13 +488,6 @@ function comment_form_alter(&$form, $form_state, $form_id) {
       '#default_value' => variable_get('comment_default_mode_' . $form['#node_type']->type, COMMENT_MODE_THREADED_EXPANDED),
       '#options' => _comment_get_modes(),
       '#description' => t('Expanded views display the body of the comment. Threaded views keep replies together.'),
-    );
-    $form['comment']['comment_default_order'] = array(
-      '#type' => 'radios',
-      '#title' => t('Display order'),
-      '#default_value' => variable_get('comment_default_order_' . $form['#node_type']->type, COMMENT_ORDER_NEWEST_FIRST),
-      '#options' => _comment_get_orders(),
-      '#description' => t('Comments are displayed in ascending or descending order.'),
     );
     $form['comment']['comment_default_per_page'] = array(
       '#type' => 'select',
@@ -921,7 +892,6 @@ function comment_render($node, $cid = 0) {
     }
 
     $mode = _comment_get_display_setting('mode', $node);
-    $order = _comment_get_display_setting('sort', $node);
     $comments_per_page = _comment_get_display_setting('comments_per_page', $node);
 
     if ($cid && is_numeric($cid)) {
@@ -955,30 +925,19 @@ function comment_render($node, $cid = 0) {
         $query_count .= ' AND c.status = %d';
         $query_args[] = COMMENT_PUBLISHED;
       }
+      if ($mode == COMMENT_MODE_FLAT_COLLAPSED || $mode == COMMENT_MODE_FLAT_EXPANDED) {
+        $query .= ' ORDER BY c.cid';
+      }
+      else {
+        // See comment above. Analysis reveals that this doesn't cost too
+        // much. It scales much much better than having the whole comment
+        // structure.
+        $query .= ' ORDER BY SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1))';
+      }
 
-      if ($order == COMMENT_ORDER_NEWEST_FIRST) {
-        if ($mode == COMMENT_MODE_FLAT_COLLAPSED || $mode == COMMENT_MODE_FLAT_EXPANDED) {
-          $query .= ' ORDER BY c.cid DESC';
-        }
-        else {
-          $query .= ' ORDER BY c.thread DESC';
-        }
-      }
-      elseif ($order == COMMENT_ORDER_OLDEST_FIRST) {
-        if ($mode == COMMENT_MODE_FLAT_COLLAPSED || $mode == COMMENT_MODE_FLAT_EXPANDED) {
-          $query .= ' ORDER BY c.cid';
-        }
-        else {
-          // See comment above. Analysis reveals that this doesn't cost too
-          // much. It scales much much better than having the whole comment
-          // structure.
-          $query .= ' ORDER BY SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1))';
-        }
-      }
       $query = db_rewrite_sql($query, 'c', 'cid');
       $query_count = db_rewrite_sql($query_count, 'c', 'cid');
 
-      // Start a form, for use with comment control.
       $result = pager_query($query, $comments_per_page, 0, $query_count, $query_args);
 
       $divs = 0;
@@ -1770,7 +1729,6 @@ function theme_comment_post_forbidden($node) {
 function template_preprocess_comment_wrapper(&$variables) {
   // Provide contextual information.
   $variables['display_mode']  = _comment_get_display_setting('mode', $variables['node']);
-  $variables['display_order'] = _comment_get_display_setting('sort', $variables['node']);
   $variables['template_files'][] = 'comment-wrapper-' . $variables['node']->type;
 }
 
@@ -1805,19 +1763,6 @@ function _comment_get_modes() {
 }
 
 /**
- * Return an array of viewing orders for comment listings.
- *
- * We can't use a global variable array because the locale system
- * is not initialized yet when the comment module is loaded.
- */
-function _comment_get_orders() {
-  return array(
-    COMMENT_ORDER_NEWEST_FIRST => t('Date - newest first'),
-    COMMENT_ORDER_OLDEST_FIRST => t('Date - oldest first')
-  );
-}
-
-/**
  * Return an array of "comments per page" settings from which the user
  * can choose.
  */
@@ -1837,10 +1782,6 @@ function _comment_get_display_setting($setting, $node) {
   switch ($setting) {
     case 'mode':
       $value = variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED_EXPANDED);
-      break;
-
-    case 'sort':
-      $value = variable_get('comment_default_order_' . $node->type, COMMENT_ORDER_NEWEST_FIRST);
       break;
 
     case 'comments_per_page':

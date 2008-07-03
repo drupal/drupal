@@ -293,7 +293,7 @@ class CommentTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Checks current pag for specified comment.
+   * Checks current page for specified comment.
    *
    * @param object $comment Comment object.
    * @param boolean $reply The comment is a reply to another comment.
@@ -373,7 +373,7 @@ class CommentTestCase extends DrupalWebTestCase {
    *   Comments per page value.
    */
   function setCommentsPerPage($number) {
-    $this->setCommentSettings('comment_default_per_page', $number, 'Number of comments per page set to ' . $number .'.');
+    $this->setCommentSettings('comment_default_per_page_article', $number, 'Number of comments per page set to ' . $number .'.');
   }
 
   /**

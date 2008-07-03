@@ -24,6 +24,11 @@ function comment_update_1() {
   return array();
 }
 
+/**
+ * @defgroup updates-5.x-to-6.x Comment updates from 5.x to 6.x
+ * @{
+ */
+
 function comment_update_6001() {
   $ret[] = update_sql("ALTER TABLE {comments} DROP score");
   $ret[] = update_sql("ALTER TABLE {comments} DROP users");
@@ -70,6 +75,31 @@ function comment_update_6003() {
   return $ret;
 }
 
+/**
+ * @} End of "defgroup updates-5.x-to-6.x"
+ * The next series of updates should start at 7000.
+ */
+
+/**
+ * @defgroup updates-6.x-to-7.x Comment updates from 6.x to 7.x
+ * @{
+ */
+
+/**
+ * Remove comment settings for page ordering.
+ */
+function comment_update_7000() {
+  $types = node_get_types();
+  foreach ($types as $type => $object) {
+    variable_del('comment_default_order' . $type);
+  }
+  return array(array('success' => TRUE, 'query' => 'Comment order settings removed.'));
+}
+
+/**
+ * @} End of "defgroup updates-6.x-to-7.x"
+ * The next series of updates should start at 8000.
+ */
 
 /**
  * Implementation of hook_schema().

@@ -13,6 +13,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Implemented drag-and-drop positioning for poll options.
     * Provided descriptions for user permissions.
     * Removed comment controls for users.
+    * Removed display order settings for comment module. Comment display
+      order can now be customised using the Views module.
 - Search:
     * Added support for language-aware searches.
 - Testing:
