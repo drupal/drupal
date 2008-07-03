@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.268 2008/05/20 20:13:34 dries Exp $
+// $Id: CHANGELOG.txt,v 1.269 2008/07/03 17:57:03 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -13,6 +13,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Implemented drag-and-drop positioning for poll options.
     * Provided descriptions for user permissions.
     * Removed comment controls for users.
+    * Removed display order settings for comment module. Comment display
+      order can now be customised using the Views module.
 - Search:
     * Added support for language-aware searches.
 - Testing:

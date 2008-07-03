@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.121 2008/07/03 06:23:22 dries Exp $
+// $Id: install.php,v 1.122 2008/07/03 17:57:03 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -26,8 +26,8 @@ function install_main() {
   if (preg_match("/^simpletest\d+$/", $_SERVER['HTTP_USER_AGENT'])) {
     header('HTTP/1.1 403 Forbidden');
     exit;
-  }  
-    
+  }
+
   require_once './includes/bootstrap.inc';
   drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
 
