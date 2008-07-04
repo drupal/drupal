@@ -1175,22 +1175,25 @@ function ip_address($reset = false) {
 
   if (!isset($ip_address) || $reset) {
     $ip_address = $_SERVER['REMOTE_ADDR'];
-    if (variable_get('reverse_proxy', 0) && array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
-      // If an array of known reverse proxy IPs is provided, then trust
-      // the XFF header if request really comes from one of them.
-      $reverse_proxy_addresses = variable_get('reverse_proxy_addresses', array());
-      if (!empty($reverse_proxy_addresses) && in_array($ip_address, $reverse_proxy_addresses, TRUE)) {
-        // If there are several arguments, we need to check the most
-        // recently added one, i.e. the last one.
-        $ip_address = array_pop(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']));
+   
+    if (variable_get('reverse_proxy', 0)) {
+      if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
+        // If an array of known reverse proxy IPs is provided, then trust
+        // the XFF header if request really comes from one of them.
+        $reverse_proxy_addresses = variable_get('reverse_proxy_addresses', array());
+        if (!empty($reverse_proxy_addresses) && in_array($ip_address, $reverse_proxy_addresses, TRUE)) {
+          // If there are several arguments, we need to check the most
+          // recently added one, i.e. the last one.
+          $ip_address = array_pop(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']));
+        }
       }
-    }
 
-    // When Drupal is run in a cluster environment, REMOTE_ADDR contains the IP
-    // address of a server in the cluster, while the IP address of the client is
-    // stored in HTTP_X_CLUSTER_CLIENT_IP.
-    if (array_key_exists('HTTP_X_CLUSTER_CLIENT_IP', $_SERVER)) {
-      $ip_address = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
+      // When Drupal is run in a cluster environment, REMOTE_ADDR contains the IP
+      // address of a server in the cluster, while the IP address of the client is
+      // stored in HTTP_X_CLUSTER_CLIENT_IP.
+      if (array_key_exists('HTTP_X_CLUSTER_CLIENT_IP', $_SERVER)) {
+        $ip_address = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
+      }
     }
   }
 
