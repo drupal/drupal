@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.269 2008/07/03 17:57:03 dries Exp $
+// $Id: CHANGELOG.txt,v 1.270 2008/07/05 10:58:12 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -15,6 +15,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Removed comment controls for users.
     * Removed display order settings for comment module. Comment display
       order can now be customised using the Views module.
+    * Added more features to the default install profile, and a new
+      slimmed down install profile for developers.
 - Search:
     * Added support for language-aware searches.
 - Testing:
