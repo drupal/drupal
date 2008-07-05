@@ -17,7 +17,7 @@ function aggregator_help($path, $arg) {
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@aggregator">Aggregator module</a>.', array('@aggregator' => 'http://drupal.org/handbook/modules/aggregator/')) . '</p>';
       return $output;
     case 'admin/content/aggregator':
-      $output = '<p>' . t('Thousands of sites (particularly news sites and blogs) publish their latest headlines and posts in feeds, using a number of standardized XML-based formats. Formats supported by the aggregator include <a href="@rss">RSS</a>, <a href="@rdf">RDF</a>, and <a href="@atom">Atom</a>.', array('@rss' => 'http://cyber.law.harvard.edu/rss/', '@rdf' => 'hsttp://www.w3.org/RDF/', '@atom' => 'http://www.atomenabled.org')) . '</p>';
+      $output = '<p>' . t('Thousands of sites (particularly news sites and blogs) publish their latest headlines and posts in feeds, using a number of standardized XML-based formats. Formats supported by the aggregator include <a href="@rss">RSS</a>, <a href="@rdf">RDF</a>, and <a href="@atom">Atom</a>.', array('@rss' => 'http://cyber.law.harvard.edu/rss/', '@rdf' => 'http://www.w3.org/RDF/', '@atom' => 'http://www.atomenabled.org')) . '</p>';
       $output .= '<p>' . t('Current feeds are listed below, and <a href="@addfeed">new feeds may be added</a>. For each feed or feed category, the <em>latest items</em> block may be enabled at the <a href="@block">blocks administration page</a>.', array('@addfeed' => url('admin/content/aggregator/add/feed'), '@block' => url('admin/build/block'))) . '</p>';
       return $output;
     case 'admin/content/aggregator/add/feed':
