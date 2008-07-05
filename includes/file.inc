@@ -139,12 +139,12 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
   // Check if directory exists.
   if (!is_dir($directory)) {
     if (($mode & FILE_CREATE_DIRECTORY) && @mkdir($directory)) {
-      drupal_set_message(t('The directory %directory has been created.', array('%directory' => $directory)));
       @chmod($directory, 0775); // Necessary for non-webserver users.
     }
     else {
       if ($form_item) {
         form_set_error($form_item, t('The directory %directory does not exist.', array('%directory' => $directory)));
+        watchdog('file system', 'The directory %directory does not exist.', array('%directory' => $directory), WATCHDOG_ERROR);
       }
       return FALSE;
     }
@@ -152,10 +152,7 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
 
   // Check to see if the directory is writable.
   if (!is_writable($directory)) {
-    if (($mode & FILE_MODIFY_PERMISSIONS) && @chmod($directory, 0775)) {
-      drupal_set_message(t('The permissions of directory %directory have been changed to make it writable.', array('%directory' => $directory)));
-    }
-    else {
+    if (($mode & FILE_MODIFY_PERMISSIONS) && !@chmod($directory, 0775)) {
       form_set_error($form_item, t('The directory %directory is not writable', array('%directory' => $directory)));
       watchdog('file system', 'The directory %directory is not writable, because it does not have the correct permissions set.', array('%directory' => $directory), WATCHDOG_ERROR);
       return FALSE;
