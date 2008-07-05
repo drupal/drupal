@@ -20,6 +20,7 @@ class DrupalWebTestCase {
   protected $original_file_directory;
 
   var $_results = array('#pass' => 0, '#fail' => 0, '#exception' => 0);
+  var $_assertions = array();
 
   /**
    * Constructor for DrupalWebTestCase.
@@ -69,6 +70,14 @@ class DrupalWebTestCase {
     $current_db_prefix = $db_prefix;
     $db_prefix = $this->db_prefix_original;
     db_query("INSERT INTO {simpletest} (test_id, test_class, status, message, message_group, caller, line, file) VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $this->test_id, get_class($this), $status, $message, $group, $function['function'], $function['line'], $function['file']);
+    $this->_assertions[] = array(
+      'status' => $status,
+      'message' => $message,
+      'group' => $group,
+      'function' => $function['function'],
+      'line' => $function['line'],
+      'file' => $function['file'],
+    );
     $db_prefix = $current_db_prefix;
     return $status;
   }
@@ -820,7 +829,9 @@ class DrupalWebTestCase {
    * @param  $edit
    *   Field data in an assocative array. Changes the current input fields
    *   (where possible) to the values indicated. A checkbox can be set to
-   *   TRUE to be checked and FALSE to be unchecked.
+   *   TRUE to be checked and FALSE to be unchecked. Note that when a form
+   *   contains file upload fields, other fields cannot start with the '@'
+   *   character.
    * @param $submit
    *   Value of the submit button.
    * @param $options
@@ -846,9 +857,22 @@ class DrupalWebTestCase {
         // We post only if we managed to handle every field in edit and the
         // submit button matches.
         if (!$edit && $submit_matches) {
-          // cURL will handle file upload for us if asked kindly.
-          foreach ($upload as $key => $file) {
-            $post[$key] = '@' . realpath($file);
+          if ($upload) {
+            // TODO: cURL handles file uploads for us, but the implementation
+            // is broken. This is a less than elegant workaround. Alternatives
+            // are being explored at #253506.
+            foreach ($upload as $key => $file) {
+              $post[$key] = '@' . realpath($file);
+            }
+          }
+          else {
+            foreach ($post as $key => $value) {
+              // Encode according to application/x-www-form-urlencoded
+              // Both names and values needs to be urlencoded, according to
+              // http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.1
+              $post[$key] = urlencode($key) . '=' . urlencode($value);
+            }
+            $post = implode('&', $post);
           }
           $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POST => TRUE, CURLOPT_POSTFIELDS => $post));
           // Ensure that any changes to variables in the other thread are picked up.
