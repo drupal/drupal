@@ -27,13 +27,6 @@ function simpletest_menu() {
     'description' => 'Run tests against Drupal core and your active modules. These tests help assure that your site code is working as designed.',
     'access arguments' => array('administer unit tests'),
   );
-  $items['admin/settings/testing'] = array(
-    'title' => 'Testing',
-    'description' => 'Configure SimpleTest framework.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('simpletest_settings'),
-    'access arguments' => array('access administration pages'),
-  );
   return $items;
 }
 
@@ -562,42 +555,4 @@ function simpletest_clean_temporary_directory($path) {
     }
   }
   rmdir($path);
-}
-
-function simpletest_settings() {
-  $form = array();
-
-  $form['http_auth'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('HTTP authentication'),
-    '#description' => t('If needed, enter a username and password for reaching your web site. This is not a drupal username/password.') .
-                      t('This is a login presented by your web server. Most sites may leave this section empty.'),
-  );
-  $form['http_auth']['simpletest_httpauth'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Use http authentication'),
-    '#default_value' => variable_get('simpletest_httpauth', FALSE),
-  );
-  $form['http_auth']['simpletest_httpauth_username'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Username'),
-    '#default_value' => variable_get('simpletest_httpauth_username', ''),
-  );
-  $form['http_auth']['simpletest_httpauth_pass'] = array(
-    '#title' => t('Password'),
-    '#type' => 'password',
-    '#default_value' => variable_get('simpletest_httpauth_pass', ''),
-  );
-  $form['devel'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Devel module settings'),
-    '#description' => t('Devel module can cause problems if you have query log enabled. It will output a few thousand queries and crash your browser'),
-  );
-  $form['devel']['simpletest_devel'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Use devel query log on test result pages'),
-    '#default_value' => variable_get('simpletest_devel', FALSE),
-  );
-
-  return system_settings_form($form);
 }
