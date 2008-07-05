@@ -15,6 +15,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Removed comment controls for users.
     * Removed display order settings for comment module. Comment display
       order can now be customised using the Views module.
+    * Added more features to the default install profile, and a new
+      slimmed down install profile for developers.
 - Search:
     * Added support for language-aware searches.
 - Testing:
