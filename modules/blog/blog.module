@@ -117,9 +117,10 @@ function blog_page($a = NULL, $b = NULL) {
   else if ($a == 'feed') {
     return blog_feed_last();
   }
-  else {
+  else if ($a === NULL) {
     return blog_page_last();
   }
+  drupal_not_found();
 }
 
 /**
