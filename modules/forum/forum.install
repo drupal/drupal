@@ -35,7 +35,6 @@ function forum_install() {
  */
 function forum_uninstall() {
   db_query('DROP TABLE {forum}');
-  db_query("DELETE FROM {node} WHERE type = 'forum'");
   variable_del('forum_containers');
   variable_del('forum_nav_vocabulary');
   variable_del('forum_hot_topic');
