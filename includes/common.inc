@@ -1560,6 +1560,8 @@ function drupal_build_css_cache($types, $filename) {
  */
 function drupal_clear_css_cache() {
   file_scan_directory(file_create_path('css'), '.*', array('.', '..', 'CVS'), 'file_delete', TRUE);
+  // Clear the page cache, so cached pages do not reference nonexistent CSS.
+  cache_clear_all();
 }
 
 /**
