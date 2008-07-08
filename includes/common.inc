@@ -1716,19 +1716,22 @@ function drupal_get_css($css = NULL) {
           unset($types[$type][$file]);
           continue;
         }
-        if (!$preprocess || !($is_writable && $preprocess_css)) {
-          // If a CSS file is not to be preprocessed and it's a module CSS file, it needs to *always* appear at the *top*,
-          // regardless of whether preprocessing is on or off.
-          if (!$preprocess && $type == 'module') {
-            $no_module_preprocess .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file . $query_string .'" />'."\n";
-          }
-          // If a CSS file is not to be preprocessed and it's a theme CSS file, it needs to *always* appear at the *bottom*,
-          // regardless of whether preprocessing is on or off.
-          else if (!$preprocess && $type == 'theme') {
-            $no_theme_preprocess .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file . $query_string .'" />'."\n";
-          }
-          else {
-            $output .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file . $query_string .'" />'."\n";
+        // Only include the stylesheet if it exists.
+        if (file_exists($file)) {
+          if (!$preprocess || !($is_writable && $preprocess_css)) {
+            // If a CSS file is not to be preprocessed and it's a module CSS file, it needs to *always* appear at the *top*,
+            // regardless of whether preprocessing is on or off.
+            if (!$preprocess && $type == 'module') {
+              $no_module_preprocess .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file . $query_string .'" />'."\n";
+            }
+            // If a CSS file is not to be preprocessed and it's a theme CSS file, it needs to *always* appear at the *bottom*,
+            // regardless of whether preprocessing is on or off.
+            else if (!$preprocess && $type == 'theme') {
+              $no_theme_preprocess .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file . $query_string .'" />'."\n";
+            }
+            else {
+              $output .= '<link type="text/css" rel="stylesheet" media="'. $media .'" href="'. base_path() . $file . $query_string .'" />'."\n";
+            }
           }
         }
       }
