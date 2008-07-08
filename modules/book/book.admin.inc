@@ -72,12 +72,24 @@ function book_admin_edit($form_state, $node) {
   drupal_set_title(check_plain($node->title));
   $form = array();
   $form['#node'] = $node;
-  $form['table'] = _book_admin_table($node);
+  _book_admin_table($node, $form);
   $form['save'] = array(
     '#type' => 'submit',
     '#value' => t('Save book pages'),
   );
   return $form;
+}
+
+/**
+ * Check that the book has not been changed while using the form.
+ *
+ * @see book_admin_edit()
+ */
+function book_admin_edit_validate($form, &$form_state) {
+  if ($form_state['values']['tree_hash'] != $form_state['values']['tree_current_hash']) {
+    form_set_error('', t('This book has been modified by another user, the changes could not be saved.'));
+    $form_state['rebuild'] = TRUE;
+  }
 }
 
 /**
@@ -128,8 +140,8 @@ function book_admin_edit_submit($form, &$form_state) {
  *
  * @see book_admin_edit()
  */
-function _book_admin_table($node) {
-  $form = array(
+function _book_admin_table($node, &$form) {
+  $form['table'] = array(
     '#theme' => 'book_admin_table',
     '#tree' => TRUE,
   );
@@ -137,9 +149,19 @@ function _book_admin_table($node) {
   $tree = book_menu_subtree_data($node->book);
   $tree = array_shift($tree); // Do not include the book item itself.
   if ($tree['below']) {
-    _book_admin_table_tree($tree['below'], $form);
+    $hash = sha1(serialize($tree['below']));
+    // Store the hash value as a hidden form element so that we can detect
+    // if another user changed the book hierarchy.
+    $form['tree_hash'] = array(
+      '#type' => 'hidden',
+      '#default_value' => $hash,
+    );
+    $form['tree_current_hash'] = array(
+      '#type' => 'value',
+      '#value' => $hash,
+    );
+    _book_admin_table_tree($tree['below'], $form['table']);
   }
-  return $form;
 }
 
 /**
