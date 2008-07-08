@@ -1,5 +1,5 @@
 <?php
-// $Id: image.gd.inc,v 1.6 2008/04/14 17:48:33 dries Exp $
+// $Id: image.gd.inc,v 1.1 2008/07/08 01:08:15 dries Exp $
 
 /**
  * @file
