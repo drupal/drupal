@@ -260,7 +260,7 @@ function drupal_get_destination() {
  *
  * Usually the redirected URL is constructed from this function's input
  * parameters. However you may override that behavior by setting a
- * <em>destination</em> in either the $_REQUEST-array (i.e. by using
+ * destination in either the $_REQUEST-array (i.e. by using
  * the query string of an URI) or the $_REQUEST['edit']-array (i.e. by
  * using a hidden form field). This is used to direct the user back to
  * the proper page after completing a form. For example, after editing
@@ -571,8 +571,8 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
  * - 1 = Log errors to database and to screen.
  */
 function drupal_error_handler($errno, $message, $filename, $line, $context) {
-  // If the @ error suppression operator was used, error_reporting is
-  // temporarily set to 0.
+  // If the @ error suppression operator was used, error_reporting will have
+  // been temporarily set to 0.
   if (error_reporting() == 0) {
     return;
   }
@@ -1225,27 +1225,27 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
  *   '<front>' may also be given and will generate the site's base URL.
  * @param $options
  *   An associative array of additional options, with the following keys:
- *     'query'
+ *   - 'query'
  *       A query string to append to the link, or an array of query key/value
  *       properties.
- *     'fragment'
+ *   - 'fragment'
  *       A fragment identifier (or named anchor) to append to the link.
  *       Do not include the '#' character.
- *     'absolute' (default FALSE)
+ *   - 'absolute' (default FALSE)
  *       Whether to force the output to be an absolute link (beginning with
  *       http:). Useful for links that will be displayed outside the site, such
  *       as in an RSS feed.
- *     'alias' (default FALSE)
+ *   - 'alias' (default FALSE)
  *       Whether the given path is an alias already.
- *     'external'
+ *   - 'external'
  *       Whether the given path is an external URL.
- *     'language'
+ *   - 'language'
  *       An optional language object. Used to build the URL to link to and
  *       look up the proper alias for the link.
- *     'base_url'
+ *   - 'base_url'
  *       Only used internally, to modify the base URL when a language dependent
  *       URL requires so.
- *     'prefix'
+ *   - 'prefix'
  *       Only used internally, to modify the path when a language dependent URL
  *       requires so.
  * @return
@@ -2717,7 +2717,7 @@ function drupal_render(&$elements) {
   $elements += array('#title' => NULL, '#description' => NULL);
   if (!isset($elements['#children'])) {
     $children = element_children($elements);
-    /* Render all the children that use a theme function */
+    // Render all the children that use a theme function.
     if (isset($elements['#theme']) && empty($elements['#theme_used'])) {
       $elements['#theme_used'] = TRUE;
 
@@ -2741,7 +2741,7 @@ function drupal_render(&$elements) {
         $elements[$key] = isset($previous[$key]) ? $previous[$key] : NULL;
       }
     }
-    /* render each of the children using drupal_render and concatenate them */
+    // Render each of the children using drupal_render and concatenate them.
     if (!isset($content) || $content === '') {
       foreach ($children as $key) {
         $content .= drupal_render($elements[$key]);
@@ -3079,8 +3079,8 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
  *   The module for which the tables will be created.
  * @return
  *   An array of arrays with the following key/value pairs:
- *      success: a boolean indicating whether the query succeeded
- *      query: the SQL query(s) executed, passed through check_plain()
+ *    - success: a boolean indicating whether the query succeeded.
+ *    - query: the SQL query(s) executed, passed through check_plain().
  */
 function drupal_install_schema($module) {
   $schema = drupal_get_schema_unprocessed($module);
@@ -3104,8 +3104,8 @@ function drupal_install_schema($module) {
  *   The module for which the tables will be removed.
  * @return
  *   An array of arrays with the following key/value pairs:
- *      success: a boolean indicating whether the query succeeded
- *      query: the SQL query(s) executed, passed through check_plain()
+ *    - success: a boolean indicating whether the query succeeded.
+ *    - query: the SQL query(s) executed, passed through check_plain().
  */
 function drupal_uninstall_schema($module) {
   $schema = drupal_get_schema_unprocessed($module);
@@ -3513,7 +3513,7 @@ function drupal_implode_tags($tags) {
  * Flush all cached data on the site.
  *
  * Empties cache tables, rebuilds the menu cache and theme registries, and
- * exposes a hook for other modules to clear their own cache data as well.
+ * invokes a hook so that other modules' cache data can be cleared as well.
  */
 function drupal_flush_all_caches() {
   // Change query-strings on css/js files to enforce reload for all users.
