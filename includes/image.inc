@@ -21,11 +21,13 @@
  * from this problem, but it requires the ISP to have installed additional
  * software.
  *
- * Image toolkits are installed by copying the image.ToolkitName.inc file into
- * Drupal's includes directory. The toolkit must then be enabled using the
- * admin/settings/image-toolkit form.
+ * Image toolkits are discovered based on the associated module's
+ * hook_image_toolkits. Additionally the image toolkit include file
+ * must be identified in the files array in the module.info file.  The
+ * toolkit must then be enabled using the admin/settings/image-toolkit
+ * form.
  *
- * Only one toolkit maybe selected at a time. If a module author wishes to call
+ * Only one toolkit may be selected at a time. If a module author wishes to call
  * a specific toolkit they can check that it is installed by calling
  * image_get_available_toolkits(), and then calling its functions directly.
  */
@@ -37,18 +39,17 @@
  *   An array of toolkit name => descriptive title.
  */
 function image_get_available_toolkits() {
-  $toolkits = file_scan_directory('includes', 'image\..*\.inc$');
+  // hook_image_toolkits returns an array of toolkit names.
+  $toolkits = module_invoke_all('image_toolkits');
 
   $output = array();
-  foreach ($toolkits as $file => $toolkit) {
-    include_once "./$file";
-    $function = str_replace('.', '_', $toolkit->name) . '_info';
-    if (function_exists($function)) {
+  foreach ($toolkits as $name) {
+    $function = 'image_' . $name . '_info';
+    if (drupal_function_exists($function)) {
       $info = $function();
       $output[$info['name']] = $info['title'];
     }
   }
-
   return $output;
 }
 
@@ -63,11 +64,11 @@ function image_get_toolkit() {
 
   if (!$toolkit) {
     $toolkit = variable_get('image_toolkit', 'gd');
-    $toolkit_file = './includes/image.' . $toolkit . '.inc';
-    if (isset($toolkit) && file_exists($toolkit_file)) {
-      include_once $toolkit_file;
+    if (isset($toolkit) &&
+      drupal_function_exists("image_" . $toolkit . "_resize")) {
     }
-    elseif (!image_gd_check_settings()) {
+    elseif (!drupal_function_exists("image_gd_check_settings") ||
+      !image_gd_check_settings()) {
       $toolkit = FALSE;
     }
   }
@@ -88,7 +89,7 @@ function image_get_toolkit() {
 function image_toolkit_invoke($method, $params = array()) {
   if ($toolkit = image_get_toolkit()) {
     $function = 'image_' . $toolkit . '_' . $method;
-    if (function_exists($function)) {
+    if (drupal_function_exists($function)) {
       return call_user_func_array($function, $params);
     }
     else {

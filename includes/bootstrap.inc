@@ -1175,7 +1175,7 @@ function ip_address($reset = false) {
 
   if (!isset($ip_address) || $reset) {
     $ip_address = $_SERVER['REMOTE_ADDR'];
-   
+
     if (variable_get('reverse_proxy', 0)) {
       if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
         // If an array of known reverse proxy IPs is provided, then trust

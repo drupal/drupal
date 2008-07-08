@@ -2105,3 +2105,10 @@ function theme_meta_generator_html($version = VERSION) {
 function theme_meta_generator_header($version = VERSION) {
   drupal_set_header('X-Generator: Drupal ' . $version . ' (http://drupal.org)');
 }
+
+/**
+ * Implementation of hook_image_toolkits().
+ */
+function system_image_toolkits() {
+  return array('gd');
+}
