@@ -1,5 +1,9 @@
 // $Id$
 
+Drupal 6.4-dev, xxxx-xx-xx (development version)
+----------------------
+
+
 Drupal 6.3, 2008-07-09
 ----------------------
 - fixed security issues, (Cross site scripting, cross site request forgery, session fixation and SQL injection), see SA-2008-044
