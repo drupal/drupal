@@ -281,6 +281,11 @@ function conf_init() {
     include_once './'. conf_path() .'/settings.php';
   }
 
+  // Ignore the placeholder url from default.settings.php.
+  if (isset($db_url) && $db_url == 'mysql://username:password@localhost/databasename') {
+    $db_url = '';
+  }
+
   if (isset($base_url)) {
     // Parse fixed base URL from settings.php.
     $parts = parse_url($base_url);

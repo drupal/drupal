@@ -98,6 +98,13 @@ function install_main() {
 
   // Tasks come after the database is set up
   if (!$task) {
+    global $db_url;
+
+    if (!$verify && !empty($db_url)) {
+      // Do not install over a configured settings.php.
+      install_already_done_error();
+    }
+
     // Check the installation requirements for Drupal and this profile.
     install_check_requirements($profile, $verify);
 
@@ -188,14 +195,6 @@ function install_change_settings($profile = 'default', $install_locale = '') {
   // We always need this because we want to run form_get_errors.
   include_once './includes/form.inc';
   install_task_list('database');
-
-  if ($db_url == 'mysql://username:password@localhost/databasename') {
-    $db_user = $db_pass = $db_path = '';
-  }
-  elseif (!empty($db_url)) {
-    // Do not install over a configured settings.php.
-    install_already_done_error();
-  }
 
   $output = drupal_get_form('install_settings_form', $profile, $install_locale, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_port, $db_path);
   drupal_set_title(st('Database configuration'));
@@ -869,21 +868,21 @@ function install_check_requirements($profile, $verify) {
     $conf_path = './'. conf_path(FALSE, TRUE);
     $settings_file = $conf_path .'/settings.php';
     $file = $conf_path;
+    $exists = FALSE;
     // Verify that the directory exists.
     if (drupal_verify_install_file($conf_path, FILE_EXIST, 'dir')) {
-      // Check to see if a settings.php already exists.
+      // Check to make sure a settings.php already exists.
+      $file = $settings_file;
       if (drupal_verify_install_file($settings_file, FILE_EXIST)) {
+        $exists = TRUE;
         // If it does, make sure it is writable.
         $writable = drupal_verify_install_file($settings_file, FILE_READABLE|FILE_WRITABLE);
-        $file = $settings_file;
-      }
-      else {
-        // If not, make sure the directory is.
-        $writable = drupal_verify_install_file($conf_path, FILE_READABLE|FILE_WRITABLE, 'dir');
       }
     }
-
-    if (!$writable) {
+    if (!$exists) {
+      drupal_set_message(st('The @drupal installer requires that you create %file as part of the installation process, and then make it writable. If you are unsure how to grant file permissions, please consult the <a href="@handbook_url">on-line handbook</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '@handbook_url' => 'http://drupal.org/server-permissions')), 'error');
+    }
+    elseif (!$writable) {
       drupal_set_message(st('The @drupal installer requires write permissions to %file during the installation process. If you are unsure how to grant file permissions, please consult the <a href="@handbook_url">on-line handbook</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '@handbook_url' => 'http://drupal.org/server-permissions')), 'error');
     }
   }
