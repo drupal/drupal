@@ -111,7 +111,7 @@ function locale_menu($may_cache) {
         'type' => MENU_CALLBACK);
       $items[] = array('path' => 'admin/settings/locale/string/delete/'. arg(5),
         'title' => t('Delete string'),
-        'callback' => 'locale_admin_string_delete',
+        'callback' => 'locale_admin_string_delete_page',
         'callback arguments' => array(arg(5)),
         'access' => $access,
         'type' => MENU_CALLBACK);
@@ -407,9 +407,29 @@ function locale_admin_string_edit_submit($form_id, $form_values) {
 }
 
 /**
- * Delete a string.
+ * String deletion confirmation page.
  */
-function locale_admin_string_delete($lid) {
+function locale_admin_string_delete_page($lid) {
+  if ($source = db_fetch_object(db_query('SELECT * FROM {locales_source} WHERE lid = %d', $lid))) {
+    return drupal_get_form('locale_string_delete_form', $source);
+  }
+  else {
+    return drupal_not_found();
+  }
+}
+
+/**
+ * User interface for the string deletion confirmation screen.
+ */
+function locale_string_delete_form($source) {
+  $form['lid'] = array('#type' => 'value', '#value' => $source->lid);
+  return confirm_form($form, t('Are you sure you want to delete the string "%source"?', array('%source' => $source->source)), 'admin/build/translate/search', t('Deleting the string will remove all translations of this string in all languages. This action cannot be undone.'), t('Delete'), t('Cancel'));
+}
+
+/**
+ * Process string deletion submissions.
+ */
+function locale_string_delete_form_submit($form_id, $form_values) {
   include_once './includes/locale.inc';
-  _locale_string_delete($lid);
+  _locale_string_delete($form_values['lid']);
 }

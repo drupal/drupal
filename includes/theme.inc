@@ -545,16 +545,14 @@ function theme_links($links, $attributes = array('class' => 'links')) {
     $i = 1;
 
     foreach ($links as $key => $link) {
-      $class = '';
+      $class = $key;
 
       // Automatically add a class to each link and also to each LI
       if (isset($link['attributes']) && isset($link['attributes']['class'])) {
         $link['attributes']['class'] .= ' ' . $key;
-        $class = $key;
       }
       else {
         $link['attributes']['class'] = $key;
-        $class = $key;
       }
 
       // Add first and last classes to the list of links to help out themers.
@@ -565,7 +563,7 @@ function theme_links($links, $attributes = array('class' => 'links')) {
       if ($i == $num_links) {
         $extra_class .= 'last ';
       }
-      $output .= '<li class="'. $extra_class . $class .'">';
+      $output .= '<li '. drupal_attributes(array('class' => $extra_class . $class)) .'>';
 
       // Is the title HTML?
       $html = isset($link['html']) && $link['html'];

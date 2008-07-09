@@ -1,8 +1,9 @@
 // $Id$
 
-Drupal 5.8, xxxx-xx-xx
+Drupal 5.8, 2008-07-09
 ----------------------
-
+- fixed a variety of small bugs.
+- fixed security issues, (Cross site scripting, cross site request forgery, and session fixation), see SA-2008-044
 
 Drupal 5.7, 2008-01-28
 ----------------------
