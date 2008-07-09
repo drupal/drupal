@@ -1,7 +1,14 @@
 // $Id$
 
-Drupal 6.3-dev, xxxx-xx-xx (development version)
+Drupal 6.3, 2008-07-09
 ----------------------
+- fixed security issues, (Cross site scripting, cross site request forgery, session fixation and SQL injection), see SA-2008-044
+- slightly modified installation process to prevent file ownership issues on shared hosts
+- improved PostgreSQL compatibility (rewritten queries; custom blocks)
+- upgraded to jQuery 1.2.6
+- performance improvements to search, menu handling and form API caches
+- fixed Views compatibility issues (Views for Drupal 6 requires Drupal 6.3+)
+- fixed a variety of small bugs.
 
 Drupal 6.2, 2008-04-09 
 ----------------------
@@ -112,6 +119,11 @@ Drupal 6.0, 2008-02-13
   contributed module (http://drupal.org/project/site_network).
 - Removed old system updates. Updates from Drupal versions prior to 5.x will
   require upgrading to 5.x before upgrading to 6.x.
+
+Drupal 5.8, 2008-07-09
+----------------------
+- fixed a variety of small bugs.
+- fixed security issues, (Cross site scripting, cross site request forgery, and session fixation), see SA-2008-044
 
 Drupal 5.7, 2008-01-28
 ----------------------

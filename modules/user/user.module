@@ -1359,8 +1359,10 @@ function user_authenticate_finalize(&$edit) {
   // This is also used to invalidate one-time login links.
   $user->login = time();
   db_query("UPDATE {users} SET login = %d WHERE uid = %d", $user->login, $user->uid);
-  user_module_invoke('login', $edit, $user);
+
+  // Regenerate the session ID to prevent against session fixation attacks.
   sess_regenerate();
+  user_module_invoke('login', $edit, $user);
 }
 
 /**
