@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.281 2008/07/10 01:44:18 dries Exp $
+// $Id: menu.inc,v 1.282 2008/07/10 10:58:01 dries Exp $
 
 /**
  * @file
@@ -2112,7 +2112,10 @@ function menu_link_maintain($module, $op, $link_path, $link_title) {
       break;
     case 'update':
       db_query("UPDATE {menu_links} SET link_title = '%s' WHERE link_path = '%s' AND customized = 0 AND module = '%s'", $link_title, $link_path, $module);
-      menu_cache_clear();
+      $result = db_query("SELECT menu_name FROM {menu_links} WHERE link_path = '%s' AND customized = 0 AND module = '%s'", $link_path, $module);
+      while ($item = db_fetch_array($result)) {
+        menu_cache_clear($item['menu_name']);
+      }
       break;
     case 'delete':
       menu_link_delete(NULL, $link_path);
