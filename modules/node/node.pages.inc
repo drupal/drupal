@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.30 2008/04/14 17:48:38 dries Exp $
+// $Id: node.pages.inc,v 1.31 2008/07/10 11:12:02 dries Exp $
 
 /**
  * @file
@@ -32,7 +32,7 @@ function theme_node_add_list($content) {
   if ($content) {
     $output = '<dl class="node-type-list">';
     foreach ($content as $item) {
-      $output .= '<dt>' . l($item['title'], $item['href'], $item['options']) . '</dt>';
+      $output .= '<dt>' . l($item['title'], $item['href'], $item['localized_options']) . '</dt>';
       $output .= '<dd>' . filter_xss_admin($item['description']) . '</dd>';
     }
     $output .= '</dl>';
