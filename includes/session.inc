@@ -57,30 +57,26 @@ function sess_write($key, $value) {
   global $user;
 
   // If saving of session data is disabled or if the client doesn't have a session,
-  // and one isn't being created ($value), do nothing.
+  // and one isn't being created ($value), do nothing. This keeps crawlers out of
+  // the session table. This reduces memory and server load, and gives more useful
+  // statistics. We can't eliminate anonymous session table rows without breaking
+  // the "Who's Online" block.
   if (!session_save_session() || (empty($_COOKIE[session_name()]) && empty($value))) {
     return TRUE;
   }
 
-  $result = db_result(db_query("SELECT COUNT(*) FROM {sessions} WHERE sid = '%s'", $key));
-
-  if (!$result) {
-    // Only save session data when when the browser sends a cookie. This keeps
-    // crawlers out of session table. This reduces memory and server load,
-    // and gives more useful statistics. We can't eliminate anonymous session
-    // table rows without breaking "Who's Online" block.
-    if ($user->uid || $value || count($_COOKIE)) {
-      db_query("INSERT INTO {sessions} (sid, uid, cache, hostname, session, timestamp) VALUES ('%s', %d, %d, '%s', '%s', %d)", $key, $user->uid, isset($user->cache) ? $user->cache : '', ip_address(), $value, time());
-    }
-  }
-  else {
-    db_query("UPDATE {sessions} SET uid = %d, cache = %d, hostname = '%s', session = '%s', timestamp = %d WHERE sid = '%s'", $user->uid, isset($user->cache) ? $user->cache : '', ip_address(), $value, time(), $key);
-
+  db_query("UPDATE {sessions} SET uid = %d, cache = %d, hostname = '%s', session = '%s', timestamp = %d WHERE sid = '%s'", $user->uid, isset($user->cache) ? $user->cache : '', ip_address(), $value, time(), $key);
+  if (db_affected_rows()) {
     // Last access time is updated no more frequently than once every 180 seconds.
     // This reduces contention in the users table.
     if ($user->uid && time() - $user->access > variable_get('session_write_interval', 180)) {
       db_query("UPDATE {users} SET access = %d WHERE uid = %d", time(), $user->uid);
     }
+  }
+  else {
+    // If this query fails, another parallel request probably got here first.
+    // In that case, any session data generated in this request is discarded.
+    @db_query("INSERT INTO {sessions} (sid, uid, cache, hostname, session, timestamp) VALUES ('%s', %d, %d, '%s', '%s', %d)", $key, $user->uid, isset($user->cache) ? $user->cache : '', ip_address(), $value, time());
   }
 
   return TRUE;
