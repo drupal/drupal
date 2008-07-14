@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.606 2008/07/08 01:08:15 dries Exp $
+// $Id: system.module,v 1.607 2008/07/14 14:03:48 dries Exp $
 
 /**
  * @file
@@ -990,7 +990,7 @@ function system_theme_data() {
 function _system_theme_data() {
   static $themes_info = array();
 
-  if (empty($theme_info)) {
+  if (empty($themes_info)) {
     // Find themes
     $themes = drupal_system_listing('\.info$', 'themes');
     // Find theme engines
