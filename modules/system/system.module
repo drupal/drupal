@@ -842,7 +842,7 @@ function system_theme_data() {
 function _system_theme_data() {
   static $themes_info = array();
 
-  if (empty($theme_info)) {
+  if (empty($themes_info)) {
     // Find themes
     $themes = drupal_system_listing('\.info$', 'themes');
     // Find theme engines
