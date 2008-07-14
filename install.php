@@ -880,7 +880,12 @@ function install_check_requirements($profile, $verify) {
       }
     }
     if (!$exists) {
-      drupal_set_message(st('The @drupal installer requires that you create %file as part of the installation process, and then make it writable. If you are unsure how to grant file permissions, please consult the <a href="@handbook_url">on-line handbook</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '@handbook_url' => 'http://drupal.org/server-permissions')), 'error');
+      drupal_set_message(st('The @drupal installer requires that you create a settings file as part of the installation process.
+<ol>
+<li>Copy the %default_file file to %file.</li>
+<li>Change file permissions so that it is writable by the web server. If you are unsure how to grant file permissions, please consult the <a href="@handbook_url">on-line handbook</a>.</li>
+</ol>
+More details about installing Drupal are available in INSTALL.txt.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '%default_file' => $conf_path .'/default.settings.php', '@handbook_url' => 'http://drupal.org/server-permissions')), 'error');
     }
     elseif (!$writable) {
       drupal_set_message(st('The @drupal installer requires write permissions to %file during the installation process. If you are unsure how to grant file permissions, please consult the <a href="@handbook_url">on-line handbook</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '@handbook_url' => 'http://drupal.org/server-permissions')), 'error');
