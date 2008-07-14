@@ -34,7 +34,7 @@ define('DRUPAL_MINIMUM_MYSQL',  '5.0');
 /**
  * Minimum supported version of PostgreSQL, if it is used.
  */
-define('DRUPAL_MINIMUM_PGSQL',  '7.4');
+define('DRUPAL_MINIMUM_PGSQL',  '8.1');
 
 /**
  * Maximum age of temporary files in seconds.
