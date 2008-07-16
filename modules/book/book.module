@@ -692,7 +692,7 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
     if (!$teaser) {
         if (!empty($node->book['bid']) && $node->build_mode == NODE_BUILD_NORMAL) {
           $node->content['book_navigation'] = array(
-            '#value' => theme('book_navigation', $node->book),
+            '#markup' => theme('book_navigation', $node->book),
             '#weight' => 100,
           );
 
@@ -790,7 +790,7 @@ function book_form_node_delete_confirm_alter(&$form, $form_state) {
 
   if (isset($node->book) && $node->book['has_children']) {
     $form['book_warning'] = array(
-      '#value' => '<p>' . t('%title is part of a book outline, and has associated child pages. If you proceed with deletion, the child pages will be relocated automatically.', array('%title' => $node->title)) . '</p>',
+      '#markup' => '<p>' . t('%title is part of a book outline, and has associated child pages. If you proceed with deletion, the child pages will be relocated automatically.', array('%title' => $node->title)) . '</p>',
       '#weight' => -10,
     );
   }

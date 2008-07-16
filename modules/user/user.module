@@ -653,7 +653,7 @@ function user_user($type, &$edit, &$account, $category = NULL) {
     $account->content['summary']['member_for'] =  array(
       '#type' => 'user_profile_item',
       '#title' => t('Member for'),
-      '#value' => format_interval(time() - $account->created),
+      '#markup' => format_interval(time() - $account->created),
     );
   }
   if ($type == 'form' && $category == 'account') {
@@ -701,7 +701,7 @@ function user_login_block() {
     $items[] = l(t('Create new account'), 'user/register', array('attributes' => array('title' => t('Create a new user account.'))));
   }
   $items[] = l(t('Request new password'), 'user/password', array('attributes' => array('title' => t('Request new password via e-mail.'))));
-  $form['links'] = array('#value' => theme('item_list', $items));
+  $form['links'] = array('#markup' => theme('item_list', $items));
   return $form;
 }
 
@@ -1493,7 +1493,7 @@ function user_edit_form(&$form_state, $uid, $edit, $register = FALSE) {
     $form['picture'] = array('#type' => 'fieldset', '#title' => t('Picture'), '#weight' => 1);
     $picture = theme('user_picture', (object)$edit);
     if ($edit['picture']) {
-      $form['picture']['current_picture'] = array('#value' => $picture);
+      $form['picture']['current_picture'] = array('#markup' => $picture);
       $form['picture']['picture_delete'] = array('#type' => 'checkbox', '#title' => t('Delete picture'), '#description' => t('Check this box to delete your current picture.'));
     }
     else {
@@ -2335,7 +2335,7 @@ function user_register() {
 
   // Display the registration form.
   if (!$admin) {
-    $form['user_registration_help'] = array('#value' => filter_xss_admin(variable_get('user_registration_help', '')));
+    $form['user_registration_help'] = array('#markup' => filter_xss_admin(variable_get('user_registration_help', '')));
   }
 
   // Merge in the default user edit fields.

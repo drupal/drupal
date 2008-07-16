@@ -51,7 +51,7 @@ function menu_overview_form(&$form_state, $menu) {
     );
   }
   else {
-    $form['empty_menu'] = array('#value' => t('There are no menu items yet.'));
+    $form['empty_menu'] = array('#markup' => t('There are no menu items yet.'));
   }
   return $form;
 }
@@ -69,7 +69,7 @@ function _menu_overview_tree_form($tree) {
       $mlid = 'mlid:' . $item['mlid'];
       $form[$mlid]['#item'] = $item;
       $form[$mlid]['#attributes'] = $item['hidden'] ? array('class' => 'menu-disabled') : array('class' => 'menu-enabled');
-      $form[$mlid]['title']['#value'] = l($item['title'], $item['href'], $item['localized_options']) . ($item['hidden'] ? ' (' . t('disabled') . ')' : '');
+      $form[$mlid]['title']['#markup'] = l($item['title'], $item['href'], $item['localized_options']) . ($item['hidden'] ? ' (' . t('disabled') . ')' : '');
       $form[$mlid]['hidden'] = array(
         '#type' => 'checkbox',
         '#default_value' => !$item['hidden'],
@@ -106,7 +106,7 @@ function _menu_overview_tree_form($tree) {
 
       $form[$mlid]['operations'] = array();
       foreach ($operations as $op => $value) {
-        $form[$mlid]['operations'][$op] = array('#value' => $value);
+        $form[$mlid]['operations'][$op] = array('#markup' => $value);
       }
     }
 
@@ -600,7 +600,7 @@ function menu_reset_item_confirm_submit($form, &$form_state) {
 function menu_configure() {
   $form['intro'] = array(
     '#type' => 'item',
-    '#value' => t('The menu module allows on-the-fly creation of menu links in the content authoring forms. The following option sets the default menu in which a new link will be added.'),
+    '#markup' => t('The menu module allows on-the-fly creation of menu links in the content authoring forms. The following option sets the default menu in which a new link will be added.'),
   );
 
   $menu_options = menu_get_menus();
@@ -635,4 +635,3 @@ function menu_configure() {
 
   return system_settings_form($form);
 }
-

@@ -199,7 +199,7 @@ function forum_nodeapi(&$node, $op, $teaser, $page) {
 
         if (!$teaser) {
           $node->content['forum_navigation'] = array(
-            '#value' => theme('forum_topic_navigation', $node),
+            '#markup' => theme('forum_topic_navigation', $node),
             '#weight' => 100,
           );
         }
@@ -360,7 +360,7 @@ function forum_form_alter(&$form, $form_state, $form_id) {
     // Hide critical options from forum vocabulary.
     if ($form_id == 'taxonomy_form_vocabulary') {
       $form['help_forum_vocab'] = array(
-        '#value' => t('This is the designated forum vocabulary. Some of the normal vocabulary options have been removed.'),
+        '#markup' => t('This is the designated forum vocabulary. Some of the normal vocabulary options have been removed.'),
         '#weight' => -1,
       );
       $form['content_types']['nodes']['#required'] = TRUE;

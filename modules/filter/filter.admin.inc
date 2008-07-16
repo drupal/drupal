@@ -30,10 +30,10 @@ function filter_admin_overview() {
     }
     $default = ($id == variable_get('filter_default_format', 1));
     $options[$id] = '';
-    $form[$id]['name'] = array('#value' => $format->name);
-    $form[$id]['roles'] = array('#value' => $default ? t('All roles may use default format') : ($roles ? implode(', ', $roles) : t('No roles may use this format')));
-    $form[$id]['configure'] = array('#value' => l(t('configure'), 'admin/settings/filters/' . $id));
-    $form[$id]['delete'] = array('#value' => $default ? '' : l(t('delete'), 'admin/settings/filters/delete/' . $id));
+    $form[$id]['name'] = array('#markup' => $format->name);
+    $form[$id]['roles'] = array('#markup' => $default ? t('All roles may use default format') : ($roles ? implode(', ', $roles) : t('No roles may use this format')));
+    $form[$id]['configure'] = array('#markup' => l(t('configure'), 'admin/settings/filters/' . $id));
+    $form[$id]['delete'] = array('#markup' => $default ? '' : l(t('delete'), 'admin/settings/filters/delete/' . $id));
     $form[$id]['weight'] = array('#type' => 'weight', '#default_value' => $format->weight);
   }
   $form['default'] = array('#type' => 'radios', '#options' => $options, '#default_value' => variable_get('filter_default_format', 1));
@@ -166,7 +166,7 @@ function filter_admin_format_form(&$form_state, $format) {
     }
     $group = '<p>' . t('These are the guidelines that users will see for posting in this input format. They are automatically generated from the filter settings.') . '</p>';
     $group .= $tiplist;
-    $form['tips'] = array('#value' => '<h2>' . t('Formatting guidelines') . '</h2>' . $group);
+    $form['tips'] = array('#markup' => '<h2>' . t('Formatting guidelines') . '</h2>' . $group);
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save configuration'));
 
@@ -325,7 +325,7 @@ function filter_admin_configure(&$form_state, $format) {
     $form = system_settings_form($form);
   }
   else {
-    $form['error'] = array('#value' => t('No settings are available.'));
+    $form['error'] = array('#markup' => t('No settings are available.'));
   }
   $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
   $form['#submit'][] = 'filter_admin_configure_submit';
@@ -360,7 +360,7 @@ function filter_admin_order(&$form_state, $format = NULL) {
 
   $form['weights'] = array('#tree' => TRUE);
   foreach ($filters as $id => $filter) {
-    $form['names'][$id] = array('#value' => $filter->name);
+    $form['names'][$id] = array('#markup' => $filter->name);
     $form['weights'][$id] = array('#type' => 'weight', '#default_value' => $filter->weight);
   }
   $form['format'] = array('#type' => 'hidden', '#value' => $format->format);

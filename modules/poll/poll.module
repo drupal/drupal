@@ -552,12 +552,12 @@ function poll_view($node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
 
   if (!empty($node->allowvotes) && ($block || empty($node->show_results))) {
     $node->content['body'] = array(
-      '#value' => drupal_get_form('poll_view_voting', $node, $block),
+      '#markup' => drupal_get_form('poll_view_voting', $node, $block),
     );
   }
   else {
     $node->content['body'] = array(
-      '#value' => poll_view_results($node, $teaser, $page, $block),
+      '#markup' => poll_view_results($node, $teaser, $page, $block),
     );
   }
   return $node;

@@ -125,7 +125,7 @@ function simpletest_test_form() {
           '#collapsed' => $ok,
           '#description' => $info['description'],
         );
-        $element['result_table']['#value'] = theme('table', $header, $element['result_table']['#rows']);
+        $element['result_table']['#markup'] = theme('table', $header, $element['result_table']['#rows']);
         $element['summary']['#ok'] = $ok;
         $group_ok = $group_ok && $ok;
       }

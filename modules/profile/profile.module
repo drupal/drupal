@@ -316,7 +316,7 @@ function profile_view_profile(&$user) {
       $user->content[$field->category][$field->name] = array(
         '#type' => 'user_profile_item',
         '#title' => $title,
-        '#value' => $value,
+        '#markup' => $value,
         '#weight' => $field->weight,
         '#attributes' => array('class' => 'profile-' . $field->name),
       );

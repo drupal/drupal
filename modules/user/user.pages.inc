@@ -105,8 +105,8 @@ function user_pass_reset(&$form_state, $uid, $timestamp, $hashed_pass, $action =
           drupal_goto('user/' . $user->uid . '/edit');
         }
         else {
-          $form['message'] = array('#value' => t('<p>This is a one-time login for %user_name and will expire on %expiration_date.</p><p>Click on this button to login to the site and change your password.</p>', array('%user_name' => $account->name, '%expiration_date' => format_date($timestamp + $timeout))));
-          $form['help'] = array('#value' => '<p>' . t('This login can be used only once.') . '</p>');
+          $form['message'] = array('#markup' => t('<p>This is a one-time login for %user_name and will expire on %expiration_date.</p><p>Click on this button to login to the site and change your password.</p>', array('%user_name' => $account->name, '%expiration_date' => format_date($timestamp + $timeout))));
+          $form['help'] = array('#markup' => '<p>' . t('This login can be used only once.') . '</p>');
           $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
           $form['#action'] = url("user/reset/$uid/$timestamp/$hashed_pass/login");
           return $form;
@@ -186,7 +186,7 @@ function template_preprocess_user_profile(&$variables) {
  */
 function template_preprocess_user_profile_item(&$variables) {
   $variables['title'] = $variables['element']['#title'];
-  $variables['value'] = $variables['element']['#value'];
+  $variables['value'] = $variables['element']['#markup'];
   $variables['attributes'] = '';
   if (isset($variables['element']['#attributes'])) {
     $variables['attributes'] = drupal_attributes($variables['element']['#attributes']);

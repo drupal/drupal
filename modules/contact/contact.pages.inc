@@ -38,7 +38,7 @@ function contact_mail_page() {
 
   if (count($categories) > 0) {
     $form['#token'] = $user->uid ? $user->name . $user->mail : '';
-    $form['contact_information'] = array('#value' => filter_xss_admin(variable_get('contact_form_information', t('You can leave a message using the contact form below.'))));
+    $form['contact_information'] = array('#markup' => filter_xss_admin(variable_get('contact_form_information', t('You can leave a message using the contact form below.'))));
     $form['name'] = array('#type' => 'textfield',
       '#title' => t('Your name'),
       '#maxlength' => 255,
@@ -177,11 +177,11 @@ function contact_mail_user(&$form_state, $recipient) {
   $form['recipient'] = array('#type' => 'value', '#value' => $recipient);
   $form['from'] = array('#type' => 'item',
     '#title' => t('From'),
-    '#value' => check_plain($user->name) . ' &lt;' . check_plain($user->mail) . '&gt;',
+    '#markup' => check_plain($user->name) . ' &lt;' . check_plain($user->mail) . '&gt;',
   );
   $form['to'] = array('#type' => 'item',
     '#title' => t('To'),
-    '#value' => check_plain($recipient->name),
+    '#markup' => check_plain($recipient->name),
   );
   $form['subject'] = array('#type' => 'textfield',
     '#title' => t('Subject'),

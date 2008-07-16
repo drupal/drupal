@@ -46,9 +46,9 @@ function locale_languages_overview_form() {
       '#type' => 'weight',
       '#default_value' => $language->weight
     );
-    $form['name'][$langcode] = array('#value' => check_plain($language->name));
-    $form['native'][$langcode] = array('#value' => check_plain($language->native));
-    $form['direction'][$langcode] = array('#value' => ($language->direction == LANGUAGE_RTL ? t('Right to left') : t('Left to right')));
+    $form['name'][$langcode] = array('#markup' => check_plain($language->name));
+    $form['native'][$langcode] = array('#markup' => check_plain($language->native));
+    $form['direction'][$langcode] = array('#markup' => ($language->direction == LANGUAGE_RTL ? t('Right to left') : t('Left to right')));
   }
   $form['enabled'] = array('#type' => 'checkboxes',
     '#options' => $options,
@@ -230,7 +230,7 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
     $form['langcode_view'] = array(
       '#type' => 'item',
       '#title' => t('Language code'),
-      '#value' => $language->language
+      '#markup' => $language->language
     );
     $form['langcode'] = array(
       '#type' => 'value',
@@ -782,7 +782,7 @@ function locale_translate_edit_form(&$form_state, $lid) {
     'original' => array(
       '#type'  => 'item',
       '#title' => t('Original text'),
-      '#value' => check_plain(wordwrap($source->source, 0)),
+      '#markup' => check_plain(wordwrap($source->source, 0)),
     ),
     'lid' => array(
       '#type'  => 'value',

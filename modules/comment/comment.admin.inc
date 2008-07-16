@@ -76,19 +76,19 @@ function comment_admin_overview($type = 'new', $arg) {
     $comments[$comment->cid] = '';
     $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
     $form['subject'][$comment->cid] = array(
-      '#value' => l($comment->subject, 'node/' . $comment->nid, array('attributes' => array('title' => truncate_utf8($comment->comment, 128)), 'fragment' => 'comment-' . $comment->cid))
+      '#markup' => l($comment->subject, 'node/' . $comment->nid, array('attributes' => array('title' => truncate_utf8($comment->comment, 128)), 'fragment' => 'comment-' . $comment->cid))
     );
     $form['username'][$comment->cid] = array(
-      '#value' => theme('username', $comment)
+      '#markup' => theme('username', $comment)
     );
     $form['node_title'][$comment->cid] = array(
-      '#value' => l($comment->node_title, 'node/' . $comment->nid)
+      '#markup' => l($comment->node_title, 'node/' . $comment->nid)
     );
     $form['timestamp'][$comment->cid] = array(
-      '#value' => format_date($comment->timestamp, 'small')
+      '#markup' => format_date($comment->timestamp, 'small')
     );
     $form['operations'][$comment->cid] = array(
-      '#value' => l(t('edit'), 'comment/edit/' . $comment->cid, array('query' => $destination))
+      '#markup' => l(t('edit'), 'comment/edit/' . $comment->cid, array('query' => $destination))
     );
   }
   $form['comments'] = array(
@@ -96,7 +96,7 @@ function comment_admin_overview($type = 'new', $arg) {
     '#options' => isset($comments) ? $comments: array()
   );
   $form['pager'] = array(
-    '#value' => theme('pager', NULL, 50, 0)
+    '#markup' => theme('pager', NULL, 50, 0)
   );
 
   return $form;
@@ -169,7 +169,7 @@ function theme_comment_admin_overview($form) {
   }
 
   $output .= theme('table', $form['header']['#value'], $rows);
-  if ($form['pager']['#value']) {
+  if ($form['pager']['#markup']) {
     $output .= drupal_render($form['pager']);
   }
 

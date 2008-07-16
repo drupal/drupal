@@ -231,7 +231,7 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
 
   if (count($db_types) == 0) {
     $form['no_db_types'] = array(
-      '#value' => st('Your web server does not appear to support any common database types. Check with your hosting provider to see if they offer any databases that <a href="@drupal-databases">Drupal supports</a>.', array('@drupal-databases' => 'http://drupal.org/node/270#database')),
+      '#markup' => st('Your web server does not appear to support any common database types. Check with your hosting provider to see if they offer any databases that <a href="@drupal-databases">Drupal supports</a>.', array('@drupal-databases' => 'http://drupal.org/node/270#database')),
     );
   }
   else {
@@ -995,7 +995,7 @@ function install_task_list($active = NULL) {
 function install_configure_form(&$form_state, $url) {
 
   $form['intro'] = array(
-    '#value' => st('To configure your website, please provide the following information.'),
+    '#markup' => st('To configure your website, please provide the following information.'),
     '#weight' => -10,
   );
   $form['site_information'] = array(
@@ -1024,7 +1024,7 @@ function install_configure_form(&$form_state, $url) {
   );
   $form['admin_account']['account']['#tree'] = TRUE;
   $form['admin_account']['markup'] = array(
-    '#value' => '<p class="description">' . st('The administrator account has complete access to the site; it will automatically be granted all permissions and can perform any administrative activity. This will be the only account that can perform certain activities, so keep its credentials safe.') . '</p>',
+    '#markup' => '<p class="description">' . st('The administrator account has complete access to the site; it will automatically be granted all permissions and can perform any administrative activity. This will be the only account that can perform certain activities, so keep its credentials safe.') . '</p>',
     '#weight' => -10,
   );
 

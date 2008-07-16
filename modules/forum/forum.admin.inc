@@ -225,12 +225,12 @@ function forum_overview(&$form_state) {
   foreach (element_children($form) as $key) {
     if (isset($form[$key]['#term'])) {
       $term = $form[$key]['#term'];
-      $form[$key]['view']['#value'] = l($term['name'], 'forum/' . $term['tid']);
+      $form[$key]['view']['#markup'] = l($term['name'], 'forum/' . $term['tid']);
       if (in_array($form[$key]['#term']['tid'], variable_get('forum_containers', array()))) {
-        $form[$key]['edit']['#value'] = l(t('edit container'), 'admin/build/forum/edit/container/' . $term['tid']);
+        $form[$key]['edit']['#markup'] = l(t('edit container'), 'admin/build/forum/edit/container/' . $term['tid']);
       }
       else {
-        $form[$key]['edit']['#value'] = l(t('edit forum'), 'admin/build/forum/edit/forum/' . $term['tid']);
+        $form[$key]['edit']['#markup'] = l(t('edit forum'), 'admin/build/forum/edit/forum/' . $term['tid']);
       }
     }
   }

@@ -23,12 +23,12 @@ function taxonomy_overview_vocabularies() {
       $types[] = $node_type ? check_plain($node_type) : check_plain($type);
     }
     $form[$vocabulary->vid]['#vocabulary'] = (array)$vocabulary;
-    $form[$vocabulary->vid]['name'] = array('#value' => check_plain($vocabulary->name));
-    $form[$vocabulary->vid]['types'] = array('#value' => implode(', ', $types));
+    $form[$vocabulary->vid]['name'] = array('#markup' => check_plain($vocabulary->name));
+    $form[$vocabulary->vid]['types'] = array('#markup' => implode(', ', $types));
     $form[$vocabulary->vid]['weight'] = array('#type' => 'weight', '#delta' => 10, '#default_value' => $vocabulary->weight);
-    $form[$vocabulary->vid]['edit'] = array('#value' => l(t('edit vocabulary'), "admin/content/taxonomy/edit/vocabulary/$vocabulary->vid"));
-    $form[$vocabulary->vid]['list'] = array('#value' => l(t('list terms'), "admin/content/taxonomy/$vocabulary->vid"));
-    $form[$vocabulary->vid]['add'] = array('#value' => l(t('add terms'), "admin/content/taxonomy/$vocabulary->vid/add/term"));
+    $form[$vocabulary->vid]['edit'] = array('#markup' => l(t('edit vocabulary'), "admin/content/taxonomy/edit/vocabulary/$vocabulary->vid"));
+    $form[$vocabulary->vid]['list'] = array('#markup' => l(t('list terms'), "admin/content/taxonomy/$vocabulary->vid"));
+    $form[$vocabulary->vid]['add'] = array('#markup' => l(t('add terms'), "admin/content/taxonomy/$vocabulary->vid/add/term"));
   }
 
   // Only make this form include a submit button and weight if more than one
@@ -387,7 +387,7 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
       unset($form[$key]['#term']['parents'], $term->parents);
     }
 
-    $form[$key]['view'] = array('#value' => l($term->name, "taxonomy/term/$term->tid"));
+    $form[$key]['view'] = array('#markup' => l($term->name, "taxonomy/term/$term->tid"));
     if (!$vocabulary->tags && $vocabulary->hierarchy < 2 && count($tree) > 1) {
       $form['#parent_fields'] = TRUE;
       $form[$key]['tid'] = array(
@@ -405,7 +405,7 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
         '#default_value' => $term->depth,
       );
     }
-    $form[$key]['edit'] = array('#value' => l(t('edit'), "admin/content/taxonomy/edit/term/$term->tid", array('query' => drupal_get_destination())));
+    $form[$key]['edit'] = array('#markup' => l(t('edit'), "admin/content/taxonomy/edit/term/$term->tid", array('query' => drupal_get_destination())));
   }
 
   $form['#total_entries'] = $total_entries;

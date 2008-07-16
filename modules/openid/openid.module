@@ -95,7 +95,7 @@ function openid_form_alter(&$form, $form_state, $form_id) {
     );
 
     $form['openid_links'] = array(
-      '#value' => theme('item_list', $items),
+      '#markup' => theme('item_list', $items),
       '#weight' => 1,
     );
 

@@ -22,13 +22,13 @@ function profile_admin_overview() {
     $categories[] = $field->category;
 
     // Save all field information
-    $form[$field->fid]['name'] = array('#value' => check_plain($field->name));
-    $form[$field->fid]['title'] = array('#value' => check_plain($field->title));
-    $form[$field->fid]['type'] = array('#value' => $field->type);
+    $form[$field->fid]['name'] = array('#markup' => check_plain($field->name));
+    $form[$field->fid]['title'] = array('#markup' => check_plain($field->title));
+    $form[$field->fid]['type'] = array('#markup' => $field->type);
     $form[$field->fid]['category'] = array('#type' => 'select', '#default_value' => $field->category, '#options' => array());
     $form[$field->fid]['weight'] = array('#type' => 'weight', '#default_value' => $field->weight);
-    $form[$field->fid]['edit'] = array('#value' => l(t('edit'), "admin/user/profile/edit/$field->fid"));
-    $form[$field->fid]['delete'] = array('#value' => l(t('delete'), "admin/user/profile/delete/$field->fid"));
+    $form[$field->fid]['edit'] = array('#markup' => l(t('edit'), "admin/user/profile/edit/$field->fid"));
+    $form[$field->fid]['delete'] = array('#markup' => l(t('delete'), "admin/user/profile/delete/$field->fid"));
   }
 
   // Add the cateogory combo boxes
@@ -58,7 +58,7 @@ function profile_admin_overview() {
     $addnewfields .= '<li>' . l($value, "admin/user/profile/add/$key") . '</li>';
   }
   $addnewfields .= '</ul>';
-  $form['addnewfields'] = array('#value' => $addnewfields);
+  $form['addnewfields'] = array('#markup' => $addnewfields);
 
   return $form;
 }

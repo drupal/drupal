@@ -1267,7 +1267,7 @@ function comment_form(&$form_state, $edit, $title = NULL) {
       $form['_author'] = array(
         '#type' => 'item',
         '#title' => t('Your name'),
-        '#value' => theme('username', $user),
+        '#markup' => theme('username', $user),
       );
       $form['author'] = array(
         '#type' => 'value',
@@ -1452,7 +1452,7 @@ function comment_form_add_preview($form, &$form_state) {
   }
 
   $form['comment_preview'] = array(
-    '#value' => $output,
+    '#markup' => $output,
     '#weight' => -100,
     '#prefix' => '<div class="preview">',
     '#suffix' => '</div>',
@@ -1473,7 +1473,7 @@ function comment_form_add_preview($form, &$form_state) {
   }
 
   $form['comment_preview_below'] = array(
-    '#value' => $output,
+    '#markup' => $output,
     '#weight' => 100,
   );
 

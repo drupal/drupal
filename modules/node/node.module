@@ -1074,7 +1074,7 @@ function node_prepare($node, $teaser = FALSE) {
   }
 
   $node->content['body'] = array(
-    '#value' => $teaser ? $node->teaser : $node->body,
+    '#markup' => $teaser ? $node->teaser : $node->body,
     '#weight' => 0,
   );
 

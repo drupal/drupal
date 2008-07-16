@@ -283,7 +283,7 @@ function upload_nodeapi(&$node, $op, $teaser) {
         if (count($node->files)) {
           if (!$teaser && user_access('view uploaded files')) {
             $node->content['files'] = array(
-              '#value' => theme('upload_attachments', $node->files),
+              '#markup' => theme('upload_attachments', $node->files),
               '#weight' => 50,
             );
           }
@@ -484,7 +484,7 @@ function _upload_form($node) {
       $description = file_create_url($file->filepath);
       $description = "<small>" . check_plain($description) . "</small>";
       $form['files'][$key]['description'] = array('#type' => 'textfield', '#default_value' => !empty($file->description) ? $file->description : $file->filename, '#maxlength' => 256, '#description' => $description );
-      $form['files'][$key]['size'] = array('#value' => format_size($file->filesize));
+      $form['files'][$key]['size'] = array('#markup' => format_size($file->filesize));
       $form['files'][$key]['remove'] = array('#type' => 'checkbox', '#default_value' => !empty($file->remove));
       $form['files'][$key]['list'] = array('#type' => 'checkbox',  '#default_value' => $file->list);
       $form['files'][$key]['weight'] = array('#type' => 'weight', '#delta' => count($node->files), '#default_value' => $file->weight);

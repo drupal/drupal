@@ -25,7 +25,7 @@ function image_gd_settings() {
   if (image_gd_check_settings()) {
     $form = array();
     $form['status'] = array(
-      '#value' => t('The GD toolkit is installed and working properly.')
+      '#markup' => t('The GD toolkit is installed and working properly.')
     );
 
     $form['image_jpeg_quality'] = array(

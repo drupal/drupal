@@ -49,10 +49,10 @@ function user_filter_form() {
     $options = $type == 'permission' ? call_user_func_array('array_merge', $filters[$type]['options']) : $filters[$type]['options'];
     $params = array('%property' => $filters[$type]['title'] , '%value' => $options[$value]);
     if ($i++ > 0) {
-      $form['filters']['current'][] = array('#value' => t('<em>and</em> where <strong>%property</strong> is <strong>%value</strong>', $params));
+      $form['filters']['current'][] = array('#markup' => t('<em>and</em> where <strong>%property</strong> is <strong>%value</strong>', $params));
     }
     else {
-      $form['filters']['current'][] = array('#value' => t('<strong>%property</strong> is <strong>%value</strong>', $params));
+      $form['filters']['current'][] = array('#markup' => t('<strong>%property</strong> is <strong>%value</strong>', $params));
     }
   }
 
@@ -171,24 +171,24 @@ function user_admin_account() {
   $accounts = array();
   while ($account = db_fetch_object($result)) {
     $accounts[$account->uid] = '';
-    $form['name'][$account->uid] = array('#value' => theme('username', $account));
-    $form['status'][$account->uid] =  array('#value' => $status[$account->status]);
+    $form['name'][$account->uid] = array('#markup' => theme('username', $account));
+    $form['status'][$account->uid] =  array('#markup' => $status[$account->status]);
     $users_roles = array();
     $roles_result = db_query('SELECT rid FROM {users_roles} WHERE uid = %d', $account->uid);
     while ($user_role = db_fetch_object($roles_result)) {
       $users_roles[] = $roles[$user_role->rid];
     }
     asort($users_roles);
-    $form['roles'][$account->uid][0] = array('#value' => theme('item_list', $users_roles));
-    $form['member_for'][$account->uid] = array('#value' => format_interval(time() - $account->created));
-    $form['last_access'][$account->uid] =  array('#value' => $account->access ? t('@time ago', array('@time' => format_interval(time() - $account->access))) : t('never'));
-    $form['operations'][$account->uid] = array('#value' => l(t('edit'), "user/$account->uid/edit", array('query' => $destination)));
+    $form['roles'][$account->uid][0] = array('#markup' => theme('item_list', $users_roles));
+    $form['member_for'][$account->uid] = array('#markup' => format_interval(time() - $account->created));
+    $form['last_access'][$account->uid] =  array('#markup' => $account->access ? t('@time ago', array('@time' => format_interval(time() - $account->access))) : t('never'));
+    $form['operations'][$account->uid] = array('#markup' => l(t('edit'), "user/$account->uid/edit", array('query' => $destination)));
   }
   $form['accounts'] = array(
     '#type' => 'checkboxes',
     '#options' => $accounts
   );
-  $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
+  $form['pager'] = array('#markup' => theme('pager', NULL, 50, 0));
 
   return $form;
 }
@@ -513,7 +513,7 @@ function user_admin_perm($form_state, $rid = NULL) {
   foreach (module_list(FALSE, FALSE, TRUE) as $module) {
     if ($permissions = module_invoke($module, 'perm')) {
       $form['permission'][] = array(
-        '#value' => $module,
+        '#markup' => $module,
       );
       ksort($permissions);
       foreach ($permissions as $perm => $description) {
@@ -525,7 +525,7 @@ function user_admin_perm($form_state, $rid = NULL) {
         $options[$perm] = '';
         $form['permission'][$perm] = array(
           '#type' => 'item',
-          '#value' => t($perm),
+          '#markup' => t($perm),
           '#description' => $hide_descriptions ? $description : NULL,
         );
         foreach ($role_names as $rid => $name) {
@@ -541,7 +541,7 @@ function user_admin_perm($form_state, $rid = NULL) {
   // Have to build checkboxes here after checkbox arrays are built
   foreach ($role_names as $rid => $name) {
     $form['checkboxes'][$rid] = array('#type' => 'checkboxes', '#options' => $options, '#default_value' => isset($status[$rid]) ? $status[$rid] : array());
-    $form['role_names'][$rid] = array('#value' => $name, '#tree' => TRUE);
+    $form['role_names'][$rid] = array('#markup' => $name, '#tree' => TRUE);
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save permissions'));
 
@@ -740,7 +740,7 @@ function theme_user_admin_account($form) {
   }
 
   $output .= theme('table', $header, $rows);
-  if ($form['pager']['#value']) {
+  if ($form['pager']['#markup']) {
     $output .= drupal_render($form['pager']);
   }
 

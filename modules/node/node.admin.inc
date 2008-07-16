@@ -21,7 +21,7 @@ function node_configure() {
       '#type' => 'fieldset',
       '#title' => t('Node access status'),
     );
-    $form['access']['status'] = array('#value' => $status);
+    $form['access']['status'] = array('#markup' => $status);
     $form['access']['rebuild'] = array(
       '#type' => 'submit',
       '#value' => t('Rebuild permissions'),
@@ -236,10 +236,10 @@ function node_filter_form() {
       $value = $filters[$type]['options'][$value];
     }
     if ($i++) {
-      $form['filters']['current'][] = array('#value' => t('<em>and</em> where <strong>%a</strong> is <strong>%b</strong>', array('%a' => $filters[$type]['title'], '%b' => $value)));
+      $form['filters']['current'][] = array('#markup' => t('<em>and</em> where <strong>%a</strong> is <strong>%b</strong>', array('%a' => $filters[$type]['title'], '%b' => $value)));
     }
     else {
-      $form['filters']['current'][] = array('#value' => t('<strong>%a</strong> is <strong>%b</strong>', array('%a' => $filters[$type]['title'], '%b' => $value)));
+      $form['filters']['current'][] = array('#markup' => t('<strong>%a</strong> is <strong>%b</strong>', array('%a' => $filters[$type]['title'], '%b' => $value)));
     }
     if (in_array($type, array('type', 'language'))) {
       // Remove the option if it is already being filtered on.
@@ -495,17 +495,17 @@ function node_admin_nodes() {
   while ($node = db_fetch_object($result)) {
     $nodes[$node->nid] = '';
     $options = empty($node->language) ? array() : array('language' => $languages[$node->language]);
-    $form['title'][$node->nid] = array('#value' => l($node->title, 'node/' . $node->nid, $options) . ' ' . theme('mark', node_mark($node->nid, $node->changed)));
-    $form['name'][$node->nid] =  array('#value' => check_plain(node_get_types('name', $node)));
-    $form['username'][$node->nid] = array('#value' => theme('username', $node));
-    $form['status'][$node->nid] =  array('#value' => ($node->status ? t('published') : t('not published')));
+    $form['title'][$node->nid] = array('#markup' => l($node->title, 'node/' . $node->nid, $options) . ' ' . theme('mark', node_mark($node->nid, $node->changed)));
+    $form['name'][$node->nid] =  array('#markup' => check_plain(node_get_types('name', $node)));
+    $form['username'][$node->nid] = array('#markup' => theme('username', $node));
+    $form['status'][$node->nid] =  array('#markup' => ($node->status ? t('published') : t('not published')));
     if ($multilanguage) {
-      $form['language'][$node->nid] = array('#value' => empty($node->language) ? t('Language neutral') : t($languages[$node->language]->name));
+      $form['language'][$node->nid] = array('#markup' => empty($node->language) ? t('Language neutral') : t($languages[$node->language]->name));
     }
-    $form['operations'][$node->nid] = array('#value' => l(t('edit'), 'node/' . $node->nid . '/edit', array('query' => $destination)));
+    $form['operations'][$node->nid] = array('#markup' => l(t('edit'), 'node/' . $node->nid . '/edit', array('query' => $destination)));
   }
   $form['nodes'] = array('#type' => 'checkboxes', '#options' => $nodes);
-  $form['pager'] = array('#value' => theme('pager', NULL, 50, 0));
+  $form['pager'] = array('#markup' => theme('pager', NULL, 50, 0));
   $form['#theme'] = 'node_admin_nodes';
   return $form;
 }
@@ -592,7 +592,7 @@ function theme_node_admin_nodes($form) {
   }
 
   $output .= theme('table', $header, $rows);
-  if ($form['pager']['#value']) {
+  if ($form['pager']['#markup']) {
     $output .= drupal_render($form['pager']);
   }
 
@@ -632,4 +632,3 @@ function node_multiple_delete_confirm_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/content/node';
   return;
 }
-

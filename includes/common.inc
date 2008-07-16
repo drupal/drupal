@@ -2741,26 +2741,15 @@ function drupal_render(&$elements) {
     // Render all the children that use a theme function.
     if (isset($elements['#theme']) && empty($elements['#theme_used'])) {
       $elements['#theme_used'] = TRUE;
-
-      $previous = array();
-      foreach (array('#value', '#type', '#prefix', '#suffix') as $key) {
-        $previous[$key] = isset($elements[$key]) ? $elements[$key] : NULL;
-      }
       // If we rendered a single element, then we will skip the renderer.
       if (empty($children)) {
         $elements['#printed'] = TRUE;
       }
       else {
-        $elements['#value'] = '';
+        $elements['#markup'] = '';
       }
-      $elements['#type'] = 'markup';
 
-      unset($elements['#prefix'], $elements['#suffix']);
       $content = theme($elements['#theme'], $elements);
-
-      foreach (array('#value', '#type', '#prefix', '#suffix') as $key) {
-        $elements[$key] = isset($previous[$key]) ? $previous[$key] : NULL;
-      }
     }
     // Render each of the children using drupal_render and concatenate them.
     if (!isset($content) || $content === '') {

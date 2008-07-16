@@ -173,7 +173,7 @@ function trigger_assign_form($form_state, $hook, $op, $description) {
   }
   else {
     $form[$op]['none'] = array(
-      '#value' => t('No available actions for this trigger.')
+      '#markup' => t('No available actions for this trigger.')
     );
   }
   return $form;

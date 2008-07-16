@@ -196,7 +196,7 @@ function system_themes_form() {
     }
     $screenshot = $screenshot ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $theme->info['name'])), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
 
-    $form[$theme->name]['screenshot'] = array('#value' => $screenshot);
+    $form[$theme->name]['screenshot'] = array('#markup' => $screenshot);
     $form[$theme->name]['info'] = array(
       '#type' => 'value',
       '#value' => $theme->info,
@@ -204,7 +204,7 @@ function system_themes_form() {
     $options[$theme->name] = '';
 
     if (!empty($theme->status) || $theme->name == variable_get('admin_theme', '0')) {
-      $form[$theme->name]['operations'] = array('#value' => l(t('configure'), 'admin/build/themes/settings/' . $theme->name) );
+      $form[$theme->name]['operations'] = array('#markup' => l(t('configure'), 'admin/build/themes/settings/' . $theme->name) );
     }
     else {
       // Dummy element for drupal_render. Cleaner than adding a check in the theme function.
@@ -645,15 +645,15 @@ function system_modules($form_state = array()) {
   $disabled = array();
   // Traverse the files retrieved and build the form.
   foreach ($files as $filename => $file) {
-    $form['name'][$filename] = array('#value' => $file->info['name']);
-    $form['version'][$filename] = array('#value' => $file->info['version']);
-    $form['description'][$filename] = array('#value' => t($file->info['description']));
+    $form['name'][$filename] = array('#markup' => $file->info['name']);
+    $form['version'][$filename] = array('#markup' => $file->info['version']);
+    $form['description'][$filename] = array('#markup' => t($file->info['description']));
 
     // Generate link for module's help page, if there is one.
     if ($help_arg && module_hook($filename, 'help')) {
       if (module_invoke($filename, 'help', "admin/help#$filename", $help_arg)) {
         // Module has a help page.
-        $form['help'][$filename] = array('#value' => theme('more_help_link', url("admin/help/$filename")));
+        $form['help'][$filename] = array('#markup' => theme('more_help_link', url("admin/help/$filename")));
       }
     }
 
@@ -690,7 +690,7 @@ function system_modules($form_state = array()) {
       // Add text for dependencies.
       if (!empty($dependencies)) {
         $form['description'][$filename]['dependencies'] = array(
-          '#value' => t('Depends on: !dependencies', array('!dependencies' => implode(', ', $dependencies))),
+          '#markup' => t('Depends on: !dependencies', array('!dependencies' => implode(', ', $dependencies))),
           '#prefix' => '<div class="admin-dependencies">',
           '#suffix' => '</div>',
         );
@@ -713,7 +713,7 @@ function system_modules($form_state = array()) {
     // Add text for enabled dependents.
     if (!empty($dependents)) {
       $form['description'][$filename]['required'] = array(
-        '#value' => t('Required by: !required', array('!required' => implode(', ', $dependents))),
+        '#markup' => t('Required by: !required', array('!required' => implode(', ', $dependents))),
         '#prefix' => '<div class="admin-required">',
         '#suffix' => '</div>',
       );
@@ -811,7 +811,7 @@ function system_modules_confirm_form($modules, $storage) {
     );
     $items[] = format_plural(count($missing_dependencies), 'You must enable the @dependencies module to install @module.', 'You must enable the @dependencies modules to install @module.', $t_argument);
   }
-  $form['text'] = array('#value' => theme('item_list', $items));
+  $form['text'] = array('#markup' => theme('item_list', $items));
 
   if ($form) {
     // Set some default form values
@@ -991,8 +991,8 @@ function system_modules_uninstall($form_state = NULL) {
     // If the hook exists, the module can be uninstalled.
     module_load_install($module->name);
     if (module_hook($module->name, 'uninstall')) {
-      $form['modules'][$module->name]['name'] = array('#value' => $info['name'] ? $info['name'] : $module->name);
-      $form['modules'][$module->name]['description'] = array('#value' => t($info['description']));
+      $form['modules'][$module->name]['name'] = array('#markup' => $info['name'] ? $info['name'] : $module->name);
+      $form['modules'][$module->name]['description'] = array('#markup' => t($info['description']));
       $options[$module->name] = '';
     }
   }
@@ -1044,7 +1044,7 @@ function system_modules_uninstall_confirm_form($storage) {
   if (isset($uninstall)) {
     $form['#confirmed'] = TRUE;
     $form['uninstall']['#tree'] = TRUE;
-    $form['modules'] = array('#value' => '<p>' . t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') . '</p>' . theme('item_list', $uninstall));
+    $form['modules'] = array('#markup' => '<p>' . t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') . '</p>' . theme('item_list', $uninstall));
     $form = confirm_form(
       $form,
       t('Confirm uninstall'),

@@ -291,7 +291,7 @@ function system_elements() {
    * Form structure.
    */
   $type['item'] = array(
-    '#value' => '',
+    '#markup' => '',
   );
 
   $type['hidden'] = array(
@@ -868,8 +868,8 @@ function system_theme_select_form($description = '', $default_value = '', $weigh
 
         $screenshot = $screenshot ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
 
-        $form['themes'][$info->key]['screenshot'] = array('#value' => $screenshot);
-        $form['themes'][$info->key]['description'] = array('#type' => 'item', '#title' => $info->name, '#value' => dirname($info->filename) . ($info->name == variable_get('theme_default', 'garland') ? '<br /> <em>' . t('(site default theme)') . '</em>' : ''));
+        $form['themes'][$info->key]['screenshot'] = array('#markup' => $screenshot);
+        $form['themes'][$info->key]['description'] = array('#type' => 'item', '#title' => $info->name, '#markup' => dirname($info->filename) . ($info->name == variable_get('theme_default', 'garland') ? '<br /> <em>' . t('(site default theme)') . '</em>' : ''));
         $options[$info->key] = '';
       }
 
@@ -1305,12 +1305,12 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
   $form['#skip_duplicate_check'] = TRUE;
 
   $form['#attributes'] = array('class' => 'confirmation');
-  $form['description'] = array('#value' => $description);
+  $form['description'] = array('#markup' => $description);
   $form[$name] = array('#type' => 'hidden', '#value' => 1);
 
   $form['actions'] = array('#prefix' => '<div class="container-inline">', '#suffix' => '</div>');
   $form['actions']['submit'] = array('#type' => 'submit', '#value' => $yes ? $yes : t('Confirm'));
-  $form['actions']['cancel'] = array('#value' => $cancel);
+  $form['actions']['cancel'] = array('#markup' => $cancel);
   $form['#theme'] = 'confirm_form';
   return $form;
 }

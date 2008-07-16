@@ -508,10 +508,10 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
     $tips = _filter_tips(variable_get('filter_default_format', 1), FALSE);
     $form['format']['guidelines'] = array(
       '#title' => t('Formatting guidelines'),
-      '#value' => theme('filter_tips', $tips, FALSE, $extra),
+      '#markup' => theme('filter_tips', $tips, FALSE, $extra),
     );
   }
-  $form[] = array('#value' => $extra);
+  $form[] = array('#markup' => $extra);
   return $form;
 }
 

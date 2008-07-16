@@ -94,7 +94,7 @@ function node_type_form(&$form_state, $type = NULL) {
     $form['identity']['type_display'] = array(
       '#title' => t('Type'),
       '#type' => 'item',
-      '#value' => theme('placeholder', $type->type),
+      '#markup' => theme('placeholder', $type->type),
       '#description' => t('The machine-readable name of this content type. This field cannot be modified for system-defined content types.'),
     );
   }
