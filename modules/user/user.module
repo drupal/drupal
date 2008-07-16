@@ -965,9 +965,11 @@ function user_login_submit($form_id, $form_values) {
     // Update the user table timestamp noting user has logged in.
     db_query("UPDATE {users} SET login = %d WHERE uid = %d", time(), $user->uid);
 
+    // Regenerate the session ID to prevent against session fixation attacks.
+    sess_regenerate();
+
     user_module_invoke('login', $form_values, $user);
 
-    sess_regenerate();
     return 'user/'. $user->uid;
   }
 }
