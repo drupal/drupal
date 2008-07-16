@@ -359,7 +359,7 @@ function theme_block_admin_display($form) {
 }
 
 function block_box_get($bid) {
-  return db_fetch_array(db_query("SELECT bx.*, bl.title FROM {boxes} bx INNER JOIN {blocks} bl ON bx.bid = bl.delta WHERE bl.module = 'block' AND bx.bid = %d", $bid));
+  return db_fetch_array(db_query("SELECT * FROM {boxes} WHERE bid = %d", $bid));
 }
 
 /**
@@ -524,7 +524,7 @@ function block_box_form_submit($form_id, $form_values) {
  */
 function block_box_delete($bid = 0) {
   $box = block_box_get($bid);
-  $form['info'] = array('#type' => 'hidden', '#value' => $box['info'] ? $box['info'] : $box['title']);
+  $form['info'] = array('#type' => 'hidden', '#value' => $box['info']);
   $form['bid'] = array('#type' => 'hidden', '#value' => $bid);
 
   return confirm_form($form, t('Are you sure you want to delete the block %name?', array('%name' => $box['info'])), 'admin/build/block', '', t('Delete'), t('Cancel'));
