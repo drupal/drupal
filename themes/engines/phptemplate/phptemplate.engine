@@ -113,7 +113,9 @@ function _phptemplate_default_variables($hook, $variables) {
       // This pre-loading is necessary because phptemplate uses variable names different from
       // the region names, e.g., 'sidebar_left' instead of 'left'.
       if (!in_array($region, array('left', 'right', 'footer'))) {
-        isset($variables[$region]) ? $variables[$region] .= theme('blocks', $region) : $variables[$region] = theme('blocks', $region);
+        $normal_blocks = (isset($variables['regions'])) ? $variables['regions'][$region] : theme('blocks', $region);
+
+        isset($variables[$region]) ? $variables[$region] .= $normal_blocks : $variables[$region] = $normal_blocks;
       }
     }
   }
@@ -148,6 +150,9 @@ function phptemplate_features() {
  * current path. If none are found, the default page.tpl.php is used.
  */
 function phptemplate_page($content, $show_blocks = TRUE) {
+  global $theme;
+  $regions = array_keys(system_region_list($theme));
+  $variables = array('regions'=>array());
 
   /* Set title and breadcrumb to declared values */
   if (drupal_is_front_page()) {
@@ -166,20 +171,31 @@ function phptemplate_page($content, $show_blocks = TRUE) {
     /**
      * Sidebar_indicator tells the block counting code to count sidebars separately.
      */
+
+    // Load blocks early for adding header info
+    foreach ($regions as $region) {
+      $variables['regions'][$region] = theme('blocks', $region);
+    }
+
     $sidebar_indicator = 'left';
-    $sidebar_left = theme('blocks', 'left');
+    $sidebar_left = $variables['regions']['left'];
     if ($sidebar_left != '') {
       $layout = 'left';
     }
 
     $sidebar_indicator = 'right';
-    $sidebar_right = theme('blocks', 'right');
+    $sidebar_right = $variables['regions']['right'];
     if ($sidebar_right != '') {
       $layout = ($layout == 'left') ? 'both' : 'right';
     }
     $sidebar_indicator = NULL;
   }
-
+  else {
+    // Add empty strings as default
+    foreach($regions as $region) {
+      $variables['regions'][$region] = '';
+    }
+  }
   // Construct page title
   if (drupal_get_title()) {
     $head_title = array(strip_tags(drupal_get_title()), variable_get('site_name', 'Drupal'));
@@ -191,13 +207,13 @@ function phptemplate_page($content, $show_blocks = TRUE) {
     }
   }
 
-  $variables = array(
+  $variables = array_merge($variables, array(
     'base_path'           => base_path(),
     'breadcrumb'          => theme('breadcrumb', drupal_get_breadcrumb()),
     'closure'             => theme('closure'),
     'content'             => $content,
     'feed_icons'          => drupal_get_feeds(),
-    'footer_message'      => filter_xss_admin(variable_get('site_footer', FALSE)) . "\n" . theme('blocks', 'footer'),
+    'footer_message'      => filter_xss_admin(variable_get('site_footer', FALSE)) . "\n" . $variables['regions']['footer'],
     'head'                => drupal_get_html_head(),
     'head_title'          => implode(' | ', $head_title),
     'help'                => theme('help'),
@@ -218,7 +234,7 @@ function phptemplate_page($content, $show_blocks = TRUE) {
     'scripts'             => drupal_get_js(),
     'tabs'                => theme('menu_local_tasks'),
     'title'               => drupal_get_title()
-  );
+  ));
 
   if ((arg(0) == 'node') && is_numeric(arg(1))) {
     $variables['node'] = node_load(arg(1));
