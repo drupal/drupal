@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.270 2008/07/05 10:58:12 dries Exp $
+// $Id: CHANGELOG.txt,v 1.271 2008/07/16 07:27:16 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -17,6 +17,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
       order can now be customised using the Views module.
     * Added more features to the default install profile, and a new
       slimmed down install profile for developers.
+    * Image toolkits are added by modules instead of being copied to 
+      the includes directory.
 - Search:
     * Added support for language-aware searches.
 - Testing:
