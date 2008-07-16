@@ -202,18 +202,18 @@ function db_num_rows($result) {
 }
 
 /**
-* Return an individual result field from the previous query.
-*
-* Only use this function if exactly one field is being selected; otherwise,
-* use db_fetch_object() or db_fetch_array().
-*
-* @param $result
-*   A database query result resource, as returned from db_query().
-* @param $row
-*   The index of the row whose result is needed.
-* @return
-*   The resulting field or FALSE.
-*/
+ * Return an individual result field from the previous query.
+ *
+ * Only use this function if exactly one field is being selected; otherwise,
+ * use db_fetch_object() or db_fetch_array().
+ *
+ * @param $result
+ *   A database query result resource, as returned from db_query().
+ * @param $row
+ *   The index of the row whose result is needed.
+ * @return
+ *   The resulting field or FALSE.
+ */
 function db_result($result, $row = 0) {
   if ($result && mysqli_num_rows($result) > $row) {
     $array = mysqli_fetch_array($result, MYSQLI_NUM);
