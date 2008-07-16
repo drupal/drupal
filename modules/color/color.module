@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.41 2008/05/19 19:36:41 dries Exp $
+// $Id: color.module,v 1.42 2008/07/16 21:59:26 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -57,7 +57,7 @@ function color_form_alter(&$form, $form_state, $form_id) {
     foreach (element_children($form) as $theme) {
       if ($screenshot = variable_get('color_' . $theme . '_screenshot', NULL)) {
         if (isset($form[$theme]['screenshot'])) {
-          $form[$theme]['screenshot']['#value'] = theme('image', $screenshot, '', '', array('class' => 'screenshot'), FALSE);
+          $form[$theme]['screenshot']['#markup'] = theme('image', $screenshot, '', '', array('class' => 'screenshot'), FALSE);
         }
       }
     }

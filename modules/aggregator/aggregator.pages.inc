@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.14 2008/05/15 21:27:32 dries Exp $
+// $Id: aggregator.pages.inc,v 1.15 2008/07/16 21:59:25 dries Exp $
 
 /**
  * @file
@@ -157,7 +157,7 @@ function aggregator_categorize_items($items, $feed_source = '') {
     '#tree' => TRUE,
   );
   foreach ($items as $item) {
-    $form['items'][$item->iid] = array('#value' => theme('aggregator_item', $item));
+    $form['items'][$item->iid] = array('#markup' => theme('aggregator_item', $item));
     $form['categories'][$item->iid] = array();
     $categories_result = db_query('SELECT c.cid, c.title, ci.iid FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid AND ci.iid = %d', $item->iid);
     $selected = array();

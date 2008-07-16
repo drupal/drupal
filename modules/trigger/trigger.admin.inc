@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.admin.inc,v 1.6 2008/04/14 17:48:43 dries Exp $
+// $Id: trigger.admin.inc,v 1.7 2008/07/16 21:59:28 dries Exp $
 
 /**
  * @file
@@ -173,7 +173,7 @@ function trigger_assign_form($form_state, $hook, $op, $description) {
   }
   else {
     $form[$op]['none'] = array(
-      '#value' => t('No available actions for this trigger.')
+      '#markup' => t('No available actions for this trigger.')
     );
   }
   return $form;

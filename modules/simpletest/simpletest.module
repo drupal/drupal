@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.6 2008/07/05 17:48:33 dries Exp $
+// $Id: simpletest.module,v 1.7 2008/07/16 21:59:27 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -125,7 +125,7 @@ function simpletest_test_form() {
           '#collapsed' => $ok,
           '#description' => $info['description'],
         );
-        $element['result_table']['#value'] = theme('table', $header, $element['result_table']['#rows']);
+        $element['result_table']['#markup'] = theme('table', $header, $element['result_table']['#rows']);
         $element['summary']['#ok'] = $ok;
         $group_ok = $group_ok && $ok;
       }

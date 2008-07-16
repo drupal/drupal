@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.11 2008/05/30 18:17:35 dries Exp $
+// $Id: forum.admin.inc,v 1.12 2008/07/16 21:59:26 dries Exp $
 
 /**
  * @file
@@ -225,12 +225,12 @@ function forum_overview(&$form_state) {
   foreach (element_children($form) as $key) {
     if (isset($form[$key]['#term'])) {
       $term = $form[$key]['#term'];
-      $form[$key]['view']['#value'] = l($term['name'], 'forum/' . $term['tid']);
+      $form[$key]['view']['#markup'] = l($term['name'], 'forum/' . $term['tid']);
       if (in_array($form[$key]['#term']['tid'], variable_get('forum_containers', array()))) {
-        $form[$key]['edit']['#value'] = l(t('edit container'), 'admin/build/forum/edit/container/' . $term['tid']);
+        $form[$key]['edit']['#markup'] = l(t('edit container'), 'admin/build/forum/edit/container/' . $term['tid']);
       }
       else {
-        $form[$key]['edit']['#value'] = l(t('edit forum'), 'admin/build/forum/edit/forum/' . $term['tid']);
+        $form[$key]['edit']['#markup'] = l(t('edit forum'), 'admin/build/forum/edit/forum/' . $term['tid']);
       }
     }
   }

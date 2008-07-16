@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.18 2008/06/25 09:52:41 dries Exp $
+// $Id: block.admin.inc,v 1.19 2008/07/16 21:59:25 dries Exp $
 
 /**
  * @file
@@ -53,7 +53,7 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
       '#value' => $block['delta'],
     );
     $form[$key]['info'] = array(
-      '#value' => check_plain($block['info']),
+      '#markup' => check_plain($block['info']),
     );
     $form[$key]['theme'] = array(
       '#type' => 'hidden',
@@ -69,7 +69,7 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
       '#options' => $block_regions,
     );
     $form[$key]['configure'] = array(
-      '#value' => l(t('configure'),
+      '#markup' => l(t('configure'),
       'admin/build/block/configure/' . $block['module'] . '/' . $block['delta']),
     );
     if ($block['module'] == 'block') {

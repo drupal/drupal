@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.admin.inc,v 1.9 2008/04/20 07:58:38 dries Exp $
+// $Id: upload.admin.inc,v 1.10 2008/07/16 21:59:28 dries Exp $
 
 /**
  * Form API callback to validate the upload settings form.
@@ -107,7 +107,7 @@ function upload_admin_settings() {
     '#field_suffix' => t('MB'),
   );
 
-  $form['settings_general']['upload_max_size'] = array('#value' => '<p>' . t('Your PHP settings limit the maximum file size per upload to %size.', array('%size' => format_size(file_upload_max_size()))) . '</p>');
+  $form['settings_general']['upload_max_size'] = array('#markup' => '<p>' . t('Your PHP settings limit the maximum file size per upload to %size.', array('%size' => format_size(file_upload_max_size()))) . '</p>');
 
   $roles = user_roles(FALSE, 'upload files');
   $form['roles'] = array('#type' => 'value', '#value' => $roles);

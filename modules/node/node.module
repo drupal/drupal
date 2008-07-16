@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.967 2008/05/26 17:12:55 dries Exp $
+// $Id: node.module,v 1.968 2008/07/16 21:59:27 dries Exp $
 
 /**
  * @file
@@ -1074,7 +1074,7 @@ function node_prepare($node, $teaser = FALSE) {
   }
 
   $node->content['body'] = array(
-    '#value' => $teaser ? $node->teaser : $node->body,
+    '#markup' => $teaser ? $node->teaser : $node->body,
     '#weight' => 0,
   );
 

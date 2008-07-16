@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.56 2008/06/25 09:52:41 dries Exp $
+// $Id: content_types.inc,v 1.57 2008/07/16 21:59:27 dries Exp $
 
 /**
  * @file
@@ -94,7 +94,7 @@ function node_type_form(&$form_state, $type = NULL) {
     $form['identity']['type_display'] = array(
       '#title' => t('Type'),
       '#type' => 'item',
-      '#value' => theme('placeholder', $type->type),
+      '#markup' => theme('placeholder', $type->type),
       '#description' => t('The machine-readable name of this content type. This field cannot be modified for system-defined content types.'),
     );
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.642 2008/07/03 17:57:03 dries Exp $
+// $Id: comment.module,v 1.643 2008/07/16 21:59:26 dries Exp $
 
 /**
  * @file
@@ -1267,7 +1267,7 @@ function comment_form(&$form_state, $edit, $title = NULL) {
       $form['_author'] = array(
         '#type' => 'item',
         '#title' => t('Your name'),
-        '#value' => theme('username', $user),
+        '#markup' => theme('username', $user),
       );
       $form['author'] = array(
         '#type' => 'value',
@@ -1452,7 +1452,7 @@ function comment_form_add_preview($form, &$form_state) {
   }
 
   $form['comment_preview'] = array(
-    '#value' => $output,
+    '#markup' => $output,
     '#weight' => -100,
     '#prefix' => '<div class="preview">',
     '#suffix' => '</div>',
@@ -1473,7 +1473,7 @@ function comment_form_add_preview($form, &$form_state) {
   }
 
   $form['comment_preview_below'] = array(
-    '#value' => $output,
+    '#markup' => $output,
     '#weight' => 100,
   );
 

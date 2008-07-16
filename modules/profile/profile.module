@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.241 2008/05/06 12:18:49 dries Exp $
+// $Id: profile.module,v 1.242 2008/07/16 21:59:27 dries Exp $
 
 /**
  * @file
@@ -316,7 +316,7 @@ function profile_view_profile(&$user) {
       $user->content[$field->category][$field->name] = array(
         '#type' => 'user_profile_item',
         '#title' => $title,
-        '#value' => $value,
+        '#markup' => $value,
         '#weight' => $field->weight,
         '#attributes' => array('class' => 'profile-' . $field->name),
       );

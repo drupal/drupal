@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.275 2008/06/25 09:57:07 dries Exp $
+// $Id: form.inc,v 1.276 2008/07/16 21:59:25 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1836,7 +1836,7 @@ function form_expand_ahah($element) {
  * @ingroup themeable
  */
 function theme_item($element) {
-  return theme('form_element', $element, $element['#value'] . (!empty($element['#children']) ? $element['#children'] : ''));
+  return theme('form_element', $element, $element['#markup'] . (!empty($element['#children']) ? $element['#children'] : ''));
 }
 
 /**
@@ -2085,7 +2085,7 @@ function theme_textarea($element) {
  */
 
 function theme_markup($element) {
-  return (isset($element['#value']) ? $element['#value'] : '') . (isset($element['#children']) ? $element['#children'] : '');
+  return (isset($element['#markup']) ? $element['#markup'] : '') . (isset($element['#children']) ? $element['#children'] : '');
 }
 
 /**
