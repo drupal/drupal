@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.216 2008/07/08 01:08:15 dries Exp $
+// $Id: bootstrap.inc,v 1.217 2008/07/17 21:10:39 dries Exp $
 
 /**
  * @file
@@ -549,7 +549,7 @@ function page_get_cache() {
 
   $cache = NULL;
 
-  if (!$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET' && count(drupal_set_message()) == 0) {
+  if (!$user->uid && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD') && count(drupal_set_message()) == 0) {
     $cache = cache_get($base_root . request_uri(), 'cache_page');
 
     if (empty($cache)) {
