@@ -17,7 +17,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
       order can now be customised using the Views module.
     * Added more features to the default install profile, and a new
       slimmed down install profile for developers.
-    * Image toolkits are added by modules instead of being copied to 
+    * Image toolkits are added by modules instead of being copied to
       the includes directory.
 - Search:
     * Added support for language-aware searches.

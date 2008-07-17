@@ -759,7 +759,7 @@ class DrupalWebTestCase {
     $this->_content = curl_exec($this->ch);
     $this->plain_text = FALSE;
     $this->elements = FALSE;
-    $this->assertTrue($this->_content !== FALSE, t('!method to !url, response is !length bytes.', array('!method' => empty($curl_options[CURLOPT_POSTFIELDS]) ? 'GET' : 'POST', '!url' => $url, '!length' => strlen($this->_content))), t('Browser'));
+    $this->assertTrue($this->_content !== FALSE, t('!method to !url, response is !length bytes.', array('!method' => !empty($curl_options[CURLOPT_NOBODY]) ? 'HEAD' : (empty($curl_options[CURLOPT_POSTFIELDS]) ? 'GET' : 'POST'), '!url' => $url, '!length' => strlen($this->_content))), t('Browser'));
     return $this->_content;
   }
 
@@ -802,7 +802,7 @@ class DrupalWebTestCase {
    * Retrieves a Drupal path or an absolute path.
    *
    * @param $path
-   *   Drupal path or url to load into internal browser
+   *   Drupal path or URL to load into internal browser
    * @param $options
    *  Options to be forwarded to url().
    * @return
@@ -814,7 +814,7 @@ class DrupalWebTestCase {
     // We re-using a CURL connection here.  If that connection still has certain
     // options set, it might change the GET into a POST.  Make sure we clear out
     // previous options.
-    $out = $this->curlExec(array(CURLOPT_HTTPGET => TRUE, CURLOPT_URL => url($path, $options)));
+    $out = $this->curlExec(array(CURLOPT_HTTPGET => TRUE, CURLOPT_URL => url($path, $options), CURLOPT_HEADER => FALSE, CURLOPT_NOBODY => FALSE));
     $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.
     return $out;
   }
@@ -874,7 +874,7 @@ class DrupalWebTestCase {
             }
             $post = implode('&', $post);
           }
-          $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POST => TRUE, CURLOPT_POSTFIELDS => $post));
+          $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POST => TRUE, CURLOPT_POSTFIELDS => $post, CURLOPT_HEADER => FALSE, CURLOPT_NOBODY => FALSE));
           // Ensure that any changes to variables in the other thread are picked up.
           $this->refreshVariables();
           return $out;
@@ -887,6 +887,40 @@ class DrupalWebTestCase {
         $this->fail(t('Failed to set field @name to @value', array('@name' => $name, '@value' => $value)));
       }
     }
+  }
+
+  /**
+   * Retrieves only the headers for a Drupal path or an absolute path.
+   *
+   * @param $path
+   *   Drupal path or URL to load into internal browser
+   * @param $options
+   *   Options to be forwarded to url().
+   * @return
+   *   The retrieved headers, also available as $this->drupalGetContent()
+   */
+  function drupalHead($path, $options = array()) {
+    $options['absolute'] = TRUE;
+    $out = $this->curlExec(array(CURLOPT_HEADER => TRUE, CURLOPT_NOBODY => TRUE, CURLOPT_URL => url($path, $options)));
+    $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.
+    return $out;
+  }
+
+  /**
+   * Retrieves only the headers for a Drupal path or an absolute path.
+   *
+   * @param $path
+   *   Drupal path or url to load into internal browser
+   * @param $options
+   *  Options to be forwarded to url().
+   * @return
+   *  The retrieved headers, also available as $this->drupalGetContent()
+   */
+  function drupalHead($path, $options = array()) {
+    $options['absolute'] = TRUE;
+    $out = $this->curlExec(array(CURLOPT_HEADER => TRUE, CURLOPT_NOBODY => TRUE, CURLOPT_URL => url($path, $options)));
+    $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.
+    return $out;
   }
 
   /**

@@ -478,8 +478,8 @@ function _block_render_blocks($region_blocks) {
       if ($block->enabled && $block->page_match) {
         // Try fetching the block from cache. Block caching is not compatible with
         // node_access modules. We also preserve the submission of forms in blocks,
-        // by fetching from cache only if the request method is 'GET'.
-        if (!count(module_implements('node_grants')) && $_SERVER['REQUEST_METHOD'] == 'GET' && ($cid = _block_get_cache_id($block)) && ($cache = cache_get($cid, 'cache_block'))) {
+        // by fetching from cache only if the request method is 'GET' (or 'HEAD').
+        if (!count(module_implements('node_grants')) && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD') && ($cid = _block_get_cache_id($block)) && ($cache = cache_get($cid, 'cache_block'))) {
           $array = $cache->data;
         }
         else {

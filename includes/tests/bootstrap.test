@@ -81,3 +81,29 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
     );
   }
 }
+
+class BootstrapPageCacheTestCase extends DrupalWebTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Page cache test'),
+      'description' => t('Enable the page cache, submit a HEAD request and examine headers.'),
+      'group' => t('Bootstrap')
+    );
+  }
+
+  /**
+   * Enable cache and examine HTTP headers.
+   */
+  function testPageCache() {
+    global $base_url;
+    variable_set('cache', 1);
+    // Retrieve the front page, which has already been cached by $this->curlConnect();
+    $this->drupalHead($base_url);
+    $this->assertText('ETag: ', t('Verify presence of ETag header indicating that page caching is enabled.'));
+  }
+
+}
