@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.203 2008/07/16 21:59:28 dries Exp $
+// $Id: upload.module,v 1.204 2008/07/18 07:18:55 dries Exp $
 
 /**
  * @file
@@ -148,7 +148,7 @@ function _upload_file_limits($user) {
  */
 function upload_file_download($filepath) {
   $filepath = file_create_path($filepath);
-  $result = db_query("SELECT f.* FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid WHERE filepath = '%s'", $file);
+  $result = db_query("SELECT f.* FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid WHERE filepath = '%s'", $filepath);
   if ($file = db_fetch_object($result)) {
     if (!user_access('view uploaded files')) {
       return -1;
