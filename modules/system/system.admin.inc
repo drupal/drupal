@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.79 2008/07/16 21:59:28 dries Exp $
+// $Id: system.admin.inc,v 1.80 2008/07/18 07:06:24 dries Exp $
 
 /**
  * @file
@@ -734,7 +734,7 @@ function system_modules($form_state = array()) {
     '#default_value' => $status,
     '#options' => $options,
     '#process' => array(
-      'expand_checkboxes',
+      'form_process_checkboxes',
       'system_modules_disable',
     ),
     '#disabled_modules' => $disabled,
