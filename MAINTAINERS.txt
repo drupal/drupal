@@ -3,89 +3,40 @@
 List of maintainers
 --------------------------------------------------------------------------------
 
-LEGEND
-======
-
-- M: the maintainer
-- S: status:
-      "supported"     : someone is actually paid to look after this.
-      "maintained"    : someone actually looks after it.
-      "fixes/patches" : it has a maintainer but they don't have time to
-                        do much other than throw the odd patch in.
-      "orphan"        : no current maintainer, but maybe you could take
-                        the role as you write new code?
-
---------------------------------------------------------------------------------
-
 BLOG API
-M: James Walker <walkah@walkah.net>
-S: maintained
-
-DISTRIBUTED AUTHENTICATION MODULES
-M: Moshe Weitzman <weitzman@tejasa.com>
-S: maintained
+James Walker 'walkah' <http://drupal.org/user/1531>
 
 DOCUMENTATION COORDINATOR
-M: Steven Peck <speck@blkmtn.org>
-S: maintained
-
-FILTER SYSTEM
-M: Steven Wittens <unconed@drupal.org>
-S: maintained
+Steven Peck 'sepeck' <http://drupal.org/user/5195>
 
 FORM SYSTEM
-M: Károly Négyesi <chx@mail.tvnet.hu>
-S: maintained
+Károly Négyesi 'chx' <http://drupal.org/user/9446>
 
 LOCALE MODULE
-M: Gabor Hojtsy <goba@php.net>
-S: maintained
+Gabor Hojtsy 'goba' <http://drupal.org/user/4166>
 
 LOGGING
-M: Khalid Baheyeldin <drupal@2bits.com>
-S: maintained
+Khalid Baheyeldin 'kbahey' <http://drupal.org/user/4063>
 
 MENU SYSTEM
-M: Károly Négyesi <chx@mail.tvnet.hu>
-S: maintained
-
-PATH MODULE
-M: Matt Westgate <drupal@asitis.org>
-S: maintained
-
-POSTGRESQL
-M: Sammy Spets <sammys-drupal@synerger.com>
-S: maintained
+Károly Négyesi 'chx' <http://drupal.org/user/9446>
 
 SECURITY COORDINATOR
-M: Heine Deelstra <hdeelstra@gmail.com>
-S: maintained
-
-STATISTICS MODULE
-M: Jeremy Andrews <jeremy@kerneltrap.com>
-S: maintained
+Heine Deelstra 'heine' <http://drupal.org/user/17943>
 
 THEME SYSTEM
-M: Earl Miles <merlin@logrus.com>
-   Joon Park <joon@dvessel.com>
-S: maintained
+Earl Miles 'merlinofchaos' <http://drupal.org/user/26979>
+Joon Park 'dvessel' <http://drupal.org/user/56782>
 
 UPDATE MODULE
-M: Derek Wright <http://drupal.org/user/46549/contact>
-   Earl Miles <http://drupal.org/user/26979/contact>
-S: maintained
-
-XML-RPC SERVER/CLIENT
-M: John VanDyk <http://drupal.org/user/2375/contact>
-S: maintained
+Derek Wright 'dww' <http://drupal.org/user/46549>
+Earl Miles 'merlinofchaos' <http://drupal.org/user/26979>
 
 TRANSLATIONS COORDINATOR
-M: Gerhard Killesreiter <gerhard@killesreiter.de>
-S: maintained
+Gerhard Killesreiter 'killes' <http://drupal.org/user/83>
 
 GARLAND THEME
-M: Stefan Nagtegaal <stefan@robuustdesign.nl>
-S: maintained
+Stefan Nagtegaal 'steef' <http://drupal.org/user/612>
 
 THE REST:
-M: Dries <dries@drupal.org>
+Dries Buytaert 'dries' <http://drupal.org/user/1>
