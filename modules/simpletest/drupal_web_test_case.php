@@ -907,23 +907,6 @@ class DrupalWebTestCase {
   }
 
   /**
-   * Retrieves only the headers for a Drupal path or an absolute path.
-   *
-   * @param $path
-   *   Drupal path or url to load into internal browser
-   * @param $options
-   *  Options to be forwarded to url().
-   * @return
-   *  The retrieved headers, also available as $this->drupalGetContent()
-   */
-  function drupalHead($path, $options = array()) {
-    $options['absolute'] = TRUE;
-    $out = $this->curlExec(array(CURLOPT_HEADER => TRUE, CURLOPT_NOBODY => TRUE, CURLOPT_URL => url($path, $options)));
-    $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.
-    return $out;
-  }
-
-  /**
    * Handle form input related to drupalPost(). Ensure that the specified fields
    * exist and attempt to create POST data in the correct manner for the particular
    * field type.
