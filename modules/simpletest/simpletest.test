@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.test,v 1.3 2008/06/24 21:51:02 dries Exp $
+// $Id: simpletest.test,v 1.4 2008/07/18 07:24:29 dries Exp $
 
 class SimpleTestTestCase extends DrupalWebTestCase {
   protected $results;
@@ -42,6 +42,12 @@ class SimpleTestTestCase extends DrupalWebTestCase {
     if (!$this->inCURL()) {
       $this->drupalGet('node');
       $this->assertTitle(variable_get('site_name', 'Drupal'), t('Site title matches.'));
+      // Make sure that we are locked out of the installer when prefixing
+      // using the user-agent header. This is an important security check.
+      global $base_url;
+
+      $this->drupalGet($base_url . '/install.php', array('external' => TRUE));
+      $this->assertResponse(403, 'Cannot access install.php with a "simpletest" user-agent header.');
     }
   }
 
