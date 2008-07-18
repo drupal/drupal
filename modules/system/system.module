@@ -189,7 +189,7 @@ function system_elements() {
     '#name' => 'op',
     '#button_type' => 'submit',
     '#executes_submit_callback' => TRUE,
-    '#process' => array('form_expand_ahah'),
+    '#process' => array('form_process_ahah'),
   );
 
   $type['button'] = array(
@@ -197,14 +197,14 @@ function system_elements() {
     '#name' => 'op',
     '#button_type' => 'submit',
     '#executes_submit_callback' => FALSE,
-    '#process' => array('form_expand_ahah'),
+    '#process' => array('form_process_ahah'),
   );
 
   $type['image_button'] = array(
     '#input' => TRUE,
     '#button_type' => 'submit',
     '#executes_submit_callback' => TRUE,
-    '#process' => array('form_expand_ahah'),
+    '#process' => array('form_process_ahah'),
     '#return_value' => TRUE,
     '#has_garbage_value' => TRUE,
     '#src' => NULL,
@@ -215,19 +215,19 @@ function system_elements() {
     '#size' => 60,
     '#maxlength' => 128,
     '#autocomplete_path' => FALSE,
-    '#process' => array('form_expand_ahah'),
+    '#process' => array('form_process_ahah'),
   );
 
   $type['password'] = array(
     '#input' => TRUE,
     '#size' => 60,
     '#maxlength' => 128,
-    '#process' => array('form_expand_ahah'),
+    '#process' => array('form_process_ahah'),
   );
 
   $type['password_confirm'] = array(
     '#input' => TRUE,
-    '#process' => array('expand_password_confirm'),
+    '#process' => array('form_process_password_confirm'),
   );
 
   $type['textarea'] = array(
@@ -235,50 +235,50 @@ function system_elements() {
     '#cols' => 60,
     '#rows' => 5,
     '#resizable' => TRUE,
-    '#process' => array('form_expand_ahah'),
+    '#process' => array('form_process_ahah'),
   );
 
   $type['radios'] = array(
     '#input' => TRUE,
-    '#process' => array('expand_radios'),
+    '#process' => array('form_process_radios'),
   );
 
   $type['radio'] = array(
     '#input' => TRUE,
     '#default_value' => NULL,
-    '#process' => array('form_expand_ahah'),
+    '#process' => array('form_process_ahah'),
   );
 
   $type['checkboxes'] = array(
     '#input' => TRUE,
     '#tree' => TRUE,
-    '#process' => array('expand_checkboxes'),
+    '#process' => array('form_process_checkboxes'),
   );
 
   $type['checkbox'] = array(
     '#input' => TRUE,
     '#return_value' => 1,
-    '#process' => array('form_expand_ahah'),
+    '#process' => array('form_process_ahah'),
   );
 
   $type['select'] = array(
     '#input' => TRUE,
     '#size' => 0,
     '#multiple' => FALSE,
-    '#process' => array('form_expand_ahah'),
+    '#process' => array('form_process_ahah'),
   );
 
   $type['weight'] = array(
     '#input' => TRUE,
     '#delta' => 10,
     '#default_value' => 0,
-    '#process' => array('process_weight', 'form_expand_ahah'),
+    '#process' => array('form_process_weight', 'form_process_ahah'),
   );
 
   $type['date'] = array(
     '#input' => TRUE,
     '#element_validate' => array('date_validate'),
-    '#process' => array('expand_date'),
+    '#process' => array('form_process_date'),
   );
 
   $type['file'] = array(
@@ -296,7 +296,7 @@ function system_elements() {
 
   $type['hidden'] = array(
     '#input' => TRUE,
-    '#process' => array('form_expand_ahah'),
+    '#process' => array('form_process_ahah'),
   );
 
   $type['value'] = array(
@@ -312,7 +312,7 @@ function system_elements() {
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
     '#value' => NULL,
-    '#process' => array('form_expand_ahah'),
+    '#process' => array('form_process_ahah'),
   );
 
   $type['token'] = array(

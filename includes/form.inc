@@ -1574,7 +1574,7 @@ function theme_password_confirm($element) {
 /**
  * Expand a password_confirm field into two text boxes.
  */
-function expand_password_confirm($element) {
+function form_process_password_confirm($element) {
   $element['pass1'] =  array(
     '#type' => 'password',
     '#title' => t('Password'),
@@ -1642,7 +1642,7 @@ function theme_date($element) {
 /**
  * Roll out a single date element.
  */
-function expand_date($element) {
+function form_process_date($element) {
   // Default to current date
   if (empty($element['#value'])) {
     $element['#value'] = array('day' => format_date(time(), 'custom', 'j'),
@@ -1719,7 +1719,7 @@ function weight_value(&$form) {
  * Roll out a single radios element to a list of radios,
  * using the options array as index.
  */
-function expand_radios($element) {
+function form_process_radios($element) {
   if (count($element['#options']) > 0) {
     foreach ($element['#options'] as $key => $choice) {
       if (!isset($element[$key])) {
@@ -1755,7 +1755,7 @@ function expand_radios($element) {
  *   None. Additional code is added to the header of the page using
  *   drupal_add_js.
  */
-function form_expand_ahah($element) {
+function form_process_ahah($element) {
   static $js_added = array();
   // Add a reasonable default event handler if none specified.
   if (isset($element['#ahah']['path']) && !isset($element['#ahah']['event'])) {
@@ -1893,7 +1893,7 @@ function theme_checkboxes($element) {
   }
 }
 
-function expand_checkboxes($element) {
+function form_process_checkboxes($element) {
   $value = is_array($element['#value']) ? $element['#value'] : array();
   $element['#tree'] = TRUE;
   if (count($element['#options']) > 0) {
@@ -2111,7 +2111,7 @@ function theme_password($element) {
 /**
  * Expand weight elements into selects.
  */
-function process_weight($element) {
+function form_process_weight($element) {
   for ($n = (-1 * $element['#delta']); $n <= $element['#delta']; $n++) {
     $weights[$n] = $n;
   }

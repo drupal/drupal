@@ -734,7 +734,7 @@ function system_modules($form_state = array()) {
     '#default_value' => $status,
     '#options' => $options,
     '#process' => array(
-      'expand_checkboxes',
+      'form_process_checkboxes',
       'system_modules_disable',
     ),
     '#disabled_modules' => $disabled,
