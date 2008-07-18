@@ -448,23 +448,41 @@ function install_select_profile() {
 
 /**
  * Form API array definition for the profile selection form.
+ *
+ * @param $form_state
+ *   Array of metadata about state of form processing.
+ * @param $profile_files
+ *   Array of .profile files, as returned from file_scan_directory().
  */
-function install_select_profile_form(&$form_state, $profiles) {
-  foreach ($profiles as $profile) {
+function install_select_profile_form(&$form_state, $profile_files) {
+  $profiles = array();
+  $names = array();
+
+  foreach ($profile_files as $profile) {
     include_once($profile->filename);
-    // Load profile details.
+
+    // Load profile details and store them for later retrieval.
     $function = $profile->name .'_profile_details';
     if (function_exists($function)) {
       $details = $function();
     }
-    // If set, used defined name. Otherwise use file name.
+    $profiles[$profile->name] = $details;
+
+    // Determine the name of the profile; default to file name if defined name
+    // is unspecified.
     $name = isset($details['name']) ? $details['name'] : $profile->name;
+    $names[$profile->name] = $name;
+  }
+
+  // Display radio buttons alphabetically by human-readable name. 
+  natcasesort($names);
+  foreach ($names as $profile => $name) {
     $form['profile'][$name] = array(
       '#type' => 'radio',
       '#value' => 'default',
-      '#return_value' => $profile->name,
+      '#return_value' => $profile,
       '#title' => $name,
-      '#description' => isset($details['description']) ? $details['description'] : '',
+      '#description' => isset($profiles[$profile]['description']) ? $profiles[$profile]['description'] : '',
       '#parents' => array('profile'),
     );
   }
