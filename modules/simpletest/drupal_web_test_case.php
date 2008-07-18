@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.26 2008/07/17 21:10:39 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.27 2008/07/18 07:30:34 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -898,23 +898,6 @@ class DrupalWebTestCase {
    *   Options to be forwarded to url().
    * @return
    *   The retrieved headers, also available as $this->drupalGetContent()
-   */
-  function drupalHead($path, $options = array()) {
-    $options['absolute'] = TRUE;
-    $out = $this->curlExec(array(CURLOPT_HEADER => TRUE, CURLOPT_NOBODY => TRUE, CURLOPT_URL => url($path, $options)));
-    $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.
-    return $out;
-  }
-
-  /**
-   * Retrieves only the headers for a Drupal path or an absolute path.
-   *
-   * @param $path
-   *   Drupal path or url to load into internal browser
-   * @param $options
-   *  Options to be forwarded to url().
-   * @return
-   *  The retrieved headers, also available as $this->drupalGetContent()
    */
   function drupalHead($path, $options = array()) {
     $options['absolute'] = TRUE;
