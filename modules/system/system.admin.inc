@@ -1829,10 +1829,10 @@ function system_sql() {
 
   $output  = '<h2>' . t('Command counters') . '</h2>';
   $output .= _system_sql($data, array(
-   'Com_select' => t('The number of <code>SELECT</code>-statements.'),
-   'Com_insert' => t('The number of <code>INSERT</code>-statements.'),
-   'Com_update' => t('The number of <code>UPDATE</code>-statements.'),
-   'Com_delete' => t('The number of <code>DELETE</code>-statements.'),
+   'Com_select' => t('The number of !sql statements.', array('!sql' => '<code>SELECT</code>')),
+   'Com_insert' => t('The number of !sql statements.', array('!sql' => '<code>INSERT</code>')),
+   'Com_update' => t('The number of !sql statements.', array('!sql' => '<code>UPDATE</code>')),
+   'Com_delete' => t('The number of !sql statements.', array('!sql' => '<code>DELETE</code>')),
    'Com_lock_tables' => t('The number of table locks.'),
    'Com_unlock_tables' => t('The number of table unlocks.')
   ));
