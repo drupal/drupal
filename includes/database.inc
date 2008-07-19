@@ -216,6 +216,11 @@ function _db_query_callback($match, $init = FALSE) {
       return (int) array_shift($args); // We don't need db_escape_string as numbers are db-safe
     case '%s':
       return db_escape_string(array_shift($args));
+    case '%n':
+      // Numeric values have arbitrary precision, so can't be treated as float.
+      // is_numeric() allows hex values (0xFF), but they are not valid.
+      $value = trim(array_shift($args));
+      return (is_numeric($value) && !stripos($value, 'x')) ? $value : '0';
     case '%%':
       return '%';
     case '%f':
@@ -244,7 +249,7 @@ function db_placeholders($arguments, $type = 'int') {
 /**
  * Indicates the place holders that should be replaced in _db_query_callback().
  */
-define('DB_QUERY_REGEXP', '/(%d|%s|%%|%f|%b)/');
+define('DB_QUERY_REGEXP', '/(%d|%s|%%|%f|%b|%n)/');
 
 /**
  * Helper function for db_rewrite_sql.
@@ -546,16 +551,14 @@ function db_type_placeholder($type) {
     case 'char':
     case 'text':
     case 'datetime':
-      return '\'%s\'';
+      return "'%s'";
 
     case 'numeric':
-      // For 'numeric' values, we use '%s', not '\'%s\'' as with
-      // string types, because numeric values should not be enclosed
-      // in quotes in queries (though they can be, at least on mysql
-      // and pgsql).  Numerics should only have [0-9.+-] and
-      // presumably no db's "escape string" function will mess with
-      // those characters.
-      return '%s';
+      // Numeric values are arbitrary precision numbers.  Syntacically, numerics
+      // should be specified directly in SQL. However, without single quotes
+      // the %s placeholder does not protect against non-numeric characters such
+      // as spaces which would expose us to SQL injection.
+      return '%n';
 
     case 'serial':
     case 'int':

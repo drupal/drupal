@@ -1,4 +1,6 @@
 <?php
+// $Id$
+
 class CacheTestCase extends DrupalWebTestCase {
   protected $default_table = 'cache';
   protected $default_cid = 'test_temporary';

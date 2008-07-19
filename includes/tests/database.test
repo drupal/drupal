@@ -1,0 +1,182 @@
+<?php
+// $Id$
+
+class DatabaseSecurityTestCase extends DrupalWebTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Database placeholders'),
+      'description' => t('Make sure that invalid values do not get passed through the %n, %d, or %f placeholders.'),
+      'group' => t('System')
+    );
+  }
+
+  function testPlaceholders() {
+    // First test the numeric type
+    $valid = array(
+      '0' => 0,
+      '1' => 1,
+      '543.21' => 543.21,
+      '123.456' => 123.46,
+      '+0.1e3' => 0.1e3,
+    );
+    $not_valid = array(
+      '1x' => 0,
+      '4.4 OR 1=1' => 0,
+      '9 9' => 0,
+      '0xff' => 0,
+      'XXX' => 0,
+      '0Xaa' => 0,
+      'e' => 0,
+      '--1' => 0,
+      'DROP TABLE' => 0,
+      '44-66' => 0,
+      '' => 0,
+      '.' => 0,
+      '%88' => 0,
+     );
+
+    $schema = array(
+      'fields' => array(
+        'n' => array(
+          'type' => 'numeric',
+          'precision' => 5,
+          'scale' => 2,
+          'not null' => TRUE,
+        ),
+      )
+    );
+
+    $ret = array();
+    db_create_table($ret, 'test_numeric', $schema);
+    $insert_query = 'INSERT INTO {test_numeric} (n) VALUES (' . db_type_placeholder('numeric') . ')';
+    foreach ($valid as $insert => $select) {
+      db_query('DELETE FROM {test_numeric}');
+      db_query($insert_query, $insert);
+      $count = db_result(db_query('SELECT COUNT(*) FROM {test_numeric}'));
+      $this->assertEqual(1, $count, "[numeric] One row ($count) after inserting $insert");
+      $test = db_result(db_query('SELECT n FROM {test_numeric}'));
+      $this->assertEqual($select, $test, "[numeric] Got $select ($test) after inserting valid value $insert");
+    }
+    foreach ($not_valid as $insert => $select) {
+      db_query('DELETE FROM {test_numeric}');
+      db_query($insert_query, $insert);
+      $count = db_result(db_query('SELECT COUNT(*) FROM {test_numeric}'));
+      $this->assertEqual(1, $count, "[numeric] One row ($count) after inserting $insert");
+      $test = db_result(db_query('SELECT n FROM {test_numeric}'));
+      $this->assertEqual(0, $test, "[numeric] Got $select ($test) after inserting invalid value $insert");
+    }
+
+    // Test ints
+    $valid = array(
+      '0' => 0,
+      '1' => 1,
+      '543.21' => 543,
+      '123.456' => 123,
+      '22' => 22,
+    );
+    $not_valid = array(
+      '+0.1e3' => 0,
+      '0xff' => 0,
+      '0Xaa' => 0,
+      '1x' => 1,
+      '4.4 OR 1=1' => 4,
+      '9 9' => 9,
+      'XXX' => 0,
+      'e' => 0,
+      '--1' => 0,
+      'DROP TABLE' => 0,
+      '44-66' => 44,
+      '' => 0,
+      '.' => 0,
+      '%88' => 0,
+     );
+
+    $schema = array(
+      'fields' => array(
+        'n' => array(
+          'type' => 'int',
+          'not null' => TRUE,
+        ),
+      )
+    );
+
+    $ret = array();
+    db_create_table($ret, 'test_int', $schema);
+    $insert_query = 'INSERT INTO {test_int} (n) VALUES (' . db_type_placeholder('int') . ')';
+    foreach ($valid as $insert => $select) {
+      db_query('DELETE FROM {test_int}');
+      db_query($insert_query, $insert);
+      $count = db_result(db_query('SELECT COUNT(*) FROM {test_int}'));
+      $this->assertEqual(1, $count, "[int] One row ($count) after inserting $insert");
+      $test = db_result(db_query('SELECT n FROM {test_int}'));
+      $this->assertEqual($select, $test, "[int] Got $select ($test) after inserting valid value $insert");
+    }
+    foreach ($not_valid as $insert => $select) {
+      db_query('DELETE FROM {test_int}');
+      db_query($insert_query, $insert);
+      $count = db_result(db_query('SELECT COUNT(*) FROM {test_int}'));
+      $this->assertEqual(1, $count, "[int] One row ($count) after inserting $insert");
+      $test = db_result(db_query('SELECT n FROM {test_int}'));
+      $this->assertEqual($select, $test, "[int] Got $select ($test) after inserting invalid value $insert");
+    }
+
+    // Test floats
+    $valid = array(
+      '0' => 0,
+      '1' => 1,
+      '543.21' => 543.21,
+      '123.456' => 123.456,
+      '22' => 22,
+      '+0.1e3' => 100,
+    );
+    $not_valid = array(
+      '0xff' => 0,
+      '0Xaa' => 0,
+      '1x' => 1,
+      '4.4 OR 1=1' => 4.4,
+      '9 9' => 9,
+      'XXX' => 0,
+      'e' => 0,
+      '--1' => 0,
+      'DROP TABLE' => 0,
+      '44-66' => 44,
+      '' => 0,
+      '.' => 0,
+      '%88' => 0,
+     );
+
+    $schema = array(
+      'fields' => array(
+        'n' => array(
+          'type' => 'float',
+          'not null' => TRUE,
+        ),
+      )
+    );
+
+    $ret = array();
+    db_create_table($ret, 'test_float', $schema);
+    $insert_query = 'INSERT INTO {test_float} (n) VALUES (' . db_type_placeholder('float') . ')';
+    foreach ($valid as $insert => $select) {
+      db_query('DELETE FROM {test_float}');
+      db_query($insert_query, $insert);
+      $count = db_result(db_query('SELECT COUNT(*) FROM {test_float}'));
+      $this->assertEqual(1, $count, "[float] One row ($count) after inserting $insert");
+      $test = db_result(db_query('SELECT n FROM {test_float}'));
+      $this->assertEqual($select, $test, "[float] Got $select ($test) after inserting valid value $insert");
+    }
+    foreach ($not_valid as $insert => $select) {
+      db_query('DELETE FROM {test_float}');
+      db_query($insert_query, $insert);
+      $count = db_result(db_query('SELECT COUNT(*) FROM {test_float}'));
+      $this->assertEqual(1, $count, "[float] One row ($count) after inserting $insert");
+      $test = db_result(db_query('SELECT n FROM {test_float}'));
+      $this->assertEqual($select, $test, "[float] Got $select ($test) after inserting invalid value $insert");
+    }
+
+  }
+}
