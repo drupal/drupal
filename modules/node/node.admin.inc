@@ -35,19 +35,7 @@ function node_configure() {
   );
   $form['teaser_length'] = array(
     '#type' => 'select', '#title' => t('Length of trimmed posts'), '#default_value' => variable_get('teaser_length', 600),
-    '#options' => array(
-      0 => t('Unlimited'),
-      200 => t('200 characters'),
-      400 => t('400 characters'),
-      600 => t('600 characters'),
-      800 => t('800 characters'),
-      1000 => t('1000 characters'),
-      1200 => t('1200 characters'),
-      1400 => t('1400 characters'),
-      1600 => t('1600 characters'),
-      1800 => t('1800 characters'),
-      2000 => t('2000 characters'),
-    ),
+    '#options' => drupal_map_assoc(array(0, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000), '_node_characters'),
     '#description' => t("The maximum number of characters used in the trimmed version of a post. Drupal will use this setting to determine at which offset long posts should be trimmed. The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc. To disable teasers, set to 'Unlimited' . Note that this setting will only affect new or updated content and will not affect existing teasers.")
   );
 
@@ -62,6 +50,13 @@ function node_configure() {
   $form['#validate'] = array('node_configure_validate');
 
   return system_settings_form($form);
+}
+
+/**
+ * Helper function for teaser length choices.
+ */
+function _node_characters($length) {
+  return ($length == 0) ? t('Unlimited') : format_plural($length, '1 character', '@count characters');
 }
 
 /**
