@@ -1,7 +1,7 @@
 ; $Id$
 
 name = Blog
-description = Enables keeping easily and regularly updated user web pages or blogs.
+description = Enables multi-user blogs.
 package = Core - optional
 version = VERSION
 core = 7.x
