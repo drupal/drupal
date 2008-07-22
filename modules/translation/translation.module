@@ -226,7 +226,7 @@ function translation_nodeapi(&$node, $op, $teaser, $page) {
         db_query("UPDATE {node} SET tnid = %d, translate = %d WHERE nid = %d", $node->tnid, $node->translation['status'], $node->nid);
         if (!empty($node->translation['retranslate'])) {
           // This is the source node, asking to mark all translations outdated.
-          db_query("UPDATE {node} SET translate = 1 WHERE tnid = %d AND nid != %d", $node->tnid, $node->nid);
+          db_query("UPDATE {node} SET translate = 1 WHERE tnid = %d AND nid <> %d", $node->tnid, $node->nid);
         }
       }
       break;
