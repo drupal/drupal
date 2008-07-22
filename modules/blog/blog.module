@@ -1,9 +1,9 @@
 <?php
-// $Id: blog.module,v 1.308 2008/07/16 21:59:25 dries Exp $
+// $Id: blog.module,v 1.309 2008/07/22 20:00:55 dries Exp $
 
 /**
  * @file
- * Enables keeping an easily and regularly updated web page or a blog.
+ * Enables multi-user blogs.
  */
 
 /**
