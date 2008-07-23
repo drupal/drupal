@@ -115,8 +115,12 @@ function system_theme() {
       'arguments' => array('form' => NULL),
       'file' => 'system.admin.inc',
     ),
-    'system_modules' => array(
+    'system_modules_fieldset' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'system.admin.inc',
+    ),
+    'system_modules_incompatible' => array(
+      'arguments' => array('message' => NULL),
       'file' => 'system.admin.inc',
     ),
     'system_modules_uninstall' => array(

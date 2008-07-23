@@ -10,7 +10,7 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
   function getInfo() {
     return array(
       'name' => t('Module list functionality'),
-      'description' => t('Enable/disable core module and confirm table creation/deletion. Enable module without dependecy enabled.'),
+      'description' => t('Enable/disable core module and confirm table creation/deletion. Enable module without dependency enabled.'),
       'group' => t('System')
     );
   }
@@ -35,7 +35,7 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
     $this->assertTableCount('aggregator', FALSE);
 
     $edit = array();
-    $edit['status[aggregator]'] = 'aggregator';
+    $edit['modules[Core - optional][aggregator][enable]'] = 'aggregator';
     $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
 
@@ -44,7 +44,7 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
 
     // Disable aggregator, check tables, uninstall aggregator, check tables.
     $edit = array();
-    $edit['status[aggregator]'] = FALSE;
+    $edit['modules[Core - optional][aggregator][enable]'] = FALSE;
     $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
 
@@ -68,7 +68,7 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
   function testEnableWithoutDependency () {
     // Attempt to enable content translation without locale enabled.
     $edit = array();
-    $edit['status[translation]'] = 'translation';
+    $edit['modules[Core - optional][translation][enable]'] = 'translation';
     $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
     $this->assertText(t('Some required modules must be enabled'), t('Dependecy required.'));
 
@@ -110,15 +110,16 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
    * @param array $modules Modules to check.
    * @param boolean $enabled Module state.
    */
-  function assertModules(array $modules, $enabled) {
+  function assertModules(Array $modules, $enabled) {
     module_list(TRUE, FALSE);
     foreach ($modules as $module) {
       if ($enabled) {
-        $this->assertTrue(module_exists($module) == $enabled, t('Module "@module" is enabled.', array('@module' => $module)));
+        $message = 'Module "@module" is enabled.';
       }
       else {
-        $this->assertTrue(module_exists($module) == $enabled, t('Module "@module" not enabled.', array('@module' => $module)));
+        $message = 'Module "@module" is not enabled.';
       }
+      $this->assertEqual(module_exists($module), $enabled, t($message, array('@module' => $module)));
     }
   }
 }
