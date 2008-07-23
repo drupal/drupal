@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.610 2008/07/18 07:06:24 dries Exp $
+// $Id: system.module,v 1.611 2008/07/23 07:37:06 dries Exp $
 
 /**
  * @file
@@ -115,8 +115,12 @@ function system_theme() {
       'arguments' => array('form' => NULL),
       'file' => 'system.admin.inc',
     ),
-    'system_modules' => array(
+    'system_modules_fieldset' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'system.admin.inc',
+    ),
+    'system_modules_incompatible' => array(
+      'arguments' => array('message' => NULL),
       'file' => 'system.admin.inc',
     ),
     'system_modules_uninstall' => array(
