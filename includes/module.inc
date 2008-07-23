@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.120 2008/05/13 17:38:42 dries Exp $
+// $Id: module.inc,v 1.121 2008/07/23 07:34:34 dries Exp $
 
 /**
  * @file
@@ -12,15 +12,6 @@
 function module_load_all() {
   foreach (module_list(TRUE, FALSE) as $module) {
     drupal_load('module', $module);
-  }
-}
-
-/**
- * Call a function repeatedly with each module in turn as an argument.
- */
-function module_iterate($function, $argument = '') {
-  foreach (module_list() as $name) {
-    $function($name, $argument);
   }
 }
 
