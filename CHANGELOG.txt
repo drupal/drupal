@@ -1,8 +1,9 @@
 // $Id$
 
-Drupal 5.9, xxxx-xx-xx
+Drupal 5.9, 2008-07-23
 ----------------------
-
+- fixed a variety of small bugs.
+- fixed security issues, (Session fixation), see SA-2008-046
 
 Drupal 5.8, 2008-07-09
 ----------------------
