@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.119 2008/05/13 18:13:43 dries Exp $
+// $Id: blogapi.module,v 1.120 2008/07/23 07:42:08 dries Exp $
 
 /**
  * @file
@@ -131,7 +131,7 @@ function blogapi_xmlrpc() {
       t('Retrieve information about the text formatting plugins supported by the server.')),
     array(
       'mt.publishPost',
-      'blogap_mti_publish_post',
+      'blogapi_mt_publish_post',
       array('boolean', 'string', 'string', 'string'),
       t('Publish (rebuild) all of the static files related to an entry from your blog. Equivalent to saving an entry in the system (but without the ping).')));
 }
@@ -490,7 +490,7 @@ function blogapi_mt_supported_text_filters() {
 /**
  * Blogging API callback. Publishes the given node.
  */
-function blogap_mti_publish_post($postid, $username, $password) {
+function blogapi_mt_publish_post($postid, $username, $password) {
   $user = blogapi_validate_user($username, $password);
 
   if (!$user->uid) {
