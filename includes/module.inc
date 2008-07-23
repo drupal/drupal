@@ -16,15 +16,6 @@ function module_load_all() {
 }
 
 /**
- * Call a function repeatedly with each module in turn as an argument.
- */
-function module_iterate($function, $argument = '') {
-  foreach (module_list() as $name) {
-    $function($name, $argument);
-  }
-}
-
-/**
  * Collect a list of all loaded modules. During the bootstrap, return only
  * vital modules. See bootstrap.inc
  *
