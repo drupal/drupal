@@ -44,9 +44,7 @@ function syslog_admin_settings() {
     '#default_value' => variable_get('syslog_facility', DEFAULT_SYSLOG_FACILITY),
     '#options'       => syslog_facility_list(),
     '#description'   => t('Select the syslog facility code under which Drupal\'s messages should be sent. On UNIX/Linux systems, Drupal can flag its messages with the code LOG_LOCAL0 through LOG_LOCAL7; for Microsoft Windows, all messages are flagged with the code LOG_USER. Depending on the system configuration, syslog and other logging tools use this code to identify or filter Drupal messages from within the entire system log. For more information on syslog, see <a href="@syslog_help">Syslog help</a>.', array(
-      '@syslog_help' => url('admin/help/syslog'),
-      '!php'         => l("PHP's syslog", 'http://www.php.net/manual/en/function.openlog.php', array('external' => TRUE)),
-      '!syslog_conf' => l('UNIX/Linux syslog.conf', 'http://www.rt.com/man/syslog.5.html', array('external' => TRUE)))),
+      '@syslog_help' => url('admin/help/syslog'))),
   );
   return system_settings_form($form);
 }
