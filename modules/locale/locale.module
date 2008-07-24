@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.219 2008/07/10 01:45:47 dries Exp $
+// $Id: locale.module,v 1.220 2008/07/24 16:25:18 dries Exp $
 
 /**
  * @file
@@ -305,7 +305,7 @@ function locale_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function locale_theme() {
   return array(

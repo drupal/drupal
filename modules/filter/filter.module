@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.216 2008/07/19 20:06:25 dries Exp $
+// $Id: filter.module,v 1.217 2008/07/24 16:25:17 dries Exp $
 
 /**
  * @file
@@ -41,7 +41,7 @@ function filter_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function filter_theme() {
   return array(

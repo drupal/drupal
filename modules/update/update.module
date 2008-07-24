@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.19 2008/05/06 12:18:53 dries Exp $
+// $Id: update.module,v 1.20 2008/07/24 16:25:19 dries Exp $
 
 /**
  * @file
@@ -164,7 +164,7 @@ function update_theme() {
 }
 
 /**
- * Implementation of hook_requirements.
+ * Implementation of hook_requirements().
  *
  * @return
  *   An array describing the status of the site regarding available updates.

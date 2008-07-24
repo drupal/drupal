@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.458 2008/07/16 21:59:26 dries Exp $
+// $Id: forum.module,v 1.459 2008/07/24 16:25:17 dries Exp $
 
 /**
  * @file
@@ -33,7 +33,7 @@ function forum_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function forum_theme() {
   return array(

@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.204 2008/07/18 07:18:55 dries Exp $
+// $Id: upload.module,v 1.205 2008/07/24 16:25:19 dries Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@ function upload_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function upload_theme() {
   return array(

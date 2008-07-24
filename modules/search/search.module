@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.259 2008/07/10 02:13:02 dries Exp $
+// $Id: search.module,v 1.260 2008/07/24 16:25:18 dries Exp $
 
 /**
  * @file
@@ -112,7 +112,7 @@ function search_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function search_theme() {
   return array(

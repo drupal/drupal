@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.269 2008/07/16 21:59:27 dries Exp $
+// $Id: poll.module,v 1.270 2008/07/24 16:25:18 dries Exp $
 
 /**
  * @file
@@ -28,7 +28,7 @@ function poll_init() {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function poll_theme() {
   return array(
