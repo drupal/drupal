@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.12 2008/07/16 21:59:26 dries Exp $
+// $Id: filter.admin.inc,v 1.13 2008/07/24 16:27:51 dries Exp $
 
 /**
  * @file
@@ -68,7 +68,7 @@ function theme_filter_admin_overview($form) {
       $element['weight']['#attributes']['class'] = 'input-format-order-weight';
       $rows[] = array(
         'data' => array(
-          check_plain($element['name']['#value']),
+          check_plain($element['name']['#markup']),
           drupal_render($element['roles']),
           drupal_render($form['default'][$id]),
           drupal_render($element['weight']),
