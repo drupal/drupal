@@ -115,7 +115,8 @@ All arguments are long options.
   --concurrency [num]
 
               Run tests in parallel, up to [num] tests at a time.
-              This is not supported under Windows.
+              This requires the Process Control Extension (PCNTL) to be compiled in PHP,
+              not supported under Windows.
 
   --all       Run all available tests.
 
@@ -198,6 +199,17 @@ function simpletest_script_parse_args() {
       $args['test_names'] += explode(',', $arg);
     }
   }
+
+  // Validate the concurrency argument
+  if (!is_numeric($args['concurrency']) || $args['concurrency'] <= 0) {
+    simpletest_script_print_error("--concurrency must be a strictly positive integer.");
+    exit;
+  }
+  else if ($args['concurrency'] > 1 && !function_exists('pcntl_fork')) {
+    simpletest_script_print_error("Parallel test execution requires the Process Control extension to be compiled in PHP. Please see http://php.net/manual/en/intro.pcntl.php for more information.");
+    exit;
+  }
+
   return array($args, $count);
 }
 
@@ -242,7 +254,7 @@ function simpletest_script_execute_batch() {
     simpletest_script_print_error("--execute-batch should not be called interactively.");
     exit;
   }
-  if ($args['concurrency'] == 1 || !function_exists('pcntl_fork')) {
+  if ($args['concurrency'] == 1) {
     // Fallback to mono-threaded execution.
     if (count($args['test_names']) > 1) {
       foreach ($args['test_names'] as $test_class) {
@@ -264,7 +276,7 @@ function simpletest_script_execute_batch() {
     $children = array();
     while (!empty($args['test_names']) || !empty($children)) {
       // Fork children safely since Drupal is not bootstrapped yet.
-      while (count($children) < $concurrency) {
+      while (count($children) < $args['concurrency']) {
         if (empty($args['test_names'])) break;
 
         $child = array();
@@ -273,7 +285,7 @@ function simpletest_script_execute_batch() {
         if (!$child['pid']) {
           // This is the child process, bootstrap and execute the test.
           drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-          simpletest_script_run_one_test($test_id, $test_class);
+          simpletest_script_run_one_test($args['test-id'], $test_class);
           exit;
         }
         else {
