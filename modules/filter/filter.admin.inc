@@ -68,7 +68,7 @@ function theme_filter_admin_overview($form) {
       $element['weight']['#attributes']['class'] = 'input-format-order-weight';
       $rows[] = array(
         'data' => array(
-          check_plain($element['name']['#value']),
+          check_plain($element['name']['#markup']),
           drupal_render($element['roles']),
           drupal_render($form['default'][$id]),
           drupal_render($element['weight']),
