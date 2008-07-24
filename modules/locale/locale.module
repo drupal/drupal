@@ -305,7 +305,7 @@ function locale_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function locale_theme() {
   return array(

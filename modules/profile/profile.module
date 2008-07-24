@@ -49,7 +49,7 @@ function profile_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function profile_theme() {
   return array(

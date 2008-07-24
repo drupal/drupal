@@ -28,7 +28,7 @@ function poll_init() {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function poll_theme() {
   return array(

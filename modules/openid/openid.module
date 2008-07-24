@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_menu.
+ * Implementation of hook_menu().
  */
 function openid_menu() {
   $items['openid/authenticate'] = array(
@@ -71,7 +71,7 @@ function openid_user($op, &$edit, &$account, $category = NULL) {
 }
 
 /**
- * Implementation of hook_form_alter : adds OpenID login to the login forms.
+ * Implementation of hook_form_alter(). Adds OpenID login to the login forms.
  */
 function openid_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'user_login_block' || $form_id == 'user_login') {

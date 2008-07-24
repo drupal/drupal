@@ -33,7 +33,7 @@ function forum_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function forum_theme() {
   return array(

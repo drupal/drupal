@@ -23,7 +23,7 @@ function upload_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function upload_theme() {
   return array(

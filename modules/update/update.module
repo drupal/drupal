@@ -164,7 +164,7 @@ function update_theme() {
 }
 
 /**
- * Implementation of hook_requirements.
+ * Implementation of hook_requirements().
  *
  * @return
  *   An array describing the status of the site regarding available updates.

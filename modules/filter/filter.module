@@ -41,7 +41,7 @@ function filter_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function filter_theme() {
   return array(

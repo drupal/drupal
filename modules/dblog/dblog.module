@@ -28,7 +28,7 @@ function dblog_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function dblog_theme() {
   return array(

@@ -16,7 +16,7 @@ function taxonomy_perm() {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function taxonomy_theme() {
   return array(

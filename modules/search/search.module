@@ -112,7 +112,7 @@ function search_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function search_theme() {
   return array(

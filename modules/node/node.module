@@ -91,7 +91,7 @@ function node_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme()
+ * Implementation of hook_theme().
  */
 function node_theme() {
   return array(
@@ -2222,7 +2222,7 @@ function node_access_view_all_nodes() {
 }
 
 /**
- * Implementation of hook_db_rewrite_sql
+ * Implementation of hook_db_rewrite_sql().
  */
 function node_db_rewrite_sql($query, $primary_table, $primary_field) {
   if ($primary_field == 'nid' && !node_access_view_all_nodes()) {

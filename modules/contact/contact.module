@@ -33,7 +33,7 @@ function contact_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_perm
+ * Implementation of hook_perm().
  */
 function contact_perm() {
   return array(
