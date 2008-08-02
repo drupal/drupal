@@ -28,7 +28,13 @@ class SyslogTestCase extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     $edit = array();
-    $edit['syslog_facility'] = 176; // LOG_LOCAL6 - Local 6.
+    // If we're on Windows, LOG_LOCAL6 will not be available.
+    if (defined('LOG_LOCAL6')) {
+      $edit['syslog_facility'] = LOG_LOCAL6;
+    }
+    else {
+      $edit['syslog_facility'] = LOG_USER;
+    }
     $this->drupalPost('admin/settings/logging/syslog', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'));
 
