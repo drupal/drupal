@@ -304,10 +304,22 @@ function system_requirements($phase) {
  */
 function system_install() {
   if ($GLOBALS['db_type'] == 'pgsql') {
+    // We create some custom types and functions using global names instead of
+    // prefixing them like we do with table names. If this function is ever
+    // called again (for example, by the test framework when creating prefixed
+    // test databases), the global names will already exist. We therefore avoid
+    // trying to create them again in that case.
+
     // Create unsigned types.
-    db_query("CREATE DOMAIN int_unsigned integer CHECK (VALUE >= 0)");
-    db_query("CREATE DOMAIN smallint_unsigned smallint CHECK (VALUE >= 0)");
-    db_query("CREATE DOMAIN bigint_unsigned bigint CHECK (VALUE >= 0)");
+    if (!db_result(db_query("SELECT COUNT(*) FROM pg_constraint WHERE conname = 'int_unsigned_check'"))) {
+      db_query("CREATE DOMAIN int_unsigned integer CHECK (VALUE >= 0)");
+    }
+    if (!db_result(db_query("SELECT COUNT(*) FROM pg_constraint WHERE conname = 'smallint_unsigned_check'"))) {
+      db_query("CREATE DOMAIN smallint_unsigned smallint CHECK (VALUE >= 0)");
+    }
+    if (!db_result(db_query("SELECT COUNT(*) FROM pg_constraint WHERE conname = 'bigint_unsigned_check'"))) {
+      db_query("CREATE DOMAIN bigint_unsigned bigint CHECK (VALUE >= 0)");
+    }
 
     // Create functions.
     db_query('CREATE OR REPLACE FUNCTION "greatest"(numeric, numeric) RETURNS numeric AS
