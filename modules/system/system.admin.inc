@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.82 2008/07/23 07:37:06 dries Exp $
+// $Id: system.admin.inc,v 1.83 2008/08/02 19:01:02 dries Exp $
 
 /**
  * @file
@@ -290,7 +290,7 @@ function system_themes_form_submit($form, &$form_state) {
 
   list_themes(TRUE);
   menu_rebuild();
-  drupal_rebuild_theme_registry();
+  drupal_theme_rebuild();
   drupal_set_message(t('The configuration options have been saved.'));
   $form_state['redirect'] = 'admin/build/themes';
 
@@ -606,7 +606,7 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
  */
 function system_modules($form_state = array()) {
   // Clear all caches.
-  drupal_rebuild_theme_registry();
+  drupal_theme_rebuild();
   node_types_rebuild();
   menu_rebuild();
   cache_clear_all('schema', 'cache');

@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.inc,v 1.1 2008/05/06 12:32:02 dries Exp $
+// $Id: registry.inc,v 1.2 2008/08/02 19:01:02 dries Exp $
 
 /**
  * @file
@@ -20,9 +20,9 @@
  */
 
 /**
- * @See drupal_rebuild_code_registry.
+ * @see registry_rebuild.
  */
-function _drupal_rebuild_code_registry() {
+function _registry_rebuild() {
   // Reset the resources cache.
   _registry_get_resource_name();
   // Get the list of files we are going to parse.

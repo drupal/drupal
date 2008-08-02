@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.611 2008/07/23 07:37:06 dries Exp $
+// $Id: system.module,v 1.612 2008/08/02 19:01:02 dries Exp $
 
 /**
  * @file
@@ -1224,7 +1224,7 @@ function system_settings_form_submit($form, &$form_state) {
   }
 
   cache_clear_all();
-  drupal_rebuild_theme_registry();
+  drupal_theme_rebuild();
 }
 
 /**

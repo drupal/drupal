@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.217 2008/07/17 21:10:39 dries Exp $
+// $Id: bootstrap.inc,v 1.218 2008/08/02 19:01:02 dries Exp $
 
 /**
  * @file
@@ -1325,9 +1325,9 @@ function registry_mark_code($type, $name, $return = FALSE) {
  * Rescans all code in modules or includes directory, storing a mapping of
  * each function, file, and hook implementation in the database.
  */
-function drupal_rebuild_code_registry() {
+function registry_rebuild() {
   require_once './includes/registry.inc';
-  _drupal_rebuild_code_registry();
+  _registry_rebuild();
 }
 
 /**

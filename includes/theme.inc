@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.430 2008/07/11 02:23:08 dries Exp $
+// $Id: theme.inc,v 1.431 2008/08/02 19:01:02 dries Exp $
 
 /**
  * @file
@@ -256,7 +256,7 @@ function _theme_save_registry($theme, $registry) {
  * when modules are added to the system, or when a dynamic system needs
  * to add more theme hooks.
  */
-function drupal_rebuild_theme_registry() {
+function drupal_theme_rebuild() {
   cache_clear_all('theme_registry', 'cache', TRUE);
 }
 

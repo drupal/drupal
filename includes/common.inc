@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.780 2008/08/02 18:56:53 dries Exp $
+// $Id: common.inc,v 1.781 2008/08/02 19:01:02 dries Exp $
 
 /**
  * @file
@@ -3548,11 +3548,11 @@ function drupal_flush_all_caches() {
   // Change query-strings on css/js files to enforce reload for all users.
   _drupal_flush_css_js();
 
-  drupal_rebuild_code_registry();
+  registry_rebuild();
   drupal_clear_css_cache();
   drupal_clear_js_cache();
   system_theme_data();
-  drupal_rebuild_theme_registry();
+  drupal_theme_rebuild();
   menu_rebuild();
   node_types_rebuild();
   // Don't clear cache_form - in-progress form submissions may break.

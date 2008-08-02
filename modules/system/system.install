@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.257 2008/08/02 18:44:36 dries Exp $
+// $Id: system.install,v 1.258 2008/08/02 19:01:02 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2959,7 +2959,7 @@ function system_update_7006() {
   db_create_table($ret, 'cache_registry', $schema['cache_registry']);
   db_create_table($ret, 'registry', $schema['registry']);
   db_create_table($ret, 'registry_file', $schema['registry_file']);
-  drupal_rebuild_code_registry();
+  registry_rebuild();
   return $ret;
 }
 
