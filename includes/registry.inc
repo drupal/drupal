@@ -20,9 +20,9 @@
  */
 
 /**
- * @See drupal_rebuild_code_registry.
+ * @see registry_rebuild.
  */
-function _drupal_rebuild_code_registry() {
+function _registry_rebuild() {
   // Reset the resources cache.
   _registry_get_resource_name();
   // Get the list of files we are going to parse.

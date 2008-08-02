@@ -284,7 +284,7 @@ function module_enable($module_list) {
     // Refresh the module list to include the new enabled module.
     module_list(TRUE, FALSE);
     // Force to regenerate the stored list of hook implementations.
-    drupal_rebuild_code_registry();
+    registry_rebuild();
   }
 
   foreach ($invoke_modules as $module) {
@@ -325,7 +325,7 @@ function module_disable($module_list) {
     // Refresh the module list to exclude the disabled modules.
     module_list(TRUE, FALSE);
     // Force to regenerate the stored list of hook implementations.
-    drupal_rebuild_code_registry();
+    registry_rebuild();
   }
 
   // If there remains no more node_access module, rebuilding will be

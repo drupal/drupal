@@ -256,7 +256,7 @@ function _theme_save_registry($theme, $registry) {
  * when modules are added to the system, or when a dynamic system needs
  * to add more theme hooks.
  */
-function drupal_rebuild_theme_registry() {
+function drupal_theme_rebuild() {
   cache_clear_all('theme_registry', 'cache', TRUE);
 }
 

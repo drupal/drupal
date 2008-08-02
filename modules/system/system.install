@@ -2959,7 +2959,7 @@ function system_update_7006() {
   db_create_table($ret, 'cache_registry', $schema['cache_registry']);
   db_create_table($ret, 'registry', $schema['registry']);
   db_create_table($ret, 'registry_file', $schema['registry_file']);
-  drupal_rebuild_code_registry();
+  registry_rebuild();
   return $ret;
 }
 

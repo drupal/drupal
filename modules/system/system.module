@@ -1224,7 +1224,7 @@ function system_settings_form_submit($form, &$form_state) {
   }
 
   cache_clear_all();
-  drupal_rebuild_theme_registry();
+  drupal_theme_rebuild();
 }
 
 /**
