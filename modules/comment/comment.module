@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.643 2008/07/16 21:59:26 dries Exp $
+// $Id: comment.module,v 1.644 2008/08/02 20:29:43 dries Exp $
 
 /**
  * @file
@@ -11,14 +11,14 @@
  */
 
 /**
- * Comment is published.
- */
-define('COMMENT_PUBLISHED', 0);
-
-/**
  * Comment is awaiting approval.
  */
-define('COMMENT_NOT_PUBLISHED', 1);
+define('COMMENT_NOT_PUBLISHED', 0);
+
+/**
+ * Comment is published.
+ */
+define('COMMENT_PUBLISHED', 1);
 
 /**
  * Comments are displayed in a flat list - collapsed.

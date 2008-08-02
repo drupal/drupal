@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.23 2008/07/03 17:57:03 dries Exp $
+// $Id: comment.install,v 1.24 2008/08/02 20:29:43 dries Exp $
 
 /**
  * Implementation of hook_enable().
@@ -97,6 +97,18 @@ function comment_update_7000() {
 }
 
 /**
+ * Change comment status from published being 0 to being 1
+ */
+function comment_update_7001() {
+  $ret = array();
+  $ret[] = update_sql("UPDATE {comments} SET status = 3 WHERE status = 0");
+  $ret[] = update_sql("UPDATE {comments} SET status = 0 WHERE status = 1");
+  $ret[] = update_sql("UPDATE {comments} SET status = 1 WHERE status = 3");
+
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
@@ -161,9 +173,9 @@ function comment_schema() {
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 0,
+        'default' => 1,
         'size' => 'tiny',
-        'description' => t('The published status of a comment. (0 = Published, 1 = Not Published)'),
+        'description' => t('The published status of a comment. (0 = Not Published, 1 = Published)'),
       ),
       'format' => array(
         'type' => 'int',
