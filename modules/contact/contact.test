@@ -60,7 +60,17 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $recipients = array('simpletest@example.com', 'simpletest2@example.com', 'simpletest3@example.com');
     $this->addCategory($category = $this->randomName(16), implode(',', array($recipients[0])), '', TRUE);
     $this->assertRaw(t('Category %category has been added.', array('%category' => $category)), t('Category successfully added.'));
-
+    
+    // Test update contact form category
+    $categories = $this->getCategories();
+    $category_id = $this->updateCategory($categories, $category = $this->randomName(16), $recipients_str = implode(',', array($recipients[0], $recipients[1])), $reply = $this->randomName(30), FALSE);
+    $category_array = db_fetch_array(db_query('SELECT category, recipients, reply, selected FROM {contact} WHERE cid = %d', array($category_id)));
+    $this->assertEqual($category_array['category'], $category);
+    $this->assertEqual($category_array['recipients'], $recipients_str);
+    $this->assertEqual($category_array['reply'], $reply);
+    $this->assertFalse($category_array['selected']);
+    $this->assertRaw(t('Category %category has been updated.', array('%category' => $category)), t('Category successfully updated.'));
+		
     $this->addCategory($category = $this->randomName(16), implode(',', array($recipients[0], $recipients[1])), '', FALSE);
     $this->assertRaw(t('Category %category has been added.', array('%category' => $category)), t('Category successfully added.'));
 
@@ -89,7 +99,6 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $this->assertText($edit['contact_form_information'], t('Contact information displayed.'));
 
     // Submit contact form with invalid values.
-    $categories = $this->getCategories();
     $this->submitContact('', $recipients[0], $this->randomName(16), $categories[0], $this->randomName(64));
     $this->assertText(t('Your name field is required.'), t('Name required.'));
 
@@ -134,6 +143,25 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $edit['reply'] = $reply;
     $edit['selected'] = ($selected ? '1' : '0');
     $this->drupalPost('admin/build/contact/add', $edit, t('Save'));
+  }
+
+  /**
+   * Update a category.
+   *
+   * @param string $category Name of category.
+   * @param string $recipients List of recipient e-mail addresses.
+   * @param string $reply Auto-reply text.
+   * @param boolean $selected Defautly selected.
+   */
+  function updateCategory($categories, $category, $recipients, $reply, $selected) {
+    $category_id = $categories[array_rand($categories)];
+    $edit = array();
+    $edit['category'] = $category;
+    $edit['recipients'] = $recipients;
+    $edit['reply'] = $reply;
+    $edit['selected'] = ($selected ? '1' : '0');
+    $this->drupalPost('admin/build/contact/edit/' . $category_id, $edit, t('Save'));
+    return($category_id);
   }
 
   /**
