@@ -1552,12 +1552,12 @@ function user_delete($edit, $uid) {
   $account = user_load(array('uid' => $uid));
   sess_destroy_uid($uid);
   _user_mail_notify('status_deleted', $account);
+  module_invoke_all('user', 'delete', $edit, $account);
   db_query('DELETE FROM {users} WHERE uid = %d', $uid);
   db_query('DELETE FROM {users_roles} WHERE uid = %d', $uid);
   db_query('DELETE FROM {authmap} WHERE uid = %d', $uid);
   $variables = array('%name' => $account->name, '%email' => '<' . $account->mail . '>');
   watchdog('user', 'Deleted user: %name %email.', $variables, WATCHDOG_NOTICE);
-  module_invoke_all('user', 'delete', $edit, $account);
 }
 
 /**
