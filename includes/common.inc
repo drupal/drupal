@@ -2063,17 +2063,22 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   // page request.
   $query_string = '?' . substr(variable_get('css_js_query_string', '0'), 0, 1);
 
+  // For inline Javascript to validate as XHTML, all Javascript containing
+  // XHTML needs to be wrapped in CDATA. To make that backwards compatible
+  // with HTML 4, we need to comment out the CDATA-tag.
+  $embed_prefix = "\n<!--//--><![CDATA[//><!--\n";
+  $embed_suffix = "\n//--><!]]>\n";
+ 
   foreach ($javascript as $type => $data) {
-
     if (!$data) continue;
 
     switch ($type) {
       case 'setting':
-        $output .= '<script type="text/javascript">jQuery.extend(Drupal.settings, ' . drupal_to_js(call_user_func_array('array_merge_recursive', $data)) . ");</script>\n";
+        $output .= '<script type="text/javascript">' . $embed_prefix . 'jQuery.extend(Drupal.settings, ' . drupal_to_js(call_user_func_array('array_merge_recursive', $data)) . ");" . $embed_suffix . "</script>\n";
         break;
       case 'inline':
         foreach ($data as $info) {
-          $output .= '<script type="text/javascript"' . ($info['defer'] ? ' defer="defer"' : '') . '>' . $info['code'] . "</script>\n";
+          $output .= '<script type="text/javascript"' . ($info['defer'] ? ' defer="defer"' : '') . '>' . $embed_prefix . $info['code'] . $embed_suffix . "</script>\n";
         }
         break;
       default:
