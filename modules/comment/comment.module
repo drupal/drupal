@@ -11,14 +11,14 @@
  */
 
 /**
- * Comment is published.
- */
-define('COMMENT_PUBLISHED', 0);
-
-/**
  * Comment is awaiting approval.
  */
-define('COMMENT_NOT_PUBLISHED', 1);
+define('COMMENT_NOT_PUBLISHED', 0);
+
+/**
+ * Comment is published.
+ */
+define('COMMENT_PUBLISHED', 1);
 
 /**
  * Comments are displayed in a flat list - collapsed.
