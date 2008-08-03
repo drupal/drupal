@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator-summary-items.tpl.php,v 1.2 2008/05/15 21:27:32 dries Exp $
+// $Id: aggregator-summary-items.tpl.php,v 1.3 2008/08/03 16:10:50 dries Exp $
 
 /**
  * @file
@@ -17,7 +17,7 @@
  * @see template_preprocess_aggregator_summary-items()
  */
 ?>
-<h2><?php print $title; ?></h2>
+<h3><?php print $title; ?></h3>
 <?php print $summary_list; ?>
 <div class="links">
   <a href="<?php print $source_url; ?>"><?php print t('More'); ?></a>
