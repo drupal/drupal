@@ -53,3 +53,63 @@ class CommonFormatSizeTestCase extends DrupalWebTestCase {
     }
   }
 }
+
+/**
+ * Test drupal_explode_tags() and drupal_implode_tags().
+ */
+class DrupalTagsHandlingTestCase extends DrupalWebTestCase {
+  var $validTags = array(
+    'Drupal' => 'Drupal',
+    'Drupal with some spaces' => 'Drupal with some spaces',
+    '"Legendary Drupal mascot of doom: ""Druplicon"""' => 'Legendary Drupal mascot of doom: "Druplicon"',
+    '"Drupal, although it rhymes with sloopal, is as awesome as a troopal!"' => 'Drupal, although it rhymes with sloopal, is as awesome as a troopal!',
+  );
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Drupal tags handling'),
+      'description' => t("Performs tests on Drupal's handling of tags, both explosion and implosion tactics used."),
+      'group' => t('System')
+    );
+  }
+
+  /**
+   * Explode a series of tags.
+   */
+  function testDrupalExplodeTags() {
+    $string = implode(', ', array_keys($this->validTags));
+    $tags = drupal_explode_tags($string);
+    $this->assertTags($tags);
+  }
+
+  /**
+   * Implode a series of tags.
+   */
+  function testDrupalImplodeTags() {
+    $tags = array_values($this->validTags);
+    // Let's explode and implode to our heart's content.
+    for ($i = 0; $i < 10; $i++) {
+      $string = drupal_implode_tags($tags);
+      $tags = drupal_explode_tags($string);
+    }
+    $this->assertTags($tags);
+  }
+
+  /**
+   * Helper function: asserts that the ending array of tags is what we wanted.
+   */
+  function assertTags($tags) {
+    $original = $this->validTags;
+    foreach ($tags as $tag) {
+      $key = array_search($tag, $original);
+      $this->_assert($key !== FALSE, t('Make sure tag %tag shows up in the final tags array (originally %original)', array('%tag' => $tag, '%original' => $key)));
+      unset($original[$key]);
+    }
+    foreach ($original as $leftover) {
+      $this->_assert(FALSE, t('Leftover tag %leftover was left over.', array('%leftover' => $leftover)));
+    }
+  }
+}
