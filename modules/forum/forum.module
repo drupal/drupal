@@ -1,9 +1,9 @@
 <?php
-// $Id: forum.module,v 1.459 2008/07/24 16:25:17 dries Exp $
+// $Id: forum.module,v 1.460 2008/08/03 18:29:29 dries Exp $
 
 /**
  * @file
- * Enable threaded discussions about general topics.
+ * Provides discussion forums.
  */
 
 /**
