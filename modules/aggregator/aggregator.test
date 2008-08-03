@@ -116,6 +116,85 @@ class AggregatorTestCase extends DrupalWebTestCase {
     $result = db_result(db_query("SELECT count(*) FROM {aggregator_feed} WHERE title = '%s' AND url='%s'", $feed_name, $feed_url));
     return (1 == $result);
   }
+
+  /**
+   * Create a valid OPML file from an array of feeds.
+   *
+   * @param $feeds
+   *   An array of feeds.
+   * @return
+   *   Path to valid OPML file.
+   */
+  function getValidOpml($feeds) {
+    /**
+     * Does not have an XML declaration, must pass the parser.
+     */
+    $opml = <<<EOF
+<opml version="1.0">
+  <head></head>
+  <body>
+    <!-- First feed to be imported. -->
+    <outline text="{$feeds[0]['title']}" xmlurl="{$feeds[0]['url']}" />
+
+    <!-- Second feed. Test string delimitation and attribute order. -->
+    <outline xmlurl='{$feeds[1]['url']}' text='{$feeds[1]['title']}'/>
+
+    <!-- Test for duplicate URL and title. -->
+    <outline xmlurl="{$feeds[0]['url']}" text="Duplicate URL"/>
+    <outline xmlurl="http://duplicate.title" text="{$feeds[1]['title']}"/>
+
+    <!-- Test that feeds are only added with required attributes. -->
+    <outline text="{$feeds[2]['title']}" />
+    <outline xmlurl="{$feeds[2]['url']}" />
+  </body>
+</opml>
+EOF;
+
+    $path = file_directory_path() . '/valid-opml.xml';
+    file_save_data($opml, $path);
+    return $path;
+  }
+
+  /**
+   * Create an invalid OPML file.
+   *
+   * @return
+   *   Path to invalid OPML file.
+   */
+  function getInvalidOpml() {
+    $opml = <<<EOF
+<opml>
+  <invalid>
+</opml>
+EOF;
+
+    $path = file_directory_path() . '/invalid-opml.xml';
+    file_save_data($opml, $path);
+    return $path;
+  }
+
+  /**
+   * Create a valid but empty OPML file.
+   *
+   * @return
+   *   Path to empty OPML file.
+   */
+  function getEmptyOpml() {
+    $opml = <<<EOF
+<?xml version="1.0" encoding="utf-8"?>
+<opml version="1.0">
+  <head></head>
+  <body>
+    <outline text="Sample text" />
+    <outline text="Sample text" url="Sample URL" />
+  </body>
+</opml>
+EOF;
+
+    $path = file_directory_path() . '/empty-opml.xml';
+    file_save_data($opml, $path);
+    return $path;
+  }
 }
 
 class AddFeedTestCase extends AggregatorTestCase {
@@ -310,5 +389,123 @@ class CategorizeFeedItemTestCase extends AggregatorTestCase {
 
     // Delete feed.
     $this->deleteFeed($feed);
+  }
+}
+
+class ImportOPMLTestCase extends AggregatorTestCase {
+  private static $prefix = 'simpletest_aggregator_';
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Import feeds from OPML functionality'),
+      'description' => t('Test OPML import.'),
+      'group' => t('Aggregator'),
+    );
+  }
+
+  /**
+   * Open OPML import form.
+   */
+  function openImportForm() {
+    db_query('TRUNCATE {aggregator_category}');
+
+    $category = $this->randomName(10, self::$prefix);
+    db_query("INSERT INTO {aggregator_category} (cid, title, description) VALUES (%d, '%s', '%s')", 1, $category, '');
+
+    $this->drupalGet('admin/content/aggregator/add/opml');
+    $this->assertText('A single OPML document may contain a collection of many feeds.', t('Looking for help text.'));
+    $this->assertFieldByName('files[upload]', '', t('Looking for file upload field.'));
+    $this->assertFieldByName('remote', '', t('Looking for remote URL field.'));
+    $this->assertFieldByName('refresh', '', t('Looking for refresh field.'));
+    $this->assertFieldByName('category[1]', '1', t('Looking for category field.'));
+  }
+
+  /**
+   * Submit form filled with invalid fields.
+   */
+  function validateImportFormFields() {
+    $before = db_result(db_query('SELECT COUNT(*) FROM {aggregator_feed}'));
+
+    $form = array();
+    $this->drupalPost('admin/content/aggregator/add/opml', $form, t('Import'));
+    $this->assertRaw(t('You must <em>either</em> upload a file or enter a URL.'), t('Error if no fields are filled.'));
+
+    $path = $this->getEmptyOpml();
+    $form = array(
+      'files[upload]' => $path,
+      'remote' => file_create_url($path),
+    );
+    $this->drupalPost('admin/content/aggregator/add/opml', $form, t('Import'));
+    $this->assertRaw(t('You must <em>either</em> upload a file or enter a URL.'), t('Error if both fields are filled.'));
+
+    $form = array('remote' => 'invalidUrl://empty');
+    $this->drupalPost('admin/content/aggregator/add/opml', $form, t('Import'));
+    $this->assertText(t('This URL is not valid.'), t('Error if the URL is invalid.'));
+
+    $after = db_result(db_query('SELECT COUNT(*) FROM {aggregator_feed}'));
+    $this->assertEqual($before, $after, t('No feeds were added during the three last form submissions.'));
+  }
+
+  /**
+   * Submit form with invalid, empty and valid OPML files.
+   */
+  function submitImportForm() {
+    $before = db_result(db_query('SELECT COUNT(*) FROM {aggregator_feed}'));
+
+    $form['files[upload]'] = $this->getInvalidOpml();
+    $this->drupalPost('admin/content/aggregator/add/opml', $form, t('Import'));
+    $this->assertText(t('No new feed has been added.'), t('Attempting to upload invalid XML.'));
+
+    $form = array('remote' => file_create_url($this->getEmptyOpml()));
+    $this->drupalPost('admin/content/aggregator/add/opml', $form, t('Import'));
+    $this->assertText(t('No new feed has been added.'), t('Attempting to load empty OPML from remote URL.'));
+
+    $after = db_result(db_query('SELECT COUNT(*) FROM {aggregator_feed}'));
+    $this->assertEqual($before, $after, t('No feeds were added during the two last form submissions.'));
+
+    db_query('TRUNCATE {aggregator_feed}');
+    db_query('TRUNCATE {aggregator_category}');
+    db_query('TRUNCATE {aggregator_category_feed}');
+
+    $category = $this->randomName(10, self::$prefix);
+    db_query("INSERT INTO {aggregator_category} (cid, title, description) VALUES (%d, '%s', '%s')", 1, $category, '');
+
+    $feeds[0] = $this->getFeedEditArray();
+    $feeds[1] = $this->getFeedEditArray();
+    $feeds[2] = $this->getFeedEditArray();
+    $form = array(
+      'files[upload]' => $this->getValidOpml($feeds),
+      'refresh'       => '900',
+      'category[1]'   => $category,
+    );
+    $this->drupalPost('admin/content/aggregator/add/opml', $form, t('Import'));
+    $this->assertRaw(t('A feed with the URL %url already exists.', array('%url' => $feeds[0]['url'])), t('Verifying that a duplicate URL was identified'));
+    $this->assertRaw(t('A feed named %title already exists.', array('%title' => $feeds[1]['title'])), t('Verifying that a duplicate title was identified'));
+
+    $after = db_result(db_query('SELECT COUNT(*) FROM {aggregator_feed}'));
+    $this->assertEqual($after, 2, t('Verifying that two distinct feeds were added.'));
+
+    $feeds_from_db = db_query("SELECT f.title, f.url, f.refresh, cf.cid FROM {aggregator_feed} f LEFT JOIN {aggregator_category_feed} cf ON f.fid = cf.fid");
+    $refresh = $category = TRUE;
+    while ($feed = db_fetch_array($feeds_from_db)) {
+      $title[$feed['url']] = $feed['title'];
+      $url[$feed['title']] = $feed['url'];
+      $category = $category && $feed['cid'] == 1;
+      $refresh = $refresh && $feed['refresh'] == 900;
+    }
+
+    $this->assertEqual($title[$feeds[0]['url']], $feeds[0]['title'], t('First feed was added correctly.'));
+    $this->assertEqual($url[$feeds[1]['title']], $feeds[1]['url'], t('Second feed was added correctly.'));
+    $this->assertTrue($refresh, t('Refresh times are correct.'));
+    $this->assertTrue($category, t('Categories are correct.'));
+  }
+
+  function testOPMLImport() {
+    $this->openImportForm();
+    $this->validateImportFormFields();
+    $this->submitImportForm();
   }
 }

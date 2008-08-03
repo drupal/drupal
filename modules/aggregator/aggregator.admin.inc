@@ -214,6 +214,151 @@ function aggregator_admin_remove_feed_submit($form, &$form_state) {
 }
 
 /**
+ * Form builder; Generate a form to import feeds from OPML.
+ *
+ * @ingroup forms
+ * @see aggregator_form_opml_validate()
+ * @see aggregator_form_opml_submit()
+ */
+function aggregator_form_opml(&$form_state) {
+  $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
+
+  $form['#attributes'] = array('enctype' => "multipart/form-data");
+
+  $form['upload'] = array(
+    '#type' => 'file',
+    '#title' => t('OPML File'),
+    '#description' => t('Upload an OPML file containing a list of feeds to be imported.'),
+  );
+  $form['remote'] = array(
+    '#type' => 'textfield',
+    '#title' => t('OPML Remote URL'),
+    '#description' => t('Enter the URL of an OPML file. This file will be downloaded and processed only once on submission of the form.'),
+  );
+  $form['refresh'] = array(
+    '#type' => 'select',
+    '#title' => t('Update interval'),
+    '#default_value' => 3600,
+    '#options' => $period,
+    '#description' => t('The length of time between feed updates. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status'))),
+  );
+
+  // Handling of categories.
+  $options = array();
+  $categories = db_query('SELECT cid, title FROM {aggregator_category} ORDER BY title');
+  while ($category = db_fetch_object($categories)) {
+    $options[$category->cid] = check_plain($category->title);
+  }
+  if ($options) {
+    $form['category'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Categorize news items'),
+      '#options' => $options,
+      '#description' => t('New feed items are automatically filed in the checked categories.'),
+    );
+  }
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Import')
+  );
+
+  return $form;
+}
+
+/**
+ * Validate aggregator_form_opml form submissions.
+ */
+function aggregator_form_opml_validate($form, &$form_state) {
+  // If both fields are empty or filled, cancel.
+  if (empty($form_state['values']['remote']) == empty($_FILES['files']['name']['upload'])) {
+    form_set_error('remote', t('You must <em>either</em> upload a file or enter a URL.'));
+  }
+
+  // Validate the URL, if one was entered.
+  if (!empty($form_state['values']['remote']) && !valid_url($form_state['values']['remote'], TRUE)) {
+    form_set_error('remote', t('This URL is not valid.'));
+  }
+}
+
+/**
+ * Process aggregator_form_opml form submissions.
+ */
+function aggregator_form_opml_submit($form, &$form_state) {
+  $data = '';
+  if ($file = file_save_upload('upload')) {
+    $data = file_get_contents($file->filepath);
+  }
+  else {
+    $response = drupal_http_request($form_state['values']['remote']);
+    if (!isset($response->error)) {
+      $data = $response->data;
+    }
+  }
+
+  $feeds = _aggregator_parse_opml($data);
+  if (empty($feeds)) {
+    drupal_set_message(t('No new feed has been added.'));
+    return;
+  }
+
+  $form_state['values']['op'] = t('Save');
+
+  foreach ($feeds as $feed) {
+    $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE title = '%s' OR url = '%s'", $feed['title'], $feed['url']);
+    $duplicate = FALSE;
+    while ($old = db_fetch_object($result)) {
+      if (strcasecmp($old->title, $feed['title']) == 0) {
+        drupal_set_message(t('A feed named %title already exists.', array('%title' => $old->title)), 'warning');
+        $duplicate = TRUE;
+        continue;
+      }
+      if (strcasecmp($old->url, $feed['url']) == 0) {
+        drupal_set_message(t('A feed with the URL %url already exists.', array('%url' => $old->url)), 'warning');
+        $duplicate = TRUE;
+        continue;
+      }
+    }
+    if (!$duplicate) {
+      $form_state['values']['title'] = $feed['title'];
+      $form_state['values']['url'] = $feed['url'];
+      drupal_execute('aggregator_form_feed', $form_state);
+    }
+  }
+}
+
+/**
+ * Parse an OPML file.
+ *
+ * Feeds are recognized as <outline> elements with the attributes
+ * <em>text</em> and <em>xmlurl</em> set.
+ *
+ * @param $opml
+ *   The complete contents of an OPML document.
+ * @return
+ *   An array of feeds, each an associative array with a <em>title</em> and
+ *   a <em>url</em> element, or NULL if the OPML document failed to be parsed.
+ *   An empty array will be returned if the document is valid but contains
+ *   no feeds, as some OPML documents do.
+ */
+function _aggregator_parse_opml($opml) {
+  $feeds = array();
+  $xml_parser = drupal_xml_parser_create($opml);
+  if (xml_parse_into_struct($xml_parser, $opml, $values)) {
+    foreach ($values as $entry) {
+      if ($entry['tag'] == 'OUTLINE' && isset($entry['attributes'])) {
+        $item = $entry['attributes'];
+        if (!empty($item['XMLURL'])) {
+          $feeds[] = array('title' => $item['TEXT'], 'url' => $item['XMLURL']);
+        }
+      }
+    }
+  }
+  xml_parser_free($xml_parser);
+
+  return $feeds;
+}
+
+/**
  * Menu callback; refreshes a feed, then redirects to the overview page.
  *
  * @param $feed

@@ -24,6 +24,8 @@ function aggregator_help($path, $arg) {
       return '<p>' . t('Add a feed in RSS, RDF or Atom format. A feed may only have one entry.') . '</p>';
     case 'admin/content/aggregator/add/category':
       return '<p>' . t('Categories allow feed items from different feeds to be grouped together. For example, several sport-related feeds may belong to a category named <em>Sports</em>. Feed items may be grouped automatically (by selecting a category when creating or editing a feed) or manually (via the <em>Categorize</em> page available from feed item listings). Each category provides its own feed page and block.') . '</p>';
+    case 'admin/content/aggregator/add/opml':
+      return '<p>' . t('<acronym title="Outline Processor Markup Language">OPML</acronym> is an XML format used to exchange multiple feeds between aggregators. A single OPML document may contain a collection of many feeds. Drupal can parse such a file and import all feeds at once, saving you the effort of adding them manually. You may either upload a local file from your computer or enter a URL where Drupal can download it.') . '</p>';
   }
 }
 
@@ -97,6 +99,14 @@ function aggregator_menu() {
     'title' => 'Add category',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_category'),
+    'access arguments' => array('administer news feeds'),
+    'type' => MENU_LOCAL_TASK,
+    'parent' => 'admin/content/aggregator',
+  );
+  $items['admin/content/aggregator/add/opml'] = array(
+    'title' => 'Import OPML',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('aggregator_form_opml'),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
     'parent' => 'admin/content/aggregator',
