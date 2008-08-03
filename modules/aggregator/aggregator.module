@@ -382,7 +382,7 @@ function aggregator_save_category($edit) {
   elseif (!empty($edit['title'])) {
     // A single unique id for bundles and feeds, to use in blocks.
     db_query("INSERT INTO {aggregator_category} (title, description, block) VALUES ('%s', '%s', 5)", $edit['title'], $edit['description']);
-    $link_path .= db_last_insert_id('aggregator', 'cid');
+    $link_path .= db_last_insert_id('aggregator_category', 'cid');
     $op = 'insert';
   }
   if (isset($op)) {
