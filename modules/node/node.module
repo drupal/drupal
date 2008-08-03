@@ -1006,7 +1006,10 @@ function node_delete($nid) {
     cache_clear_all();
 
     // Remove this node from the search index if needed.
-    if (function_exists('search_wipe')) {
+    // This code is implemented in node module rather than in search module,
+    // because node module is implementing search module's API, not the other
+    // way around.
+    if (module_exists('search')) {
       search_wipe($node->nid, 'node');
     }
     watchdog('content', '@type: deleted %title.', array('@type' => $node->type, '%title' => $node->title));
