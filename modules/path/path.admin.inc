@@ -139,8 +139,8 @@ function path_admin_form_validate($form, &$form_state) {
     form_set_error('dst', t('The alias %alias is already in use in this language.', array('%alias' => $dst)));
   }
   $item = menu_get_item($src);
-  if (!$item || !$item['access']) {
-    form_set_error('src', t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $src)));
+  if (!$item) {
+    form_set_error('src', t("The path '@link_path' is invalid.", array('@link_path' => $src)));
   }
 }
 
