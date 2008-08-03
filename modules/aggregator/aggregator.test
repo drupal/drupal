@@ -357,6 +357,7 @@ class RemoveFeedItemTestCase extends AggregatorTestCase {
 }
 
 class CategorizeFeedItemTestCase extends AggregatorTestCase {
+  private static $prefix = 'simpletest_aggregator_';
   /**
    * Implementation of getInfo().
    */
@@ -373,6 +374,18 @@ class CategorizeFeedItemTestCase extends AggregatorTestCase {
    * categorization.
    */
   function testCategorizeFeedItem() {
+    // Simulate form submission on "admin/content/aggregator/add/category".
+    $edit = array('title' => $this->randomName(10, self::$prefix), 'description' => '');
+    $this->drupalPost('admin/content/aggregator/add/category', $edit, t('Save'));
+    $this->assertRaw(t('The category %title has been added.', array('%title' => $edit['title'])), t('The category %title has been added.', array('%title' => $edit['title'])));
+
+    $category = db_fetch_object(db_query("SELECT * FROM {aggregator_category} WHERE title = '%s'", $edit['title']));
+    $this->assertTrue(!empty($category), t('The category found in database.'));
+
+    $link_path = 'aggregator/categories/' . $category->cid;
+    $menu_link = db_fetch_object(db_query("SELECT * FROM {menu_links} WHERE link_path = '%s'", $link_path));
+    $this->assertTrue(!empty($menu_link), t('The menu link associated with the category found in database.'));
+
     // TODO: Need to add categories to the feed on creation.
     $feed = $this->createFeed();
     $this->updateFeedItems($feed);
