@@ -530,10 +530,11 @@ function _form_validate($elements, $form_id = NULL) {
   /* Validate the current input */
   if (!isset($elements['#validated']) || !$elements['#validated']) {
     if (isset($elements['#needs_validation'])) {
-      // An empty textfield returns '' so we use empty(). An empty checkbox
-      // and a textfield could return '0' and empty('0') returns TRUE so we
-      // need a special check for the '0' string.
-      if ($elements['#required'] && empty($elements['#value']) && $elements['#value'] !== '0') {
+      // Make sure a value is passed when the field is required.
+      // A simple call to empty() will not cut it here as some fields, like
+      // checkboxes, can return a valid value of '0'. Instead, check the
+      // length if it's a string, and the item count if it's an array.
+      if ($elements['#required'] && (!count($elements['#value']) || (is_string($elements['#value']) && strlen(trim($elements['#value'])) == 0))) {
         form_error($elements, t('!name field is required.', array('!name' => $elements['#title'])));
       }
 
