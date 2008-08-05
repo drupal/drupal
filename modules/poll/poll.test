@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.test,v 1.4 2008/05/26 17:12:55 dries Exp $
+// $Id: poll.test,v 1.5 2008/08/05 18:07:14 dries Exp $
 
 class PollTestCase extends DrupalWebTestCase {
 
@@ -34,9 +34,7 @@ class PollTestCase extends DrupalWebTestCase {
     if ($test_preview) {
       $this->drupalPost(NULL, $edit, t('Preview'));
       foreach($choices as $k => $choice_text) {
-        $this->assertRaw($choice_text, "Choice $k found in preview");
-        $themed_bar = theme('poll_bar', $choice_text, 0, 0, FALSE, FALSE);
-        $this->assertRaw($themed_bar, "Choice $k bar is themed");
+        $this->assertRaw($choice_text, t('Choice @choice found was in preview.', array('@choice' => $k)));
       }
       list($edit, $index) = $this->_pollGenerateEdit($title, $choices, $index);
     }
