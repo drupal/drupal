@@ -34,9 +34,7 @@ class PollTestCase extends DrupalWebTestCase {
     if ($test_preview) {
       $this->drupalPost(NULL, $edit, t('Preview'));
       foreach($choices as $k => $choice_text) {
-        $this->assertRaw($choice_text, "Choice $k found in preview");
-        $themed_bar = theme('poll_bar', $choice_text, 0, 0, FALSE, FALSE);
-        $this->assertRaw($themed_bar, "Choice $k bar is themed");
+        $this->assertRaw($choice_text, t('Choice @choice found was in preview.', array('@choice' => $k)));
       }
       list($edit, $index) = $this->_pollGenerateEdit($title, $choices, $index);
     }
