@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.3 2008/05/30 07:30:51 dries Exp $
+// $Id: locale.test,v 1.4 2008/08/05 18:11:44 dries Exp $
 
 class LocaleTestCase extends DrupalWebTestCase {
   /**
@@ -108,7 +108,7 @@ class LocaleTestCase extends DrupalWebTestCase {
 
     // Delete the name string.
     $this->drupalLogin($translate_user);
-    $this->drupalGet('admin/build/translate/delete/' . $lid);
+    $this->drupalPost('admin/build/translate/delete/' . $lid, array(), t('Delete'));
     $this->assertText(t('The string has been removed.'), 'The string has been removed message.');
     $this->drupalPost('admin/build/translate/search', $search, t('Search'));
     $this->assertNoText($name, 'Search now can not find the name');
