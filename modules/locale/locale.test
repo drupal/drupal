@@ -108,7 +108,7 @@ class LocaleTestCase extends DrupalWebTestCase {
 
     // Delete the name string.
     $this->drupalLogin($translate_user);
-    $this->drupalGet('admin/build/translate/delete/' . $lid);
+    $this->drupalPost('admin/build/translate/delete/' . $lid, array(), t('Delete'));
     $this->assertText(t('The string has been removed.'), 'The string has been removed message.');
     $this->drupalPost('admin/build/translate/search', $search, t('Search'));
     $this->assertNoText($name, 'Search now can not find the name');

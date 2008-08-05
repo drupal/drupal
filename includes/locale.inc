@@ -871,16 +871,36 @@ function locale_translate_edit_form_submit($form, &$form_state) {
  */
 
 /**
- * Delete a language string.
+ * String deletion confirmation page.
  */
-function locale_translate_delete($lid) {
-  db_query('DELETE FROM {locales_source} WHERE lid = %d', $lid);
-  db_query('DELETE FROM {locales_target} WHERE lid = %d', $lid);
+function locale_translate_delete_page($lid) {
+  if ($source = db_fetch_object(db_query('SELECT * FROM {locales_source} WHERE lid = %d', $lid))) {
+    return drupal_get_form('locale_translate_delete_form', $source);
+  }
+  else {
+    return drupal_not_found();
+  }
+}
+
+/**
+ * User interface for the string deletion confirmation screen.
+ */
+function locale_translate_delete_form(&$form_state, $source) {
+  $form['lid'] = array('#type' => 'value', '#value' => $source->lid);
+  return confirm_form($form, t('Are you sure you want to delete the string "%source"?', array('%source' => $source->source)), 'admin/build/translate/search', t('Deleting the string will remove all translations of this string in all languages. This action cannot be undone.'), t('Delete'), t('Cancel'));
+}
+
+/**
+ * Process string deletion submissions.
+ */
+function locale_translate_delete_form_submit($form, &$form_state) {
+  db_query('DELETE FROM {locales_source} WHERE lid = %d', $form_state['values']['lid']);
+  db_query('DELETE FROM {locales_target} WHERE lid = %d', $form_state['values']['lid']);
   // Force JavaScript translation file recreation for all languages.
   _locale_invalidate_js();
   cache_clear_all('locale:', 'cache', TRUE);
   drupal_set_message(t('The string has been removed.'));
-  drupal_goto('admin/build/translate/search');
+  $form_state['redirect'] = 'admin/build/translate/search';
 }
 /**
  * @} End of "locale-translate-delete"
