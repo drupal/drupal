@@ -381,6 +381,8 @@ function aggregator_save_category($edit) {
     }
     else {
       db_query('DELETE FROM {aggregator_category} WHERE cid = %d', $edit['cid']);
+      // Make sure there is no active block for this category.
+      db_query("DELETE FROM {blocks} WHERE module = '%s' AND delta = '%s'", 'aggregator', 'category-' . $edit['cid']);
       $edit['title'] = '';
       $op = 'delete';
     }
@@ -421,6 +423,8 @@ function aggregator_save_feed($edit) {
     }
     db_query('DELETE FROM {aggregator_feed} WHERE fid = %d', $edit['fid']);
     db_query('DELETE FROM {aggregator_item} WHERE fid = %d', $edit['fid']);
+    // Make sure there is no active block for this feed.
+    db_query("DELETE FROM {blocks} WHERE module = '%s' AND delta = '%s'", 'aggregator', 'feed-' . $edit['fid']);
   }
   else if (!empty($edit['title'])) {
     db_query("INSERT INTO {aggregator_feed} (title, url, refresh, block, description, image) VALUES ('%s', '%s', %d, 5, '', '')", $edit['title'], $edit['url'], $edit['refresh']);
