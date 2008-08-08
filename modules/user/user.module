@@ -1367,8 +1367,11 @@ function user_login_submit($form, &$form_state) {
 function user_external_login_register($name, $module) {
   global $user;
 
-  $user = user_load(array('name' => $name));
-  if (!isset($user->uid)) {
+  $existing_user = user_load(array('name' => $name));
+  if (isset($existing_user->uid)) {
+    $user = $existing_user;
+  }
+  else {
     // Register this new user.
     $userinfo = array(
       'name' => $name,
