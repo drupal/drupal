@@ -1,6 +1,6 @@
-; $Id: filter.info,v 1.6 2008/05/06 12:18:47 dries Exp $
+;h $Id: filter.info,v 1.7 2008/08/09 12:41:22 dries Exp $
 name = Filter
-description = Handles the filtering of content in preparation for display.
+description = Filters content in preparation for display.
 package = Core - required
 version = VERSION
 core = 7.x

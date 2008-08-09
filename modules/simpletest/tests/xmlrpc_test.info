@@ -1,0 +1,8 @@
+; $Id: xmlrpc_test.info,v 1.1 2008/08/09 12:41:22 dries Exp $
+name = "XML-RPC Test"
+description = "Support module for XML-RPC tests according to the validator1 specification."
+package = Testing
+version = VERSION
+core = 7.x
+files[] = xmlrpc_test.module
+hidden = TRUE

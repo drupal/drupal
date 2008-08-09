@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.7 2008/07/16 21:59:27 dries Exp $
+// $Id: simpletest.module,v 1.8 2008/08/09 12:41:22 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -418,10 +418,6 @@ function simpletest_get_all_tests() {
           $files[] = $file->filename;
         }
       }
-    }
-
-    foreach (file_scan_directory('includes/tests', '\.test$') as $file) {
-      $files[] = $file->filename;
     }
 
     $existing_classes = get_declared_classes();
