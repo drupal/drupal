@@ -614,6 +614,13 @@ function system_modules($form_state = array()) {
   // Get current list of modules.
   $files = module_rebuild_cache();
 
+  // Remove hidden modules from display list.
+  foreach ($files as $filename => $file) {
+    if (!empty($file->info['hidden'])) {
+      unset($files[$filename]);
+    }
+  }
+
   uasort($files, 'system_sort_modules_by_info_name');
 
   if (!empty($form_state['storage'])) {
@@ -705,7 +712,7 @@ function system_sort_modules_by_info_name($a, $b) {
   return strcasecmp($a->info['name'], $b->info['name']);
 }
 
-/** 
+/**
  * Build a table row for the system modules page.
  */
 function _system_modules_build_row($info, $extra) {
@@ -881,7 +888,7 @@ function system_modules_submit($form, &$form_state) {
             );
           }
           else {
-            $dependencies[$name]['dependencies'][$dependency] = $files[$dependency]->info['name'];          
+            $dependencies[$name]['dependencies'][$dependency] = $files[$dependency]->info['name'];
           }
           $modules[$dependency] = array('group' => $files[$dependency]->info['package'], 'enabled' => TRUE);
         }
@@ -2092,10 +2099,10 @@ function theme_system_modules_fieldset($form) {
     // Add the description, along with any dependencies.
     $description .= drupal_render($module['description']);
     if ($module['#dependencies']) {
-     $description .= '<div class="admin-dependencies">' . t('Depends on: ') . implode(', ', $module['#dependencies']) . '</div>'; 
+     $description .= '<div class="admin-dependencies">' . t('Depends on: ') . implode(', ', $module['#dependencies']) . '</div>';
     }
     if ($module['#dependents']) {
-     $description .= '<div class="admin-dependencies">' . t('Required by: ') . implode(', ', $module['#dependents']) . '</div>'; 
+     $description .= '<div class="admin-dependencies">' . t('Required by: ') . implode(', ', $module['#dependents']) . '</div>';
     }
     $row[] = array('data' => $description, 'class' => 'description');
     $rows[] = $row;

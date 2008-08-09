@@ -1,6 +1,6 @@
-; $Id$
+;h $Id$
 name = Filter
-description = Handles the filtering of content in preparation for display.
+description = Filters content in preparation for display.
 package = Core - required
 version = VERSION
 core = 7.x

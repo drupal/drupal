@@ -420,10 +420,6 @@ function simpletest_get_all_tests() {
       }
     }
 
-    foreach (file_scan_directory('includes/tests', '\.test$') as $file) {
-      $files[] = $file->filename;
-    }
-
     $existing_classes = get_declared_classes();
     foreach ($files as $file) {
       include_once($file);
