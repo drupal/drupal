@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.460 2008/08/03 18:29:29 dries Exp $
+// $Id: forum.module,v 1.461 2008/08/11 21:57:40 dries Exp $
 
 /**
  * @file
@@ -464,19 +464,11 @@ function forum_form(&$node, $form_state) {
   return $form;
 }
 
-function forum_link_alter(&$links, $node) {
-  foreach ($links as $module => $link) {
-    if (strstr($module, 'taxonomy_term')) {
-      // Link back to the forum and not the taxonomy term page. We'll only
-      // do this if the taxonomy term in question belongs to forums.
-      $tid = str_replace('taxonomy/term/', '', $link['href']);
-      $vid = variable_get('forum_nav_vocabulary', '');
-      $term = taxonomy_get_term($tid);
-      if ($term->vid == $vid) {
-        $links[$module]['href'] = str_replace('taxonomy/term', 'forum', $link['href']);
-      }
-    }
-  }
+/**
+ * Implementation of hook_term_path().
+ */
+function forum_term_path($term) {
+  return 'forum/' . $term->tid;
 }
 
 /**
