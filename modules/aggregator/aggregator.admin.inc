@@ -304,26 +304,31 @@ function aggregator_form_opml_submit($form, &$form_state) {
   $form_state['values']['op'] = t('Save');
 
   foreach ($feeds as $feed) {
+    // Ensure URL is valid.
+    if (!valid_url($feed['url'], TRUE)) {
+      drupal_set_message(t('The URL %url is invalid.', array('%url' => $feed['url'])), 'warning');
+      continue;
+    }
+
+    // Check for duplicate titles or URLs.
     $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE title = '%s' OR url = '%s'", $feed['title'], $feed['url']);
-    $duplicate = FALSE;
     while ($old = db_fetch_object($result)) {
       if (strcasecmp($old->title, $feed['title']) == 0) {
         drupal_set_message(t('A feed named %title already exists.', array('%title' => $old->title)), 'warning');
-        $duplicate = TRUE;
-        continue;
+        continue 2;
       }
       if (strcasecmp($old->url, $feed['url']) == 0) {
         drupal_set_message(t('A feed with the URL %url already exists.', array('%url' => $old->url)), 'warning');
-        $duplicate = TRUE;
-        continue;
+        continue 2;
       }
     }
-    if (!$duplicate) {
-      $form_state['values']['title'] = $feed['title'];
-      $form_state['values']['url'] = $feed['url'];
-      drupal_execute('aggregator_form_feed', $form_state);
-    }
+
+    $form_state['values']['title'] = $feed['title'];
+    $form_state['values']['url'] = $feed['url'];
+    drupal_execute('aggregator_form_feed', $form_state);
   }
+
+  $form_state['redirect'] = 'admin/content/aggregator';
 }
 
 /**
