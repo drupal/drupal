@@ -166,10 +166,8 @@ function simpletest_schema() {
         'description' => t('Message status. Core understands pass, fail, exception.'),
       ),
       'message' => array(
-        'type' => 'varchar',
-        'length' => 255,
+        'type' => 'text',
         'not null' => TRUE,
-        'default' => '',
         'description' => t('The message itself.'),
       ),
       'message_group' => array(
