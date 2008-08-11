@@ -662,7 +662,7 @@ function _filter_html_settings($format) {
     '#title' => t('Allowed HTML tags'),
     '#default_value' => variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>'),
     '#size' => 64,
-    '#maxlength' => 255,
+    '#maxlength' => 1024,
     '#description' => t('Specify a list of tags which should not be stripped. (Note that JavaScript event attributes are always stripped.)'),
   );
   $form['filter_html']["filter_html_help_$format"] = array(
