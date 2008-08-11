@@ -1,5 +1,5 @@
 <?php
-// $Id: update.compare.inc,v 1.9 2008/04/14 17:48:43 dries Exp $
+// $Id: update.compare.inc,v 1.10 2008/08/11 07:07:11 dries Exp $
 
 /**
  * @file
@@ -160,7 +160,6 @@ function update_process_project_info(&$projects) {
     $projects[$key]['existing_version'] = $info['version'];
     $projects[$key]['existing_major'] = $info['major'];
     $projects[$key]['install_type'] = $install_type;
-    unset($projects[$key]['info']);
   }
 }
 
