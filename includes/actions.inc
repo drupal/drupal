@@ -298,7 +298,7 @@ function actions_synchronize($actions_in_code = array(), $delete_orphans = FALSE
     else {
       $link = l(t('Remove orphaned actions'), 'admin/build/actions/orphan');
       $count = count($actions_in_db);
-      watchdog('actions', format_plural($count, 'One orphaned action (%orphans) exists in the actions table. !link', '@count orphaned actions (%orphans) exist in the actions table. !link', array('@count' => $count, '%orphans' => $orphans, '!link' => $link), 'warning'));
+      watchdog('actions', format_plural($count, 'One orphaned action (%orphans) exists in the actions table. !link', '@count orphaned actions (%orphans) exist in the actions table. !link'), array('@count' => $count, '%orphans' => $orphans, '!link' => $link), WATCHDOG_WARNING);
     }
   }
 }
