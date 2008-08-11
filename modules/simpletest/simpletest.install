@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.install,v 1.4 2008/06/24 21:51:02 dries Exp $
+// $Id: simpletest.install,v 1.5 2008/08/11 17:43:30 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -166,10 +166,8 @@ function simpletest_schema() {
         'description' => t('Message status. Core understands pass, fail, exception.'),
       ),
       'message' => array(
-        'type' => 'varchar',
-        'length' => 255,
+        'type' => 'text',
         'not null' => TRUE,
-        'default' => '',
         'description' => t('The message itself.'),
       ),
       'message_group' => array(
