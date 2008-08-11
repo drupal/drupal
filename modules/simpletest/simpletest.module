@@ -63,7 +63,7 @@ function simpletest_test_form() {
   $tests = simpletest_categorize_tests($uncategorized_tests);
   if (isset($_SESSION['test_id'])) {
     $results = db_query("SELECT * FROM {simpletest} WHERE test_id = %d ORDER BY test_class, message_id", $_SESSION['test_id']);
-    unset($_SESSION['test_id']);
+
     $summary = array(
       '#theme' => 'simpletest_result_summary',
       '#pass' => 0,
@@ -113,6 +113,14 @@ function simpletest_test_form() {
       }
       unset($element);
     }
+
+    // Clear test results.
+    if (variable_get('simpletest_clear_results', TRUE)) {
+      db_query('DELETE FROM {simpletest} WHERE test_id = %d', $_SESSION['test_id']);
+      db_query('DELETE FROM {simpletest_test_id} WHERE test_id = %d', $_SESSION['test_id']);
+    }
+    unset($_SESSION['test_id']);
+
     $all_ok = TRUE;
     foreach ($form['results'] as $group => &$elements) {
       $group_ok = TRUE;
@@ -462,6 +470,7 @@ function simpletest_categorize_tests($tests) {
 function simpletest_clean_environment() {
   simpletest_clean_database();
   simpletest_clean_temporary_directories();
+  simpletest_clean_results_table();
 }
 
 /**
@@ -551,4 +560,19 @@ function simpletest_clean_temporary_directory($path) {
     }
   }
   rmdir($path);
+}
+
+/**
+ * Clear the test results tables.
+ */
+function simpletest_clean_results_table() {
+  if (variable_get('simpletest_clear_results', TRUE)) {
+    $count = db_result(db_query('SELECT COUNT(test_id) FROM {simpletest_test_id}'));
+
+    // Clear test results.
+    db_query('DELETE FROM {simpletest}');
+    db_query('DELETE FROM {simpletest_test_id}');
+
+    drupal_set_message(t('Removed @count test results.', array('@count' => $count)));
+  }
 }
