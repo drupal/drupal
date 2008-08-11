@@ -635,10 +635,8 @@ function aggregator_refresh($feed) {
 
         watchdog('aggregator', 'There is new syndicated content from %site.', array('%site' => $feed['title']));
         drupal_set_message(t('There is new syndicated content from %site.', array('%site' => $feed['title'])));
-        break;
       }
-      $result->error = t('feed not parseable');
-      // Do not break here..
+      break;
     default:
       watchdog('aggregator', 'The feed from %site seems to be broken, due to "%error".', array('%site' => $feed['title'], '%error' => $result->code . ' ' . $result->error), WATCHDOG_WARNING);
       drupal_set_message(t('The feed from %site seems to be broken, because of error "%error".', array('%site' => $feed['title'], '%error' => $result->code . ' ' . $result->error)));
