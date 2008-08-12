@@ -1518,6 +1518,7 @@ function theme_fieldset($element) {
 function theme_radio($element) {
   _form_set_class($element, array('form-radio'));
   $output = '<input type="radio" ';
+  $output .= 'id="' . $element['#id'] . '" ';
   $output .= 'name="' . $element['#name'] . '" ';
   $output .= 'value="' . $element['#return_value'] . '" ';
   $output .= (check_plain($element['#value']) == $element['#return_value']) ? ' checked="checked" ' : ' ';
@@ -1734,6 +1735,7 @@ function form_process_radios($element) {
           '#attributes' => $element['#attributes'],
           '#parents' => $element['#parents'],
           '#id' => form_clean_id('edit-' . implode('-', $parents_for_id)),
+          '#ahah' => $element['#ahah'],
         );
       }
     }
