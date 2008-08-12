@@ -598,7 +598,6 @@ function aggregator_refresh($feed) {
       break;
     case 301:
       $feed['url'] = $result->redirect_url;
-      watchdog('aggregator', 'Updated URL for feed %title to %url.', array('%title' => $feed['title'], '%url' => $feed['url']));
       // Do not break here.
     case 200:
     case 302:
@@ -642,6 +641,10 @@ function aggregator_refresh($feed) {
 
         // Clear the cache.
         cache_clear_all();
+
+        if (isset($result->redirect_url)) {
+          watchdog('aggregator', 'Updated URL for feed %title to %url.', array('%title' => $feed['title'], '%url' => $feed['url']));
+        }
 
         watchdog('aggregator', 'There is new syndicated content from %site.', array('%site' => $feed['title']));
         drupal_set_message(t('There is new syndicated content from %site.', array('%site' => $feed['title'])));
