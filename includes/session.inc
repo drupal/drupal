@@ -92,15 +92,14 @@ function sess_regenerate() {
 }
 
 /**
- * Counts how many users have sessions. Can count either anonymous sessions, authenticated sessions, or both.
+ * Counts how many users have sessions. Can count either anonymous sessions or authenticated sessions.
  *
  * @param int $timestamp
  *   A Unix timestamp representing a point of time in the past.
  *   The default is 0, which counts all existing sessions.
- * @param int $anonymous
+ * @param boolean $anonymous
  *   TRUE counts only anonymous users.
  *   FALSE counts only authenticated users.
- *   Any other value will return the count of both authenticated and anonymous users.
  * @return  int
  *   The number of users with sessions.
  */
