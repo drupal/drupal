@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.277 2008/07/18 07:06:24 dries Exp $
+// $Id: form.inc,v 1.278 2008/08/12 10:23:27 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1518,6 +1518,7 @@ function theme_fieldset($element) {
 function theme_radio($element) {
   _form_set_class($element, array('form-radio'));
   $output = '<input type="radio" ';
+  $output .= 'id="' . $element['#id'] . '" ';
   $output .= 'name="' . $element['#name'] . '" ';
   $output .= 'value="' . $element['#return_value'] . '" ';
   $output .= (check_plain($element['#value']) == $element['#return_value']) ? ' checked="checked" ' : ' ';
@@ -1734,6 +1735,7 @@ function form_process_radios($element) {
           '#attributes' => $element['#attributes'],
           '#parents' => $element['#parents'],
           '#id' => form_clean_id('edit-' . implode('-', $parents_for_id)),
+          '#ahah' => $element['#ahah'],
         );
       }
     }
