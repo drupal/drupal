@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.inc,v 1.14 2008/08/11 06:57:13 dries Exp $
+// $Id: actions.inc,v 1.15 2008/08/12 06:57:45 dries Exp $
 
 /**
  * @file
@@ -11,7 +11,7 @@
  *
  * Given the IDs of actions to perform, find out what the callbacks
  * for the actions are by querying the database. Then call each callback
- * using the function call $function($object, $context, $a1, $2)
+ * using the function call $function($object, $context, $a1, $a2)
  * where $function is the name of a function written in compliance with
  * the action specification; that is, foo($object, $context).
  *
