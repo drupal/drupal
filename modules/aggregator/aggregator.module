@@ -452,7 +452,7 @@ function aggregator_remove($feed) {
     db_query('DELETE FROM {aggregator_category_item} WHERE ' . implode(' OR ', $items));
   }
   db_query('DELETE FROM {aggregator_item} WHERE fid = %d', $feed['fid']);
-  db_query("UPDATE {aggregator_feed} SET checked = 0, etag = '', modified = 0 WHERE fid = %d", $feed['fid']);
+  db_query("UPDATE {aggregator_feed} SET checked = 0, hash = '', etag = '', modified = 0 WHERE fid = %d", $feed['fid']);
   drupal_set_message(t('The news items from %site have been removed.', array('%site' => $feed['title'])));
 }
 
@@ -603,6 +603,16 @@ function aggregator_refresh($feed) {
     case 200:
     case 302:
     case 307:
+      // We store the md5 hash of feed data in the database. When refreshing a
+      // feed we compare stored hash and new hash calculated from downloaded
+      // data. If both are equal we say that feed is not updated.
+      $md5 = md5($result->data);
+      if ($feed['hash'] == $md5) {
+        db_query('UPDATE {aggregator_feed} SET checked = %d WHERE fid = %d', time(), $feed['fid']);
+        drupal_set_message(t('There is no new syndicated content from %site.', array('%site' => $feed['title'])));
+        break;
+      }
+
       // Filter the input data.
       if (aggregator_parse_feed($result->data, $feed)) {
         $modified = empty($result->headers['Last-Modified']) ? 0 : strtotime($result->headers['Last-Modified']);
@@ -628,7 +638,7 @@ function aggregator_refresh($feed) {
 
         $etag = empty($result->headers['ETag']) ? '' : $result->headers['ETag'];
         // Update the feed data.
-        db_query("UPDATE {aggregator_feed} SET url = '%s', checked = %d, link = '%s', description = '%s', image = '%s', etag = '%s', modified = %d WHERE fid = %d", $feed['url'], time(), $channel['LINK'], $channel['DESCRIPTION'], $image, $etag, $modified, $feed['fid']);
+        db_query("UPDATE {aggregator_feed} SET url = '%s', checked = %d, link = '%s', description = '%s', image = '%s', hash = '%s', etag = '%s', modified = %d WHERE fid = %d", $feed['url'], time(), $channel['LINK'], $channel['DESCRIPTION'], $image, $md5, $etag, $modified, $feed['fid']);
 
         // Clear the cache.
         cache_clear_all();
