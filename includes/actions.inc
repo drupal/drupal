@@ -11,7 +11,7 @@
  *
  * Given the IDs of actions to perform, find out what the callbacks
  * for the actions are by querying the database. Then call each callback
- * using the function call $function($object, $context, $a1, $2)
+ * using the function call $function($object, $context, $a1, $a2)
  * where $function is the name of a function written in compliance with
  * the action specification; that is, foo($object, $context).
  *
