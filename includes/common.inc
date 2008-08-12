@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.781 2008/08/02 19:01:02 dries Exp $
+// $Id: common.inc,v 1.782 2008/08/12 08:36:38 dries Exp $
 
 /**
  * @file
@@ -435,6 +435,16 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
 
   // Parse the URL and make sure we can handle the schema.
   $uri = parse_url($url);
+
+  if (!isset($uri['scheme'])) {
+    $result->error = 'missing schema';
+    return $result;
+  }
+
+  if (!isset($uri['host'])) {
+    $result->error = 'missing host';
+    return $result;
+  }
 
   switch ($uri['scheme']) {
     case 'http':
