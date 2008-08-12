@@ -160,7 +160,6 @@ function update_process_project_info(&$projects) {
     $projects[$key]['existing_version'] = $info['version'];
     $projects[$key]['existing_major'] = $info['major'];
     $projects[$key]['install_type'] = $install_type;
-    unset($projects[$key]['info']);
   }
 }
 
