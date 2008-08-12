@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.install,v 1.16 2008/05/15 21:27:32 dries Exp $
+// $Id: aggregator.install,v 1.17 2008/08/12 07:00:48 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -158,6 +158,13 @@ function aggregator_schema() {
         'size' => 'big',
         'description' => t('An image representing the feed.'),
       ),
+      'hash' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('Calculated md5 hash of the feed data, used for validating cache.'),
+      ),
       'etag' => array(
         'type' => 'varchar',
         'length' => 255,
@@ -246,4 +253,13 @@ function aggregator_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Add hash column to aggregator_feed table.
+ */
+function aggregator_update_7000() {
+  $ret = array();
+  db_add_field($ret, 'aggregator_feed', 'hash', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''));
+  return $ret;
 }
