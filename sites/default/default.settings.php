@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.12 2008/07/19 12:50:56 dries Exp $
+// $Id: default.settings.php,v 1.13 2008/08/13 06:52:19 dries Exp $
 
 /**
  * @file
@@ -82,7 +82,6 @@
  *     'sessions'  => 'shared_',
  *     'role'      => 'shared_',
  *     'authmap'   => 'shared_',
- *     'sequences' => 'shared_',
  *   );
  *
  * Database URL format:
