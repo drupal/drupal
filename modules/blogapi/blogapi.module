@@ -362,20 +362,63 @@ function blogapi_metaweblog_new_media_object($blogid, $username, $password, $fil
     return blogapi_error($user);
   }
 
+  $usersize = 0;
+  $uploadsize = 0;
+
+  $roles = array_intersect(user_roles(0, 'administer content with blog api'), $user->roles);
+
+  foreach ($roles as $rid => $name) {
+    $extensions .= ' '. strtolower(variable_get("blogapi_extensions_$rid", variable_get('blogapi_extensions_default', 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp')));
+    $usersize= max($usersize, variable_get("blogapi_usersize_$rid", variable_get('blogapi_usersize_default', 1)) * 1024 * 1024);
+    $uploadsize = max($uploadsize, variable_get("blogapi_uploadsize_$rid", variable_get('blogapi_uploadsize_default', 1)) * 1024 * 1024);
+  }
+
+  $filesize = strlen($file['bits']);
+
+  if ($filesize > $uploadsize) {
+    return blogapi_error(t('It is not possible to upload the file, because it exceeded the maximum filesize of @maxsize.', array('@maxsize' => format_size($uploadsize))));
+  }
+
+  if (_blogapi_space_used($user->uid) + $filesize > $usersize) {
+    return blogapi_error(t('The file can not be attached to this post, because the disk quota of @quota has been reached.', array('@quota' => format_size($usersize))));
+  }
+
+  // Only allow files with whitelisted extensions and convert remaining dots to
+  // underscores to prevent attacks via non-terminal executable extensions with
+  // files such as exploit.php.jpg.
+
+  $whitelist = array_unique(explode(' ', trim($extensions)));
+
   $name = basename($file['name']);
+
+  if ($extension_position = strrpos($name, '.')) {
+    $filename = drupal_substr($name, 0, $extension_position);
+    $final_extension = drupal_substr($name, $extension_position + 1);
+
+    if (!in_array(strtolower($final_extension), $whitelist)) {
+      return blogapi_error(t('It is not possible to upload the file, because it is only possible to upload files with the following extensions: @extensions', array('@extensions' => implode(' ', $whitelist))));
+    }
+
+    $filename = str_replace('.', '_', $filename);
+    $filename .= '.'. $final_extension;
+  }
+
   $data = $file['bits'];
 
   if (!$data) {
     return blogapi_error(t('No file sent.'));
   }
 
-  if (!$file = file_save_data($data, $name)) {
+  if (!$file = file_save_data($data, $filename)) {
     return blogapi_error(t('Error storing file.'));
   }
+
+  db_query("INSERT INTO {blogapi_files} (uid, filepath, filesize) VALUES (%d, '%s', %d)", $user->uid, $file, $filesize);
 
   // Return the successful result.
   return array('url' => file_create_url($file), 'struct');
 }
+
 /**
  * Blogging API callback. Returns a list of the taxonomy terms that can be
  * associated with a blog node.
@@ -555,6 +598,82 @@ function blogapi_admin_settings() {
     '#description' => t('Select the content types for which you wish to enable posting via blogapi. Each type will appear as a different "blog" in the client application (if supported).')
   );
 
+
+  $blogapi_extensions_default = variable_get('blogapi_extensions_default', 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp');
+  $blogapi_uploadsize_default = variable_get('blogapi_uploadsize_default', 1);
+  $blogapi_usersize_default = variable_get('blogapi_usersize_default', 1);
+
+  $form['settings_general'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('File settings'),
+    '#collapsible' => TRUE,
+  );
+
+  $form['settings_general']['blogapi_extensions_default'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default permitted file extensions'),
+    '#default_value' => $blogapi_extensions_default,
+    '#maxlength' => 255,
+    '#description' => t('Default extensions that users can upload. Separate extensions with a space and do not include the leading dot.'),
+  );
+
+  $form['settings_general']['blogapi_uploadsize_default'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default maximum file size per upload'),
+    '#default_value' => $blogapi_uploadsize_default,
+    '#size' => 5,
+    '#maxlength' => 5,
+    '#description' => t('The default maximum file size a user can upload.'),
+    '#field_suffix' => t('MB')
+  );
+
+  $form['settings_general']['blogapi_usersize_default'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default total file size per user'),
+    '#default_value' => $blogapi_usersize_default,
+    '#size' => 5,
+    '#maxlength' => 5,
+    '#description' => t('The default maximum size of all files a user can have on the site.'),
+    '#field_suffix' => t('MB')
+  );
+
+  $form['settings_general']['upload_max_size'] = array('#value' => '<p>'. t('Your PHP settings limit the maximum file size per upload to %size.', array('%size' => format_size(file_upload_max_size()))).'</p>');
+
+  $roles = user_roles(0, 'administer content with blog api');
+  $form['roles'] = array('#type' => 'value', '#value' => $roles);
+
+  foreach ($roles as $rid => $role) {
+    $form['settings_role_'. $rid] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Settings for @role', array('@role' => $role)),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+    );
+    $form['settings_role_'. $rid]['blogapi_extensions_'. $rid] = array(
+      '#type' => 'textfield',
+      '#title' => t('Permitted file extensions'),
+      '#default_value' => variable_get('blogapi_extensions_'. $rid, $blogapi_extensions_default),
+      '#maxlength' => 255,
+      '#description' => t('Extensions that users in this role can upload. Separate extensions with a space and do not include the leading dot.'),
+    );
+    $form['settings_role_'. $rid]['blogapi_uploadsize_'. $rid] = array(
+      '#type' => 'textfield',
+      '#title' => t('Maximum file size per upload'),
+      '#default_value' => variable_get('blogapi_uploadsize_'. $rid, $blogapi_uploadsize_default),
+      '#size' => 5,
+      '#maxlength' => 5,
+      '#description' => t('The maximum size of a file a user can upload (in megabytes).'),
+    );
+    $form['settings_role_'. $rid]['blogapi_usersize_'. $rid] = array(
+      '#type' => 'textfield',
+      '#title' => t('Total file size per user'),
+      '#default_value' => variable_get('blogapi_usersize_'. $rid, $blogapi_usersize_default),
+      '#size' => 5,
+      '#maxlength' => 5,
+      '#description' => t('The maximum size of all files a user can have on the site (in megabytes).'),
+    );
+  }
+
   return system_settings_form($form);
 }
 
@@ -720,3 +839,7 @@ function _blogapi_get_node_types() {
   return $types;
 }
 
+
+function _blogapi_space_used($uid) {
+  return db_result(db_query('SELECT SUM(filesize) FROM {blogapi_files} f WHERE f.uid = %d', $uid));
+}

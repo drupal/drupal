@@ -1,8 +1,10 @@
 // $Id$
 
-Drupal 5.10, xxxx-xx-xx
+Drupal 5.10, 2008-08-13
 -----------------------
-
+- fixed a variety of small bugs.
+- fixed security issues, (Cross site scripting, Arbitrary file uploads via
+  BlogAPI and Cross site request forgery), see SA-2008-047
 
 Drupal 5.9, 2008-07-23
 ----------------------
@@ -12,7 +14,8 @@ Drupal 5.9, 2008-07-23
 Drupal 5.8, 2008-07-09
 ----------------------
 - fixed a variety of small bugs.
-- fixed security issues, (Cross site scripting, cross site request forgery, and session fixation), see SA-2008-044
+- fixed security issues, (Cross site scripting, cross site request forgery, and
+  session fixation), see SA-2008-044
 
 Drupal 5.7, 2008-01-28
 ----------------------

@@ -1295,7 +1295,7 @@ function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 
     (
     <(?=[^a-zA-Z!/])  # a lone <
     |                 # or
-    <[^>]*.(>|$)      # a string that starts with a <, up until the > or the end of the string
+    <[^>]*(>|$)       # a string that starts with a <, up until the > or the end of the string
     |                 # or
     >                 # just a >
     )%x', '_filter_xss_split', $string);

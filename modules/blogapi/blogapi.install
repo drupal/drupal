@@ -1,0 +1,90 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_install().
+ */
+function blogapi_install() {
+  // Create table.
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      db_query("CREATE TABLE {blogapi_files} (
+        fid int NOT NULL auto_increment,
+        uid int unsigned NOT NULL default 0,
+        filepath varchar(255) NOT NULL default '',
+        filesize int unsigned NOT NULL default 0,
+        PRIMARY KEY (fid),
+        KEY uid (uid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+
+    case 'pgsql':
+      db_query("CREATE TABLE {blogapi_files} (
+        fid serial,
+        filename varchar(255) NOT NULL default '',
+        filepath varchar(255) NOT NULL default '',
+        filesize int_unsigned NOT NULL default 0,
+        PRIMARY KEY (fid)
+      )");
+
+      db_query("CREATE INDEX {blogapi_files}_uid_idx ON {blogapi_files} (uid)");
+      break;
+  }
+
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function blogapi_uninstall() {
+  // Remove table.
+  db_query("DROP TABLE {blogapi_files}");
+}
+
+/**
+ * @defgroup updates-5.x-extra Extra blogapi updates for 5.x
+ * @{
+ */
+
+/**
+ * Add blogapi_files table to enable size restriction for BlogAPI file uploads.
+ *
+ * Added in Drupal 5.10 (and 6.4).
+ */
+function blogapi_update_5000() {
+  $ret = array();
+  switch ($GLOBALS['db_type']) {
+    case 'mysql':
+    case 'mysqli':
+      $ret[] = update_sql("CREATE TABLE {blogapi_files} (
+        fid int NOT NULL auto_increment,
+        uid int unsigned NOT NULL default 0,
+        filepath varchar(255) NOT NULL default '',
+        filesize int unsigned NOT NULL default 0,
+        PRIMARY KEY (fid),
+        KEY uid (uid)
+      ) /*!40100 DEFAULT CHARACTER SET UTF8 */ ");
+      break;
+
+    case 'pgsql':
+      $ret[] = update_sql("CREATE TABLE {blogapi_files} (
+        fid serial,
+        filename varchar(255) NOT NULL default '',
+        filepath varchar(255) NOT NULL default '',
+        filesize int_unsigned NOT NULL default 0,
+        PRIMARY KEY (fid)
+      )");
+
+      $ret[] = update_sql("CREATE INDEX {blogapi_files}_uid_idx ON {blogapi_files} (uid)");
+      break;
+  }
+
+  return $ret;
+}
+
+
+/**
+ * @} End of "defgroup updates-5.x-extra"
+ */
+
