@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.3 2008/08/03 18:34:21 dries Exp $
+// $Id: common.test,v 1.1 2008/08/13 07:11:18 dries Exp $
 
 class CommonFormatSizeTestCase extends DrupalWebTestCase {
 
@@ -111,5 +111,29 @@ class DrupalTagsHandlingTestCase extends DrupalWebTestCase {
     foreach ($original as $leftover) {
       $this->_assert(FALSE, t('Leftover tag %leftover was left over.', array('%leftover' => $leftover)));
     }
+  }
+}
+
+/**
+ * Test drupal_http_request().
+ */
+class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Drupal HTTP request'),
+      'description' => t("Performs tests on Drupal's HTTP request mechanism."),
+      'group' => t('System')
+    );
+  }
+
+  function testDrupalHTTPRequest() {
+    $missing_scheme = drupal_http_request('example.com/path');
+    $this->assertEqual($missing_scheme->error, 'missing schema', t('Returned with missing scheme error.'));
+
+    $unable_to_parse = drupal_http_request('http:///path');
+    $this->assertEqual($unable_to_parse->error, 'unable to parse URL', t('Returned with unable to parse URL error.'));
   }
 }
