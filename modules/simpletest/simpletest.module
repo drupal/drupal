@@ -62,6 +62,7 @@ function simpletest_test_form() {
   $uncategorized_tests = simpletest_get_all_tests();
   $tests = simpletest_categorize_tests($uncategorized_tests);
   if (isset($_SESSION['test_id'])) {
+    // Select all results using the active test ID used to group them.
     $results = db_query("SELECT * FROM {simpletest} WHERE test_id = %d ORDER BY test_class, message_id", $_SESSION['test_id']);
 
     $summary = array(

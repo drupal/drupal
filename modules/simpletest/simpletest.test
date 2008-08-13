@@ -2,7 +2,16 @@
 // $Id$
 
 class SimpleTestTestCase extends DrupalWebTestCase {
+  /**
+   * The results array that has been parsed by getTestResults().
+   */
   protected $results;
+
+  /**
+   * Store the test ID from each test run for comparison, to ensure they are
+   * incramenting.
+   */
+  protected $test_ids = array();
 
   /**
    * Implementation of getInfo().
@@ -66,16 +75,23 @@ class SimpleTestTestCase extends DrupalWebTestCase {
       $this->stubTest();
     }
     else {
-      // Run this test from web interface.
-      $this->drupalGet('admin/build/testing');
+      // Run twice so test_ids can be accumulated.
+      for ($i = 0; $i < 2; $i++) {
+        // Run this test from web interface.
+        $this->drupalGet('admin/build/testing');
 
-      $edit = array();
-      $edit['SimpleTestTestCase'] = TRUE;
-      $this->drupalPost(NULL, $edit, t('Run tests'));
+        $edit = array();
+        $edit['SimpleTestTestCase'] = TRUE;
+        $this->drupalPost(NULL, $edit, t('Run tests'));
 
-      $this->getTestResults();
+        // Parse results and confirm that they are correct.
+        $this->getTestResults();
+        $this->confirmStubTestResults();
+      }
 
-      $this->confirmStubTestResults();
+      // Regression test for #290316.
+      // Check that test_id is incrementing.
+      $this->assertTrue($this->test_ids[0] != $this->test_ids[1], t('Test ID is incrementing.'));
     }
   }
 
@@ -88,6 +104,8 @@ class SimpleTestTestCase extends DrupalWebTestCase {
 
     $this->drupalCreateUser(array($this->valid_permission));
     $this->drupalCreateUser(array($this->invalid_permission));
+
+    $this->pass(t('Test ID is @id.', array('@id' => $this->test_id)));
   }
 
   /**
@@ -99,6 +117,21 @@ class SimpleTestTestCase extends DrupalWebTestCase {
 
     $this->assertAssertion(t('Created permissions: @perms', array('@perms' => $this->valid_permission)), 'Role', 'Pass');
     $this->assertAssertion(t('Invalid permission %permission.', array('%permission' => $this->invalid_permission)), 'Role', 'Fail');
+
+    $this->test_ids[] = $test_id = $this->getTestIdFromResults();
+    $this->assertTrue($test_id, t('Found test ID in results.'));
+  }
+
+  /**
+   * Fetch the test id from the test results.
+   */
+  function getTestIdFromResults() {
+    foreach($this->results['assertions'] as $assertion) {
+      if (preg_match('@^Test ID is ([0-9]*)\.$@', $assertion['message'], $matches)) {
+        return $matches[1];
+      }
+    }
+    return NULL;
   }
 
   /**

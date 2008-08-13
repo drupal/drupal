@@ -149,7 +149,7 @@ function simpletest_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Test id, messages belonging to the same id are reported together'),
+        'description' => t('Test ID, messages belonging to the same ID are reported together'),
       ),
       'test_class' => array(
         'type' => 'varchar',
@@ -204,54 +204,16 @@ function simpletest_schema() {
     ),
   );
   $schema['simpletest_test_id'] = array(
-    'description' => t('Stores simpletest test IDs.'),
+    'description' => t('Stores simpletest test IDs, used to auto-incrament the test ID so that a fresh test ID is used.'),
     'fields' => array(
-      'message_id'  => array(
+      'test_id'  => array(
         'type' => 'serial',
         'not null' => TRUE,
-        'description' => t('Primary Key: Unique simpletest ID.'),
+        'description' => t('Primary Key: Unique simpletest ID used to group test results together. Each time a set of tests
+                            are run a new test ID is used.'),
       ),
     ),
-    'primary key' => array('message_id'),
+    'primary key' => array('test_id'),
   );
   return $schema;
-}
-
-/**
- * Create the simpletest tables.
- */
-function simpletest_update_7000() {
-  $ret = array();
-  $schema = array();
-
-  $schema['simpletest'] = array(
-    'fields' => array(
-      'message_id'  => array('type' => 'serial', 'not null' => TRUE),
-      'test_id' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'test_class' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'status' => array('type' => 'varchar', 'length' => 9, 'not null' => TRUE, 'default' => ''),
-      'message' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'message_group' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'caller' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'line' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-      'file' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-    ),
-    'primary key' => array('message_id'),
-    'indexes' => array(
-      'reporter' => array('test_class, message_id'),
-    ),
-  );
-
-  $schema['simpletest_test_id'] = array(
-    'fields' => array(
-      'message_id'  => array('type' => 'serial', 'not null' => TRUE),
-    ),
-    'primary key' => array('message_id'),
-  );
-
-  foreach ($schema as $name => $definition) {
-    db_create_table($ret, $name, $definition);
-  }
-
-  return $ret;
 }
