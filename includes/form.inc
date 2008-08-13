@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.278 2008/08/12 10:23:27 dries Exp $
+// $Id: form.inc,v 1.279 2008/08/13 06:38:33 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1735,7 +1735,7 @@ function form_process_radios($element) {
           '#attributes' => $element['#attributes'],
           '#parents' => $element['#parents'],
           '#id' => form_clean_id('edit-' . implode('-', $parents_for_id)),
-          '#ahah' => $element['#ahah'],
+          '#ahah' => isset($element['#ahah']) ? $element['#ahah'] : NULL,
         );
       }
     }
