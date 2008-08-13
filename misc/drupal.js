@@ -202,5 +202,5 @@ Drupal.encodeURIComponent = function (item, uri) {
 
 // Global Killswitch on the <html> element
 if (Drupal.jsEnabled) {
-  document.documentElement.className = 'js';
+  $(document.documentElement).addClass('js');
 }
