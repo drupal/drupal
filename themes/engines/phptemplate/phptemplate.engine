@@ -168,27 +168,30 @@ function phptemplate_page($content, $show_blocks = TRUE) {
   $layout = 'none';
   if ($show_blocks) {
     global $sidebar_indicator;
-    /**
-     * Sidebar_indicator tells the block counting code to count sidebars separately.
-     */
 
     // Load blocks early for adding header info
     foreach ($regions as $region) {
+      // Sidebar_indicator tells the block counting code
+      // to count sidebars separately.
+      if ($region == 'left' || $region == 'right') {
+        $sidebar_indicator = $region;
+      }
+      else {
+        $sidebar_indicator = NULL;
+      }
       $variables['regions'][$region] = theme('blocks', $region);
     }
+    $sidebar_indicator = NULL;
 
-    $sidebar_indicator = 'left';
     $sidebar_left = $variables['regions']['left'];
     if ($sidebar_left != '') {
       $layout = 'left';
     }
 
-    $sidebar_indicator = 'right';
     $sidebar_right = $variables['regions']['right'];
     if ($sidebar_right != '') {
       $layout = ($layout == 'left') ? 'both' : 'right';
     }
-    $sidebar_indicator = NULL;
   }
   else {
     // Add empty strings as default
