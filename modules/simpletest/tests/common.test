@@ -113,3 +113,27 @@ class DrupalTagsHandlingTestCase extends DrupalWebTestCase {
     }
   }
 }
+
+/**
+ * Test drupal_http_request().
+ */
+class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Drupal HTTP request'),
+      'description' => t("Performs tests on Drupal's HTTP request mechanism."),
+      'group' => t('System')
+    );
+  }
+
+  function testDrupalHTTPRequest() {
+    $missing_scheme = drupal_http_request('example.com/path');
+    $this->assertEqual($missing_scheme->error, 'missing schema', t('Returned with missing scheme error.'));
+
+    $unable_to_parse = drupal_http_request('http:///path');
+    $this->assertEqual($unable_to_parse->error, 'unable to parse URL', t('Returned with unable to parse URL error.'));
+  }
+}
