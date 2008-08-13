@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.260 2008/07/24 16:25:18 dries Exp $
+// $Id: search.module,v 1.261 2008/08/13 06:59:19 dries Exp $
 
 /**
  * @file
@@ -912,7 +912,7 @@ function _search_parse_query(&$word, &$scores, $not = FALSE) {
  *
  * @ingroup search
  */
-function do_search($keywords, $type, $join1 = '', $where1 = '1', $arguments1 = array(), $columns2 = 'i.relevance AS score', $join2 = '', $arguments2 = array(), $sort_parameters = 'ORDER BY score DESC') {
+function do_search($keywords, $type, $join1 = '', $where1 = '1 = 1', $arguments1 = array(), $columns2 = 'i.relevance AS score', $join2 = '', $arguments2 = array(), $sort_parameters = 'ORDER BY score DESC') {
   $query = search_parse_query($keywords);
 
   if ($query[2] == '') {
