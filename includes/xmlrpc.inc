@@ -387,7 +387,7 @@ function xmlrpc_date($time) {
     $xmlrpc_date->hour = date('H', $time);
     $xmlrpc_date->minute = date('i', $time);
     $xmlrpc_date->second = date('s', $time);
-    $xmlrpc_date->iso8601 = date('Ymd\TH:i:s');
+    $xmlrpc_date->iso8601 = date('Ymd\TH:i:s', $time);
   }
   else {
     $time = str_replace(array('-', ':'), '', $time);
