@@ -100,7 +100,7 @@ function drupal_get_form($form_id) {
       array_unshift($args_temp, $form_id);
 
       $form = call_user_func_array('drupal_retrieve_form', $args_temp);
-      $form_build_id = 'form-'. md5(mt_rand());
+      $form_build_id = 'form-'. md5(uniqid(mt_rand(), true));
       $form['#build_id'] = $form_build_id;
       drupal_prepare_form($form_id, $form, $form_state);
       // Store a copy of the unprocessed form for caching and indicate that it
@@ -216,28 +216,35 @@ function drupal_rebuild_form($form_id, &$form_state, $args, $form_build_id = NUL
 }
 
 /**
- * Fetch a form from cache.
+ * Store a form in the cache.
  */
-function form_get_cache($form_build_id, &$form_state) {
-  if ($cached = cache_get('form_'. $form_build_id, 'cache_form')) {
-    $form = $cached->data;
-    if ($cached = cache_get('storage_'. $form_build_id, 'cache_form')) {
-      $form_state['storage'] = $cached->data;
-    }
-    return $form;
+function form_set_cache($form_build_id, $form, $form_state) {
+  global $user;
+  // 6 hours cache life time for forms should be plenty.
+  $expire = 21600;
+
+  if ($user->uid) {
+    $form['#cache_token'] = drupal_get_token();
+  }
+  cache_set('form_'. $form_build_id, $form, 'cache_form', time() + $expire);
+  if (!empty($form_state['storage'])) {
+    cache_set('storage_'. $form_build_id, $form_state['storage'], 'cache_form', time() + $expire);
   }
 }
 
 /**
- * Store a form in the cache
+ * Fetch a form from cache.
  */
-function form_set_cache($form_build_id, $form, $form_state) {
-  // 6 hours cache life time for forms should be plenty.
-  $expire = 21600;
-
-  cache_set('form_'. $form_build_id, $form, 'cache_form', time() + $expire);
-  if (!empty($form_state['storage'])) {
-    cache_set('storage_'. $form_build_id, $form_state['storage'], 'cache_form', time() + $expire);
+function form_get_cache($form_build_id, &$form_state) {
+  global $user;
+  if ($cached = cache_get('form_'. $form_build_id, 'cache_form')) {
+    $form = $cached->data;
+    if ((isset($form['#cache_token']) && drupal_valid_token($form['#cache_token'])) || (!isset($form['#cache_token']) && !$user->uid)) {
+      if ($cached = cache_get('storage_'. $form_build_id, 'cache_form')) {
+        $form_state['storage'] = $cached->data;
+      }
+      return $form;
+    }
   }
 }
 

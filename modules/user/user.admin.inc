@@ -707,44 +707,21 @@ function user_admin_access_check() {
 }
 
 /**
- * Menu callback: add an access rule
+ * Menu callback: add an access rule.
  */
 function user_admin_access_add($mask = NULL, $type = NULL) {
-  if ($edit = $_POST) {
-    if (!$edit['mask']) {
-      form_set_error('mask', t('You must enter a mask.'));
-    }
-    else {
-      db_query("INSERT INTO {access} (mask, type, status) VALUES ('%s', '%s', %d)", $edit['mask'], $edit['type'], $edit['status']);
-      $aid = db_last_insert_id('access', 'aid');
-      drupal_set_message(t('The access rule has been added.'));
-      drupal_goto('admin/user/rules');
-    }
-  }
-  else {
-    $edit['mask'] = $mask;
-    $edit['type'] = $type;
-  }
+  $edit = array();
+  $edit['aid'] = 0;
+  $edit['mask'] = $mask;
+  $edit['type'] = $type;
   return drupal_get_form('user_admin_access_add_form', $edit, t('Add rule'));
 }
 
 /**
- * Menu callback: edit an access rule
+ * Menu callback: edit an access rule.
  */
 function user_admin_access_edit($aid = 0) {
-  if ($edit = $_POST) {
-    if (!$edit['mask']) {
-      form_set_error('mask', t('You must enter a mask.'));
-    }
-    else {
-      db_query("UPDATE {access} SET mask = '%s', type = '%s', status = '%s' WHERE aid = %d", $edit['mask'], $edit['type'], $edit['status'], $aid);
-      drupal_set_message(t('The access rule has been saved.'));
-      drupal_goto('admin/user/rules');
-    }
-  }
-  else {
-    $edit = db_fetch_array(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
-  }
+  $edit = db_fetch_array(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
   return drupal_get_form('user_admin_access_edit_form', $edit, t('Save rule'));
 }
 
@@ -754,6 +731,11 @@ function user_admin_access_edit($aid = 0) {
  * @ingroup forms
  */
 function user_admin_access_form(&$form_state, $edit, $submit) {
+  $form = array();
+  $form['aid'] = array(
+    '#type' => 'value',
+    '#value' => $edit['aid'],
+  );
   $form['status'] = array(
     '#type' => 'radios',
     '#title' => t('Access type'),
@@ -777,8 +759,25 @@ function user_admin_access_form(&$form_state, $edit, $submit) {
     '#required' => TRUE,
   );
   $form['submit'] = array('#type' => 'submit', '#value' => $submit);
+  $form['#submit'] = array('user_admin_access_form_submit');
 
   return $form;
+}
+
+/**
+ * Submit callback for user_admin_access_form().
+ */
+function user_admin_access_form_submit($form, &$form_state) {
+  $edit = $form_state['values'];
+  if ($edit['aid']) {
+    db_query("UPDATE {access} SET mask = '%s', type = '%s', status = '%s' WHERE aid = %d", $edit['mask'], $edit['type'], $edit['status'], $edit['aid']);
+    drupal_set_message(t('The access rule has been saved.'));
+  }
+  else {
+    db_query("INSERT INTO {access} (mask, type, status) VALUES ('%s', '%s', %d)", $edit['mask'], $edit['type'], $edit['status']);
+    drupal_set_message(t('The access rule has been added.'));
+  }
+  $form_state['redirect'] = 'admin/user/rules';
 }
 
 function user_admin_access_check_validate($form, &$form_state) {
