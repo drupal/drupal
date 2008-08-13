@@ -82,7 +82,6 @@
  *     'sessions'  => 'shared_',
  *     'role'      => 'shared_',
  *     'authmap'   => 'shared_',
- *     'sequences' => 'shared_',
  *   );
  *
  * Database URL format:
