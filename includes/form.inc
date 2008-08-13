@@ -1734,7 +1734,7 @@ function expand_radios($element) {
           '#attributes' => $element['#attributes'],
           '#parents' => $element['#parents'],
           '#id' => form_clean_id('edit-'. implode('-', $parents_for_id)),
-          '#ahah' => $element['#ahah'],
+          '#ahah' => isset($element['#ahah']) ? $element['#ahah'] : NULL,
         );
       }
     }
