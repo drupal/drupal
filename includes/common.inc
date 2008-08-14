@@ -1105,8 +1105,17 @@ function format_size($size, $langcode = NULL) {
   }
   else {
     $size = $size / 1000; // convert bytes to kilobytes (1000 bytes)
-    $units = array('KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
-    foreach ($units as $suffix) {
+    $units = array(
+      t('@size KB', array(), $langcode),
+      t('@size MB', array(), $langcode),
+      t('@size GB', array(), $langcode),
+      t('@size TB', array(), $langcode),
+      t('@size PB', array(), $langcode),
+      t('@size EB', array(), $langcode),
+      t('@size ZB', array(), $langcode),
+      t('@size YB', array(), $langcode),
+    );
+    foreach ($units as $unit) {
       if (round($size, 2) >= 1000) {
         $size = $size / 1000;
       }
@@ -1114,7 +1123,7 @@ function format_size($size, $langcode = NULL) {
         break;
       }
     }
-    return t('@size @suffix', array('@size' => round($size, 2), '@suffix' => $suffix), $langcode);
+    return str_replace('@size', round($size, 2), $unit);
   }
 }
 
