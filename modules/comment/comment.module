@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.645 2008/08/03 18:52:27 dries Exp $
+// $Id: comment.module,v 1.646 2008/08/14 19:42:26 dries Exp $
 
 /**
  * @file
@@ -203,7 +203,7 @@ function comment_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['comment/approve'] = array(
-    'title' => 'Approve to comment',
+    'title' => 'Approve a comment',
     'page callback' => 'comment_approve',
     'page arguments' => array(2),
     'access arguments' => array('administer comments'),
