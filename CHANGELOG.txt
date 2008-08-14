@@ -1,5 +1,9 @@
 // $Id$
 
+Drupal 6.5-dev, xxxx-xx-xx (development release)
+----------------------
+
+
 Drupal 6.4, 2008-08-13
 ----------------------
 - Fixed a security issue (Cross site scripting, Arbitrary file uploads via
