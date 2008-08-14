@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.62 2008/05/26 17:12:54 dries Exp $
+// $Id: install.inc,v 1.63 2008/08/14 09:25:48 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -88,8 +88,8 @@ function drupal_load_updates() {
  * @param $module
  *   A module name.
  * @return
- *   If the module has updates, an array of available updates. Otherwise,
- *   FALSE.
+ *   If the module has updates, an array of available updates sorted by version. 
+ *   Otherwise, FALSE.
  */
 function drupal_get_schema_versions($module) {
   $updates = array();
@@ -105,6 +105,10 @@ function drupal_get_schema_versions($module) {
   if (count($updates) == 0) {
     return FALSE;
   }
+  
+  // Make sure updates are run in numeric order, not in definition order.
+  sort($updates, SORT_NUMERIC);
+  
   return $updates;
 }
 
