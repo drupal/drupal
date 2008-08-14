@@ -203,7 +203,7 @@ function user_load($array = array()) {
  *   The $user object for the user to modify or add. If $user->uid is
  *   omitted, a new user will be added.
  *
- * @param $array
+ * @param $edit
  *   An array of fields and values to save. For example array('name'
  *   => 'My name').  Keys that do not belong to columns in the user-related
  *   tables are added to the a serialized array in the 'data' column
@@ -216,33 +216,33 @@ function user_load($array = array()) {
  * @return
  *   A fully-loaded $user object upon successful save or FALSE if the save failed.
  */
-function user_save($account, $array = array(), $category = 'account') {
+function user_save($account, $edit = array(), $category = 'account') {
   $table = drupal_get_schema('users');
   $user_fields = $table['fields'];
 
-  if (!empty($array['pass'])) {
+  if (!empty($edit['pass'])) {
     // Allow alternate password hashing schemes.
     require_once variable_get('password_inc', './includes/password.inc');
-    $array['pass'] = user_hash_password(trim($array['pass']));
+    $edit['pass'] = user_hash_password(trim($edit['pass']));
     // Abort if the hashing failed and returned FALSE.
-    if (!$array['pass']) {
+    if (!$edit['pass']) {
       return FALSE;
     }
   }
   else {
     // Avoid overwriting an existing password with a blank password.
-    unset($array['pass']);
+    unset($edit['pass']);
   }
 
   if (is_object($account) && $account->uid) {
-    user_module_invoke('update', $array, $account, $category);
+    user_module_invoke('update', $edit, $account, $category);
     $data = unserialize(db_result(db_query('SELECT data FROM {users} WHERE uid = %d', $account->uid)));
     // Consider users edited by an administrator as logged in, if they haven't
     // already, so anonymous users can view the profile (if allowed).
-    if (empty($array['access']) && empty($account->access) && user_access('administer users')) {
-      $array['access'] = time();
+    if (empty($edit['access']) && empty($account->access) && user_access('administer users')) {
+      $edit['access'] = time();
     }
-    foreach ($array as $key => $value) {
+    foreach ($edit as $key => $value) {
       // Fields that don't pertain to the users or user_roles
       // automatically serialized into the users.data column.
       if ($key != 'roles' && empty($user_fields[$key])) {
@@ -255,20 +255,20 @@ function user_save($account, $array = array(), $category = 'account') {
       }
     }
 
-    $array['data'] = $data;
-    $array['uid'] = $account->uid;
+    $edit['data'] = $data;
+    $edit['uid'] = $account->uid;
     // Save changes to the users table.
-    $success = drupal_write_record('users', $array, 'uid');
+    $success = drupal_write_record('users', $edit, 'uid');
     if (!$success) {
       // The query failed - better to abort the save than risk further data loss.
       return FALSE;
     }
 
     // Reload user roles if provided.
-    if (isset($array['roles']) && is_array($array['roles'])) {
+    if (isset($edit['roles']) && is_array($edit['roles'])) {
       db_query('DELETE FROM {users_roles} WHERE uid = %d', $account->uid);
 
-      foreach (array_keys($array['roles']) as $rid) {
+      foreach (array_keys($edit['roles']) as $rid) {
         if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
           db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $account->uid, $rid);
         }
@@ -276,13 +276,13 @@ function user_save($account, $array = array(), $category = 'account') {
     }
 
     // Delete a blocked user's sessions to kick them if they are online.
-    if (isset($array['status']) && $array['status'] == 0) {
+    if (isset($edit['status']) && $edit['status'] == 0) {
       sess_destroy_uid($account->uid);
     }
 
     // If the password changed, delete all open sessions and recreate
     // the current one.
-    if (!empty($array['pass'])) {
+    if (!empty($edit['pass'])) {
       sess_destroy_uid($account->uid);
       sess_regenerate();
     }
@@ -291,26 +291,26 @@ function user_save($account, $array = array(), $category = 'account') {
     $user = user_load(array('uid' => $account->uid));
 
     // Send emails after we have the new user object.
-    if (isset($array['status']) && $array['status'] != $account->status) {
+    if (isset($edit['status']) && $edit['status'] != $account->status) {
       // The user's status is changing; conditionally send notification email.
-      $op = $array['status'] == 1 ? 'status_activated' : 'status_blocked';
+      $op = $edit['status'] == 1 ? 'status_activated' : 'status_blocked';
       _user_mail_notify($op, $user);
     }
 
-    user_module_invoke('after_update', $array, $user, $category);
+    user_module_invoke('after_update', $edit, $user, $category);
   }
   else {
     // Allow 'created' to be set by the caller.
-    if (!isset($array['created'])) {
-      $array['created'] = time();
+    if (!isset($edit['created'])) {
+      $edit['created'] = time();
     }
     // Consider users created by an administrator as already logged in, so
     // anonymous users can view the profile (if allowed).
-    if (empty($array['access']) && user_access('administer users')) {
-      $array['access'] = time();
+    if (empty($edit['access']) && user_access('administer users')) {
+      $edit['access'] = time();
     }
 
-    $success = drupal_write_record('users', $array);
+    $success = drupal_write_record('users', $edit);
     if (!$success) {
       // On a failed INSERT some other existing user's uid may be returned.
       // We must abort to avoid overwriting their account.
@@ -318,14 +318,14 @@ function user_save($account, $array = array(), $category = 'account') {
     }
 
     // Build the initial user object.
-    $user = user_load(array('uid' => $array['uid']));
+    $user = user_load(array('uid' => $edit['uid']));
 
-    user_module_invoke('insert', $array, $user, $category);
+    user_module_invoke('insert', $edit, $user, $category);
 
     // Note, we wait with saving the data column to prevent module-handled
     // fields from being saved there.
     $data = array();
-    foreach ($array as $key => $value) {
+    foreach ($edit as $key => $value) {
       if (($key != 'roles') && (empty($user_fields[$key])) && ($value !== NULL)) {
         $data[$key] = $value;
       }
@@ -336,17 +336,17 @@ function user_save($account, $array = array(), $category = 'account') {
     }
 
     // Save user roles (delete just to be safe).
-    if (isset($array['roles']) && is_array($array['roles'])) {
-      db_query('DELETE FROM {users_roles} WHERE uid = %d', $array['uid']);
-      foreach (array_keys($array['roles']) as $rid) {
+    if (isset($edit['roles']) && is_array($edit['roles'])) {
+      db_query('DELETE FROM {users_roles} WHERE uid = %d', $edit['uid']);
+      foreach (array_keys($edit['roles']) as $rid) {
         if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-          db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $array['uid'], $rid);
+          db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $edit['uid'], $rid);
         }
       }
     }
 
     // Build the finished user object.
-    $user = user_load(array('uid' => $array['uid']));
+    $user = user_load(array('uid' => $edit['uid']));
   }
 
   return $user;
