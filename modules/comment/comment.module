@@ -203,7 +203,7 @@ function comment_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['comment/approve'] = array(
-    'title' => 'Approve to comment',
+    'title' => 'Approve a comment',
     'page callback' => 'comment_approve',
     'page arguments' => array(2),
     'access arguments' => array('administer comments'),
