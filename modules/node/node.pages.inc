@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.31 2008/07/10 11:12:02 dries Exp $
+// $Id: node.pages.inc,v 1.32 2008/08/14 13:47:35 dries Exp $
 
 /**
  * @file
@@ -18,6 +18,11 @@ function node_page_edit($node) {
 function node_add_page() {
   $item = menu_get_item();
   $content = system_admin_menu_block($item);
+  // Bypass the node/add listing if only one content type is available.
+  if (count($content) == 1) {
+    $item = array_shift($content);
+    drupal_goto($item['href']);
+  }
   return theme('node_add_list', $content);
 }
 
