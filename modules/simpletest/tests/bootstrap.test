@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.test,v 1.4 2008/07/19 12:31:14 dries Exp $
+// $Id: bootstrap.test,v 1.1 2008/08/14 09:18:28 dries Exp $
 
 class BootstrapIPAddressTestCase extends DrupalWebTestCase {
 
