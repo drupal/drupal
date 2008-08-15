@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.279 2008/08/13 06:38:33 dries Exp $
+// $Id: form.inc,v 1.280 2008/08/15 07:55:54 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -503,6 +503,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   }
 
   $form += _element_info('form');
+  $form += array('#tree' => FALSE, '#parents' => array());
 
   if (!isset($form['#validate'])) {
     if (drupal_function_exists($form_id . '_validate')) {
@@ -1328,8 +1329,6 @@ function _element_info($type, $refresh = NULL) {
     '#description' => NULL,
     '#attributes' => array(),
     '#required' => FALSE,
-    '#tree' => FALSE,
-    '#parents' => array()
   );
   if (!isset($cache) || $refresh) {
     $cache = array();
