@@ -247,8 +247,8 @@ function drupal_rebuild_theme_registry() {
 
 /**
  * Process a single invocation of the theme hook. $type will be one
- * of 'module', 'theme_engine' or 'theme' and it tells us some
- * important information.
+ * of 'module', 'theme_engine', 'base_theme_engine', 'theme', or 'base_theme'
+ * and it tells us some important information.
  *
  * Because $cache is a reference, the cache will be continually
  * expanded upon; new entries will replace old entries in the
@@ -314,7 +314,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
           // to provide preprocess functions even if they are not the owner of the current hook.
           $prefixes += module_list();
         }
-        elseif ($type == 'theme_engine') {
+        elseif ($type == 'theme_engine' || $type == 'base_theme_engine') {
           // Theme engines get an extra set that come before the normally named preprocessors.
           $prefixes[] = $name .'_engine';
           // The theme engine also registers on behalf of the theme. The theme or engine name can be used.
@@ -381,7 +381,7 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
 
   // Process each base theme.
   foreach ($base_theme as $base) {
-    // If the theme uses a theme engine, process its hooks.
+    // If the base theme uses a theme engine, process its hooks.
     $base_path = dirname($base->filename);
     if ($theme_engine) {
       _theme_process_registry($cache, $theme_engine, 'base_theme_engine', $base->name, $base_path);
