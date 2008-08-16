@@ -166,13 +166,15 @@ function translation_link($type, $node = NULL, $teaser = FALSE) {
     // Do not show link to the same node.
     unset($translations[$node->language]);
     $languages = language_list();
-    foreach ($translations as $language => $translation) {
-      $links["node_translation_$language"] = array(
-        'title' => $languages[$language]->native,
-        'href' => "node/$translation->nid",
-        'language' => $languages[$language],
-        'attributes' => array('title' => $translation->title, 'class' => 'translation-link')
-      );
+    foreach ($languages as $langcode => $language) {
+      if (isset($translations[$langcode])) {
+        $links["node_translation_$langcode"] = array(
+          'title' => $language->native,
+          'href' => 'node/' . $translations[$langcode]->nid,
+          'language' => $language,
+          'attributes' => array('title' => $translations[$langcode]->title, 'class' => 'translation-link')
+        );
+      }
     }
   }
   return $links;
