@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.install,v 1.6 2008/08/13 06:42:04 dries Exp $
+// $Id: simpletest.install,v 1.7 2008/08/16 20:57:14 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -200,7 +200,7 @@ function simpletest_schema() {
     ),
     'primary key' => array('message_id'),
     'indexes' => array(
-      'reporter' => array('test_class, message_id'),
+      'reporter' => array('test_class', 'message_id'),
     ),
   );
   $schema['simpletest_test_id'] = array(
