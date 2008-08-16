@@ -52,7 +52,7 @@ function aggregator_view() {
  * @see aggregator_form_feed_validate()
  * @see aggregator_form_feed_submit()
  */
-function aggregator_form_feed(&$form_state, $edit = array('refresh' => 900, 'title' => '', 'url' => '', 'fid' => NULL)) {
+function aggregator_form_feed(&$form_state, $edit = array('refresh' => 900, 'block' => 5, 'title' => '', 'url' => '', 'fid' => NULL)) {
   $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
 
   if ($edit['refresh'] == '') {
@@ -77,7 +77,13 @@ function aggregator_form_feed(&$form_state, $edit = array('refresh' => 900, 'tit
     '#title' => t('Update interval'),
     '#default_value' => $edit['refresh'],
     '#options' => $period,
-    '#description' => t('The length of time between feed updates. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status'))),
+    '#description' => t('The length of time between feed updates. Requires a correctly configured <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status'))),
+  );
+  $form['block'] = array('#type' => 'select',
+    '#title' => t('News items in block'),
+    '#default_value' => $edit['block'],
+    '#options' => drupal_map_assoc(array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)),
+    '#description' => t("Drupal can make a block with the most recent news items of this feed. You can <a href=\"@block-admin\">configure blocks</a> to be displayed in the sidebar of your page. This setting lets you configure the number of news items to show in this feed's block. If you choose '0' this feed's block will be disabled.", array('@block-admin' => url('admin/build/block'))),
   );
 
   // Handling of categories.
@@ -240,7 +246,13 @@ function aggregator_form_opml(&$form_state) {
     '#title' => t('Update interval'),
     '#default_value' => 3600,
     '#options' => $period,
-    '#description' => t('The length of time between feed updates. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status'))),
+    '#description' => t('The length of time between feed updates. Requires a correctly configured <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status'))),
+  );
+  $form['block'] = array('#type' => 'select',
+    '#title' => t('News items in block'),
+    '#default_value' => 5,
+    '#options' => drupal_map_assoc(array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)),
+    '#description' => t("Drupal can make a block with the most recent news items of a feed. You can <a href=\"@block-admin\">configure blocks</a> to be displayed in the sidebar of your page. This setting lets you configure the number of news items to show in a feed's block. If you choose '0' these feeds' blocks will be disabled.", array('@block-admin' => url('admin/build/block'))),
   );
 
   // Handling of categories.

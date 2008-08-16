@@ -21,6 +21,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
       the includes directory.
 - News aggregator:
     * Added OPML import functionality for RSS feeds.
+    * Add an option not to generate blocks for RSS feeds.
 - Search:
     * Added support for language-aware searches.
 - Testing:

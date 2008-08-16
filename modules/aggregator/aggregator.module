@@ -299,7 +299,7 @@ function aggregator_block($op = 'list', $delta = '', $edit = array()) {
       while ($category = db_fetch_object($result)) {
         $block['category-' . $category->cid]['info'] = t('!title category latest items', array('!title' => $category->title));
       }
-      $result = db_query('SELECT fid, title FROM {aggregator_feed} ORDER BY fid');
+      $result = db_query('SELECT fid, title FROM {aggregator_feed} WHERE block <> 0 ORDER BY fid');
       while ($feed = db_fetch_object($result)) {
         $block['feed-' . $feed->fid]['info'] = t('!title feed latest items', array('!title' => $feed->title));
       }
@@ -308,27 +308,26 @@ function aggregator_block($op = 'list', $delta = '', $edit = array()) {
       list($type, $id) = explode('-', $delta);
       if ($type == 'category') {
         $value = db_result(db_query('SELECT block FROM {aggregator_category} WHERE cid = %d', $id));
+        $form['block'] = array(
+          '#type' => 'select',
+          '#title' => t('Number of news items in block'),
+          '#default_value' => $value,
+          '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20))
+        );
+        return $form;
       }
-      else {
-        $value = db_result(db_query('SELECT block FROM {aggregator_feed} WHERE fid = %d', $id));
-      }
-      $form['block'] = array('#type' => 'select', '#title' => t('Number of news items in block'), '#default_value' => $value, '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
-      return $form;
     }
     elseif ($op == 'save') {
       list($type, $id) = explode('-', $delta);
       if ($type == 'category') {
         $value = db_query('UPDATE {aggregator_category} SET block = %d WHERE cid = %d', $edit['block'], $id);
       }
-      else {
-        $value = db_query('UPDATE {aggregator_feed} SET block = %d WHERE fid = %d', $edit['block'], $id);
-      }
     }
     elseif ($op == 'view') {
       list($type, $id) = explode('-', $delta);
       switch ($type) {
         case 'feed':
-          if ($feed = db_fetch_object(db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE fid = %d', $id))) {
+          if ($feed = db_fetch_object(db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE block <> 0 AND fid = %d', $id))) {
             $block['subject'] = check_plain($feed->title);
             $result = db_query_range('SELECT * FROM {aggregator_item} WHERE fid = %d ORDER BY timestamp DESC, iid DESC', $feed->fid, 0, $feed->block);
             $read_more = theme('more_link', url('aggregator/sources/' . $feed->fid), t("View this feed's recent news."));
@@ -404,7 +403,7 @@ function aggregator_save_feed($edit) {
     db_query('DELETE FROM {aggregator_category_feed} WHERE fid = %d', $edit['fid']);
   }
   if (!empty($edit['fid']) && !empty($edit['title'])) {
-    db_query("UPDATE {aggregator_feed} SET title = '%s', url = '%s', refresh = %d WHERE fid = %d", $edit['title'], $edit['url'], $edit['refresh'], $edit['fid']);
+    db_query("UPDATE {aggregator_feed} SET title = '%s', url = '%s', refresh = %d, block = %d WHERE fid = %d", $edit['title'], $edit['url'], $edit['refresh'], $edit['block'], $edit['fid']);
   }
   elseif (!empty($edit['fid'])) {
     $items = array();
@@ -421,7 +420,7 @@ function aggregator_save_feed($edit) {
     db_query("DELETE FROM {blocks} WHERE module = '%s' AND delta = '%s'", 'aggregator', 'feed-' . $edit['fid']);
   }
   elseif (!empty($edit['title'])) {
-    db_query("INSERT INTO {aggregator_feed} (title, url, refresh, block, description, image) VALUES ('%s', '%s', %d, 5, '', '')", $edit['title'], $edit['url'], $edit['refresh']);
+    db_query("INSERT INTO {aggregator_feed} (title, url, refresh, block, description, image) VALUES ('%s', '%s', %d, %d, '', '')", $edit['title'], $edit['url'], $edit['refresh'], $edit['block']);
     // A single unique ID for bundles and feeds, to use in blocks.
     $edit['fid'] = db_last_insert_id('aggregator_feed', 'fid');
   }
