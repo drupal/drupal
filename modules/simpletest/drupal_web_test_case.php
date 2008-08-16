@@ -7,6 +7,7 @@
 class DrupalWebTestCase {
   protected $_logged_in = FALSE;
   protected $_content;
+  protected $_url;
   protected $plain_text;
   protected $ch;
   protected $elements;
@@ -756,11 +757,9 @@ class DrupalWebTestCase {
     $this->curlConnect();
     $url = empty($curl_options[CURLOPT_URL]) ? curl_getinfo($this->ch, CURLINFO_EFFECTIVE_URL) : $curl_options[CURLOPT_URL];
     curl_setopt_array($this->ch, $this->curl_options + $curl_options);
-    $this->_content = curl_exec($this->ch);
-    $this->plain_text = FALSE;
-    $this->elements = FALSE;
+    $this->drupalSetContent(curl_exec($this->ch), curl_getinfo($this->ch, CURLINFO_EFFECTIVE_URL));
     $this->assertTrue($this->_content !== FALSE, t('!method to !url, response is !length bytes.', array('!method' => !empty($curl_options[CURLOPT_NOBODY]) ? 'HEAD' : (empty($curl_options[CURLOPT_POSTFIELDS]) ? 'GET' : 'POST'), '!url' => $url, '!length' => strlen($this->_content))), t('Browser'));
-    return $this->_content;
+    return $this->drupalGetContent();
   }
 
   /**
@@ -1124,7 +1123,7 @@ class DrupalWebTestCase {
    *   The current url.
    */
   function getUrl() {
-    return curl_getinfo($this->ch, CURLINFO_EFFECTIVE_URL);
+    return $this->_url;
   }
 
   /**
@@ -1132,6 +1131,22 @@ class DrupalWebTestCase {
    */
   function drupalGetContent() {
     return $this->_content;
+  }
+
+  /**
+   * Sets the raw HTML content. This can be useful when a page has been fetched
+   * outside of the internal browser and assertions need to be made on the
+   * returned page.
+   *
+   * A good example would be when testing drupal_http_request(). After fetching
+   * the page the content can be set and page elements can be checked to ensure
+   * that the function worked properly.
+   */
+  function drupalSetContent($content, $url = 'internal:') {
+    $this->_content = $content;
+    $this->_url = $url;
+    $this->plain_text = FALSE;
+    $this->elements = FALSE;
   }
 
   /**

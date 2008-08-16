@@ -434,7 +434,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   }
 
   // Parse the URL and make sure we can handle the schema.
-  $uri = parse_url($url);
+  $uri = @parse_url($url);
 
   if ($uri == FALSE) {
     $result->error = 'unable to parse URL';
