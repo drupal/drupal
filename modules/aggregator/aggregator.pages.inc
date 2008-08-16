@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.15 2008/07/16 21:59:25 dries Exp $
+// $Id: aggregator.pages.inc,v 1.16 2008/08/16 21:13:32 dries Exp $
 
 /**
  * @file
@@ -60,7 +60,6 @@ function aggregator_page_source($arg1, $arg2 = NULL) {
  *   The items HTML.
  */
 function aggregator_page_category($arg1, $arg2 = NULL) {
-  drupal_set_breadcrumb(array_merge(drupal_get_breadcrumb(), array(l(t('Categories'), 'aggregator/categories'))));
   // If there are two arguments then we are called as a form, $arg1 is
   // $form_state and $arg2 is $category. Otherwise, $arg1 is $category.
   $category = is_array($arg2) ? $arg2 : $arg1;
