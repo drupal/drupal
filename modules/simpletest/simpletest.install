@@ -200,7 +200,7 @@ function simpletest_schema() {
     ),
     'primary key' => array('message_id'),
     'indexes' => array(
-      'reporter' => array('test_class, message_id'),
+      'reporter' => array('test_class', 'message_id'),
     ),
   );
   $schema['simpletest_test_id'] = array(
