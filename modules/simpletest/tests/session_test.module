@@ -1,0 +1,55 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_menu().
+ */
+function session_test_menu() {
+  $items['session-test/get'] = array(
+    'title' => t('Session value'),
+    'page callback' => '_session_test_get',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['session-test/set/%'] = array(
+    'title' => t('Set Session value'),
+    'page callback' => '_session_test_set',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['session-test/no-set/%'] = array(
+    'title' => t('Disabled session set value'),
+    'page callback' => '_session_test_no_set',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Page callback, prints the stored session value to the screen.
+ */
+function _session_test_get() {
+  return t('The current value of the stored session variable is: %val', array('%val' => $_SESSION['session_test_value']));
+}
+
+/**
+ * Page callback, stores a value in $_SESSION['session_test_value'].
+ */
+function _session_test_set($value) {
+  $_SESSION['session_test_value'] = $value;
+  return t('The current value of the stored session variable has been set to %val', array('%val' => $value));
+}
+
+/**
+ * Menu callback: turns off session saving and then tries to save a value
+ * anyway.
+ */
+function _session_test_no_set($value) {
+  session_save_session(FALSE);
+  _session_test_set($value);
+  return t('session saving was disabled, and then %val was set', array('%val' => $value));
+}
