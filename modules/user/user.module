@@ -1083,7 +1083,7 @@ function user_pass_submit($form_id, $form_values) {
   $from = variable_get('site_mail', ini_get('sendmail_from'));
 
   // Mail one time login URL and instructions.
-  $variables = array('!username' => $account->name, '!site' => variable_get('site_name', 'Drupal'), '!login_url' => user_pass_reset_url($account), '!uri' => $base_url, '!uri_brief' => substr($base_url, strlen('http://')), '!mailto' => $account->mail, '!date' => format_date(time()), '!login_uri' => url('user', NULL, NULL, TRUE), '!edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
+  $variables = array('!username' => $account->name, '!site' => variable_get('site_name', 'Drupal'), '!login_url' => user_pass_reset_url($account), '!uri' => $base_url, '!uri_brief' => preg_replace('!^https?://!', '', $base_url), '!mailto' => $account->mail, '!date' => format_date(time()), '!login_uri' => url('user', NULL, NULL, TRUE), '!edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
   $subject = _user_mail_text('pass_subject', $variables);
   $body = _user_mail_text('pass_body', $variables);
   $mail_success = drupal_mail('user-pass', $account->mail, $subject, $body, $from);
