@@ -1964,7 +1964,6 @@ function theme_image_button($element) {
  *
  * @param $element
  *   An associative array containing the properties of the element.
- *   Properties used:  value, edit
  * @return
  *   A themed HTML string representing the hidden form field.
  *
@@ -2480,10 +2479,6 @@ function batch_process($redirect = NULL, $url = NULL) {
       if (isset($_REQUEST['destination'])) {
         $batch['destination'] = $_REQUEST['destination'];
         unset($_REQUEST['destination']);
-      }
-      elseif (isset($_REQUEST['edit']['destination'])) {
-        $batch['destination'] = $_REQUEST['edit']['destination'];
-        unset($_REQUEST['edit']['destination']);
       }
 
       // Initiate db storage in order to get a batch id. We have to provide

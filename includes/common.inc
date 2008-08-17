@@ -261,8 +261,7 @@ function drupal_get_destination() {
  * Usually the redirected URL is constructed from this function's input
  * parameters. However you may override that behavior by setting a
  * destination in either the $_REQUEST-array (i.e. by using
- * the query string of an URI) or the $_REQUEST['edit']-array (i.e. by
- * using a hidden form field). This is used to direct the user back to
+ * the query string of an URI) This is used to direct the user back to
  * the proper page after completing a form. For example, after editing
  * a post on the 'admin/content/node'-page or after having logged on using the
  * 'user login'-block in a sidebar. The function drupal_get_destination()
@@ -297,9 +296,6 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response
 
   if (isset($_REQUEST['destination'])) {
     extract(parse_url(urldecode($_REQUEST['destination'])));
-  }
-  else if (isset($_REQUEST['edit']['destination'])) {
-    extract(parse_url(urldecode($_REQUEST['edit']['destination'])));
   }
 
   $url = url($path, array('query' => $query, 'fragment' => $fragment, 'absolute' => TRUE));
