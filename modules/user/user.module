@@ -2036,7 +2036,7 @@ function user_mail_tokens($account, $language) {
     '!site' => variable_get('site_name', 'Drupal'),
     '!login_url' => user_pass_reset_url($account),
     '!uri' => $base_url,
-    '!uri_brief' => substr($base_url, strlen('http://')),
+    '!uri_brief' => preg_replace('!^https?://!', '', $base_url),
     '!mailto' => $account->mail,
     '!date' => format_date(time(), 'medium', '', NULL, $language->language),
     '!login_uri' => url('user', array('absolute' => TRUE, 'language' => $language)),
