@@ -412,13 +412,7 @@ function module_implements($hook, $sort = FALSE, $refresh = FALSE) {
   }
   registry_cache_hook_implementations(array('hook' => $hook, 'modules' => $implementations[$hook]));
 
-  // The explicit cast forces a copy to be made. This is needed because
-  // $implementations[$hook] is only a reference to an element of
-  // $implementations and if there are nested foreaches (due to nested node
-  // API calls, for example), they would both manipulate the same array's
-  // references, which causes some modules' hooks not to be called.
-  // See also http://www.zend.com/zend/art/ref-count.php.
-  return (array)$implementations[$hook];
+  return $implementations[$hook];
 }
 
 /**
