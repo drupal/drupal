@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.29 2008/08/18 18:40:07 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.30 2008/08/18 19:25:52 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -731,6 +731,8 @@ class DrupalWebTestCase {
         CURLOPT_URL => $base_url,
         CURLOPT_FOLLOWLOCATION => TRUE,
         CURLOPT_RETURNTRANSFER => TRUE,
+        CURLOPT_SSL_VERIFYPEER => FALSE,  // Required to make the tests run on https://
+        CURLOPT_SSL_VERIFYHOST => FALSE,  // Required to make the tests run on https://
       );
       if (preg_match('/simpletest\d+/', $db_prefix)) {
         $curl_options[CURLOPT_USERAGENT] = $db_prefix;
