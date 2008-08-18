@@ -937,8 +937,6 @@ function filter_xss_admin($string) {
  *   an XSS attack.
  * @param $allowed_tags
  *   An array of allowed tags.
- * @param $format
- *   The format to use.
  */
 function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd')) {
   // Only operate on valid UTF-8 strings. This is necessary to prevent cross
