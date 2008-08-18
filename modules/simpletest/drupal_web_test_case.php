@@ -824,13 +824,27 @@ class DrupalWebTestCase {
    *
    * @param $path
    *   Location of the post form. Either a Drupal path or an absolute path or
-   *   NULL to post to the current page.
+   *   NULL to post to the current page. For multi-stage forms you can set the
+   *   path to NULL and have it post to the last received page. Example:
+   *
+   *   // First step in form.
+   *   $edit = array(...);
+   *   $this->drupalPost('some_url', $edit, t('Save'));
+   *
+   *   // Second step in form.
+   *   $edit = array(...);
+   *   $this->drupalPost(NULL, $edit, t('Save'));
    * @param  $edit
    *   Field data in an assocative array. Changes the current input fields
    *   (where possible) to the values indicated. A checkbox can be set to
    *   TRUE to be checked and FALSE to be unchecked. Note that when a form
    *   contains file upload fields, other fields cannot start with the '@'
    *   character.
+   *
+   *   Multiple select fields can be set using name[] and setting each of the
+   *   possible values. Example:
+   *   $edit = array();
+   *   $edit['name[]'] = array('value1', 'value2');
    * @param $submit
    *   Value of the submit button.
    * @param $options
@@ -880,11 +894,11 @@ class DrupalWebTestCase {
         }
       }
       // We have not found a form which contained all fields of $edit.
-      $this->fail(t('Found the requested form at @path', array('@path' => $path)));
-      $this->assertTrue($submit_matches, t('Found the @submit button', array('@submit' => $submit)));
       foreach ($edit as $name => $value) {
         $this->fail(t('Failed to set field @name to @value', array('@name' => $name, '@value' => $value)));
       }
+      $this->assertTrue($submit_matches, t('Found the @submit button', array('@submit' => $submit)));
+      $this->fail(t('Found the requested form fields at @path', array('@path' => $path)));
     }
   }
 
