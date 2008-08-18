@@ -114,13 +114,16 @@ All arguments are long options.
 
   --concurrency [num]
 
-              Run tests in parallel, up to [num] tests at a time.
-              This requires the Process Control Extension (PCNTL) to be compiled in PHP,
-              not supported under Windows.
+              Run tests in parallel, up to [num] tests at a time. This requires
+              the Process Control Extension (PCNTL) to be compiled in PHP, not 
+              supported under Windows.
 
   --all       Run all available tests.
 
   --class     Run tests identified by specific class names, instead of group names.
+  
+  --file      Run tests identifiled by specific file names, instead of group names.
+              Specify the path and the extension (i.e. 'modules/user/user.test').
 
   --color     Output the rusults with color highlighting.
 
@@ -160,6 +163,7 @@ function simpletest_script_parse_args() {
     'concurrency' => 1,
     'all' => FALSE,
     'class' => FALSE,
+    'file' => FALSE,
     'color' => FALSE,
     'verbose' => FALSE,
     'test_names' => array(),
@@ -353,10 +357,25 @@ function simpletest_script_get_test_list() {
     $test_list = array_keys($all_tests);
   }
   else {
-    if ($args['class_names']) {
+    if ($args['class']) {
       // Check for valid class names.
       foreach ($args['test_names'] as $class_name) {
         if (isset($all_tests[$class_name])) {
+          $test_list[] = $class_name;
+        }
+      }
+    }
+    else if ($args['file']) {
+      $files = array();
+      foreach ($args['test_names'] as $file) {
+        $files[realpath($file)] = 1;
+      }
+	  
+      // Check for valid class names.
+      foreach ($all_tests as $class_name => $instance) {
+        $refclass = new ReflectionClass($class_name);
+        $file = $refclass->getFileName();
+        if (isset($files[$file])) {
           $test_list[] = $class_name;
         }
       }
