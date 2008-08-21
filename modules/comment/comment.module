@@ -693,7 +693,7 @@ function comment_save($edit) {
           // Strip the "/" from the end of the parent thread.
           $parent->thread = (string) rtrim((string) $parent->thread, '/');
           // Get the max value in *this* thread.
-          $max = db_result(db_query("SELECT MAX(thread) FROM {comments} WHERE thread LIKE '%s.%%' AND nid = %d", $parent->thread, $edit['nid']));
+          $max = db_query("SELECT MAX(thread) FROM {comments} WHERE thread LIKE :thread AND nid = :nid", array(':thread' => $parent->thread .'%', ':nid' => $edit['nid']))->fetchField();
 
           if ($max == '') {
             // First child of this parent.

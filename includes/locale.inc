@@ -1943,34 +1943,34 @@ function _locale_translate_seek() {
     // Compute LIKE section
     switch ($query['translation']) {
       case 'translated':
-        $where = "WHERE (t.translation LIKE '%%%s%%')";
+        $where = "WHERE (t.translation LIKE ?)";
         $orderby = "ORDER BY t.translation";
-        $arguments[] = $query['string'];
+        $arguments[] = '%'. $query['string'] .'%';
         break;
       case 'untranslated':
-        $where = "WHERE (s.source LIKE '%%%s%%' AND t.translation IS NULL)";
+        $where = "WHERE (s.source LIKE ? AND t.translation IS NULL)";
         $orderby = "ORDER BY s.source";
-        $arguments[] = $query['string'];
+        $arguments[] = '%'. $query['string'] .'%';
         break;
       case 'all' :
       default:
-        $where = "WHERE (s.source LIKE '%%%s%%' OR t.translation LIKE '%%%s%%')";
+        $where = "WHERE (s.source LIKE ? OR t.translation LIKE ?)";
         $orderby = '';
-        $arguments[] = $query['string'];
-        $arguments[] = $query['string'];
+        $arguments[] = '%'. $query['string'] .'%';
+        $arguments[] = '%'. $query['string'] .'%';
         break;
     }
     $grouplimit = '';
     if (!empty($query['group']) && $query['group'] != 'all') {
-      $grouplimit = " AND s.textgroup = '%s'";
+      $grouplimit = " AND s.textgroup = ?";
       $arguments[] = $query['group'];
     }
 
     switch ($query['language']) {
       // Force search in source strings
       case "en":
-        $sql = $join . " WHERE s.source LIKE '%%%s%%' $grouplimit ORDER BY s.source";
-        $arguments = array($query['string']); // $where is not used, discard its arguments
+        $sql = $join . " WHERE s.source LIKE ? $grouplimit ORDER BY s.source";
+        $arguments = array('%' . $query['string'] . '%'); // $where is not used, discard its arguments
         if (!empty($grouplimit)) {
           $arguments[] = $query['group'];
         }
@@ -1981,7 +1981,7 @@ function _locale_translate_seek() {
         break;
       // Some different language
       default:
-        $sql = "$join AND t.language = '%s' $where $grouplimit $orderby";
+        $sql = "$join AND t.language = ? $where $grouplimit $orderby";
         array_unshift($arguments, $query['language']);
         // Don't show translation flags for other languages, we can't see them with this search.
         $limit_language = $query['language'];
@@ -2091,7 +2091,12 @@ function _locale_rebuild_js($langcode = NULL) {
 
   // Construct the array for JavaScript translations.
   // We sort on plural so that we have all plural forms before singular forms.
-  $result = db_query("SELECT s.lid, s.source, t.plid, t.plural, t.translation FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = '%s' WHERE s.location LIKE '%%.js%%' AND s.textgroup = 'default' ORDER BY t.plural DESC", $language->language);
+  $result = db_query("SELECT s.lid, s.source, t.plid, t.plural, t.translation 
+    FROM {locales_source} s 
+      LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language 
+    WHERE s.location LIKE '%.js%' 
+      AND s.textgroup = 'default' 
+    ORDER BY t.plural DESC", array(':language' => $language->language));
 
   $translations = $plurals = array();
   while ($data = db_fetch_object($result)) {

@@ -70,7 +70,16 @@ class DrupalWebTestCase {
     }
     $current_db_prefix = $db_prefix;
     $db_prefix = $this->db_prefix_original;
-    db_query("INSERT INTO {simpletest} (test_id, test_class, status, message, message_group, caller, line, file) VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $this->test_id, get_class($this), $status, $message, $group, $function['function'], $function['line'], $function['file']);
+    db_insert('simpletest')->fields(array(
+      'test_id' => $this->test_id,
+    'test_class' => get_class($this), 
+    'status' => $status, 
+    'message' => substr($message, 0, 255),  // Some messages are too long for the database.
+    'message_group' => $group, 
+    'caller' => $function['function'], 
+    'line' => $function['line'], 
+    'file' => $function['file'],
+    ))->execute();
     $this->_assertions[] = array(
       'status' => $status,
       'message' => $message,
@@ -631,6 +640,7 @@ class DrupalWebTestCase {
 
     // Generate temporary prefixed database to ensure that tests have a clean starting point.
     $db_prefix = 'simpletest' . mt_rand(1000, 1000000);
+    
     include_once './includes/install.inc';
     drupal_install_system();
 
@@ -639,6 +649,12 @@ class DrupalWebTestCase {
     $modules = array_unique(array_merge(drupal_verify_profile('default', 'en'), $args));
     drupal_install_modules($modules);
 
+    // Because the schema is static cached, we need to flush
+    // it between each run.  If we don't, then it will contain
+    // stale data for the previous run's database prefix and all
+    // calls to it will fail.
+    drupal_get_schema(NULL, TRUE);
+    
     // Run default profile tasks.
     $task = 'profile';
     default_profile_tasks($task, '');

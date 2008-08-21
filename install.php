@@ -64,9 +64,9 @@ function install_main() {
     require_once './includes/cache.inc';
     $conf['cache_inc'] = './includes/cache.inc';
 
-    // Establish a connection to the database.
-    require_once './includes/database.inc';
-    db_set_active();
+    // Initialize the database system.  Note that the connection
+    // won't be initialized until it is actually requested.
+    require_once './includes/database/database.inc';
 
     // Check if Drupal is installed.
     $task = install_verify_drupal();
@@ -154,9 +154,12 @@ function install_main() {
  */
 function install_verify_drupal() {
   // Read the variable manually using the @ so we don't trigger an error if it fails.
-  $result = @db_query("SELECT value FROM {variable} WHERE name = '%s'", 'install_task');
-  if ($result) {
-    return unserialize(db_result($result));
+  try {
+    if ($result = db_query("SELECT value FROM {variable} WHERE name = '%s'", 'install_task')) {
+      return unserialize(db_result($result));
+    }
+  }
+  catch (Exception $e) {
   }
 }
 
@@ -164,23 +167,18 @@ function install_verify_drupal() {
  * Verify existing settings.php
  */
 function install_verify_settings() {
-  global $db_prefix, $db_type, $db_url;
+  global $db_prefix, $databases;
 
   // Verify existing settings (if any).
-  if (!empty($db_url)) {
+  if (!empty($databases)) {
     // We need this because we want to run form_get_errors.
     include_once './includes/form.inc';
 
-    $url = parse_url(is_array($db_url) ? $db_url['default'] : $db_url);
-    $db_user = urldecode($url['user']);
-    $db_pass = isset($url['pass']) ? urldecode($url['pass']) : NULL;
-    $db_host = urldecode($url['host']);
-    $db_port = isset($url['port']) ? urldecode($url['port']) : '';
-    $db_path = ltrim(urldecode($url['path']), '/');
+    $database = $databases['default']['default'];
     $settings_file = './' . conf_path(FALSE, TRUE) . '/settings.php';
 
     $form_state = array();
-    _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pass, $db_host, $db_port, $db_path, $settings_file, $form_state);
+    _install_settings_form_validate($database, $settings_file, $form_state);
     if (!form_get_errors()) {
       return TRUE;
     }
@@ -192,22 +190,16 @@ function install_verify_settings() {
  * Configure and rewrite settings.php.
  */
 function install_change_settings($profile = 'default', $install_locale = '') {
-  global $db_url, $db_type, $db_prefix;
+  global $databases, $db_prefix;
 
-  $url = parse_url(is_array($db_url) ? $db_url['default'] : $db_url);
-  $db_user = isset($url['user']) ? urldecode($url['user']) : '';
-  $db_pass = isset($url['pass']) ? urldecode($url['pass']) : '';
-  $db_host = isset($url['host']) ? urldecode($url['host']) : '';
-  $db_port = isset($url['port']) ? urldecode($url['port']) : '';
-  $db_path = ltrim(urldecode($url['path']), '/');
   $conf_path = './' . conf_path(FALSE, TRUE);
   $settings_file = $conf_path . '/settings.php';
-
+  $database = $databases['default']['default'];
   // We always need this because we want to run form_get_errors.
   include_once './includes/form.inc';
   install_task_list('database');
 
-  $output = drupal_get_form('install_settings_form', $profile, $install_locale, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_port, $db_path);
+  $output = drupal_get_form('install_settings_form', $profile, $install_locale, $settings_file, $database);
   drupal_set_title(st('Database configuration'));
   print theme('install_page', $output);
   exit;
@@ -217,19 +209,11 @@ function install_change_settings($profile = 'default', $install_locale = '') {
 /**
  * Form API array definition for install_settings.
  */
-function install_settings_form(&$form_state, $profile, $install_locale, $settings_file, $db_url, $db_type, $db_prefix, $db_user, $db_pass, $db_host, $db_port, $db_path) {
-  if (empty($db_host)) {
-    $db_host = 'localhost';
-  }
-  $db_types = drupal_detect_database_types();
+function install_settings_form(&$form_state, $profile, $install_locale, $settings_file, $database) {
+  $drivers = drupal_detect_database_types();
 
-  // If both 'mysql' and 'mysqli' are available, we disable 'mysql':
-  if (isset($db_types['mysqli'])) {
-    unset($db_types['mysql']);
-  }
-
-  if (count($db_types) == 0) {
-    $form['no_db_types'] = array(
+  if (!$drivers) {
+    $form['no_drivers'] = array(
       '#markup' => st('Your web server does not appear to support any common database types. Check with your hosting provider to see if they offer any databases that <a href="@drupal-databases">Drupal supports</a>.', array('@drupal-databases' => 'http://drupal.org/node/270#database')),
     );
   }
@@ -240,54 +224,51 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
       '#description' => '<p>' . st('To set up your @drupal database, enter the following information.', array('@drupal' => drupal_install_profile_name())) . '</p>',
     );
 
-    if (count($db_types) > 1) {
-      $form['basic_options']['db_type'] = array(
+    if (count($drivers) == 1) {
+      $form['basic_options']['driver'] = array(
+        '#type' => 'hidden',
+        '#value' => current(array_keys($drivers)),
+      );
+      $database_description = st('The name of the %driver database your @drupal data will be stored in. It must exist on your server before @drupal can be installed.', array('%driver' => current($drivers), '@drupal' => drupal_install_profile_name()));
+    }
+    else  {
+      $form['basic_options']['driver'] = array(
         '#type' => 'radios',
-        '#title' => st('Database type'),
+        '#title' => st('Database driver'),
         '#required' => TRUE,
-        '#options' => $db_types,
-        '#default_value' => ($db_type ? $db_type : current($db_types)),
+        '#options' => $drivers,
+        '#default_value' => !empty($database['driver']) ? $database['driver'] : current($drivers),
         '#description' => st('The type of database your @drupal data will be stored in.', array('@drupal' => drupal_install_profile_name())),
       );
-      $db_path_description = st('The name of the database your @drupal data will be stored in. It must exist on your server before @drupal can be installed.', array('@drupal' => drupal_install_profile_name()));
-    }
-    else {
-      if (count($db_types) == 1) {
-        $db_types = array_values($db_types);
-        $form['basic_options']['db_type'] = array(
-          '#type' => 'hidden',
-          '#value' => $db_types[0],
-        );
-        $db_path_description = st('The name of the %db_type database your @drupal data will be stored in. It must exist on your server before @drupal can be installed.', array('%db_type' => $db_types[0], '@drupal' => drupal_install_profile_name()));
-      }
+      $database_description  = st('The name of the database your @drupal data will be stored in. It must exist on your server before @drupal can be installed.', array('@drupal' => drupal_install_profile_name()));
     }
 
     // Database name
-    $form['basic_options']['db_path'] = array(
+    $form['basic_options']['database'] = array(
       '#type' => 'textfield',
       '#title' => st('Database name'),
-      '#default_value' => $db_path,
+      '#default_value' => empty($database['database']) ? '' : $database['database'],
       '#size' => 45,
       '#maxlength' => 45,
       '#required' => TRUE,
-      '#description' => $db_path_description
+      '#description' => $database_description,
     );
 
     // Database username
-    $form['basic_options']['db_user'] = array(
+    $form['basic_options']['username'] = array(
       '#type' => 'textfield',
       '#title' => st('Database username'),
-      '#default_value' => $db_user,
+      '#default_value' => empty($database['username']) ? '' : $database['username'],
       '#size' => 45,
       '#maxlength' => 45,
       '#required' => TRUE,
     );
 
     // Database username
-    $form['basic_options']['db_pass'] = array(
+    $form['basic_options']['password'] = array(
       '#type' => 'password',
       '#title' => st('Database password'),
-      '#default_value' => $db_pass,
+      '#default_value' => empty($database['password']) ? '' : $database['password'],
       '#size' => 45,
       '#maxlength' => 45,
     );
@@ -301,10 +282,10 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
     );
 
     // Database host
-    $form['advanced_options']['db_host'] = array(
+    $form['advanced_options']['host'] = array(
       '#type' => 'textfield',
       '#title' => st('Database host'),
-      '#default_value' => $db_host,
+      '#default_value' => empty($database['host']) ? 'localhost' : $database['host'],
       '#size' => 45,
       '#maxlength' => 45,
       '#required' => TRUE,
@@ -312,24 +293,24 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
     );
 
     // Database port
-    $form['advanced_options']['db_port'] = array(
+    $form['advanced_options']['port'] = array(
       '#type' => 'textfield',
       '#title' => st('Database port'),
-      '#default_value' => $db_port,
+      '#default_value' => empty($database['port']) ? '' : $database['port'],
       '#size' => 45,
       '#maxlength' => 45,
       '#description' => st('If your database server is listening to a non-standard port, enter its number.'),
     );
 
     // Table prefix
-    $prefix = ($profile == 'default') ? 'drupal_' : $profile . '_';
+    $db_prefix = ($profile == 'default') ? 'drupal_' : $profile . '_';
     $form['advanced_options']['db_prefix'] = array(
       '#type' => 'textfield',
       '#title' => st('Table prefix'),
-      '#default_value' => $db_prefix,
+      '#default_value' => '',
       '#size' => 45,
       '#maxlength' => 45,
-      '#description' => st('If more than one application will be sharing this database, enter a table prefix such as %prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_name(), '%prefix' => $prefix)),
+      '#description' => st('If more than one application will be sharing this database, enter a table prefix such as %prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_name(), '%prefix' => $db_prefix)),
     );
 
     $form['save'] = array(
@@ -339,7 +320,7 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
 
     $form['errors'] = array();
     $form['settings_file'] = array('#type' => 'value', '#value' => $settings_file);
-    $form['_db_url'] = array('#type' => 'value');
+    $form['_database'] = array('#type' => 'value');
     $form['#action'] = "install.php?profile=$profile" . ($install_locale ? "&locale=$install_locale" : '');
     $form['#redirect'] = FALSE;
   }
@@ -351,48 +332,43 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
  */
 function install_settings_form_validate($form, &$form_state) {
   global $db_url;
-  _install_settings_form_validate($form_state['values']['db_prefix'], $form_state['values']['db_type'], $form_state['values']['db_user'], $form_state['values']['db_pass'], $form_state['values']['db_host'], $form_state['values']['db_port'], $form_state['values']['db_path'], $form_state['values']['settings_file'], $form_state, $form);
+  _install_settings_form_validate($form_state['values'], $form_state['values']['settings_file'], $form_state, $form);
 }
 
 /**
  * Helper function for install_settings_validate.
  */
-function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pass, $db_host, $db_port, $db_path, $settings_file, &$form_state, $form = NULL) {
-  global $db_url;
-
+function _install_settings_form_validate($database, $settings_file, &$form_state, $form = NULL) {
+  global $databases;
   // Verify the table prefix
-  if (!empty($db_prefix) && is_string($db_prefix) && !preg_match('/^[A-Za-z0-9_.]+$/', $db_prefix)) {
+  if (!empty($database['prefix']) && is_string($database['prefix']) && !preg_match('/^[A-Za-z0-9_.]+$/', $database['dprefix'])) {
     form_set_error('db_prefix', st('The database table prefix you have entered, %db_prefix, is invalid. The table prefix can only contain alphanumeric characters, periods, or underscores.', array('%db_prefix' => $db_prefix)), 'error');
   }
 
-  if (!empty($db_port) && !is_numeric($db_port)) {
+  if (!empty($database['port']) && !is_numeric($database['port'])) {
     form_set_error('db_port', st('Database port must be a number.'));
   }
 
   // Check database type
-  if (!isset($form)) {
-    $_db_url = is_array($db_url) ? $db_url['default'] : $db_url;
-    $db_type = substr($_db_url, 0, strpos($_db_url, '://'));
-  }
-  $databases = drupal_detect_database_types();
-  if (!in_array($db_type, $databases)) {
-    form_set_error('db_type', st("In your %settings_file file you have configured @drupal to use a %db_type server, however your PHP installation currently does not support this database type.", array('%settings_file' => $settings_file, '@drupal' => drupal_install_profile_name(), '%db_type' => $db_type)));
+  $database_types = drupal_detect_database_types();
+  $driver = $database['driver'];
+  if (!isset($database_types[$driver])) {
+    form_set_error('driver', st("In your %settings_file file you have configured @drupal to use a %driver server, however your PHP installation currently does not support this database type.", array('%settings_file' => $settings_file, '@drupal' => drupal_install_profile_name(), '%driver' => $database['driver'])));
   }
   else {
-    // Verify
-    $db_url = $db_type . '://' . urlencode($db_user) . ($db_pass ? ':' . urlencode($db_pass) : '') . '@' . ($db_host ? urlencode($db_host) : 'localhost') . ($db_port ? ":$db_port" : '') . '/' . urlencode($db_path);
     if (isset($form)) {
-      form_set_value($form['_db_url'], $db_url, $form_state);
+      form_set_value($form['_database'], $database, $form_state);
     }
-    $success = array();
-
-    $function = 'drupal_test_' . $db_type;
-    if (!$function($db_url, $success)) {
-      if (isset($success['CONNECT'])) {
-        form_set_error('db_type', st('In order for Drupal to work, and to continue with the installation process, you must resolve all permission issues reported above. We were able to verify that we have permission for the following commands: %commands. For more help with configuring your database server, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what any of this means you should probably contact your hosting provider.', array('%commands' => implode($success, ', '))));
+    $class = "DatabaseInstaller_$driver";
+    $test = new $class;
+    $databases = array('default' => array('default' => $database));
+    $return = $test->test();
+    if (!$return || $test->error) {
+      if (!empty($test->success)) {
+        form_set_error('db_type', st('In order for Drupal to work, and to continue with the installation process, you must resolve all permission issues reported above. We were able to verify that we have permission for the following commands: %commands. For more help with configuring your database server, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what any of this means you should probably contact your hosting provider.', array('%commands' => implode($test->success, ', '))));
       }
       else {
-        form_set_error('db_type', '');
+        form_set_error('driver', '');
       }
     }
   }
@@ -404,9 +380,10 @@ function _install_settings_form_validate($db_prefix, $db_type, $db_user, $db_pas
 function install_settings_form_submit($form, &$form_state) {
   global $profile, $install_locale;
 
+  $database = array_intersect_key($form_state['values']['_database'], array_flip(array('driver', 'database', 'username', 'password', 'host', 'port')));
   // Update global settings array and save
-  $settings['db_url'] = array(
-    'value'    => $form_state['values']['_db_url'],
+  $settings['databases'] = array(
+    'value'    => array('default' => array('default' => $database)),
     'required' => TRUE,
   );
   $settings['db_prefix'] = array(
@@ -639,6 +616,8 @@ function install_tasks($profile, $task) {
 
   // Bootstrap newly installed Drupal, while preserving existing messages.
   $messages = isset($_SESSION['messages']) ? $_SESSION['messages'] : '';
+  drupal_install_init_database();
+  
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   $_SESSION['messages'] = $messages;
 
@@ -751,6 +730,17 @@ if (Drupal.jsEnabled) {
 }', 'inline');
       // Build menu to allow clean URL check.
       menu_rebuild();
+
+      // Cache a fully-built schema.  This is necessary for any
+      // invocation of index.php because: (1) setting cache table
+      // entries requires schema information, (2) that occurs during
+      // bootstrap before any module are loaded, so (3) if there is no
+      // cached schema, drupal_get_schema() will try to generate one
+      // but with no loaded modules will return nothing.
+      //
+      // This logically could be done during task 'done' but the clean
+      // URL check requires it now.
+      drupal_get_schema(NULL, TRUE);
     }
 
     else {
@@ -826,6 +816,9 @@ if (Drupal.jsEnabled) {
     _drupal_flush_css_js();
 
     variable_set('install_profile', $profile);
+
+    // Cache a fully-built schema.
+    drupal_get_schema(NULL, TRUE);
   }
 
   // Set task for user, and remember the task in the database.
@@ -1185,3 +1178,4 @@ function install_configure_form_submit($form, &$form_state) {
 
 // Start the installer.
 install_main();
+

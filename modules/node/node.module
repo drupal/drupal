@@ -511,11 +511,17 @@ function node_type_save($info) {
   if (!isset($info->help)) {
     $info->help = '';
   }
-  if (!isset($info->min_word_count)) {
+  if (empty($info->min_word_count)) {
     $info->min_word_count = 0;
   }
   if (!isset($info->body_label)) {
     $info->body_label = '';
+  }
+  if (empty($info->custom)) {
+    $info->custom = 0;
+  }
+  if (empty($info->locked)) {
+    $info->locked = 0;
   }
 
   if ($is_existing) {
@@ -2236,6 +2242,37 @@ function node_db_rewrite_sql($query, $primary_table, $primary_field) {
   }
 }
 
+
+/**
+ * Implementation of hook_query_alter().
+ * @todo This doesn't quite work yet.
+ */
+function DISABLED_node_query_alter(Query $query) {
+  if ($query->hasTag('node_access')) {
+    if (! user_access('administer nodes')) {
+      $query->distinct();
+      $access_alias = $query->join('node_access', 'na', 'na.nid = n.nid');
+      dsm('hello');
+      _node_query_alter_where($query, 'view', $access_alias);
+    }
+  }
+}
+
+function _node_query_alter_where($query, $op = 'view', $node_access_alias = 'na', $account = NULL) {
+  $or = db_or();
+  foreach (node_access_grants($op, $account) as $realm => $gids) {
+    foreach ($gids as $gid) {
+      $or->condition("{$node_access_alias}.gid = :gid AND {$node_access_alias}.realm = :realm", array(':gid' => $gid, ':realm' => $realm));
+    }
+  }
+
+  if (count($or->conditions())) {
+    $query->condition($or);
+  }
+
+  $query->condition("$node_access_alias.grant_$op", '>=', 1);
+}
+
 /**
  * This function will call module invoke to get a list of grants and then
  * write them to the database. It is called at node save, and should be
@@ -2290,11 +2327,11 @@ function node_access_acquire_grants($node) {
  */
 function node_access_write_grants($node, $grants, $realm = NULL, $delete = TRUE) {
   if ($delete) {
-    $query = 'DELETE FROM {node_access} WHERE nid = %d';
+    $query = db_delete('node_access')->condition('nid', $node->nid);
     if ($realm) {
-      $query .= " AND realm in ('%s', 'all')";
+      $query->condition('realm', array($realm, 'all'), 'IN');
     }
-    db_query($query, $node->nid, $realm);
+    $query->execute();
   }
 
   // Only perform work when node_access modules are active.

@@ -2,6 +2,11 @@
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
+- Database:
+    * Fully rewritten database layer utilizing PHP 5's PDO abstraction layer.
+    * Added query builders for INSERT, UPDATE, DELETE, MERGE, and SELECT queries.
+    * Support for Master/slave replication, transactions, multi-insert queries,
+      delayed inserts, and other features.
 - Security:
     * Protected cron.php -- cron will only run if the proper key is provided.
     * Changed to much stronger password hashes that are also compatible with the

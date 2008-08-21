@@ -36,9 +36,9 @@ function module_load_all() {
  *   modules.
  */
 function module_list($refresh = FALSE, $bootstrap = TRUE, $sort = FALSE, $fixed_list = NULL) {
-  static $list, $sorted_list;
+  static $list = array(), $sorted_list;
 
-  if ($refresh || $fixed_list) {
+  if (empty($list) || $refresh || $fixed_list) {
     unset($sorted_list);
     $list = array();
     if ($fixed_list) {
@@ -240,7 +240,9 @@ function module_load_include($type, $module, $name = NULL) {
     $name = $module;
   }
 
-  $file = './' . drupal_get_path('module', $module) . "/$name.$type";
+  if (drupal_function_exists('drupal_get_path')) {
+    $file = './' . drupal_get_path('module', $module) . "/$name.$type";
+  }
 
   if (is_file($file)) {
     require_once $file;
@@ -388,31 +390,38 @@ function module_hook($module, $hook) {
  * @param $refresh
  *   For internal use only: Whether to force the stored list of hook
  *   implementations to be regenerated (such as after enabling a new module,
- *   before processing hook_enable).
+ *   before processing hook_enable).  Note that if $refresh is TRUE this function
+ *   will always return NULL.
  * @return
  *   An array with the names of the modules which are implementing this hook.
+ *   If $hook is NULL then it will return the implementation cache.
  */
-function module_implements($hook, $sort = FALSE, $refresh = FALSE) {
+function module_implements($hook = NULL, $sort = FALSE, $refresh = FALSE) {
   static $implementations = array();
 
+  if (!isset($hook)) {
+    return $implementations;
+  }
   if ($refresh) {
     $implementations = array();
   }
-  else if (!defined('MAINTENANCE_MODE') && empty($implementations)) {
-    $implementations = registry_get_hook_implementations_cache();
+  if (!defined('MAINTENANCE_MODE') && empty($implementations) && ($cache = cache_get('hooks', 'cache_registry'))) {
+    $implementations = $cache->data;
   }
 
-  if (!isset($implementations[$hook])) {
-    $implementations[$hook] = array();
-    foreach (module_list() as $module) {
-      if (module_hook($module, $hook)) {
-        $implementations[$hook][] = $module;
+  if ($hook) {
+    if (!isset($implementations[$hook])) {
+      $implementations[$hook] = array();
+      foreach (module_list() as $module) {
+        if (module_hook($module, $hook)) {
+          $implementations[$hook][] = $module;
+        }
       }
     }
-  }
-  registry_cache_hook_implementations(array('hook' => $hook, 'modules' => $implementations[$hook]));
+    registry_cache_hook_implementations(array('hook' => $hook, 'modules' => $implementations[$hook]));
 
-  return $implementations[$hook];
+    return $implementations[$hook];
+  }
 }
 
 /**

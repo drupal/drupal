@@ -46,20 +46,76 @@
 /**
  * Database settings:
  *
- * Note that the $db_url variable gets parsed using PHP's built-in
- * URL parser (i.e. using the "parse_url()" function) so make sure
- * not to confuse the parser. If your username, password
- * or database name contain characters used to delineate
- * $db_url parts, you can escape them via URI hex encodings:
+ * The $databases array specifies the database connection or 
+ * connections that Drupal may use.  Drupal is able to connect
+ * to multiple databases, including multiple types of databases,
+ * during the same request.
  *
- *   : = %3a   / = %2f   @ = %40
- *   + = %2b   ( = %28   ) = %29
- *   ? = %3f   = = %3d   & = %26
+ * Each database connection is specified as an array of settings,
+ * similar to the following:
  *
- * To specify multiple connections to be used in your site (i.e. for
- * complex custom modules) you can also specify an associative array
- * of $db_url variables with the 'default' element used until otherwise
- * requested.
+ * array(
+ *   'driver' => 'mysql',
+ *   'database' => 'databasename',
+ *   'username' => 'username',
+ *   'password' => 'password',
+ *   'host' => 'localhost',
+ * );
+ *
+ * The "driver" property indicates what Drupal database driver the 
+ * connection should use.  This is usually the same as the name of the
+ * database type, such as mysql or sqlite, but not always.  The other
+ * properties will vary depending on the driver.  For SQLite, you must
+ * specify a database.  For most other drivers, you must specify a username,
+ * password, host, and database name.
+ *
+ * Some database engines support transactions.  In order to enable
+ * transaction support for a given database, set the 'transaction' key
+ * to TRUE.  To disable it, set it to FALSE.  Note that the default value
+ * varies by driver.  For MySQL, the default is FALSE since MyISAM tables
+ * do not support transactions.
+ *
+ * For each database, you may optionally specify multiple "target" databases.
+ * A target database allows Drupal to try to send certain queries to a
+ * different database if it can but fall back to the default connection if not.
+ * That is useful for master/slave replication, as Drupal may try to connect
+ * to a slave server when appropriate and if one is not available will simply 
+ * fall back to the single master server.
+ *
+ * The general format for the $databases array is as follows:
+ *
+ * $databases['default']['default'] = $info_array;
+ * $databases['default']['slave'][] = $info_array;
+ * $databases['default']['slave'][] = $info_array;
+ * $databases['extra'] = $info_array;
+ *
+ * In the above example, $info_array is an array of settings described above.
+ * The first line sets a "default" database that has one master database
+ * (the second level default).  The second and third lines create an array
+ * of potential slave databases.  Drupal will select one at random for a given
+ * request as needed.  The fourth line creates a new database with a name of
+ * "extra".  Since no target is specified, it is assumed to be "default", that
+ * is, only one server.
+ *
+ * For a single database configuration, the following is sufficient:
+ *
+ * $databases = array(
+ *   'driver' => 'mysql',
+ *   'database' => 'databasename',
+ *   'username' => 'username',
+ *   'password' => 'password',
+ *   'host' => 'localhost',
+ * );
+ *
+ * That is equivalent to:
+ *
+ * $databases['default']['default'] = array(
+ *   'driver' => 'mysql',
+ *   'database' => 'databasename',
+ *   'username' => 'username',
+ *   'password' => 'password',
+ *   'host' => 'localhost',
+ * );
  *
  * You can optionally set prefixes for some or all database table names
  * by using the $db_prefix setting. If a prefix is specified, the table
@@ -84,12 +140,27 @@
  *     'authmap'   => 'shared_',
  *   );
  *
- * Database URL format:
- *   $db_url = 'mysql://username:password@localhost/databasename';
- *   $db_url = 'mysqli://username:password@localhost/databasename';
- *   $db_url = 'pgsql://username:password@localhost/databasename';
+ * Database configuration format:
+ *   $databases = array(
+ *     'driver' => 'mysql',
+ *     'database' => 'databasename',
+ *     'username' => 'username',
+ *     'password' => 'password',
+ *     'host' => 'localhost',
+ *   );
+ *   $databases = array(
+ *     'driver' => 'pgsql',
+ *     'database' => 'databasename',
+ *     'username' => 'username',
+ *     'password' => 'password',
+ *     'host' => 'localhost',
+ *   );
+ *   $databases = array(
+ *     'driver' => 'sqlite',
+ *     'database' => 'databasefilename',
+ *   );
  */
-$db_url = '';
+$databases = array();
 $db_prefix = '';
 
 /**

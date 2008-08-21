@@ -132,6 +132,7 @@ class PathTestCase extends DrupalWebTestCase {
 
     // Check to make sure the node was created.
     $node = node_load(array('title' => $edit['title']));
+
     $this->assertNotNull(($node === FALSE ? NULL : $node), 'Node found in database. %s');
 
     return $node;

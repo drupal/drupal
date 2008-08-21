@@ -323,7 +323,7 @@ function conf_init() {
   global $base_url, $base_path, $base_root;
 
   // Export the following settings.php variables to the global namespace
-  global $db_url, $db_prefix, $cookie_domain, $conf, $installed_profile, $update_free_access;
+  global $databases, $db_prefix, $cookie_domain, $conf, $installed_profile, $update_free_access;
   $conf = array();
 
   if (file_exists('./' . conf_path() . '/settings.php')) {
@@ -520,11 +520,7 @@ function variable_get($name, $default) {
 function variable_set($name, $value) {
   global $conf;
 
-  $serialized_value = serialize($value);
-  db_query("UPDATE {variable} SET value = '%s' WHERE name = '%s'", $serialized_value, $name);
-  if (!db_affected_rows()) {
-    @db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", $name, $serialized_value);
-  }
+  db_merge('variable')->key(array('name' => $name))->fields(array('value' => serialize($value)))->execute();
 
   cache_clear_all('variables', 'cache');
 
@@ -813,24 +809,33 @@ function request_uri() {
 function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = NULL) {
   global $user, $base_root;
 
-  // Prepare the fields to be logged
-  $log_message = array(
-    'type'        => $type,
-    'message'     => $message,
-    'variables'   => $variables,
-    'severity'    => $severity,
-    'link'        => $link,
-    'user'        => $user,
-    'request_uri' => $base_root . request_uri(),
-    'referer'     => referer_uri(),
-    'ip'          => ip_address(),
-    'timestamp'   => time(),
+  static $in_error_state = FALSE;
+
+  // It is possible that the error handling will itself trigger an error.  In that case, we could
+  // end up in an infinite loop.  To avoid that, we implement a simple static semaphore.
+  if (!$in_error_state) {
+    $in_error_state = TRUE;
+
+    // Prepare the fields to be logged
+    $log_message = array(
+      'type'        => $type,
+      'message'     => $message,
+      'variables'   => $variables,
+      'severity'    => $severity,
+      'link'        => $link,
+      'user'        => $user,
+      'request_uri' => $base_root . request_uri(),
+      'referer'     => referer_uri(),
+      'ip'          => ip_address(),
+      'timestamp'   => time(),
     );
 
-  // Call the logging hooks to log/process the message
-  foreach (module_implements('watchdog', TRUE) as $module) {
-    module_invoke($module, 'watchdog', $log_message);
+    // Call the logging hooks to log/process the message
+    foreach (module_implements('watchdog', TRUE) as $module) {
+      module_invoke($module, 'watchdog', $log_message);
+    }
   }
+  $in_error_state = FALSE;
 }
 
 /**
@@ -973,7 +978,22 @@ function drupal_bootstrap($phase) {
     $current_phase = $phases[$phase_index];
     unset($phases[$phase_index++]);
     _drupal_bootstrap($current_phase);
+
+    global $_drupal_current_bootstrap_phase;
+    $_drupal_current_bootstrap_phase = $current_phase;
   }
+}
+
+/**
+ * Return the current bootstrap phase for this Drupal process.  The
+ * current phase is the one most recently completed by
+ * drupal_bootstrap().
+ *
+ * @see drupal_bootstrap
+ */
+function drupal_get_bootstrap_phase() {
+  global $_drupal_current_bootstrap_phase;
+  return $_drupal_current_bootstrap_phase;
 }
 
 function _drupal_bootstrap($phase) {
@@ -1003,9 +1023,9 @@ function _drupal_bootstrap($phase) {
       break;
 
     case DRUPAL_BOOTSTRAP_DATABASE:
-      // Initialize the default database.
-      require_once './includes/database.inc';
-      db_set_active();
+      // Initialize the database system.  Note that the connection
+      // won't be initialized until it is actually requested.
+      require_once './includes/database/database.inc';
       // Register autoload functions so that we can access classes and interfaces.
       spl_autoload_register('drupal_autoload_class');
       spl_autoload_register('drupal_autoload_interface');
@@ -1210,6 +1230,87 @@ function ip_address($reset = false) {
 }
 
 /**
+ * @ingroup schemaapi
+ * @{
+ */
+
+/**
+ * Get the schema definition of a table, or the whole database schema.
+ *
+ * The returned schema will include any modifications made by any
+ * module that implements hook_schema_alter().
+ *
+ * @param $table
+ *   The name of the table. If not given, the schema of all tables is returned.
+ * @param $rebuild
+ *   If true, the schema will be rebuilt instead of retrieved from the cache.
+ */
+function drupal_get_schema($table = NULL, $rebuild = FALSE) {
+  static $schema = array();
+
+  if (empty($schema) || $rebuild) {
+    // Try to load the schema from cache.
+    if (!$rebuild && $cached = cache_get('schema')) {
+      $schema = $cached->data;
+    }
+    // Otherwise, rebuild the schema cache.
+    else {
+      $schema = array();
+      // Load the .install files to get hook_schema.
+      // On some databases this function may be called before bootstrap has
+      // been completed, so we force the functions we need to load just in case.
+      if (drupal_function_exists('module_load_all_includes')) {
+
+        // There is currently a bug in module_list() where it caches what it
+        // was last called with, which is not always what you want.
+        // module_load_all_includes() calls module_list(), but if this function
+        // is called very early in the bootstrap process then it will be
+        // uninitialized and therefore return no modules.  Instead, we have to
+        // "prime" module_list() here to to values we want, specifically
+        // "yes rebuild the list and don't limit to bootstrap".
+        // TODO: Remove this call after http://drupal.org/node/222109 is fixed.
+        module_list(TRUE, FALSE);
+        module_load_all_includes('install');
+      }
+
+      // Invoke hook_schema for all modules.
+      foreach (module_implements('schema') as $module) {
+        $current = module_invoke($module, 'schema');
+        require_once('./includes/common.inc');
+        if (drupal_function_exists('_drupal_initialize_schema')) {
+          _drupal_initialize_schema($module, $current);
+        }
+
+        $schema = array_merge($schema, $current);
+      }
+
+      if (drupal_function_exists('drupal_alter')) {
+        drupal_alter('schema', $schema);
+      }
+
+      if (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
+        cache_set('schema', $schema);
+      }
+    }
+  }
+
+  if (!isset($table)) {
+    return $schema;
+  }
+  elseif (isset($schema[$table])) {
+    return $schema[$table];
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * @} End of "ingroup schemaapi".
+ */
+
+
+/**
  * @ingroup registry
  * @{
  */
@@ -1245,7 +1346,7 @@ function drupal_function_exists($function) {
     return TRUE;
   }
 
-  $file = db_result(db_query("SELECT filename FROM {registry} WHERE name = '%s' AND type = '%s'", $function, 'function'));
+  $file = db_result(db_query("SELECT filename FROM {registry} WHERE name = :name AND type = :type", array(':name' => $function, ':type' => 'function')));
   if ($file) {
     require_once($file);
     $checked[$function] = function_exists($function);
@@ -1293,7 +1394,7 @@ function drupal_autoload_class($class) {
  * Helper for registry_check_{interface, class}.
  */
 function _registry_check_code($type, $name) {
-  $file = db_result(db_query("SELECT filename FROM {registry} WHERE name = '%s' AND type = '%s'", $name, $type));
+  $file = db_result(db_query("SELECT filename FROM {registry} WHERE name = :name AND type = :type", array(':name' => $name, ':type' => $type)));
   if ($file) {
     require_once($file);
     registry_mark_code($type, $name);
@@ -1358,7 +1459,7 @@ function registry_cache_hook_implementations($hook, $write_to_persistent_cache =
   if ($write_to_persistent_cache === TRUE) {
     // Only write this to cache if the implementations data we are going to cache
     // is different to what we loaded earlier in the request.
-    if ($implementations != registry_get_hook_implementations_cache()) {
+    if ($implementations != module_implements()) {
       cache_set('hooks', $implementations, 'cache_registry');
     }
   }
@@ -1413,22 +1514,5 @@ function registry_load_path_files($return = FALSE) {
 }
 
 /**
- * registry_get_hook_implementations_cache
- */
-function registry_get_hook_implementations_cache() {
-  static $implementations;
-  if ($implementations === NULL) {
-    if ($cache = cache_get('hooks', 'cache_registry')) {
-      $implementations = $cache->data;
-    }
-    else {
-      $implementations = array();
-    }
-  }
-  return $implementations;
-}
-
-/**
  * @} End of "ingroup registry".
  */
-

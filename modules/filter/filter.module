@@ -292,24 +292,24 @@ function filter_formats($index = NULL) {
   if (!isset($formats)) {
     $formats = array();
 
-    $query = 'SELECT * FROM {filter_formats}';
+    $query = db_select('filter_formats', 'f');
+    $query->addField('f', 'format', 'format');
+    $query->addField('f', 'name', 'name');
+    $query->addField('f', 'roles', 'roles');
+    $query->addField('f', 'cache', 'cache');
+    $query->addField('f', 'weight', 'weight');
+    $query->orderBy('weight');
 
     // Build query for selecting the format(s) based on the user's roles.
-    $args = array();
     if (!$all) {
-      $where = array();
+      $or = db_or()->condition('format', variable_get('filter_default_format', 1));
       foreach ($user->roles as $rid => $role) {
-        $where[] = "roles LIKE '%%,%d,%%'";
-        $args[] = $rid;
+        $or->condition('roles', '%'. (int)$rid .'%', 'LIKE');
       }
-      $query .= ' WHERE ' . implode(' OR ', $where) . ' OR format = %d';
-      $args[] = variable_get('filter_default_format', 1);
+      $query->condition($or);
     }
 
-    $result = db_query($query . ' ORDER by weight', $args);
-    while ($format = db_fetch_object($result)) {
-      $formats[$format->format] = $format;
-    }
+    $formats = $query->execute()->fetchAllAssoc('format');
   }
   if (isset($index)) {
     return isset($formats[$index]) ? $formats[$index] : FALSE;

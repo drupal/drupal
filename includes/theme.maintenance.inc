@@ -28,7 +28,7 @@ function _drupal_maintenance_theme() {
   require_once './includes/unicode.inc';
   require_once './includes/file.inc';
   require_once './includes/module.inc';
-  require_once './includes/database.inc';
+  require_once './includes/database/database.inc';
   unicode_check();
 
   // Install and update pages are treated differently to prevent theming overrides.

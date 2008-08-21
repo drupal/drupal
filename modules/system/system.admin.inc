@@ -606,11 +606,11 @@ function _system_is_incompatible(&$incompatible, $files, $file) {
  */
 function system_modules($form_state = array()) {
   // Clear all caches.
+  registry_rebuild();
   drupal_theme_rebuild();
   node_types_rebuild();
   menu_rebuild();
   cache_clear_all('schema', 'cache');
-
   // Get current list of modules.
   $files = module_rebuild_cache();
 
@@ -676,6 +676,9 @@ function system_modules($form_state = array()) {
       else {
         $extra['dependents'][] = $files[$dependent]->info['name'] . t(' (<span class="admin-disabled">disabled</span>)');
       }
+    }
+    if (!isset($module->info['package'])) {
+      $module->info['package'] = 'Other';
     }
     $form['modules'][$module->info['package']][$filename] = _system_modules_build_row($module->info, $extra);
   }

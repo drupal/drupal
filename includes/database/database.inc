@@ -1,0 +1,2016 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Base classes for the database layer.
+ */
+
+/**
+ * A hash value to check when outputting database errors, md5('DB_ERROR').
+ *
+ * @see drupal_error_handler()
+ */
+define('DB_ERROR', 'a515ac9c2796ca0e23adbe92c68fc9fc');
+
+/**
+ * @defgroup database Database abstraction layer
+ * @{
+ * Allow the use of different database servers using the same code base.
+ *
+ * Drupal provides a database abstraction layer to provide developers with
+ * the ability to support multiple database servers easily.  The intent of
+ * this layer is to preserve the syntax and power of SQL as much as possible,
+ * but also allow developers a way to leverage more complex functionality in
+ * a unified way.  It also provides a structured interface for dynamically
+ * constructing queries when appropriate, and enforcing security checks and
+ * similar good practices.
+ *
+ * The system is built atop PHP's PDO (PHP Data Objects) database API and
+ * inherits much of its syntax and semantics.
+ *
+ * Most Drupal database SELECT queries are performed by a call to db_query() or
+ * db_query_range(). Module authors should also consider using pager_query() for
+ * queries that return results that need to be presented on multiple pages, and
+ * tablesort_sql() for generating appropriate queries for sortable tables.
+ *
+ * For example, one might wish to return a list of the most recent 10 nodes
+ * authored by a given user. Instead of directly issuing the SQL query
+ * @code
+ *   SELECT n.nid, n.title, n.created FROM node n WHERE n.uid = $uid LIMIT 0, 10;
+ * @endcode
+ * one would instead call the Drupal functions:
+ * @code
+ *   $result = db_query_range('SELECT n.nid, n.title, n.created
+ *     FROM {node} n WHERE n.uid = :uid', array(':uid' => $uid), 0, 10);
+ *   foreach($result as $record) {
+ *     // Perform operations on $node->title, etc. here.
+ *   }
+ * @endcode
+ * Curly braces are used around "node" to provide table prefixing via
+ * DatabaseConnection::prefixTables(). The explicit use of a user ID is pulled
+ * out into an argument passed to db_query() so that SQL injection attacks
+ * from user input can be caught and nullified. The LIMIT syntax varies between
+ * database servers, so that is abstracted into db_query_range() arguments.
+ * Finally, note the PDO-based ability to foreach() over the result set.
+ *
+ * 
+ * All queries are passed as a prepared statement string.  A 
+ * prepared statement is a "template" of a query that omits literal or variable
+ * values in favor of placeholders.  The values to place into those 
+ * placeholders are passed separately, and the database driver handles 
+ * inserting the values into the query in a secure fashion.  That means you
+ * should never quote or string-escape a value to be inserted into the query.
+ * 
+ * There are two formats for placeholders: named and unnamed.  Named placeholders
+ * are strongly preferred in all cases as they are more flexible and 
+ * self-documenting.
+ * 
+ * Named placeholders begin with a colon followed by a unique string. Example:
+ * @code
+ * SELECT nid, title FROM {node} WHERE uid=:uid
+ * @endcode
+ * 
+ * ":uid" is a placeholder that will be replaced with a literal value when
+ * the query is executed.  A given placeholder label cannot be repeated in a
+ * given query, even if the value should be the same.  When using named
+ * placeholders, the array of arguments to the query must be an associative
+ * array where keys are a placeholder label (e.g., :uid) and the value is the
+ * corresponding value to use.  The array may be in any order.
+ * 
+ * Unnamed placeholders are simply a question mark.  Example:
+ * @code
+ * SELECT nid, title FROM {node} WHERE uid=?
+ * @endcode
+ * 
+ * In this case, the array of arguments must be an indexed array of values to
+ * use in the exact same order as the placeholders in the query.  
+ * 
+ * Note that placeholders should be a "complete" value.  For example, when
+ * running a LIKE query the SQL wildcard character, %, should be part of the
+ * value, not the query itself.  Thus, the following is incorrect:
+ * 
+ * @code
+ * SELECT nid, title FROM {node} WHERE title LIKE :title%
+ * @endcode
+ * 
+ * It should instead read:
+ * 
+ * @code
+ * SELECT nid, title FROM {node} WHERE title LIKE :title
+ * @endcode
+ * 
+ * and the value for :title should include a % as appropriate.  Again, note the
+ * lack of quotation marks around :title.  Because the value is not inserted
+ * into the query as one big string but as an explicitly separate value, the
+ * database server knows where the query ends and a value begins.  That is 
+ * considerably more secure against SQL injection than trying to remember 
+ * which values need quotation marks and string escaping and which don't.
+ * 
+ *
+ * INSERT, UPDATE, and DELETE queries need special care in order to behave
+ * consistently across all different databases.  Therefore, they use a special
+ * object-oriented API for defining a query structurally.  For example, rather than
+ * @code
+ * INSERT INTO node (nid, title, body) VALUES (1, 'my title', 'my body')
+ * @endcode
+ * one would instead write:
+ * @code
+ * $fields = array('nid' => 1, 'title' => 'my title', 'body' => 'my body');
+ * db_insert('my_table')->fields($fields)->execute();
+ * @endcode
+ * This method allows databases that need special data type handling to do so,
+ * while also allowing optimizations such as multi-insert queries.  UPDATE and 
+ * DELETE queries have a similar pattern.
+ */
+
+
+/**
+ * Base Database API class.
+ *
+ * This class provides a Drupal-specific extension of the PDO database abstraction class in PHP.
+ * Every database driver implementation must provide a concrete implementation of it to support
+ * special handling required by that database.
+ *
+ * @link http://us.php.net/manual/en/ref.pdo.php
+ */
+abstract class DatabaseConnection extends PDO {
+
+  /**
+   * Reference to the last statement that was executed.
+   *
+   * We only need this for the legacy db_affected_rows() call, which will be removed.
+   *
+   * @var DatabaseStatement
+   * @todo Remove this variable.
+   */
+  public $lastStatement;
+
+  function __construct($dsn, $username, $password, $driver_options = array()) {
+    $driver_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION; // Because the other methods don't seem to work right.
+    parent::__construct($dsn, $username, $password, $driver_options);
+    $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('DatabaseStatement', array($this)));
+  }
+
+  /**
+   * Return the default query options for any given query.
+   *
+   * A given query can be customized with a number of option flags in an 
+   * associative array.
+   *
+   *   target - The database "target" against which to execute a query.  Valid 
+   *   values are "default" or "slave".  The system will first try to open a 
+   *   connection to a database specified with the user-supplied key.  If one 
+   *   is not available, it will silently fall back to the "default" target.  
+   *   If multiple databases connections are specified with the same target, 
+   *   one will be selected at random for the duration of the request.
+   * 
+   *   fetch - This element controls how rows from a result set will be returned.
+   *   legal values include PDO::FETCH_ASSOC, PDO::FETCH_BOTH, PDO::FETCH_OBJ,
+   *   PDO::FETCH_NUM, or a string representing the name of a class.  If a string
+   *   is specified, each record will be fetched into a new object of that class.
+   *   The behavior of all other values is defined by PDO.  See
+   *   http://www.php.net/PDOStatement-fetch
+   * 
+   *   return - Depending on the type of query, different return values may be
+   *   meaningful.  This directive instructs the system which type of return
+   *   value is desired.  The system will generally set the correct value 
+   *   automatically, so it is extremely rare that a module developer will ever
+   *   need to specify this value.  Setting it incorrectly will likely lead to
+   *   unpredictable results or fatal errors.  Legal values include:
+   *   
+   *     Database::RETURN_STATEMENT - Return the prepared statement object for the
+   *     query.  This is usually only meaningful for SELECT queries, where the
+   *     statement object is how one accesses the result set returned by the query.
+   * 
+   *     Database::RETURN_AFFECTED - Return the number of rows affected by an 
+   *     UPDATE or DELETE query.  Be aware that means the number of rows 
+   *     actually changed, not the number of rows matched by the WHERE clause.
+   *    
+   *     Database::RETURN_INSERT_ID - Return the sequence ID (primary key)
+   *     created by an INSERT statement on a table that contains a serial column.
+   * 
+   *     Database::RETURN_NULL - Do not return anything, as there is no
+   *     meaningful value to return.  That is the case for INSERT queries on
+   *     tables that do not contain a serial column.
+   *
+   *   throw_exception - By default, the database system will catch any errors 
+   *   on a query as an Exception, log it, and then rethrow it so that code 
+   *   further up the call chain can take an appropriate action.  To supress 
+   *   that behavior and simply return NULL on failure, set this option to FALSE.
+   *
+   * @return
+   *   An array of default query options.
+   */
+  protected function defaultOptions() {
+    return array(
+      'target' => 'default',
+      'fetch' => PDO::FETCH_OBJ,
+      'return' => Database::RETURN_STATEMENT,
+      'throw_exception' => TRUE,
+    );
+  }
+
+  /**
+   * Append a database prefix to all tables in a query.
+   *
+   * Queries sent to Drupal should wrap all table names in curly brackets. This
+   * function searches for this syntax and adds Drupal's table prefix to all
+   * tables, allowing Drupal to coexist with other systems in the same database 
+   * if necessary.
+   *
+   * @param $sql
+   *   A string containing a partial or entire SQL query.
+   * @return
+   *   The properly-prefixed string.
+   */
+  protected function prefixTables($sql) {
+    global $db_prefix;
+
+    if (is_array($db_prefix)) {
+      if (array_key_exists('default', $db_prefix)) {
+        $tmp = $db_prefix;
+        unset($tmp['default']);
+        foreach ($tmp as $key => $val) {
+          $sql = strtr($sql, array('{' . $key . '}' => $val . $key));
+        }
+        return strtr($sql, array('{' => $db_prefix['default'] , '}' => ''));
+      }
+      else {
+        foreach ($db_prefix as $key => $val) {
+          $sql = strtr($sql, array('{' . $key . '}' => $val . $key));
+        }
+        return strtr($sql, array('{' => '' , '}' => ''));
+      }
+    }
+    else {
+      return strtr($sql, array('{' => $db_prefix , '}' => ''));
+    }
+  }
+
+  /**
+   * Prepare a query string and return the prepared statement.
+   * 
+   * This method statically caches prepared statements, reusing them when
+   * possible.  It also prefixes tables names enclosed in curly-braces.
+   *
+   * @param $query
+   *   The query string as SQL, with curly-braces surrounding the
+   *   table names.
+   * @return
+   *   A PDO prepared statement ready for its execute() method.
+   */
+  protected function prepareQuery($query) {
+    static $statements = array();
+    $query = self::prefixTables($query);
+    if (empty($statements[$query])) {
+      $statements[$query] = parent::prepare($query);
+    }
+    return $statements[$query];
+  }
+
+  /**
+   * Create the appropriate sequence name for a given table and serial field.
+   * 
+   * This information is exposed to all database drivers, although it is only
+   * useful on some of them.  This method is table prefix-aware.
+   * 
+   * @param $table
+   *   The table name to use for the sequence.
+   * @param $field
+   *   The field name to use for the sequence.
+   * @return
+   *   A table prefix-parsed string for the sequence name.
+   */
+  public function makeSequenceName($table, $field) {
+    return $this->prefixTables('{'. $table .'}_'. $field .'_seq');
+  }
+  
+  /**
+   * Executes a query string against the database.
+   *
+   * This method provides a central handler for the actual execution
+   * of every query.  All queries executed by Drupal are executed as
+   * PDO prepared statements.  This method statically caches those
+   * prepared statements, reusing them when possible.
+   * 
+   * @param $query
+   *   The query to execute.  In most cases this will be a string containing
+   *   an SQL query with placeholders.  An already-prepared instance of 
+   *   DatabaseStatement may also be passed in order to allow calling code
+   *   to manually bind variables to a query.  If a DatabaseStatement object
+   *   is passed, the $args array will be ignored.
+   * 
+   *   It is extremely rare that module code will need to pass a statement 
+   *   object to this method.  It is used primarily for database drivers for 
+   *   databases that require special LOB field handling.
+   * @param $args
+   *   An array of arguments for the prepared statement.  If the prepared
+   *   statement uses ? placeholders, this array must be an indexed array.
+   *   If it contains named placeholders, it must be an associative array.
+   * @param $options
+   *   An associative array of options to control how the query is run.  See
+   *   the documentation for DatabaseConnection::defaultOptions() for details.
+   * @return
+   *   This method will return one of: The executed statement, the number of
+   *   rows affected by the query (not the number matched), or the generated
+   *   insert id of the last query, depending on the value of $options['return'].
+   *   Typically that value will be set by default or a query builder and should
+   *   not be set by a user.  If there is an error, this method will return NULL
+   *   and may throw an exception if $options['throw_exception'] is TRUE.
+   */
+  public function query($query, Array $args = array(), $options = array()) {
+
+    // Use default values if not already set.
+    $options += $this->defaultOptions();
+    
+    try {
+      // We allow either a pre-bound statement object or a literal string.
+      // In either case, we want to end up with an executed statement object.
+      if ($query instanceof DatabaseStatement) {
+        $stmt = $query;
+        $stmt->execute(NULL, $options);
+      }
+      else {
+        $stmt = $this->prepareQuery($query);
+        $stmt->execute($args, $options);
+      }
+      
+      // Depending on the type of query we may need to return a different value.
+      // See DatabaseConnection::defaultOptions() for a description of each value.
+      switch ($options['return']) {
+        case Database::RETURN_STATEMENT:
+          return $stmt;
+        case Database::RETURN_AFFECTED:
+          return $stmt->rowCount();
+        case Database::RETURN_INSERT_ID:
+          return $this->lastInsertId();
+        case Database::RETURN_NULL:
+          return;
+        default:
+          throw new PDOException('Invalid return directive: ' . $options['return']);
+      }
+    }
+    catch (PDOException $e) {
+      if (!function_exists('module_implements')) {
+        _db_need_install();
+      }
+      if ($options['throw_exception']) {
+        if ($query instanceof DatabaseStatement) {
+          $query_string = $stmt->queryString;
+        }
+        else {
+          $query_string = $query;
+        }
+        throw new PDOException($query_string . " - \n" . print_r($args,1) . $e->getMessage());
+      }
+      return NULL;
+    }
+  }
+
+  /**
+   * Prepare and return a SELECT query object with the specified ID.
+   *
+   * @see SelectQuery
+   * @param $table
+   *   The base table for this query, that is, the first table in the FROM
+   *   clause.  This table will also be used as the "base" table for query_alter
+   *   hook implementations.
+   * @param $alias
+   *   The alias of the base table of this query.
+   * @param $options
+   *   An array of options on the query.
+   * @return
+   *   A new SelectQuery object.
+   */
+  public function select($table, $alias = NULL, Array $options = array()) {
+    static $class_type;
+    if (empty($class_type)) {
+      $class_type = 'SelectQuery_' . $this->driver();
+      if (!class_exists($class_type)) {
+        $class_type = 'SelectQuery';
+      }
+    }
+    return new $class_type($table, $alias, $this, $options);
+  }
+
+  /**
+   * Prepare and return an INSERT query object with the specified ID.
+   *
+   * @see InsertQuery
+   * @param $options
+   *   An array of options on the query.
+   * @return
+   *   A new InsertQuery object.
+   */
+  public function insert($table, Array $options = array()) {
+    static $class_type;
+    if (empty($class_type)) {
+      $class_type = 'InsertQuery_' . $this->driver();
+      if (!class_exists($class_type)) {
+        $class_type = 'InsertQuery';
+      }
+    }
+    return new $class_type($this, $table, $options);
+  }
+
+  /**
+   * Prepare and return a MERGE query object with the specified ID.
+   *
+   * @see MergeQuery
+   * @param $options
+   *   An array of options on the query.
+   * @return
+   *   A new MergeQuery object.
+   */
+  public function merge($table, Array $options = array()) {
+    static $class_type;
+    if (empty($class_type)) {
+      $class_type = 'MergeQuery_' . $this->driver();
+      if (!class_exists($class_type)) {
+        $class_type = 'MergeQuery';
+      }
+    }
+    return new $class_type($this, $table, $options);
+  }
+
+  /**
+   * Prepare and return an UPDATE query object with the specified ID.
+   *
+   * @see UpdateQuery
+   * @param $options
+   *   An array of options on the query.
+   * @return
+   *   A new UpdateQuery object.
+   */
+  public function update($table, Array $options = array()) {
+    static $class_type;
+    if (empty($class_type)) {
+      $class_type = 'UpdateQuery_' . $this->driver();
+      if (!class_exists($class_type)) {
+        $class_type = 'UpdateQuery';
+      }
+    }
+    return new $class_type($this, $table, $options);
+  }
+
+  /**
+   * Prepare and return a DELETE query object with the specified ID.
+   *
+   * @see DeleteQuery
+   * @param $options
+   *   An array of options on the query.
+   * @return
+   *   A new DeleteQuery object.
+   */
+  public function delete($table, Array $options = array()) {
+    static $class_type;
+    if (empty($class_type)) {
+      $class_type = 'DeleteQuery_' . $this->driver();
+      if (!class_exists($class_type)) {
+        $class_type = 'DeleteQuery';
+      }
+    }
+    return new $class_type($this, $table, $options);
+  }
+
+  /**
+   * Returns a DatabaseSchema object for manipulating the schema of this database.
+   *
+   * This method will lazy-load the appropriate schema library file.
+   *
+   * @return
+   *   The DatabaseSchema object for this connection.
+   */
+  public function schema() {
+    static $schema;
+    if (empty($schema)) {
+      $class_type = 'DatabaseSchema_' . $this->driver();
+      $schema = new $class_type($this);
+    }
+    return $schema;
+  }
+
+  /**
+   * Escapes a table name string.
+   *
+   * Force all table names to be strictly alphanumeric-plus-underscore.
+   * For some database drivers, it may also wrap the table name in
+   * database-specific escape characters.
+   *
+   * @return
+   *   The sanitized table name string.
+   */
+  public function escapeTable($table) {
+    return preg_replace('/[^A-Za-z0-9_]+/', '', $string);
+  }
+
+  /**
+   * Returns a new DatabaseTransaction object on this connection.
+   *
+   * @param $required
+   *   If executing an operation that absolutely must use transactions, specify
+   *   TRUE for this parameter.  If the connection does not support transactions,
+   *   this method will throw an exception and the operation will not be possible.
+   * @see DatabaseTransaction
+   */
+  public function startTransaction($required = FALSE) {
+    static $class_type;
+    
+    if ($required && !$this->supportsTransactions()) {
+      throw new TransactionsNotSupportedException();
+    }
+  
+    if (empty($class_type)) {
+      $class_type = 'DatabaseTransaction_' . $this->driver();
+      if (!class_exists($class_type)) {
+        $class_type = 'DatabaseTransaction';
+      }
+    }
+    return new $class_type($this);
+  }
+
+  /**
+   * Runs a limited-range query on this database object.
+   *
+   * Use this as a substitute for ->query() when a subset of the query is to be
+   * returned.
+   * User-supplied arguments to the query should be passed in as separate parameters
+   * so that they can be properly escaped to avoid SQL injection attacks.
+   *
+   * @param $query
+   *   A string containing an SQL query.
+   * @param $args
+   *   An array of values to substitute into the query at placeholder markers.
+   * @param $from
+   *   The first result row to return.
+   * @param $count
+   *   The maximum number of result rows to return.
+   * @param $options
+   *   An array of options on the query.
+   * @return
+   *   A database query result resource, or NULL if the query was not executed
+   *   correctly.
+   */
+   abstract public function queryRange($query, Array $args, $from, $count, Array $options);
+
+  /**
+   * Runs a SELECT query and stores its results in a temporary table.
+   *
+   * Use this as a substitute for ->query() when the results need to stored
+   * in a temporary table. Temporary tables exist for the duration of the page
+   * request.
+   * User-supplied arguments to the query should be passed in as separate parameters
+   * so that they can be properly escaped to avoid SQL injection attacks.
+   *
+   * Note that if you need to know how many results were returned, you should do
+   * a SELECT COUNT(*) on the temporary table afterwards.
+   *
+   * @param $query
+   *   A string containing a normal SELECT SQL query.
+   * @param $args
+   *   An array of values to substitute into the query at placeholder markers.
+   * @param $tablename
+   *   The name of the temporary table to select into. This name will not be
+   *   prefixed as there is no risk of collision.
+   * @return
+   *   A database query result resource, or FALSE if the query was not executed
+   *   correctly.
+   */
+   abstract function queryTemporary($query, Array $args, $tablename);
+
+  /**
+   * Returns the type of database driver.
+   *
+   * This is not necessarily the same as the type of the database itself.
+   * For instance, there could be two MySQL drivers, mysql and mysql_mock.
+   * This function would return different values for each, but both would
+   * return "mysql" for databaseType().
+   */
+  abstract public function driver();
+
+  /**
+   * Determine if this driver supports transactions.
+   */
+  abstract public function supportsTransactions();
+
+  /**
+   * Returns the type of the database being accessed.
+   */
+  abstract public function databaseType();
+
+ 
+  /**
+   * Gets any special processing requirements for the condition operator.
+   *
+   * Some condition types require special processing, such as IN, because
+   * the value data they pass in is not a simple value.  This is a simple
+   * overridable lookup function.  Database connections should define only
+   * those operators they wish to be handled differently than the default.
+   *
+   * @see DatabaseCondition::compile().
+   * @param $operator
+   *   The condition operator, such as "IN", "BETWEEN", etc.  Case-sensitive.
+   * @return
+   *   The extra handling directives for the specified operator, or NULL.
+   */
+  abstract public function mapConditionOperator($operator);
+}
+
+/**
+ * Primary front-controller for the database system.
+ *
+ * This class is uninstantiatable and un-extendable.  It acts to encapsulate
+ * all control and shepherding of database connections into a single location
+ * without the use of globals.
+ *
+ */
+abstract class Database {
+
+  /**
+   * Flag to indicate a query call should simply return NULL.
+   * 
+   * This is used for queries that have no reasonable return value
+   * anyway, such as INSERT statements to a table without a serial
+   * primary key.
+   */
+  const RETURN_NULL = 0;
+  
+  /**
+   * Flag to indicate a query call should return the prepared statement.
+   */
+  const RETURN_STATEMENT = 1;
+
+  /**
+   * Flag to indicate a query call should return the number of affected rows.
+   */
+  const RETURN_AFFECTED = 2;
+  
+  /**
+   * Flag to indicate a query call should return the "last insert id".
+   */
+  const RETURN_INSERT_ID = 3;
+  
+  /**
+   * An nested array of all active connections.  It is keyed by database name and target.
+   *
+   * @var array
+   */
+  static protected $connections = array();
+
+  /**
+   * A processed copy of the database connection information from settings.php
+   *
+   * @var array
+   */
+  static protected $databaseInfo = NULL;
+
+  /**
+   * The key of the currently active database connection.
+   *
+   * @var string
+   */
+  static protected $activeKey = 'default';
+
+  /**
+   * Gets the active connection object for the specified target.
+   *
+   * @return
+   *   The active connection object.
+   */
+  final public static function getActiveConnection($target = 'default') {
+    // This could just be a call to getConnection(), but that's an extra
+    // method call for every single query.
+    if (!isset(self::$connections[self::$activeKey][$target])) {
+      self::openConnection(self::$activeKey, $target);
+    }
+
+    return isset(self::$connections[self::$activeKey][$target]) ? self::$connections[self::$activeKey][$target] : NULL;
+  }
+
+  /**
+   * Gets the connection object for the specified database key and target.
+   *
+   * @return
+   *   The corresponding connection object.
+   */
+  final public static function getConnection($key = 'default', $target = 'default') {
+    if (!isset(self::$connections[$key][$target])) {
+      self::openConnection($key, $target);
+    }
+
+    return isset(self::$connections[$key][$target]) ? self::$connections[$key][$target] : NULL;
+  }
+
+  /**
+   * Determine if there is an active connection.
+   *
+   * Note that this method will return FALSE if no connection has been established
+   * yet, even if one could be.
+   *
+   * @return
+   *   TRUE if there is at least one database connection established, FALSE otherwise.
+   */
+  final public static function isActiveConnection() {
+    return !empty(self::$connections);
+  }
+
+  /**
+   * Set the active connection to the specified key.
+   *
+   * @return
+   *   The previous database connection key.
+   */
+  final public static function setActiveConnection($key = 'default') {
+    if (empty(self::$databaseInfo)) {
+      self::parseConnectionInfo();
+    }
+
+    if (!empty(self::$databaseInfo[$key])) {
+      $old_key = self::$activeKey;
+      self::$activeKey = $key;
+      return $old_key;
+    }
+  }
+
+  /**
+   * Process the configuration file for database information.
+   * 
+   * Because the config file accepts various "fallback" configurations, we have
+   * to parse the configuration array out into a standardized "complete" form,
+   * applying defaults where necessary.
+   */
+  final protected static function parseConnectionInfo() {
+    global $databases;
+
+    if (empty($databases)) {
+      _db_need_install();
+    }
+    $databaseInfo = $databases;
+
+    // If no database key is specified, default to default.
+    if (!is_array($databaseInfo)) {
+      $databaseInfo = array('default' => $databaseInfo);
+    }
+
+    foreach ($databaseInfo as $index => $info) {
+      // If no targets are specified, default to one default.
+      if (!is_array($databaseInfo[$index])) {
+        $databaseInfo[$index] = array('default' => $info);
+      }
+
+      foreach ($databaseInfo[$index] as $target => $value) {
+        // If there is no "driver" property, then we assume it's an array of 
+        // possible connections for this target.  Pick one at random.  That 
+        // allows us to have, for example, multiple slave servers.
+        if (empty($value['driver'])) {
+          $databaseInfo[$index][$target] = $databaseInfo[$index][$target][mt_rand(0, count($databaseInfo[$index][$target]) - 1)];
+        }
+      }
+    }
+
+    self::$databaseInfo = $databaseInfo;
+  }
+  
+  /**
+   * Gets information on the specified database connection.
+   *
+   * @param $connection
+   *   The connection key for which we want information.
+   */
+  final public static function getConnectionInfo($key = 'default') {
+    if (empty(self::$databaseInfo)) {
+      self::parseConnectionInfo();
+    }
+
+    if (!empty(self::$databaseInfo[$key])) {
+      return self::$databaseInfo[$key];
+    }
+    
+  }
+
+  /**
+   * Open a connection to the server specified by the given key and target.
+   *
+   * @param $key
+   *   The database connection key, as specified in settings.php.  The default
+   *   is "default".
+   * @param $target
+   *   The database target to open.  If the specified target does not exist,
+   *   the "default" target will be used instead.  
+   */
+  final protected static function openConnection($key, $target) {
+    global $db_prefix;
+
+    if (empty(self::$connectionInfo)) {
+      self::parseConnectionInfo();
+    }
+    try {
+      // If the requested database does not exist then it is an unrecoverable error.
+      // If the requested target does not exist, however, we fall back to the default
+      // target.  The target is typically either "default" or "slave", indicating to
+      // use a slave SQL server if one is available.  If it's not available, then the
+      // default/master server is the correct server to use.
+      if (!isset(self::$databaseInfo[$key])) {
+        throw new Exception('DB does not exist');
+      }
+      if (!isset(self::$databaseInfo[$key][$target])) {
+        $target = 'default';
+      }
+
+      if (!$driver = self::$databaseInfo[$key][$target]['driver']) {
+        throw new Exception('Drupal is not set up');
+      }
+      
+      // We cannot rely on the registry yet, because the registry requires
+      // an open database connection.
+      $driver_class = 'DatabaseConnection_' . $driver;
+      $driver_file = './includes/database/' . $driver . '/database.inc';
+      require_once($driver_file);
+      self::$connections[$key][$target] = new $driver_class(self::$databaseInfo[$key][$target]);
+
+      // We need to pass around the simpletest database prefix in the request
+      // and we put that in the user_agent header.
+      if (preg_match("/^simpletest\d+$/", $_SERVER['HTTP_USER_AGENT'])) {
+        $db_prefix = $_SERVER['HTTP_USER_AGENT'];
+      }
+    }
+    catch (Exception $e) {
+      // It is extremely rare that an exception will be generated here other
+      // than when installing.  We therefore intercept it and try the installer,
+      // passing on the exception otherwise.
+      _db_need_install();
+      throw $e;
+    }
+  }
+}
+
+/**
+ * Exception to mark databases that do not support transations.
+ * 
+ * This exception will be thrown when a transaction is started that does not 
+ * allow for the "silent fallback" of no transaction and the database connection
+ * in use does not support transactions.  The calling code must then take
+ * appropriate action.
+ */
+class TransactionsNotSupportedException extends PDOException { }
+
+/**
+ * A wrapper class for creating and managing database transactions.
+ *
+ * Not all databases or database configurations support transactions.  For
+ * example, MySQL MyISAM tables do not.  It is also easy to begin a transaction
+ * and then forget to commit it, which can lead to connection errors when
+ * another transaction is started.
+ *
+ * This class acts as a wrapper for transactions.  To begin a transaction,
+ * simply instantiate it.  When the object goes out of scope and is destroyed
+ * it will automatically commit.  It also will check to see if the specified
+ * connection supports transactions.  If not, it will simply skip any transaction
+ * commands, allowing user-space code to proceed normally.  The only difference
+ * is that rollbacks won't actually do anything.
+ *
+ * In the vast majority of cases, you should not instantiate this class directly.
+ * Instead, call ->startTransaction() from the appropriate connection object.
+ */
+class DatabaseTransaction {
+
+  /**
+   * The connection object for this transaction.
+   *
+   * @var DatabaseConnection
+   */
+  protected $connection;
+
+  /**
+   * Whether or not this connection supports transactions.
+   *
+   * This can be derived from the connection itself with a method call,
+   * but is cached here for performance.
+   *
+   * @var boolean
+   */
+  protected $supportsTransactions;
+
+  /**
+   * Whether or not this transaction has been rolled back.
+   *
+   * @var boolean
+   */
+  protected $hasRolledBack = FALSE;
+
+  /**
+   * Whether or not this transaction has been committed.
+   *
+   * @var boolean
+   */
+  protected $hasCommitted = FALSE;
+
+  /**
+   * Track the number of "layers" of transactions currently active.
+   * 
+   * On many databases transactions cannot nest.  Instead, we track
+   * nested calls to transactions and collapse them into a single
+   * transaction.
+   *
+   * @var int
+   */
+  protected static $layers = 0;
+  
+  public function __construct(DatabaseConnection $connection) {
+    $this->connection = $connection;
+    $this->supportsTransactions = $connection->supportsTransactions();
+
+    if (self::$layers == 0 && $this->supportsTransactions) {
+      $connection->beginTransaction();
+    }
+    
+    ++self::$layers;
+  }
+
+  /**
+   * Commit this transaction.
+   */
+  public function commit() {
+    --self::$layers;
+    if (self::$layers == 0 && $this->supportsTransactions) {
+      $this->connection->commit();
+      $this->hasCommitted = TRUE;
+    }
+  }
+
+  /**
+   * Roll back this transaction.
+   */
+  public function rollBack() {
+    if ($this->supportsTransactions) {
+      $this->connection->rollBack();
+      $this->hasRolledBack = TRUE;
+    }
+  }
+
+  /**
+   * Determine if this transaction has already been rolled back.
+   *
+   * @return
+   *   TRUE if the transaction has been rolled back, FALSE otherwise.
+   */
+  public function hasRolledBack() {
+    return $this->hasRolledBack;
+  }
+
+  public function __destruct() {
+    --self::$layers;
+    if (self::$layers == 0 && $this->supportsTransactions && !$this->hasRolledBack && !$this->hasCommitted) {
+      $this->connection->commit();
+    }
+  }
+
+}
+
+/**
+ * Prepared statement class.
+ *
+ * PDO allows us to extend the PDOStatement class to provide additional 
+ * functionality beyond that offered by default.  We do need extra 
+ * functionality.  By default, this class is not driver-specific.  If a given 
+ * driver needs to set a custom statement class, it may do so in its constructor.
+ *
+ * @link http://us.php.net/pdostatement
+ */
+class DatabaseStatement extends PDOStatement {
+
+  /**
+   * Reference to the database connection object for this statement.
+   * 
+   * The name $dbh is inherited from PDOStatement.
+   *
+   * @var DatabaseConnection
+   */
+  public $dbh;
+
+  protected function __construct($dbh) {
+    $this->dbh = $dbh;
+    $this->setFetchMode(PDO::FETCH_OBJ);
+  }
+
+  /**
+   * Executes a prepared statement
+   *
+   * @param $args
+   *   An array of values with as many elements as there are bound parameters in the SQL statement being executed.
+   * @param $options
+   *   An array of options for this query.
+   * @return
+   *   TRUE on success, or FALSE on failure.
+   */
+  public function execute($args, $options) {
+    if (isset($options['fetch'])) {
+      if (is_string($options['fetch'])) {
+        $this->setFetchMode(PDO::FETCH_CLASS, $options['fetch']);
+      }
+      else {
+        $this->setFetchMode($options['fetch']);
+      }
+    }
+    $this->dbh->lastStatement = $this;
+    return parent::execute($args);
+  }
+
+  /**
+   * Returns an entire single column of a result set as an indexed array.
+   *
+   * Note that this method will run the result set to the end.
+   *
+   * @param $index
+   *   The index of the column number to fetch.
+   * @return
+   *   An indexed array.
+   */
+  public function fetchCol($index = 0) {
+    return $this->fetchAll(PDO::FETCH_COLUMN, $index);
+  }
+
+  /**
+   * Returns an entire result set as an associative array keyed by the named field.
+   * 
+   * If the given key appears multiple times, later records will overwrite 
+   * earlier ones.
+   *
+   * Note that this method will run the result set to the end.
+   *
+   * @param $key
+   *   The name of the field on which to index the array.
+   * @param $fetch
+   *   The fetchmode to use.  If set to   PDO::FETCH_ASSOC, PDO::FETCH_NUM, or 
+   *   PDO::FETCH_BOTH the returned value with be an array of arrays.  For any
+   *   other value it will be an array of objects.
+   * @return
+   *   An associative array.
+   */
+  public function fetchAllAssoc($key, $fetch = PDO::FETCH_OBJ) {
+    $return = array();
+    $this->setFetchMode($fetch);
+    if (in_array($fetch, array(PDO::FETCH_ASSOC, PDO::FETCH_NUM, PDO::FETCH_BOTH))) {
+      foreach ($this as $record) {
+        $return[$record[$key]] = $record;
+      }
+    }
+    else {
+      foreach ($this as $record) {
+        $return[$record->$key] = $record;
+      }
+    }
+    return $return;
+  }
+
+  /**
+   * Returns the entire result set as a single associative array.
+   *
+   * This method is only useful for two-column result sets.  It will return
+   * an associative array where the key is one column from the result set
+   * and the value is another field.  In most cases, the default of the first two
+   * columns is appropriate.
+   *
+   * Note that this method will run the result set to the end.
+   *
+   * @param $key_index
+   *   The numeric index of the field to use as the array key.
+   * @param $value_index
+   *   The numeric index of the field to use as the array value.
+   * @return
+   *   An associative array.
+   */
+  public function fetchAllKeyed($key_index = 0, $value_index = 1) {
+    $return = array();
+    $this->setFetchMode(PDO::FETCH_NUM);
+    foreach ($this as $record) {
+      $return[$record[$key_index]] = $record[$value_index];
+    }
+    return $return;
+  }
+
+  /**
+   * Return a single field out of the current
+   *
+   * @param $index
+   *   The numeric index of the field to return.  Defaults to the first field.
+   * @return
+   *   A single field from the next record.
+   */
+  public function fetchField($index = 0) {
+    return $this->fetchColumn($index);
+  }
+
+  /**
+   * Fetches the next row and returns it as an associative array.
+   *
+   * This method corresponds to PDOStatement::fetchObject(),
+   * but for associative arrays.  For some reason PDOStatement does
+   * not have a corresponding array helper method, so one is added.
+   *
+   * @return
+   *   An associative array.
+   */
+  public function fetchAssoc() {
+    return $this->fetch(PDO::FETCH_ASSOC);
+  }
+}
+
+/**
+ * The following utility functions are simply convenience wrappers.
+ * They should never, ever have any database-specific code in them.
+ */
+
+/**
+ * Execute an arbitrary query string against the active database.
+ *
+ * Do not use this function for INSERT, UPDATE, or DELETE queries.  Those should
+ * be handled via the appropriate query builder factory.  Use this function for
+ * SELECT queries that do not require a query builder.
+ *
+ * @see DatabaseConnection::defaultOptions()
+ * @param $query
+ *   The prepared statement query to run.  Although it will accept both
+ *   named and unnamed placeholders, named placeholders are strongly preferred
+ *   as they are more self-documenting.
+ * @param $args
+ *   An array of values to substitute into the query.  If the query uses named
+ *   placeholders, this is an associative array in any order.  If the query uses
+ *   unnamed placeholders (?), this is an indexed array and the order must match
+ *   the order of placeholders in the query string.
+ * @param $options
+ *   An array of options to control how the query operates.
+ * @return
+ *   A prepared statement object, already executed.
+ */
+function db_query($query, $args = array(), $options = array()) {
+  if (!is_array($args)) {
+    $args = func_get_args();
+    array_shift($args);
+  }
+  list($query, $args, $options) = _db_query_process_args($query, $args, $options);
+  
+  return Database::getActiveConnection($options['target'])->query($query, $args, $options);
+}
+
+/**
+ * Execute an arbitrary query string against the active database, restricted to a specified range.
+ *
+ * @see DatabaseConnection::defaultOptions()
+ * @param $query
+ *   The prepared statement query to run.  Although it will accept both
+ *   named and unnamed placeholders, named placeholders are strongly preferred
+ *   as they are more self-documenting.
+ * @param $args
+ *   An array of values to substitute into the query.  If the query uses named
+ *   placeholders, this is an associative array in any order.  If the query uses
+ *   unnamed placeholders (?), this is an indexed array and the order must match
+ *   the order of placeholders in the query string.
+ * @param $from
+ *   The first record from the result set to return.
+ * @param $limit
+ *   The number of records to return from the result set.
+ * @param $options
+ *   An array of options to control how the query operates.
+ * @return
+ *   A prepared statement object, already executed.
+ */
+function db_query_range($query, $args, $from = 0, $count = 0, $options = array()) {
+  if (!is_array($args)) {
+    $args = func_get_args();
+    array_shift($args);
+    $count = array_pop($args);
+    $from = array_pop($args);
+  }
+  list($query, $args, $options) = _db_query_process_args($query, $args, $options);
+  
+  return Database::getActiveConnection($options['target'])->queryRange($query, $args, $from, $count, $options);
+}
+
+/**
+ * Execute a query string against the active database and save the result set to a temp table.
+ *
+ * @see DatabaseConnection::defaultOptions()
+ * @param $query
+ *   The prepared statement query to run.  Although it will accept both
+ *   named and unnamed placeholders, named placeholders are strongly preferred
+ *   as they are more self-documenting.
+ * @param $args
+ *   An array of values to substitute into the query.  If the query uses named
+ *   placeholders, this is an associative array in any order.  If the query uses
+ *   unnamed placeholders (?), this is an indexed array and the order must match
+ *   the order of placeholders in the query string.
+ * @param $from
+ *   The first record from the result set to return.
+ * @param $limit
+ *   The number of records to return from the result set.
+ * @param $options
+ *   An array of options to control how the query operates.
+ */
+function db_query_temporary($query, $args, $tablename, $options = array()) {
+  if (!is_array($args)) {
+    $args = func_get_args();
+    array_shift($args);
+  }
+  list($query, $args, $options) = _db_query_process_args($query, $args, $options);
+  
+  return Database::getActiveConnection($options['target'])->queryTemporary($query, $args, $tablename, $options);
+}
+
+/**
+ * Returns a new InsertQuery object for the active database.
+ *
+ * @param $table
+ *   The table into which to insert.
+ * @param $options
+ *   An array of options to control how the query operates.
+ * @return
+ *   A new InsertQuery object for this connection.
+ */
+function db_insert($table, Array $options = array()) {
+  if (empty($options['target']) || $options['target'] == 'slave') {
+    $options['target'] = 'default';
+  }
+  return Database::getActiveConnection($options['target'])->insert($table, $options);
+}
+
+/**
+ * Returns a new MergeQuery object for the active database.
+ *
+ * @param $table
+ *   The table into which to merge.
+ * @param $options
+ *   An array of options to control how the query operates.
+ * @return
+ *   A new MergeQuery object for this connection.
+ */
+function db_merge($table, Array $options = array()) {
+  if (empty($options['target']) || $options['target'] == 'slave') {
+    $options['target'] = 'default';
+  }
+  return Database::getActiveConnection($options['target'])->merge($table, $options);
+}
+
+/**
+ * Returns a new UpdateQuery object for the active database.
+ *
+ * @param $table
+ *   The table to update.
+ * @param $options
+ *   An array of options to control how the query operates.
+ * @return
+ *   A new UpdateQuery object for this connection.
+ */
+function db_update($table, Array $options = array()) {
+  if (empty($options['target']) || $options['target'] == 'slave') {
+    $options['target'] = 'default';
+  }
+  return Database::getActiveConnection($options['target'])->update($table, $options);
+}
+
+/**
+ * Returns a new DeleteQuery object for the active database.
+ *
+ * @param $table
+ *   The table from which to delete.
+ * @param $options
+ *   An array of options to control how the query operates.
+ * @return
+ *   A new DeleteQuery object for this connection.
+ */
+function db_delete($table, Array $options = array()) {
+  if (empty($options['target']) || $options['target'] == 'slave') {
+    $options['target'] = 'default';
+  }
+  return Database::getActiveConnection($options['target'])->delete($table, $options);
+}
+
+/**
+ * Returns a new SelectQuery object for the active database.
+ *
+ * @param $table
+ *   The base table for this query.
+ * @param $alias
+ *   The alias for the base table of this query.
+ * @param $options
+ *   An array of options to control how the query operates.
+ * @return
+ *   A new SelectQuery object for this connection.
+ */
+function db_select($table, $alias = NULL, Array $options = array()) {
+  if (empty($options['target'])) {
+    $options['target'] = 'default';
+  }
+  return Database::getActiveConnection($options['target'])->select($table, $alias, $options);
+}
+
+/**
+ * Sets a new active database.
+ *
+ * @param $key
+ *   The key in the $databases array to set as the default database.
+ * @returns
+ *   The key of the formerly active database.
+ */
+function db_set_active($key = 'default') {
+  return Database::setActiveConnection($key);
+}
+
+/**
+ * Determine if there is an active connection.
+ *
+ * Note that this method will return FALSE if no connection has been established
+ * yet, even if one could be.
+ *
+ * @return
+ *   TRUE if there is at least one database connection established, FALSE otherwise.
+ */
+function db_is_active() {
+  return Database::isActiveConnection();
+}
+
+/**
+ * Restrict a dynamic table, column or constraint name to safe characters.
+ *
+ * Only keeps alphanumeric and underscores.
+ *
+ * @param $table
+ *   The table name to escape.
+ * @return
+ *   The escaped table name as a string.
+ */
+function db_escape_table($table) {
+  return Database::getActiveConnection()->escapeTable($table);
+}
+
+/**
+ * Perform an SQL query and return success or failure.
+ *
+ * @param $sql
+ *   A string containing a complete SQL query.  %-substitution
+ *   parameters are not supported.
+ * @return
+ *   An array containing the keys:
+ *     success: a boolean indicating whether the query succeeded
+ *     query: the SQL query executed, passed through check_plain()
+ */
+function update_sql($sql) {
+  $result = Database::getActiveConnection()->query($sql/*, array(true)*/);
+  return array('success' => $result !== FALSE, 'query' => check_plain($sql));
+}
+
+/**
+ * Generate placeholders for an array of query arguments of a single type.
+ *
+ * Given a Schema API field type, return correct %-placeholders to
+ * embed in a query
+ *
+ * @todo This may be possible to remove in favor of db_select().
+ * @param $arguments
+ *   An array with at least one element.
+ * @param $type
+ *   The Schema API type of a field (e.g. 'int', 'text', or 'varchar').
+ */
+function db_placeholders($arguments, $type = 'int') {
+  $placeholder = db_type_placeholder($type);
+  return implode(',', array_fill(0, count($arguments), $placeholder));
+}
+
+/**
+ * Wraps the given table.field entry with a DISTINCT(). The wrapper is added to
+ * the SELECT list entry of the given query and the resulting query is returned.
+ * This function only applies the wrapper if a DISTINCT doesn't already exist in
+ * the query.
+ *
+ * @todo Remove this.
+ * @param $table
+ *   Table containing the field to set as DISTINCT
+ * @param $field
+ *   Field to set as DISTINCT
+ * @param $query
+ *   Query to apply the wrapper to
+ * @return
+ *   SQL query with the DISTINCT wrapper surrounding the given table.field.
+ */
+function db_distinct_field($table, $field, $query) {
+  return Database::getActiveConnection()->distinctField($table, $field, $query);
+}
+
+/**
+ * Retrieve the name of the currently active database driver, such as
+ * "mysql" or "pgsql".
+ *
+ * @return The name of the currently active database driver.
+ */
+function db_driver() {
+  return Database::getActiveConnection()->driver();
+}
+
+/**
+ * @} End of "defgroup database".
+ */
+
+
+/**
+ * @ingroup schemaapi
+ * @{
+ */
+
+
+/**
+ * Create a new table from a Drupal table definition.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $name
+ *   The name of the table to create.
+ * @param $table
+ *   A Schema API table definition array.
+ */
+function db_create_table(&$ret, $name, $table) {
+  return Database::getActiveConnection()->schema()->createTable($ret, $name, $table);
+}
+
+/**
+ * Return an array of field names from an array of key/index column specifiers.
+ *
+ * This is usually an identity function but if a key/index uses a column prefix
+ * specification, this function extracts just the name.
+ *
+ * @param $fields
+ *   An array of key/index column specifiers.
+ * @return
+ *   An array of field names.
+ */
+function db_field_names($fields) {
+  return Database::getActiveConnection()->schema()->fieldNames($fields);
+}
+
+/**
+ * Check if a table exists.
+ */
+function db_table_exists($table) {
+  return Database::getActiveConnection()->schema()->tableExists($table);
+}
+
+/**
+ * Check if a column exists in the given table.
+ */
+function db_column_exists($table, $column) {
+  return Database::getActiveConnection()->schema()->columnExists($table, $column);
+}
+
+
+/**
+ * Given a Schema API field type, return the correct %-placeholder.
+ *
+ * Embed the placeholder in a query to be passed to db_query and and pass as an
+ * argument to db_query a value of the specified type.
+ *
+ * @todo Remove this after all queries are converted to type-agnostic form.
+ * @param $type
+ *   The Schema API type of a field.
+ * @return
+ *   The placeholder string to embed in a query for that type.
+ */
+function db_type_placeholder($type) {
+  switch ($type) {
+    case 'varchar':
+    case 'char':
+    case 'text':
+    case 'datetime':
+      return '\'%s\'';
+
+    case 'numeric':
+      // Numeric values are arbitrary precision numbers.  Syntacically, numerics
+      // should be specified directly in SQL. However, without single quotes
+      // the %s placeholder does not protect against non-numeric characters such
+      // as spaces which would expose us to SQL injection.
+      return '%n';
+
+    case 'serial':
+    case 'int':
+      return '%d';
+
+    case 'float':
+      return '%f';
+
+    case 'blob':
+      return '%b';
+  }
+
+  // There is no safe value to return here, so return something that
+  // will cause the query to fail.
+  return 'unsupported type ' . $type . 'for db_type_placeholder';
+}
+
+
+function _db_create_keys_sql($spec) {
+  return Database::getActiveConnection()->schema()->createKeysSql($spec);
+}
+
+/**
+ * This maps a generic data type in combination with its data size
+ * to the engine-specific data type.
+ */
+function db_type_map() {
+  return Database::getActiveConnection()->schema()->getFieldTypeMap();
+}
+
+/**
+ * Rename a table.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be renamed.
+ * @param $new_name
+ *   The new name for the table.
+ */
+function db_rename_table(&$ret, $table, $new_name) {
+  return Database::getActiveConnection()->schema()->renameTable($ret, $table, $new_name);
+}
+
+/**
+ * Drop a table.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be dropped.
+ */
+function db_drop_table(&$ret, $table) {
+  return Database::getActiveConnection()->schema()->dropTable($ret, $table);
+}
+
+/**
+ * Add a new field to a table.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   Name of the table to be altered.
+ * @param $field
+ *   Name of the field to be added.
+ * @param $spec
+ *   The field specification array, as taken from a schema definition.
+ *   The specification may also contain the key 'initial', the newly
+ *   created field will be set to the value of the key in all rows.
+ *   This is most useful for creating NOT NULL columns with no default
+ *   value in existing tables.
+ * @param $keys_new
+ *   Optional keys and indexes specification to be created on the
+ *   table along with adding the field. The format is the same as a
+ *   table specification but without the 'fields' element.  If you are
+ *   adding a type 'serial' field, you MUST specify at least one key
+ *   or index including it in this array. @see db_change_field for more
+ *   explanation why.
+ */
+function db_add_field(&$ret, $table, $field, $spec, $keys_new = array()) {
+  return Database::getActiveConnection()->schema()->addField($ret, $table, $field, $spec, $keys_new);
+}
+
+/**
+ * Drop a field.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ * @param $field
+ *   The field to be dropped.
+ */
+function db_drop_field(&$ret, $table, $field) {
+  return Database::getActiveConnection()->schema()->dropField($ret, $table, $field);
+}
+
+/**
+ * Set the default value for a field.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ * @param $field
+ *   The field to be altered.
+ * @param $default
+ *   Default value to be set. NULL for 'default NULL'.
+ */
+function db_field_set_default(&$ret, $table, $field, $default) {
+  return Database::getActiveConnection()->schema()->dropField($ret, $table, $field, $default);
+}
+
+/**
+ * Set a field to have no default value.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ * @param $field
+ *   The field to be altered.
+ */
+function db_field_set_no_default(&$ret, $table, $field) {
+  return Database::getActiveConnection()->schema()->fieldSetNoDefault($ret, $table, $field);
+}
+
+/**
+ * Add a primary key.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ * @param $fields
+ *   Fields for the primary key.
+ */
+function db_add_primary_key(&$ret, $table, $fields) {
+  return Database::getActiveConnection()->schema()->addPrimaryKey($ret, $table, $field);
+}
+
+/**
+ * Drop the primary key.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ */
+function db_drop_primary_key(&$ret, $table) {
+  return Database::getActiveConnection()->schema()->dropPrimaryKey($ret, $table);
+}
+
+/**
+ * Add a unique key.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ * @param $name
+ *   The name of the key.
+ * @param $fields
+ *   An array of field names.
+ */
+function db_add_unique_key(&$ret, $table, $name, $fields) {
+  return Database::getActiveConnection()->schema()->addUniqueKey($ret, $table, $name, $fields);
+}
+
+/**
+ * Drop a unique key.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ * @param $name
+ *   The name of the key.
+ */
+function db_drop_unique_key(&$ret, $table, $name) {
+  return Database::getActiveConnection()->schema()->dropUniqueKey($ret, $table, $name);
+}
+
+/**
+ * Add an index.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ * @param $name
+ *   The name of the index.
+ * @param $fields
+ *   An array of field names.
+ */
+function db_add_index(&$ret, $table, $name, $fields) {
+  return Database::getActiveConnection()->schema()->addIndex($ret, $table, $name, $fields);
+}
+
+/**
+ * Drop an index.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   The table to be altered.
+ * @param $name
+ *   The name of the index.
+ */
+function db_drop_index(&$ret, $table, $name) {
+  return Database::getActiveConnection()->schema()->addIndex($ret, $table, $name);
+}
+
+/**
+ * Change a field definition.
+ *
+ * IMPORTANT NOTE: To maintain database portability, you have to explicitly
+ * recreate all indices and primary keys that are using the changed field.
+ *
+ * That means that you have to drop all affected keys and indexes with
+ * db_drop_{primary_key,unique_key,index}() before calling db_change_field().
+ * To recreate the keys and indices, pass the key definitions as the
+ * optional $keys_new argument directly to db_change_field().
+ *
+ * For example, suppose you have:
+ * @code
+ * $schema['foo'] = array(
+ *   'fields' => array(
+ *     'bar' => array('type' => 'int', 'not null' => TRUE)
+ *   ),
+ *   'primary key' => array('bar')
+ * );
+ * @endcode
+ * and you want to change foo.bar to be type serial, leaving it as the
+ * primary key.  The correct sequence is:
+ * @code
+ * db_drop_primary_key($ret, 'foo');
+ * db_change_field($ret, 'foo', 'bar', 'bar',
+ *   array('type' => 'serial', 'not null' => TRUE),
+ *   array('primary key' => array('bar')));
+ * @endcode
+ *
+ * The reasons for this are due to the different database engines:
+ *
+ * On PostgreSQL, changing a field definition involves adding a new field
+ * and dropping an old one which* causes any indices, primary keys and
+ * sequences (from serial-type fields) that use the changed field to be dropped.
+ *
+ * On MySQL, all type 'serial' fields must be part of at least one key
+ * or index as soon as they are created.  You cannot use
+ * db_add_{primary_key,unique_key,index}() for this purpose because
+ * the ALTER TABLE command will fail to add the column without a key
+ * or index specification.  The solution is to use the optional
+ * $keys_new argument to create the key or index at the same time as
+ * field.
+ *
+ * You could use db_add_{primary_key,unique_key,index}() in all cases
+ * unless you are converting a field to be type serial. You can use
+ * the $keys_new argument in all cases.
+ *
+ * @param $ret
+ *   Array to which query results will be added.
+ * @param $table
+ *   Name of the table.
+ * @param $field
+ *   Name of the field to change.
+ * @param $field_new
+ *   New name for the field (set to the same as $field if you don't want to change the name).
+ * @param $spec
+ *   The field specification for the new field.
+ * @param $keys_new
+ *   Optional keys and indexes specification to be created on the
+ *   table along with changing the field. The format is the same as a
+ *   table specification but without the 'fields' element.
+ */
+
+function db_change_field(&$ret, $table, $field, $field_new, $spec, $keys_new = array()) {
+  return Database::getActiveConnection()->schema()->changeField($ret, $table, $field, $field_new, $spec, $keys_new);
+}
+
+/**
+ * @} End of "ingroup schemaapi".
+ */
+
+/**
+ * Prints a themed maintenance page with the 'Site offline' text,
+ * adding the provided error message in the case of 'display_errors'
+ * set to on. Ends the page request; no return.
+ */
+function _db_error_page($error = '') {
+  global $db_type;
+  drupal_maintenance_theme();
+  drupal_set_header('HTTP/1.1 503 Service Unavailable');
+  drupal_set_title('Site offline');
+}
+
+/**
+ * @ingroup database-legacy
+ *
+ * These functions are no longer necessary, as the DatabaseStatement object
+ * offers this and much more functionality.  They are kept temporarily for backward
+ * compatibility during conversion and should be removed as soon as possible.
+ *
+ * @{
+ */
+
+function db_fetch_object(DatabaseStatement $statement) {
+  return $statement->fetch(PDO::FETCH_OBJ);
+}
+
+function db_fetch_array(DatabaseStatement $statement) {
+  return $statement->fetch(PDO::FETCH_ASSOC);
+}
+
+function db_result(DatabaseStatement $statement) {
+  return $statement->fetchField();
+}
+
+function _db_need_install() {
+  if (!function_exists('install_goto')) {
+    include_once 'includes/install.inc';
+    install_goto('install.php');
+  }
+}
+
+/**
+ * Backward-compatibility utility.
+ * 
+ * This function should be removed after all queries have been converted
+ * to the new API.  It is temporary only.
+ * 
+ * @todo Remove this once the query conversion is complete. 
+ */
+function _db_query_process_args($query, $args, $options) {
+
+  if (!is_array($options)) {
+    $options = array();
+  }
+  if (empty($options['target'])) {
+    $options['target'] = 'default';
+  }
+  
+  // Temporary backward-compatibliity hacks.  Remove later.
+  $old_query = $query;
+  $query = str_replace(array('%n', '%d', '%f', '%b', "'%s'", '%s'), '?', $old_query);
+  if ($old_query !== $query) {
+    $args = array_values($args);  // The old system allowed named arrays, but PDO doesn't if you use ?.
+  }
+
+  // A large number of queries pass FALSE or empty-string for
+  // int/float fields because the previous version of db_query()
+  // casted them to int/float, resulting in 0.  MySQL PDO happily
+  // accepts these values as zero but PostgreSQL PDO does not, and I
+  // do not feel like tracking down and fixing every such query at
+  // this time.
+  if (preg_match_all('/%([dsfb])/', $old_query, $m) > 0) {
+    foreach ($m[1] as $idx => $char) {
+      switch ($char) {
+        case 'd':
+          $args[$idx] = (int) $args[$idx];
+          break;
+        case 'f':
+          $args[$idx] = (float) $args[$idx];
+          break;
+      }
+    }
+  }
+
+  return array($query, $args, $options);
+}
+
+
+/**
+ * Returns the last insert id.
+ *
+ * @todo Remove this function when all queries have been ported to db_insert().
+ * @param $table
+ *   The name of the table you inserted into.
+ * @param $field
+ *   The name of the autoincrement field.
+ */
+function db_last_insert_id($table, $field) {
+  $sequence_name = Database::getActiveConnection()->makeSequenceName($table, $field);
+  return Database::getActiveConnection()->lastInsertId($sequence_name);
+}
+
+/**
+ * Determine the number of rows changed by the preceding query.
+ *
+ * This may not work, actually, without some tricky temp code.
+ *
+ * @todo Remove this function when all queries have been ported to db_update().
+ */
+function db_affected_rows() {
+  $statement = Database::getActiveConnection()->lastStatement;
+  if (!$statement) {
+    return 0;
+  }
+  return $statement->rowCount();
+}
+
+/**
+ * Helper function for db_rewrite_sql.
+ *
+ * Collects JOIN and WHERE statements via hook_db_rewrite_sql()
+ * Decides whether to select primary_key or DISTINCT(primary_key)
+ *
+ * @todo Remove this function when all code has been converted to query_alter.
+ * @param $query
+ *   Query to be rewritten.
+ * @param $primary_table
+ *   Name or alias of the table which has the primary key field for this query.
+ *   Typical table names would be: {blocks}, {comments}, {forum}, {node},
+ *   {menu}, {term_data} or {vocabulary}. However, in most cases the usual
+ *   table alias (b, c, f, n, m, t or v) is used instead of the table name.
+ * @param $primary_field
+ *   Name of the primary field.
+ * @param $args
+ *   Array of additional arguments.
+ * @return
+ *   An array: join statements, where statements, field or DISTINCT(field).
+ */
+function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_field = 'nid', $args = array()) {
+  $where = array();
+  $join = array();
+  $distinct = FALSE;
+  foreach (module_implements('db_rewrite_sql') as $module) {
+    $result = module_invoke($module, 'db_rewrite_sql', $query, $primary_table, $primary_field, $args);
+    if (isset($result) && is_array($result)) {
+      if (isset($result['where'])) {
+        $where[] = $result['where'];
+      }
+      if (isset($result['join'])) {
+        $join[] = $result['join'];
+      }
+      if (isset($result['distinct']) && $result['distinct']) {
+        $distinct = TRUE;
+      }
+    }
+    elseif (isset($result)) {
+      $where[] = $result;
+    }
+  }
+
+  $where = empty($where) ? '' : '(' . implode(') AND (', $where) . ')';
+  $join = empty($join) ? '' : implode(' ', $join);
+
+  return array($join, $where, $distinct);
+}
+
+/**
+ * Rewrites node, taxonomy and comment queries. Use it for listing queries. Do not
+ * use FROM table1, table2 syntax, use JOIN instead.
+ *
+ * @todo Remove this function when all code has been converted to query_alter.
+ * @param $query
+ *   Query to be rewritten.
+ * @param $primary_table
+ *   Name or alias of the table which has the primary key field for this query.
+ *   Typical table names would be: {blocks}, {comments}, {forum}, {node},
+ *   {menu}, {term_data} or {vocabulary}. However, it is more common to use the
+ *   the usual table aliases: b, c, f, n, m, t or v.
+ * @param $primary_field
+ *   Name of the primary field.
+ * @param $args
+ *   An array of arguments, passed to the implementations of hook_db_rewrite_sql.
+ * @return
+ *   The original query with JOIN and WHERE statements inserted from
+ *   hook_db_rewrite_sql implementations. nid is rewritten if needed.
+ */
+function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $args = array()) {
+  list($join, $where, $distinct) = _db_rewrite_sql($query, $primary_table, $primary_field, $args);
+
+  if ($distinct) {
+    $query = db_distinct_field($primary_table, $primary_field, $query);
+  }
+
+  if (!empty($where) || !empty($join)) {
+    $pattern = '{
+      # Beginning of the string
+      ^
+      ((?P<anonymous_view>
+        # Everything within this set of parentheses is named "anonymous view"
+        (?:
+          [^()]++                   # anything not parentheses
+        |
+          \( (?P>anonymous_view) \)          # an open parenthesis, more "anonymous view" and finally a close parenthesis.
+        )*
+      )[^()]+WHERE)
+    }x';
+    preg_match($pattern, $query, $matches);
+    if ($where) {
+      $n = strlen($matches[1]);
+      $second_part = substr($query, $n);
+      $first_part = substr($matches[1], 0, $n - 5) ." $join WHERE $where AND ( ";
+      // PHP 4 does not support strrpos for strings. We emulate it.
+      $haystack_reverse = strrev($second_part);
+      // No need to use strrev on the needle, we supply GROUP, ORDER, LIMIT
+      // reversed.
+      foreach (array('PUORG', 'REDRO', 'TIMIL') as $needle_reverse) {
+        $pos = strpos($haystack_reverse, $needle_reverse);
+        if ($pos !== FALSE) {
+          // All needles are five characters long.
+          $pos += 5;
+          break;
+        }
+      }
+      if ($pos === FALSE) {
+        $query = $first_part . $second_part . ')';
+      }
+      else {
+        $query = $first_part . substr($second_part, 0, -$pos) . ')' . substr($second_part, -$pos);
+      }
+    }
+    else {
+      $query = $matches[1] . " $join " . substr($query, strlen($matches[1]));
+    }
+  }
+
+  return $query;
+}
+
+
+/**
+ * @} End of "ingroup database-legacy".
+ */
