@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.15 2008/07/01 20:36:40 dries Exp $
+// $Id: theme.maintenance.inc,v 1.16 2008/08/21 19:36:36 dries Exp $
 
 /**
  * @file
@@ -28,7 +28,7 @@ function _drupal_maintenance_theme() {
   require_once './includes/unicode.inc';
   require_once './includes/file.inc';
   require_once './includes/module.inc';
-  require_once './includes/database.inc';
+  require_once './includes/database/database.inc';
   unicode_check();
 
   // Install and update pages are treated differently to prevent theming overrides.

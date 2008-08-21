@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.pages.inc,v 1.2 2007/12/08 14:06:22 goba Exp $
+// $Id: profile.pages.inc,v 1.3 2008/08/21 19:36:38 dries Exp $
 
 /**
  * @file
@@ -110,7 +110,10 @@ function profile_browse() {
 function profile_autocomplete($field, $string) {
   $matches = array();
   if (db_result(db_query("SELECT COUNT(*) FROM {profile_fields} WHERE fid = %d AND autocomplete = 1", $field))) {
-    $result = db_query_range("SELECT value FROM {profile_values} WHERE fid = %d AND LOWER(value) LIKE LOWER('%s%%') GROUP BY value ORDER BY value ASC", $field, $string, 0, 10);
+    $result = db_query_range("SELECT value FROM {profile_values} WHERE fid = :fid AND LOWER(value) LIKE LOWER(:value) GROUP BY value ORDER BY value ASC", array(
+      ':fid' => $field, 
+      ':value' => $string .'%',
+    ), 0, 10);
     while ($data = db_fetch_object($result)) {
       $matches[$data->value] = check_plain($data->value);
     }

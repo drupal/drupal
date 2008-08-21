@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.787 2008/08/17 11:08:23 dries Exp $
+// $Id: common.inc,v 1.788 2008/08/21 19:36:36 dries Exp $
 
 /**
  * @file
@@ -2083,7 +2083,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   // with HTML 4, we need to comment out the CDATA-tag.
   $embed_prefix = "\n<!--//--><![CDATA[//><!--\n";
   $embed_suffix = "\n//--><!]]>\n";
- 
+
   foreach ($javascript as $type => $data) {
     if (!$data) continue;
 
@@ -2487,6 +2487,9 @@ function _drupal_bootstrap_full() {
   fix_gpc_magic();
   // Load all enabled modules
   module_load_all();
+  // Rebuild the module hook cache
+  module_implements('', NULL, TRUE);
+
   // Let all modules take action before menu system handles the request
   // We do not want this while running update.php.
   if (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update') {
@@ -2663,7 +2666,6 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
   return $files;
 }
 
-
 /**
  * This dispatch function hands off structured Drupal arrays to type-specific
  * *_alter implementations. It ensures a consistent interface for all altering
@@ -2711,7 +2713,6 @@ function drupal_alter($type, &$data) {
     call_user_func_array($function, $args);
   }
 }
-
 
 /**
  * Renders HTML given a structured array tree.
@@ -3061,54 +3062,6 @@ function drupal_common_theme() {
  */
 
 /**
- * Get the schema definition of a table, or the whole database schema.
- *
- * The returned schema will include any modifications made by any
- * module that implements hook_schema_alter().
- *
- * @param $table
- *   The name of the table. If not given, the schema of all tables is returned.
- * @param $rebuild
- *   If true, the schema will be rebuilt instead of retrieved from the cache.
- */
-function drupal_get_schema($table = NULL, $rebuild = FALSE) {
-  static $schema = array();
-
-  if (empty($schema) || $rebuild) {
-    // Try to load the schema from cache.
-    if (!$rebuild && $cached = cache_get('schema')) {
-      $schema = $cached->data;
-    }
-    // Otherwise, rebuild the schema cache.
-    else {
-      $schema = array();
-      // Load the .install files to get hook_schema.
-      module_load_all_includes('install');
-
-      // Invoke hook_schema for all modules.
-      foreach (module_implements('schema') as $module) {
-        $current = module_invoke($module, 'schema');
-        _drupal_initialize_schema($module, $current);
-        $schema = array_merge($schema, $current);
-      }
-
-      drupal_alter('schema', $schema);
-      cache_set('schema', $schema);
-    }
-  }
-
-  if (!isset($table)) {
-    return $schema;
-  }
-  elseif (isset($schema[$table])) {
-    return $schema[$table];
-  }
-  else {
-    return FALSE;
-  }
-}
-
-/**
  * Create all tables that a module defines in its hook_schema().
  *
  * Note: This function does not pass the module's schema through
@@ -3153,7 +3106,9 @@ function drupal_uninstall_schema($module) {
 
   $ret = array();
   foreach ($schema as $table) {
-    db_drop_table($ret, $table['name']);
+    if (db_table_exists($table['name'])) {
+      db_drop_table($ret, $table['name']);
+    }
   }
   return $ret;
 }

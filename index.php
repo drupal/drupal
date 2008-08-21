@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.94 2007/12/26 08:46:48 dries Exp $
+// $Id: index.php,v 1.95 2008/08/21 19:36:35 dries Exp $
 
 /**
  * @file
@@ -14,7 +14,6 @@
 
 require_once './includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-
 $return = menu_execute_active_handler();
 
 // Menu status constants are integers; page content is a string.

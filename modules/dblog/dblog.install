@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.install,v 1.7 2008/03/15 12:31:28 dries Exp $
+// $Id: dblog.install,v 1.8 2008/08/21 19:36:37 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -65,7 +65,7 @@ function dblog_schema() {
       'link' => array(
         'type' => 'varchar',
         'length' => 255,
-        'not null' => TRUE,
+        'not null' => FALSE,
         'default' => '',
         'description' => t('Link to view the result of the event.'),
       ),
@@ -77,7 +77,7 @@ function dblog_schema() {
       'referer' => array(
         'type' => 'varchar',
         'length' => 128,
-        'not null' => TRUE,
+        'not null' => FALSE,
         'default' => '',
         'description' => t('URL of referring page.'),
       ),
@@ -102,4 +102,14 @@ function dblog_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Allow NULL values for links.
+ */
+function dblog_update_7001() {
+  $ret = array();
+  db_change_field($ret, 'watchdog', 'link', 'link', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'default' => ''));
+  db_change_field($ret, 'watchdog', 'referer', 'referer', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'default' => ''));
+  return $ret;
 }

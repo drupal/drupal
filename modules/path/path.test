@@ -1,5 +1,5 @@
 <?php
-// $Id: path.test,v 1.2 2008/04/25 18:26:02 dries Exp $
+// $Id: path.test,v 1.3 2008/08/21 19:36:37 dries Exp $
 
 class PathTestCase extends DrupalWebTestCase {
   function getInfo() {
@@ -132,6 +132,7 @@ class PathTestCase extends DrupalWebTestCase {
 
     // Check to make sure the node was created.
     $node = node_load(array('title' => $edit['title']));
+
     $this->assertNotNull(($node === FALSE ? NULL : $node), 'Node found in database. %s');
 
     return $node;

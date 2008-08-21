@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.166 2008/07/24 16:25:18 dries Exp $
+// $Id: menu.module,v 1.167 2008/08/21 19:36:37 dries Exp $
 
 /**
  * @file
@@ -302,7 +302,7 @@ function menu_nodeapi(&$node, $op) {
       break;
     case 'delete':
       // Delete all menu module links that point to this node.
-      $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = 'node/%d' AND module = 'menu'", $node->nid);
+      $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu'", array(':path' => 'node/'. $node->nid));
       while ($m = db_fetch_array($result)) {
         menu_link_delete($m['mlid']);
       }
@@ -314,10 +314,15 @@ function menu_nodeapi(&$node, $op) {
         $item = array();
         if (isset($node->nid)) {
           // Give priority to the default menu
-          $mlid = db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = 'node/%d' AND menu_name = '%s' AND module = 'menu' ORDER BY mlid ASC", $node->nid, $menu_name, 0, 1));
+          $mlid = db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND menu_name = :menu_name AND module = 'menu' ORDER BY mlid ASC", array(
+            ':path' => 'node/'. $node->nid, 
+            ':menu_name' => $menu_name,
+          ), 0, 1));
           // Check all menus if a link does not exist in the default menu.
           if (!$mlid) {
-            $mlid = db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = 'node/%d' AND module = 'menu' ORDER BY mlid ASC", $node->nid, 0, 1));
+            $mlid = db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu' ORDER BY mlid ASC", array(
+              ':path' => 'node/'. $node->nid, 
+            ), 0, 1));
           }
           if ($mlid) {
             $item = menu_link_load($mlid);
@@ -428,15 +433,13 @@ function menu_node_form_submit($form, &$form_state) {
  */
 function menu_get_menus($all = TRUE) {
   $system_menus = menu_list_system_menus();
-  $sql = 'SELECT * FROM {menu_custom}';
+  $query = db_select('menu_custom');
+  $query->addField('menu_custom', 'menu_name', 'menu_name');
+  $query->addField('menu_custom', 'title', 'title');
   if (!$all) {
-    $sql .= ' WHERE menu_name NOT IN (' . implode(',', array_fill(0, count($system_menus), "'%s'")) . ')';
+    $query->condition('menu_name', $system_menus, 'NOT IN');
   }
-  $sql .= ' ORDER BY title';
-  $result = db_query($sql, $system_menus);
-  $rows = array();
-  while ($r = db_fetch_array($result)) {
-    $rows[$r['menu_name']] = $r['title'];
-  }
-  return $rows;
+  $query->orderBy('title');
+
+  return $query->execute()->fetchAllKeyed();
 }

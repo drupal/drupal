@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.admin.inc,v 1.8 2008/05/07 19:17:50 dries Exp $
+// $Id: statistics.admin.inc,v 1.9 2008/08/21 19:36:38 dries Exp $
 
 /**
  * @file
@@ -107,8 +107,8 @@ function statistics_top_visitors() {
  * Menu callback; presents the "referrer" page.
  */
 function statistics_top_referrers() {
-  $query = "SELECT url, COUNT(url) AS hits, MAX(timestamp) AS last FROM {accesslog} WHERE url NOT LIKE '%%%s%%' AND url <> '' GROUP BY url";
-  $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> '' AND url NOT LIKE '%%%s%%'";
+  $query = "SELECT url, COUNT(url) AS hits, MAX(timestamp) AS last FROM {accesslog} WHERE url NOT LIKE :host AND url <> '' GROUP BY url";
+  $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> '' AND url NOT LIKE :host";
   drupal_set_title(t('Top referrers in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))));
 
   $header = array(
@@ -118,7 +118,7 @@ function statistics_top_referrers() {
   );
 
   $query .= tablesort_sql($header);
-  $result = pager_query($query, 30, 0, $query_cnt, $_SERVER['HTTP_HOST']);
+  $result = pager_query($query, 30, 0, $query_cnt, array(':host' => '%'. $_SERVER['HTTP_HOST'] .'%'));
 
   $rows = array();
   while ($referrer = db_fetch_object($result)) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.282 2008/07/10 10:58:01 dries Exp $
+// $Id: menu.inc,v 1.283 2008/08/21 19:36:36 dries Exp $
 
 /**
  * @file
@@ -1719,7 +1719,7 @@ function menu_router_build($reset = FALSE) {
   static $menu;
 
   if (!isset($menu) || $reset) {
-    if (!$reset && ($cache = cache_get('router:', 'cache_menu')) && isset($cache->data)) {
+    if (FALSE && !$reset && ($cache = cache_get('router:', 'cache_menu')) && isset($cache->data)) {
       $menu = $cache->data;
     }
     else {
@@ -1810,7 +1810,7 @@ function _menu_navigation_links_rebuild($menu) {
       db_query("UPDATE {menu_links} SET router_path = '%s', updated = %d WHERE mlid = %d", $router_path, $updated, $item['mlid']);
     }
   }
-  // Find any item whose router path does not exist any more.
+  // Find any items where their router path does not exist any more.
   $result = db_query("SELECT * FROM {menu_links} WHERE router_path NOT IN ($placeholders) AND external = 0 AND updated = 0 AND customized = 0 ORDER BY depth DESC", $paths);
   // Remove all such items. Starting from those with the greatest depth will
   // minimize the amount of re-parenting done by menu_link_delete().
@@ -1888,7 +1888,7 @@ function menu_link_save(&$item) {
 
   // This is the easiest way to handle the unique internal path '<front>',
   // since a path marked as external does not need to match a router path.
-  $item['_external'] = menu_path_is_external($item['link_path'])  || $item['link_path'] == '<front>';
+  $item['_external'] = (menu_path_is_external($item['link_path'])  || $item['link_path'] == '<front>') ? 1 : 0;
   // Load defaults.
   $item += array(
     'menu_name' => 'navigation',
@@ -2212,10 +2212,22 @@ function _menu_update_parental_status($item, $exclude = FALSE) {
   // If plid == 0, there is nothing to update.
   if ($item['plid']) {
     // We may want to exclude the passed link as a possible child.
-    $where = $exclude ? " AND mlid != %d" : '';
+    //$where = $exclude ? " AND mlid != %d" : '';
     // Check if at least one visible child exists in the table.
-    $parent_has_children = (bool)db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE menu_name = '%s' AND plid = %d AND hidden = 0" . $where, $item['menu_name'], $item['plid'], $item['mlid'], 0, 1));
+     $query = db_select('menu_links', 'm');
+    $query->addField('m', 'mlid');
+    $query->condition('menu_name', $item['menu_name']);
+    $query->condition('plid', $item['plid']);
+    $query->range(0, 1);
+
+    if ($exclude) {
+      $query->condition('mlid', $item['mlid'], '!=');
+    }
+
+    $parent_has_children = ((bool) $query->execute()->fetchField()) ? 1 : 0;
+    //$parent_has_children = (bool)db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE menu_name = '%s' AND plid = %d AND hidden = 0" . $where, $item['menu_name'], $item['plid'], $item['mlid'], 0, 1));
     db_query("UPDATE {menu_links} SET has_children = %d WHERE mlid = %d", $parent_has_children, $item['plid']);
+
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.262 2008/08/14 20:13:55 dries Exp $
+// $Id: search.module,v 1.263 2008/08/21 19:36:38 dries Exp $
 
 /**
  * @file
@@ -284,10 +284,7 @@ function search_update_totals() {
     $total = db_result(db_query("SELECT SUM(score) FROM {search_index} WHERE word = '%s'", $word));
     // Apply Zipf's law to equalize the probability distribution
     $total = log10(1 + 1/(max(1, $total)));
-    db_query("UPDATE {search_total} SET count = %f WHERE word = '%s'", $total, $word);
-    if (!db_affected_rows()) {
-      db_query("INSERT INTO {search_total} (word, count) VALUES ('%s', %f)", $word, $total);
-    }
+    db_merge('search_total')->key(array('word' => $word))->fields(array('count' => $total))->execute();
   }
   // Find words that were deleted from search_index, but are still in
   // search_total. We use a LEFT JOIN between the two tables and keep only the
@@ -573,13 +570,15 @@ function search_index($sid, $type, $text) {
 
   // Insert results into search index
   foreach ($results[0] as $word => $score) {
-    // Try inserting first because this will succeed most times, but because
-    // the database collates similar words (accented and non-accented), the
-    // insert can fail, in which case we need to add the word scores together.
-    @db_query("INSERT INTO {search_index} (word, sid, type, score) VALUES ('%s', %d, '%s', %f)", $word, $sid, $type, $score);
-    if (!db_affected_rows()) {
-      db_query("UPDATE {search_index} SET score = score + %f WHERE word = '%s' AND sid = %d AND type = '%s'", $score, $word, $sid, $type);
-    }
+    // If a word already exists in the database, its score gets increased 
+    // appropriately.  If not, we create a new record with the appropriate 
+    // starting score.
+    db_merge('search_index')->key(array(
+      'word' => $word,
+      'sid' => $sid,
+      'type' => $type,
+    ))->fields(array('score' => $score))->expression('score', 'score + :score', array(':score' => $score))
+    ->execute();
     search_dirty($word);
   }
   unset($results[0]);
@@ -790,7 +789,7 @@ function search_parse_query($text) {
         $any |= $num_new_scores;
         if ($q) {
           $queryor[] = $q;
-          $arguments[] = $or;
+          $arguments[] = "% $or %";
         }
       }
       if (count($queryor)) {
@@ -805,7 +804,7 @@ function search_parse_query($text) {
       list($q, $num_new_scores, $num_valid_words) = _search_parse_query($key, $arguments2);
       if ($q) {
         $query[] = $q;
-        $arguments[] = $key;
+        $arguments[] = "% $key %";
         if (!$num_valid_words) {
           $simple = FALSE;
         }
@@ -822,7 +821,7 @@ function search_parse_query($text) {
     list($q) = _search_parse_query($key, $arguments2, TRUE);
     if ($q) {
       $query[] = $q;
-      $arguments[] = $key;
+      $arguments[] = "% $key %";
       $simple = FALSE;
     }
   }
@@ -856,7 +855,7 @@ function _search_parse_query(&$word, &$scores, $not = FALSE) {
     }
   }
   // Return matching snippet and number of added words
-  return array("d.data " . ($not ? 'NOT ' : '') . "LIKE '%% %s %%'", $num_new_scores, $num_valid_words);
+  return array("d.data " . ($not ? 'NOT ' : '') . "LIKE '%s'", $num_new_scores, $num_valid_words);
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.26 2008/07/24 16:25:17 dries Exp $
+// $Id: dblog.module,v 1.27 2008/08/21 19:36:37 dries Exp $
 
 /**
  * @file
@@ -135,7 +135,8 @@ function dblog_watchdog($log = array()) {
     $log['request_uri'],
     $log['referer'],
     $log['ip'],
-    $log['timestamp']);
+    $log['timestamp']
+  );
 
   if ($current_db) {
     db_set_active($current_db);

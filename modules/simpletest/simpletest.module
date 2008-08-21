@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.10 2008/08/13 06:42:04 dries Exp $
+// $Id: simpletest.module,v 1.11 2008/08/21 19:36:38 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -312,8 +312,7 @@ function simpletest_test_form_submit($form, &$form_state) {
 function simpletest_run_tests($test_list, $reporter = 'drupal', $batch_mode = FALSE) {
   global $db_prefix, $db_prefix_original;
   cache_clear_all();
-  db_query('INSERT INTO {simpletest_test_id} VALUES (default)');
-  $test_id = db_last_insert_id('simpletest_test_id', 'test_id');
+  $test_id = db_insert('simpletest_test_id')->useDefaults(array('test_id'))->execute();
 
   if ($batch_mode) {
     $batch = array(
@@ -501,11 +500,14 @@ function simpletest_clean_database() {
  * @return mixed Array of matching tables or count of tables.
  */
 function simpletest_get_like_tables($base_table = 'simpletest', $count = FALSE) {
-  global $db_url, $db_prefix;
-  $url = parse_url($db_url);
-  $database = substr($url['path'], 1);
+  global $db_prefix, $database;
+  $connection_info = Database::getConnectionInfo();
+  $database_name = $connection_info['default']['database'];
   $select = $count ? 'COUNT(table_name)' : 'table_name';
-  $result = db_query("SELECT $select FROM information_schema.tables WHERE table_schema = '$database' AND table_name LIKE '$db_prefix$base_table%'");
+  $result = db_query("SELECT $select FROM information_schema.tables WHERE table_schema = :database AND table_name LIKE :table_name", array(
+    ':database' => $database_name,
+    ':table_name' => $db_prefix . $base_table . '%',
+  ));
   $schema = drupal_get_schema_unprocessed('simpletest');
 
   if ($count) {

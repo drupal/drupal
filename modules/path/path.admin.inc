@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.9 2008/08/03 05:21:20 dries Exp $
+// $Id: path.admin.inc,v 1.10 2008/08/21 19:36:37 dries Exp $
 
 /**
  * @file
@@ -19,12 +19,14 @@ function path_admin_overview($keys = NULL) {
   $multilanguage = (module_exists('locale') || $count);
 
   if ($keys) {
-    // Replace wildcards with MySQL/PostgreSQL wildcards.
+    // Replace wildcards with PDO wildcards.
     $keys = preg_replace('!\*+!', '%', $keys);
-    $sql = "SELECT * FROM {url_alias} WHERE dst LIKE '%%%s%%'";
+    $sql = "SELECT * FROM {url_alias} WHERE dst LIKE :keys";
+    $args = array(':keys' => '%'. $keys .'%');
   }
   else {
     $sql = 'SELECT * FROM {url_alias}';
+    $args = array();
   }
   $header = array(
     array('data' => t('Alias'), 'field' => 'dst', 'sort' => 'asc'),
@@ -36,7 +38,7 @@ function path_admin_overview($keys = NULL) {
     $header[2] = array('data' => t('Language'), 'field' => 'language');
   }
   $sql .= tablesort_sql($header);
-  $result = pager_query($sql, 50, 0 , NULL, $keys);
+  $result = pager_query($sql, 50, 0 , NULL, $args);
 
   $rows = array();
   $destination = drupal_get_destination();

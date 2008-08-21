@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.646 2008/08/14 19:42:26 dries Exp $
+// $Id: comment.module,v 1.647 2008/08/21 19:36:36 dries Exp $
 
 /**
  * @file
@@ -693,7 +693,7 @@ function comment_save($edit) {
           // Strip the "/" from the end of the parent thread.
           $parent->thread = (string) rtrim((string) $parent->thread, '/');
           // Get the max value in *this* thread.
-          $max = db_result(db_query("SELECT MAX(thread) FROM {comments} WHERE thread LIKE '%s.%%' AND nid = %d", $parent->thread, $edit['nid']));
+          $max = db_query("SELECT MAX(thread) FROM {comments} WHERE thread LIKE :thread AND nid = :nid", array(':thread' => $parent->thread .'%', ':nid' => $edit['nid']))->fetchField();
 
           if ($max == '') {
             // First child of this parent.

@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.63 2008/08/14 09:25:48 dries Exp $
+// $Id: install.inc,v 1.64 2008/08/21 19:36:36 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -208,17 +208,114 @@ function drupal_detect_baseurl($file = 'install.php') {
 function drupal_detect_database_types() {
   $databases = array();
 
-  foreach (array('mysql', 'mysqli', 'pgsql') as $type) {
-    if (file_exists('./includes/install.' . $type . '.inc')) {
-      include_once './includes/install.' . $type . '.inc';
-      $function = $type . '_is_available';
-      if ($function()) {
-        $databases[$type] = $type;
+  foreach (scandir('./includes/database') as $driver) {
+    $driver_dir = './includes/database/' . $driver;
+    if (!is_dir($driver_dir) || strpos($driver, '.') === 0) {
+      continue;
+    }
+    
+    $drivers[] = $driver;
+    
+    // We of course cannot rely on the registry at this point.
+    include_once($driver_dir . '/database.inc');
+    include_once($install_file = $driver_dir . '/install.inc');
+    
+    $class = 'DatabaseInstaller_' . $driver;
+    $installer = new $class();
+    if ($installer->installable()) {
+      $databases[$driver] = $installer->name();
+    }
+  }
+  
+  return $databases;
+}
+
+abstract class DatabaseInstaller {
+  protected $success = array();
+  protected $tests = array(
+    'testCreate' => array(
+      'query' => 'CREATE TABLE drupal_install_test (id int NULL)',
+      'success' => 'CREATE',
+      'message' => 'Failed to create a test table on your %name database server with the command %query. %name reports the following message: %error.<ul><li>Are you sure the configured username has the necessary %name permissions to create tables in the database?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.',
+      'fatal' => TRUE,
+    ),
+    'testInsert' => array(
+      'query' => 'INSERT INTO drupal_install_test (id) VALUES (1)',
+      'success' => 'INSERT',
+      'message' => 'Failed to insert a value into a test table on your %name database server. We tried inserting a value with the command %query and %name reported the following error: %error.',
+    ),
+    'testUpdate' => array(
+      'query' => 'UPDATE drupal_install_test SET id = 2',
+      'success' => 'UPDATE',
+      'message' => 'Failed to update a value in a test table on your %name database server. We tried updating a value with the command %query and %name reported the following error: %error.',
+    ),
+    'testDelete' => array(
+      'query' => 'DELETE FROM drupal_install_test',
+      'success' => 'DELETE',
+      'message' => 'Failed to delete a value from a test table on your %name database server. We tried deleting a value with the command %query and %name reported the following error: %error.',
+    ),
+    'testDrop' => array(
+      'query' => 'DROP TABLE drupal_install_test',
+      'success' => 'DELETE',
+      'message' => 'Failed to drop a test table from your %name database server. We tried dropping a table with the command %query and %name reported the following error %error.',
+    ),
+  );
+  public $error = FALSE;
+
+  protected function hasPdoDriver() {
+    return in_array($this->pdoDriver, PDO::getAvailableDrivers());
+  }
+
+  public function installable() {
+    return $this->hasPdoDriver();
+  }
+
+  abstract public function name();
+
+  public function test() {
+    $return = $this->testConnect();
+    if ($return === FALSE) {
+      return FALSE;
+    }
+    foreach ($this->tests as $test) {
+      $return = $this->runTestQuery($test['query'], $test['success'], $test['message'], !empty($tests['fatal']));
+      if ($return === FALSE) {
+        return FALSE;
       }
+    }
+    return $this->success;
+  }
+
+  /**
+   * Check if we can connect to the database.
+   *
+   * @return
+   *  FALSE on failure.
+   */
+  protected function testConnect() {
+    try {
+      db_set_active();
+      $this->success[] = 'CONNECT';
+    }
+    catch (Exception $e) {
+      drupal_set_message(st('Failed to connect to your %name database server. %name reports the following message: %error.<ul><li>Are you sure you have the correct username and password?</li><li>Are you sure that you have typed the correct database hostname?</li><li>Are you sure that the database server is running?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%error' => $e->getMessage(), 'name' => $this->name())), 'error');
+      return FALSE;
     }
   }
 
-  return $databases;
+  protected function runTestQuery($query, $success, $message, $fatal = FALSE) {
+    try {
+      db_query($query);
+      $this->success[] = $success;
+    }
+    catch (Exception $e) {
+      drupal_set_message(st($message, array('%query' => $query, '%error' => $e->getMessage(), '%name' => $this->name())), 'error');
+      $this->error = TRUE;
+      if ($fatal) {
+        return FALSE;
+      }
+    }
+  }
 }
 
 /**
@@ -269,7 +366,7 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
           // Write new value to settings.php in the following format:
           //    $'setting' = 'value'; // 'comment'
           $setting = $settings[$variable[1]];
-          $buffer .= '$' . $variable[1] . " = '" . $setting['value'] . "';" . (!empty($setting['comment']) ? ' // ' . $setting['comment'] . "\n" : "\n");
+          $buffer .= '$' . $variable[1] . " = " . var_export($setting['value'], TRUE) . ";" . (!empty($setting['comment']) ? ' // ' . $setting['comment'] . "\n" : "\n");
           unset($settings[$variable[1]]);
         }
         else {
@@ -285,7 +382,7 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
     // Add required settings that were missing from settings.php.
     foreach ($settings as $setting => $data) {
       if ($data['required']) {
-        $buffer .= "\$$setting = '" . $data['value'] . "';\n";
+        $buffer .= "\$$setting = " . var_export($data['value'], TRUE) . ";\n";
       }
     }
 
@@ -405,6 +502,27 @@ function _drupal_install_module($module) {
 }
 
 /**
+ * Manually include all files for the active database.
+ *
+ * Because we have no registry yet, we need to manually include the
+ * necessary database include files.
+ */
+function drupal_install_init_database() {
+  static $included = FALSE;
+  
+  if (!$included) {
+    $connection_info = Database::getConnectionInfo();
+    $driver = $connection_info['default']['driver'];
+    require_once('./includes/database/query.inc');
+    require_once('./includes/database/select.inc');
+    require_once('./includes/database/schema.inc');
+    foreach (glob('./includes/database/' . $driver . '/*.inc') as $include_file) {
+      require_once($include_file);
+    }
+  }
+}
+
+/**
  * Callback to install the system module.
  *
  * Separated from the installation of other modules so core system
@@ -413,11 +531,14 @@ function _drupal_install_module($module) {
 function drupal_install_system() {
   $system_path = dirname(drupal_get_filename('module', 'system', NULL));
   require_once './' . $system_path . '/system.install';
+  drupal_install_init_database();
   module_invoke('system', 'install');
+  
   $system_versions = drupal_get_schema_versions('system');
   $system_version = $system_versions ? max($system_versions) : SCHEMA_INSTALLED;
   db_query("INSERT INTO {system} (filename, name, type, owner, status, bootstrap, schema_version) VALUES('%s', '%s', '%s', '%s', %d, %d, %d)", $system_path . '/system.module', 'system', 'module', '', 1, 0, $system_version);
   // Now that we've installed things properly, bootstrap the full Drupal environment
+  drupal_install_init_database();
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   module_rebuild_cache();
 }

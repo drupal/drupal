@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.inc,v 1.2 2008/08/02 19:01:02 dries Exp $
+// $Id: registry.inc,v 1.3 2008/08/21 19:36:36 dries Exp $
 
 /**
  * @file
@@ -23,6 +23,20 @@
  * @see registry_rebuild.
  */
 function _registry_rebuild() {
+
+  // The registry serves as a central autoloader for all classes, including
+  // the database query builders.  However, the registry rebuild process
+  // requires write ability to the database, which means having access to the
+  // query builders that require the registry in order to be loaded.  That
+  // causes a fatal race condition.  Therefore we manually include the
+  // appropriate query builders for the currently active database before the
+  // registry rebuild process runs.
+  $connection_info = Database::getConnectionInfo();
+  $driver = $connection_info['default']['driver'];
+  require_once('./includes/database/query.inc');
+  require_once('./includes/database/select.inc');
+  require_once('./includes/database/' . $driver . '/query.inc');
+
   // Reset the resources cache.
   _registry_get_resource_name();
   // Get the list of files we are going to parse.
@@ -47,13 +61,13 @@ function _registry_rebuild() {
     else {
       // Flush the registry of resources in files that are no longer on disc
       // or don't belong to installed modules.
-      db_query("DELETE FROM {registry} WHERE filename = '%s'", $filename);
-      db_query("DELETE FROM {registry_file} WHERE filename = '%s'", $filename);
+      db_delete('registry')->condition('filename', $filename)->execute();
+      db_delete('registry_file')->condition('filename', $filename)->execute();
     }
   }
   _registry_parse_files($files);
 
-  cache_clear_all('*', 'cache_registry');
+  cache_clear_all('*', 'cache_registry', TRUE);
 }
 
 /**
@@ -61,10 +75,8 @@ function _registry_rebuild() {
  */
 function registry_get_parsed_files() {
   $files = array();
-  $res = db_query("SELECT * FROM {registry_file}");
-  while ($file = db_fetch_array($res)) {
-    $files[$file['filename']] = $file;
-  }
+  // We want the result as a keyed array.
+  $files = db_query("SELECT * FROM {registry_file}")->fetchAllAssoc('filename', PDO::FETCH_ASSOC);
   return $files;
 }
 
@@ -85,12 +97,10 @@ function _registry_parse_files($files) {
       // don't make it through this rebuild, the next run will reparse the file.
       _registry_parse_file($filename, $contents);
       $file['md5'] = $md5;
-      if ($new_file) {
-        db_query("INSERT INTO {registry_file} (md5, filename) VALUES ('%s', '%s')", $md5, $filename);
-      }
-      else {
-        db_query("UPDATE {registry_file} SET md5 = '%s' WHERE filename = '%s'", $md5, $filename);
-      }
+      db_merge('registry_file')
+        ->key(array('filename' => $filename))
+        ->fields(array('md5' => $md5))
+        ->execute();
     }
   }
 }
@@ -106,14 +116,24 @@ function _registry_parse_files($files) {
 function _registry_parse_file($filename, $contents) {
   static $map = array(T_FUNCTION => 'function', T_CLASS => 'class', T_INTERFACE => 'interface');
   // Delete registry entries for this file, so we can insert the new resources.
-  db_query("DELETE FROM {registry} WHERE filename = '%s'", $filename);
+  db_delete('registry')->condition('filename', $filename)->execute();
   $tokens = token_get_all($contents);
   while ($token = next($tokens)) {
     // Ignore all tokens except for those we are specifically saving.
     if (is_array($token) && isset($map[$token[0]])) {
       $type = $map[$token[0]];
       if ($resource_name = _registry_get_resource_name($tokens, $type)) {
-        db_query("INSERT INTO {registry} (name, type, filename) VALUES ('%s', '%s', '%s')", $resource_name, $type, $filename);
+        // Because some systems, such as cache, currently use duplicate function
+        // names in separate files an insert query cannot be used here as it
+        // would cause a key constraint violation.  Instead we use a merge query.
+        // In practice this should not be an issue as those systems all initialize
+        // pre-registry and therefore are never loaded by the registry so it
+        // doesn't matter if those records in the registry table point to one
+        // filename instead of another.
+        // TODO: Convert this back to an insert query after all duplicate
+        // function names have been purged from Drupal.
+        db_merge('registry')->key(array('name' => $resource_name, 'type' => $type))->fields(array('filename' => $filename))->execute();
+
         // We skip the body because classes may contain functions.
         _registry_skip_body($tokens);
       }
