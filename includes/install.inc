@@ -208,25 +208,24 @@ function drupal_detect_baseurl($file = 'install.php') {
 function drupal_detect_database_types() {
   $databases = array();
 
-  foreach (scandir('./includes/database') as $driver) {
-    $driver_dir = './includes/database/' . $driver;
-    if (!is_dir($driver_dir) || strpos($driver, '.') === 0) {
-      continue;
-    }
-    
-    $drivers[] = $driver;
-    
-    // We of course cannot rely on the registry at this point.
-    include_once($driver_dir . '/database.inc');
-    include_once($install_file = $driver_dir . '/install.inc');
-    
+  // We define a driver as a directory in /includes/database that in turn
+  // contains a database.inc file.  That allows us to drop in additional drivers
+  // without modifying the installer.
+  // Because we have no registry yet, we need to also include the install.inc
+  // file for the driver explicitly.
+  foreach (glob('./includes/database/*/{install,database}.inc', GLOB_BRACE) as $file) {
+    include_once($file);
+    $drivers[max(explode('/', $file, -1))] = $file;
+  }
+
+  foreach ($drivers as $driver => $file) {
     $class = 'DatabaseInstaller_' . $driver;
     $installer = new $class();
     if ($installer->installable()) {
       $databases[$driver] = $installer->name();
     }
   }
-  
+
   return $databases;
 }
 
