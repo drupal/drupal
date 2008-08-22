@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.test,v 1.5 2008/08/13 06:42:04 dries Exp $
+// $Id: simpletest.test,v 1.6 2008/08/22 12:35:55 dries Exp $
 
 class SimpleTestTestCase extends DrupalWebTestCase {
   /**
@@ -190,7 +190,7 @@ class SimpleTestTestCase extends DrupalWebTestCase {
    * @return fieldset containing the results for group this test is in.
    */
   function getResultFieldSet() {
-    $fieldsets = $this->elements->xpath('//fieldset');
+    $fieldsets = $this->xpath('//fieldset');
     $info = $this->getInfo();
     foreach ($fieldsets as $fieldset) {
       if ($fieldset->legend == $info['group']) {

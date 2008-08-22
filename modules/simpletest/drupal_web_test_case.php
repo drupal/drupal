@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.31 2008/08/21 19:36:38 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.32 2008/08/22 12:35:55 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -876,7 +876,7 @@ class DrupalWebTestCase {
     if ($this->parse()) {
       $edit_save = $edit;
       // Let's iterate over all the forms.
-      $forms = $this->elements->xpath('//form');
+      $forms = $this->xpath('//form');
       foreach ($forms as $form) {
         // We try to set the fields of this form as specified in $edit.
         $edit = $edit_save;
@@ -1068,6 +1068,24 @@ class DrupalWebTestCase {
   }
 
   /**
+   * Peform an xpath search on the contents of the internal browser. The search
+   * is relative to the root element (HTML tag normally) of the page.
+   *
+   * @param $xpath
+   *   The xpath string to use in the search.
+   * @return
+   *   The return value of the xpath search. For details on the xpath string
+   *   format and return values see the SimpleXML documentation.
+   *   http://us.php.net/manual/function.simplexml-element-xpath.php
+   */
+  public function xpath($xpath) {
+    if ($this->parse()) {
+      return $this->elements->xpath($xpath);
+    }
+    return FALSE;
+  }
+
+  /**
    * Get all option elements, including nested options, in a select.
    *
    * @param $element
@@ -1108,15 +1126,13 @@ class DrupalWebTestCase {
   function clickLink($label, $index = 0) {
     $url_before = $this->getUrl();
     $ret = FALSE;
-    if ($this->parse()) {
-      $urls = $this->elements->xpath('//a[text()="' . $label . '"]');
-      if (isset($urls[$index])) {
-        $url_target = $this->getAbsoluteUrl($urls[$index]['href']);
-        $curl_options = array(CURLOPT_URL => $url_target);
-        $ret = $this->curlExec($curl_options);
-      }
-      $this->assertTrue($ret, t('Clicked link !label (!url_target) from !url_before', array('!label' => $label, '!url_target' => $url_target, '!url_before' => $url_before)), t('Browser'));
+    $urls = $this->xpath('//a[text()="' . $label . '"]');
+    if (isset($urls[$index])) {
+      $url_target = $this->getAbsoluteUrl($urls[$index]['href']);
+      $curl_options = array(CURLOPT_URL => $url_target);
+      $ret = $this->curlExec($curl_options);
     }
+    $this->assertTrue($ret, t('Clicked link !label (!url_target) from !url_before', array('!label' => $label, '!url_target' => $url_target, '!url_before' => $url_before)), t('Browser'));
     return $ret;
   }
 
@@ -1322,7 +1338,7 @@ class DrupalWebTestCase {
    *   TRUE on pass, FALSE on fail.
    */
   function assertTitle($title, $message, $group = 'Other') {
-    return $this->_assert($this->parse() && $this->elements->xpath('//title[text()="' . $title . '"]'), $message, $group);
+    return $this->_assert($this->xpath('//title[text()="' . $title . '"]') !== FALSE, $message, $group);
   }
 
   /**
@@ -1340,18 +1356,17 @@ class DrupalWebTestCase {
    *   TRUE on pass, FALSE on fail.
    */
   function assertFieldByXPath($xpath, $value, $message, $group = 'Other') {
-    $fields = array();
-    if ($this->parse()) {
-      $fields = $this->elements->xpath($xpath);
-    }
+    $fields = $this->xpath($xpath);
 
     // If value specified then check array for match.
     $found = TRUE;
     if ($value) {
       $found = FALSE;
-      foreach ($fields as $field) {
-        if ($field['value'] == $value) {
-          $found = TRUE;
+      if ($fields) {
+        foreach ($fields as $field) {
+          if ($field['value'] == $value) {
+            $found = TRUE;
+          }
         }
       }
     }
@@ -1373,18 +1388,17 @@ class DrupalWebTestCase {
    *   TRUE on pass, FALSE on fail.
    */
   function assertNoFieldByXPath($xpath, $value, $message, $group = 'Other') {
-    $fields = array();
-    if ($this->parse()) {
-      $fields = $this->elements->xpath($xpath);
-    }
+    $fields = $this->xpath($xpath);
 
     // If value specified then check array for match.
     $found = TRUE;
     if ($value) {
       $found = FALSE;
-      foreach ($fields as $field) {
-        if ($field['value'] == $value) {
-          $found = TRUE;
+      if ($fields) {
+        foreach ($fields as $field) {
+          if ($field['value'] == $value) {
+            $found = TRUE;
+          }
         }
       }
     }
