@@ -283,7 +283,7 @@ class AdminOverviewTestCase extends DrupalWebTestCase {
     if ($this->parse()) {
       $found = 0;
       $extra = 0;
-      $divs = $this->elements->xpath("//div[@class='admin-panel']");
+      $divs = $this->xpath("//div[@class='admin-panel']");
       foreach ($divs as $panel) {
         if (in_array(trim($panel->h3), $panels)) {
           $found++;

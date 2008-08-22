@@ -190,7 +190,7 @@ class SimpleTestTestCase extends DrupalWebTestCase {
    * @return fieldset containing the results for group this test is in.
    */
   function getResultFieldSet() {
-    $fieldsets = $this->elements->xpath('//fieldset');
+    $fieldsets = $this->xpath('//fieldset');
     $info = $this->getInfo();
     foreach ($fieldsets as $fieldset) {
       if ($fieldset->legend == $info['group']) {
