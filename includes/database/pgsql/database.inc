@@ -14,7 +14,6 @@
 class DatabaseConnection_pgsql extends DatabaseConnection {
 
   protected $transactionSupport;
-  //protected $lastInsertInfo = NULL;
 
   public function __construct(Array $connection_options = array()) {
 

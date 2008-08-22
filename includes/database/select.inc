@@ -44,13 +44,6 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
   protected $tables = array();
 
   /**
-   * The values to insert into the prepared statement of this query.
-   *
-   * @var array
-   */
-  //protected $arguments = array();
-
-  /**
    * The fields by which to order this query.
    *
    * This is an associative array.  The keys are the fields to order, and the value
