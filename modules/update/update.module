@@ -123,18 +123,12 @@ function update_menu() {
     'access arguments' => array('administer site configuration'),
     'weight' => 10,
   );
-  $items['admin/reports/updates/list'] = array(
-    'title' => 'List',
-    'page callback' => 'update_status',
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/reports/updates/settings'] = array(
-    'title' => 'Settings',
+  $items['admin/settings/updates'] = array(
+    'title' => 'Updates',
+    'description' => 'Change frequency of checks for available updates to your installed modules and themes, and how you would like to be notified.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('update_settings'),
     'access arguments' => array('administer site configuration'),
-    'type' => MENU_LOCAL_TASK,
   );
   $items['admin/reports/updates/check'] = array(
     'title' => 'Manual update check',
