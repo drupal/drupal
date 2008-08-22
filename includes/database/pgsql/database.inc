@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.1 2008/08/21 19:36:36 dries Exp $
+// $Id: database.inc,v 1.2 2008/08/22 12:46:25 dries Exp $
 
 /**
  * @file
@@ -14,7 +14,6 @@
 class DatabaseConnection_pgsql extends DatabaseConnection {
 
   protected $transactionSupport;
-  //protected $lastInsertInfo = NULL;
 
   public function __construct(Array $connection_options = array()) {
 

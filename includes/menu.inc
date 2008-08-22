@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.283 2008/08/21 19:36:36 dries Exp $
+// $Id: menu.inc,v 1.284 2008/08/22 12:46:24 dries Exp $
 
 /**
  * @file
@@ -2211,10 +2211,8 @@ function _menu_link_move_children($item, $existing_item) {
 function _menu_update_parental_status($item, $exclude = FALSE) {
   // If plid == 0, there is nothing to update.
   if ($item['plid']) {
-    // We may want to exclude the passed link as a possible child.
-    //$where = $exclude ? " AND mlid != %d" : '';
     // Check if at least one visible child exists in the table.
-     $query = db_select('menu_links', 'm');
+    $query = db_select('menu_links', 'm');
     $query->addField('m', 'mlid');
     $query->condition('menu_name', $item['menu_name']);
     $query->condition('plid', $item['plid']);
@@ -2225,7 +2223,6 @@ function _menu_update_parental_status($item, $exclude = FALSE) {
     }
 
     $parent_has_children = ((bool) $query->execute()->fetchField()) ? 1 : 0;
-    //$parent_has_children = (bool)db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE menu_name = '%s' AND plid = %d AND hidden = 0" . $where, $item['menu_name'], $item['plid'], $item['mlid'], 0, 1));
     db_query("UPDATE {menu_links} SET has_children = %d WHERE mlid = %d", $parent_has_children, $item['plid']);
 
   }

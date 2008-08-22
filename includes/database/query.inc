@@ -630,7 +630,7 @@ class MergeQuery extends Query {
     // this method with database-specific logic, so this function serves only
     // as a fallback to aid developers of new drivers.
     
-    //Wrap multiple queries in a transaction, if the database supports it.
+    // Wrap multiple queries in a transaction, if the database supports it.
     $transaction = $this->connection->startTransaction();
     
     // Manually check if the record already exists.

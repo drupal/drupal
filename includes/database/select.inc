@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.1 2008/08/21 19:36:36 dries Exp $
+// $Id: select.inc,v 1.2 2008/08/22 12:46:25 dries Exp $
 
 /**
  * @ingroup database
@@ -42,13 +42,6 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
    * @var array
    */
   protected $tables = array();
-
-  /**
-   * The values to insert into the prepared statement of this query.
-   *
-   * @var array
-   */
-  //protected $arguments = array();
 
   /**
    * The fields by which to order this query.
