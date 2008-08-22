@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.32 2008/08/22 12:35:55 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.33 2008/08/22 12:40:32 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -401,8 +401,13 @@ class DrupalWebTestCase {
     $type = $forced + $settings + $defaults;
     $type = (object)$type;
 
-    node_type_save($type);
+    $saved_type = node_type_save($type);
     node_types_rebuild();
+
+    $this->assertEqual($saved_type, SAVED_NEW, t('Created content type %type.', array('%type' => $type->type)));
+    
+    // Reset permissions so that permissions for this content type are available.
+    $this->checkPermissions(array(), TRUE);
 
     return $type;
   }
