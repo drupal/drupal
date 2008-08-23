@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.260 2008/08/21 19:36:38 dries Exp $
+// $Id: system.install,v 1.261 2008/08/23 08:15:37 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -765,15 +765,13 @@ function system_schema() {
       ),
       'load_functions' => array(
         'description' => t('A serialized array of function names (like node_load) to be called to load an object corresponding to a part of the current path.'),
-        'type' => 'varchar',
-        'length' => 255,
+        'type' => 'text',
         'not null' => TRUE,
         'default' => '',
       ),
       'to_arg_functions' => array(
         'description' => t('A serialized array of function names (like user_uid_optional_to_arg) to be called to replace a part of the router path with another string.'),
-        'type' => 'varchar',
-        'length' => 255,
+        'type' => 'text',
         'not null' => TRUE,
         'default' => '',
       ),
@@ -3037,6 +3035,17 @@ function system_update_7009() {
   $ret = array();
   $ret[] = update_sql("UPDATE {variable} SET name = 'menu_main_menu_source' WHERE name = 'menu_primary_links_source'");
   $ret[] = update_sql("UPDATE {variable} SET name = 'menu_main_menu_source' WHERE name = 'menu_primary_links_source'");
+
+  return $ret;
+}
+
+/**
+ * Increase the size of the 'load_functions' and 'to_arg_functions' fields in table 'menu_router'.
+ */
+function system_update_7010() {
+  $ret = array();
+  db_change_field($ret, 'menu_router', 'load_functions', 'load_functions', array('type' => 'text', 'not null' => TRUE, 'default' => ''));
+  db_change_field($ret, 'menu_router', 'to_arg_functions', 'to_arg_functions', array('type' => 'text', 'not null' => TRUE, 'default' => '',));
 
   return $ret;
 }
