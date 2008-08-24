@@ -290,6 +290,15 @@ function conf_init() {
       $cookie_domain = check_plain($_SERVER['HTTP_HOST']);
     }
   }
+  // To prevent session cookies from being hijacked, a user can configure the
+  // SSL version of their website to only transfer session cookies via SSL by
+  // using PHP's session.cookie_secure setting. The browser will then use two
+  // separate session cookies for the HTTPS and HTTP versions of the site. So we
+  // must use different session identifiers for HTTPS and HTTP to prevent a
+  // cookie collision.
+  if (ini_get('session.cookie_secure')) {
+    $session_name .= 'SSL';
+  }
   // Strip leading periods, www., and port numbers from cookie domain.
   $cookie_domain = ltrim($cookie_domain, '.');
   if (strpos($cookie_domain, 'www.') === 0) {
