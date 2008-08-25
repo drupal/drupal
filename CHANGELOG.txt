@@ -5,13 +5,13 @@ Drupal 7.0, xxxx-xx-xx (development version)
 - Database:
     * Fully rewritten database layer utilizing PHP 5's PDO abstraction layer.
     * Added query builders for INSERT, UPDATE, DELETE, MERGE, and SELECT queries.
-    * Support for Master/slave replication, transactions, multi-insert queries,
+    * Support for master/slave replication, transactions, multi-insert queries,
       delayed inserts, and other features.
 - Security:
     * Protected cron.php -- cron will only run if the proper key is provided.
-    * Changed to much stronger password hashes that are also compatible with the
+    * Implemented much stronger password hashes that are also compatible with the
       Portable PHP password hashing framework.
-    * Implemented a pluggable password hashing API that supports alternative
+    * Implemented a pluggable password hashing API supporting alternative
       hashing and authentication schemes.
 - Usability:
     * Implemented drag-and-drop positioning for input format listings.
@@ -20,13 +20,13 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Removed comment controls for users.
     * Removed display order settings for comment module. Comment display
       order can now be customised using the Views module.
-    * Added more features to the default install profile, and a new
-      slimmed down install profile for developers.
-    * Image toolkits are added by modules instead of being copied to
-      the includes directory.
+    * Added additional features to the default install profile, and implemented
+      a "slimmed down" install profile designed for developers.
+    * Image toolkits are now provided by modules (rather than requiring a manual
+      file copy to the includes directory).
 - News aggregator:
     * Added OPML import functionality for RSS feeds.
-    * Add an option not to generate blocks for RSS feeds.
+    * Optionally, RSS feeds may be configured to not automatically generate feed blocks.
 - Search:
     * Added support for language-aware searches.
 - Testing:
@@ -35,17 +35,17 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Contributed modules with similar functionality are available.
 - Refactored the "access rules" component of user module:
     * The user module now provides a simple interface for blocking single
-      IP addresses. Previous user module functionality for restricting certain
-      e-mail addresses and usernames are available as a contributed module.
+      IP addresses. The previous functionality in the user module for restricting
+      certain e-mail addresses and usernames is now available as a contributed module.
       Further, IP address range blocking is no longer supported and should be
       implemented at the operating system level.
 - Removed throttle module:
     * Alternative methods for improving performance are available in other core and
       contributed modules.
 - Added code registry:
-    * Modules now declare their includable files via their .info file.  That
-      allows Drupal to scan files when a module is enabled and then lazy-load
-      code as needed, resulting in significant performance and memory improvements.
+    * Using the registry, modules declare their includable files via their .info file,
+      allowing Drupal to lazy-load code as needed, resulting in significant performance
+      and memory improvements.
 - Theme system:
     * Converted the 'bluemarine' theme to a tableless layout.
 
