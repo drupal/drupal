@@ -215,7 +215,8 @@ function drupal_detect_database_types() {
   // file for the driver explicitly.
   foreach (glob('./includes/database/*/{install,database}.inc', GLOB_BRACE) as $file) {
     include_once($file);
-    $drivers[max(explode('/', $file, -1))] = $file;
+    $dir_parts = explode('/', $file, -1);
+    $drivers[end($dir_parts)] = $file;
   }
 
   foreach ($drivers as $driver => $file) {
