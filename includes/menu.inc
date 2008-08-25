@@ -2052,7 +2052,7 @@ function _menu_clear_page_cache() {
  */
 function _menu_set_expanded_menus() {
   $names = array();
-  $result = db_query("SELECT menu_name FROM {menu_links} WHERE expanded != 0 GROUP BY menu_name");
+  $result = db_query("SELECT menu_name FROM {menu_links} WHERE expanded <> 0 GROUP BY menu_name");
   while ($n = db_fetch_array($result)) {
     $names[] = $n['menu_name'];
   }
