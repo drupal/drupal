@@ -234,7 +234,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
       '#weight' => 1,
     );
 
-    // Get language negotiation settings.  
+    // Get language negotiation settings.
     $mode = variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE);
     $form['locale']['language'] = array(
       '#type' => (count($names) <= 5 ? 'radios' : 'select'),
@@ -261,7 +261,7 @@ function locale_form_alter(&$form, $form_state, $form_id) {
         '#options' => array('' => t('All languages')) + locale_language_list('name'),
         '#default_value' => $form['language']['#value'],
         '#weight' => -10,
-        '#description' => t('A path alias set for a specific language will always be used when displaying this page in that language, and takes precedence over path aliases set for <am>All languages</em>.'),
+        '#description' => t('A path alias set for a specific language will always be used when displaying this page in that language, and takes precedence over path aliases set for <em>All languages</em>.'),
       );
       break;
 
@@ -337,7 +337,7 @@ function locale($string = NULL, $langcode = NULL, $reset = FALSE) {
     // Reset in-memory cache.
     $locale_t = NULL;
   }
-  
+
   if (!isset($string)) {
     // Return all cached strings if no string was specified
     return $locale_t;
