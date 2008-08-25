@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.65 2008/08/22 12:43:53 dries Exp $
+// $Id: install.inc,v 1.66 2008/08/25 07:47:12 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -215,7 +215,8 @@ function drupal_detect_database_types() {
   // file for the driver explicitly.
   foreach (glob('./includes/database/*/{install,database}.inc', GLOB_BRACE) as $file) {
     include_once($file);
-    $drivers[max(explode('/', $file, -1))] = $file;
+    $dir_parts = explode('/', $file, -1);
+    $drivers[end($dir_parts)] = $file;
   }
 
   foreach ($drivers as $driver => $file) {
