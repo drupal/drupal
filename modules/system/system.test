@@ -320,3 +320,65 @@ class AdminMetaTagTestCase extends DrupalWebTestCase {
     $this->assertRaw($string, t('Fingerprinting meta tag generated correctly.'), t('System'));
   }
 }
+
+class PageNotFoundTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+  
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('404 functionality'),
+      'description' => t("Tests page not found functionality, including custom 404 pages."),
+      'group' => t('System')
+    );
+  }
+  
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp();
+
+    // Create an administrative user.
+    $this->admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->drupalLogin($this->admin_user);
+  }
+
+  function testPageNotFound() {
+    $this->drupalGet($this->randomName(10));
+    $this->assertText(t('Page not found'), t('Found the default 404 page'));
+    
+    $edit = array(
+      'title' => $this->randomName(10),
+      'body' => $this->randomName(100)
+    );
+    $node = $this->drupalCreateNode($edit);
+
+    // Use a custom 404 page.
+    $this->drupalPost('admin/settings/error-reporting', array('site_404' => 'node/' . $node->nid), t('Save configuration'));
+    
+    $this->drupalGet($this->randomName(10));
+    $this->assertText($node->title, t('Found the custom 404 page'));
+    
+    // Logout and check that the user login block is not shown on custom 404 pages.
+    $this->drupalLogout();
+    
+    $this->drupalGet($this->randomName(10));
+    $this->assertText($node->title, t('Found the custom 404 page'));
+    $this->assertNoText(t('User login'), t('Blocks are not shown on the custom 404 page'));
+    
+    // Log back in and remove the custom 404 page.
+    $this->drupalLogin($this->admin_user);
+    $this->drupalPost('admin/settings/error-reporting', array(), t('Reset to defaults'));
+
+    // Logout and check that the user login block is not shown on default 404 pages.
+    $this->drupalLogout();
+    
+    $this->drupalGet($this->randomName(10));
+    $this->assertText(t('Page not found'), t('Found the default 404 page'));
+    $this->assertNoText(t('User login'), t('Blocks are not shown on the default 404 page'));
+  }
+}
+
