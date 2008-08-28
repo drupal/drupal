@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.126 2008/08/21 19:36:35 dries Exp $
+// $Id: install.php,v 1.127 2008/08/28 08:40:32 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -194,7 +194,8 @@ function install_change_settings($profile = 'default', $install_locale = '') {
 
   $conf_path = './' . conf_path(FALSE, TRUE);
   $settings_file = $conf_path . '/settings.php';
-  $database = $databases['default']['default'];
+  $database = isset($databases['default']['default']) ? $databases['default']['default'] : array();
+
   // We always need this because we want to run form_get_errors.
   include_once './includes/form.inc';
   install_task_list('database');
@@ -237,7 +238,7 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
         '#title' => st('Database driver'),
         '#required' => TRUE,
         '#options' => $drivers,
-        '#default_value' => !empty($database['driver']) ? $database['driver'] : current($drivers),
+        '#default_value' => !empty($database['driver']) ? $database['driver'] : current(array_keys($drivers)),
         '#description' => st('The type of database your @drupal data will be stored in.', array('@drupal' => drupal_install_profile_name())),
       );
       $database_description  = st('The name of the database your @drupal data will be stored in. It must exist on your server before @drupal can be installed.', array('@drupal' => drupal_install_profile_name()));
