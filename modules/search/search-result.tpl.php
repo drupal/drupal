@@ -1,5 +1,5 @@
 <?php
-// $Id: search-result.tpl.php,v 1.1 2007/10/31 18:06:38 dries Exp $
+// $Id: search-result.tpl.php,v 1.2 2008/08/28 08:21:27 dries Exp $
 
 /**
  * @file search-result.tpl.php
@@ -15,7 +15,7 @@
  * - $snippet: A small preview of the result. Does not apply to user searches.
  * - $info: String of all the meta information ready for print. Does not apply
  *   to user searches.
- * - $info_split: Contains same data as $info split into a keyed array.
+ * - $info_split: Contains same data as $info, split into a keyed array.
  * - $type: The type of search, e.g., "node" or "user".
  *
  * Default keys within $info_split:
