@@ -15,7 +15,7 @@
  * - $snippet: A small preview of the result. Does not apply to user searches.
  * - $info: String of all the meta information ready for print. Does not apply
  *   to user searches.
- * - $info_split: Contains same data as $info split into a keyed array.
+ * - $info_split: Contains same data as $info, split into a keyed array.
  * - $type: The type of search, e.g., "node" or "user".
  *
  * Default keys within $info_split:
