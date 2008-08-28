@@ -41,7 +41,7 @@ function update_schema() {
 }
 
 /**
- * Private helper to clear out stale variables from update_status 5.x contrib. 
+ * Private helper to clear out stale variables from update_status 5.x contrib.
  *
  * @see update_install()
  * @see update_update_6000()
