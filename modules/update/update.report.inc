@@ -109,13 +109,13 @@ function theme_update_report($data) {
     $row .= "<div class=\"versions\">\n";
 
     if (isset($project['recommended'])) {
-      if ($project['status'] != UPDATE_CURRENT || $project['existing_version'] != $project['recommended']) {
+      if ($project['status'] != UPDATE_CURRENT || $project['existing_version'] !== $project['recommended']) {
 
         // First, figure out what to recommend.
         // If there's only 1 security update and it has the same version we're
         // recommending, give it the same CSS class as if it was recommended,
         // but don't print out a separate "Recommended" line for this project.
-        if (!empty($project['security updates']) && count($project['security updates']) == 1 && $project['security updates'][0]['version'] == $project['recommended']) {
+        if (!empty($project['security updates']) && count($project['security updates']) == 1 && $project['security updates'][0]['version'] === $project['recommended']) {
           $security_class = ' version-recommended version-recommended-strong';
         }
         else {
@@ -123,14 +123,14 @@ function theme_update_report($data) {
           $version_class = 'version-recommended';
           // Apply an extra class if we're displaying both a recommended
           // version and anything else for an extra visual hint.
-          if ($project['recommended'] != $project['latest_version']
+          if ($project['recommended'] !== $project['latest_version']
               || !empty($project['also'])
               || ($project['install_type'] == 'dev'
                  && isset($project['dev_version'])
-                 && $project['latest_version'] != $project['dev_version']
-                 && $project['recommended'] != $project['dev_version'])
+                 && $project['latest_version'] !== $project['dev_version']
+                 && $project['recommended'] !== $project['dev_version'])
               || (isset($project['security updates'][0])
-                 && $project['recommended'] != $project['security updates'][0])
+                 && $project['recommended'] !== $project['security updates'][0])
               ) {
             $version_class .= ' version-recommended-strong';
           }
@@ -145,13 +145,13 @@ function theme_update_report($data) {
         }
       }
 
-      if ($project['recommended'] != $project['latest_version']) {
+      if ($project['recommended'] !== $project['latest_version']) {
         $row .= theme('update_version', $project['releases'][$project['latest_version']], t('Latest version:'), 'version-latest');
       }
       if ($project['install_type'] == 'dev'
           && $project['status'] != UPDATE_CURRENT
           && isset($project['dev_version'])
-          && $project['recommended'] != $project['dev_version']) {
+          && $project['recommended'] !== $project['dev_version']) {
         $row .= theme('update_version', $project['releases'][$project['dev_version']], t('Development version:'), 'version-latest');
       }
     }
