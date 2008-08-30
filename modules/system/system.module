@@ -39,7 +39,7 @@ define('DRUPAL_MINIMUM_PGSQL',  '7.4');
 /**
  * Maximum age of temporary files in seconds.
  */
-define('DRUPAL_MAXIMUM_TEMP_FILE_AGE', 1440);
+define('DRUPAL_MAXIMUM_TEMP_FILE_AGE', 21600);
 
 /**
  * Implementation of hook_help().
