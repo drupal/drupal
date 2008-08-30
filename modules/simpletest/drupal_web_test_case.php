@@ -1107,7 +1107,9 @@ class DrupalWebTestCase {
 
     // Search option group children.
     if (isset($element->optgroup)) {
-      $options = array_merge($options, $this->getAllOptions($element->optgroup));
+      foreach ($element->optgroup as $group) {
+        $options = array_merge($options, $this->getAllOptions($group));
+      }
     }
     return $options;
   }
