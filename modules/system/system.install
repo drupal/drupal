@@ -767,13 +767,11 @@ function system_schema() {
         'description' => t('A serialized array of function names (like node_load) to be called to load an object corresponding to a part of the current path.'),
         'type' => 'text',
         'not null' => TRUE,
-        'default' => '',
       ),
       'to_arg_functions' => array(
         'description' => t('A serialized array of function names (like user_uid_optional_to_arg) to be called to replace a part of the router path with another string.'),
         'type' => 'text',
         'not null' => TRUE,
-        'default' => '',
       ),
       'access_callback' => array(
         'description' => t('The callback which determines the access to this router path. Defaults to user_access.'),
