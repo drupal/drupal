@@ -372,9 +372,9 @@ class PageViewTestCase extends DrupalWebTestCase {
       'name' => t('Unauthorized node view'),
       'description' => t('Creates a node of type page and then an unpermissioned user attempts to edit the node, '
         . 'before tries with an anonymous user. Asserts failure.'
-        . '</ br>WARNING: This is based on default registered user permissions (no administer nodes).')
-      , 'group' => t('Node'),
-  );
+        . '</ br>WARNING: This is based on default registered user permissions (no administer nodes).'),
+      'group' => t('Node'),
+    );
   }
 
   function testPageView() {
@@ -397,5 +397,40 @@ class PageViewTestCase extends DrupalWebTestCase {
     $test_user = $this->drupalCreateUser(array('administer nodes'));
     //TODO: Add edit page attempt with administer nodes user
     node_delete($node->nid);
+  }
+}
+
+class NodeTitleXSSTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+     return array(
+      'name' => t('XSS attacks in node title'),
+      'description' => t('Create a node with dangerous tags in its title, and make sure that they are escaped.'),
+      'group' => t('Node'),
+    );
+  }
+
+  function testNodeTitleXSS() {
+    // Prepare a user to do the stuff.
+    $web_user = $this->drupalCreateUser(array('create page content', 'edit any page content'));
+    $this->drupalLogin($web_user);
+
+    $xss = '<script>alert("xss")</script>';
+
+    $edit = array(
+      'title' => $xss . $this->randomName(),
+    );
+    $this->drupalPost('node/add/page', $edit, t('Preview'));
+    $this->assertNoRaw($xss, t('Harmful tags are escaped when previewing a node.'));
+
+    $node = $this->drupalCreateNode($edit);
+
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertNoRaw($xss, t('Harmful tags are escaped when viewing a node.'));
+
+    $this->drupalGet('node/' . $node->nid . '/edit');
+    $this->assertNoRaw($xss, t('Harmful tags are escaped when editing a node.'));
   }
 }
