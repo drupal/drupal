@@ -2091,7 +2091,7 @@ function theme_system_modules_fieldset($form) {
     $row = array();
     unset($module['enable']['#title']);
     $row[] = array('class' => 'checkbox', 'data' => drupal_render($module['enable']));
-    $row[] = '<strong>'. drupal_render($module['name']) .'</strong>';
+    $row[] = '<label for="' . $module['enable']['#id'] . '"><strong>' . drupal_render($module['name']) . '</strong></label>';
     $row[] = drupal_render($module['version']);
     $description = '';
     // If we have help, it becomes the first part
