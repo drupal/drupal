@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.34 2008/08/23 07:42:54 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.35 2008/08/30 09:27:21 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -1107,7 +1107,9 @@ class DrupalWebTestCase {
 
     // Search option group children.
     if (isset($element->optgroup)) {
-      $options = array_merge($options, $this->getAllOptions($element->optgroup));
+      foreach ($element->optgroup as $group) {
+        $options = array_merge($options, $this->getAllOptions($group));
+      }
     }
     return $options;
   }
