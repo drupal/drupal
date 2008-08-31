@@ -166,7 +166,7 @@ function filter_filter_tips($delta, $format, $long = FALSE) {
   global $base_url;
   switch ($delta) {
     case 0:
-      if ($allowed_html = variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>')) {
+      if ($allowed_html = variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd>')) {
         switch ($long) {
           case 0:
             return t('Allowed HTML tags: @tags', array('@tags' => $allowed_html));
@@ -660,7 +660,7 @@ function _filter_html_settings($format) {
   $form['filter_html']["allowed_html_$format"] = array(
     '#type' => 'textfield',
     '#title' => t('Allowed HTML tags'),
-    '#default_value' => variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>'),
+    '#default_value' => variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd>'),
     '#size' => 64,
     '#maxlength' => 1024,
     '#description' => t('Specify a list of tags which should not be stripped. (Note that JavaScript event attributes are always stripped.)'),
@@ -684,7 +684,7 @@ function _filter_html_settings($format) {
  * HTML filter. Provides filtering of input into accepted HTML.
  */
 function _filter_html($text, $format) {
-  $allowed_tags = preg_split('/\s+|<|>/', variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>'), -1, PREG_SPLIT_NO_EMPTY);
+  $allowed_tags = preg_split('/\s+|<|>/', variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd>'), -1, PREG_SPLIT_NO_EMPTY);
   $text = filter_xss($text, $allowed_tags);
 
   if (variable_get("filter_html_nofollow_$format", FALSE)) {
@@ -938,7 +938,7 @@ function filter_xss_admin($string) {
  * @param $allowed_tags
  *   An array of allowed tags.
  */
-function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd')) {
+function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd')) {
   // Only operate on valid UTF-8 strings. This is necessary to prevent cross
   // site scripting issues on Internet Explorer 6.
   if (!drupal_validate_utf8($string)) {
