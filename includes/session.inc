@@ -29,7 +29,7 @@ function sess_read($key) {
   }
 
   // Otherwise, if the session is still active, we have a record of the client's session in the database.
-  $user = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid", array(':sid' => $key))->fetch();
+  $user = db_fetch_object(db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '%s'", $key));
 
   // We found the client's session record and they are an authenticated user
   if ($user && $user->uid > 0) {
@@ -39,7 +39,7 @@ function sess_read($key) {
     // Add roles element to $user
     $user->roles = array();
     $user->roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user';
-    $result = db_query("SELECT r.rid, r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = :uid", array(':uid' => $user->uid));
+    $result = db_query("SELECT r.rid, r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d", $user->uid);
     while ($role = db_fetch_object($result)) {
       $user->roles[$role->rid] = $role->name;
     }
@@ -65,20 +65,27 @@ function sess_write($key, $value) {
     return TRUE;
   }
 
-  $fields = array(
-    'uid' => $user->uid,
-    'cache' => isset($user->cache) ? $user->cache : 0,
-    'hostname' => ip_address(),
-    'session' => $value,
-    'timestamp' => time(),
-  );
+  $result = db_result(db_query("SELECT COUNT(*) FROM {sessions} WHERE sid = '%s'", $key));
 
-  db_merge('sessions')->key(array('sid' => $key))->fields($fields)->execute();
+  if (!$result) {
+    // Only save session data when when the browser sends a cookie. This keeps
+    // crawlers out of session table. This reduces memory and server load,
+    // and gives more useful statistics. We can't eliminate anonymous session
+    // table rows without breaking "Who's Online" block.
+    if ($user->uid || $value || count($_COOKIE)) {
+      db_query("INSERT INTO {sessions} (sid, uid, cache, hostname, session, timestamp) VALUES ('%s', %d, %d, '%s', '%s', %d)", $key, $user->uid, isset($user->cache) ? $user->cache : 0, ip_address(), $value, time());
+    }
+  }
+  else {
+    db_query("UPDATE {sessions} SET uid = %d, cache = %d, hostname = '%s', session = '%s', timestamp = %d WHERE sid = '%s'", $user->uid, isset($user->cache) ? $user->cache : 0, ip_address(), $value, time(), $key);
 
-  // Last access time is updated no more frequently than once every 180 seconds.
-  // This reduces contention in the users table.
-  if ($user->uid && time() - $user->access > variable_get('session_write_interval', 180)) {
-    db_update('users')->fields(array('access' => time()))->condition('uid', $user->uid)->execute();
+    if (db_affected_rows()) {
+      // Last access time is updated no more frequently than once every 180 seconds.
+      // This reduces contention in the users table.
+      if ($user->uid && time() - $user->access > variable_get('session_write_interval', 180)) {
+        db_query("UPDATE {users} SET access = %d WHERE uid = %d", time(), $user->uid);
+      }
+    }
   }
 
   return TRUE;
@@ -90,7 +97,7 @@ function sess_write($key, $value) {
 function sess_regenerate() {
   $old_session_id = session_id();
   session_regenerate_id();
-  db_update('sessions')->fields(array('sid' => session_id()))->condition('sid', $old_session_id)->execute();
+  db_query("UPDATE {sessions} SET sid = '%s' WHERE sid = '%s'", session_id(), $old_session_id);
 }
 
 /**
@@ -106,11 +113,8 @@ function sess_regenerate() {
  *   The number of users with sessions.
  */
 function sess_count($timestamp = 0, $anonymous = true) {
-  $query = db_select('sessions');
-  $query->addExpression('COUNT(sid)', 'count');
-  $query->condition('timestamp', $timestamp, '>=');
-  $query->condition('uid', 0, $anonymous ? '=' : '>');
-  return $query->execute()->fetchField();
+  $query = $anonymous ? ' AND uid = 0' : ' AND uid > 0';
+  return db_result(db_query('SELECT COUNT(sid) AS count FROM {sessions} WHERE timestamp >= %d' . $query, $timestamp));
 }
 
 /**
@@ -120,7 +124,7 @@ function sess_count($timestamp = 0, $anonymous = true) {
  *   the session id
  */
 function sess_destroy_sid($sid) {
-  db_query("DELETE FROM {sessions} WHERE sid = :sid", array(':sid' => $sid));
+  db_query("DELETE FROM {sessions} WHERE sid = '%s'", $sid);
 }
 
 /**
@@ -130,7 +134,7 @@ function sess_destroy_sid($sid) {
  *   the user id
  */
 function sess_destroy_uid($uid) {
-  db_query('DELETE FROM {sessions} WHERE uid = :uid', array(':uid' => $uid));
+  db_query('DELETE FROM {sessions} WHERE uid = %d', $uid);
 }
 
 function sess_gc($lifetime) {
@@ -139,7 +143,7 @@ function sess_gc($lifetime) {
   // for three weeks before deleting them, you need to set gc_maxlifetime
   // to '1814400'. At that value, only after a user doesn't log in after
   // three weeks (1814400 seconds) will his/her session be removed.
-  db_query("DELETE FROM {sessions} WHERE timestamp < :timestamp", array(':timestamp' => time() - $lifetime));
+  db_query("DELETE FROM {sessions} WHERE timestamp < %d", time() - $lifetime);
 
   return TRUE;
 }
