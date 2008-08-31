@@ -1,0 +1,38 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_query_alter().
+ */
+function database_test_query_alter(SelectQuery $query) {
+
+  if ($query->hasTag('database_test_alter_add_range')) {
+    $query->range(0, 2);
+  }
+
+  if ($query->hasTag('database_test_alter_remove_range')) {
+    $query->range();
+  }
+  
+  if ($query->hasTag('database_test_alter_add_join')) {
+    $people_alias = $query->join('test', 'people', "test_task.pid=people.id");
+    $name_field = $query->addField('people', 'name', 'name');
+    $query->condition($people_alias . '.id', 2);
+  }
+  
+  if ($query->hasTag('database_test_alter_change_conditional')) {
+    $conditions =& $query->conditions();
+    $conditions[0]['value'] = 2;
+  }
+  
+  if ($query->hasTag('database_test_alter_change_fields')) {
+    $fields =& $query->getFields();
+    unset($fields['age']);
+  }
+  
+  if ($query->hasTag('database_test_alter_change_expressions')) {
+    $expressions =& $query->getExpressions();
+    $expressions['double_age']['expression'] = 'age*3';
+  } 
+}
+
