@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.285 2008/08/25 07:50:51 dries Exp $
+// $Id: menu.inc,v 1.286 2008/08/31 15:53:37 dries Exp $
 
 /**
  * @file
@@ -1880,6 +1880,9 @@ function _menu_delete_item($item, $force = FALSE) {
  *   - mlid        Set to an existing value, or 0 or NULL to insert a new link.
  *   - plid        The mlid of the parent.
  *   - router_path The path of the relevant router item.
+ * @return
+ *   The mlid of the saved menu link, or FALSE if the menu link could not be 
+ *   saved.
  */
 function menu_link_save(&$item) {
   $menu = menu_router_build();
