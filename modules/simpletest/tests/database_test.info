@@ -1,0 +1,8 @@
+; $Id: database_test.info,v 1.1 2008/08/31 11:43:41 webchick Exp $
+name = "Database Test"
+description = "Support module for Database layer tests."
+core = 7.x
+package = Testing
+files[] = database_test.module
+version = VERSION
+hidden = TRUE
