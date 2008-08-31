@@ -1552,7 +1552,7 @@ function node_menu() {
   foreach (node_get_types('types', NULL, TRUE) as $type) {
     $type_url_str = str_replace('_', '-', $type->type);
     $items['node/add/' . $type_url_str] = array(
-      'title' => drupal_ucfirst($type->name),
+      'title' => $type->name,
       'title callback' => 'check_plain',
       'page callback' => 'node_add',
       'page arguments' => array(2),
