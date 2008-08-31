@@ -189,11 +189,8 @@ function update_do_one($module, $number, &$context) {
 }
 
 function update_selection_page() {
-  $output = '<p>The version of Drupal you are updating from has been automatically detected. You can select a different version, but you should not need to.</p>';
-  $output .= '<p>Click Update to start the update process.</p>';
-
   drupal_set_title('Drupal database update');
-  $output .= drupal_get_form('update_script_selection_form');
+  $output = drupal_get_form('update_script_selection_form');
 
   update_task_list('select');
 
@@ -201,13 +198,12 @@ function update_selection_page() {
 }
 
 function update_script_selection_form() {
-  $form = array();
+  $form = $all = array();
   $form['start'] = array(
     '#tree' => TRUE,
     '#type' => 'fieldset',
-    '#title' => 'Select versions',
-    '#collapsible' => TRUE,
     '#collapsed' => TRUE,
+    '#collapsible' => TRUE,
   );
 
   // Ensure system.module's updates appear first
@@ -215,6 +211,7 @@ function update_script_selection_form() {
 
   $modules = drupal_get_installed_schema_version(NULL, FALSE, TRUE);
   foreach ($modules as $module => $schema_version) {
+    $pending = array();
     $updates = drupal_get_schema_versions($module);
     // Skip incompatible module updates completely, otherwise test schema versions.
     if (!update_check_incompatibility($module) && $updates !== FALSE && $schema_version >= 0) {
@@ -223,40 +220,65 @@ function update_script_selection_form() {
       $last_removed = module_invoke($module, 'update_last_removed');
       if ($schema_version < $last_removed) {
         $form['start'][$module] = array(
-          '#markup'  => '<em>' . $module . '</em> module can not be updated. Its schema version is ' . $schema_version . '. Updates up to and including ' . $last_removed . ' have been removed in this release. In order to update <em>' . $module . '</em> module, you will first <a href="http://drupal.org/upgrade">need to upgrade</a> to the last version in which these updates were available.',
+          '#title' => $module,
+          '#item'  => '<em>' . $module . '</em> module can not be updated. Its schema version is ' . $schema_version . '. Updates up to and including ' . $last_removed . ' have been removed in this release. In order to update <em>' . $module . '</em> module, you will first <a href="http://drupal.org/upgrade">need to upgrade</a> to the last version in which these updates were available.',
           '#prefix' => '<div class="warning">',
           '#suffix' => '</div>',
         );
-        $form['start']['#collapsed'] = FALSE;
         continue;
       }
       $updates = drupal_map_assoc($updates);
-      $updates[] = 'No updates available';
-      $default = $schema_version;
       foreach (array_keys($updates) as $update) {
         if ($update > $schema_version) {
-          $default = $update;
-          break;
+          // The description for an update comes from its Doxygen.
+          $func = new ReflectionFunction($module. '_update_'. $update);
+          $description = str_replace(array("\n", '*', '/'), '', $func->getDocComment());
+          $pending[] = "$update - $description";
+          if (!isset($default)) {
+            $default = $update;
+          }
         }
       }
-      $form['start'][$module] = array(
-        '#type' => 'select',
-        '#title' => $module . ' module',
-        '#default_value' => $default,
-        '#options' => $updates,
-      );
+      if (!empty($pending)) {
+        if (!isset($default)) {
+          $default = $schema_version;
+        }
+        $form['start'][$module] = array(
+          '#type' => 'hidden',
+          '#value' => $default,
+        );
+        $form['start'][$module. '_updates'] = array(
+          '#markup' => theme('item_list', $pending, $module . ' module'),
+        );
+      }
     }
+    unset($default);
+    $all += $pending;
   }
 
-  $form['has_js'] = array(
-    '#type' => 'hidden',
-    '#default_value' => FALSE,
-    '#attributes' => array('id' => 'edit-has_js'),
-  );
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => 'Update',
-  );
+  if (count($form) == 1 && $form['start']['system'] == array()) {
+    drupal_set_message(t('No pending updates.'));
+    unset($form);
+    $form['links'] = array(
+      '#markup' => theme('item_list', update_helpful_links()),
+    );
+  }
+  else {
+    $form['help'] = array(
+      '#markup' => '<p>The version of Drupal you are updating from has been automatically detected.</p>',
+      '#weight' => -5,
+    );
+    $form['start']['#title'] = strtr('!num pending updates', array('!num' => count($all)));
+    $form['has_js'] = array(
+      '#type' => 'hidden',
+      '#default_value' => FALSE,
+      '#attributes' => array('id' => 'edit-has_js'),
+    );
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => 'Apply pending updates',
+    );
+  }
   return $form;
 }
 
@@ -297,11 +319,16 @@ function update_finished($success, $results, $operations) {
   $_SESSION['updates_remaining'] = $operations;
 }
 
-function update_results_page() {
-  drupal_set_title('Drupal database update');
+function update_helpful_links() {
   // NOTE: we can't use l() here because the URL would point to 'update.php?q=admin'.
   $links[] = '<a href="' . base_path() . '">Main page</a>';
   $links[] = '<a href="' . base_path() . '?q=admin">Administration pages</a>';
+  return $links;
+}
+
+function update_results_page() {
+  drupal_set_title('Drupal database update');
+  $links = update_helpful_links();
 
   update_task_list();
   // Report end result
@@ -533,7 +560,7 @@ function update_task_list($active = NULL) {
   // Default list of tasks.
   $tasks = array(
     'info' => 'Overview',
-    'select' => 'Select updates',
+    'select' => 'Review updates',
     'run' => 'Run updates',
     'finished' => 'Review log',
   );
