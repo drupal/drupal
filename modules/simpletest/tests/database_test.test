@@ -1482,7 +1482,7 @@ class DatabaseAlter2TestCase extends DatabaseTestCase {
       
       $record = $query->execute()->fetch();
       $this->assertEqual($record->$name_field, 'George', t('Correct data retrieved.'));
-      $this->assertNull($record->$age_field, t('Age field not found, as intended.'));
+      $this->assertFalse(isset($record->$age_field), t('Age field not found, as intended.'));
     }
     catch(Exception $e) {
       $this->assertTrue(FALSE, $e->getMessage());
