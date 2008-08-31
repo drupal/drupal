@@ -338,13 +338,19 @@ function blogapi_blogger_get_recent_posts($appkey, $blogid, $username, $password
   }
 
   if ($bodies) {
-    $result = db_query_range("SELECT n.nid, n.title, r.body, r.format, n.comment, n.created, u.name FROM {node} n, {node_revisions} r, {users} u WHERE n.uid = u.uid AND n.vid = r.vid AND n.type = '%s' AND n.uid = %d ORDER BY n.created DESC",  $blogid, $user->uid, 0, $number_of_posts);
+    $result = db_query_range("SELECT n.nid, n.title, r.body, r.format, n.comment, n.created, u.name FROM {node} n, {node_revisions} r, {users} u WHERE n.uid = u.uid AND n.vid = r.vid AND n.type = :type AND n.uid = :uid ORDER BY n.created DESC",  array(
+      ':type' => $blogid,
+      ':uid' => $user->uid
+    ), 0, $number_of_posts);
   }
   else {
-    $result = db_query_range("SELECT n.nid, n.title, n.created, u.name FROM {node} n, {users} u WHERE n.uid = u.uid AND n.type = '%s' AND n.uid = %d ORDER BY n.created DESC", $blogid, $user->uid, 0, $number_of_posts);
+    $result = db_query_range("SELECT n.nid, n.title, n.created, u.name FROM {node} n, {users} u WHERE n.uid = u.uid AND n.type = :type AND n.uid = :uid ORDER BY n.created DESC", array(
+      ':type' => $blogid,
+      ':uid' => $user->uid
+    ), 0, $number_of_posts);
   }
   $blogs = array();
-  while ($blog = db_fetch_object($result)) {
+  foreach ($result as $blog) {
     $blogs[] = _blogapi_get_post($blog, $bodies);
   }
 
