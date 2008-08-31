@@ -423,7 +423,7 @@ class ImportOPMLTestCase extends AggregatorTestCase {
    * Open OPML import form.
    */
   function openImportForm() {
-    db_query('TRUNCATE {aggregator_category}');
+    db_query('DELETE FROM {aggregator_category}');
 
     $category = $this->randomName(10, self::$prefix);
     db_query("INSERT INTO {aggregator_category} (cid, title, description) VALUES (%d, '%s', '%s')", 1, $category, '');
@@ -479,9 +479,9 @@ class ImportOPMLTestCase extends AggregatorTestCase {
     $after = db_result(db_query('SELECT COUNT(*) FROM {aggregator_feed}'));
     $this->assertEqual($before, $after, t('No feeds were added during the two last form submissions.'));
 
-    db_query('TRUNCATE {aggregator_feed}');
-    db_query('TRUNCATE {aggregator_category}');
-    db_query('TRUNCATE {aggregator_category_feed}');
+    db_query('DELETE FROM {aggregator_feed}');
+    db_query('DELETE FROM {aggregator_category}');
+    db_query('DELETE FROM {aggregator_category_feed}');
 
     $category = $this->randomName(10, self::$prefix);
     db_query("INSERT INTO {aggregator_category} (cid, title, description) VALUES (%d, '%s', '%s')", 1, $category, '');
