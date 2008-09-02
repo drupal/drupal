@@ -196,26 +196,29 @@ function _init_theme($theme, $base_theme = array(), $registry_callback = '_theme
 }
 
 /**
- * Retrieve the stored theme registry. If the theme registry is already
- * in memory it will be returned; otherwise it will attempt to load the
- * registry from cache. If this fails, it will construct the registry and
- * cache it.
+ * Get the theme registry.
+ * @return 
+ *   The theme registry array if it has been stored in memory, NULL otherwise. 
  */
-function theme_get_registry($registry = NULL) {
-  static $theme_registry = NULL;
-  if (isset($registry)) {
-    $theme_registry = $registry;
-  }
-
-  return $theme_registry;
+function theme_get_registry() {
+  return _theme_set_registry();
 }
 
 /**
  * Store the theme registry in memory.
+ * @param $registry
+ *   A registry array as returned by _theme_build_registry()
+ * @return 
+ *   The theme registry array stored in memory
  */
-function _theme_set_registry($registry) {
-  // Pass through for setting of static variable.
-  return theme_get_registry($registry);
+function _theme_set_registry($registry = NULL) {
+  static $theme_registry = NULL;
+  
+  if (isset($registry)) {
+    $theme_registry = $registry;
+  }
+  
+  return $theme_registry;
 }
 
 /**
