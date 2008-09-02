@@ -1,0 +1,78 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_menu().
+ */
+function system_test_menu() {
+  $items['system-test/auth'] = array(
+    'page callback' => 'system_test_basic_auth_page',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['system-test/redirect/%'] = array(
+    'title' => 'Redirect',
+    'page callback' => 'system_test_redirect',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['system-test/redirect-noscheme'] = array(
+    'page callback' => 'system_test_redirect_noscheme',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['system-test/redirect-noparse'] = array(
+    'page callback' => 'system_test_redirect_noparse',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['system-test/redirect-invalid-scheme'] = array(
+    'page callback' => 'system_test_redirect_invalid_scheme',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['system-test/destination'] = array(
+    'title' => 'Redirect',
+    'page callback' => 'system_test_destination',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+function system_test_basic_auth_page() {
+  $output = t('$_SERVER[\'PHP_AUTH_USER\'] is @username.', array('@username' => $_SERVER['PHP_AUTH_USER']));
+  $output .= t('$_SERVER[\'PHP_AUTH_PW\'] is @password.', array('@password' => $_SERVER['PHP_AUTH_PW']));
+  return $output;
+}
+
+function system_test_redirect($code) {
+  $code = (int)$code;
+  if ($code != 200) {
+    header("Location: " . url('system-test/redirect/200', array('absolute' => TRUE)), TRUE, $code);
+    exit;
+  }
+  return '';
+}
+
+function system_test_redirect_noscheme() {
+  header("Location: localhost/path", TRUE, 301);
+  exit;
+}
+
+function system_test_redirect_noparse() {
+  header("Location: http:///path", TRUE, 301);
+  exit;
+}
+
+function system_test_redirect_invalid_scheme() {
+  header("Location: ftp://localhost/path", TRUE, 301);
+  exit;
+}
+
+function system_test_destination() {
+  return 'The destination: ' . drupal_get_destination();
+}

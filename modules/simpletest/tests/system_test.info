@@ -1,0 +1,8 @@
+; $Id$
+name = System test
+description = Support module for system testing.
+package = Testing
+version = VERSION
+core = 7.x
+files[] = system_test.module
+hidden = TRUE

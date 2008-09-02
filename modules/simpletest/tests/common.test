@@ -129,18 +129,76 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
     );
   }
 
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp('system_test');
+  }
+
   function testDrupalHTTPRequest() {
     // Parse URL schema.
     $missing_scheme = drupal_http_request('example.com/path');
-    $this->assertEqual($missing_scheme->error, 'missing schema', t('Returned with missing scheme error.'));
+    $this->assertEqual($missing_scheme->error, 'missing schema', t('Returned with "missing schema" error.'));
 
     $unable_to_parse = drupal_http_request('http:///path');
-    $this->assertEqual($unable_to_parse->error, 'unable to parse URL', t('Returned with unable to parse URL error.'));
+    $this->assertEqual($unable_to_parse->error, 'unable to parse URL', t('Returned with "unable to parse URL" error.'));
 
     // Fetch page.
     $result = drupal_http_request(url('node', array('absolute' => TRUE)));
     $this->assertEqual($result->code, 200, t('Fetched page successfully.'));
     $this->drupalSetContent($result->data);
     $this->assertTitle(variable_get('site_name', 'Drupal'), t('Site title matches.'));
+  }
+
+  function testDrupalHTTPRequestBasicAuth() {
+    $username = $this->randomName();
+    $password = $this->randomName();
+    $url = url('system-test/auth', array('absolute' => TRUE));
+
+    $auth = str_replace('http://', 'http://' . $username . ':' . $password .'@', $url);
+    $result = drupal_http_request($auth);
+
+    // We use strpos directly.
+    // assertRaw() cannot be used because we are getting the data
+    // in a variable instead of $this->_content.
+    $this->assertTrue(strpos($result->data, $username) !== FALSE, t('$_SERVER[\'PHP_AUTH_USER\'] is passed correctly.'));
+    $this->assertTrue(strpos($result->data, $password) !== FALSE, t('$_SERVER[\'PHP_AUTH_PW\'] is passed correctly.'));
+  }
+
+  function testDrupalHTTPRequestRedirect() {
+    $redirect_301 = drupal_http_request(url('system-test/redirect/301', array('absolute' => TRUE)), array(), 'GET', NULL, 1);
+    $this->assertEqual($redirect_301->redirect_code, 200, t('drupal_http_request follows the 301 redirect.'));
+
+    $redirect_301 = drupal_http_request(url('system-test/redirect/301', array('absolute' => TRUE)), array(), 'GET', NULL, 0);
+    $this->assertFalse(isset($redirect_301->redirect_code), t('drupal_http_request does not follow 301 redirect if $retry = 0.'));
+
+    $redirect_invalid = drupal_http_request(url('system-test/redirect-noscheme', array('absolute' => TRUE)), array(), 'GET', NULL, 1);
+    $this->assertEqual($redirect_invalid->error, 'missing schema', t('301 redirect to invalid URL returned with error "!error".', array('!error' => $redirect_invalid->error)));
+
+    $redirect_invalid = drupal_http_request(url('system-test/redirect-noparse', array('absolute' => TRUE)), array(), 'GET', NULL, 1);
+    $this->assertEqual($redirect_invalid->error, 'unable to parse URL', t('301 redirect to invalid URL returned with error "!error".', array('!error' => $redirect_invalid->error)));
+
+    $redirect_invalid = drupal_http_request(url('system-test/redirect-invalid-scheme', array('absolute' => TRUE)), array(), 'GET', NULL, 1);
+    $this->assertEqual($redirect_invalid->error, 'invalid schema ftp', t('301 redirect to invalid URL returned with error "!error".', array('!error' => $redirect_invalid->error)));
+
+    $redirect_302 = drupal_http_request(url('system-test/redirect/302', array('absolute' => TRUE)), array(), 'GET', NULL, 1);
+    $this->assertEqual($redirect_302->redirect_code, 200, t('drupal_http_request follows the 302 redirect.'));
+
+    $redirect_302 = drupal_http_request(url('system-test/redirect/302', array('absolute' => TRUE)), array(), 'GET', NULL, 0);
+    $this->assertFalse(isset($redirect_302->redirect_code), t('drupal_http_request does not follow 302 redirect if $retry = 0.'));
+
+    $redirect_307 = drupal_http_request(url('system-test/redirect/307', array('absolute' => TRUE)), array(), 'GET', NULL, 1);
+    $this->assertEqual($redirect_307->redirect_code, 200, t('drupal_http_request follows the 307 redirect.'));
+
+    $redirect_307 = drupal_http_request(url('system-test/redirect/307', array('absolute' => TRUE)), array(), 'GET', NULL, 0);
+    $this->assertFalse(isset($redirect_307->redirect_code), t('drupal_http_request does not follow 307 redirect if $retry = 0.'));
+  }
+
+  function testDrupalGetDestination() {
+    $query = $this->randomName(10);
+    $url = url('system-test/destination', array('absolute' => TRUE, 'query' => $query));
+    $this->drupalGet($url);
+    $this->assertText($query, t('The query passed to the page is correctly represented by drupal_get_detination().'));
   }
 }
