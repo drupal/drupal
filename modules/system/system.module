@@ -1402,7 +1402,7 @@ function system_cron() {
       // If files that exist cannot be deleted, continue so the database remains
       // consistent.
       if (!file_delete($file->filepath)) {
-        watchdog('file system', 'Could not delete temporary file "%path" during garbage collection', array('%path' => $file->filepath), 'error');
+        watchdog('file system', 'Could not delete temporary file "%path" during garbage collection', array('%path' => $file->filepath), WATCHDOG_ERROR);
         continue;
       }
     }
