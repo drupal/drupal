@@ -1,6 +1,6 @@
 /* $Id$ */
 
-#dblog-filter-form .form-item {
+#edit-type-wrapper, #edit-severity-wrapper {
   float: right;
   padding-right: 0;
   padding-left: .8em;
