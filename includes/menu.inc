@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.286 2008/08/31 15:53:37 dries Exp $
+// $Id: menu.inc,v 1.287 2008/09/02 19:23:02 webchick Exp $
 
 /**
  * @file
@@ -1787,8 +1787,11 @@ function _menu_navigation_links_rebuild($menu) {
       $existing_item = db_fetch_array(db_query("SELECT mlid, menu_name, plid, customized, has_children, updated FROM {menu_links} WHERE link_path = '%s' AND module = '%s'", $item['link_path'], 'system'));
       if ($existing_item) {
         $item['mlid'] = $existing_item['mlid'];
-        $item['menu_name'] = $existing_item['menu_name'];
-        $item['plid'] = $existing_item['plid'];
+        // A change in hook_menu may move the link to a different menu
+        if (empty($item['menu_name']) || ($item['menu_name'] == $existing_item['menu_name'])) {
+          $item['menu_name'] = $existing_item['menu_name'];
+          $item['plid'] = $existing_item['plid'];
+        }
         $item['has_children'] = $existing_item['has_children'];
         $item['updated'] = $existing_item['updated'];
       }
