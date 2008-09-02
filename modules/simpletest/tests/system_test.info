@@ -1,0 +1,8 @@
+; $Id: system_test.info,v 1.1 2008/09/02 17:00:34 dries Exp $
+name = System test
+description = Support module for system testing.
+package = Testing
+version = VERSION
+core = 7.x
+files[] = system_test.module
+hidden = TRUE
