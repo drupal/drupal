@@ -1,0 +1,20 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Dummy module implementing hook menu to test changing the menu name.
+ */
+
+ /**
+ * The name of the menu changes during the course of this test. Use a $_GET.
+ */
+function hook_menu_menu() {
+
+  $items['menu_name_test'] = array(
+    'title' => t('Test menu_name router item'),
+    'page callback' => 'node_save',
+    'menu_name' => isset($_GET["hook_menu_name"]) ? $_GET["hook_menu_name"] : 'original',
+  );
+  return $items;
+}

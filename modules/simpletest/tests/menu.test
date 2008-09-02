@@ -1,0 +1,47 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Provides SimpleTests for menu.inc.
+ */
+
+class MenuIncTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Hook menu tests'),
+      'description' => t('Test menu hook functionality.'),
+      'group' => t('Menu'),
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    // Enable dummy module that implements hook_menu.
+    parent::setUp('hook_menu');
+  }
+  
+  /**
+   * Tests for menu_name parameter for hook_menu().
+   */
+  function testMenuName() {
+    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->drupalLogin($admin_user);
+
+    $sql = "SELECT menu_name FROM {menu_links} WHERE router_path = 'menu_name_test'";
+    $name = db_result(db_query($sql));
+    $this->assertEqual($name, 'original', t('Menu name is "original".'));
+
+    // Force a menu rebuild by going to the modules page.
+    $this->drupalGet('admin/build/modules', array('query' => array("hook_menu_name" => 'changed')));
+
+    $sql = "SELECT menu_name FROM {menu_links} WHERE router_path = 'menu_name_test'";
+    $name = db_result(db_query($sql));
+    $this->assertEqual($name, 'changed', t('Menu name was successfully changed after rebuild.'));
+  }
+}
