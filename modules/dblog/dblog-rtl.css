@@ -1,6 +1,6 @@
-/* $Id: dblog-rtl.css,v 1.2 2007/11/27 12:09:26 goba Exp $ */
+/* $Id: dblog-rtl.css,v 1.3 2008/09/02 16:56:33 dries Exp $ */
 
-#dblog-filter-form .form-item {
+#edit-type-wrapper, #edit-severity-wrapper {
   float: right;
   padding-right: 0;
   padding-left: .8em;
