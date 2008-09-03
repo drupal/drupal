@@ -250,7 +250,7 @@ abstract class DatabaseConnection extends PDO {
 
   /**
    * Prepare a query string and return the prepared statement.
-   * 
+   *
    * This method statically caches prepared statements, reusing them when
    * possible.  It also prefixes tables names enclosed in curly-braces.
    *
@@ -712,7 +712,7 @@ abstract class Database {
    *   TRUE if there is at least one database connection established, FALSE otherwise.
    */
   final public static function isActiveConnection() {
-    return !empty(self::$connections);
+    return !empty(self::$activeKey) && !empty(self::$connections) && !empty(self::$connections[self::$activeKey]);
   }
 
   /**
@@ -1356,7 +1356,7 @@ function db_escape_table($table) {
  *     query: the SQL query executed, passed through check_plain()
  */
 function update_sql($sql) {
-  $result = Database::getActiveConnection()->query($sql/*, array(true)*/);
+  $result = Database::getActiveConnection()->query($sql);
   return array('success' => $result !== FALSE, 'query' => check_plain($sql));
 }
 

@@ -117,29 +117,29 @@
  */
 
 abstract class DatabaseSchema {
-  
+
   protected $connection;
-  
+
   public function __construct($connection) {
     $this->connection = $connection;
   }
-  
+
   /**
    * Check if a table exists.
    */
   abstract public function tableExists($table);
-  
+
   /**
    * Check if a column exists in the given table.
    */
   abstract public function columnExists($table, $column);
-  
+
   /**
    * This maps a generic data type in combination with its data size
    * to the engine-specific data type.
    */
   abstract public function getFieldTypeMap();
-  
+
   /**
    * Rename a table.
    *
@@ -161,7 +161,7 @@ abstract class DatabaseSchema {
    *   The table to be dropped.
    */
   abstract public function dropTable(&$ret, $table);
-  
+
   /**
    * Add a new field to a table.
    *
@@ -380,7 +380,7 @@ abstract class DatabaseSchema {
       $ret[] = update_sql($statement);
     }
   }
-  
+
   /**
    * Return an array of field names from an array of key/index column specifiers.
    *
