@@ -774,9 +774,8 @@ function aggregator_parse_feed(&$data, $feed) {
       $item['DESCRIPTION'] = $item['CONTENT'];
     }
 
-    // Try to resolve and parse the item's publication date. If no date is
-    // found, use the current date instead.
-    $date = 'now';
+    // Try to resolve and parse the item's publication date.
+    $date = '';
     foreach (array('PUBDATE', 'DC:DATE', 'DCTERMS:ISSUED', 'DCTERMS:CREATED', 'DCTERMS:MODIFIED', 'ISSUED', 'CREATED', 'MODIFIED', 'PUBLISHED', 'UPDATED') as $key) {
       if (!empty($item[$key])) {
         $date = $item[$key];
@@ -788,26 +787,26 @@ function aggregator_parse_feed(&$data, $feed) {
 
     if ($timestamp <= 0) {
       $timestamp = aggregator_parse_w3cdtf($date); // Aggregator_parse_w3cdtf() returns FALSE on failure.
-      if (!$timestamp) {
-        // Better than nothing.
-        $timestamp = time();
-      }
     }
 
     // Save this item. Try to avoid duplicate entries as much as possible. If
     // we find a duplicate entry, we resolve it and pass along its ID is such
     // that we can update it if needed.
     if (!empty($guid)) {
-      $entry = db_fetch_object(db_query("SELECT iid FROM {aggregator_item} WHERE fid = %d AND guid = '%s'", $feed['fid'], $guid));
+      $entry = db_fetch_object(db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = %d AND guid = '%s'", $feed['fid'], $guid));
     }
     else if ($link && $link != $feed['link'] && $link != $feed['url']) {
-      $entry = db_fetch_object(db_query("SELECT iid FROM {aggregator_item} WHERE fid = %d AND link = '%s'", $feed['fid'], $link));
+      $entry = db_fetch_object(db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = %d AND link = '%s'", $feed['fid'], $link));
     }
     else {
-      $entry = db_fetch_object(db_query("SELECT iid FROM {aggregator_item} WHERE fid = %d AND title = '%s'", $feed['fid'], $title));
+      $entry = db_fetch_object(db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = %d AND title = '%s'", $feed['fid'], $title));
+    }
+
+    if (!$timestamp) {
+      $timestamp = isset($entry->timestamp) ? $entry->timestamp : time();
     }
     $item += array('AUTHOR' => '', 'DESCRIPTION' => '');
-    aggregator_save_item(array('iid' => (isset($entry->iid) ? $entry->iid:  ''), 'fid' => $feed['fid'], 'timestamp' => $timestamp, 'title' => $title, 'link' => $link, 'author' => $item['AUTHOR'], 'description' => $item['DESCRIPTION'], 'guid' => $guid));
+    aggregator_save_item(array('iid' => (isset($entry->iid) ? $entry->iid : ''), 'fid' => $feed['fid'], 'timestamp' => $timestamp, 'title' => $title, 'link' => $link, 'author' => $item['AUTHOR'], 'description' => $item['DESCRIPTION'], 'guid' => $guid));
   }
 
   // Remove all items that are older than flush item timer.
