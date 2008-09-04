@@ -30,6 +30,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
       // Because MySQL's prepared statements skip the query cache, because it's dumb.
       PDO::ATTR_EMULATE_PREPARES => TRUE,
     ));
+    $this->exec('SET sql_mode=STRICT_ALL_TABLES');
   }
 
   public function queryRange($query, Array $args, $from, $count, Array $options) {
