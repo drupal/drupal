@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.128 2008/08/14 12:10:47 dries Exp $
+// $Id: file.inc,v 1.129 2008/09/05 09:25:51 dries Exp $
 
 /**
  * @file
@@ -658,7 +658,7 @@ function file_validate_extensions($file, $extensions) {
 
   // Bypass validation for uid  = 1.
   if ($user->uid != 1) {
-    $regex = '/\.(' . ereg_replace(' +', '|', preg_quote($extensions)) . ')$/i';
+    $regex = '/\.(' . preg_replace('/ +/', '|', preg_quote($extensions)) . ')$/i';
     if (!preg_match($regex, $file->filename)) {
       $errors[] = t('Only files with the following extensions are allowed: %files-allowed.', array('%files-allowed' => $extensions));
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.2 2008/08/22 12:46:25 dries Exp $
+// $Id: select.inc,v 1.3 2008/09/05 09:25:51 dries Exp $
 
 /**
  * @ingroup database
@@ -670,9 +670,11 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
     // ORDER BY
     if ($this->order) {
       $query .= "\nORDER BY ";
+      $fields = array();
       foreach ($this->order as $field => $direction) {
-        $query .= $field . ' ' . $direction . ' ';
+        $fields[] = $field . ' ' . $direction;
       }
+      $query .= implode(', ', $fields);
     }
 
     // RANGE is database specific, so we can't do it here.
