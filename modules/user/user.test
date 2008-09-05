@@ -463,3 +463,57 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
   }
 
 }
+
+class UserAdminTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('User admininstration'),
+      'description' => t('Test user admininstration page functionality.'),
+      'group' => t('User')
+    );
+  }
+
+  /**
+   * Registers a user and deletes it.
+   */
+  function testUserAdmin() {
+
+    $user_a = $this->drupalCreateUser(array());
+    $user_b = $this->drupalCreateUser(array('administer taxonomy'));
+    $user_c = $this->drupalCreateUser(array('administer taxonomy'));
+
+    // Create admin user to delete registered user.
+    $admin_user = $this->drupalCreateUser(array('administer users'));
+    $this->drupalLogin($admin_user);
+    $this->drupalGet('admin/user/user');
+    $this->assertText($user_a->name, t('Found user A on admin users page'));
+    $this->assertText($user_b->name, t('Found user B on admin users page'));
+    $this->assertText($user_c->name, t('Found user C on admin users page'));
+    $this->assertText($admin_user->name, t('Found Admin user on admin users page'));
+
+    // Filter the users by permission 'administer taxonomy'.   
+    $edit = array();
+    $edit['filter'] = 'permission';
+    $edit['permission'] = 'administer taxonomy';
+    $this->drupalPost('admin/user/user', $edit, t('Filter'));
+
+    // Check if the correct users show up.
+    $this->assertNoText($user_a->name, t('User A not on filtered by perm  admin users page'));
+    $this->assertText($user_b->name, t('Found user B on filtered by perm admin users page'));
+    $this->assertText($user_c->name, t('Found user C on filtered by perm admin users page'));
+
+    // Test blocking of a user.
+    $account = user_load(array('name' => $user_b->name));
+    $this->assertEqual($account->status, 1, 'User B not blocked');
+    $edit = array();
+    $edit['operation'] = 'block';
+    $edit['accounts['. $account->uid .']'] = TRUE;
+    $this->drupalPost('admin/user/user', $edit, t('Update'));
+    $account = user_load(array('name' => $user_b->name));
+    $this->assertEqual($account->status, 0, 'User B blocked');
+  }
+}
+
