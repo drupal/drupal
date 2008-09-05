@@ -54,7 +54,7 @@ function actions_do($action_ids, &$object, $context = NULL, $a1 = NULL, $a2 = NU
     $where_values = array();
     foreach ($action_ids as $action_id) {
       if (is_numeric($action_id)) {
-        $where[] = 'OR aid = %d';
+        $where[] = "OR aid = '%s'";
         $where_values[] = $action_id;
       }
       elseif (isset($available_actions[$action_id])) {
@@ -93,7 +93,7 @@ function actions_do($action_ids, &$object, $context = NULL, $a1 = NULL, $a2 = NU
   else {
     // If it's a configurable action, retrieve stored parameters.
     if (is_numeric($action_ids)) {
-      $action = db_fetch_object(db_query("SELECT * FROM {actions} WHERE aid = %d", $action_ids));
+      $action = db_fetch_object(db_query("SELECT * FROM {actions} WHERE aid = '%s'", $action_ids));
       $function = $action->callback;
       $context = array_merge($context, unserialize($action->parameters));
       $result[$action_ids] = $function($object, $context, $a1, $a2);
@@ -238,7 +238,7 @@ function actions_function_lookup($hash) {
   }
 
   // Must be an instance; must check database.
-  $aid = db_result(db_query("SELECT aid FROM {actions} WHERE MD5(aid) = '%s' AND parameters != ''", $hash));
+  $aid = db_result(db_query("SELECT aid FROM {actions} WHERE MD5(aid) = '%s' AND parameters <> ''", $hash));
   return $aid;
 }
 
@@ -325,7 +325,7 @@ function actions_synchronize($actions_in_code = array(), $delete_orphans = FALSE
 function actions_save($function, $type, $params, $desc, $aid = NULL) {
   $serialized = serialize($params);
   if ($aid) {
-    db_query("UPDATE {actions} SET callback = '%s', type = '%s', parameters = '%s', description = '%s' WHERE aid = %d", $function, $type, $serialized, $desc, $aid);
+    db_query("UPDATE {actions} SET callback = '%s', type = '%s', parameters = '%s', description = '%s' WHERE aid = '%s'", $function, $type, $serialized, $desc, $aid);
     watchdog('actions', 'Action %action saved.', array('%action' => $desc));
   }
   else {
@@ -333,7 +333,7 @@ function actions_save($function, $type, $params, $desc, $aid = NULL) {
     // separate table for numeric aids.
     db_query('INSERT INTO {actions_aid} VALUES (default)');
     $aid = db_last_insert_id('actions_aid', 'aid');
-    db_query("INSERT INTO {actions} (aid, callback, type, parameters, description) VALUES (%d, '%s', '%s', '%s', '%s')", $aid, $function, $type, $serialized, $desc);
+    db_query("INSERT INTO {actions} (aid, callback, type, parameters, description) VALUES ('%s', '%s', '%s', '%s', '%s')", $aid, $function, $type, $serialized, $desc);
     watchdog('actions', 'Action %action created.', array('%action' => $desc));
   }
 
@@ -350,7 +350,7 @@ function actions_save($function, $type, $params, $desc, $aid = NULL) {
  *   The appropriate action row from the database as an object.
  */
 function actions_load($aid) {
-  return db_fetch_object(db_query("SELECT * FROM {actions} WHERE aid = %d", $aid));
+  return db_fetch_object(db_query("SELECT * FROM {actions} WHERE aid = '%s'", $aid));
 }
 
 /**
@@ -360,6 +360,6 @@ function actions_load($aid) {
  *   integer The ID of the action to delete.
  */
 function actions_delete($aid) {
-  db_query("DELETE FROM {actions} WHERE aid = %d", $aid);
+  db_query("DELETE FROM {actions} WHERE aid = '%s'", $aid);
   module_invoke_all('actions_delete', $aid);
 }

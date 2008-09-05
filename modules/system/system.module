@@ -1327,7 +1327,7 @@ function system_actions_manage() {
   }
 
   $row = array();
-  $instances_present = db_fetch_object(db_query("SELECT aid FROM {actions} WHERE parameters != ''"));
+  $instances_present = db_fetch_object(db_query("SELECT aid FROM {actions} WHERE parameters <> ''"));
   $header = array(
     array('data' => t('Action type'), 'field' => 'type'),
     array('data' => t('Description'), 'field' => 'description'),
@@ -1431,7 +1431,7 @@ function system_actions_configure($form_state, $action = NULL) {
   if (is_numeric($action)) {
     $aid = $action;
     // Load stored parameter values from database.
-    $data = db_fetch_object(db_query("SELECT * FROM {actions} WHERE aid = %d", intval($aid)));
+    $data = db_fetch_object(db_query("SELECT * FROM {actions} WHERE aid = '%s'", $aid));
     $edit['actions_description'] = $data->description;
     $edit['actions_type'] = $data->type;
     $function = $data->callback;
