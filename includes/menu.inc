@@ -1719,7 +1719,7 @@ function menu_router_build($reset = FALSE) {
   static $menu;
 
   if (!isset($menu) || $reset) {
-    if (FALSE && !$reset && ($cache = cache_get('router:', 'cache_menu')) && isset($cache->data)) {
+    if (!$reset && ($cache = cache_get('router:', 'cache_menu')) && isset($cache->data)) {
       $menu = $cache->data;
     }
     else {
@@ -1813,7 +1813,7 @@ function _menu_navigation_links_rebuild($menu) {
       db_query("UPDATE {menu_links} SET router_path = '%s', updated = %d WHERE mlid = %d", $router_path, $updated, $item['mlid']);
     }
   }
-  // Find any items where their router path does not exist any more.
+  // Find any item whose router path does not exist any more.
   $result = db_query("SELECT * FROM {menu_links} WHERE router_path NOT IN ($placeholders) AND external = 0 AND updated = 0 AND customized = 0 ORDER BY depth DESC", $paths);
   // Remove all such items. Starting from those with the greatest depth will
   // minimize the amount of re-parenting done by menu_link_delete().
@@ -2221,6 +2221,7 @@ function _menu_update_parental_status($item, $exclude = FALSE) {
     $query = db_select('menu_links', 'm');
     $query->addField('m', 'mlid');
     $query->condition('menu_name', $item['menu_name']);
+    $query->condition('hidden', 0);
     $query->condition('plid', $item['plid']);
     $query->range(0, 1);
 
