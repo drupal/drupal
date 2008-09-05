@@ -670,9 +670,11 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
     // ORDER BY
     if ($this->order) {
       $query .= "\nORDER BY ";
+      $fields = array();
       foreach ($this->order as $field => $direction) {
-        $query .= $field . ' ' . $direction . ' ';
+        $fields[] = $field . ' ' . $direction;
       }
+      $query .= implode(', ', $fields);
     }
 
     // RANGE is database specific, so we can't do it here.

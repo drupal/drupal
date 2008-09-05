@@ -276,7 +276,7 @@ function profile_view_field($user, $field) {
         );
         return strtr($format, $replace);
       case 'list':
-        $values = split("[,\n\r]", $value);
+        $values = preg_split("/[,\n\r]/", $value);
         $fields = array();
         foreach ($values as $value) {
           if ($value = trim($value)) {
@@ -387,7 +387,7 @@ function profile_form_profile($edit, $user, $category, $register = FALSE) {
         break;
       case 'selection':
         $options = $field->required ? array() : array('--');
-        $lines = split("[,\n\r]", $field->options);
+        $lines = preg_split("/[,\n\r]/", $field->options);
         foreach ($lines as $line) {
           if ($line = trim($line)) {
             $options[$line] = $line;

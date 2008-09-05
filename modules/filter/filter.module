@@ -869,7 +869,7 @@ function _filter_autop($text) {
     if ($i % 2) {
       // Opening or closing tag?
       $open = ($chunk[1] != '/');
-      list($tag) = split('[ >]', substr($chunk, 2 - $open), 2);
+      list($tag) = preg_split('/[ >]/', substr($chunk, 2 - $open), 2);
       if (!$ignore) {
         if ($open) {
           $ignore = TRUE;

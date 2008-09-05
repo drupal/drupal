@@ -198,7 +198,7 @@ class DatabaseFetch2TestCase extends DatabaseTestCase {
 
   function getInfo() {
     return array(
-      'name' => t('Fetch tests, Part 2'),
+      'name' => t('Fetch tests, part 2'),
       'description' => t('Test the Database system\'s various fetch capabilities.'),
       'group' => t('Database'),
     );
@@ -455,7 +455,7 @@ class DatabaseInsertDefaultsTestCase extends DatabaseTestCase {
 
   function getInfo() {
     return array(
-      'name' => t('Insert tests, Default fields'),
+      'name' => t('Insert tests, default fields'),
       'description' => t('Test the Insert query builder with default values.'),
       'group' => t('Database'),
     );
@@ -968,7 +968,7 @@ class DatabaseSelectOrderedTestCase extends DatabaseTestCase {
 
   function getInfo() {
     return array(
-      'name' => t('Select tests, Ordered'),
+      'name' => t('Select tests, ordered'),
       'description' => t('Test the Select query builder.'),
       'group' => t('Database'),
     );
@@ -999,6 +999,43 @@ class DatabaseSelectOrderedTestCase extends DatabaseTestCase {
       $this->assertTrue(FALSE, $e->getMessage());
     }
   }
+
+  /**
+   * Test multiple order by.
+   */
+  function testSimpleSelectMultiOrdered() {
+    try {
+      $query = db_select('test');
+      $name_field = $query->addField('test', 'name');
+      $age_field = $query->addField('test', 'age', 'age');
+      $job_field = $query->addField('test', 'job');
+      $query->orderBy($job_field);
+      $query->orderBy($age_field);
+      $result = $query->execute();
+      
+      $num_records = 0;
+      $expected = array(
+        array('Ringo', 28, 'Drummer'),
+        array('John', 25, 'Singer'),
+        array('George', 27, 'Singer'),
+        array('Paul', 26, 'Songwriter'),
+      );
+      $results = $result->fetchAll(PDO::FETCH_NUM);
+      foreach ($expected as $k => $record) {
+        $num_records++;
+        foreach ($record as $kk => $col) {
+          if ($expected[$k][$kk] != $results[$k][$kk]) {
+            $this->assertTrue(FALSE, t('Results returned in correct order.'));
+          }
+        }
+      }
+      $this->assertEqual($num_records, 4, t('Returned the correct number of rows.'));
+    }
+    catch(Exception $e) {
+      $this->assertTrue(FALSE, $e->getMessage());
+    }
+  }
+
 
   /**
    * Test order by descending.
@@ -1034,7 +1071,7 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
 
   function getInfo() {
     return array(
-      'name' => t('Select tests, Complex'),
+      'name' => t('Select tests, complex'),
       'description' => t('Test the Select query builder with more complex queries.'),
       'group' => t('Database'),
     );

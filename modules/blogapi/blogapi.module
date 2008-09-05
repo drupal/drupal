@@ -558,9 +558,9 @@ function blogapi_validate_user($username, $password) {
  * For the blogger API, extract the node title from the contents field.
  */
 function blogapi_blogger_title(&$contents) {
-  if (eregi('<title>([^<]*)</title>', $contents, $title)) {
+  if (preg_match('/<title>(.*?)<\/title>/i', $contents, $title)) {
     $title = strip_tags($title[0]);
-    $contents = ereg_replace('<title>[^<]*</title>', '', $contents);
+    $contents = preg_replace('/<title>.*?<\/title>/i', '', $contents);
   }
   else {
     list($title, $contents) = explode("\n", $contents, 2);
