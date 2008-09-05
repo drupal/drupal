@@ -362,7 +362,7 @@ function menu_execute_active_handler($path = NULL) {
  * @return
  *   Returns TRUE for success, FALSE if an object cannot be loaded.
  *   Names of object loading functions are placed in $item['load_functions'].
- *   Loaded objects are placed in $map[]; keys are the same as keys in the 
+ *   Loaded objects are placed in $map[]; keys are the same as keys in the
  *   $item['load_functions'] array.
  *   $item['access'] is set to FALSE if an object cannot be loaded.
  */
@@ -471,10 +471,10 @@ function _menu_check_access(&$item, $map) {
  * @return
  *   No return value.
  *   $item['title'] is localized according to $item['title_callback'].
- *   If an item's callback is check_plain(), $item['options']['html'] becomes 
+ *   If an item's callback is check_plain(), $item['options']['html'] becomes
  *   TRUE.
  *   $item['description'] is translated using t().
- *   When doing link translation and the $item['options']['attributes']['title'] 
+ *   When doing link translation and the $item['options']['attributes']['title']
  *   (link title attribute) matches the description, it is translated as well.
  */
 function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
@@ -657,14 +657,14 @@ function _menu_link_translate(&$item) {
       _menu_item_localize($item, $map, TRUE);
     }
   }
-  
+
   // Allow other customizations - e.g. adding a page-specific query string to the
   // options array. For performance reasons we only invoke this hook if the link
   // has the 'alter' flag set in the options array.
   if (!empty($item['options']['alter'])) {
     drupal_alter('translated_menu_link', $item, $map);
   }
-  
+
   return $map;
 }
 
@@ -1557,7 +1557,7 @@ function menu_get_active_trail() {
  */
 function menu_get_active_breadcrumb() {
   $breadcrumb = array();
-  
+
   // No breadcrumb for the front page.
   if (drupal_is_front_page()) {
     return $breadcrumb;
@@ -1735,8 +1735,11 @@ function _menu_navigation_links_rebuild($menu) {
       $existing_item = db_fetch_array(db_query("SELECT mlid, menu_name, plid, customized, has_children, updated FROM {menu_links} WHERE link_path = '%s' AND module = '%s'", $item['link_path'], 'system'));
       if ($existing_item) {
         $item['mlid'] = $existing_item['mlid'];
-        $item['menu_name'] = $existing_item['menu_name'];
-        $item['plid'] = $existing_item['plid'];
+        // A change in hook_menu may move the link to a different menu
+        if (empty($item['menu_name']) || ($item['menu_name'] == $existing_item['menu_name'])) {
+          $item['menu_name'] = $existing_item['menu_name'];
+          $item['plid'] = $existing_item['plid'];
+        }
         $item['has_children'] = $existing_item['has_children'];
         $item['updated'] = $existing_item['updated'];
       }
@@ -1828,6 +1831,9 @@ function _menu_delete_item($item, $force = FALSE) {
  *   - mlid        Set to an existing value, or 0 or NULL to insert a new link.
  *   - plid        The mlid of the parent.
  *   - router_path The path of the relevant router item.
+ * @return
+ *   The mlid of the saved menu link, or FALSE if the menu link could not be 
+ *   saved.
  */
 function menu_link_save(&$item) {
   $menu = menu_router_build();
