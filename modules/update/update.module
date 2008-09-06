@@ -276,7 +276,7 @@ function _update_requirement_check($project, $type) {
 function update_cron() {
   $frequency = variable_get('update_check_frequency', 1);
   $interval = 60 * 60 * 24 * $frequency;
-  if (time() - variable_get('update_last_check', 0) > $interval) {
+  if ($_SERVER['REQUEST_TIME'] - variable_get('update_last_check', 0) > $interval) {
     update_refresh();
     _update_cron_notify();
   }
@@ -342,7 +342,7 @@ function update_get_available($refresh = FALSE) {
     }
   }
   if (!$needs_refresh && ($cache = cache_get('update_info', 'cache_update'))
-       && $cache->expire > time()) {
+       && $cache->expire > $_SERVER['REQUEST_TIME']) {
     $available = $cache->data;
   }
   elseif ($needs_refresh || $refresh) {

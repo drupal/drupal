@@ -13,7 +13,7 @@
  * Nodes changed after this time may be marked new, updated, or read, depending
  * on their state for the current user. Defaults to 30 days ago.
  */
-define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
+define('NODE_NEW_LIMIT', $_SERVER['REQUEST_TIME'] - 30 * 24 * 60 * 60);
 
 /**
  * Node is being built before being viewed normally.
@@ -188,10 +188,10 @@ function node_tag_new($nid) {
 
   if ($user->uid) {
     if (node_last_viewed($nid)) {
-      db_query('UPDATE {history} SET timestamp = %d WHERE uid = %d AND nid = %d', time(), $user->uid, $nid);
+      db_query('UPDATE {history} SET timestamp = %d WHERE uid = %d AND nid = %d', $_SERVER['REQUEST_TIME'], $user->uid, $nid);
     }
     else {
-      @db_query('INSERT INTO {history} (uid, nid, timestamp) VALUES (%d, %d, %d)', $user->uid, $nid, time());
+      @db_query('INSERT INTO {history} (uid, nid, timestamp) VALUES (%d, %d, %d)', $user->uid, $nid, $_SERVER['REQUEST_TIME']);
     }
   }
 }
@@ -880,7 +880,7 @@ function node_submit($node) {
       $node->uid = 0;
     }
   }
-  $node->created = !empty($node->date) ? strtotime($node->date) : time();
+  $node->created = !empty($node->date) ? strtotime($node->date) : $_SERVER['REQUEST_TIME'];
   $node->validated = TRUE;
 
   return $node;
@@ -932,12 +932,12 @@ function node_save(&$node) {
 
   // Set some required fields:
   if (empty($node->created)) {
-    $node->created = time();
+    $node->created = $_SERVER['REQUEST_TIME'];
   }
   // The changed timestamp is always updated for bookkeeping purposes (revisions, searching, ...)
-  $node->changed = time();
+  $node->changed = $_SERVER['REQUEST_TIME'];
 
-  $node->timestamp = time();
+  $node->timestamp = $_SERVER['REQUEST_TIME'];
   $node->format = isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT;
   $update_node = TRUE;
 
@@ -1221,7 +1221,7 @@ function node_search($op = 'search', $keys = NULL) {
       return t('Content');
 
     case 'reset':
-      db_query("UPDATE {search_dataset} SET reindex = %d WHERE type = 'node'", time());
+      db_query("UPDATE {search_dataset} SET reindex = %d WHERE type = 'node'", $_SERVER['REQUEST_TIME']);
       return;
 
     case 'status':

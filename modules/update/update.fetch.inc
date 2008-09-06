@@ -52,8 +52,8 @@ function _update_refresh() {
   }
   if (!empty($available) && is_array($available)) {
     $frequency = variable_get('update_check_frequency', 1);
-    cache_set('update_info', $available, 'cache_update', time() + (60 * 60 * 24 * $frequency));
-    variable_set('update_last_check', time());
+    cache_set('update_info', $available, 'cache_update', $_SERVER['REQUEST_TIME'] + (60 * 60 * 24 * $frequency));
+    variable_set('update_last_check', $_SERVER['REQUEST_TIME']);
     watchdog('update', 'Fetched information about all available new releases and updates.', array(), WATCHDOG_NOTICE, l(t('view'), 'admin/reports/updates'));
   }
   else {

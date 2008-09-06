@@ -1174,7 +1174,7 @@ function install_configure_form_submit($form, &$form_state) {
   $user->sid = session_id();
 
   // Record when this install ran.
-  variable_set('install_time', time());
+  variable_set('install_time', $_SERVER['REQUEST_TIME']);
 }
 
 // Start the installer.

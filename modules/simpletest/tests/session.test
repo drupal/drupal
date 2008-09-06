@@ -113,7 +113,7 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->assertEqual($authenticated, $this->session_count_authenticated, t('Correctly counted @count authenticated sessions.', array('@count' => $authenticated)), t('Session'));
 
     // Should return 0 sessions from 1 second from now.
-    $this->assertEqual(sess_count(time() + 1), 0, t('Correctly returned 0 sessions newer than the current time.'), t('Session'));
+    $this->assertEqual(sess_count($_SERVER['REQUEST_TIME'] + 1), 0, t('Correctly returned 0 sessions newer than the current time.'), t('Session'));
 
   }
 

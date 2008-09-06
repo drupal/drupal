@@ -54,7 +54,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
       l($node->title, "node/$node->nid") . ' ' . theme('mark', node_mark($node->nid, $node->changed)),
       theme('username', $node),
       array('class' => 'replies', 'data' => $comments),
-      t('!time ago', array('!time' => format_interval(time() - $node->last_updated)))
+      t('!time ago', array('!time' => format_interval($_SERVER['REQUEST_TIME'] - $node->last_updated)))
     );
   }
 

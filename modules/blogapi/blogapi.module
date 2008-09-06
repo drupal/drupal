@@ -218,7 +218,7 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
   }
 
   if (user_access('administer nodes') && !isset($edit['date'])) {
-    $edit['date'] = format_date(time(), 'custom', 'Y-m-d H:i:s O');
+    $edit['date'] = format_date($_SERVER['REQUEST_TIME'], 'custom', 'Y-m-d H:i:s O');
   }
 
   node_invoke_nodeapi($edit, 'blogapi new');

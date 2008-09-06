@@ -236,7 +236,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
               $settings['body'] .= " really rocks";
               break;
             case 'recent':
-              $settings['created'] = time() + 3600;
+              $settings['created'] = $_SERVER['REQUEST_TIME'] + 3600;
               break;
             case 'comments':
               $settings['comment'] = 2;

@@ -708,15 +708,6 @@ function drupal_unpack($obj, $field = 'data') {
 }
 
 /**
- * Return the URI of the referring page.
- */
-function referer_uri() {
-  if (isset($_SERVER['HTTP_REFERER'])) {
-    return $_SERVER['HTTP_REFERER'];
-  }
-}
-
-/**
  * Encode special characters in a plain-text string for display as HTML.
  *
  * Uses drupal_validate_utf8 to prevent cross site scripting attacks on
@@ -825,9 +816,9 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
       'link'        => $link,
       'user'        => $user,
       'request_uri' => $base_root . request_uri(),
-      'referer'     => referer_uri(),
+      'referer'     => $_SERVER['HTTP_REFERER'],
       'ip'          => ip_address(),
-      'timestamp'   => time(),
+      'timestamp'   => $_SERVER['REQUEST_TIME'],
     );
 
     // Call the logging hooks to log/process the message

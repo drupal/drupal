@@ -14,11 +14,11 @@ function comment_enable() {
  */
 function comment_update_1() {
   // Change any future last comment timestamps to current time.
-  db_query('UPDATE {node_comment_statistics} SET last_comment_timestamp = %d WHERE last_comment_timestamp > %d', time(), time());
+  db_query('UPDATE {node_comment_statistics} SET last_comment_timestamp = %d WHERE last_comment_timestamp > %d', $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME']);
 
   // Unstuck node indexing timestamp if needed.
   if (($last = variable_get('node_cron_last', FALSE)) !== FALSE) {
-    variable_set('node_cron_last', min(time(), $last));
+    variable_set('node_cron_last', min($_SERVER['REQUEST_TIME'], $last));
   }
 
   return array();

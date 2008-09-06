@@ -43,7 +43,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->assertEqual($user->mail, $mail, t('E-mail address matches.'));
     $this->assertEqual($user->theme, '', t('Correct theme field.'));
     $this->assertEqual($user->signature, '', t('Correct signature field.'));
-    $this->assertTrue(($user->created > time() - 20 ), t('Correct creation time.'));
+    $this->assertTrue(($user->created > $_SERVER['REQUEST_TIME'] - 20 ), t('Correct creation time.'));
     $this->assertEqual($user->status, variable_get('user_register', 1) == 1 ? 1 : 0, t('Correct status field.'));
     $this->assertEqual($user->timezone, variable_get('date_default_timezone', NULL), t('Correct timezone field.'));
     $this->assertEqual($user->language, '', t('Correct language field.'));

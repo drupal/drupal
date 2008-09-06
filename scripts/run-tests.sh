@@ -423,7 +423,7 @@ function simpletest_script_reporter_init() {
     echo "\n";
   }
 
-  echo "Test run started: " . format_date(time(), 'long') . "\n";
+  echo "Test run started: " . format_date($_SERVER['REQUEST_TIME'], 'long') . "\n";
   echo "\n";
 
   echo "Test summary:\n";
@@ -438,7 +438,7 @@ function simpletest_script_reporter_display_results() {
   global $args, $test_id, $results_map;
 
   echo "\n";
-  echo "Test run ended: " . format_date(time(), 'long') . "\n";
+  echo "Test run ended: " . format_date($_SERVER['REQUEST_TIME'], 'long') . "\n";
   echo "\n";
 
   if ($args['verbose']) {

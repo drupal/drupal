@@ -73,17 +73,17 @@ function sess_write($key, $value) {
     // and gives more useful statistics. We can't eliminate anonymous session
     // table rows without breaking "Who's Online" block.
     if ($user->uid || $value || count($_COOKIE)) {
-      db_query("INSERT INTO {sessions} (sid, uid, cache, hostname, session, timestamp) VALUES ('%s', %d, %d, '%s', '%s', %d)", $key, $user->uid, isset($user->cache) ? $user->cache : 0, ip_address(), $value, time());
+      db_query("INSERT INTO {sessions} (sid, uid, cache, hostname, session, timestamp) VALUES ('%s', %d, %d, '%s', '%s', %d)", $key, $user->uid, isset($user->cache) ? $user->cache : 0, ip_address(), $value, $_SERVER['REQUEST_TIME']);
     }
   }
   else {
-    db_query("UPDATE {sessions} SET uid = %d, cache = %d, hostname = '%s', session = '%s', timestamp = %d WHERE sid = '%s'", $user->uid, isset($user->cache) ? $user->cache : 0, ip_address(), $value, time(), $key);
+    db_query("UPDATE {sessions} SET uid = %d, cache = %d, hostname = '%s', session = '%s', timestamp = %d WHERE sid = '%s'", $user->uid, isset($user->cache) ? $user->cache : 0, ip_address(), $value, $_SERVER['REQUEST_TIME'], $key);
 
     if (db_affected_rows()) {
       // Last access time is updated no more frequently than once every 180 seconds.
       // This reduces contention in the users table.
-      if ($user->uid && time() - $user->access > variable_get('session_write_interval', 180)) {
-        db_query("UPDATE {users} SET access = %d WHERE uid = %d", time(), $user->uid);
+      if ($user->uid && $_SERVER['REQUEST_TIME'] - $user->access > variable_get('session_write_interval', 180)) {
+        db_query("UPDATE {users} SET access = %d WHERE uid = %d", $_SERVER['REQUEST_TIME'], $user->uid);
       }
     }
   }
@@ -143,7 +143,7 @@ function sess_gc($lifetime) {
   // for three weeks before deleting them, you need to set gc_maxlifetime
   // to '1814400'. At that value, only after a user doesn't log in after
   // three weeks (1814400 seconds) will his/her session be removed.
-  db_query("DELETE FROM {sessions} WHERE timestamp < %d", time() - $lifetime);
+  db_query("DELETE FROM {sessions} WHERE timestamp < %d", $_SERVER['REQUEST_TIME'] - $lifetime);
 
   return TRUE;
 }
