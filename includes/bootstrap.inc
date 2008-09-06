@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.221 2008/09/06 08:36:19 dries Exp $
+// $Id: bootstrap.inc,v 1.222 2008/09/06 15:20:09 webchick Exp $
 
 /**
  * @file
@@ -302,16 +302,11 @@ function conf_path($require_settings = TRUE, $reset = FALSE) {
 }
 
 /**
- * Unsets all disallowed global variables. See $allowed for what's allowed.
+ * Initialize variables needed for the rest of the execution.
  */
-function drupal_unset_globals() {
-  if (ini_get('register_globals')) {
-    $allowed = array('_ENV' => 1, '_GET' => 1, '_POST' => 1, '_COOKIE' => 1, '_FILES' => 1, '_SERVER' => 1, '_REQUEST' => 1, 'GLOBALS' => 1);
-    foreach ($GLOBALS as $key => $value) {
-      if (!isset($allowed[$key])) {
-        unset($GLOBALS[$key]);
-      }
-    }
+function drupal_initialize_variables() {
+  if (!isset($_SERVER['HTTP_REFERER'])) {
+    $_SERVER['HTTP_REFERER'] = '';
   }
 }
 
@@ -993,7 +988,7 @@ function _drupal_bootstrap($phase) {
   switch ($phase) {
 
     case DRUPAL_BOOTSTRAP_CONFIGURATION:
-      drupal_unset_globals();
+      drupal_initialize_variables();
       // Start a page timer:
       timer_start('page');
       // Initialize the configuration
