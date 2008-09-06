@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.789 2008/09/06 08:36:19 dries Exp $
+// $Id: common.inc,v 1.790 2008/09/06 15:06:10 webchick Exp $
 
 /**
  * @file
@@ -563,8 +563,8 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
       $location = $result->headers['Location'];
 
       if ($retry) {
-        $result = drupal_http_request($result->headers['Location'], $headers, $method, $data, --$retry);
-        $result->redirect_code = $result->code;
+        $result = drupal_http_request($location, $headers, $method, $data, --$retry);
+        $result->redirect_code = $code;
       }
       $result->redirect_url = $location;
 
