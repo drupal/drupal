@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.admin.inc,v 1.14 2008/08/16 14:48:17 dries Exp $
+// $Id: aggregator.admin.inc,v 1.15 2008/09/06 08:36:19 dries Exp $
 
 /**
  * @file
@@ -27,7 +27,7 @@ function aggregator_view() {
   $header = array(t('Title'), t('Items'), t('Last update'), t('Next update'), array('data' => t('Operations'), 'colspan' => '3'));
   $rows = array();
   while ($feed = db_fetch_object($result)) {
-    $rows[] = array(l($feed->title, "aggregator/sources/$feed->fid"), format_plural($feed->items, '1 item', '@count items'), ($feed->checked ? t('@time ago', array('@time' => format_interval(time() - $feed->checked))) : t('never')), ($feed->checked ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - time()))) : t('never')), l(t('edit'), "admin/content/aggregator/edit/feed/$feed->fid"), l(t('remove items'), "admin/content/aggregator/remove/$feed->fid"), l(t('update items'), "admin/content/aggregator/update/$feed->fid"));
+    $rows[] = array(l($feed->title, "aggregator/sources/$feed->fid"), format_plural($feed->items, '1 item', '@count items'), ($feed->checked ? t('@time ago', array('@time' => format_interval($_SERVER['REQUEST_TIME'] - $feed->checked))) : t('never')), ($feed->checked ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - $_SERVER['REQUEST_TIME']))) : t('never')), l(t('edit'), "admin/content/aggregator/edit/feed/$feed->fid"), l(t('remove items'), "admin/content/aggregator/remove/$feed->fid"), l(t('update items'), "admin/content/aggregator/update/$feed->fid"));
   }
   $output .= theme('table', $header, $rows);
 

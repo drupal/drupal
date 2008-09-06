@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.36 2008/08/30 09:42:25 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.37 2008/09/06 08:36:20 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -331,7 +331,7 @@ class DrupalWebTestCase {
       'body'      => $this->randomName(32),
       'title'     => $this->randomName(8),
       'comment'   => 2,
-      'changed'   => time(),
+      'changed'   => $_SERVER['REQUEST_TIME'],
       'format'    => FILTER_FORMAT_DEFAULT,
       'moderate'  => 0,
       'promote'   => 0,

@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.127 2008/08/28 08:40:32 dries Exp $
+// $Id: install.php,v 1.128 2008/09/06 08:36:19 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -1174,7 +1174,7 @@ function install_configure_form_submit($form, &$form_state) {
   $user->sid = session_id();
 
   // Record when this install ran.
-  variable_set('install_time', time());
+  variable_set('install_time', $_SERVER['REQUEST_TIME']);
 }
 
 // Start the installer.

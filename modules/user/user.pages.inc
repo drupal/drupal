@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.15 2008/08/21 19:36:39 dries Exp $
+// $Id: user.pages.inc,v 1.16 2008/09/06 08:36:22 dries Exp $
 
 /**
  * @file
@@ -84,7 +84,7 @@ function user_pass_reset(&$form_state, $uid, $timestamp, $hashed_pass, $action =
   else {
     // Time out, in seconds, until login URL expires. 24 hours = 86400 seconds.
     $timeout = 86400;
-    $current = time();
+    $current = $_SERVER['REQUEST_TIME'];
     // Some redundant checks for extra security ?
     if ($timestamp < $current && $account = user_load(array('uid' => $uid, 'status' => 1)) ) {
       // No time out for first time login.

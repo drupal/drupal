@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.pages.inc,v 1.6 2008/04/14 17:48:42 dries Exp $
+// $Id: tracker.pages.inc,v 1.7 2008/09/06 08:36:21 dries Exp $
 
 /**
  * @file
@@ -54,7 +54,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
       l($node->title, "node/$node->nid") . ' ' . theme('mark', node_mark($node->nid, $node->changed)),
       theme('username', $node),
       array('class' => 'replies', 'data' => $comments),
-      t('!time ago', array('!time' => format_interval(time() - $node->last_updated)))
+      t('!time ago', array('!time' => format_interval($_SERVER['REQUEST_TIME'] - $node->last_updated)))
     );
   }
 

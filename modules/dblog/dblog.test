@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.test,v 1.7 2008/09/05 19:04:26 webchick Exp $
+// $Id: dblog.test,v 1.8 2008/09/06 08:36:20 dries Exp $
 
 class DBLogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -102,9 +102,9 @@ class DBLogTestCase extends DrupalWebTestCase {
       'link'        => NULL,
       'user'        => $this->big_user,
       'request_uri' => $base_root . request_uri(),
-      'referer'     => referer_uri(),
+      'referer'     => $_SERVER['HTTP_REFERER'],
       'ip'          => ip_address(),
-      'timestamp'   => time(),
+      'timestamp'   => $_SERVER['REQUEST_TIME'],
       );
     $message = 'Log entry added to test the dblog row limit.';
     for ($i = 0; $i < $count; $i++) {

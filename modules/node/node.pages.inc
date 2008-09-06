@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.34 2008/08/31 09:15:12 dries Exp $
+// $Id: node.pages.inc,v 1.35 2008/09/06 08:36:20 dries Exp $
 
 /**
  * @file
@@ -80,7 +80,7 @@ function node_object_prepare(&$node) {
     }
     global $user;
     $node->uid = $user->uid;
-    $node->created = time();
+    $node->created = $_SERVER['REQUEST_TIME'];
   }
   else {
     $node->date = format_date($node->created, 'custom', 'Y-m-d H:i:s O');
@@ -361,7 +361,7 @@ function node_preview($node) {
       $node->picture = $user->picture;
     }
 
-    $node->changed = time();
+    $node->changed = $_SERVER['REQUEST_TIME'];
 
     // Extract a teaser, if it hasn't been set (e.g. by a module-provided
     // 'teaser' form item).

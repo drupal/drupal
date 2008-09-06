@@ -1,5 +1,5 @@
 <?php
-// $Id: run-tests.sh,v 1.7 2008/08/18 18:52:31 dries Exp $
+// $Id: run-tests.sh,v 1.8 2008/09/06 08:36:22 dries Exp $
 /**
  * @file
  * This script runs Drupal tests from command line.
@@ -423,7 +423,7 @@ function simpletest_script_reporter_init() {
     echo "\n";
   }
 
-  echo "Test run started: " . format_date(time(), 'long') . "\n";
+  echo "Test run started: " . format_date($_SERVER['REQUEST_TIME'], 'long') . "\n";
   echo "\n";
 
   echo "Test summary:\n";
@@ -438,7 +438,7 @@ function simpletest_script_reporter_display_results() {
   global $args, $test_id, $results_map;
 
   echo "\n";
-  echo "Test run ended: " . format_date(time(), 'long') . "\n";
+  echo "Test run ended: " . format_date($_SERVER['REQUEST_TIME'], 'long') . "\n";
   echo "\n";
 
   if ($args['verbose']) {
