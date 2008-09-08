@@ -88,8 +88,8 @@ class TaxonomyTermFunctionsTestCase extends DrupalWebTestCase {
    */
   function getInfo() {
     return array(
-      'name' => t('Term functions'),
-      'description' => t('Testing save/update/delete terms.'),
+      'name' => t('Term no hierarchy'),
+      'description' => t('Testing save/update/delete terms without a hierarchy.'),
       'group' => t('Taxonomy')
     );
   }
@@ -161,6 +161,20 @@ class TaxonomyTermFunctionsTestCase extends DrupalWebTestCase {
     $edit['name'] = 0;
     taxonomy_save_vocabulary($edit);
   }
+}
+
+class TaxonomyTermSingleTestCase extends DrupalWebTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Term single hierarchy'),
+      'description' => t('Testing save/update/delete terms in a single hierarchy.'),
+      'group' => t('Taxonomy')
+    );
+  }
 
   /**
    * Test single hierarchy terms.
@@ -203,6 +217,20 @@ class TaxonomyTermFunctionsTestCase extends DrupalWebTestCase {
     // Delete vocabulary.
     $edit['name'] = 0;
     taxonomy_save_vocabulary($edit);
+  }
+}
+
+class TaxonomyTermMultipleTestCase extends DrupalWebTestCase {
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Term multiple hierarchy'),
+      'description' => t('Testing save/update/delete terms in a multiple hierarchy.'),
+      'group' => t('Taxonomy')
+    );
   }
 
   /**
