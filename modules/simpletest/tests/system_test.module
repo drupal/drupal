@@ -1,5 +1,5 @@
 <?php
-// $Id: system_test.module,v 1.1 2008/09/02 17:00:34 dries Exp $
+// $Id: system_test.module,v 1.2 2008/09/08 20:49:47 dries Exp $
 
 /**
  * Implementation of hook_menu().
@@ -36,6 +36,14 @@ function system_test_menu() {
     'title' => 'Redirect',
     'page callback' => 'system_test_destination',
     'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/variable-get'] = array(
+    'title' => 'Variable Get',
+    'page callback' => 'variable_get',
+    'page arguments' => array('simpletest_bootstrap_variable_test', NULL),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
