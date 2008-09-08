@@ -1051,7 +1051,7 @@ function user_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['user/%user_category/edit'] = array(
+  $items['user/%user/edit'] = array(
     'title' => 'Edit',
     'page callback' => 'user_edit',
     'page arguments' => array(1),
