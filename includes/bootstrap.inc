@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.223 2008/09/08 21:08:24 dries Exp $
+// $Id: bootstrap.inc,v 1.224 2008/09/08 21:24:30 dries Exp $
 
 /**
  * @file
@@ -307,6 +307,9 @@ function conf_path($require_settings = TRUE, $reset = FALSE) {
 function drupal_initialize_variables() {
   if (!isset($_SERVER['HTTP_REFERER'])) {
     $_SERVER['HTTP_REFERER'] = '';
+  }
+  if (!isset($_SERVER['SERVER_PROTOCOL']) || ($_SERVER['SERVER_PROTOCOL'] != 'HTTP/1.0' && $_SERVER['SERVER_PROTOCOL'] != 'HTTP/1.1')) {
+    $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.0';
   }
 }
 
@@ -640,7 +643,7 @@ function drupal_page_cache_header($cache) {
   if ($if_modified_since && $if_none_match
       && $if_none_match == $etag // etag must match
       && $if_modified_since == $last_modified) {  // if-modified-since must match
-    header('HTTP/1.1 304 Not Modified');
+    header($_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified');
     // All 304 responses must send an etag if the 200 response for the same object contained an etag
     header("Etag: $etag");
     exit();
@@ -1020,7 +1023,7 @@ function _drupal_bootstrap($phase) {
     case DRUPAL_BOOTSTRAP_ACCESS:
       // Deny access to blocked IP addresses - t() is not yet available.
       if (drupal_is_denied(ip_address())) {
-        header('HTTP/1.1 403 Forbidden');
+        header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
         print 'Sorry, ' . check_plain(ip_address()) . ' has been banned.';
         exit();
       }

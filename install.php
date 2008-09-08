@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.128 2008/09/06 08:36:19 dries Exp $
+// $Id: install.php,v 1.129 2008/09/08 21:24:30 dries Exp $
 
 require_once './includes/install.inc';
 
@@ -24,7 +24,7 @@ function install_main() {
   // running tests.  However, for security reasons, it is imperative that no
   // installation be permitted using such a prefix.
   if (preg_match("/^simpletest\d+$/", $_SERVER['HTTP_USER_AGENT'])) {
-    header('HTTP/1.1 403 Forbidden');
+    header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
     exit;
   }
 
