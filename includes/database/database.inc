@@ -1780,7 +1780,7 @@ function db_change_field(&$ret, $table, $field, $field_new, $spec, $keys_new = a
 function _db_error_page($error = '') {
   global $db_type;
   drupal_maintenance_theme();
-  drupal_set_header('HTTP/1.1 503 Service Unavailable');
+  drupal_set_header($_SERVER['SERVER_PROTOCOL'] . ' 503 Service Unavailable');
   drupal_set_title('Site offline');
 }
 

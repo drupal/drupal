@@ -24,7 +24,7 @@ function install_main() {
   // running tests.  However, for security reasons, it is imperative that no
   // installation be permitted using such a prefix.
   if (preg_match("/^simpletest\d+$/", $_SERVER['HTTP_USER_AGENT'])) {
-    header('HTTP/1.1 403 Forbidden');
+    header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
     exit;
   }
 
