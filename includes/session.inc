@@ -4,31 +4,89 @@
 /**
  * @file
  * User session handling functions.
+ *
+ * The user-level session storage handlers:
+ * - _sess_open()
+ * - _sess_close()
+ * - _sess_read()
+ * - _sess_write()
+ * are assigned by session_set_save_handler() in bootstrap.inc and are called 
+ * automatically by PHP. These functions should not be called directly. Session 
+ * data should instead be accessed via the $_SESSION superglobal.
+ *
+ * The user-level session storage handlers:
+ * - sess_destroy_sid()
+ * - sess_gc()
+ * are assigned by session_set_save_handler() in bootstrap.inc and are called 
+ * automatically by PHP, but they may safely be called directly.
  */
 
-function sess_open($save_path, $session_name) {
+/**
+ * Session handler assigned by session_set_save_handler().
+ * 
+ * This function is used to handle any initialization, such as file paths or 
+ * database connections, that is needed before accessing session data. Drupal 
+ * does not need to initialize anything in this function.
+ *
+ * This function should not be called directly.
+ *
+ * @return
+ *   This function will always return TRUE.
+*/    
+function _sess_open() {
   return TRUE;
 }
 
-function sess_close() {
+/**
+ * Session handler assigned by session_set_save_handler().
+ * 
+ * This function is used to close the current session. Because Drupal stores 
+ * session data in the database immediately on write, this function does 
+ * not need to do anything.
+ *
+ * This function should not be called directly.
+ *
+ * @return
+ *   This function will always return TRUE.
+*/    
+function _sess_close() {
   return TRUE;
 }
 
-function sess_read($key) {
+/**
+ * Session handler assigned by session_set_save_handler().
+ * 
+ * This function will be called by PHP to retrieve the current user's 
+ * session data, which is stored in the database. It also loads the 
+ * current user's appropriate roles into the user object.
+ *
+ * This function should not be called directly. Session data should 
+ * instead be accessed via the $_SESSION superglobal.
+ *
+ * @param $key
+ *   Session ID
+ * @return
+ *   Either an array of the session data, or an empty string, if no data 
+ *   was found or the user is anonymous.
+*/
+function _sess_read($key) {
   global $user;
 
-  // Write and Close handlers are called after destructing objects since PHP 5.0.5
+  // Write and Close handlers are called after destructing objects 
+  // since PHP 5.0.5.
   // Thus destructors can use sessions but session handler can't use objects.
   // So we are moving session closure before destructing objects.
   register_shutdown_function('session_write_close');
 
-  // Handle the case of first time visitors and clients that don't store cookies (eg. web crawlers).
+  // Handle the case of first time visitors and clients that don't store
+  // cookies (eg. web crawlers).
   if (!isset($_COOKIE[session_name()])) {
     $user = drupal_anonymous_user();
     return '';
   }
 
-  // Otherwise, if the session is still active, we have a record of the client's session in the database.
+  // Otherwise, if the session is still active, we have a record of the 
+  // client's session in the database.
   $user = db_fetch_object(db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '%s'", $key));
 
   // We found the client's session record and they are an authenticated user
@@ -44,7 +102,8 @@ function sess_read($key) {
       $user->roles[$role->rid] = $role->name;
     }
   }
-  // We didn't find the client's record (session has expired), or they are an anonymous user.
+  // We didn't find the client's record (session has expired), or they 
+  // are an anonymous user.
   else {
     $session = isset($user->session) ? $user->session : '';
     $user = drupal_anonymous_user($session);
@@ -53,7 +112,23 @@ function sess_read($key) {
   return $user->session;
 }
 
-function sess_write($key, $value) {
+/**
+ * Session handler assigned by session_set_save_handler().
+ * 
+ * This function will be called by PHP to store the current user's 
+ * session, which Drupal saves to the database.
+ *
+ * This function should not be called directly. Session data should 
+ * instead be accessed via the $_SESSION superglobal.
+ *
+ * @param $key
+ *   Session ID
+ * @param $value
+ *   Serialized array of the session data.
+ * @return
+ *   This function will always return TRUE.
+*/
+function _sess_write($key, $value) {
   global $user;
 
   // If saving of session data is disabled or if the client doesn't have a session,
@@ -80,7 +155,8 @@ function sess_write($key, $value) {
     db_query("UPDATE {sessions} SET uid = %d, cache = %d, hostname = '%s', session = '%s', timestamp = %d WHERE sid = '%s'", $user->uid, isset($user->cache) ? $user->cache : 0, ip_address(), $value, $_SERVER['REQUEST_TIME'], $key);
 
     if (db_affected_rows()) {
-      // Last access time is updated no more frequently than once every 180 seconds.
+      // Last access time is updated no more frequently
+      // than once every 180 seconds.
       // This reduces contention in the users table.
       if ($user->uid && $_SERVER['REQUEST_TIME'] - $user->access > variable_get('session_write_interval', 180)) {
         db_query("UPDATE {users} SET access = %d WHERE uid = %d", $_SERVER['REQUEST_TIME'], $user->uid);
@@ -101,7 +177,8 @@ function sess_regenerate() {
 }
 
 /**
- * Counts how many users have sessions. Can count either anonymous sessions or authenticated sessions.
+ * Counts how many users have sessions. Can count either anonymous sessions, 
+ * authenticated sessions, or both.
  *
  * @param int $timestamp
  *   A Unix timestamp representing a point of time in the past.
@@ -118,7 +195,8 @@ function sess_count($timestamp = 0, $anonymous = true) {
 }
 
 /**
- * Called by PHP session handling with the PHP session ID to end a user's session.
+ * Called by PHP session handling with the PHP session ID 
+ * to end a user's session.
  *
  * @param  string $sid
  *   the session id
@@ -151,12 +229,14 @@ function sess_gc($lifetime) {
 /**
  * Determine whether to save session data of the current request.
  *
- * This function allows the caller to temporarily disable writing of session data,
- * should the request end while performing potentially dangerous operations, such as
- * manipulating the global $user object.  See http://drupal.org/node/218104 for usage
+ * This function allows the caller to temporarily disable writing of 
+ * session data, should the request end while performing potentially 
+ * dangerous operations, such as manipulating the global $user object.
+ * See http://drupal.org/node/218104 for usage
  *
  * @param $status
- *   Disables writing of session data when FALSE, (re-)enables writing when TRUE.
+ *   Disables writing of session data when FALSE, (re-)enables 
+ *   writing when TRUE.
  * @return
  *   FALSE if writing session data has been disabled. Otherwise, TRUE.
  */

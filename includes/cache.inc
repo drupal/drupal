@@ -2,14 +2,16 @@
 // $Id$
 
 /**
- * Return data from the persistent cache. Data may be stored as either plain text or as serialized data.
- * cache_get will automatically return unserialized objects and arrays.
+ * Return data from the persistent cache. Data may be stored as either plain 
+ * text or as serialized data. cache_get will automatically return 
+ * unserialized objects and arrays.
  *
  * @param $cid
  *   The cache ID of the data to retrieve.
  * @param $table
- *   The table $table to store the data in. Valid core values are 'cache_filter',
- *   'cache_menu', 'cache_page', or 'cache' for the default cache.
+ *   The table $table to store the data in. Valid core values are 
+ *   'cache_filter', 'cache_menu', 'cache_page', or 'cache' for 
+ *   the default cache.
  * @return The cache or FALSE on failure.
  */
 function cache_get($cid, $table = 'cache') {
@@ -37,7 +39,7 @@ function cache_get($cid, $table = 'cache') {
     // currently valid for this user before we return it by making sure the
     // cache entry was created before the timestamp in the current session's
     // cache timer. The cache variable is loaded into the $user object by
-    // sess_read() in session.inc.
+    // _sess_read() in session.inc.
     else {
       if ($user->cache > $cache->created) {
         // This cache data is too old and thus not valid for us, ignore it.
@@ -82,11 +84,12 @@ function cache_get($cid, $table = 'cache') {
  * @param $cid
  *   The cache ID of the data to store.
  * @param $data
- *   The data to store in the cache. Complex data types will be automatically serialized before insertion.
+ *   The data to store in the cache. Complex data types will be automatically 
+ *   serialized before insertion.
  *   Strings will be stored as plain text and not serialized.
  * @param $table
- *   The table $table to store the data in. Valid core values are 'cache_filter',
- *   'cache_menu', 'cache_page', or 'cache'.
+ *   The table $table to store the data in. Valid core values are 
+ *   'cache_filter', 'cache_menu', 'cache_page', or 'cache'.
  * @param $expire
  *   One of the following values:
  *   - CACHE_PERMANENT: Indicates that the item should never be removed unless
@@ -149,7 +152,7 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
   if (empty($cid)) {
     if (variable_get('cache_lifetime', 0)) {
       // We store the time in the current user's $user->cache variable which
-      // will be saved into the sessions table by sess_write(). We then
+      // will be saved into the sessions table by _sess_write(). We then
       // simulate that the cache was flushed for this user by not returning
       // cached data that was cached before the timestamp.
       $user->cache = $_SERVER['REQUEST_TIME'];

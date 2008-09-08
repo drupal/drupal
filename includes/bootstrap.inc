@@ -1028,7 +1028,7 @@ function _drupal_bootstrap($phase) {
 
     case DRUPAL_BOOTSTRAP_SESSION:
       require_once variable_get('session_inc', './includes/session.inc');
-      session_set_save_handler('sess_open', 'sess_close', 'sess_read', 'sess_write', 'sess_destroy_sid', 'sess_gc');
+      session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', 'sess_destroy_sid', 'sess_gc');
       session_start();
       break;
 
