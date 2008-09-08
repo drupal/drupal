@@ -40,6 +40,14 @@ function system_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['system-test/variable-get'] = array(
+    'title' => 'Variable Get',
+    'page callback' => 'variable_get',
+    'page arguments' => array('simpletest_bootstrap_variable_test', NULL),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 

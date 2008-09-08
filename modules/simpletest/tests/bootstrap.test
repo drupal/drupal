@@ -108,3 +108,45 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
   }
 
 }
+
+class BootstrapVariableTestCase extends DrupalWebTestCase {
+  
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp('system_test');
+  }
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Variable test'),
+      'description' => t('Make sure the variable system functions correctly.'),
+      'group' => t('Bootstrap')
+    );
+  }
+
+  /**
+   * testVariable
+   */
+  function testVariable() {
+    // Setting and retrieving values.
+    $variable = $this->randomName();
+    variable_set('simpletest_bootstrap_variable_test', $variable);
+    $this->assertIdentical($variable, variable_get('simpletest_bootstrap_variable_test', NULL), t('Setting and retrieving values'));
+
+    // Make sure the variable persists across multiple requests.
+    $this->drupalGet('system-test/variable-get');
+    $this->assertText($variable, t('Variable persists across multiple requests'));
+    
+    // Deleting variables.
+    $default_value = $this->randomName();
+    variable_del('simpletest_bootstrap_variable_test');
+    $variable = variable_get('simpletest_bootstrap_variable_test', $default_value);
+    $this->assertIdentical($variable, $default_value, t('Deleting variables'));
+  }
+
+}
