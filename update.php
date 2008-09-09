@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.257 2008/09/09 00:26:32 webchick Exp $
+// $Id: update.php,v 1.258 2008/09/09 13:33:19 webchick Exp $
 
 /**
  * @file
@@ -256,7 +256,7 @@ function update_script_selection_form() {
     $all += $pending;
   }
 
-  if (count($form) == 1 && $form['start']['system'] == array()) {
+  if (empty($all)) {
     drupal_set_message(t('No pending updates.'));
     unset($form);
     $form['links'] = array(
