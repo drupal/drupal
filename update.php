@@ -256,7 +256,7 @@ function update_script_selection_form() {
     $all += $pending;
   }
 
-  if (count($form) == 1 && $form['start']['system'] == array()) {
+  if (empty($all)) {
     drupal_set_message(t('No pending updates.'));
     unset($form);
     $form['links'] = array(
