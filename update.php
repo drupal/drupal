@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.256 2008/08/31 12:45:41 dries Exp $
+// $Id: update.php,v 1.257 2008/09/09 00:26:32 webchick Exp $
 
 /**
  * @file
@@ -667,7 +667,7 @@ if (!empty($update_free_access) || $user->uid == 1) {
       $output = update_selection_page();
       break;
 
-    case 'Update':
+    case 'Apply pending updates':
       update_batch();
       break;
 
