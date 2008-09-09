@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.180 2008/08/21 19:36:36 dries Exp $
+// $Id: locale.inc,v 1.181 2008/09/09 13:43:40 dries Exp $
 
 /**
  * @file
@@ -856,6 +856,7 @@ function locale_translate_edit_form_submit($form, &$form_state) {
   drupal_set_message(t('The string has been saved.'));
 
   // Clear locale cache.
+  _locale_invalidate_js();
   cache_clear_all('locale:', 'cache', TRUE);
 
   $form_state['redirect'] = 'admin/build/translate/search';
