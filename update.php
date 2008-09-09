@@ -667,7 +667,7 @@ if (!empty($update_free_access) || $user->uid == 1) {
       $output = update_selection_page();
       break;
 
-    case 'Update':
+    case 'Apply pending updates':
       update_batch();
       break;
 
