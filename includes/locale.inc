@@ -853,6 +853,7 @@ function locale_translate_edit_form_submit($form, &$form_state) {
   drupal_set_message(t('The string has been saved.'));
 
   // Clear locale cache.
+  _locale_invalidate_js();
   cache_clear_all('locale:', 'cache', TRUE);
 
   $form_state['redirect'] = 'admin/build/translate/search';
