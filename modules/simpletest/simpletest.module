@@ -106,7 +106,7 @@ function simpletest_test_form() {
             $result->message_group,
             basename($result->file),
             $result->line,
-            $result->caller,
+            $result->function,
             $map[$status],
           ),
           'class' => "simpletest-$status",

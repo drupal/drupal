@@ -43,53 +43,73 @@ class DrupalWebTestCase {
    *   The message string.
    * @param $group
    *   WHich group this assert belongs to.
-   * @param $custom_caller
+   * @param $caller
    *   By default, the assert comes from a function which names start with
    *   'test'. Instead, you can specify where this assert originates from
-   *   by passing in an associative array as $custom_caller. Key 'file' is
+   *   by passing in an associative array as $caller. Key 'file' is
    *   the name of the source file, 'line' is the line number and 'function'
    *   is the caller function itself.
    */
-  protected function _assert($status, $message = '', $group = 'Other', $custom_caller = NULL) {
+  protected function _assert($status, $message = '', $group = 'Other', $caller = NULL) {
     global $db_prefix;
+
+    // Convert boolean status to string status.
     if (is_bool($status)) {
       $status = $status ? 'pass' : 'fail';
     }
+
+    // Increment summary result counter.
     $this->_results['#' . $status]++;
-    if (!isset($custom_caller)) {
-      $callers = debug_backtrace();
-      array_shift($callers);
-      foreach ($callers as $function) {
-        if (substr($function['function'], 0, 6) != 'assert' && $function['function'] != 'pass' && $function['function'] != 'fail') {
-          break;
-        }
-      }
+
+    // Get the function information about the call to the assertion method.
+    if (!$caller) {
+      $caller = $this->getAssertionCall();
     }
-    else {
-      $function = $custom_caller;
-    }
+
+    // Switch to non-testing database to store results in.
     $current_db_prefix = $db_prefix;
     $db_prefix = $this->db_prefix_original;
-    db_insert('simpletest')->fields(array(
+
+    // Creation assertion array that can be displayed while tests are running.
+    $this->_assertions[] = $assertion = array(
       'test_id' => $this->test_id,
-    'test_class' => get_class($this), 
-    'status' => $status, 
-    'message' => substr($message, 0, 255),  // Some messages are too long for the database.
-    'message_group' => $group, 
-    'caller' => $function['function'], 
-    'line' => $function['line'], 
-    'file' => $function['file'],
-    ))->execute();
-    $this->_assertions[] = array(
+      'test_class' => get_class($this),
       'status' => $status,
       'message' => $message,
-      'group' => $group,
-      'function' => $function['function'],
-      'line' => $function['line'],
-      'file' => $function['file'],
+      'message_group' => $group,
+      'function' => $caller['function'],
+      'line' => $caller['line'],
+      'file' => $caller['file'],
     );
+
+    // Store assertion for display after the test has completed.
+    db_insert('simpletest')->fields($assertion)->execute();
+
+    // Return to testing prefix.
     $db_prefix = $current_db_prefix;
     return $status;
+  }
+
+  /**
+   * Cycles through backtrace until the first non-assertion method is found.
+   *
+   * @return
+   *   Array representing the true caller.
+   */
+  protected function getAssertionCall() {
+    $backtrace = debug_backtrace();
+
+    // The first element is the call. The second element is the caller.
+    // We skip calls that occured in one of the methods of DrupalWebTestCase
+    // or in an assertion function.
+    while (($caller = $backtrace[1]) &&
+          ((isset($caller['class']) && $caller['class'] == 'DrupalWebTestCase') ||
+            substr($caller['function'], 0, 6) == 'assert')) {
+      // We remove that call.
+      array_shift($backtrace);
+    }
+
+    return _drupal_get_last_caller($backtrace);
   }
 
   /**
@@ -263,11 +283,11 @@ class DrupalWebTestCase {
    *   The message to display along with the assertion.
    * @param $group
    *   The type of assertion - examples are "Browser", "PHP".
-   * @param $custom_caller
+   * @param $caller
    *   The caller of the error.
    */
-  protected function error($message = '', $group = 'Other', $custom_caller = NULL) {
-    return $this->_assert('exception', $message, $group, $custom_caller);
+  protected function error($message = '', $group = 'Other', $caller = NULL) {
+    return $this->_assert('exception', $message, $group, $caller);
   }
 
   /**
@@ -281,8 +301,13 @@ class DrupalWebTestCase {
       // If the current method starts with "test", run it - it's a test.
       if (strtolower(substr($method, 0, 4)) == 'test') {
         $this->setUp();
-        $this->$method();
-        // Finish up.
+        try {
+          $this->$method();
+          // Finish up.
+        }
+        catch (Exception $e) {
+          $this->exceptionHandler($e);
+        }
         $this->tearDown();
       }
     }
@@ -308,13 +333,26 @@ class DrupalWebTestCase {
         E_USER_NOTICE => 'User notice',
         E_RECOVERABLE_ERROR => 'Recoverable error',
       );
-      $this->error($message, $error_map[$severity], array(
-        'function' => '',
-        'line' => $line,
-        'file' => $file,
-      ));
+
+      $backtrace = debug_backtrace();
+      $this->error($message, $error_map[$severity], _drupal_get_last_caller($backtrace));
     }
     return TRUE;
+  }
+
+  /**
+   * Handle exceptions.
+   *
+   * @see set_exception_handler
+   */
+  function exceptionHandler($exception) {
+    $backtrace = $exception->getTrace();
+    // Push on top of the backtrace the call that generated the exception.
+    array_unshift($backtrace, array(
+      'line' => $exception->getLine(),
+      'file' => $exception->getFile(),
+    ));
+    $this->error($exception->getMessage(), 'Uncaught exception', _drupal_get_last_caller($backtrace));
   }
 
   /**
@@ -405,7 +443,7 @@ class DrupalWebTestCase {
     node_types_rebuild();
 
     $this->assertEqual($saved_type, SAVED_NEW, t('Created content type %type.', array('%type' => $type->type)));
-    
+
     // Reset permissions so that permissions for this content type are available.
     $this->checkPermissions(array(), TRUE);
 
@@ -645,7 +683,7 @@ class DrupalWebTestCase {
 
     // Generate temporary prefixed database to ensure that tests have a clean starting point.
     $db_prefix = 'simpletest' . mt_rand(1000, 1000000);
-    
+
     include_once './includes/install.inc';
     drupal_install_system();
 
@@ -659,7 +697,7 @@ class DrupalWebTestCase {
     // stale data for the previous run's database prefix and all
     // calls to it will fail.
     drupal_get_schema(NULL, TRUE);
-    
+
     // Run default profile tasks.
     $task = 'profile';
     default_profile_tasks($task, '');
@@ -732,7 +770,6 @@ class DrupalWebTestCase {
 
       // Close the CURL handler.
       $this->curlClose();
-      restore_error_handler();
     }
   }
 
@@ -807,7 +844,7 @@ class DrupalWebTestCase {
       // them.
       @$htmlDom = DOMDocument::loadHTML($this->_content);
       if ($htmlDom) {
-        $this->assertTrue(TRUE, t('Valid HTML found on "@path"', array('@path' => $this->getUrl())), t('Browser'));
+        $this->pass(t('Valid HTML found on "@path"', array('@path' => $this->getUrl())), t('Browser'));
         // It's much easier to work with simplexml than DOM, luckily enough
         // we can just simply import our DOM tree.
         $this->elements = simplexml_import_dom($htmlDom);
@@ -1290,7 +1327,7 @@ class DrupalWebTestCase {
    *   TRUE on pass, FALSE on fail.
    */
   function assertText($text, $message = '', $group = 'Other') {
-    return $this->assertTextHelper($text, $message, $group = 'Other', FALSE);
+    return $this->assertTextHelper($text, $message, $group, FALSE);
   }
 
   /**

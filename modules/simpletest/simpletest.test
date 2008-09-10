@@ -106,17 +106,36 @@ class SimpleTestTestCase extends DrupalWebTestCase {
     $this->drupalCreateUser(array($this->invalid_permission));
 
     $this->pass(t('Test ID is @id.', array('@id' => $this->test_id)));
+
+    // Generates a warning
+    $i = 1 / 0;
+
+    // Call an assert function specific to that class.
+    $this->assertNothing();
+  }
+
+  /**
+   * Assert nothing.
+   */
+  function assertNothing() {
+    $this->pass("This is nothing.");
   }
 
   /**
    * Confirm that the stub test produced the desired results.
    */
   function confirmStubTestResults() {
-    $this->assertAssertion($this->pass, 'Other', 'Pass');
-    $this->assertAssertion($this->fail, 'Other', 'Fail');
+    $this->assertAssertion($this->pass, 'Other', 'Pass', 'simpletest.test', 'SimpleTestTestCase->stubTest()');
+    $this->assertAssertion($this->fail, 'Other', 'Fail', 'simpletest.test', 'SimpleTestTestCase->stubTest()');
 
-    $this->assertAssertion(t('Created permissions: @perms', array('@perms' => $this->valid_permission)), 'Role', 'Pass');
-    $this->assertAssertion(t('Invalid permission %permission.', array('%permission' => $this->invalid_permission)), 'Role', 'Fail');
+    $this->assertAssertion(t('Created permissions: @perms', array('@perms' => $this->valid_permission)), 'Role', 'Pass', 'simpletest.test', 'SimpleTestTestCase->stubTest()');
+    $this->assertAssertion(t('Invalid permission %permission.', array('%permission' => $this->invalid_permission)), 'Role', 'Fail', 'simpletest.test', 'SimpleTestTestCase->stubTest()');
+
+    // Check that a warning is catched by simpletest.
+    $this->assertAssertion('Division by zero', 'Warning', 'Fail', 'simpletest.test', 'SimpleTestTestCase->stubTest()');
+
+    // Check that the backtracing code works for specific assert function.
+    $this->assertAssertion('This is nothing.', 'Other', 'Pass', 'simpletest.test', 'SimpleTestTestCase->stubTest()');
 
     $this->test_ids[] = $test_id = $this->getTestIdFromResults();
     $this->assertTrue($test_id, t('Found test ID in results.'));
@@ -141,20 +160,24 @@ class SimpleTestTestCase extends DrupalWebTestCase {
    * @param string $message Assertion message.
    * @param string $type Assertion type.
    * @param string $status Assertion status.
+   * @param string $file File where the assertion originated.
+   * @param string $functuion Function where the assertion originated.
    * @return Assertion result.
    */
-  function assertAssertion($message, $type, $status) {
+  function assertAssertion($message, $type, $status, $file, $function) {
     $message = trim(strip_tags($message));
     $found = FALSE;
     foreach ($this->results['assertions'] as $assertion) {
       if ($assertion['message'] == $message &&
           $assertion['type'] == $type &&
-          $assertion['status'] == $status) {
+          $assertion['status'] == $status &&
+          $assertion['file'] == $file &&
+          $assertion['function'] == $function) {
         $found = TRUE;
         break;
       }
     }
-    return $this->assertTrue($found, t('Found assertion {"@message", "@type", "@status"}.', array('@message' => $message, '@type' => $type, '@status' => $status)));
+    return $this->assertTrue($found, t('Found assertion {"@message", "@type", "@status", "@file", "@function"}.', array('@message' => $message, '@type' => $type, '@status' => $status, "@file" => $file, "@function" => $function)));
   }
 
   /**
@@ -175,6 +198,9 @@ class SimpleTestTestCase extends DrupalWebTestCase {
           $assertion = array();
           $assertion['message'] = $this->asText($row->td[0]);
           $assertion['type'] = $this->asText($row->td[1]);
+          $assertion['file'] = $this->asText($row->td[2]);
+          $assertion['line'] = $this->asText($row->td[3]);
+          $assertion['function'] = $this->asText($row->td[4]);
           $ok_url = (url('misc/watchdog-ok.png') == 'misc/watchdog-ok.png') ? 'misc/watchdog-ok.png' : (base_path() . 'misc/watchdog-ok.png');
           $assertion['status'] = ($row->td[5]->img['src'] == $ok_url) ? 'Pass' : 'Fail';
           $results['assertions'][] = $assertion;
@@ -212,7 +238,7 @@ class SimpleTestTestCase extends DrupalWebTestCase {
     if (!is_object($element)) {
       return $this->fail('The element is not an element.');
     }
-    return trim(strip_tags($element->asXML()));
+    return trim(html_entity_decode(strip_tags($element->asXML())));
   }
 
   /**

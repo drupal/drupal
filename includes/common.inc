@@ -627,6 +627,35 @@ function drupal_error_handler($errno, $message, $filename, $line, $context) {
   }
 }
 
+/**
+ * Gets the last caller (file name and line of the call, function in which the
+ * call originated) from a backtrace.
+ *
+ * @param $backtrace
+ *   A standard PHP backtrace.
+ * @return
+ *   An associative array with keys 'file', 'line' and 'function'.
+ */
+function _drupal_get_last_caller($backtrace) {
+  // The first trace is the call itself.
+  // It gives us the line and the file of the last call.
+  $call = $backtrace[0];
+  
+  // The second call give us the function where the call originated.
+  if (isset($backtrace[1])) {
+    if (isset($backtrace[1]['class'])) {
+      $call['function'] = $backtrace[1]['class'] . $backtrace[1]['type'] . $backtrace[1]['function'] . '()';
+    }
+    else {
+      $call['function'] = $backtrace[1]['function'] . '()';
+    }
+  }
+  else {
+    $call['function'] = 'main()';
+  }
+  return $call;
+}
+
 function _fix_gpc_magic(&$item) {
   if (is_array($item)) {
     array_walk($item, '_fix_gpc_magic');
