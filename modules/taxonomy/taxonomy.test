@@ -284,6 +284,44 @@ class TaxonomyTermMultipleTestCase extends DrupalWebTestCase {
 
 }
 
+class TaxonomyAdminTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Administration interface'),
+      'description' => t('Test the vocabulary administration interface.'),
+      'group' => t('Taxonomy'),
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp();
+    $this->taxonomy_admin = $this->drupalCreateUser(array('administer taxonomy'));
+  }
+
+  /**
+   * Visit the various admin pages for the default 'Tags' vocabulary.
+   */
+  function testTaxonomyAdminPages() {
+    $this->drupalLogin($this->taxonomy_admin);
+    $this->drupalGet('admin/content/taxonomy');
+    $this->assertResponse('200');
+    $this->assertText(t('Article'), t('Article vocabulary found.'));
+    $this->clickLink(t('edit vocabulary'));
+    $this->assertResponse('200');
+    $this->drupalGet('admin/content/taxonomy');
+    $this->clickLink(t('list terms'));
+    $this->assertResponse('200');
+    $this->clickLink(t('Add term'));
+    $this->assertResponse('200');
+  }
+}
+
 class TaxonomyTestNodeApiTestCase extends DrupalWebTestCase {
   /**
    * Implementation of getInfo().
@@ -292,7 +330,7 @@ class TaxonomyTestNodeApiTestCase extends DrupalWebTestCase {
     return array(
       'name' => t('Taxonomy nodeapi'),
       'description' => t('Save & edit a node and assert that taxonomy terms are saved/loaded properly.'),
-      'group' => t('Taxonomy')
+      'group' => t('Taxonomy'),
     );
   }
 
@@ -418,5 +456,73 @@ class TaxonomyTestNodeApiTestCase extends DrupalWebTestCase {
     $edit['name'] = 0;
     $edit['vid'] = $vid;
     taxonomy_save_vocabulary($edit);
+  }
+}
+
+/**
+ * Test term edit form to ensure terms can be edited from administration page
+ * and that term name and description are saved.
+ */
+class TermEditTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name'  => 'Term edit test',
+      'description'  => t('Ensure terms can be edited from administration page
+       and that term name and description are saved.'),
+      'group' => t('Taxonomy'));
+  }
+  
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp();
+    // Prepare a user to do the tests.
+    $web_user = $this->drupalCreateUser(array('administer taxonomy'));
+    $this->drupalLogin($web_user);
+  }
+
+  /**
+   * Save and edit a term and assert that the name and description are correct.
+   */
+  function testTermEdit() {
+    $edit = array(
+      'name' => $this->randomName(12),
+      'description' => $this->randomName(100),
+    );
+
+    // Create the term to edit (adding to the default 'Tags' vocabulary).
+    $this->drupalPost('admin/content/taxonomy/1/add/term', $edit, t('Save'));
+
+    $term = taxonomy_get_term_by_name($edit['name']);
+    $this->assertNotNull($term, t('Term found in database'));
+
+    // Submitting a term takes us to the add page; we need the List page.
+    $this->clickLink(t('List'));
+
+    // Test edit link as accessed from Taxonomy administration pages.
+    // Because Simpletest creates its own database when running tests, we know
+    // the first edit link found on the listing page is to our term.
+    $this->clickLink(t('edit'));
+
+    // This failed inexplicably with assertText, so used assertRaw. @TODO: Why?
+    $this->assertRaw($edit['name'], t('The randomly generated term name is present.'));
+    $this->assertText($edit['description'], t('The randomly generated term description is present.'));
+
+    $edit = array(
+      'name' => $this->randomName(14),
+      'description' => $this->randomName(102),
+    );
+
+    // Edit the term.
+    $this->drupalPost('admin/content/taxonomy/edit/term/'. $term[0]->tid, $edit, t('Save'));
+
+    // View the term and check that it is correct.
+    $this->drupalGet('taxonomy/term/1');
+    $this->assertText($edit['name'], t('The randomly generated term name is present.'));
+    $this->assertText($edit['description'], t('The randomly generated term description is present.'));
   }
 }

@@ -286,7 +286,7 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
     // We are not calling taxonomy_get_tree because that might fail with a big
     // number of tags in the freetagging vocabulary.
     $results = pager_query(db_rewrite_sql('SELECT t.*, h.parent FROM {term_data} t INNER JOIN {term_hierarchy} h ON t.tid = h.tid WHERE t.vid = %d ORDER BY weight, name', 't', 'tid'), $page_increment, 0, NULL, $vocabulary->vid);
-    $total_entries = db_query(db_rewrite_sql('SELECT count(*) FROM {term_data} t INNER JOIN {term_hierarchy} h ON t.tid = h.tid WHERE t.vid = %d'), $page_increment, 0, NULL, $vocabulary->vid);
+    $total_entries = db_query(db_rewrite_sql('SELECT count(*) FROM {term_data} t INNER JOIN {term_hierarchy} h ON t.tid = h.tid WHERE t.vid = :vid'), array(':vid' => $vocabulary->vid));
     while ($term = db_fetch_object($results)) {
       $key = 'tid:' . $term->tid . ':0';
       $current_page[$key] = $term;
@@ -928,7 +928,7 @@ function taxonomy_vocabulary_confirm_reset_alphabetical(&$form_state, $vid) {
  * @see taxonomy_vocabulary_confirm_reset_alphabetical()
  */
 function taxonomy_vocabulary_confirm_reset_alphabetical_submit($form, &$form_state) {
-  db_query('UPDATE {term_data} t SET weight = 0 WHERE vid = %d', $form_state['values']['vid']);
+  db_query('UPDATE {term_data} t SET weight = 0 WHERE vid = :vid', array(':vid' => $form_state['values']['vid']));
   drupal_set_message(t('Reset vocabulary %name to alphabetical order.', array('%name' => $form_state['values']['name'])));
   watchdog('taxonomy', 'Reset vocabulary %name to alphabetical order.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
   $form_state['redirect'] = 'admin/content/taxonomy/' . $form_state['values']['vid'];
