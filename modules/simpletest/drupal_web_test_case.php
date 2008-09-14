@@ -947,7 +947,7 @@ class DrupalWebTestCase {
             }
             $post = implode('&', $post);
           }
-          $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POST => TRUE, CURLOPT_POSTFIELDS => $post, CURLOPT_HEADER => FALSE, CURLOPT_NOBODY => FALSE));
+          $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POST => TRUE, CURLOPT_POSTFIELDS => $post, CURLOPT_HEADER => FALSE));
           // Ensure that any changes to variables in the other thread are picked up.
           $this->refreshVariables();
           return $out;
