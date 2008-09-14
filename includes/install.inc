@@ -156,7 +156,7 @@ function drupal_set_installed_schema_version($module, $version) {
 }
 
 /**
- * Loads the profile definition, extracting the profile's defined name.
+ * Loads the install profile definition, extracting its defined name.
  *
  * @return
  *   The name defined in the profile's _profile_details() hook.
@@ -183,7 +183,6 @@ function drupal_install_profile_name() {
  * @param $file
  *   The name of the file calling this function so we can strip it out of
  *   the URI when generating the base_url.
- *
  * @return
  *   The auto-detected $base_url that should be configured in settings.php
  */
@@ -199,8 +198,7 @@ function drupal_detect_baseurl($file = 'install.php') {
 }
 
 /**
- * Detect all databases supported by Drupal that are compiled into the current
- * PHP installation.
+ * Detect all supported databases that are compiled into PHP.
  *
  * @return
  *  An array of database types compiled into PHP.
@@ -326,8 +324,7 @@ abstract class DatabaseInstaller {
 }
 
 /**
- * Read settings.php into a buffer line by line, changing values specified in
- * $settings array, then over-writing the old settings.php file.
+ * Replace values in settings.php with values in the submitted array.
  *
  * @param $settings
  *   An array of settings that need to be updated.
@@ -418,11 +415,11 @@ function drupal_get_install_files($module_list = array()) {
 }
 
 /**
- * Verify a profile for installation.
+ * Verify an install profile for installation.
  *
- * @param profile
- *   Name of profile to verify.
- * @param locale
+ * @param $profile
+ *   Name of install profile to verify.
+ * @param $locale
  *   Name of locale used (if any).
  * @return
  *   The list of modules to install.
@@ -462,10 +459,9 @@ function drupal_verify_profile($profile, $locale) {
 }
 
 /**
- * Calls the install function and updates the system table for a given list of
- * modules.
+ * Calls the install function for a given list of modules.
  *
- * @param module_list
+ * @param $module_list
  *   The modules to install.
  */
 function drupal_install_modules($module_list = array()) {
@@ -492,11 +488,16 @@ function drupal_install_modules($module_list = array()) {
 }
 
 /**
- * Callback to install an individual profile module.
+ * Callback to install an individual install profile module.
  *
  * Used during installation to install modules one at a time and then
  * enable them, or to install a number of modules at one time
  * from admin/build/modules.
+ *
+ * @param $module
+ *   The machine name of the module to install.
+ * @return
+ *   TRUE if the module got installed.
  */
 function _drupal_install_module($module) {
   if (drupal_get_installed_schema_version($module, TRUE) == SCHEMA_UNINSTALLED) {
@@ -555,7 +556,7 @@ function drupal_install_system() {
  * Calls the uninstall function and updates the system table for a given module.
  *
  * @param $module
- *   The module to uninstall.
+ *   The machine name of the module to uninstall.
  */
 function drupal_uninstall_module($module) {
   // First, retrieve all the module's menu paths from db.
@@ -674,13 +675,12 @@ function drupal_verify_install_file($file, $mask = NULL, $type = 'file') {
 /**
  * Create a directory with specified permissions.
  *
- * @param file
+ * @param $file
  *  The name of the directory to create;
- * @param mask
+ * @param $mask
  *  The permissions of the directory to create.
  * @param $message
  *  (optional) Whether to output messages. Defaults to TRUE.
- *
  * @return
  *  TRUE/FALSE whether or not the directory was successfully created.
  */
@@ -729,7 +729,6 @@ function drupal_install_mkdir($file, $mask, $message = TRUE) {
  *  The desired permissions for the file.
  * @param $message
  *  (optional) Whether to output messages. Defaults to TRUE.
- *
  * @return
  *  TRUE/FALSE whether or not we were able to fix the file's permissions.
  */
@@ -791,8 +790,9 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
 
 
 /**
- * Send the user to a different installer page. This issues an on-site HTTP
- * redirect. Messages (and errors) are erased.
+ * Send the user to a different installer page. 
+ *
+ * This issues an on-site HTTP redirect. Messages (and errors) are erased.
  *
  * @param $path
  *   An installer path.
@@ -805,9 +805,12 @@ function install_goto($path) {
 }
 
 /**
- * Hardcoded function for doing the equivalent of t() during
- * the install process, when database, theme, and localization
+ * Functional equivalent of t(), used when some systems are not available.
+ *
+ * Used during the install process, when database, theme, and localization
  * system is possibly not yet available.
+ *
+ * @see t()
  */
 function st($string, $args = array()) {
   static $locale_strings = NULL;
@@ -845,10 +848,12 @@ function st($string, $args = array()) {
 }
 
 /**
- * Check a profile's requirements.
+ * Check an install profile's requirements.
  *
- * @param profile
- *   Name of profile to check.
+ * @param $profile
+ *   Name of install profile to check.
+ * @return
+ *   Array of the install profile's requirements.
  */
 function drupal_check_profile($profile) {
   include_once './includes/file.inc';
@@ -882,6 +887,12 @@ function drupal_check_profile($profile) {
 
 /**
  * Extract highest severity from requirements array.
+ *
+ * @param $requirements
+ *   An array of requirements, in the same format as is returned by 
+ *   hook_requirements().
+ * @return
+ *   The highest severity in the array.
  */
 function drupal_requirements_severity(&$requirements) {
   $severity = REQUIREMENT_OK;
@@ -895,6 +906,11 @@ function drupal_requirements_severity(&$requirements) {
 
 /**
  * Check a module's requirements.
+ *
+ * @param $module
+ *   Machine name of module to check.
+ * @return
+ *   TRUE/FALSE depending on the requirements are in place.
  */
 function drupal_check_module($module) {
   // Include install file
