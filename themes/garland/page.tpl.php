@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.20 2008/04/28 09:25:27 dries Exp $
+// $Id: page.tpl.php,v 1.21 2008/09/14 02:03:35 webchick Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" lang="<?php print $language->language ?>" dir="<?php print $language->dir ?>">
@@ -22,7 +22,7 @@
       <div id="header">
         <div id="logo-floater">
         <?php if ($logo || $site_title): ?>
-          <h1><a href=" <?php print $front_page ?>" title="<?php print $site_title ?>">
+          <h1><a href="<?php print $front_page ?>" title="<?php print $site_title ?>">
           <?php if ($logo): ?>
             <img src="<?php print $logo ?>" alt="<?php print $site_title ?>" id="logo" />
           <?php endif; ?>
