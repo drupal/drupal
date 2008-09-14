@@ -1,12 +1,15 @@
 // $Id$
 
+/**
+ * Add the cool table collapsing on the testing overview page.
+ */
 Drupal.behaviors.simpleTestMenuCollapse = function() {
   // Adds expand-collapse functionality.
   $('div.simpletest-image').click(function() {
     // Toggle all of the trs.
     if (!Drupal.settings.simpleTest[$(this).attr('id')].clickActive) {
       Drupal.settings.simpleTest[$(this).attr('id')].clickActive = true;
-      var trs = $(this).parents('tbody').children().filter('.'+ Drupal.settings.simpleTest[$(this).attr('id')].testClass), trs_formatted = [], direction = Drupal.settings.simpleTest[$(this).attr('id')].imageDirection, self = $(this);
+      var trs = $(this).parents('tbody').children().filter('.' + Drupal.settings.simpleTest[$(this).attr('id')].testClass), trs_formatted = [], direction = Drupal.settings.simpleTest[$(this).attr('id')].imageDirection, self = $(this);
       for (var i = 0; i < trs.length; i++) {
         trs_formatted.push(trs[i]);
       }
@@ -21,12 +24,17 @@ Drupal.behaviors.simpleTestMenuCollapse = function() {
           Drupal.settings.simpleTest[self.attr('id')].clickActive = false;
         }
       }
-      toggleTrs(trs_formatted, (direction? 'pop' : 'shift'), (direction? 'fadeOut' : 'fadeIn'));
+      toggleTrs(trs_formatted, (direction ? 'pop' : 'shift'), (direction ? 'fadeOut' : 'fadeIn'));
       Drupal.settings.simpleTest[$(this).attr('id')].imageDirection = !direction;
       $(this).html(Drupal.settings.simpleTest.images[(direction? 0 : 1)]);
     }
   });
 }
+
+/**
+ * Select/deselect all the inner checkboxes when the outer checkboxes are
+ * selected/deselected.
+ */
 Drupal.behaviors.simpleTestSelectAll = function() {
   $('td.simpletest-select-all').each(function() {
     var checkboxes = Drupal.settings.simpleTest['simpletest-test-group-'+ $(this).attr('id')].testNames, totalCheckboxes = 0,
@@ -35,11 +43,11 @@ Drupal.behaviors.simpleTestSelectAll = function() {
       for (var i = 0; i < checkboxes.length; i++) {
         $('#'+ checkboxes[i]).attr('checked', checked);
       }
-      self.data('simpletest-checked-tests', (checked? checkboxes.length : 0));
+      self.data('simpletest-checked-tests', (checked ? checkboxes.length : 0));
     }).data('simpletest-checked-tests', 0);
     var self = $(this);
     for (var i = 0; i < checkboxes.length; i++) {
-      if ($('#'+ checkboxes[i]).change(function() {
+      if ($('#' + checkboxes[i]).change(function() {
         if (checkbox.attr('checked') == 'checked') {
           checkbox.attr('checked', '');
         }
@@ -49,7 +57,7 @@ Drupal.behaviors.simpleTestSelectAll = function() {
           checkbox.attr('checked', 'checked');
         }
         else {
-          checkbox.attr('checked', '');
+          checkbox.removeAttr('checked');
         }
       }).attr('checked') == 'checked') {
         totalCheckboxes++;
