@@ -22,7 +22,7 @@
       <div id="header">
         <div id="logo-floater">
         <?php if ($logo || $site_title): ?>
-          <h1><a href=" <?php print $front_page ?>" title="<?php print $site_title ?>">
+          <h1><a href="<?php print $front_page ?>" title="<?php print $site_title ?>">
           <?php if ($logo): ?>
             <img src="<?php print $logo ?>" alt="<?php print $site_title ?>" id="logo" />
           <?php endif; ?>
