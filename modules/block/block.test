@@ -108,4 +108,29 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/build/block/configure/' . $block['module'] . '/' . $block['delta'], array('title' => 'Navigation'), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block title set.'));
   }
+
+}
+
+class NonDefaultBlockAdmin extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Non default theme admin'),
+      'description' => t('Check the administer page for non default theme.'),
+      'group' => t('Block'),
+    );
+  }
+
+  /**
+   * Test non-default theme admin.
+   */
+  function testNnonDefaultBlockAdmin() {
+    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer site configuration'));
+    $this->drupalLogin($admin_user);
+    $this->drupalPost('admin/build/themes', array('status[bluemarine]' => 1), t('Save configuration'));
+    $this->drupalGet('admin/build/block/list/bluemarine');
+    $this->assertRaw('bluemarine/style.css', t('Bluemarine CSS found'));
+  }
 }
