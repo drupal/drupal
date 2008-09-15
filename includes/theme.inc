@@ -8,7 +8,7 @@
  * The theme system allows for nearly all output of the Drupal system to be
  * customized by user themes.
  *
- * @see <a href="http://drupal.org/node/253">Theme system</a>
+ * @see <a href="http://drupal.org/node/171179">Theme guide</a>
  * @see themeable
  */
 
