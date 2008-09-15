@@ -629,7 +629,7 @@ function system_schema() {
     'description' => t('Stores information for uploaded files.'),
     'fields' => array(
       'fid' => array(
-        'description' => t('Primary Key: Unique files ID.'),
+        'description' => t('File ID.'),
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -642,7 +642,7 @@ function system_schema() {
         'default' => 0,
       ),
       'filename' => array(
-        'description' => t('Name of the file.'),
+        'description' => t('Name of the file with no path components. This may differ from the basename of the filepath if the file is renamed to avoid overwriting an existing file.'),
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -656,7 +656,7 @@ function system_schema() {
         'default' => '',
       ),
       'filemime' => array(
-        'description' => t('The file MIME type.'),
+        'description' => t("The file's MIME type."),
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -670,7 +670,7 @@ function system_schema() {
         'default' => 0,
       ),
       'status' => array(
-        'description' => t('A flag indicating whether file is temporary (1) or permanent (0).'),
+        'description' => t('A bitmapped field indicating the status of the file the least sigifigant bit indicates temporary (1) or permanent (0). Temporary files older than DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during a cron run.'),
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,

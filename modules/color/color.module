@@ -435,8 +435,8 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
  * Save the rewritten stylesheet to disk.
  */
 function _color_save_stylesheet($file, $style, &$paths) {
-  file_save_data($style, $file, FILE_EXISTS_REPLACE);
-  $paths['files'][] = $file;
+  $filepath = file_save_data($style, $file, FILE_EXISTS_REPLACE);
+  $paths['files'][] = $filepath;
 
   // Set standard file permissions for webserver-generated files.
   @chmod($file, 0664);

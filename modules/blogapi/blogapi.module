@@ -385,12 +385,12 @@ function blogapi_metaweblog_new_media_object($blogid, $username, $password, $fil
     return blogapi_error(t('No file sent.'));
   }
 
-  if (!$file = file_save_data($data, $name)) {
+  if (!$filepath = file_save_data($data, $name)) {
     return blogapi_error(t('Error storing file.'));
   }
 
   // Return the successful result.
-  return array('url' => file_create_url($file), 'struct');
+  return array('url' => file_create_url($filepath), 'struct');
 }
 /**
  * Blogging API callback. Returns a list of the taxonomy terms that can be

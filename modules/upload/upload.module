@@ -420,13 +420,12 @@ function upload_save(&$node) {
     // Create a new revision, or associate a new file needed.
     if (!empty($node->old_vid) || isset($_SESSION['upload_files'][$fid])) {
       db_query("INSERT INTO {upload} (fid, nid, vid, list, description, weight) VALUES (%d, %d, %d, %d, '%s', %d)", $file->fid, $node->nid, $node->vid, $file->list, $file->description, $file->weight);
-      file_set_status($file, FILE_STATUS_PERMANENT);
     }
     // Update existing revision.
     else {
       db_query("UPDATE {upload} SET list = %d, description = '%s', weight = %d WHERE fid = %d AND vid = %d", $file->list, $file->description, $file->weight, $file->fid, $node->vid);
-      file_set_status($file, FILE_STATUS_PERMANENT);
     }
+    file_set_status($file, FILE_STATUS_PERMANENT);
   }
   // Empty the session storage after save. We use this variable to track files
   // that haven't been related to the node yet.

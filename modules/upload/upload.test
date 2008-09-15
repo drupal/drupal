@@ -106,7 +106,7 @@ class UploadTestCase extends DrupalWebTestCase {
 
     // Attempt to upload .txt file when .test is only extension allowed.
     $this->uploadFile($node, $files[0], FALSE);
-    $this->assertRaw(t('The selected file %name could not be uploaded. Only files with the following extensions are allowed: %files-allowed.', array('%name' => basename($files[0]), '%files-allowed' => $settings['upload_extensions'])), 'File '. $files[0] . ' was not allowed to be uploaded');
+    $this->assertRaw(t('The specified file %name could not be uploaded. Only files with the following extensions are allowed: %files-allowed.', array('%name' => basename($files[0]), '%files-allowed' => $settings['upload_extensions'])), 'File '. $files[0] . ' was not allowed to be uploaded');
 
     // Attempt to upload .test file when .test is only extension allowed.
     $this->uploadFile($node, $files[1]);
@@ -143,7 +143,7 @@ class UploadTestCase extends DrupalWebTestCase {
     $filename = basename($file);
     $filesize = format_size($info['size']);
     $maxsize = format_size(parse_size(($settings['upload_uploadsize'] * 1024) . 'KB')); // Won't parse decimals.
-    $this->assertRaw(t('The selected file %name could not be uploaded. The file is %filesize exceeding the maximum file size of %maxsize.', array('%name' => $filename, '%filesize' => $filesize, '%maxsize' => $maxsize)), t('File upload was blocked since it was larger than maxsize.'));
+    $this->assertRaw(t('The specified file %name could not be uploaded. The file is %filesize exceeding the maximum file size of %maxsize.', array('%name' => $filename, '%filesize' => $filesize, '%maxsize' => $maxsize)), t('File upload was blocked since it was larger than maxsize.'));
   }
 
   function setUploadSettings($settings, $rid = NULL) {

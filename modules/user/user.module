@@ -414,9 +414,9 @@ function user_validate_picture(&$form, &$form_state) {
     // files table as a temporary file. We'll make a copy and let the garbage
     // collector delete the original upload.
     $info = image_get_info($file->filepath);
-    $destination = variable_get('user_picture_path', 'pictures') . '/picture-' . $form['#uid'] . '.' . $info['extension'];
-    if (file_copy($file, $destination, FILE_EXISTS_REPLACE)) {
-      $form_state['values']['picture'] = $file->filepath;
+    $destination = file_create_path(variable_get('user_picture_path', 'pictures') . '/picture-' . $form['#uid'] . '.' . $info['extension']);
+    if ($filepath = file_copy($file->filepath, $destination, FILE_EXISTS_REPLACE)) {
+      $form_state['values']['picture'] = $filepath;
     }
     else {
       form_set_error('picture_upload', t("Failed to upload the picture image; the %directory directory doesn't exist or is not writable.", array('%directory' => variable_get('user_picture_path', 'pictures'))));
