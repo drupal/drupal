@@ -641,7 +641,7 @@ function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $ca
   $files = array();
 
   if (is_dir($dir) && $handle = opendir($dir)) {
-    while ($file = readdir($handle)) {
+    while (FALSE !== ($file = readdir($handle))) {
       if (!in_array($file, $nomask) && $file[0] != '.') {
         if (is_dir("$dir/$file") && $recurse) {
           $files = array_merge($files, file_scan_directory("$dir/$file", $mask, $nomask, $callback, $recurse, $key, $min_depth, $depth + 1));
