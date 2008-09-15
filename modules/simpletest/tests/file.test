@@ -162,7 +162,7 @@ class FileValidateTest extends DrupalWebTestCase {
   function testFileValidateSize() {
     global $user;
     $original_user = $user;
-    session_save_session(FALSE);
+    drupal_save_session(FALSE);
 
     // Run these test as uid = 1
     $user = user_load(array('uid' => 1));
@@ -189,7 +189,7 @@ class FileValidateTest extends DrupalWebTestCase {
 
 
     $user = $original_user;
-    session_save_session(TRUE);
+    drupal_save_session(TRUE);
   }
 }
 
