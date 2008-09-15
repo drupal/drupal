@@ -697,7 +697,7 @@ function system_init() {
 /**
  * Implementation of MODULE_preprocess_HOOK().
  */
-function system_preprocess_page() {
+function system_preprocess_page(&$variables) {
   // Get the major version
   list($version,) = explode('.', VERSION);
 
@@ -706,6 +706,8 @@ function system_preprocess_page() {
 
   // Emit the HTTP Header too
   theme('meta_generator_header', $version);
+
+  $variables['head'] = drupal_get_html_head();
 }
 
 /**
