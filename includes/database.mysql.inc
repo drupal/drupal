@@ -63,6 +63,7 @@ function db_connect($url) {
       install_goto('install.php');
     }
     drupal_maintenance_theme();
+    drupal_set_header('HTTP/1.1 503 Service Unavailable');
     drupal_set_title('PHP MySQL support not enabled');
     print theme('maintenance_page', '<p>We were unable to use the MySQL database because the MySQL extension for PHP is not installed. Check your <code>PHP.ini</code> to see how you can enable it.</p>
 <p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>');
@@ -119,6 +120,7 @@ function db_connect($url) {
 
   if (!mysql_select_db(substr($url['path'], 1))) {
     drupal_maintenance_theme();
+    drupal_set_header('HTTP/1.1 503 Service Unavailable');
     drupal_set_title('Unable to select database');
     print theme('maintenance_page', '<p>We were able to connect to the MySQL database server (which means your username and password are okay) but not able to select the database.</p>
 <p>The MySQL error was: '. theme('placeholder', mysql_error($connection)) .'.</p>
