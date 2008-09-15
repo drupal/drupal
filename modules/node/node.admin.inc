@@ -478,10 +478,10 @@ function node_admin_nodes() {
 
   // Build the query and load the nodes we want to display.
   $filter = node_build_filter_query();
-  
+
   $sort = tablesort_sql($header, '', 'n.changed DESC');
   $result = pager_query(db_rewrite_sql('SELECT n.*, u.name FROM {node} n '. $filter['join'] .' INNER JOIN {users} u ON n.uid = u.uid '. $filter['where'] . $sort), 50, 0, NULL, $filter['args']);
-  
+
   // Build the 'Update options' form.
   $form['options'] = array(
     '#type' => 'fieldset',
@@ -608,7 +608,7 @@ function theme_node_admin_nodes($form) {
   }
 
   $output .= theme('table', $header, $rows);
-  
+
   if ($form['pager']['#markup']) {
     $output .= drupal_render($form['pager']);
   }

@@ -323,7 +323,7 @@ class AdminMetaTagTestCase extends DrupalWebTestCase {
 
 class PageNotFoundTestCase extends DrupalWebTestCase {
   protected $admin_user;
-  
+
   /**
    * Implementation of getInfo().
    */
@@ -334,7 +334,7 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
       'group' => t('System')
     );
   }
-  
+
   /**
    * Implementation of setUp().
    */
@@ -349,7 +349,7 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
   function testPageNotFound() {
     $this->drupalGet($this->randomName(10));
     $this->assertText(t('Page not found'), t('Found the default 404 page'));
-    
+
     $edit = array(
       'title' => $this->randomName(10),
       'body' => $this->randomName(100)
@@ -358,27 +358,26 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
 
     // Use a custom 404 page.
     $this->drupalPost('admin/settings/error-reporting', array('site_404' => 'node/' . $node->nid), t('Save configuration'));
-    
+
     $this->drupalGet($this->randomName(10));
     $this->assertText($node->title, t('Found the custom 404 page'));
-    
+
     // Logout and check that the user login block is not shown on custom 404 pages.
     $this->drupalLogout();
-    
+
     $this->drupalGet($this->randomName(10));
     $this->assertText($node->title, t('Found the custom 404 page'));
     $this->assertNoText(t('User login'), t('Blocks are not shown on the custom 404 page'));
-    
+
     // Log back in and remove the custom 404 page.
     $this->drupalLogin($this->admin_user);
     $this->drupalPost('admin/settings/error-reporting', array(), t('Reset to defaults'));
 
     // Logout and check that the user login block is not shown on default 404 pages.
     $this->drupalLogout();
-    
+
     $this->drupalGet($this->randomName(10));
     $this->assertText(t('Page not found'), t('Found the default 404 page'));
     $this->assertNoText(t('User login'), t('Blocks are not shown on the default 404 page'));
   }
 }
-

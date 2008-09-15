@@ -3,7 +3,7 @@
 
 /**
  * Implementation of hook_schema().
- * 
+ *
  * The database tests use the database API which depends on schema
  * information for certain operations on certain databases.
  * Therefore, the schema must actually be declared in a normal module
@@ -14,28 +14,28 @@ function database_test_schema() {
     'description' => 'Basic test table for the database unit tests.',
     'fields' => array(
       'id'   => array(
-      	'type' => 'serial', 
-      	'unsigned' => TRUE, 
+      	'type' => 'serial',
+      	'unsigned' => TRUE,
       	'not null' => TRUE,
       ),
       'name' => array(
         'description' => "A person's name",
-        'type' => 'varchar', 
-        'length' => 255, 
-        'not null' => TRUE, 
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
         'default' => '',
       ),
       'age'  => array(
         'description' => "The person's age",
-        'type' => 'int', 
-      	'unsigned' => TRUE, 
-        'not null' => TRUE, 
+        'type' => 'int',
+      	'unsigned' => TRUE,
+        'not null' => TRUE,
         'default' => 0),
       'job'  => array(
         'description' => "The person's job",
-        'type' => 'varchar', 
-        'length' => 255, 
-        'not null' => TRUE, 
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
         'default' => 'Undefined',
       ),
     ),
@@ -47,7 +47,7 @@ function database_test_schema() {
       'ages'  => array('age'),
     ),
   );
-  
+
   // This is an alternate version of the same table that is structured the same
   // but has a non-serial Primary Key.
   $schema['test_people'] = array(
@@ -55,23 +55,23 @@ function database_test_schema() {
     'fields' => array(
       'name' => array(
         'description' => "A person's name",
-        'type' => 'varchar', 
-        'length' => 255, 
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => TRUE,
         'default' => '',
        ),
       'age'  => array(
         'description' => "The person's age",
-        'type' => 'int', 
-        'unsigned' => TRUE, 
-        'not null' => TRUE, 
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
         'default' => 0,
       ),
       'job'  => array(
         'description' => "The person's job",
-        'type' => 'varchar', 
-        'length' => 255, 
-        'not null' => TRUE, 
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
         'default' => '',
       ),
     ),
@@ -86,7 +86,7 @@ function database_test_schema() {
     'fields' => array(
       'id' => array(
         'description' => 'Simple unique ID.',
-        'type' => 'serial', 
+        'type' => 'serial',
         'not null' => TRUE,
       ),
       'blob1' => array(
@@ -102,7 +102,7 @@ function database_test_schema() {
     'fields' => array(
       'id' => array(
         'description' => 'Simple unique ID.',
-        'type' => 'serial', 
+        'type' => 'serial',
         'not null' => TRUE,
        ),
       'blob1' => array(
@@ -122,28 +122,28 @@ function database_test_schema() {
     'fields' => array(
       'tid' => array(
         'description' => 'Task ID, primary key.',
-        'type' => 'serial', 
+        'type' => 'serial',
         'not null' => TRUE,
       ),
       'pid'  => array(
         'description' => 'The {test_people}.pid, foreign key for the test table.',
-        'type' => 'int', 
-        'unsigned' => TRUE, 
-        'not null' => TRUE, 
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
         'default' => 0,
       ),
       'task' => array(
         'description' => 'The task to be completed.',
-        'type' => 'varchar', 
-        'length' => 255, 
-        'not null' => TRUE, 
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
         'default' => '',
       ),
       'priority'  => array(
         'description' => 'The priority of the task.',
-        'type' => 'int', 
-        'unsigned' => TRUE, 
-        'not null' => TRUE, 
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
         'default' => 0,
       ),
     ),

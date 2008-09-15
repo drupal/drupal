@@ -494,7 +494,7 @@ class UserAdminTestCase extends DrupalWebTestCase {
     $this->assertText($user_c->name, t('Found user C on admin users page'));
     $this->assertText($admin_user->name, t('Found Admin user on admin users page'));
 
-    // Filter the users by permission 'administer taxonomy'.   
+    // Filter the users by permission 'administer taxonomy'.
     $edit = array();
     $edit['filter'] = 'permission';
     $edit['permission'] = 'administer taxonomy';
@@ -516,4 +516,3 @@ class UserAdminTestCase extends DrupalWebTestCase {
     $this->assertEqual($account->status, 0, 'User B blocked');
   }
 }
-

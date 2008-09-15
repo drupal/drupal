@@ -474,7 +474,7 @@ class TermEditTestCase extends DrupalWebTestCase {
        and that term name and description are saved.'),
       'group' => t('Taxonomy'));
   }
-  
+
   /**
    * Implementation of setUp().
    */

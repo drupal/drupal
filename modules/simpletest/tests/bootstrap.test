@@ -110,7 +110,7 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
 }
 
 class BootstrapVariableTestCase extends DrupalWebTestCase {
-  
+
   /**
    * Implementation of setUp().
    */
@@ -141,7 +141,7 @@ class BootstrapVariableTestCase extends DrupalWebTestCase {
     // Make sure the variable persists across multiple requests.
     $this->drupalGet('system-test/variable-get');
     $this->assertText($variable, t('Variable persists across multiple requests'));
-    
+
     // Deleting variables.
     $default_value = $this->randomName();
     variable_del('simpletest_bootstrap_variable_test');

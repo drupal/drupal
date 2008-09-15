@@ -120,7 +120,7 @@ function taxonomy_autocomplete($vid, $string = '') {
   $matches = array();
   if ($last_string != '') {
     $result = db_query_range(db_rewrite_sql("SELECT t.tid, t.name FROM {term_data} t WHERE t.vid = :vid AND LOWER(t.name) LIKE LOWER(:last_string)", 't', 'tid'), array(
-      ':vid' => $vid, 
+      ':vid' => $vid,
       ':last_string' => '%'. $last_string .'%',
     ), 0, 10);
 

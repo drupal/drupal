@@ -68,12 +68,12 @@ function statistics_exit() {
     // Log this page access.
     db_insert('accesslog')->fields(array(
       'title' => strip_tags(drupal_get_title()),
-      'path' => $_GET['q'], 
-      'url' => $_SERVER['HTTP_REFERER'], 
-      'hostname' => ip_address(), 
-      'uid' => $user->uid, 
-      'sid' => session_id(), 
-      'timer' => timer_read('page'), 
+      'path' => $_GET['q'],
+      'url' => $_SERVER['HTTP_REFERER'],
+      'hostname' => ip_address(),
+      'uid' => $user->uid,
+      'sid' => session_id(),
+      'timer' => timer_read('page'),
       'timestamp' => $_SERVER['REQUEST_TIME'],
     ))->execute();
   }

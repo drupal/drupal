@@ -113,7 +113,7 @@ class SimpleTestTestCase extends DrupalWebTestCase {
 
     // Call an assert function specific to that class.
     $this->assertNothing();
-    
+
     // Generates a warning inside a PHP function.
     array_key_exists(NULL, NULL);
   }

@@ -2092,11 +2092,11 @@ function _locale_rebuild_js($langcode = NULL) {
 
   // Construct the array for JavaScript translations.
   // We sort on plural so that we have all plural forms before singular forms.
-  $result = db_query("SELECT s.lid, s.source, t.plid, t.plural, t.translation 
-    FROM {locales_source} s 
-      LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language 
-    WHERE s.location LIKE '%.js%' 
-      AND s.textgroup = 'default' 
+  $result = db_query("SELECT s.lid, s.source, t.plid, t.plural, t.translation
+    FROM {locales_source} s
+      LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language
+    WHERE s.location LIKE '%.js%'
+      AND s.textgroup = 'default'
     ORDER BY t.plural DESC", array(':language' => $language->language));
 
   $translations = $plurals = array();

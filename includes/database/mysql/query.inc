@@ -9,13 +9,13 @@
 class InsertQuery_mysql extends InsertQuery {
 
   public function execute() {
-    
+
     // Confirm that the user did not try to specify an identical
     //  field and default field.
     if (array_intersect($this->insertFields, $this->defaultFields)) {
       throw new PDOException('You may not specify the same field to have a value and a schema-default value.');
     }
-    
+
     $last_insert_id = 0;
 
     $max_placeholder = 0;
@@ -37,10 +37,10 @@ class InsertQuery_mysql extends InsertQuery {
   public function __toString() {
 
     $delay = $this->queryOptions['delay'] ? 'DELAYED' : '';
-    
+
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
-    
+
     $query = "INSERT $delay INTO {" . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
 
     $max_placeholder = 0;
@@ -48,11 +48,11 @@ class InsertQuery_mysql extends InsertQuery {
     if (count($this->insertValues)) {
       foreach ($this->insertValues as $insert_values) {
         $placeholders = array();
-        
+
         // Default fields aren't really placeholders, but this is the most convenient
         // way to handle them.
         $placeholders = array_pad($placeholders, count($this->defaultFields), 'default');
-        
+
         $new_placeholder = $max_placeholder + count($insert_values);
         for ($i = $max_placeholder; $i < $new_placeholder; ++$i) {
           $placeholders[] = ':db_insert_placeholder_'. $i;
@@ -87,7 +87,7 @@ class MergeQuery_mysql extends MergeQuery {
         unset($update_fields[$exclude_field]);
       }
     }
-    
+
     $insert_fields = $this->insertFields + $this->keyFields;
 
     $max_placeholder = 0;
@@ -106,7 +106,7 @@ class MergeQuery_mysql extends MergeQuery {
       }
       unset($update_fields[$field]);
     }
-    
+
     // Because we filter $fields the same way here and in __toString(), the
     // placeholders will all match up properly.
     $max_placeholder = 0;
@@ -119,7 +119,7 @@ class MergeQuery_mysql extends MergeQuery {
     return $last_insert_id;
   }
 
-  
+
   public function __toString() {
 
     // Set defaults.
@@ -134,7 +134,7 @@ class MergeQuery_mysql extends MergeQuery {
         unset($update_fields[$exclude_field]);
       }
     }
-    
+
     $insert_fields = $this->insertFields + $this->keyFields;
 
     $query = "INSERT INTO {" . $this->table . '} (' . implode(', ', array_keys($insert_fields)) . ') VALUES ';
@@ -147,7 +147,7 @@ class MergeQuery_mysql extends MergeQuery {
     }
 
     $query .= '(' . implode(', ', $values) . ') ON DUPLICATE KEY UPDATE ';
-    
+
     // Expressions take priority over literal fields, so we process those first
     // and remove any literal fields that conflict.
     $max_placeholder = 0;
@@ -160,7 +160,7 @@ class MergeQuery_mysql extends MergeQuery {
     foreach ($update_fields as $field => $value) {
       $update[] = ($field . '=:db_update_placeholder_' . $max_placeholder++);
     }
-    
+
     $query .= implode(', ', $update);
 
     return $query;

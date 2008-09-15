@@ -60,7 +60,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $recipients = array('simpletest@example.com', 'simpletest2@example.com', 'simpletest3@example.com');
     $this->addCategory($category = $this->randomName(16), implode(',', array($recipients[0])), '', TRUE);
     $this->assertRaw(t('Category %category has been added.', array('%category' => $category)), t('Category successfully added.'));
-    
+
     // Test update contact form category
     $categories = $this->getCategories();
     $category_id = $this->updateCategory($categories, $category = $this->randomName(16), $recipients_str = implode(',', array($recipients[0], $recipients[1])), $reply = $this->randomName(30), FALSE);
@@ -70,7 +70,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $this->assertEqual($category_array['reply'], $reply);
     $this->assertFalse($category_array['selected']);
     $this->assertRaw(t('Category %category has been updated.', array('%category' => $category)), t('Category successfully updated.'));
-		
+
     $this->addCategory($category = $this->randomName(16), implode(',', array($recipients[0], $recipients[1])), '', FALSE);
     $this->assertRaw(t('Category %category has been added.', array('%category' => $category)), t('Category successfully added.'));
 

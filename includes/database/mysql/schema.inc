@@ -17,7 +17,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   public function tableExists($table) {
     return (bool) $this->connection->query("SHOW TABLES LIKE '{" . $table . "}'", array(), array())->fetchField();
   }
-  
+
   public function columnExists($table, $column) {
     return (bool) $this->connection->query("SHOW COLUMNS FROM {" . $this->escapeTable($table) . "} LIKE '" . $this->escapeTable($column) . "'", array(), array())->fetchField();
   }
@@ -37,25 +37,25 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     if (empty($table['mysql_suffix'])) {
       $table['mysql_suffix'] = "/*!40100 DEFAULT CHARACTER SET UTF8 */";
     }
-  
+
     $sql = "CREATE TABLE {" . $name . "} (\n";
-  
+
     // Add the SQL statement for each field.
     foreach ($table['fields'] as $field_name => $field) {
       $sql .= $this->createFieldSql($field_name, $this->processField($field)) . ", \n";
     }
-  
+
     // Process keys & indexes.
     $keys = $this->createKeysSql($table);
     if (count($keys)) {
       $sql .= implode(", \n", $keys) . ", \n";
     }
-  
+
     // Remove the last comma and space.
     $sql = substr($sql, 0, -3) . "\n) ";
-  
+
     $sql .= $table['mysql_suffix'];
-  
+
     return array($sql);
   }
 
@@ -72,40 +72,40 @@ class DatabaseSchema_mysql extends DatabaseSchema {
    */
   protected function createFieldSql($name, $spec) {
     $sql = "`" . $name . "` " . $spec['mysql_type'];
-  
+
     if (isset($spec['length'])) {
       $sql .= '(' . $spec['length'] . ')';
     }
     elseif (isset($spec['precision']) && isset($spec['scale'])) {
       $sql .= '(' . $spec['precision'] . ', ' . $spec['scale'] . ')';
     }
-  
+
     if (!empty($spec['unsigned'])) {
       $sql .= ' unsigned';
     }
-  
+
     if (!empty($spec['not null'])) {
       $sql .= ' NOT NULL';
     }
-  
+
     if (!empty($spec['auto_increment'])) {
       $sql .= ' auto_increment';
     }
-  
+
     if (isset($spec['default'])) {
       if (is_string($spec['default'])) {
         $spec['default'] = "'" . $spec['default'] . "'";
       }
       $sql .= ' DEFAULT ' . $spec['default'];
     }
-  
+
     if (empty($spec['not null']) && !isset($spec['default'])) {
       $sql .= ' DEFAULT NULL';
     }
-  
+
     return $sql;
   }
-  
+
   /**
    * Set database-engine specific properties for a field.
    *
@@ -113,21 +113,21 @@ class DatabaseSchema_mysql extends DatabaseSchema {
    *   A field description array, as specified in the schema documentation.
    */
   protected function processField($field) {
-  
+
     if (!isset($field['size'])) {
       $field['size'] = 'normal';
     }
-  
+
     // Set the correct database-engine specific datatype.
     if (!isset($field['mysql_type'])) {
       $map = db_type_map();
       $field['mysql_type'] = $map[$field['type'] . ':' . $field['size']];
     }
-  
+
     if ($field['type'] == 'serial') {
       $field['auto_increment'] = TRUE;
     }
-  
+
     return $field;
   }
 
@@ -138,41 +138,41 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     static $map = array(
       'varchar:normal'  => 'VARCHAR',
       'char:normal'     => 'CHAR',
-  
+
       'text:tiny'       => 'TINYTEXT',
       'text:small'      => 'TINYTEXT',
       'text:medium'     => 'MEDIUMTEXT',
       'text:big'        => 'LONGTEXT',
       'text:normal'     => 'TEXT',
-  
+
       'serial:tiny'     => 'TINYINT',
       'serial:small'    => 'SMALLINT',
       'serial:medium'   => 'MEDIUMINT',
       'serial:big'      => 'BIGINT',
       'serial:normal'   => 'INT',
-  
+
       'int:tiny'        => 'TINYINT',
       'int:small'       => 'SMALLINT',
       'int:medium'      => 'MEDIUMINT',
       'int:big'         => 'BIGINT',
       'int:normal'      => 'INT',
-  
+
       'float:tiny'      => 'FLOAT',
       'float:small'     => 'FLOAT',
       'float:medium'    => 'FLOAT',
       'float:big'       => 'DOUBLE',
       'float:normal'    => 'FLOAT',
-  
+
       'numeric:normal'  => 'DECIMAL',
-  
+
       'blob:big'        => 'LONGBLOB',
       'blob:normal'     => 'BLOB',
-  
+
       'datetime:normal' => 'DATETIME',
     );
     return $map;
   }
-  
+
 
 
 
@@ -195,7 +195,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
 
     return $keys;
   }
-  
+
   protected function createKeySql($fields) {
     $ret = array();
     foreach ($fields as $field) {
@@ -225,7 +225,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   public function renameTable(&$ret, $table, $new_name) {
     $ret[] = update_sql('ALTER TABLE {' . $table . '} RENAME TO {' . $new_name . '}');
   }
-  
+
   public function dropTable(&$ret, $table) {
     $ret[] = update_sql('DROP TABLE {' . $table . '}');
   }
@@ -265,7 +265,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     else {
       $default = is_string($default) ? "'$default'" : $default;
     }
-  
+
     $ret[] = update_sql('ALTER TABLE {' . $table . '} ALTER COLUMN ' . $field . ' SET DEFAULT ' . $default);
   }
 
@@ -276,7 +276,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   public function addPrimaryKey(&$ret, $table, $fields) {
     $ret[] = update_sql('ALTER TABLE {' . $table . '} ADD PRIMARY KEY (' . $this->createKeySql($fields) . ')');
   }
-  
+
   public function dropPrimaryKey(&$ret, $table) {
     $ret[] = update_sql('ALTER TABLE {' . $table . '} DROP PRIMARY KEY');
   }
@@ -288,7 +288,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   public function dropUniqueKey(&$ret, $table, $name) {
     $ret[] = update_sql('ALTER TABLE {' . $table . '} DROP KEY ' . $name);
   }
-  
+
   public function addIndex(&$ret, $table, $name, $fields) {
     $query = 'ALTER TABLE {' . $table . '} ADD INDEX ' . $name . ' (' . $this->createKeySql($fields) . ')';
     $ret[] = update_sql($query);
@@ -297,7 +297,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   public function dropIndex(&$ret, $table, $name) {
     $ret[] = update_sql('ALTER TABLE {' . $table . '} DROP INDEX ' . $name);
   }
-  
+
   public function changeField(&$ret, $table, $field, $field_new, $spec, $keys_new = array()) {
     $sql = 'ALTER TABLE {' . $table . '} CHANGE ' . $field . ' ' . $this->createFieldSql($field_new, $this->processField($spec));
     if (count($keys_new)) {

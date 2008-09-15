@@ -618,7 +618,7 @@ function install_tasks($profile, $task) {
   // Bootstrap newly installed Drupal, while preserving existing messages.
   $messages = isset($_SESSION['messages']) ? $_SESSION['messages'] : '';
   drupal_install_init_database();
-  
+
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   $_SESSION['messages'] = $messages;
 
@@ -1179,4 +1179,3 @@ function install_configure_form_submit($form, &$form_state) {
 
 // Start the installer.
 install_main();
-

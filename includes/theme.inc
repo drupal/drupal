@@ -197,8 +197,8 @@ function _init_theme($theme, $base_theme = array(), $registry_callback = '_theme
 
 /**
  * Get the theme registry.
- * @return 
- *   The theme registry array if it has been stored in memory, NULL otherwise. 
+ * @return
+ *   The theme registry array if it has been stored in memory, NULL otherwise.
  */
 function theme_get_registry() {
   return _theme_set_registry();
@@ -208,16 +208,16 @@ function theme_get_registry() {
  * Store the theme registry in memory.
  * @param $registry
  *   A registry array as returned by _theme_build_registry()
- * @return 
+ * @return
  *   The theme registry array stored in memory
  */
 function _theme_set_registry($registry = NULL) {
   static $theme_registry = NULL;
-  
+
   if (isset($registry)) {
     $theme_registry = $registry;
   }
-  
+
   return $theme_registry;
 }
 
@@ -2001,4 +2001,3 @@ function template_preprocess_block(&$variables) {
   $variables['template_files'][] = 'block-' . $variables['block']->module;
   $variables['template_files'][] = 'block-' . $variables['block']->module . '-' . $variables['block']->delta;
 }
-
