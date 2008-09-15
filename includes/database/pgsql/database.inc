@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.2 2008/08/22 12:46:25 dries Exp $
+// $Id: database.inc,v 1.3 2008/09/15 20:48:07 webchick Exp $
 
 /**
  * @file
@@ -33,7 +33,7 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
   public function query($query, Array $args = array(), $options = array()) {
 
     $options += $this->defaultOptions();
-    
+
     try {
       if ($query instanceof DatabaseStatement) {
         $stmt = $query;
@@ -43,7 +43,7 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
         $stmt = $this->prepareQuery($query);
         $stmt->execute($args, $options);
       }
-      
+
       switch ($options['return']) {
         case Database::RETURN_STATEMENT:
           return $stmt;
@@ -74,7 +74,7 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
       return NULL;
     }
   }
-  
+
   public function queryRange($query, Array $args, $from, $count, Array $options) {
     // Backward compatibility hack, temporary.
     $query = str_replace(array('%d' , '%f' , '%b' , "'%s'"), '?', $query);

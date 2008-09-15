@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.test,v 1.8 2008/09/14 21:14:21 webchick Exp $
+// $Id: simpletest.test,v 1.9 2008/09/15 20:48:09 webchick Exp $
 
 class SimpleTestTestCase extends DrupalWebTestCase {
   /**
@@ -113,7 +113,7 @@ class SimpleTestTestCase extends DrupalWebTestCase {
 
     // Call an assert function specific to that class.
     $this->assertNothing();
-    
+
     // Generates a warning inside a PHP function.
     array_key_exists(NULL, NULL);
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.test,v 1.4 2008/09/11 19:47:40 webchick Exp $
+// $Id: taxonomy.test,v 1.5 2008/09/15 20:48:10 webchick Exp $
 
 class TaxonomyVocabularyFunctionsTestCase extends DrupalWebTestCase {
   /**
@@ -474,7 +474,7 @@ class TermEditTestCase extends DrupalWebTestCase {
        and that term name and description are saved.'),
       'group' => t('Taxonomy'));
   }
-  
+
   /**
    * Implementation of setUp().
    */

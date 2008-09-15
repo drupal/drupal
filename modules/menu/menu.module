@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.167 2008/08/21 19:36:37 dries Exp $
+// $Id: menu.module,v 1.168 2008/09/15 20:48:08 webchick Exp $
 
 /**
  * @file
@@ -315,13 +315,13 @@ function menu_nodeapi(&$node, $op) {
         if (isset($node->nid)) {
           // Give priority to the default menu
           $mlid = db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND menu_name = :menu_name AND module = 'menu' ORDER BY mlid ASC", array(
-            ':path' => 'node/'. $node->nid, 
+            ':path' => 'node/'. $node->nid,
             ':menu_name' => $menu_name,
           ), 0, 1));
           // Check all menus if a link does not exist in the default menu.
           if (!$mlid) {
             $mlid = db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu' ORDER BY mlid ASC", array(
-              ':path' => 'node/'. $node->nid, 
+              ':path' => 'node/'. $node->nid,
             ), 0, 1));
           }
           if ($mlid) {

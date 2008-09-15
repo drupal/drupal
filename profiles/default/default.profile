@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.27 2008/08/21 19:36:39 dries Exp $
+// $Id: default.profile,v 1.28 2008/09/15 20:48:10 webchick Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -136,7 +136,7 @@ function default_profile_tasks(&$task, $url) {
   // Create a default vocabulary named "Tags", enabled for the 'article' content type.
   $description = st('Use tags to group articles on similar topics into categories.');
   $help = st('Enter a comma-separated list of words.');
-  
+
   $vid = db_insert('vocabulary')->fields(array(
     'name' => 'Tags',
     'description' => $description,
@@ -150,7 +150,7 @@ function default_profile_tasks(&$task, $url) {
     'weight' => 0,
   ))->execute();
   db_insert('vocabulary_node_types')->fields(array('vid' => $vid, 'type' => 'article'))->execute();
-  
+
   // Update the menu router information.
   menu_rebuild();
 }
