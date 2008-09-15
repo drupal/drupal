@@ -308,9 +308,9 @@ function color_scheme_form_submit($form, &$form_state) {
   foreach ($info['copy'] as $file) {
     $base = basename($file);
     $source = $paths['source'] . $file;
-    file_copy($source, $paths['target'] . $base);
+    $filepath = file_copy($source, $paths['target'] . $base);
     $paths['map'][$file] = $base;
-    $paths['files'][] = $paths['target'] . $base;
+    $paths['files'][] = $filepath;
   }
 
   // Render new images, if image has been provided.

@@ -128,7 +128,7 @@ class FileValidateTest extends DrupalWebTestCase {
     }
 
     // Clear out any resizing messages.
-#    drupal_get_messages();
+    drupal_get_messages();
   }
 
   /**
