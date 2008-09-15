@@ -95,33 +95,33 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
     $this->having = new DatabaseCondition('AND');
     $this->addJoin(NULL, $table, $alias);
   }
-  
+
   /* Implementations of QueryAlterableInterface. */
-  
+
   public function addTag($tag) {
     $this->alterTags[$tag] = 1;
   }
-  
+
   public function hasTag($tag) {
     return isset($this->alterTags[$tag]);
   }
-  
+
   public function hasAllTags() {
     return !(boolean)array_diff(func_get_args(), array_keys($this->alterTags));
   }
-  
+
   public function hasAnyTag() {
     return (boolean)array_intersect(func_get_args(), array_keys($this->alterTags));
   }
-  
+
   public function addMetaData($key, $object) {
     $this->alterMetaData[$key] = $object;
   }
-  
+
   public function getMetaData($key) {
     return isset($this->alterMetaData[$key]) ? $this->alterMetaData[$key] : NULL;
   }
-  
+
   /* Implementations of QueryConditionInterface for the WHERE clause. */
 
   public function condition($field, $value = NULL, $operator = '=') {
@@ -144,7 +144,7 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
     $this->where->where($snippet, $args);
     return $this;
   }
-  
+
   public function compile(DatabaseConnection $connection) {
     return $this->where->compile($connection);
   }
@@ -171,13 +171,13 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
     $this->having->where($snippet, $args);
     return $this;
   }
-  
+
   public function havingCompile(DatabaseConnection $connection) {
     return $this->having->compile($connection);
   }
 
   /* Alter accessors to expose the query data to alter hooks. */
-  
+
   /**
    * Returns a reference to the fields array for this query.
    *
@@ -186,7 +186,7 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
    * use of addField() is preferred.
    *
    * Note that this method must be called by reference as well:
-   * 
+   *
    * @code
    * $fields =& $query->getFields();
    * @endcode
@@ -197,7 +197,7 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
   public function &getFields() {
     return $this->fields;
   }
-  
+
   /**
    * Returns a reference to the expressions array for this query.
    *
@@ -206,18 +206,18 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
    * use of addExpression() is preferred.
    *
    * Note that this method must be called by reference as well:
-   * 
+   *
    * @code
    * $fields =& $query->getExpressions();
    * @endcode
-   * 
+   *
    * @return
    *   A reference to the expression array structure.
    */
   public function &getExpressions() {
     return $this->expressions;
   }
-  
+
   /**
    * Returns a reference to the order by array for this query.
    *
@@ -226,18 +226,18 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
    * fields, however, the use of orderBy() is preferred.
    *
    * Note that this method must be called by reference as well:
-   * 
+   *
    * @code
    * $fields =& $query->getOrderBy();
    * @endcode
-   * 
+   *
    * @return
    *   A reference to the expression array structure.
    */
   public function &getOrderBy() {
     return $this->order;
   }
-  
+
   /**
    * Returns a reference to the tables array for this query.
    *
@@ -246,11 +246,11 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
    * use of the join() methods is preferred.
    *
    * Note that this method must be called by reference as well:
-   * 
+   *
    * @code
    * $fields =& $query->getTables();
    * @endcode
-   * 
+   *
    * @return
    *   A reference to the tables array structure.
    */
@@ -277,13 +277,13 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
         $args += $expression['arguments'];
       }
     }
-    
+
     return $args;
   }
-  
+
   public function execute() {
     drupal_alter('query', $this);
-    
+
     $this->where->compile($this->connection);
     $this->having->compile($this->connection);
     $args = $this->where->arguments() + $this->having->arguments();
@@ -297,7 +297,7 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
         $args += $expression['arguments'];
       }
     }
-    
+
     if (!empty($this->range)) {
       return $this->connection->queryRange((string)$this, $args, $this->range['start'], $this->range['length'], $this->queryOptions);
     }
@@ -376,15 +376,15 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
    */
   public function addExpression($expression, $alias = NULL, $arguments = array()) {
     static $alaises = array();
-    
+
     if (empty($alias)) {
       $alias = 'expression';
     }
-    
+
     if (empty($aliases[$alias])) {
       $aliases[$alias] = 1;
     }
-    
+
     if (!empty($this->expressions[$alias])) {
       $alias = $alias . '_' . $aliases[$alias]++;
     }
@@ -588,7 +588,7 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
   public function groupBy($field) {
     $this->group[] = $field;
   }
-  
+
   /**
    * Get the equivalent COUNT query of this query as a new query object.
    *
@@ -599,24 +599,24 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
     // Shallow-clone this query.  We don't want to duplicate any of the
     // referenced objects, so a shallow query is all we need.
     $count = clone($this);
-    
+
     // Zero-out existing fields and expressions.
     $fields =& $count->getFields();
     $fields = array();
     $expressions =& $count->getExpressions();
     $expressions = array();
-    
+
     // Ordering a count query is a waste of cycles, and breaks on some
     // databases anyway.
     $orders = &$count->getOrderBy();
     $orders = array();
-    
+
     // COUNT() is an expression, so we add that back in.
     $count->addExpression('COUNT(*)');
-    
+
     return $count;
   }
-  
+
   public function __toString() {
 
     // SELECT
@@ -681,12 +681,12 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
 
     return $query;
   }
-  
+
   public function __clone() {
     // On cloning, also clone the conditional objects.  However, we do not
     // want to clone the database connection object as that would duplicate the
     // connection itself.
-    
+
     $this->where = clone($this->where);
     $this->having = clone($this->having);
   }

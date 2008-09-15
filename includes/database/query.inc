@@ -52,21 +52,21 @@ interface QueryConditionInterface {
    *
    * This method returns by reference.  That allows alter hooks to access the
    * data structure directly and manipulate it before it gets compiled.
-   * 
+   *
    * The data structure that is returned is an indexed array of entries, where
    * each entry looks like the following:
-   * 
+   *
    * array(
    *   'field' => $field,
    *   'value' => $value,
    *   'operator' => $operator,
    * );
-   * 
+   *
    * In the special case that $operator is NULL, the $field is taken as a raw
-   * SQL snippet (possibly containing a function) and $value is an associative 
+   * SQL snippet (possibly containing a function) and $value is an associative
    * array of placeholders for the snippet.
-   * 
-   * There will also be a single array entry of #conjunction, which is the 
+   *
+   * There will also be a single array entry of #conjunction, which is the
    * conjunction that will be applied to the array, such as AND.
    */
   public function &conditions();
@@ -78,7 +78,7 @@ interface QueryConditionInterface {
    *   An associative array of placeholders and values.
    */
   public function arguments();
-  
+
   /**
    * Compiles the saved conditions for later retrieval.
    *
@@ -96,7 +96,7 @@ interface QueryConditionInterface {
  * Interface for a query that can be manipulated via an alter hook.
  */
 interface QueryAlterableInterface {
-  
+
   /**
    * Adds a tag to a query.
    *
@@ -110,7 +110,7 @@ interface QueryAlterableInterface {
    *   The tag to add.
    */
   public function addTag($tag);
-  
+
   /**
    * Determines if a given query has a given tag.
    *
@@ -120,7 +120,7 @@ interface QueryAlterableInterface {
    *   TRUE if this query has been marked with this tag, FALSE otherwise.
    */
   public function hasTag($tag);
-  
+
   /**
    * Determines if a given query has all specified tags.
    *
@@ -141,7 +141,7 @@ interface QueryAlterableInterface {
    *   tags, FALSE otherwise.
    */
   public function hasAnyTag();
-  
+
   /**
    * Adds additional metadata to the query.
    *
@@ -157,7 +157,7 @@ interface QueryAlterableInterface {
    *
    */
   public function addMetaData($key, $object);
-  
+
   /**
    * Retrieves a given piece of metadata.
    *
@@ -264,7 +264,7 @@ class InsertQuery extends Query {
    * Add a set of field->value pairs to be inserted.
    *
    * This method may only be called once.  Calling it a second time will be
-   * ignored.  To queue up multiple sets of values to be inserted at once, 
+   * ignored.  To queue up multiple sets of values to be inserted at once,
    * use the values() method.
    *
    * @param $fields
@@ -327,15 +327,15 @@ class InsertQuery extends Query {
   /**
    * Specify fields for which the database-defaults should be used.
    *
-   * If you want to force a given field to use the database-defined default, 
+   * If you want to force a given field to use the database-defined default,
    * not NULL or undefined, use this method to instruct the database to use
    * default values explicitly.  In most cases this will not be necessary
    * unless you are inserting a row that is all default values, as you cannot
    * specify no values in an INSERT query.
-   * 
+   *
    * Specifying a field both in fields() and in useDefaults() is an error
    * and will not execute.
-   * 
+   *
    * @param $fields
    *   An array of values for which to use the default values
    *   specified in the table definition.
@@ -346,20 +346,20 @@ class InsertQuery extends Query {
     $this->defaultFields = $fields;
     return $this;
   }
-  
+
   /**
    * Flag this query as being delay-safe or not.
    *
    * If this method is never called, it is assumed that the query must be
-   * executed immediately.  If delay is set to TRUE, then the query will be 
+   * executed immediately.  If delay is set to TRUE, then the query will be
    * flagged to run "delayed" or "low priority" on databases that support such
    * capabilities.  In that case, the database will return immediately and the
    * query will be run at some point in the future.  That makes it useful for
    * logging-style queries.
-   * 
+   *
    * If the database does not support delayed INSERT queries, this method
    * has no effect.
-   * 
+   *
    * @param $delay
    *   If TRUE, this query is delay-safe and will run delayed on supported databases.
    * @return
@@ -387,7 +387,7 @@ class InsertQuery extends Query {
     if (array_intersect($this->insertFields, $this->defaultFields)) {
       throw new PDOException('You may not specify the same field to have a value and a schema-default value.');
     }
-    
+
     // Each insert happens in its own query in the degenerate case.  However,
     // we wrap it in a transaction so that it is atomic where possible.  On many
     // databases, such as SQLite, this is also a notable performance boost.
@@ -405,11 +405,11 @@ class InsertQuery extends Query {
   }
 
   public function __toString() {
-    
+
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
-    
-    // For simplicity, we will use the $placeholders array to inject 
+
+    // For simplicity, we will use the $placeholders array to inject
     // default keywords even though they are not, strictly speaking,
     // placeholders for prepared statements.
     $placeholders = array();
@@ -503,10 +503,10 @@ class MergeQuery extends Query {
       $fields = array_combine($fields, $values);
     }
     $this->insertFields = $fields;
- 
+
     return $this;
   }
-  
+
   /**
    * Set the key field(s) to be used to insert or update into the table.
    *
@@ -590,7 +590,7 @@ class MergeQuery extends Query {
       $exclude_fields = func_get_args();
     }
     $this->excludeFields = $exclude_fields;
-    
+
     return $this;
   }
 
@@ -617,7 +617,7 @@ class MergeQuery extends Query {
       'expression' => $expression,
       'arguments' => $arguments,
     );
-    
+
     return $this;
   }
 
@@ -629,25 +629,25 @@ class MergeQuery extends Query {
     // for comprehensibility.  Any practical database driver will override
     // this method with database-specific logic, so this function serves only
     // as a fallback to aid developers of new drivers.
-    
+
     // Wrap multiple queries in a transaction, if the database supports it.
     $transaction = $this->connection->startTransaction();
-    
+
     // Manually check if the record already exists.
     $select = $this->connection->select($this->table);
     foreach ($this->keyFields as $field => $value) {
       $select->condition($field, $value);
     }
-    
+
     $select = $select->countQuery();
     $sql = (string)$select;
     $arguments = $select->getArguments();
     $num_existing = db_query($sql, $arguments)->fetchField();
-    
-    
+
+
     if ($num_existing) {
       // If there is already an existing record, run an update query.
-      
+
       if ($this->updateFields) {
         $update_fields = $this->updateFields;
       }
@@ -672,7 +672,7 @@ class MergeQuery extends Query {
       $insert_fields = $this->insertFields + $this->keyFields;
       $this->connection->insert($this->table, $this->queryOptions)->fields($insert_fields)->execute();
     }
-    
+
     // Commit the transaction.
     $transaction->commit();
   }
@@ -711,7 +711,7 @@ class DeleteQuery extends Query implements QueryConditionInterface {
     $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
     $this->table = $table;
-    
+
     $this->condition = new DatabaseCondition('AND');
   }
 
@@ -735,7 +735,7 @@ class DeleteQuery extends Query implements QueryConditionInterface {
     $this->condition->where($snippet, $args);
     return $this;
   }
-  
+
   public function compile(DatabaseConnection $connection) {
     return $this->condition->compile($connection);
   }
@@ -816,7 +816,7 @@ class UpdateQuery extends Query implements QueryConditionInterface {
     $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
     $this->table = $table;
-    
+
     $this->condition = new DatabaseCondition('AND');
   }
 
@@ -840,7 +840,7 @@ class UpdateQuery extends Query implements QueryConditionInterface {
     $this->condition->where($snippet, $args);
     return $this;
   }
-  
+
   public function compile(DatabaseConnection $connection) {
     return $this->condition->compile($connection);
   }
@@ -881,12 +881,12 @@ class UpdateQuery extends Query implements QueryConditionInterface {
       'expression' => $expression,
       'arguments' => $arguments,
     );
-    
+
     return $this;
   }
 
   public function execute() {
-    
+
     // Expressions take priority over literal fields, so we process those first
     // and remove any literal fields that conflict.
     $fields = $this->fields;
@@ -897,14 +897,14 @@ class UpdateQuery extends Query implements QueryConditionInterface {
       }
       unset($fields[$field]);
     }
-    
+
     // Because we filter $fields the same way here and in __toString(), the
     // placeholders will all match up properly.
     $max_placeholder = 0;
     foreach ($fields as $field => $value) {
       $update_values[':db_update_placeholder_' . ($max_placeholder++)] = $value;
     }
-    
+
     if (count($this->condition)) {
       $this->condition->compile($this->connection);
       $update_values = array_merge($update_values, $this->condition->arguments());
@@ -922,7 +922,7 @@ class UpdateQuery extends Query implements QueryConditionInterface {
       $update_fields[] = $field . '=' . $data['expression'];
       unset($fields[$field]);
     }
-    
+
     $max_placeholder = 0;
     foreach ($fields as $field => $value) {
       $update_fields[] = $field . '=:db_update_placeholder_' . ($max_placeholder++);
@@ -948,13 +948,13 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
 
   protected $conditions = array();
   protected $arguments = array();
-  
+
   protected $changed = TRUE;
 
   public function __construct($conjunction) {
     $this->conditions['#conjunction'] = $conjunction;
   }
-  
+
   /**
    * Return the size of this conditional.  This is part of the Countable interface.
    *
@@ -964,16 +964,16 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
   public function count() {
     return count($this->conditions) - 1;
   }
-  
+
   public function condition($field, $value = NULL, $operator = '=') {
     $this->conditions[] = array(
       'field' => $field,
       'value' => $value,
       'operator' => $operator,
     );
-    
+
     $this->changed = TRUE;
-    
+
     return $this;
   }
 
@@ -984,10 +984,10 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
       'operator' => NULL,
     );
     $this->changed = TRUE;
-    
+
     return $this;
   }
-  
+
   public function &conditions() {
     return $this->conditions;
   }
@@ -1008,10 +1008,10 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
     static $next_placeholder = 1;
 
     if ($this->changed) {
-    
+
       $condition_fragments = array();
       $arguments = array();
-      
+
       $conditions = $this->conditions;
       $conjunction = $conditions['#conjunction'];
       unset($conditions['#conjunction']);
@@ -1043,7 +1043,7 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
               $operator = $this->mapConditionOperator($condition['operator']);
             }
             $operator += $operator_defaults;
-            
+
             if ($condition['value'] instanceof SelectQuery) {
               $placeholders[] = (string)$condition['value'];
               $arguments += $condition['value']->arguments();
@@ -1061,17 +1061,17 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
               $placeholders[] = $placeholder;
             }
             $condition_fragments[] = ' (' . $condition['field'] . ' ' . $operator['operator'] . ' ' . $operator['prefix'] . implode($operator['delimiter'], $placeholders) . $operator['postfix'] . ') ';
-            
+
           }
         }
       }
-      
+
       $this->changed = FALSE;
       $this->stringVersion = implode($conjunction, $condition_fragments);
       $this->arguments = $arguments;
     }
   }
-  
+
   public function __toString() {
     // If the caller forgot to call compile() first, refuse to run.
     if ($this->changed) {
@@ -1079,7 +1079,7 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
     }
     return $this->stringVersion;
   }
-  
+
   /**
    * Gets any special processing requirements for the condition operator.
    *
@@ -1105,7 +1105,7 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
 
     return $return;
   }
-  
+
 }
 
 /**
