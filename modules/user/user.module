@@ -984,6 +984,7 @@ function user_authenticate($name, $pass) {
   }
 
   // Strip name and server from ID:
+  $fullname = $name;
   if ($server = strrchr($name, '@')) {
     $name = substr($name, 0, strlen($name) - strlen($server));
     $server = substr($server, 1);
@@ -991,10 +992,10 @@ function user_authenticate($name, $pass) {
 
   // When possible, determine corresponding external auth source. Invoke
   // source, and log in user if successful:
-  if ($server && ($result = user_get_authmaps("$name@$server"))) {
+  if ($result = user_get_authmaps($fullname)) {
     if (module_invoke(key($result), 'auth', $name, $pass, $server)) {
-      $user = user_external_load("$name@$server");
-      watchdog('user', t('External load by %user using module %module.', array('%user' => $name .'@'. $server, '%module' => key($result))));
+      $user = user_external_load($fullname);
+      watchdog('user', t('External load by %user using module %module.', array('%user' => $fullname, '%module' => key($result))));
     }
   }
 
@@ -1003,23 +1004,18 @@ function user_authenticate($name, $pass) {
   else {
     foreach (module_implements('auth') as $module) {
       if (module_invoke($module, 'auth', $name, $pass, $server)) {
-        if ($server) {
-          $name .= '@'. $server;
-        }
-        $registered_user = user_load(array('name' => $name));
+        $registered_user = user_load(array('name' => $fullname));
         if (!$registered_user->uid) { // Register this new user.
           $userinfo = array(
-            'name' => $name, 
+            'name' => $fullname,
             'pass' => user_password(), 
-            'init' => $name, 
+            'init' => $fullname,
             'status' => 1, 
             'access' => time(),
           );
-          if ($server) {
-            $userinfo["authname_$module"] = $name;
-          }
+          $userinfo["authname_$module"] = $fullname;
           $user = user_save('', $userinfo);
-          watchdog('user', t('New external user: %user using module %module.', array('%user' => $name, '%module' => $module)), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $user->uid .'/edit'));
+          watchdog('user', t('New external user: %user using module %module.', array('%user' => $fullname, '%module' => $module)), WATCHDOG_NOTICE, l(t('edit'), 'user/'. $user->uid .'/edit'));
           break;
         }
       }
