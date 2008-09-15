@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.inc,v 1.16 2008/09/05 09:29:06 dries Exp $
+// $Id: actions.inc,v 1.17 2008/09/15 16:07:47 webchick Exp $
 
 /**
  * @file
@@ -250,7 +250,7 @@ function actions_function_lookup($hash) {
  */
 function actions_synchronize($actions_in_code = array(), $delete_orphans = FALSE) {
   if (!$actions_in_code) {
-    $actions_in_code = actions_list();
+    $actions_in_code = actions_list(TRUE);
   }
   $actions_in_db = array();
   $result = db_query("SELECT * FROM {actions} WHERE parameters = ''");
