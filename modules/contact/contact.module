@@ -27,7 +27,7 @@ function contact_help($section) {
         $menu_note = '';
       }
       $output .= '<p>'. t('The contact module also adds a <a href="@menu-settings">menu item</a> (disabled by default) to the navigation block.', array('@menu-settings' => url('admin/build/menu'))) .' '. $menu_note .'</p>';
-      return($output);
+      return $output;
   }
 }
 
@@ -227,7 +227,7 @@ function contact_admin_edit_submit($form_id, $form_values) {
     db_query('UPDATE {contact} SET selected = 0');
   }
   $recipients = explode(',', $form_values['recipients']);
-  foreach ($recipients as $key=>$recipient) {
+  foreach ($recipients as $key => $recipient) {
     // E-mail address validation has already been done in _validate.
     $recipients[$key] = trim($recipient);
   }
@@ -547,6 +547,6 @@ function contact_mail_page_submit($form_id, $form_values) {
   drupal_set_message(t('Your message has been sent.'));
 
   // Jump to home page rather than back to contact page to avoid contradictory messages if flood control has been activated.
-  return('');
+  return '';
 }
 
