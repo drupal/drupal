@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.2 2008/09/15 16:10:12 webchick Exp $
+// $Id: file.test,v 1.3 2008/09/15 21:06:07 webchick Exp $
 
 /**
  *  @file
@@ -128,7 +128,7 @@ class FileValidateTest extends DrupalWebTestCase {
     }
 
     // Clear out any resizing messages.
-#    drupal_get_messages();
+    drupal_get_messages();
   }
 
   /**
