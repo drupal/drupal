@@ -277,14 +277,14 @@ function user_save($account, $edit = array(), $category = 'account') {
 
     // Delete a blocked user's sessions to kick them if they are online.
     if (isset($edit['status']) && $edit['status'] == 0) {
-      sess_destroy_uid($account->uid);
+      drupal_session_destroy_uid($account->uid);
     }
 
     // If the password changed, delete all open sessions and recreate
     // the current one.
     if (!empty($edit['pass'])) {
-      sess_destroy_uid($account->uid);
-      sess_regenerate();
+      drupal_session_destroy_uid($account->uid);
+      drupal_session_regenerate();
     }
 
     // Refresh user object.
@@ -792,7 +792,7 @@ function user_block($op = 'list', $delta = '', $edit = array()) {
 
           // Perform database queries to gather online user lists.  We use s.timestamp
           // rather than u.access because it is much faster.
-          $anonymous_count = sess_count($interval);
+          $anonymous_count = drupal_session_count($interval);
           $authenticated_users = db_query('SELECT DISTINCT u.uid, u.name, s.timestamp FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.timestamp >= %d AND s.uid > 0 ORDER BY s.timestamp DESC', $interval);
           $authenticated_count = 0;
           $max_users = variable_get('user_block_max_list_count', 10);
@@ -1344,7 +1344,7 @@ function user_authenticate_finalize(&$edit) {
   $user->login = $_SERVER['REQUEST_TIME'];
   db_query("UPDATE {users} SET login = %d WHERE uid = %d", $user->login, $user->uid);
   user_module_invoke('login', $edit, $user);
-  sess_regenerate();
+  drupal_session_regenerate();
 }
 
 /**
@@ -1555,7 +1555,7 @@ function _user_edit_submit($uid, &$edit) {
  */
 function user_delete($edit, $uid) {
   $account = user_load(array('uid' => $uid));
-  sess_destroy_uid($uid);
+  drupal_session_destroy_uid($uid);
   _user_mail_notify('status_deleted', $account);
   module_invoke_all('user', 'delete', $edit, $account);
   db_query('DELETE FROM {users} WHERE uid = %d', $uid);
@@ -2210,7 +2210,7 @@ function user_block_user_action(&$object, $context = array()) {
     $uid = $user->uid;
   }
   db_query("UPDATE {users} SET status = 0 WHERE uid = %d", $uid);
-  sess_destroy_uid($uid);
+  drupal_session_destroy_uid($uid);
   watchdog('action', 'Blocked user %name.', array('%name' => check_plain($user->name)));
 }
 

@@ -32,7 +32,7 @@
  *
  * @return
  *   This function will always return TRUE.
-*/    
+ */    
 function _sess_open() {
   return TRUE;
 }
@@ -48,7 +48,7 @@ function _sess_open() {
  *
  * @return
  *   This function will always return TRUE.
-*/    
+ */    
 function _sess_close() {
   return TRUE;
 }
@@ -68,7 +68,7 @@ function _sess_close() {
  * @return
  *   Either an array of the session data, or an empty string, if no data 
  *   was found or the user is anonymous.
-*/
+ */
 function _sess_read($key) {
   global $user;
 
@@ -127,7 +127,7 @@ function _sess_read($key) {
  *   Serialized array of the session data.
  * @return
  *   This function will always return TRUE.
-*/
+ */
 function _sess_write($key, $value) {
   global $user;
 
@@ -136,7 +136,7 @@ function _sess_write($key, $value) {
   // the session table. This reduces memory and server load, and gives more useful
   // statistics. We can't eliminate anonymous session table rows without breaking
   // the "Who's Online" block.
-  if (!session_save_session() || (empty($_COOKIE[session_name()]) && empty($value))) {
+  if (!drupal_save_session() || (empty($_COOKIE[session_name()]) && empty($value))) {
     return TRUE;
   }
 
@@ -170,7 +170,7 @@ function _sess_write($key, $value) {
 /**
  * Called when an anonymous user becomes authenticated or vice-versa.
  */
-function sess_regenerate() {
+function drupal_session_regenerate() {
   $old_session_id = session_id();
   session_regenerate_id();
   db_query("UPDATE {sessions} SET sid = '%s' WHERE sid = '%s'", session_id(), $old_session_id);
@@ -189,19 +189,20 @@ function sess_regenerate() {
  * @return  int
  *   The number of users with sessions.
  */
-function sess_count($timestamp = 0, $anonymous = true) {
+function drupal_session_count($timestamp = 0, $anonymous = true) {
   $query = $anonymous ? ' AND uid = 0' : ' AND uid > 0';
   return db_result(db_query('SELECT COUNT(sid) AS count FROM {sessions} WHERE timestamp >= %d' . $query, $timestamp));
 }
 
 /**
- * Called by PHP session handling with the PHP session ID 
- * to end a user's session.
+ * Session handler assigned by session_set_save_handler().
+ * 
+ * Cleanup a specific session.
  *
  * @param  string $sid
  *   the session id
  */
-function sess_destroy_sid($sid) {
+function _sess_destroy_sid($sid) {
   db_query("DELETE FROM {sessions} WHERE sid = '%s'", $sid);
 }
 
@@ -211,11 +212,16 @@ function sess_destroy_sid($sid) {
  * @param  string $uid
  *   the user id
  */
-function sess_destroy_uid($uid) {
+function drupal_session_destroy_uid($uid) {
   db_query('DELETE FROM {sessions} WHERE uid = %d', $uid);
 }
 
-function sess_gc($lifetime) {
+/**
+ * Session handler assigned by session_set_save_handler().
+ * 
+ * Cleanup stalled sessions.
+ */
+function _sess_gc($lifetime) {
   // Be sure to adjust 'php_value session.gc_maxlifetime' to a large enough
   // value. For example, if you want user sessions to stay in your database
   // for three weeks before deleting them, you need to set gc_maxlifetime
@@ -240,7 +246,7 @@ function sess_gc($lifetime) {
  * @return
  *   FALSE if writing session data has been disabled. Otherwise, TRUE.
  */
-function session_save_session($status = NULL) {
+function drupal_save_session($status = NULL) {
   static $save_session = TRUE;
   if (isset($status)) {
     $save_session = $status;

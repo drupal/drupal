@@ -26,19 +26,19 @@ class SessionTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Tests for session_save_session().
+   * Tests for drupal_save_session().
    */
   function testSessionSaveSession() {
-    $this->assertTrue(session_save_session(), t('session_save_session() correctly returns TRUE when initially called with no arguments.'), t('Session'));
-    $this->assertFalse(session_save_session(FALSE), t('session_save_session() correctly returns FALSE when called with FALSE.'), t('Session'));
-    $this->assertFalse(session_save_session(), t('session_save_session() correctly returns FALSE when saving has been disabled.'), t('Session'));
-    $this->assertTrue(session_save_session(TRUE), t('session_save_session() correctly returns TRUE when called with TRUE.'), t('Session'));
-    $this->assertTrue(session_save_session(), t('session_save_session() correctly returns TRUE when saving has been enabled.'), t('Session'));
+    $this->assertTrue(drupal_save_session(), t('drupal_save_session() correctly returns TRUE when initially called with no arguments.'), t('Session'));
+    $this->assertFalse(drupal_save_session(FALSE), t('drupal_save_session() correctly returns FALSE when called with FALSE.'), t('Session'));
+    $this->assertFalse(drupal_save_session(), t('drupal_save_session() correctly returns FALSE when saving has been disabled.'), t('Session'));
+    $this->assertTrue(drupal_save_session(TRUE), t('drupal_save_session() correctly returns TRUE when called with TRUE.'), t('Session'));
+    $this->assertTrue(drupal_save_session(), t('drupal_save_session() correctly returns TRUE when saving has been enabled.'), t('Session'));
   }
 
   /**
    * Test data persistence via the session_test module callbacks. Also tests
-   * sess_count() since session data is already generated here.
+   * drupal_session_count() since session data is already generated here.
    */
   function testDataPersistence() {
     $user = $this->drupalCreateUser(array('access content'));
@@ -54,13 +54,13 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->drupalGet('session-test/get');
     $this->assertText($value_1, t('Session correctly returned the stored data for an authenticated user.'), t('Session'));
 
-    // Attempt to write over val_1. If session_save_session(FALSE) is working.
+    // Attempt to write over val_1. If drupal_save_session(FALSE) is working.
     // properly, val_1 will still be set.
     $value_2 = $this->randomName();
     $this->drupalGet('session-test/no-set/' . $value_2);
     $this->assertText($value_2, t('The session value was correctly passed to session-test/no-set.'), t('Session'));
     $this->drupalGet('session-test/get');
-    $this->assertText($value_1, t('Session data is not saved for session_save_session(FALSE).'), t('Session'));
+    $this->assertText($value_1, t('Session data is not saved for drupal_save_session(FALSE).'), t('Session'));
 
     // Switch browser cookie to anonymous user, then back to user 1.
     $this->sessionReset();
@@ -85,7 +85,7 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->drupalGet('session-test/no-set/' . $value_4);
     $this->assertText($value_4, t('The session value was correctly passed to session-test/no-set.'), t('Session'));
     $this->drupalGet('session-test/get');
-    $this->assertText($value_3, t('Session data is not saved for session_save_session(FALSE).'), t('Session'));
+    $this->assertText($value_3, t('Session data is not saved for drupal_save_session(FALSE).'), t('Session'));
 
     // Logout and get first user back in. Sessions shouldn't persist through
     // logout, so the data won't be on the page.
@@ -100,10 +100,10 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->drupalLogin($user2);
     $this->session_count_authenticated = $this->session_count++;
 
-    // Perform sess_count tests here in order to use the session data already generated.
+    // Perform drupal_session_count tests here in order to use the session data already generated.
     // Test absolute count.
-    $anonymous = sess_count(0, TRUE);
-    $authenticated = sess_count(0, FALSE);
+    $anonymous = drupal_session_count(0, TRUE);
+    $authenticated = drupal_session_count(0, FALSE);
     $this->assertEqual($anonymous + $authenticated, $this->session_count, t('Correctly counted @count total sessions.', array('@count' => $this->session_count)), t('Session'));
 
     // Test anonymous count.
@@ -113,7 +113,7 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->assertEqual($authenticated, $this->session_count_authenticated, t('Correctly counted @count authenticated sessions.', array('@count' => $authenticated)), t('Session'));
 
     // Should return 0 sessions from 1 second from now.
-    $this->assertEqual(sess_count(time() + 1), 0, t('Correctly returned 0 sessions newer than the current time.'), t('Session'));
+    $this->assertEqual(drupal_session_count(time() + 1), 0, t('Correctly returned 0 sessions newer than the current time.'), t('Session'));
 
   }
 

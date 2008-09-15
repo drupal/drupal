@@ -49,7 +49,7 @@ function _session_test_set($value) {
  * anyway.
  */
 function _session_test_no_set($value) {
-  session_save_session(FALSE);
+  drupal_save_session(FALSE);
   _session_test_set($value);
   return t('session saving was disabled, and then %val was set', array('%val' => $value));
 }
