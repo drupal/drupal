@@ -1538,7 +1538,11 @@ function theme_file($element) {
  *   A string representing the form element.
  */
 function theme_form_element($element, $value) {
-  $output  = '<div class="form-item">'."\n";
+  $output  = '<div class="form-item"';
+  if (!empty($element['#id'])) {
+    $output .= ' id="'. $element['#id'] .'-wrapper"';
+  }
+  $output .= ">\n";
   $required = !empty($element['#required']) ? '<span class="form-required" title="'. t('This field is required.') .'">*</span>' : '';
 
   if (!empty($element['#title'])) {
