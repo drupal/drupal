@@ -445,7 +445,7 @@ function node_admin_content($form_state) {
   $form = node_filter_form();
 
   $form['#theme'] = 'node_filter_form';
-  $form['admin']  = node_admin_nodes();
+  $form['admin'] = node_admin_nodes();
 
   return $form;
 }
@@ -454,15 +454,35 @@ function node_admin_content($form_state) {
  * Form builder: Builds the node administration overview.
  */
 function node_admin_nodes() {
+  // Enable language column if translation module is enabled
+  // or if we have any node with language.
+  $multilanguage = (module_exists('translation') || db_result(db_query("SELECT COUNT(*) FROM {node} WHERE language != ''")));
 
+  // Build the sortable table header.
+  $header = array();
+  $header[] = theme('table_select_header_cell');
+  $header[] = array('data' => t('Title'), 'field' => 'n.title');
+  $header[] = array('data' => t('Type'), 'field' => 'n.type');
+  $header[] = array('data' => t('Author'), 'field' => 'u.name');
+  $header[] = array('data' => t('Status'), 'field' => 'n.status');
+  $header[] = array('data' => t('Updated'), 'field' => 'n.changed', 'sort' => 'desc');
+  if ($multilanguage) {
+    $header[] = array('data' => t('Language'), 'field' => 'n.language');
+  }
+  $header[] = array('data' => t('Operations'));
+
+  $form['header'] = array(
+   '#type' => 'value',
+   '#value' => $header,
+  );
+
+  // Build the query and load the nodes we want to display.
   $filter = node_build_filter_query();
-
-  $result = pager_query(db_rewrite_sql('SELECT n.*, u.name FROM {node} n ' . $filter['join'] . ' INNER JOIN {users} u ON n.uid = u.uid ' . $filter['where'] . ' ORDER BY n.changed DESC'), 50, 0, NULL, $filter['args']);
-
-  // Enable language column if locale is enabled or if we have any node with language
-  $count = db_result(db_query("SELECT COUNT(*) FROM {node} n WHERE language != ''"));
-  $multilanguage = (module_exists('locale') || $count);
-
+  
+  $sort = tablesort_sql($header, '', 'n.changed DESC');
+  $result = pager_query(db_rewrite_sql('SELECT n.*, u.name FROM {node} n '. $filter['join'] .' INNER JOIN {users} u ON n.uid = u.uid '. $filter['where'] . $sort), 50, 0, NULL, $filter['args']);
+  
+  // Build the 'Update options' form.
   $form['options'] = array(
     '#type' => 'fieldset',
     '#title' => t('Update options'),
@@ -494,12 +514,16 @@ function node_admin_nodes() {
     $form['name'][$node->nid] =  array('#markup' => check_plain(node_get_types('name', $node)));
     $form['username'][$node->nid] = array('#markup' => theme('username', $node));
     $form['status'][$node->nid] =  array('#markup' => ($node->status ? t('published') : t('not published')));
+    $form['changed'][$node->nid] = array('#markup' => format_date($node->changed, 'small'));
     if ($multilanguage) {
       $form['language'][$node->nid] = array('#markup' => empty($node->language) ? t('Language neutral') : t($languages[$node->language]->name));
     }
     $form['operations'][$node->nid] = array('#markup' => l(t('edit'), 'node/' . $node->nid . '/edit', array('query' => $destination)));
   }
-  $form['nodes'] = array('#type' => 'checkboxes', '#options' => $nodes);
+  $form['nodes'] = array(
+    '#type' => 'checkboxes',
+    '#options' => $nodes,
+  );
   $form['pager'] = array('#markup' => theme('pager', NULL, 50, 0));
   $form['#theme'] = 'node_admin_nodes';
   return $form;
@@ -554,19 +578,14 @@ function node_admin_nodes_submit($form, &$form_state) {
  * @ingroup themeable
  */
 function theme_node_admin_nodes($form) {
-  // If there are rows in this form, then $form['title'] contains a list of
-  // the title form elements.
-  $has_posts = isset($form['title']) && is_array($form['title']);
-  $select_header = $has_posts ? theme('table_select_header_cell') : '';
-  $header = array($select_header, t('Title'), t('Type'), t('Author'), t('Status'));
-  if (isset($form['language'])) {
-    $header[] = t('Language');
-  }
-  $header[] = t('Operations');
   $output = '';
-
   $output .= drupal_render($form['options']);
+
+  $header = $form['header']['#value'];
+
+  $has_posts = isset($form['title']) && is_array($form['title']);
   if ($has_posts) {
+    $rows = array();
     foreach (element_children($form['title']) as $key) {
       $row = array();
       $row[] = drupal_render($form['nodes'][$key]);
@@ -574,19 +593,22 @@ function theme_node_admin_nodes($form) {
       $row[] = drupal_render($form['name'][$key]);
       $row[] = drupal_render($form['username'][$key]);
       $row[] = drupal_render($form['status'][$key]);
+      $row[] = drupal_render($form['changed'][$key]);
       if (isset($form['language'])) {
         $row[] = drupal_render($form['language'][$key]);
       }
       $row[] = drupal_render($form['operations'][$key]);
       $rows[] = $row;
     }
-
   }
   else {
-    $rows[] = array(array('data' => t('No posts available.'), 'colspan' => '6'));
+    $rows[] = array(
+      array('data' => t('No posts available.'), 'colspan' => count($header)),
+    );
   }
 
   $output .= theme('table', $header, $rows);
+  
   if ($form['pager']['#markup']) {
     $output .= drupal_render($form['pager']);
   }
