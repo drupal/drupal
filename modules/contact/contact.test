@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.test,v 1.9 2008/09/15 20:48:08 webchick Exp $
+// $Id: contact.test,v 1.10 2008/09/16 17:50:02 dries Exp $
 
 /**
  * Test the sitewide contact form.
@@ -45,7 +45,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
 
     // Add categories.
     // Test invalid recipients.
-    $invalid_recipients = array('invalid', 'invalid@', /*'invalid@site', 'invalid@site.',*/ '@site.', '@site.com');
+    $invalid_recipients = array('invalid', 'invalid@', 'invalid@site', 'invalid@site.', '@site.', '@site.com');
     foreach ($invalid_recipients as $invalid_recipient) {
       $this->addCategory($this->randomName(16), $invalid_recipient, '', FALSE);
       $this->assertRaw(t('%recipient is an invalid e-mail address.', array('%recipient' => $invalid_recipient)), t('Caught invalid recipient (' . $invalid_recipient . ').'));
