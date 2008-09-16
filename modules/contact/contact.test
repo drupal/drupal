@@ -45,7 +45,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
 
     // Add categories.
     // Test invalid recipients.
-    $invalid_recipients = array('invalid', 'invalid@', /*'invalid@site', 'invalid@site.',*/ '@site.', '@site.com');
+    $invalid_recipients = array('invalid', 'invalid@', 'invalid@site', 'invalid@site.', '@site.', '@site.com');
     foreach ($invalid_recipients as $invalid_recipient) {
       $this->addCategory($this->randomName(16), $invalid_recipient, '', FALSE);
       $this->assertRaw(t('%recipient is an invalid e-mail address.', array('%recipient' => $invalid_recipient)), t('Caught invalid recipient (' . $invalid_recipient . ').'));
