@@ -264,8 +264,10 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     // Enable the personal contact form.
+    $flood_control = 3;
     $edit = array();
     $edit['contact_default_status'] = TRUE;
+    $edit['contact_hourly_threshold'] = $flood_control;
     $this->drupalPost('admin/build/contact/settings', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Setting successfully saved.'));
 
@@ -286,6 +288,20 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
     $edit['message'] = $this->randomName(64);
     $this->drupalPost(NULL, $edit, t('Send e-mail'));
     $this->assertText(t('The message has been sent.'), t('Message sent.'));
+
+    // Clear flood table in preparation for flood test and allow other checks to complete.
+    $this->assertTrue(db_query('DELETE FROM {flood}'), t('Flood table emptied.'));
+
+    // Submit contact form with correct values and check flood interval.
+    for ($i = 0; $i < $flood_control; $i++) {
+      $this->drupalGet('user/' . $web_user2->uid . '/contact');
+      $this->drupalPost(NULL, $edit, t('Send e-mail'));
+      $this->assertText(t('The message has been sent.'), t('Message sent.'));
+    }
+
+    // Submit contact form one over limit.
+    $this->drupalGet('user/' . $web_user2->uid . '/contact');
+    $this->assertRaw(t('You cannot send more than %number messages per hour. Please try again later.', array('%number' => $flood_control)), t('Message threshold reached.'));
 
     $this->drupalLogout();
 
