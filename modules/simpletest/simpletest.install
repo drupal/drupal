@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.install,v 1.8 2008/09/10 04:13:01 webchick Exp $
+// $Id: simpletest.install,v 1.9 2008/09/16 23:24:36 webchick Exp $
 
 /**
  * Implementation of hook_install().
@@ -117,13 +117,7 @@ function simpletest_requirements($phase) {
       );
       break;
     case 'install':
-      if ($has_curl) {
-        $requirements['simpletest'] = array(
-          'title' => $t('cURL'),
-          'severity' => REQUIREMENT_OK,
-        );
-      }
-      else {
+      if (!$has_curl) {
         $requirements['simpletest'] = array(
           'title' => $t('cURL'),
           'severity' => REQUIREMENT_ERROR,
