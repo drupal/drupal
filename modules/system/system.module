@@ -1357,9 +1357,6 @@ function system_admin_compact_page($mode = 'off') {
 function system_get_module_admin_tasks($module) {
   static $items;
 
-  $admin_access = user_access('administer permissions');
-  $admin_tasks = array();
-
   if (!isset($items)) {
     $result = db_query("
        SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, ml.*
@@ -1372,6 +1369,8 @@ function system_get_module_admin_tasks($module) {
       }
     }
   }
+
+  $admin_access = user_access('administer permissions');
   $admin_tasks = array();
   $admin_task_count = 0;
   // Check for permissions.
