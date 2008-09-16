@@ -117,13 +117,7 @@ function simpletest_requirements($phase) {
       );
       break;
     case 'install':
-      if ($has_curl) {
-        $requirements['simpletest'] = array(
-          'title' => $t('cURL'),
-          'severity' => REQUIREMENT_OK,
-        );
-      }
-      else {
+      if (!$has_curl) {
         $requirements['simpletest'] = array(
           'title' => $t('cURL'),
           'severity' => REQUIREMENT_ERROR,
