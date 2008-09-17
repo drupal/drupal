@@ -126,3 +126,37 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
     $this->assertEqual($a_l_res, $a_r_res, 'multicall equals result');
   }
 }
+
+class XMLRPCMessagesTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name'  => t('XML-RPC message'),
+      'description' => t('Test large messages.'),
+      'group' => t('XML-RPC'),
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp('xmlrpc_test');
+  }
+
+  /**
+   * Make sure that XML-RPC can transfer large messages.
+   */
+  function testSizedMessages() {
+    $xml_url = url(NULL, array('absolute' => TRUE)) . 'xmlrpc.php';
+    $sizes = array(8, 80, 160);
+    foreach ($sizes as $size) {
+      $xml_message_l = xmlrpc_test_message_sized_in_kb($size);
+      $xml_message_r = xmlrpc($xml_url, 'messages.messageSizedInKB', $size);
+
+      $this->assertEqual($xml_message_l, $xml_message_r, t('XML-RPC messages.messageSizedInKB of %s Kb size received', array('%s' => $size)));
+    }
+  }
+}

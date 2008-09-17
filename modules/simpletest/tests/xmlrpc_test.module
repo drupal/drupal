@@ -18,7 +18,7 @@ function xmlrpc_test_countTheEntities($string) {
     'ctAmpersands' => substr_count($string, '&'),
     'ctApostrophes' => substr_count($string, "'"),
     'ctQuotes' => substr_count($string, '"'),
-    );
+  );
 }
 
 function xmlrpc_test_easyStructTest($array) {
@@ -58,5 +58,32 @@ function xmlrpc_test_xmlrpc() {
     'validator1.manyTypesTest' => 'xmlrpc_test_manyTypesTest',
     'validator1.moderateSizeArrayCheck' => 'xmlrpc_test_moderateSizeArrayCheck',
     'validator1.nestedStructTest' => 'xmlrpc_test_nestedStructTest',
-    'validator1.simpleStructReturnTest' => 'xmlrpc_test_simpleStructReturnTest');
+    'validator1.simpleStructReturnTest' => 'xmlrpc_test_simpleStructReturnTest',
+    'messages.messageSizedInKB' => 'xmlrpc_test_message_sized_in_kb',
+  );
+}
+
+/**
+ * Created a message of the desired size in KB.
+ *
+ * @param $size
+ *   Message size in KB.
+ * @return array
+ *   Generated message structure.
+ */
+function xmlrpc_test_message_sized_in_kb($size) {
+  $message = array();
+
+  $word = 'abcdefg';
+
+  // Create a ~1KB sized struct.
+  for ($i = 0 ; $i < 128; $i++) {
+    $line['word_' . $i] = $word;
+  }
+
+  for($i = 0; $i < $size; $i++) {
+    $message['line_' . $i] = $line;
+  }
+
+  return $message;
 }
