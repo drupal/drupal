@@ -806,7 +806,9 @@ function t($string, $args = array(), $langcode = NULL) {
   global $language;
   static $custom_strings;
 
-  $langcode = isset($langcode) ? $langcode : $language->language;
+  if (!isset($langcode)) {
+    $langcode = $language->language;
+  }
 
   // First, check for an array of customized strings. If present, use the array
   // *instead of* database lookups. This is a high performance way to provide a
