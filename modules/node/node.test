@@ -11,9 +11,8 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
   function getInfo() {
     return array(
       'name' => t('Node revisions'),
-      'description' => t('Creates a node of type Page and then a user tries various revision
-                          actions such as viewing, reverting to, and deleting revisions.'),
-      'group' => t('Node')
+      'description' => t('Create a node with revisions and test viewing, reverting, and deleting revisions.'),
+      'group' => t('Node'),
     );
   }
 
@@ -24,9 +23,9 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
     parent::setUp();
 
     // Create and login user.
-    $test_user = $this->drupalCreateUser(array('view revisions', 'revert revisions', 'edit any page content',
+    $web_user = $this->drupalCreateUser(array('view revisions', 'revert revisions', 'edit any page content',
                                                'delete revisions', 'delete any page content'));
-    $this->drupalLogin($test_user);
+    $this->drupalLogin($web_user);
 
     // Create initial node.
     $node = $this->drupalCreateNode();
@@ -93,44 +92,42 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
   }
 }
 
-
 class NodeTeaserTestCase extends DrupalWebTestCase {
   /**
-   * Implementation of getInfo() for information
+   * Implementation of getInfo().
    */
   function getInfo() {
     return array(
       'name' => t('Node teaser'),
-      'description' => t('Calls node_teaser() with different strings and lengths.'),
-      'group' => t('Node')
+      'description' => t('Test node_teaser() with different strings and lengths.'),
+      'group' => t('Node'),
     );
-  }
-
-  function setUp() {
-    parent::setUp();
-  }
-
-  function tearDown() {
-    parent::tearDown();
   }
 
   /**
    * Tests an edge case where if the first sentence is a question and
-   * subsequent sentences are not.
+   * subsequent sentences are not. This is edge case is documented at
+   * http://drupal.org/node/180425.
    */
   function testFirstSentenceQuestion() {
     $body = 'A question? A sentence. Another sentence.';
-    $expectedTeaser = 'A question? A sentence.';
-    $this->callNodeTeaser($body, $expectedTeaser, NULL, 30);
+    $expected = 'A question? A sentence.';
+    $this->callNodeTeaser($body, $expected, NULL, 30);
   }
 
   /**
-   * Simpletest test. A real-life example of the above edge case.
+   * Test teaser with long example.
    */
-  function testFirstSentenceQuestion2() {
-    $body = 'Are you an UberBabe? (Or an appreciator of UberBabes?) I am most definitely an UberBabe, and I\'m proud of it. Now, before anyone screams "sexism" or "bias" or "cheap" or anything more profane, let me clarify. An UberBabe is not someone who\'s playfully pierced navel protrudes from a belly bearing top. Not necessarily anyway. An UberBabe is a woman who likes being totally feminine, but is also smart as hell, brave, a rule breaker, speaks her mind, finds her own way, goes up against "the system" in a way that allows the system to evolve, and so on. UberBabes, frankly, kick booty - and they just may save the world.';
-    $expectedTeaser = 'Are you an UberBabe? (Or an appreciator of UberBabes?) I am most definitely an UberBabe, and I\'m proud of it. Now, before anyone screams "sexism" or "bias" or "cheap" or anything more profane, let me clarify.';
-    $this->callNodeTeaser($body, $expectedTeaser, NULL, 300);
+  function testLongSentence() {
+    $body = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' . // 125
+            'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ' . // 108
+            'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. ' . // 103
+            'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'; // 110
+    $expected = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ' .
+                'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ' .
+                'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.';
+    // First three sentences add up to: 336, so add one for space and then 3 to get half-way into next word.
+    $this->callNodeTeaser($body, $expected, NULL, 340);
   }
 
   /**
@@ -144,86 +141,87 @@ class NodeTeaserTestCase extends DrupalWebTestCase {
     // of each array item.
     // Using an input format with no line-break filter:
     $teasers = array(
-        "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-        "<",
-        "<p",
-        "<p>",
-        "<p>\n",
-        "<p>\nH",
-        "<p>\nHi",
-        "<p>\nHi\n",
-        "<p>\nHi\n<",
-        "<p>\nHi\n</",
-        "<p>\nHi\n</p",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-        "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-        "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-      );
+      "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
+      "<",
+      "<p",
+      "<p>",
+      "<p>\n",
+      "<p>\nH",
+      "<p>\nHi",
+      "<p>\nHi\n",
+      "<p>\nHi\n<",
+      "<p>\nHi\n</",
+      "<p>\nHi\n</p",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
+      "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
+      "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
+    );
+
     // And Using an input format WITH the line-break filter.
     $teasers_lb = array(
-        "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-        "<",
-        "<p",
-        "<p>",
-        "<p>",
-        "<p>",
-        "<p>",
-        "<p>\nHi",
-        "<p>\nHi",
-        "<p>\nHi",
-        "<p>\nHi",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>",
-        "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-        "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-        "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-      );
+      "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
+      "<",
+      "<p",
+      "<p>",
+      "<p>",
+      "<p>",
+      "<p>",
+      "<p>\nHi",
+      "<p>\nHi",
+      "<p>\nHi",
+      "<p>\nHi",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>",
+      "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
+      "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
+      "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
+    );
 
     // Test node_teaser() for different sizes.
     for ($i = 0; $i <= 37; $i++) {
@@ -236,130 +234,153 @@ class NodeTeaserTestCase extends DrupalWebTestCase {
   /**
    * Calls node_teaser() and asserts that the expected teaser is returned.
    */
-  function callNodeTeaser($body, $expectedTeaser, $format = NULL, $size = NULL) {
+  function callNodeTeaser($body, $expected, $format = NULL, $size = NULL) {
     $teaser = node_teaser($body, $format, $size);
-    $this->assertIdentical($teaser, $expectedTeaser);
+    $this->assertIdentical($teaser, $expected, t('Generated teaser "@teaser" matches expected teaser.', array('@teaser' => $teaser)));
   }
 }
 
 class PageEditTestCase extends DrupalWebTestCase {
-  function getInfo() {
-    return array(
-      'name'  => 'Page edit test',
-      'description'  => t('We want a working edit for pages, uh?'),
-      'group' => t('Node'));
-  }
-  function testPageEdit() {
-
-    /* Prepare settings */
-    variable_set('node_options_page', array('status', 'promote'));
-    /* Prepare a user to do the stuff */
-    $web_user = $this->drupalCreateUser(array('edit own page content', 'create page content'));
-    $this->drupalLogin($web_user);
-    $edit = array(
-    'title' => '!SimpleTest! test title' . $this->randomName(20),
-    'body' => '!SimpleTest! test body' . $this->randomName(200),
-  );
-
-    //Create the page to edit
-    $this->drupalPost('node/add/page', $edit, t('Save'));
-
-    $node = node_load(array('title' => $edit['title']));
-    $this->assertNotNull($node, 'Node found in database');
-
-    $this->clickLink(t('Edit'));
-    $editurl = url("node/$node->nid/edit", array('absolute' => true));
-    $acturl = $this->getURL();
-    $this->assertEqual($editurl, $acturl);
-
-    $this->assertText(t('Edit'), 'Edit text is here');
-    $this->assertText(t($edit['title']), 'Hello, the random title');
-    $this->assertText(t($edit['body']), 'test is over, the body\'s still there');
-
-    $edit = array(
-    'title' => '!SimpleTest! test title' . $this->randomName(20),
-    'body' => '!SimpleTest! test body' . $this->randomName(200),
-  );
-
-
-    //edit the content of the page
-    $this->drupalPost("node/$node->nid/edit", $edit, t('Save'));
-
-    $this->assertText(t($edit['title']), 'Hello, the random title');
-    $this->assertText(t($edit['body']), 'test is over, the body\'s still there');
-  }
-
-}
-
-class PagePreviewTestCase extends DrupalWebTestCase {
-
   /**
    * Implementation of getInfo().
    */
   function getInfo() {
     return array(
-   'name'  => 'Page preview test',
-   'description'  => t('We want a working preview for pages, uh?'),
-   'group' => t('Node'));
-  }
-
-  /**
-   * Test node previews.
-   */
-  function testPagePreview() {
-    // Prepare settings.
-    variable_set('node_options_page', array('status', 'promote'));
-    // Prepare a user to do the stuff.
-    $web_user = $this->drupalCreateUser(array('edit own page content', 'create page content'));
-    $this->drupalLogin($web_user);
-
-    $edit = array(
-      'title'=>'!SimpleTest! title' . $this->randomName(20),
-      'body'=>'!SimpleTest! body' . $this->randomName(200),
-    );
-    $this->drupalPost('node/add/page', $edit, t('Preview'));
-
-    $this->assertText(t('Preview'), 'Preview text is here');
-    $this->assertText(t($edit['title']), 'Hello, the random title');
-    $this->assertText(t($edit['body']), 'test is over, the body\'s still there');
-
-    $this->assertFieldByName('title', $edit['title'], 'The title is on it\'s place');
-
-  }
-
-}
-
-class PageCreationTestCase extends  DrupalWebTestCase {
-
-  /**
-   * Implementation of getInfo().
-   */
-  function getInfo() {
-    return array(
-      'name' => t('Page node creation'),
-      'description' => t('Create a page node and verify its consistency in the database.'),
+      'name' => t('Node edit'),
+      'description' => t('Create a node and test node edit functionality.'),
       'group' => t('Node'),
     );
   }
 
-  function testPageCreation() {
-    // Prepare settings.
-    variable_set('node_options_page', array('status', 'promote'));
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp();
 
-    // Prepare a user to do the stuff.
     $web_user = $this->drupalCreateUser(array('edit own page content', 'create page content'));
     $this->drupalLogin($web_user);
+  }
 
+  /**
+   * Check node edit functionality.
+   */
+  function testPageEdit() {
+    // Create node to edit.
     $edit = array();
-    $edit['title']    = '!SimpleTest test node! ' . $this->randomName(10);
-    $edit['body']     = '!SimpleTest test body! ' . $this->randomName(32) . ' ' . $this->randomName(32);
+    $edit['title'] = $this->randomName(8);
+    $edit['body'] = $this->randomName(16);
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
-    $this->assertRaw(t('!post %title has been created.', array ('!post' => 'Page', '%title' => $edit['title'])), 'Page created');
-
+    // Check that the node exists in the database.
     $node = node_load(array('title' => $edit['title']));
-    $this->assertNotNull($node, t('Node !title found in database.', array ('!title' => $edit['title'])));
+    $this->assertTrue($node, t('Node found in database.'));
 
+    // Check that "edit" link points to correct page.
+    $this->clickLink(t('Edit'));
+    $edit_url = url("node/$node->nid/edit", array('absolute' => true));
+    $actual_url = $this->getURL();
+    $this->assertEqual($edit_url, $actual_url, t('On edit page.'));
+
+    // Check that the title and body fields are displayed with the correct values.
+    $this->assertLink(t('Edit'), 0, t('Edit tab found.'));
+    $this->assertFieldByName('title', $edit['title'], t('Title field displayed.'));
+    $this->assertFieldByName('body', '<!--break-->' . $edit['body'], t('Body field displayed.'));
+
+    // Edit the content of the node.
+    $edit = array();
+    $edit['title'] = $this->randomName(8);
+    $edit['body'] = $this->randomName(16);
+    // Stay on the current page, without reloading.
+    $this->drupalPost(NULL, $edit, t('Save'));
+
+    // Check that the title and body fields are displayed with the updated values.
+    $this->assertText($edit['title'], t('Title displayed.'));
+    $this->assertText($edit['body'], t('Body displayed.'));
+  }
+}
+
+class PagePreviewTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Node preview'),
+      'description' => t('Test node preview functionality.'),
+      'group' => t('Node'),
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp();
+
+    $web_user = $this->drupalCreateUser(array('edit own page content', 'create page content'));
+    $this->drupalLogin($web_user);
+  }
+
+  /**
+   * Check the node preview functionality.
+   */
+  function testPagePreview() {
+    // Fill in node creation form and preview node.
+    $edit = array();
+    $edit['title'] = $this->randomName(8);
+    $edit['body'] = $this->randomName(16);
+    $this->drupalPost('node/add/page', $edit, t('Preview'));
+
+    // Check that the preview is displaying the title and body.
+    $this->assertTitle(t('Preview'), t('Page title is preview.'));
+    $this->assertText($edit['title'], t('Title displayed.'));
+    $this->assertText($edit['body'], t('Body displayed.'));
+
+    // Check that the title and body fields are displayed with the correct values.
+    $this->assertFieldByName('title', $edit['title'], t('Title field displayed.'));
+    $this->assertFieldByName('body', '<!--break-->' . $edit['body'], t('Body field displayed.'));
+  }
+}
+
+class PageCreationTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Node creation'),
+      'description' => t('Create a node and test saving it.'),
+      'group' => t('Node'),
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp();
+
+    $web_user = $this->drupalCreateUser(array('create page content', 'edit own page content'));
+    $this->drupalLogin($web_user);
+  }
+
+  /**
+   * Create a page node and verify its consistency in the database.
+   */
+  function testPageCreation() {
+    // Create a node.
+    $edit = array();
+    $edit['title'] = $this->randomName(8);
+    $edit['body'] = $this->randomName(16);
+    $this->drupalPost('node/add/page', $edit, t('Save'));
+
+    // Check that the page has been created.
+    $this->assertRaw(t('!post %title has been created.', array('!post' => 'Page', '%title' => $edit['title'])), t('Page created.'));
+
+    // Check that the node exists in the database.
+    $node = node_load(array('title' => $edit['title']));
+    $this->assertTrue($node, t('Node found in database.'));
   }
 }
 
@@ -369,34 +390,39 @@ class PageViewTestCase extends DrupalWebTestCase {
    */
   function getInfo() {
     return array(
-      'name' => t('Unauthorized node view'),
-      'description' => t('Creates a node of type page and then an unpermissioned user attempts to edit the node, '
-        . 'before tries with an anonymous user. Asserts failure.'
-        . '</ br>WARNING: This is based on default registered user permissions (no administer nodes).'),
+      'name' => t('Node edit permissions'),
+      'description' => t('Create a node and test edit permissions.'),
       'group' => t('Node'),
     );
   }
 
+  /**
+   * Creates a node and then an anonymous and unpermissioned user attempt to edit the node.
+   */
   function testPageView() {
-    // Prepare a node to view
-    global $user;
+    // Create a node to view.
     $node = $this->drupalCreateNode();
-    $this->assertNotNull(node_load($node->nid), 'Node created');
+    $this->assertTrue(node_load($node->nid), t('Node created.'));
 
-    // Tries to edit with anonymous user
+    // Try to edit with anonymous user.
     $html = $this->drupalGet("node/$node->nid/edit");
     $this->assertResponse(403);
 
-    // Prepare a user to request the node view
-    $test_user = $this->drupalCreateUser(array('access content'));
-    $this->drupalLogin($test_user);
+    // Create a user without permission to edit node.
+    $web_user = $this->drupalCreateUser(array('access content'));
+    $this->drupalLogin($web_user);
 
-    $html = $this->drupalGet("node/$node->nid/edit");
+    // Attempt to access edit page.
+    $this->drupalGet("node/$node->nid/edit");
     $this->assertResponse(403);
 
-    $test_user = $this->drupalCreateUser(array('administer nodes'));
-    //TODO: Add edit page attempt with administer nodes user
-    node_delete($node->nid);
+    // Create user with permission to edit node.
+    $web_user = $this->drupalCreateUser(array('administer nodes'));
+    $this->drupalLogin($web_user);
+
+    // Attempt to access edit page.
+    $this->drupalGet("node/$node->nid/edit");
+    $this->assertResponse(200);
   }
 }
 
@@ -406,8 +432,8 @@ class NodeTitleXSSTestCase extends DrupalWebTestCase {
    */
   function getInfo() {
      return array(
-      'name' => t('XSS attacks in node title'),
-      'description' => t('Create a node with dangerous tags in its title, and make sure that they are escaped.'),
+      'name' => t('Node title XSS filtering'),
+      'description' => t('Create a node with dangerous tags in its title and test that they are escaped.'),
       'group' => t('Node'),
     );
   }
