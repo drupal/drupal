@@ -73,10 +73,12 @@ Drupal.tableDrag = function(table, tableSettings) {
     this.indentCount = 1; // Total width of indents, set in makeDraggable.
     // Find the width of indentations to measure mouse movements against.
     // Because the table doesn't need to start with any indentations, we
-    // manually create an empty div, check it's width, then remove.
-    var indent = $(Drupal.theme('tableDragIndentation')).appendTo('body');
-    this.indentAmount = parseInt(indent.css('width'));
-    indent.remove();
+    // manually append 2 indentations in the first draggable row, measure
+    // the offset, then remove.
+    var indent = Drupal.theme('tableDragIndentation');
+    var testCell = $('tr.draggable:first td:first', table).prepend(indent).prepend(indent);
+    this.indentAmount = $('.indentation', testCell).get(1).offsetLeft - $('.indentation', testCell).get(0).offsetLeft;
+    $('.indentation', testCell).slice(0, 2).remove();
   }
 
   // Make each applicable row draggable.
@@ -407,7 +409,7 @@ Drupal.tableDrag.prototype.dragRow = function(event, self) {
     if (self.indentEnabled) {
       var xDiff = self.currentMouseCoords.x - self.dragObject.indentMousePos.x;
       // Set the number of indentations the mouse has been moved left or right.
-      var indentDiff = parseInt(xDiff / self.indentAmount * self.rtl);
+      var indentDiff = Math.round(xDiff / self.indentAmount * self.rtl);
       // Indent the row with our estimated diff, which may be further
       // restricted according to the rows around this row.
       var indentChange = self.rowObject.indent(indentDiff);
