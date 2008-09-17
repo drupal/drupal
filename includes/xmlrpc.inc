@@ -342,7 +342,7 @@ EOD;
 }
 
 
-function xmlrpc_error($code = NULL, $message = NULL) {
+function xmlrpc_error($code = NULL, $message = NULL, $reset = FALSE) {
   static $xmlrpc_error;
   if (isset($code)) {
     $xmlrpc_error = new stdClass();
@@ -350,6 +350,9 @@ function xmlrpc_error($code = NULL, $message = NULL) {
     $xmlrpc_error->code = $code;
     $xmlrpc_error->message = $message;
     module_invoke('system', 'check_http_request');
+  }
+  elseif ($reset) {
+    $xmlrpc_error = NULL;
   }
   return $xmlrpc_error;
 }
@@ -427,6 +430,7 @@ function xmlrpc_base64_get_xml($xmlrpc_base64) {
 function _xmlrpc() {
   $args = func_get_args();
   $url = array_shift($args);
+  xmlrpc_clear_error();
   if (is_array($args[0])) {
     $method = 'system.multicall';
     $multicall_args = array();
@@ -474,4 +478,11 @@ function xmlrpc_errno() {
 function xmlrpc_error_msg() {
   $error = xmlrpc_error();
   return ($error != NULL ? $error->message : NULL);
+}
+
+/**
+ * Clears any previous error.
+ */
+function xmlrpc_clear_error() {
+  xmlrpc_error(NULL, NULL, TRUE);
 }
