@@ -437,6 +437,11 @@ function blogapi_metaweblog_new_media_object($blogid, $username, $password, $fil
  * associated with a blog node.
  */
 function blogapi_metaweblog_get_category_list($blogid, $username, $password) {
+  $user = blogapi_validate_user($username, $password);
+  if (!$user->uid) {
+    return blogapi_error($user);
+  }
+
   if (($error = _blogapi_validate_blogid($blogid)) !== TRUE) {
     // Return an error if not configured type.
     return $error;
