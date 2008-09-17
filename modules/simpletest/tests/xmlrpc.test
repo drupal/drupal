@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.test,v 1.3 2008/09/17 07:11:58 dries Exp $
+// $Id: xmlrpc.test,v 1.4 2008/09/17 16:49:41 webchick Exp $
 
 class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
   /**
@@ -124,5 +124,39 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
     $a_l_res = array($l_res_1, $l_res_2, $l_res_3, $l_res_4, $l_res_5, $l_res_6, $l_res_7, $l_res_8);
     $a_r_res = xmlrpc($xml_url, $x);
     $this->assertEqual($a_l_res, $a_r_res, 'multicall equals result');
+  }
+}
+
+class XMLRPCMessagesTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name'  => t('XML-RPC message'),
+      'description' => t('Test large messages.'),
+      'group' => t('XML-RPC'),
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp('xmlrpc_test');
+  }
+
+  /**
+   * Make sure that XML-RPC can transfer large messages.
+   */
+  function testSizedMessages() {
+    $xml_url = url(NULL, array('absolute' => TRUE)) . 'xmlrpc.php';
+    $sizes = array(8, 80, 160);
+    foreach ($sizes as $size) {
+      $xml_message_l = xmlrpc_test_message_sized_in_kb($size);
+      $xml_message_r = xmlrpc($xml_url, 'messages.messageSizedInKB', $size);
+
+      $this->assertEqual($xml_message_l, $xml_message_r, t('XML-RPC messages.messageSizedInKB of %s Kb size received', array('%s' => $size)));
+    }
   }
 }
