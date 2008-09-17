@@ -2872,10 +2872,10 @@ function node_list_permissions($type) {
 
   // Build standard list of node permissions for this type.
   $perms["create $type content"] = t('Create new %type_name content.', array('%type_name' => $info->name));
-  $perms["delete any $type content"] = t('Delete any %type_name content, regardless of its author.', array('%type_name' => $info->name));
-  $perms["delete own $type content"] = t('Delete %type_name content created by the user.', array('%type_name' => $info->name));
   $perms["edit own $type content"] = t('Edit %type_name content created by the user.', array('%type_name' => $info->name));
   $perms["edit any $type content"] = t('Edit any %type_name content, regardless of its author.', array('%type_name' => $info->name));
+  $perms["delete own $type content"] = t('Delete %type_name content created by the user.', array('%type_name' => $info->name));
+  $perms["delete any $type content"] = t('Delete any %type_name content, regardless of its author.', array('%type_name' => $info->name));
 
   return $perms;
 }

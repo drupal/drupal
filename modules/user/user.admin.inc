@@ -515,7 +515,6 @@ function user_admin_perm($form_state, $rid = NULL) {
       $form['permission'][] = array(
         '#markup' => $module,
       );
-      ksort($permissions);
       foreach ($permissions as $perm => $description) {
         // Account for permissions lacking a description.
         if (is_int($perm)) {

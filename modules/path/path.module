@@ -204,8 +204,8 @@ function path_form_alter(&$form, $form_state, $form_id) {
  */
 function path_perm() {
   return array(
-    'create url aliases' => t('Manage URL aliases on content.'),
     'administer url aliases' => t('Manage URL aliases across the entire website.'),
+    'create url aliases' => t('Manage URL aliases on content.'),
   );
 }
 

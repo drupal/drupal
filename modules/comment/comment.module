@@ -241,10 +241,10 @@ function comment_node_type($op, $info) {
  */
 function comment_perm() {
   return array(
+    'administer comments' => t('Manage and approve comments, and configure comment administration settings.'),
     'access comments' => t('View comments attached to content.'),
     'post comments' => t('Add comments to content (approval required).'),
     'post comments without approval' => t('Add comments to content (no approval required).'),
-    'administer comments' => t('Manage and approve comments, and configure comment administration settings.'),
   );
 }
 

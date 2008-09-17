@@ -41,9 +41,9 @@ function book_theme() {
  */
 function book_perm() {
   return array(
-    'add content to books' => t('Add new content and child pages to books.'),
     'administer book outlines' => t('Manage books through the administration panel.'),
     'create new books' => t('Add new top-level books.'),
+    'add content to books' => t('Add new content and child pages to books.'),
     'access printer-friendly version' => t('View a book page and all of its sub-pages as a single document for ease of printing. Can be performance heavy.'),
   );
 }

@@ -166,11 +166,11 @@ function system_theme() {
 function system_perm() {
   return array(
     'administer site configuration' => t('Configure site-wide settings such as module or theme administration settings.'),
-    'access administration pages' => t('View the administration panel and browse the help system.'),
     'administer actions' => t('Manage the actions defined for your site.'),
+    'administer files' => t('Manage user-uploaded files.'),
+    'access administration pages' => t('View the administration panel and browse the help system.'),
     'access site reports' => t('View reports from system logs and other status information.'),
     'select different theme' => t('Select a theme other than the default theme set by the site administrator.'),
-    'administer files' => t('Manage user-uploaded files.'),
     'block IP addresses' => t('Block IP addresses from accessing your site.'),
   );
 }
