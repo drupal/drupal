@@ -1557,13 +1557,13 @@ function system_date_time_settings() {
 
   // Date settings: construct choices for user
   foreach ($date_short as $f) {
-    $date_short_choices[$f] = format_date($_SERVER['REQUEST_TIME'], 'custom', $f);
+    $date_short_choices[$f] = format_date(REQUEST_TIME, 'custom', $f);
   }
   foreach ($date_medium as $f) {
-    $date_medium_choices[$f] = format_date($_SERVER['REQUEST_TIME'], 'custom', $f);
+    $date_medium_choices[$f] = format_date(REQUEST_TIME, 'custom', $f);
   }
   foreach ($date_long as $f) {
-    $date_long_choices[$f] = format_date($_SERVER['REQUEST_TIME'], 'custom', $f);
+    $date_long_choices[$f] = format_date(REQUEST_TIME, 'custom', $f);
   }
 
   $date_long_choices['custom'] = $date_medium_choices['custom'] = $date_short_choices['custom'] = t('Custom format');
@@ -1622,7 +1622,7 @@ function system_date_time_settings() {
     '#title' => t('Custom short date format'),
     '#attributes' => array('class' => 'custom-format'),
     '#default_value' => $default_short_custom,
-    '#description' => t('A user-defined short date format. See the <a href="@url">PHP manual</a> for available options. This format is currently set to display as <span>%date</span>.', array('@url' => 'http://php.net/manual/function.date.php', '%date' => format_date($_SERVER['REQUEST_TIME'], 'custom', $default_short_custom))),
+    '#description' => t('A user-defined short date format. See the <a href="@url">PHP manual</a> for available options. This format is currently set to display as <span>%date</span>.', array('@url' => 'http://php.net/manual/function.date.php', '%date' => format_date(REQUEST_TIME, 'custom', $default_short_custom))),
   );
 
   $date_format_medium = variable_get('date_format_medium', $date_medium[1]);
@@ -1645,7 +1645,7 @@ function system_date_time_settings() {
     '#title' => t('Custom medium date format'),
     '#attributes' => array('class' => 'custom-format'),
     '#default_value' => $default_medium_custom,
-    '#description' => t('A user-defined medium date format. See the <a href="@url">PHP manual</a> for available options. This format is currently set to display as <span>%date</span>.', array('@url' => 'http://php.net/manual/function.date.php', '%date' => format_date($_SERVER['REQUEST_TIME'], 'custom', $default_medium_custom))),
+    '#description' => t('A user-defined medium date format. See the <a href="@url">PHP manual</a> for available options. This format is currently set to display as <span>%date</span>.', array('@url' => 'http://php.net/manual/function.date.php', '%date' => format_date(REQUEST_TIME, 'custom', $default_medium_custom))),
   );
 
   $date_format_long = variable_get('date_format_long', $date_long[0]);
@@ -1668,7 +1668,7 @@ function system_date_time_settings() {
     '#title' => t('Custom long date format'),
     '#attributes' => array('class' => 'custom-format'),
     '#default_value' => $default_long_custom,
-    '#description' => t('A user-defined long date format. See the <a href="@url">PHP manual</a> for available options. This format is currently set to display as <span>%date</span>.', array('@url' => 'http://php.net/manual/function.date.php', '%date' => format_date($_SERVER['REQUEST_TIME'], 'custom', $default_long_custom))),
+    '#description' => t('A user-defined long date format. See the <a href="@url">PHP manual</a> for available options. This format is currently set to display as <span>%date</span>.', array('@url' => 'http://php.net/manual/function.date.php', '%date' => format_date(REQUEST_TIME, 'custom', $default_long_custom))),
   );
 
   $form = system_settings_form($form);
@@ -1697,7 +1697,7 @@ function system_date_time_settings_submit($form, &$form_state) {
  * Return the date for a given format string via Ajax.
  */
 function system_date_time_lookup() {
-  $result = format_date($_SERVER['REQUEST_TIME'], 'custom', $_GET['format']);
+  $result = format_date(REQUEST_TIME, 'custom', $_GET['format']);
   echo drupal_to_js($result);
   exit;
 }

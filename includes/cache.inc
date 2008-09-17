@@ -19,7 +19,7 @@ function cache_get($cid, $table = 'cache') {
 
   // Garbage collection necessary when enforcing a minimum cache lifetime
   $cache_flush = variable_get('cache_flush', 0);
-  if ($cache_flush && ($cache_flush + variable_get('cache_lifetime', 0) <= $_SERVER['REQUEST_TIME'])) {
+  if ($cache_flush && ($cache_flush + variable_get('cache_lifetime', 0) <= REQUEST_TIME)) {
     // Reset the variable immediately to prevent a meltdown in heavy load situations.
     variable_set('cache_flush', 0);
     // Time to flush old cache data
@@ -104,7 +104,7 @@ function cache_get($cid, $table = 'cache') {
 function cache_set($cid, $data, $table = 'cache', $expire = CACHE_PERMANENT, $headers = NULL) {
   $fields = array(
     'serialized' => 0,
-    'created' => $_SERVER['REQUEST_TIME'],
+    'created' => REQUEST_TIME,
     'expire' => $expire,
     'headers' => $headers,
   );
@@ -155,23 +155,23 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
       // will be saved into the sessions table by _sess_write(). We then
       // simulate that the cache was flushed for this user by not returning
       // cached data that was cached before the timestamp.
-      $user->cache = $_SERVER['REQUEST_TIME'];
+      $user->cache = REQUEST_TIME;
 
       $cache_flush = variable_get('cache_flush', 0);
       if ($cache_flush == 0) {
         // This is the first request to clear the cache, start a timer.
-        variable_set('cache_flush', $_SERVER['REQUEST_TIME']);
+        variable_set('cache_flush', REQUEST_TIME);
       }
-      else if ($_SERVER['REQUEST_TIME'] > ($cache_flush + variable_get('cache_lifetime', 0))) {
+      else if (REQUEST_TIME > ($cache_flush + variable_get('cache_lifetime', 0))) {
         // Clear the cache for everyone, cache_flush_delay seconds have
         // passed since the first request to clear the cache.
-        db_query("DELETE FROM {" . $table . "} WHERE expire != %d AND expire < %d", CACHE_PERMANENT, $_SERVER['REQUEST_TIME']);
+        db_query("DELETE FROM {" . $table . "} WHERE expire != %d AND expire < %d", CACHE_PERMANENT, REQUEST_TIME);
         variable_set('cache_flush', 0);
       }
     }
     else {
       // No minimum cache lifetime, flush all temporary cache entries now.
-      db_query("DELETE FROM {" . $table . "} WHERE expire != %d AND expire < %d", CACHE_PERMANENT, $_SERVER['REQUEST_TIME']);
+      db_query("DELETE FROM {" . $table . "} WHERE expire != %d AND expire < %d", CACHE_PERMANENT, REQUEST_TIME);
     }
   }
   else {

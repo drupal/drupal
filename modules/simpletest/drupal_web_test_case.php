@@ -369,7 +369,7 @@ class DrupalWebTestCase {
       'body'      => $this->randomName(32),
       'title'     => $this->randomName(8),
       'comment'   => 2,
-      'changed'   => $_SERVER['REQUEST_TIME'],
+      'changed'   => REQUEST_TIME,
       'format'    => FILTER_FORMAT_DEFAULT,
       'moderate'  => 0,
       'promote'   => 0,

@@ -265,7 +265,7 @@ function template_preprocess_aggregator_item(&$variables) {
     $variables['source_title'] = check_plain($item->ftitle);
   }
   if (date('Ymd', $item->timestamp) == date('Ymd')) {
-    $variables['source_date'] = t('%ago ago', array('%ago' => format_interval($_SERVER['REQUEST_TIME'] - $item->timestamp)));
+    $variables['source_date'] = t('%ago ago', array('%ago' => format_interval(REQUEST_TIME - $item->timestamp)));
   }
   else {
     $variables['source_date'] = format_date($item->timestamp, 'custom', variable_get('date_format_medium', 'D, m/d/Y - H:i'));
@@ -462,7 +462,7 @@ function template_preprocess_aggregator_summary_item(&$variables) {
 
   $variables['feed_url'] = check_url($item->link);
   $variables['feed_title'] = check_plain($item->title);
-  $variables['feed_age'] = t('%age old', array('%age' => format_interval($_SERVER['REQUEST_TIME'] - $item->timestamp)));
+  $variables['feed_age'] = t('%age old', array('%age' => format_interval(REQUEST_TIME - $item->timestamp)));
 
   $variables['source_url'] = '';
   $variables['source_title'] = '';
@@ -486,7 +486,7 @@ function template_preprocess_aggregator_feed_source(&$variables) {
   $variables['source_url'] = check_url(url($feed->link, array('absolute' => TRUE)));
 
   if ($feed->checked) {
-    $variables['last_checked'] = t('@time ago', array('@time' => format_interval($_SERVER['REQUEST_TIME'] - $feed->checked)));
+    $variables['last_checked'] = t('@time ago', array('@time' => format_interval(REQUEST_TIME - $feed->checked)));
   }
   else {
     $variables['last_checked'] = t('never');

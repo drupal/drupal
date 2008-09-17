@@ -80,7 +80,7 @@ function node_object_prepare(&$node) {
     }
     global $user;
     $node->uid = $user->uid;
-    $node->created = $_SERVER['REQUEST_TIME'];
+    $node->created = REQUEST_TIME;
   }
   else {
     $node->date = format_date($node->created, 'custom', 'Y-m-d H:i:s O');
@@ -361,7 +361,7 @@ function node_preview($node) {
       $node->picture = $user->picture;
     }
 
-    $node->changed = $_SERVER['REQUEST_TIME'];
+    $node->changed = REQUEST_TIME;
 
     // Extract a teaser, if it hasn't been set (e.g. by a module-provided
     // 'teaser' form item).

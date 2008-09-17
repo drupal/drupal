@@ -66,7 +66,7 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
     $bool_5    = (($int_5 % 2) == 0);
     $string_5  = $this->randomName();
     $double_5  = (double)(mt_rand(-1000,1000) / 100);
-    $time_5    = $_SERVER['REQUEST_TIME'];
+    $time_5    = REQUEST_TIME;
     $base64_5  = $this->randomName(100);
     $l_res_5 = xmlrpc_test_manyTypesTest($int_5, $bool_5, $string_5, $double_5, xmlrpc_date($time_5), $base64_5);
     $l_res_5[5] = $l_res_5[5]->data; /* override warpping */

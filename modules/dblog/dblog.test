@@ -104,7 +104,7 @@ class DBLogTestCase extends DrupalWebTestCase {
       'request_uri' => $base_root . request_uri(),
       'referer'     => $_SERVER['HTTP_REFERER'],
       'ip'          => ip_address(),
-      'timestamp'   => $_SERVER['REQUEST_TIME'],
+      'timestamp'   => REQUEST_TIME,
       );
     $message = 'Log entry added to test the dblog row limit.';
     for ($i = 0; $i < $count; $i++) {

@@ -643,7 +643,7 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
 
     // If we made it this far it's safe to record this file in the database.
     $file->status = FILE_STATUS_TEMPORARY;
-    $file->timestamp = $_SERVER['REQUEST_TIME'];
+    $file->timestamp = REQUEST_TIME;
     drupal_write_record('files', $file);
 
     // Add file to the cache.

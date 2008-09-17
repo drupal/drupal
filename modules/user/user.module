@@ -240,7 +240,7 @@ function user_save($account, $edit = array(), $category = 'account') {
     // Consider users edited by an administrator as logged in, if they haven't
     // already, so anonymous users can view the profile (if allowed).
     if (empty($edit['access']) && empty($account->access) && user_access('administer users')) {
-      $edit['access'] = $_SERVER['REQUEST_TIME'];
+      $edit['access'] = REQUEST_TIME;
     }
     foreach ($edit as $key => $value) {
       // Fields that don't pertain to the users or user_roles
@@ -302,12 +302,12 @@ function user_save($account, $edit = array(), $category = 'account') {
   else {
     // Allow 'created' to be set by the caller.
     if (!isset($edit['created'])) {
-      $edit['created'] = $_SERVER['REQUEST_TIME'];
+      $edit['created'] = REQUEST_TIME;
     }
     // Consider users created by an administrator as already logged in, so
     // anonymous users can view the profile (if allowed).
     if (empty($edit['access']) && user_access('administer users')) {
-      $edit['access'] = $_SERVER['REQUEST_TIME'];
+      $edit['access'] = REQUEST_TIME;
     }
 
     $success = drupal_write_record('users', $edit);
@@ -653,7 +653,7 @@ function user_user($type, &$edit, &$account, $category = NULL) {
     $account->content['summary']['member_for'] =  array(
       '#type' => 'user_profile_item',
       '#title' => t('Member for'),
-      '#markup' => format_interval($_SERVER['REQUEST_TIME'] - $account->created),
+      '#markup' => format_interval(REQUEST_TIME - $account->created),
     );
   }
   if ($type == 'form' && $category == 'account') {
@@ -788,7 +788,7 @@ function user_block($op = 'list', $delta = '', $edit = array()) {
       case 'online':
         if (user_access('access content')) {
           // Count users active within the defined period.
-          $interval = $_SERVER['REQUEST_TIME'] - variable_get('user_block_seconds_online', 900);
+          $interval = REQUEST_TIME - variable_get('user_block_seconds_online', 900);
 
           // Perform database queries to gather online user lists.  We use s.timestamp
           // rather than u.access because it is much faster.
@@ -1341,7 +1341,7 @@ function user_authenticate_finalize(&$edit) {
   watchdog('user', 'Session opened for %name.', array('%name' => $user->name));
   // Update the user table timestamp noting user has logged in.
   // This is also used to invalidate one-time login links.
-  $user->login = $_SERVER['REQUEST_TIME'];
+  $user->login = REQUEST_TIME;
   db_query("UPDATE {users} SET login = %d WHERE uid = %d", $user->login, $user->uid);
   user_module_invoke('login', $edit, $user);
   drupal_session_regenerate();
@@ -1380,7 +1380,7 @@ function user_external_login_register($name, $module) {
       'pass' => user_password(),
       'init' => $name,
       'status' => 1,
-      'access' => $_SERVER['REQUEST_TIME']
+      'access' => REQUEST_TIME
     );
     $account = user_save('', $userinfo);
     // Terminate if an error occured during user_save().
@@ -1395,7 +1395,7 @@ function user_external_login_register($name, $module) {
 }
 
 function user_pass_reset_url($account) {
-  $timestamp = $_SERVER['REQUEST_TIME'];
+  $timestamp = REQUEST_TIME;
   return url("user/reset/$account->uid/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login), array('absolute' => TRUE));
 }
 
@@ -2040,7 +2040,7 @@ function user_mail_tokens($account, $language) {
     '!uri' => $base_url,
     '!uri_brief' => preg_replace('!^https?://!', '', $base_url),
     '!mailto' => $account->mail,
-    '!date' => format_date($_SERVER['REQUEST_TIME'], 'medium', '', NULL, $language->language),
+    '!date' => format_date(REQUEST_TIME, 'medium', '', NULL, $language->language),
     '!login_uri' => url('user', array('absolute' => TRUE, 'language' => $language)),
     '!edit_uri' => url('user/' . $account->uid . '/edit', array('absolute' => TRUE, 'language' => $language)),
   );

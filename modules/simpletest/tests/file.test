@@ -428,7 +428,7 @@ class FileCopyDeleteMoveTest extends DrupalWebTestCase {
     touch($f->filepath);
     $f->filemime = 'text/plain';
     $f->uid = 1;
-    $f->timestamp = $_SERVER['REQUEST_TIME'];
+    $f->timestamp = REQUEST_TIME;
     $f->filesize = 0;
     drupal_write_record('files', $f);
     $this->file = $f;

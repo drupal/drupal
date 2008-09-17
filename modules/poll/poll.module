@@ -161,7 +161,7 @@ function poll_block($op = 'list', $delta = '') {
  * Closes polls that have exceeded their allowed runtime.
  */
 function poll_cron() {
-  $result = db_query('SELECT p.nid FROM {poll} p INNER JOIN {node} n ON p.nid = n.nid WHERE (n.created + p.runtime) < ' . $_SERVER['REQUEST_TIME'] . ' AND p.active = 1 AND p.runtime != 0');
+  $result = db_query('SELECT p.nid FROM {poll} p INNER JOIN {node} n ON p.nid = n.nid WHERE (n.created + p.runtime) < ' . REQUEST_TIME . ' AND p.active = 1 AND p.runtime != 0');
   while ($poll = db_fetch_object($result)) {
     db_query("UPDATE {poll} SET active = 0 WHERE nid = %d", $poll->nid);
   }

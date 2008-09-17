@@ -181,6 +181,11 @@ define('LANGUAGE_NEGOTIATION_PATH', 2);
 define('LANGUAGE_NEGOTIATION_DOMAIN', 3);
 
 /**
+ * For convenience, define a short form of the request time global.
+ */
+define ('REQUEST_TIME', $_SERVER['REQUEST_TIME']);
+
+/**
  * Start the timer with the specified name. If you start and stop
  * the same timer multiple times, the measured intervals will be
  * accumulated.
@@ -816,7 +821,7 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
       'request_uri' => $base_root . request_uri(),
       'referer'     => $_SERVER['HTTP_REFERER'],
       'ip'          => ip_address(),
-      'timestamp'   => $_SERVER['REQUEST_TIME'],
+      'timestamp'   => REQUEST_TIME,
     );
 
     // Call the logging hooks to log/process the message

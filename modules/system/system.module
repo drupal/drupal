@@ -1397,12 +1397,12 @@ function system_get_module_admin_tasks($module) {
  */
 function system_cron() {
   // Cleanup the flood.
-  db_query('DELETE FROM {flood} WHERE timestamp < %d', $_SERVER['REQUEST_TIME'] - 3600);
+  db_query('DELETE FROM {flood} WHERE timestamp < %d', REQUEST_TIME - 3600);
   // Cleanup the batch table.
-  db_query('DELETE FROM {batch} WHERE timestamp < %d', $_SERVER['REQUEST_TIME'] - 864000);
+  db_query('DELETE FROM {batch} WHERE timestamp < %d', REQUEST_TIME - 864000);
 
   // Remove temporary files that are older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
-  $result = db_query('SELECT * FROM {files} WHERE status = %d and timestamp < %d', FILE_STATUS_TEMPORARY, $_SERVER['REQUEST_TIME'] - DRUPAL_MAXIMUM_TEMP_FILE_AGE);
+  $result = db_query('SELECT * FROM {files} WHERE status = %d and timestamp < %d', FILE_STATUS_TEMPORARY, REQUEST_TIME - DRUPAL_MAXIMUM_TEMP_FILE_AGE);
   while ($file = db_fetch_object($result)) {
     if (file_exists($file->filepath)) {
       // If files that exist cannot be deleted, continue so the database remains
@@ -2033,7 +2033,7 @@ function system_block_ip_action() {
  * Generate an array of time zones and their local time&date.
  */
 function _system_zonelist() {
-  $timestamp = $_SERVER['REQUEST_TIME'];
+  $timestamp = REQUEST_TIME;
   $zonelist = array(-11, -10, -9.5, -9, -8, -7, -6, -5, -4, -3.5, -3, -2, -1, 0, 1, 2, 3, 3.5, 4, 5, 5.5, 5.75, 6, 6.5, 7, 8, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.75, 13, 14);
   $zones = array();
   foreach ($zonelist as $offset) {

@@ -30,7 +30,7 @@ function update_get_projects() {
       _update_process_info_list($projects, module_rebuild_cache(), 'module');
       _update_process_info_list($projects, system_theme_data(), 'theme');
       // Set the projects array into the cache table.
-      cache_set('update_project_projects', $projects, 'cache_update', $_SERVER['REQUEST_TIME'] + 3600);
+      cache_set('update_project_projects', $projects, 'cache_update', REQUEST_TIME + 3600);
     }
   }
   return $projects;
@@ -551,7 +551,7 @@ function update_calculate_project_data($available) {
   drupal_alter('update_status', $projects);
 
   // Set the projects array into the cache table.
-  cache_set('update_project_data', $projects, 'cache_update', $_SERVER['REQUEST_TIME'] + 3600);
+  cache_set('update_project_data', $projects, 'cache_update', REQUEST_TIME + 3600);
   return $projects;
 }
 
@@ -588,7 +588,7 @@ function update_project_cache($cid) {
   }
   else {
     $cache = cache_get($cid, 'cache_update');
-    if (!empty($cache->data) && $cache->expire > $_SERVER['REQUEST_TIME']) {
+    if (!empty($cache->data) && $cache->expire > REQUEST_TIME) {
       $projects = $cache->data;
     }
   }

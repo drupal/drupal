@@ -378,7 +378,7 @@ function theme_comment_block() {
   $items = array();
   $number = variable_get('comment_block_count', 10);
   foreach (comment_get_recent($number) as $comment) {
-    $items[] = l($comment->subject, 'node/' . $comment->nid, array('fragment' => 'comment-' . $comment->cid)) . '<br />' . t('@time ago', array('@time' => format_interval($_SERVER['REQUEST_TIME'] - $comment->timestamp)));
+    $items[] = l($comment->subject, 'node/' . $comment->nid, array('fragment' => 'comment-' . $comment->cid)) . '<br />' . t('@time ago', array('@time' => format_interval(REQUEST_TIME - $comment->timestamp)));
   }
 
   if ($items) {
@@ -712,7 +712,7 @@ function comment_save($edit) {
         }
 
         if (empty($edit['timestamp'])) {
-          $edit['timestamp'] = $_SERVER['REQUEST_TIME'];
+          $edit['timestamp'] = REQUEST_TIME;
         }
 
         if ($edit['uid'] === $user->uid) { // '===' Need to modify anonymous users as well.
@@ -1448,7 +1448,7 @@ function comment_form_add_preview($form, &$form_state) {
       $comment->name = variable_get('anonymous', t('Anonymous'));
     }
 
-    $comment->timestamp = !empty($edit['timestamp']) ? $edit['timestamp'] : $_SERVER['REQUEST_TIME'];
+    $comment->timestamp = !empty($edit['timestamp']) ? $edit['timestamp'] : REQUEST_TIME;
     $output .= theme('comment_view', $comment, $node);
   }
 
@@ -1490,7 +1490,7 @@ function comment_form_validate($form, &$form_state) {
     foreach (array('name', 'homepage', 'mail') as $field) {
       // Set cookie for 365 days.
       if (isset($form_state['values'][$field])) {
-        setcookie('comment_info_' . $field, $form_state['values'][$field], $_SERVER['REQUEST_TIME'] + 31536000, '/');
+        setcookie('comment_info_' . $field, $form_state['values'][$field], REQUEST_TIME + 31536000, '/');
       }
     }
   }

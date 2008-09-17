@@ -908,7 +908,7 @@ function template_preprocess_forum_topic_navigation(&$variables) {
  */
 function template_preprocess_forum_submitted(&$variables) {
   $variables['author'] = isset($variables['topic']->uid) ? theme('username', $variables['topic']) : '';
-  $variables['time'] = isset($variables['topic']->timestamp) ? format_interval($_SERVER['REQUEST_TIME'] - $variables['topic']->timestamp) : '';
+  $variables['time'] = isset($variables['topic']->timestamp) ? format_interval(REQUEST_TIME - $variables['topic']->timestamp) : '';
 }
 
 function _forum_user_last_visit($nid) {

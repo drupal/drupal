@@ -55,7 +55,7 @@ function statistics_exit() {
         'daycount' => 1,
         'totalcount' => 1,
         'nid' => arg(1),
-        'timestamp' => $_SERVER['REQUEST_TIME'],
+        'timestamp' => REQUEST_TIME,
       );
       db_merge('node_counter')
         ->fields($fields)
@@ -74,7 +74,7 @@ function statistics_exit() {
       'uid' => $user->uid,
       'sid' => session_id(),
       'timer' => timer_read('page'),
-      'timestamp' => $_SERVER['REQUEST_TIME'],
+      'timestamp' => REQUEST_TIME,
     ))->execute();
   }
 }
@@ -188,14 +188,14 @@ function statistics_user($op, &$edit, &$user) {
 function statistics_cron() {
   $statistics_timestamp = variable_get('statistics_day_timestamp', '');
 
-  if (($_SERVER['REQUEST_TIME'] - $statistics_timestamp) >= 86400) {
+  if ((REQUEST_TIME - $statistics_timestamp) >= 86400) {
     // Reset day counts.
     db_query('UPDATE {node_counter} SET daycount = 0');
-    variable_set('statistics_day_timestamp', $_SERVER['REQUEST_TIME']);
+    variable_set('statistics_day_timestamp', REQUEST_TIME);
   }
 
   // Clean up expired access logs.
-  db_query('DELETE FROM {accesslog} WHERE timestamp < %d', $_SERVER['REQUEST_TIME'] - variable_get('statistics_flush_accesslog_timer', 259200));
+  db_query('DELETE FROM {accesslog} WHERE timestamp < %d', REQUEST_TIME - variable_get('statistics_flush_accesslog_timer', 259200));
 }
 
 /**

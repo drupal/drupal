@@ -23,7 +23,7 @@ class StatisticsBlockVisitorsTestCase extends DrupalWebTestCase {
     $this->blocking_user = $this->drupalCreateUser(array('block IP addresses', 'access statistics'));
 
     // Insert dummy access by anonymous user into access log.
-    db_query("INSERT INTO {accesslog} (title, path, url, hostname, uid, sid, timer, timestamp) values('%s', '%s', '%s', '%s', %d, '%s', %d, %d)", 'test', 'node/1', 'http://example.com', '192.168.1.1', '0', '10', '10', $_SERVER['REQUEST_TIME']);
+    db_query("INSERT INTO {accesslog} (title, path, url, hostname, uid, sid, timer, timestamp) values('%s', '%s', '%s', '%s', %d, '%s', %d, %d)", 'test', 'node/1', 'http://example.com', '192.168.1.1', '0', '10', '10', REQUEST_TIME);
   }
 
   /**
