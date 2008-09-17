@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.144 2008/06/21 18:22:38 dries Exp $
+// $Id: path.module,v 1.145 2008/09/17 20:37:32 webchick Exp $
 
 /**
  * @file
@@ -204,8 +204,8 @@ function path_form_alter(&$form, $form_state, $form_id) {
  */
 function path_perm() {
   return array(
-    'create url aliases' => t('Manage URL aliases on content.'),
     'administer url aliases' => t('Manage URL aliases across the entire website.'),
+    'create url aliases' => t('Manage URL aliases on content.'),
   );
 }
 

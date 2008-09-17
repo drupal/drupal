@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.649 2008/09/17 07:11:56 dries Exp $
+// $Id: comment.module,v 1.650 2008/09/17 20:37:31 webchick Exp $
 
 /**
  * @file
@@ -241,10 +241,10 @@ function comment_node_type($op, $info) {
  */
 function comment_perm() {
   return array(
+    'administer comments' => t('Manage and approve comments, and configure comment administration settings.'),
     'access comments' => t('View comments attached to content.'),
     'post comments' => t('Add comments to content (approval required).'),
     'post comments without approval' => t('Add comments to content (no approval required).'),
-    'administer comments' => t('Manage and approve comments, and configure comment administration settings.'),
   );
 }
 
