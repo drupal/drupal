@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.130 2008/09/15 20:48:06 webchick Exp $
+// $Id: install.php,v 1.131 2008/09/17 19:32:53 webchick Exp $
 
 require_once './includes/install.inc';
 
@@ -101,7 +101,7 @@ function install_main() {
 
   // Locale selection
   if (!empty($_GET['locale'])) {
-    $install_locale = preg_replace('/[^a-zA-Z_0-9]/', '', $_GET['locale']);
+    $install_locale = preg_replace('/[^a-zA-Z_0-9\-]/', '', $_GET['locale']);
   }
   elseif (($install_locale = install_select_locale($profile)) !== FALSE) {
     install_goto("install.php?profile=$profile&locale=$install_locale");

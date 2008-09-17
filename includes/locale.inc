@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.182 2008/09/15 20:48:07 webchick Exp $
+// $Id: locale.inc,v 1.183 2008/09/17 19:32:53 webchick Exp $
 
 /**
  * @file
@@ -2385,7 +2385,7 @@ function _locale_get_predefined_list() {
     "pi" => array("Pali"),
     "pl" => array("Polish", "Polski"),
     "ps" => array("Pashto", /* Left-to-right marker "‭" */ "پښتو", LANGUAGE_RTL),
-    "pt" => array("Portuguese, Portugal", "Português"),
+    "pt-pt" => array("Portuguese, Portugal", "Português"),
     "pt-br" => array("Portuguese, Brazil", "Português"),
     "qu" => array("Quechua"),
     "rm" => array("Rhaeto-Romance"),
