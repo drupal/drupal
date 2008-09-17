@@ -676,16 +676,12 @@ function system_schema() {
         'default' => ''),
       'load_functions' => array(
         'description' => t('A serialized array of function names (like node_load) to be called to load an object corresponding to a part of the current path.'),
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => ''),
+        'type' => 'text',
+        'not null' => TRUE,),
       'to_arg_functions' => array(
         'description' => t('A serialized array of function names (like user_uid_optional_to_arg) to be called to replace a part of the router path with another string.'),
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => ''),
+        'type' => 'text',
+        'not null' => TRUE,),
       'access_callback' => array(
         'description' => t('The callback which determines the access to this router path. Defaults to user_access.'),
         'type' => 'varchar',
@@ -2510,6 +2506,18 @@ function system_update_6047() {
   $ret[] = update_sql("UPDATE {blocks} SET cache = -1 WHERE module = 'system' AND delta = '0'");
   return $ret;
 }
+
+/**
+* Increase the size of the 'load_functions' and 'to_arg_functions' fields in table 'menu_router'.
+*/
+function system_update_6048() {
+  $ret = array();
+  db_change_field($ret, 'menu_router', 'load_functions', 'load_functions', array('type' => 'text', 'not null' => TRUE,));
+  db_change_field($ret, 'menu_router', 'to_arg_functions', 'to_arg_functions', array('type' => 'text', 'not null' => TRUE,));
+
+  return $ret;
+}
+
 
 /**
  * @} End of "defgroup updates-5.x-to-6.x"
