@@ -1445,13 +1445,53 @@ class DrupalWebTestCase {
       $found = FALSE;
       if ($fields) {
         foreach ($fields as $field) {
-          if ($field['value'] == $value) {
+          if (isset($field['value']) && $field['value'] == $value) {
+            // Input element with correct value.
+            $found = TRUE;
+          }
+          else if (isset($field->option)) {
+            // Select element found.
+            if ($this->getSelectedItem($field) == $value) {
+              $found = TRUE;
+            }
+            else {
+              // No item selected so use first item.
+              $items = $this->getAllOptions($field);
+              if (!empty($items) && $items[0]['value'] == $value) {
+                $found = TRUE;
+              }
+            }
+          }
+          else if (isset($field[0]) && $field[0] == $value) {
+            // Text area with correct text.
             $found = TRUE;
           }
         }
       }
     }
     return $this->assertTrue($fields && $found, $message, $group);
+  }
+
+  /**
+   * Get the selected value from a select field.
+   *
+   * @param $element
+   *   SimpleXMLElement select element.
+   * @return
+   *   The selected value or FALSE.
+   */
+  function getSelectedItem(SimpleXMLElement $element) {
+    foreach ($element->children() as $item) {
+      if (isset($item['selected'])) {
+        return $item['value'];
+      }
+      else if ($item->getName() == 'optgroup') {
+        if ($value = $this->getSelectedItem($item)) {
+          return $value;
+        }
+      }
+    }
+    return FALSE;
   }
 
   /**
