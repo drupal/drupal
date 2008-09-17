@@ -753,7 +753,9 @@ function comment_save($edit) {
           }
         }
 
-        $edit['timestamp'] = time();
+        if (empty($edit['timestamp'])) {
+          $edit['timestamp'] = time();
+        }
 
         if ($edit['uid'] === $user->uid) { // '===' because we want to modify anonymous users too
           $edit['name'] = $user->name;
