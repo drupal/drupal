@@ -34,7 +34,8 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
 
     // Set settings.
     $edit = array();
-    $edit['contact_form_information'] = $this->randomName(100);
+    $contact_form_information = $this->randomName(100);
+    $edit['contact_form_information'] = $contact_form_information;
     $edit['contact_hourly_threshold'] = 3;
     $edit['contact_default_status'] = TRUE;
     $this->drupalPost('admin/build/contact/settings', $edit, t('Save configuration'));
@@ -42,6 +43,13 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
 
     // Delete old categories to ensure that new categories are used.
     $this->deleteCategories();
+
+    // Ensure that the contact form won't be shown without categories.
+    $this->setPermission('anonymous user', array('access site-wide contact form' => TRUE));
+    $this->drupalLogout();
+    $this->drupalGet('contact');
+    $this->assertText(t('The contact form has not been configured.'), t('Contact form will not work without categories configured.'));
+    $this->drupalLogin($admin_user);
 
     // Add categories.
     // Test invalid recipients.
@@ -56,12 +64,12 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $this->assertText(t('Category field is required.'), t('Caught empty category field'));
     $this->assertText(t('Recipients field is required.'), t('Caught empty recipients field.'));
 
-    // Create valid categories.
+    // Create first valid category.
     $recipients = array('simpletest@example.com', 'simpletest2@example.com', 'simpletest3@example.com');
     $this->addCategory($category = $this->randomName(16), implode(',', array($recipients[0])), '', TRUE);
     $this->assertRaw(t('Category %category has been added.', array('%category' => $category)), t('Category successfully added.'));
 
-    // Test update contact form category
+    // Test update contact form category.
     $categories = $this->getCategories();
     $category_id = $this->updateCategory($categories, $category = $this->randomName(16), $recipients_str = implode(',', array($recipients[0], $recipients[1])), $reply = $this->randomName(30), FALSE);
     $category_array = db_fetch_array(db_query('SELECT category, recipients, reply, selected FROM {contact} WHERE cid = %d', array($category_id)));
@@ -71,6 +79,15 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $this->assertFalse($category_array['selected']);
     $this->assertRaw(t('Category %category has been updated.', array('%category' => $category)), t('Category successfully updated.'));
 
+    // Ensure that the contact form is shown without a category selection input.
+    $this->setPermission('anonymous user', array('access site-wide contact form' => TRUE));
+    $this->drupalLogout();
+    $this->drupalGet('contact');
+    $this->assertText($contact_form_information, t('Contact form is shown when there is one category.'));
+    $this->assertNoText(t('Category'), t('When there is only one category, the category selection element is hidden.'));
+    $this->drupalLogin($admin_user);
+
+    // Add more categories.
     $this->addCategory($category = $this->randomName(16), implode(',', array($recipients[0], $recipients[1])), '', FALSE);
     $this->assertRaw(t('Category %category has been added.', array('%category' => $category)), t('Category successfully added.'));
 
@@ -113,6 +130,15 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
 
     $this->submitContact($this->randomName(16), $recipients[0], $this->randomName(16), $categories[0], '');
     $this->assertText(t('Message field is required.'), t('Message required.'));
+
+    // Test contact form with no default category selected.
+    db_query('UPDATE {contact} SET selected = 0');
+    $this->drupalGet('contact');
+    $this->assertRaw(t('- Please choose -'), t('Without selected categories the visitor is asked to chose a category.'));
+
+    // Submit contact form with invalid category id (cid 0).
+    $this->submitContact($this->randomName(16), $recipients[0], $this->randomName(16), 0, '');
+    $this->assertText(t('You must select a valid category.'), t('Valid category required.'));
 
     // Submit contact form with correct values and check flood interval.
     for ($i = 0; $i < $edit['contact_hourly_threshold']; $i++) {
