@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.8 2008/09/17 05:12:12 webchick Exp $
+// $Id: search.test,v 1.9 2008/09/17 07:11:57 dries Exp $
 
 define('SEARCH_TYPE', '_test_');
 
@@ -305,7 +305,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
               $settings['body'] .= " really rocks";
               break;
             case 'recent':
-              $settings['created'] = $_SERVER['REQUEST_TIME'] + 3600;
+              $settings['created'] = REQUEST_TIME + 3600;
               break;
             case 'comments':
               $settings['comment'] = 2;

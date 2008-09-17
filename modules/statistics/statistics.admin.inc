@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.admin.inc,v 1.10 2008/09/06 08:36:21 dries Exp $
+// $Id: statistics.admin.inc,v 1.11 2008/09/17 07:11:58 dries Exp $
 
 /**
  * @file
@@ -122,7 +122,7 @@ function statistics_top_referrers() {
 
   $rows = array();
   while ($referrer = db_fetch_object($result)) {
-    $rows[] = array($referrer->hits, _statistics_link($referrer->url), t('@time ago', array('@time' => format_interval($_SERVER['REQUEST_TIME'] - $referrer->last))));
+    $rows[] = array($referrer->hits, _statistics_link($referrer->url), t('@time ago', array('@time' => format_interval(REQUEST_TIME - $referrer->last))));
   }
 
   if (empty($rows)) {

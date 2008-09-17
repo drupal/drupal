@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.22 2008/09/06 08:36:22 dries Exp $
+// $Id: update.module,v 1.23 2008/09/17 07:11:59 dries Exp $
 
 /**
  * @file
@@ -276,7 +276,7 @@ function _update_requirement_check($project, $type) {
 function update_cron() {
   $frequency = variable_get('update_check_frequency', 1);
   $interval = 60 * 60 * 24 * $frequency;
-  if ($_SERVER['REQUEST_TIME'] - variable_get('update_last_check', 0) > $interval) {
+  if (REQUEST_TIME - variable_get('update_last_check', 0) > $interval) {
     update_refresh();
     _update_cron_notify();
   }
@@ -342,7 +342,7 @@ function update_get_available($refresh = FALSE) {
     }
   }
   if (!$needs_refresh && ($cache = cache_get('update_info', 'cache_update'))
-       && $cache->expire > $_SERVER['REQUEST_TIME']) {
+       && $cache->expire > REQUEST_TIME) {
     $available = $cache->data;
   }
   elseif ($needs_refresh || $refresh) {

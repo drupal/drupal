@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.3 2008/09/15 21:06:07 webchick Exp $
+// $Id: file.test,v 1.4 2008/09/17 07:11:58 dries Exp $
 
 /**
  *  @file
@@ -428,7 +428,7 @@ class FileCopyDeleteMoveTest extends DrupalWebTestCase {
     touch($f->filepath);
     $f->filemime = 'text/plain';
     $f->uid = 1;
-    $f->timestamp = $_SERVER['REQUEST_TIME'];
+    $f->timestamp = REQUEST_TIME;
     $f->filesize = 0;
     drupal_write_record('files', $f);
     $this->file = $f;

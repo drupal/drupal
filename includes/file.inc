@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.132 2008/09/16 23:55:42 webchick Exp $
+// $Id: file.inc,v 1.133 2008/09/17 07:11:56 dries Exp $
 
 /**
  * @file
@@ -643,7 +643,7 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
 
     // If we made it this far it's safe to record this file in the database.
     $file->status = FILE_STATUS_TEMPORARY;
-    $file->timestamp = $_SERVER['REQUEST_TIME'];
+    $file->timestamp = REQUEST_TIME;
     drupal_write_record('files', $file);
 
     // Add file to the cache.

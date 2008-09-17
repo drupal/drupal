@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.124 2008/09/15 09:28:49 webchick Exp $
+// $Id: blogapi.module,v 1.125 2008/09/17 07:11:56 dries Exp $
 
 /**
  * @file
@@ -218,7 +218,7 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
   }
 
   if (user_access('administer nodes') && !isset($edit['date'])) {
-    $edit['date'] = format_date($_SERVER['REQUEST_TIME'], 'custom', 'Y-m-d H:i:s O');
+    $edit['date'] = format_date(REQUEST_TIME, 'custom', 'Y-m-d H:i:s O');
   }
 
   node_invoke_nodeapi($edit, 'blogapi new');
