@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.795 2008/09/17 07:11:56 dries Exp $
+// $Id: common.inc,v 1.796 2008/09/17 19:23:35 webchick Exp $
 
 /**
  * @file
@@ -806,7 +806,9 @@ function t($string, $args = array(), $langcode = NULL) {
   global $language;
   static $custom_strings;
 
-  $langcode = isset($langcode) ? $langcode : $language->language;
+  if (!isset($langcode)) {
+    $langcode = $language->language;
+  }
 
   // First, check for an array of customized strings. If present, use the array
   // *instead of* database lookups. This is a high performance way to provide a
