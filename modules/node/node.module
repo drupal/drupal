@@ -1515,7 +1515,7 @@ function node_menu() {
 
   $items['admin/build/types'] = array(
     'title' => 'Content types',
-    'description' => 'Manage posts by content type, including default status, front page promotion, etc.',
+    'description' => 'Manage posts by content type, including default status, front page promotion, comment settings, etc.',
     'page callback' => 'node_overview_types',
     'access arguments' => array('administer content types'),
   );
