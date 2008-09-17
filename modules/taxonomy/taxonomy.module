@@ -973,7 +973,7 @@ function taxonomy_get_term_by_name($name) {
  *   The vocabulary's ID
  *
  * @return
- *   The vocabulary object with all of its metadata, if exists, NULL otherwise.
+ *   The vocabulary object with all of its metadata, if exists, FALSE otherwise.
  *   Results are statically cached.
  */
 function taxonomy_vocabulary_load($vid) {
@@ -996,8 +996,8 @@ function taxonomy_vocabulary_load($vid) {
     }
   }
 
-  // Return NULL if this vocabulary does not exist.
-  return !empty($vocabularies[$vid]) ? $vocabularies[$vid] : NULL;
+  // Return FALSE if this vocabulary does not exist.
+  return !empty($vocabularies[$vid]) ? $vocabularies[$vid] : FALSE;
 }
 
 /**
