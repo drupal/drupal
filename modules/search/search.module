@@ -572,11 +572,12 @@ function search_index($sid, $type, $text) {
 
   // Insert results into search index
   foreach ($results[0] as $word => $score) {
-    // The database will collate similar words (accented and non-accented forms, etc.),
-    // and the score is additive, so first add and then insert.
-    db_query("UPDATE {search_index} SET score = score + %d WHERE word = '%s' AND sid = '%d' AND type = '%s'", $score, $word, $sid, $type);
+    // Try inserting first because this will succeed most times, but because
+    // the database collates similar words (accented and non-accented), the
+    // insert can fail, in which case we need to add the word scores together.
+    @db_query("INSERT INTO {search_index} (word, sid, type, score) VALUES ('%s', %d, '%s', %f)", $word, $sid, $type, $score);
     if (!db_affected_rows()) {
-      db_query("INSERT INTO {search_index} (word, sid, type, score) VALUES ('%s', %d, '%s', %f)", $word, $sid, $type, $score);
+      db_query("UPDATE {search_index} SET score = score + %f WHERE word = '%s' AND sid = %d AND type = '%s'", $score, $word, $sid, $type);
     }
     search_dirty($word);
   }
