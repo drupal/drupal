@@ -2377,7 +2377,7 @@ function _locale_get_predefined_list() {
     "pi" => array("Pali"),
     "pl" => array("Polish", "Polski"),
     "ps" => array("Pashto", /* Left-to-right marker "‭" */ "پښتو", LANGUAGE_RTL),
-    "pt" => array("Portuguese, Portugal", "Português"),
+    "pt-pt" => array("Portuguese, Portugal", "Português"),
     "pt-br" => array("Portuguese, Brazil", "Português"),
     "qu" => array("Quechua"),
     "rm" => array("Rhaeto-Romance"),

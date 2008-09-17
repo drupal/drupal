@@ -90,7 +90,7 @@ function install_main() {
 
   // Locale selection
   if (!empty($_GET['locale'])) {
-    $install_locale = preg_replace('/[^a-zA-Z_0-9]/', '', $_GET['locale']);
+    $install_locale = preg_replace('/[^a-zA-Z_0-9\-]/', '', $_GET['locale']);
   }
   elseif (($install_locale = install_select_locale($profile)) !== FALSE) {
     install_goto("install.php?profile=$profile&locale=$install_locale");
