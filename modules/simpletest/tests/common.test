@@ -202,3 +202,52 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
     $this->assertText($query, t('The query passed to the page is correctly represented by drupal_get_detination().'));
   }
 }
+
+/**
+ * Testing drupal_set_content and drupal_get_content.
+ */
+class DrupalSetContentTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Drupal set/get content'),
+      'description' => t("Performs tests on setting and retrieiving content from theme regions."),
+      'group' => t('System')
+    );
+  }
+
+
+  /**
+   * Test setting and retrieving content for theme regions.
+   */
+  function testRegions() {
+    global $theme_key;
+
+    $block_regions = array_keys(system_region_list($theme_key));
+    $delimiter = $this->randomName(32);
+    $values = array();
+    // Set some random content for each region available.
+    foreach ($block_regions as $region) {
+      $first_chunk = $this->randomName(32);
+      drupal_set_content($region, $first_chunk);
+      $second_chunk = $this->randomName(32);
+      drupal_set_content($region, $second_chunk);
+      // Store the expected result for a drupal_get_content call for this region.
+      $values[$region] = $first_chunk . $delimiter . $second_chunk;
+    }
+
+    // Ensure drupal_get_content returns expected results when fetching all regions.
+    $content = drupal_get_content(NULL, $delimiter);
+    foreach ($content as $region => $region_content) {
+      $this->assertEqual($region_content, $values[$region], t('@region region text verified when fetching all regions', array('@region' => $region)));
+    }
+
+    // Ensure drupal_get_content returns expected results when fetching a single region.
+    foreach ($block_regions as $region) {
+      $region_content = drupal_get_content($region, $delimiter);
+      $this->assertEqual($region_content, $values[$region], t('@region region text verified when fetching single region.', array('@region' => $region)));
+    }
+  }
+}
