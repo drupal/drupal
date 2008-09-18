@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.796 2008/09/17 19:23:35 webchick Exp $
+// $Id: common.inc,v 1.797 2008/09/18 10:40:28 dries Exp $
 
 /**
  * @file
@@ -153,6 +153,8 @@ function drupal_get_headers() {
 
 /**
  * Add a feed URL for the current page.
+ *
+ * This function can be called as long the HTML header hasn't been sent.
  *
  * @param $url
  *   A url for the feed.
@@ -1635,6 +1637,8 @@ function base_path() {
 
 /**
  * Add a <link> tag to the page's HEAD.
+ *
+ * This function can be called as long the HTML header hasn't been sent.
  */
 function drupal_add_link($attributes) {
   drupal_set_html_head('<link' . drupal_attributes($attributes) . " />\n");
