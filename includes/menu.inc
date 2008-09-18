@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.288 2008/09/05 08:24:08 dries Exp $
+// $Id: menu.inc,v 1.289 2008/09/18 10:44:19 dries Exp $
 
 /**
  * @file
@@ -1258,7 +1258,7 @@ function menu_list_system_menus() {
  * Return an array of links to be rendered as the Main menu.
  */
 function menu_main_menu() {
-  return menu_navigation_links(variable_get('menu_main_menu_source', 'main-menu'));
+  return menu_navigation_links(variable_get('menu_main_links_source', 'main-menu'));
 }
 
 /**
@@ -1268,11 +1268,11 @@ function menu_secondary_menu() {
 
   // If the secondary menu source is set as the primary menu, we display the
   // second level of the primary menu.
-  if (variable_get('menu_secondary_menu_source', 'secondary-menu') == variable_get('menu_main_menu_source', 'main-menu')) {
-    return menu_navigation_links(variable_get('menu_main_menu_source', 'main-menu'), 1);
+  if (variable_get('menu_secondary_links_source', 'secondary-menu') == variable_get('menu_main_links_source', 'main-menu')) {
+    return menu_navigation_links(variable_get('menu_main_links_source', 'main-menu'), 1);
   }
   else {
-    return menu_navigation_links(variable_get('menu_secondary_menu_source', 'secondary-menu'), 0);
+    return menu_navigation_links(variable_get('menu_secondary_links_source', 'secondary-menu'), 0);
   }
 }
 

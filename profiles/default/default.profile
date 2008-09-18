@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.28 2008/09/15 20:48:10 webchick Exp $
+// $Id: default.profile,v 1.29 2008/09/18 10:44:19 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -153,6 +153,12 @@ function default_profile_tasks(&$task, $url) {
 
   // Update the menu router information.
   menu_rebuild();
+
+  // Save some default links.
+  $link = array('link_path' => 'admin/build/menu-customize/main-menu/add', 'link_title' => 'Add a main menu link', 'menu_name' => 'main-menu');
+  menu_link_save($link);
+  $link = array('link_path' => 'admin/build/menu-customize/secondary-menu/add', 'link_title' => 'Add a secondary menu link', 'menu_name' => 'secondary-menu');
+  menu_link_save($link);
 }
 
 /**
