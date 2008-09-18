@@ -44,8 +44,8 @@ function simpletest_perm() {
  */
 function simpletest_theme() {
   return array(
-    'simpletest_test_form' => array(
-      'arguments' => array('form' => NULL)
+    'simpletest_test_table' => array(
+      'arguments' => array('table' => NULL)
     ),
     'simpletest_result_summary' => array(
       'arguments' => array('form' => NULL)
@@ -58,7 +58,10 @@ function simpletest_theme() {
  */
 function simpletest_test_form() {
   global $db_prefix, $db_prefix_original;
+
   $form = array();
+
+  // List out all tests in groups for selection.
   $uncategorized_tests = simpletest_get_all_tests();
   $tests = simpletest_categorize_tests($uncategorized_tests);
   if (isset($_SESSION['test_id'])) {
@@ -150,11 +153,19 @@ function simpletest_test_form() {
     }
     $form['summary']['#ok'] = $all_ok;
   }
+  $form['tests'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Tests'),
+    '#description' => t('Select the tests you would like to run, and click Run tests.'),
+  );
+  $form['tests']['table'] = array(
+    '#theme' => 'simpletest_test_table'
+    );
   foreach ($tests as $group_name => $test_group) {
     foreach ($test_group as $test) {
       $test_info = $test->getInfo();
       $test_class = get_class($test);
-      $form['tests'][$group_name][$test_class] = array(
+      $form['tests']['table'][$group_name][$test_class] = array(
         '#type' => 'checkbox',
         '#title' => $test_info['name'],
         '#default_value' => 0,
@@ -163,21 +174,8 @@ function simpletest_test_form() {
     }
   }
 
-  $form['run'] = array(
-    '#type' => 'fieldset',
-    '#collapsible' => FALSE,
-    '#collapsed' => FALSE,
-    '#title' => t('Run tests'),
-  );
-  $form['run']['running_options'] = array(
-    '#type' => 'radios',
-    '#default_value' => 'selected_tests',
-    '#options' => array(
-      'all_tests' => t('Run all tests (WARNING, this may take a long time)'),
-      'selected_tests' => t('Run selected tests'),
-    ),
-  );
-  $form['run']['op'] = array(
+  // Action buttons.
+  $form['tests']['op'] = array(
     '#type' => 'submit',
     '#value' => t('Run tests'),
   );
@@ -186,83 +184,95 @@ function simpletest_test_form() {
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
     '#title' => t('Clean test environment'),
-    '#description' => t('Remove tables with the prefix "simpletest" and temporary directories that are left over from tests that crashed.')
+    '#description' => t('Remove tables with the prefix "simpletest" and temporary directories that are left over from tests that crashed. This is intended for developers when creating tests.'),
   );
   $form['reset']['op'] = array(
     '#type' => 'submit',
     '#value' => t('Clean environment'),
-    '#submit' => array('simpletest_clean_environment')
+    '#submit' => array('simpletest_clean_environment'),
   );
+  
   return $form;
 }
 
-/**
- * Theme the SimpleTest form that provides test selection.
- *
- * @ingroup themeable
- */
-function theme_simpletest_test_form($form) {
-  drupal_add_css(drupal_get_path('module', 'simpletest') .'/simpletest.css', 'module');
-  drupal_add_js(drupal_get_path('module', 'simpletest') .'/simpletest.js', 'module');
+function theme_simpletest_test_table($table) {
+  drupal_add_css(drupal_get_path('module', 'simpletest') . '/simpletest.css', 'module');
+  drupal_add_js(drupal_get_path('module', 'simpletest') . '/simpletest.js', 'module');
+
+  // Create header for test selection table.
   $header = array(
-    array('data' => t('Run'), 'class' => 'simpletest_run checkbox'),
-    array('data' => t('Test'), 'class' => 'simpletest_test'),
-    array('data' => t('Description'), 'class' => 'simpletest_description'),
+  theme('table_select_header_cell'),
+  array('data' => t('Test'), 'class' => 'simpletest_test'),
+  array('data' => t('Description'), 'class' => 'simpletest_description'),
   );
+
+  // Define the images used to expand/collapse the test groups.
   $js = array(
     'images' => array(
-      theme('image', 'misc/menu-collapsed.png', 'Expand', 'Expand'),
-      theme('image', 'misc/menu-expanded.png', 'Collapsed', 'Collapsed'),
-    ),
+  theme('image', 'misc/menu-collapsed.png', 'Expand', 'Expand'),
+  theme('image', 'misc/menu-expanded.png', 'Collapsed', 'Collapsed'),
+  ),
   );
 
-  // Go through each test group and create a row:
+  // Go through each test group and create a row.
   $rows = array();
-  foreach (element_children($form['tests']) as $key) {
-    $element = &$form['tests'][$key];
-    $test_class = strtolower(trim(preg_replace("/[^\w\d]/", "-", $key)));
+  foreach (element_children($table) as $key) {
+    $element = &$table[$key];
     $row = array();
+
+    // Make the class name safe for output on the pace by replacing all
+    // non-word/decimal characters with a dash (-).
+    $test_class = strtolower(trim(preg_replace("/[^\w\d]/", "-", $key)));
+
+    // Place-holder for checkboxes to select group of tests.
     $row[] = array('id' => $test_class, 'class' => 'simpletest-select-all');
+
+    // Expand/collapse image and group title.
     $row[] = array(
-      'data' =>  '<div class="simpletest-image" id="simpletest-test-group-'. $test_class .'">'. $js['images'][0] .'</div>&nbsp;<label for="'. $test_class .'-select-all" class="simpletest-group-label">'. $key .'</label>',
+      'data' =>  '<div class="simpletest-image" id="simpletest-test-group-' . $test_class . '">' . $js['images'][0] . '</div>&nbsp;' .
+                 '<label for="' . $test_class . '-select-all" class="simpletest-group-label">' . $key . '</label>',
       'style' => 'font-weight: bold;'
-    );
-    $row[] = isset($element['#description']) ? $element['#description'] : '&nbsp;';
-    $rows[] = array('data' => $row, 'class' => 'simpletest-group');
+      );
 
-    $current_js = array('testClass' => $test_class .'-test', 'testNames' => array(), 'imageDirection' => 0, 'clickActive' => FALSE);
-    foreach (element_children($element) as $test_name) {
-      $current_js['testNames'][] = 'edit-'. $test_name;
-      $test = $element[$test_name];
-      foreach (array('title', 'description') as $key) {
-        $$key = $test['#'. $key];
-        unset($test['#'. $key]);
+      $row[] = isset($element['#description']) ? $element['#description'] : '&nbsp;';
+      $rows[] = array('data' => $row, 'class' => 'simpletest-group');
+
+      // Add individual tests to group.
+      $current_js = array('testClass' => $test_class . '-test', 'testNames' => array(), 'imageDirection' => 0, 'clickActive' => FALSE);
+      foreach (element_children($element) as $test_name) {
+        $test = $element[$test_name];
+        $row = array();
+
+        $current_js['testNames'][] = 'edit-' . $test_name;
+
+        // Store test title and description so that checkbox won't render them.
+        $title = $test['#title'];
+        $description = $test['#description'];
+
+        unset($test['#title']);
+        unset($test['#description']);
+
+        // Test name is used to determine what tests to run.
+        $test['#name'] = $test_name;
+
+        $row[] = drupal_render($test);
+        $row[] = theme('indentation', 1) . '<label for="edit-' . $test_name . '">' . $title . '</label>';
+        $row[] = '<div class="description">' . $description . '</div>';
+        $rows[] = array('data' => $row, 'style' => 'display: none;', 'class' => $test_class . '-test');
       }
-      $test['#name'] = $test_name;
-      $themed_test = drupal_render($test);
-      $row = array();
-      $row[] = $themed_test;
-      $row[] = theme('indentation', 1) .'<label for="edit-'. $test_name .'">'. $title .'</label>';
-      $row[] = '<div class="description">'. $description .'</div>';
-      $rows[] = array('data' => $row, 'style' => 'display: none;', 'class' => $test_class .'-test');
-    }
-    $js['simpletest-test-group-'. $test_class] = $current_js;
+      $js['simpletest-test-group-'. $test_class] = $current_js;
+      unset($table[$key]);
   }
-  unset($form['tests']);
-  drupal_add_js(array('simpleTest' => $js), 'setting');
-  // Output test groups:
-  $output = '';
-  if (isset($form['results'])) {
-    $output .= drupal_render($form['summary']);
-    $output .= drupal_render($form['results']);
-  }
-  if (count($rows)) {
-    $output .= theme('table', $header, $rows, array('id' => 'simpletest-form-table'));
-  }
-  // Output the rest of the form, excluded test groups which have been removed:
-  $output .= drupal_render($form);
 
-  return $output;
+  // Add js array of settings.
+  drupal_add_js(array('simpleTest' => $js), 'setting');
+
+  if (empty($rows)) {
+    return '<strong>' . t('No tests to display.') . '</strong>';
+  }
+  else {
+    return theme('table', $header, $rows, array('id' => 'simpletest-form-table'));;
+  }
 }
 
 function theme_simpletest_result_summary($form, $text = NULL) {
@@ -281,13 +291,15 @@ function _simpletest_format_summary_line($summary) {
  * Run selected tests.
  */
 function simpletest_test_form_submit($form, &$form_state) {
-  $output = '';
   $batch_mode = !preg_match("/^simpletest\d+$/", $_SERVER['HTTP_USER_AGENT']);
-  $tests_list = array();
-  $run_all_tests = $form_state['values']['running_options'] == 'all_tests';
+
+  // Ensure that all classes are loaded before we create instances to get test information and run.
   simpletest_get_all_tests();
+
+  // Get list of tests.
+  $tests_list = array();
   foreach ($form_state['values'] as $class_name => $value) {
-    if (class_exists($class_name) && ($value === 1 || $run_all_tests)) {
+    if (class_exists($class_name) && $value === 1) {
       $tests_list[] = $class_name;
     }
   }
@@ -318,8 +330,9 @@ function simpletest_run_tests($test_list, $reporter = 'drupal', $batch_mode = FA
     $batch = array(
       'title' => t('Running SimpleTests'),
       'operations' => array(
-        array('_simpletest_batch_operation', array($test_list, $test_id)),
+        array('_simpletest_batch_operation', array($test_list, $test_id)
       ),
+    ),
       'finished' => '_simpletest_batch_finished',
       'redirect' => 'admin/build/testing',
       'progress_message' => t('Processing tests.'),
