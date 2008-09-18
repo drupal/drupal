@@ -154,6 +154,8 @@ function drupal_get_headers() {
 /**
  * Add a feed URL for the current page.
  *
+ * This function can be called as long the HTML header hasn't been sent.
+ *
  * @param $url
  *   A url for the feed.
  * @param $title
@@ -1635,6 +1637,8 @@ function base_path() {
 
 /**
  * Add a <link> tag to the page's HEAD.
+ *
+ * This function can be called as long the HTML header hasn't been sent.
  */
 function drupal_add_link($attributes) {
   drupal_set_html_head('<link' . drupal_attributes($attributes) . " />\n");
