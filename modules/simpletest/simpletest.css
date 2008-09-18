@@ -1,27 +1,24 @@
-/* $Id: simpletest.css,v 1.2 2008/06/24 21:51:02 dries Exp $ */
+/* $Id: simpletest.css,v 1.3 2008/09/18 14:57:42 dries Exp $ */
 
 /* Addon for the simpletest module */
 #simpletest {
 }
 /* Test Table */
-th.simpletest_run {
+#simpletest-form-table th.select-all {
   width: 50px;
 }
 th.simpletest_test {
   width: 160px;
 }
 
-table#simpletest-form-table td div.form-item,
-td.simpletest-select-all {
-  text-align: center;
-}
-
 table#simpletest-form-table tr td {
   background-color: white !important;
+  color: #494949;
 }
 
 table#simpletest-form-table tr.simpletest-group td {
   background-color: #EDF5FA !important;
+  color: #494949;
 }
 
 div.simpletest-pass {
