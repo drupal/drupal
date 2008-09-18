@@ -10,7 +10,7 @@ function menu_install() {
 
   $t = get_t();
   db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", 'navigation', $t('Navigation'), $t('The navigation menu is provided by Drupal and is the main interactive menu for any site. It is usually the only menu that contains personalized links for authenticated users, and is often not even visible to anonymous users.'));
-  db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", 'main-menu', $t('Main menu'), $t('The Main menu is often used by themes to show the major sections of a site. A typical representation of the Main menu would be tabs along the top.'));
+  db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", 'main-menu', $t('Main menu'), $t('The Main menu is often used by themes to show the major sections of a site.'));
   db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", 'secondary-menu', $t('Secondary menu'), $t('The Secondary menu is often used for pages like legal notices, contact details, and other navigation items that play a lesser role than the Main menu.'));
 }
 

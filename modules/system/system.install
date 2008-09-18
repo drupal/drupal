@@ -3031,8 +3031,7 @@ function system_update_7008() {
  */
 function system_update_7009() {
   $ret = array();
-  $ret[] = update_sql("UPDATE {variable} SET name = 'menu_main_menu_source' WHERE name = 'menu_primary_links_source'");
-  $ret[] = update_sql("UPDATE {variable} SET name = 'menu_main_menu_source' WHERE name = 'menu_primary_links_source'");
+  $ret[] = update_sql("UPDATE {variable} SET name = 'menu_main_links_source' WHERE name = 'menu_primary_links_source'");
 
   return $ret;
 }

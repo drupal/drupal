@@ -612,25 +612,25 @@ function menu_configure() {
     '#description' => t('Choose the menu to be the default in the menu options in the content authoring form.'),
   );
 
-  $main = variable_get('menu_main_menu_source', 'main-menu');
-  $main_options = array_merge($menu_options, array('' => t('No Main menu')));
-  $form['menu_main_menu_source'] = array(
+  $main = variable_get('menu_main_links_source', 'main-menu');
+  $main_options = array_merge($menu_options, array('' => t('No Main links')));
+  $form['menu_main_links_source'] = array(
     '#type' => 'select',
-    '#title' => t('Source for the Main menu'),
+    '#title' => t('Source for the Main links'),
     '#default_value' => $main,
     '#options' => $main_options,
     '#tree' => FALSE,
-    '#description' => t('Select what should be displayed as the Main menu.'),
+    '#description' => t('Select what should be displayed as the Main links (typically at the top of the page).'),
   );
 
-  $secondary_options = array_merge($menu_options, array('' => t('No Secondary menu')));
-  $form["menu_secondary_menu_source"] = array(
+  $secondary_options = array_merge($menu_options, array('' => t('No Secondary links')));
+  $form["menu_secondary_links_source"] = array(
     '#type' => 'select',
-    '#title' => t('Source for the Secondary menu'),
-    '#default_value' => variable_get('menu_secondary_menu_source', 'secondary-menu'),
+    '#title' => t('Source for the Secondary links'),
+    '#default_value' => variable_get('menu_secondary_links_source', 'secondary-menu'),
     '#options' => $secondary_options,
     '#tree' => FALSE,
-    '#description' => t("Select the source for the Secondary menu. An advanced option allows you to use the same source for both Main menu (currently %main) and Secondary menu: if your source menu has two levels of hierarchy, the top level menu items will appear in the Main menu, and the children of the active item will appear in the Secondary menu." , array('%main' => $main_options[$main])),
+    '#description' => t("Select the source for the Secondary links. An advanced option allows you to use the same source for both Main links (currently %main) and Secondary links: if your source menu has two levels of hierarchy, the top level menu links will appear in the Main links, and the children of the active link will appear in the Secondary links." , array('%main' => $main_options[$main])),
   );
 
   return system_settings_form($form);

@@ -153,6 +153,12 @@ function default_profile_tasks(&$task, $url) {
 
   // Update the menu router information.
   menu_rebuild();
+
+  // Save some default links.
+  $link = array('link_path' => 'admin/build/menu-customize/main-menu/add', 'link_title' => 'Add a main menu link', 'menu_name' => 'main-menu');
+  menu_link_save($link);
+  $link = array('link_path' => 'admin/build/menu-customize/secondary-menu/add', 'link_title' => 'Add a secondary menu link', 'menu_name' => 'secondary-menu');
+  menu_link_save($link);
 }
 
 /**
