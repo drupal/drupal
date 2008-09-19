@@ -285,6 +285,13 @@ function update_script_selection_form() {
 function update_batch() {
   global $base_url;
 
+  // During the update, toggle site maintenance so that schema changes
+  // don't effect visiting users.
+  $site_offline = variable_get('site_offline', FALSE);
+  if ($site_offline == FALSE) {
+    variable_set('site_offline', TRUE);
+  }
+
   $operations = array();
   // Set the installed version so updates start at the correct place.
   foreach ($_POST['start'] as $module => $version) {
@@ -308,6 +315,12 @@ function update_batch() {
   );
   batch_set($batch);
   batch_process($base_url . '/update.php?op=results', $base_url . '/update.php');
+
+  // Now that the update is done, we can disable site maintenance if
+  // it was previously turned off.
+  if ($site_offline == FALSE) {
+    variable_set('site_offline', FALSE);
+  }
 }
 
 function update_finished($success, $results, $operations) {
