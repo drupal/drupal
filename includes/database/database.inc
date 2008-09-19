@@ -1007,7 +1007,8 @@ class DatabaseStatement extends PDOStatement {
   public function execute($args, $options) {
     if (isset($options['fetch'])) {
       if (is_string($options['fetch'])) {
-        $this->setFetchMode(PDO::FETCH_CLASS, $options['fetch']);
+        // PDO::FETCH_PROPS_LATE tells __construct() to run before properties are added to the object.
+        $this->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $options['fetch']);
       }
       else {
         $this->setFetchMode($options['fetch']);
