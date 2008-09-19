@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.36 2008/09/17 07:11:57 dries Exp $
+// $Id: node.pages.inc,v 1.37 2008/09/19 07:39:00 dries Exp $
 
 /**
  * @file
@@ -236,6 +236,7 @@ function node_form(&$form_state, $node) {
   $form['buttons']['#weight'] = 100;
   $form['buttons']['submit'] = array(
     '#type' => 'submit',
+    '#access' => !variable_get('node_preview', 0) || (!form_get_errors() && isset($form_state['node_preview'])),
     '#value' => t('Save'),
     '#weight' => 5,
     '#submit' => array('node_form_submit'),
