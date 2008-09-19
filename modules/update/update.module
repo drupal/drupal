@@ -276,7 +276,9 @@ function _update_requirement_check($project, $type) {
 function update_cron() {
   $frequency = variable_get('update_check_frequency', 1);
   $interval = 60 * 60 * 24 * $frequency;
-  if (REQUEST_TIME - variable_get('update_last_check', 0) > $interval) {
+  // Cron should check for updates if there is no update data cached or if the configured
+  // update interval has elapsed.
+  if (!cache_get('update_info', 'cache_update') || REQUEST_TIME - variable_get('update_last_check', 0) > $interval) {
     update_refresh();
     _update_cron_notify();
   }
