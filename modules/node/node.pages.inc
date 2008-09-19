@@ -236,6 +236,7 @@ function node_form(&$form_state, $node) {
   $form['buttons']['#weight'] = 100;
   $form['buttons']['submit'] = array(
     '#type' => 'submit',
+    '#access' => !variable_get('node_preview', 0) || (!form_get_errors() && isset($form_state['node_preview'])),
     '#value' => t('Save'),
     '#weight' => 5,
     '#submit' => array('node_form_submit'),
