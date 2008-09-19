@@ -1,5 +1,5 @@
 <?php
-// $Id: php.module,v 1.10 2008/04/14 17:48:41 dries Exp $
+// $Id: php.module,v 1.11 2008/09/19 07:53:59 dries Exp $
 
 /**
  * @file
@@ -24,7 +24,7 @@ function php_help($path, $arg) {
 /**
  * Implementation of hook_filter_tips().
  */
-function php_filter_tips($delta, $format, $long = false) {
+function php_filter_tips($delta, $format, $long = FALSE) {
   global $base_url;
   if ($delta == 0) {
     switch ($long) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.16 2008/08/21 19:36:36 dries Exp $
+// $Id: theme.maintenance.inc,v 1.17 2008/09/19 07:53:59 dries Exp $
 
 /**
  * @file
@@ -87,7 +87,7 @@ function theme_task_list($items, $active = NULL) {
   foreach ($items as $k => $item) {
     if ($active == $k) {
       $class = 'active';
-      $done = false;
+      $done = FALSE;
     }
     else {
       $class = $done ? 'done' : '';

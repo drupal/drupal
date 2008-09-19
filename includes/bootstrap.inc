@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.226 2008/09/17 07:11:50 dries Exp $
+// $Id: bootstrap.inc,v 1.227 2008/09/19 07:53:59 dries Exp $
 
 /**
  * @file
@@ -1193,7 +1193,7 @@ function language_default($property = NULL) {
  *   IP address of client machine, adjusted for reverse proxy and/or cluster
  *   environments.
  */
-function ip_address($reset = false) {
+function ip_address($reset = FALSE) {
   static $ip_address = NULL;
 
   if (!isset($ip_address) || $reset) {
