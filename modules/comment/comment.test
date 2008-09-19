@@ -292,6 +292,27 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->assertTrue($this->commentExists($reply, TRUE), t('Page two exists. %s'));
     $this->setCommentsPerPage(50);
 
+    // Attempt to post to node with comments disabled.
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_DISABLED));
+    $this->assertTrue($this->node, t('Article node created.'));
+    $this->drupalGet('comment/reply/' . $this->node->nid);
+    $this->assertText('This discussion is closed', t('Posting to node with comments disabled'));
+    $this->assertNoField('edit-comment', t('Comment body field found.'));
+
+    // Attempt to post to node with read-only comments.    
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_READ_ONLY));
+    $this->assertTrue($this->node, t('Article node created.'));
+    $this->drupalGet('comment/reply/' . $this->node->nid);
+    $this->assertText('This discussion is closed', t('Posting to node with comments read-only'));
+    $this->assertNoField('edit-comment', t('Comment body field found.'));
+
+    // Attempt to post to node with comments enabled (check field names etc).
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_READ_WRITE));
+    $this->assertTrue($this->node, t('Article node created.'));
+    $this->drupalGet('comment/reply/' . $this->node->nid);
+    $this->assertNoText('This discussion is closed', t('Posting to node with comments enabled'));
+    $this->assertField('edit-comment', t('Comment body field found.'));
+
     // Delete comment and make sure that reply is also removed.
     $this->drupalLogout();
     $this->drupalLogin($this->admin_user);
@@ -418,6 +439,20 @@ class CommentAnonymous extends CommentHelperCase {
     // Reset.
     $this->drupalLogin($this->admin_user);
     $this->setAnonymousUserComment(FALSE, FALSE);
+
+    // Attempt to view comments while disallowed. 
+    // NOTE: if authenticated user has permission to post comments, then a
+    // "Login or register to post comments" type link may be shown.
+    $this->drupalLogout();
+    $this->drupalGet('node/' . $this->node->nid);
+    $this->assertNoRaw('<div id="comments">', t('Comments were not displayed.'));
+    $this->assertNoLink('Add new comment', t('Link to add comment was found.'));
+    
+    // Attempt to view node-comment form while disallowed.
+    $this->drupalGet('comment/reply/' . $this->node->nid);
+    $this->assertText('You are not authorized to view comments', t('Error attempting to post comment.'));
+    $this->assertNoFieldByName('subject', '', t('Subject field not found.'));
+    $this->assertNoFieldByName('comment', '', t('Comment field not found.'));
   }
 }
 
