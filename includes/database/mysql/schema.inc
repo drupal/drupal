@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.2 2008/09/15 20:48:07 webchick Exp $
+// $Id: schema.inc,v 1.3 2008/09/19 20:30:32 dries Exp $
 
 /**
  * @file
@@ -19,7 +19,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function columnExists($table, $column) {
-    return (bool) $this->connection->query("SHOW COLUMNS FROM {" . $this->escapeTable($table) . "} LIKE '" . $this->escapeTable($column) . "'", array(), array())->fetchField();
+    return (bool) $this->connection->query("SHOW COLUMNS FROM {" . $this->connection->escapeTable($table) . "} LIKE '" . $this->connection->escapeTable($column) . "'", array(), array())->fetchField();
   }
 
 
