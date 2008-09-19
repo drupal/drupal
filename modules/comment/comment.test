@@ -54,7 +54,8 @@ class CommentHelperCase extends DrupalWebTestCase {
 
     // Get comment.
     if ($contact !== TRUE) { // If true then attempting to find error message.
-      $this->assertText($subject, 'Comment posted.');
+      $this->assertText($subject, 'Comment subject posted.');
+      $this->assertText($comment, 'Comment body posted.');
       $this->assertTrue((!empty($match) && !empty($match[1])), t('Comment id found.'));
     }
 
@@ -266,11 +267,20 @@ class CommentInterfaceTest extends CommentHelperCase {
 
     // Create comment that requires preview.
     $this->drupalLogin($this->web_user);
-    $comment = $this->postComment($this->node, $this->randomName(), $this->randomName());
+    $subject_text = $this->randomName();
+    $comment_text = $this->randomName();
+    $comment = $this->postComment($this->node, $subject_text, $comment_text);
     $this->assertTrue($this->commentExists($comment), t('Comment found.'));
+
+    // Check comment display.
+    $this->drupalGet('node/' . $this->node->nid . '/' . $comment->id);
+    $this->assertText($subject_text, t('Individual comment subject found.'));
+    $this->assertText($comment_text, t('Individual comment body found.'));
 
     // Reply to comment.
     $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
+    $this->assertText($subject_text, t('Individual comment-reply subject found.'));
+    $this->assertText($comment_text, t('Individual comment-reply body found.'));
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName());
     $this->assertTrue($this->commentExists($reply, TRUE), t('Reply found.'));
 
