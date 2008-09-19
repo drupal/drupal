@@ -495,13 +495,13 @@ class TermEditTestCase extends DrupalWebTestCase {
     );
 
     // Create the term to edit (adding to the default 'Tags' vocabulary).
-    $this->drupalPost('admin/content/taxonomy/1/add/term', $edit, t('Save'));
+    $this->drupalPost('admin/content/taxonomy/1/add/', $edit, t('Save'));
 
     $term = taxonomy_get_term_by_name($edit['name']);
     $this->assertNotNull($term, t('Term found in database'));
 
     // Submitting a term takes us to the add page; we need the List page.
-    $this->clickLink(t('List'));
+    $this->drupalGet('admin/content/taxonomy/1/list');
 
     // Test edit link as accessed from Taxonomy administration pages.
     // Because Simpletest creates its own database when running tests, we know
@@ -509,7 +509,7 @@ class TermEditTestCase extends DrupalWebTestCase {
     $this->clickLink(t('edit'));
 
     // This failed inexplicably with assertText, so used assertRaw. @TODO: Why?
-    $this->assertRaw($edit['name'], t('The randomly generated term name is present.'));
+    $this->assertText($edit['name'], t('The randomly generated term name is present.'));
     $this->assertText($edit['description'], t('The randomly generated term description is present.'));
 
     $edit = array(
@@ -518,10 +518,10 @@ class TermEditTestCase extends DrupalWebTestCase {
     );
 
     // Edit the term.
-    $this->drupalPost('admin/content/taxonomy/edit/term/'. $term[0]->tid, $edit, t('Save'));
+    $this->drupalPost('taxonomy/term/' . $term[0]->tid . '/edit', $edit, t('Save'));
 
     // View the term and check that it is correct.
-    $this->drupalGet('taxonomy/term/1');
+    $this->drupalGet('taxonomy/term/' . $term[0]->tid);
     $this->assertText($edit['name'], t('The randomly generated term name is present.'));
     $this->assertText($edit['description'], t('The randomly generated term description is present.'));
   }

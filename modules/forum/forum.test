@@ -134,7 +134,7 @@ class ForumTestCase extends DrupalWebTestCase {
     );
 
     // Edit the vocabulary.
-    $this->drupalPost('admin/content/taxonomy/edit/vocabulary/' . $vid, $edit, t('Save'));
+    $this->drupalPost('admin/content/taxonomy/' . $vid . '/edit', $edit, t('Save'));
     $this->assertResponse(200);
     $this->assertRaw(t('Updated vocabulary %name.', array('%name' => $title)), t('Vocabulary was edited'));
 
@@ -158,7 +158,7 @@ class ForumTestCase extends DrupalWebTestCase {
     );
 
     // Edit the vocabulary.
-    $this->drupalPost('admin/content/taxonomy/edit/vocabulary/' . $vid, $edit, t('Save'));
+    $this->drupalPost('admin/content/taxonomy/' . $vid . 'edit', $edit, t('Save'));
     $this->assertResponse(200);
     $this->assertRaw(t('Updated vocabulary %name.', array('%name' => $title)), t('Vocabulary was edited'));
 /*

@@ -26,9 +26,9 @@ function taxonomy_overview_vocabularies() {
     $form[$vocabulary->vid]['name'] = array('#markup' => check_plain($vocabulary->name));
     $form[$vocabulary->vid]['types'] = array('#markup' => implode(', ', $types));
     $form[$vocabulary->vid]['weight'] = array('#type' => 'weight', '#delta' => 10, '#default_value' => $vocabulary->weight);
-    $form[$vocabulary->vid]['edit'] = array('#markup' => l(t('edit vocabulary'), "admin/content/taxonomy/edit/vocabulary/$vocabulary->vid"));
-    $form[$vocabulary->vid]['list'] = array('#markup' => l(t('list terms'), "admin/content/taxonomy/$vocabulary->vid"));
-    $form[$vocabulary->vid]['add'] = array('#markup' => l(t('add terms'), "admin/content/taxonomy/$vocabulary->vid/add/term"));
+    $form[$vocabulary->vid]['edit'] = array('#markup' => l(t('edit vocabulary'), "admin/content/taxonomy/$vocabulary->vid"));
+    $form[$vocabulary->vid]['list'] = array('#markup' => l(t('list terms'), "admin/content/taxonomy/$vocabulary->vid/list"));
+    $form[$vocabulary->vid]['add'] = array('#markup' => l(t('add terms'), "admin/content/taxonomy/$vocabulary->vid/add"));
   }
 
   // Only make this form include a submit button and weight if more than one
@@ -101,6 +101,9 @@ function theme_taxonomy_overview_vocabularies($form) {
  * @see taxonomy_form_vocabulary_submit()
  */
 function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
+  if (!is_array($edit)) {
+    $edit = (array)$edit;
+  }
   $edit += array(
     'name' => '',
     'description' => '',
@@ -210,34 +213,17 @@ function taxonomy_form_vocabulary_submit($form, &$form_state) {
   switch (taxonomy_save_vocabulary($form_state['values'])) {
     case SAVED_NEW:
       drupal_set_message(t('Created new vocabulary %name.', array('%name' => $form_state['values']['name'])));
-      watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/edit/vocabulary/' . $form_state['values']['vid']));
+      watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/' . $form_state['values']['vid']));
       break;
     case SAVED_UPDATED:
       drupal_set_message(t('Updated vocabulary %name.', array('%name' => $form_state['values']['name'])));
-      watchdog('taxonomy', 'Updated vocabulary %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/edit/vocabulary/' . $form_state['values']['vid']));
+      watchdog('taxonomy', 'Updated vocabulary %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/' . $form_state['values']['vid']));
       break;
   }
 
   $form_state['vid'] = $form_state['values']['vid'];
   $form_state['redirect'] = 'admin/content/taxonomy';
   return;
-}
-
-/**
- * Page to edit a vocabulary.
- */
-function taxonomy_admin_vocabulary_edit($vocabulary) {
-  return drupal_get_form('taxonomy_form_vocabulary', (array)$vocabulary);
-}
-
-/**
- * Page to edit a vocabulary term.
- */
-function taxonomy_admin_term_edit($tid) {
-  if ($term = (array)taxonomy_get_term($tid)) {
-    return drupal_get_form('taxonomy_form_term', taxonomy_vocabulary_load($term['vid']), $term);
-  }
-  return drupal_not_found();
 }
 
 /**
@@ -258,7 +244,6 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
     return taxonomy_vocabulary_confirm_reset_alphabetical($form_state, $vocabulary->vid);
   }
 
-  drupal_set_title(t('Terms in %vocabulary', array('%vocabulary' => $vocabulary->name)));
   $form = array(
     '#vocabulary' => (array)$vocabulary,
     '#tree' => TRUE,
@@ -405,7 +390,7 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
         '#default_value' => $term->depth,
       );
     }
-    $form[$key]['edit'] = array('#markup' => l(t('edit'), "admin/content/taxonomy/edit/term/$term->tid", array('query' => drupal_get_destination())));
+    $form[$key]['edit'] = array('#markup' => l(t('edit'), 'taxonomy/term/' . $term->tid . '/edit', array('query' => drupal_get_destination())));
   }
 
   $form['#total_entries'] = $total_entries;
@@ -625,14 +610,6 @@ function theme_taxonomy_overview_terms($form) {
 }
 
 /**
- * Menu callback; return the edit form for a new term after setting the title.
- */
-function taxonomy_add_term_page($vocabulary) {
-  drupal_set_title(t('Add term to %vocabulary', array('%vocabulary' => $vocabulary->name)));
-  return drupal_get_form('taxonomy_form_term' , $vocabulary);
-}
-
-/**
  * Form function for the term edit form.
  *
  * @ingroup forms
@@ -773,11 +750,11 @@ function taxonomy_form_term_submit($form, &$form_state) {
   switch (taxonomy_save_term($form_state['values'])) {
     case SAVED_NEW:
       drupal_set_message(t('Created new term %term.', array('%term' => $form_state['values']['name'])));
-      watchdog('taxonomy', 'Created new term %term.', array('%term' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/edit/term/' . $form_state['values']['tid']));
+      watchdog('taxonomy', 'Created new term %term.', array('%term' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $form_state['values']['tid'] . '/edit'));
       break;
     case SAVED_UPDATED:
       drupal_set_message(t('Updated term %term.', array('%term' => $form_state['values']['name'])));
-      watchdog('taxonomy', 'Updated term %term.', array('%term' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/edit/term/' . $form_state['values']['tid']));
+      watchdog('taxonomy', 'Updated term %term.', array('%term' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $form_state['values']['tid'] . '/edit'));
       break;
   }
 
@@ -835,7 +812,7 @@ function taxonomy_term_confirm_parents(&$form_state, $vocabulary) {
  * @see taxonomy_term_confirm_delete_submit()
  */
 function taxonomy_term_confirm_delete(&$form_state, $tid) {
-  $term = taxonomy_get_term($tid);
+  $term = taxonomy_term_load($tid);
 
   $form['type'] = array('#type' => 'value', '#value' => 'term');
   $form['name'] = array('#type' => 'value', '#value' => $term->name);

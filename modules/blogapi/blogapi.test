@@ -117,7 +117,7 @@ class BlogAPITestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['name'] = $vocab;
     $edit['nodes[blog]'] = TRUE;
-    $this->drupalPost('admin/content/taxonomy/add/vocabulary', $edit, t('Save'));
+    $this->drupalPost('admin/content/taxonomy/add', $edit, t('Save'));
     $this->assertRaw(t('Created new vocabulary %vocab.', array('%vocab' => $edit['name'])), t('Taxonomy vocabulary added.'));
 
     $vocab_arr = taxonomy_get_vocabularies();
@@ -146,7 +146,7 @@ class BlogAPITestCase extends DrupalWebTestCase {
   function addTerm($vid, $term) {
     $edit = array();
     $edit['name'] = $term;
-    $this->drupalPost('admin/content/taxonomy/' . $vid . '/add/term', $edit, t('Save'));
+    $this->drupalPost('admin/content/taxonomy/' . $vid . '/add', $edit, t('Save'));
     $this->assertRaw(t('Created new term %term.', array('%term' => $edit['name'])), t('Taxonomy term added.'));
 
     $tree = taxonomy_get_tree($vid);

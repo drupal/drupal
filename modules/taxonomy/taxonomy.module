@@ -125,36 +125,34 @@ function taxonomy_menu() {
     'weight' => -10,
   );
 
-  $items['admin/content/taxonomy/add/vocabulary'] = array(
+  $items['admin/content/taxonomy/add'] = array(
     'title' => 'Add vocabulary',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_form_vocabulary'),
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_LOCAL_TASK,
-    'parent' => 'admin/content/taxonomy',
   );
 
-  $items['admin/content/taxonomy/edit/vocabulary/%taxonomy_vocabulary'] = array(
-    'title' => 'Edit vocabulary',
-    'page callback' => 'taxonomy_admin_vocabulary_edit',
-    'page arguments' => array(5),
-    'access arguments' => array('administer taxonomy'),
-    'type' => MENU_CALLBACK,
-  );
-
-  $items['admin/content/taxonomy/edit/term'] = array(
-    'title' => 'Edit term',
-    'page callback' => 'taxonomy_admin_term_edit',
-    'access arguments' => array('administer taxonomy'),
-    'type' => MENU_CALLBACK,
-  );
-
-  $items['taxonomy/term/%'] = array(
+  $items['taxonomy/term/%taxonomy_terms'] = array(
     'title' => 'Taxonomy term',
     'page callback' => 'taxonomy_term_page',
     'page arguments' => array(2),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
+  );
+
+  $items['taxonomy/term/%taxonomy_terms/view'] = array(
+    'title' => 'View',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+
+  $items['taxonomy/term/%taxonomy_term/edit'] = array(
+    'title' => 'Edit term',
+    'page callback' => 'taxonomy_term_edit',
+    'page arguments' => array(2),
+    'access arguments' => array('administer taxonomy'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 10,
   );
 
   $items['taxonomy/autocomplete'] = array(
@@ -163,32 +161,53 @@ function taxonomy_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
+
   $items['admin/content/taxonomy/%taxonomy_vocabulary'] = array(
-    'title' => 'List terms',
+    'title' => 'Vocabulary', // this is replaced by callback
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('taxonomy_overview_terms', 3),
+    'page arguments' => array('taxonomy_form_vocabulary', 3),
+    'title callback' => 'taxonomy_admin_vocabulary_title_callback',
+    'title arguments' => array(3),
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_CALLBACK,
   );
 
-  $items['admin/content/taxonomy/%taxonomy_vocabulary/list'] = array(
-    'title' => 'List',
+  $items['admin/content/taxonomy/%taxonomy_vocabulary/edit'] = array(
+    'title' => 'Edit vocabulary',
     'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -20,
+  );
+
+  $items['admin/content/taxonomy/%taxonomy_vocabulary/list'] = array(
+    'title' => 'List terms',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('taxonomy_overview_terms', 3),
+    'access arguments' => array('administer taxonomy'),
+    'type' => MENU_LOCAL_TASK,
     'weight' => -10,
   );
 
-  $items['admin/content/taxonomy/%taxonomy_vocabulary/add/term'] = array(
+  $items['admin/content/taxonomy/%taxonomy_vocabulary/add'] = array(
     'title' => 'Add term',
-    'page callback' => 'taxonomy_add_term_page',
-    'page arguments' => array(3),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('taxonomy_form_term', 3),
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_LOCAL_TASK,
-    'parent' => 'admin/content/taxonomy/%taxonomy_vocabulary',
   );
 
   return $items;
 }
 
+/**
+ * Return the vocabulary name given the vocabulary object.
+ */
+function taxonomy_admin_vocabulary_title_callback($vocabulary) {
+  return check_plain($vocabulary->name);
+}
+
+/**
+ * Save a vocabulary given form values or an equivalent array.
+ */
 function taxonomy_save_vocabulary(&$edit) {
   $edit['nodes'] = empty($edit['nodes']) ? array() : $edit['nodes'];
 
@@ -386,7 +405,7 @@ function taxonomy_del_term($tid) {
         }
       }
 
-      $term = (array) taxonomy_get_term($tid);
+      $term = (array) taxonomy_term_load($tid);
 
       db_query('DELETE FROM {term_data} WHERE tid = %d', $tid);
       db_query('DELETE FROM {term_hierarchy} WHERE tid = %d', $tid);
@@ -579,13 +598,13 @@ function taxonomy_preview_terms($node) {
             $taxonomy['tags'] = $term;
           }
           else {
-            $taxonomy[$tid] = taxonomy_get_term($tid);
+            $taxonomy[$tid] = taxonomy_term_load($tid);
           }
         }
       }
       // A 'Single select' field returns the term id.
       elseif ($term) {
-        $taxonomy[$term] = taxonomy_get_term($term);
+        $taxonomy[$term] = taxonomy_term_load($term);
       }
     }
   }
@@ -767,7 +786,7 @@ function taxonomy_get_parents($tid, $key = 'tid') {
 function taxonomy_get_parents_all($tid) {
   $parents = array();
   if ($tid) {
-    $parents[] = taxonomy_get_term($tid);
+    $parents[] = taxonomy_term_load($tid);
     $n = 0;
     while ($parent = taxonomy_get_parents($parents[$n]->tid)) {
       $parents = array_merge($parents, $parent);
@@ -997,6 +1016,17 @@ function taxonomy_vocabulary_load($vid) {
 }
 
 /**
+ * Return array of tids and join operator.
+ *
+ * This is a wrapper function for taxonomy_terms_parse_string which is called
+ * by the menu system when loading a path with taxonomy terms.
+ */
+function taxonomy_terms_load($str_tids) {
+  $terms = taxonomy_terms_parse_string($str_tids);
+  return $terms;
+}
+
+/**
  * Return the term object matching a term ID.
  *
  * @param $tid
@@ -1005,13 +1035,14 @@ function taxonomy_vocabulary_load($vid) {
  * @return Object
  *   A term object. Results are statically cached.
  */
-function taxonomy_get_term($tid) {
+function taxonomy_term_load($tid, $reset = FALSE) {
+  if (!is_numeric($tid)) {
+    return FALSE;
+  }
   static $terms = array();
-
-  if (!isset($terms[$tid])) {
+  if (!isset($terms[$tid]) || $reset) {
     $terms[$tid] = db_fetch_object(db_query('SELECT * FROM {term_data} WHERE tid = %d', $tid));
   }
-
   return $terms[$tid];
 }
 
@@ -1080,7 +1111,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
       $depth = NULL;
     }
     foreach ($tids as $index => $tid) {
-      $term = taxonomy_get_term($tid);
+      $term = taxonomy_term_load($tid);
       $tree = taxonomy_get_tree($term->vid, $tid, -1, $depth);
       $descendant_tids[] = array_merge(array($tid), array_map('_taxonomy_get_tid_from_term', $tree));
     }
@@ -1212,6 +1243,7 @@ function taxonomy_terms_parse_string($str_tids) {
     $terms['operator'] = 'and';
     $terms['tids'] = explode(',', $str_tids);
   }
+  $terms['str_tids'] = $str_tids;
   return $terms;
 }
 
@@ -1247,7 +1279,7 @@ function taxonomy_help($path, $arg) {
       $output = '<p>' . t("The taxonomy module allows you to categorize your content using both tags and administrator defined terms. It is a flexible tool for classifying content with many advanced features. To begin, create a 'Vocabulary' to hold one set of terms or tags. You can create one free-tagging vocabulary for everything, or separate controlled vocabularies to define the various properties of your content, for example 'Countries' or 'Colors'.") . '</p>';
       $output .= '<p>' . t('Use the list below to configure and review the vocabularies defined on your site, or to list and manage the terms (tags) they contain. A vocabulary may (optionally) be tied to specific content types as shown in the <em>Type</em> column and, if so, will be displayed when creating or editing posts of that type. Multiple vocabularies tied to the same content type will be displayed in the order shown below. To change the order of a vocabulary, grab a drag-and-drop handle under the <em>Name</em> column and drag it to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save</em> button at the bottom of the page.') . '</p>';
       return $output;
-    case 'admin/content/taxonomy/%':
+    case 'admin/content/taxonomy/%/list':
       $vocabulary = taxonomy_vocabulary_load($arg[3]);
       if ($vocabulary->tags) {
         return '<p>' . t('%capital_name is a free-tagging vocabulary. To change the name or description of a term, click the <em>edit</em> link next to the term.', array('%capital_name' => drupal_ucfirst($vocabulary->name))) . '</p>';
@@ -1260,7 +1292,7 @@ function taxonomy_help($path, $arg) {
         case 2:
           return '<p>' . t('%capital_name is a multiple hierarchy vocabulary. To change the name or description of a term, click the <em>edit</em> link next to the term. Drag and drop of multiple hierarchies is not supported, but you can re-enable drag and drop support by editing each term to include only a single parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name))) . '</p>';
       }
-    case 'admin/content/taxonomy/add/vocabulary':
+    case 'admin/content/taxonomy/add':
       return '<p>' . t('Define how your vocabulary will be presented to administrators and users, and which content types to categorize with it. Tags allows users to create terms when submitting posts by typing a comma separated list. Otherwise terms are chosen from a select list and can only be created by users with the "administer taxonomy" permission.') . '</p>';
   }
 }

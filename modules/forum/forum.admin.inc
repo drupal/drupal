@@ -160,7 +160,7 @@ function forum_form_container(&$form_state, $edit = array()) {
  * @param $tid ID of the term to be deleted
  */
 function forum_confirm_delete(&$form_state, $tid) {
-  $term = taxonomy_get_term($tid);
+  $term = taxonomy_term_load($tid);
 
   $form['tid'] = array('#type' => 'value', '#value' => $tid);
   $form['name'] = array('#type' => 'value', '#value' => $term->name);

@@ -24,6 +24,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
       a "slimmed down" install profile designed for developers.
     * Image toolkits are now provided by modules (rather than requiring a manual
       file copy to the includes directory).
+    * Added an edit tab to taxonomy term pages.
 - News aggregator:
     * Added OPML import functionality for RSS feeds.
     * Optionally, RSS feeds may be configured to not automatically generate feed blocks.

@@ -9,11 +9,11 @@
 /**
  * Menu callback; displays all nodes associated with a term.
  */
-function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
-  $terms = taxonomy_terms_parse_string($str_tids);
+function taxonomy_term_page($terms, $depth = 0, $op = 'page') {
   if ($terms['operator'] != 'and' && $terms['operator'] != 'or') {
     drupal_not_found();
   }
+  $str_tids = $terms['str_tids'];
 
   if ($terms['tids']) {
     $result = db_query(db_rewrite_sql('SELECT t.tid, t.name FROM {term_data} t WHERE t.tid IN (' . db_placeholders($terms['tids']) . ')', 't', 'tid'), $terms['tids']);
@@ -51,7 +51,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
           $channel['title'] = variable_get('site_name', 'Drupal') . ' - ' . $title;
           // Only display the description if we have a single term, to avoid clutter and confusion.
           if (count($tids) == 1) {
-            $term = taxonomy_get_term($tids[0]);
+            $term = taxonomy_term_load($tids[0]);
             // HTML will be removed from feed description, so no need to filter here.
             $channel['description'] = $term->description;
           }
@@ -87,12 +87,11 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
  */
 function theme_taxonomy_term_page($tids, $result) {
   drupal_add_css(drupal_get_path('module', 'taxonomy') . '/taxonomy.css');
-
   $output = '';
 
   // Only display the description if we have a single term, to avoid clutter and confusion.
   if (count($tids) == 1) {
-    $term = taxonomy_get_term($tids[0]);
+    $term = taxonomy_term_load($tids[0]);
     $description = $term->description;
 
     // Check that a description is set.
@@ -106,6 +105,17 @@ function theme_taxonomy_term_page($tids, $result) {
   $output .= taxonomy_render_nodes($result);
 
   return $output;
+}
+
+/**
+ * Page to edit a vocabulary term.
+ */
+function taxonomy_term_edit($term) {
+  if (isset($term)) {
+    drupal_set_title(check_plain($term->name));
+    return drupal_get_form('taxonomy_form_term', taxonomy_vocabulary_load($term->vid), (array)$term);
+  }
+  return drupal_not_found();
 }
 
 /**
