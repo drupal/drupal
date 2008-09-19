@@ -189,7 +189,7 @@ function drupal_session_regenerate() {
  * @return  int
  *   The number of users with sessions.
  */
-function drupal_session_count($timestamp = 0, $anonymous = true) {
+function drupal_session_count($timestamp = 0, $anonymous = TRUE) {
   $query = $anonymous ? ' AND uid = 0' : ' AND uid > 0';
   return db_result(db_query('SELECT COUNT(sid) AS count FROM {sessions} WHERE timestamp >= %d' . $query, $timestamp));
 }

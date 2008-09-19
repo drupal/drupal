@@ -87,7 +87,7 @@ function theme_task_list($items, $active = NULL) {
   foreach ($items as $k => $item) {
     if ($active == $k) {
       $class = 'active';
-      $done = false;
+      $done = FALSE;
     }
     else {
       $class = $done ? 'done' : '';

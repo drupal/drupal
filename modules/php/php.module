@@ -24,7 +24,7 @@ function php_help($path, $arg) {
 /**
  * Implementation of hook_filter_tips().
  */
-function php_filter_tips($delta, $format, $long = false) {
+function php_filter_tips($delta, $format, $long = FALSE) {
   global $base_url;
   if ($delta == 0) {
     switch ($long) {

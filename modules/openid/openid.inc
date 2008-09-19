@@ -267,14 +267,14 @@ function _openid_signature($association, $message_array, $keys_to_sign) {
 
 function _openid_hmac($key, $text) {
   if (strlen($key) > OPENID_SHA1_BLOCKSIZE) {
-    $key = _openid_sha1($key, true);
+    $key = _openid_sha1($key, TRUE);
   }
 
   $key = str_pad($key, OPENID_SHA1_BLOCKSIZE, chr(0x00));
   $ipad = str_repeat(chr(0x36), OPENID_SHA1_BLOCKSIZE);
   $opad = str_repeat(chr(0x5c), OPENID_SHA1_BLOCKSIZE);
-  $hash1 = _openid_sha1(($key ^ $ipad) . $text, true);
-  $hmac = _openid_sha1(($key ^ $opad) . $hash1, true);
+  $hash1 = _openid_sha1(($key ^ $ipad) . $text, TRUE);
+  $hmac = _openid_sha1(($key ^ $opad) . $hash1, TRUE);
 
   return $hmac;
 }
@@ -421,7 +421,7 @@ function _openid_response($str = NULL) {
       $str = file_get_contents('php://input');
 
       $post = array();
-      if ($str !== false) {
+      if ($str !== FALSE) {
         $post = _openid_get_params($str);
       }
 

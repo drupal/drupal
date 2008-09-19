@@ -1193,7 +1193,7 @@ function language_default($property = NULL) {
  *   IP address of client machine, adjusted for reverse proxy and/or cluster
  *   environments.
  */
-function ip_address($reset = false) {
+function ip_address($reset = FALSE) {
   static $ip_address = NULL;
 
   if (!isset($ip_address) || $reset) {

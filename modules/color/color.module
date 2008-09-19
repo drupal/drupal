@@ -132,7 +132,7 @@ function color_get_info($theme) {
 /**
  * Helper function to retrieve the color palette for a particular theme.
  */
-function color_get_palette($theme, $default = false) {
+function color_get_palette($theme, $default = FALSE) {
   // Fetch and expand default palette.
   $fields = array('base', 'link', 'top', 'bottom', 'text');
   $info = color_get_info($theme);
@@ -160,7 +160,7 @@ function color_scheme_form(&$form_state, $theme) {
   drupal_add_css($base . '/color.css', 'module', 'all', FALSE);
   drupal_add_js($base . '/color.js');
   drupal_add_js(array('color' => array(
-    'reference' => color_get_palette($theme, true)
+    'reference' => color_get_palette($theme, TRUE)
   )), 'setting');
 
   // See if we're using a predefined scheme.
@@ -186,7 +186,7 @@ function color_scheme_form(&$form_state, $theme) {
     'bottom' => t('Header bottom'),
     'text' => t('Text color'),
   );
-  $form['palette']['#tree'] = true;
+  $form['palette']['#tree'] = TRUE;
   foreach ($palette as $name => $value) {
     $form['palette'][$name] = array(
       '#type' => 'textfield',
@@ -278,7 +278,7 @@ function color_scheme_form_submit($form, &$form_state) {
   }
 
   // Don't render the default colorscheme, use the standard theme instead.
-  if (implode(',', color_get_palette($theme, true)) == implode(',', $palette)
+  if (implode(',', color_get_palette($theme, TRUE)) == implode(',', $palette)
     || $form_state['values']['op'] == t('Reset to defaults')) {
     variable_del('color_' . $theme . '_palette');
     variable_del('color_' . $theme . '_stylesheets');
@@ -370,7 +370,7 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
   foreach ($conversion as $k => $v) {
     $conversion[$k] = drupal_strtolower($v);
   }
-  $default = color_get_palette($theme, true);
+  $default = color_get_palette($theme, TRUE);
 
   // Split off the "Don't touch" section of the stylesheet.
   $split = "Color Module: Don't touch";
@@ -380,7 +380,7 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
 
   // Find all colors in the stylesheet and the chunks in between.
   $style = preg_split('/(#[0-9a-f]{6}|#[0-9a-f]{3})/i', $style, -1, PREG_SPLIT_DELIM_CAPTURE);
-  $is_color = false;
+  $is_color = FALSE;
   $output = '';
   $base = 'base';
 
@@ -455,7 +455,7 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
 
   // Prepare target buffer.
   $target = imagecreatetruecolor($width, $height);
-  imagealphablending($target, true);
+  imagealphablending($target, TRUE);
 
   // Fill regions of solid color.
   foreach ($info['fill'] as $color => $fill) {
@@ -524,9 +524,9 @@ function _color_shift($given, $ref1, $ref2, $target) {
   // delta based on the length of the difference vectors.
 
   // delta = 1 - |ref2 - ref1| / |white - ref1|
-  $target = _color_unpack($target, true);
-  $ref1 = _color_unpack($ref1, true);
-  $ref2 = _color_unpack($ref2, true);
+  $target = _color_unpack($target, TRUE);
+  $ref1 = _color_unpack($ref1, TRUE);
+  $ref2 = _color_unpack($ref2, TRUE);
   $numerator = 0;
   $denominator = 0;
   for ($i = 0; $i < 3; ++$i) {
@@ -549,7 +549,7 @@ function _color_shift($given, $ref1, $ref2, $target) {
   }
 
   // Take the given color, and blend it towards the target.
-  $given = _color_unpack($given, true);
+  $given = _color_unpack($given, TRUE);
   for ($i = 0; $i < 3; ++$i) {
     $result[$i] = $target[$i] + ($given[$i] - $target[$i]) * $delta;
   }
@@ -563,7 +563,7 @@ function _color_shift($given, $ref1, $ref2, $target) {
   $result = _color_hsl2rgb($result);
 
   // Return hex color.
-  return _color_pack($result, true);
+  return _color_pack($result, TRUE);
 }
 
 /**
@@ -591,7 +591,7 @@ function _color_blend($img, $hex1, $hex2, $alpha) {
 /**
  * Convert a hex color into an RGB triplet.
  */
-function _color_unpack($hex, $normalize = false) {
+function _color_unpack($hex, $normalize = FALSE) {
   if (strlen($hex) == 4) {
     $hex = $hex[1] . $hex[1] . $hex[2] . $hex[2] . $hex[3] . $hex[3];
   }
@@ -606,7 +606,7 @@ function _color_unpack($hex, $normalize = false) {
 /**
  * Convert an RGB triplet to a hex color.
  */
-function _color_pack($rgb, $normalize = false) {
+function _color_pack($rgb, $normalize = FALSE) {
   $out = 0;
   foreach ($rgb as $k => $v) {
     $out |= (($v * ($normalize ? 255 : 1)) << (16 - $k * 8));
