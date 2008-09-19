@@ -19,7 +19,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function columnExists($table, $column) {
-    return (bool) $this->connection->query("SHOW COLUMNS FROM {" . $this->escapeTable($table) . "} LIKE '" . $this->escapeTable($column) . "'", array(), array())->fetchField();
+    return (bool) $this->connection->query("SHOW COLUMNS FROM {" . $this->connection->escapeTable($table) . "} LIKE '" . $this->connection->escapeTable($column) . "'", array(), array())->fetchField();
   }
 
 
