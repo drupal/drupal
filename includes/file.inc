@@ -733,7 +733,7 @@ function file_validate_extensions($file, $extensions) {
  * @param $file_limit
  *   An integer specifying the maximum file size in bytes. Zero indicates that
  *   no limit should be enforced.
- * @param $$user_limit
+ * @param $user_limit
  *   An integer specifying the maximum number of bytes the user is allowed.
  *   Zero indicates that no limit should be enforced.
  * @return
@@ -751,8 +751,7 @@ function file_validate_size($file, $file_limit = 0, $user_limit = 0) {
       $errors[] = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size($file->filesize), '%maxsize' => format_size($file_limit)));
     }
 
-    $total_size = file_space_used($user->uid) + $file->filesize;
-    if ($user_limit && $total_size > $user_limit) {
+    if ($user_limit && (file_space_used($user->uid) + $file->filesize) > $user_limit) {
       $errors[] = t('The file is %filesize which would exceed your disk quota of %quota.', array('%filesize' => format_size($file->filesize), '%quota' => format_size($user_limit)));
     }
   }
