@@ -1223,7 +1223,7 @@ function taxonomy_rss_item($node) {
   foreach ($node->taxonomy as $term) {
     $output[] = array('key'   => 'category',
                       'value' => check_plain($term->name),
-                      'attributes' => array('domain' => url('taxonomy/term/' . $term->tid, array('absolute' => TRUE))));
+                      'attributes' => array('domain' => url(taxonomy_term_path($term), array('absolute' => TRUE))));
   }
   return $output;
 }

@@ -35,7 +35,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
           $breadcrumb = array();
           while ($parents = taxonomy_get_parents($current->tid)) {
             $current = array_shift($parents);
-            $breadcrumb[] = l($current->name, 'taxonomy/term/' . $current->tid);
+            $breadcrumb[] = l($current->name, taxonomy_term_path($current));
           }
           $breadcrumb[] = l(t('Home'), NULL);
           $breadcrumb = array_reverse($breadcrumb);
