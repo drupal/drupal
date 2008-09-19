@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.283 2008/09/17 07:11:56 dries Exp $
+// $Id: form.inc,v 1.284 2008/09/19 02:37:29 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -777,12 +777,17 @@ function form_execute_handlers($type, &$form, &$form_state) {
  *   element where the #parents array starts with 'foo'.
  * @param $message
  *   The error message to present to the user.
+ * @param $reset
+ *   Reset the form errors static cache.
  * @return
  *   Never use the return value of this function, use form_get_errors and
  *   form_get_error instead.
  */
-function form_set_error($name = NULL, $message = '') {
+function form_set_error($name = NULL, $message = '', $reset = FALSE) {
   static $form = array();
+  if ($reset) {
+    $form = array();
+  }
   if (isset($name) && !isset($form[$name])) {
     $form[$name] = $message;
     if ($message) {
