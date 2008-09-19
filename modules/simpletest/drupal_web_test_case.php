@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.41 2008/09/17 07:11:58 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.42 2008/09/19 02:47:38 webchick Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -1195,7 +1195,6 @@ class DrupalWebTestCase {
    * later one if an index is given. Match is case insensitive with
    * normalized space. The label is translated label. There is an assert
    * for successful click.
-   * WARNING: Assertion fails on empty ("") output from the clicked link.
    *
    * @param $label
    *   Text between the anchor tags.
@@ -1206,15 +1205,18 @@ class DrupalWebTestCase {
    */
   function clickLink($label, $index = 0) {
     $url_before = $this->getUrl();
-    $ret = FALSE;
     $urls = $this->xpath('//a[text()="' . $label . '"]');
+
     if (isset($urls[$index])) {
       $url_target = $this->getAbsoluteUrl($urls[$index]['href']);
-      $curl_options = array(CURLOPT_URL => $url_target);
-      $ret = $this->curlExec($curl_options);
     }
-    $this->assertTrue($ret, t('Clicked link !label (!url_target) from !url_before', array('!label' => $label, '!url_target' => $url_target, '!url_before' => $url_before)), t('Browser'));
-    return $ret;
+
+    $this->assertTrue(isset($urls[$index]), t('Clicked link "!label" (!url_target) from !url_before', array('!label' => $label, '!url_target' => $url_target, '!url_before' => $url_before)), t('Browser'));
+
+    if (isset($urls[$index])) {
+      return $this->drupalGet($url_target);
+    }
+    return FALSE;
   }
 
   /**
