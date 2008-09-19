@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.183 2008/09/17 19:32:53 webchick Exp $
+// $Id: locale.inc,v 1.184 2008/09/19 07:41:02 dries Exp $
 
 /**
  * @file
@@ -270,7 +270,7 @@ function _locale_languages_common_controls(&$form, $language = NULL) {
   );
   $form['domain'] = array('#type' => 'textfield',
     '#title' => t('Language domain'),
-    '#maxlength' => 64,
+    '#maxlength' => 128,
     '#default_value' => @$language->domain,
     '#description' => t('Language-specific URL, with protocol. With language negotiation set to <em>Domain name only</em>, the site is presented in this language when the URL accessing the site references this domain. For the default language, this value may be left blank. <strong>This value must include a protocol as part of the string.</strong> <em>Example: Specifying "http://example.de" or "http://de.example.com" as language domains for German results in URLs in the forms "http://example.de/node" and "http://de.example.com/node", respectively.</em>'),
   );
