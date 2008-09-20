@@ -1,0 +1,52 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Helper module for the file tests.
+ */
+
+/**
+ * Implementation of hook_menu().
+ */
+function file_test_menu() {
+  $items['file-test/upload'] = array(
+    'title' => t('Upload test'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_file_test_form'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Form to test file uploads.
+ */
+function _file_test_form(&$form_state) {
+  $form['#attributes'] = array('enctype' => 'multipart/form-data');
+  $form['file_test_upload'] = array(
+    '#type' => 'file',
+    '#title' => t('Upload an image'),
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+  return $form;
+}
+
+/**
+ * Process the upload.
+ */
+function _file_test_form_submit(&$form, &$form_state) {
+  // Validate the uploaded picture.
+  $file = file_save_upload('file_test_upload', array('file_validate_is_image' => array()));
+  if ($file) {
+    $form_state['values']['file_test_upload'] = $file;
+    drupal_set_message(t('File @filepath was uploaded.', array('@filepath' => $file->filepath)));
+  }
+  else {
+    drupal_set_message(t('Epic upload FAIL!'), 'error');
+  }
+}

@@ -311,6 +311,8 @@ class DrupalWebTestCase {
         $this->tearDown();
       }
     }
+    // Clear out the error messages and restore error handler.
+    drupal_get_messages();
     restore_error_handler();
   }
 
