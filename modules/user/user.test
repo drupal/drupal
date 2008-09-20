@@ -75,7 +75,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->assertText(t('The changes have been saved.'), t('Password changed to @password', array('@password' => $new_pass)));
 
     // Make sure password changes are present in database.
-    require_once variable_get('password_inc', './includes/password.inc');
+    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
 
     $user = user_load(array('uid' => $user->uid));
     $this->assertTrue(user_check_password($new_pass, $user), t('Correct password in database.'));

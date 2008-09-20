@@ -173,7 +173,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
 function drupal_mail_send($message) {
   // Allow for a custom mail backend.
   if (variable_get('smtp_library', '') && file_exists(variable_get('smtp_library', ''))) {
-    include_once './' . variable_get('smtp_library', '');
+    include_once DRUPAL_ROOT . '/' . variable_get('smtp_library', '');
     return drupal_mail_wrapper($message);
   }
   else {

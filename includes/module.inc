@@ -220,7 +220,7 @@ function module_exists($module) {
  */
 function module_load_install($module) {
   // Make sure the installation API is available
-  include_once './includes/install.inc';
+  include_once DRUPAL_ROOT . '/includes/install.inc';
 
   module_load_include('install', $module);
 }
@@ -241,16 +241,13 @@ function module_load_include($type, $module, $name = NULL) {
   }
 
   if (drupal_function_exists('drupal_get_path')) {
-    $file = './' . drupal_get_path('module', $module) . "/$name.$type";
+    $file = DRUPAL_ROOT . '/' . drupal_get_path('module', $module) . "/$name.$type";
+    if (is_file($file)) {
+      require_once $file;
+      return $file;
+    }
   }
-
-  if (is_file($file)) {
-    require_once $file;
-    return $file;
-  }
-  else {
-    return FALSE;
-  }
+  return FALSE;
 }
 
 /**

@@ -2491,7 +2491,7 @@ function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
  *     failed. See xmlrpc_error().
  */
 function xmlrpc($url) {
-  require_once './includes/xmlrpc.inc';
+  require_once DRUPAL_ROOT . '/includes/xmlrpc.inc';
   $args = func_get_args();
   return call_user_func_array('_xmlrpc', $args);
 }
@@ -2503,16 +2503,16 @@ function _drupal_bootstrap_full() {
     return;
   }
   $called = 1;
-  require_once './includes/theme.inc';
-  require_once './includes/pager.inc';
-  require_once './includes/menu.inc';
-  require_once './includes/tablesort.inc';
-  require_once './includes/file.inc';
-  require_once './includes/unicode.inc';
-  require_once './includes/image.inc';
-  require_once './includes/form.inc';
-  require_once './includes/mail.inc';
-  require_once './includes/actions.inc';
+  require_once DRUPAL_ROOT . '/includes/theme.inc';
+  require_once DRUPAL_ROOT . '/includes/pager.inc';
+  require_once DRUPAL_ROOT . '/includes/menu.inc';
+  require_once DRUPAL_ROOT . '/includes/tablesort.inc';
+  require_once DRUPAL_ROOT . '/includes/file.inc';
+  require_once DRUPAL_ROOT . '/includes/unicode.inc';
+  require_once DRUPAL_ROOT . '/includes/image.inc';
+  require_once DRUPAL_ROOT . '/includes/form.inc';
+  require_once DRUPAL_ROOT . '/includes/mail.inc';
+  require_once DRUPAL_ROOT . '/includes/actions.inc';
   // Set the Drupal custom error handler.
   set_error_handler('drupal_error_handler');
   // Emit the correct charset HTTP header.

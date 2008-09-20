@@ -424,7 +424,7 @@ function _simpletest_batch_finished($success, $results, $operations) {
 function simpletest_get_all_tests() {
   static $formatted_classes;
   if (!isset($formatted_classes)) {
-    require_once drupal_get_path('module', 'simpletest') . '/drupal_web_test_case.php';
+    require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'simpletest') . '/drupal_web_test_case.php';
     $files = array();
     foreach (array_keys(module_rebuild_cache()) as $module) {
       $module_path = drupal_get_path('module', $module);
@@ -443,7 +443,7 @@ function simpletest_get_all_tests() {
 
     $existing_classes = get_declared_classes();
     foreach ($files as $file) {
-      include_once($file);
+      include_once DRUPAL_ROOT . '/' . $file;
     }
     $classes = array_values(array_diff(get_declared_classes(), $existing_classes));
     $formatted_classes = array();

@@ -122,7 +122,7 @@ function _color_page_alter(&$vars) {
  */
 function color_get_info($theme) {
   $path = drupal_get_path('theme', $theme);
-  $file = $path . '/color/color.inc';
+  $file = DRUPAL_ROOT . '/' . $path . '/color/color.inc';
   if ($path && file_exists($file)) {
     include $file;
     return $info;

@@ -63,7 +63,7 @@ function update_help($path, $arg) {
       return $output;
     case 'admin/build/themes':
     case 'admin/build/modules':
-      include_once './includes/install.inc';
+      include_once DRUPAL_ROOT . '/includes/install.inc';
       $status = update_requirements('runtime');
       foreach (array('core', 'contrib') as $report_type) {
         $type = 'update_' . $report_type;
@@ -95,7 +95,7 @@ function update_help($path, $arg) {
       // update missing, print an error message about it.
       if (arg(0) == 'admin' && strpos($path, '#') === FALSE
           && user_access('administer site configuration')) {
-        include_once './includes/install.inc';
+        include_once DRUPAL_ROOT . '/includes/install.inc';
         $status = update_requirements('runtime');
         foreach (array('core', 'contrib') as $report_type) {
           $type = 'update_' . $report_type;

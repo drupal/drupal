@@ -187,7 +187,7 @@ function locale_menu() {
 function locale_inc_callback() {
   $args = func_get_args();
   $function = array_shift($args);
-  include_once './includes/locale.inc';
+  include_once DRUPAL_ROOT . '/includes/locale.inc';
   return call_user_func_array($function, $args);
 }
 
@@ -484,7 +484,7 @@ function locale_language_list($field = 'name', $all = FALSE) {
  *   translations for.
  */
 function locale_system_update($components) {
-  include_once 'includes/locale.inc';
+  include_once DRUPAL_ROOT . '/includes/locale.inc';
   if ($batch = locale_batch_by_component($components)) {
     batch_set($batch);
   }

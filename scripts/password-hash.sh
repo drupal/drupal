@@ -83,8 +83,10 @@ while ($param = array_shift($_SERVER['argv'])) {
   }
 }
 
-include_once('includes/password.inc');
-include_once('includes/common.inc');
+define('DRUPAL_ROOT', getcwd());
+
+include_once DRUPAL_ROOT . '/includes/password.inc';
+include_once DRUPAL_ROOT . '/includes/common.inc';
 
 foreach ($passwords as $password) {
   print("\npassword: $password \t\thash: ". user_hash_password($password) ."\n");

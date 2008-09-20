@@ -222,7 +222,7 @@ function user_save($account, $edit = array(), $category = 'account') {
 
   if (!empty($edit['pass'])) {
     // Allow alternate password hashing schemes.
-    require_once variable_get('password_inc', './includes/password.inc');
+    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
     $edit['pass'] = user_hash_password(trim($edit['pass']));
     // Abort if the hashing failed and returned FALSE.
     if (!$edit['pass']) {
@@ -1310,7 +1310,7 @@ function user_authenticate($form_values = array()) {
     $account = db_fetch_object(db_query("SELECT * FROM {users} WHERE name = '%s' AND status = 1", $form_values['name']));
     if ($account) {
       // Allow alternate password hashing schemes.
-      require_once variable_get('password_inc', './includes/password.inc');
+      require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
       if (user_check_password($password, $account)) {
         if (user_needs_new_hash($account)) {
            $new_hash = user_hash_password($password);

@@ -245,7 +245,8 @@ function simpletest_script_init() {
   $_SERVER['HTTP_USER_AGENT'] = 'Drupal command line';
 
   chdir(realpath(dirname(__FILE__) . '/..'));
-  require_once './includes/bootstrap.inc';
+  define('DRUPAL_ROOT', getcwd());
+  require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
 }
 
 /**

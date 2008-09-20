@@ -1040,7 +1040,7 @@ function _locale_import_po($file, $langcode, $mode, $group = NULL) {
  */
 function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL, $group = 'default') {
 
-  $fd = fopen($file->filepath, "rb"); // File will get closed by PHP on return
+  $fd = fopen(DRUPAL_ROOT . '/' . $file->filepath, "rb"); // File will get closed by PHP on return
   if (!$fd) {
     _locale_import_message('The translation import failed, because the file %filename could not be read.', $file);
     return FALSE;
@@ -2543,7 +2543,7 @@ function _locale_batch_build($files, $finished = NULL, $components = array()) {
         'title'         => $t('Importing interface translations'),
         'init_message'  => $t('Starting import'),
         'error_message' => $t('Error importing interface translations'),
-        'file'          => './includes/locale.inc',
+        'file'          => 'includes/locale.inc',
         // This is not a batch API construct, but data passed along to the
         // installer, so we know what did we import already.
         '#components'   => $components,

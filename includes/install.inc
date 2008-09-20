@@ -211,8 +211,8 @@ function drupal_detect_database_types() {
   // without modifying the installer.
   // Because we have no registry yet, we need to also include the install.inc
   // file for the driver explicitly.
-  foreach (glob('./includes/database/*/{install,database}.inc', GLOB_BRACE) as $file) {
-    include_once($file);
+  foreach (glob(DRUPAL_ROOT . '/includes/database/*/{install,database}.inc', GLOB_BRACE) as $file) {
+    include_once $file;
     $dir_parts = explode('/', $file, -1);
     $drivers[end($dir_parts)] = $file;
   }
@@ -330,8 +330,8 @@ abstract class DatabaseInstaller {
  *   An array of settings that need to be updated.
  */
 function drupal_rewrite_settings($settings = array(), $prefix = '') {
-  $default_settings = './sites/default/default.settings.php';
-  $settings_file = './' . conf_path(FALSE, TRUE) . '/' . $prefix . 'settings.php';
+  $default_settings = 'sites/default/default.settings.php';
+  $settings_file = conf_path(FALSE, TRUE) . '/' . $prefix . 'settings.php';
 
   // Build list of setting names and insert the values into the global namespace.
   $keys = array();
@@ -342,7 +342,7 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
 
   $buffer = NULL;
   $first = TRUE;
-  if ($fp = fopen($default_settings, 'r')) {
+  if ($fp = fopen(DRUPAL_ROOT . '/' . $default_settings, 'r')) {
     // Step line by line through settings.php.
     while (!feof($fp)) {
       $line = fgets($fp);
@@ -390,7 +390,7 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
       }
     }
 
-    $fp = fopen($settings_file, 'w');
+    $fp = fopen(DRUPAL_ROOT . '/' . $settings_file, 'w');
     if ($fp && fwrite($fp, $buffer) === FALSE) {
       drupal_set_message(st('Failed to modify %settings, please verify the file permissions.', array('%settings' => $settings_file)), 'error');
     }
@@ -425,16 +425,16 @@ function drupal_get_install_files($module_list = array()) {
  *   The list of modules to install.
  */
 function drupal_verify_profile($profile, $locale) {
-  include_once './includes/file.inc';
-  include_once './includes/common.inc';
+  include_once DRUPAL_ROOT . '/includes/file.inc';
+  include_once DRUPAL_ROOT . '/includes/common.inc';
 
-  $profile_file = "./profiles/$profile/$profile.profile";
+  $profile_file = DRUPAL_ROOT . "/profiles/$profile/$profile.profile";
 
   if (!isset($profile) || !file_exists($profile_file)) {
     install_no_profile_error();
   }
 
-  require_once($profile_file);
+  require_once $profile_file;
 
   // Get a list of modules required by this profile.
   $function = $profile . '_profile_modules';
@@ -521,11 +521,11 @@ function drupal_install_init_database() {
   if (!$included) {
     $connection_info = Database::getConnectionInfo();
     $driver = $connection_info['default']['driver'];
-    require_once('./includes/database/query.inc');
-    require_once('./includes/database/select.inc');
-    require_once('./includes/database/schema.inc');
-    foreach (glob('./includes/database/' . $driver . '/*.inc') as $include_file) {
-      require_once($include_file);
+    require_once DRUPAL_ROOT . '/includes/database/query.inc';
+    require_once DRUPAL_ROOT . '/includes/database/select.inc';
+    require_once DRUPAL_ROOT . '/includes/database/schema.inc';
+    foreach (glob(DRUPAL_ROOT . '/includes/database/' . $driver . '/*.inc') as $include_file) {
+      require_once $include_file;
     }
   }
 }
@@ -538,7 +538,7 @@ function drupal_install_init_database() {
  */
 function drupal_install_system() {
   $system_path = dirname(drupal_get_filename('module', 'system', NULL));
-  require_once './' . $system_path . '/system.install';
+  require_once DRUPAL_ROOT . '/' . $system_path . '/system.install';
   drupal_install_init_database();
   module_invoke('system', 'install');
   
@@ -818,16 +818,16 @@ function st($string, $args = array()) {
 
   if (!isset($locale_strings)) {
     $locale_strings = array();
-    $filename = './profiles/' . $profile . '/translations/' . $install_locale . '.po';
-    if (file_exists($filename)) {
-      require_once './includes/locale.inc';
+    $filename = 'profiles/' . $profile . '/translations/' . $install_locale . '.po';
+    if (file_exists(DRUPAL_ROOT . '/' . $filename)) {
+      require_once DRUPAL_ROOT . '/includes/locale.inc';
       $file = (object) array('filepath' => $filename);
       _locale_import_read_po('mem-store', $file);
       $locale_strings = _locale_import_one_string('mem-report');
     }
   }
 
-  require_once './includes/theme.inc';
+  require_once DRUPAL_ROOT . '/includes/theme.inc';
   // Transform arguments before inserting them
   foreach ($args as $key => $value) {
     switch ($key[0]) {
@@ -856,15 +856,15 @@ function st($string, $args = array()) {
  *   Array of the install profile's requirements.
  */
 function drupal_check_profile($profile) {
-  include_once './includes/file.inc';
+  include_once DRUPAL_ROOT . '/includes/file.inc';
 
-  $profile_file = "./profiles/$profile/$profile.profile";
+  $profile_file = DRUPAL_ROOT . "/profiles/$profile/$profile.profile";
 
   if (!isset($profile) || !file_exists($profile_file)) {
     install_no_profile_error();
   }
 
-  require_once($profile_file);
+  require_once $profile_file;
 
   // Get a list of modules required by this profile.
   $function = $profile . '_profile_modules';
@@ -876,7 +876,7 @@ function drupal_check_profile($profile) {
   // Collect requirement testing results
   $requirements = array();
   foreach ($installs as $install) {
-    require_once $install->filename;
+    require_once DRUPAL_ROOT . '/' . $install->filename;
     $function = $install->name. '_requirements';
     if (function_exists($function)) {
       $requirements = array_merge($requirements, $function('install'));
@@ -916,7 +916,7 @@ function drupal_check_module($module) {
   // Include install file
   $install = drupal_get_install_files(array($module));
   if (isset($install[$module])) {
-    require_once $install[$module]->filename;
+    require_once DRUPAL_ROOT . '/' . $install[$module]->filename;
 
     // Check requirements
     $requirements = module_invoke($module, 'requirements', 'install');

@@ -9,7 +9,7 @@
 function phptemplate_init($template) {
   $file = dirname($template->filename) . '/template.php';
   if (file_exists($file)) {
-    include_once "./$file";
+    include_once DRUPAL_ROOT . '/' . $file;
   }
 }
 

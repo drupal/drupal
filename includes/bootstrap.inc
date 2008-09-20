@@ -329,8 +329,8 @@ function conf_init() {
   global $databases, $db_prefix, $cookie_domain, $conf, $installed_profile, $update_free_access;
   $conf = array();
 
-  if (file_exists('./' . conf_path() . '/settings.php')) {
-    include_once './' . conf_path() . '/settings.php';
+  if (file_exists(DRUPAL_ROOT . '/' . conf_path() . '/settings.php')) {
+    include_once DRUPAL_ROOT . '/' . conf_path() . '/settings.php';
   }
 
   if (isset($base_url)) {
@@ -602,7 +602,7 @@ function drupal_load($type, $name) {
   $filename = drupal_get_filename($type, $name);
 
   if ($filename) {
-    include_once "./$filename";
+    include_once DRUPAL_ROOT . '/' . $filename;
     $files[$type][$name] = TRUE;
 
     return TRUE;
@@ -1006,7 +1006,7 @@ function _drupal_bootstrap($phase) {
     case DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE:
       // Allow specifying special cache handlers in settings.php, like
       // using memcached or files for storing cache information.
-      require_once variable_get('cache_inc', './includes/cache.inc');
+      require_once DRUPAL_ROOT . '/' . variable_get('cache_inc', 'includes/cache.inc');
       // If the page_cache_fastpath is set to TRUE in settings.php and
       // page_cache_fastpath (implemented in the special implementation of
       // cache.inc) printed the page and indicated this with a returned TRUE
@@ -1019,7 +1019,7 @@ function _drupal_bootstrap($phase) {
     case DRUPAL_BOOTSTRAP_DATABASE:
       // Initialize the database system.  Note that the connection
       // won't be initialized until it is actually requested.
-      require_once './includes/database/database.inc';
+      require_once DRUPAL_ROOT . '/includes/database/database.inc';
       // Register autoload functions so that we can access classes and interfaces.
       spl_autoload_register('drupal_autoload_class');
       spl_autoload_register('drupal_autoload_interface');
@@ -1035,7 +1035,7 @@ function _drupal_bootstrap($phase) {
       break;
 
     case DRUPAL_BOOTSTRAP_SESSION:
-      require_once variable_get('session_inc', './includes/session.inc');
+      require_once DRUPAL_ROOT . '/' . variable_get('session_inc', 'includes/session.inc');
       session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy_sid', '_sess_gc');
       session_start();
       break;
@@ -1044,7 +1044,7 @@ function _drupal_bootstrap($phase) {
       // Initialize configuration variables, using values from settings.php if available.
       $conf = variable_init(isset($conf) ? $conf : array());
       // Load module handling.
-      require_once './includes/module.inc';
+      require_once DRUPAL_ROOT . '/includes/module.inc';
       $cache_mode = variable_get('cache', CACHE_DISABLED);
       // Get the page from the cache.
       $cache = $cache_mode == CACHE_DISABLED ? '' : page_get_cache();
@@ -1071,13 +1071,13 @@ function _drupal_bootstrap($phase) {
       break;
 
     case DRUPAL_BOOTSTRAP_PATH:
-      require_once './includes/path.inc';
+      require_once DRUPAL_ROOT . '/includes/path.inc';
       // Initialize $_GET['q'] prior to loading modules and invoking hook_init().
       drupal_init_path();
       break;
 
     case DRUPAL_BOOTSTRAP_FULL:
-      require_once './includes/common.inc';
+      require_once DRUPAL_ROOT . '/includes/common.inc';
       _drupal_bootstrap_full();
       break;
   }
@@ -1092,7 +1092,7 @@ function _drupal_bootstrap($phase) {
  * @see _drupal_maintenance_theme()
  */
 function drupal_maintenance_theme() {
-  require_once './includes/theme.maintenance.inc';
+  require_once DRUPAL_ROOT . '/includes/theme.maintenance.inc';
   _drupal_maintenance_theme();
 }
 
@@ -1120,7 +1120,7 @@ function drupal_init_language() {
     $language = language_default();
   }
   else {
-    include_once './includes/language.inc';
+    include_once DRUPAL_ROOT . '/includes/language.inc';
     $language = language_initialize();
   }
 }
@@ -1270,7 +1270,7 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
       // Invoke hook_schema for all modules.
       foreach (module_implements('schema') as $module) {
         $current = module_invoke($module, 'schema');
-        require_once('./includes/common.inc');
+        require_once DRUPAL_ROOT . '/includes/common.inc';
         if (drupal_function_exists('_drupal_initialize_schema')) {
           _drupal_initialize_schema($module, $current);
         }
@@ -1342,7 +1342,7 @@ function drupal_function_exists($function) {
 
   $file = db_result(db_query("SELECT filename FROM {registry} WHERE name = :name AND type = :type", array(':name' => $function, ':type' => 'function')));
   if ($file) {
-    require_once($file);
+    require_once DRUPAL_ROOT . '/' . $file;
     $checked[$function] = function_exists($function);
     if ($checked[$function]) {
       registry_mark_code('function', $function);
@@ -1390,7 +1390,7 @@ function drupal_autoload_class($class) {
 function _registry_check_code($type, $name) {
   $file = db_result(db_query("SELECT filename FROM {registry} WHERE name = :name AND type = :type", array(':name' => $name, ':type' => $type)));
   if ($file) {
-    require_once($file);
+    require_once DRUPAL_ROOT . '/' . $file;
     registry_mark_code($type, $name);
     return TRUE;
   }
@@ -1430,7 +1430,7 @@ function registry_mark_code($type, $name, $return = FALSE) {
  * each function, file, and hook implementation in the database.
  */
 function registry_rebuild() {
-  require_once './includes/registry.inc';
+  require_once DRUPAL_ROOT . '/includes/registry.inc';
   _registry_rebuild();
 }
 
@@ -1501,7 +1501,7 @@ function registry_load_path_files($return = FALSE) {
   $cache = cache_get('registry:' . $menu['path'], 'cache_registry');
   if (!empty($cache->data)) {
     foreach(explode(';', $cache->data) as $file) {
-      require_once($file);
+      require_once DRUPAL_ROOT . '/' . $file;
       $file_cache_data[] = $file;
     }
   }

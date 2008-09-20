@@ -251,7 +251,7 @@ function user_update_7000(&$sandbox) {
     $sandbox['user_count'] = db_result(db_query("SELECT COUNT(uid) FROM {users}"));
   }
   else {
-    require_once variable_get('password_inc', './includes/password.inc');
+    require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
     //  Hash again all current hashed passwords.
     $has_rows = FALSE;
     // Update this many per page load.

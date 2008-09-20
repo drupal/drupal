@@ -686,7 +686,7 @@ class DrupalWebTestCase {
     // Generate temporary prefixed database to ensure that tests have a clean starting point.
     $db_prefix = 'simpletest' . mt_rand(1000, 1000000);
 
-    include_once './includes/install.inc';
+    include_once DRUPAL_ROOT . '/includes/install.inc';
     drupal_install_system();
 
     // Add the specified modules to the list of modules in the default profile.
