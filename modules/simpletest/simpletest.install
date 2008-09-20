@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.install,v 1.9 2008/09/16 23:24:36 webchick Exp $
+// $Id: simpletest.install,v 1.10 2008/09/20 03:49:23 webchick Exp $
 
 /**
  * Implementation of hook_install().
@@ -28,10 +28,10 @@ function simpletest_install() {
     }
 
     // Copy other test files for consistency.
-    $files = file_scan_directory($path, '(html|image|javascript|php|sql)-.*');
+    $files = file_scan_directory($path, '/(html|image|javascript|php|sql)-.*/');
     if (count($files) == 0) {
       $original = drupal_get_path('module', 'simpletest') . '/files';
-      $files = file_scan_directory($original, '(html|image|javascript|php|sql)-.*');
+      $files = file_scan_directory($original, '/(html|image|javascript|php|sql)-.*/');
       foreach ($files as $file) {
         file_copy($file->filename, $path . '/' . $file->basename);
       }

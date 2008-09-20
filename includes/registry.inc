@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.inc,v 1.3 2008/08/21 19:36:36 dries Exp $
+// $Id: registry.inc,v 1.4 2008/09/20 03:49:23 webchick Exp $
 
 /**
  * @file
@@ -49,7 +49,7 @@ function _registry_rebuild() {
       }
     }
   }
-  foreach (file_scan_directory('includes', '\.inc$') as $filename => $file) {
+  foreach (file_scan_directory('includes', '/\.inc$/') as $filename => $file) {
     $files["./$filename"] = array();
   }
 

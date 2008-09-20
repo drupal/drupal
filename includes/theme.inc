@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.435 2008/09/15 20:48:07 webchick Exp $
+// $Id: theme.inc,v 1.436 2008/09/20 03:49:23 webchick Exp $
 
 /**
  * @file
@@ -790,7 +790,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
   $subtheme_paths = isset($theme_paths[$theme]) ? $theme_paths[$theme] : array();
 
   // Escape the periods in the extension.
-  $regex = str_replace('.', '\.', $extension) . '$';
+  $regex = '/'. str_replace('.', '\.', $extension) . '$/';
   // Because drupal_system_listing works the way it does, we check for real
   // templates separately from checking for patterns.
   $files = drupal_system_listing($regex, $path, 'name', 0);

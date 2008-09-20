@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.42 2008/09/19 02:47:38 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.43 2008/09/20 03:49:23 webchick Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -467,7 +467,7 @@ class DrupalWebTestCase {
     if (in_array($type, array('binary', 'html', 'image', 'javascript', 'php', 'sql', 'text'))) {
      // Use original file directory instead of one created during setUp().
       $path = $this->original_file_directory . '/simpletest';
-      $files = file_scan_directory($path, $type . '\-.*');
+      $files = file_scan_directory($path, '/' . $type . '\-.*/');
 
       // If size is set then remove any files that are not of that size.
       if ($size !== NULL) {
