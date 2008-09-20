@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.290 2008/09/20 08:07:34 webchick Exp $
+// $Id: menu.inc,v 1.291 2008/09/20 20:22:23 webchick Exp $
 
 /**
  * @file
@@ -2472,7 +2472,7 @@ function _menu_site_is_offline() {
         return $_GET['q'] != 'user' && $_GET['q'] != 'user/login';
       }
       // Logged in users are unprivileged here, so they are logged out.
-      require_once drupal_get_path('module', 'user') . '/user.pages.inc';
+      require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'user') . '/user.pages.inc';
       user_logout();
     }
   }

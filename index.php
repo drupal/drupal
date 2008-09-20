@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.95 2008/08/21 19:36:35 dries Exp $
+// $Id: index.php,v 1.96 2008/09/20 20:22:23 webchick Exp $
 
 /**
  * @file
@@ -12,7 +12,12 @@
  * See COPYRIGHT.txt and LICENSE.txt.
  */
 
-require_once './includes/bootstrap.inc';
+/**
+ * Root directory of Drupal installation.
+ */
+define('DRUPAL_ROOT', dirname(realpath(__FILE__)));
+
+require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 $return = menu_execute_active_handler();
 

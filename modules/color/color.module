@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.46 2008/09/19 07:53:59 dries Exp $
+// $Id: color.module,v 1.47 2008/09/20 20:22:24 webchick Exp $
 
 /**
  * Implementation of hook_help().
@@ -122,7 +122,7 @@ function _color_page_alter(&$vars) {
  */
 function color_get_info($theme) {
   $path = drupal_get_path('theme', $theme);
-  $file = $path . '/color/color.inc';
+  $file = DRUPAL_ROOT . '/' . $path . '/color/color.inc';
   if ($path && file_exists($file)) {
     include $file;
     return $info;

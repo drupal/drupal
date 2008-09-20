@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.285 2008/09/20 16:10:29 webchick Exp $
+// $Id: form.inc,v 1.286 2008/09/20 20:22:23 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2504,7 +2504,7 @@ function batch_process($redirect = NULL, $url = NULL) {
     else {
       // Non-progressive execution: bypass the whole progressbar workflow
       // and execute the batch in one pass.
-      require_once './includes/batch.inc';
+      require_once DRUPAL_ROOT . '/includes/batch.inc';
       _batch_process();
     }
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: update.fetch.inc,v 1.11 2008/09/17 07:11:59 dries Exp $
+// $Id: update.fetch.inc,v 1.12 2008/09/20 20:22:25 webchick Exp $
 
 /**
  * @file
@@ -108,7 +108,7 @@ function _update_build_fetch_url($project, $site_key = '') {
  * @see update_requirements()
  */
 function _update_cron_notify() {
-  include_once './includes/install.inc';
+  include_once DRUPAL_ROOT . '/includes/install.inc';
   $status = update_requirements('runtime');
   $params = array();
   foreach (array('core', 'contrib') as $report_type) {

@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-// $Id: password-hash.sh,v 1.1 2008/03/31 20:50:05 dries Exp $
+// $Id: password-hash.sh,v 1.2 2008/09/20 20:22:25 webchick Exp $
 
 /**
  * Drupal hash script - to generate a hash from a plaintext password
@@ -83,8 +83,10 @@ while ($param = array_shift($_SERVER['argv'])) {
   }
 }
 
-include_once('includes/password.inc');
-include_once('includes/common.inc');
+define('DRUPAL_ROOT', getcwd());
+
+include_once DRUPAL_ROOT . '/includes/password.inc';
+include_once DRUPAL_ROOT . '/includes/common.inc';
 
 foreach ($passwords as $password) {
   print("\npassword: $password \t\thash: ". user_hash_password($password) ."\n");

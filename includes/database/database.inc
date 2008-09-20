@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.5 2008/09/19 08:18:35 dries Exp $
+// $Id: database.inc,v 1.6 2008/09/20 20:22:24 webchick Exp $
 
 /**
  * @file
@@ -825,8 +825,7 @@ abstract class Database {
       // We cannot rely on the registry yet, because the registry requires
       // an open database connection.
       $driver_class = 'DatabaseConnection_' . $driver;
-      $driver_file = './includes/database/' . $driver . '/database.inc';
-      require_once($driver_file);
+      require_once DRUPAL_ROOT . '/includes/database/' . $driver . '/database.inc';
       self::$connections[$key][$target] = new $driver_class(self::$databaseInfo[$key][$target]);
 
       // We need to pass around the simpletest database prefix in the request
@@ -1809,7 +1808,7 @@ function db_result(DatabaseStatement $statement) {
 
 function _db_need_install() {
   if (!function_exists('install_goto')) {
-    include_once 'includes/install.inc';
+    include_once DRUPAL_ROOT . '/includes/install.inc';
     install_goto('install.php');
   }
 }

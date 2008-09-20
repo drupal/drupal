@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.inc,v 1.4 2008/09/20 03:49:23 webchick Exp $
+// $Id: registry.inc,v 1.5 2008/09/20 20:22:23 webchick Exp $
 
 /**
  * @file
@@ -33,9 +33,9 @@ function _registry_rebuild() {
   // registry rebuild process runs.
   $connection_info = Database::getConnectionInfo();
   $driver = $connection_info['default']['driver'];
-  require_once('./includes/database/query.inc');
-  require_once('./includes/database/select.inc');
-  require_once('./includes/database/' . $driver . '/query.inc');
+  require_once DRUPAL_ROOT . '/includes/database/query.inc';
+  require_once DRUPAL_ROOT . '/includes/database/select.inc';
+  require_once DRUPAL_ROOT . '/includes/database/' . $driver . '/query.inc';
 
   // Reset the resources cache.
   _registry_get_resource_name();
@@ -45,12 +45,12 @@ function _registry_rebuild() {
     if ($module->status) {
       $dir = dirname($module->filename);
       foreach ($module->info['files'] as $file) {
-        $files["./$dir/$file"] = array();
+        $files["$dir/$file"] = array();
       }
     }
   }
   foreach (file_scan_directory('includes', '/\.inc$/') as $filename => $file) {
-    $files["./$filename"] = array();
+    $files["$filename"] = array();
   }
 
   foreach (registry_get_parsed_files() as $filename => $file) {

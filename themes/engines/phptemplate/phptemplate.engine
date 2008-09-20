@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.70 2008/04/14 17:48:45 dries Exp $
+// $Id: phptemplate.engine,v 1.71 2008/09/20 20:22:25 webchick Exp $
 
 /**
  * @file
@@ -9,7 +9,7 @@
 function phptemplate_init($template) {
   $file = dirname($template->filename) . '/template.php';
   if (file_exists($file)) {
-    include_once "./$file";
+    include_once DRUPAL_ROOT . '/' . $file;
   }
 }
 

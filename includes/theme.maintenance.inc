@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.17 2008/09/19 07:53:59 dries Exp $
+// $Id: theme.maintenance.inc,v 1.18 2008/09/20 20:22:23 webchick Exp $
 
 /**
  * @file
@@ -22,13 +22,13 @@ function _drupal_maintenance_theme() {
     return;
   }
 
-  require_once './includes/path.inc';
-  require_once './includes/theme.inc';
-  require_once './includes/common.inc';
-  require_once './includes/unicode.inc';
-  require_once './includes/file.inc';
-  require_once './includes/module.inc';
-  require_once './includes/database/database.inc';
+  require_once DRUPAL_ROOT . '/includes/path.inc';
+  require_once DRUPAL_ROOT . '/includes/theme.inc';
+  require_once DRUPAL_ROOT . '/includes/common.inc';
+  require_once DRUPAL_ROOT . '/includes/unicode.inc';
+  require_once DRUPAL_ROOT . '/includes/file.inc';
+  require_once DRUPAL_ROOT . '/includes/module.inc';
+  require_once DRUPAL_ROOT . '/includes/database/database.inc';
   unicode_check();
 
   // Install and update pages are treated differently to prevent theming overrides.

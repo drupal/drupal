@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.44 2008/09/20 07:35:53 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.45 2008/09/20 20:22:24 webchick Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -686,7 +686,7 @@ class DrupalWebTestCase {
     // Generate temporary prefixed database to ensure that tests have a clean starting point.
     $db_prefix = 'simpletest' . mt_rand(1000, 1000000);
 
-    include_once './includes/install.inc';
+    include_once DRUPAL_ROOT . '/includes/install.inc';
     drupal_install_system();
 
     // Add the specified modules to the list of modules in the default profile.

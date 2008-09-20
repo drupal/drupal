@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.222 2008/09/08 15:36:30 webchick Exp $
+// $Id: locale.module,v 1.223 2008/09/20 20:22:24 webchick Exp $
 
 /**
  * @file
@@ -187,7 +187,7 @@ function locale_menu() {
 function locale_inc_callback() {
   $args = func_get_args();
   $function = array_shift($args);
-  include_once './includes/locale.inc';
+  include_once DRUPAL_ROOT . '/includes/locale.inc';
   return call_user_func_array($function, $args);
 }
 
@@ -484,7 +484,7 @@ function locale_language_list($field = 'name', $all = FALSE) {
  *   translations for.
  */
 function locale_system_update($components) {
-  include_once 'includes/locale.inc';
+  include_once DRUPAL_ROOT . '/includes/locale.inc';
   if ($batch = locale_batch_by_component($components)) {
     batch_set($batch);
   }

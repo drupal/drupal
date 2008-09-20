@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.14 2008/05/19 19:25:24 dries Exp $
+// $Id: mail.inc,v 1.15 2008/09/20 20:22:23 webchick Exp $
 
 /**
  * Compose and optionally send an e-mail message.
@@ -173,7 +173,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
 function drupal_mail_send($message) {
   // Allow for a custom mail backend.
   if (variable_get('smtp_library', '') && file_exists(variable_get('smtp_library', ''))) {
-    include_once './' . variable_get('smtp_library', '');
+    include_once DRUPAL_ROOT . '/' . variable_get('smtp_library', '');
     return drupal_mail_wrapper($message);
   }
   else {

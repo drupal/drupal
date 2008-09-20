@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.20 2008/06/24 21:51:02 dries Exp $
+// $Id: batch.inc,v 1.21 2008/09/20 20:22:23 webchick Exp $
 
 /**
  * @file Batch processing API for processes to run in multiple HTTP requests.
@@ -183,7 +183,7 @@ function _batch_process() {
     // request, we check if it requires an additional file for functions
     // definitions.
     if ($set_changed && isset($current_set['file']) && is_file($current_set['file'])) {
-      include_once($current_set['file']);
+      include_once DRUPAL_ROOT . '/' . $current_set['file'];
     }
 
     $task_message = '';
@@ -304,7 +304,7 @@ function _batch_finished() {
     if (isset($batch_set['finished'])) {
       // Check if the set requires an additional file for functions definitions.
       if (isset($batch_set['file']) && is_file($batch_set['file'])) {
-        include_once($batch_set['file']);
+        include_once DRUPAL_ROOT . '/' . $batch_set['file'];
       }
       if (function_exists($batch_set['finished'])) {
         $batch_set['finished']($batch_set['success'], $batch_set['results'], $batch_set['operations']);
