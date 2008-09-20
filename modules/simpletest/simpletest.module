@@ -435,7 +435,7 @@ function simpletest_get_all_tests() {
 
       $tests_directory = $module_path . '/tests';
       if (is_dir($tests_directory)) {
-        foreach (file_scan_directory($tests_directory, '\.test$') as $file) {
+        foreach (file_scan_directory($tests_directory, '/\.test$/') as $file) {
           $files[] = $file->filename;
         }
       }

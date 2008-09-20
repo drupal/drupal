@@ -1003,9 +1003,9 @@ function _system_theme_data() {
 
   if (empty($themes_info)) {
     // Find themes
-    $themes = drupal_system_listing('\.info$', 'themes');
+    $themes = drupal_system_listing('/\.info$/', 'themes');
     // Find theme engines
-    $engines = drupal_system_listing('\.engine$', 'themes/engines');
+    $engines = drupal_system_listing('/\.engine$/', 'themes/engines');
 
     $defaults = system_theme_default();
 

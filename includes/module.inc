@@ -80,7 +80,7 @@ function module_list($refresh = FALSE, $bootstrap = TRUE, $sort = FALSE, $fixed_
  */
 function module_rebuild_cache() {
   // Get current list of modules
-  $files = drupal_system_listing('\.module$', 'modules', 'name', 0);
+  $files = drupal_system_listing('/\.module$/', 'modules', 'name', 0);
 
   // Extract current files from database.
   system_get_files_database($files, 'module');

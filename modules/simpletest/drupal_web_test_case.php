@@ -467,7 +467,7 @@ class DrupalWebTestCase {
     if (in_array($type, array('binary', 'html', 'image', 'javascript', 'php', 'sql', 'text'))) {
      // Use original file directory instead of one created during setUp().
       $path = $this->original_file_directory . '/simpletest';
-      $files = file_scan_directory($path, $type . '\-.*');
+      $files = file_scan_directory($path, '/' . $type . '\-.*/');
 
       // If size is set then remove any files that are not of that size.
       if ($size !== NULL) {

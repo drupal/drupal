@@ -409,7 +409,7 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
 function drupal_get_install_files($module_list = array()) {
   $installs = array();
   foreach ($module_list as $module) {
-    $installs = array_merge($installs, drupal_system_listing($module . '.install$', 'modules'));
+    $installs = array_merge($installs, drupal_system_listing('/'. $module . '.install$/', 'modules'));
   }
   return $installs;
 }
@@ -442,7 +442,7 @@ function drupal_verify_profile($profile, $locale) {
 
   // Get a list of modules that exist in Drupal's assorted subdirectories.
   $present_modules = array();
-  foreach (drupal_system_listing('\.module$', 'modules', 'name', 0) as $present_module) {
+  foreach (drupal_system_listing('/\.module$/', 'modules', 'name', 0) as $present_module) {
     $present_modules[] = $present_module->name;
   }
 

@@ -49,7 +49,7 @@ function _registry_rebuild() {
       }
     }
   }
-  foreach (file_scan_directory('includes', '\.inc$') as $filename => $file) {
+  foreach (file_scan_directory('includes', '/\.inc$/') as $filename => $file) {
     $files["./$filename"] = array();
   }
 

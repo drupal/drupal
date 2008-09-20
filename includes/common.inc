@@ -1952,7 +1952,7 @@ function _drupal_load_stylesheet($matches) {
  * Delete all cached CSS files.
  */
 function drupal_clear_css_cache() {
-  file_scan_directory(file_create_path('css'), '.*', array('.', '..', 'CVS'), 'file_delete', TRUE);
+  file_scan_directory(file_create_path('css'), '/.*/', array('.', '..', 'CVS'), 'file_delete', TRUE);
 }
 
 /**
@@ -2325,7 +2325,7 @@ function drupal_build_js_cache($files, $filename) {
  * Delete all cached JS files.
  */
 function drupal_clear_js_cache() {
-  file_scan_directory(file_create_path('js'), '.*', array('.', '..', 'CVS'), 'file_delete', TRUE);
+  file_scan_directory(file_create_path('js'), '/.*/', array('.', '..', 'CVS'), 'file_delete', TRUE);
   variable_set('javascript_parsed', array());
 }
 
@@ -2651,7 +2651,7 @@ function drupal_cron_cleanup() {
  * version will be included.
  *
  * @param $mask
- *   The regular expression of the files to find.
+ *   The preg_match() regular expression of the files to find.
  * @param $directory
  *   The subdirectory name in which the files are found. For example,
  *   'modules' will search in both modules/ and
