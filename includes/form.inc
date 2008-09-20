@@ -934,7 +934,7 @@ function form_builder($form_id, $form, &$form_state) {
 
   // If some callback set #cache, we need to flip a static flag so later it
   // can be found.
-  if (isset($form['#cache'])) {
+  if (isset($form['#cache']) && $form['#cache']) {
     $cache = $form['#cache'];
   }
   // We are on the top form, we can copy back #cache if it's set.
