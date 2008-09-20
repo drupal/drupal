@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.43 2008/09/20 03:49:23 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.44 2008/09/20 07:35:53 webchick Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -311,6 +311,8 @@ class DrupalWebTestCase {
         $this->tearDown();
       }
     }
+    // Clear out the error messages and restore error handler.
+    drupal_get_messages();
     restore_error_handler();
   }
 
