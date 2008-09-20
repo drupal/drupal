@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.289 2008/09/18 10:44:19 dries Exp $
+// $Id: menu.inc,v 1.290 2008/09/20 08:07:34 webchick Exp $
 
 /**
  * @file
@@ -1211,6 +1211,10 @@ function drupal_help_arg($arg = array()) {
 function menu_get_active_help() {
   $output = '';
   $router_path = menu_tab_root_path();
+  // We will always have a path unless we are on a 403 or 404.
+  if (!$router_path) {
+    return '';
+  }
 
   $arg = drupal_help_arg(arg(NULL));
   $empty_arg = drupal_help_arg();
