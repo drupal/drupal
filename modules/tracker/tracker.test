@@ -133,6 +133,9 @@ class TrackerTest extends DrupalWebTestCase {
       'subject' => $this->randomName(),
       'comment' => $this->randomName(20),
     );
+    // If the comment is posted in the same second as the last one then Drupal
+    // can't tell a difference, so wait one second here.
+    sleep(1);
     $this->drupalPost('comment/reply/' . $node->nid, $comment, t('Save'));
 
     $this->drupalLogin($this->user);
