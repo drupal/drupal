@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.286 2008/09/20 20:22:23 webchick Exp $
+// $Id: form.inc,v 1.287 2008/09/21 06:34:41 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -934,7 +934,7 @@ function form_builder($form_id, $form, &$form_state) {
 
   // If some callback set #cache, we need to flip a static flag so later it
   // can be found.
-  if (isset($form['#cache']) && $form['#cache']) {
+  if (!empty($form['#cache'])) {
     $cache = $form['#cache'];
   }
   // We are on the top form, we can copy back #cache if it's set.
