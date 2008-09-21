@@ -1569,3 +1569,37 @@ class DatabaseAlter2TestCase extends DatabaseTestCase {
     }
   }
 }
+
+/**
+ * Regression tests.
+ */
+class DatabaseRegressionTestCase extends DatabaseTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => t('Regression tests'),
+      'description' => t('Regression tests cases for the database layer.'),
+      'group' => t('Database'),
+    );
+  }
+
+  /**
+   * Regression test for #310447.
+   *
+   * Tries to insert non-ascii UTF-8 data in a database column and checks
+   * if its stored properly.
+   */
+  function testRegression_310447() {
+    // That's a 255 character UTF-8 string.
+    $name = str_repeat("é", 255);
+    db_insert('test')
+      ->fields(array(
+        'name' => $name,
+        'age' => 20,
+        'job' => 'Dancer',
+      ))->execute();
+
+    $from_database = db_query("SELECT name FROM {test} WHERE name = :name", array(':name' => $name))->fetchField();
+    $this->assertIdentical($name, $from_database, t("The database handles UTF-8 characters cleanly."));
+  }
+}
