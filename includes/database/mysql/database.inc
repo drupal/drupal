@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.2 2008/09/04 11:34:46 webchick Exp $
+// $Id: database.inc,v 1.3 2008/09/21 15:27:20 dries Exp $
 
 /**
  * @file
@@ -30,6 +30,12 @@ class DatabaseConnection_mysql extends DatabaseConnection {
       // Because MySQL's prepared statements skip the query cache, because it's dumb.
       PDO::ATTR_EMULATE_PREPARES => TRUE,
     ));
+
+    // Force MySQL to use the UTF-8 character set by default.
+    $this->exec('SET NAMES "utf8"');
+
+    // Enable MySQL's "strict mode", which removes most of MySQL's
+    // "just be lazy" behaviors that end up causing more trouble than they're worth.
     $this->exec('SET sql_mode=STRICT_ALL_TABLES');
   }
 
