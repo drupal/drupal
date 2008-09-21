@@ -1192,15 +1192,18 @@ function user_set_authmaps($account, $authmaps) {
   foreach ($authmaps as $key => $value) {
     $module = explode('_', $key, 2);
     if ($value) {
-      db_insert('authmap')->key(array(
+      db_merge('authmap')
+        ->key(array(
         'uid' => $account->uid,
         'module' => $module[1],
-      ))->fields(array(
+        ))
+        ->fields(array(
         'authname' => $value,
-      ))->execute();
+        ))
+        ->execute();
     }
     else {
-      db_query("DELETE FROM {authmap} WHERE uid = %d AND module = '%s'", $account->uid, $module[1]);
+      db_delete('authmap')->condition('uid', $account->uid)->condition('module', $module[1])->execute();
     }
   }
 }
