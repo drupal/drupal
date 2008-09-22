@@ -2340,10 +2340,11 @@ function _menu_router_build($callbacks) {
   }
   array_multisort($sort, SORT_NUMERIC, $menu);
 
-  if ($menu) {
-    // Delete the existing router since we have some data to replace it.
-    db_query('DELETE FROM {menu_router}');
+  if (!$menu) {
+    return array();
   }
+  // Delete the existing router since we have some data to replace it.
+  db_query('DELETE FROM {menu_router}');
   // Apply inheritance rules.
   foreach ($menu as $path => $v) {
     $item = &$menu[$path];
