@@ -278,7 +278,7 @@ function update_cron() {
   $interval = 60 * 60 * 24 * $frequency;
   // Cron should check for updates if there is no update data cached or if the configured
   // update interval has elapsed.
-  if (!cache_get('update_info', 'cache_update') || REQUEST_TIME - variable_get('update_last_check', 0) > $interval) {
+  if (!cache_get('update_info', 'cache_update') || ((REQUEST_TIME - variable_get('update_last_check', 0)) > $interval)) {
     update_refresh();
     _update_cron_notify();
   }
