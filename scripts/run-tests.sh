@@ -111,6 +111,8 @@ All arguments are long options.
   --url       Immediately preceeds a URL to set the host and path. You will
               need this parameter if Drupal is in a subdirectory on your
               localhost and you have not set \$base_url in settings.php.
+              
+  --php       The absolute path to the PHP executable. Usually not needed.
 
   --concurrency [num]
 
@@ -160,6 +162,7 @@ function simpletest_script_parse_args() {
     'list' => FALSE,
     'clean' => FALSE,
     'url' => '',
+    'php' => NULL,
     'concurrency' => 1,
     'all' => FALSE,
     'class' => FALSE,
@@ -225,7 +228,23 @@ function simpletest_script_init() {
 
   $host = 'localhost';
   $path = '';
-  $php = "/usr/bin/php"; // TODO Get dynamically if possible.
+  // Determine location of php command automatically, unless a comamnd line argument is supplied.
+  if (isset($args['php'])) {
+    $php = $args['php'];
+  }
+  elseif (isset($_ENV['_'])) {
+    // '_' is an environment variable set by the shell. It contains the command that was executed.
+    $php = $_ENV['_'];
+  }
+  elseif (isset($_ENV['SUDO_COMMAND'])) {
+    // 'SUDO_COMMAND' is an environment variable set by the sudo program.
+    // Extract only the PHP interpreter, not the rest of the command.
+    list($php, ) = explode(' ', $_ENV['SUDO_COMMAND'], 2);
+  }
+  else {
+    simpletest_script_print_error('Unable to automatically determine the path to the PHP interpreter. Please supply the --php command line argument.');
+    exit();
+  }
 
   // Get url from arguments.
   if (!empty($args['url'])) {
@@ -338,7 +357,7 @@ function simpletest_script_command($concurrency, $test_id, $tests) {
   if ($args['color']) {
     $command .= ' --color';
   }
-  $command .= " --concurrency $concurrency --test-id $test_id --execute-batch $tests";
+  $command .= " --php " . escapeshellarg($php) . " --concurrency $concurrency --test-id $test_id --execute-batch $tests";
   passthru($command);
 }
 
