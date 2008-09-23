@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.25 2008/09/20 20:22:25 webchick Exp $
+// $Id: update.module,v 1.26 2008/09/23 19:07:58 webchick Exp $
 
 /**
  * @file
@@ -278,7 +278,7 @@ function update_cron() {
   $interval = 60 * 60 * 24 * $frequency;
   // Cron should check for updates if there is no update data cached or if the configured
   // update interval has elapsed.
-  if (!cache_get('update_info', 'cache_update') || REQUEST_TIME - variable_get('update_last_check', 0) > $interval) {
+  if (!cache_get('update_info', 'cache_update') || ((REQUEST_TIME - variable_get('update_last_check', 0)) > $interval)) {
     update_refresh();
     _update_cron_notify();
   }
