@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.test,v 1.14 2008/09/19 03:11:53 webchick Exp $
+// $Id: comment.test,v 1.15 2008/09/24 22:38:20 webchick Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -17,7 +17,6 @@ class CommentHelperCase extends DrupalWebTestCase {
 
     $this->drupalLogin($this->web_user);
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
-    $this->assertTrue($this->node, t('Article node created.'));
     $this->drupalLogout();
   }
 
