@@ -1,6 +1,56 @@
 <?php
 // $Id$
 
+class TaxonomyVocabularyLoadTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+   function getInfo() {
+     return array(
+       'name' => t('Loading taxonomy vocabularies'),
+       'description' => t('Test loading vocabularies under various conditions.'),
+       'group' => t('Taxonomy'),
+     );
+   }
+
+  /**
+   * Implementation of setUp() {
+   */
+  function setUp() {
+    parent::setUp('taxonomy');
+    $admin_user = $this->drupalCreateUser(array('administer taxonomy'));
+    $this->drupalLogin($admin_user);
+  }
+
+  /**
+   * Ensure that when an invalid vocabulary vid is loaded, it is possible
+   * to load the same vid successfully if it subsequently becomes valid.
+   */
+  function testTaxonomyVocabularyLoadReturnFalse() {
+    // Load a vocabulary that doesn't exist.
+    $vocabularies = taxonomy_get_vocabularies();
+    $vid = count($vocabularies) + 1;
+    $vocabulary = taxonomy_vocabulary_load($vid);
+    // This should not return an object because no such vocabulary exists.
+    $this->assertTrue(!is_object($vocabulary), t('No object loaded.'));
+
+    // Create a new vocabulary.
+    $edit = array(
+      'name' => $this->randomName(),
+      'description' => $this->randomName(),
+      'help' => '',
+      'weight' => 0,
+    );
+    $this->drupalPost('admin/content/taxonomy/add/vocabulary', $edit, t('Save'));
+
+    // Load the vocabulary with the same $vid from earlier.
+    // This should return a vocabulary object since it now matches a real vid.
+    $vocabulary = taxonomy_vocabulary_load($vid);
+    $this->assertTrue(is_object($vocabulary), t('Vocabulary is an object'));
+    $this->assertTrue($vocabulary->vid == $vid, t('Valid vocabulary vid is the same as our previously invalid one.'));
+  }
+}
+
 class TaxonomyVocabularyFunctionsTestCase extends DrupalWebTestCase {
   /**
    * Implementation of getInfo().
@@ -8,9 +58,16 @@ class TaxonomyVocabularyFunctionsTestCase extends DrupalWebTestCase {
   function getInfo() {
     return array(
       'name' => t('Vocabulary functions'),
-      'description' => t('Create/Edit/Delete vocabulary and assert that all fields were properly saved.'),
+      'description' => t('Test loading, saving, and deleting vocabularies.'),
       'group' => t('Taxonomy')
     );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp('taxonomy');
   }
 
   /**
@@ -80,7 +137,6 @@ class TaxonomyVocabularyFunctionsTestCase extends DrupalWebTestCase {
     $this->assertEqual($vid, 0, t('Deleted vocabulary (@vid)', array('@vid' => $vid)));
   }
 }
-
 
 class TaxonomyTermFunctionsTestCase extends DrupalWebTestCase {
   /**

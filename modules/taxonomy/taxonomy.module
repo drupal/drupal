@@ -994,7 +994,7 @@ function taxonomy_get_term_by_name($name) {
 function taxonomy_vocabulary_load($vid) {
   static $vocabularies = array();
 
-  if (!isset($vocabularies[$vid])) {
+  if (empty($vocabularies[$vid])) {
     // Initialize so if this vocabulary does not exist, we have
     // that cached, and we will not try to load this later.
     $vocabularies[$vid] = FALSE;
