@@ -17,7 +17,6 @@ class CommentHelperCase extends DrupalWebTestCase {
 
     $this->drupalLogin($this->web_user);
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
-    $this->assertTrue($this->node, t('Article node created.'));
     $this->drupalLogout();
   }
 
