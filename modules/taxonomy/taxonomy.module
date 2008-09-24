@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.427 2008/09/19 20:25:03 dries Exp $
+// $Id: taxonomy.module,v 1.428 2008/09/24 02:59:42 webchick Exp $
 
 /**
  * @file
@@ -994,7 +994,7 @@ function taxonomy_get_term_by_name($name) {
 function taxonomy_vocabulary_load($vid) {
   static $vocabularies = array();
 
-  if (!isset($vocabularies[$vid])) {
+  if (empty($vocabularies[$vid])) {
     // Initialize so if this vocabulary does not exist, we have
     // that cached, and we will not try to load this later.
     $vocabularies[$vid] = FALSE;
