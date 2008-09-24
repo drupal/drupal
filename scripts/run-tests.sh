@@ -259,6 +259,7 @@ function simpletest_script_init() {
   $_SERVER['SERVER_SOFTWARE'] = 'Apache';
   $_SERVER['SERVER_NAME'] = 'localhost';
   $_SERVER['REQUEST_URI'] = $path .'/';
+  $_SERVER['REQUEST_METHOD'] = 'GET';
   $_SERVER['SCRIPT_NAME'] = $path .'/index.php';
   $_SERVER['PHP_SELF'] = $path .'/index.php';
   $_SERVER['HTTP_USER_AGENT'] = 'Drupal command line';
