@@ -444,6 +444,7 @@ function simpletest_script_reporter_init() {
   }
 
   echo "Test run started: " . format_date($_SERVER['REQUEST_TIME'], 'long') . "\n";
+  timer_start('run-tests');
   echo "\n";
 
   echo "Test summary:\n";
@@ -458,7 +459,8 @@ function simpletest_script_reporter_display_results() {
   global $args, $test_id, $results_map;
 
   echo "\n";
-  echo "Test run ended: " . format_date($_SERVER['REQUEST_TIME'], 'long') . "\n";
+  $end = timer_stop('run-tests');
+  echo "Test run duration: " . format_interval($end['time'] / 1000);
   echo "\n";
 
   if ($args['verbose']) {
