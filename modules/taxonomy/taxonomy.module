@@ -985,14 +985,21 @@ function taxonomy_get_term_by_name($name) {
  * Return the vocabulary object matching a vocabulary ID.
  *
  * @param $vid
- *   The vocabulary's ID
+ *   The vocabulary's ID.
+ *
+ * @param $reset
+ *   A boolean flag indicating whether to reset the internal cache.
  *
  * @return
  *   The vocabulary object with all of its metadata, if exists, FALSE otherwise.
  *   Results are statically cached.
  */
-function taxonomy_vocabulary_load($vid) {
+function taxonomy_vocabulary_load($vid, $reset = FALSE) {
   static $vocabularies = array();
+
+  if ($reset) {
+    unset($vocabularies[$vid]);
+  }
 
   if (empty($vocabularies[$vid])) {
     // Initialize so if this vocabulary does not exist, we have

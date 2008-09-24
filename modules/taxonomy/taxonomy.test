@@ -49,6 +49,26 @@ class TaxonomyVocabularyLoadTestCase extends DrupalWebTestCase {
     $this->assertTrue(is_object($vocabulary), t('Vocabulary is an object'));
     $this->assertTrue($vocabulary->vid == $vid, t('Valid vocabulary vid is the same as our previously invalid one.'));
   }
+
+  /**
+   * Ensure that the vocabulary static reset works correctly.
+   */
+  function testTaxonomyVocabularyLoadStaticReset() {
+    // Load the first available vocabulary.
+    $original_vocabulary = taxonomy_vocabulary_load(1);
+
+    // Change the name and description.
+    $edit = (array) $original_vocabulary;
+    $edit['name'] = $this->randomName();
+    $edit['description'] = $this->randomName();
+    $this->assertNotEqual($edit['name'], $original_vocabulary->name);
+    taxonomy_save_vocabulary($edit);
+
+    // Load the vocabulary with $reset TRUE.
+    $new_vocabulary = taxonomy_vocabulary_load($original_vocabulary->vid, TRUE);
+    $this->assertEqual($new_vocabulary->name, $edit['name']);
+    $this->assertEqual($new_vocabulary->name, $edit['name']);
+  }
 }
 
 class TaxonomyVocabularyFunctionsTestCase extends DrupalWebTestCase {
