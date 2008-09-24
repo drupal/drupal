@@ -1,5 +1,5 @@
 <?php
-// $Id: run-tests.sh,v 1.11 2008/09/24 15:48:56 webchick Exp $
+// $Id: run-tests.sh,v 1.12 2008/09/24 19:00:31 webchick Exp $
 /**
  * @file
  * This script runs Drupal tests from command line.
@@ -259,6 +259,7 @@ function simpletest_script_init() {
   $_SERVER['SERVER_SOFTWARE'] = 'Apache';
   $_SERVER['SERVER_NAME'] = 'localhost';
   $_SERVER['REQUEST_URI'] = $path .'/';
+  $_SERVER['REQUEST_METHOD'] = 'GET';
   $_SERVER['SCRIPT_NAME'] = $path .'/index.php';
   $_SERVER['PHP_SELF'] = $path .'/index.php';
   $_SERVER['HTTP_USER_AGENT'] = 'Drupal command line';
