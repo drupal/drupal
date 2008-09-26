@@ -104,6 +104,56 @@ class DatabaseTestCase extends DrupalWebTestCase {
       ':priority' => 3,
     ));
   }
+}
+
+/**
+ * Test connection management.
+ */
+class DatabaseConnectionTestCase extends DatabaseTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => t('Connection tests'),
+      'description' => t('Tests of the core database system.'),
+      'group' => t('Database'),
+    );
+  }
+
+  /**
+   * Test that connections return appropriate connection objects.
+   */
+  function testConnectionRouting() {
+
+    // Clone the master credentials to a slave connection.
+    // Note this will result in two independent connection objects that happen
+    // to point to the same place.
+    $connection_info = Database::getConnectionInfo();
+    Database::addConnectionInfo('default', 'slave', $connection_info['default']['default']);
+
+    $db1 = Database::getConnection('default', 'default');
+    $db2 = Database::getConnection('default', 'slave');
+
+    $this->assertFalse($db1 === $db2, t('Each target refers to a different connection.'));
+  }
+
+  /**
+   * Test that connections return appropriate connection objects.
+   */
+  function testConnectionRoutingOverride() {
+
+    // Clone the master credentials to a slave connection.
+    // Note this will result in two independent connection objects that happen
+    // to point to the same place.
+    $connection_info = Database::getConnectionInfo('default');
+    Database::addConnectionInfo('default', 'slave', $connection_info['default']);
+
+    Database::ignoreTarget('default', 'slave');
+
+    $db1 = Database::getConnection('default', 'default');
+    $db2 = Database::getConnection('default', 'slave');
+
+    $this->assertTrue($db1 === $db2, t('Both targets refer to the same connection.'));
+  }
 
 }
 

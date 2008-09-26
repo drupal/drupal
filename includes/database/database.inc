@@ -666,6 +666,13 @@ abstract class Database {
   static protected $databaseInfo = NULL;
 
   /**
+   * A list of key/target credentials to simply ignore.
+   *
+   * @var array
+   */
+  static protected $ignoreTargets = array();
+
+  /**
    * The key of the currently active database connection.
    *
    * @var string
@@ -695,6 +702,10 @@ abstract class Database {
    *   The corresponding connection object.
    */
   final public static function getConnection($key = 'default', $target = 'default') {
+    if (!empty(self::$ignoreTargets[$key][$target])) {
+      $target = 'default';
+    }
+
     if (!isset(self::$connections[$key][$target])) {
       self::openConnection($key, $target);
     }
@@ -773,6 +784,32 @@ abstract class Database {
   }
 
   /**
+   * Add database connection info for a given key/target.
+   *
+   * This method allows the addition of new connection credentials at runtime.
+   * Under normal circumstances the preferred way to specify database credentials
+   * is via settings.php.  However, this method allows them to be added at
+   * arbitrary times, such as during unit tests, when connecting to admin-defined
+   * third party databases, etc.
+   *
+   * If the given key/target pair already exists, this method will be ignored.
+   *
+   * @param $key
+   *   The database key.
+   * @param $target
+   *   The database target name.
+   * @param $info
+   *   The database connection information, as it would be defined in settings.php.
+   *   Note that the structure of this array will depend on the database driver
+   *   it is connecting to.
+   */
+  public static function addConnectionInfo($key, $target, $info) {
+    if (empty(self::$databaseInfo[$key][$target])) {
+      self::$databaseInfo[$key][$target] = $info;
+    }
+  }
+
+  /**
    * Gets information on the specified database connection.
    *
    * @param $connection
@@ -842,6 +879,24 @@ abstract class Database {
       throw $e;
     }
   }
+
+  /**
+   * Instruct the system to temporarily ignore a given key/target.
+   *
+   * At times we need to temporarily disable slave queries.  To do so,
+   * call this method with the database key and the target to disable.
+   * That database key will then always fall back to 'default' for that
+   * key, even if it's defined.
+   *
+   * @param $key
+   *   The database connection key.
+   * @param $target
+   *   The target of the specified key to ignore.
+   */
+  public static function ignoreTarget($key, $target) {
+    self::$ignoreTargets[$key][$target] = TRUE;
+  }
+
 }
 
 /**
