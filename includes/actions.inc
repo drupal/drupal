@@ -277,19 +277,10 @@ function actions_synchronize($actions_in_code = array(), $delete_orphans = FALSE
 
   // Any actions that we have left in $actions_in_db are orphaned.
   if ($actions_in_db) {
-    $orphaned = array();
-    $placeholder = array();
-
-    foreach ($actions_in_db as $callback => $array) {
-      $orphaned[] = $callback;
-      $placeholder[] = "'%s'";
-    }
-
-    $orphans = implode(', ', $orphaned);
+    $orphaned = array_keys($actions_in_db);
 
     if ($delete_orphans) {
-      $placeholders = implode(', ', $placeholder);
-      $results = db_query("SELECT a.aid, a.description FROM {actions} a WHERE callback IN ($placeholders)", $orphaned);
+      $results = db_query("SELECT a.aid, a.description FROM {actions} a WHERE callback IN (" . db_placeholders($orphaned, 'varchar') .  ")", $orphaned);
       while ($action = db_fetch_object($results)) {
         actions_delete($action->aid);
         watchdog('actions', "Removed orphaned action '%action' from database.", array('%action' => filter_xss_admin($action->description)));
@@ -298,6 +289,7 @@ function actions_synchronize($actions_in_code = array(), $delete_orphans = FALSE
     else {
       $link = l(t('Remove orphaned actions'), 'admin/build/actions/orphan');
       $count = count($actions_in_db);
+      $orphans = implode(', ', $orphaned);
       watchdog('actions', format_plural($count, 'One orphaned action (%orphans) exists in the actions table. !link', '@count orphaned actions (%orphans) exist in the actions table. !link'), array('@count' => $count, '%orphans' => $orphans, '!link' => $link), WATCHDOG_WARNING);
     }
   }
