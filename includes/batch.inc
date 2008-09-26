@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.21 2008/09/20 20:22:23 webchick Exp $
+// $Id: batch.inc,v 1.22 2008/09/26 23:30:20 webchick Exp $
 
 /**
  * @file Batch processing API for processes to run in multiple HTTP requests.
@@ -11,13 +11,17 @@
 function _batch_page() {
   $batch =& batch_get();
 
-  // Retrieve the current state of batch from db.
-  if (isset($_REQUEST['id']) && $data = db_result(db_query("SELECT batch FROM {batch} WHERE bid = %d AND token = '%s'", $_REQUEST['id'], drupal_get_token($_REQUEST['id'])))) {
-    $batch = unserialize($data);
-  }
-  else {
+  if (!isset($_REQUEST['id'])) {
     return FALSE;
   }
+
+  // Retrieve the current state of batch from db.
+  $batch = db_query("SELECT batch FROM {batch} WHERE bid = :bid AND token = :token", array(
+    ':bid' => $_REQUEST['id'],
+    ':token' => drupal_get_token($_REQUEST['id']))
+  )->fetchField();
+
+  $batch = unserialize($batch);
 
   // Register database update for end of processing.
   register_shutdown_function('_batch_shutdown');
@@ -314,7 +318,9 @@ function _batch_finished() {
 
   // Cleanup the batch table and unset the global $batch variable.
   if ($batch['progressive']) {
-    db_query("DELETE FROM {batch} WHERE bid = %d", $batch['id']);
+    db_delete('batch')
+      ->condition('bid', $batch['id'])
+      ->execute();
   }
   $_batch = $batch;
   $batch = NULL;
@@ -358,6 +364,9 @@ function _batch_finished() {
  */
 function _batch_shutdown() {
   if ($batch = batch_get()) {
-    db_query("UPDATE {batch} SET batch = '%s' WHERE bid = %d", serialize($batch), $batch['id']);
+    db_update('batch')
+      ->fields(array('batch' => serialize($batch)))
+      ->condition('bid', $batch['id'])
+      ->execute();
   }
 }
