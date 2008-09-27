@@ -1166,7 +1166,12 @@ function form_type_image_button_value($form, $edit = FALSE) {
  */
 function form_type_checkbox_value($form, $edit = FALSE) {
   if ($edit !== FALSE) {
-    return !empty($edit) ? $form['#return_value'] : 0;
+    if (empty($form['#disabled'])) {
+      return !empty($edit) ? $form['#return_value'] : 0;
+    }
+    else {
+      return $form['#default_value'];
+    }
   }
 }
 

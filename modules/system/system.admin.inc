@@ -624,6 +624,10 @@ function system_modules($form_state = array()) {
   uasort($files, 'system_sort_modules_by_info_name');
 
   if (!empty($form_state['storage'])) {
+    // If the modules form was submitted, then first system_modules_submit runs
+    // and if there are unfilled dependencies, then form_state['storage'] is
+    // filled, triggering a rebuild. In this case we need to show a confirm
+    // form.
     return system_modules_confirm_form($files, $form_state['storage']);
   }
   $dependencies = array();
@@ -859,7 +863,7 @@ function system_modules_submit($form, &$form_state) {
   $files = module_rebuild_cache();
 
   // The modules to be enabled.
-  $enabled_modules = array();
+  $modules_to_be_enabled = array();
   // The modules to be disabled.
   $disable_modules = array();
   // The modules to be installed.
@@ -876,28 +880,29 @@ function system_modules_submit($form, &$form_state) {
       if (drupal_get_installed_schema_version($name) == SCHEMA_UNINSTALLED) {
         $new_modules[$name] = $name;
       }
-      else {
-        $enable_modules[$name] = $name;
+      elseif (!module_exists($name)) {
+        $modules_to_be_enabled[$name] = $name;
       }
       // If we're not coming from a confirmation form,
       // search dependencies. Otherwise, the user will have already
       // approved of the depdent modules being enabled.
       if (empty($form_state['storage'])) {
         foreach ($form['modules'][$module['group']][$name]['#dependencies'] as $dependency => $string) {
-          if (!isset($dependencies[$name])) {
-            $dependencies[$name] = array(
-              'name' => $files[$name]->info['name'],
-              'dependencies' => array($dependency => $files[$dependency]->info['name']),
-            );
-          }
-          else {
+          if (!$modules[$dependency]['enabled']) {
+            if (!isset($dependencies[$name])) {
+              $dependencies[$name]['name'] = $files[$name]->info['name'];
+            }
             $dependencies[$name]['dependencies'][$dependency] = $files[$dependency]->info['name'];
           }
           $modules[$dependency] = array('group' => $files[$dependency]->info['package'], 'enabled' => TRUE);
         }
       }
     }
-    else {
+  }
+  // A second loop is necessary, otherwise the modules set to be enabled in the
+  // previous loop would not be found.
+  foreach ($modules as $name => $module) {
+    if (module_exists($name) && !$module['enabled']) {
       $disable_modules[$name] = $name;
     }
   }
@@ -917,7 +922,7 @@ function system_modules_submit($form, &$form_state) {
             $new_modules[$name] = $name;
           }
           else {
-            $enable_modules[$name] = $name;
+            $modules_to_be_enabled[$name] = $name;
           }
         }
       }
@@ -930,8 +935,8 @@ function system_modules_submit($form, &$form_state) {
   $old_module_list = module_list();
 
   // Enable the modules needing enabling.
-  if (!empty($enable_modules)) {
-    module_enable($enable_modules);
+  if (!empty($modules_to_be_enabled)) {
+    module_enable($modules_to_be_enabled);
   }
   // Disable the modules that need disabling.
   if (!empty($disable_modules)) {
@@ -2091,7 +2096,11 @@ function theme_system_modules_fieldset($form) {
     $row = array();
     unset($module['enable']['#title']);
     $row[] = array('class' => 'checkbox', 'data' => drupal_render($module['enable']));
-    $row[] = '<label for="' . $module['enable']['#id'] . '"><strong>' . drupal_render($module['name']) . '</strong></label>';
+    $label = '<label';
+    if (isset($module['enable']['#id'])) {
+      $label .= ' for="' . $module['enable']['#id'] . '"';
+    }
+    $row[] = $label . '><strong>' . drupal_render($module['name']) . '</strong></label>';
     $row[] = drupal_render($module['version']);
     $description = '';
     // If we have help, it becomes the first part
