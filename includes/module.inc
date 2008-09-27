@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.126 2008/09/20 20:22:23 webchick Exp $
+// $Id: module.inc,v 1.127 2008/09/27 19:03:30 webchick Exp $
 
 /**
  * @file
@@ -92,6 +92,7 @@ function module_rebuild_cache() {
     'dependencies' => array(),
     'dependents' => array(),
     'description' => '',
+    'package' => 'Other',
     'version' => NULL,
     'php' => DRUPAL_MINIMUM_PHP,
   );

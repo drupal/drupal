@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.93 2008/09/27 06:29:47 webchick Exp $
+// $Id: system.admin.inc,v 1.94 2008/09/27 19:03:30 webchick Exp $
 
 /**
  * @file
@@ -680,9 +680,6 @@ function system_modules($form_state = array()) {
       else {
         $extra['dependents'][] = $files[$dependent]->info['name'] . t(' (<span class="admin-disabled">disabled</span>)');
       }
-    }
-    if (!isset($module->info['package'])) {
-      $module->info['package'] = 'Other';
     }
     $form['modules'][$module->info['package']][$filename] = _system_modules_build_row($module->info, $extra);
   }
