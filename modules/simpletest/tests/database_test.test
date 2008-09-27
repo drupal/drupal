@@ -127,13 +127,15 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
     // Clone the master credentials to a slave connection.
     // Note this will result in two independent connection objects that happen
     // to point to the same place.
-    $connection_info = Database::getConnectionInfo();
-    Database::addConnectionInfo('default', 'slave', $connection_info['default']['default']);
+    $connection_info = Database::getConnectionInfo('default');
+    Database::addConnectionInfo('default', 'slave', $connection_info['default']);
 
     $db1 = Database::getConnection('default', 'default');
     $db2 = Database::getConnection('default', 'slave');
 
-    $this->assertFalse($db1 === $db2, t('Each target refers to a different connection.'));
+    $this->assertNotNull($db1, t('default connection is a real connection object.'));
+    $this->assertNotNull($db2, t('slave connection is a real connection object.'));
+    $this->assertNotIdentical($db1, $db2, t('Each target refers to a different connection.'));
   }
 
   /**
@@ -152,7 +154,7 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
     $db1 = Database::getConnection('default', 'default');
     $db2 = Database::getConnection('default', 'slave');
 
-    $this->assertTrue($db1 === $db2, t('Both targets refer to the same connection.'));
+    $this->assertIdentical($db1, $db2, t('Both targets refer to the same connection.'));
   }
 
 }

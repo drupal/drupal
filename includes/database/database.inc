@@ -839,7 +839,7 @@ abstract class Database {
   final protected static function openConnection($key, $target) {
     global $db_prefix;
 
-    if (empty(self::$connectionInfo)) {
+    if (empty(self::$databaseInfo)) {
       self::parseConnectionInfo();
     }
     try {
