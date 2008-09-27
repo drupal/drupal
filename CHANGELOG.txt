@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.277 2008/09/19 20:25:02 dries Exp $
+// $Id: CHANGELOG.txt,v 1.278 2008/09/27 20:23:30 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -15,6 +15,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
       hashing and authentication schemes.
 - Usability:
     * Implemented drag-and-drop positioning for input format listings.
+    * Implemented drag-and-drop positioning for language listing.
     * Implemented drag-and-drop positioning for poll options.
     * Provided descriptions for user permissions.
     * Removed comment controls for users.
