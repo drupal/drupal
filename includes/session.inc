@@ -10,15 +10,11 @@
  * - _sess_close()
  * - _sess_read()
  * - _sess_write()
+ * - _sess_destroy_sid()
+ * - _sess_gc()
  * are assigned by session_set_save_handler() in bootstrap.inc and are called
  * automatically by PHP. These functions should not be called directly. Session
  * data should instead be accessed via the $_SESSION superglobal.
- *
- * The user-level session storage handlers:
- * - sess_destroy_sid()
- * - sess_gc()
- * are assigned by session_set_save_handler() in bootstrap.inc and are called
- * automatically by PHP, but they may safely be called directly.
  */
 
 /**
@@ -64,7 +60,7 @@ function _sess_close() {
  * instead be accessed via the $_SESSION superglobal.
  *
  * @param $key
- *   Session ID
+ *   Session ID.
  * @return
  *   Either an array of the session data, or an empty string, if no data
  *   was found or the user is anonymous.
@@ -89,12 +85,12 @@ function _sess_read($key) {
   // client's session in the database.
   $user = db_fetch_object(db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '%s'", $key));
 
-  // We found the client's session record and they are an authenticated user
+  // We found the client's session record and they are an authenticated user.
   if ($user && $user->uid > 0) {
-    // This is done to unserialize the data member of $user
+    // This is done to unserialize the data member of $user.
     $user = drupal_unpack($user);
 
-    // Add roles element to $user
+    // Add roles element to $user.
     $user->roles = array();
     $user->roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user';
     $result = db_query("SELECT r.rid, r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d", $user->uid);
@@ -122,7 +118,7 @@ function _sess_read($key) {
  * instead be accessed via the $_SESSION superglobal.
  *
  * @param $key
- *   Session ID
+ *   Session ID.
  * @param $value
  *   Serialized array of the session data.
  * @return
@@ -177,16 +173,19 @@ function drupal_session_regenerate() {
 }
 
 /**
- * Counts how many users have sessions. Can count either anonymous sessions,
- * authenticated sessions, or both.
+ * Counts how many users are active on the site.
  *
- * @param int $timestamp
- *   A Unix timestamp representing a point of time in the past.
- *   The default is 0, which counts all existing sessions.
+ * Counts how many users have sessions which have been active since the
+ * specified time. Can count either anonymous sessions or
+ * authenticated sessions.
+ *
+ * @param int $timestamp.
+ *   A Unix timestamp. Users who have been active since this time will be
+ *   counted. The default is 0, which counts all existing sessions.
  * @param boolean $anonymous
  *   TRUE counts only anonymous users.
  *   FALSE counts only authenticated users.
- * @return  int
+ * @return int
  *   The number of users with sessions.
  */
 function drupal_session_count($timestamp = 0, $anonymous = TRUE) {
@@ -199,18 +198,18 @@ function drupal_session_count($timestamp = 0, $anonymous = TRUE) {
  *
  * Cleanup a specific session.
  *
- * @param  string $sid
- *   the session id
+ * @param string $sid
+ *   Session ID.
  */
 function _sess_destroy_sid($sid) {
   db_query("DELETE FROM {sessions} WHERE sid = '%s'", $sid);
 }
 
 /**
- * End a specific user's session
+ * End a specific user's session(s).
  *
- * @param  string $uid
- *   the user id
+ * @param string $uid
+ *   User ID.
  */
 function drupal_session_destroy_uid($uid) {
   db_query('DELETE FROM {sessions} WHERE uid = %d', $uid);
@@ -220,6 +219,10 @@ function drupal_session_destroy_uid($uid) {
  * Session handler assigned by session_set_save_handler().
  *
  * Cleanup stalled sessions.
+ *
+ * @param int $lifetime
+ *   The value of session.gc_maxlifetime, passed by PHP.
+ *   Sessions not updated for more than $lifetime seconds will be removed.  
  */
 function _sess_gc($lifetime) {
   // Be sure to adjust 'php_value session.gc_maxlifetime' to a large enough
@@ -238,7 +241,7 @@ function _sess_gc($lifetime) {
  * This function allows the caller to temporarily disable writing of
  * session data, should the request end while performing potentially
  * dangerous operations, such as manipulating the global $user object.
- * See http://drupal.org/node/218104 for usage
+ * See http://drupal.org/node/218104 for usage.
  *
  * @param $status
  *   Disables writing of session data when FALSE, (re-)enables

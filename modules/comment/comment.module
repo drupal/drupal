@@ -532,24 +532,22 @@ function comment_form_alter(&$form, $form_state, $form_id) {
       '#options' => array(t('Display on separate page'), t('Display below post or comments')),
     );
   }
-  elseif (isset($form['type']) && isset($form['#node'])) {
-    if ($form['type']['#value'] . '_node_form' == $form_id) {
-      $node = $form['#node'];
-      $form['comment_settings'] = array(
-        '#type' => 'fieldset',
-        '#access' => user_access('administer comments'),
-        '#title' => t('Comment settings'),
-        '#collapsible' => TRUE,
-        '#collapsed' => TRUE,
-        '#weight' => 30,
-      );
-      $form['comment_settings']['comment'] = array(
-        '#type' => 'radios',
-        '#parents' => array('comment'),
-        '#default_value' => $node->comment,
-        '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')),
-      );
-    }
+  elseif (!empty($form['#node_edit_form'])) {
+    $node = $form['#node'];
+    $form['comment_settings'] = array(
+      '#type' => 'fieldset',
+      '#access' => user_access('administer comments'),
+      '#title' => t('Comment settings'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#weight' => 30,
+    );
+    $form['comment_settings']['comment'] = array(
+      '#type' => 'radios',
+      '#parents' => array('comment'),
+      '#default_value' => $node->comment,
+      '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')),
+    );
   }
 }
 

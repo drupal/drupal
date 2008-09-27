@@ -217,9 +217,9 @@ function upload_form_alter(&$form, $form_state, $form_id) {
     );
   }
 
-  if (isset($form['type']) && isset($form['#node'])) {
+  if (!empty($form['#node_edit_form'])) {
     $node = $form['#node'];
-    if ($form['type']['#value'] . '_node_form' == $form_id && variable_get("upload_$node->type", TRUE)) {
+    if (variable_get("upload_$node->type", TRUE)) {
       // Attachments fieldset
       $form['attachments'] = array(
         '#type' => 'fieldset',

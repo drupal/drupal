@@ -503,7 +503,7 @@ function taxonomy_get_vocabularies($type = NULL) {
  *  and provide scalable alternatives.
  */
 function taxonomy_form_alter(&$form, $form_state, $form_id) {
-  if (isset($form['type']) && isset($form['#node']) && (!variable_get('taxonomy_override_selector', FALSE)) && $form['type']['#value'] . '_node_form' == $form_id) {
+  if (!variable_get('taxonomy_override_selector', FALSE) && !empty($form['#node_edit_form'])) {
     $node = $form['#node'];
 
     if (!isset($node->taxonomy)) {

@@ -350,7 +350,7 @@ function _menu_parent_depth_limit($item) {
  * Implementation of hook_form_alter(). Adds menu item fields to the node form.
  */
 function menu_form_alter(&$form, $form_state, $form_id) {
-  if (isset($form['#node']) && $form['#node']->type . '_node_form' == $form_id) {
+  if (!empty($form['#node_edit_form'])) {
     // Note - doing this to make sure the delete checkbox stays in the form.
     $form['#cache'] = TRUE;
 

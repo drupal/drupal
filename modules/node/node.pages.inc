@@ -117,8 +117,9 @@ function node_form(&$form_state, $node) {
     $node->build_mode = NODE_BUILD_PREVIEW;
   }
 
-  // Set the id of the top-level form tag
+  // Set the id and identify this as a node edit form.
   $form['#id'] = 'node-form';
+  $form['#node_edit_form'] = TRUE;
 
   // Basic node information.
   // These elements are just values so they are not even sent to the client.
