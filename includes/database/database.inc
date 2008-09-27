@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.7 2008/09/26 19:10:32 webchick Exp $
+// $Id: database.inc,v 1.8 2008/09/27 07:08:44 webchick Exp $
 
 /**
  * @file
@@ -839,7 +839,7 @@ abstract class Database {
   final protected static function openConnection($key, $target) {
     global $db_prefix;
 
-    if (empty(self::$connectionInfo)) {
+    if (empty(self::$databaseInfo)) {
       self::parseConnectionInfo();
     }
     try {
