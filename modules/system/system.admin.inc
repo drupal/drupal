@@ -688,7 +688,7 @@ function system_modules($form_state = array()) {
       '#type' => 'fieldset',
       '#title' => t($package),
       '#collapsible' => TRUE,
-      '#collapsed' => ($package == 'Core - required'),
+      '#access' => ($package != 'Core - required'),
       '#theme' => 'system_modules_fieldset',
       '#header' => array(
         array('data' => t('Enabled'), 'class' => 'checkbox'),
