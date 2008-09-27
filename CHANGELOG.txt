@@ -15,6 +15,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
       hashing and authentication schemes.
 - Usability:
     * Implemented drag-and-drop positioning for input format listings.
+    * Implemented drag-and-drop positioning for language listing.
     * Implemented drag-and-drop positioning for poll options.
     * Provided descriptions for user permissions.
     * Removed comment controls for users.

@@ -44,7 +44,8 @@ function locale_languages_overview_form() {
     }
     $form['weight'][$langcode] = array(
       '#type' => 'weight',
-      '#default_value' => $language->weight
+      '#default_value' => $language->weight,
+      '#attributes' => array('class' => 'language-order-weight'),
     );
     $form['name'][$langcode] = array('#markup' => check_plain($language->name));
     $form['native'][$langcode] = array('#markup' => check_plain($language->native));
@@ -79,20 +80,25 @@ function theme_locale_languages_overview_form($form) {
         $form['enabled'][$key]['#attributes']['disabled'] = 'disabled';
       }
       $rows[] = array(
-        array('data' => drupal_render($form['enabled'][$key]), 'align' => 'center'),
-        check_plain($key),
-        '<strong>' . drupal_render($form['name'][$key]) . '</strong>',
-        drupal_render($form['native'][$key]),
-        drupal_render($form['direction'][$key]),
-        drupal_render($form['site_default'][$key]),
-        drupal_render($form['weight'][$key]),
-        l(t('edit'), 'admin/settings/language/edit/' . $key) . (($key != 'en' && $key != $default->language) ? ' ' . l(t('delete'), 'admin/settings/language/delete/' . $key) : '')
+        'data' => array(
+          '<strong>' . drupal_render($form['name'][$key]) . '</strong>',
+          drupal_render($form['native'][$key]),
+          check_plain($key),
+          drupal_render($form['direction'][$key]),
+          array('data' => drupal_render($form['enabled'][$key]), 'align' => 'center'),
+          drupal_render($form['site_default'][$key]),
+          drupal_render($form['weight'][$key]),
+          l(t('edit'), 'admin/settings/language/edit/' . $key) . (($key != 'en' && $key != $default->language) ? ' ' . l(t('delete'), 'admin/settings/language/delete/' . $key) : '')
+        ),
+        'class' => 'draggable'
       );
     }
   }
-  $header = array(array('data' => t('Enabled')), array('data' => t('Code')), array('data' => t('English name')), array('data' => t('Native name')), array('data' => t('Direction')), array('data' => t('Default')), array('data' => t('Weight')), array('data' => t('Operations')));
-  $output = theme('table', $header, $rows);
+  $header = array(array('data' => t('English name')), array('data' => t('Native name')), array('data' => t('Code')), array('data' => t('Direction')), array('data' => t('Enabled')), array('data' => t('Default')), array('data' => t('Weight')), array('data' => t('Operations')));
+  $output = theme('table', $header, $rows, array('id' => 'language-order'));
   $output .= drupal_render($form);
+  
+  drupal_add_tabledrag('language-order', 'order', 'sibling', 'language-order-weight');
 
   return $output;
 }
