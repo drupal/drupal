@@ -81,11 +81,10 @@ class MergeQuery_mysql extends MergeQuery {
       $update_fields = $this->updateFields;
     }
     else {
-      $update_fields = $this->insertFields;
-      // If there are no exclude fields, this is a no-op.
-      foreach ($this->excludeFields as $exclude_field) {
-        unset($update_fields[$exclude_field]);
-      }
+      // When update fields are derived from insert fields, we don't need
+      // placeholders since we can tell MySQL to reuse insert supplied
+      // values using the VALUES(col_name) function.
+      $update_fields = array();
     }
 
     $insert_fields = $this->insertFields + $this->keyFields;
@@ -123,7 +122,6 @@ class MergeQuery_mysql extends MergeQuery {
   public function __toString() {
 
     // Set defaults.
-    $update_fields = array();
     if ($this->updateFields) {
       $update_fields = $this->updateFields;
     }
@@ -157,8 +155,15 @@ class MergeQuery_mysql extends MergeQuery {
       unset($update_fields[$field]);
     }
 
+    // Build update fields clauses based on caller supplied list, or derived
+    // from insert supplied values using the VALUES(col_name) function.
     foreach ($update_fields as $field => $value) {
-      $update[] = ($field . '=:db_update_placeholder_' . $max_placeholder++);
+      if ($this->updateFields) {
+        $update[] = ($field . '=:db_update_placeholder_' . $max_placeholder++);
+      }
+      else {
+        $update[] = ($field . '=VALUES(' . $field . ')');
+      }
     }
 
     $query .= implode(', ', $update);
