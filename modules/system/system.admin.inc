@@ -681,9 +681,6 @@ function system_modules($form_state = array()) {
         $extra['dependents'][] = $files[$dependent]->info['name'] . t(' (<span class="admin-disabled">disabled</span>)');
       }
     }
-    if (!isset($module->info['package'])) {
-      $module->info['package'] = 'Other';
-    }
     $form['modules'][$module->info['package']][$filename] = _system_modules_build_row($module->info, $extra);
   }
   // Add basic information to the fieldsets.

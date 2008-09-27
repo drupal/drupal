@@ -92,6 +92,7 @@ function module_rebuild_cache() {
     'dependencies' => array(),
     'dependents' => array(),
     'description' => '',
+    'package' => 'Other',
     'version' => NULL,
     'php' => DRUPAL_MINIMUM_PHP,
   );
