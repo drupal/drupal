@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.623 2008/09/20 03:49:24 webchick Exp $
+// $Id: system.module,v 1.624 2008/09/27 19:47:43 webchick Exp $
 
 /**
  * @file
@@ -219,7 +219,7 @@ function system_elements() {
     '#size' => 60,
     '#maxlength' => 128,
     '#autocomplete_path' => FALSE,
-    '#process' => array('form_process_ahah'),
+    '#process' => array('form_process_input_format', 'form_process_ahah'),
   );
 
   $type['password'] = array(
@@ -239,7 +239,7 @@ function system_elements() {
     '#cols' => 60,
     '#rows' => 5,
     '#resizable' => TRUE,
-    '#process' => array('form_process_ahah'),
+    '#process' => array('form_process_input_format', 'form_process_ahah'),
   );
 
   $type['radios'] = array(
