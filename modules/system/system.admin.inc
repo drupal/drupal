@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.90 2008/09/20 20:22:24 webchick Exp $
+// $Id: system.admin.inc,v 1.91 2008/09/27 04:55:31 webchick Exp $
 
 /**
  * @file
@@ -783,7 +783,7 @@ function _system_modules_build_row($info, $extra) {
     $form['enable'] = array(
       '#markup' =>  theme('image', 'misc/watchdog-error.png', t('incompatible'), $status_short),
     );
-    $form['description']['#value'] .= theme('system_modules_incompatible', $status_long);
+    $form['description']['#markup'] .= theme('system_modules_incompatible', $status_long);
   }
 
   // Show a "more help" link for modules that have them.
