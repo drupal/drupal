@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.91 2008/09/27 04:55:31 webchick Exp $
+// $Id: system.admin.inc,v 1.92 2008/09/27 05:07:40 webchick Exp $
 
 /**
  * @file
@@ -688,7 +688,7 @@ function system_modules($form_state = array()) {
       '#type' => 'fieldset',
       '#title' => t($package),
       '#collapsible' => TRUE,
-      '#collapsed' => ($package == 'Core - required'),
+      '#access' => ($package != 'Core - required'),
       '#theme' => 'system_modules_fieldset',
       '#header' => array(
         array('data' => t('Enabled'), 'class' => 'checkbox'),
