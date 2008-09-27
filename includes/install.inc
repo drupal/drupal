@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.70 2008/09/20 20:22:23 webchick Exp $
+// $Id: install.inc,v 1.71 2008/09/27 20:03:35 webchick Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -733,6 +733,11 @@ function drupal_install_mkdir($file, $mask, $message = TRUE) {
  *  TRUE/FALSE whether or not we were able to fix the file's permissions.
  */
 function drupal_install_fix_file($file, $mask, $message = TRUE) {
+  // If $file does not exist, fileperms() issues a PHP warning.
+  if (!file_exists($file)) {
+    return FALSE;
+  }
+
   $mod = fileperms($file) & 0777;
   $masks = array(FILE_READABLE, FILE_WRITABLE, FILE_EXECUTABLE, FILE_NOT_READABLE, FILE_NOT_WRITABLE, FILE_NOT_EXECUTABLE);
 
