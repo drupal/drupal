@@ -371,7 +371,7 @@ function system_install() {
   // presumed to be a serialized array. Install will change uid 1 immediately
   // anyways. So we insert the superuser here, the uid is 2 here for now, but
   // very soon it will be changed to 1.
-  db_query("INSERT INTO {users} (name, mail, created, data) VALUES('%s', '%s', %d, '%s')", 'placeholder-for-uid-1', 'placeholder-for-uid-1', REQUEST_TIME, serialize(array()));
+  db_query("INSERT INTO {users} (name, mail, created, status, data) VALUES('%s', '%s', %d, %d, '%s')", 'placeholder-for-uid-1', 'placeholder-for-uid-1', REQUEST_TIME, 1, serialize(array()));
   // This sets the above two users uid 0 (anonymous). We avoid an explicit 0
   // otherwise MySQL might insert the next auto_increment value.
   db_query("UPDATE {users} SET uid = uid - uid WHERE name = '%s'", '');
