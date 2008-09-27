@@ -858,6 +858,7 @@ function node_submit($node) {
   // module-provided 'teaser' form item).
   if (!isset($node->teaser)) {
     if (isset($node->body)) {
+      $node->format = (!empty($node->body_format) ? $node->body_format : FILTER_FORMAT_DEFAULT);
       $node->teaser = node_teaser($node->body, isset($node->format) ? $node->format : NULL);
       // Chop off the teaser from the body if needed. The teaser_include
       // property might not be set (eg. in Blog API postings), so only act on
@@ -938,7 +939,6 @@ function node_save(&$node) {
   $node->changed = REQUEST_TIME;
 
   $node->timestamp = REQUEST_TIME;
-  $node->format = isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT;
   $update_node = TRUE;
 
   // Generate the node table query and the node_revisions table query.

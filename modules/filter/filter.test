@@ -104,7 +104,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->drupalLogin($web_user);
 
     $this->drupalGet('node/add/page');
-    $this->assertFieldByName('format', $full, t('Full HTML filter accessible.'));
+    $this->assertFieldByName('body_format', $full, t('Full HTML filter accessible.'));
 
     // Use filtered HTML and see if it removes tags that arn't allowed.
     $body = $this->randomName();
@@ -113,7 +113,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['title'] = $this->randomName();
     $edit['body'] = $body . '<random>' . $extra_text . '</random>';
-    $edit['format'] = $filtered;
+    $edit['body_format'] = $filtered;
     $this->drupalPost('node/add/page', $edit, t('Save'));
     $this->assertRaw(t('Page %title has been created.', array('%title' => $edit['title'])), t('Filtered node created.'));
 

@@ -1753,6 +1753,79 @@ function form_process_radios($element) {
 }
 
 /**
+ * Add input format selector to text elements with the #input_format property.
+ *
+ * The #input_format property should be the ID of an input format, found in 
+ * {filter_formats}.format, which gets passed to filter_form().
+ *
+ * If the property #input_format is set, the form element will be expanded into
+ * two separate form elements, one holding the content of the element, and the
+ * other holding the input format selector. The original element is shifted into
+ * a child element, but is otherwise unaltered, so that the format selector is
+ * at the same level as the text field which it affects.
+ *
+ * For example:
+ * @code
+ *   // A simple textarea, such as a node body.
+ *   $form['body'] = array(
+ *     '#type' => 'textarea',
+ *     '#title' => t('Body'),
+ *     '#input_format' => isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT,
+ *   ); 
+ * @endcode
+ *
+ * Becomes:
+ * @code
+ *   $form['body'] = array(
+ *     // Type switches to 'markup', as we're only interested in submitting the child elements.
+ *     '#type' => 'markup',
+ *     // 'value' holds the original element.
+ *     'value' => array(
+ *       '#type' => 'textarea',
+ *       '#title' => t('Body'),
+ *       '#parents' => array('body'),
+ *     ),
+ *     // 'format' holds the input format selector.
+ *     'format' => array(
+ *       '#parents' => array('body_format'),
+ *       ...
+ *     ),
+ *   );
+ * @endcode
+ *
+ * And would result in:
+ * @code
+ *   // Original, unaltered form element value.
+ *   $form_state['values']['body'] = 'Example content';
+ *   // Chosen input format.
+ *   $form_state['values']['body_format'] = 1;
+ * @endcode
+ *
+ * @see system_elements(), filter_form()
+ */
+function form_process_input_format($element) {
+  if (isset($element['#input_format'])) {
+    // Determine the form element parents and element name to use for the input
+    // format widget. This simulates the 'element' and 'element_format' pair of
+    // parents that filter_form() expects.
+    $element_parents = $element['#parents'];
+    $element_name = array_pop($element_parents);
+    $element_parents[] = $element_name . '_format';
+
+    // We need to break references, otherwise form_builder recurses infinitely.
+    $element['value'] = (array)$element;
+    $element['#type'] = 'markup';
+    $element['format'] = filter_form($element['#input_format'], 1, $element_parents);
+
+    // We need to clear the #input_format from the new child otherwise we
+    // would get into an infinite loop.
+    unset($element['value']['#input_format']);
+    $element['value']['#weight'] = 0;
+  }
+  return $element;
+}
+
+/**
  * Add AHAH information about a form element to the page to communicate with
  * javascript. If #ahah[path] is set on an element, this additional javascript is
  * added to the page header to attach the AHAH behaviors. See ahah.js for more
@@ -1792,6 +1865,8 @@ function form_process_ahah($element) {
       case 'select':
         $element['#ahah']['event'] = 'change';
         break;
+      default:
+        return $element;
     }
   }
 

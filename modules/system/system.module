@@ -219,7 +219,7 @@ function system_elements() {
     '#size' => 60,
     '#maxlength' => 128,
     '#autocomplete_path' => FALSE,
-    '#process' => array('form_process_ahah'),
+    '#process' => array('form_process_input_format', 'form_process_ahah'),
   );
 
   $type['password'] = array(
@@ -239,7 +239,7 @@ function system_elements() {
     '#cols' => 60,
     '#rows' => 5,
     '#resizable' => TRUE,
-    '#process' => array('form_process_ahah'),
+    '#process' => array('form_process_input_format', 'form_process_ahah'),
   );
 
   $type['radios'] = array(

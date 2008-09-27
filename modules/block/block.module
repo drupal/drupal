@@ -315,24 +315,21 @@ function block_box_form($edit = array()) {
     '#type' => 'textarea',
     '#title' => t('Block body'),
     '#default_value' => $edit['body'],
+    '#input_format' => isset($edit['format']) ? $edit['format'] : FILTER_FORMAT_DEFAULT,
     '#rows' => 15,
     '#description' => t('The content of the block as shown to the user.'),
     '#weight' => -17,
   );
-  if (!isset($edit['format'])) {
-    $edit['format'] = FILTER_FORMAT_DEFAULT;
-  }
-  $form['body_field']['format'] = filter_form($edit['format'], -16);
 
   return $form;
 }
 
 function block_box_save($edit, $delta) {
-  if (!filter_access($edit['format'])) {
-    $edit['format'] = FILTER_FORMAT_DEFAULT;
+  if (!filter_access($edit['body_format'])) {
+    $edit['body_format'] = FILTER_FORMAT_DEFAULT;
   }
 
-  db_query("UPDATE {boxes} SET body = '%s', info = '%s', format = %d WHERE bid = %d", $edit['body'], $edit['info'], $edit['format'], $delta);
+  db_query("UPDATE {boxes} SET body = '%s', info = '%s', format = %d WHERE bid = %d", $edit['body'], $edit['info'], $edit['body_format'], $delta);
 
   return TRUE;
 }

@@ -666,7 +666,7 @@ function comment_save($edit) {
       );
       if ($edit['cid']) {
         // Update the comment in the database.
-        db_query("UPDATE {comments} SET status = %d, timestamp = %d, subject = '%s', comment = '%s', format = %d, uid = %d, name = '%s', mail = '%s', homepage = '%s' WHERE cid = %d", $edit['status'], $edit['timestamp'], $edit['subject'], $edit['comment'], $edit['format'], $edit['uid'], $edit['name'], $edit['mail'], $edit['homepage'], $edit['cid']);
+        db_query("UPDATE {comments} SET status = %d, timestamp = %d, subject = '%s', comment = '%s', format = %d, uid = %d, name = '%s', mail = '%s', homepage = '%s' WHERE cid = %d", $edit['status'], $edit['timestamp'], $edit['subject'], $edit['comment'], $edit['comment_format'], $edit['uid'], $edit['name'], $edit['mail'], $edit['homepage'], $edit['cid']);
         // Allow modules to respond to the updating of a comment.
         comment_invoke_comment($edit, 'update');
         // Add an entry to the watchdog log.
@@ -719,7 +719,7 @@ function comment_save($edit) {
           $edit['name'] = $user->name;
         }
 
-        db_query("INSERT INTO {comments} (nid, pid, uid, subject, comment, format, hostname, timestamp, status, thread, name, mail, homepage) VALUES (%d, %d, %d, '%s', '%s', %d, '%s', %d, %d, '%s', '%s', '%s', '%s')", $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], ip_address(), $edit['timestamp'], $edit['status'], $thread, $edit['name'], $edit['mail'], $edit['homepage']);
+        db_query("INSERT INTO {comments} (nid, pid, uid, subject, comment, format, hostname, timestamp, status, thread, name, mail, homepage) VALUES (%d, %d, %d, '%s', '%s', %d, '%s', %d, %d, '%s', '%s', '%s', '%s')", $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['comment_format'], ip_address(), $edit['timestamp'], $edit['status'], $thread, $edit['name'], $edit['mail'], $edit['homepage']);
         $edit['cid'] = db_last_insert_id('comments', 'cid');
         // Tell the other modules a new comment has been submitted.
         comment_invoke_comment($edit, 'insert');
@@ -1341,17 +1341,14 @@ function comment_form(&$form_state, $edit, $title = NULL) {
     $default = '';
   }
 
-  $form['comment_filter']['comment'] = array(
+  $form['comment'] = array(
     '#type' => 'textarea',
     '#title' => t('Comment'),
     '#rows' => 15,
     '#default_value' => $default,
+    '#input_format' => isset($edit['format']) ? $edit['format'] : FILTER_FORMAT_DEFAULT,
     '#required' => TRUE,
   );
-  if (!isset($edit['format'])) {
-    $edit['format'] = FILTER_FORMAT_DEFAULT;
-  }
-  $form['comment_filter']['format'] = filter_form($edit['format']);
 
   $form['cid'] = array(
     '#type' => 'value',
@@ -1431,6 +1428,7 @@ function comment_form_add_preview($form, &$form_state) {
   if (!form_get_errors()) {
     _comment_form_submit($edit);
     $comment = (object)$edit;
+    $comment->format = $comment->comment_format;
 
     // Attach the user and time information.
     if (!empty($edit['author'])) {
@@ -1523,7 +1521,7 @@ function _comment_form_submit(&$comment_values) {
     // 2) Strip out all HTML tags
     // 3) Convert entities back to plain-text.
     // Note: format is checked by check_markup().
-    $comment_values['subject'] = trim(truncate_utf8(decode_entities(strip_tags(check_markup($comment_values['comment'], $comment_values['format']))), 29, TRUE));
+    $comment_values['subject'] = trim(truncate_utf8(decode_entities(strip_tags(check_markup($comment_values['comment'], $comment_values['comment_format']))), 29, TRUE));
     // Edge cases where the comment body is populated only by HTML tags will
     // require a default subject.
     if ($comment_values['subject'] == '') {
@@ -1541,7 +1539,6 @@ function comment_form_submit($form, &$form_state) {
     $node = node_load($form_state['values']['nid']);
     $page = comment_new_page_count($node->comment_count, 1, $node);
     $form_state['redirect'] = array('node/' . $node->nid, $page, "comment-$cid");
-
     return;
   }
 }

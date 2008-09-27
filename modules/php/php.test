@@ -73,7 +73,7 @@ class PHPFitlerTestCase extends PHPTestCase {
 
     // Change filter to PHP filter and see that PHP code is evaluated.
     $edit = array();
-    $edit['format'] = 3;
+    $edit['body_format'] = 3;
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Page %title has been updated.', array('%title' => $node->title)), t('PHP code filter turned on.'));
 
@@ -113,6 +113,6 @@ class PHPAccessTestCase extends PHPTestCase {
 
     // Make sure that user doesn't have access to filter.
     $this->drupalGet('node/' . $node->nid . '/edit');
-    $this->assertNoFieldByName('format', '3', t('Format not available.'));
+    $this->assertNoFieldByName('body_format', '3', t('Format not available.'));
   }
 }
