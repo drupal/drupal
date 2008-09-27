@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.468 2008/09/17 20:37:31 webchick Exp $
+// $Id: book.module,v 1.469 2008/09/27 20:37:00 dries Exp $
 
 /**
  * @file
@@ -295,7 +295,7 @@ function book_get_books() {
  */
 function book_form_alter(&$form, $form_state, $form_id) {
 
-  if (isset($form['type']) && isset($form['#node']) && $form['type']['#value'] . '_node_form' == $form_id) {
+  if (!empty($form['#node_edit_form'])) {
     // Add elements to the node form.
     $node = $form['#node'];
 
