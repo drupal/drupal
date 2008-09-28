@@ -1655,3 +1655,71 @@ class DatabaseRegressionTestCase extends DatabaseTestCase {
     $this->assertIdentical($name, $from_database, t("The database handles UTF-8 characters cleanly."));
   }
 }
+
+/**
+ * Query logging tests.
+ */
+class DatabaseLoggingTestCase extends DatabaseTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => t('Query logging'),
+      'description' => t('Test the query logging facility.'),
+      'group' => t('Database'),
+    );
+  }
+
+  /**
+   * Test that we can log the existence of a query.
+   */
+  function testEnableLogging() {
+    try {
+      Database::startLog('testing');
+
+      db_query("SELECT name FROM {test} WHERE age > :age", array(':age' => 25))->fetchCol();
+      db_query("SELECT age FROM {test} WHERE name > :name", array(':name' => 'Ringo'))->fetchCol();
+
+      $queries = Database::getLog('testing', 'default');
+
+      // For debugging, since SimpleTest offers no good debugging mechanism (irony!).
+      // $this->pass(print_r($queries, 1));
+
+      $this->assertEqual(count($queries), 2, 'Correct number of queries recorded.');
+
+      foreach ($queries as $query) {
+        $this->assertEqual($query['caller']['function'], __FUNCTION__, "Correct function in query log.");
+      }
+
+      // For debugging, since SimpleTest offers no good debugging meachnism (irony!)
+      $this->pass(print_r($_SESSION['lg_debug'], 1));
+      $_SESSION['lg_debug'] = array();
+    }
+    catch(Exception $e) {
+      $this->assertTrue(FALSE, $e->getMessage());
+    }
+  }
+
+  /**
+   * Test that we can run two logs in parallel.
+   */
+  function testEnableMultiLogging() {
+    try {
+      Database::startLog('testing1');
+
+      db_query("SELECT name FROM {test} WHERE age > :age", array(':age' => 25))->fetchCol();
+
+      Database::startLog('testing2');
+
+      db_query("SELECT age FROM {test} WHERE name > :name", array(':name' => 'Ringo'))->fetchCol();
+
+      $queries1 = Database::getLog('testing1');
+      $queries2 = Database::getLog('testing2');
+
+      $this->assertEqual(count($queries1), 2, 'Correct number of queries recorded for log 1.');
+      $this->assertEqual(count($queries2), 1, 'Correct number of queries recorded for log 2.');
+    }
+    catch(Exception $e) {
+      $this->assertTrue(FALSE, $e->getMessage());
+    }
+  }
+}
