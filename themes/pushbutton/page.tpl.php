@@ -10,7 +10,7 @@
   <?php print $scripts ?>
 </head>
 
-<body bgcolor="#ffffff">
+<body>
 
 <div class="hide"><a href="#content" title="<?php print t('Skip navigation') ?>." accesskey="2"><?php print t('Skip navigation') ?></a>.</div>
 
@@ -112,7 +112,7 @@
 
 <?php if ($footer_message || $footer) : ?>
 <div id="footer-message">
-    <p><?php print $footer_message . $footer;?></p>
+    <?php print $footer_message . $footer;?>
 </div>
 <?php endif; ?>
 <?php print $closure;?>
