@@ -1,4 +1,4 @@
-// $Id: tableheader.js,v 1.16 2008/01/30 10:17:39 goba Exp $
+// $Id: tableheader.js,v 1.17 2008/09/30 06:02:05 webchick Exp $
 
 Drupal.tableHeaderDoScroll = function() {
   if (typeof(Drupal.tableHeaderOnScroll)=='function') {
@@ -35,6 +35,9 @@ Drupal.behaviors.tableHeader = function (context) {
     $(this).addClass('tableHeader-processed');
   });
 
+  // Define the anchor holding var.
+  var prevAnchor = '';
+
   // Track positioning and visibility.
   function tracker(e) {
     // Save positioning data.
@@ -62,6 +65,16 @@ Drupal.behaviors.tableHeader = function (context) {
     var vOffset = (document.documentElement.scrollTop || document.body.scrollTop) - e.vPosition;
     var visState = (vOffset > 0 && vOffset < e.vLength) ? 'visible' : 'hidden';
     $(e).css({left: -hScroll + e.hPosition +'px', visibility: visState});
+
+    // Check the previous anchor to see if we need to scroll to make room for the header.
+    // Get the height of the header table and scroll up that amount.
+    if (prevAnchor != location.hash) {
+      if (location.hash != '') {
+        var scrollLocation = $('td' + location.hash).offset().top - $(e).height();
+        $('body, html').scrollTop(scrollLocation);
+      }
+      prevAnchor = location.hash;
+    }
   }
 
   // Only attach to scrollbars once, even if Drupal.attachBehaviors is called
