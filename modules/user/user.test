@@ -257,19 +257,20 @@ class UserPictureTestCase extends DrupalWebTestCase {
         $image = current($this->drupalGetTestFiles('image'));
         $info = image_get_info($image->filename);
 
-        // set new variables;
-        $test_size = floor(filesize($image->filename) / 1000) + 1;
+        // Set new variables: invalid dimensions, valid filesize (0 = no limit).
         $test_dim = ($info['width'] - 10) . 'x' . ($info['height'] - 10);
         variable_set('user_picture_dimensions', $test_dim);
-        variable_set('user_picture_file_size', $test_size);
+        variable_set('user_picture_file_size', 0);
 
         $pic_path = $this->saveUserPicture($image);
+        // Check that the image was resized and is being displayed on the
+        // user's profile page.
+        $text = t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', array('%dimensions' => $test_dim));
+        $this->assertRaw($text, t('Image was resized.'));
+        $this->assertRaw(file_create_url($pic_path), t("Image is displayed in user's profile page"));
 
-        // check if image is displayed in user's profile page
-        $this->assertRaw(file_create_url($pic_path), "Image is displayed in user's profile page");
-
-        // check if file is located in proper directory
-        $this->assertTrue(is_file($pic_path), "File is located in proper directory");
+        // Check if file is located in proper directory.
+        $this->assertTrue(is_file($pic_path), t("File is located in proper directory"));
       }
   }
 
@@ -289,20 +290,22 @@ class UserPictureTestCase extends DrupalWebTestCase {
         $image = current($this->drupalGetTestFiles('image'));
         $info = image_get_info($image->filename);
 
-        // Set new variables.
+        // Set new variables: valid dimensions, invalid filesize.
         $test_dim = ($info['width'] + 10) . 'x' . ($info['height'] + 10);
-        $test_size = filesize($image->filename);
+        $test_size = 1;
         variable_set('user_picture_dimensions', $test_dim);
         variable_set('user_picture_file_size', $test_size);
 
-        $picture_path = $this->saveUserPicture($image);
-        $this->assertText(t('The changes have been saved.'));
+        $pic_path = $this->saveUserPicture($image);
 
-        // Check if image is displayed in user's profile page.
-        $this->assertRaw(file_create_url($picture_path), t("Image is displayed in user's profile page"));
+        // Test that the upload failed and that the correct reason was cited.
+        $text = t('The specified file %filename could not be uploaded.', array('%filename' => $image->basename));
+        $this->assertRaw($text, t('Upload failed.'));
+        $text = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size(filesize($image->filename)), '%maxsize' => format_size($test_size * 1024)));
+        $this->assertRaw($text, t('File size cited as reason for failure.'));
 
-        // Check if file is located in proper directory.
-        $this->assertTrue(is_file($picture_path), t('File is located in proper directory'));
+        // Check if file is not uploaded.
+        $this->assertFalse(is_file($pic_path), t('File was not uploaded.'));
       }
   }
 
@@ -322,18 +325,21 @@ class UserPictureTestCase extends DrupalWebTestCase {
         $image = current($this->drupalGetTestFiles('image'));
         $info = image_get_info($image->filename);
 
-        // Set new variables.
-        $test_size = floor(filesize($image->filename) / 1000) + 1;
+        // Set new variables: invalid dimensions, valid filesize (0 = no limit).
         $test_dim = ($info['width'] - 10) . 'x' . ($info['height'] - 10);
         variable_set('user_picture_dimensions', $test_dim);
-        variable_set('user_picture_file_size', $test_size);
+        variable_set('user_picture_file_size', 0);
 
         $pic_path = $this->saveUserPicture($image);
-        $text = t('The uploaded image is too large; the maximum dimensions are %dimensions pixels.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85')));
-        $this->assertText($text, t('Checking response on invalid image (dimensions).'));
 
-        // check if file is not uploaded
-        $this->assertFalse(is_file($pic_path), t('File is not uploaded'));
+        // Test that the upload failed and that the correct reason was cited.
+        $text = t('The specified file %filename could not be uploaded.', array('%filename' => $image->basename));
+        $this->assertRaw($text, t('Upload failed.'));
+        $text = t('The image is too large; the maximum dimensions are %dimensions pixels.', array('%dimensions' => $test_dim));
+        $this->assertRaw($text, t('Checking response on invalid image (dimensions).'));
+
+        // Check if file is not uploaded.
+        $this->assertFalse(is_file($pic_path), t('File was not uploaded.'));
       }
    }
 
@@ -350,21 +356,24 @@ class UserPictureTestCase extends DrupalWebTestCase {
         $this->drupalLogin($this->user);
 
         $image = current($this->drupalGetTestFiles('image'));
-        $image->filename = realpath("modules/tests/image-2.jpg");
         $info = image_get_info($image->filename);
-        // invalid size
-        // restore one and set another
+
+        // Set new variables: valid dimensions, invalid filesize.
         $test_dim = ($info['width'] + 10) . 'x' . ($info['height'] + 10);
-        $test_size = floor(filesize($image->filename) / 1000) - 1;
+        $test_size = 1;
         variable_set('user_picture_dimensions', $test_dim);
         variable_set('user_picture_file_size', $test_size);
 
         $pic_path = $this->saveUserPicture($image);
-        $text = t('The uploaded image is too large; the maximum file size is %size kB.', array('%size' => variable_get('user_picture_file_size', '30')));
-        $this->assertText($text, t('Checking response on invalid image size.'));
 
-        // check if file is not uploaded
-        $this->assertFalse(is_file($pic_path), t('File is not uploaded.'));
+        // Test that the upload failed and that the correct reason was cited.
+        $text = t('The specified file %filename could not be uploaded.', array('%filename' => $image->basename));
+        $this->assertRaw($text, t('Upload failed.'));
+        $text = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size(filesize($image->filename)), '%maxsize' => format_size($test_size * 1024)));
+        $this->assertRaw($text, t('File size cited as reason for failure.'));
+
+        // Check if file is not uploaded.
+        $this->assertFalse(is_file($pic_path), t('File was not uploaded.'));
       }
   }
 
@@ -381,12 +390,10 @@ class UserPictureTestCase extends DrupalWebTestCase {
       $image = current($this->drupalGetTestFiles('image'));
       $info = image_get_info($image->filename);
 
-      // valid size & dimensions
-      // restore one and set another
+      // Set new variables: valid dimensions, valid filesize (0 = no limit).
       $test_dim = ($info['width'] + 10) . 'x' . ($info['height'] + 10);
-      $test_size = floor(filesize($image->filename) / 1000) + 1;
       variable_set('user_picture_dimensions', $test_dim);
-      variable_set('user_picture_file_size', $test_size);
+      variable_set('user_picture_file_size', 0);
 
       $pic_path = $this->saveUserPicture($image);
 
