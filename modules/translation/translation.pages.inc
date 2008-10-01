@@ -40,7 +40,7 @@ function translation_node_overview($node) {
       $status = $translation_node->status ? t('Published') : t('Not published');
       $status .= $translation_node->translate ? ' - <span class="marker">' . t('outdated') . '</span>' : '';
       if ($translation_node->nid == $tnid) {
-        $language_name = '<strong>' . $language_name . '</strong> (source)';
+        $language_name = t('<strong>@language_name</strong> (source)', array('@language_name' => $language_name));
       }
     }
     else {
