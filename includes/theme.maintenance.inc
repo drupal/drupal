@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.18 2008/09/20 20:22:23 webchick Exp $
+// $Id: theme.maintenance.inc,v 1.19 2008/10/01 00:27:29 webchick Exp $
 
 /**
  * @file
@@ -66,6 +66,7 @@ function _drupal_maintenance_theme() {
   drupal_add_css(drupal_get_path('module', 'system') . '/system.css', 'module');
   drupal_add_css(drupal_get_path('module', 'system') . '/system-menus.css', 'module');
   drupal_add_css(drupal_get_path('module', 'system') . '/maintenance.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'system') . '/admin.css', 'module');
 }
 
 /**

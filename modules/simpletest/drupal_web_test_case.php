@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.45 2008/09/20 20:22:24 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.46 2008/10/01 00:27:29 webchick Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -691,7 +691,7 @@ class DrupalWebTestCase {
 
     // Add the specified modules to the list of modules in the default profile.
     $args = func_get_args();
-    $modules = array_unique(array_merge(drupal_verify_profile('default', 'en'), $args));
+    $modules = array_unique(array_merge(drupal_get_profile_modules('default', 'en'), $args));
     drupal_install_modules($modules);
 
     // Because the schema is static cached, we need to flush

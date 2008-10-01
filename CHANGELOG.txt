@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.279 2008/09/27 21:09:15 dries Exp $
+// $Id: CHANGELOG.txt,v 1.280 2008/10/01 00:27:29 webchick Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -14,6 +14,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Implemented a pluggable password hashing API supporting alternative
       hashing and authentication schemes.
 - Usability:
+    * Improved installer requirements check.
     * Improved support for integration of WYSIWYG editors.
     * Implemented drag-and-drop positioning for input format listings.
     * Implemented drag-and-drop positioning for language listing.
