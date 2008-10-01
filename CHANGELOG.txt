@@ -14,6 +14,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Implemented a pluggable password hashing API supporting alternative
       hashing and authentication schemes.
 - Usability:
+    * Improved installer requirements check.
     * Improved support for integration of WYSIWYG editors.
     * Implemented drag-and-drop positioning for input format listings.
     * Implemented drag-and-drop positioning for language listing.

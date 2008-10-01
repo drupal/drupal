@@ -691,7 +691,7 @@ class DrupalWebTestCase {
 
     // Add the specified modules to the list of modules in the default profile.
     $args = func_get_args();
-    $modules = array_unique(array_merge(drupal_verify_profile('default', 'en'), $args));
+    $modules = array_unique(array_merge(drupal_get_profile_modules('default', 'en'), $args));
     drupal_install_modules($modules);
 
     // Because the schema is static cached, we need to flush

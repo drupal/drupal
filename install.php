@@ -122,17 +122,20 @@ function install_main() {
     }
 
     // Check the installation requirements for Drupal and this profile.
-    install_check_requirements($profile, $verify);
+    $requirements = install_check_requirements($profile, $verify);
 
     // Verify existence of all required modules.
-    $modules = drupal_verify_profile($profile, $install_locale);
+    $requirements += drupal_verify_profile($profile, $install_locale);
 
-    // If any error messages are set now, it means a requirement problem.
-    $messages = drupal_set_message();
-    if (!empty($messages['error'])) {
+    // Check the severity of the requirements reported.
+    $severity = drupal_requirements_severity($requirements);
+
+    if ($severity == REQUIREMENT_ERROR) {
       install_task_list('requirements');
       drupal_set_title(st('Requirements problem'));
-      print theme('install_page', '');
+      $status_report = theme('status_report', $requirements);
+      $status_report .= st('Please check the error messages and <a href="!url">try again</a>.', array('!url' => request_uri()));
+      print theme('install_page', $status_report);
       exit;
     }
 
@@ -147,6 +150,7 @@ function install_main() {
     // Save the list of other modules to install for the 'profile-install'
     // task. variable_set() can be used now that system.module is installed
     // and drupal is bootstrapped.
+    $modules = drupal_get_profile_modules($profile, $install_locale);
     variable_set('install_profile_modules', array_diff($modules, array('system')));
   }
 
@@ -890,6 +894,8 @@ function install_reserved_tasks() {
  * Check installation requirements and report any errors.
  */
 function install_check_requirements($profile, $verify) {
+  // Check the profile requirements.
+  $requirements = drupal_check_profile($profile);
 
   // If Drupal is not set up already, we need to create a settings file.
   if (!$verify) {
@@ -909,48 +915,37 @@ function install_check_requirements($profile, $verify) {
         $exists = TRUE;
       }
     }
+
     if (!$exists) {
-      drupal_set_message(st('The @drupal installer requires that you create a settings file as part of the installation process.
-<ol>
-<li>Copy the %default_file file to %file.</li>
-<li>Change file permissions so that it is writable by the web server. If you are unsure how to grant file permissions, please consult the <a href="@handbook_url">on-line handbook</a>.</li>
-</ol>
-More details about installing Drupal are available in INSTALL.txt.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '%default_file' => $conf_path .'/default.settings.php', '@handbook_url' => 'http://drupal.org/server-permissions')), 'error');
+      $requirements['settings file exists'] = array(
+        'title'       => st('Settings file'),
+        'value'       => st('The settings file does not exist.'),
+        'severity'    => REQUIREMENT_ERROR,
+        'description' => st('The @drupal installer requires that you create a settings file as part of the installation process. Copy the %default_file file to %file. More details about installing Drupal are available in INSTALL.txt.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '%default_file' => $conf_path .'/default.settings.php')),
+      );
     }
-    elseif (!$writable) {
-      drupal_set_message(st('The @drupal installer requires write permissions to %file during the installation process. If you are unsure how to grant file permissions, please consult the <a href="@handbook_url">online handbook</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '@handbook_url' => 'http://drupal.org/server-permissions')), 'error');
+    elseif ($exists) {
+      $requirements['settings file exists'] = array(
+        'title'       => st('Settings file'),
+        'value'       => st('The %file file exists.', array('%file' => $file)),
+      );
     }
-  }
-
-  // Check the other requirements.
-  $requirements = drupal_check_profile($profile);
-  $severity = drupal_requirements_severity($requirements);
-
-  // If there are issues, report them.
-  if ($severity == REQUIREMENT_ERROR) {
-
-    foreach ($requirements as $requirement) {
-      if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
-        $message = $requirement['description'];
-        if (isset($requirement['value']) && $requirement['value']) {
-          $message .= ' (' . st('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) . ')';
-        }
-        drupal_set_message($message, 'error');
-      }
+    if (!$writable) {
+      $requirements['settings file writable'] = array(
+        'title'       => st('Settings file'),
+        'value'       => st('The settings file is not writable.'),
+        'severity'    => REQUIREMENT_ERROR,
+        'description' => st('The @drupal installer requires write permissions to %file during the installation process. If you are unsure how to grant file permissions, please consult the <a href="@handbook_url">online handbook</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '@handbook_url' => 'http://drupal.org/server-permissions')),
+      );
     }
-  }
-  if ($severity == REQUIREMENT_WARNING) {
-
-    foreach ($requirements as $requirement) {
-      if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_WARNING) {
-        $message = $requirement['description'];
-        if (isset($requirement['value']) && $requirement['value']) {
-          $message .= ' (' . st('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) . ')';
-        }
-        drupal_set_message($message, 'warning');
-      }
+    elseif ($writable) {
+      $requirements['settings file'] = array(
+        'title'       => st('Settings file'), 
+        'value'       => st('Settings file is writable.'),
+      );
     }
   }
+  return $requirements;
 }
 
 /**

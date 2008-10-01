@@ -415,6 +415,25 @@ function drupal_get_install_files($module_list = array()) {
 }
 
 /**
+ * Get a list of modules required by an installation profile.
+ *
+ * @param profile
+ *   Name of profile.
+ * @param locale
+ *   Name of locale used (if any).
+ * @return
+ *   The list of modules to install.
+ */
+function drupal_get_profile_modules($profile, $locale = 'en') {
+  $profile_file = "./profiles/$profile/$profile.profile";
+  require_once($profile_file);
+
+  // Get a list of modules required by this profile.
+  $function = $profile . '_profile_modules';
+  return array_merge(drupal_required_modules(), $function(), ($locale != 'en' ? array('locale') : array()));
+}
+
+/**
  * Verify an install profile for installation.
  *
  * @param $profile
@@ -434,11 +453,7 @@ function drupal_verify_profile($profile, $locale) {
     install_no_profile_error();
   }
 
-  require_once $profile_file;
-
-  // Get a list of modules required by this profile.
-  $function = $profile . '_profile_modules';
-  $module_list = array_merge(drupal_required_modules(), $function(), ($locale != 'en' ? array('locale') : array()));
+  $module_list = drupal_get_profile_modules($profile, $locale);
 
   // Get a list of modules that exist in Drupal's assorted subdirectories.
   $present_modules = array();
@@ -448,14 +463,22 @@ function drupal_verify_profile($profile, $locale) {
 
   // Verify that all of the profile's required modules are present.
   $missing_modules = array_diff($module_list, $present_modules);
+
+  $requirements = array();
+  
   if (count($missing_modules)) {
+    $modules = array();
     foreach ($missing_modules as $module) {
-      drupal_set_message(st('The %module module is required but was not found. Please move it into the <em>modules</em> subdirectory.', array('%module' => $module)), 'error');
+      $modules[] = '<span class="admin-missing">' . drupal_ucfirst($module) . '</span>';
     }
+    $requirements['required_modules'] = array(
+      'title'       => st('Required modules'),
+      'value'       => st('Required modules not found.'),
+      'severity'    => REQUIREMENT_ERROR,
+      'description' => st('The following modules are required but were not found. Please move them into the appropriate modules subdirectory, such as <em>sites/all/modules</em>. Missing modules: !modules', array('!modules' => implode(', ', $modules))),
+    );
   }
-  else {
-    return $module_list;
-  }
+  return $requirements;
 }
 
 /**
