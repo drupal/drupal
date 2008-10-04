@@ -1,15 +1,15 @@
-// $Id: INSTALL.txt,v 1.70 2008/07/18 07:24:29 dries Exp $
+// $Id: INSTALL.txt,v 1.71 2008/10/04 18:34:37 webchick Exp $
 
 CONTENTS OF THIS FILE
 ---------------------
 
  * Requirements
- * Optional requirements
+ * Optional tasks
  * Installation
  * Drupal administration
  * Customizing your theme(s)
- * Multisite Configuration
- * More Information
+ * Multisite configuration
+ * More information
 
 REQUIREMENTS
 ------------
