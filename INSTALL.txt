@@ -4,12 +4,12 @@ CONTENTS OF THIS FILE
 ---------------------
 
  * Requirements
- * Optional requirements
+ * Optional tasks
  * Installation
  * Drupal administration
  * Customizing your theme(s)
- * Multisite Configuration
- * More Information
+ * Multisite configuration
+ * More information
 
 REQUIREMENTS
 ------------
