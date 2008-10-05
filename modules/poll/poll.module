@@ -284,15 +284,15 @@ function poll_menu($may_cache) {
 function poll_load($node) {
   global $user;
 
-  // Load the appropriate choices into the $node object
   $poll = db_fetch_object(db_query("SELECT runtime, active FROM {poll} WHERE nid = %d", $node->nid));
 
+  // Load the appropriate choices into the $poll object.
   $result = db_query("SELECT chtext, chvotes, chorder FROM {poll_choices} WHERE nid = %d ORDER BY chorder", $node->nid);
   while ($choice = db_fetch_array($result)) {
     $poll->choice[$choice['chorder']] = $choice;
   }
 
-  // Determine whether or not this user is allowed to vote
+  // Determine whether or not this user is allowed to vote.
   $poll->allowvotes = FALSE;
   if (user_access('vote on polls') && $poll->active) {
     if ($user->uid) {
@@ -629,18 +629,32 @@ function poll_view($node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
  * Implementation of hook_update().
  */
 function poll_update($node) {
+  // Update poll settings.
   db_query('UPDATE {poll} SET runtime = %d, active = %d WHERE nid = %d', $node->runtime, $node->active, $node->nid);
 
+  // Clean poll choices.
   db_query('DELETE FROM {poll_choices} WHERE nid = %d', $node->nid);
-  db_query('DELETE FROM {poll_votes} WHERE nid = %d', $node->nid);
 
-  $i = 0;
-  foreach ($node->choice as $choice) {
-    $chvotes = (int)$choice['chvotes'];
+  // Poll choices come in the same order with the same numbers as they are in
+  // the database, but some might have an empty title, which signifies that
+  // they should be removed. We remove all votes to the removed options, so
+  // people who voted on them can vote again.
+  $new_chorder = 0;
+  foreach ($node->choice as $old_chorder => $choice) {
+    $chvotes = isset($choice['chvotes']) ? (int)$choice['chvotes'] : 0;
     $chtext = $choice['chtext'];
 
-    if ($chtext != '') {
-      db_query("INSERT INTO {poll_choices} (nid, chtext, chvotes, chorder) VALUES (%d, '%s', %d, %d)", $node->nid, $chtext, $chvotes, $i++);
+    if (!empty($chtext)) {
+      db_query("INSERT INTO {poll_choices} (nid, chtext, chvotes, chorder) VALUES (%d, '%s', %d, %d)", $node->nid, $chtext, $chvotes, $new_chorder);
+      if ($new_chorder != $old_chorder) {
+        // We can only remove items in the middle, not add, so
+        // new_chorder is always <= old_chorder, making this safe.
+        db_query("UPDATE {poll_votes} SET chorder = %d WHERE nid = %d AND chorder = %d", $new_chorder, $node->nid, $old_chorder);
+      }
+      $new_chorder++;
+    }
+    else {
+      db_query("DELETE FROM {poll_votes} WHERE nid = %d AND chorder = %d", $node->nid, $old_chorder);
     }
   }
 }
