@@ -244,7 +244,7 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
 function drupal_get_install_files($module_list = array()) {
   $installs = array();
   foreach ($module_list as $module) {
-    $installs = array_merge($installs, file_scan_directory('./modules', "^$module.install$", array('.', '..', 'CVS'), 0, TRUE, 'name', 0));
+    $installs = array_merge($installs, drupal_system_listing($module .'.install$', 'modules'));
   }
   return $installs;
 }
@@ -678,6 +678,7 @@ function _system_update_utf8($tables) {
  */
 function drupal_check_profile($profile) {
   include_once './includes/file.inc';
+  include_once './includes/common.inc';
 
   $profile_file = "./profiles/$profile/$profile.profile";
 
