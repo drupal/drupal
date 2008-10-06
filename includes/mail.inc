@@ -35,7 +35,7 @@
  *     foreach ($accounts as $account) {
  *       $params['account'] = $account;
  *       // example_mail() will be called based on the first drupal_mail() parameter.
- *       drupal_mail('example', 'notify', $account->mail, user_preferred_language($account), $params);
+ *       drupal_mail('example', 'notice', $account->mail, user_preferred_language($account), $params);
  *     }
  *   }
  *
@@ -435,7 +435,7 @@ function _drupal_wrap_mail_line(&$line, $key, $values) {
 function _drupal_html_to_mail_urls($match = NULL, $reset = FALSE) {
   global $base_url, $base_path;
   static $urls = array(), $regexp;
-  
+
   if ($reset) {
     // Reset internal URL list.
     $urls = array();
