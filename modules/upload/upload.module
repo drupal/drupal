@@ -263,89 +263,114 @@ function upload_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implementation of hook_nodeapi().
+ * Implementation of hook_nodeapi_load().
  */
-function upload_nodeapi(&$node, $op, $teaser) {
-  switch ($op) {
-
-    case 'load':
-      $output = '';
-      if (variable_get("upload_$node->type", 1) == 1) {
-        $output['files'] = upload_load($node);
-        return $output;
-      }
-      break;
-
-    case 'view':
-      if (isset($node->files) && user_access('view uploaded files')) {
-        // Add the attachments list to node body with a heavy
-        // weight to ensure they're below other elements
-        if (count($node->files)) {
-          if (!$teaser && user_access('view uploaded files')) {
-            $node->content['files'] = array(
-              '#markup' => theme('upload_attachments', $node->files),
-              '#weight' => 50,
-            );
-          }
-        }
-      }
-      break;
-
-    case 'prepare':
-      // Initialize $_SESSION['upload_files'] if no post occurred.
-      // This clears the variable from old forms and makes sure it
-      // is an array to prevent notices and errors in other parts
-      // of upload.module.
-      if (!$_POST) {
-        $_SESSION['upload_files'] = array();
-      }
-      break;
-
-    case 'insert':
-    case 'update':
-      if (user_access('upload files')) {
-        upload_save($node);
-      }
-      break;
-
-    case 'delete':
-      upload_delete($node);
-      break;
-
-    case 'delete revision':
-      upload_delete_revision($node);
-      break;
-
-    case 'search result':
-      return isset($node->files) && is_array($node->files) ? format_plural(count($node->files), '1 attachment', '@count attachments') : NULL;
-
-    case 'rss item':
-      if (is_array($node->files)) {
-        $files = array();
-        foreach ($node->files as $file) {
-          if ($file->list) {
-            $files[] = $file;
-          }
-        }
-        if (count($files) > 0) {
-          // RSS only allows one enclosure per item
-          $file = array_shift($files);
-          return array(
-            array(
-              'key' => 'enclosure',
-              'attributes' => array(
-                'url' => file_create_url($file->filepath),
-                'length' => $file->filesize,
-                'type' => $file->filemime
-              )
-            )
-          );
-        }
-      }
-      return array();
+function upload_nodeapi_load(&$node, $teaser) {
+  if (variable_get("upload_$node->type", 1) == 1) {
+    $output = array('files' => upload_load($node));
+    return $output;
   }
 }
 
+/**
+ * Implementation of hook_nodeapi_view().
+ */
+function upload_nodeapi_view(&$node, $teaser) {
+  if (isset($node->files) && user_access('view uploaded files')) {
+    // Add the attachments list to node body with a heavy
+    // weight to ensure they're below other elements
+    if (count($node->files)) {
+      if (!$teaser && user_access('view uploaded files')) {
+        $node->content['files'] = array(
+          '#markup' => theme('upload_attachments', $node->files),
+          '#weight' => 50,
+        );
+      }
+    }
+  }
+}
+ 
+/**
+ * Implementation of hook_nodeapi_prepare().
+ */
+function upload_nodeapi_prepare(&$node, $teaser) {
+  // Initialize $_SESSION['upload_files'] if no post occurred.
+  // This clears the variable from old forms and makes sure it
+  // is an array to prevent notices and errors in other parts
+  // of upload.module.
+  if (!$_POST) {
+    $_SESSION['upload_files'] = array();
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi_insert().
+ */
+function upload_nodeapi_insert(&$node, $teaser) {
+  if (user_access('upload files')) {
+    upload_save($node);
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi_update().
+ */
+function upload_nodeapi_update(&$node, $teaser) {
+  if (user_access('upload files')) {
+    upload_save($node);
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi_delete().
+ */
+function upload_nodeapi_delete(&$node, $teaser) {
+  upload_delete($node);
+}
+
+/**
+ * Implementation of hook_nodeapi_delete_revision().
+ */
+function upload_nodeapi_delete_revision(&$node, $teaser) {
+  upload_delete_revision($node);
+}
+ 
+/**
+ * Implementation of hook_nodeapi_search_result().
+ */
+function upload_nodeapi_search_result(&$node, $teaser) {
+  return isset($node->files) && is_array($node->files) ? format_plural(count($node->files), '1 attachment', '@count attachments') : NULL;
+}
+ 
+/**
+ * Implementation of hook_nodeapi_rss_item().
+ */
+function upload_nodeapi_rss_item(&$node, $teaser) {
+  if (is_array($node->files)) {
+    $files = array();
+    foreach ($node->files as $file) {
+      if ($file->list) {
+        $files[] = $file;
+      }
+    }
+    if (count($files) > 0) {
+      // RSS only allows one enclosure per item
+      $file = array_shift($files);
+      return array(
+        array(
+          'key' => 'enclosure',
+          'attributes' => array(
+            'url' => file_create_url($file->filepath),
+            'length' => $file->filesize,
+            'type' => $file->filemime
+          )
+        )
+      );
+    }
+  }
+  return array();
+}
+ 
 /**
  * Displays file attachments in table
  *

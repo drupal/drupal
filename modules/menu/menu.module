@@ -277,65 +277,90 @@ function menu_block($op = 'list', $delta = '') {
 }
 
 /**
- * Implementation of hook_nodeapi().
+ * Implementation of hook_nodeapi_insert().
  */
-function menu_nodeapi(&$node, $op) {
-  switch ($op) {
-    case 'insert':
-    case 'update':
-      if (isset($node->menu)) {
-        $item = $node->menu;
-        if (!empty($item['delete'])) {
-          menu_link_delete($item['mlid']);
-        }
-        elseif (trim($item['link_title'])) {
-          $item['link_title'] = trim($item['link_title']);
-          $item['link_path'] = "node/$node->nid";
-          if (!$item['customized']) {
-            $item['options']['attributes']['title'] = trim($node->title);
-          }
-          if (!menu_link_save($item)) {
-            drupal_set_message(t('There was an error saving the menu link.'), 'error');
-          }
-        }
+function menu_nodeapi_insert(&$node) {
+  if (isset($node->menu)) {
+    $item = $node->menu;
+    if (!empty($item['delete'])) {
+      menu_link_delete($item['mlid']);
+    }
+    elseif (trim($item['link_title'])) {
+      $item['link_title'] = trim($item['link_title']);
+      $item['link_path'] = "node/$node->nid";
+      if (!$item['customized']) {
+        $item['options']['attributes']['title'] = trim($node->title);
       }
-      break;
-    case 'delete':
-      // Delete all menu module links that point to this node.
-      $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu'", array(':path' => 'node/'. $node->nid));
-      while ($m = db_fetch_array($result)) {
-        menu_link_delete($m['mlid']);
+      if (!menu_link_save($item)) {
+        drupal_set_message(t('There was an error saving the menu link.'), 'error');
       }
-      break;
-    case 'prepare':
-      if (empty($node->menu)) {
-        // Prepare the node for the edit form so that $node->menu always exists.
-        $menu_name = variable_get('menu_default_node_menu', 'main-menu');
-        $item = array();
-        if (isset($node->nid)) {
-          // Give priority to the default menu
-          $mlid = db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND menu_name = :menu_name AND module = 'menu' ORDER BY mlid ASC", array(
-            ':path' => 'node/'. $node->nid,
-            ':menu_name' => $menu_name,
-          ), 0, 1));
-          // Check all menus if a link does not exist in the default menu.
-          if (!$mlid) {
-            $mlid = db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu' ORDER BY mlid ASC", array(
-              ':path' => 'node/'. $node->nid,
-            ), 0, 1));
-          }
-          if ($mlid) {
-            $item = menu_link_load($mlid);
-          }
-        }
-        // Set default values.
-        $node->menu = $item + array('link_title' => '', 'mlid' => 0, 'plid' => 0, 'menu_name' => $menu_name, 'weight' => 0, 'options' => array(), 'module' => 'menu', 'expanded' => 0, 'hidden' => 0, 'has_children' => 0, 'customized' => 0);
+    }
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi_update().
+ */
+function menu_nodeapi_update(&$node) {
+  if (isset($node->menu)) {
+    $item = $node->menu;
+    if (!empty($item['delete'])) {
+      menu_link_delete($item['mlid']);
+    }
+    elseif (trim($item['link_title'])) {
+      $item['link_title'] = trim($item['link_title']);
+      $item['link_path'] = "node/$node->nid";
+      if (!$item['customized']) {
+        $item['options']['attributes']['title'] = trim($node->title);
       }
-      // Find the depth limit for the parent select.
-      if (!isset($node->menu['parent_depth_limit'])) {
-        $node->menu['parent_depth_limit'] = _menu_parent_depth_limit($node->menu);
+      if (!menu_link_save($item)) {
+        drupal_set_message(t('There was an error saving the menu link.'), 'error');
       }
-      break;
+    }
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi_delete().
+ */
+function menu_nodeapi_delete(&$node) {
+  // Delete all menu module links that point to this node.
+  $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu'", array(':path' => 'node/'. $node->nid));
+  while ($m = db_fetch_array($result)) {
+    menu_link_delete($m['mlid']);
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi_prepare().
+ */
+function menu_nodeapi_prepare(&$node) {
+  if (empty($node->menu)) {
+    // Prepare the node for the edit form so that $node->menu always exists.
+    $menu_name = variable_get('menu_default_node_menu', 'main-menu');
+    $item = array();
+    if (isset($node->nid)) {
+      // Give priority to the default menu
+      $mlid = db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND menu_name = :menu_name AND module = 'menu' ORDER BY mlid ASC", array(
+        ':path' => 'node/'. $node->nid,
+        ':menu_name' => $menu_name,
+      ), 0, 1));
+      // Check all menus if a link does not exist in the default menu.
+      if (!$mlid) {
+        $mlid = db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu' ORDER BY mlid ASC", array(
+          ':path' => 'node/'. $node->nid,
+        ), 0, 1));
+      }
+      if ($mlid) {
+        $item = menu_link_load($mlid);
+      }
+    }
+    // Set default values.
+    $node->menu = $item + array('link_title' => '', 'mlid' => 0, 'plid' => 0, 'menu_name' => $menu_name, 'weight' => 0, 'options' => array(), 'module' => 'menu', 'expanded' => 0, 'hidden' => 0, 'has_children' => 0, 'customized' => 0);
+  }
+  // Find the depth limit for the parent select.
+  if (!isset($node->menu['parent_depth_limit'])) {
+    $node->menu['parent_depth_limit'] = _menu_parent_depth_limit($node->menu);
   }
 }
 

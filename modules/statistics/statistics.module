@@ -317,14 +317,11 @@ function _statistics_format_item($title, $path) {
 }
 
 /**
- * Implementation of hook_nodeapi().
+ * Implementation of hook_nodeapi_delete().
  */
-function statistics_nodeapi(&$node, $op, $arg = 0) {
-  switch ($op) {
-    case 'delete':
-      // clean up statistics table when node is deleted
-      db_query('DELETE FROM {node_counter} WHERE nid = %d', $node->nid);
-  }
+function statistics_nodeapi_delete(&$node, $arg = 0) {
+  // clean up statistics table when node is deleted
+  db_query('DELETE FROM {node_counter} WHERE nid = %d', $node->nid);
 }
 
 /**

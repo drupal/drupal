@@ -704,9 +704,10 @@ function node_invoke(&$node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
  */
 function node_invoke_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   $return = array();
-  foreach (module_implements('nodeapi') as $name) {
-    $function = $name . '_nodeapi';
-    $result = $function($node, $op, $a3, $a4);
+  $hook = 'nodeapi_' . $op;
+  foreach (module_implements($hook) as $name) {
+    $function = $name . '_' . $hook;
+    $result = $function($node, $a3, $a4);
     if (isset($result) && is_array($result)) {
       $return = array_merge($return, $result);
     }
@@ -1321,9 +1322,9 @@ function node_search($op = 'search', $keys = NULL) {
         $node->body = drupal_render($node->content);
 
         // Fetch comments for snippet.
-        $node->body .= module_invoke('comment', 'nodeapi', $node, 'update index');
+        $node->body .= module_invoke('comment', 'nodeapi', $node, 'update_index');
         // Fetch terms for snippet.
-        $node->body .= module_invoke('taxonomy', 'nodeapi', $node, 'update index');
+        $node->body .= module_invoke('taxonomy', 'nodeapi', $node, 'update_index');
 
         $extra = node_invoke_nodeapi($node, 'search result');
 
@@ -1742,7 +1743,7 @@ function node_feed($nids = FALSE, $channel = array()) {
     }
 
     // Allow modules to add additional item fields and/or modify $item
-    $extra = node_invoke_nodeapi($item, 'rss item');
+    $extra = node_invoke_nodeapi($item, 'rss_item');
     $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' => gmdate('r', $item->created)), array('key' => 'dc:creator', 'value' => $item->name), array('key' => 'guid', 'value' => $item->nid . ' at ' . $base_url, 'attributes' => array('isPermaLink' => 'false'))));
     foreach ($extra as $element) {
       if (isset($element['namespace'])) {

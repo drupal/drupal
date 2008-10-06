@@ -626,24 +626,25 @@ function search_touch_node($nid) {
 }
 
 /**
- * Implementation of hook_nodeapi().
+ * Implementation of hook_nodeapi_update_index().
  */
-function search_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
-  switch ($op) {
-    // Transplant links to a node into the target node.
-    case 'update index':
-      $result = db_query("SELECT caption FROM {search_node_links} WHERE nid = %d", $node->nid);
-      $output = array();
-      while ($link = db_fetch_object($result)) {
-        $output[] = $link->caption;
-      }
-      return '<a>(' . implode(', ', $output) . ')</a>';
-    // Reindex the node when it is updated.  The node is automatically indexed
-    // when it is added, simply by being added to the node table.
-    case 'update':
-      search_touch_node($node->nid);
-      break;
+function search_nodeapi_update_index(&$node, $teaser = NULL, $page = NULL) {
+  // Transplant links to a node into the target node.
+  $result = db_query("SELECT caption FROM {search_node_links} WHERE nid = %d", $node->nid);
+  $output = array();
+  while ($link = db_fetch_object($result)) {
+    $output[] = $link->caption;
   }
+  return '<a>(' . implode(', ', $output) . ')</a>';
+}
+
+/**
+ * Implementation of hook_nodeapi_update().
+ */
+function search_nodeapi_update(&$node, $teaser = NULL, $page = NULL) {
+  // Reindex the node when it is updated.  The node is automatically indexed
+  // when it is added, simply by being added to the node table.
+  search_touch_node($node->nid);
 }
 
 /**

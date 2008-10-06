@@ -552,50 +552,68 @@ function comment_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implementation of hook_nodeapi().
+ * Implementation of hook_nodeapi_load().
  */
-function comment_nodeapi(&$node, $op, $arg = 0) {
-  switch ($op) {
-    case 'load':
-      if ($node->comment != COMMENT_NODE_DISABLED) {
-        return db_fetch_array(db_query("SELECT last_comment_timestamp, last_comment_name, comment_count FROM {node_comment_statistics} WHERE nid = %d", $node->nid));
-      }
-      return array('last_comment_timestamp' => $node->created, 'last_comment_name' => '', 'comment_count' => 0);
+function comment_nodeapi_load(&$node, $arg = 0) {
+  if ($node->comment != COMMENT_NODE_DISABLED) {
+    return db_fetch_array(db_query("SELECT last_comment_timestamp, last_comment_name, comment_count FROM {node_comment_statistics} WHERE nid = %d", $node->nid));
+  }
+  return array('last_comment_timestamp' => $node->created, 'last_comment_name' => '', 'comment_count' => 0);
+}
 
-    case 'prepare':
-      if (!isset($node->comment)) {
-        $node->comment = variable_get("comment_$node->type", COMMENT_NODE_READ_WRITE);
-      }
-      break;
+/**
+ * Implementation of hook_nodeapi_prepare().
+ */
+function comment_nodeapi_prepare(&$node, $arg = 0) {
+  if (!isset($node->comment)) {
+    $node->comment = variable_get("comment_$node->type", COMMENT_NODE_READ_WRITE);
+  }
+}
 
-    case 'insert':
-      db_query('INSERT INTO {node_comment_statistics} (nid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) VALUES (%d, %d, NULL, %d, 0)', $node->nid, $node->changed, $node->uid);
-      break;
+/**
+ * Implementation of hook_nodeapi_insert().
+ */
+function comment_nodeapi_insert(&$node, $arg = 0) {
+  db_query('INSERT INTO {node_comment_statistics} (nid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) VALUES (%d, %d, NULL, %d, 0)', $node->nid, $node->changed, $node->uid);
+}
 
-    case 'delete':
-      db_query('DELETE FROM {comments} WHERE nid = %d', $node->nid);
-      db_query('DELETE FROM {node_comment_statistics} WHERE nid = %d', $node->nid);
-      break;
+/**
+ * Implementation of hook_nodeapi_delete().
+ */
+function comment_nodeapi_delete(&$node, $arg = 0) {
+  db_query('DELETE FROM {comments} WHERE nid = %d', $node->nid);
+  db_query('DELETE FROM {node_comment_statistics} WHERE nid = %d', $node->nid);
+}
 
-    case 'update index':
-      $text = '';
-      $comments = db_query('SELECT subject, comment, format FROM {comments} WHERE nid = %d AND status = %d', $node->nid, COMMENT_PUBLISHED);
-      while ($comment = db_fetch_object($comments)) {
-        $text .= '<h2>' . check_plain($comment->subject) . '</h2>' . check_markup($comment->comment, $comment->format, FALSE);
-      }
-      return $text;
+/**
+ * Implementation of hook_nodeapi_update_index().
+ */
+function comment_nodeapi_update_index(&$node, $arg = 0) {
+  $text = '';
+  $comments = db_query('SELECT subject, comment, format FROM {comments} WHERE nid = %d AND status = %d', $node->nid, COMMENT_PUBLISHED);
+  while ($comment = db_fetch_object($comments)) {
+    $text .= '<h2>' . check_plain($comment->subject) . '</h2>' . check_markup($comment->comment, $comment->format, FALSE);
+  }
+  return $text;
+}
 
-    case 'search result':
-      $comments = db_result(db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = %d', $node->nid));
-      return format_plural($comments, '1 comment', '@count comments');
+/**
+ * Implementation of hook_nodeapi_search_result().
+ */
+function comment_nodeapi_search_result(&$node, $arg = 0) {
+  $comments = db_result(db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = %d', $node->nid));
+  return format_plural($comments, '1 comment', '@count comments');
+}
 
-    case 'rss item':
-      if ($node->comment != COMMENT_NODE_DISABLED) {
-        return array(array('key' => 'comments', 'value' => url('node/' . $node->nid, array('fragment' => 'comments', 'absolute' => TRUE))));
-      }
-      else {
-        return array();
-      }
+/**
+ * Implementation of hook_nodeapi_rss_item().
+ */
+function comment_nodeapi_rss_item(&$node, $arg = 0) {
+  if ($node->comment != COMMENT_NODE_DISABLED) {
+    return array(array('key' => 'comments', 'value' => url('node/' . $node->nid, array('fragment' => 'comments', 'absolute' => TRUE))));
+  }
+  else {
+    return array();
   }
 }
 

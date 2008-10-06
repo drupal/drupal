@@ -156,133 +156,197 @@ function forum_init() {
 }
 
 /**
- * Implementation of hook_nodeapi().
+ * _forum_nodeapi_check_node_type 
+ * 
+ * @param mixed $node 
+ * @param mixed $vocabulary
+ * @access protected
+ * @return bool
  */
-function forum_nodeapi(&$node, $op, $teaser, $page) {
+function _forum_nodeapi_check_node_type($node, $vocabulary) {
   // We are going to return if $node->type is not one of the node
   // types assigned to the forum vocabulary.  If forum_nav_vocabulary
   // is undefined or the vocabulary does not exist, it clearly cannot
   // be assigned to $node->type, so return to avoid E_ALL warnings.
-  $vid = variable_get('forum_nav_vocabulary', '');
-  $vocabulary = taxonomy_vocabulary_load($vid);
   if (empty($vocabulary)) {
-    return;
+    return FALSE;
   }
 
   // Operate only on node types assigned for the forum vocabulary.
   if (!in_array($node->type, $vocabulary->nodes)) {
-    return;
+    return FALSE;
   }
 
-  switch ($op) {
-    case 'view':
-      if ($page && taxonomy_node_get_terms_by_vocabulary($node, $vid) && $tree = taxonomy_get_tree($vid)) {
-        // Get the forum terms from the (cached) tree
-        foreach ($tree as $term) {
-          $forum_terms[] = $term->tid;
-        }
-        foreach ($node->taxonomy as $term_id => $term) {
-          if (in_array($term_id, $forum_terms)) {
-            $node->tid = $term_id;
-          }
-        }
-        // Breadcrumb navigation
-        $breadcrumb[] = l(t('Home'), NULL);
-        $breadcrumb[] = l($vocabulary->name, 'forum');
-        if ($parents = taxonomy_get_parents_all($node->tid)) {
-          $parents = array_reverse($parents);
-          foreach ($parents as $p) {
-            $breadcrumb[] = l($p->name, 'forum/' . $p->tid);
-          }
-        }
-        drupal_set_breadcrumb($breadcrumb);
+  return TRUE;
+}
 
-        if (!$teaser) {
-          $node->content['forum_navigation'] = array(
-            '#markup' => theme('forum_topic_navigation', $node),
-            '#weight' => 100,
-          );
+/**
+ * Implementation of hook_nodeapi_view().
+ */
+function forum_nodeapi_view(&$node, $teaser, $page) {
+  $vid = variable_get('forum_nav_vocabulary', '');
+  $vocabulary = taxonomy_vocabulary_load($vid);
+  if (_forum_nodeapi_check_node_type($node, $vocabulary)) {
+    if ($page && taxonomy_node_get_terms_by_vocabulary($node, $vid) && $tree = taxonomy_get_tree($vid)) {
+      // Get the forum terms from the (cached) tree
+      foreach ($tree as $term) {
+        $forum_terms[] = $term->tid;
+      }
+      foreach ($node->taxonomy as $term_id => $term) {
+        if (in_array($term_id, $forum_terms)) {
+          $node->tid = $term_id;
         }
       }
-      break;
-
-    case 'prepare':
-      if (empty($node->nid)) {
-        // New topic
-        $node->taxonomy[arg(3)]->vid = $vid;
-        $node->taxonomy[arg(3)]->tid = arg(3);
+      // Breadcrumb navigation
+      $breadcrumb[] = l(t('Home'), NULL);
+      $breadcrumb[] = l($vocabulary->name, 'forum');
+      if ($parents = taxonomy_get_parents_all($node->tid)) {
+        $parents = array_reverse($parents);
+        foreach ($parents as $p) {
+          $breadcrumb[] = l($p->name, 'forum/' . $p->tid);
+        }
       }
-      break;
+      drupal_set_breadcrumb($breadcrumb);
 
-    // Check in particular that only a "leaf" term in the associated taxonomy
+      if (!$teaser) {
+        $node->content['forum_navigation'] = array(
+          '#markup' => theme('forum_topic_navigation', $node),
+          '#weight' => 100,
+        );
+      }
+    }
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi_prepare().
+ */
+function forum_nodeapi_prepare(&$node, $teaser, $page) {
+  $vid = variable_get('forum_nav_vocabulary', '');
+  $vocabulary = taxonomy_vocabulary_load($vid);
+  if (_forum_nodeapi_check_node_type($node, $vocabulary)) {
+    if (empty($node->nid)) {
+      // New topic
+      $node->taxonomy[arg(3)]->vid = $vid;
+      $node->taxonomy[arg(3)]->tid = arg(3);
+    }
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi_validate().
+ * 
+ * Check in particular that only a "leaf" term in the associated taxonomy.
+ */
+function forum_nodeapi_validate(&$node, $teaser, $page) {
+  $vid = variable_get('forum_nav_vocabulary', '');
+  $vocabulary = taxonomy_vocabulary_load($vid);
+  if (_forum_nodeapi_check_node_type($node, $vocabulary)) {
     // vocabulary is selected, not a "container" term.
-    case 'validate':
-      if ($node->taxonomy) {
-        // Extract the node's proper topic ID.
-        $vocabulary = $vid;
-        $containers = variable_get('forum_containers', array());
-        foreach ($node->taxonomy as $term) {
-          if (db_result(db_query('SELECT COUNT(*) FROM {term_data} WHERE tid = %d AND vid = %d', $term, $vocabulary))) {
-            if (in_array($term, $containers)) {
-              $term = taxonomy_term_load($term);
-              form_set_error('taxonomy', t('The item %forum is only a container for forums. Please select one of the forums below it.', array('%forum' => $term->name)));
-            }
+    if ($node->taxonomy) {
+      // Extract the node's proper topic ID.
+      $vocabulary = $vid;
+      $containers = variable_get('forum_containers', array());
+      foreach ($node->taxonomy as $term) {
+        if (db_result(db_query('SELECT COUNT(*) FROM {term_data} WHERE tid = %d AND vid = %d', $term, $vocabulary))) {
+          if (in_array($term, $containers)) {
+            $term = taxonomy_term_load($term);
+            form_set_error('taxonomy', t('The item %forum is only a container for forums. Please select one of the forums below it.', array('%forum' => $term->name)));
           }
         }
       }
-      break;
+    }
+  }
+}
 
-    // Assign forum taxonomy when adding a topic from within a forum.
-    case 'presave':
-      // Make sure all fields are set properly:
-      $node->icon = !empty($node->icon) ? $node->icon : '';
+/**
+ * Implementation of hook_nodeapi_presave().
+ *
+ * Assign forum taxonomy when adding a topic from within a forum.
+ */
+function forum_nodeapi_presave(&$node, $teaser, $page) {
+  $vid = variable_get('forum_nav_vocabulary', '');
+  $vocabulary = taxonomy_vocabulary_load($vid);
+  if (_forum_nodeapi_check_node_type($node, $vocabulary)) {
+    // Make sure all fields are set properly:
+    $node->icon = !empty($node->icon) ? $node->icon : '';
 
-      if ($node->taxonomy && $tree = taxonomy_get_tree($vid)) {
-        // Get the forum terms from the (cached) tree if we have a taxonomy.
-        foreach ($tree as $term) {
-          $forum_terms[] = $term->tid;
-        }
-        foreach ($node->taxonomy as $term_id) {
-          if (in_array($term_id, $forum_terms)) {
-            $node->tid = $term_id;
-          }
-        }
-        $old_tid = db_result(db_query_range("SELECT t.tid FROM {term_node} t INNER JOIN {node} n ON t.vid = n.vid WHERE n.nid = %d ORDER BY t.vid DESC", $node->nid, 0, 1));
-        if ($old_tid && isset($node->tid) && ($node->tid != $old_tid) && !empty($node->shadow)) {
-          // A shadow copy needs to be created. Retain new term and add old term.
-          $node->taxonomy[] = $old_tid;
+    if ($node->taxonomy && $tree = taxonomy_get_tree($vid)) {
+      // Get the forum terms from the (cached) tree if we have a taxonomy.
+      foreach ($tree as $term) {
+        $forum_terms[] = $term->tid;
+      }
+      foreach ($node->taxonomy as $term_id) {
+        if (in_array($term_id, $forum_terms)) {
+          $node->tid = $term_id;
         }
       }
-      break;
-
-    case 'update':
-      if (empty($node->revision) && db_result(db_query('SELECT tid FROM {forum} WHERE nid=%d', $node->nid))) {
-        if (!empty($node->tid)) {
-          db_query('UPDATE {forum} SET tid = %d WHERE vid = %d', $node->tid, $node->vid);
-        }
-        // The node is removed from the forum.
-        else {
-          db_query('DELETE FROM {forum} WHERE nid = %d', $node->nid);
-        }
-        break;
+      $old_tid = db_result(db_query_range("SELECT t.tid FROM {term_node} t INNER JOIN {node} n ON t.vid = n.vid WHERE n.nid = %d ORDER BY t.vid DESC", $node->nid, 0, 1));
+      if ($old_tid && isset($node->tid) && ($node->tid != $old_tid) && !empty($node->shadow)) {
+        // A shadow copy needs to be created. Retain new term and add old term.
+        $node->taxonomy[] = $old_tid;
       }
-      // Deliberate no break -- for new revisions and for previously unassigned terms we need an insert.
+    }
+  }
+}
 
-    case 'insert':
+/**
+ * Implementation of hook_nodeapi_update().
+ */
+function forum_nodeapi_update(&$node, $teaser, $page) {
+  $vid = variable_get('forum_nav_vocabulary', '');
+  $vocabulary = taxonomy_vocabulary_load($vid);
+  if (_forum_nodeapi_check_node_type($node, $vocabulary)) {
+    if (empty($node->revision) && db_result(db_query('SELECT tid FROM {forum} WHERE nid=%d', $node->nid))) {
+      if (!empty($node->tid)) {
+        db_query('UPDATE {forum} SET tid = %d WHERE vid = %d', $node->tid, $node->vid);
+      }
+      // The node is removed from the forum.
+      else {
+        db_query('DELETE FROM {forum} WHERE nid = %d', $node->nid);
+      }
+    }
+    else {
       if (!empty($node->tid)) {
         db_query('INSERT INTO {forum} (tid, vid, nid) VALUES (%d, %d, %d)', $node->tid, $node->vid, $node->nid);
       }
-      break;
-
-    case 'delete':
-      db_query('DELETE FROM {forum} WHERE nid = %d', $node->nid);
-      break;
-
-    case 'load':
-      return db_fetch_array(db_query('SELECT tid AS forum_tid FROM {forum} WHERE vid = %d', $node->vid));
+    }
   }
+}
 
-  return;
+/**
+ * Implementation of hook_nodeapi_insert().
+ */
+function forum_nodeapi_insert(&$node, $teaser, $page) {
+  $vid = variable_get('forum_nav_vocabulary', '');
+  $vocabulary = taxonomy_vocabulary_load($vid);
+  if (_forum_nodeapi_check_node_type($node, $vocabulary)) {
+    if (!empty($node->tid)) {
+      db_query('INSERT INTO {forum} (tid, vid, nid) VALUES (%d, %d, %d)', $node->tid, $node->vid, $node->nid);
+    }
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi_delete().
+ */
+function forum_nodeapi_delete(&$node, $teaser, $page) {
+  $vid = variable_get('forum_nav_vocabulary', '');
+  $vocabulary = taxonomy_vocabulary_load($vid);
+  if (_forum_nodeapi_check_node_type($node, $vocabulary)) {
+    db_query('DELETE FROM {forum} WHERE nid = %d', $node->nid);
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi_load().
+ */
+function forum_nodeapi_load(&$node, $teaser, $page) {
+  $vid = variable_get('forum_nav_vocabulary', '');
+  $vocabulary = taxonomy_vocabulary_load($vid);
+  if (_forum_nodeapi_check_node_type($node, $vocabulary)) {
+    return db_fetch_array(db_query('SELECT tid AS forum_tid FROM {forum} WHERE vid = %d', $node->vid));
+  }
 }
 
 /**

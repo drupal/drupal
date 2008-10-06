@@ -117,53 +117,66 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
   drupal_clear_path_cache();
 }
 
+/**
+ * Implementation of hook_nodeapi_validate().
+ */
+function path_nodeapi_validate(&$node, $arg) {
+  if (user_access('create url aliases') || user_access('administer url aliases')) {
+    if (isset($node->path)) {
+      $language = isset($node->language) ? $node->language : '';
+      $node->path = trim($node->path);
+      if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s' AND src != '%s' AND language = '%s'", $node->path, "node/$node->nid", $language))) {
+        form_set_error('path', t('The path is already in use.'));
+      }
+    }
+  }
+}
 
 /**
- * Implementation of hook_nodeapi().
- *
- * Allows URL aliases for nodes to be specified at node edit time rather
- * than through the administrative interface.
+ * Implementation of hook_nodeapi_load().
  */
-function path_nodeapi(&$node, $op, $arg) {
-  // Permissions are required for everything except node loading.
-  if (user_access('create url aliases') || user_access('administer url aliases') || ($op == 'load')) {
+function path_nodeapi_load(&$node, $arg) {
+  $language = isset($node->language) ? $node->language : '';
+  $path = 'node/' . $node->nid;
+  $alias = drupal_get_path_alias($path, $language);
+  if ($path != $alias) {
+    $node->path = $alias;
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi_insert().
+ */
+function path_nodeapi_insert(&$node, $arg) {
+  if (user_access('create url aliases') || user_access('administer url aliases')) {
     $language = isset($node->language) ? $node->language : '';
-    switch ($op) {
-      case 'validate':
-        if (isset($node->path)) {
-          $node->path = trim($node->path);
-          if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s' AND src != '%s' AND language = '%s'", $node->path, "node/$node->nid", $language))) {
-            form_set_error('path', t('The path is already in use.'));
-          }
-        }
-        break;
+    // Don't try to insert if path is NULL. We may have already set
+    // the alias ahead of time.
+    if (isset($node->path)) {
+      path_set_alias('node/' . $node->nid, $node->path, NULL, $language);
+    }
+  }
+}
 
-      case 'load':
-        $path = 'node/' . $node->nid;
-        $alias = drupal_get_path_alias($path, $language);
-        if ($path != $alias) {
-          $node->path = $alias;
-        }
-        break;
+/**
+ * Implementation of hook_nodeapi_update().
+ */
+function path_nodeapi_update(&$node, $arg) {
+  if (user_access('create url aliases') || user_access('administer url aliases')) {
+    $language = isset($node->language) ? $node->language : '';
+    path_set_alias('node/' . $node->nid, isset($node->path) ? $node->path : NULL, isset($node->pid) ? $node->pid : NULL, $language);
+  }
+}
 
-      case 'insert':
-        // Don't try to insert if path is NULL. We may have already set
-        // the alias ahead of time.
-        if (isset($node->path)) {
-          path_set_alias('node/' . $node->nid, $node->path, NULL, $language);
-        }
-        break;
-
-      case 'update':
-        path_set_alias('node/' . $node->nid, isset($node->path) ? $node->path : NULL, isset($node->pid) ? $node->pid : NULL, $language);
-        break;
-
-      case 'delete':
-        $path = 'node/' . $node->nid;
-        if (drupal_get_path_alias($path) != $path) {
-          path_set_alias($path);
-        }
-        break;
+/**
+ * Implementation of hook_nodeapi_delete().
+ */
+function path_nodeapi_delete(&$node, $arg) {
+  if (user_access('create url aliases') || user_access('administer url aliases')) {
+    $language = isset($node->language) ? $node->language : '';
+    $path = 'node/' . $node->nid;
+    if (drupal_get_path_alias($path) != $path) {
+      path_set_alias($path);
     }
   }
 }

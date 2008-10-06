@@ -221,7 +221,7 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
     $edit['date'] = format_date(REQUEST_TIME, 'custom', 'Y-m-d H:i:s O');
   }
 
-  node_invoke_nodeapi($edit, 'blogapi new');
+  node_invoke_nodeapi($edit, 'blogapi_new');
 
   node_validate($edit);
   if ($errors = form_get_errors()) {
@@ -273,7 +273,7 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
     $node->body = $content;
   }
 
-  node_invoke_nodeapi($node, 'blogapi edit');
+  node_invoke_nodeapi($node, 'blogapi_edit');
 
   node_validate($node);
   if ($errors = form_get_errors()) {

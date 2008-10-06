@@ -1175,44 +1175,64 @@ function taxonomy_render_nodes($result) {
 }
 
 /**
- * Implementation of hook_nodeapi().
+ * Implementation of hook_nodeapi_load().
  */
-function taxonomy_nodeapi($node, $op, $arg = 0) {
-  switch ($op) {
-    case 'load':
-      $output['taxonomy'] = taxonomy_node_get_terms($node);
-      return $output;
+function taxonomy_nodeapi_load($node, $arg = 0) {
+  $output['taxonomy'] = taxonomy_node_get_terms($node);
+  return $output;
+}
 
-    case 'insert':
-      if (!empty($node->taxonomy)) {
-        taxonomy_node_save($node, $node->taxonomy);
-      }
-      break;
-
-    case 'update':
-      if (!empty($node->taxonomy)) {
-        taxonomy_node_save($node, $node->taxonomy);
-      }
-      break;
-
-    case 'delete':
-      taxonomy_node_delete($node);
-      break;
-
-    case 'delete revision':
-      taxonomy_node_delete_revision($node);
-      break;
-
-    case 'validate':
-      taxonomy_node_validate($node);
-      break;
-
-    case 'rss item':
-      return taxonomy_rss_item($node);
-
-    case 'update index':
-      return taxonomy_node_update_index($node);
+/**
+ * Implementation of hook_nodeapi_insert().
+ */
+function taxonomy_nodeapi_insert($node, $arg = 0) {
+  if (!empty($node->taxonomy)) {
+    taxonomy_node_save($node, $node->taxonomy);
   }
+}
+
+/**
+ * Implementation of hook_nodeapi_update().
+ */
+function taxonomy_nodeapi_update($node, $arg = 0) {
+  if (!empty($node->taxonomy)) {
+    taxonomy_node_save($node, $node->taxonomy);
+  }
+}
+
+/**
+ * Implementation of hook_nodeapi_delete().
+ */
+function taxonomy_nodeapi_delete($node, $arg = 0) {
+  taxonomy_node_delete($node);
+}
+
+/**
+ * Implementation of hook_nodeapi_delete_revision().
+ */
+function taxonomy_nodeapi_delete_revision($node, $arg = 0) {
+  taxonomy_node_delete_revision($node);
+}
+
+/**
+ * Implementation of hook_nodeapi_validate().
+ */
+function taxonomy_nodeapi_validate($node, $arg = 0) {
+  taxonomy_node_validate($node);
+}
+
+/**
+ * Implementation of hook_nodeapi_rss_item().
+ */
+function taxonomy_nodeapi_rss_item($node, $arg = 0) {
+  return taxonomy_rss_item($node);
+}
+
+/**
+ * Implementation of hook_nodeapi_update_index().
+ */
+function taxonomy_nodeapi_update_index($node, $arg = 0) {
+  return taxonomy_node_update_index($node);
 }
 
 /**
