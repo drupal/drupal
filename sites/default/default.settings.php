@@ -60,6 +60,7 @@
  *   'username' => 'username',
  *   'password' => 'password',
  *   'host' => 'localhost',
+ *   'port' => 3306,
  * );
  *
  * The "driver" property indicates what Drupal database driver the 
@@ -87,27 +88,16 @@
  * $databases['default']['default'] = $info_array;
  * $databases['default']['slave'][] = $info_array;
  * $databases['default']['slave'][] = $info_array;
- * $databases['extra'] = $info_array;
+ * $databases['extra']['default'] = $info_array;
  *
  * In the above example, $info_array is an array of settings described above.
  * The first line sets a "default" database that has one master database
  * (the second level default).  The second and third lines create an array
  * of potential slave databases.  Drupal will select one at random for a given
  * request as needed.  The fourth line creates a new database with a name of
- * "extra".  Since no target is specified, it is assumed to be "default", that
- * is, only one server.
+ * "extra".
  *
  * For a single database configuration, the following is sufficient:
- *
- * $databases = array(
- *   'driver' => 'mysql',
- *   'database' => 'databasename',
- *   'username' => 'username',
- *   'password' => 'password',
- *   'host' => 'localhost',
- * );
- *
- * That is equivalent to:
  *
  * $databases['default']['default'] = array(
  *   'driver' => 'mysql',
@@ -141,21 +131,21 @@
  *   );
  *
  * Database configuration format:
- *   $databases = array(
+ *   $databases['default']['default'] = array(
  *     'driver' => 'mysql',
  *     'database' => 'databasename',
  *     'username' => 'username',
  *     'password' => 'password',
  *     'host' => 'localhost',
  *   );
- *   $databases = array(
+ *   $databases['default']['default'] = array(
  *     'driver' => 'pgsql',
  *     'database' => 'databasename',
  *     'username' => 'username',
  *     'password' => 'password',
  *     'host' => 'localhost',
  *   );
- *   $databases = array(
+ *   $databases['default']['default'] = array(
  *     'driver' => 'sqlite',
  *     'database' => 'databasefilename',
  *   );
