@@ -35,7 +35,7 @@
  *     foreach ($accounts as $account) {
  *       $params['account'] = $account;
  *       // example_mail() will be called based on the first drupal_mail() parameter.
- *       drupal_mail('example', 'notify', $account->mail, user_preferred_language($account), $params);
+ *       drupal_mail('example', 'notice', $account->mail, user_preferred_language($account), $params);
  *     }
  *   }
  *
