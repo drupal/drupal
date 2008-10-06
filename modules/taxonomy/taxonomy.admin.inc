@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.29 2008/09/19 20:25:03 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.30 2008/10/06 23:15:32 webchick Exp $
 
 /**
  * @file
@@ -251,7 +251,7 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
   );
 
   $page            = isset($_GET['page']) ? $_GET['page'] : 0;
-  $page_increment  = 10;  // Number of terms per page.
+  $page_increment  = variable_get('taxonomy_terms_per_page_admin', 100);  // Number of terms per page.
   $page_entries    = 0;   // Elements shown on this page.
   $before_entries  = 0;   // Elements at the root level before this page.
   $after_entries   = 0;   // Elements at the root level after this page.
