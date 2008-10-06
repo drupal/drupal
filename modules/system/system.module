@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.625 2008/10/06 11:30:12 dries Exp $
+// $Id: system.module,v 1.626 2008/10/06 23:02:08 webchick Exp $
 
 /**
  * @file
@@ -1411,6 +1411,11 @@ function system_cron() {
       }
     }
     db_query('DELETE FROM {files} WHERE fid = %d', $file->fid);
+  }
+  $core = array('cache', 'cache_block', 'cache_filter', 'cache_page', 'cache_form', 'cache_menu');
+  $cache_tables = array_merge(module_invoke_all('flush_caches'), $core);
+  foreach ($cache_tables as $table) {
+    cache_clear_all(NULL, $table);
   }
 }
 
