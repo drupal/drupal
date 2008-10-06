@@ -1,10 +1,14 @@
-// $Id: simpletest.js,v 1.3 2008/09/14 22:34:25 webchick Exp $
+// $Id: simpletest.js,v 1.4 2008/10/06 14:38:02 dries Exp $
 
 /**
  * Add the cool table collapsing on the testing overview page.
  */
 Drupal.behaviors.simpleTestMenuCollapse = function() {
   // Adds expand-collapse functionality.
+  $('div.simpletest-image').each(function() {
+    direction = Drupal.settings.simpleTest[$(this).attr('id')].imageDirection;
+    $(this).html(Drupal.settings.simpleTest.images[direction]);
+  });
   $('div.simpletest-image').click(function() {
     // Toggle all of the trs.
     if (!Drupal.settings.simpleTest[$(this).attr('id')].clickActive) {
