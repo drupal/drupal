@@ -360,6 +360,10 @@ class InsertQuery extends Query {
    * If the database does not support delayed INSERT queries, this method
    * has no effect.
    *
+   * Note that for a delayed query there is no serial ID returned, as it won't
+   * be created until later when the query runs.  It should therefore not be
+   * used if the value of the ID is known.
+   *
    * @param $delay
    *   If TRUE, this query is delay-safe and will run delayed on supported databases.
    * @return
@@ -376,7 +380,9 @@ class InsertQuery extends Query {
    * @return
    *   The last insert ID of the query, if one exists.  If the query
    *   was given multiple sets of values to insert, the return value is
-   *   undefined.
+   *   undefined.  If the query is flagged "delayed", then the insert ID
+   *   won't be created until later when the query actually runs so the
+   *   return value is also undefined.
    */
   public function execute() {
 
