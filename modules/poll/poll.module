@@ -823,10 +823,9 @@ function poll_cancel($form, &$form_state) {
 }
 
 /**
- * Implementation of hook_user().
+ * Implementation of hook_user_delete().
  */
-function poll_user($op, &$edit, &$user) {
-  if ($op == 'delete') {
-    db_query('UPDATE {poll_votes} SET uid = 0 WHERE uid = %d', $user->uid);
-  }
+function poll_user_delete(&$edit, &$user) {
+  db_query('UPDATE {poll_votes} SET uid = 0 WHERE uid = %d', $user->uid);
 }
+

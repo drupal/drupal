@@ -335,38 +335,35 @@ function block_box_save($edit, $delta) {
 }
 
 /**
- * Implementation of hook_user().
- *
- * Allow users to decide which custom blocks to display when they visit
- * the site.
+ * Implementation of hook_user_form().
  */
-function block_user($type, $edit, &$account, $category = NULL) {
-  switch ($type) {
-    case 'form':
-      if ($category == 'account') {
-        $rids = array_keys($account->roles);
-        $result = db_query("SELECT DISTINCT b.* FROM {blocks} b LEFT JOIN {blocks_roles} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom != 0 AND (r.rid IN (" . db_placeholders($rids) . ") OR r.rid IS NULL) ORDER BY b.weight, b.module", $rids);
-        $form['block'] = array('#type' => 'fieldset', '#title' => t('Block configuration'), '#weight' => 3, '#collapsible' => TRUE, '#tree' => TRUE);
-        while ($block = db_fetch_object($result)) {
-          $data = module_invoke($block->module, 'block', 'list');
-          if ($data[$block->delta]['info']) {
-            $return = TRUE;
-            $form['block'][$block->module][$block->delta] = array('#type' => 'checkbox', '#title' => check_plain($data[$block->delta]['info']), '#default_value' => isset($account->block[$block->module][$block->delta]) ? $account->block[$block->module][$block->delta] : ($block->custom == 1));
-          }
-        }
-
-        if (!empty($return)) {
-          return $form;
-        }
+function block_user_form(&$edit, &$account, $category = NULL) {
+  if ($category == 'account') {
+    $rids = array_keys($account->roles);
+    $result = db_query("SELECT DISTINCT b.* FROM {blocks} b LEFT JOIN {blocks_roles} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom != 0 AND (r.rid IN (" . db_placeholders($rids) . ") OR r.rid IS NULL) ORDER BY b.weight, b.module", $rids);
+    $form['block'] = array('#type' => 'fieldset', '#title' => t('Block configuration'), '#weight' => 3, '#collapsible' => TRUE, '#tree' => TRUE);
+    while ($block = db_fetch_object($result)) {
+      $data = module_invoke($block->module, 'block', 'list');
+      if ($data[$block->delta]['info']) {
+        $return = TRUE;
+        $form['block'][$block->module][$block->delta] = array('#type' => 'checkbox', '#title' => check_plain($data[$block->delta]['info']), '#default_value' => isset($account->block[$block->module][$block->delta]) ? $account->block[$block->module][$block->delta] : ($block->custom == 1));
       }
+    }
 
-      break;
-    case 'validate':
-      if (empty($edit['block'])) {
-        $edit['block'] = array();
-      }
-      return $edit;
+    if (!empty($return)) {
+      return $form;
+    }
   }
+}
+
+/**
+ * Implementation of hook_user_validate().
+ */
+function block_user_validate(&$edit, &$account, $category = NULL) {
+  if (empty($edit['block'])) {
+    $edit['block'] = array();
+  }
+  return $edit;
 }
 
 /**

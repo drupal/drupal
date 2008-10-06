@@ -600,13 +600,11 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
 }
 
 /**
- * Implementation of hook_user().
+ * Implementation of hook_user_delete().
  */
-function comment_user($type, $edit, &$user, $category = NULL) {
-  if ($type == 'delete') {
-    db_query('UPDATE {comments} SET uid = 0 WHERE uid = %d', $user->uid);
-    db_query('UPDATE {node_comment_statistics} SET last_comment_uid = 0 WHERE last_comment_uid = %d', $user->uid);
-  }
+function comment_user_delete(&$edit, &$user, $category = NULL) {
+  db_query('UPDATE {comments} SET uid = 0 WHERE uid = %d', $user->uid);
+  db_query('UPDATE {node_comment_statistics} SET last_comment_uid = 0 WHERE last_comment_uid = %d', $user->uid);
 }
 
 /**

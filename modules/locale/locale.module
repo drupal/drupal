@@ -206,42 +206,56 @@ function locale_locale($op = 'groups') {
 }
 
 /**
- * Implementation of hook_user().
+ * Implementation of hook_user_register().
  */
-function locale_user($type, $edit, &$user, $category = NULL) {
-  global $language;
-
+function locale_user_register(&$edit, &$user, $category = NULL) {
   // If we have more then one language and either creating a user on the
   // admin interface or edit the user, show the language selector.
-  if (variable_get('language_count', 1) > 1 && ($type == 'register' && user_access('administer users') || $type == 'form' && $category == 'account' )) {
-    $languages = language_list('enabled');
-    $languages = $languages[1];
-
-    // If the user is being created, we set the user language to the page language.
-    $user_preferred_language = $user ? user_preferred_language($user) : $language;
-
-    $names = array();
-    foreach ($languages as $langcode => $item) {
-      $name = t($item->name);
-      $names[$langcode] = $name . ($item->native != $name ? ' (' . $item->native . ')' : '');
-    }
-    $form['locale'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Language settings'),
-      '#weight' => 1,
-    );
-
-    // Get language negotiation settings.
-    $mode = variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE);
-    $form['locale']['language'] = array(
-      '#type' => (count($names) <= 5 ? 'radios' : 'select'),
-      '#title' => t('Language'),
-      '#default_value' => $user_preferred_language->language,
-      '#options' => $names,
-      '#description' => ($mode == LANGUAGE_NEGOTIATION_PATH) ? t("This account's default language for e-mails, and preferred language for site presentation.") : t("This account's default language for e-mails."),
-    );
-    return $form;
+  if (variable_get('language_count', 1) > 1 && user_access('administer users')) {
+    return locale_language_selector_form($user);
   }
+}
+
+/**
+ * Implementation of hook_user_form().
+ */
+function locale_user_form(&$edit, &$user, $category = NULL) {
+  // If we have more then one language and either creating a user on the
+  // admin interface or edit the user, show the language selector.
+  if (variable_get('language_count', 1) > 1 && $category == 'account') {
+    return locale_language_selector_form($user);
+  }
+}
+
+function locale_language_selector_form($user) {
+  global $language;
+  $languages = language_list('enabled');
+  $languages = $languages[1];
+
+  // If the user is being created, we set the user language to the page language.
+  $user_preferred_language = $user ? user_preferred_language($user) : $language;
+
+  $names = array();
+  foreach ($languages as $langcode => $item) {
+    $name = t($item->name);
+    $names[$langcode] = $name . ($item->native != $name ? ' (' . $item->native . ')' : '');
+  }
+  $form['locale'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Language settings'),
+    '#weight' => 1,
+  );
+
+  // Get language negotiation settings.
+  $mode = variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE);
+  $form['locale']['language'] = array(
+    '#type' => (count($names) <= 5 ? 'radios' : 'select'),
+    '#title' => t('Language'),
+    '#default_value' => $user_preferred_language->language,
+    '#options' => $names,
+    '#description' => ($mode == LANGUAGE_NEGOTIATION_PATH) ? t("This account's default language for e-mails, and preferred language for site presentation.") : t("This account's default language for e-mails."),
+  );
+  return $form;
 }
 
 /**

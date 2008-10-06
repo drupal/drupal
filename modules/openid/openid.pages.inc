@@ -82,7 +82,7 @@ function openid_user_add_validate($form, &$form_state) {
 /**
  * Menu callback; Delete the specified OpenID identity from the system.
  */
-function openid_user_delete($account, $aid = 0) {
+function openid_delete_user($account, $aid = 0) {
   db_query("DELETE FROM {authmap} WHERE uid=%d AND aid=%d AND module='openid'", $account->uid, $aid);
   if (db_affected_rows()) {
     drupal_set_message(t('OpenID deleted.'));

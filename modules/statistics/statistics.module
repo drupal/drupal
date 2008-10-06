@@ -174,12 +174,10 @@ function statistics_menu() {
 }
 
 /**
- * Implementation of hook_user().
+ * Implementation of hook_user_delete().
  */
-function statistics_user($op, &$edit, &$user) {
-  if ($op == 'delete') {
-    db_query('UPDATE {accesslog} SET uid = 0 WHERE uid = %d', $user->uid);
-  }
+function statistics_user_delete(&$edit, &$user, $category) {
+  db_query('UPDATE {accesslog} SET uid = 0 WHERE uid = %d', $user->uid);
 }
 
 /**

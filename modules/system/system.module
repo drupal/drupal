@@ -711,12 +711,10 @@ function system_preprocess_page(&$variables) {
 }
 
 /**
- * Implementation of hook_user().
- *
- * Allows users to individually set their theme and time zone.
+ * Implementation of hook_user_form().
  */
-function system_user($type, $edit, &$user, $category = NULL) {
-  if ($type == 'form' && $category == 'account') {
+function system_user_form(&$edit, &$user, $category = NULL) {
+  if ($category == 'account') {
     $form['theme_select'] = system_theme_select_form(t('Selecting a different theme will change the look and feel of the site.'), isset($edit['theme']) ? $edit['theme'] : NULL, 2);
 
     if (variable_get('configurable_timezones', 1)) {

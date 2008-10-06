@@ -42,10 +42,10 @@ function blog_access($op, $node, $account) {
 }
 
 /**
- * Implementation of hook_user().
+ * Implementation of hook_user_view().
  */
-function blog_user($type, &$edit, &$user) {
-  if ($type == 'view' && user_access('create blog content', $user)) {
+function blog_user_view(&$edit, &$user, $category) {
+  if (user_access('create blog content', $user)) {
     $user->content['summary']['blog'] =  array(
       '#type' => 'user_profile_item',
       '#title' => t('Blog'),

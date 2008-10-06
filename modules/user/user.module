@@ -24,9 +24,9 @@ define('EMAIL_MAX_LENGTH', 64);
  */
 function user_module_invoke($type, &$array, &$user, $category = NULL) {
   foreach (module_list() as $module) {
-    $function = $module . '_user';
+    $function = $module . '_user_' . $type;
     if (function_exists($function)) {
-      $function($type, $array, $user, $category);
+      $function($array, $user, $category);
     }
   }
 }
@@ -633,45 +633,62 @@ function user_elements() {
 }
 
 /**
- * Implementation of hook_user().
+ * Implementation of hook_user_view().
  */
-function user_user($type, &$edit, &$account, $category = NULL) {
-  if ($type == 'view') {
-    $account->content['user_picture'] = array(
-      '#value' => theme('user_picture', $account),
-      '#weight' => -10,
-    );
-    if (!isset($account->content['summary'])) {
-      $account->content['summary'] = array();
-    }
-    $account->content['summary'] += array(
-      '#type' => 'user_profile_category',
-      '#attributes' => array('class' => 'user-member'),
-      '#weight' => 5,
-      '#title' => t('History'),
-    );
-    $account->content['summary']['member_for'] =  array(
-      '#type' => 'user_profile_item',
-      '#title' => t('Member for'),
-      '#markup' => format_interval(REQUEST_TIME - $account->created),
-    );
+function user_user_view(&$edit, &$account, $category = NULL) {
+  $account->content['user_picture'] = array(
+    '#value' => theme('user_picture', $account),
+    '#weight' => -10,
+  );
+  if (!isset($account->content['summary'])) {
+    $account->content['summary'] = array();
   }
-  if ($type == 'form' && $category == 'account') {
+  $account->content['summary'] += array(
+    '#type' => 'user_profile_category',
+    '#attributes' => array('class' => 'user-member'),
+    '#weight' => 5,
+    '#title' => t('History'),
+  );
+  $account->content['summary']['member_for'] =  array(
+    '#type' => 'user_profile_item',
+    '#title' => t('Member for'),
+    '#markup' => format_interval(REQUEST_TIME - $account->created),
+  );
+}
+
+/**
+ * Implementation of hook_user_form.
+ */
+function user_user_form(&$edit, &$account, $category = NULL) {
+  if ($category == 'account') {
     $form_state = array();
     return user_edit_form($form_state, arg(1), $edit);
   }
+}
 
-  if ($type == 'validate' && $category == 'account') {
+/**
+ * Implementation of hook_user_validate.
+ */
+function user_user_validate(&$edit, &$account, $category = NULL) {
+  if ($category == 'account') {
     return _user_edit_validate(arg(1), $edit);
   }
+}
 
-  if ($type == 'submit' && $category == 'account') {
+/**
+ * Implementation of hook_user_submit.
+ */
+function user_user_submit(&$edit, &$account, $category = NULL) {
+  if ($category == 'account') {
     return _user_edit_submit(arg(1), $edit);
   }
+}
 
-  if ($type == 'categories') {
+/**
+ * Implementation of hook_user_categories.
+ */
+function user_user_categories(&$edit, &$account, $category = NULL) {
     return array(array('name' => 'account', 'title' => t('Account settings'), 'weight' => 1));
-  }
 }
 
 function user_login_block() {
@@ -1560,7 +1577,7 @@ function user_delete($edit, $uid) {
   $account = user_load(array('uid' => $uid));
   drupal_session_destroy_uid($uid);
   _user_mail_notify('status_deleted', $account);
-  module_invoke_all('user', 'delete', $edit, $account);
+  module_invoke_all('user_delete', $edit, $account);
   db_query('DELETE FROM {users} WHERE uid = %d', $uid);
   db_query('DELETE FROM {users_roles} WHERE uid = %d', $uid);
   db_query('DELETE FROM {authmap} WHERE uid = %d', $uid);
@@ -1888,7 +1905,7 @@ function _user_categories($account) {
   $categories = array();
 
   foreach (module_list() as $module) {
-    if ($data = module_invoke($module, 'user', 'categories', NULL, $account, '')) {
+    if ($data = module_invoke($module, 'user_categories', NULL, $account, '')) {
       $categories = array_merge($data, $categories);
     }
   }
@@ -2410,7 +2427,7 @@ function user_register_validate($form, &$form_state) {
 function _user_forms(&$edit, $account, $category, $hook = 'form') {
   $groups = array();
   foreach (module_list() as $module) {
-    if ($data = module_invoke($module, 'user', $hook, $edit, $account, $category)) {
+    if ($data = module_invoke($module, 'user_' . $hook, $edit, $account, $category)) {
       $groups = array_merge_recursive($data, $groups);
     }
   }
@@ -2418,3 +2435,4 @@ function _user_forms(&$edit, $account, $category, $hook = 'form') {
 
   return empty($groups) ? FALSE : $groups;
 }
+

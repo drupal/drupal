@@ -194,29 +194,66 @@ function profile_block($op = 'list', $delta = '', $edit = array()) {
 }
 
 /**
- * Implementation of hook_user().
+ * Implementation of hook_user_load().
  */
-function profile_user($type, &$edit, &$user, $category = NULL) {
-  switch ($type) {
-    case 'load':
-      return profile_load_profile($user);
-    case 'register':
-      return profile_form_profile($edit, $user, $category, TRUE);
-    case 'update':
-    return profile_save_profile($edit, $user, $category);
-    case 'insert':
-      return profile_save_profile($edit, $user, $category, TRUE);
-    case 'view':
-      return profile_view_profile($user);
-    case 'form':
-      return profile_form_profile($edit, $user, $category);
-    case 'validate':
-      return profile_validate_profile($edit, $category);
-    case 'categories':
-      return profile_categories();
-    case 'delete':
-      db_query('DELETE FROM {profile_values} WHERE uid = %d', $user->uid);
-  }
+function profile_user_load(&$edit, &$user, $category = NULL) {
+  return profile_load_profile($user);
+}
+
+/**
+ * Implementation of hook_user_register().
+ */
+function profile_user_register(&$edit, &$user, $category = NULL) {
+  return profile_form_profile($edit, $user, $category, TRUE);
+}
+
+/**
+ * Implementation of hook_user_update().
+ */
+function profile_user_update(&$edit, &$user, $category = NULL) {
+  return profile_save_profile($edit, $user, $category);
+}
+
+/**
+ * Implementation of hook_user_insert().
+ */
+function profile_user_insert(&$edit, &$user, $category = NULL) {
+  return profile_save_profile($edit, $user, $category, TRUE);
+}
+
+/**
+ * Implementation of hook_user_view().
+ */
+function profile_user_view(&$edit, &$user, $category = NULL) {
+  return profile_view_profile($user);
+}
+
+/**
+ * Implementation of hook_user_form().
+ */
+function profile_user_form(&$edit, &$user, $category = NULL) {
+  return profile_form_profile($edit, $user, $category);
+}
+
+/**
+ * Implementation of hook_user_validate().
+ */
+function profile_user_validate(&$edit, &$user, $category = NULL) {
+  return profile_validate_profile($edit, $category);
+}
+
+/**
+ * Implementation of hook_user_categories().
+ */
+function profile_user_categories(&$edit, &$user, $category = NULL) {
+  return profile_categories();
+}
+
+/**
+ * Implementation of hook_user_delete().
+ */
+function profile_user_delete(&$edit, &$user, $category = NULL) {
+  db_query('DELETE FROM {profile_values} WHERE uid = %d', $user->uid);
 }
 
 function profile_load_profile(&$user) {

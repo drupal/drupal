@@ -26,7 +26,7 @@ function openid_menu() {
   );
   $items['user/%user/openid/delete'] = array(
     'title' => 'Delete OpenID',
-    'page callback' => 'openid_user_delete',
+    'page callback' => 'openid_delete_user',
     'page arguments' => array(1),
     'access callback' => 'user_edit_access',
     'access arguments' => array(1),
@@ -58,10 +58,10 @@ function openid_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_user().
+ * Implementation of hook_user_insert().
  */
-function openid_user($op, &$edit, &$account, $category = NULL) {
-  if ($op == 'insert' && isset($_SESSION['openid']['values'])) {
+function openid_user_insert(&$edit, &$account, $category = NULL) {
+  if (isset($_SESSION['openid']['values'])) {
     // The user has registered after trying to login via OpenID.
     if (variable_get('user_email_verification', TRUE)) {
       drupal_set_message(t('Once you have verified your email address, you may log in via OpenID.'));
