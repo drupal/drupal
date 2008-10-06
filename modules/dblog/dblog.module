@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.27 2008/08/21 19:36:37 dries Exp $
+// $Id: dblog.module,v 1.28 2008/10/06 11:30:11 dries Exp $
 
 /**
  * @file
@@ -101,12 +101,10 @@ function dblog_cron() {
 }
 
 /**
- * Implementation of hook_user().
+ * Implementation of hook_user_delete().
  */
-function dblog_user($op, &$edit, &$user) {
-  if ($op == 'delete') {
-    db_query('UPDATE {watchdog} SET uid = 0 WHERE uid = %d', $user->uid);
-  }
+function dblog_user_delete(&$edit, &$user) {
+  db_query('UPDATE {watchdog} SET uid = 0 WHERE uid = %d', $user->uid);
 }
 
 function _dblog_get_message_types() {

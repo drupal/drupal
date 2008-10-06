@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.272 2008/09/17 07:11:57 dries Exp $
+// $Id: poll.module,v 1.273 2008/10/06 11:30:11 dries Exp $
 
 /**
  * @file
@@ -823,10 +823,9 @@ function poll_cancel($form, &$form_state) {
 }
 
 /**
- * Implementation of hook_user().
+ * Implementation of hook_user_delete().
  */
-function poll_user($op, &$edit, &$user) {
-  if ($op == 'delete') {
-    db_query('UPDATE {poll_votes} SET uid = 0 WHERE uid = %d', $user->uid);
-  }
+function poll_user_delete(&$edit, &$user) {
+  db_query('UPDATE {poll_votes} SET uid = 0 WHERE uid = %d', $user->uid);
 }
+

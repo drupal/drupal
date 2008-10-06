@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.18 2008/08/21 19:36:38 dries Exp $
+// $Id: trigger.module,v 1.19 2008/10/06 11:30:12 dries Exp $
 
 /**
  * @file
@@ -347,9 +347,53 @@ function _trigger_normalize_user_context($type, $account) {
 }
 
 /**
- * Implementation of hook_user().
+ * trigger_user_login 
  */
-function trigger_user($op, &$edit, &$account, $category = NULL) {
+function trigger_user_login(&$edit, &$account, $category) {
+  _trigger_user('login', $edit, $account, $category); 
+}
+
+/**
+ * Implementation of hook_user_logout().
+ */
+function trigger_user_logout(&$edit, &$account, $category) {
+  _trigger_user('logout', $edit, $account, $category); 
+}
+
+/**
+ * Implementation of hook_user_insert().
+ */
+function trigger_user_insert(&$edit, &$account, $category) {
+  _trigger_user('insert', $edit, $account, $category); 
+}
+
+/**
+ * Implementation of hook_user_update().
+ */
+function trigger_user_update(&$edit, &$account, $category) {
+  _trigger_user('update', $edit, $account, $category); 
+}
+
+/**
+ * Implementation of hook_user_delete().
+ */
+function trigger_user_delete(&$edit, &$account, $category) {
+  _trigger_user('delete', $edit, $account, $category); 
+}
+
+/**
+ * Implementation of hook_user_view().
+ */
+function trigger_user_view(&$edit, &$account, $category) {
+  _trigger_user('view', $edit, $account, $category); 
+}
+
+/**
+ * Simple wrapper function to make user hooks work with new entry points.
+ *
+ * @TODO: Take advantage of the new API and reorganise/remove this function. 
+ */
+function _trigger_user($op, &$edit, &$account, $category = NULL) {
   // Keep objects for reuse so that changes actions make to objects can persist.
   static $objects;
   // We support a subset of operations.
