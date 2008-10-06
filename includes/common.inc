@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.799 2008/09/20 20:22:23 webchick Exp $
+// $Id: common.inc,v 1.800 2008/10/06 11:07:14 dries Exp $
 
 /**
  * @file
@@ -1318,7 +1318,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
  * When creating links in modules, consider whether l() could be a better
  * alternative than url().
  */
-function url($path = NULL, $options = array()) {
+function url($path = NULL, array $options = array()) {
   // Merge in defaults.
   $options += array(
     'fragment' => '',
@@ -1491,7 +1491,7 @@ function drupal_attributes($attributes = array()) {
  * @return
  *   an HTML string containing a link to the given path.
  */
-function l($text, $path, $options = array()) {
+function l($text, $path, array $options = array()) {
   // Merge in defaults.
   $options += array(
       'attributes' => array(),
