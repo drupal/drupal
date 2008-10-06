@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.229 2008/10/06 14:26:54 dries Exp $
+// $Id: bootstrap.inc,v 1.230 2008/10/06 22:40:20 webchick Exp $
 
 /**
  * @file
@@ -183,7 +183,7 @@ define('LANGUAGE_NEGOTIATION_DOMAIN', 3);
 /**
  * For convenience, define a short form of the request time global.
  */
-define ('REQUEST_TIME', $_SERVER['REQUEST_TIME']);
+define('REQUEST_TIME', $_SERVER['REQUEST_TIME']);
 
 /**
  * Start the timer with the specified name. If you start and stop
