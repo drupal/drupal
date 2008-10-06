@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.15 2008/09/20 20:22:23 webchick Exp $
+// $Id: mail.inc,v 1.16 2008/10/06 11:00:01 dries Exp $
 
 /**
  * Compose and optionally send an e-mail message.
@@ -35,7 +35,7 @@
  *     foreach ($accounts as $account) {
  *       $params['account'] = $account;
  *       // example_mail() will be called based on the first drupal_mail() parameter.
- *       drupal_mail('example', 'notify', $account->mail, user_preferred_language($account), $params);
+ *       drupal_mail('example', 'notice', $account->mail, user_preferred_language($account), $params);
  *     }
  *   }
  *
