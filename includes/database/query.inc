@@ -203,7 +203,7 @@ abstract class Query {
   /**
    * Returns the query as a prepared statement string.
    */
-  abstract protected function __toString();
+  abstract public function __toString();
 }
 
 /**
