@@ -229,7 +229,7 @@ function theme_simpletest_test_table($table) {
 
     // Expand/collapse image and group title.
     $row[] = array(
-      'data' =>  '<div class="simpletest-image" id="simpletest-test-group-' . $test_class . '">' . $js['images'][0] . '</div>&nbsp;' .
+      'data' =>  '<div class="simpletest-image" id="simpletest-test-group-' . $test_class . '"></div>&nbsp;' .
                  '<label for="' . $test_class . '-select-all" class="simpletest-group-label">' . $key . '</label>',
       'style' => 'font-weight: bold;'
       );
@@ -258,7 +258,7 @@ function theme_simpletest_test_table($table) {
         $row[] = drupal_render($test);
         $row[] = theme('indentation', 1) . '<label for="edit-' . $test_name . '">' . $title . '</label>';
         $row[] = '<div class="description">' . $description . '</div>';
-        $rows[] = array('data' => $row, 'style' => 'display: none;', 'class' => $test_class . '-test');
+        $rows[] = array('data' => $row, 'class' => $test_class . '-test js-hide');
       }
       $js['simpletest-test-group-'. $test_class] = $current_js;
       unset($table[$key]);
