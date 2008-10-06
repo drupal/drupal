@@ -445,7 +445,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
   // the database.  This is required because this function is called both
   // before we have a database connection (i.e. during installation) and
   // when a database connection fails.
-  elseif (db_is_active() && (($file = db_result(db_query("SELECT filename FROM {system} WHERE name = '%s' AND type = '%s'", $name, $type))) && file_exists($file))) {
+  elseif (db_is_active() && (($file = db_query("SELECT filename FROM {system} WHERE name = :name AND type = :type", array(':name' => $name, ':type' => $type))->fetchField()) && file_exists($file))) {
     $files[$type][$name] = $file;
   }
   else {
@@ -481,10 +481,7 @@ function variable_init($conf = array()) {
     $variables = $cached->data;
   }
   else {
-    $result = db_query('SELECT * FROM {variable}');
-    while ($variable = db_fetch_object($result)) {
-      $variables[$variable->name] = unserialize($variable->value);
-    }
+    $variables = array_map('unserialize', db_query('SELECT name, value FROM {variable}')->fetchAllKeyed());
     cache_set('variables', $variables);
   }
 
@@ -539,7 +536,9 @@ function variable_set($name, $value) {
 function variable_del($name) {
   global $conf;
 
-  db_query("DELETE FROM {variable} WHERE name = '%s'", $name);
+  db_delete('variable')
+    ->condition('name', $name)
+    ->execute();
   cache_clear_all('variables', 'cache');
 
   unset($conf[$name]);
@@ -924,8 +923,7 @@ function drupal_is_denied($ip) {
     return in_array($ip, $blocked_ips);
   }
   else {
-    $sql = "SELECT 1 FROM {blocked_ips} WHERE ip = '%s'";
-    return (bool) db_result(db_query($sql, $ip));
+    return (bool)db_query("SELECT 1 FROM {blocked_ips} WHERE ip = :ip", array(':ip' => $ip))->fetchField();
   }
 }
 
@@ -1142,10 +1140,7 @@ function language_list($field = 'language', $reset = FALSE) {
   // Init language list
   if (!isset($languages)) {
     if (variable_get('language_count', 1) > 1 || module_exists('locale')) {
-      $result = db_query('SELECT * FROM {languages} ORDER BY weight ASC, name ASC');
-      while ($row = db_fetch_object($result)) {
-        $languages['language'][$row->language] = $row;
-      }
+      $languages['language'] = db_query('SELECT * FROM {languages} ORDER BY weight ASC, name ASC')->fetchAllAssoc('language');
     }
     else {
       // No locale module, so use the default language only.
@@ -1340,7 +1335,11 @@ function drupal_function_exists($function) {
     return TRUE;
   }
 
-  $file = db_result(db_query("SELECT filename FROM {registry} WHERE name = :name AND type = :type", array(':name' => $function, ':type' => 'function')));
+  $file = db_query("SELECT filename FROM {registry} WHERE name = :name AND type = :type", array(
+      ':name' => $function,
+      ':type' => 'function',
+    ))
+    ->fetchField();
   if ($file) {
     require_once DRUPAL_ROOT . '/' . $file;
     $checked[$function] = function_exists($function);
@@ -1388,7 +1387,11 @@ function drupal_autoload_class($class) {
  * Helper for registry_check_{interface, class}.
  */
 function _registry_check_code($type, $name) {
-  $file = db_result(db_query("SELECT filename FROM {registry} WHERE name = :name AND type = :type", array(':name' => $name, ':type' => $type)));
+  $file = db_query("SELECT filename FROM {registry} WHERE name = :name AND type = :type", array(
+      ':name' => $name,
+      ':type' => $type,
+    ))
+    ->fetchField();
   if ($file) {
     require_once DRUPAL_ROOT . '/' . $file;
     registry_mark_code($type, $name);
@@ -1467,15 +1470,21 @@ function registry_cache_path_files() {
     $files = array();
     $type_sql = array();
     $params = array();
+
+    $select = db_select('registry')->distinct();
+    $select->addField('registry', 'filename');
+
+    // This creates a series of 2-clause AND conditions that are then ORed together.
+    $ors = db_or();
     foreach ($used_code as $type => $names) {
-      $type_sql[] = "(name IN (" . db_placeholders($names, 'varchar') . ") AND type = '%s')";
-      $params = array_merge($params, $names);
-      $params[] = $type;
+      $and = db_and()
+        ->condition('name', $names, 'IN')
+        ->condition('type', $type);
+      $ors->condition($and);
     }
-    $res = db_query("SELECT DISTINCT filename FROM {registry} WHERE " . implode(' OR ', $type_sql), $params);
-    while ($row = db_fetch_object($res)) {
-      $files[] = $row->filename;
-    }
+    $select->condition($ors);
+    $files = $select->execute()->fetchCol();
+
     if ($files) {
       sort($files);
       // Only write this to cache if the file list we are going to cache
