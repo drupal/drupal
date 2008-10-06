@@ -183,7 +183,7 @@ define('LANGUAGE_NEGOTIATION_DOMAIN', 3);
 /**
  * For convenience, define a short form of the request time global.
  */
-define ('REQUEST_TIME', $_SERVER['REQUEST_TIME']);
+define('REQUEST_TIME', $_SERVER['REQUEST_TIME']);
 
 /**
  * Start the timer with the specified name. If you start and stop
