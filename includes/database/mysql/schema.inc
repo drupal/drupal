@@ -299,7 +299,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function changeField(&$ret, $table, $field, $field_new, $spec, $keys_new = array()) {
-    $sql = 'ALTER TABLE {' . $table . '} CHANGE ' . $field . ' ' . $this->createFieldSql($field_new, $this->processField($spec));
+    $sql = 'ALTER TABLE {' . $table . '} CHANGE `' . $field . '` ' . $this->createFieldSql($field_new, $this->processField($spec));
     if (count($keys_new)) {
       $sql .= ', ADD ' . implode(', ADD ', $this->createKeysSql($keys_new));
     }
