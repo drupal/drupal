@@ -222,6 +222,11 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
 
   node_invoke_nodeapi($edit, 'blogapi new');
 
+  $valid = blogapi_status_error_check($edit, $publish);
+  if ($valid !== TRUE) {
+    return $valid;
+  }
+
   node_validate($edit);
   if ($errors = form_get_errors()) {
     return blogapi_error(implode("\n", $errors));
@@ -259,7 +264,8 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
   if (!node_access('update', $node)) {
     return blogapi_error(t('You do not have permission to update this post.'));
   }
-
+  // Save the original status for validation of permissions.
+  $original_status = $node->status;
   $node->status = $publish;
 
   // check for bloggerAPI vs. metaWeblogAPI
@@ -274,6 +280,11 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
   }
 
   node_invoke_nodeapi($node, 'blogapi edit');
+
+  $valid = blogapi_status_error_check($node, $original_status);
+  if ($valid !== TRUE) {
+    return $valid;
+  }
 
   node_validate($node);
   if ($errors = form_get_errors()) {
@@ -306,6 +317,33 @@ function blogapi_blogger_get_post($appkey, $postid, $username, $password) {
 
   return _blogapi_get_post($node, TRUE);
 }
+
+/**
+ * Check that the user has permission to save the node with the chosen status.
+ *
+ * @return
+ *   TRUE if no error, or the blogapi_error().
+ */
+function blogapi_status_error_check($node, $original_status) {
+  
+  $node = (object) $node;
+
+  $node_type_default = variable_get('node_options_'. $node->type, array('status', 'promote'));
+
+  // If we don't have the 'administer nodes' permission and the status is
+  // changing or for a new node the status is not the content type's default,
+  // then return an error.
+  if (!user_access('administer nodes') && (($node->status != $original_status) || (empty($node->nid) && $node->status != in_array('status', $node_type_default)))) {
+    if ($node->status) {
+      return blogapi_error(t('You do not have permission to publish this type of post. Please save it as a draft instead.'));
+    }
+    else {
+      return blogapi_error(t('You do not have permission to save this post as a draft. Please publish it instead.'));
+    }
+  }
+  return TRUE;
+}
+
 
 /**
  * Blogging API callback. Removes the specified blog node.
@@ -514,7 +552,55 @@ function blogapi_mt_set_post_categories($postid, $username, $password, $categori
   foreach ($categories as $category) {
     $node->taxonomy[] = $category['categoryId'];
   }
+  $validated = blogapi_mt_validate_terms($node);
+  if ($validated !== TRUE) {
+    return $validated;
+  }
   node_save($node);
+  return TRUE;
+}
+
+/**
+ * Blogging API helper - find allowed taxonomy terms for a node type.
+ */
+function blogapi_mt_validate_terms($node) {
+  // We do a lot of heavy lifting here since taxonomy module doesn't have a
+  // stand-alone validation function.
+  if (module_exists('taxonomy')) {
+    $found_terms = array();
+    if (!empty($node->taxonomy)) {
+      $term_list = array_unique($node->taxonomy);
+      $params = $term_list;
+      $params[] = $node->type;
+      $result = db_query(db_rewrite_sql("SELECT t.tid, t.vid FROM {term_data} t INNER JOIN {vocabulary_node_types} n ON t.vid = n.vid WHERE t.tid IN (". db_placeholders($term_list) .") AND n.type = '%s'", 't', 'tid'), $params);
+      $found_terms = array();
+      $found_count = 0;
+      while ($term = db_fetch_object($result)) {
+        $found_terms[$term->vid][$term->tid] = $term->tid;
+        $found_count++;
+      }
+      // If the counts don't match, some terms are invalid or not accessible to this user.
+      if (count($term_list) != $found_count) {
+        return blogapi_error(t('Invalid categories submitted.'));
+      }
+    }
+    // Look up all the vocabularies for this node type.
+    $result2 = db_query(db_rewrite_sql("SELECT v.vid, v.name, v.required, v.multiple FROM {vocabulary} v INNER JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE n.type = '%s'", 'v', 'vid'), $node->type);
+    // Check each vocabulary associated with this node type.
+    while ($vocabulary = db_fetch_object($result2)) {
+      // Required vocabularies must have at least one term.
+      if ($vocabulary->required && empty($found_terms[$vocabulary->vid])) {
+        return blogapi_error(t('A category from the @vocabulary_name vocabulary is required.', array('@vocabulary_name' => $vocabulary->name)));
+      }
+      // Vocabularies that don't allow multiple terms may have at most one.
+      if (!($vocabulary->multiple) && (isset($found_terms[$vocabulary->vid]) && count($found_terms[$vocabulary->vid]) > 1)) {
+        return blogapi_error(t('You may only choose one category from the @vocabulary_name vocabulary.'), array('@vocabulary_name' => $vocabulary->name));
+      }
+    }
+  }
+  elseif (!empty($node->taxonomy)) {
+    return blogapi_error(t('Error saving categories. This feature is not available.'));
+  }
   return TRUE;
 }
 
@@ -549,11 +635,16 @@ function blogapi_mt_publish_post($postid, $username, $password) {
     return blogapi_error(t('Invalid post.'));
   }
 
-  $node->status = 1;
-  if (!node_access('update', $node)) {
+  // Nothing needs to be done if already published.
+  if ($node->status) {
+    return;
+  }
+
+  if (!node_access('update', $node) || !user_access('administer nodes')) {
     return blogapi_error(t('You do not have permission to update this post.'));
   }
 
+  $node->status = 1;
   node_save($node);
 
   return TRUE;

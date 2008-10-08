@@ -1,8 +1,10 @@
 // $Id$
 
-Drupal 6.5-dev, xxxx-xx-xx (development release)
+Drupal 6.5, 2008-10-08
 ----------------------
-
+- Fixed security issues, (File upload access bypass, Access rules bypass,
+  BlogAPI access bypass), see SA-2008-060.
+- Fixed a variety of small bugs.
 
 Drupal 6.4, 2008-08-13
 ----------------------
@@ -134,6 +136,12 @@ Drupal 6.0, 2008-02-13
   contributed module (http://drupal.org/project/site_network).
 - Removed old system updates. Updates from Drupal versions prior to 5.x will
   require upgrading to 5.x before upgrading to 6.x.
+
+Drupal 5.11, 2008-10-08
+-----------------------
+- fixed a variety of small bugs.
+- fixed security issues, (File upload access bypass, Access rules bypass,
+  BlogAPI access bypass, Node validation bypass), see SA-2008-060
 
 Drupal 5.10, 2008-08-13
 -----------------------

@@ -1334,9 +1334,18 @@ function user_login_final_validate($form, &$form_state) {
 function user_authenticate($form_values = array()) {
   global $user;
 
+  // Load the account to check if the e-mail is denied by an access rule.
+  // Doing this check here saves us a user_load() in user_login_name_validate()
+  // and introduces less code change for a security fix.
+  $account = user_load(array('name' => $form_values['name'], 'pass' => trim($form_values['pass']), 'status' => 1));
+  if ($account && drupal_is_denied('mail', $account->mail)) {
+    form_set_error('name', t('The name %name is registered using a reserved e-mail address and therefore could not be logged in.', array('%name' => $account->name)));
+  }
+
   // Name and pass keys are required.
-  if (!empty($form_values['name']) && !empty($form_values['pass']) &&
-      $account = user_load(array('name' => $form_values['name'], 'pass' => trim($form_values['pass']), 'status' => 1))) {
+  // The user is about to be logged in, so make sure no error was previously
+  // encountered in the validation process.
+  if (!form_get_errors() && !empty($form_values['name']) && !empty($form_values['pass']) && $account) {
     $user = $account;
     user_authenticate_finalize($form_values);
     return $user;

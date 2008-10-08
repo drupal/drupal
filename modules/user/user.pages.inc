@@ -43,6 +43,13 @@ function user_pass() {
 
 function user_pass_validate($form, &$form_state) {
   $name = trim($form_state['values']['name']);
+  
+  // Blocked accounts cannot request a new password,
+  // check provided username and email against access rules.
+  if (drupal_is_denied('user', $name) || drupal_is_denied('mail', $name)) {
+    form_set_error('name', t('%name is not allowed to request a new password.', array('%name' => $name)));
+  }
+
   // Try to load by email.
   $account = user_load(array('mail' => $name, 'status' => 1));
   if (!$account) {
@@ -87,6 +94,12 @@ function user_pass_reset(&$form_state, $uid, $timestamp, $hashed_pass, $action =
     $current = time();
     // Some redundant checks for extra security ?
     if ($timestamp < $current && $account = user_load(array('uid' => $uid, 'status' => 1)) ) {
+      // Deny one-time login to blocked accounts.
+      if (drupal_is_denied('user', $account->name) || drupal_is_denied('mail', $account->mail)) {
+        drupal_set_message(t('You have tried to use a one-time login for an account which has been blocked.'), 'error');
+        drupal_goto();
+      }
+
       // No time out for first time login.
       if ($account->login && $current - $timestamp > $timeout) {
         drupal_set_message(t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'));
