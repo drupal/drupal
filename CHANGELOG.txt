@@ -1,5 +1,8 @@
 // $Id$
 
+Drupal 6.6-dev, xxxx-xx-xx (development release)
+----------------------
+
 Drupal 6.5, 2008-10-08
 ----------------------
 - Fixed security issues, (File upload access bypass, Access rules bypass,
