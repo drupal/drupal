@@ -13,10 +13,10 @@ function database_test_schema() {
   $schema['test'] = array(
     'description' => 'Basic test table for the database unit tests.',
     'fields' => array(
-      'id'   => array(
-      	'type' => 'serial',
-      	'unsigned' => TRUE,
-      	'not null' => TRUE,
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
       ),
       'name' => array(
         'description' => "A person's name",
@@ -25,13 +25,13 @@ function database_test_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'age'  => array(
+      'age' => array(
         'description' => "The person's age",
         'type' => 'int',
-      	'unsigned' => TRUE,
+        'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0),
-      'job'  => array(
+      'job' => array(
         'description' => "The person's job",
         'type' => 'varchar',
         'length' => 255,
@@ -41,10 +41,10 @@ function database_test_schema() {
     ),
     'primary key' => array('id'),
     'unique keys' => array(
-      'name'       => array('name')
+      'name' => array('name')
     ),
     'indexes' => array(
-      'ages'  => array('age'),
+      'ages' => array('age'),
     ),
   );
 
@@ -60,14 +60,14 @@ function database_test_schema() {
         'not null' => TRUE,
         'default' => '',
        ),
-      'age'  => array(
+      'age' => array(
         'description' => "The person's age",
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
-      'job'  => array(
+      'job' => array(
         'description' => "The person's job",
         'type' => 'varchar',
         'length' => 255,
@@ -77,12 +77,12 @@ function database_test_schema() {
     ),
     'primary key' => array('job'),
     'indexes' => array(
-      'ages'  => array('age'),
+      'ages' => array('age'),
     ),
   );
 
   $schema['test_one_blob'] = array(
-    'description' => 'A simple table including a  BLOB field for testing BLOB behavior.',
+    'description' => 'A simple table including a BLOB field for testing BLOB behavior.',
     'fields' => array(
       'id' => array(
         'description' => 'Simple unique ID.',
@@ -125,7 +125,7 @@ function database_test_schema() {
         'type' => 'serial',
         'not null' => TRUE,
       ),
-      'pid'  => array(
+      'pid' => array(
         'description' => 'The {test_people}.pid, foreign key for the test table.',
         'type' => 'int',
         'unsigned' => TRUE,
@@ -139,7 +139,7 @@ function database_test_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'priority'  => array(
+      'priority' => array(
         'description' => 'The priority of the task.',
         'type' => 'int',
         'unsigned' => TRUE,
