@@ -27,14 +27,14 @@ function _book_install_type_create() {
   $book_node_type = array(
     'type' => 'book',
     'name' => t('Book page'),
-    'module' => 'node',
+    'base' => 'node_content',
     'description' => t('A <em>book page</em> is a page of content, organized into a collection of related entries collectively known as a <em>book</em>. A <em>book page</em> automatically displays links to adjacent pages, providing a simple navigation system for organizing and reviewing structured content.'),
-    'custom' => TRUE,
-    'modified' => TRUE,
-    'locked' => FALSE,
+    'custom' => 1,
+    'modified' => 1,
+    'locked' => 0,
   );
 
-  $book_node_type = (object)_node_type_set_defaults($book_node_type);
+  $book_node_type = node_type_set_defaults($book_node_type);
   node_type_save($book_node_type);
   // Default to not promoted.
   variable_set('node_options_book', array('status'));

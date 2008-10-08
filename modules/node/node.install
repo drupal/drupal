@@ -293,8 +293,8 @@ function node_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'module' => array(
-        'description' => t('The module that implements this type.'),
+      'base' => array(
+        'description' => t('The base string used to construct callbacks corresponding to this node type.'),
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -380,3 +380,23 @@ function node_schema() {
 
   return $schema;
 }
+
+/**
+ * Drupal 6.x to 7.x updates
+ */
+
+/**
+ * Fix node type 'module' attribute to avoid name-space conflicts.
+ */
+function node_update_7000() {
+  $ret = array();
+
+  $ret[] = update_sql("UPDATE {node_type} SET module = 'node_content' WHERE module = 'node'");
+  db_change_field($ret, 'node_type', 'module', 'base', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE));
+
+  return $ret;
+}
+
+/**
+ * End of 6.x to 7.x updates
+ */

@@ -356,7 +356,7 @@ function forum_node_info() {
   return array(
     'forum' => array(
       'name' => t('Forum topic'),
-      'module' => 'forum',
+      'base' => 'forum',
       'description' => t('A <em>forum topic</em> is the initial post to a new discussion thread within a forum.'),
       'title_label' => t('Subject'),
     )

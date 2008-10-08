@@ -50,19 +50,12 @@ function node_overview_types() {
  */
 function node_type_form(&$form_state, $type = NULL) {
   if (!isset($type->type)) {
-    $type = new stdClass();
-    $type->type = $type->name = $type->module = $type->description = $type->help = '';
-    $type->min_word_count = 0;
-    $type->has_title = TRUE;
-    $type->has_body = TRUE;
-    $type->title_label = t('Title');
-    $type->body_label = t('Body');
-    $type->custom = TRUE;
-    $type->modified = FALSE;
-    $type->locked = FALSE;
+    // This is a new type.  Node module managed types are custom and unlocked.
+    $type = node_type_set_defaults(array('custom' => 1, 'locked' => 0));
   }
 
-  $form['#node_type'] = $type; // Make the type object available to implementations of hook_form_alter.
+  // Make the type object available to implementations of hook_form_alter.
+  $form['#node_type'] = $type;
 
   $form['identity'] = array(
     '#type' => 'fieldset',
@@ -170,9 +163,9 @@ function node_type_form(&$form_state, $type = NULL) {
     '#type' => 'value',
     '#value' => isset($type->orig_type) ? $type->orig_type : '',
   );
-  $form['module'] = array(
+  $form['base'] = array(
     '#type' => 'value',
-    '#value' => $type->module,
+    '#value' => $type->base,
   );
   $form['custom'] = array(
     '#type' => 'value',
@@ -253,7 +246,7 @@ function node_type_form_validate($form, &$form_state) {
 function node_type_form_submit($form, &$form_state) {
   $op = isset($form_state['values']['op']) ? $form_state['values']['op'] : '';
 
-  $type = new stdClass();
+  $type = node_type_set_defaults();
 
   $type->type = trim($form_state['values']['type']);
   $type->name = trim($form_state['values']['name']);
@@ -271,7 +264,7 @@ function node_type_form_submit($form, &$form_state) {
   $type->has_title = ($type->title_label != '');
   $type->has_body = ($type->body_label != '');
 
-  $type->module = !empty($form_state['values']['module']) ? $form_state['values']['module'] : 'node';
+  $type->base = !empty($form_state['values']['base']) ? $form_state['values']['base'] : 'node_content';
   $type->custom = $form_state['values']['custom'];
   $type->modified = TRUE;
   $type->locked = $form_state['values']['locked'];
@@ -365,7 +358,7 @@ function node_type_reset(&$type) {
   $info_array = module_invoke_all('node_info');
   if (isset($info_array[$type->orig_type])) {
     $info_array[$type->orig_type]['type'] = $type->orig_type;
-    $info = _node_type_set_defaults($info_array[$type->orig_type]);
+    $info = node_type_set_defaults($info_array[$type->orig_type]);
 
     foreach ($info as $field => $value) {
       $type->$field = $value;

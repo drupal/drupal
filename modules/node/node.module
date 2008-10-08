@@ -465,8 +465,8 @@ function node_get_types($op = 'types', $node = NULL, $reset = FALSE) {
       return $_node_types;
     case 'type':
       return isset($_node_types[$type]) ? $_node_types[$type] : FALSE;
-    case 'module':
-      return isset($_node_types[$type]->module) ? $_node_types[$type]->module : FALSE;
+    case 'base':
+      return isset($_node_types[$type]->base) ? $_node_types[$type]->base : FALSE;
     case 'names':
       return $_node_names;
     case 'name':
@@ -508,32 +508,35 @@ function node_type_save($info) {
   $is_existing = FALSE;
   $existing_type = !empty($info->old_type) ? $info->old_type : $info->type;
   $is_existing = db_result(db_query("SELECT COUNT(*) FROM {node_type} WHERE type = '%s'", $existing_type));
-  if (!isset($info->help)) {
-    $info->help = '';
-  }
-  if (empty($info->min_word_count)) {
-    $info->min_word_count = 0;
-  }
-  if (!isset($info->body_label)) {
-    $info->body_label = '';
-  }
-  if (empty($info->custom)) {
-    $info->custom = 0;
-  }
-  if (empty($info->locked)) {
-    $info->locked = 0;
-  }
+  $type = node_type_set_defaults($info);
+
+  $fields = array(
+    'type' => (string) $type->type,
+    'name' => (string) $type->name,
+    'base' => (string) $type->base,
+    'has_title' => (int) $type->has_title,
+    'title_label' => (string) $type->title_label,
+    'has_body' => (int) $type->has_body,
+    'body_label' => (string) $type->body_label,
+    'description' => (string) $type->description,
+    'help' => (string) $type->help,
+    'min_word_count' => (int) $type->min_word_count,
+    'custom' => (int) $type->custom,
+    'modified' => (int) $type->modified,
+    'locked' => (int) $type->locked,
+  );
 
   if ($is_existing) {
-    db_query("UPDATE {node_type} SET type = '%s', name = '%s', module = '%s', has_title = %d, title_label = '%s', has_body = %d, body_label = '%s', description = '%s', help = '%s', min_word_count = %d, custom = %d, modified = %d, locked = %d WHERE type = '%s'", $info->type, $info->name, $info->module, $info->has_title, $info->title_label, $info->has_body, $info->body_label, $info->description, $info->help, $info->min_word_count, $info->custom, $info->modified, $info->locked, $existing_type);
+    db_update('node_type')->fields($fields)->condition('type', $existing_type)->execute();
 
-    module_invoke_all('node_type', 'update', $info);
+    module_invoke_all('node_type', 'update', $type);
     return SAVED_UPDATED;
   }
   else {
-    db_query("INSERT INTO {node_type} (type, name, module, has_title, title_label, has_body, body_label, description, help, min_word_count, custom, modified, locked, orig_type) VALUES ('%s', '%s', '%s', %d, '%s', %d, '%s', '%s', '%s', %d, %d, %d, %d, '%s')", $info->type, $info->name, $info->module, $info->has_title, $info->title_label, $info->has_body, $info->body_label, $info->description, $info->help, $info->min_word_count, $info->custom, $info->modified, $info->locked, $info->orig_type);
+    $fields['orig_type'] = (string) $type->orig_type;
+    db_insert('node_type')->fields($fields)->execute();
 
-    module_invoke_all('node_type', 'insert', $info);
+    module_invoke_all('node_type', 'insert', $type);
     return SAVED_NEW;
   }
 }
@@ -580,7 +583,7 @@ function _node_types_build() {
   $info_array = module_invoke_all('node_info');
   foreach ($info_array as $type => $info) {
     $info['type'] = $type;
-    $_node_types[$type] = (object) _node_type_set_defaults($info);
+    $_node_types[$type] = node_type_set_defaults($info);
     $_node_names[$type] = $info['name'];
   }
 
@@ -588,8 +591,8 @@ function _node_types_build() {
   while ($type_object = db_fetch_object($type_result)) {
     // Check for node types from disabled modules and mark their types for removal.
     // Types defined by the node module in the database (rather than by a separate
-    // module using hook_node_info) have a module value of 'node'.
-    if ($type_object->module != 'node' && empty($info_array[$type_object->type])) {
+    // module using hook_node_info) have a base value of 'node_content'.
+    if ($type_object->base != 'node_content' && empty($info_array[$type_object->type])) {
       $type_object->disabled = TRUE;
     }
     if (!isset($_node_types[$type_object->type]) || $type_object->modified) {
@@ -609,43 +612,54 @@ function _node_types_build() {
 }
 
 /**
- * Set default values for a node type defined through hook_node_info().
+ * Set the default values for a node type.
+ *
+ * The defaults are for a type defined through hook_node_info().
+ * When populating a custom node type $info should have the 'custom'
+ * key set to 1.
+ *
+ * @param $info
+ *   An object or array containing values to override the defaults.
+ *
+ * @return
+ *  A node type object.
  */
-function _node_type_set_defaults($info) {
-  if (!isset($info['has_title'])) {
-    $info['has_title'] = TRUE;
-  }
-  if ($info['has_title'] && !isset($info['title_label'])) {
-    $info['title_label'] = t('Title');
+function node_type_set_defaults($info = array()) {
+  static $type;
+
+  if (!isset($type)) {
+    $type = new stdClass();
+    $type->type = '';
+    $type->name = '';
+    $type->base = '';
+    $type->description = '';
+    $type->help = '';
+    $type->min_word_count = 0;
+    $type->has_title = 1;
+    $type->has_body = 1;
+    $type->title_label = t('Title');
+    $type->body_label = t('Body');
+    $type->custom = 0;
+    $type->modified = 0;
+    $type->locked = 1;
+    $type->is_new = 1;
   }
 
-  if (!isset($info['has_body'])) {
-    $info['has_body'] = TRUE;
+  $new_type = clone $type;
+  $info = (array) $info;
+  foreach ($info as $key => $data) {
+    $new_type->$key = $data;
   }
-  if ($info['has_body'] && !isset($info['body_label'])) {
-    $info['body_label'] = t('Body');
+  // If the type has no title or body, set an empty label.
+  if (!$new_type->has_title) {
+    $new_type->title_label = '';
   }
+  if (!$new_type->has_body) {
+    $new_type->body_label = '';
+  }
+  $new_type->orig_type = isset($info['type']) ? $info['type'] : '';
 
-  if (!isset($info['help'])) {
-    $info['help'] = '';
-  }
-  if (!isset($info['min_word_count'])) {
-    $info['min_word_count'] = 0;
-  }
-  if (!isset($info['custom'])) {
-    $info['custom'] = FALSE;
-  }
-  if (!isset($info['modified'])) {
-    $info['modified'] = FALSE;
-  }
-  if (!isset($info['locked'])) {
-    $info['locked'] = TRUE;
-  }
-
-  $info['orig_type'] = $info['type'];
-  $info['is_new'] = TRUE;
-
-  return $info;
+  return $new_type;
 }
 
 /**
@@ -659,12 +673,8 @@ function _node_type_set_defaults($info) {
  *   TRUE iff the $hook exists in the node type of $node.
  */
 function node_hook(&$node, $hook) {
-  $module = node_get_types('module', $node);
-  if ($module == 'node') {
-    // Avoid function name collisions.
-    $module = 'node_content';
-  }
-  return module_hook($module, $hook);
+  $base = node_get_types('base', $node);
+  return module_hook($base, $hook);
 }
 
 /**
@@ -681,11 +691,8 @@ function node_hook(&$node, $hook) {
  */
 function node_invoke(&$node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
   if (node_hook($node, $hook)) {
-    $module = node_get_types('module', $node);
-    if ($module == 'node') {
-      $module = 'node_content'; // Avoid function name collisions.
-    }
-    $function = $module . '_' . $hook;
+    $base = node_get_types('base', $node);
+    $function = $base . '_' . $hook;
     return ($function($node, $a2, $a3, $a4));
   }
 }
@@ -1172,7 +1179,7 @@ function node_perm() {
   );
 
   foreach (node_get_types() as $type) {
-    if ($type->module == 'node') {
+    if ($type->base == 'node_content') {
       $perms += node_list_permissions($type);
     }
   }
@@ -2085,11 +2092,8 @@ function node_access($op, $node, $account = NULL) {
 
   // Can't use node_invoke('access', $node), because the access hook takes the
   // $op parameter before the $node parameter.
-  $module = node_get_types('module', $node);
-  if ($module == 'node') {
-    $module = 'node_content'; // Avoid function name collisions.
-  }
-  $access = module_invoke($module, 'access', $op, $node, $account);
+  $base = node_get_types('base', $node);
+  $access = module_invoke($base, 'access', $op, $node, $account);
   if (!is_null($access)) {
     return $access;
   }

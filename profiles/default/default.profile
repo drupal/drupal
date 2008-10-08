@@ -98,29 +98,25 @@ function default_profile_tasks(&$task, $url) {
     array(
       'type' => 'page',
       'name' => st('Page'),
-      'module' => 'node',
+      'base' => 'node_content',
       'description' => st("A <em>page</em>, similar in form to an <em>article</em>, is a simple method for creating and displaying information that rarely changes, such as an \"About us\" section of a website. By default, a <em>page</em> entry does not allow visitor comments and is not featured on the site's initial home page."),
-      'custom' => TRUE,
-      'modified' => TRUE,
-      'locked' => FALSE,
-      'help' => '',
-      'min_word_count' => '',
+      'custom' => 1,
+      'modified' => 1,
+      'locked' => 0,
     ),
     array(
       'type' => 'article',
       'name' => st('Article'),
-      'module' => 'node',
+      'base' => 'node_content',
       'description' => st("An <em>article</em>, similar in form to a <em>page</em>, is ideal for creating and displaying content that informs or engages website visitors. Press releases, site announcements, and informal blog-like entries may all be created with an <em>article</em> entry. By default, an <em>article</em> entry is automatically featured on the site's initial home page, and provides the ability to post comments."),
-      'custom' => TRUE,
-      'modified' => TRUE,
-      'locked' => FALSE,
-      'help' => '',
-      'min_word_count' => '',
+      'custom' => 1,
+      'modified' => 1,
+      'locked' => 0,
     ),
   );
 
   foreach ($types as $type) {
-    $type = (object) _node_type_set_defaults($type);
+    $type = node_type_set_defaults($type);
     node_type_save($type);
   }
 

@@ -13,7 +13,7 @@ function blog_node_info() {
   return array(
     'blog' => array(
       'name' => t('Blog entry'),
-      'module' => 'blog',
+      'base' => 'blog',
       'description' => t('A <em>blog entry</em> is a single post to an online journal, or <em>blog</em>.'),
     )
   );
