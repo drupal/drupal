@@ -878,8 +878,21 @@ function _upload_image($file) {
  * Menu-callback for JavaScript-based uploads.
  */
 function upload_js() {
-  // We only do the upload.module part of the node validation process.
-  $node = (object)$_POST;
+  if (isset($_POST['vid']) && is_numeric($_POST['vid'])) {
+    // Load the node and check the user is allowed to post attachments to it.
+    $node = node_load(array('vid' => $_POST['vid']));
+    if (!$node || !node_access('update', $node) || !variable_get('upload_'. $node->type, TRUE)) {
+      // Setting this error will cause the form to fail validation.
+      form_set_error('form_token', t('Validation error, please try again. If this error persists, please contact the site administrator.'));
+      $output = theme('status_messages');
+      print drupal_to_js(array('status' => TRUE, 'data' => $output));
+      exit();
+    }
+  }
+  else {
+    // This is a new node.
+    $node = new stdClass();
+  }
 
   // Load existing node files.
   $node->files = upload_load($node);

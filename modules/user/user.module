@@ -979,8 +979,17 @@ function user_authenticate($name, $pass) {
 
   // Try to log in the user locally. Don't set $user unless successful.
   if ($account = user_load(array('name' => $name, 'pass' => $pass, 'status' => 1))) {
-    $user = $account;
-    return $user;
+    // Check if the e-mail is denied by an access rule.
+    // Doing this check here saves us a user_load() in user_login_validate()
+    // and introduces less code change for a security fix.
+    if (drupal_is_denied('mail', $account->mail)) {
+      form_set_error('name', t('The name %name is registered using a reserved e-mail address and therefore could not be logged in.', array('%name' => $account->name)));
+      return;
+    }
+    else {
+      $user = $account;
+      return $user;
+    }
   }
 
   // Strip name and server from ID:
@@ -1060,6 +1069,13 @@ function user_pass() {
 
 function user_pass_validate($form_id, $form_values) {
   $name = $form_values['name'];
+
+  // Blocked accounts cannot request a new password,
+  // check provided username and email against access rules.
+  if (drupal_is_denied('user', $name) || drupal_is_denied('mail', $name)) {
+    form_set_error('name', t('%name is not allowed to request a new password.', array('%name' => $name)));
+  }
+
   $account = user_load(array('mail' => $name, 'status' => 1));
   if (!$account) {
     $account = user_load(array('name' => $name, 'status' => 1));
@@ -1112,6 +1128,11 @@ function user_pass_reset($uid, $timestamp, $hashed_pass, $action = NULL) {
     $current = time();
     // Some redundant checks for extra security ?
     if ($timestamp < $current && $account = user_load(array('uid' => $uid, 'status' => 1)) ) {
+      // Deny one-time login to blocked accounts.
+      if (drupal_is_denied('user', $account->name) || drupal_is_denied('mail', $account->mail)) {
+        drupal_set_message(t('You have tried to use a one-time login for an account which has been blocked.'), 'error');
+        drupal_goto();
+      }
       // No time out for first time login.
       if ($account->login && $current - $timestamp > $timeout) {
         drupal_set_message(t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'));

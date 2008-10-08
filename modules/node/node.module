@@ -2165,6 +2165,14 @@ function node_form($node, $form_values = NULL) {
     $form['delete'] = array('#type' => 'button', '#value' => t('Delete'), '#weight' => 50);
   }
   $form['#after_build'] = array('node_form_add_preview');
+  // Ensure that node_validate() will always get called.
+  $form['#validate']['node_form_validate'] = array();
+  // Also, if the module defines its own _validate() routine based on the
+  // form_id, include that in the #validate array, as well.
+  $node_validate = $node->type .'_node_form_validate';
+  if (function_exists($node_validate)) {
+    $form['#validate'][$node_validate] = array();
+  }
   $form['#base'] = 'node_form';
   return $form;
 }

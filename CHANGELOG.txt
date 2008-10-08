@@ -1,8 +1,10 @@
 // $Id$
 
-Drupal 5.11-dev, xxxx-xx-xx (development release)
+Drupal 5.11, 2008-10-08
 -----------------------
-
+- fixed a variety of small bugs.
+- fixed security issues, (File upload access bypass, Access rules bypass,
+  BlogAPI access bypass, Node validation bypass), see SA-2008-060
 
 Drupal 5.10, 2008-08-13
 -----------------------
