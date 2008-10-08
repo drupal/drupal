@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.310 2008/10/06 11:30:11 dries Exp $
+// $Id: blog.module,v 1.311 2008/10/08 03:27:55 webchick Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@ function blog_node_info() {
   return array(
     'blog' => array(
       'name' => t('Blog entry'),
-      'module' => 'blog',
+      'base' => 'blog',
       'description' => t('A <em>blog entry</em> is a single post to an online journal, or <em>blog</em>.'),
     )
   );
