@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.3 2008/09/19 20:30:32 dries Exp $
+// $Id: schema.inc,v 1.4 2008/10/08 11:09:16 dries Exp $
 
 /**
  * @file
@@ -299,7 +299,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function changeField(&$ret, $table, $field, $field_new, $spec, $keys_new = array()) {
-    $sql = 'ALTER TABLE {' . $table . '} CHANGE ' . $field . ' ' . $this->createFieldSql($field_new, $this->processField($spec));
+    $sql = 'ALTER TABLE {' . $table . '} CHANGE `' . $field . '` ' . $this->createFieldSql($field_new, $this->processField($spec));
     if (count($keys_new)) {
       $sql .= ', ADD ' . implode(', ADD ', $this->createKeysSql($keys_new));
     }
