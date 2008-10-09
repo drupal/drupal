@@ -6,7 +6,7 @@
 #permissions td.permission {
   padding-left: 1.5em; /* LTR */
 }
-#permissions tr.odd .form-item, tr.even .form-item {
+#permissions tr.odd .form-item, #permissions tr.even .form-item {
   white-space: normal;
 }
 #user-login-form {
