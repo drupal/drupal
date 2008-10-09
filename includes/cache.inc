@@ -23,10 +23,13 @@ function cache_get($cid, $table = 'cache') {
     // Reset the variable immediately to prevent a meltdown in heavy load situations.
     variable_set('cache_flush', 0);
     // Time to flush old cache data
-    db_query("DELETE FROM {" . $table . "} WHERE expire != %d AND expire <= %d", CACHE_PERMANENT, $cache_flush);
+    db_delete($table)
+      ->condition('expire', CACHE_PERMANENT, '<>')
+      ->condition('expire', $cache_flush, '<=')
+      ->execute();
   }
 
-  $cache = db_fetch_object(db_query("SELECT data, created, headers, expire, serialized FROM {" . $table . "} WHERE cid = '%s'", $cid));
+  $cache = db_query("SELECT data, created, headers, expire, serialized FROM {" . $table . "} WHERE cid = :cid", array(':cid' => $cid))->fetch();
   if (isset($cache->data)) {
     // If the data is permanent or we're not enforcing a minimum cache lifetime
     // always return the cached data.
@@ -117,7 +120,10 @@ function cache_set($cid, $data, $table = 'cache', $expire = CACHE_PERMANENT, $he
     $fields['serialized'] = 0;
   }
 
-  db_merge($table)->key(array('cid' => $cid))->fields($fields)->execute();
+  db_merge($table)
+    ->key(array('cid' => $cid))
+    ->fields($fields)
+    ->execute();
 }
 
 /**
@@ -165,13 +171,19 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
       else if (REQUEST_TIME > ($cache_flush + variable_get('cache_lifetime', 0))) {
         // Clear the cache for everyone, cache_flush_delay seconds have
         // passed since the first request to clear the cache.
-        db_query("DELETE FROM {" . $table . "} WHERE expire != %d AND expire < %d", CACHE_PERMANENT, REQUEST_TIME);
+        db_delete($table)
+          ->condition('expire', CACHE_PERMANENT, '<>')
+          ->condition('expire', REQUEST_TIME, '<')
+          ->execute();
         variable_set('cache_flush', 0);
       }
     }
     else {
       // No minimum cache lifetime, flush all temporary cache entries now.
-      db_query("DELETE FROM {" . $table . "} WHERE expire != %d AND expire < %d", CACHE_PERMANENT, REQUEST_TIME);
+      db_delete($table)
+        ->condition('expire', CACHE_PERMANENT, '<>')
+        ->condition('expire', REQUEST_TIME, '<')
+        ->execute();
     }
   }
   else {
@@ -180,12 +192,15 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
         db_delete($table)->execute();
       }
       else {
-        db_delete($table)->condition('cid', $cid .'%', 'LIKE')->execute();
+        db_delete($table)
+          ->condition('cid', $cid . '%', 'LIKE')
+          ->execute();
       }
     }
     else {
-      db_delete($table)->condition('cid', $cid)->execute();
+      db_delete($table)
+        ->condition('cid', $cid)
+        ->execute();
     }
   }
 }
-
