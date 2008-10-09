@@ -1,4 +1,4 @@
-/* $Id: user.css,v 1.9 2008/04/08 22:50:55 dries Exp $ */
+/* $Id: user.css,v 1.10 2008/10/09 04:19:44 webchick Exp $ */
 
 #permissions td.module {
   font-weight: bold;
@@ -6,7 +6,7 @@
 #permissions td.permission {
   padding-left: 1.5em; /* LTR */
 }
-#permissions tr.odd .form-item, tr.even .form-item {
+#permissions tr.odd .form-item, #permissions tr.even .form-item {
   white-space: normal;
 }
 #user-login-form {
