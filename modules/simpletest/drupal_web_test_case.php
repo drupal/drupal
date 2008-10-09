@@ -877,6 +877,11 @@ class DrupalWebTestCase {
     // previous options.
     $out = $this->curlExec(array(CURLOPT_HTTPGET => TRUE, CURLOPT_URL => url($path, $options), CURLOPT_HEADER => FALSE, CURLOPT_NOBODY => FALSE));
     $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.
+
+    // Replace original page output with new output from redirected page(s).
+    if (($new = $this->checkForMetaRefresh())) {
+      $out = $new;
+    }
     return $out;
   }
 
@@ -952,6 +957,11 @@ class DrupalWebTestCase {
           $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POST => TRUE, CURLOPT_POSTFIELDS => $post, CURLOPT_HEADER => FALSE));
           // Ensure that any changes to variables in the other thread are picked up.
           $this->refreshVariables();
+
+          // Replace original page output with new output from redirected page(s).
+          if (($new = $this->checkForMetaRefresh())) {
+            $out = $new;
+          }
           return $out;
         }
       }
@@ -962,6 +972,28 @@ class DrupalWebTestCase {
       $this->assertTrue($submit_matches, t('Found the @submit button', array('@submit' => $submit)));
       $this->fail(t('Found the requested form fields at @path', array('@path' => $path)));
     }
+  }
+
+  /**
+   * Check for meta refresh tag and if found call drupalGet() recursively. This
+   * function looks for the http-equiv attribute to be set to "Refresh"
+   * and is case-sensitive.
+   *
+   * @return
+   *   Either the new page content or FALSE.
+   */
+  private function checkForMetaRefresh() {
+    if ($this->drupalGetContent() != '' && $this->parse()) {
+      $refresh = $this->xpath('//meta[@http-equiv="Refresh"]');
+      if (!empty($refresh)) {
+        // Parse the content attribute of the meta tag for the format:
+        // "[delay]: URL=[page_to_redirect_to]".
+        if (preg_match('/\d+;\s*URL=(?P<url>.*)/i', $refresh[0]['content'], $match)) {
+          return $this->drupalGet($this->getAbsoluteUrl(decode_entities($match['url'])));
+        }
+      }
+    }
+    return FALSE;
   }
 
   /**

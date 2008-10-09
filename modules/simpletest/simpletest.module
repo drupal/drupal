@@ -191,7 +191,7 @@ function simpletest_test_form() {
     '#value' => t('Clean environment'),
     '#submit' => array('simpletest_clean_environment'),
   );
-  
+
   return $form;
 }
 
@@ -291,8 +291,6 @@ function _simpletest_format_summary_line($summary) {
  * Run selected tests.
  */
 function simpletest_test_form_submit($form, &$form_state) {
-  $batch_mode = !preg_match("/^simpletest\d+$/", $_SERVER['HTTP_USER_AGENT']);
-
   // Ensure that all classes are loaded before we create instances to get test information and run.
   simpletest_get_all_tests();
 
@@ -304,10 +302,10 @@ function simpletest_test_form_submit($form, &$form_state) {
     }
   }
   if (count($tests_list) > 0 ) {
-    simpletest_run_tests($tests_list, 'drupal', $batch_mode);
+    simpletest_run_tests($tests_list, 'drupal');
   }
   else {
-    drupal_set_message(t('No test has been selected.'), 'error');
+    drupal_set_message(t('No test(s) selected.'), 'error');
   }
 }
 
@@ -318,37 +316,24 @@ function simpletest_test_form_submit($form, &$form_state) {
  * @param $reporter
  *   Which reporter to use. Allowed values are: text, xml, html and drupal,
  *   drupal being the default.
- * @param $batch_mode
- *   Whether to use the batch API or not.
  */
-function simpletest_run_tests($test_list, $reporter = 'drupal', $batch_mode = FALSE) {
+function simpletest_run_tests($test_list, $reporter = 'drupal') {
   global $db_prefix, $db_prefix_original;
   cache_clear_all();
   $test_id = db_insert('simpletest_test_id')->useDefaults(array('test_id'))->execute();
 
-  if ($batch_mode) {
-    $batch = array(
-      'title' => t('Running SimpleTests'),
-      'operations' => array(
-        array('_simpletest_batch_operation', array($test_list, $test_id)
-      ),
+  $batch = array(
+    'title' => t('Running SimpleTests'),
+    'operations' => array(
+      array('_simpletest_batch_operation', array($test_list, $test_id)),
     ),
-      'finished' => '_simpletest_batch_finished',
-      'redirect' => 'admin/build/testing',
-      'progress_message' => t('Processing tests.'),
-      'css' => array(drupal_get_path('module', 'simpletest') .'/simpletest.css'),
-      'init_message' => t('SimpleTest is initializing...') . ' ' . format_plural(count($test_list), "one test case will run.", "@count test cases will run."),
-    );
-    batch_set($batch);
-  }
-  else {
-    simpletest_get_all_tests();
-    foreach ($test_list as $test_class) {
-      $test = new $test_class($test_id);
-      $test->run();
-    }
-    $_SESSION['test_id'] = $test_id;
-  }
+    'finished' => '_simpletest_batch_finished',
+    'redirect' => 'admin/build/testing',
+    'progress_message' => t('Processing tests.'),
+    'css' => array(drupal_get_path('module', 'simpletest') . '/simpletest.css'),
+    'init_message' => t('SimpleTest is initializing...') . ' ' . format_plural(count($test_list), "one test case will run.", "@count test cases will run."),
+  );
+  batch_set($batch);
 }
 
 /**
