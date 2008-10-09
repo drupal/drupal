@@ -38,7 +38,10 @@ function menu_help($path, $arg) {
  */
 function menu_perm() {
   return array(
-    'administer menu' => t('Manage menus and menu items.'),
+    'administer menu' => array(
+      'title' => t('Administer menu'),
+      'description' => t('Manage menus and menu items.'),
+    ),
   );
 }
 

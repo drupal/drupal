@@ -1170,12 +1170,30 @@ function theme_node_log_message($log) {
  */
 function node_perm() {
   $perms = array(
-    'administer content types' => t('Manage content types and content type administration settings.'),
-    'administer nodes' => t('Manage all website content, and bypass any content-related access control. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
-    'access content' => t('View published content.'),
-    'view revisions' => t('View content revisions.'),
-    'revert revisions' => t('Replace content with an older revision.'),
-    'delete revisions' => t('Delete content revisions.'),
+    'administer content types' => array(
+      'title' => t('Administer content types'),
+      'description' => t('Manage content types and content type administration settings.'),
+    ),
+    'administer nodes' => array(
+      'title' => t('Administer nodes'),
+      'description' => t('Manage all website content, and bypass any content-related access control. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+    ),
+    'access content' => array(
+      'title' => t('Access content'),
+      'description' => t('View published content.'),
+    ),
+    'view revisions' => array(
+      'title' => t('View revisions'),
+      'description' => t('View content revisions.'),
+    ),
+    'revert revisions' => array(
+      'title' => t('Revert revisions'),
+      'description' => t('Replace content with an older revision.'),
+    ),
+    'delete revisions' => array(
+      'title' => t('Delete revisions'),
+      'description' => t('Delete content revisions.'),
+    ),
   );
 
   foreach (node_get_types() as $type) {
@@ -2874,11 +2892,28 @@ function node_list_permissions($type) {
   $type = check_plain($info->type);
 
   // Build standard list of node permissions for this type.
-  $perms["create $type content"] = t('Create new %type_name content.', array('%type_name' => $info->name));
-  $perms["edit own $type content"] = t('Edit %type_name content created by the user.', array('%type_name' => $info->name));
-  $perms["edit any $type content"] = t('Edit any %type_name content, regardless of its author.', array('%type_name' => $info->name));
-  $perms["delete own $type content"] = t('Delete %type_name content created by the user.', array('%type_name' => $info->name));
-  $perms["delete any $type content"] = t('Delete any %type_name content, regardless of its author.', array('%type_name' => $info->name));
+  $perms = array(
+    "create $type content" => array(
+      'title' => t('Create %type_name content', array('%type_name' => $info->name)),
+      'description' => t('Create new %type_name content.', array('%type_name' => $info->name)),
+    ),
+    "edit own $type content" => array(
+      'title' => t('Edit own %type_name content', array('%type_name' => $info->name)),
+      'description' => t('Edit %type_name content created by the user.', array('%type_name' => $info->name)),
+    ),
+    "edit any $type content" => array(
+      'title' => t('Edit any %type_name content', array('%type_name' => $info->name)),
+      'description' => t('Edit any %type_name content, regardless of its author.', array('%type_name' => $info->name)),
+    ),
+    "delete own $type content" => array(
+      'title' => t('Delete own %type_name content', array('%type_name' => $info->name)),
+      'description' => t('Delete %type_name content created by the user.', array('%type_name' => $info->name)),
+    ),
+    "delete any $type content" => array(
+      'title' => t('Delete any %type_name content', array('%type_name' => $info->name)),
+      'description' => t('Delete any %type_name content, regardless of its author.', array('%type_name' => $info->name)),
+    ),
+  );
 
   return $perms;
 }

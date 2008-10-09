@@ -571,10 +571,22 @@ function user_is_blocked($name) {
  */
 function user_perm() {
    return array(
-     'administer permissions' => t('Manage the permissions assigned to user roles. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
-     'administer users' => t('Manage or block users, and manage their role assignments.'),
-     'access user profiles' => t('View profiles of users on the site, which may contain personal information.'),
-     'change own username' => t('Select a different username.'),
+     'administer permissions' =>  array(
+       'title' => t('Administer permissions'),
+       'description' => t('Manage the permissions assigned to user roles. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+     ),
+     'administer users' => array(
+       'title' => t('Administer users'),
+       'description' => t('Manage or block users, and manage their role assignments.'),
+     ),
+     'access user profiles' => array(
+       'title' => t('Access user profiles'),
+       'description' => t('View profiles of users on the site, which may contain personal information.'),
+     ),
+     'change own username' => array(
+       'title' => t('Change own username'),
+       'description' => t('Select a different username.'),
+     ),
    );
 }
 

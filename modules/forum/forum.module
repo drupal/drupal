@@ -382,7 +382,10 @@ function forum_access($op, $node, $account) {
  */
 function forum_perm() {
   $perms = array(
-    'administer forums' => t('Manage forums and configure forum administration settings.'),
+    'administer forums' => array(
+      'title' => t('Administer forums'),
+      'description' => t('Manage forums and configure forum administration settings.'),
+    ),
   );
   $perms += node_list_permissions('forum');
   return $perms;

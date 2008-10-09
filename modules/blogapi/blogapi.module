@@ -25,7 +25,10 @@ function blogapi_help($path, $arg) {
  */
 function blogapi_perm() {
   return array(
-    'administer content with blog api' => t('Manage website content from external tools.'),
+    'administer content with blog api' => array(
+      'title' => t('Administer content with blog API'),
+      'description' => t('Manage website content from external tools.'),
+    ),
   );
 }
 

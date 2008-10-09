@@ -86,7 +86,10 @@ function _translation_tab_access($node) {
  */
 function translation_perm() {
   return array(
-    'translate content' => t('Translate website content.'),
+    'translate content' => array(
+      'title' => t('Tranlate content'),
+      'description' => t('Translate website content.'),
+    ),
   );
 }
 

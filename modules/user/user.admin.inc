@@ -514,18 +514,13 @@ function user_admin_perm($form_state, $rid = NULL) {
     if ($permissions = module_invoke($module, 'perm')) {
       $form['permission'][] = array(
         '#markup' => $module,
-      );
-      foreach ($permissions as $perm => $description) {
-        // Account for permissions lacking a description.
-        if (is_int($perm)) {
-          $perm = $description;
-          $description = NULL;
-        }
+        );
+      foreach ($permissions as $perm => $perm_item) {
         $options[$perm] = '';
         $form['permission'][$perm] = array(
           '#type' => 'item',
-          '#markup' => t($perm),
-          '#description' => $hide_descriptions ? $description : NULL,
+          '#markup' => $perm_item['title'],
+          '#description' => $hide_descriptions ? $perm_item['description'] : NULL,
         );
         foreach ($role_names as $rid => $name) {
           // Builds arrays for checked boxes for each role

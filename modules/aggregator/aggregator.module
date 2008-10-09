@@ -270,8 +270,14 @@ function _aggregator_has_categories() {
  */
 function aggregator_perm() {
   return array(
-    'administer news feeds' => t('Add, edit or delete news feeds that are aggregated to your site.'),
-    'access news feeds' => t('View aggregated news feed items.'),
+    'administer news feeds' => array(
+      'title' => t('Administer news feeds'),
+      'description' => t('Add, edit or delete news feeds that are aggregated to your site.'),
+    ),
+    'access news feeds' => array(
+      'title' => t('Access news feeds'),
+      'description' => t('View aggregated news feed items.'),
+    ),
   );
 }
 

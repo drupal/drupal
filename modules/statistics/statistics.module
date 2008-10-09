@@ -84,8 +84,14 @@ function statistics_exit() {
  */
 function statistics_perm() {
   return array(
-    'access statistics' => t('View content access statistics.'),
-    'view post access counter' => t('View the total number of times a piece of content has been accessed.'),
+    'access statistics' => array(
+      'title' => t('Access statistics'),
+      'description' => t('View content access statistics.'),
+    ),
+    'view post access counter' => array(
+      'title' => t('View post access counter'),
+      'description' => t('View the total number of times a piece of content has been accessed.'),
+    ),
   );
 }
 

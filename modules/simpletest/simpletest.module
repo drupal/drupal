@@ -35,7 +35,10 @@ function simpletest_menu() {
  */
 function simpletest_perm() {
   return array(
-    'administer unit tests' => t('Manage and run automated testing. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+    'administer unit tests' => array(
+      'title' => t('Administer unit tests'),
+      'description' => t('Manage and run automated testing. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+    ),
   );
 }
 

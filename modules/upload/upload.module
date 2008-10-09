@@ -44,8 +44,14 @@ function upload_theme() {
  */
 function upload_perm() {
   return array(
-    'upload files' => t('Attach images and other files to content.'),
-    'view uploaded files' => t('View and download files attached to content.'),
+    'upload files' => array(
+      'title' => t('Upload files'),
+      'description' => t('Attach images and other files to content.'),
+    ),
+    'view uploaded files' => array(
+      'title' => t('View uploaded files'),
+      'description' => t('View and download files attached to content.'),
+    ),
   );
 }
 

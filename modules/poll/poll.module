@@ -56,9 +56,18 @@ function poll_theme() {
 function poll_perm() {
   $perms = node_list_permissions('poll');
   $perms += array(
-    'vote on polls' => t('Cast votes on polls.'),
-    'cancel own vote' => t('Retract and optionally change own votes.'),
-    'inspect all votes' => t('View voting results.'),
+    'vote on polls' => array(
+      'title' => t('Vote on polls'),
+      'description' => t('Cast votes on polls.'),
+    ),
+    'cancel own vote' => array(
+      'title' => t('Cancel own vote'),
+      'description' => t('Retract and optionally change own votes.'),
+    ),
+    'inspect all votes' => array(
+      'title' => t('Inspect all votes'),
+      'description' => t('View voting results.'),
+    ),
   );
 
   return $perms;

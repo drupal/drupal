@@ -11,7 +11,10 @@
  */
 function taxonomy_perm() {
   return array(
-    'administer taxonomy' => t('Manage taxonomy vocabularies and terms.'),
+    'administer taxonomy' => array(
+      'title' => t('Administer taxonomy'),
+      'description' => t('Manage taxonomy vocabularies and terms.'),
+    ),
   );
 }
 

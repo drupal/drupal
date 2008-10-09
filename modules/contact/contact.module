@@ -37,8 +37,14 @@ function contact_help($path, $arg) {
  */
 function contact_perm() {
   return array(
-    'administer site-wide contact form' => t('Configure site-wide contact form administration settings.'),
-    'access site-wide contact form' => t('Send feedback to administrators via e-mail using the site-wide contact form.'),
+    'administer site-wide contact form' => array(
+      'title' => t('Administer site-wide contact form'),
+      'description' => t('Configure site-wide contact form administration settings.'),
+    ),
+    'access site-wide contact form' => array(
+      'title' => t('Access site-wide contact form'),
+      'description' => t('Send feedback to administrators via e-mail using the site-wide contact form.'),
+    ),
   );
 }
 

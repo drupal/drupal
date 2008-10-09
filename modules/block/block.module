@@ -105,8 +105,14 @@ function block_theme() {
  */
 function block_perm() {
   return array(
-    'administer blocks' => t('Select which blocks are displayed, and arrange them on the page.'),
-    'use PHP for block visibility' => t('Enter PHP code in the field for block visibility settings. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+    'administer blocks' => array(
+      'title' => t('Administer blocks'),
+      'description' => t('Select which blocks are displayed, and arrange them on the page.'),
+    ),
+    'use PHP for block visibility' => array(
+      'title' => t('Use PHP for block visibility'),
+      'description' => t('Enter PHP code in the field for block visibility settings. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+    ),
   );
 }
 

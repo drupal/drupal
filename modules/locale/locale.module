@@ -190,8 +190,14 @@ function locale_inc_callback() {
  */
 function locale_perm() {
   return array(
-    'administer languages' => t('Manage the languages in which the website content and interface text may be displayed.'),
-    'translate interface' => t('Translate the text of the website interface.'),
+    'administer languages' => array(
+      'title' => t('Administer languages'),
+      'description' => t('Manage the languages in which the website content and interface text may be displayed.'),
+    ),
+    'translate interface' => array(
+      'title' => t('Translate the interface'),
+      'description' => t('Translate the text of the website interface.'),
+    ),
   );
 }
 
