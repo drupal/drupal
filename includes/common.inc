@@ -2703,6 +2703,8 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
 }
 
 /**
+ * Hands off structured Drupal arrays to type-specific *_alter implementations.
+ * 
  * This dispatch function hands off structured Drupal arrays to type-specific
  * *_alter implementations. It ensures a consistent interface for all altering
  * operations.
