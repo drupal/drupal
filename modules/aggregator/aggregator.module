@@ -631,7 +631,7 @@ function aggregator_refresh($feed) {
           $image = '<a href="' . check_url($image['LINK']) . '" class="feed-image"><img src="' . check_url($image['URL']) . '" alt="' . check_plain($image['TITLE']) . '" /></a>';
         }
         else {
-          $image = NULL;
+          $image = '';
         }
 
         $etag = empty($result->headers['ETag']) ? '' : $result->headers['ETag'];
