@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.392 2008/09/17 07:11:56 dries Exp $
+// $Id: aggregator.module,v 1.393 2008/10/09 04:24:25 webchick Exp $
 
 /**
  * @file
@@ -631,7 +631,7 @@ function aggregator_refresh($feed) {
           $image = '<a href="' . check_url($image['LINK']) . '" class="feed-image"><img src="' . check_url($image['URL']) . '" alt="' . check_plain($image['TITLE']) . '" /></a>';
         }
         else {
-          $image = NULL;
+          $image = '';
         }
 
         $etag = empty($result->headers['ETag']) ? '' : $result->headers['ETag'];
