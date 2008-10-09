@@ -2503,7 +2503,7 @@ function batch_set($batch_definition) {
     $defaults = array(
       'title' => $t('Processing'),
       'init_message' => $t('Initializing.'),
-      'progress_message' => $t('Remaining @remaining of @total.'),
+      'progress_message' => $t('Completed @current of @total.'),
       'error_message' => $t('An error has occurred.'),
       'css' => array(),
     );
