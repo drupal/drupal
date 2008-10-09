@@ -52,6 +52,16 @@ Drupal 7.0, xxxx-xx-xx (development version)
       and memory improvements.
 - Theme system:
     * Converted the 'bluemarine' theme to a tableless layout.
+- File handling:
+    * Files are now first class Drupal objects with file_load(), file_save(),
+      and file_validate() functions and corresponding hooks.
+    * The file_move(), file_copy() and file_delete() functions now operate on
+      file objects and invoke file hooks so that modules are notified and can
+      respond to changes.
+    * For the occasions when only basic file manipulation are needed--such as
+      uploading a site logo--that don't require the overhead of databases and
+      hooks, the current unmanaged copy, move and delete operations have been
+      preserved but renamed to file_unmanaged_*().
 
 Drupal 6.0, 2008-02-13
 ----------------------

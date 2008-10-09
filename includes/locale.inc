@@ -2165,7 +2165,7 @@ function _locale_rebuild_js($langcode = NULL) {
 
     // Save the file.
     $dest = $dir . '/' . $language->language . '_' . $data_hash . '.js';
-    if (file_save_data($data, $dest)) {
+    if (file_unmanaged_save_data($data, $dest)) {
       $language->javascript = $data_hash;
       $status = ($status == 'deleted') ? 'updated' : 'created';
     }

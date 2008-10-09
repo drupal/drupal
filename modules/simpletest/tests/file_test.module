@@ -50,3 +50,117 @@ function _file_test_form_submit(&$form, &$form_state) {
     drupal_set_message(t('Epic upload FAIL!'), 'error');
   }
 }
+
+
+/**
+ * Reset/initialize the history of calls to the file_* hooks.
+ */
+function file_test_reset() {
+  // Keep track of calls to these hooks
+  $GLOBALS['file_test_results'] = array(
+    'load' => array(),
+    'validate' => array(),
+    'download' => array(),
+    'references' => array(),
+    'status' => array(),
+    'insert' => array(),
+    'update' => array(),
+    'copy' => array(),
+    'move' => array(),
+    'delete' => array(),
+  );
+
+  // These hooks will return these values.
+  $GLOBALS['file_test_hook_return'] = array(
+    'validate' => NULL,
+    'download' => NULL,
+    'references' => NULL,
+  );
+}
+
+/**
+ * Get the values passed to a the hook calls for a given operation.
+ *
+ * @param $op One of the hook_file_* operations.
+ * @returns Array of the parameters passed to each call.
+ */
+function file_test_get_calls($op) {
+  return $GLOBALS['file_test_results'][$op];
+}
+
+/**
+ * Implementation of hook_file_load().
+ */
+function file_test_file_load(&$file) {
+  $GLOBALS['file_test_results']['load'][] = func_get_args();
+  // Assign a value on the object so that we can test that the $file is passed
+  // by reference.
+  $file->file_test['loaded'] = TRUE;
+}
+
+/**
+ * Implementation of hook_file_validate().
+ */
+function file_test_file_validate(&$file) {
+  $GLOBALS['file_test_results']['validate'][] = func_get_args();
+  return $GLOBALS['file_test_hook_return']['validate'];
+}
+
+/**
+ * Implementation of hook_file_status().
+ */
+function file_test_file_status(&$file) {
+  $GLOBALS['file_test_results']['status'][] = func_get_args();
+}
+
+/**
+ * Implementation of hook_file_download().
+ */
+function file_test_file_download(&$file) {
+  $GLOBALS['file_test_results']['download'][] = func_get_args();
+  return $GLOBALS['file_test_hook_return']['download'];
+}
+
+/**
+ * Implementation of hook_file_references().
+ */
+function file_test_file_references(&$file) {
+  $GLOBALS['file_test_results']['references'][] = func_get_args();
+  return $GLOBALS['file_test_hook_return']['references'];
+}
+
+/**
+ * Implementation of hook_file_insert().
+ */
+function file_test_file_insert(&$file) {
+  $GLOBALS['file_test_results']['insert'][] = func_get_args();
+}
+
+/**
+ * Implementation of hook_file_update().
+ */
+function file_test_file_update(&$file) {
+  $GLOBALS['file_test_results']['update'][] = func_get_args();
+}
+
+/**
+ * Implemenation of hook_file_copy().
+ */
+function file_test_file_copy(&$file, &$source) {
+  $GLOBALS['file_test_results']['copy'][] = func_get_args();
+}
+
+/**
+ * Implemenation of hook_file_move().
+ */
+function file_test_file_move(&$file, &$source) {
+  $GLOBALS['file_test_results']['move'][] = func_get_args();
+}
+
+/**
+ * Implementation of hook_file_delete().
+ */
+function file_test_file_delete(&$file) {
+  $GLOBALS['file_test_results']['delete'][] = func_get_args();
+}
+

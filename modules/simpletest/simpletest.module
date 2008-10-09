@@ -571,7 +571,7 @@ function simpletest_clean_temporary_directory($path) {
         simpletest_clean_temporary_directory($file_path);
       }
       else {
-        file_delete($file_path);
+        file_unmanaged_delete($file_path);
       }
     }
   }

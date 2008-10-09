@@ -385,7 +385,7 @@ function blogapi_metaweblog_new_media_object($blogid, $username, $password, $fil
     return blogapi_error(t('No file sent.'));
   }
 
-  if (!$filepath = file_save_data($data, $name)) {
+  if (!$filepath = file_unmanaged_save_data($data, $name)) {
     return blogapi_error(t('Error storing file.'));
   }
 

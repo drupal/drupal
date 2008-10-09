@@ -648,7 +648,7 @@ function _drupal_get_last_caller($backtrace) {
   // The first trace is the call itself.
   // It gives us the line and the file of the last call.
   $call = $backtrace[0];
-  
+
   // The second call give us the function where the call originated.
   if (isset($backtrace[1])) {
     if (isset($backtrace[1]['class'])) {
@@ -1851,7 +1851,7 @@ function drupal_build_css_cache($types, $filename) {
     $data = implode('', $matches[0]) . $data;
 
     // Create the CSS file.
-    file_save_data($data, $csspath . '/' . $filename, FILE_EXISTS_REPLACE);
+    file_unmanaged_save_data($data, $csspath . '/' . $filename, FILE_EXISTS_REPLACE);
   }
   return $csspath . '/' . $filename;
 }
@@ -1952,7 +1952,7 @@ function _drupal_load_stylesheet($matches) {
  * Delete all cached CSS files.
  */
 function drupal_clear_css_cache() {
-  file_scan_directory(file_create_path('css'), '/.*/', array('.', '..', 'CVS'), 'file_delete', TRUE);
+  file_scan_directory(file_create_path('css'), '/.*/', array('.', '..', 'CVS'), 'file_unmanaged_delete', TRUE);
 }
 
 /**
@@ -2315,7 +2315,7 @@ function drupal_build_js_cache($files, $filename) {
     }
 
     // Create the JS file.
-    file_save_data($contents, $jspath . '/' . $filename, FILE_EXISTS_REPLACE);
+    file_unmanaged_save_data($contents, $jspath . '/' . $filename, FILE_EXISTS_REPLACE);
   }
 
   return $jspath . '/' . $filename;
@@ -2325,7 +2325,7 @@ function drupal_build_js_cache($files, $filename) {
  * Delete all cached JS files.
  */
 function drupal_clear_js_cache() {
-  file_scan_directory(file_create_path('js'), '/.*/', array('.', '..', 'CVS'), 'file_delete', TRUE);
+  file_scan_directory(file_create_path('js'), '/.*/', array('.', '..', 'CVS'), 'file_unmanaged_delete', TRUE);
   variable_set('javascript_parsed', array());
 }
 

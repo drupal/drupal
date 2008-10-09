@@ -308,7 +308,7 @@ function color_scheme_form_submit($form, &$form_state) {
   foreach ($info['copy'] as $file) {
     $base = basename($file);
     $source = $paths['source'] . $file;
-    $filepath = file_copy($source, $paths['target'] . $base);
+    $filepath = file_unmanaged_copy($source, $paths['target'] . $base);
     $paths['map'][$file] = $base;
     $paths['files'][] = $filepath;
   }
@@ -435,7 +435,7 @@ function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
  * Save the rewritten stylesheet to disk.
  */
 function _color_save_stylesheet($file, $style, &$paths) {
-  $filepath = file_save_data($style, $file, FILE_EXISTS_REPLACE);
+  $filepath = file_unmanaged_save_data($style, $file, FILE_EXISTS_REPLACE);
   $paths['files'][] = $filepath;
 
   // Set standard file permissions for webserver-generated files.

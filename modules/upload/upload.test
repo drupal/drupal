@@ -100,16 +100,25 @@ class UploadTestCase extends DrupalWebTestCase {
     $this->drupalLogin($web_user);
 
     $node = $this->drupalCreateNode();
-    $text_files = $this->drupalGetTestFiles('text');
-    $html_files = $this->drupalGetTestFiles('html');
-    $files = array(current($text_files)->filename, current($html_files)->filename);
 
-    // Attempt to upload .txt file when .test is only extension allowed.
-    $this->uploadFile($node, $files[0], FALSE);
-    $this->assertRaw(t('The specified file %name could not be uploaded. Only files with the following extensions are allowed: %files-allowed.', array('%name' => basename($files[0]), '%files-allowed' => $settings['upload_extensions'])), 'File '. $files[0] . ' was not allowed to be uploaded');
+    // Attempt to upload .txt file when .html is only extension allowed.
+    $text_files = array_values($this->drupalGetTestFiles('text'));
+    // Select a file that's less than the 1MB upload limit so we only test one
+    // limit at a time.
+    $text_file = $text_files[2]->filename;
+    $this->uploadFile($node, $text_file, FALSE);
+    // Test the error message in two steps in case there are additional errors
+    // that change the error message's format.
+    $this->assertRaw(t('The specified file %name could not be uploaded.', array('%name' => basename($text_file))), t('File %filename was not allowed to be uploaded', array('%filename' => $text_file)));
+    $this->assertRaw(t('Only files with the following extensions are allowed: %files-allowed.', array('%files-allowed' => $settings['upload_extensions'])), t('File extension cited as reason for failure'));
 
-    // Attempt to upload .test file when .test is only extension allowed.
-    $this->uploadFile($node, $files[1]);
+    // Attempt to upload .html file when .html is only extension allowed.
+    $html_files = array_values($this->drupalGetTestFiles('html'));
+    // Use the HTML file with the .html extension, $html_files[0] has a .txt
+    // extension.
+    $html_file = $html_files[1]->filename;
+    $this->uploadFile($node, $html_file);
+    $this->assertNoRaw(t('The specified file %name could not be uploaded.', array('%name' => basename($html_file))), t('File '. $html_file . ' was allowed to be uploaded'));
   }
 
   /**
@@ -143,7 +152,10 @@ class UploadTestCase extends DrupalWebTestCase {
     $filename = basename($file);
     $filesize = format_size($info['size']);
     $maxsize = format_size(parse_size(($settings['upload_uploadsize'] * 1024) . 'KB')); // Won't parse decimals.
-    $this->assertRaw(t('The specified file %name could not be uploaded. The file is %filesize exceeding the maximum file size of %maxsize.', array('%name' => $filename, '%filesize' => $filesize, '%maxsize' => $maxsize)), t('File upload was blocked since it was larger than maxsize.'));
+    // Test the error message in two steps in case there are additional errors
+    // that change the error message's format.
+    $this->assertRaw(t('The specified file %name could not be uploaded.', array('%name' => $filename)), t('File upload was blocked'));
+    $this->assertRaw(t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => $filesize, '%maxsize' => $maxsize)), t('File size cited as problem with upload'));
   }
 
   function setUploadSettings($settings, $rid = NULL) {

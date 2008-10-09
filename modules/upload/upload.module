@@ -263,6 +263,38 @@ function upload_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
+ * Implementation of hook_file_load().
+ */
+function upload_file_load(&$file) {
+  // Add the upload specific data into the file object.
+  $values = db_query('SELECT * FROM {upload} u WHERE u.fid = :fid', array(':fid' => $file->fid))->fetch(PDO::FETCH_ASSOC);
+  foreach ((array)$values as $key => $value) {
+    $file->{$key} = $value;
+  }
+}
+
+/**
+ * Implementation of hook_file_references().
+ */
+function upload_file_references(&$file) {
+  // If upload.module is still using a file, do not let other modules delete it.
+  $count = db_query('SELECT COUNT(*) FROM {upload} WHERE fid = :fid', array(':fid' => $file->fid))->fetchField();
+  if ($count) {
+    // Return the name of the module and how many references it has to the file.
+    return array('upload' => $count);
+  }
+}
+
+/**
+ * Implementation of hook_file_delete().
+ */
+function upload_file_delete(&$file) {
+  // Delete all information associated with the file.
+  db_delete('upload')->condition('fid', $file->fid)->execute();
+}
+
+
+/**
  * Implementation of hook_nodeapi_load().
  */
 function upload_nodeapi_load(&$node, $teaser) {
@@ -289,7 +321,7 @@ function upload_nodeapi_view(&$node, $teaser) {
     }
   }
 }
- 
+
 /**
  * Implementation of hook_nodeapi_prepare().
  */
@@ -325,23 +357,35 @@ function upload_nodeapi_update(&$node, $teaser) {
  * Implementation of hook_nodeapi_delete().
  */
 function upload_nodeapi_delete(&$node, $teaser) {
-  upload_delete($node);
+  db_delete('upload')->condition('nid', $node->nid)->execute();
+  if (!is_array($node->files)) {
+    return;
+  }
+  foreach($node->files as $file) {
+    file_delete($file);
+  }
 }
 
 /**
  * Implementation of hook_nodeapi_delete_revision().
  */
 function upload_nodeapi_delete_revision(&$node, $teaser) {
-  upload_delete_revision($node);
+  db_delete('upload')->condition('vid', $node->vid)->execute();
+  if (!is_array($node->files)) {
+    return;
+  }
+  foreach ($node->files as $file) {
+    file_delete($file);
+  }
 }
- 
+
 /**
  * Implementation of hook_nodeapi_search_result().
  */
 function upload_nodeapi_search_result(&$node, $teaser) {
   return isset($node->files) && is_array($node->files) ? format_plural(count($node->files), '1 attachment', '@count attachments') : NULL;
 }
- 
+
 /**
  * Implementation of hook_nodeapi_rss_item().
  */
@@ -370,7 +414,7 @@ function upload_nodeapi_rss_item(&$node, $teaser) {
   }
   return array();
 }
- 
+
 /**
  * Displays file attachments in table
  *
@@ -426,15 +470,10 @@ function upload_save(&$node) {
     // Remove file. Process removals first since no further processing
     // will be required.
     if (!empty($file->remove)) {
-      db_query('DELETE FROM {upload} WHERE fid = %d AND vid = %d', $fid, $node->vid);
-
-      // If the file isn't used by any other revisions delete it.
-      $count = db_result(db_query('SELECT COUNT(fid) FROM {upload} WHERE fid = %d', $fid));
-      if ($count < 1) {
-        file_delete($file->filepath);
-        db_query('DELETE FROM {files} WHERE fid = %d', $fid);
-      }
-
+      // Remove the reference from this revision.
+      db_delete('upload')->condition('fid', $file->fid)->condition('vid', $node->vid)->execute();
+      // Try a soft delete, if the file isn't used elsewhere it'll be deleted.
+      file_delete($file);
       // Remove it from the session in the case of new uploads,
       // that you want to disassociate before node submission.
       unset($_SESSION['upload_files'][$fid]);
@@ -457,41 +496,6 @@ function upload_save(&$node) {
   unset($_SESSION['upload_files']);
 }
 
-function upload_delete($node) {
-  $files = array();
-  $result = db_query('SELECT DISTINCT f.* FROM {upload} u INNER JOIN {files} f ON u.fid = f.fid WHERE u.nid = %d', $node->nid);
-  while ($file = db_fetch_object($result)) {
-    $files[$file->fid] = $file;
-  }
-
-  foreach ($files as $fid => $file) {
-    // Delete all files associated with the node
-    db_query('DELETE FROM {files} WHERE fid = %d', $fid);
-    file_delete($file->filepath);
-  }
-
-  // Delete all file revision information associated with the node
-  db_query('DELETE FROM {upload} WHERE nid = %d', $node->nid);
-}
-
-function upload_delete_revision($node) {
-  if (is_array($node->files)) {
-    foreach ($node->files as $file) {
-      // Check if the file will be used after this revision is deleted
-      $count = db_result(db_query('SELECT COUNT(fid) FROM {upload} WHERE fid = %d', $file->fid));
-
-      // if the file won't be used, delete it
-      if ($count < 2) {
-        db_query('DELETE FROM {files} WHERE fid = %d', $file->fid);
-        file_delete($file->filepath);
-      }
-    }
-  }
-
-  // delete the revision
-  db_query('DELETE FROM {upload} WHERE vid = %d', $node->vid);
-}
-
 function _upload_form($node) {
   global $user;
 
@@ -503,11 +507,11 @@ function _upload_form($node) {
   if (!empty($node->files) && is_array($node->files)) {
     $form['files']['#theme'] = 'upload_form_current';
     $form['files']['#tree'] = TRUE;
-    foreach ($node->files as $key => $file) {
+    foreach ($node->files as $file) {
       $file = (object)$file;
-      $description = file_create_url($file->filepath);
-      $description = "<small>" . check_plain($description) . "</small>";
-      $form['files'][$key]['description'] = array('#type' => 'textfield', '#default_value' => !empty($file->description) ? $file->description : $file->filename, '#maxlength' => 256, '#description' => $description );
+      $key = $file->fid;
+
+      $form['files'][$key]['description'] = array('#type' => 'textfield', '#default_value' => !empty($file->description) ? $file->description : $file->filename, '#maxlength' => 256, '#description' => '<small>' . file_create_url($file->filepath) . '</small>');
       $form['files'][$key]['size'] = array('#markup' => format_size($file->filesize));
       $form['files'][$key]['remove'] = array('#type' => 'checkbox', '#default_value' => !empty($file->remove));
       $form['files'][$key]['list'] = array('#type' => 'checkbox',  '#default_value' => $file->list);
@@ -522,12 +526,26 @@ function _upload_form($node) {
 
   if (user_access('upload files')) {
     $limits = _upload_file_limits($user);
+
+    $limit_description = t('The maximum size of file uploads is %filesize. ', array('%filesize' => format_size($limits['file_size'])));
+    if (!empty($limits['resolution'])) {
+      if (image_get_toolkit()) {
+        $limit_description .= t('Images larger than %resolution will be resized. ', array('%resolution' => $limits['resolution']));
+      }
+      else {
+        $limit_description .= t('Images may not be larger than %resolution. ', array('%resolution' => $limits['resolution']));
+      }
+    }
+    if ($user->uid != 1) {
+      $limit_description .= t('Only files with the following extensions may be uploaded: %extensions. ', array('%extensions' => $limits['extensions']));
+    }
+
     $form['new']['#weight'] = 10;
     $form['new']['upload'] = array(
       '#type' => 'file',
       '#title' => t('Attach new file'),
       '#size' => 40,
-      '#description' => ($limits['resolution'] ? t('Images are larger than %resolution will be resized. ', array('%resolution' => $limits['resolution'])) : '') . t('The maximum upload size is %filesize. Only files with the following extensions may be uploaded: %extensions. ', array('%extensions' => $limits['extensions'], '%filesize' => format_size($limits['file_size']))),
+      '#description' => $limit_description,
     );
     $form['new']['attach'] = array(
       '#type' => 'submit',
@@ -589,9 +607,9 @@ function upload_load($node) {
   $files = array();
 
   if ($node->vid) {
-    $result = db_query('SELECT * FROM {files} f INNER JOIN {upload} r ON f.fid = r.fid WHERE r.vid = %d ORDER BY r.weight, f.fid', $node->vid);
-    while ($file = db_fetch_object($result)) {
-      $files[$file->fid] = $file;
+    $result = db_query('SELECT u.fid FROM {upload} u WHERE u.vid = :vid ORDER BY u.weight, u.fid', array(':vid' => $node->vid));
+    foreach ($result as $file) {
+      $files[$file->fid] = file_load($file->fid);
     }
   }
 

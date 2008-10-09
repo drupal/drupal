@@ -151,7 +151,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
 EOF;
 
     $path = file_directory_path() . '/valid-opml.xml';
-    return file_save_data($opml, $path);
+    return file_unmanaged_save_data($opml, $path);
   }
 
   /**
@@ -168,7 +168,7 @@ EOF;
 EOF;
 
     $path = file_directory_path() . '/invalid-opml.xml';
-    return file_save_data($opml, $path);
+    return file_unmanaged_save_data($opml, $path);
   }
 
   /**
@@ -190,7 +190,7 @@ EOF;
 EOF;
 
     $path = file_directory_path() . '/empty-opml.xml';
-    return file_save_data($opml, $path);
+    return file_unmanaged_save_data($opml, $path);
   }
 
   function getRSS091Sample() {
@@ -223,7 +223,7 @@ EOF;
 EOT;
 
     $path = file_directory_path() . '/rss091.xml';
-    return file_save_data($feed, $path);
+    return file_unmanaged_save_data($feed, $path);
   }
 }
 

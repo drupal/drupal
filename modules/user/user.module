@@ -407,7 +407,7 @@ function user_validate_picture(&$form, &$form_state) {
   if ($file = file_save_upload('picture_upload', $validators)) {
     // Remove the old picture.
     if (isset($form_state['values']['_account']->picture) && file_exists($form_state['values']['_account']->picture)) {
-      file_delete($form_state['values']['_account']->picture);
+      file_unmanaged_delete($form_state['values']['_account']->picture);
     }
 
     // The image was saved using file_save_upload() and was added to the
@@ -415,7 +415,7 @@ function user_validate_picture(&$form, &$form_state) {
     // collector delete the original upload.
     $info = image_get_info($file->filepath);
     $destination = file_create_path(variable_get('user_picture_path', 'pictures') . '/picture-' . $form['#uid'] . '.' . $info['extension']);
-    if ($filepath = file_copy($file->filepath, $destination, FILE_EXISTS_REPLACE)) {
+    if ($filepath = file_unmanaged_copy($file->filepath, $destination, FILE_EXISTS_REPLACE)) {
       $form_state['values']['picture'] = $filepath;
     }
     else {
@@ -1558,7 +1558,7 @@ function _user_edit_submit($uid, &$edit) {
   // Delete picture if requested, and if no replacement picture was given.
   if (!empty($edit['picture_delete'])) {
     if ($user->picture && file_exists($user->picture)) {
-      file_delete($user->picture);
+      file_unmanaged_delete($user->picture);
     }
     $edit['picture'] = '';
   }
