@@ -1,4 +1,4 @@
-; $Id: node.info,v 1.6 2008/05/06 12:18:48 dries Exp $
+; $Id: node.info,v 1.7 2008/10/09 22:51:39 webchick Exp $
 name = Node
 description = Allows content to be submitted to the site and displayed on pages.
 package = Core - required
@@ -8,3 +8,4 @@ files[] = node.module
 files[] = content_types.inc
 files[] = node.admin.inc
 files[] = node.pages.inc
+files[] = node.install

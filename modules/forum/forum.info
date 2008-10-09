@@ -1,4 +1,4 @@
-; $Id: forum.info,v 1.9 2008/08/03 18:29:29 dries Exp $
+; $Id: forum.info,v 1.10 2008/10/09 22:51:39 webchick Exp $
 name = Forum
 description = Provides discussion forums.
 dependencies[] = taxonomy
@@ -9,3 +9,4 @@ core = 7.x
 files[] = forum.module
 files[] = forum.admin.inc
 files[] = forum.pages.inc
+files[] = forum.install

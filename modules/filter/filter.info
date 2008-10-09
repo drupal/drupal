@@ -1,4 +1,4 @@
-;h $Id: filter.info,v 1.7 2008/08/09 12:41:22 dries Exp $
+;h $Id: filter.info,v 1.8 2008/10/09 22:51:39 webchick Exp $
 name = Filter
 description = Filters content in preparation for display.
 package = Core - required
@@ -7,3 +7,4 @@ core = 7.x
 files[] = filter.module
 files[] = filter.admin.inc
 files[] = filter.pages.inc
+files[] = filter.install

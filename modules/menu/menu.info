@@ -1,4 +1,4 @@
-; $Id: menu.info,v 1.6 2008/05/06 12:18:48 dries Exp $
+; $Id: menu.info,v 1.7 2008/10/09 22:51:39 webchick Exp $
 name = Menu
 description = Allows administrators to customize the site navigation menu.
 package = Core - optional
@@ -6,3 +6,4 @@ version = VERSION
 core = 7.x
 files[] = menu.module
 files[] = menu.admin.inc
+files[] = menu.install

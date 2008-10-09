@@ -1,4 +1,4 @@
-; $Id: upload.info,v 1.6 2008/05/06 12:18:53 dries Exp $
+; $Id: upload.info,v 1.7 2008/10/09 22:51:41 webchick Exp $
 name = Upload
 description = Allows users to upload and attach files to content.
 package = Core - optional
@@ -6,3 +6,4 @@ version = VERSION
 core = 7.x
 files[] = upload.module
 files[] = upload.admin.inc
+files[] = upload.install

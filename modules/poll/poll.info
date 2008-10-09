@@ -1,4 +1,4 @@
-; $Id: poll.info,v 1.6 2008/05/06 12:18:49 dries Exp $
+; $Id: poll.info,v 1.7 2008/10/09 22:51:39 webchick Exp $
 name = Poll
 description = Allows your site to capture votes on different topics in the form of multiple choice questions.
 package = Core - optional
@@ -6,3 +6,4 @@ version = VERSION
 core = 7.x
 files[] = poll.module
 files[] = poll.pages.inc
+files[] = poll.install
