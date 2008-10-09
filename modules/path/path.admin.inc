@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.10 2008/08/21 19:36:37 dries Exp $
+// $Id: path.admin.inc,v 1.11 2008/10/09 20:20:49 dries Exp $
 
 /**
  * @file
@@ -34,8 +34,7 @@ function path_admin_overview($keys = NULL) {
     array('data' => t('Operations'), 'colspan' => '2')
   );
   if ($multilanguage) {
-    $header[3] = $header[2];
-    $header[2] = array('data' => t('Language'), 'field' => 'language');
+    array_splice($header, 2, 0, array(array('data' => t('Language'), 'field' => 'language')));
   }
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50, 0 , NULL, $args);
@@ -45,9 +44,7 @@ function path_admin_overview($keys = NULL) {
   while ($data = db_fetch_object($result)) {
     $row = array(check_plain($data->dst), check_plain($data->src), l(t('edit'), "admin/build/path/edit/$data->pid", array('query' => $destination)), l(t('delete'), "admin/build/path/delete/$data->pid", array('query' => $destination)));
     if ($multilanguage) {
-      $row[4] = $row[3];
-      $row[3] = $row[2];
-      $row[2] = module_invoke('locale', 'language_name', $data->language);
+      array_splice($row, 2, 0, module_invoke('locale', 'language_name', $data->language));
     }
     $rows[] = $row;
   }
