@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.30 2008/10/06 12:55:55 dries Exp $
+// $Id: translation.module,v 1.31 2008/10/09 04:32:34 webchick Exp $
 
 /**
  * @file
@@ -255,8 +255,8 @@ function translation_nodeapi_delete(&$node, $teaser, $page) {
  */
 function translation_remove_from_set($node) {
   if (isset($node->tnid)) {
-    if (db_result(db_query('SELECT COUNT(*) FROM {node} WHERE tnid = %d', $node->tnid)) <= 2) {
-      // There would only be one node left in the set: remove the set altogether.
+    if (db_result(db_query('SELECT COUNT(*) FROM {node} WHERE tnid = %d', $node->tnid)) == 1) {
+      // There is only one node left in the set: remove the set altogether.
       db_query('UPDATE {node} SET tnid = 0, translate = 0 WHERE tnid = %d', $node->tnid);
     }
     else {
