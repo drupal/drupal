@@ -8,3 +8,4 @@ core = 7.x
 files[] = aggregator.module
 files[] = aggregator.admin.inc
 files[] = aggregator.pages.inc
+files[] = aggregator.install

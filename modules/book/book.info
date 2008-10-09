@@ -8,3 +8,4 @@ core = 7.x
 files[] = book.module
 files[] = book.admin.inc
 files[] = book.pages.inc
+files[] = book.install

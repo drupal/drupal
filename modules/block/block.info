@@ -7,3 +7,4 @@ version = VERSION
 core = 7.x
 files[] = block.module
 files[] = block.admin.inc
+files[] = block.install

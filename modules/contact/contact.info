@@ -7,3 +7,4 @@ core = 7.x
 files[] = contact.module
 files[] = contact.admin.inc
 files[] = contact.pages.inc
+files[] = contact.install

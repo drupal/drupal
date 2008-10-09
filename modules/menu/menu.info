@@ -6,3 +6,4 @@ version = VERSION
 core = 7.x
 files[] = menu.module
 files[] = menu.admin.inc
+files[] = menu.install

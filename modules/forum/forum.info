@@ -9,3 +9,4 @@ core = 7.x
 files[] = forum.module
 files[] = forum.admin.inc
 files[] = forum.pages.inc
+files[] = forum.install

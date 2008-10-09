@@ -7,3 +7,4 @@ core = 7.x
 files[] = user.module
 files[] = user.admin.inc
 files[] = user.pages.inc
+files[] = user.install

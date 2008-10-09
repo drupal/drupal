@@ -8,3 +8,4 @@ core = 7.x
 files[] = comment.module
 files[] = comment.admin.inc
 files[] = comment.pages.inc
+files[] = comment.install

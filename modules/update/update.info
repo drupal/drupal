@@ -9,3 +9,4 @@ files[] = update.compare.inc
 files[] = update.fetch.inc
 files[] = update.report.inc
 files[] = update.settings.inc
+files[] = update.install

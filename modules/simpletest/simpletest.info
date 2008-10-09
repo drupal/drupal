@@ -5,3 +5,4 @@ package = Core - optional
 version = VERSION
 core = 7.x
 files[] = simpletest.module
+files[] = simpletest.install

@@ -6,3 +6,4 @@ version = VERSION
 core = 7.x
 files[] = upload.module
 files[] = upload.admin.inc
+files[] = upload.install

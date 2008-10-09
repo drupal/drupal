@@ -6,3 +6,4 @@ version = VERSION
 core = 7.x
 files[] = trigger.module
 files[] = trigger.admin.inc
+files[] = trigger.install

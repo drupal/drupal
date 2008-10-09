@@ -6,3 +6,4 @@ package = Core - optional
 version = VERSION
 core = 7.x
 files[] = blogapi.module
+files[] = blogapi.install

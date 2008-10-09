@@ -4,5 +4,6 @@ description = "Support module for Database layer tests."
 core = 7.x
 package = Testing
 files[] = database_test.module
+files[] = database_test.install
 version = VERSION
 hidden = TRUE
