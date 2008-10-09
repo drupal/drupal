@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.127 2008/10/06 12:55:53 dries Exp $
+// $Id: blogapi.module,v 1.128 2008/10/09 00:02:28 webchick Exp $
 
 /**
  * @file
@@ -385,7 +385,7 @@ function blogapi_metaweblog_new_media_object($blogid, $username, $password, $fil
     return blogapi_error(t('No file sent.'));
   }
 
-  if (!$filepath = file_save_data($data, $name)) {
+  if (!$filepath = file_unmanaged_save_data($data, $name)) {
     return blogapi_error(t('Error storing file.'));
   }
 

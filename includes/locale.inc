@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.187 2008/09/27 20:23:30 dries Exp $
+// $Id: locale.inc,v 1.188 2008/10/09 00:02:28 webchick Exp $
 
 /**
  * @file
@@ -2165,7 +2165,7 @@ function _locale_rebuild_js($langcode = NULL) {
 
     // Save the file.
     $dest = $dir . '/' . $language->language . '_' . $data_hash . '.js';
-    if (file_save_data($data, $dest)) {
+    if (file_unmanaged_save_data($data, $dest)) {
       $language->javascript = $data_hash;
       $status = ($status == 'deleted') ? 'updated' : 'created';
     }

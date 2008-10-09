@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.94 2008/09/27 19:03:30 webchick Exp $
+// $Id: system.admin.inc,v 1.95 2008/10/09 00:02:29 webchick Exp $
 
 /**
  * @file
@@ -338,7 +338,7 @@ function system_theme_settings(&$form_state, $key = '') {
     // The image was saved using file_save_upload() and was added to the
     // files table as a temporary file. We'll make a copy and let the garbage
     // collector delete the original upload.
-    if ($filepath = file_copy($file->filepath, $filename, FILE_EXISTS_REPLACE)) {
+    if ($filepath = file_unmanaged_copy($file->filepath, $filename, FILE_EXISTS_REPLACE)) {
       $_POST['default_logo'] = 0;
       $_POST['logo_path'] = $filepath;
       $_POST['toggle_logo'] = 1;
@@ -353,7 +353,7 @@ function system_theme_settings(&$form_state, $key = '') {
     // The image was saved using file_save_upload() and was added to the
     // files table as a temporary file. We'll make a copy and let the garbage
     // collector delete the original upload.
-    if ($filepath = file_copy($file->filepath, $filename, FILE_EXISTS_REPLACE)) {
+    if ($filepath = file_unmanaged_copy($file->filepath, $filename, FILE_EXISTS_REPLACE)) {
       $_POST['default_favicon'] = 0;
       $_POST['favicon_path'] = $filepath;
       $_POST['toggle_favicon'] = 1;
