@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.393 2008/10/09 04:24:25 webchick Exp $
+// $Id: aggregator.module,v 1.394 2008/10/09 15:15:49 webchick Exp $
 
 /**
  * @file
@@ -270,8 +270,14 @@ function _aggregator_has_categories() {
  */
 function aggregator_perm() {
   return array(
-    'administer news feeds' => t('Add, edit or delete news feeds that are aggregated to your site.'),
-    'access news feeds' => t('View aggregated news feed items.'),
+    'administer news feeds' => array(
+      'title' => t('Administer news feeds'),
+      'description' => t('Add, edit or delete news feeds that are aggregated to your site.'),
+    ),
+    'access news feeds' => array(
+      'title' => t('Access news feeds'),
+      'description' => t('View aggregated news feed items.'),
+    ),
   );
 }
 

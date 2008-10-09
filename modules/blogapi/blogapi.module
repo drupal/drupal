@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.128 2008/10/09 00:02:28 webchick Exp $
+// $Id: blogapi.module,v 1.129 2008/10/09 15:15:50 webchick Exp $
 
 /**
  * @file
@@ -25,7 +25,10 @@ function blogapi_help($path, $arg) {
  */
 function blogapi_perm() {
   return array(
-    'administer content with blog api' => t('Manage website content from external tools.'),
+    'administer content with blog api' => array(
+      'title' => t('Administer content with blog API'),
+      'description' => t('Manage website content from external tools.'),
+    ),
   );
 }
 

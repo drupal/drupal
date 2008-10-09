@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.170 2008/10/06 12:55:54 dries Exp $
+// $Id: menu.module,v 1.171 2008/10/09 15:15:51 webchick Exp $
 
 /**
  * @file
@@ -38,7 +38,10 @@ function menu_help($path, $arg) {
  */
 function menu_perm() {
   return array(
-    'administer menu' => t('Manage menus and menu items.'),
+    'administer menu' => array(
+      'title' => t('Administer menu'),
+      'description' => t('Manage menus and menu items.'),
+    ),
   );
 }
 

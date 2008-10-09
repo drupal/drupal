@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.431 2008/10/06 12:55:54 dries Exp $
+// $Id: taxonomy.module,v 1.432 2008/10/09 15:15:54 webchick Exp $
 
 /**
  * @file
@@ -11,7 +11,10 @@
  */
 function taxonomy_perm() {
   return array(
-    'administer taxonomy' => t('Manage taxonomy vocabularies and terms.'),
+    'administer taxonomy' => array(
+      'title' => t('Administer taxonomy'),
+      'description' => t('Manage taxonomy vocabularies and terms.'),
+    ),
   );
 }
 

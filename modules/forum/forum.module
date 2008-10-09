@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.466 2008/10/08 03:27:56 webchick Exp $
+// $Id: forum.module,v 1.467 2008/10/09 15:15:51 webchick Exp $
 
 /**
  * @file
@@ -382,7 +382,10 @@ function forum_access($op, $node, $account) {
  */
 function forum_perm() {
   $perms = array(
-    'administer forums' => t('Manage forums and configure forum administration settings.'),
+    'administer forums' => array(
+      'title' => t('Administer forums'),
+      'description' => t('Manage forums and configure forum administration settings.'),
+    ),
   );
   $perms += node_list_permissions('forum');
   return $perms;
