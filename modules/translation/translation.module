@@ -199,7 +199,7 @@ function translation_nodeapi_prepare(&$node, $teaser, $page) {
       $node->title = $node->translation_source->title;
       $node->body = $node->translation_source->body;
       // Let every module add custom translated fields.
-      node_invoke_nodeapi($node, 'prepare translation');
+      node_invoke_nodeapi($node, 'prepare_translation');
     }
   }
 }
