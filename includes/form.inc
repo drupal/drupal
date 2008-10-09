@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.289 2008/09/27 19:47:42 webchick Exp $
+// $Id: form.inc,v 1.290 2008/10/09 22:54:08 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2503,7 +2503,7 @@ function batch_set($batch_definition) {
     $defaults = array(
       'title' => $t('Processing'),
       'init_message' => $t('Initializing.'),
-      'progress_message' => $t('Remaining @remaining of @total.'),
+      'progress_message' => $t('Completed @current of @total.'),
       'error_message' => $t('An error has occurred.'),
       'css' => array(),
     );
