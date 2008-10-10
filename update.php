@@ -498,7 +498,7 @@ function update_check_incompatibility($name, $type = 'module') {
 
   // Store values of expensive functions for future use.
   if (empty($themes) || empty($modules)) {
-    $themes = system_theme_data();
+    $themes = _system_theme_data();
     $modules = module_rebuild_cache();
   }
 
