@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.290 2008/10/09 22:54:08 webchick Exp $
+// $Id: form.inc,v 1.291 2008/10/10 07:49:47 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2085,7 +2085,7 @@ function theme_textfield($element) {
   $extra = '';
   $output = '';
 
-  if ($element['#autocomplete_path']) {
+  if ($element['#autocomplete_path'] && menu_valid_path(array('link_path' => $element['#autocomplete_path']))) {
     drupal_add_js('misc/autocomplete.js');
     $class[] = 'form-autocomplete';
     $extra =  '<input class="autocomplete" type="hidden" id="' . $element['#id'] . '-autocomplete" value="' . check_url(url($element['#autocomplete_path'], array('absolute' => TRUE))) . '" disabled="disabled" />';
