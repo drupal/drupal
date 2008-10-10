@@ -49,12 +49,11 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
   $available_actions = actions_list();
   $result = array();
   if (is_array($action_ids)) {
-    $where = array();
-    $where_values = array();
+
+    $conditions = array();
     foreach ($action_ids as $action_id) {
       if (is_numeric($action_id)) {
-        $where[] = "OR aid = '%s'";
-        $where_values[] = $action_id;
+        $conditions[] = $action_id;
       }
       elseif (isset($available_actions[$action_id])) {
         $actions[$action_id] = $available_actions[$action_id];
@@ -63,12 +62,15 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
 
     // When we have action instances we must go to the database to
     // retrieve instance data.
-    if ($where) {
-      $where_clause = implode(' ', $where);
-      // Strip off leading 'OR '.
-      $where_clause = '(' . strstr($where_clause, " ") . ')';
-      $result_db = db_query('SELECT * FROM {actions} WHERE ' . $where_clause, $where_values);
-      while ($action = db_fetch_object($result_db)) {
+    if (!empty($conditions)) {
+      $query = db_select('actions');
+      $query->addField('actions', 'aid');
+      $query->addField('actions', 'type');
+      $query->addField('actions', 'callback');
+      $query->addField('actions', 'parameters');
+      $query->condition('aid', $conditions, 'IN');
+      $result = $query->execute();
+      foreach ($result as $action) {
         $actions[$action->aid] = $action->parameters ? unserialize($action->parameters) : array();
         $actions[$action->aid]['callback'] = $action->callback;
         $actions[$action->aid]['type'] = $action->type;
@@ -92,7 +94,7 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
   else {
     // If it's a configurable action, retrieve stored parameters.
     if (is_numeric($action_ids)) {
-      $action = db_fetch_object(db_query("SELECT * FROM {actions} WHERE aid = '%s'", $action_ids));
+      $action = db_query("SELECT callback, parameters FROM {actions} WHERE aid = :aid", array(':aid' => $action_ids))->fetchObject();
       $function = $action->callback;
       $context = array_merge($context, unserialize($action->parameters));
       $result[$action_ids] = $function($object, $context, $a1, $a2);
@@ -176,15 +178,11 @@ function actions_list($reset = FALSE) {
  *   'type' and 'configurable'.
  */
 function actions_get_all_actions() {
-  $actions = array();
-  $result = db_query("SELECT * FROM {actions}");
-  while ($action = db_fetch_object($result)) {
-    $actions[$action->aid] = array(
-      'callback' => $action->callback,
-      'description' => $action->description,
-      'type' => $action->type,
-      'configurable' => (bool) $action->parameters,
-    );
+  $actions = db_query("SELECT aid, type, callback, parameters, description FROM {actions}")->fetchAllAssoc('aid', PDO::FETCH_ASSOC);
+  foreach ($actions as &$action) {
+    $action['configurable'] = (bool) $action['parameters'];
+    unset($action['parameters']);
+    unset($action['aid']);
   }
   return $actions;
 }
@@ -238,8 +236,7 @@ function actions_function_lookup($hash) {
   }
 
   // Must be an instance; must check database.
-  $aid = db_result(db_query("SELECT aid FROM {actions} WHERE MD5(aid) = '%s' AND parameters <> ''", $hash));
-  return $aid;
+  return db_query("SELECT aid FROM {actions} WHERE MD5(aid) = :hash AND parameters <> ''", array(':hash' => $hash))->fetchField();
 }
 
 /**
@@ -254,11 +251,7 @@ function actions_synchronize($actions_in_code = array(), $delete_orphans = FALSE
   if (!$actions_in_code) {
     $actions_in_code = actions_list(TRUE);
   }
-  $actions_in_db = array();
-  $result = db_query("SELECT * FROM {actions} WHERE parameters = ''");
-  while ($action = db_fetch_object($result)) {
-    $actions_in_db[$action->callback] = array('aid' => $action->aid, 'description' => $action->description);
-  }
+  $actions_in_db = db_query("SELECT aid, callback, description FROM {actions} WHERE parameters = ''")->fetchAllAssoc('callback', PDO::FETCH_ASSOC);
 
   // Go through all the actions provided by modules.
   foreach ($actions_in_code as $callback => $array) {
@@ -271,7 +264,15 @@ function actions_synchronize($actions_in_code = array(), $delete_orphans = FALSE
       }
       else {
         // This is a new singleton that we don't have an aid for; assign one.
-        db_query("INSERT INTO {actions} (aid, type, callback, parameters, description) VALUES ('%s', '%s', '%s', '%s', '%s')", $callback, $array['type'], $callback, '', $array['description']);
+        db_insert('actions')
+          ->fields(array(
+            'aid' => $callback,
+            'type' => $array['type'],
+            'callback' => $callback,
+            'parameters' => '',
+            'description' => $array['description'],
+            ))
+          ->execute();
         watchdog('actions', "Action '%action' added.", array('%action' => filter_xss_admin($array['description'])));
       }
     }
@@ -282,8 +283,12 @@ function actions_synchronize($actions_in_code = array(), $delete_orphans = FALSE
     $orphaned = array_keys($actions_in_db);
 
     if ($delete_orphans) {
-      $results = db_query("SELECT a.aid, a.description FROM {actions} a WHERE callback IN (" . db_placeholders($orphaned, 'varchar') .  ")", $orphaned);
-      while ($action = db_fetch_object($results)) {
+      $results = db_select('actions')
+        ->addField('actions', 'aid')
+        ->addField('actions', 'description')
+        ->condition('callback', $orphaned, 'IN')
+        ->execute();
+      foreach ($results as $action) {
         actions_delete($action->aid);
         watchdog('actions', "Removed orphaned action '%action' from database.", array('%action' => filter_xss_admin($action->description)));
       }
@@ -315,20 +320,23 @@ function actions_synchronize($actions_in_code = array(), $delete_orphans = FALSE
  *   The ID of the action.
  */
 function actions_save($function, $type, $params, $desc, $aid = NULL) {
-  $serialized = serialize($params);
-  if ($aid) {
-    db_query("UPDATE {actions} SET callback = '%s', type = '%s', parameters = '%s', description = '%s' WHERE aid = '%s'", $function, $type, $serialized, $desc, $aid);
-    watchdog('actions', 'Action %action saved.', array('%action' => $desc));
-  }
-  else {
-    // aid is the callback for singleton actions so we need to keep a
-    // separate table for numeric aids.
-    db_query('INSERT INTO {actions_aid} VALUES (default)');
-    $aid = db_last_insert_id('actions_aid', 'aid');
-    db_query("INSERT INTO {actions} (aid, callback, type, parameters, description) VALUES ('%s', '%s', '%s', '%s', '%s')", $aid, $function, $type, $serialized, $desc);
-    watchdog('actions', 'Action %action created.', array('%action' => $desc));
+  // aid is the callback for singleton actions so we need to keep a
+  // separate table for numeric aids.
+  if (!$aid) {
+    $aid = db_insert('actions_aid')->execute();
   }
 
+  db_merge('actions')
+    ->key(array('aid' => $aid))
+    ->fields(array(
+      'callback' => $function,
+      'type' => $type,
+      'parameters' => serialize($params),
+      'description' => $desc,
+    ))
+    ->execute();
+
+  watchdog('actions', 'Action %action saved.', array('%action' => $desc));
   return $aid;
 }
 
@@ -342,7 +350,7 @@ function actions_save($function, $type, $params, $desc, $aid = NULL) {
  *   The appropriate action row from the database as an object.
  */
 function actions_load($aid) {
-  return db_fetch_object(db_query("SELECT * FROM {actions} WHERE aid = '%s'", $aid));
+  return db_query("SELECT aid, type, callback, parameters, description FROM {actions} WHERE aid = :aid", array(':aid' => $aid))->fetchObject();
 }
 
 /**
@@ -352,6 +360,8 @@ function actions_load($aid) {
  *   integer The ID of the action to delete.
  */
 function actions_delete($aid) {
-  db_query("DELETE FROM {actions} WHERE aid = '%s'", $aid);
+  db_delete('actions')
+    ->condition('aid', $aid)
+    ->execute();
   module_invoke_all('actions_delete', $aid);
 }
