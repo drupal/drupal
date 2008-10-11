@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.137 2008/10/09 20:07:00 dries Exp $
+// $Id: file.inc,v 1.138 2008/10/11 20:41:53 webchick Exp $
 
 /**
  * @file
@@ -1218,7 +1218,9 @@ function file_set_status($file, $status = FILE_STATUS_PERMANENT) {
  *   An array of HTTP headers to send along with file.
  */
 function file_transfer($source, $headers) {
-  ob_end_clean();
+  if (ob_get_level()) {
+    ob_end_clean();
+  }
 
   foreach ($headers as $header) {
     // To prevent HTTP header injection, we delete new lines that are
