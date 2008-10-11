@@ -61,8 +61,12 @@ function _registry_rebuild() {
     else {
       // Flush the registry of resources in files that are no longer on disc
       // or don't belong to installed modules.
-      db_delete('registry')->condition('filename', $filename)->execute();
-      db_delete('registry_file')->condition('filename', $filename)->execute();
+      db_delete('registry')
+        ->condition('filename', $filename)
+        ->execute();
+      db_delete('registry_file')
+        ->condition('filename', $filename)
+        ->execute();
     }
   }
   _registry_parse_files($files);
@@ -116,7 +120,9 @@ function _registry_parse_files($files) {
 function _registry_parse_file($filename, $contents) {
   static $map = array(T_FUNCTION => 'function', T_CLASS => 'class', T_INTERFACE => 'interface');
   // Delete registry entries for this file, so we can insert the new resources.
-  db_delete('registry')->condition('filename', $filename)->execute();
+  db_delete('registry')
+    ->condition('filename', $filename)
+    ->execute();
   $tokens = token_get_all($contents);
   while ($token = next($tokens)) {
     // Ignore all tokens except for those we are specifically saving.
@@ -132,7 +138,10 @@ function _registry_parse_file($filename, $contents) {
         // filename instead of another.
         // TODO: Convert this back to an insert query after all duplicate
         // function names have been purged from Drupal.
-        db_merge('registry')->key(array('name' => $resource_name, 'type' => $type))->fields(array('filename' => $filename))->execute();
+        db_merge('registry')
+          ->key(array('name' => $resource_name, 'type' => $type))
+          ->fields(array('filename' => $filename))
+          ->execute();
 
         // We skip the body because classes may contain functions.
         _registry_skip_body($tokens);
