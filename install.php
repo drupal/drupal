@@ -244,7 +244,7 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
     else  {
       $form['basic_options']['driver'] = array(
         '#type' => 'radios',
-        '#title' => st('Database driver'),
+        '#title' => st('Database type'),
         '#required' => TRUE,
         '#options' => $drivers,
         '#default_value' => !empty($database['driver']) ? $database['driver'] : current(array_keys($drivers)),
