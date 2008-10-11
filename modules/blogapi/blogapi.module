@@ -226,6 +226,11 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
 
   node_invoke_nodeapi($edit, 'blogapi_new');
 
+  $valid = blogapi_status_error_check($edit, $publish);
+  if ($valid !== TRUE) {
+    return $valid;
+  }
+
   node_validate($edit);
   if ($errors = form_get_errors()) {
     return blogapi_error(implode("\n", $errors));
@@ -262,7 +267,8 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
   if (!node_access('update', $node)) {
     return blogapi_error(t('You do not have permission to update this post.'));
   }
-
+  // Save the original status for validation of permissions.
+  $original_status = $node->status;
   $node->status = $publish;
 
   // check for bloggerAPI vs. metaWeblogAPI
@@ -277,6 +283,11 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
   }
 
   node_invoke_nodeapi($node, 'blogapi_edit');
+
+  $valid = blogapi_status_error_check($node, $original_status);
+  if ($valid !== TRUE) {
+    return $valid;
+  }
 
   node_validate($node);
   if ($errors = form_get_errors()) {
@@ -309,6 +320,33 @@ function blogapi_blogger_get_post($appkey, $postid, $username, $password) {
 
   return _blogapi_get_post($node, TRUE);
 }
+
+/**
+ * Check that the user has permission to save the node with the chosen status.
+ *
+ * @return
+ *   TRUE if no error, or the blogapi_error().
+ */
+function blogapi_status_error_check($node, $original_status) {
+  
+  $node = (object) $node;
+
+  $node_type_default = variable_get('node_options_'. $node->type, array('status', 'promote'));
+
+  // If we don't have the 'administer nodes' permission and the status is
+  // changing or for a new node the status is not the content type's default,
+  // then return an error.
+  if (!user_access('administer nodes') && (($node->status != $original_status) || (empty($node->nid) && $node->status != in_array('status', $node_type_default)))) {
+    if ($node->status) {
+      return blogapi_error(t('You do not have permission to publish this type of post. Please save it as a draft instead.'));
+    }
+    else {
+      return blogapi_error(t('You do not have permission to save this post as a draft. Please publish it instead.'));
+    }
+  }
+  return TRUE;
+}
+
 
 /**
  * Blogging API callback. Removes the specified blog node.
@@ -516,11 +554,16 @@ function blogapi_mt_publish_post($postid, $username, $password) {
     return blogapi_error(t('Invalid post.'));
   }
 
-  $node->status = 1;
-  if (!node_access('update', $node)) {
+  // Nothing needs to be done if already published.
+  if ($node->status) {
+    return;
+  }
+
+  if (!node_access('update', $node) || !user_access('administer nodes')) {
     return blogapi_error(t('You do not have permission to update this post.'));
   }
 
+  $node->status = 1;
   node_save($node);
 
   return TRUE;
