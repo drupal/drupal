@@ -10,7 +10,7 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
   function getInfo() {
     return array(
       'name' => t('Module list functionality'),
-      'description' => t('Enable/disable core module and confirm table creation/deletion. Enable module without dependency enabled.'),
+      'description' => t('Enable/disable core module and confirm table creation/deletion. Enable module without dependency enabled. Attempt disabling of required modules.'),
       'group' => t('System')
     );
   }
@@ -93,9 +93,9 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
    */
   function testDisableRequired() {
     $required_modules = drupal_required_modules();
+    $this->drupalGet('admin/build/modules');
     foreach($required_modules as $module) {
       // Check to make sure the checkbox for required module is not found.
-      $this->drupalGet('admin/build/modules');
       $this->assertNoFieldByName('modules[Core][' . $module . '][enable]');
     }
   }

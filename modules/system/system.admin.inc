@@ -637,16 +637,9 @@ function system_modules($form_state = array()) {
   // Used when checking if module implements a help page.
   $help_arg = module_exists('help') ? drupal_help_arg() : FALSE;
 
-  // The list of required modules.
-  $modules_required = drupal_required_modules();
-
   // Iterate through each of the modules.
   foreach ($files as $filename => $module) {
     $extra = array();
-    // If the module is requried, set it to be so.
-    if (in_array($filename, $modules_required)) {
-      continue;
-    }
     $extra['enabled'] = (bool) $module->status;
     // If this module has dependencies, add them to the array.
     if (is_array($module->info['dependencies'])) {
