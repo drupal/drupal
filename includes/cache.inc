@@ -2,15 +2,15 @@
 // $Id$
 
 /**
- * Return data from the persistent cache. Data may be stored as either plain 
- * text or as serialized data. cache_get will automatically return 
+ * Return data from the persistent cache. Data may be stored as either plain
+ * text or as serialized data. cache_get will automatically return
  * unserialized objects and arrays.
  *
  * @param $cid
  *   The cache ID of the data to retrieve.
  * @param $table
- *   The table $table to store the data in. Valid core values are 
- *   'cache_filter', 'cache_menu', 'cache_page', or 'cache' for 
+ *   The table $table to store the data in. Valid core values are
+ *   'cache_filter', 'cache_menu', 'cache_page', or 'cache' for
  *   the default cache.
  * @return The cache or FALSE on failure.
  */
@@ -29,7 +29,7 @@ function cache_get($cid, $table = 'cache') {
       ->execute();
   }
 
-  $cache = db_query("SELECT data, created, headers, expire, serialized FROM {" . $table . "} WHERE cid = :cid", array(':cid' => $cid))->fetch();
+  $cache = db_query("SELECT data, created, headers, expire, serialized FROM {" . $table . "} WHERE cid = :cid", array(':cid' => $cid))->fetchObject();
   if (isset($cache->data)) {
     // If the data is permanent or we're not enforcing a minimum cache lifetime
     // always return the cached data.
@@ -87,11 +87,11 @@ function cache_get($cid, $table = 'cache') {
  * @param $cid
  *   The cache ID of the data to store.
  * @param $data
- *   The data to store in the cache. Complex data types will be automatically 
+ *   The data to store in the cache. Complex data types will be automatically
  *   serialized before insertion.
  *   Strings will be stored as plain text and not serialized.
  * @param $table
- *   The table $table to store the data in. Valid core values are 
+ *   The table $table to store the data in. Valid core values are
  *   'cache_filter', 'cache_menu', 'cache_page', or 'cache'.
  * @param $expire
  *   One of the following values:
