@@ -232,19 +232,16 @@ function book_remove_form_submit($form, &$form_state) {
  *   Prints the replacement HTML in JSON format.
  */
 function book_form_update() {
-  $cid = 'form_' . $_POST['form_build_id'];
+  $cached_form_state = array();
   $bid = $_POST['book']['bid'];
-  $cache = cache_get($cid, 'cache_form');
-  if ($cache) {
-    $form = $cache->data;
-
+  if ($form = form_get_cache($_POST['form_build_id'], $cached_form_state)) {
     // Validate the bid.
     if (isset($form['book']['bid']['#options'][$bid])) {
       $book_link = $form['#node']->book;
       $book_link['bid'] = $bid;
       // Get the new options and update the cache.
       $form['book']['plid'] = _book_parent_select($book_link);
-      cache_set($cid, $form, 'cache_form', $cache->expire);
+      form_set_cache($_POST['form_build_id'], $form, $cached_form_state);
       // Build and render the new select element, then return it in JSON format.
       $form_state = array();
       $form['#post'] = array();

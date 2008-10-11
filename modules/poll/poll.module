@@ -366,7 +366,9 @@ function poll_choice_js() {
   // not process it. We retreive the cached form, add the element, and resave.
   $form_build_id = $_POST['form_build_id'];
   $form_state = array('submitted' => FALSE);
-  $form = form_get_cache($form_build_id, $form_state);
+  if (!$form = form_get_cache($form_build_id, $form_state)) {
+    exit();
+  }
 
   $delta = count($_POST['choice']);
   $key = isset($form['#node']->choice) ? 'new:'. ($delta - count($form['#node']->choice)) : 'new:'. $delta;
