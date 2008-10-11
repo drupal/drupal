@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.40 2008/10/06 12:55:54 dries Exp $
+// $Id: node.pages.inc,v 1.41 2008/10/11 20:45:26 webchick Exp $
 
 /**
  * @file
@@ -184,7 +184,7 @@ function node_form(&$form_state, $node) {
     '#title' => t('Authored by'),
     '#maxlength' => 60,
     '#autocomplete_path' => 'user/autocomplete',
-    '#default_value' => $node->name ? $node->name : '',
+    '#default_value' => !empty($node->name) ? $node->name : '',
     '#weight' => -1,
     '#description' => t('Leave blank for %anonymous.', array('%anonymous' => variable_get('anonymous', t('Anonymous')))),
   );
