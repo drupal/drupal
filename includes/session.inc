@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.60 2008/09/27 20:37:00 dries Exp $
+// $Id: session.inc,v 1.61 2008/10/11 16:37:38 webchick Exp $
 
 /**
  * @file
@@ -132,7 +132,7 @@ function _sess_write($key, $value) {
   // the session table. This reduces memory and server load, and gives more useful
   // statistics. We can't eliminate anonymous session table rows without breaking
   // the "Who's Online" block.
-  if (!drupal_save_session() || (empty($_COOKIE[session_name()]) && empty($value))) {
+  if (!drupal_save_session() || ($user->uid == 0 && empty($_COOKIE[session_name()]) && empty($value))) {
     return TRUE;
   }
 
