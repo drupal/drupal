@@ -154,15 +154,17 @@ function _upload_file_limits($user) {
  */
 function upload_file_download($filepath) {
   $filepath = file_create_path($filepath);
-  $result = db_query("SELECT f.* FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid WHERE filepath = '%s'", $filepath);
+  $result = db_query("SELECT f.*, u.nid FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid WHERE filepath = '%s'", $filepath);
   if ($file = db_fetch_object($result)) {
-    if (!user_access('view uploaded files')) {
+    if (user_access('view uploaded files') && ($node = node_load($file->nid)) && node_access('view', $node)) {
+      return array(
+        'Content-Type: ' . $file->filemime,
+        'Content-Length: ' . $file->filesize,
+      );
+    }
+    else {
       return -1;
     }
-    return array(
-      'Content-Type: ' . $file->filemime,
-      'Content-Length: ' . $file->filesize,
-    );
   }
 }
 
