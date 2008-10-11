@@ -1218,7 +1218,9 @@ function file_set_status($file, $status = FILE_STATUS_PERMANENT) {
  *   An array of HTTP headers to send along with file.
  */
 function file_transfer($source, $headers) {
-  ob_end_clean();
+  if (ob_get_level()) {
+    ob_end_clean();
+  }
 
   foreach ($headers as $header) {
     // To prevent HTTP header injection, we delete new lines that are
