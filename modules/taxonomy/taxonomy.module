@@ -896,9 +896,25 @@ function taxonomy_get_synonyms($tid) {
 
 /**
  * Return the term object that has the given string as a synonym.
+ *
+ * @param $synonym
+ *   The string to compare against.
+ * @param $reset
+ *   Whether to reset the internal cache for this synonym.
+ * @return
+ *   A term object, or FALSE if no matching term is found.
  */
-function taxonomy_get_synonym_root($synonym) {
-  return db_fetch_object(db_query("SELECT * FROM {term_synonym} s, {term_data} t WHERE t.tid = s.tid AND s.name = '%s'", $synonym));
+function taxonomy_get_synonym_root($synonym, $reset = FALSE) {
+  static $synonyms = array();
+
+  if ($reset) {
+    unset($synonyms[$synonym]);
+  }
+
+  if (!isset($synonyms[$synonym])) {
+    $synonyms[$synonym] = db_query("SELECT * FROM {term_synonym} s, {term_data} t WHERE t.tid = s.tid AND s.name = :name", array(':name' => $synonym))->fetch();
+  }
+  return $synonyms[$synonym];
 }
 
 /**
