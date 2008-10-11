@@ -132,7 +132,7 @@ function _sess_write($key, $value) {
   // the session table. This reduces memory and server load, and gives more useful
   // statistics. We can't eliminate anonymous session table rows without breaking
   // the "Who's Online" block.
-  if (!drupal_save_session() || (empty($_COOKIE[session_name()]) && empty($value))) {
+  if (!drupal_save_session() || ($user->uid == 0 && empty($_COOKIE[session_name()]) && empty($value))) {
     return TRUE;
   }
 
