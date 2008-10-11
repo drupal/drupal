@@ -590,11 +590,12 @@ function locale_block($op = 'list', $delta = '') {
   // Only show if we have at least two languages and language dependent
   // web addresses, so we can actually link to other language versions.
   elseif ($op == 'view' && variable_get('language_count', 1) > 1 && variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE) != LANGUAGE_NEGOTIATION_NONE) {
+    $path = drupal_is_front_page() ? '<front>' : $_GET['q'];
     $languages = language_list('enabled');
     $links = array();
     foreach ($languages[1] as $language) {
       $links[$language->language] = array(
-        'href'       => $_GET['q'],
+        'href'       => $path,
         'title'      => $language->native,
         'language'   => $language,
         'attributes' => array('class' => 'language-link'),
@@ -605,7 +606,7 @@ function locale_block($op = 'list', $delta = '') {
     // A translation link may need to point to a different path or use
     // a translated link text before going through l(), which will just
     // handle the path aliases.
-    drupal_alter('translation_link', $links, $_GET['q']);
+    drupal_alter('translation_link', $links, $path);
 
     $block['subject'] = t('Languages');
     $block['content'] = theme('links', $links, array());
