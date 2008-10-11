@@ -650,7 +650,7 @@ function drupal_page_cache_header($cache) {
     header($_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified');
     // All 304 responses must send an etag if the 200 response for the same object contained an etag
     header("Etag: $etag");
-    exit();
+    return;
   }
 
   // Send appropriate response:
