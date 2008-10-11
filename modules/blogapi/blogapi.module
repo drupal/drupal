@@ -516,8 +516,56 @@ function blogapi_mt_set_post_categories($postid, $username, $password, $categori
   foreach ($categories as $category) {
     $node->taxonomy[] = $category['categoryId'];
   }
+  $validated = blogapi_mt_validate_terms($node);
+  if ($validated !== TRUE) {
+    return $validated;
+  }
   node_save($node);
 
+  return TRUE;
+}
+
+/**
+ * Blogging API helper - find allowed taxonomy terms for a node type.
+ */
+function blogapi_mt_validate_terms($node) {
+  // We do a lot of heavy lifting here since taxonomy module doesn't have a
+  // stand-alone validation function.
+  if (module_exists('taxonomy')) {
+    $found_terms = array();
+    if (!empty($node->taxonomy)) {
+      $term_list = array_unique($node->taxonomy);
+      $params = $term_list;
+      $params[] = $node->type;
+      $result = db_query(db_rewrite_sql("SELECT t.tid, t.vid FROM {term_data} t INNER JOIN {vocabulary_node_types} n ON t.vid = n.vid WHERE t.tid IN (". db_placeholders($term_list) .") AND n.type = '%s'", 't', 'tid'), $params);
+      $found_terms = array();
+      $found_count = 0;
+      while ($term = db_fetch_object($result)) {
+        $found_terms[$term->vid][$term->tid] = $term->tid;
+        $found_count++;
+      }
+      // If the counts don't match, some terms are invalid or not accessible to this user.
+      if (count($term_list) != $found_count) {
+        return blogapi_error(t('Invalid categories submitted.'));
+      }
+    }
+    // Look up all the vocabularies for this node type.
+    $result2 = db_query(db_rewrite_sql("SELECT v.vid, v.name, v.required, v.multiple FROM {vocabulary} v INNER JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE n.type = '%s'", 'v', 'vid'), $node->type);
+    // Check each vocabulary associated with this node type.
+    while ($vocabulary = db_fetch_object($result2)) {
+      // Required vocabularies must have at least one term.
+      if ($vocabulary->required && empty($found_terms[$vocabulary->vid])) {
+        return blogapi_error(t('A category from the @vocabulary_name vocabulary is required.', array('@vocabulary_name' => $vocabulary->name)));
+      }
+      // Vocabularies that don't allow multiple terms may have at most one.
+      if (!($vocabulary->multiple) && (isset($found_terms[$vocabulary->vid]) && count($found_terms[$vocabulary->vid]) > 1)) {
+        return blogapi_error(t('You may only choose one category from the @vocabulary_name vocabulary.'), array('@vocabulary_name' => $vocabulary->name));
+      }
+    }
+  }
+  elseif (!empty($node->taxonomy)) {
+    return blogapi_error(t('Error saving categories. This feature is not available.'));
+  }
   return TRUE;
 }
 
