@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.97 2008/10/11 15:54:14 webchick Exp $
+// $Id: system.admin.inc,v 1.98 2008/10/11 22:46:22 webchick Exp $
 
 /**
  * @file
@@ -1083,9 +1083,8 @@ function system_modules_uninstall_submit($form, &$form_state) {
 
   if (!empty($form['#confirmed'])) {
     // Call the uninstall routine for each selected module.
-    foreach (array_filter($form_state['values']['uninstall']) as $module => $value) {
-      drupal_uninstall_module($module);
-    }
+    $modules = array_keys($form_state['values']['uninstall']);
+    drupal_uninstall_modules($modules);
     drupal_set_message(t('The selected modules have been uninstalled.'));
 
     unset($form_state['storage']);
