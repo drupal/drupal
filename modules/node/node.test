@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.6 2008/09/17 05:26:51 webchick Exp $
+// $Id: node.test,v 1.7 2008/10/11 18:29:20 webchick Exp $
 
 class NodeRevisionsTestCase extends DrupalWebTestCase {
   protected $nodes;
@@ -417,7 +417,7 @@ class PageViewTestCase extends DrupalWebTestCase {
     $this->assertResponse(403);
 
     // Create user with permission to edit node.
-    $web_user = $this->drupalCreateUser(array('administer nodes'));
+    $web_user = $this->drupalCreateUser(array('bypass node access'));
     $this->drupalLogin($web_user);
 
     // Attempt to access edit page.
