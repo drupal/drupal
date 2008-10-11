@@ -184,7 +184,7 @@ function upload_node_form_submit($form, &$form_state) {
   );
 
   // Save new file uploads.
-  if (($user->uid != 1 || user_access('upload files')) && ($file = file_save_upload('upload', $validators, file_directory_path()))) {
+  if (user_access('upload files') && ($file = file_save_upload('upload', $validators, file_directory_path()))) {
     $file->list = variable_get('upload_list_default', 1);
     $file->description = $file->filename;
     $file->weight = 0;
