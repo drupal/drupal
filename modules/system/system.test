@@ -89,6 +89,18 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Assert that core required modules cannot be disabled.
+   */
+  function testDisableRequired() {
+    $required_modules = drupal_required_modules();
+    foreach($required_modules as $module) {
+      // Check to make sure the checkbox for required module is not found.
+      $this->drupalGet('admin/build/modules');
+      $this->assertNoFieldByName('modules[Core][' . $module . '][enable]');
+    }
+  }
+
+  /**
    * Assert tables that begin with the specified base table name.
    *
    * @param string $base_table Begginning of table name to look for.

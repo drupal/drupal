@@ -645,7 +645,7 @@ function system_modules($form_state = array()) {
     $extra = array();
     // If the module is requried, set it to be so.
     if (in_array($filename, $modules_required)) {
-      $extra['required'] = TRUE;
+      continue;
     }
     $extra['enabled'] = (bool) $module->status;
     // If this module has dependencies, add them to the array.
@@ -689,7 +689,6 @@ function system_modules($form_state = array()) {
       '#type' => 'fieldset',
       '#title' => t($package),
       '#collapsible' => TRUE,
-      '#access' => ($package != 'Core - required'),
       '#theme' => 'system_modules_fieldset',
       '#header' => array(
         array('data' => t('Enabled'), 'class' => 'checkbox'),
@@ -722,7 +721,6 @@ function system_sort_modules_by_info_name($a, $b) {
 function _system_modules_build_row($info, $extra) {
   // Add in the defaults.
   $extra += array(
-    'required' => FALSE,
     'dependencies' => array(),
     'dependents' => array(),
     'disabled' => FALSE,
@@ -773,7 +771,6 @@ function _system_modules_build_row($info, $extra) {
     $form['enable'] = array(
       '#type' => 'checkbox',
       '#title' => t('Enable'),
-      '#required' => $extra['required'],
       '#default_value' => $extra['enabled'],
     );
     if ($extra['disabled']) {
