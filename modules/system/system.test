@@ -333,6 +333,70 @@ class AdminMetaTagTestCase extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Tests custom access denied functionality.
+ */
+class AccessDeniedTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('403 functionality'),
+      'description' => t("Tests page access denied functionality, including custom 403 pages."),
+      'group' => t('System')
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp();
+
+    // Create an administrative user.
+    $this->admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->drupalLogin($this->admin_user);
+  }
+
+  function testAccessDenied() {
+    $this->drupalGet('admin');
+    $this->assertText(t('Access denied'), t('Found the default 403 page'));
+
+    $edit = array(
+      'title' => $this->randomName(10),
+      'body' => $this->randomName(100)
+    );
+    $node = $this->drupalCreateNode($edit);
+
+    // Use a custom 403 page.
+    $this->drupalPost('admin/settings/error-reporting', array('site_403' => 'node/' . $node->nid), t('Save configuration'));
+
+    $this->drupalGet('admin');
+    $this->assertText($node->title, t('Found the custom 403 page'));
+
+    // Logout and check that the user login block is shown on custom 403 pages.
+    $this->drupalLogout();
+
+    $this->drupalGet('admin');
+    $this->assertText($node->title, t('Found the custom 403 page'));
+    $this->assertText(t('User login'), t('Blocks are shown on the custom 403 page'));
+
+    // Log back in and remove the custom 403 page.
+    $this->drupalLogin($this->admin_user);
+    $this->drupalPost('admin/settings/error-reporting', array(), t('Reset to defaults'));
+
+    // Logout and check that the user login block is shown on default 403 pages.
+    $this->drupalLogout();
+
+    $this->drupalGet('admin');
+    $this->assertText(t('Access denied'), t('Found the default 403 page'));
+    $this->assertText(t('User login'), t('Blocks are shown on the default 403 page'));
+  }
+}
+
 class PageNotFoundTestCase extends DrupalWebTestCase {
   protected $admin_user;
 
