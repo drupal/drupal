@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.pages.inc,v 1.4 2008/10/01 13:19:29 dries Exp $
+// $Id: translation.pages.inc,v 1.5 2008/10/11 21:11:02 webchick Exp $
 
 /**
  * @file
@@ -54,6 +54,6 @@ function translation_node_overview($node) {
     $rows[] = array($language_name, $title, $status, implode(" | ", $options));
   }
 
-  drupal_set_title(t('Translations of %title', array('%title' => $node->title)));
+  drupal_set_title(t('Translations of %title', array('%title' => $node->title)), PASS_THROUGH);
   return theme('table', $header, $rows);
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.admin.inc,v 1.13 2008/10/10 07:49:49 webchick Exp $
+// $Id: profile.admin.inc,v 1.14 2008/10/11 21:11:01 webchick Exp $
 
 /**
  * @file
@@ -175,7 +175,7 @@ function profile_field_form(&$form_state, $arg = NULL) {
         drupal_not_found();
         return;
       }
-      drupal_set_title(t('edit %title', array('%title' => $edit['title'])));
+      drupal_set_title(t('edit %title', array('%title' => $edit['title'])), PASS_THROUGH);
       $form['fid'] = array('#type' => 'value',
         '#value' => $fid,
       );
@@ -193,7 +193,7 @@ function profile_field_form(&$form_state, $arg = NULL) {
       return;
     }
     $type = $arg;
-    drupal_set_title(t('add new %type', array('%type' => $types[$type])));
+    drupal_set_title(t('add new %type', array('%type' => $types[$type])), PASS_THROUGH);
     $edit = array('name' => 'profile_');
     $form['type'] = array('#type' => 'value', '#value' => $type);
   }

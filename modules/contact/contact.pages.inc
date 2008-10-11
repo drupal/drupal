@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.pages.inc,v 1.11 2008/07/16 21:59:26 dries Exp $
+// $Id: contact.pages.inc,v 1.12 2008/10/11 21:10:59 webchick Exp $
 
 /**
  * @file
@@ -164,7 +164,7 @@ function contact_user_page($account) {
     $output = t("You cannot send more than %number messages per hour. Please try again later.", array('%number' => variable_get('contact_hourly_threshold', 3)));
   }
   else {
-    drupal_set_title(check_plain($account->name));
+    drupal_set_title($account->name);
     $output = drupal_get_form('contact_mail_user', $account);
   }
 

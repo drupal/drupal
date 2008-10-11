@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.19 2008/07/16 21:59:25 dries Exp $
+// $Id: block.admin.inc,v 1.20 2008/10/11 21:10:59 webchick Exp $
 
 /**
  * @file
@@ -174,7 +174,7 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
   // Get the block subject for the page title.
   $info = module_invoke($module, 'block', 'list');
   if (isset($info[$delta])) {
-    drupal_set_title(t("'%name' block", array('%name' => $info[$delta]['info'])));
+    drupal_set_title(t("'%name' block", array('%name' => $info[$delta]['info'])), PASS_THROUGH);
   }
 
   // Standard block configurations.
