@@ -1,7 +1,7 @@
-; $Id: contact.info,v 1.7 2008/10/09 22:51:38 webchick Exp $
+; $Id: contact.info,v 1.8 2008/10/11 02:32:42 webchick Exp $
 name = Contact
 description = Enables the use of both personal and site-wide contact forms.
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = contact.module

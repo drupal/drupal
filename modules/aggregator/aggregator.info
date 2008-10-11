@@ -1,8 +1,8 @@
-; $Id: aggregator.info,v 1.8 2008/10/09 22:51:37 webchick Exp $
+; $Id: aggregator.info,v 1.9 2008/10/11 02:32:33 webchick Exp $
 
 name = Aggregator
 description = "Aggregates syndicated content (RSS, RDF, and Atom feeds)."
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = aggregator.module

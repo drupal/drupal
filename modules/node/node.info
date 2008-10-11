@@ -1,7 +1,7 @@
-; $Id: node.info,v 1.7 2008/10/09 22:51:39 webchick Exp $
+; $Id: node.info,v 1.8 2008/10/11 02:32:51 webchick Exp $
 name = Node
 description = Allows content to be submitted to the site and displayed on pages.
-package = Core - required
+package = Core
 version = VERSION
 core = 7.x
 files[] = node.module

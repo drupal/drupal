@@ -1,7 +1,7 @@
-;h $Id: filter.info,v 1.8 2008/10/09 22:51:39 webchick Exp $
+;h $Id: filter.info,v 1.9 2008/10/11 02:32:45 webchick Exp $
 name = Filter
 description = Filters content in preparation for display.
-package = Core - required
+package = Core
 version = VERSION
 core = 7.x
 files[] = filter.module

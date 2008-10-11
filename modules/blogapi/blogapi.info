@@ -1,8 +1,8 @@
-; $Id: blogapi.info,v 1.8 2008/10/09 22:51:37 webchick Exp $
+; $Id: blogapi.info,v 1.9 2008/10/11 02:32:37 webchick Exp $
 
 name = Blog API
 description = Allows users to post content using applications that support XML-RPC blog APIs.
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = blogapi.module

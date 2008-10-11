@@ -1,8 +1,8 @@
-; $Id: comment.info,v 1.8 2008/10/09 22:51:38 webchick Exp $
+; $Id: comment.info,v 1.9 2008/10/11 02:32:41 webchick Exp $
 
 name = Comment
 description = Allows users to comment on and discuss published content.
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = comment.module

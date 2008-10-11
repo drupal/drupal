@@ -1,8 +1,8 @@
-; $Id: blog.info,v 1.9 2008/07/22 20:00:55 dries Exp $
+; $Id: blog.info,v 1.10 2008/10/11 02:32:36 webchick Exp $
 
 name = Blog
 description = Enables multi-user blogs.
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = blog.module

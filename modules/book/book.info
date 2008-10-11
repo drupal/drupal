@@ -1,8 +1,8 @@
-; $Id: book.info,v 1.9 2008/10/09 22:51:38 webchick Exp $
+; $Id: book.info,v 1.10 2008/10/11 02:32:38 webchick Exp $
 
 name = Book
 description = Allows users to structure site pages in a hierarchy or outline.
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = book.module

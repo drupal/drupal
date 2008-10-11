@@ -1,9 +1,9 @@
-; $Id: forum.info,v 1.10 2008/10/09 22:51:39 webchick Exp $
+; $Id: forum.info,v 1.11 2008/10/11 02:32:46 webchick Exp $
 name = Forum
 description = Provides discussion forums.
 dependencies[] = taxonomy
 dependencies[] = comment
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = forum.module

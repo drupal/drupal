@@ -1,7 +1,7 @@
-; $Id: taxonomy.info,v 1.7 2008/10/09 22:51:40 webchick Exp $
+; $Id: taxonomy.info,v 1.8 2008/10/11 02:33:06 webchick Exp $
 name = Taxonomy
 description = Enables the categorization of content.
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = taxonomy.module

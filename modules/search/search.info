@@ -1,7 +1,7 @@
-; $Id: search.info,v 1.7 2008/10/09 22:51:40 webchick Exp $
+; $Id: search.info,v 1.8 2008/10/11 02:33:00 webchick Exp $
 name = Search
 description = Enables site-wide keyword searching.
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = search.module

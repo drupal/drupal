@@ -1,8 +1,8 @@
-; $Id: translation.info,v 1.3 2008/05/06 12:18:51 dries Exp $
+; $Id: translation.info,v 1.4 2008/10/11 02:33:09 webchick Exp $
 name = Content translation
 description = Allows content to be translated into different languages.
 dependencies[] = locale
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = translation.module

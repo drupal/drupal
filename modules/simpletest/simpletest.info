@@ -1,7 +1,7 @@
-; $Id: simpletest.info,v 1.3 2008/10/09 22:51:40 webchick Exp $
+; $Id: simpletest.info,v 1.4 2008/10/11 02:33:01 webchick Exp $
 name = "SimpleTest"
 description = "Provides a framework for unit and functional testing."
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = simpletest.module

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.802 2008/10/09 01:49:03 webchick Exp $
+// $Id: common.inc,v 1.803 2008/10/11 02:32:32 webchick Exp $
 
 /**
  * @file
@@ -3424,7 +3424,7 @@ function drupal_write_record($table, &$object, $update = array()) {
  *   description = Enables threaded discussions about general topics.
  *   dependencies[] = taxonomy
  *   dependencies[] = comment
- *   package = Core - optional
+ *   package = Core
  *   version = VERSION
  * @endverbatim
  *
