@@ -3048,6 +3048,29 @@ function system_update_7010() {
 }
 
 /**
+ * Split the 'bypass node access' permission from 'administer nodes'.
+ */
+function system_update_7011() {
+  $ret = array();
+  // Get existing roles that can 'administer nodes'.
+  $rids = array();
+  $rids = db_query("SELECT rid FROM {role_permission} WHERE permission = :perm", array(':perm' => 'administer nodes'))->fetchCol();
+  // None found.
+  if (empty($rids)) {
+    return $ret;
+  }
+  $insert = db_insert('role_permission')->fields(array('rid', 'permission'));
+  foreach ($rids as $rid) {
+    $insert->values(array(
+    'rid' => $rid,
+    'permission' => 'bypass node access',
+    ));
+  }
+  $insert->execute();  
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */

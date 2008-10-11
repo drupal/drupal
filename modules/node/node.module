@@ -1176,11 +1176,15 @@ function node_perm() {
     ),
     'administer nodes' => array(
       'title' => t('Administer nodes'),
-      'description' => t('Manage all website content, and bypass any content-related access control. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'description' => t('Manage all information associated with site content, such as author, publication date and current revision. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
     ),
     'access content' => array(
       'title' => t('Access content'),
       'description' => t('View published content.'),
+    ),
+    'bypass node access' => array(
+      'title' => t('Bypass node access'),
+      'description' => t('View, edit and delete all site content. Users with this permission will bypass any content-related access control. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
     ),
     'view revisions' => array(
       'title' => t('View revisions'),
@@ -2100,7 +2104,7 @@ function node_access($op, $node, $account = NULL) {
     return FALSE;
   }
 
-  if (user_access('administer nodes', $account)) {
+  if (user_access('bypass node access', $account)) {
     return TRUE;
   }
 
@@ -2157,7 +2161,7 @@ function node_access($op, $node, $account = NULL) {
  *   An SQL join clause.
  */
 function _node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
-  if (user_access('administer nodes')) {
+  if (user_access('bypass node access')) {
     return '';
   }
 
@@ -2179,7 +2183,7 @@ function _node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
  *   An SQL where clause.
  */
 function _node_access_where_sql($op = 'view', $node_access_alias = 'na', $account = NULL) {
-  if (user_access('administer nodes')) {
+  if (user_access('bypass node access')) {
     return;
   }
 

@@ -417,7 +417,7 @@ class PageViewTestCase extends DrupalWebTestCase {
     $this->assertResponse(403);
 
     // Create user with permission to edit node.
-    $web_user = $this->drupalCreateUser(array('administer nodes'));
+    $web_user = $this->drupalCreateUser(array('bypass node access'));
     $this->drupalLogin($web_user);
 
     // Attempt to access edit page.
