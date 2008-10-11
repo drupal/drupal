@@ -73,7 +73,7 @@ function profile_browse() {
       $title = check_plain($field->page);
     }
 
-    drupal_set_title($title);
+    drupal_set_title($title, PASS_THROUGH);
     return $output;
   }
   else if ($name && !$field->fid) {
@@ -99,7 +99,7 @@ function profile_browse() {
     $output = theme('profile_wrapper', $content);
     $output .= theme('pager', NULL, 20);
 
-    drupal_set_title(t('User list'));
+    drupal_set_title(t('User list'), PASS_THROUGH);
     return $output;
   }
 }

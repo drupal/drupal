@@ -25,6 +25,27 @@ define('SAVED_UPDATED', 2);
 define('SAVED_DELETED', 3);
 
 /**
+ * @name Title text filtering flags
+ * @{
+ * Flags for use in drupal_set_title().
+ */
+
+/**
+ * Flag for drupal_set_title(); text is not sanitized, so run check_plain().
+ */
+define('CHECK_PLAIN', 0);
+
+/**
+ * Flag for drupal_set_title(); text has already been sanitized.
+ */
+define('PASS_THROUGH', -1);
+
+/**
+ * @} End of "Title text filtering flags".
+ */
+
+
+/**
  * Set content for a specified region.
  *
  * @param $region
@@ -750,7 +771,7 @@ function fix_gpc_magic() {
  *   to escape HTML characters. Use this for any output that's displayed within
  *   a Drupal page.
  *   @code
- *     drupal_set_title($title = t("@name's blog", array('@name' => $account->name)));
+ *     drupal_set_title($title = t("@name's blog", array('@name' => $account->name)), PASS_THROUGH);
  *   @endcode
  *
  * - %variable, which indicates that the string should be HTML escaped and

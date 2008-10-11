@@ -723,7 +723,7 @@ function template_preprocess_forums(&$variables) {
     }
   }
   drupal_set_breadcrumb($breadcrumb);
-  drupal_set_title(check_plain($title));
+  drupal_set_title($title);
 
   if ($variables['forums_defined'] = count($variables['forums']) || count($variables['parents'])) {
     // Format the "post new content" links listing.
@@ -784,7 +784,7 @@ function template_preprocess_forums(&$variables) {
 
   }
   else {
-    drupal_set_title(t('No forums defined'));
+    drupal_set_title(t('No forums defined'), PASS_THROUGH);
     $variables['links'] = array();
     $variables['forums'] = '';
     $variables['topics'] = '';

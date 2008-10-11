@@ -1142,7 +1142,7 @@ function node_build_content($node, $teaser = FALSE, $page = FALSE) {
  */
 function node_show($node, $cid, $message = FALSE) {
   if ($message) {
-    drupal_set_title(t('Revision of %title from %date', array('%title' => $node->title, '%date' => format_date($node->revision_timestamp))));
+    drupal_set_title(t('Revision of %title from %date', array('%title' => $node->title, '%date' => format_date($node->revision_timestamp))), PASS_THROUGH);
   }
   $output = node_view($node, FALSE, TRUE);
 
@@ -1857,7 +1857,7 @@ function node_page_default() {
  * Menu callback; view a single node.
  */
 function node_page_view($node, $cid = NULL) {
-  drupal_set_title(check_plain($node->title));
+  drupal_set_title($node->title);
   return node_show($node, $cid);
 }
 

@@ -174,7 +174,7 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
   // Get the block subject for the page title.
   $info = module_invoke($module, 'block', 'list');
   if (isset($info[$delta])) {
-    drupal_set_title(t("'%name' block", array('%name' => $info[$delta]['info'])));
+    drupal_set_title(t("'%name' block", array('%name' => $info[$delta]['info'])), PASS_THROUGH);
   }
 
   // Standard block configurations.
