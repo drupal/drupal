@@ -35,7 +35,7 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
     $this->assertTableCount('aggregator', FALSE);
 
     $edit = array();
-    $edit['modules[Core - optional][aggregator][enable]'] = 'aggregator';
+    $edit['modules[Core][aggregator][enable]'] = 'aggregator';
     $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
 
@@ -44,7 +44,7 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
 
     // Disable aggregator, check tables, uninstall aggregator, check tables.
     $edit = array();
-    $edit['modules[Core - optional][aggregator][enable]'] = FALSE;
+    $edit['modules[Core][aggregator][enable]'] = FALSE;
     $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
 
@@ -68,7 +68,7 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
   function testEnableWithoutDependency () {
     // Attempt to enable content translation without locale enabled.
     $edit = array();
-    $edit['modules[Core - optional][translation][enable]'] = 'translation';
+    $edit['modules[Core][translation][enable]'] = 'translation';
     $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
     $this->assertText(t('Some required modules must be enabled'), t('Dependecy required.'));
 

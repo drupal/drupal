@@ -1,7 +1,7 @@
 ; $Id$
 name = Taxonomy
 description = Enables the categorization of content.
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = taxonomy.module

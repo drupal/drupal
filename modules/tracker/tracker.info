@@ -2,7 +2,7 @@
 name = Tracker
 description = Enables tracking of recent posts for users.
 dependencies[] = comment
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = tracker.module

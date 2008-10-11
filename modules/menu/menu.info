@@ -1,7 +1,7 @@
 ; $Id$
 name = Menu
 description = Allows administrators to customize the site navigation menu.
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = menu.module

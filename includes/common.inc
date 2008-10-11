@@ -3424,7 +3424,7 @@ function drupal_write_record($table, &$object, $update = array()) {
  *   description = Enables threaded discussions about general topics.
  *   dependencies[] = taxonomy
  *   dependencies[] = comment
- *   package = Core - optional
+ *   package = Core
  *   version = VERSION
  * @endverbatim
  *

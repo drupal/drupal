@@ -1,7 +1,7 @@
 ; $Id$
 name = User
 description = Manages the user registration and login system.
-package = Core - required
+package = Core
 version = VERSION
 core = 7.x
 files[] = user.module

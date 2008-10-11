@@ -2,7 +2,7 @@
 
 name = Color
 description = Allows administrators to change the color scheme of compatible themes.
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = color.module

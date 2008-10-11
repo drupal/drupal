@@ -1,7 +1,7 @@
 ; $Id$
 name = Poll
 description = Allows your site to capture votes on different topics in the form of multiple choice questions.
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = poll.module

@@ -1,7 +1,7 @@
 ;h $Id$
 name = Filter
 description = Filters content in preparation for display.
-package = Core - required
+package = Core
 version = VERSION
 core = 7.x
 files[] = filter.module

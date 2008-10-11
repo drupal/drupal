@@ -2,7 +2,7 @@
 name = Update status
 description = Checks the status of available updates for Drupal and your installed modules and themes.
 version = VERSION
-package = Core - optional
+package = Core
 core = 7.x
 files[] = update.module
 files[] = update.compare.inc

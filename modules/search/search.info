@@ -1,7 +1,7 @@
 ; $Id$
 name = Search
 description = Enables site-wide keyword searching.
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = search.module

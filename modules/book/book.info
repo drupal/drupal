@@ -2,7 +2,7 @@
 
 name = Book
 description = Allows users to structure site pages in a hierarchy or outline.
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = book.module

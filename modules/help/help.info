@@ -1,7 +1,7 @@
 ; $Id$
 name = Help
 description = Manages the display of online help.
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = help.module

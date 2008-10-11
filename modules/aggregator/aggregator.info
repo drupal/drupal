@@ -2,7 +2,7 @@
 
 name = Aggregator
 description = "Aggregates syndicated content (RSS, RDF, and Atom feeds)."
-package = Core - optional
+package = Core
 version = VERSION
 core = 7.x
 files[] = aggregator.module

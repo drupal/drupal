@@ -1,7 +1,7 @@
 ; $Id$
 name = Node
 description = Allows content to be submitted to the site and displayed on pages.
-package = Core - required
+package = Core
 version = VERSION
 core = 7.x
 files[] = node.module
