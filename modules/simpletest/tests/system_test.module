@@ -84,3 +84,39 @@ function system_test_redirect_invalid_scheme() {
 function system_test_destination() {
   return 'The destination: ' . drupal_get_destination();
 }
+
+/**
+ * Implementation of hook_modules_installed().
+ */
+function system_test_modules_installed($modules) {
+  if (in_array('aggregator', $modules)) {
+    drupal_set_message(t('hook_modules_installed fired for aggregator'));
+  }
+}
+
+/**
+ * Implementation of hook_modules_enabled().
+ */
+function system_test_modules_enabled($modules) {
+  if (in_array('aggregator', $modules)) {
+    drupal_set_message(t('hook_modules_enabled fired for aggregator'));
+  }
+}
+
+/**
+ * Implementation of hook_modules_disabled().
+ */
+function system_test_modules_disabled($modules) {
+  if (in_array('aggregator', $modules)) {
+    drupal_set_message(t('hook_modules_disabled fired for aggregator'));
+  }
+}
+
+/**
+ * Implementation of hook_modules_uninstalled().
+ */
+function system_test_modules_uninstalled($modules) {
+  if (in_array('aggregator', $modules)) {
+    drupal_set_message(t('hook_modules_uninstalled fired for aggregator'));
+  }
+}

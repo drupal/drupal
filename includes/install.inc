@@ -506,7 +506,10 @@ function drupal_install_modules($module_list = array()) {
   } while ($moved);
   asort($module_list);
   $module_list = array_keys($module_list);
-  array_filter($module_list, '_drupal_install_module');
+  $modules_installed = array_filter($module_list, '_drupal_install_module');
+  if (!empty($modules_installed)) {
+    module_invoke_all('modules_installed', $modules_installed);
+  }
   module_enable($module_list);
 }
 
@@ -574,46 +577,52 @@ function drupal_install_system() {
   module_rebuild_cache();
 }
 
-
 /**
  * Calls the uninstall function and updates the system table for a given module.
  *
- * @param $module
- *   The machine name of the module to uninstall.
+ * @param $module_list
+ *   The modules to uninstall.
  */
-function drupal_uninstall_module($module) {
-  // First, retrieve all the module's menu paths from db.
-  drupal_load('module', $module);
-  $paths = module_invoke($module, 'menu');
+function drupal_uninstall_modules($module_list = array()) {
+  foreach ($module_list as $module) {
+    // First, retrieve all the module's menu paths from db.
+    drupal_load('module', $module);
+    $paths = module_invoke($module, 'menu');
 
-  // Uninstall the module(s).
-  module_load_install($module);
-  module_invoke($module, 'uninstall');
+    // Uninstall the module.
+    module_load_install($module);
+    module_invoke($module, 'uninstall');
 
-  // Now remove the menu links for all paths declared by this module.
-  if (!empty($paths)) {
-    $paths = array_keys($paths);
-    // Clean out the names of load functions.
-    foreach ($paths as $index => $path) {
-      $parts = explode('/', $path, MENU_MAX_PARTS);
-      foreach ($parts as $k => $part) {
-        if (preg_match('/^%[a-z_]*$/', $part)) {
-          $parts[$k] = '%';
+    // Now remove the menu links for all paths declared by this module.
+    if (!empty($paths)) {
+      $paths = array_keys($paths);
+      // Clean out the names of load functions.
+      foreach ($paths as $index => $path) {
+        $parts = explode('/', $path, MENU_MAX_PARTS);
+        foreach ($parts as $k => $part) {
+          if (preg_match('/^%[a-z_]*$/', $part)) {
+            $parts[$k] = '%';
+          }
         }
+        $paths[$index] = implode('/', $parts);
       }
-      $paths[$index] = implode('/', $parts);
-    }
-    $placeholders = implode(', ', array_fill(0, count($paths), "'%s'"));
+      $placeholders = implode(', ', array_fill(0, count($paths), "'%s'"));
 
-    $result = db_query('SELECT * FROM {menu_links} WHERE router_path IN (' . $placeholders . ') AND external = 0 ORDER BY depth DESC', $paths);
-    // Remove all such items. Starting from those with the greatest depth will
-    // minimize the amount of re-parenting done by menu_link_delete().
-    while ($item = db_fetch_array($result)) {
-      _menu_delete_item($item, TRUE);
+      $result = db_query('SELECT * FROM {menu_links} WHERE router_path IN (' . $placeholders . ') AND external = 0 ORDER BY depth DESC', $paths);
+      // Remove all such items. Starting from those with the greatest depth will
+      // minimize the amount of re-parenting done by menu_link_delete().
+      while ($item = db_fetch_array($result)) {
+        _menu_delete_item($item, TRUE);
+      }
     }
+
+    drupal_set_installed_schema_version($module, SCHEMA_UNINSTALLED);
   }
 
-  drupal_set_installed_schema_version($module, SCHEMA_UNINSTALLED);
+  if (!empty($module_list)) {
+    // Call hook_module_uninstall to let other modules act
+    module_invoke_all('modules_uninstalled', $module_list);
+  }
 }
 
 /**

@@ -297,6 +297,12 @@ function module_enable($module_list) {
       node_access_needs_rebuild(TRUE);
     }
   }
+
+  if (!empty($invoke_modules)) {
+    // Invoke the hook_module_enable after all the modules have been
+    // enabled.
+    module_invoke_all('modules_enabled', $invoke_modules);
+  }
 }
 
 /**
@@ -322,6 +328,9 @@ function module_disable($module_list) {
   }
 
   if (!empty($invoke_modules)) {
+    // Invoke hook_module_disable before disabling modules,
+    // so we can still call module hooks to get information.
+    module_invoke_all('modules_disabled', $invoke_modules);
     // Refresh the module list to exclude the disabled modules.
     module_list(TRUE, FALSE);
     // Force to regenerate the stored list of hook implementations.

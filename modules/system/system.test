@@ -19,7 +19,7 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
    * Implementation of setUp().
    */
   function setUp() {
-    parent::setUp();
+    parent::setUp('system_test');
 
     $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer site configuration'));
     $this->drupalLogin($this->admin_user);
@@ -28,17 +28,22 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
   /**
    * Enable a module, check the database for related tables, disable module,
    * check for related tables, unistall module, check for related tables.
+   * Also check for invocation of the hook_module_action hook.
    */
   function testEnableDisable() {
     // Enable aggregator, and check tables.
     $this->assertModules(array('aggregator'), FALSE);
     $this->assertTableCount('aggregator', FALSE);
 
+    // Install (and enable) aggregator module.
     $edit = array();
     $edit['modules[Core][aggregator][enable]'] = 'aggregator';
     $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
 
+    // Check that hook_modules_installed and hook_modules_enabled hooks were invoked and check tables.
+    $this->assertText(t('hook_modules_installed fired for aggregator'), t('hook_modules_installed fired.'));
+    $this->assertText(t('hook_modules_enabled fired for aggregator'), t('hook_modules_enabled fired.'));
     $this->assertModules(array('aggregator'), TRUE);
     $this->assertTableCount('aggregator', TRUE);
 
@@ -48,9 +53,12 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
 
+    // Check that hook_modules_disabled hook was invoked and check tables.
+    $this->assertText(t('hook_modules_disabled fired for aggregator'), t('hook_modules_disabled fired.'));
     $this->assertModules(array('aggregator'), FALSE);
     $this->assertTableCount('aggregator', TRUE);
 
+    // Uninstall the module.
     $edit = array();
     $edit['uninstall[aggregator]'] = 'aggregator';
     $this->drupalPost('admin/build/modules/uninstall', $edit, t('Uninstall'));
@@ -58,6 +66,8 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), t('Modules status has been updated.'));
 
+    // Check that hook_modules_uninstalled hook was invoked and check tables.
+    $this->assertText(t('hook_modules_uninstalled fired for aggregator'), t('hook_modules_uninstalled fired.'));
     $this->assertModules(array('aggregator'), FALSE);
     $this->assertTableCount('aggregator', FALSE);
   }
