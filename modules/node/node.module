@@ -1355,7 +1355,7 @@ function node_search($op = 'search', $keys = NULL) {
         // Fetch terms for snippet.
         $node->body .= module_invoke('taxonomy', 'nodeapi', $node, 'update_index');
 
-        $extra = node_invoke_nodeapi($node, 'search result');
+        $extra = node_invoke_nodeapi($node, 'search_result');
 
         $results[] = array(
           'link' => url('node/' . $item->sid, array('absolute' => TRUE)),
@@ -1898,7 +1898,7 @@ function _node_index_node($node) {
   $text = '<h1>' . check_plain($node->title) . '</h1>' . $node->body;
 
   // Fetch extra data normally not visible
-  $extra = node_invoke_nodeapi($node, 'update index');
+  $extra = node_invoke_nodeapi($node, 'update_index');
   foreach ($extra as $t) {
     $text .= $t;
   }

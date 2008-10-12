@@ -995,8 +995,8 @@ function search_get_keys() {
  * for all of the search features to work.
  *
  * There are three ways to interact with the search system:
- * - Specifically for searching nodes, you can implement nodeapi('update index')
- *   and nodeapi('search result'). However, note that the search system already
+ * - Specifically for searching nodes, you can implement nodeapi('update_index')
+ *   and nodeapi('search_result'). However, note that the search system already
  *   indexes all visible output of a node, i.e. everything displayed normally
  *   by hook_view() and hook_nodeapi('view'). This is usually sufficient.
  *   You should only use this mechanism if you want additional, non-visible data
