@@ -3,7 +3,7 @@
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'themes': {}, 'locale': {} };
 
 /**
- * Set the variable that indicates if JavaScript behaviors should be applied
+ * Set the variable that indicates if JavaScript behaviors should be applied.
  */
 Drupal.jsEnabled = document.getElementsByTagName && document.createElement && document.createTextNode && document.documentElement && document.getElementById;
 
@@ -80,17 +80,17 @@ Drupal.t = function(str, args) {
   }
 
   if (args) {
-    // Transform arguments before inserting them
+    // Transform arguments before inserting them.
     for (var key in args) {
       switch (key.charAt(0)) {
-        // Escaped only
+        // Escaped only.
         case '@':
           args[key] = Drupal.checkPlain(args[key]);
         break;
-        // Pass-through
+        // Pass-through.
         case '!':
           break;
-        // Escaped and placeholder
+        // Escaped and placeholder.
         case '%':
         default:
           args[key] = Drupal.theme('placeholder', args[key]);
@@ -209,7 +209,7 @@ Drupal.freezeHeight = function () {
 };
 
 /**
- * Unfreeze the body height
+ * Unfreeze the body height.
  */
 Drupal.unfreezeHeight = function () {
   $('#freeze-height').remove();
@@ -230,7 +230,7 @@ Drupal.encodeURIComponent = function (item, uri) {
  */
 Drupal.getSelection = function (element) {
   if (typeof(element.selectionStart) != 'number' && document.selection) {
-    // The current selection
+    // The current selection.
     var range1 = document.selection.createRange();
     var range2 = range1.duplicate();
     // Select all text.
@@ -263,11 +263,11 @@ Drupal.ahahError = function(xmlhttp, uri) {
   return message;
 }
 
-// Global Killswitch on the <html> element
+// Global Killswitch on the <html> element.
 if (Drupal.jsEnabled) {
-  // Global Killswitch on the <html> element
+  // Global Killswitch on the <html> element.
   $(document.documentElement).addClass('js');
-  // 'js enabled' cookie
+  // 'js enabled' cookie.
   document.cookie = 'has_js=1; path=/';
   // Attach all behaviors.
   $(document).ready(function() {

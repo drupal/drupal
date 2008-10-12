@@ -56,10 +56,10 @@ Drupal.behaviors.teaser = function(context) {
       // Note: using val() fails sometimes. jQuery bug?
       teaser[0].value = trim(text.slice(0, split));
       body[0].value = trim(text.slice(split));
-      // Reveal and enable teaser
+      // Reveal and enable teaser.
       $(teaser).attr('disabled', '');
       $(teaser).parent().slideDown('fast');
-      // Change label
+      // Change label.
       $(this).val(Drupal.t('Join summary'));
       // Show separate teaser checkbox, restore checked value.
       $(checkbox).show().children('input').attr('checked', checked);
@@ -87,7 +87,7 @@ Drupal.behaviors.teaser = function(context) {
     if (Drupal.behaviors.textarea && teaser.is(('.form-textarea:not(.textarea-processed)'))) {
       Drupal.behaviors.textarea(teaser.parentNode);
     }
-    // Set initial visibility
+    // Set initial visibility.
     if ($(teaser).is('[@disabled]')) {
       $(teaser).parent().hide();
     }

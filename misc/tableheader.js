@@ -105,7 +105,7 @@ Drupal.behaviors.tableHeader = function (context) {
         this.viewHeight = 0;
         tracker(this);
       });
-      // Reset timer
+      // Reset timer.
       time = null;
     }, 250);
   };

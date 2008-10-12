@@ -275,7 +275,7 @@ Drupal.tableDrag.prototype.makeDraggable = function(item) {
           keyChange = true;
 
           if ($(item).is('.tabledrag-root')) {
-            // Swap with the previous top-level row..
+            // Swap with the previous top-level row.
             var groupHeight = 0;
             while (previousRow && $('.indentation', previousRow).size()) {
               previousRow = $(previousRow).prev('tr').get(0);
