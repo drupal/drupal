@@ -95,6 +95,7 @@ function module_rebuild_cache() {
     'package' => 'Other',
     'version' => NULL,
     'php' => DRUPAL_MINIMUM_PHP,
+    'files' => array(),
   );
 
   foreach ($files as $filename => $file) {
