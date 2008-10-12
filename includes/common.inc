@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.807 2008/10/12 06:27:03 webchick Exp $
+// $Id: common.inc,v 1.808 2008/10/12 19:03:04 webchick Exp $
 
 /**
  * @file
@@ -23,27 +23,6 @@ define('SAVED_UPDATED', 2);
  * Return status for saving which deleted an existing item.
  */
 define('SAVED_DELETED', 3);
-
-/**
- * @name Title text filtering flags
- * @{
- * Flags for use in drupal_set_title().
- */
-
-/**
- * Flag for drupal_set_title(); text is not sanitized, so run check_plain().
- */
-define('CHECK_PLAIN', 0);
-
-/**
- * Flag for drupal_set_title(); text has already been sanitized.
- */
-define('PASS_THROUGH', -1);
-
-/**
- * @} End of "Title text filtering flags".
- */
-
 
 /**
  * Set content for a specified region.
