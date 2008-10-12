@@ -2,6 +2,65 @@
 // $Id$
 
 /**
+ * Implementation of hook_install().
+ */
+function blogapi_install() {
+  // Create tables.
+  drupal_install_schema('blogapi');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function blogapi_uninstall() {
+  // Remove tables.
+  drupal_uninstall_schema('blogapi');
+}
+
+
+/**
+ * Implementation of hook_schema().
+ */
+function blogapi_schema() {
+  $schema['blogapi_files'] = array(
+    'description' => t('Stores information for files uploaded via the blogapi.'),
+    'fields' => array(
+      'fid' => array(
+        'description' => t('Primary Key: Unique file ID.'),
+        'type' => 'serial',
+      ),
+      'uid' => array(
+        'description' => t('The {users}.uid of the user who is associated with the file.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'filepath' => array(
+        'description' => t('Path of the file relative to Drupal root.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'filesize' => array(
+        'description' => t('The size of the file in bytes.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('fid'),
+    'indexes' => array(
+      'uid' => array('uid'),
+    ),
+  );
+
+  return $schema;
+}
+
+/**
  * @defgroup updates-5.x-to-6.x Blog API updates from 5.x to 6.x
  * @{
  */
@@ -12,6 +71,22 @@
 function blogapi_update_6000() {
   drupal_set_message("Blog API module does not depend on blog module's permissions anymore, but provides its own 'administer content with blog api' permission instead. Until <a href=\"" . url('admin/user/permissions', array('fragment' => 'module-blogapi')) . '">this permission is assigned</a> to at least one user role, only the site administrator will be able to use Blog API features.');
   return array();
+}
+
+/**
+ * Add blogapi_files table to enable size restriction for BlogAPI file uploads.
+ *
+ * This table was introduced in Drupal 6.4.
+ */
+function blogapi_update_6001() {
+  $ret = array();
+
+  if (!db_table_exists('blogapi_files')) {
+    $schema = blogapi_schema();
+    db_create_table($ret, 'blogapi_files', $schema['blogapi_files']);
+  }
+
+  return $ret;
 }
 
 /**
