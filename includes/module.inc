@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.128 2008/10/11 22:46:21 webchick Exp $
+// $Id: module.inc,v 1.129 2008/10/12 01:23:01 webchick Exp $
 
 /**
  * @file
@@ -492,5 +492,13 @@ function module_invoke_all() {
  * Array of modules required by core.
  */
 function drupal_required_modules() {
-  return array('block', 'filter', 'node', 'system', 'user');
+  $files = drupal_system_listing('/\.info$/', 'modules', 'name', 0);
+  $required = array();
+  foreach ($files as $name => $file) {
+    $info = drupal_parse_info_file($file->filename);
+    if (!empty($info) && !empty($info['required']) && $info['required']) {
+      $required[] = $name;
+    }
+  }
+  return $required;
 }

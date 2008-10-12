@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.98 2008/10/11 22:46:22 webchick Exp $
+// $Id: system.admin.inc,v 1.99 2008/10/12 01:23:05 webchick Exp $
 
 /**
  * @file
@@ -616,7 +616,7 @@ function system_modules($form_state = array()) {
 
   // Remove hidden modules from display list.
   foreach ($files as $filename => $file) {
-    if (!empty($file->info['hidden'])) {
+    if (!empty($file->info['hidden']) || !empty($file->info['required'])) {
       unset($files[$filename]);
     }
   }

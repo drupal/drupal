@@ -1,4 +1,4 @@
-; $Id: node.info,v 1.9 2008/10/11 15:54:14 webchick Exp $
+; $Id: node.info,v 1.10 2008/10/12 01:23:04 webchick Exp $
 name = Node
 description = Allows content to be submitted to the site and displayed on pages.
 package = Core
@@ -9,4 +9,4 @@ files[] = content_types.inc
 files[] = node.admin.inc
 files[] = node.pages.inc
 files[] = node.install
-hidden = TRUE
+required = TRUE
