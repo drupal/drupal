@@ -102,14 +102,13 @@ class UploadTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode();
 
     // Attempt to upload .txt file when .html is only extension allowed.
-    $text_files = array_values($this->drupalGetTestFiles('text'));
+    $text_file = current($this->drupalGetTestFiles('text'));
     // Select a file that's less than the 1MB upload limit so we only test one
     // limit at a time.
-    $text_file = $text_files[2]->filename;
-    $this->uploadFile($node, $text_file, FALSE);
+    $this->uploadFile($node, $text_file->filename, FALSE);
     // Test the error message in two steps in case there are additional errors
     // that change the error message's format.
-    $this->assertRaw(t('The specified file %name could not be uploaded.', array('%name' => basename($text_file))), t('File %filename was not allowed to be uploaded', array('%filename' => $text_file)));
+    $this->assertRaw(t('The specified file %name could not be uploaded.', array('%name' => $text_file->basename)), t('File %filename was not allowed to be uploaded', array('%filename' => $text_file->filename)));
     $this->assertRaw(t('Only files with the following extensions are allowed: %files-allowed.', array('%files-allowed' => $settings['upload_extensions'])), t('File extension cited as reason for failure'));
 
     // Attempt to upload .html file when .html is only extension allowed.
