@@ -156,7 +156,7 @@ class FileValidatorTest extends DrupalWebTestCase {
 
     $this->image = new stdClass();
     $this->image->filepath = 'misc/druplicon.png';
-    $this->iamge->filename = basename($this->image->filepath);
+    $this->image->filename = basename($this->image->filepath);
 
     $this->non_image = new stdClass();
     $this->non_image->filepath = 'misc/jquery.js';
@@ -427,7 +427,8 @@ class FileDirectoryTest extends FileTestCase {
 
     // Remove .htaccess file to then test that it gets re-created.
     @unlink(file_directory_path() .'/.htaccess');
-    file_check_directory(file_directory_path());
+    $directory = file_directory_path();
+    file_check_directory($directory);
     $this->assertTrue(is_file(file_directory_path() . '/.htaccess'), t('Successfully created the .htaccess file in the files directory.'), 'File');
 
     // Verify contents of .htaccess file.
