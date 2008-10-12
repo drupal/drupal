@@ -1,4 +1,4 @@
-// $Id: progress.js,v 1.20 2008/01/04 11:53:21 goba Exp $
+// $Id: progress.js,v 1.21 2008/10/12 00:29:09 webchick Exp $
 
 /**
  * A progressbar object. Initialized with the given id. Must be inserted into
@@ -53,7 +53,7 @@ Drupal.progressBar.prototype.startMonitoring = function (uri, delay) {
  */
 Drupal.progressBar.prototype.stopMonitoring = function () {
   clearTimeout(this.timer);
-  // This allows monitoring to be stopped from within the callback
+  // This allows monitoring to be stopped from within the callback.
   this.uri = null;
 };
 
@@ -74,14 +74,14 @@ Drupal.progressBar.prototype.sendPing = function () {
       data: '',
       dataType: 'json',
       success: function (progress) {
-        // Display errors
+        // Display errors.
         if (progress.status == 0) {
           pb.displayError(progress.data);
           return;
         }
-        // Update display
+        // Update display.
         pb.setProgress(progress.percentage, progress.message);
-        // Schedule next timer
+        // Schedule next timer.
         pb.timer = setTimeout(function() { pb.sendPing(); }, pb.delay);
       },
       error: function (xmlhttp) {

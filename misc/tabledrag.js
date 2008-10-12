@@ -1,4 +1,4 @@
-// $Id: tabledrag.js,v 1.19 2008/09/18 18:37:29 webchick Exp $
+// $Id: tabledrag.js,v 1.20 2008/10/12 00:29:09 webchick Exp $
 
 /**
  * Drag and drop table rows with field manipulation.
@@ -275,7 +275,7 @@ Drupal.tableDrag.prototype.makeDraggable = function(item) {
           keyChange = true;
 
           if ($(item).is('.tabledrag-root')) {
-            // Swap with the previous top-level row..
+            // Swap with the previous top-level row.
             var groupHeight = 0;
             while (previousRow && $('.indentation', previousRow).size()) {
               previousRow = $(previousRow).prev('tr').get(0);

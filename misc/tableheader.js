@@ -1,4 +1,4 @@
-// $Id: tableheader.js,v 1.17 2008/09/30 06:02:05 webchick Exp $
+// $Id: tableheader.js,v 1.18 2008/10/12 00:29:09 webchick Exp $
 
 Drupal.tableHeaderDoScroll = function() {
   if (typeof(Drupal.tableHeaderOnScroll)=='function') {
@@ -105,7 +105,7 @@ Drupal.behaviors.tableHeader = function (context) {
         this.viewHeight = 0;
         tracker(this);
       });
-      // Reset timer
+      // Reset timer.
       time = null;
     }, 250);
   };
