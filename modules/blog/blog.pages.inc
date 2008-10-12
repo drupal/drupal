@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.12 2008/10/12 04:30:05 webchick Exp $
+// $Id: blog.pages.inc,v 1.13 2008/10/12 06:27:03 webchick Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
 function blog_page_user($account) {
   global $user;
 
-  drupal_set_title($title = t("@name's blog", array('@name' => $account->name)), PASS_THROUGH);
+  drupal_set_title($title = t("@name's blog", array('@name' => $account->name)));
 
   $items = array();
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.pages.inc,v 1.6 2008/10/12 04:30:08 webchick Exp $
+// $Id: profile.pages.inc,v 1.7 2008/10/12 06:27:05 webchick Exp $
 
 /**
  * @file
@@ -73,7 +73,7 @@ function profile_browse() {
       $title = check_plain($field->page);
     }
 
-    drupal_set_title($title, PASS_THROUGH);
+    drupal_set_title($title);
     return $output;
   }
   elseif ($name && !$field->fid) {
@@ -99,7 +99,7 @@ function profile_browse() {
     $output = theme('profile_wrapper', $content);
     $output .= theme('pager', NULL, 20);
 
-    drupal_set_title(t('User list'), PASS_THROUGH);
+    drupal_set_title(t('User list'));
     return $output;
   }
 }

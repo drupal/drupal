@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.16 2008/10/11 21:11:01 webchick Exp $
+// $Id: taxonomy.pages.inc,v 1.17 2008/10/12 06:27:05 webchick Exp $
 
 /**
  * @file
@@ -112,7 +112,7 @@ function theme_taxonomy_term_page($tids, $result) {
  */
 function taxonomy_term_edit($term) {
   if (isset($term)) {
-    drupal_set_title($term->name);
+    drupal_set_title(check_plain($term->name));
     return drupal_get_form('taxonomy_form_term', taxonomy_vocabulary_load($term->vid), (array)$term);
   }
   return drupal_not_found();

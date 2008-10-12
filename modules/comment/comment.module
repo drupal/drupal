@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.656 2008/10/11 21:10:59 webchick Exp $
+// $Id: comment.module,v 1.657 2008/10/12 06:27:04 webchick Exp $
 
 /**
  * @file
@@ -1442,7 +1442,7 @@ function comment_form_box($edit, $title = NULL) {
 function comment_form_add_preview($form, &$form_state) {
   global $user;
   $edit = $form_state['values'];
-  drupal_set_title(t('Preview comment'), PASS_THROUGH);
+  drupal_set_title(t('Preview comment'));
   $output = '';
   $node = node_load($edit['nid']);
 
