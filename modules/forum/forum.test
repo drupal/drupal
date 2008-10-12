@@ -113,14 +113,11 @@ class ForumTestCase extends DrupalWebTestCase {
 
   /**
    * Edit the forum taxonomy.
-   *
    */
   function editForumTaxonomy() {
     // Backup forum taxonomy.
     $vid = variable_get('forum_nav_vocabulary', '');
-    // This function returns NULL (the cache value is false).
-//    $original_settings = taxonomy_vocabulary_load($vid);
-    $original_settings = db_fetch_array(db_query('SELECT v.* FROM {vocabulary} v WHERE v.vid = %d', $vid));
+    $original_settings = taxonomy_vocabulary_load($vid);
 
     // Generate a random name/description.
     $title = $this->randomName(10);
@@ -134,41 +131,22 @@ class ForumTestCase extends DrupalWebTestCase {
     );
 
     // Edit the vocabulary.
-    $this->drupalPost('admin/content/taxonomy/' . $vid . '/edit', $edit, t('Save'));
+    $this->drupalPost('admin/content/taxonomy/' . $vid, $edit, t('Save'));
     $this->assertResponse(200);
     $this->assertRaw(t('Updated vocabulary %name.', array('%name' => $title)), t('Vocabulary was edited'));
 
     // Grab the newly edited vocabulary.
-    $cur_settings = db_fetch_array(db_query('SELECT v.* FROM {vocabulary} v WHERE v.vid = %d', $vid));
+    $current_settings = taxonomy_vocabulary_load($vid, TRUE);
 
     // Make sure we actually edited the vocabulary properly.
-    $this->assertTrue($cur_settings['name'] == $title, 'The name was updated');
-    $this->assertTrue($cur_settings['description'] == $description, 'The description was updated');
+    $this->assertEqual($current_settings->name, $title, t('The name was updated'));
+    $this->assertEqual($current_settings->description, $description, t('The description was updated'));
 
-    // Restore the name/description.
-    $title = $original_settings['name'];
-    $description = $original_settings['description'];
-    $description = ($description == NULL) ? '' : $description;
-
-    $edit = array(
-      'name' => $title,
-      'description' => $description,
-      'help' => '',
-      'weight' => -10
-    );
-
-    // Edit the vocabulary.
-    $this->drupalPost('admin/content/taxonomy/' . $vid . 'edit', $edit, t('Save'));
-    $this->assertResponse(200);
-    $this->assertRaw(t('Updated vocabulary %name.', array('%name' => $title)), t('Vocabulary was edited'));
-/*
-    // Verify original forum taxonomy.
+    // Restore the original vocabulary.
     $original_settings = (array) $original_settings;
-    taxonomy_save_vocabulary($original_settings); // This fails because taxonomy_vocabulary_load returns NULL.
-    $cur_settings = db_fetch_array(db_query('SELECT v.* FROM {vocabulary} v WHERE v.vid = %d', $vid));
-    $this->assertTrue($cur_settings['name'] == $original_settings['name'], 'The name was restored');
-    $this->assertTrue(!isset($cur_settings['description']), 'The description was restored');
-*/
+    taxonomy_save_vocabulary($original_settings);
+    $current_settings = taxonomy_vocabulary_load($vid, TRUE);
+    $this->assertEqual($current_settings->name, $original_settings['name'], 'The original vocabulary settings were restored');
   }
 
   /**
