@@ -90,7 +90,7 @@ function book_export_html($nid) {
  * Menu callback; show the outline form for a single node.
  */
 function book_outline($node) {
-  drupal_set_title($node->title);
+  drupal_set_title(check_plain($node->title));
   return drupal_get_form('book_outline_form', $node);
 }
 

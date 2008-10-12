@@ -12,7 +12,7 @@
 function blog_page_user($account) {
   global $user;
 
-  drupal_set_title($title = t("@name's blog", array('@name' => $account->name)), PASS_THROUGH);
+  drupal_set_title($title = t("@name's blog", array('@name' => $account->name)));
 
   $items = array();
 

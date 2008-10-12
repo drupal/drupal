@@ -28,7 +28,7 @@ function poll_page() {
  * Callback for the 'votes' tab for polls you can see other votes on
  */
 function poll_votes($node) {
-  drupal_set_title($node->title);
+  drupal_set_title(check_plain($node->title));
   $output = t('This table lists all the recorded votes for this poll. If anonymous users are allowed to vote, they will be identified by the IP address of the computer they used when they voted.');
 
   $header[] = array('data' => t('Visitor'), 'field' => 'u.name');
@@ -51,7 +51,7 @@ function poll_votes($node) {
  * Callback for the 'results' tab for polls you can vote on
  */
 function poll_results($node) {
-  drupal_set_title($node->title);
+  drupal_set_title(check_plain($node->title));
   $node->show_results = TRUE;
   return node_show($node, 0);
 }

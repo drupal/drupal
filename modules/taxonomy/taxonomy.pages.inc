@@ -112,7 +112,7 @@ function theme_taxonomy_term_page($tids, $result) {
  */
 function taxonomy_term_edit($term) {
   if (isset($term)) {
-    drupal_set_title($term->name);
+    drupal_set_title(check_plain($term->name));
     return drupal_get_form('taxonomy_form_term', taxonomy_vocabulary_load($term->vid), (array)$term);
   }
   return drupal_not_found();

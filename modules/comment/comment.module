@@ -1442,7 +1442,7 @@ function comment_form_box($edit, $title = NULL) {
 function comment_form_add_preview($form, &$form_state) {
   global $user;
   $edit = $form_state['values'];
-  drupal_set_title(t('Preview comment'), PASS_THROUGH);
+  drupal_set_title(t('Preview comment'));
   $output = '';
   $node = node_load($edit['nid']);
 

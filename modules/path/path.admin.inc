@@ -66,7 +66,7 @@ function path_admin_overview($keys = NULL) {
 function path_admin_edit($pid = 0) {
   if ($pid) {
     $alias = path_load($pid);
-    drupal_set_title($alias['dst']);
+    drupal_set_title(check_plain($alias['dst']));
     $output = drupal_get_form('path_admin_form', $alias);
   }
   else {

@@ -175,7 +175,7 @@ function profile_field_form(&$form_state, $arg = NULL) {
         drupal_not_found();
         return;
       }
-      drupal_set_title(t('edit %title', array('%title' => $edit['title'])), PASS_THROUGH);
+      drupal_set_title(t('edit %title', array('%title' => $edit['title'])));
       $form['fid'] = array('#type' => 'value',
         '#value' => $fid,
       );
@@ -193,7 +193,7 @@ function profile_field_form(&$form_state, $arg = NULL) {
       return;
     }
     $type = $arg;
-    drupal_set_title(t('add new %type', array('%type' => $types[$type])), PASS_THROUGH);
+    drupal_set_title(t('add new %type', array('%type' => $types[$type])));
     $edit = array('name' => 'profile_');
     $form['type'] = array('#type' => 'value', '#value' => $type);
   }

@@ -37,7 +37,7 @@ function aggregator_page_source($arg1, $arg2 = NULL) {
   // $arg1 is $form_state and $arg2 is $feed. Otherwise, $arg1 is $feed.
   $feed = is_array($arg2) ? $arg2 : $arg1;
   $feed = (object)$feed;
-  drupal_set_title($feed->title);
+  drupal_set_title(check_plain($feed->title));
   $feed_source = theme('aggregator_feed_source', $feed);
 
   // It is safe to include the fid in the query because it's loaded from the

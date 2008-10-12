@@ -11,7 +11,7 @@
  * Menu callback; presents the node editing form, or redirects to delete confirmation.
  */
 function node_page_edit($node) {
-  drupal_set_title($node->title);
+  drupal_set_title(check_plain($node->title));
   return drupal_get_form($node->type . '_node_form', $node);
 }
 
@@ -59,7 +59,7 @@ function node_add($type) {
     // Initialize settings:
     $node = array('uid' => $user->uid, 'name' => (isset($user->name) ? $user->name : ''), 'type' => $type, 'language' => '');
 
-    drupal_set_title(t('Create @name', array('@name' => $types[$type]->name)), PASS_THROUGH);
+    drupal_set_title(t('Create @name', array('@name' => $types[$type]->name)));
     $output = drupal_get_form($type . '_node_form', $node);
   }
 
@@ -381,7 +381,7 @@ function node_preview($node) {
       $cloned_node->build_mode = NODE_BUILD_PREVIEW;
       $output = theme('node_preview', $cloned_node);
     }
-    drupal_set_title(t('Preview'), PASS_THROUGH);
+    drupal_set_title(t('Preview'));
 
     return $output;
   }
@@ -504,7 +504,7 @@ function node_delete_confirm_submit($form, &$form_state) {
  * Generate an overview table of older revisions of a node.
  */
 function node_revision_overview($node) {
-  drupal_set_title(t('Revisions for %title', array('%title' => $node->title)), PASS_THROUGH);
+  drupal_set_title(t('Revisions for %title', array('%title' => $node->title)));
 
   $header = array(t('Revision'), array('data' => t('Operations'), 'colspan' => 2));
 

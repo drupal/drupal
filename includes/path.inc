@@ -196,20 +196,15 @@ function drupal_get_title() {
  * @param $title
  *   Optional string value to assign to the page title; or if set to NULL
  *   (default), leaves the current title unchanged.
- * @param $output
- *   Optional flag - normally should be left as CHECK_PLAIN. Only set to
- *   PASS_THROUGH if you have already removed any possibly dangerous code
- *   from $title using a function like check_plain() or filter_xss(). With this
- *   flag the string will be passed through unchanged.
  *
  * @return
  *   The updated title of the current page.
  */
-function drupal_set_title($title = NULL, $output = CHECK_PLAIN) {
+function drupal_set_title($title = NULL) {
   static $stored_title;
 
   if (isset($title)) {
-    $stored_title = ($output == PASS_THROUGH) ? $title : check_plain($title);
+    $stored_title = $title;
   }
   return $stored_title;
 }
