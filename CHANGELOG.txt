@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.282 2008/10/09 15:15:49 webchick Exp $
+// $Id: CHANGELOG.txt,v 1.283 2008/10/12 02:47:49 webchick Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -62,6 +62,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
       uploading a site logo--that don't require the overhead of databases and
       hooks, the current unmanaged copy, move and delete operations have been
       preserved but renamed to file_unmanaged_*().
+- Added aliased multi-site support:
+    * Added support for mapping domain names to sites directories.
 
 Drupal 6.0, 2008-02-13
 ----------------------
