@@ -175,7 +175,7 @@ function upload_file_download($filepath) {
  * @param $node
  *   A node object to associate with uploaded files.
  */
-function upload_node_form_submit($form, &$form_state) {
+function upload_node_form_submit(&$form, &$form_state) {
   global $user;
 
   $limits = _upload_file_limits($user);
@@ -190,15 +190,14 @@ function upload_node_form_submit($form, &$form_state) {
     $file->list = variable_get('upload_list_default', 1);
     $file->description = $file->filename;
     $file->weight = 0;
-    $_SESSION['upload_files'][$file->fid] = $file;
+    $file->new = TRUE;
+    $form['#node']->files[$file->fid] = $file;
+    $form_state['values']['files'][$file->fid] = (array)$file;
   }
 
-  // Attach session files to node.
-  if (!empty($_SESSION['upload_files'])) {
-    foreach ($_SESSION['upload_files'] as $fid => $file) {
-      if (!isset($form_state['values']['files'][$fid]['filepath'])) {
-        $form_state['values']['files'][$fid] = (array)$file;
-      }
+  if (isset($form_state['values']['files'])) {
+    foreach ($form_state['values']['files'] as $fid => $file) {
+      $form_state['values']['files'][$fid]['new'] = !empty($form['#node']->files[$fid]->new);
     }
   }
 
@@ -327,19 +326,6 @@ function upload_nodeapi_view(&$node, $teaser) {
         );
       }
     }
-  }
-}
-
-/**
- * Implementation of hook_nodeapi_prepare().
- */
-function upload_nodeapi_prepare(&$node, $teaser) {
-  // Initialize $_SESSION['upload_files'] if no post occurred.
-  // This clears the variable from old forms and makes sure it
-  // is an array to prevent notices and errors in other parts
-  // of upload.module.
-  if (!$_POST) {
-    $_SESSION['upload_files'] = array();
   }
 }
 
@@ -484,13 +470,13 @@ function upload_save(&$node) {
       file_delete($file);
       // Remove it from the session in the case of new uploads,
       // that you want to disassociate before node submission.
-      unset($_SESSION['upload_files'][$fid]);
+      unset($node->files[$fid]);
       // Move on, so the removed file won't be added to new revisions.
       continue;
     }
 
     // Create a new revision, or associate a new file needed.
-    if (!empty($node->old_vid) || isset($_SESSION['upload_files'][$fid])) {
+    if (!empty($node->old_vid) || $file->new) {
       db_query("INSERT INTO {upload} (fid, nid, vid, list, description, weight) VALUES (%d, %d, %d, %d, '%s', %d)", $file->fid, $node->nid, $node->vid, $file->list, $file->description, $file->weight);
     }
     // Update existing revision.
@@ -499,9 +485,6 @@ function upload_save(&$node) {
     }
     file_set_status($file, FILE_STATUS_PERMANENT);
   }
-  // Empty the session storage after save. We use this variable to track files
-  // that haven't been related to the node yet.
-  unset($_SESSION['upload_files']);
 }
 
 function _upload_form($node) {
@@ -529,6 +512,7 @@ function _upload_form($node) {
       $form['files'][$key]['filemime'] = array('#type' => 'value',  '#value' => $file->filemime);
       $form['files'][$key]['filesize'] = array('#type' => 'value',  '#value' => $file->filesize);
       $form['files'][$key]['fid'] = array('#type' => 'value',  '#value' => $file->fid);
+      $form['files'][$key]['new'] = array('#type' => 'value', '#value' => FALSE);
     }
   }
 
@@ -568,8 +552,6 @@ function _upload_form($node) {
     );
   }
 
-  // This value is used in upload_js().
-  $form['current']['vid'] = array('#type' => 'hidden', '#value' => isset($node->vid) ? $node->vid : 0);
   return $form;
 }
 
@@ -628,44 +610,51 @@ function upload_load($node) {
  * Menu-callback for JavaScript-based uploads.
  */
 function upload_js() {
-  // Load the form from the Form API cache.
-  $cache = cache_get('form_' . $_POST['form_build_id'], 'cache_form');
+  $cached_form_state = array();
+  $files = array();
 
-  // We only do the upload.module part of the node validation process.
-  $node = (object)$_POST;
-  unset($node->files['upload']);
-  $form = $cache->data;
+  // Load the form from the Form API cache.
+  if (!($cached_form = form_get_cache($_POST['form_build_id'], $cached_form_state)) || !isset($cached_form['#node']) || !isset($cached_form['attachments'])) {
+    form_set_error('form_token', t('Validation error, please try again. If this error persists, please contact the site administrator.'));
+    $output = theme('status_messages');
+    print drupal_to_js(array('status' => TRUE, 'data' => $output));
+    exit();
+  }
+
   $form_state = array('values' => $_POST);
 
   // Handle new uploads, and merge tmp files into node-files.
-  upload_node_form_submit($form, $form_state);
-  $node_files = upload_load($node);
+  upload_node_form_submit($cached_form, $form_state);
+
   if (!empty($form_state['values']['files'])) {
     foreach ($form_state['values']['files'] as $fid => $file) {
-      if (is_numeric($fid)) {
-        $node->files[$fid] = $file;
-        if (!isset($file['filepath'])) {
-          $node->files[$fid] = $node_files[$fid];
-        }
+      if (isset($cached_form['#node']->files[$fid])) {
+        $files[$fid] = $cached_form['#node']->files[$fid];
       }
     }
   }
+
+  $node = $cached_form['#node'];
+
+  $node->files = $files;
+
   $form = _upload_form($node);
 
-  // Update the default values changed in the $_POST array.
-  $files = isset($_POST['files']) ? $_POST['files'] : array();
+  unset($cached_form['attachments']['wrapper']['new']);
+  $cached_form['attachments']['wrapper'] = array_merge($cached_form['attachments']['wrapper'], $form);
+
+  $cached_form['attachments']['#collapsed'] = FALSE;
+
+  form_set_cache($_POST['form_build_id'], $cached_form, $cached_form_state);
+
   foreach ($files as $fid => $file) {
     if (is_numeric($fid)) {
-      $form['files'][$fid]['description']['#default_value'] = $file['description'];
-      $form['files'][$fid]['list']['#default_value'] = isset($file['list']) ? 1 : 0;
-      $form['files'][$fid]['remove']['#default_value'] = isset($file['remove']) ? 1 : 0;
-      $form['files'][$fid]['weight']['#default_value'] = $file['weight'];
+      $form['files'][$fid]['description']['#default_value'] = $form_state['values']['files'][$fid]['description'];
+      $form['files'][$fid]['list']['#default_value'] = !empty($form_state['values']['files'][$fid]['list']);
+      $form['files'][$fid]['remove']['#default_value'] = !empty($form_state['values']['files'][$fid]['remove']);
+      $form['files'][$fid]['weight']['#default_value'] = $form_state['values']['files'][$fid]['weight'];
     }
   }
-
-  // Add the new element to the stored form state and resave.
-  $cache->data['attachments']['wrapper'] = array_merge($cache->data['attachments']['wrapper'], $form);
-  cache_set('form_' . $_POST['form_build_id'], $cache->data, 'cache_form', $cache->expire);
 
   // Render the form for output.
   $form += array(
