@@ -880,12 +880,12 @@ function _filter_autop($text) {
         }
       }
       // Only allow a matching tag to close it.
-      else if (!$open && $ignoretag == $tag) {
+      elseif (!$open && $ignoretag == $tag) {
         $ignore = FALSE;
         $ignoretag = '';
       }
     }
-    else if (!$ignore) {
+    elseif (!$ignore) {
       $chunk = preg_replace('|\n*$|', '', $chunk) . "\n\n"; // just to make things a little easier, pad the end
       $chunk = preg_replace('|<br />\s*<br />|', "\n\n", $chunk);
       $chunk = preg_replace('!(<' . $block . '[^>]*>)!', "\n$1", $chunk); // Space things out a little
@@ -1001,7 +1001,7 @@ function _filter_xss_split($m, $store = FALSE) {
     // We matched a lone ">" character
     return '&gt;';
   }
-  else if (strlen($string) == 1) {
+  elseif (strlen($string) == 1) {
     // We matched a lone "<" character
     return '&lt;';
   }

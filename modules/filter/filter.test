@@ -162,7 +162,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
       if ($format->name == 'Filtered HTML') {
         $filtered = $format->format;
       }
-      else if ($format->name == 'Full HTML') {
+      elseif ($format->name == 'Full HTML') {
         $full = $format->format;
       }
     }

@@ -1320,7 +1320,7 @@ function _locale_import_one_string_db(&$report, $langcode, $source, $translation
         db_query("INSERT INTO {locales_target} (lid, language, translation, plid, plural) VALUES (%d, '%s', '%s', %d, %d)", $lid, $langcode, $translation, $plid, $plural);
         $report[0]++;
       }
-      else if ($mode == LOCALE_IMPORT_OVERWRITE) {
+      elseif ($mode == LOCALE_IMPORT_OVERWRITE) {
         // Translation exists, only overwrite if instructed.
         db_query("UPDATE {locales_target} SET translation = '%s', plid = %d, plural = %d WHERE language = '%s' AND lid = %d", $translation, $plid, $plural, $langcode, $lid);
         $report[1]++;

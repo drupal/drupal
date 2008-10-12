@@ -401,7 +401,7 @@ function theme_pager_link($text, $page_new, $element, $parameters = array(), $at
     if (isset($titles[$text])) {
       $attributes['title'] = $titles[$text];
     }
-    else if (is_numeric($text)) {
+    elseif (is_numeric($text)) {
       $attributes['title'] = t('Go to page @number', array('@number' => $text));
     }
   }

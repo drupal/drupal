@@ -356,7 +356,7 @@ function node_preview($node) {
         $node->uid = 0; // anonymous user
       }
     }
-    else if ($node->uid) {
+    elseif ($node->uid) {
       $user = user_load(array('uid' => $node->uid));
       $node->name = $user->name;
       $node->picture = $user->picture;

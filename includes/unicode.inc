@@ -174,10 +174,10 @@ function drupal_convert_to_utf8($data, $encoding) {
   if (function_exists('iconv')) {
     $out = @iconv($encoding, 'utf-8', $data);
   }
-  else if (function_exists('mb_convert_encoding')) {
+  elseif (function_exists('mb_convert_encoding')) {
     $out = @mb_convert_encoding($data, 'utf-8', $encoding);
   }
-  else if (function_exists('recode_string')) {
+  elseif (function_exists('recode_string')) {
     $out = @recode_string($encoding . '..utf-8', $data);
   }
   else {
@@ -370,16 +370,16 @@ function _decode_entities($prefix, $codepoint, $original, &$table, &$exclude) {
   if ($codepoint < 0x80) {
     $str = chr($codepoint);
   }
-  else if ($codepoint < 0x800) {
+  elseif ($codepoint < 0x800) {
     $str = chr(0xC0 | ($codepoint >> 6))
          . chr(0x80 | ($codepoint & 0x3F));
   }
-  else if ($codepoint < 0x10000) {
+  elseif ($codepoint < 0x10000) {
     $str = chr(0xE0 | ( $codepoint >> 12))
          . chr(0x80 | (($codepoint >> 6) & 0x3F))
          . chr(0x80 | ( $codepoint       & 0x3F));
   }
-  else if ($codepoint < 0x200000) {
+  elseif ($codepoint < 0x200000) {
     $str = chr(0xF0 | ( $codepoint >> 18))
          . chr(0x80 | (($codepoint >> 12) & 0x3F))
          . chr(0x80 | (($codepoint >> 6)  & 0x3F))
@@ -488,7 +488,7 @@ function drupal_substr($text, $start, $length = NULL) {
         }
       }
     }
-    else if ($start < 0) {
+    elseif ($start < 0) {
       // Count all the continuation bytes from the end until we have found
       // abs($start) characters
       $start = abs($start);
@@ -507,7 +507,7 @@ function drupal_substr($text, $start, $length = NULL) {
     if ($length === NULL) {
       $bytes = $strlen - 1;
     }
-    else if ($length > 0) {
+    elseif ($length > 0) {
       // Count all the continuation bytes from the starting index until we have
       // found $length + 1 characters. Then backtrack one byte.
       $bytes = $istart; $chars = 0;
@@ -520,7 +520,7 @@ function drupal_substr($text, $start, $length = NULL) {
       }
       $bytes--;
     }
-    else if ($length < 0) {
+    elseif ($length < 0) {
       // Count all the continuation bytes from the end until we have found
       // abs($length) characters
       $length = abs($length);

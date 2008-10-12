@@ -285,7 +285,7 @@ function _forum_parent_select($tid, $title, $child_type) {
   if ($child_type == 'container') {
     $description = t('Containers are usually placed at the top (root) level, but may also be placed inside another container or forum.');
   }
-  else if ($child_type == 'forum') {
+  elseif ($child_type == 'forum') {
     $description = t('Forums may be placed at the top (root) level, or inside another container or forum.');
   }
 

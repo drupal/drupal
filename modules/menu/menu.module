@@ -272,7 +272,7 @@ function menu_block($op = 'list', $delta = '') {
     }
     return $blocks;
   }
-  else if ($op == 'view') {
+  elseif ($op == 'view') {
     $data['subject'] = check_plain($menus[$delta]);
     $data['content'] = menu_tree($delta);
     return $data;

@@ -562,7 +562,7 @@ function locale_update_js_files() {
   }
   // If no refresh was attempted, but we have new source files, we need
   // to store them too. This occurs if current page is in English.
-  else if ($new_files) {
+  elseif ($new_files) {
     variable_set('javascript_parsed', $parsed);
   }
 

@@ -666,7 +666,7 @@ function user_admin_role_validate($form, &$form_state) {
         form_set_error('name', t('The role name %name already exists. Please choose another role name.', array('%name' => $form_state['values']['name'])));
       }
     }
-    else if ($form_state['values']['op'] == t('Add role')) {
+    elseif ($form_state['values']['op'] == t('Add role')) {
       if (db_result(db_query("SELECT COUNT(*) FROM {role} WHERE name = '%s'", $form_state['values']['name']))) {
         form_set_error('name', t('The role name %name already exists. Please choose another role name.', array('%name' => $form_state['values']['name'])));
       }
@@ -682,7 +682,7 @@ function user_admin_role_submit($form, &$form_state) {
     db_query("UPDATE {role} SET name = '%s' WHERE rid = %d", $form_state['values']['name'], $form_state['values']['rid']);
     drupal_set_message(t('The role has been renamed.'));
   }
-  else if ($form_state['values']['op'] == t('Delete role')) {
+  elseif ($form_state['values']['op'] == t('Delete role')) {
     db_query('DELETE FROM {role} WHERE rid = %d', $form_state['values']['rid']);
     db_query('DELETE FROM {role_permission} WHERE rid = %d', $form_state['values']['rid']);
     // Update the users who have this role set:
@@ -690,7 +690,7 @@ function user_admin_role_submit($form, &$form_state) {
 
     drupal_set_message(t('The role has been deleted.'));
   }
-  else if ($form_state['values']['op'] == t('Add role')) {
+  elseif ($form_state['values']['op'] == t('Add role')) {
     db_query("INSERT INTO {role} (name) VALUES ('%s')", $form_state['values']['name']);
     drupal_set_message(t('The role has been added.'));
   }

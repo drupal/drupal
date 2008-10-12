@@ -135,7 +135,7 @@ function profile_block($op = 'list', $delta = '', $edit = array()) {
     $blocks['author-information']['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
     return $blocks;
   }
-  else if ($op == 'configure') {
+  elseif ($op == 'configure') {
     // Compile a list of fields to show
     $fields = array();
     $result = db_query('SELECT name, title, weight, visibility FROM {profile_fields} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
@@ -152,10 +152,10 @@ function profile_block($op = 'list', $delta = '', $edit = array()) {
     );
     return $form;
   }
-  else if ($op == 'save') {
+  elseif ($op == 'save') {
     variable_set('profile_block_author_fields', $edit['profile_block_author_fields']);
   }
-  else if ($op == 'view') {
+  elseif ($op == 'view') {
     if (user_access('access user profiles')) {
       $output = '';
       if ((arg(0) == 'node') && is_numeric(arg(1)) && (arg(2) == NULL)) {
@@ -471,7 +471,7 @@ function profile_validate_profile($edit, $category) {
         }
       }
     }
-    else if ($field->required && !user_access('administer users')) {
+    elseif ($field->required && !user_access('administer users')) {
       form_set_error($field->name, t('The field %field is required.', array('%field' => $field->title)));
     }
   }

@@ -162,7 +162,7 @@ function user_load($array = array()) {
       $query[] = "$key = %d";
       $params[] = $value;
     }
-    else if ($key == 'pass') {
+    elseif ($key == 'pass') {
       $query[] = "pass = '%s'";
       $params[] = $value;
     }
@@ -757,7 +757,7 @@ function user_block($op = 'list', $delta = '', $edit = array()) {
     $blocks['online']['cache'] = BLOCK_NO_CACHE;
     return $blocks;
   }
-  else if ($op == 'configure' && $delta == 'new') {
+  elseif ($op == 'configure' && $delta == 'new') {
     $form['user_block_whois_new_count'] = array(
       '#type' => 'select',
       '#title' => t('Number of users to display'),
@@ -766,21 +766,21 @@ function user_block($op = 'list', $delta = '', $edit = array()) {
     );
     return $form;
   }
-  else if ($op == 'configure' && $delta == 'online') {
+  elseif ($op == 'configure' && $delta == 'online') {
     $period = drupal_map_assoc(array(30, 60, 120, 180, 300, 600, 900, 1800, 2700, 3600, 5400, 7200, 10800, 21600, 43200, 86400), 'format_interval');
     $form['user_block_seconds_online'] = array('#type' => 'select', '#title' => t('User activity'), '#default_value' => variable_get('user_block_seconds_online', 900), '#options' => $period, '#description' => t('A user is considered online for this long after they have last viewed a page.'));
     $form['user_block_max_list_count'] = array('#type' => 'select', '#title' => t('User list length'), '#default_value' => variable_get('user_block_max_list_count', 10), '#options' => drupal_map_assoc(array(0, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)), '#description' => t('Maximum number of currently online users to display.'));
 
     return $form;
   }
-  else if ($op == 'save' && $delta == 'new') {
+  elseif ($op == 'save' && $delta == 'new') {
     variable_set('user_block_whois_new_count', $edit['user_block_whois_new_count']);
   }
-  else if ($op == 'save' && $delta == 'online') {
+  elseif ($op == 'save' && $delta == 'online') {
     variable_set('user_block_seconds_online', $edit['user_block_seconds_online']);
     variable_set('user_block_max_list_count', $edit['user_block_max_list_count']);
   }
-  else if ($op == 'view') {
+  elseif ($op == 'view') {
     $block = array();
 
     switch ($delta) {
@@ -871,7 +871,7 @@ function template_preprocess_user_picture(&$variables) {
     if (!empty($account->picture) && file_exists($account->picture)) {
       $picture = file_create_url($account->picture);
     }
-    else if (variable_get('user_picture_default', '')) {
+    elseif (variable_get('user_picture_default', '')) {
       $picture = variable_get('user_picture_default', '');
     }
 
@@ -1551,7 +1551,7 @@ function _user_edit_validate($uid, &$edit) {
     if ($error = user_validate_name($edit['name'])) {
       form_set_error('name', $error);
     }
-    else if (db_result(db_query("SELECT COUNT(*) FROM {users} WHERE uid != %d AND LOWER(name) = LOWER('%s')", $uid, $edit['name'])) > 0) {
+    elseif (db_result(db_query("SELECT COUNT(*) FROM {users} WHERE uid != %d AND LOWER(name) = LOWER('%s')", $uid, $edit['name'])) > 0) {
       form_set_error('name', t('The name %name is already taken.', array('%name' => $edit['name'])));
     }
   }
@@ -1560,7 +1560,7 @@ function _user_edit_validate($uid, &$edit) {
   if ($error = user_validate_mail($edit['mail'])) {
     form_set_error('mail', $error);
   }
-  else if (db_result(db_query("SELECT COUNT(*) FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $uid, $edit['mail'])) > 0) {
+  elseif (db_result(db_query("SELECT COUNT(*) FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $uid, $edit['mail'])) > 0) {
     form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $edit['mail'], '@password' => url('user/password'))));
   }
 }
@@ -2317,7 +2317,7 @@ function user_register_submit($form, &$form_state) {
     if ($admin && !$notify) {
       drupal_set_message(t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url("user/$account->uid"), '%name' => $account->name)));
     }
-    else if (!variable_get('user_email_verification', TRUE) && $account->status && !$admin) {
+    elseif (!variable_get('user_email_verification', TRUE) && $account->status && !$admin) {
       // No e-mail verification is required, create new user account, and login
       // user immediately.
       _user_mail_notify('register_no_approval_required', $account);
@@ -2327,7 +2327,7 @@ function user_register_submit($form, &$form_state) {
       $form_state['redirect'] = '';
       return;
     }
-    else if ($account->status || $notify) {
+    elseif ($account->status || $notify) {
       // Create new user account, no administrator approval required.
       $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
       _user_mail_notify($op, $account);

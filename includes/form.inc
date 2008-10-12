@@ -488,7 +488,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
       $form['form_token'] = array('#type' => 'token', '#default_value' => drupal_get_token($form['#token']));
     }
   }
-  else if (isset($user->uid) && $user->uid && !$form['#programmed']) {
+  elseif (isset($user->uid) && $user->uid && !$form['#programmed']) {
     $form['#token'] = $form_id;
     $form['form_token'] = array(
       '#id' => form_clean_id('edit-' . $form_id . '-form-token'),
@@ -1375,7 +1375,7 @@ function form_options_flatten($array, $reset = TRUE) {
     if (is_object($value)) {
       form_options_flatten($value->option, FALSE);
     }
-    else if (is_array($value)) {
+    elseif (is_array($value)) {
       form_options_flatten($value, FALSE);
     }
     else {
@@ -1479,12 +1479,12 @@ function form_get_options($element, $key) {
     if (is_array($choice)) {
       return FALSE;
     }
-    else if (is_object($choice)) {
+    elseif (is_object($choice)) {
       if (isset($choice->option[$key])) {
         $keys[] = $index;
       }
     }
-    else if ($index == $key) {
+    elseif ($index == $key) {
       $keys[] = $index;
     }
   }

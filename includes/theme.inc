@@ -1128,7 +1128,7 @@ function theme_links($links, $attributes = array('class' => 'links')) {
         // Pass in $link as $options, they share the same keys.
         $output .= l($link['title'], $link['href'], $link);
       }
-      else if (!empty($link['title'])) {
+      elseif (!empty($link['title'])) {
         // Some links are actually not links, but we wrap these in <span> for adding title and class attributes
         if (empty($link['html'])) {
           $link['title'] = check_plain($link['title']);
@@ -1457,7 +1457,7 @@ function theme_mark($type = MARK_NEW) {
     if ($type == MARK_NEW) {
       return ' <span class="marker">' . t('new') . '</span>';
     }
-    else if ($type == MARK_UPDATED) {
+    elseif ($type == MARK_UPDATED) {
       return ' <span class="marker">' . t('updated') . '</span>';
     }
   }
@@ -1639,7 +1639,7 @@ function theme_username($object) {
       $output = check_plain($name);
     }
   }
-  else if ($object->name) {
+  elseif ($object->name) {
     // Sometimes modules display content composed by people who are
     // not registered members of the site (e.g. mailing list or news
     // aggregator modules). This clause enables modules to display

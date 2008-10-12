@@ -146,7 +146,7 @@ function poll_block($op = 'list', $delta = '') {
       $blocks['recent']['info'] = t('Most recent poll');
       return $blocks;
     }
-    else if ($op == 'view') {
+    elseif ($op == 'view') {
       // Retrieve the latest poll.
       $sql = db_rewrite_sql("SELECT MAX(n.created) FROM {node} n INNER JOIN {poll} p ON p.nid = n.nid WHERE n.status = 1 AND p.active = 1");
       $timestamp = db_result(db_query($sql));

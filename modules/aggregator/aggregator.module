@@ -801,7 +801,7 @@ function aggregator_parse_feed(&$data, $feed) {
     if (!empty($guid)) {
       $entry = db_fetch_object(db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = %d AND guid = '%s'", $feed['fid'], $guid));
     }
-    else if ($link && $link != $feed['link'] && $link != $feed['url']) {
+    elseif ($link && $link != $feed['link'] && $link != $feed['url']) {
       $entry = db_fetch_object(db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = %d AND link = '%s'", $feed['fid'], $link));
     }
     else {

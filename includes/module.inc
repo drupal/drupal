@@ -476,7 +476,7 @@ function module_invoke_all() {
       if (isset($result) && is_array($result)) {
         $return = array_merge_recursive($return, $result);
       }
-      else if (isset($result)) {
+      elseif (isset($result)) {
         $return[] = $result;
       }
     }

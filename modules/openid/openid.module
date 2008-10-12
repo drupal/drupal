@@ -182,7 +182,7 @@ function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
   if (!empty($services[0]['localid'])) {
     $identity = $services[0]['localid'];
   }
-  else if (!empty($services[0]['delegate'])) {
+  elseif (!empty($services[0]['delegate'])) {
     $identity = $services[0]['delegate'];
   }
   else {

@@ -224,7 +224,7 @@ function node_filter_form() {
       $value = module_invoke('taxonomy', 'get_term', $value);
       $value = $value->name;
     }
-    else if ($type == 'language') {
+    elseif ($type == 'language') {
       $value = empty($value) ? t('Language neutral') : module_invoke('locale', 'language_name', $value);
     }
     else {

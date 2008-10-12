@@ -254,7 +254,7 @@ Unless you know what you are doing, it is highly recommended that you prefix the
       '#description' => t('To enable browsing this field by value, enter a title for the resulting page. The word <code>%value</code> will be substituted with the corresponding value. An example page title is "People whose favorite color is %value" . This is only applicable for a public field.'),
     );
   }
-  else if ($type == 'checkbox') {
+  elseif ($type == 'checkbox') {
     $form['fields']['page'] = array('#type' => 'textfield',
       '#title' => t('Page title'),
       '#default_value' => $edit['page'],

@@ -227,7 +227,7 @@ function taxonomy_save_vocabulary(&$edit) {
     module_invoke_all('taxonomy', 'update', 'vocabulary', $edit);
     $status = SAVED_UPDATED;
   }
-  else if (!empty($edit['vid'])) {
+  elseif (!empty($edit['vid'])) {
     $status = taxonomy_del_vocabulary($edit['vid']);
   }
   else {
@@ -328,7 +328,7 @@ function taxonomy_save_term(&$form_values) {
     $hook = 'update';
     $status = SAVED_UPDATED;
   }
-  else if (!empty($form_values['tid'])) {
+  elseif (!empty($form_values['tid'])) {
     return taxonomy_del_term($form_values['tid']);
   }
   else {
@@ -713,10 +713,10 @@ function taxonomy_node_save($node, $terms) {
           }
         }
       }
-      else if (is_object($term)) {
+      elseif (is_object($term)) {
         db_query('INSERT INTO {term_node} (nid, vid, tid) VALUES (%d, %d, %d)', $node->nid, $node->vid, $term->tid);
       }
-      else if ($term) {
+      elseif ($term) {
         db_query('INSERT INTO {term_node} (nid, vid, tid) VALUES (%d, %d, %d)', $node->nid, $node->vid, $term);
       }
     }
@@ -1285,7 +1285,7 @@ function taxonomy_terms_parse_string($str_tids) {
     // The '+' character in a query string may be parsed as ' '.
     $terms['tids'] = preg_split('/[+ ]/', $str_tids);
   }
-  else if (preg_match('/^([0-9]+,)*[0-9]+$/', $str_tids)) {
+  elseif (preg_match('/^([0-9]+,)*[0-9]+$/', $str_tids)) {
     $terms['operator'] = 'and';
     $terms['tids'] = explode(',', $str_tids);
   }

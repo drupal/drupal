@@ -19,7 +19,7 @@ function blog_page_user($account) {
   if (($account->uid == $user->uid) && user_access('create blog content')) {
     $items[] = l(t('Post new blog entry.'), "node/add/blog");
   }
-  else if ($account->uid == $user->uid) {
+  elseif ($account->uid == $user->uid) {
     $items[] = t('You are not allowed to post a new blog entry.');
   }
 

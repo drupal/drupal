@@ -160,7 +160,7 @@ function contact_user_page($account) {
   if (!valid_email_address($user->mail)) {
     $output = t('You need to provide a valid e-mail address to contact other users. Please update your <a href="@url">user information</a> and try again.', array('@url' => url("user/$user->uid/edit", array('query' => 'destination=' . drupal_get_destination()))));
   }
-  else if (!flood_is_allowed('contact', variable_get('contact_hourly_threshold', 3)) && !user_access('administer site-wide contact form')) {
+  elseif (!flood_is_allowed('contact', variable_get('contact_hourly_threshold', 3)) && !user_access('administer site-wide contact form')) {
     $output = t("You cannot send more than %number messages per hour. Please try again later.", array('%number' => variable_get('contact_hourly_threshold', 3)));
   }
   else {

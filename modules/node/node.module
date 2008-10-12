@@ -718,7 +718,7 @@ function node_invoke_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     if (isset($result) && is_array($result)) {
       $return = array_merge($return, $result);
     }
-    else if (isset($result)) {
+    elseif (isset($result)) {
       $return[] = $result;
     }
   }
@@ -1716,7 +1716,7 @@ function node_block($op = 'list', $delta = '') {
     $blocks['syndicate']['cache'] = BLOCK_NO_CACHE;
     return $blocks;
   }
-  else if ($op == 'view') {
+  elseif ($op == 'view') {
     $block['subject'] = t('Syndicate');
     $block['content'] = theme('feed_icon', url('rss.xml'), t('Syndicate'));
 

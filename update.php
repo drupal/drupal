@@ -505,7 +505,7 @@ function update_check_incompatibility($name, $type = 'module') {
   if ($type == 'module' && isset($modules[$name])) {
     $file = $modules[$name];
   }
-  else if ($type == 'theme' && isset($themes[$name])) {
+  elseif ($type == 'theme' && isset($themes[$name])) {
     $file = $themes[$name];
   }
   if (!isset($file)

@@ -1247,25 +1247,25 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
     if (strpos('AaDlM', $c) !== FALSE) {
       $date .= t(gmdate($c, $timestamp), array(), $langcode);
     }
-    else if ($c == 'F') {
+    elseif ($c == 'F') {
       // Special treatment for long month names: May is both an abbreviation
       // and a full month name in English, but other languages have
       // different abbreviations.
       $date .= trim(t('!long-month-name ' . gmdate($c, $timestamp), array('!long-month-name' => ''), $langcode));
     }
-    else if (strpos('BdgGhHiIjLmnsStTUwWYyz', $c) !== FALSE) {
+    elseif (strpos('BdgGhHiIjLmnsStTUwWYyz', $c) !== FALSE) {
       $date .= gmdate($c, $timestamp);
     }
-    else if ($c == 'r') {
+    elseif ($c == 'r') {
       $date .= format_date($timestamp - $timezone, 'custom', 'D, d M Y H:i:s O', $timezone, $langcode);
     }
-    else if ($c == 'O') {
+    elseif ($c == 'O') {
       $date .= sprintf('%s%02d%02d', ($timezone < 0 ? '-' : '+'), abs($timezone / 3600), abs($timezone % 3600) / 60);
     }
-    else if ($c == 'Z') {
+    elseif ($c == 'Z') {
       $date .= $timezone;
     }
-    else if ($c == '\\') {
+    elseif ($c == '\\') {
       $date .= $format[++$i];
     }
     else {
@@ -1789,7 +1789,7 @@ function drupal_get_css($css = NULL) {
             }
             // If a CSS file is not to be preprocessed and it's a theme CSS file, it needs to *always* appear at the *bottom*,
             // regardless of whether preprocessing is on or off.
-            else if (!$preprocess && $type == 'theme') {
+            elseif (!$preprocess && $type == 'theme') {
               $no_theme_preprocess .= '<link type="text/css" rel="stylesheet" media="' . $media . '" href="' . base_path() . $file . $query_string . '" />' . "\n";
             }
             else {
@@ -2559,7 +2559,7 @@ function page_set_cache() {
         if (zlib_get_coding_type() == 'deflate') {
           $cache = FALSE;
         }
-        else if (zlib_get_coding_type() == FALSE) {
+        elseif (zlib_get_coding_type() == FALSE) {
           $data = gzencode($data, 9, FORCE_GZIP);
         }
         // The remaining case is 'gzip' which means the data is

@@ -1147,10 +1147,10 @@ function system_ip_blocking_form_validate($form, &$form_state) {
   if (db_result(db_query("SELECT * FROM {blocked_ips} WHERE ip = '%s'", $ip))) {
     form_set_error('ip', t('This IP address is already blocked.'));
   }
-  else if ($ip == ip_address()) {
+  elseif ($ip == ip_address()) {
     form_set_error('ip', t('You may not block your own IP address.'));
   }
-  else if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) == FALSE) {
+  elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) == FALSE) {
     form_set_error('ip', t('Please enter a valid IP address.'));
   }
 }

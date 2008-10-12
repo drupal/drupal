@@ -146,7 +146,7 @@ function system_requirements($phase) {
     if (REQUEST_TIME - $cron_last > $threshold_error) {
       $severity = REQUIREMENT_ERROR;
     }
-    else if ($never_run || (REQUEST_TIME - $cron_last > $threshold_warning)) {
+    elseif ($never_run || (REQUEST_TIME - $cron_last > $threshold_warning)) {
       $severity = REQUIREMENT_WARNING;
     }
 

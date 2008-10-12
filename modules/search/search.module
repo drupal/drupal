@@ -167,7 +167,7 @@ function search_block($op = 'list', $delta = '') {
     $blocks['form']['cache'] = BLOCK_NO_CACHE;
     return $blocks;
   }
-  else if ($op == 'view' && user_access('search content')) {
+  elseif ($op == 'view' && user_access('search content')) {
     $block['content'] = drupal_get_form('search_block_form');
     $block['subject'] = t('Search');
     return $block;

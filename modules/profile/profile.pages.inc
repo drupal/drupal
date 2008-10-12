@@ -76,7 +76,7 @@ function profile_browse() {
     drupal_set_title($title, PASS_THROUGH);
     return $output;
   }
-  else if ($name && !$field->fid) {
+  elseif ($name && !$field->fid) {
     drupal_not_found();
   }
   else {

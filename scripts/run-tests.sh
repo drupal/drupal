@@ -212,7 +212,7 @@ function simpletest_script_parse_args() {
     simpletest_script_print_error("--concurrency must be a strictly positive integer.");
     exit;
   }
-  else if ($args['concurrency'] > 1 && !function_exists('pcntl_fork')) {
+  elseif ($args['concurrency'] > 1 && !function_exists('pcntl_fork')) {
     simpletest_script_print_error("Parallel test execution requires the Process Control extension to be compiled in PHP. Please see http://php.net/manual/en/intro.pcntl.php for more information.");
     exit;
   }
@@ -386,7 +386,7 @@ function simpletest_script_get_test_list() {
         }
       }
     }
-    else if ($args['file']) {
+    elseif ($args['file']) {
       $files = array();
       foreach ($args['test_names'] as $file) {
         $files[realpath($file)] = 1;
