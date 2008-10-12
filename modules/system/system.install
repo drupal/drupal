@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.270 2008/10/11 18:29:20 webchick Exp $
+// $Id: system.install,v 1.271 2008/10/12 04:30:08 webchick Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -146,7 +146,7 @@ function system_requirements($phase) {
     if (REQUEST_TIME - $cron_last > $threshold_error) {
       $severity = REQUIREMENT_ERROR;
     }
-    else if ($never_run || (REQUEST_TIME - $cron_last > $threshold_warning)) {
+    elseif ($never_run || (REQUEST_TIME - $cron_last > $threshold_warning)) {
       $severity = REQUIREMENT_WARNING;
     }
 

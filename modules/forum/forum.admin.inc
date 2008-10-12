@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.13 2008/09/19 20:25:02 dries Exp $
+// $Id: forum.admin.inc,v 1.14 2008/10/12 04:30:06 webchick Exp $
 
 /**
  * @file
@@ -285,7 +285,7 @@ function _forum_parent_select($tid, $title, $child_type) {
   if ($child_type == 'container') {
     $description = t('Containers are usually placed at the top (root) level, but may also be placed inside another container or forum.');
   }
-  else if ($child_type == 'forum') {
+  elseif ($child_type == 'forum') {
     $description = t('Forums may be placed at the top (root) level, or inside another container or forum.');
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.130 2008/10/12 02:52:51 webchick Exp $
+// $Id: module.inc,v 1.131 2008/10/12 04:30:05 webchick Exp $
 
 /**
  * @file
@@ -476,7 +476,7 @@ function module_invoke_all() {
       if (isset($result) && is_array($result)) {
         $return = array_merge_recursive($return, $result);
       }
-      else if (isset($result)) {
+      elseif (isset($result)) {
         $return[] = $result;
       }
     }

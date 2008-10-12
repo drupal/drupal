@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.pages.inc,v 1.5 2008/10/11 21:11:01 webchick Exp $
+// $Id: profile.pages.inc,v 1.6 2008/10/12 04:30:08 webchick Exp $
 
 /**
  * @file
@@ -76,7 +76,7 @@ function profile_browse() {
     drupal_set_title($title, PASS_THROUGH);
     return $output;
   }
-  else if ($name && !$field->fid) {
+  elseif ($name && !$field->fid) {
     drupal_not_found();
   }
   else {

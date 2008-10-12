@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.138 2008/10/11 20:41:53 webchick Exp $
+// $Id: file.inc,v 1.139 2008/10/12 04:30:05 webchick Exp $
 
 /**
  * @file
@@ -128,11 +128,11 @@ function file_create_path($destination = NULL) {
   }
   // Check if the destination is instead inside the Drupal temporary files
   // directory.
-  else if (file_check_location($destination, file_directory_temp())) {
+  elseif (file_check_location($destination, file_directory_temp())) {
     return $destination;
   }
   // Not found, try again with prefixed directory path.
-  else if (file_check_location($file_path . '/' . $destination, $file_path)) {
+  elseif (file_check_location($file_path . '/' . $destination, $file_path)) {
     return $file_path . '/' . $destination;
   }
   // File not found.

@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.262 2008/10/10 07:35:51 webchick Exp $
+// $Id: update.php,v 1.263 2008/10/12 04:30:05 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -505,7 +505,7 @@ function update_check_incompatibility($name, $type = 'module') {
   if ($type == 'module' && isset($modules[$name])) {
     $file = $modules[$name];
   }
-  else if ($type == 'theme' && isset($themes[$name])) {
+  elseif ($type == 'theme' && isset($themes[$name])) {
     $file = $themes[$name];
   }
   if (!isset($file)

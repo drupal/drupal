@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.42 2008/10/11 21:11:01 webchick Exp $
+// $Id: node.pages.inc,v 1.43 2008/10/12 04:30:06 webchick Exp $
 
 /**
  * @file
@@ -356,7 +356,7 @@ function node_preview($node) {
         $node->uid = 0; // anonymous user
       }
     }
-    else if ($node->uid) {
+    elseif ($node->uid) {
       $user = user_load(array('uid' => $node->uid));
       $node->name = $user->name;
       $node->picture = $user->picture;

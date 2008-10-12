@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.7 2008/09/27 19:47:42 webchick Exp $
+// $Id: filter.test,v 1.8 2008/10/12 04:30:06 webchick Exp $
 
 class FilterAdminTestCase extends DrupalWebTestCase {
   /**
@@ -162,7 +162,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
       if ($format->name == 'Filtered HTML') {
         $filtered = $format->format;
       }
-      else if ($format->name == 'Full HTML') {
+      elseif ($format->name == 'Full HTML') {
         $full = $format->format;
       }
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.228 2008/10/11 23:32:07 webchick Exp $
+// $Id: locale.module,v 1.229 2008/10/12 04:30:06 webchick Exp $
 
 /**
  * @file
@@ -562,7 +562,7 @@ function locale_update_js_files() {
   }
   // If no refresh was attempted, but we have new source files, we need
   // to store them too. This occurs if current page is in English.
-  else if ($new_files) {
+  elseif ($new_files) {
     variable_set('javascript_parsed', $parsed);
   }
 

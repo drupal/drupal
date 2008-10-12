@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-// $Id: drupal.sh,v 1.5 2008/02/17 20:09:52 dries Exp $
+// $Id: drupal.sh,v 1.6 2008/10/12 04:30:09 webchick Exp $
 
 /**
  * Drupal shell execution script
@@ -118,7 +118,7 @@ while ($param = array_shift($_SERVER['argv'])) {
           $_SERVER['PHP_SELF'] = $_SERVER['REQUEST_URI'] = $path['path'];
           $cmd = substr($path['path'], 1);
         }
-        else if (isset($path['path'])) {
+        elseif (isset($path['path'])) {
           if (!isset($_GET['q'])) {
             $_REQUEST['q'] = $_GET['q'] = $path['path'];
           }

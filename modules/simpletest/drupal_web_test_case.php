@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.48 2008/10/12 03:46:08 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.49 2008/10/12 04:30:08 webchick Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -1486,7 +1486,7 @@ class DrupalWebTestCase {
             // Input element with correct value.
             $found = TRUE;
           }
-          else if (isset($field->option)) {
+          elseif (isset($field->option)) {
             // Select element found.
             if ($this->getSelectedItem($field) == $value) {
               $found = TRUE;
@@ -1499,7 +1499,7 @@ class DrupalWebTestCase {
               }
             }
           }
-          else if (isset($field[0]) && $field[0] == $value) {
+          elseif (isset($field[0]) && $field[0] == $value) {
             // Text area with correct text.
             $found = TRUE;
           }
@@ -1522,7 +1522,7 @@ class DrupalWebTestCase {
       if (isset($item['selected'])) {
         return $item['value'];
       }
-      else if ($item->getName() == 'optgroup') {
+      elseif ($item->getName() == 'optgroup') {
         if ($value = $this->getSelectedItem($item)) {
           return $value;
         }

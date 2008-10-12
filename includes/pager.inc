@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.63 2007/12/06 09:58:30 goba Exp $
+// $Id: pager.inc,v 1.64 2008/10/12 04:30:05 webchick Exp $
 
 /**
  * @file
@@ -401,7 +401,7 @@ function theme_pager_link($text, $page_new, $element, $parameters = array(), $at
     if (isset($titles[$text])) {
       $attributes['title'] = $titles[$text];
     }
-    else if (is_numeric($text)) {
+    elseif (is_numeric($text)) {
       $attributes['title'] = t('Go to page @number', array('@number' => $text));
     }
   }

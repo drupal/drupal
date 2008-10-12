@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.pages.inc,v 1.6 2008/06/24 17:01:33 dries Exp $
+// $Id: comment.pages.inc,v 1.7 2008/10/12 04:30:05 webchick Exp $
 
 /**
  * @file
@@ -88,7 +88,7 @@ function comment_reply($node, $pid = NULL) {
         }
       }
       // This is the case where the comment is in response to a node. Display the node.
-      else if (user_access('access content')) {
+      elseif (user_access('access content')) {
         $output .= node_view($node);
       }
 
@@ -97,7 +97,7 @@ function comment_reply($node, $pid = NULL) {
         drupal_set_message(t("This discussion is closed: you can't post new comments."), 'error');
         drupal_goto("node/$node->nid");
       }
-      else if (user_access('post comments')) {
+      elseif (user_access('post comments')) {
         $output .= comment_form_box(array('pid' => $pid, 'nid' => $node->nid), t('Reply'));
       }
       else {

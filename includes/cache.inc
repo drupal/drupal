@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.26 2008/10/11 19:19:51 webchick Exp $
+// $Id: cache.inc,v 1.27 2008/10/12 04:30:05 webchick Exp $
 
 /**
  * Return data from the persistent cache. Data may be stored as either plain
@@ -168,7 +168,7 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
         // This is the first request to clear the cache, start a timer.
         variable_set('cache_flush', REQUEST_TIME);
       }
-      else if (REQUEST_TIME > ($cache_flush + variable_get('cache_lifetime', 0))) {
+      elseif (REQUEST_TIME > ($cache_flush + variable_get('cache_lifetime', 0))) {
         // Clear the cache for everyone, cache_flush_delay seconds have
         // passed since the first request to clear the cache.
         db_delete($table)

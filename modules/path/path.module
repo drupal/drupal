@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.148 2008/10/09 15:15:52 webchick Exp $
+// $Id: path.module,v 1.149 2008/10/12 04:30:06 webchick Exp $
 
 /**
  * @file
@@ -93,7 +93,7 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
       db_query("UPDATE {url_alias} SET src = '%s', dst = '%s', language = '%s' WHERE pid = %d", $path, $alias, $language, $pid);
     }
   }
-  else if ($path && $alias) {
+  elseif ($path && $alias) {
     // Check for existing aliases.
     if ($alias == drupal_get_path_alias($path, $language)) {
       // There is already such an alias, neutral or in this language.

@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.11 2008/10/11 21:10:59 webchick Exp $
+// $Id: blog.pages.inc,v 1.12 2008/10/12 04:30:05 webchick Exp $
 
 /**
  * @file
@@ -19,7 +19,7 @@ function blog_page_user($account) {
   if (($account->uid == $user->uid) && user_access('create blog content')) {
     $items[] = l(t('Post new blog entry.'), "node/add/blog");
   }
-  else if ($account->uid == $user->uid) {
+  elseif ($account->uid == $user->uid) {
     $items[] = t('You are not allowed to post a new blog entry.');
   }
 

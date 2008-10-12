@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.26 2008/09/15 20:48:08 webchick Exp $
+// $Id: node.admin.inc,v 1.27 2008/10/12 04:30:06 webchick Exp $
 
 /**
  * @file
@@ -224,7 +224,7 @@ function node_filter_form() {
       $value = module_invoke('taxonomy', 'get_term', $value);
       $value = $value->name;
     }
-    else if ($type == 'language') {
+    elseif ($type == 'language') {
       $value = empty($value) ? t('Language neutral') : module_invoke('locale', 'language_name', $value);
     }
     else {
