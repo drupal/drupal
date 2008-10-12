@@ -8,4 +8,4 @@ files[] = filter.module
 files[] = filter.admin.inc
 files[] = filter.pages.inc
 files[] = filter.install
-hidden = TRUE
+required = TRUE

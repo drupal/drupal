@@ -616,7 +616,7 @@ function system_modules($form_state = array()) {
 
   // Remove hidden modules from display list.
   foreach ($files as $filename => $file) {
-    if (!empty($file->info['hidden'])) {
+    if (!empty($file->info['hidden']) || !empty($file->info['required'])) {
       unset($files[$filename]);
     }
   }

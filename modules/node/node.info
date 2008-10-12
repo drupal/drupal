@@ -9,4 +9,4 @@ files[] = content_types.inc
 files[] = node.admin.inc
 files[] = node.pages.inc
 files[] = node.install
-hidden = TRUE
+required = TRUE

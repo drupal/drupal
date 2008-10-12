@@ -8,4 +8,4 @@ files[] = system.module
 files[] = system.admin.inc
 files[] = image.gd.inc
 files[] = system.install
-hidden = TRUE
+required = TRUE
