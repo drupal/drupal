@@ -1,7 +1,7 @@
 ; $Id$
 
 name = Book
-description = Allows users to structure site pages in a hierarchy or outline.
+description = Allows users to create and organize related content in an outline.
 package = Core
 version = VERSION
 core = 7.x
