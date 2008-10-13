@@ -234,18 +234,19 @@ class CronRunTestCase extends DrupalWebTestCase {
    * Test cron runs.
    */
   function testCronRun() {
+    global $base_url;
     // Run cron anonymously without any cron key.
-    $this->drupalGet('cron.php');
+    $this->drupalGet($base_url . '/cron.php', array('external' => TRUE));
     $this->assertResponse(403);
 
     // Run cron anonymously with a random cron key.
     $key = $this->randomName(16);
-    $this->drupalGet('cron.php', array('query' => 'cron_key=' . $key));
+    $this->drupalGet($base_url . '/cron.php', array('external' => TRUE, 'query' => 'cron_key=' . $key));
     $this->assertResponse(403);
 
     // Run cron anonymously with the valid cron key.
     $key = variable_get('cron_key', 'drupal');
-    $this->drupalGet('cron.php', array('query' => 'cron_key=' . $key));
+    $this->drupalGet($base_url . '/cron.php', array('external' => TRUE, 'query' => 'cron_key=' . $key));
     $this->assertResponse(200);
 
     // Execute cron directly.

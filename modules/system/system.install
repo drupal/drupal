@@ -10,6 +10,7 @@
  *   An array of system requirements.
  */
 function system_requirements($phase) {
+  global $base_url;
   $requirements = array();
   // Ensure translations don't break at install time
   $t = get_t();
@@ -171,7 +172,7 @@ function system_requirements($phase) {
     }
 
     $description .= ' ' . $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
-    $description .= '<br />' . $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url('cron.php', array('absolute' => TRUE, 'query' => 'cron_key=' . variable_get('cron_key', 'drupal')))));
+    $description .= '<br />' . $t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url($base_url . '/cron.php', array('external' => TRUE, 'query' => 'cron_key=' . variable_get('cron_key', 'drupal')))));
 
     $requirements['cron'] = array(
       'title' => $t('Cron maintenance tasks'),
