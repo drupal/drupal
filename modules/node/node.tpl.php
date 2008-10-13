@@ -2,9 +2,8 @@
 // $Id$
 
 /**
- * @file node.tpl.php
- *
- * Theme implementation to display a node.
+ * @file
+ * Default theme implementation to display a node.
  *
  * Available variables:
  * - $title: the (sanitized) title of the node.

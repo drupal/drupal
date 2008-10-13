@@ -2,9 +2,8 @@
 // $Id$
 
 /**
- * @file block.tpl.php
- *
- * Theme implementation to display a block.
+ * @file
+ * Default theme implementation to display a block.
  *
  * Available variables:
  * - $block->subject: Block title.

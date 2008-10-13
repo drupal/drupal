@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file forum-topic-navigation.tpl.php
+ * @file
  * Default theme implementation to display the topic navigation string at the
  * bottom of all forum topics.
  *

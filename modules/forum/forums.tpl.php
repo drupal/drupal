@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file forums.tpl.php
+ * @file
  * Default theme implementation to display a forum which may contain forum
  * containers as well as forum topics.
  *

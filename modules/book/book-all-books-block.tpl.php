@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file book-all-books-block.tpl.php
+ * @file
  * Default theme implementation for rendering book outlines within a block.
  * This template is used only when the block is configured to "show block on
  * all pages" which presents Multiple independent books on all pages.

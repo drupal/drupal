@@ -2,8 +2,9 @@
 // $Id$
 
 /**
- * @file search-block-form.tpl.php
- * Default theme implementation for displaying a search form within a block region.
+ * @file
+ * Default theme implementation for displaying a search form within a block
+ * region.
  *
  * Available variables:
  * - $search_form: The complete search form ready for print.

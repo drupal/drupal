@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file user-profile-item.tpl.php
+ * @file
  * Default theme implementation to present profile items (values from user
  * account profile fields or modules).
  *

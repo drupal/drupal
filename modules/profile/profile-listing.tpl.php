@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file profile-listing.tpl.php
+ * @file
  * Default theme implementation for displaying a user and their profile data
  * for member listing pages.
  *

@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file search-result.tpl.php
+ * @file
  * Default theme implementation for displaying a single search result.
  *
  * This template renders a single search result and is collected into

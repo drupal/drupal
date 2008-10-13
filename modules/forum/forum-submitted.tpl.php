@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file forum-submitted.tpl.php
+ * @file
  * Default theme implementation to format a simple string indicated when and
  * by whom a topic was submitted.
  *

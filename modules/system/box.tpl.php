@@ -2,9 +2,8 @@
 // $Id$
 
 /**
- * @file box.tpl.php
- *
- * Theme implementation to display a box.
+ * @file
+ * Default theme implementation to display a box.
  *
  * Available variables:
  * - $title: Box title.

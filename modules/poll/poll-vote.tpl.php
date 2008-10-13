@@ -2,8 +2,8 @@
 // $Id$
 
 /**
- * @file poll-vote.tpl.php
- * Voting form for a poll.
+ * @file
+ * Default theme implementation to display voting form for a poll.
  *
  * - $choice: The radio buttons for the choices in the poll.
  * - $title: The title of the poll.

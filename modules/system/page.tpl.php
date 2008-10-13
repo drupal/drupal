@@ -2,9 +2,8 @@
 // $Id$
 
 /**
- * @file page.tpl.php
- *
- * Theme implementation to display a single Drupal page.
+ * @file
+ * Default theme implementation to display a single Drupal page.
  *
  * Available variables:
  *

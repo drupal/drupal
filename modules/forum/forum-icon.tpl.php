@@ -2,8 +2,8 @@
 // $Id$
 
 /**
- * @file forum-icon.tpl.php
- * Display an appropriate icon for a forum post.
+ * @file
+ * Default theme implementation to display an appropriate icon for a forum post.
  *
  * Available variables:
  * - $new_posts: Indicates whether or not the topic contains new posts.

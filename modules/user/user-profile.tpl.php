@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file user-profile.tpl.php
+ * @file
  * Default theme implementation to present all user profile data.
  *
  * This template is used when viewing a registered member's profile page,

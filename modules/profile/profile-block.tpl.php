@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file profile-block.tpl.php
+ * @file
  * Default theme implementation for displaying a users profile within a
  * block. It only shows in relation to a node displayed as a full page.
  *

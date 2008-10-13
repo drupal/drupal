@@ -2,7 +2,8 @@
 // $Id$
 
 /**
- * @file maintenance-page.tpl.php
+ * @file
+ * Override of the default maintenance page.
  *
  * This is an override of the default maintenance page. Used for Garland and
  * Minnelli, this file should not be moved or modified since the installation

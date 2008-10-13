@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * @file user-picture.tpl.php
+ * @file
  * Default theme implementation to present an picture configured for the
  * user's account.
  *
