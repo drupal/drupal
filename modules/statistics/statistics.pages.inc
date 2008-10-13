@@ -29,7 +29,7 @@ function statistics_node_tracker() {
       $rows[] = array(array('data' => t('No statistics available.'), 'colspan' => 4));
     }
 
-    drupal_set_title(check_plain($node->title));
+    drupal_set_title($node->title);
     $output = theme('table', $header, $rows);
     $output .= theme('pager', NULL, 30, 0);
     return $output;
@@ -60,7 +60,7 @@ function statistics_user_tracker() {
       $rows[] = array(array('data' => t('No statistics available.'), 'colspan' => 3));
     }
 
-    drupal_set_title(check_plain($account->name));
+    drupal_set_title($account->name);
     $output = theme('table', $header, $rows);
     $output .= theme('pager', NULL, 30, 0);
     return $output;

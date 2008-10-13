@@ -164,7 +164,7 @@ function contact_user_page($account) {
     $output = t("You cannot send more than %number messages per hour. Please try again later.", array('%number' => variable_get('contact_hourly_threshold', 3)));
   }
   else {
-    drupal_set_title(check_plain($account->name));
+    drupal_set_title($account->name);
     $output = drupal_get_form('contact_mail_user', $account);
   }
 

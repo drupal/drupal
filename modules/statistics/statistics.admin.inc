@@ -64,7 +64,7 @@ function statistics_top_pages() {
     $rows[] = array(array('data' => t('No statistics available.'), 'colspan' => 4));
   }
 
-  drupal_set_title(t('Top pages in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))));
+  drupal_set_title(t('Top pages in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))), PASS_THROUGH);
   $output = theme('table', $header, $rows);
   $output .= theme('pager', NULL, 30, 0);
   return $output;
@@ -97,7 +97,7 @@ function statistics_top_visitors() {
     $rows[] = array(array('data' => t('No statistics available.'), 'colspan' => 4));
   }
 
-  drupal_set_title(t('Top visitors in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))));
+  drupal_set_title(t('Top visitors in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))), PASS_THROUGH);
   $output = theme('table', $header, $rows);
   $output .= theme('pager', NULL, 30, 0);
   return $output;
@@ -109,7 +109,7 @@ function statistics_top_visitors() {
 function statistics_top_referrers() {
   $query = "SELECT url, COUNT(url) AS hits, MAX(timestamp) AS last FROM {accesslog} WHERE url NOT LIKE :host AND url <> '' GROUP BY url";
   $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> '' AND url NOT LIKE :host";
-  drupal_set_title(t('Top referrers in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))));
+  drupal_set_title(t('Top referrers in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))), PASS_THROUGH);
 
   $header = array(
     array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),

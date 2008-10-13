@@ -1296,6 +1296,11 @@ function system_node_type($op, $info) {
  * confirmed the action. You should never directly inspect $_POST to see if an
  * action was confirmed.
  *
+ * Note - if the parameters $question, $description, $yes, or $no could contain
+ * any user input (such as node titles or taxonomy terms), it is the
+ * responsibility of the code calling confirm_form() to sanitize them first with
+ * a function like check_plain() or filter_xss().
+ *
  * @ingroup forms
  * @param $form
  *   Additional elements to inject into the form, for example hidden elements.
@@ -1329,7 +1334,7 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
   }
   $cancel = l($no ? $no : t('Cancel'), $path, array('query' => $query, 'fragment' => $fragment));
 
-  drupal_set_title($question);
+  drupal_set_title($question, PASS_THROUGH);
 
   // Confirm form fails duplication check, as the form values rarely change -- so skip it.
   $form['#skip_duplicate_check'] = TRUE;
