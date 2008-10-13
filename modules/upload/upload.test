@@ -21,6 +21,7 @@ class UploadTestCase extends DrupalWebTestCase {
    * Create node; upload files to node; and edit, and delete uploads.
    */
   function testNodeUpload() {
+    global $base_url;
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
     $web_user = $this->drupalCreateUser(array('access content', 'edit any page content', 'upload files', 'view uploaded files'));
 
@@ -72,7 +73,7 @@ class UploadTestCase extends DrupalWebTestCase {
       $this->assertRaw(t('Page %title has been updated.', array('%title' => $node->title)), 'File deleted successfully.');
 
       $this->assertNoText($new_name, $new_name . ' not found on node.');
-      $this->drupalGet(file_directory_path() . '/' . $upload->description);
+      $this->drupalGet($base_url . '/' . file_directory_path() . '/' . $upload->description, array('external' => TRUE));
       $this->assertResponse(array(404), 'Uploaded ' . $upload->description . ' is not accessible.');
     }
     else {
@@ -191,8 +192,9 @@ class UploadTestCase extends DrupalWebTestCase {
    * @param string $filename Name of file to verifiy.
    */
   function checkUploadedFile($filename) {
+    global $base_url;
     $file = realpath(file_directory_path() . '/' . $filename);
-    $this->drupalGet(file_directory_path() . '/' . $filename);
+    $this->drupalGet($base_url . '/' . file_directory_path() . '/' . $filename, array('external' => TRUE));
     $this->assertResponse(array(200), 'Uploaded ' . $filename . ' is accessible.');
     $this->assertEqual(file_get_contents($file), $this->drupalGetContent(), 'Uploaded contents of ' . $filename . ' verified.');
   }
