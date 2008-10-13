@@ -1,9 +1,9 @@
 <?php
-// $Id: book.module,v 1.471 2008/10/09 15:15:50 webchick Exp $
+// $Id: book.module,v 1.472 2008/10/13 19:59:41 dries Exp $
 
 /**
  * @file
- * Allows users to structure the pages of a site in a hierarchy or outline.
+ * Allows users to create and organize related content in an outline.
  */
 
 /**
