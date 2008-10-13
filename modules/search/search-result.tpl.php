@@ -1,8 +1,8 @@
 <?php
-// $Id: search-result.tpl.php,v 1.2 2008/08/28 08:21:27 dries Exp $
+// $Id: search-result.tpl.php,v 1.3 2008/10/13 12:31:42 dries Exp $
 
 /**
- * @file search-result.tpl.php
+ * @file
  * Default theme implementation for displaying a single search result.
  *
  * This template renders a single search result and is collected into

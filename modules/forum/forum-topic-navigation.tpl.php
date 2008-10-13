@@ -1,8 +1,8 @@
 <?php
-// $Id: forum-topic-navigation.tpl.php,v 1.2 2007/08/07 08:39:35 goba Exp $
+// $Id: forum-topic-navigation.tpl.php,v 1.3 2008/10/13 12:31:42 dries Exp $
 
 /**
- * @file forum-topic-navigation.tpl.php
+ * @file
  * Default theme implementation to display the topic navigation string at the
  * bottom of all forum topics.
  *

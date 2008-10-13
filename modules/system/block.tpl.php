@@ -1,10 +1,9 @@
 <?php
-// $Id: block.tpl.php,v 1.6 2008/04/14 17:48:41 dries Exp $
+// $Id: block.tpl.php,v 1.7 2008/10/13 12:31:43 dries Exp $
 
 /**
- * @file block.tpl.php
- *
- * Theme implementation to display a block.
+ * @file
+ * Default theme implementation to display a block.
  *
  * Available variables:
  * - $block->subject: Block title.

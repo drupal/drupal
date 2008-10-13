@@ -1,8 +1,9 @@
 <?php
-// $Id: maintenance-page.tpl.php,v 1.6 2008/10/11 20:45:26 webchick Exp $
+// $Id: maintenance-page.tpl.php,v 1.7 2008/10/13 12:31:43 dries Exp $
 
 /**
- * @file maintenance-page.tpl.php
+ * @file
+ * Override of the default maintenance page.
  *
  * This is an override of the default maintenance page. Used for Garland and
  * Minnelli, this file should not be moved or modified since the installation

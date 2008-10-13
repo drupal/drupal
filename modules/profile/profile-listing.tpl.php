@@ -1,8 +1,8 @@
 <?php
-// $Id: profile-listing.tpl.php,v 1.3 2008/04/23 18:25:08 dries Exp $
+// $Id: profile-listing.tpl.php,v 1.4 2008/10/13 12:31:42 dries Exp $
 
 /**
- * @file profile-listing.tpl.php
+ * @file
  * Default theme implementation for displaying a user and their profile data
  * for member listing pages.
  *

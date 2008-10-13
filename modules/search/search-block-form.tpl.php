@@ -1,9 +1,10 @@
 <?php
-// $Id: search-block-form.tpl.php,v 1.1 2007/10/31 18:06:38 dries Exp $
+// $Id: search-block-form.tpl.php,v 1.2 2008/10/13 12:31:42 dries Exp $
 
 /**
- * @file search-block-form.tpl.php
- * Default theme implementation for displaying a search form within a block region.
+ * @file
+ * Default theme implementation for displaying a search form within a block
+ * region.
  *
  * Available variables:
  * - $search_form: The complete search form ready for print.

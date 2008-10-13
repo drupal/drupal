@@ -1,10 +1,9 @@
 <?php
-// $Id: node.tpl.php,v 1.4 2008/01/25 21:21:44 goba Exp $
+// $Id: node.tpl.php,v 1.5 2008/10/13 12:31:42 dries Exp $
 
 /**
- * @file node.tpl.php
- *
- * Theme implementation to display a node.
+ * @file
+ * Default theme implementation to display a node.
  *
  * Available variables:
  * - $title: the (sanitized) title of the node.

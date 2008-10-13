@@ -1,9 +1,9 @@
 <?php
-// $Id: poll-results.tpl.php,v 1.2 2007/08/07 08:39:35 goba Exp $
+// $Id: poll-results.tpl.php,v 1.3 2008/10/13 12:31:42 dries Exp $
 
 /**
- * @file poll-results-block.tpl.php
- * Display the poll results in a block.
+ * @file
+ * Default theme implementation to display the poll results in a block.
  *
  * Variables available:
  * - $title: The title of the poll.

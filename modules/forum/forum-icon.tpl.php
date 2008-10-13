@@ -1,9 +1,9 @@
 <?php
-// $Id: forum-icon.tpl.php,v 1.3 2007/12/20 09:35:09 goba Exp $
+// $Id: forum-icon.tpl.php,v 1.4 2008/10/13 12:31:42 dries Exp $
 
 /**
- * @file forum-icon.tpl.php
- * Display an appropriate icon for a forum post.
+ * @file
+ * Default theme implementation to display an appropriate icon for a forum post.
  *
  * Available variables:
  * - $new_posts: Indicates whether or not the topic contains new posts.

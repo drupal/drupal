@@ -1,8 +1,8 @@
 <?php
-// $Id: profile-block.tpl.php,v 1.2 2007/08/07 08:39:35 goba Exp $
+// $Id: profile-block.tpl.php,v 1.3 2008/10/13 12:31:42 dries Exp $
 
 /**
- * @file profile-block.tpl.php
+ * @file
  * Default theme implementation for displaying a users profile within a
  * block. It only shows in relation to a node displayed as a full page.
  *

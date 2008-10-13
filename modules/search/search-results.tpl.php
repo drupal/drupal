@@ -1,8 +1,8 @@
 <?php
-// $Id: search-results.tpl.php,v 1.1 2007/10/31 18:06:38 dries Exp $
+// $Id: search-results.tpl.php,v 1.2 2008/10/13 12:31:42 dries Exp $
 
 /**
- * @file search-results.tpl.php
+ * @file
  * Default theme implementation for displaying search results.
  *
  * This template collects each invocation of theme_search_result(). This and

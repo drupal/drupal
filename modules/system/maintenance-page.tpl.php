@@ -1,14 +1,12 @@
 <?php
-// $Id: maintenance-page.tpl.php,v 1.3 2008/07/01 20:36:40 dries Exp $
+// $Id: maintenance-page.tpl.php,v 1.4 2008/10/13 12:31:43 dries Exp $
 
 /**
- * @file maintenance-page.tpl.php
- *
- * Theme implementation to display a single Drupal page while offline.
+ * @file
+ * Default theme implementation to display a single Drupal page while offline.
  *
  * All the available variables are mirrored in page.tpl.php. Some may be left
  * blank but they are provided for consistency.
- *
  *
  * @see template_preprocess()
  * @see template_preprocess_maintenance_page()

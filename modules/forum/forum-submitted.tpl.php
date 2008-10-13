@@ -1,8 +1,8 @@
 <?php
-// $Id: forum-submitted.tpl.php,v 1.3 2007/08/07 08:39:35 goba Exp $
+// $Id: forum-submitted.tpl.php,v 1.4 2008/10/13 12:31:42 dries Exp $
 
 /**
- * @file forum-submitted.tpl.php
+ * @file
  * Default theme implementation to format a simple string indicated when and
  * by whom a topic was submitted.
  *

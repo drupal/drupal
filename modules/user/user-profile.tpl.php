@@ -1,8 +1,8 @@
 <?php
-// $Id: user-profile.tpl.php,v 1.2 2007/08/07 08:39:36 goba Exp $
+// $Id: user-profile.tpl.php,v 1.3 2008/10/13 12:31:43 dries Exp $
 
 /**
- * @file user-profile.tpl.php
+ * @file
  * Default theme implementation to present all user profile data.
  *
  * This template is used when viewing a registered member's profile page,

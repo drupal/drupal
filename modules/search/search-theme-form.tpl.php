@@ -1,8 +1,8 @@
 <?php
-// $Id: search-theme-form.tpl.php,v 1.1 2007/10/31 18:06:38 dries Exp $
+// $Id: search-theme-form.tpl.php,v 1.2 2008/10/13 12:31:42 dries Exp $
 
 /**
- * @file search-theme-form.tpl.php
+ * @file
  * Default theme implementation for displaying a search form directly into the
  * theme layout. Not to be confused with the search block or the search page.
  *

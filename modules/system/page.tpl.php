@@ -1,10 +1,9 @@
 <?php
-// $Id: page.tpl.php,v 1.12 2008/06/25 09:12:25 dries Exp $
+// $Id: page.tpl.php,v 1.13 2008/10/13 12:31:43 dries Exp $
 
 /**
- * @file page.tpl.php
- *
- * Theme implementation to display a single Drupal page.
+ * @file
+ * Default theme implementation to display a single Drupal page.
  *
  * Available variables:
  *

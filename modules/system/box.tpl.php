@@ -1,10 +1,9 @@
 <?php
-// $Id: box.tpl.php,v 1.3 2007/12/16 21:01:45 goba Exp $
+// $Id: box.tpl.php,v 1.4 2008/10/13 12:31:43 dries Exp $
 
 /**
- * @file box.tpl.php
- *
- * Theme implementation to display a box.
+ * @file
+ * Default theme implementation to display a box.
  *
  * Available variables:
  * - $title: Box title.
