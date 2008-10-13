@@ -58,6 +58,7 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
   if ($action == 'wipe') {
     $map = array();
     $no_src = array();
+    $count = NULL;
   }
   elseif ($count > 0 && $path != '') {
     if ($action == 'alias') {
