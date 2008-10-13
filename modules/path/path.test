@@ -138,3 +138,88 @@ class PathTestCase extends DrupalWebTestCase {
     return $node;
   }
 }
+
+class PathLanguageTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Path aliases with translated nodes'),
+      'description' => t('Confirm that paths work with translated nodes'),
+      'group' => t('Path'),
+    );
+  }
+
+  /**
+   * Create user, setup permissions, log user in, and create a node.
+   */
+  function setUp() {
+    parent::setUp('path', 'locale', 'translation');
+
+    // Create and login user.
+    $web_user = $this->drupalCreateUser(array('edit own page content', 'create page content', 'administer url aliases', 'create url aliases', 'administer languages', 'translate content', 'access administration pages'));
+    $this->drupalLogin($web_user);
+
+    // Enable French language.
+    $edit = array();
+    $edit['langcode'] = 'fr';
+
+    $this->drupalPost('admin/settings/language/add', $edit, t('Add language'));
+
+    // Set language negotiation to "Path prefix with fallback".
+    variable_set('language_negotiation', LANGUAGE_NEGOTIATION_PATH);
+
+    // Force inclusion of language.inc.
+    drupal_init_language();
+  }
+
+  /**
+   * Test alias functionality through the admin interfaces.
+   */
+  function testAliasTranslation() {
+    // Set 'page' content type to enable translation.
+    variable_set('language_content_type_page', 2);
+
+    // Create a page in English.
+    $edit = array();
+    $edit['title'] = $this->randomName();
+    $edit['body'] = $this->randomName();
+    $edit['language'] = 'en';
+    $edit['path'] = $this->randomName();
+
+    $this->drupalPost('node/add/page', $edit, t('Save'));
+
+    // Check to make sure the node was created.
+    $english_node = node_load(array('title' => $edit['title']));
+    $this->assertTrue(($english_node), 'Node found in database.');
+
+    // Confirm that the alias works.
+    $this->drupalGet($edit['path']);
+    $this->assertText($english_node->title, 'Alias works.');
+
+    // Translate the node into French.
+    $this->drupalGet('node/' . $english_node->nid . '/translate');
+    $this->clickLink(t('add translation'));
+    $edit = array();
+    $edit['title'] = $this->randomName();
+    $edit['body'] = $this->randomName();
+    $edit['path'] = $this->randomName();
+    $this->drupalPost(NULL, $edit, t('Save'));
+
+    // Clear the path lookup cache.
+    drupal_lookup_path('wipe');
+
+    // Ensure the node was created.
+    // Check to make sure the node was created.
+    $french_node = node_load(array('title' => $edit['title']));
+    $this->assertTrue(($french_node), 'Node found in database.');
+
+    // Confirm that the alias works.
+    $this->drupalGet('fr/' . $edit['path']);
+    $this->assertText($french_node->title, 'Alias for French translation works.');
+
+    // Confirm that the alias is returned by url().
+    $languages = language_list();
+    $url = url('node/' . $french_node->nid, array('language' => $languages[$french_node->language]));
+    $this->assertTrue(strpos($url, $edit['path']), t('URL contains the path alias.'));
+  }
+}
+
