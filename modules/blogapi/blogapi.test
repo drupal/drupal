@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.test,v 1.5 2008/09/19 20:25:02 dries Exp $
+// $Id: blogapi.test,v 1.6 2008/10/13 12:43:30 dries Exp $
 
 class BlogAPITestCase extends DrupalWebTestCase {
   /**
@@ -24,6 +24,7 @@ class BlogAPITestCase extends DrupalWebTestCase {
    * Create, edit, and delete post; upload file; set/get categories.
    */
   function testBlogAPI() {
+    global $base_url;
     // Create admin user and taxononmy for later use.
     $admin_user = $this->drupalCreateUser(array('administer taxonomy'));
     $this->drupalLogin($admin_user);
@@ -36,7 +37,7 @@ class BlogAPITestCase extends DrupalWebTestCase {
     $this->drupalLogin($web_user);
 
     // Init common variables.
-    $local = url('xmlrpc.php', array('absolute' => TRUE));
+    $local = url($base_url . '/xmlrpc.php', array('external' => TRUE));
     $appid = 'simpletest';
 
     // Get user's blog.
