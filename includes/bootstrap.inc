@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.235 2008/10/12 08:37:14 webchick Exp $
+// $Id: bootstrap.inc,v 1.236 2008/10/13 04:06:22 webchick Exp $
 
 /**
  * @file
@@ -184,6 +184,27 @@ define('LANGUAGE_NEGOTIATION_DOMAIN', 3);
  * For convenience, define a short form of the request time global.
  */
 define('REQUEST_TIME', $_SERVER['REQUEST_TIME']);
+
+/**
+ * @name Title text filtering flags
+ * @{
+ * Flags for use in drupal_set_title().
+ */
+
+/**
+ * Flag for drupal_set_title(); text is not sanitized, so run check_plain().
+ */
+define('CHECK_PLAIN', 0);
+
+/**
+ * Flag for drupal_set_title(); text has already been sanitized.
+ */
+define('PASS_THROUGH', -1);
+
+/**
+ * @} End of "Title text filtering flags".
+ */
+
 
 /**
  * Start the timer with the specified name. If you start and stop
