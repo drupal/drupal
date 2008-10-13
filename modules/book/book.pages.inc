@@ -1,5 +1,5 @@
 <?php
-// $Id: book.pages.inc,v 1.10 2008/10/12 06:27:04 webchick Exp $
+// $Id: book.pages.inc,v 1.11 2008/10/13 00:33:01 webchick Exp $
 
 /**
  * @file
@@ -90,7 +90,7 @@ function book_export_html($nid) {
  * Menu callback; show the outline form for a single node.
  */
 function book_outline($node) {
-  drupal_set_title(check_plain($node->title));
+  drupal_set_title($node->title);
   return drupal_get_form('book_outline_form', $node);
 }
 

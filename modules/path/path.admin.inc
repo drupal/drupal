@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.13 2008/10/12 06:27:04 webchick Exp $
+// $Id: path.admin.inc,v 1.14 2008/10/13 00:33:03 webchick Exp $
 
 /**
  * @file
@@ -66,7 +66,7 @@ function path_admin_overview($keys = NULL) {
 function path_admin_edit($pid = 0) {
   if ($pid) {
     $alias = path_load($pid);
-    drupal_set_title(check_plain($alias['dst']));
+    drupal_set_title($alias['dst']);
     $output = drupal_get_form('path_admin_form', $alias);
   }
   else {

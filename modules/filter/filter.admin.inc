@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.15 2008/10/12 06:27:04 webchick Exp $
+// $Id: filter.admin.inc,v 1.16 2008/10/13 00:33:02 webchick Exp $
 
 /**
  * @file
@@ -94,7 +94,7 @@ function theme_filter_admin_overview($form) {
  */
 function filter_admin_format_page($format = NULL) {
   if (!isset($format->name)) {
-    drupal_set_title(t("Add input format"));
+    drupal_set_title(t('Add input format'), PASS_THROUGH);
     $format = (object)array('name' => '', 'roles' => '', 'format' => '');
   }
   return drupal_get_form('filter_admin_format_form', $format);
@@ -302,7 +302,7 @@ function filter_admin_delete_submit($form, &$form_state) {
  * Menu callback; display settings defined by a format's filters.
  */
 function filter_admin_configure_page($format) {
-  drupal_set_title(t("Configure %format", array('%format' => $format->name)));
+  drupal_set_title(t("Configure %format", array('%format' => $format->name)), PASS_THROUGH);
   return drupal_get_form('filter_admin_configure', $format);
 }
 
@@ -343,7 +343,7 @@ function filter_admin_configure_submit($form, &$form_state) {
  * Menu callback; display form for ordering filters for a format.
  */
 function filter_admin_order_page($format) {
-  drupal_set_title(t("Rearrange %format", array('%format' => $format->name)));
+  drupal_set_title(t("Rearrange %format", array('%format' => $format->name)), PASS_THROUGH);
   return drupal_get_form('filter_admin_order', $format);
 }
 

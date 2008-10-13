@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.21 2008/10/12 06:27:06 webchick Exp $
+// $Id: user.pages.inc,v 1.22 2008/10/13 00:33:05 webchick Exp $
 
 /**
  * @file
@@ -147,7 +147,7 @@ function user_logout() {
  * Menu callback; Displays a user or user profile page.
  */
 function user_view($account) {
-  drupal_set_title(check_plain($account->name));
+  drupal_set_title($account->name);
   // Retrieve all profile fields and attach to $account->content.
   user_build_content($account);
 
@@ -218,7 +218,7 @@ function template_preprocess_user_profile_category(&$variables) {
  * @see user_edit_submit()
  */
 function user_edit($account, $category = 'account') {
-  drupal_set_title(check_plain($account->name));
+  drupal_set_title($account->name);
   return drupal_get_form('user_profile_form', $account, $category);
 }
 
