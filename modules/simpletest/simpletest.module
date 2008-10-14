@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.19 2008/10/09 15:15:52 webchick Exp $
+// $Id: simpletest.module,v 1.20 2008/10/14 20:44:57 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -274,7 +274,7 @@ function theme_simpletest_test_table($table) {
     return '<strong>' . t('No tests to display.') . '</strong>';
   }
   else {
-    return theme('table', $header, $rows, array('id' => 'simpletest-form-table'));;
+    return theme('table', $header, $rows, array('id' => 'simpletest-form-table'));
   }
 }
 

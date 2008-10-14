@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.229 2008/10/12 04:30:06 webchick Exp $
+// $Id: filter.module,v 1.230 2008/10/14 20:44:56 dries Exp $
 
 /**
  * @file
@@ -1100,7 +1100,7 @@ function _filter_xss_attributes($attr) {
           $thisval = filter_xss_bad_protocol($match[1]);
 
           if (!$skip) {
-            $attrarr[] = "$attrname='$thisval'";;
+            $attrarr[] = "$attrname='$thisval'";
           }
           $working = 1; $mode = 0;
           $attr = preg_replace("/^'[^']*'(\s+|$)/", '', $attr);
