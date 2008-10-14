@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.296 2008/10/14 13:31:38 dries Exp $
+// $Id: menu.inc,v 1.297 2008/10/14 20:17:29 dries Exp $
 
 /**
  * @file
@@ -2279,7 +2279,7 @@ function _menu_router_build($callbacks) {
       // Look for wildcards in the form allowed to be used in PHP functions,
       // because we are using these to construct the load function names.
       // See http://php.net/manual/en/language.functions.php for reference.
-      if (preg_match('/^%([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)$/', $part, $matches)) {
+      if (preg_match('/^%(|[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)$/', $part, $matches)) {
         if (empty($matches[1])) {
           $match = TRUE;
           $load_functions[$k] = NULL;
