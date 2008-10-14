@@ -269,6 +269,7 @@ class CommentInterfaceTest extends CommentHelperCase {
     $subject_text = $this->randomName();
     $comment_text = $this->randomName();
     $comment = $this->postComment($this->node, $subject_text, $comment_text);
+    $comment_loaded = comment_load($comment->id);
     $this->assertTrue($this->commentExists($comment), t('Comment found.'));
 
     // Check comment display.
@@ -281,7 +282,19 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->assertText($subject_text, t('Individual comment-reply subject found.'));
     $this->assertText($comment_text, t('Individual comment-reply body found.'));
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName());
+    $reply_loaded = comment_load($reply->id);
     $this->assertTrue($this->commentExists($reply, TRUE), t('Reply found.'));
+    $this->assertEqual($comment->id, $reply_loaded->pid, t('Pid of a reply to a comment is set correctly.'));
+    $this->assertEqual(rtrim($comment_loaded->thread,'/').'.00/', $reply_loaded->thread, t('Thread of reply grows correctly.'));
+
+    // Second reply to comment
+    $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
+    $this->assertText($subject_text, t('Individual comment-reply subject found.'));
+    $this->assertText($comment_text, t('Individual comment-reply body found.'));
+    $reply = $this->postComment(NULL, $this->randomName(), $this->randomName());
+    $reply_loaded = comment_load($reply->id);
+    $this->assertTrue($this->commentExists($reply, TRUE), t('Second reply found.'));
+    $this->assertEqual(rtrim($comment_loaded->thread,'/').'.01/', $reply_loaded->thread, t('Thread of second reply grows correctly.'));
 
     // Edit reply.
     $this->drupalGet('comment/edit/' . $reply->id);
@@ -290,7 +303,7 @@ class CommentInterfaceTest extends CommentHelperCase {
 
     // Correct link count
     $this->drupalGet('node');
-    $this->assertRaw('2 comments', t('Link to the 2 comments exist.'));
+    $this->assertRaw('3 comments', t('Link to the 3 comments exist.'));
 
     // Pager
     $this->setCommentsPerPage(2);
