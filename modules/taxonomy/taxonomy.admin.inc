@@ -627,7 +627,7 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
   $form['#term'] = $edit;
   $form['#term']['parent'] = $parent;
   $form['#vocabulary'] = (array)$vocabulary;
-  $form['#vocabulary']['nodes'] = drupal_map_assoc($vocabulary->nodes);;
+  $form['#vocabulary']['nodes'] = drupal_map_assoc($vocabulary->nodes);
 
   // Check for confirmation forms.
   if (isset($form_state['confirm_delete'])) {

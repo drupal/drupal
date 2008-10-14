@@ -1100,7 +1100,7 @@ function _filter_xss_attributes($attr) {
           $thisval = filter_xss_bad_protocol($match[1]);
 
           if (!$skip) {
-            $attrarr[] = "$attrname='$thisval'";;
+            $attrarr[] = "$attrname='$thisval'";
           }
           $working = 1; $mode = 0;
           $attr = preg_replace("/^'[^']*'(\s+|$)/", '', $attr);

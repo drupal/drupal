@@ -2054,7 +2054,7 @@ function system_goto_action($object, $context) {
  */
 function system_block_ip_action() {
   $ip = ip_address();
-  db_query("INSERT INTO {blocked_ips} (ip) VALUES ('%s')", $ip);;
+  db_query("INSERT INTO {blocked_ips} (ip) VALUES ('%s')", $ip);
   watchdog('action', 'Banned IP address %ip', array('%ip' => $ip));
 }
 

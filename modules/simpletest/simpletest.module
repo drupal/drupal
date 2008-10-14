@@ -274,7 +274,7 @@ function theme_simpletest_test_table($table) {
     return '<strong>' . t('No tests to display.') . '</strong>';
   }
   else {
-    return theme('table', $header, $rows, array('id' => 'simpletest-form-table'));;
+    return theme('table', $header, $rows, array('id' => 'simpletest-form-table'));
   }
 }
 
