@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.24 2008/10/12 06:27:01 webchick Exp $
+// $Id: batch.inc,v 1.25 2008/10/14 11:01:08 webchick Exp $
 
 /**
  * @file Batch processing API for processes to run in multiple HTTP requests.
@@ -80,10 +80,10 @@ function _batch_start() {
 function _batch_progress_page_js() {
   $batch = batch_get();
 
-  // The first batch set gets to set the page title
-  // and the initialization and error messages.
+  // The first batch set gets to set the page title and the initialization and
+  // error messages. Only safe strings should be passed in to batch_set().
   $current_set = _batch_current_set();
-  drupal_set_title($current_set['title']);
+  drupal_set_title($current_set['title'], PASS_THROUGH);
   drupal_add_js('misc/progress.js', 'core', 'header', FALSE, FALSE);
 
   $url = url($batch['url'], array('query' => array('id' => $batch['id'])));
@@ -126,7 +126,7 @@ function _batch_progress_page_nojs() {
   $batch =& batch_get();
   $current_set = _batch_current_set();
 
-  drupal_set_title($current_set['title']);
+  drupal_set_title($current_set['title'], PASS_THROUGH);
 
   $new_op = 'do_nojs';
 

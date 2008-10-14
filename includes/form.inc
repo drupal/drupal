@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.295 2008/10/12 06:27:03 webchick Exp $
+// $Id: form.inc,v 1.296 2008/10/14 11:01:08 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2378,6 +2378,11 @@ function form_clean_id($id = NULL, $flush = FALSE) {
  * // only needed if not inside a form _submit handler :
  * batch_process();
  * @endcode
+ *
+ * Note - if the batch 'title', 'init_message', 'progress_message',
+ * or 'error_message' could contain any user input, it is the responsibility of
+ * the code calling batch_set() to sanitize them first with a function like
+ * check_plain() or filter_xss().
  *
  * Sample batch operations:
  * @code
