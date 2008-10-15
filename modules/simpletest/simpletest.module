@@ -337,6 +337,13 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
     'init_message' => t('SimpleTest is initializing...') . ' ' . format_plural(count($test_list), "one test case will run.", "@count test cases will run."),
   );
   batch_set($batch);
+  // Normally, the forms portion of the batch API takes care of calling
+  // batch_process(), but in the process it saves the whole $form into the
+  // database (which is huge for the test selection form).
+  // By calling batch_process() directly, we skip that behavior and ensure
+  // that we don't exceed the size of data that can be sent to the database
+  // (max_allowed_packet on MySQL).
+  batch_process();
 }
 
 /**

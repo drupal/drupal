@@ -2544,8 +2544,8 @@ function batch_set($batch_definition) {
  * Unless the batch has been marked with 'progressive' = FALSE, the function
  * issues a drupal_goto and thus ends page execution.
  *
- * This function is not needed in form submit handlers; Form API takes care
- * of batches that were set during form submission.
+ * This function is generally not needed in form submit handlers;
+ * Form API takes care of batches that were set during form submission.
  *
  * @param $redirect
  *   (optional) Path to redirect to when the batch has finished processing.
