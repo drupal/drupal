@@ -1,5 +1,5 @@
 <?php
-// $Id: system_test.module,v 1.3 2008/10/11 22:46:21 webchick Exp $
+// $Id: system_test.module,v 1.4 2008/10/15 16:05:51 dries Exp $
 
 /**
  * Implementation of hook_menu().
@@ -45,6 +45,27 @@ function system_test_menu() {
     'page callback' => 'variable_get',
     'page arguments' => array('simpletest_bootstrap_variable_test', NULL),
     'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/generate-warnings'] = array(
+    'title' => 'Generate warnings',
+    'page callback' => 'system_test_generate_warnings',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/trigger-exception'] = array(
+    'title' => 'Trigger an exception',
+    'page callback' => 'system_test_trigger_exception',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/trigger-pdo-exception'] = array(
+    'title' => 'Trigger a PDO exception',
+    'page callback' => 'system_test_trigger_pdo_exception',
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -119,4 +140,31 @@ function system_test_modules_uninstalled($modules) {
   if (in_array('aggregator', $modules)) {
     drupal_set_message(t('hook_modules_uninstalled fired for aggregator'));
   }
+}
+
+/**
+ * Menu callback; generate warnings to test the error handler.
+ */
+function system_test_generate_warnings() {
+  // This will generate a notice.
+  $monkey_love = $bananas;
+  // This will generate a warning.
+  $awesomely_big = 1/0;
+  // This will generate a user error.
+  trigger_error("Drupal is awesome", E_USER_NOTICE);
+  return "";
+}
+
+/**
+ * Menu callback; trigger an exception to test the exception handler.
+ */
+function system_test_trigger_exception() {
+  throw new Exception("Drupal is awesome");
+}
+
+/**
+ * Menu callback; trigger an exception to test the exception handler.
+ */
+function system_test_trigger_pdo_exception() {
+  db_query("SELECT * FROM bananas_are_awesome");
 }

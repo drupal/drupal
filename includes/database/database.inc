@@ -1,17 +1,10 @@
 <?php
-// $Id: database.inc,v 1.12 2008/10/08 11:21:37 dries Exp $
+// $Id: database.inc,v 1.13 2008/10/15 16:05:51 dries Exp $
 
 /**
  * @file
  * Base classes for the database layer.
  */
-
-/**
- * A hash value to check when outputting database errors, md5('DB_ERROR').
- *
- * @see drupal_error_handler()
- */
-define('DB_ERROR', 'a515ac9c2796ca0e23adbe92c68fc9fc');
 
 /**
  * @defgroup database Database abstraction layer

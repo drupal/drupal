@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.50 2008/10/12 08:30:05 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.51 2008/10/15 16:05:51 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -322,8 +322,7 @@ class DrupalWebTestCase {
    * @see set_error_handler
    */
   function errorHandler($severity, $message, $file = NULL, $line = NULL) {
-    $severity = $severity & error_reporting();
-    if ($severity) {
+    if ($severity & error_reporting()) {
       $error_map = array(
         E_STRICT => 'Run-time notice',
         E_WARNING => 'Warning',
