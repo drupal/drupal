@@ -322,8 +322,7 @@ class DrupalWebTestCase {
    * @see set_error_handler
    */
   function errorHandler($severity, $message, $file = NULL, $line = NULL) {
-    $severity = $severity & error_reporting();
-    if ($severity) {
+    if ($severity & error_reporting()) {
       $error_map = array(
         E_STRICT => 'Run-time notice',
         E_WARNING => 'Warning',

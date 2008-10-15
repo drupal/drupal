@@ -371,6 +371,10 @@ function drupal_initialize_variables() {
   if (!isset($_SERVER['SERVER_PROTOCOL']) || ($_SERVER['SERVER_PROTOCOL'] != 'HTTP/1.0' && $_SERVER['SERVER_PROTOCOL'] != 'HTTP/1.1')) {
     $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.0';
   }
+  // Enforce E_ALL, but allow users to set levels not part of E_ALL.
+  error_reporting(E_ALL | error_reporting());
+  // Prevent PHP from generating HTML errors messages.
+  ini_set('html_errors', 0);
 }
 
 /**

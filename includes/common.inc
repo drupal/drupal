@@ -583,55 +583,122 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
  */
 
 /**
- * Log errors as defined by administrator.
+ * Custom PHP error handler.
  *
- * Error levels:
- * - 0 = Log errors to database.
- * - 1 = Log errors to database and to screen.
+ * @param $error_level
+ *   The level of the error raised.
+ * @param $message
+ *   The error message.
+ * @param $filename
+ *   The filename that the error was raised in.
+ * @param $line
+ *   The line number the error was raised at.
+ * @param $context
+ *   An array that points to the active symbol table at the point the error occurred.
  */
-function drupal_error_handler($errno, $message, $filename, $line, $context) {
-  // If the @ error suppression operator was used, error_reporting will have
-  // been temporarily set to 0.
-  if (error_reporting() == 0) {
-    return;
-  }
-
-  if ($errno & (E_ALL)) {
-    $types = array(1 => 'error', 2 => 'warning', 4 => 'parse error', 8 => 'notice', 16 => 'core error', 32 => 'core warning', 64 => 'compile error', 128 => 'compile warning', 256 => 'user error', 512 => 'user warning', 1024 => 'user notice', 2048 => 'strict warning', 4096 => 'recoverable fatal error');
-
-    // For database errors, we want the line number/file name of the place that
-    // the query was originally called, not _db_query().
-    if (isset($context[DB_ERROR])) {
-      $backtrace = array_reverse(debug_backtrace());
-
-      // List of functions where SQL queries can originate.
-      $query_functions = array('db_query', 'pager_query', 'db_query_range', 'db_query_temporary', 'update_sql');
-
-      // Determine where query function was called, and adjust line/file
-      // accordingly.
-      foreach ($backtrace as $index => $function) {
-        if (in_array($function['function'], $query_functions)) {
-          $line = $backtrace[$index]['line'];
-          $filename = $backtrace[$index]['file'];
-          break;
-        }
-      }
-    }
-
-    $entry = $types[$errno] . ': ' . $message . ' in ' . $filename . ' on line ' . $line . '.';
-
-    // Force display of error messages in update.php.
-    if (variable_get('error_level', 1) == 1 || strstr($_SERVER['SCRIPT_NAME'], 'update.php')) {
-      drupal_set_message($entry, 'error');
-    }
-
-    watchdog('php', '%message in %file on line %line.', array('%error' => $types[$errno], '%message' => $message, '%file' => $filename, '%line' => $line), WATCHDOG_ERROR);
+function _drupal_error_handler($error_level, $message, $filename, $line, $context) {
+  if ($error_level & error_reporting()) {
+    // All these constants are documented at http://php.net/manual/en/errorfunc.constants.php
+    $types = array(
+      E_ERROR => 'Error',
+      E_WARNING => 'Warning',
+      E_PARSE => 'Parse error',
+      E_NOTICE => 'Notice',
+      E_CORE_ERROR => 'Core error',
+      E_CORE_WARNING => 'Core warning',
+      E_COMPILE_ERROR => 'Compile error',
+      E_COMPILE_WARNING => 'Compile warning',
+      E_USER_ERROR => 'User error',
+      E_USER_WARNING => 'User warning',
+      E_USER_NOTICE => 'User notice',
+      E_STRICT => 'Strict warning',
+      E_RECOVERABLE_ERROR => 'Recoverable fatal error'
+    );
+    $backtrace = debug_backtrace();
+    // We treat recoverable errors as fatal.
+    _drupal_log_error(isset($types[$error_level]) ? $types[$error_level] : 'Unknown error', $message, $backtrace, $error_level == E_RECOVERABLE_ERROR);
   }
 }
 
 /**
- * Gets the last caller (file name and line of the call, function in which the
- * call originated) from a backtrace.
+ * Custom PHP exception handler.
+ *
+ * Uncaught exceptions are those not enclosed in a try/catch block. They are
+ * always fatal: the execution of the script will stop as soon as the exception
+ * handler exits.
+ *
+ * @param $exception
+ *   The exception object that was thrown.
+ */
+function _drupal_exception_handler($exception) {
+  $backtrace = $exception->getTrace();
+  // Add the line throwing the exception to the backtrace.
+  array_unshift($backtrace, array('line' => $exception->getLine(), 'file' => $exception->getFile()));
+
+  // For PDOException errors, we try to return the initial caller,
+  // skipping internal functions of the database layer.
+  if ($exception instanceof PDOException) {
+    // The first element in the stack is the call, the second element gives us the caller.
+    // We skip calls that occurred in one of the classes of the database layer
+    // or in one of its global functions.
+    $db_functions = array('db_query', 'pager_query', 'db_query_range', 'db_query_temporary', 'update_sql');
+    while (($caller = $backtrace[1]) &&
+         ((isset($caller['class']) && (strpos($caller['class'], 'Query') !== FALSE || strpos($caller['class'], 'Database') !== FALSE)) ||
+         in_array($caller['function'], $db_functions))) {
+      // We remove that call.
+      array_shift($backtrace);
+    }
+  }
+
+  // Log the message to the watchdog and return an error page to the user.
+  _drupal_log_error(get_class($exception), $exception->getMessage(), $backtrace, TRUE);
+}
+
+/**
+ * Log a PHP error or exception, display an error page in fatal cases.
+ *
+ * @param $type
+ *   The type of the error (Error, Warning, ...).
+ * @param $message
+ *   The message associated to the error.
+ * @param $backtrace
+ *   The backtrace of function calls that led to this error.
+ * @param $fatal
+ *   TRUE if the error is fatal.
+ */
+function _drupal_log_error($type, $message, $backtrace, $fatal) {
+  $caller = _drupal_get_last_caller($backtrace);
+
+  // Initialize a maintenance theme early if the boostrap was not complete.
+  // Do it early because drupal_set_message() triggers an init_theme().
+  if ($fatal && (drupal_get_bootstrap_phase() != DRUPAL_BOOTSTRAP_FULL)) {
+    unset($GLOBALS['theme']);
+    define('MAINTENANCE_MODE', 'error');
+    drupal_maintenance_theme();
+  }
+
+  // Force display of error messages in update.php.
+  if (variable_get('error_level', 1) == 1 || (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update')) {
+    drupal_set_message(t('@type: %message in %function (line %line of %file).', array('@type' => $type, '%message' => $message, '%function' => $caller['function'], '%line' => $caller['line'], '%file' => $caller['file'])), 'error');
+  }
+
+  watchdog('php', '%type: %message in %function (line %line of %file).', array('%type' => $type, '%message' => $message, '%function' => $caller['function'], '%file' => $caller['file'], '%line' => $caller['line']), WATCHDOG_ERROR);  
+
+  if ($fatal) {
+    drupal_set_header($_SERVER['SERVER_PROTOCOL'] . ' Service unavailable');
+    drupal_set_title(t('Error'));
+    if (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
+      print theme('page', t('The website encountered an unexpected error. Please try again later.'), FALSE);
+    }
+    else {
+      print theme('maintenance_page', t('The website encountered an unexpected error. Please try again later.'), FALSE);      
+    }
+    exit;
+  }
+}
+
+/**
+ * Gets the last caller from a backtrace.
  *
  * @param $backtrace
  *   A standard PHP backtrace.
@@ -2514,7 +2581,9 @@ function _drupal_bootstrap_full() {
   require_once DRUPAL_ROOT . '/includes/mail.inc';
   require_once DRUPAL_ROOT . '/includes/actions.inc';
   // Set the Drupal custom error handler.
-  set_error_handler('drupal_error_handler');
+  set_error_handler('_drupal_error_handler');
+  set_exception_handler('_drupal_exception_handler');
+
   // Emit the correct charset HTTP header.
   drupal_set_header('Content-Type: text/html; charset=utf-8');
   // Detect string handling method

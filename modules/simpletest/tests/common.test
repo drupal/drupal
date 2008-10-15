@@ -251,3 +251,52 @@ class DrupalSetContentTestCase extends DrupalWebTestCase {
     }
   }
 }
+
+/**
+ * Tests Drupal error and exception handlers.
+ */
+class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Drupal error handlers'),
+      'description' => t("Performs tests on the Drupal error and exception handler."),
+      'group' => t('System'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('system_test');
+  }
+
+  /**
+   * Test the error handler.
+   */
+  function testErrorHandler() {
+    $this->drupalGet('system-test/generate-warnings');
+
+    $this->assertErrorMessage('Notice', 'system_test.module', 'system_test_generate_warnings() ', 'Undefined variable');
+    $this->assertErrorMessage('Warning', 'system_test.module', 'system_test_generate_warnings() ', 'Division by zero');
+    $this->assertErrorMessage('User notice', 'system_test.module', 'system_test_generate_warnings() ', 'Drupal is awesome');
+  }
+
+  /**
+   * Test the exception handler.
+   */
+  function testExceptionHandler() {
+    $this->drupalGet('system-test/trigger-exception');
+    $this->assertErrorMessage('Exception', 'system_test.module', 'system_test_trigger_exception()', 'Drupal is awesome');
+
+    $this->drupalGet('system-test/trigger-pdo-exception');
+    $this->assertErrorMessage('PDOException', 'system_test.module', 'system_test_trigger_pdo_exception()', 'Base table or view not found');
+  }
+
+  /**
+   * Helper function: assert that the logged message is correct.
+   */
+  function assertErrorMessage($type, $file, $function, $message) {
+    $this->assertText($type, t("Found '%type' in error page.", array('%type' => $type)));
+    $this->assertText($file, t("Found '%file' in error page.", array('%file' => $file)));
+    $this->assertText($function, t("Found '%function' in error page.", array('%function' => $function)));
+    $this->assertText($message, t("Found '%message' in error page.", array('%message' => $message)));
+  }
+}
