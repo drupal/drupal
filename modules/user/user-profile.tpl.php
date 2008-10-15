@@ -13,7 +13,7 @@
  * It is keyed to the name of each category or other data attached to the
  * account. If it is a category it will contain all the profile items. By
  * default $profile['summary'] is provided which contains data on the user's
- * history. Other data can be included by modules. $profile['picture'] is
+ * history. Other data can be included by modules. $profile['user_picture'] is
  * available by default showing the account picture.
  *
  * Also keep in mind that profile items and their categories can be defined by
@@ -26,17 +26,19 @@
  *
  * To check for all available data within $profile, use the code below.
  *
- *   <?php print '<pre>'. check_plain(print_r($profile, 1)) .'</pre>'; ?>
+ * @code
+ *   print '<pre>'. check_plain(print_r($profile, 1)) .'</pre>';
+ * @endcode
  *
  * @see user-profile-category.tpl.php
- *      where the html is handled for the group.
+ *   Where the html is handled for the group.
  * @see user-profile-field.tpl.php
- *      where the html is handled for each item in the group.
+ *   Where the html is handled for each item in the group.
  *
  * Available variables:
- * - $user_profile: All user profile data. Ready for print.
- * - $profile: Keyed array of profile categories and their items or other data
- *   provided by modules.
+ *   - $user_profile: All user profile data. Ready for print.
+ *   - $profile: Keyed array of profile categories and their items or other data
+ *     provided by modules.
  *
  * @see template_preprocess_user_profile()
  */
