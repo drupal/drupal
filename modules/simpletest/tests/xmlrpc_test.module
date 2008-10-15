@@ -30,7 +30,7 @@ function xmlrpc_test_echoStructTest($array) {
 }
 
 function xmlrpc_test_manyTypesTest($number, $boolean, $string, $double, $dateTime, $base64) {
-  $timestamp = mktime($dateTime->hour, $dateTime->minute, $dateTime->second, $dateTime->month, $dateTime->day, $dateTime->year);
+  $timestamp = gmmktime($dateTime->hour, $dateTime->minute, $dateTime->second, $dateTime->month, $dateTime->day, $dateTime->year);
   return array($number, $boolean, $string, $double, xmlrpc_date($timestamp), xmlrpc_Base64($base64));
 }
 

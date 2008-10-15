@@ -381,13 +381,13 @@ function xmlrpc_date($time) {
   $xmlrpc_date->is_date = TRUE;
   // $time can be a PHP timestamp or an ISO one
   if (is_numeric($time)) {
-    $xmlrpc_date->year = date('Y', $time);
-    $xmlrpc_date->month = date('m', $time);
-    $xmlrpc_date->day = date('d', $time);
-    $xmlrpc_date->hour = date('H', $time);
-    $xmlrpc_date->minute = date('i', $time);
-    $xmlrpc_date->second = date('s', $time);
-    $xmlrpc_date->iso8601 = date('Ymd\TH:i:s', $time);
+    $xmlrpc_date->year = gmdate('Y', $time);
+    $xmlrpc_date->month = gmdate('m', $time);
+    $xmlrpc_date->day = gmdate('d', $time);
+    $xmlrpc_date->hour = gmdate('H', $time);
+    $xmlrpc_date->minute = gmdate('i', $time);
+    $xmlrpc_date->second = gmdate('s', $time);
+    $xmlrpc_date->iso8601 = gmdate('Ymd\TH:i:s', $time);
   }
   else {
     $xmlrpc_date->iso8601 = $time;
