@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc_test.module,v 1.2 2008/09/17 16:49:41 webchick Exp $
+// $Id: xmlrpc_test.module,v 1.3 2008/10/15 13:56:08 dries Exp $
 
 function xmlrpc_test_arrayOfStructsTest($array) {
   $sum = 0;
@@ -30,7 +30,7 @@ function xmlrpc_test_echoStructTest($array) {
 }
 
 function xmlrpc_test_manyTypesTest($number, $boolean, $string, $double, $dateTime, $base64) {
-  $timestamp = mktime($dateTime->hour, $dateTime->minute, $dateTime->second, $dateTime->month, $dateTime->day, $dateTime->year);
+  $timestamp = gmmktime($dateTime->hour, $dateTime->minute, $dateTime->second, $dateTime->month, $dateTime->day, $dateTime->year);
   return array($number, $boolean, $string, $double, xmlrpc_date($timestamp), xmlrpc_Base64($base64));
 }
 
