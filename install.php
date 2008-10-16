@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.135 2008/10/11 18:20:53 webchick Exp $
+// $Id: install.php,v 1.136 2008/10/16 13:47:06 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -853,7 +853,7 @@ function _install_module_batch($module, $module_name, &$context) {
   // steps.
   module_enable(array($module));
   $context['results'][] = $module;
-  $context['message'] = 'Installed ' . $module_name . ' module.';
+  $context['message'] = st('Installed %module module.', array('%module' => $module_name));
 }
 
 /**
