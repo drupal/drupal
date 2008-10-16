@@ -645,14 +645,14 @@ function system_modules($form_state = array()) {
     if (is_array($module->info['dependencies'])) {
       foreach ($module->info['dependencies'] as $dependency) {
         if (!isset($files[$dependency])) {
-          $extra['dependencies'][$dependency] = drupal_ucfirst($dependency) . t(' (<span class="admin-missing">missing</span>)');
+          $extra['dependencies'][$dependency] = t('@module (<span class="admin-missing">missing</span>)', array('@module' => drupal_ucfirst($dependency)));
           $extra['disabled'] = TRUE;
         }
         elseif (!$files[$dependency]->status) {
-          $extra['dependencies'][$dependency] = $files[$dependency]->info['name'] . t(' (<span class="admin-disabled">disabled</span>)');
+          $extra['dependencies'][$dependency] = t('@module (<span class="admin-disabled">disabled</span>)', array('@module' => $files[$dependency]->info['name']));
         }
         else {
-          $extra['dependencies'][$dependency] = $files[$dependency]->info['name'] . t(' (<span class="admin-enabled">enabled</span>)');
+          $extra['dependencies'][$dependency] = t('@module (<span class="admin-enabled">enabled</span>)', array('@module' => $files[$dependency]->info['name']));
         }
       }
     }
@@ -667,11 +667,11 @@ function system_modules($form_state = array()) {
     $dependents = array();
     foreach ($module->info['dependents'] as $dependent) {
       if ($files[$dependent]->status == 1) {
-        $extra['dependents'][] = $files[$dependent]->info['name'] . t(' (<span class="admin-enabled">enabled</span>)');
+        $extra['dependents'][] = t('@module (<span class="admin-enabled">enabled</span>)', array('@module' => $files[$dependent]->info['name']));
         $extra['disabled'] = TRUE;
       }
       else {
-        $extra['dependents'][] = $files[$dependent]->info['name'] . t(' (<span class="admin-disabled">disabled</span>)');
+        $extra['dependents'][] = t('@module (<span class="admin-disabled">disabled</span>)', array('@module' => $files[$dependent]->info['name']));
       }
     }
     $form['modules'][$module->info['package']][$filename] = _system_modules_build_row($module->info, $extra);
