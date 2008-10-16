@@ -853,7 +853,7 @@ function _install_module_batch($module, $module_name, &$context) {
   // steps.
   module_enable(array($module));
   $context['results'][] = $module;
-  $context['message'] = 'Installed ' . $module_name . ' module.';
+  $context['message'] = st('Installed %module module.', array('%module' => $module_name));
 }
 
 /**
