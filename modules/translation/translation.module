@@ -244,8 +244,8 @@ function translation_nodeapi(&$node, $op, $teaser, $page) {
  */
 function translation_remove_from_set($node) {
   if (isset($node->tnid)) {
-    if (db_result(db_query('SELECT COUNT(*) FROM {node} WHERE tnid = %d', $node->tnid)) <= 2) {
-      // There would only be one node left in the set: remove the set altogether.
+    if (db_result(db_query('SELECT COUNT(*) FROM {node} WHERE tnid = %d', $node->tnid)) == 1) {
+      // There is only one node left in the set: remove the set altogether.
       db_query('UPDATE {node} SET tnid = 0, translate = 0 WHERE tnid = %d', $node->tnid);
     }
     else {
