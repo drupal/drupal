@@ -123,7 +123,6 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
    * Test that connections return appropriate connection objects.
    */
   function testConnectionRouting() {
-
     // Clone the master credentials to a slave connection.
     // Note this will result in two independent connection objects that happen
     // to point to the same place.
@@ -156,7 +155,6 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
 
     $this->assertIdentical($db1, $db2, t('Both targets refer to the same connection.'));
   }
-
 }
 
 /**
@@ -351,7 +349,7 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
    * Test that we can insert multiple records in one query object.
    */
   function testMultiInsert() {
-  	try {
+    try {
       $num_records_before = (int) db_query("SELECT COUNT(*) FROM {test}")->fetchField();
 
       $query = db_insert('test');
@@ -379,7 +377,7 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
       $this->assertIdentical($saved_age, '31', t('Can retrieve by name.'));
       $saved_age = db_query("SELECT age FROM {test} WHERE name = :name", array(':name' => 'Moe'))->fetchField();
       $this->assertIdentical($saved_age, '32', t('Can retrieve by name.'));
-  	}
+    }
     catch (Exception $e) {
       $this->assertTrue(FALSE, $e->getMessage());
     }
@@ -419,7 +417,7 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
       $this->assertIdentical($saved_age, '31', t('Can retrieve by name.'));
       $saved_age = db_query("SELECT age FROM {test} WHERE name = :name", array(':name' => 'Moe'))->fetchField();
       $this->assertIdentical($saved_age, '32', t('Can retrieve by name.'));
-  	}
+    }
     catch (Exception $e) {
       $this->assertTrue(FALSE, $e->getMessage());
     }
@@ -453,7 +451,7 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
         ->execute();
 
       $this->assertIdentical($id, '5', t('Auto-increment ID returned successfully.'));
-  	}
+    }
     catch (Exception $e) {
       $this->assertTrue(FALSE, $e->getMessage());
     }
@@ -1653,5 +1651,156 @@ class DatabaseRegressionTestCase extends DatabaseTestCase {
 
     $from_database = db_query("SELECT name FROM {test} WHERE name = :name", array(':name' => $name))->fetchField();
     $this->assertIdentical($name, $from_database, t("The database handles UTF-8 characters cleanly."));
+  }
+}
+
+/**
+ * Query logging tests.
+ */
+class DatabaseLoggingTestCase extends DatabaseTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => t('Query logging'),
+      'description' => t('Test the query logging facility.'),
+      'group' => t('Database'),
+    );
+  }
+
+  /**
+   * Test that we can log the existence of a query.
+   */
+  function testEnableLogging() {
+    try {
+      Database::startLog('testing');
+
+      db_query("SELECT name FROM {test} WHERE age > :age", array(':age' => 25))->fetchCol();
+      db_query("SELECT age FROM {test} WHERE name = :name", array(':name' => 'Ringo'))->fetchCol();
+
+      $queries = Database::getLog('testing', 'default');
+
+      $this->assertEqual(count($queries), 2, t('Correct number of queries recorded.'));
+
+      foreach ($queries as $query) {
+        $this->assertEqual($query['caller']['function'], __FUNCTION__, t('Correct function in query log.'));
+      }
+    }
+    catch(Exception $e) {
+      $this->fail($e->getMessage());
+    }
+  }
+
+  /**
+   * Test that we can run two logs in parallel.
+   */
+  function testEnableMultiLogging() {
+    try {
+      Database::startLog('testing1');
+
+      db_query("SELECT name FROM {test} WHERE age > :age", array(':age' => 25))->fetchCol();
+
+      Database::startLog('testing2');
+
+      db_query("SELECT age FROM {test} WHERE name = :name", array(':name' => 'Ringo'))->fetchCol();
+
+      $queries1 = Database::getLog('testing1');
+      $queries2 = Database::getLog('testing2');
+
+      $this->assertEqual(count($queries1), 2, t('Correct number of queries recorded for log 1.'));
+      $this->assertEqual(count($queries2), 1, t('Correct number of queries recorded for log 2.'));
+    }
+    catch(Exception $e) {
+      $this->fail($e->getMessage());
+    }
+  }
+
+  /**
+   * Test that we can log queries against multiple targets on the same connection.
+   */
+  function testEnableTargetLogging() {
+    try {
+      // Clone the master credentials to a slave connection and to another fake
+      // connection.
+      $connection_info = Database::getConnectionInfo('default');
+      Database::addConnectionInfo('default', 'slave', $connection_info['default']);
+
+      Database::startLog('testing1');
+
+      db_query("SELECT name FROM {test} WHERE age > :age", array(':age' => 25))->fetchCol();
+
+      db_query("SELECT age FROM {test} WHERE name = :name", array(':name' => 'Ringo'), array('target' => 'slave'));//->fetchCol();
+
+      $queries1 = Database::getLog('testing1');
+
+      $this->assertEqual(count($queries1), 2, t('Recorded queries from all targets.'));
+      $this->assertEqual($queries1[0]['target'], 'default', t('First query used default target.'));
+      $this->assertEqual($queries1[1]['target'], 'slave', t('Second query used slave target.'));
+    }
+    catch(Exception $e) {
+      $this->fail($e->getMessage());
+    }
+  }
+
+  /**
+   * Test that logs to separate targets collapse to the same connection properly.
+   *
+   * This test is identical to the one above, except that it doesn't create
+   * a fake target so the query should fall back to running on the default
+   * target.
+   */
+  function testEnableTargetLoggingNoTarget() {
+    try {
+      Database::startLog('testing1');
+
+      db_query("SELECT name FROM {test} WHERE age > :age", array(':age' => 25))->fetchCol();
+
+      // We use "fake" here as a target because any non-existent target will do.
+      // However, because all of the tests in this class share a single page
+      // request there is likely to be a target of "slave" from one of the other
+      // unit tests, so we use a target here that we know with absolute certainty
+      // does not exist.
+      db_query("SELECT age FROM {test} WHERE name = :name", array(':name' => 'Ringo'), array('target' => 'fake'))->fetchCol();
+
+      $queries1 = Database::getLog('testing1');
+
+      $this->assertEqual(count($queries1), 2, t('Recorded queries from all targets.'));
+      $this->assertEqual($queries1[0]['target'], 'default', t('First query used default target.'));
+      $this->assertEqual($queries1[1]['target'], 'default', t('Second query used default target as fallback.'));
+    }
+    catch(Exception $e) {
+      $this->fail($e->getMessage());
+    }
+  }
+
+  /**
+   * Test that we can log queries separately on different connections.
+   */
+  function testEnableMultiConnectionLogging() {
+    try {
+      // Clone the master credentials to a fake connection.
+      // That both connections point to the same physical database is irrelevant.
+      $connection_info = Database::getConnectionInfo('default');
+      Database::addConnectionInfo('test2', 'default', $connection_info['default']);
+
+      Database::startLog('testing1');
+      Database::startLog('testing1', 'test2');
+
+      db_query("SELECT name FROM {test} WHERE age > :age", array(':age' => 25))->fetchCol();
+
+      $old_key = db_set_active('test2');
+
+      db_query("SELECT age FROM {test} WHERE name = :name", array(':name' => 'Ringo'), array('target' => 'slave'))->fetchCol();
+
+      db_set_active($old_key);
+
+      $queries1 = Database::getLog('testing1');
+      $queries2 = Database::getLog('testing1', 'test2');
+
+      $this->assertEqual(count($queries1), 1, t('Correct number of queries recorded for first connection.'));
+      $this->assertEqual(count($queries2), 1, t('Correct number of queries recorded for second connection.'));
+    }
+    catch(Exception $e) {
+      $this->fail($e->getMessage());
+    }
   }
 }

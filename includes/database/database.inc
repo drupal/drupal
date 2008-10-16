@@ -139,6 +139,22 @@ abstract class DatabaseConnection extends PDO {
    */
   public $lastStatement;
 
+  /**
+   * The database target this connection is for.
+   *
+   * We need this information for later auditing and logging.
+   *
+   * @var string
+   */
+  protected $target = NULL;
+
+  /**
+   * The current database logging object for this connection.
+   *
+   * @var DatabaseLog
+   */
+  protected $logger = NULL;
+
   function __construct($dsn, $username, $password, $driver_options = array()) {
     $driver_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION; // Because the other methods don't seem to work right.
     parent::__construct($dsn, $username, $password, $driver_options);
@@ -260,6 +276,55 @@ abstract class DatabaseConnection extends PDO {
       $statements[$query] = parent::prepare($query);
     }
     return $statements[$query];
+  }
+
+  /**
+   * Tell this connection object what its target value is.
+   *
+   * This is needed for logging and auditing.  It's sloppy to do in the
+   * constructor because the constructor for child classes has a different
+   * signature.  We therefore also ensure that this function is only ever
+   * called once.
+   *
+   * @param $target
+   *   The target this connection is for.  Set to NULL (default) to disable
+   *   logging entirely.
+   */
+  public function setTarget($target = NULL) {
+    if (!isset($this->target)) {
+      $this->target = $target;
+    }
+  }
+
+  /**
+   * Returns the target this connection is associated with.
+   *
+   * @return
+   *   The target string of this connection.
+   */
+  public function getTarget() {
+    return $this->target;
+  }
+
+  /**
+   * Associate a logging object with this connection.
+   *
+   * @param $logger
+   *   The logging object we want to use.
+   */
+  public function setLogger(DatabaseLog $logger) {
+    $this->logger = $logger;
+  }
+
+  /**
+   * Get the current logging object for this connection.
+   *
+   * @return
+   *   The current logging object for this connection.  If there isn't one,
+   *   NULL is returned.
+   */
+  public function getLogger() {
+    return $this->logger;
   }
 
   /**
@@ -673,6 +738,75 @@ abstract class Database {
   static protected $activeKey = 'default';
 
   /**
+   * An array of active query log objects.
+   *
+   * Every connection has one and only one logger object for all targets
+   * and logging keys.
+   *
+   * array(
+   *   '$db_key' => DatabaseLog object.
+   * );
+   *
+   * @var array
+   */
+  static protected $logs = array();
+
+  /**
+   * Start logging a given logging key on the specified connection.
+   *
+   * @see DatabaseLog
+   * @param $logging_key
+   *   The logging key to log.
+   * @param $key
+   *   The database connection key for which we want to log.
+   * @return
+   *   The query log object.  Note that the log object does support richer
+   *   methods than the few exposed through the Database class, so in some
+   *   cases it may be desirable to access it directly.
+   */
+  final public static function startLog($logging_key, $key = 'default') {
+    if (empty(self::$logs[$key])) {
+      self::$logs[$key] = new DatabaseLog($key);
+
+      // Every target already active for this connection key needs to have
+      // the logging object associated with it.
+      if (!empty(self::$connections[$key])) {
+        foreach (self::$connections[$key] as $connection) {
+          $connection->setLogger(self::$logs[$key]);
+        }
+      }
+    }
+
+    self::$logs[$key]->start($logging_key);
+    return self::$logs[$key];
+  }
+
+  /**
+   * Retrieve the queries logged on for given logging key.
+   *
+   * This method also ends logging for the specified key.  To get the query log
+   * to date without ending the logger request the logging object by starting
+   * it again (which does nothing to an open log key) and call methods on it as
+   * desired.
+   *
+   * @see DatabaseLog
+   * @param $logging_key
+   *   The logging key to log.
+   * @param $key
+   *   The database connection key for which we want to log.
+   * @return
+   *   The query log for the specified logging key and connection.
+   */
+  final public static function getLog($logging_key, $key = 'default') {
+    if (empty(self::$logs[$key])) {
+      return NULL;
+    }
+    $queries = self::$logs[$key]->get($logging_key);
+    self::$logs[$key]->end($logging_key);
+    return $queries;
+  }
+
+  /**
    * Gets the active connection object for the specified target.
    *
    * @return
@@ -681,8 +815,14 @@ abstract class Database {
   final public static function getActiveConnection($target = 'default') {
     // This could just be a call to getConnection(), but that's an extra
     // method call for every single query.
+    if (!empty(self::$ignoreTargets[self::$activeKey][$target])) {
+      $target = 'default';
+    }
+
     if (!isset(self::$connections[self::$activeKey][$target])) {
-      self::openConnection(self::$activeKey, $target);
+      // If we're trying to open a target that doesn't exist, we need to know
+      // what the actual target we got was.
+      $target = self::openConnection(self::$activeKey, $target);
     }
 
     return isset(self::$connections[self::$activeKey][$target]) ? self::$connections[self::$activeKey][$target] : NULL;
@@ -700,7 +840,9 @@ abstract class Database {
     }
 
     if (!isset(self::$connections[$key][$target])) {
-      self::openConnection($key, $target);
+      // If we're trying to open a target that doesn't exist, we need to know
+      // what the actual target we got was.
+      $target = self::openConnection(self::$activeKey, $target);
     }
 
     return isset(self::$connections[$key][$target]) ? self::$connections[$key][$target] : NULL;
@@ -814,6 +956,8 @@ abstract class Database {
    * @param $target
    *   The database target to open.  If the specified target does not exist,
    *   the "default" target will be used instead.
+   * @return
+   *   The name of the target that was actually opened.
    */
   final protected static function openConnection($key, $target) {
     global $db_prefix;
@@ -843,12 +987,23 @@ abstract class Database {
       $driver_class = 'DatabaseConnection_' . $driver;
       require_once DRUPAL_ROOT . '/includes/database/' . $driver . '/database.inc';
       self::$connections[$key][$target] = new $driver_class(self::$databaseInfo[$key][$target]);
+      self::$connections[$key][$target]->setTarget($target);
+
+      // If we have any active logging objects for this connection key, we need
+      // to associate them with the connection we just opened.
+      if (!empty(self::$logs[$key])) {
+        self::$connections[$key][$target]->setLogger(self::$logs[$key]);
+      }
 
       // We need to pass around the simpletest database prefix in the request
       // and we put that in the user_agent header.
       if (preg_match("/^simpletest\d+$/", $_SERVER['HTTP_USER_AGENT'])) {
         $db_prefix = $_SERVER['HTTP_USER_AGENT'];
       }
+
+      // Return the target that was actually opened in case the requested one
+      // didn't exist.
+      return $target;
     }
     catch (Exception $e) {
       // It is extremely rare that an exception will be generated here other
@@ -1050,7 +1205,20 @@ class DatabaseStatement extends PDOStatement {
       }
     }
     $this->dbh->lastStatement = $this;
-    return parent::execute($args);
+
+    $logger = $this->dbh->getLogger();
+    if (!empty($logger)) {
+      $query_start = microtime(TRUE);
+    }
+
+    $return = parent::execute($args);
+
+    if (!empty($logger)) {
+      $query_end = microtime(TRUE);
+      $logger->log($this, $args, $query_end - $query_start);
+    }
+
+    return $return;
   }
 
   /**
