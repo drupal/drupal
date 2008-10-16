@@ -217,8 +217,7 @@ define('PASS_THROUGH', -1);
 function timer_start($name) {
   global $timers;
 
-  list($usec, $sec) = explode(' ', microtime());
-  $timers[$name]['start'] = (float)$usec + (float)$sec;
+  $timers[$name]['start'] = microtime(TRUE);
   $timers[$name]['count'] = isset($timers[$name]['count']) ? ++$timers[$name]['count'] : 1;
 }
 
@@ -234,8 +233,7 @@ function timer_read($name) {
   global $timers;
 
   if (isset($timers[$name]['start'])) {
-    list($usec, $sec) = explode(' ', microtime());
-    $stop = (float)$usec + (float)$sec;
+    $stop = microtime(TRUE);
     $diff = round(($stop - $timers[$name]['start']) * 1000, 2);
 
     if (isset($timers[$name]['time'])) {
