@@ -1,5 +1,5 @@
 <?php
-// $Id: run-tests.sh,v 1.13 2008/10/12 04:30:09 webchick Exp $
+// $Id: run-tests.sh,v 1.14 2008/10/19 20:12:55 dries Exp $
 /**
  * @file
  * This script runs Drupal tests from command line.
@@ -162,7 +162,7 @@ function simpletest_script_parse_args() {
     'list' => FALSE,
     'clean' => FALSE,
     'url' => '',
-    'php' => NULL,
+    'php' => '',
     'concurrency' => 1,
     'all' => FALSE,
     'class' => FALSE,
