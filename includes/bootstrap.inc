@@ -1020,17 +1020,17 @@ function drupal_anonymous_user($session = '') {
  *     DRUPAL_BOOTSTRAP_PATH: set $_GET['q'] to Drupal path of request.
  *     DRUPAL_BOOTSTRAP_FULL: Drupal is fully loaded, validate and fix input data.
  */
-function drupal_bootstrap($phase) {
-  static $phases = array(DRUPAL_BOOTSTRAP_CONFIGURATION, DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE, DRUPAL_BOOTSTRAP_DATABASE, DRUPAL_BOOTSTRAP_ACCESS, DRUPAL_BOOTSTRAP_SESSION, DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE, DRUPAL_BOOTSTRAP_LANGUAGE, DRUPAL_BOOTSTRAP_PATH, DRUPAL_BOOTSTRAP_FULL), $phase_index = 0;
+function drupal_bootstrap($phase = NULL) {
+  static $phases = array(DRUPAL_BOOTSTRAP_CONFIGURATION, DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE, DRUPAL_BOOTSTRAP_DATABASE, DRUPAL_BOOTSTRAP_ACCESS, DRUPAL_BOOTSTRAP_SESSION, DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE, DRUPAL_BOOTSTRAP_LANGUAGE, DRUPAL_BOOTSTRAP_PATH, DRUPAL_BOOTSTRAP_FULL), $completed_phase = -1;
 
-  while ($phase >= $phase_index && isset($phases[$phase_index])) {
-    $current_phase = $phases[$phase_index];
-    unset($phases[$phase_index++]);
-    _drupal_bootstrap($current_phase);
-
-    global $_drupal_current_bootstrap_phase;
-    $_drupal_current_bootstrap_phase = $current_phase;
+  if (isset($phase) && $phase > $completed_phase) {
+    while ($phases) {
+      $current_phase = array_shift($phases);
+      _drupal_bootstrap($current_phase);
+      $completed_phase = $current_phase;
+    }
   }
+  return $completed_phase;
 }
 
 /**
@@ -1041,8 +1041,7 @@ function drupal_bootstrap($phase) {
  * @see drupal_bootstrap
  */
 function drupal_get_bootstrap_phase() {
-  global $_drupal_current_bootstrap_phase;
-  return $_drupal_current_bootstrap_phase;
+  return drupal_bootstrap();
 }
 
 function _drupal_bootstrap($phase) {
