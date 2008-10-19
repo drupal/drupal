@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.440 2008/10/19 20:06:48 dries Exp $
+// $Id: theme.inc,v 1.441 2008/10/19 20:32:41 dries Exp $
 
 /**
  * @file
@@ -1799,7 +1799,7 @@ function template_preprocess_page(&$variables) {
   // Load all region content assigned via blocks.
   foreach (array_keys($regions) as $region) {
     // Prevent left and right regions from rendering blocks when 'show_blocks' == FALSE.
-    if ($variables['show_blocks'] || ($region != 'left' && $region != 'right'))) {
+    if (!(!$variables['show_blocks'] && ($region == 'left' || $region == 'right'))) {
       $blocks = theme('blocks', $region);
     }
     else {
