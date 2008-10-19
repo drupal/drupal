@@ -1896,7 +1896,7 @@ function menu_link_save(&$item) {
 
   // This is the easiest way to handle the unique internal path '<front>',
   // since a path marked as external does not need to match a router path.
-  $item['_external'] = (menu_path_is_external($item['link_path'])  || $item['link_path'] == '<front>') ? 1 : 0;
+  $item['external'] = (menu_path_is_external($item['link_path'])  || $item['link_path'] == '<front>') ? 1 : 0;
   // Load defaults.
   $item += array(
     'menu_name' => 'navigation',
@@ -1916,7 +1916,13 @@ function menu_link_save(&$item) {
   }
 
   if (isset($item['plid'])) {
-    $parent = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE mlid = %d", $item['plid']));
+    if ($item['plid']) {
+      $parent = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE mlid = %d", $item['plid']));
+    }
+    else {
+      // Don't bother with the query - mlid can never equal zero..
+      $parent = FALSE;
+    }
   }
   else {
     // Find the parent - it must be unique.
@@ -1968,7 +1974,7 @@ function menu_link_save(&$item) {
       %d, %d,
       '%s', '%s', '%s', %d, %d)",
       $item['menu_name'], $item['plid'], $item['link_path'],
-      $item['hidden'], $item['_external'], $item['has_children'],
+      $item['hidden'], $item['external'], $item['has_children'],
       $item['expanded'], $item['weight'],
       $item['module'],  $item['link_title'], serialize($item['options']),
       $item['customized'], $item['updated']);
@@ -2000,10 +2006,9 @@ function menu_link_save(&$item) {
   if ($existing_item && ($item['plid'] != $existing_item['plid'] || $menu_name != $existing_item['menu_name'])) {
     _menu_link_move_children($item, $existing_item);
   }
-  // Find the callback. During the menu update we store empty paths to be
-  // fixed later, so we skip this.
-  if (!isset($_SESSION['system_update_6021']) && (empty($item['router_path'])  || !$existing_item || ($existing_item['link_path'] != $item['link_path']))) {
-    if ($item['_external']) {
+  // Find the router_path.
+  if (empty($item['router_path'])  || !$existing_item || ($existing_item['link_path'] != $item['link_path'])) {
+    if ($item['external']) {
       $item['router_path'] = '';
     }
     else {
@@ -2012,24 +2017,32 @@ function menu_link_save(&$item) {
       $item['router_path'] = _menu_find_router_path($menu, $item['link_path']);
     }
   }
-  db_query("UPDATE {menu_links} SET menu_name = '%s', plid = %d, link_path = '%s',
-    router_path = '%s', hidden = %d, external = %d, has_children = %d,
-    expanded = %d, weight = %d, depth = %d,
-    p1 = %d, p2 = %d, p3 = %d, p4 = %d, p5 = %d, p6 = %d, p7 = %d, p8 = %d, p9 = %d,
-    module = '%s', link_title = '%s', options = '%s', customized = %d WHERE mlid = %d",
-    $item['menu_name'], $item['plid'], $item['link_path'],
-    $item['router_path'], $item['hidden'], $item['_external'], $item['has_children'],
-    $item['expanded'], $item['weight'],  $item['depth'],
-    $item['p1'], $item['p2'], $item['p3'], $item['p4'], $item['p5'], $item['p6'], $item['p7'], $item['p8'], $item['p9'],
-    $item['module'],  $item['link_title'], serialize($item['options']), $item['customized'], $item['mlid']);
-  // Check the has_children status of the parent.
-  _menu_update_parental_status($item);
-  menu_cache_clear($menu_name);
-  if ($existing_item && $menu_name != $existing_item['menu_name']) {
-    menu_cache_clear($existing_item['menu_name']);
+  $item['options'] = serialize($item['options']);
+  // If every value in $existing_item is the same in the $item, there is no
+  // reason to run the update queries or clear the caches. We use
+  // array_diff_assoc() with the $existing_item as the first parameter
+  // because $item has additional keys left over from the process of building
+  // the router item.
+  if (!$existing_item || array_diff_assoc($existing_item, $item)) {
+    db_query("UPDATE {menu_links} SET menu_name = '%s', plid = %d, link_path = '%s',
+      router_path = '%s', hidden = %d, external = %d, has_children = %d,
+      expanded = %d, weight = %d, depth = %d,
+      p1 = %d, p2 = %d, p3 = %d, p4 = %d, p5 = %d, p6 = %d, p7 = %d, p8 = %d, p9 = %d,
+      module = '%s', link_title = '%s', options = '%s', customized = %d WHERE mlid = %d",
+      $item['menu_name'], $item['plid'], $item['link_path'],
+      $item['router_path'], $item['hidden'], $item['external'], $item['has_children'],
+      $item['expanded'], $item['weight'],  $item['depth'],
+      $item['p1'], $item['p2'], $item['p3'], $item['p4'], $item['p5'], $item['p6'], $item['p7'], $item['p8'], $item['p9'],
+      $item['module'],  $item['link_title'], $item['options'], $item['customized'], $item['mlid']);
+    // Check the has_children status of the parent.
+    _menu_update_parental_status($item);
+    menu_cache_clear($menu_name);
+    if ($existing_item && $menu_name != $existing_item['menu_name']) {
+      menu_cache_clear($existing_item['menu_name']);
+    }
+  
+    _menu_clear_page_cache();
   }
-
-  _menu_clear_page_cache();
   return $item['mlid'];
 }
 
