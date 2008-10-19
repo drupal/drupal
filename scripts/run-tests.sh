@@ -162,7 +162,7 @@ function simpletest_script_parse_args() {
     'list' => FALSE,
     'clean' => FALSE,
     'url' => '',
-    'php' => NULL,
+    'php' => '',
     'concurrency' => 1,
     'all' => FALSE,
     'class' => FALSE,
