@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.136 2008/10/16 13:47:06 dries Exp $
+// $Id: install.php,v 1.137 2008/10/19 20:55:07 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -1052,6 +1052,7 @@ function install_configure_form(&$form_state, $url) {
     '#description' => st('Spaces are allowed; punctuation is not allowed except for periods, hyphens, and underscores.'),
     '#required' => TRUE,
     '#weight' => -10,
+    '#attributes' => array('class' => 'username'),
   );
 
   $form['admin_account']['account']['mail'] = array('#type' => 'textfield',

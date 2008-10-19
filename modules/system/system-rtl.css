@@ -1,4 +1,4 @@
-/* $Id: system-rtl.css,v 1.13 2008/04/25 18:28:18 dries Exp $ */
+/* $Id: system-rtl.css,v 1.14 2008/10/19 20:55:07 dries Exp $ */
 
 thead th {
   text-align: right;
@@ -94,6 +94,12 @@ input.password-field {
 input.password-confirm {
   margin-left: 10px;
   margin-right: 0;
+}
+.password-strength-title {
+  float: right;
+}
+.password-parent {
+  float: right;
 }
 
 .draggable a.tabledrag-handle {
