@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.29 2008/10/12 04:30:09 webchick Exp $
+// $Id: user.admin.inc,v 1.30 2008/10/19 21:19:02 dries Exp $
 
 /**
  * @file
@@ -415,7 +415,7 @@ function user_admin_settings() {
   // If picture support is enabled, check whether the picture directory exists:
   if (variable_get('user_pictures', 0)) {
     $picture_path = file_create_path(variable_get('user_picture_path', 'pictures'));
-    file_check_directory($picture_path, 1, 'user_picture_path');
+    file_check_directory($picture_path, FILE_CREATE_DIRECTORY, 'user_picture_path');
   }
 
   $form['pictures'] = array(
