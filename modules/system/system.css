@@ -516,36 +516,46 @@ html.js .js-hide {
 /*
 ** Password strength indicator
 */
-span.password-strength {
-  visibility: hidden;
+.password-strength-title {
+  float: left; /* LTR */
 }
-input.password-field {
-  margin-right: 10px; /* LTR */
+#password-indicator {
+  border: 1px solid #B4B4B4;
+  float: right;
+  height: 0.9em;
+  margin: 0.3em 0.80em 0 0.3em;
+  width: 5em;
 }
-div.password-description {
-  padding: 0 2px;
-  margin: 4px 0 0 0;
-  font-size: 0.85em;
-  max-width: 500px;
+#password-indicator div {
+  height: 100%;
+  width: 0%;
+  background-color: #47C965;
 }
-div.password-description ul {
+input.password-confirm, input.password-field {
+  width: 16em;
+  margin-bottom: 0.4em;
+}
+div.password-suggestions {
+  padding: 0.2em 0.5em;
+  margin: 0.7em 0;
+  width: 38.5em;
+  border: 1px solid #B4B4B4;
+}
+div.password-suggestions ul {
   margin-bottom: 0;
 }
 .password-parent {
-  margin: 0 0 0 0;
+  margin: 0;
+  float: left; /* LTR */
+  width: 17.3em;
 }
+
 /*
 ** Password confirmation checker
 */
-input.password-confirm {
-  margin-right: 10px; /* LTR */
-}
 .confirm-parent {
-  margin: 5px 0 0 0;
+  margin: 0;
 }
-span.password-confirm {
+div.password-confirm {
   visibility: hidden;
-}
-span.password-confirm span {
-  font-weight: normal;
 }

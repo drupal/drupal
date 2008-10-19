@@ -95,6 +95,12 @@ input.password-confirm {
   margin-left: 10px;
   margin-right: 0;
 }
+.password-strength-title {
+  float: right;
+}
+.password-parent {
+  float: right;
+}
 
 .draggable a.tabledrag-handle {
   float: right;

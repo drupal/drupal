@@ -1052,6 +1052,7 @@ function install_configure_form(&$form_state, $url) {
     '#description' => st('Spaces are allowed; punctuation is not allowed except for periods, hyphens, and underscores.'),
     '#required' => TRUE,
     '#weight' => -10,
+    '#attributes' => array('class' => 'username'),
   );
 
   $form['admin_account']['account']['mail'] = array('#type' => 'textfield',

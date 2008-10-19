@@ -5,111 +5,83 @@
  * that its confirmation is correct.
  */
 Drupal.behaviors.password = function(context) {
+
   var translate = Drupal.settings.password;
   $("input.password-field:not(.password-processed)", context).each(function() {
     var passwordInput = $(this).addClass('password-processed');
-    var parent = $(this).parent();
-    // Wait this number of milliseconds before checking password.
-    var monitorDelay = 700;
+    var innerWrapper = $(this).parent();
+    var outerWrapper = $(this).parent().parent();
 
     // Add the password strength layers.
-    $(this).after('<span class="password-strength"><span class="password-title">'+ translate.strengthTitle +'</span> <span class="password-result"></span></span>').parent();
-    var passwordStrength = $("span.password-strength", parent);
+    var passwordStrength = $("span.password-strength", innerWrapper);
     var passwordResult = $("span.password-result", passwordStrength);
-    parent.addClass("password-parent");
-
-    // Add the password confirmation layer.
-    var outerItem  = $(this).parent().parent();
-    $("input.password-confirm", outerItem).after('<span class="password-confirm">'+ translate["confirmTitle"] +' <span></span></span>').parent().addClass("confirm-parent");
-    var confirmInput = $("input.password-confirm", outerItem);
-    var confirmResult = $("span.password-confirm", outerItem);
-    var confirmChild = $("span", confirmResult);
+    innerWrapper.addClass("password-parent");
 
     // Add the description box at the end.
-    $(confirmInput).parent().after('<div class="password-description"></div>');
-    var passwordDescription = $("div.password-description", $(this).parent().parent()).hide();
+    var passwordMeter = '<div id="password-strength"><div class="password-strength-title">' + translate.strengthTitle + '</div><div id="password-indicator"><div id="indicator"></div></div></div>';
+    $("div.description", outerWrapper).prepend('<div class="password-suggestions"></div>');
+    $(innerWrapper).append(passwordMeter);
+    var passwordDescription = $("div.password-suggestions", outerWrapper).hide();
 
-    // Check the password fields.
+    // Add the password confirmation layer.
+    $("input.password-confirm", outerWrapper).after('<div class="password-confirm">' + translate["confirmTitle"] + ' <span></span></div>').parent().addClass("confirm-parent");
+    var confirmInput = $("input.password-confirm", outerWrapper);
+    var confirmResult = $("div.password-confirm", outerWrapper);
+    var confirmChild = $("span", confirmResult);
+
+    // Check the password strength.
     var passwordCheck = function () {
-      // Remove timers for a delayed check if they exist.
-      if (this.timer) {
-        clearTimeout(this.timer);
-      }
 
-      // Verify that there is a password to check.
-      if (!passwordInput.val()) {
-        passwordStrength.css({ visibility: "hidden" });
-        passwordDescription.hide();
-        return;
-      }
-
-      // Evaluate password strength.
-
+      // Evaluate the password strength.
       var result = Drupal.evaluatePasswordStrength(passwordInput.val());
-      passwordResult.html(result.strength == "" ? "" : translate[result.strength +"Strength"]);
 
-      // Map the password strength to the relevant drupal CSS class.
-      var classMap = { low: "error", medium: "warning", high: "ok" };
-      var newClass = classMap[result.strength] || "";
-
-      // Remove the previous styling if any exists; add the new class.
-      if (this.passwordClass) {
-        passwordResult.removeClass(this.passwordClass);
-        passwordDescription.removeClass(this.passwordClass);
+      // Update the suggestions for how to improve the password.
+      if (passwordDescription.html() != result.message) {
+        passwordDescription.html(result.message);
       }
-      passwordDescription.html(result.message);
-      passwordResult.addClass(newClass);
-      if (result.strength == "high") {
+
+      // Only show the description box if there is a weakness in the password.
+      if (result.strength == 100) {
         passwordDescription.hide();
       }
       else {
-        passwordDescription.addClass(newClass);
-      }
-      this.passwordClass = newClass;
-
-      // Check that password and confirmation match.
-
-      // Hide the result layer if confirmation is empty, otherwise show the layer.
-      confirmResult.css({ visibility: (confirmInput.val() == "" ? "hidden" : "visible") });
-
-      var success = passwordInput.val() == confirmInput.val();
-
-      // Remove the previous styling if any exists.
-      if (this.confirmClass) {
-        confirmChild.removeClass(this.confirmClass);
+        passwordDescription.show();
       }
 
-      // Fill in the correct message and set the class accordingly.
-      var confirmClass = success ? "ok" : "error";
-      confirmChild.html(translate["confirm"+ (success ? "Success" : "Failure")]).addClass(confirmClass);
-      this.confirmClass = confirmClass;
+      // Adjust the length of the strength indicator.
+      $("#indicator").css('width', result.strength + '%');
 
-      // Show the indicator and tips.
-      passwordStrength.css({ visibility: "visible" });
-      passwordDescription.show();
+      passwordCheckMatch();
     };
 
-    // Do a delayed check on the password fields.
-    var passwordDelayedCheck = function() {
-      // Postpone the check since the user is most likely still typing.
-      if (this.timer) {
-        clearTimeout(this.timer);
-      }
+    // Check that password and confirmation inputs match.
+    var passwordCheckMatch = function () {
 
-      // When the user clears the field, hide the tips immediately.
-      if (!passwordInput.val()) {
-        passwordStrength.css({ visibility: "hidden" });
-        passwordDescription.hide();
-        return;
-      }
+      if (confirmInput.val()) {
+        var success = passwordInput.val() === confirmInput.val();
 
-      // Schedule the actual check.
-      this.timer = setTimeout(passwordCheck, monitorDelay);
-    };
+        // Show the confirm result.
+        confirmResult.css({ visibility: "visible" });
+
+        // Remove the previous styling if any exists.
+        if (this.confirmClass) {
+          confirmChild.removeClass(this.confirmClass);
+        }
+
+        // Fill in the success message and set the class accordingly.
+        var confirmClass = success ? "ok" : 'error';
+        confirmChild.html(translate["confirm" + (success ? "Success" : "Failure")]).addClass(confirmClass);
+        this.confirmClass = confirmClass;
+      }
+      else {
+        confirmResult.css({ visibility: "hidden" });
+      }
+    }
+
     // Monitor keyup and blur events.
     // Blur must be used because a mouse paste does not trigger keyup.
-    passwordInput.keyup(passwordDelayedCheck).blur(passwordCheck);
-    confirmInput.keyup(passwordDelayedCheck).blur(passwordCheck);
+    passwordInput.keyup(passwordCheck).focus(passwordCheck).blur(passwordCheck);
+    confirmInput.keyup(passwordCheckMatch).blur(passwordCheckMatch);
   });
 };
 
@@ -118,52 +90,71 @@ Drupal.behaviors.password = function(context) {
  *
  * Returns the estimated strength and the relevant output message.
  */
-Drupal.evaluatePasswordStrength = function(value) {
-  var strength = "", msg = "", translate = Drupal.settings.password;
+Drupal.evaluatePasswordStrength = function (password) {
+  var weaknesses = 0, strength = 100, msg = [], translate = Drupal.settings.password;
 
-  var hasLetters = value.match(/[a-zA-Z]+/);
-  var hasNumbers = value.match(/[0-9]+/);
-  var hasPunctuation = value.match(/[^a-zA-Z0-9]+/);
-  var hasCasing = value.match(/[a-z]+.*[A-Z]+|[A-Z]+.*[a-z]+/);
+  var hasLowercase = password.match(/[a-z]+/);
+  var hasUppercase = password.match(/[A-Z]+/);
+  var hasNumbers = password.match(/[0-9]+/);
+  var hasPunctuation = password.match(/[^a-zA-Z0-9]+/);
 
-  // Check if the password is blank.
-  if (!value.length) {
-    strength = "";
-    msg = "";
-  }
-  // Check if length is less than 6 characters.
-  else if (value.length < 6) {
-    strength = "low";
-    msg = translate.tooShort;
-  }
-  // Check if password is the same as the username (convert both to lowercase).
-  else if (value.toLowerCase() == translate.username.toLowerCase()) {
-    strength  = "low";
-    msg = translate.sameAsUsername;
-  }
-  // Check if it contains letters, numbers, punctuation, and upper/lower case.
-  else if (hasLetters && hasNumbers && hasPunctuation && hasCasing) {
-    strength = "high";
-  }
-  // Password is not secure enough so construct the medium-strength message.
-  else {
-    // Extremely bad passwords still count as low.
-    var count = (hasLetters ? 1 : 0) + (hasNumbers ? 1 : 0) + (hasPunctuation ? 1 : 0) + (hasCasing ? 1 : 0);
-    strength = count > 1 ? "medium" : "low";
+  // If there is a username edit box on the page, compare password to that, otherwise
+  // use value from the database.
+  var usernameBox = $("input.username");
+  var username = (usernameBox.length > 0) ? usernameBox.val() : translate.username;
 
-    msg = [];
-    if (!hasLetters || !hasCasing) {
-      msg.push(translate.addLetters);
-    }
-    if (!hasNumbers) {
-      msg.push(translate.addNumbers);
-    }
-    if (!hasPunctuation) {
-      msg.push(translate.addPunctuation);
-    }
-    msg = translate.needsMoreVariation +"<ul><li>"+ msg.join("</li><li>") +"</li></ul>";
+  // Lose 10 points for every character less than 6.
+  if (password.length < 6) {
+    msg.push(translate.tooShort);
+    strength -= (6 - password.length) * 10;
   }
 
+  // Count weaknesses.
+  if (!hasLowercase) {
+    msg.push(translate.addLowerCase);
+    weaknesses++;
+  }
+  if (!hasUppercase) {
+    msg.push(translate.addUpperCase);
+    weaknesses++;
+  }
+  if (!hasNumbers) {
+    msg.push(translate.addNumbers);
+    weaknesses++;
+  }
+  if (!hasPunctuation) {
+    msg.push(translate.addPunctuation);
+    weaknesses++;
+  }
+
+  // Apply penalty for each weakness (balanced against length penalty).
+  switch (weaknesses) {
+    case 1:
+      strength -= 12.5;
+      break;
+
+    case 2:
+      strength -= 25;
+      break;
+
+    case 3:
+      strength -= 40;
+      break;
+
+    case 4:
+      strength -= 40;
+      break;
+  }
+
+  // Check if password is the same as the username.
+  if ((password !== '') && (password.toLowerCase() === username.toLowerCase())){
+    msg.push(translate.sameAsUsername);
+    // Passwords the same as username are always very weak.
+    strength = 5;
+  }
+
+  // Assemble the final message.
+  msg = translate.hasWeaknesses + "<ul><li>" + msg.join("</li><li>") + "</li></ul>";
   return { strength: strength, message: msg };
 };
 

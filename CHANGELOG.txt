@@ -28,6 +28,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Image toolkits are now provided by modules (rather than requiring a manual
       file copy to the includes directory).
     * Added an edit tab to taxonomy term pages.
+    * Redesigned password strength validator.
 - News aggregator:
     * Added OPML import functionality for RSS feeds.
     * Optionally, RSS feeds may be configured to not automatically generate feed blocks.
