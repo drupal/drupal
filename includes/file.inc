@@ -148,8 +148,9 @@ function file_create_path($destination = NULL) {
  * @param $directory
  *   A string containing the name of a directory path.
  * @param $mode
- *   A Boolean value to indicate if the directory should be created if it does
- *   not exist or made writable if it is read-only.
+ *   A bitmask to indicate if the directory should be created if it does
+ *   not exist (FILE_CREATE_DIRECTORY) or made writable if it is read-only
+ *   (FILE_MODIFY_PERMISSIONS).
  * @param $form_item
  *   An optional string containing the name of a form item that any errors will
  *   be attached to. This is useful for settings forms that require the user to
@@ -158,7 +159,7 @@ function file_create_path($destination = NULL) {
  * @return
  *   FALSE when directory not found, or TRUE when directory exists.
  */
-function file_check_directory(&$directory, $mode = FALSE, $form_item = NULL) {
+function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
   $directory = rtrim($directory, '/\\');
 
   // Check if directory exists.
