@@ -1023,8 +1023,8 @@ function drupal_anonymous_user($session = '') {
 function drupal_bootstrap($phase = NULL) {
   static $phases = array(DRUPAL_BOOTSTRAP_CONFIGURATION, DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE, DRUPAL_BOOTSTRAP_DATABASE, DRUPAL_BOOTSTRAP_ACCESS, DRUPAL_BOOTSTRAP_SESSION, DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE, DRUPAL_BOOTSTRAP_LANGUAGE, DRUPAL_BOOTSTRAP_PATH, DRUPAL_BOOTSTRAP_FULL), $completed_phase = -1;
 
-  if (isset($phase) && $phase > $completed_phase) {
-    while ($phases) {
+  if (isset($phase)) {
+    while ($phases && $phase > $completed_phase) {
       $current_phase = array_shift($phases);
       _drupal_bootstrap($current_phase);
       $completed_phase = $current_phase;
