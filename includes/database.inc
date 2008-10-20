@@ -172,6 +172,7 @@ function db_set_active($name = 'default') {
  */
 function _db_error_page($error = '') {
   global $db_type;
+  drupal_init_language();
   drupal_maintenance_theme();
   drupal_set_header('HTTP/1.1 503 Service Unavailable');
   drupal_set_title('Site off-line');
