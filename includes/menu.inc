@@ -2424,7 +2424,7 @@ function _menu_site_is_offline() {
       // page redirects], and specifically suppress its display on the site
       // maintenance page.
       if (drupal_get_normal_path($_GET['q']) != 'admin/settings/site-maintenance') {
-        drupal_set_message(t('Operating in off-line mode.'), 'status', FALSE);
+        drupal_set_message(l(t('Operating in off-line mode.'), 'admin/settings/site-maintenance'), 'status', FALSE);
       }
     }
     else {
