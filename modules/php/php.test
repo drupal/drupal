@@ -1,5 +1,5 @@
 <?php
-// $Id: php.test,v 1.4 2008/09/27 19:47:43 webchick Exp $
+// $Id: php.test,v 1.5 2008/10/20 13:04:27 dries Exp $
 
 /**
  * Base PHP test case class.
@@ -40,7 +40,7 @@ class PHPTestCase extends DrupalWebTestCase {
 /**
  * Tests to make sure the PHP filter actually evaluates PHP code when used.
  */
-class PHPFitlerTestCase extends PHPTestCase {
+class PHPFilterTestCase extends PHPTestCase {
   /**
    * Implementation of getInfo().
    */
