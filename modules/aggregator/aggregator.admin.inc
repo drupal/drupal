@@ -26,7 +26,7 @@ function aggregator_view() {
 
   $header = array(t('Title'), t('Items'), t('Last update'), t('Next update'), array('data' => t('Operations'), 'colspan' => '3'));
   $rows = array();
-  while ($feed = db_fetch_object($result)) {
+  foreach ($result as $feed) {
     $rows[] = array(l($feed->title, "aggregator/sources/$feed->fid"), format_plural($feed->items, '1 item', '@count items'), ($feed->checked ? t('@time ago', array('@time' => format_interval(REQUEST_TIME - $feed->checked))) : t('never')), ($feed->checked ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - REQUEST_TIME))) : t('never')), l(t('edit'), "admin/content/aggregator/edit/feed/$feed->fid"), l(t('remove items'), "admin/content/aggregator/remove/$feed->fid"), l(t('update items'), "admin/content/aggregator/update/$feed->fid"));
   }
   $output .= theme('table', $header, $rows);
@@ -37,7 +37,7 @@ function aggregator_view() {
 
   $header = array(t('Title'), t('Items'), t('Operations'));
   $rows = array();
-  while ($category = db_fetch_object($result)) {
+  foreach ($result as $category) {
     $rows[] = array(l($category->title, "aggregator/categories/$category->cid"), format_plural($category->items, '1 item', '@count items'), l(t('edit'), "admin/content/aggregator/edit/category/$category->cid"));
   }
   $output .= theme('table', $header, $rows);
@@ -89,8 +89,8 @@ function aggregator_form_feed(&$form_state, $edit = array('refresh' => 900, 'blo
   // Handling of categories.
   $options = array();
   $values = array();
-  $categories = db_query('SELECT c.cid, c.title, f.fid FROM {aggregator_category} c LEFT JOIN {aggregator_category_feed} f ON c.cid = f.cid AND f.fid = %d ORDER BY title', $edit['fid']);
-  while ($category = db_fetch_object($categories)) {
+  $categories = db_query('SELECT c.cid, c.title, f.fid FROM {aggregator_category} c LEFT JOIN {aggregator_category_feed} f ON c.cid = f.cid AND f.fid = :fid ORDER BY title', array(':fid' => $edit['fid']));
+  foreach ($categories as $category) {
     $options[$category->cid] = check_plain($category->title);
     if ($category->fid) $values[] = $category->cid;
   }
@@ -133,12 +133,12 @@ function aggregator_form_feed_validate($form, &$form_state) {
     }
     // Check for duplicate titles.
     if (isset($form_state['values']['fid'])) {
-      $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE (title = '%s' OR url = '%s') AND fid <> %d", $form_state['values']['title'], $form_state['values']['url'], $form_state['values']['fid']);
+      $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE (title = :title OR url = :url) AND fid <> :fid", array(':title' => $form_state['values']['title'], ':url' => $form_state['values']['url'], ':fid' => $form_state['values']['fid']));
     }
     else {
-      $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE title = '%s' OR url = '%s'", $form_state['values']['title'], $form_state['values']['url']);
+      $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE title = :title OR url = :url", array(':title' => $form_state['values']['title'], ':url' => $form_state['values']['url']));
     }
-    while ($feed = db_fetch_object($result)) {
+    foreach ($result as $feed) {
       if (strcasecmp($feed->title, $form_state['values']['title']) == 0) {
         form_set_error('title', t('A feed named %feed already exists. Please enter a unique title.', array('%feed' => $form_state['values']['title'])));
       }
@@ -256,11 +256,7 @@ function aggregator_form_opml(&$form_state) {
   );
 
   // Handling of categories.
-  $options = array();
-  $categories = db_query('SELECT cid, title FROM {aggregator_category} ORDER BY title');
-  while ($category = db_fetch_object($categories)) {
-    $options[$category->cid] = check_plain($category->title);
-  }
+  $options = array_map('check_plain', db_query("SELECT cid, title FROM {aggregator_category} ORDER BY title")->fetchAllKeyed());
   if ($options) {
     $form['category'] = array(
       '#type' => 'checkboxes',
@@ -323,8 +319,8 @@ function aggregator_form_opml_submit($form, &$form_state) {
     }
 
     // Check for duplicate titles or URLs.
-    $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE title = '%s' OR url = '%s'", $feed['title'], $feed['url']);
-    while ($old = db_fetch_object($result)) {
+    $result = db_query("SELECT title, url FROM {aggregator_feed} WHERE title = :title OR url = :url", array(':title' => $feed['title'], ':url' => $feed['url']));
+    foreach ($result as $old) {
       if (strcasecmp($old->title, $feed['title']) == 0) {
         drupal_set_message(t('A feed named %title already exists.', array('%title' => $old->title)), 'warning');
         continue 2;
@@ -458,10 +454,10 @@ function aggregator_form_category_validate($form, &$form_state) {
   if ($form_state['values']['op'] == t('Save')) {
     // Check for duplicate titles
     if (isset($form_state['values']['cid'])) {
-      $category = db_fetch_object(db_query("SELECT cid FROM {aggregator_category} WHERE title = '%s' AND cid <> %d", $form_state['values']['title'], $form_state['values']['cid']));
+      $category = db_query("SELECT cid FROM {aggregator_category} WHERE title = :title AND cid <> :cid", array(':title' => $form_state['values']['title'], ':cid' => $form_state['values']['cid']))->fetchObject();
     }
     else {
-      $category = db_fetch_object(db_query("SELECT cid FROM {aggregator_category} WHERE title = '%s'", $form_state['values']['title']));
+      $category = db_query("SELECT cid FROM {aggregator_category} WHERE title = :title", array(':title' => $form_state['values']['title']))->fetchObject();
     }
     if ($category) {
       form_set_error('title', t('A category named %category already exists. Please enter a unique title.', array('%category' => $form_state['values']['title'])));

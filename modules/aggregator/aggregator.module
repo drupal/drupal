@@ -262,7 +262,7 @@ function aggregator_init() {
  *   TRUE if there is at least one category and the user has access to them, FALSE otherwise.
  */
 function _aggregator_has_categories() {
-  return user_access('access news feeds') && db_result(db_query('SELECT COUNT(*) FROM {aggregator_category}'));
+  return user_access('access news feeds') && db_query('SELECT COUNT(*) FROM {aggregator_category}')->fetchField();
 }
 
 /**
@@ -287,9 +287,9 @@ function aggregator_perm() {
  * Checks news feeds for updates once their refresh interval has elapsed.
  */
 function aggregator_cron() {
-  $result = db_query('SELECT * FROM {aggregator_feed} WHERE checked + refresh < %d', REQUEST_TIME);
-  while ($feed = db_fetch_array($result)) {
-    aggregator_refresh($feed);
+  $result = db_query('SELECT * FROM {aggregator_feed} WHERE checked + refresh < :time', array(':time' => REQUEST_TIME));
+  foreach ($result as $feed) {
+    aggregator_refresh((array)$feed);
   }
 }
 
@@ -302,18 +302,18 @@ function aggregator_block($op = 'list', $delta = '', $edit = array()) {
   if (user_access('access news feeds')) {
     if ($op == 'list') {
       $result = db_query('SELECT cid, title FROM {aggregator_category} ORDER BY title');
-      while ($category = db_fetch_object($result)) {
+      foreach ($result as $category) {
         $block['category-' . $category->cid]['info'] = t('!title category latest items', array('!title' => $category->title));
       }
       $result = db_query('SELECT fid, title FROM {aggregator_feed} WHERE block <> 0 ORDER BY fid');
-      while ($feed = db_fetch_object($result)) {
+      foreach ($result as $feed) {
         $block['feed-' . $feed->fid]['info'] = t('!title feed latest items', array('!title' => $feed->title));
       }
     }
     elseif ($op == 'configure') {
       list($type, $id) = explode('-', $delta);
       if ($type == 'category') {
-        $value = db_result(db_query('SELECT block FROM {aggregator_category} WHERE cid = %d', $id));
+        $value = db_query('SELECT block FROM {aggregator_category} WHERE cid = :cid', array(':cid' => $id))->fetchField();
         $form['block'] = array(
           '#type' => 'select',
           '#title' => t('Number of news items in block'),
@@ -326,30 +326,33 @@ function aggregator_block($op = 'list', $delta = '', $edit = array()) {
     elseif ($op == 'save') {
       list($type, $id) = explode('-', $delta);
       if ($type == 'category') {
-        $value = db_query('UPDATE {aggregator_category} SET block = %d WHERE cid = %d', $edit['block'], $id);
+        db_merge('aggregator_category')
+          ->key(array('cid' => $id))
+          ->fields(array('block' => $edit['block']))
+          ->execute();
       }
     }
     elseif ($op == 'view') {
       list($type, $id) = explode('-', $delta);
       switch ($type) {
         case 'feed':
-          if ($feed = db_fetch_object(db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE block <> 0 AND fid = %d', $id))) {
+          if ($feed = db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE block <> 0 AND fid = :fid', array(':fid' => $id))->fetchObject()) {
             $block['subject'] = check_plain($feed->title);
-            $result = db_query_range('SELECT * FROM {aggregator_item} WHERE fid = %d ORDER BY timestamp DESC, iid DESC', $feed->fid, 0, $feed->block);
+            $result = db_query_range("SELECT * FROM {aggregator_item} WHERE fid = :fid ORDER BY timestamp DESC, iid DESC", array(':fid' => $id), 0, $feed->block);
             $read_more = theme('more_link', url('aggregator/sources/' . $feed->fid), t("View this feed's recent news."));
           }
           break;
 
         case 'category':
-          if ($category = db_fetch_object(db_query('SELECT cid, title, block FROM {aggregator_category} WHERE cid = %d', $id))) {
+          if ($category = db_query('SELECT cid, title, block FROM {aggregator_category} WHERE cid = :cid', array(':cid' => $id))->fetchObject()) {
             $block['subject'] = check_plain($category->title);
-            $result = db_query_range('SELECT i.* FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON ci.iid = i.iid WHERE ci.cid = %d ORDER BY i.timestamp DESC, i.iid DESC', $category->cid, 0, $category->block);
+            $result = db_query_range('SELECT i.* FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON ci.iid = i.iid WHERE ci.cid = :cid ORDER BY i.timestamp DESC, i.iid DESC', array(':cid' => $category->cid), 0, $category->block);
             $read_more = theme('more_link', url('aggregator/categories/' . $category->cid), t("View this category's recent news."));
           }
           break;
       }
       $items = array();
-      while ($item = db_fetch_object($result)) {
+      foreach ($result as $item) {
         $items[] = theme('aggregator_block_item', $item);
       }
 
@@ -375,21 +378,36 @@ function aggregator_save_category($edit) {
   if (!empty($edit['cid'])) {
     $link_path .= $edit['cid'];
     if (!empty($edit['title'])) {
-      db_query("UPDATE {aggregator_category} SET title = '%s', description = '%s' WHERE cid = %d", $edit['title'], $edit['description'], $edit['cid']);
+      db_merge('aggregator_category')
+        ->key(array('cid' => $edit['cid']))
+        ->fields(array(
+          'title' => $edit['title'],
+          'description' => $edit['description'],
+        ))
+        ->execute();
       $op = 'update';
     }
     else {
-      db_query('DELETE FROM {aggregator_category} WHERE cid = %d', $edit['cid']);
+      db_delete('aggregator_category')
+        ->condition('cid', $edit['cid'])
+        ->execute();
       // Make sure there is no active block for this category.
-      db_query("DELETE FROM {blocks} WHERE module = '%s' AND delta = '%s'", 'aggregator', 'category-' . $edit['cid']);
+      db_delete('blocks')
+        ->condition('module', 'aggregator')
+        ->condition('delta', 'category-' . $edit['cid'])
+        ->execute();
       $edit['title'] = '';
       $op = 'delete';
     }
   }
   elseif (!empty($edit['title'])) {
     // A single unique id for bundles and feeds, to use in blocks.
-    db_query("INSERT INTO {aggregator_category} (title, description, block) VALUES ('%s', '%s', 5)", $edit['title'], $edit['description']);
-    $link_path .= db_last_insert_id('aggregator_category', 'cid');
+    $link_path .= db_insert('aggregator_category')
+      ->fields(array(
+        'title' => $edit['title'],
+        'description' => $edit['description'],
+      ))
+      ->execute();
     $op = 'insert';
   }
   if (isset($op)) {
@@ -406,36 +424,64 @@ function aggregator_save_category($edit) {
 function aggregator_save_feed($edit) {
   if (!empty($edit['fid'])) {
     // An existing feed is being modified, delete the category listings.
-    db_query('DELETE FROM {aggregator_category_feed} WHERE fid = %d', $edit['fid']);
+    db_delete('aggregator_category_feed')
+      ->condition('fid', $edit['fid'])
+      ->execute();
   }
   if (!empty($edit['fid']) && !empty($edit['title'])) {
-    db_query("UPDATE {aggregator_feed} SET title = '%s', url = '%s', refresh = %d, block = %d WHERE fid = %d", $edit['title'], $edit['url'], $edit['refresh'], $edit['block'], $edit['fid']);
+    db_update('aggregator_feed')
+      ->condition('fid', $edit['fid'])
+      ->fields(array(
+        'title' => $edit['title'],
+        'url' => $edit['url'],
+        'refresh' => $edit['refresh'],
+        'block' => $edit['block'],
+      ))
+      ->execute();
   }
   elseif (!empty($edit['fid'])) {
-    $items = array();
-    $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = %d', $edit['fid']);
-    while ($item = db_fetch_object($result)) {
-      $items[] = "iid = $item->iid";
+    $iids = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $edit['fid']))->fetchCol();
+    if ($iids) {
+      db_delete('aggregator_category_item')
+        ->condition('iid', $iids, 'IN')
+        ->execute();
     }
-    if (!empty($items)) {
-      db_query('DELETE FROM {aggregator_category_item} WHERE ' . implode(' OR ', $items));
-    }
-    db_query('DELETE FROM {aggregator_feed} WHERE fid = %d', $edit['fid']);
-    db_query('DELETE FROM {aggregator_item} WHERE fid = %d', $edit['fid']);
+    db_delete('aggregator_feed')->
+      condition('fid', $edit['fid'])
+      ->execute();
+    db_delete('aggregator_item')
+      ->condition('fid', $edit['fid'])
+      ->execute();
     // Make sure there is no active block for this feed.
-    db_query("DELETE FROM {blocks} WHERE module = '%s' AND delta = '%s'", 'aggregator', 'feed-' . $edit['fid']);
+    db_delete('blocks')
+      ->condition('module', 'aggregator')
+      ->condition('delta', 'feed-' . $edit['fid'])
+      ->execute();
   }
   elseif (!empty($edit['title'])) {
-    db_query("INSERT INTO {aggregator_feed} (title, url, refresh, block, description, image) VALUES ('%s', '%s', %d, %d, '', '')", $edit['title'], $edit['url'], $edit['refresh'], $edit['block']);
-    // A single unique ID for bundles and feeds, to use in blocks.
-    $edit['fid'] = db_last_insert_id('aggregator_feed', 'fid');
+    $edit['fid'] = db_insert('aggregator_feed')
+      ->fields(array(
+        'title' => $edit['title'],
+        'url' => $edit['url'],
+        'refresh' => $edit['refresh'],
+        'block' => $edit['block'],
+        'description' => '',
+        'image' => '',
+      ))
+      ->execute();
+    
   }
   if (!empty($edit['title'])) {
     // The feed is being saved, save the categories as well.
     if (!empty($edit['category'])) {
       foreach ($edit['category'] as $cid => $value) {
         if ($value) {
-          db_query('INSERT INTO {aggregator_category_feed} (fid, cid) VALUES (%d, %d)', $edit['fid'], $cid);
+          db_merge('aggregator_category_feed')
+            ->fields(array(
+              'fid' => $edit['fid'],
+              'cid' => $cid,
+            ))
+            ->execute();
         }
       }
     }
@@ -449,15 +495,26 @@ function aggregator_save_feed($edit) {
  *   An associative array describing the feed to be cleared.
  */
 function aggregator_remove($feed) {
-  $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = %d', $feed['fid']);
-  while ($item = db_fetch_object($result)) {
-    $items[] = "iid = $item->iid";
+  $iids = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed['fid']))->fetchCol();
+  if ($iids) {
+    db_delete('aggregator_category_item')
+      ->condition('iid', $iids, 'IN')
+      ->execute();
   }
-  if (!empty($items)) {
-    db_query('DELETE FROM {aggregator_category_item} WHERE ' . implode(' OR ', $items));
-  }
-  db_query('DELETE FROM {aggregator_item} WHERE fid = %d', $feed['fid']);
-  db_query("UPDATE {aggregator_feed} SET checked = 0, hash = '', etag = '', modified = 0 WHERE fid = %d", $feed['fid']);
+  
+  db_delete('aggregator_item')
+    ->condition('fid', $feed['fid'])
+    ->execute();
+  db_merge('aggregator_feed')
+    ->key(array('fid' => $feed['fid']))
+    ->fields(array(
+      'checked' => 0,
+      'hash' => '',
+      'modified' => 0,
+      'description' => $feed['description'],
+      'image' => $feed['image'],
+    ))
+    ->execute();
   drupal_set_message(t('The news items from %site have been removed.', array('%site' => $feed['title'])));
 }
 
@@ -598,7 +655,10 @@ function aggregator_refresh($feed) {
   // Process HTTP response code.
   switch ($result->code) {
     case 304:
-      db_query('UPDATE {aggregator_feed} SET checked = %d WHERE fid = %d', REQUEST_TIME, $feed['fid']);
+      db_update('aggregator_feed')
+        ->fields(array('checked' => REQUEST_TIME))
+        ->condition('fid', $feed['fid'])
+        ->execute();
       drupal_set_message(t('There is no new syndicated content from %site.', array('%site' => $feed['title'])));
       break;
     case 301:
@@ -612,7 +672,10 @@ function aggregator_refresh($feed) {
       // data. If both are equal we say that feed is not updated.
       $md5 = md5($result->data);
       if ($feed['hash'] == $md5) {
-        db_query('UPDATE {aggregator_feed} SET checked = %d WHERE fid = %d', REQUEST_TIME, $feed['fid']);
+        db_update('aggregator_feed')
+          ->condition('fid', $feed['fid'])
+          ->fields(array('checked' => REQUEST_TIME))
+          ->execute();
         drupal_set_message(t('There is no new syndicated content from %site.', array('%site' => $feed['title'])));
         break;
       }
@@ -642,7 +705,19 @@ function aggregator_refresh($feed) {
 
         $etag = empty($result->headers['ETag']) ? '' : $result->headers['ETag'];
         // Update the feed data.
-        db_query("UPDATE {aggregator_feed} SET url = '%s', checked = %d, link = '%s', description = '%s', image = '%s', hash = '%s', etag = '%s', modified = %d WHERE fid = %d", $feed['url'], REQUEST_TIME, $channel['LINK'], $channel['DESCRIPTION'], $image, $md5, $etag, $modified, $feed['fid']);
+        db_merge('aggregator_feed')
+          ->key(array('fid' => $feed['fid']))
+          ->fields(array(
+            'url' => $feed['url'],
+            'checked' => REQUEST_TIME,
+            'link' => $channel['LINK'],
+            'description' => $channel['DESCRIPTION'],
+            'image' => $image,
+            'hash' => $md5,
+            'etag' => $etag,
+            'modified' => $modified,
+          ))
+          ->execute();
 
         // Clear the cache.
         cache_clear_all();
@@ -799,13 +874,13 @@ function aggregator_parse_feed(&$data, $feed) {
     // we find a duplicate entry, we resolve it and pass along its ID is such
     // that we can update it if needed.
     if (!empty($guid)) {
-      $entry = db_fetch_object(db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = %d AND guid = '%s'", $feed['fid'], $guid));
+      $entry = db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = :fid AND guid = :guid", array(':fid' => $feed['fid'], ':guid' => $guid))->fetchObject();
     }
     elseif ($link && $link != $feed['link'] && $link != $feed['url']) {
-      $entry = db_fetch_object(db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = %d AND link = '%s'", $feed['fid'], $link));
+      $entry = db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = :fid AND link = :link", array(':fid' => $feed['fid'], ':link' => $link))->fetchObject();
     }
     else {
-      $entry = db_fetch_object(db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = %d AND title = '%s'", $feed['fid'], $title));
+      $entry = db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = :fid AND title = :title", array(':fid' => $feed['fid'], ':title' => $title))->fetchObject();
     }
 
     if (!$timestamp) {
@@ -817,17 +892,14 @@ function aggregator_parse_feed(&$data, $feed) {
 
   // Remove all items that are older than flush item timer.
   $age = REQUEST_TIME - variable_get('aggregator_clear', 9676800);
-  $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = %d AND timestamp < %d', $feed['fid'], $age);
-
-  $items = array();
-  $num_rows = FALSE;
-  while ($item = db_fetch_object($result)) {
-    $items[] = $item->iid;
-    $num_rows = TRUE;
-  }
-  if ($num_rows) {
-    db_query('DELETE FROM {aggregator_category_item} WHERE iid IN (' . implode(', ', $items) . ')');
-    db_query('DELETE FROM {aggregator_item} WHERE fid = %d AND timestamp < %d', $feed['fid'], $age);
+  $iids = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid AND timestamp < :timestamp', array(':fid' => $feed['fid'], ':timestamp' => $age))->fetchCol();
+  if ($iids) {
+    db_delete('aggregator_category_item')
+      ->condition('iid', $iids, 'IN')
+      ->execute();
+    db_delete('aggregator_item')
+      ->condition('iid', $iids, 'IN')
+      ->execute();
   }
 
   return TRUE;
@@ -840,20 +912,37 @@ function aggregator_parse_feed(&$data, $feed) {
  *   An associative array describing the item to be added/edited/deleted.
  */
 function aggregator_save_item($edit) {
-  if ($edit['iid'] && $edit['title']) {
-    db_query("UPDATE {aggregator_item} SET title = '%s', link = '%s', author = '%s', description = '%s', guid = '%s', timestamp = %d WHERE iid = %d", $edit['title'], $edit['link'], $edit['author'], $edit['description'], $edit['guid'], $edit['timestamp'], $edit['iid']);
+  if ($edit['title'] && empty($edit['iid'])) {
+    $edit['iid'] = db_insert('aggregator_item')
+      ->fields(array(
+        'title' => $edit['title'],
+        'link' => $edit['link'],
+        'author' => $edit['author'],
+        'description' => $edit['description'],
+        'guid' => $edit['guid'],
+        'timestamp' => $edit['timestamp'],
+        'fid' => $edit['fid'],
+      ))
+      ->execute();
   }
-  elseif ($edit['iid']) {
-    db_query('DELETE FROM {aggregator_item} WHERE iid = %d', $edit['iid']);
-    db_query('DELETE FROM {aggregator_category_item} WHERE iid = %d', $edit['iid']);
+  if ($edit['iid'] && !$edit['title']) {
+    db_delete('aggregator_item')
+      ->condition('iid', $edit['iid'])
+      ->execute();
+    db_delete('aggregator_category_item')
+      ->condition('iid', $edit['iid'])
+      ->execute();
   }
   elseif ($edit['title'] && $edit['link']) {
-    db_query("INSERT INTO {aggregator_item} (fid, title, link, author, description, timestamp, guid) VALUES (%d, '%s', '%s', '%s', '%s', %d, '%s')", $edit['fid'], $edit['title'], $edit['link'], $edit['author'], $edit['description'], $edit['timestamp'], $edit['guid']);
-    $edit['iid'] = db_last_insert_id('aggregator_item', 'iid');
     // file the items in the categories indicated by the feed
-    $categories = db_query('SELECT cid FROM {aggregator_category_feed} WHERE fid = %d', $edit['fid']);
-    while ($category = db_fetch_object($categories)) {
-      db_query('INSERT INTO {aggregator_category_item} (cid, iid) VALUES (%d, %d)', $category->cid, $edit['iid']);
+    $result = db_query('SELECT cid FROM {aggregator_category_feed} WHERE fid = :fid', array(':fid' => $edit['fid']));
+    foreach ($result as $category) {
+      db_merge('aggregator_category_item')
+        ->fields(array(
+          'cid' => $category->cid,
+          'iid' => $edit['iid'],
+        ))
+        ->execute();
     }
   }
 }
@@ -869,7 +958,7 @@ function aggregator_save_item($edit) {
 function aggregator_feed_load($fid) {
   static $feeds;
   if (!isset($feeds[$fid])) {
-    $feeds[$fid] = db_fetch_array(db_query('SELECT * FROM {aggregator_feed} WHERE fid = %d', $fid));
+    $feeds[$fid] = db_query('SELECT * FROM {aggregator_feed} WHERE fid = :fid', array(':fid' => $fid))->fetchAssoc();
   }
 
   return $feeds[$fid];
@@ -886,7 +975,7 @@ function aggregator_feed_load($fid) {
 function aggregator_category_load($cid) {
   static $categories;
   if (!isset($categories[$cid])) {
-    $categories[$cid] = db_fetch_array(db_query('SELECT * FROM {aggregator_category} WHERE cid = %d', $cid));
+    $categories[$cid] = db_query('SELECT * FROM {aggregator_category} WHERE cid = :cid', array(':cid' => $cid))->fetchAssoc();
   }
 
   return $categories[$cid];

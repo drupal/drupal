@@ -23,7 +23,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/content/aggregator/add/feed', $edit, t('Save'));
     $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), t('The feed !name has been added.', array('!name' => $edit['title'])));
 
-    $feed = db_fetch_object(db_query("SELECT *  FROM {aggregator_feed} WHERE title = '%s' AND url='%s'", $edit['title'], $edit['url']));
+    $feed = db_query("SELECT *  FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $edit['title'], ':url' => $edit['url']))->fetch();
     $this->assertTrue(!empty($feed), t('The feed found in database.'));
     return $feed;
   }
@@ -65,17 +65,18 @@ class AggregatorTestCase extends DrupalWebTestCase {
     $this->assertResponse(200, t('rss.xml is reachable.'));
 
     // Our tests are based off of rss.xml, so let's find out how many elements should be related.
-    $feed_count = db_result(db_query_range(db_rewrite_sql('SELECT COUNT(*) FROM {node} n WHERE n.promote = 1 AND n.status = 1'), 0, variable_get('feed_default_items', 10)));
+    // @todo: remove db_rewrite_sql() when possible
+    $feed_count = db_query_range(db_rewrite_sql('SELECT COUNT(*) FROM {node} n WHERE n.promote = 1 AND n.status = 1'), 0, variable_get('feed_default_items', 10))->fetchField();
     $feed_count = $feed_count > 10 ? 10 : $feed_count;
 
     // Refresh the feed (simulated link click).
     $this->drupalGet('admin/content/aggregator/update/' . $feed->fid);
 
     // Ensure we have the right number of items.
-    $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = %d', $feed->fid);
+    $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid));
     $items = array();
     $feed->items = array();
-    while ($item = db_fetch_object($result)) {
+    foreach ($result as $item) {
       $feed->items[] = $item->iid;
     }
     $feed->item_count = count($feed->items);
@@ -99,8 +100,8 @@ class AggregatorTestCase extends DrupalWebTestCase {
    */
   function getFeedCategories($feed) {
     // add the categories to the feed so we can use them
-    $result = db_query('SELECT cid FROM {aggregator_category_feed} WHERE fid = %d', $feed->fid);
-    while ($category = db_fetch_object($result)) {
+    $result = db_query('SELECT cid FROM {aggregator_category_feed} WHERE fid = :fid', array(':fid' => $feed->fid));
+    foreach ($result as $category) {
       $feed->categories[] = $category->cid;
     }
   }
@@ -113,7 +114,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
    * @return boolean Feed is unique.
    */
   function uniqueFeed($feed_name, $feed_url) {
-    $result = db_result(db_query("SELECT count(*) FROM {aggregator_feed} WHERE title = '%s' AND url='%s'", $feed_name, $feed_url));
+    $result = db_query("SELECT COUNT(*) FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $feed_name, ':url' => $feed_url))->fetchField();
     return (1 == $result);
   }
 
@@ -324,7 +325,7 @@ class RemoveFeedTestCase extends AggregatorTestCase {
     $this->assertResponse(404, t('Deleted feed source does not exists.'));
 
     // Check database for feed.
-    $result = db_result(db_query("SELECT count(*) FROM {aggregator_feed} WHERE title = '%s' AND url='%s'", $feed->title, $feed->url));
+    $result = db_query("SELECT COUNT(*) FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $feed->title, ':url' => $feed->url))->fetchField();
     $this->assertFalse($result, t('Feed not found in database'));
   }
 }
@@ -366,17 +367,25 @@ class UpdateFeedItemTestCase extends AggregatorTestCase {
     $this->drupalPost('admin/content/aggregator/add/feed', $edit, t('Save'));
     $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), t('The feed !name has been added.', array('!name' => $edit['title'])));
 
-    $feed = db_fetch_object(db_query("SELECT * FROM {aggregator_feed} WHERE url = '%s'", $edit['url']));
+    $feed = db_query("SELECT * FROM {aggregator_feed} WHERE url = '%s'", array($edit['url']))->fetchObject();
     $this->drupalGet('admin/content/aggregator/update/' . $feed->fid);
 
-    $before = db_result(db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = %d', $feed->fid));
+    $before = db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
 
     // Sleep for 3 second.
     sleep(3);
-    db_query("UPDATE {aggregator_feed} SET checked = 0, hash = '', etag = '', modified = 0 WHERE fid = %d", $feed->fid);
+    db_update('aggregator_feed')
+      ->condition('fid', $feed->fid)
+      ->fields(array(
+        'checked' => 0,
+        'hash' => '',
+        'etag' => '',
+        'modified' => 0,
+      ))
+      ->execute();
     $this->drupalGet('admin/content/aggregator/update/' . $feed->fid);
 
-    $after = db_result(db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = %d', $feed->fid));
+    $after = db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
 
     $this->assertTrue($before === $after, t('Publish timestamp of feed item was not updated (!before === !after)', array('!before' => $before, '!after' => $after)));
   }
@@ -403,7 +412,7 @@ class RemoveFeedItemTestCase extends AggregatorTestCase {
     // Add and remove feed items and ensure that the count is zero.
     $this->updateFeedItems($feed);
     $this->removeFeedItems($feed);
-    $count = db_result(db_query('SELECT COUNT(*) FROM {aggregator_item} WHERE fid = %d', $feed->fid));
+    $count = db_query('SELECT COUNT(*) FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
     $this->assertTrue($count == 0);
 
     // Delete feed.
@@ -434,11 +443,11 @@ class CategorizeFeedItemTestCase extends AggregatorTestCase {
     $this->drupalPost('admin/content/aggregator/add/category', $edit, t('Save'));
     $this->assertRaw(t('The category %title has been added.', array('%title' => $edit['title'])), t('The category %title has been added.', array('%title' => $edit['title'])));
 
-    $category = db_fetch_object(db_query("SELECT * FROM {aggregator_category} WHERE title = '%s'", $edit['title']));
+    $category = db_query("SELECT * FROM {aggregator_category} WHERE title = :title", array(':title' => $edit['title']))->fetch();
     $this->assertTrue(!empty($category), t('The category found in database.'));
 
     $link_path = 'aggregator/categories/' . $category->cid;
-    $menu_link = db_fetch_object(db_query("SELECT * FROM {menu_links} WHERE link_path = '%s'", $link_path));
+    $menu_link = db_query("SELECT * FROM {menu_links} WHERE link_path = :link_path", array(':link_path' => $link_path))->fetch();
     $this->assertTrue(!empty($menu_link), t('The menu link associated with the category found in database.'));
 
     // TODO: Need to add categories to the feed on creation.
@@ -449,8 +458,12 @@ class CategorizeFeedItemTestCase extends AggregatorTestCase {
     // For each category of a feed, ensure feed items have that category, too.
     if (!empty($feed->categories) && !empty($feed->items)) {
       foreach ($feed->categories as $category) {
-        $items_str = implode(', ', $feed->items);
-        $categorized_count = db_result(db_query('SELECT COUNT(*) FROM {aggregator_category_item} WHERE iid IN (' . $items_str . ')'));
+        $categorized_count = db_select('aggregator_category_item')
+          ->condition('iid', $feed->items, 'IN')
+          ->countQuery()
+          ->execute()
+          ->fetchField();
+        
         $this->assertEqual($feed->item_count, $categorized_count, t('Total items in feed equal to the total categorized feed items in database'));
       }
     }
@@ -478,10 +491,16 @@ class ImportOPMLTestCase extends AggregatorTestCase {
    * Open OPML import form.
    */
   function openImportForm() {
-    db_query('DELETE FROM {aggregator_category}');
+    db_delete('aggregator_category')->execute();
 
     $category = $this->randomName(10, self::$prefix);
-    db_query("INSERT INTO {aggregator_category} (cid, title, description) VALUES (%d, '%s', '%s')", 1, $category, '');
+    db_insert('aggregator_category')
+      ->fields(array(
+        'cid' => 1,
+        'title' => $category,
+        'description' => '',
+      ))
+      ->execute();
 
     $this->drupalGet('admin/content/aggregator/add/opml');
     $this->assertText('A single OPML document may contain a collection of many feeds.', t('Looking for help text.'));
@@ -495,7 +514,7 @@ class ImportOPMLTestCase extends AggregatorTestCase {
    * Submit form filled with invalid fields.
    */
   function validateImportFormFields() {
-    $before = db_result(db_query('SELECT COUNT(*) FROM {aggregator_feed}'));
+    $before = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
 
     $form = array();
     $this->drupalPost('admin/content/aggregator/add/opml', $form, t('Import'));
@@ -513,7 +532,7 @@ class ImportOPMLTestCase extends AggregatorTestCase {
     $this->drupalPost('admin/content/aggregator/add/opml', $form, t('Import'));
     $this->assertText(t('This URL is not valid.'), t('Error if the URL is invalid.'));
 
-    $after = db_result(db_query('SELECT COUNT(*) FROM {aggregator_feed}'));
+    $after = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
     $this->assertEqual($before, $after, t('No feeds were added during the three last form submissions.'));
   }
 
@@ -521,7 +540,7 @@ class ImportOPMLTestCase extends AggregatorTestCase {
    * Submit form with invalid, empty and valid OPML files.
    */
   function submitImportForm() {
-    $before = db_result(db_query('SELECT COUNT(*) FROM {aggregator_feed}'));
+    $before = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
 
     $form['files[upload]'] = $this->getInvalidOpml();
     $this->drupalPost('admin/content/aggregator/add/opml', $form, t('Import'));
@@ -531,15 +550,21 @@ class ImportOPMLTestCase extends AggregatorTestCase {
     $this->drupalPost('admin/content/aggregator/add/opml', $form, t('Import'));
     $this->assertText(t('No new feed has been added.'), t('Attempting to load empty OPML from remote URL.'));
 
-    $after = db_result(db_query('SELECT COUNT(*) FROM {aggregator_feed}'));
+    $after = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
     $this->assertEqual($before, $after, t('No feeds were added during the two last form submissions.'));
 
-    db_query('DELETE FROM {aggregator_feed}');
-    db_query('DELETE FROM {aggregator_category}');
-    db_query('DELETE FROM {aggregator_category_feed}');
+    db_delete('aggregator_feed')->execute();
+    db_delete('aggregator_category')->execute();
+    db_delete('aggregator_category_feed')->execute();
 
     $category = $this->randomName(10, self::$prefix);
-    db_query("INSERT INTO {aggregator_category} (cid, title, description) VALUES (%d, '%s', '%s')", 1, $category, '');
+    db_insert('aggregator_category')
+      ->fields(array(
+        'cid' => 1,
+        'title' => $category,
+        'description' => '',
+      ))
+      ->execute();
 
     $feeds[0] = $this->getFeedEditArray();
     $feeds[1] = $this->getFeedEditArray();
@@ -553,16 +578,16 @@ class ImportOPMLTestCase extends AggregatorTestCase {
     $this->assertRaw(t('A feed with the URL %url already exists.', array('%url' => $feeds[0]['url'])), t('Verifying that a duplicate URL was identified'));
     $this->assertRaw(t('A feed named %title already exists.', array('%title' => $feeds[1]['title'])), t('Verifying that a duplicate title was identified'));
 
-    $after = db_result(db_query('SELECT COUNT(*) FROM {aggregator_feed}'));
+    $after = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
     $this->assertEqual($after, 2, t('Verifying that two distinct feeds were added.'));
 
     $feeds_from_db = db_query("SELECT f.title, f.url, f.refresh, cf.cid FROM {aggregator_feed} f LEFT JOIN {aggregator_category_feed} cf ON f.fid = cf.fid");
     $refresh = $category = TRUE;
-    while ($feed = db_fetch_array($feeds_from_db)) {
-      $title[$feed['url']] = $feed['title'];
-      $url[$feed['title']] = $feed['url'];
-      $category = $category && $feed['cid'] == 1;
-      $refresh = $refresh && $feed['refresh'] == 900;
+    foreach ($feeds_from_db as $feed) {
+      $title[$feed->url] = $feed->title;
+      $url[$feed->title] = $feed->url;
+      $category = $category && $feed->cid == 1;
+      $refresh = $refresh && $feed->refresh == 900;
     }
 
     $this->assertEqual($title[$feeds[0]['url']], $feeds[0]['title'], t('First feed was added correctly.'));

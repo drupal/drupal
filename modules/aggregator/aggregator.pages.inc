@@ -15,7 +15,7 @@
 function aggregator_page_last() {
   drupal_add_feed(url('aggregator/rss'), variable_get('site_name', 'Drupal') . ' ' . t('aggregator'));
 
-  $items = aggregator_feed_items_load('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC');
+  $items = aggregator_feed_items_load('sum');
 
   return _aggregator_page_list($items, arg(1));
 }
@@ -42,7 +42,7 @@ function aggregator_page_source($arg1, $arg2 = NULL) {
 
   // It is safe to include the fid in the query because it's loaded from the
   // database by aggregator_feed_load.
-  $items = aggregator_feed_items_load('SELECT * FROM {aggregator_item} WHERE fid = ' . $feed->fid . ' ORDER BY timestamp DESC, iid DESC');
+  $items = aggregator_feed_items_load('source', $feed);
 
   return _aggregator_page_list($items, arg(3), $feed_source);
 }
@@ -68,31 +68,39 @@ function aggregator_page_category($arg1, $arg2 = NULL) {
 
   // It is safe to include the cid in the query because it's loaded from the
   // database by aggregator_category_load.
-  $items = aggregator_feed_items_load('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = ' . $category['cid'] . ' ORDER BY timestamp DESC, i.iid DESC');
+  $items = aggregator_feed_items_load('category', $category);
 
   return _aggregator_page_list($items, arg(3));
 }
 
 /**
- * Load feed items by passing a SQL query.
+ * Load feed items
  *
- * @param $sql
- *   The query to be executed.
+ * @param $type
+ *   The filter for the items. Possible values: 'sum', 'source', 'category'
+ * @param $data
+ *   Feed or category data for filtering
  * @return
  *   An array of the feed items.
  */
-function aggregator_feed_items_load($sql) {
+function aggregator_feed_items_load($type, $data = NULL) {
   $items = array();
-  if (isset($sql)) {
-    $result = pager_query($sql, 20);
-    while ($item = db_fetch_object($result)) {
-      $result_category = db_query('SELECT c.title, c.cid FROM {aggregator_category_item} ci LEFT JOIN {aggregator_category} c ON ci.cid = c.cid WHERE ci.iid = %d ORDER BY c.title', $item->iid);
-      $item->categories = array();
-      while ($item_categories = db_fetch_object($result_category)) {
-        $item->categories[] = $item_categories;
-      }
-      $items[$item->iid] = $item;
-    }
+  $range_limit = 20;
+  switch ($type) {
+    case 'sum':
+      $result = db_query_range('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC', 0, $range_limit);
+      break;
+    case 'source':
+      $result = db_query_range('SELECT * FROM {aggregator_item} WHERE fid = :fid ORDER BY timestamp DESC, iid DESC', array(':fid' => $data->fid), 0, $range_limit);
+      break;
+    case 'category':
+      $result = db_query_range('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = :cid ORDER BY timestamp DESC, i.iid DESC', array(':cid' => $data['cid']), 0, $range_limit);
+      break;
+  }
+
+  foreach ($result as $item) {
+    $item->categories = db_query('SELECT c.title, c.cid FROM {aggregator_category_item} ci LEFT JOIN {aggregator_category} c ON ci.cid = c.cid WHERE ci.iid = :iid ORDER BY c.title', array(':iid' => $item->iid))->fetchAll();
+    $items[] = $item;
   }
 
   return $items;
@@ -158,9 +166,9 @@ function aggregator_categorize_items($items, $feed_source = '') {
   foreach ($items as $item) {
     $form['items'][$item->iid] = array('#markup' => theme('aggregator_item', $item));
     $form['categories'][$item->iid] = array();
-    $categories_result = db_query('SELECT c.cid, c.title, ci.iid FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid AND ci.iid = %d', $item->iid);
+    $categories_result = db_query('SELECT c.cid, c.title, ci.iid FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid AND ci.iid = :iid', array(':iid' => $item->iid));
     $selected = array();
-    while ($category = db_fetch_object($categories_result)) {
+    foreach ($categories_result as $category) {
       if (!$done) {
         $categories[$category->cid] = check_plain($category->title);
       }
@@ -197,11 +205,22 @@ function aggregator_categorize_items_validate($form, &$form_state) {
 function aggregator_categorize_items_submit($form, &$form_state) {
   if (!empty($form_state['values']['categories'])) {
     foreach ($form_state['values']['categories'] as $iid => $selection) {
-      db_query('DELETE FROM {aggregator_category_item} WHERE iid = %d', $iid);
+      db_delete('aggregator_category_item')
+        ->condition('iid', $iid)
+        ->execute();
+      $insert = db_insert('aggregator_category_item')->fields(array('iid', 'cid'));
+      $has_values = FALSE;
       foreach ($selection as $cid) {
-        if ($cid) {
-          db_query('INSERT INTO {aggregator_category_item} (cid, iid) VALUES (%d, %d)', $cid, $iid);
+        if ($cid && $iid) {
+          $has_values = TRUE;
+          $insert->values(array(
+            'iid' => $iid,
+            'cid' => $cid,
+          ));
         }
+      }
+      if ($has_values) {
+        $insert->execute();
       }
     }
   }
@@ -284,12 +303,12 @@ function aggregator_page_sources() {
   $result = db_query('SELECT f.fid, f.title, f.description, f.image, MAX(i.timestamp) AS last FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.description, f.image ORDER BY last DESC, f.title');
 
   $output = '';
-  while ($feed = db_fetch_object($result)) {
+  foreach ($result as $feed) {
     // Most recent items:
     $summary_items = array();
     if (variable_get('aggregator_summary_items', 3)) {
-      $items = db_query_range('SELECT i.title, i.timestamp, i.link FROM {aggregator_item} i WHERE i.fid = %d ORDER BY i.timestamp DESC', $feed->fid, 0, variable_get('aggregator_summary_items', 3));
-      while ($item = db_fetch_object($items)) {
+      $items = db_query_range('SELECT i.title, i.timestamp, i.link FROM {aggregator_item} i WHERE i.fid = :fid ORDER BY i.timestamp DESC', array(':fid' => $feed->fid), 0, variable_get('aggregator_summary_items', 3));
+      foreach ($items as $item) {
         $summary_items[] = theme('aggregator_summary_item', $item);
       }
     }
@@ -308,11 +327,11 @@ function aggregator_page_categories() {
   $result = db_query('SELECT c.cid, c.title, c.description FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid LEFT JOIN {aggregator_item} i ON ci.iid = i.iid GROUP BY c.cid, c.title, c.description');
 
   $output = '';
-  while ($category = db_fetch_object($result)) {
+  foreach ($result as $category) {
     if (variable_get('aggregator_summary_items', 3)) {
       $summary_items = array();
-      $items = db_query_range('SELECT i.title, i.timestamp, i.link, f.title as feed_title, f.link as feed_link FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON i.iid = ci.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE ci.cid = %d ORDER BY i.timestamp DESC', $category->cid, 0, variable_get('aggregator_summary_items', 3));
-      while ($item = db_fetch_object($items)) {
+      $items = db_query_range('SELECT i.title, i.timestamp, i.link, f.title as feed_title, f.link as feed_link FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON i.iid = ci.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE ci.cid = :cid ORDER BY i.timestamp DESC', array(':cid' => $category->cid), 0, variable_get('aggregator_summary_items', 3));
+      foreach ($items as $item) {
         $summary_items[] = theme('aggregator_summary_item', $item);
       }
     }
@@ -330,22 +349,16 @@ function aggregator_page_rss() {
   $result = NULL;
   // arg(2) is the passed cid, only select for that category.
   if (arg(2)) {
-    $category = db_fetch_object(db_query('SELECT cid, title FROM {aggregator_category} WHERE cid = %d', arg(2)));
-    $sql = 'SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = %d ORDER BY timestamp DESC, i.iid DESC';
-    $result = db_query_range($sql, $category->cid, 0, variable_get('feed_default_items', 10));
+    $category = db_query('SELECT cid, title FROM {aggregator_category} WHERE cid = :cid', array(':cid' => arg(2)))->fetchObject();
+    $result = db_query_range('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = :cid ORDER BY timestamp DESC, i.iid DESC', array(':cid' => $category->cid), 0, variable_get('feed_default_items', 10));
   }
   // Or, get the default aggregator items.
   else {
     $category = NULL;
-    $sql = 'SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC';
-    $result = db_query_range($sql, 0, variable_get('feed_default_items', 10));
+    $result = db_query_range('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC', 0, variable_get('feed_default_items', 10));
   }
 
-  $feeds = array();
-  while ($item = db_fetch_object($result)) {
-    $feeds[] = $item;
-  }
-
+  $feeds = $result->fetchAll();
   return theme('aggregator_page_rss', $feeds, $category);
 }
 
@@ -401,17 +414,13 @@ function theme_aggregator_page_rss($feeds, $category = NULL) {
  */
 function aggregator_page_opml($cid = NULL) {
   if ($cid) {
-    $result = db_query('SELECT f.title, f.url FROM {aggregator_feed} f LEFT JOIN {aggregator_category_feed} c on f.fid = c.fid WHERE c.cid = %d ORDER BY title', $cid);
+    $result = db_query('SELECT f.title, f.url FROM {aggregator_feed} f LEFT JOIN {aggregator_category_feed} c on f.fid = c.fid WHERE c.cid = :cid ORDER BY title', array(':cid' => $cid));
   }
   else {
     $result = db_query('SELECT * FROM {aggregator_feed} ORDER BY title');
   }
 
-  $feeds = array();
-  while ($item = db_fetch_object($result)) {
-    $feeds[] = $item;
-  }
-
+  $feeds = $result->fetchAll();
   return theme('aggregator_page_opml', $feeds);
 }
 
