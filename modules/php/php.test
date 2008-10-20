@@ -40,7 +40,7 @@ class PHPTestCase extends DrupalWebTestCase {
 /**
  * Tests to make sure the PHP filter actually evaluates PHP code when used.
  */
-class PHPFitlerTestCase extends PHPTestCase {
+class PHPFilterTestCase extends PHPTestCase {
   /**
    * Implementation of getInfo().
    */
