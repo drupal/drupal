@@ -1799,7 +1799,7 @@ function template_preprocess_page(&$variables) {
   // Load all region content assigned via blocks.
   foreach (array_keys($regions) as $region) {
     // Prevent left and right regions from rendering blocks when 'show_blocks' == FALSE.
-    if (!(!$variables['show_blocks'] && ($region == 'left' || $region == 'right'))) {
+    if ($variables['show_blocks'] || ($region != 'left' && $region != 'right')) {
       $blocks = theme('blocks', $region);
     }
     else {
