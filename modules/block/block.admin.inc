@@ -302,7 +302,7 @@ function block_add_block_form_submit($form, &$form_state) {
 
   foreach (list_themes() as $key => $theme) {
     if ($theme->status) {
-      db_query("INSERT INTO {blocks} (visibility, pages, custom, title, module, theme, status, weight, delta, cache) VALUES(%d, '%s', %d, '%s', '%s', '%s', %d, %d, %d, %d)", $form_state['values']['visibility'], trim($form_state['values']['pages']), $form_state['values']['custom'], $form_state['values']['title'], $form_state['values']['module'], $theme->name, 0, 0, $delta, BLOCK_NO_CACHE);
+      db_query("INSERT INTO {blocks} (visibility, pages, custom, title, module, theme, status, weight, delta, cache) VALUES(%d, '%s', %d, '%s', '%s', '%s', %d, %d, '%s', %d)", $form_state['values']['visibility'], trim($form_state['values']['pages']), $form_state['values']['custom'], $form_state['values']['title'], $form_state['values']['module'], $theme->name, 0, 0, $delta, BLOCK_NO_CACHE);
     }
   }
 
@@ -333,7 +333,7 @@ function block_box_delete(&$form_state, $bid = 0) {
  */
 function block_box_delete_submit($form, &$form_state) {
   db_query('DELETE FROM {boxes} WHERE bid = %d', $form_state['values']['bid']);
-  db_query("DELETE FROM {blocks} WHERE module = 'block' AND delta = %d", $form_state['values']['bid']);
+  db_query("DELETE FROM {blocks} WHERE module = 'block' AND delta = '%s'", $form_state['values']['bid']);
   drupal_set_message(t('The block %name has been removed.', array('%name' => $form_state['values']['info'])));
   cache_clear_all();
   $form_state['redirect'] = 'admin/build/block';
