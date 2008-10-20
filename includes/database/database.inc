@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.14 2008/10/16 14:58:46 dries Exp $
+// $Id: database.inc,v 1.15 2008/10/20 11:28:30 dries Exp $
 
 /**
  * @file
@@ -1983,6 +1983,7 @@ function db_change_field(&$ret, $table, $field, $field_new, $spec, $keys_new = a
  */
 function _db_error_page($error = '') {
   global $db_type;
+  drupal_init_language();
   drupal_maintenance_theme();
   drupal_set_header($_SERVER['SERVER_PROTOCOL'] . ' 503 Service Unavailable');
   drupal_set_title('Site offline');
