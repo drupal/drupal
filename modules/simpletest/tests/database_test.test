@@ -57,52 +57,85 @@ class DatabaseTestCase extends DrupalWebTestCase {
    * INSERT operations here, just populate.
    */
   function addSampleData() {
-    db_query("INSERT INTO {test} (name, age, job) VALUES ('John', 25, 'Singer')");
-    $john = db_last_insert_id('test', 'id');
-    db_query("INSERT INTO {test} (name, age, job) VALUES ('George', 27, 'Singer')");
-    $george = db_last_insert_id('test', 'id');
-    db_query("INSERT INTO {test} (name, age, job) VALUES ('Ringo', 28, 'Drummer')");
-    $ringo = db_last_insert_id('test', 'id');
-    db_query("INSERT INTO {test} (name, age, job) VALUES ('Paul', 26, 'Songwriter')");
-    $paul = db_last_insert_id('test', 'id');
+    // We need the IDs, so we can't use a multi-insert here.
+    $john = db_insert('test')
+      ->fields(array(
+        'name' => 'John',
+        'age' => 25,
+        'job' => 'Singer',
+      ))
+      ->execute();
 
-    db_query("INSERT INTO {test_people} (name, age, job) VALUES ('Meredith', 30, 'Speaker')");
+    $george = db_insert('test')
+      ->fields(array(
+        'name' => 'George',
+        'age' => 27,
+        'job' => 'Singer',
+      ))
+      ->execute();
 
-    db_query("INSERT INTO {test_task} (pid, task, priority) VALUES (:pid, :task, :priority)", array(
-      ':pid' => $john,
-      ':task' => 'eat',
-      ':priority' => 3,
-    ));
-    db_query("INSERT INTO {test_task} (pid, task, priority) VALUES (:pid, :task, :priority)", array(
-      ':pid' => $john,
-      ':task' => 'sleep',
-      ':priority' => 4,
-    ));
-    db_query("INSERT INTO {test_task} (pid, task, priority) VALUES (:pid, :task, :priority)", array(
-      ':pid' => $john,
-      ':task' => 'code',
-      ':priority' => 1,
-    ));
-    db_query("INSERT INTO {test_task} (pid, task, priority) VALUES (:pid, :task, :priority)", array(
-      ':pid' => $george,
-      ':task' => 'sing',
-      ':priority' => 2,
-    ));
-    db_query("INSERT INTO {test_task} (pid, task, priority) VALUES (:pid, :task, :priority)", array(
-      ':pid' => $george,
-      ':task' => 'sleep',
-      ':priority' => 2,
-    ));
-    db_query("INSERT INTO {test_task} (pid, task, priority) VALUES (:pid, :task, :priority)", array(
-      ':pid' => $paul,
-      ':task' => 'found new band',
-      ':priority' => 1,
-    ));
-    db_query("INSERT INTO {test_task} (pid, task, priority) VALUES (:pid, :task, :priority)", array(
-      ':pid' => $paul,
-      ':task' => 'perform at superbowl',
-      ':priority' => 3,
-    ));
+    $ringo = db_insert('test')
+      ->fields(array(
+        'name' => 'Ringo',
+        'age' => 28,
+        'job' => 'Drummer',
+      ))
+      ->execute();
+
+    $paul = db_insert('test')
+      ->fields(array(
+        'name' => 'Paul',
+        'age' => 26,
+        'job' => 'Songwriter',
+      ))
+      ->execute();
+
+    db_insert('test_people')
+      ->fields(array(
+        'name' => 'Meredith',
+        'age' => 30,
+        'job' => 'Speaker',
+      ))
+      ->execute();
+
+    db_insert('test_task')
+      ->fields(array('pid', 'task', 'priority'))
+      ->values(array(
+        'pid' => $john,
+        'task' => 'eat',
+        'priority' => 3,
+      ))
+      ->values(array(
+        'pid' => $john,
+        'task' => 'sleep',
+        'priority' => 4,
+      ))
+      ->values(array(
+        'pid' => $john,
+        'task' => 'code',
+        'priority' => 1,
+      ))
+      ->values(array(
+        'pid' => $george,
+        'task' => 'sing',
+        'priority' => 2,
+      ))
+      ->values(array(
+        'pid' => $george,
+        'task' => 'sleep',
+        'priority' => 2,
+      ))
+      ->values(array(
+        'pid' => $paul,
+        'task' => 'found new band',
+        'priority' => 1,
+      ))
+      ->values(array(
+        'pid' => $paul,
+        'task' => 'perform at superbowl',
+        'priority' => 3,
+      ))
+      ->execute();
   }
 }
 
