@@ -725,7 +725,7 @@ class DrupalWebTestCase {
     $this->original_file_directory = file_directory_path();
     variable_set('file_directory_path', file_directory_path() . '/' . $db_prefix);
     $directory = file_directory_path();
-    file_check_directory($directory, TRUE); // Create the files directory.
+    file_check_directory($directory, FILE_CREATE_DIRECTORY); // Create the files directory.
   }
 
   /**
