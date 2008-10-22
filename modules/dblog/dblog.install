@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.install,v 1.8 2008/08/21 19:36:37 dries Exp $
+// $Id: dblog.install,v 1.9 2008/10/22 18:32:31 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -98,6 +98,7 @@ function dblog_schema() {
     'primary key' => array('wid'),
     'indexes' => array(
       'type' => array('type'),
+      'uid' => array('uid'),
     ),
   );
 
@@ -111,5 +112,14 @@ function dblog_update_7001() {
   $ret = array();
   db_change_field($ret, 'watchdog', 'link', 'link', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'default' => ''));
   db_change_field($ret, 'watchdog', 'referer', 'referer', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'default' => ''));
+  return $ret;
+}
+
+/**
+ * Add index on uid.
+ */
+function dblog_update_7002() {
+  $ret = array();
+  db_add_index($ret, 'watchdog', 'uid', array('uid'));
   return $ret;
 }
