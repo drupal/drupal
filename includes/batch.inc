@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.25 2008/10/14 11:01:08 webchick Exp $
+// $Id: batch.inc,v 1.26 2008/10/22 19:39:36 dries Exp $
 
 /**
  * @file Batch processing API for processes to run in multiple HTTP requests.
@@ -84,7 +84,7 @@ function _batch_progress_page_js() {
   // error messages. Only safe strings should be passed in to batch_set().
   $current_set = _batch_current_set();
   drupal_set_title($current_set['title'], PASS_THROUGH);
-  drupal_add_js('misc/progress.js', 'core', 'header', FALSE, FALSE);
+  drupal_add_js('misc/progress.js', array('type' => 'core', 'cache' => FALSE));
 
   $url = url($batch['url'], array('query' => array('id' => $batch['id'])));
   $js_setting = array(
@@ -95,7 +95,7 @@ function _batch_progress_page_js() {
     ),
   );
   drupal_add_js($js_setting, 'setting');
-  drupal_add_js('misc/batch.js', 'core', 'header', FALSE, FALSE);
+  drupal_add_js('misc/batch.js', array('type' => 'core', 'cache' => FALSE));
 
   $output = '<div id="progress"></div>';
   return $output;
