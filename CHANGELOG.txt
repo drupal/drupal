@@ -1,7 +1,9 @@
 // $Id$
 
-Drupal 6.6-dev, xxxx-xx-xx (development release)
+Drupal 6.6, 2008-10-22
 ----------------------
+- Fixed security issues, (File inclusion, Cross site scripting), see SA-2008-067
+- Fixed a variety of small bugs.
 
 Drupal 6.5, 2008-10-08
 ----------------------
@@ -139,6 +141,10 @@ Drupal 6.0, 2008-02-13
   contributed module (http://drupal.org/project/site_network).
 - Removed old system updates. Updates from Drupal versions prior to 5.x will
   require upgrading to 5.x before upgrading to 6.x.
+
+Drupal 5.12, 2008-10-22
+-----------------------
+- fixed security issues, (File inclusion), see SA-2008-067
 
 Drupal 5.11, 2008-10-08
 -----------------------
