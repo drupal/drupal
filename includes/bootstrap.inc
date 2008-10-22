@@ -125,26 +125,31 @@ define('DRUPAL_BOOTSTRAP_ACCESS', 3);
 define('DRUPAL_BOOTSTRAP_SESSION', 4);
 
 /**
- * Sixth bootstrap phase: load bootstrap.inc and module.inc, start
+ * Sixth bootstrap phase: initialize the variable system.
+ */
+define('DRUPAL_BOOTSTRAP_VARIABLES', 5);
+
+/**
+ * Seventh bootstrap phase: load bootstrap.inc and module.inc, start
  * the variable system and try to serve a page from the cache.
  */
-define('DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE', 5);
+define('DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE', 6);
 
 /**
- * Seventh bootstrap phase: find out language of the page.
+ * Eighth bootstrap phase: find out language of the page.
  */
-define('DRUPAL_BOOTSTRAP_LANGUAGE', 6);
+define('DRUPAL_BOOTSTRAP_LANGUAGE', 7);
 
 /**
- * Eighth bootstrap phase: set $_GET['q'] to Drupal path of request.
+ * Nineth bootstrap phase: set $_GET['q'] to Drupal path of request.
  */
-define('DRUPAL_BOOTSTRAP_PATH', 7);
+define('DRUPAL_BOOTSTRAP_PATH', 8);
 
 /**
  * Final bootstrap phase: Drupal is fully loaded; validate and fix
  * input data.
  */
-define('DRUPAL_BOOTSTRAP_FULL', 8);
+define('DRUPAL_BOOTSTRAP_FULL', 9);
 
 /**
  * Role ID for anonymous users; should match what's in the "role" table.
@@ -1014,6 +1019,7 @@ function drupal_anonymous_user($session = '') {
  *     DRUPAL_BOOTSTRAP_DATABASE: initialize database layer.
  *     DRUPAL_BOOTSTRAP_ACCESS: identify and reject banned hosts.
  *     DRUPAL_BOOTSTRAP_SESSION: initialize session handling.
+ *     DRUPAL_BOOTSTRAP_VARIABLES: initialize variable handling.
  *     DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE: load bootstrap.inc and module.inc, start
  *       the variable system and try to serve a page from the cache.
  *     DRUPAL_BOOTSTRAP_LANGUAGE: identify the language used on the page.
@@ -1021,7 +1027,7 @@ function drupal_anonymous_user($session = '') {
  *     DRUPAL_BOOTSTRAP_FULL: Drupal is fully loaded, validate and fix input data.
  */
 function drupal_bootstrap($phase = NULL) {
-  static $phases = array(DRUPAL_BOOTSTRAP_CONFIGURATION, DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE, DRUPAL_BOOTSTRAP_DATABASE, DRUPAL_BOOTSTRAP_ACCESS, DRUPAL_BOOTSTRAP_SESSION, DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE, DRUPAL_BOOTSTRAP_LANGUAGE, DRUPAL_BOOTSTRAP_PATH, DRUPAL_BOOTSTRAP_FULL), $completed_phase = -1;
+  static $phases = array(DRUPAL_BOOTSTRAP_CONFIGURATION, DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE, DRUPAL_BOOTSTRAP_DATABASE, DRUPAL_BOOTSTRAP_ACCESS, DRUPAL_BOOTSTRAP_SESSION, DRUPAL_BOOTSTRAP_VARIABLES, DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE, DRUPAL_BOOTSTRAP_LANGUAGE, DRUPAL_BOOTSTRAP_PATH, DRUPAL_BOOTSTRAP_FULL), $completed_phase = -1;
 
   if (isset($phase)) {
     while ($phases && $phase > $completed_phase) {
@@ -1094,9 +1100,12 @@ function _drupal_bootstrap($phase) {
       session_start();
       break;
 
-    case DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE:
+    case DRUPAL_BOOTSTRAP_VARIABLES:
       // Initialize configuration variables, using values from settings.php if available.
       $conf = variable_init(isset($conf) ? $conf : array());
+      break;
+
+    case DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE:
       // Load module handling.
       require_once DRUPAL_ROOT . '/includes/module.inc';
       $cache_mode = variable_get('cache', CACHE_DISABLED);
