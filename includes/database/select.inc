@@ -335,10 +335,17 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
    *   The unique alias that was assigned for this field.
    */
   public function addField($table_alias, $field, $alias = NULL) {
+    // If no alias is specified, first try the field name itself.
     if (empty($alias)) {
+      $alias = $field;
+    }
+
+    // If that's already in use, try the table name and field name.
+    if (!empty($this->tables[$alias])) {
       $alias = $table_alias . '_' . $field;
     }
 
+    // If that is already used, just add a counter until we find an unused alias.
     $alias_candidate = $alias;
     $count = 2;
     while (!empty($this->tables[$alias_candidate])) {

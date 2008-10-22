@@ -1014,7 +1014,7 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
     $result = $query->execute();
 
     // Check that the aliases are being created the way we want.
-    $this->assertEqual($name_field, 'test_name', t('Name field alias is correct.'));
+    $this->assertEqual($name_field, 'name', t('Name field alias is correct.'));
     $this->assertEqual($age_field, 'age', t('Age field alias is correct.'));
 
     // Ensure that we got the right record.
@@ -1034,7 +1034,7 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
     $result = $query->execute();
 
     // Check that the aliases are being created the way we want.
-    $this->assertEqual($name_field, 'test_name', t('Name field alias is correct.'));
+    $this->assertEqual($name_field, 'name', t('Name field alias is correct.'));
     $this->assertEqual($age_field, 'double_age', t('Age field alias is correct.'));
 
     // Ensure that we got the right record.
