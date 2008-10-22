@@ -98,6 +98,7 @@ function dblog_schema() {
     'primary key' => array('wid'),
     'indexes' => array(
       'type' => array('type'),
+      'uid' => array('uid'),
     ),
   );
 
@@ -111,5 +112,14 @@ function dblog_update_7001() {
   $ret = array();
   db_change_field($ret, 'watchdog', 'link', 'link', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'default' => ''));
   db_change_field($ret, 'watchdog', 'referer', 'referer', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'default' => ''));
+  return $ret;
+}
+
+/**
+ * Add index on uid.
+ */
+function dblog_update_7002() {
+  $ret = array();
+  db_add_index($ret, 'watchdog', 'uid', array('uid'));
   return $ret;
 }
