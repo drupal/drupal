@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.442 2008/10/20 11:34:32 dries Exp $
+// $Id: theme.inc,v 1.443 2008/10/22 03:36:47 webchick Exp $
 
 /**
  * @file
@@ -1224,7 +1224,9 @@ function theme_submenu($links) {
  *   - "data": The localized title of the table column.
  *   - "field": The database field represented in the table column (required if
  *     user is to be able to sort on this column).
- *   - "sort": A default sort order for this column ("asc" or "desc").
+ *   - "sort": A default sort order for this column ("asc" or "desc"). This
+ *     depends on tablesort_sql() appending sort data when forming queries
+ *     before being passed to theme_table().
  *   - Any HTML attributes, such as "colspan", to apply to the column header cell.
  * @param $rows
  *   An array of table rows. Every row is an array of cells, or an associative
