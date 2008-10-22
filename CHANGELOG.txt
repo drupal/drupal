@@ -1,7 +1,8 @@
 // $Id$
 
-Drupal 5.12-dev, xxxx-xx-xx (development version)
+Drupal 5.12, 2008-10-22
 -----------------------
+- fixed security issues, (File inclusion), see SA-2008-067
 
 
 Drupal 5.11, 2008-10-08
