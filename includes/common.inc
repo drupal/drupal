@@ -2046,57 +2046,100 @@ function drupal_clear_css_cache() {
  *   settings are required by some modules to function properly. The settings
  *   will be accessible at Drupal.settings.
  *
+ * Examples:
+ * @code
+ *   drupal_add_js('misc/collapse.js');
+ *   drupal_add_js('misc/collapse.js', 'module');
+ *   drupal_add_js('$(document).ready(function(){alert("Hello!");});',
+ *     array('type' => 'inline', 'scope' => 'footer')
+ *   );
+ * @endcode
+ *
  * @param $data
- *   (optional) If given, the value depends on the $type parameter:
+ *   (optional) If given, the value depends on the $options parameter:
  *   - 'core', 'module' or 'theme': Path to the file relative to base_path().
  *   - 'inline': The JavaScript code that should be placed in the given scope.
  *   - 'setting': An array with configuration options as associative array. The
  *       array is directly placed in Drupal.settings. You might want to wrap your
  *       actual configuration settings in another variable to prevent the pollution
  *       of the Drupal.settings namespace.
- * @param $type
- *   (optional) The type of JavaScript that should be added to the page. Allowed
- *   values are 'core', 'module', 'theme', 'inline' and 'setting'. You
- *   can, however, specify any value. It is treated as a reference to a JavaScript
- *   file. Defaults to 'module'.
- * @param $scope
- *   (optional) The location in which you want to place the script. Possible
- *   values are 'header' and 'footer' by default. If your theme implements
- *   different locations, however, you can also use these.
- * @param $defer
- *   (optional) If set to TRUE, the defer attribute is set on the <script> tag.
- *   Defaults to FALSE. This parameter is not used with $type == 'setting'.
- * @param $cache
- *   (optional) If set to FALSE, the JavaScript file is loaded anew on every page
- *   call, that means, it is not cached. Defaults to TRUE. Used only when $type
- *   references a JavaScript file.
- * @param $preprocess
- *   (optional) Should this JS file be aggregated if this
- *   feature has been turned on under the performance section?
+ * @param $options
+ *   (optional) A string defining the type of JavaScript that is being added
+ *   in the $data parameter ('core', 'module', 'theme', 'setting', 'inline'),
+ *   or an array which can have any or all of the following keys (these are
+ *   not valid with type => 'setting'):
+ *   - type
+ *       The type of JavaScript that should be added to the page. Allowed
+ *       values are 'core', 'module', 'theme', 'inline' and 'setting'. Defaults
+ *       to 'module'.
+ *   - scope
+ *       The location in which you want to place the script. Possible
+ *       values are 'header' and 'footer'. If your theme implements different
+ *       locations, however, you can also use these. Defaults to 'header'.
+ *   - defer
+ *       If set to TRUE, the defer attribute is set on the <script> tag.
+ *       Defaults to FALSE. This parameter is not used with 'type' => 'setting'.
+ *   - cache
+ *       If set to FALSE, the JavaScript file is loaded anew on every page
+ *       call, that means, it is not cached. Used only when type references
+ *       a JavaScript file. Defaults to TRUE.
+ *   - preprocess
+ *       Aggregate the JavaScript if the JavaScript optimization setting has
+ *       been toggled in admin/settings/performance. Defaults to TRUE.
+ * @param $reset
+ *   (optional) Resets the currently loaded JavaScript.
  * @return
- *   If the first parameter is NULL, the JavaScript array that has been built so
- *   far for $scope is returned. If the first three parameters are NULL,
- *   an array with all scopes is returned.
+ *   The contructed array of JavaScript files.
+ * @see drupal_get_js()
  */
-function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer = FALSE, $cache = TRUE, $preprocess = TRUE) {
+function drupal_add_js($data = NULL, $options = NULL, $reset = FALSE) {
   static $javascript = array();
 
-  if (isset($data)) {
+  // Construct the options, taking the defaults into consideration.
+  if (isset($options)) {
+    if (!is_array($options)) {
+      $options = array('type' => $options);
+    }
+  }
+  else {
+    $options = array();
+  }
+  $options += array(
+    'type' => 'module',
+    // Default to a header scope only if we're adding some data.
+    'scope' => isset($data) ? 'header' : NULL,
+    'cache' => TRUE, 
+    'defer' => FALSE,
+    'preprocess' => TRUE
+  );
+  // Preprocess can only be set if caching is enabled.
+  $options['preprocess'] = $options['cache'] ? $options['preprocess'] : FALSE;
+  $type = $options['type'];
+  $scope = $options['scope'];
+  unset($options['type'], $options['scope']);
 
+  // Request made to reset the JavaScript added so far.
+  if ($reset) {
+    $javascript = array();
+  }
+
+  if (isset($data)) {
     // Add jquery.js and drupal.js, as well as the basePath setting, the
     // first time a Javascript file is added.
     if (empty($javascript)) {
-      $javascript['header'] = array(
-        'core' => array(
-          'misc/jquery.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
-          'misc/drupal.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
-        ),
-        'module' => array(),
-        'theme' => array(),
-        'setting' => array(
-          array('basePath' => base_path()),
-        ),
-        'inline' => array(),
+      $javascript = array(
+        'header' => array(
+          'core' => array(
+            'misc/jquery.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
+            'misc/drupal.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
+          ),
+          'module' => array(),
+          'theme' => array(),
+          'setting' => array(
+            array('basePath' => base_path()),
+          ),
+          'inline' => array(),
+        )
       );
     }
 
@@ -2113,22 +2156,15 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
         $javascript[$scope][$type][] = $data;
         break;
       case 'inline':
-        $javascript[$scope][$type][] = array('code' => $data, 'defer' => $defer);
+        $javascript[$scope][$type][] = array('code' => $data, 'defer' => $options['defer']);
         break;
       default:
-        // If cache is FALSE, don't preprocess the JS file.
-        $javascript[$scope][$type][$data] = array('cache' => $cache, 'defer' => $defer, 'preprocess' => (!$cache ? FALSE : $preprocess));
+        $javascript[$scope][$type][$data] = $options;
     }
   }
 
   if (isset($scope)) {
-
-    if (isset($javascript[$scope])) {
-      return $javascript[$scope];
-    }
-    else {
-      return array();
-    }
+    return isset($javascript[$scope]) ? $javascript[$scope] : array();
   }
   else {
     return $javascript;
@@ -2151,6 +2187,7 @@ function drupal_add_js($data = NULL, $type = 'module', $scope = 'header', $defer
  *   JavaScript array for the given scope.
  * @return
  *   All JavaScript code segments and includes for the scope as HTML tags.
+ * @see drupal_add_js()
  */
 function drupal_get_js($scope = 'header', $javascript = NULL) {
   if ((!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update') && function_exists('locale_update_js_files')) {
@@ -2158,7 +2195,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   }
 
   if (!isset($javascript)) {
-    $javascript = drupal_add_js(NULL, NULL, $scope);
+    $javascript = drupal_add_js(NULL, array('scope' => $scope));
   }
 
   if (empty($javascript)) {

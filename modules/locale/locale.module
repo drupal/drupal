@@ -518,10 +518,8 @@ function locale_update_js_files() {
   $dir = file_create_path(variable_get('locale_js_directory', 'languages'));
   $parsed = variable_get('javascript_parsed', array());
 
-  // The first three parameters are NULL in order to get an array with all
-  // scopes. This is necessary to prevent recreation of JS translation files
-  // when new files are added for example in the footer.
-  $javascript = drupal_add_js(NULL, NULL, NULL);
+  // Get an array of all the JavaScript added so far.
+  $javascript = drupal_add_js();
   $files = $new_files = FALSE;
 
   foreach ($javascript as $scope) {
