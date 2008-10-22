@@ -413,7 +413,7 @@ function aggregator_admin_settings() {
   $form['aggregator_category_selector'] = array(
     '#type' => 'radios', '#title' => t('Category selection type'), '#default_value' => variable_get('aggregator_category_selector', 'checkboxes'),
     '#options' => array('checkboxes' => t('checkboxes'), 'select' => t('multiple selector')),
-    '#description' => t('The type of category selection widget displayed on categorization pages. (For a small number of categories, checkboxes are easier to use, while a multiple selector work well with large numbers of categories.)'),
+    '#description' => t('The type of category selection widget displayed on categorization pages. (For a small number of categories, checkboxes are easier to use, while a multiple selector works well with large numbers of categories.)'),
   );
 
   return system_settings_form($form);
