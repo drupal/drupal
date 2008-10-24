@@ -47,8 +47,7 @@ function _update_refresh() {
   }
 
   if ($data) {
-    $parser = new update_xml_parser;
-    $available = $parser->parse($data);
+    $available = update_parse_xml($data);
   }
   if (!empty($available) && is_array($available)) {
     $frequency = variable_get('update_check_frequency', 1);
@@ -136,96 +135,40 @@ function _update_cron_notify() {
 }
 
 /**
- * XML Parser object to read Drupal's release history info files.
- * This uses PHP4's lame XML parsing, but it works.
+ * Parse the XML of the Drupal release history info files.
+ *
+ * @param $raw_xml_list
+ *   Array of raw XML strings, one for each fetched project.
+ *
+ * @return
+ *   Nested array of parsed data about projects and releases.
  */
-class update_xml_parser {
-  var $projects = array();
-  var $current_project;
-  var $current_release;
-  var $current_term;
-  var $current_tag;
-  var $current_object;
-
-  /**
-   * Parse an array of XML data files.
-   */
-  function parse($data) {
-    foreach ($data as $datum) {
-      $parser = xml_parser_create();
-      xml_set_object($parser, $this);
-      xml_set_element_handler($parser, 'start', 'end');
-      xml_set_character_data_handler($parser, "data");
-      xml_parse($parser, $datum);
-      xml_parser_free($parser);
+function update_parse_xml($raw_xml_list) {
+  $data = array();
+  foreach ($raw_xml_list as $raw_xml) {
+    $xml = new SimpleXMLElement($raw_xml);
+    $short_name = (string)$xml->short_name;
+    $data[$short_name] = array();
+    foreach ($xml as $k => $v) {
+      $data[$short_name][$k] = (string)$v;
     }
-    return $this->projects;
-  }
-
-  function start($parser, $name, $attr) {
-    $this->current_tag = $name;
-    switch ($name) {
-      case 'PROJECT':
-        unset($this->current_object);
-        $this->current_project = array();
-        $this->current_object = &$this->current_project;
-        break;
-      case 'RELEASE':
-        unset($this->current_object);
-        $this->current_release = array();
-        $this->current_object = &$this->current_release;
-        break;
-      case 'TERM':
-        unset($this->current_object);
-        $this->current_term = array();
-        $this->current_object = &$this->current_term;
-        break;
-    }
-  }
-
-  function end($parser, $name) {
-    switch ($name) {
-      case 'PROJECT':
-        unset($this->current_object);
-        $this->projects[$this->current_project['short_name']] = $this->current_project;
-        $this->current_project = array();
-        break;
-      case 'RELEASE':
-        unset($this->current_object);
-        $this->current_project['releases'][$this->current_release['version']] = $this->current_release;
-        break;
-      case 'RELEASES':
-        $this->current_object = &$this->current_project;
-        break;
-      case 'TERM':
-        unset($this->current_object);
-        $term_name = $this->current_term['name'];
-        if (!isset($this->current_release['terms'])) {
-          $this->current_release['terms'] = array();
-        }
-        if (!isset($this->current_release['terms'][$term_name])) {
-          $this->current_release['terms'][$term_name] = array();
-        }
-        $this->current_release['terms'][$term_name][] = $this->current_term['value'];
-        break;
-      case 'TERMS':
-        $this->current_object = &$this->current_release;
-        break;
-      default:
-        $this->current_object[strtolower($this->current_tag)] = trim($this->current_object[strtolower($this->current_tag)]);
-        $this->current_tag = '';
-    }
-  }
-
-  function data($parser, $data) {
-    if ($this->current_tag && !in_array($this->current_tag, array('PROJECT', 'RELEASE', 'RELEASES', 'TERM', 'TERMS'))) {
-      $tag = strtolower($this->current_tag);
-      if (isset($this->current_object[$tag])) {
-        $this->current_object[$tag] .= $data;
+    $data[$short_name]['releases'] = array();
+    foreach ($xml->releases->children() as $release) {
+      $version = (string)$release->version;
+      $data[$short_name]['releases'][$version] = array();
+      foreach ($release->children() as $k => $v) {
+        $data[$short_name]['releases'][$version][$k] = (string)$v;
       }
-      else {
-        $this->current_object[$tag] = $data;
+      $data[$short_name]['releases'][$version]['terms'] = array();
+      if ($release->terms) {
+        foreach ($release->terms->children() as $term) {
+          if (!isset($data[$short_name]['releases'][$version]['terms'][(string)$term->name])) {
+            $data[$short_name]['releases'][$version]['terms'][(string)$term->name] = array();
+          }
+          $data[$short_name]['releases'][$version]['terms'][(string)$term->name][] = (string)$term->value;
+        }
       }
     }
   }
+  return $data;
 }
