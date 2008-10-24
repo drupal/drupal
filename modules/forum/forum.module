@@ -378,7 +378,7 @@ function forum_form_alter(&$form, $form_state, $form_id) {
     // Hide multiple parents select from forum terms.
     elseif ($form_id == 'taxonomy_form_term') {
       $form['advanced']['parent']['#access'] = FALSE;
-    }    
+    }
   }
   if ($form_id == 'forum_node_form') {
     // Make the vocabulary required for 'real' forum-nodes.
@@ -563,7 +563,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   global $user, $forum_topic_list_header;
 
   $forum_topic_list_header = array(
-    array('data' => '&nbsp;', 'field' => NULL),
+    NULL,
     array('data' => t('Topic'), 'field' => 'n.title'),
     array('data' => t('Replies'), 'field' => 'l.comment_count'),
     array('data' => t('Created'), 'field' => 'n.created'),
