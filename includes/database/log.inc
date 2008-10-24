@@ -145,7 +145,7 @@ class DatabaseLog {
     $stack = debug_backtrace();
     $stack_count = count($stack);
     for ($i = 0; $i < $stack_count; ++$i) {
-      if (strpos($stack[$i]['file'], 'includes/database') === FALSE) {
+      if (strpos($stack[$i]['file'], 'includes' . DIRECTORY_SEPARATOR . 'database') === FALSE) {
         return array(
           'file' => $stack[$i]['file'],
           'line' => $stack[$i]['line'],
