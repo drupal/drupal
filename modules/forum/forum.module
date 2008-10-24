@@ -618,7 +618,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   global $user, $forum_topic_list_header;
 
   $forum_topic_list_header = array(
-    array('data' => '&nbsp;', 'field' => NULL),
+    NULL,
     array('data' => t('Topic'), 'field' => 'n.title'),
     array('data' => t('Replies'), 'field' => 'l.comment_count'),
     array('data' => t('Created'), 'field' => 'n.created'),
