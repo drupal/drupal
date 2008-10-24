@@ -1,5 +1,5 @@
 <?php
-// $Id: log.inc,v 1.3 2008/10/19 20:22:07 dries Exp $
+// $Id: log.inc,v 1.4 2008/10/24 18:36:01 dries Exp $
 
 /**
  * @file
@@ -145,7 +145,7 @@ class DatabaseLog {
     $stack = debug_backtrace();
     $stack_count = count($stack);
     for ($i = 0; $i < $stack_count; ++$i) {
-      if (strpos($stack[$i]['file'], 'includes/database') === FALSE) {
+      if (strpos($stack[$i]['file'], 'includes' . DIRECTORY_SEPARATOR . 'database') === FALSE) {
         return array(
           'file' => $stack[$i]['file'],
           'line' => $stack[$i]['line'],
