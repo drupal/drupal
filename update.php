@@ -203,7 +203,8 @@ function update_selection_page() {
 }
 
 function update_script_selection_form() {
-  $form = $all = array();
+  $form = array();
+  $count = 0;
   $form['start'] = array(
     '#tree' => TRUE,
     '#type' => 'fieldset',
@@ -258,10 +259,10 @@ function update_script_selection_form() {
       }
     }
     unset($default);
-    $all += $pending;
+    $count = $count + count($pending);
   }
 
-  if (empty($all)) {
+  if (empty($count)) {
     drupal_set_message(t('No pending updates.'));
     unset($form);
     $form['links'] = array(
@@ -273,7 +274,7 @@ function update_script_selection_form() {
       '#markup' => '<p>The version of Drupal you are updating from has been automatically detected.</p>',
       '#weight' => -5,
     );
-    $form['start']['#title'] = strtr('!num pending updates', array('!num' => count($all)));
+    $form['start']['#title'] = strtr('!num pending updates', array('!num' => $count));
     $form['has_js'] = array(
       '#type' => 'hidden',
       '#default_value' => FALSE,
