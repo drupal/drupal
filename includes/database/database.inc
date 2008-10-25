@@ -631,11 +631,14 @@ abstract class DatabaseConnection extends PDO {
    * @param $tablename
    *   The name of the temporary table to select into. This name will not be
    *   prefixed as there is no risk of collision.
+   * @param $options
+   *   An associative array of options to control how the query is run.  See
+   *   the documentation for DatabaseConnection::defaultOptions() for details.
    * @return
    *   A database query result resource, or FALSE if the query was not executed
    *   correctly.
    */
-   abstract function queryTemporary($query, Array $args, $tablename);
+   abstract function queryTemporary($query, Array $args, $tablename, $options = array());
 
   /**
    * Returns the type of database driver.
