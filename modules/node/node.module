@@ -426,7 +426,7 @@ function node_teaser($body, $format = NULL, $size = NULL) {
  *
  * @param $op
  *   The format in which to return the list. When this is set to 'type',
- *   'module', or 'name', only the specified node type is returned. When set to
+ *   'base', or 'name', only the specified node type is returned. When set to
  *   'types' or 'names', all node types are returned.
  * @param $node
  *   A node object, array, or string that indicates the node type to return.
