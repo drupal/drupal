@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.3 2008/09/21 15:27:20 dries Exp $
+// $Id: database.inc,v 1.4 2008/10/25 02:03:55 webchick Exp $
 
 /**
  * @file
@@ -46,7 +46,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
     return $this->query($query . ' LIMIT ' . $from . ', ' . $count, $args, $options);
   }
 
-  public function queryTemporary($query, Array $args, $tablename) {
+  public function queryTemporary($query, Array $args, $tablename, $options = array()) {
     $query = preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE ' . $tablename . ' Engine=HEAP SELECT', $this->prefixTables($query));
 
     return $this->query($query, $args, $options);
