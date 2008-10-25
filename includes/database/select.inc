@@ -37,6 +37,7 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
    *   'alias' => $alias_of_the_table,
    *   'condition' => $condition_clause_on_which_to_join,
    *   'arguments' => $array_of_arguments_for_placeholders_in_the condition.
+   *   'all_fields' => TRUE to SELECT $alias.*, FALSE or NULL otherwise.
    * )
    *
    * @var array
@@ -363,6 +364,43 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
   }
 
   /**
+   * Add multiple fields from the same table to be SELECTed.
+   *
+   * This method does not return the aliases set for the passed fields.  In the
+   * majority of cases that is not a problem, as the alias will be the field
+   * name.  However, if you do need to know the alias you can call getFields()
+   * and examine the result to determine what alias was created.  Alternatively,
+   * simply use addField() for the few fields you care about and this method for
+   * the rest.
+   *
+   * @param $table_alias
+   *   The name of the table from which the field comes, as an alias.  Generally
+   *   you will want to use the return value of join() here to ensure that it is
+   *   valid.
+   * @param $fields
+   *   An indexed array of fields present in the specified table that should be
+   *   included in this query.  If not specified, $table_alias.* will be generated
+   *   without any aliases.
+   * @return
+   *   The called object.
+   */
+  public function fields($table_alias, Array $fields = array()) {
+
+    if ($fields) {
+      foreach ($fields as $field) {
+        // We don't care what alias was assigned.
+        $this->addField($table_alias, $field);
+      }
+    }
+    else {
+      // We want all fields from this table.
+      $this->tables[$table_alias]['all_fields'] = TRUE;
+    }
+
+    return $this;
+  }
+
+  /**
    * Adds an expression to the list of "fields" to be SELECTed.
    *
    * An expression can be any arbitrary string that is valid SQL.  That includes
@@ -640,7 +678,13 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
     foreach ($this->expressions as $alias => $expression) {
       $fields[] = $expression['expression'] . ' AS ' . $expression['alias'];
     }
+    foreach ($this->tables as $alias => $table) {
+      if (!empty($table['all_fields'])) {
+        $fields[] = $alias . '.*';
+      }
+    }
     $query .= implode(', ', $fields);
+
 
     // FROM - We presume all queries have a FROM, as any query that doesn't won't need the query builder anyway.
     $query .= "\nFROM ";

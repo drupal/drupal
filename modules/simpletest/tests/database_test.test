@@ -1042,6 +1042,54 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
     $this->assertEqual($record->$name_field, 'George', t('Fetched name is correct.'));
     $this->assertEqual($record->$age_field, 27*2, t('Fetched age expression is correct.'));
   }
+
+  /**
+   * Test adding multiple fields to a select statement at the same time.
+   */
+  function testSimpleSelectMultipleFields() {
+
+    $record = db_select('test')
+      ->fields('test', array('id', 'name', 'age', 'job'))
+      ->condition('age', 27)
+      ->execute()->fetchObject();
+
+    // Check that all fields we asked for are present.
+    $this->assertNotNull($record->id, t('ID field is present.'));
+    $this->assertNotNull($record->name, t('Name field is present.'));
+    $this->assertNotNull($record->age, t('Age field is present.'));
+    $this->assertNotNull($record->job, t('Job field is present.'));
+
+    // Ensure that we got the right record.
+    // Check that all fields we asked for are present.
+    $this->assertEqual($record->id, 2, t('ID field has the correct value.'));
+    $this->assertEqual($record->name, 'George', t('Name field has the correct value.'));
+    $this->assertEqual($record->age, 27, t('Age field has the correct value.'));
+    $this->assertEqual($record->job, 'Singer', t('Job field has the correct value.'));
+  }
+
+  /**
+   * Test adding all fields from a given table to a select statement.
+   */
+  function testSimpleSelectAllFields() {
+
+    $record = db_select('test')
+      ->fields('test')
+      ->condition('age', 27)
+      ->execute()->fetchObject();
+
+    // Check that all fields we asked for are present.
+    $this->assertNotNull($record->id, t('ID field is present.'));
+    $this->assertNotNull($record->name, t('Name field is present.'));
+    $this->assertNotNull($record->age, t('Age field is present.'));
+    $this->assertNotNull($record->job, t('Job field is present.'));
+
+    // Ensure that we got the right record.
+    // Check that all fields we asked for are present.
+    $this->assertEqual($record->id, 2, t('ID field has the correct value.'));
+    $this->assertEqual($record->name, 'George', t('Name field has the correct value.'));
+    $this->assertEqual($record->age, 27, t('Age field has the correct value.'));
+    $this->assertEqual($record->job, 'Singer', t('Job field has the correct value.'));
+  }
 }
 
 /**
@@ -1118,7 +1166,6 @@ class DatabaseSelectOrderedTestCase extends DatabaseTestCase {
       $this->assertTrue(FALSE, $e->getMessage());
     }
   }
-
 
   /**
    * Test order by descending.
