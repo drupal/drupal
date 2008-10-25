@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.241 2008/10/22 20:44:53 dries Exp $
+// $Id: bootstrap.inc,v 1.242 2008/10/25 01:13:40 webchick Exp $
 
 /**
  * @file
@@ -347,6 +347,11 @@ function conf_path($require_settings = TRUE, $reset = FALSE) {
   }
 
   $uri = explode('/', $_SERVER['SCRIPT_NAME'] ? $_SERVER['SCRIPT_NAME'] : $_SERVER['SCRIPT_FILENAME']);
+  if (strpos($_SERVER['HTTP_HOST'], '/') !== FALSE || strpos($_SERVER['HTTP_HOST'], '\\') !== FALSE) {
+    // A HTTP_HOST containing slashes may be an attack and is invalid.
+    header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
+    exit;
+  }
   $server = explode('.', implode('.', array_reverse(explode(':', rtrim($_SERVER['HTTP_HOST'], '.')))));
   for ($i = count($uri) - 1; $i > 0; $i--) {
     for ($j = count($server); $j > 0; $j--) {
