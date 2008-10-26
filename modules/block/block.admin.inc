@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.24 2008/10/25 21:16:52 webchick Exp $
+// $Id: block.admin.inc,v 1.25 2008/10/26 18:06:38 dries Exp $
 
 /**
  * @file
@@ -28,7 +28,7 @@ function block_admin_display($theme = NULL) {
 function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
   global $theme_key, $custom_theme;
 
-  drupal_add_css(drupal_get_path('module', 'block') . '/block.css', 'module', 'all', FALSE);
+  drupal_add_css(drupal_get_path('module', 'block') . '/block.css', array('preprocess' => FALSE));
 
   // If non-default theme configuration has been selected, set the custom theme.
   $custom_theme = isset($theme) ? $theme : variable_get('theme_default', 'garland');

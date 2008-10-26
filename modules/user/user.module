@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.929 2008/10/19 20:55:07 dries Exp $
+// $Id: user.module,v 1.930 2008/10/26 18:06:39 dries Exp $
 
 /**
  * @file
@@ -1120,7 +1120,7 @@ function user_menu() {
 }
 
 function user_init() {
-  drupal_add_css(drupal_get_path('module', 'user') . '/user.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'user') . '/user.css');
 }
 
 function user_uid_optional_load($arg) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.28 2008/10/06 11:30:11 dries Exp $
+// $Id: dblog.module,v 1.29 2008/10/26 18:06:38 dries Exp $
 
 /**
  * @file
@@ -83,7 +83,7 @@ function dblog_menu() {
 function dblog_init() {
   if (arg(0) == 'admin' && arg(1) == 'reports') {
     // Add the CSS for this module
-    drupal_add_css(drupal_get_path('module', 'dblog') . '/dblog.css', 'module', 'all', FALSE);
+    drupal_add_css(drupal_get_path('module', 'dblog') . '/dblog.css', array('preprocess' => FALSE));
   }
 }
 

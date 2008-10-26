@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.pages.inc,v 1.11 2008/10/13 00:33:05 webchick Exp $
+// $Id: tracker.pages.inc,v 1.12 2008/10/26 18:06:39 dries Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
  */
 function tracker_page($account = NULL, $set_title = FALSE) {
   // Add CSS
-  drupal_add_css(drupal_get_path('module', 'tracker') . '/tracker.css', 'module', 'all', FALSE);
+  drupal_add_css(drupal_get_path('module', 'tracker') . '/tracker.css', array('preprocess' => FALSE));
 
   if ($account) {
     if ($set_title) {

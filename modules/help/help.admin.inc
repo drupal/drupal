@@ -1,5 +1,5 @@
 <?php
-// $Id: help.admin.inc,v 1.6 2008/04/14 17:48:37 dries Exp $
+// $Id: help.admin.inc,v 1.7 2008/10/26 18:06:38 dries Exp $
 
 /**
  * @file
@@ -11,7 +11,7 @@
  */
 function help_main() {
   // Add CSS
-  drupal_add_css(drupal_get_path('module', 'help') . '/help.css', 'module', 'all', FALSE);
+  drupal_add_css(drupal_get_path('module', 'help') . '/help.css', array('preprocess' => FALSE));
   $output = '<h2>' . t('Help topics') . '</h2><p>' . t('Help is available on the following items:') . '</p>' . help_links_as_list();
   return $output;
 }

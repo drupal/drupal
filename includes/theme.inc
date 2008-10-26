@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.445 2008/10/24 07:14:51 webchick Exp $
+// $Id: theme.inc,v 1.446 2008/10/26 18:06:38 dries Exp $
 
 /**
  * @file
@@ -133,7 +133,7 @@ function _init_theme($theme, $base_theme = array(), $registry_callback = '_theme
   // And now add the stylesheets properly
   foreach ($final_stylesheets as $media => $stylesheets) {
     foreach ($stylesheets as $stylesheet) {
-      drupal_add_css($stylesheet, 'theme', $media);
+      drupal_add_css($stylesheet, array('type' => 'theme', 'media' => $media));
     }
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.270 2008/10/12 19:00:56 webchick Exp $
+// $Id: search.module,v 1.271 2008/10/26 18:06:38 dries Exp $
 
 /**
  * @file
@@ -1031,7 +1031,7 @@ function search_get_keys() {
 function search_form(&$form_state, $action = '', $keys = '', $type = NULL, $prompt = NULL) {
 
   // Add CSS
-  drupal_add_css(drupal_get_path('module', 'search') . '/search.css', 'module', 'all', FALSE);
+  drupal_add_css(drupal_get_path('module', 'search') . '/search.css', array('preprocess' => FALSE));
 
   if (!$action) {
     $action = url('search/' . $type);
