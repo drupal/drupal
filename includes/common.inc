@@ -1731,55 +1731,84 @@ function drupal_add_link($attributes) {
  *   file added to the list, if exists in the same directory. This CSS file
  *   should contain overrides for properties which should be reversed or
  *   otherwise different in a right-to-left display.
- * @param $type
- *   (optional) The type of stylesheet that is being added. Types are: module
- *   or theme.
- * @param $media
- *   (optional) The media type for the stylesheet, e.g., all, print, screen.
- * @param $preprocess
- *   (optional) Should this CSS file be aggregated and compressed if this
- *   feature has been turned on under the performance section?
+ * @param $options
+ *   (optional) A string defining the type of CSS that is being added in the
+ *   $path parameter ('module' or 'theme'), or an associative array of
+ *   additional options, with the following keys:
+ *     - 'type'
+ *       The type of stylesheet that is being added. Types are: module or
+ *       theme. Defaults to 'module'.
+ *     - 'media'
+ *       The media type for the stylesheet, e.g., all, print, screen. Defaults
+ *       to 'all'.
+ *     - 'preprocess':
+ *       Allow this CSS file to be aggregated and compressed if the Optimize
+ *       CSS feature has been turned on under the performance section. Defaults
+ *       to TRUE.
  *
- *   What does this actually mean?
- *   CSS preprocessing is the process of aggregating a bunch of separate CSS
- *   files into one file that is then compressed by removing all extraneous
- *   white space.
+ *       What does this actually mean?
+ *       CSS preprocessing is the process of aggregating a bunch of separate CSS
+ *       files into one file that is then compressed by removing all extraneous
+ *       white space.
  *
- *   The reason for merging the CSS files is outlined quite thoroughly here:
- *   http://www.die.net/musings/page_load_time/
- *   "Load fewer external objects. Due to request overhead, one bigger file
- *   just loads faster than two smaller ones half its size."
+ *       The reason for merging the CSS files is outlined quite thoroughly here:
+ *       http://www.die.net/musings/page_load_time/
+ *       "Load fewer external objects. Due to request overhead, one bigger file
+ *       just loads faster than two smaller ones half its size."
  *
- *   However, you should *not* preprocess every file as this can lead to
- *   redundant caches. You should set $preprocess = FALSE when:
+ *       However, you should *not* preprocess every file as this can lead to
+ *       redundant caches. You should set $preprocess = FALSE when your styles
+ *       are only used rarely on the site. This could be a special admin page,
+ *       the homepage, or a handful of pages that does not represent the
+ *       majority of the pages on your site.
  *
- *     - Your styles are only used rarely on the site. This could be a special
- *       admin page, the homepage, or a handful of pages that does not represent
- *       the majority of the pages on your site.
- *
- *   Typical candidates for caching are for example styles for nodes across
- *   the site, or used in the theme.
+ *       Typical candidates for caching are for example styles for nodes across
+ *       the site, or used in the theme.
+ * @param $reset
+ *   (optional) Resets the currently loaded cascading stylesheets.
  * @return
  *   An array of CSS files.
  */
-function drupal_add_css($path = NULL, $type = 'module', $media = 'all', $preprocess = TRUE) {
+function drupal_add_css($path = NULL, $options = NULL, $reset = FALSE) {
   static $css = array();
   global $language;
+
+  // Request made to reset the CSS added so far.
+  if ($reset) {
+    $css = array();
+  }
 
   // Create an array of CSS files for each media type first, since each type needs to be served
   // to the browser differently.
   if (isset($path)) {
+    // Construct the options, taking the defaults into consideration.
+    if (isset($options)) {
+      if (!is_array($options)) {
+        $options = array('type' => $options);
+      }
+    }
+    else {
+      $options = array();
+    }
+    $options += array(
+      'type' => 'module',
+      'media' => 'all',
+      'preprocess' => TRUE
+    );  
+    $media = $options['media'];
+    $type = $options['type'];
+
     // This check is necessary to ensure proper cascading of styles and is faster than an asort().
     if (!isset($css[$media])) {
       $css[$media] = array('module' => array(), 'theme' => array());
     }
-    $css[$media][$type][$path] = $preprocess;
+    $css[$media][$type][$path] = $options['preprocess'];
 
     // If the current language is RTL, add the CSS file with RTL overrides.
     if (defined('LANGUAGE_RTL') && $language->direction == LANGUAGE_RTL) {
       $rtl_path = str_replace('.css', '-rtl.css', $path);
       if (file_exists($rtl_path)) {
-        $css[$media][$type][$rtl_path] = $preprocess;
+        $css[$media][$type][$rtl_path] = $options['preprocess'];
       }
     }
   }

@@ -75,7 +75,7 @@ function openid_user_insert(&$edit, &$account, $category = NULL) {
  */
 function openid_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'user_login_block' || $form_id == 'user_login') {
-    drupal_add_css(drupal_get_path('module', 'openid') . '/openid.css', 'module');
+    drupal_add_css(drupal_get_path('module', 'openid') . '/openid.css');
     drupal_add_js(drupal_get_path('module', 'openid') . '/openid.js');
     if (!empty($form_state['post']['openid_identifier'])) {
       $form['name']['#required'] = FALSE;

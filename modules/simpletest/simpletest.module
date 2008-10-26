@@ -199,7 +199,7 @@ function simpletest_test_form() {
 }
 
 function theme_simpletest_test_table($table) {
-  drupal_add_css(drupal_get_path('module', 'simpletest') . '/simpletest.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'simpletest') . '/simpletest.css');
   drupal_add_js(drupal_get_path('module', 'simpletest') . '/simpletest.js', 'module');
 
   // Create header for test selection table.

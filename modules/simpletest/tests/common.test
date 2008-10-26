@@ -115,6 +115,56 @@ class DrupalTagsHandlingTestCase extends DrupalWebTestCase {
 }
 
 /**
+ * Test the Drupal CSS system.
+ */
+class CascadingStylesheetsTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Cascading stylesheets'),
+      'description' => t('Tests adding various cascading stylesheets to the page.'),
+      'group' => t('System')
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp();
+    // Reset drupal_add_css() before each test.
+    drupal_add_css(NULL, NULL, TRUE);
+  }
+
+  /**
+   * Check default stylesheets as empty.
+   */
+  function testDefault() {
+    $this->assertEqual(array(), drupal_add_css(), t('Default CSS is empty.'));
+  }
+
+  /**
+   * Tests adding a file stylesheet.
+   */
+  function testAddFile() {
+    $path = drupal_get_path('module', 'simpletest') . '/simpletest.css';
+    $css = drupal_add_css($path);
+    $this->assertEqual($css['all']['module'][$path], TRUE, t('Adding a CSS file caches it properly.'));
+  }
+
+  /**
+   * Tests rendering the stylesheets.
+   */
+  function testRenderFile() {
+    $css = drupal_get_path('module', 'simpletest') . '/simpletest.css';
+    drupal_add_css($css);
+    $this->assertTrue(strpos(drupal_get_css(), $css) > 0, t('Rendered CSS includes the added stylesheet.'));
+  }
+}
+
+/**
  * Test drupal_http_request().
  */
 class DrupalHTTPRequestTestCase extends DrupalWebTestCase {

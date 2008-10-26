@@ -12,7 +12,7 @@
  */
 function tracker_page($account = NULL, $set_title = FALSE) {
   // Add CSS
-  drupal_add_css(drupal_get_path('module', 'tracker') . '/tracker.css', 'module', 'all', FALSE);
+  drupal_add_css(drupal_get_path('module', 'tracker') . '/tracker.css', array('preprocess' => FALSE));
 
   if ($account) {
     if ($set_title) {

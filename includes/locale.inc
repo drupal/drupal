@@ -2215,7 +2215,7 @@ function _locale_rebuild_js($langcode = NULL) {
  */
 function _locale_translate_language_list($translation, $limit_language) {
   // Add CSS
-  drupal_add_css(drupal_get_path('module', 'locale') . '/locale.css', 'module', 'all', FALSE);
+  drupal_add_css(drupal_get_path('module', 'locale') . '/locale.css', array('preprocess' => FALSE));
 
   $languages = language_list();
   unset($languages['en']);

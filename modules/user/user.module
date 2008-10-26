@@ -1120,7 +1120,7 @@ function user_menu() {
 }
 
 function user_init() {
-  drupal_add_css(drupal_get_path('module', 'user') . '/user.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'user') . '/user.css');
 }
 
 function user_uid_optional_load($arg) {

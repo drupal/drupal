@@ -29,7 +29,7 @@ function openid_authentication_page() {
  */
 function openid_user_identities($account) {
   drupal_set_title($account->name);
-  drupal_add_css(drupal_get_path('module', 'openid') . '/openid.css', 'module');
+  drupal_add_css(drupal_get_path('module', 'openid') . '/openid.css');
 
   // Check to see if we got a response
   $result = openid_complete();

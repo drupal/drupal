@@ -1031,7 +1031,7 @@ function search_get_keys() {
 function search_form(&$form_state, $action = '', $keys = '', $type = NULL, $prompt = NULL) {
 
   // Add CSS
-  drupal_add_css(drupal_get_path('module', 'search') . '/search.css', 'module', 'all', FALSE);
+  drupal_add_css(drupal_get_path('module', 'search') . '/search.css', array('preprocess' => FALSE));
 
   if (!$action) {
     $action = url('search/' . $type);
