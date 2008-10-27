@@ -67,6 +67,8 @@ function simpletest_test_form() {
   // List out all tests in groups for selection.
   $uncategorized_tests = simpletest_get_all_tests();
   $tests = simpletest_categorize_tests($uncategorized_tests);
+  $selected_tests = array();
+
   if (isset($_SESSION['test_id'])) {
     // Select all results using the active test ID used to group them.
     $results = db_query("SELECT * FROM {simpletest} WHERE test_id = %d ORDER BY test_class, message_id", $_SESSION['test_id']);
@@ -91,6 +93,7 @@ function simpletest_test_form() {
       $class = $result->test_class;
       $info = $uncategorized_tests[$class]->getInfo();
       $group = $info['group'];
+      $selected_tests[$group][$class] = TRUE;
       if (!isset($group_summary[$group])) {
         $group_summary[$group] = $summary;
       }
@@ -165,15 +168,22 @@ function simpletest_test_form() {
     '#theme' => 'simpletest_test_table'
     );
   foreach ($tests as $group_name => $test_group) {
+    $form['tests']['table'][$group_name] = array(
+      '#collapsed' => TRUE,
+    );
     foreach ($test_group as $test) {
       $test_info = $test->getInfo();
       $test_class = get_class($test);
+      $is_selected = isset($selected_tests[$group_name][$test_class]);
       $form['tests']['table'][$group_name][$test_class] = array(
         '#type' => 'checkbox',
         '#title' => $test_info['name'],
-        '#default_value' => 0,
+        '#default_value' => $is_selected,
         '#description' => $test_info['description'],
       );
+      if ($is_selected) {
+        $form['tests']['table'][$group_name]['#collapsed'] = FALSE;
+      }
     }
   }
 
@@ -212,9 +222,9 @@ function theme_simpletest_test_table($table) {
   // Define the images used to expand/collapse the test groups.
   $js = array(
     'images' => array(
-  theme('image', 'misc/menu-collapsed.png', 'Expand', 'Expand'),
-  theme('image', 'misc/menu-expanded.png', 'Collapsed', 'Collapsed'),
-  ),
+      0 => theme('image', 'misc/menu-collapsed.png', 'Expand', 'Expand'),
+      1 => theme('image', 'misc/menu-expanded.png', 'Collapsed', 'Collapsed'),
+    ),
   );
 
   // Go through each test group and create a row.
@@ -226,6 +236,11 @@ function theme_simpletest_test_table($table) {
     // Make the class name safe for output on the pace by replacing all
     // non-word/decimal characters with a dash (-).
     $test_class = strtolower(trim(preg_replace("/[^\w\d]/", "-", $key)));
+
+    // Select the right "expand"/"collapse" image, depending on whether the
+    // category is expanded (at least one test selected) or not.
+    $collapsed = !empty($element['#collapsed']);
+    $image_index = $collapsed ? 0 : 1;
 
     // Place-holder for checkboxes to select group of tests.
     $row[] = array('id' => $test_class, 'class' => 'simpletest-select-all');
@@ -241,7 +256,12 @@ function theme_simpletest_test_table($table) {
       $rows[] = array('data' => $row, 'class' => 'simpletest-group');
 
       // Add individual tests to group.
-      $current_js = array('testClass' => $test_class . '-test', 'testNames' => array(), 'imageDirection' => 0, 'clickActive' => FALSE);
+      $current_js = array(
+        'testClass' => $test_class . '-test',
+        'testNames' => array(),
+        'imageDirection' => $image_index,
+        'clickActive' => FALSE,
+      );
       foreach (element_children($element) as $test_name) {
         $test = $element[$test_name];
         $row = array();
@@ -261,7 +281,7 @@ function theme_simpletest_test_table($table) {
         $row[] = drupal_render($test);
         $row[] = theme('indentation', 1) . '<label for="edit-' . $test_name . '">' . $title . '</label>';
         $row[] = '<div class="description">' . $description . '</div>';
-        $rows[] = array('data' => $row, 'class' => $test_class . '-test js-hide');
+        $rows[] = array('data' => $row, 'class' => $test_class . '-test' . ($collapsed ? ' js-hide' : ''));
       }
       $js['simpletest-test-group-'. $test_class] = $current_js;
       unset($table[$key]);
