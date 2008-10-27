@@ -1761,7 +1761,7 @@ function form_process_radios($element) {
 /**
  * Add input format selector to text elements with the #input_format property.
  *
- * The #input_format property should be the ID of an input format, found in 
+ * The #input_format property should be the ID of an input format, found in
  * {filter_formats}.format, which gets passed to filter_form().
  *
  * If the property #input_format is set, the form element will be expanded into
@@ -1777,7 +1777,7 @@ function form_process_radios($element) {
  *     '#type' => 'textarea',
  *     '#title' => t('Body'),
  *     '#input_format' => isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT,
- *   ); 
+ *   );
  * @endcode
  *
  * Becomes:
@@ -2579,8 +2579,12 @@ function batch_process($redirect = NULL, $url = NULL) {
 
       // Initiate db storage in order to get a batch id. We have to provide
       // at least an empty string for the (not null) 'token' column.
-      db_query("INSERT INTO {batch} (token, timestamp) VALUES ('', %d)", REQUEST_TIME);
-      $batch['id'] = db_last_insert_id('batch', 'bid');
+      $batch['id'] = db_insert('batch')
+        ->fields(array(
+          'token' => '',
+          'timestamp' => REQUEST_TIME,
+        ))
+        ->execute();
 
       // Now that we have a batch id, we can generate the redirection link in
       // the generic error message.
@@ -2588,7 +2592,13 @@ function batch_process($redirect = NULL, $url = NULL) {
       $batch['error_message'] = $t('Please continue to <a href="@error_url">the error page</a>', array('@error_url' => url($url, array('query' => array('id' => $batch['id'], 'op' => 'finished')))));
 
       // Actually store the batch data and the token generated form the batch id.
-      db_query("UPDATE {batch} SET token = '%s', batch = '%s' WHERE bid = %d", drupal_get_token($batch['id']), serialize($batch), $batch['id']);
+      db_update('batch')
+        ->condition('bid', $batch['id'])
+        ->fields(array(
+          'token' => drupal_get_token($batch['id']),
+          'batch' => serialize($batch),
+        ))
+        ->execute();
 
       drupal_goto($batch['url'], 'op=start&id=' . $batch['id']);
     }
