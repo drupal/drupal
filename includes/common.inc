@@ -682,7 +682,7 @@ function _drupal_log_error($type, $message, $backtrace, $fatal) {
     drupal_set_message(t('@type: %message in %function (line %line of %file).', array('@type' => $type, '%message' => $message, '%function' => $caller['function'], '%line' => $caller['line'], '%file' => $caller['file'])), 'error');
   }
 
-  watchdog('php', '%type: %message in %function (line %line of %file).', array('%type' => $type, '%message' => $message, '%function' => $caller['function'], '%file' => $caller['file'], '%line' => $caller['line']), WATCHDOG_ERROR);  
+  watchdog('php', '%type: %message in %function (line %line of %file).', array('%type' => $type, '%message' => $message, '%function' => $caller['function'], '%file' => $caller['file'], '%line' => $caller['line']), WATCHDOG_ERROR);
 
   if ($fatal) {
     drupal_set_header($_SERVER['SERVER_PROTOCOL'] . ' Service unavailable');
@@ -691,7 +691,7 @@ function _drupal_log_error($type, $message, $backtrace, $fatal) {
       print theme('page', t('The website encountered an unexpected error. Please try again later.'), FALSE);
     }
     else {
-      print theme('maintenance_page', t('The website encountered an unexpected error. Please try again later.'), FALSE);      
+      print theme('maintenance_page', t('The website encountered an unexpected error. Please try again later.'), FALSE);
     }
     exit;
   }
@@ -974,7 +974,13 @@ function valid_url($url, $absolute = FALSE) {
  *   The name of an event.
  */
 function flood_register_event($name) {
-  db_query("INSERT INTO {flood} (event, hostname, timestamp) VALUES ('%s', '%s', %d)", $name, ip_address(), REQUEST_TIME);
+  db_insert('flood')
+    ->fields(array(
+      'event' => $name,
+      'hostname' => ip_address(),
+      'timestamp' => REQUEST_TIME,
+    ))
+    ->execute();
 }
 
 /**
@@ -991,8 +997,12 @@ function flood_register_event($name) {
  *   True if the user did not exceed the hourly threshold. False otherwise.
  */
 function flood_is_allowed($name, $threshold) {
-  $number = db_result(db_query("SELECT COUNT(*) FROM {flood} WHERE event = '%s' AND hostname = '%s' AND timestamp > %d", $name, ip_address(), REQUEST_TIME - 3600));
-  return ($number < $threshold ? TRUE : FALSE);
+  $number = db_query("SELECT COUNT(*) FROM {flood} WHERE event = :event AND hostname = :hostname AND timestamp > :timestamp", array(
+    ':event' => $name,
+    ':hostname' => ip_address(),
+    ':timestamp' => REQUEST_TIME - 3600))
+    ->fetchField();
+  return ($number < $threshold);
 }
 
 function check_file($filename) {
@@ -1794,7 +1804,7 @@ function drupal_add_css($path = NULL, $options = NULL, $reset = FALSE) {
       'type' => 'module',
       'media' => 'all',
       'preprocess' => TRUE
-    );  
+    );
     $media = $options['media'];
     $type = $options['type'];
 
@@ -2137,7 +2147,7 @@ function drupal_add_js($data = NULL, $options = NULL, $reset = FALSE) {
     'type' => 'module',
     // Default to a header scope only if we're adding some data.
     'scope' => isset($data) ? 'header' : NULL,
-    'cache' => TRUE, 
+    'cache' => TRUE,
     'defer' => FALSE,
     'preprocess' => TRUE
   );
@@ -2839,7 +2849,7 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
 
 /**
  * Hands off structured Drupal arrays to type-specific *_alter implementations.
- * 
+ *
  * This dispatch function hands off structured Drupal arrays to type-specific
  * *_alter implementations. It ensures a consistent interface for all altering
  * operations.
