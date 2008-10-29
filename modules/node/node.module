@@ -1757,7 +1757,7 @@ function node_feed($nids = FALSE, $channel = array()) {
     $item->link = url("node/$nid", array('absolute' => TRUE));
 
     if ($item_length != 'title') {
-      $teaser = ($item_length == 'teaser') ? TRUE : FALSE;
+      $teaser = ($item_length == 'teaser');
 
       // Filter and prepare node teaser
       if (node_hook($item, 'view')) {

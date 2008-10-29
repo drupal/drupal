@@ -385,7 +385,7 @@ function template_preprocess_block_admin_display_form(&$variables) {
       $variables['form'][$i]['weight']['#attributes']['class'] = 'block-weight block-weight-' . $region;
 
       $variables['block_listing'][$region][$i]->row_class = isset($block['#attributes']['class']) ? $block['#attributes']['class'] : '';
-      $variables['block_listing'][$region][$i]->block_modified = isset($block['#attributes']['class']) && strpos($block['#attributes']['class'], 'block-modified') !== FALSE ? TRUE : FALSE;
+      $variables['block_listing'][$region][$i]->block_modified = isset($block['#attributes']['class']) && strpos($block['#attributes']['class'], 'block-modified') !== FALSE;
       $variables['block_listing'][$region][$i]->block_title =  drupal_render($block['info']);
       $variables['block_listing'][$region][$i]->region_select = drupal_render($block['region']) . drupal_render($block['theme']);
       $variables['block_listing'][$region][$i]->weight_select = drupal_render($block['weight']);

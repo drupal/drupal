@@ -584,7 +584,7 @@ function install_select_locale_form(&$form_state, $locales) {
     $form['locale'][$locale->name] = array(
       '#type' => 'radio',
       '#return_value' => $locale->name,
-      '#default_value' => ($locale->name == 'en' ? TRUE : FALSE),
+      '#default_value' => $locale->name == 'en',
       '#title' => $name . ($locale->name == 'en' ? ' ' . st('(built-in)') : ''),
       '#parents' => array('locale')
     );
@@ -940,7 +940,7 @@ function install_check_requirements($profile, $verify) {
     }
     elseif ($writable) {
       $requirements['settings file'] = array(
-        'title'       => st('Settings file'), 
+        'title'       => st('Settings file'),
         'value'       => st('Settings file is writable.'),
       );
     }

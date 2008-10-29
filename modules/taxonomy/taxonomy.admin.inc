@@ -659,7 +659,7 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
     '#type' => 'fieldset',
     '#title' => t('Advanced options'),
     '#collapsible' => TRUE,
-    '#collapsed' => $vocabulary->hierarchy > 1 ? FALSE : TRUE,
+    '#collapsed' => $vocabulary->hierarchy < 2,
   );
 
   // taxonomy_get_tree and taxonomy_get_parents may contain large numbers of
