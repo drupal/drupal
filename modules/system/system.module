@@ -394,7 +394,7 @@ function system_menu() {
   // menu items that are basically just menu blocks
   $items['admin/settings'] = array(
     'title' => 'Site configuration',
-    'description' => 'Adjust basic site configuration options.',
+    'description' => 'Configure site settings.',
     'position' => 'right',
     'weight' => -5,
     'page callback' => 'system_settings_overview',
