@@ -1,21 +1,23 @@
-// $Id: autocomplete.js,v 1.24 2008/10/12 00:29:09 webchick Exp $
+// $Id: autocomplete.js,v 1.25 2008/10/29 10:01:26 dries Exp $
 
 /**
  * Attaches the autocomplete behavior to all required fields.
  */
-Drupal.behaviors.autocomplete = function (context) {
-  var acdb = [];
-  $('input.autocomplete:not(.autocomplete-processed)', context).each(function () {
-    var uri = this.value;
-    if (!acdb[uri]) {
-      acdb[uri] = new Drupal.ACDB(uri);
-    }
-    var input = $('#' + this.id.substr(0, this.id.length - 13))
-      .attr('autocomplete', 'OFF')[0];
-    $(input.form).submit(Drupal.autocompleteSubmit);
-    new Drupal.jsAC(input, acdb[uri]);
-    $(this).addClass('autocomplete-processed');
-  });
+Drupal.behaviors.autocomplete = {
+  attach: function(context) {
+    var acdb = [];
+    $('input.autocomplete:not(.autocomplete-processed)', context).each(function () {
+      var uri = this.value;
+      if (!acdb[uri]) {
+        acdb[uri] = new Drupal.ACDB(uri);
+      }
+      var input = $('#' + this.id.substr(0, this.id.length - 13))
+        .attr('autocomplete', 'OFF')[0];
+      $(input.form).submit(Drupal.autocompleteSubmit);
+      new Drupal.jsAC(input, acdb[uri]);
+      $(this).addClass('autocomplete-processed');
+    });
+  }
 };
 
 /**

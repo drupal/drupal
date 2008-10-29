@@ -1,7 +1,9 @@
-// $Id: tableselect.js,v 1.8 2007/11/19 12:15:16 goba Exp $
+// $Id: tableselect.js,v 1.9 2008/10/29 10:01:26 dries Exp $
 
-Drupal.behaviors.tableSelect = function (context) {
-  $('form table:has(th.select-all):not(.tableSelect-processed)', context).each(Drupal.tableSelect);
+Drupal.behaviors.tableSelect = {
+  attach: function(context) {
+    $('form table:has(th.select-all):not(.tableSelect-processed)', context).each(Drupal.tableSelect);
+  }
 };
 
 Drupal.tableSelect = function() {

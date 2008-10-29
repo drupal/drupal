@@ -1,4 +1,4 @@
-// $Id: ahah.js,v 1.8 2008/02/12 13:52:33 dries Exp $
+// $Id: ahah.js,v 1.9 2008/10/29 10:01:26 dries Exp $
 
 /**
  * Provides AJAX-like page updating via AHAH (Asynchronous HTML and HTTP).
@@ -15,17 +15,19 @@
 /**
  * Attaches the ahah behavior to each ahah form element.
  */
-Drupal.behaviors.ahah = function(context) {
-  for (var base in Drupal.settings.ahah) {
-    if (!$('#'+ base + '.ahah-processed').size()) {
-      var element_settings = Drupal.settings.ahah[base];
+Drupal.behaviors.ahah = {
+  attach: function(context) {
+    for (var base in Drupal.settings.ahah) {
+      if (!$('#'+ base + '.ahah-processed').size()) {
+        var element_settings = Drupal.settings.ahah[base];
 
-      $(element_settings.selector).each(function() {
-        element_settings.element = this;
-        var ahah = new Drupal.ahah(base, element_settings);
-      });
+        $(element_settings.selector).each(function() {
+          element_settings.element = this;
+          var ahah = new Drupal.ahah(base, element_settings);
+        });
 
-      $('#'+ base).addClass('ahah-processed');
+        $('#'+ base).addClass('ahah-processed');
+      }
     }
   }
 };

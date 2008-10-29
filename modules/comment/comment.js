@@ -1,14 +1,16 @@
-// $Id: comment.js,v 1.6 2008/05/14 13:12:40 dries Exp $
+// $Id: comment.js,v 1.7 2008/10/29 10:01:27 dries Exp $
 
-Drupal.behaviors.comment = function(context) {
-  var parts = new Array("name", "homepage", "mail");
-  var cookie = '';
-  for (i=0;i<3;i++) {
-    cookie = Drupal.comment.getCookie('comment_info_' + parts[i]);
-    if (cookie != '') {
-      $("#comment-form input[name=" + parts[i] + "]:not(.comment-processed)", context)
-        .val(cookie)
-        .addClass('comment-processed');
+Drupal.behaviors.comment = {
+  attach: function(context) {
+    var parts = new Array("name", "homepage", "mail");
+    var cookie = '';
+    for (i=0;i<3;i++) {
+      cookie = Drupal.comment.getCookie('comment_info_' + parts[i]);
+      if (cookie != '') {
+        $("#comment-form input[name=" + parts[i] + "]:not(.comment-processed)", context)
+          .val(cookie)
+          .addClass('comment-processed');
+      }
     }
   }
 };
