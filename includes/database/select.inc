@@ -673,6 +673,8 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
     // FIELDS and EXPRESSIONS
     $fields = array();
     foreach ($this->fields as $alias => $field) {
+      // Always use the AS keyword for field aliases, as some
+      // databases require it (e.g., PostgreSQL).
       $fields[] = (isset($field['table']) ? $field['table'] . '.' : '') . $field['field'] . ' AS ' . $field['alias'];
     }
     foreach ($this->expressions as $alias => $expression) {
@@ -693,7 +695,9 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
       if (isset($table['join type'])) {
         $query .= $table['join type'] . ' JOIN ';
       }
-      $query .= '{' . $this->connection->escapeTable($table['table']) . '} AS ' . $table['alias'];
+      // Don't use the AS keyword for table aliases, as some
+      // databases don't support it (e.g., Oracle).
+      $query .= '{' . $this->connection->escapeTable($table['table']) . '} ' . $table['alias'];
       if (!empty($table['condition'])) {
         $query .= ' ON ' . $table['condition'];
       }
