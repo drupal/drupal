@@ -229,14 +229,14 @@ function simpletest_script_init() {
   $host = 'localhost';
   $path = '';
   // Determine location of php command automatically, unless a comamnd line argument is supplied.
-  if (isset($args['php'])) {
+  if (!empty($args['php'])) {
     $php = $args['php'];
   }
-  elseif (isset($_ENV['_'])) {
+  elseif (!empty($_ENV['_'])) {
     // '_' is an environment variable set by the shell. It contains the command that was executed.
     $php = $_ENV['_'];
   }
-  elseif (isset($_ENV['SUDO_COMMAND'])) {
+  elseif (!empty($_ENV['SUDO_COMMAND'])) {
     // 'SUDO_COMMAND' is an environment variable set by the sudo program.
     // Extract only the PHP interpreter, not the rest of the command.
     list($php, ) = explode(' ', $_ENV['SUDO_COMMAND'], 2);
