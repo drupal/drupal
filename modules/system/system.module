@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.633 2008/10/26 18:06:39 dries Exp $
+// $Id: system.module,v 1.634 2008/10/29 03:02:42 dries Exp $
 
 /**
  * @file
@@ -394,7 +394,7 @@ function system_menu() {
   // menu items that are basically just menu blocks
   $items['admin/settings'] = array(
     'title' => 'Site configuration',
-    'description' => 'Adjust basic site configuration options.',
+    'description' => 'Configure site settings.',
     'position' => 'right',
     'weight' => -5,
     'page callback' => 'system_settings_overview',
