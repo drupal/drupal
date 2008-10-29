@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.989 2008/10/25 00:23:03 webchick Exp $
+// $Id: node.module,v 1.990 2008/10/29 10:08:52 dries Exp $
 
 /**
  * @file
@@ -1757,7 +1757,7 @@ function node_feed($nids = FALSE, $channel = array()) {
     $item->link = url("node/$nid", array('absolute' => TRUE));
 
     if ($item_length != 'title') {
-      $teaser = ($item_length == 'teaser') ? TRUE : FALSE;
+      $teaser = ($item_length == 'teaser');
 
       // Filter and prepare node teaser
       if (node_hook($item, 'view')) {
