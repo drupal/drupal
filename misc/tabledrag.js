@@ -11,18 +11,20 @@
  * overriding the .onDrag, .onDrop, .row.onSwap, and .row.onIndent methods.
  * See blocks.js for an example of adding additional functionality to tableDrag.
  */
-Drupal.behaviors.tableDrag = function(context) {
-  for (var base in Drupal.settings.tableDrag) {
-    if (!$('#' + base + '.tabledrag-processed', context).size()) {
-      var tableSettings = Drupal.settings.tableDrag[base];
+Drupal.behaviors.tableDrag = {
+  attach: function(context) {
+    for (var base in Drupal.settings.tableDrag) {
+      if (!$('#' + base + '.tabledrag-processed', context).size()) {
+        var tableSettings = Drupal.settings.tableDrag[base];
 
-      $('#' + base).filter(':not(.tabledrag-processed)').each(function() {
-        // Create the new tableDrag instance. Save in the Drupal variable
-        // to allow other scripts access to the object.
-        Drupal.tableDrag[base] = new Drupal.tableDrag(this, tableSettings);
-      });
+        $('#' + base).filter(':not(.tabledrag-processed)').each(function() {
+          // Create the new tableDrag instance. Save in the Drupal variable
+          // to allow other scripts access to the object.
+          Drupal.tableDrag[base] = new Drupal.tableDrag(this, tableSettings);
+        });
 
-      $('#' + base).addClass('tabledrag-processed');
+        $('#' + base).addClass('tabledrag-processed');
+      }
     }
   }
 };

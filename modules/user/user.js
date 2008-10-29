@@ -4,85 +4,86 @@
  * Attach handlers to evaluate the strength of any password fields and to check
  * that its confirmation is correct.
  */
-Drupal.behaviors.password = function(context) {
+Drupal.behaviors.password = {
+  attach: function(context) {
+    var translate = Drupal.settings.password;
+    $("input.password-field:not(.password-processed)", context).each(function() {
+      var passwordInput = $(this).addClass('password-processed');
+      var innerWrapper = $(this).parent();
+      var outerWrapper = $(this).parent().parent();
 
-  var translate = Drupal.settings.password;
-  $("input.password-field:not(.password-processed)", context).each(function() {
-    var passwordInput = $(this).addClass('password-processed');
-    var innerWrapper = $(this).parent();
-    var outerWrapper = $(this).parent().parent();
+      // Add the password strength layers.
+      var passwordStrength = $("span.password-strength", innerWrapper);
+      var passwordResult = $("span.password-result", passwordStrength);
+      innerWrapper.addClass("password-parent");
 
-    // Add the password strength layers.
-    var passwordStrength = $("span.password-strength", innerWrapper);
-    var passwordResult = $("span.password-result", passwordStrength);
-    innerWrapper.addClass("password-parent");
+      // Add the description box at the end.
+      var passwordMeter = '<div id="password-strength"><div class="password-strength-title">' + translate.strengthTitle + '</div><div id="password-indicator"><div id="indicator"></div></div></div>';
+      $("div.description", outerWrapper).prepend('<div class="password-suggestions"></div>');
+      $(innerWrapper).append(passwordMeter);
+      var passwordDescription = $("div.password-suggestions", outerWrapper).hide();
 
-    // Add the description box at the end.
-    var passwordMeter = '<div id="password-strength"><div class="password-strength-title">' + translate.strengthTitle + '</div><div id="password-indicator"><div id="indicator"></div></div></div>';
-    $("div.description", outerWrapper).prepend('<div class="password-suggestions"></div>');
-    $(innerWrapper).append(passwordMeter);
-    var passwordDescription = $("div.password-suggestions", outerWrapper).hide();
+      // Add the password confirmation layer.
+      $("input.password-confirm", outerWrapper).after('<div class="password-confirm">' + translate["confirmTitle"] + ' <span></span></div>').parent().addClass("confirm-parent");
+      var confirmInput = $("input.password-confirm", outerWrapper);
+      var confirmResult = $("div.password-confirm", outerWrapper);
+      var confirmChild = $("span", confirmResult);
 
-    // Add the password confirmation layer.
-    $("input.password-confirm", outerWrapper).after('<div class="password-confirm">' + translate["confirmTitle"] + ' <span></span></div>').parent().addClass("confirm-parent");
-    var confirmInput = $("input.password-confirm", outerWrapper);
-    var confirmResult = $("div.password-confirm", outerWrapper);
-    var confirmChild = $("span", confirmResult);
+      // Check the password strength.
+      var passwordCheck = function () {
 
-    // Check the password strength.
-    var passwordCheck = function () {
+        // Evaluate the password strength.
+        var result = Drupal.evaluatePasswordStrength(passwordInput.val());
 
-      // Evaluate the password strength.
-      var result = Drupal.evaluatePasswordStrength(passwordInput.val());
-
-      // Update the suggestions for how to improve the password.
-      if (passwordDescription.html() != result.message) {
-        passwordDescription.html(result.message);
-      }
-
-      // Only show the description box if there is a weakness in the password.
-      if (result.strength == 100) {
-        passwordDescription.hide();
-      }
-      else {
-        passwordDescription.show();
-      }
-
-      // Adjust the length of the strength indicator.
-      $("#indicator").css('width', result.strength + '%');
-
-      passwordCheckMatch();
-    };
-
-    // Check that password and confirmation inputs match.
-    var passwordCheckMatch = function () {
-
-      if (confirmInput.val()) {
-        var success = passwordInput.val() === confirmInput.val();
-
-        // Show the confirm result.
-        confirmResult.css({ visibility: "visible" });
-
-        // Remove the previous styling if any exists.
-        if (this.confirmClass) {
-          confirmChild.removeClass(this.confirmClass);
+        // Update the suggestions for how to improve the password.
+        if (passwordDescription.html() != result.message) {
+          passwordDescription.html(result.message);
         }
 
-        // Fill in the success message and set the class accordingly.
-        var confirmClass = success ? "ok" : 'error';
-        confirmChild.html(translate["confirm" + (success ? "Success" : "Failure")]).addClass(confirmClass);
-        this.confirmClass = confirmClass;
-      }
-      else {
-        confirmResult.css({ visibility: "hidden" });
-      }
-    }
+        // Only show the description box if there is a weakness in the password.
+        if (result.strength == 100) {
+          passwordDescription.hide();
+        }
+        else {
+          passwordDescription.show();
+        }
 
-    // Monitor keyup and blur events.
-    // Blur must be used because a mouse paste does not trigger keyup.
-    passwordInput.keyup(passwordCheck).focus(passwordCheck).blur(passwordCheck);
-    confirmInput.keyup(passwordCheckMatch).blur(passwordCheckMatch);
-  });
+        // Adjust the length of the strength indicator.
+        $("#indicator").css('width', result.strength + '%');
+
+        passwordCheckMatch();
+      };
+
+      // Check that password and confirmation inputs match.
+      var passwordCheckMatch = function () {
+
+        if (confirmInput.val()) {
+          var success = passwordInput.val() === confirmInput.val();
+
+          // Show the confirm result.
+          confirmResult.css({ visibility: "visible" });
+
+          // Remove the previous styling if any exists.
+          if (this.confirmClass) {
+            confirmChild.removeClass(this.confirmClass);
+          }
+
+          // Fill in the success message and set the class accordingly.
+          var confirmClass = success ? "ok" : 'error';
+          confirmChild.html(translate["confirm" + (success ? "Success" : "Failure")]).addClass(confirmClass);
+          this.confirmClass = confirmClass;
+        }
+        else {
+          confirmResult.css({ visibility: "hidden" });
+        }
+      }
+
+      // Monitor keyup and blur events.
+      // Blur must be used because a mouse paste does not trigger keyup.
+      passwordInput.keyup(passwordCheck).focus(passwordCheck).blur(passwordCheck);
+      confirmInput.keyup(passwordCheckMatch).blur(passwordCheckMatch);
+    });
+  }
 };
 
 /**
@@ -171,9 +172,10 @@ Drupal.setDefaultTimezone = function() {
  * picture-related form elements depending on the current value of the
  * "Picture support" radio buttons.
  */
-Drupal.behaviors.userSettings = function (context) {
-  $('div.user-admin-picture-radios input[type=radio]:not(.userSettings-processed)', context).addClass('userSettings-processed').click(function () {
-    $('div.user-admin-picture-settings', context)[['hide', 'show'][this.value]]();
-  });
+Drupal.behaviors.userSettings = {
+  attach: function(context) {
+    $('div.user-admin-picture-radios input[type=radio]:not(.userSettings-processed)', context).addClass('userSettings-processed').click(function () {
+      $('div.user-admin-picture-settings', context)[['hide', 'show'][this.value]]();
+    });
+  }
 };
-
