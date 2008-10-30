@@ -156,7 +156,9 @@ abstract class DatabaseConnection extends PDO {
   protected $logger = NULL;
 
   function __construct($dsn, $username, $password, $driver_options = array()) {
-    $driver_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION; // Because the other methods don't seem to work right.
+    // Because the other methods don't seem to work right.
+    $driver_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+    // Call PDO::__construct and PDO::setAttribute.
     parent::__construct($dsn, $username, $password, $driver_options);
     $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('DatabaseStatement', array($this)));
   }
@@ -273,6 +275,7 @@ abstract class DatabaseConnection extends PDO {
     static $statements = array();
     $query = self::prefixTables($query);
     if (empty($statements[$query])) {
+      // Call PDO::prepare.
       $statements[$query] = parent::prepare($query);
     }
     return $statements[$query];
@@ -384,7 +387,8 @@ abstract class DatabaseConnection extends PDO {
 
     try {
       // We allow either a pre-bound statement object or a literal string.
-      // In either case, we want to end up with an executed statement object.
+      // In either case, we want to end up with an executed statement object,
+      // which we pass to PDOStatement::execute.
       if ($query instanceof DatabaseStatement) {
         $stmt = $query;
         $stmt->execute(NULL, $options);
@@ -1306,6 +1310,7 @@ class DatabaseStatement extends PDOStatement {
    *   A single field from the next record.
    */
   public function fetchField($index = 0) {
+    // Call PDOStatement::fetchColumn to fetch the field.
     return $this->fetchColumn($index);
   }
 
@@ -1320,6 +1325,7 @@ class DatabaseStatement extends PDOStatement {
    *   An associative array.
    */
   public function fetchAssoc() {
+    // Call PDOStatement::fetch to fetch the row.
     return $this->fetch(PDO::FETCH_ASSOC);
   }
 }
