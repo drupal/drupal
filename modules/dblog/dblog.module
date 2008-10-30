@@ -119,26 +119,20 @@ function _dblog_get_message_types() {
 }
 
 function dblog_watchdog($log = array()) {
-  $current_db = db_set_active();
-  db_query("INSERT INTO {watchdog}
-    (uid, type, message, variables, severity, link, location, referer, hostname, timestamp)
-    VALUES
-    (%d, '%s', '%s', '%s', %d, '%s', '%s', '%s', '%s', %d)",
-    $log['user']->uid,
-    $log['type'],
-    $log['message'],
-    serialize($log['variables']),
-    $log['severity'],
-    $log['link'],
-    $log['request_uri'],
-    $log['referer'],
-    $log['ip'],
-    $log['timestamp']
-  );
-
-  if ($current_db) {
-    db_set_active($current_db);
-  }
+  Database::getConnection('default')->insert('watchdog')
+    ->fields(array(
+      'uid' => $log['user']->uid,
+      'type' => $log['type'],
+      'message' => $log['message'],
+      'variables' => serialize($log['variables']),
+      'severity' => $log['severity'],
+      'link' => $log['link'],
+      'location' => $log['request_uri'],
+      'referer' => $log['referer'],
+      'hostname' => $log['ip'],
+      'timestamp' => $log['timestamp'],
+    ))
+    ->execute();
 }
 
 /**
