@@ -408,7 +408,7 @@ abstract class DatabaseSchema {
   /**
    * Find all tables that are like the specified base table name.
    *
-   * @param table_expression
+   * @param $table_expression
    *   An SQL expression, for example "simpletest%" (without the quotes).
    *   BEWARE: this is not prefixed, the caller should take care of that.
    * @return

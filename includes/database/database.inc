@@ -1674,15 +1674,15 @@ function db_column_exists($table, $column) {
   return Database::getActiveConnection()->schema()->columnExists($table, $column);
 }
 
- /**
-  * Find all tables that are like the specified base table name.
-  *
-  * @param table_expression
-  *   An SQL expression, for example simpletest% . BEWARE: this is not
-  *   prefixed, the caller should take care of that.
-  * @return
-  *   Array, both the keys and the values are the matching tables.
-  */
+/**
+ * Find all tables that are like the specified base table name.
+ *
+ * @param $table_expression
+ *   An SQL expression, for example "simpletest%" (without the quotes).
+ *   BEWARE: this is not prefixed, the caller should take care of that.
+ * @return
+ *   Array, both the keys and the values are the matching tables.
+ */
 function db_find_tables($table_expression) {
   return Database::getActiveConnection()->schema()->findTables($table_expression);
 }
