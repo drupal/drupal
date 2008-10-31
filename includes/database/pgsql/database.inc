@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.4 2008/10/25 02:12:35 webchick Exp $
+// $Id: database.inc,v 1.5 2008/10/31 11:24:04 dries Exp $
 
 /**
  * @file
@@ -27,7 +27,10 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
       $dsn .= ' port=' . $connection_options['port'];
     }
 
-    parent::__construct($dsn, $connection_options['username'], $connection_options['password'], array(PDO::ATTR_STRINGIFY_FETCHES => TRUE));
+    parent::__construct($dsn, $connection_options['username'], $connection_options['password'], array(
+      // Convert numeric values to strings when fetching.
+      PDO::ATTR_STRINGIFY_FETCHES => TRUE,
+    ));
   }
 
   public function query($query, Array $args = array(), $options = array()) {
