@@ -3389,7 +3389,7 @@ function drupal_schema_fields_sql($table, $prefix = NULL) {
  *   The object to write. This is a reference, as defaults according to
  *   the schema may be filled in on the object, as well as ID on the serial
  *   type(s). Both array an object types may be passed.
- * @param $update
+ * @param $primary_keys
  *   If this is an update, specify the primary keys' field names. It is the
  *   caller's responsibility to know if a record for this object already
  *   exists in the database. If there is only 1 key, you may pass a simple string.
@@ -3400,10 +3400,10 @@ function drupal_schema_fields_sql($table, $prefix = NULL) {
  *   the $table. For example, $object->nid will be populated after inserting
  *   a new node.
  */
-function drupal_write_record($table, &$object, $update = array()) {
-  // Standardize $update to an array.
-  if (is_string($update)) {
-    $update = array($update);
+function drupal_write_record($table, &$object, $primary_keys = array()) {
+  // Standardize $primary_keys to an array.
+  if (is_string($primary_keys)) {
+    $primary_keys = array($primary_keys);
   }
 
   $schema = drupal_get_schema($table);
@@ -3420,42 +3420,61 @@ function drupal_write_record($table, &$object, $update = array()) {
     $array = FALSE;
   }
 
-  $fields = $defs = $values = $serials = $placeholders = array();
+  $fields = array();
 
   // Go through our schema, build SQL, and when inserting, fill in defaults for
   // fields that are not set.
   foreach ($schema['fields'] as $field => $info) {
     // Special case -- skip serial types if we are updating.
-    if ($info['type'] == 'serial' && count($update)) {
+    if ($info['type'] == 'serial' && !empty($primary_keys)) {
       continue;
     }
 
-    // For inserts, populate defaults from Schema if not already provided
-    if (!isset($object->$field) && !count($update) && isset($info['default'])) {
+    // For inserts, populate defaults from schema if not already provided.
+    if (!isset($object->$field) && empty($primary_keys) && isset($info['default'])) {
       $object->$field = $info['default'];
     }
 
-    // Track serial fields so we can helpfully populate them after the query.
+    // Track serial field so we can helpfully populate them after the query.
+    // NOTE: Each table should come with one serial field only.
     if ($info['type'] == 'serial') {
-      $serials[] = $field;
-      // Ignore values for serials when inserting data. Unsupported.
+      $serial = $field;
+      // Ignore values for serial when inserting data. Unsupported.
       unset($object->$field);
     }
 
-    // Build arrays for the fields, placeholders, and values in our query.
+    // Build arrays for the fields and values in our query.
     if (isset($object->$field)) {
-      $fields[] = $field;
-      $placeholders[] = db_type_placeholder($info['type']);
-
       if (empty($info['serialize'])) {
-        $values[] = $object->$field;
+        $fields[$field] = $object->$field;
       }
       elseif (!empty($object->$field)) {
-        $values[] = serialize($object->$field);
+        $fields[$field] = serialize($object->$field);
       }
       else {
-        $values[] = '';
+        $fields[$field] = '';
       }
+    }
+
+    // We don't need to care about type casting if value does not exist.
+    if (!isset($fields[$field])) {
+      continue;
+    }
+
+    // Special case -- skip null value if field allows null.
+    if ($fields[$field] == NULL && $info['not null'] == FALSE) {
+      continue;
+    }
+
+    // Type cast if field does not allow null. Required by DB API.
+    if ($info['type'] == 'int' || $info['type'] == 'serial') {
+      $fields[$field] = (int) $fields[$field];
+    }
+    elseif ($info['type'] == 'float') {
+      $fields[$field] = (float) $fields[$field];
+    }
+    else {
+      $fields[$field] = (string) $fields[$field];
     }
   }
 
@@ -3463,42 +3482,29 @@ function drupal_write_record($table, &$object, $update = array()) {
     // No changes requested.
     // If we began with an array, convert back so we don't surprise the caller.
     if ($array) {
-      $object = (array)$object;
+      $object = (array) $object;
     }
     return;
   }
 
   // Build the SQL.
-  $query = '';
-  if (!count($update)) {
-    $query = "INSERT INTO {" . $table . "} (" . implode(', ', $fields) . ') VALUES (' . implode(', ', $placeholders) . ')';
+  if (empty($primary_keys)) {
+    $query = db_insert($table)->fields($fields);
     $return = SAVED_NEW;
   }
   else {
-    $query = '';
-    foreach ($fields as $id => $field) {
-      if ($query) {
-        $query .= ', ';
-      }
-      $query .= $field . ' = ' . $placeholders[$id];
+    $query = db_update($table)->fields($fields);
+    foreach ($primary_keys as $key){
+      $query->condition($key, $object->$key);
     }
-
-    foreach ($update as $key){
-      $conditions[] = "$key = " . db_type_placeholder($schema['fields'][$key]['type']);
-      $values[] = $object->$key;
-    }
-
-    $query = "UPDATE {" . $table . "} SET $query WHERE " . implode(' AND ', $conditions);
     $return = SAVED_UPDATED;
   }
 
   // Execute the SQL.
-  if (db_query($query, $values)) {
-    if ($serials) {
-      // Get last insert ids and fill them in.
-      foreach ($serials as $field) {
-        $object->$field = db_last_insert_id($table, $field);
-      }
+  if ($last_insert_id = $query->execute()) {
+    if (isset($serial)) {
+      // Populate the serial field.
+      $object->$serial = $last_insert_id;
     }
   }
   else {
