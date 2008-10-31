@@ -405,6 +405,24 @@ abstract class DatabaseSchema {
     return $ret;
   }
 
+  /**
+   * Find all tables that are like the specified base table name.
+   *
+   * @param table_expression
+   *   An SQL expression, for example "simpletest%" (without the quotes).
+   *   BEWARE: this is not prefixed, the caller should take care of that.
+   * @return
+   *   Array, both the keys and the values are the matching tables.
+   */
+  public function findTables($table_expression) {
+    global $db_prefix;
+    $info = Database::getConnectionInfo();
+    $result = db_query("SELECT table_name FROM information_schema.tables WHERE table_schema = :database AND table_name LIKE :table_name", array(
+      ':database' => $info['default']['database'],
+      ':table_name' => $table_expression,
+    ));
+    return $result->fetchAllKeyed(0, 0);
+  }
 }
 
 /**

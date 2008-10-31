@@ -505,10 +505,10 @@ function simpletest_clean_environment() {
  * Removed prefixed talbes from the database that are left over from crashed tests.
  */
 function simpletest_clean_database() {
-  $tables = simpletest_get_like_tables();
-
+  $tables = db_find_tables(Database::getActiveConnection()->prefixTables('simpletest') . '%');
+  $schema = drupal_get_schema_unprocessed('simpletest');
   $ret = array();
-  foreach ($tables as $table) {
+  foreach (array_diff_key($tables, $schema) as $table) {
     db_drop_table($ret, $table);
   }
 
@@ -518,36 +518,6 @@ function simpletest_clean_database() {
   else {
     drupal_set_message(t('No left over tables to remove.'));
   }
-}
-
-/**
- * Find all tables that are like the specified base table name.
- *
- * @param string $base_table Base table name.
- * @param boolean $count Return the table count instead of list of tables.
- * @return mixed Array of matching tables or count of tables.
- */
-function simpletest_get_like_tables($base_table = 'simpletest', $count = FALSE) {
-  global $db_prefix, $database;
-  $connection_info = Database::getConnectionInfo();
-  $database_name = $connection_info['default']['database'];
-  $select = $count ? 'COUNT(table_name)' : 'table_name';
-  $result = db_query("SELECT $select FROM information_schema.tables WHERE table_schema = :database AND table_name LIKE :table_name", array(
-    ':database' => $database_name,
-    ':table_name' => $db_prefix . $base_table . '%',
-  ));
-  $schema = drupal_get_schema_unprocessed('simpletest');
-
-  if ($count) {
-    return db_result($result);
-  }
-  $tables = array();
-  while ($table = db_result($result)) {
-    if (!isset($schema[$table])) {
-      $tables[] = $table;
-    }
-  }
-  return $tables;
 }
 
 /**
