@@ -935,7 +935,7 @@ function system_check_directory($form_element) {
  */
 function system_get_files_database(&$files, $type) {
   // Extract current files from database.
-  $result = db_query("SELECT filename, name, type, status, schema_version FROM {system} WHERE type = '%s'", $type);
+  $result = db_query("SELECT filename, name, type, status, schema_version, weight FROM {system} WHERE type = '%s'", $type);
   while ($file = db_fetch_object($result)) {
     if (isset($files[$file->name]) && is_object($files[$file->name])) {
       $file->old_filename = $file->filename;

@@ -1092,8 +1092,31 @@ function system_schema() {
         'length' => 255,
         'not null' => TRUE,
       ),
+      'module' => array(
+        'description' => t('Name of the module the file belongs to.'),
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''
+      ),
+      'suffix' => array(
+        'description' => t("The part of the function name after the module, which is the hook this function implements, if any."),
+        'type' => 'varchar',
+        'length' => 68,
+        'not null' => TRUE,
+        'default' => ''
+      ),
+      'weight' => array(
+        'description' => t("The order in which this module's hooks should be invoked relative to other modules. Equal-weighted modules are ordered by name."),
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
     ),
     'primary key' => array('name', 'type'),
+    'indexes' => array(
+      'hook' => array('type', 'suffix', 'weight', 'module'),
+    ),
   );
 
   $schema['registry_file'] = array(
@@ -2931,8 +2954,14 @@ function system_update_7006() {
       'name'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       'type'   => array('type' => 'varchar', 'length' => 9, 'not null' => TRUE, 'default' => ''),
       'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'module'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'suffix'   => array('type' => 'varchar', 'length' => 69, 'not null' => TRUE, 'default' => ''),
+      'weight'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
     ),
     'primary key' => array('name', 'type'),
+    'indexes' => array(
+      'hook' => array('type', 'suffix', 'weight', 'module'),
+    ),
   );
   $schema['registry_file'] = array(
     'fields' => array(

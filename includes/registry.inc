@@ -45,12 +45,12 @@ function _registry_rebuild() {
     if ($module->status) {
       $dir = dirname($module->filename);
       foreach ($module->info['files'] as $file) {
-        $files["$dir/$file"] = array();
+        $files["$dir/$file"] = array('module' => $module->name, 'weight' => $module->weight);
       }
     }
   }
   foreach (file_scan_directory('includes', '/\.inc$/') as $filename => $file) {
-    $files["$filename"] = array();
+    $files["$filename"] = array('module' => '', 'weight' => 0);
   }
 
   foreach (registry_get_parsed_files() as $filename => $file) {
@@ -71,6 +71,7 @@ function _registry_rebuild() {
   }
   _registry_parse_files($files);
 
+  module_implements(MODULE_IMPLEMENTS_CLEAR_CACHE);
   cache_clear_all('*', 'cache_registry', TRUE);
 }
 
@@ -99,7 +100,7 @@ function _registry_parse_files($files) {
     if ($new_file || $md5 != $file['md5']) {
       // We update the md5 after we've saved the files resources rather than here, so if we
       // don't make it through this rebuild, the next run will reparse the file.
-      _registry_parse_file($filename, $contents);
+      _registry_parse_file($filename, $contents, $file['module'], $file['weight']);
       $file['md5'] = $md5;
       db_merge('registry_file')
         ->key(array('filename' => $filename))
@@ -116,8 +117,12 @@ function _registry_parse_files($files) {
  *  Name of the file we are going to parse.
  * @param $contents
  *  Contents of the file we are going to parse as a string.
+ * @param $module
+ *   (optional) Name of the module this file belongs to.
+ * @param $weight
+ *   (optional) Weight of the module.
  */
-function _registry_parse_file($filename, $contents) {
+function _registry_parse_file($filename, $contents, $module = '', $weight = 0) {
   static $map = array(T_FUNCTION => 'function', T_CLASS => 'class', T_INTERFACE => 'interface');
   // Delete registry entries for this file, so we can insert the new resources.
   db_delete('registry')
@@ -129,6 +134,21 @@ function _registry_parse_file($filename, $contents) {
     if (is_array($token) && isset($map[$token[0]])) {
       $type = $map[$token[0]];
       if ($resource_name = _registry_get_resource_name($tokens, $type)) {
+        $suffix = '';
+        // Collect the part of the function name after the module name,
+        // so that we can query the registry for possible hook implementations.
+        if ($type == 'function' && !empty($module)) {
+          $n = strlen($module);
+          if (substr($resource_name, 0, $n) == $module) {
+            $suffix = substr($resource_name, $n + 1);
+          }
+        }
+        $fields = array(
+          'filename' => $filename,
+          'module' => $module,
+          'suffix' => $suffix,
+          'weight' => $weight,
+        );
         // Because some systems, such as cache, currently use duplicate function
         // names in separate files an insert query cannot be used here as it
         // would cause a key constraint violation.  Instead we use a merge query.
@@ -140,7 +160,7 @@ function _registry_parse_file($filename, $contents) {
         // function names have been purged from Drupal.
         db_merge('registry')
           ->key(array('name' => $resource_name, 'type' => $type))
-          ->fields(array('filename' => $filename))
+          ->fields($fields)
           ->execute();
 
         // We skip the body because classes may contain functions.

@@ -122,11 +122,9 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
   function getFiles() {
     $files = array();
     foreach ($this->fileTypes as $fileType) {
+      $files[$this->$fileType->fileName] = array('module' => '', 'weight' => 0);
       if ($fileType == 'existing_changed') {
-        $files[$this->$fileType->fileName] = array('md5' => $this->$fileType->fakeMD5);
-      }
-      else {
-        $files[$this->$fileType->fileName] = array();
+        $files[$this->$fileType->fileName]['md5'] = $this->$fileType->fakeMD5;
       }
     }
     return $files;

@@ -1406,18 +1406,7 @@ function drupal_function_exists($function) {
     return TRUE;
   }
 
-  $file = db_query("SELECT filename FROM {registry} WHERE name = :name AND type = :type", array(
-      ':name' => $function,
-      ':type' => 'function',
-    ))
-    ->fetchField();
-  if ($file) {
-    require_once DRUPAL_ROOT . '/' . $file;
-    $checked[$function] = function_exists($function);
-    if ($checked[$function]) {
-      registry_mark_code('function', $function);
-    }
-  }
+  $checked[$function] = _registry_check_code('function', $function);
 
   return $checked[$function];
 }
@@ -1455,7 +1444,7 @@ function drupal_autoload_class($class) {
 }
 
 /**
- * Helper for registry_check_{interface, class}.
+ * Helper to check for a resource in the registry.
  */
 function _registry_check_code($type, $name) {
   $file = db_query("SELECT filename FROM {registry} WHERE name = :name AND type = :type", array(
@@ -1468,6 +1457,7 @@ function _registry_check_code($type, $name) {
     registry_mark_code($type, $name);
     return TRUE;
   }
+  return FALSE;
 }
 
 /**
@@ -1506,31 +1496,6 @@ function registry_mark_code($type, $name, $return = FALSE) {
 function registry_rebuild() {
   require_once DRUPAL_ROOT . '/includes/registry.inc';
   _registry_rebuild();
-}
-
-/**
- * Save hook implementations cache.
- *
- * @param $hook
- *   Array with the hook name and list of modules that implement it.
- * @param $write_to_persistent_cache
- *   Whether to write to the persistent cache.
- */
-function registry_cache_hook_implementations($hook, $write_to_persistent_cache = FALSE) {
-  static $implementations;
-
-  if ($hook) {
-    // Newer is always better, so overwrite anything that's come before.
-    $implementations[$hook['hook']] = $hook['modules'];
-  }
-
-  if ($write_to_persistent_cache === TRUE) {
-    // Only write this to cache if the implementations data we are going to cache
-    // is different to what we loaded earlier in the request.
-    if ($implementations != module_implements()) {
-      cache_set('hooks', $implementations, 'cache_registry');
-    }
-  }
 }
 
 /**
