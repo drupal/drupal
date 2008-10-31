@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.3 2008/10/31 11:13:30 dries Exp $
+// $Id: schema.inc,v 1.4 2008/10/31 15:46:16 webchick Exp $
 
 /**
  * @file
@@ -408,7 +408,7 @@ abstract class DatabaseSchema {
   /**
    * Find all tables that are like the specified base table name.
    *
-   * @param table_expression
+   * @param $table_expression
    *   An SQL expression, for example "simpletest%" (without the quotes).
    *   BEWARE: this is not prefixed, the caller should take care of that.
    * @return
