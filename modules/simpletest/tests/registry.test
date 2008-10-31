@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.test,v 1.2 2008/09/20 20:22:24 webchick Exp $
+// $Id: registry.test,v 1.3 2008/10/31 02:18:22 dries Exp $
 
 class RegistryParseFileTestCase extends DrupalWebTestCase {
 
@@ -122,11 +122,9 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
   function getFiles() {
     $files = array();
     foreach ($this->fileTypes as $fileType) {
+      $files[$this->$fileType->fileName] = array('module' => '', 'weight' => 0);
       if ($fileType == 'existing_changed') {
-        $files[$this->$fileType->fileName] = array('md5' => $this->$fileType->fakeMD5);
-      }
-      else {
-        $files[$this->$fileType->fileName] = array();
+        $files[$this->$fileType->fileName]['md5'] = $this->$fileType->fakeMD5;
       }
     }
     return $files;

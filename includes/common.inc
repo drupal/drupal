@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.812 2008/10/29 10:06:06 dries Exp $
+// $Id: common.inc,v 1.813 2008/10/31 02:18:22 dries Exp $
 
 /**
  * @file
@@ -1608,7 +1608,7 @@ function drupal_page_footer() {
 
   module_invoke_all('exit');
 
-  registry_cache_hook_implementations(FALSE, TRUE);
+  module_implements(MODULE_IMPLEMENTS_WRITE_CACHE);
   registry_cache_path_files();
 }
 
@@ -2668,8 +2668,6 @@ function _drupal_bootstrap_full() {
   fix_gpc_magic();
   // Load all enabled modules
   module_load_all();
-  // Rebuild the module hook cache
-  module_implements('', NULL, TRUE);
 
   // Let all modules take action before menu system handles the request
   // We do not want this while running update.php.

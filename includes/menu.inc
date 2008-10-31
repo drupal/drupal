@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.298 2008/10/19 21:15:58 dries Exp $
+// $Id: menu.inc,v 1.299 2008/10/31 02:18:22 dries Exp $
 
 /**
  * @file
@@ -1728,7 +1728,7 @@ function menu_router_build($reset = FALSE) {
       // We need to manually call each module so that we can know which module
       // a given item came from.
       $callbacks = array();
-      foreach (module_implements('menu', NULL, TRUE) as $module) {
+      foreach (module_implements('menu', TRUE) as $module) {
         $router_items = call_user_func($module . '_menu');
         if (isset($router_items) && is_array($router_items)) {
           foreach (array_keys($router_items) as $path) {
