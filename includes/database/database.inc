@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.17 2008/10/30 08:57:50 dries Exp $
+// $Id: database.inc,v 1.18 2008/10/31 11:13:30 dries Exp $
 
 /**
  * @file
@@ -1674,6 +1674,18 @@ function db_column_exists($table, $column) {
   return Database::getActiveConnection()->schema()->columnExists($table, $column);
 }
 
+ /**
+  * Find all tables that are like the specified base table name.
+  *
+  * @param table_expression
+  *   An SQL expression, for example simpletest% . BEWARE: this is not
+  *   prefixed, the caller should take care of that.
+  * @return
+  *   Array, both the keys and the values are the matching tables.
+  */
+function db_find_tables($table_expression) {
+  return Database::getActiveConnection()->schema()->findTables($table_expression);
+}
 
 /**
  * Given a Schema API field type, return the correct %-placeholder.
