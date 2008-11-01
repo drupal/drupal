@@ -321,6 +321,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
    * Implementation of setUp().
    */
   function setUp() {
+    parent::setUp();
     // Reset drupal_add_js() before each test.
     drupal_add_js(NULL, NULL, TRUE);
   }

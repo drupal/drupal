@@ -514,11 +514,16 @@ function simpletest_clean_environment() {
  * Removed prefixed talbes from the database that are left over from crashed tests.
  */
 function simpletest_clean_database() {
-  $tables = db_find_tables(Database::getActiveConnection()->prefixTables('simpletest') . '%');
+  global $db_prefix;
+  $tables = db_find_tables(Database::getActiveConnection()->prefixTables('{simpletest}') . '%');
   $schema = drupal_get_schema_unprocessed('simpletest');
   $ret = array();
   foreach (array_diff_key($tables, $schema) as $table) {
-    db_drop_table($ret, $table);
+    // Strip $db_prefix and skip tables without digits following "simpletest",
+    // e.g. {simpletest_tets_id}.
+    if (preg_match('/simpletest\d+.*/', $table, $matches)) {
+      db_drop_table($ret, $matches[0]);
+    }
   }
 
   if (count($ret) > 0) {

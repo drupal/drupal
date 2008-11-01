@@ -1005,7 +1005,7 @@ abstract class Database {
       // We need to pass around the simpletest database prefix in the request
       // and we put that in the user_agent header.
       if (preg_match("/^simpletest\d+$/", $_SERVER['HTTP_USER_AGENT'])) {
-        $db_prefix = $_SERVER['HTTP_USER_AGENT'];
+        $db_prefix .= $_SERVER['HTTP_USER_AGENT'];
       }
 
       // Return the target that was actually opened in case the requested one

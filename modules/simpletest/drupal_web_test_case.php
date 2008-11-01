@@ -689,7 +689,7 @@ class DrupalWebTestCase {
     $clean_url_original = variable_get('clean_url', 0);
 
     // Generate temporary prefixed database to ensure that tests have a clean starting point.
-    $db_prefix = 'simpletest' . mt_rand(1000, 1000000);
+    $db_prefix = Database::getActiveConnection()->prefixTables('{simpletest' . mt_rand(1000, 1000000) . '}');
 
     include_once DRUPAL_ROOT . '/includes/install.inc';
     drupal_install_system();
@@ -800,8 +800,8 @@ class DrupalWebTestCase {
         CURLOPT_SSL_VERIFYPEER => FALSE,  // Required to make the tests run on https://
         CURLOPT_SSL_VERIFYHOST => FALSE,  // Required to make the tests run on https://
       );
-      if (preg_match('/simpletest\d+/', $db_prefix)) {
-        $curl_options[CURLOPT_USERAGENT] = $db_prefix;
+      if (preg_match('/simpletest\d+/', $db_prefix, $matches)) {
+        $curl_options[CURLOPT_USERAGENT] = $matches[0];
       }
       if (!isset($curl_options[CURLOPT_USERPWD]) && ($auth = variable_get('simpletest_httpauth_username', ''))) {
         if ($pass = variable_get('simpletest_httpauth_pass', '')) {
