@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.test,v 1.10 2008/10/20 12:57:35 dries Exp $
+// $Id: aggregator.test,v 1.11 2008/11/01 17:01:23 dries Exp $
 
 class AggregatorTestCase extends DrupalWebTestCase {
   private static $prefix = 'simpletest_aggregator_';
@@ -367,7 +367,7 @@ class UpdateFeedItemTestCase extends AggregatorTestCase {
     $this->drupalPost('admin/content/aggregator/add/feed', $edit, t('Save'));
     $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), t('The feed !name has been added.', array('!name' => $edit['title'])));
 
-    $feed = db_query("SELECT * FROM {aggregator_feed} WHERE url = '%s'", array($edit['url']))->fetchObject();
+    $feed = db_query("SELECT * FROM {aggregator_feed} WHERE url = :url", array(':url' => $edit['url']))->fetchObject();
     $this->drupalGet('admin/content/aggregator/update/' . $feed->fid);
 
     $before = db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
