@@ -993,14 +993,6 @@ function aggregator_category_load($cid) {
  * @ingroup themeable
  */
 function theme_aggregator_block_item($item, $feed = 0) {
-  global $user;
-
-  $output = '';
-  if ($user->uid && module_exists('blog') && user_access('create blog entries')) {
-    if ($image = theme('image', 'misc/blog.png', t('blog it'), t('blog it'))) {
-      $output .= '<div class="icon">' . l($image, 'node/add/blog', array('attributes' => array('title' => t('Comment on this news item in your personal blog.'), 'class' => 'blog-it'), 'query' => "iid=$item->iid", 'html' => TRUE)) . '</div>';
-    }
-  }
 
   // Display the external link to the item.
   $output .= '<a href="' . check_url($item->link) . '">' . check_plain($item->title) . "</a>\n";
