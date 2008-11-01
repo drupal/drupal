@@ -255,8 +255,11 @@ function _batch_process() {
       '@total'      => $total,
       '@current'    => floor($current),
       '@percentage' => $percentage,
-      );
-    $message = strtr($progress_message, $values) . '<br/>';
+    );
+    $message = strtr($progress_message, $values);
+    if (!empty($message)) {
+      $message .= '<br/>';
+    }
     $message .= $task_message ? $task_message : '&nbsp';
 
     return array($percentage, $message);

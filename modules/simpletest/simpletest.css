@@ -3,30 +3,36 @@
 /* Addon for the simpletest module */
 #simpletest {
 }
+
 /* Test Table */
 #simpletest-form-table th.select-all {
   width: 50px;
 }
+
 th.simpletest_test {
   width: 160px;
 }
 
 table#simpletest-form-table tr td {
-  background-color: white !important;
+  background-color: white;
   color: #494949;
 }
 
 table#simpletest-form-table tr.simpletest-group td {
-  background-color: #EDF5FA !important;
+  background-color: #EDF5FA;
   color: #494949;
+}
+
+div.message > div.item-list {
+  font-weight: normal;
 }
 
 div.simpletest-pass {
   color: #33a333;
 }
 
-div.simpletest-fail {
-  color: #a30000;
+.simpletest-fail {
+  color: #981010;
 }
 
 tr.simpletest-pass.odd {
