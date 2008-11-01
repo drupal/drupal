@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.26 2008/10/22 19:39:36 dries Exp $
+// $Id: batch.inc,v 1.27 2008/11/01 18:32:22 dries Exp $
 
 /**
  * @file Batch processing API for processes to run in multiple HTTP requests.
@@ -255,8 +255,11 @@ function _batch_process() {
       '@total'      => $total,
       '@current'    => floor($current),
       '@percentage' => $percentage,
-      );
-    $message = strtr($progress_message, $values) . '<br/>';
+    );
+    $message = strtr($progress_message, $values);
+    if (!empty($message)) {
+      $message .= '<br/>';
+    }
     $message .= $task_message ? $task_message : '&nbsp';
 
     return array($percentage, $message);
