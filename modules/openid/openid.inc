@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.12 2008/09/19 07:53:59 dries Exp $
+// $Id: openid.inc,v 1.13 2008/11/01 19:51:06 dries Exp $
 
 /**
  * @file
@@ -445,22 +445,4 @@ function _openid_get_params($str) {
     }
   }
   return $data;
-}
-
-/**
- * Provide bcpowmod support for PHP4.
- */
-if (!function_exists('bcpowmod')) {
-  function bcpowmod($base, $exp, $mod) {
-    $square = bcmod($base, $mod);
-    $result = 1;
-    while (bccomp($exp, 0) > 0) {
-      if (bcmod($exp, 2)) {
-        $result = bcmod(bcmul($result, $square), $mod);
-      }
-      $square = bcmod(bcmul($square, $square), $mod);
-      $exp = bcdiv($exp, 2);
-    }
-    return $result;
-  }
 }
