@@ -977,7 +977,7 @@ function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 
 /**
  * Processes an HTML tag.
  *
- * @param @m
+ * @param $m
  *   An array with various meaning depending on the value of $store.
  *   If $store is TRUE then the array contains the allowed tags.
  *   If $store is FALSE then the array has one element, the HTML tag to process.
@@ -1025,10 +1025,9 @@ function _filter_xss_split($m, $store = FALSE) {
   }
 
   // Is there a closing XHTML slash at the end of the attributes?
-  // In PHP 5.1.0+ we could count the changes, currently we need a separate match
-  $xhtml_slash = preg_match('%\s?/\s*$%', $attrlist) ? ' /' : '';
-  $attrlist = preg_replace('%(\s?)/\s*$%', '\1', $attrlist);
-
+  $attrlist = preg_replace('%(\s?)/\s*$%', '\1', $attrlist, -1, $count);
+  $xhtml_slash = $count ? ' /' : '';
+  
   // Clean up attributes
   $attr2 = implode(' ', _filter_xss_attributes($attrlist));
   $attr2 = preg_replace('/[<>]/', '', $attr2);

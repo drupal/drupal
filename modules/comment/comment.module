@@ -1134,8 +1134,7 @@ function comment_validate($edit) {
   comment_invoke_comment($edit, 'validate');
 
   if (isset($edit['date'])) {
-    // As of PHP 5.1.0, strtotime returns FALSE upon failure instead of -1.
-    if (strtotime($edit['date']) <= 0) {
+    if (strtotime($edit['date']) === FALSE) {
       form_set_error('date', t('You have to specify a valid date.'));
     }
   }

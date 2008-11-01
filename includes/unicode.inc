@@ -42,12 +42,6 @@ function _unicode_check() {
   // Set the standard C locale to ensure consistent, ASCII-only string handling.
   setlocale(LC_CTYPE, 'C');
 
-  // Check for outdated PCRE library
-  // Note: we check if U+E2 is in the range U+E0 - U+E1. This test returns TRUE on old PCRE versions.
-  if (preg_match('/[à-á]/u', 'â')) {
-    return array(UNICODE_ERROR, $t('The PCRE library in your PHP installation is outdated. This will cause problems when handling Unicode text. If you are running PHP 4.3.3 or higher, make sure you are using the PCRE library supplied by PHP. Please refer to the <a href="@url">PHP PCRE documentation</a> for more information.', array('@url' => 'http://www.php.net/pcre')));
-  }
-
   // Check for mbstring extension
   if (!function_exists('mb_strlen')) {
     return array(UNICODE_SINGLEBYTE, $t('Operations on Unicode strings are emulated on a best-effort basis. Install the <a href="@url">PHP mbstring extension</a> for improved Unicode support.', array('@url' => 'http://www.php.net/mbstring')));

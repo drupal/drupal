@@ -842,8 +842,8 @@ function node_validate($node, $form = array()) {
       form_set_error('name', t('The username %name does not exist.', array('%name' => $node->name)));
     }
 
-    // Validate the "authored on" field. As of PHP 5.1.0, strtotime returns FALSE instead of -1 upon failure.
-    if (!empty($node->date) && strtotime($node->date) <= 0) {
+    // Validate the "authored on" field.
+    if (!empty($node->date) && strtotime($node->date) === FALSE) {
       form_set_error('date', t('You have to specify a valid date.'));
     }
   }

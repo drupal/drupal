@@ -695,9 +695,7 @@ function aggregator_refresh($feed) {
         }
 
         if (!empty($image['LINK']) && !empty($image['URL']) && !empty($image['TITLE'])) {
-          // TODO: we should really use theme_image() here, but that only works with
-          // local images. It won't work with images fetched with a URL unless PHP version > 5.
-          $image = '<a href="' . check_url($image['LINK']) . '" class="feed-image"><img src="' . check_url($image['URL']) . '" alt="' . check_plain($image['TITLE']) . '" /></a>';
+          $image = l(theme('image', $image['URL'], $image['TITLE']), $image['LINK'], array('html' => TRUE));
         }
         else {
           $image = '';
@@ -864,9 +862,9 @@ function aggregator_parse_feed(&$data, $feed) {
       }
     }
 
-    $timestamp = strtotime($date); // As of PHP 5.1.0, strtotime returns FALSE on failure instead of -1.
+    $timestamp = strtotime($date);
 
-    if ($timestamp <= 0) {
+    if ($timestamp === FALSE) {
       $timestamp = aggregator_parse_w3cdtf($date); // Aggregator_parse_w3cdtf() returns FALSE on failure.
     }
 
