@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.19 2008/10/31 15:46:16 webchick Exp $
+// $Id: database.inc,v 1.20 2008/11/01 21:21:35 dries Exp $
 
 /**
  * @file
@@ -1005,7 +1005,7 @@ abstract class Database {
       // We need to pass around the simpletest database prefix in the request
       // and we put that in the user_agent header.
       if (preg_match("/^simpletest\d+$/", $_SERVER['HTTP_USER_AGENT'])) {
-        $db_prefix = $_SERVER['HTTP_USER_AGENT'];
+        $db_prefix .= $_SERVER['HTTP_USER_AGENT'];
       }
 
       // Return the target that was actually opened in case the requested one

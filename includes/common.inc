@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.814 2008/10/31 02:23:24 dries Exp $
+// $Id: common.inc,v 1.815 2008/11/01 21:21:34 dries Exp $
 
 /**
  * @file
@@ -497,8 +497,8 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   // user-agent is used to ensure that multiple testing sessions running at the
   // same time won't interfere with each other as they would if the database
   // prefix were stored statically in a file or database variable.
-  if (preg_match("/^simpletest\d+/", $db_prefix)) {
-    $headers['User-Agent'] = $db_prefix;
+  if (preg_match("/simpletest\d+/", $db_prefix, $matches)) {
+    $headers['User-Agent'] = $matches[0];
   }
 
   foreach ($headers as $header => $value) {
