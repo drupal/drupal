@@ -367,7 +367,7 @@ class UpdateFeedItemTestCase extends AggregatorTestCase {
     $this->drupalPost('admin/content/aggregator/add/feed', $edit, t('Save'));
     $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), t('The feed !name has been added.', array('!name' => $edit['title'])));
 
-    $feed = db_query("SELECT * FROM {aggregator_feed} WHERE url = '%s'", array($edit['url']))->fetchObject();
+    $feed = db_query("SELECT * FROM {aggregator_feed} WHERE url = :url", array(':url' => $edit['url']))->fetchObject();
     $this->drupalGet('admin/content/aggregator/update/' . $feed->fid);
 
     $before = db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
