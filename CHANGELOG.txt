@@ -29,6 +29,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
       file copy to the includes directory).
     * Added an edit tab to taxonomy term pages.
     * Redesigned password strength validator.
+    * Redesigned the add content type screen.
 - News aggregator:
     * Added OPML import functionality for RSS feeds.
     * Optionally, RSS feeds may be configured to not automatically generate feed blocks.

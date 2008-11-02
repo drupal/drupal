@@ -135,6 +135,9 @@ function node_theme() {
     'node_submitted' => array(
       'arguments' => array('node' => NULL),
     ),
+    'node_admin_overview' => array(
+      'arguments' => array('name' => NULL, 'type' => NULL),
+    ),
   );
 }
 

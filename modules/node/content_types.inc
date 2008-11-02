@@ -12,18 +12,14 @@
 function node_overview_types() {
   $types = node_get_types();
   $names = node_get_types('names');
-  $header = array(t('Name'), t('Type'), t('Description'), array('data' => t('Operations'), 'colspan' => '2'));
+  $header = array(t('Name'), array('data' => t('Operations'), 'colspan' => '2'));
   $rows = array();
 
   foreach ($names as $key => $name) {
     $type = $types[$key];
     if (node_hook($type, 'form')) {
       $type_url_str = str_replace('_', '-', $type->type);
-      $row = array(
-        check_plain($name),
-        check_plain($type->type),
-        filter_xss_admin($type->description),
-      );
+      $row = array(theme('node_admin_overview', $name, $type));
       // Set the edit column.
       $row[] = array('data' => l(t('edit'), 'admin/build/node-type/' . $type_url_str));
 
@@ -43,6 +39,13 @@ function node_overview_types() {
   }
 
   return theme('table', $header, $rows);
+}
+
+function theme_node_admin_overview($name, $type) {
+  $output = check_plain($name);
+  $output .= ' <small> (Machine name: ' . check_plain($type->type) . ')</small>';
+  $output .= '<div class="description">' . filter_xss_admin($type->description) . '</div>';
+  return $output;
 }
 
 /**
@@ -71,7 +74,7 @@ function node_type_form(&$form_state, $type = NULL) {
 
   if (!$type->locked) {
     $form['identity']['type'] = array(
-      '#title' => t('Type'),
+      '#title' => t('Machine name'),
       '#type' => 'textfield',
       '#default_value' => $type->type,
       '#maxlength' => 32,
@@ -85,7 +88,7 @@ function node_type_form(&$form_state, $type = NULL) {
       '#value' => $type->type,
     );
     $form['identity']['type_display'] = array(
-      '#title' => t('Type'),
+      '#title' => t('Machine name'),
       '#type' => 'item',
       '#markup' => theme('placeholder', $type->type),
       '#description' => t('The machine-readable name of this content type. This field cannot be modified for system-defined content types.'),
