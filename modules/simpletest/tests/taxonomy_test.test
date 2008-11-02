@@ -1,0 +1,59 @@
+<?php
+// $Id$
+
+class TaxonomyHooksTestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Taxonomy term hooks'),
+      'description' => t('Hooks for taxonomy term load/save/delete.'),
+      'group' => t('Taxonomy')
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp('taxonomy', 'taxonomy_test');
+    $taxonomy_admin = $this->drupalCreateUser(array('administer taxonomy'));
+    $this->drupalLogin($taxonomy_admin);
+  }
+
+  /**
+   * Test that hooks are run correctly on creating, editing and deleting a term.
+   */
+  function testTaxonomyTermHooks() {
+    // Create a taxonomy vocabulary.
+    $edit = array(
+      'name' => $this->randomName(),
+    );
+    $this->drupalPost('admin/content/taxonomy/add', $edit, t('Save'));
+
+    // Create a term with one antonym.
+    $edit = array(
+      'name' => $this->randomName(),
+      'antonyms' => 'Long',
+    );
+    $this->drupalPost('admin/content/taxonomy/1/add', $edit, t('Save'));
+    $terms = taxonomy_get_term_by_name($edit['name']);
+    $term = taxonomy_term_load($terms[0]->tid);
+    $this->assertEqual($term->antonyms[0], $edit['antonyms'], t('Antonyms were loaded into the term object'));
+
+    // Update the term with a different antonym.
+    $edit = array(
+      'name' => $this->randomName(),
+      'antonyms' => 'Short',
+    );
+    $this->drupalPost('taxonomy/term/' . $term->tid . '/edit', $edit, t('Save'));
+    $term = taxonomy_term_load($term->tid, TRUE);
+    $this->assertTrue(in_array($edit['antonyms'], $term->antonyms), t('Antonym was successfully edited'));
+
+    // Delete the term.
+    taxonomy_del_term($term->tid);
+    $antonyms = db_query('SELECT taid FROM {term_antonym} WHERE tid = :tid', array(':tid' => $term->tid))->fetchField();
+    $this->assertFalse($antonyms, t('The antonyms were deleted from the database.'));
+  }
+}

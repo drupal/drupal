@@ -1,0 +1,54 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_schema().
+ */
+function taxonomy_test_schema() {
+  $schema['term_antonym'] = array(
+    'description' => t('Stores term antonyms.'),
+    'fields' => array(
+      'taid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => t('Primary Key: Unique term antonym ID.'),
+      ),
+      'tid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => t('The {term_data}.tid of the term.'),
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => t('The name of the antonym.'),
+      ),
+    ),
+    'indexes' => array(
+      'tid' => array('tid'),
+      'name_tid' => array('name', 'tid'),
+    ),
+    'primary key' => array('taid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implementation of hook_install().
+ */
+function taxonomy_test_install() {
+  drupal_install_schema('taxonomy_test');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function taxonomy_test_uninstall() {
+  drupal_uninstall_schema('taxonomy_test');
+}
+

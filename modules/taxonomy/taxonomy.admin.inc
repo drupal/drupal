@@ -747,7 +747,8 @@ function taxonomy_form_term_submit($form, &$form_state) {
     return;
   }
 
-  switch (taxonomy_save_term($form_state['values'])) {
+  $status = taxonomy_save_term($form_state['values']);
+  switch ($status) {
     case SAVED_NEW:
       drupal_set_message(t('Created new term %term.', array('%term' => $form_state['values']['name'])));
       watchdog('taxonomy', 'Created new term %term.', array('%term' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $form_state['values']['tid'] . '/edit'));

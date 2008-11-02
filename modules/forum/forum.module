@@ -632,8 +632,6 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
     }
   }
 
-  $term = taxonomy_term_load($tid);
-
   $sql = db_rewrite_sql("SELECT n.nid, r.tid, n.title, n.type, n.sticky, u.name, u.uid, n.created AS timestamp, n.comment AS comment_mode, l.last_comment_timestamp, IF(l.last_comment_uid != 0, cu.name, l.last_comment_name) AS last_comment_name, l.last_comment_uid, l.comment_count AS num_comments, f.tid AS forum_tid FROM {node_comment_statistics} l INNER JOIN {node} n ON n.nid = l.nid INNER JOIN {users} cu ON l.last_comment_uid = cu.uid INNER JOIN {term_node} r ON n.vid = r.vid INNER JOIN {users} u ON n.uid = u.uid INNER JOIN {forum} f ON n.vid = f.vid WHERE n.status = 1 AND r.tid = %d");
   $sql .= tablesort_sql($forum_topic_list_header, 'n.sticky DESC,');
   $sql .= ', n.created DESC';  // Always add a secondary sort order so that the news forum topics are on top.

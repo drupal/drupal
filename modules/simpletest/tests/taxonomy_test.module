@@ -1,0 +1,72 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Test module for Taxonomy hooks and functions not used in core.
+ */
+
+/**
+ * Implementation of hook_taxonomy_term_load().
+ */
+function taxonomy_test_taxonomy_term_load($term) {
+  $term->antonyms = taxonomy_test_get_antonyms($term->tid);
+}
+
+/**
+ * Implementation of hook_taxonomy_term_save().
+ */
+function taxonomy_test_taxonomy_term_save($term) {
+  taxonomy_test_taxonomy_term_delete($term);
+  if (!empty($term->antonyms)) {
+    foreach (explode ("\n", str_replace("\r", '', $term->antonyms)) as $antonym) {
+      if ($antonym) {
+        db_insert('term_antonym')
+        ->fields(array(
+          'tid' => $term->tid,
+          'name' => rtrim($antonym),
+        ))
+        ->execute();
+      }
+    }
+  }
+}
+
+/**
+ * Implementation of hook_taxonomy_term_delete().
+ */
+function taxonomy_test_taxonomy_term_delete($term) {
+  db_delete('term_antonym')->condition('tid', $term->tid)->execute();
+}
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function taxonomy_test_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'taxonomy_form_term') {
+    $antonyms = taxonomy_test_get_antonyms($form['#term']['tid']);
+    $form['advanced']['antonyms'] = array(
+      '#type' => 'textarea',
+      '#title' => t('Antonyms'),
+      '#default_value' => !empty($antonyms) ? implode("\n", $antonyms) : NULL,
+      '#description' => t('Antonyms of this term, one antonym per line.')
+    );
+  }
+}
+
+/**
+ * Return an array of antonyms of the given term ID.
+ */
+function taxonomy_test_get_antonyms($tid) {
+  if ($tid) {
+    $antonyms = array();
+    $result = db_query('SELECT name FROM {term_antonym} WHERE tid = :tid', array(':tid' => $tid));
+    foreach($result as $antonym) {
+      $antonyms[] = $antonym->name;
+    }
+    return $antonyms;
+  }
+  else {
+    return FALSE;
+  }
+}

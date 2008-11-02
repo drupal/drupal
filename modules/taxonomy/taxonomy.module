@@ -323,18 +323,19 @@ function taxonomy_save_term(&$form_values) {
     'weight' => 0
   );
 
+  $term = (object) $form_values;
+
   if (!empty($form_values['tid']) && $form_values['name']) {
-    drupal_write_record('term_data', $form_values, 'tid');
-    $hook = 'update';
-    $status = SAVED_UPDATED;
+    $status = drupal_write_record('term_data', $form_values, 'tid');
+    module_invoke_all('taxonomy_term_save', $term);
   }
   elseif (!empty($form_values['tid'])) {
     return taxonomy_del_term($form_values['tid']);
   }
   else {
-    drupal_write_record('term_data', $form_values);
-    $hook = 'insert';
-    $status = SAVED_NEW;
+    $status = drupal_write_record('term_data', $form_values);
+    $term->tid = $form_values['tid'];
+    module_invoke_all('taxonomy_term_save', $term);
   }
 
   db_query('DELETE FROM {term_relation} WHERE tid1 = %d OR tid2 = %d', $form_values['tid'], $form_values['tid']);
@@ -375,10 +376,6 @@ function taxonomy_save_term(&$form_values) {
     }
   }
 
-  if (isset($hook)) {
-    module_invoke_all('taxonomy', $hook, 'term', $form_values);
-  }
-
   cache_clear_all();
 
   return $status;
@@ -408,7 +405,7 @@ function taxonomy_del_term($tid) {
         }
       }
 
-      $term = (array) taxonomy_term_load($tid);
+      $term = taxonomy_term_load($tid);
 
       db_query('DELETE FROM {term_data} WHERE tid = %d', $tid);
       db_query('DELETE FROM {term_hierarchy} WHERE tid = %d', $tid);
@@ -416,7 +413,7 @@ function taxonomy_del_term($tid) {
       db_query('DELETE FROM {term_synonym} WHERE tid = %d', $tid);
       db_query('DELETE FROM {term_node} WHERE tid = %d', $tid);
 
-      module_invoke_all('taxonomy', 'delete', 'term', $term);
+      module_invoke_all('taxonomy_term_delete', $term);
     }
 
     $tids = $orphans;
@@ -1067,7 +1064,24 @@ function taxonomy_term_load($tid, $reset = FALSE) {
   }
   static $terms = array();
   if (!isset($terms[$tid]) || $reset) {
-    $terms[$tid] = db_fetch_object(db_query('SELECT * FROM {term_data} WHERE tid = %d', $tid));
+    $terms[$tid] = taxonomy_get_term_data($tid, $reset);
+    module_invoke_all('taxonomy_term_load', $terms[$tid]);
+  }
+  return $terms[$tid];
+}
+
+/**
+ * Return a term object from the term_data table.
+ * @param $tid
+ *   A term's ID
+ * @return Object
+ *  A term object. Results are statically cached.
+ */
+function taxonomy_get_term_data($tid, $reset = FALSE) {
+   static $terms = array();
+
+  if (!isset($terms[$tid]) || $reset) {
+    $terms[$tid] = db_query('SELECT * FROM {term_data} WHERE tid = :tid', array(':tid' => $tid))->fetchObject();
   }
   return $terms[$tid];
 }
@@ -1137,7 +1151,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
       $depth = NULL;
     }
     foreach ($tids as $index => $tid) {
-      $term = taxonomy_term_load($tid);
+      $term = taxonomy_get_term_data($tid);
       $tree = taxonomy_get_tree($term->vid, $tid, -1, $depth);
       $descendant_tids[] = array_merge(array($tid), array_map('_taxonomy_get_tid_from_term', $tree));
     }
