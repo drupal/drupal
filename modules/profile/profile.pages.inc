@@ -82,7 +82,7 @@ function profile_browse() {
   else {
     // Compile a list of fields to show.
     $fields = array();
-    $result = db_query('SELECT name, title, type, weight, page FROM {profile_fields} WHERE visibility = %d ORDER BY category, weight', PROFILE_PUBLIC_LISTINGS);
+    $result = db_query('SELECT name, title, type, weight, page, visibility FROM {profile_fields} WHERE visibility = %d ORDER BY category, weight', PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
       $fields[] = $record;
     }
