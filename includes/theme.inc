@@ -1122,9 +1122,14 @@ function theme_status_messages($display = NULL) {
  * Return a themed set of links.
  *
  * @param $links
- *   A keyed array of links to be themed.
+ *   A keyed array of links to be themed. The key for each link is used as its css class.
+ *   Each link should be itself an array, with the following keys:
+ *    - title: the link text
+ *    - href: the link URL. If omitted, the 'title' is shown as a plain text item in the links list.
+ *    - html: (optional) set this to TRUE if 'title' is HTML so it will be escaped.
+ *   Array items are passed on to the l() function's $options parameter when creating the link.
  * @param $attributes
- *   A keyed array of attributes
+ *   A keyed array of attributes.
  * @return
  *   A string containing an unordered list of links.
  */
@@ -1157,7 +1162,7 @@ function theme_links($links, $attributes = array('class' => 'links')) {
         $output .= l($link['title'], $link['href'], $link);
       }
       elseif (!empty($link['title'])) {
-        // Some links are actually not links, but we wrap these in <span> for adding title and class attributes
+        // Some links are actually not links, but we wrap these in <span> for adding title and class attributes.
         if (empty($link['html'])) {
           $link['title'] = check_plain($link['title']);
         }
