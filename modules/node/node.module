@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.991 2008/11/01 19:51:06 dries Exp $
+// $Id: node.module,v 1.992 2008/11/02 10:48:31 dries Exp $
 
 /**
  * @file
@@ -134,6 +134,9 @@ function node_theme() {
     ),
     'node_submitted' => array(
       'arguments' => array('node' => NULL),
+    ),
+    'node_admin_overview' => array(
+      'arguments' => array('name' => NULL, 'type' => NULL),
     ),
   );
 }
