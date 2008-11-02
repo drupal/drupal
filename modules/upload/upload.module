@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.213 2008/10/12 02:42:56 webchick Exp $
+// $Id: upload.module,v 1.214 2008/11/02 20:24:46 dries Exp $
 
 /**
  * @file
@@ -100,10 +100,6 @@ function upload_menu() {
     'type' => MENU_NORMAL_ITEM,
   );
   return $items;
-}
-
-function upload_menu_alter(&$items) {
-  $items['system/files']['access arguments'] = array('view uploaded files');
 }
 
 /**
