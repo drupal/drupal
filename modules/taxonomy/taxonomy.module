@@ -327,7 +327,7 @@ function taxonomy_save_term(&$form_values) {
 
   if (!empty($form_values['tid']) && $form_values['name']) {
     $status = drupal_write_record('term_data', $form_values, 'tid');
-    module_invoke_all('taxonomy_term_save', $term);
+    module_invoke_all('taxonomy_term_insert', $term);
   }
   elseif (!empty($form_values['tid'])) {
     return taxonomy_del_term($form_values['tid']);
@@ -335,7 +335,7 @@ function taxonomy_save_term(&$form_values) {
   else {
     $status = drupal_write_record('term_data', $form_values);
     $term->tid = $form_values['tid'];
-    module_invoke_all('taxonomy_term_save', $term);
+    module_invoke_all('taxonomy_term_update', $term);
   }
 
   db_query('DELETE FROM {term_relation} WHERE tid1 = %d OR tid2 = %d', $form_values['tid'], $form_values['tid']);

@@ -14,19 +14,27 @@ function taxonomy_test_taxonomy_term_load($term) {
 }
 
 /**
- * Implementation of hook_taxonomy_term_save().
+ * Implementation of hook_taxonomy_term_insert().
  */
-function taxonomy_test_taxonomy_term_save($term) {
+function taxonomy_test_taxonomy_term_insert($term) {
+  if (!empty($term->antonyms)) {
+    foreach (explode ("\n", str_replace("\r", '', $term->antonyms)) as $antonym) {
+      if ($antonym) {
+        db_insert('term_antonym')->fields(array('tid' => $term->tid, 'name' => rtrim($antonym)))->execute();
+      }
+    }
+  }
+}
+
+/**
+ * Implementation of hook_taxonomy_term_update().
+ */
+function taxonomy_test_taxonomy_term_update($term) {
   taxonomy_test_taxonomy_term_delete($term);
   if (!empty($term->antonyms)) {
     foreach (explode ("\n", str_replace("\r", '', $term->antonyms)) as $antonym) {
       if ($antonym) {
-        db_insert('term_antonym')
-        ->fields(array(
-          'tid' => $term->tid,
-          'name' => rtrim($antonym),
-        ))
-        ->execute();
+        db_insert('term_antonym')->fields(array('tid' => $term->tid, 'name' => rtrim($antonym)))->execute();
       }
     }
   }
