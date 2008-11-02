@@ -1,5 +1,5 @@
 <?php
-// $Id: search.install,v 1.15 2008/03/15 12:31:29 dries Exp $
+// $Id: search.install,v 1.16 2008/11/02 14:56:15 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -55,7 +55,7 @@ function search_schema() {
         'description' => t('Set to force node reindexing.'),
       ),
     ),
-    'unique keys' => array(
+    'indexes' => array(
       'sid_type' => array('sid', 'type'),
     ),
   );

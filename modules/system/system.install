@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.273 2008/10/31 02:18:22 dries Exp $
+// $Id: system.install,v 1.274 2008/11/02 14:56:15 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3097,6 +3097,16 @@ function system_update_7011() {
     ));
   }
   $insert->execute();  
+  return $ret;
+}
+
+/**
+ * Replace unique key 'sid_type' by indexes in 'search_dataset' table.
+ */
+function system_update_7012() {
+  $ret = array();
+  db_drop_unique_key($ret, 'search_dataset', 'sid_type');
+  db_add_index($ret, 'search_dataset', 'sid_type', array('sid', 'type'));
   return $ret;
 }
 
