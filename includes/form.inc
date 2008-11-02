@@ -1503,7 +1503,7 @@ function form_get_options($element, $key) {
  * @ingroup themeable
  */
 function theme_fieldset($element) {
-  if ($element['#collapsible']) {
+  if (!empty($element['#collapsible'])) {
     drupal_add_js('misc/collapse.js');
 
     if (!isset($element['#attributes']['class'])) {
@@ -1511,7 +1511,7 @@ function theme_fieldset($element) {
     }
 
     $element['#attributes']['class'] .= ' collapsible';
-    if ($element['#collapsed']) {
+    if (!empty($element['#collapsed'])) {
       $element['#attributes']['class'] .= ' collapsed';
     }
   }
