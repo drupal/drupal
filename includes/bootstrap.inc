@@ -1447,7 +1447,10 @@ function drupal_autoload_class($class) {
  * Helper to check for a resource in the registry.
  */
 function _registry_check_code($type, $name) {
-  $file = db_query("SELECT filename FROM {registry} WHERE name = :name AND type = :type", array(
+  // This function may get called when the default database is not active, but
+  // there is no reason we'd ever want to not use the default database for
+  // this query.
+  $file = Database::getConnection('default')->query("SELECT filename FROM {registry} WHERE name = :name AND type = :type", array(
       ':name' => $name,
       ':type' => $type,
     ))
@@ -1507,7 +1510,10 @@ function registry_cache_path_files() {
     $type_sql = array();
     $params = array();
 
-    $select = db_select('registry')->distinct();
+    // This function may get called when the default database is not active, but
+    // there is no reason we'd ever want to not use the default database for
+    // this query.
+    $select = Database::getConnection('default')->select('registry')->distinct();
     $select->addField('registry', 'filename');
 
     // This creates a series of 2-clause AND conditions that are then ORed together.
