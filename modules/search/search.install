@@ -55,9 +55,7 @@ function search_schema() {
         'description' => t('Set to force node reindexing.'),
       ),
     ),
-    'indexes' => array(
-      'sid_type' => array('sid', 'type'),
-    ),
+    'primary key' => array('sid', 'type'),
   );
 
   $schema['search_index'] = array(
@@ -93,9 +91,7 @@ function search_schema() {
       'sid_type' => array('sid', 'type'),
       'word' => array('word'),
     ),
-    'unique keys' => array(
-      'word_sid_type' => array('word', 'sid', 'type'),
-    ),
+    'primary key' => array('word', 'sid', 'type'),
   );
 
   $schema['search_total'] = array(

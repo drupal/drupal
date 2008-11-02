@@ -3101,12 +3101,16 @@ function system_update_7011() {
 }
 
 /**
- * Replace unique key 'sid_type' by indexes in 'search_dataset' table.
+ * Replace unique keys in 'search_dataset' and 'search_index' by primary keys.
  */
 function system_update_7012() {
   $ret = array();
   db_drop_unique_key($ret, 'search_dataset', 'sid_type');
-  db_add_index($ret, 'search_dataset', 'sid_type', array('sid', 'type'));
+  db_add_primary_key($ret, 'search_dataset', array('sid', 'type'));
+  
+  db_drop_index($ret, 'search_index', 'word');
+  db_drop_unique_key($ret, 'search_index', 'word_sid_type');
+  db_add_primary_key($ret, 'search_index', array('word', 'sid', 'type'));
   return $ret;
 }
 
