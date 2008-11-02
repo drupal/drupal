@@ -102,10 +102,6 @@ function upload_menu() {
   return $items;
 }
 
-function upload_menu_alter(&$items) {
-  $items['system/files']['access arguments'] = array('view uploaded files');
-}
-
 /**
  * Determine the limitations on files that a given user may upload. The user
  * may be in multiple roles so we select the most permissive limitations from
