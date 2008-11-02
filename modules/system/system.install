@@ -3101,6 +3101,16 @@ function system_update_7011() {
 }
 
 /**
+ * Replace unique key 'sid_type' by indexes in 'search_dataset' table.
+ */
+function system_update_7012() {
+  $ret = array();
+  db_drop_unique_key($ret, 'search_dataset', 'sid_type');
+  db_add_index($ret, 'search_dataset', 'sid_type', array('sid', 'type'));
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */

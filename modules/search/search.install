@@ -55,7 +55,7 @@ function search_schema() {
         'description' => t('Set to force node reindexing.'),
       ),
     ),
-    'unique keys' => array(
+    'indexes' => array(
       'sid_type' => array('sid', 'type'),
     ),
   );
