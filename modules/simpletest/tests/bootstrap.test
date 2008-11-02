@@ -8,8 +8,8 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
    */
   function getInfo() {
     return array(
-      'name' => t('IP address test'),
-      'description' => t('Get the IP address from the current visitor from the server variables.'),
+      'name' => t('IP address and HTTP_HOST test'),
+      'description' => t('Get the IP address from the current visitor from the server variables, check hostname validation.'),
       'group' => t('Bootstrap')
     );
   }
@@ -42,9 +42,9 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * testIPAddress
+   * test IP Address and hostname
    */
-  function testIPAddress() {
+  function testIPAddressHost() {
     // Test the normal IP address.
     $this->assertTrue(
       ip_address(true) == $this->remote_ip,
@@ -80,6 +80,16 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
       ip_address(true) == $this->cluster_ip,
       t('Cluster environment got cluster client IP')
     );
+    $_SERVER['HTTP_HOST'] = 'security/.drupal.org:80';
+    $this->assertFalse(drupal_valid_http_host(), t('HTTP_HOST with / is invalid'));
+    $_SERVER['HTTP_HOST'] = 'security\\.drupal.org:80';
+    $this->assertFalse(drupal_valid_http_host(), t('HTTP_HOST with \\ is invalid'));
+    $_SERVER['HTTP_HOST'] = 'security<.drupal.org:80';
+    $this->assertFalse(drupal_valid_http_host(), t('HTTP_HOST with &lt; is invalid'));
+    $_SERVER['HTTP_HOST'] = 'security..drupal.org:80';
+    $this->assertFalse(drupal_valid_http_host(), t('HTTP_HOST with .. is invalid'));
+    $_SERVER['HTTP_HOST'] = '[::1]:80'; // IPv6 loopback address
+    $this->assertTrue(drupal_valid_http_host(), t('HTTP_HOST containing IPv6 loopback is valid'));
   }
 }
 
