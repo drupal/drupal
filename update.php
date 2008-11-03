@@ -330,7 +330,7 @@ function update_finished($success, $results, $operations) {
   $_SESSION['update_results'] = $results;
   $_SESSION['update_success'] = $success;
   $_SESSION['updates_remaining'] = $operations;
-  
+
   // Now that the update is done, we can disable site maintenance if it was
   // previously turned off.
   if (isset($_SESSION['site_offline']) && $_SESSION['site_offline'] == FALSE) {
@@ -574,6 +574,37 @@ function update_fix_d6_requirements() {
 }
 
 /**
+ * Users who still have a Drupal 6 database (and are in the process of
+ * updating to Drupal 7) need extra help before a full bootstrap can be
+ * achieved. This function does the necessary preliminary work that allows
+ * the bootstrap to be successful.
+ *
+ * No access check has been performed when this function is called, so no
+ * changes to the database should be made here.
+ */
+function update_prepare_d7_bootstrap() {
+  // Allow the database system to work even though the registry has not
+  // been created yet.
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
+  include_once DRUPAL_ROOT . '/includes/install.inc';
+  drupal_install_init_database();
+  spl_autoload_unregister('drupal_autoload_class');
+  spl_autoload_unregister('drupal_autoload_interface');
+  // The new {blocked_ips} table is used in Drupal 7 to store a list of
+  // banned IP addresses. If this table doesn't exist then we are still
+  // running on a Drupal 6 database, so suppress the unavoidable errors
+  // that occur.
+  try {
+    drupal_bootstrap(DRUPAL_BOOTSTRAP_ACCESS);
+  }
+  catch (Exception $e) {
+    if (db_table_exists('blocked_ips')) {
+      throw $e;
+    }
+  }
+}
+
+/**
  * Add the update task list to the current page.
  */
 function update_task_list($active = NULL) {
@@ -655,12 +686,9 @@ if (empty($op)) {
   install_goto('update.php?op=info');
 }
 
+update_prepare_d7_bootstrap();
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 drupal_maintenance_theme();
-
-// This must happen *after* drupal_bootstrap(), since it calls
-// variable_(get|set), which only works after a full bootstrap.
-update_create_batch_table();
 
 // Turn error reporting back on. From now on, only fatal errors (which are
 // not passed through the error handler) will cause a message to be printed.

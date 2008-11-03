@@ -414,9 +414,7 @@ abstract class DatabaseConnection extends PDO {
       }
     }
     catch (PDOException $e) {
-      if (!function_exists('module_implements')) {
-        _db_need_install();
-      }
+      _db_check_install_needed();
       if ($options['throw_exception']) {
         if ($query instanceof DatabaseStatement) {
           $query_string = $stmt->queryString;
@@ -892,11 +890,9 @@ abstract class Database {
   final protected static function parseConnectionInfo() {
     global $databases;
 
-    if (empty($databases)) {
-      _db_need_install();
-    }
-    $databaseInfo = $databases;
+    _db_check_install_needed();
 
+    $databaseInfo = $databases;
     foreach ($databaseInfo as $index => $info) {
       foreach ($databaseInfo[$index] as $target => $value) {
         // If there is no "driver" property, then we assume it's an array of
@@ -1016,7 +1012,7 @@ abstract class Database {
       // It is extremely rare that an exception will be generated here other
       // than when installing.  We therefore intercept it and try the installer,
       // passing on the exception otherwise.
-      _db_need_install();
+      _db_check_install_needed();
       throw $e;
     }
   }
@@ -1851,7 +1847,7 @@ function db_field_set_no_default(&$ret, $table, $field) {
  *   Fields for the primary key.
  */
 function db_add_primary_key(&$ret, $table, $fields) {
-  return Database::getActiveConnection()->schema()->addPrimaryKey($ret, $table, $field);
+  return Database::getActiveConnection()->schema()->addPrimaryKey($ret, $table, $fields);
 }
 
 /**
@@ -1923,7 +1919,7 @@ function db_add_index(&$ret, $table, $name, $fields) {
  *   The name of the index.
  */
 function db_drop_index(&$ret, $table, $name) {
-  return Database::getActiveConnection()->schema()->addIndex($ret, $table, $name);
+  return Database::getActiveConnection()->schema()->dropIndex($ret, $table, $name);
 }
 
 /**
@@ -2032,8 +2028,14 @@ function db_result(DatabaseStatement $statement) {
   return $statement->fetchField();
 }
 
-function _db_need_install() {
-  if (!function_exists('install_goto')) {
+/**
+ * Redirect the user to the installation script if Drupal has not been
+ * installed yet (i.e., if no $databases array has been defined in the
+ * settings file) and we are not already there. Otherwise, do nothing.
+ */
+function _db_check_install_needed() {
+  global $databases;
+  if (empty($databases) && !function_exists('install_main')) {
     include_once DRUPAL_ROOT . '/includes/install.inc';
     install_goto('install.php');
   }

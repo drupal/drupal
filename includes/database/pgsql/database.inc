@@ -61,10 +61,7 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
       }
     }
     catch (PDOException $e) {
-      if (!function_exists('module_implements')) {
-        _db_need_install();
-      }
-      //watchdog('database', var_export($e, TRUE) . $e->getMessage(), NULL, WATCHDOG_ERROR);
+      _db_check_install_needed();
       if ($options['throw_exception']) {
         if ($query instanceof DatabaseStatement) {
           $query_string = $stmt->queryString;

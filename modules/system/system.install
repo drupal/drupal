@@ -2955,7 +2955,7 @@ function system_update_7006() {
       'type'   => array('type' => 'varchar', 'length' => 9, 'not null' => TRUE, 'default' => ''),
       'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       'module'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'suffix'   => array('type' => 'varchar', 'length' => 69, 'not null' => TRUE, 'default' => ''),
+      'suffix'   => array('type' => 'varchar', 'length' => 68, 'not null' => TRUE, 'default' => ''),
       'weight'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
     ),
     'primary key' => array('name', 'type'),
@@ -3071,8 +3071,8 @@ function system_update_7009() {
  */
 function system_update_7010() {
   $ret = array();
-  db_change_field($ret, 'menu_router', 'load_functions', 'load_functions', array('type' => 'text', 'not null' => TRUE, 'default' => ''));
-  db_change_field($ret, 'menu_router', 'to_arg_functions', 'to_arg_functions', array('type' => 'text', 'not null' => TRUE, 'default' => '',));
+  db_change_field($ret, 'menu_router', 'load_functions', 'load_functions', array('type' => 'text', 'not null' => TRUE));
+  db_change_field($ret, 'menu_router', 'to_arg_functions', 'to_arg_functions', array('type' => 'text', 'not null' => TRUE));
 
   return $ret;
 }
@@ -3107,10 +3107,11 @@ function system_update_7012() {
   $ret = array();
   db_drop_unique_key($ret, 'search_dataset', 'sid_type');
   db_add_primary_key($ret, 'search_dataset', array('sid', 'type'));
-  
+
   db_drop_index($ret, 'search_index', 'word');
   db_drop_unique_key($ret, 'search_index', 'word_sid_type');
   db_add_primary_key($ret, 'search_index', array('word', 'sid', 'type'));
+
   return $ret;
 }
 
