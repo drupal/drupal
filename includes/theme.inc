@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.447 2008/11/02 14:46:57 dries Exp $
+// $Id: theme.inc,v 1.448 2008/11/03 05:55:55 webchick Exp $
 
 /**
  * @file
@@ -898,7 +898,7 @@ function theme_get_settings($key = NULL) {
     'toggle_logo'                   =>  1,
     'toggle_favicon'                =>  1,
     'toggle_name'                   =>  1,
-    'toggle_search'                 =>  1,
+    'toggle_search'                 =>  0,
     'toggle_slogan'                 =>  0,
     'toggle_mission'                =>  1,
     'toggle_node_user_picture'      =>  0,
@@ -919,8 +919,8 @@ function theme_get_settings($key = NULL) {
   }
 
   // Only offer search box if search.module is enabled.
-  if (!module_exists('search') || !user_access('search content')) {
-    $settings['toggle_search'] = 0;
+  if (!defined('MAINTENANCE_MODE') && module_exists('search') && user_access('search content')) {
+    $settings['toggle_search'] = 1;
   }
 
   return $settings;
