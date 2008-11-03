@@ -40,7 +40,7 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
 
   // Build form tree
   $form = array(
-    '#action' => arg(3) ? url('admin/build/block/list/'. $theme_key) : url('admin/build/block'),
+    '#action' => arg(4) ? url('admin/build/block/list/'. $theme_key) : url('admin/build/block'),
     '#tree' => TRUE,
   );
 
