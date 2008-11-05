@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.14 2008/10/12 04:30:06 webchick Exp $
+// $Id: forum.admin.inc,v 1.15 2008/11/05 14:08:11 dries Exp $
 
 /**
  * @file
@@ -79,12 +79,13 @@ function forum_form_submit($form, &$form_state) {
     $type = t('forum');
   }
 
-  $status = taxonomy_save_term($form_state['values']);
+  $term = (object) $form_state['values'];
+  $status = taxonomy_term_save($term);
   switch ($status) {
     case SAVED_NEW:
       if ($container) {
         $containers = variable_get('forum_containers', array());
-        $containers[] = $form_state['values']['tid'];
+        $containers[] = $term->tid;
         variable_set('forum_containers', $containers);
       }
       drupal_set_message(t('Created new @type %term.', array('%term' => $form_state['values']['name'], '@type' => $type)));
