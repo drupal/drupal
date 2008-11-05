@@ -209,34 +209,31 @@ function taxonomy_admin_vocabulary_title_callback($vocabulary) {
 }
 
 /**
- * Save a vocabulary given form values or an equivalent array.
+ * Save a vocabulary given a vocabulary object..
  */
-function taxonomy_save_vocabulary(&$edit) {
-  $edit['nodes'] = empty($edit['nodes']) ? array() : $edit['nodes'];
-
-  if (!isset($edit['module'])) {
-    $edit['module'] = 'taxonomy';
+function taxonomy_vocabulary_save($vocabulary) {
+  if (empty($vocabulary->nodes)) {
+    $vocabulary->nodes = array();
   }
 
-  if (!empty($edit['vid']) && !empty($edit['name'])) {
-    drupal_write_record('vocabulary', $edit, 'vid');
-    db_query("DELETE FROM {vocabulary_node_types} WHERE vid = %d", $edit['vid']);
-    foreach ($edit['nodes'] as $type => $selected) {
-      db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $edit['vid'], $type);
-    }
-    module_invoke_all('taxonomy', 'update', 'vocabulary', $edit);
-    $status = SAVED_UPDATED;
+  if (!isset($vocabulary->module)) {
+    $vocabulary->module = 'taxonomy';
   }
-  elseif (!empty($edit['vid'])) {
-    $status = taxonomy_del_vocabulary($edit['vid']);
-  }
-  else {
-    drupal_write_record('vocabulary', $edit);
-    foreach ($edit['nodes'] as $type => $selected) {
-      db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $edit['vid'], $type);
+
+  if (!empty($vocabulary->vid) && !empty($vocabulary->name)) {
+    $status = drupal_write_record('vocabulary', $vocabulary, 'vid');
+    db_query("DELETE FROM {vocabulary_node_types} WHERE vid = %d", $vocabulary->vid);
+    foreach ($vocabulary->nodes as $type => $selected) {
+      db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $vocabulary->vid, $type);
     }
-    module_invoke_all('taxonomy', 'insert', 'vocabulary', $edit);
-    $status = SAVED_NEW;
+    module_invoke_all('taxonomy_vocabulary_update', $vocabulary);
+  }
+  elseif (empty($vocabulary->vid)) {
+    $status = drupal_write_record('vocabulary', $vocabulary);
+    foreach ($vocabulary->nodes as $type => $selected) {
+      db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $vocabulary->vid, $type);
+    }
+    module_invoke_all('taxonomy_vocabulary_insert', $vocabulary);
   }
 
   cache_clear_all();
@@ -252,7 +249,7 @@ function taxonomy_save_vocabulary(&$edit) {
  * @return
  *   Constant indicating items were deleted.
  */
-function taxonomy_del_vocabulary($vid) {
+function taxonomy_vocabulary_delete($vid) {
   $vocabulary = (array) taxonomy_vocabulary_load($vid);
 
   db_query('DELETE FROM {vocabulary} WHERE vid = %d', $vid);
@@ -280,12 +277,12 @@ function taxonomy_del_vocabulary($vid) {
  * hieararchy of 2.
  *
  * @param $vocabulary
- *   An array of the vocabulary structure.
+ *   A vocabulary object.
  * @param $changed_term
  *   An array of the term structure that was updated.
  */
 function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
-  $tree = taxonomy_get_tree($vocabulary['vid']);
+  $tree = taxonomy_get_tree($vocabulary->vid);
   $hierarchy = 0;
   foreach ($tree as $term) {
     // Update the changed term with the new parent value before comparision.
@@ -302,9 +299,9 @@ function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
       $hierarchy = 1;
     }
   }
-  if ($hierarchy != $vocabulary['hierarchy']) {
-    $vocabulary['hierarchy'] = $hierarchy;
-    taxonomy_save_vocabulary($vocabulary);
+  if ($hierarchy != $vocabulary->hierarchy) {
+    $vocabulary->hierarchy = $hierarchy;
+    taxonomy_vocabulary_save($vocabulary);
   }
 
   return $hierarchy;

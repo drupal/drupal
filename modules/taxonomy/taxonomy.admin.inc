@@ -22,7 +22,7 @@ function taxonomy_overview_vocabularies() {
       $node_type = node_get_types('name', $type);
       $types[] = $node_type ? check_plain($node_type) : check_plain($type);
     }
-    $form[$vocabulary->vid]['#vocabulary'] = (array)$vocabulary;
+    $form[$vocabulary->vid]['#vocabulary'] = $vocabulary;
     $form[$vocabulary->vid]['name'] = array('#markup' => check_plain($vocabulary->name));
     $form[$vocabulary->vid]['types'] = array('#markup' => implode(', ', $types));
     $form[$vocabulary->vid]['weight'] = array('#type' => 'weight', '#delta' => 10, '#default_value' => $vocabulary->weight);
@@ -49,9 +49,9 @@ function taxonomy_overview_vocabularies() {
  */
 function taxonomy_overview_vocabularies_submit($form, &$form_state) {
   foreach ($form_state['values'] as $vid => $vocabulary) {
-    if (is_numeric($vid) && $form[$vid]['#vocabulary']['weight'] != $form_state['values'][$vid]['weight']) {
-      $form[$vid]['#vocabulary']['weight'] = $form_state['values'][$vid]['weight'];
-      taxonomy_save_vocabulary($form[$vid]['#vocabulary']);
+    if (is_numeric($vid) && $form[$vid]['#vocabulary']->weight != $form_state['values'][$vid]['weight']) {
+      $form[$vid]['#vocabulary']->weight = $form_state['values'][$vid]['weight'];
+      taxonomy_vocabulary_save($form[$vid]['#vocabulary']);
     }
   }
 }
@@ -210,18 +210,19 @@ function taxonomy_form_vocabulary_submit($form, &$form_state) {
   }
   // Fix up the nodes array to remove unchecked nodes.
   $form_state['values']['nodes'] = array_filter($form_state['values']['nodes']);
-  switch (taxonomy_save_vocabulary($form_state['values'])) {
+  $vocabulary = (object) $form_state['values'];
+  switch (taxonomy_vocabulary_save($vocabulary)) {
     case SAVED_NEW:
-      drupal_set_message(t('Created new vocabulary %name.', array('%name' => $form_state['values']['name'])));
-      watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/' . $form_state['values']['vid']));
+      drupal_set_message(t('Created new vocabulary %name.', array('%name' => $vocabulary->name)));
+      watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/' . $vocabulary->vid));
       break;
     case SAVED_UPDATED:
-      drupal_set_message(t('Updated vocabulary %name.', array('%name' => $form_state['values']['name'])));
-      watchdog('taxonomy', 'Updated vocabulary %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/' . $form_state['values']['vid']));
+      drupal_set_message(t('Updated vocabulary %name.', array('%name' => $vocabulary->name)));
+      watchdog('taxonomy', 'Updated vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/content/taxonomy/' . $vocabulary->vid));
       break;
   }
 
-  $form_state['vid'] = $form_state['values']['vid'];
+  $form_state['vid'] = $vocabulary->vid;
   $form_state['redirect'] = 'admin/content/taxonomy';
   return;
 }
@@ -245,7 +246,7 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
   }
 
   $form = array(
-    '#vocabulary' => (array)$vocabulary,
+    '#vocabulary' => $vocabulary,
     '#tree' => TRUE,
     '#parent_fields' => FALSE,
   );
@@ -452,7 +453,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
   $hierarchy = 0; // Update the current hierarchy type as we go.
 
   $changed_terms = array();
-  $tree = taxonomy_get_tree($vocabulary['vid']);
+  $tree = taxonomy_get_tree($vocabulary->vid);
 
   if (empty($tree)) {
     return;
@@ -517,9 +518,9 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
   }
 
   // Update the vocabulary hierarchy to flat or single hierarchy.
-  if ($vocabulary['hierarchy'] != $hierarchy) {
-    $vocabulary['hierarchy'] = $hierarchy;
-    taxonomy_save_vocabulary($vocabulary);
+  if ($vocabulary->hierarchy != $hierarchy) {
+    $vocabulary->hierarchy = $hierarchy;
+    taxonomy_vocabulary_save($vocabulary);
   }
 }
 
@@ -626,8 +627,8 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
   $parent = array_keys(taxonomy_get_parents($edit['tid']));
   $form['#term'] = $edit;
   $form['#term']['parent'] = $parent;
-  $form['#vocabulary'] = (array)$vocabulary;
-  $form['#vocabulary']['nodes'] = drupal_map_assoc($vocabulary->nodes);
+  $form['#vocabulary'] = $vocabulary;
+  $form['#vocabulary']->nodes = drupal_map_assoc($vocabulary->nodes);
 
   // Check for confirmation forms.
   if (isset($form_state['confirm_delete'])) {
@@ -741,7 +742,7 @@ function taxonomy_form_term_submit($form, &$form_state) {
     return;
   }
   // Rebuild the form to confirm enabling multiple parents.
-  elseif ($form_state['clicked_button']['#value'] == t('Save') && !$form['#vocabulary']['tags'] && count($form_state['values']['parent']) > 1 && $form['#vocabulary']['hierarchy'] < 2) {
+  elseif ($form_state['clicked_button']['#value'] == t('Save') && !$form['#vocabulary']->tags && count($form_state['values']['parent']) > 1 && $form['#vocabulary']->hierarchy < 2) {
     $form_state['rebuild'] = TRUE;
     $form_state['confirm_parents'] = TRUE;
     return;
@@ -759,7 +760,7 @@ function taxonomy_form_term_submit($form, &$form_state) {
       break;
   }
 
-  if (!$form['#vocabulary']['tags']) {
+  if (!$form['#vocabulary']->tags) {
     $current_parent_count = count($form_state['values']['parent']);
     $previous_parent_count = count($form['#term']['parent']);
     // Root doesn't count if it's the only parent.
@@ -775,9 +776,9 @@ function taxonomy_form_term_submit($form, &$form_state) {
     }
     // If we've increased the number of parents and this is a single or flat
     // hierarchy, update the vocabulary immediately.
-    elseif ($current_parent_count > $previous_parent_count && $form['#vocabulary']['hierarchy'] < 2) {
-      $form['#vocabulary']['hierarchy'] = $current_parent_count == 1 ? 1 : 2;
-      taxonomy_save_vocabulary($form['#vocabulary']);
+    elseif ($current_parent_count > $previous_parent_count && $form['#vocabulary']->hierarchy < 2) {
+      $form['#vocabulary']->hierarchy = $current_parent_count == 1 ? 1 : 2;
+      taxonomy_vocabulary_save($form['#vocabulary']);
     }
   }
 
@@ -871,7 +872,7 @@ function taxonomy_vocabulary_confirm_delete(&$form_state, $vid) {
  * @see taxonomy_vocabulary_confirm_delete()
  */
 function taxonomy_vocabulary_confirm_delete_submit($form, &$form_state) {
-  $status = taxonomy_del_vocabulary($form_state['values']['vid']);
+  $status = taxonomy_vocabulary_delete($form_state['values']['vid']);
   drupal_set_message(t('Deleted vocabulary %name.', array('%name' => $form_state['values']['name'])));
   watchdog('taxonomy', 'Deleted vocabulary %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
   $form_state['redirect'] = 'admin/content/taxonomy';

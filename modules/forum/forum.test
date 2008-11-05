@@ -143,10 +143,9 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->assertEqual($current_settings->description, $description, t('The description was updated'));
 
     // Restore the original vocabulary.
-    $original_settings = (array) $original_settings;
-    taxonomy_save_vocabulary($original_settings);
+    taxonomy_vocabulary_save($original_settings);
     $current_settings = taxonomy_vocabulary_load($vid, TRUE);
-    $this->assertEqual($current_settings->name, $original_settings['name'], 'The original vocabulary settings were restored');
+    $this->assertEqual($current_settings->name, $original_settings->name, 'The original vocabulary settings were restored');
   }
 
   /**

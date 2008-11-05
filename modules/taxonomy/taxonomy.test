@@ -56,18 +56,18 @@ class TaxonomyVocabularyLoadTestCase extends DrupalWebTestCase {
   function testTaxonomyVocabularyLoadStaticReset() {
     // Load the first available vocabulary.
     $original_vocabulary = taxonomy_vocabulary_load(1);
+    $this->assertTrue(is_object($original_vocabulary));
 
     // Change the name and description.
-    $edit = (array) $original_vocabulary;
-    $edit['name'] = $this->randomName();
-    $edit['description'] = $this->randomName();
-    $this->assertNotEqual($edit['name'], $original_vocabulary->name);
-    taxonomy_save_vocabulary($edit);
+    $vocabulary = $original_vocabulary;
+    $vocabulary->name = $this->randomName();
+    $vocabulary->description = $this->randomName();
+    taxonomy_vocabulary_save($vocabulary);
 
     // Load the vocabulary with $reset TRUE.
     $new_vocabulary = taxonomy_vocabulary_load($original_vocabulary->vid, TRUE);
-    $this->assertEqual($new_vocabulary->name, $edit['name']);
-    $this->assertEqual($new_vocabulary->name, $edit['name']);
+    $this->assertEqual($new_vocabulary->name, $vocabulary->name);
+    $this->assertEqual($new_vocabulary->name, $vocabulary->name);
   }
 }
 
@@ -120,7 +120,8 @@ class TaxonomyVocabularyFunctionsTestCase extends DrupalWebTestCase {
       $edit[$key] = $$key;
 
     // Exec save function.
-    taxonomy_save_vocabulary($edit);
+    $vocabulary = (object) $edit;
+    taxonomy_vocabulary_save($vocabulary);
     // After save we use $nodesBak.
     ksort($nodesBak);
     $edit['nodes'] = $nodesBak;
@@ -138,13 +139,8 @@ class TaxonomyVocabularyFunctionsTestCase extends DrupalWebTestCase {
       $this->assertEqual($value, $edit[$key], t('Checking value of @key.', array('@key' => $key)));
     }
 
-    // Delete vocabulary to avoid exception messages we create array with empty fields.
-    $deleteArray = array();
-    foreach($getEdit as $key => $v) {
-      $deleteArray[$key] = 0;
-    }
-    $deleteArray['vid'] = $vid;
-    taxonomy_save_vocabulary($deleteArray);
+    // Delete vocabulary.
+    taxonomy_vocabulary_delete($vid);
     // Checking if we deleted voc.
     $vocabularies = taxonomy_get_vocabularies();
     $vid = 0;
@@ -184,7 +180,9 @@ class TaxonomyTermFunctionsTestCase extends DrupalWebTestCase {
     $name = $this->randomName(20);
     $relation = 1;
     $edit['name'] = $name;
-    taxonomy_save_vocabulary($edit);
+    $vocabulary = (object) $edit;
+    taxonomy_vocabulary_save($vocabulary);
+    $edit['vid'] = $vocabulary->vid;
 
     // Create term.
     $termname = $this->randomName(20);
@@ -234,8 +232,7 @@ class TaxonomyTermFunctionsTestCase extends DrupalWebTestCase {
     }
 
     // Delete vocabulary.
-    $edit['name'] = 0;
-    taxonomy_save_vocabulary($edit);
+    taxonomy_vocabulary_delete($edit['vid']);
   }
 }
 
@@ -268,7 +265,9 @@ class TaxonomyTermSingleTestCase extends DrupalWebTestCase {
     $name = $this->randomName(20);
     $edit['hierarchy'] = 1;
     $edit['name'] = $name;
-    taxonomy_save_vocabulary($edit);
+    $vocabulary = (object) $edit;
+    taxonomy_vocabulary_save($vocabulary);
+    $edit['vid'] = $vocabulary->vid;
 
     // Create 1st term.
     $termname = $this->randomName(20);
@@ -291,8 +290,7 @@ class TaxonomyTermSingleTestCase extends DrupalWebTestCase {
     $this->assertEqual($children,$getChildren[$children->tid], t('Checking children.'));
 
     // Delete vocabulary.
-    $edit['name'] = 0;
-    taxonomy_save_vocabulary($edit);
+    taxonomy_vocabulary_delete($edit['vid']);
   }
 }
 
@@ -323,7 +321,9 @@ class TaxonomyTermMultipleTestCase extends DrupalWebTestCase {
     $name = $this->randomName(20);
     $edit['hierarchy'] = 1;
     $edit['name'] = $name;
-    taxonomy_save_vocabulary($edit);
+    $vocabulary = (object) $edit;
+    taxonomy_vocabulary_save($vocabulary);
+    $edit['vid'] = $vocabulary->vid;
 
     // Create 1st term.
     $parent = array();
@@ -354,8 +354,7 @@ class TaxonomyTermMultipleTestCase extends DrupalWebTestCase {
     }
 
     // Delete vocabulary.
-    $edit['name'] = 0;
-    taxonomy_save_vocabulary($edit);
+    taxonomy_vocabulary_delete($edit['vid']);
   }
 
 }
@@ -423,12 +422,13 @@ class TaxonomyTestNodeApiTestCase extends DrupalWebTestCase {
     }
 
     $name = $this->randomName(20);
-    $edit['hierarchy'] = 1;
-    $edit['multiple'] = 1;
-    $edit['name'] = $name;
-    $edit['nodes'] = array('article' => 'article');
-    taxonomy_save_vocabulary($edit);
-    $vid = $edit['vid']; // We need to persist vid after $edit is unset().
+    $vocabulary->hierarchy = 1;
+    $vocabulary->multiple = 1;
+    $vocabulary->name = $name;
+    $vocabulary->nodes = array('article' => 'article');
+    taxonomy_vocabulary_save($vocabulary);
+    $vid = $vocabulary->vid;
+
 
     $parent = array();
     $patternArray = array();
@@ -524,14 +524,8 @@ class TaxonomyTestNodeApiTestCase extends DrupalWebTestCase {
     $num_rows = db_result(db_query('SELECT COUNT(*) FROM {term_node} WHERE nid = %d', $node->nid));
     $this->assertEqual($num_rows, 0, t('Checking database field after deletion'));
 
-    // Delete vocabulary to avoid exception messages create array with empty fields.
-    $edit = array();
-    foreach($_t as $key ) {
-      $edit[$key] = 0;
-    }
-    $edit['name'] = 0;
-    $edit['vid'] = $vid;
-    taxonomy_save_vocabulary($edit);
+    // Delete vocabulary.
+    taxonomy_vocabulary_delete($vid);
   }
 }
 

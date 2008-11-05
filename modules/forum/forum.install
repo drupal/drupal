@@ -17,13 +17,13 @@ function forum_enable() {
     // vocabulary still exists. Keep all other node types intact there.
     $vocabulary = (array) $vocabulary;
     $vocabulary['nodes']['forum'] = 1;
-    taxonomy_save_vocabulary($vocabulary);
+    taxonomy_vocabulary_save($vocabulary);
   }
   else {
     // Create the forum vocabulary if it does not exist. Assign the vocabulary
     // a low weight so it will appear first in forum topic create and edit
     // forms.
-    $vocabulary = array(
+    $edit = array(
       'name' => t('Forums'),
       'multiple' => 0,
       'required' => 0,
@@ -33,9 +33,10 @@ function forum_enable() {
       'weight' => -10,
       'nodes' => array('forum' => 1),
     );
-    taxonomy_save_vocabulary($vocabulary);
+    $vocabulary = (object) $edit;
+    taxonomy_vocabulary_save($vocabulary);
 
-    variable_set('forum_nav_vocabulary', $vocabulary['vid']);
+    variable_set('forum_nav_vocabulary', $vocabulary->vid);
   }
 }
 
@@ -47,8 +48,8 @@ function forum_uninstall() {
   drupal_load('module', 'taxonomy');
 
   // Delete the vocabulary.
-  $vid = variable_get('forum_nav_vocabulary', '');
-  taxonomy_del_vocabulary($vid);
+  $vid = variable_get('forum_nav_vocabulary', 0);
+  taxonomy_vocabulary_delete($vid);
 
   db_query('DROP TABLE {forum}');
   variable_del('forum_containers');
