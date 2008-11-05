@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.53 2008/11/01 21:21:35 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.54 2008/11/05 15:54:56 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -770,8 +770,10 @@ class DrupalWebTestCase {
       // Ensure that the internal logged in variable is reset.
       $this->_logged_in = FALSE;
 
-      // Reload module list to ensure that test module hooks aren't called after tests.
+      // Reload module list and implementations to ensure that test module hooks
+      // aren't called after tests.
       module_list(TRUE);
+      module_implements(MODULE_IMPLEMENTS_CLEAR_CACHE);
 
       // Rebuild caches.
       $this->refreshVariables();
