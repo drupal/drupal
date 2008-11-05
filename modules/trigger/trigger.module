@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.20 2008/10/06 12:55:56 dries Exp $
+// $Id: trigger.module,v 1.21 2008/11/05 17:06:18 dries Exp $
 
 /**
  * @file
@@ -393,8 +393,8 @@ function trigger_user_login(&$edit, &$account, $category) {
 /**
  * Implementation of hook_user_logout().
  */
-function trigger_user_logout(&$edit, &$account, $category) {
-  _trigger_user('logout', $edit, $account, $category); 
+function trigger_user_logout(&$edit, &$account) {
+  _trigger_user('logout', $edit, $account); 
 }
 
 /**
