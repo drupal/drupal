@@ -195,7 +195,8 @@ class TaxonomyTermFunctionsTestCase extends DrupalWebTestCase {
     }
     $termsyn = implode("\n", $synonyms);
     $data = array('name' => $termname, 'description' => $termdesc, 'weight' => $termweight, 'synonyms' => $termsyn, 'vid' => $edit['vid'], 'tid' => 0, 'relations' => 0);
-    taxonomy_save_term($data);
+    $term = (object) $data;
+    taxonomy_term_save($term);
 
     // Retrieve term and check all fields.
     $_tArray = taxonomy_get_term_by_name($termname);
@@ -213,7 +214,8 @@ class TaxonomyTermFunctionsTestCase extends DrupalWebTestCase {
     $relations[] = $staryTid;
     $termname = $this->randomName(20);
     $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => 0, 'vid' => $edit['vid'], 'tid' => 0, 'relations' => array($staryTid));
-    taxonomy_save_term($data);
+    $term = (object) $data;
+    taxonomy_term_save($term);
     $_tArray = taxonomy_get_term_by_name($termname);
     $getTerm = $_tArray[0];
     $relations[] = $getTerm->tid;
@@ -221,7 +223,8 @@ class TaxonomyTermFunctionsTestCase extends DrupalWebTestCase {
     // Creating another term related to 2 terms above.
     $termname = $this->randomName(20);
     $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => 0, 'vid' => $edit['vid'], 'tid' => 0, 'relations' => array($staryTid, $getTerm->tid));
-    taxonomy_save_term($data);
+    $term = (object) $data;
+    taxonomy_term_save($term);
     $_tArray = taxonomy_get_term_by_name($termname);
     $getTerm = $_tArray[0];
 
@@ -272,14 +275,16 @@ class TaxonomyTermSingleTestCase extends DrupalWebTestCase {
     // Create 1st term.
     $termname = $this->randomName(20);
     $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $edit['vid'], 'tid' => 0, 'relations' => 0);
-    taxonomy_save_term($data);
+    $term = (object) $data;
+    taxonomy_term_save($term);
     $_tArray = taxonomy_get_term_by_name($termname);
     $parent = $_tArray[0];
 
     // Create 2nd term as a child.
     $termname = $this->randomName(20);
     $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $edit['vid'], 'tid' => 0, 'relations' => 0, 'parent' => array($parent->tid));
-    taxonomy_save_term($data);
+    $term = (object) $data;
+    taxonomy_term_save($term);
     $_tArray = taxonomy_get_term_by_name($termname);
     $children = $_tArray[0];
 
@@ -329,21 +334,24 @@ class TaxonomyTermMultipleTestCase extends DrupalWebTestCase {
     $parent = array();
     $termname = $this->randomName(20);
     $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $edit['vid'], 'tid' => 0, 'relations' => 0);
-    taxonomy_save_term($data);
+    $term = (object) $data;
+    taxonomy_term_save($term);
     $_tArray = taxonomy_get_term_by_name($termname);
     $parent[] = $_tArray[0]->tid;
 
     // Create 2nd term.
     $termname = $this->randomName(20);
     $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $edit['vid'], 'tid' => 0, 'relations' => 0);
-    taxonomy_save_term($data);
+    $term = (object) $data;
+    taxonomy_term_save($term);
     $_tArray = taxonomy_get_term_by_name($termname);
     $parent[] = $_tArray[0]->tid;
 
     // Create 3rd term as a child.
     $termname = $this->randomName(20);
     $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $edit['vid'], 'tid' => 0, 'relations' => 0, 'parent' => array($parent));
-    taxonomy_save_term($data);
+    $term = (object) $data;
+    taxonomy_term_save($term);
     $_tArray = taxonomy_get_term_by_name($termname);
     $children = $_tArray[0];
 
@@ -436,7 +444,8 @@ class TaxonomyTestNodeApiTestCase extends DrupalWebTestCase {
     // Create 1st term.
     $termname = $this->randomName(20);
     $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $vid, 'tid' => 0, 'relations' => 0);
-    taxonomy_save_term($data);
+    $term = (object) $data;
+    taxonomy_term_save($term);
     $_tArray = taxonomy_get_term_by_name($termname);
     $parent[$_tArray[0]->tid] = $_tArray[0]->tid;
     $patternArray['term name 1'] = $termname;
@@ -444,7 +453,8 @@ class TaxonomyTestNodeApiTestCase extends DrupalWebTestCase {
     // Create 2nd term.
     $termname = $this->randomName(20);
     $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $vid, 'tid' => 0, 'relations' => 0);
-    taxonomy_save_term($data);
+    $term = (object) $data;
+    taxonomy_term_save($term);
     $_tArray = taxonomy_get_term_by_name($termname);
     $parent[$_tArray[0]->tid] = $_tArray[0]->tid;
     $patternArray['term name 2'] = $termname;
@@ -485,7 +495,8 @@ class TaxonomyTestNodeApiTestCase extends DrupalWebTestCase {
     // create 1st term
     $termname = $this->randomName(20);
     $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $vid, 'tid' => 0, 'relations' => 0);
-    taxonomy_save_term($data);
+    $term = (object) $data;
+    taxonomy_term_save($term);
     $_tArray = taxonomy_get_term_by_name($termname);
     $parent[] = $_tArray[0]->tid;
     $patternArray['term name 2'] = $termname;
@@ -493,7 +504,8 @@ class TaxonomyTestNodeApiTestCase extends DrupalWebTestCase {
     // create 2nd term
     $termname = $this->randomName(20);
     $data = array('name' => $termname, 'description' => '', 'weight' => 0, 'synonyms' => '', 'vid' => $vid, 'tid' => 0, 'relations' => 0);
-    taxonomy_save_term($data);
+    $term = (object) $data;
+    taxonomy_term_save($term);
     $_tArray = taxonomy_get_term_by_name($termname);
     $parent[] = $_tArray[0]->tid;
     $patternArray['term name 3'] = $termname;

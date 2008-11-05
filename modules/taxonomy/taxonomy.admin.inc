@@ -514,7 +514,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
 
   // Save all updated terms.
   foreach ($changed_terms as $term) {
-    taxonomy_save_term($term);
+    taxonomy_term_save($term);
   }
 
   // Update the vocabulary hierarchy to flat or single hierarchy.
@@ -748,15 +748,16 @@ function taxonomy_form_term_submit($form, &$form_state) {
     return;
   }
 
-  $status = taxonomy_save_term($form_state['values']);
+  $term = (object) $form_state['values'];
+  $status = taxonomy_term_save($term);
   switch ($status) {
     case SAVED_NEW:
-      drupal_set_message(t('Created new term %term.', array('%term' => $form_state['values']['name'])));
-      watchdog('taxonomy', 'Created new term %term.', array('%term' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $form_state['values']['tid'] . '/edit'));
+      drupal_set_message(t('Created new term %term.', array('%term' => $term->name)));
+      watchdog('taxonomy', 'Created new term %term.', array('%term' => $term->name), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $term->tid . '/edit'));
       break;
     case SAVED_UPDATED:
-      drupal_set_message(t('Updated term %term.', array('%term' => $form_state['values']['name'])));
-      watchdog('taxonomy', 'Updated term %term.', array('%term' => $form_state['values']['name']), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $form_state['values']['tid'] . '/edit'));
+      drupal_set_message(t('Updated term %term.', array('%term' => $term->name)));
+      watchdog('taxonomy', 'Updated term %term.', array('%term' => $term->name), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $term->tid . '/edit'));
       break;
   }
 
@@ -782,7 +783,7 @@ function taxonomy_form_term_submit($form, &$form_state) {
     }
   }
 
-  $form_state['tid'] = $form_state['values']['tid'];
+  $form_state['tid'] = $term->tid;
   $form_state['redirect'] = 'admin/content/taxonomy';
   return;
 }

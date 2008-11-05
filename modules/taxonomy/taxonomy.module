@@ -256,7 +256,7 @@ function taxonomy_vocabulary_delete($vid) {
   db_query('DELETE FROM {vocabulary_node_types} WHERE vid = %d', $vid);
   $result = db_query('SELECT tid FROM {term_data} WHERE vid = %d', $vid);
   while ($term = db_fetch_object($result)) {
-    taxonomy_del_term($term->tid);
+    taxonomy_term_delete($term->tid);
   }
 
   module_invoke_all('taxonomy', 'delete', 'vocabulary', $vocabulary);
@@ -308,67 +308,58 @@ function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
 }
 
 /**
- * Helper function for taxonomy_form_term_submit().
+ * Save a term object to the database.
  *
- * @param $form_state['values']
+ * @param $term
+ *  A term object.
  * @return
  *   Status constant indicating if term was inserted or updated.
  */
-function taxonomy_save_term(&$form_values) {
-  $form_values += array(
-    'description' => '',
-    'weight' => 0
-  );
+function taxonomy_term_save($term) {
 
-  $term = (object) $form_values;
-
-  if (!empty($form_values['tid']) && $form_values['name']) {
-    $status = drupal_write_record('term_data', $form_values, 'tid');
+  if (!empty($term->tid) && $term->name) {
+    $status = drupal_write_record('term_data', $term, 'tid');
     module_invoke_all('taxonomy_term_insert', $term);
   }
-  elseif (!empty($form_values['tid'])) {
-    return taxonomy_del_term($form_values['tid']);
-  }
   else {
-    $status = drupal_write_record('term_data', $form_values);
-    $term->tid = $form_values['tid'];
+    $status = drupal_write_record('term_data', $term);
     module_invoke_all('taxonomy_term_update', $term);
   }
+  db_delete('term_relation')->condition('tid1', $term->tid, 'OR')->condition('tid2', $term->tid)->execute();
 
-  db_query('DELETE FROM {term_relation} WHERE tid1 = %d OR tid2 = %d', $form_values['tid'], $form_values['tid']);
-  if (!empty($form_values['relations'])) {
-    foreach ($form_values['relations'] as $related_id) {
+  if (!empty($term->relations)) {
+    foreach ($term->relations as $related_id) {
       if ($related_id != 0) {
-        db_query('INSERT INTO {term_relation} (tid1, tid2) VALUES (%d, %d)', $form_values['tid'], $related_id);
+        db_insert('term_relation')->fields(array('tid1' => $term->tid, 'tid2' => $related_id))->execute();
       }
     }
   }
+  db_delete('term_hierarchy')->condition('tid', $term->tid)->execute();
 
-  db_query('DELETE FROM {term_hierarchy} WHERE tid = %d', $form_values['tid']);
-  if (!isset($form_values['parent']) || empty($form_values['parent'])) {
-    $form_values['parent'] = array(0);
+  if (!isset($term->parent) || empty($term->parent)) {
+    $term->parent = array(0);
   }
-  if (is_array($form_values['parent'])) {
-    foreach ($form_values['parent'] as $parent) {
+  if (is_array($term->parent)) {
+    foreach ($term->parent as $parent) {
       if (is_array($parent)) {
         foreach ($parent as $tid) {
-          db_query('INSERT INTO {term_hierarchy} (tid, parent) VALUES (%d, %d)', $form_values['tid'], $tid);
+          db_insert('term_hierarchy')->fields(array('tid' => $term->tid, 'parent' => $tid))->execute();
         }
       }
       else {
-        db_query('INSERT INTO {term_hierarchy} (tid, parent) VALUES (%d, %d)', $form_values['tid'], $parent);
+        db_insert('term_hierarchy')->fields(array('tid' => $term->tid, 'parent' => $parent))->execute();
       }
     }
   }
   else {
-    db_query('INSERT INTO {term_hierarchy} (tid, parent) VALUES (%d, %d)', $form_values['tid'], $form_values['parent']);
+    db_insert('term_hierarchy')->field(array('tid' => $term_tid, 'parent' => $term->parent))->execute();
   }
 
-  db_query('DELETE FROM {term_synonym} WHERE tid = %d', $form_values['tid']);
-  if (!empty($form_values['synonyms'])) {
-    foreach (explode ("\n", str_replace("\r", '', $form_values['synonyms'])) as $synonym) {
+  db_delete('term_synonym')->condition('tid', $term->tid)->execute();
+  if (!empty($term->synonyms)) {
+    foreach (explode ("\n", str_replace("\r", '', $term->synonyms)) as $synonym) {
       if ($synonym) {
-        db_query("INSERT INTO {term_synonym} (tid, name) VALUES (%d, '%s')", $form_values['tid'], chop($synonym));
+        db_insert('term_synonym')->fields(array('tid' => $term->tid, 'name' => rtrim($synonym)))->execute();
       }
     }
   }
@@ -386,7 +377,7 @@ function taxonomy_save_term(&$form_values) {
  * @return
  *   Status constant indicating deletion.
  */
-function taxonomy_del_term($tid) {
+function taxonomy_term_delete($tid) {
   $tids = array($tid);
   while ($tids) {
     $children_tids = $orphans = array();
@@ -685,7 +676,7 @@ function taxonomy_node_save($node, $terms) {
 
         if (!$typed_term_tid) {
           $edit = array('vid' => $vid, 'name' => $typed_term);
-          $status = taxonomy_save_term($edit);
+          $status = taxonomy_term_save($edit);
           $typed_term_tid = $edit['tid'];
         }
 

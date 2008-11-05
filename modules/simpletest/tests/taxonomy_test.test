@@ -52,7 +52,7 @@ class TaxonomyHooksTestCase extends DrupalWebTestCase {
     $this->assertTrue(in_array($edit['antonyms'], $term->antonyms), t('Antonym was successfully edited'));
 
     // Delete the term.
-    taxonomy_del_term($term->tid);
+    taxonomy_term_delete($term->tid);
     $antonyms = db_query('SELECT taid FROM {term_antonym} WHERE tid = :tid', array(':tid' => $term->tid))->fetchField();
     $this->assertFalse($antonyms, t('The antonyms were deleted from the database.'));
   }
