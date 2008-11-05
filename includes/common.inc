@@ -615,6 +615,7 @@ function _drupal_error_handler($error_level, $message, $filename, $line, $contex
       E_RECOVERABLE_ERROR => 'Recoverable fatal error'
     );
     $backtrace = debug_backtrace();
+
     // We treat recoverable errors as fatal.
     _drupal_log_error(isset($types[$error_level]) ? $types[$error_level] : 'Unknown error', $message, $backtrace, $error_level == E_RECOVERABLE_ERROR);
   }
@@ -673,8 +674,23 @@ function _drupal_log_error($type, $message, $backtrace, $fatal) {
   // Do it early because drupal_set_message() triggers an init_theme().
   if ($fatal && (drupal_get_bootstrap_phase() != DRUPAL_BOOTSTRAP_FULL)) {
     unset($GLOBALS['theme']);
-    define('MAINTENANCE_MODE', 'error');
+    if (!defined('MAINTENANCE_MODE')) {
+      define('MAINTENANCE_MODE', 'error');
+    }
     drupal_maintenance_theme();
+  }
+
+  // When running inside the testing framework, we relay the errors
+  // to the tested site by the way of HTTP headers.
+  if (preg_match("/^simpletest\d+/", $GLOBALS['db_prefix']) && !headers_sent() && !defined('SIMPLETEST_DONT_COLLECT_ERRORS')) {
+    static $number = 0;
+    $assertion = array(
+      $message,
+      $type,
+      $caller
+    );
+    header('X-Drupal-Assertion-' . $number . ': ' . rawurlencode(serialize($assertion)));
+    $number++;
   }
 
   // Force display of error messages in update.php.

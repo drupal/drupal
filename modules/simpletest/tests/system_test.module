@@ -146,6 +146,7 @@ function system_test_modules_uninstalled($modules) {
  * Menu callback; generate warnings to test the error handler.
  */
 function system_test_generate_warnings() {
+  define('SIMPLETEST_DONT_COLLECT_ERRORS', TRUE);
   // This will generate a notice.
   $monkey_love = $bananas;
   // This will generate a warning.
@@ -159,6 +160,7 @@ function system_test_generate_warnings() {
  * Menu callback; trigger an exception to test the exception handler.
  */
 function system_test_trigger_exception() {
+  define('SIMPLETEST_DONT_COLLECT_ERRORS', TRUE);
   throw new Exception("Drupal is awesome");
 }
 
@@ -166,5 +168,6 @@ function system_test_trigger_exception() {
  * Menu callback; trigger an exception to test the exception handler.
  */
 function system_test_trigger_pdo_exception() {
+  define('SIMPLETEST_DONT_COLLECT_ERRORS', TRUE);
   db_query("SELECT * FROM bananas_are_awesome");
 }

@@ -393,8 +393,8 @@ function trigger_user_login(&$edit, &$account, $category) {
 /**
  * Implementation of hook_user_logout().
  */
-function trigger_user_logout(&$edit, &$account, $category) {
-  _trigger_user('logout', $edit, $account, $category); 
+function trigger_user_logout(&$edit, &$account) {
+  _trigger_user('logout', $edit, $account); 
 }
 
 /**

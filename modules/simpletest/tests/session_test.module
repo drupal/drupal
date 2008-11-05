@@ -33,7 +33,12 @@ function session_test_menu() {
  * Page callback, prints the stored session value to the screen.
  */
 function _session_test_get() {
-  return t('The current value of the stored session variable is: %val', array('%val' => $_SESSION['session_test_value']));
+  if (!empty($_SESSION['session_test_value'])) {
+    return t('The current value of the stored session variable is: %val', array('%val' => $_SESSION['session_test_value']));
+  }
+  else {
+    return "";
+  }
 }
 
 /**
