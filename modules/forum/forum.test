@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.5 2008/10/12 01:01:44 webchick Exp $
+// $Id: forum.test,v 1.6 2008/11/05 12:47:23 dries Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -143,10 +143,9 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->assertEqual($current_settings->description, $description, t('The description was updated'));
 
     // Restore the original vocabulary.
-    $original_settings = (array) $original_settings;
-    taxonomy_save_vocabulary($original_settings);
+    taxonomy_vocabulary_save($original_settings);
     $current_settings = taxonomy_vocabulary_load($vid, TRUE);
-    $this->assertEqual($current_settings->name, $original_settings['name'], 'The original vocabulary settings were restored');
+    $this->assertEqual($current_settings->name, $original_settings->name, 'The original vocabulary settings were restored');
   }
 
   /**
