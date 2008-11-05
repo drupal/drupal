@@ -482,7 +482,7 @@ function user_access($string, $account = NULL, $reset = FALSE) {
   static $perm = array();
 
   if ($reset) {
-    unset($perm);
+    $perm = array();
   }
 
   if (is_null($account)) {
