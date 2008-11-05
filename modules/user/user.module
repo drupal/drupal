@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.930 2008/10/26 18:06:39 dries Exp $
+// $Id: user.module,v 1.931 2008/11/05 14:12:34 dries Exp $
 
 /**
  * @file
@@ -528,7 +528,7 @@ function user_access($string, $account = NULL, $reset = FALSE) {
   static $perm = array();
 
   if ($reset) {
-    unset($perm);
+    $perm = array();
   }
 
   if (is_null($account)) {
