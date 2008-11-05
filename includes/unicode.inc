@@ -335,7 +335,10 @@ function decode_entities($text, $exclude = array()) {
   }
   $newtable = array_diff($table, $exclude);
 
-  // Use a regexp to select all entities in one pass, to avoid decoding double-escaped entities twice.
+  // Use a regexp to select all entities in one pass, to avoid decoding 
+  // double-escaped entities twice. The PREG_REPLACE_EVAL modifier 'e' is
+  // being used to allow for a callback (see 
+  // http://php.net/manual/en/reference.pcre.pattern.modifiers).
   return preg_replace('/&(#x?)?([A-Za-z0-9]+);/e', '_decode_entities("$1", "$2", "$0", $newtable, $exclude)', $text);
 }
 
