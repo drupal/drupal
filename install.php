@@ -835,6 +835,11 @@ if (Drupal.jsEnabled) {
   install_task_list($task);
   variable_set('install_task', $task);
 
+  // Run cron to populate update status tables (if available) so that users
+  // will be warned if they've installed an out of date Drupal version.
+  // Will also trigger indexing of profile-supplied content or feeds.
+  drupal_cron_run();
+
   // Output page, if some output was required. Otherwise it is possible
   // that we are printing a JSON page and theme output should not be there.
   if (isset($output)) {

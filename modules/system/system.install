@@ -133,12 +133,9 @@ function system_requirements($phase) {
     // Cron configuration help text.
     $help = $t('For more information, see the online handbook entry for <a href="@cron-handbook">configuring cron jobs</a>.', array('@cron-handbook' => 'http://drupal.org/cron'));
 
-    // Determine when cron last ran. If never, use the install time to
-    // determine the warning or error status.
+    // Determine when cron last ran.
     $cron_last = variable_get('cron_last', NULL);
-    $never_run = FALSE;
     if (!is_numeric($cron_last)) {
-      $never_run = TRUE;
       $cron_last = variable_get('install_time', 0);
     }
 
@@ -147,28 +144,15 @@ function system_requirements($phase) {
     if (REQUEST_TIME - $cron_last > $threshold_error) {
       $severity = REQUIREMENT_ERROR;
     }
-    elseif ($never_run || (REQUEST_TIME - $cron_last > $threshold_warning)) {
+    elseif (REQUEST_TIME - $cron_last > $threshold_warning) {
       $severity = REQUIREMENT_WARNING;
     }
 
-    // If cron hasn't been run, and the user is viewing the main
-    // administration page, instead of an error, we display a helpful reminder
-    // to configure cron jobs.
-    if ($never_run && $severity != REQUIREMENT_ERROR && $_GET['q'] == 'admin' && user_access('administer site configuration')) {
-      drupal_set_message($t('Cron has not run. Please visit the <a href="@status">status report</a> for more information.', array('@status' => url('admin/reports/status'))));
-    }
-
     // Set summary and description based on values determined above.
-    if ($never_run) {
-      $summary = $t('Never run');
-      $description = $t('Cron has not run.') . ' ' . $help;
-    }
-    else {
-      $summary = $t('Last run !time ago', array('!time' => format_interval(REQUEST_TIME - $cron_last)));
-      $description = '';
-      if ($severity != REQUIREMENT_OK) {
-        $description = $t('Cron has not run recently.') . ' ' . $help;
-      }
+    $summary = $t('Last run !time ago', array('!time' => format_interval(REQUEST_TIME - $cron_last)));
+    $description = '';
+    if ($severity != REQUIREMENT_OK) {
+      $description = $t('Cron has not run recently.') . ' ' . $help;
     }
 
     $description .= ' ' . $t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
