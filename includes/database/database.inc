@@ -2211,12 +2211,8 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
       $n = strlen($matches[1]);
       $second_part = substr($query, $n);
       $first_part = substr($matches[1], 0, $n - 5) ." $join WHERE $where AND ( ";
-      // PHP 4 does not support strrpos for strings. We emulate it.
-      $haystack_reverse = strrev($second_part);
-      // No need to use strrev on the needle, we supply GROUP, ORDER, LIMIT
-      // reversed.
-      foreach (array('PUORG', 'REDRO', 'TIMIL') as $needle_reverse) {
-        $pos = strpos($haystack_reverse, $needle_reverse);
+      foreach (array('GROUP', 'ORDER', 'LIMIT') as $needle) {
+        $pos = strrpos($second_part, $needle);
         if ($pos !== FALSE) {
           // All needles are five characters long.
           $pos += 5;

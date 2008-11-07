@@ -815,14 +815,8 @@ function check_plain($text) {
  * is outside of a tag, and thus deemed safe by a filter, can be interpreted
  * by the browser as if it were inside the tag.
  *
- * This function exploits preg_match behaviour (since PHP 4.3.5) when used
- * with the u modifier, as a fast way to find invalid UTF-8. When the matched
- * string contains an invalid byte sequence, it will fail silently.
- *
- * preg_match may not fail on 4 and 5 octet sequences, even though they
- * are not supported by the specification.
- *
- * The specific preg_match behaviour is present since PHP 4.3.5.
+ * The function does not return FALSE for strings containing character codes
+ * above U+10FFFF, even though these are prohibited by RFC 3629.
  *
  * @param $text
  *   The text to check.
@@ -833,6 +827,9 @@ function drupal_validate_utf8($text) {
   if (strlen($text) == 0) {
     return TRUE;
   }
+  // With the PCRE_UTF8 modifier 'u', preg_match() fails silently on strings
+  // containing invalid UTF-8 byte sequences. It does not reject character
+  // codes above U+10FFFF (represented by 4 or more octets), though.
   return (preg_match('/^./us', $text) == 1);
 }
 

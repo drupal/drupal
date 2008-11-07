@@ -451,7 +451,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
       $fp = @fsockopen($uri['host'], $port, $errno, $errstr, 15);
       break;
     case 'https':
-      // Note: Only works for PHP 4.3 compiled with OpenSSL.
+      // Note: Only works when PHP is compiled with OpenSSL support.
       $port = isset($uri['port']) ? $uri['port'] : 443;
       $host = $uri['host'] . ($port != 443 ? ':' . $port : '');
       $fp = @fsockopen('ssl://' . $uri['host'], $port, $errno, $errstr, 20);
