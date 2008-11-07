@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.2 2008/09/15 20:48:07 webchick Exp $
+// $Id: query.inc,v 1.3 2008/11/07 06:44:56 webchick Exp $
 
 
 /**
@@ -75,7 +75,7 @@ class InsertQuery_pgsql extends InsertQuery {
 
     $max_placeholder = 0;
     $values = array();
-      if (count($this->insertValues)) {
+    if ($this->insertValues) {
       foreach ($this->insertValues as $insert_values) {
         $placeholders = array();
 
@@ -91,10 +91,13 @@ class InsertQuery_pgsql extends InsertQuery {
         $values[] = '(' . implode(', ', $placeholders) . ')';
       }
     }
-    else {
+    elseif ($this->defaultFields) {
       // If there are no values, then this is a default-only query.  We still need to handle that.
       $placeholders = array_fill(0, count($this->defaultFields), 'default');
       $values[] = '(' . implode(', ', $placeholders) .')';
+    }
+    else {
+      $values[] = '(default)';
     }
 
     $query .= implode(', ', $values);

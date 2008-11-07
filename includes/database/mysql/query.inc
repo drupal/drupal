@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.3 2008/09/27 20:10:26 dries Exp $
+// $Id: query.inc,v 1.4 2008/11/07 06:44:55 webchick Exp $
 
 /**
  * @ingroup database
@@ -45,7 +45,7 @@ class InsertQuery_mysql extends InsertQuery {
 
     $max_placeholder = 0;
     $values = array();
-    if (count($this->insertValues)) {
+    if ($this->insertValues) {
       foreach ($this->insertValues as $insert_values) {
         $placeholders = array();
 
@@ -61,10 +61,13 @@ class InsertQuery_mysql extends InsertQuery {
         $values[] = '('. implode(', ', $placeholders) .')';
       }
     }
-    else {
+    elseif ($this->defaultFields) {
       // If there are no values, then this is a default-only query.  We still need to handle that.
       $placeholders = array_fill(0, count($this->defaultFields), 'default');
       $values[] = '(' . implode(', ', $placeholders) .')';
+    }
+    else {
+      $values[] = '(default)';
     }
 
     $query .= implode(', ', $values);
