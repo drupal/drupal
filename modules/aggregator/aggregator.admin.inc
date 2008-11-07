@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.admin.inc,v 1.18 2008/10/22 18:29:28 dries Exp $
+// $Id: aggregator.admin.inc,v 1.19 2008/11/07 07:11:22 webchick Exp $
 
 /**
  * @file
@@ -361,7 +361,8 @@ function _aggregator_parse_opml($opml) {
       if ($entry['tag'] == 'OUTLINE' && isset($entry['attributes'])) {
         $item = $entry['attributes'];
         if (!empty($item['XMLURL'])) {
-          $feeds[] = array('title' => $item['TEXT'], 'url' => $item['XMLURL']);
+          $title = isset($item['TEXT']) ? $item['TEXT'] : $item['XMLURL'];
+          $feeds[] = array('title' => $title, 'url' => $item['XMLURL']);
         }
       }
     }
