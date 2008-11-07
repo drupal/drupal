@@ -209,11 +209,16 @@ function taxonomy_admin_vocabulary_title_callback($vocabulary) {
 }
 
 /**
- * Save a vocabulary given a vocabulary object..
+ * Save a vocabulary given a vocabulary object.
  */
 function taxonomy_vocabulary_save($vocabulary) {
   if (empty($vocabulary->nodes)) {
     $vocabulary->nodes = array();
+  }
+  
+  if (!empty($vocabulary->name)) {
+    // Prevent leading and trailing spaces in vocabulary names.
+    $vocabulary->name = trim($vocabulary->name);
   }
 
   if (!isset($vocabulary->module)) {
@@ -316,6 +321,10 @@ function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
  *   Status constant indicating if term was inserted or updated.
  */
 function taxonomy_term_save($term) {
+  if ($term->name) {
+    // Prevent leading and trailing spaces in term names.
+    $term->name = trim($term->name);
+  }
 
   if (!empty($term->tid) && $term->name) {
     $status = drupal_write_record('term_data', $term, 'tid');
