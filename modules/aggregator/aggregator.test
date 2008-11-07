@@ -585,7 +585,7 @@ class ImportOPMLTestCase extends AggregatorTestCase {
     $this->assertRaw(t('A feed named %title already exists.', array('%title' => $feeds[1]['title'])), t('Verifying that a duplicate title was identified'));
 
     $after = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
-    $this->assertEqual($after, 3, t('Verifying that three distinct feeds were added.'));
+    $this->assertEqual($after, 2, t('Verifying that two distinct feeds were added.'));
 
     $feeds_from_db = db_query("SELECT f.title, f.url, f.refresh, cf.cid FROM {aggregator_feed} f LEFT JOIN {aggregator_category_feed} cf ON f.fid = cf.fid");
     $refresh = $category = TRUE;
