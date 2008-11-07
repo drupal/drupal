@@ -301,7 +301,7 @@ function block_add_block_form_validate($form, &$form_state) {
  * Save the new custom block.
  */
 function block_add_block_form_submit($form, &$form_state) {
-  db_query("INSERT INTO {boxes} (body, info, format) VALUES ('%s', '%s', %d)", $form_state['values']['body'], $form_state['values']['info'], $form_state['values']['format']);
+  db_query("INSERT INTO {boxes} (body, info, format) VALUES ('%s', '%s', %d)", $form_state['values']['body'], $form_state['values']['info'], $form_state['values']['body_format']);
   $delta = db_last_insert_id('boxes', 'bid');
 
   foreach (list_themes() as $key => $theme) {
@@ -318,8 +318,6 @@ function block_add_block_form_submit($form, &$form_state) {
   cache_clear_all();
 
   $form_state['redirect'] = 'admin/build/block';
-
-  return;
 }
 
 /**

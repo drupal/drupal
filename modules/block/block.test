@@ -20,7 +20,7 @@ class BlockTestCase extends DrupalWebTestCase {
     parent::setUp();
 
     // Create and login user
-    $admin_user = $this->drupalCreateUser(array('administer blocks'));
+    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer filters'));
     $this->drupalLogin($admin_user);
   }
 
@@ -58,6 +58,28 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/build/block/delete/' . $bid, array(), t('Delete'));
     $this->assertRaw(t('The block %title has been removed.', array('%title' => $box['info'])), t('Box successfully deleted.'));
     $this->assertNoText(t($box['title']), t('Box no longer appears on page.'));
+  }
+
+  /**
+   * Test creating custom block (i.e. box) using Full HTML.
+   */
+  function testBoxFormat() {
+    // Add a new box by filling out the input form on the admin/build/block/add page.
+    $box = array();
+    $box['info'] = $this->randomName(8);
+    $box['title'] = $this->randomName(8);
+    $box['body'] = '<h1>Full HTML</h1>';
+    $box['body_format'] = 2;
+    $this->drupalPost('admin/build/block/add', $box, t('Save block'));
+
+    // Set the created box to a specific region.
+    $bid = db_result(db_query("SELECT bid FROM {boxes} WHERE info = '%s'", array($box['info'])));
+    $edit = array();
+    $edit['block_' . $bid . '[region]'] = 'left';
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+
+    // Confirm that the box is being displayed using configured input format.
+    $this->assertRaw('<h1>Full HTML</h1>', t('Box successfully being displayed using Full HTML.'));
   }
 
   /**
