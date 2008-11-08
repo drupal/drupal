@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.14 2008/11/08 04:45:36 webchick Exp $
+// $Id: database_test.test,v 1.15 2008/11/08 07:06:03 webchick Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -1415,6 +1415,23 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
     catch(Exception $e) {
       $this->assertTrue(FALSE, $e->getMessage());
     }
+  }
+
+  /**
+   * Confirm that we can properly nest conditional clauses.
+   */
+  function testNestedConditions() {
+    // This query should translate to:
+    // "SELECT job FROM {test} WHERE name = 'Paul' AND (age = 26 OR age = 27)"
+    // That should find only one record.  Yes it's a non-optimal way of writing
+    // that query but that's not the point!
+    $query = db_select('test');
+    $query->addField('test', 'job');
+    $query->condition('name', 'Paul');
+    $query->condition(db_or()->condition('age', 26)->condition('age', 27));
+
+    $job = $query->execute()->fetchField();
+    $this->assertEqual($job, 'Songwriter', t('Correct data retrieved.'));
   }
 }
 
