@@ -144,13 +144,13 @@ function aggregator_schema() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('The parent website of the feed; comes from the <link> element in the feed.'),
+        'description' => t('The parent website of the feed; comes from the &lt;link&gt; element in the feed.'),
       ),
       'description' => array(
         'type' => 'text',
         'not null' => TRUE,
         'size' => 'big',
-        'description' => t("The parent website's description; comes from the <description> element in the feed."),
+        'description' => t("The parent website's description; comes from the &lt;description&gt; element in the feed."),
       ),
       'image' => array(
         'type' => 'text',
