@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.inc,v 1.21 2008/10/10 08:49:51 dries Exp $
+// $Id: actions.inc,v 1.22 2008/11/08 07:28:03 webchick Exp $
 
 /**
  * @file
@@ -323,7 +323,7 @@ function actions_save($function, $type, $params, $desc, $aid = NULL) {
   // aid is the callback for singleton actions so we need to keep a
   // separate table for numeric aids.
   if (!$aid) {
-    $aid = db_insert('actions_aid')->execute();
+    $aid = db_insert('actions_aid')->useDefaults(array('aid'))->execute();
   }
 
   db_merge('actions')
