@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.993 2008/11/03 05:55:56 webchick Exp $
+// $Id: node.module,v 1.994 2008/11/08 20:43:54 dries Exp $
 
 /**
  * @file
@@ -1088,10 +1088,10 @@ function node_prepare($node, $teaser = FALSE) {
   $node->readmore = (strlen($node->teaser) < strlen($node->body));
 
   if ($teaser == FALSE) {
-    $node->body = check_markup($node->body, $node->format, FALSE);
+    $node->body = check_markup($node->body, $node->format, $node->language, FALSE);
   }
   else {
-    $node->teaser = check_markup($node->teaser, $node->format, FALSE);
+    $node->teaser = check_markup($node->teaser, $node->format, $node->language, FALSE);
   }
 
   $node->content['body'] = array(
