@@ -640,7 +640,7 @@ abstract class DatabaseConnection extends PDO {
    *   A database query result resource, or FALSE if the query was not executed
    *   correctly.
    */
-   abstract function queryTemporary($query, Array $args, $tablename, $options = array());
+  abstract function queryTemporary($query, Array $args, $tablename, Array $options = array());
 
   /**
    * Returns the type of database driver.
@@ -1410,10 +1410,9 @@ function db_query_range($query, $args, $from = 0, $count = 0, $options = array()
  *   placeholders, this is an associative array in any order.  If the query uses
  *   unnamed placeholders (?), this is an indexed array and the order must match
  *   the order of placeholders in the query string.
- * @param $from
- *   The first record from the result set to return.
- * @param $limit
- *   The number of records to return from the result set.
+ * @param $tablename
+ *   The name of the temporary table to select into. This name will not be
+ *   prefixed as there is no risk of collision.
  * @param $options
  *   An array of options to control how the query operates.
  */

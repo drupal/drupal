@@ -1884,3 +1884,36 @@ class DatabaseLoggingTestCase extends DatabaseTestCase {
     }
   }
 }
+
+/**
+ * Temporary query tests.
+ */
+class DatabaseTemporaryQueryTestCase extends DrupalWebTestCase {
+
+  /**
+   * Define metadata for this test subclass.
+   */
+  function getInfo() {
+    return array(
+      'name' => t('Temporary query test'),
+      'description' => t('Test the temporary query functionality.'),
+      'group' => t('Database'),
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp('database_test');
+  }
+
+  /**
+   * Confirm that temporary tables work and are limited to one request.
+   */
+  function testTemporaryQuery() {
+    $this->drupalGet('database_test_db_query_temporary');
+    $this->assertEqual(db_query('SELECT COUNT(*) FROM {system}')->fetchField(), $this->_content, t('The temporary table exists and contains the correct amount of rows.'));
+    $this->assertFalse(db_table_exists('temporary'), t('The temporary table is, indeed, temporary.'));
+  }
+}

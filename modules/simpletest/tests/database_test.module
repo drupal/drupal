@@ -35,3 +35,27 @@ function database_test_query_alter(SelectQuery $query) {
     $expressions['double_age']['expression'] = 'age*3';
   }
 }
+
+/**
+ * Implementation of hook_menu().
+ */
+function database_test_menu() {
+  $items['database_test_db_query_temporary'] = array(
+    'access callback' => TRUE,
+    'page callback' => 'database_test_db_query_temporary',
+  );
+  return $items;
+}
+
+/**
+ * Run a db_query_temporary and print the number of rows in the resulting table.
+ *
+ * We need to test that the table created is temporary, so we run it here, in a
+ * separate menu callback request; After this request is done, the temporary
+ * table should automatically dropped.
+ */
+function database_test_db_query_temporary() {
+  db_query_temporary('SELECT status FROM {system}', array(), 'temporary');
+  print db_query('SELECT COUNT(*) FROM temporary')->fetchField();
+  exit;
+}
