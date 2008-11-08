@@ -45,7 +45,7 @@ class InsertQuery_mysql extends InsertQuery {
 
     $max_placeholder = 0;
     $values = array();
-    if ($this->insertValues) {
+    if (count($this->insertValues)) {
       foreach ($this->insertValues as $insert_values) {
         $placeholders = array();
 
@@ -61,13 +61,10 @@ class InsertQuery_mysql extends InsertQuery {
         $values[] = '('. implode(', ', $placeholders) .')';
       }
     }
-    elseif ($this->defaultFields) {
+    else {
       // If there are no values, then this is a default-only query.  We still need to handle that.
       $placeholders = array_fill(0, count($this->defaultFields), 'default');
       $values[] = '(' . implode(', ', $placeholders) .')';
-    }
-    else {
-      $values[] = '(default)';
     }
 
     $query .= implode(', ', $values);
