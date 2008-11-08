@@ -1820,7 +1820,7 @@ function _drupal_build_css_path($matches, $base = NULL) {
   $last = '';
   while ($path != $last) {
     $last = $path;
-    $path = preg_replace('`(^|/)(?!../)([^/]+)/../`', '$1', $path);
+    $path = preg_replace('`(^|/)(?!\.\./)([^/]+)/\.\./`', '$1', $path);
   }
   return 'url('. $path .')';
 }
