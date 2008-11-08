@@ -409,6 +409,10 @@ function filter_list_format($format) {
  * @param $format
  *    The format of the text to be filtered. Specify FILTER_FORMAT_DEFAULT for
  *    the default format.
+ * @param $langcode
+ *    Optional: the language code of the text to be filtered, e.g. 'en' for
+ *    English.  This allows filters to be language aware so language specific
+ *    text replacement can be implemented.
  * @param $check
  *    Whether to check the $format with filter_access() first. Defaults to TRUE.
  *    Note that this will check the permissions of the current user, so you
@@ -416,13 +420,13 @@ function filter_list_format($format) {
  *    showing content that is not (yet) stored in the database (eg. upon preview),
  *    set to TRUE so the user's permissions are checked.
  */
-function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
+function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $check = TRUE) {
   // When $check = TRUE, do an access check on $format.
   if (isset($text) && (!$check || filter_access($format))) {
     $format = filter_resolve_format($format);
 
     // Check for a cached version of this piece of text.
-    $cache_id = $format . ':' . md5($text);
+    $cache_id = $format . ':' . $langcode . ':' . md5($text);
     if ($cached = cache_get($cache_id, 'cache_filter')) {
       return $cached->data;
     }
@@ -439,12 +443,12 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $check = TRUE) {
 
     // Give filters the chance to escape HTML-like data such as code or formulas.
     foreach ($filters as $filter) {
-      $text = module_invoke($filter->module, 'filter', 'prepare', $filter->delta, $format, $text, $cache_id);
+      $text = module_invoke($filter->module, 'filter', 'prepare', $filter->delta, $format, $text, $langcode, $cache_id);
     }
 
     // Perform filtering.
     foreach ($filters as $filter) {
-      $text = module_invoke($filter->module, 'filter', 'process', $filter->delta, $format, $text, $cache_id);
+      $text = module_invoke($filter->module, 'filter', 'process', $filter->delta, $format, $text, $langcode, $cache_id);
     }
 
     // Store in cache with a minimum expiration time of 1 day.

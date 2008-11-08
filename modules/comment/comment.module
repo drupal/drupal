@@ -604,7 +604,7 @@ function comment_nodeapi_update_index(&$node, $arg = 0) {
   $text = '';
   $comments = db_query('SELECT subject, comment, format FROM {comments} WHERE nid = %d AND status = %d', $node->nid, COMMENT_PUBLISHED);
   while ($comment = db_fetch_object($comments)) {
-    $text .= '<h2>' . check_plain($comment->subject) . '</h2>' . check_markup($comment->comment, $comment->format, FALSE);
+    $text .= '<h2>' . check_plain($comment->subject) . '</h2>' . check_markup($comment->comment, $comment->format, '', FALSE);
   }
   return $text;
 }
@@ -1597,7 +1597,7 @@ function theme_comment_view($comment, $node, $links = array(), $visible = TRUE) 
 
   // Switch to folded/unfolded view of the comment.
   if ($visible) {
-    $comment->comment = check_markup($comment->comment, $comment->format, FALSE);
+    $comment->comment = check_markup($comment->comment, $comment->format, '', FALSE);
     // Comment API hook.
     comment_invoke_comment($comment, 'view');
     $output .= theme('comment', $comment, $node, $links);

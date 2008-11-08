@@ -213,7 +213,7 @@ function block_block($op = 'list', $delta = 0, $edit = array()) {
 
     case 'view':
       $block = db_fetch_object(db_query('SELECT body, format FROM {boxes} WHERE bid = %d', $delta));
-      $data['content'] = check_markup($block->body, $block->format, FALSE);
+      $data['content'] = check_markup($block->body, $block->format, '', FALSE);
       return $data;
   }
 }
