@@ -1416,6 +1416,23 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
       $this->assertTrue(FALSE, $e->getMessage());
     }
   }
+
+  /**
+   * Confirm that we can properly nest conditional clauses.
+   */
+  function testNestedConditions() {
+    // This query should translate to:
+    // "SELECT job FROM {test} WHERE name = 'Paul' AND (age = 26 OR age = 27)"
+    // That should find only one record.  Yes it's a non-optimal way of writing
+    // that query but that's not the point!
+    $query = db_select('test');
+    $query->addField('test', 'job');
+    $query->condition('name', 'Paul');
+    $query->condition(db_or()->condition('age', 26)->condition('age', 27));
+
+    $job = $query->execute()->fetchField();
+    $this->assertEqual($job, 'Songwriter', t('Correct data retrieved.'));
+  }
 }
 
 /**

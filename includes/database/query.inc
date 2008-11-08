@@ -1032,7 +1032,7 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
           if ($condition['field'] instanceof QueryConditionInterface) {
             // Compile the sub-condition recursively and add it to the list.
             $condition['field']->compile($connection);
-            $condition_fragments[] = (string)$condition['field'];
+            $condition_fragments[] = '(' . (string)$condition['field'] . ')';
             $arguments += $condition['field']->arguments();
           }
           else {
