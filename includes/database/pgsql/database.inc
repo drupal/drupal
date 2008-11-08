@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.6 2008/11/03 05:55:56 webchick Exp $
+// $Id: database.inc,v 1.7 2008/11/08 04:45:36 webchick Exp $
 
 /**
  * @file
@@ -82,10 +82,8 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
     return $this->query($query . ' LIMIT ' . $count . ' OFFSET ' . $from, $args, $options);
   }
 
-  public function queryTemporary($query, Array $args, $tablename, $options = array()) {
-    $query = preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE ' . $tablename . ' Engine=HEAP SELECT', $this->prefixTables($query));
-
-    return $this->query($query, $args, $options);
+  public function queryTemporary($query, Array $args, $tablename, Array $options = array()) {
+    return $this->query(preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE ' . $tablename . ' AS SELECT', $query), $args, $options);
   }
 
   public function driver() {
