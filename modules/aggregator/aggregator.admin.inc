@@ -360,7 +360,7 @@ function _aggregator_parse_opml($opml) {
     foreach ($values as $entry) {
       if ($entry['tag'] == 'OUTLINE' && isset($entry['attributes'])) {
         $item = $entry['attributes'];
-        if (!empty($item['XMLURL'])) {
+        if (!empty($item['XMLURL']) && !empty($item['TEXT'])) {
           $feeds[] = array('title' => $item['TEXT'], 'url' => $item['XMLURL']);
         }
       }
