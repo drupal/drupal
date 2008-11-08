@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.admin.inc,v 1.20 2008/11/07 07:12:52 webchick Exp $
+// $Id: aggregator.admin.inc,v 1.21 2008/11/08 07:12:18 webchick Exp $
 
 /**
  * @file
@@ -360,7 +360,7 @@ function _aggregator_parse_opml($opml) {
     foreach ($values as $entry) {
       if ($entry['tag'] == 'OUTLINE' && isset($entry['attributes'])) {
         $item = $entry['attributes'];
-        if (!empty($item['XMLURL'])) {
+        if (!empty($item['XMLURL']) && !empty($item['TEXT'])) {
           $feeds[] = array('title' => $item['TEXT'], 'url' => $item['XMLURL']);
         }
       }
