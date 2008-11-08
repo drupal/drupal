@@ -173,8 +173,8 @@ function _book_admin_table($node, &$form) {
  * @see book_admin_edit()
  */
 function _book_admin_table_tree($tree, &$form) {
-  foreach ($tree as $key => $data) {
-    $form[$key] = array(
+  foreach ($tree as $data) {
+    $form['book-admin-' . $data['link']['nid']] = array(
       '#item' => $data['link'],
       'nid' => array('#type' => 'value', '#value' => $data['link']['nid']),
       'depth' => array('#type' => 'value', '#value' => $data['link']['depth']),
