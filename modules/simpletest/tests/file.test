@@ -974,18 +974,22 @@ class FileSaveTest extends FileHookTestCase {
     $this->assertFileHookCalled('insert');
     $this->assertNotNull($saved_file, t("Saving the file should give us back a file object."), 'File');
     $this->assertTrue($saved_file->fid > 0, t("A new file ID is set when saving a new file to the database."), 'File');
-    $this->assertEqual(db_result(db_query('SELECT COUNT(*) FROM {files} f WHERE f.fid = %d', array($saved_file->fid))), 1, t("Record exists in the database."));
+    $loaded_file = db_query('SELECT * FROM {files} f WHERE f.fid = :fid', array(':fid' => $saved_file->fid))->fetch(PDO::FETCH_OBJ);
+    $this->assertNotNull($loaded_file, t("Record exists in the database."));
+    $this->assertEqual($loaded_file->status, $file->status, t("Status was saved correctly."));
     $this->assertEqual($saved_file->filesize, filesize($file->filepath), t("File size was set correctly."), 'File');
     $this->assertTrue($saved_file->timestamp > 1, t("File size was set correctly."), 'File');
 
     // Resave the file, updating the existing record.
     file_test_reset();
+    $saved_file->status = 7;
     $resaved_file = file_save($saved_file);
     $this->assertFileHookCalled('update');
     $this->assertEqual($resaved_file->fid, $saved_file->fid, t("The file ID of an existing file is not changed when updating the database."), 'File');
     $this->assertTrue($resaved_file->timestamp >= $saved_file->timestamp, t("Timestamp didn't go backwards."), 'File');
-    $count = db_result(db_query('SELECT COUNT(*) FROM {files} f WHERE f.fid = %d', array($saved_file->fid)));
-    $this->assertEqual($count, 1, t("Record still exists in the database."), 'File');
+    $loaded_file = db_query('SELECT * FROM {files} f WHERE f.fid = :fid', array(':fid' => $saved_file->fid))->fetch(PDO::FETCH_OBJ);
+    $this->assertNotNull($loaded_file, t("Record still exists in the database."), 'File');
+    $this->assertEqual($loaded_file->status, $saved_file->status, t("Status was saved correctly."));
   }
 }
 
@@ -1029,66 +1033,6 @@ class FileValidateTest extends FileHookTestCase {
     $failing = array('file_test_validator' => array(array('Failed', 'Badly')));
     $this->assertEqual(file_validate($file, $failing), array('Failed', 'Badly', 'Epic fail'), t('Validating returns errors.'));
     $this->assertFileHookCalled('validate', 1);
-  }
-}
-
-/**
- * Tests the file_set_status() function.
- */
-class FileSetStatusTest extends FileHookTestCase {
-  /**
-   * Implementation of getInfo().
-   */
-  function getInfo() {
-    return array(
-      'name' => t('File set status'),
-      'description' => t('Tests the file set status functions.'),
-      'group' => t('File'),
-    );
-  }
-
-  /**
-   * Test the file_set_status() function.
-   */
-  function testFileSetStatus() {
-    // Create a new file object.
-    $file = array(
-      'uid' => 1,
-      'filename' => 'druplicon.png',
-      'filepath' => 'misc/druplicon.png',
-      'filemime' => 'image/png',
-      'timestamp' => 1,
-      'status' => FILE_STATUS_TEMPORARY,
-    );
-    $file = file_save($file);
-    // Just a couple of sanity checks before we start the real testing.
-    $this->assertTrue($file->fid, t("Make sure the file saved correctly."));
-    $this->assertEqual($file->status, FILE_STATUS_TEMPORARY, t("Status was set during save."));
-
-    // Change the status and make sure everything works
-    file_test_reset();
-    $returned = file_set_status($file);
-    $this->assertEqual(count(file_test_get_calls('status')), 1, t('hook_file_status was called.'));
-    $this->assertNotIdentical($returned, FALSE, t("file_set_status() worked and returned a non-false value."));
-    $this->assertEqual($returned->fid, $file->fid, t("Returned the correct file."));
-    $this->assertEqual($returned->status, FILE_STATUS_PERMANENT, t("File's status was changed."));
-
-    // Try it resetting it to the same value.
-    file_test_reset();
-    $returned = file_set_status($file, FILE_STATUS_PERMANENT);
-    $this->assertEqual(count(file_test_get_calls('status')), 0, t('hook_file_status was not called.'));
-    $this->assertIdentical($returned, FALSE, t("file_set_status() failed since there was no change."));
-    $test_file = file_load($file->fid);
-    $this->assertEqual($test_file->fid, $file->fid , t("Loaded the correct file."));
-    $this->assertEqual($test_file->status, FILE_STATUS_PERMANENT, t("File's status is correct."));
-
-    // Now switch it.
-    file_test_reset();
-    $returned = file_set_status($file, FILE_STATUS_TEMPORARY);
-    $this->assertEqual(count(file_test_get_calls('status')), 1, t('hook_file_status was called.'));
-    $this->assertNotIdentical($returned, FALSE, t("file_set_status() worked and returned a non-false value."));
-    $this->assertEqual($returned->fid, $file->fid , t("Returned the correct file."));
-    $this->assertEqual($returned->status, FILE_STATUS_TEMPORARY, t("File's status is correct."));
   }
 }
 

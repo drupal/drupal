@@ -780,8 +780,8 @@ function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
  * Saves a file upload to a new location.
  *
  * The file will be added to the files table as a temporary file. Temporary
- * files are periodically cleaned. To make the file permanent file call
- * file_set_status() to change its status.
+ * files are periodically cleaned. To make the file a permanent file call
+ * assign the status and use file_save() to save it.
  *
  * @param $source
  *   A string specifying the name of the upload field to save.
@@ -1173,40 +1173,6 @@ function file_unmanaged_save_data($data, $destination = NULL, $replace = FILE_EX
 
   // Move the file to its final destination.
   return file_unmanaged_move($temp_name, $destination, $replace);
-}
-
-/**
- * Set the status of a file.
- *
- * @param $file
- *   A Drupal file object.
- * @param $status
- *   A status value to set the file to.
- *   - FILE_STATUS_TEMPORARY - A temporary file that Drupal's garbage
- *                             collection will remove.
- *   - FILE_STATUS_PERMANENT - A permanent file that Drupal's garbage
- *                             collection will not remove.
- * @return
- *   File object if the change is successful, or FALSE in the event of an
- *   error.
- *
- * @see hook_file_status()
- */
-function file_set_status($file, $status = FILE_STATUS_PERMANENT) {
-  $file = (object)$file;
-
-  $num_updated = db_update('files')
-    ->fields(array('status' => $status))
-    ->condition('fid', $file->fid)
-    ->execute();
-
-  if ($num_updated) {
-    $file->status = $status;
-    // Notify other modules that the file's status has changed.
-    module_invoke_all('file_status', $file);
-    return $file;
-  }
-  return FALSE;
 }
 
 /**

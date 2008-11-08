@@ -67,7 +67,6 @@ function file_test_reset() {
     'validate' => array(),
     'download' => array(),
     'references' => array(),
-    'status' => array(),
     'insert' => array(),
     'update' => array(),
     'copy' => array(),
@@ -91,7 +90,7 @@ function file_test_reset() {
  *
  * @param $op
  *   One of the hook_file_* operations: 'load', 'validate', 'download',
- *   'references', 'status', 'insert', 'update', 'copy', 'move', 'delete'.
+ *   'references', 'insert', 'update', 'copy', 'move', 'delete'.
  * @returns
  *   Array of the parameters passed to each call.
  * @see _file_test_log_call() and file_test_reset()
@@ -106,7 +105,7 @@ function file_test_get_calls($op) {
  *
  * @param $op
  *   One of the hook_file_* operations: 'load', 'validate', 'download',
- *   'references', 'status', 'insert', 'update', 'copy', 'move', 'delete'.
+ *   'references', 'insert', 'update', 'copy', 'move', 'delete'.
  * @param $args
  *   Values passed to hook.
  * @see file_test_get_calls() and file_test_reset()
@@ -162,13 +161,6 @@ function file_test_file_load($file) {
 function file_test_file_validate($file) {
   _file_test_log_call('validate', array($file));
   return _file_test_get_return('validate');
-}
-
-/**
- * Implementation of hook_file_status().
- */
-function file_test_file_status($file) {
-  _file_test_log_call('status', array($file));
 }
 
 /**
