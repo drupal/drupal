@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.271 2008/10/26 18:06:38 dries Exp $
+// $Id: search.module,v 1.272 2008/11/08 04:55:13 webchick Exp $
 
 /**
  * @file
@@ -948,7 +948,7 @@ function do_search($keywords, $type, $join1 = '', $where1 = '1 = 1', $arguments1
   }
 
   // Calculate maximum keyword relevance, to normalize it.
-  $select = "SELECT SUM(i.score * t.count) AS score FROM {search_index} i $join WHERE $conditions GROUP BY i.type, i.sid HAVING COUNT(*) >= %d ORDER BY score DESC";
+  $select = "SELECT SUM(i.score * t.count) AS calculated_score FROM {search_index} i $join WHERE $conditions GROUP BY i.type, i.sid HAVING COUNT(*) >= %d ORDER BY calculated_score DESC";
   $arguments = array_merge($arguments1, array($query[4]));
   $normalize = db_result(db_query_range($select, $arguments, 0, 1));
   if (!$normalize) {
