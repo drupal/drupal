@@ -401,6 +401,13 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
   }
 
   /**
+   * Private list of aliases already attributed to expression fields.
+   *
+   * @var Array
+   */
+  private $expressionAliases = array();
+
+  /**
    * Adds an expression to the list of "fields" to be SELECTed.
    *
    * An expression can be any arbitrary string that is valid SQL.  That includes
@@ -412,7 +419,7 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
    * @param $alias
    *   The alias for this expression.  If not specified, one will be generated
    *   automatically in the form "expression_#".  The alias will be checked for
-   *   uniqueness, so the requested alias may not be the alias that is asigned
+   *   uniqueness, so the requested alias may not be the alias that is assigned
    *   in all cases.
    * @param $arguments
    *   Any placeholder arguments needed for this expression.
@@ -420,19 +427,16 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
    *   The unique alias that was assigned for this expression.
    */
   public function addExpression($expression, $alias = NULL, $arguments = array()) {
-    static $alaises = array();
-
     if (empty($alias)) {
       $alias = 'expression';
     }
 
-    if (empty($aliases[$alias])) {
-      $aliases[$alias] = 1;
+    $alias_candidate = $alias;
+    $count = 2;
+    while (!empty($this->expressions[$alias_candidate])) {
+      $alias_candidate = $alias . '_' . $count++;
     }
-
-    if (!empty($this->expressions[$alias])) {
-      $alias = $alias . '_' . $aliases[$alias]++;
-    }
+    $alias = $alias_candidate;
 
     $this->expressions[$alias] = array(
       'expression' => $expression,

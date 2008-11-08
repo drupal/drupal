@@ -155,6 +155,68 @@ abstract class DatabaseConnection extends PDO {
    */
   protected $logger = NULL;
 
+  /**
+   * Cache of prepared statements.
+   *
+   * This cache only lasts as long as the current page request, so it's not
+   * as useful as it could be, but every little bit helps.
+   *
+   * @var Array
+   */
+  protected $preparedStatements = array();
+
+  /**
+   * The name of the Select class for this connection.
+   *
+   * Normally this and the following class names would be static variables,
+   * but statics in methods are still global and shared by all instances.
+   *
+   * @var string
+   */
+  protected $selectClass = NULL;
+
+  /**
+   * The name of the Delete class for this connection.
+   *
+   * @var string
+   */
+  protected $deleteClass = NULL;
+
+  /**
+   * The name of the Insert class for this connection.
+   *
+   * @var string
+   */
+  protected $insertClass = NULL;
+
+  /**
+   * The name of the Merge class for this connection.
+   *
+   * @var string
+   */
+  protected $mergeClass = NULL;
+
+  /**
+   * The name of the Update class for this connection.
+   *
+   * @var string
+   */
+  protected $updateClass = NULL;
+
+  /**
+   * The name of the Transaction class for this connection.
+   *
+   * @var string
+   */
+  protected $transactionClass = NULL;
+
+  /**
+   * The schema object for this connection.
+   *
+   * @var object
+   */
+  protected $schema = NULL;
+
   function __construct($dsn, $username, $password, $driver_options = array()) {
     // Because the other methods don't seem to work right.
     $driver_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -262,7 +324,7 @@ abstract class DatabaseConnection extends PDO {
   /**
    * Prepare a query string and return the prepared statement.
    *
-   * This method statically caches prepared statements, reusing them when
+   * This method caches prepared statements, reusing them when
    * possible.  It also prefixes tables names enclosed in curly-braces.
    *
    * @param $query
@@ -272,13 +334,12 @@ abstract class DatabaseConnection extends PDO {
    *   A PDO prepared statement ready for its execute() method.
    */
   protected function prepareQuery($query) {
-    static $statements = array();
     $query = self::prefixTables($query);
-    if (empty($statements[$query])) {
+    if (empty($this->preparedStatements[$query])) {
       // Call PDO::prepare.
-      $statements[$query] = parent::prepare($query);
+      $this->preparedStatements[$query] = parent::prepare($query);
     }
-    return $statements[$query];
+    return $this->preparedStatements[$query];
   }
 
   /**
@@ -352,8 +413,7 @@ abstract class DatabaseConnection extends PDO {
    *
    * This method provides a central handler for the actual execution
    * of every query.  All queries executed by Drupal are executed as
-   * PDO prepared statements.  This method statically caches those
-   * prepared statements, reusing them when possible.
+   * PDO prepared statements.
    *
    * @param $query
    *   The query to execute.  In most cases this will be a string containing
@@ -444,14 +504,18 @@ abstract class DatabaseConnection extends PDO {
    *   A new SelectQuery object.
    */
   public function select($table, $alias = NULL, Array $options = array()) {
-    static $class_type;
-    if (empty($class_type)) {
-      $class_type = 'SelectQuery_' . $this->driver();
-      if (!class_exists($class_type)) {
-        $class_type = 'SelectQuery';
+    if (empty($this->selectClass)) {
+      $this->selectClass = 'SelectQuery_' . $this->driver();
+      if (!class_exists($this->selectClass)) {
+        $this->selectClass = 'SelectQuery';
       }
     }
-    return new $class_type($table, $alias, $this, $options);
+    $class = $this->selectClass;
+    // new is documented as the highest precedence operator so this will
+    // create a class named $class and pass the arguments into the constructor,
+    // instead of calling a function named $class with the arguments listed and
+    // then creating using the return value as the class name.
+    return new $class($table, $alias, $this, $options);
   }
 
   /**
@@ -464,14 +528,14 @@ abstract class DatabaseConnection extends PDO {
    *   A new InsertQuery object.
    */
   public function insert($table, Array $options = array()) {
-    static $class_type;
-    if (empty($class_type)) {
-      $class_type = 'InsertQuery_' . $this->driver();
-      if (!class_exists($class_type)) {
-        $class_type = 'InsertQuery';
+    if (empty($this->insertClass)) {
+      $this->insertClass = 'InsertQuery_' . $this->driver();
+      if (!class_exists($this->insertClass)) {
+        $this->insertClass = 'InsertQuery';
       }
     }
-    return new $class_type($this, $table, $options);
+    $class = $this->insertClass;
+    return new $class($this, $table, $options);
   }
 
   /**
@@ -484,15 +548,16 @@ abstract class DatabaseConnection extends PDO {
    *   A new MergeQuery object.
    */
   public function merge($table, Array $options = array()) {
-    static $class_type;
-    if (empty($class_type)) {
-      $class_type = 'MergeQuery_' . $this->driver();
-      if (!class_exists($class_type)) {
-        $class_type = 'MergeQuery';
+    if (empty($this->mergeClass)) {
+      $this->mergeClass = 'MergeQuery_' . $this->driver();
+      if (!class_exists($this->mergeClass)) {
+        $this->mergeClass = 'MergeQuery';
       }
     }
-    return new $class_type($this, $table, $options);
+    $class = $this->mergeClass;
+    return new $class($this, $table, $options);
   }
+
 
   /**
    * Prepare and return an UPDATE query object with the specified ID.
@@ -504,14 +569,14 @@ abstract class DatabaseConnection extends PDO {
    *   A new UpdateQuery object.
    */
   public function update($table, Array $options = array()) {
-    static $class_type;
-    if (empty($class_type)) {
-      $class_type = 'UpdateQuery_' . $this->driver();
-      if (!class_exists($class_type)) {
-        $class_type = 'UpdateQuery';
+    if (empty($this->updateClass)) {
+      $this->updateClass = 'UpdateQuery_' . $this->driver();
+      if (!class_exists($this->updateClass)) {
+        $this->updateClass = 'UpdateQuery';
       }
     }
-    return new $class_type($this, $table, $options);
+    $class = $this->updateClass;
+    return new $class($this, $table, $options);
   }
 
   /**
@@ -524,14 +589,14 @@ abstract class DatabaseConnection extends PDO {
    *   A new DeleteQuery object.
    */
   public function delete($table, Array $options = array()) {
-    static $class_type;
-    if (empty($class_type)) {
-      $class_type = 'DeleteQuery_' . $this->driver();
-      if (!class_exists($class_type)) {
-        $class_type = 'DeleteQuery';
+    if (empty($this->deleteClass)) {
+      $this->deleteClass = 'DeleteQuery_' . $this->driver();
+      if (!class_exists($this->deleteClass)) {
+        $this->deleteClass = 'DeleteQuery';
       }
     }
-    return new $class_type($this, $table, $options);
+    $class = $this->deleteClass;
+    return new $class($this, $table, $options);
   }
 
   /**
@@ -543,12 +608,11 @@ abstract class DatabaseConnection extends PDO {
    *   The DatabaseSchema object for this connection.
    */
   public function schema() {
-    static $schema;
-    if (empty($schema)) {
+    if (empty($this->schema)) {
       $class_type = 'DatabaseSchema_' . $this->driver();
-      $schema = new $class_type($this);
+      $this->schema = new $class_type($this);
     }
-    return $schema;
+    return $this->schema;
   }
 
   /**
@@ -575,19 +639,17 @@ abstract class DatabaseConnection extends PDO {
    * @see DatabaseTransaction
    */
   public function startTransaction($required = FALSE) {
-    static $class_type;
-
     if ($required && !$this->supportsTransactions()) {
       throw new TransactionsNotSupportedException();
     }
 
-    if (empty($class_type)) {
-      $class_type = 'DatabaseTransaction_' . $this->driver();
-      if (!class_exists($class_type)) {
-        $class_type = 'DatabaseTransaction';
+    if (empty($this->transactionClass)) {
+      $this->transactionClass = 'DatabaseTransaction_' . $this->driver();
+      if (!class_exists($this->transactionClass)) {
+        $this->transactionClass = 'DatabaseTransaction';
       }
     }
-    return new $class_type($this);
+    return new $this->transactionClass($this);
   }
 
   /**
