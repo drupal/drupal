@@ -1259,7 +1259,7 @@ function file_download() {
  * @param $mask
  *   The preg_match() regular expression of the files to find.
  * @param $nomask
- *   The preg_match() regular expression of the files to ignore.
+ *   An array of files/directories to ignore.
  * @param $callback
  *   The callback function to call for each match.
  * @param $recurse
@@ -1280,13 +1280,13 @@ function file_download() {
  *   "path", "basename", and "name" members corresponding to the
  *   matching files.
  */
-function file_scan_directory($dir, $mask, $nomask = '/(\.\.?|CVS)$/', $callback = 0, $recurse = TRUE, $key = 'filename', $min_depth = 0, $depth = 0) {
+function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $callback = 0, $recurse = TRUE, $key = 'filename', $min_depth = 0, $depth = 0) {
   $key = (in_array($key, array('filename', 'basename', 'name')) ? $key : 'filename');
   $files = array();
 
   if (is_dir($dir) && $handle = opendir($dir)) {
     while (FALSE !== ($file = readdir($handle))) {
-      if (!preg_match($nomask, $file) && $file[0] != '.') {
+      if (!in_array($file, $nomask) && $file[0] != '.') {
         if (is_dir("$dir/$file") && $recurse) {
           // Give priority to files in this folder by merging them in after any subdirectory files.
           $files = array_merge(file_scan_directory("$dir/$file", $mask, $nomask, $callback, $recurse, $key, $min_depth, $depth + 1), $files);

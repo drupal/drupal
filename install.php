@@ -410,7 +410,7 @@ function install_settings_form_submit($form, &$form_state) {
  * Find all .profile files.
  */
 function install_find_profiles() {
-  return file_scan_directory('./profiles', '/\.profile$/', '/(\.\.?|CVS)$/', 0, TRUE, 'name', 0);
+  return file_scan_directory('./profiles', '/\.profile$/', array('.', '..', 'CVS'), 0, TRUE, 'name', 0);
 }
 
 /**
@@ -496,7 +496,7 @@ function install_select_profile_form(&$form_state, $profile_files) {
  * Find all .po files for the current profile.
  */
 function install_find_locales($profilename) {
-  $locales = file_scan_directory('./profiles/' . $profilename . '/translations', '/\.po$/', '/(\.\.?|CVS)$/', 0, FALSE);
+  $locales = file_scan_directory('./profiles/' . $profilename . '/translations', '/\.po$/', array('.', '..', 'CVS'), 0, FALSE);
   array_unshift($locales, (object) array('name' => 'en'));
   return $locales;
 }
