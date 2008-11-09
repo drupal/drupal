@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.35 2008/11/05 14:08:11 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.36 2008/11/09 00:58:03 webchick Exp $
 
 /**
  * @file
@@ -513,7 +513,8 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
   }
 
   // Save all updated terms.
-  foreach ($changed_terms as $term) {
+  foreach ($changed_terms as $changed) {
+    $term = (object)$changed;
     taxonomy_term_save($term);
   }
 
