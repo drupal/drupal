@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.55 2008/11/05 17:06:18 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.56 2008/11/09 03:07:54 webchick Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -971,7 +971,10 @@ class DrupalWebTestCase {
             // is broken. This is a less than elegant workaround. Alternatives
             // are being explored at #253506.
             foreach ($upload as $key => $file) {
-              $post[$key] = '@' . realpath($file);
+              $file = realpath($file);
+              if ($file && is_file($file)) {
+                $post[$key] = '@' . $file;
+              }
             }
           }
           else {
