@@ -971,7 +971,10 @@ class DrupalWebTestCase {
             // is broken. This is a less than elegant workaround. Alternatives
             // are being explored at #253506.
             foreach ($upload as $key => $file) {
-              $post[$key] = '@' . realpath($file);
+              $file = realpath($file);
+              if ($file && is_file($file)) {
+                $post[$key] = '@' . $file;
+              }
             }
           }
           else {
