@@ -28,14 +28,12 @@ function simpletest_install() {
     }
 
     // Copy other test files for consistency.
-    $original = drupal_get_path('module', 'simpletest') . '/files';
-    $files = file_scan_directory($original, '(html|image|javascript|php|sql)-.*');
-
-    // If there are more files in the original directory than the files directory, copy files.
-    if (count($files) > count(file_scan_directory($path, '(html|image|javascript|php|sql)-.*'))) {
+    $files = file_scan_directory($path, '/(html|image|javascript|php|sql)-.*/');
+    if (count($files) == 0) {
+      $original = drupal_get_path('module', 'simpletest') . '/files';
       $files = file_scan_directory($original, '/(html|image|javascript|php|sql)-.*/');
       foreach ($files as $file) {
-        file_copy($file->filename, $path, FILE_EXISTS_REPLACE);
+        file_unmanaged_copy($file->filename, $path . '/' . $file->basename);
       }
       $generated = TRUE;
     }
@@ -94,22 +92,11 @@ function simpletest_get_file_count($directory, $filename) {
  * Implementation of hook_uninstall().
  */
 function simpletest_uninstall() {
-  // Remove settings variables.
   variable_del('simpletest_httpauth');
   variable_del('simpletest_httpauth_username');
   variable_del('simpletest_httpauth_pass');
   variable_del('simpletest_devel');
-
-  // Uninstall schema.
   drupal_uninstall_schema('simpletest');
-
-  // Remove generated files.
-  $path = file_directory_path() . '/simpletest';
-  $files = file_scan_directory($path, '.*');
-  foreach ($files as $file) {
-    file_delete($file->filename);
-  }
-  rmdir($path);
 }
 
 /**
