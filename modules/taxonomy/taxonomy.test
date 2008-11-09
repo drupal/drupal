@@ -542,8 +542,7 @@ class TaxonomyTestNodeApiTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Test term edit form to ensure terms can be edited from administration page
- * and that term name and description are saved.
+ * Test term editing and creation.
  */
 class TermEditTestCase extends DrupalWebTestCase {
   /**
@@ -551,9 +550,8 @@ class TermEditTestCase extends DrupalWebTestCase {
    */
   function getInfo() {
     return array(
-      'name'  => 'Term edit test',
-      'description'  => t('Ensure terms can be edited from administration page
-       and that term name and description are saved.'),
+      'name'  => 'Term creation and editing',
+      'description'  => t('Ensure terms can be created and saved via taxonomy administration and freetagging forms.'),
       'group' => t('Taxonomy'));
   }
 
@@ -563,8 +561,30 @@ class TermEditTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp();
     // Prepare a user to do the tests.
-    $web_user = $this->drupalCreateUser(array('administer taxonomy'));
+    $web_user = $this->drupalCreateUser(array('administer taxonomy', 'create article content'));
     $this->drupalLogin($web_user);
+  }
+
+  /**
+   * Test term creation with a free-tagging vocabulary from the node form.
+   */
+  function testNodeTermCreation() {
+    $terms = array(
+      $this->randomName(),
+      $this->randomName(),
+      $this->randomName(),
+    );
+    $edit = array();
+    $edit['title'] = $this->randomName();
+    // Insert the terms in a comma separated list. Vocabulary 1 is a
+    // free-tagging field created by the default profile.
+    $edit['taxonomy[tags][1]'] =  implode(', ', $terms);
+    $edit['body'] = $this->randomName();
+    $this->drupalPost('node/add/article', $edit, t('Save'));
+    $this->assertRaw(t('@type %title has been created.', array('@type' => t('Article'), '%title' => $edit['title'])), t('The node was created successfully'));
+    foreach ($terms as $term) {
+      $this->assertText($term, t('The term was saved and appears on the node page'));
+    }
   }
 
   /**

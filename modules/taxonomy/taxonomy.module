@@ -361,7 +361,7 @@ function taxonomy_term_save($term) {
     }
   }
   else {
-    db_insert('term_hierarchy')->field(array('tid' => $term_tid, 'parent' => $term->parent))->execute();
+    db_insert('term_hierarchy')->fields(array('tid' => $term->tid, 'parent' => $term->parent))->execute();
   }
 
   db_delete('term_synonym')->condition('tid', $term->tid)->execute();
@@ -685,8 +685,9 @@ function taxonomy_node_save($node, $terms) {
 
         if (!$typed_term_tid) {
           $edit = array('vid' => $vid, 'name' => $typed_term);
-          $status = taxonomy_term_save($edit);
-          $typed_term_tid = $edit['tid'];
+          $term = (object)$edit;
+          $status = taxonomy_term_save($term);
+          $typed_term_tid = $term->tid;
         }
 
         // Defend against duplicate, differently cased tags

@@ -513,7 +513,8 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
   }
 
   // Save all updated terms.
-  foreach ($changed_terms as $term) {
+  foreach ($changed_terms as $changed) {
+    $term = (object)$changed;
     taxonomy_term_save($term);
   }
 
