@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.9 2008/09/17 07:11:57 dries Exp $
+// $Id: search.test,v 1.10 2008/11/10 05:19:50 webchick Exp $
 
 define('SEARCH_TYPE', '_test_');
 
@@ -148,7 +148,7 @@ class SearchMatchTestCase extends DrupalWebTestCase {
     // Get result scores.
     $scores = array();
     foreach ($set as $item) {
-      $scores[] = $item->score;
+      $scores[] = $item->calculated_score;
     }
 
     // Check order.
