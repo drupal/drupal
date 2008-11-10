@@ -373,7 +373,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
   // Let themes have preprocess functions even if they didn't register a template.
   if ($type == 'theme' || $type == 'base_theme') {
     foreach ($cache as $hook => $info) {
-      // Check only if it's a template and not registered by the theme or engine
+      // Check only if it's a template and not registered by the theme or engine.
       if (!empty($info['template']) && empty($result[$hook])) {
         if (!isset($info['preprocess functions'])) {
           $cache[$hook]['preprocess functions'] = array();
