@@ -903,8 +903,8 @@ function _search_parse_query(&$word, &$scores, $not = FALSE) {
  *
  * @param $columns2
  *   (optional) Inserted into the SELECT pat of the second query. Must contain
- *   a column selected as 'score'.
- *   defaults to 'i.relevance AS score'
+ *   a column selected as 'calculated_score'.
+ *   defaults to 'i.relevance AS calculated_score'
  *
  * @param $join2
  *   (optional) Inserted into the JOIN par of the second SQL query.
@@ -915,14 +915,14 @@ function _search_parse_query(&$word, &$scores, $not = FALSE) {
  *
  * @param $sort_parameters
  *   (optional) SQL arguments for sorting the final results.
- *              Default: 'ORDER BY score DESC'
+ *              Default: 'ORDER BY calculated_score DESC'
  *
  * @return
  *   An array of SIDs for the search results.
  *
  * @ingroup search
  */
-function do_search($keywords, $type, $join1 = '', $where1 = '1 = 1', $arguments1 = array(), $columns2 = 'i.relevance AS score', $join2 = '', $arguments2 = array(), $sort_parameters = 'ORDER BY score DESC') {
+function do_search($keywords, $type, $join1 = '', $where1 = '1 = 1', $arguments1 = array(), $columns2 = 'i.relevance AS calculated_score', $join2 = '', $arguments2 = array(), $sort_parameters = 'ORDER BY calculated_score DESC') {
   $query = search_parse_query($keywords);
 
   if ($query[2] == '') {

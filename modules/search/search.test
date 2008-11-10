@@ -148,7 +148,7 @@ class SearchMatchTestCase extends DrupalWebTestCase {
     // Get result scores.
     $scores = array();
     foreach ($set as $item) {
-      $scores[] = $item->score;
+      $scores[] = $item->calculated_score;
     }
 
     // Check order.

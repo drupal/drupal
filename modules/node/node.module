@@ -1333,13 +1333,13 @@ function node_search($op = 'search', $keys = NULL) {
         $total = 1;
         $arguments2 = array();
         $join2 = '';
-        $select2 = 'i.relevance AS score';
+        $select2 = 'i.relevance AS calculated_score';
       }
       else {
         $total = $rankings['total'];
         $arguments2 = $rankings['arguments'];
         $join2 = implode(' ', $rankings['join']);
-        $select2 = '('. implode(' + ', $rankings['score']) .') AS score';
+        $select2 = '('. implode(' + ', $rankings['score']) .') AS calculated_score';
       }
 
       // Do search.
@@ -1369,7 +1369,7 @@ function node_search($op = 'search', $keys = NULL) {
           'date' => $node->changed,
           'node' => $node,
           'extra' => $extra,
-          'score' => $total ? ($item->score / $total) : 0,
+          'score' => $total ? ($item->calculated_score / $total) : 0,
           'snippet' => search_excerpt($keys, $node->body),
         );
       }
