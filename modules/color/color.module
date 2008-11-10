@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.49 2008/10/26 18:06:38 dries Exp $
+// $Id: color.module,v 1.50 2008/11/10 05:22:59 webchick Exp $
 
 /**
  * Implementation of hook_help().
@@ -154,7 +154,7 @@ function color_scheme_form(&$form_state, $theme) {
 
   // Add Farbtastic color picker.
   drupal_add_css('misc/farbtastic/farbtastic.css', array('preprocess' => FALSE));
-  drupal_add_js('misc/farbtastic/farbtastic.js');
+  drupal_add_js('misc/farbtastic/farbtastic.js', array('weight' => JS_LIBRARY));
 
   // Add custom CSS and JS.
   drupal_add_css($base . '/color.css', array('preprocess' => FALSE));

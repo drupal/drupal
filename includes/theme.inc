@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.448 2008/11/03 05:55:55 webchick Exp $
+// $Id: theme.inc,v 1.449 2008/11/10 05:22:59 webchick Exp $
 
 /**
  * @file
@@ -158,7 +158,7 @@ function _init_theme($theme, $base_theme = array(), $registry_callback = '_theme
 
   // Add scripts used by this theme.
   foreach ($final_scripts as $script) {
-    drupal_add_js($script, 'theme');
+    drupal_add_js($script, array('weight' => JS_THEME));
   }
 
   $theme_engine = NULL;

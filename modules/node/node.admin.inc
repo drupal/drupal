@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.28 2008/11/03 22:43:56 webchick Exp $
+// $Id: node.admin.inc,v 1.29 2008/11/10 05:22:59 webchick Exp $
 
 /**
  * @file
@@ -250,7 +250,7 @@ function node_filter_form() {
     $form['filters']['buttons']['reset'] = array('#type' => 'submit', '#value' => t('Reset'));
   }
 
-  drupal_add_js('misc/form.js', 'core');
+  drupal_add_js('misc/form.js');
 
   return $form;
 }

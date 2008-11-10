@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.102 2008/10/16 20:23:08 dries Exp $
+// $Id: system.admin.inc,v 1.103 2008/11/10 05:23:00 webchick Exp $
 
 /**
  * @file
@@ -1528,7 +1528,7 @@ function system_rss_feeds_settings() {
  * @see system_date_time_settings_submit()
  */
 function system_date_time_settings() {
-  drupal_add_js(drupal_get_path('module', 'system') . '/system.js', 'module');
+  drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
   drupal_add_js(array('dateTime' => array('lookup' => url('admin/settings/date-time/lookup'))), 'setting');
 
   // Date settings:
@@ -1736,7 +1736,7 @@ function system_clean_url_settings() {
 
   if (!variable_get('clean_url', 0)) {
     if (strpos(request_uri(), '?q=') !== FALSE) {
-      drupal_add_js(drupal_get_path('module', 'system') . '/system.js', 'module');
+      drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
 
       $form['clean_url']['#description'] .= ' <span>' . t('Before enabling clean URLs, you must perform a test to determine if your server is properly configured. If you are able to see this page again after clicking the "Run the clean URL test" link, the test has succeeded and the radio buttons above will be available. If instead you are directed to a "Page not found" error, you will need to change the configuration of your server. The <a href="@handbook">handbook page on Clean URLs</a> has additional troubleshooting information.', array('@handbook' => 'http://drupal.org/node/15365')) . '</span>';
 
