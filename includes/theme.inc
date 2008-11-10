@@ -261,6 +261,7 @@ function drupal_rebuild_theme_registry() {
  * over how and when the preprocess functions are run.
  */
 function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
+  $result = array();
   $function = $name .'_theme';
   if (function_exists($function)) {
     $result = $function($cache, $type, $theme, $path);
@@ -357,6 +358,26 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
 
     // Merge the newly created theme hooks into the existing cache.
     $cache = array_merge($cache, $result);
+  }
+
+  // Let themes have preprocess functions even if they didn't register a template.
+  if ($type == 'theme' || $type == 'base_theme') {
+    foreach ($cache as $hook => $info) {
+      // Check only if it's a template and not registered by the theme or engine.
+      if (!empty($info['template']) && empty($result[$hook])) {
+        if (!isset($info['preprocess functions'])) {
+          $cache[$hook]['preprocess functions'] = array();
+        }
+        if (function_exists($name .'_preprocess')) {
+          $cache[$hook]['preprocess functions'][] = $name .'_preprocess';
+        }
+        if (function_exists($name .'_preprocess_'. $hook)) {
+          $cache[$hook]['preprocess functions'][] = $name .'_preprocess_'. $hook;
+        }
+        // Ensure uniqueness.
+        $cache[$hook]['preprocess functions'] = array_unique($cache[$hook]['preprocess functions']);
+      }
+    }
   }
 }
 
