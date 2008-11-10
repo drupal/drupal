@@ -25,6 +25,22 @@ define('SAVED_UPDATED', 2);
 define('SAVED_DELETED', 3);
 
 /**
+ * The weight of JavaScript libraries, settings or jQuery plugins being
+ * added to the page.
+ */
+define('JS_LIBRARY', -100);
+
+/**
+ * The default weight of JavaScript being added to the page.
+ */
+define('JS_DEFAULT', 0);
+
+/**
+ * The weight of theme JavaScript code being added to the page.
+ */
+define('JS_THEME', 100);
+
+/**
  * Set content for a specified region.
  *
  * @param $region
@@ -2085,58 +2101,74 @@ function drupal_clear_css_cache() {
  * reference to an existing file or as inline code. The following actions can be
  * performed using this function:
  *
- * - Add a file ('core', 'module' and 'theme'):
- *   Adds a reference to a JavaScript file to the page. JavaScript files
- *   are placed in a certain order, from 'core' first, to 'module' and finally
- *   'theme' so that files, that are added later, can override previously added
- *   files with ease.
+ * - Add a file ('file'):
+ *   Adds a reference to a JavaScript file to the page.
  *
  * - Add inline JavaScript code ('inline'):
  *   Executes a piece of JavaScript code on the current page by placing the code
  *   directly in the page. This can, for example, be useful to tell the user that
- *   a new message arrived, by opening a pop up, alert box etc.
+ *   a new message arrived, by opening a pop up, alert box etc. This should only
+ *   be used for JavaScript which cannot be placed and executed from a file.
  *
  * - Add settings ('setting'):
  *   Adds a setting to Drupal's global storage of JavaScript settings. Per-page
- *   settings are required by some modules to function properly. The settings
+ *   settings are required by some modules to function properly. All settings
  *   will be accessible at Drupal.settings.
  *
  * Examples:
  * @code
  *   drupal_add_js('misc/collapse.js');
- *   drupal_add_js('misc/collapse.js', 'module');
+ *   drupal_add_js('misc/collapse.js', 'file');
+ *   drupal_add_js('$(document).ready(function(){alert("Hello!");});', 'inline');
  *   drupal_add_js('$(document).ready(function(){alert("Hello!");});',
- *     array('type' => 'inline', 'scope' => 'footer')
+ *     array('type' => 'inline', 'scope' => 'footer', 'weight' => 5)
  *   );
  * @endcode
  *
  * @param $data
  *   (optional) If given, the value depends on the $options parameter:
- *   - 'core', 'module' or 'theme': Path to the file relative to base_path().
+ *   - 'file': Path to the file relative to base_path().
  *   - 'inline': The JavaScript code that should be placed in the given scope.
  *   - 'setting': An array with configuration options as associative array. The
- *       array is directly placed in Drupal.settings. You might want to wrap your
- *       actual configuration settings in another variable to prevent the pollution
- *       of the Drupal.settings namespace.
+ *       array is directly placed in Drupal.settings. All modules should wrap
+ *       their actual configuration settings in another variable to prevent
+ *       the pollution of the Drupal.settings namespace.
  * @param $options
  *   (optional) A string defining the type of JavaScript that is being added
- *   in the $data parameter ('core', 'module', 'theme', 'setting', 'inline'),
- *   or an array which can have any or all of the following keys (these are
- *   not valid with type => 'setting'):
+ *   in the $data parameter ('file'/'setting'/'inline'), or an array which
+ *   can have any or all of the following keys. JavaScript settings should
+ *   always pass the string 'setting' only.
  *   - type
- *       The type of JavaScript that should be added to the page. Allowed
- *       values are 'core', 'module', 'theme', 'inline' and 'setting'. Defaults
- *       to 'module'.
+ *       The type of JavaScript that is to be added to the page. Allowed
+ *       values are 'file', 'inline' or 'setting'. Defaults to 'file'.
  *   - scope
- *       The location in which you want to place the script. Possible
- *       values are 'header' and 'footer'. If your theme implements different
- *       locations, however, you can also use these. Defaults to 'header'.
+ *       The location in which you want to place the script. Possible values
+ *       are 'header' or 'footer'. If your theme implements different regions,
+ *       however, you can also use these. Defaults to 'header'.
+ *   - weight
+ *       A number defining the order in which the JavaScript is added to the
+ *       page. In some cases, the order in which the JavaScript is presented
+ *       on the page is very important. jQuery, for example, must be added to
+ *       to the page before any jQuery code is run, so jquery.js uses a weight
+ *       of JS_LIBRARY - 2, drupal.js uses a weight of JS_LIBRARY - 1, and all
+ *       following scripts depending on jQuery and Drupal behaviors are simply
+ *       added using the default weight of JS_DEFAULT.
+ *
+ *       Available constants are:
+ *       - JS_LIBRARY: Any libraries, settings, or jQuery plugins.
+ *       - JS_DEFAULT: Any module-layer JavaScript.
+ *       - JS_THEME: Any theme-layer JavaScript.
+ *
+ *       If you need to invoke a JavaScript file before any other module's
+ *       JavaScript, for example, you would use JS_DEFAULT - 1.
+ *       Note that inline JavaScripts are simply appended to the end of the
+ *       specified scope (region), so they always come last.
  *   - defer
- *       If set to TRUE, the defer attribute is set on the <script> tag.
- *       Defaults to FALSE. This parameter is not used with 'type' => 'setting'.
+ *       If set to TRUE, the defer attribute is set on the &lt;script&gt; tag.
+ *       Defaults to FALSE.
  *   - cache
  *       If set to FALSE, the JavaScript file is loaded anew on every page
- *       call, that means, it is not cached. Used only when type references
+ *       call, that means, it is not cached. Used only when 'type' references
  *       a JavaScript file. Defaults to TRUE.
  *   - preprocess
  *       Aggregate the JavaScript if the JavaScript optimization setting has
@@ -2160,18 +2192,16 @@ function drupal_add_js($data = NULL, $options = NULL, $reset = FALSE) {
     $options = array();
   }
   $options += array(
-    'type' => 'module',
-    // Default to a header scope only if we're adding some data.
-    'scope' => isset($data) ? 'header' : NULL,
+    'type' => 'file',
+    'weight' => JS_DEFAULT,
+    'scope' => 'header',
     'cache' => TRUE,
     'defer' => FALSE,
-    'preprocess' => TRUE
+    'preprocess' => TRUE,
+    'data' => $data,
   );
   // Preprocess can only be set if caching is enabled.
   $options['preprocess'] = $options['cache'] ? $options['preprocess'] : FALSE;
-  $type = $options['type'];
-  $scope = $options['scope'];
-  unset($options['type'], $options['scope']);
 
   // Request made to reset the JavaScript added so far.
   if ($reset) {
@@ -2183,47 +2213,54 @@ function drupal_add_js($data = NULL, $options = NULL, $reset = FALSE) {
     // first time a Javascript file is added.
     if (empty($javascript)) {
       $javascript = array(
-        'header' => array(
-          'core' => array(
-            'misc/jquery.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
-            'misc/drupal.js' => array('cache' => TRUE, 'defer' => FALSE, 'preprocess' => TRUE),
-          ),
-          'module' => array(),
-          'theme' => array(),
-          'setting' => array(
+        'settings' => array(
+          'data' => array(
             array('basePath' => base_path()),
           ),
-          'inline' => array(),
-        )
+          'type' => 'setting',
+          'scope' => 'header',
+          'weight' => JS_LIBRARY,
+        ),
+        'misc/jquery.js' => array(
+          'data' => 'misc/jquery.js',
+          'type' => 'file',
+          'scope' => 'header',
+          'weight' => JS_LIBRARY - 2,
+          'cache' => TRUE,
+          'defer' => FALSE,
+          'preprocess' => TRUE,
+        ),
+        'misc/drupal.js' => array(
+          'data' => 'misc/drupal.js',
+          'type' => 'file',
+          'scope' => 'header',
+          'weight' => JS_LIBRARY - 1,
+          'cache' => TRUE,
+          'defer' => FALSE,
+          'preprocess' => TRUE,
+        ),
       );
     }
 
-    if (isset($scope) && !isset($javascript[$scope])) {
-      $javascript[$scope] = array('core' => array(), 'module' => array(), 'theme' => array(), 'setting' => array(), 'inline' => array());
-    }
-
-    if (isset($type) && isset($scope) && !isset($javascript[$scope][$type])) {
-      $javascript[$scope][$type] = array();
-    }
-
-    switch ($type) {
+    switch ($options['type']) {
       case 'setting':
-        $javascript[$scope][$type][] = $data;
+        // All JavaScript settings are placed in the header of the page with
+        // the library weight so that inline scripts appear afterwards.
+        $javascript['settings']['data'][] = $data;
         break;
+
       case 'inline':
-        $javascript[$scope][$type][] = array('code' => $data, 'defer' => $options['defer']);
+        $javascript[] = $options;
         break;
-      default:
-        $javascript[$scope][$type][$data] = $options;
+
+      case 'file':
+        // Files must keep their name as the associative key so the same
+        // JavaScript files can not be added twice.
+        $javascript[$options['data']] = $options;
+        break;
     }
   }
-
-  if (isset($scope)) {
-    return isset($javascript[$scope]) ? $javascript[$scope] : array();
-  }
-  else {
-    return $javascript;
-  }
+  return $javascript;
 }
 
 /**
@@ -2248,18 +2285,24 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   if ((!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update') && function_exists('locale_update_js_files')) {
     locale_update_js_files();
   }
-
   if (!isset($javascript)) {
-    $javascript = drupal_add_js(NULL, array('scope' => $scope));
+    $javascript = drupal_add_js();
   }
-
   if (empty($javascript)) {
     return '';
   }
 
+  // Filter out elements of the given scope.
+  $items = array();
+  foreach ($javascript as $item) {
+    if ($item['scope'] == $scope) {
+      $items[] = $item;
+    }
+  }
+
   $output = '';
   $preprocessed = '';
-  $no_preprocess = array('core' => '', 'module' => '', 'theme' => '');
+  $no_preprocess = '';
   $files = array();
   $preprocess_js = (variable_get('preprocess_js', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
   $directory = file_directory_path();
@@ -2279,29 +2322,28 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   $embed_prefix = "\n<!--//--><![CDATA[//><!--\n";
   $embed_suffix = "\n//--><!]]>\n";
 
-  foreach ($javascript as $type => $data) {
-    if (!$data) continue;
+  // Sort the JavaScript by weight so that it appears in the correct order.
+  uasort($items, 'drupal_sort_weight');
 
-    switch ($type) {
+  // Loop through the JavaScript to construct the rendered output.
+  foreach ($items as $item) {
+    switch ($item['type']) {
       case 'setting':
-        $output .= '<script type="text/javascript">' . $embed_prefix . 'jQuery.extend(Drupal.settings, ' . drupal_to_js(call_user_func_array('array_merge_recursive', $data)) . ");" . $embed_suffix . "</script>\n";
+        $output .= '<script type="text/javascript">' . $embed_prefix . 'jQuery.extend(Drupal.settings, ' . drupal_to_js(call_user_func_array('array_merge_recursive', $item['data'])) . ");" . $embed_suffix . "</script>\n";
         break;
+
       case 'inline':
-        foreach ($data as $info) {
-          $output .= '<script type="text/javascript"' . ($info['defer'] ? ' defer="defer"' : '') . '>' . $embed_prefix . $info['code'] . $embed_suffix . "</script>\n";
+        $output .= '<script type="text/javascript"' . ($item['defer'] ? ' defer="defer"' : '') . '>' . $embed_prefix . $item['data'] . $embed_suffix . "</script>\n";
+        break;
+
+      case 'file':
+        if (!$item['preprocess'] || !$is_writable || !$preprocess_js) {
+          $no_preprocess .= '<script type="text/javascript"' . ($item['defer'] ? ' defer="defer"' : '') . ' src="' . base_path() . $item['data'] . ($item['cache'] ? $query_string : '?' . REQUEST_TIME) . "\"></script>\n";
+        }
+        else {
+          $files[$item['data']] = $item;
         }
         break;
-      default:
-        // If JS preprocessing is off, we still need to output the scripts.
-        // Additionally, go through any remaining scripts if JS preprocessing is on and output the non-cached ones.
-        foreach ($data as $path => $info) {
-          if (!$info['preprocess'] || !$is_writable || !$preprocess_js) {
-            $no_preprocess[$type] .= '<script type="text/javascript"' . ($info['defer'] ? ' defer="defer"' : '') . ' src="' . base_path() . $path . ($info['cache'] ? $query_string : '?' . REQUEST_TIME) . "\"></script>\n";
-          }
-          else {
-            $files[$path] = $info;
-          }
-        }
     }
   }
 
@@ -2314,9 +2356,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
 
   // Keep the order of JS files consistent as some are preprocessed and others are not.
   // Make sure any inline or JS setting variables appear last after libraries have loaded.
-  $output = $preprocessed . implode('', $no_preprocess) . $output;
-
-  return $output;
+  return $preprocessed . $no_preprocess . $output;
 }
 
 /**
@@ -2429,7 +2469,10 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
 function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgroup = NULL, $source = NULL, $hidden = TRUE, $limit = 0) {
   static $js_added = FALSE;
   if (!$js_added) {
-    drupal_add_js('misc/tabledrag.js', 'core');
+    // Add the table drag JavaScript to the page before the module JavaScript
+    // to ensure that table drag behaviors are registered before any module
+    // uses it.
+    drupal_add_js('misc/tabledrag.js', array('weight' => JS_DEFAULT - 1));
     $js_added = TRUE;
   }
 
@@ -3019,6 +3062,18 @@ function drupal_render(&$elements) {
 function element_sort($a, $b) {
   $a_weight = (is_array($a) && isset($a['#weight'])) ? $a['#weight'] : 0;
   $b_weight = (is_array($b) && isset($b['#weight'])) ? $b['#weight'] : 0;
+  if ($a_weight == $b_weight) {
+    return 0;
+  }
+  return ($a_weight < $b_weight) ? -1 : 1;
+}
+
+/**
+ * Function used by uasort to sort structured arrays by weight, without the property weight prefix.
+ */
+function drupal_sort_weight($a, $b) {
+  $a_weight = (is_array($a) && isset($a['weight'])) ? $a['weight'] : 0;
+  $b_weight = (is_array($b) && isset($b['weight'])) ? $b['weight'] : 0;
   if ($a_weight == $b_weight) {
     return 0;
   }

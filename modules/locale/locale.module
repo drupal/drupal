@@ -522,20 +522,17 @@ function locale_update_js_files() {
   $javascript = drupal_add_js();
   $files = $new_files = FALSE;
 
-  foreach ($javascript as $scope) {
-    foreach ($scope as $type => $data) {
-      if ($type != 'setting' && $type != 'inline') {
-        foreach ($data as $filepath => $info) {
-          $files = TRUE;
-          if (!in_array($filepath, $parsed)) {
-            // Don't parse our own translations files.
-            if (substr($filepath, 0, strlen($dir)) != $dir) {
-              locale_inc_callback('_locale_parse_js_file', $filepath);
-              watchdog('locale', 'Parsed JavaScript file %file.', array('%file' => $filepath));
-              $parsed[] = $filepath;
-              $new_files = TRUE;
-            }
-          }
+  foreach ($javascript as $item) {
+    if ($item['type'] == 'file') {
+      $files = TRUE;
+      $filepath = $item['data'];
+      if (!in_array($filepath, $parsed)) {
+        // Don't parse our own translations files.
+        if (substr($filepath, 0, strlen($dir)) != $dir) {
+          locale_inc_callback('_locale_parse_js_file', $filepath);
+          watchdog('locale', 'Parsed JavaScript file %file.', array('%file' => $filepath));
+          $parsed[] = $filepath;
+          $new_files = TRUE;
         }
       }
     }
@@ -566,7 +563,7 @@ function locale_update_js_files() {
 
   // Add the translation JavaScript file to the page.
   if ($files && !empty($language->javascript)) {
-    drupal_add_js($dir . '/' . $language->language . '_' . $language->javascript . '.js', 'core');
+    drupal_add_js($dir . '/' . $language->language . '_' . $language->javascript . '.js');
   }
 }
 

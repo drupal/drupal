@@ -1893,7 +1893,7 @@ function form_process_ahah($element) {
   // Adding the same javascript settings twice will cause a recursion error,
   // we avoid the problem by checking if the javascript has already been added.
   if (isset($element['#ahah']['path']) && isset($element['#ahah']['event']) && !isset($js_added[$element['#id']])) {
-    drupal_add_js('misc/jquery.form.js');
+    drupal_add_js('misc/jquery.form.js', array('weight' => JS_LIBRARY));
     drupal_add_js('misc/ahah.js');
 
     $ahah_binding = array(
@@ -1919,7 +1919,7 @@ function form_process_ahah($element) {
 
     // Add progress.js if we're doing a bar display.
     if ($ahah_binding['progress']['type'] == 'bar') {
-      drupal_add_js('misc/progress.js');
+      drupal_add_js('misc/progress.js', array('cache' => FALSE));
     }
 
     drupal_add_js(array('ahah' => array($element['#id'] => $ahah_binding)), 'setting');

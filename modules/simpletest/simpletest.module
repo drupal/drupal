@@ -210,7 +210,10 @@ function simpletest_test_form() {
 
 function theme_simpletest_test_table($table) {
   drupal_add_css(drupal_get_path('module', 'simpletest') . '/simpletest.css');
-  drupal_add_js(drupal_get_path('module', 'simpletest') . '/simpletest.js', 'module');
+
+  // Since SimpleTest is a special use case for the table select, stick the
+  // SimpleTest JavaScript above the table select.
+  drupal_add_js(drupal_get_path('module', 'simpletest') . '/simpletest.js', array('weight' => JS_DEFAULT - 1));
 
   // Create header for test selection table.
   $header = array(

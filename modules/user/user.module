@@ -2160,7 +2160,7 @@ function _user_password_dynamic_validation() {
   global $user;
   // Only need to do once per page.
   if (!$complete) {
-    drupal_add_js(drupal_get_path('module', 'user') . '/user.js', 'module');
+    drupal_add_js(drupal_get_path('module', 'user') . '/user.js');
 
     drupal_add_js(array(
       'password' => array(

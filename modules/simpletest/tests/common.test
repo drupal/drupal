@@ -307,6 +307,11 @@ class DrupalSetContentTestCase extends DrupalWebTestCase {
  */
 class JavaScriptTestCase extends DrupalWebTestCase {
   /**
+   * Store configured value for JavaScript preprocessing.
+   */
+  var $preprocess_js = NULL;
+
+  /**
    * Implementation of getInfo().
    */
   function getInfo() {
@@ -316,45 +321,58 @@ class JavaScriptTestCase extends DrupalWebTestCase {
       'group' => t('System')
     );
   }
-  
+
   /**
    * Implementation of setUp().
    */
   function setUp() {
-    parent::setUp();
+    // Enable locale in test environment.
+    parent::setUp('locale');
+
+    // Disable preprocessing
+    $this->preprocess_js = variable_get('preprocess_js', 0);
+    variable_set('preprocess_js', 0);
+
     // Reset drupal_add_js() before each test.
     drupal_add_js(NULL, NULL, TRUE);
   }
-  
+
+  /**
+   * Implementation of tearDown().
+   */
+  function tearDown() {
+    // Restore configured value for JavaScript preprocessing.
+    variable_set('preprocess_js', $this->preprocess_js);
+    parent::tearDown();
+  }
+
   /**
    * Test default JavaScript is empty.
    */
   function testDefault() {
     $this->assertEqual(array(), drupal_add_js(), t('Default JavaScript is empty.'));
   }
-  
+
   /**
    * Test adding a JavaScript file.
    */
   function testAddFile() {
-    drupal_add_js('misc/collapse.js');
-    $javascript = drupal_add_js();
-    $this->assertTrue(array_key_exists('misc/jquery.js', $javascript['header']['core']), t('jQuery is added when a file is added.'));
-    $this->assertTrue(array_key_exists('misc/drupal.js', $javascript['header']['core']), t('Drupal.js is added when file is added.'));
-    $this->assertTrue(array_key_exists('misc/collapse.js', $javascript['header']['module']), t('JavaScript files are correctly added.'));
-    $this->assertEqual(base_path(), $javascript['header']['setting'][0]['basePath'], t('Base path JavaScript setting is correctly set.'));
+    $javascript = drupal_add_js('misc/collapse.js');
+    $this->assertTrue(array_key_exists('misc/jquery.js', $javascript), t('jQuery is added when a file is added.'));
+    $this->assertTrue(array_key_exists('misc/drupal.js', $javascript), t('Drupal.js is added when file is added.'));
+    $this->assertTrue(array_key_exists('misc/collapse.js', $javascript), t('JavaScript files are correctly added.'));
+    $this->assertEqual(base_path(), $javascript['settings']['data'][0]['basePath'], t('Base path JavaScript setting is correctly set.'));
   }
-  
+
   /**
    * Test adding settings.
    */
   function testAddSetting() {
-    drupal_add_js(array('drupal' => 'rocks', 'dries' => 280342800), 'setting');
-    $javascript = drupal_add_js();
-    $this->assertEqual(280342800, $javascript['header']['setting'][1]['dries'], t('JavaScript setting is set correctly.'));
-    $this->assertEqual('rocks', $javascript['header']['setting'][1]['drupal'], t('The other JavaScript setting is set correctly.'));
+    $javascript = drupal_add_js(array('drupal' => 'rocks', 'dries' => 280342800), 'setting');
+    $this->assertEqual(280342800, $javascript['settings']['data'][1]['dries'], t('JavaScript setting is set correctly.'));
+    $this->assertEqual('rocks', $javascript['settings']['data'][1]['drupal'], t('The other JavaScript setting is set correctly.'));
   }
-  
+
   /**
    * Test drupal_get_js() for JavaScript settings.
    */
@@ -365,27 +383,27 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $this->assertTrue(strpos($javascript, 'testSetting') > 0, t('Rendered JavaScript header returns custom setting.'));
     $this->assertTrue(strpos($javascript, 'misc/jquery.js') > 0, t('Rendered JavaScript header includes jQuery.'));
   }
-  
+
   /**
    * Test to see if resetting the JavaScript empties the cache.
    */
   function testReset() {
     drupal_add_js('misc/collapse.js');
-    drupal_add_js(NULL, NULL, TRUE);    
+    drupal_add_js(NULL, NULL, TRUE);
     $this->assertEqual(array(), drupal_add_js(), t('Resetting the JavaScript correctly empties the cache.'));
   }
-  
+
   /**
    * Test adding inline scripts.
    */
   function testAddInline() {
     $inline = '$(document).ready(function(){});';
-    drupal_add_js($inline, array('type' => 'inline', 'scope' => 'footer'));
-    $javascript = drupal_add_js();
-    $this->assertTrue(array_key_exists('misc/jquery.js', $javascript['header']['core']), t('jQuery is added when inline scripts are added.'));
-    $this->assertEqual($inline, $javascript['footer']['inline'][0]['code'], t('Inline JavaScript is correctly added to the footer.'));
+    $javascript = drupal_add_js($inline, array('type' => 'inline', 'scope' => 'footer'));
+    $this->assertTrue(array_key_exists('misc/jquery.js', $javascript), t('jQuery is added when inline scripts are added.'));
+    $data = end($javascript);
+    $this->assertEqual($inline, $data['data'], t('Inline JavaScript is correctly added to the footer.'));
   }
-  
+
   /**
    * Test drupal_get_js() with a footer scope.
    */
@@ -395,14 +413,30 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $javascript = drupal_get_js('footer');
     $this->assertTrue(strpos($javascript, $inline) > 0, t('Rendered JavaScript footer returns the inline code.'));
   }
-  
+
   /**
    * Test drupal_add_js() sets preproccess to false when cache is set to false.
    */
   function testNoCache() {
-    drupal_add_js('misc/collapse.js', array('cache' => FALSE));
-    $javascript = drupal_add_js();
-    $this->assertTrue(!$javascript['header']['module']['misc/collapse.js']['preprocess'], t('Setting cache to FALSE sets proprocess to FALSE when adding JavaScript.'));
+    $javascript = drupal_add_js('misc/collapse.js', array('cache' => FALSE));
+    $this->assertFalse($javascript['misc/collapse.js']['preprocess'], t('Setting cache to FALSE sets proprocess to FALSE when adding JavaScript.'));
+  }
+
+  /**
+   * Test adding a JavaScript file with a different weight.
+   */
+  function testDifferentWeight() {
+    $javascript = drupal_add_js('misc/collapse.js', array('weight' => JS_THEME));
+    $this->assertEqual($javascript['misc/collapse.js']['weight'], JS_THEME, t('Adding a JavaScript file with a different weight caches the given weight.'));
+  }
+
+  /**
+   * Test rendering the JavaScript with a file's weight above jQuery's.
+   */
+  function testRenderDifferentWeight() {
+    drupal_add_js('misc/collapse.js', array('weight' => JS_LIBRARY - 10));
+    $javascript = drupal_get_js();
+    $this->assertTrue(strpos($javascript, 'misc/collapse.js') < strpos($javascript, 'misc/jquery.js'), t('Rendering a JavaScript file above jQuery.'));
   }
 }
 

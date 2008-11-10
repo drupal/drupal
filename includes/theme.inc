@@ -158,7 +158,7 @@ function _init_theme($theme, $base_theme = array(), $registry_callback = '_theme
 
   // Add scripts used by this theme.
   foreach ($final_scripts as $script) {
-    drupal_add_js($script, 'theme');
+    drupal_add_js($script, array('weight' => JS_THEME));
   }
 
   $theme_engine = NULL;
