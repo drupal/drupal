@@ -25,6 +25,7 @@ function node_configure() {
     $form['access']['rebuild'] = array(
       '#type' => 'submit',
       '#value' => t('Rebuild permissions'),
+      '#submit' => array('node_configure_access_submit'),
     );
   }
 
@@ -59,18 +60,14 @@ function node_configure() {
     '#description' => t('Must users preview posts before submitting?'),
   );
 
-  $form['#validate'] = array('node_configure_validate');
-
   return system_settings_form($form);
 }
 
 /**
- * Form validate callback.
+ * Form button submit callback.
  */
-function node_configure_validate($form, &$form_state) {
-  if ($form_state['values']['op'] == t('Rebuild permissions')) {
-    drupal_goto('admin/content/node-settings/rebuild');
-  }
+function node_configure_access_submit($form, &$form_state) {
+  $form_state['redirect'] = 'admin/content/node-settings/rebuild';
 }
 
 /**
@@ -87,7 +84,6 @@ function node_configure_rebuild_confirm() {
 function node_configure_rebuild_confirm_submit($form, &$form_state) {
   node_access_rebuild(TRUE);
   $form_state['redirect'] = 'admin/content/node-settings';
-  return;
 }
 
 /**
