@@ -579,8 +579,8 @@ function search_index($sid, $type, $text) {
 
   // Insert results into search index
   foreach ($results[0] as $word => $score) {
-    // If a word already exists in the database, its score gets increased 
-    // appropriately.  If not, we create a new record with the appropriate 
+    // If a word already exists in the database, its score gets increased
+    // appropriately.  If not, we create a new record with the appropriate
     // starting score.
     db_merge('search_index')->key(array(
       'word' => $word,

@@ -88,7 +88,7 @@ function drupal_load_updates() {
  * @param $module
  *   A module name.
  * @return
- *   If the module has updates, an array of available updates sorted by version. 
+ *   If the module has updates, an array of available updates sorted by version.
  *   Otherwise, FALSE.
  */
 function drupal_get_schema_versions($module) {
@@ -105,10 +105,10 @@ function drupal_get_schema_versions($module) {
   if (count($updates) == 0) {
     return FALSE;
   }
-  
+
   // Make sure updates are run in numeric order, not in definition order.
   sort($updates, SORT_NUMERIC);
-  
+
   return $updates;
 }
 
@@ -213,8 +213,8 @@ function drupal_detect_database_types() {
   // file for the driver explicitly.
 
   foreach (file_scan_directory(DRUPAL_ROOT . '/includes/database', '/^[a-z]*$/i', array('.', '..', 'CVS'), 0, FALSE) as $file) {
-    include_once "{$file->filename}/install.inc";      
-    include_once "{$file->filename}/database.inc"; 
+    include_once "{$file->filename}/install.inc";
+    include_once "{$file->filename}/database.inc";
     $drivers[$file->basename] = $file->filename;
   }
 
@@ -232,7 +232,7 @@ function drupal_detect_database_types() {
     unset($databases['mysql']);
     $databases = array('mysql' => $mysql_database) + $databases;
   }
-  
+
   return $databases;
 }
 
@@ -466,7 +466,7 @@ function drupal_verify_profile($profile, $locale) {
   $missing_modules = array_diff($module_list, $present_modules);
 
   $requirements = array();
-  
+
   if (count($missing_modules)) {
     $modules = array();
     foreach ($missing_modules as $module) {
@@ -544,7 +544,7 @@ function _drupal_install_module($module) {
  */
 function drupal_install_init_database() {
   static $included = FALSE;
-  
+
   if (!$included) {
     $connection_info = Database::getConnectionInfo();
     $driver = $connection_info['default']['driver'];
@@ -568,7 +568,7 @@ function drupal_install_system() {
   require_once DRUPAL_ROOT . '/' . $system_path . '/system.install';
   drupal_install_init_database();
   module_invoke('system', 'install');
-  
+
   $system_versions = drupal_get_schema_versions('system');
   $system_version = $system_versions ? max($system_versions) : SCHEMA_INSTALLED;
   db_query("INSERT INTO {system} (filename, name, type, owner, status, bootstrap, schema_version) VALUES('%s', '%s', '%s', '%s', %d, %d, %d)", $system_path . '/system.module', 'system', 'module', '', 1, 0, $system_version);
@@ -828,7 +828,7 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
 
 
 /**
- * Send the user to a different installer page. 
+ * Send the user to a different installer page.
  *
  * This issues an on-site HTTP redirect. Messages (and errors) are erased.
  *
@@ -927,7 +927,7 @@ function drupal_check_profile($profile) {
  * Extract highest severity from requirements array.
  *
  * @param $requirements
- *   An array of requirements, in the same format as is returned by 
+ *   An array of requirements, in the same format as is returned by
  *   hook_requirements().
  * @return
  *   The highest severity in the array.

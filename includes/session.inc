@@ -229,7 +229,7 @@ function drupal_session_destroy_uid($uid) {
  *
  * @param int $lifetime
  *   The value of session.gc_maxlifetime, passed by PHP.
- *   Sessions not updated for more than $lifetime seconds will be removed.  
+ *   Sessions not updated for more than $lifetime seconds will be removed.
  */
 function _sess_gc($lifetime) {
   // Be sure to adjust 'php_value session.gc_maxlifetime' to a large enough

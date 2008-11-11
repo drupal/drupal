@@ -215,7 +215,7 @@ function taxonomy_vocabulary_save($vocabulary) {
   if (empty($vocabulary->nodes)) {
     $vocabulary->nodes = array();
   }
-  
+
   if (!empty($vocabulary->name)) {
     // Prevent leading and trailing spaces in vocabulary names.
     $vocabulary->name = trim($vocabulary->name);

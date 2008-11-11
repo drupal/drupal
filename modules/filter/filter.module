@@ -1031,7 +1031,7 @@ function _filter_xss_split($m, $store = FALSE) {
   // Is there a closing XHTML slash at the end of the attributes?
   $attrlist = preg_replace('%(\s?)/\s*$%', '\1', $attrlist, -1, $count);
   $xhtml_slash = $count ? ' /' : '';
-  
+
   // Clean up attributes
   $attr2 = implode(' ', _filter_xss_attributes($attrlist));
   $attr2 = preg_replace('/[<>]/', '', $attr2);

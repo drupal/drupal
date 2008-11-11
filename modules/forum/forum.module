@@ -156,9 +156,9 @@ function forum_init() {
 }
 
 /**
- * _forum_nodeapi_check_node_type 
- * 
- * @param mixed $node 
+ * _forum_nodeapi_check_node_type
+ *
+ * @param mixed $node
  * @param mixed $vocabulary
  * @access protected
  * @return bool
@@ -235,7 +235,7 @@ function forum_nodeapi_prepare(&$node, $teaser, $page) {
 
 /**
  * Implementation of hook_nodeapi_validate().
- * 
+ *
  * Check in particular that only a "leaf" term in the associated taxonomy.
  */
 function forum_nodeapi_validate(&$node, $teaser, $page) {

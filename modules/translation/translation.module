@@ -251,7 +251,7 @@ function translation_nodeapi_delete(&$node, $teaser, $page) {
     translation_remove_from_set($node);
   }
 }
- 
+
 /**
  * Remove a node from its translation set (if any)
  * and update the set accordingly.

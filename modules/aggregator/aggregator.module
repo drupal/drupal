@@ -469,7 +469,7 @@ function aggregator_save_feed($edit) {
         'image' => '',
       ))
       ->execute();
-    
+
   }
   if (!empty($edit['title'])) {
     // The feed is being saved, save the categories as well.
@@ -501,7 +501,7 @@ function aggregator_remove($feed) {
       ->condition('iid', $iids, 'IN')
       ->execute();
   }
-  
+
   db_delete('aggregator_item')
     ->condition('fid', $feed['fid'])
     ->execute();

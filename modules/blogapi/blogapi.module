@@ -328,7 +328,7 @@ function blogapi_blogger_get_post($appkey, $postid, $username, $password) {
  *   TRUE if no error, or the blogapi_error().
  */
 function blogapi_status_error_check($node, $original_status) {
-  
+
   $node = (object) $node;
 
   $node_type_default = variable_get('node_options_'. $node->type, array('status', 'promote'));

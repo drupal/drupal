@@ -111,19 +111,19 @@ All arguments are long options.
   --url       Immediately preceeds a URL to set the host and path. You will
               need this parameter if Drupal is in a subdirectory on your
               localhost and you have not set \$base_url in settings.php.
-              
+
   --php       The absolute path to the PHP executable. Usually not needed.
 
   --concurrency [num]
 
               Run tests in parallel, up to [num] tests at a time. This requires
-              the Process Control Extension (PCNTL) to be compiled in PHP, not 
+              the Process Control Extension (PCNTL) to be compiled in PHP, not
               supported under Windows.
 
   --all       Run all available tests.
 
   --class     Run tests identified by specific class names, instead of group names.
-  
+
   --file      Run tests identifiled by specific file names, instead of group names.
               Specify the path and the extension (i.e. 'modules/user/user.test').
 
@@ -391,7 +391,7 @@ function simpletest_script_get_test_list() {
       foreach ($args['test_names'] as $file) {
         $files[realpath($file)] = 1;
       }
-	  
+
       // Check for valid class names.
       foreach ($all_tests as $class_name => $instance) {
         $refclass = new ReflectionClass($class_name);

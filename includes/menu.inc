@@ -1886,7 +1886,7 @@ function _menu_delete_item($item, $force = FALSE) {
  *   - plid        The mlid of the parent.
  *   - router_path The path of the relevant router item.
  * @return
- *   The mlid of the saved menu link, or FALSE if the menu link could not be 
+ *   The mlid of the saved menu link, or FALSE if the menu link could not be
  *   saved.
  */
 function menu_link_save(&$item) {
@@ -2040,7 +2040,7 @@ function menu_link_save(&$item) {
     if ($existing_item && $menu_name != $existing_item['menu_name']) {
       menu_cache_clear($existing_item['menu_name']);
     }
-  
+
     _menu_clear_page_cache();
   }
   return $item['mlid'];
