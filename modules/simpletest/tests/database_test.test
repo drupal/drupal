@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.16 2008/11/08 22:52:24 dries Exp $
+// $Id: database_test.test,v 1.17 2008/11/11 20:37:46 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -212,7 +212,7 @@ class DatabaseFetchTestCase extends DatabaseTestCase {
 
     $records = array();
     $result = db_query("SELECT name FROM {test} WHERE age = :age", array(':age' => 25));
-    $this->assertTrue($result instanceof DatabaseStatement, t('Result set is a Drupal statement object.'));
+    $this->assertTrue($result instanceof DatabaseStatementInterface, t('Result set is a Drupal statement object.'));
     foreach ($result as $record) {
       $records[] = $record;
       $this->assertTrue(is_object($record), t('Record is an object.'));

@@ -1,5 +1,5 @@
 <?php
-// $Id: log.inc,v 1.4 2008/10/24 18:36:01 dries Exp $
+// $Id: log.inc,v 1.5 2008/11/11 20:37:45 dries Exp $
 
 /**
  * @file
@@ -113,10 +113,10 @@ class DatabaseLog {
    * @param $time
    *   The time in milliseconds the query took to execute.
    */
-  public function log(DatabaseStatement $statement, $args, $time) {
+  public function log(DatabaseStatementInterface $statement, $args, $time) {
     foreach (array_keys($this->queryLog) as $key) {
       $this->queryLog[$key][] = array(
-        'query' => $statement->queryString,
+        'query' => $statement->getQueryString(),
         'args' => $args,
         'target' => $statement->dbh->getTarget(),
         'caller' => $this->findCaller(),

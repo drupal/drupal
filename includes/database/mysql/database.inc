@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.5 2008/11/08 04:45:36 webchick Exp $
+// $Id: database.inc,v 1.6 2008/11/11 20:37:45 dries Exp $
 
 /**
  * @file
@@ -60,10 +60,6 @@ class DatabaseConnection_mysql extends DatabaseConnection {
 
   public function supportsTransactions() {
     return $this->transactionSupport;
-  }
-
-  public function escapeTable($table) {
-    return preg_replace('/[^A-Za-z0-9_]+/', '', $table);
   }
 
   public function mapConditionOperator($operator) {
