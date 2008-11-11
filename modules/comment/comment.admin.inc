@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.10 2008/07/16 21:59:26 dries Exp $
+// $Id: comment.admin.inc,v 1.11 2008/11/11 21:44:01 dries Exp $
 
 /**
  * @file
@@ -128,7 +128,9 @@ function comment_admin_overview_submit($form, &$form_state) {
     foreach ($form_state['values']['comments'] as $cid => $value) {
       if ($value) {
         // Perform the update action, then refresh node statistics.
-        db_query($query, $cid);
+        $query
+          ->condition('cid', $cid )
+          ->execute();
         $comment = comment_load($cid);
         _comment_update_node_statistics($comment->nid);
         // Allow modules to respond to the updating of a comment.
