@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.472 2008/11/02 14:42:45 dries Exp $
+// $Id: forum.module,v 1.473 2008/11/11 16:49:37 dries Exp $
 
 /**
  * @file
@@ -156,9 +156,9 @@ function forum_init() {
 }
 
 /**
- * _forum_nodeapi_check_node_type 
- * 
- * @param mixed $node 
+ * _forum_nodeapi_check_node_type
+ *
+ * @param mixed $node
  * @param mixed $vocabulary
  * @access protected
  * @return bool
@@ -235,7 +235,7 @@ function forum_nodeapi_prepare(&$node, $teaser, $page) {
 
 /**
  * Implementation of hook_nodeapi_validate().
- * 
+ *
  * Check in particular that only a "leaf" term in the associated taxonomy.
  */
 function forum_nodeapi_validate(&$node, $teaser, $page) {

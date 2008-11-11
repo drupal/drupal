@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.4 2008/10/08 11:09:16 dries Exp $
+// $Id: schema.inc,v 1.5 2008/11/11 16:49:37 dries Exp $
 
 /**
  * @file

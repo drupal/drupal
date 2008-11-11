@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.192 2008/11/08 22:04:03 dries Exp $
+// $Id: locale.inc,v 1.193 2008/11/11 16:49:37 dries Exp $
 
 /**
  * @file
@@ -97,7 +97,7 @@ function theme_locale_languages_overview_form($form) {
   $header = array(array('data' => t('English name')), array('data' => t('Native name')), array('data' => t('Code')), array('data' => t('Direction')), array('data' => t('Enabled')), array('data' => t('Default')), array('data' => t('Weight')), array('data' => t('Operations')));
   $output = theme('table', $header, $rows, array('id' => 'language-order'));
   $output .= drupal_render($form);
-  
+
   drupal_add_tabledrag('language-order', 'order', 'sibling', 'language-order-weight');
 
   return $output;

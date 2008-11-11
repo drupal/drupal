@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.62 2008/11/01 21:27:38 dries Exp $
+// $Id: session.inc,v 1.63 2008/11/11 16:49:37 dries Exp $
 
 /**
  * @file
@@ -229,7 +229,7 @@ function drupal_session_destroy_uid($uid) {
  *
  * @param int $lifetime
  *   The value of session.gc_maxlifetime, passed by PHP.
- *   Sessions not updated for more than $lifetime seconds will be removed.  
+ *   Sessions not updated for more than $lifetime seconds will be removed.
  */
 function _sess_gc($lifetime) {
   // Be sure to adjust 'php_value session.gc_maxlifetime' to a large enough

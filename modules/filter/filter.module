@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.232 2008/11/08 20:43:54 dries Exp $
+// $Id: filter.module,v 1.233 2008/11/11 16:49:37 dries Exp $
 
 /**
  * @file
@@ -1031,7 +1031,7 @@ function _filter_xss_split($m, $store = FALSE) {
   // Is there a closing XHTML slash at the end of the attributes?
   $attrlist = preg_replace('%(\s?)/\s*$%', '\1', $attrlist, -1, $count);
   $xhtml_slash = $count ? ' /' : '';
-  
+
   // Clean up attributes
   $attr2 = implode(' ', _filter_xss_attributes($attrlist));
   $attr2 = preg_replace('/[<>]/', '', $attr2);
