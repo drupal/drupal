@@ -15,7 +15,7 @@
  */
 function comment_edit($cid) {
   global $user;
-  $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d', $cid));
+  $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid', array(':cid'=>$cid) )->fetchObject();
   $comment = drupal_unpack($comment);
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
 
@@ -69,7 +69,10 @@ function comment_reply($node, $pid = NULL) {
       // $pid indicates that this is a reply to a comment.
       if ($pid) {
         // Load the comment whose cid = $pid
-        if ($comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $pid, COMMENT_PUBLISHED))) {
+        $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid AND c.status = :status', array(
+          ':cid'=>$pid, 
+          ':status'=>COMMENT_PUBLISHED))->fetchObject();
+        if ( $comment ) {
           // If that comment exists, make sure that the current comment and the
           // parent comment both belong to the same parent node.
           if ($comment->nid != $node->nid) {
@@ -123,7 +126,10 @@ function comment_approve($cid) {
   // Load the comment whose cid = $cid
   if ($comment = comment_load($cid)) {
     $operations = comment_operations('publish');
-    db_query($operations['publish'][1], $cid);
+    $query = $operations['publish'][1];
+    $query
+      ->condition('cid', $cid )
+      ->execute();
 
     drupal_set_message(t('Comment approved.'));
     drupal_goto("node/$comment->nid");

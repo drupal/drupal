@@ -128,7 +128,9 @@ function comment_admin_overview_submit($form, &$form_state) {
     foreach ($form_state['values']['comments'] as $cid => $value) {
       if ($value) {
         // Perform the update action, then refresh node statistics.
-        db_query($query, $cid);
+        $query
+          ->condition('cid', $cid )
+          ->execute();
         $comment = comment_load($cid);
         _comment_update_node_statistics($comment->nid);
         // Allow modules to respond to the updating of a comment.
