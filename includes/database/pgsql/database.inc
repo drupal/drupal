@@ -38,7 +38,7 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
     $options += $this->defaultOptions();
 
     try {
-      if ($query instanceof DatabaseStatement) {
+      if ($query instanceof DatabaseStatementInterface) {
         $stmt = $query;
         $stmt->execute(NULL, $options);
       }
@@ -63,8 +63,8 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
     catch (PDOException $e) {
       _db_check_install_needed();
       if ($options['throw_exception']) {
-        if ($query instanceof DatabaseStatement) {
-          $query_string = $stmt->queryString;
+        if ($query instanceof DatabaseStatementInterface) {
+          $query_string = $stmt->getQueryString();
         }
         else {
           $query_string = $query;
@@ -96,10 +96,6 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
 
   public function supportsTransactions() {
     return $this->transactionSupport;
-  }
-
-  public function escapeTable($table) {
-    return preg_replace('/[^A-Za-z0-9_]+/', '', $table);
   }
 
   public function mapConditionOperator($operator) {

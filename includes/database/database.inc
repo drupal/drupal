@@ -134,7 +134,7 @@ abstract class DatabaseConnection extends PDO {
    *
    * We only need this for the legacy db_affected_rows() call, which will be removed.
    *
-   * @var DatabaseStatement
+   * @var DatabaseStatementInterface
    * @todo Remove this variable.
    */
   public $lastStatement;
@@ -218,11 +218,17 @@ abstract class DatabaseConnection extends PDO {
   protected $schema = NULL;
 
   function __construct($dsn, $username, $password, $driver_options = array()) {
+    // Merge in defaults.
+    $driver_options += array(
+      'statement_class' => 'DatabaseStatementBase',
+    );
     // Because the other methods don't seem to work right.
     $driver_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
     // Call PDO::__construct and PDO::setAttribute.
     parent::__construct($dsn, $username, $password, $driver_options);
-    $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('DatabaseStatement', array($this)));
+    if (!empty($driver_options['statement_class'])) {
+      $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array($driver_options['statement_class'], array($this)));
+    }
   }
 
   /**
@@ -418,8 +424,8 @@ abstract class DatabaseConnection extends PDO {
    * @param $query
    *   The query to execute.  In most cases this will be a string containing
    *   an SQL query with placeholders.  An already-prepared instance of
-   *   DatabaseStatement may also be passed in order to allow calling code
-   *   to manually bind variables to a query.  If a DatabaseStatement object
+   *   DatabaseStatementInterface may also be passed in order to allow calling code
+   *   to manually bind variables to a query.  If a DatabaseStatementInterface
    *   is passed, the $args array will be ignored.
    *
    *   It is extremely rare that module code will need to pass a statement
@@ -449,7 +455,7 @@ abstract class DatabaseConnection extends PDO {
       // We allow either a pre-bound statement object or a literal string.
       // In either case, we want to end up with an executed statement object,
       // which we pass to PDOStatement::execute.
-      if ($query instanceof DatabaseStatement) {
+      if ($query instanceof DatabaseStatementInterface) {
         $stmt = $query;
         $stmt->execute(NULL, $options);
       }
@@ -476,8 +482,8 @@ abstract class DatabaseConnection extends PDO {
     catch (PDOException $e) {
       _db_check_install_needed();
       if ($options['throw_exception']) {
-        if ($query instanceof DatabaseStatement) {
-          $query_string = $stmt->queryString;
+        if ($query instanceof DatabaseStatementInterface) {
+          $query_string = $stmt->getQueryString();
         }
         else {
           $query_string = $query;
@@ -626,7 +632,7 @@ abstract class DatabaseConnection extends PDO {
    *   The sanitized table name string.
    */
   public function escapeTable($table) {
-    return preg_replace('/[^A-Za-z0-9_]+/', '', $string);
+    return preg_replace('/[^A-Za-z0-9_]+/', '', $table);
   }
 
   /**
@@ -1222,7 +1228,190 @@ class DatabaseTransaction {
 }
 
 /**
- * Prepared statement class.
+ * A prepared statement.
+ *
+ * Some methods in that class are purposely commented out. Due to a change in
+ * how PHP defines PDOStatement, we can't define a signature for those methods that
+ * will work the same way between versions older than 5.2.6 and later versions.
+ *
+ * Please refer to http://bugs.php.net/bug.php?id=42452 for more details.
+ *
+ * Child implementations should either extend PDOStatement:
+ * @code
+ * class DatabaseStatement_oracle extends PDOStatement implements DatabaseStatementInterface {}
+ * @endcode
+ *
+ * or implement their own class, but in that case they will also have to implement
+ * the Iterator or IteratorArray interfaces before DatabaseStatementInterface:
+ * @code
+ * class DatabaseStatement_oracle implements Iterator, DatabaseStatementInterface {}
+ * @endcode
+ */
+interface DatabaseStatementInterface extends Traversable {
+
+  /**
+   * Executes a prepared statement
+   *
+   * @param $args
+   *   An array of values with as many elements as there are bound parameters in the SQL statement being executed.
+   * @param $options
+   *   An array of options for this query.
+   * @return
+   *   TRUE on success, or FALSE on failure.
+   */
+  public function execute($args, $options);
+
+  /**
+   * Get the query string of that statement.
+   *
+   * @return
+   *   The query string, in its form with placeholders.
+   */
+  public function getQueryString();
+
+  /**
+   * Returns the number of rows affected by the last SQL statement.
+   *
+   * @return
+   *   The number of rows affected by the last DELETE, INSERT, or UPDATE
+   *   statement executed
+   */
+  public function rowCount();
+
+  /**
+   * Set the default fetch mode for this statement.
+   *
+   * See http://php.net/manual/en/pdo.constants.php for the definition of the
+   * constants used.
+   *
+   * @param $mode
+   *   One of the PDO::FETCH_* constants.
+   * @param $a1
+   *   An option depending of the fetch mode specified by $mode:
+   *    - for PDO::FETCH_COLUMN, it is the index of the column to fetch,
+   *    - for PDO::FETCH_CLASS, it is the name of the class to create, and
+   *    - for PDO::FETCH_INTO, it is the object to add the data to.
+   * @param $a2
+   *  In case of when mode is PDO::FETCH_CLASS, the optional arguments to
+   *  pass to the constructor.
+   */
+  // public function setFetchMode($mode, $a1 = NULL, $a2 = array());
+
+  /**
+   * Fetches the next row from a result set.
+   *
+   * See http://php.net/manual/en/pdo.constants.php for the definition of the
+   * constants used.
+   *
+   * @param $mode
+   *   One of the PDO::FETCH_* constants.
+   *   Default to what was specified by setFetchMode().
+   * @param $cursor_orientation
+   *   Not implemented in all database drivers, don't use.
+   * @param $cursor_offset
+   *   Not implemented in all database drivers, don't use.
+   * @return
+   *   A result, formatted according to $mode.
+   */
+  // public function fetch($mode = NULL, $cursor_orientation = NULL, $cursor_offset = NULL);
+
+  /**
+   * Return a single field out of the current
+   *
+   * @param $index
+   *   The numeric index of the field to return.  Defaults to the first field.
+   * @return
+   *   A single field from the next record.
+   */
+  public function fetchField($index = 0);
+
+  /**
+   * Fetches the next row and returns it as an object.
+   *
+   * The object will be of the class specified by DatabaseStatementInterface::setFetchMode()
+   * or stdClass if not specified.
+   */
+  // public function fetchObject();
+
+  /**
+   * Fetches the next row and returns it as an associative array.
+   *
+   * This method corresponds to PDOStatement::fetchObject(),
+   * but for associative arrays.  For some reason PDOStatement does
+   * not have a corresponding array helper method, so one is added.
+   *
+   * @return
+   *   An associative array.
+   */
+  public function fetchAssoc();
+
+  /**
+   * Returns an array containing all of the result set rows.
+   *
+   * @param $mode
+   *   One of the PDO::FETCH_* constants.
+   * @param $column_index
+   *   If $mode is PDO::FETCH_COLUMN, the index of the column to fetch.
+   * @param $constructor_arguments
+   *   If $mode is PDO::FETCH_CLASS, the arguments to pass to the constructor.
+   * @return
+   *   An array of results.
+   */
+  // function fetchAll($mode = NULL, $column_index = NULL, Array $constructor_arguments);
+
+  /**
+   * Returns an entire single column of a result set as an indexed array.
+   *
+   * Note that this method will run the result set to the end.
+   *
+   * @param $index
+   *   The index of the column number to fetch.
+   * @return
+   *   An indexed array.
+   */
+  public function fetchCol($index = 0);
+
+  /**
+   * Returns the entire result set as a single associative array.
+   *
+   * This method is only useful for two-column result sets. It will return
+   * an associative array where the key is one column from the result set
+   * and the value is another field. In most cases, the default of the first two
+   * columns is appropriate.
+   *
+   * Note that this method will run the result set to the end.
+   *
+   * @param $key_index
+   *   The numeric index of the field to use as the array key.
+   * @param $value_index
+   *   The numeric index of the field to use as the array value.
+   * @return
+   *   An associative array.
+   */
+  public function fetchAllKeyed($key_index = 0, $value_index = 1);
+
+  /**
+   * Returns an entire result set as an associative array keyed by the named field.
+   *
+   * If the given key appears multiple times, later records will overwrite
+   * earlier ones.
+   *
+   * Note that this method will run the result set to the end.
+   *
+   * @param $key
+   *   The name of the field on which to index the array.
+   * @param $fetch
+   *   The fetchmode to use.  If set to PDO::FETCH_ASSOC, PDO::FETCH_NUM, or
+   *   PDO::FETCH_BOTH the returned value with be an array of arrays. For any
+   *   other value it will be an array of objects.
+   * @return
+   *   An associative array.
+   */
+  public function fetchAllAssoc($key, $fetch = PDO::FETCH_OBJ);
+}
+
+/**
+ * Default implementation of DatabaseStatementInterface.
  *
  * PDO allows us to extend the PDOStatement class to provide additional
  * functionality beyond that offered by default.  We do need extra
@@ -1231,7 +1420,7 @@ class DatabaseTransaction {
  *
  * @link http://us.php.net/pdostatement
  */
-class DatabaseStatement extends PDOStatement {
+class DatabaseStatementBase extends PDOStatement implements DatabaseStatementInterface {
 
   /**
    * Reference to the database connection object for this statement.
@@ -1247,16 +1436,6 @@ class DatabaseStatement extends PDOStatement {
     $this->setFetchMode(PDO::FETCH_OBJ);
   }
 
-  /**
-   * Executes a prepared statement
-   *
-   * @param $args
-   *   An array of values with as many elements as there are bound parameters in the SQL statement being executed.
-   * @param $options
-   *   An array of options for this query.
-   * @return
-   *   TRUE on success, or FALSE on failure.
-   */
   public function execute($args, $options) {
     if (isset($options['fetch'])) {
       if (is_string($options['fetch'])) {
@@ -1286,37 +1465,14 @@ class DatabaseStatement extends PDOStatement {
     return $return;
   }
 
-  /**
-   * Returns an entire single column of a result set as an indexed array.
-   *
-   * Note that this method will run the result set to the end.
-   *
-   * @param $index
-   *   The index of the column number to fetch.
-   * @return
-   *   An indexed array.
-   */
+  public function getQueryString() {
+    return $this->queryString;
+  }
+
   public function fetchCol($index = 0) {
     return $this->fetchAll(PDO::FETCH_COLUMN, $index);
   }
 
-  /**
-   * Returns an entire result set as an associative array keyed by the named field.
-   *
-   * If the given key appears multiple times, later records will overwrite
-   * earlier ones.
-   *
-   * Note that this method will run the result set to the end.
-   *
-   * @param $key
-   *   The name of the field on which to index the array.
-   * @param $fetch
-   *   The fetchmode to use.  If set to   PDO::FETCH_ASSOC, PDO::FETCH_NUM, or
-   *   PDO::FETCH_BOTH the returned value with be an array of arrays.  For any
-   *   other value it will be an array of objects.
-   * @return
-   *   An associative array.
-   */
   public function fetchAllAssoc($key, $fetch = PDO::FETCH_OBJ) {
     $return = array();
     $this->setFetchMode($fetch);
@@ -1333,23 +1489,6 @@ class DatabaseStatement extends PDOStatement {
     return $return;
   }
 
-  /**
-   * Returns the entire result set as a single associative array.
-   *
-   * This method is only useful for two-column result sets.  It will return
-   * an associative array where the key is one column from the result set
-   * and the value is another field.  In most cases, the default of the first two
-   * columns is appropriate.
-   *
-   * Note that this method will run the result set to the end.
-   *
-   * @param $key_index
-   *   The numeric index of the field to use as the array key.
-   * @param $value_index
-   *   The numeric index of the field to use as the array value.
-   * @return
-   *   An associative array.
-   */
   public function fetchAllKeyed($key_index = 0, $value_index = 1) {
     $return = array();
     $this->setFetchMode(PDO::FETCH_NUM);
@@ -1359,29 +1498,11 @@ class DatabaseStatement extends PDOStatement {
     return $return;
   }
 
-  /**
-   * Return a single field out of the current
-   *
-   * @param $index
-   *   The numeric index of the field to return.  Defaults to the first field.
-   * @return
-   *   A single field from the next record.
-   */
   public function fetchField($index = 0) {
     // Call PDOStatement::fetchColumn to fetch the field.
     return $this->fetchColumn($index);
   }
 
-  /**
-   * Fetches the next row and returns it as an associative array.
-   *
-   * This method corresponds to PDOStatement::fetchObject(),
-   * but for associative arrays.  For some reason PDOStatement does
-   * not have a corresponding array helper method, so one is added.
-   *
-   * @return
-   *   An associative array.
-   */
   public function fetchAssoc() {
     // Call PDOStatement::fetch to fetch the row.
     return $this->fetch(PDO::FETCH_ASSOC);
@@ -2070,22 +2191,22 @@ function _db_error_page($error = '') {
 /**
  * @ingroup database-legacy
  *
- * These functions are no longer necessary, as the DatabaseStatement object
+ * These functions are no longer necessary, as the DatabaseStatementInterface interface
  * offers this and much more functionality.  They are kept temporarily for backward
  * compatibility during conversion and should be removed as soon as possible.
  *
  * @{
  */
 
-function db_fetch_object(DatabaseStatement $statement) {
+function db_fetch_object(DatabaseStatementInterface $statement) {
   return $statement->fetch(PDO::FETCH_OBJ);
 }
 
-function db_fetch_array(DatabaseStatement $statement) {
+function db_fetch_array(DatabaseStatementInterface $statement) {
   return $statement->fetch(PDO::FETCH_ASSOC);
 }
 
-function db_result(DatabaseStatement $statement) {
+function db_result(DatabaseStatementInterface $statement) {
   return $statement->fetchField();
 }
 

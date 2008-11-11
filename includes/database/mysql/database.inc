@@ -62,10 +62,6 @@ class DatabaseConnection_mysql extends DatabaseConnection {
     return $this->transactionSupport;
   }
 
-  public function escapeTable($table) {
-    return preg_replace('/[^A-Za-z0-9_]+/', '', $table);
-  }
-
   public function mapConditionOperator($operator) {
     // We don't want to override any of the defaults.
     return NULL;

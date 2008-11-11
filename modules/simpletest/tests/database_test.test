@@ -212,7 +212,7 @@ class DatabaseFetchTestCase extends DatabaseTestCase {
 
     $records = array();
     $result = db_query("SELECT name FROM {test} WHERE age = :age", array(':age' => 25));
-    $this->assertTrue($result instanceof DatabaseStatement, t('Result set is a Drupal statement object.'));
+    $this->assertTrue($result instanceof DatabaseStatementInterface, t('Result set is a Drupal statement object.'));
     foreach ($result as $record) {
       $records[] = $record;
       $this->assertTrue(is_object($record), t('Record is an object.'));
