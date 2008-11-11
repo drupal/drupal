@@ -111,6 +111,8 @@ Drupal 6.0, 2008-02-13
       ported to the correct core API version.
     * Can now specify the minimum PHP version required for a module within the
       .info file.
+    * Drupal core no longer requires CREATE TEMPORARY TABLES or LOCK TABLES
+      database rights.
     * Dynamically check password strength and confirmation.
     * Refactored poll administration.
     * Implemented drag-and-drop positioning for blocks, menu items, taxonomy
