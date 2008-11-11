@@ -1398,12 +1398,12 @@ function system_get_module_admin_tasks($module) {
   $admin_tasks = array();
   $admin_task_count = 0;
   // Check for permissions.
-  if (module_hook($module, 'perm') && $admin_access) {
+  if (in_array($module, module_implements('perm')) && $admin_access) {
     $admin_tasks[-1] = l(t('Configure permissions'), 'admin/user/permissions', array('fragment' => 'module-' . $module));
   }
 
   // Check for menu items that are admin links.
-  if ($menu = module_invoke($module, 'menu')) {
+  if (in_array($module, module_implements('menu')) && $menu = module_invoke($module, 'menu')) {
     foreach (array_keys($menu) as $path) {
       if (isset($items[$path])) {
         $admin_tasks[$items[$path]['title'] . $admin_task_count ++] = l($items[$path]['title'], $path);

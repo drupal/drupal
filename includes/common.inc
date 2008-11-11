@@ -1641,7 +1641,7 @@ function drupal_page_footer() {
   module_invoke_all('exit');
 
   module_implements(MODULE_IMPLEMENTS_WRITE_CACHE);
-  registry_cache_path_files();
+  _registry_check_code(REGISTRY_WRITE_LOOKUP_CACHE);
 }
 
 /**

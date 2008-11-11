@@ -239,7 +239,7 @@ function _block_rehash() {
   // Valid region names for the theme.
   $regions = system_region_list($theme_key);
 
-  foreach (module_list() as $module) {
+  foreach (module_implements('block') as $module) {
     $module_blocks = module_invoke($module, 'block', 'list');
     if ($module_blocks) {
       foreach ($module_blocks as $delta => $block) {

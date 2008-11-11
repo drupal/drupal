@@ -207,6 +207,16 @@ define('CHECK_PLAIN', 0);
 define('PASS_THROUGH', -1);
 
 /**
+ * Signals that the registry lookup cache should be reset. 
+ */
+define('REGISTRY_RESET_LOOKUP_CACHE', 1);
+
+/**
+ * Signals that the registry lookup cache should be written to storage. 
+ */
+define('REGISTRY_WRITE_LOOKUP_CACHE', 2);
+
+/**
  * @} End of "Title text filtering flags".
  */
 
@@ -655,7 +665,7 @@ function page_get_cache() {
  *   The name of the bootstrap hook we wish to invoke.
  */
 function bootstrap_invoke_all($hook) {
-  foreach (module_list(TRUE, TRUE) as $module) {
+  foreach (module_implements($hook) as $module) {
     module_invoke($module, $hook);
   }
 }
@@ -1412,7 +1422,6 @@ function drupal_function_exists($function) {
   $checked[$function] = FALSE;
 
   if (function_exists($function)) {
-    registry_mark_code('function', $function);
     $checked[$function] = TRUE;
     return TRUE;
   }
@@ -1456,8 +1465,52 @@ function drupal_autoload_class($class) {
 
 /**
  * Helper to check for a resource in the registry.
+ *
+ * @param $type
+ *   The type of resource we are looking up, or one of the constants 
+ *   REGISTRY_RESET_LOOKUP_CACHE or REGISTRY_WRITE_LOOKUP_CACHE, which
+ *   signal that we should reset or write the cache, respectively.
+ * @param $name
+ *   The name of the resource, or NULL if either of the REGISTRY_* constants
+ *   is passed in.
+ * @return
+ *   TRUE if the resource was found, FALSE if not.
+ *   NULL if either of the REGISTRY_* constants is passed in as $type.
  */
-function _registry_check_code($type, $name) {
+function _registry_check_code($type, $name = NULL) {
+  static $lookup_cache, $cache_update_needed;
+
+  if (!isset($lookup_cache)) {
+    $lookup_cache = _registry_get_lookup_cache();
+  }
+  
+  // When we rebuild the registry, we need to reset this cache so
+  // we don't keep lookups for resources that changed during the rebuild.
+  if ($type == REGISTRY_RESET_LOOKUP_CACHE) {
+    $cache_update_needed = TRUE;
+    $lookup_cache = NULL;
+    return;
+  }
+
+  // Called from drupal_page_footer, we write to permanent storage if there
+  // changes to the lookup cache for this request.
+  if ($type == REGISTRY_WRITE_LOOKUP_CACHE) {
+    if ($cache_update_needed) {
+      _registry_set_lookup_cache($lookup_cache);
+    }
+    return;
+  }
+  
+  // $type can be one of 'function', 'interface' or 'class', so we only need the 
+  // first letter to keep the cache key unique.
+  $cache_key = $type[0] . $name;
+  if (isset($lookup_cache[$cache_key])) {
+    if ($lookup_cache[$cache_key]) {
+      require_once DRUPAL_ROOT . '/' . $lookup_cache[$cache_key];
+    }
+    return $lookup_cache[$cache_key];
+  }
+  
   // This function may get called when the default database is not active, but
   // there is no reason we'd ever want to not use the default database for
   // this query.
@@ -1466,38 +1519,20 @@ function _registry_check_code($type, $name) {
       ':type' => $type,
     ))
     ->fetchField();
+
+  // Flag that we've run a lookup query and need to update the cache.
+  $cache_update_needed = TRUE;
+
+  // Misses are valuable information worth caching, so cache even if
+  // $file is FALSE.
+  $lookup_cache[$cache_key] = $file;
+
   if ($file) {
     require_once DRUPAL_ROOT . '/' . $file;
-    registry_mark_code($type, $name);
     return TRUE;
   }
-  return FALSE;
-}
-
-/**
- * Collect the resources used for this request.
- *
- * @param $type
- *   The type of resource.
- * @param $name
- *   The name of the resource.
- * @param $return
- *   Boolean flag to indicate whether to return the resources.
- */
-function registry_mark_code($type, $name, $return = FALSE) {
-  static $resources = array();
-
-  if ($type && $name) {
-    if (!isset($resources[$type])) {
-      $resources[$type] = array();
-    }
-    if (!in_array($name, $resources[$type])) {
-      $resources[$type][] = $name;
-    }
-  }
-
-  if ($return) {
-    return $resources;
+  else {
+    return FALSE;
   }
 }
 
@@ -1513,60 +1548,35 @@ function registry_rebuild() {
 }
 
 /**
- * Save the files required by the registry for this path.
+ * Wrapper function to perform array to string conversion of lookup cache.
  */
-function registry_cache_path_files() {
-  if ($used_code = registry_mark_code(NULL, NULL, TRUE)) {
-    $files = array();
-    $type_sql = array();
-    $params = array();
-
-    // This function may get called when the default database is not active, but
-    // there is no reason we'd ever want to not use the default database for
-    // this query.
-    $select = Database::getConnection('default')->select('registry')->distinct();
-    $select->addField('registry', 'filename');
-
-    // This creates a series of 2-clause AND conditions that are then ORed together.
-    $ors = db_or();
-    foreach ($used_code as $type => $names) {
-      $and = db_and()
-        ->condition('name', $names, 'IN')
-        ->condition('type', $type);
-      $ors->condition($and);
-    }
-    $select->condition($ors);
-    $files = $select->execute()->fetchCol();
-
-    if ($files) {
-      sort($files);
-      // Only write this to cache if the file list we are going to cache
-      // is different to what we loaded earlier in the request.
-      if ($files != registry_load_path_files(TRUE)) {
-        $menu = menu_get_item();
-        cache_set('registry:' . $menu['path'], implode(';', $files), 'cache_registry');
-      }
-    }
+function _registry_set_lookup_cache(array $lookup_cache) {
+  // Cache a string, not an array, so we can avoid the memory usage hit 
+  // from serialize() in the cache system.
+  $key_value_pairs = array();
+  foreach ($lookup_cache as $key => $value) {
+    $key_value_pairs[] =  "$key|" . ($value ? $value : '');
   }
+  return cache_set('lookup_cache', implode(';', $key_value_pairs), 'cache_registry');
 }
 
 /**
- * registry_load_path_files
+ * Wrapper function to perform string to array conversion of lookup cache.
  */
-function registry_load_path_files($return = FALSE) {
-  static $file_cache_data = array();
-  if ($return) {
-    sort($file_cache_data);
-    return $file_cache_data;
-  }
-  $menu = menu_get_item();
-  $cache = cache_get('registry:' . $menu['path'], 'cache_registry');
-  if (!empty($cache->data)) {
-    foreach(explode(';', $cache->data) as $file) {
-      require_once DRUPAL_ROOT . '/' . $file;
-      $file_cache_data[] = $file;
+function _registry_get_lookup_cache() {
+  // In _registry_set_lookup_cache, we cache a string, not an array, to avoid 
+  // serialize() in the cache system. serialize() makes a copy, and thus uses
+  // extra memory, which we are trying to avoid.
+  $lookup_cache = array();
+  if ($cache = cache_get('lookup_cache', 'cache_registry')) {
+    // Each item is separated by ';'.
+    foreach (explode(';', $cache->data) as $lookup) {
+      // Key value pairs are separated by '|'.
+      list($resource, $result) = explode('|', $lookup);
+      $lookup_cache[$resource] = $result;
     }
   }
+  return $lookup_cache;
 }
 
 /**

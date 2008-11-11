@@ -1917,7 +1917,7 @@ function user_help($path, $arg) {
 function _user_categories($account) {
   $categories = array();
 
-  foreach (module_list() as $module) {
+  foreach (module_implements('user_categories') as $module) {
     if ($data = module_invoke($module, 'user_categories', NULL, $account, '')) {
       $categories = array_merge($data, $categories);
     }

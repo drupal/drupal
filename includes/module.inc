@@ -90,7 +90,7 @@ function module_list($refresh = FALSE, $bootstrap = TRUE, $sort = FALSE, $fixed_
  *   The array of filesystem objects used to rebuild the cache.
  */
 function module_rebuild_cache() {
-  // Get current list of modules
+  // Get current list of modules, including uninstalled modules.
   $files = drupal_system_listing('/\.module$/', 'modules', 'name', 0);
 
   // Extract current files from database.
@@ -128,7 +128,8 @@ function module_rebuild_cache() {
     // Log the critical hooks implemented by this module.
     $bootstrap = 0;
     foreach (bootstrap_hooks() as $hook) {
-      if (module_hook($file->name, $hook)) {
+      // Only look for hooks in installed modules.
+      if (!empty($file->status) && in_array($file->name, module_implements($hook))) {
         $bootstrap = 1;
         break;
       }
