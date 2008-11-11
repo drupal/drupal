@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.285 2008/11/02 10:52:53 dries Exp $
+// $Id: CHANGELOG.txt,v 1.286 2008/11/11 20:25:01 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -111,6 +111,8 @@ Drupal 6.0, 2008-02-13
       ported to the correct core API version.
     * Can now specify the minimum PHP version required for a module within the
       .info file.
+    * Drupal core no longer requires CREATE TEMPORARY TABLES or LOCK TABLES
+      database rights.
     * Dynamically check password strength and confirmation.
     * Refactored poll administration.
     * Implemented drag-and-drop positioning for blocks, menu items, taxonomy
