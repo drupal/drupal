@@ -154,13 +154,11 @@ function menu_theme() {
  */
 function menu_enable() {
   menu_rebuild();
-  $base_link = db_fetch_array(db_query("SELECT mlid AS plid, menu_name from {menu_links} WHERE link_path = 'admin/build/menu' AND module = 'system'"));
-  $base_link['router_path'] = 'admin/build/menu-customize/%';
-  $base_link['module'] = 'menu';
+  $link = db_fetch_array(db_query("SELECT mlid AS plid, menu_name from {menu_links} WHERE link_path = 'admin/build/menu' AND module = 'system'"));
+  $link['router_path'] = 'admin/build/menu-customize/%';
+  $link['module'] = 'menu';
   $result = db_query("SELECT * FROM {menu_custom}");
   while ($menu = db_fetch_array($result)) {
-    // $link is passed by reference to menu_link_save(), so we make a copy of $base_link.
-    $link = $base_link;
     $link['mlid'] = 0;
     $link['link_title'] = $menu['title'];
     $link['link_path'] = 'admin/build/menu-customize/' . $menu['menu_name'];
