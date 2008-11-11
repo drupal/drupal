@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.193 2008/11/11 16:49:37 dries Exp $
+// $Id: locale.inc,v 1.194 2008/11/11 20:22:17 dries Exp $
 
 /**
  * @file
@@ -1046,7 +1046,7 @@ function _locale_import_po($file, $langcode, $mode, $group = NULL) {
  */
 function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL, $group = 'default') {
 
-  $fd = fopen(DRUPAL_ROOT . '/' . $file->filepath, "rb"); // File will get closed by PHP on return
+  $fd = fopen($file->filepath, "rb"); // File will get closed by PHP on return
   if (!$fd) {
     _locale_import_message('The translation import failed, because the file %filename could not be read.', $file);
     return FALSE;
