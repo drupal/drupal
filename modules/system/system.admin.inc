@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.103 2008/11/10 05:23:00 webchick Exp $
+// $Id: system.admin.inc,v 1.104 2008/11/11 22:39:59 dries Exp $
 
 /**
  * @file
@@ -657,7 +657,7 @@ function system_modules($form_state = array()) {
       }
     }
     // Generate link for module's help page, if there is one.
-    if ($help_arg && module_hook($filename, 'help')) {
+    if ($help_arg && $module->status && in_array($filename, module_implements('help'))) {
       if (module_invoke($filename, 'help', "admin/help#$filename", $help_arg)) {
         // Module has a help page.
         $extra['help'] = theme('more_help_link', url("admin/help/$filename"));

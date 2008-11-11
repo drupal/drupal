@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.31 2008/11/10 05:23:01 webchick Exp $
+// $Id: user.admin.inc,v 1.32 2008/11/11 22:39:59 dries Exp $
 
 /**
  * @file
@@ -510,7 +510,7 @@ function user_admin_perm($form_state, $rid = NULL) {
   // Render role/permission overview:
   $options = array();
   $hide_descriptions = !system_admin_compact_mode();
-  foreach (module_list(FALSE, FALSE, TRUE) as $module) {
+  foreach (module_implements('perm') as $module) {
     if ($permissions = module_invoke($module, 'perm')) {
       $form['permission'][] = array(
         '#markup' => $module,

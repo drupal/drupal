@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.303 2008/11/11 18:15:00 webchick Exp $
+// $Id: menu.inc,v 1.304 2008/11/11 22:39:58 dries Exp $
 
 /**
  * @file
@@ -393,7 +393,6 @@ function menu_execute_active_handler($path = NULL) {
     menu_rebuild();
   }
   if ($router_item = menu_get_item($path)) {
-    registry_load_path_files();
     if ($router_item['access']) {
       if (drupal_function_exists($router_item['page_callback'])) {
         return call_user_func_array($router_item['page_callback'], $router_item['page_arguments']);

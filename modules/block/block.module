@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.313 2008/11/08 20:43:54 dries Exp $
+// $Id: block.module,v 1.314 2008/11/11 22:39:59 dries Exp $
 
 /**
  * @file
@@ -239,7 +239,7 @@ function _block_rehash() {
   // Valid region names for the theme.
   $regions = system_region_list($theme_key);
 
-  foreach (module_list() as $module) {
+  foreach (module_implements('block') as $module) {
     $module_blocks = module_invoke($module, 'block', 'list');
     if ($module_blocks) {
       foreach ($module_blocks as $delta => $block) {
