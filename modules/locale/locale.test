@@ -114,3 +114,85 @@ class LocaleTestCase extends DrupalWebTestCase {
     $this->assertNoText($name, 'Search now can not find the name');
   }
 }
+
+/**
+ * Functional tests for the import of translation files.
+ */
+class LocaleImportFunctionalTest extends DrupalWebTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => t('Translation import'),
+      'description' => t('Tests the importation of locale files.'),
+      'group' => t('Locale'),
+    );
+  }
+
+  /**
+   * A user able to create languages and import translations.
+   */
+  protected $admin_user = NULL;
+
+  function setUp() {
+    parent::setUp('locale');
+
+    $this->admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages'));
+    $this->drupalLogin($this->admin_user);
+  }
+
+  /**
+   * Test importation of standalone .po files.
+   */
+  function testStandalonePoFile() {
+    // Try importing a .po file.
+    $name = tempnam(file_directory_temp(), "po_");
+    file_put_contents($name, $this->getPoFile());
+    $this->drupalPost('admin/build/translate/import', array(
+      'langcode' => 'fr',
+      'files[file]' => $name,
+    ), t('Import'));
+    unlink($name);
+
+    // The importation should automatically create the corresponding language.
+    $this->assertRaw(t('The language %language has been created.', array('%language' => 'French')), t('The language has been automatically created'));
+
+    // The importation should have create 7 strings.
+    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 7, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported'));
+  }
+
+  /**
+   * Helper function that returns a proper .po file.
+   */
+  function getPoFile() {
+    return <<< EOF
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 6\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
+
+msgid "Monday"
+msgstr "lundi"
+
+msgid "Tuesday"
+msgstr "mardi"
+
+msgid "Wednesday"
+msgstr "mercredi"
+
+msgid "Thursday"
+msgstr "jeudi"
+
+msgid "Friday"
+msgstr "vendredi"
+
+msgid "Saturday"
+msgstr "samedi"
+
+msgid "Sunday"
+msgstr "dimanche"
+EOF;
+  }
+}
