@@ -24,7 +24,7 @@ class MenuTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('menu');
     // Create users.
-    $this->big_user = $this->drupalCreateUser(array('administer blocks', 'administer menu', 'create article content'));
+    $this->big_user = $this->drupalCreateUser(array('access administration pages', 'administer blocks', 'administer menu', 'create article content'));
     $this->std_user = $this->drupalCreateUser(array());
   }
 

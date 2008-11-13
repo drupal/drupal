@@ -1911,7 +1911,9 @@ function menu_link_save(&$item) {
   );
   $existing_item = FALSE;
   if (isset($item['mlid'])) {
-    $existing_item = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE mlid = %d", $item['mlid']));
+    if ($existing_item = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE mlid = %d", $item['mlid']))) {
+      $existing_item['options'] = unserialize($existing_item['options']);
+    }
   }
 
   if (isset($item['plid'])) {
@@ -2016,7 +2018,6 @@ function menu_link_save(&$item) {
       $item['router_path'] = _menu_find_router_path($menu, $item['link_path']);
     }
   }
-  $item['options'] = serialize($item['options']);
   // If every value in $existing_item is the same in the $item, there is no
   // reason to run the update queries or clear the caches. We use
   // array_diff_assoc() with the $existing_item as the first parameter
@@ -2032,7 +2033,7 @@ function menu_link_save(&$item) {
       $item['router_path'], $item['hidden'], $item['external'], $item['has_children'],
       $item['expanded'], $item['weight'],  $item['depth'],
       $item['p1'], $item['p2'], $item['p3'], $item['p4'], $item['p5'], $item['p6'], $item['p7'], $item['p8'], $item['p9'],
-      $item['module'],  $item['link_title'], $item['options'], $item['customized'], $item['mlid']);
+      $item['module'],  $item['link_title'], serialize($item['options']), $item['customized'], $item['mlid']);
     // Check the has_children status of the parent.
     _menu_update_parental_status($item);
     menu_cache_clear($menu_name);
