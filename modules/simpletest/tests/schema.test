@@ -1,0 +1,97 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Tests for the Database Schema API.
+ */
+
+/**
+ * Unit tests for the Schema API.
+ */
+class SchemaTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Schema API'),
+      'description' => t('Tests table creation and modification via the schema API.'),
+      'group' => t('Database'),
+    );
+  }
+
+  /**
+   * 
+   */
+  function testSchema() {
+    // Try creating a table.
+    $table_name = 'test';
+    $table_specification = array(
+      'fields' => array(
+        'id'  => array(
+          'type' => 'int',
+          'default' => NULL,
+        ),
+        'test'  => array(
+          'type' => 'int',
+          'not null' => TRUE,
+        ),
+      ),
+    );
+    $ret = array();
+    db_create_table($ret, $table_name, $table_specification);
+
+    // Assert that the table exists.
+    $this->assertTrue(db_table_exists($table_name), t('The table exists.'));
+
+    // An insert without a value for the column 'test' should fail.
+    $field_name = 'test';
+    $this->assertFalse($this->tryInsert(), t('Insert without a default failed.'));
+
+    // Add a default value to the column.
+    db_field_set_default($ret, $table_name, $field_name, 0);
+    // The insert should now succeed.
+    $this->assertTrue($this->tryInsert(), t('Insert with a default succeeded.'));
+
+    // Remove the default.
+    db_field_set_no_default($ret, $table_name, $field_name);
+    // The insert should fail again.
+    $this->assertFalse($this->tryInsert(), t('Insert without a default failed.'));
+
+    // Rename the table.
+    db_rename_table($ret, $table_name, $table_name . '_test');
+    // We need the default so that we can insert after the rename.
+    db_field_set_default($ret, $table_name . '_test', $field_name, 0);
+    $this->assertFalse($this->tryInsert(), t('Insert into the old table failed.'));
+    $this->assertTrue($this->tryInsert('_test'), t('Insert into the new table succeeded.'));
+
+    // Try to drop the table.
+    db_drop_table($ret, $table_name . '_test');
+    $this->assertFalse(db_table_exists($table_name . '_test'), t('The renamed table does not exist.'));
+
+    // Recreate the table.
+    db_create_table($ret, $table_name, $table_specification);
+    db_field_set_default($ret, $table_name, $field_name, 0);
+    db_add_field($ret, $table_name, 'test2', array('type' => 'int', 'not null' => TRUE, 'default' => 0));
+
+    // Change the new field to a serial column.
+    db_change_field($ret, $table_name, 'test2', 'test2', array('type' => 'serial', 'not null' => TRUE), array('primary key' => array('test2')));
+
+    $this->assertTrue($this->tryInsert(), t('Insert with a serial succeeded.'));
+    $max1 = db_query('SELECT MAX(test2) FROM test')->fetchField();
+    $this->assertTrue($this->tryInsert(), t('Insert with a serial succeeded.'));
+    $max2 = db_query('SELECT MAX(test2) FROM test')->fetchField();
+    $this->assertTrue($max2 > $max1, t('The serial is monotone.'));
+
+    $count = db_query('SELECT COUNT(test2) FROM test')->fetchField();
+    $this->assertEqual($count, 2, t('There were two rows.'));
+  }
+
+  function tryInsert($tablepostfix = '') {
+    try {
+      db_query("INSERT INTO {test$tablepostfix} (id) VALUES (:id)", array(':id' => mt_rand(10,20)));
+      return TRUE;
+    }
+    catch (Exception $e) {
+      return FALSE;
+    }
+  }
+}
