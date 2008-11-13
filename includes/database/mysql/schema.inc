@@ -92,9 +92,13 @@ class DatabaseSchema_mysql extends DatabaseSchema {
       $sql .= ' auto_increment';
     }
 
-    if (isset($spec['default'])) {
+    // $spec['default'] can be NULL, so we explicitely check for the key here.
+    if (array_key_exists('default', $spec)) {
       if (is_string($spec['default'])) {
         $spec['default'] = "'" . $spec['default'] . "'";
+      }
+      elseif (is_null($spec['default'])) {
+        $spec['default'] = 'NULL';
       }
       $sql .= ' DEFAULT ' . $spec['default'];
     }
@@ -259,7 +263,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function fieldSetDefault(&$ret, $table, $field, $default) {
-    if ($default == NULL) {
+    if (is_null($default)) {
       $default = 'NULL';
     }
     else {
