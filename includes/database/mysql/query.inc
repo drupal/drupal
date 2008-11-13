@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.5 2008/11/08 04:18:08 webchick Exp $
+// $Id: query.inc,v 1.6 2008/11/13 21:08:15 dries Exp $
 
 /**
  * @ingroup database
@@ -14,6 +14,10 @@ class InsertQuery_mysql extends InsertQuery {
     //  field and default field.
     if (array_intersect($this->insertFields, $this->defaultFields)) {
       throw new PDOException('You may not specify the same field to have a value and a schema-default value.');
+    }
+
+    if (count($this->insertFields) + count($this->defaultFields) == 0) {
+      return NULL;
     }
 
     $last_insert_id = 0;

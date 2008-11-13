@@ -382,7 +382,9 @@ class InsertQuery extends Query {
    *   was given multiple sets of values to insert, the return value is
    *   undefined.  If the query is flagged "delayed", then the insert ID
    *   won't be created until later when the query actually runs so the
-   *   return value is also undefined.
+   *   return value is also undefined. If no fields are specified, this
+   *   method will do nothing and return NULL. That makes it safe to use
+   *   in multi-insert loops.
    */
   public function execute() {
 
@@ -392,6 +394,10 @@ class InsertQuery extends Query {
     //  field and default field.
     if (array_intersect($this->insertFields, $this->defaultFields)) {
       throw new PDOException('You may not specify the same field to have a value and a schema-default value.');
+    }
+
+    if (count($this->insertFields) + count($this->defaultFields) == 0) {
+      return NULL;
     }
 
     // Each insert happens in its own query in the degenerate case.  However,

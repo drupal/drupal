@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.4 2008/11/08 04:18:08 webchick Exp $
+// $Id: query.inc,v 1.5 2008/11/13 21:08:16 dries Exp $
 
 
 /**
@@ -20,6 +20,10 @@ class InsertQuery_pgsql extends InsertQuery {
     //  field and default field.
     if (array_intersect($this->insertFields, $this->defaultFields)) {
       throw new PDOException('You may not specify the same field to have a value and a schema-default value.');
+    }
+
+    if (count($this->insertFields) + count($this->defaultFields) == 0) {
+      return NULL;
     }
 
     $schema = drupal_get_schema($this->table);

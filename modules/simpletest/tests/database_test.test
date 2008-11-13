@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.18 2008/11/13 21:02:10 dries Exp $
+// $Id: database_test.test,v 1.19 2008/11/13 21:08:16 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -556,6 +556,24 @@ class DatabaseInsertDefaultsTestCase extends DatabaseTestCase {
 
       $job = db_query("SELECT job FROM {test} WHERE id = :id", array(':id' => $id))->fetchField();
       $this->assertEqual($job, $schema['fields']['job']['default'], t('Default field value is set.'));
+    }
+    catch (Exception $e) {
+      $this->assertTrue(FALSE, $e->getMessage());
+    }
+  }
+
+  /**
+   * Test that no action will be preformed if no fields are specified.
+   */
+  function testDefaultEmptyInsert() {
+    try {
+      $num_records_before = (int) db_query("SELECT COUNT(*) FROM {test}")->fetchField();
+
+      $result = db_insert('test')->execute();
+      $this->assertNull($result, t('Return NULL as no fields are specified.'));
+
+      $num_records_after = (int) db_query("SELECT COUNT(*) FROM {test}")->fetchField();
+      $this->assertIdentical($num_records_before, $num_records_after, t('Do nothing as no fields are specified.'));
     }
     catch (Exception $e) {
       $this->assertTrue(FALSE, $e->getMessage());
