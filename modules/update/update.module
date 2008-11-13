@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.26 2008/09/23 19:07:58 webchick Exp $
+// $Id: update.module,v 1.27 2008/11/13 20:27:30 dries Exp $
 
 /**
  * @file
@@ -76,7 +76,6 @@ function update_help($path, $arg) {
           }
         }
       }
-      return '<p>' . t('See the <a href="@available_updates">available updates</a> page for information on installed modules and themes with new versions released.', array('@available_updates' => url('admin/reports/updates'))) . '</p>';
 
     case 'admin/reports/updates/settings':
     case 'admin/reports/status':
