@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.5 2008/11/11 16:49:37 dries Exp $
+// $Id: schema.inc,v 1.6 2008/11/13 20:52:13 dries Exp $
 
 /**
  * @file
@@ -92,9 +92,13 @@ class DatabaseSchema_mysql extends DatabaseSchema {
       $sql .= ' auto_increment';
     }
 
-    if (isset($spec['default'])) {
+    // $spec['default'] can be NULL, so we explicitely check for the key here.
+    if (array_key_exists('default', $spec)) {
       if (is_string($spec['default'])) {
         $spec['default'] = "'" . $spec['default'] . "'";
+      }
+      elseif (is_null($spec['default'])) {
+        $spec['default'] = 'NULL';
       }
       $sql .= ' DEFAULT ' . $spec['default'];
     }
@@ -259,7 +263,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function fieldSetDefault(&$ret, $table, $field, $default) {
-    if ($default == NULL) {
+    if (is_null($default)) {
       $default = 'NULL';
     }
     else {
