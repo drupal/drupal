@@ -1432,11 +1432,11 @@ function system_modules_confirm_form($modules, $form_values = array()) {
 function system_module_build_dependencies($modules, $form_values) {
   static $dependencies;
 
-  if (!isset($dependencies) && isset($form_values)) {
+  if (!isset($dependencies) && isset($form_values) && is_array($form_values)) {
     $dependencies = array();
     foreach ($modules as $name => $module) {
       // If the module is disabled, will be switched on and it has dependencies.
-      if (!$module->status && $form_values['status'][$name] && isset($module->info['dependencies'])) {
+      if (!$module->status && isset($form_values['status'][$name]) && $form_values['status'][$name] && isset($module->info['dependencies'])) {
         foreach ($module->info['dependencies'] as $dependency) {
           if (!$form_values['status'][$dependency] && isset($modules[$dependency])) {
             if (!isset($dependencies[$name])) {
