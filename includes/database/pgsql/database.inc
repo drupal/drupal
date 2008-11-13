@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.8 2008/11/11 20:37:46 dries Exp $
+// $Id: database.inc,v 1.9 2008/11/13 21:02:10 dries Exp $
 
 /**
  * @file
@@ -75,10 +75,7 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
     }
   }
 
-  public function queryRange($query, Array $args, $from, $count, Array $options) {
-    // Backward compatibility hack, temporary.
-    $query = str_replace(array('%d' , '%f' , '%b' , "'%s'"), '?', $query);
-
+  public function queryRange($query, Array $args, $from, $count, Array $options = array()) {
     return $this->query($query . ' LIMIT ' . $count . ' OFFSET ' . $from, $args, $options);
   }
 

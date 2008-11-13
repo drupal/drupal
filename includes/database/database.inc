@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.26 2008/11/12 08:30:23 dries Exp $
+// $Id: database.inc,v 1.27 2008/11/13 21:02:09 dries Exp $
 
 /**
  * @file
@@ -683,7 +683,7 @@ abstract class DatabaseConnection extends PDO {
    *   A database query result resource, or NULL if the query was not executed
    *   correctly.
    */
-   abstract public function queryRange($query, Array $args, $from, $count, Array $options);
+  abstract public function queryRange($query, Array $args, $from, $count, Array $options = array());
 
   /**
    * Runs a SELECT query and stores its results in a temporary table.

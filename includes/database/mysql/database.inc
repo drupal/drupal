@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.6 2008/11/11 20:37:45 dries Exp $
+// $Id: database.inc,v 1.7 2008/11/13 21:02:09 dries Exp $
 
 /**
  * @file
@@ -39,10 +39,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
     $this->exec('SET sql_mode=STRICT_ALL_TABLES');
   }
 
-  public function queryRange($query, Array $args, $from, $count, Array $options) {
-    // Backward compatibility hack, temporary.
-    $query = str_replace(array('%d' , '%f' , '%b' , "'%s'"), '?', $query);
-
+  public function queryRange($query, Array $args, $from, $count, Array $options = array()) {
     return $this->query($query . ' LIMIT ' . $from . ', ' . $count, $args, $options);
   }
 
