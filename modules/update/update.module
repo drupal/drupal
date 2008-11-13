@@ -76,7 +76,6 @@ function update_help($path, $arg) {
           }
         }
       }
-      return '<p>' . t('See the <a href="@available_updates">available updates</a> page for information on installed modules and themes with new versions released.', array('@available_updates' => url('admin/reports/updates'))) . '</p>';
 
     case 'admin/reports/updates/settings':
     case 'admin/reports/status':
