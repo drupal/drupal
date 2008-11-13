@@ -595,6 +595,9 @@ class TermEditTestCase extends DrupalWebTestCase {
       'name' => $this->randomName(12),
       'description' => $this->randomName(100),
     );
+    // Explictly set the parents field to 'root', to ensure that
+    // taxonomy_form_term_submit() handles the invalid term ID correctly.
+    $edit['parent[]'] = 0;
 
     // Create the term to edit (adding to the default 'Tags' vocabulary).
     $this->drupalPost('admin/content/taxonomy/1/add/', $edit, t('Save'));

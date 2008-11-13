@@ -766,7 +766,7 @@ function taxonomy_form_term_submit($form, &$form_state) {
     $current_parent_count = count($form_state['values']['parent']);
     $previous_parent_count = count($form['#term']['parent']);
     // Root doesn't count if it's the only parent.
-    if ($current_parent_count == 1 && isset($form_state['values']['parent'][''])) {
+    if ($current_parent_count == 1 && isset($form_state['values']['parent'][0])) {
       $current_parent_count = 0;
       $form_state['values']['parent'] = array();
     }

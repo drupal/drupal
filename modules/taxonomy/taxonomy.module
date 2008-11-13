@@ -1089,7 +1089,7 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
   $options = array();
 
   if ($blank) {
-    $options[''] = $blank;
+    $options[0] = $blank;
   }
   if ($tree) {
     foreach ($tree as $term) {
