@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.441 2008/11/11 16:49:38 dries Exp $
+// $Id: taxonomy.module,v 1.442 2008/11/13 08:13:56 webchick Exp $
 
 /**
  * @file
@@ -1089,7 +1089,7 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
   $options = array();
 
   if ($blank) {
-    $options[''] = $blank;
+    $options[0] = $blank;
   }
   if ($tree) {
     foreach ($tree as $term) {
