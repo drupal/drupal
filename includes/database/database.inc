@@ -683,7 +683,7 @@ abstract class DatabaseConnection extends PDO {
    *   A database query result resource, or NULL if the query was not executed
    *   correctly.
    */
-   abstract public function queryRange($query, Array $args, $from, $count, Array $options);
+  abstract public function queryRange($query, Array $args, $from, $count, Array $options = array());
 
   /**
    * Runs a SELECT query and stores its results in a temporary table.

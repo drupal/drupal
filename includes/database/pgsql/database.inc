@@ -75,10 +75,7 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
     }
   }
 
-  public function queryRange($query, Array $args, $from, $count, Array $options) {
-    // Backward compatibility hack, temporary.
-    $query = str_replace(array('%d' , '%f' , '%b' , "'%s'"), '?', $query);
-
+  public function queryRange($query, Array $args, $from, $count, Array $options = array()) {
     return $this->query($query . ' LIMIT ' . $count . ' OFFSET ' . $from, $args, $options);
   }
 
