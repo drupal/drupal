@@ -22,6 +22,10 @@ class InsertQuery_pgsql extends InsertQuery {
       throw new PDOException('You may not specify the same field to have a value and a schema-default value.');
     }
 
+    if (count($this->insertFields) + count($this->defaultFields) == 0) {
+      return NULL;
+    }
+
     $schema = drupal_get_schema($this->table);
 
     $stmt = $this->connection->prepareQuery((string)$this);

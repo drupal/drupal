@@ -16,6 +16,10 @@ class InsertQuery_mysql extends InsertQuery {
       throw new PDOException('You may not specify the same field to have a value and a schema-default value.');
     }
 
+    if (count($this->insertFields) + count($this->defaultFields) == 0) {
+      return NULL;
+    }
+
     $last_insert_id = 0;
 
     $max_placeholder = 0;
