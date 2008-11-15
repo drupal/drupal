@@ -750,7 +750,15 @@ function profile_validate_profile($edit, $category) {
 }
 
 function profile_categories() {
-  $result = db_query("SELECT DISTINCT(category) FROM {profile_fields}");
+  // Hide hidden profile fields from users that don't have permission to administer users.
+  // For these users, categories with only hidden profile fields will not be returned.
+  if (user_access('administer users')) {
+    $result = db_query("SELECT DISTINCT(category) FROM {profile_fields}");
+  }
+  else {
+    $result = db_query("SELECT DISTINCT(category) FROM {profile_fields} WHERE visibility <> %d", PROFILE_HIDDEN);
+  }
+
   while ($category = db_fetch_object($result)) {
     $data[] = array('name' => $category->category, 'title' => $category->category, 'weight' => 3);
   }
