@@ -159,8 +159,8 @@ function sess_gc($lifetime) {
  *
  * @param $status
  *   Disables writing of session data when FALSE, (re-)enables writing when TRUE.
- *
- * @return FALSE if writing session data has been disabled. Otherwise, TRUE.
+ * @return
+ *   FALSE if writing session data has been disabled. Otherwise, TRUE.
  */
 function session_save_session($status = NULL) {
   static $save_session = TRUE;
