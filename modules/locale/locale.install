@@ -226,80 +226,80 @@ function locale_uninstall() {
  */
 function locale_schema() {
   $schema['languages'] = array(
-    'description' => t('List of all available languages in the system.'),
+    'description' => 'List of all available languages in the system.',
     'fields' => array(
       'language' => array(
         'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,
         'default' => '',
-        'description' => t("Language code, e.g. 'de' or 'en-US'."),
+        'description' => "Language code, e.g. 'de' or 'en-US'.",
       ),
       'name' => array(
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Language name in English.'),
+        'description' => 'Language name in English.',
       ),
       'native' => array(
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Native language name.'),
+        'description' => 'Native language name.',
       ),
       'direction' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Direction of language (Left-to-Right = 0, Right-to-Left = 1).'),
+        'description' => 'Direction of language (Left-to-Right = 0, Right-to-Left = 1).',
       ),
       'enabled' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Enabled flag (1 = Enabled, 0 = Disabled).'),
+        'description' => 'Enabled flag (1 = Enabled, 0 = Disabled).',
       ),
       'plurals' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Number of plural indexes in this language.'),
+        'description' => 'Number of plural indexes in this language.',
       ),
       'formula' => array(
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Plural formula in PHP code to evaluate to get plural indexes.'),
+        'description' => 'Plural formula in PHP code to evaluate to get plural indexes.',
       ),
       'domain' => array(
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Domain to use for this language.'),
+        'description' => 'Domain to use for this language.',
       ),
       'prefix' => array(
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Path prefix to use for this language.'),
+        'description' => 'Path prefix to use for this language.',
       ),
       'weight' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Weight, used in lists of languages.'),
+        'description' => 'Weight, used in lists of languages.',
       ),
       'javascript' => array(
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Location of JavaScript translation file.'),
+        'description' => 'Location of JavaScript translation file.',
       ),
     ),
     'primary key' => array('language'),
@@ -309,39 +309,39 @@ function locale_schema() {
   );
 
   $schema['locales_source'] = array(
-    'description' => t('List of English source strings.'),
+    'description' => 'List of English source strings.',
     'fields' => array(
       'lid' => array(
         'type' => 'serial',
         'not null' => TRUE,
-        'description' => t('Unique identifier of this string.'),
+        'description' => 'Unique identifier of this string.',
       ),
       'location' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Drupal path in case of online discovered translations or file path in case of imported strings.'),
+        'description' => 'Drupal path in case of online discovered translations or file path in case of imported strings.',
       ),
       'textgroup' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => 'default',
-        'description' => t('A module defined group of translations, see hook_locale().'),
+        'description' => 'A module defined group of translations, see hook_locale().',
       ),
       'source' => array(
         'type' => 'text',
         'mysql_type' => 'blob',
         'not null' => TRUE,
-        'description' => t('The original string in English.'),
+        'description' => 'The original string in English.',
       ),
       'version' => array(
         'type' => 'varchar',
         'length' => 20,
         'not null' => TRUE,
         'default' => 'none',
-        'description' => t('Version of Drupal, where the string was last used (for locales optimization).'),
+        'description' => 'Version of Drupal, where the string was last used (for locales optimization).',
       ),
     ),
     'primary key' => array('lid'),
@@ -351,38 +351,38 @@ function locale_schema() {
   );
 
   $schema['locales_target'] = array(
-    'description' => t('Stores translated versions of strings.'),
+    'description' => 'Stores translated versions of strings.',
     'fields' => array(
       'lid' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Source string ID. References {locales_source}.lid.'),
+        'description' => 'Source string ID. References {locales_source}.lid.',
       ),
       'translation' => array(
         'type' => 'text',
         'mysql_type' => 'blob',
         'not null' => TRUE,
-        'description' => t('Translation string value in this language.'),
+        'description' => 'Translation string value in this language.',
       ),
       'language' => array(
         'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Language code. References {languages}.language.'),
+        'description' => 'Language code. References {languages}.language.',
       ),
       'plid' => array(
         'type' => 'int',
         'not null' => TRUE, // This should be NULL for no referenced string, not zero.
         'default' => 0,
-        'description' => t('Parent lid (lid of the previous string in the plural chain) in case of plural strings. References {locales_source}.lid.'),
+        'description' => 'Parent lid (lid of the previous string in the plural chain) in case of plural strings. References {locales_source}.lid.',
       ),
       'plural' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Plural index number in case of plural strings.'),
+        'description' => 'Plural index number in case of plural strings.',
       ),
     ),
     'primary key' => array('language', 'lid', 'plural'),

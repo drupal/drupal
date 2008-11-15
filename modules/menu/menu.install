@@ -28,26 +28,26 @@ function menu_uninstall() {
  */
 function menu_schema() {
   $schema['menu_custom'] = array(
-    'description' => t('Holds definitions for top-level custom menus (for example, Main menu).'),
+    'description' => 'Holds definitions for top-level custom menus (for example, Main menu).',
     'fields' => array(
       'menu_name' => array(
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Primary Key: Unique key for menu. This is used as a block delta so length is 32.'),
+        'description' => 'Primary Key: Unique key for menu. This is used as a block delta so length is 32.',
       ),
       'title' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Menu title; displayed at top of block.'),
+        'description' => 'Menu title; displayed at top of block.',
       ),
       'description' => array(
         'type' => 'text',
         'not null' => FALSE,
-        'description' => t('Menu description.'),
+        'description' => 'Menu description.',
       ),
     ),
     'primary key' => array('menu_name'),

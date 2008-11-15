@@ -36,7 +36,7 @@ function update_uninstall() {
  */
 function update_schema() {
   $schema['cache_update'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_update']['description'] = t('Cache table for the Update module to store information about available releases, fetched from central server.');
+  $schema['cache_update']['description'] = 'Cache table for the Update module to store information about available releases, fetched from central server.';
   return $schema;
 }
 

@@ -26,65 +26,65 @@ function search_uninstall() {
  */
 function search_schema() {
   $schema['search_dataset'] = array(
-    'description' => t('Stores items that will be searched.'),
+    'description' => 'Stores items that will be searched.',
     'fields' => array(
       'sid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Search item ID, e.g. node ID for nodes.'),
+        'description' => 'Search item ID, e.g. node ID for nodes.',
       ),
       'type' => array(
         'type' => 'varchar',
         'length' => 16,
         'not null' => FALSE,
-        'description' => t('Type of item, e.g. node.'),
+        'description' => 'Type of item, e.g. node.',
       ),
       'data' => array(
         'type' => 'text',
         'not null' => TRUE,
         'size' => 'big',
-        'description' => t('List of space-separated words from the item.'),
+        'description' => 'List of space-separated words from the item.',
       ),
       'reindex' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Set to force node reindexing.'),
+        'description' => 'Set to force node reindexing.',
       ),
     ),
     'primary key' => array('sid', 'type'),
   );
 
   $schema['search_index'] = array(
-    'description' => t('Stores the search index, associating words, items and scores.'),
+    'description' => 'Stores the search index, associating words, items and scores.',
     'fields' => array(
       'word' => array(
         'type' => 'varchar',
         'length' => 50,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('The {search_total}.word that is associated with the search item.'),
+        'description' => 'The {search_total}.word that is associated with the search item.',
       ),
       'sid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {search_dataset}.sid of the searchable item to which the word belongs.'),
+        'description' => 'The {search_dataset}.sid of the searchable item to which the word belongs.',
       ),
       'type' => array(
         'type' => 'varchar',
         'length' => 16,
         'not null' => FALSE,
-        'description' => t('The {search_dataset}.type of the searchable item to which the word belongs.'),
+        'description' => 'The {search_dataset}.type of the searchable item to which the word belongs.',
       ),
       'score' => array(
         'type' => 'float',
         'not null' => FALSE,
-        'description' => t('The numeric score of the word, higher being more important.'),
+        'description' => 'The numeric score of the word, higher being more important.',
       ),
     ),
     'indexes' => array(
@@ -94,17 +94,17 @@ function search_schema() {
   );
 
   $schema['search_total'] = array(
-    'description' => t('Stores search totals for words.'),
+    'description' => 'Stores search totals for words.',
     'fields' => array(
       'word' => array(
-        'description' => t('Primary Key: Unique word in the search index.'),
+        'description' => 'Primary Key: Unique word in the search index.',
         'type' => 'varchar',
         'length' => 50,
         'not null' => TRUE,
         'default' => '',
       ),
       'count' => array(
-        'description' => t("The count of the word in the index using Zipf's law to equalize the probability distribution."),
+        'description' => "The count of the word in the index using Zipf's law to equalize the probability distribution.",
         'type' => 'float',
         'not null' => FALSE,
       ),
@@ -113,34 +113,34 @@ function search_schema() {
   );
 
   $schema['search_node_links'] = array(
-    'description' => t('Stores items (like nodes) that link to other nodes, used to improve search scores for nodes that are frequently linked to.'),
+    'description' => 'Stores items (like nodes) that link to other nodes, used to improve search scores for nodes that are frequently linked to.',
     'fields' => array(
       'sid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {search_dataset}.sid of the searchable item containing the link to the node.'),
+        'description' => 'The {search_dataset}.sid of the searchable item containing the link to the node.',
       ),
       'type' => array(
         'type' => 'varchar',
         'length' => 16,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('The {search_dataset}.type of the searchable item containing the link to the node.'),
+        'description' => 'The {search_dataset}.type of the searchable item containing the link to the node.',
       ),
       'nid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {node}.nid that this item links to.'),
+        'description' => 'The {node}.nid that this item links to.',
       ),
       'caption' => array(
         'type' => 'text',
         'size' => 'big',
         'not null' => FALSE,
-        'description' => t('The text used to link to the {node}.nid.'),
+        'description' => 'The text used to link to the {node}.nid.',
       ),
     ),
     'primary key' => array('sid', 'type', 'nid'),

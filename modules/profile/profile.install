@@ -24,88 +24,88 @@ function profile_uninstall() {
  */
 function profile_schema() {
   $schema['profile_fields'] = array(
-    'description' => t('Stores profile field information.'),
+    'description' => 'Stores profile field information.',
     'fields' => array(
       'fid' => array(
         'type' => 'serial',
         'not null' => TRUE,
-        'description' => t('Primary Key: Unique profile field ID.'),
+        'description' => 'Primary Key: Unique profile field ID.',
       ),
       'title' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => FALSE,
-        'description' => t('Title of the field shown to the end user.'),
+        'description' => 'Title of the field shown to the end user.',
       ),
       'name' => array(
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Internal name of the field used in the form HTML and URLs.'),
+        'description' => 'Internal name of the field used in the form HTML and URLs.',
       ),
       'explanation' => array(
         'type' => 'text',
         'not null' => FALSE,
-        'description' => t('Explanation of the field to end users.'),
+        'description' => 'Explanation of the field to end users.',
       ),
       'category' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => FALSE,
-        'description' => t('Profile category that the field will be grouped under.'),
+        'description' => 'Profile category that the field will be grouped under.',
       ),
       'page' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => FALSE,
-        'description' => t("Title of page used for browsing by the field's value"),
+        'description' => "Title of page used for browsing by the field's value",
       ),
       'type' => array(
         'type' => 'varchar',
         'length' => 128,
         'not null' => FALSE,
-        'description' => t('Type of form field.'),
+        'description' => 'Type of form field.',
       ),
       'weight' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => t('Weight of field in relation to other profile fields.'),
+        'description' => 'Weight of field in relation to other profile fields.',
       ),
       'required' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => t('Whether the user is required to enter a value. (0 = no, 1 = yes)'),
+        'description' => 'Whether the user is required to enter a value. (0 = no, 1 = yes)',
       ),
       'register' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => t('Whether the field is visible in the user registration form. (1 = yes, 0 = no)'),
+        'description' => 'Whether the field is visible in the user registration form. (1 = yes, 0 = no)',
       ),
       'visibility' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => t('The level of visibility for the field. (0 = hidden, 1 = private, 2 = public on profile but not member list pages, 3 = public on profile and list pages)'),
+        'description' => 'The level of visibility for the field. (0 = hidden, 1 = private, 2 = public on profile but not member list pages, 3 = public on profile and list pages)',
       ),
       'autocomplete' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => t('Whether form auto-completion is enabled. (0 = disabled, 1 = enabled)'),
+        'description' => 'Whether form auto-completion is enabled. (0 = disabled, 1 = enabled)',
       ),
       'options' => array(
         'type' => 'text',
         'not null' => FALSE,
-        'description' => t('List of options to be used in a list selection field.'),
+        'description' => 'List of options to be used in a list selection field.',
       ),
     ),
     'indexes' => array(
@@ -118,26 +118,26 @@ function profile_schema() {
   );
 
   $schema['profile_values'] = array(
-    'description' => t('Stores values for profile fields.'),
+    'description' => 'Stores values for profile fields.',
     'fields' => array(
       'fid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {profile_fields}.fid of the field.'),
+        'description' => 'The {profile_fields}.fid of the field.',
       ),
       'uid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {users}.uid of the profile user.'),
+        'description' => 'The {users}.uid of the profile user.',
       ),
       'value' => array(
         'type' => 'text',
         'not null' => FALSE,
-        'description' => t('The value for the field.'),
+        'description' => 'The value for the field.',
       ),
     ),
     'primary key' => array('uid', 'fid'),

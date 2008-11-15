@@ -6,39 +6,39 @@
  */
 function filter_schema() {
   $schema['filters'] = array(
-    'description' => t('Table that maps filters (HTML corrector) to input formats (Filtered HTML).'),
+    'description' => 'Table that maps filters (HTML corrector) to input formats (Filtered HTML).',
     'fields' => array(
       'fid' => array(
         'type' => 'serial',
         'not null' => TRUE,
-        'description' => t('Primary Key: Auto-incrementing filter ID.'),
+        'description' => 'Primary Key: Auto-incrementing filter ID.',
       ),
       'format' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Foreign key: The {filter_formats}.format to which this filter is assigned.'),
+        'description' => 'Foreign key: The {filter_formats}.format to which this filter is assigned.',
       ),
       'module' => array(
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('The origin module of the filter.'),
+        'description' => 'The origin module of the filter.',
       ),
       'delta' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => t('ID to identify which filter within module is being referenced.'),
+        'description' => 'ID to identify which filter within module is being referenced.',
       ),
       'weight' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => t('Weight of filter within format.'),
+        'description' => 'Weight of filter within format.',
       )
     ),
     'primary key' => array('fid'),
@@ -50,40 +50,40 @@ function filter_schema() {
     ),
   );
   $schema['filter_formats'] = array(
-    'description' => t('Stores input formats: custom groupings of filters, such as Filtered HTML.'),
+    'description' => 'Stores input formats: custom groupings of filters, such as Filtered HTML.',
     'fields' => array(
       'format' => array(
         'type' => 'serial',
         'not null' => TRUE,
-        'description' => t('Primary Key: Unique ID for format.'),
+        'description' => 'Primary Key: Unique ID for format.',
       ),
       'name' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Name of the input format (Filtered HTML).'),
+        'description' => 'Name of the input format (Filtered HTML).',
       ),
       'roles' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('A comma-separated string of roles; references {role}.rid.'), // This is bad since you can't use joins, nor index.
+        'description' => 'A comma-separated string of roles; references {role}.rid.', // This is bad since you can't use joins, nor index.
       ),
       'cache' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => t('Flag to indicate whether format is cachable. (1 = cachable, 0 = not cachable)'),
+        'description' => 'Flag to indicate whether format is cachable. (1 = cachable, 0 = not cachable)',
       ),
       'weight' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => t('Weight of input format to use when listing.'),
+        'description' => 'Weight of input format to use when listing.',
       )
     ),
     'primary key' => array('format'),
@@ -93,7 +93,7 @@ function filter_schema() {
   );
 
   $schema['cache_filter'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_filter']['description'] = t('Cache table for the Filter module to store already filtered pieces of text, identified by input format and md5 hash of the text.');
+  $schema['cache_filter']['description'] = 'Cache table for the Filter module to store already filtered pieces of text, identified by input format and md5 hash of the text.';
 
   return $schema;
 }

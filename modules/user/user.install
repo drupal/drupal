@@ -6,10 +6,10 @@
  */
 function user_schema() {
   $schema['authmap'] = array(
-    'description' => t('Stores distributed authentication mapping.'),
+    'description' => 'Stores distributed authentication mapping.',
     'fields' => array(
       'aid' => array(
-        'description' => t('Primary Key: Unique authmap ID.'),
+        'description' => 'Primary Key: Unique authmap ID.',
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -18,21 +18,21 @@ function user_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t("User's {users}.uid."),
+        'description' => "User's {users}.uid.",
       ),
       'authname' => array(
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Unique authentication name.'),
+        'description' => 'Unique authentication name.',
       ),
       'module' => array(
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Module which is controlling the authentication.'),
+        'description' => 'Module which is controlling the authentication.',
       ),
     ),
     'unique keys' => array(
@@ -42,20 +42,20 @@ function user_schema() {
   );
 
   $schema['role_permission'] = array(
-    'description' => t('Stores the permissions assigned to user roles.'),
+    'description' => 'Stores the permissions assigned to user roles.',
     'fields' => array(
       'rid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => t('Foreign Key: {role}.rid.'),
+        'description' => 'Foreign Key: {role}.rid.',
       ),
       'permission' => array(
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('A single permission granted to the role identified by rid.'),
+        'description' => 'A single permission granted to the role identified by rid.',
       ),
     ),
     'primary key' => array('rid', 'permission'),
@@ -65,20 +65,20 @@ function user_schema() {
   );
 
   $schema['role'] = array(
-    'description' => t('Stores user roles.'),
+    'description' => 'Stores user roles.',
     'fields' => array(
       'rid' => array(
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => t('Primary Key: Unique role ID.'),
+        'description' => 'Primary Key: Unique role ID.',
       ),
       'name' => array(
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Unique role name.'),
+        'description' => 'Unique role name.',
       ),
     ),
     'unique keys' => array(
@@ -88,107 +88,107 @@ function user_schema() {
   );
 
   $schema['users'] = array(
-    'description' => t('Stores user data.'),
+    'description' => 'Stores user data.',
     'fields' => array(
       'uid' => array(
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => t('Primary Key: Unique user ID.'),
+        'description' => 'Primary Key: Unique user ID.',
       ),
       'name' => array(
         'type' => 'varchar',
         'length' => 60,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Unique user name.'),
+        'description' => 'Unique user name.',
       ),
       'pass' => array(
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
         'default' => '',
-        'description' => t("User's password (hashed)."),
+        'description' => "User's password (hashed).",
       ),
       'mail' => array(
         'type' => 'varchar',
         'length' => 64,
         'not null' => FALSE,
         'default' => '',
-        'description' => t("User's email address."),
+        'description' => "User's email address.",
       ),
       'theme' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => t("User's default theme."),
+        'description' => "User's default theme.",
       ),
       'signature' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => t("User's signature."),
+        'description' => "User's signature.",
       ),
       'created' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Timestamp for when user was created.'),
+        'description' => 'Timestamp for when user was created.',
       ),
       'access' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Timestamp for previous time user accessed the site.'),
+        'description' => 'Timestamp for previous time user accessed the site.',
       ),
       'login' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t("Timestamp for user's last login."),
+        'description' => "Timestamp for user's last login.",
       ),
       'status' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => t('Whether the user is active(1) or blocked(0).'),
+        'description' => 'Whether the user is active(1) or blocked(0).',
       ),
       'timezone' => array(
         'type' => 'varchar',
         'length' => 8,
         'not null' => FALSE,
-        'description' => t("User's timezone."),
+        'description' => "User's timezone.",
       ),
       'language' => array(
         'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,
         'default' => '',
-        'description' => t("User's default language."),
+        'description' => "User's default language.",
       ),
       'picture' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => t("Path to the user's uploaded picture."),
+        'description' => "Path to the user's uploaded picture.",
       ),
       'init' => array(
         'type' => 'varchar',
         'length' => 64,
         'not null' => FALSE,
         'default' => '',
-        'description' => t('Email address used for initial account creation.'),
+        'description' => 'Email address used for initial account creation.',
       ),
       'data' => array(
         'type' => 'text',
         'not null' => FALSE,
         'size' => 'big',
         'serialize' => TRUE,
-        'description' => t('A serialized array of name value pairs that are related to the user. Any form values posted during user edit are stored and are loaded into the $user object during user_load(). Use of this field is discouraged and it will likely disappear in a future version of Drupal.'),
+        'description' => 'A serialized array of name value pairs that are related to the user. Any form values posted during user edit are stored and are loaded into the $user object during user_load(). Use of this field is discouraged and it will likely disappear in a future version of Drupal.',
       ),
     ),
     'indexes' => array(
@@ -203,21 +203,21 @@ function user_schema() {
   );
 
   $schema['users_roles'] = array(
-    'description' => t('Maps users to roles.'),
+    'description' => 'Maps users to roles.',
     'fields' => array(
       'uid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Primary Key: {users}.uid for user.'),
+        'description' => 'Primary Key: {users}.uid for user.',
       ),
       'rid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Primary Key: {role}.rid for role.'),
+        'description' => 'Primary Key: {role}.rid for role.',
       ),
     ),
     'primary key' => array('uid', 'rid'),

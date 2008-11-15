@@ -132,64 +132,64 @@ function simpletest_requirements($phase) {
 
 function simpletest_schema() {
   $schema['simpletest'] = array(
-    'description' => t('Stores simpletest messages'),
+    'description' => 'Stores simpletest messages',
     'fields' => array(
       'message_id'  => array(
         'type' => 'serial',
         'not null' => TRUE,
-        'description' => t('Primary Key: Unique simpletest message ID.'),
+        'description' => 'Primary Key: Unique simpletest message ID.',
       ),
       'test_id' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Test ID, messages belonging to the same ID are reported together'),
+        'description' => 'Test ID, messages belonging to the same ID are reported together',
       ),
       'test_class' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('The name of the class that created this message.'),
+        'description' => 'The name of the class that created this message.',
       ),
       'status' => array(
         'type' => 'varchar',
         'length' => 9,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Message status. Core understands pass, fail, exception.'),
+        'description' => 'Message status. Core understands pass, fail, exception.',
       ),
       'message' => array(
         'type' => 'text',
         'not null' => TRUE,
-        'description' => t('The message itself.'),
+        'description' => 'The message itself.',
       ),
       'message_group' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('The message group this message belongs to. For example: warning, browser, user.'),
+        'description' => 'The message group this message belongs to. For example: warning, browser, user.',
       ),
       'function' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Name of the assertion function or method that created this message.'),
+        'description' => 'Name of the assertion function or method that created this message.',
       ),
       'line' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Line number on which the function is called.'),
+        'description' => 'Line number on which the function is called.',
       ),
       'file' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Name of the file where the function is called.'),
+        'description' => 'Name of the file where the function is called.',
       ),
     ),
     'primary key' => array('message_id'),
@@ -198,13 +198,13 @@ function simpletest_schema() {
     ),
   );
   $schema['simpletest_test_id'] = array(
-    'description' => t('Stores simpletest test IDs, used to auto-incrament the test ID so that a fresh test ID is used.'),
+    'description' => 'Stores simpletest test IDs, used to auto-incrament the test ID so that a fresh test ID is used.',
     'fields' => array(
       'test_id'  => array(
         'type' => 'serial',
         'not null' => TRUE,
-        'description' => t('Primary Key: Unique simpletest ID used to group test results together. Each time a set of tests
-                            are run a new test ID is used.'),
+        'description' => 'Primary Key: Unique simpletest ID used to group test results together. Each time a set of tests
+                            are run a new test ID is used.',
       ),
     ),
     'primary key' => array('test_id'),

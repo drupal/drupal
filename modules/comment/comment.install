@@ -118,56 +118,56 @@ function comment_update_7001() {
  */
 function comment_schema() {
   $schema['comments'] = array(
-    'description' => t('Stores comments and associated data.'),
+    'description' => 'Stores comments and associated data.',
     'fields' => array(
       'cid' => array(
         'type' => 'serial',
         'not null' => TRUE,
-        'description' => t('Primary Key: Unique comment ID.'),
+        'description' => 'Primary Key: Unique comment ID.',
       ),
       'pid' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {comments}.cid to which this comment is a reply. If set to 0, this comment is not a reply to an existing comment.'),
+        'description' => 'The {comments}.cid to which this comment is a reply. If set to 0, this comment is not a reply to an existing comment.',
       ),
       'nid' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {node}.nid to which this comment is a reply.'),
+        'description' => 'The {node}.nid to which this comment is a reply.',
       ),
       'uid' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {users}.uid who authored the comment. If set to 0, this comment was created by an anonymous user.'),
+        'description' => 'The {users}.uid who authored the comment. If set to 0, this comment was created by an anonymous user.',
       ),
       'subject' => array(
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('The comment title.'),
+        'description' => 'The comment title.',
       ),
       'comment' => array(
         'type' => 'text',
         'not null' => TRUE,
         'size' => 'big',
-        'description' => t('The comment body.'),
+        'description' => 'The comment body.',
       ),
       'hostname' => array(
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
         'default' => '',
-        'description' => t("The author's host name."),
+        'description' => "The author's host name.",
       ),
       'timestamp' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The time that the comment was created, or last edited by its author, as a Unix timestamp.'),
+        'description' => 'The time that the comment was created, or last edited by its author, as a Unix timestamp.',
       ),
       'status' => array(
         'type' => 'int',
@@ -175,38 +175,38 @@ function comment_schema() {
         'not null' => TRUE,
         'default' => 1,
         'size' => 'tiny',
-        'description' => t('The published status of a comment. (0 = Not Published, 1 = Published)'),
+        'description' => 'The published status of a comment. (0 = Not Published, 1 = Published)',
       ),
       'format' => array(
         'type' => 'int',
         'size' => 'small',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {filter_formats}.format of the comment body.'),
+        'description' => 'The {filter_formats}.format of the comment body.',
       ),
       'thread' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
-        'description' => t("The vancode representation of the comment's place in a thread."),
+        'description' => "The vancode representation of the comment's place in a thread.",
       ),
       'name' => array(
         'type' => 'varchar',
         'length' => 60,
         'not null' => FALSE,
-        'description' => t("The comment author's name. Uses {users}.name if the user is logged in, otherwise uses the value typed into the comment form."),
+        'description' => "The comment author's name. Uses {users}.name if the user is logged in, otherwise uses the value typed into the comment form.",
       ),
       'mail' => array(
         'type' => 'varchar',
         'length' => 64,
         'not null' => FALSE,
-        'description' => t("The comment author's e-mail address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on."),
+        'description' => "The comment author's e-mail address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on.",
       ),
       'homepage' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => FALSE,
-        'description' => t("The comment author's home page address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on."),
+        'description' => "The comment author's home page address from the comment form, if user is anonymous, and the 'Anonymous users may/must leave their contact information' setting is turned on.",
       )
     ),
     'indexes' => array(
@@ -219,39 +219,39 @@ function comment_schema() {
   );
 
   $schema['node_comment_statistics'] = array(
-    'description' => t('Maintains statistics of node and comments posts to show "new" and "updated" flags.'),
+    'description' => 'Maintains statistics of node and comments posts to show "new" and "updated" flags.',
     'fields' => array(
       'nid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {node}.nid for which the statistics are compiled.'),
+        'description' => 'The {node}.nid for which the statistics are compiled.',
       ),
       'last_comment_timestamp' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The Unix timestamp of the last comment that was posted within this node, from {comments}.timestamp.'),
+        'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comments}.timestamp.',
       ),
       'last_comment_name' => array(
         'type' => 'varchar',
         'length' => 60,
         'not null' => FALSE,
-        'description' => t('The name of the latest author to post a comment on this node, from {comments}.name.'),
+        'description' => 'The name of the latest author to post a comment on this node, from {comments}.name.',
       ),
       'last_comment_uid' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The user ID of the latest author to post a comment on this node, from {comments}.uid.'),
+        'description' => 'The user ID of the latest author to post a comment on this node, from {comments}.uid.',
       ),
       'comment_count' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The total number of comments on this node.'),
+        'description' => 'The total number of comments on this node.',
       ),
     ),
     'primary key' => array('nid'),

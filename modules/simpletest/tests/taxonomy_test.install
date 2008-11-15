@@ -6,26 +6,26 @@
  */
 function taxonomy_test_schema() {
   $schema['term_antonym'] = array(
-    'description' => t('Stores term antonyms.'),
+    'description' => 'Stores term antonyms.',
     'fields' => array(
       'taid' => array(
         'type' => 'serial',
         'not null' => TRUE,
-        'description' => t('Primary Key: Unique term antonym ID.'),
+        'description' => 'Primary Key: Unique term antonym ID.',
       ),
       'tid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {term_data}.tid of the term.'),
+        'description' => 'The {term_data}.tid of the term.',
       ),
       'name' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('The name of the antonym.'),
+        'description' => 'The name of the antonym.',
       ),
     ),
     'indexes' => array(

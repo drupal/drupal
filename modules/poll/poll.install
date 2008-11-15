@@ -22,67 +22,67 @@ function poll_uninstall() {
  */
 function poll_schema() {
   $schema['poll'] = array(
-    'description' => t('Stores poll-specific information for poll nodes.'),
+    'description' => 'Stores poll-specific information for poll nodes.',
     'fields' => array(
       'nid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t("The poll's {node}.nid."),
+        'description' => "The poll's {node}.nid.",
       ),
       'runtime' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The number of seconds past {node}.created during which the poll is open.'),
+        'description' => 'The number of seconds past {node}.created during which the poll is open.',
       ),
       'active' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Boolean indicating whether or not the poll is open.'),
+        'description' => 'Boolean indicating whether or not the poll is open.',
       ),
     ),
     'primary key' => array('nid'),
   );
 
   $schema['poll_choices'] = array(
-    'description' => t('Stores information about all choices for all {poll}s.'),
+    'description' => 'Stores information about all choices for all {poll}s.',
     'fields' => array(
       'chid' => array(
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => t('Unique identifier for a poll choice.'),
+        'description' => 'Unique identifier for a poll choice.',
       ),
       'nid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {node}.nid this choice belongs to.'),
+        'description' => 'The {node}.nid this choice belongs to.',
       ),
       'chtext' => array(
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('The text for this choice.'),
+        'description' => 'The text for this choice.',
       ),
       'chvotes' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The total number of votes this choice has received by all users.'),
+        'description' => 'The total number of votes this choice has received by all users.',
       ),
       'weight' => array(
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The sort order of this choice among all choices for the same node.'),
+        'description' => 'The sort order of this choice among all choices for the same node.',
       ),
     ),
     'indexes' => array(
@@ -92,33 +92,33 @@ function poll_schema() {
   );
 
   $schema['poll_votes'] = array(
-    'description' => t('Stores per-{users} votes for each {poll}.'),
+    'description' => 'Stores per-{users} votes for each {poll}.',
     'fields' => array(
       'chid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => t("The {users}'s vote for this poll."),
+        'description' => "The {users}'s vote for this poll.",
       ),
       'nid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => t('The {poll} node this vote is for.'),
+        'description' => 'The {poll} node this vote is for.',
       ),
       'uid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {users}.uid this vote is from unless the voter was anonymous.'),
+        'description' => 'The {users}.uid this vote is from unless the voter was anonymous.',
       ),
       'hostname' => array(
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('The IP address this vote is from unless the voter was logged in.'),
+        'description' => 'The IP address this vote is from unless the voter was logged in.',
       ),
     ),
     'primary key' => array('nid', 'uid', 'hostname'),

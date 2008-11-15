@@ -23,28 +23,28 @@ function blogapi_uninstall() {
  */
 function blogapi_schema() {
   $schema['blogapi_files'] = array(
-    'description' => t('Stores information for files uploaded via the blogapi.'),
+    'description' => 'Stores information for files uploaded via the blogapi.',
     'fields' => array(
       'fid' => array(
-        'description' => t('Primary Key: Unique file ID.'),
+        'description' => 'Primary Key: Unique file ID.',
         'type' => 'serial',
       ),
       'uid' => array(
-        'description' => t('The {users}.uid of the user who is associated with the file.'),
+        'description' => 'The {users}.uid of the user who is associated with the file.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ),
       'filepath' => array(
-        'description' => t('Path of the file relative to Drupal root.'),
+        'description' => 'Path of the file relative to Drupal root.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'filesize' => array(
-        'description' => t('The size of the file in bytes.'),
+        'description' => 'The size of the file in bytes.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,

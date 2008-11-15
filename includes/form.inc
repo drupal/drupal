@@ -852,7 +852,7 @@ function form_error(&$element, $message = '') {
  *   $_POST data.
  */
 function form_builder($form_id, $form, &$form_state) {
-  static $complete_form, $cache;
+  static $complete_form, $cache, $file;
 
   // Initialize as unprocessed.
   $form['#processed'] = FALSE;
@@ -943,9 +943,20 @@ function form_builder($form_id, $form, &$form_state) {
   if (!empty($form['#cache'])) {
     $cache = $form['#cache'];
   }
-  // We are on the top form, we can copy back #cache if it's set.
-  if (isset($form['#type']) && $form['#type'] == 'form' && isset($cache)) {
-    $form['#cache'] = TRUE;
+  // If there is a file element, we need to flip a static flag so later the
+  // form encoding can be set.
+  if ($form['#type'] == 'file') {
+    $file = TRUE;
+  }
+  if (isset($form['#type']) && $form['#type'] == 'form') {
+    // We are on the top form, we can copy back #cache if it's set.
+    if (isset($cache)) {
+      $form['#cache'] = TRUE;
+    }
+    // If there is a file element, we set the form encoding.
+    if (isset($file)) {
+      $form['#attributes']['enctype'] = 'multipart/form-data';
+    }
   }
   return $form;
 }
