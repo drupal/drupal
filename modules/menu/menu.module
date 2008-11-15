@@ -357,6 +357,7 @@ function menu_edit_item_form($type, $mid = 0) {
     '#title' => t('Description'),
     '#default_value' => $item['description'],
     '#description' => t('The description displayed when hovering over a menu item.'),
+    '#maxlength' => 255,
   );
 
   if ($item['type'] & MENU_CREATED_BY_ADMIN) {
