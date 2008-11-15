@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.233 2008/11/11 16:49:37 dries Exp $
+// $Id: filter.module,v 1.234 2008/11/15 11:45:03 dries Exp $
 
 /**
  * @file
@@ -326,8 +326,9 @@ function filter_formats($index = NULL) {
 function filter_list_all() {
   $filters = array();
 
-  foreach (module_list() as $module) {
-    $list = module_invoke($module, 'filter', 'list');
+  foreach (module_implements('filter') as $module) {
+    $function = $module . '_filter';
+    $list = $function('list');
     if (isset($list) && is_array($list)) {
       foreach ($list as $delta => $name) {
         $filters[$module . '/' . $delta] = (object)array('module' => $module, 'delta' => $delta, 'name' => $name);
