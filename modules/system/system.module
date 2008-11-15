@@ -840,7 +840,7 @@ function system_admin_menu_block($item) {
 function system_admin_theme_submit($form, &$form_state) {
   // If we're changing themes, make sure the theme has its blocks initialized.
   if ($form_state['values']['admin_theme'] && $form_state['values']['admin_theme'] != variable_get('admin_theme', '0')) {
-    $result = db_result(db_query("SELECT COUNT(*) FROM {blocks} WHERE theme = '%s'", $form_state['values']['admin_theme']));
+    $result = db_result(db_query("SELECT COUNT(*) FROM {block} WHERE theme = '%s'", $form_state['values']['admin_theme']));
     if (!$result) {
       system_initialize_theme_blocks($form_state['values']['admin_theme']);
     }
@@ -1181,16 +1181,16 @@ function system_default_region($theme) {
  */
 function system_initialize_theme_blocks($theme) {
   // Initialize theme's blocks if none already registered.
-  if (!(db_result(db_query("SELECT COUNT(*) FROM {blocks} WHERE theme = '%s'", $theme)))) {
+  if (!(db_result(db_query("SELECT COUNT(*) FROM {block} WHERE theme = '%s'", $theme)))) {
     $default_theme = variable_get('theme_default', 'garland');
     $regions = system_region_list($theme);
-    $result = db_query("SELECT * FROM {blocks} WHERE theme = '%s'", $default_theme);
+    $result = db_query("SELECT * FROM {block} WHERE theme = '%s'", $default_theme);
     while ($block = db_fetch_array($result)) {
       // If the region isn't supported by the theme, assign the block to the theme's default region.
       if (!array_key_exists($block['region'], $regions)) {
         $block['region'] = system_default_region($theme);
       }
-      db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, visibility, pages, custom, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d)",
+      db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, visibility, pages, custom, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d)",
           $block['module'], $block['delta'], $theme, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['cache']);
     }
   }

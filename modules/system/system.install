@@ -378,9 +378,9 @@ function system_install() {
 
   db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", 'theme_default', 's:7:"garland";');
   db_query("UPDATE {system} SET status = %d WHERE type = '%s' AND name = '%s'", 1, 'theme', 'garland');
-  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', 'login', 'garland', 1, 0, 'left', '', -1);
-  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', 'navigation', 'garland', 1, 0, 'left', '', -1);
-  db_query("INSERT INTO {blocks} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'system', 'powered-by', 'garland', 1, 10, 'footer', '', -1);
+  db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', 'login', 'garland', 1, 0, 'left', '', -1);
+  db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', 'navigation', 'garland', 1, 0, 'left', '', -1);
+  db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'system', 'powered-by', 'garland', 1, 10, 'footer', '', -1);
 
   db_query("INSERT INTO {node_access} (nid, gid, realm, grant_view, grant_update, grant_delete) VALUES (%d, %d, '%s', %d, %d, %d)", 0, 0, 'all', 1, 0, 0);
 
@@ -3081,6 +3081,18 @@ function system_update_7011() {
     ));
   }
   $insert->execute();
+  return $ret;
+}
+
+/**
+ * Rename {blocks} table to {block}, {blocks_roles} to {block_role} and
+ * {boxes} to {box}.
+ */
+function system_update_7012() {
+  $ret = array();
+  db_rename_table($ret, 'blocks', 'block');
+  db_rename_table($ret, 'blocks_roles', 'block_role');
+  db_rename_table($ret, 'boxes', 'box');
   return $ret;
 }
 

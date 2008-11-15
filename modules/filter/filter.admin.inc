@@ -288,7 +288,7 @@ function filter_admin_delete_submit($form, &$form_state) {
   // Replace existing instances of the deleted format with the default format.
   db_query("UPDATE {node_revisions} SET format = %d WHERE format = %d", $default, $form_state['values']['format']);
   db_query("UPDATE {comments} SET format = %d WHERE format = %d", $default, $form_state['values']['format']);
-  db_query("UPDATE {boxes} SET format = %d WHERE format = %d", $default, $form_state['values']['format']);
+  db_query("UPDATE {box} SET format = %d WHERE format = %d", $default, $form_state['values']['format']);
 
   cache_clear_all($form_state['values']['format'] . ':', 'cache_filter', TRUE);
   drupal_set_message(t('Deleted input format %format.', array('%format' => $form_state['values']['name'])));

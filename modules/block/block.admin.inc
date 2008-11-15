@@ -95,7 +95,7 @@ function block_admin_display_form_submit($form, &$form_state) {
   foreach ($form_state['values'] as $block) {
     $block['status'] = $block['region'] != BLOCK_REGION_NONE;
     $block['region'] = $block['status'] ? $block['region'] : '';
-    db_query("UPDATE {blocks} SET status = %d, weight = %d, region = '%s' WHERE module = '%s' AND delta = '%s' AND theme = '%s'", $block['status'], $block['weight'], $block['region'], $block['module'], $block['delta'], $block['theme']);
+    db_query("UPDATE {block} SET status = %d, weight = %d, region = '%s' WHERE module = '%s' AND delta = '%s' AND theme = '%s'", $block['status'], $block['weight'], $block['region'], $block['module'], $block['delta'], $block['theme']);
   }
   drupal_set_message(t('The block settings have been updated.'));
   cache_clear_all();
@@ -148,7 +148,7 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
     '#value' => $delta,
   );
 
-  $edit = db_fetch_array(db_query("SELECT pages, visibility, custom, title FROM {blocks} WHERE module = '%s' AND delta = '%s'", $module, $delta));
+  $edit = db_fetch_array(db_query("SELECT pages, visibility, custom, title FROM {block} WHERE module = '%s' AND delta = '%s'", $module, $delta));
 
   $form['block_settings'] = array(
     '#type' => 'fieldset',
@@ -197,7 +197,7 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
 
   // Role-based visibility settings.
   $default_role_options = array();
-  $result = db_query("SELECT rid FROM {blocks_roles} WHERE module = '%s' AND delta = '%s'", $module, $delta);
+  $result = db_query("SELECT rid FROM {block_role} WHERE module = '%s' AND delta = '%s'", $module, $delta);
   while ($role = db_fetch_object($result)) {
     $default_role_options[] = $role->rid;
   }
@@ -263,7 +263,7 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
 
 function block_admin_configure_validate($form, &$form_state) {
   if ($form_state['values']['module'] == 'block') {
-    if (empty($form_state['values']['info']) || db_result(db_query("SELECT COUNT(*) FROM {boxes} WHERE bid != %d AND info = '%s'", $form_state['values']['delta'], $form_state['values']['info']))) {
+    if (empty($form_state['values']['info']) || db_result(db_query("SELECT COUNT(*) FROM {box} WHERE bid != %d AND info = '%s'", $form_state['values']['delta'], $form_state['values']['info']))) {
       form_set_error('info', t('Please ensure that each block description is unique.'));
     }
   }
@@ -271,10 +271,10 @@ function block_admin_configure_validate($form, &$form_state) {
 
 function block_admin_configure_submit($form, &$form_state) {
   if (!form_get_errors()) {
-    db_query("UPDATE {blocks} SET visibility = %d, pages = '%s', custom = %d, title = '%s' WHERE module = '%s' AND delta = '%s'", $form_state['values']['visibility'], trim($form_state['values']['pages']), $form_state['values']['custom'], $form_state['values']['title'], $form_state['values']['module'], $form_state['values']['delta']);
-    db_query("DELETE FROM {blocks_roles} WHERE module = '%s' AND delta = '%s'", $form_state['values']['module'], $form_state['values']['delta']);
+    db_query("UPDATE {block} SET visibility = %d, pages = '%s', custom = %d, title = '%s' WHERE module = '%s' AND delta = '%s'", $form_state['values']['visibility'], trim($form_state['values']['pages']), $form_state['values']['custom'], $form_state['values']['title'], $form_state['values']['module'], $form_state['values']['delta']);
+    db_query("DELETE FROM {block_role} WHERE module = '%s' AND delta = '%s'", $form_state['values']['module'], $form_state['values']['delta']);
     foreach (array_filter($form_state['values']['roles']) as $rid) {
-      db_query("INSERT INTO {blocks_roles} (rid, module, delta) VALUES (%d, '%s', '%s')", $rid, $form_state['values']['module'], $form_state['values']['delta']);
+      db_query("INSERT INTO {block_role} (rid, module, delta) VALUES (%d, '%s', '%s')", $rid, $form_state['values']['module'], $form_state['values']['delta']);
     }
     module_invoke($form_state['values']['module'], 'block', 'save', $form_state['values']['delta'], $form_state['values']);
     drupal_set_message(t('The block configuration has been saved.'));
@@ -292,7 +292,7 @@ function block_add_block_form(&$form_state) {
 }
 
 function block_add_block_form_validate($form, &$form_state) {
-  if (empty($form_state['values']['info']) || db_result(db_query("SELECT COUNT(*) FROM {boxes} WHERE info = '%s'", $form_state['values']['info']))) {
+  if (empty($form_state['values']['info']) || db_result(db_query("SELECT COUNT(*) FROM {box} WHERE info = '%s'", $form_state['values']['info']))) {
     form_set_error('info', t('Please ensure that each block description is unique.'));
   }
 }
@@ -301,17 +301,17 @@ function block_add_block_form_validate($form, &$form_state) {
  * Save the new custom block.
  */
 function block_add_block_form_submit($form, &$form_state) {
-  db_query("INSERT INTO {boxes} (body, info, format) VALUES ('%s', '%s', %d)", $form_state['values']['body'], $form_state['values']['info'], $form_state['values']['body_format']);
-  $delta = db_last_insert_id('boxes', 'bid');
+  db_query("INSERT INTO {box} (body, info, format) VALUES ('%s', '%s', %d)", $form_state['values']['body'], $form_state['values']['info'], $form_state['values']['body_format']);
+  $delta = db_last_insert_id('box', 'bid');
 
   foreach (list_themes() as $key => $theme) {
     if ($theme->status) {
-      db_query("INSERT INTO {blocks} (visibility, pages, custom, title, module, theme, status, weight, delta, cache) VALUES(%d, '%s', %d, '%s', '%s', '%s', %d, %d, '%s', %d)", $form_state['values']['visibility'], trim($form_state['values']['pages']), $form_state['values']['custom'], $form_state['values']['title'], $form_state['values']['module'], $theme->name, 0, 0, $delta, BLOCK_NO_CACHE);
+      db_query("INSERT INTO {block} (visibility, pages, custom, title, module, theme, status, weight, delta, cache) VALUES(%d, '%s', %d, '%s', '%s', '%s', %d, %d, '%s', %d)", $form_state['values']['visibility'], trim($form_state['values']['pages']), $form_state['values']['custom'], $form_state['values']['title'], $form_state['values']['module'], $theme->name, 0, 0, $delta, BLOCK_NO_CACHE);
     }
   }
 
   foreach (array_filter($form_state['values']['roles']) as $rid) {
-    db_query("INSERT INTO {blocks_roles} (rid, module, delta) VALUES (%d, '%s', '%s')", $rid, $form_state['values']['module'], $delta);
+    db_query("INSERT INTO {block_role} (rid, module, delta) VALUES (%d, '%s', '%s')", $rid, $form_state['values']['module'], $delta);
   }
 
   drupal_set_message(t('The block has been created.'));
@@ -335,8 +335,8 @@ function block_box_delete(&$form_state, $bid = 0) {
  * Deletion of custom blocks.
  */
 function block_box_delete_submit($form, &$form_state) {
-  db_query('DELETE FROM {boxes} WHERE bid = %d', $form_state['values']['bid']);
-  db_query("DELETE FROM {blocks} WHERE module = 'block' AND delta = '%s'", $form_state['values']['bid']);
+  db_query('DELETE FROM {box} WHERE bid = %d', $form_state['values']['bid']);
+  db_query("DELETE FROM {block} WHERE module = 'block' AND delta = '%s'", $form_state['values']['bid']);
   drupal_set_message(t('The block %name has been removed.', array('%name' => $form_state['values']['info'])));
   cache_clear_all();
   $form_state['redirect'] = 'admin/build/block';

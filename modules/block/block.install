@@ -5,7 +5,7 @@
  * Implementation of hook_schema().
  */
 function block_schema() {
-  $schema['blocks'] = array(
+  $schema['block'] = array(
     'description' => t('Stores block settings, such as region and visibility settings.'),
     'fields' => array(
       'bid' => array(
@@ -98,20 +98,20 @@ function block_schema() {
     ),
   );
 
-  $schema['blocks_roles'] = array(
+  $schema['block_role'] = array(
     'description' => t('Sets up access permissions for blocks based on user roles'),
     'fields' => array(
       'module' => array(
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
-        'description' => t("The block's origin module, from {blocks}.module."),
+        'description' => t("The block's origin module, from {block}.module."),
       ),
       'delta' => array(
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
-        'description' => t("The block's unique delta within module, from {blocks}.delta."),
+        'description' => t("The block's unique delta within module, from {block}.delta."),
       ),
       'rid' => array(
         'type' => 'int',
@@ -126,14 +126,14 @@ function block_schema() {
     ),
   );
 
-  $schema['boxes'] = array(
+  $schema['box'] = array(
     'description' => t('Stores contents of custom-made blocks.'),
     'fields' => array(
       'bid' => array(
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => t("The block's {blocks}.bid."),
+        'description' => t("The block's {block}.bid."),
       ),
       'body' => array(
         'type' => 'text',

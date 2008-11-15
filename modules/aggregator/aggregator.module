@@ -392,7 +392,7 @@ function aggregator_save_category($edit) {
         ->condition('cid', $edit['cid'])
         ->execute();
       // Make sure there is no active block for this category.
-      db_delete('blocks')
+      db_delete('block')
         ->condition('module', 'aggregator')
         ->condition('delta', 'category-' . $edit['cid'])
         ->execute();
@@ -453,7 +453,7 @@ function aggregator_save_feed($edit) {
       ->condition('fid', $edit['fid'])
       ->execute();
     // Make sure there is no active block for this feed.
-    db_delete('blocks')
+    db_delete('block')
       ->condition('module', 'aggregator')
       ->condition('delta', 'feed-' . $edit['fid'])
       ->execute();

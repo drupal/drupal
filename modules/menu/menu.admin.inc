@@ -484,8 +484,8 @@ function menu_delete_menu_confirm_submit($form, &$form_state) {
   db_query("DELETE FROM {menu_links} WHERE menu_name = '%s'", $menu['menu_name']);
   db_query("DELETE FROM {menu_custom} WHERE menu_name = '%s'", $menu['menu_name']);
   // Delete all the blocks for this menu.
-  db_query("DELETE FROM {blocks} WHERE module = 'menu' AND delta = '%s'", $menu['menu_name']);
-  db_query("DELETE FROM {blocks_roles} WHERE module = 'menu' AND delta = '%s'", $menu['menu_name']);
+  db_query("DELETE FROM {block} WHERE module = 'menu' AND delta = '%s'", $menu['menu_name']);
+  db_query("DELETE FROM {block_role} WHERE module = 'menu' AND delta = '%s'", $menu['menu_name']);
   menu_cache_clear_all();
   cache_clear_all();
   $t_args = array('%title' => $menu['title']);
