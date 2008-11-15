@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.27 2008/11/13 21:02:09 dries Exp $
+// $Id: database.inc,v 1.28 2008/11/15 08:23:06 dries Exp $
 
 /**
  * @file
@@ -2313,7 +2313,7 @@ function db_affected_rows() {
  *   Query to be rewritten.
  * @param $primary_table
  *   Name or alias of the table which has the primary key field for this query.
- *   Typical table names would be: {blocks}, {comments}, {forum}, {node},
+ *   Typical table names would be: {block}, {comments}, {forum}, {node},
  *   {menu}, {term_data} or {vocabulary}. However, in most cases the usual
  *   table alias (b, c, f, n, m, t or v) is used instead of the table name.
  * @param $primary_field
@@ -2360,7 +2360,7 @@ function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_field = 'ni
  *   Query to be rewritten.
  * @param $primary_table
  *   Name or alias of the table which has the primary key field for this query.
- *   Typical table names would be: {blocks}, {comments}, {forum}, {node},
+ *   Typical table names would be: {block}, {comments}, {forum}, {node},
  *   {menu}, {term_data} or {vocabulary}. However, it is more common to use the
  *   the usual table aliases: b, c, f, n, m, t or v.
  * @param $primary_field
