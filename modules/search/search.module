@@ -208,14 +208,14 @@ function search_menu() {
     'file path' => drupal_get_path('module', 'dblog'),
   );
 
-  foreach (module_implements('search') as $name) {
-    $items['search/' . $name . '/%menu_tail'] = array(
+  foreach (module_implements('search') as $module) {
+    $items['search/' . $module . '/%menu_tail'] = array(
       'title callback' => 'module_invoke',
-      'title arguments' => array($name, 'search', 'name', TRUE),
+      'title arguments' => array($module, 'search', 'name', TRUE),
       'page callback' => 'search_view',
-      'page arguments' => array($name),
+      'page arguments' => array($module),
       'access callback' => '_search_menu',
-      'access arguments' => array($name),
+      'access arguments' => array($module),
       'type' => MENU_LOCAL_TASK,
       'parent' => 'search',
     );
@@ -277,8 +277,9 @@ function search_cron() {
   register_shutdown_function('search_update_totals');
 
   // Update word index
-  foreach (module_list() as $module) {
-    module_invoke($module, 'update_index');
+  foreach (module_implements('update_index') as $module) {
+    $function = $module . '_update_index';
+    $function();
   }
 }
 

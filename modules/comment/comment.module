@@ -1945,8 +1945,8 @@ function _comment_update_node_statistics($nid) {
  */
 function comment_invoke_comment(&$comment, $op) {
   $return = array();
-  foreach (module_implements('comment') as $name) {
-    $function = $name . '_comment';
+  foreach (module_implements('comment') as $module) {
+    $function = $module . '_comment';
     $result = $function($comment, $op);
     if (isset($result) && is_array($result)) {
       $return = array_merge($return, $result);

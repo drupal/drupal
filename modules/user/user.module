@@ -23,11 +23,9 @@ define('EMAIL_MAX_LENGTH', 64);
  * be passed by reference.
  */
 function user_module_invoke($type, &$array, &$user, $category = NULL) {
-  foreach (module_list() as $module) {
+  foreach (module_implements('user_' . $type) as $module) {
     $function = $module . '_user_' . $type;
-    if (function_exists($function)) {
-      $function($array, $user, $category);
-    }
+    $function($array, $user, $category);
   }
 }
 
@@ -1952,8 +1950,9 @@ function user_filters() {
   }
 
   $options = array();
-  foreach (module_list() as $module) {
-    if ($permissions = module_invoke($module, 'perm')) {
+  foreach (module_implements('perm') as $module) {
+    $function = $module . '_perm';
+    if ($permissions = $function('perm')) {
       asort($permissions);
       foreach ($permissions as $permission => $description) {
         $options[t('@module module', array('@module' => $module))][$permission] = t($permission);
@@ -2437,8 +2436,9 @@ function user_register_validate($form, &$form_state) {
  */
 function _user_forms(&$edit, $account, $category, $hook = 'form') {
   $groups = array();
-  foreach (module_list() as $module) {
-    if ($data = module_invoke($module, 'user_' . $hook, $edit, $account, $category)) {
+  foreach (module_implements('user_' . $hook) as $module) {
+    $function = $module . '_user_' . $hook;
+    if ($data = $function($edit, $account, $category)) {
       $groups = array_merge_recursive($data, $groups);
     }
   }

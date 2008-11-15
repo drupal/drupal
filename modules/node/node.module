@@ -716,8 +716,8 @@ function node_invoke(&$node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
 function node_invoke_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   $return = array();
   $hook = 'nodeapi_' . $op;
-  foreach (module_implements($hook) as $name) {
-    $function = $name . '_' . $hook;
+  foreach (module_implements($hook) as $module) {
+    $function = $module . '_' . $hook;
     $result = $function($node, $a3, $a4);
     if (isset($result) && is_array($result)) {
       $return = array_merge($return, $result);

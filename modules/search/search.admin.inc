@@ -37,12 +37,11 @@ function search_admin_settings() {
   // Collect some stats
   $remaining = 0;
   $total = 0;
-  foreach (module_list() as $module) {
-    if (module_hook($module, 'search')) {
-      $status = module_invoke($module, 'search', 'status');
-      $remaining += $status['remaining'];
-      $total += $status['total'];
-    }
+  foreach (module_implements('search') as $module) {
+    $function = $module . '_search';
+    $status = $function('status');
+    $remaining += $status['remaining'];
+    $total += $status['total'];
   }
   $count = format_plural($remaining, 'There is 1 item left to index.', 'There are @count items left to index.');
   $percentage = ((int)min(100, 100 * ($total - $remaining) / max(1, $total))) . '%';
