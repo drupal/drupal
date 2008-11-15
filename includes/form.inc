@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.303 2008/11/15 13:01:04 dries Exp $
+// $Id: form.inc,v 1.304 2008/11/15 15:32:36 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -945,7 +945,7 @@ function form_builder($form_id, $form, &$form_state) {
   }
   // If there is a file element, we need to flip a static flag so later the
   // form encoding can be set.
-  if ($form['#type'] == 'file') {
+  if (isset($form['#type']) && $form['#type'] == 'file') {
     $file = TRUE;
   }
   if (isset($form['#type']) && $form['#type'] == 'form') {
