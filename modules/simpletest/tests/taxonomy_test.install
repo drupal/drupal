@@ -1,31 +1,31 @@
 <?php
-// $Id: taxonomy_test.install,v 1.1 2008/11/02 14:42:45 dries Exp $
+// $Id: taxonomy_test.install,v 1.2 2008/11/15 13:01:09 dries Exp $
 
 /**
  * Implementation of hook_schema().
  */
 function taxonomy_test_schema() {
   $schema['term_antonym'] = array(
-    'description' => t('Stores term antonyms.'),
+    'description' => 'Stores term antonyms.',
     'fields' => array(
       'taid' => array(
         'type' => 'serial',
         'not null' => TRUE,
-        'description' => t('Primary Key: Unique term antonym ID.'),
+        'description' => 'Primary Key: Unique term antonym ID.',
       ),
       'tid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {term_data}.tid of the term.'),
+        'description' => 'The {term_data}.tid of the term.',
       ),
       'name' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('The name of the antonym.'),
+        'description' => 'The name of the antonym.',
       ),
     ),
     'indexes' => array(

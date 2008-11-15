@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.13 2008/11/15 08:23:07 dries Exp $
+// $Id: block.install,v 1.14 2008/11/15 13:01:04 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -163,7 +163,7 @@ function block_schema() {
   );
 
   $schema['cache_block'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_block']['description'] = t('Cache table for the Block module to store already built blocks, identified by module, delta, and various contexts which may change the block, such as theme, locale, and caching mode defined for the block.');
+  $schema['cache_block']['description'] = 'Cache table for the Block module to store already built blocks, identified by module, delta, and various contexts which may change the block, such as theme, locale, and caching mode defined for the block.';
 
   return $schema;
 }

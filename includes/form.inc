@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.302 2008/11/10 05:22:59 webchick Exp $
+// $Id: form.inc,v 1.303 2008/11/15 13:01:04 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -852,7 +852,7 @@ function form_error(&$element, $message = '') {
  *   $_POST data.
  */
 function form_builder($form_id, $form, &$form_state) {
-  static $complete_form, $cache;
+  static $complete_form, $cache, $file;
 
   // Initialize as unprocessed.
   $form['#processed'] = FALSE;
@@ -943,9 +943,20 @@ function form_builder($form_id, $form, &$form_state) {
   if (!empty($form['#cache'])) {
     $cache = $form['#cache'];
   }
-  // We are on the top form, we can copy back #cache if it's set.
-  if (isset($form['#type']) && $form['#type'] == 'form' && isset($cache)) {
-    $form['#cache'] = TRUE;
+  // If there is a file element, we need to flip a static flag so later the
+  // form encoding can be set.
+  if ($form['#type'] == 'file') {
+    $file = TRUE;
+  }
+  if (isset($form['#type']) && $form['#type'] == 'form') {
+    // We are on the top form, we can copy back #cache if it's set.
+    if (isset($cache)) {
+      $form['#cache'] = TRUE;
+    }
+    // If there is a file element, we set the form encoding.
+    if (isset($file)) {
+      $form['#attributes']['enctype'] = 'multipart/form-data';
+    }
   }
   return $form;
 }

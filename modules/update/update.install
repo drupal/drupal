@@ -1,5 +1,5 @@
 <?php
-// $Id: update.install,v 1.5 2008/02/06 19:38:28 dries Exp $
+// $Id: update.install,v 1.6 2008/11/15 13:01:11 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -36,7 +36,7 @@ function update_uninstall() {
  */
 function update_schema() {
   $schema['cache_update'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_update']['description'] = t('Cache table for the Update module to store information about available releases, fetched from central server.');
+  $schema['cache_update']['description'] = 'Cache table for the Update module to store information about available releases, fetched from central server.';
   return $schema;
 }
 
