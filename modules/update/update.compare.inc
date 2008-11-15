@@ -1,5 +1,5 @@
 <?php
-// $Id: update.compare.inc,v 1.13 2008/09/17 07:11:59 dries Exp $
+// $Id: update.compare.inc,v 1.14 2008/11/15 07:43:06 dries Exp $
 
 /**
  * @file
@@ -103,7 +103,7 @@ function update_get_project_name($file) {
   if (isset($file->info['project'])) {
     $project_name = $file->info['project'];
   }
-  elseif (isset($file->info['package']) && (strpos($file->info['package'], 'Core -') !== FALSE)) {
+  elseif (isset($file->info['package']) && (strpos($file->info['package'], 'Core') !== FALSE)) {
     $project_name = 'drupal';
   }
   elseif (in_array($file->name, array('bluemarine', 'chameleon', 'garland', 'marvin', 'minnelli', 'pushbutton'))) {
