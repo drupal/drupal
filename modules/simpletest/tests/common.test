@@ -475,7 +475,8 @@ class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
     $this->assertErrorMessage('Exception', 'system_test.module', 'system_test_trigger_exception()', 'Drupal is awesome');
 
     $this->drupalGet('system-test/trigger-pdo-exception');
-    $this->assertErrorMessage('PDOException', 'system_test.module', 'system_test_trigger_pdo_exception()', 'Base table or view not found');
+    // We only check for SQLSTATE because the exact error reported varies from database to database.
+    $this->assertErrorMessage('PDOException', 'system_test.module', 'system_test_trigger_pdo_exception()', 'SQLSTATE');
   }
 
   /**

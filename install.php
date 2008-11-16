@@ -271,7 +271,6 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
       '#default_value' => empty($database['username']) ? '' : $database['username'],
       '#size' => 45,
       '#maxlength' => 45,
-      '#required' => TRUE,
     );
 
     // Database username

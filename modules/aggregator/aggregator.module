@@ -477,8 +477,8 @@ function aggregator_save_feed($edit) {
       foreach ($edit['category'] as $cid => $value) {
         if ($value) {
           db_merge('aggregator_category_feed')
+            ->key(array('fid' => $edit['fid']))
             ->fields(array(
-              'fid' => $edit['fid'],
               'cid' => $cid,
             ))
             ->execute();
