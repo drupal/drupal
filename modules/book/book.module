@@ -222,7 +222,11 @@ function book_block($op = 'list', $delta = '', $edit = array()) {
       }
       elseif ($current_bid) {
         // Only display this block when the user is browsing a book.
-        $title = db_result(db_query(db_rewrite_sql('SELECT n.title FROM {node} n WHERE n.nid = %d'), $node->book['bid']));
+        $select = db_select('node');
+        $select->addField('node', 'title');
+        $select->condition('nid', $node->book['bid']);
+        $select->addTag('node_access');
+        $title = $select->execute()->fetchField();
         // Only show the block if the user has view access for the top-level node.
         if ($title) {
           $tree = menu_tree_all_data($node->book['menu_name'], $node->book);
@@ -278,22 +282,30 @@ function book_get_books() {
 
   if (!isset($all_books)) {
     $all_books = array();
-    $result = db_query("SELECT DISTINCT(bid) FROM {book}");
-    $nids = array();
-    while ($book = db_fetch_array($result)) {
-      $nids[] = $book['bid'];
-    }
+    $nids = db_query("SELECT DISTINCT(bid) FROM {book}")->fetchCol();
 
     if ($nids) {
-      $result2 = db_query(db_rewrite_sql("SELECT n.type, n.title, b.*, ml.* FROM {book} b INNER JOIN {node} n on b.nid = n.nid INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE n.nid IN (" . implode(',', $nids) . ") AND n.status = 1 ORDER BY ml.weight, ml.link_title"));
-      while ($link = db_fetch_array($result2)) {
+      $query = db_select('book', 'b', array('fetch' => PDO::FETCH_ASSOC));
+      $node_alias = $query->join('node', 'n', 'b.nid = n.nid');
+      $menu_links_alias = $query->join('menu_links', 'ml', 'b.mlid = ml.mlid');
+      $query->addField('n', 'type', 'type');
+      $query->addField('n', 'title', 'title');
+      $query->fields('b');
+      $query->fields($menu_links_alias);
+      $query->condition('n.nid', $nids, 'IN');
+      $query->condition('n.status', 1);
+      $query->orderBy('ml.weight');
+      $query->orderBy('ml.link_title');
+      $query->addTag('node_access');
+      $result2 = $query->execute();
+      foreach ($result2 as $link) {
         $link['href'] = $link['link_path'];
         $link['options'] = unserialize($link['options']);
         $all_books[$link['bid']] = $link;
       }
     }
   }
-
+  
   return $all_books;
 }
 
@@ -478,10 +490,14 @@ function _book_update_outline(&$node) {
   else {
     // Check in case the parent is not is this book; the book takes precedence.
     if (!empty($node->book['plid'])) {
-      $parent = db_fetch_array(db_query("SELECT * FROM {book} WHERE mlid = %d", $node->book['plid']));
+      $parent = db_query("SELECT * FROM {book} WHERE mlid = :mlid", array(
+        ':mlid' => $node->book['plid'],
+      ))->fetchAssoc();
     }
     if (empty($node->book['plid']) || !$parent || $parent['bid'] != $node->book['bid']) {
-      $node->book['plid'] = db_result(db_query("SELECT mlid FROM {book} WHERE nid = %d", $node->book['bid']));
+      $node->book['plid'] = db_query("SELECT mlid FROM {book} WHERE nid = :nid", array(
+        ':nid' => $node->book['bid'],
+      ))->fetchField();
       $node->book['parent_mismatch'] = TRUE; // Likely when JS is disabled.
     }
   }
@@ -489,10 +505,18 @@ function _book_update_outline(&$node) {
   if (menu_link_save($node->book)) {
     if ($new) {
       // Insert new.
-      db_query("INSERT INTO {book} (nid, mlid, bid) VALUES (%d, %d, %d)", $node->nid, $node->book['mlid'], $node->book['bid']);
+      db_insert('book')
+        ->fields(array(
+          'nid' => $node->nid,
+          'mlid' => $node->book['mlid'],
+          'bid' => $node->book['bid'],
+        ))
+        ->execute();
     }
     else {
-      if ($node->book['bid'] != db_result(db_query("SELECT bid FROM {book} WHERE nid = %d", $node->nid))) {
+      if ($node->book['bid'] != db_query("SELECT bid FROM {book} WHERE nid = :nid", array(
+          ':nid' => $node->nid,
+        ))->fetchField()) {
         // Update the bid for this page and all children.
         book_update_bid($node->book);
       }
@@ -512,19 +536,18 @@ function _book_update_outline(&$node) {
  *   A fully loaded menu link that is part of the book hierarchy.
  */
 function book_update_bid($book_link) {
+  $query = db_select('menu_links');
+  $query->addField('menu_links', 'mlid');
   for ($i = 1; $i <= MENU_MAX_DEPTH && $book_link["p$i"]; $i++) {
-    $match[] = "p$i = %d";
-    $args[] = $book_link["p$i"];
+    $query->condition("p$i", $book_link["p$i"]);
   }
-  $result = db_query("SELECT mlid FROM {menu_links} WHERE " . implode(' AND ', $match), $args);
-
-  $mlids = array();
-  while ($a = db_fetch_array($result)) {
-    $mlids[] = $a['mlid'];
-  }
+  $mlids = $query->execute()->fetchCol();
 
   if ($mlids) {
-    db_query("UPDATE {book} SET bid = %d WHERE mlid IN (" . implode(',', $mlids) . ")", $book_link['bid']);
+    db_update('book')
+      ->fields(array('bid', $book_link['bid']))
+      ->condition('mlid', $mlids, 'IN')
+      ->execute();
   }
 }
 
@@ -684,7 +707,9 @@ function book_build_active_trail($book_link) {
  */
 function book_nodeapi_load(&$node, $teaser, $page) {
   // Note - we cannot use book_link_load() because it will call node_load().
-  $info['book'] = db_fetch_array(db_query('SELECT * FROM {book} b INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE b.nid = %d', $node->nid));
+  $info['book'] = db_query('SELECT * FROM {book} b INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE b.nid = :nid', array(
+    ':nid' => $node->nid
+  ))->fetchAssoc();
 
   if ($info['book']) {
     $info['book']['href'] = $info['book']['link_path'];
@@ -765,15 +790,19 @@ function book_nodeapi_delete(&$node, $teaser, $page) {
   if (!empty($node->book['bid'])) {
     if ($node->nid == $node->book['bid']) {
       // Handle deletion of a top-level post.
-      $result = db_query("SELECT b.nid FROM {menu_links} ml INNER JOIN {book} b on b.mlid = ml.mlid WHERE ml.plid = %d", $node->book['mlid']);
-      while ($child = db_fetch_array($result)) {
-        $child_node = node_load($child['nid']);
+      $result = db_query("SELECT b.nid FROM {menu_links} ml INNER JOIN {book} b on b.mlid = ml.mlid WHERE ml.plid = :plid", array(
+        ':plid' => $node->book['mlid']
+      ));
+      foreach ($result as $child) {
+        $child_node = node_load($child->nid);
         $child_node->book['bid'] = $child_node->nid;
         _book_update_outline($child_node);
       }
     }
     menu_link_delete($node->book['mlid']);
-    db_query('DELETE FROM {book} WHERE mlid = %d', $node->book['mlid']);
+    db_delete('book')
+      ->condition('mlid', $node->book['mlid'])
+      ->execute();
   }
 }
 
@@ -1094,7 +1123,9 @@ function book_help($path, $arg) {
  * Do not call when loading a node, since this function may call node_load().
  */
 function book_link_load($mlid) {
-  if ($item = db_fetch_array(db_query("SELECT * FROM {menu_links} ml INNER JOIN {book} b ON b.mlid = ml.mlid LEFT JOIN {menu_router} m ON m.path = ml.router_path WHERE ml.mlid = %d", $mlid))) {
+  if ($item = db_query("SELECT * FROM {menu_links} ml INNER JOIN {book} b ON b.mlid = ml.mlid LEFT JOIN {menu_router} m ON m.path = ml.router_path WHERE ml.mlid = :mlid", array(
+      ':mlid' => $mlid,
+    ))->fetchAssoc()) {
     _menu_link_translate($item);
     return $item;
   }
@@ -1134,22 +1165,21 @@ function book_menu_subtree_data($item) {
 
     // If the subtree data was not in the cache, $data will be NULL.
     if (!isset($data)) {
-      $match = array("menu_name = '%s'");
-      $args = array($item['menu_name']);
-      $i = 1;
-      while ($i <= MENU_MAX_DEPTH && $item["p$i"]) {
-        $match[] = "p$i = %d";
-        $args[] = $item["p$i"];
-        $i++;
+      $query = db_select('menu_links', 'ml');
+      $menu_router_alias = $query->join('menu_router', 'm', 'm.path = ml.router_path');
+      $book_alias = $query->join('book', 'b', 'ml.mlid = b.mlid');
+      $query->fields($book_alias);
+      $query->fields($menu_router_alias, array('load_functions', 'to_arg_functions', 'access_callback', 'access_arguments', 'page_callback', 'page_arguments', 'title', 'title_callback', 'title_arguments', 'type'));
+      $query->fields('ml');
+      $query->condition('menu_name', $item['menu_name']);
+      for ($i = 1; $i <= MENU_MAX_DEPTH && $item["p$i"]; ++$i) {
+        $query->condition("p$i", $item["p$i"]);
       }
-      $sql = "
-        SELECT b.*, m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, ml.*
-        FROM {menu_links} ml INNER JOIN {menu_router} m ON m.path = ml.router_path
-        INNER JOIN {book} b ON ml.mlid = b.mlid
-        WHERE " . implode(' AND ', $match) . "
-        ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC, p6 ASC, p7 ASC, p8 ASC, p9 ASC";
+      for ($i = 1; $i <= MENU_MAX_DEPTH; ++$i) {
+        $query->orderBy("p$i");
+      }
 
-      $data['tree'] = menu_tree_data(db_query($sql, $args), array(), $item['depth']);
+      $data['tree'] = menu_tree_data($query->execute(), array(), $item['depth']);
       $data['node_links'] = array();
       menu_tree_collect_node_links($data['tree'], $data['node_links']);
       // Compute the real cid for book subtree data.

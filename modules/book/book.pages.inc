@@ -210,7 +210,9 @@ function book_remove_form_submit($form, &$form_state) {
   if ($node->nid != $node->book['bid']) {
     // Only allowed when this is not a book (top-level page).
     menu_link_delete($node->book['mlid']);
-    db_query('DELETE FROM {book} WHERE nid = %d', $node->nid);
+    db_delete('book')
+      ->condition('nid', $node->nid)
+      ->execute();
     drupal_set_message(t('The post has been removed from the book.'));
   }
   $form_state['redirect'] = 'node/' . $node->nid;
