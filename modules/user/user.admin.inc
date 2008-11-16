@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.32 2008/11/11 22:39:59 dries Exp $
+// $Id: user.admin.inc,v 1.33 2008/11/16 15:10:49 dries Exp $
 
 /**
  * @file
@@ -512,8 +512,9 @@ function user_admin_perm($form_state, $rid = NULL) {
   $hide_descriptions = !system_admin_compact_mode();
   foreach (module_implements('perm') as $module) {
     if ($permissions = module_invoke($module, 'perm')) {
+      $info = drupal_parse_info_file(drupal_get_path('module', $module) . "/$module.info");
       $form['permission'][] = array(
-        '#markup' => $module,
+        '#markup' => $info['name'],
         );
       foreach ($permissions as $perm => $perm_item) {
         $options[$perm] = '';
@@ -576,7 +577,7 @@ function theme_user_admin_perm($form) {
       $row = array();
       // Module name
       if (is_numeric($key)) {
-        $row[] = array('data' => t('@module module', array('@module' => drupal_render($form['permission'][$key]))), 'class' => 'module', 'id' => 'module-' . $form['permission'][$key]['#markup'], 'colspan' => count($form['role_names']) + 1);
+        $row[] = array('data' => drupal_render($form['permission'][$key]), 'class' => 'module', 'id' => 'module-' . $form['permission'][$key]['#markup'], 'colspan' => count($form['role_names']) + 1);
       }
       else {
         // Permission row.
