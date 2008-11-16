@@ -632,8 +632,16 @@ function _drupal_error_handler($error_level, $message, $filename, $line, $contex
     );
     $backtrace = debug_backtrace();
 
+    $caller = _drupal_get_last_caller(debug_backtrace());
+
     // We treat recoverable errors as fatal.
-    _drupal_log_error(isset($types[$error_level]) ? $types[$error_level] : 'Unknown error', $message, $backtrace, $error_level == E_RECOVERABLE_ERROR);
+    _drupal_log_error(array(
+      '%type' => isset($types[$error_level]) ? $types[$error_level] : 'Unknown error',
+      '%message' => $message,
+      '%function' => $caller['function'],
+      '%file' => $caller['file'],
+      '%line' => $caller['line'],
+    ), $error_level == E_RECOVERABLE_ERROR);
   }
 }
 
@@ -648,6 +656,18 @@ function _drupal_error_handler($error_level, $message, $filename, $line, $contex
  *   The exception object that was thrown.
  */
 function _drupal_exception_handler($exception) {
+  // Log the message to the watchdog and return an error page to the user.
+  _drupal_log_error(_drupal_decode_exception($exception), TRUE);
+}
+
+/**
+ * Decode an exception, especially to retrive the correct caller.
+ *
+ * @param $exception
+ *   The exception object that was thrown.
+ * @return An error in the format expected by _drupal_log_error().
+ */
+function _drupal_decode_exception($exception) {
   $backtrace = $exception->getTrace();
   // Add the line throwing the exception to the backtrace.
   array_unshift($backtrace, array('line' => $exception->getLine(), 'file' => $exception->getFile()));
@@ -659,33 +679,33 @@ function _drupal_exception_handler($exception) {
     // We skip calls that occurred in one of the classes of the database layer
     // or in one of its global functions.
     $db_functions = array('db_query', 'pager_query', 'db_query_range', 'db_query_temporary', 'update_sql');
-    while (($caller = $backtrace[1]) &&
+    while (!empty($backtrace[1]) && ($caller = $backtrace[1]) &&
          ((isset($caller['class']) && (strpos($caller['class'], 'Query') !== FALSE || strpos($caller['class'], 'Database') !== FALSE)) ||
          in_array($caller['function'], $db_functions))) {
       // We remove that call.
       array_shift($backtrace);
     }
   }
+  $caller = _drupal_get_last_caller($backtrace);
 
-  // Log the message to the watchdog and return an error page to the user.
-  _drupal_log_error(get_class($exception), $exception->getMessage(), $backtrace, TRUE);
+  return array(
+    '%type' => get_class($exception),
+    '%message' => $exception->getMessage(),
+    '%function' => $caller['function'],
+    '%file' => $caller['file'],
+    '%line' => $caller['line'],
+  );
 }
 
 /**
  * Log a PHP error or exception, display an error page in fatal cases.
  *
- * @param $type
- *   The type of the error (Error, Warning, ...).
- * @param $message
- *   The message associated to the error.
- * @param $backtrace
- *   The backtrace of function calls that led to this error.
+ * @param $error
+ *   An array with the following keys: %type, %message, %function, %file, %line.
  * @param $fatal
  *   TRUE if the error is fatal.
  */
-function _drupal_log_error($type, $message, $backtrace, $fatal) {
-  $caller = _drupal_get_last_caller($backtrace);
-
+function _drupal_log_error($error, $fatal = FALSE) {
   // Initialize a maintenance theme early if the boostrap was not complete.
   // Do it early because drupal_set_message() triggers an init_theme().
   if ($fatal && (drupal_get_bootstrap_phase() != DRUPAL_BOOTSTRAP_FULL)) {
@@ -701,9 +721,9 @@ function _drupal_log_error($type, $message, $backtrace, $fatal) {
   if (preg_match("/^simpletest\d+/", $_SERVER['HTTP_USER_AGENT']) && !headers_sent() && !defined('SIMPLETEST_DONT_COLLECT_ERRORS')) {
     static $number = 0;
     $assertion = array(
-      $message,
-      $type,
-      $caller
+      $error['%message'],
+      $error['%type'],
+      $error['%function'],
     );
     header('X-Drupal-Assertion-' . $number . ': ' . rawurlencode(serialize($assertion)));
     $number++;
@@ -711,15 +731,21 @@ function _drupal_log_error($type, $message, $backtrace, $fatal) {
 
   // Force display of error messages in update.php.
   if (variable_get('error_level', 1) == 1 || (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update')) {
-    drupal_set_message(t('@type: %message in %function (line %line of %file).', array('@type' => $type, '%message' => $message, '%function' => $caller['function'], '%line' => $caller['line'], '%file' => $caller['file'])), 'error');
+    drupal_set_message(t('%type: %message in %function (line %line of %file).', $error), 'error');
   }
 
-  watchdog('php', '%type: %message in %function (line %line of %file).', array('%type' => $type, '%message' => $message, '%function' => $caller['function'], '%file' => $caller['file'], '%line' => $caller['line']), WATCHDOG_ERROR);
+  try {
+    watchdog('php', '%type: %message in %function (line %line of %file).', $error, WATCHDOG_ERROR);
+  }
+  catch (Exception $e) {
+    $new_error = _drupal_decode_exception($e);
+    drupal_set_message(t('%type: %message in %function (line %line of %file).', $new_error), 'error');
+  }
 
   if ($fatal) {
     drupal_set_header($_SERVER['SERVER_PROTOCOL'] . ' Service unavailable');
     drupal_set_title(t('Error'));
-    if (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
+    if (!defined('MAINTENANCE_MODE') && drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
       print theme('page', t('The website encountered an unexpected error. Please try again later.'), FALSE);
     }
     else {
