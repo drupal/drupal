@@ -212,7 +212,7 @@ function drupal_detect_database_types() {
   // Because we have no registry yet, we need to also include the install.inc
   // file for the driver explicitly.
 
-  foreach (file_scan_directory(DRUPAL_ROOT . '/includes/database', '/^[a-z]*$/i', array('.', '..', 'CVS'), 0, FALSE) as $file) {
+  foreach (file_scan_directory(DRUPAL_ROOT . '/includes/database', '/^[a-z]*$/i', '/(\.\.?|CVS)$/', 0, FALSE) as $file) {
     include_once "{$file->filename}/install.inc";
     include_once "{$file->filename}/database.inc";
     $drivers[$file->basename] = $file->filename;
