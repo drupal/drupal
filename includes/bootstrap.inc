@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.247 2008/11/11 22:39:58 dries Exp $
+// $Id: bootstrap.inc,v 1.248 2008/11/16 15:19:34 dries Exp $
 
 /**
  * @file
@@ -160,6 +160,14 @@ define('DRUPAL_ANONYMOUS_RID', 1);
  * Role ID for authenticated users; should match what's in the "role" table.
  */
 define('DRUPAL_AUTHENTICATED_RID', 2);
+
+/**
+ * The number of bytes in a kilobyte. The scientific standard for kilo is 1000,
+ * but used commonly in the field of computers to represent 1024 bits. For more
+ * information on the different standards please visit:
+ * http://en.wikipedia.org/wiki/Kilobyte.
+ */
+define('DRUPAL_KILOBYTE', 1024);
 
 /**
  * No language negotiation. The default language is used.
