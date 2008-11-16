@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.142 2008/11/10 05:22:56 webchick Exp $
+// $Id: install.php,v 1.143 2008/11/16 04:38:14 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -271,7 +271,6 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
       '#default_value' => empty($database['username']) ? '' : $database['username'],
       '#size' => 45,
       '#maxlength' => 45,
-      '#required' => TRUE,
     );
 
     // Database username
