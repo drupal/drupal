@@ -370,16 +370,16 @@ function comment_new_page_count($num_comments, $new_replies, $node) {
   else {
     // Threaded comments.
     // Find the first thread with a new comment.
-    $result = db_query_range('(SELECT thread 
-      FROM {comments} 
-      WHERE nid = :nid 
-        AND status = 0 
-      ORDER BY timestamp DESC) 
+    $result = db_query_range('(SELECT thread
+      FROM {comments}
+      WHERE nid = :nid
+        AND status = 0
+      ORDER BY timestamp DESC)
       ORDER BY SUBSTRING(thread, 1, (LENGTH(thread) - 1))', array(':nid' => $node->nid), 0, $new_replies)
       ->fetchField();
     $thread = substr($result, 0, -1);
     $count = db_query('SELECT COUNT(*) FROM {comments} WHERE nid = :nid AND status = 0 AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < :thread', array(
-      ':nid' => $node->nid, 
+      ':nid' => $node->nid,
       ':thread' => $thread))
       ->fetchField();
     $pageno =  $count / $comments_per_page;
@@ -763,7 +763,7 @@ function comment_save($edit) {
           $parent->thread = (string) rtrim((string) $parent->thread, '/');
           // Get the max value in *this* thread.
           $max = db_query("SELECT MAX(thread) FROM {comments} WHERE thread LIKE :thread AND nid = :nid", array(
-            ':thread' => $parent->thread .'.%', 
+            ':thread' => $parent->thread .'.%',
             ':nid' => $edit['nid']))
             ->fetchField();
 
@@ -1006,7 +1006,7 @@ function comment_render($node, $cid = 0) {
       }
     }
     else {
-      
+
       //TODO Convert to dynamic queries once the pager query is updated to the new DBTNG API.
 
       // Multiple comment view.
@@ -1150,7 +1150,7 @@ function comment_num_replies($pid) {
 
   if (!isset($cache[$pid])) {
     $cache[$pid] = db_query('SELECT COUNT(cid) FROM {comments} WHERE pid = :pid AND status = :status', array(
-      ':pid' => $pid, 
+      ':pid' => $pid,
       ':status' => COMMENT_PUBLISHED))
       ->fetchField();
   }

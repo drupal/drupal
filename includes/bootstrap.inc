@@ -215,12 +215,12 @@ define('CHECK_PLAIN', 0);
 define('PASS_THROUGH', -1);
 
 /**
- * Signals that the registry lookup cache should be reset. 
+ * Signals that the registry lookup cache should be reset.
  */
 define('REGISTRY_RESET_LOOKUP_CACHE', 1);
 
 /**
- * Signals that the registry lookup cache should be written to storage. 
+ * Signals that the registry lookup cache should be written to storage.
  */
 define('REGISTRY_WRITE_LOOKUP_CACHE', 2);
 
@@ -1475,7 +1475,7 @@ function drupal_autoload_class($class) {
  * Helper to check for a resource in the registry.
  *
  * @param $type
- *   The type of resource we are looking up, or one of the constants 
+ *   The type of resource we are looking up, or one of the constants
  *   REGISTRY_RESET_LOOKUP_CACHE or REGISTRY_WRITE_LOOKUP_CACHE, which
  *   signal that we should reset or write the cache, respectively.
  * @param $name
@@ -1491,7 +1491,7 @@ function _registry_check_code($type, $name = NULL) {
   if (!isset($lookup_cache)) {
     $lookup_cache = _registry_get_lookup_cache();
   }
-  
+
   // When we rebuild the registry, we need to reset this cache so
   // we don't keep lookups for resources that changed during the rebuild.
   if ($type == REGISTRY_RESET_LOOKUP_CACHE) {
@@ -1508,8 +1508,8 @@ function _registry_check_code($type, $name = NULL) {
     }
     return;
   }
-  
-  // $type can be one of 'function', 'interface' or 'class', so we only need the 
+
+  // $type can be one of 'function', 'interface' or 'class', so we only need the
   // first letter to keep the cache key unique.
   $cache_key = $type[0] . $name;
   if (isset($lookup_cache[$cache_key])) {
@@ -1518,7 +1518,7 @@ function _registry_check_code($type, $name = NULL) {
     }
     return $lookup_cache[$cache_key];
   }
-  
+
   // This function may get called when the default database is not active, but
   // there is no reason we'd ever want to not use the default database for
   // this query.
@@ -1559,7 +1559,7 @@ function registry_rebuild() {
  * Wrapper function to perform array to string conversion of lookup cache.
  */
 function _registry_set_lookup_cache(array $lookup_cache) {
-  // Cache a string, not an array, so we can avoid the memory usage hit 
+  // Cache a string, not an array, so we can avoid the memory usage hit
   // from serialize() in the cache system.
   $key_value_pairs = array();
   foreach ($lookup_cache as $key => $value) {
@@ -1572,7 +1572,7 @@ function _registry_set_lookup_cache(array $lookup_cache) {
  * Wrapper function to perform string to array conversion of lookup cache.
  */
 function _registry_get_lookup_cache() {
-  // In _registry_set_lookup_cache, we cache a string, not an array, to avoid 
+  // In _registry_set_lookup_cache, we cache a string, not an array, to avoid
   // serialize() in the cache system. serialize() makes a copy, and thus uses
   // extra memory, which we are trying to avoid.
   $lookup_cache = array();

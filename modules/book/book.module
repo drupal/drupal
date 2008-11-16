@@ -305,7 +305,7 @@ function book_get_books() {
       }
     }
   }
-  
+
   return $all_books;
 }
 

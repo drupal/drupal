@@ -19,7 +19,7 @@ class SchemaTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * 
+   *
    */
   function testSchema() {
     // Try creating a table.

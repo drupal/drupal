@@ -73,7 +73,7 @@ function _registry_rebuild() {
 
   $unchanged_resources = array();
   foreach (_registry_get_lookup_cache() as $key => $file) {
-    // If the file for this cached resource is carried over unchanged from 
+    // If the file for this cached resource is carried over unchanged from
     // the last registry build, then we can safely re-cache it.
     if ($file && in_array($file, array_keys($files)) && !in_array($file, $parsed_files)) {
       $unchanged_resources[$key] = $file;

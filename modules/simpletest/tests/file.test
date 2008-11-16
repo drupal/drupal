@@ -542,6 +542,38 @@ class FileDirectoryTest extends FileTestCase {
 
 
 /**
+ * Tests the file_scan_directory() function.
+ */
+class FileScanDirectoryTest extends FileTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  function getInfo() {
+    return array(
+      'name' => t('File scan directory'),
+      'description' => t('Tests the file_scan_directory() function.'),
+      'group' => t('File'),
+    );
+  }
+
+  /**
+   * Check that the no-mask parameter is honored.
+   */
+  function testNoMask() {
+    $path = $this->original_file_directory . '/simpletest';
+
+    // Grab a listing of all the JS files.
+    $all_files = file_scan_directory($path, '/javascript*/');
+    $this->assertEqual(2, count($all_files), t('Found two, expected javascript files.'));
+
+    // Now use the nomast parameter to filter out the .script file.
+    $filtered_files = file_scan_directory($path, '/javascript*/', '/.script$/');
+    $this->assertEqual(1, count($filtered_files), t('Filtered correctly.'));
+  }
+}
+
+
+/**
  * Deletion related tests.
  */
 class FileUnmanagedDeleteTest extends FileTestCase {
