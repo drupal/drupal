@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.474 2008/11/16 15:02:45 dries Exp $
+// $Id: book.module,v 1.475 2008/11/16 19:41:14 dries Exp $
 
 /**
  * @file
@@ -305,7 +305,7 @@ function book_get_books() {
       }
     }
   }
-  
+
   return $all_books;
 }
 

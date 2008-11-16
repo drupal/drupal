@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.826 2008/11/16 18:57:18 dries Exp $
+// $Id: common.inc,v 1.827 2008/11/16 19:41:14 dries Exp $
 
 /**
  * @file
@@ -2116,7 +2116,7 @@ function _drupal_load_stylesheet($matches) {
  * Delete all cached CSS files.
  */
 function drupal_clear_css_cache() {
-  file_scan_directory(file_create_path('css'), '/.*/', array('.', '..', 'CVS'), 'file_unmanaged_delete', TRUE);
+  file_scan_directory(file_create_path('css'), '/.*/', '/(\.\.?|CVS)$/', 'file_unmanaged_delete', TRUE);
 }
 
 /**
@@ -2553,7 +2553,7 @@ function drupal_build_js_cache($files, $filename) {
  * Delete all cached JS files.
  */
 function drupal_clear_js_cache() {
-  file_scan_directory(file_create_path('js'), '/.*/', array('.', '..', 'CVS'), 'file_unmanaged_delete', TRUE);
+  file_scan_directory(file_create_path('js'), '/.*/', '/(\.\.?|CVS)$/', 'file_unmanaged_delete', TRUE);
   variable_set('javascript_parsed', array());
 }
 
@@ -2924,7 +2924,7 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
 
   // Get current list of items
   foreach ($searchdir as $dir) {
-    $files = array_merge($files, file_scan_directory($dir, $mask, array('.', '..', 'CVS'), 0, TRUE, $key, $min_depth));
+    $files = array_merge($files, file_scan_directory($dir, $mask, '/(\.\.?|CVS)$/', 0, TRUE, $key, $min_depth));
   }
 
   return $files;

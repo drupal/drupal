@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.pages.inc,v 1.8 2008/11/11 21:44:01 dries Exp $
+// $Id: comment.pages.inc,v 1.9 2008/11/16 19:41:14 dries Exp $
 
 /**
  * @file
@@ -70,7 +70,7 @@ function comment_reply($node, $pid = NULL) {
       if ($pid) {
         // Load the comment whose cid = $pid
         $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid AND c.status = :status', array(
-          ':cid'=>$pid, 
+          ':cid'=>$pid,
           ':status'=>COMMENT_PUBLISHED))->fetchObject();
         if ( $comment ) {
           // If that comment exists, make sure that the current comment and the
