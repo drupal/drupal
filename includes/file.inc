@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.143 2008/11/08 22:04:03 dries Exp $
+// $Id: file.inc,v 1.144 2008/11/16 14:58:28 dries Exp $
 
 /**
  * @file
@@ -814,7 +814,7 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
 
 
   // If a file was uploaded, process it.
-  if (isset($_FILES['files']) && $_FILES['files']['name'][$source] && is_uploaded_file($_FILES['files']['tmp_name'][$source])) {
+  if (isset($_FILES['files']['name'][$source]) && is_uploaded_file($_FILES['files']['tmp_name'][$source])) {
     // Check for file upload errors and return FALSE if a lower level system
     // error occurred.
     switch ($_FILES['files']['error'][$source]) {
