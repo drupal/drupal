@@ -162,6 +162,14 @@ define('DRUPAL_ANONYMOUS_RID', 1);
 define('DRUPAL_AUTHENTICATED_RID', 2);
 
 /**
+ * The number of bytes in a kilobyte. The scientific standard for kilo is 1000,
+ * but used commonly in the field of computers to represent 1024 bits. For more
+ * information on the different standards please visit:
+ * http://en.wikipedia.org/wiki/Kilobyte.
+ */
+define('DRUPAL_KILOBYTE', 1024);
+
+/**
  * No language negotiation. The default language is used.
  */
 define('LANGUAGE_NEGOTIATION_NONE', 0);

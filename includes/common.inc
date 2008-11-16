@@ -1210,20 +1210,20 @@ function format_plural($count, $singular, $plural, $args = array(), $langcode = 
  * Parse a given byte count.
  *
  * @param $size
- *   A size expressed as a number of bytes with optional SI size and unit
- *   suffix (e.g. 2, 3K, 5MB, 10G).
+ *   A size expressed as a number of bytes with optional SI or IEC binary unit
+ *   prefix (e.g. 2, 3K, 5MB, 10G, 6GiB, 8 bytes, 9mbytes).
  * @return
- *   An integer representation of the size.
+ *   An integer representation of the size in bytes.
  */
 function parse_size($size) {
-  $suffixes = array(
-    '' => 1,
-    'k' => 1024,
-    'm' => 1048576, // 1024 * 1024
-    'g' => 1073741824, // 1024 * 1024 * 1024
-  );
-  if (preg_match('/([0-9]+)\s*(k|m|g)?(b?(ytes?)?)/i', $size, $match)) {
-    return $match[1] * $suffixes[drupal_strtolower($match[2])];
+  $unit = preg_replace('/[^bkmgtpezy]/i', '', $size); // Remove the non-unit characters from the size.
+  $size = preg_replace('/[^0-9\.]/', '', $size); // Remove the non-numeric characters from the size.
+  if ($unit) {
+    // Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
+    return round($size * pow(DRUPAL_KILOBYTE, stripos('bkmgtpezy', $unit[0])));
+  }
+  else {
+    return round($size);
   }
 }
 
@@ -1239,11 +1239,11 @@ function parse_size($size) {
  *   A translated string representation of the size.
  */
 function format_size($size, $langcode = NULL) {
-  if ($size < 1000) {
+  if ($size < DRUPAL_KILOBYTE) {
     return format_plural($size, '1 byte', '@count bytes', array(), $langcode);
   }
   else {
-    $size = $size / 1000; // convert bytes to kilobytes (1000 bytes)
+    $size = $size / DRUPAL_KILOBYTE; // Convert bytes to kilobytes.
     $units = array(
       t('@size KB', array(), $langcode),
       t('@size MB', array(), $langcode),
@@ -1255,8 +1255,8 @@ function format_size($size, $langcode = NULL) {
       t('@size YB', array(), $langcode),
     );
     foreach ($units as $unit) {
-      if (round($size, 2) >= 1000) {
-        $size = $size / 1000;
+      if (round($size, 2) >= DRUPAL_KILOBYTE) {
+        $size = $size / DRUPAL_KILOBYTE;
       }
       else {
         break;
