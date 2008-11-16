@@ -52,6 +52,7 @@ function theme_node_admin_overview($name, $type) {
  * Generates the node type editing form.
  */
 function node_type_form(&$form_state, $type = NULL) {
+  drupal_add_js(drupal_get_path('module', 'node') .'/content_types.js');
   if (!isset($type->type)) {
     // This is a new type.  Node module managed types are custom and unlocked.
     $type = node_type_set_defaults(array('custom' => 1, 'locked' => 0));
@@ -70,6 +71,7 @@ function node_type_form(&$form_state, $type = NULL) {
     '#default_value' => $type->name,
     '#description' => t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>create content</em> page. It is recommended that this name begin with a capital letter and contain only letters, numbers, and <strong>spaces</strong>. This name must be unique.'),
     '#required' => TRUE,
+    '#field_suffix' => ' <small id="node-type-name-suffix">&nbsp;</small>',
   );
 
   if (!$type->locked) {
