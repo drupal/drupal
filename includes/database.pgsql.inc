@@ -85,6 +85,7 @@ function db_connect($url) {
   // Restore error tracking setting
   ini_set('track_errors', $track_errors_previous);
 
+  pg_query($connection, "set client_encoding=\"UTF8\"");
   return $connection;
 }
 
