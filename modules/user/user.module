@@ -139,6 +139,9 @@ function user_external_login($account, $edit = array()) {
  *   An associative array of attributes to search for in selecting the
  *   user, such as user name or e-mail address.
  *
+ * @return
+ *   A fully-loaded $user object upon successful user load or FALSE if user
+ *   cannot be loaded.
  */
 function user_load($array = array()) {
   // Dynamically compose a SQL query:
@@ -209,7 +212,7 @@ function user_load($array = array()) {
  *   (optional) The category for storing profile information in.
  *
  * @return
- *   A fully-loaded $user object.
+ *   A fully-loaded $user object upon successful save or FALSE if the save failed.
  */
 function user_save($account, $edit = array(), $category = 'account') {
   $table = drupal_get_schema('users');
@@ -253,7 +256,11 @@ function user_save($account, $edit = array(), $category = 'account') {
     $edit['data'] = $data;
     $edit['uid'] = $account->uid;
     // Save changes to the users table.
-    drupal_write_record('users', $edit, 'uid');
+    $success = drupal_write_record('users', $edit, 'uid');
+    if (!$success) {
+      // The query failed - better to abort the save than risk further data loss.
+      return FALSE;
+    }
 
     // Reload user roles if provided.
     if (isset($edit['roles']) && is_array($edit['roles'])) {
@@ -301,7 +308,12 @@ function user_save($account, $edit = array(), $category = 'account') {
       $edit['access'] = REQUEST_TIME;
     }
 
-    drupal_write_record('users', $edit);
+    $success = drupal_write_record('users', $edit);
+    if (!$success) {
+      // On a failed INSERT some other existing user's uid may be returned.
+      // We must abort to avoid overwriting their account.
+      return FALSE;
+    }
 
     // Build the initial user object.
     $user = user_load(array('uid' => $edit['uid']));
@@ -1401,6 +1413,11 @@ function user_external_login_register($name, $module) {
       'access' => REQUEST_TIME
     );
     $account = user_save('', $userinfo);
+    // Terminate if an error occured during user_save().
+    if (!$account) {
+      drupal_set_message(t("Error saving user account."), 'error');
+      return;
+    }
     user_set_authmaps($account, array("authname_$module" => $name));
     $user = $account;
     watchdog('user', 'New external user: %name using module %module.', array('%name' => $name, '%module' => $module), WATCHDOG_NOTICE, l(t('edit'), 'user/' . $user->uid . '/edit'));
@@ -2270,6 +2287,12 @@ function user_register_submit($form, &$form_state) {
     $merge_data['status'] = variable_get('user_register', 1) == 1;
   }
   $account = user_save('', array_merge($form_state['values'], $merge_data));
+  // Terminate if an error occured during user_save().
+  if (!$account) {
+    drupal_set_message(t("Error saving user account."), 'error');
+    $form_state['redirect'] = '';
+    return;
+  }
   $form_state['user'] = $account;
 
   watchdog('user', 'New user: %name (%email).', array('%name' => $name, '%email' => $mail), WATCHDOG_NOTICE, l(t('edit'), 'user/' . $account->uid . '/edit'));
