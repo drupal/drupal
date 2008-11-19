@@ -801,10 +801,7 @@ function user_block($op = 'list', $delta = '', $edit = array()) {
       case 'new':
         if (user_access('access content')) {
           // Retrieve a list of new users who have subsequently accessed the site successfully.
-          $result = db_query_range('SELECT uid, name FROM {users} WHERE status != 0 AND access != 0 ORDER BY created DESC', 0, variable_get('user_block_whois_new_count', 5));
-          while ($account = db_fetch_object($result)) {
-            $items[] = $account;
-          }
+          $items = db_query_range('SELECT uid, name FROM {users} WHERE status != 0 AND access != 0 ORDER BY created DESC', array(), 0, variable_get('user_block_whois_new_count', 5))->fetchAll();
           $output = theme('user_list', $items);
 
           $block['subject'] = t('Who\'s new');
@@ -820,17 +817,7 @@ function user_block($op = 'list', $delta = '', $edit = array()) {
           // Perform database queries to gather online user lists.  We use s.timestamp
           // rather than u.access because it is much faster.
           $anonymous_count = drupal_session_count($interval);
-          $authenticated_users = db_query('SELECT DISTINCT u.uid, u.name, s.timestamp FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.timestamp >= %d AND s.uid > 0 ORDER BY s.timestamp DESC', $interval);
-          $authenticated_count = 0;
-          $max_users = variable_get('user_block_max_list_count', 10);
-          $items = array();
-          while ($account = db_fetch_object($authenticated_users)) {
-            if ($max_users > 0) {
-              $items[] = $account;
-              $max_users--;
-            }
-            $authenticated_count++;
-          }
+          $authenticated_count = db_query("SELECT COUNT(DISTINCT s.uid) FROM {sessions} s WHERE s.timestamp >= :timestamp AND s.uid > 0", array(':timestamp' => $interval))->fetchField();
 
           // Format the output with proper grammar.
           if ($anonymous_count == 1 && $authenticated_count == 1) {
@@ -843,6 +830,7 @@ function user_block($op = 'list', $delta = '', $edit = array()) {
           // Display a list of currently online users.
           $max_users = variable_get('user_block_max_list_count', 10);
           if ($authenticated_count && $max_users) {
+            $items = db_query_range('SELECT u.uid, u.name, MAX(s.timestamp) AS max_timestamp FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.timestamp >= :interval AND s.uid > 0 GROUP BY u.uid, u.name ORDER BY max_timestamp DESC', array(':interval' => $interval), 0, $max_users)->fetchAll();
             $output .= theme('user_list', $items, t('Online users'));
           }
 
