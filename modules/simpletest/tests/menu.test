@@ -7,9 +7,6 @@
  */
 
 class MenuIncTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Hook menu tests'),
@@ -18,9 +15,6 @@ class MenuIncTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     // Enable dummy module that implements hook_menu.
     parent::setUp('hook_menu');
@@ -44,4 +38,42 @@ class MenuIncTestCase extends DrupalWebTestCase {
     $name = db_result(db_query($sql));
     $this->assertEqual($name, 'changed', t('Menu name was successfully changed after rebuild.'));
   }
+}
+
+/**
+ * Tests rebuilding the menu by setting 'menu_rebuild_needed.'
+ */
+class MenuRebuildTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Menu rebuild test'),
+      'description' => t('Test rebuilding of menu.'),
+      'group' => t('Menu'),
+    );
+  }
+  
+  /**
+   * Test if the 'menu_rebuild_needed' variable triggers a menu_rebuild() call.
+   */
+  function testMenuRebuildByVariable() {
+    // Check if 'admin' path exists.
+    $admin_exists = db_result(db_query("SELECT path from {menu_router} WHERE path = 'admin'"));
+    $this->assertEqual($admin_exists, 'admin', t("The path 'admin/' exists prior to deleting."));
+
+    // Delete the path item 'admin', and test that the path doesn't exist in the database.
+    $delete = db_delete('menu_router')
+      ->condition('path', 'admin')
+      ->execute();
+    $admin_exists = db_result(db_query("SELECT path from {menu_router} WHERE path = 'admin'"));
+    $this->assertFalse($admin_exists, t("The path 'admin/' has been deleted and doesn't exist in the database."));
+
+    // Now we enable the rebuild variable and trigger menu_execute_active_handler()
+    // to rebuild the menu item. Now 'admin' should exist.
+    variable_set('menu_rebuild_needed', TRUE);
+    // menu_execute_active_handler() should trigger the rebuild.
+    $this->drupalGet('<front>');
+    $admin_exists = db_result(db_query("SELECT path from {menu_router} WHERE path = 'admin'"));
+    $this->assertEqual($admin_exists, 'admin', t("The menu has been rebuilt, the path 'admin' now exists again."));
+  }
+  
 }
