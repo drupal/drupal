@@ -158,9 +158,9 @@ function user_schema() {
       ),
       'timezone' => array(
         'type' => 'varchar',
-        'length' => 8,
+        'length' => 32,
         'not null' => FALSE,
-        'description' => "User's timezone.",
+        'description' => "User's time zone.",
       ),
       'language' => array(
         'type' => 'varchar',
@@ -288,6 +288,74 @@ function user_update_7001() {
   db_drop_field($ret, 'users', 'mode');
   db_drop_field($ret, 'users', 'sort');
 
+  return $ret;
+}
+
+/**
+ * Convert user time zones from time zone offsets to time zone names.
+ */
+function user_update_7002(&$sandbox) {
+  $ret = array('#finished' => 0);
+
+  // Multi-part update.
+  if (!isset($sandbox['user_from'])) {
+    db_change_field($ret, 'users', 'timezone', 'timezone', array('type' => 'varchar', 'length' => 32, 'not null' => FALSE));
+    $sandbox['user_from'] = 0;
+    $sandbox['user_count'] = db_result(db_query("SELECT COUNT(uid) FROM {users}"));
+    $sandbox['user_not_migrated'] = 0;
+  }
+  else {
+    $timezones = system_time_zones();
+    // Update this many per page load.
+    $count = 10000;
+    $contributed_date_module = db_column_exists('users', 'timezone_name');
+    $contributed_event_module = db_column_exists('users', 'timezone_id');
+
+    $results = db_query_range("SELECT uid FROM {users} ORDER BY uid", array(), $sandbox['user_from'], $count);
+    foreach ($results as $account) {
+      $timezone = NULL;
+      // If the contributed Date module has created a users.timezone_name
+      // column, use this data to set each user's time zone.
+      if ($contributed_date_module) {
+        $date_timezone = db_query("SELECT timezone_name FROM {users} WHERE uid = :uid", array(':uid' => $account->uid))->fetchField();
+        if (isset($timezones[$date_timezone])) {
+          $timezone = $date_timezone;
+        }
+      }
+      // If the contributed Event module has stored user time zone information
+      // use that information to update the user accounts.
+      if (!$timezone && $contributed_event_module) {
+        try {
+          $event_timezone = db_query("SELECT t.name FROM {users} u LEFT JOIN {event_timezones} t ON u.timezone_id = t.timezone WHERE u.uid = :uid", array(':uid' => $account->uid))->fetchField();
+          $event_timezone = str_replace(' ', '_', $event_timezone);
+          if (isset($timezones[$event_timezone])) {
+            $timezone = $event_timezone;
+          }
+        }
+        catch (PDOException $e) {
+          // Ignore error if event_timezones table does not exist or unexpected
+          // schema found.
+        }
+      }
+      if ($timezone) {
+        db_query("UPDATE {users} SET timezone = :timezone WHERE uid = :uid", array(':timezone' => $timezone, ':uid' => $account->uid));
+      }
+      else {
+        $sandbox['user_not_migrated']++;
+        db_query("UPDATE {users} SET timezone = NULL WHERE uid = :uid", array(':uid' => $account->uid));
+      }
+      $sandbox['user_from']++;
+    }
+
+    $ret['#finished'] = $sandbox['user_from'] / $sandbox['user_count'];
+    if ($sandbox['user_from'] == $sandbox['user_count']) {
+      $ret[] = array('success' => TRUE, 'query' => "Migrate user time zones.");
+      if ($sandbox['user_not_migrated'] > 0) {
+        variable_set('empty_timezone_message', 1);
+        drupal_set_message('Some user time zones have been emptied and need to be set to the correct values. Use the new ' . l('time zone options', 'admin/settings/date-time') . ' to choose whether to remind users at login to set the correct time zone.', 'warning');
+      }
+    }
+  }
   return $ret;
 }
 

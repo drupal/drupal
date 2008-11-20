@@ -469,6 +469,50 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Tests generic date and time handling capabilities of Drupal.
+ */
+class DateTimeFunctionalTest extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Date and time'),
+      'description' => t('Configure date and time settings. Test date formatting and time zone handling, including daylight saving time.'),
+      'group' => t('System'),
+    );
+  }
+
+  /**
+   * Test time zones and DST handling.
+   */
+  function testTimeZoneHandling() {
+    // Setup date/time settings for Honolulu time.
+    variable_set('date_default_timezone', 'Pacific/Honolulu');
+    variable_set('configurable_timezones', 0);
+    variable_set('date_format_medium', 'Y-m-d H:i:s O');
+
+    // Create some nodes with different authored-on dates.
+    $date1 = '2007-01-31 21:00:00 -1000';
+    $date2 = '2007-07-31 21:00:00 -1000';
+    $node1 = $this->drupalCreateNode(array('created' => strtotime($date1), 'type' => 'article'));
+    $node2 = $this->drupalCreateNode(array('created' => strtotime($date2), 'type' => 'article'));
+
+    // Confirm date format and time zone.
+    $this->drupalGet("node/$node1->nid");
+    $this->assertText('2007-01-31 21:00:00 -1000', t('Date should be identical, with GMT offset of -10 hours.'));
+    $this->drupalGet("node/$node2->nid");
+    $this->assertText('2007-07-31 21:00:00 -1000', t('Date should be identical, with GMT offset of -10 hours.'));
+
+    // Set time zone to Los Angeles time.
+    variable_set('date_default_timezone', 'America/Los_Angeles');
+
+    // Confirm date format and time zone.
+    $this->drupalGet("node/$node1->nid");
+    $this->assertText('2007-01-31 23:00:00 -0800', t('Date should be two hours ahead, with GMT offset of -8 hours.'));
+    $this->drupalGet("node/$node2->nid");
+    $this->assertText('2007-08-01 00:00:00 -0700', t('Date should be three hours ahead, with GMT offset of -7 hours.'));
+  }
+}
+
 class PageTitleFiltering extends DrupalWebTestCase {
   protected $content_user;
   protected $saved_title;
@@ -532,4 +576,3 @@ class PageTitleFiltering extends DrupalWebTestCase {
     $this->assertText(check_plain($edit['title']), 'Check to make sure tags in the node title are converted.');
   }
 }
-

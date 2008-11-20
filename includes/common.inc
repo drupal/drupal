@@ -1340,7 +1340,7 @@ function format_interval($timestamp, $granularity = 2, $langcode = NULL) {
  *   before a character to avoid interpreting the character as part of a date
  *   format.
  * @param $timezone
- *   Time zone offset in seconds; if omitted, the user's time zone is used.
+ *   Time zone identifier; if omitted, the user's time zone is used.
  * @param $langcode
  *   Optional language code to translate to a language other than what is used
  *   to display the page.
@@ -1348,17 +1348,21 @@ function format_interval($timestamp, $granularity = 2, $langcode = NULL) {
  *   A translated date string in the requested format.
  */
 function format_date($timestamp, $type = 'medium', $format = '', $timezone = NULL, $langcode = NULL) {
+  static $timezones = array();
   if (!isset($timezone)) {
     global $user;
-    if (variable_get('configurable_timezones', 1) && $user->uid && strlen($user->timezone)) {
+    if (variable_get('configurable_timezones', 1) && $user->uid && $user->timezone) {
       $timezone = $user->timezone;
     }
     else {
-      $timezone = variable_get('date_default_timezone', 0);
+      $timezone = variable_get('date_default_timezone', 'UTC');
     }
   }
-
-  $timestamp += $timezone;
+  // Store DateTimeZone objects in an array rather than repeatedly
+  // contructing identical objects over the life of a request.
+  if (!isset($timezones[$timezone])) {
+    $timezones[$timezone] = timezone_open($timezone);
+  }
 
   switch ($type) {
     case 'small':
@@ -1377,28 +1381,27 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
 
   $max = strlen($format);
   $date = '';
+  // Create a DateTime object from the timestamp.
+  $date_time = date_create('@' . $timestamp);
+  // Set the time zone for the DateTime object.
+  date_timezone_set($date_time, $timezones[$timezone]);
+
   for ($i = 0; $i < $max; $i++) {
     $c = $format[$i];
-    if (strpos('AaDlM', $c) !== FALSE) {
-      $date .= t(gmdate($c, $timestamp), array(), $langcode);
+    if (strpos('AaeDlMT', $c) !== FALSE) {
+      $date .= t(date_format($date_time, $c), array(), $langcode);
     }
     elseif ($c == 'F') {
       // Special treatment for long month names: May is both an abbreviation
       // and a full month name in English, but other languages have
       // different abbreviations.
-      $date .= trim(t('!long-month-name ' . gmdate($c, $timestamp), array('!long-month-name' => ''), $langcode));
+      $date .= trim(t('!long-month-name ' . date_format($date_time, $c), array('!long-month-name' => ''), $langcode));
     }
-    elseif (strpos('BdgGhHiIjLmnsStTUwWYyz', $c) !== FALSE) {
-      $date .= gmdate($c, $timestamp);
+    elseif (strpos('BcdGgHhIijLmNnOoPSstUuWwYyZz', $c) !== FALSE) {
+      $date .= date_format($date_time, $c);
     }
     elseif ($c == 'r') {
-      $date .= format_date($timestamp - $timezone, 'custom', 'D, d M Y H:i:s O', $timezone, $langcode);
-    }
-    elseif ($c == 'O') {
-      $date .= sprintf('%s%02d%02d', ($timezone < 0 ? '-' : '+'), abs($timezone / 3600), abs($timezone % 3600) / 60);
-    }
-    elseif ($c == 'Z') {
-      $date .= $timezone;
+      $date .= format_date($timestamp, 'custom', 'D, d M Y H:i:s O', $timezone, $langcode);
     }
     elseif ($c == '\\') {
       $date .= $format[++$i];

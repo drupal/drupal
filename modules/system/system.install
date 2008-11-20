@@ -3097,7 +3097,47 @@ function system_update_7012() {
 }
 
 /**
+ * Convert default time zone offset to default time zone name.
+ */
+function system_update_7013() {
+  $ret = array();
+  $timezone = NULL;
+  $timezones = system_time_zones();
+  // If the contributed Date module set a default time zone name, use this
+  // setting as the default time zone.
+  if (($timezone_name = variable_get('date_default_timezone_name', NULL)) && isset($timezones[$timezone_name])) {
+    $timezone = $timezone_name;
+  }
+  // If the contributed Event module has set a default site time zone, look up
+  // the time zone name and use it as the default time zone.
+  if (!$timezone && ($timezone_id = variable_get('date_default_timezone_id', 0))) {
+    try {
+      $timezone_name = db_result(db_query('SELECT name FROM {event_timezones} WHERE timezone = :timezone_id', array(':timezone_id' => $timezone_id)));
+      if (($timezone_name = str_replace(' ', '_', $timezone_name)) && isset($timezones[$timezone_name])) {
+        $timezone = $timezone_name;
+      }
+    }
+    catch (PDOException $e) {
+      // Ignore error if event_timezones table does not exist or unexpected
+      // schema found.
+    }
+  }
+  // If the previous default time zone was a non-zero offset, guess the site's
+  // intended time zone based on that offset and the server's daylight saving
+  // time status.
+  if (!$timezone && ($offset = variable_get('date_default_timezone', 0)) && ($timezone_name = timezone_name_from_abbr('', intval($offset), date('I'))) && isset($timezones[$timezone_name])) {
+    $timezone = $timezone_name;
+  }
+  // Otherwise, the default time zone offset was zero, which is UTC.
+  if (!$timezone) {
+    $timezone = 'UTC';
+  }
+  variable_set('date_default_timezone', $timezone);
+  drupal_set_message('The default time zone has been set to <em>' . check_plain($timezone) . '</em>. Please check the ' . l('date and time configuration page', 'admin/settings/date-time') . ' to configure it correctly.', 'warning');
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
-

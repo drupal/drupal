@@ -23,9 +23,9 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     // Set user registration to "Visitors can create accounts and no administrator approval is required."
     variable_set('user_register', 1);
 
-    // Enable user configurable timezone, and set the default timezone to +1 hour (or +3600 seconds).
+    // Enable user-configurable time zones, and set the default time zone to Brussels time.
     variable_set('configurable_timezones', 1);
-    variable_set('date_default_timezone', 3600);
+    variable_set('date_default_timezone', 'Europe/Brussels');
 
     $edit = array();
     $edit['name'] = $name = $this->randomName();
@@ -45,7 +45,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->assertEqual($user->signature, '', t('Correct signature field.'));
     $this->assertTrue(($user->created > REQUEST_TIME - 20 ), t('Correct creation time.'));
     $this->assertEqual($user->status, variable_get('user_register', 1) == 1 ? 1 : 0, t('Correct status field.'));
-    $this->assertEqual($user->timezone, variable_get('date_default_timezone', NULL), t('Correct timezone field.'));
+    $this->assertEqual($user->timezone, variable_get('date_default_timezone', NULL), t('Correct time zone field.'));
     $this->assertEqual($user->language, '', t('Correct language field.'));
     $this->assertEqual($user->picture, '', t('Correct picture field.'));
     $this->assertEqual($user->init, $mail, t('Correct init field.'));
@@ -521,6 +521,66 @@ class UserAdminTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/user/user', $edit, t('Update'));
     $account = user_load(array('name' => $user_b->name));
     $this->assertEqual($account->status, 0, 'User B blocked');
+  }
+}
+
+/**
+ * Tests for user-configurable time zones.
+ */
+class UserTimeZoneFunctionalTest extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('User time zones'),
+      'description' => t('Set a user time zone and verify that dates are displayed in local time.'),
+      'group' => t('User'),
+    );
+  }
+
+  /**
+   * Tests the display of dates and time when user-configurable time zones are set.
+   */
+  function testUserTimeZone() {
+    // Setup date/time settings for Los Angeles time.
+    variable_set('date_default_timezone', 'America/Los_Angeles');
+    variable_set('configurable_timezones', 1);
+    variable_set('date_format_medium', 'Y-m-d H:i T');
+
+    // Create a user account and login.
+    $web_user = $this->drupalCreateUser();
+    $this->drupalLogin($web_user);
+
+    // Create some nodes with different authored-on dates.
+    // Two dates in PST (winter time):
+    $date1 = '2007-03-09 21:00:00 -0800';
+    $date2 = '2007-03-11 01:00:00 -0800';
+    // One date in PDT (summer time):
+    $date3 = '2007-03-20 21:00:00 -0700';
+    $node1 = $this->drupalCreateNode(array('created' => strtotime($date1), 'type' => 'article'));
+    $node2 = $this->drupalCreateNode(array('created' => strtotime($date2), 'type' => 'article'));
+    $node3 = $this->drupalCreateNode(array('created' => strtotime($date3), 'type' => 'article'));
+
+    // Confirm date format and time zone.
+    $this->drupalGet("node/$node1->nid");
+    $this->assertText('2007-03-09 21:00 PST', t('Date should be PST.'));
+    $this->drupalGet("node/$node2->nid");
+    $this->assertText('2007-03-11 01:00 PST', t('Date should be PST.'));
+    $this->drupalGet("node/$node3->nid");
+    $this->assertText('2007-03-20 21:00 PDT', t('Date should be PDT.'));
+
+    // Change user time zone to Santiago time.
+    $edit = array();
+    $edit['mail'] = $web_user->mail;
+    $edit['timezone'] = 'America/Santiago';
+    $this->drupalPost("user/$web_user->uid/edit", $edit, t('Save'));
+    $this->assertText(t('The changes have been saved.'), t('Time zone changed to Santiago time.'));
+
+    // Confirm date format and time zone.
+    $this->drupalGet("node/$node1->nid");
+    $this->assertText('2007-03-10 02:00 CLST', t('Date should be Chile summer time; five hours ahead of PST.'));
+    $this->drupalGet("node/$node2->nid");
+    $this->assertText('2007-03-11 05:00 CLT', t('Date should be Chile time; four hours ahead of PST'));
+    $this->drupalGet("node/$node3->nid");
+    $this->assertText('2007-03-21 00:00 CLT', t('Date should be Chile time; three hours ahead of PDT.'));
   }
 }
 

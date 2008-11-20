@@ -2390,25 +2390,6 @@ function user_register() {
     $form = array_merge($form, $extra);
   }
 
-  if (variable_get('configurable_timezones', 1)) {
-    // Override field ID, so we only change timezone on user registration,
-    // and never touch it on user edit pages.
-    $form['timezone'] = array(
-      '#type' => 'hidden',
-      '#default_value' => variable_get('date_default_timezone', NULL),
-      '#id' => 'edit-user-register-timezone',
-    );
-
-    // Add the JavaScript callback to automatically set the timezone.
-    drupal_add_js('
-// Global Killswitch
-if (Drupal.jsEnabled) {
-  $(document).ready(function() {
-    Drupal.setDefaultTimezone();
-  });
-}', 'inline');
-  }
-
   $form['submit'] = array('#type' => 'submit', '#value' => t('Create new account'), '#weight' => 30);
   $form['#validate'][] = 'user_register_validate';
 

@@ -42,6 +42,21 @@ define('DRUPAL_MINIMUM_PGSQL',  '8.1');
 define('DRUPAL_MAXIMUM_TEMP_FILE_AGE', 21600);
 
 /**
+ * New users will be set to the default time zone at registration.
+ */
+define('DRUPAL_USER_TIMEZONE_DEFAULT', 0);
+
+/**
+ * New users will get an empty time zone at registration.
+ */
+define('DRUPAL_USER_TIMEZONE_EMPTY', 1);
+
+/**
+ * New users will select their own timezone at registration.
+ */
+define('DRUPAL_USER_TIMEZONE_SELECT', 2);
+
+/**
  * Implementation of hook_help().
  */
 function system_help($path, $arg) {
@@ -356,6 +371,12 @@ function system_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['system/timezone'] = array(
+    'title' => 'Time zone',
+    'page callback' => 'system_timezone',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
   $items['admin'] = array(
     'title' => 'Administer',
     'access arguments' => array('access administration pages'),
@@ -591,7 +612,7 @@ function system_menu() {
   );
   $items['admin/settings/date-time'] = array(
     'title' => 'Date and time',
-    'description' => "Settings for how Drupal displays date and time, as well as the system's default timezone.",
+    'description' => "Settings for how Drupal displays date and time, as well as the system's default time zone.",
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_date_time_settings'),
     'access arguments' => array('administer site configuration'),
@@ -736,25 +757,64 @@ function system_preprocess_page(&$variables) {
 function system_user_form(&$edit, &$user, $category = NULL) {
   if ($category == 'account') {
     $form['theme_select'] = system_theme_select_form(t('Selecting a different theme will change the look and feel of the site.'), isset($edit['theme']) ? $edit['theme'] : NULL, 2);
-
     if (variable_get('configurable_timezones', 1)) {
-      $zones = _system_zonelist();
+      system_user_timezone($edit, $form);
+    }
+    return $form;
+  }
+}
+
+/**
+ * Implementation of hook_user_register().
+ */
+function system_user_register(&$edit, &$user, $category = NULL) {
+  if (variable_get('configurable_timezones', 1)) {
+    $form = array();
+    if (variable_get('user_default_timezone', DRUPAL_USER_TIMEZONE_DEFAULT) == DRUPAL_USER_TIMEZONE_SELECT) {
+      system_user_timezone($edit, $form);
+    }
+    else {
       $form['timezone'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Locale settings'),
-        '#weight' => 6,
-        '#collapsible' => TRUE,
-      );
-      $form['timezone']['timezone'] = array(
-        '#type' => 'select',
-        '#title' => t('Time zone'),
-        '#default_value' => strlen($edit['timezone']) ? $edit['timezone'] : variable_get('date_default_timezone', 0),
-        '#options' => $zones,
-        '#description' => t('Select your current local time. Dates and times throughout this site will be displayed using this time zone.'),
+        '#type' => 'hidden',
+        '#value' => variable_get('user_default_timezone', DRUPAL_USER_TIMEZONE_DEFAULT) ? '' : variable_get('date_default_timezone', ''),
       );
     }
-
     return $form;
+  }
+}
+
+/**
+ * Implementation of hook_user_login().
+ */
+function system_user_login(&$edit, &$user, $category = NULL) {
+  // If the user has a NULL time zone, notify them to set a time zone.
+  if (!$user->timezone && variable_get('configurable_timezones', 1) && variable_get('empty_timezone_message', 0)) {
+    drupal_set_message(t('Please configure your <a href="@user-edit">account time zone setting</a>.', array('@user-edit' => url("user/$user->uid/edit", array('query' => drupal_get_destination(), 'fragment' => 'edit-timezone')))));
+  }
+}
+
+/**
+ * Add the time zone field to the user edit and register forms.
+ */
+function system_user_timezone(&$edit, &$form) {
+  global $user;
+  $form['timezone'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Locale settings'),
+    '#weight' => 6,
+    '#collapsible' => TRUE,
+  );
+  $form['timezone']['timezone'] = array(
+    '#type' => 'select',
+    '#title' => t('Time zone'),
+    '#default_value' => $edit['timezone'] ? $edit['timezone'] : ($edit['uid'] == $user->uid ? variable_get('date_default_timezone', '') : ''),
+    '#options' => system_time_zones(($edit['uid'] != $user->uid)),
+    '#description' => t('Select the desired local time and time zone. Dates and times throughout this site will be displayed using this time zone.'),
+  );
+  if (!$edit['timezone'] && $edit['uid'] == $user->uid) {
+    $form['timezone']['#description'] = t('Your time zone setting will be automatically detected if possible. Please confirm the selection and click save.');
+    $form['timezone']['timezone']['#attributes'] = array('class' => 'timezone-detect');
+    drupal_add_js('misc/timezone.js');
   }
 }
 
@@ -2059,15 +2119,23 @@ function system_block_ip_action() {
 
 /**
  * Generate an array of time zones and their local time&date.
+ *
+ * @param $blank
+ *   If evaluates true, prepend an empty time zone option to the array.
  */
-function _system_zonelist() {
-  $timestamp = REQUEST_TIME;
-  $zonelist = array(-11, -10, -9.5, -9, -8, -7, -6, -5, -4, -3.5, -3, -2, -1, 0, 1, 2, 3, 3.5, 4, 5, 5.5, 5.75, 6, 6.5, 7, 8, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.75, 13, 14);
-  $zones = array();
-  foreach ($zonelist as $offset) {
-    $zone = $offset * 3600;
-    $zones[$zone] = format_date($timestamp, 'custom', variable_get('date_format_long', 'l, F j, Y - H:i') . ' O', $zone);
+function system_time_zones($blank = NULL) {
+  $zonelist = timezone_identifiers_list();
+  $zones = $blank ? array('' => t('- None selected -')) : array();
+  foreach ($zonelist as $zone) {
+    // Because many time zones exist in PHP only for backward compatibility
+    // reasons and should not be used, the list is filtered by a regular
+    // expression.
+    if (preg_match('!^((Africa|America|Antarctica|Arctic|Asia|Atlantic|Australia|Europe|Indian|Pacific)/|UTC$)!', $zone)) {
+      $zones[$zone] = t('@zone: @date', array('@zone' => t($zone), '@date' => format_date(REQUEST_TIME, 'custom', variable_get('date_format_long', 'l, F j, Y - H:i') . ' O', $zone)));
+    }
   }
+  // Sort the translated time zones alphabetically.
+  asort($zones);
   return $zones;
 }
 
@@ -2095,6 +2163,17 @@ function system_check_http_request() {
   $works = isset($result->data) && $result->data == $nothing;
   variable_set('drupal_http_request_fails', !$works);
   return $works;
+}
+
+/**
+ * Menu callback; Retrieve a JSON object containing a suggested time zone name.
+ */
+function system_timezone($abbreviation = '', $offset = -1, $is_daylight_saving_time = NULL) {
+  // An abbreviation of "0" passed in the callback arguments should be
+  // interpreted as the empty string.
+  $abbreviation = $abbreviation ? $abbreviation : '';
+  $timezone = timezone_name_from_abbr($abbreviation, intval($offset), $is_daylight_saving_time);
+  drupal_json($timezone);
 }
 
 /**

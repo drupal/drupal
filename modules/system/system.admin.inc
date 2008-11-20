@@ -1532,7 +1532,7 @@ function system_date_time_settings() {
   drupal_add_js(array('dateTime' => array('lookup' => url('admin/settings/date-time/lookup'))), 'setting');
 
   // Date settings:
-  $zones = _system_zonelist();
+  $zones = system_time_zones();
 
   // Date settings: possible date formats
   $date_short = array('Y-m-d H:i', 'm/d/Y - H:i', 'd/m/Y - H:i', 'Y/m/d - H:i',
@@ -1567,17 +1567,9 @@ function system_date_time_settings() {
   $form['locale']['date_default_timezone'] = array(
     '#type' => 'select',
     '#title' => t('Default time zone'),
-    '#default_value' => variable_get('date_default_timezone', 0),
+    '#default_value' => variable_get('date_default_timezone', date_default_timezone_get()),
     '#options' => $zones,
     '#description' => t('Select the default site time zone.')
-  );
-
-  $form['locale']['configurable_timezones'] = array(
-    '#type' => 'radios',
-    '#title' => t('User-configurable time zones'),
-    '#default_value' => variable_get('configurable_timezones', 1),
-    '#options' => array(t('Disabled'), t('Enabled')),
-    '#description' => t('When enabled, users can set their own time zone and dates will be displayed accordingly.')
   );
 
   $form['locale']['date_first_day'] = array(
@@ -1586,6 +1578,42 @@ function system_date_time_settings() {
     '#default_value' => variable_get('date_first_day', 0),
     '#options' => array(0 => t('Sunday'), 1 => t('Monday'), 2 => t('Tuesday'), 3 => t('Wednesday'), 4 => t('Thursday'), 5 => t('Friday'), 6 => t('Saturday')),
     '#description' => t('The first day of the week for calendar views.')
+  );
+
+  $form['timezone'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('User time zones'),
+  );
+
+  $form['timezone']['configurable_timezones'] = array(
+    '#type' => 'radios',
+    '#title' => t('User-configurable time zones'),
+    '#default_value' => variable_get('configurable_timezones', 1),
+    '#options' => array(0 => t('Disabled'), 1 => t('Enabled')),
+    '#description' => t('When enabled, users can set their own time zone and dates will be displayed accordingly.')
+  );
+
+  $form['timezone']['user_default_timezone'] = array(
+    '#type' => 'radios',
+    '#title' => t('User time zone defaults'),
+    '#default_value' => variable_get('user_default_timezone', DRUPAL_USER_TIMEZONE_DEFAULT),
+    '#options' => array(
+      DRUPAL_USER_TIMEZONE_DEFAULT => t('New users will be set to the default time zone at registration.'),
+      DRUPAL_USER_TIMEZONE_EMPTY   => t('New users will get an empty time zone at registration.'),
+      DRUPAL_USER_TIMEZONE_SELECT  => t('New users will select their own time zone at registration.'),
+    ),
+    '#description' => t('Method for setting user time zones at registration when user-configurable time zones are enabled. This only affects the initial time zone setting for a new registration. Users will be able to change their time zone any time they edit their account.')
+  );
+
+  $form['timezone']['empty_timezone_message'] = array(
+    '#type' => 'radios',
+    '#title' => t('Empty user time zones'),
+    '#default_value' => variable_get('empty_timezone_message', 0),
+    '#options' => array(
+      0 => t('Ignore empty user time zones.'),
+      1 => t('Remind users at login if their time zone is not set.'),
+    ),
+    '#description' => t('Handling for empty user time zones when user-configurable time zones are enabled. Use this option to help ensure that users set the correct time zone.')
   );
 
   $form['date_formats'] = array(

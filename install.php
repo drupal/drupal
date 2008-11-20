@@ -726,6 +726,8 @@ function install_tasks($profile, $task) {
       // Add JavaScript validation.
       _user_password_dynamic_validation();
       drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
+      // Add JavaScript time zone detection.
+      drupal_add_js('misc/timezone.js');
       // We add these strings as settings because JavaScript translation does not
       // work on install time.
       drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail')), 'cleanURL' => array('success' => st('Your server has been successfully tested to support this feature.'), 'failure' => st('Your system configuration does not currently support this feature. The <a href="http://drupal.org/node/15365">handbook page on Clean URLs</a> has additional troubleshooting information.'), 'testing' => st('Testing clean URLs...'))), 'setting');
@@ -734,7 +736,6 @@ function install_tasks($profile, $task) {
 if (Drupal.jsEnabled) {
   $(document).ready(function() {
     Drupal.cleanURLsInstallCheck();
-    Drupal.setDefaultTimezone();
   });
 }', 'inline');
       // Build menu to allow clean URL check.
@@ -1081,10 +1082,11 @@ function install_configure_form(&$form_state, $url) {
   $form['server_settings']['date_default_timezone'] = array(
     '#type' => 'select',
     '#title' => st('Default time zone'),
-    '#default_value' => 0,
-    '#options' => _system_zonelist(),
+    '#default_value' => date_default_timezone_get(),
+    '#options' => system_time_zones(),
     '#description' => st('By default, dates in this site will be displayed in the chosen time zone.'),
     '#weight' => 5,
+    '#attributes' => array('class' => 'timezone-detect'),
   );
 
   $form['server_settings']['clean_url'] = array(

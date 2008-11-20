@@ -160,14 +160,6 @@ Drupal.evaluatePasswordStrength = function (password) {
 };
 
 /**
- * Set the client's system timezone as default values of form fields.
- */
-Drupal.setDefaultTimezone = function() {
-  var offset = new Date().getTimezoneOffset() * -60;
-  $("#edit-date-default-timezone, #edit-user-register-timezone").val(offset);
-};
-
-/**
  * On the admin/user/settings page, conditionally show all of the
  * picture-related form elements depending on the current value of the
  * "Picture support" radio buttons.
