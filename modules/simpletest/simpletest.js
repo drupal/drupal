@@ -5,34 +5,51 @@
  */
 Drupal.behaviors.simpleTestMenuCollapse = {
   attach: function() {
+    var timeout = null;
     // Adds expand-collapse functionality.
     $('div.simpletest-image').each(function() {
       direction = Drupal.settings.simpleTest[$(this).attr('id')].imageDirection;
       $(this).html(Drupal.settings.simpleTest.images[direction]);
     });
+
+    // Adds group toggling functionality to arrow images.
     $('div.simpletest-image').click(function() {
-      // Toggle all of the trs.
-      if (!Drupal.settings.simpleTest[$(this).attr('id')].clickActive) {
-        Drupal.settings.simpleTest[$(this).attr('id')].clickActive = true;
-        var trs = $(this).parents('tbody').children().filter('.' + Drupal.settings.simpleTest[$(this).attr('id')].testClass), trs_formatted = [], direction = Drupal.settings.simpleTest[$(this).attr('id')].imageDirection, self = $(this);
-        for (var i = 0; i < trs.length; i++) {
-          trs_formatted.push(trs[i]);
-        }
-        var toggleTrs = function(trs, action, action2) {
-          tr = trs[action]();
-          if (tr) {
-            $(tr)[action2](1, function() {
-              toggleTrs(trs, action, action2);
-            });
-          }
-          else {
-            Drupal.settings.simpleTest[self.attr('id')].clickActive = false;
-          }
-        }
-        toggleTrs(trs_formatted, (direction ? 'pop' : 'shift'), (direction ? 'fadeOut' : 'fadeIn'));
-        Drupal.settings.simpleTest[$(this).attr('id')].imageDirection = !direction;
-        $(this).html(Drupal.settings.simpleTest.images[(direction? 0 : 1)]);
+      var trs = $(this).parents('tbody').children('.' + Drupal.settings.simpleTest[this.id].testClass);
+      var direction = Drupal.settings.simpleTest[this.id].imageDirection;
+      var row = direction ? trs.size() - 1 : 0;
+
+      // If clicked in the middle of expanding a group, stop so we can switch directions.
+      if (timeout) {
+        clearTimeout(timeout);
       }
+
+      // Function to toggle an individual row according to the current direction.
+      // We set a timeout of 20 ms until the next row will be shown/hidden to
+      // create a sliding effect.
+      function rowToggle() {
+        if (direction) {
+          if (row >= 0) {
+            $(trs[row]).hide();
+            row--;
+            timeout = setTimeout(rowToggle, 20);
+          }
+        }
+        else {
+          if (row < trs.size()) {
+            $(trs[row]).removeClass('js-hide').show();
+            row++;
+            timeout = setTimeout(rowToggle, 20);
+          }
+        }
+      }
+
+      // Kick-off the toggling upon a new click.
+      rowToggle();
+
+      // Toggle the arrow image next to the test group title.
+      $(this).html(Drupal.settings.simpleTest.images[(direction ? 0 : 1)]);
+      Drupal.settings.simpleTest[this.id].imageDirection = !direction;
+
     });
   }
 };
