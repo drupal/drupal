@@ -1,4 +1,4 @@
-// $Id: user.js,v 1.8 2008/10/29 10:01:28 dries Exp $
+// $Id: user.js,v 1.9 2008/11/20 06:56:17 webchick Exp $
 
 /**
  * Attach handlers to evaluate the strength of any password fields and to check
@@ -157,14 +157,6 @@ Drupal.evaluatePasswordStrength = function (password) {
   // Assemble the final message.
   msg = translate.hasWeaknesses + "<ul><li>" + msg.join("</li><li>") + "</li></ul>";
   return { strength: strength, message: msg };
-};
-
-/**
- * Set the client's system timezone as default values of form fields.
- */
-Drupal.setDefaultTimezone = function() {
-  var offset = new Date().getTimezoneOffset() * -60;
-  $("#edit-date-default-timezone, #edit-user-register-timezone").val(offset);
 };
 
 /**
