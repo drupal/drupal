@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.265 2008/11/03 05:55:55 webchick Exp $
+// $Id: update.php,v 1.266 2008/11/20 07:07:59 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -512,7 +512,8 @@ function update_check_incompatibility($name, $type = 'module') {
   if (!isset($file)
       || !isset($file->info['core'])
       || $file->info['core'] != DRUPAL_CORE_COMPATIBILITY
-      || version_compare(phpversion(), $file->info['php']) < 0) {
+      || version_compare(phpversion(), $file->info['php']) < 0
+      || ($type == 'module' && empty($file->info['files']))) {
     return TRUE;
   }
   return FALSE;
