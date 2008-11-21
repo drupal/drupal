@@ -73,8 +73,6 @@ function system_help($path, $arg) {
       $output .= '<li>' . t('basic configuration options for your site, including <a href="@date-settings">date and time settings</a>, <a href="@file-system">file system settings</a>, <a href="@clean-url">clean URL support</a>, <a href="@site-info">site name and other information</a>, and a <a href="@site-maintenance">site maintenance</a> function for taking your site temporarily offline.', array('@date-settings' => url('admin/settings/date-time'), '@file-system' => url('admin/settings/file-system'), '@clean-url' => url('admin/settings/clean-urls'), '@site-info' => url('admin/settings/site-information'), '@site-maintenance' => url('admin/settings/site-maintenance'))) . '</li></ul>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@system">System module</a>.', array('@system' => 'http://drupal.org/handbook/modules/system/')) . '</p>';
       return $output;
-    case 'admin':
-      return '<p>' . t('Welcome to the administration section. Here you may control how your site functions.') . '</p>';
     case 'admin/by-module':
       return '<p>' . t('This page shows you all available administration tasks for each module.') . '</p>';
     case 'admin/build/themes':
