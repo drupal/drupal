@@ -413,6 +413,11 @@ class CommentAnonymous extends CommentHelperCase {
     // Allow contact info.
     $this->drupalLogin($this->admin_user);
     $this->setCommentAnonymous('1');
+
+    // Attempt to edit anonymous comment.
+    $this->drupalGet('comment/edit/' . $anonymous_comment1->id);
+    $edited_comment = $this->postComment(NULL, $this->randomName(), $this->randomName());
+    $this->assertTrue($this->commentExists($edited_comment, FALSE), t('Modified reply found.'));
     $this->drupalLogout();
 
     // Post anonymous comment with contact info (optional).

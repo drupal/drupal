@@ -787,7 +787,7 @@ function comment_save($edit) {
           $edit['timestamp'] = REQUEST_TIME;
         }
 
-        if ($edit['uid'] === $user->uid) { // '===' Need to modify anonymous users as well.
+        if ($edit['uid'] === $user->uid && isset($user->name)) { // '===' Need to modify anonymous users as well.
           $edit['name'] = $user->name;
         }
 
@@ -795,7 +795,7 @@ function comment_save($edit) {
           ->fields(array(
            'nid' => $edit['nid'],
             'pid' => empty($edit['pid']) ? 0 : $edit['pid'],
-            'uid' => empty($edit['uid']) ? 0 : $edit['uid'],
+            'uid' => $edit['uid'],
             'subject' => $edit['subject'],
             'comment' => $edit['comment'],
             'format' => $edit['comment_format'],
@@ -1466,7 +1466,7 @@ function comment_form(&$form_state, $edit, $title = NULL) {
   );
   $form['uid'] = array(
     '#type' => 'value',
-    '#value' => !empty($edit['uid']) ? $edit['uid'] : NULL,
+    '#value' => !empty($edit['uid']) ? $edit['uid'] : 0,
   );
 
   // Only show the save button if comment previews are optional or if we are
