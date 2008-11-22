@@ -188,15 +188,14 @@ $update_free_access = FALSE;
 /**
  * PHP settings:
  *
- * To see what PHP settings are possible, including whether they can
- * be set at runtime (ie., when ini_set() occurs), read the PHP
- * documentation at http://www.php.net/manual/en/ini.php#ini.list
- * and take a look at the .htaccess file to see which non-runtime
- * settings are used there. Settings defined here should not be
- * duplicated there so as to avoid conflict issues.
+ * To see what PHP settings are possible, including whether they can be set at
+ * runtime (i.e., when ini_set() occurs), read the PHP documentation:
+ * http://www.php.net/manual/en/ini.php#ini.list
+ * See drupal_initialize_variables() in includes/bootstrap.inc for required
+ * runtime settings and the .htaccess file for non-runtime settings. Settings
+ * defined there should not be duplicated here so as to avoid conflict issues.
  */
 ini_set('arg_separator.output',     '&amp;');
-ini_set('magic_quotes_runtime',     0);
 ini_set('magic_quotes_sybase',      0);
 ini_set('session.cache_expire',     200000);
 ini_set('session.cache_limiter',    'none');
