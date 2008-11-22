@@ -189,7 +189,7 @@ $update_free_access = FALSE;
  * PHP settings:
  *
  * To see what PHP settings are possible, including whether they can be set at
- * runtime (i.e., when ini_set() occurs), read the PHP documentation:
+ * runtime (by using ini_set()), read the PHP documentation:
  * http://www.php.net/manual/en/ini.php#ini.list
  * See drupal_initialize_variables() in includes/bootstrap.inc for required
  * runtime settings and the .htaccess file for non-runtime settings. Settings
