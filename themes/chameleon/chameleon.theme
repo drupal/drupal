@@ -22,14 +22,16 @@ function chameleon_page($content, $show_blocks = TRUE, $show_messages = TRUE) {
   }
 
   $title = drupal_get_title();
+  $rdf_namespaces = drupal_get_rdf_namespaces();
 
   // Get blocks before so that they can alter the header (JavaScript, Stylesheets etc.)
   $blocks_left = theme_blocks('left');
   $blocks_right = theme_blocks('right');
 
-  $output  = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
-  $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"$language\" xml:lang=\"$language\" dir=\"$direction\">\n";
-  $output .= "<head>\n";
+  $output  = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML+RDFa 1.0//EN\" \"http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd\">\n";
+  $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"$language\" xml:lang=\"$language\" dir=\"$direction\"\n";
+  $putput .= "  $rdf_namespaces>\n";
+  $output .= "<head profile=\"http://ns.inria.fr/grddl/rdfa/\">\n";
   $output .= " <title>" . ($title ? strip_tags($title) . " | " . variable_get("site_name", "Drupal") : variable_get("site_name", "Drupal") . " | " . variable_get("site_slogan", "")) . "</title>\n";
   $output .= drupal_get_html_head();
   $output .= drupal_get_css();

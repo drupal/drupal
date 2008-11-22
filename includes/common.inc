@@ -113,6 +113,18 @@ function drupal_get_breadcrumb() {
 }
 
 /**
+ * Returns a string containing RDF namespaces for the html tag of a XHTML page.
+ */
+function drupal_get_rdf_namespaces() {
+  // Serialize the RDF namespaces used in RDFa annotation.
+  $xml_rdf_namespaces = array();
+  foreach (module_invoke_all('rdf_namespaces') as $prefix => $uri) {
+    $xml_rdf_namespaces[] = 'xmlns:' . $prefix . '="' . $uri . '"';
+  }
+  return implode("\n  ", $xml_rdf_namespaces);
+}
+
+/**
  * Add output to the head tag of the HTML page.
  *
  * This function can be called as long the headers aren't sent.
