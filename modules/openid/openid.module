@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.32 2008/10/26 18:06:38 dries Exp $
+// $Id: openid.module,v 1.33 2008/11/22 10:32:42 dries Exp $
 
 /**
  * @file
@@ -26,8 +26,8 @@ function openid_menu() {
   );
   $items['user/%user/openid/delete'] = array(
     'title' => 'Delete OpenID',
-    'page callback' => 'openid_delete_user',
-    'page arguments' => array(1),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('openid_user_delete_form', 1),
     'access callback' => 'user_edit_access',
     'access arguments' => array(1),
     'type' => MENU_CALLBACK,
