@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.996 2008/11/15 11:45:03 dries Exp $
+// $Id: node.module,v 1.997 2008/11/22 13:11:05 dries Exp $
 
 /**
  * @file
@@ -1446,11 +1446,8 @@ function theme_node_search_admin($form) {
  * Retrieve the comment mode for the given node ID (none, read, or read/write).
  */
 function node_comment_mode($nid) {
-  static $comment_mode;
-  if (!isset($comment_mode[$nid])) {
-    $comment_mode[$nid] = db_result(db_query('SELECT comment FROM {node} WHERE nid = %d', $nid));
-  }
-  return $comment_mode[$nid];
+  $node = node_load($nid);
+  return $node->comment;
 }
 
 /**
