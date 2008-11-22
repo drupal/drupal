@@ -1303,24 +1303,24 @@ function node_search($op = 'search', $keys = NULL) {
         $keys = search_query_insert($keys, 'type');
       }
 
-      if ($category = search_query_extract($keys, 'category')) {
-        $categories = array();
-        foreach (explode(',', $category) as $c) {
-          $categories[] = "tn.tid = %d";
+      if ($term = search_query_extract($keys, 'term')) {
+        $terms = array();
+        foreach (explode(',', $term) as $c) {
+          $terms[] = "tn.tid = %d";
           $arguments1[] = $c;
         }
-        $conditions1 .= ' AND (' . implode(' OR ', $categories) . ')';
+        $conditions1 .= ' AND (' . implode(' OR ', $terms) . ')';
         $join1 .= ' INNER JOIN {term_node} tn ON n.vid = tn.vid';
-        $keys = search_query_insert($keys, 'category');
+        $keys = search_query_insert($keys, 'term');
       }
 
       if ($languages = search_query_extract($keys, 'language')) {
-        $categories = array();
+        $terms = array();
         foreach (explode(',', $languages) as $l) {
-          $categories[] = "n.language = '%s'";
+          $terms[] = "n.language = '%s'";
           $arguments1[] = $l;
         }
-        $conditions1 .= ' AND (' . implode(' OR ', $categories) . ')';
+        $conditions1 .= ' AND (' . implode(' OR ', $terms) . ')';
         $keys = search_query_insert($keys, 'language');
       }
 
@@ -1947,9 +1947,9 @@ function node_form_alter(&$form, $form_state, $form_id) {
 
     // Taxonomy box:
     if ($taxonomy = module_invoke('taxonomy', 'form_all', 1)) {
-      $form['advanced']['category'] = array(
+      $form['advanced']['term'] = array(
         '#type' => 'select',
-        '#title' => t('Only in the category(s)'),
+        '#title' => t('Only in the term(s)'),
         '#prefix' => '<div class="criterion">',
         '#size' => 10,
         '#suffix' => '</div>',
@@ -2010,8 +2010,8 @@ function node_search_validate($form, &$form_state) {
     }
   }
 
-  if (isset($form_state['values']['category']) && is_array($form_state['values']['category'])) {
-    $keys = search_query_insert($keys, 'category', implode(',', $form_state['values']['category']));
+  if (isset($form_state['values']['term']) && is_array($form_state['values']['term'])) {
+    $keys = search_query_insert($keys, 'term', implode(',', $form_state['values']['term']));
   }
   if (isset($form_state['values']['language']) && is_array($form_state['values']['language'])) {
     $keys = search_query_insert($keys, 'language', implode(',', array_filter($form_state['values']['language'])));

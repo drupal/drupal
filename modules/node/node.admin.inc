@@ -152,7 +152,7 @@ function node_filters() {
 
   // The taxonomy filter
   if ($taxonomy = module_invoke('taxonomy', 'form_all', 1)) {
-    $filters['category'] = array('title' => t('category'), 'options' => $taxonomy);
+    $filters['term'] = array('title' => t('term'), 'options' => $taxonomy);
   }
   // Language filter if there is a list of languages
   if ($languages = module_invoke('locale', 'language_list')) {
@@ -179,7 +179,7 @@ function node_build_filter_query() {
         list($key, $value) = explode('-', $value, 2);
         $where[] = 'n.' . $key . ' = %d';
         break;
-      case 'category':
+      case 'term':
         $table = "tn$index";
         $where[] = "$table.tid = %d";
         $join .= "INNER JOIN {term_node} $table ON n.nid = $table.nid ";
@@ -215,7 +215,7 @@ function node_filter_form() {
   $form['#submit'][] = 'node_filter_form_submit';
   foreach ($session as $filter) {
     list($type, $value) = $filter;
-    if ($type == 'category') {
+    if ($type == 'term') {
       // Load term name from DB rather than search and parse options array.
       $value = module_invoke('taxonomy', 'get_term', $value);
       $value = $value->name;
