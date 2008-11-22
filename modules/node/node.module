@@ -1446,11 +1446,8 @@ function theme_node_search_admin($form) {
  * Retrieve the comment mode for the given node ID (none, read, or read/write).
  */
 function node_comment_mode($nid) {
-  static $comment_mode;
-  if (!isset($comment_mode[$nid])) {
-    $comment_mode[$nid] = db_result(db_query('SELECT comment FROM {node} WHERE nid = %d', $nid));
-  }
-  return $comment_mode[$nid];
+  $node = node_load($nid);
+  return $node->comment;
 }
 
 /**
