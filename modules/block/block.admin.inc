@@ -177,52 +177,11 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
     drupal_set_title(t("'%name' block", array('%name' => $info[$delta]['info'])), PASS_THROUGH);
   }
 
-  // Standard block configurations.
-  $form['user_vis_settings'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('User specific visibility settings'),
-    '#collapsible' => TRUE,
-  );
-  $form['user_vis_settings']['custom'] = array(
-    '#type' => 'radios',
-    '#title' => t('Custom visibility settings'),
-    '#options' => array(
-      t('Users cannot control whether or not they see this block.'),
-      t('Show this block by default, but let individual users hide it.'),
-      t('Hide this block by default but let individual users show it.')
-    ),
-    '#description' => t('Allow individual users to customize the visibility of this block in their account settings.'),
-    '#default_value' => $edit['custom'],
-  );
-
-  // Role-based visibility settings.
-  $default_role_options = array();
-  $result = db_query("SELECT rid FROM {block_role} WHERE module = '%s' AND delta = '%s'", $module, $delta);
-  while ($role = db_fetch_object($result)) {
-    $default_role_options[] = $role->rid;
-  }
-  $result = db_query('SELECT rid, name FROM {role} ORDER BY name');
-  $role_options = array();
-  while ($role = db_fetch_object($result)) {
-    $role_options[$role->rid] = $role->name;
-  }
-  $form['role_vis_settings'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Role specific visibility settings'),
-    '#collapsible' => TRUE,
-  );
-  $form['role_vis_settings']['roles'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Show block for specific roles'),
-    '#default_value' => $default_role_options,
-    '#options' => $role_options,
-    '#description' => t('Show this block only for the selected role(s). If you select no roles, the block will be visible to all users.'),
-  );
-
   $form['page_vis_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('Page specific visibility settings'),
     '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
   );
 
   $access = user_access('use PHP for block visibility');
@@ -252,6 +211,50 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
       '#description' => $description,
     );
   }
+
+  // Role-based visibility settings.
+  $default_role_options = array();
+  $result = db_query("SELECT rid FROM {block_role} WHERE module = '%s' AND delta = '%s'", $module, $delta);
+  while ($role = db_fetch_object($result)) {
+    $default_role_options[] = $role->rid;
+  }
+  $result = db_query('SELECT rid, name FROM {role} ORDER BY name');
+  $role_options = array();
+  while ($role = db_fetch_object($result)) {
+    $role_options[$role->rid] = $role->name;
+  }
+  $form['role_vis_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Role specific visibility settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['role_vis_settings']['roles'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Show block for specific roles'),
+    '#default_value' => $default_role_options,
+    '#options' => $role_options,
+    '#description' => t('Show this block only for the selected role(s). If you select no roles, the block will be visible to all users.'),
+  );
+
+  // Standard block configurations.
+  $form['user_vis_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('User specific visibility settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['user_vis_settings']['custom'] = array(
+    '#type' => 'radios',
+    '#title' => t('Custom visibility settings'),
+    '#options' => array(
+      t('Users cannot control whether or not they see this block.'),
+      t('Show this block by default, but let individual users hide it.'),
+      t('Hide this block by default but let individual users show it.')
+    ),
+    '#description' => t('Allow individual users to customize the visibility of this block in their account settings.'),
+    '#default_value' => $edit['custom'],
+  );
 
   $form['submit'] = array(
     '#type' => 'submit',
