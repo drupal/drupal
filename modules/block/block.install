@@ -6,87 +6,87 @@
  */
 function block_schema() {
   $schema['block'] = array(
-    'description' => t('Stores block settings, such as region and visibility settings.'),
+    'description' => 'Stores block settings, such as region and visibility settings.',
     'fields' => array(
       'bid' => array(
         'type' => 'serial',
         'not null' => TRUE,
-        'description' => t('Primary Key: Unique block ID.'),
+        'description' => 'Primary Key: Unique block ID.',
       ),
       'module' => array(
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
         'default' => '',
-        'description' => t("The module from which the block originates; for example, 'user' for the Who's Online block, and 'block' for any custom blocks."),
+        'description' => "The module from which the block originates; for example, 'user' for the Who's Online block, and 'block' for any custom blocks.",
       ),
       'delta' => array(
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => '0',
-        'description' => t('Unique ID for block within a module.'),
+        'description' => 'Unique ID for block within a module.',
       ),
       'theme' => array(
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('The theme under which the block settings apply.'),
+        'description' => 'The theme under which the block settings apply.',
       ),
       'status' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => t('Block enabled status. (1 = enabled, 0 = disabled)'),
+        'description' => 'Block enabled status. (1 = enabled, 0 = disabled)',
       ),
       'weight' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => t('Block weight within region.'),
+        'description' => 'Block weight within region.',
       ),
       'region' => array(
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Theme region within which the block is set.'),
+        'description' => 'Theme region within which the block is set.',
       ),
       'custom' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => t('Flag to indicate how users may control visibility of the block. (0 = Users cannot control, 1 = On by default, but can be hidden, 2 = Hidden by default, but can be shown)'),
+        'description' => 'Flag to indicate how users may control visibility of the block. (0 = Users cannot control, 1 = On by default, but can be hidden, 2 = Hidden by default, but can be shown)',
       ),
       'visibility' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => t('Flag to indicate how to show blocks on pages. (0 = Show on all pages except listed pages, 1 = Show only on listed pages, 2 = Use custom PHP code to determine visibility)'),
+        'description' => 'Flag to indicate how to show blocks on pages. (0 = Show on all pages except listed pages, 1 = Show only on listed pages, 2 = Use custom PHP code to determine visibility)',
       ),
       'pages' => array(
         'type' => 'text',
         'not null' => TRUE,
-        'description' => t('Contents of the "Pages" block; contains either a list of paths on which to include/exclude the block or PHP code, depending on "visibility" setting.'),
+        'description' => 'Contents of the "Pages" block; contains either a list of paths on which to include/exclude the block or PHP code, depending on "visibility" setting.',
       ),
       'title' => array(
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Custom title for the block. (Empty string will use block default title, &lt;none&gt; will remove the title, text will cause block to use specified title.)'),
+        'description' => 'Custom title for the block. (Empty string will use block default title, &lt;none&gt; will remove the title, text will cause block to use specified title.)',
       ),
       'cache' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 1,
         'size' => 'tiny',
-        'description' => t('Binary flag to indicate block cache mode. (-1: Do not cache, 1: Cache per role, 2: Cache per user, 4: Cache per page, 8: Block cache global) See BLOCK_CACHE_* constants in block.module for more detailed information.'),
+        'description' => 'Binary flag to indicate block cache mode. (-1: Do not cache, 1: Cache per role, 2: Cache per user, 4: Cache per page, 8: Block cache global) See BLOCK_CACHE_* constants in block.module for more detailed information.',
       ),
     ),
     'primary key' => array('bid'),
@@ -99,25 +99,25 @@ function block_schema() {
   );
 
   $schema['block_role'] = array(
-    'description' => t('Sets up access permissions for blocks based on user roles'),
+    'description' => 'Sets up access permissions for blocks based on user roles',
     'fields' => array(
       'module' => array(
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
-        'description' => t("The block's origin module, from {block}.module."),
+        'description' => "The block's origin module, from {block}.module.",
       ),
       'delta' => array(
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
-        'description' => t("The block's unique delta within module, from {block}.delta."),
+        'description' => "The block's unique delta within module, from {block}.delta.",
       ),
       'rid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => t("The user's role ID from {users_roles}.rid."),
+        'description' => "The user's role ID from {users_roles}.rid.",
       ),
     ),
     'primary key' => array('module', 'delta', 'rid'),
@@ -127,33 +127,33 @@ function block_schema() {
   );
 
   $schema['box'] = array(
-    'description' => t('Stores contents of custom-made blocks.'),
+    'description' => 'Stores contents of custom-made blocks.',
     'fields' => array(
       'bid' => array(
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => t("The block's {block}.bid."),
+        'description' => "The block's {block}.bid.",
       ),
       'body' => array(
         'type' => 'text',
         'not null' => FALSE,
         'size' => 'big',
-        'description' => t('Block contents.'),
+        'description' => 'Block contents.',
       ),
       'info' => array(
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Block description.'),
+        'description' => 'Block description.',
       ),
       'format' => array(
         'type' => 'int',
         'size' => 'small',
         'not null' => TRUE,
         'default' => 0,
-        'description' => t("Block body's {filter_formats}.format; for example, 1 = Filtered HTML."),
+        'description' => "Block body's {filter_formats}.format; for example, 1 = Filtered HTML.",
       )
     ),
     'unique keys' => array(
