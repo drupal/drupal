@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.304 2008/11/15 15:32:36 webchick Exp $
+// $Id: form.inc,v 1.305 2008/11/22 13:03:06 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -590,8 +590,7 @@ function drupal_validate_form($form_id, $form, &$form_state) {
  * @param $form
  *   An associative array containing the structure of the form.
  * @return
- *   A string containing the path of the page to display when processing
- *   is complete.
+ *   A string containing the themed HTML.
  */
 function drupal_render_form($form_id, &$form) {
   // Don't override #theme if someone already set it.
