@@ -36,6 +36,11 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
 
   $block_regions = system_region_list($theme_key) + array(BLOCK_REGION_NONE => '<' . t('none') . '>');
 
+  // Weights range from -delta to +delta, so delta should be at least half
+  // of the amount of blocks present. This makes sure all blocks in the same
+  // region get an unique weight.
+  $weight_delta = round(count($blocks) / 2);
+
   // Build the form tree.
   $form = array(
     '#action' => arg(4) ? url('admin/build/block/list/' . $theme_key) : url('admin/build/block'),
@@ -62,6 +67,7 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
     $form[$key]['weight'] = array(
       '#type' => 'weight',
       '#default_value' => $block['weight'],
+      '#delta' => $weight_delta,
     );
     $form[$key]['region'] = array(
       '#type' => 'select',
