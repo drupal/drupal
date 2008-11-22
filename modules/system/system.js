@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.17 2008/11/20 06:56:17 webchick Exp $
+// $Id: system.js,v 1.18 2008/11/22 11:54:40 dries Exp $
 
 /**
  * Internal function to check using Ajax if clean URLs can be enabled on the
@@ -118,5 +118,17 @@ Drupal.behaviors.dateTime = {
 
     // Trigger the event handler to show the form input if necessary.
     $('select.date-format', context).trigger('change');
+  }
+};
+
+/**
+ * Show the powered by Drupal image preview
+ */
+Drupal.behaviors.poweredByPreview = {
+  attach: function(context) {
+    $('#edit-color, #edit-size').change(function() {
+      var path = Drupal.settings.basePath + 'misc/' + $('#edit-color').val() + '-' + $('#edit-size').val() + '.png';
+      $('img.powered-by-preview').attr('src', path);
+    });
   }
 };
