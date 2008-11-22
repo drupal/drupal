@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.641 2008/11/22 11:54:40 dries Exp $
+// $Id: system.module,v 1.642 2008/11/22 13:55:27 dries Exp $
 
 /**
  * @file
@@ -205,6 +205,26 @@ function system_perm() {
       'title' => t('Block IP addresses'),
       'description' => t('Block IP addresses from accessing your site.'),
     ),
+  );
+}
+
+/**
+ * Implementation of hook_rdf_namespace().
+ */
+function system_rdf_namespaces() {
+  return array(
+    'admin'    => 'http://webns.net/mvcb/',
+    'content'  => 'http://purl.org/rss/1.0/modules/content/',
+    'dc'       => 'http://purl.org/dc/elements/1.1/',
+    'dcterms'  => 'http://purl.org/dc/terms/',
+    'foaf'     => 'http://xmlns.com/foaf/0.1/',
+    'owl'      => 'http://www.w3.org/2002/07/owl#',
+    'rdf'      => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+    'rdfs'     => 'http://www.w3.org/2000/01/rdf-schema#',
+    'rss'      => 'http://purl.org/rss/1.0/',
+    'sioc'     => 'http://rdfs.org/sioc/ns#',
+    'xsi'      => 'http://www.w3.org/2001/XMLSchema-instance#',
+    'xsd'      => 'http://www.w3.org/2001/XMLSchema#',
   );
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.828 2008/11/20 06:56:17 webchick Exp $
+// $Id: common.inc,v 1.829 2008/11/22 13:55:27 dries Exp $
 
 /**
  * @file
@@ -110,6 +110,18 @@ function drupal_get_breadcrumb() {
   }
 
   return $breadcrumb;
+}
+
+/**
+ * Returns a string containing RDF namespaces for the html tag of a XHTML page.
+ */
+function drupal_get_rdf_namespaces() {
+  // Serialize the RDF namespaces used in RDFa annotation.
+  $xml_rdf_namespaces = array();
+  foreach (module_invoke_all('rdf_namespaces') as $prefix => $uri) {
+    $xml_rdf_namespaces[] = 'xmlns:' . $prefix . '="' . $uri . '"';
+  }
+  return implode("\n  ", $xml_rdf_namespaces);
 }
 
 /**

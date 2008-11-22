@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.451 2008/11/22 10:12:05 dries Exp $
+// $Id: theme.inc,v 1.452 2008/11/22 13:55:27 dries Exp $
 
 /**
  * @file
@@ -1881,6 +1881,11 @@ function template_preprocess_page(&$variables) {
   $variables['scripts']           = drupal_get_js();
   $variables['tabs']              = theme('menu_local_tasks');
   $variables['title']             = drupal_get_title();
+  // RDFa annotatates XHTML with RDF data, while GRDDL provides
+  // mechanisms for extraction of this RDF content via XSLT transformation
+  // using an associated GRDDL profile.
+  $variables['rdf_namespaces']    = drupal_get_rdf_namespaces();
+  $variables['grddl_profile']     = 'http://ns.inria.fr/grddl/rdfa/';
   // Closure should be filled last.
   $variables['closure']           = theme('closure');
 
