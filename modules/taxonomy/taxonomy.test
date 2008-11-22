@@ -6,10 +6,42 @@
  * Tests for Taxonomy module.
  */
 
- /**
-  * Tests for the taxonomy vocabulary interface.
-  */
-class TaxonomyVocabularyFunctionalTest extends DrupalWebTestCase {
+/**
+* Class with common helper methods.
+*/
+class TaxonomyWebTestCase extends DrupalWebTestCase {
+
+  /**
+   * Returns a new vocabulary with random properties.
+   */
+  function createVocabulary() {
+    // Create a vocabulary.
+    $vocabulary = new stdClass();
+    $vocabulary->name = $this->randomName();
+    $vocabulary->description = $this->randomName();
+    $vocabulary->help = '';
+    $vocabulary->nodes = array('article' => 'article');
+    $vocabulary->weight = mt_rand(0, 10);
+    taxonomy_vocabulary_save($vocabulary);
+    return $vocabulary;
+  }
+
+  /**
+   * Returns a new term with random properties in vocabulary $vid.
+   */
+  function createTerm($vid) {
+    $term = new stdClass();
+    $term->name = $this->randomName();
+    $term->vid = $vid;
+    taxonomy_term_save($term);
+    return $term;
+  }
+}
+
+/**
+* Tests for the taxonomy vocabulary interface.
+*/
+class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
 
   function getInfo() {
     return array(
@@ -22,6 +54,8 @@ class TaxonomyVocabularyFunctionalTest extends DrupalWebTestCase {
   function setUp() {
     parent::setUp();
     $this->admin_user = $this->drupalCreateUser(array('administer taxonomy'));
+    $this->drupalLogin($this->admin_user);
+    $this->vocabulary = $this->createVocabulary();
   }
 
   /**
@@ -29,7 +63,6 @@ class TaxonomyVocabularyFunctionalTest extends DrupalWebTestCase {
    */
   function testVocabularyInterface() {
     // Visit the main taxonomy administration page.
-    $this->drupalLogin($this->admin_user);
     $this->drupalGet('admin/content/taxonomy');
 
     // Create a new vocabulary.
@@ -57,13 +90,89 @@ class TaxonomyVocabularyFunctionalTest extends DrupalWebTestCase {
     $this->drupalGet('admin/content/taxonomy');
     $this->assertText($edit['name'], t('Vocabulary found in the vocabulary overview listing.'));
   }
+
+  /**
+   * Changing weights on the vocabulary overview with two or more vocabularies.
+   */
+  function testTaxonomyAdminChangingWeights() {
+    // Create some vocabularies.
+    for ($i = 0; $i < 10; $i++) {
+      $this->createVocabulary();
+    }
+    // Get all vocabularies and change their weights.
+    $vocabularies = taxonomy_get_vocabularies();
+    $edit = array();
+    foreach ($vocabularies as $key => $vocabulary) {
+      $vocabulary->weight = -$vocabulary->weight;
+      $vocabularies[$key]->weight = $vocabulary->weight;
+      $edit[$key .'[weight]'] = $vocabulary->weight;
+    }
+    // Saving the new weights via the interface.
+    $this->drupalPost('admin/content/taxonomy/', $edit, t('Save'));
+
+    // Load the vocabularies from the database.
+    $new_vocabularies = taxonomy_get_vocabularies();
+
+    // Check that the weights are saved in the database correctly.
+    foreach ($vocabularies as $key => $vocabulary) {
+      $this->assertEqual($new_vocabularies[$key]->weight, $vocabularies[$key]->weight, t('The vocabulary weight was changed.'));
+    }
+  }
+
+  /**
+   * Test the vocabulary overview with no vocabularies.
+   */
+  function testTaxonomyAdminNoVocabularies() {
+    // Delete all vocabularies.
+    $vocabularies = taxonomy_get_vocabularies();
+    foreach ($vocabularies as $key => $vocabulary) {
+      $edit = array();
+      $this->drupalPost('admin/content/taxonomy/' . $vocabulary->vid, $edit, t('Delete'));
+      // Submit the confirm form for deletion.
+      $this->drupalPost(NULL, NULL, t('Delete'));
+    }
+    // Confirm that no vocabularies are found in the database.
+    $this->assertFalse(taxonomy_get_vocabularies(), t('No vocabularies found in the database'));
+    // Check the default message for no vocabularies.
+    $this->assertText(t('No vocabularies available.'), t('No vocabularies were found.'));
+  }
+
+  /**
+   * Deleting a vocabulary.
+   */
+  function testTaxonomyAdminDeletingVocabulary() {
+    // Create a vocabulary.
+    $edit = array(
+      'name' => $this->randomName(),
+      'nodes[article]' => 'article',
+    );
+    $this->drupalPost('admin/content/taxonomy/add', $edit, t('Save'));
+    $this->assertText(t('Created new vocabulary'), t('New vocabulary was created.'));
+
+    // Check the created vocabulary.
+    $vocabularies = taxonomy_get_vocabularies();
+    $vid = $vocabularies[count($vocabularies)-1]->vid;
+    $vocabulary = taxonomy_vocabulary_load($vid, TRUE);
+    $this->assertTrue($vocabulary, t('Vocabulary found in database'));
+
+    // Delete the vocabulary.
+    $edit = array();
+    $this->drupalPost('admin/content/taxonomy/' .$vid, $edit, t('Delete'));
+    $this->assertRaw(t('Are you sure you want to delete the vocabulary %name?', array('%name' => $vocabulary->name)), t('[confirm deletion] Asks for confirmation.'));
+    $this->assertText(t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'), t('[confirm deletion] Inform that all terms will be deleted.'));
+
+    // Confirm deletion.
+    $this->drupalPost(NULL, NULL, t('Delete'));
+    $this->assertRaw(t('Deleted vocabulary %name.', array('%name' => $vocabulary->name)), t('Vocabulary deleted'));
+    $this->assertFalse(taxonomy_vocabulary_load($vid, TRUE), t('Vocabulary is not found in the database'));
+  }
 }
 
 
 /**
  * Tests for taxonomy vocabulary functions.
  */
-class TaxonomyVocabularyUnitTest extends DrupalWebTestCase {
+class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
 
 function getInfo() {
      return array(
@@ -77,14 +186,7 @@ function getInfo() {
     parent::setUp('taxonomy');
     $admin_user = $this->drupalCreateUser(array('create article content', 'administer taxonomy'));
     $this->drupalLogin($admin_user);
-    // Create a new vocabulary.
-    $vocabulary = new stdClass();
-    $vocabulary->name = $this->randomName();
-    $vocabulary->description = $this->randomName();
-    $vocabulary->help = '';
-    $vocabulary->weight = 0;
-    taxonomy_vocabulary_save($vocabulary);
-    $this->vocabulary = $vocabulary;
+    $this->vocabulary = $this->createVocabulary();
   }
 
   /**
@@ -97,20 +199,14 @@ function getInfo() {
     $vid = count($vocabularies) + 1;
     $vocabulary = taxonomy_vocabulary_load($vid);
     // This should not return an object because no such vocabulary exists.
-    $this->assertTrue(!is_object($vocabulary), t('No object loaded.'));
+    $this->assertTrue(empty($vocabulary), t('No object loaded.'));
 
     // Create a new vocabulary.
-    $vocabulary = new stdClass();
-    $vocabulary->name = $this->randomName();
-    $vocabulary->description = $this->randomName();
-    $vocabulary->help = '';
-    $vocabulary->weight = 0;
-    taxonomy_vocabulary_save($vocabulary);
-
+    $this->createVocabulary();
     // Load the vocabulary with the same $vid from earlier.
     // This should return a vocabulary object since it now matches a real vid.
     $vocabulary = taxonomy_vocabulary_load($vid);
-    $this->assertTrue(is_object($vocabulary), t('Vocabulary is an object'));
+    $this->assertTrue(!empty($vocabulary) && is_object($vocabulary), t('Vocabulary is an object'));
     $this->assertTrue($vocabulary->vid == $vid, t('Valid vocabulary vid is the same as our previously invalid one.'));
   }
 
@@ -143,7 +239,7 @@ function getInfo() {
 /**
  * Tests for taxonomy term functions.
  */
-class TaxonomyTermTestCase extends DrupalWebTestCase {
+class TaxonomyTermTestCase extends TaxonomyWebTestCase {
 
   function getInfo() {
     return array(
@@ -156,15 +252,8 @@ class TaxonomyTermTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('taxonomy');
     $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access'));
-
-    // Create a vocabulary.
-    $vocabulary = new stdClass();
-    $vocabulary->name = $this->randomName();
-    $vocabulary->description = $this->randomName();
-    $vocabulary->help = '';
-    $vocabulary->nodes = array('article' => 'article');
-    taxonomy_vocabulary_save($vocabulary);
-    $this->vocabulary = $vocabulary;
+    $this->drupalLogin($this->admin_user);
+    $this->vocabulary = $this->createVocabulary();
   }
 
   /**
@@ -172,17 +261,10 @@ class TaxonomyTermTestCase extends DrupalWebTestCase {
    */
   function testTaxonomyTermRelations() {
     // Create two taxonomy terms.
-    $term1 = new stdClass();
-    $term1->name = $this->randomName();
-    $term1->vid = $this->vocabulary->vid;
-    $term2 = new stdClass();
-    $term2->name = $this->randomName();
-    $term2->vid = $this->vocabulary->vid;
-    taxonomy_term_save($term1);
-    taxonomy_term_save($term2);
+    $term1 = $this->createTerm($this->vocabulary->vid);
+    $term2 = $this->createTerm($this->vocabulary->vid);
 
     // Edit $term1 and add $term2 as a relationship.
-    $this->drupalLogin($this->admin_user);
     $edit = array();
     $edit['relations[]'] = $term2->tid;
     $this->drupalPost('taxonomy/term/' . $term1->tid . '/edit', $edit, t('Save'));
@@ -195,12 +277,9 @@ class TaxonomyTermTestCase extends DrupalWebTestCase {
    * Test synonyms.
    */
   function testTaxonomySynonyms() {
-    // Create a taxonomy term with two synonyms.
-    $synonym = $this->randomName();
-    $term = new stdClass();
-    $term->name = $this->randomName();
-    $term->vid = $this->vocabulary->vid;
-    $term->synonyms = $synonym;
+    // Create a taxonomy term with one synonym.
+    $term = $this->createTerm($this->vocabulary->vid);
+    $term->synonyms = $this->randomName();
     taxonomy_term_save($term);
 
     // Fetch the synonyms.
@@ -218,17 +297,10 @@ class TaxonomyTermTestCase extends DrupalWebTestCase {
    */
   function testTaxonomyTermHierarchy() {
     // Create two taxonomy terms.
-    $term1 = new stdClass();
-    $term1->name = $this->randomName();
-    $term1->vid = $this->vocabulary->vid;
-    $term2 = new stdClass();
-    $term2->name = $this->randomName();
-    $term2->vid = $this->vocabulary->vid;
-    taxonomy_term_save($term1);
-    taxonomy_term_save($term2);
+    $term1 = $this->createTerm($this->vocabulary->vid);
+    $term2 = $this->createTerm($this->vocabulary->vid);
 
     // Edit $term2, setting $term1 as parent.
-    $this->drupalLogin($this->admin_user);
     $edit = array();
     $edit['parent[]'] = $term1->tid;
     $this->drupalPost('taxonomy/term/' . $term2->tid . '/edit', $edit, t('Save'));
@@ -240,10 +312,7 @@ class TaxonomyTermTestCase extends DrupalWebTestCase {
     $this->assertTrue(isset($parents[$term1->tid]), t('Parent found correctly.'));
 
     // Create a third term and save this as a parent of term2.
-    $term3 = new stdClass();
-    $term3->name = $this->randomName();
-    $term3->vid = $this->vocabulary->vid;
-    taxonomy_term_save($term3);
+    $term3 = $this->createTerm($this->vocabulary->vid);
     $term2->parent = array($term1->tid, $term3->tid);
     taxonomy_term_save($term2);
     $parents = taxonomy_get_parents($term2->tid);
@@ -252,21 +321,14 @@ class TaxonomyTermTestCase extends DrupalWebTestCase {
 
   /**
    * Test that hook_nodeapi_$op implementations work correctly.
-   */
-  /*
+   *
    * Save & edit a node and assert that taxonomy terms are saved/loaded properly.
    */
   function testTaxonomyNode() {
-    $term1 = new stdClass();
-    $term1->name = $this->randomName();
-    $term1->vid = $this->vocabulary->vid;
-    $term2 = new stdClass();
-    $term2->name = $this->randomName();
-    $term2->vid = $this->vocabulary->vid;
-    taxonomy_term_save($term1);
-    taxonomy_term_save($term2);
+    // Create two taxonomy terms.
+    $term1 = $this->createTerm($this->vocabulary->vid);
+    $term2 = $this->createTerm($this->vocabulary->vid);
 
-    $this->drupalLogin($this->admin_user);
     // Post an article.
     $edit = array();
     $edit['title'] = $this->randomName();
@@ -307,7 +369,6 @@ class TaxonomyTermTestCase extends DrupalWebTestCase {
       $this->randomName(),
       $this->randomName(),
     );
-    $this->drupalLogin($this->admin_user);
     $edit = array();
     $edit['title'] = $this->randomName();
     // Insert the terms in a comma separated list. Vocabulary 1 is a
@@ -325,7 +386,6 @@ class TaxonomyTermTestCase extends DrupalWebTestCase {
    * Save and edit a term and assert that the name and description are correct.
    */
   function testTermEdit() {
-    $this->drupalLogin($this->admin_user);
     $edit = array(
       'name' => $this->randomName(12),
       'description' => $this->randomName(100),
