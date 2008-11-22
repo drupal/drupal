@@ -150,7 +150,7 @@ class HookBootExitTestCase extends DrupalWebTestCase {
 
   function getInfo() {
     return array(
-      'name' => t('Boot and exit hook functionality'),
+      'name' => t('Boot and exit hook invocation'),
       'description' => t('Test that hook_boot() and hook_exit() are called correctly.'),
       'group' => t('Bootstrap'),
     );
@@ -165,8 +165,8 @@ class HookBootExitTestCase extends DrupalWebTestCase {
    */
   function testHookBootExit() {
     // Test with cache disabled. Boot and exit should always fire. Initialize
-    // the number of hook calls to one since the first call to two since the
-    // first call to drupalGet actually performs two HTTP requests.
+    // the number of hook calls to two since the first call to drupalGet
+    // actually performs two HTTP requests.
     variable_set('cache', CACHE_DISABLED);
     $this->drupalGet('');
     $calls = 2;
@@ -180,8 +180,8 @@ class HookBootExitTestCase extends DrupalWebTestCase {
     $this->assertEqual(db_query("SELECT COUNT(*) FROM {watchdog} WHERE type = 'system_test' AND message = 'hook_boot'")->fetchField(), $calls, t('hook_boot called with normal cache.'));
     $this->assertEqual(db_query("SELECT COUNT(*) FROM {watchdog} WHERE type = 'system_test' AND message = 'hook_exit'")->fetchField(), $calls, t('hook_exit called with normal cache.'));
 
-    // Test with aggressive cache. Boot and exit should only fire if there is
-    // no page cached.
+    // Test with aggressive cache. Boot and exit should not fire since the
+    // page is cached.
     variable_set('cache', CACHE_AGGRESSIVE);
     $this->assertTrue(cache_get(url('', array('absolute' => TRUE)), 'cache_page'), t('Page has been cached.'));
     $this->drupalGet('');
