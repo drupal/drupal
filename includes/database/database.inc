@@ -891,14 +891,17 @@ abstract class Database {
   final public static function getActiveConnection($target = 'default') {
     // This could just be a call to getConnection(), but that's an extra
     // method call for every single query.
-    if (!empty(self::$ignoreTargets[self::$activeKey][$target])) {
+
+    // If the requested target does not exist, or if it is ignored, we fall back
+    // to the default target. The target is typically either "default" or "slave",
+    // indicating to use a slave SQL server if one is available. If it's not
+    // available, then the default/master server is the correct server to use.
+    if (!empty(self::$ignoreTargets[self::$activeKey][$target]) || !isset(self::$databaseInfo[self::$activeKey][$target])) {
       $target = 'default';
     }
 
     if (!isset(self::$connections[self::$activeKey][$target])) {
-      // If we're trying to open a target that doesn't exist, we need to know
-      // what the actual target we got was.
-      $target = self::openConnection(self::$activeKey, $target);
+      self::openConnection(self::$activeKey, $target);
     }
 
     return isset(self::$connections[self::$activeKey][$target]) ? self::$connections[self::$activeKey][$target] : NULL;
@@ -911,14 +914,16 @@ abstract class Database {
    *   The corresponding connection object.
    */
   final public static function getConnection($key = 'default', $target = 'default') {
-    if (!empty(self::$ignoreTargets[$key][$target])) {
+    // If the requested target does not exist, or if it is ignored, we fall back
+    // to the default target. The target is typically either "default" or "slave",
+    // indicating to use a slave SQL server if one is available. If it's not
+    // available, then the default/master server is the correct server to use.
+    if (!empty(self::$ignoreTargets[$key][$target]) || !isset(self::$databaseInfo[$key][$target])) {
       $target = 'default';
     }
 
     if (!isset(self::$connections[$key][$target])) {
-      // If we're trying to open a target that doesn't exist, we need to know
-      // what the actual target we got was.
-      $target = self::openConnection(self::$activeKey, $target);
+      self::openConnection($key, $target);
     }
 
     return isset(self::$connections[$key][$target]) ? self::$connections[$key][$target] : NULL;
@@ -1028,10 +1033,7 @@ abstract class Database {
    *   The database connection key, as specified in settings.php.  The default
    *   is "default".
    * @param $target
-   *   The database target to open.  If the specified target does not exist,
-   *   the "default" target will be used instead.
-   * @return
-   *   The name of the target that was actually opened.
+   *   The database target to open.
    */
   final protected static function openConnection($key, $target) {
     global $db_prefix;
@@ -1041,15 +1043,8 @@ abstract class Database {
     }
     try {
       // If the requested database does not exist then it is an unrecoverable error.
-      // If the requested target does not exist, however, we fall back to the default
-      // target.  The target is typically either "default" or "slave", indicating to
-      // use a slave SQL server if one is available.  If it's not available, then the
-      // default/master server is the correct server to use.
       if (!isset(self::$databaseInfo[$key])) {
         throw new Exception('DB does not exist');
-      }
-      if (!isset(self::$databaseInfo[$key][$target])) {
-        $target = 'default';
       }
 
       if (!$driver = self::$databaseInfo[$key][$target]['driver']) {
@@ -1074,10 +1069,6 @@ abstract class Database {
       if (preg_match("/^simpletest\d+$/", $_SERVER['HTTP_USER_AGENT'])) {
         $db_prefix .= $_SERVER['HTTP_USER_AGENT'];
       }
-
-      // Return the target that was actually opened in case the requested one
-      // didn't exist.
-      return $target;
     }
     catch (Exception $e) {
       // It is extremely rare that an exception will be generated here other
