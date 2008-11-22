@@ -24,8 +24,9 @@ ErrorDocument 404 /index.php
 # Set the default handler.
 DirectoryIndex index.php
 
-# Override PHP settings. More in sites/default/settings.php
-# but the following cannot be changed at runtime.
+# Override PHP settings that cannot be changed at runtime. See
+# sites/default/default.settings.php and drupal_initialize_variables() in
+# includes/bootstrap.inc for settings that can be changed at runtime.
 
 # PHP 5, Apache 1 and 2.
 <IfModule mod_php5.c>
@@ -86,4 +87,4 @@ DirectoryIndex index.php
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.96 2008/09/15 15:21:44 dries Exp $
+# $Id: .htaccess,v 1.97 2008/11/22 13:46:11 dries Exp $

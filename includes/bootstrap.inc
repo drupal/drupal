@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.250 2008/11/22 13:32:59 dries Exp $
+// $Id: bootstrap.inc,v 1.251 2008/11/22 13:46:11 dries Exp $
 
 /**
  * @file
@@ -394,8 +394,15 @@ function drupal_initialize_variables() {
   }
   // Enforce E_ALL, but allow users to set levels not part of E_ALL.
   error_reporting(E_ALL | error_reporting());
+
+  // Override PHP settings required for Drupal to work properly. The .htaccess
+  // file contains settings that cannot be changed at runtime. See
+  // sites/default/default.settings.php for more non-runtime settings.
+
   // Prevent PHP from generating HTML errors messages.
   ini_set('html_errors', 0);
+  // Don't escape quotes when reading files from disk etc.
+  ini_set('magic_quotes_runtime', '0');
 }
 
 /**
