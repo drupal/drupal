@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.281 2008/11/20 06:56:17 webchick Exp $
+// $Id: system.install,v 1.282 2008/11/22 10:59:49 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1207,13 +1207,6 @@ function system_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-      ),
-      'throttle' => array(
-        'description' => 'Boolean indicating whether this item is disabled when the throttle.module disables throttleable items.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
       ),
       'bootstrap' => array(
         'description' => "Boolean indicating whether this module is loaded during Drupal's early bootstrapping phase (e.g. even before the page cache is consulted).",
