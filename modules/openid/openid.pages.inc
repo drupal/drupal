@@ -44,7 +44,7 @@ function openid_user_identities($account) {
 
   $result = db_query("SELECT * FROM {authmap} WHERE module='openid' AND uid=%d", $account->uid);
   while ($identity = db_fetch_object($result)) {
-    $rows[] = array($identity->authname, l(t('Delete'), 'user/' . $account->uid . '/openid/delete/' . $identity->aid));
+    $rows[] = array(check_plain($identity->authname), l(t('Delete'), 'user/' . $account->uid . '/openid/delete/' . $identity->aid));
   }
 
   $output = theme('table', $header, $rows);
@@ -82,10 +82,16 @@ function openid_user_add_validate($form, &$form_state) {
 /**
  * Menu callback; Delete the specified OpenID identity from the system.
  */
-function openid_delete_user($account, $aid = 0) {
-  db_query("DELETE FROM {authmap} WHERE uid=%d AND aid=%d AND module='openid'", $account->uid, $aid);
+function openid_user_delete_form($form_state, $account, $aid = 0) {
+  $authname = db_result(db_query('SELECT authname FROM {authmap} WHERE uid = %d AND aid = %d', $account->uid, $aid));
+  return confirm_form(array(), t('Are you sure you want to delete the OpenID %authname for %user?', array('%authname' => $authname, '%user' => $account->name)), 'user/'. $account->uid .'/openid');
+}
+
+function openid_user_delete_form_submit(&$form_state, $form_values) {
+  db_query("DELETE FROM {authmap} WHERE uid = %d AND aid = %d AND module = 'openid'", $form_state['#parameters'][2]->uid, $form_state['#parameters'][3]);
   if (db_affected_rows()) {
     drupal_set_message(t('OpenID deleted.'));
   }
-  drupal_goto('user/' . $account->uid . '/openid');
+  $form_state['#redirect'] = 'user/'. $form_state['#parameters'][2]->uid .'/openid';
 }
+
