@@ -1140,13 +1140,13 @@ function _drupal_bootstrap($phase) {
       break;
 
     case DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE:
-      // Load module handling.
-      require_once DRUPAL_ROOT . '/includes/module.inc';
       $cache_mode = variable_get('cache', CACHE_DISABLED);
       // Get the page from the cache.
       $cache = $cache_mode == CACHE_DISABLED ? '' : page_get_cache();
       // If the skipping of the bootstrap hooks is not enforced, call hook_boot.
-      if ($cache_mode != CACHE_AGGRESSIVE) {
+      if (!$cache || $cache_mode != CACHE_AGGRESSIVE) {
+        // Load module handling.
+        require_once DRUPAL_ROOT . '/includes/module.inc';
         bootstrap_invoke_all('boot');
       }
       // If there is a cached page, display it.

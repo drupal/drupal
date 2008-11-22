@@ -143,6 +143,20 @@ function system_test_modules_uninstalled($modules) {
 }
 
 /**
+ * Implementation of hook_boot().
+ */
+function system_test_boot() {
+  watchdog('system_test', 'hook_boot');
+}
+
+/**
+ * Implementation of hook_exit().
+ */
+function system_test_exit() {
+  watchdog('system_test', 'hook_exit');
+}
+
+/**
  * Menu callback; generate warnings to test the error handler.
  */
 function system_test_generate_warnings() {

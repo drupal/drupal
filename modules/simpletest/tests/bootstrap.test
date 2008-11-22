@@ -3,9 +3,6 @@
 
 class BootstrapIPAddressTestCase extends DrupalWebTestCase {
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('IP address and HTTP_HOST test'),
@@ -14,9 +11,6 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     $this->oldserver = $_SERVER;
 
@@ -33,9 +27,6 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
     parent::setUp();
   }
 
-  /**
-   * Implementation of tearDown().
-   */
   function tearDown() {
     $_SERVER = $this->oldserver;
     parent::tearDown();
@@ -95,9 +86,6 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
 
 class BootstrapPageCacheTestCase extends DrupalWebTestCase {
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Page cache test'),
@@ -121,16 +109,10 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
 
 class BootstrapVariableTestCase extends DrupalWebTestCase {
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('system_test');
   }
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Variable test'),
@@ -160,3 +142,59 @@ class BootstrapVariableTestCase extends DrupalWebTestCase {
   }
 
 }
+
+/**
+ * Test hook_boot and hook_exit.
+ */
+class HookBootExitTestCase extends DrupalWebTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => t('Boot and exit hook functionality'),
+      'description' => t('Test that hook_boot() and hook_exit() are called correctly.'),
+      'group' => t('Bootstrap'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('system_test', 'dblog');
+  }
+
+  /**
+   * Test calling of hook_boot() and hook_exit().
+   */
+  function testHookBootExit() {
+    // Test with cache disabled. Boot and exit should always fire. Initialize
+    // the number of hook calls to one since the first call to two since the
+    // first call to drupalGet actually performs two HTTP requests.
+    variable_set('cache', CACHE_DISABLED);
+    $this->drupalGet('');
+    $calls = 2;
+    $this->assertEqual(db_query("SELECT COUNT(*) FROM {watchdog} WHERE type = 'system_test' AND message = 'hook_boot'")->fetchField(), $calls, t('hook_boot called with disabled cache.'));
+    $this->assertEqual(db_query("SELECT COUNT(*) FROM {watchdog} WHERE type = 'system_test' AND message = 'hook_exit'")->fetchField(), $calls, t('hook_exit called with disabled cache.'));
+
+    // Test with normal cache. Boot and exit should be called.
+    variable_set('cache', CACHE_NORMAL);
+    $this->drupalGet('');
+    $calls++;
+    $this->assertEqual(db_query("SELECT COUNT(*) FROM {watchdog} WHERE type = 'system_test' AND message = 'hook_boot'")->fetchField(), $calls, t('hook_boot called with normal cache.'));
+    $this->assertEqual(db_query("SELECT COUNT(*) FROM {watchdog} WHERE type = 'system_test' AND message = 'hook_exit'")->fetchField(), $calls, t('hook_exit called with normal cache.'));
+
+    // Test with aggressive cache. Boot and exit should only fire if there is
+    // no page cached.
+    variable_set('cache', CACHE_AGGRESSIVE);
+    $this->assertTrue(cache_get(url('', array('absolute' => TRUE)), 'cache_page'), t('Page has been cached.'));
+    $this->drupalGet('');
+    $this->assertEqual(db_query("SELECT COUNT(*) FROM {watchdog} WHERE type = 'system_test' AND message = 'hook_boot'")->fetchField(), $calls, t('hook_boot not called with agressive cache and a cached page.'));
+    $this->assertEqual(db_query("SELECT COUNT(*) FROM {watchdog} WHERE type = 'system_test' AND message = 'hook_exit'")->fetchField(), $calls, t('hook_exit not called with agressive cache and a cached page.'));
+
+    // Test with aggressive cache and page cache cleared. Boot and exit should
+    // be called.
+    $this->assertTrue(db_delete('cache_page')->execute(), t('Page cache cleared.'));
+    $this->drupalGet('');
+    $calls++;
+    $this->assertEqual(db_query("SELECT COUNT(*) FROM {watchdog} WHERE type = 'system_test' AND message = 'hook_boot'")->fetchField(), $calls, t('hook_boot called with agressive cache and no cached page.'));
+    $this->assertEqual(db_query("SELECT COUNT(*) FROM {watchdog} WHERE type = 'system_test' AND message = 'hook_exit'")->fetchField(), $calls, t('hook_exit called with agressive cache and no cached page.'));
+  }
+}
+
