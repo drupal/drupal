@@ -192,7 +192,7 @@ function path_form_alter(&$form, $form_state, $form_id) {
     $form['path']['path'] = array(
       '#type' => 'textfield',
       '#default_value' => $path,
-      '#maxlength' => 250,
+      '#maxlength' => 128,
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#description' => t('Optionally specify an alternative URL by which this node can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
