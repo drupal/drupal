@@ -1,5 +1,5 @@
 <?php
-// $Id: system_test.module,v 1.5 2008/11/05 17:06:18 dries Exp $
+// $Id: system_test.module,v 1.6 2008/11/22 13:33:00 dries Exp $
 
 /**
  * Implementation of hook_menu().
@@ -140,6 +140,20 @@ function system_test_modules_uninstalled($modules) {
   if (in_array('aggregator', $modules)) {
     drupal_set_message(t('hook_modules_uninstalled fired for aggregator'));
   }
+}
+
+/**
+ * Implementation of hook_boot().
+ */
+function system_test_boot() {
+  watchdog('system_test', 'hook_boot');
+}
+
+/**
+ * Implementation of hook_exit().
+ */
+function system_test_exit() {
+  watchdog('system_test', 'hook_exit');
 }
 
 /**
