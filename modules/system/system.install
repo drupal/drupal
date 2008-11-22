@@ -1208,13 +1208,6 @@ function system_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'throttle' => array(
-        'description' => 'Boolean indicating whether this item is disabled when the throttle.module disables throttleable items.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-      ),
       'bootstrap' => array(
         'description' => "Boolean indicating whether this module is loaded during Drupal's early bootstrapping phase (e.g. even before the page cache is consulted).",
         'type' => 'int',
