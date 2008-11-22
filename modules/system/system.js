@@ -120,3 +120,15 @@ Drupal.behaviors.dateTime = {
     $('select.date-format', context).trigger('change');
   }
 };
+
+/**
+ * Show the powered by Drupal image preview
+ */
+Drupal.behaviors.poweredByPreview = {
+  attach: function(context) {
+    $('#edit-color, #edit-size').change(function() {
+      var path = Drupal.settings.basePath + 'misc/' + $('#edit-color').val() + '-' + $('#edit-size').val() + '.png';
+      $('img.powered-by-preview').attr('src', path);
+    });
+  }
+};

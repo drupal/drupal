@@ -822,6 +822,7 @@ function system_user_timezone(&$edit, &$form) {
  * Generate a block with a promotional link to Drupal.org.
  */
 function system_block($op = 'list', $delta = '', $edit = NULL) {
+  $image_path = 'misc/' . variable_get('drupal_badge_color', 'powered-blue') . '-' . variable_get('drupal_badge_size', '80x15') . '.png';
   switch ($op) {
     case 'list':
       $blocks['powered-by'] = array(
@@ -832,6 +833,7 @@ function system_block($op = 'list', $delta = '', $edit = NULL) {
       );
       return $blocks;
     case 'configure':
+      drupal_add_js(drupal_get_path('module', 'system') .'/system.js');
       // Compile a list of fields to show
       $form['wrapper']['color'] = array(
         '#type' => 'select',
@@ -845,13 +847,17 @@ function system_block($op = 'list', $delta = '', $edit = NULL) {
         '#default_value' => variable_get('drupal_badge_size', '80x15'),
         '#options' => array('80x15' => t('Small'), '88x31' => t('Medium'), '135x42' => t('Large')),
       );
+      $form['wrapper']['preview'] = array(
+        '#type' => 'item',
+        '#title' => 'Preview',
+        '#markup' => theme('image', $image_path, t('Powered by Drupal, an open source content management system'), t('Powered by Drupal, an open source content management system'), array('class' => 'powered-by-preview'), FALSE),
+      );
       return $form;
     case 'save':
       variable_set('drupal_badge_color', $edit['color']);
       variable_set('drupal_badge_size', $edit['size']);
       break;
     case 'view':
-      $image_path = 'misc/' . variable_get('drupal_badge_color', 'powered-blue') . '-' . variable_get('drupal_badge_size', '80x15') . '.png';
       $block['subject'] = NULL; // Don't display a title
       $block['content'] = theme('system_powered_by', $image_path);
       return $block;
