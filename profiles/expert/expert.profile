@@ -1,5 +1,5 @@
 <?php
-// $Id: expert.profile,v 1.1 2008/07/05 10:58:12 dries Exp $
+// $Id: expert.profile,v 1.2 2008/11/23 18:13:41 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -21,8 +21,8 @@ function expert_profile_modules() {
  */
 function expert_profile_details() {
   return array(
-    'name' => 'Drupal (experts only)',
-    'description' => 'Select this profile to install with only minimum functionality enabled.'
+    'name' => 'Drupal (minimal)',
+    'description' => 'Create a Drupal site with only required modules enabled.'
   );
 }
 

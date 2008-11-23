@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.30 2008/10/08 03:27:56 webchick Exp $
+// $Id: default.profile,v 1.31 2008/11/23 18:13:41 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -22,7 +22,7 @@ function default_profile_modules() {
 function default_profile_details() {
   return array(
     'name' => 'Drupal',
-    'description' => 'Select this profile to enable some basic Drupal functionality and the default theme.'
+    'description' => 'Create a Drupal site with the most commonly used features pre-installed.'
   );
 }
 
