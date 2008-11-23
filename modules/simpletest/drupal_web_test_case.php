@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.57 2008/11/23 18:12:08 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.58 2008/11/23 21:17:48 webchick Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -661,7 +661,7 @@ class DrupalWebTestCase {
    */
   function drupalLogout() {
     // Make a request to the logout page.
-    $this->drupalGet('logout');
+    $this->drupalGet('user/logout');
 
     // Load the user page, the idea being if you were properly logged out you should be seeing a login screen.
     $this->drupalGet('user');
