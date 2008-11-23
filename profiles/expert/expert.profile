@@ -21,8 +21,8 @@ function expert_profile_modules() {
  */
 function expert_profile_details() {
   return array(
-    'name' => 'Drupal (experts only)',
-    'description' => 'Select this profile to install with only minimum functionality enabled.'
+    'name' => 'Drupal (minimal)',
+    'description' => 'Create a Drupal site with only required modules enabled.'
   );
 }
 
