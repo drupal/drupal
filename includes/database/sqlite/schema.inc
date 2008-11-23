@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.1 2008/11/23 06:06:15 webchick Exp $
+// $Id: schema.inc,v 1.2 2008/11/23 21:01:03 webchick Exp $
 
 /**
  * @file
@@ -75,7 +75,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
 
     // Process keys.
     if (!empty($schema['primary key'])) {
-      $sql_array[] = " PRIMARY KEY (" . $this->createKeySql($schema['primary key']);
+      $sql_array[] = " PRIMARY KEY (" . $this->createKeySql($schema['primary key']) . ")";
     }
 
     return implode(", \n", $sql_array);
