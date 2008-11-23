@@ -209,7 +209,7 @@ function system_perm() {
 }
 
 /**
- * Implementation of hook_rdf_namespace().
+ * Implementation of hook_rdf_namespaces().
  */
 function system_rdf_namespaces() {
   return array(
