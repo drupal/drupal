@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.642 2008/11/22 13:55:27 dries Exp $
+// $Id: system.module,v 1.643 2008/11/23 16:54:48 dries Exp $
 
 /**
  * @file
@@ -209,7 +209,7 @@ function system_perm() {
 }
 
 /**
- * Implementation of hook_rdf_namespace().
+ * Implementation of hook_rdf_namespaces().
  */
 function system_rdf_namespaces() {
   return array(

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.452 2008/11/22 13:55:27 dries Exp $
+// $Id: theme.inc,v 1.453 2008/11/23 16:54:47 dries Exp $
 
 /**
  * @file
@@ -1881,7 +1881,7 @@ function template_preprocess_page(&$variables) {
   $variables['scripts']           = drupal_get_js();
   $variables['tabs']              = theme('menu_local_tasks');
   $variables['title']             = drupal_get_title();
-  // RDFa annotatates XHTML with RDF data, while GRDDL provides
+  // RDFa allows annotation of XHTML pages with RDF data, while GRDDL provides
   // mechanisms for extraction of this RDF content via XSLT transformation
   // using an associated GRDDL profile.
   $variables['rdf_namespaces']    = drupal_get_rdf_namespaces();
