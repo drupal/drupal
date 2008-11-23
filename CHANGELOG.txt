@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.287 2008/11/20 06:56:16 webchick Exp $
+// $Id: CHANGELOG.txt,v 1.288 2008/11/23 06:06:15 webchick Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -7,6 +7,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Added query builders for INSERT, UPDATE, DELETE, MERGE, and SELECT queries.
     * Support for master/slave replication, transactions, multi-insert queries,
       delayed inserts, and other features.
+    * Added support for the SQLite database engine.
 - Security:
     * Protected cron.php -- cron will only run if the proper key is provided.
     * Implemented much stronger password hashes that are also compatible with the
