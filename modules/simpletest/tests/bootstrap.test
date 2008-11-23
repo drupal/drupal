@@ -100,7 +100,9 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
   function testPageCache() {
     global $base_url;
     variable_set('cache', 1);
-    // Retrieve the front page, which has already been cached by $this->curlConnect();
+    // Fill the cache.
+    $this->drupalGet($base_url);
+
     $this->drupalHead($base_url);
     $this->assertText('ETag: ', t('Verify presence of ETag header indicating that page caching is enabled.'));
   }
@@ -164,12 +166,10 @@ class HookBootExitTestCase extends DrupalWebTestCase {
    * Test calling of hook_boot() and hook_exit().
    */
   function testHookBootExit() {
-    // Test with cache disabled. Boot and exit should always fire. Initialize
-    // the number of hook calls to two since the first call to drupalGet
-    // actually performs two HTTP requests.
+    // Test with cache disabled. Boot and exit should always fire.
     variable_set('cache', CACHE_DISABLED);
     $this->drupalGet('');
-    $calls = 2;
+    $calls = 1;
     $this->assertEqual(db_query("SELECT COUNT(*) FROM {watchdog} WHERE type = 'system_test' AND message = 'hook_boot'")->fetchField(), $calls, t('hook_boot called with disabled cache.'));
     $this->assertEqual(db_query("SELECT COUNT(*) FROM {watchdog} WHERE type = 'system_test' AND message = 'hook_exit'")->fetchField(), $calls, t('hook_exit called with disabled cache.'));
 
