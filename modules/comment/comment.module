@@ -820,7 +820,9 @@ function comment_save($edit) {
       // Explain the approval queue if necessary, and then
       // redirect the user to the node he's commenting on.
       if ($edit['status'] == COMMENT_NOT_PUBLISHED) {
-        drupal_set_message(t('Your comment has been queued for moderation by site administrators and will be published after approval.'));
+        if (!user_access('administer comments')) {
+          drupal_set_message(t('Your comment has been queued for moderation by site administrators and will be published after approval.'));
+        }
       }
       else {
         drupal_set_message(t('Your comment has been posted.'));
