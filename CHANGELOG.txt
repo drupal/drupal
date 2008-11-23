@@ -7,6 +7,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Added query builders for INSERT, UPDATE, DELETE, MERGE, and SELECT queries.
     * Support for master/slave replication, transactions, multi-insert queries,
       delayed inserts, and other features.
+    * Added support for the SQLite database engine.
 - Security:
     * Protected cron.php -- cron will only run if the proper key is provided.
     * Implemented much stronger password hashes that are also compatible with the
