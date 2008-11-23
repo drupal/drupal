@@ -630,3 +630,68 @@ class UserAutocompleteTestCase extends DrupalWebTestCase {
     $this->assertRaw($this->unprivileged_user->name, t('User name found in autocompletion results.'));
   }
 }
+
+/**
+ * Test user blocks.
+ */
+class UserBlocksUnitTests extends DrupalWebTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => t('User blocks'),
+      'description' => t('Test user blocks.'),
+      'group' => t('User')
+    );
+  }
+
+  /**
+   * Test the Who's Online block.
+   */
+  function testWhosOnlineBlock() {
+    // Generate users and make sure there are no current user sessions.
+    $user1 = $this->drupalCreateUser(array());
+    $user2 = $this->drupalCreateUser(array());
+    $user3 = $this->drupalCreateUser(array());
+    $this->assertEqual(db_query("SELECT COUNT(*) FROM {sessions}")->fetchField(), 0, t('Sessions table is empty.'));
+
+    // Insert a user with two sessions.
+    $this->insertSession(array('uid' => $user1->uid));
+    $this->insertSession(array('uid' => $user1->uid));
+    $this->assertEqual(db_query("SELECT COUNT(*) FROM {sessions} WHERE uid = :uid", array(':uid' => $user1->uid))->fetchField(), 2, t('Duplicate user session has been inserted.'));
+
+    // Insert a user with only one session.
+    $this->insertSession(array('uid' => $user2->uid, 'timestamp' => REQUEST_TIME + 1));
+
+    // Insert an inactive logged-in user who should not be seen in the block.
+    $this->insertSession(array('uid' => $user3->uid, 'timestamp' => (REQUEST_TIME - variable_get('user_block_seconds_online', 900) - 1)));
+
+    // Insert two anonymous user sessions.
+    $this->insertSession();
+    $this->insertSession();
+
+    // Test block output.
+    $block = user_block('view', 'online');
+    $this->drupalSetContent($block['content']);
+    $this->assertRaw(t('%members and %visitors', array('%members' => '2 users', '%visitors' => '2 guests')), t('Correct number of online users (2 users and 2 guests).'));
+    $this->assertText($user1->name, t('Active user 1 found in online list.'));
+    $this->assertText($user2->name, t('Active user 2 found in online list.'));
+    $this->assertNoText($user3->name, t("Inactive user not found in online list."));
+    $this->assertTrue(strpos($this->drupalGetContent(), $user1->name) > strpos($this->drupalGetContent(), $user2->name), t('Online users are ordered correctly.'));
+  }
+
+  /**
+   * Insert a user session into the {sessions} table. This function is used
+   * since we cannot log in more than one user at the same time in tests.
+   */
+  private function insertSession(array $fields = array()) {
+    $fields += array(
+      'uid' => 0,
+      'sid' => md5(microtime()),
+      'timestamp' => REQUEST_TIME,
+    );
+    db_insert('sessions')
+      ->fields($fields)
+      ->execute();
+    $this->assertEqual(db_query("SELECT COUNT(*) FROM {sessions} WHERE uid = :uid AND sid = :sid AND timestamp = :timestamp", array(':uid' => $fields['uid'], ':sid' => $fields['sid'], ':timestamp' => $fields['timestamp']))->fetchField(), 1, t('Session record inserted.'));
+  }
+}
