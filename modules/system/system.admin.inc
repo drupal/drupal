@@ -517,7 +517,6 @@ function system_theme_settings(&$form_state, $key = '') {
       }
     }
   }
-  $form['#attributes'] = array('enctype' => 'multipart/form-data');
 
   $form = system_settings_form($form);
   // We don't want to call system_settings_form_submit(), so change #submit.
