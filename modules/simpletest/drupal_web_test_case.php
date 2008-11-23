@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.56 2008/11/09 03:07:54 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.57 2008/11/23 18:12:08 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -784,13 +784,13 @@ class DrupalWebTestCase {
   }
 
   /**
-   * Initializes the cURL connection and gets a session cookie.
+   * Initializes the cURL connection.
    *
-   * This function will add authentication headers as specified in
-   * simpletest_httpauth_username and simpletest_httpauth_pass variables.
-   * Also, see the description of $curl_options among the properties.
+   * This function will add authentication headers as specified in the
+   * simpletest_httpauth_username and simpletest_httpauth_pass variables. Also,
+   * see the description of $curl_options among the properties.
    */
-  protected function curlConnect() {
+  protected function curlInitialize() {
     global $base_url, $db_prefix;
     if (!isset($this->ch)) {
       $this->ch = curl_init();
@@ -812,7 +812,7 @@ class DrupalWebTestCase {
         }
         $curl_options[CURLOPT_USERPWD] = $auth;
       }
-      return $this->curlExec($curl_options);
+      curl_setopt_array($this->ch, $this->curl_options + $curl_options);
     }
   }
 
@@ -825,7 +825,7 @@ class DrupalWebTestCase {
    *   Content returned from the exec.
    */
   protected function curlExec($curl_options) {
-    $this->curlConnect();
+    $this->curlInitialize();
     $url = empty($curl_options[CURLOPT_URL]) ? curl_getinfo($this->ch, CURLINFO_EFFECTIVE_URL) : $curl_options[CURLOPT_URL];
     curl_setopt_array($this->ch, $this->curl_options + $curl_options);
     $this->drupalSetContent(curl_exec($this->ch), curl_getinfo($this->ch, CURLINFO_EFFECTIVE_URL));
