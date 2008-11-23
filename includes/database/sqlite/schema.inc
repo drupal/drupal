@@ -75,7 +75,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
 
     // Process keys.
     if (!empty($schema['primary key'])) {
-      $sql_array[] = " PRIMARY KEY (" . $this->createKeySql($schema['primary key']);
+      $sql_array[] = " PRIMARY KEY (" . $this->createKeySql($schema['primary key']) . ")";
     }
 
     return implode(", \n", $sql_array);
