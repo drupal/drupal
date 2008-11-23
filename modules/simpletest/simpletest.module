@@ -210,10 +210,7 @@ function simpletest_test_form() {
 
 function theme_simpletest_test_table($table) {
   drupal_add_css(drupal_get_path('module', 'simpletest') . '/simpletest.css');
-
-  // Since SimpleTest is a special use case for the table select, stick the
-  // SimpleTest JavaScript above the table select.
-  drupal_add_js(drupal_get_path('module', 'simpletest') . '/simpletest.js', array('weight' => JS_DEFAULT - 1));
+  drupal_add_js(drupal_get_path('module', 'simpletest') . '/simpletest.js');
 
   // Create header for test selection table.
   $header = array(
@@ -298,6 +295,18 @@ function theme_simpletest_test_table($table) {
   }
   else {
     return theme('table', $header, $rows, array('id' => 'simpletest-form-table'));
+  }
+}
+
+/**
+ * Implementation of hook_js_alter().
+ */
+function simpletest_js_alter(&$javascript) {
+  // Since SimpleTest is a special use case for the table select, stick the
+  // SimpleTest JavaScript above the table select.
+  $simpletest = drupal_get_path('module', 'simpletest') . '/simpletest.js';
+  if (array_key_exists($simpletest, $javascript) && array_key_exists('misc/tableselect.js', $javascript)) {
+    $javascript[$simpletest]['weight'] = $javascript['misc/tableselect.js']['weight'] - 1;
   }
 }
 

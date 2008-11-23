@@ -376,8 +376,8 @@ class JavaScriptTestCase extends DrupalWebTestCase {
    * Implementation of setUp().
    */
   function setUp() {
-    // Enable locale in test environment.
-    parent::setUp('locale');
+    // Enable Locale and SimpleTest in the test environment.
+    parent::setUp('locale', 'simpletest');
 
     // Disable preprocessing
     $this->preprocess_js = variable_get('preprocess_js', 0);
@@ -487,6 +487,23 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     drupal_add_js('misc/collapse.js', array('weight' => JS_LIBRARY - 10));
     $javascript = drupal_get_js();
     $this->assertTrue(strpos($javascript, 'misc/collapse.js') < strpos($javascript, 'misc/jquery.js'), t('Rendering a JavaScript file above jQuery.'));
+  }
+
+  /**
+   * Test altering a JavaScript's weight via hook_js_alter().
+   *
+   * @see simpletest_js_alter()
+   */
+  function testAlter() {
+    // Add both tableselect.js and simpletest.js, with a larger weight on SimpleTest.
+    drupal_add_js('misc/tableselect.js');
+    drupal_add_js(drupal_get_path('module', 'simpletest') . '/simpletest.js', array('weight' => JS_THEME));
+
+    // Render the JavaScript, testing if simpletest.js was altered to be before
+    // tableselect.js. See simpletest_js_alter() to see where this alteration
+    // takes place.
+    $javascript = drupal_get_js();
+    $this->assertTrue(strpos($javascript, 'simpletest.js') < strpos($javascript, 'misc/tableselect.js'), t('Altering JavaScript weight through the alter hook.'));
   }
 }
 

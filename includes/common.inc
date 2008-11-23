@@ -2232,15 +2232,8 @@ function drupal_add_js($data = NULL, $options = NULL, $reset = FALSE) {
   else {
     $options = array();
   }
-  $options += array(
-    'type' => 'file',
-    'weight' => JS_DEFAULT,
-    'scope' => 'header',
-    'cache' => TRUE,
-    'defer' => FALSE,
-    'preprocess' => TRUE,
-    'data' => $data,
-  );
+  $options += drupal_js_defaults($data);
+
   // Preprocess can only be set if caching is enabled.
   $options['preprocess'] = $options['cache'] ? $options['preprocess'] : FALSE;
 
@@ -2305,12 +2298,39 @@ function drupal_add_js($data = NULL, $options = NULL, $reset = FALSE) {
 }
 
 /**
+ * Constructs an array of the defaults that are used for JavaScript items.
+ *
+ * @param $data
+ *   (optional) The default data parameter for the JavaScript item array.
+ * @see drupal_get_js()
+ * @see drupal_add_js()
+ */
+function drupal_js_defaults($data = NULL) {
+  return array(
+    'type' => 'file',
+    'weight' => JS_DEFAULT,
+    'scope' => 'header',
+    'cache' => TRUE,
+    'defer' => FALSE,
+    'preprocess' => TRUE,
+    'data' => $data,
+  );
+}
+
+/**
  * Returns a themed presentation of all JavaScript code for the current page.
  *
  * References to JavaScript files are placed in a certain order: first, all
  * 'core' files, then all 'module' and finally all 'theme' JavaScript files
  * are added to the page. Then, all settings are output, followed by 'inline'
  * JavaScript code. If running update.php, all preprocessing is disabled.
+ *
+ * Note that hook_js_alter(&$javascript) is called during this function call
+ * to allow alterations of the JavaScript during its presentation. Calls to
+ * drupal_add_js() from hook_js_alter() will not be added to the output
+ * presentation. The correct way to add JavaScript during hook_js_alter()
+ * is to add another element to the $javascript array, deriving from
+ * drupal_js_defaults(). See locale_js_alter() for an example of this.
  *
  * @param $scope
  *   (optional) The scope for which the JavaScript rules should be returned.
@@ -2321,17 +2341,19 @@ function drupal_add_js($data = NULL, $options = NULL, $reset = FALSE) {
  * @return
  *   All JavaScript code segments and includes for the scope as HTML tags.
  * @see drupal_add_js()
+ * @see locale_js_alter()
+ * @see drupal_js_defaults()
  */
 function drupal_get_js($scope = 'header', $javascript = NULL) {
-  if ((!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update') && function_exists('locale_update_js_files')) {
-    locale_update_js_files();
-  }
   if (!isset($javascript)) {
     $javascript = drupal_add_js();
   }
   if (empty($javascript)) {
     return '';
   }
+
+  // Allow modules to alter the JavaScript.
+  drupal_alter('js', $javascript);
 
   // Filter out elements of the given scope.
   $items = array();

@@ -505,21 +505,18 @@ function locale_system_update($components) {
 }
 
 /**
- * Update JavaScript translation file, if required, and add it to the page.
+ * Implementation of hook_js_alter().
  *
  * This function checks all JavaScript files currently added via drupal_add_js()
  * and invokes parsing if they have not yet been parsed for Drupal.t()
  * and Drupal.formatPlural() calls. Also refreshes the JavaScript translation
  * file if necessary, and adds it to the page.
  */
-function locale_update_js_files() {
+function locale_js_alter(&$javascript) {
   global $language;
 
   $dir = file_create_path(variable_get('locale_js_directory', 'languages'));
   $parsed = variable_get('javascript_parsed', array());
-
-  // Get an array of all the JavaScript added so far.
-  $javascript = drupal_add_js();
   $files = $new_files = FALSE;
 
   foreach ($javascript as $item) {
@@ -563,7 +560,9 @@ function locale_update_js_files() {
 
   // Add the translation JavaScript file to the page.
   if ($files && !empty($language->javascript)) {
-    drupal_add_js($dir . '/' . $language->language . '_' . $language->javascript . '.js');
+    // Add the translation JavaScript file to the page.
+    $file = $dir . '/' . $language->language . '_' . $language->javascript . '.js';
+    $javascript[$file] = drupal_js_defaults($file);
   }
 }
 
