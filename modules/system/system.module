@@ -223,8 +223,7 @@ function system_rdf_namespaces() {
     'rdfs'     => 'http://www.w3.org/2000/01/rdf-schema#',
     'rss'      => 'http://purl.org/rss/1.0/',
     'sioc'     => 'http://rdfs.org/sioc/ns#',
-    'xsi'      => 'http://www.w3.org/2001/XMLSchema-instance#',
-    'xsd'      => 'http://www.w3.org/2001/XMLSchema#',
+    'xsd'      => 'http://www.w3.org/2001/XMLSchema',
   );
 }
 
