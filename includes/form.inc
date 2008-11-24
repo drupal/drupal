@@ -851,7 +851,7 @@ function form_error(&$element, $message = '') {
  *   $_POST data.
  */
 function form_builder($form_id, $form, &$form_state) {
-  static $complete_form, $cache, $enctype;
+  static $complete_form, $cache, $file;
 
   // Initialize as unprocessed.
   $form['#processed'] = FALSE;
@@ -864,7 +864,6 @@ function form_builder($form_id, $form, &$form_state) {
 
   if (isset($form['#type']) && $form['#type'] == 'form') {
     $cache = NULL;
-    $enctype = NULL;
     $complete_form = $form;
     if (!empty($form['#programmed'])) {
       $form_state['submitted'] = TRUE;
@@ -938,12 +937,6 @@ function form_builder($form_id, $form, &$form_state) {
     unset($form_state['buttons']);
   }
 
-  // If an element requires to set the forms content type enctype attribute, we
-  // need to store this info in a static $enctype flag to update the parent
-  // form element. E.g. For files, non-ASCII data, and binary data.
-  if (isset($form['#enctype'])) {
-    $enctype = $form['#enctype'];
-  }
   // If some callback set #cache, we need to flip a static flag so later it
   // can be found.
   if (!empty($form['#cache'])) {
@@ -955,14 +948,13 @@ function form_builder($form_id, $form, &$form_state) {
     $file = TRUE;
   }
   if (isset($form['#type']) && $form['#type'] == 'form') {
-    // Set the form encoding if required.
-    if (isset($enctype)) {
-      $form['#attributes']['enctype'] = $enctype;
-    }
-    
     // We are on the top form, we can copy back #cache if it's set.
     if (isset($cache)) {
       $form['#cache'] = TRUE;
+    }
+    // If there is a file element, we set the form encoding.
+    if (isset($file)) {
+      $form['#attributes']['enctype'] = 'multipart/form-data';
     }
   }
   return $form;

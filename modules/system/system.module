@@ -341,7 +341,6 @@ function system_elements() {
   $type['file'] = array(
     '#input' => TRUE,
     '#size' => 60,
-    '#enctype' => 'multipart/form-data',
   );
 
 
