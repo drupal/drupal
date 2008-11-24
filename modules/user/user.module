@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.940 2008/11/24 04:22:02 webchick Exp $
+// $Id: user.module,v 1.941 2008/11/24 06:12:46 dries Exp $
 
 /**
  * @file
@@ -1361,8 +1361,11 @@ function user_authenticate_finalize(&$edit) {
   // This is also used to invalidate one-time login links.
   $user->login = REQUEST_TIME;
   db_query("UPDATE {users} SET login = %d WHERE uid = %d", $user->login, $user->uid);
-  user_module_invoke('login', $edit, $user);
+  // Regenerate the session ID to prevent against session fixation attacks.
+  // This is called before hook_user in case one of those functions fails
+  // or incorrectly does a redirect which would leave the old session in place.
   drupal_session_regenerate();
+  user_module_invoke('login', $edit, $user);
 }
 
 /**

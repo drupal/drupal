@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.63 2008/11/11 16:49:37 dries Exp $
+// $Id: session.inc,v 1.64 2008/11/24 06:12:45 dries Exp $
 
 /**
  * @file
@@ -163,6 +163,9 @@ function _sess_write($key, $value) {
  */
 function drupal_session_regenerate() {
   $old_session_id = session_id();
+  extract(session_get_cookie_params());
+  // Set "httponly" to TRUE to reduce the risk of session stealing via XSS.
+  session_set_cookie_params($lifetime, $path, $domain, $secure, TRUE);
   session_regenerate_id();
   db_update('sessions')
     ->fields(array(

@@ -1,5 +1,5 @@
 <?php
-// $Id: session_test.module,v 1.3 2008/11/05 17:06:18 dries Exp $
+// $Id: session_test.module,v 1.4 2008/11/24 06:12:45 dries Exp $
 
 /**
  * Implementation of hook_menu().
@@ -8,6 +8,12 @@ function session_test_menu() {
   $items['session-test/get'] = array(
     'title' => t('Session value'),
     'page callback' => '_session_test_get',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['session-test/id'] = array(
+    'title' => t('Session ID value'),
+    'page callback' => '_session_test_id',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
@@ -58,3 +64,22 @@ function _session_test_no_set($value) {
   _session_test_set($value);
   return t('session saving was disabled, and then %val was set', array('%val' => $value));
 }
+
+/**
+ * Menu callback: print the current session ID.
+ */
+function _session_test_id() {
+  return 'session_id:' . session_id() . "\n";
+}
+
+/**
+ * Implementation of hook_user().
+ */
+function session_test_user_login($edit = array(), $user = NULL) {
+  if ($edit['name'] == 'session_test_user') {
+    // Exit so we can verify that the session was regenerated
+    // before hook_user() was called.
+    exit;
+  }
+}
+
