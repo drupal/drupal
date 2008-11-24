@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.252 2008/11/22 16:48:20 webchick Exp $
+// $Id: bootstrap.inc,v 1.253 2008/11/24 06:17:40 dries Exp $
 
 /**
  * @file
@@ -930,8 +930,11 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
     foreach (module_implements('watchdog', TRUE) as $module) {
       module_invoke($module, 'watchdog', $log_message);
     }
+
+    // It is critical that the semaphore is only cleared here, in the parent
+    // watchdog() call (not outside the loop), to prevent recursive execution.
+    $in_error_state = FALSE;
   }
-  $in_error_state = FALSE;
 }
 
 /**
