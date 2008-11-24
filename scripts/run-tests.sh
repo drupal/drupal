@@ -72,8 +72,7 @@ if (!ini_get('safe_mode')) {
 simpletest_script_reporter_init();
 
 // Setup database for test results.
-db_query('INSERT INTO {simpletest_test_id} VALUES (default)');
-$test_id = db_last_insert_id('simpletest_test_id', 'test_id');
+$test_id = db_insert('simpletest_test_id')->useDefaults(array('test_id'))->execute();
 
 // Execute tests.
 simpletest_script_command($args['concurrency'], $test_id, implode(",", $test_list));
@@ -82,8 +81,9 @@ simpletest_script_command($args['concurrency'], $test_id, implode(",", $test_lis
 simpletest_script_reporter_display_results();
 
 // Cleanup our test results.
-db_query("DELETE FROM {simpletest} WHERE test_id = %d", $test_id);
-
+db_delete("simpletest")
+  ->condition('test_id', $test_id)
+  ->execute();
 
 
 /**
@@ -476,9 +476,9 @@ function simpletest_script_reporter_display_results() {
       'exception' => 'Exception'
     );
 
-    $results = db_query("SELECT * FROM {simpletest} WHERE test_id = %d ORDER BY test_class, message_id", $test_id);
+    $results = db_query("SELECT * FROM {simpletest} WHERE test_id = :test_id ORDER BY test_class, message_id", array(':test_id' => $test_id));
     $test_class = '';
-    while($result = db_fetch_object($results)) {
+    foreach ($results as $result) {
       if (isset($results_map[$result->status])) {
         if ($result->test_class != $test_class) {
           // Display test class every time results are for new test class.
