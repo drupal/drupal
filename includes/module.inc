@@ -21,7 +21,7 @@ define('MODULE_IMPLEMENTS_CLEAR_CACHE', -2);
  * Load all the modules that have been enabled in the system table.
  */
 function module_load_all() {
-  foreach (module_list(TRUE, FALSE) as $module) {
+  foreach (module_list(TRUE) as $module) {
     drupal_load('module', $module);
   }
 }
@@ -33,9 +33,6 @@ function module_load_all() {
  * @param $refresh
  *   Whether to force the module list to be regenerated (such as after the
  *   administrator has changed the system settings).
- * @param $bootstrap
- *   Whether to return the reduced set of modules loaded in "bootstrap mode"
- *   for cached pages. See bootstrap.inc.
  * @param $sort
  *   By default, modules are ordered by weight and filename. Set this option to
  *   TRUE to return a module list ordered only by module name.
@@ -46,7 +43,7 @@ function module_load_all() {
  *   An associative array whose keys and values are the names of all loaded
  *   modules.
  */
-function module_list($refresh = FALSE, $bootstrap = TRUE, $sort = FALSE, $fixed_list = NULL) {
+function module_list($refresh = FALSE, $sort = FALSE, $fixed_list = NULL) {
   static $list = array(), $sorted_list;
 
   if (empty($list) || $refresh || $fixed_list) {
@@ -59,12 +56,7 @@ function module_list($refresh = FALSE, $bootstrap = TRUE, $sort = FALSE, $fixed_
       }
     }
     else {
-      if ($bootstrap) {
-        $result = db_query("SELECT name, filename FROM {system} WHERE type = 'module' AND status = 1 AND bootstrap = 1 ORDER BY weight ASC, filename ASC");
-      }
-      else {
-        $result = db_query("SELECT name, filename FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, filename ASC");
-      }
+      $result = db_query("SELECT name, filename FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, filename ASC");
       while ($module = db_fetch_object($result)) {
         if (file_exists($module->filename)) {
           drupal_get_filename('module', $module->name, $module->filename);
@@ -125,24 +117,14 @@ function module_rebuild_cache() {
     // modify the data in the .info files if necessary.
     drupal_alter('system_info', $files[$filename]->info, $files[$filename]);
 
-    // Log the critical hooks implemented by this module.
-    $bootstrap = 0;
-    foreach (bootstrap_hooks() as $hook) {
-      // Only look for hooks in installed modules.
-      if (!empty($file->status) && in_array($file->name, module_implements($hook))) {
-        $bootstrap = 1;
-        break;
-      }
-    }
-
     // Update the contents of the system table:
     if (isset($file->status) || (isset($file->old_filename) && $file->old_filename != $file->filename)) {
-      db_query("UPDATE {system} SET info = '%s', name = '%s', filename = '%s', bootstrap = %d WHERE filename = '%s'", serialize($files[$filename]->info), $file->name, $file->filename, $bootstrap, $file->old_filename);
+      db_query("UPDATE {system} SET info = '%s', name = '%s', filename = '%s' WHERE filename = '%s'", serialize($files[$filename]->info), $file->name, $file->filename, $file->old_filename);
     }
     else {
       // This is a new module.
       $files[$filename]->status = 0;
-      db_query("INSERT INTO {system} (name, info, type, filename, status, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d)", $file->name, serialize($files[$filename]->info), 'module', $file->filename, 0, $bootstrap);
+      db_query("INSERT INTO {system} (name, info, type, filename, status) VALUES ('%s', '%s', '%s', '%s', %d)", $file->name, serialize($files[$filename]->info), 'module', $file->filename, 0);
     }
   }
   $files = _module_build_dependencies($files);
@@ -295,7 +277,7 @@ function module_enable($module_list) {
 
   if (!empty($invoke_modules)) {
     // Refresh the module list to include the new enabled module.
-    module_list(TRUE, FALSE);
+    module_list(TRUE);
     // Force to regenerate the stored list of hook implementations.
     registry_rebuild();
   }
@@ -345,7 +327,7 @@ function module_disable($module_list) {
     // so we can still call module hooks to get information.
     module_invoke_all('modules_disabled', $invoke_modules);
     // Refresh the module list to exclude the disabled modules.
-    module_list(TRUE, FALSE);
+    module_list(TRUE);
     // Force to regenerate the stored list of hook implementations.
     registry_rebuild();
   }

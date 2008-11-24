@@ -1208,12 +1208,6 @@ function system_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'bootstrap' => array(
-        'description' => "Boolean indicating whether this module is loaded during Drupal's early bootstrapping phase (e.g. even before the page cache is consulted).",
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
       'schema_version' => array(
         'description' => "The module's database schema version number. -1 if the module is not installed (its tables do not exist); 0 or the largest N of the module's hook_update_N() function that has either been run or existed when the module was first installed.",
         'type' => 'int',
@@ -1236,7 +1230,6 @@ function system_schema() {
     'primary key' => array('filename'),
     'indexes' => array(
       'modules' => array(array('type', 12), 'status', 'weight', 'filename'),
-      'bootstrap' => array(array('type', 12), 'status', 'bootstrap', 'weight', 'filename'),
     ),
   );
 
@@ -3127,6 +3120,15 @@ function system_update_7013() {
   }
   variable_set('date_default_timezone', $timezone);
   drupal_set_message('The default time zone has been set to <em>' . check_plain($timezone) . '</em>. Please check the ' . l('date and time configuration page', 'admin/settings/date-time') . ' to configure it correctly.', 'warning');
+  return $ret;
+}
+
+/**
+ * Drop the bootstrap column from the {system} table.
+ */
+function system_update_7014() {
+  $ret = array();
+  db_drop_field($ret, 'system', 'bootstrap');
   return $ret;
 }
 

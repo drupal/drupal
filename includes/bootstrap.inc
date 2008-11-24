@@ -674,18 +674,6 @@ function page_get_cache() {
 }
 
 /**
- * Call all init or exit hooks without including all modules.
- *
- * @param $hook
- *   The name of the bootstrap hook we wish to invoke.
- */
-function bootstrap_invoke_all($hook) {
-  foreach (module_implements($hook) as $module) {
-    module_invoke($module, $hook);
-  }
-}
-
-/**
  * Includes a file with the provided type and name. This prevents
  * including a theme, engine, module, etc., more than once.
  *
@@ -787,13 +775,6 @@ function drupal_page_cache_header($cache) {
   }
 
   print $cache->data;
-}
-
-/**
- * Define the critical hooks that force modules to always be loaded.
- */
-function bootstrap_hooks() {
-  return array('boot', 'exit');
 }
 
 /**
@@ -1157,14 +1138,14 @@ function _drupal_bootstrap($phase) {
       if (!$cache || $cache_mode != CACHE_AGGRESSIVE) {
         // Load module handling.
         require_once DRUPAL_ROOT . '/includes/module.inc';
-        bootstrap_invoke_all('boot');
+        module_invoke_all('boot');
       }
       // If there is a cached page, display it.
       if ($cache) {
         drupal_page_cache_header($cache);
         // If the skipping of the bootstrap hooks is not enforced, call hook_exit.
         if ($cache_mode != CACHE_AGGRESSIVE) {
-          bootstrap_invoke_all('exit');
+          module_invoke_all('exit');
         }
         // We are done.
         exit;
@@ -1368,7 +1349,7 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
         // "prime" module_list() here to to values we want, specifically
         // "yes rebuild the list and don't limit to bootstrap".
         // TODO: Remove this call after http://drupal.org/node/222109 is fixed.
-        module_list(TRUE, FALSE);
+        module_list(TRUE);
         module_load_all_includes('install');
       }
 

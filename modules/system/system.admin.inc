@@ -940,7 +940,7 @@ function system_modules_submit($form, &$form_state) {
     drupal_install_modules($new_modules);
   }
 
-  $current_module_list = module_list(TRUE, FALSE);
+  $current_module_list = module_list(TRUE);
   if ($old_module_list != $current_module_list) {
     drupal_set_message(t('The configuration options have been saved.'));
   }

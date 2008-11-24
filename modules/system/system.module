@@ -1088,7 +1088,7 @@ function system_theme_data() {
       $theme->owner = '';
     }
 
-    db_query("INSERT INTO {system} (name, owner, info, type, filename, status, bootstrap) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d)", $theme->name, $theme->owner, serialize($theme->info), 'theme', $theme->filename, isset($theme->status) ? $theme->status : 0, 0);
+    db_query("INSERT INTO {system} (name, owner, info, type, filename, status) VALUES ('%s', '%s', '%s', '%s', '%s', %d)", $theme->name, $theme->owner, serialize($theme->info), 'theme', $theme->filename, isset($theme->status) ? $theme->status : 0);
   }
 
   return $themes;
