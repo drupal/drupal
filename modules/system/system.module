@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.644 2008/11/23 21:17:48 webchick Exp $
+// $Id: system.module,v 1.645 2008/11/24 00:40:45 webchick Exp $
 
 /**
  * @file
@@ -341,7 +341,6 @@ function system_elements() {
   $type['file'] = array(
     '#input' => TRUE,
     '#size' => 60,
-    '#enctype' => 'multipart/form-data',
   );
 
 

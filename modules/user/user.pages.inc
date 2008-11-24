@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.23 2008/11/23 21:17:48 webchick Exp $
+// $Id: user.pages.inc,v 1.24 2008/11/24 00:40:45 webchick Exp $
 
 /**
  * @file
@@ -246,6 +246,7 @@ function user_profile_form($form_state, $account, $category = 'account') {
       '#submit' => array('user_edit_delete_submit'),
     );
   }
+  $form['#attributes']['enctype'] = 'multipart/form-data';
 
   return $form;
 }
