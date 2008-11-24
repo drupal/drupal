@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.107 2008/11/24 00:40:45 webchick Exp $
+// $Id: system.admin.inc,v 1.108 2008/11/24 10:41:39 dries Exp $
 
 /**
  * @file
@@ -940,7 +940,7 @@ function system_modules_submit($form, &$form_state) {
     drupal_install_modules($new_modules);
   }
 
-  $current_module_list = module_list(TRUE, FALSE);
+  $current_module_list = module_list(TRUE);
   if ($old_module_list != $current_module_list) {
     drupal_set_message(t('The configuration options have been saved.'));
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.20 2008/10/26 18:06:38 dries Exp $
+// $Id: theme.maintenance.inc,v 1.21 2008/11/24 10:41:39 dries Exp $
 
 /**
  * @file
@@ -39,7 +39,7 @@ function _drupal_maintenance_theme() {
     // Load module basics (needed for hook invokes).
     $module_list['system']['filename'] = 'modules/system/system.module';
     $module_list['filter']['filename'] = 'modules/filter/filter.module';
-    module_list(TRUE, FALSE, FALSE, $module_list);
+    module_list(TRUE, FALSE, $module_list);
     drupal_load('module', 'system');
     drupal_load('module', 'filter');
 

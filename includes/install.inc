@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.76 2008/11/16 23:44:47 webchick Exp $
+// $Id: install.inc,v 1.77 2008/11/24 10:41:39 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -571,7 +571,7 @@ function drupal_install_system() {
 
   $system_versions = drupal_get_schema_versions('system');
   $system_version = $system_versions ? max($system_versions) : SCHEMA_INSTALLED;
-  db_query("INSERT INTO {system} (filename, name, type, owner, status, bootstrap, schema_version) VALUES('%s', '%s', '%s', '%s', %d, %d, %d)", $system_path . '/system.module', 'system', 'module', '', 1, 0, $system_version);
+  db_query("INSERT INTO {system} (filename, name, type, owner, status, schema_version) VALUES('%s', '%s', '%s', '%s', %d, %d)", $system_path . '/system.module', 'system', 'module', '', 1, $system_version);
   // Now that we've installed things properly, bootstrap the full Drupal environment
   drupal_install_init_database();
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);

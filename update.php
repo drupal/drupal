@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.266 2008/11/20 07:07:59 webchick Exp $
+// $Id: update.php,v 1.267 2008/11/24 10:41:39 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -663,7 +663,7 @@ if (empty($op)) {
   include_once DRUPAL_ROOT . '/includes/module.inc';
   $module_list['system']['filename'] = 'modules/system/system.module';
   $module_list['filter']['filename'] = 'modules/filter/filter.module';
-  module_list(TRUE, FALSE, FALSE, $module_list);
+  module_list(TRUE, FALSE, $module_list);
   drupal_load('module', 'system');
   drupal_load('module', 'filter');
 
