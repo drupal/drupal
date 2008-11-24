@@ -930,8 +930,11 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
     foreach (module_implements('watchdog', TRUE) as $module) {
       module_invoke($module, 'watchdog', $log_message);
     }
+
+    // It is critical that the semaphore is only cleared here, in the parent
+    // watchdog() call (not outside the loop), to prevent recursive execution.
+    $in_error_state = FALSE;
   }
-  $in_error_state = FALSE;
 }
 
 /**
