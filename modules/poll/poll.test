@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.test,v 1.6 2008/11/23 21:17:48 webchick Exp $
+// $Id: poll.test,v 1.7 2008/11/24 04:22:02 webchick Exp $
 
 class PollTestCase extends DrupalWebTestCase {
 
@@ -113,7 +113,7 @@ class PollVoteTestCase extends PollTestCase {
     $title = $this->randomName();
     $choices = $this->_generateChoices(7);
     $poll_nid = $this->pollCreate($title, $choices, FALSE);
-    $this->drupalLogout();
+    $this->drupalGet('logout');
 
     $web_user = $this->drupalCreateUser(array('cancel own vote', 'inspect all votes', 'vote on polls', 'access content'));
     $this->drupalLogin($web_user);
@@ -130,3 +130,4 @@ class PollVoteTestCase extends PollTestCase {
     $this->assertText($choices[0], 'Vote recorded');
   }
 }
+

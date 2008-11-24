@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.285 2008/11/23 21:17:48 webchick Exp $
+// $Id: system.install,v 1.286 2008/11/24 04:22:02 webchick Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3127,16 +3127,6 @@ function system_update_7013() {
   }
   variable_set('date_default_timezone', $timezone);
   drupal_set_message('The default time zone has been set to <em>' . check_plain($timezone) . '</em>. Please check the ' . l('date and time configuration page', 'admin/settings/date-time') . ' to configure it correctly.', 'warning');
-  return $ret;
-}
-
-/**
- * Change the user logout path.
- */
-function system_update_7014() {
-  $ret = array();
-  $ret[] = update_sql("UPDATE {menu_links} SET link_path = 'user/logout' WHERE link_path = 'logout'");
-  $ret[] = update_sql("UPDATE {menu_links} SET router_path = 'user/logout' WHERE router_path = 'logout'");
   return $ret;
 }
 
