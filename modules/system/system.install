@@ -3131,16 +3131,6 @@ function system_update_7013() {
 }
 
 /**
- * Change the user logout path.
- */
-function system_update_7014() {
-  $ret = array();
-  $ret[] = update_sql("UPDATE {menu_links} SET link_path = 'user/logout' WHERE link_path = 'logout'");
-  $ret[] = update_sql("UPDATE {menu_links} SET router_path = 'user/logout' WHERE router_path = 'logout'");
-  return $ret;
-}
-
-/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */

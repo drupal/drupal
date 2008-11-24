@@ -977,13 +977,6 @@ function user_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['user/logout'] = array(
-    'title' => 'Log out',
-    'access callback' => 'user_is_logged_in',
-    'page callback' => 'user_logout',
-    'weight' => 10,
-  );
-
   // User administration pages.
   $items['admin/user'] = array(
     'title' => 'User management',
@@ -1038,6 +1031,13 @@ function user_menu() {
     'page arguments' => array('user_admin_role'),
     'access arguments' => array('administer permissions'),
     'type' => MENU_CALLBACK,
+  );
+
+  $items['logout'] = array(
+    'title' => 'Log out',
+    'access callback' => 'user_is_logged_in',
+    'page callback' => 'user_logout',
+    'weight' => 10,
   );
 
   $items['user/%user_uid_optional'] = array(
@@ -2415,3 +2415,4 @@ function _user_forms(&$edit, $account, $category, $hook = 'form') {
 
   return empty($groups) ? FALSE : $groups;
 }
+
