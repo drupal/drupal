@@ -525,9 +525,7 @@ function _upload_form($node) {
         $limit_description .= t('Images may not be larger than %resolution. ', array('%resolution' => $limits['resolution']));
       }
     }
-    if ($user->uid != 1) {
-      $limit_description .= t('Only files with the following extensions may be uploaded: %extensions. ', array('%extensions' => $limits['extensions']));
-    }
+    $limit_description .= t('Only files with the following extensions may be uploaded: %extensions. ', array('%extensions' => $limits['extensions']));
 
     $form['new']['#weight'] = 10;
     $form['new']['upload'] = array(
