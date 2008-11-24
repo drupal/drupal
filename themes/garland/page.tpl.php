@@ -1,8 +1,8 @@
 <?php
-// $Id: page.tpl.php,v 1.22 2008/11/22 13:55:27 dries Exp $
+// $Id: page.tpl.php,v 1.23 2008/11/24 15:27:13 dries Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
   "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" lang="<?php print $language->language ?>" dir="<?php print $language->dir ?>"
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" dir="<?php print $language->dir ?>"
   <?php print $rdf_namespaces ?>>
   <head profile="<?php print $grddl_profile ?>">
     <title><?php print $head_title ?></title>
