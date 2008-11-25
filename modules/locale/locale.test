@@ -55,7 +55,7 @@ class LocaleTestCase extends DrupalWebTestCase {
     // No t() here, we do not want to add this string to the database and it's
     // surely not translated yet.
     $this->assertText($native, 'Test language added');
-    $this->drupalGet('logout');
+    $this->drupalLogout();
 
     // Search for the name and translate it.
     $this->drupalLogin($translate_user);
@@ -87,7 +87,7 @@ class LocaleTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/build/translate/search', $search, t('Search'));
     // The indicator should not be here.
     $this->assertNoRaw($language_indicator, 'String is translated');
-    $this->drupalGet('logout');
+    $this->drupalLogout();
 
     // Delete the language.
     $this->drupalLogin($admin_user);
@@ -101,7 +101,7 @@ class LocaleTestCase extends DrupalWebTestCase {
     $this->assertNoText($langcode, 'Language code not found');
     $this->assertNoText($name, 'Name not found');
     $this->assertNoText($native, 'Native not found');
-    $this->drupalGet('logout');
+    $this->drupalLogout();
 
     // Delete the name string.
     $this->drupalLogin($translate_user);
