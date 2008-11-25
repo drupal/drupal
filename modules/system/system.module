@@ -1508,18 +1508,15 @@ function system_cron() {
   db_query('DELETE FROM {batch} WHERE timestamp < %d', REQUEST_TIME - 864000);
 
   // Remove temporary files that are older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
-  $result = db_query('SELECT * FROM {files} WHERE status = %d and timestamp < %d', FILE_STATUS_TEMPORARY, REQUEST_TIME - DRUPAL_MAXIMUM_TEMP_FILE_AGE);
-  while ($file = db_fetch_object($result)) {
-    if (file_exists($file->filepath)) {
-      // If files that exist cannot be deleted, continue so the database remains
-      // consistent.
+  $result = db_query('SELECT fid FROM {files} WHERE status & :permanent != :permanent AND timestamp < :timestamp', array(':permanent' => FILE_STATUS_PERMANENT, ':timestamp' => REQUEST_TIME - DRUPAL_MAXIMUM_TEMP_FILE_AGE));
+  foreach ($result as $row) {
+    if ($file = file_load($row->fid)) {
       if (!file_delete($file)) {
         watchdog('file system', 'Could not delete temporary file "%path" during garbage collection', array('%path' => $file->filepath), WATCHDOG_ERROR);
-        continue;
       }
     }
-    db_query('DELETE FROM {files} WHERE fid = %d', $file->fid);
   }
+
   $core = array('cache', 'cache_block', 'cache_filter', 'cache_page', 'cache_form', 'cache_menu');
   $cache_tables = array_merge(module_invoke_all('flush_caches'), $core);
   foreach ($cache_tables as $table) {
