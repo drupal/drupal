@@ -1,10 +1,7 @@
 <?php
-// $Id: syslog.test,v 1.4 2008/08/22 12:35:55 dries Exp $
+// $Id: syslog.test,v 1.5 2008/11/25 13:14:28 dries Exp $
 
 class SyslogTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Syslog functionality'),
@@ -13,9 +10,6 @@ class SyslogTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('syslog');
   }

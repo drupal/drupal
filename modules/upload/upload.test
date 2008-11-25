@@ -1,10 +1,7 @@
 <?php
-// $Id: upload.test,v 1.7 2008/10/13 12:43:30 dries Exp $
+// $Id: upload.test,v 1.8 2008/11/25 13:14:29 dries Exp $
 
 class UploadTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Upload functionality'),

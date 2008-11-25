@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.test,v 1.9 2008/09/15 20:48:09 webchick Exp $
+// $Id: simpletest.test,v 1.10 2008/11/25 13:14:28 dries Exp $
 
 class SimpleTestTestCase extends DrupalWebTestCase {
   /**
@@ -13,9 +13,6 @@ class SimpleTestTestCase extends DrupalWebTestCase {
    */
   protected $test_ids = array();
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('SimpleTest functionality'),
@@ -27,9 +24,6 @@ class SimpleTestTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     if (!$this->inCURL()) {
       parent::setUp('simpletest');

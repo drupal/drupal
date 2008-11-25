@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.6 2008/11/05 12:47:23 dries Exp $
+// $Id: forum.test,v 1.7 2008/11/25 13:14:27 dries Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -11,9 +11,6 @@ class ForumTestCase extends DrupalWebTestCase {
   protected $root_forum;
   protected $nids;
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Forum functionality'),

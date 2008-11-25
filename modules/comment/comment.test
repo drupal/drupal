@@ -1,14 +1,11 @@
 <?php
-// $Id: comment.test,v 1.18 2008/11/21 14:48:59 dries Exp $
+// $Id: comment.test,v 1.19 2008/11/25 13:14:26 dries Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
   protected $web_user;
   protected $node;
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('comment');
     // Create users.
@@ -230,10 +227,6 @@ class CommentHelperCase extends DrupalWebTestCase {
 }
 
 class CommentInterfaceTest extends CommentHelperCase {
-
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Comment interface'),
@@ -348,10 +341,6 @@ class CommentInterfaceTest extends CommentHelperCase {
 }
 
 class CommentNodePage extends CommentHelperCase {
-
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Comment on a node page'),
@@ -384,10 +373,6 @@ class CommentNodePage extends CommentHelperCase {
 }
 
 class CommentAnonymous extends CommentHelperCase {
-
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Comment on a node page'),
@@ -484,10 +469,6 @@ class CommentAnonymous extends CommentHelperCase {
 }
 
 class CommentApprovalTest extends CommentHelperCase {
-
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Comment approval'),

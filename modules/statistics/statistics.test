@@ -1,10 +1,7 @@
 <?php
-// $Id: statistics.test,v 1.4 2008/09/17 07:11:58 dries Exp $
+// $Id: statistics.test,v 1.5 2008/11/25 13:14:28 dries Exp $
 
 class StatisticsBlockVisitorsTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Top visitor blocking'),
@@ -13,9 +10,6 @@ class StatisticsBlockVisitorsTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('statistics');
 

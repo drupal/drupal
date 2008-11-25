@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.test,v 1.7 2008/11/24 04:22:02 webchick Exp $
+// $Id: poll.test,v 1.8 2008/11/25 13:14:28 dries Exp $
 
 class PollTestCase extends DrupalWebTestCase {
 
@@ -74,10 +74,6 @@ class PollTestCase extends DrupalWebTestCase {
 }
 
 class PollCreateTestCase extends PollTestCase {
-
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array('name' => t('Poll create'), 'description' => 'Adds "more choices", previews and creates a poll.', 'group' => t('Poll'));
   }
@@ -94,9 +90,6 @@ class PollCreateTestCase extends PollTestCase {
 }
 
 class PollVoteTestCase extends PollTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array('name' => t('Poll vote'), 'description' => 'Vote on a poll', 'group' => t('Poll'));
   }

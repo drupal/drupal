@@ -1,10 +1,7 @@
 <?php
-// $Id: blogapi.test,v 1.6 2008/10/13 12:43:30 dries Exp $
+// $Id: blogapi.test,v 1.7 2008/11/25 13:14:26 dries Exp $
 
 class BlogAPITestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Blog API functionality'),
@@ -13,9 +10,6 @@ class BlogAPITestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('blog', 'blogapi', 'taxonomy');
   }

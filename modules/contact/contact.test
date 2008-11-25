@@ -1,14 +1,10 @@
 <?php
-// $Id: contact.test,v 1.12 2008/09/17 06:54:11 dries Exp $
+// $Id: contact.test,v 1.13 2008/11/25 13:14:26 dries Exp $
 
 /**
  * Test the sitewide contact form.
  */
 class ContactSitewideTestCase extends DrupalWebTestCase {
-
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Site-wide contact form'),
@@ -17,9 +13,6 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('contact');
   }
@@ -263,10 +256,6 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
  * Test the personal contact form.
  */
 class ContactPersonalTestCase extends DrupalWebTestCase {
-
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Personal contact form'),
@@ -275,9 +264,6 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('contact');
   }

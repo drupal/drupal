@@ -1,10 +1,7 @@
 <?php
-// $Id: locale.test,v 1.7 2008/11/24 04:22:02 webchick Exp $
+// $Id: locale.test,v 1.8 2008/11/25 13:14:27 dries Exp $
 
 class LocaleTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo() for information
-   */
   function getInfo() {
     return array(
       'name' => t('String translate'),
@@ -119,7 +116,6 @@ class LocaleTestCase extends DrupalWebTestCase {
  * Functional tests for the import of translation files.
  */
 class LocaleImportFunctionalTest extends DrupalWebTestCase {
-
   function getInfo() {
     return array(
       'name' => t('Translation import'),

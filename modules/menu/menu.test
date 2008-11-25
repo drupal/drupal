@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.3 2008/11/13 05:54:35 webchick Exp $
+// $Id: menu.test,v 1.4 2008/11/25 13:14:27 dries Exp $
 
 class MenuTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -7,9 +7,6 @@ class MenuTestCase extends DrupalWebTestCase {
   protected $menu;
   protected $items;
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Menu item creation/deletion'),
@@ -18,9 +15,6 @@ class MenuTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('menu');
     // Create users.

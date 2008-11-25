@@ -1,13 +1,10 @@
 <?php
-// $Id: trigger.test,v 1.3 2008/06/02 17:39:12 dries Exp $
+// $Id: trigger.test,v 1.4 2008/11/25 13:14:29 dries Exp $
 
 class TriggerContentTestCase extends DrupalWebTestCase {
   var $_cleanup_roles = array();
   var $_cleanup_users = array();
 
-  /**
-   * Implementation of getInfo() for information
-   */
   function getInfo() {
     return array(
       'name' => t('Trigger content (node) actions'),
