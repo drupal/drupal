@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.287 2008/11/24 10:41:40 dries Exp $
+// $Id: system.install,v 1.288 2008/11/25 13:16:39 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3129,6 +3129,16 @@ function system_update_7013() {
 function system_update_7014() {
   $ret = array();
   db_drop_field($ret, 'system', 'bootstrap');
+  return $ret;
+}
+
+/**
+ * Change the user logout path.
+ */
+function system_update_7015() {
+  $ret = array();
+  $ret[] = update_sql("UPDATE {menu_links} SET link_path = 'user/logout' WHERE link_path = 'logout'");
+  $ret[] = update_sql("UPDATE {menu_links} SET router_path = 'user/logout' WHERE router_path = 'logout'");
   return $ret;
 }
 
