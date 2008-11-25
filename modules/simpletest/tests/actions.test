@@ -2,9 +2,6 @@
 // $Id$
 
 class ActionsConfigurationTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Actions configuration'),

@@ -2,9 +2,6 @@
 // $Id$
 
 class BlogAPITestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Blog API functionality'),
@@ -13,9 +10,6 @@ class BlogAPITestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('blog', 'blogapi', 'taxonomy');
   }

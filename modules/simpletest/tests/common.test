@@ -5,9 +5,6 @@ class CommonSizeTestCase extends DrupalWebTestCase {
   protected $exact_test_cases;
   protected $rounded_test_cases;
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Size parsing test'),
@@ -16,9 +13,6 @@ class CommonSizeTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     $kb = DRUPAL_KILOBYTE;
     $this->exact_test_cases = array(
@@ -115,9 +109,6 @@ class DrupalTagsHandlingTestCase extends DrupalWebTestCase {
     '"Drupal, although it rhymes with sloopal, is as awesome as a troopal!"' => 'Drupal, although it rhymes with sloopal, is as awesome as a troopal!',
   );
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Drupal tags handling'),
@@ -168,9 +159,6 @@ class DrupalTagsHandlingTestCase extends DrupalWebTestCase {
  * Test the Drupal CSS system.
  */
 class CascadingStylesheetsTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Cascading stylesheets'),
@@ -179,9 +167,6 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp();
     // Reset drupal_add_css() before each test.
@@ -218,9 +203,6 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
  * Test drupal_http_request().
  */
 class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Drupal HTTP request'),
@@ -229,9 +211,6 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('system_test');
   }
@@ -307,9 +286,6 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
  * Testing drupal_set_content and drupal_get_content.
  */
 class DrupalSetContentTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Drupal set/get content'),
@@ -361,9 +337,6 @@ class JavaScriptTestCase extends DrupalWebTestCase {
    */
   var $preprocess_js = NULL;
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('JavaScript'),
@@ -372,9 +345,6 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     // Enable Locale and SimpleTest in the test environment.
     parent::setUp('locale', 'simpletest');
@@ -387,9 +357,6 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     drupal_add_js(NULL, NULL, TRUE);
   }
 
-  /**
-   * Implementation of tearDown().
-   */
   function tearDown() {
     // Restore configured value for JavaScript preprocessing.
     variable_set('preprocess_js', $this->preprocess_js);

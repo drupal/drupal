@@ -5,9 +5,6 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
   protected $nodes;
   protected $logs;
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Node revisions'),
@@ -16,9 +13,6 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp();
 
@@ -93,9 +87,6 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
 }
 
 class NodeTeaserTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Node teaser'),
@@ -241,9 +232,6 @@ class NodeTeaserTestCase extends DrupalWebTestCase {
 }
 
 class PageEditTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Node edit'),
@@ -252,9 +240,6 @@ class PageEditTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp();
 
@@ -301,9 +286,6 @@ class PageEditTestCase extends DrupalWebTestCase {
 }
 
 class PagePreviewTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Node preview'),
@@ -312,9 +294,6 @@ class PagePreviewTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp();
 
@@ -344,9 +323,6 @@ class PagePreviewTestCase extends DrupalWebTestCase {
 }
 
 class PageCreationTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Node creation'),
@@ -355,9 +331,6 @@ class PageCreationTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp();
 
@@ -385,9 +358,6 @@ class PageCreationTestCase extends DrupalWebTestCase {
 }
 
 class PageViewTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Node edit permissions'),
@@ -427,9 +397,6 @@ class PageViewTestCase extends DrupalWebTestCase {
 }
 
 class NodeTitleXSSTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
      return array(
       'name' => t('Node title XSS filtering'),

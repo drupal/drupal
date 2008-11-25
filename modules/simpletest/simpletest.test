@@ -13,9 +13,6 @@ class SimpleTestTestCase extends DrupalWebTestCase {
    */
   protected $test_ids = array();
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('SimpleTest functionality'),
@@ -27,9 +24,6 @@ class SimpleTestTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     if (!$this->inCURL()) {
       parent::setUp('simpletest');

@@ -1978,10 +1978,6 @@ class DatabaseLoggingTestCase extends DatabaseTestCase {
  * Range query tests.
  */
 class DatabaseRangeQueryTestCase extends DrupalWebTestCase {
-
-  /**
-   * Define metadata for this test subclass.
-   */
   function getInfo() {
     return array(
       'name' => t('Range query test'),
@@ -1990,9 +1986,6 @@ class DatabaseRangeQueryTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('database_test');
   }
@@ -2016,10 +2009,6 @@ class DatabaseRangeQueryTestCase extends DrupalWebTestCase {
  * Temporary query tests.
  */
 class DatabaseTemporaryQueryTestCase extends DrupalWebTestCase {
-
-  /**
-   * Define metadata for this test subclass.
-   */
   function getInfo() {
     return array(
       'name' => t('Temporary query test'),
@@ -2028,9 +2017,6 @@ class DatabaseTemporaryQueryTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('database_test');
   }

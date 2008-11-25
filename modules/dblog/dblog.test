@@ -5,9 +5,6 @@ class DBLogTestCase extends DrupalWebTestCase {
   protected $big_user;
   protected $any_user;
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('DBLog functionality'),

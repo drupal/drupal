@@ -2,9 +2,6 @@
 // $Id$
 
 class LocaleTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo() for information
-   */
   function getInfo() {
     return array(
       'name' => t('String translate'),
@@ -119,7 +116,6 @@ class LocaleTestCase extends DrupalWebTestCase {
  * Functional tests for the import of translation files.
  */
 class LocaleImportFunctionalTest extends DrupalWebTestCase {
-
   function getInfo() {
     return array(
       'name' => t('Translation import'),

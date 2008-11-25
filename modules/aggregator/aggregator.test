@@ -4,9 +4,6 @@
 class AggregatorTestCase extends DrupalWebTestCase {
   private static $prefix = 'simpletest_aggregator_';
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('aggregator');
     $web_user = $this->drupalCreateUser(array('administer news feeds', 'access news feeds'));
@@ -229,9 +226,6 @@ EOT;
 }
 
 class AddFeedTestCase extends AggregatorTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Add feed functionality'),
@@ -261,9 +255,6 @@ class AddFeedTestCase extends AggregatorTestCase {
 }
 
 class UpdateFeedTestCase extends AggregatorTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Update feed functionality'),
@@ -306,9 +297,6 @@ class UpdateFeedTestCase extends AggregatorTestCase {
 }
 
 class RemoveFeedTestCase extends AggregatorTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Remove feed functionality'),
@@ -337,9 +325,6 @@ class RemoveFeedTestCase extends AggregatorTestCase {
 }
 
 class UpdateFeedItemTestCase extends AggregatorTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Update feed item functionality'),
@@ -398,9 +383,6 @@ class UpdateFeedItemTestCase extends AggregatorTestCase {
 }
 
 class RemoveFeedItemTestCase extends AggregatorTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Remove feed item functionality'),
@@ -428,9 +410,7 @@ class RemoveFeedItemTestCase extends AggregatorTestCase {
 
 class CategorizeFeedItemTestCase extends AggregatorTestCase {
   private static $prefix = 'simpletest_aggregator_';
-  /**
-   * Implementation of getInfo().
-   */
+
   function getInfo() {
     return array(
       'name' => t('Categorize feed item functionality'),
@@ -482,9 +462,6 @@ class CategorizeFeedItemTestCase extends AggregatorTestCase {
 class ImportOPMLTestCase extends AggregatorTestCase {
   private static $prefix = 'simpletest_aggregator_';
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Import feeds from OPML functionality'),

@@ -4,9 +4,6 @@
 class BookTestCase extends DrupalWebTestCase {
   protected $book;
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Book functionality'),
@@ -15,9 +12,6 @@ class BookTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('book');
   }

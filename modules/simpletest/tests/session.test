@@ -7,12 +7,8 @@
  */
 
 class SessionTestCase extends DrupalWebTestCase {
-
   protected $saved_cookie;
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Session tests'),
@@ -21,12 +17,10 @@ class SessionTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('session_test');
   }
+
   /**
    * Implementation of curlHeaderCallback().
    */

@@ -2,9 +2,6 @@
 // $Id$
 
 class TaxonomyHooksTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Taxonomy term hooks'),
@@ -13,9 +10,6 @@ class TaxonomyHooksTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('taxonomy', 'taxonomy_test');
     $taxonomy_admin = $this->drupalCreateUser(array('administer taxonomy'));

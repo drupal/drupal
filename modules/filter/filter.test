@@ -2,9 +2,6 @@
 // $Id$
 
 class FilterAdminTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Filter administration functionality'),
@@ -184,9 +181,6 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 class FilterTestCase extends DrupalWebTestCase {
   protected $format;
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Core filters'),
@@ -195,9 +189,6 @@ class FilterTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp();
 

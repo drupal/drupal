@@ -2,9 +2,6 @@
 // $Id$
 
 class BlockTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Block functionality'),
@@ -13,9 +10,6 @@ class BlockTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp();
 
@@ -134,9 +128,6 @@ class BlockTestCase extends DrupalWebTestCase {
 }
 
 class NonDefaultBlockAdmin extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Non default theme admin'),

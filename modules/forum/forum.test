@@ -11,9 +11,6 @@ class ForumTestCase extends DrupalWebTestCase {
   protected $root_forum;
   protected $nids;
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Forum functionality'),

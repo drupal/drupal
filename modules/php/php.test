@@ -5,10 +5,6 @@
  * Base PHP test case class.
  */
 class PHPTestCase extends DrupalWebTestCase {
-
-  /**
-   * Implementation of getInfo().
-   */
   function setUp() {
     parent::setUp('php');
 
@@ -41,9 +37,6 @@ class PHPTestCase extends DrupalWebTestCase {
  * Tests to make sure the PHP filter actually evaluates PHP code when used.
  */
 class PHPFilterTestCase extends PHPTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('PHP filter functionality'),
@@ -87,9 +80,6 @@ class PHPFilterTestCase extends PHPTestCase {
  * Tests to make sure access to the PHP filter is properly restricted.
  */
 class PHPAccessTestCase extends PHPTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('PHP filter access check'),

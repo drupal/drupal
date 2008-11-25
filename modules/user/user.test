@@ -2,9 +2,6 @@
 // $Id$
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('User registration'),
@@ -104,9 +101,6 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
 
 
 class UserValidationTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Username/e-mail validation'),
@@ -159,9 +153,6 @@ class UserValidationTestCase extends DrupalWebTestCase {
 
 
 class UserDeleteTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('User delete'),
@@ -422,9 +413,6 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
   protected $admin_user;
   protected $rid;
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Role permissions'),
@@ -472,9 +460,6 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
 }
 
 class UserAdminTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('User admininstration'),
@@ -588,10 +573,6 @@ class UserTimeZoneFunctionalTest extends DrupalWebTestCase {
  * Test user autocompletion.
  */
 class UserAutocompleteTestCase extends DrupalWebTestCase {
-
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('User autocompletion'),
@@ -600,9 +581,6 @@ class UserAutocompleteTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp();
 
@@ -635,7 +613,6 @@ class UserAutocompleteTestCase extends DrupalWebTestCase {
  * Test user blocks.
  */
 class UserBlocksUnitTests extends DrupalWebTestCase {
-
   function getInfo() {
     return array(
       'name' => t('User blocks'),

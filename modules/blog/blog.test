@@ -6,9 +6,6 @@ class BlogTestCase extends DrupalWebTestCase {
   protected $own_user;
   protected $any_user;
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Blog functionality'),

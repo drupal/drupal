@@ -4,9 +4,6 @@
 define('SEARCH_TYPE', '_test_');
 
 class SearchMatchTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Search engine queries'),
@@ -163,9 +160,7 @@ class SearchMatchTestCase extends DrupalWebTestCase {
 
 class SearchBikeShed extends DrupalWebTestCase {
   protected $searching_user;
-  /**
-   * Implementation of getInfo().
-   */
+
   function getInfo() {
     return array(
       'name' => t('Bike shed'),
@@ -174,9 +169,6 @@ class SearchBikeShed extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('search');
 
@@ -199,9 +191,6 @@ class SearchBikeShed extends DrupalWebTestCase {
 class SearchAdvancedSearchForm extends DrupalWebTestCase {
   protected $node;
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Advanced search form'),
@@ -210,9 +199,6 @@ class SearchAdvancedSearchForm extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('search');
     // Create and login user.
@@ -266,9 +252,6 @@ class SearchAdvancedSearchForm extends DrupalWebTestCase {
 }
 
 class SearchRankingTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Search engine ranking'),

@@ -114,9 +114,6 @@ class ProfileTestCase extends DrupalWebTestCase {
 }
 
 class ProfileTestFields extends ProfileTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => 'Test single fields',
@@ -150,10 +147,6 @@ class ProfileTestFields extends ProfileTestCase {
 }
 
 class ProfileTestSelect extends ProfileTestCase {
-
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => 'Test select field',
@@ -179,10 +172,6 @@ class ProfileTestSelect extends ProfileTestCase {
 }
 
 class ProfileTestDate extends ProfileTestCase {
-
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => 'Test date field',
@@ -219,10 +208,6 @@ class ProfileTestDate extends ProfileTestCase {
 }
 
 class ProfileTestWeights extends ProfileTestCase {
-
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => 'Test field weights',
@@ -252,10 +237,6 @@ class ProfileTestWeights extends ProfileTestCase {
  * Test profile field autocompletion and access.
  */
 class ProfileTestAutocomplete extends ProfileTestCase {
-
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Autocompletion'),

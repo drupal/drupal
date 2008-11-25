@@ -2,10 +2,6 @@
 // $Id$
 
 class RegistryParseFileTestCase extends DrupalWebTestCase {
-
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Registry parse file test'),
@@ -14,9 +10,6 @@ class RegistryParseFileTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     $this->fileName = 'registry_test_' . md5(rand());
     $this->functionName = 'registry_test_function' . md5(rand());
@@ -56,12 +49,8 @@ CONTENTS;
 }
 
 class RegistryParseFilesTestCase extends DrupalWebTestCase {
-
   protected $fileTypes = array('new', 'existing_changed');
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Registry parse files test'),
@@ -70,9 +59,6 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp();
     // Create files with some php to parse - one 'new', one 'existing' so

@@ -4,9 +4,6 @@
 class TranslationTestCase extends DrupalWebTestCase {
   protected $book;
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Translation functionality'),
@@ -15,9 +12,6 @@ class TranslationTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('locale', 'translation');
   }

@@ -2,9 +2,6 @@
 // $Id$
 
 class UploadTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Upload functionality'),

@@ -2,9 +2,6 @@
 // $Id$
 
 class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name'  => t('XML-RPC validator'),
@@ -13,9 +10,6 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('xmlrpc_test');
   }
@@ -128,9 +122,6 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
 }
 
 class XMLRPCMessagesTestCase extends DrupalWebTestCase {
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name'  => t('XML-RPC message'),
@@ -139,9 +130,6 @@ class XMLRPCMessagesTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('xmlrpc_test');
   }

@@ -6,9 +6,6 @@ class TrackerTest extends DrupalWebTestCase {
   protected $other_user;
   protected $new_node;
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Tracker'),
@@ -17,9 +14,6 @@ class TrackerTest extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('comment', 'tracker');
 

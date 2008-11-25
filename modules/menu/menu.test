@@ -7,9 +7,6 @@ class MenuTestCase extends DrupalWebTestCase {
   protected $menu;
   protected $items;
 
-  /**
-   * Implementation of getInfo().
-   */
   function getInfo() {
     return array(
       'name' => t('Menu item creation/deletion'),
@@ -18,9 +15,6 @@ class MenuTestCase extends DrupalWebTestCase {
     );
   }
 
-  /**
-   * Implementation of setUp().
-   */
   function setUp() {
     parent::setUp('menu');
     // Create users.
