@@ -1,5 +1,5 @@
 <?php
-// $Id: run-tests.sh,v 1.17 2008/11/24 20:17:07 dries Exp $
+// $Id: run-tests.sh,v 1.18 2008/11/26 13:48:50 dries Exp $
 /**
  * @file
  * This script runs Drupal tests from command line.
@@ -343,9 +343,9 @@ function simpletest_script_run_one_test($test_id, $test_class) {
   $test->run();
   $info = $test->getInfo();
 
-  $status = ((isset($test->_results['#fail']) && $test->_results['#fail'] > 0)
-           || (isset($test->_results['#exception']) && $test->_results['#exception'] > 0) ? 'fail' : 'pass');
-  simpletest_script_print($info['name'] . ' ' . _simpletest_format_summary_line($test->_results) . "\n", simpletest_script_color_code($status));
+  $status = ((isset($test->results['#fail']) && $test->results['#fail'] > 0)
+           || (isset($test->results['#exception']) && $test->results['#exception'] > 0) ? 'fail' : 'pass');
+  simpletest_script_print($info['name'] . ' ' . _simpletest_format_summary_line($test->results) . "\n", simpletest_script_color_code($status));
 }
 
 /**
