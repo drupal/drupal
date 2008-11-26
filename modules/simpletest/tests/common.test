@@ -146,11 +146,11 @@ class DrupalTagsHandlingTestCase extends DrupalWebTestCase {
     $original = $this->validTags;
     foreach ($tags as $tag) {
       $key = array_search($tag, $original);
-      $this->_assert($key !== FALSE, t('Make sure tag %tag shows up in the final tags array (originally %original)', array('%tag' => $tag, '%original' => $key)));
+      $this->assertTrue($key, t('Make sure tag %tag shows up in the final tags array (originally %original)', array('%tag' => $tag, '%original' => $key)));
       unset($original[$key]);
     }
     foreach ($original as $leftover) {
-      $this->_assert(FALSE, t('Leftover tag %leftover was left over.', array('%leftover' => $leftover)));
+      $this->fail(t('Leftover tag %leftover was left over.', array('%leftover' => $leftover)));
     }
   }
 }
@@ -238,11 +238,9 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
     $auth = str_replace('http://', 'http://' . $username . ':' . $password .'@', $url);
     $result = drupal_http_request($auth);
 
-    // We use strpos directly.
-    // assertRaw() cannot be used because we are getting the data
-    // in a variable instead of $this->_content.
-    $this->assertTrue(strpos($result->data, $username) !== FALSE, t('$_SERVER[\'PHP_AUTH_USER\'] is passed correctly.'));
-    $this->assertTrue(strpos($result->data, $password) !== FALSE, t('$_SERVER[\'PHP_AUTH_PW\'] is passed correctly.'));
+    $this->drupalSetContent($result->data);
+    $this->assertRaw($username, t('$_SERVER["PHP_AUTH_USER"] is passed correctly.'));
+    $this->assertRaw($password, t('$_SERVER["PHP_AUTH_PW"] is passed correctly.'));
   }
 
   function testDrupalHTTPRequestRedirect() {

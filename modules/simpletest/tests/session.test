@@ -169,9 +169,9 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->curlClose();
 
     // Change cookie file for user.
-    $this->cookie_file = file_directory_temp() . '/cookie.' . $uid . '.txt';
-    $this->curl_options[CURLOPT_COOKIEFILE] = $this->cookie_file;
-    $this->curl_options[CURLOPT_COOKIESESSION] = TRUE;
+    $this->cookieFile = file_directory_temp() . '/cookie.' . $uid . '.txt';
+    $this->additionalCurlOptions[CURLOPT_COOKIEFILE] = $this->cookieFile;
+    $this->additionalCurlOptions[CURLOPT_COOKIESESSION] = TRUE;
     $this->drupalGet('session-test/get');
     $this->assertResponse(200, t('Session test module is correctly enabled.'), t('Session'));
   }

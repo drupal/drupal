@@ -343,9 +343,9 @@ function simpletest_script_run_one_test($test_id, $test_class) {
   $test->run();
   $info = $test->getInfo();
 
-  $status = ((isset($test->_results['#fail']) && $test->_results['#fail'] > 0)
-           || (isset($test->_results['#exception']) && $test->_results['#exception'] > 0) ? 'fail' : 'pass');
-  simpletest_script_print($info['name'] . ' ' . _simpletest_format_summary_line($test->_results) . "\n", simpletest_script_color_code($status));
+  $status = ((isset($test->results['#fail']) && $test->results['#fail'] > 0)
+           || (isset($test->results['#exception']) && $test->results['#exception'] > 0) ? 'fail' : 'pass');
+  simpletest_script_print($info['name'] . ' ' . _simpletest_format_summary_line($test->results) . "\n", simpletest_script_color_code($status));
 }
 
 /**

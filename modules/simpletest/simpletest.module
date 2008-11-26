@@ -60,8 +60,6 @@ function simpletest_theme() {
  * Menu callback for both running tests and listing possible tests
  */
 function simpletest_test_form() {
-  global $db_prefix, $db_prefix_original;
-
   $form = array();
 
   // List out all tests in groups for selection.
@@ -354,7 +352,6 @@ function simpletest_test_form_submit($form, &$form_state) {
  *   drupal being the default.
  */
 function simpletest_run_tests($test_list, $reporter = 'drupal') {
-  global $db_prefix, $db_prefix_original;
   cache_clear_all();
   $test_id = db_insert('simpletest_test_id')->useDefaults(array('test_id'))->execute();
 
@@ -415,7 +412,7 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
   $info = $test->getInfo();
 
   // Gather results and compose the report.
-  $test_results[$test_class] = $test->_results;
+  $test_results[$test_class] = $test->results;
   foreach ($test_results[$test_class] as $key => $value) {
     $test_results[$key] += $value;
   }
@@ -526,13 +523,12 @@ function simpletest_clean_environment() {
  * Removed prefixed talbes from the database that are left over from crashed tests.
  */
 function simpletest_clean_database() {
-  global $db_prefix;
   $tables = db_find_tables(Database::getActiveConnection()->prefixTables('{simpletest}') . '%');
   $schema = drupal_get_schema_unprocessed('simpletest');
   $ret = array();
   foreach (array_diff_key($tables, $schema) as $table) {
-    // Strip $db_prefix and skip tables without digits following "simpletest",
-    // e.g. {simpletest_tets_id}.
+    // Strip the prefix and skip tables without digits following "simpletest",
+    // e.g. {simpletest_test_id}.
     if (preg_match('/simpletest\d+.*/', $table, $matches)) {
       db_drop_table($ret, $matches[0]);
     }

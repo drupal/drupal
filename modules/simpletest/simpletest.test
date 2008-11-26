@@ -5,7 +5,7 @@ class SimpleTestTestCase extends DrupalWebTestCase {
   /**
    * The results array that has been parsed by getTestResults().
    */
-  protected $results;
+  protected $childTestResults;
 
   /**
    * Store the test ID from each test run for comparison, to ensure they are
@@ -100,7 +100,7 @@ class SimpleTestTestCase extends DrupalWebTestCase {
     $this->drupalCreateUser(array($this->valid_permission));
     $this->drupalCreateUser(array($this->invalid_permission));
 
-    $this->pass(t('Test ID is @id.', array('@id' => $this->test_id)));
+    $this->pass(t('Test ID is @id.', array('@id' => $this->testId)));
 
     // Generates a warning.
     $i = 1 / 0;
@@ -146,7 +146,7 @@ class SimpleTestTestCase extends DrupalWebTestCase {
    * Fetch the test id from the test results.
    */
   function getTestIdFromResults() {
-    foreach($this->results['assertions'] as $assertion) {
+    foreach($this->childTestResults['assertions'] as $assertion) {
       if (preg_match('@^Test ID is ([0-9]*)\.$@', $assertion['message'], $matches)) {
         return $matches[1];
       }
@@ -168,7 +168,7 @@ class SimpleTestTestCase extends DrupalWebTestCase {
   function assertAssertion($message, $type, $status, $file, $function) {
     $message = trim(strip_tags($message));
     $found = FALSE;
-    foreach ($this->results['assertions'] as $assertion) {
+    foreach ($this->childTestResults['assertions'] as $assertion) {
       if ((strpos($assertion['message'], $message) !== FALSE) &&
           $assertion['type'] == $type &&
           $assertion['status'] == $status &&
@@ -208,7 +208,7 @@ class SimpleTestTestCase extends DrupalWebTestCase {
         }
       }
     }
-    $this->results = $results;
+    $this->childTestResults = $results;
   }
 
   /**

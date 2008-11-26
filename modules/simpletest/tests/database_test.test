@@ -2026,7 +2026,7 @@ class DatabaseTemporaryQueryTestCase extends DrupalWebTestCase {
    */
   function testTemporaryQuery() {
     $this->drupalGet('database_test_db_query_temporary');
-    $this->assertEqual(db_query('SELECT COUNT(*) FROM {system}')->fetchField(), $this->_content, t('The temporary table exists and contains the correct amount of rows.'));
+    $this->assertEqual(db_query('SELECT COUNT(*) FROM {system}')->fetchField(), $this->drupalGetContent(), t('The temporary table exists and contains the correct amount of rows.'));
     $this->assertFalse(db_table_exists('temporary'), t('The temporary table is, indeed, temporary.'));
   }
 }
