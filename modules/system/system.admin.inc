@@ -1717,8 +1717,7 @@ function system_date_time_settings_submit($form, &$form_state) {
  */
 function system_date_time_lookup() {
   $result = format_date(REQUEST_TIME, 'custom', $_GET['format']);
-  echo drupal_to_js($result);
-  exit;
+  drupal_json($result);
 }
 
 /**
