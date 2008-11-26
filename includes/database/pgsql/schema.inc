@@ -247,7 +247,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       $spec['not null'] = FALSE;
     }
     $query = 'ALTER TABLE {' . $table . '} ADD COLUMN ';
-    $query .= $this->_createFieldSql($field, $this->_processField($spec));
+    $query .= $this->createFieldSql($field, $this->processField($spec));
     $ret[] = update_sql($query);
     if (isset($spec['initial'])) {
       // All this because update_sql does not support %-placeholders.
@@ -290,7 +290,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    *   Default value to be set. NULL for 'default NULL'.
    */
   public function fieldSetDefault(&$ret, $table, $field, $default) {
-    if ($default == NULL) {
+    if (is_null($default)) {
       $default = 'NULL';
     }
     else {
