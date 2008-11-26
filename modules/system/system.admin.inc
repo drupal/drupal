@@ -1416,9 +1416,6 @@ function system_performance_settings() {
     '#submit' => array('system_clear_cache_submit'),
   );
 
-  $form['#submit'][] = 'drupal_clear_css_cache';
-  $form['#submit'][] = 'drupal_clear_js_cache';
-
   return system_settings_form($form);
 }
 
