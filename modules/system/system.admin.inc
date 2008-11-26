@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.109 2008/11/26 13:52:13 dries Exp $
+// $Id: system.admin.inc,v 1.110 2008/11/26 13:54:05 dries Exp $
 
 /**
  * @file
@@ -1415,9 +1415,6 @@ function system_performance_settings() {
     '#value' => t('Clear cached data'),
     '#submit' => array('system_clear_cache_submit'),
   );
-
-  $form['#submit'][] = 'drupal_clear_css_cache';
-  $form['#submit'][] = 'drupal_clear_js_cache';
 
   return system_settings_form($form);
 }
