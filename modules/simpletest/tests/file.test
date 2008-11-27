@@ -539,7 +539,7 @@ class FileScanDirectoryTest extends FileTestCase {
    * Check that the no-mask parameter is honored.
    */
   function testNoMask() {
-    $path = $this->original_file_directory . '/simpletest';
+    $path = $this->originalFileDirectory . '/simpletest';
 
     // Grab a listing of all the JS files.
     $all_files = file_scan_directory($path, '/javascript*/');
