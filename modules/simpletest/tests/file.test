@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.13 2008/11/25 13:14:28 dries Exp $
+// $Id: file.test,v 1.14 2008/11/27 08:41:45 webchick Exp $
 
 /**
  *  @file
@@ -539,7 +539,7 @@ class FileScanDirectoryTest extends FileTestCase {
    * Check that the no-mask parameter is honored.
    */
   function testNoMask() {
-    $path = $this->original_file_directory . '/simpletest';
+    $path = $this->originalFileDirectory . '/simpletest';
 
     // Grab a listing of all the JS files.
     $all_files = file_scan_directory($path, '/javascript*/');
