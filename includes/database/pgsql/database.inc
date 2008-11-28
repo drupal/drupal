@@ -30,6 +30,8 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
     parent::__construct($dsn, $connection_options['username'], $connection_options['password'], array(
       // Convert numeric values to strings when fetching.
       PDO::ATTR_STRINGIFY_FETCHES => TRUE,
+      // Force column names to lower case.
+      PDO::ATTR_CASE => PDO::CASE_LOWER,
     ));
   }
 
