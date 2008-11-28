@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.1 2008/11/23 06:06:15 webchick Exp $
+// $Id: database.inc,v 1.2 2008/11/28 09:27:58 dries Exp $
 
 /**
  * @file
@@ -31,7 +31,10 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
 
     $this->transactionSupport = isset($connection_options['transactions']) ? $connection_options['transactions'] : TRUE;
 
-    parent::__construct('sqlite:'. $connection_options['database'], '', '', $connection_options);
+    parent::__construct('sqlite:'. $connection_options['database'], '', '', array(
+      // Force column names to lower case.
+      PDO::ATTR_CASE => PDO::CASE_LOWER,
+    ));
 
     $this->exec('PRAGMA encoding="UTF-8"');
 
