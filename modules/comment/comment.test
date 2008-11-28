@@ -375,7 +375,7 @@ class CommentNodePage extends CommentHelperCase {
 class CommentAnonymous extends CommentHelperCase {
   function getInfo() {
     return array(
-      'name' => t('Comment on a node page'),
+      'name' => t('Anonymous comments'),
       'description' => t('Test anonymous comments.'),
       'group' => t('Comment'),
     );
