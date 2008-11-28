@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.test,v 1.19 2008/11/25 13:14:26 dries Exp $
+// $Id: comment.test,v 1.20 2008/11/28 09:34:42 dries Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -375,7 +375,7 @@ class CommentNodePage extends CommentHelperCase {
 class CommentAnonymous extends CommentHelperCase {
   function getInfo() {
     return array(
-      'name' => t('Comment on a node page'),
+      'name' => t('Anonymous comments'),
       'description' => t('Test anonymous comments.'),
       'group' => t('Comment'),
     );
