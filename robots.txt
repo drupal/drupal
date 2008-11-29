@@ -1,4 +1,4 @@
-# $Id: robots.txt,v 1.12 2008/11/27 07:07:00 webchick Exp $
+# $Id: robots.txt,v 1.13 2008/11/29 09:33:50 dries Exp $
 #
 # robots.txt
 #
@@ -43,19 +43,19 @@ Disallow: /xmlrpc.php
 Disallow: /admin/
 Disallow: /comment/reply/
 Disallow: /contact/
-Disallow: /logout/
 Disallow: /node/add/
 Disallow: /search/
 Disallow: /user/register/
 Disallow: /user/password/
 Disallow: /user/login/
+Disallow: /user/logout/
 # Paths (no clean URLs)
 Disallow: /?q=admin/
 Disallow: /?q=comment/reply/
 Disallow: /?q=contact/
-Disallow: /?q=logout/
 Disallow: /?q=node/add/
 Disallow: /?q=search/
 Disallow: /?q=user/password/
 Disallow: /?q=user/register/
 Disallow: /?q=user/login/
+Disallow: /?q=user/logout/
