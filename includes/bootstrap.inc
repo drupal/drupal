@@ -1480,7 +1480,10 @@ function _registry_check_code($type, $name = NULL) {
   static $lookup_cache, $cache_update_needed;
 
   if (!isset($lookup_cache)) {
-    $lookup_cache = _registry_get_lookup_cache();
+    $lookup_cache = array();
+    if ($cache = cache_get('lookup_cache', 'cache_registry')) {
+      $lookup_cache = $cache->data;
+    }
   }
 
   // When we rebuild the registry, we need to reset this cache so
@@ -1495,7 +1498,7 @@ function _registry_check_code($type, $name = NULL) {
   // changes to the lookup cache for this request.
   if ($type == REGISTRY_WRITE_LOOKUP_CACHE) {
     if ($cache_update_needed) {
-      _registry_set_lookup_cache($lookup_cache);
+      cache_set('lookup_cache', $lookup_cache, 'cache_registry');
     }
     return;
   }
@@ -1544,38 +1547,6 @@ function _registry_check_code($type, $name = NULL) {
 function registry_rebuild() {
   require_once DRUPAL_ROOT . '/includes/registry.inc';
   _registry_rebuild();
-}
-
-/**
- * Wrapper function to perform array to string conversion of lookup cache.
- */
-function _registry_set_lookup_cache(array $lookup_cache) {
-  // Cache a string, not an array, so we can avoid the memory usage hit
-  // from serialize() in the cache system.
-  $key_value_pairs = array();
-  foreach ($lookup_cache as $key => $value) {
-    $key_value_pairs[] =  "$key|" . ($value ? $value : '');
-  }
-  return cache_set('lookup_cache', implode(';', $key_value_pairs), 'cache_registry');
-}
-
-/**
- * Wrapper function to perform string to array conversion of lookup cache.
- */
-function _registry_get_lookup_cache() {
-  // In _registry_set_lookup_cache, we cache a string, not an array, to avoid
-  // serialize() in the cache system. serialize() makes a copy, and thus uses
-  // extra memory, which we are trying to avoid.
-  $lookup_cache = array();
-  if ($cache = cache_get('lookup_cache', 'cache_registry')) {
-    // Each item is separated by ';'.
-    foreach (explode(';', $cache->data) as $lookup) {
-      // Key value pairs are separated by '|'.
-      list($resource, $result) = explode('|', $lookup);
-      $lookup_cache[$resource] = $result;
-    }
-  }
-  return $lookup_cache;
 }
 
 /**
