@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.10 2008/11/28 09:27:58 dries Exp $
+// $Id: database.inc,v 1.11 2008/11/29 09:30:35 dries Exp $
 
 /**
  * @file
@@ -13,20 +13,13 @@
 
 class DatabaseConnection_pgsql extends DatabaseConnection {
 
-  protected $transactionSupport;
+  protected $transactionSupport = TRUE;
 
   public function __construct(Array $connection_options = array()) {
+    $this->transactionSupport = isset($connection_options['transactions']) ? $connection_options['transactions'] : TRUE;
+    $connection_options['port'] = !empty($connection_options['port']) ? $connection_options['port'] : 5432;
 
-    $connection_options += array(
-      'transactions' => TRUE,
-    );
-    $this->transactionSupport = $connection_options['transactions'];
-
-    $dsn = 'pgsql:host=' . $connection_options['host'] . ' dbname=' . $connection_options['database'];
-    if (!empty($connection_options['port'])) {
-      $dsn .= ' port=' . $connection_options['port'];
-    }
-
+    $dsn = 'pgsql:host=' . $connection_options['host'] . ' dbname=' . $connection_options['database'] . ' port=' . $connection_options['port'];
     parent::__construct($dsn, $connection_options['username'], $connection_options['password'], array(
       // Convert numeric values to strings when fetching.
       PDO::ATTR_STRINGIFY_FETCHES => TRUE,

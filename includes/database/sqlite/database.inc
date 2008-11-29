@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.2 2008/11/28 09:27:58 dries Exp $
+// $Id: database.inc,v 1.3 2008/11/29 09:30:36 dries Exp $
 
 /**
  * @file
@@ -27,11 +27,11 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
 
   public function __construct(Array $connection_options = array()) {
     // We don't need a specific PDOStatement class here, we simulate it below.
-    $connection_options['statement_class'] = FALSE;
-
+    $this->statementClass = 'PDOStatement';
     $this->transactionSupport = isset($connection_options['transactions']) ? $connection_options['transactions'] : TRUE;
 
-    parent::__construct('sqlite:'. $connection_options['database'], '', '', array(
+    $dns = 'sqlite:'. $connection_options['database'];
+    parent::__construct($dns, '', '', array(
       // Force column names to lower case.
       PDO::ATTR_CASE => PDO::CASE_LOWER,
     ));
