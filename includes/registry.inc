@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.inc,v 1.9 2008/11/16 19:41:14 dries Exp $
+// $Id: registry.inc,v 1.10 2008/11/29 23:21:22 webchick Exp $
 
 /**
  * @file
@@ -72,7 +72,11 @@ function _registry_rebuild() {
   $parsed_files = _registry_parse_files($files);
 
   $unchanged_resources = array();
-  foreach (_registry_get_lookup_cache() as $key => $file) {
+  $lookup_cache = array();
+  if ($cache = cache_get('lookup_cache', 'cache_registry')) {
+    $lookup_cache = $cache->data;
+  }
+  foreach ($lookup_cache as $key => $file) {
     // If the file for this cached resource is carried over unchanged from
     // the last registry build, then we can safely re-cache it.
     if ($file && in_array($file, array_keys($files)) && !in_array($file, $parsed_files)) {
@@ -87,7 +91,7 @@ function _registry_rebuild() {
   // We have some unchanged resources, warm up the cache - no need to pay
   // for looking them up again.
   if (count($unchanged_resources) > 0) {
-    _registry_set_lookup_cache($unchanged_resources);
+    cache_set('lookup_cache', $unchanged_resources, 'cache_registry');
   }
 }
 
