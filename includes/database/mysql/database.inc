@@ -13,15 +13,11 @@
 
 class DatabaseConnection_mysql extends DatabaseConnection {
 
-  protected $transactionSupport;
+  protected $transactionSupport = FALSE;
 
   public function __construct(Array $connection_options = array()) {
-
-    $connection_options += array(
-      'transactions' => FALSE,
-      'port' => 3306,
-    );
-    $this->transactionSupport = $connection_options['transactions'];
+    $this->transactionSupport = isset($connection_options['transactions']) ? $connection_options['transactions'] : FALSE;
+    $connection_options['port'] = !empty($connection_options['port']) ? $connection_options['port'] : 3306;
 
     $dsn = 'mysql:host=' . $connection_options['host'] . ';port=' . $connection_options['port'] . ';dbname=' . $connection_options['database'];
     parent::__construct($dsn, $connection_options['username'], $connection_options['password'], array(

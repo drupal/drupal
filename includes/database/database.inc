@@ -211,6 +211,13 @@ abstract class DatabaseConnection extends PDO {
   protected $transactionClass = NULL;
 
   /**
+   * The name of the Statement class for this connection.
+   *
+   * @var string
+   */
+  protected $statementClass = NULL;
+
+  /**
    * The schema object for this connection.
    *
    * @var object
@@ -219,8 +226,9 @@ abstract class DatabaseConnection extends PDO {
 
   function __construct($dsn, $username, $password, $driver_options = array()) {
     // Fallback to DatabaseStatementBase if the driver has not specified one.
-    $statement_class = isset($driver_options['statement_class']) ? $driver_options['statement_class'] : 'DatabaseStatementBase';
-    unset($driver_options['statement_class']);
+    if (empty($this->statementClass)) {
+      $this->statementClass = 'DatabaseStatementBase';
+    }
 
     // Because the other methods don't seem to work right.
     $driver_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -229,8 +237,8 @@ abstract class DatabaseConnection extends PDO {
     parent::__construct($dsn, $username, $password, $driver_options);
 
     // Set a specific PDOStatement class if the driver requires that.
-    if (!empty($statement_class)) {
-      $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array($statement_class, array($this)));
+    if ($this->statementClass != 'PDOStatement') {
+      $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array($this->statementClass, array($this)));
     }
   }
 
