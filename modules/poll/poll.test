@@ -106,7 +106,7 @@ class PollVoteTestCase extends PollTestCase {
     $title = $this->randomName();
     $choices = $this->_generateChoices(7);
     $poll_nid = $this->pollCreate($title, $choices, FALSE);
-    $this->drupalGet('logout');
+    $this->drupalLogout();
 
     $web_user = $this->drupalCreateUser(array('cancel own vote', 'inspect all votes', 'vote on polls', 'access content'));
     $this->drupalLogin($web_user);

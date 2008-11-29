@@ -745,7 +745,7 @@ class DrupalWebTestCase {
    */
   protected function drupalLogout() {
     // Make a request to the logout page.
-    $this->drupalGet('logout');
+    $this->drupalGet('user/logout');
 
     // Load the user page, the idea being if you were properly logged out you should be seeing a login screen.
     $this->drupalGet('user');
