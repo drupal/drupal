@@ -1368,7 +1368,9 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
         drupal_alter('schema', $schema);
       }
 
-      if (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
+      // If the schema is empty, avoid saving it: some database engines require
+      // the schema to perform queries, and this could lead to infinite loops.
+      if (!empty($schema) && (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL)) {
         cache_set('schema', $schema);
       }
     }

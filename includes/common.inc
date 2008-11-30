@@ -947,7 +947,7 @@ function t($string, $args = array(), $langcode = NULL) {
   static $custom_strings;
 
   if (!isset($langcode)) {
-    $langcode = $language->language;
+    $langcode = isset($language->language) ? $language->language : 'en';
   }
 
   // First, check for an array of customized strings. If present, use the array
