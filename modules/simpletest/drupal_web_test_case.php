@@ -778,6 +778,8 @@ class DrupalWebTestCase {
     include_once DRUPAL_ROOT . '/includes/install.inc';
     drupal_install_system();
 
+    $this->preloadRegistry();
+
     // Add the specified modules to the list of modules in the default profile.
     $args = func_get_args();
     $modules = array_unique(array_merge(drupal_get_profile_modules('default', 'en'), $args));
@@ -794,7 +796,6 @@ class DrupalWebTestCase {
     default_profile_tasks($task, '');
 
     // Rebuild caches.
-    menu_rebuild();
     actions_synchronize();
     _drupal_flush_css_js();
     $this->refreshVariables();
@@ -810,6 +811,16 @@ class DrupalWebTestCase {
     variable_set('file_directory_path', file_directory_path() . '/' . $db_prefix);
     $directory = file_directory_path();
     file_check_directory($directory, FILE_CREATE_DIRECTORY); // Create the files directory.
+  }
+
+  /**
+   * This method is called by DrupalWebTestCase::setUp, and preloads the 
+   * registry from the testing site to cut down on the time it takes to 
+   * setup the a clean environment for the current test run. 
+   */ 
+  protected function preloadRegistry() {
+    db_query('INSERT INTO {registry} SELECT * FROM ' . $this->originalPrefix . 'registry');
+    db_query('INSERT INTO {registry_file} SELECT * FROM ' . $this->originalPrefix . 'registry_file');
   }
 
   /**
