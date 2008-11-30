@@ -238,6 +238,15 @@ class DatabaseStatement_sqlite extends DatabaseStatementPrefetch implements Iter
     // using the same convention as MySQL and PostgreSQL.
     $rename_columns = array();
     foreach ($this->columnNames as $k => $column) {
+      // In some SQLite versions, SELECT DISTINCT(field) will return "(field)"
+      // instead of "field".
+      if (preg_match("/^\((.*)\)$/", $column, $matches)) {
+        $rename_columns[$column] = $matches[1];
+        $this->columnNames[$k] = $matches[1];
+        $column = $matches[1];
+      }
+
+      // Remove "table." prefixes.
       if (preg_match("/^.*\.(.*)$/", $column, $matches)) {
         $rename_columns[$column] = $matches[1];
         $this->columnNames[$k] = $matches[1];
