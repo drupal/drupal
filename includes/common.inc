@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.831 2008/11/23 16:54:47 dries Exp $
+// $Id: common.inc,v 1.832 2008/11/30 01:05:16 webchick Exp $
 
 /**
  * @file
@@ -947,7 +947,7 @@ function t($string, $args = array(), $langcode = NULL) {
   static $custom_strings;
 
   if (!isset($langcode)) {
-    $langcode = $language->language;
+    $langcode = isset($language->language) ? $language->language : 'en';
   }
 
   // First, check for an array of customized strings. If present, use the array

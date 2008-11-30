@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.255 2008/11/29 23:21:22 webchick Exp $
+// $Id: bootstrap.inc,v 1.256 2008/11/30 01:05:16 webchick Exp $
 
 /**
  * @file
@@ -1368,7 +1368,9 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
         drupal_alter('schema', $schema);
       }
 
-      if (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
+      // If the schema is empty, avoid saving it: some database engines require
+      // the schema to perform queries, and this could lead to infinite loops.
+      if (!empty($schema) && (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL)) {
         cache_set('schema', $schema);
       }
     }
