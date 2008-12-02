@@ -847,7 +847,7 @@ function fix_gpc_magic() {
 /**
  * Translate strings to the page language or a given language.
  *
- * All human-readable text that will be displayed somewhere within a page should
+ * Human-readable text that will be displayed somewhere within a page should
  * be run through the t() function.
  *
  * Examples:
@@ -914,7 +914,7 @@ function fix_gpc_magic() {
  *   $output .= '<p>' . t('Go to the <a href="@contact-page">contact page</a>.', array('@contact-page' => url('contact'))) . '</p>';
  * @endcode
  *
- * Also avoid escaping quotation marks wherever possible.
+ * Avoid escaping quotation marks wherever possible.
  *
  * Incorrect:
  * @code
@@ -925,6 +925,101 @@ function fix_gpc_magic() {
  * @code
  *   $output .= t("Don't click me.");
  * @endcode
+ *
+ * Because t() is designed for handling code-based strings, in almost all
+ * cases, the actual string and not a variable must be passed through t().
+ *
+ * Extraction of translations is done based on the strings contained in t()
+ * calls. If a variable is passed through t(), the content of the variable 
+ * cannot be extracted from the file for translation.
+ *
+ * Incorrect:
+ * @code
+ *   $message = 'An error occurred.';
+ *   drupal_set_message(t($message), 'error');
+ *   $output .= t($message);
+ * @endcode
+ *
+ * Correct:
+ * @code
+ *   $message = t('An error occurred.');
+ *   drupal_set_message($message, 'error');
+ *   $output .= $message;
+ * @endcode
+ *
+ * The only case in which variables can be passed safely through t() is when
+ * code-based versions of the same strings will be passed through t() (or 
+ * otherwise extracted) elsewhere.
+ *
+ * In some cases, modules may include strings in code that can't use t()
+ * calls. For example, a module may use an external PHP application that
+ * produces strings that are loaded into variables in Drupal for output.
+ * In these cases, module authors may include a dummy file that passes the
+ * relevant strings through t(). This approach will allow the strings to be
+ * extracted.
+ *
+ * Sample external (non-Drupal) code:
+ * @code
+ *   class Time {
+ *     public $yesterday = 'Yesterday';
+ *     public $today = 'Today';
+ *     public $tomorrow = 'Tomorrow';
+ *   }
+ * @endcode
+ *
+ * Sample dummy file.
+ * @code
+ *   // Dummy function included in example.potx.inc.
+ *   function example_potx() {
+ *     $strings = array(
+ *       t('Yesterday'),
+ *       t('Today'),
+ *       t('Tomorrow'),
+ *     );
+ *     // No return value needed, since this is a dummy function.
+ *   }
+ * @endcode
+ *
+ * Having passed strings through t() in a dummy function, it is then
+ * okay to pass variables through t().
+ *
+ * Correct (if a dummy file was used):
+ * @code
+ *   $time = new Time();
+ *   $output .= t($time->today);
+ * @endcode
+ *
+ * However tempting it is, custom data from user input or other non-code sources
+ * should not be passed through t(). Doing so leads to the following
+ * problems and errors:
+ *  - The t() system doesn't support updates to existing strings. When user data
+ *    is updated, the next time it's passed through t() a new record is created
+ *    instead of an update. The database bloats over time and any existing
+ *    translations are orphaned with each update.
+ *  - The t() system assumes any data it receives is in English. User data may
+ *    be in another language, producing translation errors.
+ *  - The "Built-in interface" text group in the locale system is used to produce
+ *    translations for storage in .po files. When non-code strings are passed
+ *    through t(), they are added to this text group, which is rendered inaccurate
+ *    since it is a mix of actual interface strings and various user input strings of 
+ *    uncertain origin.
+ *
+ * Incorrect:
+ * @code
+ *   $item = item_load();
+ *   $output .= check_plain(t($item['title']));
+ * @endcode
+ *
+ * Instead, translation of these data can be done through the locale system,
+ * either directly or through helper functions provided by contributed
+ * modules.
+ * @see hook_locale()
+ *
+ * During installation, st() is used in place of t(). Code that may be called
+ * during installation or during normal operation should use the get_t()
+ * helper function.
+ * @see st()
+ * @see get_t()
  *
  * @param $string
  *   A string containing the English string to translate.
