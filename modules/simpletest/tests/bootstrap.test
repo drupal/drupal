@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.test,v 1.7 2008/11/23 18:12:08 dries Exp $
+// $Id: bootstrap.test,v 1.8 2008/12/02 20:03:57 dries Exp $
 
 class BootstrapIPAddressTestCase extends DrupalWebTestCase {
 
@@ -104,7 +104,7 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
     $this->drupalGet($base_url);
 
     $this->drupalHead($base_url);
-    $this->assertText('ETag: ', t('Verify presence of ETag header indicating that page caching is enabled.'));
+    $this->assertTrue($this->drupalGetHeader('ETag') !== FALSE, t('Verify presence of ETag header indicating that page caching is enabled.'));
   }
 
 }
