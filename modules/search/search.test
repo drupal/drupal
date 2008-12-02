@@ -303,6 +303,9 @@ class SearchRankingTestCase extends DrupalWebTestCase {
     node_update_index();
     search_update_totals();
 
+    // Refresh variables after the treatment.
+    $this->refreshVariables();
+
     // Add a comment to one of the nodes.
     $edit = array('subject' => 'my comment title', 'comment' => 'some random comment');
     $this->drupalGet('comment/reply/' . $nodes['comments'][1]->nid);

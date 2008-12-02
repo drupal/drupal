@@ -2117,7 +2117,7 @@ function comment_ranking() {
       'title' => t('Number of comments'),
       'join' => 'LEFT JOIN {node_comment_statistics} node_comment_statistics ON node_comment_statistics.nid = i.sid',
       // Inverse law that maps the highest reply count on the site to 1 and 0 to 0.
-      'score' => '2.0 - 2.0 / (1.0 + node_comment_statistics.comment_count * %f)',
+      'score' => '2.0 - 2.0 / (1.0 + node_comment_statistics.comment_count * CAST(%f AS DECIMAL))',
       'arguments' => array(variable_get('node_cron_comments_scale', 0)),
     ),
   );

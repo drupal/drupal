@@ -1229,7 +1229,7 @@ function _node_rankings() {
         }
 
         // Add the rankings weighted score multiplier value, handling NULL gracefully.
-        $rankings['score'][] = '%f * COALESCE(('. $values['score'] .'), 0)';
+        $rankings['score'][] = 'CAST(%f AS DECIMAL) * COALESCE(('. $values['score'] .'), 0)';
 
         // Add the the administrator's weighted score multiplier value for this ranking.
         $rankings['total'] += $node_rank;
@@ -1333,13 +1333,13 @@ function node_search($op = 'search', $keys = NULL) {
         $total = 1;
         $arguments2 = array();
         $join2 = '';
-        $select2 = 'i.relevance AS calculated_score';
+        $select2 = 'SUM(i.relevance) AS calculated_score';
       }
       else {
         $total = $rankings['total'];
         $arguments2 = $rankings['arguments'];
         $join2 = implode(' ', $rankings['join']);
-        $select2 = '('. implode(' + ', $rankings['score']) .') AS calculated_score';
+        $select2 = 'SUM('. implode(' + ', $rankings['score']) .') AS calculated_score';
       }
 
       // Do search.
@@ -1405,7 +1405,7 @@ function node_ranking() {
     $ranking['recent'] = array(
       'title' => t('Recently posted'),
       // Exponential decay with half-life of 6 months, starting at last indexed node
-      'score' => '(POW(2, GREATEST(n.created, n.changed) - %d) * 6.43e-8)',
+      'score' => 'POW(2.0, (GREATEST(n.created, n.changed) - %d) * 6.43e-8)',
       'arguments' => array($node_cron_last),
     );
   }

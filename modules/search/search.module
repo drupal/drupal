@@ -905,7 +905,7 @@ function _search_parse_query(&$word, &$scores, $not = FALSE) {
  * @param $columns2
  *   (optional) Inserted into the SELECT pat of the second query. Must contain
  *   a column selected as 'calculated_score'.
- *   defaults to 'i.relevance AS calculated_score'
+ *   defaults to 'SUM(i.relevance) AS calculated_score'
  *
  * @param $join2
  *   (optional) Inserted into the JOIN par of the second SQL query.
@@ -923,7 +923,7 @@ function _search_parse_query(&$word, &$scores, $not = FALSE) {
  *
  * @ingroup search
  */
-function do_search($keywords, $type, $join1 = '', $where1 = '1 = 1', $arguments1 = array(), $columns2 = 'i.relevance AS calculated_score', $join2 = '', $arguments2 = array(), $sort_parameters = 'ORDER BY calculated_score DESC') {
+function do_search($keywords, $type, $join1 = '', $where1 = '1 = 1', $arguments1 = array(), $columns2 = 'SUM(i.relevance) AS calculated_score', $join2 = '', $arguments2 = array(), $sort_parameters = 'ORDER BY calculated_score DESC') {
   $query = search_parse_query($keywords);
 
   if ($query[2] == '') {
@@ -955,12 +955,12 @@ function do_search($keywords, $type, $join1 = '', $where1 = '1 = 1', $arguments1
   if (!$normalize) {
     return array();
   }
-  $columns2 = str_replace('i.relevance', '(' . (1.0 / $normalize) . ' * SUM(i.score * t.count))', $columns2);
+  $columns2 = str_replace('i.relevance', '(' . (1.0 / $normalize) . ' * i.score * t.count)', $columns2);
 
   // Build query to retrieve results.
   $select = "SELECT i.type, i.sid, $columns2 FROM {search_index} i $join $join2 WHERE $conditions GROUP BY i.type, i.sid HAVING COUNT(*) >= %d";
   $count_select =  "SELECT COUNT(*) FROM ($select) n1";
-  $arguments = array_merge($arguments2, $arguments1, array($query[4]));
+  $arguments = array_values(array_merge($arguments2, $arguments1, array($query[4])));
 
   // Do actual search query
   $result = pager_query("$select $sort_parameters", 10, 0, $count_select, $arguments);

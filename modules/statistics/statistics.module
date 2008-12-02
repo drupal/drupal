@@ -340,7 +340,7 @@ function statistics_ranking() {
         'title' => t('Number of views'),
         'join' => 'LEFT JOIN {node_counter} node_counter ON node_counter.nid = i.sid',
         // Inverse law that maps the highest view count on the site to 1 and 0 to 0.
-        'score' => '2.0 - 2.0 / (1.0 + node_counter.totalcount * %f)',
+        'score' => '2.0 - 2.0 / (1.0 + node_counter.totalcount * CAST(%f AS DECIMAL))',
         'arguments' => array(variable_get('node_cron_views_scale', 0)),
       ),
     );
