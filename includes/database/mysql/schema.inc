@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.6 2008/11/13 20:52:13 dries Exp $
+// $Id: schema.inc,v 1.7 2008/12/02 19:45:01 dries Exp $
 
 /**
  * @file
@@ -92,7 +92,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
       $sql .= ' auto_increment';
     }
 
-    // $spec['default'] can be NULL, so we explicitely check for the key here.
+    // $spec['default'] can be NULL, so we explicitly check for the key here.
     if (array_key_exists('default', $spec)) {
       if (is_string($spec['default'])) {
         $spec['default'] = "'" . $spec['default'] . "'";

@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.9 2008/11/29 09:30:35 dries Exp $
+// $Id: database.inc,v 1.10 2008/12/02 19:45:01 dries Exp $
 
 /**
  * @file
@@ -13,11 +13,14 @@
 
 class DatabaseConnection_mysql extends DatabaseConnection {
 
-  protected $transactionSupport = FALSE;
-
   public function __construct(Array $connection_options = array()) {
-    $this->transactionSupport = isset($connection_options['transactions']) ? $connection_options['transactions'] : FALSE;
-    $connection_options['port'] = !empty($connection_options['port']) ? $connection_options['port'] : 3306;
+    // This driver defaults to non transaction support.
+    $this->transactionSupport = !empty($connection_option['transactions']);
+
+    // Default to TCP connection on port 3306.
+    if (empty($connection_options['port'])) {
+      $connection_options['port'] = 3306;
+    }
 
     $dsn = 'mysql:host=' . $connection_options['host'] . ';port=' . $connection_options['port'] . ';dbname=' . $connection_options['database'];
     parent::__construct($dsn, $connection_options['username'], $connection_options['password'], array(
@@ -51,10 +54,6 @@ class DatabaseConnection_mysql extends DatabaseConnection {
 
   public function databaseType() {
     return 'mysql';
-  }
-
-  public function supportsTransactions() {
-    return $this->transactionSupport;
   }
 
   public function mapConditionOperator($operator) {
