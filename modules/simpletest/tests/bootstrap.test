@@ -104,7 +104,7 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
     $this->drupalGet($base_url);
 
     $this->drupalHead($base_url);
-    $this->assertText('ETag: ', t('Verify presence of ETag header indicating that page caching is enabled.'));
+    $this->assertTrue($this->drupalGetHeader('ETag') !== FALSE, t('Verify presence of ETag header indicating that page caching is enabled.'));
   }
 
 }

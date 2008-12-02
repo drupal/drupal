@@ -7,8 +7,6 @@
  */
 
 class SessionTestCase extends DrupalWebTestCase {
-  protected $saved_cookie;
-
   function getInfo() {
     return array(
       'name' => t('Session tests'),
@@ -19,18 +17,6 @@ class SessionTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('session_test');
-  }
-
-  /**
-   * Implementation of curlHeaderCallback().
-   */
-  protected function curlHeaderCallback($ch, $header) {
-    // Look for a Set-Cookie header.
-    if (preg_match('/^Set-Cookie.+$/i', $header, $matches)) {
-      $this->saved_cookie = $header;
-    }
-
-    return parent::curlHeaderCallback($ch, $header);
   }
 
   /**
@@ -49,7 +35,7 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->sessionReset($user->uid);
     // Make sure the session cookie is set as HttpOnly.
     $this->drupalLogin($user);
-    $this->assertTrue(preg_match('/HttpOnly/i', $this->saved_cookie), t('Session cookie is set as HttpOnly.'));
+    $this->assertTrue(preg_match('/HttpOnly/i', $this->drupalGetHeader('Set-Cookie', TRUE)), t('Session cookie is set as HttpOnly.'));
     $this->drupalLogout();
     // Verify that the session is regenerated if a module calls exit
     // in hook_user_login().

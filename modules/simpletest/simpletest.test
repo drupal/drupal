@@ -44,6 +44,7 @@ class SimpleTestTestCase extends DrupalWebTestCase {
     global $conf;
     if (!$this->inCURL()) {
       $this->drupalGet('node');
+      $this->assertTrue($this->drupalGetHeader('Date'), t('An HTTP header was received.'));
       $this->assertTitle(variable_get('site_name', 'Drupal'), t('Site title matches.'));
       // Make sure that we are locked out of the installer when prefixing
       // using the user-agent header. This is an important security check.
@@ -51,6 +52,15 @@ class SimpleTestTestCase extends DrupalWebTestCase {
 
       $this->drupalGet($base_url . '/install.php', array('external' => TRUE));
       $this->assertResponse(403, 'Cannot access install.php with a "simpletest" user-agent header.');
+
+      $this->drupalLogin($this->drupalCreateUser());
+      $headers = $this->drupalGetHeaders(TRUE);
+      $this->assertEqual(count($headers), 2, t('There was one intermediate request.'));
+      $this->assertTrue(strpos($headers[0][':status'], '302') !== FALSE, t('Intermediate response code was 302.'));
+      $this->assertFalse(empty($headers[0]['location']), t('Intermediate request contained a Location header.'));
+      $this->assertEqual($this->getUrl(), $headers[0]['location'], t('HTTP redirect was followed'));
+      $this->assertFalse($this->drupalGetHeader('Location'), t('Headers from intermediate request were reset.'));
+      $this->assertResponse(200, t('Response code from intermediate request was reset.'));
     }
   }
 
