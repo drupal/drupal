@@ -92,7 +92,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
       $sql .= ' auto_increment';
     }
 
-    // $spec['default'] can be NULL, so we explicitely check for the key here.
+    // $spec['default'] can be NULL, so we explicitly check for the key here.
     if (array_key_exists('default', $spec)) {
       if (is_string($spec['default'])) {
         $spec['default'] = "'" . $spec['default'] . "'";

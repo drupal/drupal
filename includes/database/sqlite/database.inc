@@ -18,20 +18,14 @@ include_once DRUPAL_ROOT . '/includes/database/prefetch.inc';
  */
 class DatabaseConnection_sqlite extends DatabaseConnection {
 
-  /**
-   * Indicates that this connection supports transactions.
-   *
-   * @var bool
-   */
-  protected $transactionSupport = TRUE;
-
   public function __construct(Array $connection_options = array()) {
     // We don't need a specific PDOStatement class here, we simulate it below.
-    $this->statementClass = 'PDOStatement';
-    $this->transactionSupport = isset($connection_options['transactions']) ? $connection_options['transactions'] : TRUE;
+    $this->statementClass = NULL;
 
-    $dns = 'sqlite:'. $connection_options['database'];
-    parent::__construct($dns, '', '', array(
+    // This driver defaults to transaction support, except if explicitly passed FALSE.
+    $this->transactionSupport = !isset($connection_options['transactions']) || $connection_options['transactions'] === FALSE;
+
+    parent::__construct('sqlite:'. $connection_options['database'], '', '', array(
       // Force column names to lower case.
       PDO::ATTR_CASE => PDO::CASE_LOWER,
     ));
@@ -139,10 +133,6 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
 
   public function databaseType() {
     return 'sqlite';
-  }
-
-  public function supportsTransactions() {
-    return $this->transactionSupport;
   }
 
   public function mapConditionOperator($operator) {

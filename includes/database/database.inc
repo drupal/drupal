@@ -215,7 +215,14 @@ abstract class DatabaseConnection extends PDO {
    *
    * @var string
    */
-  protected $statementClass = NULL;
+  protected $statementClass = 'DatabaseStatementBase';
+
+  /**
+   * Whether this database connection supports transactions.
+   *
+   * @var bool
+   */
+  protected $transactionSupport = TRUE;
 
   /**
    * The schema object for this connection.
@@ -225,11 +232,6 @@ abstract class DatabaseConnection extends PDO {
   protected $schema = NULL;
 
   function __construct($dsn, $username, $password, $driver_options = array()) {
-    // Fallback to DatabaseStatementBase if the driver has not specified one.
-    if (empty($this->statementClass)) {
-      $this->statementClass = 'DatabaseStatementBase';
-    }
-
     // Because the other methods don't seem to work right.
     $driver_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 
@@ -237,7 +239,7 @@ abstract class DatabaseConnection extends PDO {
     parent::__construct($dsn, $username, $password, $driver_options);
 
     // Set a specific PDOStatement class if the driver requires that.
-    if ($this->statementClass != 'PDOStatement') {
+    if (!empty($this->statementClass)) {
       $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array($this->statementClass, array($this)));
     }
   }
@@ -734,7 +736,9 @@ abstract class DatabaseConnection extends PDO {
   /**
    * Determine if this driver supports transactions.
    */
-  abstract public function supportsTransactions();
+  public function supportsTransactions() {
+   return $this->transactionSupport;
+  }
 
   /**
    * Returns the type of the database being accessed.

@@ -13,11 +13,14 @@
 
 class DatabaseConnection_pgsql extends DatabaseConnection {
 
-  protected $transactionSupport = TRUE;
-
   public function __construct(Array $connection_options = array()) {
-    $this->transactionSupport = isset($connection_options['transactions']) ? $connection_options['transactions'] : TRUE;
-    $connection_options['port'] = !empty($connection_options['port']) ? $connection_options['port'] : 5432;
+    // This driver defaults to transaction support, except if explicitly passed FALSE.
+    $this->transactionSupport = !isset($connection_options['transactions']) || $connection_options['transactions'] === FALSE;
+
+    // Default to TCP connection on port 5432.
+    if (empty($connection_options['port'])) {
+      $connection_options['port'] = 5432;
+    }
 
     $dsn = 'pgsql:host=' . $connection_options['host'] . ' dbname=' . $connection_options['database'] . ' port=' . $connection_options['port'];
     parent::__construct($dsn, $connection_options['username'], $connection_options['password'], array(
@@ -84,10 +87,6 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
 
   public function databaseType() {
     return 'pgsql';
-  }
-
-  public function supportsTransactions() {
-    return $this->transactionSupport;
   }
 
   public function mapConditionOperator($operator) {
