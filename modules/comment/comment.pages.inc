@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.pages.inc,v 1.9 2008/11/16 19:41:14 dries Exp $
+// $Id: comment.pages.inc,v 1.10 2008/12/03 16:32:21 dries Exp $
 
 /**
  * @file
@@ -15,7 +15,7 @@
  */
 function comment_edit($cid) {
   global $user;
-  $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid', array(':cid'=>$cid) )->fetchObject();
+  $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.data FROM {comment} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid', array(':cid'=>$cid) )->fetchObject();
   $comment = drupal_unpack($comment);
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
 
@@ -69,7 +69,7 @@ function comment_reply($node, $pid = NULL) {
       // $pid indicates that this is a reply to a comment.
       if ($pid) {
         // Load the comment whose cid = $pid
-        $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid AND c.status = :status', array(
+        $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comment} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid AND c.status = :status', array(
           ':cid'=>$pid,
           ':status'=>COMMENT_PUBLISHED))->fetchObject();
         if ( $comment ) {

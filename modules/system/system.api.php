@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.1 2008/11/25 02:37:32 webchick Exp $
+// $Id: system.api.php,v 1.2 2008/12/03 16:32:22 dries Exp $
 
 /**
  * @file
@@ -51,7 +51,7 @@ function hook_cron() {
  *   Query to be rewritten.
  * @param $primary_table
  *   Name or alias of the table which has the primary key field for this query.
- *   Typical table names would be: {blocks}, {comments}, {forum}, {node},
+ *   Typical table names would be: {block}, {comment}, {forum}, {node},
  *   {menu}, {term_data} or {vocabulary}. However, it is more common for
  *   $primary_table to contain the usual table alias: b, c, f, n, m, t or v.
  * @param $primary_field
@@ -1346,7 +1346,7 @@ function hook_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE),
       'vid' => array(
-        'description' => t('The current {node_revisions}.vid version identifier.'),
+        'description' => t('The current {node_revision}.vid version identifier.'),
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,

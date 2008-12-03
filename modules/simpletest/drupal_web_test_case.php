@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.66 2008/12/03 14:51:53 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.67 2008/12/03 16:32:22 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -488,7 +488,7 @@ class DrupalWebTestCase {
     node_save($node);
 
     // small hack to link revisions to our test user
-    db_query('UPDATE {node_revisions} SET uid = %d WHERE vid = %d', $node->uid, $node->vid);
+    db_query('UPDATE {node_revision} SET uid = %d WHERE vid = %d', $node->uid, $node->vid);
     return $node;
   }
 

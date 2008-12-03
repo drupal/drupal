@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.307 2008/11/24 00:40:44 webchick Exp $
+// $Id: form.inc,v 1.308 2008/12/03 16:32:21 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1786,7 +1786,7 @@ function form_process_radios($element) {
  * Add input format selector to text elements with the #input_format property.
  *
  * The #input_format property should be the ID of an input format, found in
- * {filter_formats}.format, which gets passed to filter_form().
+ * {filter_format}.format, which gets passed to filter_form().
  *
  * If the property #input_format is set, the form element will be expanded into
  * two separate form elements, one holding the content of the element, and the
