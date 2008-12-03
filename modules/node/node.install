@@ -15,7 +15,7 @@ function node_schema() {
         'not null' => TRUE,
       ),
       'vid' => array(
-        'description' => 'The current {node_revisions}.vid version identifier.',
+        'description' => 'The current {node_revision}.vid version identifier.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -210,7 +210,7 @@ function node_schema() {
     'primary key' => array('nid'),
   );
 
-  $schema['node_revisions'] = array(
+  $schema['node_revision'] = array(
     'description' => 'Stores information about each saved version of a {node}.',
     'fields' => array(
       'nid' => array(
@@ -326,7 +326,7 @@ function node_schema() {
         'default' => '',
       ),
       'has_body' => array(
-        'description' => 'Boolean indicating whether this type uses the {node_revisions}.body field.',
+        'description' => 'Boolean indicating whether this type uses the {node_revision}.body field.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -394,6 +394,15 @@ function node_update_7000() {
   $ret[] = update_sql("UPDATE {node_type} SET module = 'node_content' WHERE module = 'node'");
   db_change_field($ret, 'node_type', 'module', 'base', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE));
 
+  return $ret;
+}
+
+/**
+ * Rename {node_revisions} table to {node_revision}.
+ */
+function node_update_7001() {
+  $ret = array();
+  db_rename_table($ret, 'node_revisions', 'node_revision');
   return $ret;
 }
 

@@ -82,7 +82,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
     $this->assertRaw(t('Revision from %revision-date of @type %title has been deleted.',
                         array('%revision-date' => format_date($nodes[1]->revision_timestamp),
                               '@type' => 'Page', '%title' => $nodes[1]->title)), t('Revision deleted.'));
-    $this->assertTrue(db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d and vid = %d', $node->nid, $nodes[1]->vid)) == 0, t('Revision not found.'));
+    $this->assertTrue(db_result(db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = %d and vid = %d', $node->nid, $nodes[1]->vid)) == 0, t('Revision not found.'));
   }
 }
 

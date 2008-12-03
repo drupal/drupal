@@ -109,6 +109,15 @@ function comment_update_7001() {
 }
 
 /**
+ * Rename {comments} table to {comment}.
+ */
+function comment_update_7002() {
+  $ret = array();
+  db_rename_table($ret, 'comments', 'comment');
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
@@ -117,7 +126,7 @@ function comment_update_7001() {
  * Implementation of hook_schema().
  */
 function comment_schema() {
-  $schema['comments'] = array(
+  $schema['comment'] = array(
     'description' => 'Stores comments and associated data.',
     'fields' => array(
       'cid' => array(
@@ -129,7 +138,7 @@ function comment_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The {comments}.cid to which this comment is a reply. If set to 0, this comment is not a reply to an existing comment.',
+        'description' => 'The {comment}.cid to which this comment is a reply. If set to 0, this comment is not a reply to an existing comment.',
       ),
       'nid' => array(
         'type' => 'int',
@@ -182,7 +191,7 @@ function comment_schema() {
         'size' => 'small',
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The {filter_formats}.format of the comment body.',
+        'description' => 'The {filter_format}.format of the comment body.',
       ),
       'thread' => array(
         'type' => 'varchar',
@@ -232,19 +241,19 @@ function comment_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comments}.timestamp.',
+        'description' => 'The Unix timestamp of the last comment that was posted within this node, from {comment}.timestamp.',
       ),
       'last_comment_name' => array(
         'type' => 'varchar',
         'length' => 60,
         'not null' => FALSE,
-        'description' => 'The name of the latest author to post a comment on this node, from {comments}.name.',
+        'description' => 'The name of the latest author to post a comment on this node, from {comment}.name.',
       ),
       'last_comment_uid' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The user ID of the latest author to post a comment on this node, from {comments}.uid.',
+        'description' => 'The user ID of the latest author to post a comment on this node, from {comment}.uid.',
       ),
       'comment_count' => array(
         'type' => 'int',

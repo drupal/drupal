@@ -50,7 +50,7 @@ function filter_admin_overview_submit($form, &$form_state) {
   foreach ($form_state['values'] as $id => $data) {
     if (is_array($data) && isset($data['weight'])) {
       // Only update if this is a form element with weight.
-      db_query("UPDATE {filter_formats} SET weight = %d WHERE format = %d", $data['weight'], $id);
+      db_query("UPDATE {filter_format} SET weight = %d WHERE format = %d", $data['weight'], $id);
     }
   }
   drupal_set_message(t('The input format ordering has been saved.'));
@@ -179,7 +179,7 @@ function filter_admin_format_form(&$form_state, $format) {
 function filter_admin_format_form_validate($form, &$form_state) {
   if (!isset($form_state['values']['format'])) {
     $name = trim($form_state['values']['name']);
-    $result = db_fetch_object(db_query("SELECT format FROM {filter_formats} WHERE name='%s'", $name));
+    $result = db_fetch_object(db_query("SELECT format FROM {filter_format} WHERE name='%s'", $name));
     if ($result) {
       form_set_error('name', t('Filter format names need to be unique. A format named %name already exists.', array('%name' => $name)));
     }
@@ -198,21 +198,21 @@ function filter_admin_format_form_submit($form, &$form_state) {
   // Add a new filter format.
   if (!$format) {
     $new = TRUE;
-    db_query("INSERT INTO {filter_formats} (name) VALUES ('%s')", $name);
-    $format = db_result(db_query("SELECT MAX(format) AS format FROM {filter_formats}"));
+    db_query("INSERT INTO {filter_format} (name) VALUES ('%s')", $name);
+    $format = db_result(db_query("SELECT MAX(format) AS format FROM {filter_format}"));
     drupal_set_message(t('Added input format %format.', array('%format' => $name)));
   }
   else {
     drupal_set_message(t('The input format settings have been updated.'));
   }
 
-  db_query("DELETE FROM {filters} WHERE format = %d", $format);
+  db_query("DELETE FROM {filter} WHERE format = %d", $format);
   foreach ($form_state['values']['filters'] as $id => $checked) {
     if ($checked) {
       list($module, $delta) = explode('/', $id);
       // Add new filters to the bottom.
       $weight = isset($current[$id]->weight) ? $current[$id]->weight : 10;
-      db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", $format, $module, $delta, $weight);
+      db_query("INSERT INTO {filter} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", $format, $module, $delta, $weight);
 
       // Check if there are any 'no cache' filters.
       $cache &= !module_invoke($module, 'filter', 'no cache', $delta);
@@ -237,7 +237,7 @@ function filter_admin_format_form_submit($form, &$form_state) {
     $roles = ',' . implode(',', $roles) . ',';
   }
 
-  db_query("UPDATE {filter_formats} SET cache = %d, name='%s', roles = '%s' WHERE format = %d", $cache, $name, $roles, $format);
+  db_query("UPDATE {filter_format} SET cache = %d, name='%s', roles = '%s' WHERE format = %d", $cache, $name, $roles, $format);
 
   cache_clear_all($format . ':', 'cache_filter', TRUE);
 
@@ -258,7 +258,7 @@ function filter_admin_format_form_submit($form, &$form_state) {
  */
 function filter_admin_delete() {
   $format = arg(4);
-  $format = db_fetch_object(db_query('SELECT * FROM {filter_formats} WHERE format = %d', $format));
+  $format = db_fetch_object(db_query('SELECT * FROM {filter_format} WHERE format = %d', $format));
 
   if ($format) {
     if ($format->format != variable_get('filter_default_format', 1)) {
@@ -281,13 +281,13 @@ function filter_admin_delete() {
  * Process filter delete form submission.
  */
 function filter_admin_delete_submit($form, &$form_state) {
-  db_query("DELETE FROM {filter_formats} WHERE format = %d", $form_state['values']['format']);
-  db_query("DELETE FROM {filters} WHERE format = %d", $form_state['values']['format']);
+  db_query("DELETE FROM {filter_format} WHERE format = %d", $form_state['values']['format']);
+  db_query("DELETE FROM {filter} WHERE format = %d", $form_state['values']['format']);
 
   $default = variable_get('filter_default_format', 1);
   // Replace existing instances of the deleted format with the default format.
-  db_query("UPDATE {node_revisions} SET format = %d WHERE format = %d", $default, $form_state['values']['format']);
-  db_query("UPDATE {comments} SET format = %d WHERE format = %d", $default, $form_state['values']['format']);
+  db_query("UPDATE {node_revision} SET format = %d WHERE format = %d", $default, $form_state['values']['format']);
+  db_query("UPDATE {comment} SET format = %d WHERE format = %d", $default, $form_state['values']['format']);
   db_query("UPDATE {box} SET format = %d WHERE format = %d", $default, $form_state['values']['format']);
 
   cache_clear_all($form_state['values']['format'] . ':', 'cache_filter', TRUE);
@@ -402,7 +402,7 @@ function theme_filter_admin_order($form) {
 function filter_admin_order_submit($form, &$form_state) {
   foreach ($form_state['values']['weights'] as $id => $weight) {
     list($module, $delta) = explode('/', $id);
-    db_query("UPDATE {filters} SET weight = %d WHERE format = %d AND module = '%s' AND delta = %d", $weight, $form_state['values']['format'], $module, $delta);
+    db_query("UPDATE {filter} SET weight = %d WHERE format = %d AND module = '%s' AND delta = %d", $weight, $form_state['values']['format'], $module, $delta);
   }
   drupal_set_message(t('The filter ordering has been saved.'));
 

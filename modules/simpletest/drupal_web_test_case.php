@@ -488,7 +488,7 @@ class DrupalWebTestCase {
     node_save($node);
 
     // small hack to link revisions to our test user
-    db_query('UPDATE {node_revisions} SET uid = %d WHERE vid = %d', $node->uid, $node->vid);
+    db_query('UPDATE {node_revision} SET uid = %d WHERE vid = %d', $node->uid, $node->vid);
     return $node;
   }
 

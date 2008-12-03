@@ -295,7 +295,7 @@ function filter_formats($index = NULL) {
   if (!isset($formats)) {
     $formats = array();
 
-    $query = db_select('filter_formats', 'f');
+    $query = db_select('filter_format', 'f');
     $query->addField('f', 'format', 'format');
     $query->addField('f', 'name', 'name');
     $query->addField('f', 'roles', 'roles');
@@ -361,7 +361,7 @@ function filter_format_allowcache($format) {
   static $cache = array();
   $format = filter_resolve_format($format);
   if (!isset($cache[$format])) {
-    $cache[$format] = db_result(db_query('SELECT cache FROM {filter_formats} WHERE format = %d', $format));
+    $cache[$format] = db_result(db_query('SELECT cache FROM {filter_format} WHERE format = %d', $format));
   }
   return $cache[$format];
 }
@@ -374,7 +374,7 @@ function filter_list_format($format) {
 
   if (!isset($filters[$format])) {
     $filters[$format] = array();
-    $result = db_query("SELECT * FROM {filters} WHERE format = %d ORDER BY weight, module, delta", $format);
+    $result = db_query("SELECT * FROM {filter} WHERE format = %d ORDER BY weight, module, delta", $format);
     while ($filter = db_fetch_object($result)) {
       $list = module_invoke($filter->module, 'filter', 'list');
       if (isset($list) && is_array($list) && isset($list[$filter->delta])) {
@@ -560,7 +560,7 @@ function _filter_tips($format, $long = FALSE) {
     $formats = filter_formats();
   }
   else {
-    $formats = array(db_fetch_object(db_query("SELECT * FROM {filter_formats} WHERE format = %d", $format)));
+    $formats = array(db_fetch_object(db_query("SELECT * FROM {filter_format} WHERE format = %d", $format)));
   }
 
   $tips = array();

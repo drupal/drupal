@@ -775,7 +775,7 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
 
   // Retrieve a field list based on the site's schema.
   $fields = drupal_schema_fields_sql('node', 'n');
-  $fields = array_merge($fields, drupal_schema_fields_sql('node_revisions', 'r'));
+  $fields = array_merge($fields, drupal_schema_fields_sql('node_revision', 'r'));
   $fields = array_merge($fields, array('u.name', 'u.picture', 'u.data'));
   // Remove fields not needed in the query: n.vid and r.nid are redundant,
   // n.title is unnecessary because the node title comes from the
@@ -791,10 +791,10 @@ function node_load($param = array(), $revision = NULL, $reset = NULL) {
   // No db_rewrite_sql is applied so as to get complete indexing for search.
   if ($revision) {
     array_unshift($arguments, $revision);
-    $node = db_fetch_object(db_query('SELECT ' . $fields . ' FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.nid = n.nid AND r.vid = %d WHERE ' . $cond, $arguments));
+    $node = db_fetch_object(db_query('SELECT ' . $fields . ' FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revision} r ON r.nid = n.nid AND r.vid = %d WHERE ' . $cond, $arguments));
   }
   else {
-    $node = db_fetch_object(db_query('SELECT ' . $fields . ' FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revisions} r ON r.vid = n.vid WHERE ' . $cond, $arguments));
+    $node = db_fetch_object(db_query('SELECT ' . $fields . ' FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revision} r ON r.vid = n.vid WHERE ' . $cond, $arguments));
   }
 
   if ($node && $node->nid) {
@@ -915,7 +915,7 @@ function node_save(&$node) {
     $node->is_new = TRUE;
 
     // When inserting a node, $node->log must be set because
-    // {node_revisions}.log does not (and cannot) have a default
+    // {node_revision}.log does not (and cannot) have a default
     // value.  If the user does not have permission to create
     // revisions, however, the form will not contain an element for
     // log so $node->log will be unset at this point.
@@ -997,10 +997,10 @@ function _node_save_revision(&$node, $uid, $update = NULL) {
   $temp_uid = $node->uid;
   $node->uid = $uid;
   if (isset($update)) {
-    drupal_write_record('node_revisions', $node, $update);
+    drupal_write_record('node_revision', $node, $update);
   }
   else {
-    drupal_write_record('node_revisions', $node);
+    drupal_write_record('node_revision', $node);
   }
   $node->uid = $temp_uid;
 }
@@ -1014,7 +1014,7 @@ function node_delete($nid) {
 
   if (node_access('delete', $node)) {
     db_query('DELETE FROM {node} WHERE nid = %d', $node->nid);
-    db_query('DELETE FROM {node_revisions} WHERE nid = %d', $node->nid);
+    db_query('DELETE FROM {node_revision} WHERE nid = %d', $node->nid);
 
     // Call the node-specific callback (if any):
     node_invoke($node, 'delete');
@@ -1417,7 +1417,7 @@ function node_ranking() {
  */
 function node_user_delete(&$edit, &$user) {
   db_query('UPDATE {node} SET uid = 0 WHERE uid = %d', $user->uid);
-  db_query('UPDATE {node_revisions} SET uid = 0 WHERE uid = %d', $user->uid);
+  db_query('UPDATE {node_revision} SET uid = 0 WHERE uid = %d', $user->uid);
 }
 
 /**
@@ -1481,7 +1481,7 @@ function _node_revision_access($node, $op = 'view') {
     // different revisions so there is no need for a separate database check.
     // Also, if you try to revert to or delete the current revision, that's
     // not good.
-    if ($is_current_revision && (db_result(db_query('SELECT COUNT(vid) FROM {node_revisions} WHERE nid = %d', $node->nid)) == 1 || $op == 'update' || $op == 'delete')) {
+    if ($is_current_revision && (db_result(db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = %d', $node->nid)) == 1 || $op == 'update' || $op == 'delete')) {
       $access[$node->vid] = FALSE;
     }
     elseif (user_access('administer nodes')) {
@@ -1699,7 +1699,7 @@ function node_last_changed($nid) {
  */
 function node_revision_list($node) {
   $revisions = array();
-  $result = db_query('SELECT r.vid, r.title, r.log, r.uid, n.vid AS current_vid, r.timestamp, u.name FROM {node_revisions} r LEFT JOIN {node} n ON n.vid = r.vid INNER JOIN {users} u ON u.uid = r.uid WHERE r.nid = %d ORDER BY r.timestamp DESC', $node->nid);
+  $result = db_query('SELECT r.vid, r.title, r.log, r.uid, n.vid AS current_vid, r.timestamp, u.name FROM {node_revision} r LEFT JOIN {node} n ON n.vid = r.vid INNER JOIN {users} u ON u.uid = r.uid WHERE r.nid = %d ORDER BY r.timestamp DESC', $node->nid);
   while ($revision = db_fetch_object($result)) {
     $revisions[$revision->vid] = $revision;
   }

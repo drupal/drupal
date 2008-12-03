@@ -385,28 +385,28 @@ function system_install() {
   db_query("INSERT INTO {node_access} (nid, gid, realm, grant_view, grant_update, grant_delete) VALUES (%d, %d, '%s', %d, %d, %d)", 0, 0, 'all', 1, 0, 0);
 
   // Add input formats.
-  db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('%s', '%s', %d)", 'Filtered HTML', ',1,2,', 1);
-  db_query("INSERT INTO {filter_formats} (name, roles, cache) VALUES ('%s', '%s', %d)", 'Full HTML', '', 1);
+  db_query("INSERT INTO {filter_format} (name, roles, cache) VALUES ('%s', '%s', %d)", 'Filtered HTML', ',1,2,', 1);
+  db_query("INSERT INTO {filter_format} (name, roles, cache) VALUES ('%s', '%s', %d)", 'Full HTML', '', 1);
 
   // Enable filters for each input format.
 
   // Filtered HTML:
   // URL filter.
-  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 1, 'filter', 2, 0);
+  db_query("INSERT INTO {filter} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 1, 'filter', 2, 0);
   // HTML filter.
-  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 1, 'filter', 0, 1);
+  db_query("INSERT INTO {filter} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 1, 'filter', 0, 1);
   // Line break filter.
-  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 1, 'filter', 1, 2);
+  db_query("INSERT INTO {filter} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 1, 'filter', 1, 2);
   // HTML corrector filter.
-  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 1, 'filter', 3, 10);
+  db_query("INSERT INTO {filter} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 1, 'filter', 3, 10);
 
   // Full HTML:
   // URL filter.
-  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 2, 'filter', 2, 0);
+  db_query("INSERT INTO {filter} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 2, 'filter', 2, 0);
   // Line break filter.
-  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 2, 'filter', 1, 1);
+  db_query("INSERT INTO {filter} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 2, 'filter', 1, 1);
   // HTML corrector filter.
-  db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 2, 'filter', 3, 10);
+  db_query("INSERT INTO {filter} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", 2, 'filter', 3, 10);
 
   db_query("INSERT INTO {variable} (name, value) VALUES ('%s','%s')", 'filter_html_1', 'i:1;');
 
@@ -2137,7 +2137,7 @@ function system_update_6022() {
 
   // The nid column was renamed to uid. Use the old nid to find the node's uid.
   update_sql('UPDATE {files} SET uid = (SELECT n.uid FROM {node} n WHERE {files}.uid = n.nid)');
-  update_sql('UPDATE {upload} SET nid = (SELECT r.nid FROM {node_revisions} r WHERE {upload}.vid = r.vid)');
+  update_sql('UPDATE {upload} SET nid = (SELECT r.nid FROM {node_revision} r WHERE {upload}.vid = r.vid)');
 
   // Mark all existing files as FILE_STATUS_PERMANENT.
   $ret[] = update_sql('UPDATE {files} SET status = 1');

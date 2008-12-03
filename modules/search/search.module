@@ -508,7 +508,7 @@ function search_index($sid, $type, $text) {
               $linknid = $match[1];
               if ($linknid > 0) {
                 // Note: ignore links to uncachable nodes to avoid redirect bugs.
-                $node = db_fetch_object(db_query('SELECT n.title, n.nid, n.vid, r.format FROM {node} n INNER JOIN {node_revisions} r ON n.vid = r.vid WHERE n.nid = %d', $linknid));
+                $node = db_fetch_object(db_query('SELECT n.title, n.nid, n.vid, r.format FROM {node} n INNER JOIN {node_revision} r ON n.vid = r.vid WHERE n.nid = %d', $linknid));
                 if (filter_format_allowcache($node->format)) {
                   $link = TRUE;
                   $linktitle = $node->title;

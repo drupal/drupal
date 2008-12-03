@@ -5,7 +5,7 @@
  * Implementation of hook_schema().
  */
 function filter_schema() {
-  $schema['filters'] = array(
+  $schema['filter'] = array(
     'description' => 'Table that maps filters (HTML corrector) to input formats (Filtered HTML).',
     'fields' => array(
       'fid' => array(
@@ -17,7 +17,7 @@ function filter_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'Foreign key: The {filter_formats}.format to which this filter is assigned.',
+        'description' => 'Foreign key: The {filter_format}.format to which this filter is assigned.',
       ),
       'module' => array(
         'type' => 'varchar',
@@ -49,7 +49,7 @@ function filter_schema() {
       'list' => array('format', 'weight', 'module', 'delta'),
     ),
   );
-  $schema['filter_formats'] = array(
+  $schema['filter_format'] = array(
     'description' => 'Stores input formats: custom groupings of filters, such as Filtered HTML.',
     'fields' => array(
       'format' => array(
@@ -120,5 +120,15 @@ function filter_update_7001() {
     }
     variable_del('filter_html_' . $format->format);
   }
+  return $ret;
+}
+
+/**
+ * Rename {filters} table to {filter} and {filter_formats} table to {filter_format}.
+ */
+function filter_update_7002() {
+  $ret = array();
+  db_rename_table($ret, 'filters', 'filter');
+  db_rename_table($ret, 'filter_formats', 'filter_format');
   return $ret;
 }

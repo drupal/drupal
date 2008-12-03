@@ -379,7 +379,7 @@ function blogapi_blogger_get_recent_posts($appkey, $blogid, $username, $password
   }
 
   if ($bodies) {
-    $result = db_query_range("SELECT n.nid, n.title, r.body, r.format, n.comment, n.created, u.name FROM {node} n, {node_revisions} r, {users} u WHERE n.uid = u.uid AND n.vid = r.vid AND n.type = :type AND n.uid = :uid ORDER BY n.created DESC",  array(
+    $result = db_query_range("SELECT n.nid, n.title, r.body, r.format, n.comment, n.created, u.name FROM {node} n, {node_revision} r, {users} u WHERE n.uid = u.uid AND n.vid = r.vid AND n.type = :type AND n.uid = :uid ORDER BY n.created DESC",  array(
       ':type' => $blogid,
       ':uid' => $user->uid
     ), 0, $number_of_posts);

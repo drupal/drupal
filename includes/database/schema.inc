@@ -38,7 +38,7 @@
  *       References to other tables should be enclosed in
  *       curly-brackets.  For example, the node table vid field
  *       description might contain "Always holds the largest (most
- *       recent) {node_revisions}.vid value for this nid."
+ *       recent) {node_revision}.vid value for this nid."
  *     - 'type': The generic datatype: 'varchar', 'int', 'serial'
  *       'float', 'numeric', 'text', 'blob' or 'datetime'.  Most types
  *       just map to the according database engine specific
