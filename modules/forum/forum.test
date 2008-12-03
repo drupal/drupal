@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.7 2008/11/25 13:14:27 dries Exp $
+// $Id: forum.test,v 1.8 2008/12/03 14:38:59 dries Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -93,7 +93,6 @@ class ForumTestCase extends DrupalWebTestCase {
 
     // Add forum to navigation menu.
     $edit = array();
-    $edit['mlid:' . $mlid . '[hidden]'] = TRUE;
     $this->drupalPost('admin/build/menu-customize/navigation', $edit, t('Save configuration'));
     $this->assertResponse(200);
 
