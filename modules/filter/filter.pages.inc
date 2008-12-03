@@ -23,16 +23,37 @@ function filter_tips_long() {
 
 
 /**
- * Format a set of filter tips.
+ * Render HTML for a set of filter tips.
  *
+ * @param $tips
+ *   An array containing descriptions and a CSS id in the form of
+ *   'module-name/filter-id' (only used when $long is TRUE) for each input
+ *   filter in one or more input formats. Example:
+ *   @code
+ *     array(
+ *       'Full HTML' => array(
+ *         0 => array(
+ *           'tip' => 'Web page addresses and e-mail addresses turn into links automatically.',
+ *           'id' => 'filter/2',
+ *         ),
+ *       ),
+ *     );
+ *   @endcode
+ * @param $long
+ *   (optional) Whether the passed in filter tips contain extended explanations,
+ *   i.e. intended to be output on the path 'filter/tips' (TRUE), or are in a
+ *   short format, i.e. suitable to be displayed below a form element.  Defaults
+ *   to FALSE.
+ *
+ * @see _filter_tips()
  * @ingroup themeable
  */
-function theme_filter_tips($tips, $long = FALSE, $extra = '') {
+function theme_filter_tips($tips, $long = FALSE) {
   $output = '';
 
   $multiple = count($tips) > 1;
   if ($multiple) {
-    $output = t('input formats') . ':';
+    $output = t('Input formats') . ':';
   }
 
   if (count($tips)) {

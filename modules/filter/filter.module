@@ -54,7 +54,7 @@ function filter_theme() {
       'file' => 'filter.admin.inc',
     ),
     'filter_tips' => array(
-      'arguments' => array('tips' => NULL, 'long' => FALSE, 'extra' => ''),
+      'arguments' => array('tips' => NULL, 'long' => FALSE),
       'file' => 'filter.pages.inc',
     ),
     'filter_tips_more_info' => array(
@@ -516,7 +516,7 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
     $tips = _filter_tips(variable_get('filter_default_format', 1), FALSE);
     $form['format']['guidelines'] = array(
       '#title' => t('Formatting guidelines'),
-      '#markup' => theme('filter_tips', $tips, FALSE, $extra),
+      '#markup' => theme('filter_tips', $tips, FALSE),
     );
   }
   $form[] = array('#markup' => $extra);
