@@ -89,7 +89,7 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
   function getInfo() {
     return array(
       'name' => t('Page cache test'),
-      'description' => t('Enable the page cache, submit a HEAD request and examine headers.'),
+      'description' => t('Enable the page cache and test it with conditional HTTP requests.'),
       'group' => t('Bootstrap')
     );
   }
@@ -98,13 +98,38 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
    * Enable cache and examine HTTP headers.
    */
   function testPageCache() {
-    global $base_url;
-    variable_set('cache', 1);
-    // Fill the cache.
-    $this->drupalGet($base_url);
+    variable_set('cache', CACHE_NORMAL);
 
-    $this->drupalHead($base_url);
-    $this->assertTrue($this->drupalGetHeader('ETag') !== FALSE, t('Verify presence of ETag header indicating that page caching is enabled.'));
+    // Fill the cache.
+    $this->drupalGet('');
+
+    $this->drupalHead('');
+    $etag = $this->drupalGetHeader('ETag');
+    $this->assertTrue($etag, t('An ETag header was sent, indicating that page was cached.'));
+    $last_modified = $this->drupalGetHeader('Last-Modified');
+
+    $this->drupalGet('', array(), array('If-Modified-Since: ' . $last_modified, 'If-None-Match: ' . $etag));
+    $this->assertResponse(304, t('Conditional request returned 304 Not Modified.'));
+
+    $this->drupalGet('', array(), array('If-Modified-Since: ' . gmdate(DATE_RFC822, strtotime($last_modified)), 'If-None-Match: ' . $etag));
+    $this->assertResponse(304, t('Conditional request with obsolete If-Modified-Since date returned 304 Not Modified.'));
+
+    $this->drupalGet('', array(), array('If-Modified-Since: ' . gmdate(DATE_RFC850, strtotime($last_modified)), 'If-None-Match: ' . $etag));
+    $this->assertResponse(304, t('Conditional request with obsolete If-Modified-Since date returned 304 Not Modified.'));
+
+    $this->drupalGet('', array(), array('If-Modified-Since: ' . $last_modified));
+    $this->assertResponse(200, t('Conditional request without If-None-Match returned 200 OK.'));
+    $this->assertTrue($this->drupalGetHeader('ETag'), t('An ETag header was sent, indicating that page was cached.'));
+
+    $this->drupalGet('', array(), array('If-Modified-Since: ' . gmdate(DATE_RFC1123, strtotime($last_modified) + 1), 'If-None-Match: ' . $etag));
+    $this->assertResponse(200, t('Conditional request with new a If-Modified-Since date newer than Last-Modified returned 200 OK.'));
+    $this->assertTrue($this->drupalGetHeader('ETag'), t('An ETag header was sent, indicating that page was cached.'));
+
+    $user = $this->drupalCreateUser();
+    $this->drupalLogin($user);
+    $this->drupalGet('', array(), array('If-Modified-Since: ' . $last_modified, 'If-None-Match: ' . $etag));
+    $this->assertResponse(200, t('Conditional request returned 200 OK for authenticated user.'));
+    $this->assertFalse($this->drupalGetHeader('ETag'), t('An ETag header was not sent, indicating that page was not cached.'));
   }
 
 }

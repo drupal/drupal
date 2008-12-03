@@ -730,17 +730,16 @@ function drupal_page_header() {
  *
  */
 function drupal_page_cache_header($cache) {
-  // Set default values:
-  $last_modified = gmdate('D, d M Y H:i:s', $cache->created) . ' GMT';
-  $etag = '"' . md5($last_modified) . '"';
+  // Create entity tag based on cache update time.
+  $etag = '"' . md5($cache->created) . '"';
 
-  // See if the client has provided the required HTTP headers:
-  $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? stripslashes($_SERVER['HTTP_IF_MODIFIED_SINCE']) : FALSE;
+  // See if the client has provided the required HTTP headers.
+  $if_modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) : FALSE;
   $if_none_match = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? stripslashes($_SERVER['HTTP_IF_NONE_MATCH']) : FALSE;
 
   if ($if_modified_since && $if_none_match
       && $if_none_match == $etag // etag must match
-      && $if_modified_since == $last_modified) {  // if-modified-since must match
+      && $if_modified_since == $cache->created) {  // if-modified-since must match
     header($_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified');
     // All 304 responses must send an etag if the 200 response for the same object contained an etag
     header("Etag: $etag");
@@ -748,7 +747,7 @@ function drupal_page_cache_header($cache) {
   }
 
   // Send appropriate response:
-  header("Last-Modified: $last_modified");
+  header("Last-Modified: " . gmdate(DATE_RFC1123, $cache->created));
   header("ETag: $etag");
 
   // The following headers force validation of cache:

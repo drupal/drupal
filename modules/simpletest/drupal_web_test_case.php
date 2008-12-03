@@ -1001,16 +1001,19 @@ class DrupalWebTestCase {
    *   Drupal path or URL to load into internal browser
    * @param $options
    *   Options to be forwarded to url().
+   * @param $headers
+   *   An array containing additional HTTP request headers, each formatted as
+   *   "name: value".
    * @return
    *   The retrieved HTML string, also available as $this->drupalGetContent()
    */
-  protected function drupalGet($path, $options = array()) {
+  protected function drupalGet($path, Array $options = array(), Array $headers = array()) {
     $options['absolute'] = TRUE;
 
     // We re-using a CURL connection here.  If that connection still has certain
     // options set, it might change the GET into a POST.  Make sure we clear out
     // previous options.
-    $out = $this->curlExec(array(CURLOPT_HTTPGET => TRUE, CURLOPT_URL => url($path, $options), CURLOPT_NOBODY => FALSE));
+    $out = $this->curlExec(array(CURLOPT_HTTPGET => TRUE, CURLOPT_URL => url($path, $options), CURLOPT_NOBODY => FALSE, CURLOPT_HTTPHEADER => $headers));
     $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.
 
     // Replace original page output with new output from redirected page(s).
@@ -1051,8 +1054,11 @@ class DrupalWebTestCase {
    *   Value of the submit button.
    * @param $options
    *   Options to be forwarded to url().
+   * @param $headers
+   *   An array containing additional HTTP request headers, each formatted as
+   *   "name: value".
    */
-  protected function drupalPost($path, $edit, $submit, $options = array()) {
+  protected function drupalPost($path, $edit, $submit, Array $options = array(), Array $headers = array()) {
     $submit_matches = FALSE;
     if (isset($path)) {
       $html = $this->drupalGet($path, $options);
@@ -1092,7 +1098,7 @@ class DrupalWebTestCase {
             }
             $post = implode('&', $post);
           }
-          $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POST => TRUE, CURLOPT_POSTFIELDS => $post));
+          $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POST => TRUE, CURLOPT_POSTFIELDS => $post, CURLOPT_HTTPHEADER => $headers));
           // Ensure that any changes to variables in the other thread are picked up.
           $this->refreshVariables();
 
@@ -1141,12 +1147,15 @@ class DrupalWebTestCase {
    *   Drupal path or URL to load into internal browser
    * @param $options
    *   Options to be forwarded to url().
+   * @param $headers
+   *   An array containing additional HTTP request headers, each formatted as
+   *   "name: value".
    * @return
    *   The retrieved headers, also available as $this->drupalGetContent()
    */
-  protected function drupalHead($path, Array $options = array()) {
+  protected function drupalHead($path, Array $options = array(), Array $headers = array()) {
     $options['absolute'] = TRUE;
-    $out = $this->curlExec(array(CURLOPT_NOBODY => TRUE, CURLOPT_URL => url($path, $options)));
+    $out = $this->curlExec(array(CURLOPT_NOBODY => TRUE, CURLOPT_URL => url($path, $options), CURLOPT_HTTPHEADER => $headers));
     $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.
     return $out;
   }
