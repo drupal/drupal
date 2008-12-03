@@ -75,10 +75,8 @@ function dblog_schema() {
         'description' => 'URL of the origin of the event.',
       ),
       'referer' => array(
-        'type' => 'varchar',
-        'length' => 128,
+        'type' => 'text',
         'not null' => FALSE,
-        'default' => '',
         'description' => 'URL of referring page.',
       ),
       'hostname' => array(
@@ -106,12 +104,12 @@ function dblog_schema() {
 }
 
 /**
- * Allow NULL values for links.
+ * Allow NULL values for links and longer referers.
  */
 function dblog_update_7001() {
   $ret = array();
   db_change_field($ret, 'watchdog', 'link', 'link', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'default' => ''));
-  db_change_field($ret, 'watchdog', 'referer', 'referer', array('type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'default' => ''));
+  db_change_field($ret, 'watchdog', 'referer', 'referer', array('type' => 'text', 'not null' => FALSE));
   return $ret;
 }
 

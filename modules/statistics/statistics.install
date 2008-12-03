@@ -76,8 +76,7 @@ function statistics_schema() {
         'description' => 'Internal path to page visited (relative to Drupal root.)',
       ),
       'url' => array(
-        'type' => 'varchar',
-        'length' => 255,
+        'type' => 'text',
         'not null' => FALSE,
         'description' => 'Referrer URI.',
       ),
@@ -119,3 +118,11 @@ function statistics_schema() {
   return $schema;
 }
 
+/**
+ * Allow longer referrers.
+ */
+function statistics_update_7000() {
+  $ret = array();
+  db_change_field($ret, 'accesslog', 'url', 'url', array('type' => 'text', 'not null' => FALSE));
+  return $ret;
+}
