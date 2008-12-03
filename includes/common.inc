@@ -930,7 +930,7 @@ function fix_gpc_magic() {
  * cases, the actual string and not a variable must be passed through t().
  *
  * Extraction of translations is done based on the strings contained in t()
- * calls. If a variable is passed through t(), the content of the variable 
+ * calls. If a variable is passed through t(), the content of the variable
  * cannot be extracted from the file for translation.
  *
  * Incorrect:
@@ -948,7 +948,7 @@ function fix_gpc_magic() {
  * @endcode
  *
  * The only case in which variables can be passed safely through t() is when
- * code-based versions of the same strings will be passed through t() (or 
+ * code-based versions of the same strings will be passed through t() (or
  * otherwise extracted) elsewhere.
  *
  * In some cases, modules may include strings in code that can't use t()
@@ -989,20 +989,20 @@ function fix_gpc_magic() {
  *   $output .= t($time->today);
  * @endcode
  *
- * However tempting it is, custom data from user input or other non-code sources
- * should not be passed through t(). Doing so leads to the following
+ * However tempting it is, custom data from user input or other non-code
+ * sources should not be passed through t(). Doing so leads to the following
  * problems and errors:
- *  - The t() system doesn't support updates to existing strings. When user data
- *    is updated, the next time it's passed through t() a new record is created
- *    instead of an update. The database bloats over time and any existing
- *    translations are orphaned with each update.
+ *  - The t() system doesn't support updates to existing strings. When user
+ *    data is updated, the next time it's passed through t() a new record is
+ *    created instead of an update. The database bloats over time and any
+ *    existing translations are orphaned with each update.
  *  - The t() system assumes any data it receives is in English. User data may
  *    be in another language, producing translation errors.
- *  - The "Built-in interface" text group in the locale system is used to produce
- *    translations for storage in .po files. When non-code strings are passed
- *    through t(), they are added to this text group, which is rendered inaccurate
- *    since it is a mix of actual interface strings and various user input strings of 
- *    uncertain origin.
+ *  - The "Built-in interface" text group in the locale system is used to
+ *    produce translations for storage in .po files. When non-code strings are
+ *    passed through t(), they are added to this text group, which is rendered
+ *    inaccurate since it is a mix of actual interface strings and various user
+ *    input strings of uncertain origin.
  *
  * Incorrect:
  * @code
