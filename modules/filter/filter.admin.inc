@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.18 2008/12/03 16:32:21 dries Exp $
+// $Id: filter.admin.inc,v 1.19 2008/12/03 19:43:21 dries Exp $
 
 /**
  * @file
@@ -159,10 +159,12 @@ function filter_admin_format_form(&$form_state, $format) {
 
     // Composition tips (guidelines)
     $tips = _filter_tips($format->format, FALSE);
-    $extra = '<p>' . l(t('More information about formatting options'), 'filter/tips') . '</p>';
-    $tiplist = theme('filter_tips', $tips, FALSE, $extra);
+    $tiplist = theme('filter_tips', $tips, FALSE);
     if (!$tiplist) {
       $tiplist = '<p>' . t('No guidelines available.') . '</p>';
+    }
+    else {
+      $tiplist .= theme('filter_tips_more_info');
     }
     $group = '<p>' . t('These are the guidelines that users will see for posting in this input format. They are automatically generated from the filter settings.') . '</p>';
     $group .= $tiplist;
