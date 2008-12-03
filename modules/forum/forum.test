@@ -93,7 +93,6 @@ class ForumTestCase extends DrupalWebTestCase {
 
     // Add forum to navigation menu.
     $edit = array();
-    $edit['mlid:' . $mlid . '[hidden]'] = TRUE;
     $this->drupalPost('admin/build/menu-customize/navigation', $edit, t('Save configuration'));
     $this->assertResponse(200);
 
