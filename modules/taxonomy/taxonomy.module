@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.442 2008/11/13 08:13:56 webchick Exp $
+// $Id: taxonomy.module,v 1.443 2008/12/04 10:57:17 dries Exp $
 
 /**
  * @file
@@ -334,7 +334,9 @@ function taxonomy_term_save($term) {
     $status = drupal_write_record('term_data', $term);
     module_invoke_all('taxonomy_term_update', $term);
   }
-  db_delete('term_relation')->condition('tid1', $term->tid, 'OR')->condition('tid2', $term->tid)->execute();
+  
+  $or = db_or()->condition('tid1', $term->tid)->condition('tid2', $term->tid);
+  db_delete('term_relation')->condition($or)->execute();
 
   if (!empty($term->relations)) {
     foreach ($term->relations as $related_id) {
