@@ -49,7 +49,6 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
   $available_actions = actions_list();
   $result = array();
   if (is_array($action_ids)) {
-
     $conditions = array();
     foreach ($action_ids as $action_id) {
       if (is_numeric($action_id)) {
@@ -60,8 +59,8 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
       }
     }
 
-    // When we have action instances we must go to the database to
-    // retrieve instance data.
+    // When we have action instances we must go to the database to retrieve
+    // instance data.
     if (!empty($conditions)) {
       $query = db_select('actions');
       $query->addField('actions', 'aid');
@@ -79,7 +78,8 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
 
     // Fire actions, in no particular order.
     foreach ($actions as $action_id => $params) {
-      if (is_numeric($action_id)) { // Configurable actions need parameters.
+      // Configurable actions need parameters.
+      if (is_numeric($action_id)) {
         $function = $params['callback'];
         $context = array_merge($context, $params);
         $result[$action_id] = $function($object, $context, $a1, $a2);
@@ -90,7 +90,7 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
       }
     }
   }
-  // Optimized execution of single action.
+  // Optimized execution of a single action.
   else {
     // If it's a configurable action, retrieve stored parameters.
     if (is_numeric($action_ids)) {
@@ -108,10 +108,10 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
   return $result;
 }
 
-
 /**
  * Discover all action functions by invoking hook_action_info().
  *
+ * @code
  * mymodule_action_info() {
  *   return array(
  *     'mymodule_functiondescription_action' => array(
@@ -125,6 +125,7 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
  *     )
  *   );
  * }
+ * @endcode
  *
  * The description is used in presenting possible actions to the user for
  * configuration. The type is used to present these actions in a logical
@@ -139,8 +140,7 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
  * @return
  *   An associative array keyed on function name. The value of each key is
  *   an array containing information about the action, such as type of
- *   action and description of the action, e.g.,
- *
+ *   action and description of the action, e.g.:
  *   @code
  *   $actions['node_publish_action'] = array(
  *     'type' => 'node',
@@ -160,22 +160,21 @@ function actions_list($reset = FALSE) {
     drupal_alter('action_info', $actions);
   }
 
-  // See module_implements for explanations of this cast.
+  // See module_implements() for an explanation of this cast.
   return (array)$actions;
 }
 
 /**
  * Retrieve all action instances from the database.
  *
- * Compare with actions_list() which gathers actions by
- * invoking hook_action_info(). The two are synchronized
- * by visiting /admin/build/actions (when actions.module is
- * enabled) which runs actions_synchronize().
+ * Compare with actions_list() which gathers actions by invoking
+ * hook_action_info(). The two are synchronized by visiting
+ * /admin/build/actions (when actions.module is enabled) which runs
+ * actions_synchronize().
  *
  * @return
- *   Associative array keyed by action ID. Each value is
- *   an associative array with keys 'callback', 'description',
- *   'type' and 'configurable'.
+ *   Associative array keyed by action ID. Each value is an associative array
+ *   with keys 'callback', 'description', 'type' and 'configurable'.
  */
 function actions_get_all_actions() {
   $actions = db_query("SELECT aid, type, callback, parameters, description FROM {actions}")->fetchAllAssoc('aid', PDO::FETCH_ASSOC);
@@ -190,19 +189,19 @@ function actions_get_all_actions() {
 /**
  * Create an associative array keyed by md5 hashes of function names.
  *
- * Hashes are used to prevent actual function names from going out into
- * HTML forms and coming back.
+ * Hashes are used to prevent actual function names from going out into HTML
+ * forms and coming back.
  *
  * @param $actions
- *   An associative array with function names as keys and associative
- *   arrays with keys 'description', 'type', etc. as values. Generally
- *   the output of actions_list() or actions_get_all_actions() is given
- *   as input to this function.
+ *   An associative array with function names as keys and associative arrays
+ *   with keys 'description', 'type', etc. as values. Generally the output of
+ *   actions_list() or actions_get_all_actions() is given as input to this
+ *   function.
  *
  * @return
- *   An associative array keyed on md5 hash of function name. The value of
- *   each key is an associative array of function, description, and type
- *   for the action.
+ *   An associative array keyed on md5 hash of function names. The value of
+ *   each key is an associative array of function, description, and type for
+ *   the action.
  */
 function actions_actions_map($actions) {
   $actions_map = array();
@@ -222,10 +221,10 @@ function actions_actions_map($actions) {
  * Faster than actions_actions_map() when you only need the function name.
  *
  * @param $hash
- *   MD5 hash of a function name
+ *   MD5 hash of a function name.
  *
  * @return
- *   Function name
+ *   The corresponding function name or FALSE if none is found.
  */
 function actions_function_lookup($hash) {
   $actions_list = actions_list();
@@ -242,10 +241,10 @@ function actions_function_lookup($hash) {
 /**
  * Synchronize actions that are provided by modules.
  *
- * They are synchronized with actions that are stored in the actions table.
- * This is necessary so that actions that do not require configuration can
- * receive action IDs. This is not necessarily the best approach,
- * but it is the most straightforward.
+ * Actions provided by modules are synchronized with actions that are stored in
+ * the actions table. This is necessary so that actions that do not require
+ * configuration can receive action IDs. This is not necessarily the best
+ * approach, but it is the most straightforward.
  */
 function actions_synchronize($actions_in_code = array(), $delete_orphans = FALSE) {
   if (!$actions_in_code) {
@@ -255,8 +254,8 @@ function actions_synchronize($actions_in_code = array(), $delete_orphans = FALSE
 
   // Go through all the actions provided by modules.
   foreach ($actions_in_code as $callback => $array) {
-    // Ignore configurable actions since their instances get put in
-    // when the user adds the action.
+    // Ignore configurable actions since their instances get put in when the
+    // user adds the action.
     if (!$array['configurable']) {
       // If we already have an action ID for this action, no need to assign aid.
       if (array_key_exists($callback, $actions_in_db)) {
@@ -308,11 +307,11 @@ function actions_synchronize($actions_in_code = array(), $delete_orphans = FALSE
  * @param $function
  *   The name of the function to be called when this action is performed.
  * @param $params
- *   An associative array with parameter names as keys and parameter values
- *   as values.
+ *   An associative array with parameter names as keys and parameter values as
+ *   values.
  * @param $desc
- *   A user-supplied description of this particular action, e.g., 'Send
- *   e-mail to Jim'.
+ *   A user-supplied description of this particular action, e.g., 'Send e-mail
+ *   to Jim'.
  * @param $aid
  *   The ID of this action. If omitted, a new action is created.
  *
@@ -320,8 +319,8 @@ function actions_synchronize($actions_in_code = array(), $delete_orphans = FALSE
  *   The ID of the action.
  */
 function actions_save($function, $type, $params, $desc, $aid = NULL) {
-  // aid is the callback for singleton actions so we need to keep a
-  // separate table for numeric aids.
+  // aid is the callback for singleton actions so we need to keep a separate
+  // table for numeric aids.
   if (!$aid) {
     $aid = db_insert('actions_aid')->useDefaults(array('aid'))->execute();
   }
@@ -344,7 +343,7 @@ function actions_save($function, $type, $params, $desc, $aid = NULL) {
  * Retrieve a single action from the database.
  *
  * @param $aid
- *   integer The ID of the action to retrieve.
+ *   The ID of the action to retrieve.
  *
  * @return
  *   The appropriate action row from the database as an object.
@@ -357,7 +356,7 @@ function actions_load($aid) {
  * Delete a single action from the database.
  *
  * @param $aid
- *   integer The ID of the action to delete.
+ *   The ID of the action to delete.
  */
 function actions_delete($aid) {
   db_delete('actions')
@@ -365,3 +364,4 @@ function actions_delete($aid) {
     ->execute();
   module_invoke_all('actions_delete', $aid);
 }
+
