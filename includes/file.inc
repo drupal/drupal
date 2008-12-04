@@ -771,9 +771,9 @@ function file_unmanaged_delete($path) {
  */
 function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
   if (!is_null($uid)) {
-    return db_query('SELECT SUM(filesize) FROM {files} WHERE uid = :uid AND status & :status', array(':uid' => $uid, ':status' => $status))->fetchField();
+    return db_query('SELECT SUM(filesize) FROM {files} WHERE uid = :uid AND status = :status', array(':uid' => $uid, ':status' => $status))->fetchField();
   }
-  return db_query('SELECT SUM(filesize) FROM {files} WHERE status & :status', array(':status' => $status))->fetchField();
+  return db_query('SELECT SUM(filesize) FROM {files} WHERE status = :status', array(':status' => $status))->fetchField();
 }
 
 /**
