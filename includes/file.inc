@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.145 2008/11/16 19:41:14 dries Exp $
+// $Id: file.inc,v 1.146 2008/12/04 11:09:33 dries Exp $
 
 /**
  * @file
@@ -771,9 +771,9 @@ function file_unmanaged_delete($path) {
  */
 function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
   if (!is_null($uid)) {
-    return db_query('SELECT SUM(filesize) FROM {files} WHERE uid = :uid AND status & :status', array(':uid' => $uid, ':status' => $status))->fetchField();
+    return db_query('SELECT SUM(filesize) FROM {files} WHERE uid = :uid AND status = :status', array(':uid' => $uid, ':status' => $status))->fetchField();
   }
-  return db_query('SELECT SUM(filesize) FROM {files} WHERE status & :status', array(':status' => $status))->fetchField();
+  return db_query('SELECT SUM(filesize) FROM {files} WHERE status = :status', array(':status' => $status))->fetchField();
 }
 
 /**
