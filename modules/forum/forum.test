@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.8 2008/12/03 14:38:59 dries Exp $
+// $Id: forum.test,v 1.9 2008/12/05 22:18:44 dries Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -236,7 +236,7 @@ class ForumTestCase extends DrupalWebTestCase {
     }
 
     // Retrieve node object.
-    $node = node_load(array('title' => $title), null, true); // Are these last two parameters necessary?
+    $node = $this->drupalGetNodeByTitle($title);
     $this->assertTrue($node != null, t('Node @title was loaded', array('@title' => $title)));
 
     // View forum topic.

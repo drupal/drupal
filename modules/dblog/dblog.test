@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.test,v 1.10 2008/11/25 13:14:27 dries Exp $
+// $Id: dblog.test,v 1.11 2008/12/05 22:18:44 dries Exp $
 
 class DBLogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -262,7 +262,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->drupalPost('node/add/' . $type, $edit, t('Save'));
     $this->assertResponse(200);
     // Retrieve node object.
-    $node = node_load(array('title' => $title));
+    $node = $this->drupalGetNodeByTitle($title);
     $this->assertTrue($node != null, t('Node @title was loaded', array('@title' => $title)));
     // Edit node.
     $edit = $this->getContentUpdate($type);

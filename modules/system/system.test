@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.27 2008/11/26 18:56:16 dries Exp $
+// $Id: system.test,v 1.28 2008/12/05 22:18:45 dries Exp $
 
 class EnableDisableCoreTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -570,7 +570,7 @@ class PageTitleFiltering extends DrupalWebTestCase {
     // Create the node with HTML in the title.
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
-    $node = node_load(array('title' => $edit['title']));
+    $node = $this->drupalGetNodeByTitle($edit['title']);
     $this->assertNotNull($node, 'Node created and found in database');
     $this->drupalGet("node/" . $node->nid);
     $this->assertText(check_plain($edit['title']), 'Check to make sure tags in the node title are converted.');

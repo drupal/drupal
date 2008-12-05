@@ -1,5 +1,5 @@
 <?php
-// $Id: book.test,v 1.4 2008/11/25 13:14:26 dries Exp $
+// $Id: book.test,v 1.5 2008/12/05 22:18:44 dries Exp $
 
 class BookTestCase extends DrupalWebTestCase {
   protected $book;
@@ -146,7 +146,7 @@ class BookTestCase extends DrupalWebTestCase {
     }
 
     // Check to make sure the book node was created.
-    $node = node_load(array('title' => $edit['title']));
+    $node = $this->drupalGetNodeByTitle($edit['title']);
     $this->assertNotNull(($node === FALSE ? NULL : $node), t('Book node found in database.'));
     $number++;
 

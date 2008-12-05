@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.10 2008/12/03 16:32:21 dries Exp $
+// $Id: filter.test,v 1.11 2008/12/05 22:18:44 dries Exp $
 
 class FilterAdminTestCase extends DrupalWebTestCase {
   function getInfo() {
@@ -114,7 +114,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->drupalPost('node/add/page', $edit, t('Save'));
     $this->assertRaw(t('Page %title has been created.', array('%title' => $edit['title'])), t('Filtered node created.'));
 
-    $node = node_load(array('title' => $edit['title']));
+    $node = $this->drupalGetNodeByTitle($edit['title']);
     $this->assertTrue($node, t('Node found in database.'));
 
     $this->drupalGet('node/' . $node->nid);
