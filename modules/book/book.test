@@ -146,7 +146,7 @@ class BookTestCase extends DrupalWebTestCase {
     }
 
     // Check to make sure the book node was created.
-    $node = node_load(array('title' => $edit['title']));
+    $node = $this->drupalGetNodeByTitle($edit['title']);
     $this->assertNotNull(($node === FALSE ? NULL : $node), t('Book node found in database.'));
     $number++;
 

@@ -131,7 +131,7 @@ class PathTestCase extends DrupalWebTestCase {
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check to make sure the node was created.
-    $node = node_load(array('title' => $edit['title']));
+    $node = $this->drupalGetNodeByTitle($edit['title']);
 
     $this->assertNotNull(($node === FALSE ? NULL : $node), 'Node found in database. %s');
 
@@ -188,7 +188,7 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check to make sure the node was created.
-    $english_node = node_load(array('title' => $edit['title']));
+    $english_node = $this->drupalGetNodeByTitle($edit['title']);
     $this->assertTrue(($english_node), 'Node found in database.');
 
     // Confirm that the alias works.
@@ -209,7 +209,7 @@ class PathLanguageTestCase extends DrupalWebTestCase {
 
     // Ensure the node was created.
     // Check to make sure the node was created.
-    $french_node = node_load(array('title' => $edit['title']));
+    $french_node = $this->drupalGetNodeByTitle($edit['title']);
     $this->assertTrue(($french_node), 'Node found in database.');
 
     // Confirm that the alias works.

@@ -262,7 +262,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->drupalPost('node/add/' . $type, $edit, t('Save'));
     $this->assertResponse(200);
     // Retrieve node object.
-    $node = node_load(array('title' => $title));
+    $node = $this->drupalGetNodeByTitle($title);
     $this->assertTrue($node != null, t('Node @title was loaded', array('@title' => $title)));
     // Edit node.
     $edit = $this->getContentUpdate($type);

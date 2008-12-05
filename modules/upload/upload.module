@@ -300,10 +300,11 @@ function upload_file_delete(&$file) {
 /**
  * Implementation of hook_nodeapi_load().
  */
-function upload_nodeapi_load(&$node, $teaser) {
-  if (variable_get("upload_$node->type", 1) == 1) {
-    $output = array('files' => upload_load($node));
-    return $output;
+function upload_nodeapi_load($nodes, $types) {
+  foreach ($nodes as $node) {
+    if (variable_get("upload_$node->type", 1) == 1) {
+      $node->files = upload_load($node);
+    }
   }
 }
 

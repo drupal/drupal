@@ -570,7 +570,7 @@ class PageTitleFiltering extends DrupalWebTestCase {
     // Create the node with HTML in the title.
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
-    $node = node_load(array('title' => $edit['title']));
+    $node = $this->drupalGetNodeByTitle($edit['title']);
     $this->assertNotNull($node, 'Node created and found in database');
     $this->drupalGet("node/" . $node->nid);
     $this->assertText(check_plain($edit['title']), 'Check to make sure tags in the node title are converted.');

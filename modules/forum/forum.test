@@ -236,7 +236,7 @@ class ForumTestCase extends DrupalWebTestCase {
     }
 
     // Retrieve node object.
-    $node = node_load(array('title' => $title), null, true); // Are these last two parameters necessary?
+    $node = $this->drupalGetNodeByTitle($title);
     $this->assertTrue($node != null, t('Node @title was loaded', array('@title' => $title)));
 
     // View forum topic.

@@ -155,6 +155,39 @@ function hook_node_operations() {
 }
 
 /**
+ * Act on node objects when loaded.
+ *
+ * This hook allows you to add information to node objects when loaded from
+ * the database. It takes an array of nodes indexed by nid as its first
+ * parameter. For performance reasons, information for all available nodes
+ * should be loaded in a single query where possible.
+ *
+ * The types of all nodes being passed in are also available in the $types
+ * parameter. If your module keeps track of the node types it supports, this
+ * allows for an early return if nothing needs to be done.
+ *
+ * Due to the internal cache in node_load_multiple(), you should not use this
+ * hook to modify information returned from the {node} table itself, since
+ * this may affect the way nodes are returned from the cache in subsequent
+ * calls to the function.
+ *
+ * @see comment_nodeapi_load()
+ * @see taxonomy_nodeapi_load()
+ * @see forum_nodeapi_load()
+ *
+ * @param $nodes
+ *   An array of node objects indexed by nid.
+ * @param $types
+ *   An array containing the types of the nodes.
+ */
+function hook_nodeapi_load($nodes, $types) {
+  $result = db_query('SELECT nid, foo FROM {mytable} WHERE nid IN(' . db_placeholders(array_keys($nodes)) . ')', array_keys($nodes));
+  foreach ($result as $record) {
+    $nodes[$record->nid]->foo = $record->foo;
+  }
+}
+
+/**
  * Act on nodes defined by other modules.
  *
  * Despite what its name might make you think, hook_nodeapi() is not
@@ -521,25 +554,22 @@ function hook_insert($node) {
  * Load node-type-specific information.
  *
  * This is a hook used by node modules. It is called to allow the module
- * a chance to load extra information that it stores about a node, or
- * possibly replace already loaded information - which can be dangerous.
+ * a chance to load extra information that it stores about a node. The hook
+ * should not be used to replace information from the core {node} table since
+ * this may interfere with the way nodes are fetched from cache.
  *
- * @param $node
- *   The node being loaded. At call time, node.module has already loaded
- *   the basic information about the node, such as its node ID (nid),
- *   title, and body.
- * @return
- *   An object containing properties of the node being loaded. This will
- *   be merged with the passed-in $node to result in an object containing
- *   a set of properties resulting from adding the extra properties to
- *   the passed-in ones, and overwriting the passed-in ones with the
- *   extra properties if they have the same name as passed-in properties.
+ * @param $nodes
+ *   An array of the nodes being loaded, keyed by nid. At call time,
+ *   node.module has already loaded the basic information about the nodes, such
+ *   as node ID (nid), title, and body.
  *
  * For a detailed usage example, see node_example.module.
  */
-function hook_load($node) {
-  $additions = db_fetch_object(db_query('SELECT * FROM {mytable} WHERE vid = %d', $node->vid));
-  return $additions;
+function hook_load($nodes) {
+  $result = db_fetch_object(db_query('SELECT nid, foo FROM {mytable} WHERE nid IN (' . db_placeholders(array_keys($nodes)) . ')', array_keys($nodes)));
+  foreach ($result as $record) {
+    $nodes[$record->nid]->foo = $record->foo;
+  }
 }
 
 /**

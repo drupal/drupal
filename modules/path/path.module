@@ -135,12 +135,14 @@ function path_nodeapi_validate(&$node, $arg) {
 /**
  * Implementation of hook_nodeapi_load().
  */
-function path_nodeapi_load(&$node, $arg) {
-  $language = isset($node->language) ? $node->language : '';
-  $path = 'node/' . $node->nid;
-  $alias = drupal_get_path_alias($path, $language);
-  if ($path != $alias) {
-    $node->path = $alias;
+function path_nodeapi_load($nodes, $types) {
+  foreach ($nodes as $node) {
+    $language = isset($node->language) ? $node->language : '';
+    $path = 'node/' . $node->nid;
+    $alias = drupal_get_path_alias($path, $language);
+    if ($path != $alias) {
+      $node->path = $alias;
+    }
   }
 }
 

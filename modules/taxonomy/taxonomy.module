@@ -623,6 +623,33 @@ function taxonomy_node_get_terms_by_vocabulary($node, $vid, $key = 'tid') {
 }
 
 /**
+ * Find all term IDs associated with a set of nodes.
+ *
+ * @param $nodes
+ *  An array of node objects.
+ *
+ * @return
+ *  An array of term and node IDs ordered by vocabulary and term weight.
+ */
+function taxonomy_get_tids_from_nodes($nodes) {
+  $node_vids = array();
+  foreach ($nodes as $node) {
+    $node_vids[] = $node->vid;
+  }
+  $query = db_select('term_node', 'r');
+  $query->fields('r', array('tid', 'nid', 'vid'));
+  $query->join('term_data', 't', 'r.tid = t.tid');
+  $query->join('vocabulary', 'v', 't.vid = v.vid');
+  $query->condition('r.vid', $node_vids, 'IN');
+  $query->orderBy('v.weight');
+  $query->orderBy('t.weight');
+  $query->orderBy('t.name');
+  $query->addTag('term_access');
+
+  return $query->execute()->fetchAll();
+}
+
+/**
  * Find all terms associated with the given node, ordered by vocabulary and term weight.
  */
 function taxonomy_node_get_terms($node, $key = 'tid') {
@@ -1050,24 +1077,124 @@ function taxonomy_terms_load($str_tids) {
 }
 
 /**
+ * Load multiple taxonomy terms based on certain conditions.
+ *
+ * This function should be used whenever you need to load more than one term
+ * from the database. Terms are loaded into memory and will not require
+ * database access if loaded again during the same page request.
+ *
+ * @param $tids
+ *  An array of taxonomy term IDs.
+ * @param $conditions
+ *  An array of conditions to add to the query.
+ * @param $reset
+ *  Whether to reset the internal cache.
+ *
+ * @return
+ *  An array of term objects, indexed by tid.
+ */
+function taxonomy_term_load_multiple($tids = array(), $conditions = array(), $reset = FALSE) {
+  static $term_cache = array();
+
+  if ($reset) {
+    $term_cache = array();
+  }
+
+  $terms = array();
+
+  // Create a new variable which is either a prepared version of the $tids
+  // array for later comparison with the term cache, or FALSE if no $tids were
+  // passed. The $tids array is reduced as items are loaded from cache, and we
+  // need to know if it's empty for this reason to avoid querying the database
+  // when all requested terms are loaded from cache.
+  $passed_tids = !empty($tids) ? array_flip($tids) : FALSE;
+
+  // Load any available terms from the internal cache.
+  if ($term_cache) {
+    if ($tids) {
+      $terms += array_intersect_key($term_cache, $passed_tids);
+      // If any terms were loaded, remove them from the $tids still to load.
+      $tids = array_keys(array_diff_key($passed_tids, $terms));
+    }
+    // If only conditions is passed, load all terms from the cache. Terms
+    // which don't match conditions will be removed later.
+    elseif ($conditions) {
+      $terms = $term_cache;
+    }
+  }
+
+  // Remove any loaded terms from the array if they don't match $conditions.
+  if ($conditions) {
+    foreach ($terms as $term) {
+      $term_values = (array) $term;
+      if (array_diff_assoc($conditions, $term_values)) {
+        unset($terms[$term->tid]);
+      }
+    }
+  }
+
+  // Load any remaining terms from the database, this is necessary if we have
+  // $tids still to load, or if $conditions was passed without $tids.
+  if ($tids || ($conditions && !$passed_tids)) {
+    $query = db_select('term_data', 't');
+    $term_data = drupal_schema_fields_sql('term_data');
+    $query->fields('t', $term_data);
+
+    // If the $tids array is populated, add those to the query.
+    if ($tids) {
+      $query->condition('t.tid', $tids, 'IN');
+    }
+
+    // If the conditions array is populated, add those to the query.
+    if ($conditions) {
+      foreach ($conditions as $field => $value) {
+        $query->conditions('t.' . $field, $value);
+      }
+    }
+    $queried_terms = $query->execute()->fetchAllAssoc('tid');
+    // Invoke hook_taxonomy_term_load() on the terms loaded from the database
+    // and add them to the static cache.
+    if (!empty($queried_terms)) {
+      foreach (module_implements('taxonomy_term_load') as $module) {
+        $function = $module . '_taxonomy_term_load';
+        $function($queried_terms);
+      }
+      $terms += $queried_terms;
+      $term_cache += $queried_terms;
+    }
+  }
+
+  // Ensure that the returned array is ordered the same as the original $tids
+  // array if this was passed in and remove any invalid tids.
+  if ($passed_tids) {
+    // Remove any invalid tids from the array.
+    $passed_tids = array_intersect_key($passed_tids, $terms);
+    foreach ($terms as $term) {
+      $passed_tids[$term->tid] = $term;
+    }
+    $terms = $passed_tids;
+  }
+
+  return $terms;
+}
+
+/**
  * Return the term object matching a term ID.
  *
  * @param $tid
  *   A term's ID
+ * @param $reset
+ *   Whether to reset the static cache.
  *
- * @return Object
+ * @return
  *   A term object. Results are statically cached.
  */
 function taxonomy_term_load($tid, $reset = FALSE) {
   if (!is_numeric($tid)) {
     return FALSE;
   }
-  static $terms = array();
-  if (!isset($terms[$tid]) || $reset) {
-    $terms[$tid] = taxonomy_get_term_data($tid, $reset);
-    module_invoke_all('taxonomy_term_load', $terms[$tid]);
-  }
-  return $terms[$tid];
+  $term = taxonomy_term_load_multiple(array($tid), array(), $reset);
+  return $term ? $term[$tid] : FALSE;
 }
 
 /**
@@ -1193,12 +1320,16 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
  */
 function taxonomy_render_nodes($result) {
   $output = '';
-  $has_rows = FALSE;
-  while ($node = db_fetch_object($result)) {
-    $output .= node_view(node_load($node->nid), 1);
-    $has_rows = TRUE;
+  $nids = array();
+  foreach ($result as $record) {
+    $nids[] = $record->nid;
   }
-  if ($has_rows) {
+  if (!empty($nids)) {
+    $nodes = node_load_multiple($nids);
+
+    foreach ($nodes as $node) {
+      $output .= node_view($node, 1);
+    }
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10), 0);
   }
   else {
@@ -1210,9 +1341,27 @@ function taxonomy_render_nodes($result) {
 /**
  * Implementation of hook_nodeapi_load().
  */
-function taxonomy_nodeapi_load($node, $arg = 0) {
-  $output['taxonomy'] = taxonomy_node_get_terms($node);
-  return $output;
+function taxonomy_nodeapi_load($nodes) {
+  // Get an array of tid, vid associations ordered by vocabulary and term
+  // weight.
+  $tids = taxonomy_get_tids_from_nodes($nodes);
+
+  // Extract the tids only from this array.
+  $term_ids = array();
+  foreach ($tids as $term) {
+    $term_ids[$term->tid] = $term->tid;
+  }
+
+  // Load the full term objects for these tids.
+  $terms = taxonomy_term_load_multiple($term_ids);
+  foreach ($tids as $term) {
+    $nodes[$term->nid]->taxonomy[$term->tid] = $terms[$term->tid];
+  }
+  foreach ($nodes as $node) {
+    if (!isset($nodes[$node->nid]->taxonomy)) {
+      $node->taxonomy = array();
+    }
+  }
 }
 
 /**

@@ -341,11 +341,25 @@ function forum_nodeapi_delete(&$node, $teaser, $page) {
 /**
  * Implementation of hook_nodeapi_load().
  */
-function forum_nodeapi_load(&$node, $teaser, $page) {
+function forum_nodeapi_load($nodes, $types) {
   $vid = variable_get('forum_nav_vocabulary', '');
+  // If no forum vocabulary is set up, return.
+  if ($vid == '') {
+    return;
+  }
   $vocabulary = taxonomy_vocabulary_load($vid);
-  if (_forum_nodeapi_check_node_type($node, $vocabulary)) {
-    return db_fetch_array(db_query('SELECT tid AS forum_tid FROM {forum} WHERE vid = %d', $node->vid));
+
+  $node_vids = array();
+  foreach ($nodes as $node) {
+    if (isset($vocabulary->nodes[$node->type])) {
+      $node_vids[] = $node->vid;
+    }
+  }
+  if (!empty($node_vids)) {
+    $result = db_query('SELECT nid, tid FROM {forum} WHERE vid IN(' . db_placeholders($node_vids) . ')', $node_vids);
+    foreach ($result as $record) {
+      $nodes[$record->nid]->forum_tid = $record->tid;
+    }
   }
 }
 
@@ -449,15 +463,6 @@ function forum_form_alter(&$form, $form_state, $form_id) {
     $form['taxonomy'][$vid]['#required'] = TRUE;
     $form['taxonomy'][$vid]['#options'][''] = t('- Please choose -');
   }
-}
-
-/**
- * Implementation of hook_load().
- */
-function forum_load($node) {
-  $forum = db_fetch_object(db_query('SELECT * FROM {term_node} WHERE vid = %d', $node->vid));
-
-  return $forum;
 }
 
 /**

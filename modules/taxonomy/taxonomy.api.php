@@ -74,12 +74,21 @@ function hook_taxonomy_vocabulary_delete($vocabulary) {
  *
  * Modules implementing this hook can act on the term object returned by
  * taxonomy_term_load().
+ * For performance reasons, information to be added to term objects should be
+ * loaded in a single query for all terms where possible.
  *
- * @param $term
- *   A taxonomy term object.
+ * Since terms are stored and retrieved from cache during a page request, avoid
+ * altering properties provided by the {term_data} table, since this may
+ * affect the way results are loaded from cache in subsequent calls.
+ *
+ * @param $terms
+ *   An array of term objects, indexed by tid.
  */
-function hook_taxonomy_term_load($term) {
-  $term->synonyms = taxonomy_get_synonyms($term->tid);
+function hook_taxonomy_term_load($terms) {
+  $result = db_query('SELECT tid, foo FROM {mytable} WHERE tid IN (' . db_placeholders(array_keys($terms)) . ')', array_keys($terms));
+  foreach ($result as $record) {
+    $terms[$record->tid]->foo = $record->foo;
+  }
 }
 
 /**

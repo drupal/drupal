@@ -579,11 +579,32 @@ function comment_form_alter(&$form, $form_state, $form_id) {
 /**
  * Implementation of hook_nodeapi_load().
  */
-function comment_nodeapi_load(&$node, $arg = 0) {
-  if ($node->comment != COMMENT_NODE_DISABLED) {
-    return db_query('SELECT last_comment_timestamp, last_comment_name, comment_count FROM {node_comment_statistics} WHERE nid = :nid', array(':nid' => $node->nid))->fetchAssoc();
+function comment_nodeapi_load($nodes, $types) {
+  $comments_enabled = array();
+
+  // Check if comments are enabled for each node. If comments are disabled,
+  // assign values without hitting the database.
+  foreach ($nodes as $node) {
+    // Store whether comments are enabled for this node.
+    if ($node->comment != COMMENT_NODE_DISABLED) {
+      $comments_enabled[] = $node->nid;
+    }
+    else {
+      $node->last_comment_timestamp = $node->created;
+      $node->last_comment_name = '';
+      $node->comment_count = 0;
+    }
   }
-  return array('last_comment_timestamp' => $node->created, 'last_comment_name' => '', 'comment_count' => 0);
+
+  // For nodes with comments enabled, fetch information from the database.
+  if (!empty($comments_enabled)) {
+    $result = db_query('SELECT nid, last_comment_timestamp, last_comment_name, comment_count FROM {node_comment_statistics} WHERE nid IN(' . db_placeholders($comments_enabled) . ')', $comments_enabled);
+    foreach ($result as $record) {
+      $nodes[$record->nid]->last_comment_timestamp = $record->last_comment_timestamp;
+      $nodes[$record->nid]->last_comment_name = $record->last_comment_name;
+      $nodes[$record->nid]->comment_count = $record->comment_count;
+    }
+  }
 }
 
 /**

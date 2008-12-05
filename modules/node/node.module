@@ -730,93 +730,177 @@ function node_invoke_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 }
 
 /**
+ * Load node objects from the database.
+ *
+ * This function should be used whenever you need to load more than one node
+ * from the database. Nodes are loaded into memory and will not require
+ * database access if loaded again during the same page request.
+ *
+ * @param $nids
+ *   An array of node IDs.
+ * @param $conditions
+ *   An array of conditions on the {node} table in the form 'field' => $value.
+ * @param $reset
+ *   Whether to reset the internal node_load cache.
+ *
+ * @return
+ *   An array of node objects indexed by nid.
+ */
+function node_load_multiple($nids = array(), $conditions = array(), $reset = FALSE) {
+  static $node_cache = array();
+  if ($reset) {
+    $node_cache = array();
+  }
+  $nodes = array();
+
+  // Create a new variable which is either a prepared version of the $nids
+  // array for later comparison with the node cache, or FALSE if no $nids were
+  // passed. The $nids array is reduced as items are loaded from cache, and we
+  // need to know if it's empty for this reason to avoid querying the database
+  // when all requested nodes are loaded from cache.
+  $passed_nids = !empty($nids) ? array_flip($nids) : FALSE;
+
+  // Revisions are not statically cached, and require a different query to
+  // other conditions, so separate vid into its own variable.
+  $vid = isset($conditions['vid']) ? $conditions['vid'] : FALSE;
+  unset($conditions['vid']);
+
+  // Load any available nodes from the internal cache.
+  if ($node_cache && !$vid) {
+    if ($nids) {
+      $nodes += array_intersect_key($node_cache, $passed_nids);
+      // If any nodes were loaded, remove them from the $nids still to load.
+      $nids = array_keys(array_diff_key($passed_nids, $nodes));
+    }
+    // If loading nodes only by conditions, fetch all available nodes from
+    // the cache. Nodes which don't match are removed later.
+    elseif ($conditions) {
+      $nodes = $node_cache;
+    }
+  }
+
+  // Exclude any nodes loaded from cache if they don't match $conditions.
+  // This ensures the same behaviour whether loading from memory or database.
+  if ($conditions) {
+    foreach ($nodes as $node) {
+      $node_values = (array) $node;
+      if (array_diff_assoc($conditions, $node_values)) {
+        unset($nodes[$node->nid]);
+      }
+    }
+  }
+
+  // Load any remaining nodes from the database. This is the case if there are
+  // any $nids left to load, if loading a revision, or if $conditions was
+  // passed without $nids.
+  if ($nids || $vid || ($conditions && !$passed_nids)) {
+    $query = db_select('node', 'n');
+
+    if ($vid) {
+      $query->join('node_revision', 'r', 'r.nid = n.nid AND r.vid = :vid', array(':vid' => $vid));
+    }
+    else {
+      $query->join('node_revision', 'r', 'r.vid = n.vid');
+    }
+    $query->join('users', 'u', 'u.uid = n.uid');
+
+    // Add fields from the {node} table.
+    $node_fields = drupal_schema_fields_sql('node');
+
+    // vid and title are provided by node_revision, so remove them.
+    unset($node_fields['vid']);
+    unset($node_fields['title']);
+    $query->fields('n', $node_fields);
+
+    // Add all fields from the {node_revision} table.
+    $node_revision_fields = drupal_schema_fields_sql('node_revision');
+
+    // nid is provided by node, so remove it.
+    unset($node_revision_fields['nid']);
+
+    // Change timestamp to revision_timestamp before adding it to the query.
+    unset($node_revision_fields['timestamp']);
+    $query->addField('r', 'timestamp', 'revision_timestamp');
+    $query->fields('r', $node_revision_fields);
+
+    // Add fields from the {users} table.
+    $user_fields = array('name', 'picture', 'data');
+    $query->fields('u', $user_fields);
+
+    if ($nids) {
+      $query->condition('n.nid', $nids, 'IN');
+    }
+    if ($conditions) {
+      foreach ($conditions as $field => $value) {
+        $query->condition('n.' . $field, $value);
+      }
+    }
+    $queried_nodes = $query->execute()->fetchAllAssoc('nid');
+  }
+
+  // Pass all nodes loaded from the database through the node type specific
+  // callbacks and hook_nodeapi_load(), then add them to the internal cache.
+  if (!empty($queried_nodes)) {
+    // Create an array of nodes for each content type and pass this to the
+    // node type specific callback.
+    $typed_nodes = array();
+    foreach ($queried_nodes as $nid => $node) {
+      $typed_nodes[$node->type][$nid] = $node;
+    }
+
+    // Call node type specific callbacks on each typed array of nodes.
+    foreach ($typed_nodes as $type => $nodes_of_type) {
+      if (node_hook($type, 'load')) {
+        $function = node_get_types('base', $type) . '_load';
+        $function($nodes_of_type);
+      }
+    }
+
+    // Call hook_nodeapi_load(), pass the node types so modules can return early
+    // if not acting on types in the array.
+    foreach (module_implements('nodeapi_load') as $module) {
+      $function = $module . '_nodeapi_load';
+      $function($queried_nodes, array_keys($typed_nodes));
+    }
+    $nodes += $queried_nodes;
+    // Add nodes to the cache if we're not loading a revision.
+    if (!$vid) {
+      $node_cache += $queried_nodes;
+    }
+  }
+
+  // Ensure that the returned array is ordered the same as the original $nids
+  // array if this was passed in and remove any invalid nids.
+  if ($passed_nids) {
+    // Remove any invalid nids from the array.
+    $passed_nids = array_intersect_key($passed_nids, $nodes);
+    foreach ($nodes as $node) {
+      $passed_nids[$node->nid] = $node;
+    }
+    $nodes = $passed_nids;
+  }
+
+  return $nodes;
+}
+
+/**
  * Load a node object from the database.
  *
- * @param $param
- *   Either the nid of the node or an array of conditions to match against in the database query
- * @param $revision
- *   Which numbered revision to load. Defaults to the current version.
+ * @param $nid
+ *   The node ID.
+ * @param $vid
+ *   The revision ID.
  * @param $reset
  *   Whether to reset the internal node_load cache.
  *
  * @return
  *   A fully-populated node object.
  */
-function node_load($param = array(), $revision = NULL, $reset = NULL) {
-  static $nodes = array();
+function node_load($nid, $vid = array(), $reset = FALSE) {
+  $vid = isset($vid) ? array('vid' => $vid) : NULL;
+  $node = node_load_multiple(array($nid), $vid, $reset);
 
-  if ($reset) {
-    $nodes = array();
-  }
-
-  $cachable = ($revision == NULL);
-  $arguments = array();
-  if (is_numeric($param)) {
-    if ($cachable) {
-      // Is the node statically cached?
-      if (isset($nodes[$param])) {
-        return is_object($nodes[$param]) ? clone $nodes[$param] : $nodes[$param];
-      }
-    }
-    $cond = 'n.nid = %d';
-    $arguments[] = $param;
-  }
-  elseif (is_array($param)) {
-    // Turn the conditions into a query.
-    foreach ($param as $key => $value) {
-      $cond[] = 'n.' . db_escape_table($key) . " = '%s'";
-      $arguments[] = $value;
-    }
-    $cond = implode(' AND ', $cond);
-  }
-  else {
-    return FALSE;
-  }
-
-  // Retrieve a field list based on the site's schema.
-  $fields = drupal_schema_fields_sql('node', 'n');
-  $fields = array_merge($fields, drupal_schema_fields_sql('node_revision', 'r'));
-  $fields = array_merge($fields, array('u.name', 'u.picture', 'u.data'));
-  // Remove fields not needed in the query: n.vid and r.nid are redundant,
-  // n.title is unnecessary because the node title comes from the
-  // node_revisions table.  We'll keep r.vid, r.title, and n.nid.
-  $fields = array_diff($fields, array('n.vid', 'n.title', 'r.nid'));
-  $fields = implode(', ', $fields);
-  // Rename timestamp field for clarity.
-  $fields = str_replace('r.timestamp', 'r.timestamp AS revision_timestamp', $fields);
-  // Change name of revision uid so it doesn't conflict with n.uid.
-  $fields = str_replace('r.uid', 'r.uid AS revision_uid', $fields);
-
-  // Retrieve the node.
-  // No db_rewrite_sql is applied so as to get complete indexing for search.
-  if ($revision) {
-    array_unshift($arguments, $revision);
-    $node = db_fetch_object(db_query('SELECT ' . $fields . ' FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revision} r ON r.nid = n.nid AND r.vid = %d WHERE ' . $cond, $arguments));
-  }
-  else {
-    $node = db_fetch_object(db_query('SELECT ' . $fields . ' FROM {node} n INNER JOIN {users} u ON u.uid = n.uid INNER JOIN {node_revision} r ON r.vid = n.vid WHERE ' . $cond, $arguments));
-  }
-
-  if ($node && $node->nid) {
-    // Call the node specific callback (if any) and piggy-back the
-    // results to the node or overwrite some values.
-    if ($extra = node_invoke($node, 'load')) {
-      foreach ($extra as $key => $value) {
-        $node->$key = $value;
-      }
-    }
-
-    if ($extra = node_invoke_nodeapi($node, 'load')) {
-      foreach ($extra as $key => $value) {
-        $node->$key = $value;
-      }
-    }
-    if ($cachable) {
-      $nodes[$node->nid] = is_object($node) ? clone $node : $node;
-    }
-  }
-
-  return $node;
+  return $node ? $node[$nid] : FALSE;
 }
 
 /**
@@ -1740,22 +1824,18 @@ function node_feed($nids = FALSE, $channel = array()) {
   global $base_url, $language;
 
   if ($nids === FALSE) {
-    $nids = array();
-    $result = db_query_range(db_rewrite_sql('SELECT n.nid, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.created DESC'), 0, variable_get('feed_default_items', 10));
-    while ($row = db_fetch_object($result)) {
-      $nids[] = $row->nid;
-    }
+    $nids = db_query_range(db_rewrite_sql('SELECT n.nid, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.created DESC'), 0, variable_get('feed_default_items', 10))->fetchCol();
   }
 
   $item_length = variable_get('feed_item_length', 'teaser');
   $namespaces = array('xmlns:dc' => 'http://purl.org/dc/elements/1.1/');
 
+  // Load all nodes to be rendered.
+  $nodes = node_load_multiple($nids);
   $items = '';
-  foreach ($nids as $nid) {
-    // Load the specified node:
-    $item = node_load($nid);
+  foreach ($nodes as $item) {
     $item->build_mode = NODE_BUILD_RSS;
-    $item->link = url("node/$nid", array('absolute' => TRUE));
+    $item->link = url("node/$item->nid", array('absolute' => TRUE));
 
     if ($item_length != 'title') {
       $teaser = ($item_length == 'teaser');
@@ -1822,16 +1902,14 @@ function node_feed($nids = FALSE, $channel = array()) {
  * Menu callback; Generate a listing of promoted nodes.
  */
 function node_page_default() {
-  $result = pager_query(db_rewrite_sql('SELECT n.nid, n.sticky, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC'), variable_get('default_nodes_main', 10));
+  $nids = pager_query(db_rewrite_sql('SELECT n.nid FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC'), variable_get('default_nodes_main', 10))->fetchCol();
+  if (!empty($nids)) {
+    $nodes = node_load_multiple($nids);
+    $output = '';
+    foreach ($nodes as $node) {
+      $output .= node_view($node, TRUE);
+    }
 
-  $output = '';
-  $num_rows = FALSE;
-  while ($node = db_fetch_object($result)) {
-    $output .= node_view(node_load($node->nid), 1);
-    $num_rows = TRUE;
-  }
-
-  if ($num_rows) {
     $feed_url = url('rss.xml', array('absolute' => TRUE));
     drupal_add_feed($feed_url, variable_get('site_name', 'Drupal') . ' ' . t('RSS'));
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));

@@ -705,18 +705,13 @@ function book_build_active_trail($book_link) {
 /**
  * Implementation of hook_nodeapi_load().
  */
-function book_nodeapi_load(&$node, $teaser, $page) {
-  // Note - we cannot use book_link_load() because it will call node_load().
-  $info['book'] = db_query('SELECT * FROM {book} b INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE b.nid = :nid', array(
-    ':nid' => $node->nid
-  ))->fetchAssoc();
-
-  if ($info['book']) {
-    $info['book']['href'] = $info['book']['link_path'];
-    $info['book']['title'] = $info['book']['link_title'];
-    $info['book']['options'] = unserialize($info['book']['options']);
-
-    return $info;
+function book_nodeapi_load($nodes, $types) {
+  $result = db_query("SELECT * FROM {book} b INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE b.nid IN (" . db_placeholders(array_keys($nodes)) . ")",  array_keys($nodes), array('fetch' => PDO::FETCH_ASSOC));
+  foreach ($result as $record) {
+    $nodes[$record['nid']]->book = $record;
+    $nodes[$record['nid']]->book['href'] = $record['link_path'];
+    $nodes[$record['nid']]->book['title'] = $record['link_title'];
+    $nodes[$record['nid']]->book['options'] = unserialize($record['options']);
   }
 }
 

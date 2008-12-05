@@ -344,7 +344,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $this->drupalPost('node/add/article', $edit, t('Save'));
 
     // Check that the term is displayed when the node is viewed.
-    $node = node_load(array('title' => $edit['title']));
+    $node = $this->drupalGetNodeByTitle($edit['title']);
     $this->drupalGet('node/' . $node->nid);
     $this->assertText($term1->name, t('Term is displayed when viewing the node.'));
 
@@ -431,5 +431,65 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $this->drupalGet('taxonomy/term/' . $term[0]->tid);
     $this->assertText($edit['name'], t('The randomly generated term name is present.'));
     $this->assertText($edit['description'], t('The randomly generated term description is present.'));
+  }
+}
+
+/**
+ * Test the taxonomy_term_load_multiple() function.
+ */
+class TaxonomyLoadMultipleUnitTest extends TaxonomyWebTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => t('Taxonomy term multiple loading'),
+      'description' => t('Test the loading of multiple taxonomy terms at once'),
+      'group' => t('Taxonomy'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    $this->taxonomy_admin = $this->drupalCreateUser(array('administer taxonomy'));
+    $this->drupalLogin($this->taxonomy_admin);
+  }
+
+  /**
+   * Create a vocabulary and some taxonomy terms, ensuring they're loaded
+   * correctly using taxonomy_term_load_multiple().
+   */
+  function testTaxonomyTermMultipleLoad() {
+    // Create a vocabulary.
+    $vocabulary = $this->createVocabulary();
+
+    // Create five terms in the vocabulary.
+    $i = 0;
+    while ($i < 5) {
+      $i++;
+      $this->createTerm($vocabulary->vid);
+    }
+    // Load the terms from the vocabulary.
+    $terms = taxonomy_term_load_multiple(NULL, array('vid' => $vocabulary->vid));
+    $count = count($terms);
+    $this->assertTrue($count == 5, t('Correct number of terms were loaded. !count terms.', array('!count' => $count)));
+
+    // Load the same terms again by tid.
+    $terms2 = taxonomy_term_load_multiple(array_keys($terms));
+    $this->assertTrue($count == count($terms2), t('Five terms were loaded by tid'));
+    $this->assertEqual($terms, $terms2, t('Both arrays contain the same terms'));
+
+    // Load the terms by tid, with a condition on vid.
+    $terms3 = taxonomy_term_load_multiple(array_keys($terms2), array('vid' => $vocabulary->vid));
+    $this->assertEqual($terms2, $terms3);
+
+    // Remove one term from the array, then delete it.
+    $deleted = array_shift($terms3);
+    taxonomy_term_delete($deleted->tid);
+    $deleted_term = taxonomy_term_load($deleted->tid, TRUE);
+    $this->assertFalse($deleted_term);
+
+    // Load terms from the vocabulary by vid.
+    $terms4 = taxonomy_term_load_multiple(NULL, array('vid' => $vocabulary->vid), TRUE);
+    $this->assertTrue(count($terms4 == 4), t('Correct number of terms were loaded.'));
+    $this->assertFalse(isset($terms4[$deleted->tid]));
   }
 }

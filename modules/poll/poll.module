@@ -148,11 +148,9 @@ function poll_block($op = 'list', $delta = '') {
     }
     elseif ($op == 'view') {
       // Retrieve the latest poll.
-      $sql = db_rewrite_sql("SELECT MAX(n.created) FROM {node} n INNER JOIN {poll} p ON p.nid = n.nid WHERE n.status = 1 AND p.active = 1");
-      $timestamp = db_result(db_query($sql));
-      if ($timestamp) {
-        $poll = node_load(array('type' => 'poll', 'created' => $timestamp, 'status' => 1));
-
+      $record = db_query_range(db_rewrite_sql("SELECT n.nid FROM {node} n INNER JOIN {poll} p ON p.nid = n.nid WHERE n.status = :status AND p.active = :active ORDER BY n.created DESC"), array(':status' => 1, ':active' => 1), 0, 1)->fetch();
+      if ($record) {
+        $poll = node_load($record->nid);
         if ($poll->nid) {
           $poll = poll_view($poll, TRUE, FALSE, TRUE);
         }
@@ -451,35 +449,35 @@ function poll_validate($node) {
 /**
  * Implementation of hook_load().
  */
-function poll_load($node) {
+function poll_load($nodes) {
   global $user;
+  foreach ($nodes as $node) {
+    $poll = db_query("SELECT runtime, active FROM {poll} WHERE nid = :nid", array(':nid' => $node->nid))->fetch();
 
-  $poll = db_fetch_object(db_query("SELECT runtime, active FROM {poll} WHERE nid = %d", $node->nid));
+    // Load the appropriate choices into the $poll object.
+    $poll->choice = db_query("SELECT chid, chtext, chvotes, weight FROM {poll_choice} WHERE nid = :nid ORDER BY weight", array(':nid' => $node->nid))->fetchAllAssoc('chid', PDO::FETCH_ASSOC);
 
-  // Load the appropriate choices into the $poll object.
-  $result = db_query("SELECT chid, chtext, chvotes, weight FROM {poll_choice} WHERE nid = %d ORDER BY weight", $node->nid);
-  while ($choice = db_fetch_array($result)) {
-    $poll->choice[$choice['chid']] = $choice;
+    // Determine whether or not this user is allowed to vote.
+    $poll->allowvotes = FALSE;
+    if (user_access('vote on polls') && $poll->active) {
+      if ($user->uid) {
+        $result = db_query('SELECT chid FROM {poll_vote} WHERE nid = :nid AND uid = :uid', array(':nid' => $node->nid, ':uid' => $user->uid))->fetch();
+      }
+      else {
+        $result = db_query("SELECT chid FROM {poll_vote} WHERE nid = :nid AND hostname = :hostname", array(':nid' => $node->nid, ':hostname' => ip_address()))->fetch();
+      }
+      if ($result) {
+        $poll->vote = $result->chid;
+      }
+      else {
+        $poll->vote = -1;
+        $poll->allowvotes = TRUE;
+      }
+    }
+    foreach ($poll as $key => $value) {
+      $nodes[$node->nid]->$key = $value;
+    }
   }
-
-  // Determine whether or not this user is allowed to vote.
-  $poll->allowvotes = FALSE;
-  if (user_access('vote on polls') && $poll->active) {
-    if ($user->uid) {
-      $result = db_fetch_object(db_query('SELECT chid FROM {poll_vote} WHERE nid = %d AND uid = %d', $node->nid, $user->uid));
-    }
-    else {
-      $result = db_fetch_object(db_query("SELECT chid FROM {poll_vote} WHERE nid = %d AND hostname = '%s'", $node->nid, ip_address()));
-    }
-    if (isset($result->chid)) {
-      $poll->vote = $result->chid;
-    }
-    else {
-      $poll->vote = -1;
-      $poll->allowvotes = TRUE;
-    }
-  }
-  return $poll;
 }
 
 /**

@@ -117,7 +117,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->assertRaw(t('Page %title has been created.', array('%title' => $edit['title'])), t('Page created.'));
 
     // Check to make sure the node was created.
-    $node = node_load(array('title' => $edit['title']));
+    $node = $this->drupalGetNodeByTitle($edit['title']);
     $this->assertTrue($node, t('Node found in database.'));
 
     return $node;
@@ -141,7 +141,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->assertRaw(t('Page %title has been created.', array('%title' => $edit['title'])), t('Translation created.'));
 
     // Check to make sure that translation was successfull.
-    $node = node_load(array('title' => $edit['title']));
+    $node = $this->drupalGetNodeByTitle($edit['title']);
     $this->assertTrue($node, t('Node found in database.'));
 
     return $node;

@@ -40,7 +40,7 @@ class PollTestCase extends DrupalWebTestCase {
     }
 
     $this->drupalPost(NULL, $edit, t('Save'));
-    $node = node_load(array('title' => $title));
+    $node = $this->drupalGetNodeByTitle($title);
     $this->assertRaw(t('@type %title has been created.', array('@type' => node_get_types('name', 'poll'), '%title' => $title)), 'Poll has been created.');
     $this->assertTrue($node->nid, t('Poll has been found in the database'));
 
