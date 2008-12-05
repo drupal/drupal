@@ -198,7 +198,10 @@ class DatabaseStatement_sqlite extends DatabaseStatementPrefetch implements Iter
         // Else, this is using named placeholders.
         foreach ($args as $placeholder => $value) {
           if (is_numeric($value)) {
-            $query = str_replace($placeholder, $value, $query);
+            // When replacing the placeholders, make sure we search for the
+            // exact placeholder. For example, if searching for
+            // ':db_placeholder_1', do not replace ':db_placeholder_11'.
+            $query = preg_replace('/' . preg_quote($placeholder) . '\b/', $value, $query);
             unset($args[$placeholder]);
           }
         }
