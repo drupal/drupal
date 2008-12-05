@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.52 2008/10/19 20:55:07 dries Exp $ */
+/* $Id: system.css,v 1.53 2008/12/05 12:50:28 dries Exp $ */
 
 /*
 ** HTML elements
@@ -77,7 +77,7 @@ div.error, tr.error {
 div.warning {
   border: 1px solid #f0c020;
 }
-div.warning, tr.warning {
+div.warning, table tr.warning {
   background: #ffd;
   color: #220;
   padding: 2px;

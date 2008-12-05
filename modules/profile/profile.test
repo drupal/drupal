@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.test,v 1.8 2008/11/25 13:14:28 dries Exp $
+// $Id: profile.test,v 1.9 2008/12/05 12:50:28 dries Exp $
 
 /**
  * A class for common methods for testing profile fields.
@@ -37,7 +37,7 @@ class ProfileTestCase extends DrupalWebTestCase {
     $edit['explanation'] = $this->randomName(50);
 
     $this->drupalPost('admin/user/profile/add/' . $type, $edit, t('Save field'));
-    $fid = db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s'", $title));
+    $fid = db_result(db_query("SELECT fid FROM {profile_field} WHERE title = '%s'", $title));
     $this->assertTrue($fid, t('New Profile field has been entered in the database'));
 
     // Check that the new field is appearing on the user edit form.

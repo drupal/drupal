@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.31 2008/11/23 18:13:41 dries Exp $
+// $Id: default.profile,v 1.32 2008/12/05 12:50:28 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -145,7 +145,7 @@ function default_profile_tasks(&$task, $url) {
     'module' => 'taxonomy',
     'weight' => 0,
   ))->execute();
-  db_insert('vocabulary_node_types')->fields(array('vid' => $vid, 'type' => 'article'))->execute();
+  db_insert('vocabulary_node_type')->fields(array('vid' => $vid, 'type' => 'article'))->execute();
 
   // Update the menu router information.
   menu_rebuild();

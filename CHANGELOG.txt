@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.289 2008/11/25 02:37:31 webchick Exp $
+// $Id: CHANGELOG.txt,v 1.290 2008/12/05 12:50:27 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -31,6 +31,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Added an edit tab to taxonomy term pages.
     * Redesigned password strength validator.
     * Redesigned the add content type screen.
+    * Highlight duplicate URL aliases.
 - Documentation:
     * Hook API documentation now included in Drupal core.
 - News aggregator:
