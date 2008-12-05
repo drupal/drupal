@@ -13,7 +13,7 @@ function profile_browse() {
   // Ensure that the path is converted to 3 levels always.
   list(, $name, $value) = array_pad(explode('/', $_GET['q'], 3), 3, '');
 
-  $field = db_fetch_object(db_query("SELECT DISTINCT(fid), type, title, page, visibility FROM {profile_fields} WHERE name = '%s'", $name));
+  $field = db_fetch_object(db_query("SELECT DISTINCT(fid), type, title, page, visibility FROM {profile_field} WHERE name = '%s'", $name));
 
   if ($name && $field->fid) {
     // Only allow browsing of fields that have a page title set.
@@ -29,7 +29,7 @@ function profile_browse() {
 
     // Compile a list of fields to show.
     $fields = array();
-    $result = db_query('SELECT name, title, type, weight, page FROM {profile_fields} WHERE fid != %d AND visibility = %d ORDER BY weight', $field->fid, PROFILE_PUBLIC_LISTINGS);
+    $result = db_query('SELECT name, title, type, weight, page FROM {profile_field} WHERE fid != %d AND visibility = %d ORDER BY weight', $field->fid, PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
       $fields[] = $record;
     }
@@ -55,7 +55,7 @@ function profile_browse() {
     }
 
     // Extract the affected users:
-    $result = pager_query("SELECT u.uid, u.access FROM {users} u INNER JOIN {profile_values} v ON u.uid = v.uid WHERE v.fid = %d AND $query AND u.access != 0 AND u.status != 0 ORDER BY u.access DESC", 20, 0, NULL, $arguments);
+    $result = pager_query("SELECT u.uid, u.access FROM {users} u INNER JOIN {profile_value} v ON u.uid = v.uid WHERE v.fid = %d AND $query AND u.access != 0 AND u.status != 0 ORDER BY u.access DESC", 20, 0, NULL, $arguments);
 
     $content = '';
     while ($account = db_fetch_object($result)) {
@@ -82,7 +82,7 @@ function profile_browse() {
   else {
     // Compile a list of fields to show.
     $fields = array();
-    $result = db_query('SELECT name, title, type, weight, page, visibility FROM {profile_fields} WHERE visibility = %d ORDER BY category, weight', PROFILE_PUBLIC_LISTINGS);
+    $result = db_query('SELECT name, title, type, weight, page, visibility FROM {profile_field} WHERE visibility = %d ORDER BY category, weight', PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
       $fields[] = $record;
     }
@@ -109,8 +109,8 @@ function profile_browse() {
  */
 function profile_autocomplete($field, $string) {
   $matches = array();
-  if (db_result(db_query("SELECT COUNT(*) FROM {profile_fields} WHERE fid = %d AND autocomplete = 1", $field))) {
-    $result = db_query_range("SELECT value FROM {profile_values} WHERE fid = :fid AND LOWER(value) LIKE LOWER(:value) GROUP BY value ORDER BY value ASC", array(
+  if (db_result(db_query("SELECT COUNT(*) FROM {profile_field} WHERE fid = %d AND autocomplete = 1", $field))) {
+    $result = db_query_range("SELECT value FROM {profile_value} WHERE fid = :fid AND LOWER(value) LIKE LOWER(:value) GROUP BY value ORDER BY value ASC", array(
       ':fid' => $field,
       ':value' => $string .'%',
     ), 0, 10);

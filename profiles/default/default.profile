@@ -145,7 +145,7 @@ function default_profile_tasks(&$task, $url) {
     'module' => 'taxonomy',
     'weight' => 0,
   ))->execute();
-  db_insert('vocabulary_node_types')->fields(array('vid' => $vid, 'type' => 'article'))->execute();
+  db_insert('vocabulary_node_type')->fields(array('vid' => $vid, 'type' => 'article'))->execute();
 
   // Update the menu router information.
   menu_rebuild();

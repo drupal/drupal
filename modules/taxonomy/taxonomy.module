@@ -227,16 +227,16 @@ function taxonomy_vocabulary_save($vocabulary) {
 
   if (!empty($vocabulary->vid) && !empty($vocabulary->name)) {
     $status = drupal_write_record('vocabulary', $vocabulary, 'vid');
-    db_query("DELETE FROM {vocabulary_node_types} WHERE vid = %d", $vocabulary->vid);
+    db_query("DELETE FROM {vocabulary_node_type} WHERE vid = %d", $vocabulary->vid);
     foreach ($vocabulary->nodes as $type => $selected) {
-      db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $vocabulary->vid, $type);
+      db_query("INSERT INTO {vocabulary_node_type} (vid, type) VALUES (%d, '%s')", $vocabulary->vid, $type);
     }
     module_invoke_all('taxonomy_vocabulary_update', $vocabulary);
   }
   elseif (empty($vocabulary->vid)) {
     $status = drupal_write_record('vocabulary', $vocabulary);
     foreach ($vocabulary->nodes as $type => $selected) {
-      db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $vocabulary->vid, $type);
+      db_query("INSERT INTO {vocabulary_node_type} (vid, type) VALUES (%d, '%s')", $vocabulary->vid, $type);
     }
     module_invoke_all('taxonomy_vocabulary_insert', $vocabulary);
   }
@@ -258,7 +258,7 @@ function taxonomy_vocabulary_delete($vid) {
   $vocabulary = (array) taxonomy_vocabulary_load($vid);
 
   db_query('DELETE FROM {vocabulary} WHERE vid = %d', $vid);
-  db_query('DELETE FROM {vocabulary_node_types} WHERE vid = %d', $vid);
+  db_query('DELETE FROM {vocabulary_node_type} WHERE vid = %d', $vid);
   $result = db_query('SELECT tid FROM {term_data} WHERE vid = %d', $vid);
   while ($term = db_fetch_object($result)) {
     taxonomy_term_delete($term->tid);
@@ -469,10 +469,10 @@ function taxonomy_form_all($free_tags = 0) {
  */
 function taxonomy_get_vocabularies($type = NULL) {
   if ($type) {
-    $result = db_query(db_rewrite_sql("SELECT v.vid, v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE n.type = '%s' ORDER BY v.weight, v.name", 'v', 'vid'), $type);
+    $result = db_query(db_rewrite_sql("SELECT v.vid, v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_type} n ON v.vid = n.vid WHERE n.type = '%s' ORDER BY v.weight, v.name", 'v', 'vid'), $type);
   }
   else {
-    $result = db_query(db_rewrite_sql('SELECT v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_types} n ON v.vid = n.vid ORDER BY v.weight, v.name', 'v', 'vid'));
+    $result = db_query(db_rewrite_sql('SELECT v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_type} n ON v.vid = n.vid ORDER BY v.weight, v.name', 'v', 'vid'));
   }
 
   $vocabularies = array();
@@ -516,7 +516,7 @@ function taxonomy_form_alter(&$form, $form_state, $form_id) {
       $terms = $node->taxonomy;
     }
 
-    $c = db_query(db_rewrite_sql("SELECT v.* FROM {vocabulary} v INNER JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE n.type = '%s' ORDER BY v.weight, v.name", 'v', 'vid'), $node->type);
+    $c = db_query(db_rewrite_sql("SELECT v.* FROM {vocabulary} v INNER JOIN {vocabulary_node_type} n ON v.vid = n.vid WHERE n.type = '%s' ORDER BY v.weight, v.name", 'v', 'vid'), $node->type);
 
     while ($vocabulary = db_fetch_object($c)) {
       if ($vocabulary->tags) {
@@ -739,10 +739,10 @@ function taxonomy_node_delete_revision($node) {
  */
 function taxonomy_node_type($op, $info) {
   if ($op == 'update' && !empty($info->old_type) && $info->type != $info->old_type) {
-    db_query("UPDATE {vocabulary_node_types} SET type = '%s' WHERE type = '%s'", $info->type, $info->old_type);
+    db_query("UPDATE {vocabulary_node_type} SET type = '%s' WHERE type = '%s'", $info->type, $info->old_type);
   }
   elseif ($op == 'delete') {
-    db_query("DELETE FROM {vocabulary_node_types} WHERE type = '%s'", $info->type);
+    db_query("DELETE FROM {vocabulary_node_type} WHERE type = '%s'", $info->type);
   }
 }
 
@@ -1022,7 +1022,7 @@ function taxonomy_vocabulary_load($vid, $reset = FALSE) {
     // that cached, and we will not try to load this later.
     $vocabularies[$vid] = FALSE;
     // Try to load the data and fill up the object.
-    $result = db_query('SELECT v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE v.vid = %d', $vid);
+    $result = db_query('SELECT v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_type} n ON v.vid = n.vid WHERE v.vid = %d', $vid);
     $node_types = array();
     while ($voc = db_fetch_object($result)) {
       if (!empty($voc->type)) {

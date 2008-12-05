@@ -257,7 +257,7 @@ function taxonomy_schema() {
     ),
   );
 
-  $schema['vocabulary_node_types'] = array(
+  $schema['vocabulary_node_type'] = array(
     'description' => 'Stores which node types vocabularies may be used with.',
     'fields' => array(
       'vid' => array(
@@ -284,3 +284,11 @@ function taxonomy_schema() {
   return $schema;
 }
 
+/**
+ * Rename {vocabulary_node_types} table to {vocabulary_node_type}.
+ */
+function taxonomy_update_7001() {
+  $ret = array();
+  db_rename_table($ret, 'vocabulary_node_types', 'vocabulary_node_type');
+  return $ret;
+}

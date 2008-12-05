@@ -13,7 +13,7 @@
  * @see profile_admin_overview_submit()
  */
 function profile_admin_overview() {
-  $result = db_query('SELECT title, name, type, category, fid, weight FROM {profile_fields} ORDER BY category, weight');
+  $result = db_query('SELECT title, name, type, category, fid, weight FROM {profile_field} ORDER BY category, weight');
 
   $form = array();
   $categories = array();
@@ -74,7 +74,7 @@ function profile_admin_overview_submit($form, &$form_state) {
       $weight = $form_state['values'][$fid]['weight'];
       $category = $form_state['values'][$fid]['category'];
       if ($weight != $form[$fid]['weight']['#default_value'] || $category != $form[$fid]['category']['#default_value']) {
-        db_query("UPDATE {profile_fields} SET weight = %d, category = '%s' WHERE fid = %d", $weight, $category, $fid);
+        db_query("UPDATE {profile_field} SET weight = %d, category = '%s' WHERE fid = %d", $weight, $category, $fid);
       }
     }
   }
@@ -169,7 +169,7 @@ function profile_field_form(&$form_state, $arg = NULL) {
     if (is_numeric($arg)) {
       $fid = $arg;
 
-      $edit = db_fetch_array(db_query('SELECT * FROM {profile_fields} WHERE fid = %d', $fid));
+      $edit = db_fetch_array(db_query('SELECT * FROM {profile_field} WHERE fid = %d', $fid));
 
       if (!$edit) {
         drupal_not_found();
@@ -314,10 +314,10 @@ function profile_field_form_validate($form, &$form_state) {
     $query_suffix = ' AND fid != %d';
   }
 
-  if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s' AND category = '%s'" . $query_suffix, $args1))) {
+  if (db_result(db_query("SELECT fid FROM {profile_field} WHERE title = '%s' AND category = '%s'" . $query_suffix, $args1))) {
     form_set_error('title', t('The specified title is already in use.'));
   }
-  if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE name = '%s'" . $query_suffix, $args2))) {
+  if (db_result(db_query("SELECT fid FROM {profile_field} WHERE name = '%s'" . $query_suffix, $args2))) {
     form_set_error('name', t('The specified name is already in use.'));
   }
   if ($form_state['values']['visibility'] == PROFILE_HIDDEN) {
@@ -341,13 +341,13 @@ function profile_field_form_submit($form, &$form_state) {
     $form_state['values']['page'] = '';
   }
   if (!isset($form_state['values']['fid'])) {
-    db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, register, visibility, autocomplete, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, %d, '%s', '%s')", $form_state['values']['title'], $form_state['values']['name'], $form_state['values']['explanation'], $form_state['values']['category'], $form_state['values']['type'], $form_state['values']['weight'], $form_state['values']['required'], $form_state['values']['register'], $form_state['values']['visibility'], $form_state['values']['autocomplete'], $form_state['values']['options'], $form_state['values']['page']);
+    db_query("INSERT INTO {profile_field} (title, name, explanation, category, type, weight, required, register, visibility, autocomplete, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, %d, '%s', '%s')", $form_state['values']['title'], $form_state['values']['name'], $form_state['values']['explanation'], $form_state['values']['category'], $form_state['values']['type'], $form_state['values']['weight'], $form_state['values']['required'], $form_state['values']['register'], $form_state['values']['visibility'], $form_state['values']['autocomplete'], $form_state['values']['options'], $form_state['values']['page']);
 
     drupal_set_message(t('The field has been created.'));
     watchdog('profile', 'Profile field %field added under category %category.', array('%field' => $form_state['values']['title'], '%category' => $form_state['values']['category']), WATCHDOG_NOTICE, l(t('view'), 'admin/user/profile'));
   }
   else {
-    db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, register = %d, visibility = %d, autocomplete = %d, options = '%s', page = '%s' WHERE fid = %d", $form_state['values']['title'], $form_state['values']['name'], $form_state['values']['explanation'], $form_state['values']['category'], $form_state['values']['weight'], $form_state['values']['required'], $form_state['values']['register'], $form_state['values']['visibility'], $form_state['values']['autocomplete'], $form_state['values']['options'], $form_state['values']['page'], $form_state['values']['fid']);
+    db_query("UPDATE {profile_field} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, register = %d, visibility = %d, autocomplete = %d, options = '%s', page = '%s' WHERE fid = %d", $form_state['values']['title'], $form_state['values']['name'], $form_state['values']['explanation'], $form_state['values']['category'], $form_state['values']['weight'], $form_state['values']['required'], $form_state['values']['register'], $form_state['values']['visibility'], $form_state['values']['autocomplete'], $form_state['values']['options'], $form_state['values']['page'], $form_state['values']['fid']);
 
     drupal_set_message(t('The field has been updated.'));
   }
@@ -362,7 +362,7 @@ function profile_field_form_submit($form, &$form_state) {
  * Menu callback; deletes a field from all user profiles.
  */
 function profile_field_delete(&$form_state, $fid) {
-  $field = db_fetch_object(db_query("SELECT title FROM {profile_fields} WHERE fid = %d", $fid));
+  $field = db_fetch_object(db_query("SELECT title FROM {profile_field} WHERE fid = %d", $fid));
   if (!$field) {
     drupal_not_found();
     return;
@@ -380,8 +380,8 @@ function profile_field_delete(&$form_state, $fid) {
  * Process a field delete form submission.
  */
 function profile_field_delete_submit($form, &$form_state) {
-  db_query('DELETE FROM {profile_fields} WHERE fid = %d', $form_state['values']['fid']);
-  db_query('DELETE FROM {profile_values} WHERE fid = %d', $form_state['values']['fid']);
+  db_query('DELETE FROM {profile_field} WHERE fid = %d', $form_state['values']['fid']);
+  db_query('DELETE FROM {profile_value} WHERE fid = %d', $form_state['values']['fid']);
 
   cache_clear_all();
 
@@ -397,7 +397,7 @@ function profile_field_delete_submit($form, &$form_state) {
  */
 function profile_admin_settings_autocomplete($string) {
   $matches = array();
-  $result = db_query_range("SELECT category FROM {profile_fields} WHERE LOWER(category) LIKE LOWER(:category)", array(':category' => $string .'%'), 0, 10);
+  $result = db_query_range("SELECT category FROM {profile_field} WHERE LOWER(category) LIKE LOWER(:category)", array(':category' => $string .'%'), 0, 10);
   while ($data = db_fetch_object($result)) {
     $matches[$data->category] = check_plain($data->category);
   }

@@ -42,9 +42,19 @@ function path_admin_overview($keys = NULL) {
   $rows = array();
   $destination = drupal_get_destination();
   while ($data = db_fetch_object($result)) {
-    $row = array(check_plain($data->dst), check_plain($data->src), l(t('edit'), "admin/build/path/edit/$data->pid", array('query' => $destination)), l(t('delete'), "admin/build/path/delete/$data->pid", array('query' => $destination)));
+    $row = array(
+      // If the system path maps to a different URL alias, highlight this table
+      // row to let the user know of old aliases.
+      'class' => ($data->dst != drupal_get_path_alias($data->src, $data->language) ? 'warning' : NULL),
+      'data' => array(
+        l($data->dst, $data->src),
+        l($data->src, $data->src, array('alias' => TRUE)),
+        l(t('edit'), "admin/build/path/edit/$data->pid", array('query' => $destination)),
+        l(t('delete'), "admin/build/path/delete/$data->pid", array('query' => $destination)),
+      ),
+    );
     if ($multilanguage) {
-      array_splice($row, 2, 0, module_invoke('locale', 'language_name', $data->language));
+      array_splice($row['data'], 2, 0, module_invoke('locale', 'language_name', $data->language));
     }
     $rows[] = $row;
   }

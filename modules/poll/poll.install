@@ -48,7 +48,7 @@ function poll_schema() {
     'primary key' => array('nid'),
   );
 
-  $schema['poll_choices'] = array(
+  $schema['poll_choice'] = array(
     'description' => 'Stores information about all choices for all {poll}s.',
     'fields' => array(
       'chid' => array(
@@ -91,7 +91,7 @@ function poll_schema() {
     'primary key' => array('chid'),
   );
 
-  $schema['poll_votes'] = array(
+  $schema['poll_vote'] = array(
     'description' => 'Stores per-{users} votes for each {poll}.',
     'fields' => array(
       'chid' => array(
@@ -130,4 +130,14 @@ function poll_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Rename {poll_choices} table to {poll_choice} and {poll_votes} to {poll_vote}.
+ */
+function poll_update_7001() {
+  $ret = array();
+  db_rename_table($ret, 'poll_choices', 'poll_choice');
+  db_rename_table($ret, 'poll_votes', 'poll_vote');
+  return $ret;
 }

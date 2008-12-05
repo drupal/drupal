@@ -138,7 +138,7 @@ function profile_block($op = 'list', $delta = '', $edit = array()) {
   elseif ($op == 'configure') {
     // Compile a list of fields to show
     $fields = array();
-    $result = db_query('SELECT name, title, weight, visibility FROM {profile_fields} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
+    $result = db_query('SELECT name, title, weight, visibility FROM {profile_field} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
       $fields[$record->name] = check_plain($record->title);
     }
@@ -165,7 +165,7 @@ function profile_block($op = 'list', $delta = '', $edit = array()) {
         if ($use_fields = variable_get('profile_block_author_fields', array())) {
           // Compile a list of fields to show.
           $fields = array();
-          $result = db_query('SELECT name, title, type, visibility, weight FROM {profile_fields} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
+          $result = db_query('SELECT name, title, type, visibility, weight FROM {profile_field} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
           while ($record = db_fetch_object($result)) {
             // Ensure that field is displayed only if it is among the defined block fields and, if it is private, the user has appropriate permissions.
             if (isset($use_fields[$record->name]) && $use_fields[$record->name]) {
@@ -253,11 +253,11 @@ function profile_user_categories(&$edit, &$user, $category = NULL) {
  * Implementation of hook_user_delete().
  */
 function profile_user_delete(&$edit, &$user, $category = NULL) {
-  db_query('DELETE FROM {profile_values} WHERE uid = %d', $user->uid);
+  db_query('DELETE FROM {profile_value} WHERE uid = %d', $user->uid);
 }
 
 function profile_load_profile(&$user) {
-  $result = db_query('SELECT f.name, f.type, v.value FROM {profile_fields} f INNER JOIN {profile_values} v ON f.fid = v.fid WHERE uid = %d', $user->uid);
+  $result = db_query('SELECT f.name, f.type, v.value FROM {profile_field} f INNER JOIN {profile_value} v ON f.fid = v.fid WHERE uid = %d', $user->uid);
   while ($field = db_fetch_object($result)) {
     if (empty($user->{$field->name})) {
       $user->{$field->name} = _profile_field_serialize($field->type) ? unserialize($field->value) : $field->value;
@@ -271,8 +271,8 @@ function profile_save_profile(&$edit, &$user, $category, $register = FALSE) {
     if (_profile_field_serialize($field->type)) {
       $edit[$field->name] = serialize($edit[$field->name]);
     }
-    db_query("DELETE FROM {profile_values} WHERE fid = %d AND uid = %d", $field->fid, $user->uid);
-    db_query("INSERT INTO {profile_values} (fid, uid, value) VALUES (%d, %d, '%s')", $field->fid, $user->uid, $edit[$field->name]);
+    db_query("DELETE FROM {profile_value} WHERE fid = %d AND uid = %d", $field->fid, $user->uid);
+    db_query("INSERT INTO {profile_value} (fid, uid, value) VALUES (%d, %d, '%s')", $field->fid, $user->uid, $edit[$field->name]);
     // Mark field as handled (prevents saving to user->data).
     $edit[$field->name] = NULL;
   }
@@ -331,10 +331,10 @@ function profile_view_profile(&$user) {
 
   // Show private fields to administrators and people viewing their own account.
   if (user_access('administer users') || $GLOBALS['user']->uid == $user->uid) {
-    $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d ORDER BY category, weight', PROFILE_HIDDEN);
+    $result = db_query('SELECT * FROM {profile_field} WHERE visibility != %d ORDER BY category, weight', PROFILE_HIDDEN);
   }
   else {
-    $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d AND visibility != %d ORDER BY category, weight', PROFILE_PRIVATE, PROFILE_HIDDEN);
+    $result = db_query('SELECT * FROM {profile_field} WHERE visibility != %d AND visibility != %d ORDER BY category, weight', PROFILE_PRIVATE, PROFILE_HIDDEN);
   }
 
   $fields = array();
@@ -480,7 +480,7 @@ function profile_validate_profile($edit, $category) {
 }
 
 function profile_categories() {
-  $result = db_query("SELECT DISTINCT(category) FROM {profile_fields}");
+  $result = db_query("SELECT DISTINCT(category) FROM {profile_field}");
   $data = array();
   while ($category = db_fetch_object($result)) {
     $data[] = array(
@@ -502,7 +502,7 @@ function profile_category_access($account, $category) {
     return TRUE;
   }
   else {
-    return user_edit_access($account) && db_result(db_query("SELECT COUNT(*) FROM {profile_fields} WHERE category = '%s' AND visibility <> %d", $category, PROFILE_HIDDEN));
+    return user_edit_access($account) && db_result(db_query("SELECT COUNT(*) FROM {profile_field} WHERE category = '%s' AND visibility <> %d", $category, PROFILE_HIDDEN));
   }
 }
 
@@ -589,7 +589,7 @@ function _profile_field_serialize($type = NULL) {
 
 function _profile_get_fields($category, $register = FALSE) {
   $args = array();
-  $sql = 'SELECT * FROM {profile_fields} WHERE ';
+  $sql = 'SELECT * FROM {profile_field} WHERE ';
   $filters = array();
   if ($register) {
     $filters[] = 'register = 1';

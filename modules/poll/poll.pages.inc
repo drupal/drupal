@@ -11,7 +11,7 @@
  */
 function poll_page() {
   // List all polls.
-  $sql = db_rewrite_sql("SELECT n.nid, n.title, p.active, n.created, SUM(c.chvotes) AS votes FROM {node} n INNER JOIN {poll} p ON n.nid = p.nid INNER JOIN {poll_choices} c ON n.nid = c.nid WHERE n.status = 1 GROUP BY n.nid, n.title, p.active, n.created ORDER BY n.created DESC");
+  $sql = db_rewrite_sql("SELECT n.nid, n.title, p.active, n.created, SUM(c.chvotes) AS votes FROM {node} n INNER JOIN {poll} p ON n.nid = p.nid INNER JOIN {poll_choice} c ON n.nid = c.nid WHERE n.status = 1 GROUP BY n.nid, n.title, p.active, n.created ORDER BY n.created DESC");
   // Count all polls for the pager.
   $count_sql = db_rewrite_sql('SELECT COUNT(*) FROM {node} n INNER JOIN {poll} p ON n.nid = p.nid WHERE n.status = 1');
   $result = pager_query($sql, 15, 0, $count_sql);
@@ -35,7 +35,7 @@ function poll_votes($node) {
   $header[] = array('data' => t('Vote'), 'field' => 'pv.chorder');
   $header[] = array('data' => t('Vote'), 'field' => 'pc.weight');
 
-  $result = pager_query("SELECT pv.chid, pv.uid, pv.hostname, u.name FROM {poll_votes} pv INNER JOIN {poll_choices} pc ON pv.chid = pc.chid LEFT JOIN {users} u ON pv.uid = u.uid WHERE pv.nid = %d". tablesort_sql($header), 20, 0, NULL, $node->nid);
+  $result = pager_query("SELECT pv.chid, pv.uid, pv.hostname, u.name FROM {poll_vote} pv INNER JOIN {poll_choice} pc ON pv.chid = pc.chid LEFT JOIN {users} u ON pv.uid = u.uid WHERE pv.nid = %d". tablesort_sql($header), 20, 0, NULL, $node->nid);
   $rows = array();
   while ($vote = db_fetch_object($result)) {
     $rows[] = array(

@@ -457,7 +457,7 @@ function poll_load($node) {
   $poll = db_fetch_object(db_query("SELECT runtime, active FROM {poll} WHERE nid = %d", $node->nid));
 
   // Load the appropriate choices into the $poll object.
-  $result = db_query("SELECT chid, chtext, chvotes, weight FROM {poll_choices} WHERE nid = %d ORDER BY weight", $node->nid);
+  $result = db_query("SELECT chid, chtext, chvotes, weight FROM {poll_choice} WHERE nid = %d ORDER BY weight", $node->nid);
   while ($choice = db_fetch_array($result)) {
     $poll->choice[$choice['chid']] = $choice;
   }
@@ -466,10 +466,10 @@ function poll_load($node) {
   $poll->allowvotes = FALSE;
   if (user_access('vote on polls') && $poll->active) {
     if ($user->uid) {
-      $result = db_fetch_object(db_query('SELECT chid FROM {poll_votes} WHERE nid = %d AND uid = %d', $node->nid, $user->uid));
+      $result = db_fetch_object(db_query('SELECT chid FROM {poll_vote} WHERE nid = %d AND uid = %d', $node->nid, $user->uid));
     }
     else {
-      $result = db_fetch_object(db_query("SELECT chid FROM {poll_votes} WHERE nid = %d AND hostname = '%s'", $node->nid, ip_address()));
+      $result = db_fetch_object(db_query("SELECT chid FROM {poll_vote} WHERE nid = %d AND hostname = '%s'", $node->nid, ip_address()));
     }
     if (isset($result->chid)) {
       $poll->vote = $result->chid;
@@ -498,7 +498,7 @@ function poll_insert($node) {
 
   foreach ($node->choice as $choice) {
     if ($choice['chtext'] != '') {
-      db_query("INSERT INTO {poll_choices} (nid, chtext, chvotes, weight) VALUES (%d, '%s', %d, %d)", $node->nid, $choice['chtext'], $choice['chvotes'], $choice['weight']);
+      db_query("INSERT INTO {poll_choice} (nid, chtext, chvotes, weight) VALUES (%d, '%s', %d, %d)", $node->nid, $choice['chtext'], $choice['chvotes'], $choice['weight']);
     }
   }
 }
@@ -515,14 +515,14 @@ function poll_update($node) {
   foreach ($node->choice as $key => $choice) {
     if (!empty($choice['chtext'])) {
       if (isset($choice['chid'])) {
-        db_query("UPDATE {poll_choices} SET chtext = '%s', chvotes = %d, weight = %d WHERE chid = %d", $choice['chtext'], (int)$choice['chvotes'], $choice['weight'], $choice['chid']);
+        db_query("UPDATE {poll_choice} SET chtext = '%s', chvotes = %d, weight = %d WHERE chid = %d", $choice['chtext'], (int)$choice['chvotes'], $choice['weight'], $choice['chid']);
       }
       else {
-        db_query("INSERT INTO {poll_choices} (nid, chtext, chvotes, weight) VALUES (%d, '%s', %d, %d)", $node->nid, $choice['chtext'], (int)$choice['chvotes'], $choice['weight']);
+        db_query("INSERT INTO {poll_choice} (nid, chtext, chvotes, weight) VALUES (%d, '%s', %d, %d)", $node->nid, $choice['chtext'], (int)$choice['chvotes'], $choice['weight']);
       }
     }
     else {
-      db_query("DELETE FROM {poll_votes} WHERE nid = %d AND chid = %d", $node->nid, $key);
+      db_query("DELETE FROM {poll_vote} WHERE nid = %d AND chid = %d", $node->nid, $key);
     }
   }
 }
@@ -532,8 +532,8 @@ function poll_update($node) {
  */
 function poll_delete($node) {
   db_query("DELETE FROM {poll} WHERE nid = %d", $node->nid);
-  db_query("DELETE FROM {poll_choices} WHERE nid = %d", $node->nid);
-  db_query("DELETE FROM {poll_votes} WHERE nid = %d", $node->nid);
+  db_query("DELETE FROM {poll_choice} WHERE nid = %d", $node->nid);
+  db_query("DELETE FROM {poll_vote} WHERE nid = %d", $node->nid);
 }
 
 /**
@@ -648,14 +648,14 @@ function poll_vote($form, &$form_state) {
 
   global $user;
   if ($user->uid) {
-    db_query('INSERT INTO {poll_votes} (nid, chid, uid) VALUES (%d, %d, %d)', $node->nid, $choice, $user->uid);
+    db_query('INSERT INTO {poll_vote} (nid, chid, uid) VALUES (%d, %d, %d)', $node->nid, $choice, $user->uid);
   }
   else {
-    db_query("INSERT INTO {poll_votes} (nid, chid, hostname) VALUES (%d, %d, '%s')", $node->nid, $choice, ip_address());
+    db_query("INSERT INTO {poll_vote} (nid, chid, hostname) VALUES (%d, %d, '%s')", $node->nid, $choice, ip_address());
   }
 
   // Add one to the votes.
-  db_query("UPDATE {poll_choices} SET chvotes = chvotes + 1 WHERE chid = %d", $choice);
+  db_query("UPDATE {poll_choice} SET chvotes = chvotes + 1 WHERE chid = %d", $choice);
 
   cache_clear_all();
   drupal_set_message(t('Your vote was recorded.'));
@@ -823,20 +823,20 @@ function poll_cancel($form, &$form_state) {
   global $user;
 
   if ($user->uid) {
-    db_query('DELETE FROM {poll_votes} WHERE nid = %d and uid = %d', $node->nid, $user->uid);
+    db_query('DELETE FROM {poll_vote} WHERE nid = %d and uid = %d', $node->nid, $user->uid);
   }
   else {
-    db_query("DELETE FROM {poll_votes} WHERE nid = %d and hostname = '%s'", $node->nid, ip_address());
+    db_query("DELETE FROM {poll_vote} WHERE nid = %d and hostname = '%s'", $node->nid, ip_address());
   }
 
   // Subtract from the votes.
-  db_query("UPDATE {poll_choices} SET chvotes = chvotes - 1 WHERE chid = %d", $node->vote);
+  db_query("UPDATE {poll_choice} SET chvotes = chvotes - 1 WHERE chid = %d", $node->vote);
 }
 
 /**
  * Implementation of hook_user_delete().
  */
 function poll_user_delete(&$edit, &$user) {
-  db_query('UPDATE {poll_votes} SET uid = 0 WHERE uid = %d', $user->uid);
+  db_query('UPDATE {poll_vote} SET uid = 0 WHERE uid = %d', $user->uid);
 }
 

@@ -584,7 +584,7 @@ function blogapi_mt_validate_terms($node) {
       $term_list = array_unique($node->taxonomy);
       $params = $term_list;
       $params[] = $node->type;
-      $result = db_query(db_rewrite_sql("SELECT t.tid, t.vid FROM {term_data} t INNER JOIN {vocabulary_node_types} n ON t.vid = n.vid WHERE t.tid IN (". db_placeholders($term_list) .") AND n.type = '%s'", 't', 'tid'), $params);
+      $result = db_query(db_rewrite_sql("SELECT t.tid, t.vid FROM {term_data} t INNER JOIN {vocabulary_node_type} n ON t.vid = n.vid WHERE t.tid IN (". db_placeholders($term_list) .") AND n.type = '%s'", 't', 'tid'), $params);
       $found_terms = array();
       $found_count = 0;
       while ($term = db_fetch_object($result)) {
@@ -597,7 +597,7 @@ function blogapi_mt_validate_terms($node) {
       }
     }
     // Look up all the vocabularies for this node type.
-    $result2 = db_query(db_rewrite_sql("SELECT v.vid, v.name, v.required, v.multiple FROM {vocabulary} v INNER JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE n.type = '%s'", 'v', 'vid'), $node->type);
+    $result2 = db_query(db_rewrite_sql("SELECT v.vid, v.name, v.required, v.multiple FROM {vocabulary} v INNER JOIN {vocabulary_node_type} n ON v.vid = n.vid WHERE n.type = '%s'", 'v', 'vid'), $node->type);
     // Check each vocabulary associated with this node type.
     while ($vocabulary = db_fetch_object($result2)) {
       // Required vocabularies must have at least one term.

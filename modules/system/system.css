@@ -77,7 +77,7 @@ div.error, tr.error {
 div.warning {
   border: 1px solid #f0c020;
 }
-div.warning, tr.warning {
+div.warning, table tr.warning {
   background: #ffd;
   color: #220;
   padding: 2px;

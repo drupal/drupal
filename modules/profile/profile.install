@@ -23,7 +23,7 @@ function profile_uninstall() {
  * Implementation of hook_schema().
  */
 function profile_schema() {
-  $schema['profile_fields'] = array(
+  $schema['profile_field'] = array(
     'description' => 'Stores profile field information.',
     'fields' => array(
       'fid' => array(
@@ -117,7 +117,7 @@ function profile_schema() {
     'primary key' => array('fid'),
   );
 
-  $schema['profile_values'] = array(
+  $schema['profile_value'] = array(
     'description' => 'Stores values for profile fields.',
     'fields' => array(
       'fid' => array(
@@ -125,7 +125,7 @@ function profile_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The {profile_fields}.fid of the field.',
+        'description' => 'The {profile_field}.fid of the field.',
       ),
       'uid' => array(
         'type' => 'int',
@@ -147,4 +147,14 @@ function profile_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Rename {profile_fields} table to {profile_field} and {profile_values} to {profile_value}.
+ */
+function profile_update_7001() {
+  $ret = array();
+  db_rename_table($ret, 'profile_fields', 'profile_field');
+  db_rename_table($ret, 'profile_values', 'profile_value');
+  return $ret;
 }
