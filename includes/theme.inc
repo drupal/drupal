@@ -1506,10 +1506,10 @@ function theme_mark($type = MARK_NEW) {
  *   All other elements are treated as attributes of the list item element.
  * @param $title
  *   The title of the list.
- * @param $attributes
- *   The attributes applied to the list element.
  * @param $type
  *   The type of list to return (e.g. "ul", "ol")
+ * @param $attributes
+ *   The attributes applied to the list element.
  * @return
  *   A string containing the list output.
  */
