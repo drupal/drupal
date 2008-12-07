@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.68 2008/12/05 22:18:45 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.69 2008/12/07 07:55:24 webchick Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -828,6 +828,7 @@ class DrupalWebTestCase {
     variable_set('install_profile', 'default');
     variable_set('install_task', 'profile-finished');
     variable_set('clean_url', $clean_url_original);
+    variable_set('site_mail', 'simpletest@example.com');
 
     // Use temporary files directory with the same prefix as database.
     $this->originalFileDirectory = file_directory_path();
