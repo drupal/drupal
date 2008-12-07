@@ -793,7 +793,7 @@ class UpdateQuery extends Query implements QueryConditionInterface {
    *
    * @var array
    */
-  protected $fields;
+  protected $fields = array();
 
   /**
    * An array of values to update to.

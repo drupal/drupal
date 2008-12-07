@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.23 2008/11/26 13:48:49 dries Exp $
+// $Id: database_test.test,v 1.24 2008/12/07 07:51:55 webchick Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -798,6 +798,21 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
     catch (Exception $e) {
       $this->assertTrue(FALSE, $e->getMessage());
     }
+  }
+
+  /**
+   * Test update with only expression values.
+   */
+  function testUpdateOnlyExpression() {
+    $before_age = db_query("SELECT age FROM {test} WHERE name = 'Ringo'")->fetchField();
+    $num_updated = db_update('test')
+      ->condition('name', 'Ringo')
+      ->expression('age', 'age + :age',array(':age' => 4))
+      ->execute();
+    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+
+    $after_age = db_query("SELECT age FROM {test} WHERE name = 'Ringo'")->fetchField();
+    $this->assertEqual($before_age + 4, $after_age, t('Age updated correctly'));
   }
 }
 
