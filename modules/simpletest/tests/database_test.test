@@ -799,6 +799,21 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
       $this->assertTrue(FALSE, $e->getMessage());
     }
   }
+
+  /**
+   * Test update with only expression values.
+   */
+  function testUpdateOnlyExpression() {
+    $before_age = db_query("SELECT age FROM {test} WHERE name = 'Ringo'")->fetchField();
+    $num_updated = db_update('test')
+      ->condition('name', 'Ringo')
+      ->expression('age', 'age + :age',array(':age' => 4))
+      ->execute();
+    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+
+    $after_age = db_query("SELECT age FROM {test} WHERE name = 'Ringo'")->fetchField();
+    $this->assertEqual($before_age + 4, $after_age, t('Age updated correctly'));
+  }
 }
 
 /**
