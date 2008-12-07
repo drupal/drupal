@@ -828,6 +828,7 @@ class DrupalWebTestCase {
     variable_set('install_profile', 'default');
     variable_set('install_task', 'profile-finished');
     variable_set('clean_url', $clean_url_original);
+    variable_set('site_mail', 'simpletest@example.com');
 
     // Use temporary files directory with the same prefix as database.
     $this->originalFileDirectory = file_directory_path();
