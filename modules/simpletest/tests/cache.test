@@ -142,7 +142,7 @@ class CacheSavingCase extends CacheTestCase {
    * Test the saving and restoring of an object.
    */
   function testObject() {
-    $test_object = new StdClass();
+    $test_object = new stdClass();
     $test_object->test1 = $this->randomName('100');
     $test_object->test2 = 100;
     $test_object->test3 = array('drupal1', 'drupal2' => 'drupal3', 'drupal4' => array('drupal5', 'drupal6'));

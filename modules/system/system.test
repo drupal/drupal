@@ -132,7 +132,7 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
    * @param array $modules Modules to check.
    * @param boolean $enabled Module state.
    */
-  function assertModules(Array $modules, $enabled) {
+  function assertModules(array $modules, $enabled) {
     module_list(TRUE);
     foreach ($modules as $module) {
       if ($enabled) {

@@ -64,7 +64,7 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
     // Create files with some php to parse - one 'new', one 'existing' so
     // we test all the important code paths in _registry_parse_files.
     foreach ($this->fileTypes as $fileType) {
-      $this->$fileType = new StdClass();
+      $this->$fileType = new stdClass();
       $this->$fileType->fileName = file_directory_path() . '/registry_test_' . md5(rand());
       $this->$fileType->functionName = 'registry_test_function' . md5(rand());
       $this->$fileType->className = 'registry_test_class' . md5(rand());

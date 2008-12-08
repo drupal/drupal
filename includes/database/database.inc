@@ -459,7 +459,7 @@ abstract class DatabaseConnection extends PDO {
    *   not be set by a user.  If there is an error, this method will return NULL
    *   and may throw an exception if $options['throw_exception'] is TRUE.
    */
-  public function query($query, Array $args = array(), $options = array()) {
+  public function query($query, array $args = array(), $options = array()) {
 
     // Use default values if not already set.
     $options += $this->defaultOptions();
@@ -522,7 +522,7 @@ abstract class DatabaseConnection extends PDO {
    * @return
    *   A new SelectQuery object.
    */
-  public function select($table, $alias = NULL, Array $options = array()) {
+  public function select($table, $alias = NULL, array $options = array()) {
     if (empty($this->selectClass)) {
       $this->selectClass = 'SelectQuery_' . $this->driver();
       if (!class_exists($this->selectClass)) {
@@ -546,7 +546,7 @@ abstract class DatabaseConnection extends PDO {
    * @return
    *   A new InsertQuery object.
    */
-  public function insert($table, Array $options = array()) {
+  public function insert($table, array $options = array()) {
     if (empty($this->insertClass)) {
       $this->insertClass = 'InsertQuery_' . $this->driver();
       if (!class_exists($this->insertClass)) {
@@ -566,7 +566,7 @@ abstract class DatabaseConnection extends PDO {
    * @return
    *   A new MergeQuery object.
    */
-  public function merge($table, Array $options = array()) {
+  public function merge($table, array $options = array()) {
     if (empty($this->mergeClass)) {
       $this->mergeClass = 'MergeQuery_' . $this->driver();
       if (!class_exists($this->mergeClass)) {
@@ -587,7 +587,7 @@ abstract class DatabaseConnection extends PDO {
    * @return
    *   A new UpdateQuery object.
    */
-  public function update($table, Array $options = array()) {
+  public function update($table, array $options = array()) {
     if (empty($this->updateClass)) {
       $this->updateClass = 'UpdateQuery_' . $this->driver();
       if (!class_exists($this->updateClass)) {
@@ -607,7 +607,7 @@ abstract class DatabaseConnection extends PDO {
    * @return
    *   A new DeleteQuery object.
    */
-  public function delete($table, Array $options = array()) {
+  public function delete($table, array $options = array()) {
     if (empty($this->deleteClass)) {
       $this->deleteClass = 'DeleteQuery_' . $this->driver();
       if (!class_exists($this->deleteClass)) {
@@ -693,7 +693,7 @@ abstract class DatabaseConnection extends PDO {
    *   A database query result resource, or NULL if the query was not executed
    *   correctly.
    */
-  abstract public function queryRange($query, Array $args, $from, $count, Array $options = array());
+  abstract public function queryRange($query, array $args, $from, $count, array $options = array());
 
   /**
    * Runs a SELECT query and stores its results in a temporary table.
@@ -721,7 +721,7 @@ abstract class DatabaseConnection extends PDO {
    *   A database query result resource, or FALSE if the query was not executed
    *   correctly.
    */
-  abstract function queryTemporary($query, Array $args, $tablename, Array $options = array());
+  abstract function queryTemporary($query, array $args, $tablename, array $options = array());
 
   /**
    * Returns the type of database driver.
@@ -1363,7 +1363,7 @@ interface DatabaseStatementInterface extends Traversable {
    * @return
    *   An array of results.
    */
-  // function fetchAll($mode = NULL, $column_index = NULL, Array $constructor_arguments);
+  // function fetchAll($mode = NULL, $column_index = NULL, array $constructor_arguments);
 
   /**
    * Returns an entire single column of a result set as an indexed array.
@@ -1625,7 +1625,7 @@ function db_query_temporary($query, $args, $tablename, $options = array()) {
  * @return
  *   A new InsertQuery object for this connection.
  */
-function db_insert($table, Array $options = array()) {
+function db_insert($table, array $options = array()) {
   if (empty($options['target']) || $options['target'] == 'slave') {
     $options['target'] = 'default';
   }
@@ -1642,7 +1642,7 @@ function db_insert($table, Array $options = array()) {
  * @return
  *   A new MergeQuery object for this connection.
  */
-function db_merge($table, Array $options = array()) {
+function db_merge($table, array $options = array()) {
   if (empty($options['target']) || $options['target'] == 'slave') {
     $options['target'] = 'default';
   }
@@ -1659,7 +1659,7 @@ function db_merge($table, Array $options = array()) {
  * @return
  *   A new UpdateQuery object for this connection.
  */
-function db_update($table, Array $options = array()) {
+function db_update($table, array $options = array()) {
   if (empty($options['target']) || $options['target'] == 'slave') {
     $options['target'] = 'default';
   }
@@ -1676,7 +1676,7 @@ function db_update($table, Array $options = array()) {
  * @return
  *   A new DeleteQuery object for this connection.
  */
-function db_delete($table, Array $options = array()) {
+function db_delete($table, array $options = array()) {
   if (empty($options['target']) || $options['target'] == 'slave') {
     $options['target'] = 'default';
   }
@@ -1695,7 +1695,7 @@ function db_delete($table, Array $options = array()) {
  * @return
  *   A new SelectQuery object for this connection.
  */
-function db_select($table, $alias = NULL, Array $options = array()) {
+function db_select($table, $alias = NULL, array $options = array()) {
   if (empty($options['target'])) {
     $options['target'] = 'default';
   }

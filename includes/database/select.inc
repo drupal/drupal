@@ -384,7 +384,7 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
    * @return
    *   The called object.
    */
-  public function fields($table_alias, Array $fields = array()) {
+  public function fields($table_alias, array $fields = array()) {
 
     if ($fields) {
       foreach ($fields as $field) {

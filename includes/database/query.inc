@@ -253,7 +253,7 @@ class InsertQuery extends Query {
    */
   protected $insertValues = array();
 
-  public function __construct($connection, $table, Array $options = array()) {
+  public function __construct($connection, $table, array $options = array()) {
     $options['return'] = Database::RETURN_INSERT_ID;
     $options += array('delay' => FALSE);
     parent::__construct($connection, $options);
@@ -279,7 +279,7 @@ class InsertQuery extends Query {
    * @return
    *   The called object.
    */
-  public function fields(Array $fields, Array $values = array()) {
+  public function fields(array $fields, array $values = array()) {
     if (empty($this->insertFields)) {
       if (empty($values)) {
         if (!is_numeric(key($fields))) {
@@ -309,7 +309,7 @@ class InsertQuery extends Query {
    * @return
    *   The called object.
    */
-  public function values(Array $values) {
+  public function values(array $values) {
     if (is_numeric(key($values))) {
       $this->insertValues[] = $values;
     }
@@ -342,7 +342,7 @@ class InsertQuery extends Query {
    * @return
    *   The called object.
    */
-  public function useDefaults(Array $fields) {
+  public function useDefaults(array $fields) {
     $this->defaultFields = $fields;
     return $this;
   }
@@ -486,7 +486,7 @@ class MergeQuery extends Query {
    */
   protected $expressionFields = array();
 
-  public function __construct($connection, $table, Array $options = array()) {
+  public function __construct($connection, $table, array $options = array()) {
     $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
     $this->table = $table;
@@ -510,7 +510,7 @@ class MergeQuery extends Query {
    * @return
    *   The called object.
    */
-  public function fields(Array $fields, Array $values = array()) {
+  public function fields(array $fields, array $values = array()) {
     if (count($values) > 0) {
       $fields = array_combine($fields, $values);
     }
@@ -544,7 +544,7 @@ class MergeQuery extends Query {
    * @return
    *   The called object.
    */
-  public function key(Array $fields, Array $values = array()) {
+  public function key(array $fields, array $values = array()) {
     if ($values) {
       $fields = array_combine($fields, $values);
     }
@@ -568,7 +568,7 @@ class MergeQuery extends Query {
    * @return
    *   The called object.
    */
-  public function update(Array $fields, Array $values = array()) {
+  public function update(array $fields, array $values = array()) {
    if ($values) {
       $fields = array_combine($fields, $values);
     }
@@ -624,7 +624,7 @@ class MergeQuery extends Query {
    * @return
    *   The called object.
    */
-  public function expression($field, $expression, Array $arguments = NULL) {
+  public function expression($field, $expression, array $arguments = NULL) {
     $this->expressionFields[$field] = array(
       'expression' => $expression,
       'arguments' => $arguments,
@@ -719,7 +719,7 @@ class DeleteQuery extends Query implements QueryConditionInterface {
    */
   protected $condition;
 
-  public function __construct(DatabaseConnection $connection, $table, Array $options = array()) {
+  public function __construct(DatabaseConnection $connection, $table, array $options = array()) {
     $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
     $this->table = $table;
@@ -824,7 +824,7 @@ class UpdateQuery extends Query implements QueryConditionInterface {
   protected $expressionFields = array();
 
 
-  public function __construct(DatabaseConnection $connection, $table, Array $options = array()) {
+  public function __construct(DatabaseConnection $connection, $table, array $options = array()) {
     $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
     $this->table = $table;
@@ -866,7 +866,7 @@ class UpdateQuery extends Query implements QueryConditionInterface {
    * @return
    *   The called object.
    */
-  public function fields(Array $fields) {
+  public function fields(array $fields) {
     $this->fields = $fields;
     return $this;
   }
@@ -888,7 +888,7 @@ class UpdateQuery extends Query implements QueryConditionInterface {
    * @return
    *   The called object.
    */
-  public function expression($field, $expression, Array $arguments = NULL) {
+  public function expression($field, $expression, array $arguments = NULL) {
     $this->expressionFields[$field] = array(
       'expression' => $expression,
       'arguments' => $arguments,

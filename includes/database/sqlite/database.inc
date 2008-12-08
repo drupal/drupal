@@ -18,7 +18,7 @@ include_once DRUPAL_ROOT . '/includes/database/prefetch.inc';
  */
 class DatabaseConnection_sqlite extends DatabaseConnection {
 
-  public function __construct(Array $connection_options = array()) {
+  public function __construct(array $connection_options = array()) {
     // We don't need a specific PDOStatement class here, we simulate it below.
     $this->statementClass = NULL;
 
@@ -99,7 +99,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
    * a DatabaseStatement_sqlite object, that will create a PDOStatement
    * using the semi-private PDOPrepare() method below.
    */
-  public function prepare($query, Array $options = array()) {
+  public function prepare($query, array $options = array()) {
     return new DatabaseStatement_sqlite($this, $query, $options);
   }
 
@@ -115,15 +115,15 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
    * DatabaseStatement_sqlite needs to call it, we have no other choice but to
    * expose this function to the world.
    */
-  public function PDOPrepare($query, Array $options = array()) {
+  public function PDOPrepare($query, array $options = array()) {
     return parent::prepare($query, $options);
   }
 
-  public function queryRange($query, Array $args, $from, $count, Array $options = array()) {
+  public function queryRange($query, array $args, $from, $count, array $options = array()) {
     return $this->query($query . ' LIMIT ' . $from . ', ' . $count, $args, $options);
   }
 
-  public function queryTemporary($query, Array $args, $tablename, Array $options = array()) {
+  public function queryTemporary($query, array $args, $tablename, array $options = array()) {
     return $this->query(preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE ' . $tablename . ' AS SELECT', $query), $args, $options);
   }
 

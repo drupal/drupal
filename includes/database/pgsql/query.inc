@@ -9,7 +9,7 @@
 
 class InsertQuery_pgsql extends InsertQuery {
 
-  public function __construct($connection, $table, Array $options = array()) {
+  public function __construct($connection, $table, array $options = array()) {
     parent::__construct($connection, $table, $options);
     $this->queryOptions['return'] = Database::RETURN_NULL;
   }

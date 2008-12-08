@@ -672,7 +672,7 @@ class DrupalWebTestCase {
    * @return
    *   Role ID of newly created role, or FALSE if role creation failed.
    */
-  protected function _drupalCreateRole(Array $permissions = NULL) {
+  protected function _drupalCreateRole(array $permissions = NULL) {
     // Generate string version of permissions list.
     if ($permissions === NULL) {
       $permissions = array('access comments', 'access content', 'post comments', 'post comments without approval');
@@ -711,7 +711,7 @@ class DrupalWebTestCase {
    * @return
    *   TRUE or FALSE depending on whether the permissions are valid.
    */
-  protected function checkPermissions(Array $permissions, $reset = FALSE) {
+  protected function checkPermissions(array $permissions, $reset = FALSE) {
     static $available;
 
     if (!isset($available) || $reset) {
@@ -1024,7 +1024,7 @@ class DrupalWebTestCase {
    * @return
    *   The retrieved HTML string, also available as $this->drupalGetContent()
    */
-  protected function drupalGet($path, Array $options = array(), Array $headers = array()) {
+  protected function drupalGet($path, array $options = array(), array $headers = array()) {
     $options['absolute'] = TRUE;
 
     // We re-using a CURL connection here.  If that connection still has certain
@@ -1075,7 +1075,7 @@ class DrupalWebTestCase {
    *   An array containing additional HTTP request headers, each formatted as
    *   "name: value".
    */
-  protected function drupalPost($path, $edit, $submit, Array $options = array(), Array $headers = array()) {
+  protected function drupalPost($path, $edit, $submit, array $options = array(), array $headers = array()) {
     $submit_matches = FALSE;
     if (isset($path)) {
       $html = $this->drupalGet($path, $options);
@@ -1170,7 +1170,7 @@ class DrupalWebTestCase {
    * @return
    *   The retrieved headers, also available as $this->drupalGetContent()
    */
-  protected function drupalHead($path, Array $options = array(), Array $headers = array()) {
+  protected function drupalHead($path, array $options = array(), array $headers = array()) {
     $options['absolute'] = TRUE;
     $out = $this->curlExec(array(CURLOPT_NOBODY => TRUE, CURLOPT_URL => url($path, $options), CURLOPT_HTTPHEADER => $headers));
     $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.
