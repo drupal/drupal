@@ -238,11 +238,6 @@ function conf_path($require_settings = TRUE, $reset = FALSE) {
 
   $confdir = 'sites';
   $uri = explode('/', $_SERVER['SCRIPT_NAME'] ? $_SERVER['SCRIPT_NAME'] : $_SERVER['SCRIPT_FILENAME']);
-  if (strpos($_SERVER['HTTP_HOST'], '/') !== FALSE) {
-    // A HTTP_HOST containing slashes may be an attack and is invalid.
-    header('HTTP/1.1 400 Bad Request');
-    exit;
-  }
   $server = explode('.', implode('.', array_reverse(explode(':', rtrim($_SERVER['HTTP_HOST'], '.')))));
   for ($i = count($uri) - 1; $i > 0; $i--) {
     for ($j = count($server); $j > 0; $j--) {
@@ -272,6 +267,21 @@ function drupal_unset_globals() {
 }
 
 /**
+ * Validate that $_SERVER['HTTP_HOST'] is safe.
+ *
+ * As $_SERVER['HTTP_HOST'] is user input, ensure it only contains characters
+ * allowed in hostnames.  See RFC 952 (and RFC 2181). $_SERVER['HTTP_HOST'] is
+ * lowercased.
+ *
+ * @return
+ *  TRUE if only containing valid characters, or FALSE otherwise.
+ */
+function drupal_valid_http_host() {
+  $_SERVER['HTTP_HOST'] = strtolower($_SERVER['HTTP_HOST']);
+  return preg_match('/^\[?(?:[a-z0-9-:\]_]+\.?)+$/', $_SERVER['HTTP_HOST']);
+}
+
+/**
  * Loads the configuration and sets the base URL, cookie domain, and
  * session name correctly.
  */
@@ -281,6 +291,12 @@ function conf_init() {
   // Export the following settings.php variables to the global namespace
   global $db_url, $db_prefix, $cookie_domain, $conf, $installed_profile, $update_free_access;
   $conf = array();
+
+  if (!drupal_valid_http_host()) {
+    // HTTP_HOST is invalid, e.g. if containing slashes it may be an attack.
+    header('HTTP/1.1 400 Bad Request');
+    exit;
+  }
 
   if (file_exists('./'. conf_path() .'/settings.php')) {
     include_once './'. conf_path() .'/settings.php';
@@ -305,9 +321,7 @@ function conf_init() {
     // Create base URL
     $base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
 
-    // As $_SERVER['HTTP_HOST'] is user input, ensure it only contains
-    // characters allowed in hostnames.
-    $base_url = $base_root .= '://'. preg_replace('/[^a-z0-9-:._]/i', '', $_SERVER['HTTP_HOST']);
+    $base_url = $base_root .= '://'. $_SERVER['HTTP_HOST'];
 
     // $_SERVER['SCRIPT_NAME'] can, in contrast to $_SERVER['PHP_SELF'], not
     // be modified by a visitor.
