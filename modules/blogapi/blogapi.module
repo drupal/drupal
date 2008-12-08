@@ -499,7 +499,7 @@ function blogapi_metaweblog_get_category_list($blogid, $username, $password) {
   $categories = array();
   if ($vocabularies) {
     foreach ($vocabularies as $vocabulary) {
-      $terms = module_invoke('taxonomy', 'get_tree', $vocabulary->vid, 0, -1);
+      $terms = module_invoke('taxonomy', 'get_tree', $vocabulary->vid);
       foreach ($terms as $term) {
         $term_name = $term->name;
         foreach (module_invoke('taxonomy', 'get_parents', $term->tid, 'tid') as $parent) {

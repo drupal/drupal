@@ -850,18 +850,18 @@ function taxonomy_get_children($tid, $vid = 0, $key = 'tid') {
  *   The term ID under which to generate the tree. If 0, generate the tree
  *   for the entire vocabulary.
  *
- * @param $depth
- *   Internal use only.
- *
  * @param $max_depth
  *   The number of levels of the tree to return. Leave NULL to return all levels.
+ *
+ * @param $depth
+ *   Internal use only.
  *
  * @return
  *   An array of all term objects in the tree. Each term object is extended
  *   to have "depth" and "parents" attributes in addition to its normal ones.
  *   Results are statically cached.
  */
-function taxonomy_get_tree($vid, $parent = 0, $depth = -1, $max_depth = NULL) {
+function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $depth = -1) {
   static $children, $parents, $terms;
 
   $depth++;
@@ -892,7 +892,7 @@ function taxonomy_get_tree($vid, $parent = 0, $depth = -1, $max_depth = NULL) {
         $tree[] = $term;
 
         if (!empty($children[$vid][$child])) {
-          $tree = array_merge($tree, taxonomy_get_tree($vid, $child, $depth, $max_depth));
+          $tree = array_merge($tree, taxonomy_get_tree($vid, $child, $max_depth, $depth));
         }
       }
     }
@@ -1279,7 +1279,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
     }
     foreach ($tids as $index => $tid) {
       $term = taxonomy_get_term_data($tid);
-      $tree = taxonomy_get_tree($term->vid, $tid, -1, $depth);
+      $tree = taxonomy_get_tree($term->vid, $tid, $depth);
       $descendant_tids[] = array_merge(array($tid), array_map('_taxonomy_get_tid_from_term', $tree));
     }
 
