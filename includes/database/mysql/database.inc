@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.10 2008/12/02 19:45:01 dries Exp $
+// $Id: database.inc,v 1.11 2008/12/08 21:41:53 dries Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@
 
 class DatabaseConnection_mysql extends DatabaseConnection {
 
-  public function __construct(Array $connection_options = array()) {
+  public function __construct(array $connection_options = array()) {
     // This driver defaults to non transaction support.
     $this->transactionSupport = !empty($connection_option['transactions']);
 
@@ -40,11 +40,11 @@ class DatabaseConnection_mysql extends DatabaseConnection {
     $this->exec('SET sql_mode=STRICT_ALL_TABLES');
   }
 
-  public function queryRange($query, Array $args, $from, $count, Array $options = array()) {
+  public function queryRange($query, array $args, $from, $count, array $options = array()) {
     return $this->query($query . ' LIMIT ' . $from . ', ' . $count, $args, $options);
   }
 
-  public function queryTemporary($query, Array $args, $tablename, Array $options = array()) {
+  public function queryTemporary($query, array $args, $tablename, array $options = array()) {
     return $this->query(preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE ' . $tablename . ' Engine=MEMORY SELECT', $query), $args, $options);
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.5 2008/11/13 21:08:16 dries Exp $
+// $Id: query.inc,v 1.6 2008/12/08 21:41:53 dries Exp $
 
 
 /**
@@ -9,7 +9,7 @@
 
 class InsertQuery_pgsql extends InsertQuery {
 
-  public function __construct($connection, $table, Array $options = array()) {
+  public function __construct($connection, $table, array $options = array()) {
     parent::__construct($connection, $table, $options);
     $this->queryOptions['return'] = Database::RETURN_NULL;
   }

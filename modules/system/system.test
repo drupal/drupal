@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.28 2008/12/05 22:18:45 dries Exp $
+// $Id: system.test,v 1.29 2008/12/08 21:41:54 dries Exp $
 
 class EnableDisableCoreTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -132,7 +132,7 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
    * @param array $modules Modules to check.
    * @param boolean $enabled Module state.
    */
-  function assertModules(Array $modules, $enabled) {
+  function assertModules(array $modules, $enabled) {
     module_list(TRUE);
     foreach ($modules as $module) {
       if ($enabled) {

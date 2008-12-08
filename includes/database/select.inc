@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.8 2008/11/08 22:52:24 dries Exp $
+// $Id: select.inc,v 1.9 2008/12/08 21:41:53 dries Exp $
 
 /**
  * @ingroup database
@@ -384,7 +384,7 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
    * @return
    *   The called object.
    */
-  public function fields($table_alias, Array $fields = array()) {
+  public function fields($table_alias, array $fields = array()) {
 
     if ($fields) {
       foreach ($fields as $field) {

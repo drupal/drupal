@@ -119,7 +119,7 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
     'column' => 0,
   );
 
-  public function __construct(DatabaseConnection $connection, $query, Array $driver_options = array()) {
+  public function __construct(DatabaseConnection $connection, $query, array $driver_options = array()) {
     $this->dbh = $connection;
     $this->queryString = $query;
     $this->driverOptions = $driver_options;
@@ -215,7 +215,7 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
    *
    * @param $query
    *   The query.
-   * @param Array $args
+   * @param array $args
    *   An array of arguments.
    * @return
    *   A PDOStatement object.
