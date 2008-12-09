@@ -53,11 +53,18 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
   protected $data = array();
 
   /**
-   * Flag indicating whether $data contains valid data.
+   * The current row, retrieved in PDO::FETCH_ASSOC format.
    *
-   * @var bool
+   * @var Array
    */
-  protected $isValid = FALSE;
+  protected $currentRow = NULL;
+
+  /**
+   * The key of the current row.
+   *
+   * @var int
+   */
+  protected $currentKey = NULL;
 
   /**
    * The list of column names in this result set.
@@ -177,11 +184,9 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
 
     if ($this->resultRowCount) {
       $this->columnNames = array_keys($this->data[0]);
-      $this->isValid = TRUE;
     }
     else {
       $this->columnNames = array();
-      $this->isValid = FALSE;
     }
 
     if (!empty($logger)) {
@@ -189,9 +194,8 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
       $logger->log($this, $args, $query_end - $query_start);
     }
 
-    // We will iterate this array so we need to make sure the array pointer is
-    // at the beginning.
-    reset($this->data);
+    // Initialize the first row in $this->currentRow.
+    $this->next();
 
     return $return;
   }
@@ -267,22 +271,23 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
    *  The current row formatted as requested.
    */
   public function current() {
-    $row = current($this->data);
-    if ($row !== FALSE) {
+    if (isset($this->currentRow)) {
       switch ($this->fetchStyle) {
         case PDO::FETCH_ASSOC:
-          return $row;
+          return $this->currentRow;
         case PDO::FETCH_BOTH:
-          return $row + array_values($row);
+          // PDO::FETCH_BOTH returns an array indexed by both the column name
+          // and the column number.
+          return $this->currentRow + array_values($this->currentRow);
         case PDO::FETCH_NUM:
-          return array_values($row);
+          return array_values($this->currentRow);
         case PDO::FETCH_LAZY:
           // We do not do lazy as everything is fetched already. Fallback to
           // PDO::FETCH_OBJ.
         case PDO::FETCH_OBJ:
-          return (object) $row;
+          return (object) $this->currentRow;
         case PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE:
-          $class_name = array_unshift($row);
+          $class_name = array_unshift($this->currentRow);
           // Deliberate no break.
         case PDO::FETCH_CLASS:
           if (!isset($class_name)) {
@@ -295,18 +300,18 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
           else {
             $result = new $class_name();
           }
-          foreach ($row as $k => $v) {
+          foreach ($this->currentRow as $k => $v) {
             $result->$k = $v;
           }
           return $result;
         case PDO::FETCH_INTO:
-          foreach ($row as $k => $v) {
+          foreach ($this->currentRow as $k => $v) {
             $this->fetchOptions['object']->$k = $v;
           }
           return $this->fetchOptions['object'];
         case PDO::FETCH_COLUMN:
           if (isset($this->columnNames[$this->fetchOptions['column']])) {
-            return $row[$k][$this->columnNames[$this->fetchOptions['column']]];
+            return $this->currentRow[$k][$this->columnNames[$this->fetchOptions['column']]];
           }
           else {
             return;
@@ -318,26 +323,26 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
   /* Implementations of Iterator. */
 
   public function key() {
-    return key($this->data);
+    return $this->currentKey;
   }
 
   public function rewind() {
-    reset($this->data);
-    if (count($this->data)) {
-      $this->isValid = TRUE;
-    }
+    // Nothing to do: our DatabaseStatement can't be rewound.
   }
 
   public function next() {
-    // We fetch rows as PDO::FETCH_ASSOC in execute(),
-    // so no element of the array can ever be FALSE.
-    if (next($this->data) === FALSE) {
-      $this->isValid = FALSE;
+    if (!empty($this->data)) {
+      $this->currentRow = reset($this->data);
+      $this->currentKey = key($this->data);
+      unset($this->data[$this->currentKey]);
+    }
+    else {
+      $this->currentRow = NULL;
     }
   }
 
   public function valid() {
-    return $this->isValid;
+    return isset($this->currentRow);
   }
 
   /* Implementations of DatabaseStatementInterface. */
@@ -347,7 +352,7 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
   }
 
   public function fetch($fetch_style = NULL, $cursor_orientation = PDO::FETCH_ORI_NEXT, $cursor_offset = NULL) {
-    if ($this->isValid) {
+    if (isset($this->currentRow)) {
       // Set the fetch parameter.
       $this->fetchStyle = isset($fetch_style) ? $fetch_style : $this->defaultFetchStyle;
       $this->fetchOptions = $this->defaultFetchOptions;
@@ -368,10 +373,9 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
   }
 
   public function fetchField($index = 0) {
-    if ($this->isValid && isset($this->columnNames[$index])) {
+    if (isset($this->currentRow) && isset($this->columnNames[$index])) {
       // We grab the value directly from $this->data, and format it.
-      $current = current($this->data);
-      $return = $current[$this->columnNames[$index]];
+      $return = $this->currentRow[$this->columnNames[$index]];
       $this->next();
       return $return;
     }
@@ -381,10 +385,10 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
   }
 
   public function fetchObject($class_name = NULL, $constructor_args = array()) {
-    if ($this->isValid) {
+    if (isset($this->currentRow)) {
       if (!isset($class_name)) {
         // Directly cast to an object to avoid a function call.
-        $result = (object) current($this->data);
+        $result = (object) $this->currentRow;
       }
       else {
         $this->fetchStyle = PDO::FETCH_CLASS;
@@ -406,8 +410,8 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
   }
 
   public function fetchAssoc() {
-    if ($this->isValid) {
-      $result = current($this->data);
+    if (isset($this->currentRow)) {
+      $result = $this->currentRow;
       $this->next();
       return $result;
     }
@@ -428,7 +432,7 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
 
     $result = array();
     // Traverse the array as PHP would have done.
-    while ($this->isValid) {
+    while (isset($this->currentRow)) {
       // Grab the row in the format specified above.
       $result[] = $this->current();
       $this->next();
@@ -445,9 +449,8 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
       $column = $this->columnNames[$index];
       $result = array();
       // Traverse the array as PHP would have done.
-      while ($this->isValid) {
-        $current = current($this->data);
-        $result[] = $current[$this->columnNames[$index]];
+      while (isset($this->currentRow)) {
+        $result[] = $this->currentRow[$this->columnNames[$index]];
         $this->next();
       }
       return $result;
@@ -466,9 +469,8 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
 
     $result = array();
     // Traverse the array as PHP would have done.
-    while ($this->isValid) {
-      $row = current($this->data);
-      $result[$row[$key]] = $row[$value];
+    while (isset($this->currentRow)) {
+      $result[$this->currentRow[$key]] = $this->currentRow[$value];
       $this->next();
     }
     return $result;
@@ -480,12 +482,12 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
 
     $result = array();
     // Traverse the array as PHP would have done.
-    while ($this->isValid) {
+    while (isset($this->currentRow)) {
       // Grab the row in its raw PDO::FETCH_ASSOC format.
-      $row = current($this->data);
+      $row = $this->currentRow;
       // Grab the row in the format specified above.
       $result_row = $this->current();
-      $result[$row[$key]] = $result_row;
+      $result[$this->currentRow[$key]] = $result_row;
       $this->next();
     }
 

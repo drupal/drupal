@@ -246,21 +246,27 @@ class DatabaseStatement_sqlite extends DatabaseStatementPrefetch implements Iter
       }
     }
     if ($rename_columns) {
+      // DatabaseStatementPrefetch already extracted the first row,
+      // put it back into the result set.
+      if (isset($this->currentRow)) {
+        $this->data[0] = &$this->currentRow;
+      }
+
+      // Then rename all the columns across the result set.
       foreach ($this->data as $k => $row) {
         foreach ($rename_columns as $old_column => $new_column) {
           $this->data[$k][$new_column] = $this->data[$k][$old_column];
           unset($this->data[$k][$old_column]);
         }
       }
-    }
 
-    // We will iterate this array so we need to make sure the array pointer is
-    // at the beginning.
-    reset($this->data);
+      // Finally, extract the first row again.
+      $this->currentRow = $this->data[0];
+      unset($this->data[0]);
+    }
 
     return $return;
   }
-
 }
 
 /**
