@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.232 2008/11/23 16:00:06 webchick Exp $
+// $Id: locale.module,v 1.233 2008/12/09 11:36:03 dries Exp $
 
 /**
  * @file
@@ -597,9 +597,6 @@ function locale_block($op = 'list', $delta = '') {
     }
 
     // Allow modules to provide translations for specific links.
-    // A translation link may need to point to a different path or use
-    // a translated link text before going through l(), which will just
-    // handle the path aliases.
     drupal_alter('translation_link', $links, $path);
 
     $block['subject'] = t('Languages');

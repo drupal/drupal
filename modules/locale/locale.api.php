@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.api.php,v 1.1 2008/11/25 02:37:32 webchick Exp $
+// $Id: locale.api.php,v 1.2 2008/12/09 11:36:03 dries Exp $
 
 /**
  * @file
@@ -21,6 +21,29 @@ function hook_locale($op = 'groups') {
   switch ($op) {
     case 'groups':
       return array('custom' => t('Custom'));
+  }
+}
+
+/**
+ * Perform alterations on translation links.
+ *
+ * A translation link may need to point to a different path or use a translated
+ * link text before going through l(), which will just handle the path aliases.
+ *
+ * @param $links
+ *   Nested array of links keyed by language code.
+ * @param $path
+ *   The current path.
+ * @return
+ *   None.
+ */
+function hook_translation_link_alter(array &$links, $path) {
+  global $language;
+
+  if (isset($links[$language])) {
+    foreach ($links[$language] as $link) {
+      $link['attributes']['class'] .= ' active-language';
+    }
   }
 }
 
