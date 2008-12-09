@@ -4,8 +4,8 @@
 class LocaleTestCase extends DrupalWebTestCase {
   function getInfo() {
     return array(
-      'name' => t('String translate'),
-      'description' => 'Adds a new locale and translates its name',
+      'name' => t('String translate and validate'),
+      'description' => 'Adds a new locale and translates its name.  Checks the validation of translation strings.',
       'group' => 'Locale',
     );
   }
@@ -110,6 +110,67 @@ class LocaleTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/build/translate/search', $search, t('Search'));
     $this->assertNoText($name, 'Search now can not find the name');
   }
+
+  function testLocaleStringTest() {
+    global $base_url;
+
+    // User to add  language and strings
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'translate interface'));
+    $this->drupalLogin($admin_user);
+    $langcode = str_replace('simpletest_', 'si-', $this->randomName(6));
+    // The English name for the language. This will be translated.
+    $name = $this->randomName(16);
+    // The native name for the language.
+    $native = $this->randomName(16);
+    // The domain prefix. Not tested yet.
+    $prefix = strtolower(str_replace('si-', '', $langcode));
+    // This is the language indicator on the translation search screen for
+    // untranslated strings. Copied straight from locale.inc.
+    $language_indicator = "<em class=\"locale-untranslated\">$langcode</em> ";
+    // These will be the invalid translations of $name.
+    $key = $this->randomName(16);
+    $bad_translations[$key] = "<script>alert('xss');</script>" . $key;
+    $key = $this->randomName(16);
+    $bad_translations[$key] = '<img SRC="javascript:alert(\'xss\');">' . $key;
+    $key = $this->randomName(16);
+    $bad_translations[$key] = '<<SCRIPT>alert("xss");//<</SCRIPT>' . $key;
+    $key = $this->randomName(16);
+    $bad_translations[$key] ="<BODY ONLOAD=alert('xss')>" . $key;
+
+    // Add language.
+    $edit = array (
+      'langcode' => $langcode,
+      'name' => $name,
+      'native' => $native,
+      'prefix' => $prefix,
+      'direction' => '0',
+    );
+    $this->drupalPost('admin/settings/language/add', $edit, t('Add custom language'));
+    // Add string.
+    t($name, array(), $langcode);
+    // Reset locale cache.
+    $search = array (
+      'string' => $name,
+      'language' => 'all',
+      'translation' => 'all',
+      'group' => 'all',
+    );
+    $this->drupalPost('admin/build/translate/search', $search, t('Search'));
+    // Find the edit path
+    $content = $this->drupalGetContent();
+    $this->assertTrue(preg_match('@(admin/build/translate/edit/[0-9]+)@', $content, $matches), t('Found the edit path'));
+    $path = $matches[0];
+    foreach ($bad_translations as $key => $translation) {
+      $edit = array (
+        "translations[$langcode]" => $translation,
+      );
+      $this->drupalPost($path, $edit, t('Save translations'));
+      // Check for a form error on the textarea.
+      $form_class = $this->xpath('//form[@id="locale-translate-edit-form"]//textarea/@class');
+      $this->assertNotIdentical(FALSE, strpos($form_class[0], 'error'), t('The string was rejected as unsafe.'));
+      $this->assertNoText(t('The string has been saved.'), t('The string was not saved.'));
+    }
+  }
 }
 
 /**
@@ -154,6 +215,20 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
 
     // The importation should have create 7 strings.
     $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 7, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported'));
+
+    // Try importing a .po file with script.
+    $name = tempnam(file_directory_temp(), "po_");
+    file_put_contents($name, $this->getBadPoFile());
+    $this->drupalPost('admin/build/translate/import', array(
+      'langcode' => 'fr',
+      'files[file]' => $name,
+    ), t('Import'));
+    unlink($name);
+    // The importation should have created 1 string and rejected 2.
+    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
+    $skip_message = format_plural(2, 'One translation string was skipped because it contains disallowed HTML.', '@count translation strings were skipped because they contain disallowed HTML.');
+    $this->assertRaw($skip_message, t('Unsafe strings were skipped.'));
+
   }
 
   /**
@@ -189,6 +264,31 @@ msgstr "samedi"
 
 msgid "Sunday"
 msgstr "dimanche"
+EOF;
+  }
+
+  /**
+   * Helper function that returns a proper .po file.
+   */
+  function getBadPoFile() {
+    return <<< EOF
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 6\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
+
+msgid "Save configuration"
+msgstr "Enregistrer la configuration"
+
+msgid "edit"
+msgstr "modifier<img SRC="javascript:alert(\'xss\');">"
+
+msgid "delete"
+msgstr "supprimer<script>alert('xss');</script>"
+
 EOF;
   }
 }
