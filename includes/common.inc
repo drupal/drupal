@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.835 2008/12/07 08:23:07 webchick Exp $
+// $Id: common.inc,v 1.836 2008/12/09 11:09:26 dries Exp $
 
 /**
  * @file
@@ -731,12 +731,16 @@ function _drupal_log_error($error, $fatal = FALSE) {
 
   // When running inside the testing framework, we relay the errors
   // to the tested site by the way of HTTP headers.
-  if (preg_match("/^simpletest\d+/", $_SERVER['HTTP_USER_AGENT']) && !headers_sent() && !defined('SIMPLETEST_DONT_COLLECT_ERRORS')) {
+  if (preg_match("/^simpletest\d+/", $_SERVER['HTTP_USER_AGENT']) && !headers_sent() && (!defined('SIMPLETEST_COLLECT_ERRORS') || SIMPLETEST_COLLECT_ERRORS)) {
     static $number = 0;
     $assertion = array(
       $error['%message'],
       $error['%type'],
-      $error['%function'],
+      array(
+        'function' => $error['%function'],
+        'file' => $error['%file'],
+        'line' => $error['%line'],
+      ),
     );
     header('X-Drupal-Assertion-' . $number . ': ' . rawurlencode(serialize($assertion)));
     $number++;

@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.70 2008/12/08 21:41:53 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.71 2008/12/09 11:09:26 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -128,15 +128,15 @@ class DrupalWebTestCase {
    * @param $message
    *   The message string.
    * @param $group
-   *   WHich group this assert belongs to.
+   *   Which group this assert belongs to.
    * @param $caller
-   *   By default, the assert comes from a function which names start with
+   *   By default, the assert comes from a function whose name starts with
    *   'test'. Instead, you can specify where this assert originates from
    *   by passing in an associative array as $caller. Key 'file' is
    *   the name of the source file, 'line' is the line number and 'function'
    *   is the caller function itself.
    */
-  private function assert($status, $message = '', $group = 'Other', $caller = NULL) {
+  private function assert($status, $message = '', $group = 'Other', array $caller = NULL) {
     global $db_prefix;
 
     // Convert boolean status to string status.
@@ -374,7 +374,7 @@ class DrupalWebTestCase {
    * @return
    *   FALSE.
    */
-  protected function error($message = '', $group = 'Other', $caller = NULL) {
+  protected function error($message = '', $group = 'Other', array $caller = NULL) {
     return $this->assert('exception', $message, $group, $caller);
   }
 
