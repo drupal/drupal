@@ -1,5 +1,5 @@
 <?php
-// $Id: system_test.module,v 1.6 2008/11/22 13:33:00 dries Exp $
+// $Id: system_test.module,v 1.7 2008/12/09 07:16:10 dries Exp $
 
 /**
  * Implementation of hook_menu().
@@ -147,6 +147,16 @@ function system_test_modules_uninstalled($modules) {
  */
 function system_test_boot() {
   watchdog('system_test', 'hook_boot');
+}
+
+/**
+ * Implementation of hook_init().
+ */
+function system_test_init() {
+  // Used by FrontPageTestCase to get the results of drupal_is_front_page().
+  if (variable_get('front_page_output', 0) && drupal_is_front_page()) {
+    drupal_set_message(t('On front page.'));
+  }
 }
 
 /**
