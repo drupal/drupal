@@ -212,6 +212,7 @@ function drupal_set_title($title = NULL, $output = CHECK_PLAIN) {
   if (isset($title)) {
     $stored_title = ($output == PASS_THROUGH) ? $title : check_plain($title);
   }
+
   return $stored_title;
 }
 
@@ -222,9 +223,15 @@ function drupal_set_title($title = NULL, $output = CHECK_PLAIN) {
  *   Boolean value: TRUE if the current page is the front page; FALSE if otherwise.
  */
 function drupal_is_front_page() {
-  // As drupal_init_path updates $_GET['q'] with the 'site_frontpage' path,
-  // we can check it against the 'site_frontpage' variable.
-  return $_GET['q'] == drupal_get_normal_path(variable_get('site_frontpage', 'node'));
+  static $is_front_page;
+
+  if (!isset($is_front_page)) {
+    // As drupal_init_path updates $_GET['q'] with the 'site_frontpage' path,
+    // we can check it against the 'site_frontpage' variable.
+    $is_front_page = ($_GET['q'] == drupal_get_normal_path(variable_get('site_frontpage', 'node')));
+  }
+
+  return $is_front_page;
 }
 
 /**
