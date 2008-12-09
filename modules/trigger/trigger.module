@@ -204,7 +204,7 @@ function _trigger_normalize_node_context($type, $node) {
  *
  * @TODO: Take advantage of the new API and reorganise/remove this function.
  */
-function _trigger_nodeapi(&$node, $op, $a3, $a4) {
+function _trigger_nodeapi($node, $op, $a3 = NULL, $a4 = NULL) {
   // Keep objects for reuse so that changes actions make to objects can persist.
   static $objects;
   // Prevent recursion by tracking which operations have already been called.
@@ -245,36 +245,36 @@ function _trigger_nodeapi(&$node, $op, $a3, $a4) {
 /**
  * Implementation of hook_nodeapi_view().
  */
-function trigger_nodeapi_view(&$node, $a3, $a4) {
-  _trigger_nodeapi($node, 'view', $a3, $a4);
+function trigger_nodeapi_view($node, $teaser, $page) {
+  _trigger_nodeapi($node, 'view', $teaser, $page);
 }
 
 /**
  * Implementation of hook_nodeapi_update().
  */
-function trigger_nodeapi_update(&$node, $a3, $a4) {
-  _trigger_nodeapi($node, 'update', $a3, $a4);
+function trigger_nodeapi_update($node) {
+  _trigger_nodeapi($node, 'update');
 }
 
 /**
  * Implementation of hook_nodeapi_presave().
  */
-function trigger_nodeapi_presave(&$node, $a3, $a4) {
-  _trigger_nodeapi($node, 'presave', $a3, $a4);
+function trigger_nodeapi_presave($node) {
+  _trigger_nodeapi($node, 'presave');
 }
 
 /**
  * Implementation of hook_nodeapi_insert().
  */
-function trigger_nodeapi_insert(&$node, $a3, $a4) {
-  _trigger_nodeapi($node, 'insert', $a3, $a4);
+function trigger_nodeapi_insert($node) {
+  _trigger_nodeapi($node, 'insert');
 }
 
 /**
  * Implementation of hook_nodeapi_delete().
  */
-function trigger_nodeapi_delete(&$node, $a3, $a4) {
-  _trigger_nodeapi($node, 'delete', $a3, $a4);
+function trigger_nodeapi_delete($node) {
+  _trigger_nodeapi($node, 'delete');
 }
 
 /**

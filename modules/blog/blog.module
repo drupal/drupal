@@ -72,7 +72,7 @@ function blog_help($path, $arg) {
 /**
  * Implementation of hook_form().
  */
-function blog_form(&$node) {
+function blog_form($node, $form_state) {
   global $nid;
   $type = node_get_types('type', $node);
 
@@ -84,7 +84,7 @@ function blog_form(&$node) {
 /**
  * Implementation of hook_view().
  */
-function blog_view($node, $teaser = FALSE, $page = FALSE) {
+function blog_view($node, $teaser, $page) {
   if ($page) {
     // Breadcrumb navigation.
     drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('Blogs'), 'blog'), l(t("!name's blog", array('!name' => $node->name)), 'blog/' . $node->uid)));

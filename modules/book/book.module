@@ -718,7 +718,7 @@ function book_nodeapi_load($nodes, $types) {
 /**
  * Implementation of hook_nodeapi_view().
  */
-function book_nodeapi_view(&$node, $teaser, $page) {
+function book_nodeapi_view($node, $teaser, $page) {
   if (!$teaser) {
     if (!empty($node->book['bid']) && $node->build_mode == NODE_BUILD_NORMAL) {
       $node->content['book_navigation'] = array(
@@ -737,7 +737,7 @@ function book_nodeapi_view(&$node, $teaser, $page) {
 /**
  * Implementation of hook_nodeapi_presave().
  */
-function book_nodeapi_presave(&$node, $teaser, $page) {
+function book_nodeapi_presave($node) {
   // Always save a revision for non-administrators.
   if (!empty($node->book['bid']) && !user_access('administer nodes')) {
     $node->revision = 1;
@@ -751,7 +751,7 @@ function book_nodeapi_presave(&$node, $teaser, $page) {
 /**
  * Implementation of hook_nodeapi_insert().
  */
-function book_nodeapi_insert(&$node, $teaser, $page) {
+function book_nodeapi_insert($node) {
   if (!empty($node->book['bid'])) {
     if ($node->book['bid'] == 'new') {
       // New nodes that are their own book.
@@ -766,7 +766,7 @@ function book_nodeapi_insert(&$node, $teaser, $page) {
 /**
  * Implementation of hook_nodeapi_update().
  */
-function book_nodeapi_update(&$node, $teaser, $page) {
+function book_nodeapi_update($node) {
   if (!empty($node->book['bid'])) {
     if ($node->book['bid'] == 'new') {
       // New nodes that are their own book.
@@ -781,7 +781,7 @@ function book_nodeapi_update(&$node, $teaser, $page) {
 /**
  * Implementation of hook_nodeapi_delete().
  */
-function book_nodeapi_delete(&$node, $teaser, $page) {
+function book_nodeapi_delete($node) {
   if (!empty($node->book['bid'])) {
     if ($node->nid == $node->book['bid']) {
       // Handle deletion of a top-level post.
@@ -804,7 +804,7 @@ function book_nodeapi_delete(&$node, $teaser, $page) {
 /**
  * Implementation of hook_nodeapi_prepare().
  */
-function book_nodeapi_prepare(&$node, $teaser, $page) {
+function book_nodeapi_prepare($node) {
   // Prepare defaults for the add/edit form.
   if (empty($node->book) && (user_access('add content to books') || user_access('administer book outlines'))) {
     $node->book = array();

@@ -183,7 +183,7 @@ function _forum_nodeapi_check_node_type($node, $vocabulary) {
 /**
  * Implementation of hook_nodeapi_view().
  */
-function forum_nodeapi_view(&$node, $teaser, $page) {
+function forum_nodeapi_view($node, $teaser, $page) {
   $vid = variable_get('forum_nav_vocabulary', '');
   $vocabulary = taxonomy_vocabulary_load($vid);
   if (_forum_nodeapi_check_node_type($node, $vocabulary)) {
@@ -221,7 +221,7 @@ function forum_nodeapi_view(&$node, $teaser, $page) {
 /**
  * Implementation of hook_nodeapi_prepare().
  */
-function forum_nodeapi_prepare(&$node, $teaser, $page) {
+function forum_nodeapi_prepare($node) {
   $vid = variable_get('forum_nav_vocabulary', '');
   $vocabulary = taxonomy_vocabulary_load($vid);
   if (_forum_nodeapi_check_node_type($node, $vocabulary)) {
@@ -238,7 +238,7 @@ function forum_nodeapi_prepare(&$node, $teaser, $page) {
  *
  * Check in particular that only a "leaf" term in the associated taxonomy.
  */
-function forum_nodeapi_validate(&$node, $teaser, $page) {
+function forum_nodeapi_validate($node, $form) {
   $vid = variable_get('forum_nav_vocabulary', '');
   $vocabulary = taxonomy_vocabulary_load($vid);
   if (_forum_nodeapi_check_node_type($node, $vocabulary)) {
@@ -264,7 +264,7 @@ function forum_nodeapi_validate(&$node, $teaser, $page) {
  *
  * Assign forum taxonomy when adding a topic from within a forum.
  */
-function forum_nodeapi_presave(&$node, $teaser, $page) {
+function forum_nodeapi_presave($node) {
   $vid = variable_get('forum_nav_vocabulary', '');
   $vocabulary = taxonomy_vocabulary_load($vid);
   if (_forum_nodeapi_check_node_type($node, $vocabulary)) {
@@ -293,7 +293,7 @@ function forum_nodeapi_presave(&$node, $teaser, $page) {
 /**
  * Implementation of hook_nodeapi_update().
  */
-function forum_nodeapi_update(&$node, $teaser, $page) {
+function forum_nodeapi_update($node) {
   $vid = variable_get('forum_nav_vocabulary', '');
   $vocabulary = taxonomy_vocabulary_load($vid);
   if (_forum_nodeapi_check_node_type($node, $vocabulary)) {
@@ -317,7 +317,7 @@ function forum_nodeapi_update(&$node, $teaser, $page) {
 /**
  * Implementation of hook_nodeapi_insert().
  */
-function forum_nodeapi_insert(&$node, $teaser, $page) {
+function forum_nodeapi_insert($node) {
   $vid = variable_get('forum_nav_vocabulary', '');
   $vocabulary = taxonomy_vocabulary_load($vid);
   if (_forum_nodeapi_check_node_type($node, $vocabulary)) {
@@ -330,7 +330,7 @@ function forum_nodeapi_insert(&$node, $teaser, $page) {
 /**
  * Implementation of hook_nodeapi_delete().
  */
-function forum_nodeapi_delete(&$node, $teaser, $page) {
+function forum_nodeapi_delete($node) {
   $vid = variable_get('forum_nav_vocabulary', '');
   $vocabulary = taxonomy_vocabulary_load($vid);
   if (_forum_nodeapi_check_node_type($node, $vocabulary)) {

@@ -155,6 +155,70 @@ function hook_node_operations() {
 }
 
 /**
+ * Fiter, substitute or otherwise alter the $node's raw text.
+ *
+ * The $node->content array has been rendered, so the node body or
+ * teaser is filtered and now contains HTML. This hook should only be 
+ * used when text substitution, filtering, or other raw text operations 
+ * are necessary.
+ * 
+ * @param $node
+ *   The node the action is being performed on.
+ * @param $teaser
+ *   The $teaser parameter from node_view().
+ * @param $page
+ *   The $page parameter from node_view().
+ * @return
+ *   None.
+ */
+function hook_nodeapi_alter($node, $teaser, $page) {
+}
+
+/**
+ * Act on node deletion.
+ *
+ * @param $node
+ *   The node that is being deleted.
+ * @return
+ *   None.
+ */
+function hook_nodeapi_delete($node) {
+  db_query('DELETE FROM {mytable} WHERE nid = %d', $node->nid);
+}
+
+/**
+ * A revision of the node is deleted.
+ *
+ * You can delete data associated with that revision.
+ *
+ * @param $node
+ *   The node the action is being performed on.
+ * @return
+ *   None.
+ */
+function hook_nodeapi_delete_revision($node) {
+  db_delete('upload')->condition('vid', $node->vid)->execute();
+  if (!is_array($node->files)) {
+    return;
+  }
+  foreach ($node->files as $file) {
+    file_delete($file);
+  }
+}
+
+/**
+ * The node being created (inserted in the database).
+ *
+ * @param $node
+ *   The node the action is being performed on.
+ * @return
+ *   None.
+ */
+function hook_nodeapi_insert($node) {
+  db_query("INSERT INTO {mytable} (nid, extra) VALUES (%d, '%s')", $node->nid, $node->extra);
+}
+
+/**
  * Act on node objects when loaded.
  *
  * This hook allows you to add information to node objects when loaded from
@@ -188,100 +252,163 @@ function hook_nodeapi_load($nodes, $types) {
 }
 
 /**
- * Act on nodes defined by other modules.
+ * The node is about to be shown on the add/edit form.
  *
- * Despite what its name might make you think, hook_nodeapi() is not
- * reserved for node modules. On the contrary, it allows modules to react
- * to actions affecting all kinds of nodes, regardless of whether that
- * module defined the node.
- *
- * It is common to find hook_nodeapi() used in conjunction with
- * hook_form_alter(). Modules use hook_form_alter() to place additional form
- * elements onto the node edit form, and hook_nodeapi() is used to read and
- * write those values to and from the database.
- *
- * @param &$node
+ * @param $node
  *   The node the action is being performed on.
- * @param $op
- *   What kind of action is being performed. Possible values:
- *   - "alter": the $node->content array has been rendered, so the node body or
- *     teaser is filtered and now contains HTML. This op should only be used when
- *     text substitution, filtering, or other raw text operations are necessary.
- *   - "delete": The node is being deleted.
- *   - "delete_revision": The revision of the node is deleted. You can delete data
- *     associated with that revision.
- *   - "insert": The node is being created (inserted in the database).
- *   - "load": The node is about to be loaded from the database. This hook
- *     can be used to load additional data at this time.
- *   - "prepare": The node is about to be shown on the add/edit form.
- *   - "prepare_translation": The node is being cloned for translation. Load
- *     additional data or copy values from $node->translation_source.
- *   - "print": Prepare a node view for printing. Used for printer-friendly
- *     view in book_module
- *   - "rss_item": An RSS feed is generated. The module can return properties
- *     to be added to the RSS item generated for this node. See comment_nodeapi()
- *     and upload_nodeapi() for examples. The $node passed can also be modified
- *     to add or remove contents to the feed item.
- *   - "search_result": The node is displayed as a search result. If you
- *     want to display extra information with the result, return it.
- *   - "presave": The node passed validation and is about to be saved. Modules may
- *      use this to make changes to the node before it is saved to the database.
- *   - "update": The node is being updated.
- *   - "update_index": The node is being indexed. If you want additional
- *     information to be indexed which is not already visible through
- *     nodeapi "view", then you should return it here.
- *   - "validate": The user has just finished editing the node and is
- *     trying to preview or submit it. This hook can be used to check
- *     the node data. Errors should be set with form_set_error().
- *   - "view": The node content is being assembled before rendering. The module
- *     may add elements $node->content prior to rendering. This hook will be
- *     called after hook_view().  The format of $node->content is the same as
- *     used by Forms API.
- * @param $a3
- *   - For "view", passes in the $teaser parameter from node_view().
- *   - For "validate", passes in the $form parameter from node_validate().
- * @param $a4
- *   - For "view", passes in the $page parameter from node_view().
  * @return
- *   This varies depending on the operation.
- *   - The "presave", "insert", "update", "delete", "print" and "view"
- *     operations have no return value.
- *   - The "load" operation should return an array containing pairs
- *     of fields => values to be merged into the node object.
- *
- * If you are writing a node module, do not use this hook to perform
- * actions on your type of node alone. Instead, use the hooks set aside
- * for node modules, such as hook_insert() and hook_form(). That said, for
- * some operations, such as "delete_revision" or "rss_item" there is no
- * corresponding hook so even the module defining the node will need to
- * implement hook_nodeapi().
+ *   None.
  */
-function hook_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
-  switch ($op) {
-    case 'presave':
-      if ($node->nid && $node->moderate) {
-        // Reset votes when node is updated:
-        $node->score = 0;
-        $node->users = '';
-        $node->votes = 0;
-      }
-      break;
-    case 'insert':
-    case 'update':
-      if ($node->moderate && user_access('access submission queue')) {
-        drupal_set_message(t('The post is queued for approval'));
-      }
-      elseif ($node->moderate) {
-        drupal_set_message(t('The post is queued for approval. The editors will decide whether it should be published.'));
-      }
-      break;
-    case 'view':
-      $node->content['my_additional_field'] = array(
-        '#value' => theme('mymodule_my_additional_field', $additional_field),
-        '#weight' => 10,
-      );
-      break;
+function hook_nodeapi_prepare($node) {
+  if (!isset($node->comment)) {
+    $node->comment = variable_get("comment_$node->type", COMMENT_NODE_READ_WRITE);
   }
+}
+
+/**
+ * The node is being cloned for translation.
+ *
+ * This hook can be used to load additional data or copy values from
+ * $node->translation_source.
+ *
+ * @param $node
+ *   The node the action is being performed on.
+ * @return
+ *   None.
+ */
+function hook_nodeapi_prepare_translation($node) {
+}
+
+/**
+ * An RSS feed is being generated.
+ *
+ * The module can return properties to be added to the RSS item generated for
+ * this node. See comment_nodeapi_rss_item() and upload_nodeapi_rss_item() for
+ * examples. The $node passed can also be modified to add or remove contents to
+ * the feed item.
+ *
+ * @param $node
+ *   The node the action is being performed on.
+ * @return
+ *   Extra information to be added to the RSS item.
+ */
+function hook_nodeapi_rss_item($node) {
+  if ($node->comment != COMMENT_NODE_DISABLED) {
+    return array(array('key' => 'comments', 'value' => url('node/' . $node->nid, array('fragment' => 'comments', 'absolute' => TRUE))));
+  }
+  else {
+    return array();
+  }
+}
+
+/**
+ * The node is being displayed as a search result. 
+ *
+ * If you want to display extra information with the result, return it.
+ *
+ * @param $node
+ *   The node the action is being performed on.
+ * @return
+ *   Extra information to be displayed with search result.
+ */
+function hook_nodeapi_search_result($node) {
+  $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
+  return format_plural($comments, '1 comment', '@count comments');
+}
+
+/**
+ * The node passed validation and is about to be saved.
+ *
+ * Modules may make changes to the node before it is saved to the database.
+ *
+ * @param $node
+ *   The node the action is being performed on.
+ * @return
+ *   None.
+ */
+function hook_nodeapi_presave($node) {
+  if ($node->nid && $node->moderate) {
+    // Reset votes when node is updated:
+    $node->score = 0;
+    $node->users = '';
+    $node->votes = 0;
+  }
+}
+
+/**
+ * The node being updated.
+ *
+ * @param $node
+ *   The node the action is being performed on.
+ * @return
+ *   None.
+ */
+function hook_nodeapi_update($node) {
+  db_query("UPDATE {mytable} SET extra = '%s' WHERE nid = %d", $node->extra, $node->nid);
+}
+
+/**
+ * The node is being indexed.
+ *
+ * If you want additional information to be indexed which is not already
+ * visible through nodeapi "view", then you should return it here.
+ *
+ * @param $node
+ *   The node the action is being performed on.
+ * @return
+ *   Array of additional information to be indexed.
+ */
+function hook_nodeapi_update_index($node) {
+  $text = '';
+  $comments = db_query('SELECT subject, comment, format FROM {comment} WHERE nid = :nid AND status = :status', array(':nid' => $node->nid, ':status' => COMMENT_PUBLISHED));
+  foreach ($comments as $comment) {
+    $text .= '<h2>' . check_plain($comment->subject) . '</h2>' . check_markup($comment->comment, $comment->format, FALSE);
+  }
+  return $text;
+}
+
+/**
+ * The user has finished editing the node and is trying to preview or submit it. 
+ *
+ * This hook can be used to check the node data. Errors should be set with 
+ * form_set_error().
+ *
+ * @param $node
+ *   The node the action is being performed on.
+ * @param $form
+ *   The $form parameter from node_validate().
+ * @return
+ *   None.
+ */
+function hook_nodeapi_validate($node, $form) {
+  if (isset($node->end) && isset($node->start)) {
+    if ($node->start > $node->end) {
+      form_set_error('time', t('An event may not end before it starts.'));
+    }
+  }
+}
+
+/**
+ * The node content is being assembled before rendering. 
+ *
+ * The module may add elements $node->content prior to rendering. This hook 
+ * will be called after hook_view(). The format of $node->content is the 
+ * same as used by Forms API.
+ *
+ * @param $node
+ *   The node the action is being performed on.
+ * @param $teaser
+ *   The $teaser parameter from node_view().
+ * @param $page
+ *   The $page parameter from node_view().
+ * @return
+ *   None.
+ */
+function hook_nodeapi_view($node, $teaser, $page) {
+  $node->content['my_additional_field'] = array(
+    '#value' => theme('mymodule_my_additional_field', $additional_field),
+    '#weight' => 10,
+  );
 }
 
 /**

@@ -186,7 +186,7 @@ function translation_link($type, $node = NULL, $teaser = FALSE) {
 /**
  * Implementation of hook_nodeapi_prepare().
  */
-function translation_nodeapi_prepare(&$node, $teaser, $page) {
+function translation_nodeapi_prepare($node) {
   // Only act if we are dealing with a content type supporting translations.
   if (translation_supported_type($node->type)) {
     if (empty($node->nid) && isset($_GET['translation']) && isset($_GET['language']) &&
@@ -207,7 +207,7 @@ function translation_nodeapi_prepare(&$node, $teaser, $page) {
 /**
  * Implementation of hook_nodeapi_insert().
  */
-function translation_nodeapi_insert(&$node, $teaser, $page) {
+function translation_nodeapi_insert($node) {
   // Only act if we are dealing with a content type supporting translations.
   if (translation_supported_type($node->type)) {
     if (!empty($node->translation_source)) {
@@ -228,7 +228,7 @@ function translation_nodeapi_insert(&$node, $teaser, $page) {
 /**
  * Implementation of hook_nodeapi_update().
  */
-function translation_nodeapi_update(&$node, $teaser, $page) {
+function translation_nodeapi_update($node) {
   // Only act if we are dealing with a content type supporting translations.
   if (translation_supported_type($node->type)) {
     if (isset($node->translation) && $node->translation && !empty($node->language) && $node->tnid) {
@@ -245,7 +245,7 @@ function translation_nodeapi_update(&$node, $teaser, $page) {
 /**
  * Implementation of hook_nodeapi_delete().
  */
-function translation_nodeapi_delete(&$node, $teaser, $page) {
+function translation_nodeapi_delete($node) {
   // Only act if we are dealing with a content type supporting translations.
   if (translation_supported_type($node->type)) {
     translation_remove_from_set($node);

@@ -1367,7 +1367,7 @@ function taxonomy_nodeapi_load($nodes) {
 /**
  * Implementation of hook_nodeapi_insert().
  */
-function taxonomy_nodeapi_insert($node, $arg = 0) {
+function taxonomy_nodeapi_insert($node) {
   if (!empty($node->taxonomy)) {
     taxonomy_node_save($node, $node->taxonomy);
   }
@@ -1376,7 +1376,7 @@ function taxonomy_nodeapi_insert($node, $arg = 0) {
 /**
  * Implementation of hook_nodeapi_update().
  */
-function taxonomy_nodeapi_update($node, $arg = 0) {
+function taxonomy_nodeapi_update($node) {
   if (!empty($node->taxonomy)) {
     taxonomy_node_save($node, $node->taxonomy);
   }
@@ -1385,42 +1385,42 @@ function taxonomy_nodeapi_update($node, $arg = 0) {
 /**
  * Implementation of hook_nodeapi_delete().
  */
-function taxonomy_nodeapi_delete($node, $arg = 0) {
+function taxonomy_nodeapi_delete($node) {
   taxonomy_node_delete($node);
 }
 
 /**
  * Implementation of hook_nodeapi_delete_revision().
  */
-function taxonomy_nodeapi_delete_revision($node, $arg = 0) {
+function taxonomy_nodeapi_delete_revision($node) {
   taxonomy_node_delete_revision($node);
 }
 
 /**
  * Implementation of hook_nodeapi_validate().
  */
-function taxonomy_nodeapi_validate($node, $arg = 0) {
+function taxonomy_nodeapi_validate($node, $form) {
   taxonomy_node_validate($node);
 }
 
 /**
  * Implementation of hook_nodeapi_rss_item().
  */
-function taxonomy_nodeapi_rss_item($node, $arg = 0) {
+function taxonomy_nodeapi_rss_item($node) {
   return taxonomy_rss_item($node);
 }
 
 /**
  * Implementation of hook_nodeapi_update_index().
  */
-function taxonomy_nodeapi_update_index($node, $arg = 0) {
+function taxonomy_nodeapi_update_index($node) {
   return taxonomy_node_update_index($node);
 }
 
 /**
  * Implementation of hook_nodeapi('update_index').
  */
-function taxonomy_node_update_index(&$node) {
+function taxonomy_node_update_index($node) {
   $output = array();
   foreach ($node->taxonomy as $term) {
     $output[] = $term->name;

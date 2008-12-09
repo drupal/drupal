@@ -120,7 +120,7 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
 /**
  * Implementation of hook_nodeapi_validate().
  */
-function path_nodeapi_validate(&$node, $arg) {
+function path_nodeapi_validate($node, $form) {
   if (user_access('create url aliases') || user_access('administer url aliases')) {
     if (isset($node->path)) {
       $language = isset($node->language) ? $node->language : '';
@@ -149,7 +149,7 @@ function path_nodeapi_load($nodes, $types) {
 /**
  * Implementation of hook_nodeapi_insert().
  */
-function path_nodeapi_insert(&$node, $arg) {
+function path_nodeapi_insert($node) {
   if (user_access('create url aliases') || user_access('administer url aliases')) {
     $language = isset($node->language) ? $node->language : '';
     // Don't try to insert if path is NULL. We may have already set
@@ -163,7 +163,7 @@ function path_nodeapi_insert(&$node, $arg) {
 /**
  * Implementation of hook_nodeapi_update().
  */
-function path_nodeapi_update(&$node, $arg) {
+function path_nodeapi_update($node) {
   if (user_access('create url aliases') || user_access('administer url aliases')) {
     $language = isset($node->language) ? $node->language : '';
     path_set_alias('node/' . $node->nid, isset($node->path) ? $node->path : NULL, isset($node->pid) ? $node->pid : NULL, $language);
@@ -173,7 +173,7 @@ function path_nodeapi_update(&$node, $arg) {
 /**
  * Implementation of hook_nodeapi_delete().
  */
-function path_nodeapi_delete(&$node, $arg) {
+function path_nodeapi_delete($node) {
   if (user_access('create url aliases') || user_access('administer url aliases')) {
     $language = isset($node->language) ? $node->language : '';
     $path = 'node/' . $node->nid;

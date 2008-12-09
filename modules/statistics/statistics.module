@@ -325,7 +325,7 @@ function _statistics_format_item($title, $path) {
 /**
  * Implementation of hook_nodeapi_delete().
  */
-function statistics_nodeapi_delete(&$node, $arg = 0) {
+function statistics_nodeapi_delete($node) {
   // clean up statistics table when node is deleted
   db_query('DELETE FROM {node_counter} WHERE nid = %d', $node->nid);
 }

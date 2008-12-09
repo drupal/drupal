@@ -425,7 +425,7 @@ function poll_node_form_submit(&$form, &$form_state) {
 /**
  * Implementation of hook_validate().
  */
-function poll_validate($node) {
+function poll_validate($node, $form) {
   if (isset($node->title)) {
     // Check for at least two options and validate amount of votes:
     $realchoices = 0;
