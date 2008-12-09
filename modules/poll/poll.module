@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.279 2008/12/05 22:18:45 dries Exp $
+// $Id: poll.module,v 1.280 2008/12/09 11:30:24 dries Exp $
 
 /**
  * @file
@@ -425,7 +425,7 @@ function poll_node_form_submit(&$form, &$form_state) {
 /**
  * Implementation of hook_validate().
  */
-function poll_validate($node) {
+function poll_validate($node, $form) {
   if (isset($node->title)) {
     // Check for at least two options and validate amount of votes:
     $realchoices = 0;
