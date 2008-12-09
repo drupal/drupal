@@ -25,5 +25,28 @@ function hook_locale($op = 'groups') {
 }
 
 /**
+ * Perform alterations on translation links.
+ *
+ * A translation link may need to point to a different path or use a translated
+ * link text before going through l(), which will just handle the path aliases.
+ *
+ * @param $links
+ *   Nested array of links keyed by language code.
+ * @param $path
+ *   The current path.
+ * @return
+ *   None.
+ */
+function hook_translation_link_alter(array &$links, $path) {
+  global $language;
+
+  if (isset($links[$language])) {
+    foreach ($links[$language] as $link) {
+      $link['attributes']['class'] .= ' active-language';
+    }
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

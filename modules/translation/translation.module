@@ -335,11 +335,11 @@ function translation_path_get_translations($path) {
 }
 
 /**
- * Implementation of hook_alter_translation_link().
+ * Implementation of hook_translation_link_alter().
  *
  * Replaces links with pointers to translated versions of the content.
  */
-function translation_translation_link_alter(&$links, $path) {
+function translation_translation_link_alter(array &$links, $path) {
   if ($paths = translation_path_get_translations($path)) {
     foreach ($links as $langcode => $link) {
       if (isset($paths[$langcode])) {
@@ -353,4 +353,3 @@ function translation_translation_link_alter(&$links, $path) {
     }
   }
 }
-

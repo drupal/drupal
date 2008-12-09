@@ -397,21 +397,22 @@ function hook_link($type, $object, $teaser = FALSE) {
 }
 
 /**
- * Perform alterations before links on a node are rendered. One popular use of
- * this hook is to add/delete links from other modules.
+ * Perform alterations before links on a node are rendered.
+ *
+ * One popular use of this hook is to add/delete links from other modules.
  *
  * @param $links
- *   Nested array of links for the node
+ *   Nested array of links for the node keyed by providing module.
  * @param $node
- *   A node object for editing links on
+ *   A node object that contains the links.
  * @return
  *   None.
  */
-function hook_link_alter(&$links, $node) {
-  foreach ($links AS $module => $link) {
+function hook_link_alter(array &$links, $node) {
+  foreach ($links as $module => $link) {
     if (strstr($module, 'taxonomy_term')) {
       // Link back to the forum and not the taxonomy term page
-      $links[$module]['#href'] = str_replace('taxonomy/term', 'forum', $link['#href']);
+      $links[$module]['href'] = str_replace('taxonomy/term', 'forum', $link['href']);
     }
   }
 }
