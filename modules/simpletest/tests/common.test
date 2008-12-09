@@ -287,7 +287,7 @@ class DrupalSetContentTestCase extends DrupalWebTestCase {
   function getInfo() {
     return array(
       'name' => t('Drupal set/get content'),
-      'description' => t("Performs tests on setting and retrieiving content from theme regions."),
+      'description' => t('Performs tests on setting and retrieiving content from theme regions.'),
       'group' => t('System')
     );
   }
@@ -338,7 +338,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
   function getInfo() {
     return array(
       'name' => t('JavaScript'),
-      'description' => t("Tests the JavaScript system."),
+      'description' => t('Tests the JavaScript system.'),
       'group' => t('System')
     );
   }
@@ -479,7 +479,7 @@ class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
   function getInfo() {
     return array(
       'name' => t('Drupal error handlers'),
-      'description' => t("Performs tests on the Drupal error and exception handler."),
+      'description' => t('Performs tests on the Drupal error and exception handler.'),
       'group' => t('System'),
     );
   }
@@ -519,5 +519,77 @@ class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
     $this->assertText($file, t("Found '%file' in error page.", array('%file' => $file)));
     $this->assertText($function, t("Found '%function' in error page.", array('%function' => $function)));
     $this->assertText($message, t("Found '%message' in error page.", array('%message' => $message)));
+  }
+}
+
+/**
+ * Tests Simpletest error and exception collecter.
+ */
+class DrupalErrorCollectionUnitTest extends DrupalWebTestCase {
+
+  /**
+   * Errors triggered during the test.
+   *
+   * Errors are intercepted by the overriden implementation
+   * of DrupalWebTestCase::error below.
+   *
+   * @var Array
+   */
+  protected $collectedErrors = array();
+
+  function getInfo() {
+    return array(
+      'name' => t('SimpleTest error collecter'),
+      'description' => t('Performs tests on the Simpletest error and exception collecter.'),
+      'group' => t('SimpleTest'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('system_test');
+  }
+
+  /**
+   * Test that simpletest collects errors from the tested site.
+   */
+  function testErrorCollect() {
+    $this->collectedErrors = array();
+    $this->drupalGet('system-test/generate-warnings-with-report');
+
+    $this->assertEqual(count($this->collectedErrors), 3, t('Three errors were collected'));
+
+    if (count($this->collectedErrors) == 3) {
+      $this->assertError($this->collectedErrors[0], 'Notice', 'system_test_generate_warnings()', 'system_test.module', 'Undefined variable: bananas');
+      $this->assertError($this->collectedErrors[1], 'Warning', 'system_test_generate_warnings()', 'system_test.module', 'Division by zero');
+      $this->assertError($this->collectedErrors[2], 'User notice', 'system_test_generate_warnings()', 'system_test.module', 'Drupal is awesome');
+    }
+    else {
+      // Give back the errors to the log report.
+      foreach ($this->collectedErrors as $error) {
+        parent::error($error['message'], $error['group'], $error['caller']);
+      }
+    }
+  }
+
+  protected function error($message = '', $group = 'Other', array $caller = NULL) {
+    // This function overiddes DrupalWebTestCase::error(). We collect an error...
+    $this->collectedErrors[] = array(
+      'message' => $message,
+      'group' => $group,
+      'caller' => $caller
+    );
+    // ... and ignore it.
+  }
+
+  /**
+   * Assert that a collected error matches what we are expecting.
+   */
+  function assertError($error, $group, $function, $file, $message = NULL) {
+    $this->assertEqual($error['group'], $group, t("Group was %group", array('%group' => $group)));
+    $this->assertEqual($error['caller']['function'], $function, t("Function was %function", array('%function' => $function)));
+    $this->assertEqual(basename($error['caller']['file']), $file, t("File was %file", array('%file' => $file)));
+    if (isset($message)) {
+      $this->assertEqual($error['message'], $message, t("Message was %message", array('%message' => $message)));
+    }
   }
 }
