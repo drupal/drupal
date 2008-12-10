@@ -499,9 +499,8 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   $request = $method .' '. $path ." HTTP/1.0\r\n";
   $request .= implode("\r\n", $defaults);
   $request .= "\r\n\r\n";
-  if ($data) {
-    $request .= $data ."\r\n";
-  }
+  $request .= $data;
+
   $result->request = $request;
 
   fwrite($fp, $request);
