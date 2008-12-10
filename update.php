@@ -562,10 +562,11 @@ function update_finished_page($success) {
 
 function update_info_page() {
   drupal_set_title('Drupal database update');
+  $link = 'update.php?op=selection&token='. drupal_get_token('update');
   $output = "<ol>\n";
   $output .= "<li>Use this script to <strong>upgrade an existing Drupal installation</strong>. You don't need this script when installing Drupal from scratch.</li>";
   $output .= "<li>Before doing anything, backup your database. This process will change your database and its values, and some things might get lost.</li>\n";
-  $output .= "<li>Update your Drupal sources, check the notes below and <a href=\"update.php?op=selection\">run the database upgrade script</a>. Don't upgrade your database twice as it may cause problems.</li>\n";
+  $output .= "<li>Update your Drupal sources, check the notes below and <a href=\"$link\">run the database upgrade script</a>. Don't upgrade your database twice as it may cause problems.</li>\n";
   $output .= "<li>Go through the various administration pages to change the existing and new settings to your liking.</li>\n";
   $output .= "</ol>";
   $output .= '<p>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>';
@@ -793,10 +794,6 @@ if (($access_check == FALSE) || ($user->uid == 1)) {
 
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
   switch ($op) {
-    case 'Update':
-      $output = update_update_page();
-      break;
-
     case 'finished':
       $output = update_finished_page(TRUE);
       break;
@@ -813,10 +810,18 @@ if (($access_check == FALSE) || ($user->uid == 1)) {
       $output = update_progress_page_nojs();
       break;
 
+    case 'Update':
+      if ($_GET['token'] == drupal_get_token('update')) {
+        $output = update_update_page();
+        break;
+      }
+      // If the token did not match we just display the default page.
     case 'selection':
-      $output = update_selection_page();
-      break;
-
+      if ($_GET['token'] == drupal_get_token('update')) {
+        $output = update_selection_page();
+        break;
+      }
+      // If the token did not match we just display the default page.
     default:
       $output = update_info_page();
       break;

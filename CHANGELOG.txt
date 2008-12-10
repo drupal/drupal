@@ -1,7 +1,10 @@
 // $Id$
 
-Drupal 5.13-dev, xxxx-xx-xx (development version)
+Drupal 5.13, 2008-12-10
 -----------------------
+- fixed a variety of small bugs.
+- fixed security issues, (Cross site request forgery and Cross site scripting), see SA-2008-073
+- updated robots.txt and .htaccess to match current file use.
 
 Drupal 5.12, 2008-10-22
 -----------------------
