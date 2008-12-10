@@ -664,7 +664,7 @@ function locale_translate_import_form_submit($form, &$form_state) {
   }
   else {
     drupal_set_message(t('File to import not found.'), 'error');
-    return 'admin/build/translate/import';
+    $form_state['redirect'] = 'admin/build/translate/import';
   }
 
   $form_state['redirect'] = 'admin/build/translate';
@@ -825,7 +825,38 @@ function locale_translate_edit_form(&$form_state, $lid) {
 }
 
 /**
+ * Check that a string is safe to be added or imported as a translation.
+ *
+ * This test can be used to detect possibly bad translation strings. It should
+ * not have any false positives. But it is only a test, not a transformation,
+ * as it destroys valid HTML. We cannot reliably filter translation strings
+ * on inport becuase some strings are irreversibly corrupted. For example,
+ * a &amp; in the translation would get encoded to &amp;amp; by filter_xss()
+ * before being put in the database, and thus would be displayed incorrectly.
+ *
+ * The allowed tag list is like filter_xss_admin(), but omitting div and img as
+ * not needed for translation and likely to cause layout issues (div) or a
+ * possible attack vector (img).
+ */
+function locale_string_is_safe($string) {
+  return decode_entities($string) == decode_entities(filter_xss($string, array('a', 'abbr', 'acronym', 'address', 'b', 'bdo', 'big', 'blockquote', 'br', 'caption', 'cite', 'code', 'col', 'colgroup', 'dd', 'del', 'dfn', 'dl', 'dt', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'ins', 'kbd', 'li', 'ol', 'p', 'pre', 'q', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr', 'tt', 'ul', 'var')));
+}
+
+/**
+ * Validate string editing form submissions.
+ */
+function locale_translate_edit_form_validate($form, &$form_state) {
+  foreach ($form_state['values']['translations'] as $key => $value) {
+    if (!locale_string_is_safe($value)) {
+      form_set_error('translations', t('The submitted string contains disallowed HTML: %string', array('%string' => $value)));
+      watchdog('locale', 'Attempted submission of a translation string with disallowed HTML: %string', array('%string' => $value), WATCHDOG_WARNING);
+    }
+  }
+}
+
+/**
  * Process string editing form submissions.
+ *
  * Saves all translations of one string submitted from a form.
  */
 function locale_translate_edit_form_submit($form, &$form_state) {
@@ -1003,7 +1034,7 @@ function _locale_import_po($file, $langcode, $mode, $group = NULL) {
   }
 
   // Get status information on import process.
-  list($headerdone, $additions, $updates, $deletes) = _locale_import_one_string('db-report');
+  list($headerdone, $additions, $updates, $deletes, $skips) = _locale_import_one_string('db-report');
 
   if (!$headerdone) {
     drupal_set_message(t('The translation file %filename appears to have a missing or malformed header.', array('%filename' => $file->filename)), 'error');
@@ -1018,6 +1049,11 @@ function _locale_import_po($file, $langcode, $mode, $group = NULL) {
 
   drupal_set_message(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => $additions, '%update' => $updates, '%delete' => $deletes)));
   watchdog('locale', 'Imported %file into %locale: %number new strings added, %update updated and %delete removed.', array('%file' => $file->filename, '%locale' => $langcode, '%number' => $additions, '%update' => $updates, '%delete' => $deletes));
+  if ($skips) {
+    $skip_message = format_plural($skips, 'One translation string was skipped because it contains disallowed HTML.', '@count translation strings were skipped because they contain disallowed HTML.');
+    drupal_set_message($skip_message);
+    watchdog('locale', $skip_message, NULL, WATCHDOG_WARNING);
+  }
   return TRUE;
 }
 
@@ -1207,7 +1243,7 @@ function _locale_import_message($message, $file, $lineno = NULL) {
  *   Text group to import PO file into (eg. 'default' for interface translations)
  */
 function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NULL, $file = NULL, $group = 'default') {
-  static $report = array(0, 0, 0);
+  static $report = array('additions' => 0, 'updates' => 0, 'deletes' => 0, 'skips' => 0);
   static $headerdone = FALSE;
   static $strings = array();
 
@@ -1223,7 +1259,7 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
 
     // Called at end of import to inform the user
     case 'db-report':
-      return array($headerdone, $report[0], $report[1], $report[2]);
+      return array($headerdone, $report['additions'], $report['updates'], $report['deletes'], $report['skips']);
 
     // Store the string we got in the database.
     case 'db-store':
@@ -1302,19 +1338,24 @@ function _locale_import_one_string_db(&$report, $langcode, $source, $translation
   $lid = db_result(db_query("SELECT lid FROM {locales_source} WHERE source = '%s' AND textgroup = '%s'", $source, $textgroup));
 
   if (!empty($translation)) {
-    if ($lid) {
+     // Skip this string unless it passes a check for dangerous code.
+     if (!locale_string_is_safe($translation)) {
+       $report['skips']++;
+       $lid = 0;
+     }
+     elseif ($lid) {
       // We have this source string saved already.
       db_query("UPDATE {locales_source} SET location = '%s' WHERE lid = %d", $location, $lid);
       $exists = (bool) db_result(db_query("SELECT lid FROM {locales_target} WHERE lid = %d AND language = '%s'", $lid, $langcode));
       if (!$exists) {
         // No translation in this language.
         db_query("INSERT INTO {locales_target} (lid, language, translation, plid, plural) VALUES (%d, '%s', '%s', %d, %d)", $lid, $langcode, $translation, $plid, $plural);
-        $report[0]++;
+        $report['additions']++;
       }
       else if ($mode == LOCALE_IMPORT_OVERWRITE) {
         // Translation exists, only overwrite if instructed.
         db_query("UPDATE {locales_target} SET translation = '%s', plid = %d, plural = %d WHERE language = '%s' AND lid = %d", $translation, $plid, $plural, $langcode, $lid);
-        $report[1]++;
+        $report['updates']++;
       }
     }
     else {
@@ -1322,13 +1363,13 @@ function _locale_import_one_string_db(&$report, $langcode, $source, $translation
       db_query("INSERT INTO {locales_source} (location, source, textgroup) VALUES ('%s', '%s', '%s')", $location, $source, $textgroup);
       $lid = db_result(db_query("SELECT lid FROM {locales_source} WHERE source = '%s' AND textgroup = '%s'", $source, $textgroup));
       db_query("INSERT INTO {locales_target} (lid, language, translation, plid, plural) VALUES (%d, '%s', '%s', %d, %d)", $lid, $langcode, $translation, $plid, $plural);
-      $report[0]++;
+      $report['additions']++;
     }
   }
   elseif ($mode == LOCALE_IMPORT_OVERWRITE) {
     // Empty translation, remove existing if instructed.
     db_query("DELETE FROM {locales_target} WHERE language = '%s' AND lid = %d AND plid = %d AND plural = %d", $translation, $langcode, $lid, $plid, $plural);
-    $report[2]++;
+    $report['deletes']++;
   }
 
   return $lid;
