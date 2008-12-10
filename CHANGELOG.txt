@@ -1,5 +1,8 @@
 // $Id$
 
+Drupal 6.8-dev, xxxx-xx-xx (development release)
+----------------------
+
 Drupal 6.7, 2008-12-10
 ----------------------
 - Fixed security issues, (Cross site request forgery and Cross site scripting), see SA-2008-073
