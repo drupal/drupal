@@ -1,5 +1,8 @@
 // $Id$
 
+Drupal 6.9-dev, xxxx-xx-xx (development release)
+----------------------
+
 Drupal 6.8, 2008-12-11
 ----------------------
 - Removed a previous change incompatible with PHP 5.1.x and lower.
