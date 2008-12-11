@@ -38,7 +38,7 @@ class HelpTestCase extends DrupalWebTestCase {
     $this->verifyHelp();
 
     // Login the regular user.
-    $user = $this->drupalLogin($this->any_user);
+    $this->drupalLogin($this->any_user);
     $this->verifyHelp(403);
   }
 

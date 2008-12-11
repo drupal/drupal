@@ -37,7 +37,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->verifyReports();
 
     // Login the regular user.
-    $user = $this->drupalLogin($this->any_user);
+    $this->drupalLogin($this->any_user);
     $this->verifyReports(403);
   }
 

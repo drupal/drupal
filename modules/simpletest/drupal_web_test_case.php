@@ -729,23 +729,15 @@ class DrupalWebTestCase {
   }
 
   /**
-   * Logs in a user with the internal browser. If already logged in then logs the current
-   * user out before logging in the specified user. If no user is specified then a new
-   * user will be created and logged in.
+   * Logs in a user with the internal browser. If a user is already logged in,
+   * then the current user is logged out before logging in the specified user.
    *
    * @param $user
    *   User object representing the user to login.
-   * @return
-   *   User that was logged in. Useful if no user was passed in order to retrieve
-   *   the created user.
    */
-  protected function drupalLogin($user = NULL) {
+  protected function drupalLogin(stdClass $user) {
     if ($this->isLoggedIn) {
       $this->drupalLogout();
-    }
-
-    if (!isset($user)) {
-      $user = $this->_drupalCreateRole();
     }
 
     $edit = array(
@@ -759,8 +751,6 @@ class DrupalWebTestCase {
     $pass = $pass && $this->assertNoText(t('The name %name is a reserved username.', array('%name' => $user->name)), t('No reserved message at login page'), t('User login'));
 
     $this->isLoggedIn = $pass;
-
-    return $user;
   }
 
   /*
@@ -838,10 +828,10 @@ class DrupalWebTestCase {
   }
 
   /**
-   * This method is called by DrupalWebTestCase::setUp, and preloads the 
-   * registry from the testing site to cut down on the time it takes to 
-   * setup the a clean environment for the current test run. 
-   */ 
+   * This method is called by DrupalWebTestCase::setUp, and preloads the
+   * registry from the testing site to cut down on the time it takes to
+   * setup a clean environment for the current test run.
+   */
   protected function preloadRegistry() {
     db_query('INSERT INTO {registry} SELECT * FROM ' . $this->originalPrefix . 'registry');
     db_query('INSERT INTO {registry_file} SELECT * FROM ' . $this->originalPrefix . 'registry_file');
