@@ -97,10 +97,6 @@ function sess_regenerate() {
     setcookie(session_name(), '', time() - 42000, '/');
   }
 
-  extract(session_get_cookie_params());
-  // Set "httponly" to TRUE to reduce the risk of session stealing via XSS.
-  // This has no effect for PHP < 5.2.0.
-  session_set_cookie_params($lifetime, $path, $domain, $secure, TRUE);
   session_regenerate_id();
 
   db_query("UPDATE {sessions} SET sid = '%s' WHERE sid = '%s'", session_id(), $old_session_id);
