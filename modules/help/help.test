@@ -1,5 +1,5 @@
 <?php
-// $Id: help.test,v 1.3 2008/11/25 13:14:27 dries Exp $
+// $Id: help.test,v 1.4 2008/12/11 20:35:37 dries Exp $
 
 class HelpTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -38,7 +38,7 @@ class HelpTestCase extends DrupalWebTestCase {
     $this->verifyHelp();
 
     // Login the regular user.
-    $user = $this->drupalLogin($this->any_user);
+    $this->drupalLogin($this->any_user);
     $this->verifyHelp(403);
   }
 
