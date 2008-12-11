@@ -46,6 +46,7 @@ class SimpleTestTestCase extends DrupalWebTestCase {
       $this->drupalGet('node');
       $this->assertTrue($this->drupalGetHeader('Date'), t('An HTTP header was received.'));
       $this->assertTitle(variable_get('site_name', 'Drupal'), t('Site title matches.'));
+      $this->assertNoTitle('Foo', t('Site title does not match.'));
       // Make sure that we are locked out of the installer when prefixing
       // using the user-agent header. This is an important security check.
       global $base_url;
