@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.71 2008/12/09 11:09:26 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.72 2008/12/11 20:11:40 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -1705,7 +1705,23 @@ class DrupalWebTestCase {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertTitle($title, $message, $group = 'Other') {
-    return $this->assert($this->xpath('//title[text()="' . $title . '"]') !== FALSE, $message, $group);
+    return $this->assertTrue($this->xpath('//title[text()="' . $title . '"]'), $message, $group);
+  }
+
+  /**
+   * Pass if the page title is not the given string.
+   *
+   * @param $title
+   *   The string the title should not be.
+   * @param $message
+   *   Message to display.
+   * @param $group
+   *   The group this message belongs to.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertNoTitle($title, $message, $group = 'Other') {
+    return $this->assertFalse($this->xpath('//title[text()="' . $title . '"]'), $message, $group);
   }
 
   /**
