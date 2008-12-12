@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.836 2008/12/09 11:09:26 dries Exp $
+// $Id: common.inc,v 1.837 2008/12/12 16:07:13 dries Exp $
 
 /**
  * @file
@@ -531,15 +531,12 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   }
 
   foreach ($headers as $header => $value) {
-    $defaults[$header] = $header . ': ' . $value;
+    $defaults[$header] = $header . ': ' . trim($value);
   }
 
   $request = $method . ' ' . $path . " HTTP/1.0\r\n";
   $request .= implode("\r\n", $defaults);
-  $request .= "\r\n\r\n";
-  if ($data) {
-    $request .= $data . "\r\n";
-  }
+  $request .= "\r\n\r\n" . $data;
   $result->request = $request;
 
   fwrite($fp, $request);
