@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.10 2008/12/05 22:18:45 dries Exp $
+// $Id: node.test,v 1.11 2008/12/12 16:18:31 dries Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -392,7 +392,7 @@ class PagePreviewTestCase extends DrupalWebTestCase {
     $this->drupalPost('node/add/page', $edit, t('Preview'));
 
     // Check that the preview is displaying the title and body.
-    $this->assertTitle(t('Preview'), t('Page title is preview.'));
+    $this->assertTitle(t('Preview | Drupal'), t('Page title is preview.'));
     $this->assertText($edit['title'], t('Title displayed.'));
     $this->assertText($edit['body'], t('Body displayed.'));
 
