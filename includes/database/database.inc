@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.33 2008/12/08 21:41:53 dries Exp $
+// $Id: database.inc,v 1.34 2008/12/12 16:21:58 dries Exp $
 
 /**
  * @file
@@ -1687,7 +1687,8 @@ function db_delete($table, array $options = array()) {
  * Returns a new SelectQuery object for the active database.
  *
  * @param $table
- *   The base table for this query.
+ *   The base table for this query.  May be a string or another SelectQuery
+ *   object.  If a query object is passed, it will be used as a subselect.
  * @param $alias
  *   The alias for the base table of this query.
  * @param $options

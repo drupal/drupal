@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.25 2008/12/08 22:02:45 dries Exp $
+// $Id: database_test.test,v 1.26 2008/12/12 16:21:58 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -1096,6 +1096,72 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
     $this->assertEqual($record->name, 'George', t('Name field has the correct value.'));
     $this->assertEqual($record->age, 27, t('Age field has the correct value.'));
     $this->assertEqual($record->job, 'Singer', t('Job field has the correct value.'));
+  }
+}
+
+/**
+ * Test case for subselects in a dynamic SELECT query.
+ */
+class DatabaseSelectSubqueryTestCase extends DatabaseTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => t('Select tests, subqueries'),
+      'description' => t('Test the Select query builder.'),
+      'group' => t('Database'),
+    );
+  }
+
+  /**
+   * Test that we can use a subquery in a FROM clause.
+   */
+  function testFromSubquerySelect() {
+    // Create a subquery, which is just a normal query object.
+    $subquery = db_select('test_task', 'tt');
+    $subquery->addField('tt', 'pid', 'pid');
+    $subquery->addField('tt', 'task', 'task');
+    $subquery->condition('priority', 1);
+
+    // Create another query that joins against the virtual table resulting
+    // from the subquery.
+    $select = db_select($subquery, 'tt2');
+    $select->join('test', 't', 't.id=tt2.pid');
+    $select->addField('t', 'name');
+
+    $select->condition('task', 'code');
+
+    // The resulting query should be equivalent to:
+    // SELECT t.name
+    // FROM (SELECT tt.pid AS pid, tt.task AS task FROM test_task tt WHERE priority=1) tt
+    //   INNER JOIN test t ON t.id=tt.pid
+    // WHERE tt.task = 'code'
+    $people = $select->execute()->fetchCol();
+
+    $this->assertEqual(count($people), 1, t('Returned the correct number of rows.'));
+  }
+
+  /**
+   * Test that we can use a subquery in a JOIN clause.
+   */
+  function testJoinSubquerySelect() {
+    // Create a subquery, which is just a normal query object.
+    $subquery = db_select('test_task', 'tt');
+    $subquery->addField('tt', 'pid', 'pid');
+    $subquery->condition('priority', 1);
+
+    // Create another query that joins against the virtual table resulting
+    // from the subquery.
+    $select = db_select('test', 't');
+    $select->join($subquery, 'tt', 't.id=tt.pid');
+    $select->addField('t', 'name');
+
+    // The resulting query should be equivalent to:
+    // SELECT t.name
+    // FROM test t
+    //   INNER JOIN (SELECT tt.pid AS pid FROM test_task tt WHERE priority=1) tt ON t.id=tt.pid
+    $people = $select->execute()->fetchCol();
+
+    $this->assertEqual(count($people), 2, t('Returned the correct number of rows.'));
   }
 }
 
