@@ -33,12 +33,15 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
    *
    * array(
    *   'type' => $join_type (one of INNER, LEFT OUTER, RIGHT OUTER),
-   *   'table' => $name_of_table,
+   *   'table' => $table,
    *   'alias' => $alias_of_the_table,
    *   'condition' => $condition_clause_on_which_to_join,
    *   'arguments' => $array_of_arguments_for_placeholders_in_the condition.
    *   'all_fields' => TRUE to SELECT $alias.*, FALSE or NULL otherwise.
    * )
+   *
+   * If $table is a string, it is taken as the name of a table.  If it is
+   * a SelectQuery object, it is taken as a subquery.
    *
    * @var array
    */
@@ -262,7 +265,8 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
   /**
    * Compiles and returns an associative array of the arguments for this prepared statement.
    *
-   * @return array
+   * @return
+   *   An associative array of all placeholder arguments for this query.
    */
   public function getArguments() {
     $this->where->compile($this->connection);
@@ -271,6 +275,10 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
     foreach ($this->tables as $table) {
       if ($table['arguments']) {
         $args += $table['arguments'];
+      }
+      // If this table is a subquery, grab its arguments recursively.
+      if ($table['table'] instanceof SelectQuery) {
+        $args += $table['table']->getArguments();
       }
     }
     foreach ($this->expressions as $expression) {
@@ -285,19 +293,7 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
   public function execute() {
     drupal_alter('query', $this);
 
-    $this->where->compile($this->connection);
-    $this->having->compile($this->connection);
-    $args = $this->where->arguments() + $this->having->arguments();
-    foreach ($this->tables as $table) {
-      if ($table['arguments']) {
-        $args += $table['arguments'];
-      }
-    }
-    foreach ($this->expressions as $expression) {
-      if ($expression['arguments']) {
-        $args += $expression['arguments'];
-      }
-    }
+    $args = $this->getArguments();
 
     if (!empty($this->range)) {
       return $this->connection->queryRange((string)$this, $args, $this->range['start'], $this->range['length'], $this->queryOptions);
@@ -548,8 +544,11 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
    * In some cases, that may include dipping into the Schema API to find the necessary
    * fields on which to join.
    *
+   * @param $type
+   *   The type of join.  Typically one one of INNER, LEFT OUTER, and RIGHT OUTER.
    * @param $table
-   *   The table against which to join.
+   *   The table against which to join.  May be a string or another SelectQuery
+   *   object.  If a query object is passed, it will be used as a subselect.
    * @param $alias
    *   The alias for the table.  In most cases this should be the first letter
    *   of the table, or the first letter of each "word" in the table.  If omitted,
@@ -568,7 +567,12 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
   public function addJoin($type, $table, $alias = NULL, $condition = NULL, $arguments = array()) {
 
     if (empty($alias)) {
-      $alias = $table;
+      if ($table instanceof SelectQuery) {
+        $alias = 'subquery';
+      }
+      else {
+        $alias = $table;
+      }
     }
 
     $alias_candidate = $alias;
@@ -699,9 +703,19 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
       if (isset($table['join type'])) {
         $query .= $table['join type'] . ' JOIN ';
       }
+
+      // If the table is a subquery, compile it and integrate it into this query.
+      if ($table['table'] instanceof SelectQuery) {
+        $table_string = '(' . (string)$table['table'] .')';
+      }
+      else {
+        $table_string = '{' . $this->connection->escapeTable($table['table']) . '}';
+      }
+
       // Don't use the AS keyword for table aliases, as some
       // databases don't support it (e.g., Oracle).
-      $query .= '{' . $this->connection->escapeTable($table['table']) . '} ' . $table['alias'];
+      $query .=  $table_string . ' ' . $table['alias'];
+
       if (!empty($table['condition'])) {
         $query .= ' ON ' . $table['condition'];
       }

@@ -59,3 +59,4 @@ function database_test_db_query_temporary() {
   print db_query('SELECT COUNT(*) FROM temporary')->fetchField();
   exit;
 }
+

@@ -1687,7 +1687,8 @@ function db_delete($table, array $options = array()) {
  * Returns a new SelectQuery object for the active database.
  *
  * @param $table
- *   The base table for this query.
+ *   The base table for this query.  May be a string or another SelectQuery
+ *   object.  If a query object is passed, it will be used as a subselect.
  * @param $alias
  *   The alias for the base table of this query.
  * @param $options
