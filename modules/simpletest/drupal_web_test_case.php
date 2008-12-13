@@ -1754,7 +1754,7 @@ class DrupalWebTestCase {
               }
             }
           }
-          elseif (isset($field[0]) && $field[0] == $value) {
+          elseif ((string) $field == $value) {
             // Text area with correct text.
             $found = TRUE;
           }
