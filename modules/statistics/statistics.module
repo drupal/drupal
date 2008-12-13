@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.288 2008/12/09 11:30:25 dries Exp $
+// $Id: statistics.module,v 1.289 2008/12/13 13:52:40 dries Exp $
 
 /**
  * @file
@@ -73,7 +73,7 @@ function statistics_exit() {
       'hostname' => ip_address(),
       'uid' => $user->uid,
       'sid' => session_id(),
-      'timer' => timer_read('page'),
+      'timer' => (int) timer_read('page'),
       'timestamp' => REQUEST_TIME,
     ))->execute();
   }
