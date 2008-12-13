@@ -677,19 +677,6 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
 }
 
 /**
- * Finds the first unread node for a given forum.
- */
-function _forum_new($tid) {
-  global $user;
-
-  $sql = "SELECT n.nid FROM {node} n LEFT JOIN {history} h ON n.nid = h.nid AND h.uid = %d INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = %d WHERE n.status = 1 AND h.nid IS NULL AND n.created > %d ORDER BY created";
-  $sql = db_rewrite_sql($sql);
-  $nid = db_result(db_query_range($sql, $user->uid, $tid, NODE_NEW_LIMIT, 0, 1));
-
-  return $nid ? $nid : 0;
-}
-
-/**
  * Process variables for forums.tpl.php
  *
  * The $variables array contains the following arguments:
