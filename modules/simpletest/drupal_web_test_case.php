@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.73 2008/12/11 20:35:37 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.74 2008/12/13 14:03:21 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -1754,7 +1754,7 @@ class DrupalWebTestCase {
               }
             }
           }
-          elseif (isset($field[0]) && $field[0] == $value) {
+          elseif ((string) $field == $value) {
             // Text area with correct text.
             $found = TRUE;
           }
