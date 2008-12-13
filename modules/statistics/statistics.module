@@ -73,7 +73,7 @@ function statistics_exit() {
       'hostname' => ip_address(),
       'uid' => $user->uid,
       'sid' => session_id(),
-      'timer' => timer_read('page'),
+      'timer' => (int) timer_read('page'),
       'timestamp' => REQUEST_TIME,
     ))->execute();
   }
