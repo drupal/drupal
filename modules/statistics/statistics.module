@@ -96,20 +96,23 @@ function statistics_perm() {
 }
 
 /**
- * Implementation of hook_link().
+ * Implementation of hook_nodeapi_view().
  */
-function statistics_link($type, $node = NULL, $teaser = FALSE) {
+function statistics_nodeapi_view($node, $teaser, $page) {
   global $id;
   $links = array();
 
-  if ($type != 'comment' && user_access('view post access counter')) {
+  if (user_access('view post access counter')) {
     $statistics = statistics_get($node->nid);
     if ($statistics) {
       $links['statistics_counter']['title'] = format_plural($statistics['totalcount'], '1 read', '@count reads');
     }
   }
-
-  return $links;
+  
+  $node->content['links']['statistics'] = array(
+    '#type' => 'node_links',
+    '#value' => $links,
+  );
 }
 
 /**
@@ -244,9 +247,8 @@ function statistics_get($nid) {
   if ($nid > 0) {
     // Retrieve an array with both totalcount and daycount.
     $statistics = db_fetch_array(db_query('SELECT totalcount, daycount, timestamp FROM {node_counter} WHERE nid = %d', $nid));
+    return $statistics;
   }
-
-  return $statistics;
 }
 
 /**

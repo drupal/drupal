@@ -1978,29 +1978,29 @@ function template_preprocess_page(&$variables) {
  */
 function template_preprocess_node(&$variables) {
   $node = $variables['node'];
-  if (module_exists('taxonomy')) {
-    $variables['taxonomy'] = taxonomy_link('taxonomy terms', $node);
-  }
-  else {
-    $variables['taxonomy'] = array();
-  }
-
-  if ($variables['teaser'] && $node->teaser) {
-    $variables['content'] = $node->teaser;
-  }
-  elseif (isset($node->body)) {
-    $variables['content'] = $node->body;
-  }
-  else {
-    $variables['content'] = '';
-  }
 
   $variables['date']      = format_date($node->created);
-  $variables['links']     = !empty($node->links) ? theme('links', $node->links, array('class' => 'links inline')) : '';
   $variables['name']      = theme('username', $node);
   $variables['node_url']  = url('node/' . $node->nid);
-  $variables['terms']     = theme('links', $variables['taxonomy'], array('class' => 'links inline'));
   $variables['title']     = check_plain($node->title);
+  
+  if ($node->build_mode == NODE_BUILD_PREVIEW) {
+    unset($node->content['links']);
+  }
+  
+  // Render taxonomy links separately.
+  $variables['terms']     = !empty($node->content['links']['terms']) ? drupal_render($node->content['links']['terms']) : '';
+  
+  // Render all remaining node links.
+  $variables['links']     = !empty($node->content['links']) ? drupal_render($node->content['links']) : '';
+
+  // Render the rest of the node into $content.
+  if (!empty($node->content['teaser'])) {
+    $variables['content'] = drupal_render($node->content['teaser']);
+  }
+  else {
+    $variables['content'] = drupal_render($node->content);
+  }
 
   // Flatten the node object's member fields.
   $variables = array_merge((array)$node, $variables);

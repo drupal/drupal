@@ -412,16 +412,16 @@ function theme_comment_block() {
 }
 
 /**
- * Implementation of hook_link().
+ * An implementation of hook_nodeapi_view().
  */
-function comment_link($type, $node = NULL, $teaser = FALSE) {
+function comment_nodeapi_view($node, $teaser, $page) {
   $links = array();
 
-  if ($type == 'node' && $node->comment) {
+  if ($node->comment) {
     if ($teaser) {
       // Main page: display the number of comments that have been posted.
       if (user_access('access comments')) {
-        if ($node->comment_count) {
+        if (!empty($node->comment_count)) {
           $links['comment_comments'] = array(
             'title' => format_plural($node->comment_count, '1 comment', '@count comments'),
             'href' => "node/$node->nid",
@@ -476,17 +476,16 @@ function comment_link($type, $node = NULL, $teaser = FALSE) {
         }
       }
     }
-  }
+    
+    if (isset($links['comment_forbidden'])) {
+      $links['comment_forbidden']['html'] = TRUE;
+    }
 
-  if ($type == 'comment') {
-    $links = comment_links($node, $teaser);
+    $node->content['links']['comment'] = array(
+      '#type' => 'node_links',
+      '#value' => $links,
+    );
   }
-
-  if (isset($links['comment_forbidden'])) {
-    $links['comment_forbidden']['html'] = TRUE;
-  }
-
-  return $links;
 }
 
 /**
@@ -861,6 +860,14 @@ function comment_save($edit) {
     drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $edit['subject'])), 'error');
 
     return FALSE;
+  }
+}
+
+// An implementation of hook_link().
+function comment_link($type, $object, $teaser) {
+  if ($type == 'comment') {
+    $links = comment_links($object, FALSE);
+    return $links;
   }
 }
 

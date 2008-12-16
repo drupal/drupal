@@ -322,7 +322,7 @@ function hook_image_toolkits() {
  * Define internal Drupal links.
  *
  * This hook enables modules to add links to many parts of Drupal. Links
- * may be added in nodes or in the navigation block, for example.
+ * may be added in the navigation block, for example.
  *
  * The returned array should be a keyed array of link entries. Each link can
  * be in one of two formats.
@@ -345,11 +345,10 @@ function hook_image_toolkits() {
  *   An identifier declaring what kind of link is being requested.
  *   Possible values:
  *   - comment: Links to be placed below a comment being viewed.
- *   - node: Links to be placed below a node being viewed.
  * @param $object
- *   A node object or a comment object according to the $type.
+ *   A comment object.
  * @param $teaser
- *   In case of node link: a 0/1 flag depending on whether the node is
+ *   A 0/1 flag depending on whether the node is
  *   displayed with its teaser or its full form.
  * @return
  *   An array of the requested links.
@@ -358,48 +357,17 @@ function hook_image_toolkits() {
 function hook_link($type, $object, $teaser = FALSE) {
   $links = array();
 
-  if ($type == 'node' && isset($object->parent)) {
-    if (!$teaser) {
-      if (book_access('create', $object)) {
-        $links['book_add_child'] = array(
-          'title' => t('add child page'),
-          'href' => "node/add/book/parent/$object->nid",
-        );
-      }
-      if (user_access('see printer-friendly version')) {
-        $links['book_printer'] = array(
-          'title' => t('printer-friendly version'),
-          'href' => 'book/export/html/' . $object->nid,
-          'attributes' => array('title' => t('Show a printer-friendly version of this book page and its sub-pages.'))
-        );
-      }
-    }
-  }
-
-  $links['sample_link'] = array(
-    'title' => t('go somewhere'),
-    'href' => 'node/add',
-    'query' => 'foo=bar',
-    'fragment' => 'anchorname',
-    'attributes' => array('title' => t('go to another page')),
-  );
-
-  // Example of a link that's not an anchor
-  if ($type == 'video') {
-    if (variable_get('video_playcounter', 1) && user_access('view play counter')) {
-      $links['play_counter'] = array(
-        'title' => format_plural($object->play_counter, '1 play', '@count plays'),
-      );
-    }
+  if ($type == 'comment') {
+    $links = comment_links($object, FALSE);
+    return $links;
   }
 
   return $links;
 }
 
 /**
- * Perform alterations before links on a node are rendered.
- *
- * One popular use of this hook is to add/delete links from other modules.
+ * Perform alterations before links on a comment are rendered. One popular use of
+ * this hook is to add/delete links from other modules.
  *
  * @param $links
  *   Nested array of links for the node keyed by providing module.

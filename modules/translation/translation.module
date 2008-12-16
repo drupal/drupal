@@ -158,14 +158,13 @@ function translation_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implementation of hook_link().
+ * Implementation of hook_nodeapi_view().
  *
  * Display translation links with native language names, if this node
  * is part of a translation set.
  */
-function translation_link($type, $node = NULL, $teaser = FALSE) {
-  $links = array();
-  if ($type == 'node' && ($node->tnid) && $translations = translation_node_get_translations($node->tnid)) {
+function translation_nodeapi_view(&$node, $teaser = FALSE) {
+  if (isset($node->tnid) && $translations = translation_node_get_translations($node->tnid)) {
     // Do not show link to the same node.
     unset($translations[$node->language]);
     $languages = language_list();
@@ -177,10 +176,13 @@ function translation_link($type, $node = NULL, $teaser = FALSE) {
           'language' => $language,
           'attributes' => array('title' => $translations[$langcode]->title, 'class' => 'translation-link')
         );
+        $node->content['links']['translation'] = array(
+          '#type' => 'node_links',
+          '#value' => $links,
+        );
       }
     }
   }
-  return $links;
 }
 
 /**

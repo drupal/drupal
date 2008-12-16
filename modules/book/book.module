@@ -61,12 +61,12 @@ function book_perm() {
 }
 
 /**
- * Implementation of hook_link().
+ * Inject links into $node as needed. 
  */
-function book_link($type, $node = NULL, $teaser = FALSE) {
+function book_nodeapi_view_link($node, $teaser, $page) {
   $links = array();
-
-  if ($type == 'node' && isset($node->book)) {
+  
+  if (isset($node->book['depth'])) {
     if (!$teaser) {
       $child_type = variable_get('book_child_type', 'book');
       if ((user_access('add content to books') || user_access('administer book outlines')) && node_access('create', $child_type) && $node->status == 1 && $node->book['depth'] < MENU_MAX_DEPTH) {
@@ -87,7 +87,12 @@ function book_link($type, $node = NULL, $teaser = FALSE) {
     }
   }
 
-  return $links;
+  if (!empty($links)) {
+    $node->content['links']['book'] = array(
+      '#type' => 'node_links',
+      '#value' => $links,
+    );
+  }
 }
 
 /**
@@ -732,6 +737,8 @@ function book_nodeapi_view($node, $teaser, $page) {
       }
     }
   }
+  
+  book_nodeapi_view_link($node, $teaser, $page);
 }
 
 /**

@@ -56,13 +56,13 @@ function upload_perm() {
 }
 
 /**
- * Implementation of hook_link().
+ * Inject links into $node for attachments.
  */
-function upload_link($type, $node = NULL, $teaser = FALSE) {
+function upload_nodeapi_links($node, $teaser) {
   $links = array();
 
   // Display a link with the number of attachments
-  if ($teaser && $type == 'node' && isset($node->files) && user_access('view uploaded files')) {
+  if ($teaser && isset($node->files) && user_access('view uploaded files')) {
     $num_files = 0;
     foreach ($node->files as $file) {
       if ($file->list) {
@@ -76,10 +76,12 @@ function upload_link($type, $node = NULL, $teaser = FALSE) {
         'attributes' => array('title' => t('Read full article to view attachments.')),
         'fragment' => 'attachments'
       );
+      $node->content['links']['upload_attachments'] = array(
+        '#type' => 'node_links',
+        '#value' => $links,
+      );
     }
   }
-
-  return $links;
 }
 
 /**
@@ -323,6 +325,8 @@ function upload_nodeapi_view($node, $teaser, $page) {
         );
       }
     }
+    
+    upload_nodeapi_links($node, $teaser);
   }
 }
 
