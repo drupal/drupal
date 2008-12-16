@@ -282,7 +282,9 @@ function user_save($account, $edit = array(), $category = 'account') {
     // the current one.
     if (!empty($edit['pass'])) {
       drupal_session_destroy_uid($account->uid);
-      drupal_session_regenerate();
+      if ($account->uid == $GLOBALS['user']->uid) {
+        drupal_session_regenerate();
+      }
     }
 
     // Refresh user object.
