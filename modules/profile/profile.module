@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.247 2008/12/05 12:50:28 dries Exp $
+// $Id: profile.module,v 1.248 2008/12/16 23:57:33 dries Exp $
 
 /**
  * @file
@@ -126,69 +126,78 @@ function profile_menu() {
 }
 
 /**
- * Implementation of hook_block().
+ * Implementation of hook_block_list().
  */
-function profile_block($op = 'list', $delta = '', $edit = array()) {
+function profile_block_list() {
+  $blocks['author-information']['info'] = t('Author information');
+  $blocks['author-information']['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
+  return $blocks;
+}
 
-  if ($op == 'list') {
-    $blocks['author-information']['info'] = t('Author information');
-    $blocks['author-information']['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
-    return $blocks;
+/**
+ * Implementation of hook_block_configure().
+ */
+function profile_block_configure($delta = '') {
+  // Compile a list of fields to show
+  $fields = array();
+  $result = db_query('SELECT name, title, weight, visibility FROM {profile_field} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
+  while ($record = db_fetch_object($result)) {
+    $fields[$record->name] = check_plain($record->title);
   }
-  elseif ($op == 'configure') {
-    // Compile a list of fields to show
-    $fields = array();
-    $result = db_query('SELECT name, title, weight, visibility FROM {profile_field} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
-    while ($record = db_fetch_object($result)) {
-      $fields[$record->name] = check_plain($record->title);
-    }
-    $fields['user_profile'] = t('Link to full user profile');
-    $form['profile_block_author_fields'] = array(
-      '#type' => 'checkboxes',
-      '#title' => t('Profile fields to display'),
-      '#default_value' => variable_get('profile_block_author_fields', array()),
-      '#options' => $fields,
-      '#description' => t('Select which profile fields you wish to display in the block. Only fields designated as public in the <a href="@profile-admin">profile field configuration</a> are available.', array('@profile-admin' => url('admin/user/profile'))),
-    );
-    return $form;
-  }
-  elseif ($op == 'save') {
-    variable_set('profile_block_author_fields', $edit['profile_block_author_fields']);
-  }
-  elseif ($op == 'view') {
-    if (user_access('access user profiles')) {
-      $output = '';
-      if ((arg(0) == 'node') && is_numeric(arg(1)) && (arg(2) == NULL)) {
-        $node = node_load(arg(1));
-        $account = user_load(array('uid' => $node->uid));
+  $fields['user_profile'] = t('Link to full user profile');
+  $form['profile_block_author_fields'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Profile fields to display'),
+    '#default_value' => variable_get('profile_block_author_fields', array()),
+    '#options' => $fields,
+    '#description' => t('Select which profile fields you wish to display in the block. Only fields designated as public in the <a href="@profile-admin">profile field configuration</a> are available.', array('@profile-admin' => url('admin/user/profile'))),
+  );
+  return $form;
+}
 
-        if ($use_fields = variable_get('profile_block_author_fields', array())) {
-          // Compile a list of fields to show.
-          $fields = array();
-          $result = db_query('SELECT name, title, type, visibility, weight FROM {profile_field} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
-          while ($record = db_fetch_object($result)) {
-            // Ensure that field is displayed only if it is among the defined block fields and, if it is private, the user has appropriate permissions.
-            if (isset($use_fields[$record->name]) && $use_fields[$record->name]) {
-              $fields[] = $record;
-            }
+/**
+ * Implementation of hook_block_save().
+ */
+function profile_block_save($delta = '', $edit = array()) {
+  variable_set('profile_block_author_fields', $edit['profile_block_author_fields']);
+}
+
+/**
+ * Implementation of hook_block_view().
+ */
+function profile_block_view($delta = '') {
+  if (user_access('access user profiles')) {
+    $output = '';
+    if ((arg(0) == 'node') && is_numeric(arg(1)) && (arg(2) == NULL)) {
+      $node = node_load(arg(1));
+      $account = user_load(array('uid' => $node->uid));
+
+      if ($use_fields = variable_get('profile_block_author_fields', array())) {
+        // Compile a list of fields to show.
+        $fields = array();
+        $result = db_query('SELECT name, title, type, visibility, weight FROM {profile_field} WHERE visibility IN (%d, %d) ORDER BY weight', PROFILE_PUBLIC, PROFILE_PUBLIC_LISTINGS);
+        while ($record = db_fetch_object($result)) {
+          // Ensure that field is displayed only if it is among the defined block fields and, if it is private, the user has appropriate permissions.
+          if (isset($use_fields[$record->name]) && $use_fields[$record->name]) {
+            $fields[] = $record;
           }
         }
-
-        if (!empty($fields)) {
-          $profile = _profile_update_user_fields($fields, $account);
-          $output .= theme('profile_block', $account, $profile, TRUE);
-        }
-
-        if (isset($use_fields['user_profile']) && $use_fields['user_profile']) {
-          $output .= '<div>' . l(t('View full user profile'), 'user/' . $account->uid) . '</div>';
-        }
       }
 
-      if ($output) {
-        $block['subject'] = t('About %name', array('%name' => $account->name));
-        $block['content'] = $output;
-        return $block;
+      if (!empty($fields)) {
+        $profile = _profile_update_user_fields($fields, $account);
+        $output .= theme('profile_block', $account, $profile, TRUE);
       }
+
+      if (isset($use_fields['user_profile']) && $use_fields['user_profile']) {
+        $output .= '<div>' . l(t('View full user profile'), 'user/' . $account->uid) . '</div>';
+      }
+    }
+
+    if ($output) {
+      $block['subject'] = t('About %name', array('%name' => $account->name));
+      $block['content'] = $output;
+      return $block;
     }
   }
 }

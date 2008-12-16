@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.945 2008/12/16 21:09:55 dries Exp $
+// $Id: user.module,v 1.946 2008/12/16 23:57:33 dries Exp $
 
 /**
  * @file
@@ -735,112 +735,135 @@ function user_login_block() {
 }
 
 /**
- * Implementation of hook_block().
+ * Implementation of hook_block_list().
  */
-function user_block($op = 'list', $delta = '', $edit = array()) {
+function user_block_list() {
   global $user;
 
-  if ($op == 'list') {
-    $blocks['login']['info'] = t('User login');
-    // Not worth caching.
-    $blocks['login']['cache'] = BLOCK_NO_CACHE;
+  $blocks['login']['info'] = t('User login');
+  // Not worth caching.
+  $blocks['login']['cache'] = BLOCK_NO_CACHE;
 
-    $blocks['navigation']['info'] = t('Navigation');
-    // Menu blocks can't be cached because each menu item can have
-    // a custom access callback. menu.inc manages its own caching.
-    $blocks['navigation']['cache'] = BLOCK_NO_CACHE;
+  $blocks['navigation']['info'] = t('Navigation');
+  // Menu blocks can't be cached because each menu item can have
+  // a custom access callback. menu.inc manages its own caching.
+  $blocks['navigation']['cache'] = BLOCK_NO_CACHE;
 
-    $blocks['new']['info'] = t('Who\'s new');
+  $blocks['new']['info'] = t('Who\'s new');
 
-    // Too dynamic to cache.
-    $blocks['online']['info'] = t('Who\'s online');
-    $blocks['online']['cache'] = BLOCK_NO_CACHE;
-    return $blocks;
+  // Too dynamic to cache.
+  $blocks['online']['info'] = t('Who\'s online');
+  $blocks['online']['cache'] = BLOCK_NO_CACHE;
+  return $blocks;
+}
+
+/**
+ * Implementation of hook_block_configure().
+ */
+function user_block_configure($delta = '') {
+  global $user;
+
+  switch($delta) {
+    case 'new':
+      $form['user_block_whois_new_count'] = array(
+        '#type' => 'select',
+        '#title' => t('Number of users to display'),
+        '#default_value' => variable_get('user_block_whois_new_count', 5),
+        '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
+      );
+      return $form;
+
+    case 'online':
+      $period = drupal_map_assoc(array(30, 60, 120, 180, 300, 600, 900, 1800, 2700, 3600, 5400, 7200, 10800, 21600, 43200, 86400), 'format_interval');
+      $form['user_block_seconds_online'] = array('#type' => 'select', '#title' => t('User activity'), '#default_value' => variable_get('user_block_seconds_online', 900), '#options' => $period, '#description' => t('A user is considered online for this long after they have last viewed a page.'));
+      $form['user_block_max_list_count'] = array('#type' => 'select', '#title' => t('User list length'), '#default_value' => variable_get('user_block_max_list_count', 10), '#options' => drupal_map_assoc(array(0, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)), '#description' => t('Maximum number of currently online users to display.'));
+      return $form;
   }
-  elseif ($op == 'configure' && $delta == 'new') {
-    $form['user_block_whois_new_count'] = array(
-      '#type' => 'select',
-      '#title' => t('Number of users to display'),
-      '#default_value' => variable_get('user_block_whois_new_count', 5),
-      '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)),
-    );
-    return $form;
-  }
-  elseif ($op == 'configure' && $delta == 'online') {
-    $period = drupal_map_assoc(array(30, 60, 120, 180, 300, 600, 900, 1800, 2700, 3600, 5400, 7200, 10800, 21600, 43200, 86400), 'format_interval');
-    $form['user_block_seconds_online'] = array('#type' => 'select', '#title' => t('User activity'), '#default_value' => variable_get('user_block_seconds_online', 900), '#options' => $period, '#description' => t('A user is considered online for this long after they have last viewed a page.'));
-    $form['user_block_max_list_count'] = array('#type' => 'select', '#title' => t('User list length'), '#default_value' => variable_get('user_block_max_list_count', 10), '#options' => drupal_map_assoc(array(0, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)), '#description' => t('Maximum number of currently online users to display.'));
+}
 
-    return $form;
-  }
-  elseif ($op == 'save' && $delta == 'new') {
-    variable_set('user_block_whois_new_count', $edit['user_block_whois_new_count']);
-  }
-  elseif ($op == 'save' && $delta == 'online') {
-    variable_set('user_block_seconds_online', $edit['user_block_seconds_online']);
-    variable_set('user_block_max_list_count', $edit['user_block_max_list_count']);
-  }
-  elseif ($op == 'view') {
-    $block = array();
+/**
+ * Implementation of hook_block_save().
+ */
+function user_block_save($delta = '', $edit = array()) {
+  global $user;
 
-    switch ($delta) {
-      case 'login':
-        // For usability's sake, avoid showing two login forms on one page.
-        if (!$user->uid && !(arg(0) == 'user' && !is_numeric(arg(1)))) {
+  switch ($delta) {
+    case 'new':
+      variable_set('user_block_whois_new_count', $edit['user_block_whois_new_count']);
+      break;
 
-          $block['subject'] = t('User login');
-          $block['content'] = drupal_get_form('user_login_block');
+    case 'online':
+      variable_set('user_block_seconds_online', $edit['user_block_seconds_online']);
+      variable_set('user_block_max_list_count', $edit['user_block_max_list_count']);
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_block_view().
+ */
+function user_block_view($delta = '') {
+  global $user;
+
+  $block = array();
+
+  switch ($delta) {
+    case 'login':
+      // For usability's sake, avoid showing two login forms on one page.
+      if (!$user->uid && !(arg(0) == 'user' && !is_numeric(arg(1)))) {
+
+        $block['subject'] = t('User login');
+        $block['content'] = drupal_get_form('user_login_block');
+      }
+      return $block;
+
+    case 'navigation':
+      if ($menu = menu_tree()) {
+        $block['subject'] = $user->uid ? check_plain($user->name) : t('Navigation');
+        $block['content'] = $menu;
+      }
+      return $block;
+
+    case 'new':
+      if (user_access('access content')) {
+        // Retrieve a list of new users who have subsequently accessed the site successfully.
+        $items = db_query_range('SELECT uid, name FROM {users} WHERE status != 0 AND access != 0 ORDER BY created DESC', array(), 0, variable_get('user_block_whois_new_count', 5))->fetchAll();
+        $output = theme('user_list', $items);
+
+        $block['subject'] = t('Who\'s new');
+        $block['content'] = $output;
+      }
+      return $block;
+
+    case 'online':
+      if (user_access('access content')) {
+        // Count users active within the defined period.
+        $interval = REQUEST_TIME - variable_get('user_block_seconds_online', 900);
+
+        // Perform database queries to gather online user lists.  We use s.timestamp
+        // rather than u.access because it is much faster.
+        $anonymous_count = drupal_session_count($interval);
+        $authenticated_count = db_query("SELECT COUNT(DISTINCT s.uid) FROM {sessions} s WHERE s.timestamp >= :timestamp AND s.uid > 0", array(':timestamp' => $interval))->fetchField();
+
+        // Format the output with proper grammar.
+        if ($anonymous_count == 1 && $authenticated_count == 1) {
+          $output = t('There is currently %members and %visitors online.', array('%members' => format_plural($authenticated_count, '1 user', '@count users'), '%visitors' => format_plural($anonymous_count, '1 guest', '@count guests')));
         }
-        return $block;
-
-      case 'navigation':
-        if ($menu = menu_tree()) {
-          $block['subject'] = $user->uid ? check_plain($user->name) : t('Navigation');
-          $block['content'] = $menu;
+        else {
+          $output = t('There are currently %members and %visitors online.', array('%members' => format_plural($authenticated_count, '1 user', '@count users'), '%visitors' => format_plural($anonymous_count, '1 guest', '@count guests')));
         }
-        return $block;
 
-      case 'new':
-        if (user_access('access content')) {
-          // Retrieve a list of new users who have subsequently accessed the site successfully.
-          $items = db_query_range('SELECT uid, name FROM {users} WHERE status != 0 AND access != 0 ORDER BY created DESC', array(), 0, variable_get('user_block_whois_new_count', 5))->fetchAll();
-          $output = theme('user_list', $items);
-
-          $block['subject'] = t('Who\'s new');
-          $block['content'] = $output;
+        // Display a list of currently online users.
+        $max_users = variable_get('user_block_max_list_count', 10);
+        if ($authenticated_count && $max_users) {
+          $items = db_query_range('SELECT u.uid, u.name, MAX(s.timestamp) AS max_timestamp FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.timestamp >= :interval AND s.uid > 0 GROUP BY u.uid, u.name ORDER BY max_timestamp DESC', array(':interval' => $interval), 0, $max_users)->fetchAll();
+          $output .= theme('user_list', $items, t('Online users'));
         }
-        return $block;
 
-      case 'online':
-        if (user_access('access content')) {
-          // Count users active within the defined period.
-          $interval = REQUEST_TIME - variable_get('user_block_seconds_online', 900);
-
-          // Perform database queries to gather online user lists.  We use s.timestamp
-          // rather than u.access because it is much faster.
-          $anonymous_count = drupal_session_count($interval);
-          $authenticated_count = db_query("SELECT COUNT(DISTINCT s.uid) FROM {sessions} s WHERE s.timestamp >= :timestamp AND s.uid > 0", array(':timestamp' => $interval))->fetchField();
-
-          // Format the output with proper grammar.
-          if ($anonymous_count == 1 && $authenticated_count == 1) {
-            $output = t('There is currently %members and %visitors online.', array('%members' => format_plural($authenticated_count, '1 user', '@count users'), '%visitors' => format_plural($anonymous_count, '1 guest', '@count guests')));
-          }
-          else {
-            $output = t('There are currently %members and %visitors online.', array('%members' => format_plural($authenticated_count, '1 user', '@count users'), '%visitors' => format_plural($anonymous_count, '1 guest', '@count guests')));
-          }
-
-          // Display a list of currently online users.
-          $max_users = variable_get('user_block_max_list_count', 10);
-          if ($authenticated_count && $max_users) {
-            $items = db_query_range('SELECT u.uid, u.name, MAX(s.timestamp) AS max_timestamp FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.timestamp >= :interval AND s.uid > 0 GROUP BY u.uid, u.name ORDER BY max_timestamp DESC', array(':interval' => $interval), 0, $max_users)->fetchAll();
-            $output .= theme('user_list', $items, t('Online users'));
-          }
-
-          $block['subject'] = t('Who\'s online');
-          $block['content'] = $output;
-        }
-        return $block;
-    }
+        $block['subject'] = t('Who\'s online');
+        $block['content'] = $output;
+      }
+      return $block;
   }
 }
 

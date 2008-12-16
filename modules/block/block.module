@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.315 2008/11/15 08:23:07 dries Exp $
+// $Id: block.module,v 1.316 2008/12/16 23:57:31 dries Exp $
 
 /**
  * @file
@@ -15,7 +15,7 @@ define('BLOCK_REGION_NONE', -1);
  * Constants defining cache granularity for blocks.
  *
  * Modules specify the caching patterns for their blocks using binary
- * combinations of these constants in their hook_block(op 'list'):
+ * combinations of these constants in their hook_block_list():
  *   $block[delta]['cache'] = BLOCK_CACHE_PER_ROLE | BLOCK_CACHE_PER_PAGE;
  * BLOCK_CACHE_PER_ROLE is used as a default when no caching pattern is
  * specified.
@@ -180,42 +180,49 @@ function _block_themes_access($theme) {
 }
 
 /**
- * Implementation of hook_block().
+ * Implementation of hook_block_list().
+ */
+function block_block_list() {
+  $blocks = array();
+
+  $result = db_query('SELECT bid, info FROM {box} ORDER BY info');
+  while ($block = db_fetch_object($result)) {
+    $blocks[$block->bid]['info'] = $block->info;
+    // Not worth caching.
+    $blocks[$block->bid]['cache'] = BLOCK_NO_CACHE;
+  }
+  return $blocks;
+}
+
+/**
+ * Implementation of hook_block_configure().
+ */
+function block_block_configure($delta = 0, $edit = array()) {
+  $box = array('format' => FILTER_FORMAT_DEFAULT);
+  if ($delta) {
+    $box = block_box_get($delta);
+  }
+  if (filter_access($box['format'])) {
+    return block_box_form($box);
+  }
+}
+
+/**
+ * Implementation of hook_block_save().
+ */
+function block_block_save($delta = 0, $edit = array()) {
+  block_box_save($edit, $delta);
+}
+
+/**
+ * Implementation of hook_block_view().
  *
  * Generates the administrator-defined blocks for display.
  */
-function block_block($op = 'list', $delta = 0, $edit = array()) {
-  switch ($op) {
-    case 'list':
-      $blocks = array();
-
-      $result = db_query('SELECT bid, info FROM {box} ORDER BY info');
-      while ($block = db_fetch_object($result)) {
-        $blocks[$block->bid]['info'] = $block->info;
-        // Not worth caching.
-        $blocks[$block->bid]['cache'] = BLOCK_NO_CACHE;
-      }
-      return $blocks;
-
-    case 'configure':
-      $box = array('format' => FILTER_FORMAT_DEFAULT);
-      if ($delta) {
-        $box = block_box_get($delta);
-      }
-      if (filter_access($box['format'])) {
-        return block_box_form($box);
-      }
-      break;
-
-    case 'save':
-      block_box_save($edit, $delta);
-      break;
-
-    case 'view':
-      $block = db_fetch_object(db_query('SELECT body, format FROM {box} WHERE bid = %d', $delta));
-      $data['content'] = check_markup($block->body, $block->format, '', FALSE);
-      return $data;
-  }
+function block_block_view($delta = 0, $edit = array()) {
+  $block = db_fetch_object(db_query('SELECT body, format FROM {box} WHERE bid = %d', $delta));
+  $data['content'] = check_markup($block->body, $block->format, '', FALSE);
+  return $data;
 }
 
 /**
@@ -239,8 +246,8 @@ function _block_rehash() {
   // Valid region names for the theme.
   $regions = system_region_list($theme_key);
 
-  foreach (module_implements('block') as $module) {
-    $module_blocks = module_invoke($module, 'block', 'list');
+  foreach (module_implements('block_list') as $module) {
+    $module_blocks = module_invoke($module, 'block_list');
     if ($module_blocks) {
       foreach ($module_blocks as $delta => $block) {
         if (empty($old_blocks[$module][$delta])) {
@@ -349,7 +356,7 @@ function block_user_form(&$edit, &$account, $category = NULL) {
     $result = db_query("SELECT DISTINCT b.* FROM {block} b LEFT JOIN {block_role} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom != 0 AND (r.rid IN (" . db_placeholders($rids) . ") OR r.rid IS NULL) ORDER BY b.weight, b.module", $rids);
     $form['block'] = array('#type' => 'fieldset', '#title' => t('Block configuration'), '#weight' => 3, '#collapsible' => TRUE, '#tree' => TRUE);
     while ($block = db_fetch_object($result)) {
-      $data = module_invoke($block->module, 'block', 'list');
+      $data = module_invoke($block->module, 'block_list');
       if ($data[$block->delta]['info']) {
         $return = TRUE;
         $form['block'][$block->module][$block->delta] = array('#type' => 'checkbox', '#title' => check_plain($data[$block->delta]['info']), '#default_value' => isset($account->block[$block->module][$block->delta]) ? $account->block[$block->module][$block->delta] : ($block->custom == 1));
@@ -483,7 +490,7 @@ function _block_render_blocks($region_blocks) {
           $array = $cache->data;
         }
         else {
-          $array = module_invoke($block->module, 'block', 'view', $block->delta);
+          $array = module_invoke($block->module, 'block_view', $block->delta);
           if (isset($cid)) {
             cache_set($cid, $array, 'cache_block', CACHE_TEMPORARY);
           }

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.test,v 1.9 2008/12/05 12:50:28 dries Exp $
+// $Id: profile.test,v 1.10 2008/12/16 23:57:33 dries Exp $
 
 /**
  * A class for common methods for testing profile fields.
@@ -286,6 +286,36 @@ class ProfileTestAutocomplete extends ProfileTestCase {
     // User should be denied access to the profile autocomplete path.
     $this->drupalGet('profile/autocomplete/' . $field['fid'] . '/' . $field['value'][0]);
     $this->assertResponse(403, t('Autocomplete path denied to user without permission.'));
+  }
+}
+
+class ProfileBlockTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Block availability'),
+      'description' => t('Check if the author-information block is available.'),
+      'group' => t('Profile'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('profile');
+
+    // Create and login user
+    $admin_user = $this->drupalCreateUser(array('administer blocks'));
+    $this->drupalLogin($admin_user);
+  }
+
+  function testAuthorInformationBlock() {
+    // Set block title to confirm that the interface is availble.
+    $this->drupalPost('admin/build/block/configure/profile/author-information', array('title' => $this->randomName(8)), t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+
+    // Set the block to a region to confirm block is availble.
+    $edit = array();
+    $edit['profile_author-information[region]'] = 'footer';
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
   }
 }
 

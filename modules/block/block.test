@@ -1,7 +1,9 @@
 <?php
-// $Id: block.test,v 1.6 2008/11/25 13:14:26 dries Exp $
+// $Id: block.test,v 1.7 2008/12/16 23:57:31 dries Exp $
 
 class BlockTestCase extends DrupalWebTestCase {
+  protected $regions;
+
   function getInfo() {
     return array(
       'name' => t('Block functionality'),
@@ -16,6 +18,14 @@ class BlockTestCase extends DrupalWebTestCase {
     // Create and login user
     $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer filters'));
     $this->drupalLogin($admin_user);
+
+    // Define the exising regions
+    $this->regions = array();
+    $this->regions[] = array('name' => 'header', 'id' => 'header-region');
+    $this->regions[] = array('name' => 'left', 'id' => 'sidebar-left');
+    $this->regions[] = array('name' => 'content', 'id' => 'center');
+    $this->regions[] = array('name' => 'right', 'id' => 'sidebar-right');
+    $this->regions[] = array('name' => 'footer');
   }
 
   /**
@@ -36,17 +46,12 @@ class BlockTestCase extends DrupalWebTestCase {
     // Check to see if the box was created by checking that it's in the database..
     $this->assertNotNull($bid, t('Box found in database'));
 
-    // Set the created box to a specific region.
-    // TODO: Implement full region checking.
-    $edit = array();
-    $edit['block_' . $bid . '[region]'] = 'left';
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
-
-    // Confirm that the box was moved to the proper region.
-    $this->assertText(t('The block settings have been updated.'), t('Box successfully moved to left region.'));
-
-    // Confirm that the box is being displayed.
-    $this->assertText(t($box['title']), t('Box successfully being displayed on the page.'));
+    // Check if the block can be moved to all availble regions.
+    $box['module'] = 'block';
+    $box['delta'] = $bid;
+    foreach ($this->regions as $region) {
+      $this->moveBlockToRegion($box, $region);
+    }
 
     // Delete the created box & verify that it's been deleted and no longer appearing on the page.
     $this->drupalPost('admin/build/block/delete/' . $bid, array(), t('Delete'));
@@ -94,17 +99,10 @@ class BlockTestCase extends DrupalWebTestCase {
     // Check to see if the block was created by checking that it's in the database.
     $this->assertNotNull($bid, t('Block found in database'));
 
-    // Set the created block to a specific region.
-    $edit = array();
-    $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = 'left';
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
-
-    // Confirm that the block was moved to the proper region.
-    // TODO: Implement full region checking.
-    $this->assertText(t('The block settings have been updated.'), t('Block successfully moved to left region.'));
-
-    // Confirm that the block is being displayed.
-    $this->assertText(t($block['title']), t('Block successfully being displayed on the page.'));
+    // Check if the block can be moved to all availble regions.
+    foreach ($this->regions as $region) {
+      $this->moveBlockToRegion($block, $region);
+    }
 
     // Set the block to the disabled region.
     $edit = array();
@@ -115,16 +113,41 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to disabled region.'));
     $this->assertNoText(t($block['title']), t('Block no longer appears on page.'));
 
+    // Confirm that the regions xpath is not availble
+    $xpath = '//div[@id="block-block-' . $bid . '"]/*';
+    $this->assertNoFieldByXPath($xpath, FALSE, t('Box found in no regions. '));
+
     // For convenience of developers, put the navigation block back.
     $edit = array();
     $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = 'left';
     $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to disabled region.'));
+    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to left region.'));
 
     $this->drupalPost('admin/build/block/configure/' . $block['module'] . '/' . $block['delta'], array('title' => 'Navigation'), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block title set.'));
   }
 
+  function moveBlockToRegion($block, $region) {
+    // If an id for an region hasn't been specified, we assume it's the same as the name.
+    if (!(isset($region['id']))) {
+      $region['id'] = $region['name'];
+    }
+
+    // Set the created block to a specific region.
+    $edit = array();
+    $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = $region['name'];
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+
+    // Confirm that the block was moved to the proper region.
+    $this->assertText(t('The block settings have been updated.'), t('Block successfully moved to %region_name region.', array( '%region_name'=> $region['name'])));
+
+    // Confirm that the block is being displayed.
+    $this->assertText(t($block['title']), t('Block successfully being displayed on the page.'));
+
+    // Confirm that the box was found at the proper region.
+    $xpath = '//div[@id="' . $region['id'] . '"]//div[@id="block-' . $block['module'] . '-' . $block['delta'] . '"]/*';
+    $this->assertFieldByXPath($xpath, FALSE, t('Box found in %region_name region.', array('%region_name' => $region['name'])));
+  }
 }
 
 class NonDefaultBlockAdmin extends DrupalWebTestCase {

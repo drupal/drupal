@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.233 2008/12/09 11:36:03 dries Exp $
+// $Id: locale.module,v 1.234 2008/12/16 23:57:32 dries Exp $
 
 /**
  * @file
@@ -570,20 +570,24 @@ function locale_js_alter(&$javascript) {
 // Language switcher block
 
 /**
- * Implementation of hook_block().
- * Displays a language switcher. Translation links may be provided by other modules.
+ * Implementation of hook_block_list().
  */
-function locale_block($op = 'list', $delta = '') {
-  if ($op == 'list') {
-    $block['language-switcher']['info'] = t('Language switcher');
-    // Not worth caching.
-    $block['language-switcher']['cache'] = BLOCK_NO_CACHE;
-    return $block;
-  }
+function locale_block_list() {
+  $block['language-switcher']['info'] = t('Language switcher');
+  // Not worth caching.
+  $block['language-switcher']['cache'] = BLOCK_NO_CACHE;
+  return $block;
+}
 
-  // Only show if we have at least two languages and language dependent
-  // web addresses, so we can actually link to other language versions.
-  elseif ($op == 'view' && variable_get('language_count', 1) > 1 && variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE) != LANGUAGE_NEGOTIATION_NONE) {
+/**
+ * Implementation of hook_block_view().
+ *
+ * Displays a language switcher. Translation links may be provided by other modules.
+ * Only show if we have at least two languages and language dependent
+ * web addresses, so we can actually link to other language versions.
+ */
+function locale_block_view($delta = '') {
+  if (variable_get('language_count', 1) > 1 && variable_get('language_negotiation', LANGUAGE_NEGOTIATION_NONE) != LANGUAGE_NEGOTIATION_NONE) {
     $path = drupal_is_front_page() ? '<front>' : $_GET['q'];
     $languages = language_list('enabled');
     $links = array();

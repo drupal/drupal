@@ -1,5 +1,5 @@
 <?php
-// $Id: book.test,v 1.5 2008/12/05 22:18:44 dries Exp $
+// $Id: book.test,v 1.6 2008/12/16 23:57:32 dries Exp $
 
 class BookTestCase extends DrupalWebTestCase {
   protected $book;
@@ -151,5 +151,35 @@ class BookTestCase extends DrupalWebTestCase {
     $number++;
 
     return $node;
+  }
+}
+
+class BookBlockTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Block availability'),
+      'description' => t('Check if the book navigation block is available.'),
+      'group' => t('Book'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('book');
+
+    // Create and login user
+    $admin_user = $this->drupalCreateUser(array('administer blocks'));
+    $this->drupalLogin($admin_user);
+  }
+
+  function testBookNavigationBlock() {
+    // Set block title to confirm that the interface is availble.
+    $this->drupalPost('admin/build/block/configure/book/navigation', array('title' => $this->randomName(8)), t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+
+    // Set the block to a region to confirm block is availble.
+    $edit = array();
+    $edit['book_navigation[region]'] = 'footer';
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
   }
 }

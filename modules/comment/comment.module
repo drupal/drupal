@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.671 2008/12/16 22:05:50 dries Exp $
+// $Id: comment.module,v 1.672 2008/12/16 23:57:32 dries Exp $
 
 /**
  * @file
@@ -261,39 +261,47 @@ function comment_perm() {
 }
 
 /**
- * Implementation of hook_block().
+ * Implementation of hook_block_list().
+ */
+function comment_block_list() {
+  $blocks['recent']['info'] = t('Recent comments');
+
+  return $blocks;
+}
+
+/**
+ * Implementation of hook_block_configure().
+ */
+function comment_block_configure($delta = '') {
+  $form['comment_block_count'] = array(
+    '#type' => 'select',
+    '#title' => t('Number of recent comments'),
+    '#default_value' => variable_get('comment_block_count', 10),
+    '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30)),
+    '#description' => t('Number of comments displayed in the <em>Recent comments</em> block.'),
+  );
+
+  return $form;
+}
+
+/**
+ * Implementation of hook_block_save().
+ */
+function comment_block_save($delta = '', $edit = array()) {
+  variable_set('comment_block_count', (int)$edit['comment_block_count']);
+}
+
+/**
+ * Implementation of hook_block_view().
  *
  * Generates a block with the most recent comments.
  */
-function comment_block($op = 'list', $delta = '', $edit = array()) {
-  switch ($op) {
-    case 'list':
-      $blocks['recent']['info'] = t('Recent comments');
+function comment_block_view($delta = '') {
+  if (user_access('access comments')) {
+    $block['subject'] = t('Recent comments');
+    $block['content'] = theme('comment_block');
 
-      return $blocks;
-
-    case 'configure':
-      $form['comment_block_count'] = array(
-        '#type' => 'select',
-        '#title' => t('Number of recent comments'),
-        '#default_value' => variable_get('comment_block_count', 10),
-        '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30)),
-        '#description' => t('Number of comments displayed in the <em>Recent comments</em> block.'),
-      );
-
-      return $form;
-
-    case 'save':
-      variable_set('comment_block_count', (int)$edit['comment_block_count']);
-      break;
-
-    case 'view':
-      if (user_access('access comments')) {
-        $block['subject'] = t('Recent comments');
-        $block['content'] = theme('comment_block');
-
-        return $block;
-      }
+    return $block;
   }
 }
 

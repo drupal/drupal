@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.11 2008/12/12 16:18:31 dries Exp $
+// $Id: node.test,v 1.12 2008/12/16 23:57:32 dries Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -505,5 +505,35 @@ class NodeTitleXSSTestCase extends DrupalWebTestCase {
 
     $this->drupalGet('node/' . $node->nid . '/edit');
     $this->assertNoRaw($xss, t('Harmful tags are escaped when editing a node.'));
+  }
+}
+
+class NodeBlockTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Block availability'),
+      'description' => t('Check if the syndicate block is available.'),
+      'group' => t('Node'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    // Create and login user
+    $admin_user = $this->drupalCreateUser(array('administer blocks'));
+    $this->drupalLogin($admin_user);
+  }
+
+  function testSearchFormBlock() {
+    // Set block title to confirm that the interface is availble.
+    $this->drupalPost('admin/build/block/configure/node/syndicate', array('title' => $this->randomName(8)), t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+
+    // Set the block to a region to confirm block is availble.
+    $edit = array();
+    $edit['node_syndicate[region]'] = 'footer';
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
   }
 }

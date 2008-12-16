@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1002 2008/12/16 22:05:51 dries Exp $
+// $Id: node.module,v 1.1003 2008/12/16 23:57:32 dries Exp $
 
 /**
  * @file
@@ -1779,21 +1779,23 @@ function node_revision_list($node) {
 }
 
 /**
- * Implementation of hook_block().
+ * Implementation of hook_block_list().
  */
-function node_block($op = 'list', $delta = '') {
-  if ($op == 'list') {
-    $blocks['syndicate']['info'] = t('Syndicate');
-    // Not worth caching.
-    $blocks['syndicate']['cache'] = BLOCK_NO_CACHE;
-    return $blocks;
-  }
-  elseif ($op == 'view') {
-    $block['subject'] = t('Syndicate');
-    $block['content'] = theme('feed_icon', url('rss.xml'), t('Syndicate'));
+function node_block_list() {
+  $blocks['syndicate']['info'] = t('Syndicate');
+  // Not worth caching.
+  $blocks['syndicate']['cache'] = BLOCK_NO_CACHE;
+  return $blocks;
+}
 
-    return $block;
-  }
+/**
+ * Implementation of hook_block_view().
+ */
+function node_block_view($delta = '') {
+  $block['subject'] = t('Syndicate');
+  $block['content'] = theme('feed_icon', url('rss.xml'), t('Syndicate'));
+
+  return $block;
 }
 
 /**

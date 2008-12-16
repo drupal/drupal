@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.30 2008/12/09 07:16:10 dries Exp $
+// $Id: system.test,v 1.31 2008/12/16 23:57:33 dries Exp $
 
 class EnableDisableCoreTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -631,3 +631,55 @@ class FrontPageTestCase extends DrupalWebTestCase {
     $this->assertText(t('On front page.'), t('Path is the front page.'));
   }
 }
+
+class SystemBlockTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Block functionality'),
+      'description' => t('Configure and move powered-by block.'),
+      'group' => t('System'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    // Create and login user
+    $admin_user = $this->drupalCreateUser(array('administer blocks'));
+    $this->drupalLogin($admin_user);
+  }
+
+  /**
+   * Test displaying and hiding the powered-by block.
+   */
+  function testPoweredByBlock() {
+    // Set block title and some settings to confirm that the interface is availble.
+    $this->drupalPost('admin/build/block/configure/system/powered-by', array('title' => $this->randomName(8), 'color' => 'powered-black', 'size' => '135x42'), t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+
+    // Set the powered-by block to the footer region.
+    $edit = array();
+    $edit['system_powered-by[region]'] = 'footer';
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+
+    // Confirm that the block is being displayed.
+    $this->assertRaw('id="block-system-powered-by"', t('Block successfully being displayed on the page.'));
+
+    // Set the block to the disabled region.
+    $edit = array();
+    $edit['system_powered-by[region]'] = '-1';
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+
+    // Confirm that the block is hidden.
+    $this->assertNoRaw('id="block-system-powered-by"', t('Block no longer appears on page.'));
+
+    // For convenience of developers, set the block to it's default settings.
+    $edit = array();
+    $edit['system_powered-by[region]'] = 'footer';
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/build/block/configure/system/powered-by', array('title' => '', 'color' => 'powered-blue', 'size' => '80x15'), t('Save block'));
+  }
+
+}
+

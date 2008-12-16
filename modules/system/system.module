@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.650 2008/11/28 09:25:59 dries Exp $
+// $Id: system.module,v 1.651 2008/12/16 23:57:33 dries Exp $
 
 /**
  * @file
@@ -836,51 +836,65 @@ function system_user_timezone(&$edit, &$form) {
 }
 
 /**
- * Implementation of hook_block().
+ * Implementation of hook_block_list().
+ */
+function system_block_list() {
+  $image_path = 'misc/' . variable_get('drupal_badge_color', 'powered-blue') . '-' . variable_get('drupal_badge_size', '80x15') . '.png';
+  $blocks['powered-by'] = array(
+    'info' => t('Powered by Drupal'),
+    'weight' => '10',
+     // Not worth caching.
+    'cache' => BLOCK_NO_CACHE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implementation of hook_block_configure().
+ */
+function system_block_configure($delta = '') {
+  $image_path = 'misc/' . variable_get('drupal_badge_color', 'powered-blue') . '-' . variable_get('drupal_badge_size', '80x15') . '.png';
+  drupal_add_js(drupal_get_path('module', 'system') .'/system.js');
+  // Compile a list of fields to show
+  $form['wrapper']['color'] = array(
+    '#type' => 'select',
+    '#title' => t('Badge color'),
+    '#default_value' => variable_get('drupal_badge_color', 'powered-blue'),
+    '#options' => array('powered-black' => t('Black'), 'powered-blue' => t('Blue'), 'powered-gray' => t('Gray')),
+  );
+  $form['wrapper']['size'] = array(
+    '#type' => 'select',
+    '#title' => t('Badge size'),
+    '#default_value' => variable_get('drupal_badge_size', '80x15'),
+    '#options' => array('80x15' => t('Small'), '88x31' => t('Medium'), '135x42' => t('Large')),
+  );
+  $form['wrapper']['preview'] = array(
+    '#type' => 'item',
+    '#title' => 'Preview',
+    '#markup' => theme('image', $image_path, t('Powered by Drupal, an open source content management system'), t('Powered by Drupal, an open source content management system'), array('class' => 'powered-by-preview'), FALSE),
+  );
+  return $form;
+}
+
+/**
+ * Implementation of hook_block_save().
+ */
+function system_block_save($delta = '', $edit = NULL) {
+  $image_path = 'misc/' . variable_get('drupal_badge_color', 'powered-blue') . '-' . variable_get('drupal_badge_size', '80x15') . '.png';
+  variable_set('drupal_badge_color', $edit['color']);
+  variable_set('drupal_badge_size', $edit['size']);
+}
+
+/**
+ * Implementation of hook_block_view().
  *
  * Generate a block with a promotional link to Drupal.org.
  */
-function system_block($op = 'list', $delta = '', $edit = NULL) {
+function system_block_view($delta = '') {
   $image_path = 'misc/' . variable_get('drupal_badge_color', 'powered-blue') . '-' . variable_get('drupal_badge_size', '80x15') . '.png';
-  switch ($op) {
-    case 'list':
-      $blocks['powered-by'] = array(
-        'info' => t('Powered by Drupal'),
-        'weight' => '10',
-         // Not worth caching.
-        'cache' => BLOCK_NO_CACHE,
-      );
-      return $blocks;
-    case 'configure':
-      drupal_add_js(drupal_get_path('module', 'system') .'/system.js');
-      // Compile a list of fields to show
-      $form['wrapper']['color'] = array(
-        '#type' => 'select',
-        '#title' => t('Badge color'),
-        '#default_value' => variable_get('drupal_badge_color', 'powered-blue'),
-        '#options' => array('powered-black' => t('Black'), 'powered-blue' => t('Blue'), 'powered-gray' => t('Gray')),
-      );
-      $form['wrapper']['size'] = array(
-        '#type' => 'select',
-        '#title' => t('Badge size'),
-        '#default_value' => variable_get('drupal_badge_size', '80x15'),
-        '#options' => array('80x15' => t('Small'), '88x31' => t('Medium'), '135x42' => t('Large')),
-      );
-      $form['wrapper']['preview'] = array(
-        '#type' => 'item',
-        '#title' => 'Preview',
-        '#markup' => theme('image', $image_path, t('Powered by Drupal, an open source content management system'), t('Powered by Drupal, an open source content management system'), array('class' => 'powered-by-preview'), FALSE),
-      );
-      return $form;
-    case 'save':
-      variable_set('drupal_badge_color', $edit['color']);
-      variable_set('drupal_badge_size', $edit['size']);
-      break;
-    case 'view':
-      $block['subject'] = NULL; // Don't display a title
-      $block['content'] = theme('system_powered_by', $image_path);
-      return $block;
-  }
+  $block['subject'] = NULL; // Don't display a title
+  $block['content'] = theme('system_powered_by', $image_path);
+  return $block;
 }
 
 /**
