@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.944 2008/11/29 09:33:51 dries Exp $
+// $Id: user.module,v 1.945 2008/12/16 21:09:55 dries Exp $
 
 /**
  * @file
@@ -282,7 +282,9 @@ function user_save($account, $edit = array(), $category = 'account') {
     // the current one.
     if (!empty($edit['pass'])) {
       drupal_session_destroy_uid($account->uid);
-      drupal_session_regenerate();
+      if ($account->uid == $GLOBALS['user']->uid) {
+        drupal_session_regenerate();
+      }
     }
 
     // Refresh user object.
