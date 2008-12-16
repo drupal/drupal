@@ -158,16 +158,20 @@ function search_perm() {
 }
 
 /**
- * Implementation of hook_block().
+ * Implementation of hook_block_list().
  */
-function search_block($op = 'list', $delta = '') {
-  if ($op == 'list') {
-    $blocks['form']['info'] = t('Search form');
-    // Not worth caching.
-    $blocks['form']['cache'] = BLOCK_NO_CACHE;
-    return $blocks;
-  }
-  elseif ($op == 'view' && user_access('search content')) {
+function search_block_list() {
+  $blocks['form']['info'] = t('Search form');
+  // Not worth caching.
+  $blocks['form']['cache'] = BLOCK_NO_CACHE;
+  return $blocks;
+}
+
+/**
+ * Implementation of hook_block_view().
+ */
+function search_block_view($delta = '') {
+  if (user_access('search content')) {
     $block['content'] = drupal_get_form('search_block_form');
     $block['subject'] = t('Search');
     return $block;

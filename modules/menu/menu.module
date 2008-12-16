@@ -257,28 +257,35 @@ function menu_reset_item($item) {
 }
 
 /**
- * Implementation of hook_block().
+ * Implementation of hook_block_list().
  */
-function menu_block($op = 'list', $delta = '') {
+function menu_block_list() {
   $menus = menu_get_menus();
   // The Navigation menu is handled by the user module.
   unset($menus['navigation']);
-  if ($op == 'list') {
-    $blocks = array();
-    foreach ($menus as $name => $title) {
-      // Default "Navigation" block is handled by user.module.
-      $blocks[$name]['info'] = check_plain($title);
-      // Menu blocks can't be cached because each menu item can have
-      // a custom access callback. menu.inc manages its own caching.
-      $blocks[$name]['cache'] = BLOCK_NO_CACHE;
-    }
-    return $blocks;
+
+  $blocks = array();
+  foreach ($menus as $name => $title) {
+    // Default "Navigation" block is handled by user.module.
+    $blocks[$name]['info'] = check_plain($title);
+    // Menu blocks can't be cached because each menu item can have
+    // a custom access callback. menu.inc manages its own caching.
+    $blocks[$name]['cache'] = BLOCK_NO_CACHE;
   }
-  elseif ($op == 'view') {
-    $data['subject'] = check_plain($menus[$delta]);
-    $data['content'] = menu_tree($delta);
-    return $data;
-  }
+  return $blocks;
+}
+
+/**
+ * Implementation of hook_block_view().
+ */
+function menu_block_view($delta = '') {
+  $menus = menu_get_menus();
+  // The Navigation menu is handled by the user module.
+  unset($menus['navigation']);
+
+  $data['subject'] = check_plain($menus[$delta]);
+  $data['content'] = menu_tree($delta);
+  return $data;
 }
 
 /**

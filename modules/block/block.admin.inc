@@ -171,14 +171,14 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
   );
 
   // Module-specific block configurations.
-  if ($settings = module_invoke($module, 'block', 'configure', $delta)) {
+  if ($settings = module_invoke($module, 'block_configure', $delta)) {
     foreach ($settings as $k => $v) {
       $form['block_settings'][$k] = $v;
     }
   }
 
   // Get the block subject for the page title.
-  $info = module_invoke($module, 'block', 'list');
+  $info = module_invoke($module, 'block_list');
   if (isset($info[$delta])) {
     drupal_set_title(t("'%name' block", array('%name' => $info[$delta]['info'])), PASS_THROUGH);
   }
@@ -285,7 +285,7 @@ function block_admin_configure_submit($form, &$form_state) {
     foreach (array_filter($form_state['values']['roles']) as $rid) {
       db_query("INSERT INTO {block_role} (rid, module, delta) VALUES (%d, '%s', '%s')", $rid, $form_state['values']['module'], $form_state['values']['delta']);
     }
-    module_invoke($form_state['values']['module'], 'block', 'save', $form_state['values']['delta'], $form_state['values']);
+    module_invoke($form_state['values']['module'], 'block_save', $form_state['values']['delta'], $form_state['values']);
     drupal_set_message(t('The block configuration has been saved.'));
     cache_clear_all();
     $form_state['redirect'] = 'admin/build/block';

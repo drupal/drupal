@@ -546,3 +546,33 @@ class CommentApprovalTest extends CommentHelperCase {
     $this->assertTrue($this->commentExists($anonymous_comment4), t('Anonymous comment visible.'));
   }
 }
+
+class CommentBlockTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Block availability'),
+      'description' => t('Check if the recent comments block is available.'),
+      'group' => t('Comment'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('comment');
+
+    // Create and login user
+    $admin_user = $this->drupalCreateUser(array('administer blocks'));
+    $this->drupalLogin($admin_user);
+  }
+
+  function testRecentCommentBlock() {
+    // Set block title to confirm that the interface is availble.
+    $this->drupalPost('admin/build/block/configure/comment/recent', array('title' => $this->randomName(8)), t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+
+    // Set the block to a region to confirm block is availble.
+    $edit = array();
+    $edit['comment_recent[region]'] = 'footer';
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+  }
+}

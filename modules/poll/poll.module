@@ -136,29 +136,33 @@ function _poll_menu_access($node, $perm, $inspect_allowvotes) {
 }
 
 /**
- * Implementation of hook_block().
+ * Implementation of hook_block_list().
+ */
+function poll_block_list() {
+  if (user_access('access content')) {
+    $blocks['recent']['info'] = t('Most recent poll');
+    return $blocks;
+  }
+}
+
+/**
+ * Implementation of hook_block_view().
  *
  * Generates a block containing the latest poll.
  */
-function poll_block($op = 'list', $delta = '') {
+function poll_block_view($delta = '') {
   if (user_access('access content')) {
-    if ($op == 'list') {
-      $blocks['recent']['info'] = t('Most recent poll');
-      return $blocks;
-    }
-    elseif ($op == 'view') {
-      // Retrieve the latest poll.
-      $record = db_query_range(db_rewrite_sql("SELECT n.nid FROM {node} n INNER JOIN {poll} p ON p.nid = n.nid WHERE n.status = :status AND p.active = :active ORDER BY n.created DESC"), array(':status' => 1, ':active' => 1), 0, 1)->fetch();
-      if ($record) {
-        $poll = node_load($record->nid);
-        if ($poll->nid) {
-          $poll = poll_view($poll, TRUE, FALSE, TRUE);
-        }
+    // Retrieve the latest poll.
+    $record = db_query_range(db_rewrite_sql("SELECT n.nid FROM {node} n INNER JOIN {poll} p ON p.nid = n.nid WHERE n.status = :status AND p.active = :active ORDER BY n.created DESC"), array(':status' => 1, ':active' => 1), 0, 1)->fetch();
+    if ($record) {
+      $poll = node_load($record->nid);
+      if ($poll->nid) {
+        $poll = poll_view($poll, TRUE, FALSE, TRUE);
       }
-      $block['subject'] = t('Poll');
-      $block['content'] = drupal_render($poll->content);
-      return $block;
     }
+    $block['subject'] = t('Poll');
+    $block['content'] = drupal_render($poll->content);
+    return $block;
   }
 }
 

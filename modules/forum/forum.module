@@ -466,50 +466,58 @@ function forum_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implementation of hook_block().
+ * Implementation of hook_block_list().
+ */
+function forum_block_list() {
+  $blocks['active']['info'] = t('Active forum topics');
+  $blocks['new']['info'] = t('New forum topics');
+  return $blocks;
+}
+
+/**
+ * Implementation of hook_block_configure().
+ */
+function forum_block_configure($delta = '') {
+  $form['forum_block_num_' . $delta] = array('#type' => 'select', '#title' => t('Number of topics'), '#default_value' => variable_get('forum_block_num_' . $delta, '5'), '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
+  return $form;
+}
+
+/**
+ * Implementation of hook_block_save().
+ */
+function forum_block_save($delta = '', $edit = array()) {
+  variable_set('forum_block_num_' . $delta, $edit['forum_block_num_' . $delta]);
+}
+
+/**
+ * Implementation of hook_block_view().
  *
  * Generates a block containing the currently active forum topics and the
  * most recently added forum topics.
  */
-function forum_block($op = 'list', $delta = '', $edit = array()) {
-  switch ($op) {
-    case 'list':
-      $blocks['active']['info'] = t('Active forum topics');
-      $blocks['new']['info'] = t('New forum topics');
-      return $blocks;
+function forum_block_view($delta = '') {
+  if (user_access('access content')) {
+    switch ($delta) {
+      case 'active':
+        $title = t('Active forum topics');
+        $sql = db_rewrite_sql("SELECT n.nid, n.title, l.comment_count, l.last_comment_timestamp FROM {node} n INNER JOIN {term_node} tn ON tn.vid = n.vid INNER JOIN {term_data} td ON td.tid = tn.tid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND td.vid = %d ORDER BY l.last_comment_timestamp DESC");
+        $result = db_query_range($sql, variable_get('forum_nav_vocabulary', ''), 0, variable_get('forum_block_num_active', '5'));
+        $content = node_title_list($result);
+        break;
 
-    case 'configure':
-      $form['forum_block_num_' . $delta] = array('#type' => 'select', '#title' => t('Number of topics'), '#default_value' => variable_get('forum_block_num_' . $delta, '5'), '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
-      return $form;
+      case 'new':
+        $title = t('New forum topics');
+        $sql = db_rewrite_sql("SELECT n.nid, n.title, l.comment_count FROM {node} n INNER JOIN {term_node} tn ON tn.vid = n.vid INNER JOIN {term_data} td ON td.tid = tn.tid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND td.vid = %d ORDER BY n.nid DESC");
+        $result = db_query_range($sql, variable_get('forum_nav_vocabulary', ''), 0, variable_get('forum_block_num_new', '5'));
+        $content = node_title_list($result);
+        break;
+    }
 
-    case 'save':
-      variable_set('forum_block_num_' . $delta, $edit['forum_block_num_' . $delta]);
-      break;
-
-    case 'view':
-      if (user_access('access content')) {
-        switch ($delta) {
-          case 'active':
-            $title = t('Active forum topics');
-            $sql = db_rewrite_sql("SELECT n.nid, n.title, l.comment_count, l.last_comment_timestamp FROM {node} n INNER JOIN {term_node} tn ON tn.vid = n.vid INNER JOIN {term_data} td ON td.tid = tn.tid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND td.vid = %d ORDER BY l.last_comment_timestamp DESC");
-            $result = db_query_range($sql, variable_get('forum_nav_vocabulary', ''), 0, variable_get('forum_block_num_active', '5'));
-            $content = node_title_list($result);
-            break;
-
-          case 'new':
-            $title = t('New forum topics');
-            $sql = db_rewrite_sql("SELECT n.nid, n.title, l.comment_count FROM {node} n INNER JOIN {term_node} tn ON tn.vid = n.vid INNER JOIN {term_data} td ON td.tid = tn.tid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND td.vid = %d ORDER BY n.nid DESC");
-            $result = db_query_range($sql, variable_get('forum_nav_vocabulary', ''), 0, variable_get('forum_block_num_new', '5'));
-            $content = node_title_list($result);
-            break;
-        }
-
-        if (!empty($content)) {
-          $block['subject'] = $title;
-          $block['content'] = $content . theme('more_link', url('forum'), t('Read the latest forum topics.'));
-          return $block;
-        }
-      }
+    if (!empty($content)) {
+      $block['subject'] = $title;
+      $block['content'] = $content . theme('more_link', url('forum'), t('Read the latest forum topics.'));
+      return $block;
+    }
   }
 }
 

@@ -167,3 +167,10 @@ function block_schema() {
 
   return $schema;
 }
+
+/**
+ * Refresh the block cache.
+ */
+function block_update_7000() {
+  return array();
+}
