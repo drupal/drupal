@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.196 2008/12/09 19:53:36 dries Exp $
+// $Id: locale.inc,v 1.197 2008/12/16 21:04:08 dries Exp $
 
 /**
  * @file
@@ -674,6 +674,7 @@ function locale_translate_import_form_submit($form, &$form_state) {
   else {
     drupal_set_message(t('File to import not found.'), 'error');
     $form_state['redirect'] = 'admin/build/translate/import';
+    return;
   }
 
   $form_state['redirect'] = 'admin/build/translate';
