@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.test,v 1.8 2008/11/25 13:14:29 dries Exp $
+// $Id: upload.test,v 1.9 2008/12/16 22:05:51 dries Exp $
 
 class UploadTestCase extends DrupalWebTestCase {
   function getInfo() {
@@ -44,12 +44,17 @@ class UploadTestCase extends DrupalWebTestCase {
     $this->uploadFile($node, $files[0]);
     $this->uploadFile($node, $files[1]);
 
-    // Check to see that uploaded file is listed and actually accessible.
+    // Check to see that uploaded file is listed in detail page and actually accessible.
     $this->assertText(basename($files[0]), basename($files[0]) . ' found on node.');
     $this->assertText(basename($files[1]), basename($files[1]) . ' found on node.');
 
     $this->checkUploadedFile(basename($files[0]));
     $this->checkUploadedFile(basename($files[1]));
+    
+    // Assure that the attachment link appears on teaser view and has correct count.
+    $node = node_load($node->nid);
+    $teaser = node_view($node, TRUE);
+    $this->assertTrue(strpos($teaser, format_plural(2, '1 attachment', '@count attachments')), 'Attachments link found on node teaser.');
 
     // Fetch db record and use fid to rename and delete file.
     $upload = db_fetch_object(db_query('SELECT fid, description FROM {upload} WHERE nid = %d', array($node->nid)));

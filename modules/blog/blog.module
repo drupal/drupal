@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.313 2008/12/09 11:30:23 dries Exp $
+// $Id: blog.module,v 1.314 2008/12/16 22:05:50 dries Exp $
 
 /**
  * @file
@@ -94,22 +94,22 @@ function blog_view($node, $teaser, $page) {
 }
 
 /**
- * Implementation of hook_link().
+ * Implementation of hook_nodeapi_view.
  */
-function blog_link($type, $node = NULL, $teaser = FALSE) {
-  $links = array();
-
-  if ($type == 'node' && $node->type == 'blog') {
+function blog_nodeapi_view($node, $teaser = FALSE) {
+  if ($node->type == 'blog') {
     if (arg(0) != 'blog' || arg(1) != $node->uid) {
       $links['blog_usernames_blog'] = array(
         'title' => t("!username's blog", array('!username' => $node->name)),
         'href' => "blog/$node->uid",
         'attributes' => array('title' => t("Read !username's latest blog entries.", array('!username' => $node->name))),
       );
+      $node->content['links']['blog'] = array(
+        '#type' => 'node_links',
+        '#value' => $links,
+      );
     }
   }
-
-  return $links;
 }
 
 /**

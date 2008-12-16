@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1001 2008/12/05 22:18:45 dries Exp $
+// $Id: node.module,v 1.1002 2008/12/16 22:05:51 dries Exp $
 
 /**
  * @file
@@ -137,6 +137,9 @@ function node_theme() {
     ),
     'node_admin_overview' => array(
       'arguments' => array('name' => NULL, 'type' => NULL),
+    ),
+    'node_links' => array(
+      'arguments' => array('element' => NULL),
     ),
   );
 }
@@ -1134,30 +1137,10 @@ function node_delete($nid) {
  * @return
  *   An HTML representation of the themed node.
  */
-function node_view($node, $teaser = FALSE, $page = FALSE, $links = TRUE) {
+function node_view($node, $teaser = FALSE, $page = FALSE) {
   $node = (object)$node;
 
   $node = node_build_content($node, $teaser, $page);
-
-  if ($links) {
-    $node->links = module_invoke_all('link', 'node', $node, $teaser);
-    drupal_alter('link', $node->links, $node);
-  }
-
-  // Set the proper node part, then unset unused $node part so that a bad
-  // theme can not open a security hole.
-  $content = drupal_render($node->content);
-  if ($teaser) {
-    $node->teaser = $content;
-    unset($node->body);
-  }
-  else {
-    $node->body = $content;
-    unset($node->teaser);
-  }
-
-  // Allow modules to modify the fully-built node.
-  node_invoke_nodeapi($node, 'alter', $teaser, $page);
 
   return theme('node', $node, $teaser, $page);
 }
@@ -1221,6 +1204,9 @@ function node_build_content($node, $teaser = FALSE, $page = FALSE) {
 
   // Allow modules to make their own additions to the node.
   node_invoke_nodeapi($node, 'view', $teaser, $page);
+  
+  // Allow modules to modify the structured node.
+  drupal_alter('node_view', $node, $teaser, $page);
 
   return $node;
 }
@@ -1232,6 +1218,7 @@ function node_show($node, $cid, $message = FALSE) {
   if ($message) {
     drupal_set_title(t('Revision of %title from %date', array('%title' => $node->title, '%date' => format_date($node->revision_timestamp))), PASS_THROUGH);
   }
+
   $output = node_view($node, FALSE, TRUE);
 
   if (function_exists('comment_render') && $node->comment) {
@@ -2999,4 +2986,28 @@ function node_list_permissions($type) {
   );
 
   return $perms;
+}
+
+/**
+ * Implementation of hook_elements().
+ */
+function node_elements() {
+  $type['node_links'] = array();
+  
+  return $type;
+}
+
+/**
+ * Format a set of node links.
+ *
+ * @param $element
+ *   An associative array containing the properties of the element.
+ *   Properties used:  value
+ * @return
+ *   A themed HTML string representing the links.
+ *
+ * @ingroup themeable
+ */
+function theme_node_links($element) {
+  return theme('links', $element['#value'],  array('class' => 'links inline'));
 }
