@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.test,v 1.13 2008/12/16 23:57:33 dries Exp $
+// $Id: poll.test,v 1.14 2008/12/18 14:38:37 dries Exp $
 
 class PollTestCase extends DrupalWebTestCase {
 
@@ -151,5 +151,58 @@ class PollBlockTestCase extends DrupalWebTestCase {
     $edit['poll_recent[region]'] = 'footer';
     $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+  }
+}
+
+/**
+ * Test adding new choices.
+ */
+class PollJSAddChoice extends DrupalWebTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => t('Poll add choice'),
+      'description' => t('Submits a POST request for an additional poll choice.'),
+      'group' => t('Poll')
+    );
+  }
+
+  function setUp() {
+    parent::setUp('poll');
+  }
+
+  /**
+   * Test adding a new choice.
+   */
+  function testAddChoice() {
+    $web_user = $this->drupalCreateUser(array('create poll content', 'access content'));
+    $this->drupalLogin($web_user);
+    $this->drupalGet('node/add/poll');
+    $edit = array(
+      'title' => $this->randomName(),
+      'choice[new:0][chtext]' => $this->randomName(),
+      'choice[new:1][chtext]' => $this->randomName(),
+    );
+
+    // @TODO: the framework should make it possible to submit a form to a
+    // different URL than its action or the current. For now, we can just force
+    // it.
+    $this->additionalCurlOptions[CURLOPT_URL] = url('poll/js', array('absolute' => TRUE));
+    $this->drupalPost(NULL, $edit, t('More choices'));
+    unset($this->additionalCurlOptions[CURLOPT_URL]);
+
+    // The response is drupal_json, so we need to undo some escaping.
+    $response = json_decode(str_replace(array('\x3c', '\x3e', '\x26'), array("<", ">", "&"), $this->drupalGetContent()));
+    $this->assertTrue(is_object($response), t('The response is an object'));
+    $this->assertIdentical($response->status, TRUE, t('Response status is true'));
+    // This response data is valid HTML so we will can reuse everything we have
+    // for HTML pages.
+    $this->content = $response->data;
+
+    // Needs to be emptied out so the new content will be parsed.
+    $this->elements = '';
+    $this->assertFieldByName('choice[chid:0][chtext]', $edit['choice[new:0][chtext]'], t('Field !i found', array('!i' => 0)));
+    $this->assertFieldByName('choice[chid:1][chtext]', $edit['choice[new:1][chtext]'], t('Field !i found', array('!i' => 1)));
+    $this->assertFieldByName('choice[new:0][chtext]', '', t('Field !i found', array('!i' => 2)));
   }
 }
