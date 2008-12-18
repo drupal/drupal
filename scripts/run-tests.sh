@@ -142,9 +142,12 @@ All arguments are long options.
               be separated by commas.  Ignored if --all is specified.
 
 To run this script you will normally invoke it from the root directory of your
-Drupal installation as the webserver user, or root, with
+Drupal installation as the webserver user (differs per configuration), or root:
 
-php  ./scripts/{$args['script']}
+sudo -u [wwwrun|www-data|etc] php ./scripts/{$args['script']}
+  --url http://example.com/ --all
+sudo -u [wwwrun|www-data|etc] php ./scripts/{$args['script']}
+  --url http://example.com/ --class UploadTestCase
 \n
 EOF;
 }
@@ -243,6 +246,7 @@ function simpletest_script_init() {
   }
   else {
     simpletest_script_print_error('Unable to automatically determine the path to the PHP interpreter. Please supply the --php command line argument.');
+    simpletest_script_help();
     exit();
   }
 
