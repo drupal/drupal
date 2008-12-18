@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.74 2008/12/13 14:03:21 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.75 2008/12/18 00:42:55 webchick Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -90,6 +90,13 @@ class DrupalWebTestCase {
    * @var string
    */
   protected $originalFileDirectory = NULL;
+
+  /**
+   * The original user, before it was changed to a clean uid = 1 for testing purposes.
+   *
+   * @var object
+   */
+  protected $originalUser = NULL;
 
   /**
    * Current results of this test case.
@@ -779,7 +786,7 @@ class DrupalWebTestCase {
    *   List of modules to enable for the duration of the test.
    */
   protected function setUp() {
-    global $db_prefix;
+    global $db_prefix, $user;
 
     // Store necessary current values before switching to prefixed database.
     $this->originalPrefix = $db_prefix;
@@ -813,6 +820,11 @@ class DrupalWebTestCase {
     _drupal_flush_css_js();
     $this->refreshVariables();
     $this->checkPermissions(array(), TRUE);
+
+    // Log in with a clean $user.
+    $this->originalUser = $user;
+    drupal_save_session(FALSE);
+    $user = user_load(array('uid' => 1));
 
     // Restore necessary variables.
     variable_set('install_profile', 'default');
@@ -860,7 +872,7 @@ class DrupalWebTestCase {
    * and reset the database prefix.
    */
   protected function tearDown() {
-    global $db_prefix;
+    global $db_prefix, $user;
     if (preg_match('/simpletest\d+/', $db_prefix)) {
       // Delete temporary files directory and reset files directory path.
       simpletest_clean_temporary_directory(file_directory_path());
@@ -875,6 +887,10 @@ class DrupalWebTestCase {
 
       // Return the database prefix to the original.
       $db_prefix = $this->originalPrefix;
+
+      // Return the user to the original one.
+      $user = $this->originalUser;
+      drupal_save_session(TRUE);
 
       // Ensure that the internal logged in variable is reset.
       $this->isLoggedIn = FALSE;
