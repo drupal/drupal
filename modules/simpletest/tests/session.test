@@ -23,7 +23,7 @@ class SessionTestCase extends DrupalWebTestCase {
    * Tests for drupal_save_session() and drupal_session_regenerate().
    */
   function testSessionSaveRegenerate() {
-    $this->assertTrue(drupal_save_session(), t('drupal_save_session() correctly returns TRUE when initially called with no arguments.'), t('Session'));
+    $this->assertFalse(drupal_save_session(), t('drupal_save_session() correctly returns FALSE (inside of testing framework) when initially called with no arguments.'), t('Session'));
     $this->assertFalse(drupal_save_session(FALSE), t('drupal_save_session() correctly returns FALSE when called with FALSE.'), t('Session'));
     $this->assertFalse(drupal_save_session(), t('drupal_save_session() correctly returns FALSE when saving has been disabled.'), t('Session'));
     $this->assertTrue(drupal_save_session(TRUE), t('drupal_save_session() correctly returns TRUE when called with TRUE.'), t('Session'));
