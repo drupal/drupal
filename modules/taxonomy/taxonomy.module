@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.448 2008/12/16 22:05:51 dries Exp $
+// $Id: taxonomy.module,v 1.449 2008/12/18 23:07:50 dries Exp $
 
 /**
  * @file
@@ -654,30 +654,11 @@ function taxonomy_node_get_terms($node, $key = 'tid') {
 }
 
 /**
- * Make sure incoming vids are free tagging enabled.
- */
-function taxonomy_node_validate(&$node) {
-  if (!empty($node->taxonomy)) {
-    $terms = $node->taxonomy;
-    if (!empty($terms['tags'])) {
-      foreach ($terms['tags'] as $vid => $vid_value) {
-        $vocabulary = taxonomy_vocabulary_load($vid);
-        if (empty($vocabulary->tags)) {
-          // see form_get_error $key = implode('][', $element['#parents']);
-          // on why this is the key
-          form_set_error("taxonomy][tags][$vid", t('The %name vocabulary can not be modified in this way.', array('%name' => $vocabulary->name)));
-        }
-      }
-    }
-  }
-}
-
-/**
  * Save term associations for a given node.
  */
 function taxonomy_node_save($node, $terms) {
 
-  taxonomy_node_delete_revision($node);
+  taxonomy_nodeapi_delete_revision($node);
 
   // Free tagging vocabularies do not send their tids in the form,
   // so we'll detect them here and process them independently.
@@ -733,20 +714,6 @@ function taxonomy_node_save($node, $terms) {
       }
     }
   }
-}
-
-/**
- * Remove associations of a node to its terms.
- */
-function taxonomy_node_delete($node) {
-  db_query('DELETE FROM {term_node} WHERE nid = %d', $node->nid);
-}
-
-/**
- * Remove associations of a node to its terms.
- */
-function taxonomy_node_delete_revision($node) {
-  db_query('DELETE FROM {term_node} WHERE vid = %d', $node->vid);
 }
 
 /**
@@ -1372,43 +1339,64 @@ function taxonomy_nodeapi_update($node) {
 
 /**
  * Implementation of hook_nodeapi_delete().
+ *
+ * Remove associations of a node to its terms.
  */
 function taxonomy_nodeapi_delete($node) {
-  taxonomy_node_delete($node);
+  db_query('DELETE FROM {term_node} WHERE nid = %d', $node->nid);
 }
 
 /**
  * Implementation of hook_nodeapi_delete_revision().
+ *
+ * Remove associations of a node to its terms.
  */
 function taxonomy_nodeapi_delete_revision($node) {
-  taxonomy_node_delete_revision($node);
+  db_query('DELETE FROM {term_node} WHERE vid = %d', $node->vid);
 }
 
 /**
  * Implementation of hook_nodeapi_validate().
+ *
+ * Make sure incoming vids are free tagging enabled.
  */
 function taxonomy_nodeapi_validate($node, $form) {
-  taxonomy_node_validate($node);
+  if (!empty($node->taxonomy)) {
+    $terms = $node->taxonomy;
+    if (!empty($terms['tags'])) {
+      foreach ($terms['tags'] as $vid => $vid_value) {
+        $vocabulary = taxonomy_vocabulary_load($vid);
+        if (empty($vocabulary->tags)) {
+          // see form_get_error $key = implode('][', $element['#parents']);
+          // on why this is the key
+          form_set_error("taxonomy][tags][$vid", t('The %name vocabulary can not be modified in this way.', array('%name' => $vocabulary->name)));
+        }
+      }
+    }
+  }
 }
 
 /**
  * Implementation of hook_nodeapi_rss_item().
+ *
+ * Provides category information for RSS feeds.
  */
 function taxonomy_nodeapi_rss_item($node) {
-  return taxonomy_rss_item($node);
+  $output = array();
+  foreach ($node->taxonomy as $term) {
+    $output[] = array(
+      'key' => 'category',
+      'value' => check_plain($term->name),
+      'attributes' => array('domain' => url(taxonomy_term_path($term), array('absolute' => TRUE))),
+    );
+  }
+  return $output;
 }
 
 /**
  * Implementation of hook_nodeapi_update_index().
  */
 function taxonomy_nodeapi_update_index($node) {
-  return taxonomy_node_update_index($node);
-}
-
-/**
- * Implementation of hook_nodeapi('update_index').
- */
-function taxonomy_node_update_index($node) {
   $output = array();
   foreach ($node->taxonomy as $term) {
     $output[] = $term->name;
@@ -1442,19 +1430,6 @@ function taxonomy_terms_parse_string($str_tids) {
   }
   $terms['str_tids'] = $str_tids;
   return $terms;
-}
-
-/**
- * Provides category information for RSS feeds.
- */
-function taxonomy_rss_item($node) {
-  $output = array();
-  foreach ($node->taxonomy as $term) {
-    $output[] = array('key'   => 'category',
-                      'value' => check_plain($term->name),
-                      'attributes' => array('domain' => url(taxonomy_term_path($term), array('absolute' => TRUE))));
-  }
-  return $output;
 }
 
 /**
