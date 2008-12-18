@@ -315,7 +315,8 @@ function poll_more_choices_submit($form, &$form_state) {
 
   // Make the changes we want to the form state.
   if ($form_state['values']['poll_more']) {
-    $form_state['choice_count'] = count($form_state['values']['choice']) + 5;
+    $n = $_GET['q'] == 'poll/js' ? 1 : 5;
+    $form_state['choice_count'] = count($form_state['values']['choice']) + $n;
   }
 }
 
@@ -363,55 +364,33 @@ function _poll_choice_form($key, $chid = NULL, $value = '', $votes = 0, $weight 
  * Menu callback for AHAH additions.
  */
 function poll_choice_js() {
-  // Add the new element to the stored form state. Without adding the element
-  // to the form, Drupal is not aware of this new elements existence and will
-  // not process it. We retreive the cached form, add the element, and resave.
+  $form_state = array('storage' => NULL, 'submitted' => FALSE);
   $form_build_id = $_POST['form_build_id'];
-  $form_state = array('submitted' => FALSE);
-  if (!$form = form_get_cache($form_build_id, $form_state)) {
-    exit();
-  }
 
-  $delta = count($_POST['choice']);
-  $key = isset($form['#node']->choice) ? 'new:'. ($delta - count($form['#node']->choice)) : 'new:'. $delta;
+  // Get the form from the cache.
+  $form = form_get_cache($form_build_id, $form_state);
+  $args = $form['#parameters'];
+  $form_id = array_shift($args);
 
-  // Match the new choice at the current greatest weight.
-  $weight = 0;
-  foreach ($_POST['choice'] as $choice) {
-    $weight = $choice['weight'] > $weight ? $choice['weight'] : $weight;
-  }
+  // We will run some of the submit handlers so we need to disable redirecting.
+  $form['#redirect'] = FALSE;
 
-  // Build our new form element.
-  $form_element = _poll_choice_form($key, NULL, NULL, NULL, $weight, $delta + 1);
-  drupal_alter('form', $form_element, array(), 'poll_choice_js');
+  // We need to process the form, prepare for that by setting a few internals
+  // variables.
+  $form['#post'] = $_POST;
+  $form['#programmed'] = FALSE;
+  $form_state['post'] = $_POST;
 
-  // Dynamically increase the delta of the weight field for every field added.
-  foreach(element_children($form['choice_wrapper']['choice']) as $n) {
-    $form['choice_wrapper']['choice'][$n]['weight']['#delta'] = $delta + 1;
-  }
+  // Build, validate and if possible, submit the form.
+  drupal_process_form($form_id, $form, $form_state);
 
-  // Add the new poll choice.
-  $form['choice_wrapper']['choice'][$key] = $form_element;
-
-  // Reorder the form to use the same order as post.
-  $order = array_flip(array_keys($_POST['choice']));
-  $form['choice_wrapper']['choice'] = array_merge($order, $form['choice_wrapper']['choice']);
-
-  // Resave the cache.
-  form_set_cache($form_build_id, $form, $form_state);
-  $form += array(
-    '#post' => $_POST,
-    '#programmed' => FALSE,
-  );
-
-  // Rebuild the form.
-  $form = form_builder('poll_node_form', $form, $form_state);
+  // This call recreates the form relying solely on the form_state that the
+  // drupal_process_form set up.
+  $form = drupal_rebuild_form($form_id, $form_state, $args, $form_build_id);
 
   // Render the new output.
   $choice_form = $form['choice_wrapper']['choice'];
   unset($choice_form['#prefix'], $choice_form['#suffix']); // Prevent duplicate wrappers.
-  $choice_form[$key]['#attributes']['class'] = empty($choice_form[$key]['#attributes']['class']) ? 'ahah-new-content' : $choice_form[$key]['#attributes']['class'] .' ahah-new-content';
-  $choice_form[$key]['chvotes']['#value'] = 0;
   $output = theme('status_messages') . drupal_render($choice_form);
 
   drupal_json(array('status' => TRUE, 'data' => $output));
