@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.290 2008/12/16 22:05:51 dries Exp $
+// $Id: statistics.module,v 1.291 2008/12/18 03:58:24 dries Exp $
 
 /**
  * @file
@@ -252,58 +252,65 @@ function statistics_get($nid) {
 }
 
 /**
- * Implementation of hook_block().
+ * Implementation of hook_block_list().
  */
-function statistics_block($op = 'list', $delta = '', $edit = array()) {
-  switch ($op) {
-    case 'list':
-      if (variable_get('statistics_count_content_views', 0)) {
-        $blocks['popular']['info'] = t('Popular content');
-        // Too dynamic to cache.
-        $blocks['popular']['cache'] = BLOCK_NO_CACHE;
-        return $blocks;
-      }
-      break;
+function statistics_block_list() {
+  if (variable_get('statistics_count_content_views', 0)) {
+    $blocks['popular']['info'] = t('Popular content');
+    // Too dynamic to cache.
+    $blocks['popular']['cache'] = BLOCK_NO_CACHE;
+    return $blocks;
+  }
+}
 
-    case 'configure':
-      // Popular content block settings
-      $numbers = array('0' => t('Disabled')) + drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 40));
-      $form['statistics_block_top_day_num'] = array('#type' => 'select', '#title' => t("Number of day's top views to display"), '#default_value' => variable_get('statistics_block_top_day_num', 0), '#options' => $numbers, '#description' => t('How many content items to display in "day" list.'));
-      $form['statistics_block_top_all_num'] = array('#type' => 'select', '#title' => t('Number of all time views to display'), '#default_value' => variable_get('statistics_block_top_all_num', 0), '#options' => $numbers, '#description' => t('How many content items to display in "all time" list.'));
-      $form['statistics_block_top_last_num'] = array('#type' => 'select', '#title' => t('Number of most recent views to display'), '#default_value' => variable_get('statistics_block_top_last_num', 0), '#options' => $numbers, '#description' => t('How many content items to display in "recently viewed" list.'));
-      return $form;
+/**
+ * Implementation of hook_block_configure().
+ */
+function statistics_block_configure($delta = '') {
+  // Popular content block settings
+  $numbers = array('0' => t('Disabled')) + drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 40));
+  $form['statistics_block_top_day_num'] = array('#type' => 'select', '#title' => t("Number of day's top views to display"), '#default_value' => variable_get('statistics_block_top_day_num', 0), '#options' => $numbers, '#description' => t('How many content items to display in "day" list.'));
+  $form['statistics_block_top_all_num'] = array('#type' => 'select', '#title' => t('Number of all time views to display'), '#default_value' => variable_get('statistics_block_top_all_num', 0), '#options' => $numbers, '#description' => t('How many content items to display in "all time" list.'));
+  $form['statistics_block_top_last_num'] = array('#type' => 'select', '#title' => t('Number of most recent views to display'), '#default_value' => variable_get('statistics_block_top_last_num', 0), '#options' => $numbers, '#description' => t('How many content items to display in "recently viewed" list.'));
+  return $form;
+}
 
-    case 'save':
-      variable_set('statistics_block_top_day_num', $edit['statistics_block_top_day_num']);
-      variable_set('statistics_block_top_all_num', $edit['statistics_block_top_all_num']);
-      variable_set('statistics_block_top_last_num', $edit['statistics_block_top_last_num']);
-      break;
+/**
+ * Implementation of hook_block_save().
+ */
+function statistics_block_save($delta = '', $edit = array()) {
+  variable_set('statistics_block_top_day_num', $edit['statistics_block_top_day_num']);
+  variable_set('statistics_block_top_all_num', $edit['statistics_block_top_all_num']);
+  variable_set('statistics_block_top_last_num', $edit['statistics_block_top_last_num']);
+}
 
-    case 'view':
-      if (user_access('access content')) {
-        $content = array();
+/**
+ * Implementation of hook_block_view().
+ */
+function statistics_block_view($delta = '') {
+  if (user_access('access content')) {
+    $content = array();
 
-        $daytop = variable_get('statistics_block_top_day_num', 0);
-        if ($daytop && ($result = statistics_title_list('daycount', $daytop)) && ($node_title_list = node_title_list($result, t("Today's:")))) {
-          $content[] = $node_title_list;
-        }
+    $daytop = variable_get('statistics_block_top_day_num', 0);
+    if ($daytop && ($result = statistics_title_list('daycount', $daytop)) && ($node_title_list = node_title_list($result, t("Today's:")))) {
+      $content[] = $node_title_list;
+    }
 
-        $alltimetop = variable_get('statistics_block_top_all_num', 0);
-        if ($alltimetop && ($result = statistics_title_list('totalcount', $alltimetop)) && ($node_title_list = node_title_list($result, t('All time:')))) {
-          $content[] = $node_title_list;
-        }
+    $alltimetop = variable_get('statistics_block_top_all_num', 0);
+    if ($alltimetop && ($result = statistics_title_list('totalcount', $alltimetop)) && ($node_title_list = node_title_list($result, t('All time:')))) {
+      $content[] = $node_title_list;
+    }
 
-        $lasttop = variable_get('statistics_block_top_last_num', 0);
-        if ($lasttop && ($result = statistics_title_list('timestamp', $lasttop)) && ($node_title_list = node_title_list($result, t('Last viewed:')))) {
-          $content[] = $node_title_list;
-        }
+    $lasttop = variable_get('statistics_block_top_last_num', 0);
+    if ($lasttop && ($result = statistics_title_list('timestamp', $lasttop)) && ($node_title_list = node_title_list($result, t('Last viewed:')))) {
+      $content[] = $node_title_list;
+    }
 
-        if (count($content)) {
-          $block['content'] = implode('<br />', $content);
-          $block['subject'] = t('Popular content');
-          return $block;
-        }
-      }
+    if (count($content)) {
+      $block['content'] = implode('<br />', $content);
+      $block['subject'] = t('Popular content');
+      return $block;
+    }
   }
 }
 

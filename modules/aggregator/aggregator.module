@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.401 2008/11/16 04:38:15 webchick Exp $
+// $Id: aggregator.module,v 1.402 2008/12/18 03:58:24 dries Exp $
 
 /**
  * @file
@@ -294,76 +294,87 @@ function aggregator_cron() {
 }
 
 /**
- * Implementation of hook_block().
+ * Implementation of hook_block_list().
+ */
+function aggregator_block_list() {
+  $block = array();
+  $result = db_query('SELECT cid, title FROM {aggregator_category} ORDER BY title');
+  foreach ($result as $category) {
+    $block['category-' . $category->cid]['info'] = t('!title category latest items', array('!title' => $category->title));
+  }
+  $result = db_query('SELECT fid, title FROM {aggregator_feed} WHERE block <> 0 ORDER BY fid');
+  foreach ($result as $feed) {
+    $block['feed-' . $feed->fid]['info'] = t('!title feed latest items', array('!title' => $feed->title));
+  }
+  return $block;
+}
+
+/**
+ * Implementation of hook_block_configure().
+ */
+function aggregator_block_configure($delta = '') {
+  list($type, $id) = explode('-', $delta);
+  if ($type == 'category') {
+    $value = db_query('SELECT block FROM {aggregator_category} WHERE cid = :cid', array(':cid' => $id))->fetchField();
+    $form['block'] = array(
+      '#type' => 'select',
+      '#title' => t('Number of news items in block'),
+      '#default_value' => $value,
+      '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20))
+    );
+    return $form;
+  }
+}
+
+/**
+ * Implementation of hook_block_save().
+ */
+function aggregator_block_save($delta = '', $edit = array()) {
+  list($type, $id) = explode('-', $delta);
+  if ($type == 'category') {
+    db_merge('aggregator_category')
+      ->key(array('cid' => $id))
+      ->fields(array('block' => $edit['block']))
+      ->execute();
+  }
+}
+
+/**
+ * Implementation of hook_block_view().
  *
  * Generates blocks for the latest news items in each category and feed.
  */
-function aggregator_block($op = 'list', $delta = '', $edit = array()) {
+function aggregator_block_view($delta = '') {
   if (user_access('access news feeds')) {
-    if ($op == 'list') {
-      $result = db_query('SELECT cid, title FROM {aggregator_category} ORDER BY title');
-      foreach ($result as $category) {
-        $block['category-' . $category->cid]['info'] = t('!title category latest items', array('!title' => $category->title));
-      }
-      $result = db_query('SELECT fid, title FROM {aggregator_feed} WHERE block <> 0 ORDER BY fid');
-      foreach ($result as $feed) {
-        $block['feed-' . $feed->fid]['info'] = t('!title feed latest items', array('!title' => $feed->title));
-      }
-    }
-    elseif ($op == 'configure') {
-      list($type, $id) = explode('-', $delta);
-      if ($type == 'category') {
-        $value = db_query('SELECT block FROM {aggregator_category} WHERE cid = :cid', array(':cid' => $id))->fetchField();
-        $form['block'] = array(
-          '#type' => 'select',
-          '#title' => t('Number of news items in block'),
-          '#default_value' => $value,
-          '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20))
-        );
-        return $form;
-      }
-    }
-    elseif ($op == 'save') {
-      list($type, $id) = explode('-', $delta);
-      if ($type == 'category') {
-        db_merge('aggregator_category')
-          ->key(array('cid' => $id))
-          ->fields(array('block' => $edit['block']))
-          ->execute();
-      }
-    }
-    elseif ($op == 'view') {
-      list($type, $id) = explode('-', $delta);
-      switch ($type) {
-        case 'feed':
-          if ($feed = db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE block <> 0 AND fid = :fid', array(':fid' => $id))->fetchObject()) {
-            $block['subject'] = check_plain($feed->title);
-            $result = db_query_range("SELECT * FROM {aggregator_item} WHERE fid = :fid ORDER BY timestamp DESC, iid DESC", array(':fid' => $id), 0, $feed->block);
-            $read_more = theme('more_link', url('aggregator/sources/' . $feed->fid), t("View this feed's recent news."));
-          }
-          break;
+    $block = array();
+    list($type, $id) = explode('-', $delta);
+    switch ($type) {
+      case 'feed':
+        if ($feed = db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE block <> 0 AND fid = :fid', array(':fid' => $id))->fetchObject()) {
+          $block['subject'] = check_plain($feed->title);
+          $result = db_query_range("SELECT * FROM {aggregator_item} WHERE fid = :fid ORDER BY timestamp DESC, iid DESC", array(':fid' => $id), 0, $feed->block);
+          $read_more = theme('more_link', url('aggregator/sources/' . $feed->fid), t("View this feed's recent news."));
+        }
+        break;
 
-        case 'category':
-          if ($category = db_query('SELECT cid, title, block FROM {aggregator_category} WHERE cid = :cid', array(':cid' => $id))->fetchObject()) {
-            $block['subject'] = check_plain($category->title);
-            $result = db_query_range('SELECT i.* FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON ci.iid = i.iid WHERE ci.cid = :cid ORDER BY i.timestamp DESC, i.iid DESC', array(':cid' => $category->cid), 0, $category->block);
-            $read_more = theme('more_link', url('aggregator/categories/' . $category->cid), t("View this category's recent news."));
-          }
-          break;
-      }
-      $items = array();
-      foreach ($result as $item) {
-        $items[] = theme('aggregator_block_item', $item);
-      }
+      case 'category':
+        if ($category = db_query('SELECT cid, title, block FROM {aggregator_category} WHERE cid = :cid', array(':cid' => $id))->fetchObject()) {
+          $block['subject'] = check_plain($category->title);
+          $result = db_query_range('SELECT i.* FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON ci.iid = i.iid WHERE ci.cid = :cid ORDER BY i.timestamp DESC, i.iid DESC', array(':cid' => $category->cid), 0, $category->block);
+          $read_more = theme('more_link', url('aggregator/categories/' . $category->cid), t("View this category's recent news."));
+        }
+        break;
+    }
+    $items = array();
+    foreach ($result as $item) {
+      $items[] = theme('aggregator_block_item', $item);
+    }
 
-      // Only display the block if there are items to show.
-      if (count($items) > 0) {
-        $block['content'] = theme('item_list', $items) . $read_more;
-      }
+    // Only display the block if there are items to show.
+    if (count($items) > 0) {
+      $block['content'] = theme('item_list', $items) . $read_more;
     }
-    if (isset($block)) {
-      return $block;
-    }
+    return $block;
   }
 }
 
