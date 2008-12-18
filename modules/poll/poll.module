@@ -288,7 +288,8 @@ function poll_more_choices_submit($form, &$form_state) {
 
   // Make the changes we want to the form state.
   if ($form_state['values']['poll_more']) {
-    $form_state['choice_count'] = count($form_state['values']['choice']) + 5;
+    $n = $_GET['q'] == 'poll/js' ? 1 : 5;
+    $form_state['choice_count'] = count($form_state['values']['choice']) + $n;
   }
 }
 
@@ -326,36 +327,28 @@ function _poll_choice_form($delta, $value = '', $votes = 0) {
  * Menu callback for AHAH additions.
  */
 function poll_choice_js() {
-  $delta = count($_POST['choice']);
-
-  // Build our new form element.
-  $form_element = _poll_choice_form($delta);
-  drupal_alter('form', $form_element, array(), 'poll_choice_js');
-
-  // Build the new form.
-  $form_state = array('submitted' => FALSE);
+  include_once 'modules/node/node.pages.inc';
+  $form_state = array('storage' => NULL, 'submitted' => FALSE);
   $form_build_id = $_POST['form_build_id'];
-  // Add the new element to the stored form. Without adding the element to the
-  // form, Drupal is not aware of this new elements existence and will not
-  // process it. We retreive the cached form, add the element, and resave.
-  if (!$form = form_get_cache($form_build_id, $form_state)) {
-    exit();
-  }
-  $form['choice_wrapper']['choice'][$delta] = $form_element;
-  form_set_cache($form_build_id, $form, $form_state);
-  $form += array(
-    '#post' => $_POST,
-    '#programmed' => FALSE,
-  );
-
-  // Rebuild the form.
-  $form = form_builder('poll_node_form', $form, $form_state);
-
+  // Get the form from the cache.
+  $form = form_get_cache($form_build_id, $form_state);
+  $args = $form['#parameters'];
+  $form_id = array_shift($args);
+  // We will run some of the submit handlers so we need to disable redirecting.
+  $form['#redirect'] = FALSE;
+  // We need to process the form, prepare for that by setting a few internals
+  // variables.
+  $form['#post'] = $_POST;
+  $form['#programmed'] = FALSE;
+  $form_state['post'] = $_POST;
+  // Build, validate and if possible, submit the form.
+  drupal_process_form($form_id, $form, $form_state);
+  // This call recreates the form relying solely on the form_state that the
+  // drupal_process_form set up.
+  $form = drupal_rebuild_form($form_id, $form_state, $args, $form_build_id);
   // Render the new output.
   $choice_form = $form['choice_wrapper']['choice'];
   unset($choice_form['#prefix'], $choice_form['#suffix']); // Prevent duplicate wrappers.
-  $choice_form[$delta]['#attributes']['class'] = empty($choice_form[$delta]['#attributes']['class']) ? 'ahah-new-content' : $choice_form[$delta]['#attributes']['class'] .' ahah-new-content';
-  $choice_form[$delta]['chvotes']['#value'] = 0;
   $output = theme('status_messages') . drupal_render($choice_form);
 
   drupal_json(array('status' => TRUE, 'data' => $output));
