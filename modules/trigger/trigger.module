@@ -209,8 +209,7 @@ function _trigger_nodeapi($node, $op, $a3 = NULL, $a4 = NULL) {
   static $objects;
   // Prevent recursion by tracking which operations have already been called.
   static $recursion;
-  // Support a subset of operations.
-  if (!in_array($op, array('view', 'update', 'presave', 'insert', 'delete')) || isset($recursion[$op])) {
+  if (isset($recursion[$op])) {
     return;
   }
   $recursion[$op] = TRUE;
@@ -433,10 +432,6 @@ function trigger_user_view(&$edit, &$account, $category) {
 function _trigger_user($op, &$edit, &$account, $category = NULL) {
   // Keep objects for reuse so that changes actions make to objects can persist.
   static $objects;
-  // We support a subset of operations.
-  if (!in_array($op, array('login', 'logout', 'insert', 'update', 'delete', 'view'))) {
-    return;
-  }
   $aids = _trigger_get_hook_aids('user', $op);
   $context = array(
     'hook' => 'user',
