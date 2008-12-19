@@ -11,39 +11,20 @@ body {
   direction: rtl;
 }
 
-ol li, ul li {
-  margin: 0.4em .5em 0.4em 0;
+ul, .block ul, ol {
+  padding: 0 1.5em 0 0;
 }
 
 ul.menu, .item-list ul {
   margin: 0.35em -0.5em 0 0;
 }
 
-ul.menu ul, .item-list ul ul {
-  margin-left: 0;
-  margin-right: 0em;
-}
-
 ol li, ul li, ul.menu li, .item-list ul li, li.leaf {
   margin: 0.15em .5em 0.15em 0;
 }
 
-ul li, ul.menu li, .item-list ul li, li.leaf {
-  padding: 0 1.5em .2em 0;
-  background: transparent url("images/menu-leaf.gif") no-repeat 100% .5em;
-}
-
-ol li {
-  margin-left: 0;
-  margin-right: 2em;
-}
-
-ul li.expanded {
-  background: transparent url("images/menu-expanded.gif") no-repeat 100% .35em;
-}
-
 ul li.collapsed {
-  background: transparent url("images/menu-collapsed-rtl.gif") no-repeat 100% .4em;
+  list-style-image: url(images/menu-collapsed-rtl.gif);
 }
 
 ul.inline li {
