@@ -491,5 +491,12 @@ class TaxonomyLoadMultipleUnitTest extends TaxonomyWebTestCase {
     $terms4 = taxonomy_term_load_multiple(NULL, array('vid' => $vocabulary->vid), TRUE);
     $this->assertTrue(count($terms4 == 4), t('Correct number of terms were loaded.'));
     $this->assertFalse(isset($terms4[$deleted->tid]));
+
+    // Create a single term and load it by name.
+    $term = $this->createTerm($vocabulary->vid);
+    $loaded_terms = taxonomy_term_load_multiple(array(), array('name' => $term->name));
+    $this->assertEqual(count($loaded_terms), 1, t('One term was loaded'));
+    $loaded_term = reset($loaded_terms);
+    $this->assertEqual($term->tid, $loaded_term->tid, t('Term loaded by name successfully.'));
   }
 }

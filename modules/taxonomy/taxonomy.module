@@ -1103,7 +1103,7 @@ function taxonomy_term_load_multiple($tids = array(), $conditions = array(), $re
     // If the conditions array is populated, add those to the query.
     if ($conditions) {
       foreach ($conditions as $field => $value) {
-        $query->conditions('t.' . $field, $value);
+        $query->condition('t.' . $field, $value);
       }
     }
     $queried_terms = $query->execute()->fetchAllAssoc('tid');
