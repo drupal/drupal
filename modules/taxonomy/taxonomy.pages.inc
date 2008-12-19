@@ -31,7 +31,9 @@ function taxonomy_term_page($terms, $depth = 0, $op = 'page') {
       switch ($op) {
         case 'page':
           // Build breadcrumb based on first hierarchy of first term:
-          $current->tid = $tids[0];
+          $current = (object) array(
+            'tid' => $tids[0],
+          );
           $breadcrumb = array();
           while ($parents = taxonomy_get_parents($current->tid)) {
             $current = array_shift($parents);

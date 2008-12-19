@@ -603,14 +603,14 @@ function locale_translate_import_form() {
 
   if (!count($names)) {
     $languages = _locale_prepare_predefined_list();
-    $default = array_shift(array_keys($languages));
+    $default = key($languages);
   }
   else {
     $languages = array(
       t('Already added languages') => $names,
       t('Languages not yet added') => _locale_prepare_predefined_list()
     );
-    $default = array_shift(array_keys($names));
+    $default = key($names);
   }
 
   $form = array();

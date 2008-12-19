@@ -227,8 +227,10 @@ function forum_nodeapi_prepare($node) {
   if (_forum_nodeapi_check_node_type($node, $vocabulary)) {
     if (empty($node->nid)) {
       // New topic
-      $node->taxonomy[arg(3)]->vid = $vid;
-      $node->taxonomy[arg(3)]->tid = arg(3);
+      $node->taxonomy[arg(3)] = (object) array(
+        'vid' => $vid,
+        'tid' => arg(3),
+      );
     }
   }
 }
