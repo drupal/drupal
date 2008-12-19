@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.479 2008/12/16 23:57:32 dries Exp $
+// $Id: book.module,v 1.480 2008/12/19 03:55:23 dries Exp $
 
 /**
  * @file
@@ -625,7 +625,8 @@ function book_prev($book_link) {
     // The previous page in the book may be a child of the previous visible link.
     if ($prev['depth'] == $book_link['depth'] && $prev['has_children']) {
       // The subtree will have only one link at the top level - get its data.
-      $data = array_shift(book_menu_subtree_data($prev));
+      $tree = book_menu_subtree_data($prev);
+      $data = array_shift($tree);
       // The link of interest is the last child - iterate to find the deepest one.
       while ($data['below']) {
         $data = end($data['below']);

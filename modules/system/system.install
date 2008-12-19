@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.291 2008/12/03 16:32:22 dries Exp $
+// $Id: system.install,v 1.292 2008/12/19 03:55:23 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1336,7 +1336,7 @@ function system_update_6001() {
   db_add_primary_key($ret, 'term_node', array('vid', 'tid', 'nid'));
   db_add_index($ret, 'term_node', 'vid', array('vid'));
 
-  db_query('UPDATE {term_node} t SET vid = (SELECT vid FROM {node} n WHERE t.nid = n.nid)');
+  db_query('UPDATE {term_node} SET vid = (SELECT vid FROM {node} n WHERE {term_node}.nid = n.nid)');
   return $ret;
 }
 
@@ -3014,7 +3014,7 @@ function system_update_7008() {
     // Add chid column and convert existing votes.
     db_add_field($ret, 'poll_votes', 'chid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
     db_add_index($ret, 'poll_votes', 'chid', array('chid'));
-    $ret[] = update_sql("UPDATE {poll_votes} v SET chid = (SELECT chid FROM {poll_choices} c WHERE v.chorder = c.chorder AND v.nid = c.nid)");
+    $ret[] = update_sql("UPDATE {poll_votes} SET chid = (SELECT chid FROM {poll_choices} c WHERE {poll_votes}.chorder = c.chorder AND {poll_votes}.nid = c.nid)");
     // Remove old chorder column.
     db_drop_field($ret, 'poll_votes', 'chorder');
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.197 2008/12/16 21:04:08 dries Exp $
+// $Id: locale.inc,v 1.198 2008/12/19 03:55:23 dries Exp $
 
 /**
  * @file
@@ -603,14 +603,14 @@ function locale_translate_import_form() {
 
   if (!count($names)) {
     $languages = _locale_prepare_predefined_list();
-    $default = array_shift(array_keys($languages));
+    $default = key($languages);
   }
   else {
     $languages = array(
       t('Already added languages') => $names,
       t('Languages not yet added') => _locale_prepare_predefined_list()
     );
-    $default = array_shift(array_keys($names));
+    $default = key($names);
   }
 
   $form = array();

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.37 2008/11/13 08:13:56 webchick Exp $
+// $Id: taxonomy.admin.inc,v 1.38 2008/12/19 03:55:23 dries Exp $
 
 /**
  * @file
@@ -909,7 +909,7 @@ function taxonomy_vocabulary_confirm_reset_alphabetical(&$form_state, $vid) {
  * @see taxonomy_vocabulary_confirm_reset_alphabetical()
  */
 function taxonomy_vocabulary_confirm_reset_alphabetical_submit($form, &$form_state) {
-  db_query('UPDATE {term_data} t SET weight = 0 WHERE vid = :vid', array(':vid' => $form_state['values']['vid']));
+  db_query('UPDATE {term_data} SET weight = 0 WHERE vid = :vid', array(':vid' => $form_state['values']['vid']));
   drupal_set_message(t('Reset vocabulary %name to alphabetical order.', array('%name' => $form_state['values']['name'])));
   watchdog('taxonomy', 'Reset vocabulary %name to alphabetical order.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
   $form_state['redirect'] = 'admin/content/taxonomy/' . $form_state['values']['vid'];
