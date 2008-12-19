@@ -1,8 +1,8 @@
-/* $Id: book.css,v 1.7 2008/05/15 21:19:24 dries Exp $ */
+/* $Id: book.css,v 1.8 2008/12/19 15:42:26 dries Exp $ */
 
 .book-navigation .menu {
   border-top: 1px solid #888;
-  padding: 1em 0 0 3em;
+  padding: 1em 0 0 3em; /* LTR */
 }
 .book-navigation .page-links {
   border-top: 1px solid #888;

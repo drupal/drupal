@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.46 2008/06/25 09:12:25 dries Exp $ */
+/* $Id: style.css,v 1.47 2008/12/19 15:42:26 dries Exp $ */
 
 /**
  * Generic elements
@@ -53,7 +53,7 @@ h6 {
   font-size: 110%;
 }
 
-ul, quote, code, fieldset {
+quote, code, fieldset {
   margin: .5em 0;
 }
 
@@ -84,51 +84,36 @@ hr {
   background: #5294c1;
 }
 
-ul {
+ul, .block ul, ol {
   margin: 0.5em 0 1em;
-  padding: 0;
+  padding: 0 0 0 1.5em; /* LTR */
 }
 
+/* Default to menu leaf bullet for unordered list items. "ul" used here so it can cascade to list items and "li.leaf" to override the system leaf image. */
+ul, li.leaf {
+  list-style-image: url(images/menu-leaf.gif);
+}
+
+/* This is used to cancel the list style image when an ordered list is embedded in an unordered list. */
 ol {
-  margin: 0.75em 0 1.25em;
-  padding: 0;
-}
-
-ol li, ul li {
-  margin: 0.4em 0 0.4em .5em; /* LTR */
+  list-style-image: none;
 }
 
 ul.menu, .item-list ul {
   margin: 0.35em 0 0 -0.5em; /* LTR */
-  padding: 0;
-}
-
-ul.menu ul, .item-list ul ul {
-  margin-left: 0em; /* LTR */
 }
 
 ol li, ul li, ul.menu li, .item-list ul li, li.leaf {
   margin: 0.15em 0 0.15em .5em; /* LTR */
-}
-
-ul li, ul.menu li, .item-list ul li, li.leaf {
-  padding: 0 0 .2em 1.5em;
-  list-style-type: none;
-  list-style-image: none;
-  background: transparent url(images/menu-leaf.gif) no-repeat 1px .5em; /* LTR */
-}
-
-ol li {
-  padding: 0 0 .3em;
-  margin-left: 2em; /* LTR */
+  padding-bottom: .1em;
 }
 
 ul li.expanded {
-  background: transparent url(images/menu-expanded.gif) no-repeat 1px .35em; /* LTR */
+  list-style-image: url(images/menu-expanded.gif);
 }
 
 ul li.collapsed {
-  background: transparent url(images/menu-collapsed.gif) no-repeat 0px .4em; /* LTR */
+  list-style-image: url(images/menu-collapsed.gif); /* LTR */
 }
 
 ul li.leaf a, ul li.expanded a, ul li.collapsed a {
