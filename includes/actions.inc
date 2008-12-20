@@ -245,11 +245,14 @@ function actions_function_lookup($hash) {
  * the actions table. This is necessary so that actions that do not require
  * configuration can receive action IDs. This is not necessarily the best
  * approach, but it is the most straightforward.
+ *
+ * @param $delete_orphans
+ *   Boolean if TRUE, any actions that exist in the database but are no longer
+ *   found in the code (for example, because the module that provides them has
+ *   been disabled) will be deleted.
  */
-function actions_synchronize($actions_in_code = array(), $delete_orphans = FALSE) {
-  if (!$actions_in_code) {
-    $actions_in_code = actions_list(TRUE);
-  }
+function actions_synchronize($delete_orphans = FALSE) {
+  $actions_in_code = actions_list(TRUE);
   $actions_in_db = db_query("SELECT aid, callback, description FROM {actions} WHERE parameters = ''")->fetchAllAssoc('callback', PDO::FETCH_ASSOC);
 
   // Go through all the actions provided by modules.

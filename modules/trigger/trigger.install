@@ -9,7 +9,7 @@ function trigger_install() {
   drupal_install_schema('trigger');
 
   // Do initial synchronization of actions in code and the database.
-  actions_synchronize(actions_list());
+  actions_synchronize();
 }
 
 /**

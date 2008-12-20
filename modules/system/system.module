@@ -1607,8 +1607,8 @@ function system_action_info() {
  */
 function system_actions_manage() {
   $output = '';
+  actions_synchronize();
   $actions = actions_list();
-  actions_synchronize($actions);
   $actions_map = actions_actions_map($actions);
   $options = array(t('Choose an advanced action'));
   $unconfigurable = array();
@@ -1862,7 +1862,7 @@ function system_action_delete_orphans_post($orphaned) {
  * Remove actions that are in the database but not supported by any enabled module.
  */
 function system_actions_remove_orphans() {
-  actions_synchronize(actions_list(), TRUE);
+  actions_synchronize(TRUE);
   drupal_goto('admin/settings/actions/manage');
 }
 
