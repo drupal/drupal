@@ -2257,7 +2257,7 @@ function user_block_user_action(&$object, $context = array()) {
   }
   db_query("UPDATE {users} SET status = 0 WHERE uid = %d", $uid);
   drupal_session_destroy_uid($uid);
-  watchdog('action', 'Blocked user %name.', array('%name' => check_plain($user->name)));
+  watchdog('action', 'Blocked user %name.', array('%name' => $user->name));
 }
 
 /**
