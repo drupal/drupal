@@ -54,7 +54,7 @@ function theme_node_admin_overview($name, $type) {
 function node_type_form(&$form_state, $type = NULL) {
   drupal_add_js(drupal_get_path('module', 'node') .'/content_types.js');
   if (!isset($type->type)) {
-    // This is a new type.  Node module managed types are custom and unlocked.
+    // This is a new type. Node module managed types are custom and unlocked.
     $type = node_type_set_defaults(array('custom' => 1, 'locked' => 0));
   }
 

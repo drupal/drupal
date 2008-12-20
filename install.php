@@ -26,7 +26,7 @@ define('MAINTENANCE_MODE', 'install');
  */
 function install_main() {
   // The user agent header is used to pass a database prefix in the request when
-  // running tests.  However, for security reasons, it is imperative that no
+  // running tests. However, for security reasons, it is imperative that no
   // installation be permitted using such a prefix.
   if (preg_match("/^simpletest\d+$/", $_SERVER['HTTP_USER_AGENT'])) {
     header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
@@ -69,7 +69,7 @@ function install_main() {
     require_once DRUPAL_ROOT . '/includes/cache.inc';
     $conf['cache_inc'] = 'includes/cache.inc';
 
-    // Initialize the database system.  Note that the connection
+    // Initialize the database system. Note that the connection
     // won't be initialized until it is actually requested.
     require_once DRUPAL_ROOT . '/includes/database/database.inc';
 
@@ -741,7 +741,7 @@ if (Drupal.jsEnabled) {
       // Build menu to allow clean URL check.
       menu_rebuild();
 
-      // Cache a fully-built schema.  This is necessary for any
+      // Cache a fully-built schema. This is necessary for any
       // invocation of index.php because: (1) setting cache table
       // entries requires schema information, (2) that occurs during
       // bootstrap before any module are loaded, so (3) if there is no

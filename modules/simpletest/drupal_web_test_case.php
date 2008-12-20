@@ -806,7 +806,7 @@ class DrupalWebTestCase {
     drupal_install_modules($modules);
 
     // Because the schema is static cached, we need to flush
-    // it between each run.  If we don't, then it will contain
+    // it between each run. If we don't, then it will contain
     // stale data for the previous run's database prefix and all
     // calls to it will fail.
     drupal_get_schema(NULL, TRUE);
@@ -1033,8 +1033,8 @@ class DrupalWebTestCase {
   protected function drupalGet($path, array $options = array(), array $headers = array()) {
     $options['absolute'] = TRUE;
 
-    // We re-using a CURL connection here.  If that connection still has certain
-    // options set, it might change the GET into a POST.  Make sure we clear out
+    // We re-using a CURL connection here. If that connection still has certain
+    // options set, it might change the GET into a POST. Make sure we clear out
     // previous options.
     $out = $this->curlExec(array(CURLOPT_HTTPGET => TRUE, CURLOPT_URL => url($path, $options), CURLOPT_NOBODY => FALSE, CURLOPT_HTTPHEADER => $headers));
     $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.

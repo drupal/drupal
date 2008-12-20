@@ -36,15 +36,15 @@ All arguments are long options.
               produce errors from setting the session.
 
   URI         The URI to execute, i.e. http://default/foo/bar for executing
-              the path '/foo/bar' in your site 'default'.  URI has to be
+              the path '/foo/bar' in your site 'default'. URI has to be
               enclosed by quotation marks if there are ampersands in it
-              (f.e. index.php?q=node&foo=bar).  Prefix 'http://' is required,
+              (f.e. index.php?q=node&foo=bar). Prefix 'http://' is required,
               and the domain must exist in Drupal's sites-directory.
 
               If the given path and file exists it will be executed directly,
               i.e. if URI is set to http://default/bar/foo.php
               and bar/foo.php exists, this script will be executed without
-              bootstrapping Drupal.  To execute Drupal's cron.php, specify
+              bootstrapping Drupal. To execute Drupal's cron.php, specify
               http://default/cron.php as the URI.
 
 

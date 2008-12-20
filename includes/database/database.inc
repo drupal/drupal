@@ -12,10 +12,10 @@
  * Allow the use of different database servers using the same code base.
  *
  * Drupal provides a database abstraction layer to provide developers with
- * the ability to support multiple database servers easily.  The intent of
+ * the ability to support multiple database servers easily. The intent of
  * this layer is to preserve the syntax and power of SQL as much as possible,
  * but also allow developers a way to leverage more complex functionality in
- * a unified way.  It also provides a structured interface for dynamically
+ * a unified way. It also provides a structured interface for dynamically
  * constructing queries when appropriate, and enforcing security checks and
  * similar good practices.
  *
@@ -48,14 +48,14 @@
  * Finally, note the PDO-based ability to foreach() over the result set.
  *
  *
- * All queries are passed as a prepared statement string.  A
+ * All queries are passed as a prepared statement string. A
  * prepared statement is a "template" of a query that omits literal or variable
- * values in favor of placeholders.  The values to place into those
+ * values in favor of placeholders. The values to place into those
  * placeholders are passed separately, and the database driver handles
- * inserting the values into the query in a secure fashion.  That means you
+ * inserting the values into the query in a secure fashion. That means you
  * should never quote or string-escape a value to be inserted into the query.
  *
- * There are two formats for placeholders: named and unnamed.  Named placeholders
+ * There are two formats for placeholders: named and unnamed. Named placeholders
  * are strongly preferred in all cases as they are more flexible and
  * self-documenting.
  *
@@ -65,13 +65,13 @@
  * @endcode
  *
  * ":uid" is a placeholder that will be replaced with a literal value when
- * the query is executed.  A given placeholder label cannot be repeated in a
- * given query, even if the value should be the same.  When using named
+ * the query is executed. A given placeholder label cannot be repeated in a
+ * given query, even if the value should be the same. When using named
  * placeholders, the array of arguments to the query must be an associative
  * array where keys are a placeholder label (e.g., :uid) and the value is the
- * corresponding value to use.  The array may be in any order.
+ * corresponding value to use. The array may be in any order.
  *
- * Unnamed placeholders are simply a question mark.  Example:
+ * Unnamed placeholders are simply a question mark. Example:
  * @code
  * SELECT nid, title FROM {node} WHERE uid=?
  * @endcode
@@ -79,9 +79,9 @@
  * In this case, the array of arguments must be an indexed array of values to
  * use in the exact same order as the placeholders in the query.
  *
- * Note that placeholders should be a "complete" value.  For example, when
+ * Note that placeholders should be a "complete" value. For example, when
  * running a LIKE query the SQL wildcard character, %, should be part of the
- * value, not the query itself.  Thus, the following is incorrect:
+ * value, not the query itself. Thus, the following is incorrect:
  *
  * @code
  * SELECT nid, title FROM {node} WHERE title LIKE :title%
@@ -93,17 +93,17 @@
  * SELECT nid, title FROM {node} WHERE title LIKE :title
  * @endcode
  *
- * and the value for :title should include a % as appropriate.  Again, note the
- * lack of quotation marks around :title.  Because the value is not inserted
+ * and the value for :title should include a % as appropriate. Again, note the
+ * lack of quotation marks around :title. Because the value is not inserted
  * into the query as one big string but as an explicitly separate value, the
- * database server knows where the query ends and a value begins.  That is
+ * database server knows where the query ends and a value begins. That is
  * considerably more secure against SQL injection than trying to remember
  * which values need quotation marks and string escaping and which don't.
  *
  *
  * INSERT, UPDATE, and DELETE queries need special care in order to behave
- * consistently across all different databases.  Therefore, they use a special
- * object-oriented API for defining a query structurally.  For example, rather than
+ * consistently across all different databases. Therefore, they use a special
+ * object-oriented API for defining a query structurally. For example, rather than
  * @code
  * INSERT INTO node (nid, title, body) VALUES (1, 'my title', 'my body')
  * @endcode
@@ -113,7 +113,7 @@
  * db_insert('my_table')->fields($fields)->execute();
  * @endcode
  * This method allows databases that need special data type handling to do so,
- * while also allowing optimizations such as multi-insert queries.  UPDATE and
+ * while also allowing optimizations such as multi-insert queries. UPDATE and
  * DELETE queries have a similar pattern.
  */
 
@@ -250,45 +250,45 @@ abstract class DatabaseConnection extends PDO {
    * A given query can be customized with a number of option flags in an
    * associative array.
    *
-   *   target - The database "target" against which to execute a query.  Valid
-   *   values are "default" or "slave".  The system will first try to open a
-   *   connection to a database specified with the user-supplied key.  If one
+   *   target - The database "target" against which to execute a query. Valid
+   *   values are "default" or "slave". The system will first try to open a
+   *   connection to a database specified with the user-supplied key. If one
    *   is not available, it will silently fall back to the "default" target.
    *   If multiple databases connections are specified with the same target,
    *   one will be selected at random for the duration of the request.
    *
    *   fetch - This element controls how rows from a result set will be returned.
    *   legal values include PDO::FETCH_ASSOC, PDO::FETCH_BOTH, PDO::FETCH_OBJ,
-   *   PDO::FETCH_NUM, or a string representing the name of a class.  If a string
+   *   PDO::FETCH_NUM, or a string representing the name of a class. If a string
    *   is specified, each record will be fetched into a new object of that class.
-   *   The behavior of all other values is defined by PDO.  See
+   *   The behavior of all other values is defined by PDO. See
    *   http://www.php.net/PDOStatement-fetch
    *
    *   return - Depending on the type of query, different return values may be
-   *   meaningful.  This directive instructs the system which type of return
-   *   value is desired.  The system will generally set the correct value
+   *   meaningful. This directive instructs the system which type of return
+   *   value is desired. The system will generally set the correct value
    *   automatically, so it is extremely rare that a module developer will ever
-   *   need to specify this value.  Setting it incorrectly will likely lead to
-   *   unpredictable results or fatal errors.  Legal values include:
+   *   need to specify this value. Setting it incorrectly will likely lead to
+   *   unpredictable results or fatal errors. Legal values include:
    *
    *     Database::RETURN_STATEMENT - Return the prepared statement object for the
-   *     query.  This is usually only meaningful for SELECT queries, where the
+   *     query. This is usually only meaningful for SELECT queries, where the
    *     statement object is how one accesses the result set returned by the query.
    *
    *     Database::RETURN_AFFECTED - Return the number of rows affected by an
-   *     UPDATE or DELETE query.  Be aware that means the number of rows
+   *     UPDATE or DELETE query. Be aware that means the number of rows
    *     actually changed, not the number of rows matched by the WHERE clause.
    *
    *     Database::RETURN_INSERT_ID - Return the sequence ID (primary key)
    *     created by an INSERT statement on a table that contains a serial column.
    *
    *     Database::RETURN_NULL - Do not return anything, as there is no
-   *     meaningful value to return.  That is the case for INSERT queries on
+   *     meaningful value to return. That is the case for INSERT queries on
    *     tables that do not contain a serial column.
    *
    *   throw_exception - By default, the database system will catch any errors
    *   on a query as an Exception, log it, and then rethrow it so that code
-   *   further up the call chain can take an appropriate action.  To supress
+   *   further up the call chain can take an appropriate action. To supress
    *   that behavior and simply return NULL on failure, set this option to FALSE.
    *
    * @return
@@ -344,7 +344,7 @@ abstract class DatabaseConnection extends PDO {
    * Prepare a query string and return the prepared statement.
    *
    * This method caches prepared statements, reusing them when
-   * possible.  It also prefixes tables names enclosed in curly-braces.
+   * possible. It also prefixes tables names enclosed in curly-braces.
    *
    * @param $query
    *   The query string as SQL, with curly-braces surrounding the
@@ -364,13 +364,13 @@ abstract class DatabaseConnection extends PDO {
   /**
    * Tell this connection object what its target value is.
    *
-   * This is needed for logging and auditing.  It's sloppy to do in the
+   * This is needed for logging and auditing. It's sloppy to do in the
    * constructor because the constructor for child classes has a different
-   * signature.  We therefore also ensure that this function is only ever
+   * signature. We therefore also ensure that this function is only ever
    * called once.
    *
    * @param $target
-   *   The target this connection is for.  Set to NULL (default) to disable
+   *   The target this connection is for. Set to NULL (default) to disable
    *   logging entirely.
    */
   public function setTarget($target = NULL) {
@@ -403,7 +403,7 @@ abstract class DatabaseConnection extends PDO {
    * Get the current logging object for this connection.
    *
    * @return
-   *   The current logging object for this connection.  If there isn't one,
+   *   The current logging object for this connection. If there isn't one,
    *   NULL is returned.
    */
   public function getLogger() {
@@ -414,7 +414,7 @@ abstract class DatabaseConnection extends PDO {
    * Create the appropriate sequence name for a given table and serial field.
    *
    * This information is exposed to all database drivers, although it is only
-   * useful on some of them.  This method is table prefix-aware.
+   * useful on some of them. This method is table prefix-aware.
    *
    * @param $table
    *   The table name to use for the sequence.
@@ -431,32 +431,32 @@ abstract class DatabaseConnection extends PDO {
    * Executes a query string against the database.
    *
    * This method provides a central handler for the actual execution
-   * of every query.  All queries executed by Drupal are executed as
+   * of every query. All queries executed by Drupal are executed as
    * PDO prepared statements.
    *
    * @param $query
-   *   The query to execute.  In most cases this will be a string containing
-   *   an SQL query with placeholders.  An already-prepared instance of
+   *   The query to execute. In most cases this will be a string containing
+   *   an SQL query with placeholders. An already-prepared instance of
    *   DatabaseStatementInterface may also be passed in order to allow calling code
-   *   to manually bind variables to a query.  If a DatabaseStatementInterface
+   *   to manually bind variables to a query. If a DatabaseStatementInterface
    *   is passed, the $args array will be ignored.
    *
    *   It is extremely rare that module code will need to pass a statement
-   *   object to this method.  It is used primarily for database drivers for
+   *   object to this method. It is used primarily for database drivers for
    *   databases that require special LOB field handling.
    * @param $args
-   *   An array of arguments for the prepared statement.  If the prepared
+   *   An array of arguments for the prepared statement. If the prepared
    *   statement uses ? placeholders, this array must be an indexed array.
    *   If it contains named placeholders, it must be an associative array.
    * @param $options
-   *   An associative array of options to control how the query is run.  See
+   *   An associative array of options to control how the query is run. See
    *   the documentation for DatabaseConnection::defaultOptions() for details.
    * @return
    *   This method will return one of: The executed statement, the number of
    *   rows affected by the query (not the number matched), or the generated
    *   insert id of the last query, depending on the value of $options['return'].
    *   Typically that value will be set by default or a query builder and should
-   *   not be set by a user.  If there is an error, this method will return NULL
+   *   not be set by a user. If there is an error, this method will return NULL
    *   and may throw an exception if $options['throw_exception'] is TRUE.
    */
   public function query($query, array $args = array(), $options = array()) {
@@ -513,7 +513,7 @@ abstract class DatabaseConnection extends PDO {
    * @see SelectQuery
    * @param $table
    *   The base table for this query, that is, the first table in the FROM
-   *   clause.  This table will also be used as the "base" table for query_alter
+   *   clause. This table will also be used as the "base" table for query_alter
    *   hook implementations.
    * @param $alias
    *   The alias of the base table of this query.
@@ -653,7 +653,7 @@ abstract class DatabaseConnection extends PDO {
    *
    * @param $required
    *   If executing an operation that absolutely must use transactions, specify
-   *   TRUE for this parameter.  If the connection does not support transactions,
+   *   TRUE for this parameter. If the connection does not support transactions,
    *   this method will throw an exception and the operation will not be possible.
    * @see DatabaseTransaction
    */
@@ -715,7 +715,7 @@ abstract class DatabaseConnection extends PDO {
    *   The name of the temporary table to select into. This name will not be
    *   prefixed as there is no risk of collision.
    * @param $options
-   *   An associative array of options to control how the query is run.  See
+   *   An associative array of options to control how the query is run. See
    *   the documentation for DatabaseConnection::defaultOptions() for details.
    * @return
    *   A database query result resource, or FALSE if the query was not executed
@@ -750,13 +750,13 @@ abstract class DatabaseConnection extends PDO {
    * Gets any special processing requirements for the condition operator.
    *
    * Some condition types require special processing, such as IN, because
-   * the value data they pass in is not a simple value.  This is a simple
-   * overridable lookup function.  Database connections should define only
+   * the value data they pass in is not a simple value. This is a simple
+   * overridable lookup function. Database connections should define only
    * those operators they wish to be handled differently than the default.
    *
    * @see DatabaseCondition::compile().
    * @param $operator
-   *   The condition operator, such as "IN", "BETWEEN", etc.  Case-sensitive.
+   *   The condition operator, such as "IN", "BETWEEN", etc. Case-sensitive.
    * @return
    *   The extra handling directives for the specified operator, or NULL.
    */
@@ -766,7 +766,7 @@ abstract class DatabaseConnection extends PDO {
 /**
  * Primary front-controller for the database system.
  *
- * This class is uninstantiatable and un-extendable.  It acts to encapsulate
+ * This class is uninstantiatable and un-extendable. It acts to encapsulate
  * all control and shepherding of database connections into a single location
  * without the use of globals.
  *
@@ -798,7 +798,7 @@ abstract class Database {
   const RETURN_INSERT_ID = 3;
 
   /**
-   * An nested array of all active connections.  It is keyed by database name and target.
+   * An nested array of all active connections. It is keyed by database name and target.
    *
    * @var array
    */
@@ -848,7 +848,7 @@ abstract class Database {
    * @param $key
    *   The database connection key for which we want to log.
    * @return
-   *   The query log object.  Note that the log object does support richer
+   *   The query log object. Note that the log object does support richer
    *   methods than the few exposed through the Database class, so in some
    *   cases it may be desirable to access it directly.
    */
@@ -872,7 +872,7 @@ abstract class Database {
   /**
    * Retrieve the queries logged on for given logging key.
    *
-   * This method also ends logging for the specified key.  To get the query log
+   * This method also ends logging for the specified key. To get the query log
    * to date without ending the logger request the logging object by starting
    * it again (which does nothing to an open log key) and call methods on it as
    * desired.
@@ -984,7 +984,7 @@ abstract class Database {
     foreach ($databaseInfo as $index => $info) {
       foreach ($databaseInfo[$index] as $target => $value) {
         // If there is no "driver" property, then we assume it's an array of
-        // possible connections for this target.  Pick one at random.  That
+        // possible connections for this target. Pick one at random. That
         // allows us to have, for example, multiple slave servers.
         if (empty($value['driver'])) {
           $databaseInfo[$index][$target] = $databaseInfo[$index][$target][mt_rand(0, count($databaseInfo[$index][$target]) - 1)];
@@ -1000,7 +1000,7 @@ abstract class Database {
    *
    * This method allows the addition of new connection credentials at runtime.
    * Under normal circumstances the preferred way to specify database credentials
-   * is via settings.php.  However, this method allows them to be added at
+   * is via settings.php. However, this method allows them to be added at
    * arbitrary times, such as during unit tests, when connecting to admin-defined
    * third party databases, etc.
    *
@@ -1042,7 +1042,7 @@ abstract class Database {
    * Open a connection to the server specified by the given key and target.
    *
    * @param $key
-   *   The database connection key, as specified in settings.php.  The default
+   *   The database connection key, as specified in settings.php. The default
    *   is "default".
    * @param $target
    *   The database target to open.
@@ -1084,7 +1084,7 @@ abstract class Database {
     }
     catch (Exception $e) {
       // It is extremely rare that an exception will be generated here other
-      // than when installing.  We therefore intercept it and try the installer,
+      // than when installing. We therefore intercept it and try the installer,
       // passing on the exception otherwise.
       _db_check_install_needed();
       throw $e;
@@ -1094,7 +1094,7 @@ abstract class Database {
   /**
    * Instruct the system to temporarily ignore a given key/target.
    *
-   * At times we need to temporarily disable slave queries.  To do so,
+   * At times we need to temporarily disable slave queries. To do so,
    * call this method with the database key and the target to disable.
    * That database key will then always fall back to 'default' for that
    * key, even if it's defined.
@@ -1115,7 +1115,7 @@ abstract class Database {
  *
  * This exception will be thrown when a transaction is started that does not
  * allow for the "silent fallback" of no transaction and the database connection
- * in use does not support transactions.  The calling code must then take
+ * in use does not support transactions. The calling code must then take
  * appropriate action.
  */
 class TransactionsNotSupportedException extends PDOException { }
@@ -1123,16 +1123,16 @@ class TransactionsNotSupportedException extends PDOException { }
 /**
  * A wrapper class for creating and managing database transactions.
  *
- * Not all databases or database configurations support transactions.  For
- * example, MySQL MyISAM tables do not.  It is also easy to begin a transaction
+ * Not all databases or database configurations support transactions. For
+ * example, MySQL MyISAM tables do not. It is also easy to begin a transaction
  * and then forget to commit it, which can lead to connection errors when
  * another transaction is started.
  *
- * This class acts as a wrapper for transactions.  To begin a transaction,
- * simply instantiate it.  When the object goes out of scope and is destroyed
- * it will automatically commit.  It also will check to see if the specified
- * connection supports transactions.  If not, it will simply skip any transaction
- * commands, allowing user-space code to proceed normally.  The only difference
+ * This class acts as a wrapper for transactions. To begin a transaction,
+ * simply instantiate it. When the object goes out of scope and is destroyed
+ * it will automatically commit. It also will check to see if the specified
+ * connection supports transactions. If not, it will simply skip any transaction
+ * commands, allowing user-space code to proceed normally. The only difference
  * is that rollbacks won't actually do anything.
  *
  * In the vast majority of cases, you should not instantiate this class directly.
@@ -1174,7 +1174,7 @@ class DatabaseTransaction {
   /**
    * Track the number of "layers" of transactions currently active.
    *
-   * On many databases transactions cannot nest.  Instead, we track
+   * On many databases transactions cannot nest. Instead, we track
    * nested calls to transactions and collapse them into a single
    * transaction.
    *
@@ -1325,7 +1325,7 @@ interface DatabaseStatementInterface extends Traversable {
    * Return a single field out of the current
    *
    * @param $index
-   *   The numeric index of the field to return.  Defaults to the first field.
+   *   The numeric index of the field to return. Defaults to the first field.
    * @return
    *   A single field from the next record.
    */
@@ -1343,7 +1343,7 @@ interface DatabaseStatementInterface extends Traversable {
    * Fetches the next row and returns it as an associative array.
    *
    * This method corresponds to PDOStatement::fetchObject(),
-   * but for associative arrays.  For some reason PDOStatement does
+   * but for associative arrays. For some reason PDOStatement does
    * not have a corresponding array helper method, so one is added.
    *
    * @return
@@ -1407,7 +1407,7 @@ interface DatabaseStatementInterface extends Traversable {
    * @param $key
    *   The name of the field on which to index the array.
    * @param $fetch
-   *   The fetchmode to use.  If set to PDO::FETCH_ASSOC, PDO::FETCH_NUM, or
+   *   The fetchmode to use. If set to PDO::FETCH_ASSOC, PDO::FETCH_NUM, or
    *   PDO::FETCH_BOTH the returned value with be an array of arrays. For any
    *   other value it will be an array of objects.
    * @return
@@ -1420,8 +1420,8 @@ interface DatabaseStatementInterface extends Traversable {
  * Default implementation of DatabaseStatementInterface.
  *
  * PDO allows us to extend the PDOStatement class to provide additional
- * functionality beyond that offered by default.  We do need extra
- * functionality.  By default, this class is not driver-specific.  If a given
+ * functionality beyond that offered by default. We do need extra
+ * functionality. By default, this class is not driver-specific. If a given
  * driver needs to set a custom statement class, it may do so in its constructor.
  *
  * @link http://us.php.net/pdostatement
@@ -1523,18 +1523,18 @@ class DatabaseStatementBase extends PDOStatement implements DatabaseStatementInt
 /**
  * Execute an arbitrary query string against the active database.
  *
- * Do not use this function for INSERT, UPDATE, or DELETE queries.  Those should
- * be handled via the appropriate query builder factory.  Use this function for
+ * Do not use this function for INSERT, UPDATE, or DELETE queries. Those should
+ * be handled via the appropriate query builder factory. Use this function for
  * SELECT queries that do not require a query builder.
  *
  * @see DatabaseConnection::defaultOptions()
  * @param $query
- *   The prepared statement query to run.  Although it will accept both
+ *   The prepared statement query to run. Although it will accept both
  *   named and unnamed placeholders, named placeholders are strongly preferred
  *   as they are more self-documenting.
  * @param $args
- *   An array of values to substitute into the query.  If the query uses named
- *   placeholders, this is an associative array in any order.  If the query uses
+ *   An array of values to substitute into the query. If the query uses named
+ *   placeholders, this is an associative array in any order. If the query uses
  *   unnamed placeholders (?), this is an indexed array and the order must match
  *   the order of placeholders in the query string.
  * @param $options
@@ -1557,12 +1557,12 @@ function db_query($query, $args = array(), $options = array()) {
  *
  * @see DatabaseConnection::defaultOptions()
  * @param $query
- *   The prepared statement query to run.  Although it will accept both
+ *   The prepared statement query to run. Although it will accept both
  *   named and unnamed placeholders, named placeholders are strongly preferred
  *   as they are more self-documenting.
  * @param $args
- *   An array of values to substitute into the query.  If the query uses named
- *   placeholders, this is an associative array in any order.  If the query uses
+ *   An array of values to substitute into the query. If the query uses named
+ *   placeholders, this is an associative array in any order. If the query uses
  *   unnamed placeholders (?), this is an indexed array and the order must match
  *   the order of placeholders in the query string.
  * @param $from
@@ -1591,12 +1591,12 @@ function db_query_range($query, $args, $from = 0, $count = 0, $options = array()
  *
  * @see DatabaseConnection::defaultOptions()
  * @param $query
- *   The prepared statement query to run.  Although it will accept both
+ *   The prepared statement query to run. Although it will accept both
  *   named and unnamed placeholders, named placeholders are strongly preferred
  *   as they are more self-documenting.
  * @param $args
- *   An array of values to substitute into the query.  If the query uses named
- *   placeholders, this is an associative array in any order.  If the query uses
+ *   An array of values to substitute into the query. If the query uses named
+ *   placeholders, this is an associative array in any order. If the query uses
  *   unnamed placeholders (?), this is an indexed array and the order must match
  *   the order of placeholders in the query string.
  * @param $tablename
@@ -1687,8 +1687,8 @@ function db_delete($table, array $options = array()) {
  * Returns a new SelectQuery object for the active database.
  *
  * @param $table
- *   The base table for this query.  May be a string or another SelectQuery
- *   object.  If a query object is passed, it will be used as a subselect.
+ *   The base table for this query. May be a string or another SelectQuery
+ *   object. If a query object is passed, it will be used as a subselect.
  * @param $alias
  *   The alias for the base table of this query.
  * @param $options
@@ -1746,7 +1746,7 @@ function db_escape_table($table) {
  * Perform an SQL query and return success or failure.
  *
  * @param $sql
- *   A string containing a complete SQL query.  %-substitution
+ *   A string containing a complete SQL query. %-substitution
  *   parameters are not supported.
  * @return
  *   An array containing the keys:
@@ -1893,7 +1893,7 @@ function db_type_placeholder($type) {
       return '\'%s\'';
 
     case 'numeric':
-      // Numeric values are arbitrary precision numbers.  Syntacically, numerics
+      // Numeric values are arbitrary precision numbers. Syntacically, numerics
       // should be specified directly in SQL. However, without single quotes
       // the %s placeholder does not protect against non-numeric characters such
       // as spaces which would expose us to SQL injection.
@@ -1972,7 +1972,7 @@ function db_drop_table(&$ret, $table) {
  * @param $keys_new
  *   Optional keys and indexes specification to be created on the
  *   table along with adding the field. The format is the same as a
- *   table specification but without the 'fields' element.  If you are
+ *   table specification but without the 'fields' element. If you are
  *   adding a type 'serial' field, you MUST specify at least one key
  *   or index including it in this array. @see db_change_field for more
  *   explanation why.
@@ -2132,7 +2132,7 @@ function db_drop_index(&$ret, $table, $name) {
  * );
  * @endcode
  * and you want to change foo.bar to be type serial, leaving it as the
- * primary key.  The correct sequence is:
+ * primary key. The correct sequence is:
  * @code
  * db_drop_primary_key($ret, 'foo');
  * db_change_field($ret, 'foo', 'bar', 'bar',
@@ -2147,10 +2147,10 @@ function db_drop_index(&$ret, $table, $name) {
  * sequences (from serial-type fields) that use the changed field to be dropped.
  *
  * On MySQL, all type 'serial' fields must be part of at least one key
- * or index as soon as they are created.  You cannot use
+ * or index as soon as they are created. You cannot use
  * db_add_{primary_key,unique_key,index}() for this purpose because
  * the ALTER TABLE command will fail to add the column without a key
- * or index specification.  The solution is to use the optional
+ * or index specification. The solution is to use the optional
  * $keys_new argument to create the key or index at the same time as
  * field.
  *
@@ -2199,7 +2199,7 @@ function _db_error_page($error = '') {
  * @ingroup database-legacy
  *
  * These functions are no longer necessary, as the DatabaseStatementInterface interface
- * offers this and much more functionality.  They are kept temporarily for backward
+ * offers this and much more functionality. They are kept temporarily for backward
  * compatibility during conversion and should be removed as soon as possible.
  *
  * @{
@@ -2234,7 +2234,7 @@ function _db_check_install_needed() {
  * Backward-compatibility utility.
  *
  * This function should be removed after all queries have been converted
- * to the new API.  It is temporary only.
+ * to the new API. It is temporary only.
  *
  * @todo Remove this once the query conversion is complete.
  */
@@ -2247,7 +2247,7 @@ function _db_query_process_args($query, $args, $options) {
     $options['target'] = 'default';
   }
 
-  // Temporary backward-compatibliity hacks.  Remove later.
+  // Temporary backward-compatibliity hacks. Remove later.
   $old_query = $query;
   $query = str_replace(array('%n', '%d', '%f', '%b', "'%s'", '%s'), '?', $old_query);
   if ($old_query !== $query) {
@@ -2256,7 +2256,7 @@ function _db_query_process_args($query, $args, $options) {
 
   // A large number of queries pass FALSE or empty-string for
   // int/float fields because the previous version of db_query()
-  // casted them to int/float, resulting in 0.  MySQL PDO happily
+  // casted them to int/float, resulting in 0. MySQL PDO happily
   // accepts these values as zero but PostgreSQL PDO does not, and I
   // do not feel like tracking down and fixing every such query at
   // this time.

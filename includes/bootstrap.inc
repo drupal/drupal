@@ -315,8 +315,8 @@ function timer_stop($name) {
  * 13. $confdir/default
  *
  * If a file named sites.php is present in the $confdir, it will be loaded
- * prior to scanning for directories.  It should define an associative array
- * named $sites, which maps domains to directories.  It should be in the form
+ * prior to scanning for directories. It should define an associative array
+ * named $sites, which maps domains to directories. It should be in the form
  * of:
  *
  * $sites = array(
@@ -334,7 +334,7 @@ function timer_stop($name) {
  * "example.com" in the sites directory whenever a request comes from
  * "example.com", "devexample.com", or "localhost/example". That is useful
  * on development servers, where the domain name may not be the same as the
- * domain of the live server.  Since Drupal stores file paths into the database
+ * domain of the live server. Since Drupal stores file paths into the database
  * (files, system table, etc.) this will ensure the paths are correct while
  * accessed on development servers.
  *
@@ -409,7 +409,7 @@ function drupal_initialize_variables() {
  * Validate that $_SERVER['HTTP_HOST'] is safe.
  *
  * As $_SERVER['HTTP_HOST'] is user input, ensure it only contains characters
- * allowed in hostnames.  See RFC 952 (and RFC 2181). $_SERVER['HTTP_HOST'] is
+ * allowed in hostnames. See RFC 952 (and RFC 2181). $_SERVER['HTTP_HOST'] is
  * lowercased.
  *
  * @return
@@ -548,7 +548,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     // nothing
   }
   // Verify that we have an active database connection, before querying
-  // the database.  This is required because this function is called both
+  // the database. This is required because this function is called both
   // before we have a database connection (i.e. during installation) and
   // when a database connection fails.
   elseif (db_is_active() && (($file = db_query("SELECT filename FROM {system} WHERE name = :name AND type = :type", array(':name' => $name, ':type' => $type))->fetchField()) && file_exists($file))) {
@@ -708,7 +708,7 @@ function drupal_load($type, $name) {
  * Set HTTP headers in preparation for a page response.
  *
  * Authenticated users are always given a 'no-cache' header, and will
- * fetch a fresh page on every request.  This prevents authenticated
+ * fetch a fresh page on every request. This prevents authenticated
  * users seeing locally cached pages that show them as logged out.
  *
  * @see page_set_cache()
@@ -724,7 +724,7 @@ function drupal_page_header() {
  * Set HTTP headers in preparation for a cached page response.
  *
  * The general approach here is that anonymous users can keep a local
- * cache of the page, but must revalidate it on every request.  Then,
+ * cache of the page, but must revalidate it on every request. Then,
  * they are given a '304 Not Modified' response as long as they stay
  * logged out and the page has not been modified.
  *
@@ -887,8 +887,8 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
 
   static $in_error_state = FALSE;
 
-  // It is possible that the error handling will itself trigger an error.  In that case, we could
-  // end up in an infinite loop.  To avoid that, we implement a simple static semaphore.
+  // It is possible that the error handling will itself trigger an error. In that case, we could
+  // end up in an infinite loop. To avoid that, we implement a simple static semaphore.
   if (!$in_error_state) {
     $in_error_state = TRUE;
 
@@ -1064,7 +1064,7 @@ function drupal_bootstrap($phase = NULL) {
 }
 
 /**
- * Return the current bootstrap phase for this Drupal process.  The
+ * Return the current bootstrap phase for this Drupal process. The
  * current phase is the one most recently completed by
  * drupal_bootstrap().
  *
@@ -1101,7 +1101,7 @@ function _drupal_bootstrap($phase) {
       break;
 
     case DRUPAL_BOOTSTRAP_DATABASE:
-      // Initialize the database system.  Note that the connection
+      // Initialize the database system. Note that the connection
       // won't be initialized until it is actually requested.
       require_once DRUPAL_ROOT . '/includes/database/database.inc';
       // Register autoload functions so that we can access classes and interfaces.
@@ -1268,7 +1268,7 @@ function language_default($property = NULL) {
 /**
  * If Drupal is behind a reverse proxy, we use the X-Forwarded-For header
  * instead of $_SERVER['REMOTE_ADDR'], which would be the IP address of
- * the proxy server, and not the client's.  If Drupal is run in a cluster
+ * the proxy server, and not the client's. If Drupal is run in a cluster
  * we use the X-Cluster-Client-Ip header instead.
  *
  * @param $reset
@@ -1344,7 +1344,7 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
         // was last called with, which is not always what you want.
         // module_load_all_includes() calls module_list(), but if this function
         // is called very early in the bootstrap process then it will be
-        // uninitialized and therefore return no modules.  Instead, we have to
+        // uninitialized and therefore return no modules. Instead, we have to
         // "prime" module_list() here to to values we want, specifically
         // "yes rebuild the list and don't limit to bootstrap".
         // TODO: Remove this call after http://drupal.org/node/222109 is fixed.

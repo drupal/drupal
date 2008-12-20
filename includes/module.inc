@@ -392,7 +392,7 @@ function module_hook($module, $hook) {
  *     MODULE_IMPLEMENTS_WRITE_CACHE: Write the stored list of hook
  *     implementations into the cache_registry table.
  * @param $sort
- *   By default, modules are ordered by weight and filename.  By setting this
+ *   By default, modules are ordered by weight and filename. By setting this
  *   option to TRUE, modules will be ordered by module name.
  * @return
  *   An array with the names of the modules which are implementing this hook.

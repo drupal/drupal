@@ -47,7 +47,7 @@ function _book_install_type_create() {
  * Drupal 5.x to 6.x update.
  *
  * This function moves any existing book hierarchy into the new structure used
- * in the 6.x module.  Rather than storing the hierarchy in the {book} table,
+ * in the 6.x module. Rather than storing the hierarchy in the {book} table,
  * the menu API is used to store the hierarchy in the {menu_links} table and the
  * {book} table serves to uniquely connect a node to a menu link.
  *

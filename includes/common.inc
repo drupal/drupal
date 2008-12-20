@@ -1532,7 +1532,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
  *
  * @param $path
  *   The Drupal path being linked to, such as "admin/content/node", or an
- *   existing URL like "http://drupal.org/".  The special path
+ *   existing URL like "http://drupal.org/". The special path
  *   '<front>' may also be given and will generate the site's base URL.
  * @param $options
  *   An associative array of additional options, with the following keys:
@@ -2777,7 +2777,7 @@ function drupal_random_bytes($count)  {
   // Note that it may be important that our $random_state is passed
   // through md5() prior to being rolled into $output, that the two md5()
   // invocations are different, and that the extra input into the first one -
-  // the microtime() - is prepended rather than appended.  This is to avoid
+  // the microtime() - is prepended rather than appended. This is to avoid
   // directly leaking $random_state via the $output stream, which could
   // allow for trivial prediction of further "random" numbers.
   while (strlen($output) < $count) {
@@ -3045,7 +3045,7 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
   $searchdir[] = 'sites/all/' . $directory;
 
   // The 'profiles' directory contains pristine collections of modules and
-  // themes as organized by a distribution.  It is pristine in the same way
+  // themes as organized by a distribution. It is pristine in the same way
   // that /modules is pristine for core; users should avoid changing anything
   // there in favor of sites/all or sites/<domain> directories.
   if (file_exists("profiles/$profile/$directory")) {

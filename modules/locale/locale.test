@@ -5,7 +5,7 @@ class LocaleTestCase extends DrupalWebTestCase {
   function getInfo() {
     return array(
       'name' => t('String translate and validate'),
-      'description' => 'Adds a new locale and translates its name.  Checks the validation of translation strings.',
+      'description' => 'Adds a new locale and translates its name. Checks the validation of translation strings.',
       'group' => 'Locale',
     );
   }

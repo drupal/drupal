@@ -27,25 +27,25 @@
  *
  *   - 'description': A string describing this table and its purpose.
  *     References to other tables should be enclosed in
- *     curly-brackets.  For example, the node_revisions table
+ *     curly-brackets. For example, the node_revisions table
  *     description field might contain "Stores per-revision title and
  *     body data for each {node}."
  *   - 'fields': An associative array ('fieldname' => specification)
- *     that describes the table's database columns.  The specification
- *     is also an array.  The following specification parameters are defined:
+ *     that describes the table's database columns. The specification
+ *     is also an array. The following specification parameters are defined:
  *
  *     - 'description': A string describing this field and its purpose.
  *       References to other tables should be enclosed in
- *       curly-brackets.  For example, the node table vid field
+ *       curly-brackets. For example, the node table vid field
  *       description might contain "Always holds the largest (most
  *       recent) {node_revision}.vid value for this nid."
  *     - 'type': The generic datatype: 'varchar', 'int', 'serial'
- *       'float', 'numeric', 'text', 'blob' or 'datetime'.  Most types
+ *       'float', 'numeric', 'text', 'blob' or 'datetime'. Most types
  *       just map to the according database engine specific
- *       datatypes.  Use 'serial' for auto incrementing fields. This
+ *       datatypes. Use 'serial' for auto incrementing fields. This
  *       will expand to 'int auto_increment' on mysql.
  *     - 'size': The data size: 'tiny', 'small', 'medium', 'normal',
- *       'big'.  This is a hint about the largest value the field will
+ *       'big'. This is a hint about the largest value the field will
  *       store and determines which of the database engine specific
  *       datatypes will be used (e.g. on MySQL, TINYINT vs. INT vs. BIGINT).
  *       'normal', the default, selects the base type (e.g. on MySQL,
@@ -54,21 +54,21 @@
  *       Not all sizes are available for all data types. See
  *       db_type_map() for possible combinations.
  *     - 'not null': If true, no NULL values will be allowed in this
- *       database column.  Defaults to false.
- *     - 'default': The field's default value.  The PHP type of the
- *       value matters: '', '0', and 0 are all different.  If you
+ *       database column. Defaults to false.
+ *     - 'default': The field's default value. The PHP type of the
+ *       value matters: '', '0', and 0 are all different. If you
  *       specify '0' as the default value for a type 'int' field it
  *       will not work because '0' is a string containing the
  *       character "zero", not an integer.
  *     - 'length': The maximal length of a type 'varchar' or 'text'
- *       field.  Ignored for other field types.
+ *       field. Ignored for other field types.
  *     - 'unsigned': A boolean indicating whether a type 'int', 'float'
- *       and 'numeric' only is signed or unsigned.  Defaults to
- *       FALSE.  Ignored for other field types.
+ *       and 'numeric' only is signed or unsigned. Defaults to
+ *       FALSE. Ignored for other field types.
  *     - 'precision', 'scale': For type 'numeric' fields, indicates
  *       the precision (total number of significant digits) and scale
- *       (decimal digits right of the decimal point).  Both values are
- *       mandatory.  Ignored for other field types.
+ *       (decimal digits right of the decimal point). Both values are
+ *       mandatory. Ignored for other field types.
  *
  *     All parameters apart from 'type' are optional except that type
  *     'numeric' columns must specify 'precision' and 'scale'.
@@ -76,10 +76,10 @@
  *  - 'primary key': An array of one or more key column specifiers (see below)
  *    that form the primary key.
  *  - 'unique key': An associative array of unique keys ('keyname' =>
- *    specification).  Each specification is an array of one or more
+ *    specification). Each specification is an array of one or more
  *    key column specifiers (see below) that form a unique key on the table.
  *  - 'indexes':  An associative array of indexes ('indexame' =>
- *    specification).  Each specification is an array of one or more
+ *    specification). Each specification is an array of one or more
  *    key column specifiers (see below) that form an index on the
  *    table.
  *
@@ -88,7 +88,7 @@
  * of the named column.
  *
  * As an example, here is a SUBSET of the schema definition for
- * Drupal's 'node' table.  It show four fields (nid, vid, type, and
+ * Drupal's 'node' table. It show four fields (nid, vid, type, and
  * title), the primary key on field 'nid', a unique key named 'vid' on
  * field 'vid', and two indexes, one named 'nid' on field 'nid' and
  * one named 'node_title_type' on the field 'title' and the first four
@@ -180,7 +180,7 @@ abstract class DatabaseSchema {
    * @param $keys_new
    *   Optional keys and indexes specification to be created on the
    *   table along with adding the field. The format is the same as a
-   *   table specification but without the 'fields' element.  If you are
+   *   table specification but without the 'fields' element. If you are
    *   adding a type 'serial' field, you MUST specify at least one key
    *   or index including it in this array. @see db_change_field for more
    *   explanation why.
@@ -321,7 +321,7 @@ abstract class DatabaseSchema {
    * );
    * @endcode
    * and you want to change foo.bar to be type serial, leaving it as the
-   * primary key.  The correct sequence is:
+   * primary key. The correct sequence is:
    * @code
    * db_drop_primary_key($ret, 'foo');
    * db_change_field($ret, 'foo', 'bar', 'bar',
@@ -336,10 +336,10 @@ abstract class DatabaseSchema {
    * sequences (from serial-type fields) that use the changed field to be dropped.
    *
    * On MySQL, all type 'serial' fields must be part of at least one key
-   * or index as soon as they are created.  You cannot use
+   * or index as soon as they are created. You cannot use
    * db_add_{primary_key,unique_key,index}() for this purpose because
    * the ALTER TABLE command will fail to add the column without a key
-   * or index specification.  The solution is to use the optional
+   * or index specification. The solution is to use the optional
    * $keys_new argument to create the key or index at the same time as
    * field.
    *

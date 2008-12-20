@@ -117,7 +117,7 @@ function locale_update_6000() {
 /**
  * Change locale column to language. The language column is added by
  * update_fix_d6_requirements() in update.php to avoid a large number
- * of error messages from update.php.  All we need to do here is copy
+ * of error messages from update.php. All we need to do here is copy
  * locale to language and then drop locale.
  */
 function locale_update_6001() {

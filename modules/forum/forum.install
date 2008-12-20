@@ -103,7 +103,7 @@ function forum_schema() {
 /**
  * Create the forum vocabulary if does not exist. Assign the
  * vocabulary a low weight so it will appear first in forum topic
- * create and edit forms.  Do not just call forum_enable() because in
+ * create and edit forms. Do not just call forum_enable() because in
  * future versions it might do something different.
  */
 function forum_update_6000() {

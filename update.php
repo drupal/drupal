@@ -524,11 +524,11 @@ function update_check_incompatibility($name, $type = 'module') {
  * to function properly.
  *
  * This function runs when update.php is run the first time for 6.x,
- * even before updates are selected or performed.  It is important
+ * even before updates are selected or performed. It is important
  * that if updates are not ultimately performed that no changes are
  * made which make it impossible to continue using the prior version.
- * Just adding columns is safe.  However, renaming the
- * system.description column to owner is not.  Therefore, we add the
+ * Just adding columns is safe. However, renaming the
+ * system.description column to owner is not. Therefore, we add the
  * system.owner column and leave it to system_update_6008() to copy
  * the data from description and remove description. The same for
  * renaming locales_target.locale to locales_target.language, which

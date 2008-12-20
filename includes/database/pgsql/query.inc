@@ -96,7 +96,7 @@ class InsertQuery_pgsql extends InsertQuery {
       }
     }
     else {
-      // If there are no values, then this is a default-only query.  We still need to handle that.
+      // If there are no values, then this is a default-only query. We still need to handle that.
       $placeholders = array_fill(0, count($this->defaultFields), 'default');
       $values[] = '(' . implode(', ', $placeholders) .')';
     }

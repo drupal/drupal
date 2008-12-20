@@ -181,7 +181,7 @@ code-style.pl - Review drupal code for style
 =head1 DESCRIPTION
 
 Originally written for Drupal (http://drupal.org/) to ensure stylish
-code.  This program reviews PHP code, and tries to show as many code
+code. This program reviews PHP code, and tries to show as many code
 improvements as possible with no false positives.
 
 =head1 OPTIONS

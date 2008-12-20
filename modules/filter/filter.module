@@ -412,7 +412,7 @@ function filter_list_format($format) {
  *    the default format.
  * @param $langcode
  *    Optional: the language code of the text to be filtered, e.g. 'en' for
- *    English.  This allows filters to be language aware so language specific
+ *    English. This allows filters to be language aware so language specific
  *    text replacement can be implemented.
  * @param $check
  *    Whether to check the $format with filter_access() first. Defaults to TRUE.

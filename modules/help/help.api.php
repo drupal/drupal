@@ -34,11 +34,11 @@
  *   An array that corresponds to the return of the arg() function - if a module
  *   needs to provide help for a page with additional parameters after the
  *   Drupal path or help for a specific value for a wildcard in the path, then
- *   the values in this array can be referenced.  For example you could provide
- *   help for user/1 by looking for the path user/% and $arg[1] == '1'.  This
+ *   the values in this array can be referenced. For example you could provide
+ *   help for user/1 by looking for the path user/% and $arg[1] == '1'. This
  *   array should always be used rather than directly invoking arg(). Note that
  *   depending on which module is invoking hook_help, $arg may contain only,
- *   empty strings.  Regardless, $arg[0] to $arg[11] will always be set.
+ *   empty strings. Regardless, $arg[0] to $arg[11] will always be set.
  * @return
  *   A localized string containing the help text. Every web link, l(), or
  *   url() must be replaced with %something and put into the final t()

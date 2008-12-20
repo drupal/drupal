@@ -92,7 +92,7 @@
  * @param $text
  *   The content to filter (applies to 'prepare' and 'process').
  * @param $langcode
- *   The language code associated with the content, e.g. 'en' for English.  This
+ *   The language code associated with the content, e.g. 'en' for English. This
  *   enables filters to be language aware and can be used to implement language
  *   specific text replacements.
  * @param $cache_id

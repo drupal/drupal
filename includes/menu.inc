@@ -239,9 +239,9 @@ define('MENU_MAX_DEPTH', 9);
  * part of the path. If the bit is 1, then it represents the original
  * value while 0 means wildcard. If the path is node/12/edit/foo
  * then the 1011 bitstring represents node/%/edit/foo where % means that
- * any argument matches that part.  We limit ourselves to using binary
+ * any argument matches that part. We limit ourselves to using binary
  * numbers that correspond the patterns of wildcards of router items that
- * actually exists.  This list of 'masks' is built in menu_rebuild().
+ * actually exists. This list of 'masks' is built in menu_rebuild().
  *
  * @param $parts
  *   An array of path parts, for the above example
@@ -822,7 +822,7 @@ function menu_tree_output($tree) {
  * @param $menu_name
  *   The named menu links to return
  * @param $item
- *   A fully loaded menu link, or NULL.  If a link is supplied, only the
+ *   A fully loaded menu link, or NULL. If a link is supplied, only the
  *   path to root will be included in the returned tree- as if this link
  *   represented the current page in a visible menu.
  * @return
@@ -887,7 +887,7 @@ function menu_tree_all_data($menu_name = 'navigation', $item = NULL) {
         // Get all links in this menu.
         $parents = array();
       }
-      // Select the links from the table, and recursively build the tree.  We
+      // Select the links from the table, and recursively build the tree. We
       // LEFT JOIN since there is no match in {menu_router} for an external
       // link.
       $data['tree'] = menu_tree_data($query->execute(), $parents);
@@ -1621,7 +1621,7 @@ function menu_set_active_trail($new_trail = NULL) {
     if ($item['tab_parent']) {
       // The title of a local task is used for the tab, never the page title.
       // Thus, replace it with the item corresponding to the root path to get
-      // the relevant href and title.  For example, the menu item corresponding
+      // the relevant href and title. For example, the menu item corresponding
       // to 'admin' is used when on the 'By module' tab at 'admin/by-module'.
       $parts = explode('/', $item['tab_root']);
       $args = arg();
@@ -1759,7 +1759,7 @@ function menu_cache_clear($menu_name = 'navigation') {
 }
 
 /**
- * Clears all cached menu data.  This should be called any time broad changes
+ * Clears all cached menu data. This should be called any time broad changes
  * might have been made to the router items or menu links.
  */
 function menu_cache_clear_all() {

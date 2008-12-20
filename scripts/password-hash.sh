@@ -21,7 +21,7 @@ if (version_compare(PHP_VERSION, "5.2.0", "<")) {
   $version  = PHP_VERSION;
   echo <<<EOF
 
-ERROR: This script requires at least PHP version 5.2.0.  You invoked it with
+ERROR: This script requires at least PHP version 5.2.0. You invoked it with
        PHP version {$version}.
 \n
 EOF;

@@ -136,7 +136,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function getFieldTypeMap() {
-    // Put :normal last so it gets preserved by array_flip.  This makes
+    // Put :normal last so it gets preserved by array_flip. This makes
     // it much easier for modules (such as schema.module) to map
     // database types back into schema types.
     static $map = array(

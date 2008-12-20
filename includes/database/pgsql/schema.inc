@@ -137,7 +137,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    * to the engine-specific data type.
    */
   function getFieldTypeMap() {
-    // Put :normal last so it gets preserved by array_flip.  This makes
+    // Put :normal last so it gets preserved by array_flip. This makes
     // it much easier for modules (such as schema.module) to map
     // database types back into schema types.
     $map = array(
@@ -235,7 +235,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    * @param $keys_new
    *   Optional keys and indexes specification to be created on the
    *   table along with adding the field. The format is the same as a
-   *   table specification but without the 'fields' element.  If you are
+   *   table specification but without the 'fields' element. If you are
    *   adding a type 'serial' field, you MUST specify at least one key
    *   or index including it in this array. @see db_change_field for more
    *   explanation why.
@@ -424,7 +424,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    * );
    * @endcode
    * and you want to change foo.bar to be type serial, leaving it as the
-   * primary key.  The correct sequence is:
+   * primary key. The correct sequence is:
    * @code
    * db_drop_primary_key($ret, 'foo');
    * db_change_field($ret, 'foo', 'bar', 'bar',
@@ -439,10 +439,10 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    * sequences (from serial-type fields) that use the changed field to be dropped.
    *
    * On MySQL, all type 'serial' fields must be part of at least one key
-   * or index as soon as they are created.  You cannot use
+   * or index as soon as they are created. You cannot use
    * db_add_{primary_key,unique_key,index}() for this purpose because
    * the ALTER TABLE command will fail to add the column without a key
-   * or index specification.  The solution is to use the optional
+   * or index specification. The solution is to use the optional
    * $new_keys argument to create the key or index at the same time as
    * field.
    *

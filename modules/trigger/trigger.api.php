@@ -28,12 +28,12 @@
  *    following key-value pairs:
  *     - 'type': (required) the type is determined by what object the action
  *       acts on. Possible choices are node, user, comment, and system. Or
- *       whatever your own custom type is.  So, for the nodequeue module, the
+ *       whatever your own custom type is. So, for the nodequeue module, the
  *       type might be set to 'nodequeue' if the action would be performed on a
  *       nodequeue.
  *     - 'description': (required) The human-readable name of the action.
  *     - 'configurable': (required) If FALSE, then the action doesn't require
- *       any extra configuration.  If TRUE, then you should define a form
+ *       any extra configuration. If TRUE, then you should define a form
  *       function with the same name as the key, but with '_form' appended to
  *       it (i.e., the form for 'node_assign_owner_action' is
  *       'node_assign_owner_action_form'.)
@@ -41,22 +41,22 @@
  *       paired with the usual _submit function, and possibly a _validate
  *       function.
  *     - 'hooks': (required) An array of all of the operations this action is
- *       appropriate for, keyed by hook name.  The trigger module uses this to
+ *       appropriate for, keyed by hook name. The trigger module uses this to
  *       filter out inappropriate actions when presenting the interface for
- *       assigning actions to events.  If you are writing actions in your own
+ *       assigning actions to events. If you are writing actions in your own
  *       modules and you simply want to declare support for all possible hooks,
- *       you can set 'hooks' => array('any' => TRUE).  Common hooks are 'user',
+ *       you can set 'hooks' => array('any' => TRUE). Common hooks are 'user',
  *       'nodeapi', 'comment', or 'taxonomy'. Any hook that has been described
  *       to Drupal in hook_hook_info() will work is a possiblity.
  *     - 'behavior': (optional) Human-readable array of behavior descriptions.
- *       The only one we have now is 'changes node property'.  You will almost
+ *       The only one we have now is 'changes node property'. You will almost
  *       certainly never have to return this in your own implementations of this
  *       hook.
  *
  * The function that is called when the action is triggered is passed two
  * parameters - an object of the same type as the 'type' value of the
  * hook_action_info array, and a context variable that contains the context
- * under which the action is currently running, sent as an array.  For example,
+ * under which the action is currently running, sent as an array. For example,
  * the actions module sets the 'hook' and 'op' keys of the context array (so,
  * 'hook' may be 'nodeapi' and 'op' may be 'insert').
  */
@@ -113,8 +113,8 @@ function hook_action_info_alter(&$actions) {
  * See also hook_action_info().
  *
  * @return
- *   - A nested array.  The outermost key defines the module that the triggers
- *     are from.  The menu system will use the key to look at the .info file of
+ *   - A nested array. The outermost key defines the module that the triggers
+ *     are from. The menu system will use the key to look at the .info file of
  *     the module and make a local task (a tab) in the trigger UI.
  *     - The next key defines the hook being described.
  *       - Inside of that array are a list of arrays keyed by hook operation.
@@ -122,8 +122,8 @@ function hook_action_info_alter(&$actions) {
  *           an English description of the hook.
  *
  * For example, the node_hook_info implementation has 'node' as the outermost
- * key, as that's the module it's in.  Next it has 'nodeapi' as the next key,
- * as hook_nodeapi() is what applies to changes in nodes.  Finally the keys
+ * key, as that's the module it's in. Next it has 'nodeapi' as the next key,
+ * as hook_nodeapi() is what applies to changes in nodes. Finally the keys
  * after that are the various operations for hook_nodeapi() that the node module
  * is exposing as triggers.
  */

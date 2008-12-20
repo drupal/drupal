@@ -221,7 +221,7 @@ function book_remove_form_submit($form, &$form_state) {
 /**
  * AJAX callback to replace the book parent select options.
  *
- * This function is called when the selected book is changed.  It updates the
+ * This function is called when the selected book is changed. It updates the
  * cached form (either the node form or the book outline form) and returns
  * rendered output to be used to replace the select containing the possible
  * parent pages in the newly selected book.

@@ -42,7 +42,7 @@ function filter_tips_long() {
  * @param $long
  *   (optional) Whether the passed in filter tips contain extended explanations,
  *   i.e. intended to be output on the path 'filter/tips' (TRUE), or are in a
- *   short format, i.e. suitable to be displayed below a form element.  Defaults
+ *   short format, i.e. suitable to be displayed below a form element. Defaults
  *   to FALSE.
  *
  * @see _filter_tips()
