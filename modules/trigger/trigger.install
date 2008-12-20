@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.install,v 1.6 2008/11/15 13:01:10 dries Exp $
+// $Id: trigger.install,v 1.7 2008/12/20 05:20:21 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -9,7 +9,7 @@ function trigger_install() {
   drupal_install_schema('trigger');
 
   // Do initial synchronization of actions in code and the database.
-  actions_synchronize(actions_list());
+  actions_synchronize();
 }
 
 /**
