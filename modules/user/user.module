@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.946 2008/12/16 23:57:33 dries Exp $
+// $Id: user.module,v 1.947 2008/12/20 03:53:18 dries Exp $
 
 /**
  * @file
@@ -2257,7 +2257,7 @@ function user_block_user_action(&$object, $context = array()) {
   }
   db_query("UPDATE {users} SET status = 0 WHERE uid = %d", $uid);
   drupal_session_destroy_uid($uid);
-  watchdog('action', 'Blocked user %name.', array('%name' => check_plain($user->name)));
+  watchdog('action', 'Blocked user %name.', array('%name' => $user->name));
 }
 
 /**
