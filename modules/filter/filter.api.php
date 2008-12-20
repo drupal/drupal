@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.api.php,v 1.1 2008/11/25 02:37:32 webchick Exp $
+// $Id: filter.api.php,v 1.2 2008/12/20 18:24:36 dries Exp $
 
 /**
  * @file
@@ -92,7 +92,7 @@
  * @param $text
  *   The content to filter (applies to 'prepare' and 'process').
  * @param $langcode
- *   The language code associated with the content, e.g. 'en' for English.  This
+ *   The language code associated with the content, e.g. 'en' for English. This
  *   enables filters to be language aware and can be used to implement language
  *   specific text replacements.
  * @param $cache_id

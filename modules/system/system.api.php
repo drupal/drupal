@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.4 2008/12/16 22:05:51 dries Exp $
+// $Id: system.api.php,v 1.5 2008/12/20 18:24:40 dries Exp $
 
 /**
  * @file
@@ -1300,7 +1300,7 @@ function hook_requirements($phase) {
  * details on schema definition structures.
  *
  * @return
- * A schema definition structure array.  For each element of the
+ * A schema definition structure array. For each element of the
  * array, the key is a table name and the value is a table structure
  * definition.
  */

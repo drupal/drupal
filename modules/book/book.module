@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.480 2008/12/19 03:55:23 dries Exp $
+// $Id: book.module,v 1.481 2008/12/20 18:24:35 dries Exp $
 
 /**
  * @file
@@ -575,7 +575,7 @@ function book_update_bid($book_link) {
  * @return
  *   A linear array of menu links in the order that the links are shown in the
  *   menu, so the previous and next pages are the elements before and after the
- *   element corresponding to $node.  The children of $node (if any) will come
+ *   element corresponding to $node. The children of $node (if any) will come
  *   immediately after it in the array.
  */
 function book_get_flat_menu($book_link) {
@@ -963,7 +963,7 @@ function _book_toc_recurse($tree, $indent, &$toc, $exclude, $depth_limit) {
  * @param $bid
  *   The ID of the book whose pages are to be listed.
  * @param $exclude
- *   Optional array of mlid values.  Any link whose mlid is in this array
+ *   Optional array of mlid values. Any link whose mlid is in this array
  *   will be excluded (along with its children).
  * @param $depth_limit
  *   Any link deeper than this value will be excluded (along with its children).

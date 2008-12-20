@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.60 2008/11/16 18:19:46 dries Exp $
+// $Id: content_types.inc,v 1.61 2008/12/20 18:24:38 dries Exp $
 
 /**
  * @file
@@ -54,7 +54,7 @@ function theme_node_admin_overview($name, $type) {
 function node_type_form(&$form_state, $type = NULL) {
   drupal_add_js(drupal_get_path('module', 'node') .'/content_types.js');
   if (!isset($type->type)) {
-    // This is a new type.  Node module managed types are custom and unlocked.
+    // This is a new type. Node module managed types are custom and unlocked.
     $type = node_type_set_defaults(array('custom' => 1, 'locked' => 0));
   }
 

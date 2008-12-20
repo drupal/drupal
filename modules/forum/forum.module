@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.478 2008/12/19 03:55:23 dries Exp $
+// $Id: forum.module,v 1.479 2008/12/20 18:24:36 dries Exp $
 
 /**
  * @file
@@ -165,7 +165,7 @@ function forum_init() {
  */
 function _forum_nodeapi_check_node_type($node, $vocabulary) {
   // We are going to return if $node->type is not one of the node
-  // types assigned to the forum vocabulary.  If forum_nav_vocabulary
+  // types assigned to the forum vocabulary. If forum_nav_vocabulary
   // is undefined or the vocabulary does not exist, it clearly cannot
   // be assigned to $node->type, so return to avoid E_ALL warnings.
   if (empty($vocabulary)) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.30 2008/11/22 14:09:41 dries Exp $
+// $Id: node.admin.inc,v 1.31 2008/12/20 18:24:38 dries Exp $
 
 /**
  * @file
@@ -561,7 +561,7 @@ function node_admin_nodes_submit($form, &$form_state) {
     cache_clear_all();
   }
   else {
-    // We need to rebuild the form to go to a second step.  For example, to
+    // We need to rebuild the form to go to a second step. For example, to
     // show the confirmation form for the deletion of nodes.
     $form_state['rebuild'] = TRUE;
   }

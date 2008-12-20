@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.inc,v 1.10 2008/11/29 23:21:22 webchick Exp $
+// $Id: registry.inc,v 1.11 2008/12/20 18:24:33 dries Exp $
 
 /**
  * @file
@@ -25,10 +25,10 @@
 function _registry_rebuild() {
 
   // The registry serves as a central autoloader for all classes, including
-  // the database query builders.  However, the registry rebuild process
+  // the database query builders. However, the registry rebuild process
   // requires write ability to the database, which means having access to the
-  // query builders that require the registry in order to be loaded.  That
-  // causes a fatal race condition.  Therefore we manually include the
+  // query builders that require the registry in order to be loaded. That
+  // causes a fatal race condition. Therefore we manually include the
   // appropriate query builders for the currently active database before the
   // registry rebuild process runs.
   $connection_info = Database::getConnectionInfo();
@@ -173,7 +173,7 @@ function _registry_parse_file($filename, $contents, $module = '', $weight = 0) {
         );
         // Because some systems, such as cache, currently use duplicate function
         // names in separate files an insert query cannot be used here as it
-        // would cause a key constraint violation.  Instead we use a merge query.
+        // would cause a key constraint violation. Instead we use a merge query.
         // In practice this should not be an issue as those systems all initialize
         // pre-registry and therefore are never loaded by the registry so it
         // doesn't matter if those records in the registry table point to one

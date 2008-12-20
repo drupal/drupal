@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.26 2008/07/08 01:08:15 dries Exp $
+// $Id: image.inc,v 1.27 2008/12/20 18:24:33 dries Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@
  *
  * Image toolkits are discovered based on the associated module's
  * hook_image_toolkits. Additionally the image toolkit include file
- * must be identified in the files array in the module.info file.  The
+ * must be identified in the files array in the module.info file. The
  * toolkit must then be enabled using the admin/settings/image-toolkit
  * form.
  *
@@ -139,7 +139,7 @@ function image_get_info($file) {
 /**
  * Scales an image to the exact width and height given. Achieves the
  * target aspect ratio by cropping the original image equally on both
- * sides, or equally on the top and bottom.  This function is, for
+ * sides, or equally on the top and bottom. This function is, for
  * example, useful to create uniform sized avatars from larger images.
  *
  * The resulting image always has the exact target dimensions.

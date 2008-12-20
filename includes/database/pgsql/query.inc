@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.6 2008/12/08 21:41:53 dries Exp $
+// $Id: query.inc,v 1.7 2008/12/20 18:24:34 dries Exp $
 
 
 /**
@@ -96,7 +96,7 @@ class InsertQuery_pgsql extends InsertQuery {
       }
     }
     else {
-      // If there are no values, then this is a default-only query.  We still need to handle that.
+      // If there are no values, then this is a default-only query. We still need to handle that.
       $placeholders = array_fill(0, count($this->defaultFields), 'default');
       $values[] = '(' . implode(', ', $placeholders) .')';
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.api.php,v 1.1 2008/11/25 02:37:32 webchick Exp $
+// $Id: menu.api.php,v 1.2 2008/12/20 18:24:37 dries Exp $
 
 /**
  * @file
@@ -32,7 +32,7 @@
  *     visits the path. If omitted, the parent menu item's callback will be used
  *     instead.
  *   - "page arguments": An array of arguments to pass to the page callback
- *     function.  Integer values pass the corresponding URL component (see arg()).
+ *     function. Integer values pass the corresponding URL component (see arg()).
  *   - "access callback": A  function returning a boolean value that determines
  *     whether the user has access rights to this menu item. Defaults to
  *     user_access() unless a value is inherited from a parent menu item..
@@ -85,8 +85,8 @@ function hook_menu() {
  * Alter the data being saved to the {menu_router} table after hook_menu is invoked.
  *
  * This hook is invoked by menu_router_build(). The menu definitions are passed
- * in by reference.  Each element of the $callbacks array is one item returned
- * by a module from hook_menu.  Additional items may be added, or existing items
+ * in by reference. Each element of the $callbacks array is one item returned
+ * by a module from hook_menu. Additional items may be added, or existing items
  * altered.
  *
  * @param $callbacks
@@ -125,7 +125,7 @@ function hook_menu_link_alter(&$item, $menu) {
  *
  * This hook may be used, for example, to add a page-specific query string.
  * For performance reasons, only links that have $item['options']['alter'] == TRUE
- * will be passed into this hook.  The $item['options']['alter'] flag should
+ * will be passed into this hook. The $item['options']['alter'] flag should
  * generally be set using hook_menu_link_alter().
  *
  * @param $item

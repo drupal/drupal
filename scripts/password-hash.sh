@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-// $Id: password-hash.sh,v 1.2 2008/09/20 20:22:25 webchick Exp $
+// $Id: password-hash.sh,v 1.3 2008/12/20 18:24:41 dries Exp $
 
 /**
  * Drupal hash script - to generate a hash from a plaintext password
@@ -21,7 +21,7 @@ if (version_compare(PHP_VERSION, "5.2.0", "<")) {
   $version  = PHP_VERSION;
   echo <<<EOF
 
-ERROR: This script requires at least PHP version 5.2.0.  You invoked it with
+ERROR: This script requires at least PHP version 5.2.0. You invoked it with
        PHP version {$version}.
 \n
 EOF;

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.292 2008/12/19 03:55:23 dries Exp $
+// $Id: system.install,v 1.293 2008/12/20 18:24:40 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1330,7 +1330,7 @@ function system_update_6000() {
 function system_update_6001() {
   $ret = array();
 
-  // Add vid to term-node relation.  The schema says it is unsigned.
+  // Add vid to term-node relation. The schema says it is unsigned.
   db_add_field($ret, 'term_node', 'vid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
   db_drop_primary_key($ret, 'term_node');
   db_add_primary_key($ret, 'term_node', array('vid', 'tid', 'nid'));
@@ -1362,13 +1362,13 @@ function system_update_6003() {
 
 /**
  * This update used to add an index on users created column (#127941).
- * However, system_update_1022() does the same thing.  This update
+ * However, system_update_1022() does the same thing. This update
  * tried to detect if 1022 had already run but failed to do so,
  * resulting in an "index already exists" error.
  *
- * Adding the index here is never necessary.  Sites installed before
- * 1022 will run 1022, getting the update.  Sites installed on/after 1022
- * got the index when the table was first created.  Therefore, this
+ * Adding the index here is never necessary. Sites installed before
+ * 1022 will run 1022, getting the update. Sites installed on/after 1022
+ * got the index when the table was first created. Therefore, this
  * function is now a no-op.
  */
 function system_update_6004() {
@@ -1386,16 +1386,16 @@ function system_update_6005() {
 
       // As of system.install:1.85 (before the new language
       // subsystem), new installs got a unique key named
-      // url_alias_dst_key on url_alias.dst.  Unfortunately,
+      // url_alias_dst_key on url_alias.dst. Unfortunately,
       // system_update_162 created a unique key inconsistently named
       // url_alias_dst_idx on url_alias.dst (keys should have the _key
-      // suffix, indexes the _idx suffix).  Therefore, sites installed
+      // suffix, indexes the _idx suffix). Therefore, sites installed
       // before system_update_162 have a unique key with a different
-      // name than sites installed after system_update_162().  Now, we
+      // name than sites installed after system_update_162(). Now, we
       // want to drop the unique key on dst which may have either one
       // of two names and create a new unique key on (dst, language).
       // There is no way to know which key name exists so we have to
-      // drop both, causing an SQL error.  Thus, we just hide the
+      // drop both, causing an SQL error. Thus, we just hide the
       // error and only report the update_sql results that work.
       $err = error_reporting(0);
       $ret1 = update_sql('DROP INDEX {url_alias}_dst_idx');
@@ -1456,9 +1456,9 @@ function system_update_6007() {
 }
 
 /**
- * Add info files to themes.  The info and owner columns are added by
+ * Add info files to themes. The info and owner columns are added by
  * update_fix_d6_requirements() in update.php to avoid a large number
- * of error messages from update.php.  All we need to do here is copy
+ * of error messages from update.php. All we need to do here is copy
  * description to owner and then drop description.
  */
 function system_update_6008() {
@@ -1527,7 +1527,7 @@ function system_update_6011() {
 }
 
 /**
- * Add serialized field to cache tables.  This is now handled directly
+ * Add serialized field to cache tables. This is now handled directly
  * by update.php, so this function is a no-op.
  */
 function system_update_6012() {
@@ -1690,11 +1690,11 @@ function system_update_6018() {
  * and pgsql schemas so they are the same and can be represented by a
  * single schema structure.
  *
- * Note that the mysql and pgsql cases make different changes.  This
+ * Note that the mysql and pgsql cases make different changes. This
  * is because each schema needs to be tweaked in different ways to
- * conform to the new schema structure.  Also, since they operate on
+ * conform to the new schema structure. Also, since they operate on
  * tables defined by many optional core modules which may not ever
- * have been installed, they must test each table for existence.  If
+ * have been installed, they must test each table for existence. If
  * the modules are first installed after this update exists the tables
  * will be created from the schema structure and will start out
  * correct.
@@ -1728,10 +1728,10 @@ function system_update_6019() {
         db_change_field($ret, 'search_total', 'count', 'count', array('type' => 'float'));
       }
 
-      // Replace unique index dst_language with a unique constraint.  The
+      // Replace unique index dst_language with a unique constraint. The
       // result is the same but the unique key fits our current schema
-      // structure.  Also, the postgres documentation implies that
-      // unique constraints are preferable to unique indexes.  See
+      // structure. Also, the postgres documentation implies that
+      // unique constraints are preferable to unique indexes. See
       // http://www.postgresql.org/docs/8.2/interactive/indexes-unique.html.
       if (db_table_exists('url_alias')) {
         db_drop_index($ret, 'url_alias', 'dst_language');
@@ -2015,7 +2015,7 @@ function system_update_6021() {
     $menu_primary_menu = variable_get('menu_primary_menu', 0);
     // Ensure that we wind up with a system menu named 'primary-links'.
     if (isset($_SESSION['menu_menu_map'][2])) {
-      // The primary links menu that ships with Drupal 5 has mid = 2.  If this
+      // The primary links menu that ships with Drupal 5 has mid = 2. If this
       // menu hasn't been deleted by the site admin, we use that.
       $updated_primary_links_menu = 2;
     }
@@ -2232,14 +2232,14 @@ function system_update_6028() {
 function system_update_6029() {
   // The watchdog table is now owned by dblog, which is not yet
   // "installed" according to the system table, but the table already
-  // exists.  We set the module as "installed" here to avoid an error
+  // exists. We set the module as "installed" here to avoid an error
   // later.
   //
   // Although not the case for the initial D6 release, it is likely
   // that dblog.install will have its own update functions eventually.
   // However, dblog did not exist in D5 and this update is part of the
   // initial D6 release, so we know that dblog is not installed yet.
-  // It is therefore correct to install it as version 0.  If
+  // It is therefore correct to install it as version 0. If
   // dblog updates exist, the next run of update.php will get them.
   drupal_set_installed_schema_version('dblog', 0);
   module_enable(array('dblog'));
@@ -2313,7 +2313,7 @@ function system_update_6033() {
   if (db_table_exists('node_comment_statistics')) {
     // On pgsql but not mysql, db_change_field() drops all keys
     // involving the changed field, which in this case is the primary
-    // key.  The normal approach is explicitly drop the pkey, change the
+    // key. The normal approach is explicitly drop the pkey, change the
     // field, and re-create the pkey.
     //
     // Unfortunately, in this case that won't work on mysql; we CANNOT
@@ -2321,7 +2321,7 @@ function system_update_6033() {
     // included in at least one key or index.
     //
     // Since we cannot drop the pkey before db_change_field(), after
-    // db_change_field() we may or may not still have a pkey.  The
+    // db_change_field() we may or may not still have a pkey. The
     // simple way out is to re-create the pkey only when using pgsql.
     // Realistic requirements trump idealistic purity.
     db_change_field($ret, 'node_comment_statistics', 'nid', 'nid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
@@ -2519,7 +2519,7 @@ function system_update_6043() {
   db_add_index($ret, 'flood', 'allow', array('event', 'hostname', 'timestamp'));
   db_add_index($ret, 'history', 'nid', array('nid'));
   // Change length of theme field in {blocks} to be consistent with module, and
-  // to avoid a MySQL error regarding a too-long index.  Also add new indices.
+  // to avoid a MySQL error regarding a too-long index. Also add new indices.
   db_change_field($ret, 'blocks', 'theme', 'theme', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),array(
                   'unique keys' => array('tmd' => array('theme', 'module', 'delta'),),
                   'indexes' => array('list' => array('theme', 'status', 'region', 'weight', 'module'),),));

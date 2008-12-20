@@ -1,5 +1,5 @@
 <?php
-// $Id: password.inc,v 1.3 2008/05/26 17:12:54 dries Exp $
+// $Id: password.inc,v 1.4 2008/12/20 18:24:33 dries Exp $
 
 /**
  * @file
@@ -218,7 +218,7 @@ function user_check_password($password, $account) {
  * Check whether a user's hashed password needs to be replaced with a new hash.
  *
  * This is typically called during the login process when the plain text
- * password is available.  A new hash is needed when the desired iteration count
+ * password is available. A new hash is needed when the desired iteration count
  * has changed through a change in the variable password_count_log2 or
  * DRUPAL_HASH_COUNT or if the user's password hash was generated in an update
  * like user_update_7000().

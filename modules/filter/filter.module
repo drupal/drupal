@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.236 2008/12/03 19:43:21 dries Exp $
+// $Id: filter.module,v 1.237 2008/12/20 18:24:36 dries Exp $
 
 /**
  * @file
@@ -412,7 +412,7 @@ function filter_list_format($format) {
  *    the default format.
  * @param $langcode
  *    Optional: the language code of the text to be filtered, e.g. 'en' for
- *    English.  This allows filters to be language aware so language specific
+ *    English. This allows filters to be language aware so language specific
  *    text replacement can be implemented.
  * @param $check
  *    Whether to check the $format with filter_access() first. Defaults to TRUE.

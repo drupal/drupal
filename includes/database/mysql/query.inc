@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.6 2008/11/13 21:08:15 dries Exp $
+// $Id: query.inc,v 1.7 2008/12/20 18:24:34 dries Exp $
 
 /**
  * @ingroup database
@@ -66,7 +66,7 @@ class InsertQuery_mysql extends InsertQuery {
       }
     }
     else {
-      // If there are no values, then this is a default-only query.  We still need to handle that.
+      // If there are no values, then this is a default-only query. We still need to handle that.
       $placeholders = array_fill(0, count($this->defaultFields), 'default');
       $values[] = '(' . implode(', ', $placeholders) .')';
     }
@@ -95,7 +95,7 @@ class MergeQuery_mysql extends MergeQuery {
 
     $max_placeholder = 0;
     $values = array();
-    // We assume that the order here is the same as in __toString().  If that's
+    // We assume that the order here is the same as in __toString(). If that's
     // not the case, then we have serious problems.
     foreach ($insert_fields as $value) {
       $values[':db_insert_placeholder_' . $max_placeholder++] = $value;

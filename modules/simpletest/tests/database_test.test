@@ -1,12 +1,12 @@
 <?php
-// $Id: database_test.test,v 1.26 2008/12/12 16:21:58 dries Exp $
+// $Id: database_test.test,v 1.27 2008/12/20 18:24:40 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
  *
  * PDO supports using a new instance of an arbitrary class for records
- * rather than just a stdClass or array.  This class is for testing that
- * functionality.  (See testQueryFetchClass() below)
+ * rather than just a stdClass or array. This class is for testing that
+ * functionality. (See testQueryFetchClass() below)
  */
 class FakeRecord { }
 
@@ -941,7 +941,7 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
     // This is a very contrived example, as I have no idea why you'd want to
     // change age this way, but that's beside the point.
     // Note that we are also double-setting age here, once as a literal and
-    // once as an expression.  This test will only pass if the expression wins,
+    // once as an expression. This test will only pass if the expression wins,
     // which is what is supposed to happen.
     db_merge('test_people')
       ->key(array('job' => 'Speaker'))
@@ -1446,7 +1446,7 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
   function testNestedConditions() {
     // This query should translate to:
     // "SELECT job FROM {test} WHERE name = 'Paul' AND (age = 26 OR age = 27)"
-    // That should find only one record.  Yes it's a non-optimal way of writing
+    // That should find only one record. Yes it's a non-optimal way of writing
     // that query but that's not the point!
     $query = db_select('test');
     $query->addField('test', 'job');

@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.134 2008/11/24 10:41:39 dries Exp $
+// $Id: module.inc,v 1.135 2008/12/20 18:24:33 dries Exp $
 
 /**
  * @file
@@ -392,7 +392,7 @@ function module_hook($module, $hook) {
  *     MODULE_IMPLEMENTS_WRITE_CACHE: Write the stored list of hook
  *     implementations into the cache_registry table.
  * @param $sort
- *   By default, modules are ordered by weight and filename.  By setting this
+ *   By default, modules are ordered by weight and filename. By setting this
  *   option to TRUE, modules will be ordered by module name.
  * @return
  *   An array with the names of the modules which are implementing this hook.

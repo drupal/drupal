@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.3 2008/12/09 11:30:24 dries Exp $
+// $Id: node.api.php,v 1.4 2008/12/20 18:24:38 dries Exp $
 
 /**
  * @file
@@ -739,8 +739,8 @@ function hook_update($node) {
  * this module), use hook_nodeapi() instead.
  *
  * Changes made to the $node object within a hook_validate() function will
- * have no effect.  The preferred method to change a node's content is to use
- * hook_submit() or hook_nodeapi($op='submit') instead.  If it is really
+ * have no effect. The preferred method to change a node's content is to use
+ * hook_submit() or hook_nodeapi($op='submit') instead. If it is really
  * necessary to change the node at the validate stage, you can use function
  * form_set_value().
  *

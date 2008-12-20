@@ -1,5 +1,5 @@
 <?php
-// $Id: update.compare.inc,v 1.14 2008/11/15 07:43:06 dries Exp $
+// $Id: update.compare.inc,v 1.15 2008/12/20 18:24:40 dries Exp $
 
 /**
  * @file
@@ -444,7 +444,7 @@ function update_calculate_project_data($available) {
 
         // If we're running a dev snapshot and have a timestamp, stop
         // searching for security updates once we hit an official release
-        // older than what we've got.  Allow 100 seconds of leeway to handle
+        // older than what we've got. Allow 100 seconds of leeway to handle
         // differences between the datestamp in the .info file and the
         // timestamp of the tarball itself (which are usually off by 1 or 2
         // seconds) so that we don't flag that as a new release.
@@ -579,7 +579,7 @@ function update_calculate_project_data($available) {
 function update_project_cache($cid) {
   $projects = array();
 
-  // In some cases, we must clear the cache.  Rather than do so on a time
+  // In some cases, we must clear the cache. Rather than do so on a time
   // basis, we check for specific paths.
   $q = $_GET['q'];
   $paths = array('admin/build/modules', 'admin/build/themes', 'admin/reports', 'admin/reports/updates', 'admin/reports/status', 'admin/reports/updates/check');

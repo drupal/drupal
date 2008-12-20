@@ -1,5 +1,5 @@
 <?php
-// $Id: run-tests.sh,v 1.19 2008/12/18 03:55:02 dries Exp $
+// $Id: run-tests.sh,v 1.20 2008/12/20 18:24:41 dries Exp $
 /**
  * @file
  * This script runs Drupal tests from command line.
@@ -133,13 +133,13 @@ All arguments are long options.
 
   <test1>[,<test2>[,<test3> ...]]
 
-              One or more tests to be run.  By default, these are interpreted
+              One or more tests to be run. By default, these are interpreted
               as the names of test groups as shown at ?q=admin/build/testing.
               These group names typically correspond to module names like "User"
               or "Profile" or "System", but there is also a group "XML-RPC".
               If --class is specified then these are interpreted as the names of
-              specific test classes whose test methods will be run.  Tests must
-              be separated by commas.  Ignored if --all is specified.
+              specific test classes whose test methods will be run. Tests must
+              be separated by commas. Ignored if --all is specified.
 
 To run this script you will normally invoke it from the root directory of your
 Drupal installation as the webserver user (differs per configuration), or root:

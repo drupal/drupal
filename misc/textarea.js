@@ -1,4 +1,4 @@
-// $Id: textarea.js,v 1.24 2008/10/29 10:01:26 dries Exp $
+// $Id: textarea.js,v 1.25 2008/12/20 18:24:34 dries Exp $
 
 Drupal.behaviors.textarea = {
   attach: function(context) {
@@ -9,7 +9,7 @@ Drupal.behaviors.textarea = {
       }
       var textarea = $(this).addClass('textarea-processed'), staticOffset = null;
 
-      // When wrapping the text area, work around an IE margin bug.  See:
+      // When wrapping the text area, work around an IE margin bug. See:
       // http://jaspan.com/ie-inherited-margin-bug-form-elements-and-haslayout
       $(this).wrap('<div class="resizable-textarea"><span></span></div>')
         .parent().append($('<div class="grippie"></div>').mousedown(startDrag));

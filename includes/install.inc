@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.78 2008/11/30 01:11:23 webchick Exp $
+// $Id: install.inc,v 1.79 2008/12/20 18:24:33 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -207,7 +207,7 @@ function drupal_detect_database_types() {
   $databases = array();
 
   // We define a driver as a directory in /includes/database that in turn
-  // contains a database.inc file.  That allows us to drop in additional drivers
+  // contains a database.inc file. That allows us to drop in additional drivers
   // without modifying the installer.
   // Because we have no registry yet, we need to also include the install.inc
   // file for the driver explicitly.

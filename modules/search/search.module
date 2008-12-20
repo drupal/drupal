@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.279 2008/12/16 23:57:33 dries Exp $
+// $Id: search.module,v 1.280 2008/12/20 18:24:38 dries Exp $
 
 /**
  * @file
@@ -434,7 +434,7 @@ function search_index($sid, $type, $text) {
   global $base_url;
   $node_regexp = '@href=[\'"]?(?:' . preg_quote($base_url, '@') . '/|' . preg_quote(base_path(), '@') . ')(?:\?q=)?/?((?![a-z]+:)[^\'">]+)[\'">]@i';
 
-  // Multipliers for scores of words inside certain HTML tags.  The weights are stored
+  // Multipliers for scores of words inside certain HTML tags. The weights are stored
   // in a variable so that modules can overwrite the default weights.
   // Note: 'a' must be included for link ranking to work.
   $tags = variable_get('search_tag_weights', array(
@@ -585,7 +585,7 @@ function search_index($sid, $type, $text) {
   // Insert results into search index
   foreach ($results[0] as $word => $score) {
     // If a word already exists in the database, its score gets increased
-    // appropriately.  If not, we create a new record with the appropriate
+    // appropriately. If not, we create a new record with the appropriate
     // starting score.
     db_merge('search_index')->key(array(
       'word' => $word,
@@ -656,7 +656,7 @@ function search_nodeapi_update_index($node) {
  * Implementation of hook_nodeapi_update().
  */
 function search_nodeapi_update($node) {
-  // Reindex the node when it is updated.  The node is automatically indexed
+  // Reindex the node when it is updated. The node is automatically indexed
   // when it is added, simply by being added to the node table.
   search_touch_node($node->nid);
 }
@@ -880,7 +880,7 @@ function _search_parse_query(&$word, &$scores, $not = FALSE) {
  * indexed search (and thus, implements hook_update_index()).
  *
  * Results are retrieved in two logical passes. However, the two passes are
- * joined together into a single query.  And in the case of most simple
+ * joined together into a single query. And in the case of most simple
  * queries the second pass is not even used.
  *
  * The first pass selects a set of all possible matches, which has the benefit

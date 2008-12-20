@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.7 2008/12/02 19:45:01 dries Exp $
+// $Id: schema.inc,v 1.8 2008/12/20 18:24:34 dries Exp $
 
 /**
  * @file
@@ -136,7 +136,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function getFieldTypeMap() {
-    // Put :normal last so it gets preserved by array_flip.  This makes
+    // Put :normal last so it gets preserved by array_flip. This makes
     // it much easier for modules (such as schema.module) to map
     // database types back into schema types.
     static $map = array(
