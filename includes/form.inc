@@ -1107,7 +1107,7 @@ function theme_password_confirm($element) {
   return theme('form_element', $element, $element['#children']);
 }
 
-/*
+/**
  * Expand a password_confirm field into two text boxes.
  */
 function expand_password_confirm($element) {
