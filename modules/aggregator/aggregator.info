@@ -1,4 +1,4 @@
-; $Id: aggregator.info,v 1.9 2008/10/11 02:32:33 webchick Exp $
+; $Id: aggregator.info,v 1.10 2008/12/22 19:38:31 dries Exp $
 
 name = Aggregator
 description = "Aggregates syndicated content (RSS, RDF, and Atom feeds)."
@@ -8,4 +8,7 @@ core = 7.x
 files[] = aggregator.module
 files[] = aggregator.admin.inc
 files[] = aggregator.pages.inc
+files[] = aggregator.fetcher.inc
+files[] = aggregator.parser.inc
+files[] = aggregator.processor.inc
 files[] = aggregator.install

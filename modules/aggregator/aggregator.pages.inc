@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.22 2008/10/20 12:57:35 dries Exp $
+// $Id: aggregator.pages.inc,v 1.23 2008/12/22 19:38:31 dries Exp $
 
 /**
  * @file
@@ -35,8 +35,7 @@ function aggregator_page_last() {
 function aggregator_page_source($arg1, $arg2 = NULL) {
   // If there are two arguments then this function is the categorize form, and
   // $arg1 is $form_state and $arg2 is $feed. Otherwise, $arg1 is $feed.
-  $feed = is_array($arg2) ? $arg2 : $arg1;
-  $feed = (object)$feed;
+  $feed = is_object($arg2) ? $arg2 : $arg1;
   drupal_set_title($feed->title);
   $feed_source = theme('aggregator_feed_source', $feed);
 
