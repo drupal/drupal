@@ -20,6 +20,9 @@ function aggregator_uninstall() {
   variable_del('aggregator_summary_items');
   variable_del('aggregator_clear');
   variable_del('aggregator_category_selector');
+  variable_del('aggregator_fetcher');
+  variable_del('aggregator_parser');
+  variable_del('aggregator_processors');
 }
 
 /**

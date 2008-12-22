@@ -52,36 +52,36 @@ function aggregator_view() {
  * @see aggregator_form_feed_validate()
  * @see aggregator_form_feed_submit()
  */
-function aggregator_form_feed(&$form_state, $edit = array('refresh' => 900, 'block' => 5, 'title' => '', 'url' => '', 'fid' => NULL)) {
+function aggregator_form_feed(&$form_state, $feed = NULL) {
   $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
 
-  if ($edit['refresh'] == '') {
-    $edit['refresh'] = 3600;
+  if (empty($feed->refresh)) {
+    $feed->refresh = 3600;
   }
 
   $form['title'] = array('#type' => 'textfield',
     '#title' => t('Title'),
-    '#default_value' => $edit['title'],
+    '#default_value' => isset($feed->title) ? $feed->title : '',
     '#maxlength' => 255,
     '#description' => t('The name of the feed (or the name of the website providing the feed).'),
     '#required' => TRUE,
   );
   $form['url'] = array('#type' => 'textfield',
     '#title' => t('URL'),
-    '#default_value' => $edit['url'],
+    '#default_value' => isset($feed->url) ? $feed->url : '',
     '#maxlength' => 255,
     '#description' => t('The fully-qualified URL of the feed.'),
     '#required' => TRUE,
   );
   $form['refresh'] = array('#type' => 'select',
     '#title' => t('Update interval'),
-    '#default_value' => $edit['refresh'],
+    '#default_value' => isset($feed->refresh) ? $feed->refresh : 900,
     '#options' => $period,
     '#description' => t('The length of time between feed updates. Requires a correctly configured <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status'))),
   );
   $form['block'] = array('#type' => 'select',
     '#title' => t('News items in block'),
-    '#default_value' => $edit['block'],
+    '#default_value' => isset($feed->block) ? $feed->block : 5,
     '#options' => drupal_map_assoc(array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)),
     '#description' => t("Drupal can make a block with the most recent news items of this feed. You can <a href=\"@block-admin\">configure blocks</a> to be displayed in the sidebar of your page. This setting lets you configure the number of news items to show in this feed's block. If you choose '0' this feed's block will be disabled.", array('@block-admin' => url('admin/build/block'))),
   );
@@ -89,11 +89,12 @@ function aggregator_form_feed(&$form_state, $edit = array('refresh' => 900, 'blo
   // Handling of categories.
   $options = array();
   $values = array();
-  $categories = db_query('SELECT c.cid, c.title, f.fid FROM {aggregator_category} c LEFT JOIN {aggregator_category_feed} f ON c.cid = f.cid AND f.fid = :fid ORDER BY title', array(':fid' => $edit['fid']));
+  $categories = db_query('SELECT c.cid, c.title, f.fid FROM {aggregator_category} c LEFT JOIN {aggregator_category_feed} f ON c.cid = f.cid AND f.fid = :fid ORDER BY title', array(':fid' => isset($feed->fid) ? $feed->fid : NULL));
   foreach ($categories as $category) {
     $options[$category->cid] = check_plain($category->title);
     if ($category->fid) $values[] = $category->cid;
   }
+
   if ($options) {
     $form['category'] = array(
       '#type' => 'checkboxes',
@@ -108,14 +109,14 @@ function aggregator_form_feed(&$form_state, $edit = array('refresh' => 900, 'blo
     '#value' => t('Save'),
   );
 
-  if ($edit['fid']) {
+  if (!empty($feed->fid)) {
     $form['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete'),
     );
     $form['fid'] = array(
       '#type' => 'hidden',
-      '#value' => $edit['fid'],
+      '#value' => $feed->fid,
     );
   }
 
@@ -200,7 +201,7 @@ function aggregator_admin_remove_feed($form_state, $feed) {
         '#value' => $feed,
       ),
     ),
-    t('Are you sure you want to remove all items from the feed %feed?', array('%feed' => $feed['title'])),
+    t('Are you sure you want to remove all items from the feed %feed?', array('%feed' => $feed->title)),
     'admin/content/aggregator',
     t('This action cannot be undone.'),
     t('Remove items'),
@@ -375,7 +376,7 @@ function _aggregator_parse_opml($opml) {
  * Menu callback; refreshes a feed, then redirects to the overview page.
  *
  * @param $feed
- *   An associative array describing the feed to be refreshed.
+ *   An object describing the feed to be refreshed.
  */
 function aggregator_admin_refresh_feed($feed) {
   aggregator_refresh($feed);
@@ -386,37 +387,105 @@ function aggregator_admin_refresh_feed($feed) {
  * Form builder; Configure the aggregator system.
  *
  * @ingroup forms
- * @see system_settings_form()
  */
-function aggregator_admin_settings() {
-  $items = array(0 => t('none')) + drupal_map_assoc(array(3, 5, 10, 15, 20, 25), '_aggregator_items');
-  $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), 'format_interval');
+function aggregator_admin_form($form_state) {
+  
+  // Make sure configuration is sane.
+  aggregator_sanitize_configuration();
+  
+  // Get all available fetchers.
+  $fetchers = module_implements('aggregator_fetch');
+  foreach ($fetchers as $k => $module) {
+    if ($info = module_invoke($module, 'aggregator_fetch_info')) {
+      $label = $info['title'] . ' <span class="description">' . $info['description'] . '</span>';
+    }
+    else {
+      $label = $module;
+    }
+    unset($fetchers[$k]);
+    $fetchers[$module] = $label;
+  }
+  
+  // Get all available parsers.
+  $parsers = module_implements('aggregator_parse');
+  foreach ($parsers as $k => $module) {
+    if ($info = module_invoke($module, 'aggregator_parse_info')) {
+      $label = $info['title'] . ' <span class="description">' . $info['description'] . '</span>';
+    }
+    else {
+      $label = $module;
+    }
+    unset($parsers[$k]);
+    $parsers[$module] = $label;
+  }
+  
+  // Get all available processors.
+  $processors = module_implements('aggregator_process');
+  foreach ($processors as $k => $module) {
+    if ($info = module_invoke($module, 'aggregator_process_info')) {
+      $label = $info['title'] . ' <span class="description">' . $info['description'] . '</span>';
+    }
+    else {
+      $label = $module;
+    }
+    unset($processors[$k]);
+    $processors[$module] = $label;
+  }
+  
+  // Only show basic configuration if there are actually options.
+  $basic_conf = array();
+  if (count($fetchers) > 1) {
+    $basic_conf['aggregator_fetcher'] = array(
+      '#type' => 'radios',
+      '#title' => t('Fetcher'),
+      '#description' => t('Fetchers download data from an external source. Choose a fetcher suitable for the external source you would like to download from.'),
+      '#options' => $fetchers,
+      '#default_value' => variable_get('aggregator_fetcher', 'aggregator'),
+    );
+  }
+  if (count($parsers) > 1) {
+    $basic_conf['aggregator_parser'] = array(
+      '#type' => 'radios',
+      '#title' => t('Parser'),
+      '#description' => t('Parsers transform downloaded data into standard structures. Choose a parser suitable for the type of feeds you would like to aggregate.'),
+      '#options' => $parsers,
+      '#default_value' => variable_get('aggregator_parser', 'aggregator'),
+    );
+  }
+  if (count($processors) > 1) {
+    $basic_conf['aggregator_processors'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Processors'),
+      '#description' => t('Processors act on parsed feed data, for example they store feed items. Choose the processors suitable for your task.'),
+      '#options' => $processors,
+      '#default_value' => variable_get('aggregator_processors', array('aggregator')),
+    );
+  }
+ if (count($basic_conf)) {
+    $form['basic_conf'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Basic configuration'),
+      '#description' => t('For most aggregation tasks, the default settings are fine.'),
+      '#collapsible' => TRUE,
+      '#collapsed' => FALSE,
+      );
+    $form['basic_conf'] += $basic_conf;
+  }
+  
+  // Implementing modules will expect an array at $form['modules'].
+  $form['modules'] = array();
 
-  $form['aggregator_allowed_html_tags'] = array(
-    '#type' => 'textfield', '#title' => t('Allowed HTML tags'), '#size' => 80, '#maxlength' => 255,
-    '#default_value' => variable_get('aggregator_allowed_html_tags', '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'),
-    '#description' => t('A space-separated list of HTML tags allowed in the content of feed items. (Tags in this list are not removed by Drupal.)'),
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
   );
 
-  $form['aggregator_summary_items'] = array(
-    '#type' => 'select', '#title' => t('Items shown in sources and categories pages') ,
-    '#default_value' => variable_get('aggregator_summary_items', 3), '#options' => $items,
-    '#description' => t('Number of feed items displayed in feed and category summary pages.'),
-  );
+  return $form;
+}
 
-  $form['aggregator_clear'] = array(
-    '#type' => 'select', '#title' => t('Discard items older than'),
-    '#default_value' => variable_get('aggregator_clear', 9676800), '#options' => $period,
-    '#description' => t('The length of time to retain feed items before discarding. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status'))),
-  );
-
-  $form['aggregator_category_selector'] = array(
-    '#type' => 'radios', '#title' => t('Category selection type'), '#default_value' => variable_get('aggregator_category_selector', 'checkboxes'),
-    '#options' => array('checkboxes' => t('checkboxes'), 'select' => t('multiple selector')),
-    '#description' => t('The type of category selection widget displayed on categorization pages. (For a small number of categories, checkboxes are easier to use, while a multiple selector works well with large numbers of categories.)'),
-  );
-
-  return system_settings_form($form);
+function aggregator_admin_form_submit($form, &$form_state) {
+  $form_state['values']['aggregator_processors'] = array_filter($form_state['values']['aggregator_processors']);
+  system_settings_form_submit($form, $form_state);
 }
 
 /**

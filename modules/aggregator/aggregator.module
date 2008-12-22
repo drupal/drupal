@@ -133,7 +133,7 @@ function aggregator_menu() {
   $items['admin/content/aggregator/settings'] = array(
     'title' => 'Settings',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('aggregator_admin_settings'),
+    'page arguments' => array('aggregator_admin_form'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
     'access arguments' => array('administer news feeds'),
@@ -289,7 +289,7 @@ function aggregator_perm() {
 function aggregator_cron() {
   $result = db_query('SELECT * FROM {aggregator_feed} WHERE checked + refresh < :time', array(':time' => REQUEST_TIME));
   foreach ($result as $feed) {
-    aggregator_refresh((array)$feed);
+    aggregator_refresh($feed);
   }
 }
 
@@ -417,6 +417,7 @@ function aggregator_save_category($edit) {
       ->fields(array(
         'title' => $edit['title'],
         'description' => $edit['description'],
+        'block' => 5,
       ))
       ->execute();
     $op = 'insert';
@@ -503,456 +504,51 @@ function aggregator_save_feed($edit) {
  * Removes all items from a feed.
  *
  * @param $feed
- *   An associative array describing the feed to be cleared.
+ *   An object describing the feed to be cleared.
  */
 function aggregator_remove($feed) {
-  $iids = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed['fid']))->fetchCol();
-  if ($iids) {
-    db_delete('aggregator_category_item')
-      ->condition('iid', $iids, 'IN')
-      ->execute();
-  }
-
-  db_delete('aggregator_item')
-    ->condition('fid', $feed['fid'])
-    ->execute();
+  // Call hook_aggregator_remove() on all modules.
+  module_invoke_all('aggregator_remove', $feed);
+  // Reset feed.
   db_merge('aggregator_feed')
-    ->key(array('fid' => $feed['fid']))
+    ->key(array('fid' => $feed->fid))
     ->fields(array(
       'checked' => 0,
       'hash' => '',
       'modified' => 0,
-      'description' => $feed['description'],
-      'image' => $feed['image'],
+      'description' => $feed->description,
+      'image' => $feed->image,
     ))
     ->execute();
-  drupal_set_message(t('The news items from %site have been removed.', array('%site' => $feed['title'])));
-}
-
-/**
- * Callback function used by the XML parser.
- */
-function aggregator_element_start($parser, $name, $attributes) {
-  global $item, $element, $tag, $items, $channel;
-
-  switch ($name) {
-    case 'IMAGE':
-    case 'TEXTINPUT':
-    case 'CONTENT':
-    case 'SUMMARY':
-    case 'TAGLINE':
-    case 'SUBTITLE':
-    case 'LOGO':
-    case 'INFO':
-      $element = $name;
-      break;
-    case 'ID':
-      if ($element != 'ITEM') {
-        $element = $name;
-      }
-    case 'LINK':
-      if (!empty($attributes['REL']) && $attributes['REL'] == 'alternate') {
-        if ($element == 'ITEM') {
-          $items[$item]['LINK'] = $attributes['HREF'];
-        }
-        else {
-          $channel['LINK'] = $attributes['HREF'];
-        }
-      }
-      break;
-    case 'ITEM':
-      $element = $name;
-      $item += 1;
-      break;
-    case 'ENTRY':
-      $element = 'ITEM';
-      $item += 1;
-      break;
-  }
-
-  $tag = $name;
-}
-
-/**
- * Call-back function used by the XML parser.
- */
-function aggregator_element_end($parser, $name) {
-  global $element;
-
-  switch ($name) {
-    case 'IMAGE':
-    case 'TEXTINPUT':
-    case 'ITEM':
-    case 'ENTRY':
-    case 'CONTENT':
-    case 'INFO':
-      $element = '';
-      break;
-    case 'ID':
-      if ($element == 'ID') {
-        $element = '';
-      }
-  }
-}
-
-/**
- * Callback function used by the XML parser.
- */
-function aggregator_element_data($parser, $data) {
-  global $channel, $element, $items, $item, $image, $tag;
-  $items += array($item => array());
-  switch ($element) {
-    case 'ITEM':
-      $items[$item] += array($tag => '');
-      $items[$item][$tag] .= $data;
-      break;
-    case 'IMAGE':
-    case 'LOGO':
-      $image += array($tag => '');
-      $image[$tag] .= $data;
-      break;
-    case 'LINK':
-      if ($data) {
-        $items[$item] += array($tag => '');
-        $items[$item][$tag] .= $data;
-      }
-      break;
-    case 'CONTENT':
-      $items[$item] += array('CONTENT' => '');
-      $items[$item]['CONTENT'] .= $data;
-      break;
-    case 'SUMMARY':
-      $items[$item] += array('SUMMARY' => '');
-      $items[$item]['SUMMARY'] .= $data;
-      break;
-    case 'TAGLINE':
-    case 'SUBTITLE':
-      $channel += array('DESCRIPTION' => '');
-      $channel['DESCRIPTION'] .= $data;
-      break;
-    case 'INFO':
-    case 'ID':
-    case 'TEXTINPUT':
-      // The sub-element is not supported. However, we must recognize
-      // it or its contents will end up in the item array.
-      break;
-    default:
-      $channel += array($tag => '');
-      $channel[$tag] .= $data;
-  }
 }
 
 /**
  * Checks a news feed for new items.
  *
  * @param $feed
- *   An associative array describing the feed to be refreshed.
+ *   An object describing the feed to be refreshed.
  */
 function aggregator_refresh($feed) {
-  global $channel, $image;
+  // Fetch the feed.
+  $fetcher = variable_get('aggregator_fetcher', 'aggregator');
+  module_invoke($fetcher, 'aggregator_fetch', $feed);
 
-  // Generate conditional GET headers.
-  $headers = array();
-  if ($feed['etag']) {
-    $headers['If-None-Match'] = $feed['etag'];
-  }
-  if ($feed['modified']) {
-    $headers['If-Modified-Since'] = gmdate('D, d M Y H:i:s', $feed['modified']) . ' GMT';
-  }
+  if ($feed->source_string !== FALSE) {
+    // Parse the feed.
+    $parser = variable_get('aggregator_parser', 'aggregator');
+    module_invoke($parser, 'aggregator_parse', $feed);
 
-  // Request feed.
-  $result = drupal_http_request($feed['url'], $headers);
-
-  // Process HTTP response code.
-  switch ($result->code) {
-    case 304:
-      db_update('aggregator_feed')
-        ->fields(array('checked' => REQUEST_TIME))
-        ->condition('fid', $feed['fid'])
-        ->execute();
-      drupal_set_message(t('There is no new syndicated content from %site.', array('%site' => $feed['title'])));
-      break;
-    case 301:
-      $feed['url'] = $result->redirect_url;
-      // Do not break here.
-    case 200:
-    case 302:
-    case 307:
-      // We store the md5 hash of feed data in the database. When refreshing a
-      // feed we compare stored hash and new hash calculated from downloaded
-      // data. If both are equal we say that feed is not updated.
-      $md5 = md5($result->data);
-      if ($feed['hash'] == $md5) {
-        db_update('aggregator_feed')
-          ->condition('fid', $feed['fid'])
-          ->fields(array('checked' => REQUEST_TIME))
-          ->execute();
-        drupal_set_message(t('There is no new syndicated content from %site.', array('%site' => $feed['title'])));
-        break;
-      }
-
-      // Filter the input data.
-      if (aggregator_parse_feed($result->data, $feed)) {
-        $modified = empty($result->headers['Last-Modified']) ? 0 : strtotime($result->headers['Last-Modified']);
-
-        // Prepare the channel data.
-        foreach ($channel as $key => $value) {
-          $channel[$key] = trim($value);
-        }
-
-        // Prepare the image data (if any).
-        foreach ($image as $key => $value) {
-          $image[$key] = trim($value);
-        }
-
-        if (!empty($image['LINK']) && !empty($image['URL']) && !empty($image['TITLE'])) {
-          $image = l(theme('image', $image['URL'], $image['TITLE']), $image['LINK'], array('html' => TRUE));
-        }
-        else {
-          $image = '';
-        }
-
-        $etag = empty($result->headers['ETag']) ? '' : $result->headers['ETag'];
-        // Update the feed data.
-        db_merge('aggregator_feed')
-          ->key(array('fid' => $feed['fid']))
-          ->fields(array(
-            'url' => $feed['url'],
-            'checked' => REQUEST_TIME,
-            'link' => $channel['LINK'],
-            'description' => $channel['DESCRIPTION'],
-            'image' => $image,
-            'hash' => $md5,
-            'etag' => $etag,
-            'modified' => $modified,
-          ))
-          ->execute();
-
-        // Clear the cache.
-        cache_clear_all();
-
-        if (isset($result->redirect_url)) {
-          watchdog('aggregator', 'Updated URL for feed %title to %url.', array('%title' => $feed['title'], '%url' => $feed['url']));
-        }
-
-        watchdog('aggregator', 'There is new syndicated content from %site.', array('%site' => $feed['title']));
-        drupal_set_message(t('There is new syndicated content from %site.', array('%site' => $feed['title'])));
-      }
-      break;
-    default:
-      watchdog('aggregator', 'The feed from %site seems to be broken, due to "%error".', array('%site' => $feed['title'], '%error' => $result->code . ' ' . $result->error), WATCHDOG_WARNING);
-      drupal_set_message(t('The feed from %site seems to be broken, because of error "%error".', array('%site' => $feed['title'], '%error' => $result->code . ' ' . $result->error)));
-      module_invoke('system', 'check_http_request');
-  }
-}
-
-/**
- * Parse the W3C date/time format, a subset of ISO 8601.
- *
- * PHP date parsing functions do not handle this format.
- * See http://www.w3.org/TR/NOTE-datetime for more information.
- * Originally from MagpieRSS (http://magpierss.sourceforge.net/).
- *
- * @param $date_str
- *   A string with a potentially W3C DTF date.
- * @return
- *   A timestamp if parsed successfully or FALSE if not.
- */
-function aggregator_parse_w3cdtf($date_str) {
-  if (preg_match('/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(:(\d{2}))?(?:([-+])(\d{2}):?(\d{2})|(Z))?/', $date_str, $match)) {
-    list($year, $month, $day, $hours, $minutes, $seconds) = array($match[1], $match[2], $match[3], $match[4], $match[5], $match[6]);
-    // Calculate the epoch for current date assuming GMT.
-    $epoch = gmmktime($hours, $minutes, $seconds, $month, $day, $year);
-    if ($match[10] != 'Z') { // Z is zulu time, aka GMT
-      list($tz_mod, $tz_hour, $tz_min) = array($match[8], $match[9], $match[10]);
-      // Zero out the variables.
-      if (!$tz_hour) {
-        $tz_hour = 0;
-      }
-      if (!$tz_min) {
-        $tz_min = 0;
-      }
-      $offset_secs = (($tz_hour * 60) + $tz_min) * 60;
-      // Is timezone ahead of GMT?  If yes, subtract offset.
-      if ($tz_mod == '+') {
-        $offset_secs *= -1;
-      }
-      $epoch += $offset_secs;
-    }
-    return $epoch;
-  }
-  else {
-    return FALSE;
-  }
-}
-
-/**
- * Parse a feed and store its items.
- *
- * @param $data
- *   The feed data.
- * @param $feed
- *   An associative array describing the feed to be parsed.
- * @return
- *   FALSE on error, TRUE otherwise.
- */
-function aggregator_parse_feed(&$data, $feed) {
-  global $items, $image, $channel;
-
-  // Unset the global variables before we use them.
-  unset($GLOBALS['element'], $GLOBALS['item'], $GLOBALS['tag']);
-  $items = array();
-  $image = array();
-  $channel = array();
-
-  // Parse the data.
-  $xml_parser = drupal_xml_parser_create($data);
-  xml_set_element_handler($xml_parser, 'aggregator_element_start', 'aggregator_element_end');
-  xml_set_character_data_handler($xml_parser, 'aggregator_element_data');
-
-  if (!xml_parse($xml_parser, $data, 1)) {
-    watchdog('aggregator', 'The feed from %site seems to be broken, due to an error "%error" on line %line.', array('%site' => $feed['title'], '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser)), WATCHDOG_WARNING);
-    drupal_set_message(t('The feed from %site seems to be broken, because of error "%error" on line %line.', array('%site' => $feed['title'], '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser))), 'error');
-    return FALSE;
-  }
-  xml_parser_free($xml_parser);
-
-  // We reverse the array such that we store the first item last, and the last
-  // item first. In the database, the newest item should be at the top.
-  $items = array_reverse($items);
-
-  // Initialize variables.
-  $title = $link = $author = $description = $guid = NULL;
-  foreach ($items as $item) {
-    unset($title, $link, $author, $description, $guid);
-
-    // Prepare the item:
-    foreach ($item as $key => $value) {
-      $item[$key] = trim($value);
-    }
-
-    // Resolve the item's title. If no title is found, we use up to 40
-    // characters of the description ending at a word boundary, but not
-    // splitting potential entities.
-    if (!empty($item['TITLE'])) {
-      $title = $item['TITLE'];
-    }
-    elseif (!empty($item['DESCRIPTION'])) {
-      $title = preg_replace('/^(.*)[^\w;&].*?$/', "\\1", truncate_utf8($item['DESCRIPTION'], 40));
-    }
-    else {
-      $title = '';
-    }
-
-    // Resolve the items link.
-    if (!empty($item['LINK'])) {
-      $link = $item['LINK'];
-    }
-    else {
-      $link = $feed['link'];
-    }
-    $guid = isset($item['GUID']) ? $item['GUID'] : '';
-
-    // Atom feeds have a CONTENT and/or SUMMARY tag instead of a DESCRIPTION tag.
-    if (!empty($item['CONTENT:ENCODED'])) {
-      $item['DESCRIPTION'] = $item['CONTENT:ENCODED'];
-    }
-    elseif (!empty($item['SUMMARY'])) {
-      $item['DESCRIPTION'] = $item['SUMMARY'];
-    }
-    elseif (!empty($item['CONTENT'])) {
-      $item['DESCRIPTION'] = $item['CONTENT'];
-    }
-
-    // Try to resolve and parse the item's publication date.
-    $date = '';
-    foreach (array('PUBDATE', 'DC:DATE', 'DCTERMS:ISSUED', 'DCTERMS:CREATED', 'DCTERMS:MODIFIED', 'ISSUED', 'CREATED', 'MODIFIED', 'PUBLISHED', 'UPDATED') as $key) {
-      if (!empty($item[$key])) {
-        $date = $item[$key];
-        break;
+    // If there are items on the feed, let all enabled processors do their work on it.
+    if (@count($feed->items)) {
+      $processors = variable_get('aggregator_processors', array('aggregator'));
+      foreach ($processors as $processor) {
+        module_invoke($processor, 'aggregator_process', $feed);
       }
     }
-
-    $timestamp = strtotime($date);
-
-    if ($timestamp === FALSE) {
-      $timestamp = aggregator_parse_w3cdtf($date); // Aggregator_parse_w3cdtf() returns FALSE on failure.
-    }
-
-    // Save this item. Try to avoid duplicate entries as much as possible. If
-    // we find a duplicate entry, we resolve it and pass along its ID is such
-    // that we can update it if needed.
-    if (!empty($guid)) {
-      $entry = db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = :fid AND guid = :guid", array(':fid' => $feed['fid'], ':guid' => $guid))->fetchObject();
-    }
-    elseif ($link && $link != $feed['link'] && $link != $feed['url']) {
-      $entry = db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = :fid AND link = :link", array(':fid' => $feed['fid'], ':link' => $link))->fetchObject();
-    }
-    else {
-      $entry = db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = :fid AND title = :title", array(':fid' => $feed['fid'], ':title' => $title))->fetchObject();
-    }
-
-    if (!$timestamp) {
-      $timestamp = isset($entry->timestamp) ? $entry->timestamp : REQUEST_TIME;
-    }
-    $item += array('AUTHOR' => '', 'DESCRIPTION' => '');
-    aggregator_save_item(array('iid' => (isset($entry->iid) ? $entry->iid : ''), 'fid' => $feed['fid'], 'timestamp' => $timestamp, 'title' => $title, 'link' => $link, 'author' => $item['AUTHOR'], 'description' => $item['DESCRIPTION'], 'guid' => $guid));
   }
-
-  // Remove all items that are older than flush item timer.
-  $age = REQUEST_TIME - variable_get('aggregator_clear', 9676800);
-  $iids = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid AND timestamp < :timestamp', array(':fid' => $feed['fid'], ':timestamp' => $age))->fetchCol();
-  if ($iids) {
-    db_delete('aggregator_category_item')
-      ->condition('iid', $iids, 'IN')
-      ->execute();
-    db_delete('aggregator_item')
-      ->condition('iid', $iids, 'IN')
-      ->execute();
-  }
-
-  return TRUE;
-}
-
-/**
- * Add/edit/delete an aggregator item.
- *
- * @param $edit
- *   An associative array describing the item to be added/edited/deleted.
- */
-function aggregator_save_item($edit) {
-  if ($edit['title'] && empty($edit['iid'])) {
-    $edit['iid'] = db_insert('aggregator_item')
-      ->fields(array(
-        'title' => $edit['title'],
-        'link' => $edit['link'],
-        'author' => $edit['author'],
-        'description' => $edit['description'],
-        'guid' => $edit['guid'],
-        'timestamp' => $edit['timestamp'],
-        'fid' => $edit['fid'],
-      ))
-      ->execute();
-  }
-  if ($edit['iid'] && !$edit['title']) {
-    db_delete('aggregator_item')
-      ->condition('iid', $edit['iid'])
-      ->execute();
-    db_delete('aggregator_category_item')
-      ->condition('iid', $edit['iid'])
-      ->execute();
-  }
-  elseif ($edit['title'] && $edit['link']) {
-    // file the items in the categories indicated by the feed
-    $result = db_query('SELECT cid FROM {aggregator_category_feed} WHERE fid = :fid', array(':fid' => $edit['fid']));
-    foreach ($result as $category) {
-      db_merge('aggregator_category_item')
-        ->fields(array(
-          'cid' => $category->cid,
-          'iid' => $edit['iid'],
-        ))
-        ->execute();
-    }
+  // Expire old feed items.
+  if (drupal_function_exists('aggregator_expire')) {
+    aggregator_expire($feed);
   }
 }
 
@@ -962,12 +558,12 @@ function aggregator_save_item($edit) {
  * @param $fid
  *   The feed id.
  * @return
- *   An associative array describing the feed.
+ *   An object describing the feed.
  */
 function aggregator_feed_load($fid) {
   static $feeds;
   if (!isset($feeds[$fid])) {
-    $feeds[$fid] = db_query('SELECT * FROM {aggregator_feed} WHERE fid = :fid', array(':fid' => $fid))->fetchAssoc();
+    $feeds[$fid] = db_query('SELECT * FROM {aggregator_feed} WHERE fid = :fid', array(':fid' => $fid))->fetchObject();
   }
 
   return $feeds[$fid];
@@ -1004,9 +600,8 @@ function aggregator_category_load($cid) {
 function theme_aggregator_block_item($item, $feed = 0) {
 
   // Display the external link to the item.
-  $output .= '<a href="' . check_url($item->link) . '">' . check_plain($item->title) . "</a>\n";
-
-  return $output;
+  return '<a href="' . check_url($item->link) . '">' . check_plain($item->title) . "</a>\n";
+  
 }
 
 /**
@@ -1019,6 +614,41 @@ function theme_aggregator_block_item($item, $feed = 0) {
  */
 function aggregator_filter_xss($value) {
   return filter_xss($value, preg_split('/\s+|<|>/', variable_get('aggregator_allowed_html_tags', '<a> <b> <br> <dd> <dl> <dt> <em> <i> <li> <ol> <p> <strong> <u> <ul>'), -1, PREG_SPLIT_NO_EMPTY));
+}
+
+/**
+ * Check and sanitize aggregator configuration.
+ * 
+ * Goes through all fetchers, parsers and processors and checks whether they are available.
+ * If one is missing resets to standard configuration.
+ * 
+ * @return
+ *   TRUE if this function reset the configuration FALSE if not.
+ */
+function aggregator_sanitize_configuration() {
+  $reset = FALSE;
+  $fetcher = variable_get('aggregator_fetcher', 'aggregator');
+  if (!module_exists($fetcher)) {
+    $reset = TRUE;
+  }
+  $parser = variable_get('aggregator_parser', 'aggregator');
+  if (!module_exists($parser)) {
+    $reset = TRUE;
+  }
+  $processors = variable_get('aggregator_processors', array('aggregator'));
+  foreach ($processors as $processor) {
+    if (!module_exists($processor)) {
+      $reset = TRUE;
+      break;
+    }
+  }
+  if ($reset) {
+    variable_del('aggregator_fetcher');
+    variable_del('aggregator_parser');
+    variable_del('aggregator_processors');
+    return TRUE;
+  }
+  return FALSE;
 }
 
 /**

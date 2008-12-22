@@ -42,6 +42,9 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Optionally, RSS feeds may be configured to not automatically generate feed blocks.
 - Search:
     * Added support for language-aware searches.
+- Aggregator:
+    * Introduced architecture that allows pluggable parsers and processors for 
+      syndicating RSS and Atom feeds.
 - Testing:
     * Added test framework and tests.
 - Improved time zone support:
