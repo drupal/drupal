@@ -1,5 +1,5 @@
 <?php
-// $Id: book.test,v 1.6 2008/12/16 23:57:32 dries Exp $
+// $Id: book.test,v 1.7 2008/12/23 14:32:08 dries Exp $
 
 class BookTestCase extends DrupalWebTestCase {
   protected $book;
@@ -21,7 +21,7 @@ class BookTestCase extends DrupalWebTestCase {
    */
   function testBook() {
     // Create users.
-    $book_author = $this->drupalCreateUser(array('create new books', 'create book content', 'add content to books'));
+    $book_author = $this->drupalCreateUser(array('create new books', 'create book content', 'edit own book content', 'add content to books'));
     $web_user = $this->drupalCreateUser(array('access printer-friendly version'));
 
     // Create new book.
@@ -57,6 +57,25 @@ class BookTestCase extends DrupalWebTestCase {
     $this->checkBookNode($nodes[2], NULL, $nodes[1], $nodes[0], $nodes[3]);
     $this->checkBookNode($nodes[3], NULL, $nodes[2], $book, $nodes[4]);
     $this->checkBookNode($nodes[4], NULL, $nodes[3], $book, false);
+
+    $this->drupalLogout();
+
+    // Create a second book, and move an existing book page into it.
+    $this->drupalLogin($book_author);
+    $other_book = $this->createBookNode('new');
+    $node = $this->createBookNode($book->nid);
+    $edit = array('book[bid]' => $other_book->nid);
+    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+
+    $this->drupalLogout();
+    $this->drupalLogin($web_user);
+
+    // Check that the nodes in the second book are displayed correctly.
+    // First we must set $this->book to the second book, so that the
+    // correct regex will be generated for testing the outline.
+    $this->book = $other_book;
+    $this->checkBookNode($other_book, array($node), false, false, $node);
+    $this->checkBookNode($node, NULL, $other_book, $other_book, false);
   }
 
   /**
