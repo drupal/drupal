@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.258 2008/12/20 18:24:32 dries Exp $
+// $Id: bootstrap.inc,v 1.259 2008/12/23 19:59:17 dries Exp $
 
 /**
  * @file
@@ -403,6 +403,12 @@ function drupal_initialize_variables() {
   ini_set('html_errors', 0);
   // Don't escape quotes when reading files from the database, disk, etc.
   ini_set('magic_quotes_runtime', '0');
+  // Use session cookies, not transparent sessions that puts the session id in
+  // the query string.
+  ini_set('session.use_only_cookies', '1');
+  ini_set('session.use_trans_sid', '1');
+  // Don't send HTTP headers using PHP's session handler.
+  ini_set('session.cache_limiter', 'none');
 }
 
 /**
