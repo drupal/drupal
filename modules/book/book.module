@@ -561,7 +561,7 @@ function book_update_bid($book_link) {
 
   if ($mlids) {
     db_update('book')
-      ->fields(array('bid', $book_link['bid']))
+      ->fields(array('bid' => $book_link['bid']))
       ->condition('mlid', $mlids, 'IN')
       ->execute();
   }
@@ -760,6 +760,10 @@ function book_nodeapi_presave($node) {
   // Always save a revision for non-administrators.
   if (!empty($node->book['bid']) && !user_access('administer nodes')) {
     $node->revision = 1;
+    // The database schema requires a log message for every revision.
+    if (!isset($node->log)) {
+      $node->log = '';
+    }
   }
   // Make sure a new node gets a new menu link.
   if (empty($node->nid)) {
