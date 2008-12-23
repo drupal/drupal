@@ -1922,3 +1922,148 @@ class DatabaseTemporaryQueryTestCase extends DrupalWebTestCase {
     $this->assertFalse(db_table_exists('temporary'), t('The temporary table is, indeed, temporary.'));
   }
 }
+
+/**
+ * Test how the current database driver interprets the SQL syntax.
+ *
+ * In order to ensure consistent SQL handling throughout Drupal
+ * across multiple kinds of database systems, we test that the
+ * database system interprets SQL syntax in an expected fashion.
+ */
+class DatabaseAnsiSyntaxTestCase extends DatabaseTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('ANSI SQL syntax tests'),
+      'description' => t('Test ANSI SQL syntax interpretation.'),
+      'group' => t('Database'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('database_test');
+  }
+
+  /**
+   * Test for ANSI string concatenation.
+   */
+  function testBasicConcat() {
+    $result = db_query("SELECT 'This' || ' ' || 'is' || ' a ' || 'test.'");
+    $this->assertIdentical($result->fetchField(), 'This is a test.', t('Basic ANSI Concat works.'));
+  }
+
+  /**
+   * Test for ANSI string concatenation with field values.
+   */
+  function testFieldConcat() {
+    $result = db_query("SELECT 'The age of ' || name || ' is ' || age || '.' FROM {test} WHERE age = :age", array(':age' => 25));
+    $this->assertIdentical($result->fetchField(), 'The age of John is 25.', t('Field ANSI Concat works.'));
+  }
+
+  /**
+   * ANSI standard allows for double quotes to escape field names.
+   */
+  function testQuotes() {
+    $result = db_query('SELECT "name" FROM {test} WHERE age = :age', array(':age' => 25));
+    $this->assertIdentical($result->fetchField(), 'John', t('ANSI field quoting works.'));
+  }
+}
+
+/**
+ * Test invalid data handling.
+ */
+class DatabaseInvalidDataTestCase extends DatabaseTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('SQL handling tests'),
+      'description' => t('Test handling of invalid data.'),
+      'group' => t('Database'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('database_test');
+  }
+
+  /**
+   * Traditional SQL database systems abort inserts when invalid data is encountered.
+   */
+  function testInsertDuplicateData() {
+    // Try to insert multiple records where at least one has bad data.
+    try {
+      db_insert('test')
+        ->fields(array('name', 'age', 'job'))
+        ->values(array(
+          'name' => 'Elvis',
+          'age' => 63,
+          'job' => 'Singer',
+        ))->values(array(
+          'name' => 'John', // <-- Duplicate value on unique field.
+          'age' => 17,
+          'job' => 'Consultant',
+        ))
+        ->values(array(
+          'name' => 'Frank',
+          'age' => 75,
+          'job' => 'Singer',
+        ))
+        ->execute();
+        $this->assertTrue(FALSE, t('Insert succeedded when it should not have.'));
+    }
+    catch (Exception $e) {
+      // Check the first record was inserted.
+      $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 63));
+      $this->assertIdentical($result->fetchField(), 'Elvis', t('First record inserted as expected.'));
+
+      // Ensure the other values were not inserted.
+      $record = db_select('test')
+        ->fields('test', array('name', 'age'))
+        ->condition('age', array(17, 75),'IN')
+        ->execute()->fetchObject();
+      $this->assertFalse($record, $e->getMessage() .':: '. t('Insert aborted as expected.'));
+    }
+  }
+
+  /**
+   * Dates do not allow zero values for month/day or a zero value for an entire date.
+   */
+  function testInvalidDate() {
+    // Test zero in month.
+    try {
+      db_insert('test_date')
+        ->fields(array(
+          'dummy_date' => '2008-00-01 12:00:00'
+        ))
+        ->execute();
+      $this->assertTrue(FALSE, t('Insert with zero as month in date unexpectedly succeeded.'));
+    }
+    catch (Exception $e) {
+      $this->assertTrue(TRUE, t('Insert with zero as month in date causes expected SQL error.'));
+    }
+
+    // Test zero in day.
+    try {
+       db_insert('test_date')
+        ->fields(array(
+          'dummy_date' => '2008-05-00 12:00:00'
+        ))
+        ->execute();
+      $this->assertTrue(FALSE, t('Insert with zero as day in date unexpectedly succeeded.'));
+    }
+    catch (Exception $e) {
+      $this->assertTrue(TRUE, t('Insert with zero as day in date causes expected SQL error.'));
+    }
+
+    // Test 0000-00-00 00:00:00 is invalid.
+    try {
+      db_insert('test_date')
+        ->fields(array(
+          'dummy_date' => '0000-00-00 00:00:00'
+        ))
+        ->execute();
+      $this->assertTrue(FALSE, t('Insertion of zero date unexpectedly succeeded.'));
+    }
+    catch (Exception $e) {
+      $this->assertTrue(TRUE, t('Insertion of zero date failed as expected.'));
+    }
+  }
+}

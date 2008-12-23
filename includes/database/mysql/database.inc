@@ -35,9 +35,12 @@ class DatabaseConnection_mysql extends DatabaseConnection {
     // Force MySQL to use the UTF-8 character set by default.
     $this->exec('SET NAMES "utf8"');
 
-    // Enable MySQL's "strict mode", which removes most of MySQL's
-    // "just be lazy" behaviors that end up causing more trouble than they're worth.
-    $this->exec('SET sql_mode=STRICT_ALL_TABLES');
+    // Force MySQL's behavior to conform more closely to SQL standards.
+    // This allows Drupal to run almost seamlessly on many different
+    // kinds of database systems. These settings force MySQL to behave
+    // the same as postgresql, or sqlite in regards to syntax interpretation
+    // and invalid data handling. See http://drupal.org/node/344575 for further disscussion.
+    $this->exec("SET sql_mode='ANSI,TRADITIONAL,ONLY_FULL_GROUP_BY'");
   }
 
   public function queryRange($query, array $args, $from, $count, array $options = array()) {
