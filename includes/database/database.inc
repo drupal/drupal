@@ -349,10 +349,14 @@ abstract class DatabaseConnection extends PDO {
    * @param $query
    *   The query string as SQL, with curly-braces surrounding the
    *   table names.
+   * @param $query
+   *   Whether or not to cache the prepared statement for later reuse in this
+   *   same request.  Usually we want to, but queries that require preprocessing
+   *   cannot be safely cached.
    * @return
    *   A PDO prepared statement ready for its execute() method.
    */
-  protected function prepareQuery($query) {
+  protected function prepareQuery($query, $cache = TRUE) {
     $query = self::prefixTables($query);
     if (empty($this->preparedStatements[$query])) {
       // Call PDO::prepare.
@@ -473,7 +477,8 @@ abstract class DatabaseConnection extends PDO {
         $stmt->execute(NULL, $options);
       }
       else {
-        $stmt = $this->prepareQuery($query);
+        $modified = $this->expandArguments($query, $args);
+        $stmt = $this->prepareQuery($query, !$modified);
         $stmt->execute($args, $options);
       }
 
@@ -505,6 +510,50 @@ abstract class DatabaseConnection extends PDO {
       }
       return NULL;
     }
+  }
+
+  /**
+   * Expand out shorthand placeholders.
+   *
+   * Drupal supports an alternate syntax for doing arrays of values.  We therefore
+   * need to expand them out into a full, executable query string.
+   *
+   * @param $query
+   *   The query string to modify.
+   * @param $args
+   *   The arguments for the query.
+   * @return
+   *   TRUE if the query was modified, FALSE otherwise.
+   */
+  protected function expandArguments(&$query, &$args) {
+    $modified = FALSE;
+
+    foreach ($args as $key => $data) {
+      // is_array() is slower than checking a string value, so do that first.
+      if (is_array($data)) {
+        $new_keys = array();
+        $base = $key;
+        $base[0] = ':';
+        foreach ($data as $i => $value) {
+          $candidate_placeholder = $base . '_' . $i;
+          while (isset($args[$candidate_placeholder])) {
+            $candidate_placeholder .= mt_rand();
+          }
+          $new_keys[$candidate_placeholder] = $value;
+        }
+
+        // Update the query with the new placeholders.
+        $query = str_replace($key, implode(', ', $new_keys), $query);
+
+        // Update the args array with the new placeholders.
+        unset($args[$key]);
+        $args += $new_keys;
+
+        $modified = TRUE;
+      }
+    }
+
+    return $modified;
   }
 
   /**
