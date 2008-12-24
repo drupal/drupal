@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.test,v 1.12 2008/12/11 20:35:37 dries Exp $
+// $Id: dblog.test,v 1.13 2008/12/24 10:38:41 dries Exp $
 
 class DBLogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -353,5 +353,37 @@ class DBLogTestCase extends DrupalWebTestCase {
       break;
     }
     return $content;
+  }
+
+  /**
+   * Login an admin user, create dblog event, and test clearing dblog functionality through the admin interface.
+   */
+  protected function testDBLogAddAndClear() {
+    global $base_root;
+    // Get a count of how many watchdog entries there are.
+    $count = db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField();
+    $log = array(
+      'type'        => 'custom',
+      'message'     => 'Log entry added to test the doClearTest clear down.',
+      'variables'   => array(),
+      'severity'    => WATCHDOG_NOTICE,
+      'link'        => NULL,
+      'user'        => $this->big_user,
+      'request_uri' => $base_root . request_uri(),
+      'referer'     => $_SERVER['HTTP_REFERER'],
+      'ip'          => ip_address(),
+      'timestamp'   => REQUEST_TIME,
+    );
+    // Add a watchdog entry.
+    dblog_watchdog($log);
+    // Make sure the table count has actually incremented.
+    $this->assertEqual($count + 1, db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField(), t('dblog_watchdog() added an entry to the dblog %count', array('%count' => $count)));
+    // Login the admin user.
+    $this->drupalLogin($this->big_user);
+    // Now post to clear the db table.
+    $this->drupalPost('admin/reports/dblog', array(), t('Clear log messages'));
+    // Count rows in watchdog that previously related to the deleted user.
+    $count = db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField();
+    $this->assertEqual($count, 0, t('DBLog contains %count records after a clear.', array('%count' => $count)));
   }
 }
