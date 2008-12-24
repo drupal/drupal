@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.28 2008/12/23 07:48:24 dries Exp $
+// $Id: database_test.test,v 1.29 2008/12/24 09:53:40 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -2065,5 +2065,31 @@ class DatabaseInvalidDataTestCase extends DatabaseTestCase {
     catch (Exception $e) {
       $this->assertTrue(TRUE, t('Insertion of zero date failed as expected.'));
     }
+  }
+}
+
+/**
+ * Drupal-specific SQL syntax tests.
+ */
+class DatabaseQueryTestCase extends DatabaseTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Custom query syntax tests'),
+      'description' => t('Test Drupal\'s extended prepared statement syntax..'),
+      'group' => t('Database'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('database_test');
+  }
+
+  /**
+   * Confirm that temporary tables work and are limited to one request.
+   */
+  function testArraySubstitution() {
+    $names = db_query("SELECT name FROM {test} WHERE age IN (@ages) ORDER BY age", array('@ages' => array(25, 26, 27)))->fetchAll();
+
+    $this->assertEqual(count($names), 3, t('Correct number of names returned'));
   }
 }
