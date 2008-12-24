@@ -52,6 +52,7 @@ function dblog_overview() {
   );
 
   $output = drupal_get_form('dblog_filter_form');
+  $output .= drupal_get_form('dblog_clear_log_form');
 
   $header = array(
     ' ',
@@ -327,4 +328,35 @@ function dblog_filter_form_submit($form, &$form_state) {
       break;
   }
   return 'admin/reports/dblog';
+}
+
+/**
+ * Return form for dblog clear button.
+ *
+ * @ingroup forms
+ * @see dblog_clear_log_submit()
+ */
+function dblog_clear_log_form() {
+  $form['dblog_clear'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Clear log messages'),
+    '#description' => t('This will permanently remove the log messages from the database.'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['dblog_clear']['clear'] = array(
+    '#type' => 'submit',
+    '#value' => t('Clear log messages'),
+    '#submit' => array('dblog_clear_log_submit'),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit callback: clear database with log messages.
+ */
+function dblog_clear_log_submit(&$form_state, $form) {
+  db_delete('watchdog')->execute();
+  drupal_set_message(t('Database log cleared.'));
 }
