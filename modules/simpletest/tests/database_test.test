@@ -2019,7 +2019,7 @@ class DatabaseInvalidDataTestCase extends DatabaseTestCase {
         ->fields('test', array('name', 'age'))
         ->condition('age', array(17, 75),'IN')
         ->execute()->fetchObject();
-      $this->assertFalse($record, $e->getMessage() .':: '. t('Insert aborted as expected.'));
+      $this->assertFalse($record, t('Insert aborted as expected.'));
     }
   }
 
