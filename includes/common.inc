@@ -684,8 +684,8 @@ function fix_gpc_magic() {
  *
  * Special variables called "placeholders" are used to signal dynamic
  * information in a string which should not be translated. Placeholders
- * can also be used for text that may change from time to time
- * (such as link paths) to be changed without requiring updates to translations.
+ * can also be used for text that may change from time to time (such as
+ * link paths) to be changed without requiring updates to translations.
  *
  * For example:
  * @code
@@ -701,9 +701,9 @@ function fix_gpc_magic() {
  *     $message[] = t("If you don't want to receive such e-mails, you can change your settings at !url.", array('!url' => url("user/$account->uid", array('absolute' => TRUE))));
  *   @endcode
  *
- * - @variable, which indicates that the text should be run through check_plain,
- *   to escape HTML characters. Use this for any output that's displayed within
- *   a Drupal page.
+ * - @variable, which indicates that the text should be run through
+ *   check_plain, to escape HTML characters. Use this for any output that's
+ *   displayed within a Drupal page.
  *   @code
  *     drupal_set_title($title = t("@name's blog", array('@name' => $account->name)));
  *   @endcode
@@ -716,10 +716,10 @@ function fix_gpc_magic() {
  *   @endcode
  *
  * When using t(), try to put entire sentences and strings in one t() call.
- * This makes it easier for translators, as it provides context as to what each
- * word refers to. HTML markup within translation strings is allowed, but should
- * be avoided if possible. The exception are embedded links; link titles add a
- * context for translators, so should be kept in the main string.
+ * This makes it easier for translators, as it provides context as to what
+ * each word refers to. HTML markup within translation strings is allowed, but
+ * should be avoided if possible. The exception are embedded links; link
+ * titles add a context for translators, so should be kept in the main string.
  *
  * Here is an example of incorrect usage of t():
  * @code
@@ -842,8 +842,8 @@ function fix_gpc_magic() {
  *   A string containing the English string to translate.
  * @param $args
  *   An associative array of replacements to make after translation. Incidences
- *   of any key in this array are replaced with the corresponding value.
- *   Based on the first character of the key, the value is escaped and/or themed:
+ *   of any key in this array are replaced with the corresponding value. Based
+ *   on the first character of the key, the value is escaped and/or themed:
  *    - !variable: inserted as is
  *    - @variable: escape plain text to HTML (check_plain)
  *    - %variable: escape text and theme as a placeholder for user-submitted
