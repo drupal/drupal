@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.82 2008/12/16 22:05:51 dries Exp $
+// $Id: chameleon.theme,v 1.83 2008/12/26 10:46:54 dries Exp $
 
 /**
  * @file
@@ -139,8 +139,8 @@ function chameleon_node($node, $teaser = 0, $page = 0) {
   }
 
   $terms = '';
-  if (!empty($node->content['links']['taxonomy'])) {
-    $terms = drupal_render($node->content['links']['taxonomy']);
+  if (!empty($node->content['links']['terms'])) {
+    $terms = drupal_render($node->content['links']['terms']);
   }
   
   $links = '';

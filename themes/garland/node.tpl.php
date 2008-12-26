@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.5 2007/10/11 09:51:29 goba Exp $
+// $Id: node.tpl.php,v 1.6 2008/12/26 10:46:54 dries Exp $
 ?>
 <div id="node-<?php print $node->nid; ?>" class="node<?php if ($sticky) { print ' sticky'; } ?><?php if (!$status) { print ' node-unpublished'; } ?>">
 
@@ -19,7 +19,7 @@
 
   <div class="clear-block">
     <div class="meta">
-    <?php if ($taxonomy): ?>
+    <?php if ($terms): ?>
       <div class="terms"><?php print $terms ?></div>
     <?php endif;?>
     </div>
