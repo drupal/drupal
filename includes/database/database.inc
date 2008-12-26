@@ -349,7 +349,7 @@ abstract class DatabaseConnection extends PDO {
    * @param $query
    *   The query string as SQL, with curly-braces surrounding the
    *   table names.
-   * @param $query
+   * @param $cache
    *   Whether or not to cache the prepared statement for later reuse in this
    *   same request.  Usually we want to, but queries that require preprocessing
    *   cannot be safely cached.
@@ -529,21 +529,21 @@ abstract class DatabaseConnection extends PDO {
     $modified = FALSE;
 
     foreach ($args as $key => $data) {
-      // is_array() is slower than checking a string value, so do that first.
+      // If the placeholder value to insert is an array, assume that we need
+      // to expand it out into a comma-delimited set of placeholders.
       if (is_array($data)) {
         $new_keys = array();
-        $base = $key;
-        $base[0] = ':';
         foreach ($data as $i => $value) {
-          $candidate_placeholder = $base . '_' . $i;
-          while (isset($args[$candidate_placeholder])) {
-            $candidate_placeholder .= mt_rand();
-          }
-          $new_keys[$candidate_placeholder] = $value;
+          // This assumes that there are no other placeholders that use the same
+          // name.  For example, if the array placeholder is defined as :example
+          // and there is already an :example_2 placeholder, this will generate
+          // a duplicate key.  We do not account for that as the calling code
+          // is already broken if that happens.
+          $new_keys[$key . '_' . $i] = $value;
         }
 
         // Update the query with the new placeholders.
-        $query = str_replace($key, implode(', ', $new_keys), $query);
+        $query = str_replace($key, implode(', ', array_keys($new_keys)), $query);
 
         // Update the args array with the new placeholders.
         unset($args[$key]);

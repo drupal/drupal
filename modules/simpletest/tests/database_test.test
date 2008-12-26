@@ -2085,10 +2085,10 @@ class DatabaseQueryTestCase extends DatabaseTestCase {
   }
 
   /**
-   * Confirm that temporary tables work and are limited to one request.
+   * Test that we can specify an array of values in the query by simply passing in an array.
    */
   function testArraySubstitution() {
-    $names = db_query("SELECT name FROM {test} WHERE age IN (@ages) ORDER BY age", array('@ages' => array(25, 26, 27)))->fetchAll();
+    $names = db_query("SELECT name FROM {test} WHERE age IN (:ages) ORDER BY age", array(':ages' => array(25, 26, 27)))->fetchAll();
 
     $this->assertEqual(count($names), 3, t('Correct number of names returned'));
   }
