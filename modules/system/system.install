@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.293 2008/12/20 18:24:40 dries Exp $
+// $Id: system.install,v 1.294 2008/12/26 11:04:39 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -289,22 +289,11 @@ function system_requirements($phase) {
  */
 function system_install() {
   if (db_driver() == 'pgsql') {
-    // We create some custom types and functions using global names instead of
-    // prefixing them like we do with table names. If this function is ever
-    // called again (for example, by the test framework when creating prefixed
-    // test databases), the global names will already exist. We therefore avoid
-    // trying to create them again in that case.
-
-    // Create unsigned types.
-    if (!db_result(db_query("SELECT COUNT(*) FROM pg_constraint WHERE conname = 'int_unsigned_check'"))) {
-      db_query("CREATE DOMAIN int_unsigned integer CHECK (VALUE >= 0)");
-    }
-    if (!db_result(db_query("SELECT COUNT(*) FROM pg_constraint WHERE conname = 'smallint_unsigned_check'"))) {
-      db_query("CREATE DOMAIN smallint_unsigned smallint CHECK (VALUE >= 0)");
-    }
-    if (!db_result(db_query("SELECT COUNT(*) FROM pg_constraint WHERE conname = 'bigint_unsigned_check'"))) {
-      db_query("CREATE DOMAIN bigint_unsigned bigint CHECK (VALUE >= 0)");
-    }
+    // We create some functions using global names instead of prefixing them
+    // like we do with table names. If this function is ever called again (for
+    // example, by the test framework when creating prefixed test databases), 
+    // the global names will already exist. We therefore avoid trying to create
+    // them again in that case.
 
     // Create functions.
     db_query('CREATE OR REPLACE FUNCTION "greatest"(numeric, numeric) RETURNS numeric AS
@@ -1730,7 +1719,7 @@ function system_update_6019() {
 
       // Replace unique index dst_language with a unique constraint. The
       // result is the same but the unique key fits our current schema
-      // structure. Also, the postgres documentation implies that
+      // structure. Also, the PostgreSQL documentation implies that
       // unique constraints are preferable to unique indexes. See
       // http://www.postgresql.org/docs/8.2/interactive/indexes-unique.html.
       if (db_table_exists('url_alias')) {
@@ -3139,6 +3128,40 @@ function system_update_7015() {
   $ret = array();
   $ret[] = update_sql("UPDATE {menu_links} SET link_path = 'user/logout' WHERE link_path = 'logout'");
   $ret[] = update_sql("UPDATE {menu_links} SET router_path = 'user/logout' WHERE router_path = 'logout'");
+  return $ret;
+}
+
+/**
+ * Remove custom datatype *_unsigned in PostgreSQL.
+ */
+function system_update_7016() {
+  $ret = array();
+  // Only run these queries if the driver used is pgsql.
+  if (db_driver() == 'pgsql') {
+    $result = db_query("SELECT c.relname AS table, a.attname AS field, 
+                        pg_catalog.format_type(a.atttypid, a.atttypmod) AS type 
+                        FROM pg_catalog.pg_attribute a 
+                        LEFT JOIN pg_class c ON (c.oid =  a.attrelid) 
+                        WHERE pg_catalog.pg_table_is_visible(c.oid) AND c.relkind = 'r' 
+                        AND pg_catalog.format_type(a.atttypid, a.atttypmod) LIKE '%unsigned%'");
+    while ($row = db_fetch_object($result)) {
+      switch ($row->type) {
+        case 'smallint_unsigned':
+          $datatype = 'int';
+          break;
+        case 'int_unsigned':
+        case 'bigint_unsigned':
+        default:
+          $datatype = 'bigint';
+          break;
+      }
+      $ret[] = update_sql('ALTER TABLE ' . $row->table . ' ALTER COLUMN ' . $row->field . ' TYPE ' . $datatype); 
+      $ret[] = update_sql('ALTER TABLE ' . $row->table . ' ADD CHECK (' . $row->field . ' >= 0)');
+    }
+    $ret[] = update_sql('DROP DOMAIN smallint_unsigned');
+    $ret[] = update_sql('DROP DOMAIN int_unsigned');
+    $ret[] = update_sql('DROP DOMAIN bigint_unsigned');
+  }
   return $ret;
 }
 
