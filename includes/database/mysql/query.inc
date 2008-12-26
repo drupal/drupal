@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.7 2008/12/20 18:24:34 dries Exp $
+// $Id: query.inc,v 1.8 2008/12/26 14:23:38 dries Exp $
 
 /**
  * @ingroup database
@@ -80,6 +80,12 @@ class InsertQuery_mysql extends InsertQuery {
 class MergeQuery_mysql extends MergeQuery {
 
   public function execute() {
+
+    // A merge query without any key field is invalid.
+    if (count($this->keyFields) == 0) {
+      throw new InvalidMergeQueryException("You need to specify key fields before executing a merge query");
+    }
+
     // Set defaults.
     if ($this->updateFields) {
       $update_fields = $this->updateFields;
