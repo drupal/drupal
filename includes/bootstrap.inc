@@ -406,7 +406,7 @@ function drupal_initialize_variables() {
   // Use session cookies, not transparent sessions that puts the session id in
   // the query string.
   ini_set('session.use_only_cookies', '1');
-  ini_set('session.use_trans_sid', '1');
+  ini_set('session.use_trans_sid', '0');
   // Don't send HTTP headers using PHP's session handler.
   ini_set('session.cache_limiter', 'none');
 }
