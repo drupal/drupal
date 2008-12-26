@@ -51,14 +51,13 @@ function statistics_exit() {
     // We are counting content views.
     if ((arg(0) == 'node') && is_numeric(arg(1)) && arg(2) == '') {
       // A node has been viewed, so update the node's counters.
-      $fields = array(
-        'daycount' => 1,
-        'totalcount' => 1,
-        'nid' => arg(1),
-        'timestamp' => REQUEST_TIME,
-      );
       db_merge('node_counter')
-        ->fields($fields)
+        ->key(array('nid' => arg(1)))
+        ->fields(array(
+          'daycount' => 1,
+          'totalcount' => 1,
+          'timestamp' => REQUEST_TIME,
+        ))
         ->expression('daycount', 'daycount + 1')
         ->expression('totalcount', 'totalcount + 1')
         ->execute();

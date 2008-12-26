@@ -80,6 +80,12 @@ class InsertQuery_mysql extends InsertQuery {
 class MergeQuery_mysql extends MergeQuery {
 
   public function execute() {
+
+    // A merge query without any key field is invalid.
+    if (count($this->keyFields) == 0) {
+      throw new InvalidMergeQueryException("You need to specify key fields before executing a merge query");
+    }
+
     // Set defaults.
     if ($this->updateFields) {
       $update_fields = $this->updateFields;

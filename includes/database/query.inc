@@ -635,6 +635,11 @@ class MergeQuery extends Query {
 
   public function execute() {
 
+    // A merge query without any key field is invalid.
+    if (count($this->keyFields) == 0) {
+      throw new InvalidMergeQueryException("You need to specify key fields before executing a merge query");
+    }
+
     // In the degenerate case of this query type, we have to run multiple
     // queries as there is no universal single-query mechanism that will work.
     // Our degenerate case is not designed for performance efficiency but

@@ -957,6 +957,26 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
     $this->assertEqual($person->age, $age_before + 4, t('Age updated correctly.'));
     $this->assertEqual($person->job, 'Speaker', t('Job set correctly.'));
   }
+
+  /**
+   * Test that an invalid merge query throws an exception like it is supposed to.
+   */
+  function testInvalidMerge() {
+    try {
+      // This query should die because there is no key field specified.
+      db_merge('test_people')
+        ->fields(array(
+          'age' => 31,
+          'name' => 'Tiffany',
+        ))
+        ->execute();
+    }
+    catch (InvalidMergeQueryException $e) {
+      $this->pass(t('InvalidMergeQueryException thrown for invalid query.'));
+      return;
+    }
+    $this->fail(t('No InvalidMergeQueryException thrown'));
+  }
 }
 
 /**
