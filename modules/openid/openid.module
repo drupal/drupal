@@ -272,7 +272,7 @@ function openid_discovery($claimed_id) {
   if ($url['scheme'] == 'http' || $url['scheme'] == 'https') {
     // For regular URLs, try Yadis resolution first, then HTML-based discovery
     $headers = array('Accept' => 'application/xrds+xml');
-    $result = drupal_http_request($xrds_url, $headers);
+    $result = drupal_http_request($xrds_url, array('headers' => $headers));
 
     if (!isset($result->error)) {
       if (isset($result->headers['Content-Type']) && preg_match("/application\/xrds\+xml/", $result->headers['Content-Type'])) {
@@ -290,7 +290,7 @@ function openid_discovery($claimed_id) {
         }
         if (!empty($xrds_url)) {
           $headers = array('Accept' => 'application/xrds+xml');
-          $xrds_result = drupal_http_request($xrds_url, $headers);
+          $xrds_result = drupal_http_request($xrds_url, array('headers' => $headers));
           if (!isset($xrds_result->error)) {
             $services = xrds_parse($xrds_result->data);
           }
@@ -347,8 +347,12 @@ function openid_association($op_endpoint) {
     // If there is no existing association, then request one
     $assoc_request = openid_association_request($public);
     $assoc_message = _openid_encode_message(_openid_create_message($assoc_request));
-    $assoc_headers = array('Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8');
-    $assoc_result = drupal_http_request($op_endpoint, $assoc_headers, 'POST', $assoc_message);
+    $assoc_options = array(
+      'headers' => array('Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8'),
+      'method' => 'POST',
+      'data' => $assoc_message,
+    );
+    $assoc_result = drupal_http_request($op_endpoint, $assoc_options);
     if (isset($assoc_result->error)) {
       module_invoke('system', 'check_http_request');
       return FALSE;
@@ -509,8 +513,12 @@ function openid_verify_assertion($op_endpoint, $response) {
     $request = $response;
     $request['openid.mode'] = 'check_authentication';
     $message = _openid_create_message($request);
-    $headers = array('Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8');
-    $result = drupal_http_request($op_endpoint, $headers, 'POST', _openid_encode_message($message));
+    $options = array(
+      'headers' => array('Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8'),
+      'method' => 'POST',
+      'data' => _openid_encode_message($message),
+    );
+    $result = drupal_http_request($op_endpoint, $options);
     if (!isset($result->error)) {
       $response = _openid_parse_message($result->data);
       if (strtolower(trim($response['is_valid'])) == 'true') {

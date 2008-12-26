@@ -439,7 +439,12 @@ function _xmlrpc() {
     $method = array_shift($args);
   }
   $xmlrpc_request = xmlrpc_request($method, $args);
-  $result = drupal_http_request($url, array("Content-Type" => "text/xml"), 'POST', $xmlrpc_request->xml);
+  $options = array(
+    'headers' => array('Content-Type' => 'text/xml'),
+    'method' => 'POST',
+    'data' => $xmlrpc_request->xml,
+  );
+  $result = drupal_http_request($url, $options);
   if ($result->code != 200) {
     xmlrpc_error($result->code, $result->error);
     return FALSE;

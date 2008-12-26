@@ -422,26 +422,43 @@ function drupal_access_denied() {
 /**
  * Perform an HTTP request.
  *
- * This is a flexible and powerful HTTP client implementation. Correctly handles
- * GET, POST, PUT or any other HTTP requests. Handles redirects.
+ * This is a flexible and powerful HTTP client implementation. Correctly
+ * handles GET, POST, PUT or any other HTTP requests. Handles redirects.
  *
  * @param $url
  *   A string containing a fully qualified URI.
- * @param $headers
- *   An array containing an HTTP header => value pair.
- * @param $method
- *   A string defining the HTTP request to use.
- * @param $data
- *   A string containing data to include in the request.
- * @param $retry
- *   An integer representing how many times to retry the request in case of a
- *   redirect.
+ * @param $options
+ *   (optional) An array which can have one or more of following keys:
+ *   - headers
+ *       An array containing request headers to send as name/value pairs.
+ *   - method
+ *       A string containing the request method. Defaults to 'GET'.
+ *   - data
+ *       A string containing the request body. Defaults to NULL.
+ *   - max_redirects
+ *       An integer representing how many times a redirect may be followed.
+ *       Defaults to 3.
  * @return
- *   An object containing the HTTP request headers, response code, headers,
- *   data and redirect status.
+ *   An object which can have one or more of the following parameters:
+ *   - request
+ *       A string containing the request body that was sent.
+ *   - code
+ *       An integer containing the response status code, or the error code if
+ *       an error occurred.
+ *   - redirect_code
+ *       If redirected, an integer containing the initial response status code.
+ *   - redirect_url
+ *       If redirected, a string containing the redirection location.
+ *   - error
+ *       If an error occurred, the error message.
+ *   - headers
+ *       An array containing the response headers as name/value pairs.
+ *   - data
+ *       A string containing the response body that was received.
  */
-function drupal_http_request($url, $headers = array(), $method = 'GET', $data = NULL, $retry = 3) {
+function drupal_http_request($url, array $options = array()) {
   global $db_prefix;
+
   static $self_test = FALSE;
   $result = new stdClass();
   // Try to clear the drupal_http_request_fails variable if it's set. We
@@ -505,19 +522,27 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
     $path .= '?' . $uri['query'];
   }
 
-  // Create HTTP request.
-  $defaults = array(
+  // Merge the default options.
+  $options += array(
+    'headers' => array(),
+    'method' => 'GET',
+    'data' => NULL,
+    'max_redirects' => 3,
+  );
+
+  // Merge the default headers.
+  $options['headers'] += array(
     // RFC 2616: "non-standard ports MUST, default ports MAY be included".
     // We don't add the port to prevent from breaking rewrite rules checking the
     // host that do not take into account the port number.
-    'Host' => "Host: $host",
-    'User-Agent' => 'User-Agent: Drupal (+http://drupal.org/)',
-    'Content-Length' => 'Content-Length: ' . strlen($data)
+    'Host' => $host,
+    'User-Agent' => 'Drupal (+http://drupal.org/)',
+    'Content-Length' => strlen($options['data']),
   );
 
   // If the server url has a user then attempt to use basic authentication
   if (isset($uri['user'])) {
-    $defaults['Authorization'] = 'Authorization: Basic ' . base64_encode($uri['user'] . (!empty($uri['pass']) ? ":" . $uri['pass'] : ''));
+    $options['headers']['Authorization'] = 'Basic ' . base64_encode($uri['user'] . (!empty($uri['pass']) ? ":" . $uri['pass'] : ''));
   }
 
   // If the database prefix is being used by SimpleTest to run the tests in a copied
@@ -527,16 +552,16 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   // same time won't interfere with each other as they would if the database
   // prefix were stored statically in a file or database variable.
   if (preg_match("/simpletest\d+/", $db_prefix, $matches)) {
-    $headers['User-Agent'] = $matches[0];
+    $options['headers']['User-Agent'] = $matches[0];
   }
 
-  foreach ($headers as $header => $value) {
-    $defaults[$header] = $header . ': ' . trim($value);
+  foreach ($options['headers'] as $name => $value) {
+    $options['headers'][$name] = $name . ': ' . trim($value);
   }
 
-  $request = $method . ' ' . $path . " HTTP/1.0\r\n";
-  $request .= implode("\r\n", $defaults);
-  $request .= "\r\n\r\n" . $data;
+  $request = $options['method'] . ' ' . $path . " HTTP/1.0\r\n";
+  $request .= implode("\r\n", $options['headers']);
+  $request .= "\r\n\r\n" . $options['data'];
   $result->request = $request;
 
   fwrite($fp, $request);
@@ -548,15 +573,16 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   }
   fclose($fp);
 
-  // Parse response.
-  list($split, $result->data) = explode("\r\n\r\n", $response, 2);
-  $split = preg_split("/\r\n|\n|\r/", $split);
+  // Parse response headers from the response body.
+  list($response, $result->data) = explode("\r\n\r\n", $response, 2);
+  $response = preg_split("/\r\n|\n|\r/", $response);
 
-  list($protocol, $code, $text) = explode(' ', trim(array_shift($split)), 3);
+  // Parse the response status line.
+  list($protocol, $code, $status) = explode(' ', trim(array_shift($response)), 3);
   $result->headers = array();
 
-  // Parse headers.
-  while ($line = trim(array_shift($split))) {
+  // Parse the response headers.
+  while ($line = trim(array_shift($response))) {
     list($header, $value) = explode(':', $line, 2);
     if (isset($result->headers[$header]) && $header == 'Set-Cookie') {
       // RFC 2109: the Set-Cookie response header comprises the token Set-
@@ -569,17 +595,53 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   }
 
   $responses = array(
-    100 => 'Continue', 101 => 'Switching Protocols',
-    200 => 'OK', 201 => 'Created', 202 => 'Accepted', 203 => 'Non-Authoritative Information', 204 => 'No Content', 205 => 'Reset Content', 206 => 'Partial Content',
-    300 => 'Multiple Choices', 301 => 'Moved Permanently', 302 => 'Found', 303 => 'See Other', 304 => 'Not Modified', 305 => 'Use Proxy', 307 => 'Temporary Redirect',
-    400 => 'Bad Request', 401 => 'Unauthorized', 402 => 'Payment Required', 403 => 'Forbidden', 404 => 'Not Found', 405 => 'Method Not Allowed', 406 => 'Not Acceptable', 407 => 'Proxy Authentication Required', 408 => 'Request Time-out', 409 => 'Conflict', 410 => 'Gone', 411 => 'Length Required', 412 => 'Precondition Failed', 413 => 'Request Entity Too Large', 414 => 'Request-URI Too Large', 415 => 'Unsupported Media Type', 416 => 'Requested range not satisfiable', 417 => 'Expectation Failed',
-    500 => 'Internal Server Error', 501 => 'Not Implemented', 502 => 'Bad Gateway', 503 => 'Service Unavailable', 504 => 'Gateway Time-out', 505 => 'HTTP Version not supported'
+    100 => 'Continue',
+    101 => 'Switching Protocols',
+    200 => 'OK',
+    201 => 'Created',
+    202 => 'Accepted',
+    203 => 'Non-Authoritative Information',
+    204 => 'No Content',
+    205 => 'Reset Content',
+    206 => 'Partial Content',
+    300 => 'Multiple Choices',
+    301 => 'Moved Permanently',
+    302 => 'Found',
+    303 => 'See Other',
+    304 => 'Not Modified',
+    305 => 'Use Proxy',
+    307 => 'Temporary Redirect',
+    400 => 'Bad Request',
+    401 => 'Unauthorized',
+    402 => 'Payment Required',
+    403 => 'Forbidden',
+    404 => 'Not Found',
+    405 => 'Method Not Allowed',
+    406 => 'Not Acceptable',
+    407 => 'Proxy Authentication Required',
+    408 => 'Request Time-out',
+    409 => 'Conflict',
+    410 => 'Gone',
+    411 => 'Length Required',
+    412 => 'Precondition Failed',
+    413 => 'Request Entity Too Large',
+    414 => 'Request-URI Too Large',
+    415 => 'Unsupported Media Type',
+    416 => 'Requested range not satisfiable',
+    417 => 'Expectation Failed',
+    500 => 'Internal Server Error',
+    501 => 'Not Implemented',
+    502 => 'Bad Gateway',
+    503 => 'Service Unavailable',
+    504 => 'Gateway Time-out',
+    505 => 'HTTP Version not supported',
   );
   // RFC 2616 states that all unknown HTTP codes must be treated the same as the
   // base code in their class.
   if (!isset($responses[$code])) {
     $code = floor($code / 100) * 100;
   }
+  $result->code = $code;
 
   switch ($code) {
     case 200: // OK
@@ -589,19 +651,18 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
     case 302: // Moved temporarily
     case 307: // Moved temporarily
       $location = $result->headers['Location'];
-
-      if ($retry) {
-        $result = drupal_http_request($location, $headers, $method, $data, --$retry);
+      if ($options['max_redirects']) {
+        // Redirect to the new location.
+        $options['max_redirects']--;
+        $result = drupal_http_request($location, $options);
         $result->redirect_code = $code;
       }
       $result->redirect_url = $location;
-
       break;
     default:
-      $result->error = $text;
+      $result->error = $status;
   }
 
-  $result->code = $code;
   return $result;
 }
 /**
