@@ -84,12 +84,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       unset($spec['not null']);
     }
     if (!empty($spec['unsigned'])) {
-      if ($spec['type'] == 'serial') {
-        $sql .= " CHECK ($name >= 0)";
-      }
-      else {
-        $sql .= '_unsigned';
-      }
+      $sql .= " CHECK ($name >= 0)";
     }
 
     if (!empty($spec['length'])) {
@@ -124,6 +119,25 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     if (!isset($field['pgsql_type'])) {
       $map = $this->getFieldTypeMap();
       $field['pgsql_type'] = $map[$field['type'] . ':' . $field['size']];
+    }
+    if (!empty($field['unsigned'])) {
+      // Unsigned datatypes are not supported in PostgreSQL 8.3. In MySQL,
+      // they are used to ensure a positive number is inserted and it also
+      // doubles the maximum integer size that can be stored in a field. 
+      // The PostgreSQL schema in Drupal creates a check constraint 
+      // to ensure that a value inserted is >= 0. To provide the extra 
+      // integer capacity, here, we bump up the column field size.
+      if (!isset($map)) {
+        $map = $this->getFieldTypeMap();
+      }
+      switch ($field['pgsql_type']) {
+        case 'smallint':
+          $field['pgsql_type'] = $map['int:medium'];
+          break;
+        case 'int' :
+          $field['pgsql_type'] = $map['int:big'];
+          break;
+      }
     }
     if ($field['type'] == 'serial') {
       unset($field['not null']);
