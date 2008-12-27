@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.308 2008/12/03 16:32:21 dries Exp $
+// $Id: form.inc,v 1.309 2008/12/27 19:12:09 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2497,7 +2497,7 @@ function form_clean_id($id = NULL, $flush = FALSE) {
  *        @endcode
  *     All the other values below are optional.
  *     batch_init() provides default values for the messages.
- *     'title': title for the progress page.
+ *     'title': title for the progress page. Only safe strings should be passed.
  *       Defaults to t('Processing').
  *     'init_message': message displayed while the processing is initialized.
  *       Defaults to t('Initializing.').
