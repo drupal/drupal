@@ -17,7 +17,7 @@ class MenuIncTestCase extends DrupalWebTestCase {
 
   function setUp() {
     // Enable dummy module that implements hook_menu.
-    parent::setUp('hook_menu');
+    parent::setUp('menu_test');
   }
 
   /**

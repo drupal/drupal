@@ -9,7 +9,7 @@
  /**
  * The name of the menu changes during the course of this test. Use a $_GET.
  */
-function hook_menu_menu() {
+function menu_test_menu() {
 
   $items['menu_name_test'] = array(
     'title' => t('Test menu_name router item'),
