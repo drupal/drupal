@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.install,v 1.11 2008/12/03 19:22:09 dries Exp $
+// $Id: dblog.install,v 1.12 2008/12/28 20:41:19 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -37,7 +37,7 @@ function dblog_schema() {
       ),
       'type' => array(
         'type' => 'varchar',
-        'length' => 16,
+        'length' => 64,
         'not null' => TRUE,
         'default' => '',
         'description' => 'Type of log message, for example "user" or "page not found."',
@@ -119,5 +119,14 @@ function dblog_update_7001() {
 function dblog_update_7002() {
   $ret = array();
   db_add_index($ret, 'watchdog', 'uid', array('uid'));
+  return $ret;
+}
+
+/**
+ * Allow longer type values.
+ */
+function dblog_update_7003() {
+  $ret = array();
+  db_change_field($ret, 'watchdog', 'type', 'type', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''));
   return $ret;
 }

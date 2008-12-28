@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.5 2008/12/20 18:24:40 dries Exp $
+// $Id: system.api.php,v 1.6 2008/12/28 20:41:19 dries Exp $
 
 /**
  * @file
@@ -683,7 +683,7 @@ function hook_xmlrpc() {
  * SMS, Email, pager, syslog, ...etc.
  *
  * @param $log_entry
- *   The log_entry is an associative array containing the following keys:
+ *   An associative array containing the following keys:
  *   - type: The type of message for this entry. For contributed modules, this is
  *     normally the module name. Do not use 'debug', use severity WATCHDOG_DEBUG instead.
  *   - user: The user object for the user who was logged in when the event happened.
@@ -706,8 +706,8 @@ function hook_xmlrpc() {
  * @return
  *   None.
  */
-function hook_watchdog($log_msg) {
-  global $base_url;
+function hook_watchdog(array $log_entry) {
+  global $base_url, $language;
 
   $severity_list = array(
     WATCHDOG_EMERG    => t('Emergency'),
@@ -720,38 +720,40 @@ function hook_watchdog($log_msg) {
     WATCHDOG_DEBUG    => t('Debug'),
   );
 
-  $to = "someone@example.com";
-  $subject = t('[@site_name] @severity_desc: Alert from your web site', array(
-      '@site_name' => variable_get('site_name', 'Drupal'),
-      '@severity_desc' => $severity_list[$log['severity']]));
-
-  $message  = "\nSite:         @base_url";
-  $message .= "\nSeverity:     (@severity) @severity_desc";
-  $message .= "\nTimestamp:    @timestamp";
-  $message .= "\nType:         @type";
-  $message .= "\nIP Address:   @ip";
-  $message .= "\nRequest URI:  @request_uri";
-  $message .= "\nReferrer URI: @referer_uri";
-  $message .= "\nUser:         (@uid) @name";
-  $message .= "\nLink:         @link";
-  $message .= "\nMessage:      \n\n@message";
-
-  $message = t($message, array(
-    '@base_url'      => $base_url,
-    '@severity'      => $log_msg['severity'],
-    '@severity_desc' => $severity_list[$log_msg['severity']],
-    '@timestamp'     => format_date($log_msg['timestamp']),
-    '@type'          => $log_msg['type'],
-    '@ip'            => $log_msg['ip'],
-    '@request_uri'   => $log_msg['request_uri'],
-    '@referer_uri'   => $log_msg['referer'],
-    '@uid'           => $log_msg['user']->uid,
-    '@name'          => $log_msg['user']->name,
-    '@link'          => strip_tags($log_msg['link']),
-    '@message'       => strip_tags($log_msg['message']),
+  $to = 'someone@example.com';
+  $params = array();
+  $params['subject'] = t('[@site_name] @severity_desc: Alert from your web site', array(
+    '@site_name' => variable_get('site_name', 'Drupal'),
+    '@severity_desc' => $severity_list[$log_entry['severity']],
   ));
 
-  drupal_mail('emaillog', $to, $subject, $body, $from = NULL, $headers = array());
+  $params['message']  = "\nSite:         @base_url";
+  $params['message'] .= "\nSeverity:     (@severity) @severity_desc";
+  $params['message'] .= "\nTimestamp:    @timestamp";
+  $params['message'] .= "\nType:         @type";
+  $params['message'] .= "\nIP Address:   @ip";
+  $params['message'] .= "\nRequest URI:  @request_uri";
+  $params['message'] .= "\nReferrer URI: @referer_uri";
+  $params['message'] .= "\nUser:         (@uid) @name";
+  $params['message'] .= "\nLink:         @link";
+  $params['message'] .= "\nMessage:      \n\n@message";
+
+  $params['message'] = t($params['message'], array(
+    '@base_url'      => $base_url,
+    '@severity'      => $log_entry['severity'],
+    '@severity_desc' => $severity_list[$log_entry['severity']],
+    '@timestamp'     => format_date($log_entry['timestamp']),
+    '@type'          => $log_entry['type'],
+    '@ip'            => $log_entry['ip'],
+    '@request_uri'   => $log_entry['request_uri'],
+    '@referer_uri'   => $log_entry['referer'],
+    '@uid'           => $log_entry['user']->uid,
+    '@name'          => $log_entry['user']->name,
+    '@link'          => strip_tags($log_entry['link']),
+    '@message'       => strip_tags($log_entry['message']),
+  ));
+
+  drupal_mail('emaillog', 'entry', $to, $language, $params);
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.260 2008/12/26 11:00:23 dries Exp $
+// $Id: bootstrap.inc,v 1.261 2008/12/28 20:41:18 dries Exp $
 
 /**
  * @file
@@ -887,6 +887,7 @@ function request_uri() {
  *   A link to associate with the message.
  *
  * @see watchdog_severity_levels()
+ * @see hook_watchdog()
  */
 function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NOTICE, $link = NULL) {
   global $user, $base_root;
@@ -899,7 +900,7 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
     $in_error_state = TRUE;
 
     // Prepare the fields to be logged
-    $log_message = array(
+    $log_entry = array(
       'type'        => $type,
       'message'     => $message,
       'variables'   => $variables,
@@ -914,7 +915,7 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
 
     // Call the logging hooks to log/process the message
     foreach (module_implements('watchdog', TRUE) as $module) {
-      module_invoke($module, 'watchdog', $log_message);
+      module_invoke($module, 'watchdog', $log_entry);
     }
 
     // It is critical that the semaphore is only cleared here, in the parent
