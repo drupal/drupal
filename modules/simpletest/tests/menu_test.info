@@ -1,8 +1,8 @@
-; $Id: hook_menu.info,v 1.1 2008/09/02 19:23:02 webchick Exp $
+; $Id: menu_test.info,v 1.1 2008/12/28 18:27:14 dries Exp $
 name = "Hook menu tests"
 description = "Support module for menu hook testing."
 package = Testing
 version = VERSION
 core = 7.x
-files[] = hook_menu.module
+files[] = menu_test.module
 hidden = TRUE
