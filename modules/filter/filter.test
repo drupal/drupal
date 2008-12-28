@@ -200,7 +200,14 @@ class FilterTestCase extends DrupalWebTestCase {
    * Test the line break filter
    */
   function testLineBreakFilter() {
+    $f = _filter_autop('<p><div>  </div></p>');
+    $this->assertEqual(substr_count($f, '<p>'), substr_count($f, '</p>'), t('Make sure line breaking produces matching paragraph tags.'));
+    
+    $f = _filter_autop('<div><p>  </p></div>');
+    $this->assertEqual(substr_count($f, '<p>'), substr_count($f, '</p>'), t('Make sure line breaking produces matching paragraph tags.'));
 
+    $f = _filter_autop('<blockquote><pre>aaa</pre></blockquote>');
+    $this->assertEqual(substr_count($f, '<p>'), substr_count($f, '</p>'), t('Make sure line breaking produces matching paragraph tags.'));
   }
 
   /**
