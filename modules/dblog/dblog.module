@@ -118,19 +118,24 @@ function _dblog_get_message_types() {
   return $types;
 }
 
-function dblog_watchdog($log = array()) {
+/**
+ * Implementation of hook_watchdog().
+ *
+ * Note some values may be truncated for database column size restrictions.
+ */
+function dblog_watchdog(array $log_entry) {
   Database::getConnection('default')->insert('watchdog')
     ->fields(array(
-      'uid' => $log['user']->uid,
-      'type' => $log['type'],
-      'message' => $log['message'],
-      'variables' => serialize($log['variables']),
-      'severity' => $log['severity'],
-      'link' => $log['link'],
-      'location' => $log['request_uri'],
-      'referer' => $log['referer'],
-      'hostname' => $log['ip'],
-      'timestamp' => $log['timestamp'],
+      'uid' => $log_entry['user']->uid,
+      'type' => substr($log_entry['type'], 0, 64),
+      'message' => $log_entry['message'],
+      'variables' => serialize($log_entry['variables']),
+      'severity' => $log_entry['severity'],
+      'link' => substr($log_entry['link'], 0, 255),
+      'location' => $log_entry['request_uri'],
+      'referer' => $log_entry['referer'],
+      'hostname' => substr($log_entry['ip'], 0, 128),
+      'timestamp' => $log_entry['timestamp'],
     ))
     ->execute();
 }
@@ -148,4 +153,3 @@ function theme_dblog_filters($form) {
   $output .= '<div id="dblog-admin-buttons">' . drupal_render($form['buttons']) . '</div>';
   return $output;
 }
-

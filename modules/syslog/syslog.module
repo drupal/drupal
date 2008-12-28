@@ -68,7 +68,10 @@ function syslog_facility_list() {
   return $facility_list;
 }
 
-function syslog_watchdog($entry) {
+/**
+ * Implementation of hook_watchdog().
+ */
+function syslog_watchdog(array $log_entry) {
   static $log_init = FALSE;
 
   if (!$log_init) {
@@ -76,7 +79,7 @@ function syslog_watchdog($entry) {
     openlog('drupal', LOG_NDELAY, variable_get('syslog_facility', DEFAULT_SYSLOG_FACILITY));
   }
 
-  syslog($entry['severity'], theme('syslog_format', $entry));
+  syslog($log_entry['severity'], theme('syslog_format', $log_entry));
 }
 
 function syslog_theme() {
