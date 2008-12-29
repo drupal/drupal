@@ -85,7 +85,7 @@ function hook_taxonomy_vocabulary_delete($vocabulary) {
  *   An array of term objects, indexed by tid.
  */
 function hook_taxonomy_term_load($terms) {
-  $result = db_query('SELECT tid, foo FROM {mytable} WHERE tid IN (' . db_placeholders(array_keys($terms)) . ')', array_keys($terms));
+  $result = db_query('SELECT tid, foo FROM {mytable} WHERE tid IN (:tids)', array(':tids' => array_keys($terms)));
   foreach ($result as $record) {
     $terms[$record->tid]->foo = $record->foo;
   }

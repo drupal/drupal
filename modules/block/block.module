@@ -353,7 +353,7 @@ function block_box_save($edit, $delta) {
 function block_user_form(&$edit, &$account, $category = NULL) {
   if ($category == 'account') {
     $rids = array_keys($account->roles);
-    $result = db_query("SELECT DISTINCT b.* FROM {block} b LEFT JOIN {block_role} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom != 0 AND (r.rid IN (" . db_placeholders($rids) . ") OR r.rid IS NULL) ORDER BY b.weight, b.module", $rids);
+    $result = db_query("SELECT DISTINCT b.* FROM {block} b LEFT JOIN {block_role} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom != 0 AND (r.rid IN (:rids) OR r.rid IS NULL) ORDER BY b.weight, b.module", array(':rids' => $rids));
     $form['block'] = array('#type' => 'fieldset', '#title' => t('Block configuration'), '#weight' => 3, '#collapsible' => TRUE, '#tree' => TRUE);
     while ($block = db_fetch_object($result)) {
       $data = module_invoke($block->module, 'block_list');

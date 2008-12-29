@@ -489,7 +489,7 @@ function user_role_permissions($roles = array(), $reset = FALSE) {
     if ($fetch) {
       // Get from the database permissions that were not in the static variable.
       // Only role IDs with at least one permission assigned will return rows.
-      $result = db_query("SELECT r.rid, p.permission FROM {role} r INNER JOIN {role_permission} p ON p.rid = r.rid WHERE r.rid IN (" . db_placeholders($fetch) . ")", $fetch);
+      $result = db_query("SELECT r.rid, p.permission FROM {role} r INNER JOIN {role_permission} p ON p.rid = r.rid WHERE r.rid IN (:fetch)", array(':fetch' => $fetch));
 
       while ($row = db_fetch_array($result)) {
         $stored_permissions[$row['rid']][$row['permission']] = TRUE;

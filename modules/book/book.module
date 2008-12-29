@@ -723,7 +723,7 @@ function book_build_active_trail($book_link) {
  * Implementation of hook_nodeapi_load().
  */
 function book_nodeapi_load($nodes, $types) {
-  $result = db_query("SELECT * FROM {book} b INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE b.nid IN (" . db_placeholders(array_keys($nodes)) . ")",  array_keys($nodes), array('fetch' => PDO::FETCH_ASSOC));
+  $result = db_query("SELECT * FROM {book} b INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE b.nid IN (:nids)", array(':nids' =>  array_keys($nodes)), array('fetch' => PDO::FETCH_ASSOC));
   foreach ($result as $record) {
     $nodes[$record['nid']]->book = $record;
     $nodes[$record['nid']]->book['href'] = $record['link_path'];

@@ -245,7 +245,7 @@ function hook_nodeapi_insert($node) {
  *   An array containing the types of the nodes.
  */
 function hook_nodeapi_load($nodes, $types) {
-  $result = db_query('SELECT nid, foo FROM {mytable} WHERE nid IN(' . db_placeholders(array_keys($nodes)) . ')', array_keys($nodes));
+  $result = db_query('SELECT nid, foo FROM {mytable} WHERE nid IN(:nids)', array(':nids' => array_keys($nodes)));
   foreach ($result as $record) {
     $nodes[$record->nid]->foo = $record->foo;
   }
@@ -693,7 +693,7 @@ function hook_insert($node) {
  * For a detailed usage example, see node_example.module.
  */
 function hook_load($nodes) {
-  $result = db_fetch_object(db_query('SELECT nid, foo FROM {mytable} WHERE nid IN (' . db_placeholders(array_keys($nodes)) . ')', array_keys($nodes)));
+  $result = db_query('SELECT nid, foo FROM {mytable} WHERE nid IN (:nids)', array(':nids' => array_keys($nodes)));
   foreach ($result as $record) {
     $nodes[$record->nid]->foo = $record->foo;
   }

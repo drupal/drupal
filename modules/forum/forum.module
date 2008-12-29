@@ -358,7 +358,7 @@ function forum_nodeapi_load($nodes, $types) {
     }
   }
   if (!empty($node_vids)) {
-    $result = db_query('SELECT nid, tid FROM {forum} WHERE vid IN(' . db_placeholders($node_vids) . ')', $node_vids);
+    $result = db_query('SELECT nid, tid FROM {forum} WHERE vid IN(:node_vids)', array(':node_vids' => $node_vids));
     foreach ($result as $record) {
       $nodes[$record->nid]->forum_tid = $record->tid;
     }
