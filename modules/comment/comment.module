@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.673 2008/12/20 18:24:35 dries Exp $
+// $Id: comment.module,v 1.674 2008/12/29 16:03:56 dries Exp $
 
 /**
  * @file
@@ -605,7 +605,7 @@ function comment_nodeapi_load($nodes, $types) {
 
   // For nodes with comments enabled, fetch information from the database.
   if (!empty($comments_enabled)) {
-    $result = db_query('SELECT nid, last_comment_timestamp, last_comment_name, comment_count FROM {node_comment_statistics} WHERE nid IN(' . db_placeholders($comments_enabled) . ')', $comments_enabled);
+    $result = db_query('SELECT nid, last_comment_timestamp, last_comment_name, comment_count FROM {node_comment_statistics} WHERE nid IN(:comments_enabled)', array(':comments_enabled' => $comments_enabled));
     foreach ($result as $record) {
       $nodes[$record->nid]->last_comment_timestamp = $record->last_comment_timestamp;
       $nodes[$record->nid]->last_comment_name = $record->last_comment_name;

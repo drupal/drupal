@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.479 2008/12/20 18:24:36 dries Exp $
+// $Id: forum.module,v 1.480 2008/12/29 16:03:56 dries Exp $
 
 /**
  * @file
@@ -358,7 +358,7 @@ function forum_nodeapi_load($nodes, $types) {
     }
   }
   if (!empty($node_vids)) {
-    $result = db_query('SELECT nid, tid FROM {forum} WHERE vid IN(' . db_placeholders($node_vids) . ')', $node_vids);
+    $result = db_query('SELECT nid, tid FROM {forum} WHERE vid IN(:node_vids)', array(':node_vids' => $node_vids));
     foreach ($result as $record) {
       $nodes[$record->nid]->forum_tid = $record->tid;
     }
