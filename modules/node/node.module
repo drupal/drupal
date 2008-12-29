@@ -2303,21 +2303,27 @@ function node_access_view_all_nodes() {
   static $access;
 
   if (!isset($access)) {
-    $grants = array();
-    foreach (node_access_grants('view') as $realm => $gids) {
-      foreach ($gids as $gid) {
-        $grants[] = "(gid = $gid AND realm = '$realm')";
+    // If no modules implement the node access system, access is always true.
+    if (!module_implements('node_grants')) {
+      $access = TRUE;
+    }
+    else {
+      $grants = array();
+      foreach (node_access_grants('view') as $realm => $gids) {
+        foreach ($gids as $gid) {
+          $grants[] = "(gid = $gid AND realm = '$realm')";
+        }
       }
-    }
 
-    $grants_sql = '';
-    if (count($grants)) {
-      $grants_sql = 'AND (' . implode(' OR ', $grants) . ')';
-    }
+      $grants_sql = '';
+      if (count($grants)) {
+        $grants_sql = 'AND (' . implode(' OR ', $grants) . ')';
+      }
 
-    $sql = "SELECT COUNT(*) FROM {node_access} WHERE nid = 0 $grants_sql AND grant_view >= 1";
-    $result = db_query($sql);
-    $access = db_result($result);
+      $sql = "SELECT COUNT(*) FROM {node_access} WHERE nid = 0 $grants_sql AND grant_view >= 1";
+      $result = db_query($sql);
+      $access = db_result($result);
+    }
   }
 
   return $access;
