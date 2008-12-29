@@ -2341,35 +2341,34 @@ function node_db_rewrite_sql($query, $primary_table, $primary_field) {
   }
 }
 
-
 /**
  * Implementation of hook_query_alter().
- * @todo This doesn't quite work yet.
  */
-function DISABLED_node_query_alter(Query $query) {
-  if ($query->hasTag('node_access')) {
-    if (! user_access('administer nodes')) {
-      $query->distinct();
+function node_query_alter(QueryAlterableInterface $query) {
+  if ($query->hasTag('node_access') && !node_access_view_all_nodes()) {
+    $query->distinct();
+    if (!$op = $query->getMetaData('op')) {
+      $op = 'view';
+    }
+    if (!user_access('bypass node access')) {
       $access_alias = $query->join('node_access', 'na', 'na.nid = n.nid');
-      dsm('hello');
-      _node_query_alter_where($query, 'view', $access_alias);
+      $or = db_or();
+      foreach (node_access_grants($op, $query->getMetaData('account')) as $realm => $gids) {
+        foreach ($gids as $gid) {
+          $or->condition(db_and()
+            ->condition("{$access_alias}.gid", $gid)
+            ->condition("{$access_alias}.realm", $realm)
+          );
+        }
+      }
+
+      if (count($or->conditions())) {
+        $query->condition($or);
+      }
+      
+      $query->condition("{$access_alias}.grant_$op", 1, '>=');
     }
-  }
-}
-
-function _node_query_alter_where($query, $op = 'view', $node_access_alias = 'na', $account = NULL) {
-  $or = db_or();
-  foreach (node_access_grants($op, $account) as $realm => $gids) {
-    foreach ($gids as $gid) {
-      $or->condition("{$node_access_alias}.gid = :gid AND {$node_access_alias}.realm = :realm", array(':gid' => $gid, ':realm' => $realm));
-    }
-  }
-
-  if (count($or->conditions())) {
-    $query->condition($or);
-  }
-
-  $query->condition("$node_access_alias.grant_$op", '>=', 1);
+  } 
 }
 
 /**

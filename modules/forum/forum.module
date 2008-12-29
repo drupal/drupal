@@ -502,8 +502,20 @@ function forum_block_view($delta = '') {
     switch ($delta) {
       case 'active':
         $title = t('Active forum topics');
-        $sql = db_rewrite_sql("SELECT n.nid, n.title, l.comment_count, l.last_comment_timestamp FROM {node} n INNER JOIN {term_node} tn ON tn.vid = n.vid INNER JOIN {term_data} td ON td.tid = tn.tid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND td.vid = %d ORDER BY l.last_comment_timestamp DESC");
-        $result = db_query_range($sql, variable_get('forum_nav_vocabulary', ''), 0, variable_get('forum_block_num_active', '5'));
+        $query = db_select('node', 'n');
+        $tn_alias = $query->join('term_node', 'tn', 'tn.vid = n.vid');
+        $td_alias = $query->join('term_data', 'td', 'tn.tid = tn.tid');
+        $l_alias = $query->join('node_comment_statistics', 'l', 'n.nid = l.nid');
+        $query->addField('n', 'nid', 'nid');
+        $query->addField('n', 'title', 'title');
+        $query->addField($l_alias, 'comment_count', 'comment_count');
+        $query->addField($l_alias, 'last_comment_timestamp');
+        $query->condition("n.status", 1);
+        $query->condition("{$td_alias}.vid", variable_get('forum_nav_vocabulary', ''));
+        $query->orderBy("{$l_alias}.last_comment_timestamp", 'DESC');
+        $query->range(0, variable_get('forum_block_num_active', '5'));
+        $query->addTag('node_access');
+        $result = $query->execute();
         $content = node_title_list($result);
         break;
 
