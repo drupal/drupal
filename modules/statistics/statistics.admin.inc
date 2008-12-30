@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.admin.inc,v 1.14 2008/10/13 00:33:04 webchick Exp $
+// $Id: statistics.admin.inc,v 1.15 2008/12/30 03:53:35 webchick Exp $
 
 /**
  * @file
@@ -83,7 +83,7 @@ function statistics_top_visitors() {
   );
 
   $sql = "SELECT COUNT(a.uid) AS hits, a.uid, u.name, a.hostname, SUM(a.timer) AS total, bl.iid FROM {accesslog} a LEFT JOIN {blocked_ips} bl ON a.hostname = bl.ip LEFT JOIN {users} u ON a.uid = u.uid GROUP BY a.hostname, a.uid, u.name, bl.iid" . tablesort_sql($header);
-  $sql_cnt = "SELECT COUNT(DISTINCT(CONCAT(uid, hostname))) FROM {accesslog}";
+  $sql_cnt = "SELECT COUNT(DISTINCT(CONCAT(CAST(uid AS char), hostname))) FROM {accesslog}";
   $result = pager_query($sql, 30, 0, $sql_cnt);
 
   $rows = array();
