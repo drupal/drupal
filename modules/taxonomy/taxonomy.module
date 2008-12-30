@@ -260,14 +260,14 @@ function taxonomy_vocabulary_delete($vid) {
 }
 
 /**
- * Dynamicly check and update the hierarachy flag of a vocabulary.
+ * Dynamically check and update the hierarchy flag of a vocabulary.
  *
  * Checks the current parents of all terms in a vocabulary and updates the
  * vocabularies hierarchy setting to the lowest possible level. A hierarchy with
  * no parents in any of its terms will be given a hierarchy of 0. If terms
  * contain at most a single parent, the vocabulary will be given a hierarchy of
  * 1. If any term contain multiple parents, the vocabulary will be given a
- * hieararchy of 2.
+ * hierarchy of 2.
  *
  * @param $vocabulary
  *   A vocabulary object.
@@ -278,7 +278,7 @@ function taxonomy_check_vocabulary_hierarchy($vocabulary, $changed_term) {
   $tree = taxonomy_get_tree($vocabulary->vid);
   $hierarchy = 0;
   foreach ($tree as $term) {
-    // Update the changed term with the new parent value before comparision.
+    // Update the changed term with the new parent value before comparison.
     if ($term->tid == $changed_term['tid']) {
       $term = (object)$changed_term;
       $term->parents = $term->parent;
@@ -1199,7 +1199,7 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
 
 /**
  * Format the selection field for choosing terms
- * (by deafult the default selection field is used).
+ * (by default the default selection field is used).
  *
  * @ingroup themeable
  */
@@ -1215,7 +1215,7 @@ function theme_taxonomy_term_select($element) {
  * @param $operator
  *   How to interpret multiple IDs in the array. Can be "or" or "and".
  * @param $depth
- *   How many levels deep to traverse the taxonomy tree. Can be a nonnegative
+ *   How many levels deep to traverse the taxonomy tree. Can be a non-negative
  *   integer or "all".
  * @param $pager
  *   Whether the nodes are to be used with a pager (the case on most Drupal

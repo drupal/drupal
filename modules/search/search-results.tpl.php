@@ -6,7 +6,7 @@
  * Default theme implementation for displaying search results.
  *
  * This template collects each invocation of theme_search_result(). This and
- * the child template are dependant to one another sharing the markup for
+ * the child template are dependent to one another sharing the markup for
  * definition lists.
  *
  * Note that modules may implement their own search type and theme function

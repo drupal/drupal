@@ -1191,7 +1191,7 @@ function drupal_maintenance_theme() {
 }
 
 /**
- * Return the name of the localisation function. Use in code that needs to
+ * Return the name of the localization function. Use in code that needs to
  * run both during installation and normal operation.
  */
 function get_t() {

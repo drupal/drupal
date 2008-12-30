@@ -483,7 +483,7 @@ class CommentApprovalTest extends CommentHelperCase {
   function testApprovalAdminInterface() {
     $this->drupalLogin($this->admin_user);
 
-    // Set anonymouse comments to require approval.
+    // Set anonymous comments to require approval.
     $this->setAnonymousUserComment(TRUE, FALSE);
     $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
     $this->drupalLogout();
@@ -517,7 +517,7 @@ class CommentApprovalTest extends CommentHelperCase {
   function testApprovalNodeInterface() {
     $this->drupalLogin($this->admin_user);
 
-    // Set anonymouse comments to require approval.
+    // Set anonymous comments to require approval.
     $this->setAnonymousUserComment(TRUE, FALSE);
     $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
     $this->drupalLogout();
@@ -528,7 +528,7 @@ class CommentApprovalTest extends CommentHelperCase {
     $this->postComment($this->node, $subject, $body, TRUE, TRUE); // Set $contact to true so that it won't check for id and message.
     $this->assertText(t('Your comment has been queued for moderation by site administrators and will be published after approval.'), t('Comment requires approval.'));
 
-    // Get unaproved comment id.
+    // Get unapproved comment id.
     $this->drupalLogin($this->admin_user);
     $anonymous_comment4 = $this->getUnapprovedComment($subject);
     $anonymous_comment4 = (object) array('id' => $anonymous_comment4, 'subject' => $subject, 'comment' => $body);

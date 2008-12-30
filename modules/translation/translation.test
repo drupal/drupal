@@ -50,7 +50,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     $node_translation_body = $this->randomName();
     $node_translation = $this->createTranslation($node->nid, $node_translation_title, $node_translation_body, 'es');
 
-    // Update origninal and mark translation as outdated.
+    // Update original and mark translation as outdated.
     $edit = array();
     $edit['body'] = $this->randomName();
     $edit['translation[retranslate]'] = TRUE;
@@ -73,7 +73,7 @@ class TranslationTestCase extends DrupalWebTestCase {
    * Install a the specified language if it has not been already. Otherwise make sure that
    * the language is enabled.
    *
-   * @param string $language_code The langauge code the check.
+   * @param string $language_code The language code the check.
    */
   function addLanguage($language_code) {
     // Check to make sure that language has not already been installed.
@@ -106,7 +106,7 @@ class TranslationTestCase extends DrupalWebTestCase {
    *
    * @param string $title Title of page in specified language.
    * @param string $body Body of page in specified language.
-   * @param string $language Langauge code.
+   * @param string $language Language code.
    */
   function createPage($title, $body, $language) {
     $edit = array();
@@ -129,7 +129,7 @@ class TranslationTestCase extends DrupalWebTestCase {
    * @param integer $nid Node id of page to create translation for.
    * @param string $title Title of page in specified language.
    * @param string $body Body of page in specified language.
-   * @param string $language Langauge code.
+   * @param string $language Language code.
    */
   function createTranslation($nid, $title, $body, $language) {
     $this->drupalGet('node/add/page', array('query' => array('translation' => $nid, 'language' => $language)));
@@ -140,7 +140,7 @@ class TranslationTestCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertRaw(t('Page %title has been created.', array('%title' => $edit['title'])), t('Translation created.'));
 
-    // Check to make sure that translation was successfull.
+    // Check to make sure that translation was successful.
     $node = $this->drupalGetNodeByTitle($edit['title']);
     $this->assertTrue($node, t('Node found in database.'));
 

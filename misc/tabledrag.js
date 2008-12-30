@@ -357,7 +357,7 @@ Drupal.tableDrag.prototype.makeDraggable = function(item) {
   });
 
   // Compatibility addition, return false on keypress to prevent unwanted scrolling.
-  // IE and Safari will supress scrolling on keydown, but all other browsers
+  // IE and Safari will suppress scrolling on keydown, but all other browsers
   // need to return false on keypress. http://www.quirksmode.org/js/keys.html
   handle.keypress(function(event) {
     switch (event.keyCode) {
@@ -592,7 +592,7 @@ Drupal.tableDrag.prototype.findDropTargetRow = function(x, y) {
 Drupal.tableDrag.prototype.updateFields = function(changedRow) {
   for (var group in this.tableSettings) {
     // Each group may have a different setting for relationship, so we find
-    // the source rows for each seperately.
+    // the source rows for each separately.
     this.updateField(changedRow, group);
   }
 };
@@ -653,7 +653,7 @@ Drupal.tableDrag.prototype.updateField = function(changedRow, group) {
     // Otherwise we went all the way to the left of the table without finding
     // a parent, meaning this item has been placed at the root level.
     else {
-      // Use the first row in the table as source, because it's garanteed to
+      // Use the first row in the table as source, because it's guaranteed to
       // be at the root level. Find the first item, then compare this row
       // against it as a sibling.
       sourceRow = $('tr.draggable:first').get(0);
@@ -775,7 +775,7 @@ Drupal.tableDrag.prototype.setScroll = function(scrollAmount) {
 };
 
 Drupal.tableDrag.prototype.restripeTable = function() {
-  // :even and :odd are reversed because jquery counts from 0 and
+  // :even and :odd are reversed because jQuery counts from 0 and
   // we count from 1, so we're out of sync.
   $('tr.draggable', this.table)
     .filter(':odd').filter('.odd')
@@ -1019,7 +1019,7 @@ Drupal.tableDrag.prototype.row.prototype.findSiblings = function(rowSettings) {
       // Check that the sibling contains a similar target field.
       if ($('.' + rowSettings.target, checkRow)) {
         // Either add immediately if this is a flat table, or check to ensure
-        // that this row has the same level of indentaiton.
+        // that this row has the same level of indentation.
         if (this.indentEnabled) {
           var checkRowIndentation = $('.indentation', checkRow).length
         }

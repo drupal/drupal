@@ -226,7 +226,7 @@ function drupal_detect_database_types() {
     }
   }
 
-  // Usability: unconditionnally put the MySQL driver on top.
+  // Usability: unconditionally put the MySQL driver on top.
   if (isset($databases['mysql'])) {
     $mysql_database = $databases['mysql'];
     unset($databases['mysql']);

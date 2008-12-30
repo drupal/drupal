@@ -31,7 +31,7 @@ function profile_admin_overview() {
     $form[$field->fid]['delete'] = array('#markup' => l(t('delete'), "admin/user/profile/delete/$field->fid"));
   }
 
-  // Add the cateogory combo boxes
+  // Add the category combo boxes
   $categories = array_unique($categories);
   foreach ($form as $fid => $field) {
     foreach ($categories as $cat => $category) {
@@ -114,7 +114,7 @@ function theme_profile_admin_overview($form) {
         $rows[] = array(array('data' => $category, 'colspan' => 7, 'class' => 'category'));
         $rows[] = array('data' => array(array('data' => '<em>' . t('No fields in this category. If this category remains empty when saved, it will be removed.') . '</em>', 'colspan' => 7)), 'class' => 'category-' . $category_number . '-message category-message category-populated');
 
-        // Make it dragable only if there is more than one field
+        // Make it draggable only if there is more than one field
         if (isset($form['submit'])) {
           drupal_add_tabledrag('profile-fields', 'order', 'sibling', 'profile-weight', 'profile-weight-' . $category_number);
           drupal_add_tabledrag('profile-fields', 'match', 'sibling', 'profile-category', 'profile-category-' . $category_number);

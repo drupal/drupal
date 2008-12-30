@@ -872,7 +872,7 @@ function system_modules_submit($form, &$form_state) {
       }
       // If we're not coming from a confirmation form,
       // search dependencies. Otherwise, the user will have already
-      // approved of the depdent modules being enabled.
+      // approved of the dependent modules being enabled.
       if (empty($form_state['storage'])) {
         foreach ($form['modules'][$module['group']][$name]['#dependencies'] as $dependency => $string) {
           if (!$modules[$dependency]['enabled']) {

@@ -74,7 +74,7 @@ function _color_page_alter(&$vars) {
   $color_paths = variable_get('color_' . $theme_key . '_stylesheets', array());
   if (!empty($color_paths)) {
     // Loop over theme CSS files and try to rebuild CSS array with rewritten
-    // stylesheets. Keep the orginal order intact for CSS cascading.
+    // stylesheets. Keep the original order intact for CSS cascading.
     $new_theme_css = array();
 
     foreach ($vars['css']['all']['theme'] as $old_path => $old_preprocess) {

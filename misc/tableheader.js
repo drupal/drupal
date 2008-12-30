@@ -29,7 +29,7 @@ Drupal.behaviors.tableHeader = {
       // Store parent table.
       var table = $(this).parent('table')[0];
       headerClone.table = table;
-      // Finish initialzing header positioning.
+      // Finish initializing header positioning.
       tracker(headerClone);
 
       $(table).addClass('sticky-table');

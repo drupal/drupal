@@ -141,7 +141,7 @@ function book_update_6000() {
       return $ret;
     }
     else {
-      // No exising nodes in the hierarchy, so drop the table and re-create it.
+      // No existing nodes in the hierarchy, so drop the table and re-create it.
       $ret[] = update_sql("DROP TABLE {book}");
       db_create_table($ret, 'book', $schema['book']);
       return $ret;

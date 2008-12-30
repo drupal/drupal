@@ -831,7 +831,7 @@ function blogapi_menu() {
 }
 
 /**
- * Implementaton of hook_init().
+ * Implementation of hook_init().
  */
 function blogapi_init() {
   if (drupal_is_front_page()) {

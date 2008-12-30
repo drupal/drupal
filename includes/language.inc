@@ -99,7 +99,7 @@ function language_from_browser() {
 }
 
 /**
- * Rewrite URL's with language based prefix. Parameters are the same
+ * Rewrite URLs with language based prefix. Parameters are the same
  * as those of the url() function.
  */
 function language_url_rewrite(&$path, &$options) {

@@ -19,7 +19,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer filters'));
     $this->drupalLogin($admin_user);
 
-    // Define the exising regions
+    // Define the existing regions
     $this->regions = array();
     $this->regions[] = array('name' => 'header', 'id' => 'header-region');
     $this->regions[] = array('name' => 'left', 'id' => 'sidebar-left');

@@ -882,7 +882,7 @@ function taxonomy_vocabulary_confirm_delete_submit($form, &$form_state) {
 }
 
 /**
- * Form builder to confirm reseting a vocabulary to alphabetical order.
+ * Form builder to confirm resetting a vocabulary to alphabetical order.
  *
  * @ingroup forms
  * @see taxonomy_vocabulary_confirm_reset_alphabetical_submit()

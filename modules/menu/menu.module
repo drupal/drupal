@@ -136,7 +136,7 @@ function menu_menu() {
 }
 
 /**
- * Implemenation of hook_theme().
+ * Implementation of hook_theme().
  */
 function menu_theme() {
   return array(

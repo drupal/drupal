@@ -30,7 +30,7 @@
  *
  * Since $info_split is keyed, a direct print of the item is possible.
  * This array does not apply to user searches so it is recommended to check
- * for their existance before printing. The default keys of 'type', 'user' and
+ * for their existence before printing. The default keys of 'type', 'user' and
  * 'date' always exist for node searches. Modules may provide other data.
  *
  *   <?php if (isset($info_split['comment'])) : ?>

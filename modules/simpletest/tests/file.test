@@ -581,7 +581,7 @@ class FileUnmanagedDeleteTest extends FileTestCase {
    */
   function testMissing() {
     // Try to delete a non-existing file
-    $this->assertTrue(file_unmanaged_delete(file_directory_path() . '/' . $this->randomName()), t('Returns true when deleting a non-existant file.'));
+    $this->assertTrue(file_unmanaged_delete(file_directory_path() . '/' . $this->randomName()), t('Returns true when deleting a non-existent file.'));
   }
 
   /**
@@ -644,7 +644,7 @@ class FileUnmanagedMoveTest extends FileTestCase {
    * Try to move a missing file.
    */
   function testMissing() {
-    // Move non-existant file.
+    // Move non-existent file.
     $new_filepath = file_unmanaged_move($this->randomName(), $this->randomName());
     $this->assertFalse($new_filepath, t('Moving a missing file fails.'));
   }
@@ -712,10 +712,10 @@ class FileUnmanagedCopyTest extends FileTestCase {
   }
 
   /**
-   * Copy a non-existant file.
+   * Copy a non-existent file.
    */
-  function testNonExistant() {
-    // Copy non-existant file
+  function testNonExistent() {
+    // Copy non-existent file
     $desired_filepath = $this->randomName();
     $this->assertFalse(file_exists($desired_filepath), t("Randomly named file doesn't exists."));
     $new_filepath = file_unmanaged_copy($desired_filepath, $this->randomName());
@@ -873,7 +873,7 @@ class FileLoadTest extends FileHookTestCase {
   }
 
   /**
-   * Try to load a non-existant file by fid.
+   * Try to load a non-existent file by fid.
    */
   function testLoadMissingFid() {
     $this->assertFalse(file_load(-1), t("Try to load an invalid fid fails."));
@@ -881,7 +881,7 @@ class FileLoadTest extends FileHookTestCase {
   }
 
   /**
-   * Try to load a non-existant file by filepath.
+   * Try to load a non-existent file by filepath.
    */
   function testLoadMissingFilepath() {
     $this->assertFalse(file_load(array('filepath' => 'misc/druplicon.png')), t("Try to load a file that doesn't exist in the database fails."));
@@ -889,7 +889,7 @@ class FileLoadTest extends FileHookTestCase {
   }
 
   /**
-   * Try to load a non-existant file by status.
+   * Try to load a non-existent file by status.
    */
   function testLoadInvalidStatus() {
     $this->assertFalse(file_load(array('status' => -99)), t("Trying to load a file with an invalid status fails."));

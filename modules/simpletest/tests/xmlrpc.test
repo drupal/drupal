@@ -66,7 +66,7 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
     $l_res_5[5] = $l_res_5[5]->data; /* override warpping */
     $r_res_5 = xmlrpc($xml_url, 'validator1.manyTypesTest', $int_5, $bool_5, $string_5, $double_5, xmlrpc_date($time_5), xmlrpc_base64($base64_5));
     /* Contains objects, objects are not equal */
-    // See http://drupal.org/node/37766 why this currnetly fails
+    // See http://drupal.org/node/37766 why this currently fails
     $this->assertEqual($l_res_5, $r_res_5, 'many types test: %s');
 
 

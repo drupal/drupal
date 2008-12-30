@@ -407,7 +407,7 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
    * Adds an expression to the list of "fields" to be SELECTed.
    *
    * An expression can be any arbitrary string that is valid SQL. That includes
-   * various functions, which may in some cases be database-dependant. This
+   * various functions, which may in some cases be database-dependent. This
    * method makes no effort to correct for database-specific functions.
    *
    * @param $expression
@@ -559,7 +559,7 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
    *   insert should be passed in the 4th parameter. For the first table joined
    *   on a query, this value is ignored as the first table is taken as the base
    *   table.
-   * @param $argments
+   * @param $arguments
    *   An array of arguments to replace into the $condition of this join.
    * @return
    *   The unique alias that was assigned for this table.

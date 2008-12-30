@@ -31,7 +31,7 @@ class StatisticsBlockVisitorsTestCase extends DrupalWebTestCase {
     variable_set('statistics_enable_access_log', 1);
 
     // Verify the IP address from accesslog appears on the top visitors page
-    // and that a 'block IP adddress' link is displayed.
+    // and that a 'block IP address' link is displayed.
     $this->drupalLogin($this->blocking_user);
     $this->drupalGet('admin/reports/visitors');
     $this->assertText($test_ip_address, t('IP address found.'));

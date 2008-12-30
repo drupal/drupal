@@ -18,7 +18,7 @@
  *
  * Since $search is keyed, a direct print of the form element is possible.
  * Modules can add to the search form so it is recommended to check for their
- * existance before printing. The default keys will always exist.
+ * existence before printing. The default keys will always exist.
  *
  *   <?php if (isset($search['extra_field'])): ?>
  *     <div class="extra-field">

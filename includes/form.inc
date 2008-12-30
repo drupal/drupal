@@ -48,7 +48,7 @@
 
 /**
  * Retrieves a form from a constructor function, or from the cache if
- * the form was built in a previous page-load. The form is then passesed
+ * the form was built in a previous page-load. The form is then passed
  * on for processing, after and rendered for display if necessary.
  *
  * @param $form_id
@@ -399,7 +399,7 @@ function drupal_process_form($form_id, &$form, &$form_state) {
 
     // form_clean_id() maintains a cache of element IDs it has seen,
     // so it can prevent duplicates. We want to be sure we reset that
-    // cache when a form is processed, so scenerios that result in
+    // cache when a form is processed, so scenarios that result in
     // the form being built behind the scenes and again for the
     // browser don't increment all the element IDs needlessly.
     form_clean_id(NULL, TRUE);
@@ -422,7 +422,7 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       // drupal_execute).
       if ($batch =& batch_get() && !isset($batch['current_set'])) {
         // The batch uses its own copies of $form and $form_state for
-        // late execution of submit handers and post-batch redirection.
+        // late execution of submit handlers and post-batch redirection.
         $batch['form'] = $form;
         $batch['form_state'] = $form_state;
         $batch['progressive'] = !$form['#programmed'];
@@ -929,7 +929,7 @@ function form_builder($form_id, $form, &$form_state) {
   // Internet Explorer button-click scenario.
   _form_builder_ie_cleanup($form, $form_state);
 
-  // We shoud keep the buttons array until the IE clean up function
+  // We should keep the buttons array until the IE clean up function
   // has recognized the submit button so the form has been marked
   // as submitted. If we already know which button was submitted,
   // we don't need the array.
@@ -1881,7 +1881,7 @@ function form_process_ahah($element) {
         // submission via pressing the enter key triggers a click event on
         // submit inputs, inappropriately triggering AHAH behaviors.
         $element['#ahah']['event'] = 'mousedown';
-        // Attach an additional event handler so that AHAH behaviours
+        // Attach an additional event handler so that AHAH behaviors
         // can be triggered still via keyboard input.
         $element['#ahah']['keypress'] = TRUE;
         break;

@@ -21,7 +21,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
    * Test configuration options and site-wide contact form.
    */
   function testSiteWideContact() {
-    // Create and login administative user.
+    // Create and login administrative user.
     $admin_user = $this->drupalCreateUser(array('administer site-wide contact form', 'administer permissions'));
     $this->drupalLogin($admin_user);
 

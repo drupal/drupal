@@ -23,7 +23,7 @@ if ($args['execute-batch']) {
   simpletest_script_execute_batch();
 }
 
-// Bootstrap to perform initial validation or other opperations.
+// Bootstrap to perform initial validation or other operations.
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 if (!module_exists('simpletest')) {
   simpletest_script_print_error("The simpletest module must be enabled before this script can run.");
@@ -49,7 +49,7 @@ $groups = simpletest_categorize_tests($all_tests);
 $test_list = array();
 
 if ($args['list']) {
-  // Display all availabe tests.
+  // Display all available tests.
   echo "\nAvailable test groups & classes\n";
   echo   "-------------------------------\n\n";
   foreach ($groups as $group => $tests) {
@@ -194,7 +194,7 @@ function simpletest_script_parse_args() {
         else {
           $args[$matches[1]] = array_shift($_SERVER['argv']);
         }
-        // Clear an extrenious values.
+        // Clear extraneous values.
         $args['test_names'] = array();
         $count++;
       }
@@ -339,7 +339,7 @@ function simpletest_script_execute_batch() {
 }
 
 /**
- * Run a single test (assume a Drupal bootstrapped environnement).
+ * Run a single test (assume a Drupal bootstrapped environment).
  */
 function simpletest_script_run_one_test($test_id, $test_class) {
   simpletest_get_all_tests();
@@ -367,7 +367,7 @@ function simpletest_script_command($concurrency, $test_id, $tests) {
 }
 
 /**
- * Get list of tests based on arguments. If --all specfied then
+ * Get list of tests based on arguments. If --all specified then
  * returns all available tests, otherwise reads list of tests.
  *
  * Will print error and exit if no valid tests were found.

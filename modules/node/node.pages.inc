@@ -304,7 +304,7 @@ function node_body_field(&$node, $label, $word_count) {
 }
 
 /**
- * Button sumit function: handle the 'Delete' button on the node form.
+ * Button submit function: handle the 'Delete' button on the node form.
  */
 function node_form_delete_submit($form, &$form_state) {
   $destination = '';

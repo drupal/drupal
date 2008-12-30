@@ -9,7 +9,7 @@ class SimpleTestTestCase extends DrupalWebTestCase {
 
   /**
    * Store the test ID from each test run for comparison, to ensure they are
-   * incramenting.
+   * incrementing.
    */
   protected $test_ids = array();
 

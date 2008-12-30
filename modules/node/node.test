@@ -130,7 +130,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Check node revision related opperations.
+   * Check node revision related operations.
    */
   function testRevisions() {
     $nodes = $this->nodes;

@@ -62,7 +62,7 @@ function image_gd_settings_validate($form, &$form_state) {
  * Verify GD2 settings (that the right version is actually installed).
  *
  * @return
- *   A boolean indicating if the GD toolkit is avaiable on this machine.
+ *   A boolean indicating if the GD toolkit is available on this machine.
  */
 function image_gd_check_settings() {
   if ($check = get_extension_funcs('gd')) {
@@ -175,7 +175,7 @@ function image_gd_crop($source, $destination, $x, $y, $width, $height) {
  * GD helper function to create an image resource from a file.
  *
  * @param $file
- *   A string file path where the iamge should be saved.
+ *   A string file path where the image should be saved.
  * @param $extension
  *   A string containing one of the following extensions: gif, jpg, jpeg, png.
  * @return
@@ -196,7 +196,7 @@ function image_gd_open($file, $extension) {
  * @param $res
  *   An image resource created with image_gd_open().
  * @param $destination
- *   A string file path where the iamge should be saved.
+ *   A string file path where the image should be saved.
  * @param $extension
  *   A string containing one of the following extensions: gif, jpg, jpeg, png.
  * @return

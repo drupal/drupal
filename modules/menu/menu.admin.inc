@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Administrative page callbaks for menu module.
+ * Administrative page callbacks for menu module.
  */
 
 /**

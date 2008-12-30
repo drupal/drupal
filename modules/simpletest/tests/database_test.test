@@ -1558,7 +1558,7 @@ class DatabaseTaggingTestCase extends DatabaseTestCase {
     $this->assertEqual($data, $return, t('Corect metadata returned.'));
 
     $return = $query->getMetaData('nothere');
-    $this->assertNull($return, t('Non-existant key returned NULL.'));
+    $this->assertNull($return, t('Non-existent key returned NULL.'));
   }
 }
 

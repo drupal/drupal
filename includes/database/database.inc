@@ -288,7 +288,7 @@ abstract class DatabaseConnection extends PDO {
    *
    *   throw_exception - By default, the database system will catch any errors
    *   on a query as an Exception, log it, and then rethrow it so that code
-   *   further up the call chain can take an appropriate action. To supress
+   *   further up the call chain can take an appropriate action. To suppress
    *   that behavior and simply return NULL on failure, set this option to FALSE.
    *
    * @return
@@ -1950,7 +1950,7 @@ function db_type_placeholder($type) {
       return '\'%s\'';
 
     case 'numeric':
-      // Numeric values are arbitrary precision numbers. Syntacically, numerics
+      // Numeric values are arbitrary precision numbers. Syntactically, numerics
       // should be specified directly in SQL. However, without single quotes
       // the %s placeholder does not protect against non-numeric characters such
       // as spaces which would expose us to SQL injection.
@@ -2304,7 +2304,7 @@ function _db_query_process_args($query, $args, $options) {
     $options['target'] = 'default';
   }
 
-  // Temporary backward-compatibliity hacks. Remove later.
+  // Temporary backward-compatibility hacks. Remove later.
   $old_query = $query;
   $query = str_replace(array('%n', '%d', '%f', '%b', "'%s'", '%s'), '?', $old_query);
   if ($old_query !== $query) {

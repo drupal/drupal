@@ -747,7 +747,7 @@ function file_unmanaged_delete($path) {
   if (is_file($path)) {
     return unlink($path);
   }
-  // Return TRUE for non-existant file, but log that nothing was actually
+  // Return TRUE for non-existent file, but log that nothing was actually
   // deleted, as the current state is the indended result.
   if (!file_exists($path)) {
     watchdog('file', 'The file %path was not deleted, because it does not exist.', array('%path' => $path), WATCHDOG_NOTICE);

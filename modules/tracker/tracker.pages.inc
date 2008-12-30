@@ -18,7 +18,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
     if ($set_title) {
       // When viewed from user/%user/track, display the name of the user
       // as page title -- the tab title remains Track so this needs to be done
-      // here and not in the menu definiton.
+      // here and not in the menu definition.
       drupal_set_title($account->name);
     }
   // TODO: These queries are very expensive, see http://drupal.org/node/105639

@@ -527,7 +527,7 @@ function _block_render_blocks($region_blocks) {
  * constants). Two block instances can use the same cached content when
  * they share the same cache_id.
  *
- * Theme and language contexts are automatically differenciated.
+ * Theme and language contexts are automatically differentiated.
  *
  * @param $block
  * @return
