@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.674 2008/12/29 16:03:56 dries Exp $
+// $Id: comment.module,v 1.675 2008/12/30 20:15:43 dries Exp $
 
 /**
  * @file
@@ -1043,7 +1043,8 @@ function comment_render($node, $cid = 0) {
         $output .= theme('comment_view', $comment, $node, $links);
       }
     }
-    else {
+    // Only attempt to render comments if the node has been commented upon.
+    elseif ($node->comment_count) {
 
       //TODO Convert to dynamic queries once the pager query is updated to the new DBTNG API.
 
