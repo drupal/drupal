@@ -468,15 +468,6 @@ function system_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
-  // Menu handler to test that drupal_http_request() works locally.
-  // @see system_check_http_request()
-  $items['admin/reports/request-test'] = array(
-    'title' => 'Request test',
-    'page callback' => 'printf',
-    'page arguments' => array('request test'),
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
 
   // Reports:
   $items['admin/reports'] = array(
@@ -1870,20 +1861,12 @@ function _system_zonelist() {
  * will contain an error.
  *
  * @return
- *  Whether the admin/reports/request-test page can be requested via HTTP
- *  and contains the same output as if called via the menu system.
+ *  Whether the www.example.com page can be requested via HTTP.
  */
 function system_check_http_request() {
-  // Check whether we can do any request at all. First get the results for
-  // a very simple page which has access TRUE set via the menu system. Then,
-  // try to drupal_http_request() the same page and compare.
-  ob_start();
-  $path = 'admin/reports/request-test';
-  menu_execute_active_handler($path);
-  $nothing = ob_get_contents();
-  ob_end_clean();
-  $result = drupal_http_request(url($path, array('absolute' => TRUE)));
-  $works = isset($result->data) && $result->data == $nothing;
+  $result = drupal_http_request('http://www.example.com');
+  // If the resulting page contains RFC 2606 then we got the page we wanted.
+  $works = isset($result->data) && preg_match('/RFC\s+2606/', $result->data);
   variable_set('drupal_http_request_fails', !$works);
   return $works;
 }
