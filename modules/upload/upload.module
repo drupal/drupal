@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.221 2008/12/16 22:05:51 dries Exp $
+// $Id: upload.module,v 1.222 2008/12/30 15:52:59 dries Exp $
 
 /**
  * @file
@@ -152,17 +152,16 @@ function _upload_file_limits($user) {
  */
 function upload_file_download($filepath) {
   $filepath = file_create_path($filepath);
-  $result = db_query("SELECT f.*, u.nid FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid WHERE filepath = '%s'", $filepath);
-  if ($file = db_fetch_object($result)) {
-    if (user_access('view uploaded files') && ($node = node_load($file->nid)) && node_access('view', $node)) {
-      return array(
-        'Content-Type: ' . $file->filemime,
-        'Content-Length: ' . $file->filesize,
-      );
-    }
-    else {
-      return -1;
-    }
+  $file = db_query("SELECT f.*, u.nid FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid WHERE filepath = :path", array(':path' => $filepath))->fetchObject();
+
+  if ($file && user_access('view uploaded files') && ($node = node_load($file->nid)) && node_access('view', $node)) {
+    return array(
+      'Content-Type: ' . $file->filemime,
+      'Content-Length: ' . $file->filesize,
+    );
+  }
+  else {
+    return -1;
   }
 }
 
@@ -450,7 +449,7 @@ function upload_space_used($uid) {
  *   The amount of disk space used by uploaded files in bytes.
  */
 function upload_total_space_used() {
-  return db_result(db_query('SELECT SUM(f.filesize) FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid'));
+  return db_query('SELECT SUM(f.filesize) FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid')->fetchField();
 }
 
 function upload_save(&$node) {
@@ -478,11 +477,28 @@ function upload_save(&$node) {
 
     // Create a new revision, or associate a new file needed.
     if (!empty($node->old_vid) || $file->new) {
-      db_query("INSERT INTO {upload} (fid, nid, vid, list, description, weight) VALUES (%d, %d, %d, %d, '%s', %d)", $file->fid, $node->nid, $node->vid, $file->list, $file->description, $file->weight);
+      db_insert('upload')
+        ->fields(array(
+          'fid' => $file->fid,
+          'nid' => $node->nid,
+          'vid' => $node->vid,
+          'list' => $file->list,
+          'description' => $file->description,
+          'weight' => $file->weight,
+        ))
+        ->execute();
     }
     // Update existing revision.
     else {
-      db_query("UPDATE {upload} SET list = %d, description = '%s', weight = %d WHERE fid = %d AND vid = %d", $file->list, $file->description, $file->weight, $file->fid, $node->vid);
+      db_update('upload')
+        ->fields(array(
+          'list' => $file->list,
+          'description' => $file->description,
+          'weight' => $file->weight,
+        ))
+        ->condition('fid', $file->fid, '=')
+        ->condition('vid', $node->vid, '=')
+        ->execute();
     }
     $file->status &= FILE_STATUS_PERMANENT;
     $file = file_save($file);
