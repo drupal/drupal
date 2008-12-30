@@ -57,7 +57,8 @@
  *
  * There are two formats for placeholders: named and unnamed. Named placeholders
  * are strongly preferred in all cases as they are more flexible and
- * self-documenting.
+ * self-documenting. Named placeholders should start with a colon ":" and can be
+ * followed by one or more letters, numbers or underscores.
  *
  * Named placeholders begin with a colon followed by a unique string. Example:
  * @code
@@ -543,7 +544,14 @@ abstract class DatabaseConnection extends PDO {
         }
 
         // Update the query with the new placeholders.
-        $query = str_replace($key, implode(', ', array_keys($new_keys)), $query);
+        // preg_replace is a little bit slower than str_replace, but it is
+        // necessary to ensure the replacement does not affect placeholders
+        // that start with the same exact text. For example, if the query
+        // contains the placeholders :foo and :foobar, and :foo has an array
+        // of values, using str_replace would affect both placeholders, but
+        // using the following preg_replace would only affect :foo because it
+        // is followed by a non-word character.
+        $query = preg_replace('#' . $key . '\b#', implode(', ', array_keys($new_keys)), $query);
 
         // Update the args array with the new placeholders.
         unset($args[$key]);
