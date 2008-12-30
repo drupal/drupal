@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.17 2008/11/07 16:59:36 dries Exp $
+// $Id: mail.inc,v 1.18 2008/12/30 16:43:14 dries Exp $
 
 /**
  * Compose and optionally send an e-mail message.
@@ -188,7 +188,7 @@ function drupal_mail_send($message) {
       // They will appear correctly in the actual e-mail that is sent.
       str_replace("\r", '', $message['body']),
       // For headers, PHP's API suggests that we use CRLF normally,
-      // but some MTAs incorrecly replace LF with CRLF. See #234403.
+      // but some MTAs incorrectly replace LF with CRLF. See #234403.
       join("\n", $mimeheaders)
     );
   }

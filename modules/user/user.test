@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.23 2008/12/16 23:57:33 dries Exp $
+// $Id: user.test,v 1.24 2008/12/30 16:43:20 dries Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   function getInfo() {
@@ -184,7 +184,7 @@ class UserDeleteTestCase extends DrupalWebTestCase {
     $this->drupalGet('user/' . $user->uid . '/edit');
     $this->drupalPost(NULL, NULL, t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the account %name?', array('%name' => $user->name)), t('[confirm deletion] Asks for confirmation.'));
-    $this->assertText(t('All submissions made by this user will be attributed to the anonymous account. This action cannot be undone.'), t('[confirm deletion] Inform that all submissions will be attributed to anonymouse account.'));
+    $this->assertText(t('All submissions made by this user will be attributed to the anonymous account. This action cannot be undone.'), t('[confirm deletion] Inform that all submissions will be attributed to anonymous account.'));
 
     // Confirm deletion.
     $this->drupalPost(NULL, NULL, t('Delete'));

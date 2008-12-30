@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.29 2008/11/26 13:48:49 dries Exp $
+// $Id: simpletest.module,v 1.30 2008/12/30 16:43:18 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -43,7 +43,7 @@ function simpletest_perm() {
 }
 
 /**
- * Implemenation of hook_theme().
+ * Implementation of hook_theme().
  */
 function simpletest_theme() {
   return array(
@@ -520,7 +520,7 @@ function simpletest_clean_environment() {
 }
 
 /**
- * Removed prefixed talbes from the database that are left over from crashed tests.
+ * Removed prefixed tables from the database that are left over from crashed tests.
  */
 function simpletest_clean_database() {
   $tables = db_find_tables(Database::getActiveConnection()->prefixTables('{simpletest}') . '%');
@@ -565,7 +565,7 @@ function simpletest_clean_temporary_directories() {
 }
 
 /**
- * Remove all files from specified firectory and then remove directory.
+ * Remove all files from specified directory and then remove directory.
  *
  * @param string $path Directory path.
  */

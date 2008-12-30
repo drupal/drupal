@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.38 2008/12/19 03:55:23 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.39 2008/12/30 16:43:19 dries Exp $
 
 /**
  * @file
@@ -882,7 +882,7 @@ function taxonomy_vocabulary_confirm_delete_submit($form, &$form_state) {
 }
 
 /**
- * Form builder to confirm reseting a vocabulary to alphabetical order.
+ * Form builder to confirm resetting a vocabulary to alphabetical order.
  *
  * @ingroup forms
  * @see taxonomy_vocabulary_confirm_reset_alphabetical_submit()

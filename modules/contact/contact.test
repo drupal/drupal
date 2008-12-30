@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.test,v 1.13 2008/11/25 13:14:26 dries Exp $
+// $Id: contact.test,v 1.14 2008/12/30 16:43:16 dries Exp $
 
 /**
  * Test the sitewide contact form.
@@ -21,7 +21,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
    * Test configuration options and site-wide contact form.
    */
   function testSiteWideContact() {
-    // Create and login administative user.
+    // Create and login administrative user.
     $admin_user = $this->drupalCreateUser(array('administer site-wide contact form', 'administer permissions'));
     $this->drupalLogin($admin_user);
 

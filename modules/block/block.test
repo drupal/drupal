@@ -1,5 +1,5 @@
 <?php
-// $Id: block.test,v 1.7 2008/12/16 23:57:31 dries Exp $
+// $Id: block.test,v 1.8 2008/12/30 16:43:15 dries Exp $
 
 class BlockTestCase extends DrupalWebTestCase {
   protected $regions;
@@ -19,7 +19,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer filters'));
     $this->drupalLogin($admin_user);
 
-    // Define the exising regions
+    // Define the existing regions
     $this->regions = array();
     $this->regions[] = array('name' => 'header', 'id' => 'header-region');
     $this->regions[] = array('name' => 'left', 'id' => 'sidebar-left');

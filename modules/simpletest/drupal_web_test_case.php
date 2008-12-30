@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.76 2008/12/20 18:24:39 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.77 2008/12/30 16:43:18 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -193,7 +193,7 @@ class DrupalWebTestCase {
     $backtrace = debug_backtrace();
 
     // The first element is the call. The second element is the caller.
-    // We skip calls that occured in one of the methods of DrupalWebTestCase
+    // We skip calls that occurred in one of the methods of DrupalWebTestCase
     // or in an assertion function.
     while (($caller = $backtrace[1]) &&
           ((isset($caller['class']) && $caller['class'] == 'DrupalWebTestCase') ||
@@ -1000,7 +1000,7 @@ class DrupalWebTestCase {
    */
   protected function parse() {
     if (!$this->elements) {
-      // DOM can load HTML soup. But, HTML soup can throw warnings, supress
+      // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
       // them.
       @$htmlDom = DOMDocument::loadHTML($this->content);
       if ($htmlDom) {
@@ -1063,7 +1063,7 @@ class DrupalWebTestCase {
    *   $edit = array(...);
    *   $this->drupalPost(NULL, $edit, t('Save'));
    * @param  $edit
-   *   Field data in an assocative array. Changes the current input fields
+   *   Field data in an associative array. Changes the current input fields
    *   (where possible) to the values indicated. A checkbox can be set to
    *   TRUE to be checked and FALSE to be unchecked. Note that when a form
    *   contains file upload fields, other fields cannot start with the '@'
@@ -1314,7 +1314,7 @@ class DrupalWebTestCase {
   }
 
   /**
-   * Peform an xpath search on the contents of the internal browser. The search
+   * Perform an xpath search on the contents of the internal browser. The search
    * is relative to the root element (HTML tag normally) of the page.
    *
    * @param $xpath
@@ -1606,7 +1606,7 @@ class DrupalWebTestCase {
 
   /**
    * Pass if the text IS found on the text version of the page. The text version
-   * is the equivilent of what a user would see when viewing through a web browser.
+   * is the equivalent of what a user would see when viewing through a web browser.
    * In other words the HTML has been filtered out of the contents.
    *
    * @param $text
@@ -1624,7 +1624,7 @@ class DrupalWebTestCase {
 
   /**
    * Pass if the text is NOT found on the text version of the page. The text version
-   * is the equivilent of what a user would see when viewing through a web browser.
+   * is the equivalent of what a user would see when viewing through a web browser.
    * In other words the HTML has been filtered out of the contents.
    *
    * @param $text
@@ -1956,7 +1956,7 @@ class DrupalWebTestCase {
    * Assert the page responds with the specified response code.
    *
    * @param $code
-   *   Reponse code. For example 200 is a successful page request. For a list
+   *   Response code. For example 200 is a successful page request. For a list
    *   of all codes see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html.
    * @param $message
    *   Message to display.

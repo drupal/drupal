@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.api.php,v 1.2 2008/12/20 18:24:36 dries Exp $
+// $Id: filter.api.php,v 1.3 2008/12/30 16:43:17 dries Exp $
 
 /**
  * @file
@@ -51,7 +51,7 @@
  * and with what settings. Filters that provide settings should usually store
  * these settings per format.
  *
- * If the filter's behaviour depends on an extensive list and/or external data
+ * If the filter's behavior depends on an extensive list and/or external data
  * (e.g. a list of smileys, a list of glossary terms) then filters are allowed
  * to provide a separate, global configuration page rather than provide settings
  * per format. In that case, there should be a link from the format-specific

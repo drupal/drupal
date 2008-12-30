@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.176 2008/12/16 23:57:32 dries Exp $
+// $Id: menu.module,v 1.177 2008/12/30 16:43:17 dries Exp $
 
 /**
  * @file
@@ -136,7 +136,7 @@ function menu_menu() {
 }
 
 /**
- * Implemenation of hook_theme().
+ * Implementation of hook_theme().
  */
 function menu_theme() {
   return array(

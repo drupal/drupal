@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.238 2008/12/28 19:30:36 dries Exp $
+// $Id: filter.module,v 1.239 2008/12/30 16:43:17 dries Exp $
 
 /**
  * @file
@@ -954,7 +954,7 @@ function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 
   }
   // Store the input format
   _filter_xss_split($allowed_tags, TRUE);
-  // Remove NUL characters (ignored by some browsers)
+  // Remove NULL characters (ignored by some browsers)
   $string = str_replace(chr(0), '', $string);
   // Remove Netscape 4 JS entities
   $string = preg_replace('%&\s*\{[^}]*(\}\s*;?|$)%', '', $string);

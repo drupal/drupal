@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.6 2008/12/28 20:41:19 dries Exp $
+// $Id: system.api.php,v 1.7 2008/12/30 16:43:19 dries Exp $
 
 /**
  * @file
@@ -1202,8 +1202,8 @@ function hook_file_download($filepath) {
  * Drupal itself (by install.php) with an installation profile or later by hand.
  * As a consequence, install-time requirements must be checked without access
  * to the full Drupal API, because it is not available during install.php.
- * For localisation you should for example use $t = get_t() to
- * retrieve the appropriate localisation function name (t() or st()).
+ * For localization you should for example use $t = get_t() to
+ * retrieve the appropriate localization function name (t() or st()).
  * If a requirement has a severity of REQUIREMENT_ERROR, install.php will abort
  * or at least the module will not install.
  * Other severity levels have no effect on the installation.

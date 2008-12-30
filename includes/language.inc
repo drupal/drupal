@@ -1,5 +1,5 @@
 <?php
-// $Id: language.inc,v 1.16 2008/04/14 17:48:33 dries Exp $
+// $Id: language.inc,v 1.17 2008/12/30 16:43:14 dries Exp $
 
 /**
  * @file
@@ -99,7 +99,7 @@ function language_from_browser() {
 }
 
 /**
- * Rewrite URL's with language based prefix. Parameters are the same
+ * Rewrite URLs with language based prefix. Parameters are the same
  * as those of the url() function.
  */
 function language_url_rewrite(&$path, &$options) {

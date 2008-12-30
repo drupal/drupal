@@ -1,5 +1,5 @@
 <?php
-// $Id: book.install,v 1.25 2008/12/20 18:24:34 dries Exp $
+// $Id: book.install,v 1.26 2008/12/30 16:43:16 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -141,7 +141,7 @@ function book_update_6000() {
       return $ret;
     }
     else {
-      // No exising nodes in the hierarchy, so drop the table and re-create it.
+      // No existing nodes in the hierarchy, so drop the table and re-create it.
       $ret[] = update_sql("DROP TABLE {book}");
       db_create_table($ret, 'book', $schema['book']);
       return $ret;

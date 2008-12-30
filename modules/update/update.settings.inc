@@ -1,5 +1,5 @@
 <?php
-// $Id: update.settings.inc,v 1.3 2007/10/20 21:57:50 goba Exp $
+// $Id: update.settings.inc,v 1.4 2008/12/30 16:43:19 dries Exp $
 
 /**
  * @file
@@ -44,7 +44,7 @@ function update_settings() {
   );
 
   $form = system_settings_form($form);
-  // Custom valiation callback for the email notification setting.
+  // Custom validation callback for the email notification setting.
   $form['#validate'][] = 'update_settings_validate';
   // We need to call our own submit callback first, not the one from
   // system_settings_form(), so that we can process and save the emails.

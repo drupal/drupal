@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.24 2008/11/24 00:40:45 webchick Exp $
+// $Id: user.pages.inc,v 1.25 2008/12/30 16:43:20 dries Exp $
 
 /**
  * @file
@@ -168,7 +168,7 @@ function template_preprocess_user_profile(&$variables) {
   $variables['profile'] = array();
   // Sort sections by weight
   uasort($variables['account']->content, 'element_sort');
-  // Provide keyed variables so themers can print each section independantly.
+  // Provide keyed variables so themers can print each section independently.
   foreach (element_children($variables['account']->content) as $key) {
     $variables['profile'][$key] = drupal_render($variables['account']->content[$key]);
   }

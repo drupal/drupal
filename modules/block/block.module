@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.317 2008/12/29 16:03:56 dries Exp $
+// $Id: block.module,v 1.318 2008/12/30 16:43:15 dries Exp $
 
 /**
  * @file
@@ -527,7 +527,7 @@ function _block_render_blocks($region_blocks) {
  * constants). Two block instances can use the same cached content when
  * they share the same cache_id.
  *
- * Theme and language contexts are automatically differenciated.
+ * Theme and language contexts are automatically differentiated.
  *
  * @param $block
  * @return

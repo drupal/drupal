@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.308 2008/12/20 18:24:33 dries Exp $
+// $Id: menu.inc,v 1.309 2008/12/30 16:43:14 dries Exp $
 
 /**
  * @file
@@ -444,7 +444,7 @@ function _menu_load_objects(&$item, &$map) {
           foreach ($args as $i => $arg) {
             if ($arg === '%index') {
               // Pass on argument index to the load function, so multiple
-              // occurances of the same placeholder can be identified.
+              // occurrences of the same placeholder can be identified.
               $args[$i] = $index;
             }
             if ($arg === '%map') {
@@ -734,7 +734,7 @@ function _menu_link_translate(&$item) {
  * infinite recursion.
  *
  * @param $type
- *   Type of the object. These appear in hook_menu definitons as %type. Core
+ *   Type of the object. These appear in hook_menu definitions as %type. Core
  *   provides aggregator_feed, aggregator_category, contact, filter_format,
  *   forum_term, menu, menu_link, node, taxonomy_vocabulary, user. See the
  *   relevant {$type}_load function for more on each. Defaults to node.
@@ -2185,7 +2185,7 @@ function _menu_clear_page_cache() {
   static $cache_cleared = 0;
 
   // Clear the page and block caches, but at most twice, including at
-  //  the end of the page load when there are multple links saved or deleted.
+  //  the end of the page load when there are multiple links saved or deleted.
   if (empty($cache_cleared)) {
     cache_clear_all();
     // Keep track of which menus have expanded items.

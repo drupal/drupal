@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.294 2008/12/26 11:04:39 dries Exp $
+// $Id: system.install,v 1.295 2008/12/30 16:43:19 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1997,7 +1997,7 @@ function system_update_6021() {
   if ($_SESSION['system_update_6021'] >= $_SESSION['system_update_6021_max']) {
     if (!empty($_SESSION['menu_bogus_menus'])) {
       // Remove entries in bogus menus. This is secure because we deleted
-      // every non-alpanumeric character from the menu name.
+      // every non-alphanumeric character from the menu name.
       $ret[] = update_sql("DELETE FROM {menu_links} WHERE menu_name IN ('" . implode("', '", $_SESSION['menu_bogus_menus']) . "')");
     }
 
@@ -2071,7 +2071,7 @@ function system_update_6021() {
     unset($_SESSION['menu_menu_map'][1]);
     // Update the deltas for all menu module blocks.
     foreach ($_SESSION['menu_menu_map'] as $mid => $menu_name) {
-      // This is again secure because we deleted every non-alpanumeric
+      // This is again secure because we deleted every non-alphanumeric
       // character from the menu name.
       $ret[] = update_sql("UPDATE {blocks} SET delta = '" . $menu_name . "' WHERE module = 'menu' AND delta = '" . $mid . "'");
       $ret[] = update_sql("UPDATE {blocks_roles} SET delta = '" . $menu_name . "' WHERE module = 'menu' AND delta = '" . $mid . "'");

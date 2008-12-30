@@ -1,5 +1,5 @@
 <?php
-// $Id: file_test.module,v 1.4 2008/11/08 21:35:09 dries Exp $
+// $Id: file_test.module,v 1.5 2008/12/30 16:43:18 dries Exp $
 
 /**
  * @file
@@ -194,14 +194,14 @@ function file_test_file_update($file) {
 }
 
 /**
- * Implemenation of hook_file_copy().
+ * Implementation of hook_file_copy().
  */
 function file_test_file_copy($file, $source) {
   _file_test_log_call('copy', array($file, $source));
 }
 
 /**
- * Implemenation of hook_file_move().
+ * Implementation of hook_file_move().
  */
 function file_test_file_move($file, $source) {
   _file_test_log_call('move', array($file, $source));

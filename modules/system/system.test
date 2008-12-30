@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.32 2008/12/28 19:11:31 dries Exp $
+// $Id: system.test,v 1.33 2008/12/30 16:43:19 dries Exp $
 
 class EnableDisableCoreTestCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -27,7 +27,7 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
 
   /**
    * Enable a module, check the database for related tables, disable module,
-   * check for related tables, unistall module, check for related tables.
+   * check for related tables, uninstall module, check for related tables.
    * Also check for invocation of the hook_module_action hook.
    */
   function testEnableDisable() {
@@ -113,7 +113,7 @@ class EnableDisableCoreTestCase extends DrupalWebTestCase {
   /**
    * Assert tables that begin with the specified base table name.
    *
-   * @param string $base_table Begginning of table name to look for.
+   * @param string $base_table Beginning of table name to look for.
    * @param boolean $count Assert tables that match specified base table.
    * @return boolean Tables with specified base table.
    */

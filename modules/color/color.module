@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.50 2008/11/10 05:22:59 webchick Exp $
+// $Id: color.module,v 1.51 2008/12/30 16:43:16 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -74,7 +74,7 @@ function _color_page_alter(&$vars) {
   $color_paths = variable_get('color_' . $theme_key . '_stylesheets', array());
   if (!empty($color_paths)) {
     // Loop over theme CSS files and try to rebuild CSS array with rewritten
-    // stylesheets. Keep the orginal order intact for CSS cascading.
+    // stylesheets. Keep the original order intact for CSS cascading.
     $new_theme_css = array();
 
     foreach ($vars['css']['all']['theme'] as $old_path => $old_preprocess) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.261 2008/12/28 20:41:18 dries Exp $
+// $Id: bootstrap.inc,v 1.262 2008/12/30 16:43:14 dries Exp $
 
 /**
  * @file
@@ -1191,7 +1191,7 @@ function drupal_maintenance_theme() {
 }
 
 /**
- * Return the name of the localisation function. Use in code that needs to
+ * Return the name of the localization function. Use in code that needs to
  * run both during installation and normal operation.
  */
 function get_t() {

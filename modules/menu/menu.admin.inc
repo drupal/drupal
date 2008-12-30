@@ -1,9 +1,9 @@
 <?php
-// $Id: menu.admin.inc,v 1.34 2008/11/15 08:23:07 dries Exp $
+// $Id: menu.admin.inc,v 1.35 2008/12/30 16:43:17 dries Exp $
 
 /**
  * @file
- * Administrative page callbaks for menu module.
+ * Administrative page callbacks for menu module.
  */
 
 /**

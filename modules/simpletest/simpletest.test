@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.test,v 1.13 2008/12/11 20:11:40 dries Exp $
+// $Id: simpletest.test,v 1.14 2008/12/30 16:43:18 dries Exp $
 
 class SimpleTestTestCase extends DrupalWebTestCase {
   /**
@@ -9,7 +9,7 @@ class SimpleTestTestCase extends DrupalWebTestCase {
 
   /**
    * Store the test ID from each test run for comparison, to ensure they are
-   * incramenting.
+   * incrementing.
    */
   protected $test_ids = array();
 

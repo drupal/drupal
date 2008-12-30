@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.47 2008/12/16 22:05:51 dries Exp $
+// $Id: node.pages.inc,v 1.48 2008/12/30 16:43:18 dries Exp $
 
 /**
  * @file
@@ -304,7 +304,7 @@ function node_body_field(&$node, $label, $word_count) {
 }
 
 /**
- * Button sumit function: handle the 'Delete' button on the node form.
+ * Button submit function: handle the 'Delete' button on the node form.
  */
 function node_form_delete_submit($form, &$form_state) {
   $destination = '';

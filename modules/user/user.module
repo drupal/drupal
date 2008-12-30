@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.950 2008/12/29 16:03:57 dries Exp $
+// $Id: user.module,v 1.951 2008/12/30 16:43:20 dries Exp $
 
 /**
  * @file
@@ -1429,7 +1429,7 @@ function user_external_login_register($name, $module) {
       'access' => REQUEST_TIME
     );
     $account = user_save('', $userinfo);
-    // Terminate if an error occured during user_save().
+    // Terminate if an error occurred during user_save().
     if (!$account) {
       drupal_set_message(t("Error saving user account."), 'error');
       return;
@@ -2303,7 +2303,7 @@ function user_register_submit($form, &$form_state) {
     $merge_data['status'] = variable_get('user_register', 1) == 1;
   }
   $account = user_save('', array_merge($form_state['values'], $merge_data));
-  // Terminate if an error occured during user_save().
+  // Terminate if an error occurred during user_save().
   if (!$account) {
     drupal_set_message(t("Error saving user account."), 'error');
     $form_state['redirect'] = '';

@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.79 2008/12/20 18:24:33 dries Exp $
+// $Id: install.inc,v 1.80 2008/12/30 16:43:14 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -226,7 +226,7 @@ function drupal_detect_database_types() {
     }
   }
 
-  // Usability: unconditionnally put the MySQL driver on top.
+  // Usability: unconditionally put the MySQL driver on top.
   if (isset($databases['mysql'])) {
     $mysql_database = $databases['mysql'];
     unset($databases['mysql']);

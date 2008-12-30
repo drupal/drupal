@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1006 2008/12/29 22:29:44 dries Exp $
+// $Id: node.module,v 1.1007 2008/12/30 16:43:18 dries Exp $
 
 /**
  * @file
@@ -783,7 +783,7 @@ function node_load_multiple($nids = array(), $conditions = array(), $reset = FAL
   }
 
   // Exclude any nodes loaded from cache if they don't match $conditions.
-  // This ensures the same behaviour whether loading from memory or database.
+  // This ensures the same behavior whether loading from memory or database.
   if ($conditions) {
     foreach ($nodes as $node) {
       $node_values = (array) $node;
@@ -1024,7 +1024,7 @@ function node_save(&$node) {
     $node->old_vid = $node->vid;
   }
   else {
-    // When updating a node, avoid clobberring an existing log entry with an empty one.
+    // When updating a node, avoid clobbering an existing log entry with an empty one.
     if (empty($node->log)) {
       unset($node->log);
     }
@@ -1077,7 +1077,7 @@ function node_save(&$node) {
 /**
  * Helper function to save a revision with the uid of the current user.
  *
- * Node is taken by reference, becuse drupal_write_record() updates the
+ * Node is taken by reference, because drupal_write_record() updates the
  * $node with the revision id, and we need to pass that back to the caller.
  */
 function _node_save_revision(&$node, $uid, $update = NULL) {
@@ -1607,7 +1607,7 @@ function node_menu() {
   $items['admin/content/node-settings/rebuild'] = array(
     'title' => 'Rebuild permissions',
     'page arguments' => array('node_configure_rebuild_confirm'),
-    // Any user than can potentially trigger a node_acess_needs_rebuild(TRUE)
+    // Any user than can potentially trigger a node_access_needs_rebuild(TRUE)
     // has to be allowed access to the 'node access rebuild' confirm form.
     'access arguments' => array('access administration pages'),
     'type' => MENU_CALLBACK,
@@ -2065,7 +2065,7 @@ function node_form_alter(&$form, $form_state, $form_id) {
  * Form API callback for the search form. Registered in node_form_alter().
  */
 function node_search_validate($form, &$form_state) {
-  // Initialise using any existing basic search keywords.
+  // Initialize using any existing basic search keywords.
   $keys = $form_state['values']['processed_keys'];
 
   // Insert extra restrictions into the search keywords string.
@@ -2519,7 +2519,7 @@ function node_access_rebuild($batch_mode = FALSE) {
       $result = db_query("SELECT nid FROM {node}");
       while ($node = db_fetch_object($result)) {
         $loaded_node = node_load($node->nid, NULL, TRUE);
-        // To preserve database integrity, only aquire grants if the node
+        // To preserve database integrity, only acquire grants if the node
         // loads successfully.
         if (!empty($loaded_node)) {
           node_access_acquire_grants($loaded_node);
@@ -2542,7 +2542,7 @@ function node_access_rebuild($batch_mode = FALSE) {
 /**
  * Batch operation for node_access_rebuild_batch.
  *
- * This is a mutlistep operation : we go through all nodes by packs of 20.
+ * This is a multistep operation : we go through all nodes by packs of 20.
  * The batch processing engine interrupts processing and sends progress
  * feedback after 1 second execution time.
  */
@@ -2559,7 +2559,7 @@ function _node_access_rebuild_batch_operation(&$context) {
   $result = db_query_range("SELECT nid FROM {node} WHERE nid > %d ORDER BY nid ASC", $context['sandbox']['current_node'], 0, $limit);
   while ($row = db_fetch_array($result)) {
     $loaded_node = node_load($row['nid'], NULL, TRUE);
-    // To preserve database integrity, only aquire grants if the node
+    // To preserve database integrity, only acquire grants if the node
     // loads successfully.
     if (!empty($loaded_node)) {
       node_access_acquire_grants($loaded_node);

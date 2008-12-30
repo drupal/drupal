@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.test,v 1.9 2008/12/16 22:05:51 dries Exp $
+// $Id: upload.test,v 1.10 2008/12/30 16:43:19 dries Exp $
 
 class UploadTestCase extends DrupalWebTestCase {
   function getInfo() {
@@ -191,7 +191,7 @@ class UploadTestCase extends DrupalWebTestCase {
   /**
    * Check that uploaded file is accessible and verify the contents against the original.
    *
-   * @param string $filename Name of file to verifiy.
+   * @param string $filename Name of file to verify.
    */
   function checkUploadedFile($filename) {
     global $base_url;
@@ -205,7 +205,7 @@ class UploadTestCase extends DrupalWebTestCase {
    * Get the role id of the 'simpletest' role associated with a SimpleTest test user.
    *
    * @param object $user User object.
-   * @return interger SimpleTest role id.
+   * @return integer SimpleTest role id.
    */
   function getSimpletestRoleId($user) {
     foreach ($user->roles as $rid => $role) {

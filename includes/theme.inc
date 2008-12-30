@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.456 2008/12/16 22:05:50 dries Exp $
+// $Id: theme.inc,v 1.457 2008/12/30 16:43:14 dries Exp $
 
 /**
  * @file
@@ -1379,7 +1379,7 @@ function theme_table($header, $rows, $attributes = array(), $caption = NULL, $co
   // Format the table header:
   if (count($header)) {
     $ts = tablesort_init($header);
-    // HTML requires that the thead tag has tr tags in it follwed by tbody
+    // HTML requires that the thead tag has tr tags in it followed by tbody
     // tags. Using ternary operator to check and see if we have any rows.
     $output .= (count($rows) ? ' <thead><tr>' : ' <tr>');
     foreach ($header as $cell) {
@@ -1816,7 +1816,7 @@ function template_preprocess(&$variables, $hook) {
  * based on the current path.
  *
  * Any changes to variables in this preprocessor should also be changed inside
- * template_preprocess_maintenance_page() to keep all them consistent.
+ * template_preprocess_maintenance_page() to keep all of them consistent.
  *
  * The $variables array contains the following arguments:
  * - $content

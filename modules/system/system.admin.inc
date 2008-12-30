@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.110 2008/11/26 13:54:05 dries Exp $
+// $Id: system.admin.inc,v 1.111 2008/12/30 16:43:19 dries Exp $
 
 /**
  * @file
@@ -872,7 +872,7 @@ function system_modules_submit($form, &$form_state) {
       }
       // If we're not coming from a confirmation form,
       // search dependencies. Otherwise, the user will have already
-      // approved of the depdent modules being enabled.
+      // approved of the dependent modules being enabled.
       if (empty($form_state['storage'])) {
         foreach ($form['modules'][$module['group']][$name]['#dependencies'] as $dependency => $string) {
           if (!$modules[$dependency]['enabled']) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.146 2008/12/04 11:09:33 dries Exp $
+// $Id: file.inc,v 1.147 2008/12/30 16:43:14 dries Exp $
 
 /**
  * @file
@@ -747,7 +747,7 @@ function file_unmanaged_delete($path) {
   if (is_file($path)) {
     return unlink($path);
   }
-  // Return TRUE for non-existant file, but log that nothing was actually
+  // Return TRUE for non-existent file, but log that nothing was actually
   // deleted, as the current state is the indended result.
   if (!file_exists($path)) {
     watchdog('file', 'The file %path was not deleted, because it does not exist.', array('%path' => $path), WATCHDOG_NOTICE);

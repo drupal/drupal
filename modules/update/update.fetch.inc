@@ -1,5 +1,5 @@
 <?php
-// $Id: update.fetch.inc,v 1.13 2008/10/24 19:23:59 dries Exp $
+// $Id: update.fetch.inc,v 1.14 2008/12/30 16:43:19 dries Exp $
 
 /**
  * @file
@@ -101,7 +101,7 @@ function _update_build_fetch_url($project, $site_key = '') {
  * Perform any notifications that should be done once cron fetches new data.
  *
  * This method checks the status of the site using the new data and depending
- * on the configuration of the site, notifys administrators via email if there
+ * on the configuration of the site, notifies administrators via email if there
  * are new releases or missing security updates.
  *
  * @see update_requirements()

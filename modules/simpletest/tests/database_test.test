@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.32 2008/12/26 14:23:38 dries Exp $
+// $Id: database_test.test,v 1.33 2008/12/30 16:43:18 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -1558,7 +1558,7 @@ class DatabaseTaggingTestCase extends DatabaseTestCase {
     $this->assertEqual($data, $return, t('Corect metadata returned.'));
 
     $return = $query->getMetaData('nothere');
-    $this->assertNull($return, t('Non-existant key returned NULL.'));
+    $this->assertNull($return, t('Non-existent key returned NULL.'));
   }
 }
 

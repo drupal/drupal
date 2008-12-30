@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.280 2008/12/20 18:24:38 dries Exp $
+// $Id: search.module,v 1.281 2008/12/30 16:43:18 dries Exp $
 
 /**
  * @file
@@ -462,7 +462,7 @@ function search_index($sid, $type, $text) {
   // and begins and ends with a literal (inserting $null as required).
 
   $tag = FALSE; // Odd/even counter. Tag or no tag.
-  $link = FALSE; // State variable for link analyser
+  $link = FALSE; // State variable for link analyzer
   $score = 1; // Starting score per word
   $accum = ' '; // Accumulator for cleaned up data
   $tagstack = array(); // Stack with open tags
@@ -715,9 +715,9 @@ function search_query_insert($keys, $option, $value = '') {
  *    * Arguments for this query part.
  *    * A series of exact word matches OR'd together.
  *    * Arguments for this query part.
- *    * A bool indicating whether this is a simple query or not. Negative
+ *    * A boolean indicating whether this is a simple query or not. Negative
  *      terms, presence of both AND / OR make this FALSE.
- *    * A bool indicating the presence of a lowercase or. Maybe the user
+ *    * A boolean indicating the presence of a lowercase or. Maybe the user
  *      wanted to use OR.
  */
 function search_parse_query($text) {

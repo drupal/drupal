@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.840 2008/12/26 21:01:57 dries Exp $
+// $Id: common.inc,v 1.841 2008/12/30 16:43:14 dries Exp $
 
 /**
  * @file
@@ -1900,7 +1900,7 @@ function drupal_eval($code) {
   $old_theme_path = $theme_path;
 
   // Restore theme_path to the theme, as long as drupal_eval() executes,
-  // so code evaluted will not see the caller module as the current theme.
+  // so code evaluated will not see the caller module as the current theme.
   // If theme info is not initialized get the path from theme_default.
   if (!isset($theme_info)) {
     $theme_path = drupal_get_path('theme', $conf['theme_default']);
@@ -2650,7 +2650,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  *
  * Please note that this function should be called from the theme layer, such as
  * in a .tpl.php file, theme_ function, or in a template_preprocess function,
- * not in a form declartion. Though the same JavaScript could be added to the
+ * not in a form declaration. Though the same JavaScript could be added to the
  * page using drupal_add_js() directly, this function helps keep template files
  * clean and readable. It also prevents tabledrag.js from being added twice
  * accidentally.

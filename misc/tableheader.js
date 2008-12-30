@@ -1,4 +1,4 @@
-// $Id: tableheader.js,v 1.19 2008/10/29 10:01:26 dries Exp $
+// $Id: tableheader.js,v 1.20 2008/12/30 16:43:15 dries Exp $
 
 Drupal.tableHeaderDoScroll = function() {
   if (typeof(Drupal.tableHeaderOnScroll)=='function') {
@@ -29,7 +29,7 @@ Drupal.behaviors.tableHeader = {
       // Store parent table.
       var table = $(this).parent('table')[0];
       headerClone.table = table;
-      // Finish initialzing header positioning.
+      // Finish initializing header positioning.
       tracker(headerClone);
 
       $(table).addClass('sticky-table');

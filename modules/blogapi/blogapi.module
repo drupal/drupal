@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.136 2008/12/08 21:54:31 dries Exp $
+// $Id: blogapi.module,v 1.137 2008/12/30 16:43:15 dries Exp $
 
 /**
  * @file
@@ -831,7 +831,7 @@ function blogapi_menu() {
 }
 
 /**
- * Implementaton of hook_init().
+ * Implementation of hook_init().
  */
 function blogapi_init() {
   if (drupal_is_front_page()) {

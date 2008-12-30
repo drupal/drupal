@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.test,v 1.7 2008/11/25 13:14:26 dries Exp $
+// $Id: blogapi.test,v 1.8 2008/12/30 16:43:15 dries Exp $
 
 class BlogAPITestCase extends DrupalWebTestCase {
   function getInfo() {
@@ -19,7 +19,7 @@ class BlogAPITestCase extends DrupalWebTestCase {
    */
   function testBlogAPI() {
     global $base_url;
-    // Create admin user and taxononmy for later use.
+    // Create admin user and taxonomy for later use.
     $admin_user = $this->drupalCreateUser(array('administer taxonomy'));
     $this->drupalLogin($admin_user);
     $vid = $this->addVocabulary('simpletest_vocab');
@@ -53,7 +53,7 @@ class BlogAPITestCase extends DrupalWebTestCase {
 
     // Check recent posts.
     $result = xmlrpc($local, 'blogger.getRecentPosts', $appid, $blog_id, $web_user->name, $web_user->pass_raw, 5);
-    $this->assertTrue($result, t('Recent post list retreived.'));
+    $this->assertTrue($result, t('Recent post list retrieved.'));
 
     if ($result !== FALSE && array_key_exists('title', $result[0])) {
       $this->assertEqual($content, $result[0]['title'], t('Post found.'));
@@ -89,7 +89,7 @@ class BlogAPITestCase extends DrupalWebTestCase {
 
     // Get post categories.
     $result = xmlrpc($local, 'mt.getPostCategories', $nid, $web_user->name, $web_user->pass_raw);
-    $this->assertTrue($result, t('Category list successfully retreived.'));
+    $this->assertTrue($result, t('Category list successfully retrieved.'));
 
     if ($result !== FALSE && array_key_exists('categoryId', $result[0])) {
       $this->assertEqual($term, $result[0]['categoryId'], t('Category list verified.'));
@@ -134,8 +134,9 @@ class BlogAPITestCase extends DrupalWebTestCase {
    *
    * @param integer $vid
    *   Vocabulary ID.
-   * @param string $term Term name.
-   * @return interger
+   * @param string $term
+   *   Term name.
+   * @return integer
    *   The Term ID.
    */
   function addTerm($vid, $term) {

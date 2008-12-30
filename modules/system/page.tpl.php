@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.13 2008/10/13 12:31:43 dries Exp $
+// $Id: page.tpl.php,v 1.14 2008/12/30 16:43:19 dries Exp $
 
 /**
  * @file
@@ -49,7 +49,7 @@
  * - $secondary_menu (array): An array containing the Secondary menu links for
  *   the site, if they have been configured.
  *
- * Page content (in order of occurrance in the default page.tpl.php):
+ * Page content (in order of occurrence in the default page.tpl.php):
  * - $left: The HTML for the left sidebar.
  *
  * - $breadcrumb: The breadcrumb trail for the current page.
