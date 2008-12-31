@@ -1,0 +1,214 @@
+<?php
+// $Id $
+
+/**
+ * @file
+ * Various unicode handling tests.
+ */
+
+/**
+ * Test unicode handling features implemented in unicode.inc.
+ */
+class UnicodeUnitTest extends DrupalWebTestCase {
+
+  /**
+   * Whether to run the extended version of the tests (including non latin1 characters).
+   *
+   * @var boolean
+   */
+  protected $extendedMode = FALSE;
+
+  function getInfo() {
+    return array(
+      'name' => t('Unicode handling'),
+      'description' => t('Tests Drupal Unicode handling.'),
+      'group' => t('System'),
+    );
+  }
+
+  /**
+   * Test full unicode features implemented using the mbstring extension.
+   */
+  function testMbStringUnicode() {
+    global $multibyte;
+
+    // mbstring was not detected on this installation, there is no way to test
+    // multibyte features. Treat that as an exception.
+    if ($multibyte == UNICODE_SINGLEBYTE) {
+      $this->error(t('Unable to test Multibyte features: mbstring extension was not detected.'));
+    }
+
+    $multibyte = UNICODE_MULTIBYTE;
+
+    $this->extendedMode = TRUE;
+    $this->pass(t('Testing in mbstring mode'));
+
+    $this->helperTestStrToLower();
+    $this->helperTestStrToUpper();
+    $this->helperTestUcFirst();
+    $this->helperTestStrLen();
+    $this->helperTestSubStr();
+  }
+
+  /**
+   * Test emulated unicode features.
+   */
+  function testEmulatedUnicode() {
+    global $multibyte;
+
+    $multibyte = UNICODE_SINGLEBYTE;
+
+    $this->extendedMode = FALSE;
+
+    $this->pass(t('Testing in emulated (best-effort) mode'));
+
+    $this->helperTestStrToLower();
+    $this->helperTestStrToUpper();
+    $this->helperTestUcFirst();
+    $this->helperTestStrLen();
+    $this->helperTestSubStr();
+  }
+
+  function helperTestStrToLower() {
+    $testcase = array(
+      'tHe QUIcK bRoWn' => 'the quick brown',
+      'FrançAIS is ÜBER-åwesome' => 'français is über-åwesome',
+    );
+    if ($this->extendedMode) {
+      $testcase['ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ'] = 'αβγδεζηθικλμνξοσὠ';
+    }
+
+    foreach ($testcase as $input => $output) {
+      $this->assertEqual(drupal_strtolower($input), $output, t('%input is lowercased as %output', array('%input' => $input, '%output' => $output)));
+    }
+  }
+
+  function helperTestStrToUpper() {
+    $testcase = array(
+      'tHe QUIcK bRoWn' => 'THE QUICK BROWN',
+      'FrançAIS is ÜBER-åwesome' => 'FRANÇAIS IS ÜBER-ÅWESOME',
+    );
+    if ($this->extendedMode) {
+      $testcase['αβγδεζηθικλμνξοσὠ'] = 'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ';
+    }
+
+    foreach ($testcase as $input => $output) {
+      $this->assertEqual(drupal_strtoupper($input), $output, t('%input is uppercased as %output', array('%input' => $input, '%output' => $output)));
+    }
+  }
+
+  function helperTestUcFirst() {
+    $testcase = array(
+      'tHe QUIcK bRoWn' => 'THe QUIcK bRoWn',
+      'françAIS' => 'FrançAIS',
+      'über' => 'Über',
+      'åwesome' => 'Åwesome'
+    );
+    if ($this->extendedMode) {
+      $testcase['σion'] = 'Σion';
+    }
+
+    foreach ($testcase as $input => $output) {
+      $this->assertEqual(drupal_ucfirst($input), $output, t('%input is ucfirst-ed as %output', array('%input' => $input, '%output' => $output)));
+    }
+  }
+
+  function helperTestStrLen() {
+    $testcase = array(
+      'tHe QUIcK bRoWn' => 15,
+      'ÜBER-åwesome' => 12,
+    );
+
+    foreach ($testcase as $input => $output) {
+      $this->assertEqual(drupal_strlen($input), $output, t('%input length is %output', array('%input' => $input, '%output' => $output)));
+    }
+  }
+
+  function helperTestSubStr() {
+    $testcase = array(
+      //     012345678901234567890123
+      array('frànçAIS is über-åwesome', 0, 1,
+            'f'),
+      array('frànçAIS is über-åwesome', 0, 8,
+            'frànçAIS'),
+      array('frànçAIS is über-åwesome', 0, 100,
+            'frànçAIS is über-åwesome'),
+      array('frànçAIS is über-åwesome', 4, 4,
+                'çAIS'),
+      array('frànçAIS is über-åwesome', 1, 0,
+            ''),
+      array('frànçAIS is über-åwesome', 100, 0,
+            ''),
+      array('frànçAIS is über-åwesome', -4, 2,
+                                'so'),
+      array('frànçAIS is über-åwesome', -7, 10,
+                             'åwesome'),
+      array('frànçAIS is über-åwesome', 5, -10,
+                 'AIS is üb'),
+
+    );
+
+    foreach ($testcase as $test) {
+      list($input, $start, $length, $output) = $test;
+      $this->assertEqual(drupal_substr($input, $start, $length), $output, t('%input substring-ed at offset %offset for %length characters is %output', array('%input' => $input, '%offset' => $start, '%length' => $length, '%output' => $output)));
+    }
+  }
+
+  /**
+   * Test decode_entities().
+   */
+  function testDecodeEntities() {
+    $testcase = array(
+      'Drupal' => 'Drupal',
+      '<script>' => '<script>',
+      '&lt;script&gt;' => '<script>',
+      '&amp;lt;script&amp;gt;' => '&lt;script&gt;',
+      '"' => '"',
+      '&#34;' => '"',
+      '&amp;#34;' => '&#34;',
+      '&quot;' => '"',
+      '&amp;quot;' => '&quot;',
+      "'" => "'",
+      '&#39;' => "'",
+      '&amp;#39;' => '&#39;',
+      '©' => '©',
+      '&copy;' => '©',
+      '&#169;' => '©',
+      '→' => '→',
+      '&#8594;' => '→',
+      '➼' => '➼',
+      '&#10172;' => '➼',
+    );
+    foreach ($testcase as $input => $output) {
+      $this->assertEqual(decode_entities($input), $output, t('Make sure the decoded entity of @input is @output', array('@input' => $input, '@output' => $output)));
+    }
+  }
+
+  function testDecodeEntitiesExclusion() {
+    $testcase = array(
+      'Drupal' => 'Drupal',
+      '<script>' => '<script>',
+      '&lt;script&gt;' => '&lt;script>',
+      '&amp;lt;script&amp;gt;' => '&amp;lt;script&amp;gt;',
+      '"' => '"',
+      '&#34;' => '&#34;',
+      '&amp;#34;' => '&amp;#34;',
+      '&quot;' => '&quot;',
+      '&amp;quot;' => '&amp;quot;',
+      "'" => "'",
+      '&#39;' => "'",
+      '&amp;#39;' => '&amp;#39;',
+      '©' => '©',
+      '&copy;' => '©',
+      '&#169;' => '©',
+      '→' => '→',
+      '&#8594;' => '→',
+      '➼' => '➼',
+      '&#10172;' => '➼',
+    );
+    $exclude = array('<', '&', '"');
+    foreach ($testcase as $input => $output) {
+      $this->assertIdentical(decode_entities($input, $exclude), $output, t('Make sure the decoded entity of %input, excluding %excludes, is %output', array('%input' => $input, '%excludes' => implode(',', $exclude), '%output' => $output)));
+    }
+  }
+}
