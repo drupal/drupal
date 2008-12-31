@@ -983,23 +983,24 @@ function custom_url_rewrite_inbound(&$result, $path, $path_language) {
 }
 
 /**
- * Load additional information into a file object.
+ * Load additional information into file objects.
  *
- * file_load() calls this hook to allow modules to load additional information
- * into the $file.
+ * file_load_multiple() calls this hook to allow modules to load
+ * additional information into each file.
  *
- * @param $file
- *   The file object being loaded.
- * @return
- *   None.
+ * @param $files
+ *   An array of file objects, indexed by fid.
  *
- * @see file_load()
+ * @see file_load_multiple()
+ * @see upload_file_load()
  */
-function hook_file_load(&$file) {
+function hook_file_load($files) {
   // Add the upload specific data into the file object.
-  $values = db_query('SELECT * FROM {upload} u WHERE u.fid = :fid', array(':fid' => $file->fid))->fetch(PDO::FETCH_ASSOC);
-  foreach ((array)$values as $key => $value) {
-    $file->{$key} = $value;
+  $result = db_query('SELECT * FROM {upload} u WHERE u.fid IN (:fids)', array(':fids' => array_keys($files)))->fetchAll(PDO::FETCH_ASSOC);
+  foreach ($result as $record) {
+    foreach ($record as $key => $value) {
+      $files[$record['fid']]->$key = $value;
+    }
   }
 }
 

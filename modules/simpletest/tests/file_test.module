@@ -148,11 +148,13 @@ function file_test_set_return($op, $value) {
 /**
  * Implementation of hook_file_load().
  */
-function file_test_file_load($file) {
-  _file_test_log_call('load', array($file));
-  // Assign a value on the object so that we can test that the $file is passed
-  // by reference.
-  $file->file_test['loaded'] = TRUE;
+function file_test_file_load($files) {
+  foreach ($files as $file) {
+    _file_test_log_call('load', array($file));
+    // Assign a value on the object so that we can test that the $file is passed
+    // by reference.
+    $file->file_test['loaded'] = TRUE;
+  }
 }
 
 /**
