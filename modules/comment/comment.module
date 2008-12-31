@@ -1061,7 +1061,7 @@ function comment_render($node, $cid = 0) {
       }
     }
     // Only attempt to render comments if the node has been commented upon.
-    elseif ($node->comment_count) {
+    else {
 
       //TODO Convert to dynamic queries once the pager query is updated to the new DBTNG API.
 
