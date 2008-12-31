@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.315 2008/12/16 23:57:32 dries Exp $
+// $Id: blog.module,v 1.316 2008/12/31 12:02:21 dries Exp $
 
 /**
  * @file
@@ -84,8 +84,8 @@ function blog_form($node, $form_state) {
 /**
  * Implementation of hook_view().
  */
-function blog_view($node, $teaser, $page) {
-  if ($page) {
+function blog_view($node, $teaser) {
+  if ((bool)menu_get_object()) {
     // Breadcrumb navigation.
     drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('Blogs'), 'blog'), l(t("!name's blog", array('!name' => $node->name)), 'blog/' . $node->uid)));
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.85 2008/12/28 08:26:51 dries Exp $
+// $Id: chameleon.theme,v 1.86 2008/12/31 12:02:23 dries Exp $
 
 /**
  * @file
@@ -114,7 +114,7 @@ function chameleon_page($content, $show_blocks = TRUE, $show_messages = TRUE) {
   return $output;
 }
 
-function chameleon_node($node, $teaser = 0, $page = 0) {
+function chameleon_node($node, $teaser = 0) {
 
   $output  = "<div class=\"node" . ((!$node->status) ? ' node-unpublished' : '') . (($node->sticky) ? ' sticky' : '') . "\">\n";
 
@@ -153,6 +153,10 @@ function chameleon_node($node, $teaser = 0, $page = 0) {
   }
 
   $output .= "</div>\n";
+  
+  if ($node->content['comments']) {
+    $output .= drupal_render($node->content['comments']);
+  }
 
   return $output;
 }

@@ -1,5 +1,8 @@
-/* $Id: comment.css,v 1.4 2007/07/24 21:33:53 goba Exp $ */
+/* $Id: comment.css,v 1.5 2008/12/31 12:02:21 dries Exp $ */
 
+#comments {
+  margin-top: 15px;
+}
 .indented {
   margin-left: 25px; /* LTR */
 }

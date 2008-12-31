@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.481 2008/12/29 22:29:44 dries Exp $
+// $Id: forum.module,v 1.482 2008/12/31 12:02:22 dries Exp $
 
 /**
  * @file
@@ -183,11 +183,11 @@ function _forum_nodeapi_check_node_type($node, $vocabulary) {
 /**
  * Implementation of hook_nodeapi_view().
  */
-function forum_nodeapi_view($node, $teaser, $page) {
+function forum_nodeapi_view($node, $teaser) {
   $vid = variable_get('forum_nav_vocabulary', '');
   $vocabulary = taxonomy_vocabulary_load($vid);
   if (_forum_nodeapi_check_node_type($node, $vocabulary)) {
-    if ($page && taxonomy_node_get_terms_by_vocabulary($node, $vid) && $tree = taxonomy_get_tree($vid)) {
+    if ((bool)menu_get_object() && taxonomy_node_get_terms_by_vocabulary($node, $vid) && $tree = taxonomy_get_tree($vid)) {
       // Get the forum terms from the (cached) tree
       foreach ($tree as $term) {
         $forum_terms[] = $term->tid;

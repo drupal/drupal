@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.282 2008/12/18 14:38:37 dries Exp $
+// $Id: poll.module,v 1.283 2008/12/31 12:02:23 dries Exp $
 
 /**
  * @file
@@ -524,7 +524,7 @@ function poll_delete($node) {
  *   An extra parameter that adapts the hook to display a block-ready
  *   rendering of the poll.
  */
-function poll_view($node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
+function poll_view($node, $teaser = FALSE, $block = FALSE) {
   global $user;
   $output = '';
 
@@ -549,7 +549,7 @@ function poll_view($node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
   }
   else {
     $node->content['body'] = array(
-      '#markup' => poll_view_results($node, $teaser, $page, $block),
+      '#markup' => poll_view_results($node, $teaser, $block),
     );
   }
   return $node;
@@ -665,7 +665,7 @@ function template_preprocess_poll_vote(&$variables) {
 /**
  * Generates a graphical representation of the results of a poll.
  */
-function poll_view_results(&$node, $teaser, $page, $block) {
+function poll_view_results(&$node, $teaser, $block) {
   // Count the votes and find the maximum
   $total_votes = 0;
   $max_votes = 0;

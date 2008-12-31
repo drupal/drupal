@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.675 2008/12/30 20:15:43 dries Exp $
+// $Id: comment.module,v 1.676 2008/12/31 12:02:21 dries Exp $
 
 /**
  * @file
@@ -422,7 +422,7 @@ function theme_comment_block() {
 /**
  * An implementation of hook_nodeapi_view().
  */
-function comment_nodeapi_view($node, $teaser, $page) {
+function comment_nodeapi_view($node, $teaser) {
   $links = array();
 
   if ($node->comment) {
@@ -493,6 +493,13 @@ function comment_nodeapi_view($node, $teaser, $page) {
       '#type' => 'node_links',
       '#value' => $links,
     );
+    
+    // Append the list of comments to $node->content for node detail pages.
+    if ($node->comment && (bool)menu_get_object()) {
+      $node->content['comments'] = array(
+        '#markup' => comment_render($node),
+      );
+    }
   }
 }
 
@@ -662,6 +669,14 @@ function comment_nodeapi_update_index($node) {
 }
 
 /**
+ * Implementation of hook_update_index().
+ */
+function comment_update_index() {
+  // Store the maximum possible comments per thread (used for ranking by reply count)
+  variable_set('node_cron_comments_scale', 1.0 / max(1, db_query('SELECT MAX(comment_count) FROM {node_comment_statistics}')->fetchField()));
+}
+
+/**
  * Implementation of hook_nodeapi_search_result().
  */
 function comment_nodeapi_search_result($node) {
@@ -740,7 +755,8 @@ function comment_node_url() {
  */
 function comment_save($edit) {
   global $user;
-  if (user_access('post comments') && (user_access('administer comments') || node_comment_mode($edit['nid']) == COMMENT_NODE_READ_WRITE)) {
+  $node = node_load($edit['nid']);
+  if (user_access('post comments') && (user_access('administer comments') || $node->comment == COMMENT_NODE_READ_WRITE)) {
     if (!form_get_errors()) {
       $edit += array(
         'mail' => '',
@@ -902,7 +918,8 @@ function comment_links($comment, $return = 1) {
     );
   }
 
-  if (node_comment_mode($comment->nid) == COMMENT_NODE_READ_WRITE) {
+  $node = node_load($comment->nid);
+  if ($node->comment == COMMENT_NODE_READ_WRITE) {
     if (user_access('administer comments') && user_access('post comments')) {
       $links['comment_delete'] = array(
         'title' => t('delete'),
@@ -1118,7 +1135,7 @@ function comment_render($node, $cid = 0) {
 
     // If enabled, show new comment form if it's not already being displayed.
     $reply = arg(0) == 'comment' && arg(1) == 'reply';
-    if (user_access('post comments') && node_comment_mode($nid) == COMMENT_NODE_READ_WRITE && (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_BELOW) && !$reply) {
+    if (user_access('post comments') && $node->comment == COMMENT_NODE_READ_WRITE && (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_BELOW) && !$reply) {
       $output .= comment_form_box(array('nid' => $nid), t('Post new comment'));
     }
     $output = theme('comment_wrapper', $output, $node);

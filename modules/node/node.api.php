@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.5 2008/12/29 16:03:56 dries Exp $
+// $Id: node.api.php,v 1.6 2008/12/31 12:02:22 dries Exp $
 
 /**
  * @file
@@ -166,8 +166,6 @@ function hook_node_operations() {
  *   The node the action is being performed on.
  * @param $teaser
  *   The $teaser parameter from node_view().
- * @param $page
- *   The $page parameter from node_view().
  * @return
  *   None.
  */
@@ -392,22 +390,21 @@ function hook_nodeapi_validate($node, $form) {
  * The node content is being assembled before rendering. 
  *
  * The module may add elements $node->content prior to rendering. This hook 
- * will be called after hook_view(). The format of $node->content is the 
- * same as used by Forms API.
+ * will be called after hook_view(). The structure of $node->content is a renderable 
+ * array as expected by drupal_render().
  *
  * @param $node
  *   The node the action is being performed on.
  * @param $teaser
  *   The $teaser parameter from node_view().
- * @param $page
- *   The $page parameter from node_view().
  * @return
  *   None.
  */
-function hook_nodeapi_view($node, $teaser, $page) {
+function hook_nodeapi_view($node, $teaser) {
   $node->content['my_additional_field'] = array(
-    '#value' => theme('mymodule_my_additional_field', $additional_field),
+    '#value' => $additional_field,
     '#weight' => 10,
+    '#theme' => 'mymodule_my_additional_field',
   );
 }
 
@@ -766,11 +763,6 @@ function hook_validate($node, &$form) {
  * @param $teaser
  *   Whether we are to generate a "teaser" or summary of the node, rather than
  *   display the whole thing.
- * @param $page
- *   Whether the node is being displayed as a standalone page. If this is
- *   TRUE, the node title should not be displayed, as it will be printed
- *   automatically by the theme system. Also, the module may choose to alter
- *   the default breadcrumb trail in this case.
  * @return
  *   $node. The passed $node parameter should be modified as necessary and
  *   returned so it can be properly presented. Nodes are prepared for display
@@ -785,8 +777,8 @@ function hook_validate($node, &$form) {
  *
  * For a detailed usage example, see node_example.module.
  */
-function hook_view($node, $teaser = FALSE, $page = FALSE) {
-  if ($page) {
+function hook_view($node, $teaser = FALSE) {
+  if ((bool)menu_get_object()) {
     $breadcrumb = array();
     $breadcrumb[] = array('path' => 'example', 'title' => t('example'));
     $breadcrumb[] = array('path' => 'example/' . $node->field1,

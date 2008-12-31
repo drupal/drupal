@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1007 2008/12/30 16:43:18 dries Exp $
+// $Id: node.module,v 1.1008 2008/12/31 12:02:22 dries Exp $
 
 /**
  * @file
@@ -1129,20 +1129,18 @@ function node_delete($nid) {
  *   A node array or node object.
  * @param $teaser
  *   Whether to display the teaser only or the full form.
- * @param $page
- *   Whether the node is being displayed by itself as a page.
  * @param $links
  *   Whether or not to display node links. Links are omitted for node previews.
  *
  * @return
  *   An HTML representation of the themed node.
  */
-function node_view($node, $teaser = FALSE, $page = FALSE) {
+function node_view($node, $teaser = FALSE) {
   $node = (object)$node;
 
-  $node = node_build_content($node, $teaser, $page);
+  $node = node_build_content($node, $teaser);
 
-  return theme('node', $node, $teaser, $page);
+  return theme('node', $node, $teaser);
 }
 
 /**
@@ -1176,14 +1174,12 @@ function node_prepare($node, $teaser = FALSE) {
  *   A node object.
  * @param $teaser
  *   Whether to display the teaser only, as on the main page.
- * @param $page
- *   Whether the node is being displayed by itself as a page.
  *
  * @return
  *   An structured array containing the individual elements
  *   of the node's body.
  */
-function node_build_content($node, $teaser = FALSE, $page = FALSE) {
+function node_build_content($node, $teaser = FALSE) {
 
   // The build mode identifies the target for which the node is built.
   if (!isset($node->build_mode)) {
@@ -1196,34 +1192,30 @@ function node_build_content($node, $teaser = FALSE, $page = FALSE) {
   // The 'view' hook can be implemented to overwrite the default function
   // to display nodes.
   if (node_hook($node, 'view')) {
-    $node = node_invoke($node, 'view', $teaser, $page);
+    $node = node_invoke($node, 'view', $teaser);
   }
   else {
     $node = node_prepare($node, $teaser);
   }
 
   // Allow modules to make their own additions to the node.
-  node_invoke_nodeapi($node, 'view', $teaser, $page);
+  node_invoke_nodeapi($node, 'view', $teaser);
   
   // Allow modules to modify the structured node.
-  drupal_alter('node_view', $node, $teaser, $page);
+  drupal_alter('node_view', $node, $teaser);
 
   return $node;
 }
 
 /**
- * Generate a page displaying a single node, along with its comments.
+ * Generate a page displaying a single node.
  */
-function node_show($node, $cid, $message = FALSE) {
+function node_show($node, $message = FALSE) {
   if ($message) {
     drupal_set_title(t('Revision of %title from %date', array('%title' => $node->title, '%date' => format_date($node->revision_timestamp))), PASS_THROUGH);
   }
 
   $output = node_view($node, FALSE, TRUE);
-
-  if (function_exists('comment_render') && $node->comment) {
-    $output .= comment_render($node, $cid);
-  }
 
   // Update the history table, stating that this user viewed this node.
   node_tag_new($node->nid);
@@ -1514,14 +1506,6 @@ function theme_node_search_admin($form) {
 }
 
 /**
- * Retrieve the comment mode for the given node ID (none, read, or read/write).
- */
-function node_comment_mode($nid) {
-  $node = node_load($nid);
-  return $node->comment;
-}
-
-/**
  * Implementation of hook_link().
  */
 function node_link($type, $node = NULL, $teaser = FALSE) {
@@ -1720,7 +1704,7 @@ function node_menu() {
     'title' => 'Revisions',
     'load arguments' => array(3),
     'page callback' => 'node_show',
-    'page arguments' => array(1, NULL, TRUE),
+    'page arguments' => array(1, TRUE),
     'access callback' => '_node_revision_access',
     'access arguments' => array(1),
     'type' => MENU_CALLBACK,
@@ -1924,9 +1908,9 @@ function node_page_default() {
 /**
  * Menu callback; view a single node.
  */
-function node_page_view($node, $cid = NULL) {
+function node_page_view($node) {
   drupal_set_title($node->title);
-  return node_show($node, $cid);
+  return node_show($node);
 }
 
 /**
@@ -1935,8 +1919,6 @@ function node_page_view($node, $cid = NULL) {
 function node_update_index() {
   $limit = (int)variable_get('search_cron_limit', 100);
 
-  // Store the maximum possible comments per thread (used for ranking by reply count)
-  variable_set('node_cron_comments_scale', 1.0 / max(1, db_result(db_query('SELECT MAX(comment_count) FROM {node_comment_statistics}'))));
   variable_set('node_cron_views_scale', 1.0 / max(1, db_result(db_query('SELECT MAX(totalcount) FROM {node_counter}'))));
 
   $result = db_query_range("SELECT n.nid FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, n.nid ASC", 0, $limit);

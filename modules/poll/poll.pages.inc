@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.pages.inc,v 1.10 2008/12/05 12:50:28 dries Exp $
+// $Id: poll.pages.inc,v 1.11 2008/12/31 12:02:23 dries Exp $
 
 /**
  * @file
@@ -53,5 +53,5 @@ function poll_votes($node) {
 function poll_results($node) {
   drupal_set_title($node->title);
   $node->show_results = TRUE;
-  return node_show($node, 0);
+  return node_show($node);
 }
