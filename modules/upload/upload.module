@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.222 2008/12/30 15:52:59 dries Exp $
+// $Id: upload.module,v 1.223 2008/12/31 11:08:47 dries Exp $
 
 /**
  * @file
@@ -269,11 +269,13 @@ function upload_form_alter(&$form, $form_state, $form_id) {
 /**
  * Implementation of hook_file_load().
  */
-function upload_file_load(&$file) {
+function upload_file_load($files) {
   // Add the upload specific data into the file object.
-  $values = db_query('SELECT * FROM {upload} u WHERE u.fid = :fid', array(':fid' => $file->fid))->fetch(PDO::FETCH_ASSOC);
-  foreach ((array)$values as $key => $value) {
-    $file->{$key} = $value;
+  $result = db_query('SELECT * FROM {upload} u WHERE u.fid IN (:fids)', array(':fids' => array_keys($files)))->fetchAll(PDO::FETCH_ASSOC);
+  foreach ($result as $record) {
+    foreach ($record as $key => $value) {
+      $files[$record['fid']]->$key = $value;
+    }
   }
 }
 
@@ -297,15 +299,41 @@ function upload_file_delete(&$file) {
   db_delete('upload')->condition('fid', $file->fid)->execute();
 }
 
-
 /**
  * Implementation of hook_nodeapi_load().
  */
 function upload_nodeapi_load($nodes, $types) {
+  // Collect all the revision ids for nodes with upload enabled.
+  $node_vids = array();
   foreach ($nodes as $node) {
     if (variable_get("upload_$node->type", 1) == 1) {
-      $node->files = upload_load($node);
+      $node_vids[$node->vid] = $node->vid;
+      $node->files = array();
     }
+  }
+  // If there are no vids then there's no point trying to load files.
+  if (empty($node_vids)) {
+    return;
+  }
+
+  // Fetch the fids associated with these node revisions.
+  $result = db_query('SELECT u.fid, u.nid, u.vid FROM {upload} u WHERE u.vid IN (:node_vids) ORDER BY u.weight, u.fid', array(':node_vids' => $node_vids));
+
+  // The same file may be attached to several nodes (e.g. translated nodes) so
+  // simply calling db_query()->fetchAllAssoc('fid') would return one node
+  // per file. Instead we build one array with the file ids for
+  // file_load_multiple() and another array with upload records so we can match
+  // files back to the nodes.
+  $fids = array();
+  $uploads = array();
+  foreach ($result as $record) {
+    $fids[] = $record->fid;
+    $uploads[] = $record;
+  }
+
+  $files = file_load_multiple($fids);
+  foreach ($uploads as $upload) {
+    $nodes[$upload->nid]->files[$upload->fid] = $files[$upload->fid];
   }
 }
 
@@ -324,7 +352,7 @@ function upload_nodeapi_view($node, $teaser, $page) {
         );
       }
     }
-    
+
     upload_nodeapi_links($node, $teaser);
   }
 }
@@ -607,19 +635,6 @@ function theme_upload_form_new($form) {
   drupal_add_tabledrag('upload-attachments', 'order', 'sibling', 'upload-weight');
   $output = drupal_render($form);
   return $output;
-}
-
-function upload_load($node) {
-  $files = array();
-
-  if ($node->vid) {
-    $result = db_query('SELECT u.fid FROM {upload} u WHERE u.vid = :vid ORDER BY u.weight, u.fid', array(':vid' => $node->vid));
-    foreach ($result as $file) {
-      $files[$file->fid] = file_load($file->fid);
-    }
-  }
-
-  return $files;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.147 2008/12/30 16:43:14 dries Exp $
+// $Id: file.inc,v 1.148 2008/12/31 11:08:47 dries Exp $
 
 /**
  * @file
@@ -267,55 +267,60 @@ function file_check_location($source, $directory = '') {
 }
 
 /**
+ * Load file objects from the database.
+ *
+ * @param $fids
+ *   An array of file IDs.
+ * @param $conditions
+ *   An array of conditions to match against the {files} table. These
+ *   should be supplied in the form array('field_name' => 'field_value').
+ * @return
+ *  An array of file objects, indexed by fid.
+ *
+ * @see hook_file_load()
+ * @see file_load()
+ */
+function file_load_multiple($fids = array(), $conditions = array()) {
+  $query = db_select('files', 'f')->fields('f');
+
+  // If the $fids array is populated, add those to the query.
+  if ($fids) {
+    $query->condition('f.fid', $fids, 'IN');
+  }
+
+  // If the conditions array is populated, add those to the query.
+  if ($conditions) {
+    foreach ($conditions as $field => $value) {
+      $query->condition('f.' . $field, $value);
+    }
+  }
+  $files = $query->execute()->fetchAllAssoc('fid');
+
+  // Invoke hook_file_load() on the terms loaded from the database
+  // and add them to the static cache.
+  if (!empty($files)) {
+    foreach (module_implements('file_load') as $module) {
+      $function = $module . '_file_load';
+      $function($files);
+    }
+  }
+  return $files;
+}
+
+/**
  * Load a file object from the database.
  *
- * @param $param
- *   Either the id of a file or an array of conditions to match against in the
- *   database query.
- * @param $reset
- *   Whether to reset the internal file_load cache.
+ * @param $fid
+ *  A file ID.
  * @return
  *   A file object.
  *
  * @see hook_file_load()
+ * @see file_load_multiple()
  */
-function file_load($param, $reset = NULL) {
-  static $files = array();
-
-  if ($reset) {
-    $files = array();
-  }
-
-  if (is_numeric($param)) {
-    if (isset($files[(string) $param])) {
-      return is_object($files[$param]) ? clone $files[$param] : $files[$param];
-    }
-    $result = db_query('SELECT f.* FROM {files} f WHERE f.fid = :fid', array(':fid' => $param));
-  }
-  elseif (is_array($param)) {
-    // Turn the conditions into a query.
-    $cond = array();
-    $arguments = array();
-    foreach ($param as $key => $value) {
-      $cond[] = 'f.' . db_escape_table($key) . " = '%s'";
-      $arguments[] = $value;
-    }
-    $result = db_query('SELECT f.* FROM {files} f WHERE ' . implode(' AND ', $cond), $arguments);
-  }
-  else {
-    return FALSE;
-  }
-  $file = $result->fetch(PDO::FETCH_OBJ);
-
-  if ($file && $file->fid) {
-    // Allow modules to add or change the file object.
-    module_invoke_all('file_load', $file);
-
-    // Cache the fully loaded value.
-    $files[(string) $file->fid] = clone $file;
-  }
-
-  return $file;
+function file_load($fid) {
+  $files = file_load_multiple(array($fid), array());
+  return reset($files);
 }
 
 /**

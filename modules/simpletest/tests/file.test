@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.15 2008/12/30 16:43:18 dries Exp $
+// $Id: file.test,v 1.16 2008/12/31 11:08:47 dries Exp $
 
 /**
  *  @file
@@ -338,7 +338,7 @@ class FileSaveUploadTest extends FileHookTestCase {
    * Test the file_save_upload() function.
    */
   function testFileSaveUpload() {
-    $max_fid_before = db_result(db_query('SELECT MAX(fid) AS fid FROM {files}'));
+    $max_fid_before = db_query('SELECT MAX(fid) AS fid FROM {files}')->fetchField();
     $upload_user = $this->drupalCreateUser(array('access content'));
     $this->drupalLogin($upload_user);
 
@@ -354,7 +354,23 @@ class FileSaveUploadTest extends FileHookTestCase {
 
     $max_fid_after = db_result(db_query('SELECT MAX(fid) AS fid FROM {files}'));
     $this->assertTrue($max_fid_after > $max_fid_before, t('A new file was created.'));
-    $this->assertTrue(file_load($max_fid_after), t('Loaded the file.'));
+    $file1 = file_load($max_fid_after);
+    $this->assertTrue($file1, t('Loaded the file.'));
+
+    // Upload a second file.
+    $max_fid_before = db_query('SELECT MAX(fid) AS fid FROM {files}')->fetchField();
+    $image2 = current($this->drupalGetTestFiles('image'));
+    $edit = array('files[file_test_upload]' => realpath($image2->filename));
+    $this->drupalPost('file-test/upload', $edit, t('Submit'));
+    $max_fid_after = db_query('SELECT MAX(fid) AS fid FROM {files}')->fetchField();
+
+    $file2 = file_load($max_fid_after);
+    $this->assertTrue($file2);
+
+    // Load both files using file_load_multiple().
+    $files = file_load_multiple(array($file1->fid, $file2->fid));
+    $this->assertTrue(isset($files[$file1->fid]), t('File was loaded successfully'));
+    $this->assertTrue(isset($files[$file2->fid]), t('File was loaded successfully'));
   }
 }
 
@@ -781,7 +797,7 @@ class FileDeleteTest extends FileHookTestCase {
     $this->assertFileHookCalled('references');
     $this->assertFileHookCalled('delete');
     $this->assertFalse(file_exists($file->filepath), t("Test file has actually been deleted."));
-    $this->assertFalse(file_load(array('filepath' => $file->filepath)), t("File was removed from the database."));
+    $this->assertFalse(file_load($file->fid), t('File was removed from the database.'));
 
     // TODO: implement hook_file_references() in file_test.module and report a
     // file in use and test the $force parameter.
@@ -814,7 +830,7 @@ class FileMoveTest extends FileHookTestCase {
     $this->assertFileHookCalled('update');
     $this->assertEqual($file->fid, $file->fid, t("File id $file->fid is unchanged after move."));
 
-    $loaded_file = file_load($file->fid, TRUE);
+    $loaded_file = file_load($file->fid);
     $this->assertTrue($loaded_file, t("File can be loaded from the database."));
     $this->assertEqual($file->filename, $loaded_file->filename, t("File name was updated correctly in the database."));
     $this->assertEqual($file->filepath, $loaded_file->filepath, t("File path was updated correctly in the database."));
@@ -852,7 +868,7 @@ class FileCopyTest extends FileHookTestCase {
     $this->assertTrue(file_exists($file->filepath), t('The copied file exists.'));
 
     // Check that the changes were actually saved to the database.
-    $loaded_file = file_load($file->fid, TRUE);
+    $loaded_file = file_load($file->fid);
     $this->assertTrue($loaded_file, t("File can be loaded from the database."));
     $this->assertEqual($file->filename, $loaded_file->filename, t("File name was updated correctly in the database."));
     $this->assertEqual($file->filepath, $loaded_file->filepath, t("File path was updated correctly in the database."));
@@ -884,7 +900,7 @@ class FileLoadTest extends FileHookTestCase {
    * Try to load a non-existent file by filepath.
    */
   function testLoadMissingFilepath() {
-    $this->assertFalse(file_load(array('filepath' => 'misc/druplicon.png')), t("Try to load a file that doesn't exist in the database fails."));
+    $this->assertFalse(reset(file_load_multiple(array(), array('filepath' => 'misc/druplicon.png'))), t("Try to load a file that doesn't exist in the database fails."));
     $this->assertFileHookCalled('load', 0);
   }
 
@@ -892,14 +908,40 @@ class FileLoadTest extends FileHookTestCase {
    * Try to load a non-existent file by status.
    */
   function testLoadInvalidStatus() {
-    $this->assertFalse(file_load(array('status' => -99)), t("Trying to load a file with an invalid status fails."));
+    $this->assertFalse(reset(file_load_multiple(array(), array('status' => -99))), t("Trying to load a file with an invalid status fails."));
     $this->assertFileHookCalled('load', 0);
   }
 
   /**
-   * This will test lading file data from the database.
+   * Load a single file and ensure that the correct values are returned.
    */
-  function testFileLoad() {
+  function testSingleValues() {
+    // Create a new file object from scratch so we know the values.
+    $file = array(
+      'uid' => 1,
+      'filename' => 'druplicon.png',
+      'filepath' => 'misc/druplicon.png',
+      'filemime' => 'image/png',
+      'timestamp' => 1,
+      'status' => FILE_STATUS_PERMANENT,
+    );
+    $file = file_save($file);
+
+    $by_fid_file = file_load($file->fid);
+    $this->assertFileHookCalled('load', 1);
+    $this->assertTrue(is_object($by_fid_file), t('file_load() returned an object.'));
+    $this->assertEqual($by_fid_file->fid, $file->fid, t("Loading by fid got the same fid."), 'File');
+    $this->assertEqual($by_fid_file->filepath, $file->filepath, t("Loading by fid got the correct filepath."), 'File');
+    $this->assertEqual($by_fid_file->filename, $file->filename, t("Loading by fid got the correct filename."), 'File');
+    $this->assertEqual($by_fid_file->filemime, $file->filemime, t("Loading by fid got the correct MIME type."), 'File');
+    $this->assertEqual($by_fid_file->status, $file->status, t("Loading by fid got the correct status."), 'File');
+    $this->assertTrue($by_fid_file->file_test['loaded'], t('file_test_file_load() was able to modify the file during load.'));
+  }
+
+  /**
+   * This will test loading file data from the database.
+   */
+  function testMultiple() {
     // Create a new file object.
     $file = array(
       'uid' => 1,
@@ -913,25 +955,24 @@ class FileLoadTest extends FileHookTestCase {
 
     // Load by path.
     file_test_reset();
-    $by_path_file = file_load(array('filepath' => $file->filepath));
-    $this->assertFileHookCalled('load');
+    $by_path_files = file_load_multiple(array(), array('filepath' => $file->filepath));
+    $this->assertFileHookCalled('load', 1);
+    $this->assertEqual(1, count($by_path_files), t('file_load_multiple() returned an array of the correct size.'));
+    $by_path_file = reset($by_path_files);
     $this->assertTrue($by_path_file->file_test['loaded'], t('file_test_file_load() was able to modify the file during load.'));
     $this->assertEqual($by_path_file->fid, $file->fid, t("Loading by filepath got the correct fid."), 'File');
 
     // Load by fid.
     file_test_reset();
-    $by_fid_file = file_load($file->fid);
-    $this->assertFileHookCalled('load', 0);
+    $by_fid_files = file_load_multiple(array($file->fid), array());
+    $this->assertFileHookCalled('load', 1);
+    $this->assertEqual(1, count($by_fid_files), t('file_load_multiple() returned an array of the correct size.'));
+    $by_fid_file = reset($by_fid_files);
     $this->assertTrue($by_fid_file->file_test['loaded'], t('file_test_file_load() was able to modify the file during load.'));
-    $this->assertEqual($by_fid_file->filepath, $file->filepath, t("Loading by fid got the correct filepath."), 'File');
-
-    // Load again by fid but use the reset param to reload.
-    file_test_reset();
-    $by_fid_file = file_load($file->fid, TRUE);
-    $this->assertFileHookCalled('load');
     $this->assertEqual($by_fid_file->filepath, $file->filepath, t("Loading by fid got the correct filepath."), 'File');
   }
 }
+
 /**
  * Tests the file_save() function.
  */
