@@ -471,13 +471,13 @@ function drupal_substr($text, $start, $length = NULL) {
   }
   else {
     $strlen = strlen($text);
-    // Find the starting byte offset
+    // Find the starting byte offset.
     $bytes = 0;
     if ($start > 0) {
       // Count all the continuation bytes from the start until we have found
-      // $start characters
+      // $start characters or the end of the string.
       $bytes = -1; $chars = -1;
-      while ($bytes < $strlen && $chars < $start) {
+      while ($bytes < $strlen - 1 && $chars < $start) {
         $bytes++;
         $c = ord($text[$bytes]);
         if ($c < 0x80 || $c >= 0xC0) {
@@ -487,7 +487,7 @@ function drupal_substr($text, $start, $length = NULL) {
     }
     elseif ($start < 0) {
       // Count all the continuation bytes from the end until we have found
-      // abs($start) characters
+      // abs($start) characters.
       $start = abs($start);
       $bytes = $strlen; $chars = 0;
       while ($bytes > 0 && $chars < $start) {
@@ -500,37 +500,48 @@ function drupal_substr($text, $start, $length = NULL) {
     }
     $istart = $bytes;
 
-    // Find the ending byte offset
+    // Find the ending byte offset.
     if ($length === NULL) {
-      $bytes = $strlen - 1;
+      $iend = $strlen;
     }
     elseif ($length > 0) {
       // Count all the continuation bytes from the starting index until we have
-      // found $length + 1 characters. Then backtrack one byte.
-      $bytes = $istart; $chars = 0;
-      while ($bytes < $strlen && $chars < $length) {
-        $bytes++;
-        $c = ord($text[$bytes]);
+      // found $length characters or reached the end of the string, then
+      // backtrace one byte.
+      $iend = $istart - 1; $chars = -1;
+      while ($iend < $strlen - 1 && $chars < $length) {
+        $iend++;
+        $c = ord($text[$iend]);
         if ($c < 0x80 || $c >= 0xC0) {
           $chars++;
         }
       }
-      $bytes--;
+      // Backtrace one byte if the end of the string was not reached.
+      if ($iend < $strlen - 1) {
+        $iend--;
+      }
     }
     elseif ($length < 0) {
       // Count all the continuation bytes from the end until we have found
-      // abs($length) characters
+      // abs($start) characters, then backtrace one byte.
       $length = abs($length);
-      $bytes = $strlen - 1; $chars = 0;
-      while ($bytes >= 0 && $chars < $length) {
-        $c = ord($text[$bytes]);
+      $iend = $strlen; $chars = 0;
+      while ($iend > 0 && $chars < $length) {
+        $iend--;
+        $c = ord($text[$iend]);
         if ($c < 0x80 || $c >= 0xC0) {
           $chars++;
         }
-        $bytes--;
+      }
+      // Backtrace one byte if we are not at the begining of the string.
+      if ($iend > 0) {
+        $iend--;
       }
     }
-    $iend = $bytes;
+    else {
+      // $length == 0, return an empty string.
+      $iend = $istart - 1;
+    }
 
     return substr($text, $istart, max(0, $iend - $istart + 1));
   }
