@@ -1,5 +1,8 @@
 /* $Id$ */
 
+#comments {
+  margin-top: 15px;
+}
 .indented {
   margin-left: 25px; /* LTR */
 }

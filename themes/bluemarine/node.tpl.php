@@ -10,4 +10,5 @@
     <div class="taxonomy"><?php print $terms?></div>
     <div class="content"><?php print $content?></div>
     <?php if ($links) { ?><div class="links">&raquo; <?php print $links?></div><?php }; ?>
+    <?php print $comments; ?>
   </div>

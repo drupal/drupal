@@ -53,5 +53,5 @@ function poll_votes($node) {
 function poll_results($node) {
   drupal_set_title($node->title);
   $node->show_results = TRUE;
-  return node_show($node, 0);
+  return node_show($node);
 }

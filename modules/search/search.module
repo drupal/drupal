@@ -281,10 +281,7 @@ function search_cron() {
   register_shutdown_function('search_update_totals');
 
   // Update word index
-  foreach (module_implements('update_index') as $module) {
-    $function = $module . '_update_index';
-    $function();
-  }
+  module_invoke_all('update_index');
 }
 
 /**

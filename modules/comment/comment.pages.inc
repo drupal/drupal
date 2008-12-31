@@ -96,7 +96,7 @@ function comment_reply($node, $pid = NULL) {
       }
 
       // Should we show the reply box?
-      if (node_comment_mode($node->nid) != COMMENT_NODE_READ_WRITE) {
+      if ($node->comment != COMMENT_NODE_READ_WRITE) {
         drupal_set_message(t("This discussion is closed: you can't post new comments."), 'error');
         drupal_goto("node/$node->nid");
       }

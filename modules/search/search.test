@@ -300,7 +300,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
     }
 
     // Update the search index.
-    node_update_index();
+    module_invoke_all('update_index');
     search_update_totals();
 
     // Refresh variables after the treatment.

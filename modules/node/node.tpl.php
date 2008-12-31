@@ -8,6 +8,7 @@
  * Available variables:
  * - $title: the (sanitized) title of the node.
  * - $content: Node body or teaser depending on $teaser flag.
+ * - $comments: the themed list of comments (if any).
  * - $picture: The authors picture of the node output from
  *   theme_user_picture().
  * - $date: Formatted creation date (use $created to reformat with
@@ -70,4 +71,7 @@
   </div>
 
   <?php print $links; ?>
+  
+  <?php print $comments; ?>
+  
 </div>
