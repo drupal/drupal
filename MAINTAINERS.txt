@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.24 2008/11/10 05:27:56 webchick Exp $
+// $Id: MAINTAINERS.txt,v 1.25 2009/01/01 21:30:28 dries Exp $
 
 List of maintainers
 --------------------------------------------------------------------------------
@@ -8,6 +8,10 @@ James Walker 'walkah' <http://drupal.org/user/1531>
 
 DATABASE SYSTEM
 Larry Garfield 'Crell' <http://drupal.org/user/26398>
+
+ - SQLITE DRIVER
+   Damien Tournoud 'DamZ' <http://drupal.org/user/22211>
+   Károly Négyesi 'chx' <http://drupal.org/user/9446>
 
 DOCUMENTATION COORDINATOR
 Steven Peck 'sepeck' <http://drupal.org/user/5195>
