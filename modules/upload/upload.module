@@ -528,7 +528,7 @@ function upload_save(&$node) {
         ->condition('vid', $node->vid, '=')
         ->execute();
     }
-    $file->status &= FILE_STATUS_PERMANENT;
+    $file->status |= FILE_STATUS_PERMANENT;
     $file = file_save($file);
   }
 }

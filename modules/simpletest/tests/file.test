@@ -86,7 +86,7 @@ class FileTestCase extends DrupalWebTestCase {
     $file->uid = 1;
     $file->timestamp = REQUEST_TIME;
     $file->filesize = filesize($file->filepath);
-    $file->status = FILE_STATUS_TEMPORARY;
+    $file->status = 0;
     $this->assertNotIdentical(drupal_write_record('files', $file), FALSE, t('The file was added to the database.'));
 
     return $file;
