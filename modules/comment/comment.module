@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.677 2008/12/31 12:04:36 dries Exp $
+// $Id: comment.module,v 1.678 2009/01/02 21:17:35 dries Exp $
 
 /**
  * @file
@@ -1418,7 +1418,7 @@ function comment_form(&$form_state, $edit, $title = NULL) {
         '#parents' => array('status'),
         '#title' => t('Status'),
         '#default_value' =>  $status,
-        '#options' => array(t('Published'), t('Not published')),
+        '#options' => array(t('Not published'), t('Published')),
         '#weight' => -1,
       );
     }
