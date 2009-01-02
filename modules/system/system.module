@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.654 2008/12/28 19:11:31 dries Exp $
+// $Id: system.module,v 1.655 2009/01/02 20:28:09 dries Exp $
 
 /**
  * @file
@@ -2156,7 +2156,7 @@ function system_time_zones($blank = NULL) {
     // reasons and should not be used, the list is filtered by a regular
     // expression.
     if (preg_match('!^((Africa|America|Antarctica|Arctic|Asia|Atlantic|Australia|Europe|Indian|Pacific)/|UTC$)!', $zone)) {
-      $zones[$zone] = t('@zone: @date', array('@zone' => t($zone), '@date' => format_date(REQUEST_TIME, 'custom', variable_get('date_format_long', 'l, F j, Y - H:i') . ' O', $zone)));
+      $zones[$zone] = t('@zone: @date', array('@zone' => t(str_replace('_', ' ', $zone)), '@date' => format_date(REQUEST_TIME, 'custom', variable_get('date_format_long', 'l, F j, Y - H:i') . ' O', $zone)));
     }
   }
   // Sort the translated time zones alphabetically.
