@@ -108,7 +108,7 @@ function node_schema() {
       'node_changed'        => array('changed'),
       'node_created'        => array('created'),
       'node_moderate'       => array('moderate'),
-      'node_promote_status' => array('promote', 'status'),
+      'node_frontpage'      => array('promote', 'status', 'sticky', 'created'),
       'node_status_type'    => array('status', 'type', 'nid'),
       'node_title_type'     => array('title', array('type', 4)),
       'node_type'           => array(array('type', 4)),
@@ -403,6 +403,16 @@ function node_update_7000() {
 function node_update_7001() {
   $ret = array();
   db_rename_table($ret, 'node_revisions', 'node_revision');
+  return $ret;
+}
+
+/**
+ * Extend the node_promote_status index to include all fields required for the node page query.
+ */
+function node_update_7002() {
+  $ret = array();
+  db_drop_index($ret, 'node', 'node_promote_status');
+  db_add_index($ret, 'node', 'node_frontpage', array('promote', 'status', 'sticky', 'created'));
   return $ret;
 }
 
