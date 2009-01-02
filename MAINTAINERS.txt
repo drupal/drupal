@@ -14,7 +14,7 @@ Larry Garfield 'Crell' <http://drupal.org/user/26398>
    Károly Négyesi 'chx' <http://drupal.org/user/9446>
 
 DOCUMENTATION COORDINATOR
-Steven Peck 'sepeck' <http://drupal.org/user/5195>
+Addison Berry 'add1sun' <http://drupal.org/user/65088>
 
 FORM SYSTEM
 Károly Négyesi 'chx' <http://drupal.org/user/9446>
