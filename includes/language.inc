@@ -25,7 +25,7 @@ function language_initialize() {
     case LANGUAGE_NEGOTIATION_DOMAIN:
       foreach ($languages as $language) {
         $parts = parse_url($language->domain);
-        if (!empty($parts['host']) && ($_SERVER['SERVER_NAME'] == $parts['host'])) {
+        if (!empty($parts['host']) && ($_SERVER['HTTP_HOST'] == $parts['host'])) {
           return $language;
         }
       }
