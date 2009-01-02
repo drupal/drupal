@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.16 2008/12/31 11:08:47 dries Exp $
+// $Id: file.test,v 1.17 2009/01/02 21:45:11 dries Exp $
 
 /**
  *  @file
@@ -86,7 +86,7 @@ class FileTestCase extends DrupalWebTestCase {
     $file->uid = 1;
     $file->timestamp = REQUEST_TIME;
     $file->filesize = filesize($file->filepath);
-    $file->status = FILE_STATUS_TEMPORARY;
+    $file->status = 0;
     $this->assertNotIdentical(drupal_write_record('files', $file), FALSE, t('The file was added to the database.'));
 
     return $file;

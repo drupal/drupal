@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.223 2008/12/31 11:08:47 dries Exp $
+// $Id: upload.module,v 1.224 2009/01/02 21:45:11 dries Exp $
 
 /**
  * @file
@@ -528,7 +528,7 @@ function upload_save(&$node) {
         ->condition('vid', $node->vid, '=')
         ->execute();
     }
-    $file->status &= FILE_STATUS_PERMANENT;
+    $file->status |= FILE_STATUS_PERMANENT;
     $file = file_save($file);
   }
 }

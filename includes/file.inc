@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.148 2008/12/31 11:08:47 dries Exp $
+// $Id: file.inc,v 1.149 2009/01/02 21:45:11 dries Exp $
 
 /**
  * @file
@@ -20,9 +20,10 @@
  * - filepath - Path of the file relative to Drupal root.
  * - filemime - The file's MIME type.
  * - filesize - The size of the file in bytes.
- * - status - A bitmapped field indicating the status of the file the least
- *   sigifigant bit indicates temporary (1) or permanent (0). Temporary files
- *   older than DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during a cron run.
+ * - status - A bitmapped field indicating the status of the file. The first 8
+ *   bits are reserved for Drupal core. The least sigifigant bit indicates
+ *   temporary (0) or permanent (1). Temporary files older than
+ *   DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during cron runs.
  * - timestamp - UNIX timestamp for the date the file was added to the database.
  */
 
@@ -68,19 +69,10 @@ define('FILE_EXISTS_REPLACE', 1);
 define('FILE_EXISTS_ERROR', 2);
 
 /**
- * File status -- File has been temporarily saved to the {files} tables.
- *
- * Drupal's file garbage collection will delete the file and remove it from the
- * files table after a set period of time.
- */
-define('FILE_STATUS_TEMPORARY', 0);
-
-/**
- * File status -- File has been permanently saved to the {files} tables.
- *
- * If you wish to add custom statuses for use by contrib modules please expand
- * as binary flags and consider the first 8 bits reserved.
- * (0,1,2,4,8,16,32,64,128).
+ * File status -- This bit in the status indicates that the file is permanent
+ * and should not be deleted during file garbage collection process. Temporary
+ * files older than DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during cron
+ * runs.
  */
 define('FILE_STATUS_PERMANENT', 1);
 
@@ -854,7 +846,7 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
     // Begin building file object.
     $file = new stdClass();
     $file->uid      = $user->uid;
-    $file->status   = FILE_STATUS_TEMPORARY;
+    $file->status   = 0;
     $file->filename = file_munge_filename(trim(basename($_FILES['files']['name'][$source]), '.'), $extensions);
     $file->filepath = $_FILES['files']['tmp_name'][$source];
     $file->filemime = file_get_mimetype($file->filename);
@@ -1138,7 +1130,7 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
     $file->filename = basename($file->filepath);
     $file->filemime = file_get_mimetype($file->filepath);
     $file->uid      = $user->uid;
-    $file->status   = FILE_STATUS_PERMANENT;
+    $file->status  |= FILE_STATUS_PERMANENT;
     return file_save($file);
   }
   return FALSE;
@@ -1758,7 +1750,6 @@ function file_get_mimetype($filename, $mapping = NULL) {
 
   return 'application/octet-stream';
 }
-
 /**
  * @} End of "defgroup file".
  */
