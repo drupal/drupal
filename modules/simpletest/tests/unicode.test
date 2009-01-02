@@ -162,6 +162,7 @@ class UnicodeUnitTest extends DrupalWebTestCase {
       'Drupal' => 'Drupal',
       '<script>' => '<script>',
       '&lt;script&gt;' => '<script>',
+      '&#60;script&#62;' => '<script>',
       '&amp;lt;script&amp;gt;' => '&lt;script&gt;',
       '"' => '"',
       '&#34;' => '"',
@@ -178,6 +179,7 @@ class UnicodeUnitTest extends DrupalWebTestCase {
       '&#8594;' => '→',
       '➼' => '➼',
       '&#10172;' => '➼',
+      '&euro;' => '€',
     );
     foreach ($testcase as $input => $output) {
       $this->assertEqual(decode_entities($input), $output, t('Make sure the decoded entity of @input is @output', array('@input' => $input, '@output' => $output)));
@@ -189,6 +191,7 @@ class UnicodeUnitTest extends DrupalWebTestCase {
       'Drupal' => 'Drupal',
       '<script>' => '<script>',
       '&lt;script&gt;' => '&lt;script>',
+      '&#60;script&#62;' => '&#60;script>',
       '&amp;lt;script&amp;gt;' => '&amp;lt;script&amp;gt;',
       '"' => '"',
       '&#34;' => '&#34;',
@@ -205,6 +208,7 @@ class UnicodeUnitTest extends DrupalWebTestCase {
       '&#8594;' => '→',
       '➼' => '➼',
       '&#10172;' => '➼',
+      '&euro;' => '€',
     );
     $exclude = array('<', '&', '"');
     foreach ($testcase as $input => $output) {
