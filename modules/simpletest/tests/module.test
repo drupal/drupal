@@ -1,0 +1,73 @@
+<?php
+// $Id $
+
+/**
+ * @file
+ * Tests for the module API.
+ */
+
+/**
+ * Unit tests for the module API.
+ */
+class ModuleUnitTest extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Module API'),
+      'description' => t('Test low-level module functions.'),
+      'group' => t('Module'),
+    );
+  }
+
+  /**
+   * The basic functionality of module_list().
+   */
+  function testModuleList() {
+    $base_module_list = drupal_get_profile_modules('default', 'en');
+    // Key the list by module name.
+    $base_module_list = array_combine($base_module_list, $base_module_list);
+    // All default profile modules have a weight equal to 0, the default sort
+    // order is thus simply alphabetical.
+    ksort($base_module_list);
+    $this->assertModuleList($base_module_list, t('Default profile'));
+
+    // Try to install a new module.
+    drupal_install_modules(array('path'));
+    $base_module_list['path'] = 'path';
+    ksort($base_module_list);
+    $this->assertModuleList($base_module_list, t('After adding a module'));
+
+    // Try to mess with the module weights.
+    db_query("UPDATE {system} SET weight = 20 WHERE name = 'path' AND type = 'module'");
+    // Reset the module list.
+    module_list(TRUE);
+    // Move path at the end of the array.
+    unset($base_module_list['path']);
+    $base_module_list['path'] = 'path';
+    $this->assertModuleList($base_module_list, t('After changing weights'));
+
+    // Test the fixed list feature.
+    $fixed_list = array(
+      'system' => array('filename' => drupal_get_path('module', 'system')),
+      'menu' => array('filename' => drupal_get_path('module', 'menu')),
+    );
+    module_list(FALSE, FALSE, $fixed_list);
+    $new_module_list = array_combine(array_keys($fixed_list), array_keys($fixed_list));
+    $this->assertModuleList($new_module_list, t('When using a fixed list'));
+
+    // Reset the module list.
+    module_list(TRUE);
+    $this->assertModuleList($base_module_list, t('After reset'));
+  }
+
+  /**
+   * Assert that module_list() return the expected values.
+   *
+   * @param $expected_values
+   *   The expected values, sorted by weight and file name.
+   */
+  protected function assertModuleList(Array $expected_values, $condition) {
+    $this->assertIdentical($expected_values, module_list(), t('@condition: module_list() returns correct results', array('@condition' => $condition)));
+    ksort($expected_values);
+    $this->assertIdentical($expected_values, module_list(FALSE, TRUE), t('@condition: module_list() returns correctly sorted results', array('@condition' => $condition)));
+  }
+}

@@ -47,8 +47,8 @@ function module_list($refresh = FALSE, $sort = FALSE, $fixed_list = NULL) {
   static $list = array(), $sorted_list;
 
   if (empty($list) || $refresh || $fixed_list) {
-    unset($sorted_list);
     $list = array();
+    $sorted_list = NULL;
     if ($fixed_list) {
       foreach ($fixed_list as $name => $module) {
         drupal_get_filename('module', $name, $module['filename']);
