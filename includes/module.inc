@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.135 2008/12/20 18:24:33 dries Exp $
+// $Id: module.inc,v 1.136 2009/01/03 08:45:14 dries Exp $
 
 /**
  * @file
@@ -47,8 +47,8 @@ function module_list($refresh = FALSE, $sort = FALSE, $fixed_list = NULL) {
   static $list = array(), $sorted_list;
 
   if (empty($list) || $refresh || $fixed_list) {
-    unset($sorted_list);
     $list = array();
+    $sorted_list = NULL;
     if ($fixed_list) {
       foreach ($fixed_list as $name => $module) {
         drupal_get_filename('module', $name, $module['filename']);
