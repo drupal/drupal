@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.30 2009/01/03 11:20:59 dries Exp $
+// $Id: path.inc,v 1.31 2009/01/03 13:17:25 dries Exp $
 
 /**
  * @file
@@ -66,10 +66,10 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
         return $map[$path_language][$path];
       }
       // Get the most fitting result falling back with alias without language
-      $alias = db_query("SELECT dst FROM {url_alias} WHERE src = :src AND language IN(':language', '') ORDER BY language DESC", array(
+      $alias = db_query("SELECT dst FROM {url_alias} WHERE src = :src AND language IN(:language, '') ORDER BY language DESC", array(
         ':src' => $path,
         ':language' => $path_language))
-        ->fetchField;
+        ->fetchField();
       $map[$path_language][$path] = $alias;
       return $alias;
     }
@@ -83,7 +83,7 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
         if ($src = db_query("SELECT src FROM {url_alias} WHERE dst = :dst AND language IN(:language, '') ORDER BY language DESC", array(
                      ':dst' => $path,
                      ':language' => $path_language))
-            ->fetchField) {
+            ->fetchField()) {
           $map[$path_language][$src] = $path;
         }
         else {
