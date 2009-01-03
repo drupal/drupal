@@ -52,7 +52,7 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
 
   // Use $count to avoid looking up paths in subsequent calls if there simply are no aliases
   if (!isset($count)) {
-    $count = db_result(db_query('SELECT COUNT(pid) FROM {url_alias}'));
+    $count = db_query('SELECT COUNT(pid) FROM {url_alias}')->fetchField();
   }
 
   if ($action == 'wipe') {
@@ -66,7 +66,10 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
         return $map[$path_language][$path];
       }
       // Get the most fitting result falling back with alias without language
-      $alias = db_result(db_query("SELECT dst FROM {url_alias} WHERE src = '%s' AND language IN('%s', '') ORDER BY language DESC", $path, $path_language));
+      $alias = db_query("SELECT dst FROM {url_alias} WHERE src = :src AND language IN(':language', '') ORDER BY language DESC", array(
+        ':src' => $path,
+        ':language' => $path_language))
+        ->fetchField;
       $map[$path_language][$path] = $alias;
       return $alias;
     }
@@ -77,7 +80,10 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
       $src = '';
       if (!isset($map[$path_language]) || !($src = array_search($path, $map[$path_language]))) {
         // Get the most fitting result falling back with alias without language
-        if ($src = db_result(db_query("SELECT src FROM {url_alias} WHERE dst = '%s' AND language IN('%s', '') ORDER BY language DESC", $path, $path_language))) {
+        if ($src = db_query("SELECT src FROM {url_alias} WHERE dst = :dst AND language IN(:language, '') ORDER BY language DESC", array(
+                     ':dst' => $path,
+                     ':language' => $path_language))
+            ->fetchField) {
           $map[$path_language][$src] = $path;
         }
         else {
