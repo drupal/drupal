@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.6 2008/12/31 12:02:22 dries Exp $
+// $Id: node.api.php,v 1.7 2009/01/04 16:19:39 dries Exp $
 
 /**
  * @file
@@ -366,7 +366,7 @@ function hook_nodeapi_update_index($node) {
 }
 
 /**
- * The user has finished editing the node and is trying to preview or submit it. 
+ * The user has finished editing the node and is previewing or submitting it. 
  *
  * This hook can be used to check the node data. Errors should be set with 
  * form_set_error().

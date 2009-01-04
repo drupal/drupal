@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.459 2009/01/04 16:17:47 dries Exp $
+// $Id: theme.inc,v 1.460 2009/01/04 16:19:39 dries Exp $
 
 /**
  * @file
@@ -1983,7 +1983,7 @@ function template_preprocess_node(&$variables) {
   $variables['name']      = theme('username', $node);
   $variables['node_url']  = url('node/' . $node->nid);
   $variables['title']     = check_plain($node->title);
-  $variables['page']     = (bool)menu_get_object();
+  $variables['page']      = (bool)menu_get_object();
   
   if ($node->build_mode == NODE_BUILD_PREVIEW) {
     unset($node->content['links']);
@@ -1996,7 +1996,7 @@ function template_preprocess_node(&$variables) {
   $variables['links']     = !empty($node->content['links']) ? drupal_render($node->content['links']) : '';
   
   // Render any comments.
-  $variables['comments']     = !empty($node->content['comments']) ? drupal_render($node->content['comments']) : '';
+  $variables['comments']  = !empty($node->content['comments']) ? drupal_render($node->content['comments']) : '';
 
   // Render the rest of the node into $content.
   if (!empty($node->content['teaser'])) {

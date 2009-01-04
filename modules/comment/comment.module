@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.679 2009/01/04 16:10:48 dries Exp $
+// $Id: comment.module,v 1.680 2009/01/04 16:19:39 dries Exp $
 
 /**
  * @file
@@ -495,7 +495,7 @@ function comment_nodeapi_view($node, $teaser) {
     );
     
     // Append the list of comments to $node->content for node detail pages.
-    if ($node->comment && (bool)menu_get_object()) {
+    if ($node->comment && (bool)menu_get_object() && $node->build_mode != NODE_BUILD_PREVIEW) {
       $node->content['comments'] = array(
         '#markup' => comment_render($node),
       );
