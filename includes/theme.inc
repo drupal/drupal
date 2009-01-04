@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.458 2008/12/31 12:02:21 dries Exp $
+// $Id: theme.inc,v 1.459 2009/01/04 16:17:47 dries Exp $
 
 /**
  * @file
@@ -456,8 +456,8 @@ function list_themes($refresh = FALSE) {
     // Extract from the database only when it is available.
     // Also check that the site is not in the middle of an install or update.
     if (db_is_active() && !defined('MAINTENANCE_MODE')) {
-      $result = db_query("SELECT * FROM {system} WHERE type = '%s'", 'theme');
-      while ($theme = db_fetch_object($result)) {
+      $result = db_query("SELECT * FROM {system} WHERE type = :theme", array(':theme' => 'theme'));
+      foreach ($result as $theme) {
         if (file_exists($theme->filename)) {
           $theme->info = unserialize($theme->info);
           $themes[] = $theme;
