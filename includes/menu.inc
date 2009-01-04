@@ -727,11 +727,16 @@ function _menu_link_translate(&$item) {
 /**
  * Get a loaded object from a router item.
  *
- * menu_get_object() will provide you the current node on paths like node/5,
- * node/5/revisions/48 etc. menu_get_object('user') will give you the user
- * account on user/5 etc. Note - this function should never be called within a
- * _to_arg function (like user_current_to_arg()) since this may result in an
- * infinite recursion.
+ * menu_get_object() provides access to objects loaded by the current router
+ * item. For example, on the page node/%node, the router loads the %node object,
+ * and calling menu_get_object() will return that. Normally, it is necessary to
+ * specify the type of object referenced, however node is the default.
+ * The following example tests to see whether the node being displayed is of the
+ * "story" content type:
+ * @code
+ * $node = menu_get_object();
+ * $story = $node->type == 'story';
+ * @endcode
  *
  * @param $type
  *   Type of the object. These appear in hook_menu definitions as %type. Core
@@ -739,8 +744,9 @@ function _menu_link_translate(&$item) {
  *   forum_term, menu, menu_link, node, taxonomy_vocabulary, user. See the
  *   relevant {$type}_load function for more on each. Defaults to node.
  * @param $position
- *   The expected position for $type object. For node/%node this is 1, for
- *   comment/reply/%node this is 2. Defaults to 1.
+ *   The position of the object in the path, where the first path segment is 0.
+ *   For node/%node, the position of %node is 1, but for comment/reply/%node,
+ *   it's 2. Defaults to 1.
  * @param $path
  *   See menu_get_item() for more on this. Defaults to the current path.
  */
