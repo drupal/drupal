@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.31 2009/01/03 13:17:25 dries Exp $
+// $Id: path.inc,v 1.32 2009/01/04 20:04:32 dries Exp $
 
 /**
  * @file
@@ -148,12 +148,13 @@ function drupal_get_normal_path($path, $path_language = '') {
  * Return a component of the current Drupal path.
  *
  * When viewing a page at the path "admin/build/types", for example, arg(0)
- * would return "admin", arg(1) would return "content", and arg(2) would return
- * "types".
+ * returns "admin", arg(1) returns "content", and arg(2) returns "types".
  *
  * Avoid use of this function where possible, as resulting code is hard to read.
- * Instead, attempt to use named arguments in menu callback functions. See the
- * explanation in menu.inc for how to construct callbacks that take arguments.
+ * In menu callback functions, attempt to use named arguments. See the explanation
+ * in menu.inc for how to construct callbacks that take arguments. When attempting
+ * to use this function to load an element from the current path, e.g. loading the
+ * node on a node page, please use menu_get_object() instead.
  *
  * @param $index
  *   The index of the component, where each component is separated by a '/'
