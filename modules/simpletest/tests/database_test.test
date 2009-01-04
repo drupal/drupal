@@ -1695,7 +1695,7 @@ class DatabaseAlter2TestCase extends DatabaseTestCase {
   }
 
   /**
-   * Test that we can remove a range() value from a query.
+   * Test that we can remove a range() value from a query. This also tests hook_query_TAG_alter().
    */
   function testAlterRemoveRange() {
     $query = db_select('test');

@@ -4,14 +4,10 @@
 /**
  * Implementation of hook_query_alter().
  */
-function database_test_query_alter(SelectQuery $query) {
+function database_test_query_alter(QueryAlterableInterface $query) {
 
   if ($query->hasTag('database_test_alter_add_range')) {
     $query->range(0, 2);
-  }
-
-  if ($query->hasTag('database_test_alter_remove_range')) {
-    $query->range();
   }
 
   if ($query->hasTag('database_test_alter_add_join')) {
@@ -34,6 +30,14 @@ function database_test_query_alter(SelectQuery $query) {
     $expressions =& $query->getExpressions();
     $expressions['double_age']['expression'] = 'age*3';
   }
+}
+
+
+/**
+ * Implementation of hook_query_TAG_alter(). Called by DatabaseTestCase::testAlterRemoveRange.
+ */
+function database_test_query_database_test_alter_remove_range_alter(QueryAlterableInterface $query) {
+  $query->range();
 }
 
 /**

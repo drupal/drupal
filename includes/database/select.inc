@@ -291,7 +291,13 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
   }
 
   public function execute() {
+    // Modules may alter all queries or only those having a particular tag.
     drupal_alter('query', $this);
+    if (isset($this->alterTags)) {
+      foreach ($this->alterTags as $tag => $value) {
+        drupal_alter("query_$tag", $this);
+      }
+    }
 
     $args = $this->getArguments();
 

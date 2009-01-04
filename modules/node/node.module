@@ -2324,17 +2324,23 @@ function node_db_rewrite_sql($query, $primary_table, $primary_field) {
 }
 
 /**
- * Implementation of hook_query_alter().
+ * Implementation of hook_query_TAG_alter().
  */
-function node_query_alter(QueryAlterableInterface $query) {
-  if ($query->hasTag('node_access') && !node_access_view_all_nodes()) {
+function node_query_node_access_alter(QueryAlterableInterface $query) {
+  // Skip the extra expensive alterations if site has no node access control modules.
+  if (!node_access_view_all_nodes()) {
+    // Prevent duplicate records.
     $query->distinct();
+    // The recognized operations are 'view', 'update', 'delete'.
     if (!$op = $query->getMetaData('op')) {
       $op = 'view';
     }
+    // Skip the extra joins and conditions for node admins.
     if (!user_access('bypass node access')) {
+      // The node_access table has the access grants for any given node.
       $access_alias = $query->join('node_access', 'na', 'na.nid = n.nid');
       $or = db_or();
+      // If any grant exists for the specified user, then user has access to the node for the specified operation.
       foreach (node_access_grants($op, $query->getMetaData('account')) as $realm => $gids) {
         foreach ($gids as $gid) {
           $or->condition(db_and()
