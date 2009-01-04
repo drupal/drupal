@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.26 2009/01/02 21:15:00 dries Exp $
+// $Id: MAINTAINERS.txt,v 1.27 2009/01/04 19:47:28 dries Exp $
 
 List of maintainers
 --------------------------------------------------------------------------------
@@ -8,6 +8,10 @@ James Walker 'walkah' <http://drupal.org/user/1531>
 
 DATABASE SYSTEM
 Larry Garfield 'Crell' <http://drupal.org/user/26398>
+
+ - POSTGRESQL DRIVER
+   Damien Tournoud 'DamZ' <http://drupal.org/user/22211>
+   Josh Waihi 'fiasco' <http://drupal.org/user/188162>
 
  - SQLITE DRIVER
    Damien Tournoud 'DamZ' <http://drupal.org/user/22211>
