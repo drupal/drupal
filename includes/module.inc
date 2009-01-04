@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.136 2009/01/03 08:45:14 dries Exp $
+// $Id: module.inc,v 1.137 2009/01/04 18:09:34 dries Exp $
 
 /**
  * @file
@@ -57,7 +57,7 @@ function module_list($refresh = FALSE, $sort = FALSE, $fixed_list = NULL) {
     }
     else {
       $result = db_query("SELECT name, filename FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, filename ASC");
-      while ($module = db_fetch_object($result)) {
+      foreach ($result as $module) {
         if (file_exists($module->filename)) {
           drupal_get_filename('module', $module->name, $module->filename);
           $list[$module->name] = $module->name;
@@ -119,12 +119,25 @@ function module_rebuild_cache() {
 
     // Update the contents of the system table:
     if (isset($file->status) || (isset($file->old_filename) && $file->old_filename != $file->filename)) {
-      db_query("UPDATE {system} SET info = '%s', name = '%s', filename = '%s' WHERE filename = '%s'", serialize($files[$filename]->info), $file->name, $file->filename, $file->old_filename);
+      db_update('system')
+        ->fields(array(
+            'info' => serialize($files[$filename]->info),
+            'name' => $file->name,
+            'filename' => $file->filename))
+        ->condition('filename', $file->old_filename)
+        ->execute();
     }
     else {
       // This is a new module.
       $files[$filename]->status = 0;
-      db_query("INSERT INTO {system} (name, info, type, filename, status) VALUES ('%s', '%s', '%s', '%s', %d)", $file->name, serialize($files[$filename]->info), 'module', $file->filename, 0);
+      db_insert('system')
+        ->fields(array(
+            'name' => $file->name,
+            'info' => serialize($files[$filename]->info),
+            'type' => 'module',
+            'filename' => $file->filename,
+            'status' => 0))
+        ->execute();
     }
   }
   $files = _module_build_dependencies($files);
@@ -266,10 +279,17 @@ function module_load_all_includes($type, $name = NULL) {
 function module_enable($module_list) {
   $invoke_modules = array();
   foreach ($module_list as $module) {
-    $existing = db_fetch_object(db_query("SELECT status FROM {system} WHERE type = '%s' AND name = '%s'", 'module', $module));
+    $existing = db_query("SELECT status FROM {system} WHERE type = :type AND name = :name", array(
+      ':type' => 'module',
+      ':name' => $module))
+      ->fetchObject();
     if ($existing->status == 0) {
       module_load_install($module);
-      db_query("UPDATE {system} SET status = %d WHERE type = '%s' AND name = '%s'", 1, 'module', $module);
+      db_update('system')
+        ->fields(array('status' => 1))
+        ->condition('type', 'module')
+        ->condition('name', $module)
+        ->execute();
       drupal_load('module', $module);
       $invoke_modules[] = $module;
     }
@@ -317,7 +337,11 @@ function module_disable($module_list) {
 
       module_load_install($module);
       module_invoke($module, 'disable');
-      db_query("UPDATE {system} SET status = %d WHERE type = '%s' AND name = '%s'", 0, 'module', $module);
+      db_update('system')
+        ->fields(array('status' => 0))
+        ->condition('type', 'module')
+        ->condition('name', $module)
+        ->execute();
       $invoke_modules[] = $module;
     }
   }
