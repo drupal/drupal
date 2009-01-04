@@ -366,7 +366,7 @@ function hook_nodeapi_update_index($node) {
 }
 
 /**
- * The user has finished editing the node and is trying to preview or submit it. 
+ * The user has finished editing the node and is previewing or submitting it. 
  *
  * This hook can be used to check the node data. Errors should be set with 
  * form_set_error().
