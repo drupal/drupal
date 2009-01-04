@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.24 2008/12/18 23:07:50 dries Exp $
+// $Id: trigger.module,v 1.25 2009/01/04 16:10:48 dries Exp $
 
 /**
  * @file
@@ -303,15 +303,45 @@ function _trigger_normalize_comment_context($type, $comment) {
 }
 
 /**
- * Implementation of hook_comment().
+ * Implementation of hook_comment_insert().
  */
-function trigger_comment($a1, $op) {
+function trigger_comment_insert($form_values) {
+  _trigger_coment($form_values, 'insert');
+}
+
+/**
+ * Implementation of hook_comment_update().
+ */
+function trigger_comment_update($form_values) {
+  _trigger_coment($form_values, 'update');
+}
+
+/**
+ * Implementation of hook_comment_delete().
+ */
+function trigger_comment_delete($comment) {
+  _trigger_coment($comment, 'delete');
+}
+
+/**
+ * Implementation of hook_comment_view().
+ */
+function trigger_comment_view($comment) {
+  _trigger_coment($comment, 'view');
+}
+
+/**
+ * Helper function for implementations of hook_comment_op().
+ *
+ * @param $a1
+ *   Argument, which will be passed to the action.
+ *   It can be a array of form values or a comment.
+ * @param $op
+ *   What kind of action is being performed.
+ */
+function _trigger_comment($a1, $op) {
   // Keep objects for reuse so that changes actions make to objects can persist.
   static $objects;
-  // We support a subset of operations.
-  if (!in_array($op, array('insert', 'update', 'delete', 'view'))) {
-    return;
-  }
   $aids = _trigger_get_hook_aids('comment', $op);
   $context = array(
     'hook' => 'comment',

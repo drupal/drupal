@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.678 2009/01/02 21:17:35 dries Exp $
+// $Id: comment.module,v 1.679 2009/01/04 16:10:48 dries Exp $
 
 /**
  * @file
@@ -1990,7 +1990,7 @@ function _comment_update_node_statistics($nid) {
 }
 
 /**
- * Invoke a hook_comment() operation in all modules.
+ * Invoke a hook_comment_[$op]() operation in all modules.
  *
  * @param &$comment
  *   A comment object.
@@ -2001,9 +2001,9 @@ function _comment_update_node_statistics($nid) {
  */
 function comment_invoke_comment(&$comment, $op) {
   $return = array();
-  foreach (module_implements('comment') as $module) {
-    $function = $module . '_comment';
-    $result = $function($comment, $op);
+  foreach (module_implements('comment_' . $op) as $module) {
+    $function = $module . '_comment_' . $op;
+    $result = $function($comment);
     if (isset($result) && is_array($result)) {
       $return = array_merge($return, $result);
     }
