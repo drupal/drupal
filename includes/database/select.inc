@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.12 2008/12/30 16:43:14 dries Exp $
+// $Id: select.inc,v 1.13 2009/01/04 19:56:50 dries Exp $
 
 /**
  * @ingroup database
@@ -291,7 +291,13 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
   }
 
   public function execute() {
+    // Modules may alter all queries or only those having a particular tag.
     drupal_alter('query', $this);
+    if (isset($this->alterTags)) {
+      foreach ($this->alterTags as $tag => $value) {
+        drupal_alter("query_$tag", $this);
+      }
+    }
 
     $args = $this->getArguments();
 

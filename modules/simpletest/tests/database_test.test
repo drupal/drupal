@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.33 2008/12/30 16:43:18 dries Exp $
+// $Id: database_test.test,v 1.34 2009/01/04 19:56:51 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -1695,7 +1695,7 @@ class DatabaseAlter2TestCase extends DatabaseTestCase {
   }
 
   /**
-   * Test that we can remove a range() value from a query.
+   * Test that we can remove a range() value from a query. This also tests hook_query_TAG_alter().
    */
   function testAlterRemoveRange() {
     $query = db_select('test');
