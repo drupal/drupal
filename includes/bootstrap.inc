@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.262 2008/12/30 16:43:14 dries Exp $
+// $Id: bootstrap.inc,v 1.263 2009/01/04 16:15:54 dries Exp $
 
 /**
  * @file
@@ -1359,10 +1359,10 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
         module_load_all_includes('install');
       }
 
+      require_once DRUPAL_ROOT . '/includes/common.inc';
       // Invoke hook_schema for all modules.
       foreach (module_implements('schema') as $module) {
         $current = module_invoke($module, 'schema');
-        require_once DRUPAL_ROOT . '/includes/common.inc';
         if (drupal_function_exists('_drupal_initialize_schema')) {
           _drupal_initialize_schema($module, $current);
         }
