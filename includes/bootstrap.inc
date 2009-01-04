@@ -1359,10 +1359,10 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
         module_load_all_includes('install');
       }
 
+      require_once DRUPAL_ROOT . '/includes/common.inc';
       // Invoke hook_schema for all modules.
       foreach (module_implements('schema') as $module) {
         $current = module_invoke($module, 'schema');
-        require_once DRUPAL_ROOT . '/includes/common.inc';
         if (drupal_function_exists('_drupal_initialize_schema')) {
           _drupal_initialize_schema($module, $current);
         }
