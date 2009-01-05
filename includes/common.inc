@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.841 2008/12/30 16:43:14 dries Exp $
+// $Id: common.inc,v 1.842 2009/01/05 22:23:58 dries Exp $
 
 /**
  * @file
@@ -3236,7 +3236,7 @@ function drupal_render(&$elements) {
         $elements['#markup'] = '';
       }
 
-      unset($elements['#prefix'], $elements['#suffix']);
+      unset($elements['#type'], $elements['#prefix'], $elements['#suffix']);
       $content = theme($elements['#theme'], $elements);
 
       foreach (array('#type', '#prefix', '#suffix') as $key) {
