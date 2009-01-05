@@ -3236,7 +3236,7 @@ function drupal_render(&$elements) {
         $elements['#markup'] = '';
       }
 
-      unset($elements['#prefix'], $elements['#suffix']);
+      unset($elements['#type'], $elements['#prefix'], $elements['#suffix']);
       $content = theme($elements['#theme'], $elements);
 
       foreach (array('#type', '#prefix', '#suffix') as $key) {
