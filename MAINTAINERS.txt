@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.27 2009/01/04 19:47:28 dries Exp $
+// $Id: MAINTAINERS.txt,v 1.28 2009/01/05 04:35:18 webchick Exp $
 
 List of maintainers
 --------------------------------------------------------------------------------
@@ -19,6 +19,9 @@ Larry Garfield 'Crell' <http://drupal.org/user/26398>
 
 DOCUMENTATION COORDINATOR
 Addison Berry 'add1sun' <http://drupal.org/user/65088>
+
+FILE MANAGEMENT SYSTEM
+Andrew Morton 'drewish' <http://drupal.org/user/34869>
 
 FORM SYSTEM
 Károly Négyesi 'chx' <http://drupal.org/user/9446>
