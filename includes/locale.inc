@@ -1368,7 +1368,7 @@ function _locale_import_one_string_db(&$report, $langcode, $source, $translation
   }
   elseif ($mode == LOCALE_IMPORT_OVERWRITE) {
     // Empty translation, remove existing if instructed.
-    db_query("DELETE FROM {locales_target} WHERE language = '%s' AND lid = %d AND plid = %d AND plural = %d", $translation, $langcode, $lid, $plid, $plural);
+    db_query("DELETE FROM {locales_target} WHERE language = '%s' AND lid = %d AND plid = %d AND plural = %d", $langcode, $lid, $plid, $plural);
     $report['deletes']++;
   }
 
