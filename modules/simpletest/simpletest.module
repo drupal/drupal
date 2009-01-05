@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.30 2008/12/30 16:43:18 dries Exp $
+// $Id: simpletest.module,v 1.31 2009/01/05 21:57:12 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -370,7 +370,6 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
     'redirect' => 'admin/build/testing',
     'progress_message' => '',
     'css' => array(drupal_get_path('module', 'simpletest') . '/simpletest.css'),
-    'js' => array(drupal_get_path('module', 'simpletest') .'/simpletest.js'),
     'init_message' => t('Processing test @num of @max - %test.', array('%test' => $info['name'], '@num' => '1', '@max' => count($test_list))),
   );
   batch_set($batch);
