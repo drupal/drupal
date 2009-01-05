@@ -806,100 +806,105 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
     return $upload_cache[$source];
   }
 
+  // Make sure there's an upload to process.
+  if (!isset($_FILES['files']['name'][$source])) {
+    return FALSE;
+  }
+
+  // Check for file upload errors and return FALSE if a lower level system
+  // error occurred. For a complete list of errors:
+  // @see http://php.net/manual/en/features.file-upload.errors.php
+  switch ($_FILES['files']['error'][$source]) {
+    case UPLOAD_ERR_INI_SIZE:
+    case UPLOAD_ERR_FORM_SIZE:
+      drupal_set_message(t('The file %file could not be saved, because it exceeds %maxsize, the maximum allowed size for uploads.', array('%file' => $source, '%maxsize' => format_size(file_upload_max_size()))), 'error');
+      return FALSE;
+
+    case UPLOAD_ERR_PARTIAL:
+    case UPLOAD_ERR_NO_FILE:
+      drupal_set_message(t('The file %file could not be saved, because the upload did not complete.', array('%file' => $source)), 'error');
+      return FALSE;
+
+    case UPLOAD_ERR_OK:
+      // Final check that this is a valid upload, if it isn't, use the
+      // default error handler.
+      if (is_uploaded_file($_FILES['files']['tmp_name'][$source])) {
+         break;
+      }
+
+    // Unknown error
+    default:
+      drupal_set_message(t('The file %file could not be saved. An unknown error has occurred.', array('%file' => $source)), 'error');
+      return FALSE;
+  }
+
+  // Build the list of non-munged extensions.
+  // @todo: this should not be here. we need to figure out the right place.
+  $extensions = '';
+  foreach ($user->roles as $rid => $name) {
+    $extensions .= ' ' . variable_get("upload_extensions_$rid",
+    variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps odt ods odp'));
+  }
+
+  // Begin building file object.
+  $file = new stdClass();
+  $file->uid      = $user->uid;
+  $file->status   = 0;
+  $file->filename = file_munge_filename(trim(basename($_FILES['files']['name'][$source]), '.'), $extensions);
+  $file->filepath = $_FILES['files']['tmp_name'][$source];
+  $file->filemime = file_get_mimetype($file->filename);
+  $file->filesize = $_FILES['files']['size'][$source];
+
+  // Rename potentially executable files, to help prevent exploits.
+  if (preg_match('/\.(php|pl|py|cgi|asp|js)$/i', $file->filename) && (substr($file->filename, -4) != '.txt')) {
+    $file->filemime = 'text/plain';
+    $file->filepath .= '.txt';
+    $file->filename .= '.txt';
+  }
+
+  // If the destination is not provided, or is not writable, then use the
+  // temporary directory.
+  if (empty($destination) || file_check_path($destination) === FALSE) {
+    $destination = file_directory_temp();
+  }
+
+  $file->source = $source;
+  $file->destination = file_destination(file_create_path($destination . '/' . $file->filename), $replace);
+
   // Add in our check of the the file name length.
   $validators['file_validate_name_length'] = array();
 
+  // Call the validation functions specified by this function's caller.
+  $errors = file_validate($file, $validators);
 
-  // If a file was uploaded, process it.
-  if (isset($_FILES['files']['name'][$source]) && is_uploaded_file($_FILES['files']['tmp_name'][$source])) {
-    // Check for file upload errors and return FALSE if a lower level system
-    // error occurred.
-    switch ($_FILES['files']['error'][$source]) {
-      // @see http://php.net/manual/en/features.file-upload.errors.php
-      case UPLOAD_ERR_OK:
-        break;
-
-      case UPLOAD_ERR_INI_SIZE:
-      case UPLOAD_ERR_FORM_SIZE:
-        drupal_set_message(t('The file %file could not be saved, because it exceeds %maxsize, the maximum allowed size for uploads.', array('%file' => $source, '%maxsize' => format_size(file_upload_max_size()))), 'error');
-        return FALSE;
-
-      case UPLOAD_ERR_PARTIAL:
-      case UPLOAD_ERR_NO_FILE:
-        drupal_set_message(t('The file %file could not be saved, because the upload did not complete.', array('%file' => $source)), 'error');
-        return FALSE;
-
-        // Unknown error
-      default:
-        drupal_set_message(t('The file %file could not be saved. An unknown error has occurred.', array('%file' => $source)), 'error');
-        return FALSE;
+  // Check for errors.
+  if (!empty($errors)) {
+    $message = t('The specified file %name could not be uploaded.', array('%name' => $file->filename));
+    if (count($errors) > 1) {
+      $message .= theme('item_list', $errors);
     }
-
-    // Build the list of non-munged extensions.
-    // @todo: this should not be here. we need to figure out the right place.
-    $extensions = '';
-    foreach ($user->roles as $rid => $name) {
-      $extensions .= ' ' . variable_get("upload_extensions_$rid",
-      variable_get('upload_extensions_default', 'jpg jpeg gif png txt html doc xls pdf ppt pps odt ods odp'));
+    else {
+      $message .= ' ' . array_pop($errors);
     }
+    form_set_error($source, $message);
+    return FALSE;
+  }
 
-    // Begin building file object.
-    $file = new stdClass();
-    $file->uid      = $user->uid;
-    $file->status   = 0;
-    $file->filename = file_munge_filename(trim(basename($_FILES['files']['name'][$source]), '.'), $extensions);
-    $file->filepath = $_FILES['files']['tmp_name'][$source];
-    $file->filemime = file_get_mimetype($file->filename);
-    $file->filesize = $_FILES['files']['size'][$source];
+  // Move uploaded files from PHP's upload_tmp_dir to Drupal's temporary
+  // directory. This overcomes open_basedir restrictions for future file
+  // operations.
+  $file->filepath = $file->destination;
+  if (!move_uploaded_file($_FILES['files']['tmp_name'][$source], $file->filepath)) {
+    form_set_error($source, t('File upload error. Could not move uploaded file.'));
+    watchdog('file', 'Upload error. Could not move uploaded file %file to destination %destination.', array('%file' => $file->filename, '%destination' => $file->filepath));
+    return FALSE;
+  }
 
-    // Rename potentially executable files, to help prevent exploits.
-    if (preg_match('/\.(php|pl|py|cgi|asp|js)$/i', $file->filename) && (substr($file->filename, -4) != '.txt')) {
-      $file->filemime = 'text/plain';
-      $file->filepath .= '.txt';
-      $file->filename .= '.txt';
-    }
-
-    // If the destination is not provided, or is not writable, then use the
-    // temporary directory.
-    if (empty($destination) || file_check_path($destination) === FALSE) {
-      $destination = file_directory_temp();
-    }
-
-    $file->source = $source;
-    $file->destination = file_destination(file_create_path($destination . '/' . $file->filename), $replace);
-
-    // Call the validation functions specified by this function's caller.
-    $errors = file_validate($file, $validators);
-
-    // Check for errors.
-    if (!empty($errors)) {
-      $message = t('The specified file %name could not be uploaded.', array('%name' => $file->filename));
-      if (count($errors) > 1) {
-        $message .= theme('item_list', $errors);
-      }
-      else {
-        $message .= ' ' . array_pop($errors);
-      }
-      form_set_error($source, $message);
-      return FALSE;
-    }
-
-    // Move uploaded files from PHP's upload_tmp_dir to Drupal's temporary
-    // directory. This overcomes open_basedir restrictions for future file
-    // operations.
-    $file->filepath = $file->destination;
-    if (!move_uploaded_file($_FILES['files']['tmp_name'][$source], $file->filepath)) {
-      form_set_error($source, t('File upload error. Could not move uploaded file.'));
-      watchdog('file', 'Upload error. Could not move uploaded file %file to destination %destination.', array('%file' => $file->filename, '%destination' => $file->filepath));
-      return FALSE;
-    }
-
-    // If we made it this far it's safe to record this file in the database.
-    if ($file = file_save($file)) {
-      // Add file to the cache.
-      $upload_cache[$source] = $file;
-      return $file;
-    }
+  // If we made it this far it's safe to record this file in the database.
+  if ($file = file_save($file)) {
+    // Add file to the cache.
+    $upload_cache[$source] = $file;
+    return $file;
   }
   return FALSE;
 }
