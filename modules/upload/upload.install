@@ -26,35 +26,35 @@ function upload_uninstall() {
  */
 function upload_schema() {
   $schema['upload'] = array(
-    'description' => t('Stores uploaded file information and table associations.'),
+    'description' => 'Stores uploaded file information and table associations.',
     'fields' => array(
       'fid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Primary Key: The {files}.fid.'),
+        'description' => 'Primary Key: The {files}.fid.',
       ),
       'nid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('The {node}.nid associated with the uploaded file.'),
+        'description' => 'The {node}.nid associated with the uploaded file.',
       ),
       'vid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Primary Key: The {node}.vid associated with the uploaded file.'),
+        'description' => 'Primary Key: The {node}.vid associated with the uploaded file.',
       ),
       'description' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Description of the uploaded file.'),
+        'description' => 'Description of the uploaded file.',
       ),
       'list' => array(
         'type' => 'int',
@@ -62,14 +62,14 @@ function upload_schema() {
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => t('Whether the file should be visibly listed on the node: yes(1) or no(0).'),
+        'description' => 'Whether the file should be visibly listed on the node: yes(1) or no(0).',
       ),
       'weight' => array(
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => t('Weight of this upload in relation to other uploads in this node.'),
+        'description' => 'Weight of this upload in relation to other uploads in this node.',
       ),
     ),
     'primary key' => array('vid', 'fid'),

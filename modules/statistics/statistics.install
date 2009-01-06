@@ -49,64 +49,64 @@ function statistics_uninstall() {
  */
 function statistics_schema() {
   $schema['accesslog'] = array(
-    'description' => t('Stores site access information for statistics.'),
+    'description' => 'Stores site access information for statistics.',
     'fields' => array(
       'aid' => array(
         'type' => 'serial',
         'not null' => TRUE,
-        'description' => t('Primary Key: Unique accesslog ID.'),
+        'description' => 'Primary Key: Unique accesslog ID.',
       ),
       'sid' => array(
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
         'default' => '',
-        'description' => t('Browser session ID of user that visited page.'),
+        'description' => 'Browser session ID of user that visited page.',
       ),
       'title' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => FALSE,
-        'description' => t('Title of page visited.'),
+        'description' => 'Title of page visited.',
       ),
       'path' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => FALSE,
-        'description' => t('Internal path to page visited (relative to Drupal root.)'),
+        'description' => 'Internal path to page visited (relative to Drupal root.)',
       ),
       'url' => array(
         'type' => 'varchar',
         'length' => 255,
         'not null' => FALSE,
-        'description' => t('Referrer URI.'),
+        'description' => 'Referrer URI.',
       ),
       'hostname' => array(
         'type' => 'varchar',
         'length' => 128,
         'not null' => FALSE,
-        'description' => t('Hostname of user that visited the page.'),
+        'description' => 'Hostname of user that visited the page.',
       ),
       'uid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => FALSE,
         'default' => 0,
-        'description' => t('User {users}.uid that visited the page.'),
+        'description' => 'User {users}.uid that visited the page.',
       ),
       'timer' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Time in milliseconds that the page took to load.'),
+        'description' => 'Time in milliseconds that the page took to load.',
       ),
       'timestamp' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => t('Timestamp of when the page was visited.'),
+        'description' => 'Timestamp of when the page was visited.',
       ),
     ),
     'indexes' => array(
