@@ -1600,7 +1600,7 @@ function theme_comment_view($comment, $node, $links = array(), $visible = TRUE) 
  *   Comments per page.
  * @ingroup forms
  */
-function comment_controls($mode = COMMENT_MODE_THREADED_EXPANDED, $order = COMMENT_ORDER_NEWEST_FIRST, $comments_per_page = 50) {
+function comment_controls(&$form_state, $mode = COMMENT_MODE_THREADED_EXPANDED, $order = COMMENT_ORDER_NEWEST_FIRST, $comments_per_page = 50) {
   $form['mode'] = array('#type' => 'select',
     '#default_value' => $mode,
     '#options' => _comment_get_modes(),
