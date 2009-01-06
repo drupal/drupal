@@ -130,6 +130,67 @@ class FileHookTestCase extends FileTestCase {
   }
 }
 
+
+/**
+ *  This will run tests against the file_space_used() function.
+ */
+class FileSpaceUsedTest extends FileTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('File space used tests'),
+      'description' => t('Tests the file_space_used() function.'),
+      'group' => t('File'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    // Create records for a couple of users with different sizes.
+    drupal_write_record('files', $file = array('uid' => 2, 'filesize' => 50, 'status' => FILE_STATUS_PERMANENT));
+    drupal_write_record('files', $file = array('uid' => 2, 'filesize' => 20, 'status' => FILE_STATUS_PERMANENT));
+    drupal_write_record('files', $file = array('uid' => 3, 'filesize' => 100, 'status' => FILE_STATUS_PERMANENT));
+    drupal_write_record('files', $file = array('uid' => 3, 'filesize' => 200, 'status' => FILE_STATUS_PERMANENT));
+
+    // Now create some with other statuses. These values were chosen arbitrarily
+    // for the sole purpose of testing that bitwise operators were used
+    // correctly on the field.
+    drupal_write_record('files', $file = array('uid' => 2, 'filesize' => 1, 'status' => 2 | 8));
+    drupal_write_record('files', $file = array('uid' => 3, 'filesize' => 3, 'status' => 2 | 4));
+  }
+
+  /**
+   * Test different users with the default status.
+   */
+  function testUser() {
+    $this->assertEqual(file_space_used(2), 70, t("Found the size of the first user's files."));
+    $this->assertEqual(file_space_used(3), 300, t("Found the size of the second user's files."));
+    $this->assertEqual(file_space_used(), 370, t("Found the size of all user's files."));
+  }
+
+  /**
+   * Test the status fields
+   */
+  function testStatus() {
+    // Check selection with a single bit set.
+    $this->assertEqual(file_space_used(NULL, 2), 4, t("Found the size of all user's files with status 2."));
+    $this->assertEqual(file_space_used(NULL, 4), 3, t("Found the size of all user's files with status 4."));
+    // Check that the bitwise AND operator is used when selecting so that we
+    // only get files with the 2 AND 4 bits set.
+    $this->assertEqual(file_space_used(NULL, 2 | 4), 3, t("Found the size of all user's files with status 6."));
+  }
+
+  /**
+   * Test both the user and status.
+   */
+  function testUserAndStatus() {
+    $this->assertEqual(file_space_used(1, 8), 0, t("Found the size of the admin user's files with status 8."));
+    $this->assertEqual(file_space_used(2, 8), 1, t("Found the size of the first user's files with status 8."));
+    $this->assertEqual(file_space_used(2, 2), 1, t("Found the size of the first user's files with status 2."));
+    $this->assertEqual(file_space_used(3, 2), 3, t("Found the size of the second user's files with status 2."));
+  }
+}
+
 /**
  *  This will run tests against the file validation functions (file_validate_*).
  */

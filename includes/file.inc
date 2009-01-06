@@ -767,10 +767,15 @@ function file_unmanaged_delete($path) {
  *   An integer containing the number of bytes used.
  */
 function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
+  $query = db_select('files', 'f');
+  // Use separate placeholders for the status to avoid a bug in some versions
+  // of PHP. @see http://drupal.org/node/352956
+  $query->where('f.status & :status1 = :status2', array(':status1' => $status, ':status2' => $status));
+  $query->addExpression('SUM(f.filesize)', 'filesize');
   if (!is_null($uid)) {
-    return db_query('SELECT SUM(filesize) FROM {files} WHERE uid = :uid AND status = :status', array(':uid' => $uid, ':status' => $status))->fetchField();
+    $query->condition('f.uid', $uid);
   }
-  return db_query('SELECT SUM(filesize) FROM {files} WHERE status = :status', array(':status' => $status))->fetchField();
+  return $query->execute()->fetchField();
 }
 
 /**
