@@ -665,6 +665,7 @@ function locale_translate_import_form_submit($form, &$form_state) {
   else {
     drupal_set_message(t('File to import not found.'), 'error');
     $form_state['redirect'] = 'admin/build/translate/import';
+    return;
   }
 
   $form_state['redirect'] = 'admin/build/translate';
