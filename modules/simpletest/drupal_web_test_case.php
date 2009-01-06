@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.78 2009/01/06 11:04:59 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.79 2009/01/06 12:44:20 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -115,6 +115,12 @@ class DrupalWebTestCase {
    * @var Array
    */
   protected $assertions = array();
+
+  /**
+   * Time limit for the test.
+   */
+  protected $timeLimit = 180;
+
 
   /**
    * Constructor for DrupalWebTestCase.
@@ -857,6 +863,7 @@ class DrupalWebTestCase {
     variable_set('file_directory_path', file_directory_path() . '/' . $db_prefix);
     $directory = file_directory_path();
     file_check_directory($directory, FILE_CREATE_DIRECTORY); // Create the files directory.
+    set_time_limit($this->timeLimit);
   }
 
   /**
