@@ -117,6 +117,12 @@ class DrupalWebTestCase {
   protected $assertions = array();
 
   /**
+   * Time limit for the test.
+   */
+  protected $timeLimit = 180;
+
+
+  /**
    * Constructor for DrupalWebTestCase.
    *
    * @param $test_id
@@ -857,6 +863,7 @@ class DrupalWebTestCase {
     variable_set('file_directory_path', file_directory_path() . '/' . $db_prefix);
     $directory = file_directory_path();
     file_check_directory($directory, FILE_CREATE_DIRECTORY); // Create the files directory.
+    set_time_limit($this->timeLimit);
   }
 
   /**
