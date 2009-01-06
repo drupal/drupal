@@ -926,28 +926,28 @@ function install_check_requirements($profile, $verify) {
         'title'       => st('Settings file'),
         'value'       => st('The settings file does not exist.'),
         'severity'    => REQUIREMENT_ERROR,
-        'description' => st('The @drupal installer requires that you create a settings file as part of the installation process. Copy the %default_file file to %file. More details about installing Drupal are available in INSTALL.txt.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '%default_file' => $conf_path .'/default.settings.php')),
+        'description' => st('The @drupal installer requires that you create a settings file as part of the installation process. Copy the %default_file file to %file. More details about installing Drupal are available in <a href="@install_txt">INSTALL.txt</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '%default_file' => $conf_path .'/default.settings.php', '@install_txt' => base_path() .'INSTALL.txt')),
       );
     }
-    elseif ($exists) {
+    else {
       $requirements['settings file exists'] = array(
         'title'       => st('Settings file'),
         'value'       => st('The %file file exists.', array('%file' => $file)),
       );
-    }
-    if (!$writable) {
-      $requirements['settings file writable'] = array(
-        'title'       => st('Settings file'),
-        'value'       => st('The settings file is not writable.'),
-        'severity'    => REQUIREMENT_ERROR,
-        'description' => st('The @drupal installer requires write permissions to %file during the installation process. If you are unsure how to grant file permissions, please consult the <a href="@handbook_url">online handbook</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '@handbook_url' => 'http://drupal.org/server-permissions')),
-      );
-    }
-    elseif ($writable) {
-      $requirements['settings file'] = array(
-        'title'       => st('Settings file'),
-        'value'       => st('Settings file is writable.'),
-      );
+      if (!$writable) {
+        $requirements['settings file writable'] = array(
+          'title'       => st('Settings file'),
+          'value'       => st('The settings file is not writable.'),
+          'severity'    => REQUIREMENT_ERROR,
+          'description' => st('The @drupal installer requires write permissions to %file during the installation process. If you are unsure how to grant file permissions, please consult the <a href="@handbook_url">online handbook</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '@handbook_url' => 'http://drupal.org/server-permissions')),
+        );
+      }
+      else {
+        $requirements['settings file'] = array(
+          'title'       => st('Settings file'),
+          'value'       => st('Settings file is writable.'),
+        );
+      }
     }
   }
   return $requirements;
