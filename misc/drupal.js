@@ -1,6 +1,6 @@
 // $Id$
 
-var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'themes': {}, 'locale': {} };
+var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'locale': {} };
 
 /**
  * Set the variable that indicates if JavaScript behaviors should be applied.
