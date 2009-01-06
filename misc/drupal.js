@@ -1,6 +1,6 @@
-// $Id: drupal.js,v 1.48 2008/11/01 21:38:56 dries Exp $
+// $Id: drupal.js,v 1.49 2009/01/06 13:16:09 dries Exp $
 
-var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'themes': {}, 'locale': {} };
+var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'locale': {} };
 
 /**
  * Set the variable that indicates if JavaScript behaviors should be applied.
