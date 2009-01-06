@@ -2517,12 +2517,14 @@ function locale_batch_by_language($langcode, $finished = NULL, $skip = array()) 
   // Collect all files to import for all enabled modules and themes.
   $files = array();
   $components = array();
-  $query = "SELECT name, filename FROM {system} WHERE status = 1";
+  $query = db_select('system', 's');
+  $query->fields('s', array('name', 'filename'));
+  $query->condition('s.status', 1);
   if (count($skip)) {
-    $query .= " AND name NOT IN (" . db_placeholders($skip, 'varchar') . ")";
+    $query->condition('name', $skip, 'NOT IN');
   }
-  $result = db_query($query, $skip);
-  while ($component = db_fetch_object($result)) {
+  $result = $query->execute();
+  foreach ($result as $component) {
     // Collect all files for all components, names as $langcode.po or
     // with names ending with $langcode.po. This allows for filenames
     // like node-module.de.po to let translators use small files and
