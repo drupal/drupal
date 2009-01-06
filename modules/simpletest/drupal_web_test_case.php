@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.77 2008/12/30 16:43:18 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.78 2009/01/06 11:04:59 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -736,11 +736,31 @@ class DrupalWebTestCase {
   }
 
   /**
-   * Logs in a user with the internal browser. If a user is already logged in,
-   * then the current user is logged out before logging in the specified user.
+   * Log in a user with the internal browser.
+   *
+   * If a user is already logged in, then the current user is logged out before
+   * logging in the specified user.
+   *
+   * Please note that neither the global $user nor the passed in user object is
+   * populated with data of the logged in user. If you need full access to the
+   * user object after logging in, it must be updated manually. If you also need
+   * access to the plain-text password of the user (set by drupalCreateUser()),
+   * e.g. to login the same user again, then it must be re-assigned manually.
+   * For example:
+   * @code
+   *   // Create a user.
+   *   $account = $this->drupalCreateUser(array());
+   *   $this->drupalLogin($account);
+   *   // Load real user object.
+   *   $pass_raw = $account->pass_raw;
+   *   $account = user_load($account->uid);
+   *   $account->pass_raw = $pass_raw;
+   * @endcode
    *
    * @param $user
    *   User object representing the user to login.
+   *
+   * @see drupalCreateUser()
    */
   protected function drupalLogin(stdClass $user) {
     if ($this->isLoggedIn) {
