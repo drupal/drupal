@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.25 2009/01/04 16:10:48 dries Exp $
+// $Id: trigger.module,v 1.26 2009/01/07 03:52:32 webchick Exp $
 
 /**
  * @file
@@ -306,28 +306,28 @@ function _trigger_normalize_comment_context($type, $comment) {
  * Implementation of hook_comment_insert().
  */
 function trigger_comment_insert($form_values) {
-  _trigger_coment($form_values, 'insert');
+  _trigger_comment($form_values, 'insert');
 }
 
 /**
  * Implementation of hook_comment_update().
  */
 function trigger_comment_update($form_values) {
-  _trigger_coment($form_values, 'update');
+  _trigger_comment($form_values, 'update');
 }
 
 /**
  * Implementation of hook_comment_delete().
  */
 function trigger_comment_delete($comment) {
-  _trigger_coment($comment, 'delete');
+  _trigger_comment($comment, 'delete');
 }
 
 /**
  * Implementation of hook_comment_view().
  */
 function trigger_comment_view($comment) {
-  _trigger_coment($comment, 'view');
+  _trigger_comment($comment, 'view');
 }
 
 /**
