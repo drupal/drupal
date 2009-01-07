@@ -162,7 +162,7 @@ class NonDefaultBlockAdmin extends DrupalWebTestCase {
   /**
    * Test non-default theme admin.
    */
-  function testNnonDefaultBlockAdmin() {
+  function testNonDefaultBlockAdmin() {
     $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer site configuration'));
     $this->drupalLogin($admin_user);
     $this->drupalPost('admin/build/themes', array('status[bluemarine]' => 1), t('Save configuration'));
