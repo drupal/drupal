@@ -1,5 +1,5 @@
 <?php
-// $Id: block.test,v 1.8 2008/12/30 16:43:15 dries Exp $
+// $Id: block.test,v 1.9 2009/01/07 21:41:13 dries Exp $
 
 class BlockTestCase extends DrupalWebTestCase {
   protected $regions;
@@ -162,7 +162,7 @@ class NonDefaultBlockAdmin extends DrupalWebTestCase {
   /**
    * Test non-default theme admin.
    */
-  function testNnonDefaultBlockAdmin() {
+  function testNonDefaultBlockAdmin() {
     $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer site configuration'));
     $this->drupalLogin($admin_user);
     $this->drupalPost('admin/build/themes', array('status[bluemarine]' => 1), t('Save configuration'));
