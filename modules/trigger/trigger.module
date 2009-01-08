@@ -441,10 +441,15 @@ function trigger_user_update(&$edit, &$account, $category) {
 }
 
 /**
- * Implementation of hook_user_delete().
+ * Implementation of hook_user_cancel().
  */
-function trigger_user_delete(&$edit, &$account, $category) {
-  _trigger_user('delete', $edit, $account, $category);
+function trigger_user_cancel(&$edit, &$account, $method) {
+  switch ($method) {
+    case 'user_cancel_reassign':
+    case 'user_cancel_delete':
+      _trigger_user('delete', $edit, $account, $method);
+      break;
+  }
 }
 
 /**

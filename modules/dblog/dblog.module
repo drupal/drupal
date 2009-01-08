@@ -101,10 +101,18 @@ function dblog_cron() {
 }
 
 /**
- * Implementation of hook_user_delete().
+ * Implementation of hook_user_cancel().
  */
-function dblog_user_delete(&$edit, &$user) {
-  db_query('UPDATE {watchdog} SET uid = 0 WHERE uid = %d', $user->uid);
+function dblog_user_cancel(&$edit, &$account, $method) {
+  switch ($method) {
+    case 'user_cancel_reassign':
+      db_update('watchdog')->fields(array('uid' => 0))->condition('uid', $account->uid)->execute();
+      break;
+
+    case 'user_cancel_delete':
+      db_delete('watchdog')->condition('uid', $account->uid)->execute();
+      break;
+  }
 }
 
 function _dblog_get_message_types() {

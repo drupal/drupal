@@ -228,9 +228,10 @@ function user_edit($account, $category = 'account') {
  * @ingroup forms
  * @see user_profile_form_validate()
  * @see user_profile_form_submit()
- * @see user_edit_delete_submit()
+ * @see user_cancel_confirm_form_submit()
  */
 function user_profile_form($form_state, $account, $category = 'account') {
+  global $user;
 
   $edit = (empty($form_state['values'])) ? (array)$account : $form_state['values'];
 
@@ -238,12 +239,12 @@ function user_profile_form($form_state, $account, $category = 'account') {
   $form['_category'] = array('#type' => 'value', '#value' => $category);
   $form['_account'] = array('#type' => 'value', '#value' => $account);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save'), '#weight' => 30);
-  if (user_access('administer users')) {
-    $form['delete'] = array(
+  if (($account->uid == $user->uid && user_access('cancel account')) || user_access('administer users')) {
+    $form['cancel'] = array(
       '#type' => 'submit',
-      '#value' => t('Delete'),
+      '#value' => t('Cancel account'),
       '#weight' => 31,
-      '#submit' => array('user_edit_delete_submit'),
+      '#submit' => array('user_edit_cancel_submit'),
     );
   }
   $form['#attributes']['enctype'] = 'multipart/form-data';
@@ -270,7 +271,7 @@ function user_profile_form_validate($form, &$form_state) {
 function user_profile_form_submit($form, &$form_state) {
   $account = $form_state['values']['_account'];
   $category = $form_state['values']['_category'];
-  unset($form_state['values']['_account'], $form_state['values']['op'], $form_state['values']['submit'], $form_state['values']['delete'], $form_state['values']['form_token'], $form_state['values']['form_id'], $form_state['values']['_category'], $form_state['values']['form_build_id']);
+  unset($form_state['values']['_account'], $form_state['values']['op'], $form_state['values']['submit'], $form_state['values']['cancel'], $form_state['values']['form_token'], $form_state['values']['form_id'], $form_state['values']['_category'], $form_state['values']['form_build_id']);
   user_module_invoke('submit', $form_state['values'], $account, $category);
   user_save($account, $form_state['values'], $category);
 
@@ -282,45 +283,213 @@ function user_profile_form_submit($form, &$form_state) {
 }
 
 /**
- * Submit function for the 'Delete' button on the user edit form.
+ * Submit function for the 'Cancel account' button on the user edit form.
  */
-function user_edit_delete_submit($form, &$form_state) {
+function user_edit_cancel_submit($form, &$form_state) {
   $destination = '';
   if (isset($_REQUEST['destination'])) {
     $destination = drupal_get_destination();
     unset($_REQUEST['destination']);
   }
-  // Note: We redirect from user/uid/edit to user/uid/delete to make the tabs disappear.
-  $form_state['redirect'] = array("user/" . $form_state['values']['_account']->uid . "/delete", $destination);
+  // Note: We redirect from user/uid/edit to user/uid/cancel to make the tabs disappear.
+  $form_state['redirect'] = array("user/" . $form_state['values']['_account']->uid . "/cancel", $destination);
 }
 
 /**
- * Form builder; confirm form for user deletion.
+ * Form builder; confirm form for cancelling user account.
  *
  * @ingroup forms
- * @see user_confirm_delete_submit()
+ * @see user_edit_cancel_submit()
  */
-function user_confirm_delete(&$form_state, $account) {
+function user_cancel_confirm_form(&$form_state, $account) {
+  global $user;
 
   $form['_account'] = array('#type' => 'value', '#value' => $account);
 
+  // Display account cancellation method selection, if allowed.
+  $default_method = variable_get('user_cancel_method', 'user_cancel_block');
+  $admin_access = user_access('administer users');
+  $can_select_method = $admin_access || user_access('select account cancellation method');
+  $form['user_cancel_method'] = array(
+    '#type' => 'item',
+    '#title' => ($account->uid == $user->uid ? t('When cancelling your account') : t('When cancelling the account')),
+    '#access' => $can_select_method,
+  );
+  $form['user_cancel_method'] += user_cancel_methods();
+
+  // Allow user administrators to skip the account cancellation confirmation
+  // mail (by default), as long as they do not attempt to cancel their own
+  // account.
+  $override_access = $admin_access && ($account->uid != $user->uid);
+  $form['user_cancel_confirm'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Require e-mail confirmation to cancel account.'),
+    '#default_value' => ($override_access ? FALSE : TRUE),
+    '#access' => $override_access,
+    '#description' => t('When enabled, the user must confirm the account cancellation via e-mail.'),
+  );
+  // Also allow to send account canceled notification mail, if enabled.
+  $default_notify = variable_get('user_mail_status_canceled_notify', FALSE);
+  $form['user_cancel_notify'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Notify user when account is canceled.'),
+    '#default_value' => ($override_access ? FALSE : $default_notify),
+    '#access' => $override_access && $default_notify,
+    '#description' => t('When enabled, the user will receive an e-mail notification after the account has been cancelled.'),
+  );
+
+  // Prepare confirmation form page title and description.
+  if ($account->uid == $user->uid) {
+    $question = t('Are you sure you want to cancel your account?');
+  }
+  else {
+    $question = t('Are you sure you want to cancel the account %name?', array('%name' => $account->name));
+  }
+  $description = '';
+  if ($can_select_method) {
+    $description = t('Select the method to cancel the account above.');
+    foreach (element_children($form['user_cancel_method']) as $element) {
+      unset($form['user_cancel_method'][$element]['#description']);
+    }
+  }
+  else {
+    // The radio button #description is used as description for the confirmation
+    // form.
+    foreach (element_children($form['user_cancel_method']) as $element) {
+      if ($form['user_cancel_method'][$element]['#default_value'] == $form['user_cancel_method'][$element]['#return_value']) {
+        $description = $form['user_cancel_method'][$element]['#description'];
+      }
+      unset($form['user_cancel_method'][$element]['#description']);
+    }
+  }
+
   return confirm_form($form,
-    t('Are you sure you want to delete the account %name?', array('%name' => $account->name)),
+    $question,
     'user/' . $account->uid,
-    t('All submissions made by this user will be attributed to the anonymous account. This action cannot be undone.'),
-    t('Delete'), t('Cancel'));
+    $description . ' ' . t('This action cannot be undone.'),
+    t('Cancel account'), t('Cancel'));
 }
 
 /**
- * Submit function for the confirm form for user deletion.
+ * Submit handler for the account cancellation confirm form.
+ *
+ * @see user_cancel_confirm_form()
+ * @see user_multiple_cancel_confirm_submit()
  */
-function user_confirm_delete_submit($form, &$form_state) {
-  user_delete($form_state['values'], $form_state['values']['_account']->uid);
-  drupal_set_message(t('%name has been deleted.', array('%name' => $form_state['values']['_account']->name)));
+function user_cancel_confirm_form_submit($form, &$form_state) {
+  global $user;
+  $account = $form_state['values']['_account'];
 
-  if (!isset($_REQUEST['destination'])) {
-    $form_state['redirect'] = 'admin/user/user';
+  // Cancel account immediately, if the current user has administrative
+  // privileges, no confirmation mail shall be sent, and the user does not
+  // attempt to cancel the own account.
+  if (user_access('administer users') && empty($form_state['values']['user_cancel_confirm']) && $account->uid != $user->uid) {
+    user_cancel($form_state['values'], $account->uid, $form_state['values']['user_cancel_method']);
+
+    if (!isset($_REQUEST['destination'])) {
+      $form_state['redirect'] = 'admin/user/user';
+    }
   }
+  else {
+    // Store cancelling method and whether to notify the user in $account for
+    // user_cancel_confirm().
+    $edit = array(
+      'user_cancel_method' => $form_state['values']['user_cancel_method'],
+      'user_cancel_notify' => $form_state['values']['user_cancel_notify'],
+    );
+    $account = user_save($account, $edit);
+    _user_mail_notify('cancel_confirm', $account);
+    drupal_set_message(t('A confirmation request to cancel your account has been sent to your e-mail address.'));
+
+    if (!isset($_REQUEST['destination'])) {
+      $form_state['redirect'] = "user/$account->uid";
+    }
+  }
+}
+
+/**
+ * Helper function to return available account cancellation methods.
+ *
+ * Please refer to the documentation of hook_user_cancel_methods_alter().
+ *
+ * @return
+ *   An array containing all account cancellation methods as form elements.
+ *
+ * @see hook_user_cancel_methods_alter()
+ * @see user_admin_settings()
+ * @see user_cancel_confirm_form()
+ * @see user_multiple_cancel_confirm()
+ */
+function user_cancel_methods() {
+  $methods = array(
+    'user_cancel_block' => array(
+      'title' => t('Disable the account and keep all content.'),
+      'description' => t('Your account will be blocked and you will no longer be able to log in. All of your content will remain attributed to your user name.'),
+    ),
+    'user_cancel_block_unpublish' => array(
+      'title' => t('Disable the account and unpublish all content.'),
+      'description' => t('Your account will be blocked and you will no longer be able to log in. All of your content will be hidden from everyone but administrators.'),
+    ),
+    'user_cancel_reassign' => array(
+      'title' => t('Delete the account and make all content belong to the %anonymous-name user.', array('%anonymous-name' => variable_get('anonymous', t('Anonymous')))),
+      'description' => t('Your account will be removed and all account information deleted. All of your content will be assigned to the %anonymous-name user.', array('%anonymous-name' => variable_get('anonymous', t('Anonymous')))),
+    ),
+    'user_cancel_delete' => array(
+      'title' => t('Delete the account and all content.'),
+      'description' => t('Your account will be removed and all account information deleted. All of your content will also be deleted.'),
+      'access' => user_access('administer users'),
+    ),
+  );
+  // Allow modules to customize account cancellation methods.
+  drupal_alter('user_cancel_methods', $methods);
+
+  // Turn all methods into real form elements.
+  $default_method = variable_get('user_cancel_method', 'user_cancel_block');
+  $form = array();
+  foreach ($methods as $name => $method) {
+    $form[$name] = array(
+      '#type' => 'radio',
+      '#title' => $method['title'],
+      '#description' => (isset($method['description']) ? $method['description'] : NULL),
+      '#return_value' => $name,
+      '#default_value' => $default_method,
+      '#parents' => array('user_cancel_method'),
+      '#required' => TRUE,
+    );
+  }
+  return $form;
+}
+
+/**
+ * Menu callback; Cancel a user account via e-mail confirmation link.
+ *
+ * @see user_cancel_confirm_form()
+ * @see user_cancel_url()
+ */
+function user_cancel_confirm($account, $timestamp = 0, $hashed_pass = '') {
+  // Time out in seconds until cancel URL expires; 24 hours = 86400 seconds.
+  $timeout = 86400;
+  $current = REQUEST_TIME;
+
+  // Basic validation of arguments.
+  if (isset($account->user_cancel_method) && !empty($timestamp) && !empty($hashed_pass)) {
+    // Validate expiration and hashed password/login.
+    if ($timestamp <= $current && $current - $timestamp < $timeout && $account->uid && $timestamp >= $account->login && $hashed_pass == user_pass_rehash($account->pass, $timestamp, $account->login)) {
+      $edit = array(
+        'user_cancel_notify' => isset($account->user_cancel_notify) ? $account->user_cancel_notify : variable_get('user_mail_status_canceled_notify', FALSE),
+      );
+      user_cancel($edit, $account->uid, $account->user_cancel_method);
+      // Since user_cancel() is not invoked via Form API, batch processing needs
+      // to be invoked manually and should redirect to the front page after
+      // completion.
+      batch_process('');
+    }
+    else {
+      drupal_set_message(t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'));
+      drupal_goto("user/$account->uid/cancel");
+    }
+  }
+  drupal_access_denied();
 }
 
 function user_edit_validate($form, &$form_state) {
@@ -336,7 +505,7 @@ function user_edit_validate($form, &$form_state) {
 function user_edit_submit($form, &$form_state) {
   $account = $form_state['values']['_account'];
   $category = $form_state['values']['_category'];
-  unset($form_state['values']['_account'], $form_state['values']['op'], $form_state['values']['submit'], $form_state['values']['delete'], $form_state['values']['form_token'], $form_state['values']['form_id'], $form_state['values']['_category'], $form_state['values']['form_build_id']);
+  unset($form_state['values']['_account'], $form_state['values']['op'], $form_state['values']['submit'], $form_state['values']['cancel'], $form_state['values']['form_token'], $form_state['values']['form_id'], $form_state['values']['_category'], $form_state['values']['form_build_id']);
   user_module_invoke('submit', $form_state['values'], $account, $category);
   user_save($account, $form_state['values'], $category);
 

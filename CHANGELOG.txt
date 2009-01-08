@@ -32,6 +32,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Redesigned password strength validator.
     * Redesigned the add content type screen.
     * Highlight duplicate URL aliases.
+    * Added configurable ability for users to cancel their own accounts.
 - Performance:
     * Improved performance on uncached page views by loading multiple core
       objects in a single database query.

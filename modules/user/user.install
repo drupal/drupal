@@ -360,6 +360,34 @@ function user_update_7002(&$sandbox) {
 }
 
 /**
+ * Update user settings for cancelling user accounts.
+ *
+ * Prior to 7.x, users were not able to cancel their accounts. When
+ * administrators deleted an account, all contents were assigned to uid 0,
+ * which is the same as the 'user_cancel_reassign' method now.
+ */
+function user_update_7003() {
+  $ret = array();
+  // Set the default account cancellation method.
+  variable_set('user_cancel_method', 'user_cancel_reassign');
+  // Re-assign notification setting.
+  if ($setting = variable_get('user_mail_status_deleted_notify', FALSE)) {
+    variable_set('user_mail_status_canceled_notify', $setting);
+    variable_del('user_mail_status_deleted_notify');
+  }
+  // Re-assign "Account deleted" mail strings to "Account canceled" mail.
+  if ($setting = variable_get('user_mail_status_deleted_subject', FALSE)) {
+    variable_set('user_mail_status_canceled_subject', $setting);
+    variable_del('user_mail_status_deleted_subject');
+  }
+  if ($setting = variable_get('user_mail_status_deleted_body', FALSE)) {
+    variable_set('user_mail_status_canceled_body', $setting);
+    variable_del('user_mail_status_deleted_body');
+  }
+  return $ret;
+}
+
+/**
  * @} End of "defgroup user-updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */

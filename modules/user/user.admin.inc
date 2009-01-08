@@ -15,8 +15,8 @@ function user_admin($callback_arg = '') {
       $output = drupal_get_form('user_register');
       break;
     default:
-      if (!empty($_POST['accounts']) && isset($_POST['operation']) && ($_POST['operation'] == 'delete')) {
-        $output = drupal_get_form('user_multiple_delete_confirm');
+      if (!empty($_POST['accounts']) && isset($_POST['operation']) && ($_POST['operation'] == 'cancel')) {
+        $output = drupal_get_form('user_multiple_cancel_confirm');
       }
       else {
         $output = drupal_get_form('user_filter_form');
@@ -235,6 +235,30 @@ function user_admin_settings() {
   $form['registration']['user_email_verification'] = array('#type' => 'checkbox', '#title' => t('Require e-mail verification when a visitor creates an account'), '#default_value' => variable_get('user_email_verification', TRUE), '#description' => t('If this box is checked, new users will be required to validate their e-mail address prior to logging into the site, and will be assigned a system-generated password. With it unchecked, users will be logged in immediately upon registering, and may select their own passwords during registration.'));
   $form['registration']['user_registration_help'] = array('#type' => 'textarea', '#title' => t('User registration guidelines'), '#default_value' => variable_get('user_registration_help', ''), '#description' => t('This text is displayed at the top of the user registration form and is useful for helping or instructing your users.'));
 
+  // Account cancellation settings.
+  module_load_include('inc', 'user', 'user.pages');
+  $form['cancel'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Account cancellation settings'),
+  );
+  $form['cancel']['user_cancel_method'] = array(
+    '#type' => 'item',
+    '#title' => t('When cancelling a user account'),
+    '#description' => t('This default applies to all users who want to cancel their accounts. Users with the %select-cancel-method or %administer-users <a href="@permissions-url">permissions</a> can override this default method.', array('%select-cancel-method' => t('Select method for cancelling account'), '%administer-users' => t('Administer users'), '@permissions-url' => url('admin/user/permissions'))),
+  );
+  $form['cancel']['user_cancel_method'] += user_cancel_methods();
+  foreach (element_children($form['cancel']['user_cancel_method']) as $element) {
+    // Remove all account cancellation methods that have #access defined, as
+    // those cannot be configured as default method.
+    if (isset($form['cancel']['user_cancel_method'][$element]['#access'])) {
+      $form['cancel']['user_cancel_method'][$element]['#access'] = FALSE;
+    }
+    // Remove the description (only displayed on the confirmation form).
+    else {
+      unset($form['cancel']['user_cancel_method'][$element]['#description']);
+    }
+  }
+
   // User e-mail settings.
   $form['email'] = array(
     '#type' => 'fieldset',
@@ -243,7 +267,7 @@ function user_admin_settings() {
   );
   // These email tokens are shared for all settings, so just define
   // the list once to help ensure they stay in sync.
-  $email_token_help = t('Available variables are:') . ' !username, !site, !password, !uri, !uri_brief, !mailto, !date, !login_uri, !edit_uri, !login_url.';
+  $email_token_help = t('Available variables are:') . ' !username, !site, !password, !uri, !uri_brief, !mailto, !date, !login_uri, !edit_uri, !login_url, !cancel_url.';
 
   $form['email']['admin_created'] = array(
     '#type' => 'fieldset',
@@ -375,28 +399,48 @@ function user_admin_settings() {
     '#rows' => 3,
   );
 
-  $form['email']['deleted'] = array(
+  $form['email']['cancel_confirm'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Account deleted email'),
+    '#title' => t('Account cancellation confirmation email'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
-    '#description' => t('Enable and customize e-mail messages sent to users when their accounts are deleted.') . ' ' . $email_token_help,
+    '#description' => t('Customize e-mail messages sent to users when they attempt to cancel their accounts.') . ' ' . $email_token_help,
   );
-  $form['email']['deleted']['user_mail_status_deleted_notify'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Notify user when account is deleted.'),
-    '#default_value' => variable_get('user_mail_status_deleted_notify', FALSE),
-  );
-  $form['email']['deleted']['user_mail_status_deleted_subject'] = array(
+  $form['email']['cancel_confirm']['user_mail_cancel_confirm_subject'] = array(
     '#type' => 'textfield',
     '#title' => t('Subject'),
-    '#default_value' => _user_mail_text('status_deleted_subject'),
+    '#default_value' => _user_mail_text('cancel_confirm_subject'),
     '#maxlength' => 180,
   );
-  $form['email']['deleted']['user_mail_status_deleted_body'] = array(
+  $form['email']['cancel_confirm']['user_mail_cancel_confirm_body'] = array(
     '#type' => 'textarea',
     '#title' => t('Body'),
-    '#default_value' => _user_mail_text('status_deleted_body'),
+    '#default_value' => _user_mail_text('cancel_confirm_body'),
+    '#rows' => 3,
+  );
+
+  $form['email']['canceled'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Account canceled email'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#description' => t('Enable and customize e-mail messages sent to users when their accounts are canceled.') . ' ' . $email_token_help,
+  );
+  $form['email']['canceled']['user_mail_status_canceled_notify'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Notify user when account is canceled.'),
+    '#default_value' => variable_get('user_mail_status_canceled_notify', FALSE),
+  );
+  $form['email']['canceled']['user_mail_status_canceled_subject'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Subject'),
+    '#default_value' => _user_mail_text('status_canceled_subject'),
+    '#maxlength' => 180,
+  );
+  $form['email']['canceled']['user_mail_status_canceled_body'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Body'),
+    '#default_value' => _user_mail_text('status_canceled_body'),
     '#rows' => 3,
   );
 
