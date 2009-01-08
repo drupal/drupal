@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.5 2008/12/26 11:04:39 dries Exp $
+// $Id: schema.inc,v 1.6 2009/01/08 09:52:12 dries Exp $
 
 /**
  * @file
@@ -12,14 +12,6 @@
  */
 
 class DatabaseSchema_pgsql extends DatabaseSchema {
-
-  public function tableExists($table) {
-    return (bool) db_result(db_query("SELECT COUNT(*) FROM pg_class WHERE relname = '{" . db_escape_table($table) . "}'"));
-  }
-
-  public function columnExists($table, $column) {
-    return (bool) db_result(db_query("SELECT COUNT(pg_attribute.attname) FROM pg_class, pg_attribute WHERE pg_attribute.attrelid = pg_class.oid AND pg_class.relname = '{" . db_escape_table($table) . "}' AND attname = '" . db_escape_table($column) . "'"));
-  }
 
   /**
    * Generate SQL to create a new table from a Drupal schema definition.
