@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.31 2008/12/20 18:24:38 dries Exp $
+// $Id: node.admin.inc,v 1.32 2009/01/08 01:16:57 webchick Exp $
 
 /**
  * @file
@@ -217,7 +217,7 @@ function node_filter_form() {
     list($type, $value) = $filter;
     if ($type == 'term') {
       // Load term name from DB rather than search and parse options array.
-      $value = module_invoke('taxonomy', 'get_term', $value);
+      $value = module_invoke('taxonomy', 'term_load', $value);
       $value = $value->name;
     }
     elseif ($type == 'language') {
