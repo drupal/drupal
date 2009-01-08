@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.test,v 1.10 2008/12/16 23:57:33 dries Exp $
+// $Id: profile.test,v 1.11 2009/01/08 19:09:49 dries Exp $
 
 /**
  * A class for common methods for testing profile fields.
@@ -134,7 +134,9 @@ class ProfileTestFields extends ProfileTestCase {
       'textarea' => $this->randomName(),
       'list' => $this->randomName(),
       'checkbox' => 1,
-      'url' => 'http://www.' . $this->randomName(10). '.org',
+      // An underscore is an invalid character in a domain name. The method randomName can
+      // return an underscore.
+      'url' => 'http://www.' . str_replace('_', '', $this->randomName(10)). '.org',
     );
 
     // For each field type, create a field, give it a value and delete the field.

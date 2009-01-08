@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.19 2008/12/26 21:01:57 dries Exp $
+// $Id: common.test,v 1.20 2009/01/08 19:09:49 dries Exp $
 
 class CommonSizeTestCase extends DrupalWebTestCase {
   protected $exact_test_cases;
@@ -519,6 +519,111 @@ class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
     $this->assertText($file, t("Found '%file' in error page.", array('%file' => $file)));
     $this->assertText($function, t("Found '%function' in error page.", array('%function' => $function)));
     $this->assertText($message, t("Found '%message' in error page.", array('%message' => $message)));
+  }
+}
+
+/**
+ * Test for valid_url().
+ */
+class ValidUrlTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Valid Url'),
+      'description' => t("Performs tests on Drupal's valid url function."),
+      'group' => t('System')
+    );
+  }
+
+  /**
+   * Test valid absolute urls.
+   */
+  function testValidAbsolute() {
+    $url_schemes = array('http', 'https', 'ftp');
+    $valid_absolute_urls = array(
+      'example.com',
+      'www.example.com',
+      'ex-ample.com',
+      '3xampl3.com',
+      'example.com/paren(the)sis',
+      'example.com/index.html#pagetop',
+      'example.com:8080',
+      'subdomain.example.com',
+      'example.com/index.php?q=node',
+      'example.com/index.php?q=node&param=false',
+      'user@www.example.com',
+      'user:pass@www.example.com:8080/login.php?do=login&style=%23#pagetop',
+      '127.0.0.1',
+      'example.org?',
+      'john%20doe:secret:foo@example.org/',
+      'example.org/~,$\'*;',
+      'caf%C3%A9.example.org',
+    );
+
+    foreach ($url_schemes as $scheme) {
+      foreach ($valid_absolute_urls as $url) {
+        $test_url = $scheme . '://' . $url;
+        $valid_url = valid_url($test_url, TRUE);
+        $this->assertTrue($valid_url, t('@url is a valid url.', array('@url' => $test_url)));
+      }
+    }
+  }
+
+  /**
+   * Test invalid absolute urls.
+   */
+  function testInvalidAbsolute() {
+    $url_schemes = array('http', 'https', 'ftp');
+    $invalid_ablosule_urls = array(
+      '',
+      'ex!ample.com',
+    );
+
+    foreach ($url_schemes as $scheme) {
+      foreach ($invalid_ablosule_urls as $url) {
+        $test_url = $scheme . '://' . $url;
+        $valid_url = valid_url($test_url, TRUE);
+        $this->assertFalse($valid_url, t('@url is NOT a valid url.', array('@url' => $test_url)));
+      }
+    }
+  }
+
+  /**
+   * Test valid relative urls.
+   */
+  function testValidRelative() {
+    $valid_relative_urls = array(
+      'paren(the)sis',
+      'index.html#pagetop',
+      'index.php?q=node',
+      'index.php?q=node&param=false',
+      'login.php?do=login&style=%23#pagetop',
+    );
+
+    foreach (array('', '/') as $front) {
+      foreach ($valid_relative_urls as $url) {
+        $test_url = $front . $url;
+        $valid_url = valid_url($test_url);
+        $this->assertTrue($valid_url,t('@url is a valid url.', array('@url' => $test_url)));
+      }
+    }
+  }
+
+  /**
+   * Test invalid relative urls.
+   */
+  function testInvalidRelative() {
+    $invalid_relative_urls = array(
+      'ex^mple',
+      'example<>'
+    );
+
+    foreach (array('', '/') as $front) {
+      foreach ($invalid_relative_urls as $url) {
+        $test_url = $front . $url;
+        $valid_url = valid_url($test_url);
+        $this->assertFALSE($valid_url,t('@url is NOT a valid url.', array('@url' => $test_url)));
+      }
+    }
   }
 }
 
