@@ -1,4 +1,4 @@
-// $Id: MAINTAINERS.txt,v 1.28 2009/01/05 04:35:18 webchick Exp $
+// $Id: MAINTAINERS.txt,v 1.29 2009/01/08 03:32:42 webchick Exp $
 
 List of maintainers
 --------------------------------------------------------------------------------
@@ -8,6 +8,10 @@ James Walker 'walkah' <http://drupal.org/user/1531>
 
 DATABASE SYSTEM
 Larry Garfield 'Crell' <http://drupal.org/user/26398>
+
+ - MYSQL DRIVER
+   Larry Garfield 'Crell' <http://drupal.org/user/26398>
+   David Strauss 'David Strauss' <hhttp://drupal.org/user/93254>
 
  - POSTGRESQL DRIVER
    Damien Tournoud 'DamZ' <http://drupal.org/user/22211>
