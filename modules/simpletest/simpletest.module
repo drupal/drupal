@@ -231,7 +231,7 @@ function theme_simpletest_test_table($table) {
     $element = &$table[$key];
     $row = array();
 
-    // Make the class name safe for output on the pace by replacing all
+    // Make the class name safe for output on the page by replacing all
     // non-word/decimal characters with a dash (-).
     $test_class = strtolower(trim(preg_replace("/[^\w\d]/", "-", $key)));
 
