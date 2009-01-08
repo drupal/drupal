@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.13 2008/12/24 10:21:31 dries Exp $
+// $Id: database.inc,v 1.14 2009/01/08 09:39:48 dries Exp $
 
 /**
  * @file
@@ -16,6 +16,9 @@ class DatabaseConnection_mysql extends DatabaseConnection {
   public function __construct(array $connection_options = array()) {
     // This driver defaults to non transaction support.
     $this->transactionSupport = !empty($connection_option['transactions']);
+    
+    // MySQL never supports transactional DDL.
+    $this->transactionalDDLSupport = FALSE;
 
     // Default to TCP connection on port 3306.
     if (empty($connection_options['port'])) {
