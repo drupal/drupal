@@ -134,7 +134,9 @@ class ProfileTestFields extends ProfileTestCase {
       'textarea' => $this->randomName(),
       'list' => $this->randomName(),
       'checkbox' => 1,
-      'url' => 'http://www.' . $this->randomName(10). '.org',
+      // An underscore is an invalid character in a domain name. The method randomName can
+      // return an underscore.
+      'url' => 'http://www.' . str_replace('_', '', $this->randomName(10)). '.org',
     );
 
     // For each field type, create a field, give it a value and delete the field.

@@ -1173,7 +1173,7 @@ function valid_email_address($mail) {
  *
  * This function should only be used on actual URLs. It should not be used for
  * Drupal menu paths, which can contain arbitrary characters.
- *
+ * Valid values per RFC 3986.
  * @param $url
  *   The URL to verify.
  * @param $absolute
@@ -1182,12 +1182,21 @@ function valid_email_address($mail) {
  *   TRUE if the URL is in a valid format.
  */
 function valid_url($url, $absolute = FALSE) {
-  $allowed_characters = '[a-z0-9\/:_\-_\.\?\$,;~=#&%\+]';
   if ($absolute) {
-    return (bool)preg_match("/^(http|https|ftp):\/\/" . $allowed_characters . "+$/i", $url);
+    return (bool)preg_match("
+      /^                                                # Start at the beginning of the text
+      (?:ftp|https?):\/\/                               # Look for ftp, http, or https
+      (?:                                               # Userinfo (optional)
+        (?:[\w\.\-\+%!$&'\(\)*\+,;=]+:)*
+        [\w\.\-\+%!$&'\(\)*\+,;=]+@
+      )?
+      (?:[a-z0-9\-\.%]+)                                # The domain
+      (?::[0-9]+)?                                      # Server port number (optional)
+      (?:[\/|\?][\w#!:\.\?\+=&%@!$'~*,;\/\(\)\[\]\-]*)? # The path (optional)
+    $/xi", $url);
   }
   else {
-    return (bool)preg_match("/^" . $allowed_characters . "+$/i", $url);
+    return (bool)preg_match("/^[\w#!:\.\?\+=&%@!$'~*,;\/\(\)\[\]\-]+$/i", $url);
   }
 }
 
