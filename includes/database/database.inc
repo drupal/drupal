@@ -116,6 +116,49 @@
  * This method allows databases that need special data type handling to do so,
  * while also allowing optimizations such as multi-insert queries. UPDATE and
  * DELETE queries have a similar pattern.
+ *
+ *
+ * Drupal also supports transactions, including a transparent fallback for
+ * databases that do not support transactions. To start a new transaction,
+ * simply call $txn = db_transaction(): in your own code. The transaction will
+ * remain open for as long as the variable $txn remains in scope.  When $txn is
+ * destroyed, the transaction will be committed.  If your transaction is nested
+ * inside of another then Drupal will track each transaction and only commit
+ * the outer-most transaction when the last transaction object goes out out of
+ * scope, that is, all relevant queries completed successfully.
+ *
+ * Example:
+ *
+ * @code
+ * function my_transaction_function() {
+ *   // The transaction opens here.
+ *   $txn = db_transaction();
+ *
+ *   $id = db_insert('example')
+ *     ->fields(array(
+ *       'field1' => 'mystring',
+ *       'field2' => 5,
+ *     ))
+ *     ->execute();
+ *
+ *   my_other_function($id);
+ *
+ *   return $id;
+ *   // $txn goes out of scope here, and the entire transaction commits.
+ * }
+ *
+ * function my_other_function($id) {
+ *   // The transaction is still open here.
+ *
+ *   if ($id % 2 == 0) {
+ *     db_update('example')
+ *       ->condition('id', $id)
+ *       ->fields(array('field2' => 10))
+ *       ->execute();
+ *   }
+ * }
+ * @endcode
+ *
  */
 
 
@@ -165,6 +208,24 @@ abstract class DatabaseConnection extends PDO {
    * @var Array
    */
   protected $preparedStatements = array();
+
+  /**
+   * Track the number of "layers" of transactions currently active.
+   *
+   * On many databases transactions cannot nest.  Instead, we track
+   * nested calls to transactions and collapse them into a single
+   * transaction.
+   *
+   * @var int
+   */
+  protected $transactionLayers = 0;
+
+  /**
+   * Whether or not the active transaction (if any) will be rolled back.
+   *
+   * @var boolean
+   */
+  protected $willRollBack;
 
   /**
    * The name of the Select class for this connection.
@@ -224,6 +285,15 @@ abstract class DatabaseConnection extends PDO {
    * @var bool
    */
   protected $transactionSupport = TRUE;
+
+  /**
+   * Whether this database connection supports transactional DDL.
+   *
+   * Set to FALSE by default because few databases support this feature.
+   *
+   * @var bool
+   */
+  protected $transactionalDDLSupport = FALSE;
 
   /**
    * The schema object for this connection.
@@ -706,6 +776,16 @@ abstract class DatabaseConnection extends PDO {
   }
 
   /**
+   * Determine if there is an active transaction open.
+   *
+   * @return
+   *   TRUE if we're currently in a transaction, FALSE otherwise.
+   */
+  public function inTransaction() {
+    return ($this->transactionLayers > 0);
+  }
+
+  /**
    * Returns a new DatabaseTransaction object on this connection.
    *
    * @param $required
@@ -726,6 +806,83 @@ abstract class DatabaseConnection extends PDO {
       }
     }
     return new $this->transactionClass($this);
+  }
+
+  /**
+   * Schedule the current transaction for rollback.
+   *
+   * This method throws an exception if no transaction is active.
+   */
+  public function rollBack() {
+    if ($this->transactionLayers == 0) {
+      throw new NoActiveTransactionException();
+    }
+
+    $this->willRollBack = TRUE;
+  }
+
+  /**
+   * Determine if this transaction will roll back.
+   *
+   * Use this function to skip further operations if the current transaction
+   * is already scheduled to roll back. Throws an exception if no transaction
+   * is active.
+   *
+   * @return
+   *   TRUE if the transaction will roll back, FALSE otherwise.
+   */
+  public function willRollBack() {
+    if ($this->transactionLayers == 0) {
+      throw new NoActiveTransactionException();
+    }
+
+    return $this->willRollBack;
+  }
+
+  /**
+   * Increases the depth of transaction nesting.
+   *
+   * If no transaction is already active, we begin a new transaction.
+   *
+   * @see DatabaseTransaction
+   */
+  public function pushTransaction() {
+    ++$this->transactionLayers;
+
+    if ($this->transactionLayers == 1) {
+      if ($this->supportsTransactions()) {
+        parent::startTransaction();
+      }
+
+      // Reset any scheduled rollback
+      $this->willRollBack = FALSE;
+    }
+  }
+
+  /**
+   * Decreases the depth of transaction nesting, committing or rolling back if necessary.
+   *
+   * If we pop off the last transaction layer, then we either commit or roll back
+   * the transaction as necessary.  If no transaction is active, we throw
+   * an exception.
+   *
+   * @see DatabaseTransaction
+   */
+  public function popTransaction() {
+    if ($this->transactionLayers == 0) {
+      throw new NoActiveTransactionException();
+    }
+
+    --$this->transactionLayers;
+
+    if ($this->transactionLayers == 0 && $this->supportsTransactions()) {
+      if ($this->willRollBack) {
+        parent::rollBack();
+      }
+      else {
+        parent::commit();
+      }
+    }
   }
 
   /**
@@ -792,9 +949,24 @@ abstract class DatabaseConnection extends PDO {
 
   /**
    * Determine if this driver supports transactions.
+   *
+   * @return
+   *   TRUE if this connection supports transactions, FALSE otherwise.
    */
   public function supportsTransactions() {
-   return $this->transactionSupport;
+    return $this->transactionSupport;
+  }
+
+  /**
+   * Determine if this driver supports transactional DDL.
+   *
+   * DDL queries are those that change the schema, such as ALTER queries.
+   *
+   * @return
+   *   TRUE if this connection supports transactions for DDL queries, FALSE otherwise.
+   */
+  public function supportsTransactionalDDL() {
+    return $this->transactionalDDLSupport;
   }
 
   /**
@@ -818,6 +990,20 @@ abstract class DatabaseConnection extends PDO {
    *   The extra handling directives for the specified operator, or NULL.
    */
   abstract public function mapConditionOperator($operator);
+
+  /**
+   * Throws an exception to deny direct access to transaction commits.
+   *
+   * We do not want to allow users to commit transactions at any time, only
+   * by destroying the transaction object or allowing it to go out of scope.
+   * A direct commit bypasses all of the safety checks we've built on top of
+   * PDO's transaction routines.
+   *
+   * @see DatabaseTransaction
+   */
+  public function commit() {
+    throw new ExplicitTransactionsNotSupportedException();
+  }
 }
 
 /**
@@ -1175,7 +1361,20 @@ abstract class Database {
  * in use does not support transactions. The calling code must then take
  * appropriate action.
  */
-class TransactionsNotSupportedException extends PDOException { }
+class TransactionsNotSupportedException extends Exception { }
+
+/**
+ * Exception to throw when popTransaction() is called when no transaction is active.
+ */
+class NoActiveTransactionException extends Exception { }
+
+/**
+ * Exception to deny attempts to explicitly manage transactions.
+ *
+ * This exception will be thrown when the PDO connection commit() is called.
+ * Code should never call this method directly.
+ */
+class ExplicitTransactionsNotSupportedException extends Exception { }
 
 /**
  * Exception thrown for merge queries that do not make semantic sense.
@@ -1201,7 +1400,7 @@ class InvalidMergeQueryException extends Exception {}
  * is that rollbacks won't actually do anything.
  *
  * In the vast majority of cases, you should not instantiate this class directly.
- * Instead, call ->startTransaction() from the appropriate connection object.
+ * Instead, call ->startTransaction(), from the appropriate connection object.
  */
 class DatabaseTransaction {
 
@@ -1212,88 +1411,13 @@ class DatabaseTransaction {
    */
   protected $connection;
 
-  /**
-   * Whether or not this connection supports transactions.
-   *
-   * This can be derived from the connection itself with a method call,
-   * but is cached here for performance.
-   *
-   * @var boolean
-   */
-  protected $supportsTransactions;
-
-  /**
-   * Whether or not this transaction has been rolled back.
-   *
-   * @var boolean
-   */
-  protected $hasRolledBack = FALSE;
-
-  /**
-   * Whether or not this transaction has been committed.
-   *
-   * @var boolean
-   */
-  protected $hasCommitted = FALSE;
-
-  /**
-   * Track the number of "layers" of transactions currently active.
-   *
-   * On many databases transactions cannot nest. Instead, we track
-   * nested calls to transactions and collapse them into a single
-   * transaction.
-   *
-   * @var int
-   */
-  protected static $layers = 0;
-
-  public function __construct(DatabaseConnection $connection) {
-    $this->connection = $connection;
-    $this->supportsTransactions = $connection->supportsTransactions();
-
-    if (self::$layers == 0 && $this->supportsTransactions) {
-      $connection->beginTransaction();
-    }
-
-    ++self::$layers;
-  }
-
-  /**
-   * Commit this transaction.
-   */
-  public function commit() {
-    --self::$layers;
-    if (self::$layers == 0 && $this->supportsTransactions) {
-      $this->connection->commit();
-      $this->hasCommitted = TRUE;
-    }
-  }
-
-  /**
-   * Roll back this transaction.
-   */
-  public function rollBack() {
-    if ($this->supportsTransactions) {
-      $this->connection->rollBack();
-      $this->hasRolledBack = TRUE;
-    }
-  }
-
-  /**
-   * Determine if this transaction has already been rolled back.
-   *
-   * @return
-   *   TRUE if the transaction has been rolled back, FALSE otherwise.
-   */
-  public function hasRolledBack() {
-    return $this->hasRolledBack;
+  public function __construct(DatabaseConnection &$connection) {
+    $this->connection = &$connection;
+    $this->connection->pushTransaction();
   }
 
   public function __destruct() {
-    --self::$layers;
-    if (self::$layers == 0 && $this->supportsTransactions && !$this->hasRolledBack && !$this->hasCommitted) {
-      $this->connection->commit();
-    }
+    $this->connection->popTransaction();
   }
 
 }
@@ -1766,6 +1890,26 @@ function db_select($table, $alias = NULL, array $options = array()) {
     $options['target'] = 'default';
   }
   return Database::getActiveConnection($options['target'])->select($table, $alias, $options);
+}
+
+/**
+ * Returns a new transaction object for the active database.
+ *
+ * @param $required
+ *   TRUE if the calling code will not function properly without transaction
+ *   support.  If set to TRUE and the active database does not support transactions
+ *   a TransactionsNotSupportedException exception will be thrown.
+ * @param $options
+ *   An array of options to control how the transaction operates.  Only the
+ *   target key has any meaning in this case.
+ * @return
+ *   A new DatabaseTransaction object for this connection.
+ */
+function db_transaction($required = FALSE, Array $options = array()) {
+  if (empty($options['target'])) {
+    $options['target'] = 'default';
+  }
+  return Database::getActiveConnection($options['target'])->startTransaction($required);
 }
 
 /**

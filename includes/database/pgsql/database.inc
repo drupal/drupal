@@ -16,6 +16,10 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
   public function __construct(array $connection_options = array()) {
     // This driver defaults to transaction support, except if explicitly passed FALSE.
     $this->transactionSupport = !isset($connection_options['transactions']) || $connection_options['transactions'] === FALSE;
+    
+    // Transactional DDL is always available in PostgreSQL,
+    // but we'll only enable it if standard transactions are.
+    $this->transactionalDDLSupport = $this->transactionSupport;
 
     // Default to TCP connection on port 5432.
     if (empty($connection_options['port'])) {
