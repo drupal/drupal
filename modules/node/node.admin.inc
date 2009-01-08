@@ -217,7 +217,7 @@ function node_filter_form() {
     list($type, $value) = $filter;
     if ($type == 'term') {
       // Load term name from DB rather than search and parse options array.
-      $value = module_invoke('taxonomy', 'get_term', $value);
+      $value = module_invoke('taxonomy', 'term_load', $value);
       $value = $value->name;
     }
     elseif ($type == 'language') {
