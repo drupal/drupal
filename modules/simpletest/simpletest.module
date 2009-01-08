@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.31 2009/01/05 21:57:12 dries Exp $
+// $Id: simpletest.module,v 1.32 2009/01/08 18:57:32 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -231,7 +231,7 @@ function theme_simpletest_test_table($table) {
     $element = &$table[$key];
     $row = array();
 
-    // Make the class name safe for output on the pace by replacing all
+    // Make the class name safe for output on the page by replacing all
     // non-word/decimal characters with a dash (-).
     $test_class = strtolower(trim(preg_replace("/[^\w\d]/", "-", $key)));
 
