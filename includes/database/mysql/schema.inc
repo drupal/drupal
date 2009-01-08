@@ -14,14 +14,29 @@
 
 class DatabaseSchema_mysql extends DatabaseSchema {
 
-  public function tableExists($table) {
-    return (bool) $this->connection->query("SHOW TABLES LIKE '{" . $table . "}'", array(), array())->fetchField();
-  }
+  /**
+   * Build a condition to match a table name against a standard information_schema. 
+   *
+   * MySQL uses databases like schemas rather than catalogs so when we build
+   * a condition to query the information_schema.tables, we set the default
+   * database as the schema unless specified otherwise, and exclude table_catalog 
+   * from the condition criteria.
+   */
+  protected function buildTableNameCondition($table_name, $operator = '=') {
+    $info = Database::getConnectionInfo();
 
-  public function columnExists($table, $column) {
-    return (bool) $this->connection->query("SHOW COLUMNS FROM {" . $this->connection->escapeTable($table) . "} LIKE '" . $this->connection->escapeTable($column) . "'", array(), array())->fetchField();
-  }
+    if (strpos($table_name, '.')) {
+      list($schema, $table_name) = explode('.', $table_name);
+    }
+    else {
+      $schema = $info['default']['database'];
+    }
 
+    $condition = db_and()
+      ->condition('table_schema', $schema)
+      ->condition('table_name', $table_name, $operator);
+    return $condition;
+  }
 
   /**
    * Generate SQL to create a new table from a Drupal schema definition.

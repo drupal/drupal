@@ -380,14 +380,14 @@ abstract class DatabaseConnection extends PDO {
    * Queries sent to Drupal should wrap all table names in curly brackets. This
    * function searches for this syntax and adds Drupal's table prefix to all
    * tables, allowing Drupal to coexist with other systems in the same database
-   * if necessary.
+   * and/or schema if necessary.
    *
    * @param $sql
    *   A string containing a partial or entire SQL query.
    * @return
    *   The properly-prefixed string.
    */
-  protected function prefixTables($sql) {
+  public function prefixTables($sql) {
     global $db_prefix;
 
     if (is_array($db_prefix)) {
@@ -428,7 +428,7 @@ abstract class DatabaseConnection extends PDO {
    *   A PDO prepared statement ready for its execute() method.
    */
   protected function prepareQuery($query, $cache = TRUE) {
-    $query = self::prefixTables($query);
+    $query = $this->prefixTables($query);
     if (empty($this->preparedStatements[$query])) {
       // Call PDO::prepare.
       $this->preparedStatements[$query] = parent::prepare($query);

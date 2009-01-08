@@ -125,14 +125,95 @@ abstract class DatabaseSchema {
   }
 
   /**
-   * Check if a table exists.
+   * Build a condition to match a table name against a standard information_schema.
+   *
+   * The information_schema is a SQL standard that provides information about the
+   * database server and the databases, schemas, tables, columns and users within
+   * it. This makes information_schema a useful tool to use across the drupal 
+   * database drivers and is used by a few different functions. The function below
+   * describes the conditions to be meet when querying information_schema.tables
+   * for drupal tables or information associated with drupal tables. Even though
+   * this is the standard method, not all databases follow standards and so this
+   * method should be overwritten by a database driver if the database provider
+   * uses alternate methods. Because information_schema.tables is used in a few
+   * different functions, a database driver will only need to override this function
+   * to make all the others work. For example see includes/databases/mysql/schema.inc.
+   *
+   * @param $table_name
+   *   The name of the table to explode.
+   * @param $operator
+   *   The operator to apply on the 'table' part of the condition.
+   * @return
+   *   A DatabaseCondition object.
    */
-  abstract public function tableExists($table);
+  protected function buildTableNameCondition($table_name, $operator = '=') {
+    $info = Database::getConnectionInfo();
+
+    // The table name may describe the schema eg. schema.table.
+    if (strpos($table_name, '.')) {
+      list($schema, $table_name) = explode('.', $table_name);
+    }
+    else {
+      $schema = 'public';
+    }
+
+    $condition = db_and()
+      ->condition('table_catalog', $info['default']['database'])
+      ->condition('table_schema', $schema)
+      ->condition('table_name', $table_name, $operator);
+    return $condition;
+  }
+
+  /**
+   * Check if a table exists.
+   * 
+   * @param $table
+   *   The name of the table in drupal (no prefixing).
+   * @return
+   *   false is no table exists otherwise the actual table name.
+   */
+  public function tableExists($table) {
+    $condition = $this->buildTableNameCondition($this->connection->prefixTables('{' . $table . '}'));
+    $condition->compile($this->connection);
+    // Normally, we would heartily discourage the use of string
+    // concatination for conditionals like this however, we 
+    // couldn't use db_select() here because it would prefix
+    // information_schema.tables and the query would fail.
+    return db_query("SELECT table_name FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchField();
+  }
+
+  /**
+   * Find all tables that are like the specified base table name.
+   *
+   * @param $table_expression
+   *   An SQL expression, for example "simpletest%" (without the quotes).
+   *   BEWARE: this is not prefixed, the caller should take care of that.
+   * @return
+   *   Array, both the keys and the values are the matching tables.
+   */
+  public function findTables($table_expression) {
+    $condition = $this->buildTableNameCondition($table_expression, 'LIKE');
+    $condition->compile($this->connection);
+    // Normally, we would heartily discourage the use of string
+    // concatination for conditionals like this however, we 
+    // couldn't use db_select() here because it would prefix
+    // information_schema.tables and the query would fail.
+    return db_query("SELECT table_name FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchAllKeyed(0, 0);
+  }
 
   /**
    * Check if a column exists in the given table.
    */
-  abstract public function columnExists($table, $column);
+  public function columnExists($table, $column) {
+    $condition = $this->buildTableNameCondition($this->connection->prefixTables('{' . $table . '}'));
+    $condition->condition('column_name', $column);
+    $condition->compile($this->connection);
+    // Normally, we would heartily discourage the use of string
+    // concatination for conditionals like this however, we 
+    // couldn't use db_select() here because it would prefix
+    // information_schema.tables and the query would fail.
+    return db_query("SELECT column_name FROM information_schema.columns WHERE " . (string) $condition, $condition->arguments())->fetchAllKeyed(0, 0);
+  }
 
   /**
    * This maps a generic data type in combination with its data size
@@ -403,25 +484,6 @@ abstract class DatabaseSchema {
       }
     }
     return $ret;
-  }
-
-  /**
-   * Find all tables that are like the specified base table name.
-   *
-   * @param $table_expression
-   *   An SQL expression, for example "simpletest%" (without the quotes).
-   *   BEWARE: this is not prefixed, the caller should take care of that.
-   * @return
-   *   Array, both the keys and the values are the matching tables.
-   */
-  public function findTables($table_expression) {
-    global $db_prefix;
-    $info = Database::getConnectionInfo();
-    $result = db_query("SELECT table_name FROM information_schema.tables WHERE table_schema = :database AND table_name LIKE :table_name", array(
-      ':database' => $info['default']['database'],
-      ':table_name' => $table_expression,
-    ));
-    return $result->fetchAllKeyed(0, 0);
   }
 }
 
