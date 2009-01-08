@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.15 2008/11/20 06:56:17 webchick Exp $
+// $Id: user.install,v 1.16 2009/01/08 08:42:13 webchick Exp $
 
 /**
  * Implementation of hook_schema().
@@ -355,6 +355,34 @@ function user_update_7002(&$sandbox) {
         drupal_set_message('Some user time zones have been emptied and need to be set to the correct values. Use the new ' . l('time zone options', 'admin/settings/date-time') . ' to choose whether to remind users at login to set the correct time zone.', 'warning');
       }
     }
+  }
+  return $ret;
+}
+
+/**
+ * Update user settings for cancelling user accounts.
+ *
+ * Prior to 7.x, users were not able to cancel their accounts. When
+ * administrators deleted an account, all contents were assigned to uid 0,
+ * which is the same as the 'user_cancel_reassign' method now.
+ */
+function user_update_7003() {
+  $ret = array();
+  // Set the default account cancellation method.
+  variable_set('user_cancel_method', 'user_cancel_reassign');
+  // Re-assign notification setting.
+  if ($setting = variable_get('user_mail_status_deleted_notify', FALSE)) {
+    variable_set('user_mail_status_canceled_notify', $setting);
+    variable_del('user_mail_status_deleted_notify');
+  }
+  // Re-assign "Account deleted" mail strings to "Account canceled" mail.
+  if ($setting = variable_get('user_mail_status_deleted_subject', FALSE)) {
+    variable_set('user_mail_status_canceled_subject', $setting);
+    variable_del('user_mail_status_deleted_subject');
+  }
+  if ($setting = variable_get('user_mail_status_deleted_body', FALSE)) {
+    variable_set('user_mail_status_canceled_body', $setting);
+    variable_del('user_mail_status_deleted_body');
   }
   return $ret;
 }

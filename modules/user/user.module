@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.952 2009/01/04 16:10:48 dries Exp $
+// $Id: user.module,v 1.953 2009/01/08 08:42:13 webchick Exp $
 
 /**
  * @file
@@ -15,6 +15,7 @@ define('USERNAME_MAX_LENGTH', 60);
  * Maximum length of user e-mail text field.
  */
 define('EMAIL_MAX_LENGTH', 64);
+
 
 /**
  * Invokes hook_user() in every module.
@@ -587,6 +588,14 @@ function user_perm() {
        'title' => t('Change own username'),
        'description' => t('Select a different username.'),
      ),
+     'cancel account' => array(
+       'title' => t('Cancel account'),
+       'description' => t('Remove or disable own user account and unpublish, anonymize, or remove own submissions depending on the configured <a href="@user-settings-url">user settings</a>.', array('@user-settings-url' => url('admin/user/settings'))),
+     ),
+     'select account cancellation method' => array(
+       'title' => t('Select method for cancelling own account'),
+       'description' => t('Select the method for cancelling own user account. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+     ),
    );
 }
 
@@ -948,6 +957,16 @@ function user_edit_access($account) {
   return (($GLOBALS['user']->uid == $account->uid) || user_access('administer users')) && $account->uid > 0;
 }
 
+/**
+ * Menu access callback; limit access to account cancellation pages.
+ *
+ * Limit access to users with the 'cancel account' permission or administrative
+ * users, and prevent the anonymous user from cancelling the account.
+ */
+function user_cancel_access($account) {
+  return ((($GLOBALS['user']->uid == $account->uid) && user_access('cancel account')) || user_access('administer users')) && $account->uid > 0;
+}
+
 function user_load_self($arg) {
   $arg[1] = user_load($GLOBALS['user']->uid);
   return $arg;
@@ -1082,12 +1101,21 @@ function user_menu() {
     'weight' => -10,
   );
 
-  $items['user/%user/delete'] = array(
-    'title' => 'Delete',
+  $items['user/%user/cancel'] = array(
+    'title' => 'Cancel account',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_confirm_delete', 1),
-    'access callback' => 'user_access',
-    'access arguments' => array('administer users'),
+    'page arguments' => array('user_cancel_confirm_form', 1),
+    'access callback' => 'user_cancel_access',
+    'access arguments' => array(1),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['user/%user/cancel/confirm/%/%'] = array(
+    'title' => 'Confirm account cancellation',
+    'page callback' => 'user_cancel_confirm',
+    'page arguments' => array(1, 4, 5),
+    'access callback' => 'user_cancel_access',
+    'access arguments' => array(1),
     'type' => MENU_CALLBACK,
   );
 
@@ -1445,6 +1473,17 @@ function user_pass_reset_url($account) {
   return url("user/reset/$account->uid/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login), array('absolute' => TRUE));
 }
 
+/**
+ * Generate a URL to confirm an account cancellation request.
+ *
+ * @see user_mail_tokens()
+ * @see user_cancel_confirm()
+ */
+function user_cancel_url($account) {
+  $timestamp = REQUEST_TIME;
+  return url("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login), array('absolute' => TRUE));
+}
+
 function user_pass_rehash($password, $timestamp, $login) {
   return md5($timestamp . $password . $login);
 }
@@ -1595,21 +1634,106 @@ function _user_edit_submit($account, &$edit) {
 }
 
 /**
- * Delete a user.
+ * Cancel a user account.
  *
- * @param $edit An array of submitted form values.
- * @param $uid The user ID of the user to delete.
+ * Since the user cancellation process needs to be run in a batch, either
+ * Form API will invoke it, or batch_process() needs to be invoked after calling
+ * this function and should define the path to redirect to.
+ *
+ * @param $edit
+ *   An array of submitted form values.
+ * @param $uid
+ *   The user ID of the user account to cancel.
+ * @param $method
+ *   The account cancellation method to use.
+ *
+ * @see _user_cancel()
  */
-function user_delete($edit, $uid) {
+function user_cancel($edit, $uid, $method) {
+  global $user;
+
   $account = user_load(array('uid' => $uid));
-  drupal_session_destroy_uid($uid);
-  _user_mail_notify('status_deleted', $account);
-  module_invoke_all('user_delete', $edit, $account);
-  db_query('DELETE FROM {users} WHERE uid = %d', $uid);
-  db_query('DELETE FROM {users_roles} WHERE uid = %d', $uid);
-  db_query('DELETE FROM {authmap} WHERE uid = %d', $uid);
-  $variables = array('%name' => $account->name, '%email' => '<' . $account->mail . '>');
-  watchdog('user', 'Deleted user: %name %email.', $variables, WATCHDOG_NOTICE);
+
+  if (!$account) {
+    drupal_set_message(t('The user account %id does not exist.', array('%id' => $uid)), 'error');
+    watchdog('user', 'Attempted to cancel non-existing user account: %id.', array('%id' => $uid), WATCHDOG_ERROR);
+    return;
+  }
+
+  // Initialize batch (to set title).
+  $batch = array(
+    'title' => t('Cancelling account'),
+    'operations' => array(),
+  );
+  batch_set($batch);
+
+  // Allow modules to add further sets to this batch.
+  module_invoke_all('user_cancel', $edit, $account, $method);
+
+  // Finish the batch and actually cancel the account.
+  $batch = array(
+    'title' => t('Cancelling user account'),
+    'operations' => array(
+      array('_user_cancel', array($edit, $account, $method)),
+    ),
+  );
+  batch_set($batch);
+
+  // Batch processing is either handled via Form API or has to be invoked
+  // manually.
+}
+
+/**
+ * Last batch processing step for cancelling a user account.
+ *
+ * Since batch and session API require a valid user account, the actual
+ * cancellation of a user account needs to happen last.
+ *
+ * @see user_cancel()
+ */
+function _user_cancel($edit, $account, $method) {
+  global $user;
+
+  switch ($method) {
+    case 'user_cancel_block':
+    case 'user_cancel_block_unpublish':
+    default:
+      // Send account blocked notification if option was checked.
+      if (!empty($edit['user_cancel_notify'])) {
+        _user_mail_notify('status_blocked', $account);
+      }
+      db_update('users')->fields(array('status' => 0))->condition('uid', $account->uid)->execute();
+      drupal_set_message(t('%name has been disabled.', array('%name' => $account->name)));
+      break;
+
+    case 'user_cancel_reassign':
+    case 'user_cancel_delete':
+      // Send account canceled notification if option was checked.
+      if (!empty($edit['user_cancel_notify'])) {
+        _user_mail_notify('status_canceled', $account);
+      }
+      db_delete('users')->condition('uid', $account->uid)->execute();
+      db_delete('users_roles')->condition('uid', $account->uid)->execute();
+      db_delete('authmap')->condition('uid', $account->uid)->execute();
+      drupal_set_message(t('%name has been deleted.', array('%name' => $account->name)));
+      $variables = array('%name' => $account->name, '%email' => '<' . $account->mail . '>');
+      watchdog('user', 'Deleted user: %name %email.', $variables, WATCHDOG_NOTICE);
+      break;
+  }
+
+  // After cancelling account, ensure that user is logged out.
+  if ($account->uid == $user->uid) {
+    // Destroy the current session.
+    session_destroy();
+    // Load the anonymous user.
+    $user = drupal_anonymous_user();
+  }
+  else {
+    drupal_session_destroy_uid($account->uid);
+  }
+
+  // Clear the cache for anonymous users.
+  cache_clear_all();
 }
 
 /**
@@ -1682,10 +1806,28 @@ function _user_mail_text($key, $language = NULL, $variables = array()) {
         return t('Account details for !username at !site (blocked)', $variables, $langcode);
       case 'status_blocked_body':
         return t("!username,\n\nYour account on !site has been blocked.", $variables, $langcode);
-      case 'status_deleted_subject':
-        return t('Account details for !username at !site (deleted)', $variables, $langcode);
-      case 'status_deleted_body':
-        return t("!username,\n\nYour account on !site has been deleted.", $variables, $langcode);
+
+      case 'cancel_confirm_subject':
+        return t('Account cancellation request for !username at !site', $variables, $langcode);
+      case 'cancel_confirm_body':
+        return t("!username,
+
+A request to cancel your account has been made at !site.
+
+You may now cancel your account on !uri_brief by clicking this link or copying and pasting it into your browser:
+
+!cancel_url
+
+NOTE: The cancellation of your account is not reversible.
+
+This link expires in one day and nothing will happen if it is not used.", $variables, $langcode);
+
+      case 'status_canceled_subject':
+        return t('Account details for !username at !site (canceled)', $variables, $langcode);
+      case 'status_canceled_body':
+        return t("!username,
+
+Your account on !site has been canceled.", $variables, $langcode);
     }
   }
 }
@@ -1752,8 +1894,8 @@ function user_user_operations($form_state = array()) {
       'label' => t('Block the selected users'),
       'callback' => 'user_user_operations_block',
     ),
-    'delete' => array(
-      'label' => t('Delete the selected users'),
+    'cancel' => array(
+      'label' => t('Cancel the selected user accounts'),
     ),
   );
 
@@ -1866,7 +2008,7 @@ function user_multiple_role_edit($accounts, $operation, $rid) {
   }
 }
 
-function user_multiple_delete_confirm(&$form_state) {
+function user_multiple_cancel_confirm(&$form_state) {
   $edit = $form_state['post'];
 
   $form['accounts'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
@@ -1875,20 +2017,64 @@ function user_multiple_delete_confirm(&$form_state) {
     $user = db_result(db_query('SELECT name FROM {users} WHERE uid = %d', $uid));
     $form['accounts'][$uid] = array('#type' => 'hidden', '#value' => $uid, '#prefix' => '<li>', '#suffix' => check_plain($user) . "</li>\n");
   }
-  $form['operation'] = array('#type' => 'hidden', '#value' => 'delete');
+
+  $form['operation'] = array('#type' => 'hidden', '#value' => 'cancel');
+
+  module_load_include('inc', 'user', 'user.pages');
+  $form['user_cancel_method'] = array(
+    '#type' => 'item',
+    '#title' => t('When cancelling these accounts'),
+  );
+  $form['user_cancel_method'] += user_cancel_methods();
+  // Remove method descriptions.
+  foreach (element_children($form['user_cancel_method']) as $element) {
+    unset($form['user_cancel_method'][$element]['#description']);
+  }
+
+  // Allow to send the account cancellation confirmation mail.
+  $form['user_cancel_confirm'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Require e-mail confirmation to cancel account.'),
+    '#default_value' => FALSE,
+    '#description' => t('When enabled, the user must confirm the account cancellation via e-mail.'),
+  );
+  // Also allow to send account canceled notification mail, if enabled.
+  $form['user_cancel_notify'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Notify user when account is canceled.'),
+    '#default_value' => FALSE,
+    '#access' => variable_get('user_mail_status_canceled_notify', FALSE),
+    '#description' => t('When enabled, the user will receive an e-mail notification after the account has been cancelled.'),
+  );
 
   return confirm_form($form,
-                      t('Are you sure you want to delete these users?'),
+                      t('Are you sure you want to cancel these user accounts?'),
                       'admin/user/user', t('This action cannot be undone.'),
-                      t('Delete all'), t('Cancel'));
+                      t('Cancel accounts'), t('Cancel'));
 }
 
-function user_multiple_delete_confirm_submit($form, &$form_state) {
+/**
+ * Submit handler for mass-account cancellation form.
+ *
+ * @see user_multiple_cancel_confirm()
+ * @see user_cancel_confirm_form_submit()
+ */
+function user_multiple_cancel_confirm_submit($form, &$form_state) {
+  global $user;
+
   if ($form_state['values']['confirm']) {
     foreach ($form_state['values']['accounts'] as $uid => $value) {
-      user_delete($form_state['values'], $uid);
+      // Prevent user administrators from deleting themselves without confirmation.
+      if ($uid == $user->uid) {
+        $admin_form_state = $form_state;
+        unset($admin_form_state['values']['user_cancel_confirm']);
+        $admin_form_state['values']['_account'] = $user;
+        user_cancel_confirm_form_submit(array(), $admin_form_state);
+      }
+      else {
+        user_cancel($form_state['values'], $uid, $form_state['values']['user_cancel_method']);
+      }
     }
-    drupal_set_message(t('The users have been deleted.'));
   }
   $form_state['redirect'] = 'admin/user/user';
   return;
@@ -2082,6 +2268,7 @@ function user_mail_tokens($account, $language) {
     '!username' => $account->name,
     '!site' => variable_get('site_name', 'Drupal'),
     '!login_url' => user_pass_reset_url($account),
+    '!cancel_url' => user_cancel_url($account),
     '!uri' => $base_url,
     '!uri_brief' => preg_replace('!^https?://!', '', $base_url),
     '!mailto' => $account->mail,
@@ -2133,7 +2320,8 @@ function user_preferred_language($account, $default = NULL) {
  *  'password_reset': Password recovery request
  *  'status_activated': Account activated
  *  'status_blocked': Account blocked
- *  'status_deleted': Account deleted
+ *  'cancel_confirm': Account cancellation request
+ *  'status_canceled': Account canceled
  *
  * @param $account
  *  The user object of the account being notified. Must contain at
@@ -2144,8 +2332,8 @@ function user_preferred_language($account, $default = NULL) {
  *  The return value from drupal_mail_send(), if ends up being called.
  */
 function _user_mail_notify($op, $account, $language = NULL) {
-  // By default, we always notify except for deleted and blocked.
-  $default_notify = ($op != 'status_deleted' && $op != 'status_blocked');
+  // By default, we always notify except for canceled and blocked.
+  $default_notify = ($op != 'status_canceled' && $op != 'status_blocked');
   $notify = variable_get('user_mail_' . $op . '_notify', $default_notify);
   if ($notify) {
     $params['account'] = $account;

@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.292 2008/12/26 14:23:38 dries Exp $
+// $Id: statistics.module,v 1.293 2009/01/08 08:42:13 webchick Exp $
 
 /**
  * @file
@@ -182,10 +182,18 @@ function statistics_menu() {
 }
 
 /**
- * Implementation of hook_user_delete().
+ * Implementation of hook_user_cancel().
  */
-function statistics_user_delete(&$edit, &$user, $category) {
-  db_query('UPDATE {accesslog} SET uid = 0 WHERE uid = %d', $user->uid);
+function statistics_user_cancel(&$edit, &$account, $method) {
+  switch ($method) {
+    case 'user_cancel_reassign':
+      db_update('accesslog')->fields(array('uid' => 0))->condition('uid', $account->uid)->execute();
+      break;
+
+    case 'user_cancel_delete':
+      db_delete('accesslog')->condition('uid', $account->uid)->execute();
+      break;
+  }
 }
 
 /**

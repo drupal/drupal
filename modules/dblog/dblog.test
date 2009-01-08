@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.test,v 1.13 2008/12/24 10:38:41 dries Exp $
+// $Id: dblog.test,v 1.14 2009/01/08 08:42:12 webchick Exp $
 
 class DBLogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -165,7 +165,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->doNode('page');
     $this->doNode('poll');
 
-    // When a user is deleted, any content they created remains but the
+    // When a user account is canceled, any content they created remains but the
     // uid = 0. Their blog entry shows as "'s blog" on the home page. Records
     // in the watchdog table related to that user have the uid set to zero.
   }
@@ -202,8 +202,13 @@ class DBLogTestCase extends DrupalWebTestCase {
     }
     $count_before = (isset($ids)) ? count($ids) : 0;
     $this->assertTrue($count_before > 0, t('DBLog contains @count records for @name', array('@count' => $count_before, '@name' => $user->name)));
+
+    // Login the admin user.
+    $this->drupalLogin($this->big_user);
     // Delete user.
-    user_delete(array(), $user->uid);
+    // We need to POST here to invoke batch_process() in the internal browser.
+    $this->drupalPost('user/' . $user->uid . '/cancel', array('user_cancel_method' => 'user_cancel_reassign'), t('Cancel account'));
+
     // Count rows that have uids for the user.
     $count = db_result(db_query('SELECT COUNT(wid) FROM {watchdog} WHERE uid = %d', $user->uid));
     $this->assertTrue($count == 0, t('DBLog contains @count records for @name', array('@count' => $count, '@name' => $user->name)));
@@ -225,8 +230,6 @@ class DBLogTestCase extends DrupalWebTestCase {
     }
     $this->assertTrue(!isset($ids), t('DBLog contains no records for @name', array('@name' => $user->name)));
 
-    // Login the admin user.
-    $this->drupalLogin($this->big_user);
     // View the dblog report.
     $this->drupalGet('admin/reports/dblog');
     $this->assertResponse(200);

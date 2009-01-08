@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1009 2009/01/04 19:56:51 dries Exp $
+// $Id: node.module,v 1.1010 2009/01/08 08:42:12 webchick Exp $
 
 /**
  * @file
@@ -1476,11 +1476,41 @@ function node_ranking() {
 }
 
 /**
- * Implementation of hook_user_delete().
+ * Implementation of hook_user_cancel().
  */
-function node_user_delete(&$edit, &$user) {
-  db_query('UPDATE {node} SET uid = 0 WHERE uid = %d', $user->uid);
-  db_query('UPDATE {node_revision} SET uid = 0 WHERE uid = %d', $user->uid);
+function node_user_cancel(&$edit, &$account, $method) {
+  switch ($method) {
+    case 'user_cancel_block_unpublish':
+      // Unpublish nodes (current revisions).
+      module_load_include('inc', 'node', 'node.admin');
+      $nodes = db_select('node', 'n')->fields('n', array('nid'))->condition('uid', $account->uid)->execute()->fetchCol();
+      node_mass_update($nodes, array('status' => 0));
+      break;
+
+    case 'user_cancel_reassign':
+      // Anonymize nodes (current revisions).
+      module_load_include('inc', 'node', 'node.admin');
+      $nodes = db_select('node', 'n')->fields('n', array('nid'))->condition('uid', $account->uid)->execute()->fetchCol();
+      node_mass_update($nodes, array('uid' => 0));
+      // Anonymize old revisions.
+      db_update('node_revision')->fields(array('uid' => 0))->condition('uid', $account->uid)->execute();
+      // Clean history.
+      db_delete('history')->condition('uid', $account->uid)->execute();
+      break;
+
+    case 'user_cancel_delete':
+      // Delete nodes (current revisions).
+      // @todo Introduce node_mass_delete() or make node_mass_update() more flexible.
+      $nodes = db_select('node', 'n')->fields('n', array('nid'))->condition('uid', $account->uid)->execute()->fetchCol();
+      foreach ($nodes as $nid) {
+        node_delete($nid);
+      }
+      // Delete old revisions.
+      db_delete('node_revision')->condition('uid', $account->uid)->execute();
+      // Clean history.
+      db_delete('history')->condition('uid', $account->uid)->execute();
+      break;
+  }
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.248 2008/12/16 23:57:33 dries Exp $
+// $Id: profile.module,v 1.249 2009/01/08 08:42:13 webchick Exp $
 
 /**
  * @file
@@ -259,10 +259,15 @@ function profile_user_categories(&$edit, &$user, $category = NULL) {
 }
 
 /**
- * Implementation of hook_user_delete().
+ * Implementation of hook_user_cancel().
  */
-function profile_user_delete(&$edit, &$user, $category = NULL) {
-  db_query('DELETE FROM {profile_value} WHERE uid = %d', $user->uid);
+function profile_user_cancel(&$edit, &$account, $method) {
+  switch ($method) {
+    case 'user_cancel_reassign':
+    case 'user_cancel_delete':
+      db_delete('profile_value')->condition('uid', $account->uid)->execute();
+      break;
+  }
 }
 
 function profile_load_profile(&$user) {

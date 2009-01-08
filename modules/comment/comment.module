@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.680 2009/01/04 16:19:39 dries Exp $
+// $Id: comment.module,v 1.681 2009/01/08 08:42:12 webchick Exp $
 
 /**
  * @file
@@ -697,17 +697,31 @@ function comment_nodeapi_rss_item($node) {
 }
 
 /**
- * Implementation of hook_user_delete().
+ * Implementation of hook_user_cancel().
  */
-function comment_user_delete(&$edit, &$user, $category = NULL) {
-  db_update('comment')
-    ->fields(array('uid' => 0))
-    ->condition('uid', $user->uid)
-    ->execute();
-  db_update('node_comment_statistics')
-    ->fields(array('last_comment_uid' => 0))
-    ->condition('last_comment_uid', $user->uid)
-    ->execute();
+function comment_user_cancel(&$edit, &$account, $method) {
+  switch ($method) {
+    case 'user_cancel_block_unpublish':
+      db_update('comment')->fields(array('status' => 0))->condition('uid', $account->uid)->execute();
+      db_update('node_comment_statistics')->fields(array('last_comment_uid' => 0))->condition('last_comment_uid', $account->uid)->execute();
+      break;
+
+    case 'user_cancel_reassign':
+      db_update('comment')->fields(array('uid' => 0))->condition('uid', $account->uid)->execute();
+      db_update('node_comment_statistics')->fields(array('last_comment_uid' => 0))->condition('last_comment_uid', $account->uid)->execute();
+      break;
+
+    case 'user_cancel_delete':
+      module_load_include('inc', 'comment', 'comment.admin');
+      $comments = db_select('comment', 'c')->fields('c', array('cid'))->condition('uid', $account->uid)->execute()->fetchCol();
+      foreach ($comments as $cid) {
+        $comment = comment_load($cid);
+        // Delete the comment and its replies.
+        _comment_delete_thread($comment);
+        _comment_update_node_statistics($comment->nid);
+      }
+      break;
+  }
 }
 
 /**

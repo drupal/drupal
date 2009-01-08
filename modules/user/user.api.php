@@ -1,5 +1,5 @@
 <?php
-// $Id: user.api.php,v 1.1 2008/11/25 02:37:33 webchick Exp $
+// $Id: user.api.php,v 1.2 2009/01/08 08:42:13 webchick Exp $
 
 /**
  * @file
@@ -23,8 +23,6 @@
  *     (probably along with 'insert') if you want to reuse some information from
  *     the user object.
  *   - "categories": A set of user information categories is requested.
- *   - "delete": The user account is being deleted. The module should remove its
- *     custom additions to the user object from the database.
  *   - "form": The user account edit form is about to be displayed. The module
  *     should present the form elements it wishes to inject into the form.
  *   - "insert": The user account is being added. The module should save its
@@ -88,6 +86,98 @@ function hook_user($op, &$edit, &$account, $category = NULL) {
 }
 
 /**
+ * Act on user account cancellations.
+ *
+ * The user account is being canceled. Depending on the account cancellation
+ * method, the module should either do nothing, unpublish content, anonymize
+ * content, or delete content and data belonging to the canceled user account.
+ *
+ * Expensive operations should be added to the global batch with batch_set().
+ *
+ * @param &$edit
+ *   The array of form values submitted by the user.
+ * @param &$account
+ *   The user object on which the operation is being performed.
+ * @param $method
+ *   The account cancellation method.
+ *
+ * @see user_cancel_methods()
+ * @see hook_user_cancel_methods_alter()
+ * @see user_cancel()
+ */
+function hook_user_cancel(&$edit, &$account, $method) {
+  switch ($method) {
+    case 'user_cancel_block_unpublish':
+      // Unpublish nodes (current revisions).
+      module_load_include('inc', 'node', 'node.admin');
+      $nodes = db_select('node', 'n')->fields('n', array('nid'))->condition('uid', $account->uid)->execute()->fetchCol();
+      node_mass_update($nodes, array('status' => 0));
+      break;
+
+    case 'user_cancel_reassign':
+      // Anonymize nodes (current revisions).
+      module_load_include('inc', 'node', 'node.admin');
+      $nodes = db_select('node', 'n')->fields('n', array('nid'))->condition('uid', $account->uid)->execute()->fetchCol();
+      node_mass_update($nodes, array('uid' => 0));
+      // Anonymize old revisions.
+      db_update('node_revision')->fields(array('uid' => 0))->condition('uid', $account->uid)->execute();
+      // Clean history.
+      db_delete('history')->condition('uid', $account->uid)->execute();
+      break;
+
+    case 'user_cancel_delete':
+      // Delete nodes (current revisions).
+      $nodes = db_select('node', 'n')->fields('n', array('nid'))->condition('uid', $account->uid)->execute()->fetchCol();
+      foreach ($nodes as $nid) {
+        node_delete($nid);
+      }
+      // Delete old revisions.
+      db_delete('node_revision')->condition('uid', $account->uid)->execute();
+      // Clean history.
+      db_delete('history')->condition('uid', $account->uid)->execute();
+      break;
+  }
+}
+
+/**
+ * Modify account cancellation methods.
+ *
+ * By implementing this hook, modules are able to add, customize, or remove
+ * account cancellation methods. All defined methods are turned into radio
+ * button form elements by user_cancel_methods() after this hook is invoked.
+ * The following properties can be defined for each method:
+ * - title: The radio button's title.
+ * - description: (optional) A description to display on the confirmation form
+ *   if the user is not allowed to select the account cancellation method. The
+ *   description is NOT used for the radio button, but instead should provide
+ *   additional explanation to the user seeking to cancel their account.
+ * - access: (optional) A boolean value indicating whether the user can access
+ *   a method. If #access is defined, the method cannot be configured as default
+ *   method.
+ *
+ * @param &$methods
+ *   An array containing user account cancellation methods, keyed by method id.
+ *
+ * @see user_cancel_methods()
+ * @see user_cancel_confirm_form()
+ */
+function hook_user_cancel_methods_alter(&$methods) {
+  // Limit access to disable account and unpublish content method.
+  $methods['user_cancel_block_unpublish']['access'] = user_access('administer site configuration');
+
+  // Remove the content re-assigning method.
+  unset($methods['user_cancel_reassign']);
+
+  // Add a custom zero-out method.
+  $methods['mymodule_zero_out'] = array(
+    'title' => t('Delete the account and remove all content.'),
+    'description' => t('All your content will be replaced by empty strings.'),
+    // access should be used for administrative methods only.
+    'access' => user_access('access zero-out account cancellation method'),
+  );
+}
+
+/**
  * Add mass user operations.
  *
  * This hook enables modules to inject custom operations into the mass operations
@@ -114,8 +204,8 @@ function hook_user_operations() {
       'label' => t('Block the selected users'),
       'callback' => 'user_user_operations_block',
     ),
-    'delete' => array(
-      'label' => t('Delete the selected users'),
+    'cancel' => array(
+      'label' => t('Cancel the selected user accounts'),
     ),
   );
   return $operations;
