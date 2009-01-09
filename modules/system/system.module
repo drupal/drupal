@@ -1354,25 +1354,6 @@ function _system_sort_requirements($a, $b) {
 }
 
 /**
- * Implementation of hook_node_type().
- *
- * Updates theme settings after a node type change.
- */
-function system_node_type($op, $info) {
-  if ($op == 'update' && !empty($info->old_type) && $info->type != $info->old_type) {
-    $old = 'toggle_node_info_' . $info->old_type;
-    $new = 'toggle_node_info_' . $info->type;
-
-    $theme_settings = variable_get('theme_settings', array());
-    if (isset($theme_settings[$old])) {
-      $theme_settings[$new] = $theme_settings[$old];
-      unset($theme_settings[$old]);
-      variable_set('theme_settings', $theme_settings);
-    }
-  }
-}
-
-/**
  * Output a confirmation form
  *
  * This function returns a complete form for confirming an action. A link is

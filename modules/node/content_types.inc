@@ -159,7 +159,18 @@ function node_type_form(&$form_state, $type = NULL) {
     ),
     '#description' => t('Users with the <em>administer nodes</em> permission will be able to override these options.'),
   );
-
+  $form['display'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Display settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['display']['node_submitted'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Display post information'),
+    '#default_value' => variable_get('node_submitted_'. $type->type, TRUE),
+    '#description' => t('Enable the <em>submitted by Username on date</em> text.'), 
+  ); 
   $form['old_type'] = array(
     '#type' => 'value',
     '#value' => $type->type,

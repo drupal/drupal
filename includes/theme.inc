@@ -918,11 +918,6 @@ function theme_get_settings($key = NULL) {
     'toggle_secondary_menu'         =>  1,
   );
 
-  if (module_exists('node')) {
-    foreach (node_get_types() as $type => $name) {
-      $defaults['toggle_node_info_' . $type] = 1;
-    }
-  }
   $settings = array_merge($defaults, variable_get('theme_settings', array()));
 
   if ($key) {
@@ -2009,8 +2004,8 @@ function template_preprocess_node(&$variables) {
   // Flatten the node object's member fields.
   $variables = array_merge((array)$node, $variables);
 
-  // Display info only on certain node types.
-  if (theme_get_setting('toggle_node_info_' . $node->type)) {
+  // Display post information only on certain node types.
+  if (variable_get('node_submitted_' . $node->type, TRUE)) {
     $variables['submitted'] = theme('node_submitted', $node);
     $variables['picture'] = theme_get_setting('toggle_node_user_picture') ? theme('user_picture', $node) : '';
   }

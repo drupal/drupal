@@ -134,7 +134,7 @@ function chameleon_node($node, $teaser = 0) {
   $output .= " </div>\n";
 
   $submitted = '';
-  if (theme_get_setting("toggle_node_info_$node->type")) {
+  if (variable_get('node_submitted_' . $node->type, TRUE)) {
     $submitted = t("By !author at @date", array('!author' => theme('username', $node), '@date' => format_date($node->created, 'small')));
   }
 

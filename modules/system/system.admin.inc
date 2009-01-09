@@ -399,30 +399,7 @@ function system_theme_settings(&$form_state, $key = '') {
     }
   }
 
-  // System wide only settings.
-  if (!$key) {
-    // Create neat 2-column layout for the toggles
-    $form['theme_settings'] += array(
-      '#prefix' => '<div class="theme-settings-left">',
-      '#suffix' => '</div>',
-    );
-
-    // Toggle node display.
-    $node_types = node_get_types('names');
-    if ($node_types) {
-      $form['node_info'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Display post information on'),
-        '#description' => t('Enable or disable the <em>submitted by Username on date</em> text when displaying posts of the following type.'),
-        '#prefix' => '<div class="theme-settings-right">',
-        '#suffix' => '</div>',
-      );
-      foreach ($node_types as $type => $name) {
-        $form['node_info']["toggle_node_info_$type"] = array('#type' => 'checkbox', '#title' => check_plain($name), '#default_value' => $settings["toggle_node_info_$type"]);
-      }
-    }
-  }
-  elseif (!element_children($form['theme_settings'])) {
+  if (!element_children($form['theme_settings'])) {
     // If there is no element in the theme settings fieldset then do not show
     // it -- but keep it in the form if another module wants to alter.
     $form['theme_settings']['#access'] = FALSE;
@@ -436,7 +413,7 @@ function system_theme_settings(&$form_state, $key = '') {
       '#description' => t('If toggled on, the following logo will be displayed.'),
       '#attributes' => array('class' => 'theme-settings-bottom'),
     );
-    $form['logo']["default_logo"] = array(
+    $form['logo']['default_logo'] = array(
       '#type' => 'checkbox',
       '#title' => t('Use the default logo'),
       '#default_value' => $settings['default_logo'],
@@ -461,7 +438,7 @@ function system_theme_settings(&$form_state, $key = '') {
     $form['favicon'] = array(
       '#type' => 'fieldset',
       '#title' => t('Shortcut icon settings'),
-      '#description' => t("Your shortcut icon, or 'favicon', is displayed in the address bar and bookmarks of most browsers.")
+      '#description' => t("Your shortcut icon, or 'favicon', is displayed in the address bar and bookmarks of most browsers."),
     );
     $form['favicon']['default_favicon'] = array(
       '#type' => 'checkbox',
