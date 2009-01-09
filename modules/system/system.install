@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.295 2008/12/30 16:43:19 dries Exp $
+// $Id: system.install,v 1.296 2009/01/09 16:19:55 webchick Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3162,6 +3162,35 @@ function system_update_7016() {
     $ret[] = update_sql('DROP DOMAIN int_unsigned');
     $ret[] = update_sql('DROP DOMAIN bigint_unsigned');
   }
+  return $ret;
+}
+
+/**
+ * Change the theme setting 'toggle_node_info' into a per content type variable.
+ */
+function system_update_7017() {
+  $ret = array();
+  $types = node_get_types();
+  if (count($types)) {
+    foreach ($types as $type) {
+      $node_info = theme_get_setting('toggle_node_info_' . $type->type);
+      if ($node_info !== NULL) {
+        variable_set('node_submitted_' . $type->type, $node_info);
+        $ret[] = array('success' => TRUE, 'query' => "variable_set('node_submitted_$type->type')");
+      }
+    }
+  }
+
+  // Unset deprecated 'toggle_node_info' theme settings.
+  $theme_settings = theme_get_settings();
+  foreach ($theme_settings as $setting => $value) {
+    if (substr($setting, 0, 16) == 'toggle_node_info') {
+      unset($theme_settings[$setting]);
+    }
+  }
+  variable_set('theme_settings', $theme_settings);
+  $ret[] = array('success' => TRUE, 'query' => "variable_set('theme_settings')");
+
   return $ret;
 }
 

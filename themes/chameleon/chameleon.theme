@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.86 2008/12/31 12:02:23 dries Exp $
+// $Id: chameleon.theme,v 1.87 2009/01/09 16:19:56 webchick Exp $
 
 /**
  * @file
@@ -134,7 +134,7 @@ function chameleon_node($node, $teaser = 0) {
   $output .= " </div>\n";
 
   $submitted = '';
-  if (theme_get_setting("toggle_node_info_$node->type")) {
+  if (variable_get('node_submitted_' . $node->type, TRUE)) {
     $submitted = t("By !author at @date", array('!author' => theme('username', $node), '@date' => format_date($node->created, 'small')));
   }
 

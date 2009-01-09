@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.656 2009/01/05 02:52:43 webchick Exp $
+// $Id: system.module,v 1.657 2009/01/09 16:19:55 webchick Exp $
 
 /**
  * @file
@@ -1351,25 +1351,6 @@ function _system_sort_requirements($a, $b) {
     return -$b['weight'];
   }
   return isset($b['weight']) ? $a['weight'] - $b['weight'] : $a['weight'];
-}
-
-/**
- * Implementation of hook_node_type().
- *
- * Updates theme settings after a node type change.
- */
-function system_node_type($op, $info) {
-  if ($op == 'update' && !empty($info->old_type) && $info->type != $info->old_type) {
-    $old = 'toggle_node_info_' . $info->old_type;
-    $new = 'toggle_node_info_' . $info->type;
-
-    $theme_settings = variable_get('theme_settings', array());
-    if (isset($theme_settings[$old])) {
-      $theme_settings[$new] = $theme_settings[$old];
-      unset($theme_settings[$old]);
-      variable_set('theme_settings', $theme_settings);
-    }
-  }
 }
 
 /**

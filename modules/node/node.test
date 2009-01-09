@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.13 2008/12/30 16:43:18 dries Exp $
+// $Id: node.test,v 1.14 2009/01/09 16:19:55 webchick Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -535,5 +535,67 @@ class NodeBlockTestCase extends DrupalWebTestCase {
     $edit['node_syndicate[region]'] = 'footer';
     $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+  }
+}
+
+/**
+ * Check that the post information displays when enabled for a content type.
+ */
+class NodePostSettingsTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Node post information display'),
+      'description' => t('Check that the post information (submitted by Username on date) text displays appropriately.'),
+      'group' => t('Node'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    $web_user = $this->drupalCreateUser(array('create page content', 'administer content types', 'access user profiles'));
+    $this->drupalLogin($web_user);
+  }
+
+  /**
+   * Set page content type to display post information and confirm its presence on a new node.
+   */
+  function testPagePostInfo() {
+
+    // Set page content type to display post information.
+    $edit = array();
+    $edit['node_submitted'] = TRUE;
+    $this->drupalPost('admin/build/node-type/page', $edit, t('Save content type'));
+
+    // Create a node.
+    $edit = array();
+    $edit['title'] = $this->randomName(8);
+    $edit['body'] = $this->randomName(16);
+    $this->drupalPost('node/add/page', $edit, t('Save'));
+
+    // Check that the post information is displayed.
+    $node = $this->drupalGetNodeByTitle($edit['title']);
+    $this->assertRaw(theme('node_submitted', $node), t('Post information is displayed.'));
+  }
+
+  /**
+   * Set page content type to not display post information and confirm its absence on a new node.
+   */
+  function testPageNotPostInfo() {
+
+    // Set page content type to display post information.
+    $edit = array();
+    $edit['node_submitted'] = FALSE;
+    $this->drupalPost('admin/build/node-type/page', $edit, t('Save content type'));
+
+    // Create a node.
+    $edit = array();
+    $edit['title'] = $this->randomName(8);
+    $edit['body'] = $this->randomName(16);
+    $this->drupalPost('node/add/page', $edit, t('Save'));
+
+    // Check that the post information is displayed.
+    $node = $this->drupalGetNodeByTitle($edit['title']);
+    $this->assertNoRaw(theme('node_submitted', $node), t('Post information is not displayed.'));
   }
 }
