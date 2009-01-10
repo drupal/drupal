@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.151 2009/01/06 12:00:40 dries Exp $
+// $Id: file.inc,v 1.152 2009/01/10 06:09:54 webchick Exp $
 
 /**
  * @file
@@ -361,18 +361,21 @@ function file_save($file) {
  *   replace the file or rename the file based on the $replace parameter.
  * - Adds the new file to the files database. If the source file is a
  *   temporary file, the resulting file will also be a temporary file.
- *   @see file_save_upload about temporary files.
+ *   @see file_save_upload() for details on temporary files.
  *
  * @param $source
  *   A file object.
  * @param $destination
- *   A string containing the directory $source should be copied to. If this
- *   value is omitted, Drupal's 'files' directory will be used.
+ *   A string containing the destination that $source should be copied to. This
+ *   can be a complete file path, a directory path or, if this value is omitted,
+ *   Drupal's 'files' directory will be used.
  * @param $replace
  *   Replace behavior when the destination file already exists:
- *   - FILE_EXISTS_REPLACE - Replace the existing file.
+ *   - FILE_EXISTS_REPLACE - Replace the existing file. If a managed file with
+ *       the destination name exists then its database entry will be updated. If
+ *       no database entry is found then a new one will be created.
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is
- *                          unique.
+ *       unique.
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
  * @return
  *   File object if the copy is successful, or FALSE in the event of an error.
@@ -385,14 +388,30 @@ function file_copy($source, $destination = NULL, $replace = FILE_EXISTS_RENAME) 
 
   if ($filepath = file_unmanaged_copy($source->filepath, $destination, $replace)) {
     $file = clone $source;
-    $file->fid      = NULL;
-    $file->filename = basename($filepath);
+    $file->fid = NULL;
     $file->filepath = $filepath;
-    if ($file = file_save($file)) {
-      // Inform modules that the file has been copied.
-      module_invoke_all('file_copy', $file, $source);
-      return $file;
+    $file->filename = basename($filepath);
+    // If we are replacing an existing file re-use its database record.
+    if ($replace == FILE_EXISTS_REPLACE) {
+      $existing_files = file_load_multiple(array(), array('filepath' => $filepath));
+      if (count($existing_files)) {
+        $existing = reset($existing_files);
+        $file->fid = $existing->fid;
+        $file->filename = $existing->filename;
+      }
     }
+    // If we are renaming around an existing file (rather than a directory),
+    // use its basename for the filename.
+    else if ($replace == FILE_EXISTS_RENAME && is_file(file_create_path($destination))) {
+      $file->filename = basename($destination);
+    }
+
+    $file = file_save($file);
+
+    // Inform modules that the file has been copied.
+    module_invoke_all('file_copy', $file, $source);
+
+    return $file;
   }
   return FALSE;
 }
@@ -412,13 +431,14 @@ function file_copy($source, $destination = NULL, $replace = FILE_EXISTS_RENAME) 
  * @param $source
  *   A string specifying the file location of the original file.
  * @param $destination
- *   A string containing the directory $source should be copied to. If this
- *   value is omitted, Drupal's 'files' directory will be used.
+ *   A string containing the destination that $source should be copied to. This
+ *   can be a complete file path, a directory path or, if this value is omitted,
+ *   Drupal's 'files' directory will be used.
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file.
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is
- *                          unique.
+ *       unique.
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
  * @return
  *   The path to the new file, or FALSE in the event of an error.
@@ -482,7 +502,7 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
  *   Replace behavior when the destination file already exists.
  *   - FILE_EXISTS_REPLACE - Replace the existing file.
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is
- *                          unique.
+ *       unique.
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
  * @return
  *   The destination file path or FALSE if the file already exists and
@@ -523,13 +543,18 @@ function file_destination($destination, $replace) {
  * @param $source
  *   A file object.
  * @param $destination
- *   A string containing the directory $source should be copied to. If this
- *   value is omitted, Drupal's 'files' directory will be used.
+ *   A string containing the destination that $source should be moved to. This
+ *   can be a complete file path, a directory path or, if this value is omitted,
+ *   Drupal's 'files' directory will be used.
  * @param $replace
  *   Replace behavior when the destination file already exists:
- *   - FILE_EXISTS_REPLACE - Replace the existing file.
+ *   - FILE_EXISTS_REPLACE - Replace the existing file. If a managed file with
+ *       the destination name exists then its database entry will be updated and
+ *       file_delete() called on the source file after hook_file_move is called.
+ *       If no database entry is found then the source files record will be
+ *       updated.
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is
- *                          unique.
+ *       unique.
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
  * @return
  *   Resulting file object for success, or FALSE in the event of an error.
@@ -541,15 +566,36 @@ function file_move($source, $destination = NULL, $replace = FILE_EXISTS_RENAME) 
   $source = (object)$source;
 
   if ($filepath = file_unmanaged_move($source->filepath, $destination, $replace)) {
+    $delete_source = FALSE;
+
     $file = clone $source;
-    $file->filename = basename($filepath);
     $file->filepath = $filepath;
-    if ($file = file_save($file)) {
-      // Inform modules that the file has been moved.
-      module_invoke_all('file_move', $file, $source);
-      return $file;
+    // If we are replacing an existing file re-use its database record.
+    if ($replace == FILE_EXISTS_REPLACE) {
+      $existing_files = file_load_multiple(array(), array('filepath' => $filepath));
+      if (count($existing_files)) {
+        $existing = reset($existing_files);
+        $delete_source = TRUE;
+        $file->fid = $existing->fid;
+      }
     }
-    drupal_set_message(t('The removal of the original file %file has failed.', array('%file' => $source->filepath)), 'error');
+    // If we are renaming around an existing file (rather than a directory),
+    // use its basename for the filename.
+    else if ($replace == FILE_EXISTS_RENAME && is_file(file_create_path($destination))) {
+      $file->filename = basename($destination);
+    }
+
+    $file = file_save($file);
+
+    // Inform modules that the file has been moved.
+    module_invoke_all('file_move', $file, $source);
+
+    if ($delete_source) {
+      // Try a soft delete to remove original if it's not in use elsewhere.
+      file_delete($source);
+    }
+
+    return $file;
   }
   return FALSE;
 }
@@ -561,13 +607,14 @@ function file_move($source, $destination = NULL, $replace = FILE_EXISTS_RENAME) 
  * @param $source
  *   A string specifying the file location of the original file.
  * @param $destination
- *   A string containing the directory $source should be copied to. If this
- *   value is omitted, Drupal's 'files' directory will be used.
+ *   A string containing the destination that $source should be moved to. This
+ *   can be a complete file path, a directory name or, if this value is omitted,
+ *   Drupal's 'files' directory will be used.
  * @param $replace
  *   Replace behavior when the destination file already exists:
  *   - FILE_EXISTS_REPLACE - Replace the existing file.
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is
- *                          unique.
+ *       unique.
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
  * @return
  *   The filepath of the moved file, or FALSE in the event of an error.
@@ -875,6 +922,11 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
 
   $file->source = $source;
   $file->destination = file_destination(file_create_path($destination . '/' . $file->filename), $replace);
+  // If file_destination() returns FALSE then $replace == FILE_EXISTS_ERROR and
+  // there's an existing file so we need to bail.
+  if ($file->destination === FALSE) {
+    return FALSE;
+  }
 
   // Add in our check of the the file name length.
   $validators['file_validate_name_length'] = array();
@@ -903,6 +955,15 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
     form_set_error($source, t('File upload error. Could not move uploaded file.'));
     watchdog('file', 'Upload error. Could not move uploaded file %file to destination %destination.', array('%file' => $file->filename, '%destination' => $file->filepath));
     return FALSE;
+  }
+
+  // If we are replacing an existing file re-use its database record.
+  if ($replace == FILE_EXISTS_REPLACE) {
+    $existing_files = file_load_multiple(array(), array('filepath' => $file->filepath));
+    if (count($existing_files)) {
+      $existing = reset($existing_files);
+      $file->fid = $existing->fid;
+    }
   }
 
   // If we made it this far it's safe to record this file in the database.
@@ -1121,9 +1182,11 @@ function file_validate_image_resolution(&$file, $maximum_dimensions = 0, $minimu
  *   files directory.
  * @param $replace
  *   Replace behavior when the destination file already exists:
- *   - FILE_EXISTS_REPLACE - Replace the existing file.
+ *   - FILE_EXISTS_REPLACE - Replace the existing file. If a managed file with
+ *       the destination name exists then its database entry will be updated. If
+ *       no database entry is found then a new one will be created.
  *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is
- *                          unique.
+ *       unique.
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
  * @return
  *   A file object, or FALSE on error.
@@ -1136,11 +1199,27 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
   if ($filepath = file_unmanaged_save_data($data, $destination, $replace)) {
     // Create a file object.
     $file = new stdClass();
+    $file->fid = NULL;
     $file->filepath = $filepath;
-    $file->filename = basename($file->filepath);
+    $file->filename = basename($filepath);
     $file->filemime = file_get_mimetype($file->filepath);
     $file->uid      = $user->uid;
     $file->status  |= FILE_STATUS_PERMANENT;
+    // If we are replacing an existing file re-use its database record.
+    if ($replace == FILE_EXISTS_REPLACE) {
+      $existing_files = file_load_multiple(array(), array('filepath' => $filepath));
+      if (count($existing_files)) {
+        $existing = reset($existing_files);
+        $file->fid = $existing->fid;
+        $file->filename = $existing->filename;
+      }
+    }
+    // If we are renaming around an existing file (rather than a directory),
+    // use its basename for the filename.
+    else if ($replace == FILE_EXISTS_RENAME && is_file(file_create_path($destination))) {
+      $file->filename = basename($destination);
+    }
+
     return file_save($file);
   }
   return FALSE;
