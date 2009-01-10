@@ -15,8 +15,7 @@ function forum_enable() {
   if ($vocabulary = taxonomy_vocabulary_load(variable_get('forum_nav_vocabulary', 0))) {
     // Existing install. Add back forum node type, if the forums
     // vocabulary still exists. Keep all other node types intact there.
-    $vocabulary = (array) $vocabulary;
-    $vocabulary['nodes']['forum'] = 1;
+    $vocabulary->nodes['forum'] = 1;
     taxonomy_vocabulary_save($vocabulary);
   }
   else {
