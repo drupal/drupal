@@ -296,6 +296,13 @@ abstract class DatabaseConnection extends PDO {
   protected $transactionalDDLSupport = FALSE;
 
   /**
+   * An index used to generate unique temporary table names.
+   *
+   * @var integer
+   */
+  protected $temporaryNameIndex = 0;
+
+  /**
    * The schema object for this connection.
    *
    * @var object
@@ -910,6 +917,16 @@ abstract class DatabaseConnection extends PDO {
   abstract public function queryRange($query, array $args, $from, $count, array $options = array());
 
   /**
+   * Generate a temporary table name.
+   *
+   * @return
+   *   A table name.
+   */
+  protected function generateTemporaryTableName() {
+    return "db_temporary_" . $this->temporaryNameIndex++;
+  }
+
+  /**
    * Runs a SELECT query and stores its results in a temporary table.
    *
    * Use this as a substitute for ->query() when the results need to stored
@@ -925,17 +942,13 @@ abstract class DatabaseConnection extends PDO {
    *   A string containing a normal SELECT SQL query.
    * @param $args
    *   An array of values to substitute into the query at placeholder markers.
-   * @param $tablename
-   *   The name of the temporary table to select into. This name will not be
-   *   prefixed as there is no risk of collision.
    * @param $options
    *   An associative array of options to control how the query is run. See
    *   the documentation for DatabaseConnection::defaultOptions() for details.
    * @return
-   *   A database query result resource, or FALSE if the query was not executed
-   *   correctly.
+   *   The name of the temporary table.
    */
-  abstract function queryTemporary($query, array $args, $tablename, array $options = array());
+  abstract function queryTemporary($query, array $args, array $options = array());
 
   /**
    * Returns the type of database driver.
@@ -1788,20 +1801,19 @@ function db_query_range($query, $args, $from = 0, $count = 0, $options = array()
  *   placeholders, this is an associative array in any order. If the query uses
  *   unnamed placeholders (?), this is an indexed array and the order must match
  *   the order of placeholders in the query string.
- * @param $tablename
- *   The name of the temporary table to select into. This name will not be
- *   prefixed as there is no risk of collision.
  * @param $options
  *   An array of options to control how the query operates.
+ * @return
+ *   The name of the temporary table.
  */
-function db_query_temporary($query, $args, $tablename, $options = array()) {
+function db_query_temporary($query, $args, $options = array()) {
   if (!is_array($args)) {
     $args = func_get_args();
     array_shift($args);
   }
   list($query, $args, $options) = _db_query_process_args($query, $args, $options);
 
-  return Database::getActiveConnection($options['target'])->queryTemporary($query, $args, $tablename, $options);
+  return Database::getActiveConnection($options['target'])->queryTemporary($query, $args, $options);
 }
 
 /**
