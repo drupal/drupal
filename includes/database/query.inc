@@ -690,8 +690,7 @@ class MergeQuery extends Query {
       $this->connection->insert($this->table, $this->queryOptions)->fields($insert_fields)->execute();
     }
 
-    // Commit the transaction.
-    $transaction->commit();
+    // Transaction commits here where $transaction looses scope.
   }
 
   public function __toString() {

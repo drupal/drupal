@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.42 2009/01/08 09:52:11 dries Exp $
+// $Id: database.inc,v 1.43 2009/01/11 07:47:03 dries Exp $
 
 /**
  * @file
@@ -851,7 +851,7 @@ abstract class DatabaseConnection extends PDO {
 
     if ($this->transactionLayers == 1) {
       if ($this->supportsTransactions()) {
-        parent::startTransaction();
+        parent::beginTransaction();
       }
 
       // Reset any scheduled rollback
