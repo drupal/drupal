@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.9 2009/01/11 08:36:27 dries Exp $
+// $Id: database.inc,v 1.10 2009/01/11 10:57:20 dries Exp $
 
 /**
  * @file
@@ -123,8 +123,10 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     return $this->query($query . ' LIMIT ' . $from . ', ' . $count, $args, $options);
   }
 
-  public function queryTemporary($query, array $args, $tablename, array $options = array()) {
-    return $this->query(preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE ' . $tablename . ' AS SELECT', $query), $args, $options);
+  public function queryTemporary($query, array $args, array $options = array()) {
+    $tablename = $this->generateTemporaryTableName();
+    $this->query(preg_replace('/^SELECT/i', 'CREATE TEMPORARY TABLE {' . $tablename . '} AS SELECT', $query), $args, $options);
+    return $tablename;
   }
 
   public function driver() {
