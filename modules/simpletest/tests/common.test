@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.20 2009/01/08 19:09:49 dries Exp $
+// $Id: common.test,v 1.21 2009/01/11 08:39:08 dries Exp $
 
 class CommonSizeTestCase extends DrupalWebTestCase {
   protected $exact_test_cases;
@@ -557,6 +557,7 @@ class ValidUrlTestCase extends DrupalWebTestCase {
       'john%20doe:secret:foo@example.org/',
       'example.org/~,$\'*;',
       'caf%C3%A9.example.org',
+      '[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]:80/index.html',
     );
 
     foreach ($url_schemes as $scheme) {
@@ -576,6 +577,7 @@ class ValidUrlTestCase extends DrupalWebTestCase {
     $invalid_ablosule_urls = array(
       '',
       'ex!ample.com',
+      'ex%ample.com',
     );
 
     foreach ($url_schemes as $scheme) {
@@ -614,7 +616,8 @@ class ValidUrlTestCase extends DrupalWebTestCase {
   function testInvalidRelative() {
     $invalid_relative_urls = array(
       'ex^mple',
-      'example<>'
+      'example<>',
+      'ex%ample',
     );
 
     foreach (array('', '/') as $front) {
