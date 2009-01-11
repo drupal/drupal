@@ -31,7 +31,7 @@ function book_admin_settings() {
   $form['book_allowed_types'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Allowed book outline types'),
-    '#default_value' => variable_get('book_allowed_types', array('book')),
+    '#default_value' => array('book'),
     '#options' => $types,
     '#description' => t('Select content types which users with the %add-perm permission will be allowed to add to the book hierarchy. Users with the %outline-perm permission can add all content types.', array('%add-perm' => t('add content to books'),  '%outline-perm' => t('administer book outlines'))),
     '#required' => TRUE,
@@ -39,7 +39,7 @@ function book_admin_settings() {
   $form['book_child_type'] = array(
     '#type' => 'radios',
     '#title' => t('Default child page type'),
-    '#default_value' => variable_get('book_child_type', 'book'),
+    '#default_value' => 'book',
     '#options' => $types,
     '#description' => t('The content type for the %add-child link must be one of those selected as an allowed book outline type.', array('%add-child' => t('Add child page'))),
     '#required' => TRUE,
@@ -47,7 +47,7 @@ function book_admin_settings() {
   $form['array_filter'] = array('#type' => 'value', '#value' => TRUE);
   $form['#validate'][] = 'book_admin_settings_validate';
 
-  return system_settings_form($form);
+  return system_settings_form($form, TRUE);
 }
 
 /**

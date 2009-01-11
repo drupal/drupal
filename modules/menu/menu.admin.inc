@@ -607,7 +607,7 @@ function menu_configure() {
   $form['menu_default_node_menu'] = array(
     '#type' => 'select',
     '#title' => t('Default menu for content'),
-    '#default_value' => variable_get('menu_default_node_menu', 'main-menu'),
+    '#default_value' => 'main-menu',
     '#options' => $menu_options,
     '#description' => t('Choose the menu to be the default in the menu options in the content authoring form.'),
   );
@@ -627,11 +627,11 @@ function menu_configure() {
   $form["menu_secondary_links_source"] = array(
     '#type' => 'select',
     '#title' => t('Source for the Secondary links'),
-    '#default_value' => variable_get('menu_secondary_links_source', 'secondary-menu'),
+    '#default_value' => 'secondary-menu',
     '#options' => $secondary_options,
     '#tree' => FALSE,
     '#description' => t("Select the source for the Secondary links. An advanced option allows you to use the same source for both Main links (currently %main) and Secondary links: if your source menu has two levels of hierarchy, the top level menu links will appear in the Main links, and the children of the active link will appear in the Secondary links." , array('%main' => $main_options[$main])),
   );
 
-  return system_settings_form($form);
+  return system_settings_form($form, TRUE);
 }

@@ -1284,6 +1284,24 @@ function system_initialize_theme_blocks($theme) {
   }
 }
 
+function _system_settings_form_automatic_defaults($form) {
+  // Get an array of all non-property keys
+  $keys = element_children($form);
+
+  foreach ($keys as $key) {
+    // If the property (key) '#default_value' exists, replace it.
+    if (array_key_exists('#default_value', $form[$key])) {
+      $form[$key]['#default_value'] = variable_get($key, $form[$key]['#default_value']);
+    }
+    else {
+      // Recurse through child elements
+      $form[$key] = _system_settings_form_automatic_defaults($form[$key]);
+    }
+  }
+  
+  return $form;
+}
+
 /**
  * Add default buttons to a form and set its prefix.
  *
@@ -1294,10 +1312,14 @@ function system_initialize_theme_blocks($theme) {
  * @return
  *   The form structure.
  */
-function system_settings_form($form) {
+function system_settings_form($form, $automatic_defaults = TRUE) {
   $form['buttons']['submit'] = array('#type' => 'submit', '#value' => t('Save configuration') );
   $form['buttons']['reset'] = array('#type' => 'submit', '#value' => t('Reset to defaults') );
 
+  if ($automatic_defaults) {
+    $form = _system_settings_form_automatic_defaults($form);
+  }
+  
   if (!empty($_POST) && form_get_errors()) {
     drupal_set_message(t('The settings have not been saved because of the errors.'), 'error');
   }

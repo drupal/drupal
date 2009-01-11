@@ -43,7 +43,7 @@ function update_settings() {
     '#description' => t('If there are updates available of Drupal core or any of your installed modules and themes, your site will print an error message on the <a href="@status_report">status report</a>, the <a href="@modules_page">modules page</a>, and the <a href="@themes_page">themes page</a>. You can choose to only see these error messages if a security update is available, or to be notified about any newer versions.', array('@status_report' => url('admin/reports/status'), '@modules_page' => url('admin/build/modules'), '@themes_page' => url('admin/build/themes')))
   );
 
-  $form = system_settings_form($form);
+  $form = system_settings_form($form, FALSE);
   // Custom validation callback for the email notification setting.
   $form['#validate'][] = 'update_settings_validate';
   // We need to call our own submit callback first, not the one from

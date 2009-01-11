@@ -526,7 +526,7 @@ function user_admin_settings() {
     '#description' => t("This text is displayed at the picture upload form in addition to the default guidelines. It's useful for helping or instructing your users."),
   );
 
-  return system_settings_form($form);
+  return system_settings_form($form, FALSE);
 }
 
 /**

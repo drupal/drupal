@@ -148,5 +148,5 @@ function upload_admin_settings() {
 
   $form['#validate'] = array('upload_admin_settings_validate');
 
-  return system_settings_form($form);
+  return system_settings_form($form, FALSE);
 }

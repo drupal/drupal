@@ -324,7 +324,7 @@ function filter_admin_configure(&$form_state, $format) {
   }
 
   if (!empty($form)) {
-    $form = system_settings_form($form);
+    $form = system_settings_form($form, TRUE);
   }
   else {
     $form['error'] = array('#markup' => t('No settings are available.'));
