@@ -2255,8 +2255,8 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
         // on a database that does not actually support transactions, and
         // the current database does claim to NOT support transactions.
         $txn = db_transaction(TRUE);
+        $this->fail('No transaction failure registered.');
       }
-      $this->fail('No transaction failure registered.');
     }
     catch (TransactionsNotSupportedException $e) {
       $this->pass('Exception thrown for unsupported transactions.');

@@ -851,7 +851,7 @@ abstract class DatabaseConnection extends PDO {
 
     if ($this->transactionLayers == 1) {
       if ($this->supportsTransactions()) {
-        parent::startTransaction();
+        parent::beginTransaction();
       }
 
       // Reset any scheduled rollback
