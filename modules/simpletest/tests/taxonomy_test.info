@@ -1,4 +1,4 @@
-; $Id: taxonomy_test.info,v 1.1 2008/11/02 14:42:45 dries Exp $
+; $Id: taxonomy_test.info,v 1.2 2009/01/11 07:50:03 dries Exp $
 name = "Taxonomy test module"
 description = "Tests functions and hooks not used in core".
 package = Testing
@@ -6,4 +6,4 @@ version = VERSION
 core = 7.x
 files[] = taxonomy_test.module
 hidden[] = TRUE
-dependencies[] = Taxonomy
+dependencies[] = taxonomy

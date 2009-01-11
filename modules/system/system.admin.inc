@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.113 2009/01/09 16:19:55 webchick Exp $
+// $Id: system.admin.inc,v 1.114 2009/01/11 07:50:03 dries Exp $
 
 /**
  * @file
@@ -643,12 +643,15 @@ function system_modules($form_state = array()) {
     // Mark dependents disabled so user can not remove modules being depended on.
     $dependents = array();
     foreach ($module->info['dependents'] as $dependent) {
-      if ($files[$dependent]->status == 1) {
-        $extra['dependents'][] = t('@module (<span class="admin-enabled">enabled</span>)', array('@module' => $files[$dependent]->info['name']));
-        $extra['disabled'] = TRUE;
-      }
-      else {
-        $extra['dependents'][] = t('@module (<span class="admin-disabled">disabled</span>)', array('@module' => $files[$dependent]->info['name']));
+      // Hidden modules are unset already.
+      if (isset($files[$dependent])) {
+        if ($files[$dependent]->status == 1) {
+          $extra['dependents'][] = t('@module (<span class="admin-enabled">enabled</span>)', array('@module' => $files[$dependent]->info['name']));
+          $extra['disabled'] = TRUE;
+        }
+        else {
+          $extra['dependents'][] = t('@module (<span class="admin-disabled">disabled</span>)', array('@module' => $files[$dependent]->info['name']));
+        }
       }
     }
     $form['modules'][$module->info['package']][$filename] = _system_modules_build_row($module->info, $extra);
