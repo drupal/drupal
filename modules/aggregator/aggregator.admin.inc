@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.admin.inc,v 1.22 2008/12/22 19:38:30 dries Exp $
+// $Id: aggregator.admin.inc,v 1.23 2009/01/11 08:36:28 dries Exp $
 
 /**
  * @file
@@ -52,8 +52,12 @@ function aggregator_view() {
  * @see aggregator_form_feed_validate()
  * @see aggregator_form_feed_submit()
  */
-function aggregator_form_feed(&$form_state, $feed = NULL) {
+function aggregator_form_feed(&$form_state, stdClass $feed = NULL) {
   $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
+
+  if (!isset($feed)) {
+    $feed = new stdClass();
+  }
 
   if (empty($feed->refresh)) {
     $feed->refresh = 3600;

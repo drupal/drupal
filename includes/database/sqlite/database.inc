@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.8 2008/12/09 11:22:11 dries Exp $
+// $Id: database.inc,v 1.9 2009/01/11 08:36:27 dries Exp $
 
 /**
  * @file
@@ -140,7 +140,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     return NULL;
   }
 
-  protected function prepareQuery($query) {
+  protected function prepareQuery($query, $cache = TRUE) {
     // It makes no sense to use the static prepared statement cache here,
     // because all the work in our implementation is done in
     // DatabaseStatement_sqlite::execute() and cannot be cached.
