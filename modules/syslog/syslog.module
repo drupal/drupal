@@ -1,5 +1,5 @@
 <?php
-// $Id: syslog.module,v 1.19 2008/12/28 20:41:19 dries Exp $
+// $Id: syslog.module,v 1.20 2009/01/11 21:19:18 dries Exp $
 
 /**
  * @file
@@ -41,12 +41,12 @@ function syslog_admin_settings() {
   $form['syslog_facility'] = array(
     '#type'          => 'select',
     '#title'         => t('Send events to this syslog facility'),
-    '#default_value' => variable_get('syslog_facility', DEFAULT_SYSLOG_FACILITY),
+    '#default_value' => DEFAULT_SYSLOG_FACILITY,
     '#options'       => syslog_facility_list(),
     '#description'   => t('Select the syslog facility code under which Drupal\'s messages should be sent. On UNIX/Linux systems, Drupal can flag its messages with the code LOG_LOCAL0 through LOG_LOCAL7; for Microsoft Windows, all messages are flagged with the code LOG_USER. Depending on the system configuration, syslog and other logging tools use this code to identify or filter Drupal messages from within the entire system log. For more information on syslog, see <a href="@syslog_help">Syslog help</a>.', array(
       '@syslog_help' => url('admin/help/syslog'))),
   );
-  return system_settings_form($form);
+  return system_settings_form($form, TRUE);
 }
 
 function syslog_facility_list() {

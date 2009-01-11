@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.admin.inc,v 1.15 2008/12/30 03:53:35 webchick Exp $
+// $Id: statistics.admin.inc,v 1.16 2009/01/11 21:19:18 dries Exp $
 
 /**
  * @file
@@ -189,14 +189,14 @@ function statistics_access_logging_settings() {
   $form['access']['statistics_enable_access_log'] = array(
     '#type' => 'radios',
     '#title' => t('Enable access log'),
-    '#default_value' => variable_get('statistics_enable_access_log', 0),
+    '#default_value' => 0,
     '#options' => $options,
     '#description' => t('Log each page access. Required for referrer statistics.'));
   $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), 'format_interval');
   $form['access']['statistics_flush_accesslog_timer'] = array(
     '#type' => 'select',
     '#title' => t('Discard access logs older than'),
-    '#default_value'   => variable_get('statistics_flush_accesslog_timer', 259200),
+    '#default_value'   => 259200,
     '#options' => $period,
     '#description' => t('Older access log entries (including referrer statistics) will be automatically discarded. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status'))));
 
@@ -207,9 +207,9 @@ function statistics_access_logging_settings() {
   $form['content']['statistics_count_content_views'] = array(
     '#type' => 'radios',
     '#title' => t('Count content views'),
-    '#default_value' => variable_get('statistics_count_content_views', 0),
+    '#default_value' => 0,
     '#options' => $options,
     '#description' => t('Increment a counter each time content is viewed.'));
 
-  return system_settings_form($form);
+  return system_settings_form($form, TRUE);
 }

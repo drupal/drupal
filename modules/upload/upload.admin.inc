@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.admin.inc,v 1.10 2008/07/16 21:59:28 dries Exp $
+// $Id: upload.admin.inc,v 1.11 2009/01/11 21:19:19 dries Exp $
 
 /**
  * Form API callback to validate the upload settings form.
@@ -148,5 +148,5 @@ function upload_admin_settings() {
 
   $form['#validate'] = array('upload_admin_settings_validate');
 
-  return system_settings_form($form);
+  return system_settings_form($form, FALSE);
 }

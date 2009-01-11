@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.114 2009/01/11 07:50:03 dries Exp $
+// $Id: system.admin.inc,v 1.115 2009/01/11 21:19:18 dries Exp $
 
 /**
  * @file
@@ -153,18 +153,18 @@ function system_admin_theme_settings() {
     '#options' => $options,
     '#title' => t('Administration theme'),
     '#description' => t('Choose which theme the administration pages should display in. If you choose "System default" the administration pages will use the same theme as the rest of the site.'),
-    '#default_value' => variable_get('admin_theme', '0'),
+    '#default_value' => '0',
   );
 
   $form['node_admin_theme'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use administration theme for content editing'),
     '#description' => t('Use the administration theme when editing existing posts or creating new ones.'),
-    '#default_value' => variable_get('node_admin_theme', '0'),
+    '#default_value' => '0',
   );
 
   $form['#submit'][] = 'system_admin_theme_submit';
-  return system_settings_form($form);
+  return system_settings_form($form, TRUE);
 }
 
 /**
@@ -496,7 +496,7 @@ function system_theme_settings(&$form_state, $key = '') {
   }
   $form['#attributes'] = array('enctype' => 'multipart/form-data');
 
-  $form = system_settings_form($form);
+  $form = system_settings_form($form, FALSE);
   // We don't want to call system_settings_form_submit(), so change #submit.
   $form['#submit'] = array('system_theme_settings_submit');
   return $form;
@@ -1177,46 +1177,46 @@ function system_site_information_settings() {
   $form['site_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Name'),
-    '#default_value' => variable_get('site_name', 'Drupal'),
+    '#default_value' => 'Drupal',
     '#description' => t('The name of this website.'),
     '#required' => TRUE
   );
   $form['site_mail'] = array(
     '#type' => 'textfield',
     '#title' => t('E-mail address'),
-    '#default_value' => variable_get('site_mail', ini_get('sendmail_from')),
+    '#default_value' => ini_get('sendmail_from'),
     '#description' => t("The <em>From</em> address in automated e-mails sent during registration and new password requests, and other notifications. (Use an address ending in your site's domain to help prevent this e-mail being flagged as spam.)"),
     '#required' => TRUE,
   );
   $form['site_slogan'] = array(
     '#type' => 'textfield',
     '#title' => t('Slogan'),
-    '#default_value' => variable_get('site_slogan', ''),
+    '#default_value' => '',
     '#description' => t("Your site's motto, tag line, or catchphrase (often displayed alongside the title of the site).")
   );
   $form['site_mission'] = array(
     '#type' => 'textarea',
     '#title' => t('Mission'),
-    '#default_value' => variable_get('site_mission', ''),
+    '#default_value' => '',
     '#description' => t("Your site's mission or focus statement (often prominently displayed on the front page).")
   );
   $form['site_footer'] = array(
     '#type' => 'textarea',
     '#title' => t('Footer message'),
-    '#default_value' => variable_get('site_footer', ''),
+    '#default_value' => '',
     '#description' => t('This text will be displayed at the bottom of each page. Useful for adding a copyright notice to your pages.')
   );
   $form['anonymous'] = array(
     '#type' => 'textfield',
     '#title' => t('Anonymous user'),
-    '#default_value' => variable_get('anonymous', t('Anonymous')),
+    '#default_value' => t('Anonymous'),
     '#description' => t('The name used to indicate anonymous users.'),
     '#required' => TRUE,
   );
   $form['site_frontpage'] = array(
     '#type' => 'textfield',
     '#title' => t('Default front page'),
-    '#default_value' => variable_get('site_frontpage', 'node'),
+    '#default_value' => 'node',
     '#size' => 40,
     '#description' => t('The home page displays content from this relative URL. If unsure, specify "node".'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
@@ -1224,7 +1224,7 @@ function system_site_information_settings() {
   );
   $form['#validate'][] = 'system_site_information_settings_validate';
 
-  return system_settings_form($form);
+  return system_settings_form($form, TRUE);
 }
 
 /**
@@ -1258,7 +1258,7 @@ function system_error_reporting_settings() {
   $form['site_403'] = array(
     '#type' => 'textfield',
     '#title' => t('Default 403 (access denied) page'),
-    '#default_value' => variable_get('site_403', ''),
+    '#default_value' => '',
     '#size' => 40,
     '#description' => t('This page is displayed when the requested document is denied to the current user. If unsure, specify nothing.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
@@ -1267,19 +1267,20 @@ function system_error_reporting_settings() {
   $form['site_404'] = array(
     '#type' => 'textfield',
     '#title' => t('Default 404 (not found) page'),
-    '#default_value' => variable_get('site_404', ''),
+    '#default_value' => '',
     '#size' => 40,
     '#description' => t('This page is displayed when no other content matches the requested document. If unsure, specify nothing.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
   );
 
   $form['error_level'] = array(
-    '#type' => 'select', '#title' => t('Error reporting'), '#default_value' => variable_get('error_level', 1),
+    '#type' => 'select', '#title' => t('Error reporting'),
+    '#default_value' => 1,
     '#options' => array(t('Write errors to the log'), t('Write errors to the log and to the screen')),
     '#description' => t('Specify where Drupal, PHP and SQL errors are logged. While it is recommended that a site running in a production environment write errors to the log only, in a development or testing environment it may be helpful to write errors both to the log and to the screen.')
   );
 
-  return system_settings_form($form);
+  return system_settings_form($form, TRUE);
 }
 
 /**
@@ -1399,7 +1400,7 @@ function system_performance_settings() {
   $form['#submit'][] = 'drupal_clear_css_cache';
   $form['#submit'][] = 'drupal_clear_js_cache';
 
-  return system_settings_form($form);
+  return system_settings_form($form, FALSE);
 }
 
 /**
@@ -1441,12 +1442,12 @@ function system_file_system_settings() {
   $form['file_downloads'] = array(
     '#type' => 'radios',
     '#title' => t('Download method'),
-    '#default_value' => variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC),
+    '#default_value' => FILE_DOWNLOADS_PUBLIC,
     '#options' => array(FILE_DOWNLOADS_PUBLIC => t('Public - files are available using HTTP directly.'), FILE_DOWNLOADS_PRIVATE => t('Private - files are transferred by Drupal.')),
     '#description' => t('Choose the <em>Public download</em> method unless you wish to enforce fine-grained access controls over file downloads. Changing the download method will modify all download paths and may cause unexpected problems on an existing site.')
   );
 
-  return system_settings_form($form);
+  return system_settings_form($form, TRUE);
 }
 
 /**
@@ -1461,7 +1462,7 @@ function system_image_toolkit_settings() {
     $form['image_toolkit'] = array(
       '#type' => 'radios',
       '#title' => t('Select an image processing toolkit'),
-      '#default_value' => variable_get('image_toolkit', image_get_toolkit()),
+      '#default_value' => image_get_toolkit(),
       '#options' => $toolkits_available
     );
   }
@@ -1471,7 +1472,7 @@ function system_image_toolkit_settings() {
 
   $form['image_toolkit_settings'] = image_toolkit_invoke('settings');
 
-  return system_settings_form($form);
+  return system_settings_form($form, TRUE);
 }
 
 /**
@@ -1485,19 +1486,19 @@ function system_rss_feeds_settings() {
   $form['feed_default_items'] = array(
     '#type' => 'select',
     '#title' => t('Number of items in each feed'),
-    '#default_value' => variable_get('feed_default_items', 10),
+    '#default_value' => 10,
     '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
     '#description' => t('Default number of items to include in each feed.')
   );
   $form['feed_item_length'] = array(
     '#type' => 'select',
     '#title' => t('Feed content'),
-    '#default_value' => variable_get('feed_item_length', 'teaser'),
+    '#default_value' => 'teaser',
     '#options' => array('title' => t('Titles only'), 'teaser' => t('Titles plus teaser'), 'fulltext' => t('Full text')),
     '#description' => t('Global setting for the default display of content items in each feed.')
   );
 
-  return system_settings_form($form);
+  return system_settings_form($form, TRUE);
 }
 
 /**
@@ -1670,7 +1671,7 @@ function system_date_time_settings() {
     '#description' => t('A user-defined long date format. See the <a href="@url">PHP manual</a> for available options. This format is currently set to display as <span>%date</span>.', array('@url' => 'http://php.net/manual/function.date.php', '%date' => format_date(REQUEST_TIME, 'custom', $default_long_custom))),
   );
 
-  $form = system_settings_form($form);
+  $form = system_settings_form($form, FALSE);
   // We will call system_settings_form_submit() manually, so remove it for now.
   unset($form['#submit']);
   return $form;
@@ -1711,7 +1712,7 @@ function system_site_maintenance_settings() {
   $form['site_offline'] = array(
     '#type' => 'radios',
     '#title' => t('Site status'),
-    '#default_value' => variable_get('site_offline', 0),
+    '#default_value' => 0,
     '#options' => array(t('Online'), t('Offline')),
     '#description' => t('When set to "Online", all visitors will be able to browse your site normally. When set to "Offline", only users with the "administer site configuration" permission will be able to access your site to perform maintenance; all other visitors will see the site offline message configured below. Authorized users can log in during "Offline" mode directly via the <a href="@user-login">user login</a> page.', array('@user-login' => url('user'))),
   );
@@ -1719,11 +1720,11 @@ function system_site_maintenance_settings() {
   $form['site_offline_message'] = array(
     '#type' => 'textarea',
     '#title' => t('Site offline message'),
-    '#default_value' => variable_get('site_offline_message', t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal')))),
+    '#default_value' => t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal'))),
     '#description' => t('Message to show visitors when the site is in offline mode.')
   );
 
-  return system_settings_form($form);
+  return system_settings_form($form, TRUE);
 }
 
 /**
@@ -1736,7 +1737,7 @@ function system_clean_url_settings() {
   $form['clean_url'] = array(
     '#type' => 'radios',
     '#title' => t('Clean URLs'),
-    '#default_value' => variable_get('clean_url', 0),
+    '#default_value' => 0,
     '#options' => array(t('Disabled'), t('Enabled')),
     '#description' => t('This option makes Drupal emit "clean" URLs (i.e. without <code>?q=</code> in the URL).'),
   );
@@ -1756,7 +1757,7 @@ function system_clean_url_settings() {
     }
   }
 
-  return system_settings_form($form);
+  return system_settings_form($form, TRUE);
 }
 
 /**

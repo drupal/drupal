@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.admin.inc,v 1.5 2008/07/02 20:05:11 dries Exp $
+// $Id: contact.admin.inc,v 1.6 2009/01/11 21:19:17 dries Exp $
 
 /**
  * @file
@@ -146,20 +146,20 @@ function contact_admin_delete_submit($form, &$form_state) {
 function contact_admin_settings() {
   $form['contact_form_information'] = array('#type' => 'textarea',
     '#title' => t('Additional information'),
-    '#default_value' => variable_get('contact_form_information', t('You can leave a message using the contact form below.')),
+    '#default_value' => t('You can leave a message using the contact form below.'),
     '#description' => t('Information to show on the <a href="@form">contact page</a>. Can be anything from submission guidelines to your postal address or telephone number.', array('@form' => url('contact'))),
   );
   $form['contact_hourly_threshold'] = array('#type' => 'select',
     '#title' => t('Hourly threshold'),
     '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50)),
-    '#default_value' => variable_get('contact_hourly_threshold', 3),
+    '#default_value' => 3,
     '#description' => t('The maximum number of contact form submissions a user can perform per hour.'),
   );
   $form['contact_default_status'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable personal contact form by default'),
-    '#default_value' => variable_get('contact_default_status', 1),
+    '#default_value' => 1,
     '#description' => t('Default status of the personal contact form for new users.'),
   );
-  return system_settings_form($form);
+  return system_settings_form($form, TRUE);
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.34 2009/01/08 08:42:13 webchick Exp $
+// $Id: user.admin.inc,v 1.35 2009/01/11 21:19:19 dries Exp $
 
 /**
  * @file
@@ -526,7 +526,7 @@ function user_admin_settings() {
     '#description' => t("This text is displayed at the picture upload form in addition to the default guidelines. It's useful for helping or instructing your users."),
   );
 
-  return system_settings_form($form);
+  return system_settings_form($form, FALSE);
 }
 
 /**

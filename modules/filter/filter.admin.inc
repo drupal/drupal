@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.19 2008/12/03 19:43:21 dries Exp $
+// $Id: filter.admin.inc,v 1.20 2009/01/11 21:19:17 dries Exp $
 
 /**
  * @file
@@ -324,7 +324,7 @@ function filter_admin_configure(&$form_state, $format) {
   }
 
   if (!empty($form)) {
-    $form = system_settings_form($form);
+    $form = system_settings_form($form, TRUE);
   }
   else {
     $form['error'] = array('#markup' => t('No settings are available.'));
