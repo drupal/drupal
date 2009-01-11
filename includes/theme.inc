@@ -1994,12 +1994,7 @@ function template_preprocess_node(&$variables) {
   $variables['comments']  = !empty($node->content['comments']) ? drupal_render($node->content['comments']) : '';
 
   // Render the rest of the node into $content.
-  if (!empty($node->content['teaser'])) {
-    $variables['content'] = drupal_render($node->content['teaser']);
-  }
-  else {
-    $variables['content'] = drupal_render($node->content);
-  }
+  $variables['content'] = drupal_render($node->content);
 
   // Flatten the node object's member fields.
   $variables = array_merge((array)$node, $variables);
