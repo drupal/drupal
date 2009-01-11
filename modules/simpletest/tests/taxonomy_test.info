@@ -6,4 +6,4 @@ version = VERSION
 core = 7.x
 files[] = taxonomy_test.module
 hidden[] = TRUE
-dependencies[] = Taxonomy
+dependencies[] = taxonomy
