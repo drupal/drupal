@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.29 2008/12/27 19:12:09 webchick Exp $
+// $Id: batch.inc,v 1.30 2009/01/12 06:23:57 dries Exp $
 
 
 /**
@@ -263,6 +263,8 @@ function _batch_process() {
 
     // If we are in progressive mode, break processing after 1 second.
     if ($batch['progressive'] && timer_read('batch_processing') > 1000) {
+      // Record elapsed wall clock time. 
+      $current_set['elapsed'] = round((microtime(TRUE) - $current_set['start']) * 1000, 2);
       break;
     }
   }
@@ -289,11 +291,16 @@ function _batch_process() {
 
     $current    = $total - $remaining + $finished;
     $percentage = $total ? floor($current / $total * 100) : 100;
+    $elapsed    = $current_set['elapsed'];
+    // Estimate remaining with percentage in floating format.
+    $estimate   = $elapsed * ($total - $current) / $current;
     $values     = array(
       '@remaining'  => $remaining,
       '@total'      => $total,
       '@current'    => floor($current),
       '@percentage' => $percentage,
+      '@elapsed'    => format_interval($elapsed / 1000),
+      '@estimate'   => format_interval($estimate / 1000),
     );
     $message = strtr($progress_message, $values);
     if (!empty($message)) {
@@ -360,7 +367,8 @@ function _batch_finished() {
         include_once DRUPAL_ROOT . '/' . $batch_set['file'];
       }
       if (function_exists($batch_set['finished'])) {
-        $batch_set['finished']($batch_set['success'], $batch_set['results'], $batch_set['operations']);
+        // Format the elapsed time when batch complete.
+        $batch_set['finished']($batch_set['success'], $batch_set['results'], $batch_set['operations'], format_interval($batch_set['elapsed'] / 1000));
       }
     }
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.311 2009/01/10 05:23:49 webchick Exp $
+// $Id: form.inc,v 1.312 2009/01/12 06:23:57 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2501,8 +2501,9 @@ function form_clean_id($id = NULL, $flush = FALSE) {
  *     'init_message': message displayed while the processing is initialized.
  *       Defaults to t('Initializing.').
  *     'progress_message': message displayed while processing the batch.
- *       Available placeholders are @current, @remaining, @total and @percent.
- *       Defaults to t('Remaining @remaining of @total.').
+ *       Available placeholders are @current, @remaining, @total, @percentage,
+ *       @estimate and @elapsed.
+ *       Defaults to t('Completed @current of @total.').
  *     'error_message': message displayed if an error occurred while processing
  *       the batch.
  *       Defaults to t('An error has occurred.').
@@ -2539,6 +2540,8 @@ function batch_set($batch_definition) {
       'sandbox' => array(),
       'results' => array(),
       'success' => FALSE,
+      'start' => microtime(TRUE),
+      'elapsed' => 0,
     );
     // Use get_t() to allow batches at install time.
     $t = get_t();
