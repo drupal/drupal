@@ -434,12 +434,12 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
   $context['finished'] = 1 - $size / $max;
 }
 
-function _simpletest_batch_finished($success, $results, $operations) {
+function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
   if (isset($results['test_id'])) {
     $_SESSION['test_id'] = $results['test_id'];
   }
   if ($success) {
-    drupal_set_message(t('The tests have finished running.'));
+    drupal_set_message(t('The tests finished in @elapsed.', array('@elapsed' => $elapsed)));
   }
   else {
     drupal_set_message(t('The tests did not successfully finish.'), 'error');
