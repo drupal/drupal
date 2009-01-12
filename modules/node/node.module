@@ -903,7 +903,6 @@ function node_save(&$node) {
 
   $node->timestamp = time();
   $node->format = isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT;
-  $update_node = TRUE;
 
   // Generate the node table query and the node_revisions table query.
   if ($node->is_new) {
@@ -920,7 +919,6 @@ function node_save(&$node) {
     }
     else {
       _node_save_revision($node, $user->uid, 'vid');
-      $update_node = FALSE;
     }
     $op = 'update';
   }
