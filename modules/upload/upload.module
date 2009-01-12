@@ -256,8 +256,8 @@ function upload_form_alter(&$form, $form_state, $form_id) {
         $form['attachments']['wrapper'] += _upload_form($node);
         $form['#attributes']['enctype'] = 'multipart/form-data';
       }
+      $form['#submit'][] = 'upload_node_form_submit';
     }
-    $form['#submit'][] = 'upload_node_form_submit';
   }
 }
 
