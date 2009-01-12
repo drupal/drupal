@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.224 2009/01/02 21:45:11 dries Exp $
+// $Id: upload.module,v 1.225 2009/01/12 08:29:09 dries Exp $
 
 /**
  * @file
@@ -261,8 +261,8 @@ function upload_form_alter(&$form, $form_state, $form_id) {
         $form['attachments']['wrapper'] += _upload_form($node);
         $form['#attributes']['enctype'] = 'multipart/form-data';
       }
+      $form['#submit'][] = 'upload_node_form_submit';
     }
-    $form['#submit'][] = 'upload_node_form_submit';
   }
 }
 
