@@ -1,7 +1,7 @@
 <?php
-// $Id: simpletest.test,v 1.14 2008/12/30 16:43:18 dries Exp $
+// $Id: simpletest.test,v 1.15 2009/01/12 16:53:09 dries Exp $
 
-class SimpleTestTestCase extends DrupalWebTestCase {
+class SimpleTestFunctionalTest extends DrupalWebTestCase {
   /**
    * The results array that has been parsed by getTestResults().
    */
@@ -87,7 +87,7 @@ class SimpleTestTestCase extends DrupalWebTestCase {
         $this->drupalGet('admin/build/testing');
 
         $edit = array();
-        $edit['SimpleTestTestCase'] = TRUE;
+        $edit['SimpleTestFunctionalTest'] = TRUE;
         $this->drupalPost(NULL, $edit, t('Run tests'));
 
         // Parse results and confirm that they are correct.
@@ -134,20 +134,20 @@ class SimpleTestTestCase extends DrupalWebTestCase {
    * Confirm that the stub test produced the desired results.
    */
   function confirmStubTestResults() {
-    $this->assertAssertion($this->pass, 'Other', 'Pass', 'simpletest.test', 'SimpleTestTestCase->stubTest()');
-    $this->assertAssertion($this->fail, 'Other', 'Fail', 'simpletest.test', 'SimpleTestTestCase->stubTest()');
+    $this->assertAssertion($this->pass, 'Other', 'Pass', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
+    $this->assertAssertion($this->fail, 'Other', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
 
-    $this->assertAssertion(t('Created permissions: @perms', array('@perms' => $this->valid_permission)), 'Role', 'Pass', 'simpletest.test', 'SimpleTestTestCase->stubTest()');
-    $this->assertAssertion(t('Invalid permission %permission.', array('%permission' => $this->invalid_permission)), 'Role', 'Fail', 'simpletest.test', 'SimpleTestTestCase->stubTest()');
+    $this->assertAssertion(t('Created permissions: @perms', array('@perms' => $this->valid_permission)), 'Role', 'Pass', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
+    $this->assertAssertion(t('Invalid permission %permission.', array('%permission' => $this->invalid_permission)), 'Role', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
 
     // Check that a warning is catched by simpletest.
-    $this->assertAssertion('Division by zero', 'Warning', 'Fail', 'simpletest.test', 'SimpleTestTestCase->stubTest()');
+    $this->assertAssertion('Division by zero', 'Warning', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
 
     // Check that the backtracing code works for specific assert function.
-    $this->assertAssertion('This is nothing.', 'Other', 'Pass', 'simpletest.test', 'SimpleTestTestCase->stubTest()');
+    $this->assertAssertion('This is nothing.', 'Other', 'Pass', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
 
     // Check that errors that occur inside PHP internal functions are correctly reported.
-    $this->assertAssertion('The second argument should be either an array or an object', 'Warning', 'Fail', 'simpletest.test', 'SimpleTestTestCase->stubTest()');
+    $this->assertAssertion('The second argument should be either an array or an object', 'Warning', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
 
     $this->test_ids[] = $test_id = $this->getTestIdFromResults();
     $this->assertTrue($test_id, t('Found test ID in results.'));
