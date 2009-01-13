@@ -1196,12 +1196,12 @@ function valid_url($url, $absolute = FALSE) {
       )
       (?::[0-9]+)?                                            # Server port number (optional)
       (?:[\/|\?]
-        (?:[\w#!:\.\?\+=&@!$'~*,;\/\(\)\[\]\-]|%[0-9a-f]{2})  # The path and query (optional)
+        (?:[\w#!:\.\?\+=&@$'~*,;\/\(\)\[\]\-]|%[0-9a-f]{2})   # The path and query (optional)
       *)?
     $/xi", $url);
   }
   else {
-    return (bool)preg_match("/^(?:[\w#!:\.\?\+=&@!$'~*,;\/\(\)\[\]\-]|%[0-9a-f]{2})+$/i", $url);
+    return (bool)preg_match("/^(?:[\w#!:\.\?\+=&@$'~*,;\/\(\)\[\]\-]|%[0-9a-f]{2})+$/i", $url);
   }
 }
 
