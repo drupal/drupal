@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.16 2008/12/05 12:50:27 dries Exp $
+// $Id: path.admin.inc,v 1.17 2009/01/13 19:27:21 dries Exp $
 
 /**
  * @file
@@ -148,8 +148,8 @@ function path_admin_form_validate($form, &$form_state) {
     form_set_error('dst', t('The alias %alias is already in use in this language.', array('%alias' => $dst)));
   }
   $item = menu_get_item($src);
-  if (!$item) {
-    form_set_error('src', t("The path '@link_path' is invalid.", array('@link_path' => $src)));
+  if (!$item || !$item['access']) {
+    form_set_error('src', t("The path '@link_path' is either invalid or you do not have access to it.", array('@link_path' => $src)));
   }
 }
 
