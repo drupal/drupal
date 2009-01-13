@@ -360,7 +360,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $this->drupalGet('node/' . $node->nid);
     $this->assertNoText($term2->name, t('Checking if node exists'));
     // Checking database fields.
-    $result = db_query('SELECT * FROM {term_node} WHERE nid = :nid', array(':nid' => $node->nid))->fetch();
+    $result = db_query('SELECT * FROM {taxonomy_term_node} WHERE nid = :nid', array(':nid' => $node->nid))->fetch();
     $this->assertTrue(empty($result), t('Term/node relationships are no longer in the database table.'));
   }
 

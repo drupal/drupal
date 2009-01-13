@@ -18,7 +18,7 @@ function taxonomy_test_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The {term_data}.tid of the term.',
+        'description' => 'The {taxonomy_term_data}.tid of the term.',
       ),
       'name' => array(
         'type' => 'varchar',

@@ -128,7 +128,7 @@ function hook_search($op = 'search', $keys = null) {
           $arguments1[] = $c;
         }
         $conditions1 .= ' AND (' . implode(' OR ', $categories) . ')';
-        $join1 .= ' INNER JOIN {term_node} tn ON n.vid = tn.vid';
+        $join1 .= ' INNER JOIN {taxonomy_term_node} tn ON n.vid = tn.vid';
         $keys = search_query_insert($keys, 'category');
       }
 
