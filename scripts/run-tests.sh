@@ -1,5 +1,5 @@
 <?php
-// $Id: run-tests.sh,v 1.21 2008/12/30 16:43:20 dries Exp $
+// $Id: run-tests.sh,v 1.22 2009/01/13 22:39:11 dries Exp $
 /**
  * @file
  * This script runs Drupal tests from command line.
@@ -124,10 +124,10 @@ All arguments are long options.
 
   --class     Run tests identified by specific class names, instead of group names.
 
-  --file      Run tests identifiled by specific file names, instead of group names.
+  --file      Run tests identified by specific file names, instead of group names.
               Specify the path and the extension (i.e. 'modules/user/user.test').
 
-  --color     Output the rusults with color highlighting.
+  --color     Output the results with color highlighting.
 
   --verbose   Output detailed assertion messages in addition to summary.
 
@@ -231,7 +231,7 @@ function simpletest_script_init() {
 
   $host = 'localhost';
   $path = '';
-  // Determine location of php command automatically, unless a comamnd line argument is supplied.
+  // Determine location of php command automatically, unless a command line argument is supplied.
   if (!empty($args['php'])) {
     $php = $args['php'];
   }

@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-// $Id: password-hash.sh,v 1.3 2008/12/20 18:24:41 dries Exp $
+// $Id: password-hash.sh,v 1.4 2009/01/13 22:39:11 dries Exp $
 
 /**
  * Drupal hash script - to generate a hash from a plaintext password
@@ -10,7 +10,7 @@
  *   #!c:/program files/php/php.exe
  *
  * @param password1 [password2 [password3 ...]]
- *  Plain-text passwords in quotes (or with spaces backslah escaped).
+ *  Plain-text passwords in quotes (or with spaces backslash escaped).
  */
 
 function variable_get($x, $default) {

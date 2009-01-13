@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# $Id: code-style.pl,v 1.15 2008/12/20 18:24:41 dries Exp $
+# $Id: code-style.pl,v 1.16 2009/01/13 22:39:11 dries Exp $
 
 use Pod::Usage;
 use Getopt::Long qw(GetOptions);
@@ -168,7 +168,7 @@ __END__
 
 =head1 NAME
 
-code-style.pl - Review drupal code for style
+code-style.pl - Review Drupal code for style
 
 =head1 SYNOPSIS
 
