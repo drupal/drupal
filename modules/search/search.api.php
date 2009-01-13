@@ -1,5 +1,5 @@
 <?php
-// $Id: search.api.php,v 1.1 2008/11/25 02:37:32 webchick Exp $
+// $Id: search.api.php,v 1.2 2009/01/13 22:25:12 dries Exp $
 
 /**
  * @file
@@ -128,7 +128,7 @@ function hook_search($op = 'search', $keys = null) {
           $arguments1[] = $c;
         }
         $conditions1 .= ' AND (' . implode(' OR ', $categories) . ')';
-        $join1 .= ' INNER JOIN {term_node} tn ON n.vid = tn.vid';
+        $join1 .= ' INNER JOIN {taxonomy_term_node} tn ON n.vid = tn.vid';
         $keys = search_query_insert($keys, 'category');
       }
 
