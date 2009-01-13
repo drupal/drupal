@@ -184,7 +184,7 @@ function node_build_filter_query() {
       case 'term':
         $table = "tn$index";
         $where[] = "$table.tid = %d";
-        $join .= "INNER JOIN {taxonomy_term_node} $table ON n.nid = $table.nid ";
+        $join .= "INNER JOIN {term_node} $table ON n.nid = $table.nid ";
         break;
       case 'type':
         $where[] = "n.type = '%s'";

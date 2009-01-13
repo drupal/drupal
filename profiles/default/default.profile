@@ -131,7 +131,7 @@ function default_profile_tasks(&$task, $url) {
   $description = st('Use tags to group articles on similar topics into categories.');
   $help = st('Enter a comma-separated list of words.');
 
-  $vid = db_insert('taxonomy_vocabulary')->fields(array(
+  $vid = db_insert('vocabulary')->fields(array(
     'name' => 'Tags',
     'description' => $description,
     'help' => $help,
@@ -143,7 +143,7 @@ function default_profile_tasks(&$task, $url) {
     'module' => 'taxonomy',
     'weight' => 0,
   ))->execute();
-  db_insert('taxonomy_vocabulary_node_type')->fields(array('vid' => $vid, 'type' => 'article'))->execute();
+  db_insert('vocabulary_node_type')->fields(array('vid' => $vid, 'type' => 'article'))->execute();
 
   // Update the menu router information.
   menu_rebuild();

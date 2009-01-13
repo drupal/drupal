@@ -149,7 +149,7 @@ class ForumTestCase extends DrupalWebTestCase {
    *
    * @param string $type Forum type (forum container or forum).
    * @param integer $parent Forum parent (default = 0 = a root forum; >0 = a forum container or another forum).
-   * @return object Taxonomy_term_data created.
+   * @return object Term_data created.
    */
   function createForum($type, $parent = 0) {
     // Generate a random name/description.
@@ -170,12 +170,12 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->assertRaw(t('Created new @type %term.', array('%term' => $name, '@type' => t($type))), t(ucfirst($type) . ' was created'));
 
     // Verify forum.
-    $term = db_fetch_array(db_query("SELECT * FROM {taxonomy_term_data} t WHERE t.vid = %d AND t.name = '%s' AND t.description = '%s'", variable_get('forum_nav_vocabulary', ''), $name, $description));
+    $term = db_fetch_array(db_query("SELECT * FROM {term_data} t WHERE t.vid = %d AND t.name = '%s' AND t.description = '%s'", variable_get('forum_nav_vocabulary', ''), $name, $description));
     $this->assertTrue(!empty($term), 'The ' . $type . ' exists in the database');
 
     // Verify forum hierarchy.
     $tid = $term['tid'];
-    $parent_tid = db_result(db_query("SELECT t.parent FROM {taxonomy_term_hierarchy} t WHERE t.tid = %d", $tid));
+    $parent_tid = db_result(db_query("SELECT t.parent FROM {term_hierarchy} t WHERE t.tid = %d", $tid));
     $this->assertTrue($parent == $parent_tid, 'The ' . $type . ' is linked to its container');
 
     return $term;
@@ -322,7 +322,7 @@ class ForumTestCase extends DrupalWebTestCase {
   /**
    * Verify display of forum page.
    *
-   * @param array $forum Forum array (a row from taxonomy_term_data table).
+   * @param array $forum Forum array (a row from term_data table).
    */
   private function verifyForumView($forum, $parent = NULL) {
     $crumb = '›';
@@ -342,7 +342,7 @@ class ForumTestCase extends DrupalWebTestCase {
   /**
    * Generate forum topics to test display of active forum block.
    *
-   * @param array $forum Forum array (a row from taxonomy_term_data table).
+   * @param array $forum Forum array (a row from term_data table).
    */
   private function generateForumTopics($forum) {
     $this->nids = array();

@@ -74,7 +74,7 @@ function forum_theme() {
  *   An associative array containing the term data or FALSE if the term cannot be loaded, or is not part of the forum vocabulary.
  */
 function forum_term_load($tid) {
-  $result = db_query(db_rewrite_sql('SELECT t.tid, t.vid, t.name, t.description, t.weight FROM {taxonomy_term_data} t WHERE t.tid = %d AND t.vid = %d', 't', 'tid'), $tid, variable_get('forum_nav_vocabulary', ''));
+  $result = db_query(db_rewrite_sql('SELECT t.tid, t.vid, t.name, t.description, t.weight FROM {term_data} t WHERE t.tid = %d AND t.vid = %d', 't', 'tid'), $tid, variable_get('forum_nav_vocabulary', ''));
   return db_fetch_array($result);
 }
 
@@ -250,7 +250,7 @@ function forum_nodeapi_validate($node, $form) {
       $vocabulary = $vid;
       $containers = variable_get('forum_containers', array());
       foreach ($node->taxonomy as $term) {
-        if (db_result(db_query('SELECT COUNT(*) FROM {taxonomy_term_data} WHERE tid = %d AND vid = %d', $term, $vocabulary))) {
+        if (db_result(db_query('SELECT COUNT(*) FROM {term_data} WHERE tid = %d AND vid = %d', $term, $vocabulary))) {
           if (in_array($term, $containers)) {
             $term = taxonomy_term_load($term);
             form_set_error('taxonomy', t('The item %forum is only a container for forums. Please select one of the forums below it.', array('%forum' => $term->name)));
@@ -283,7 +283,7 @@ function forum_nodeapi_presave($node) {
           $node->tid = $term_id;
         }
       }
-      $old_tid = db_result(db_query_range("SELECT t.tid FROM {taxonomy_term_node} t INNER JOIN {node} n ON t.vid = n.vid WHERE n.nid = %d ORDER BY t.vid DESC", $node->nid, 0, 1));
+      $old_tid = db_result(db_query_range("SELECT t.tid FROM {term_node} t INNER JOIN {node} n ON t.vid = n.vid WHERE n.nid = %d ORDER BY t.vid DESC", $node->nid, 0, 1));
       if ($old_tid && isset($node->tid) && ($node->tid != $old_tid) && !empty($node->shadow)) {
         // A shadow copy needs to be created. Retain new term and add old term.
         $node->taxonomy[] = $old_tid;
@@ -414,7 +414,7 @@ function forum_taxonomy($op, $type, $term = NULL) {
   if ($op == 'delete' && $term['vid'] == variable_get('forum_nav_vocabulary', '')) {
     switch ($type) {
       case 'term':
-        $results = db_query('SELECT tn.nid FROM {taxonomy_term_node} tn WHERE tn.tid = %d', $term['tid']);
+        $results = db_query('SELECT tn.nid FROM {term_node} tn WHERE tn.tid = %d', $term['tid']);
         while ($node = db_fetch_object($results)) {
           // node_delete will also remove any association with non-forum vocabularies.
           node_delete($node->nid);
@@ -503,8 +503,8 @@ function forum_block_view($delta = '') {
       case 'active':
         $title = t('Active forum topics');
         $query = db_select('node', 'n');
-        $tn_alias = $query->join('taxonomy_term_node', 'tn', 'tn.vid = n.vid');
-        $td_alias = $query->join('taxonomy_term_data', 'td', 'tn.tid = tn.tid');
+        $tn_alias = $query->join('term_node', 'tn', 'tn.vid = n.vid');
+        $td_alias = $query->join('term_data', 'td', 'tn.tid = tn.tid');
         $l_alias = $query->join('node_comment_statistics', 'l', 'n.nid = l.nid');
         $query->addField('n', 'nid', 'nid');
         $query->addField('n', 'title', 'title');
@@ -521,7 +521,7 @@ function forum_block_view($delta = '') {
 
       case 'new':
         $title = t('New forum topics');
-        $sql = db_rewrite_sql("SELECT n.nid, n.title, l.comment_count FROM {node} n INNER JOIN {taxonomy_term_node} tn ON tn.vid = n.vid INNER JOIN {taxonomy_term_data} td ON td.tid = tn.tid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND td.vid = %d ORDER BY n.nid DESC");
+        $sql = db_rewrite_sql("SELECT n.nid, n.title, l.comment_count FROM {node} n INNER JOIN {term_node} tn ON tn.vid = n.vid INNER JOIN {term_data} td ON td.tid = tn.tid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND td.vid = %d ORDER BY n.nid DESC");
         $result = db_query_range($sql, variable_get('forum_nav_vocabulary', ''), 0, variable_get('forum_block_num_new', '5'));
         $content = node_title_list($result);
         break;
@@ -588,7 +588,7 @@ function forum_get_forums($tid = 0) {
 
     $counts = array();
 
-    $sql = "SELECT r.tid, COUNT(n.nid) AS topic_count, SUM(l.comment_count) AS comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {taxonomy_term_node} r ON n.vid = r.vid WHERE n.status = 1 GROUP BY r.tid";
+    $sql = "SELECT r.tid, COUNT(n.nid) AS topic_count, SUM(l.comment_count) AS comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {term_node} r ON n.vid = r.vid WHERE n.status = 1 GROUP BY r.tid";
     $sql = db_rewrite_sql($sql);
     $_counts = db_query($sql);
     while ($count = db_fetch_object($_counts)) {
@@ -613,7 +613,7 @@ function forum_get_forums($tid = 0) {
     // This query does not use full ANSI syntax since MySQL 3.x does not support
     // table1 INNER JOIN table2 INNER JOIN table3 ON table2_criteria ON table3_criteria
     // used to join node_comment_statistics to users.
-    $sql = "SELECT ncs.last_comment_timestamp, IF (ncs.last_comment_uid != 0, u2.name, ncs.last_comment_name) AS last_comment_name, ncs.last_comment_uid FROM {node} n INNER JOIN {users} u1 ON n.uid = u1.uid INNER JOIN {taxonomy_term_node} tn ON n.vid = tn.vid INNER JOIN {node_comment_statistics} ncs ON n.nid = ncs.nid INNER JOIN {users} u2 ON ncs.last_comment_uid=u2.uid WHERE n.status = 1 AND tn.tid = %d ORDER BY ncs.last_comment_timestamp DESC";
+    $sql = "SELECT ncs.last_comment_timestamp, IF (ncs.last_comment_uid != 0, u2.name, ncs.last_comment_name) AS last_comment_name, ncs.last_comment_uid FROM {node} n INNER JOIN {users} u1 ON n.uid = u1.uid INNER JOIN {term_node} tn ON n.vid = tn.vid INNER JOIN {node_comment_statistics} ncs ON n.nid = ncs.nid INNER JOIN {users} u2 ON ncs.last_comment_uid=u2.uid WHERE n.status = 1 AND tn.tid = %d ORDER BY ncs.last_comment_timestamp DESC";
     $sql = db_rewrite_sql($sql);
     $topic = db_fetch_object(db_query_range($sql, $forum->tid, 0, 1));
 
@@ -636,7 +636,7 @@ function forum_get_forums($tid = 0) {
  * than NODE_NEW_LIMIT.
  */
 function _forum_topics_unread($term, $uid) {
-  $sql = "SELECT COUNT(n.nid) FROM {node} n INNER JOIN {taxonomy_term_node} tn ON n.vid = tn.vid AND tn.tid = %d LEFT JOIN {history} h ON n.nid = h.nid AND h.uid = %d WHERE n.status = 1 AND n.created > %d AND h.nid IS NULL";
+  $sql = "SELECT COUNT(n.nid) FROM {node} n INNER JOIN {term_node} tn ON n.vid = tn.vid AND tn.tid = %d LEFT JOIN {history} h ON n.nid = h.nid AND h.uid = %d WHERE n.status = 1 AND n.created > %d AND h.nid IS NULL";
   $sql = db_rewrite_sql($sql);
   return db_result(db_query($sql, $term, $uid, NODE_NEW_LIMIT));
 }
@@ -659,11 +659,11 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
     }
   }
 
-  $sql = db_rewrite_sql("SELECT n.nid, r.tid, n.title, n.type, n.sticky, u.name, u.uid, n.created AS timestamp, n.comment AS comment_mode, l.last_comment_timestamp, IF(l.last_comment_uid != 0, cu.name, l.last_comment_name) AS last_comment_name, l.last_comment_uid, l.comment_count AS num_comments, f.tid AS forum_tid FROM {node_comment_statistics} l INNER JOIN {node} n ON n.nid = l.nid INNER JOIN {users} cu ON l.last_comment_uid = cu.uid INNER JOIN {taxonomy_term_node} r ON n.vid = r.vid INNER JOIN {users} u ON n.uid = u.uid INNER JOIN {forum} f ON n.vid = f.vid WHERE n.status = 1 AND r.tid = %d");
+  $sql = db_rewrite_sql("SELECT n.nid, r.tid, n.title, n.type, n.sticky, u.name, u.uid, n.created AS timestamp, n.comment AS comment_mode, l.last_comment_timestamp, IF(l.last_comment_uid != 0, cu.name, l.last_comment_name) AS last_comment_name, l.last_comment_uid, l.comment_count AS num_comments, f.tid AS forum_tid FROM {node_comment_statistics} l INNER JOIN {node} n ON n.nid = l.nid INNER JOIN {users} cu ON l.last_comment_uid = cu.uid INNER JOIN {term_node} r ON n.vid = r.vid INNER JOIN {users} u ON n.uid = u.uid INNER JOIN {forum} f ON n.vid = f.vid WHERE n.status = 1 AND r.tid = %d");
   $sql .= tablesort_sql($forum_topic_list_header, 'n.sticky DESC,');
   $sql .= ', n.created DESC';  // Always add a secondary sort order so that the news forum topics are on top.
 
-  $sql_count = db_rewrite_sql("SELECT COUNT(n.nid) FROM {node} n INNER JOIN {taxonomy_term_node} r ON n.vid = r.vid AND r.tid = %d WHERE n.status = 1");
+  $sql_count = db_rewrite_sql("SELECT COUNT(n.nid) FROM {node} n INNER JOIN {term_node} r ON n.vid = r.vid AND r.tid = %d WHERE n.status = 1");
 
   $result = pager_query($sql, $forum_per_page, 0, $sql_count, $tid);
   $topics = array();
@@ -954,7 +954,7 @@ function template_preprocess_forum_topic_navigation(&$variables) {
   $output = '';
 
   // get previous and next topic
-  $sql = "SELECT n.nid, n.title, n.sticky, l.comment_count, l.last_comment_timestamp FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {taxonomy_term_node} r ON n.nid = r.nid AND r.tid = %d WHERE n.status = 1 ORDER BY n.sticky DESC, " . _forum_get_topic_order_sql(variable_get('forum_order', 1));
+  $sql = "SELECT n.nid, n.title, n.sticky, l.comment_count, l.last_comment_timestamp FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {term_node} r ON n.nid = r.nid AND r.tid = %d WHERE n.status = 1 ORDER BY n.sticky DESC, " . _forum_get_topic_order_sql(variable_get('forum_order', 1));
   $result = db_query(db_rewrite_sql($sql), isset($variables['node']->tid) ? $variables['node']->tid : 0);
 
   $stop = $variables['prev'] = $variables['next'] = 0;
