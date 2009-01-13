@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.953 2009/01/08 08:42:13 webchick Exp $
+// $Id: user.module,v 1.954 2009/01/13 06:27:01 webchick Exp $
 
 /**
  * @file
@@ -692,7 +692,24 @@ function user_user_form(&$edit, &$account, $category = NULL) {
  */
 function user_user_validate(&$edit, &$account, $category = NULL) {
   if ($category == 'account') {
-    return _user_edit_validate($account, $edit);
+    $uid = isset($account->uid) ? $account->uid : FALSE;
+    // Validate the username when: new user account; or user is editing own account and can change username; or an admin user.
+    if (!$uid || ($GLOBALS['user']->uid == $uid && user_access('change own username')) || user_access('administer users')) {
+      if ($error = user_validate_name($edit['name'])) {
+        form_set_error('name', $error);
+      }
+      elseif (db_result(db_query("SELECT COUNT(*) FROM {users} WHERE uid != %d AND LOWER(name) = LOWER('%s')", $uid, $edit['name'])) > 0) {
+        form_set_error('name', t('The name %name is already taken.', array('%name' => $edit['name'])));
+      }
+    }
+
+    // Validate the e-mail address:
+    if ($error = user_validate_mail($edit['mail'])) {
+      form_set_error('mail', $error);
+    }
+    elseif (db_result(db_query("SELECT COUNT(*) FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $uid, $edit['mail'])) > 0) {
+      form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $edit['mail'], '@password' => url('user/password'))));
+    }
   }
 }
 
@@ -701,7 +718,16 @@ function user_user_validate(&$edit, &$account, $category = NULL) {
  */
 function user_user_submit(&$edit, &$account, $category = NULL) {
   if ($category == 'account') {
-    return _user_edit_submit($account, $edit);
+    // Delete picture if requested, and if no replacement picture was given.
+    if (!empty($edit['picture_delete'])) {
+      if ($account->picture && file_exists($account->picture)) {
+        file_unmanaged_delete($account->picture);
+      }
+      $edit['picture'] = '';
+    }
+    if (isset($edit['roles'])) {
+      $edit['roles'] = array_filter($edit['roles']);
+    }
   }
 }
 
@@ -1597,40 +1623,6 @@ function user_edit_form(&$form_state, $uid, $edit, $register = FALSE) {
   $form['#uid'] = $uid;
 
   return $form;
-}
-
-function _user_edit_validate($account, &$edit) {
-  $uid = isset($account->uid) ? $account->uid : FALSE;
-  // Validate the username when: new user account; or user is editing own account and can change username; or an admin user.
-  if (!$uid || ($GLOBALS['user']->uid == $uid && user_access('change own username')) || user_access('administer users')) {
-    if ($error = user_validate_name($edit['name'])) {
-      form_set_error('name', $error);
-    }
-    elseif (db_result(db_query("SELECT COUNT(*) FROM {users} WHERE uid != %d AND LOWER(name) = LOWER('%s')", $uid, $edit['name'])) > 0) {
-      form_set_error('name', t('The name %name is already taken.', array('%name' => $edit['name'])));
-    }
-  }
-
-  // Validate the e-mail address:
-  if ($error = user_validate_mail($edit['mail'])) {
-    form_set_error('mail', $error);
-  }
-  elseif (db_result(db_query("SELECT COUNT(*) FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $uid, $edit['mail'])) > 0) {
-    form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $edit['mail'], '@password' => url('user/password'))));
-  }
-}
-
-function _user_edit_submit($account, &$edit) {
-  // Delete picture if requested, and if no replacement picture was given.
-  if (!empty($edit['picture_delete'])) {
-    if ($account->picture && file_exists($account->picture)) {
-      file_unmanaged_delete($account->picture);
-    }
-    $edit['picture'] = '';
-  }
-  if (isset($edit['roles'])) {
-    $edit['roles'] = array_filter($edit['roles']);
-  }
 }
 
 /**
