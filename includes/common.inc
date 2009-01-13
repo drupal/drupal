@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.845 2009/01/11 08:39:07 dries Exp $
+// $Id: common.inc,v 1.846 2009/01/13 22:19:28 dries Exp $
 
 /**
  * @file
@@ -1196,12 +1196,12 @@ function valid_url($url, $absolute = FALSE) {
       )
       (?::[0-9]+)?                                            # Server port number (optional)
       (?:[\/|\?]
-        (?:[\w#!:\.\?\+=&@!$'~*,;\/\(\)\[\]\-]|%[0-9a-f]{2})  # The path and query (optional)
+        (?:[\w#!:\.\?\+=&@$'~*,;\/\(\)\[\]\-]|%[0-9a-f]{2})   # The path and query (optional)
       *)?
     $/xi", $url);
   }
   else {
-    return (bool)preg_match("/^(?:[\w#!:\.\?\+=&@!$'~*,;\/\(\)\[\]\-]|%[0-9a-f]{2})+$/i", $url);
+    return (bool)preg_match("/^(?:[\w#!:\.\?\+=&@$'~*,;\/\(\)\[\]\-]|%[0-9a-f]{2})+$/i", $url);
   }
 }
 
