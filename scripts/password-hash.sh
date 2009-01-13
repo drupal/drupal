@@ -10,7 +10,7 @@
  *   #!c:/program files/php/php.exe
  *
  * @param password1 [password2 [password3 ...]]
- *  Plain-text passwords in quotes (or with spaces backslah escaped).
+ *  Plain-text passwords in quotes (or with spaces backslash escaped).
  */
 
 function variable_get($x, $default) {

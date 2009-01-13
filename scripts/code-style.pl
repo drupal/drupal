@@ -168,7 +168,7 @@ __END__
 
 =head1 NAME
 
-code-style.pl - Review drupal code for style
+code-style.pl - Review Drupal code for style
 
 =head1 SYNOPSIS
 
