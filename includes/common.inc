@@ -3866,7 +3866,7 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
  * Information stored in the module.info file:
  * - name: The real name of the module for display purposes.
  * - description: A brief description of the module.
- * - dependencies: An array of shortnames of other modules this module depends on.
+ * - dependencies: An array of shortnames of other modules this module requires.
  * - package: The name of the package of modules this module belongs to.
  *
  * Example of .info file:

@@ -47,7 +47,7 @@ table.package .description {
 table.package .version {
   direction: ltr;
 }
-div.admin-dependencies, div.admin-required {
+div.admin-requirements, div.admin-required {
   font-size: 0.9em;
   color: #444;
 }
