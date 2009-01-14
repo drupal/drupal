@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.263 2009/01/04 16:15:54 dries Exp $
+// $Id: bootstrap.inc,v 1.264 2009/01/14 12:15:38 dries Exp $
 
 /**
  * @file
@@ -392,6 +392,18 @@ function drupal_initialize_variables() {
   if (!isset($_SERVER['SERVER_PROTOCOL']) || ($_SERVER['SERVER_PROTOCOL'] != 'HTTP/1.0' && $_SERVER['SERVER_PROTOCOL'] != 'HTTP/1.1')) {
     $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.0';
   }
+  // Some pre-HTTP/1.1 clients will not send a Host header. Ensure the key is
+  // defined for E_ALL compliance.
+  if (!isset($_SERVER['HTTP_HOST'])) {
+    $_SERVER['HTTP_HOST'] = '';
+  }
+
+  if (!drupal_valid_http_host()) {
+    // HTTP_HOST is invalid, e.g. if containing slashes it may be an attack.
+    header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
+    exit;
+  }
+
   // Enforce E_ALL, but allow users to set levels not part of E_ALL.
   error_reporting(E_ALL | error_reporting());
 
@@ -422,8 +434,13 @@ function drupal_initialize_variables() {
  *  TRUE if only containing valid characters, or FALSE otherwise.
  */
 function drupal_valid_http_host() {
-  $_SERVER['HTTP_HOST'] = strtolower($_SERVER['HTTP_HOST']);
-  return preg_match('/^\[?(?:[a-z0-9-:\]_]+\.?)+$/', $_SERVER['HTTP_HOST']);
+  if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != '') {
+    $_SERVER['HTTP_HOST'] = strtolower($_SERVER['HTTP_HOST']);
+    return preg_match('/^\[?(?:[a-z0-9-:\]_]+\.?)+$/', $_SERVER['HTTP_HOST']);
+  }
+  else {
+    return TRUE;
+  }
 }
 
 /**
@@ -436,12 +453,6 @@ function conf_init() {
   // Export the following settings.php variables to the global namespace
   global $databases, $db_prefix, $cookie_domain, $conf, $installed_profile, $update_free_access;
   $conf = array();
-
-  if (!drupal_valid_http_host()) {
-    // HTTP_HOST is invalid, e.g. if containing slashes it may be an attack.
-    header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
-    exit;
-  }
 
   if (file_exists(DRUPAL_ROOT . '/' . conf_path() . '/settings.php')) {
     include_once DRUPAL_ROOT . '/' . conf_path() . '/settings.php';
