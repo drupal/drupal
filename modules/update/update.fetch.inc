@@ -57,7 +57,6 @@ function _update_refresh() {
     watchdog('update', 'Fetched information about all available new releases and updates.', array(), WATCHDOG_NOTICE, l(t('view'), 'admin/reports/updates'));
   }
   else {
-    module_invoke('system', 'check_http_request');
     watchdog('update', 'Unable to fetch any information about available new releases and updates.', array(), WATCHDOG_ERROR, l(t('view'), 'admin/reports/updates'));
   }
   return $available;

@@ -268,8 +268,8 @@ function system_requirements($phase) {
   include_once './includes/unicode.inc';
   $requirements = array_merge($requirements, unicode_requirements());
 
-  // Check for update status module.
   if ($phase == 'runtime') {
+    // Check for update status module.
     if (!module_exists('update')) {
       $requirements['update status'] = array(
         'value' => $t('Not enabled'),
@@ -281,16 +281,18 @@ function system_requirements($phase) {
       $requirements['update status'] = array(
         'value' => $t('Enabled'),
       );
-      if (variable_get('drupal_http_request_fails', FALSE)) {
-        $requirements['http requests'] = array(
-          'title' => $t('HTTP request status'),
-          'value' => $t('Fails'),
-          'severity' => REQUIREMENT_ERROR,
-          'description' => $t('Your system or network configuration does not allow Drupal to access web pages, resulting in reduced functionality. This could be due to your webserver configuration or PHP settings, and should be resolved in order to download information about available updates, fetch aggregator feeds, sign in via OpenID, or use other network-dependent services.'),
-        );
-      }
     }
     $requirements['update status']['title'] = $t('Update notifications');
+
+    // Check that Drupal can issue HTTP requests.
+    if (variable_get('drupal_http_request_fails', TRUE) && !system_check_http_request()) {
+      $requirements['http requests'] = array(
+        'title' => $t('HTTP request status'),
+        'value' => $t('Fails'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => $t('Your system or network configuration does not allow Drupal to access web pages, resulting in reduced functionality. This could be due to your webserver configuration or PHP settings, and should be resolved in order to download information about available updates, fetch aggregator feeds, sign in via OpenID, or use other network-dependent services.'),
+      );
+    }
   }
 
   return $requirements;
