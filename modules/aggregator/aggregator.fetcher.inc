@@ -76,6 +76,5 @@ function aggregator_aggregator_fetch($feed) {
     default:
       watchdog('aggregator', 'The feed from %site seems to be broken, due to "%error".', array('%site' => $feed->title, '%error' => $result->code . ' ' . $result->error), WATCHDOG_WARNING);
       drupal_set_message(t('The feed from %site seems to be broken, because of error "%error".', array('%site' => $feed->title, '%error' => $result->code . ' ' . $result->error)));
-      module_invoke('system', 'check_http_request');
   }
 }

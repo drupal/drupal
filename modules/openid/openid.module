@@ -316,9 +316,6 @@ function openid_discovery($claimed_id) {
       }
     }
   }
-  if (!$services) {
-    module_invoke('system', 'check_http_request');
-  }
   return $services;
 }
 
@@ -354,13 +351,11 @@ function openid_association($op_endpoint) {
     );
     $assoc_result = drupal_http_request($op_endpoint, $assoc_options);
     if (isset($assoc_result->error)) {
-      module_invoke('system', 'check_http_request');
       return FALSE;
     }
 
     $assoc_response = _openid_parse_message($assoc_result->data);
     if (isset($assoc_response['mode']) && $assoc_response['mode'] == 'error') {
-      module_invoke('system', 'check_http_request');
       return FALSE;
     }
 
@@ -528,9 +523,6 @@ function openid_verify_assertion($op_endpoint, $response) {
         $valid = FALSE;
       }
     }
-  }
-  if (!$valid) {
-    module_invoke('system', 'check_http_request');
   }
   return $valid;
 }

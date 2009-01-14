@@ -349,7 +349,6 @@ function xmlrpc_error($code = NULL, $message = NULL) {
     $xmlrpc_error->is_error = TRUE;
     $xmlrpc_error->code = $code;
     $xmlrpc_error->message = $message;
-    module_invoke('system', 'check_http_request');
   }
   return $xmlrpc_error;
 }
