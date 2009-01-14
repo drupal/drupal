@@ -1,5 +1,8 @@
 // $Id$
 
+Drupal 6.10-dev, xxxx-xx-xx (development release)
+----------------------
+
 Drupal 6.9, 2009-01-14
 ----------------------
 - Fixed security issues, (Access Bypass, Validation Bypass and Hardening
@@ -10,9 +13,6 @@ Drupal 6.9, 2009-01-14
 - Removed t() calls from all schema documentation. Suggested best practice
   changed for contributed modules, see http://drupal.org/node/322731.
 - Fixed a variety of small bugs.
-
-Drupal 6.9-dev, xxxx-xx-xx (development release)
-----------------------
 
 Drupal 6.8, 2008-12-11
 ----------------------
