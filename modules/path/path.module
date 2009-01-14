@@ -179,7 +179,7 @@ function path_form($edit = '') {
     '#type' => 'textfield',
     '#title' => t('Existing system path'),
     '#default_value' => $edit['src'],
-    '#maxlength' => 64,
+    '#maxlength' => 128,
     '#size' => 45,
     '#description' => t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.'),
     '#field_prefix' => url(NULL, NULL, NULL, TRUE) . (variable_get('clean_url', 0) ? '' : '?q=')
@@ -187,7 +187,7 @@ function path_form($edit = '') {
   $form['dst'] = array(
     '#type' => 'textfield',
     '#default_value' => $edit['dst'],
-    '#maxlength' => 64,
+    '#maxlength' => 128,
     '#size' => 45,
     '#description' => t('Specify an alternative path by which this data can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
     '#field_prefix' => url(NULL, NULL, NULL, TRUE) . (variable_get('clean_url', 0) ? '' : '?q=')
@@ -269,7 +269,7 @@ function path_form_alter($form_id, &$form) {
     $form['path']['path'] = array(
       '#type' => 'textfield',
       '#default_value' => $path,
-      '#maxlength' => 250,
+      '#maxlength' => 128,
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#description' => t('Optionally specify an alternative URL by which this node can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
