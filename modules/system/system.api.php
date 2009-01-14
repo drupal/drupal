@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.11 2009/01/13 22:41:39 dries Exp $
+// $Id: system.api.php,v 1.12 2009/01/14 21:16:20 dries Exp $
 
 /**
  * @file
@@ -41,7 +41,7 @@ function hook_cron() {
  * shall be made DISTINCT. For node objects, primary field is always called nid.
  * For taxonomy terms, it is tid and for vocabularies it is vid. For comments,
  * it is cid. Primary table is the table where the primary object (node, file,
- * term_node etc.) is.
+ * taxonomy_term_node etc.) is.
  *
  * You shall return an associative array. Possible keys are 'join', 'where' and
  * 'distinct'. The value of 'distinct' shall be 1 if you want that the
@@ -52,7 +52,7 @@ function hook_cron() {
  * @param $primary_table
  *   Name or alias of the table which has the primary key field for this query.
  *   Typical table names would be: {block}, {comment}, {forum}, {node},
- *   {menu}, {term_data} or {vocabulary}. However, it is more common for
+ *   {menu}, {taxonomy_term_data} or {taxonomy_vocabulary}. However, it is more common for
  *   $primary_table to contain the usual table alias: b, c, f, n, m, t or v.
  * @param $primary_field
  *   Name of the primary field.

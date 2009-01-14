@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.install,v 1.25 2009/01/13 22:41:38 dries Exp $
+// $Id: forum.install,v 1.26 2009/01/14 21:16:20 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -86,7 +86,7 @@ function forum_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The {term_data}.tid of the forum term assigned to the node.',
+        'description' => 'The {taxonomy_term_data}.tid of the forum term assigned to the node.',
       ),
     ),
     'indexes' => array(

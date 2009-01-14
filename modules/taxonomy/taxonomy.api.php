@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.api.php,v 1.5 2009/01/13 22:41:39 dries Exp $
+// $Id: taxonomy.api.php,v 1.6 2009/01/14 21:16:20 dries Exp $
 
 /**
  * @file
@@ -78,7 +78,7 @@ function hook_taxonomy_vocabulary_delete($vocabulary) {
  * loaded in a single query for all terms where possible.
  *
  * Since terms are stored and retrieved from cache during a page request, avoid
- * altering properties provided by the {term_data} table, since this may
+ * altering properties provided by the {taxonomy_term_data} table, since this may
  * affect the way results are loaded from cache in subsequent calls.
  *
  * @param $terms
@@ -104,7 +104,7 @@ function hook_taxonomy_term_insert($term) {
   if (!empty($term->synonyms)) {
     foreach (explode ("\n", str_replace("\r", '', $term->synonyms)) as $synonym) {
       if ($synonym) {
-        db_insert('term_synonym')
+        db_insert('taxonomy_term_synonym')
         ->fields(array(
           'tid' => $term->tid,
           'name' => rtrim($synonym),
@@ -128,7 +128,7 @@ function hook_taxonomy_term_update($term) {
   if (!empty($term->synonyms)) {
     foreach (explode ("\n", str_replace("\r", '', $term->synonyms)) as $synonym) {
       if ($synonym) {
-        db_insert('term_synonym')
+        db_insert('taxonomy_term_synonym')
         ->fields(array(
           'tid' => $term->tid,
           'name' => rtrim($synonym),
