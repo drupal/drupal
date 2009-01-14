@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.658 2009/01/11 21:19:18 dries Exp $
+// $Id: system.module,v 1.659 2009/01/14 21:13:41 dries Exp $
 
 /**
  * @file
@@ -2177,12 +2177,14 @@ function system_time_zones($blank = NULL) {
  * will contain an error.
  *
  * @return
- *  Whether the www.example.com page can be requested via HTTP.
+ *  TRUE if this installation can issue HTTP requests.
  */
 function system_check_http_request() {
-  $result = drupal_http_request('http://www.example.com');
-  // If the resulting page contains RFC 2606 then we got the page we wanted.
-  $works = isset($result->data) && preg_match('/RFC\s+2606/', $result->data);
+  // Try to get the content of the front page via drupal_http_request().
+  $result = drupal_http_request(url('', array('absolute' => TRUE)));
+  // We only care that we get a http response - this means that Drupal
+  // can make a http request.
+  $works = isset($result->code) && ($result->code >= 100) && ($result->code < 600);
   variable_set('drupal_http_request_fails', !$works);
   return $works;
 }

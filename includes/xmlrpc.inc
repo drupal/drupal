@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.55 2008/12/26 21:01:57 dries Exp $
+// $Id: xmlrpc.inc,v 1.56 2009/01/14 21:13:41 dries Exp $
 
 /**
  * @file
@@ -349,7 +349,6 @@ function xmlrpc_error($code = NULL, $message = NULL) {
     $xmlrpc_error->is_error = TRUE;
     $xmlrpc_error->code = $code;
     $xmlrpc_error->message = $message;
-    module_invoke('system', 'check_http_request');
   }
   return $xmlrpc_error;
 }

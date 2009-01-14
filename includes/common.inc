@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.847 2009/01/14 12:18:37 dries Exp $
+// $Id: common.inc,v 1.848 2009/01/14 21:13:41 dries Exp $
 
 /**
  * @file
@@ -459,23 +459,7 @@ function drupal_access_denied() {
 function drupal_http_request($url, array $options = array()) {
   global $db_prefix;
 
-  static $self_test = FALSE;
   $result = new stdClass();
-  // Try to clear the drupal_http_request_fails variable if it's set. We
-  // can't tie this call to any error because there is no surefire way to
-  // tell whether a request has failed, so we add the check to places where
-  // some parsing has failed.
-  if (!$self_test && variable_get('drupal_http_request_fails', FALSE)) {
-    $self_test = TRUE;
-    $works = module_invoke('system', 'check_http_request');
-    $self_test = FALSE;
-    if (!$works) {
-      // Do not bother with further operations if we already know that we
-      // have no chance.
-      $result->error = t("The server can't issue HTTP requests");
-      return $result;
-    }
-  }
 
   // Parse the URL and make sure we can handle the schema.
   $uri = @parse_url($url);
@@ -513,6 +497,13 @@ function drupal_http_request($url, array $options = array()) {
     // clash with the HTTP status codes.
     $result->code = -$errno;
     $result->error = trim($errstr);
+
+    // Mark that this request failed. This will trigger a check of the web
+    // server's ability to make outgoing HTTP requests the next time that
+    // requirements checking is performed.
+    // @see system_requirements()
+    variable_set('drupal_http_request_fails', TRUE);
+
     return $result;
   }
 
