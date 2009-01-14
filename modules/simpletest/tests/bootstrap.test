@@ -68,7 +68,7 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
     // Cluster environment.
     $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'] = $this->cluster_ip;
     $this->assertTrue(
-      ip_address(true) == $this->cluster_ip,
+      ip_address(TRUE) == $this->cluster_ip,
       t('Cluster environment got cluster client IP')
     );
     $_SERVER['HTTP_HOST'] = 'security/.drupal.org:80';
@@ -81,6 +81,10 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
     $this->assertFalse(drupal_valid_http_host(), t('HTTP_HOST with .. is invalid'));
     $_SERVER['HTTP_HOST'] = '[::1]:80'; // IPv6 loopback address
     $this->assertTrue(drupal_valid_http_host(), t('HTTP_HOST containing IPv6 loopback is valid'));
+    $_SERVER['HTTP_HOST'] = '';
+    $this->assertTrue(drupal_valid_http_host(), t('Empty HTTP_HOST is valid'));
+    $_SERVER['HTTP_HOST'] = NULL;
+    $this->assertTrue(drupal_valid_http_host(), t('NULL HTTP_HOST is valid'));
   }
 }
 
