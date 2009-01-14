@@ -230,7 +230,7 @@ function drupal_unset_globals() {
 }
 
 /**
- * Validate that $_SERVER['HTTP_HOST'] is safe.
+ * Validate that a hostname (for example $_SERVER['HTTP_HOST']) is safe.
  *
  * As $_SERVER['HTTP_HOST'] is user input, ensure it only contains characters
  * allowed in hostnames.  See RFC 952 (and RFC 2181). $_SERVER['HTTP_HOST'] is
@@ -239,9 +239,8 @@ function drupal_unset_globals() {
  * @return
  *  TRUE if only containing valid characters, or FALSE otherwise.
  */
-function drupal_valid_http_host() {
-  $_SERVER['HTTP_HOST'] = strtolower($_SERVER['HTTP_HOST']);
-  return preg_match('/^\[?(?:[a-z0-9-:\]_]+\.?)+$/', $_SERVER['HTTP_HOST']);
+function drupal_valid_http_host($host) {
+  return preg_match('/^\[?(?:[a-z0-9-:\]_]+\.?)+$/', $host);
 }
 
 /**
@@ -255,10 +254,21 @@ function conf_init() {
   global $db_url, $db_prefix, $cookie_domain, $conf, $installed_profile;
   $conf = array();
 
-  if (!drupal_valid_http_host()) {
-    // HTTP_HOST is invalid, e.g. if containing slashes it may be an attack.
-    header('HTTP/1.1 400 Bad Request');
-    exit;
+  if (isset($_SERVER['HTTP_HOST'])) {
+    // As HTTP_HOST is user input, ensure it only contains characters allowed
+    // in hostnames. See RFC 952 (and RFC 2181).
+    // $_SERVER['HTTP_HOST'] is lowercased here per specifications.
+    $_SERVER['HTTP_HOST'] = strtolower($_SERVER['HTTP_HOST']);
+    if (!drupal_valid_http_host($_SERVER['HTTP_HOST'])) {
+      // HTTP_HOST is invalid, e.g. if containing slashes it may be an attack.
+      header('HTTP/1.1 400 Bad Request');
+      exit;
+    }
+  }
+  else {
+    // Some pre-HTTP/1.1 clients will not send a Host header. Ensure the key is
+    // defined for E_ALL compliance.
+    $_SERVER['HTTP_HOST'] = '';
   }
 
   include_once './'. conf_path() .'/settings.php';
