@@ -1977,7 +1977,9 @@ function node_search_validate($form, &$form_state) {
 function node_access($op, $node, $account = NULL) {
   global $user;
 
-  if (!$node) {
+  if (!$node || !in_array($op, array('view', 'update', 'delete', 'create'), TRUE)) {
+    // If there was no node to check against, or the $op was not one of the
+    // supported ones, we return access denied.
     return FALSE;
   }
   // Convert the node to an object if necessary:

@@ -76,10 +76,7 @@ function translation_menu() {
  * all languages).
  */
 function _translation_tab_access($node) {
-  if (!empty($node->language) && translation_supported_type($node->type)) {
-    return user_access('translate content');
-  }
-  return FALSE;
+  return !empty($node->language) && translation_supported_type($node->type) && node_access('view', $node) && user_access('translate content');
 }
 
 /**
@@ -192,15 +189,27 @@ function translation_nodeapi(&$node, $op, $teaser, $page) {
 
   switch ($op) {
     case 'prepare':
-      if (empty($node->nid) && isset($_GET['translation']) && isset($_GET['language']) &&
-          ($source_nid = $_GET['translation']) && ($language = $_GET['language']) &&
-          (user_access('translate content'))) {
-        // We are translating a node from a source node, so
-        // load the node to be translated and populate fields.
-        $node->language = $language;
-        $node->translation_source = node_load($source_nid);
-        $node->title = $node->translation_source->title;
-        $node->body = $node->translation_source->body;
+      if (empty($node->nid) && user_access('translate content') && isset($_GET['translation']) && isset($_GET['language']) && is_numeric($_GET['translation'])) {
+        $translation_source = node_load($_GET['translation']);
+        if (empty($translation_source) || !node_access('view', $translation_source)) {
+          // Source node not found or no access to view. We should not check
+          // for edit access, since the translator might not have permissions
+          // to edit the source node but should still be able to translate.
+          return;
+        }
+        $language_list = language_list();
+        if (!isset($language_list[$_GET['language']]) || ($translation_source->language == $_GET['language'])) {
+          // If not supported language, or same language as source node, break.
+          return;
+        }
+        // Populate fields based on source node.
+        $node->language = $_GET['language'];
+        $node->translation_source = $translation_source;
+        $node->title = $translation_source->title;
+        // If user has no access to the filter used for the body, Drupal core
+        // does not let the edit form to appear, so we should avoid exposing
+        // the source text here too.
+        $node->body = filter_access($translation_source->format) ? $translation_source->body : '';
         // Let every module add custom translated fields.
         node_invoke_nodeapi($node, 'prepare translation');
       }
