@@ -2539,7 +2539,7 @@ function db_affected_rows() {
  * @param $primary_table
  *   Name or alias of the table which has the primary key field for this query.
  *   Typical table names would be: {block}, {comment}, {forum}, {node},
- *   {menu}, {term_data} or {vocabulary}. However, in most cases the usual
+ *   {menu}, {taxonomy_term_data} or {taxonomy_vocabulary}. However, in most cases the usual
  *   table alias (b, c, f, n, m, t or v) is used instead of the table name.
  * @param $primary_field
  *   Name of the primary field.
@@ -2586,7 +2586,7 @@ function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_field = 'ni
  * @param $primary_table
  *   Name or alias of the table which has the primary key field for this query.
  *   Typical table names would be: {block}, {comment}, {forum}, {node},
- *   {menu}, {term_data} or {vocabulary}. However, it is more common to use the
+ *   {menu}, {taxonomy_term_data} or {taxonomy_vocabulary}. However, it is more common to use the
  *   the usual table aliases: b, c, f, n, m, t or v.
  * @param $primary_field
  *   Name of the primary field.

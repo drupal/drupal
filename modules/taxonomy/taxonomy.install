@@ -5,7 +5,7 @@
  * Implementation of hook_schema().
  */
 function taxonomy_schema() {
-  $schema['term_data'] = array(
+  $schema['taxonomy_term_data'] = array(
     'description' => 'Stores term information.',
     'fields' => array(
       'tid' => array(
@@ -19,7 +19,7 @@ function taxonomy_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The {vocabulary}.vid of the vocabulary to which the term is assigned.',
+        'description' => 'The {taxonomy_vocabulary}.vid of the vocabulary to which the term is assigned.',
       ),
       'name' => array(
         'type' => 'varchar',
@@ -49,7 +49,7 @@ function taxonomy_schema() {
     ),
   );
 
-  $schema['term_hierarchy'] = array(
+  $schema['taxonomy_term_hierarchy'] = array(
     'description' => 'Stores the hierarchical relationship between terms.',
     'fields' => array(
       'tid' => array(
@@ -57,14 +57,14 @@ function taxonomy_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'Primary Key: The {term_data}.tid of the term.',
+        'description' => 'Primary Key: The {taxonomy_term_data}.tid of the term.',
       ),
       'parent' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => "Primary Key: The {term_data}.tid of the term's parent. 0 indicates no parent.",
+        'description' => "Primary Key: The {taxonomy_term_data}.tid of the term's parent. 0 indicates no parent.",
       ),
     ),
     'indexes' => array(
@@ -73,7 +73,7 @@ function taxonomy_schema() {
     'primary key' => array('tid', 'parent'),
   );
 
-  $schema['term_node'] = array(
+  $schema['taxonomy_term_node'] = array(
     'description' => 'Stores the relationship of terms to nodes.',
     'fields' => array(
       'nid' => array(
@@ -95,7 +95,7 @@ function taxonomy_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'Primary Key: The {term_data}.tid of a term assigned to the node.',
+        'description' => 'Primary Key: The {taxonomy_term_data}.tid of a term assigned to the node.',
       ),
     ),
     'indexes' => array(
@@ -105,7 +105,7 @@ function taxonomy_schema() {
     'primary key' => array('tid', 'vid'),
   );
 
-  $schema['term_relation'] = array(
+  $schema['taxonomy_term_relation'] = array(
     'description' => 'Stores non-hierarchical relationships between terms.',
     'fields' => array(
       'trid' => array(
@@ -118,14 +118,14 @@ function taxonomy_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The {term_data}.tid of the first term in a relationship.',
+        'description' => 'The {taxonomy_term_data}.tid of the first term in a relationship.',
       ),
       'tid2' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The {term_data}.tid of the second term in a relationship.',
+        'description' => 'The {taxonomy_term_data}.tid of the second term in a relationship.',
       ),
     ),
     'unique keys' => array(
@@ -137,7 +137,7 @@ function taxonomy_schema() {
     'primary key' => array('trid'),
   );
 
-  $schema['term_synonym'] = array(
+  $schema['taxonomy_term_synonym'] = array(
     'description' => 'Stores term synonyms.',
     'fields' => array(
       'tsid' => array(
@@ -150,7 +150,7 @@ function taxonomy_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The {term_data}.tid of the term.',
+        'description' => 'The {taxonomy_term_data}.tid of the term.',
       ),
       'name' => array(
         'type' => 'varchar',
@@ -167,7 +167,7 @@ function taxonomy_schema() {
     'primary key' => array('tsid'),
   );
 
-  $schema['vocabulary'] = array(
+  $schema['taxonomy_vocabulary'] = array(
     'description' => 'Stores vocabulary information.',
     'fields' => array(
       'vid' => array(
@@ -257,7 +257,7 @@ function taxonomy_schema() {
     ),
   );
 
-  $schema['vocabulary_node_type'] = array(
+  $schema['taxonomy_vocabulary_node_type'] = array(
     'description' => 'Stores which node types vocabularies may be used with.',
     'fields' => array(
       'vid' => array(
@@ -265,7 +265,7 @@ function taxonomy_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'Primary Key: the {vocabulary}.vid of the vocabulary.',
+        'description' => 'Primary Key: the {taxonomy_vocabulary}.vid of the vocabulary.',
       ),
       'type' => array(
         'type' => 'varchar',
@@ -285,10 +285,17 @@ function taxonomy_schema() {
 }
 
 /**
- * Rename {vocabulary_node_types} table to {vocabulary_node_type}.
+ * Rename taxonomy tables.
  */
 function taxonomy_update_7001() {
   $ret = array();
-  db_rename_table($ret, 'vocabulary_node_types', 'vocabulary_node_type');
+  db_rename_table($ret, 'term_data', 'taxonomy_term_data');
+  db_rename_table($ret, 'term_hierarchy', 'taxonomy_term_hierarchy');
+  db_rename_table($ret, 'term_node', 'taxonomy_term_node');
+  db_rename_table($ret, 'term_relation', 'taxonomy_term_relation');
+  db_rename_table($ret, 'term_synonym', 'taxonomy_term_synonym');
+  db_rename_table($ret, 'vocabulary', 'taxonomy_vocabulary');
+  db_rename_table($ret, 'vocabulary_node_types', 'taxonomy_vocabulary_node_type');
+  
   return $ret;
 }
