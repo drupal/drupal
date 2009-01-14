@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.681 2009/01/08 08:42:12 webchick Exp $
+// $Id: comment.module,v 1.682 2009/01/14 21:48:24 dries Exp $
 
 /**
  * @file
@@ -106,7 +106,7 @@ function comment_help($path, $arg) {
       return '<p>' . t("Below is a list of the latest comments posted to your site. Click on a subject to see the comment, the author's name to edit the author's user information, 'edit' to modify the text, and 'delete' to remove their submission.") . '</p>';
 
     case 'admin/content/comment/approval':
-      return '<p>' . t("Below is a list of the comments posted to your site that need approval. To approve a comment, click on 'edit' and then change its 'moderation status' to Approved. Click on a subject to see the comment, the author's name to edit the author's user information, 'edit' to modify the text, and 'delete' to remove their submission.") . '</p>';
+      return '<p>' . t("Below is a list of the unapproved comments posted to your site. To approve comments, select them with the checkbox, choose <em>Publish the selected comments</em> from <em>Update options</em> and click the <em>Update</em> button. To delete them, choose <em>Delete the selected comments</em> instead. Use <em>edit</em> to individually modify a comment's content.") . '</p>';
   }
 }
 
@@ -166,7 +166,7 @@ function comment_theme() {
 function comment_menu() {
   $items['admin/content/comment'] = array(
     'title' => 'Comments',
-    'description' => 'List and edit site comments and the comment moderation queue.',
+    'description' => 'List and edit site comments and the comment approval queue.',
     'page callback' => 'comment_admin',
     'access arguments' => array('administer comments'),
   );
@@ -879,7 +879,7 @@ function comment_save($edit) {
       // redirect the user to the node he's commenting on.
       if ($edit['status'] == COMMENT_NOT_PUBLISHED) {
         if (!user_access('administer comments')) {
-          drupal_set_message(t('Your comment has been queued for moderation by site administrators and will be published after approval.'));
+          drupal_set_message(t('Your comment has been queued for review by site administrators and will be published after approval.'));
         }
       }
       else {

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.test,v 1.22 2008/12/30 16:43:16 dries Exp $
+// $Id: comment.test,v 1.23 2009/01/14 21:48:24 dries Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -492,7 +492,7 @@ class CommentApprovalTest extends CommentHelperCase {
     $subject = $this->randomName();
     $body = $this->randomName();
     $this->postComment($this->node, $subject, $body, TRUE, TRUE); // Set $contact to true so that it won't check for id and message.
-    $this->assertText(t('Your comment has been queued for moderation by site administrators and will be published after approval.'), t('Comment requires approval.'));
+    $this->assertText(t('Your comment has been queued for review by site administrators and will be published after approval.'), t('Comment requires approval.'));
 
     // Get unapproved comment id.
     $this->drupalLogin($this->admin_user);
@@ -526,7 +526,7 @@ class CommentApprovalTest extends CommentHelperCase {
     $subject = $this->randomName();
     $body = $this->randomName();
     $this->postComment($this->node, $subject, $body, TRUE, TRUE); // Set $contact to true so that it won't check for id and message.
-    $this->assertText(t('Your comment has been queued for moderation by site administrators and will be published after approval.'), t('Comment requires approval.'));
+    $this->assertText(t('Your comment has been queued for review by site administrators and will be published after approval.'), t('Comment requires approval.'));
 
     // Get unapproved comment id.
     $this->drupalLogin($this->admin_user);
