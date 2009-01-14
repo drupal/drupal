@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.137 2009/01/04 18:09:34 dries Exp $
+// $Id: module.inc,v 1.138 2009/01/14 12:18:37 dries Exp $
 
 /**
  * @file
@@ -145,69 +145,35 @@ function module_rebuild_cache() {
 }
 
 /**
- * Find dependencies any level deep and fill in dependents information too.
- *
- * If module A depends on B which in turn depends on C then this function will
- * add C to the list of modules A depends on. This will be repeated until
- * module A has a list of all modules it depends on. If it depends on itself,
- * called a circular dependency, that's marked by adding a nonexistent module,
- * called -circular- to this list of modules. Because this does not exist,
- * it'll be impossible to switch module A on.
- *
- * Also we fill in a dependents array in $file->info. Using the names above,
- * the dependents array of module B lists A.
+ * Find dependencies any level deep and fill in required by information too.
  *
  * @param $files
  *   The array of filesystem objects used to rebuild the cache.
  * @return
- *   The same array with dependencies and dependents added where applicable.
+ *   The same array with the new keys for each module:
+ *   - requires: An array with the keys being the modules that this module
+ *     requires.
+ *   - required_by: An array with the keys being the modules that will not work
+ *     without this module.
  */
 function _module_build_dependencies($files) {
-  do {
-    $new_dependency = FALSE;
-    foreach ($files as $filename => $file) {
-      // We will modify this object (module A, see doxygen for module A, B, C).
-      $file = &$files[$filename];
-      if (isset($file->info['dependencies']) && is_array($file->info['dependencies'])) {
-        foreach ($file->info['dependencies'] as $dependency_name) {
-          // This is a nonexistent module.
-          if ($dependency_name == '-circular-' || !isset($files[$dependency_name])) {
-            continue;
-          }
-          // $dependency_name is module B (again, see doxygen).
-          $files[$dependency_name]->info['dependents'][$filename] = $filename;
-          $dependency = $files[$dependency_name];
-          if (isset($dependency->info['dependencies']) && is_array($dependency->info['dependencies'])) {
-            // Let's find possible C modules.
-            foreach ($dependency->info['dependencies'] as $candidate) {
-              if (array_search($candidate, $file->info['dependencies']) === FALSE) {
-                // Is this a circular dependency?
-                if ($candidate == $filename) {
-                  // As a module name can not contain dashes, this makes
-                  // impossible to switch on the module.
-                  $candidate = '-circular-';
-                  // Do not display the message or add -circular- more than once.
-                  if (array_search($candidate, $file->info['dependencies']) !== FALSE) {
-                    continue;
-                  }
-                  drupal_set_message(t('%module is part of a circular dependency. This is not supported and you will not be able to switch it on.', array('%module' => $file->info['name'])), 'error');
-                }
-                else {
-                  // We added a new dependency to module A. The next loop will
-                  // be able to use this as "B module" thus finding even
-                  // deeper dependencies.
-                  $new_dependency = TRUE;
-                }
-                $file->info['dependencies'][] = $candidate;
-              }
-            }
-          }
-        }
+  require_once DRUPAL_ROOT .'/includes/graph.inc';
+  $roots = $files;
+  foreach ($files as $filename => $file) {
+    $graph[$file->name]['edges'] = array();
+    if (isset($file->info['dependencies']) && is_array($file->info['dependencies'])) {
+      foreach ($file->info['dependencies'] as $dependency_name) {
+        $graph[$file->name]['edges'][$dependency_name] = 1;
+        unset($roots[$dependency_name]);
       }
-      // Don't forget to break the reference.
-      unset($file);
     }
-  } while ($new_dependency);
+  }
+  drupal_depth_first_search($graph, array_keys($roots));
+  foreach ($graph as $module => $data) {
+    $files[$module]->required_by= isset($data['reverse_paths']) ? $data['reverse_paths'] : array();
+    $files[$module]->requires = isset($data['paths']) ? $data['paths'] : array();
+    $files[$module]->sort = $data['weight'];
+  }
   return $files;
 }
 
