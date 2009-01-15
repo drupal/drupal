@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.116 2009/01/14 12:18:37 dries Exp $
+// $Id: system.admin.inc,v 1.117 2009/01/15 16:07:51 webchick Exp $
 
 /**
  * @file
@@ -2108,10 +2108,10 @@ function theme_system_modules_fieldset($form) {
     // Add the description, along with any modules it requires.
     $description .= drupal_render($module['description']);
     if ($module['#requires']) {
-     $description .= '<div class="admin-requirements">' . t('Requires: @module-list', array('@module-list' => implode(', ', $module['#requires']))) . '</div>';
+     $description .= '<div class="admin-requirements">' . t('Requires: !module-list', array('!module-list' => implode(', ', $module['#requires']))) . '</div>';
     }
     if ($module['#required_by']) {
-     $description .= '<div class="admin-requirements">' . t('Required by: @module-list', array('@module-list' => implode(', ', $module['#required_by']))) . '</div>';
+     $description .= '<div class="admin-requirements">' . t('Required by: !module-list', array('!module-list' => implode(', ', $module['#required_by']))) . '</div>';
     }
     $row[] = array('data' => $description, 'class' => 'description');
     $rows[] = $row;
