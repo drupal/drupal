@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.293 2009/01/08 08:42:12 webchick Exp $
+// $Id: CHANGELOG.txt,v 1.294 2009/01/16 17:36:42 webchick Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -87,6 +87,9 @@ Drupal 7.0, xxxx-xx-xx (development version)
       preserved but renamed to file_unmanaged_*().
 - Added aliased multi-site support:
     * Added support for mapping domain names to sites directories.
+- Added RDF support:
+    * Modules can declare RDF namespaces which are serialized in the <html> tag
+      for RDFa support.
 
 Drupal 6.0, 2008-02-13
 ----------------------
