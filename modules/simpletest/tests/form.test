@@ -72,3 +72,41 @@ class FormsTestCase extends DrupalWebTestCase {
     drupal_get_messages();
   }
 }
+
+/**
+ * Test form type functions for expected behavior.
+ */
+class FormsTestTypeCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Form type-specific tests'),
+      'description' => t('Test form type functions for expected behavior.'),
+      'group' => t('Form API'),
+    );
+  }
+
+  /**
+   * Test form_type_checkbox_value() function for expected behavior.
+   */
+  function testFormCheckboxValue() {
+    $form['#return_value'] = $return_value = $this->randomName();
+    $form['#default_value'] = $default_value = $this->randomName();
+    // Element is disabled , and $edit is not empty.
+    $form['#disabled'] = TRUE;
+    $edit = array(1);
+    $this->assertEqual(form_type_checkbox_value($form, $edit), $default_value, t('form_type_checkbox_value() returns the default value when #disabled is set.'));
+
+    // Element is not disabled, $edit is not empty.
+    unset($form['#disabled']);
+    $this->assertEqual(form_type_checkbox_value($form, $edit), $return_value, t('form_type_checkbox_value() returns the return value when #disabled is not set.'));
+
+    // Element is not disabled, $edit is empty.
+    $edit = array();
+    $this->assertIdentical(form_type_checkbox_value($form, $edit), 0, t('form_type_checkbox_value() returns 0 when #disabled is not set, and $edit is empty.'));
+
+    // $edit is FALSE.
+    $edit = FALSE;
+    $this->assertNull(form_type_checkbox_value($form, $edit), t('form_type_checkbox_value() returns NULL when $edit is FALSE'));
+  }
+}
+
