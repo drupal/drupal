@@ -408,10 +408,11 @@ class InsertQuery extends Query {
     foreach ($this->insertValues as $insert_values) {
       $last_insert_id = $this->connection->query($sql, $insert_values, $this->queryOptions);
     }
-    $transaction->commit();
 
     // Re-initialize the values array so that we can re-use this query.
     $this->insertValues = array();
+
+    // Transaction commits here where $transaction looses scope.
 
     return $last_insert_id;
   }
