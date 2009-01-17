@@ -1468,7 +1468,7 @@ function hook_install() {
  *
  * The database updates are numbered sequentially according to the version of Drupal you are compatible with.
  *
- * Schema updates should adhere to the Schema API: http://drupal.org/node/150215
+ * Schema updates should adhere to the Schema API: @link http://drupal.org/node/150215
  *
  * Database updates consist of 3 parts:
  * - 1 digit for Drupal core compatibility
@@ -1492,17 +1492,17 @@ function hook_install() {
  *     6.x-1.x branch only.
  *
  * A good rule of thumb is to remove updates older than two major releases of
- * Drupal.
+ * Drupal. See hook_update_last_removed() to notify Drupal about the removals.
  *
  * Never renumber update functions.
  *
  * Further information about releases and release numbers:
- * - http://drupal.org/handbook/version-info
- * - http://drupal.org/node/93999 (Overview of contributions branches and tags)
- * - http://drupal.org/handbook/cvs/releases
+ * - @link http://drupal.org/handbook/version-info
+ * - @link http://drupal.org/node/93999 (Overview of contributions branches and tags)
+ * - @link http://drupal.org/handbook/cvs/releases
  *
  * Implementations of this hook should be placed in a mymodule.install file in
- * the same directory at mymodule.module. Drupal core's updates are implemented
+ * the same directory as mymodule.module. Drupal core's updates are implemented
  * using the system module as a name and stored in database/updates.inc.
  *
  * @return An array with the results of the calls to update_sql(). An upate
@@ -1517,6 +1517,28 @@ function hook_update_N() {
   $ret = array();
   db_add_field($ret, 'mytable1', 'newcol', array('type' => 'int', 'not null' => TRUE));
   return $ret;
+}
+
+/**
+ * Return a number which is no longer available as hook_update_N().
+ *
+ * If you remove some update functions from your mymodule.install file, you
+ * should notify Drupal of those missing functions. This way, Drupal can
+ * ensure that no update is accidentally skipped.
+ *
+ * Implementations of this hook should be placed in a mymodule.install file in
+ * the same directory as mymodule.module.
+ *
+ * @return
+ *   An integer, corresponding to hook_update_N() which has been removed from
+ *   mymodule.install.
+ *
+ * @see hook_update_N()
+ */
+function hook_update_last_removed() {
+  // We've removed the 5.x-1.x version of mymodule, including database updates.
+  // The next update function is mymodule_update_5200().
+  return 5103;
 }
 
 /**
