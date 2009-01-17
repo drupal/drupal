@@ -341,7 +341,7 @@ function update_finished($success, $results, $operations) {
 
 function update_helpful_links() {
   // NOTE: we can't use l() here because the URL would point to 'update.php?q=admin'.
-  $links[] = '<a href="' . base_path() . '">Main page</a>';
+  $links[] = '<a href="' . base_path() . '">Front page</a>';
   $links[] = '<a href="' . base_path() . '?q=admin">Administration pages</a>';
   return $links;
 }
