@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1013 2009/01/14 21:16:20 dries Exp $
+// $Id: node.module,v 1.1014 2009/01/17 20:56:04 webchick Exp $
 
 /**
  * @file
@@ -968,6 +968,7 @@ function node_submit($node) {
     }
     else {
       $node->teaser = '';
+      $node->format = 0;
     }
   }
 
