@@ -968,6 +968,7 @@ function node_submit($node) {
     }
     else {
       $node->teaser = '';
+      $node->format = 0;
     }
   }
 
