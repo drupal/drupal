@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.268 2008/12/20 18:24:32 dries Exp $
+// $Id: update.php,v 1.269 2009/01/17 18:55:29 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -341,7 +341,7 @@ function update_finished($success, $results, $operations) {
 
 function update_helpful_links() {
   // NOTE: we can't use l() here because the URL would point to 'update.php?q=admin'.
-  $links[] = '<a href="' . base_path() . '">Main page</a>';
+  $links[] = '<a href="' . base_path() . '">Front page</a>';
   $links[] = '<a href="' . base_path() . '?q=admin">Administration pages</a>';
   return $links;
 }
