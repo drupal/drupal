@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.312 2009/01/12 06:23:57 dries Exp $
+// $Id: form.inc,v 1.313 2009/01/18 06:51:41 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1548,7 +1548,7 @@ function theme_radio($element) {
   $output .= (check_plain($element['#value']) == $element['#return_value']) ? ' checked="checked" ' : ' ';
   $output .= drupal_attributes($element['#attributes']) . ' />';
   if (!is_null($element['#title'])) {
-    $output = '<label class="option">' . $output . ' ' . $element['#title'] . '</label>';
+    $output = '<label class="option" for="' . $element['#id'] . '">' . $output . ' ' . $element['#title'] . '</label>';
   }
 
   unset($element['#title']);
@@ -1976,7 +1976,7 @@ function theme_checkbox($element) {
   $checkbox .= drupal_attributes($element['#attributes']) . ' />';
 
   if (!is_null($element['#title'])) {
-    $checkbox = '<label class="option">' . $checkbox . ' ' . $element['#title'] . '</label>';
+    $checkbox = '<label class="option" for="' . $element['#id'] . '">' . $checkbox . ' ' . $element['#title'] . '</label>';
   }
 
   unset($element['#title']);
