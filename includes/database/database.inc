@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.47 2009/01/14 21:16:19 dries Exp $
+// $Id: database.inc,v 1.48 2009/01/18 16:24:05 webchick Exp $
 
 /**
  * @file
@@ -169,7 +169,7 @@
  * Every database driver implementation must provide a concrete implementation of it to support
  * special handling required by that database.
  *
- * @link http://us.php.net/manual/en/ref.pdo.php
+ * @link http://php.net/manual/en/book.pdo.php
  */
 abstract class DatabaseConnection extends PDO {
 
