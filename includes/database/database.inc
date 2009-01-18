@@ -169,7 +169,7 @@
  * Every database driver implementation must provide a concrete implementation of it to support
  * special handling required by that database.
  *
- * @link http://us.php.net/manual/en/ref.pdo.php
+ * @link http://php.net/manual/en/book.pdo.php
  */
 abstract class DatabaseConnection extends PDO {
 
