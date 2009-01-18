@@ -434,7 +434,7 @@ function drupal_get_profile_modules($profile, $locale = 'en') {
 
   // Get a list of modules required by this profile.
   $function = $profile . '_profile_modules';
-  return array_merge(drupal_required_modules(), $function(), ($locale != 'en' ? array('locale') : array()));
+  return array_merge(drupal_required_modules(), $function(), ($locale != 'en' && !empty($locale) ? array('locale') : array()));
 }
 
 /**
