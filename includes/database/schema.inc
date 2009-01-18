@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.7 2009/01/08 09:52:11 dries Exp $
+// $Id: schema.inc,v 1.8 2009/01/18 06:47:58 webchick Exp $
 
 /**
  * @file
@@ -75,7 +75,7 @@
  *
  *  - 'primary key': An array of one or more key column specifiers (see below)
  *    that form the primary key.
- *  - 'unique key': An associative array of unique keys ('keyname' =>
+ *  - 'unique keys': An associative array of unique keys ('keyname' =>
  *    specification). Each specification is an array of one or more
  *    key column specifiers (see below) that form a unique key on the table.
  *  - 'indexes':  An associative array of indexes ('indexame' =>
