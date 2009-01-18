@@ -75,7 +75,7 @@
  *
  *  - 'primary key': An array of one or more key column specifiers (see below)
  *    that form the primary key.
- *  - 'unique key': An associative array of unique keys ('keyname' =>
+ *  - 'unique keys': An associative array of unique keys ('keyname' =>
  *    specification). Each specification is an array of one or more
  *    key column specifiers (see below) that form a unique key on the table.
  *  - 'indexes':  An associative array of indexes ('indexame' =>
