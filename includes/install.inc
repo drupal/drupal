@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.81 2009/01/04 18:50:23 dries Exp $
+// $Id: install.inc,v 1.82 2009/01/18 06:56:58 webchick Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -434,7 +434,7 @@ function drupal_get_profile_modules($profile, $locale = 'en') {
 
   // Get a list of modules required by this profile.
   $function = $profile . '_profile_modules';
-  return array_merge(drupal_required_modules(), $function(), ($locale != 'en' ? array('locale') : array()));
+  return array_merge(drupal_required_modules(), $function(), ($locale != 'en' && !empty($locale) ? array('locale') : array()));
 }
 
 /**
