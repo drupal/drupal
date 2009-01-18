@@ -704,8 +704,6 @@ class MergeQuery extends Query {
 
 /**
  * General class for an abstracted DELETE operation.
- *
- * The conditional WHERE handling of this class is all inherited from Query.
  */
 class DeleteQuery extends Query implements QueryConditionInterface {
 
@@ -781,8 +779,6 @@ class DeleteQuery extends Query implements QueryConditionInterface {
 
 /**
  * General class for an abstracted UPDATE operation.
- *
- * The conditional WHERE handling of this class is all inherited from Query.
  */
 class UpdateQuery extends Query implements QueryConditionInterface {
 
