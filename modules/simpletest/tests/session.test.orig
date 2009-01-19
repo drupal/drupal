@@ -7,6 +7,8 @@
  */
 
 class SessionTestCase extends DrupalWebTestCase {
+  protected $saved_cookie;
+
   function getInfo() {
     return array(
       'name' => t('Session tests'),
@@ -20,10 +22,22 @@ class SessionTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Implementation of curlHeaderCallback().
+   */
+  protected function curlHeaderCallback($ch, $header) {
+    // Look for a Set-Cookie header.
+    if (preg_match('/^Set-Cookie.+$/i', $header, $matches)) {
+      $this->saved_cookie = $header;
+    }
+
+    return parent::curlHeaderCallback($ch, $header);
+  }
+
+  /**
    * Tests for drupal_save_session() and drupal_session_regenerate().
    */
   function testSessionSaveRegenerate() {
-    $this->assertFalse(drupal_save_session(), t('drupal_save_session() correctly returns FALSE (inside of testing framework) when initially called with no arguments.'), t('Session'));
+    $this->assertTrue(drupal_save_session(), t('drupal_save_session() correctly returns TRUE when initially called with no arguments.'), t('Session'));
     $this->assertFalse(drupal_save_session(FALSE), t('drupal_save_session() correctly returns FALSE when called with FALSE.'), t('Session'));
     $this->assertFalse(drupal_save_session(), t('drupal_save_session() correctly returns FALSE when saving has been disabled.'), t('Session'));
     $this->assertTrue(drupal_save_session(TRUE), t('drupal_save_session() correctly returns TRUE when called with TRUE.'), t('Session'));
@@ -35,7 +49,7 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->sessionReset($user->uid);
     // Make sure the session cookie is set as HttpOnly.
     $this->drupalLogin($user);
-    $this->assertTrue(preg_match('/HttpOnly/i', $this->drupalGetHeader('Set-Cookie', TRUE)), t('Session cookie is set as HttpOnly.'));
+    $this->assertTrue(preg_match('/HttpOnly/i', $this->saved_cookie), t('Session cookie is set as HttpOnly.'));
     $this->drupalLogout();
     // Verify that the session is regenerated if a module calls exit
     // in hook_user_login().
@@ -146,89 +160,6 @@ class SessionTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test that empty anonymous sessions are destroyed.
-   */
-  function testEmptyAnonymousSession() {
-    // With caching disabled, a session is always started.
-    $this->drupalGet('');
-    $this->assertSessionCookie(FALSE);
-    $this->assertSessionStarted(TRUE);
-    $this->assertSessionEmpty(TRUE);
-
-    variable_set('cache', CACHE_NORMAL);
-
-    // During this request the session is destroyed in drupal_page_footer(),
-    // and the session cookie is unset.
-    $this->drupalGet('');
-    $this->assertSessionCookie(TRUE);
-    $this->assertSessionStarted(TRUE);
-    $this->assertSessionEmpty(TRUE);
-    $this->assertFalse($this->drupalGetHeader('ETag'), t('Page was not cached.'));
-    // When PHP deletes a cookie, it sends "Set-Cookie: cookiename=deleted;
-    // expires=..."
-    $this->assertTrue(preg_match('/SESS\w+=deleted/', $this->drupalGetHeader('Set-Cookie')), t('Session cookie was deleted.'));
-
-    // Verify that the session cookie was actually deleted.
-    $this->drupalGet('');
-    $this->assertSessionCookie(FALSE);
-    $this->assertSessionStarted(FALSE);
-    $this->assertFalse($this->drupalGetHeader('Set-Cookie'), t('New session was not started.'));
-
-    // Start a new session by setting a message.
-    $this->drupalGet('session-test/set-message');
-    $this->assertSessionCookie(FALSE);
-    $this->assertSessionStarted(FALSE);
-    $this->assertTrue($this->drupalGetHeader('Set-Cookie'), t('New session was started.'));
-
-    // Display the message.
-    $this->drupalGet('');
-    $this->assertSessionCookie(TRUE);
-    $this->assertSessionStarted(TRUE);
-    $this->assertSessionEmpty(FALSE);
-    $this->assertFalse($this->drupalGetHeader('ETag'), t('Page was not cached.'));
-    $this->assertText(t('This is a dummy message.'), t('Message was displayed.'));
-
-    // During this request the session is destroyed in _drupal_bootstrap(),
-    // and the session cookie is unset.
-    $this->drupalGet('');
-    $this->assertSessionCookie(TRUE);
-    $this->assertSessionStarted(TRUE);
-    $this->assertSessionEmpty(TRUE);
-    $this->assertTrue($this->drupalGetHeader('ETag'), t('Page was cached.'));
-    $this->assertNoText(t('This is a dummy message.'), t('Message was not cached.'));
-    $this->assertTrue(preg_match('/SESS\w+=deleted/', $this->drupalGetHeader('Set-Cookie')), t('Session cookie was deleted.'));
-
-    // Verify that session was destroyed.
-    $this->drupalGet('');
-    $this->assertSessionCookie(FALSE);
-    $this->assertSessionStarted(FALSE);
-    $this->assertTrue($this->drupalGetHeader('ETag'), t('Page was cached.'));
-    $this->assertFalse($this->drupalGetHeader('Set-Cookie'), t('New session was not started.'));
-
-    // Verify that modifying $_SESSION without having started a session
-    // generates a watchdog message, and that no messages have been generated
-    // so far.
-    $this->assertEqual($this->getWarningCount(), 0, t('No watchdog messages have been generated'));
-    $this->drupalGet('/session-test/set-not-started');
-    $this->assertSessionCookie(FALSE);
-    $this->assertSessionStarted(FALSE);
-    $this->assertEqual($this->getWarningCount(), 1, t('1 watchdog messages has been generated'));
-  }
-
-  /**
-   * Count watchdog messages about modifying $_SESSION without having started a
-   * session.
-   */
-  function getWarningCount() {
-    return db_select('watchdog')
-      ->condition('type', 'session')
-      ->condition('message', '$_SESSION is non-empty yet no code has called drupal_session_start().')
-      ->countQuery()
-      ->execute()
-      ->fetchField();
-  }
-
-  /**
    * Reset the cookie file so that it refers to the specified user.
    *
    * @param $uid User id to set as the active session.
@@ -238,46 +169,10 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->curlClose();
 
     // Change cookie file for user.
-    $this->cookieFile = file_directory_temp() . '/cookie.' . $uid . '.txt';
-    $this->additionalCurlOptions[CURLOPT_COOKIEFILE] = $this->cookieFile;
-    $this->additionalCurlOptions[CURLOPT_COOKIESESSION] = TRUE;
+    $this->cookie_file = file_directory_temp() . '/cookie.' . $uid . '.txt';
+    $this->curl_options[CURLOPT_COOKIEFILE] = $this->cookie_file;
+    $this->curl_options[CURLOPT_COOKIESESSION] = TRUE;
     $this->drupalGet('session-test/get');
     $this->assertResponse(200, t('Session test module is correctly enabled.'), t('Session'));
-  }
-
-  /**
-   * Assert whether the SimpleTest browser sent a session cookie.
-   */
-  function assertSessionCookie($sent) {
-    if ($sent) {
-      $this->assertIdentical($this->drupalGetHeader('X-Session-Cookie'), '1', t('Session cookie was sent.'));
-    }
-    else {
-      $this->assertIdentical($this->drupalGetHeader('X-Session-Cookie'), '0', t('Session cookie was not sent.'));
-    }
-  }
-
-  /**
-   * Assert whether session was started during the bootstrap process.
-   */
-  function assertSessionStarted($started) {
-    if ($started) {
-      $this->assertIdentical($this->drupalGetHeader('X-Session-Started'), '1', t('Session was started.'));
-    }
-    else {
-      $this->assertIdentical($this->drupalGetHeader('X-Session-Started'), '0', t('Session was not started.'));
-    }
-  }
-
-  /**
-   * Assert whether $_SESSION is empty at the beginning of the request.
-   */
-  function assertSessionEmpty($empty) {
-    if ($empty) {
-      $this->assertIdentical($this->drupalGetHeader('X-Session-Empty'), '1', t('Session was empty.'));
-    }
-    else {
-      $this->assertIdentical($this->drupalGetHeader('X-Session-Empty'), '0', t('Session was not empty.'));
-    }
   }
 }

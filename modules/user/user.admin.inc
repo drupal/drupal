@@ -33,8 +33,10 @@ function user_admin($callback_arg = '') {
  * @see user_filter_form_submit()
  */
 function user_filter_form() {
+  if (!isset($_SESSION['user_overview_filter'])) {
+    drupal_set_session('user_overview_filter', array());
+  }
   $session = &$_SESSION['user_overview_filter'];
-  $session = is_array($session) ? $session : array();
   $filters = user_filters();
 
   $i = 0;
@@ -101,6 +103,9 @@ function user_filter_form_submit($form, &$form_state) {
         // Merge an array of arrays into one if necessary.
         $options = $filter == 'permission' ? call_user_func_array('array_merge', $filters[$filter]['options']) : $filters[$filter]['options'];
         if (isset($options[$form_state['values'][$filter]])) {
+          if (!isset($_SESSION['user_overview_filter'])) {
+            drupal_set_session('user_overview_filter', array());
+          }
           $_SESSION['user_overview_filter'][] = array($filter, $form_state['values'][$filter]);
         }
       }
@@ -109,7 +114,7 @@ function user_filter_form_submit($form, &$form_state) {
       array_pop($_SESSION['user_overview_filter']);
       break;
     case t('Reset'):
-      $_SESSION['user_overview_filter'] = array();
+      drupal_set_session('user_overview_filter', array());
       break;
     case t('Update'):
       return;

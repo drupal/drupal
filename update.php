@@ -293,7 +293,7 @@ function update_batch() {
 
   // During the update, toggle site maintenance so that schema changes do not
   // affect visiting users.
-  $_SESSION['site_offline'] = variable_get('site_offline', FALSE);
+  drupal_set_session('site_offline', variable_get('site_offline', FALSE));
   if ($_SESSION['site_offline'] == FALSE) {
     variable_set('site_offline', TRUE);
   }
@@ -327,9 +327,9 @@ function update_finished($success, $results, $operations) {
   // clear the caches in case the data has been updated.
   drupal_flush_all_caches();
 
-  $_SESSION['update_results'] = $results;
-  $_SESSION['update_success'] = $success;
-  $_SESSION['updates_remaining'] = $operations;
+  drupal_set_session('update_results', $results);
+  drupal_set_session('update_success', $success);
+  drupal_set_session('updates_remaining', $operations);
 
   // Now that the update is done, we can disable site maintenance if it was
   // previously turned off.

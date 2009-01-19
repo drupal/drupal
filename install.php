@@ -628,7 +628,7 @@ function install_tasks($profile, $task) {
   drupal_install_init_database();
 
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-  $_SESSION['messages'] = $messages;
+  drupal_set_session('messages', $messages);
 
   // URL used to direct page requests.
   $url = $base_url . '/install.php?locale=' . $install_locale . '&profile=' . $profile;

@@ -919,8 +919,9 @@ class DrupalWebTestCase {
       $user = $this->originalUser;
       drupal_save_session(TRUE);
 
-      // Ensure that the internal logged in variable is reset.
+      // Ensure that internal logged in variable and cURL options are reset.
       $this->isLoggedIn = FALSE;
+      $this->additionalCurlOptions = array();
 
       // Reload module list and implementations to ensure that test module hooks
       // aren't called after tests.
