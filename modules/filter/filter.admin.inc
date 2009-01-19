@@ -32,7 +32,7 @@ function filter_admin_overview() {
     $options[$id] = '';
     $form[$id]['name'] = array('#markup' => $format->name);
     $form[$id]['roles'] = array('#markup' => $default ? t('All roles may use default format') : ($roles ? implode(', ', $roles) : t('No roles may use this format')));
-    $form[$id]['configure'] = array('#markup' => l(t('configure'), 'admin/settings/filters/' . $id));
+    $form[$id]['edit'] = array('#markup' => l(t('edit'), 'admin/settings/filters/' . $id));
     $form[$id]['delete'] = array('#markup' => $default ? '' : l(t('delete'), 'admin/settings/filters/delete/' . $id));
     $form[$id]['weight'] = array('#type' => 'weight', '#default_value' => $format->weight);
   }
@@ -72,7 +72,7 @@ function theme_filter_admin_overview($form) {
           drupal_render($element['roles']),
           drupal_render($form['default'][$id]),
           drupal_render($element['weight']),
-          drupal_render($element['configure']),
+          drupal_render($element['edit']),
           drupal_render($element['delete']),
         ),
         'class' => 'draggable',
