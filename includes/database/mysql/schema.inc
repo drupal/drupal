@@ -32,9 +32,9 @@ class DatabaseSchema_mysql extends DatabaseSchema {
       $schema = $info['default']['database'];
     }
 
-    $condition = db_and()
-      ->condition('table_schema', $schema)
-      ->condition('table_name', $table_name, $operator);
+    $condition = new DatabaseCondition('AND');
+    $condition->condition('table_schema', $schema);
+    $condition->condition('table_name', $table_name, $operator);
     return $condition;
   }
 

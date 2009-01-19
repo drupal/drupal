@@ -157,10 +157,10 @@ abstract class DatabaseSchema {
       $schema = 'public';
     }
 
-    $condition = db_and()
-      ->condition('table_catalog', $info['default']['database'])
-      ->condition('table_schema', $schema)
-      ->condition('table_name', $table_name, $operator);
+    $condition = new DatabaseCondition('AND');
+    $condition->condition('table_catalog', $info['default']['database']);
+    $condition->condition('table_schema', $schema);
+    $condition->condition('table_name', $table_name, $operator);
     return $condition;
   }
 
