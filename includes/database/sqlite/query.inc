@@ -75,7 +75,7 @@ class UpdateQuery_sqlite extends UpdateQuery {
     $this->removeFieldsInCondition($fields, $this->condition);
 
     // Add the inverse of the fields to the condition.
-    $condition = db_or();
+    $condition = new DatabaseCondition('OR');
     foreach ($fields as $field => $data) {
       if (is_array($data)) {
         // The field is an expression.

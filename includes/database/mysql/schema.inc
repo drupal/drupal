@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.9 2009/01/08 09:52:11 dries Exp $
+// $Id: schema.inc,v 1.10 2009/01/19 01:28:28 webchick Exp $
 
 /**
  * @file
@@ -32,9 +32,9 @@ class DatabaseSchema_mysql extends DatabaseSchema {
       $schema = $info['default']['database'];
     }
 
-    $condition = db_and()
-      ->condition('table_schema', $schema)
-      ->condition('table_name', $table_name, $operator);
+    $condition = new DatabaseCondition('AND');
+    $condition->condition('table_schema', $schema);
+    $condition->condition('table_name', $table_name, $operator);
     return $condition;
   }
 

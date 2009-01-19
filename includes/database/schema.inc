@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.8 2009/01/18 06:47:58 webchick Exp $
+// $Id: schema.inc,v 1.9 2009/01/19 01:28:27 webchick Exp $
 
 /**
  * @file
@@ -157,10 +157,10 @@ abstract class DatabaseSchema {
       $schema = 'public';
     }
 
-    $condition = db_and()
-      ->condition('table_catalog', $info['default']['database'])
-      ->condition('table_schema', $schema)
-      ->condition('table_name', $table_name, $operator);
+    $condition = new DatabaseCondition('AND');
+    $condition->condition('table_catalog', $info['default']['database']);
+    $condition->condition('table_schema', $schema);
+    $condition->condition('table_name', $table_name, $operator);
     return $condition;
   }
 
