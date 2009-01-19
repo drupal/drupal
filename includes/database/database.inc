@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.48 2009/01/18 16:24:05 webchick Exp $
+// $Id: database.inc,v 1.49 2009/01/19 10:12:00 dries Exp $
 
 /**
  * @file
@@ -134,17 +134,27 @@
  *   // The transaction opens here.
  *   $txn = db_transaction();
  *
- *   $id = db_insert('example')
- *     ->fields(array(
- *       'field1' => 'mystring',
- *       'field2' => 5,
- *     ))
- *     ->execute();
+ *   try {
+ *     $id = db_insert('example')
+ *       ->fields(array(
+ *         'field1' => 'mystring',
+ *         'field2' => 5,
+ *       ))
+ *       ->execute();
  *
- *   my_other_function($id);
+ *     my_other_function($id);
  *
- *   return $id;
- *   // $txn goes out of scope here, and the entire transaction commits.
+ *     return $id;
+ *   }
+ *   catch (Exception $e) {
+ *     // Something went wrong somewhere, so flag the entire transaction to
+ *     // roll back instead of getting committed.  It doesn't actually roll back
+ *     // yet, just gets flagged to do so.
+ *     $txn->rollback();
+ *   }
+ *
+ *   // $txn goes out of scope here.  If there was a problem, it rolls back
+ *   // automatically.  If not, it commits automatically.
  * }
  *
  * function my_other_function($id) {
