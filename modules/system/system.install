@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.298 2009/01/19 01:23:39 webchick Exp $
+// $Id: system.install,v 1.299 2009/01/19 01:53:26 webchick Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -330,7 +330,7 @@ function system_install() {
   }
 
   // Create tables.
-  $modules = array('system', 'filter', 'block', 'user', 'node', 'taxonomy');
+  $modules = array('system', 'filter', 'block', 'user', 'node');
   foreach ($modules as $module) {
     drupal_install_schema($module);
   }

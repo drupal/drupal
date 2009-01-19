@@ -1,5 +1,21 @@
 <?php
-// $Id: taxonomy.install,v 1.12 2009/01/14 21:16:20 dries Exp $
+// $Id: taxonomy.install,v 1.13 2009/01/19 01:53:26 webchick Exp $
+
+ /**
+ * Implementation of hook_install().
+ */
+function taxonomy_install() {
+  // Create tables.
+  drupal_install_schema('taxonomy');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function taxonomy_uninstall() {
+  // Remove tables.
+  drupal_uninstall_schema('taxonomy');
+}
 
 /**
  * Implementation of hook_schema().
