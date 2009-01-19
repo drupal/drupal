@@ -1,5 +1,21 @@
 <?php
-// $Id: comment.install,v 1.28 2008/12/03 16:32:21 dries Exp $
+// $Id: comment.install,v 1.29 2009/01/19 01:23:39 webchick Exp $
+
+/**
+ * Implementation of hook_install().
+ */
+function comment_install() {
+  // Create tables.
+  drupal_install_schema('comment');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function comment_uninstall() {
+  // Remove tables.
+  drupal_uninstall_schema('comment');
+}
 
 /**
  * Implementation of hook_enable().
