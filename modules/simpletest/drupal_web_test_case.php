@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.79 2009/01/06 12:44:20 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.80 2009/01/19 10:46:51 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -919,8 +919,9 @@ class DrupalWebTestCase {
       $user = $this->originalUser;
       drupal_save_session(TRUE);
 
-      // Ensure that the internal logged in variable is reset.
+      // Ensure that internal logged in variable and cURL options are reset.
       $this->isLoggedIn = FALSE;
+      $this->additionalCurlOptions = array();
 
       // Reload module list and implementations to ensure that test module hooks
       // aren't called after tests.

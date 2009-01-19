@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.313 2009/01/18 06:51:41 webchick Exp $
+// $Id: form.inc,v 1.314 2009/01/19 10:46:50 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2476,7 +2476,7 @@ function form_clean_id($id = NULL, $flush = FALSE) {
  *   foreach ($results as $result) {
  *     $items[] = t('Loaded node %title.', array('%title' => $result));
  *   }
- *   $_SESSION['my_batch_results'] = $items;
+ *   drupal_set_session('my_batch_results', $items);
  * }
  * @endcode
  */

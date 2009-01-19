@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.848 2009/01/14 21:13:41 dries Exp $
+// $Id: common.inc,v 1.849 2009/01/19 10:46:50 dries Exp $
 
 /**
  * @file
@@ -339,9 +339,11 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response
     module_invoke_all('exit', $url);
   }
 
-  // Even though session_write_close() is registered as a shutdown function, we
-  // need all session data written to the database before redirecting.
-  session_write_close();
+  if (drupal_session_is_started()) {
+    // Even though session_write_close() is registered as a shutdown function,
+    // we need all session data written to the database before redirecting.
+    session_write_close();
+  }
 
   header('Location: ' . $url, TRUE, $http_response_code);
 
@@ -1831,6 +1833,15 @@ function l($text, $path, array $options = array()) {
  * react to the closing of the page by calling hook_exit().
  */
 function drupal_page_footer() {
+  global $user;
+
+  // Destroy empty anonymous sessions if possible.
+  if (!headers_sent() && drupal_session_is_started() && empty($_SESSION) && !$user->uid) {
+    session_destroy();
+  }
+  elseif (!empty($_SESSION) && !drupal_session_is_started()) {
+    watchdog('session', '$_SESSION is non-empty yet no code has called drupal_session_start().', array(), WATCHDOG_NOTICE);
+  }
 
   if (variable_get('cache', CACHE_DISABLED) != CACHE_DISABLED) {
     page_set_cache();
@@ -2971,26 +2982,24 @@ function _drupal_bootstrap_full() {
 function page_set_cache() {
   global $user, $base_root;
 
-  if (!$user->uid && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD') && count(drupal_get_messages(NULL, FALSE)) == 0) {
-    // This will fail in some cases, see page_get_cache() for the explanation.
-    if ($data = ob_get_contents()) {
-      $cache = TRUE;
-      if (variable_get('page_compression', TRUE) && function_exists('gzencode')) {
-        // We do not store the data in case the zlib mode is deflate.
-        // This should be rarely happening.
-        if (zlib_get_coding_type() == 'deflate') {
-          $cache = FALSE;
-        }
-        elseif (zlib_get_coding_type() == FALSE) {
-          $data = gzencode($data, 9, FORCE_GZIP);
-        }
-        // The remaining case is 'gzip' which means the data is
-        // already compressed and nothing left to do but to store it.
+  if (page_get_cache(FALSE)) {
+    $cache = TRUE;
+    $data = ob_get_contents();
+    if (variable_get('page_compression', TRUE) && function_exists('gzencode')) {
+      // We do not store the data in case the zlib mode is deflate. This should
+      // be rarely happening.
+      if (zlib_get_coding_type() == 'deflate') {
+        $cache = FALSE;
       }
-      ob_end_flush();
-      if ($cache && $data) {
-        cache_set($base_root . request_uri(), $data, 'cache_page', CACHE_TEMPORARY, drupal_get_headers());
+      elseif (zlib_get_coding_type() == FALSE) {
+        $data = gzencode($data, 9, FORCE_GZIP);
       }
+      // The remaining case is 'gzip' which means the data is already
+      // compressed and nothing left to do but to store it.
+    }
+    ob_end_flush();
+    if ($cache && $data) {
+      cache_set($base_root . request_uri(), $data, 'cache_page', CACHE_TEMPORARY, drupal_get_headers());
     }
   }
 }

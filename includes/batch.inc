@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.30 2009/01/12 06:23:57 dries Exp $
+// $Id: batch.inc,v 1.31 2009/01/19 10:46:50 dries Exp $
 
 
 /**
@@ -33,6 +33,11 @@ function _batch_page() {
     ':bid' => $_REQUEST['id'],
     ':token' => drupal_get_token($_REQUEST['id']))
   )->fetchField();
+
+  if (!$batch) {
+    drupal_set_message(t('No active batch.'), 'error');
+    drupal_goto();
+  }
 
   $batch = unserialize($batch);
 
@@ -409,7 +414,7 @@ function _batch_finished() {
     // We get here if $form['#redirect'] was FALSE, or if the form is a
     // multi-step form. We save the final $form_state value to be retrieved
     // by drupal_get_form(), and redirect to the originating page.
-    $_SESSION['batch_form_state'] = $_batch['form_state'];
+    drupal_set_session('batch_form_state', $_batch['form_state']);
     drupal_goto($_batch['source_page']);
   }
 }

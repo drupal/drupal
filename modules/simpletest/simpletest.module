@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.33 2009/01/12 06:23:57 dries Exp $
+// $Id: simpletest.module,v 1.34 2009/01/19 10:46:51 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -436,7 +436,7 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
 
 function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
   if (isset($results['test_id'])) {
-    $_SESSION['test_id'] = $results['test_id'];
+    drupal_set_session('test_id', $results['test_id']);
   }
   if ($success) {
     drupal_set_message(t('The tests finished in @elapsed.', array('@elapsed' => $elapsed)));

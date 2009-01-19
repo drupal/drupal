@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.10 2009/01/11 21:19:17 dries Exp $
+// $Id: dblog.admin.inc,v 1.11 2009/01/19 10:46:51 dries Exp $
 
 /**
  * @file
@@ -262,8 +262,10 @@ function _dblog_format_message($dblog) {
  * @see dblog_filter_form_validate()
  */
 function dblog_filter_form() {
+  if (!isset($_SESSION['dblog_overview_filter'])) {
+    drupal_set_session('dblog_overview_filter', array());
+  }
   $session = &$_SESSION['dblog_overview_filter'];
-  $session = is_array($session) ? $session : array();
   $filters = dblog_filters();
 
   $form['filters'] = array(
@@ -319,12 +321,15 @@ function dblog_filter_form_submit($form, &$form_state) {
     case t('Filter'):
       foreach ($filters as $name => $filter) {
         if (isset($form_state['values'][$name])) {
+          if (!isset($_SESSION['dblog_overview_filter'])) {
+            drupal_set_session('dblog_overview_filter', array());
+          }
           $_SESSION['dblog_overview_filter'][$name] = $form_state['values'][$name];
         }
       }
       break;
     case t('Reset'):
-      $_SESSION['dblog_overview_filter'] = array();
+      drupal_set_session('dblog_overview_filter', array());
       break;
   }
   return 'admin/reports/dblog';

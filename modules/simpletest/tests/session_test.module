@@ -1,5 +1,5 @@
 <?php
-// $Id: session_test.module,v 1.4 2008/11/24 06:12:45 dries Exp $
+// $Id: session_test.module,v 1.5 2009/01/19 10:46:51 dries Exp $
 
 /**
  * Implementation of hook_menu().
@@ -31,8 +31,39 @@ function session_test_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
+  $items['session-test/set-message'] = array(
+    'title' => t('Session value'),
+    'page callback' => '_session_test_set_message',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['session-test/set-not-started'] = array(
+    'title' => t('Session value'),
+    'page callback' => '_session_test_set_not_started',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
 
   return $items;
+}
+
+/**
+ * Implement hook_boot().
+ */
+function session_test_boot() {
+  header('X-Session-Cookie: ' . intval(isset($_COOKIE[session_name()])));
+  header('X-Session-Started: ' . intval(drupal_session_is_started()));
+  header('X-Session-Empty: ' . intval(empty($_SESSION)));
+}
+
+/**
+ * Implement hook_init().
+ */
+function session_test_init() {
+  // hook_init() is called later in the bootstrap process, but not in cached
+  // requests. Here the header set in hook_boot() is overwritten, so the
+  // session state is reported as late in the bootstrap process as possible.
+  header('X-Session-Started: ' . intval(drupal_session_is_started()));
 }
 
 /**
@@ -51,7 +82,7 @@ function _session_test_get() {
  * Page callback, stores a value in $_SESSION['session_test_value'].
  */
 function _session_test_set($value) {
-  $_SESSION['session_test_value'] = $value;
+  drupal_set_session('session_test_value', $value);
   return t('The current value of the stored session variable has been set to %val', array('%val' => $value));
 }
 
@@ -70,6 +101,27 @@ function _session_test_no_set($value) {
  */
 function _session_test_id() {
   return 'session_id:' . session_id() . "\n";
+}
+
+/**
+ * Menu callback, sets a message to me displayed on the following page.
+ */
+function _session_test_set_message() {
+  drupal_set_message(t('This is a dummy message.'));
+  print t('A message was set.');
+  // Do not return anything, so the current request does not result in a themed
+  // page with messages. The message will be displayed in the following request
+  // instead.
+}
+
+/**
+ * Menu callback, stores a value in $_SESSION['session_test_value'] without
+ * having started the session in advance.
+ */
+function _session_test_set_not_started() {
+  if (!drupal_session_is_started()) {
+    $_SESSION['session_test_value'] = t('Session was not started'); 
+  }
 }
 
 /**
