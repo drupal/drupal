@@ -1257,7 +1257,6 @@ function system_site_information_settings_validate($form, &$form_state) {
  * @see system_settings_form()
  */
 function system_error_reporting_settings() {
-
   $form['site_403'] = array(
     '#type' => 'textfield',
     '#title' => t('Default 403 (access denied) page'),
@@ -1266,7 +1265,6 @@ function system_error_reporting_settings() {
     '#description' => t('This page is displayed when the requested document is denied to the current user. If unsure, specify nothing.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
   );
-
   $form['site_404'] = array(
     '#type' => 'textfield',
     '#title' => t('Default 404 (not found) page'),
@@ -1275,15 +1273,19 @@ function system_error_reporting_settings() {
     '#description' => t('This page is displayed when no other content matches the requested document. If unsure, specify nothing.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
   );
-
   $form['error_level'] = array(
-    '#type' => 'select', '#title' => t('Error reporting'),
-    '#default_value' => 1,
-    '#options' => array(t('Write errors to the log'), t('Write errors to the log and to the screen')),
-    '#description' => t('Specify where Drupal, PHP and SQL errors are logged. While it is recommended that a site running in a production environment write errors to the log only, in a development or testing environment it may be helpful to write errors both to the log and to the screen.')
+    '#type' => 'radios',
+    '#title' => t('Error reporting'),
+    '#default_value' => 2,
+    '#options' => array(
+      0 => t('Site in production: do not display any errors.'),
+      1 => t('Site in development: display functional errors only.'),
+      2 => t('For developers: display all errors.'),
+    ),
+    '#description' => t('Display settings for error messages. Note that all error messages are always logged.'),
   );
 
-  return system_settings_form($form, TRUE);
+  return system_settings_form($form);
 }
 
 /**
