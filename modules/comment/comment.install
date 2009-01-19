@@ -2,6 +2,22 @@
 // $Id$
 
 /**
+ * Implementation of hook_install().
+ */
+function comment_install() {
+  // Create tables.
+  drupal_install_schema('comment');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function comment_uninstall() {
+  // Remove tables.
+  drupal_uninstall_schema('comment');
+}
+
+/**
  * Implementation of hook_enable().
  */
 function comment_enable() {

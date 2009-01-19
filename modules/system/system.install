@@ -330,7 +330,7 @@ function system_install() {
   }
 
   // Create tables.
-  $modules = array('system', 'filter', 'block', 'user', 'node', 'comment', 'taxonomy');
+  $modules = array('system', 'filter', 'block', 'user', 'node', 'taxonomy');
   foreach ($modules as $module) {
     drupal_install_schema($module);
   }
