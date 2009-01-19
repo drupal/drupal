@@ -61,36 +61,41 @@ Drupal.behaviors.simpleTestMenuCollapse = {
 Drupal.behaviors.simpleTestSelectAll = {
   attach: function() {
     $('td.simpletest-select-all').each(function() {
-      var checkboxes = Drupal.settings.simpleTest['simpletest-test-group-'+ $(this).attr('id')].testNames, totalCheckboxes = 0,
-        checkbox = $('<input type="checkbox" class="form-checkbox" id="'+ $(this).attr('id') +'-select-all" />').change(function() {
+      var testCheckboxes = Drupal.settings.simpleTest['simpletest-test-group-' + $(this).attr('id')].testNames;
+      var groupCheckbox = $('<input type="checkbox" class="form-checkbox" id="' + $(this).attr('id') + '-select-all" />');
+
+      // Each time a single-test checkbox is checked or unchecked, make sure
+      // that the associated group checkbox gets the right state too.
+      var updateGroupCheckbox = function() {
+        var checkedTests = 0;
+        for (var i = 0; i < testCheckboxes.length; i++) {
+          $('#' + testCheckboxes[i]).each(function() {
+            if (($(this).attr('checked'))) {
+              checkedTests++;
+            }
+          });
+        }
+        $(groupCheckbox).attr('checked', (checkedTests == testCheckboxes.length));
+      }
+
+      // Have the single-test checkboxes follow the group checkbox.
+      groupCheckbox.change(function() {
         var checked = !!($(this).attr('checked'));
-        for (var i = 0; i < checkboxes.length; i++) {
-          $('#'+ checkboxes[i]).attr('checked', checked);
+        for (var i = 0; i < testCheckboxes.length; i++) {
+          $('#'+ testCheckboxes[i]).attr('checked', checked);
         }
-        self.data('simpletest-checked-tests', (checked ? checkboxes.length : 0));
-      }).data('simpletest-checked-tests', 0);
-      var self = $(this);
-      for (var i = 0; i < checkboxes.length; i++) {
-        if ($('#' + checkboxes[i]).change(function() {
-          if (checkbox.attr('checked') == 'checked') {
-            checkbox.attr('checked', '');
-          }
-          var data = (!self.data('simpletest-checked-tests') ? 0 : self.data('simpletest-checked-tests')) + (!!($(this).attr('checked')) ? 1 : -1);
-          self.data('simpletest-checked-tests', data);
-          if (data == checkboxes.length) {
-            checkbox.attr('checked', 'checked');
-          }
-          else {
-            checkbox.removeAttr('checked');
-          }
-        }).attr('checked') == 'checked') {
-          totalCheckboxes++;
-        }
+      });
+
+      // Have the group checkbox follow the single-test checkboxes.
+      for (var i = 0; i < testCheckboxes.length; i++) {
+        $('#' + testCheckboxes[i]).change(function() {
+          updateGroupCheckbox();
+        });
       }
-      if (totalCheckboxes == checkboxes.length) {
-        $(checkbox).attr('checked', 'checked');
-      }
-      $(this).append(checkbox);
+
+      // Initialize status for the group checkbox correctly.
+      updateGroupCheckbox();
+      $(this).append(groupCheckbox);
     });
   }
 };
