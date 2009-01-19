@@ -23,7 +23,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     $this->statementClass = NULL;
 
     // This driver defaults to transaction support, except if explicitly passed FALSE.
-    $this->transactionSupport = !isset($connection_options['transactions']) || $connection_options['transactions'] === FALSE;
+    $this->transactionSupport = !isset($connection_options['transactions']) || $connection_options['transactions'] !== FALSE;
 
     parent::__construct('sqlite:'. $connection_options['database'], '', '', array(
       // Force column names to lower case.
