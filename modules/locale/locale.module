@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.234 2008/12/16 23:57:32 dries Exp $
+// $Id: locale.module,v 1.235 2009/01/20 03:18:40 webchick Exp $
 
 /**
  * @file
@@ -11,17 +11,6 @@
  *   assigned. The setup of languages and translations is completely web based.
  *   Gettext portable object files are supported.
  */
-
-/**
- * Language written left to right. Possible value of $language->direction.
- */
-define('LANGUAGE_LTR', 0);
-
-/**
- * Language written right to left. Possible value of $language->direction.
- */
-define('LANGUAGE_RTL', 1);
-
 
 // ---------------------------------------------------------------------------------
 // Hook implementations

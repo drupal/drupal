@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.149 2009/01/19 10:46:50 dries Exp $
+// $Id: install.php,v 1.150 2009/01/20 03:18:40 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -554,9 +554,11 @@ function install_select_locale($profilename) {
       }
     }
 
-    foreach ($locales as $locale) {
-      if ($_POST['locale'] == $locale->name) {
-        return $locale->name;
+    if (!empty($_POST['locale'])) {
+      foreach ($locales as $locale) {
+        if ($_POST['locale'] == $locale->name) {
+          return $locale->name;
+        }
       }
     }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.265 2009/01/19 10:46:50 dries Exp $
+// $Id: bootstrap.inc,v 1.266 2009/01/20 03:18:40 webchick Exp $
 
 /**
  * @file
@@ -192,6 +192,16 @@ define('LANGUAGE_NEGOTIATION_PATH', 2);
  * if no language identified by domain.
  */
 define('LANGUAGE_NEGOTIATION_DOMAIN', 3);
+
+/**
+ * Language written left to right. Possible value of $language->direction.
+ */
+define('LANGUAGE_LTR', 0);
+
+/**
+ * Language written right to left. Possible value of $language->direction.
+ */
+define('LANGUAGE_RTL', 1);
 
 /**
  * For convenience, define a short form of the request time global.

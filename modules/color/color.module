@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.51 2008/12/30 16:43:16 dries Exp $
+// $Id: color.module,v 1.52 2009/01/20 03:18:40 webchick Exp $
 
 /**
  * Implementation of hook_help().
@@ -94,7 +94,7 @@ function _color_page_alter(&$vars) {
 
           // If the current language is RTL and the CSS file had an RTL variant,
           // pull out the non-colored and add rewritten RTL stylesheet.
-          if (defined('LANGUAGE_RTL') && $language->direction == LANGUAGE_RTL) {
+          if ($language->direction == LANGUAGE_RTL) {
             $rtl_old_path = str_replace('.css', '-rtl.css', $old_path);
             $rtl_color_path = str_replace('.css', '-rtl.css', $color_path);
             if (file_exists($rtl_color_path)) {

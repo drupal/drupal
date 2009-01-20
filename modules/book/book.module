@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.483 2008/12/29 16:03:56 dries Exp $
+// $Id: book.module,v 1.484 2009/01/20 03:18:40 webchick Exp $
 
 /**
  * @file
@@ -998,7 +998,7 @@ function template_preprocess_book_export_html(&$variables) {
   $variables['title'] = check_plain($variables['title']);
   $variables['base_url'] = $base_url;
   $variables['language'] = $language;
-  $variables['language_rtl'] = defined('LANGUAGE_RTL') && $language->direction == LANGUAGE_RTL;
+  $variables['language_rtl'] = ($language->direction == LANGUAGE_RTL);
   $variables['head'] = drupal_get_html_head();
 }
 
