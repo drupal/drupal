@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.37 2009/01/11 10:57:20 dries Exp $
+// $Id: database_test.test,v 1.38 2009/01/20 03:54:15 webchick Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -2047,19 +2047,35 @@ class DatabaseInvalidDataTestCase extends DatabaseTestCase {
           'job' => 'Singer',
         ))
         ->execute();
-        $this->assertTrue(FALSE, t('Insert succeedded when it should not have.'));
+      $this->fail(t('Insert succeedded when it should not have.'));
     }
     catch (Exception $e) {
-      // Check the first record was inserted.
-      $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 63));
-      $this->assertIdentical($result->fetchField(), 'Elvis', t('First record inserted as expected.'));
+      // Check if the first record was inserted.
+      $name = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 63))->fetchField();
+
+      if ($name == 'Elvis') {
+        if (!Database::getActiveConnection()->supportsTransactions()) {
+          // This is an expected fail.
+          // Database engines that don't support transactions can leave partial
+          // inserts in place when an error occurs. This is the case for MySQL
+          // when running on a MyISAM table.
+          $this->pass(t("The whole transaction has not been rolled-back when a duplicate key insert occurs, this is expected because the database doesn't support transactions"));
+        }
+        else {
+          $this->fail(t('The whole transaction is rolled back when a duplicate key insert occurs.'));
+        }
+      }
+      else {
+        $this->pass(t('The whole transaction is rolled back when a duplicate key insert occurs.'));
+      }
 
       // Ensure the other values were not inserted.
       $record = db_select('test')
         ->fields('test', array('name', 'age'))
         ->condition('age', array(17, 75),'IN')
         ->execute()->fetchObject();
-      $this->assertFalse($record, t('Insert aborted as expected.'));
+
+      $this->assertFalse($record, t('The rest of the insert aborted as expected.'));
     }
   }
 
