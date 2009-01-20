@@ -418,7 +418,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
 
     // Create a regular user.
     $account = $this->drupalCreateUser(array());
-    
+
     // Create administrative user.
     $admin_user = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($admin_user);
@@ -547,7 +547,8 @@ class UserPictureTestCase extends DrupalWebTestCase {
         // user's profile page.
         $text = t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', array('%dimensions' => $test_dim));
         $this->assertRaw($text, t('Image was resized.'));
-        $this->assertRaw(file_create_url($pic_path), t("Image is displayed in user's profile page"));
+        $alt = t("@user's picture", array('@user' => $this->user->name));
+        $this->assertRaw(theme('image', $pic_path, $alt, $alt, '', FALSE), t("Image is displayed in user's profile page"));
 
         // Check if file is located in proper directory.
         $this->assertTrue(is_file($pic_path), t("File is located in proper directory"));

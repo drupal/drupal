@@ -186,6 +186,14 @@ function user_load($array = array()) {
     while ($role = db_fetch_object($result)) {
       $user->roles[$role->rid] = $role->name;
     }
+
+    if (!empty($user->picture) && ($file = file_load($user->picture))) {
+      $user->picture = $file;
+    }
+    else {
+      $user->picture = NULL;
+    }
+
     user_module_invoke('load', $array, $user);
   }
   else {
@@ -254,6 +262,23 @@ function user_save($account, $edit = array(), $category = 'account') {
       }
     }
 
+
+    // Process picture uploads.
+    if (!empty($edit['picture']->fid)) {
+      $picture = $edit['picture'];
+      // If the picture is a temporary file move it to its final location and
+      // make it permanent.
+      if (($picture->status & FILE_STATUS_PERMANENT) == 0) {
+        $info = image_get_info($picture->filepath);
+        $destination = file_create_path(variable_get('user_picture_path', 'pictures') . '/picture-' . $account->uid . '.' . $info['extension']);
+        if ($picture = file_move($picture, $destination, FILE_EXISTS_REPLACE)) {
+          $picture->status |= FILE_STATUS_PERMANENT;
+          $edit['picture'] = file_save($picture);
+        }
+      }
+    }
+    $edit['picture'] = empty($edit['picture']->fid) ? 0 : $edit['picture']->fid;
+
     $edit['data'] = $data;
     $edit['uid'] = $account->uid;
     // Save changes to the users table.
@@ -261,6 +286,13 @@ function user_save($account, $edit = array(), $category = 'account') {
     if (!$success) {
       // The query failed - better to abort the save than risk further data loss.
       return FALSE;
+    }
+
+    // If the picture changed or was unset, remove the old one. This step needs
+    // to occur after updating the {users} record so that user_file_references()
+    // doesn't report it in use and block the deletion.
+    if (!empty($account->picture->fid) && ($edit['picture'] != $account->picture->fid)) {
+      file_delete($account->picture);
     }
 
     // Reload user roles if provided.
@@ -405,23 +437,14 @@ function user_validate_picture(&$form, &$form_state) {
     'file_validate_image_resolution' => array(variable_get('user_picture_dimensions', '85x85')),
     'file_validate_size' => array(variable_get('user_picture_file_size', '30') * 1024),
   );
-  if ($file = file_save_upload('picture_upload', $validators)) {
-    // Remove the old picture.
-    if (isset($form_state['values']['_account']->picture) && file_exists($form_state['values']['_account']->picture)) {
-      file_unmanaged_delete($form_state['values']['_account']->picture);
-    }
 
-    // The image was saved using file_save_upload() and was added to the
-    // files table as a temporary file. We'll make a copy and let the garbage
-    // collector delete the original upload.
-    $info = image_get_info($file->filepath);
-    $destination = file_create_path(variable_get('user_picture_path', 'pictures') . '/picture-' . $form['#uid'] . '.' . $info['extension']);
-    if ($filepath = file_unmanaged_copy($file->filepath, $destination, FILE_EXISTS_REPLACE)) {
-      $form_state['values']['picture'] = $filepath;
-    }
-    else {
-      form_set_error('picture_upload', t("Failed to upload the picture image; the %directory directory doesn't exist or is not writable.", array('%directory' => variable_get('user_picture_path', 'pictures'))));
-    }
+  // Save the file as a temporary file.
+  $file = file_save_upload('picture_upload', $validators);
+  if ($file === FALSE) {
+    form_set_error('picture_upload', t("Failed to upload the picture image; the %directory directory doesn't exist or is not writable.", array('%directory' => variable_get('user_picture_path', 'pictures'))));
+  }
+  elseif ($file !== NULL) {
+    $form_state['values']['picture_upload'] = $file;
   }
 }
 
@@ -604,11 +627,34 @@ function user_perm() {
  *
  * Ensure that user pictures (avatars) are always downloadable.
  */
-function user_file_download($file) {
-  if (strpos($file, variable_get('user_picture_path', 'pictures') . '/picture-') === 0) {
-    $info = image_get_info(file_create_path($file));
+function user_file_download($filepath) {
+  if (strpos($filepath, variable_get('user_picture_path', 'pictures') . '/picture-') === 0) {
+    $info = image_get_info(file_create_path($filepath));
     return array('Content-type: ' . $info['mime_type']);
   }
+}
+
+/**
+ * Implementation of hook_file_references().
+ */
+function user_file_references($file) {
+  // Determine if the file is used by this module.
+  $count = db_query('SELECT COUNT(*) FROM {users} WHERE picture = :fid', array(':fid' => $file->fid))->fetchField();
+  if ($count) {
+    // Return the name of the module and how many references it has to the file.
+    return array('user' => $count);
+  }
+}
+
+/**
+ * Implementation of hook_file_delete().
+ */
+function user_file_delete($file) {
+  // Remove any references to the file.
+  db_update('users')
+    ->fields(array('picture' => 0))
+    ->condition('picture', $file->fid)
+    ->execute();
 }
 
 /**
@@ -688,7 +734,7 @@ function user_user_form(&$edit, &$account, $category = NULL) {
 }
 
 /**
- * Implementation of hook_user_validate.
+ * Implementation of hook_user_validate().
  */
 function user_user_validate(&$edit, &$account, $category = NULL) {
   if ($category == 'account') {
@@ -714,17 +760,21 @@ function user_user_validate(&$edit, &$account, $category = NULL) {
 }
 
 /**
- * Implementation of hook_user_submit.
+ * Implementation of hook_user_submit().
  */
 function user_user_submit(&$edit, &$account, $category = NULL) {
   if ($category == 'account') {
-    // Delete picture if requested, and if no replacement picture was given.
-    if (!empty($edit['picture_delete'])) {
-      if ($account->picture && file_exists($account->picture)) {
-        file_unmanaged_delete($account->picture);
-      }
-      $edit['picture'] = '';
+    if (!empty($edit['picture_upload'])) {
+      $edit['picture'] = $edit['picture_upload'];
     }
+    // Delete picture if requested, and if no replacement picture was given.
+    elseif (!empty($edit['picture_delete'])) {
+      $edit['picture'] = NULL;
+    }
+    // Remove these values so they don't end up serialized in the data field.
+    $edit['picture_upload'] = NULL;
+    $edit['picture_delete'] = NULL;
+
     if (isset($edit['roles'])) {
       $edit['roles'] = array_filter($edit['roles']);
     }
@@ -914,7 +964,8 @@ function user_block_view($delta = '') {
  * Process variables for user-picture.tpl.php.
  *
  * The $variables array contains the following arguments:
- * - $account
+ * - $account: A user, node or comment object with 'name', 'uid' and 'picture'
+ *   fields.
  *
  * @see user-picture.tpl.php
  */
@@ -922,16 +973,27 @@ function template_preprocess_user_picture(&$variables) {
   $variables['picture'] = '';
   if (variable_get('user_pictures', 0)) {
     $account = $variables['account'];
-    if (!empty($account->picture) && file_exists($account->picture)) {
-      $picture = file_create_url($account->picture);
+    if (!empty($account->picture)) {
+      // @TODO: Ideally this function would only be passed file objects, but
+      // since there's a lot of legacy code that JOINs the {users} table to
+      // {node} or {comments} and passes the results into this function if we
+      // a numeric value in the picture field we'll assume it's a file id
+      // and load it for them. Once we've got user_load_multiple() and
+      // comment_load_multiple() functions the user module will be able to load
+      // the picture files in mass during the object's load process.
+      if (is_numeric($account->picture)) {
+        $account->picture = file_load($account->picture);
+      }
+      if (!empty($account->picture->filepath)) {
+        $filepath = $account->picture->filepath;
+      }
     }
     elseif (variable_get('user_picture_default', '')) {
-      $picture = variable_get('user_picture_default', '');
+      $filepath = variable_get('user_picture_default', '');
     }
-
-    if (isset($picture)) {
+    if (isset($filepath)) {
       $alt = t("@user's picture", array('@user' => $account->name ? $account->name : variable_get('anonymous', t('Anonymous'))));
-      $variables['picture'] = theme('image', $picture, $alt, $alt, '', FALSE);
+      $variables['picture'] = theme('image', $filepath, $alt, $alt, '', FALSE);
       if (!empty($account->uid) && user_access('access user profiles')) {
         $attributes = array('attributes' => array('title' => t('View user profile.')), 'html' => TRUE);
         $variables['picture'] = l($variables['picture'], "user/$account->uid", $attributes);
@@ -1616,16 +1678,30 @@ function user_edit_form(&$form_state, $uid, $edit, $register = FALSE) {
 
   // Picture/avatar:
   if (variable_get('user_pictures', 0) && !$register) {
-    $form['picture'] = array('#type' => 'fieldset', '#title' => t('Picture'), '#weight' => 1);
-    $picture = theme('user_picture', (object)$edit);
-    if ($edit['picture']) {
-      $form['picture']['current_picture'] = array('#markup' => $picture);
-      $form['picture']['picture_delete'] = array('#type' => 'checkbox', '#title' => t('Delete picture'), '#description' => t('Check this box to delete your current picture.'));
-    }
-    else {
-      $form['picture']['picture_delete'] = array('#type' => 'hidden');
-    }
-    $form['picture']['picture_upload'] = array('#type' => 'file', '#title' => t('Upload picture'), '#size' => 48, '#description' => t('Your virtual face or picture. Maximum dimensions are %dimensions and the maximum size is %size kB.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'), '%size' => variable_get('user_picture_file_size', '30'))) . ' ' . variable_get('user_picture_guidelines', ''));
+    $form['picture'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Picture'),
+      '#weight' => 1,
+    );
+    $form['picture']['picture'] = array(
+      '#type' => 'value',
+      '#value' => $edit['picture'],
+    );
+    $form['picture']['picture_current'] = array(
+      '#markup' => theme('user_picture', (object)$edit),
+    );
+    $form['picture']['picture_delete'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Delete picture'),
+      '#access' => !empty($edit['picture']->fid),
+      '#description' => t('Check this box to delete your current picture.'),
+    );
+    $form['picture']['picture_upload'] = array(
+      '#type' => 'file',
+      '#title' => t('Upload picture'),
+      '#size' => 48,
+      '#description' => t('Your virtual face or picture. Maximum dimensions are %dimensions and the maximum size is %size kB.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'), '%size' => variable_get('user_picture_file_size', '30'))) . ' ' . variable_get('user_picture_guidelines', ''),
+    );
     $form['#validate'][] = 'user_validate_picture';
   }
   $form['#uid'] = $uid;
