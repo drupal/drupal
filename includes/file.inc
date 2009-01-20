@@ -845,8 +845,8 @@ function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
  *   destination directory should overwritten. A false value will generate a
  *   new, unique filename in the destination directory.
  * @return
- *   An object containing the file information, or FALSE in the event of an
- *   error.
+ *   An object containing the file information if the upload succeeded, FALSE
+ *   in the event of an error, or NULL if no file was uploaded.
  */
 function file_save_upload($source, $validators = array(), $destination = FALSE, $replace = FILE_EXISTS_RENAME) {
   global $user;
@@ -859,8 +859,8 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
   }
 
   // Make sure there's an upload to process.
-  if (!isset($_FILES['files']['name'][$source])) {
-    return FALSE;
+  if (empty($_FILES['files']['name'][$source])) {
+    return NULL;
   }
 
   // Check for file upload errors and return FALSE if a lower level system

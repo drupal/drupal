@@ -599,6 +599,14 @@ class FileSaveUploadTest extends FileHookTestCase {
     // Check that the no hooks were called while failing.
     $this->assertFileHooksCalled(array());
   }
+
+  /**
+   * Test for no failures when not uploading a file.
+   */
+  function testNoUpload() {
+    $this->drupalPost('file-test/upload', array(), t('Submit'));
+    $this->assertNoRaw(t('Epic upload FAIL!'), t('Failure message not found.'));
+  }
 }
 
 /**
@@ -1765,4 +1773,3 @@ class FileNameMungingTest extends FileTestCase {
     $this->assertIdentical($unmunged_name, $this->name, t('The unmunged (%unmunged) filename matches the original (%original)', array('%unmunged' => $unmunged_name, '%original' => $this->name)));
   }
 }
-
