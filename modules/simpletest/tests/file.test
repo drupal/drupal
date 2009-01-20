@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.20 2009/01/10 06:09:54 webchick Exp $
+// $Id: file.test,v 1.21 2009/01/20 02:56:05 webchick Exp $
 
 /**
  *  @file
@@ -598,6 +598,14 @@ class FileSaveUploadTest extends FileHookTestCase {
 
     // Check that the no hooks were called while failing.
     $this->assertFileHooksCalled(array());
+  }
+
+  /**
+   * Test for no failures when not uploading a file.
+   */
+  function testNoUpload() {
+    $this->drupalPost('file-test/upload', array(), t('Submit'));
+    $this->assertNoRaw(t('Epic upload FAIL!'), t('Failure message not found.'));
   }
 }
 
@@ -1765,4 +1773,3 @@ class FileNameMungingTest extends FileTestCase {
     $this->assertIdentical($unmunged_name, $this->name, t('The unmunged (%unmunged) filename matches the original (%original)', array('%unmunged' => $unmunged_name, '%original' => $this->name)));
   }
 }
-
