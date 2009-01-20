@@ -194,6 +194,16 @@ define('LANGUAGE_NEGOTIATION_PATH', 2);
 define('LANGUAGE_NEGOTIATION_DOMAIN', 3);
 
 /**
+ * Language written left to right. Possible value of $language->direction.
+ */
+define('LANGUAGE_LTR', 0);
+
+/**
+ * Language written right to left. Possible value of $language->direction.
+ */
+define('LANGUAGE_RTL', 1);
+
+/**
  * For convenience, define a short form of the request time global.
  */
 define('REQUEST_TIME', $_SERVER['REQUEST_TIME']);

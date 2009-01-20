@@ -554,9 +554,11 @@ function install_select_locale($profilename) {
       }
     }
 
-    foreach ($locales as $locale) {
-      if ($_POST['locale'] == $locale->name) {
-        return $locale->name;
+    if (!empty($_POST['locale'])) {
+      foreach ($locales as $locale) {
+        if ($_POST['locale'] == $locale->name) {
+          return $locale->name;
+        }
       }
     }
 

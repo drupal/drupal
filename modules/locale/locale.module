@@ -12,17 +12,6 @@
  *   Gettext portable object files are supported.
  */
 
-/**
- * Language written left to right. Possible value of $language->direction.
- */
-define('LANGUAGE_LTR', 0);
-
-/**
- * Language written right to left. Possible value of $language->direction.
- */
-define('LANGUAGE_RTL', 1);
-
-
 // ---------------------------------------------------------------------------------
 // Hook implementations
 
