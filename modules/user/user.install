@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.16 2009/01/08 08:42:13 webchick Exp $
+// $Id: user.install,v 1.17 2009/01/20 03:10:00 webchick Exp $
 
 /**
  * Implementation of hook_schema().
@@ -170,11 +170,10 @@ function user_schema() {
         'description' => "User's default language.",
       ),
       'picture' => array(
-        'type' => 'varchar',
-        'length' => 255,
+        'type' => 'int',
         'not null' => TRUE,
-        'default' => '',
-        'description' => "Path to the user's uploaded picture.",
+        'default' => 0,
+        'description' => "Foreign key: {files}.fid of user's picture.",
       ),
       'init' => array(
         'type' => 'varchar',
@@ -384,6 +383,83 @@ function user_update_7003() {
     variable_set('user_mail_status_canceled_body', $setting);
     variable_del('user_mail_status_deleted_body');
   }
+  return $ret;
+}
+
+/**
+ * Add the user's pictures to the {files} table and make them managed files.
+ */
+function user_update_7004(&$sandbox) {
+  $ret = array();
+
+  $picture_field = array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'description' => t("Foriegn key: {files}.fid of user's picture."),
+  );
+
+  if (!isset($sandbox['progress'])) {
+    // Check that the field hasn't been updated in an aborted run of this
+    // update.
+    if (!db_column_exists('users', 'picture_fid')) {
+      // Add a new field for the fid.
+      db_add_field($ret, 'users', 'picture_fid', $picture_field);
+    }
+
+    // Initialize batch update information.
+    $sandbox['progress'] = 0;
+    $sandbox['last_user_processed'] = -1;
+    $sandbox['max'] = db_query("SELECT COUNT(*) FROM {users} WHERE picture <> ''")->fetchField();
+  }
+
+  // As a batch operation move the photos into the {files} table and update the
+  // {user} records.
+  $limit = 500;
+  $result = db_query_range("SELECT uid, picture FROM {users} WHERE picture <> '' AND uid > :uid ORDER BY uid", array(':uid' => $sandbox['last_user_processed']), 0, $limit);
+  foreach ($result as $user) {
+    // Don't bother adding files that don't exist.
+    if (!file_exists($user->picture)) {
+      continue;
+    }
+
+    // Check if the file already exists.
+    $files = file_load_multiple(array(), array('filepath' => $user->picture));
+    if (count($files)) {
+      $file = reset($files);
+    }
+    else {
+      // Create a file object.
+      $file = new stdClass();
+      $file->filepath = $user->picture;
+      $file->filename = basename($file->filepath);
+      $file->filemime = file_get_mimetype($file->filepath);
+      $file->uid      = $user->uid;
+      $file->status   = FILE_STATUS_PERMANENT;
+      $file = file_save($file);
+    }
+
+    db_update('users')
+      ->fields(array('picture_fid' => $file->fid))
+      ->condition('uid', $user->uid)
+      ->execute();
+
+    // Update our progress information for the batch update.
+    $sandbox['progress']++;
+    $sandbox['last_user_processed'] = $user->uid;
+  }
+
+  // Indicate our current progress to the batch update system. If there's no
+  // max value then there's nothing to update and we're finished.
+  $ret['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+
+  // When we're finished, drop the old picture field and rename the new one to
+  // replace it.
+  if (isset($ret['#finished']) && $ret['#finished'] == 1) {
+    db_drop_field($ret, 'users', 'picture');
+    db_change_field($ret, 'users', 'picture_fid', 'picture', $picture_field);
+  }
+
   return $ret;
 }
 
