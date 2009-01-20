@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.850 2009/01/19 21:13:09 dries Exp $
+// $Id: common.inc,v 1.851 2009/01/20 00:47:47 webchick Exp $
 
 /**
  * @file
@@ -800,7 +800,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
   // Force display of error messages in update.php or if the proper error
   // reporting level is set.
   $error_level = variable_get('error_level', 2);
-  if ($error_level == 2 || ($error_level == 1 && $type != 'Notice') || (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update')) {
+  if ($error_level == 2 || ($error_level == 1 && $error['%type'] != 'Notice') || (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update')) {
     drupal_set_message(t('%type: %message in %function (line %line of %file).', $error), 'error');
   }
 
