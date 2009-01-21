@@ -32,15 +32,17 @@ function poll_votes($node) {
   $output = t('This table lists all the recorded votes for this poll. If anonymous users are allowed to vote, they will be identified by the IP address of the computer they used when they voted.');
 
   $header[] = array('data' => t('Visitor'), 'field' => 'u.name');
-  $header[] = array('data' => t('Vote'), 'field' => 'pv.chorder');
-  $header[] = array('data' => t('Vote'), 'field' => 'pc.weight');
+  $header[] = array('data' => t('Vote'), 'field' => 'pc.chtext');
+  $header[] = array('data' => t('Timestamp'), 'field' => 'pv.timestamp', 'sort' => 'desc');
 
-  $result = pager_query("SELECT pv.chid, pv.uid, pv.hostname, u.name FROM {poll_vote} pv INNER JOIN {poll_choice} pc ON pv.chid = pc.chid LEFT JOIN {users} u ON pv.uid = u.uid WHERE pv.nid = %d". tablesort_sql($header), 20, 0, NULL, $node->nid);
+  $result = pager_query("SELECT pv.chid, pv.uid, pv.hostname, pv.timestamp, pv.nid, pc.chtext, u.name FROM {poll_vote} pv INNER JOIN {poll_choice} pc ON pv.chid = pc.chid LEFT JOIN {users} u ON pv.uid = u.uid WHERE pv.nid = %d". tablesort_sql($header), 20, 0, NULL, $node->nid);
   $rows = array();
   while ($vote = db_fetch_object($result)) {
     $rows[] = array(
       $vote->name ? theme('username', $vote) : check_plain($vote->hostname),
-      check_plain($node->choice[$vote->chid]['chtext']));
+      check_plain($vote->chtext),
+      format_date($vote->timestamp),
+    );
   }
   $output .= theme('table', $header, $rows);
   $output .= theme('pager', NULL, 20, 0);

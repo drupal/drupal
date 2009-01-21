@@ -629,10 +629,10 @@ function poll_vote($form, &$form_state) {
 
   global $user;
   if ($user->uid) {
-    db_query('INSERT INTO {poll_vote} (nid, chid, uid) VALUES (%d, %d, %d)', $node->nid, $choice, $user->uid);
+    db_query('INSERT INTO {poll_vote} (nid, chid, uid, timestamp) VALUES (%d, %d, %d, %d)', $node->nid, $choice, $user->uid, REQUEST_TIME);
   }
   else {
-    db_query("INSERT INTO {poll_vote} (nid, chid, hostname) VALUES (%d, %d, '%s')", $node->nid, $choice, ip_address());
+    db_query("INSERT INTO {poll_vote} (nid, chid, hostname, timestamp) VALUES (%d, %d, '%s', %d)", $node->nid, $choice, ip_address(), REQUEST_TIME);
   }
 
   // Add one to the votes.
