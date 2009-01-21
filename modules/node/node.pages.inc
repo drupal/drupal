@@ -297,7 +297,7 @@ function node_body_field(&$node, $label, $word_count) {
     '#default_value' => $include ? $node->body : ($node->teaser . $node->body),
     '#rows' => 20,
     '#required' => ($word_count > 0),
-    '#input_format' => isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT,
+    '#text_format' => isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT,
   );
 
   return $form;

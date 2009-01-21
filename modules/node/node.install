@@ -264,7 +264,7 @@ function node_schema() {
         'default' => 0,
       ),
       'format' => array(
-        'description' => "The input format used by this version's body.",
+        'description' => "The text format used by this version's body.",
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,

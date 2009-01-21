@@ -617,7 +617,7 @@ function blogapi_mt_validate_terms($node) {
 }
 
 /**
- * Blogging API callback. Sends a list of available input formats.
+ * Blogging API callback. Sends a list of available text formats.
  */
 function blogapi_mt_supported_text_filters() {
   // NOTE: we're only using anonymous' formats because the MT spec

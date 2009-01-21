@@ -1782,14 +1782,14 @@ function form_process_radios($element) {
 }
 
 /**
- * Add input format selector to text elements with the #input_format property.
+ * Add text format selector to text elements with the #text_format property.
  *
- * The #input_format property should be the ID of an input format, found in
+ * The #text_format property should be the ID of an text format, found in
  * {filter_format}.format, which gets passed to filter_form().
  *
- * If the property #input_format is set, the form element will be expanded into
+ * If the property #text_format is set, the form element will be expanded into
  * two separate form elements, one holding the content of the element, and the
- * other holding the input format selector. The original element is shifted into
+ * other holding the text format selector. The original element is shifted into
  * a child element, but is otherwise unaltered, so that the format selector is
  * at the same level as the text field which it affects.
  *
@@ -1799,7 +1799,7 @@ function form_process_radios($element) {
  *   $form['body'] = array(
  *     '#type' => 'textarea',
  *     '#title' => t('Body'),
- *     '#input_format' => isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT,
+ *     '#text_format' => isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT,
  *   );
  * @endcode
  *
@@ -1814,7 +1814,7 @@ function form_process_radios($element) {
  *       '#title' => t('Body'),
  *       '#parents' => array('body'),
  *     ),
- *     // 'format' holds the input format selector.
+ *     // 'format' holds the text format selector.
  *     'format' => array(
  *       '#parents' => array('body_format'),
  *       ...
@@ -1826,14 +1826,14 @@ function form_process_radios($element) {
  * @code
  *   // Original, unaltered form element value.
  *   $form_state['values']['body'] = 'Example content';
- *   // Chosen input format.
+ *   // Chosen text format.
  *   $form_state['values']['body_format'] = 1;
  * @endcode
  *
  * @see system_elements(), filter_form()
  */
 function form_process_input_format($element) {
-  if (isset($element['#input_format'])) {
+  if (isset($element['#text_format'])) {
     // Determine the form element parents and element name to use for the input
     // format widget. This simulates the 'element' and 'element_format' pair of
     // parents that filter_form() expects.
@@ -1844,11 +1844,11 @@ function form_process_input_format($element) {
     // We need to break references, otherwise form_builder recurses infinitely.
     $element['value'] = (array)$element;
     $element['#type'] = 'markup';
-    $element['format'] = filter_form($element['#input_format'], 1, $element_parents);
+    $element['format'] = filter_form($element['#text_format'], 1, $element_parents);
 
-    // We need to clear the #input_format from the new child otherwise we
+    // We need to clear the #text_format from the new child otherwise we
     // would get into an infinite loop.
-    unset($element['value']['#input_format']);
+    unset($element['value']['#text_format']);
     $element['value']['#weight'] = 0;
   }
   return $element;

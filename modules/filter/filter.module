@@ -20,20 +20,20 @@ define('FILTER_FORMAT_DEFAULT', 0);
 function filter_help($path, $arg) {
   switch ($path) {
     case 'admin/help#filter':
-      $output = '<p>' . t("The filter module allows administrators to configure text input formats for use on your site. An input format defines the HTML tags, codes, and other input allowed in both content and comments, and is a key feature in guarding against potentially damaging input from malicious users. Two input formats included by default are <em>Filtered HTML</em> (which allows only an administrator-approved subset of HTML tags) and <em>Full HTML</em> (which allows the full set of HTML tags). Additional input formats may be created by an administrator.") . '</p>';
-      $output .= '<p>' . t('Each input format uses filters to manipulate text, and most input formats apply several different filters to text in a specific order. Each filter is designed for a specific purpose, and generally either adds, removes or transforms elements within user-entered text before it is displayed. A filter does not change the actual content of a post, but instead, modifies it temporarily before it is displayed. A filter may remove unapproved HTML tags, for instance, while another automatically adds HTML to make links referenced in text clickable.') . '</p>';
-      $output .= '<p>' . t('Users with access to more than one input format can use the <em>Input format</em> fieldset to choose between available input formats when creating or editing multi-line content. Administrators determine the input formats available to each user role, select a default input format, and control the order of formats listed in the <em>Input format</em> fieldset.') . '</p>';
+      $output = '<p>' . t("The filter module allows administrators to configure text formats for use on your site. A text format defines the HTML tags, codes, and other input allowed in both content and comments, and is a key feature in guarding against potentially damaging input from malicious users. Two formats included by default are <em>Filtered HTML</em> (which allows only an administrator-approved subset of HTML tags) and <em>Full HTML</em> (which allows the full set of HTML tags). Additional formats may be created by an administrator.") . '</p>';
+      $output .= '<p>' . t('Each text format uses filters to manipulate text, and most formats apply several different filters to text in a specific order. Each filter is designed for a specific purpose, and generally either adds, removes or transforms elements within user-entered text before it is displayed. A filter does not change the actual content of a post, but instead, modifies it temporarily before it is displayed. A filter may remove unapproved HTML tags, for instance, while another automatically adds HTML to make links referenced in text clickable.') . '</p>';
+      $output .= '<p>' . t('Users with access to more than one text format can use the <em>Text format</em> fieldset to choose between available text formats when creating or editing multi-line content. Administrators determine the text formats available to each user role, select a default text format, and control the order of formats listed in the <em>Text format</em> fieldset.') . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@filter">Filter module</a>.', array('@filter' => 'http://drupal.org/handbook/modules/filter/')) . '</p>';
       return $output;
-    case 'admin/settings/filters':
-      $output = '<p>' . t('Use the list below to review the input formats available to each user role, to select a default input format, and to control the order of formats listed in the <em>Input format</em> fieldset. (The <em>Input format</em> fieldset is displayed below textareas when users with access to more than one input format create multi-line content.) The input format selected as <em>Default</em> is available to all users and, unless another format is selected, is applied to all content. All input formats are available to users in roles with the "administer filters" permission.') . '</p>';
-      $output .= '<p>' . t('Since input formats, if available, are presented in the same order as the list below, it may be helpful to arrange the formats in descending order of your preference for their use. To change the order of an input format, grab a drag-and-drop handle under the <em>Name</em> column and drag to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save changes</em> button at the bottom of the page.') . '</p>';
+    case 'admin/settings/filter':
+      $output = '<p>' . t('Use the list below to review the text formats available to each user role, to select a default text format, and to control the order of formats listed in the <em>Text format</em> fieldset. (The <em>Text format</em> fieldset is displayed below textareas when users with access to more than one text format create multi-line content.) The text format selected as <em>Default</em> is available to all users and, unless another format is selected, is applied to all content. All text formats are available to users in roles with the "administer filters" permission.') . '</p>';
+      $output .= '<p>' . t('Since text formats, if available, are presented in the same order as the list below, it may be helpful to arrange the formats in descending order of your preference for their use. To change the order of an text format, grab a drag-and-drop handle under the <em>Name</em> column and drag to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save changes</em> button at the bottom of the page.') . '</p>';
       return $output;
-    case 'admin/settings/filters/%':
-      return '<p>' . t('Every <em>filter</em> performs one particular change on the user input, for example stripping out malicious HTML or making URLs clickable. Choose which filters you want to apply to text in this input format. If you notice some filters are causing conflicts in the output, you can <a href="@rearrange">rearrange them</a>.', array('@rearrange' => url('admin/settings/filters/' . $arg[3] . '/order'))) . '</p>';
-    case 'admin/settings/filters/%/configure':
-      return '<p>' . t('If you cannot find the settings for a certain filter, make sure you have enabled it on the <a href="@url">edit tab</a> first.', array('@url' => url('admin/settings/filters/' . $arg[3]))) . '</p>';
-    case 'admin/settings/filters/%/order':
+    case 'admin/settings/filter/%':
+      return '<p>' . t('Every <em>filter</em> performs one particular change on the user input, for example stripping out malicious HTML or making URLs clickable. Choose which filters you want to apply to text in this format. If you notice some filters are causing conflicts in the output, you can <a href="@rearrange">rearrange them</a>.', array('@rearrange' => url('admin/settings/filter/' . $arg[3] . '/order'))) . '</p>';
+    case 'admin/settings/filter/%/configure':
+      return '<p>' . t('If you cannot find the settings for a certain filter, make sure you have enabled it on the <a href="@url">edit tab</a> first.', array('@url' => url('admin/settings/filter/' . $arg[3]))) . '</p>';
+    case 'admin/settings/filter/%/order':
       $output = '<p>' . t('Because of the flexible filtering system, you might encounter a situation where one filter prevents another from doing its job. For example: a word in an URL gets converted into a glossary term, before the URL can be converted to a clickable link. When this happens, rearrange the order of the filters.') . '</p>';
       $output .= '<p>' . t("Filters are executed from top-to-bottom. To change the order of the filters, modify the values in the <em>Weight</em> column or grab a drag-and-drop handle under the <em>Name</em> column and drag filters to new locations in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.") . '</p>';
       return $output;
@@ -67,26 +67,26 @@ function filter_theme() {
  * Implementation of hook_menu().
  */
 function filter_menu() {
-  $items['admin/settings/filters'] = array(
-    'title' => 'Input formats',
+  $items['admin/settings/filter'] = array(
+    'title' => 'Text formats',
     'description' => 'Configure how content input by users is filtered, including allowed HTML tags. Also allows enabling of module-provided filters.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('filter_admin_overview'),
     'access arguments' => array('administer filters'),
   );
-  $items['admin/settings/filters/list'] = array(
+  $items['admin/settings/filter/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/settings/filters/add'] = array(
-    'title' => 'Add input format',
+  $items['admin/settings/filter/add'] = array(
+    'title' => 'Add text format',
     'page callback' => 'filter_admin_format_page',
     'access arguments' => array('administer filters'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
   );
-  $items['admin/settings/filters/delete'] = array(
-    'title' => 'Delete input format',
+  $items['admin/settings/filter/delete'] = array(
+    'title' => 'Delete text format',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('filter_admin_delete'),
     'access arguments' => array('administer filters'),
@@ -98,7 +98,7 @@ function filter_menu() {
     'access callback' => TRUE,
     'type' => MENU_SUGGESTED_ITEM,
   );
-  $items['admin/settings/filters/%filter_format'] = array(
+  $items['admin/settings/filter/%filter_format'] = array(
     'type' => MENU_CALLBACK,
     'title callback' => 'filter_admin_format_title',
     'title arguments' => array(3),
@@ -106,12 +106,12 @@ function filter_menu() {
     'page arguments' => array(3),
     'access arguments' => array('administer filters'),
   );
-  $items['admin/settings/filters/%filter_format/edit'] = array(
+  $items['admin/settings/filter/%filter_format/edit'] = array(
     'title' => 'Edit',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => 0,
   );
-  $items['admin/settings/filters/%filter_format/configure'] = array(
+  $items['admin/settings/filter/%filter_format/configure'] = array(
     'title' => 'Configure',
     'page callback' => 'filter_admin_configure_page',
     'page arguments' => array(3),
@@ -119,7 +119,7 @@ function filter_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
   );
-  $items['admin/settings/filters/%filter_format/order'] = array(
+  $items['admin/settings/filter/%filter_format/order'] = array(
     'title' => 'Rearrange',
     'page callback' => 'filter_admin_order_page',
     'page arguments' => array(3),
@@ -148,7 +148,7 @@ function filter_perm() {
   return array(
     'administer filters' => array(
       'title' => t('Administer filters'),
-      'description' => t('Manage input formats and filters, and select which roles may use them. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+      'description' => t('Manage text formats and filters, and select which roles may use them. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
     ),
   );
 }
@@ -283,13 +283,13 @@ function filter_filter_tips($delta, $format, $long = FALSE) {
 }
 
 /**
- * Retrieve a list of input formats.
+ * Retrieve a list of text formats.
  */
 function filter_formats($index = NULL) {
   global $user;
   static $formats;
 
-  // Administrators can always use all input formats.
+  // Administrators can always use all text formats.
   $all = user_access('administer filters');
 
   if (!isset($formats)) {
@@ -355,7 +355,7 @@ function filter_resolve_format($format) {
   return $format == FILTER_FORMAT_DEFAULT ? variable_get('filter_default_format', 1) : $format;
 }
 /**
- * Check if text in a certain input format is allowed to be cached.
+ * Check if text in a certain text format is allowed to be cached.
  */
 function filter_format_allowcache($format) {
   static $cache = array();
@@ -472,9 +472,9 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $c
  * @param $value
  *   The ID of the format that is currently selected.
  * @param $weight
- *   The weight of the input format.
+ *   The weight of the text format.
  * @param $parents
- *   Required when defining multiple input formats on a single node or having a different parent than 'format'.
+ *   Required when defining multiple text formats on a single node or having a different parent than 'format'.
  * @return
  *   HTML for the form element.
  */
@@ -487,7 +487,7 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
   if (count($formats) > 1) {
     $form = array(
       '#type' => 'fieldset',
-      '#title' => t('Input format'),
+      '#title' => t('Text format'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
       '#weight' => $weight,
@@ -952,7 +952,7 @@ function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 
   if (!drupal_validate_utf8($string)) {
     return '';
   }
-  // Store the input format
+  // Store the text format
   _filter_xss_split($allowed_tags, TRUE);
   // Remove NULL characters (ignored by some browsers)
   $string = str_replace(chr(0), '', $string);

@@ -6,7 +6,7 @@
  */
 function php_install() {
   $format_exists = db_result(db_query("SELECT COUNT(*) FROM {filter_format} WHERE name = 'PHP code'"));
-  // Add a PHP code input format, if it does not exist. Do this only for the
+  // Add a PHP code text format, if it does not exist. Do this only for the
   // first install (or if the format has been manually deleted) as there is no
   // reliable method to identify the format in an uninstall hook or in
   // subsequent clean installs.
@@ -17,7 +17,7 @@ function php_install() {
     // Enable the PHP evaluator filter.
     db_query("INSERT INTO {filter} (format, module, delta, weight) VALUES (%d, 'php', 0, 0)", $format);
 
-    drupal_set_message(t('A !php-code input format has been created.', array('!php-code' => l('PHP code', 'admin/settings/filters/' . $format))));
+    drupal_set_message(t('A !php-code text format has been created.', array('!php-code' => l('PHP code', 'admin/settings/filter/' . $format))));
   }
 }
 

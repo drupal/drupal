@@ -1518,7 +1518,7 @@ function comment_form(&$form_state, $edit, $title = NULL) {
     '#title' => t('Comment'),
     '#rows' => 15,
     '#default_value' => $default,
-    '#input_format' => isset($edit['format']) ? $edit['format'] : FILTER_FORMAT_DEFAULT,
+    '#text_format' => isset($edit['format']) ? $edit['format'] : FILTER_FORMAT_DEFAULT,
     '#required' => TRUE,
   );
 

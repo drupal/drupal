@@ -46,7 +46,7 @@
  * the content: transforming URLs into hyperlinks, converting smileys into
  * images, etc.
  *
- * An important aspect of the filtering system are 'input formats'. Every input
+ * An important aspect of the filtering system are 'text formats'. Every input
  * format is an entire filter setup: which filters to enable, in what order
  * and with what settings. Filters that provide settings should usually store
  * these settings per format.
@@ -61,7 +61,7 @@
  * in the cache table and retrieved the next time the piece of content is
  * displayed. If a filter's output is dynamic it can override the cache
  * mechanism, but obviously this feature should be used with caution: having one
- * 'no cache' filter in a particular input format disables caching for the
+ * 'no cache' filter in a particular text format disables caching for the
  * entire format, not just for one filter.
  *
  * Beware of the filter cache when developing your module: it is advised to set
@@ -82,12 +82,12 @@
  *   - settings: Return HTML form controls for the filter's settings. These
  *     settings are stored with variable_set() when the form is submitted.
  *     Remember to use the $format identifier in the variable and control names
- *     to store settings per input format (e.g. "mymodule_setting_$format").
+ *     to store settings per text format (e.g. "mymodule_setting_$format").
  * @param $delta
  *   Which of the module's filters to use (applies to every operation except
  *   'list'). Modules that only contain one filter can ignore this parameter.
  * @param $format
- *   Which input format the filter is being used in (applies to 'prepare',
+ *   Which text format the filter is being used in (applies to 'prepare',
  *   'process' and 'settings').
  * @param $text
  *   The content to filter (applies to 'prepare' and 'process').

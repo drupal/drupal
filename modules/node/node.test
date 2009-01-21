@@ -210,7 +210,7 @@ class NodeTeaserTestCase extends DrupalWebTestCase {
 
     // The teasers we expect node_teaser() to return when $size is the index
     // of each array item.
-    // Using an input format with no line-break filter:
+    // Using an text format with no line-break filter:
     $teasers = array(
       "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
       "<",
@@ -252,7 +252,7 @@ class NodeTeaserTestCase extends DrupalWebTestCase {
       "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
     );
 
-    // And Using an input format WITH the line-break filter.
+    // And Using an text format WITH the line-break filter.
     $teasers_lb = array(
       "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
       "<",
