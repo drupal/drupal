@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.956 2009/01/20 03:10:00 webchick Exp $
+// $Id: user.module,v 1.957 2009/01/21 14:37:35 dries Exp $
 
 /**
  * @file
@@ -749,12 +749,18 @@ function user_user_validate(&$edit, &$account, $category = NULL) {
       }
     }
 
-    // Validate the e-mail address:
+    // Validate the e-mail address, and check if it is taken by an existing user.
     if ($error = user_validate_mail($edit['mail'])) {
       form_set_error('mail', $error);
     }
     elseif (db_result(db_query("SELECT COUNT(*) FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $uid, $edit['mail'])) > 0) {
-      form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $edit['mail'], '@password' => url('user/password'))));
+      // Format error message dependent on whether the user is logged in or not.
+      if ($GLOBALS['user']->uid) {
+        form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => $edit['mail'])));
+      }
+      else {
+        form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $edit['mail'], '@password' => url('user/password'))));
+      }
     }
   }
 }
