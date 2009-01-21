@@ -1,5 +1,5 @@
 <?php
-// $Id: node.install,v 1.10 2009/01/02 21:12:31 dries Exp $
+// $Id: node.install,v 1.11 2009/01/21 16:58:42 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -264,7 +264,7 @@ function node_schema() {
         'default' => 0,
       ),
       'format' => array(
-        'description' => "The input format used by this version's body.",
+        'description' => "The text format used by this version's body.",
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,

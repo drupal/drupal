@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.318 2008/12/30 16:43:15 dries Exp $
+// $Id: block.module,v 1.319 2009/01/21 16:58:41 dries Exp $
 
 /**
  * @file
@@ -328,7 +328,7 @@ function block_box_form($edit = array()) {
     '#type' => 'textarea',
     '#title' => t('Block body'),
     '#default_value' => $edit['body'],
-    '#input_format' => isset($edit['format']) ? $edit['format'] : FILTER_FORMAT_DEFAULT,
+    '#text_format' => isset($edit['format']) ? $edit['format'] : FILTER_FORMAT_DEFAULT,
     '#rows' => 15,
     '#description' => t('The content of the block as shown to the user.'),
     '#weight' => -17,

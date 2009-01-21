@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.pages.inc,v 1.5 2008/12/20 18:24:36 dries Exp $
+// $Id: filter.pages.inc,v 1.6 2009/01/21 16:58:42 dries Exp $
 
 /**
  * @file
@@ -28,7 +28,7 @@ function filter_tips_long() {
  * @param $tips
  *   An array containing descriptions and a CSS id in the form of
  *   'module-name/filter-id' (only used when $long is TRUE) for each input
- *   filter in one or more input formats. Example:
+ *   filter in one or more text formats. Example:
  *   @code
  *     array(
  *       'Full HTML' => array(
@@ -53,7 +53,7 @@ function theme_filter_tips($tips, $long = FALSE) {
 
   $multiple = count($tips) > 1;
   if ($multiple) {
-    $output = t('Input formats') . ':';
+    $output = t('Text formats') . ':';
   }
 
   if (count($tips)) {

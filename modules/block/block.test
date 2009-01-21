@@ -1,5 +1,5 @@
 <?php
-// $Id: block.test,v 1.9 2009/01/07 21:41:13 dries Exp $
+// $Id: block.test,v 1.10 2009/01/21 16:58:41 dries Exp $
 
 class BlockTestCase extends DrupalWebTestCase {
   protected $regions;
@@ -77,7 +77,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $edit['block_' . $bid . '[region]'] = 'left';
     $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
 
-    // Confirm that the box is being displayed using configured input format.
+    // Confirm that the box is being displayed using configured text format.
     $this->assertRaw('<h1>Full HTML</h1>', t('Box successfully being displayed using Full HTML.'));
   }
 

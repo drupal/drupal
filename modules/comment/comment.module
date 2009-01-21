@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.682 2009/01/14 21:48:24 dries Exp $
+// $Id: comment.module,v 1.683 2009/01/21 16:58:41 dries Exp $
 
 /**
  * @file
@@ -1518,7 +1518,7 @@ function comment_form(&$form_state, $edit, $title = NULL) {
     '#title' => t('Comment'),
     '#rows' => 15,
     '#default_value' => $default,
-    '#input_format' => isset($edit['format']) ? $edit['format'] : FILTER_FORMAT_DEFAULT,
+    '#text_format' => isset($edit['format']) ? $edit['format'] : FILTER_FORMAT_DEFAULT,
     '#required' => TRUE,
   );
 

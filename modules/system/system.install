@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.300 2009/01/19 10:46:51 dries Exp $
+// $Id: system.install,v 1.301 2009/01/21 16:58:42 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -375,11 +375,11 @@ function system_install() {
 
   db_query("INSERT INTO {node_access} (nid, gid, realm, grant_view, grant_update, grant_delete) VALUES (%d, %d, '%s', %d, %d, %d)", 0, 0, 'all', 1, 0, 0);
 
-  // Add input formats.
+  // Add text formats.
   db_query("INSERT INTO {filter_format} (name, roles, cache) VALUES ('%s', '%s', %d)", 'Filtered HTML', ',1,2,', 1);
   db_query("INSERT INTO {filter_format} (name, roles, cache) VALUES ('%s', '%s', %d)", 'Full HTML', '', 1);
 
-  // Enable filters for each input format.
+  // Enable filters for each text format.
 
   // Filtered HTML:
   // URL filter.
@@ -1470,7 +1470,7 @@ function system_update_6008() {
 function system_update_6009() {
   $ret = array();
 
-  // If any input format used the Drupal 5 PHP filter.
+  // If any text format used the Drupal 5 PHP filter.
   if (db_result(db_query("SELECT COUNT(format) FROM {filters} WHERE module = 'filter' AND delta = 1"))) {
     // Enable the PHP filter module.
     $ret[] = update_sql("UPDATE {system} SET status = 1 WHERE name = 'php' AND type = 'module'");
@@ -1670,7 +1670,7 @@ function system_update_6018() {
   while ($format = db_fetch_object($result)) {
     $weight = db_result(db_query("SELECT MAX(weight) FROM {filters} WHERE format = %d", $format->format));
     db_query("INSERT INTO {filters} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", $format->format, 'filter', 3, max(10, $weight + 1));
-    $ret[] = array('success' => TRUE, 'query' => "HTML corrector filter added to the '" . $format->name . "' input format.");
+    $ret[] = array('success' => TRUE, 'query' => "HTML corrector filter added to the '" . $format->name . "' text format.");
   }
 
   return $ret;

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.48 2008/12/30 16:43:18 dries Exp $
+// $Id: node.pages.inc,v 1.49 2009/01/21 16:58:42 dries Exp $
 
 /**
  * @file
@@ -297,7 +297,7 @@ function node_body_field(&$node, $label, $word_count) {
     '#default_value' => $include ? $node->body : ($node->teaser . $node->body),
     '#rows' => 20,
     '#required' => ($word_count > 0),
-    '#input_format' => isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT,
+    '#text_format' => isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT,
   );
 
   return $form;

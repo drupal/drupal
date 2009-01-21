@@ -1,5 +1,5 @@
 <?php
-// $Id: php.test,v 1.6 2008/11/25 13:14:28 dries Exp $
+// $Id: php.test,v 1.7 2009/01/21 16:58:42 dries Exp $
 
 /**
  * Base PHP test case class.
@@ -13,7 +13,7 @@ class PHPTestCase extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     // Confirm that the PHP filter is #3.
-    $this->drupalGet('admin/settings/filters/3');
+    $this->drupalGet('admin/settings/filter/3');
     $this->assertText('PHP code', t('On PHP code filter page.'));
   }
 
@@ -53,7 +53,7 @@ class PHPFilterTestCase extends PHPTestCase {
     $edit = array();
     $edit['roles[2]'] = TRUE; // Set authenticated users to have permission to use filter.
     $this->drupalPost(NULL, $edit, 'Save configuration');
-    $this->assertText(t('The input format settings have been updated.'), t('PHP format available to authenticated users.'));
+    $this->assertText(t('The text format settings have been updated.'), t('PHP format available to authenticated users.'));
 
     // Create node with PHP filter enabled.
     $web_user = $this->drupalCreateUser(array('access content', 'create page content', 'edit own page content'));

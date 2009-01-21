@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.14 2009/01/09 16:19:55 webchick Exp $
+// $Id: node.test,v 1.15 2009/01/21 16:58:42 dries Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -210,7 +210,7 @@ class NodeTeaserTestCase extends DrupalWebTestCase {
 
     // The teasers we expect node_teaser() to return when $size is the index
     // of each array item.
-    // Using an input format with no line-break filter:
+    // Using an text format with no line-break filter:
     $teasers = array(
       "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
       "<",
@@ -252,7 +252,7 @@ class NodeTeaserTestCase extends DrupalWebTestCase {
       "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
     );
 
-    // And Using an input format WITH the line-break filter.
+    // And Using an text format WITH the line-break filter.
     $teasers_lb = array(
       "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
       "<",
