@@ -48,6 +48,7 @@ function dblog_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('dblog_admin_settings'),
     'access arguments' => array('administer site configuration'),
+    'type' => MENU_LOCAL_TASK,
   );
   $items['admin/reports/dblog'] = array(
     'title' => 'Recent log entries',

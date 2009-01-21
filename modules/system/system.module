@@ -586,18 +586,18 @@ function system_menu() {
     'page arguments' => array('system_site_information_settings'),
     'access arguments' => array('administer site configuration'),
   );
-  $items['admin/settings/error-reporting'] = array(
-    'title' => 'Error reporting',
-    'description' => 'Control how Drupal deals with errors including 403/404 errors as well as PHP error reporting.',
+  $items['admin/settings/logging'] = array(
+    'title' => 'Logging, errors and alerts',
+    'description' => "Settings for logging and alerts modules. Various modules can route Drupal's system events to different destination, such as syslog, database, email, ...etc.",
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_error_reporting_settings'),
+    'page arguments' => array('system_logging_settings'),
     'access arguments' => array('administer site configuration'),
   );
-  $items['admin/settings/logging'] = array(
-    'title' => 'Logging and alerts',
-    'description' => "Settings for logging and alerts modules. Various modules can route Drupal's system events to different destination, such as syslog, database, email, ...etc.",
-    'page callback' => 'system_logging_overview',
+  $items['admin/settings/logging/settings'] = array(
+    'title' => 'Settings',
     'access arguments' => array('administer site configuration'),
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -1,
   );
   $items['admin/settings/performance'] = array(
     'title' => 'Performance',
@@ -1298,7 +1298,7 @@ function _system_settings_form_automatic_defaults($form) {
       $form[$key] = _system_settings_form_automatic_defaults($form[$key]);
     }
   }
-  
+
   return $form;
 }
 
@@ -1319,7 +1319,7 @@ function system_settings_form($form, $automatic_defaults = TRUE) {
   if ($automatic_defaults) {
     $form = _system_settings_form_automatic_defaults($form);
   }
-  
+
   if (!empty($_POST) && form_get_errors()) {
     drupal_set_message(t('The settings have not been saved because of the errors.'), 'error');
   }
