@@ -1201,7 +1201,7 @@ function node_build_content($node, $teaser = FALSE) {
 
   // Allow modules to make their own additions to the node.
   node_invoke_nodeapi($node, 'view', $teaser);
-  
+
   // Allow modules to modify the structured node.
   drupal_alter('node_view', $node, $teaser);
 
@@ -2169,7 +2169,9 @@ function node_search_validate($form, &$form_state) {
 function node_access($op, $node, $account = NULL) {
   global $user;
 
-  if (!$node) {
+  if (!$node || !in_array($op, array('view', 'update', 'delete', 'create'), TRUE)) {
+    // If there was no node to check against, or the $op was not one of the
+    // supported ones, we return access denied.
     return FALSE;
   }
   // Convert the node to an object if necessary:
@@ -2384,10 +2386,10 @@ function node_query_node_access_alter(QueryAlterableInterface $query) {
       if (count($or->conditions())) {
         $query->condition($or);
       }
-      
+
       $query->condition("{$access_alias}.grant_$op", 1, '>=');
     }
-  } 
+  }
 }
 
 /**
@@ -3019,7 +3021,7 @@ function node_list_permissions($type) {
  */
 function node_elements() {
   $type['node_links'] = array();
-  
+
   return $type;
 }
 
