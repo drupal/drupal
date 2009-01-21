@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.270 2009/01/19 10:46:50 dries Exp $
+// $Id: update.php,v 1.271 2009/01/21 14:47:12 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -282,7 +282,7 @@ function update_script_selection_form() {
     );
     $form['submit'] = array(
       '#type' => 'submit',
-      '#value' => 'Apply pending updates',
+      '#value' => 'apply pending updates',
     );
   }
   return $form;
@@ -420,6 +420,7 @@ function update_info_page() {
 
   update_task_list('info');
   drupal_set_title('Drupal database update');
+  $token = drupal_get_token('update');
   $output = '<p>Use this utility to update your database whenever a new release of Drupal or a module is installed.</p><p>For more detailed information, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.</p>';
   $output .= "<ol>\n";
   $output .= "<li><strong>Back up your database</strong>. This process will change your database values and in case of emergency you may need to revert to a backup.</li>\n";
@@ -428,7 +429,7 @@ function update_info_page() {
   $output .= "<li>Install your new files in the appropriate location, as described in the handbook.</li>\n";
   $output .= "</ol>\n";
   $output .= "<p>When you have performed the steps above, you may proceed.</p>\n";
-  $output .= '<form method="post" action="update.php?op=selection"><input type="submit" value="Continue" /></form>';
+  $output .= '<form method="post" action="update.php?op=selection&token=' . $token . '"><input type="submit" value="Continue" /></form>';
   $output .= "\n";
   return $output;
 }
@@ -708,16 +709,21 @@ if (!empty($update_free_access) || $user->uid == 1) {
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
   switch ($op) {
     // update.php ops
-    case 'info':
-      $output = update_info_page();
-      break;
 
     case 'selection':
-      $output = update_selection_page();
-      break;
+      if (isset($_GET['token']) && $_GET['token'] == drupal_get_token('update')) {
+        $output = update_selection_page();
+        break;
+      }
 
-    case 'Apply pending updates':
-      update_batch();
+    case 'apply pending updates':
+      if (isset($_GET['token']) && $_GET['token'] == drupal_get_token('update')) {
+        update_batch();
+        break;
+      }
+
+    case 'info':
+      $output = update_info_page();
       break;
 
     case 'results':
