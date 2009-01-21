@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.119 2009/01/19 21:13:09 dries Exp $
+// $Id: system.admin.inc,v 1.120 2009/01/21 14:22:32 dries Exp $
 
 /**
  * @file
@@ -1225,9 +1225,25 @@ function system_site_information_settings() {
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
     '#required' => TRUE,
   );
+  $form['site_403'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default 403 (access denied) page'),
+    '#default_value' => '',
+    '#size' => 40,
+    '#description' => t('This page is displayed when the requested document is denied to the current user. If unsure, specify nothing.'),
+    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
+  );
+  $form['site_404'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Default 404 (not found) page'),
+    '#default_value' => '',
+    '#size' => 40,
+    '#description' => t('This page is displayed when no other content matches the requested document. If unsure, specify nothing.'),
+    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
+  );
   $form['#validate'][] = 'system_site_information_settings_validate';
 
-  return system_settings_form($form, TRUE);
+  return system_settings_form($form);
 }
 
 /**
@@ -1256,23 +1272,7 @@ function system_site_information_settings_validate($form, &$form_state) {
  * @ingroup forms
  * @see system_settings_form()
  */
-function system_error_reporting_settings() {
-  $form['site_403'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Default 403 (access denied) page'),
-    '#default_value' => '',
-    '#size' => 40,
-    '#description' => t('This page is displayed when the requested document is denied to the current user. If unsure, specify nothing.'),
-    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
-  );
-  $form['site_404'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Default 404 (not found) page'),
-    '#default_value' => '',
-    '#size' => 40,
-    '#description' => t('This page is displayed when no other content matches the requested document. If unsure, specify nothing.'),
-    '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
-  );
+function system_logging_settings() {
   $form['error_level'] = array(
     '#type' => 'radios',
     '#title' => t('Error reporting'),
@@ -1286,18 +1286,6 @@ function system_error_reporting_settings() {
   );
 
   return system_settings_form($form);
-}
-
-/**
- * Menu callback; Menu page for the various logging options.
- */
-function system_logging_overview() {
-  $item = menu_get_item('admin/settings/logging');
-  $content = system_admin_menu_block($item);
-
-  $output = theme('admin_block_content', $content);
-
-  return $output;
 }
 
 /**

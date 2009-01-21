@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.36 2009/01/14 12:18:37 dries Exp $
+// $Id: system.test,v 1.37 2009/01/21 14:22:33 dries Exp $
 
 /**
  * Helper class for module test cases.
@@ -450,7 +450,7 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode($edit);
 
     // Use a custom 403 page.
-    $this->drupalPost('admin/settings/error-reporting', array('site_403' => 'node/' . $node->nid), t('Save configuration'));
+    $this->drupalPost('admin/settings/site-information', array('site_403' => 'node/' . $node->nid), t('Save configuration'));
 
     $this->drupalGet('admin');
     $this->assertText($node->title, t('Found the custom 403 page'));
@@ -464,7 +464,7 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
 
     // Log back in and remove the custom 403 page.
     $this->drupalLogin($this->admin_user);
-    $this->drupalPost('admin/settings/error-reporting', array(), t('Reset to defaults'));
+    $this->drupalPost('admin/settings/site-information', array(), t('Reset to defaults'));
 
     // Logout and check that the user login block is shown on default 403 pages.
     $this->drupalLogout();
@@ -511,7 +511,7 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode($edit);
 
     // Use a custom 404 page.
-    $this->drupalPost('admin/settings/error-reporting', array('site_404' => 'node/' . $node->nid), t('Save configuration'));
+    $this->drupalPost('admin/settings/site-information', array('site_404' => 'node/' . $node->nid), t('Save configuration'));
 
     $this->drupalGet($this->randomName(10));
     $this->assertText($node->title, t('Found the custom 404 page'));
@@ -525,7 +525,7 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
 
     // Log back in and remove the custom 404 page.
     $this->drupalLogin($this->admin_user);
-    $this->drupalPost('admin/settings/error-reporting', array(), t('Reset to defaults'));
+    $this->drupalPost('admin/settings/site-information', array(), t('Reset to defaults'));
 
     // Logout and check that the user login block is not shown on default 404 pages.
     $this->drupalLogout();
@@ -778,16 +778,16 @@ class SystemSettingsForm extends DrupalWebTestCase {
   function tearDown() {
     variable_del('system_settings_form_test');
     variable_del('system_settings_form_test_4');
-    
+
     parent::tearDown();
   }
-  
+
   /**
    * Tests the handling of automatic defaults in systems_settings_form().
    */
   function testAutomaticDefaults() {
     $form = array();
-    
+
     $form['system_settings_form_test'] = array(
       '#type' => 'checkbox',
       '#default_value' => FALSE,
@@ -819,7 +819,6 @@ class SystemSettingsForm extends DrupalWebTestCase {
     $this->assertTrue($automatic['system_settings_form_test_3']['#default_value']);
     $this->assertFalse($automatic['has_children']['system_settings_form_test_4']['#default_value']);
     $this->assertTrue($automatic['has_children']['system_settings_form_test_5']['#default_value']);
-    
 
     $no_automatic = system_settings_form($form);
     $this->assertTrue($no_automatic['system_settings_form_test']['#default_value']);

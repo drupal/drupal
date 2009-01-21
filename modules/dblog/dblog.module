@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.32 2009/01/08 08:42:12 webchick Exp $
+// $Id: dblog.module,v 1.33 2009/01/21 14:22:31 dries Exp $
 
 /**
  * @file
@@ -48,6 +48,7 @@ function dblog_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('dblog_admin_settings'),
     'access arguments' => array('administer site configuration'),
+    'type' => MENU_LOCAL_TASK,
   );
   $items['admin/reports/dblog'] = array(
     'title' => 'Recent log entries',
