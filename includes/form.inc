@@ -291,6 +291,10 @@ function form_set_cache($form_build_id, $form, $form_state) {
  */
 function drupal_execute($form_id, &$form_state) {
   $args = func_get_args();
+  
+  // Make sure $form_state is passed around by reference.
+  $args[1] = &$form_state;
+
   $form = call_user_func_array('drupal_retrieve_form', $args);
   $form['#post'] = $form_state['values'];
   drupal_prepare_form($form_id, $form, $form_state);

@@ -705,7 +705,7 @@ function comment_nodeapi_rss_item($node) {
 /**
  * Implementation of hook_user_cancel().
  */
-function comment_user_cancel(&$edit, &$account, $method) {
+function comment_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_block_unpublish':
       db_update('comment')->fields(array('status' => 0))->condition('uid', $account->uid)->execute();

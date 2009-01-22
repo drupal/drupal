@@ -1481,7 +1481,7 @@ function node_ranking() {
 /**
  * Implementation of hook_user_cancel().
  */
-function node_user_cancel(&$edit, &$account, $method) {
+function node_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_block_unpublish':
       // Unpublish nodes (current revisions).

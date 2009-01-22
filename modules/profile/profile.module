@@ -254,7 +254,7 @@ function profile_user_validate(&$edit, &$user, $category = NULL) {
 /**
  * Implementation of hook_user_categories().
  */
-function profile_user_categories(&$edit, &$user, $category = NULL) {
+function profile_user_categories($edit, $user, $category = NULL) {
   return profile_categories();
 }
 

@@ -186,7 +186,7 @@ function statistics_menu() {
 /**
  * Implementation of hook_user_cancel().
  */
-function statistics_user_cancel(&$edit, &$account, $method) {
+function statistics_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
       db_update('accesslog')->fields(array('uid' => 0))->condition('uid', $account->uid)->execute();

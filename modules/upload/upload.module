@@ -282,7 +282,7 @@ function upload_file_load($files) {
 /**
  * Implementation of hook_file_references().
  */
-function upload_file_references(&$file) {
+function upload_file_references($file) {
   // If upload.module is still using a file, do not let other modules delete it.
   $count = db_query('SELECT COUNT(*) FROM {upload} WHERE fid = :fid', array(':fid' => $file->fid))->fetchField();
   if ($count) {
@@ -294,7 +294,7 @@ function upload_file_references(&$file) {
 /**
  * Implementation of hook_file_delete().
  */
-function upload_file_delete(&$file) {
+function upload_file_delete($file) {
   // Delete all information associated with the file.
   db_delete('upload')->condition('fid', $file->fid)->execute();
 }
@@ -604,7 +604,7 @@ function _upload_form($node) {
  *
  * @ingroup themeable
  */
-function theme_upload_form_current(&$form) {
+function theme_upload_form_current($form) {
   $header = array('', t('Delete'), t('List'), t('Description'), t('Weight'), t('Size'));
   drupal_add_tabledrag('upload-attachments', 'order', 'sibling', 'upload-weight');
 

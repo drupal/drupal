@@ -790,7 +790,7 @@ function user_user_submit(&$edit, &$account, $category = NULL) {
 /**
  * Implementation of hook_user_categories.
  */
-function user_user_categories(&$edit, &$account, $category = NULL) {
+function user_user_categories($edit, $account, $category = NULL) {
     return array(array('name' => 'account', 'title' => t('Account settings'), 'weight' => 1));
 }
 

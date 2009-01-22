@@ -104,7 +104,7 @@ function dblog_cron() {
 /**
  * Implementation of hook_user_cancel().
  */
-function dblog_user_cancel(&$edit, &$account, $method) {
+function dblog_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
       db_update('watchdog')->fields(array('uid' => 0))->condition('uid', $account->uid)->execute();
