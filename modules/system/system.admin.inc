@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.120 2009/01/21 14:22:32 dries Exp $
+// $Id: system.admin.inc,v 1.121 2009/01/22 05:01:39 webchick Exp $
 
 /**
  * @file
@@ -574,7 +574,6 @@ function system_modules($form_state = array()) {
   registry_rebuild();
   drupal_theme_rebuild();
   node_types_rebuild();
-  menu_rebuild();
   cache_clear_all('schema', 'cache');
   // Get current list of modules.
   $files = module_rebuild_cache();

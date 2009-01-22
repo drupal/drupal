@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1016 2009/01/22 03:11:54 webchick Exp $
+// $Id: node.module,v 1.1017 2009/01/22 05:01:39 webchick Exp $
 
 /**
  * @file
@@ -499,6 +499,8 @@ function node_types_rebuild() {
   }
 
   _node_types_build();
+  // This is required for proper menu items at node/add/type.
+  menu_rebuild();
 }
 
 /**

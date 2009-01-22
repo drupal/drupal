@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.62 2009/01/09 16:19:55 webchick Exp $
+// $Id: content_types.inc,v 1.63 2009/01/22 05:01:39 webchick Exp $
 
 /**
  * @file
@@ -328,7 +328,6 @@ function node_type_form_submit($form, &$form_state) {
   }
 
   node_types_rebuild();
-  menu_rebuild();
   $t_args = array('%name' => $type->name);
 
   if ($op == t('Reset to defaults')) {
@@ -413,7 +412,6 @@ function node_type_delete_confirm_submit($form, &$form_state) {
   watchdog('menu', 'Deleted content type %name.', $t_args, WATCHDOG_NOTICE);
 
   node_types_rebuild();
-  menu_rebuild();
 
   $form_state['redirect'] = 'admin/build/types';
   return;
