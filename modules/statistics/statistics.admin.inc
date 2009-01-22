@@ -180,7 +180,7 @@ function statistics_access_log($aid) {
  * @ingroup forms
  * @see system_settings_form()
  */
-function statistics_access_logging_settings() {
+function statistics_settings_form() {
   // Access log settings:
   $options = array('1' => t('Enabled'), '0' => t('Disabled'));
   $form['access'] = array(
