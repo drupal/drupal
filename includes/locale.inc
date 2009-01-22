@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.199 2009/01/06 13:20:17 dries Exp $
+// $Id: locale.inc,v 1.200 2009/01/22 03:29:01 webchick Exp $
 
 /**
  * @file
@@ -856,8 +856,10 @@ function locale_string_is_safe($string) {
  * Validate string editing form submissions.
  */
 function locale_translate_edit_form_validate($form, &$form_state) {
+  // Locale string check is needed for default textgroup only.
+  $safe_check_needed = $form_state['values']['textgroup'] == 'default';
   foreach ($form_state['values']['translations'] as $key => $value) {
-    if (!locale_string_is_safe($value)) {
+    if ($safe_check_needed && !locale_string_is_safe($value)) {
       form_set_error('translations', t('The submitted string contains disallowed HTML: %string', array('%string' => $value)));
       watchdog('locale', 'Attempted submission of a translation string with disallowed HTML: %string', array('%string' => $value), WATCHDOG_WARNING);
     }
@@ -1349,7 +1351,9 @@ function _locale_import_one_string_db(&$report, $langcode, $source, $translation
 
   if (!empty($translation)) {
     // Skip this string unless it passes a check for dangerous code.
-    if (!locale_string_is_safe($translation)) {
+    // Text groups other than default still can contain HTML tags
+    // (i.e. translatable blocks).
+    if ($textgroup == "default" && !locale_string_is_safe($translation)) {
       $report['skips']++;
       $lid = 0;
     }
