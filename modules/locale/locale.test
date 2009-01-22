@@ -191,7 +191,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
   protected $admin_user = NULL;
 
   function setUp() {
-    parent::setUp('locale');
+    parent::setUp('locale', 'locale_test');
 
     $this->admin_user = $this->drupalCreateUser(array('administer languages', 'translate interface', 'access administration pages'));
     $this->drupalLogin($this->admin_user);
@@ -216,7 +216,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     // The importation should have create 7 strings.
     $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 7, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported'));
 
-    // Try importing a .po file with script.
+    // Try importing a .po file with invalid tags in the default text group.
     $name = tempnam(file_directory_temp(), "po_");
     file_put_contents($name, $this->getBadPoFile());
     $this->drupalPost('admin/build/translate/import', array(
@@ -229,6 +229,17 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     $skip_message = format_plural(2, 'One translation string was skipped because it contains disallowed HTML.', '@count translation strings were skipped because they contain disallowed HTML.');
     $this->assertRaw($skip_message, t('Unsafe strings were skipped.'));
 
+    // Try importing a .po file with invalid tags in a non default text group.
+    $name = tempnam(file_directory_temp(), "po_");
+    file_put_contents($name, $this->getBadPoFile());
+    $this->drupalPost('admin/build/translate/import', array(
+      'langcode' => 'fr',
+      'files[file]' => $name,
+      'group' => 'custom',
+    ), t('Import'));
+    unlink($name);
+    // The importation should have created 3 strings.
+    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 3, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
   }
 
   /**
