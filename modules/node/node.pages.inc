@@ -164,9 +164,9 @@ function node_form(&$form_state, $node) {
     );
     $form['revision_information']['log'] = array(
       '#type' => 'textarea',
-      '#title' => t('Log message'),
+      '#title' => t('Revision log message'),
       '#rows' => 2,
-      '#description' => t('An explanation of the additions or updates being made to help other authors understand your motivations.'),
+      '#description' => t('Provide an explanation of the changes you are making. This will help other authors understand your motivations.'),
     );
   }
 
