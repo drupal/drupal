@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.315 2009/01/21 16:58:41 dries Exp $
+// $Id: form.inc,v 1.316 2009/01/22 12:46:05 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -291,6 +291,10 @@ function form_set_cache($form_build_id, $form, $form_state) {
  */
 function drupal_execute($form_id, &$form_state) {
   $args = func_get_args();
+  
+  // Make sure $form_state is passed around by reference.
+  $args[1] = &$form_state;
+
   $form = call_user_func_array('drupal_retrieve_form', $args);
   $form['#post'] = $form_state['values'];
   drupal_prepare_form($form_id, $form, $form_state);

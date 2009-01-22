@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.250 2009/01/11 10:49:21 dries Exp $
+// $Id: profile.module,v 1.251 2009/01/22 12:46:06 dries Exp $
 
 /**
  * @file
@@ -254,7 +254,7 @@ function profile_user_validate(&$edit, &$user, $category = NULL) {
 /**
  * Implementation of hook_user_categories().
  */
-function profile_user_categories(&$edit, &$user, $category = NULL) {
+function profile_user_categories($edit, $user, $category = NULL) {
   return profile_categories();
 }
 

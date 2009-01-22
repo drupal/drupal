@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.test,v 1.15 2009/01/12 16:53:09 dries Exp $
+// $Id: simpletest.test,v 1.16 2009/01/22 12:46:06 dries Exp $
 
 class SimpleTestFunctionalTest extends DrupalWebTestCase {
   /**
@@ -147,7 +147,9 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
     $this->assertAssertion('This is nothing.', 'Other', 'Pass', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
 
     // Check that errors that occur inside PHP internal functions are correctly reported.
-    $this->assertAssertion('The second argument should be either an array or an object', 'Warning', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
+    // The exact error message differs between PHP versions so we check only
+    // the function name 'array_key_exists'.
+    $this->assertAssertion('array_key_exists', 'Warning', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
 
     $this->test_ids[] = $test_id = $this->getTestIdFromResults();
     $this->assertTrue($test_id, t('Found test ID in results.'));

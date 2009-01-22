@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.154 2009/01/21 02:07:10 webchick Exp $
+// $Id: file.inc,v 1.155 2009/01/22 12:46:05 dries Exp $
 
 /**
  * @file
@@ -1100,7 +1100,7 @@ function file_validate_size($file, $file_limit = 0, $user_limit = 0) {
  *
  * @see hook_file_validate()
  */
-function file_validate_is_image(&$file) {
+function file_validate_is_image($file) {
   $errors = array();
 
   $info = image_get_info($file->filepath);
@@ -1135,7 +1135,7 @@ function file_validate_is_image(&$file) {
  *
  * @see hook_file_validate()
  */
-function file_validate_image_resolution(&$file, $maximum_dimensions = 0, $minimum_dimensions = 0) {
+function file_validate_image_resolution($file, $maximum_dimensions = 0, $minimum_dimensions = 0) {
   $errors = array();
 
   // Check first that the file is an image.

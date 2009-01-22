@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.33 2009/01/21 14:22:31 dries Exp $
+// $Id: dblog.module,v 1.34 2009/01/22 12:46:06 dries Exp $
 
 /**
  * @file
@@ -104,7 +104,7 @@ function dblog_cron() {
 /**
  * Implementation of hook_user_cancel().
  */
-function dblog_user_cancel(&$edit, &$account, $method) {
+function dblog_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
       db_update('watchdog')->fields(array('uid' => 0))->condition('uid', $account->uid)->execute();

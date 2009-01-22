@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.959 2009/01/22 04:43:32 webchick Exp $
+// $Id: user.module,v 1.960 2009/01/22 12:46:07 dries Exp $
 
 /**
  * @file
@@ -790,7 +790,7 @@ function user_user_submit(&$edit, &$account, $category = NULL) {
 /**
  * Implementation of hook_user_categories.
  */
-function user_user_categories(&$edit, &$account, $category = NULL) {
+function user_user_categories($edit, $account, $category = NULL) {
     return array(array('name' => 'account', 'title' => t('Account settings'), 'weight' => 1));
 }
 

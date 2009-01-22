@@ -1,5 +1,5 @@
 <?php
-// $Id: user.api.php,v 1.2 2009/01/08 08:42:13 webchick Exp $
+// $Id: user.api.php,v 1.3 2009/01/22 12:46:07 dries Exp $
 
 /**
  * @file
@@ -94,9 +94,9 @@ function hook_user($op, &$edit, &$account, $category = NULL) {
  *
  * Expensive operations should be added to the global batch with batch_set().
  *
- * @param &$edit
+ * @param $edit
  *   The array of form values submitted by the user.
- * @param &$account
+ * @param $account
  *   The user object on which the operation is being performed.
  * @param $method
  *   The account cancellation method.
@@ -105,7 +105,7 @@ function hook_user($op, &$edit, &$account, $category = NULL) {
  * @see hook_user_cancel_methods_alter()
  * @see user_cancel()
  */
-function hook_user_cancel(&$edit, &$account, $method) {
+function hook_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_block_unpublish':
       // Unpublish nodes (current revisions).

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1017 2009/01/22 05:01:39 webchick Exp $
+// $Id: node.module,v 1.1018 2009/01/22 12:46:06 dries Exp $
 
 /**
  * @file
@@ -1481,7 +1481,7 @@ function node_ranking() {
 /**
  * Implementation of hook_user_cancel().
  */
-function node_user_cancel(&$edit, &$account, $method) {
+function node_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_block_unpublish':
       // Unpublish nodes (current revisions).

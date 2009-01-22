@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.684 2009/01/22 03:11:53 webchick Exp $
+// $Id: comment.module,v 1.685 2009/01/22 12:46:06 dries Exp $
 
 /**
  * @file
@@ -705,7 +705,7 @@ function comment_nodeapi_rss_item($node) {
 /**
  * Implementation of hook_user_cancel().
  */
-function comment_user_cancel(&$edit, &$account, $method) {
+function comment_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_block_unpublish':
       db_update('comment')->fields(array('status' => 0))->condition('uid', $account->uid)->execute();

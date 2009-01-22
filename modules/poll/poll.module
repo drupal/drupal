@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.285 2009/01/21 14:42:16 dries Exp $
+// $Id: poll.module,v 1.286 2009/01/22 12:46:06 dries Exp $
 
 /**
  * @file
@@ -817,7 +817,7 @@ function poll_cancel($form, &$form_state) {
 /**
  * Implementation of hook_user_cancel().
  */
-function poll_user_cancel(&$edit, &$account, $method) {
+function poll_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
       db_update('poll_vote')->fields(array('uid' => 0))->condition('uid', $account->uid)->execute();

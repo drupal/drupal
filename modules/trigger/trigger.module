@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.27 2009/01/08 08:42:13 webchick Exp $
+// $Id: trigger.module,v 1.28 2009/01/22 12:46:07 dries Exp $
 
 /**
  * @file
@@ -422,7 +422,7 @@ function trigger_user_login(&$edit, &$account, $category) {
 /**
  * Implementation of hook_user_logout().
  */
-function trigger_user_logout(&$edit, &$account) {
+function trigger_user_logout($edit, $account) {
   _trigger_user('logout', $edit, $account);
 }
 
@@ -443,7 +443,7 @@ function trigger_user_update(&$edit, &$account, $category) {
 /**
  * Implementation of hook_user_cancel().
  */
-function trigger_user_cancel(&$edit, &$account, $method) {
+function trigger_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
     case 'user_cancel_delete':
