@@ -574,7 +574,6 @@ function system_modules($form_state = array()) {
   registry_rebuild();
   drupal_theme_rebuild();
   node_types_rebuild();
-  menu_rebuild();
   cache_clear_all('schema', 'cache');
   // Get current list of modules.
   $files = module_rebuild_cache();
