@@ -286,17 +286,27 @@ function update_cron() {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implementation of hook_form_FORM_ID_alter().
  *
  * Adds a submit handler to the system modules and themes forms, so that if a
  * site admin saves either form, we invalidate the cache of available updates.
  *
  * @see update_invalidate_cache()
  */
-function update_form_alter(&$form, $form_state, $form_id) {
-  if ($form_id == 'system_modules' || $form_id == 'system_themes' ) {
-    $form['#submit'][] = 'update_invalidate_cache';
-  }
+function update_form_system_themes_alter(&$form, $form_state) {
+  $form['#submit'][] = 'update_invalidate_cache';
+}
+
+/**
+ * Implementation of hook_form_FORM_ID_alter().
+ *
+ * Adds a submit handler to the system modules and themes forms, so that if a
+ * site admin saves either form, we invalidate the cache of available updates.
+ *
+ * @see update_invalidate_cache()
+ */
+function update_form_system_modules_alter(&$form, $form_state) {
+  $form['#submit'][] = 'update_invalidate_cache';
 }
 
 /**
