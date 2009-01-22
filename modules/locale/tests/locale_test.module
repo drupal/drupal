@@ -1,0 +1,17 @@
+<?php
+// $Id $
+
+/**
+ * @file
+ * Mock module for locale layer tests.
+ */
+
+/**
+ * Implementation of hook_locale().
+ */
+function locale_test_locale($op = 'groups') {
+  switch ($op) {
+    case 'groups':
+      return array('custom' => t('Custom'));
+  }
+}
