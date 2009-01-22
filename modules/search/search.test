@@ -1,7 +1,10 @@
 <?php
-// $Id: search.test,v 1.14 2008/12/31 12:02:23 dries Exp $
+// $Id: search.test,v 1.15 2009/01/22 04:49:58 webchick Exp $
 
+// The search index can contain different types of content. Typically the type is 'node'.
+// Here we test with _test_ and _test2_ as the type.
 define('SEARCH_TYPE', '_test_');
+define('SEARCH_TYPE_2', '_test2_');
 
 class SearchMatchTestCase extends DrupalWebTestCase {
   function getInfo() {
@@ -36,11 +39,14 @@ class SearchMatchTestCase extends DrupalWebTestCase {
     for ($i = 1; $i <= 7; ++$i) {
       search_index($i, SEARCH_TYPE, $this->getText($i));
     }
+    for ($i = 1; $i <= 5; ++$i) {
+      search_index($i + 7, SEARCH_TYPE_2, $this->getText2($i));
+    }
     search_update_totals();
   }
 
   /**
-   * Helper method for generating snippets of content.
+   * _test_: Helper method for generating snippets of content.
    *
    * Generated items to test against:
    *   1  ipsum
@@ -53,6 +59,21 @@ class SearchMatchTestCase extends DrupalWebTestCase {
    */
   function getText($n) {
     $words = explode(' ', "Ipsum dolore sit am. Ut enim am minim veniam. Es cillum dolore eu.");
+    return implode(' ', array_slice($words, $n - 1, $n));
+  }
+
+  /**
+   * _test2_: Helper method for generating snippets of content.
+   *
+   * Generated items to test against:
+   *   8  dear
+   *   9  king philip
+   *   10 philip came over
+   *   11 came over from germany
+   *   12 over from germany swimming
+   */
+  function getText2($n) {
+    $words = explode(' ', "Dear King Philip came over from Germany swimming.");
     return implode(' ', array_slice($words, $n - 1, $n));
   }
 
@@ -113,6 +134,21 @@ class SearchMatchTestCase extends DrupalWebTestCase {
     );
     foreach ($queries as $query => $results) {
       $set = do_search($query, SEARCH_TYPE);
+      $this->_testQueryMatching($query, $set, $results);
+      $this->_testQueryScores($query, $set, $results);
+    }
+
+    // These queries are run against the second index type, SEARCH_TYPE_2.
+    $queries = array(
+      // Simple AND queries.
+      'ipsum' => array(),
+      'enim' => array(),
+      'enim minim' => array(),
+      'dear' => array(8),
+      'germany' => array(11, 12),
+    );
+    foreach ($queries as $query => $results) {
+      $set = do_search($query, SEARCH_TYPE_2);
       $this->_testQueryMatching($query, $set, $results);
       $this->_testQueryScores($query, $set, $results);
     }
