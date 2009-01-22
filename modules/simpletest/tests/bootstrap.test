@@ -71,20 +71,12 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
       ip_address(TRUE) == $this->cluster_ip,
       t('Cluster environment got cluster client IP')
     );
-    $_SERVER['HTTP_HOST'] = 'security/.drupal.org:80';
-    $this->assertFalse(drupal_valid_http_host(), t('HTTP_HOST with / is invalid'));
-    $_SERVER['HTTP_HOST'] = 'security\\.drupal.org:80';
-    $this->assertFalse(drupal_valid_http_host(), t('HTTP_HOST with \\ is invalid'));
-    $_SERVER['HTTP_HOST'] = 'security<.drupal.org:80';
-    $this->assertFalse(drupal_valid_http_host(), t('HTTP_HOST with &lt; is invalid'));
-    $_SERVER['HTTP_HOST'] = 'security..drupal.org:80';
-    $this->assertFalse(drupal_valid_http_host(), t('HTTP_HOST with .. is invalid'));
-    $_SERVER['HTTP_HOST'] = '[::1]:80'; // IPv6 loopback address
-    $this->assertTrue(drupal_valid_http_host(), t('HTTP_HOST containing IPv6 loopback is valid'));
-    $_SERVER['HTTP_HOST'] = '';
-    $this->assertTrue(drupal_valid_http_host(), t('Empty HTTP_HOST is valid'));
-    $_SERVER['HTTP_HOST'] = NULL;
-    $this->assertTrue(drupal_valid_http_host(), t('NULL HTTP_HOST is valid'));
+    $this->assertFalse(drupal_valid_http_host('security/.drupal.org:80'), t('HTTP_HOST with / is invalid'));
+    $this->assertFalse(drupal_valid_http_host('security\\.drupal.org:80'), t('HTTP_HOST with \\ is invalid'));
+    $this->assertFalse(drupal_valid_http_host('security<.drupal.org:80'), t('HTTP_HOST with &lt; is invalid'));
+    $this->assertFalse(drupal_valid_http_host('security..drupal.org:80'), t('HTTP_HOST with .. is invalid'));
+    // IPv6 loopback address
+    $this->assertTrue(drupal_valid_http_host('[::1]:80'), t('HTTP_HOST containing IPv6 loopback is valid'));
   }
 }
 

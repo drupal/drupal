@@ -402,16 +402,22 @@ function drupal_initialize_variables() {
   if (!isset($_SERVER['SERVER_PROTOCOL']) || ($_SERVER['SERVER_PROTOCOL'] != 'HTTP/1.0' && $_SERVER['SERVER_PROTOCOL'] != 'HTTP/1.1')) {
     $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.0';
   }
-  // Some pre-HTTP/1.1 clients will not send a Host header. Ensure the key is
-  // defined for E_ALL compliance.
-  if (!isset($_SERVER['HTTP_HOST'])) {
-    $_SERVER['HTTP_HOST'] = '';
-  }
 
-  if (!drupal_valid_http_host()) {
-    // HTTP_HOST is invalid, e.g. if containing slashes it may be an attack.
-    header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
-    exit;
+  if (isset($_SERVER['HTTP_HOST'])) {
+    // As HTTP_HOST is user input, ensure it only contains characters allowed
+    // in hostnames. See RFC 952 (and RFC 2181).
+    // $_SERVER['HTTP_HOST'] is lowercased here per specifications.
+    $_SERVER['HTTP_HOST'] = strtolower($_SERVER['HTTP_HOST']);
+    if (!drupal_valid_http_host($_SERVER['HTTP_HOST'])) {
+      // HTTP_HOST is invalid, e.g. if containing slashes it may be an attack.
+      header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
+      exit;
+    }
+  }
+  else {
+    // Some pre-HTTP/1.1 clients will not send a Host header. Ensure the key is
+    // defined for E_ALL compliance.
+    $_SERVER['HTTP_HOST'] = '';
   }
 
   // Enforce E_ALL, but allow users to set levels not part of E_ALL.
@@ -434,23 +440,13 @@ function drupal_initialize_variables() {
 }
 
 /**
- * Validate that $_SERVER['HTTP_HOST'] is safe.
- *
- * As $_SERVER['HTTP_HOST'] is user input, ensure it only contains characters
- * allowed in hostnames. See RFC 952 (and RFC 2181). $_SERVER['HTTP_HOST'] is
- * lowercased.
+ * Validate that a hostname (for example $_SERVER['HTTP_HOST']) is safe.
  *
  * @return
  *  TRUE if only containing valid characters, or FALSE otherwise.
  */
-function drupal_valid_http_host() {
-  if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != '') {
-    $_SERVER['HTTP_HOST'] = strtolower($_SERVER['HTTP_HOST']);
-    return preg_match('/^\[?(?:[a-z0-9-:\]_]+\.?)+$/', $_SERVER['HTTP_HOST']);
-  }
-  else {
-    return TRUE;
-  }
+function drupal_valid_http_host($host) {
+  return preg_match('/^\[?(?:[a-zA-Z0-9-:\]_]+\.?)+$/', $host);
 }
 
 /**
