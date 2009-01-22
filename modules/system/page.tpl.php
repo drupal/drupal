@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.14 2008/12/30 16:43:19 dries Exp $
+// $Id: page.tpl.php,v 1.15 2009/01/22 12:52:50 dries Exp $
 
 /**
  * @file
@@ -83,7 +83,6 @@
   <?php print $head; ?>
   <?php print $styles; ?>
   <?php print $scripts; ?>
-  <script type="text/javascript"><?php /* Needed to avoid Flash of Unstyled Content in IE */ ?> </script>
 </head>
 <body class="<?php print $body_classes; ?>">
   <div id="page">
