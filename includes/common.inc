@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.853 2009/01/22 03:18:30 webchick Exp $
+// $Id: common.inc,v 1.854 2009/01/22 03:56:11 webchick Exp $
 
 /**
  * @file
@@ -1987,13 +1987,17 @@ function drupal_add_link($attributes) {
  *   file added to the list, if exists in the same directory. This CSS file
  *   should contain overrides for properties which should be reversed or
  *   otherwise different in a right-to-left display.
+ *
+ *   Note that if $options or $options['type'] is 'reset', then $path will be
+ *   ignored.
  * @param $options
  *   (optional) A string defining the type of CSS that is being added in the
  *   $path parameter ('module' or 'theme'), or an associative array of
  *   additional options, with the following keys:
  *     - 'type'
- *       The type of stylesheet that is being added. Types are: module or
- *       theme. Defaults to 'module'.
+ *       The type of stylesheet that is being added. Types are: 'module',
+ *       'theme', or 'reset'. Defaults to 'module'. If the type is 'reset',
+ *       then the CSS will be reset, ignoring $path and other $options.
  *     - 'media'
  *       The media type for the stylesheet, e.g., all, print, screen. Defaults
  *       to 'all'.
@@ -2020,32 +2024,31 @@ function drupal_add_link($attributes) {
  *
  *       Typical candidates for caching are for example styles for nodes across
  *       the site, or used in the theme.
- * @param $reset
- *   (optional) Resets the currently loaded cascading stylesheets.
  * @return
  *   An array of CSS files.
  */
-function drupal_add_css($path = NULL, $options = NULL, $reset = FALSE) {
+function drupal_add_css($path = NULL, $options = NULL) {
   static $css = array();
   global $language;
 
+  // Construct the options, taking the defaults into consideration.
+  if (isset($options)) {
+    if (!is_array($options)) {
+      $options = array('type' => $options);
+    }
+  }
+  else {
+    $options = array();
+  }
+
   // Request made to reset the CSS added so far.
-  if ($reset) {
-    $css = array();
+  if (isset($options['type']) && $options['type'] == 'reset') {
+    return $css = array();
   }
 
   // Create an array of CSS files for each media type first, since each type needs to be served
   // to the browser differently.
   if (isset($path)) {
-    // Construct the options, taking the defaults into consideration.
-    if (isset($options)) {
-      if (!is_array($options)) {
-        $options = array('type' => $options);
-      }
-    }
-    else {
-      $options = array();
-    }
     $options += array(
       'type' => 'module',
       'media' => 'all',
@@ -2347,6 +2350,8 @@ function drupal_clear_css_cache() {
  *       array is directly placed in Drupal.settings. All modules should wrap
  *       their actual configuration settings in another variable to prevent
  *       the pollution of the Drupal.settings namespace.
+ *   - 'reset': Anything in $data will be ignored and the JavaScript added so
+ *       far will be reset.
  * @param $options
  *   (optional) A string defining the type of JavaScript that is being added
  *   in the $data parameter ('file'/'setting'/'inline'), or an array which
@@ -2354,7 +2359,10 @@ function drupal_clear_css_cache() {
  *   always pass the string 'setting' only.
  *   - type
  *       The type of JavaScript that is to be added to the page. Allowed
- *       values are 'file', 'inline' or 'setting'. Defaults to 'file'.
+ *       values are 'file', 'inline', 'setting', or 'reset'. Defaults to
+ *       'file'. Note that if type is 'reset', then $data and all other
+ *       $options will be ignored and the JavaScript added so far will be
+ *       reset.
  *   - scope
  *       The location in which you want to place the script. Possible values
  *       are 'header' or 'footer'. If your theme implements different regions,
@@ -2387,13 +2395,11 @@ function drupal_clear_css_cache() {
  *   - preprocess
  *       Aggregate the JavaScript if the JavaScript optimization setting has
  *       been toggled in admin/settings/performance. Defaults to TRUE.
- * @param $reset
- *   (optional) Resets the currently loaded JavaScript.
  * @return
  *   The contructed array of JavaScript files.
  * @see drupal_get_js()
  */
-function drupal_add_js($data = NULL, $options = NULL, $reset = FALSE) {
+function drupal_add_js($data = NULL, $options = NULL) {
   static $javascript = array();
 
   // Construct the options, taking the defaults into consideration.
@@ -2407,13 +2413,13 @@ function drupal_add_js($data = NULL, $options = NULL, $reset = FALSE) {
   }
   $options += drupal_js_defaults($data);
 
+  if ($options['type'] == 'reset') {
+    // Request made to reset the JavaScript added so far
+    return $javascript = array();
+  }
+
   // Preprocess can only be set if caching is enabled.
   $options['preprocess'] = $options['cache'] ? $options['preprocess'] : FALSE;
-
-  // Request made to reset the JavaScript added so far.
-  if ($reset) {
-    $javascript = array();
-  }
 
   if (isset($data)) {
     // Add jquery.js and drupal.js, as well as the basePath setting, the
