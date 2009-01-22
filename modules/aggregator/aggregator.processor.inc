@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.processor.inc,v 1.1 2008/12/22 19:38:31 dries Exp $
+// $Id: aggregator.processor.inc,v 1.2 2009/01/22 12:59:32 dries Exp $
 
 /**
  * @file
@@ -147,9 +147,9 @@ function aggregator_save_item($edit) {
     $result = db_query('SELECT cid FROM {aggregator_category_feed} WHERE fid = :fid', array(':fid' => $edit['fid']));
     foreach ($result as $category) {
       db_merge('aggregator_category_item')
+        ->key(array('iid' => $edit['iid']))
         ->fields(array(
           'cid' => $category->cid,
-          'iid' => $edit['iid'],
         ))
         ->execute();
     }

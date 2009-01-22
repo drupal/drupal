@@ -1,12 +1,12 @@
 <?php
-// $Id: aggregator.test,v 1.17 2008/12/04 11:11:59 dries Exp $
+// $Id: aggregator.test,v 1.18 2009/01/22 12:59:32 dries Exp $
 
 class AggregatorTestCase extends DrupalWebTestCase {
   private static $prefix = 'simpletest_aggregator_';
 
   function setUp() {
     parent::setUp('aggregator');
-    $web_user = $this->drupalCreateUser(array('administer news feeds', 'access news feeds'));
+    $web_user = $this->drupalCreateUser(array('administer news feeds', 'access news feeds', 'create article content'));
     $this->drupalLogin($web_user);
   }
 
@@ -223,6 +223,16 @@ EOT;
     $path = file_directory_path() . '/rss091.xml';
     return file_unmanaged_save_data($feed, $path);
   }
+
+  function createSampleNodes() {
+    // Post 5 articles.
+    for($i = 0; $i < 5; $i++) {
+      $edit = array();
+      $edit['title'] = $this->randomName();
+      $edit['body'] = $this->randomName();
+      $this->drupalPost('node/add/article', $edit, t('Save'));
+    }
+  }
 }
 
 class AddFeedTestCase extends AggregatorTestCase {
@@ -337,6 +347,8 @@ class UpdateFeedItemTestCase extends AggregatorTestCase {
    * Test running "update items" from the 'admin/content/aggregator' page.
    */
   function testUpdateFeedItem() {
+    $this->createSampleNodes();
+
     // Create a feed and test updating feed items if possible.
     $feed = $this->createFeed();
     if (!empty($feed)) {
@@ -395,6 +407,8 @@ class RemoveFeedItemTestCase extends AggregatorTestCase {
    * Test running "remove items" from the 'admin/content/aggregator' page.
    */
   function testRemoveFeedItem() {
+    $this->createSampleNodes();
+
     $feed = $this->createFeed();
 
     // Add and remove feed items and ensure that the count is zero.
@@ -424,6 +438,8 @@ class CategorizeFeedItemTestCase extends AggregatorTestCase {
    * categorization.
    */
   function testCategorizeFeedItem() {
+    $this->createSampleNodes();
+
     // Simulate form submission on "admin/content/aggregator/add/category".
     $edit = array('title' => $this->randomName(10, self::$prefix), 'description' => '');
     $this->drupalPost('admin/content/aggregator/add/category', $edit, t('Save'));
@@ -436,10 +452,16 @@ class CategorizeFeedItemTestCase extends AggregatorTestCase {
     $menu_link = db_query("SELECT * FROM {menu_links} WHERE link_path = :link_path", array(':link_path' => $link_path))->fetch();
     $this->assertTrue(!empty($menu_link), t('The menu link associated with the category found in database.'));
 
-    // TODO: Need to add categories to the feed on creation.
     $feed = $this->createFeed();
+    db_insert('aggregator_category_feed')
+      ->fields(array(
+        'cid' => $category->cid,
+        'fid' => $feed->fid,
+      ))
+      ->execute();
     $this->updateFeedItems($feed);
     $this->getFeedCategories($feed);
+    $this->assertTrue(!empty($feed->categories), t('The category found in the feed.'));
 
     // For each category of a feed, ensure feed items have that category, too.
     if (!empty($feed->categories) && !empty($feed->items)) {
