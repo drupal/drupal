@@ -1786,6 +1786,7 @@ function _user_cancel($edit, $account, $method) {
       }
       db_update('users')->fields(array('status' => 0))->condition('uid', $account->uid)->execute();
       drupal_set_message(t('%name has been disabled.', array('%name' => $account->name)));
+      watchdog('user', 'Blocked user: %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
       break;
 
     case 'user_cancel_reassign':
@@ -1798,8 +1799,7 @@ function _user_cancel($edit, $account, $method) {
       db_delete('users_roles')->condition('uid', $account->uid)->execute();
       db_delete('authmap')->condition('uid', $account->uid)->execute();
       drupal_set_message(t('%name has been deleted.', array('%name' => $account->name)));
-      $variables = array('%name' => $account->name, '%email' => '<' . $account->mail . '>');
-      watchdog('user', 'Deleted user: %name %email.', $variables, WATCHDOG_NOTICE);
+      watchdog('user', 'Deleted user: %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
       break;
   }
 
