@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.37 2009/01/19 10:46:51 dries Exp $
+// $Id: openid.module,v 1.38 2009/01/22 03:11:54 webchick Exp $
 
 /**
  * @file
@@ -71,47 +71,62 @@ function openid_user_insert(&$edit, &$account, $category = NULL) {
 }
 
 /**
+ * Implementation of hook_form_FORM_ID_alter().
+ */
+function openid_form_user_login_block_alter(&$form, &$form_state) {
+  _openid_user_login_form_alter($form, $form_state);
+}
+
+/**
+ * Implementation of hook_form_FORM_ID_alter().
+ */
+function openid_form_user_login_alter(&$form, &$form_state) {
+  _openid_user_login_form_alter($form, $form_state);
+}
+
+function _openid_user_login_form_alter(&$form, &$form_state) {
+  drupal_add_css(drupal_get_path('module', 'openid') . '/openid.css');
+  drupal_add_js(drupal_get_path('module', 'openid') . '/openid.js');
+  if (!empty($form_state['post']['openid_identifier'])) {
+    $form['name']['#required'] = FALSE;
+    $form['pass']['#required'] = FALSE;
+    unset($form['#submit']);
+    $form['#validate'] = array('openid_login_validate');
+  }
+
+  $items = array();
+  $items[] = array(
+    'data' => l(t('Log in using OpenID'), '#'),
+    'class' => 'openid-link',
+  );
+  $items[] = array(
+    'data' => l(t('Cancel OpenID login'), '#'),
+    'class' => 'user-link',
+  );
+
+  $form['openid_links'] = array(
+    '#markup' => theme('item_list', $items),
+    '#weight' => 1,
+  );
+
+  $form['links']['#weight'] = 2;
+
+  $form['openid_identifier'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Log in using OpenID'),
+    '#size' => ($form_id == 'user_login') ? 58 : 13,
+    '#maxlength' => 255,
+    '#weight' => -1,
+    '#description' => l(t('What is OpenID?'), 'http://openid.net/', array('external' => TRUE)),
+  );
+  $form['openid.return_to'] = array('#type' => 'hidden', '#value' => url('openid/authenticate', array('absolute' => TRUE, 'query' => drupal_get_destination())));
+}
+
+/**
  * Implementation of hook_form_alter(). Adds OpenID login to the login forms.
  */
-function openid_form_alter(&$form, $form_state, $form_id) {
-  if ($form_id == 'user_login_block' || $form_id == 'user_login') {
-    drupal_add_css(drupal_get_path('module', 'openid') . '/openid.css');
-    drupal_add_js(drupal_get_path('module', 'openid') . '/openid.js');
-    if (!empty($form_state['post']['openid_identifier'])) {
-      $form['name']['#required'] = FALSE;
-      $form['pass']['#required'] = FALSE;
-      unset($form['#submit']);
-      $form['#validate'] = array('openid_login_validate');
-    }
-
-    $items = array();
-    $items[] = array(
-      'data' => l(t('Log in using OpenID'), '#'),
-      'class' => 'openid-link',
-    );
-    $items[] = array(
-      'data' => l(t('Cancel OpenID login'), '#'),
-      'class' => 'user-link',
-    );
-
-    $form['openid_links'] = array(
-      '#markup' => theme('item_list', $items),
-      '#weight' => 1,
-    );
-
-    $form['links']['#weight'] = 2;
-
-    $form['openid_identifier'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Log in using OpenID'),
-      '#size' => ($form_id == 'user_login') ? 58 : 13,
-      '#maxlength' => 255,
-      '#weight' => -1,
-      '#description' => l(t('What is OpenID?'), 'http://openid.net/', array('external' => TRUE)),
-    );
-    $form['openid.return_to'] = array('#type' => 'hidden', '#value' => url('openid/authenticate', array('absolute' => TRUE, 'query' => drupal_get_destination())));
-  }
-  elseif ($form_id == 'user_register' && isset($_SESSION['openid'])) {
+function openid_form_user_register_alter(&$form, &$form_state) {
+  if (isset($_SESSION['openid'])) {
     // We were unable to auto-register a new user. Prefill the registration
     // form with the values we have.
     $form['name']['#default_value'] = $_SESSION['openid']['values']['name'];
@@ -124,7 +139,6 @@ function openid_form_alter(&$form, $form_state, $form_id) {
     }
     $form['auth_openid'] = array('#type' => 'hidden', '#value' => $_SESSION['openid']['values']['auth_openid']);
   }
-  return $form;
 }
 
 /**

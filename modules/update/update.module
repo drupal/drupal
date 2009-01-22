@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.29 2009/01/18 16:38:06 webchick Exp $
+// $Id: update.module,v 1.30 2009/01/22 03:11:54 webchick Exp $
 
 /**
  * @file
@@ -286,17 +286,27 @@ function update_cron() {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implementation of hook_form_FORM_ID_alter().
  *
  * Adds a submit handler to the system modules and themes forms, so that if a
  * site admin saves either form, we invalidate the cache of available updates.
  *
  * @see update_invalidate_cache()
  */
-function update_form_alter(&$form, $form_state, $form_id) {
-  if ($form_id == 'system_modules' || $form_id == 'system_themes' ) {
-    $form['#submit'][] = 'update_invalidate_cache';
-  }
+function update_form_system_themes_alter(&$form, $form_state) {
+  $form['#submit'][] = 'update_invalidate_cache';
+}
+
+/**
+ * Implementation of hook_form_FORM_ID_alter().
+ *
+ * Adds a submit handler to the system modules and themes forms, so that if a
+ * site admin saves either form, we invalidate the cache of available updates.
+ *
+ * @see update_invalidate_cache()
+ */
+function update_form_system_modules_alter(&$form, $form_state) {
+  $form['#submit'][] = 'update_invalidate_cache';
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.683 2009/01/21 16:58:41 dries Exp $
+// $Id: comment.module,v 1.684 2009/01/22 03:11:53 webchick Exp $
 
 /**
  * @file
@@ -504,10 +504,10 @@ function comment_nodeapi_view($node, $teaser) {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implementation of hook_form_FORM_ID_alter().
  */
-function comment_form_alter(&$form, $form_state, $form_id) {
-  if ($form_id == 'node_type_form' && isset($form['identity']['type'])) {
+function comment_form_node_type_form_alter(&$form, $form_state) {
+  if (isset($form['identity']['type'])) {
     $form['comment'] = array(
       '#type' => 'fieldset',
       '#title' => t('Comment settings'),
@@ -571,7 +571,13 @@ function comment_form_alter(&$form, $form_state, $form_id) {
       '#options' => array(t('Display on separate page'), t('Display below post or comments')),
     );
   }
-  elseif (!empty($form['#node_edit_form'])) {
+}
+
+/**
+ * Implementation of hook_form_alter().
+ */
+function comment_form_alter(&$form, $form_state, $form_id) {
+  if (!empty($form['#node_edit_form'])) {
     $node = $form['#node'];
     $form['comment_settings'] = array(
       '#type' => 'fieldset',

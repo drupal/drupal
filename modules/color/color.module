@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.52 2009/01/20 03:18:40 webchick Exp $
+// $Id: color.module,v 1.53 2009/01/22 03:11:52 webchick Exp $
 
 /**
  * Implementation of hook_help().
@@ -28,11 +28,10 @@ function color_theme() {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implementation of hook_form_FORM_ID_alter().
  */
-function color_form_alter(&$form, $form_state, $form_id) {
-  // Insert the color changer into the theme settings page.
-  if ($form_id == 'system_theme_settings' && color_get_info(arg(4)) && function_exists('gd_info')) {
+function color_form_system_theme_settings_alter(&$form, &$form_state) {
+  if (color_get_info(arg(4)) && function_exists('gd_info')) {
     if (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) != FILE_DOWNLOADS_PUBLIC) {
       // Disables the color changer when the private download method is used.
       // TODO: This should be solved in a different way. See issue #181003.
@@ -50,15 +49,32 @@ function color_form_alter(&$form, $form_state, $form_id) {
       $form['#submit'][] = 'color_scheme_form_submit';
     }
   }
+}
 
+/**
+ * Implementation of hook_form_FORM_ID_alter().
+ */
+function color_form_system_themes_alter(&$form, &$form_state) {
+  _color_theme_select_form_alter($form, $form_state);
+}
+
+/**
+ * Implementation of hook_form_FORM_ID_alter().
+ */
+function color_form_system_theme_select_form_alter(&$form, &$form_state) {
+  _color_theme_select_form_alter($form, $form_state);
+}
+
+/**
+ * Helper for hook_form_FORM_ID_alter() implementations.
+ */
+function _color_theme_select_form_alter(&$form, &$form_state) {
   // Use the generated screenshot in the theme list.
-  if ($form_id == 'system_theme_select_form' || $form_id == 'system_themes') {
-    $themes = list_themes();
-    foreach (element_children($form) as $theme) {
-      if ($screenshot = variable_get('color_' . $theme . '_screenshot', NULL)) {
-        if (isset($form[$theme]['screenshot'])) {
-          $form[$theme]['screenshot']['#markup'] = theme('image', $screenshot, '', '', array('class' => 'screenshot'), FALSE);
-        }
+  $themes = list_themes();
+  foreach (element_children($form) as $theme) {
+    if ($screenshot = variable_get('color_' . $theme . '_screenshot', NULL)) {
+      if (isset($form[$theme]['screenshot'])) {
+        $form[$theme]['screenshot']['#markup'] = theme('image', $screenshot, '', '', array('class' => 'screenshot'), FALSE);
       }
     }
   }

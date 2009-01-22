@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.37 2008/12/16 22:05:51 dries Exp $
+// $Id: translation.module,v 1.38 2009/01/22 03:11:54 webchick Exp $
 
 /**
  * @file
@@ -94,20 +94,24 @@ function translation_perm() {
 }
 
 /**
+ * Implementation of hook_form_FORM_ID_alter().
+ */
+function translation_form_node_type_form_alter(&$form, &$form_state) {
+  // Add translation option to content type form.
+  $form['workflow']['language_content_type']['#options'][TRANSLATION_ENABLED] = t('Enabled, with translation');
+  // Description based on text from locale.module.
+  $form['workflow']['language_content_type']['#description'] = t('Enable multilingual support for this content type. If enabled, a language selection field will be added to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. You can also turn on translation for this content type, which lets you have content translated to any of the enabled languages. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/settings/language')));
+}
+
+/**
  * Implementation of hook_form_alter().
  *
  * - Add translation option to content type form.
  * - Alters language fields on node forms when a translation
  *   is about to be created.
  */
-function translation_form_alter(&$form, $form_state, $form_id) {
-  if ($form_id == 'node_type_form') {
-    // Add translation option to content type form.
-    $form['workflow']['language_content_type']['#options'][TRANSLATION_ENABLED] = t('Enabled, with translation');
-    // Description based on text from locale.module.
-    $form['workflow']['language_content_type']['#description'] = t('Enable multilingual support for this content type. If enabled, a language selection field will be added to the editing form, allowing you to select from one of the <a href="!languages">enabled languages</a>. You can also turn on translation for this content type, which lets you have content translated to any of the enabled languages. If disabled, new posts are saved with the default language. Existing content will not be affected by changing this option.', array('!languages' => url('admin/settings/language')));
-  }
-  elseif (isset($form['#id']) && $form['#id'] == 'node-form' && translation_supported_type($form['#node']->type)) {
+function translation_form_alter(&$form, &$form_state, $form_id) {
+  if (isset($form['#id']) && $form['#id'] == 'node-form' && translation_supported_type($form['#node']->type)) {
     $node = $form['#node'];
     if (!empty($node->translation_source)) {
       // We are creating a translation. Add values and lock language field.

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1015 2009/01/21 14:50:58 dries Exp $
+// $Id: node.module,v 1.1016 2009/01/22 03:11:54 webchick Exp $
 
 /**
  * @file
@@ -1989,11 +1989,10 @@ function _node_index_node($node) {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implementation of hook_form_FORM_ID_alter().
  */
-function node_form_alter(&$form, $form_state, $form_id) {
-  // Advanced node search form
-  if ($form_id == 'search_form' && $form['module']['#value'] == 'node' && user_access('use advanced search')) {
+function node_form_search_form_alter(&$form, $form_state) {
+  if ($form['module']['#value'] == 'node' && user_access('use advanced search')) {
     // Keyword boxes:
     $form['advanced'] = array(
       '#type' => 'fieldset',
@@ -2068,7 +2067,6 @@ function node_form_alter(&$form, $form_state, $form_id) {
         '#options' => $language_options,
       );
     }
-
 
     $form['#validate'][] = 'node_search_validate';
   }
