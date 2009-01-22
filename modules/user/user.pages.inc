@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.26 2009/01/08 08:42:13 webchick Exp $
+// $Id: user.pages.inc,v 1.27 2009/01/22 04:43:32 webchick Exp $
 
 /**
  * @file
@@ -400,6 +400,7 @@ function user_cancel_confirm_form_submit($form, &$form_state) {
     $account = user_save($account, $edit);
     _user_mail_notify('cancel_confirm', $account);
     drupal_set_message(t('A confirmation request to cancel your account has been sent to your e-mail address.'));
+    watchdog('user', 'Sent account cancellation request to %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
 
     if (!isset($_REQUEST['destination'])) {
       $form_state['redirect'] = "user/$account->uid";
