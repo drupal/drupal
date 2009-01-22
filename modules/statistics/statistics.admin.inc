@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.admin.inc,v 1.16 2009/01/11 21:19:18 dries Exp $
+// $Id: statistics.admin.inc,v 1.17 2009/01/22 12:01:24 dries Exp $
 
 /**
  * @file
@@ -180,7 +180,7 @@ function statistics_access_log($aid) {
  * @ingroup forms
  * @see system_settings_form()
  */
-function statistics_access_logging_settings() {
+function statistics_settings_form() {
   // Access log settings:
   $options = array('1' => t('Enabled'), '0' => t('Disabled'));
   $form['access'] = array(
