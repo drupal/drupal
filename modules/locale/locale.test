@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.13 2008/12/20 18:24:37 dries Exp $
+// $Id: locale.test,v 1.14 2009/01/22 03:18:30 webchick Exp $
 
 class LocaleTestCase extends DrupalWebTestCase {
   function getInfo() {
@@ -290,5 +290,81 @@ msgid "delete"
 msgstr "supprimer<script>alert('xss');</script>"
 
 EOF;
+  }
+}
+
+/**
+ * Functional tests for the language switching feature.
+ */
+class LanguageSwitchingFunctionalTest extends DrupalWebTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => t('Language switching'),
+      'description' => t('Tests for the language switching feature.'),
+      'group' => t('Locale'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('locale');
+
+    // Create and login user
+    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer languages', 'translate interface', 'access administration pages'));
+    $this->drupalLogin($admin_user);
+  }
+
+  function testLanguageBlock() {
+    // Enable the language switching block.
+    $edit = array(
+      'locale_language-switcher[region]' => 'left',
+    );
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+
+    // Add language.
+    $edit = array(
+      'langcode' => 'fr',
+    );
+    $this->drupalPost('admin/settings/language/add', $edit, t('Add language'));
+
+    // Set language negotiation.
+    $edit = array(
+      'language_negotiation' => LANGUAGE_NEGOTIATION_PATH_DEFAULT,
+    );
+    $this->drupalPost('admin/settings/language/configure', $edit, t('Save settings'));
+
+    // Assert that the language switching block is displayed on the frontpage.
+    $this->drupalGet('');
+    $this->assertText(t('Languages'));
+
+    // Assert that only the current language is marked as active.
+    list($language_switcher) = $this->xpath('//div[@id="block-locale-language-switcher"]');
+    $links = array(
+      'active' => array(),
+      'inactive' => array(),
+    );
+    $anchors = array(
+      'active' => array(),
+      'inactive' => array(),
+    );
+    foreach ($language_switcher->div->ul->li as $link) {
+      $classes = explode(" ", (string) $link['class']);
+      list($language) = array_intersect($classes, array('en', 'fr'));
+      if (in_array('active', $classes)) {
+        $links['active'][] = $language;
+      }
+      else {
+        $links['inactive'][] = $language;
+      }
+      $anchor_classes = explode(" ", (string) $link->a['class']);
+      if (in_array('active', $anchor_classes)) {
+        $anchors['active'][] = $language;
+      }
+      else {
+        $anchors['inactive'][] = $language;
+      }
+    }
+    $this->assertIdentical($links, array('active' => array('en'), 'inactive' => array('fr')), t('Only the current language list item is marked as active on the language switcher block'));
+    $this->assertIdentical($anchors, array('active' => array('en'), 'inactive' => array('fr')), t('Only the current language anchor is marked as active on the language switcher block'));
   }
 }
