@@ -498,6 +498,7 @@ function comment_nodeapi_view($node, $teaser) {
     if ($node->comment && (bool)menu_get_object() && $node->build_mode != NODE_BUILD_PREVIEW) {
       $node->content['comments'] = array(
         '#markup' => comment_render($node),
+        '#sorted' => TRUE,
       );
     }
   }

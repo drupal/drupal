@@ -3199,7 +3199,10 @@ function drupal_alter($type, &$data) {
  *
  * Recursively iterates over each of the array elements, generating HTML code.
  * This function is usually called from within a another function, like
- * drupal_get_form() or node_view().
+ * drupal_get_form() or node_view(). Elements are sorted internally using
+ * uasort(). Since this is expensive, when passing already sorted elements to
+ * drupal_render(), for example from a database query, set
+ * $elements['#sorted'] = TRUE to avoid sorting them a second time.
  *
  * @param $elements
  *   The structured array describing the data to be rendered.
@@ -3207,6 +3210,7 @@ function drupal_alter($type, &$data) {
  *   The rendered HTML.
  */
 function drupal_render(&$elements) {
+  // Early-return nothing if user does not have access.
   if (!isset($elements) || (isset($elements['#access']) && !$elements['#access'])) {
     return NULL;
   }
@@ -3230,15 +3234,19 @@ function drupal_render(&$elements) {
     }
   }
 
-  $content = '';
-  // Either the elements did not go through form_builder or one of the children
-  // has a #weight.
-  if (!isset($elements['#sorted'])) {
-    uasort($elements, "element_sort");
+  // Sort the elements by weight, if there are any children, and they have not
+  // been sorted elsewhere already, for example by a database query. Pre-sorted
+  // elements should have $elements['#sorted'] set to TRUE to avoid unnecessary
+  // calls to uasort().
+  $children = !isset($elements['#children']) ? element_children($elements) : FALSE;
+  if (empty($elements['#sorted']) && $children) {
+    uasort($elements, 'element_sort');
+    $elements['#sorted'] = TRUE;
   }
+
+  $content = '';
   $elements += array('#title' => NULL, '#description' => NULL);
   if (!isset($elements['#children'])) {
-    $children = element_children($elements);
     // Render all the children that use a theme function.
     if (isset($elements['#theme']) && empty($elements['#theme_used'])) {
       $elements['#theme_used'] = TRUE;

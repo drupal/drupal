@@ -76,7 +76,8 @@ function taxonomy_nodeapi_view($node) {
   
   $node->content['links']['terms'] = array(
     '#type' => 'node_links',
-    '#value' => $links
+    '#value' => $links,
+    '#sorted' => TRUE,
   );
 }
 
