@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.685 2009/01/22 12:46:06 dries Exp $
+// $Id: comment.module,v 1.686 2009/01/23 14:23:27 dries Exp $
 
 /**
  * @file
@@ -498,6 +498,7 @@ function comment_nodeapi_view($node, $teaser) {
     if ($node->comment && (bool)menu_get_object() && $node->build_mode != NODE_BUILD_PREVIEW) {
       $node->content['comments'] = array(
         '#markup' => comment_render($node),
+        '#sorted' => TRUE,
       );
     }
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.454 2009/01/14 21:16:20 dries Exp $
+// $Id: taxonomy.module,v 1.455 2009/01/23 14:23:27 dries Exp $
 
 /**
  * @file
@@ -76,7 +76,8 @@ function taxonomy_nodeapi_view($node) {
   
   $node->content['links']['terms'] = array(
     '#type' => 'node_links',
-    '#value' => $links
+    '#value' => $links,
+    '#sorted' => TRUE,
   );
 }
 
