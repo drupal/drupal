@@ -522,7 +522,7 @@ function simpletest_clean_environment() {
  * Removed prefixed tables from the database that are left over from crashed tests.
  */
 function simpletest_clean_database() {
-  $tables = db_find_tables(Database::getActiveConnection()->prefixTables('{simpletest}') . '%');
+  $tables = db_find_tables(Database::getConnection()->prefixTables('{simpletest}') . '%');
   $schema = drupal_get_schema_unprocessed('simpletest');
   $ret = array();
   foreach (array_diff_key($tables, $schema) as $table) {

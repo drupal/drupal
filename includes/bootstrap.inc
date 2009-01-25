@@ -1579,7 +1579,7 @@ function _registry_check_code($type, $name = NULL) {
   // This function may get called when the default database is not active, but
   // there is no reason we'd ever want to not use the default database for
   // this query.
-  $file = Database::getConnection('default')->query("SELECT filename FROM {registry} WHERE name = :name AND type = :type", array(
+  $file = Database::getConnection('default', 'default')->query("SELECT filename FROM {registry} WHERE name = :name AND type = :type", array(
       ':name' => $name,
       ':type' => $type,
     ))

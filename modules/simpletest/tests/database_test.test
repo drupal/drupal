@@ -156,7 +156,7 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
     Database::addConnectionInfo('default', 'slave', $connection_info['default']);
 
     $db1 = Database::getConnection('default', 'default');
-    $db2 = Database::getConnection('default', 'slave');
+    $db2 = Database::getConnection('slave', 'default');
 
     $this->assertNotNull($db1, t('default connection is a real connection object.'));
     $this->assertNotNull($db2, t('slave connection is a real connection object.'));
@@ -164,18 +164,18 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
 
     // Try to open those targets another time, that should return the same objects.
     $db1b = Database::getConnection('default', 'default');
-    $db2b = Database::getConnection('default', 'slave');
+    $db2b = Database::getConnection('slave', 'default');
     $this->assertIdentical($db1, $db1b, t('A second call to getConnection() returns the same object.'));
     $this->assertIdentical($db2, $db2b, t('A second call to getConnection() returns the same object.'));
 
     // Try to open an unknown target.
     $unknown_target = $this->randomName();
-    $db3 = Database::getConnection('default', $unknown_target);
+    $db3 = Database::getConnection($unknown_target, 'default');
     $this->assertNotNull($db3, t('Opening an unknown target returns a real connection object.'));
     $this->assertIdentical($db1, $db3, t('An unknown target opens the default connection.'));
 
     // Try to open that unknown target another time, that should return the same object.
-    $db3b = Database::getConnection('default', $unknown_target);
+    $db3b = Database::getConnection($unknown_target, 'default');
     $this->assertIdentical($db3, $db3b, t('A second call to getConnection() returns the same object.'));
   }
 
@@ -192,7 +192,7 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
     Database::ignoreTarget('default', 'slave');
 
     $db1 = Database::getConnection('default', 'default');
-    $db2 = Database::getConnection('default', 'slave');
+    $db2 = Database::getConnection('slave', 'default');
 
     $this->assertIdentical($db1, $db2, t('Both targets refer to the same connection.'));
   }
@@ -2054,7 +2054,7 @@ class DatabaseInvalidDataTestCase extends DatabaseTestCase {
       $name = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 63))->fetchField();
 
       if ($name == 'Elvis') {
-        if (!Database::getActiveConnection()->supportsTransactions()) {
+        if (!Database::getConnection()->supportsTransactions()) {
           // This is an expected fail.
           // Database engines that don't support transactions can leave partial
           // inserts in place when an error occurs. This is the case for MySQL
@@ -2200,7 +2200,7 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
    *   Whether or not to try rolling back the transaction when we're done.
    */
   protected function transactionOuterLayer($suffix, $rollback = FALSE) {
-    $connection = Database::getActiveConnection();
+    $connection = Database::getConnection();
     $txn = db_transaction();
 
     // Insert a single row into the testing table.
@@ -2230,7 +2230,7 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
    *   Whether or not to try rolling back the transaction when we're done.
    */
   protected function transactionInnerLayer($suffix, $rollback = FALSE) {
-    $connection = Database::getActiveConnection();
+    $connection = Database::getConnection();
 
     // Start a transaction. If we're being called from ->transactionOuterLayer,
     // then we're already in a transaction. Normally, that would make starting
@@ -2263,7 +2263,7 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
    */
   function testTransactionsSupported() {
     try {
-      $connection = Database::getActiveConnection();
+      $connection = Database::getConnection();
       if ($connection->supportsTransactions()) {
 
         // Start a "required" transaction. This should fail if we do
@@ -2284,7 +2284,7 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
    */
   function testTransactionsNotSupported() {
     try {
-      $connection = Database::getActiveConnection();
+      $connection = Database::getConnection();
       if (!$connection->supportsTransactions()) {
 
         // Start a "required" transaction. This should fail if we do this
@@ -2306,7 +2306,7 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
    */
   function testTransactionRollBackSupported() {
     // This test won't work right if transactions are not supported.
-    if (!Database::getActiveConnection()->supportsTransactions()) {
+    if (!Database::getConnection()->supportsTransactions()) {
       return;
     }
     try {
@@ -2332,7 +2332,7 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
    */
   function testTransactionRollBackNotSupported() {
     // This test won't work right if transactions are supported.
-    if (Database::getActiveConnection()->supportsTransactions()) {
+    if (Database::getConnection()->supportsTransactions()) {
       return;
     }
     try {

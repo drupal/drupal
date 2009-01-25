@@ -1161,37 +1161,21 @@ abstract class Database {
   }
 
   /**
-   * Gets the active connection object for the specified target.
-   *
-   * @return
-   *   The active connection object.
-   */
-  final public static function getActiveConnection($target = 'default') {
-    // This could just be a call to getConnection(), but that's an extra
-    // method call for every single query.
-
-    // If the requested target does not exist, or if it is ignored, we fall back
-    // to the default target. The target is typically either "default" or "slave",
-    // indicating to use a slave SQL server if one is available. If it's not
-    // available, then the default/master server is the correct server to use.
-    if (!empty(self::$ignoreTargets[self::$activeKey][$target]) || !isset(self::$databaseInfo[self::$activeKey][$target])) {
-      $target = 'default';
-    }
-
-    if (!isset(self::$connections[self::$activeKey][$target])) {
-      self::openConnection(self::$activeKey, $target);
-    }
-
-    return isset(self::$connections[self::$activeKey][$target]) ? self::$connections[self::$activeKey][$target] : NULL;
-  }
-
-  /**
    * Gets the connection object for the specified database key and target.
    *
+   * @param $target
+   *   The database target name.
+   * @param $key
+   *   The database connection key. Defaults to NULL which means the active
+   *   key.
    * @return
    *   The corresponding connection object.
    */
-  final public static function getConnection($key = 'default', $target = 'default') {
+  final public static function getConnection($target = 'default', $key = NULL) {
+    if (!isset($key)) {
+      // By default, we want the active connection, set in setActiveConnection.
+      $key = self::$activeKey;
+    }
     // If the requested target does not exist, or if it is ignored, we fall back
     // to the default target. The target is typically either "default" or "slave",
     // indicating to use a slave SQL server if one is available. If it's not
@@ -1201,7 +1185,8 @@ abstract class Database {
     }
 
     if (!isset(self::$connections[$key][$target])) {
-      self::openConnection($key, $target);
+      // If necessary, a new connection is opened.
+      self::$connections[$key][$target] = self::openConnection($key, $target);
     }
 
     return isset(self::$connections[$key][$target]) ? self::$connections[$key][$target] : NULL;
@@ -1333,13 +1318,13 @@ abstract class Database {
       // an open database connection.
       $driver_class = 'DatabaseConnection_' . $driver;
       require_once DRUPAL_ROOT . '/includes/database/' . $driver . '/database.inc';
-      self::$connections[$key][$target] = new $driver_class(self::$databaseInfo[$key][$target]);
-      self::$connections[$key][$target]->setTarget($target);
+      $new_connection = new $driver_class(self::$databaseInfo[$key][$target]);
+      $new_connection->setTarget($target);
 
       // If we have any active logging objects for this connection key, we need
       // to associate them with the connection we just opened.
       if (!empty(self::$logs[$key])) {
-        self::$connections[$key][$target]->setLogger(self::$logs[$key]);
+        $new_connection->setLogger(self::$logs[$key]);
       }
 
       // We need to pass around the simpletest database prefix in the request
@@ -1347,6 +1332,7 @@ abstract class Database {
       if (preg_match("/^simpletest\d+$/", $_SERVER['HTTP_USER_AGENT'])) {
         $db_prefix .= $_SERVER['HTTP_USER_AGENT'];
       }
+      return $new_connection;
     }
     catch (Exception $e) {
       // It is extremely rare that an exception will be generated here other
@@ -1761,7 +1747,7 @@ function db_query($query, $args = array(), $options = array()) {
   }
   list($query, $args, $options) = _db_query_process_args($query, $args, $options);
 
-  return Database::getActiveConnection($options['target'])->query($query, $args, $options);
+  return Database::getConnection($options['target'])->query($query, $args, $options);
 }
 
 /**
@@ -1795,7 +1781,7 @@ function db_query_range($query, $args, $from = 0, $count = 0, $options = array()
   }
   list($query, $args, $options) = _db_query_process_args($query, $args, $options);
 
-  return Database::getActiveConnection($options['target'])->queryRange($query, $args, $from, $count, $options);
+  return Database::getConnection($options['target'])->queryRange($query, $args, $from, $count, $options);
 }
 
 /**
@@ -1823,7 +1809,7 @@ function db_query_temporary($query, $args, $options = array()) {
   }
   list($query, $args, $options) = _db_query_process_args($query, $args, $options);
 
-  return Database::getActiveConnection($options['target'])->queryTemporary($query, $args, $options);
+  return Database::getConnection($options['target'])->queryTemporary($query, $args, $options);
 }
 
 /**
@@ -1840,7 +1826,7 @@ function db_insert($table, array $options = array()) {
   if (empty($options['target']) || $options['target'] == 'slave') {
     $options['target'] = 'default';
   }
-  return Database::getActiveConnection($options['target'])->insert($table, $options);
+  return Database::getConnection($options['target'])->insert($table, $options);
 }
 
 /**
@@ -1857,7 +1843,7 @@ function db_merge($table, array $options = array()) {
   if (empty($options['target']) || $options['target'] == 'slave') {
     $options['target'] = 'default';
   }
-  return Database::getActiveConnection($options['target'])->merge($table, $options);
+  return Database::getConnection($options['target'])->merge($table, $options);
 }
 
 /**
@@ -1874,7 +1860,7 @@ function db_update($table, array $options = array()) {
   if (empty($options['target']) || $options['target'] == 'slave') {
     $options['target'] = 'default';
   }
-  return Database::getActiveConnection($options['target'])->update($table, $options);
+  return Database::getConnection($options['target'])->update($table, $options);
 }
 
 /**
@@ -1891,7 +1877,7 @@ function db_delete($table, array $options = array()) {
   if (empty($options['target']) || $options['target'] == 'slave') {
     $options['target'] = 'default';
   }
-  return Database::getActiveConnection($options['target'])->delete($table, $options);
+  return Database::getConnection($options['target'])->delete($table, $options);
 }
 
 /**
@@ -1911,7 +1897,7 @@ function db_select($table, $alias = NULL, array $options = array()) {
   if (empty($options['target'])) {
     $options['target'] = 'default';
   }
-  return Database::getActiveConnection($options['target'])->select($table, $alias, $options);
+  return Database::getConnection($options['target'])->select($table, $alias, $options);
 }
 
 /**
@@ -1931,7 +1917,7 @@ function db_transaction($required = FALSE, Array $options = array()) {
   if (empty($options['target'])) {
     $options['target'] = 'default';
   }
-  return Database::getActiveConnection($options['target'])->startTransaction($required);
+  return Database::getConnection($options['target'])->startTransaction($required);
 }
 
 /**
@@ -1970,7 +1956,7 @@ function db_is_active() {
  *   The escaped table name as a string.
  */
 function db_escape_table($table) {
-  return Database::getActiveConnection()->escapeTable($table);
+  return Database::getConnection()->escapeTable($table);
 }
 
 /**
@@ -1985,7 +1971,7 @@ function db_escape_table($table) {
  *     query: the SQL query executed, passed through check_plain()
  */
 function update_sql($sql) {
-  $result = Database::getActiveConnection()->query($sql);
+  $result = Database::getConnection()->query($sql);
   return array('success' => $result !== FALSE, 'query' => check_plain($sql));
 }
 
@@ -2023,7 +2009,7 @@ function db_placeholders($arguments, $type = 'int') {
  *   SQL query with the DISTINCT wrapper surrounding the given table.field.
  */
 function db_distinct_field($table, $field, $query) {
-  return Database::getActiveConnection()->distinctField($table, $field, $query);
+  return Database::getConnection()->distinctField($table, $field, $query);
 }
 
 /**
@@ -2033,7 +2019,7 @@ function db_distinct_field($table, $field, $query) {
  * @return The name of the currently active database driver.
  */
 function db_driver() {
-  return Database::getActiveConnection()->driver();
+  return Database::getConnection()->driver();
 }
 
 /**
@@ -2058,7 +2044,7 @@ function db_driver() {
  *   A Schema API table definition array.
  */
 function db_create_table(&$ret, $name, $table) {
-  return Database::getActiveConnection()->schema()->createTable($ret, $name, $table);
+  return Database::getConnection()->schema()->createTable($ret, $name, $table);
 }
 
 /**
@@ -2073,21 +2059,21 @@ function db_create_table(&$ret, $name, $table) {
  *   An array of field names.
  */
 function db_field_names($fields) {
-  return Database::getActiveConnection()->schema()->fieldNames($fields);
+  return Database::getConnection()->schema()->fieldNames($fields);
 }
 
 /**
  * Check if a table exists.
  */
 function db_table_exists($table) {
-  return Database::getActiveConnection()->schema()->tableExists($table);
+  return Database::getConnection()->schema()->tableExists($table);
 }
 
 /**
  * Check if a column exists in the given table.
  */
 function db_column_exists($table, $column) {
-  return Database::getActiveConnection()->schema()->columnExists($table, $column);
+  return Database::getConnection()->schema()->columnExists($table, $column);
 }
 
 /**
@@ -2100,7 +2086,7 @@ function db_column_exists($table, $column) {
  *   Array, both the keys and the values are the matching tables.
  */
 function db_find_tables($table_expression) {
-  return Database::getActiveConnection()->schema()->findTables($table_expression);
+  return Database::getConnection()->schema()->findTables($table_expression);
 }
 
 /**
@@ -2148,7 +2134,7 @@ function db_type_placeholder($type) {
 
 
 function _db_create_keys_sql($spec) {
-  return Database::getActiveConnection()->schema()->createKeysSql($spec);
+  return Database::getConnection()->schema()->createKeysSql($spec);
 }
 
 /**
@@ -2156,7 +2142,7 @@ function _db_create_keys_sql($spec) {
  * to the engine-specific data type.
  */
 function db_type_map() {
-  return Database::getActiveConnection()->schema()->getFieldTypeMap();
+  return Database::getConnection()->schema()->getFieldTypeMap();
 }
 
 /**
@@ -2170,7 +2156,7 @@ function db_type_map() {
  *   The new name for the table.
  */
 function db_rename_table(&$ret, $table, $new_name) {
-  return Database::getActiveConnection()->schema()->renameTable($ret, $table, $new_name);
+  return Database::getConnection()->schema()->renameTable($ret, $table, $new_name);
 }
 
 /**
@@ -2182,7 +2168,7 @@ function db_rename_table(&$ret, $table, $new_name) {
  *   The table to be dropped.
  */
 function db_drop_table(&$ret, $table) {
-  return Database::getActiveConnection()->schema()->dropTable($ret, $table);
+  return Database::getConnection()->schema()->dropTable($ret, $table);
 }
 
 /**
@@ -2209,7 +2195,7 @@ function db_drop_table(&$ret, $table) {
  *   explanation why.
  */
 function db_add_field(&$ret, $table, $field, $spec, $keys_new = array()) {
-  return Database::getActiveConnection()->schema()->addField($ret, $table, $field, $spec, $keys_new);
+  return Database::getConnection()->schema()->addField($ret, $table, $field, $spec, $keys_new);
 }
 
 /**
@@ -2223,7 +2209,7 @@ function db_add_field(&$ret, $table, $field, $spec, $keys_new = array()) {
  *   The field to be dropped.
  */
 function db_drop_field(&$ret, $table, $field) {
-  return Database::getActiveConnection()->schema()->dropField($ret, $table, $field);
+  return Database::getConnection()->schema()->dropField($ret, $table, $field);
 }
 
 /**
@@ -2239,7 +2225,7 @@ function db_drop_field(&$ret, $table, $field) {
  *   Default value to be set. NULL for 'default NULL'.
  */
 function db_field_set_default(&$ret, $table, $field, $default) {
-  return Database::getActiveConnection()->schema()->fieldSetDefault($ret, $table, $field, $default);
+  return Database::getConnection()->schema()->fieldSetDefault($ret, $table, $field, $default);
 }
 
 /**
@@ -2253,7 +2239,7 @@ function db_field_set_default(&$ret, $table, $field, $default) {
  *   The field to be altered.
  */
 function db_field_set_no_default(&$ret, $table, $field) {
-  return Database::getActiveConnection()->schema()->fieldSetNoDefault($ret, $table, $field);
+  return Database::getConnection()->schema()->fieldSetNoDefault($ret, $table, $field);
 }
 
 /**
@@ -2267,7 +2253,7 @@ function db_field_set_no_default(&$ret, $table, $field) {
  *   Fields for the primary key.
  */
 function db_add_primary_key(&$ret, $table, $fields) {
-  return Database::getActiveConnection()->schema()->addPrimaryKey($ret, $table, $fields);
+  return Database::getConnection()->schema()->addPrimaryKey($ret, $table, $fields);
 }
 
 /**
@@ -2279,7 +2265,7 @@ function db_add_primary_key(&$ret, $table, $fields) {
  *   The table to be altered.
  */
 function db_drop_primary_key(&$ret, $table) {
-  return Database::getActiveConnection()->schema()->dropPrimaryKey($ret, $table);
+  return Database::getConnection()->schema()->dropPrimaryKey($ret, $table);
 }
 
 /**
@@ -2295,7 +2281,7 @@ function db_drop_primary_key(&$ret, $table) {
  *   An array of field names.
  */
 function db_add_unique_key(&$ret, $table, $name, $fields) {
-  return Database::getActiveConnection()->schema()->addUniqueKey($ret, $table, $name, $fields);
+  return Database::getConnection()->schema()->addUniqueKey($ret, $table, $name, $fields);
 }
 
 /**
@@ -2309,7 +2295,7 @@ function db_add_unique_key(&$ret, $table, $name, $fields) {
  *   The name of the key.
  */
 function db_drop_unique_key(&$ret, $table, $name) {
-  return Database::getActiveConnection()->schema()->dropUniqueKey($ret, $table, $name);
+  return Database::getConnection()->schema()->dropUniqueKey($ret, $table, $name);
 }
 
 /**
@@ -2325,7 +2311,7 @@ function db_drop_unique_key(&$ret, $table, $name) {
  *   An array of field names.
  */
 function db_add_index(&$ret, $table, $name, $fields) {
-  return Database::getActiveConnection()->schema()->addIndex($ret, $table, $name, $fields);
+  return Database::getConnection()->schema()->addIndex($ret, $table, $name, $fields);
 }
 
 /**
@@ -2339,7 +2325,7 @@ function db_add_index(&$ret, $table, $name, $fields) {
  *   The name of the index.
  */
 function db_drop_index(&$ret, $table, $name) {
-  return Database::getActiveConnection()->schema()->dropIndex($ret, $table, $name);
+  return Database::getConnection()->schema()->dropIndex($ret, $table, $name);
 }
 
 /**
@@ -2406,7 +2392,7 @@ function db_drop_index(&$ret, $table, $name) {
  */
 
 function db_change_field(&$ret, $table, $field, $field_new, $spec, $keys_new = array()) {
-  return Database::getActiveConnection()->schema()->changeField($ret, $table, $field, $field_new, $spec, $keys_new);
+  return Database::getConnection()->schema()->changeField($ret, $table, $field, $field_new, $spec, $keys_new);
 }
 
 /**
@@ -2518,8 +2504,8 @@ function _db_query_process_args($query, $args, $options) {
  *   The name of the autoincrement field.
  */
 function db_last_insert_id($table, $field) {
-  $sequence_name = Database::getActiveConnection()->makeSequenceName($table, $field);
-  return Database::getActiveConnection()->lastInsertId($sequence_name);
+  $sequence_name = Database::getConnection()->makeSequenceName($table, $field);
+  return Database::getConnection()->lastInsertId($sequence_name);
 }
 
 /**
@@ -2530,7 +2516,7 @@ function db_last_insert_id($table, $field) {
  * @todo Remove this function when all queries have been ported to db_update().
  */
 function db_affected_rows() {
-  $statement = Database::getActiveConnection()->lastStatement;
+  $statement = Database::getConnection()->lastStatement;
   if (!$statement) {
     return 0;
   }
