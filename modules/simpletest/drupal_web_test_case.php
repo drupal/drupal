@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.80 2009/01/19 10:46:51 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.81 2009/01/25 12:19:32 webchick Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -819,7 +819,7 @@ class DrupalWebTestCase {
     $clean_url_original = variable_get('clean_url', 0);
 
     // Generate temporary prefixed database to ensure that tests have a clean starting point.
-    $db_prefix = Database::getActiveConnection()->prefixTables('{simpletest' . mt_rand(1000, 1000000) . '}');
+    $db_prefix = Database::getConnection()->prefixTables('{simpletest' . mt_rand(1000, 1000000) . '}');
 
     include_once DRUPAL_ROOT . '/includes/install.inc';
     drupal_install_system();

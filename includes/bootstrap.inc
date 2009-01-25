@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.267 2009/01/22 03:05:17 webchick Exp $
+// $Id: bootstrap.inc,v 1.268 2009/01/25 12:19:31 webchick Exp $
 
 /**
  * @file
@@ -1579,7 +1579,7 @@ function _registry_check_code($type, $name = NULL) {
   // This function may get called when the default database is not active, but
   // there is no reason we'd ever want to not use the default database for
   // this query.
-  $file = Database::getConnection('default')->query("SELECT filename FROM {registry} WHERE name = :name AND type = :type", array(
+  $file = Database::getConnection('default', 'default')->query("SELECT filename FROM {registry} WHERE name = :name AND type = :type", array(
       ':name' => $name,
       ':type' => $type,
     ))

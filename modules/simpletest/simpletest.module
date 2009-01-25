@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.34 2009/01/19 10:46:51 dries Exp $
+// $Id: simpletest.module,v 1.35 2009/01/25 12:19:32 webchick Exp $
 
 /**
  * Implementation of hook_help().
@@ -522,7 +522,7 @@ function simpletest_clean_environment() {
  * Removed prefixed tables from the database that are left over from crashed tests.
  */
 function simpletest_clean_database() {
-  $tables = db_find_tables(Database::getActiveConnection()->prefixTables('{simpletest}') . '%');
+  $tables = db_find_tables(Database::getConnection()->prefixTables('{simpletest}') . '%');
   $schema = drupal_get_schema_unprocessed('simpletest');
   $ret = array();
   foreach (array_diff_key($tables, $schema) as $table) {
