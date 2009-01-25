@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.302 2009/01/25 12:22:09 webchick Exp $
+// $Id: system.install,v 1.303 2009/01/25 13:57:21 webchick Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1260,7 +1260,7 @@ function system_schema() {
     ),
     'primary key' => array('pid'),
     'indexes' => array(
-      'src' => array('src'),
+      'src_language' => array('src', 'language'),
     ),
   );
 
@@ -3192,6 +3192,17 @@ function system_update_7017() {
   }
   variable_set('theme_settings', $theme_settings);
   $ret[] = array('success' => TRUE, 'query' => "variable_set('theme_settings')");
+
+  return $ret;
+}
+
+/**
+ * Replace src index on the {url_alias} table with src, language.
+ */
+function system_update_7018() {
+  $ret = array();
+  db_add_index($ret, 'url_alias', 'src_language', array('src', 'language'));
+  db_drop_index($ret, 'url_alias', 'src');
 
   return $ret;
 }
