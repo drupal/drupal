@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.303 2009/01/25 13:57:21 webchick Exp $
+// $Id: system.install,v 1.304 2009/01/25 16:46:05 webchick Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2688,6 +2688,18 @@ function system_update_6047() {
 }
 
 /**
+ * Increase the size of the 'load_functions' and 'to_arg_functions' fields in
+ * table 'menu_router'.
+ */
+function system_update_6048() {
+  $ret = array();
+  db_change_field($ret, 'menu_router', 'load_functions', 'load_functions', array('type' => 'text', 'not null' => TRUE));
+  db_change_field($ret, 'menu_router', 'to_arg_functions', 'to_arg_functions', array('type' => 'text', 'not null' => TRUE));
+
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-5.x-to-6.x"
  * The next series of updates should start at 7000.
  */
@@ -3028,14 +3040,10 @@ function system_update_7009() {
 }
 
 /**
- * Increase the size of the 'load_functions' and 'to_arg_functions' fields in table 'menu_router'.
+ * Moved to system_update_6048().
  */
 function system_update_7010() {
-  $ret = array();
-  db_change_field($ret, 'menu_router', 'load_functions', 'load_functions', array('type' => 'text', 'not null' => TRUE));
-  db_change_field($ret, 'menu_router', 'to_arg_functions', 'to_arg_functions', array('type' => 'text', 'not null' => TRUE));
-
-  return $ret;
+  return array();
 }
 
 /**
