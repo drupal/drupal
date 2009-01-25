@@ -1260,7 +1260,7 @@ function system_schema() {
     ),
     'primary key' => array('pid'),
     'indexes' => array(
-      'src' => array('src'),
+      'src_language' => array('src', 'language'),
     ),
   );
 
@@ -3192,6 +3192,17 @@ function system_update_7017() {
   }
   variable_set('theme_settings', $theme_settings);
   $ret[] = array('success' => TRUE, 'query' => "variable_set('theme_settings')");
+
+  return $ret;
+}
+
+/**
+ * Replace src index on the {url_alias} table with src, language.
+ */
+function system_update_7018() {
+  $ret = array();
+  db_add_index($ret, 'url_alias', 'src_language', array('src', 'language'));
+  db_drop_index($ret, 'url_alias', 'src');
 
   return $ret;
 }
