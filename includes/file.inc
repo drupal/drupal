@@ -154,20 +154,17 @@ function file_check_path(&$path) {
 
 
 /**
- * Check if $source is a valid file upload. If so, move the file to Drupal's tmp dir
- * and return it as an object.
+ * Verify an uploaded file.
  *
- * The use of SESSION['file_uploads'] should probably be externalized to upload.module
+ * Check if $source is a valid file upload. If so, move the file to the
+ * temporary directory and return it as an object.
  *
- * @todo Rename file_check_upload to file_prepare upload.
- * @todo Refactor or merge file_save_upload.
- * @todo Extenalize SESSION['file_uploads'] to modules.
- *
- * @param $source An upload source (the name of the upload form item), or a file
- * @return FALSE for an invalid file or upload. A file object for valid uploads/files.
- *
+ * @param $source
+ *   An upload source (the name of the upload form item), or a file.
+ * @return
+ *   FALSE for an invalid file or upload. A file object for valid
+ *   uploads/files.
  */
-
 function file_check_upload($source = 'upload') {
   // Cache for uploaded files. Since the data in _FILES is modified
   // by this function, we cache the result.
