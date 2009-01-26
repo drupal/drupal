@@ -111,7 +111,7 @@ function statistics_nodeapi_view($node, $teaser, $page) {
       $links['statistics_counter']['title'] = format_plural($statistics['totalcount'], '1 read', '@count reads');
     }
   }
-  
+
   $node->content['links']['statistics'] = array(
     '#type' => 'node_links',
     '#value' => $links,

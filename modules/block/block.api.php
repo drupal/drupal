@@ -77,7 +77,7 @@ function hook_block_list() {
  * and also by block.module to procure the list of available blocks.
  *
  * @param $delta
- *   Which block to return. This is a descriptive string used to identify 
+ *   Which block to return. This is a descriptive string used to identify
  *   blocks within each module and also within the theme system.
  *   The $delta for each block is defined within the array that your module
  *   returns when the hook_block_list() implementation is called.
@@ -135,7 +135,7 @@ function hook_block_save($delta = '', $edit = array()) {
  * and also by block.module to procure the list of available blocks.
  *
  * @param $delta
- *   Which block to return. This is a descriptive string used to identify 
+ *   Which block to return. This is a descriptive string used to identify
  *   blocks within each module and also within the theme system.
  *   The $delta for each block is defined within the array that your module
  *   returns when the hook_block_list() implementation is called.

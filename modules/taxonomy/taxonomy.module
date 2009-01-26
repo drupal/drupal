@@ -73,7 +73,7 @@ function taxonomy_nodeapi_view($node) {
       }
     }
   }
-  
+
   $node->content['links']['terms'] = array(
     '#type' => 'node_links',
     '#value' => $links,
@@ -323,7 +323,7 @@ function taxonomy_term_save($term) {
     $status = drupal_write_record('taxonomy_term_data', $term);
     module_invoke_all('taxonomy_term_update', $term);
   }
-  
+
   $or = db_or()->condition('tid1', $term->tid)->condition('tid2', $term->tid);
   db_delete('taxonomy_term_relation')->condition($or)->execute();
 

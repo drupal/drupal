@@ -1382,14 +1382,14 @@ function hook_schema_alter(&$schema) {
  *
  * @see hook_query_TAG_alter()
  * @see node_query_node_access_alter()
- * 
+ *
  * @param $query
  *   A Query object describing the composite parts of a SQL query.
  * @return
  *   None.
  */
 function hook_query_alter(QueryAlterableInterface $query) {
-  
+
 }
 
 /**
@@ -1397,7 +1397,7 @@ function hook_query_alter(QueryAlterableInterface $query) {
  *
  * @see hook_query_alter()
  * @see node_query_node_access_alter()
- * 
+ *
  * @param $query
  *   An Query object describing the composite parts of a SQL query.
  * @return
@@ -1430,7 +1430,7 @@ function hook_query_TAG_alter(QueryAlterableInterface $query) {
       if (count($or->conditions())) {
         $query->condition($or);
       }
-      
+
       $query->condition("{$access_alias}.grant_$op", 1, '>=');
     }
   }

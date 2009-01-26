@@ -21,7 +21,7 @@ function aggregator_aggregator_fetch_info() {
  */
 function aggregator_aggregator_fetch($feed) {
   $feed->source_string = FALSE;
-  
+
   // Generate conditional GET headers.
   $headers = array();
   if ($feed->etag) {

@@ -50,7 +50,7 @@ class UploadTestCase extends DrupalWebTestCase {
 
     $this->checkUploadedFile(basename($files[0]));
     $this->checkUploadedFile(basename($files[1]));
-    
+
     // Assure that the attachment link appears on teaser view and has correct count.
     $node = node_load($node->nid);
     $teaser = node_view($node, TRUE);

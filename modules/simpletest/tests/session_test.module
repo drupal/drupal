@@ -120,7 +120,7 @@ function _session_test_set_message() {
  */
 function _session_test_set_not_started() {
   if (!drupal_session_is_started()) {
-    $_SESSION['session_test_value'] = t('Session was not started'); 
+    $_SESSION['session_test_value'] = t('Session was not started');
   }
 }
 

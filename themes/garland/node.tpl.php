@@ -27,9 +27,9 @@
     <?php if ($links): ?>
       <div class="links"><?php print $links; ?></div>
     <?php endif; ?>
-    
+
     <?php print $comments; ?>
-    
+
   </div>
 
 </div>

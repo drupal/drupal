@@ -142,7 +142,7 @@ function chameleon_node($node, $teaser = 0) {
   if (!empty($node->content['links']['terms'])) {
     $terms = drupal_render($node->content['links']['terms']);
   }
-  
+
   $links = '';
   if ($node->content['links']) {
     $links = drupal_render($node->content['links']);
@@ -153,7 +153,7 @@ function chameleon_node($node, $teaser = 0) {
   }
 
   $output .= "</div>\n";
-  
+
   if ($node->content['comments']) {
     $output .= drupal_render($node->content['comments']);
   }

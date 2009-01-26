@@ -115,9 +115,9 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     if (!empty($field['unsigned'])) {
       // Unsigned datatypes are not supported in PostgreSQL 8.3. In MySQL,
       // they are used to ensure a positive number is inserted and it also
-      // doubles the maximum integer size that can be stored in a field. 
-      // The PostgreSQL schema in Drupal creates a check constraint 
-      // to ensure that a value inserted is >= 0. To provide the extra 
+      // doubles the maximum integer size that can be stored in a field.
+      // The PostgreSQL schema in Drupal creates a check constraint
+      // to ensure that a value inserted is >= 0. To provide the extra
       // integer capacity, here, we bump up the column field size.
       if (!isset($map)) {
         $map = $this->getFieldTypeMap();

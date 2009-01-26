@@ -13,21 +13,21 @@
 
 /**
  * Implement this hook to create an alternative fetcher for aggregator module.
- * 
- * A fetcher downloads feed data to a Drupal site. The fetcher is called 
- * at the first of the three aggregation stages: data is downloaded by the 
- * active fetcher, it is converted to a common format by the active parser and 
- * finally, it is passed to all active processors which manipulate or store the 
+ *
+ * A fetcher downloads feed data to a Drupal site. The fetcher is called
+ * at the first of the three aggregation stages: data is downloaded by the
+ * active fetcher, it is converted to a common format by the active parser and
+ * finally, it is passed to all active processors which manipulate or store the
  * data.
- * 
- * Modules that define this hook can be set as active fetcher on 
+ *
+ * Modules that define this hook can be set as active fetcher on
  * admin/content/aggregator/settings. Only one fetcher can be active at a time.
- * 
+ *
  * @param $feed
- *   The $feed object that describes the resource to be downloaded. 
- *   $feed->url contains the link to the feed. Download the data at the URL 
+ *   The $feed object that describes the resource to be downloaded.
+ *   $feed->url contains the link to the feed. Download the data at the URL
  *   and expose it to other modules by attaching it to $feed->source_string.
- * 
+ *
  * @see hook_aggregator_fetch_info()
  * @see hook_aggregator_parse()
  * @see hook_aggregator_process()
@@ -39,19 +39,19 @@ function hook_aggregator_fetch($feed) {
 }
 
 /**
- * Implement this hook to expose the title and a short description of your 
+ * Implement this hook to expose the title and a short description of your
  * fetcher.
- * 
- * The title and the description provided are shown on 
+ *
+ * The title and the description provided are shown on
  * admin/content/aggregator/settings among other places. Use as title the human
  * readable name of the fetcher and as description a brief (40 to 80 characters)
  * explanation of the fetcher's functionality.
- * 
+ *
  * This hook is only called if your module implements hook_aggregator_fetch().
  * If this hook is not implemented aggregator will use your module's file name
  * as title and there will be no description.
- * 
- * @return 
+ *
+ * @return
  *   An associative array defining a title and a description string.
  *
  * @see hook_aggregator_fetch()
@@ -67,25 +67,25 @@ function hook_aggregator_fetch_info() {
 
 /**
  * Implement this hook to create an alternative parser for aggregator module.
- * 
- * A parser converts feed item data to a common format. The parser is called 
- * at the second of the three aggregation stages: data is downloaded by the 
- * active fetcher, it is converted to a common format by the active parser and 
- * finally, it is passed to all active processors which manipulate or store the 
+ *
+ * A parser converts feed item data to a common format. The parser is called
+ * at the second of the three aggregation stages: data is downloaded by the
+ * active fetcher, it is converted to a common format by the active parser and
+ * finally, it is passed to all active processors which manipulate or store the
  * data.
- * 
- * Modules that define this hook can be set as active parser on 
+ *
+ * Modules that define this hook can be set as active parser on
  * admin/content/aggregator/settings. Only one parser can be active at a time.
- * 
+ *
  * @param $feed
- *   The $feed object that describes the resource to be parsed. 
- *   $feed->source_string contains the raw feed data as a string. Parse data 
- *   from $feed->source_string and expose it to other modules as an array of 
- *   data items on $feed->items. 
- *   
+ *   The $feed object that describes the resource to be parsed.
+ *   $feed->source_string contains the raw feed data as a string. Parse data
+ *   from $feed->source_string and expose it to other modules as an array of
+ *   data items on $feed->items.
+ *
  *   By convention, the common format for a single feed item is:
  *   $item[key-name] = value;
- * 
+ *
  *   Recognized keys:
  *   TITLE (string) - the title of a feed item
  *   DESCRIPTION (string) - the description (body text) of a feed item
@@ -97,7 +97,7 @@ function hook_aggregator_fetch_info() {
  * @see hook_aggregator_parse_info()
  * @see hook_aggregator_fetch()
  * @see hook_aggregator_process()
- * 
+ *
  * @ingroup aggregator
  */
 function hook_aggregator_parse($feed) {
@@ -105,19 +105,19 @@ function hook_aggregator_parse($feed) {
 }
 
 /**
- * Implement this hook to expose the title and a short description of your 
+ * Implement this hook to expose the title and a short description of your
  * parser.
- * 
- * The title and the description provided are shown on 
+ *
+ * The title and the description provided are shown on
  * admin/content/aggregator/settings among other places. Use as title the human
  * readable name of the parser and as description a brief (40 to 80 characters)
  * explanation of the parser's functionality.
- * 
+ *
  * This hook is only called if your module implements hook_aggregator_parse().
  * If this hook is not implemented aggregator will use your module's file name
  * as title and there will be no description.
- * 
- * @return 
+ *
+ * @return
  *   An associative array defining a title and a description string.
  *
  * @see hook_aggregator_parse()
@@ -133,22 +133,22 @@ function hook_aggregator_parse_info() {
 
 /**
  * Implement this hook to create a processor for aggregator module.
- * 
- * A processor acts on parsed feed data. Active processors are called at the 
+ *
+ * A processor acts on parsed feed data. Active processors are called at the
  * third and last of the aggregation stages: data is downloaded by the active
- * fetcher, it is converted to a common format by the active parser and 
+ * fetcher, it is converted to a common format by the active parser and
  * finally, it is passed to all active processors which manipulate or store the
  * data.
- * 
- * Modules that define this hook can be activated as processor on 
+ *
+ * Modules that define this hook can be activated as processor on
  * admin/content/aggregator/settings.
- * 
+ *
  * @param $feed
  *   The $feed object that describes the resource to be processed. $feed->items
- *   contains an array of feed items downloaded and parsed at the parsing 
- *   stage. See hook_aggregator_parse() for the basic format of a single item 
- *   in the $feed->items array. For the exact format refer to the particular 
- *   parser in use. 
+ *   contains an array of feed items downloaded and parsed at the parsing
+ *   stage. See hook_aggregator_parse() for the basic format of a single item
+ *   in the $feed->items array. For the exact format refer to the particular
+ *   parser in use.
  *
  * @see hook_aggregator_process_info()
  * @see hook_aggregator_fetch()
@@ -162,20 +162,20 @@ function hook_aggregator_process($feed) {
   }
 }
 
-/** 
- * Implement this hook to expose the title and a short description of your 
+/**
+ * Implement this hook to expose the title and a short description of your
  * processor.
- * 
- * The title and the description provided are shown most importantly on 
- * admin/content/aggregator/settings . Use as title the natural name of the 
- * processor and as description a brief (40 to 80 characters) explanation of 
+ *
+ * The title and the description provided are shown most importantly on
+ * admin/content/aggregator/settings . Use as title the natural name of the
+ * processor and as description a brief (40 to 80 characters) explanation of
  * the functionality.
  *
- * This hook is only called if your module implements 
- * hook_aggregator_process(). If this hook is not implemented aggregator 
+ * This hook is only called if your module implements
+ * hook_aggregator_process(). If this hook is not implemented aggregator
  * will use your module's file name as title and there will be no description.
- * 
- * @return 
+ *
+ * @return
  *   An associative array defining a title and a description string.
  *
  * @see hook_aggregator_process()
@@ -190,16 +190,16 @@ function hook_aggregator_process_info($feed) {
 }
 
 /**
- * Implement this hook to remove stored data if a feed is being deleted or a 
- * feed's items are being removed. 
- * 
- * Aggregator calls this hook if either a feed is deleted or a user clicks on 
- * "remove items". 
- * 
+ * Implement this hook to remove stored data if a feed is being deleted or a
+ * feed's items are being removed.
+ *
+ * Aggregator calls this hook if either a feed is deleted or a user clicks on
+ * "remove items".
+ *
  * If your module stores feed items for example on hook_aggregator_process() it
- * is recommended to implement this hook and to remove data related to $feed 
+ * is recommended to implement this hook and to remove data related to $feed
  * when called.
- * 
+ *
  * @param $feed
  *   The $feed object whose items are being removed.
  *

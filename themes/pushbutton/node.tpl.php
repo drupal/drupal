@@ -12,7 +12,7 @@
     <?php if ($links): ?>
       <div class="links">&raquo; <?php print $links ?></div>
     <?php endif; ?>
-    
+
     <?php print $comments; ?>
-      
+
 </div>

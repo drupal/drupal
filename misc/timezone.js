@@ -49,7 +49,7 @@ Drupal.behaviors.setTimezone = {
       var path = 'system/timezone/' + abbreviation + '/' + offsetNow + '/' + isDaylightSavingTime;
       var element = this;
       $.ajax({
-        async: false, 
+        async: false,
         url: Drupal.settings.basePath,
         data: { q: path, date: dateString },
         dataType: 'json',

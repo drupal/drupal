@@ -312,6 +312,6 @@ function taxonomy_update_7001() {
   db_rename_table($ret, 'term_synonym', 'taxonomy_term_synonym');
   db_rename_table($ret, 'vocabulary', 'taxonomy_vocabulary');
   db_rename_table($ret, 'vocabulary_node_types', 'taxonomy_vocabulary_node_type');
-  
+
   return $ret;
 }

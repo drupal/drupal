@@ -71,7 +71,7 @@
   </div>
 
   <?php print $links; ?>
-  
+
   <?php print $comments; ?>
-  
+
 </div>

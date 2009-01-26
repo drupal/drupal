@@ -26,7 +26,7 @@ function hook_comment_insert(&$form_values) {
 }
 
 /**
- *  The user has just finished editing the comment and is trying to 
+ *  The user has just finished editing the comment and is trying to
  *  preview or submit it. This hook can be used to check or
  *  even modify the node. Errors should be set with form_set_error().
  *

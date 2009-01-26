@@ -393,10 +393,10 @@ function aggregator_admin_refresh_feed($feed) {
  * @ingroup forms
  */
 function aggregator_admin_form($form_state) {
-  
+
   // Make sure configuration is sane.
   aggregator_sanitize_configuration();
-  
+
   // Get all available fetchers.
   $fetchers = module_implements('aggregator_fetch');
   foreach ($fetchers as $k => $module) {
@@ -409,7 +409,7 @@ function aggregator_admin_form($form_state) {
     unset($fetchers[$k]);
     $fetchers[$module] = $label;
   }
-  
+
   // Get all available parsers.
   $parsers = module_implements('aggregator_parse');
   foreach ($parsers as $k => $module) {
@@ -422,7 +422,7 @@ function aggregator_admin_form($form_state) {
     unset($parsers[$k]);
     $parsers[$module] = $label;
   }
-  
+
   // Get all available processors.
   $processors = module_implements('aggregator_process');
   foreach ($processors as $k => $module) {
@@ -435,7 +435,7 @@ function aggregator_admin_form($form_state) {
     unset($processors[$k]);
     $processors[$module] = $label;
   }
-  
+
   // Only show basic configuration if there are actually options.
   $basic_conf = array();
   if (count($fetchers) > 1) {
@@ -475,7 +475,7 @@ function aggregator_admin_form($form_state) {
       );
     $form['basic_conf'] += $basic_conf;
   }
-  
+
   // Implementing modules will expect an array at $form['modules'].
   $form['modules'] = array();
 

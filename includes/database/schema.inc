@@ -129,7 +129,7 @@ abstract class DatabaseSchema {
    *
    * The information_schema is a SQL standard that provides information about the
    * database server and the databases, schemas, tables, columns and users within
-   * it. This makes information_schema a useful tool to use across the drupal 
+   * it. This makes information_schema a useful tool to use across the drupal
    * database drivers and is used by a few different functions. The function below
    * describes the conditions to be meet when querying information_schema.tables
    * for drupal tables or information associated with drupal tables. Even though
@@ -166,7 +166,7 @@ abstract class DatabaseSchema {
 
   /**
    * Check if a table exists.
-   * 
+   *
    * @param $table
    *   The name of the table in drupal (no prefixing).
    * @return
@@ -176,7 +176,7 @@ abstract class DatabaseSchema {
     $condition = $this->buildTableNameCondition($this->connection->prefixTables('{' . $table . '}'));
     $condition->compile($this->connection);
     // Normally, we would heartily discourage the use of string
-    // concatination for conditionals like this however, we 
+    // concatination for conditionals like this however, we
     // couldn't use db_select() here because it would prefix
     // information_schema.tables and the query would fail.
     return db_query("SELECT table_name FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchField();
@@ -195,7 +195,7 @@ abstract class DatabaseSchema {
     $condition = $this->buildTableNameCondition($table_expression, 'LIKE');
     $condition->compile($this->connection);
     // Normally, we would heartily discourage the use of string
-    // concatination for conditionals like this however, we 
+    // concatination for conditionals like this however, we
     // couldn't use db_select() here because it would prefix
     // information_schema.tables and the query would fail.
     return db_query("SELECT table_name FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchAllKeyed(0, 0);
@@ -209,7 +209,7 @@ abstract class DatabaseSchema {
     $condition->condition('column_name', $column);
     $condition->compile($this->connection);
     // Normally, we would heartily discourage the use of string
-    // concatination for conditionals like this however, we 
+    // concatination for conditionals like this however, we
     // couldn't use db_select() here because it would prefix
     // information_schema.tables and the query would fail.
     return db_query("SELECT column_name FROM information_schema.columns WHERE " . (string) $condition, $condition->arguments())->fetchAllKeyed(0, 0);
