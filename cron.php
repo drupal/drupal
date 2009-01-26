@@ -1,5 +1,5 @@
 <?php
-// $Id: cron.php,v 1.40 2008/09/20 20:22:23 webchick Exp $
+// $Id: cron.php,v 1.41 2009/01/26 14:11:34 dries Exp $
 
 /**
  * @file
@@ -17,6 +17,6 @@ if (isset($_GET['cron_key']) && variable_get('cron_key', 'drupal') == $_GET['cro
   drupal_cron_run();
 }
 else {
-  watchdog('cron', 'Cron did not run because an invalid key used.', array(), WATCHDOG_NOTICE);
+  watchdog('cron', 'Cron could not run because an invalid key was used.', array(), WATCHDOG_NOTICE);
   drupal_access_denied();
 }
