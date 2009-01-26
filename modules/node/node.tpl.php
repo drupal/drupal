@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.6 2008/12/31 12:02:22 dries Exp $
+// $Id: node.tpl.php,v 1.7 2009/01/26 14:08:43 dries Exp $
 
 /**
  * @file
@@ -71,7 +71,7 @@
   </div>
 
   <?php print $links; ?>
-  
+
   <?php print $comments; ?>
-  
+
 </div>

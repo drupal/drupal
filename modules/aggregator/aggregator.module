@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.403 2008/12/22 19:38:31 dries Exp $
+// $Id: aggregator.module,v 1.404 2009/01/26 14:08:42 dries Exp $
 
 /**
  * @file
@@ -601,7 +601,7 @@ function theme_aggregator_block_item($item, $feed = 0) {
 
   // Display the external link to the item.
   return '<a href="' . check_url($item->link) . '">' . check_plain($item->title) . "</a>\n";
-  
+
 }
 
 /**
@@ -618,10 +618,10 @@ function aggregator_filter_xss($value) {
 
 /**
  * Check and sanitize aggregator configuration.
- * 
+ *
  * Goes through all fetchers, parsers and processors and checks whether they are available.
  * If one is missing resets to standard configuration.
- * 
+ *
  * @return
  *   TRUE if this function reset the configuration FALSE if not.
  */

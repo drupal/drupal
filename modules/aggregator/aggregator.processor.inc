@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.processor.inc,v 1.2 2009/01/22 12:59:32 dries Exp $
+// $Id: aggregator.processor.inc,v 1.3 2009/01/26 14:08:42 dries Exp $
 
 /**
  * @file
@@ -57,13 +57,13 @@ function aggregator_aggregator_remove($feed) {
   db_delete('aggregator_item')
     ->condition('fid', $feed->fid)
     ->execute();
-    
+
   drupal_set_message(t('The news items from %site have been removed.', array('%site' => $feed->title)));
 }
 
 /**
  * Implementation of hook_form_aggregator_admin_form_alter().
- * 
+ *
  * Form alter aggregator module's own form to keep processor functionality
  * separate from aggregator API functionality.
  */
@@ -86,28 +86,28 @@ function aggregator_form_aggregator_admin_form_alter(&$form, $form_state) {
     else {
       $form['modules']['aggregator'] = array();
     }
-    
+
     $form['modules']['aggregator']['aggregator_summary_items'] = array(
-      '#type' => 'select', 
+      '#type' => 'select',
       '#title' => t('Items shown in sources and categories pages') ,
-      '#default_value' => variable_get('aggregator_summary_items', 3), 
+      '#default_value' => variable_get('aggregator_summary_items', 3),
       '#options' => $items,
       '#description' => t('Number of feed items displayed in feed and category summary pages.'),
     );
 
     $form['modules']['aggregator']['aggregator_clear'] = array(
-      '#type' => 'select', 
+      '#type' => 'select',
       '#title' => t('Discard items older than'),
-      '#default_value' => variable_get('aggregator_clear', 9676800), 
+      '#default_value' => variable_get('aggregator_clear', 9676800),
       '#options' => $period,
       '#description' => t('The length of time to retain feed items before discarding. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status'))),
     );
 
     $form['modules']['aggregator']['aggregator_category_selector'] = array(
-      '#type' => 'radios', 
-      '#title' => t('Category selection type'), 
+      '#type' => 'radios',
+      '#title' => t('Category selection type'),
       '#default_value' => variable_get('aggregator_category_selector', 'checkboxes'),
-      '#options' => array('checkboxes' => t('checkboxes'), 
+      '#options' => array('checkboxes' => t('checkboxes'),
       'select' => t('multiple selector')),
       '#description' => t('The type of category selection widget displayed on categorization pages. (For a small number of categories, checkboxes are easier to use, while a multiple selector works well with large numbers of categories.)'),
     );
@@ -158,7 +158,7 @@ function aggregator_save_item($edit) {
 
 /**
  * Expire feed items on $feed that are older than aggregator_clear.
- * 
+ *
  * @param $feed
  *   Object describing feed.
  */

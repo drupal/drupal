@@ -1,5 +1,5 @@
 <?php
-// $Id: block.api.php,v 1.2 2008/12/16 23:57:31 dries Exp $
+// $Id: block.api.php,v 1.3 2009/01/26 14:08:42 dries Exp $
 
 /**
  * @file
@@ -77,7 +77,7 @@ function hook_block_list() {
  * and also by block.module to procure the list of available blocks.
  *
  * @param $delta
- *   Which block to return. This is a descriptive string used to identify 
+ *   Which block to return. This is a descriptive string used to identify
  *   blocks within each module and also within the theme system.
  *   The $delta for each block is defined within the array that your module
  *   returns when the hook_block_list() implementation is called.
@@ -135,7 +135,7 @@ function hook_block_save($delta = '', $edit = array()) {
  * and also by block.module to procure the list of available blocks.
  *
  * @param $delta
- *   Which block to return. This is a descriptive string used to identify 
+ *   Which block to return. This is a descriptive string used to identify
  *   blocks within each module and also within the theme system.
  *   The $delta for each block is defined within the array that your module
  *   returns when the hook_block_list() implementation is called.

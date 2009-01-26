@@ -1,5 +1,5 @@
 <?php
-// $Id: session_test.module,v 1.5 2009/01/19 10:46:51 dries Exp $
+// $Id: session_test.module,v 1.6 2009/01/26 14:08:43 dries Exp $
 
 /**
  * Implementation of hook_menu().
@@ -120,7 +120,7 @@ function _session_test_set_message() {
  */
 function _session_test_set_not_started() {
   if (!drupal_session_is_started()) {
-    $_SESSION['session_test_value'] = t('Session was not started'); 
+    $_SESSION['session_test_value'] = t('Session was not started');
   }
 }
 

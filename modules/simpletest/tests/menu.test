@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.4 2008/12/28 18:27:14 dries Exp $
+// $Id: menu.test,v 1.5 2009/01/26 14:08:43 dries Exp $
 
 /**
  * @file
@@ -51,7 +51,7 @@ class MenuRebuildTestCase extends DrupalWebTestCase {
       'group' => t('Menu'),
     );
   }
-  
+
   /**
    * Test if the 'menu_rebuild_needed' variable triggers a menu_rebuild() call.
    */
@@ -75,5 +75,5 @@ class MenuRebuildTestCase extends DrupalWebTestCase {
     $admin_exists = db_result(db_query("SELECT path from {menu_router} WHERE path = 'admin'"));
     $this->assertEqual($admin_exists, 'admin', t("The menu has been rebuilt, the path 'admin' now exists again."));
   }
-  
+
 }

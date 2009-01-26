@@ -1,4 +1,4 @@
-// $Id: timezone.js,v 1.1 2008/11/21 04:33:28 webchick Exp $
+// $Id: timezone.js,v 1.2 2009/01/26 14:08:42 dries Exp $
 
 /**
  * Set the client's system time zone as default values of form fields.
@@ -49,7 +49,7 @@ Drupal.behaviors.setTimezone = {
       var path = 'system/timezone/' + abbreviation + '/' + offsetNow + '/' + isDaylightSavingTime;
       var element = this;
       $.ajax({
-        async: false, 
+        async: false,
         url: Drupal.settings.basePath,
         data: { q: path, date: dateString },
         dataType: 'json',

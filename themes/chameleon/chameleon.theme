@@ -1,5 +1,5 @@
 <?php
-// $Id: chameleon.theme,v 1.87 2009/01/09 16:19:56 webchick Exp $
+// $Id: chameleon.theme,v 1.88 2009/01/26 14:08:44 dries Exp $
 
 /**
  * @file
@@ -142,7 +142,7 @@ function chameleon_node($node, $teaser = 0) {
   if (!empty($node->content['links']['terms'])) {
     $terms = drupal_render($node->content['links']['terms']);
   }
-  
+
   $links = '';
   if ($node->content['links']) {
     $links = drupal_render($node->content['links']);
@@ -153,7 +153,7 @@ function chameleon_node($node, $teaser = 0) {
   }
 
   $output .= "</div>\n";
-  
+
   if ($node->content['comments']) {
     $output .= drupal_render($node->content['comments']);
   }

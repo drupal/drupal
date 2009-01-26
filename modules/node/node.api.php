@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.7 2009/01/04 16:19:39 dries Exp $
+// $Id: node.api.php,v 1.8 2009/01/26 14:08:43 dries Exp $
 
 /**
  * @file
@@ -158,10 +158,10 @@ function hook_node_operations() {
  * Fiter, substitute or otherwise alter the $node's raw text.
  *
  * The $node->content array has been rendered, so the node body or
- * teaser is filtered and now contains HTML. This hook should only be 
- * used when text substitution, filtering, or other raw text operations 
+ * teaser is filtered and now contains HTML. This hook should only be
+ * used when text substitution, filtering, or other raw text operations
  * are necessary.
- * 
+ *
  * @param $node
  *   The node the action is being performed on.
  * @param $teaser
@@ -300,7 +300,7 @@ function hook_nodeapi_rss_item($node) {
 }
 
 /**
- * The node is being displayed as a search result. 
+ * The node is being displayed as a search result.
  *
  * If you want to display extra information with the result, return it.
  *
@@ -366,9 +366,9 @@ function hook_nodeapi_update_index($node) {
 }
 
 /**
- * The user has finished editing the node and is previewing or submitting it. 
+ * The user has finished editing the node and is previewing or submitting it.
  *
- * This hook can be used to check the node data. Errors should be set with 
+ * This hook can be used to check the node data. Errors should be set with
  * form_set_error().
  *
  * @param $node
@@ -387,10 +387,10 @@ function hook_nodeapi_validate($node, $form) {
 }
 
 /**
- * The node content is being assembled before rendering. 
+ * The node content is being assembled before rendering.
  *
- * The module may add elements $node->content prior to rendering. This hook 
- * will be called after hook_view(). The structure of $node->content is a renderable 
+ * The module may add elements $node->content prior to rendering. This hook
+ * will be called after hook_view(). The structure of $node->content is a renderable
  * array as expected by drupal_render().
  *
  * @param $node

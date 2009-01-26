@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.13 2009/01/21 16:58:42 dries Exp $
+// $Id: filter.test,v 1.14 2009/01/26 14:08:43 dries Exp $
 
 class FilterAdminTestCase extends DrupalWebTestCase {
   function getInfo() {
@@ -202,7 +202,7 @@ class FilterTestCase extends DrupalWebTestCase {
   function testLineBreakFilter() {
     $f = _filter_autop('<p><div>  </div></p>');
     $this->assertEqual(substr_count($f, '<p>'), substr_count($f, '</p>'), t('Make sure line breaking produces matching paragraph tags.'));
-    
+
     $f = _filter_autop('<div><p>  </p></div>');
     $this->assertEqual(substr_count($f, '<p>'), substr_count($f, '</p>'), t('Make sure line breaking produces matching paragraph tags.'));
 

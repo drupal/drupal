@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.test,v 1.10 2008/12/30 16:43:19 dries Exp $
+// $Id: upload.test,v 1.11 2009/01/26 14:08:43 dries Exp $
 
 class UploadTestCase extends DrupalWebTestCase {
   function getInfo() {
@@ -50,7 +50,7 @@ class UploadTestCase extends DrupalWebTestCase {
 
     $this->checkUploadedFile(basename($files[0]));
     $this->checkUploadedFile(basename($files[1]));
-    
+
     // Assure that the attachment link appears on teaser view and has correct count.
     $node = node_load($node->nid);
     $teaser = node_view($node, TRUE);

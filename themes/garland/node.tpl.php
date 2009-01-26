@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.7 2008/12/31 12:02:23 dries Exp $
+// $Id: node.tpl.php,v 1.8 2009/01/26 14:08:44 dries Exp $
 ?>
 <div id="node-<?php print $node->nid; ?>" class="node<?php if ($sticky) { print ' sticky'; } ?><?php if (!$status) { print ' node-unpublished'; } ?>">
 
@@ -27,9 +27,9 @@
     <?php if ($links): ?>
       <div class="links"><?php print $links; ?></div>
     <?php endif; ?>
-    
+
     <?php print $comments; ?>
-    
+
   </div>
 
 </div>

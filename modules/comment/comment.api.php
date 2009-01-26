@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.api.php,v 1.2 2009/01/04 16:10:48 dries Exp $
+// $Id: comment.api.php,v 1.3 2009/01/26 14:08:42 dries Exp $
 
 /**
  * @file
@@ -26,7 +26,7 @@ function hook_comment_insert(&$form_values) {
 }
 
 /**
- *  The user has just finished editing the comment and is trying to 
+ *  The user has just finished editing the comment and is trying to
  *  preview or submit it. This hook can be used to check or
  *  even modify the node. Errors should be set with form_set_error().
  *

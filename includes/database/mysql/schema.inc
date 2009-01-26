@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.10 2009/01/19 01:28:28 webchick Exp $
+// $Id: schema.inc,v 1.11 2009/01/26 14:08:41 dries Exp $
 
 /**
  * @file
@@ -15,11 +15,11 @@
 class DatabaseSchema_mysql extends DatabaseSchema {
 
   /**
-   * Build a condition to match a table name against a standard information_schema. 
+   * Build a condition to match a table name against a standard information_schema.
    *
    * MySQL uses databases like schemas rather than catalogs so when we build
    * a condition to query the information_schema.tables, we set the default
-   * database as the schema unless specified otherwise, and exclude table_catalog 
+   * database as the schema unless specified otherwise, and exclude table_catalog
    * from the condition criteria.
    */
   protected function buildTableNameCondition($table_name, $operator = '=') {

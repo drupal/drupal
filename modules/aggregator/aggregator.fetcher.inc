@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.fetcher.inc,v 1.3 2009/01/14 21:13:41 dries Exp $
+// $Id: aggregator.fetcher.inc,v 1.4 2009/01/26 14:08:42 dries Exp $
 
 /**
  * @file
@@ -21,7 +21,7 @@ function aggregator_aggregator_fetch_info() {
  */
 function aggregator_aggregator_fetch($feed) {
   $feed->source_string = FALSE;
-  
+
   // Generate conditional GET headers.
   $headers = array();
   if ($feed->etag) {

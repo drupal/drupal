@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.295 2009/01/22 12:46:07 dries Exp $
+// $Id: statistics.module,v 1.296 2009/01/26 14:08:43 dries Exp $
 
 /**
  * @file
@@ -111,7 +111,7 @@ function statistics_nodeapi_view($node, $teaser, $page) {
       $links['statistics_counter']['title'] = format_plural($statistics['totalcount'], '1 read', '@count reads');
     }
   }
-  
+
   $node->content['links']['statistics'] = array(
     '#type' => 'node_links',
     '#value' => $links,

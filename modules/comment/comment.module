@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.686 2009/01/23 14:23:27 dries Exp $
+// $Id: comment.module,v 1.687 2009/01/26 14:08:42 dries Exp $
 
 /**
  * @file
@@ -484,7 +484,7 @@ function comment_nodeapi_view($node, $teaser) {
         }
       }
     }
-    
+
     if (isset($links['comment_forbidden'])) {
       $links['comment_forbidden']['html'] = TRUE;
     }
@@ -493,7 +493,7 @@ function comment_nodeapi_view($node, $teaser) {
       '#type' => 'node_links',
       '#value' => $links,
     );
-    
+
     // Append the list of comments to $node->content for node detail pages.
     if ($node->comment && (bool)menu_get_object() && $node->build_mode != NODE_BUILD_PREVIEW) {
       $node->content['comments'] = array(

@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.63 2009/01/22 05:01:39 webchick Exp $
+// $Id: content_types.inc,v 1.64 2009/01/26 14:08:43 dries Exp $
 
 /**
  * @file
@@ -169,8 +169,8 @@ function node_type_form(&$form_state, $type = NULL) {
     '#type' => 'checkbox',
     '#title' => t('Display post information'),
     '#default_value' => variable_get('node_submitted_'. $type->type, TRUE),
-    '#description' => t('Enable the <em>submitted by Username on date</em> text.'), 
-  ); 
+    '#description' => t('Enable the <em>submitted by Username on date</em> text.'),
+  );
   $form['old_type'] = array(
     '#type' => 'value',
     '#value' => $type->type,

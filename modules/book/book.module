@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.484 2009/01/20 03:18:40 webchick Exp $
+// $Id: book.module,v 1.485 2009/01/26 14:08:42 dries Exp $
 
 /**
  * @file
@@ -61,11 +61,11 @@ function book_perm() {
 }
 
 /**
- * Inject links into $node as needed. 
+ * Inject links into $node as needed.
  */
 function book_nodeapi_view_link($node, $teaser, $page) {
   $links = array();
-  
+
   if (isset($node->book['depth'])) {
     if (!$teaser) {
       $child_type = variable_get('book_child_type', 'book');
@@ -749,7 +749,7 @@ function book_nodeapi_view($node, $teaser, $page) {
       }
     }
   }
-  
+
   book_nodeapi_view_link($node, $teaser, $page);
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.31 2009/01/19 10:46:50 dries Exp $
+// $Id: batch.inc,v 1.32 2009/01/26 14:08:40 dries Exp $
 
 
 /**
@@ -268,7 +268,7 @@ function _batch_process() {
 
     // If we are in progressive mode, break processing after 1 second.
     if ($batch['progressive'] && timer_read('batch_processing') > 1000) {
-      // Record elapsed wall clock time. 
+      // Record elapsed wall clock time.
       $current_set['elapsed'] = round((microtime(TRUE) - $current_set['start']) * 1000, 2);
       break;
     }
