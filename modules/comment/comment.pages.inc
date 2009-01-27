@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.pages.inc,v 1.11 2008/12/31 12:02:21 dries Exp $
+// $Id: comment.pages.inc,v 1.12 2009/01/27 00:22:25 dries Exp $
 
 /**
  * @file
@@ -92,7 +92,7 @@ function comment_reply($node, $pid = NULL) {
       }
       // This is the case where the comment is in response to a node. Display the node.
       elseif (user_access('access content')) {
-        $output .= node_view($node);
+        $output .= drupal_render(node_build($node));
       }
 
       // Should we show the reply box?

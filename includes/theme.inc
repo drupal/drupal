@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.465 2009/01/26 14:08:40 dries Exp $
+// $Id: theme.inc,v 1.466 2009/01/27 00:22:25 dries Exp $
 
 /**
  * @file
@@ -1569,6 +1569,25 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attribu
 }
 
 /**
+ * Return a themed list of items from a drupal_render() style array.
+ *
+ * @param $elements
+ *   An array consisting of the following keys:
+ *   - #items: an array of items as expected by theme('item_list').
+ *   - #title: a title which prints above the list.
+ *   - #list_type: the type of list to return. Defaults to "ul".
+ *   - #attributes: an array of attributes as expected by theme('item_list').
+ * @return
+ *   A string containing the list output.
+ */
+function theme_list($elements) {
+  // Populate any missing array elements with their defaults.
+  $elements += _element_info('list');
+
+  return theme('item_list', $elements['#items'], $elements['#title'], $elements['#list_type'], $elements['#attributes']);
+}
+
+/**
  * Returns code that emits the 'more help'-link.
  */
 function theme_more_help_link($url) {
@@ -1628,30 +1647,6 @@ function theme_more_link($url, $title) {
 function theme_closure($main = 0) {
   $footer = module_invoke_all('footer', $main);
   return implode("\n", $footer) . drupal_get_js('footer');
-}
-
-/**
- * Return a set of blocks available for the current user.
- *
- * @param $region
- *   Which set of blocks to retrieve.
- * @return
- *   A string containing the themed blocks for this region.
- */
-function theme_blocks($region) {
-  $output = '';
-
-  if ($list = block_list($region)) {
-    foreach ($list as $key => $block) {
-      // $key == <i>module</i>_<i>delta</i>
-      $output .= theme('block', $block);
-    }
-  }
-
-  // Add any content assigned to this region through drupal_set_content() calls.
-  $output .= drupal_get_content($region);
-
-  return $output;
 }
 
 /**
@@ -1816,32 +1811,26 @@ function template_preprocess(&$variables, $hook) {
  * Any changes to variables in this preprocessor should also be changed inside
  * template_preprocess_maintenance_page() to keep all of them consistent.
  *
- * The $variables array contains the following arguments:
- * - $content
- * - $show_blocks
+ * The $variables array contains two keys:
+ * - 'page': the fully decorated page.
+ * - 'content': the content of the page, already rendered.
  *
+ * @see drupal_render_page
  * @see page.tpl.php
  */
 function template_preprocess_page(&$variables) {
-  // Add favicon
-  if (theme_get_setting('toggle_favicon')) {
-    drupal_set_html_head('<link rel="shortcut icon" href="' . check_url(theme_get_setting('favicon')) . '" type="image/x-icon" />');
+  // Move some variables to the top level for themer convenience and template cleanliness.
+  $variables['show_blocks'] = $variables['page']['#show_blocks'];
+  $variables['show_messages'] = $variables['page']['#show_messages'];
+
+  // Render each region into top level variables.
+  foreach (system_region_list($GLOBALS['theme']) as $region_key => $region_name) {
+    $variables[$region_key] = empty($variables['page'][$region_key]) ? '' : drupal_render($variables['page'][$region_key]);
   }
 
-  global $theme;
-  // Populate all block regions.
-  $regions = system_region_list($theme);
-  // Load all region content assigned via blocks.
-  foreach (array_keys($regions) as $region) {
-    // Prevent left and right regions from rendering blocks when 'show_blocks' == FALSE.
-    if ($variables['show_blocks'] || ($region != 'left' && $region != 'right')) {
-      $blocks = theme('blocks', $region);
-    }
-    else {
-      $blocks = '';
-    }
-    // Assign region to a region variable.
-    isset($variables[$region]) ? $variables[$region] .= $blocks : $variables[$region] = $blocks;
+  // Add favicon.
+  if (theme_get_setting('toggle_favicon')) {
+    drupal_set_html_head('<link rel="shortcut icon" href="' . check_url(theme_get_setting('favicon')) . '" type="image/x-icon" />');
   }
 
   // Set up layout variable.
@@ -1881,8 +1870,8 @@ function template_preprocess_page(&$variables) {
   $variables['logo']              = theme_get_setting('logo');
   $variables['messages']          = $variables['show_messages'] ? theme('status_messages') : '';
   $variables['mission']           = isset($mission) ? $mission : '';
-  $variables['main_menu']     = theme_get_setting('toggle_main_menu') ? menu_main_menu() : array();
-  $variables['secondary_menu']   = theme_get_setting('toggle_secondary_menu') ? menu_secondary_menu() : array();
+  $variables['main_menu']         = theme_get_setting('toggle_main_menu') ? menu_main_menu() : array();
+  $variables['secondary_menu']    = theme_get_setting('toggle_secondary_menu') ? menu_secondary_menu() : array();
   $variables['search_box']        = (theme_get_setting('toggle_search') ? drupal_get_form('search_theme_form') : '');
   $variables['site_name']         = (theme_get_setting('toggle_name') ? variable_get('site_name', 'Drupal') : '');
   $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? variable_get('site_slogan', '') : '');
@@ -1975,6 +1964,8 @@ function template_preprocess_page(&$variables) {
  * @see node.tpl.php
  */
 function template_preprocess_node(&$variables) {
+  $variables['teaser'] = $variables['elements']['#teaser'];
+  $variables['node'] = $variables['elements']['#node'];
   $node = $variables['node'];
 
   $variables['date']      = format_date($node->created);
@@ -1982,17 +1973,17 @@ function template_preprocess_node(&$variables) {
   $variables['node_url']  = url('node/' . $node->nid);
   $variables['title']     = check_plain($node->title);
   $variables['page']      = (bool)menu_get_object();
-
+  
   if ($node->build_mode == NODE_BUILD_PREVIEW) {
     unset($node->content['links']);
   }
-
+  
   // Render taxonomy links separately.
   $variables['terms']     = !empty($node->content['links']['terms']) ? drupal_render($node->content['links']['terms']) : '';
-
+  
   // Render all remaining node links.
   $variables['links']     = !empty($node->content['links']) ? drupal_render($node->content['links']) : '';
-
+  
   // Render any comments.
   $variables['comments']  = !empty($node->content['comments']) ? drupal_render($node->content['comments']) : '';
 
@@ -2035,6 +2026,7 @@ function template_preprocess_node(&$variables) {
  */
 function template_preprocess_block(&$variables) {
   static $block_counter = array();
+  $variables['block'] = $variables['block']['#block'];
   // All blocks get an independent counter for each region.
   if (!isset($block_counter[$variables['block']->region])) {
     $block_counter[$variables['block']->region] = 1;

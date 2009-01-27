@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.122 2009/01/22 12:46:07 dries Exp $
+// $Id: system.admin.inc,v 1.123 2009/01/27 00:22:26 dries Exp $
 
 /**
  * @file
@@ -1888,7 +1888,10 @@ function system_batch_page() {
   elseif (isset($output)) {
     // Force a page without blocks or messages to
     // display a list of collected messages later.
-    print theme('page', $output, FALSE, FALSE);
+    $page = drupal_get_page($output);
+    $page['#show_blocks'] = FALSE;
+    $page['#show_messages'] = FALSE;
+    return $page;
   }
 }
 

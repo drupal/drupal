@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.687 2009/01/26 14:08:42 dries Exp $
+// $Id: comment.module,v 1.688 2009/01/27 00:22:25 dries Exp $
 
 /**
  * @file
@@ -1649,7 +1649,7 @@ function comment_form_add_preview($form, &$form_state) {
   }
   else {
     $suffix = empty($form['#suffix']) ? '' : $form['#suffix'];
-    $form['#suffix'] = $suffix . node_view($node);
+    $form['#suffix'] = $suffix . drupal_render(node_build($node));
     $edit['pid'] = 0;
   }
 

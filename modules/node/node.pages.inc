@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.50 2009/01/22 12:04:27 dries Exp $
+// $Id: node.pages.inc,v 1.51 2009/01/27 00:22:26 dries Exp $
 
 /**
  * @file
@@ -415,12 +415,12 @@ function theme_node_preview($node) {
   if ($preview_trimmed_version) {
     drupal_set_message(t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication.<span class="no-js"> You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.</span>'));
     $output .= '<h3>' . t('Preview trimmed version') . '</h3>';
-    $output .= node_view(clone $node, 1, FALSE);
+    $output .= drupal_render(node_build(clone $node, TRUE));
     $output .= '<h3>' . t('Preview full version') . '</h3>';
-    $output .= node_view($node, 0, FALSE);
+    $output .= drupal_render(node_build($node, FALSE));
   }
   else {
-    $output .= node_view($node, 0, FALSE);
+    $output .= drupal_render(node_build($node, FALSE));
   }
   $output .= "</div>\n";
 

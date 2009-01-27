@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.8 2009/01/26 14:08:43 dries Exp $
+// $Id: node.api.php,v 1.9 2009/01/27 00:22:26 dries Exp $
 
 /**
  * @file
@@ -81,7 +81,7 @@ function hook_node_access_records($node) {
     return;
   }
 
-  // We only care about the node if it's been marked private. If not, it is
+  // We only care about the node if it has been marked private. If not, it is
   // treated just like any other node and we completely ignore it.
   if ($node->private) {
     $grants = array();
@@ -169,7 +169,7 @@ function hook_node_operations() {
  * @return
  *   None.
  */
-function hook_nodeapi_alter($node, $teaser, $page) {
+function hook_nodeapi_alter($node, $teaser) {
 }
 
 /**
