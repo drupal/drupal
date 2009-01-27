@@ -180,6 +180,63 @@ function hook_js_alter(&$javascript) {
 }
 
 /**
+ * Perform alterations before a page is rendered.
+ *
+ * Use this hook when you want to add, remove, or alter elements at the page
+ * level. If you are making changes to entities such as forms, menus, or user
+ * profiles, use those objects' native alter hooks instead (hook_form_alter(),
+ * for example).
+ *
+ * The $page array contains top level elements for each block region:
+ * @code
+ *   $page['header']
+ *   $page['left']
+ *   $page['content']
+ *   $page['right']
+ *   $page['footer']
+ * @endcode
+ *
+ * The 'content' element contains the main content of the current page, and its
+ * structure will vary depending on what module is responsible for building the
+ * page. Some legacy modules may not return structured content at all: their
+ * pre-rendered markup will be located in $page['content']['main']['#markup'].
+ *
+ * Pages built by Drupal's core Node and Blog modules use a standard structure:
+ *
+ * @code
+ *   // Node body.
+ *   $page['content']['nodes'][$nid]['body']
+ *   // Array of links attached to the node (add comments, read more).
+ *   $page['content']['nodes'][$nid]['links']
+ *   // The node object itself.
+ *   $page['content']['nodes'][$nid]['#node']
+ *   // The results pager.
+ *   $page['content']['pager']
+ * @code 
+ *
+ * Blocks may be referenced by their module/delta pair within a region:
+ * @code
+ *   // The login block in the left sidebar region.
+ *   $page['left']['user-login']['#block'];
+ * @endcode
+ *
+ * @param $page
+ *   Nested array of renderable elements that make up the page.
+ *
+ * @see drupal_render_page()
+ */
+function hook_page_alter($page) {
+  if (menu_get_object('node', 1)) {
+    // We are on a node detail page. Append a standard disclaimer to the
+    // content region.
+    $page['content']['disclaimer'] = array(
+      '#markup' => t('Acme, Inc. is not responsible for the contents of this sample code.'),
+      '#weight' => 25,
+    );
+  }
+}
+
+/**
  * Perform alterations before a form is rendered.
  *
  * One popular use of this hook is to add form elements to the node form. When

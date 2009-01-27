@@ -21,7 +21,7 @@ require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 $return = menu_execute_active_handler();
 
-// Menu status constants are integers; page content is a string.
+// Menu status constants are integers; page content is a string or array.
 if (is_int($return)) {
   switch ($return) {
     case MENU_NOT_FOUND:
@@ -36,8 +36,8 @@ if (is_int($return)) {
   }
 }
 elseif (isset($return)) {
-  // Print any value (including an empty string) except NULL or undefined:
-  print theme('page', $return);
+  // Print anything besides a menu constant, assuming it's not NULL or undefined.
+  print drupal_render_page($return);
 }
 
 drupal_page_footer();

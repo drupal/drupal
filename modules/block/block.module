@@ -226,6 +226,61 @@ function block_block_view($delta = 0, $edit = array()) {
 }
 
 /**
+ * Implementation of hook_page_alter().
+ *
+ * Render blocks into their regions.
+ */
+function block_page_alter($page) {
+  global $theme;
+
+  // The theme system might not yet be initialized. We need $theme.
+  init_theme();
+
+  // Populate all block regions
+  $regions = system_region_list($theme);
+
+  // Load all region content assigned via blocks.
+  foreach (array_keys($regions) as $region) {
+    // Prevent left and right regions from rendering blocks when 'show_blocks' == FALSE.
+    if ($page['#show_blocks'] || ($region != 'left' && $region != 'right')) {
+      // Assign blocks to region.
+      if ($blocks = block_get_blocks_by_region($region)) {
+        $page[$region]['blocks'] = $blocks;
+      }
+
+      // Append region description if we are rendering the block admin page.
+      $item = menu_get_item();
+      if ($item['path'] == 'admin/build/block') {
+        $description = '<div class="block-region">' . $regions[$region] . '</div>';
+        $page[$region]['blocks']['block_description'] = array('#markup' => $description);
+      }
+    }
+  }
+}
+
+/**
+ * Get a renderable array of a region containing all enabled blocks.
+ *
+ * @param $region
+ *   The requested region.
+ */
+function block_get_blocks_by_region($region) {
+  $weight = 0;
+  $build = array();
+  if ($list = block_list($region)) {
+    foreach ($list as $key => $block) {
+      $build[$key] = array(
+        '#theme' => 'block',
+        '#block' => $block,
+        '#weight' => ++$weight,
+      );
+    }
+    $build['#sorted'] = TRUE;
+  }
+  return $build;
+}
+
+/**
  * Update the 'block' DB table with the blocks currently exported by modules.
  *
  * @return

@@ -23,18 +23,20 @@ function blog_page_user($account) {
     $items[] = t('You are not allowed to post a new blog entry.');
   }
 
-  $output = theme('item_list', $items);
+  $build['blog_actions'] = array(
+    '#items' => $items,
+    '#theme' => 'list',
+    '#weight' => -1,
+  );
 
-  $result = pager_query(db_rewrite_sql("SELECT n.nid, n.sticky, n.created FROM {node} n WHERE n.type = 'blog' AND n.uid = %d AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC"), variable_get('default_nodes_main', 10), 0, NULL, $account->uid);
-  $has_posts = FALSE;
-
-  while ($node = db_fetch_object($result)) {
-    $output .= node_view(node_load($node->nid), 1);
-    $has_posts = TRUE;
-  }
-
-  if ($has_posts) {
-    $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
+  $nids = pager_query(db_rewrite_sql("SELECT n.nid, n.sticky, n.created FROM {node} n WHERE n.type = 'blog' AND n.uid = %d AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC"), variable_get('default_nodes_main', 10), 0, NULL, $account->uid)->fetchCol();
+  if (!empty($nids)) {
+    $nodes = node_load_multiple($nids);
+    $build += node_build_multiple($nodes);
+    $build['pager'] = array(
+      '#markup' => theme('pager', NULL, variable_get('default_nodes_main', 10)),
+      '#weight' => 5,
+    );
   }
   else {
     if ($account->uid == $user->uid) {
@@ -46,7 +48,7 @@ function blog_page_user($account) {
   }
   drupal_add_feed(url('blog/' . $account->uid . '/feed'), t('RSS - !title', array('!title' => $title)));
 
-  return $output;
+  return drupal_get_page($build);
 }
 
 /**
@@ -54,33 +56,33 @@ function blog_page_user($account) {
  */
 function blog_page_last() {
   global $user;
-
-  $output = '';
-  $items = array();
+  $build = array();
 
   if (user_access('edit own blog')) {
     $items[] = l(t('Create new blog entry.'), "node/add/blog");
+    $build['blog_actions'] = array(
+      '#items' => $items,
+      '#theme' => 'list',
+      '#weight' => -1,
+    );
   }
 
-  $output = theme('item_list', $items);
+  $nids = pager_query(db_rewrite_sql("SELECT n.nid, n.sticky, n.created FROM {node} n WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC"), variable_get('default_nodes_main', 10))->fetchCol();
 
-  $result = pager_query(db_rewrite_sql("SELECT n.nid, n.created FROM {node} n WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC"), variable_get('default_nodes_main', 10));
-  $has_posts = FALSE;
-
-  while ($node = db_fetch_object($result)) {
-    $output .= node_view(node_load($node->nid), 1);
-    $has_posts = TRUE;
-  }
-
-  if ($has_posts) {
-    $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
+  if (!empty($nids)) {
+    $nodes = node_load_multiple($nids);
+    $build += node_build_multiple($nodes);
+    $build['pager'] = array(
+      '#markup' => theme('pager', NULL, variable_get('default_nodes_main', 10)),
+      '#weight' => 5,
+    );
   }
   else {
     drupal_set_message(t('No blog entries have been created.'));
   }
   drupal_add_feed(url('blog/feed'), t('RSS - blogs'));
 
-  return $output;
+  return drupal_get_page($build);
 }
 
 /**

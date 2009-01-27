@@ -301,8 +301,7 @@ function drupal_get_destination() {
  * Drupal will ensure that messages set by drupal_set_message() and other
  * session data are written to the database before the user is redirected.
  *
- * This function ends the request; use it rather than a print theme('page')
- * statement in your menu callback.
+ * This function ends the request; use it instead of a return in your menu callback.
  *
  * @param $path
  *   A Drupal path or a full URL.
@@ -379,19 +378,23 @@ function drupal_not_found() {
 
   $path = drupal_get_normal_path(variable_get('site_404', ''));
   if ($path && $path != $_GET['q']) {
-    // Set the active item in case there are tabs to display, or other
-    // dependencies on the path.
+    // Custom 404 handler. Set the active item in case there are tabs to
+    // display, or other dependencies on the path.
     menu_set_active_item($path);
     $return = menu_execute_active_handler($path);
   }
 
   if (empty($return) || $return == MENU_NOT_FOUND || $return == MENU_ACCESS_DENIED) {
+    // Standard 404 handler.
     drupal_set_title(t('Page not found'));
     $return = t('The requested page could not be found.');
   }
 
+  $page = drupal_get_page($return);
   // To conserve CPU and bandwidth, omit the blocks.
-  print theme('page', $return, FALSE);
+  $page['#show_blocks'] = FALSE;
+
+  print drupal_render_page($page);
 }
 
 /**
@@ -408,17 +411,19 @@ function drupal_access_denied() {
 
   $path = drupal_get_normal_path(variable_get('site_403', ''));
   if ($path && $path != $_GET['q']) {
-    // Set the active item in case there are tabs to display or other
-    // dependencies on the path.
+    // Custom 403 handler. Set the active item in case there are tabs to
+    // display or other dependencies on the path.
     menu_set_active_item($path);
     $return = menu_execute_active_handler($path);
   }
 
   if (empty($return) || $return == MENU_NOT_FOUND || $return == MENU_ACCESS_DENIED) {
+    // Standard 403 handler.
     drupal_set_title(t('Access denied'));
     $return = t('You are not authorized to access this page.');
   }
-  print theme('page', $return);
+
+  print drupal_render_page($return);
 }
 
 /**
@@ -816,7 +821,10 @@ function _drupal_log_error($error, $fatal = FALSE) {
     drupal_set_header($_SERVER['SERVER_PROTOCOL'] . ' Service unavailable');
     drupal_set_title(t('Error'));
     if (!defined('MAINTENANCE_MODE') && drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
-      print theme('page', t('The website encountered an unexpected error. Please try again later.'), FALSE);
+      // To conserve CPU and bandwidth, omit the blocks.
+      $page = drupal_get_page(t('The website encountered an unexpected error. Please try again later.'));
+      $page['#show_blocks'] = FALSE;
+      print drupal_render_page($page);
     }
     else {
       print theme('maintenance_page', t('The website encountered an unexpected error. Please try again later.'), FALSE);
@@ -3195,6 +3203,53 @@ function drupal_alter($type, &$data) {
 }
 
 /**
+ * Retrieve a $page element that is ready for decorating.
+ *
+ * Used by menu callbacks in order to populate the page with content
+ * and behavior (e.g. #show_blocks).
+ *
+ * @param $content
+ *   A string or renderable array representing the body of the page.
+ * @return
+ *   A $page element that should be decorated and then passed to drupal_render_page().
+ *
+ * @see drupal_render_page().
+ */
+function drupal_get_page($content = NULL) {
+  // Initialize page array with defaults. @see hook_elements() - 'page' element.
+  $page = _element_info('page');
+  $page['content'] = is_array($content) ? $content : array('main' => array('#markup' => $content));
+
+  return $page;
+}
+
+/**
+ * Renders the page, including all theming.
+ *
+ * @param $page
+ *   A string or array representing the content of a page. The array consists of
+ *   the following keys:
+ *   - #type: Value is always 'page'. This pushes the theming through page.tpl.php (required).
+ *   - content: A renderable array as built by the menu callback (required).
+ *   - #show_blocks: A marker which suppresses left/right regions if FALSE (optional).
+ *   - #show_messages: Suppress drupal_get_message() items. Used by Batch API (optional).
+ *
+ * @see hook_page_alter()
+ * @see drupal_get_page()
+ */
+function drupal_render_page($page) {
+  // Allow menu callbacks to return strings.
+  if (is_string($page)) {
+    $page = drupal_get_page($page);
+  }
+  // Modules alter the $page as needed. Blocks are populated into regions like
+  // 'left', 'footer', etc.
+  drupal_alter('page', $page);
+
+  return drupal_render($page);
+}
+
+/**
  * Renders HTML given a structured array tree.
  *
  * Recursively iterates over each of the array elements, generating HTML code.
@@ -3366,7 +3421,7 @@ function drupal_common_theme() {
       'arguments' => array('text' => NULL)
     ),
     'page' => array(
-      'arguments' => array('content' => NULL, 'show_blocks' => TRUE, 'show_messages' => TRUE),
+      'arguments' => array('page' => NULL),
       'template' => 'page',
     ),
     'maintenance_page' => array(
@@ -3424,6 +3479,9 @@ function drupal_common_theme() {
     ),
     'item_list' => array(
       'arguments' => array('items' => array(), 'title' => NULL, 'type' => 'ul', 'attributes' => NULL),
+    ),
+    'list' => array(
+      'arguments' => array('elements' => NULL),
     ),
     'more_help_link' => array(
       'arguments' => array('url' => NULL),

@@ -92,7 +92,7 @@ function comment_reply($node, $pid = NULL) {
       }
       // This is the case where the comment is in response to a node. Display the node.
       elseif (user_access('access content')) {
-        $output .= node_view($node);
+        $output .= drupal_render(node_build($node));
       }
 
       // Should we show the reply box?

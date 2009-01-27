@@ -237,6 +237,19 @@ function system_elements() {
     '#action' => request_uri(),
   );
 
+  $type['page'] = array(
+    '#show_messages' => TRUE,
+    '#show_blocks' => TRUE,
+    '#theme' => 'page',
+  );
+
+  $type['list'] = array(
+    '#title' => '',
+    '#list_type' => 'ul',
+    '#attributes' => array(),
+    '#items' => array(),
+  );
+
   /**
    * Input elements.
    */

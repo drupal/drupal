@@ -42,11 +42,40 @@ function taxonomy_term_page($terms, $depth = 0, $op = 'page') {
           $breadcrumb[] = l(t('Home'), NULL);
           $breadcrumb = array_reverse($breadcrumb);
           drupal_set_breadcrumb($breadcrumb);
-
-          $output = theme('taxonomy_term_page', $tids, taxonomy_select_nodes($tids, $terms['operator'], $depth, TRUE));
           drupal_add_feed(url('taxonomy/term/' . $str_tids . '/' . $depth . '/feed'), 'RSS - ' . $title);
-          return $output;
-          break;
+          drupal_add_css(drupal_get_path('module', 'taxonomy') . '/taxonomy.css');
+
+          $build = array();
+          // Only display the description if we have a single term, to avoid clutter and confusion.
+          if (count($tids) == 1) {
+            $term = taxonomy_term_load($tids[0]);
+            if (!empty($term->description)) {
+              $build['term_description'] = array(
+                '#markup' => filter_xss_admin($term->description),
+                '#weight' => -1,
+                '#prefix' => '<div class="taxonomy-term-description">',
+                '#suffix' => '</div>',
+              );
+            }
+          }
+
+          if ($nids = taxonomy_select_nodes($tids, $terms['operator'], $depth, TRUE)) {
+            $nodes = node_load_multiple($nids);
+            $build += node_build_multiple($nodes);
+            $build['pager'] = array(
+              '#markup' => theme('pager', NULL, variable_get('default_nodes_main', 10)),
+              '#weight' => 5,
+            );
+          }
+          else {
+            $build['no_content'] = array(
+              '#prefix' => '<p>',
+              '#markup' => t('There are currently no posts in this category.'),
+              '#suffix' => '</p>',
+            );
+          }
+
+          return drupal_get_page($build);
 
         case 'feed':
           $channel['link'] = url('taxonomy/term/' . $str_tids . '/' . $depth, array('absolute' => TRUE));
@@ -58,13 +87,9 @@ function taxonomy_term_page($terms, $depth = 0, $op = 'page') {
             $channel['description'] = $term->description;
           }
 
-          $result = taxonomy_select_nodes($tids, $terms['operator'], $depth, FALSE);
-          $items = array();
-          while ($row = db_fetch_object($result)) {
-            $items[] = $row->nid;
-          }
+          $nids = taxonomy_select_nodes($tids, $terms['operator'], $depth, FALSE);
 
-          node_feed($items, $channel);
+          node_feed($nids, $channel);
           break;
 
         default:
@@ -75,38 +100,6 @@ function taxonomy_term_page($terms, $depth = 0, $op = 'page') {
       drupal_not_found();
     }
   }
-}
-
-/**
- * Render a taxonomy term page HTML output.
- *
- * @param $tids
- *   An array of term ids.
- * @param $result
- *   A pager_query() result, such as that performed by taxonomy_select_nodes().
- *
- * @ingroup themeable
- */
-function theme_taxonomy_term_page($tids, $result) {
-  drupal_add_css(drupal_get_path('module', 'taxonomy') . '/taxonomy.css');
-  $output = '';
-
-  // Only display the description if we have a single term, to avoid clutter and confusion.
-  if (count($tids) == 1) {
-    $term = taxonomy_term_load($tids[0]);
-    $description = $term->description;
-
-    // Check that a description is set.
-    if (!empty($description)) {
-      $output .= '<div class="taxonomy-term-description">';
-      $output .= filter_xss_admin($description);
-      $output .= '</div>';
-    }
-  }
-
-  $output .= taxonomy_render_nodes($result);
-
-  return $output;
 }
 
 /**

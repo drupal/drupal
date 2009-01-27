@@ -81,7 +81,7 @@ function hook_node_access_records($node) {
     return;
   }
 
-  // We only care about the node if it's been marked private. If not, it is
+  // We only care about the node if it has been marked private. If not, it is
   // treated just like any other node and we completely ignore it.
   if ($node->private) {
     $grants = array();
@@ -169,7 +169,7 @@ function hook_node_operations() {
  * @return
  *   None.
  */
-function hook_nodeapi_alter($node, $teaser, $page) {
+function hook_nodeapi_alter($node, $teaser) {
 }
 
 /**

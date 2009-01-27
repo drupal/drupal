@@ -1888,7 +1888,10 @@ function system_batch_page() {
   elseif (isset($output)) {
     // Force a page without blocks or messages to
     // display a list of collected messages later.
-    print theme('page', $output, FALSE, FALSE);
+    $page = drupal_get_page($output);
+    $page['#show_blocks'] = FALSE;
+    $page['#show_messages'] = FALSE;
+    return $page;
   }
 }
 

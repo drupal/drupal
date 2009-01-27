@@ -53,7 +53,7 @@ class UploadTestCase extends DrupalWebTestCase {
 
     // Assure that the attachment link appears on teaser view and has correct count.
     $node = node_load($node->nid);
-    $teaser = node_view($node, TRUE);
+    $teaser = drupal_render(node_build($node, TRUE));
     $this->assertTrue(strpos($teaser, format_plural(2, '1 attachment', '@count attachments')), 'Attachments link found on node teaser.');
 
     // Fetch db record and use fid to rename and delete file.
