@@ -3289,12 +3289,10 @@ function drupal_render(&$elements) {
     }
   }
 
-  // Sort the elements by weight, if there are any children, and they have not
-  // been sorted elsewhere already, for example by a database query. Pre-sorted
-  // elements should have $elements['#sorted'] set to TRUE to avoid unnecessary
-  // calls to uasort().
-  $children = !isset($elements['#children']) ? element_children($elements) : FALSE;
-  if (empty($elements['#sorted']) && $children) {
+  // Sort the elements by weight if they have not been sorted elsewhere already,
+  // for example by a database query. Pre-sorted elements should have
+  // $elements['#sorted'] set to TRUE to avoid unnecessary calls to uasort().
+  if (empty($elements['#sorted'])) {
     uasort($elements, 'element_sort');
     $elements['#sorted'] = TRUE;
   }
@@ -3302,6 +3300,7 @@ function drupal_render(&$elements) {
   $content = '';
   $elements += array('#title' => NULL, '#description' => NULL);
   if (!isset($elements['#children'])) {
+    $children = element_children($elements);
     // Render all the children that use a theme function.
     if (isset($elements['#theme']) && empty($elements['#theme_used'])) {
       $elements['#theme_used'] = TRUE;

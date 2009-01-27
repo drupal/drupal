@@ -481,6 +481,42 @@ class JavaScriptTestCase extends DrupalWebTestCase {
 }
 
 /**
+ * Tests for drupal_render().
+ */
+class DrupalRenderUnitTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Drupal render'),
+      'description' => t('Performs unit tests on drupal_render().'),
+      'group' => t('System'),
+    );
+  }
+
+  /**
+   * Test sorting by weight.
+   */
+  function testDrupalRenderSorting() {
+    $first = $this->randomName();
+    $second = $this->randomName();
+    // Build an array with '#weight' set for each element.
+    $elements = array(
+      'second' => array(
+        '#weight' => 10,
+        '#markup' => $second,
+      ),
+      'first' => array(
+        '#weight' => 0,
+        '#markup' => $first,
+      ),
+    );
+    $output = drupal_render($elements);
+    // The lowest weight element should appear last in $output.
+    $this->assertTrue(strpos($output, $second) > strpos($output, $first), t('Elements were sorted correctly by weight'));
+  }
+}
+
+
+/**
  * Tests Drupal error and exception handlers.
  */
 class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
