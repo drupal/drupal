@@ -765,8 +765,8 @@ function taxonomy_get_parents($tid, $key = 'tid') {
  */
 function taxonomy_get_parents_all($tid) {
   $parents = array();
-  if ($tid) {
-    $parents[] = taxonomy_term_load($tid);
+  if ($term = taxonomy_term_load($tid)) {
+    $parents[] = $term;
     $n = 0;
     while ($parent = taxonomy_get_parents($parents[$n]->tid)) {
       $parents = array_merge($parents, $parent);

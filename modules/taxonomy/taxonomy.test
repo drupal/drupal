@@ -390,9 +390,9 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
   }
 
   /**
-   * Save and edit a term and assert that the name and description are correct.
+   * Save, edit and delete a term using the user interface.
    */
-  function testTermEdit() {
+  function testTermInterface() {
     $edit = array(
       'name' => $this->randomName(12),
       'description' => $this->randomName(100),
@@ -431,6 +431,14 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $this->drupalGet('taxonomy/term/' . $term[0]->tid);
     $this->assertText($edit['name'], t('The randomly generated term name is present.'));
     $this->assertText($edit['description'], t('The randomly generated term description is present.'));
+
+    // Delete the term.
+    $this->drupalPost('taxonomy/term/' . $term[0]->tid . '/edit', array(), t('Delete'));
+    $this->drupalPost(NULL, NULL, t('Delete'));
+
+    // Assert that the term no longer exists.
+    $this->drupalGet('taxonomy/term/' . $term[0]->tid);
+    $this->assertResponse(404, t('The taxonomy term page was not found'));
   }
 }
 

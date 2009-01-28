@@ -103,6 +103,10 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->container = $this->createForum('container');
     // Create forum inside the forum container.
     $this->forum = $this->createForum('forum', $this->container['tid']);
+    // Create second forum in container.
+    $this->delete_forum = $this->createForum('forum', $this->container['tid']);
+    // Delete this second form.
+    $this->deleteForum($this->delete_forum['tid']);
     // Create forum at the top (root) level.
     $this->root_forum = $this->createForum('forum');
   }
@@ -179,6 +183,21 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->assertTrue($parent == $parent_tid, 'The ' . $type . ' is linked to its container');
 
     return $term;
+  }
+
+  /**
+   * Delete a forum.
+   *
+   * @param integer $tid Forum id.
+   */
+  function deleteForum($tid) {
+    // Delete the forum id.
+    $this->drupalPost('admin/build/forum/edit/forum/'. $tid, array(), t('Delete'));
+    $this->drupalPost(NULL, NULL, t('Delete'));
+    
+    // Assert that the forum no longer exists.
+    $this->drupalGet('forum/'. $tid);
+    $this->assertRaw(t('No forums defined'), 'The forum was not found');
   }
 
   /**

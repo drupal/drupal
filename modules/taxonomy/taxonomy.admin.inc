@@ -837,7 +837,7 @@ function taxonomy_term_confirm_delete(&$form_state, $tid) {
  * @see taxonomy_term_confirm_delete()
  */
 function taxonomy_term_confirm_delete_submit($form, &$form_state) {
-  taxonomy_del_term($form_state['values']['tid']);
+  taxonomy_term_delete($form_state['values']['tid']);
   taxonomy_check_vocabulary_hierarchy($form['#vocabulary'], $form_state['values']);
   drupal_set_message(t('Deleted term %name.', array('%name' => $form_state['values']['name'])));
   watchdog('taxonomy', 'Deleted term %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);
