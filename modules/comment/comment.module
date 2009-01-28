@@ -118,9 +118,6 @@ function comment_theme() {
     'comment_block' => array(
       'arguments' => array(),
     ),
-    'comment_admin_overview' => array(
-      'arguments' => array('form' => NULL),
-    ),
     'comment_preview' => array(
       'arguments' => array('comment' => NULL, 'node' => NULL, 'links' => array(), 'visible' => 1),
     ),

@@ -2037,6 +2037,117 @@ function form_process_checkboxes($element) {
 }
 
 /**
+ * Format a table with radio buttons or checkboxes.
+ *
+ * @param $element
+ *   An associative array containing the properties and children of the
+ *   tableselect element.
+ *   Properties used: header, options, empty, js_select.
+ *
+ * @return
+ *   A themed HTML string representing the table.
+ *
+ * @ingroup themeable
+ */
+function theme_tableselect($element) {
+  $rows = array();
+  if (!empty($element['#options'])) {
+    // Generate a table row for each selectable item in #options.
+    foreach ($element['#options'] as $key => $value) {
+      $row = array();
+
+      // Render the checkbox / radio element.
+      $row[] = $element[$key]['#content'];
+
+      // As theme_table only maps header and row columns by order, create the
+      // correct order by iterating over the header fields.
+      foreach ($element['#header'] as $fieldname => $title) {
+        $row[] = $element['#options'][$key][$fieldname];
+      }
+      $rows[] = $row;
+    }
+    // Add an empty header or a "Select all" checkbox to provide room for the
+    // checkboxes/radios in the first table column.
+    $first_col = $element['#js_select'] ? array(theme('table_select_header_cell')) : array('');
+    $header = array_merge($first_col, $element['#header']);
+  }
+  else {
+    // If there are no selectable options, display the empty text over the
+    // entire width of the table.
+    $header = $element['#header'];
+    $rows[] = array(array('data' => $element['#empty'], 'colspan' => count($header)));
+  }
+  return theme('table', $header, $rows);
+}
+
+/**
+ * Create the correct amount of checkbox or radio elements to populate the table.
+ *
+ * @param $element
+ *   An associative array containing the properties and children of the
+ *   tableselect element.
+ *
+ * @return
+ *   The processed element.
+ */
+function form_process_tableselect($element) {
+
+  if ($element['#multiple']) {
+    $value = is_array($element['#value']) ? $element['#value'] : array();
+  }
+  else {
+    // Advanced selection behaviour make no sense for radios.
+    $element['#js_select'] = FALSE;
+  }
+
+  $element['#tree'] = TRUE;
+
+  if (count($element['#options']) > 0) {
+    if (!isset($element['#default_value']) || $element['#default_value'] === 0) {
+      $element['#default_value'] = array();
+    }
+
+    // Create a checkbox or radio for each item in #options in such a way that
+    // the value of the tableselect element behaves as if it had been of type
+    // checkboxes or radios.
+    foreach ($element['#options'] as $key => $choice) {
+      // Do not overwrite manually created children.
+      if (!isset($element[$key])) {
+        if ($element['#multiple']) {
+          $element[$key] = array(
+            '#type' => 'checkbox',
+            '#title' => '',
+            '#return_value' => $key,
+            '#default_value' => isset($value[$key]),
+            '#attributes' => $element['#attributes'],
+            '#ahah' => isset($element['#ahah']) ? $element['#ahah'] : NULL,
+          );
+        }
+        else {
+          // Generate the parents as the autogenerator does, so we will have a
+          // unique id for each radio button.
+          $parents_for_id = array_merge($element['#parents'], array($key));
+          $element[$key] = array(
+            '#type' => 'radio',
+            '#title' => '',
+            '#return_value' => $key,
+            '#default_value' => ($element['#default_value'] == $key) ? $key : NULL,
+            '#attributes' => $element['#attributes'],
+            '#parents' => $element['#parents'],
+            '#id' => form_clean_id('edit-' . implode('-', $parents_for_id)),
+            '#ahah' => isset($element['#ahah']) ? $element['#ahah'] : NULL,
+          );
+        }
+      }
+    }
+  }
+  else {
+    $element['#value'] = array();
+  }
+  return $element;
+}
+
+/**
  * Theme a form submit button.
  *
  * @ingroup themeable

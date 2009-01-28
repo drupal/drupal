@@ -354,7 +354,14 @@ function system_elements() {
     '#input' => TRUE,
     '#size' => 60,
   );
-
+  $type['tableselect'] = array(
+    '#input' => TRUE,
+    '#js_select' => TRUE,
+    '#multiple' => TRUE,
+    '#process' => array('form_process_tableselect'),
+    '#options' => array(),
+    '#empty' => '',
+  );
 
   /**
    * Form structure.

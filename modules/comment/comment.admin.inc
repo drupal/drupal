@@ -58,43 +58,37 @@ function comment_admin_overview($type = 'new', $arg) {
 
   // Load the comments that need to be displayed.
   $status = ($arg == 'approval') ? COMMENT_NOT_PUBLISHED : COMMENT_PUBLISHED;
-  $form['header'] = array(
-    '#type' => 'value',
-    '#value' => array(
-      theme('table_select_header_cell'),
-      array('data' => t('Subject'), 'field' => 'subject'),
-      array('data' => t('Author'), 'field' => 'name'),
-      array('data' => t('Posted in'), 'field' => 'node_title'),
-      array('data' => t('Time'), 'field' => 'timestamp', 'sort' => 'desc'),
-      array('data' => t('Operations')),
-  ));
-  $result = pager_query('SELECT c.subject, c.nid, c.cid, c.comment, c.timestamp, c.status, c.name, c.homepage, u.name AS registered_name, u.uid, n.title as node_title FROM {comment} c INNER JOIN {users} u ON u.uid = c.uid INNER JOIN {node} n ON n.nid = c.nid WHERE c.status = %d' . tablesort_sql($form['header']['#value']), 50, 0, NULL, $status);
+  $header = array(
+    'subject' => array('data' => t('Subject'), 'field' => 'subject'),
+    'author' => array('data' => t('Author'), 'field' => 'name'),
+    'posted_in' => array('data' => t('Posted in'), 'field' => 'node_title'),
+    'time' => array('data' => t('Time'), 'field' => 'timestamp', 'sort' => 'desc'),
+    'operations' => array('data' => t('Operations')),
+  );
+
+  $result = pager_query('SELECT c.subject, c.nid, c.cid, c.comment, c.timestamp, c.status, c.name, c.homepage, u.name AS registered_name, u.uid, n.title as node_title FROM {comment} c INNER JOIN {users} u ON u.uid = c.uid INNER JOIN {node} n ON n.nid = c.nid WHERE c.status = %d' . tablesort_sql($header), 50, 0, NULL, $status);
 
   // Build a table listing the appropriate comments.
+  $options = array();
   $destination = drupal_get_destination();
+
   while ($comment = db_fetch_object($result)) {
-    $comments[$comment->cid] = '';
-    $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-    $form['subject'][$comment->cid] = array(
-      '#markup' => l($comment->subject, 'node/' . $comment->nid, array('attributes' => array('title' => truncate_utf8($comment->comment, 128)), 'fragment' => 'comment-' . $comment->cid))
-    );
-    $form['username'][$comment->cid] = array(
-      '#markup' => theme('username', $comment)
-    );
-    $form['node_title'][$comment->cid] = array(
-      '#markup' => l($comment->node_title, 'node/' . $comment->nid)
-    );
-    $form['timestamp'][$comment->cid] = array(
-      '#markup' => format_date($comment->timestamp, 'small')
-    );
-    $form['operations'][$comment->cid] = array(
-      '#markup' => l(t('edit'), 'comment/edit/' . $comment->cid, array('query' => $destination))
+    $options[$comment->cid] = array(
+      'subject' => l($comment->subject, 'node/' . $comment->nid, array('attributes' => array('title' => truncate_utf8($comment->comment, 128)), 'fragment' => 'comment-' . $comment->cid)),
+      'author' => theme('username', $comment),
+      'posted_in' => l($comment->node_title, 'node/' . $comment->nid),
+      'time' => format_date($comment->timestamp, 'small'),
+      'operations' => l(t('edit'), 'comment/edit/' . $comment->cid, array('query' => $destination)),
     );
   }
+
   $form['comments'] = array(
-    '#type' => 'checkboxes',
-    '#options' => isset($comments) ? $comments: array()
+    '#type' => 'tableselect',
+    '#header' => $header,
+    '#options' => $options,
+    '#empty' => t('No comments available.'),
   );
+
   $form['pager'] = array(
     '#markup' => theme('pager', NULL, 50, 0)
   );
@@ -143,41 +137,6 @@ function comment_admin_overview_submit($form, &$form_state) {
     drupal_set_message(t('The update has been performed.'));
     $form_state['redirect'] = 'admin/content/comment';
   }
-}
-
-/**
- * Theme the comment admin form.
- *
- * @param $form
- *   An associative array containing the structure of the form.
- * @ingroup themeable
- */
-function theme_comment_admin_overview($form) {
-  $output = drupal_render($form['options']);
-  if (isset($form['subject']) && is_array($form['subject'])) {
-    foreach (element_children($form['subject']) as $key) {
-      $row = array();
-      $row[] = drupal_render($form['comments'][$key]);
-      $row[] = drupal_render($form['subject'][$key]);
-      $row[] = drupal_render($form['username'][$key]);
-      $row[] = drupal_render($form['node_title'][$key]);
-      $row[] = drupal_render($form['timestamp'][$key]);
-      $row[] = drupal_render($form['operations'][$key]);
-      $rows[] = $row;
-    }
-  }
-  else {
-    $rows[] = array(array('data' => t('No comments available.'), 'colspan' => '6'));
-  }
-
-  $output .= theme('table', $form['header']['#value'], $rows);
-  if ($form['pager']['#markup']) {
-    $output .= drupal_render($form['pager']);
-  }
-
-  $output .= drupal_render($form);
-
-  return $output;
 }
 
 /**
