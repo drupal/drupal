@@ -237,6 +237,81 @@ function getInfo() {
 }
 
 /**
+ * Unit tests for taxonomy term functions.
+ */
+class TaxonomyTermUnitTest extends TaxonomyWebTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => t('Taxonomy term unit tests'),
+      'description' => t('Unit tests for taxonomy term functions.'),
+      'group' => t('Taxonomy'),
+    );
+  }
+
+  /**
+   * Tests for taxonomy_term_count_nodes().
+   *
+   * Attach nodes to a hierarchical vocabulary and check they are counted
+   * correctly.
+   */
+  function testTaxonomyTermCountNodes() {
+    // Create a vocabulary with three terms.
+    $vocabulary = $this->createVocabulary();
+    $term1 = $this->createTerm($vocabulary->vid);
+    $term2 = $this->createTerm($vocabulary->vid);
+    $term3 = $this->createTerm($vocabulary->vid);
+
+    // Attach term1 to a node.
+    $node1 = $this->drupalCreateNode(array('type' => 'page'));
+    $node1->taxonomy = array($term1->tid);
+    node_save($node1);
+    $this->assertEqual(taxonomy_term_count_nodes($term1->tid), 1, t('Term has one valid node association.'));
+
+    // Attach term2 to a node.
+    $node2 = $this->drupalCreateNode(array('type' => 'article'));
+    $node2->taxonomy = array($term2->tid);
+    node_save($node2);
+    $this->assertEqual(taxonomy_term_count_nodes($term2->tid), 1, t('Term has one valid node association.'));
+
+    // Confirm that term3 is not associated with any nodes.
+    //$this->assertEqual(taxonomy_term_count_nodes($term3->tid), NULL, t('Term is not associated with any nodes'));
+
+    // Set term3 as the parent of term1.
+    $term1->parent = array($term3->tid);
+    taxonomy_term_save($term1);
+
+    // Confirm that the term hierarchy is altered correctly.
+    $children = taxonomy_get_children($term3->tid);
+    $this->assertTrue(isset($children[$term1->tid]), t('Term 3 saved as parent of term 1'));
+
+    // Reset the taxonomy_get_tree() static cache to avoid stale data, since
+    // the hierarchy has been updated during this page request.
+    $this->assertEqual(count(taxonomy_get_tree($term3->vid, $term3->tid, NULL, TRUE)), 1, t('Term 3 has one child term'));
+
+    // Confirm that term3's parental relationship with term1 leads to a
+    // node assocation being counted.
+    $this->assertEqual(taxonomy_term_count_nodes($term3->tid, NULL, TRUE), 1, t('Term has one valid node association due to child term.'));
+
+    // Set term3 as the parent of term2.
+    $term2->parent = array($term3->tid);
+    taxonomy_term_save($term2);
+
+    // term3 should now have two node associations counted.
+    $this->assertEqual(taxonomy_term_count_nodes($term3->tid, NULL, TRUE), 2, t('Term has two valid node associations due to child terms.'));
+
+    // Save node1 with both child taxonomy terms, this should still result
+    // in term3 having two node associations.
+    $node1->taxonomy = array($term1->tid, $term2->tid);
+    node_save($node1);
+    $this->assertEqual(taxonomy_term_count_nodes($term3->tid, NULL, TRUE), 2, t('Term has two valid node associations.'));
+
+    // Confirm that the node type argument returns a single node association.
+    $this->assertEqual(taxonomy_term_count_nodes($term3->tid, 'page', TRUE), 1, t("Term is associated with one node of type 'page'."));
+  }
+}
+
+/**
  * Tests for taxonomy term functions.
  */
 class TaxonomyTermTestCase extends TaxonomyWebTestCase {
