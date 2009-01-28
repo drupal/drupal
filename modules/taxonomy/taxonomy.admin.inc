@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.42 2009/01/14 21:16:20 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.43 2009/01/28 01:09:58 webchick Exp $
 
 /**
  * @file
@@ -837,7 +837,7 @@ function taxonomy_term_confirm_delete(&$form_state, $tid) {
  * @see taxonomy_term_confirm_delete()
  */
 function taxonomy_term_confirm_delete_submit($form, &$form_state) {
-  taxonomy_del_term($form_state['values']['tid']);
+  taxonomy_term_delete($form_state['values']['tid']);
   taxonomy_check_vocabulary_hierarchy($form['#vocabulary'], $form_state['values']);
   drupal_set_message(t('Deleted term %name.', array('%name' => $form_state['values']['name'])));
   watchdog('taxonomy', 'Deleted term %name.', array('%name' => $form_state['values']['name']), WATCHDOG_NOTICE);

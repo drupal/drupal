@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.16 2009/01/11 21:19:17 dries Exp $
+// $Id: forum.admin.inc,v 1.17 2009/01/28 01:09:58 webchick Exp $
 
 /**
  * @file
@@ -173,7 +173,7 @@ function forum_confirm_delete(&$form_state, $tid) {
  * Implementation of forms api _submit call. Deletes a forum after confirmation.
  */
 function forum_confirm_delete_submit($form, &$form_state) {
-  taxonomy_del_term($form_state['values']['tid']);
+  taxonomy_term_delete($form_state['values']['tid']);
   drupal_set_message(t('The forum %term and all sub-forums have been deleted.', array('%term' => $form_state['values']['name'])));
   watchdog('content', 'forum: deleted %term and all its sub-forums.', array('%term' => $form_state['values']['name']));
 
