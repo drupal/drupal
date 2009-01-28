@@ -1,0 +1,8 @@
+; $Id: node_test.info,v 1.1 2009/01/28 07:34:30 webchick Exp $
+name = "Node module tests"
+description = "Support module for node related testing."
+package = Testing
+version = VERSION
+core = 7.x
+files[] = node_test.module
+hidden = TRUE

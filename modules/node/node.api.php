@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.9 2009/01/27 00:22:26 dries Exp $
+// $Id: node.api.php,v 1.10 2009/01/28 07:34:30 webchick Exp $
 
 /**
  * @file
@@ -281,9 +281,9 @@ function hook_nodeapi_prepare_translation($node) {
  * An RSS feed is being generated.
  *
  * The module can return properties to be added to the RSS item generated for
- * this node. See comment_nodeapi_rss_item() and upload_nodeapi_rss_item() for
- * examples. The $node passed can also be modified to add or remove contents to
- * the feed item.
+ * this node. This hook should only be used to add XML elements to the RSS
+ * feed item itself. See comment_nodeapi_rss_item() and upload_nodeapi_rss_item()
+ * for examples.
  *
  * @param $node
  *   The node the action is being performed on.
