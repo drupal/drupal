@@ -281,9 +281,9 @@ function hook_nodeapi_prepare_translation($node) {
  * An RSS feed is being generated.
  *
  * The module can return properties to be added to the RSS item generated for
- * this node. See comment_nodeapi_rss_item() and upload_nodeapi_rss_item() for
- * examples. The $node passed can also be modified to add or remove contents to
- * the feed item.
+ * this node. This hook should only be used to add XML elements to the RSS
+ * feed item itself. See comment_nodeapi_rss_item() and upload_nodeapi_rss_item()
+ * for examples.
  *
  * @param $node
  *   The node the action is being performed on.

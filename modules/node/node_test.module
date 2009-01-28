@@ -1,0 +1,18 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Dummy module implementing node related hooks to test API interaction with
+ * the Node module.
+ */
+
+/**
+ * When the module is enabled, text will be added to all nodes in all build modes.
+ */
+function node_test_nodeapi_view($node, $teaser) {
+  $node->content['node_test_extra_field'] = array(
+    '#markup' => '<p>' . t('Extra test data added to node !nid.', array('!nid' => $node->nid)) . '</p>',
+    '#weight' => 10,
+  );
+}
