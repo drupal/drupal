@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.48 2008/04/14 17:48:33 dries Exp $
+// $Id: tablesort.inc,v 1.49 2009/01/28 07:43:26 webchick Exp $
 
 /**
  * @file
@@ -165,13 +165,14 @@ function tablesort_get_order($headers) {
     return $default;
   }
   else {
-    // The first column specified is initial 'order by' field unless otherwise specified
-    if (is_array($headers[0])) {
-      $headers[0] += array('data' => NULL, 'field' => NULL);
-      return array('name' => $headers[0]['data'], 'sql' => $headers[0]['field']);
+    // The first column specified is the initial 'order by' field unless otherwise specified.
+    $first = current($headers);
+    if (is_array($first)) {
+      $first += array('data' => NULL, 'field' => NULL);
+      return array('name' => $first['data'], 'sql' => $first['field']);
     }
     else {
-      return array('name' => $headers[0]);
+      return array('name' => $first, 'sql' => '');
     }
   }
 }

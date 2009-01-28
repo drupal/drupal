@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.2 2009/01/17 19:27:32 webchick Exp $
+// $Id: form.test,v 1.3 2009/01/28 07:43:26 webchick Exp $
 
 /**
  * @file
@@ -108,5 +108,208 @@ class FormsTestTypeCase extends DrupalWebTestCase {
     $edit = FALSE;
     $this->assertNull(form_type_checkbox_value($form, $edit), t('form_type_checkbox_value() returns NULL when $edit is FALSE'));
   }
+}
+
+/**
+ * Test the tableselect form element for expected behavior.
+ */
+class FormsElementsTableSelectFunctionalTest extends DrupalWebTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => t('Tableselect form element type test'),
+      'description' => t('Test the tableselect element for expected behavior'),
+      'group' => t('Form API'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('form_test');
+  }
+
+
+  /**
+   * Test the display of checkboxes when #multiple is TRUE.
+   */
+  function testMultipleTrue() {
+
+    $this->drupalGet('form_test/tableselect/multiple-true');
+
+    $this->assertNoText(t('Empty text.'), t('Empty text should not be displayed.'));
+
+    // Test for the presence of the Select all rows tableheader.
+    $this->assertFieldByXPath('//th[@class="select-all"]', NULL, t('Presence of the "Select all" checkbox.'));
+
+    $rows = array('row1', 'row2', 'row3');
+    foreach($rows as $row) {
+      $this->assertFieldByXPath('//input[@type="checkbox"]', $row, t('Checkbox for value @row.', array('@row' => $row)));
+    }
+  }
+
+  /**
+   * Test the display of radios when #multiple is FALSE.
+   */
+  function testMultipleFalse() {
+    $this->drupalGet('form_test/tableselect/multiple-false');
+
+    $this->assertNoText(t('Empty text.'), t('Empty text should not be displayed.'));
+
+    // Test for the absence of the Select all rows tableheader.
+    $this->assertNoFieldByXPath('//th[@class="select-all"]', '', t('Absence of the "Select all" checkbox.'));
+
+    $rows = array('row1', 'row2', 'row3');
+    foreach($rows as $row) {
+      $this->assertFieldByXPath('//input[@type="radio"]', $row, t('Radio button for value @row.', array('@row' => $row)));
+    }
+  }
+
+  /**
+   * Test the display of the #empty text when #options is an empty array.
+   */
+  function testEmptyText() {
+    $this->drupalGet('form_test/tableselect/empty-text');
+    $this->assertText(t('Empty text.'), t('Empty text should be displayed.'));
+  }
+
+  /**
+   * Test the submission of single and multiple values when #multiple is TRUE.
+   */
+  function testMultipleTrueSubmit() {
+
+    // Test a submission with one checkbox checked.
+    $edit = array();
+    $edit['tableselect[row1]'] = TRUE;
+    $this->drupalPost('form_test/tableselect/multiple-true', $edit, 'Submit');
+
+    $this->assertText(t('Submitted: row1 = row1'), t('Checked checkbox row1'));
+    $this->assertText(t('Submitted: row2 = 0'), t('Unchecked checkbox row2.'));
+    $this->assertText(t('Submitted: row3 = 0'), t('Unchecked checkbox row3.'));
+
+    // Test a submission with multiple checkboxes checked.
+    $edit['tableselect[row1]'] = TRUE;
+    $edit['tableselect[row3]'] = TRUE;
+    $this->drupalPost('form_test/tableselect/multiple-true', $edit, 'Submit');
+
+    $this->assertText(t('Submitted: row1 = row1'), t('Checked checkbox row1.'));
+    $this->assertText(t('Submitted: row2 = 0'), t('Unchecked checkbox row2.'));
+    $this->assertText(t('Submitted: row3 = row3'), t('Checked checkbox row3.'));
+
+  }
+
+  /**
+   * Test submission of values when #multiple is FALSE.
+   */
+  function testMultipleFalseSubmit() {
+    $edit['tableselect'] = 'row1';
+    $this->drupalPost('form_test/tableselect/multiple-false', $edit, 'Submit');
+    $this->assertText(t('Submitted: row1'), t('Selected radio button'));
+  }
+
+  /**
+   * Test the #js_select property.
+   */
+  function testAdvancedSelect() {
+    // When #multiple = TRUE a Select all checkbox should be displayed by default.
+    $this->drupalGet('form_test/tableselect/advanced-select/multiple-true-default');
+    $this->assertFieldByXPath('//th[@class="select-all"]', NULL, t('Display a "Select all" checkbox by default when #multiple is TRUE.'));
+
+    // When #js_select is set to FALSE, a "Select all" checkbox should not be displayed.
+    $this->drupalGet('form_test/tableselect/advanced-select/multiple-true-no-advanced-select');
+    $this->assertNoFieldByXPath('//th[@class="select-all"]', NULL, t('Do not display a "Select all" checkbox when #js_select is FALSE.'));
+
+    // A "Select all" checkbox never makes sense when #multiple = FALSE, regardless of the value of #js_select.
+    $this->drupalGet('form_test/tableselect/advanced-select/multiple-false-default');
+    $this->assertNoFieldByXPath('//th[@class="select-all"]', NULL, t('Do not display a "Select all" checkbox when #multiple is FALSE.'));
+
+    $this->drupalGet('form_test/tableselect/advanced-select/multiple-false-advanced-select');
+    $this->assertNoFieldByXPath('//th[@class="select-all"]', NULL, t('Do not display a "Select all" checkbox when #multiple is FALSE, even when #js_select is TRUE.'));
+  }
+
+
+  /**
+   * Test the whether the option checker gives an error on invalid tableselect values for checkboxes.
+   */
+  function testMultipleTrueOptionchecker() {
+
+    list($header, $options) = _form_test_tableselect_get_data();
+
+    $form['tableselect'] = array(
+      '#type' => 'tableselect',
+      '#header' => $header,
+      '#options' => $options,
+    );
+
+    // Test with a valid value.
+    list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, array('tableselect' => 'row1'));
+    $this->assertFalse(isset($errors['tableselect']), t('Option checker allows valid values for checkboxes.'));
+
+    // Test with an invalid value.
+    list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, array('tableselect' => 'non_existing_value'));
+    $this->assertTrue(isset($errors['tableselect']), t('Option checker disallows invalid values for checkboxes.'));
+
+  }
+
+
+  /**
+   * Test the whether the option checker gives an error on invalid tableselect values for radios.
+   */
+  function testMultipleFalseOptionchecker() {
+
+    list($header, $options) = _form_test_tableselect_get_data();
+
+    $form['tableselect'] = array(
+      '#type' => 'tableselect',
+      '#header' => $header,
+      '#options' => $options,
+      '#multiple' => FALSE,
+    );
+
+    // Test with a valid value.
+    list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, array('tableselect' => 'row1'));
+    $this->assertFalse(isset($errors['tableselect']), t('Option checker allows valid values for radio buttons.'));
+
+    // Test with an invalid value.
+    list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, array('tableselect' => 'non_existing_value'));
+    $this->assertTrue(isset($errors['tableselect']), t('Option checker disallows invalid values for radio buttons.'));
+  }
+
+
+  /**
+   * Helper function for the option check test to submit a form while collecting errors.
+   *
+   * @param $form_element
+   *   A form element to test.
+   * @param $edit
+   *   An array containing post data.
+   *
+   * @return
+   *   An array containing the processed form, the form_state and any errors.
+   */
+  private function formSubmitHelper($form_element, $edit) {
+    $form_id = $this->randomName();
+
+    $form = $form_state = array();
+
+    $form = array_merge($form, $form_element);
+    $form['op'] = array('#type' => 'submit', '#value' => t('Submit'));
+
+    $form['#post'] = $edit;
+    $form['#post']['form_id'] = $form_id;
+
+    drupal_prepare_form($form_id, $form, $form_state);
+
+    drupal_process_form($form_id, $form, $form_state);
+
+    $errors = form_get_errors();
+
+    // Clear errors and messages.
+    drupal_get_messages();
+    form_set_error(NULL, '', TRUE);
+
+    // Return the processed form together with form_state and errors
+    // to allow the caller lowlevel access to the form.
+    return array($form, $form_state, $errors);
+  }
+
 }
 

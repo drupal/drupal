@@ -1,0 +1,182 @@
+<?php
+// $Id: form_test.module,v 1.1 2009/01/28 07:43:26 webchick Exp $
+
+/**
+ * @file
+ * Helper module for the form API tests.
+ */
+
+/**
+ * Implementation of hook_menu().
+ */
+function form_test_menu() {
+  $items = array();
+
+  $items['form_test/tableselect/multiple-true'] = array(
+    'title' => 'Tableselect checkboxes test',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_form_test_tableselect_multiple_true_form'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['form_test/tableselect/multiple-false'] = array(
+    'title' => 'Tableselect radio button test',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_form_test_tableselect_multiple_false_form'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['form_test/tableselect/empty-text'] = array(
+    'title' => 'Tableselect empty text test',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_form_test_tableselect_empty_form'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['form_test/tableselect/advanced-select'] = array(
+    'title' => 'Tableselect js_select tests',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('_form_test_tableselect_js_select_form'),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+/**
+ * Create a header and options array. Helper function for callbacks.
+ */
+function _form_test_tableselect_get_data() {
+  $header = array(
+    'one' => t('One'),
+    'two' => t('Two'),
+    'three' => t('Three'),
+    'four' => t('Four'),
+  );
+
+  $options['row1'] = array(
+    'one' => 'row1col1',
+    'two' => t('row1col2'),
+    'three' => t('row1col3'),
+    'four' => t('row1col4'),
+  );
+
+  $options['row2'] = array(
+    'one' => 'row2col1',
+    'two' => t('row2col2'),
+    'three' => t('row2col3'),
+    'four' => t('row2col4'),
+  );
+
+  $options['row3'] = array(
+    'one' => 'row3col1',
+    'two' => t('row3col2'),
+    'three' => t('row3col3'),
+    'four' => t('row3col4'),
+  );
+
+  return array($header, $options);
+}
+
+/**
+ * Build a form to test the tableselect element.
+ *
+ * @param $form_state
+ *   The form_state
+ * @param $element_properties
+ *   An array of element properties for the tableselect element.
+ *
+ * @return
+ *   A form with a tableselect element and a submit button.
+ */
+function _form_test_tableselect_form_builder($form_state, $element_properties) {
+  $form = array();
+
+  list($header, $options) = _form_test_tableselect_get_data();
+
+  $form['tableselect'] = $element_properties;
+
+  $form['tableselect'] += array(
+    '#type' => 'tableselect',
+    '#header' => $header,
+    '#options' => $options,
+    '#multiple' => FALSE,
+    '#empty' => t('Empty text.'),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
+  return $form;
+}
+
+/**
+ * Test the tableselect #multiple = TRUE functionality.
+ */
+function _form_test_tableselect_multiple_true_form($form_state) {
+  return _form_test_tableselect_form_builder($form_state, array('#multiple' => TRUE));
+}
+
+/**
+ * Process the tableselect #multiple = TRUE submitted values.
+ */
+function _form_test_tableselect_multiple_true_form_submit($form, &$form_state) {
+  $selected = $form_state['values']['tableselect'];
+  foreach ($selected as $key => $value) {
+    drupal_set_message(t('Submitted: @key = @value', array('@key' => $key, '@value' => $value)));
+  }
+}
+
+/**
+ * Test the tableselect #multiple = FALSE functionality.
+ */
+function _form_test_tableselect_multiple_false_form($form_state) {
+  return _form_test_tableselect_form_builder($form_state, array('#multiple' => FALSE));
+}
+
+/**
+ * Process the tableselect #multiple = FALSE submitted values.
+ */
+function _form_test_tableselect_multiple_false_form_submit($form, &$form_state) {
+  drupal_set_message(t('Submitted: @value', array('@value' => $form_state['values']['tableselect'])));
+}
+
+/**
+ * Test functionality of the tableselect #empty property.
+ */
+function _form_test_tableselect_empty_form($form_state) {
+  return _form_test_tableselect_form_builder($form_state, array('#options' => array()));
+}
+
+/**
+ * Test functionality of the tableselect #js_select property.
+ */
+function _form_test_tableselect_js_select_form($form_state, $action) {
+
+  switch ($action) {
+
+    case 'multiple-true-default':
+      $options = array('#multiple' => TRUE);
+      break;
+
+    case 'multiple-false-default':
+      $options = array('#multiple' => FALSE);
+      break;
+
+    case 'multiple-true-no-advanced-select':
+      $options = array('#multiple' => TRUE, '#js_select' => FALSE);
+      break;
+
+    case 'multiple-false-advanced-select':
+      $options = array('#multiple' => FALSE, '#js_select' => TRUE);
+      break;
+  }
+
+  return _form_test_tableselect_form_builder($form_state, $options);
+}

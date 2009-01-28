@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.688 2009/01/27 00:22:25 dries Exp $
+// $Id: comment.module,v 1.689 2009/01/28 07:43:26 webchick Exp $
 
 /**
  * @file
@@ -117,9 +117,6 @@ function comment_theme() {
   return array(
     'comment_block' => array(
       'arguments' => array(),
-    ),
-    'comment_admin_overview' => array(
-      'arguments' => array('form' => NULL),
     ),
     'comment_preview' => array(
       'arguments' => array('comment' => NULL, 'node' => NULL, 'links' => array(), 'visible' => 1),

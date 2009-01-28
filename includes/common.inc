@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.858 2009/01/27 02:14:41 webchick Exp $
+// $Id: common.inc,v 1.859 2009/01/28 07:43:26 webchick Exp $
 
 /**
  * @file
@@ -3354,7 +3354,10 @@ function drupal_render(&$elements) {
     }
     $prefix = isset($elements['#prefix']) ? $elements['#prefix'] : '';
     $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';
-    return $prefix . $content . $suffix;
+    $content = $prefix . $content . $suffix;
+    // Store the rendered content, so higher level elements can reuse it.
+    $elements['#content'] = $content;
+    return $content;
   }
 }
 
@@ -3607,6 +3610,9 @@ function drupal_common_theme() {
       'arguments' => array('element' => NULL),
     ),
     'file' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'tableselect' => array(
       'arguments' => array('element' => NULL),
     ),
     'form_element' => array(
