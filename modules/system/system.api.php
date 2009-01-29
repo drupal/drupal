@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.15 2009/01/27 00:22:26 dries Exp $
+// $Id: system.api.php,v 1.16 2009/01/29 14:37:40 webchick Exp $
 
 /**
  * @file
@@ -1502,7 +1502,8 @@ function hook_query_TAG_alter(QueryAlterableInterface $query) {
  * function needs to be updated to reflect the current version of the database
  * schema.
  *
- * See the Schema API documentation at http://drupal.org/node/146843
+ * See the Schema API documentation at
+ * @link http://drupal.org/node/146843 http://drupal.org/node/146843 @endlink
  * for details on hook_schema, where a database tables are defined.
  *
  * Note that since this function is called from a full bootstrap, all functions
@@ -1525,7 +1526,8 @@ function hook_install() {
  *
  * The database updates are numbered sequentially according to the version of Drupal you are compatible with.
  *
- * Schema updates should adhere to the Schema API: @link http://drupal.org/node/150215
+ * Schema updates should adhere to the Schema API:
+ * @link http://drupal.org/node/150215 http://drupal.org/node/150215 @endlink
  *
  * Database updates consist of 3 parts:
  * - 1 digit for Drupal core compatibility
@@ -1554,9 +1556,9 @@ function hook_install() {
  * Never renumber update functions.
  *
  * Further information about releases and release numbers:
- * - @link http://drupal.org/handbook/version-info
- * - @link http://drupal.org/node/93999 (Overview of contributions branches and tags)
- * - @link http://drupal.org/handbook/cvs/releases
+ * - @link http://drupal.org/handbook/version-info http://drupal.org/handbook/version-info @endlink
+ * - @link http://drupal.org/node/93999 http://drupal.org/node/93999 @endlink (Overview of contributions branches and tags)
+ * - @link http://drupal.org/handbook/cvs/releases http://drupal.org/handbook/cvs/releases @endlink
  *
  * Implementations of this hook should be placed in a mymodule.install file in
  * the same directory as mymodule.module. Drupal core's updates are implemented
