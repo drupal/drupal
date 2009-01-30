@@ -1,0 +1,48 @@
+/* $Id$ */
+
+/**
+ * @file
+ * Stark layout method
+ *
+ * To avoid obscuring CSS added to the page by Drupal or a contrib module, the
+ * Stark theme itself has no styling, except just enough CSS to arrange the page
+ * in a traditional "Header, sidebars, content, and footer" layout.
+ *
+ * This layout method works reasonably well, but shouldn't be used on a
+ * production site because it can break. For example, if an over-large image
+ * (one that is wider than 20% of the viewport) is in a sidebar, the entire
+ * #main content can shift completely below the sidebar.
+ */
+
+#sidebar-left,
+#main,
+#sidebar-right {
+  float: left;
+  display: inline;
+  position: relative;
+}
+
+#sidebar-left,
+#sidebar-right {
+  width: 20%;
+}
+
+body.one-sidebar #main {
+  width: 80%;
+}
+
+body.two-sidebars #main {
+  width: 60%;
+}
+
+body.sidebar-left #main-squeeze {
+  margin-left: 20px;
+}
+
+body.sidebar-right #main-squeeze {
+  margin-right: 20px;
+}
+
+body.two-sidebars #main-squeeze {
+  margin: 0 20px;
+}
