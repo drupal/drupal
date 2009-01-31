@@ -1,6 +1,31 @@
 <?php
 // $Id$
 
+/**
+ * Tests for the l() function.
+ */
+class CommonLUnitTest extends DrupalWebTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => t('Tests for the l() function'),
+      'description' => t('Confirm that url() works correctly with various input.'),
+      'group' => t('System'),
+    );
+  }
+
+  /**
+   * Confirm that invalid text given as $path is filtered.
+   */
+  function testLXSS() {
+    $text = $this->randomName();
+    $path = "<SCRIPT>alert('XSS')</SCRIPT>";
+    $link = l($text, $path);
+    $sanitized_path = check_url(url($path));
+    $this->assertTrue(strpos($link, $sanitized_path) != FALSE, t('XSS attack @path was filtered', array('@path' => $path)));
+  }
+}
+
 class CommonSizeTestCase extends DrupalWebTestCase {
   protected $exact_test_cases;
   protected $rounded_test_cases;
