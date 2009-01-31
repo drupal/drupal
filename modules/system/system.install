@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.304 2009/01/25 16:46:05 webchick Exp $
+// $Id: system.install,v 1.305 2009/01/31 16:50:57 webchick Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -134,7 +134,7 @@ function system_requirements($phase) {
     $help = $t('For more information, see the online handbook entry for <a href="@cron-handbook">configuring cron jobs</a>.', array('@cron-handbook' => 'http://drupal.org/cron'));
 
     // Determine when cron last ran.
-    $cron_last = variable_get('cron_last', NULL);
+    $cron_last = variable_get('cron_last');
     if (!is_numeric($cron_last)) {
       $cron_last = variable_get('install_time', 0);
     }
@@ -2491,7 +2491,7 @@ function system_update_6041() {
  */
 function system_update_6042() {
   foreach (list_themes() as $theme) {
-    $stylesheet = variable_get('color_' . $theme->name . '_stylesheet', NULL);
+    $stylesheet = variable_get('color_' . $theme->name . '_stylesheet');
     if (!empty($stylesheet)) {
       variable_set('color_' . $theme->name . '_stylesheets', array($stylesheet));
       variable_del('color_' . $theme->name . '_stylesheet');
@@ -2853,12 +2853,12 @@ function system_update_7004(&$sandbox) {
       }
     }
     // Rename forum module's block variables.
-    $forum_block_num_0 = variable_get('forum_block_num_0', NULL);
+    $forum_block_num_0 = variable_get('forum_block_num_0');
     if (isset($forum_block_num_0)) {
       variable_set('forum_block_num_active', $forum_block_num_0);
       variable_del('forum_block_num_0');
     }
-    $forum_block_num_1 = variable_get('forum_block_num_1', NULL);
+    $forum_block_num_1 = variable_get('forum_block_num_1');
     if (isset($forum_block_num_1)) {
       variable_set('forum_block_num_new', $forum_block_num_1);
       variable_del('forum_block_num_1');
@@ -3090,7 +3090,7 @@ function system_update_7013() {
   $timezones = system_time_zones();
   // If the contributed Date module set a default time zone name, use this
   // setting as the default time zone.
-  if (($timezone_name = variable_get('date_default_timezone_name', NULL)) && isset($timezones[$timezone_name])) {
+  if (($timezone_name = variable_get('date_default_timezone_name')) && isset($timezones[$timezone_name])) {
     $timezone = $timezone_name;
   }
   // If the contributed Event module has set a default site time zone, look up

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.26 2009/01/20 03:10:00 webchick Exp $
+// $Id: user.test,v 1.27 2009/01/31 16:50:57 webchick Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   function getInfo() {
@@ -42,7 +42,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->assertEqual($user->signature, '', t('Correct signature field.'));
     $this->assertTrue(($user->created > REQUEST_TIME - 20 ), t('Correct creation time.'));
     $this->assertEqual($user->status, variable_get('user_register', 1) == 1 ? 1 : 0, t('Correct status field.'));
-    $this->assertEqual($user->timezone, variable_get('date_default_timezone', NULL), t('Correct time zone field.'));
+    $this->assertEqual($user->timezone, variable_get('date_default_timezone'), t('Correct time zone field.'));
     $this->assertEqual($user->language, '', t('Correct language field.'));
     $this->assertEqual($user->picture, '', t('Correct picture field.'));
     $this->assertEqual($user->init, $mail, t('Correct init field.'));

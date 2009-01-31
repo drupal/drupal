@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.16 2009/01/29 14:37:40 webchick Exp $
+// $Id: system.api.php,v 1.17 2009/01/31 16:50:57 webchick Exp $
 
 /**
  * @file
@@ -1322,7 +1322,7 @@ function hook_requirements($phase) {
 
   // Report cron status
   if ($phase == 'runtime') {
-    $cron_last = variable_get('cron_last', NULL);
+    $cron_last = variable_get('cron_last');
 
     if (is_numeric($cron_last)) {
       $requirements['cron']['value'] = $t('Last run !time ago', array('!time' => format_interval(REQUEST_TIME - $cron_last)));

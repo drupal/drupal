@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.155 2009/01/22 12:46:05 dries Exp $
+// $Id: file.inc,v 1.156 2009/01/31 16:50:56 webchick Exp $
 
 /**
  * @file
@@ -1407,7 +1407,7 @@ function file_scan_directory($dir, $mask, $nomask = '/(\.\.?|CVS)$/', $callback 
  *   A string containing a temp directory.
  */
 function file_directory_temp() {
-  $temporary_directory = variable_get('file_directory_temp', NULL);
+  $temporary_directory = variable_get('file_directory_temp');
 
   if (is_null($temporary_directory)) {
     $directories = array();
