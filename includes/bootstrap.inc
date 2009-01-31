@@ -631,7 +631,7 @@ function variable_init($conf = array()) {
  * @return
  *   The value of the variable.
  */
-function variable_get($name, $default) {
+function variable_get($name, $default = NULL) {
   global $conf;
 
   return isset($conf[$name]) ? $conf[$name] : $default;
@@ -1046,7 +1046,7 @@ function drupal_is_denied($ip) {
   // Because this function is called on every page request, we first check
   // for an array of IP addresses in settings.php before querying the
   // database.
-  $blocked_ips = variable_get('blocked_ips', NULL);
+  $blocked_ips = variable_get('blocked_ips');
   if (isset($blocked_ips) && is_array($blocked_ips)) {
     return in_array($ip, $blocked_ips);
   }
