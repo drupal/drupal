@@ -293,7 +293,7 @@ function menu_block_view($delta = '') {
  */
 function menu_nodeapi_insert(&$node) {
   if (isset($node->menu)) {
-    $item = $node->menu;
+    $item = &$node->menu;
     if (!empty($item['delete'])) {
       menu_link_delete($item['mlid']);
     }
@@ -315,7 +315,7 @@ function menu_nodeapi_insert(&$node) {
  */
 function menu_nodeapi_update(&$node) {
   if (isset($node->menu)) {
-    $item = $node->menu;
+    $item = &$node->menu;
     if (!empty($item['delete'])) {
       menu_link_delete($item['mlid']);
     }
