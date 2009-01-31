@@ -1,5 +1,30 @@
 <?php
-// $Id: common.test,v 1.24 2009/01/27 02:14:42 webchick Exp $
+// $Id: common.test,v 1.25 2009/01/31 19:07:45 dries Exp $
+
+/**
+ * Tests for the l() function.
+ */
+class CommonLUnitTest extends DrupalWebTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => t('Tests for the l() function'),
+      'description' => t('Confirm that url() works correctly with various input.'),
+      'group' => t('System'),
+    );
+  }
+
+  /**
+   * Confirm that invalid text given as $path is filtered.
+   */
+  function testLXSS() {
+    $text = $this->randomName();
+    $path = "<SCRIPT>alert('XSS')</SCRIPT>";
+    $link = l($text, $path);
+    $sanitized_path = check_url(url($path));
+    $this->assertTrue(strpos($link, $sanitized_path) != FALSE, t('XSS attack @path was filtered', array('@path' => $path)));
+  }
+}
 
 class CommonSizeTestCase extends DrupalWebTestCase {
   protected $exact_test_cases;

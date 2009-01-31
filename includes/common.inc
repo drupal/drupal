@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.859 2009/01/28 07:43:26 webchick Exp $
+// $Id: common.inc,v 1.860 2009/01/31 19:07:45 dries Exp $
 
 /**
  * @file
@@ -1836,7 +1836,7 @@ function l($text, $path, array $options = array()) {
     $options['attributes']['title'] = strip_tags($options['attributes']['title']);
   }
 
-  return '<a href="' . check_url(url($path, $options)) . '"' . drupal_attributes($options['attributes']) . '>' . ($options['html'] ? $text : check_plain($text)) . '</a>';
+  return '<a href="' . url($path, $options) . '"' . drupal_attributes($options['attributes']) . '>' . ($options['html'] ? $text : check_plain($text)) . '</a>';
 }
 
 /**
