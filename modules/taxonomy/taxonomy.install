@@ -15,6 +15,10 @@ function taxonomy_install() {
 function taxonomy_uninstall() {
   // Remove tables.
   drupal_uninstall_schema('taxonomy');
+
+  // Remove variables.
+  variable_del('taxonomy_override_selector');
+  variable_del('taxonomy_terms_per_page_admin');
 }
 
 /**
