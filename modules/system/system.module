@@ -608,7 +608,7 @@ function system_menu() {
   );
   $items['admin/settings/logging'] = array(
     'title' => 'Logging, errors and alerts',
-    'description' => "Settings for logging and alerts modules. Various modules can route Drupal's system events to different destination, such as syslog, database, email, ...etc.",
+    'description' => "Settings for logging and alerts modules. Various modules can route Drupal's system events to different destinations, such as syslog, database, email, etc.",
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_logging_settings'),
     'access arguments' => array('administer site configuration'),
