@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.177 2008/12/30 16:43:17 dries Exp $
+// $Id: menu.module,v 1.178 2009/01/31 16:56:00 webchick Exp $
 
 /**
  * @file
@@ -293,7 +293,7 @@ function menu_block_view($delta = '') {
  */
 function menu_nodeapi_insert(&$node) {
   if (isset($node->menu)) {
-    $item = $node->menu;
+    $item = &$node->menu;
     if (!empty($item['delete'])) {
       menu_link_delete($item['mlid']);
     }
@@ -315,7 +315,7 @@ function menu_nodeapi_insert(&$node) {
  */
 function menu_nodeapi_update(&$node) {
   if (isset($node->menu)) {
-    $item = $node->menu;
+    $item = &$node->menu;
     if (!empty($item['delete'])) {
       menu_link_delete($item['mlid']);
     }
