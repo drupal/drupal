@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.pages.inc,v 1.12 2009/01/27 00:22:25 dries Exp $
+// $Id: comment.pages.inc,v 1.13 2009/01/31 16:19:29 webchick Exp $
 
 /**
  * @file
@@ -124,15 +124,13 @@ function comment_reply($node, $pid = NULL) {
  */
 function comment_approve($cid) {
   // Load the comment whose cid = $cid
-  if ($comment = comment_load($cid)) {
-    $operations = comment_operations('publish');
-    $query = $operations['publish'][1];
-    $query
-      ->condition('cid', $cid )
-      ->execute();
+  if ($comment = (array) comment_load($cid)) {
+    $comment['status'] = COMMENT_PUBLISHED;
+    $comment['comment_format'] = $comment['format'];
+    comment_save($comment);
 
     drupal_set_message(t('Comment approved.'));
-    drupal_goto("node/$comment->nid");
+    drupal_goto('node/' . $comment['nid']);
   }
   else {
     drupal_set_message(t('The comment you are approving does not exist.'), 'error');

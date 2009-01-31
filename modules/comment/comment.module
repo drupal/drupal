@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.689 2009/01/28 07:43:26 webchick Exp $
+// $Id: comment.module,v 1.690 2009/01/31 16:19:29 webchick Exp $
 
 /**
  * @file
@@ -1078,10 +1078,12 @@ function comment_render($node, $cid = 0) {
         $output .= theme('comment_view', $comment, $node, $links);
       }
     }
-    // Only attempt to render comments if the node has been commented upon.
-    else {
+    // Only attempt to render comments if the node has visible comments.
+    // Unpublished comments are not included in $node->comment_count, so show
+    // comments unconditionally if the user is an administrator.
+    elseif ($node->comment_count || user_access('administer comments')) {
 
-      //TODO Convert to dynamic queries once the pager query is updated to the new DBTNG API.
+      // TODO: Convert to dynamic queries once the pager query is updated to the new DBTNG API.
 
       // Multiple comment view.
       $query_count = 'SELECT COUNT(*) FROM {comment} c WHERE c.nid = %d';
