@@ -207,6 +207,7 @@ function simpletest_script_parse_args() {
     else {
       // Values found without an argument should be test names.
       $args['test_names'] += explode(',', $arg);
+      $count++;
     }
   }
 
