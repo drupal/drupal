@@ -1,5 +1,5 @@
 <?php
-// $Id: run-tests.sh,v 1.22 2009/01/13 22:39:11 dries Exp $
+// $Id: run-tests.sh,v 1.23 2009/02/01 16:42:26 dries Exp $
 /**
  * @file
  * This script runs Drupal tests from command line.
@@ -207,6 +207,7 @@ function simpletest_script_parse_args() {
     else {
       // Values found without an argument should be test names.
       $args['test_names'] += explode(',', $arg);
+      $count++;
     }
   }
 
