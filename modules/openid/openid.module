@@ -285,8 +285,8 @@ function openid_discovery($claimed_id) {
   if (_openid_is_xri($claimed_id)) {
     $xrds_url = 'http://xri.net/' . $claimed_id;
   }
-  $url = @parse_url($xrds_url);
-  if ($url['scheme'] == 'http' || $url['scheme'] == 'https') {
+  $scheme = @parse_url($xrds_url, PHP_URL_SCHEME);
+  if ($scheme == 'http' || $scheme == 'https') {
     // For regular URLs, try Yadis resolution first, then HTML-based discovery
     $headers = array('Accept' => 'application/xrds+xml');
     $result = drupal_http_request($xrds_url, array('headers' => $headers));
