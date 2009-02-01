@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.318 2009/01/28 07:43:26 webchick Exp $
+// $Id: form.inc,v 1.319 2009/02/01 06:48:14 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1759,6 +1759,39 @@ function weight_value(&$form) {
 }
 
 /**
+ * Menu callback for AHAH callbacks through the #ahah['callback'] FAPI property.
+ */
+function form_ahah_callback() {
+  $form_state = array('storage' => NULL, 'submitted' => FALSE);
+  $form_build_id = $_POST['form_build_id'];
+
+  // Get the form from the cache.
+  $form = form_get_cache($form_build_id, $form_state);
+  $args = $form['#parameters'];
+  $form_id = array_shift($args);
+
+  // We will run some of the submit handlers so we need to disable redirecting.
+  $form['#redirect'] = FALSE;
+
+  // We need to process the form, prepare for that by setting a few internals
+  // variables.
+  $form['#post'] = $_POST;
+  $form['#programmed'] = FALSE;
+  $form_state['post'] = $_POST;
+
+  // Build, validate and if possible, submit the form.
+  drupal_process_form($form_id, $form, $form_state);
+
+  // This call recreates the form relying solely on the form_state that the
+  // drupal_process_form set up.
+  $form = drupal_rebuild_form($form_id, $form_state, $args, $form_build_id);
+
+  // Get the callback function from the clicked button.
+  $callback = $form_state['clicked_button']['#ahah']['callback'];
+  $callback($form, $form_state);
+}
+
+/**
  * Roll out a single radios element to a list of radios,
  * using the options array as index.
  */
@@ -1875,7 +1908,7 @@ function form_process_input_format($element) {
 function form_process_ahah($element) {
   static $js_added = array();
   // Add a reasonable default event handler if none specified.
-  if (isset($element['#ahah']['path']) && !isset($element['#ahah']['event'])) {
+  if (isset($element['#ahah']) && !isset($element['#ahah']['event'])) {
     switch ($element['#type']) {
       case 'submit':
       case 'button':
@@ -1905,12 +1938,12 @@ function form_process_ahah($element) {
 
   // Adding the same javascript settings twice will cause a recursion error,
   // we avoid the problem by checking if the javascript has already been added.
-  if (isset($element['#ahah']['path']) && isset($element['#ahah']['event']) && !isset($js_added[$element['#id']])) {
+  if ((isset($element['#ahah']['callback']) || isset($element['#ahah']['path'])) && isset($element['#ahah']['event']) && !isset($js_added[$element['#id']])) {
     drupal_add_js('misc/jquery.form.js', array('weight' => JS_LIBRARY));
     drupal_add_js('misc/ahah.js');
 
     $ahah_binding = array(
-      'url'      => url($element['#ahah']['path']),
+      'url'      => isset($element['#ahah']['callback']) ? url('system/ahah') : url($element['#ahah']['path']),
       'event'    => $element['#ahah']['event'],
       'keypress' => empty($element['#ahah']['keypress']) ? NULL : $element['#ahah']['keypress'],
       'wrapper'  => empty($element['#ahah']['wrapper']) ? NULL : $element['#ahah']['wrapper'],

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.663 2009/01/31 15:55:05 webchick Exp $
+// $Id: system.module,v 1.664 2009/02/01 06:48:15 webchick Exp $
 
 /**
  * @file
@@ -405,6 +405,12 @@ function system_menu() {
   $items['system/files'] = array(
     'title' => 'File download',
     'page callback' => 'file_download',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  $items['system/ahah'] = array(
+    'title' => 'AHAH callback',
+    'page callback' => 'form_ahah_callback',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
