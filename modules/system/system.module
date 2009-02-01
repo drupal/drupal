@@ -408,6 +408,12 @@ function system_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
+  $items['system/ahah'] = array(
+    'title' => 'AHAH callback',
+    'page callback' => 'form_ahah_callback',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
   $items['system/timezone'] = array(
     'title' => 'Time zone',
     'page callback' => 'system_timezone',

@@ -118,13 +118,6 @@ function poll_menu() {
     'type' => MENU_LOCAL_TASK,
   );
 
-  $items['poll/js'] = array(
-    'title' => 'Javascript Choice Form',
-    'page callback' => 'poll_choice_js',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-
   return $items;
 }
 
@@ -266,7 +259,7 @@ function poll_form(&$node, $form_state) {
     '#weight' => 1,
     '#submit' => array('poll_more_choices_submit'), // If no javascript action.
     '#ahah' => array(
-      'path' => 'poll/js',
+      'callback' => 'poll_choice_js',
       'wrapper' => 'poll-choices',
       'method' => 'replace',
       'effect' => 'fade',
@@ -315,7 +308,7 @@ function poll_more_choices_submit($form, &$form_state) {
 
   // Make the changes we want to the form state.
   if ($form_state['values']['poll_more']) {
-    $n = $_GET['q'] == 'poll/js' ? 1 : 5;
+    $n = $_GET['q'] == 'system/ahah' ? 1 : 5;
     $form_state['choice_count'] = count($form_state['values']['choice']) + $n;
   }
 }
@@ -361,36 +354,13 @@ function _poll_choice_form($key, $chid = NULL, $value = '', $votes = 0, $weight 
 }
 
 /**
- * Menu callback for AHAH additions.
+ * Menu callback for AHAH additions. Render the new poll choices.
  */
-function poll_choice_js() {
-  $form_state = array('storage' => NULL, 'submitted' => FALSE);
-  $form_build_id = $_POST['form_build_id'];
-
-  // Get the form from the cache.
-  $form = form_get_cache($form_build_id, $form_state);
-  $args = $form['#parameters'];
-  $form_id = array_shift($args);
-
-  // We will run some of the submit handlers so we need to disable redirecting.
-  $form['#redirect'] = FALSE;
-
-  // We need to process the form, prepare for that by setting a few internals
-  // variables.
-  $form['#post'] = $_POST;
-  $form['#programmed'] = FALSE;
-  $form_state['post'] = $_POST;
-
-  // Build, validate and if possible, submit the form.
-  drupal_process_form($form_id, $form, $form_state);
-
-  // This call recreates the form relying solely on the form_state that the
-  // drupal_process_form set up.
-  $form = drupal_rebuild_form($form_id, $form_state, $args, $form_build_id);
-
-  // Render the new output.
+function poll_choice_js($form, $form_state) {
   $choice_form = $form['choice_wrapper']['choice'];
-  unset($choice_form['#prefix'], $choice_form['#suffix']); // Prevent duplicate wrappers.
+
+  // Prevent duplicate wrappers.
+  unset($choice_form['#prefix'], $choice_form['#suffix']);
   $output = theme('status_messages') . drupal_render($choice_form);
 
   drupal_json(array('status' => TRUE, 'data' => $output));
