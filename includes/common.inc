@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.860 2009/01/31 19:07:45 dries Exp $
+// $Id: common.inc,v 1.861 2009/02/02 15:42:43 dries Exp $
 
 /**
  * @file
@@ -1883,13 +1883,9 @@ function drupal_page_footer() {
  *   An associative array.
  */
 function drupal_map_assoc($array, $function = NULL) {
-  if (!isset($function)) {
-    $result = array();
-    foreach ($array as $value) {
-      $result[$value] = $value;
-    }
-    return $result;
-  }
+  if (!isset($function) && !empty($array)) {
+    return array_combine($array, $array);
+ }
   elseif (function_exists($function)) {
     $result = array();
     foreach ($array as $value) {
