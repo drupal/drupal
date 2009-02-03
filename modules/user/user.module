@@ -83,6 +83,32 @@ function user_theme() {
   );
 }
 
+/**
+ * Implementation of hook_fieldable_info().
+ */
+function user_fieldable_info() {
+  $return = array(
+    'user' => array(
+      'name' => t('User'),
+      'id key' => 'uid',
+    ),
+  );
+  return $return;
+}
+
+/**
+ * Implementation of hook_field_build_modes().
+ */
+function user_field_build_modes($obj_type) {
+  $modes = array();
+  if ($obj_type == 'user') {
+    $modes = array(
+      'full' => t('User account'),
+    );
+  }
+  return $modes;
+}
+
 function user_external_load($authname) {
   $result = db_query("SELECT uid FROM {authmap} WHERE authname = '%s'", $authname);
 
@@ -187,6 +213,10 @@ function user_load($array = array()) {
       $user->roles[$role->rid] = $role->name;
     }
 
+    // Attach fields.
+    // TODO D7 : not sure the 3rd param ($types) is needed.
+    field_attach_load('user', array($user->uid => $user));
+
     if (!empty($user->picture) && ($file = file_load($user->picture))) {
       $user->picture = $file;
     }
@@ -241,6 +271,18 @@ function user_save($account, $edit = array(), $category = 'account') {
     unset($edit['pass']);
   }
 
+  // Get the fields form so we can recognize the fields in the $edit
+  // form that should not go into the serialized data array.
+  $field_form = array();
+  $field_form_state = array();
+  $edit = (object) $edit;
+  field_attach_form('user', $edit, $field_form, $field_form_state);
+
+  // Presave fields.
+  field_attach_presave('user', $edit);
+
+  $edit = (array) $edit;
+
   if (is_object($account) && $account->uid) {
     user_module_invoke('update', $edit, $account, $category);
     $data = unserialize(db_result(db_query('SELECT data FROM {users} WHERE uid = %d', $account->uid)));
@@ -250,9 +292,10 @@ function user_save($account, $edit = array(), $category = 'account') {
       $edit['access'] = REQUEST_TIME;
     }
     foreach ($edit as $key => $value) {
-      // Fields that don't pertain to the users or user_roles
-      // automatically serialized into the users.data column.
-      if ($key != 'roles' && empty($user_fields[$key])) {
+      // Form fields that don't pertain to the users, user_roles, or
+      // Field API are automatically serialized into the users.data
+      // column.
+      if ($key != 'roles' && empty($user_fields[$key]) && empty($field_form[$key])) {
         if ($value === NULL) {
           unset($data[$key]);
         }
@@ -284,8 +327,14 @@ function user_save($account, $edit = array(), $category = 'account') {
     // Save changes to the users table.
     $success = drupal_write_record('users', $edit, 'uid');
     if (!$success) {
-      // The query failed - better to abort the save than risk further data loss.
-      return FALSE;
+      // The query failed - better to abort the save than risk further
+      // data loss.
+
+      // TODO: Fields change: I think this is a bug.  If no columns in
+      // the users table are changed, drupal_write_record returns
+      // FALSE because rowCount() (rows changed) is 0.  However,
+      // non-users data may have been changed, e.g. fields.
+      // return FALSE;
     }
 
     // If the picture changed or was unset, remove the old one. This step needs
@@ -320,6 +369,10 @@ function user_save($account, $edit = array(), $category = 'account') {
       }
     }
 
+    // Save Field data.
+    $obj = (object) $edit;
+    field_attach_update('user', $obj);
+
     // Refresh user object.
     $user = user_load(array('uid' => $account->uid));
 
@@ -353,13 +406,19 @@ function user_save($account, $edit = array(), $category = 'account') {
     // Build the initial user object.
     $user = user_load(array('uid' => $edit['uid']));
 
+    $obj = (object) $edit;
+    field_attach_insert('user', $obj);
+
     user_module_invoke('insert', $edit, $user, $category);
 
     // Note, we wait with saving the data column to prevent module-handled
     // fields from being saved there.
     $data = array();
     foreach ($edit as $key => $value) {
-      if (($key != 'roles') && (empty($user_fields[$key])) && ($value !== NULL)) {
+      // Form fields that don't pertain to the users, user_roles, or
+      // Field API are automatically serialized into the users.data
+      // column.
+      if (($key != 'roles') && (empty($user_fields[$key]) && empty($field_form[$key])) && ($value !== NULL)) {
         $data[$key] = $value;
       }
     }
@@ -1594,6 +1653,8 @@ function user_edit_form(&$form_state, $uid, $edit, $register = FALSE) {
   _user_password_dynamic_validation();
   $admin = user_access('administer users');
 
+  $form = array();
+
   // Account information:
   $form['account'] = array('#type' => 'fieldset',
     '#title' => t('Account information'),
@@ -1829,7 +1890,15 @@ function _user_cancel($edit, $account, $method) {
  */
 function user_build_content(&$account) {
   $edit = NULL;
+  $account->content = array();
+
+  // Build fields content.
+  // TODO D7 : figure out where exactly this needs to go
+  // TODO D7 : $page / $teaser ??
+  $account->content += field_attach_view('user', $account);
+
   user_module_invoke('view', $edit, $account);
+
   // Allow modules to modify the fully-built profile.
   drupal_alter('profile', $account);
 

@@ -1,0 +1,400 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Defines simple text field types.
+ */
+
+/**
+ * Implementation of hook_theme().
+ */
+function text_theme() {
+  return array(
+    'text_textarea' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'text_textfield' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'field_formatter_text_default' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'field_formatter_text_plain' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'field_formatter_text_trimmed' => array(
+      'arguments' => array('element' => NULL),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_field_info().
+ */
+function text_field_info() {
+  return array(
+    'text' => array(
+      'label' => t('Text'),
+      'description' => t('This field stores varchar text in the database.'),
+      'settings' => array('max_length' => 255),
+      'instance_settings' => array('text_processing' => 0),
+      'default_widget' => 'text_textfield',
+      'default_formatter' => 'text_default',
+    ),
+    'text_long' => array(
+      'label' => t('Long text'),
+      'description' => t('This field stores long text in the database.'),
+      'instance_settings' => array('text_processing' => 0),
+      'default_widget' => 'text_textarea',
+      'default_formatter' => 'text_default',
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_field_schema().
+ */
+function text_field_columns($field) {
+  if ($field['type'] == 'text_long') {
+    $columns = array(
+      'value' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      ),
+    );
+  }
+  else {
+    $columns = array(
+      'value' => array(
+        'type' => 'varchar',
+        'length' => $field['settings']['max_length'],
+        'not null' => FALSE,
+      ),
+    );
+  }
+  $columns += array(
+    'format' => array(
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => FALSE,
+    ),
+  );
+  return $columns;
+}
+
+/**
+ * Implementation of hook_field_validate().
+ */
+function text_field_validate($obj_type, $object, $field, $instance, $items, $form) {
+  if (is_array($items)) {
+    foreach ($items as $delta => $item) {
+      $error_element = isset($item['_error_element']) ? $item['_error_element'] : '';
+      if (is_array($item) && isset($item['_error_element'])) unset($item['_error_element']);
+      if (!empty($item['value'])) {
+        if (!empty($field['settings']['max_length']) && drupal_strlen($item['value']) > $field['settings']['max_length']) {
+          form_set_error($error_element, t('%name: the value may not be longer than %max characters.', array('%name' => $instance['label'], '%max' => $field['settings']['max_length'])));
+        }
+      }
+    }
+  }
+}
+
+function text_field_sanitize($obj_type, $object, $field, $instance, &$items) {
+  global $language;
+  foreach ($items as $delta => $item) {
+    // TODO D7 : this code is really node-related.
+    if (!empty($instance['settings']['text_processing'])) {
+      $check = is_null($object) || (isset($object->build_mode) && $object->build_mode == NODE_BUILD_PREVIEW);
+      $text = isset($item['value']) ? check_markup($item['value'], $item['format'], isset($object->language) ? $object->language : $language, $check) : '';
+    }
+    else {
+      $text = check_plain($item['value']);
+    }
+    $items[$delta]['safe'] = $text;
+  }
+}
+
+/**
+ * Implementation of hook_field_is_empty().
+ */
+function text_field_is_empty($item, $field) {
+  if (empty($item['value']) && (string)$item['value'] !== '0') {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Implementation of hook_field_formatter_info().
+ */
+function text_field_formatter_info() {
+  return array(
+    'text_default' => array(
+      'label' => t('Default'),
+      'field types' => array('text', 'text_long'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+    'text_plain' => array(
+      'label' => t('Plain text'),
+      'field types' => array('text', 'text_long'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+    'text_trimmed' => array(
+      'label' => t('Trimmed'),
+      'field types' => array('text', 'text_long'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+  );
+}
+
+/**
+ * Theme function for 'default' text field formatter.
+ */
+function theme_field_formatter_text_default($element) {
+  return $element['#item']['safe'];
+}
+
+/**
+ * Theme function for 'plain' text field formatter.
+ */
+function theme_field_formatter_text_plain($element) {
+  return strip_tags($element['#item']['safe']);
+}
+
+/**
+ * Theme function for 'trimmed' text field formatter.
+ */
+function theme_field_formatter_text_trimmed($element) {
+  $field = field_info_field($element['#field_name']);
+  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  return $instance['settings']['text_processing'] ? $element['#item']['format'] : NULL;
+}
+
+/**
+ * Implementation of hook_field_widget_info().
+ *
+ * Here we indicate that the field module will handle
+ * the default value and multiple values for these widgets.
+ *
+ * Callbacks can be omitted if default handing is used.
+ * They're included here just so this module can be used
+ * as an example for custom modules that might do things
+ * differently.
+ */
+function text_field_widget_info() {
+  return array(
+    'text_textfield' => array(
+      'label' => t('Text field'),
+      'field types' => array('text'),
+      'settings' => array('size' => 60),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+        'default value' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+    'text_textarea' => array(
+      'label' => t('Text area (multiple rows)'),
+      'field types' => array('text_long'),
+      'settings' => array('rows' => 5),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+        'default value' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+  );
+}
+
+/**
+ * Implementation of FAPI hook_elements().
+ *
+ * Any FAPI callbacks needed for individual widgets can be declared here,
+ * and the element will be passed to those callbacks for processing.
+ *
+ * Drupal will automatically theme the element using a theme with
+ * the same name as the hook_elements key.
+ *
+ * Autocomplete_path is not used by text_field_widget but other
+ * widgets can use it (see nodereference and userreference).
+ */
+function text_elements() {
+  return array(
+    'text_textfield' => array(
+      '#input' => TRUE,
+      '#columns' => array('value'), '#delta' => 0,
+      '#process' => array('text_textfield_process'),
+      '#autocomplete_path' => FALSE,
+      ),
+    'text_textarea' => array(
+      '#input' => TRUE,
+      '#columns' => array('value', 'format'), '#delta' => 0,
+      '#process' => array('text_textarea_process'),
+      '#filter_value' => FILTER_FORMAT_DEFAULT,
+      ),
+  );
+}
+
+/**
+ * Implementation of hook_field_widget().
+ *
+ * Attach a single form element to the form. It will be built out and
+ * validated in the callback(s) listed in hook_elements. We build it
+ * out in the callbacks rather than here in hook_field_widget so it can be
+ * plugged into any module that can provide it with valid
+ * $field information.
+ *
+ * Field module will set the weight, field name and delta values
+ * for each form element. 
+ *
+ * If there are multiple values for this field, the field module will
+ * call this function as many times as needed.
+ *
+ * @param $form
+ *   the entire form array, $form['#node'] holds node information
+ * @param $form_state
+ *   the form_state, $form_state['values'][$field['field_name']]
+ *   holds the field's form values.
+ * @param $field
+ *   The field structure.
+ * @param $instance
+ *   the field instance array
+ * @param $items
+ *   array of default values for this field
+ * @param $delta
+ *   the order of this item in the array of subelements (0, 1, 2, etc)
+ *
+ * @return
+ *   the form item for a single element for this field
+ */
+function text_field_widget(&$form, &$form_state, $field, $instance, $items, $delta = 0) {
+  $element = array(
+    '#type' => $instance['widget']['type'],
+    '#default_value' => isset($items[$delta]) ? $items[$delta] : '',
+  );
+  return $element;
+}
+
+/**
+ * Process an individual element.
+ *
+ * Build the form element. When creating a form using FAPI #process,
+ * note that $element['#value'] is already set.
+ *
+ * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
+ *
+ * TODO: For widgets to be actual FAPI 'elements', reusable outside of a
+ * 'field' context, they shoudn't rely on $field and $instance. The bits of
+ * information needed to adjust the behavior of the 'element' should be
+ * extracted in hook_field_widget() above.
+ */
+function text_textfield_process($element, $edit, $form_state, $form) {
+  $field = $form['#fields'][$element['#field_name']]['field'];
+  $instance = $form['#fields'][$element['#field_name']]['instance'];
+  $field_key = $element['#columns'][0];
+  $delta = $element['#delta'];
+
+  $element[$field_key] = array(
+    '#type' => 'textfield',
+    '#default_value' => isset($element['#value'][$field_key]) ? $element['#value'][$field_key] : NULL,
+    '#autocomplete_path' => $element['#autocomplete_path'],
+    '#size' => $instance['widget']['settings']['size'],
+    '#attributes' => array('class' => 'text'),
+    // The following values were set by the field module and need
+    // to be passed down to the nested element.
+    '#title' => $element['#title'],
+    '#description' => $element['#description'],
+    '#required' => $element['#required'],
+    '#field_name' => $element['#field_name'],
+    '#bundle' => $element['#bundle'],
+    '#delta' => $element['#delta'],
+    '#columns' => $element['#columns'],
+  );
+
+  $element[$field_key]['#maxlength'] = !empty($field['settings']['max_length']) ? $field['settings']['max_length'] : NULL;
+
+  if (!empty($instance['settings']['text_processing'])) {
+    $filter_key = $element['#columns'][1];
+    $format = isset($element['#value'][$filter_key]) ? $element['#value'][$filter_key] : FILTER_FORMAT_DEFAULT;
+    $parents = array_merge($element['#parents'] , array($filter_key));
+    $element[$filter_key] = filter_form($format, 1, $parents);
+  }
+
+  // Used so that hook_field('validate') knows where to flag an error.
+  // TODO: rework that. See http://groups.drupal.org/node/18019.
+  $element['_error_element'] = array(
+    '#type' => 'value',
+    '#value' => implode('][', array_merge($element['#parents'], array($field_key))),
+  );
+
+  return $element;
+}
+
+/**
+ * Process an individual element.
+ *
+ * Build the form element. When creating a form using FAPI #process,
+ * note that $element['#value'] is already set.
+ *
+ * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
+ */
+function text_textarea_process($element, $edit, $form_state, $form) {
+  $field = $form['#fields'][$element['#field_name']]['field'];
+  $instance = $form['#fields'][$element['#field_name']]['instance'];
+  $field_key = $element['#columns'][0];
+  $delta = $element['#delta'];
+  $element[$field_key] = array(
+    '#type' => 'textarea',
+    '#default_value' => isset($element['#value'][$field_key]) ? $element['#value'][$field_key] : NULL,
+    '#rows' => $instance['widget']['settings']['rows'],
+    '#weight' => 0,
+    // The following values were set by the field module and need
+    // to be passed down to the nested element.
+    '#title' => $element['#title'],
+    '#description' => $element['#description'],
+    '#required' => $element['#required'],
+    '#field_name' => $element['#field_name'],
+    '#bundle' => $element['#bundle'],
+    '#delta' => $element['#delta'],
+    '#columns' => $element['#columns'],
+  );
+
+  if (!empty($instance['settings']['text_processing'])) {
+    $filter_key  = (count($element['#columns']) == 2) ? $element['#columns'][1] : 'format';
+    $format = isset($element['#value'][$filter_key]) ? $element['#value'][$filter_key] : FILTER_FORMAT_DEFAULT;
+    $parents = array_merge($element['#parents'] , array($filter_key));
+    $element[$filter_key] = filter_form($format, 1, $parents);
+  }
+
+  // Used so that hook_field('validate') knows where to flag an error.
+  $element['_error_element'] = array(
+    '#type' => 'value',
+    '#value' => implode('][', array_merge($element['#parents'], array($field_key))),
+  );
+  return $element;
+}
+
+/**
+ * FAPI theme for an individual text elements.
+ *
+ * The textfield or textarea is already rendered by the
+ * textfield or textarea themes and the html output
+ * lives in $element['#children']. Override this theme to
+ * make custom changes to the output.
+ *
+ * $element['#field_name'] contains the field name
+ * $element['#delta]  is the position of this element in the group
+ */
+function theme_text_textfield($element) {
+  return $element['#children'];
+}
+
+function theme_text_textarea($element) {
+  return $element['#children'];
+}

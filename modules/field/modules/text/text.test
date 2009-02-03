@@ -1,0 +1,39 @@
+<?php
+// $Id$
+
+class TextFieldTestCase extends DrupalWebTestCase {
+  protected $instance;
+
+  function getInfo() {
+    return array(
+      'name'  => t('Text Field'),
+      'description'  => t("Test the creation of text fields."),
+      'group' => t('Field')
+    );
+  }
+
+  function setUp() {
+    parent::setUp('field', 'text', 'field_test');
+  }
+
+  // Test widgets.
+
+  /**
+   * Test textfield widget.
+   */
+  function testTextfieldWidget() {
+    // Create a field
+    $field = $this->drupalCreateField('text');
+    $this->instance = $this->drupalCreateFieldInstance($field['field_name'], 'text_textfield', 'text_default', FIELD_TEST_BUNDLE);
+
+  }
+
+  /**
+   * Test textarea widget.
+   */
+
+  // Test formatters.
+  /**
+   *
+   */
+}

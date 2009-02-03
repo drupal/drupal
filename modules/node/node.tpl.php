@@ -20,6 +20,7 @@
  * - $terms: the themed list of taxonomy term links output from theme_links().
  * - $submitted: themed submission information output from
  *   theme_node_submitted().
+ * TODO D7 : document $FIELD_NAME_rendered variables.
  *
  * Other variables:
  * - $node: Full node object. Contains data that may not be safe.

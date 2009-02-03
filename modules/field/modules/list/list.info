@@ -1,0 +1,7 @@
+; $Id$
+name = List
+description = Defines list field types. Use with Options to create selection lists.
+package = Core - fields
+core = 7.x
+
+files[]=list.module

@@ -1,0 +1,388 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Default implementation of the field storage API.
+ */
+
+/**
+ * Implementation of hook_help().
+ */
+function field_sql_storage_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#field_sql_storage':
+      $output = '<p>' . t('The Field SQL Storage module stores Field API data in the database.  It is the default field storage module, but other field storage modules may be available in the contributions repository.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Generate a table name for a field data table.
+ *
+ * @param $name
+ *   The name of the field
+ * @return
+ *   A string containing the generated name for the database table
+ */
+function _field_sql_storage_tablename($name) {
+  return 'field_data_' . $name;
+}
+
+/**
+ * Generate a table name for a field revision archive table.
+ *
+ * @param $name
+ *   The name of the field
+ * @return
+ *   A string containing the generated name for the database table
+ */
+function _field_sql_storage_revision_tablename($name) {
+  return 'field_data_revision_' . $name;
+}
+
+/**
+ * Generate a column name for a field data table.
+ *
+ * @param $name
+ *   The name of the field
+ * @param $column
+ *   The name of the column
+ * @return
+ *   A string containing a generated column name for a field data
+ *   table that is unique among all other fields.
+ */
+function _field_sql_storage_columnname($name, $column) {
+  return $name . '_' . $column;
+}
+
+/**
+ * Retrieve or assign an entity type id for an object type.
+ *
+ * @param $obj_type
+ *   The object type, such as 'node' or 'user'.
+ * @return
+ *   The entity type id.
+ *
+ * TODO: We need to decide on 'entity' or 'object'.
+ */
+function _field_sql_storage_etid($obj_type) {
+  $etid = variable_get('field_sql_storage_' . $obj_type . '_etid', NULL);
+  if (is_null($etid)) {
+    $etid = db_insert('field_config_entity_type')->fields(array('type' => $obj_type))->execute();
+    variable_set('field_sql_storage_' . $obj_type . '_etid', $etid);
+  }
+  return $etid;
+}
+
+/**
+ * Return the database schema for a field.  This may contain one or
+ * more tables.  Each table will contain the columns relevant for the
+ * specified field.  Leave $field['columns'] empty to get only the
+ * base schema.
+ *
+ * @param $field
+ *   The field structure for which to generate a database schema.
+ * @return
+ *   One or more tables representing the schema for the field.
+ */
+function _field_sql_storage_schema($field) {
+  $current = array(
+    'description' => 'Data storage for field ' . $field['field_name'],
+    'fields' => array(
+      'etid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The entity type id this data is attached to',
+      ),
+      'bundle' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The field instance bundle to which this row belongs, used when deleting a field instance',
+      ),
+      'deleted' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'A boolean indicating whether this data item has been deleted'
+      ),
+      'entity_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The entity id this data is attached to',
+      ),
+      'revision_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => 'The entity revision id this data is attached to, or NULL if the entity type is not versioned',
+      ),
+      'delta' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The sequence number for this data item, used for multi-value fields',
+      ),
+    ),
+    'primary key' => array('etid', 'entity_id', 'deleted', 'delta'),
+    // TODO : index on 'bundle'
+  );
+
+  // Add field columns.
+  foreach ($field['columns'] as $column_name => $attributes) {
+    $current['fields'][_field_sql_storage_columnname($field['field_name'], $column_name)] = $attributes;
+  }
+
+  // Construct the revision table.  The primary key includes
+  // revision_id but not entity_id so that multiple revision loads can
+  // use the IN operator.
+  $revision = $current;
+  $revision['description'] = 'Revision archive storage for field ' . $field['field_name'];
+  $revision['revision_id']['description'] = 'The entity revision id this data is attached to';
+  $revision['primary key'] = array('etid', 'revision_id', 'deleted', 'delta');
+
+  return array(
+    _field_sql_storage_tablename($field['field_name']) => $current,
+    _field_sql_storage_revision_tablename($field['field_name']) => $revision,
+  );
+}
+
+function field_sql_storage_field_storage_create_field($field) {
+  $schema = _field_sql_storage_schema($field);
+  foreach ($schema as $name => $table) {
+    db_create_table($ret, $name, $table);
+  }
+}
+
+function field_sql_storage_field_storage_delete_field($field_name) {
+  // Mark all data associated with the field for deletion.
+  $table = _field_sql_storage_tablename($field_name);
+  db_update($table)
+    ->fields(array('deleted' => 1))
+    ->execute();
+}
+
+/**
+ * Load field data for a set of objects from the database.
+ *
+ * @param $obj_type
+ *   The entity type of objects being loaded, such as 'node' or
+ *   'user'.
+ * @param $objects
+ *   The array of objects for which to load data.
+ * @param $age
+ *   FIELD_LOAD_CURRENT to load the most recent revision for all
+ *   fields, or FIELD_LOAD_REVISION to load the version indicated by
+ *   each object.
+ * @return
+ *   An array of field data for the objects, keyed by entity id, field
+ *   name, and item delta number.
+ */
+function field_sql_storage_field_storage_load($obj_type, $objects, $age) {
+  $etid = _field_sql_storage_etid($obj_type);
+  $load_current = $age == FIELD_LOAD_CURRENT;
+
+  // Gather ids needed for each field.
+  $field_ids = array();
+  $delta_count = array();
+  foreach ($objects as $obj) {
+    list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $obj);
+    foreach (field_info_instances($bundle) as $instance) {
+      $field_ids[$instance['field_name']][] = $load_current ? $id : $vid;
+      $delta_count[$id][$instance['field_name']] = 0;
+    }
+  }
+
+  $additions = array();
+  foreach ($field_ids as $field_name => $ids) {
+    $field = field_info_field($field_name);
+    $table = $load_current ? _field_sql_storage_tablename($field_name) : _field_sql_storage_revision_tablename($field_name);
+
+    $results = db_select($table, 't')
+      ->fields('t')
+      ->condition('etid', $etid)
+      ->condition($load_current ? 'entity_id' : 'revision_id', $ids, 'IN')
+      ->condition('deleted', 0)
+      ->orderBy('delta')
+      ->execute();
+
+    foreach ($results as $row) {
+      if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$field_name] < $field['cardinality']) {
+        $item = array();
+        // For each column declared by the field, populate the item
+        // from the prefixed database column.
+        foreach ($field['columns'] as $column => $attributes) {
+          $item[$column] = $row->{_field_sql_storage_columnname($field_name, $column)};
+        }
+
+        // Add the item to the field values for the entity.
+        $additions[$row->entity_id][$field_name][] = $item;
+        $delta_count[$row->entity_id][$field_name]++;
+      }
+    }
+  }
+  return $additions;
+}
+
+function field_sql_storage_field_storage_write($obj_type, $object, $update = FALSE) {
+  list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
+  $etid = _field_sql_storage_etid($obj_type);
+
+  $instances = field_info_instances($bundle);
+  foreach ($instances as $instance) {
+    $field_name = $instance['field_name'];
+    $table_name = _field_sql_storage_tablename($field_name);
+    $revision_name = _field_sql_storage_revision_tablename($field_name);
+    $field = field_read_field($field_name);
+
+    // Leave the field untouched if $object comes with no $field_name property.
+    // Empty the field if $object->$field_name is NULL or an empty array.
+
+    // Function property_exists() is slower, so we catch the more frequent cases
+    // where it's an empty array with the faster isset().
+    if (isset($object->$field_name) || property_exists($object, $field_name)) {
+      // Delete and insert, rather than update, in case a value was added.
+      if ($update) {
+        db_delete($table_name)->condition('etid', $etid)->condition('entity_id', $id)->execute();
+        if (isset($vid)) {
+          db_delete($revision_name)->condition('etid', $etid)->condition('entity_id', $id)->condition('revision_id', $vid)->execute();
+        }
+      }
+
+      if ($object->$field_name) {
+        // Prepare the multi-insert query.
+        $columns = array('etid', 'entity_id', 'revision_id', 'bundle', 'delta');
+        foreach ($field['columns'] as $column => $attributes) {
+          $columns[] = _field_sql_storage_columnname($field_name, $column);
+        }
+        $query = db_insert($table_name)->fields($columns);
+        if (isset($vid)) {
+          $revision_query = db_insert($revision_name)->fields($columns);
+        }
+
+        $delta_count = 0;
+        foreach ($object->$field_name as $delta => $item) {
+          $record = array(
+            'etid' => $etid,
+            'entity_id' => $id,
+            'revision_id' => $vid,
+            'bundle' => $bundle,
+            'delta' => $delta,
+          );
+          foreach ($field['columns'] as $column => $attributes) {
+            $record[_field_sql_storage_columnname($field_name, $column)] = isset($item[$column]) ? $item[$column] : NULL;
+          }
+          $query->values($record);
+          if (isset($vid)) {
+            $revision_query->values($record);
+          }
+
+          if ($field['cardinality'] != FIELD_CARDINALITY_UNLIMITED && ++$delta_count == $field['cardinality']) {
+            break;
+          }
+        }
+
+        // Execute the insert.
+        $query->execute();
+        if (isset($vid)) {
+          $revision_query->execute();
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Delete all field data for a single object.  This function actually
+ * deletes the data from the database.
+ *
+ * @param $obj_type
+ *   The entity type of the object being deleted, such as 'node' or
+ *   'user'.
+ * @param $object
+ *   The object for which to delete field data.
+ */
+function field_sql_storage_field_storage_delete($obj_type, $object) {
+  list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
+  $etid = _field_sql_storage_etid($obj_type);
+
+  $instances = field_info_instances($bundle);
+  foreach ($instances as $instance) {
+    $field_name = $instance['field_name'];
+    $table_name = _field_sql_storage_tablename($field_name);
+    $revision_name = _field_sql_storage_revision_tablename($field_name);
+    db_delete($table_name)
+      ->condition('etid', $etid)
+      ->condition('entity_id', $id)
+      ->execute();
+    db_delete($revision_name)
+      ->condition('etid', $etid)
+      ->condition('entity_id', $id)
+      ->execute();
+  }
+}
+
+/**
+ * Delete field data for a single revision of a single object.
+ * Deleting the current (most recently written) revision is not
+ * allowed as has undefined results.  This function actually deletes
+ * the data from the database.
+ *
+ * @param $obj_type
+ *   The entity type of the object being deleted, such as 'node' or
+ *   'user'.
+ * @param $object
+ *   The object for which to delete field data.
+ */
+function field_sql_storage_field_storage_delete_revision($obj_type, $object) {
+  list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
+  $etid = _field_sql_storage_etid($obj_type);
+
+  if (isset($vid)) {
+    $instances = field_info_instances($bundle);
+    foreach ($instances as $instance) {
+      $field_name = $instance['field_name'];
+      $revision_name = _field_sql_storage_revision_tablename($field_name);
+      db_delete($revision_name)
+        ->condition('etid', $etid)
+        ->condition('entity_id', $id)
+        ->condition('revision_id', $vid)
+        ->execute();
+    }
+  }
+}
+
+function field_sql_storage_field_storage_delete_instance($field_name, $bundle) {
+  // Mark all data associated with the field for deletion.
+  $table_name = _field_sql_storage_tablename($field_name);
+  $revision_name = _field_sql_storage_revision_tablename($field_name);
+  db_update($table_name)
+    ->fields(array('deleted' => 1))
+    ->condition('bundle', $bundle)
+    ->execute();
+  db_update($revision_name)
+    ->fields(array('deleted' => 1))
+    ->condition('bundle', $bundle)
+    ->execute();
+}
+
+function field_sql_storage_field_storage_rename_bundle($bundle_old, $bundle_new) {
+  $instances = field_info_instances($bundle_old);
+  foreach ($instances as $instance) {
+    $table_name = _field_sql_storage_tablename($instance['field_name']);
+    $revision_name = _field_sql_storage_revision_tablename($instance['field_name']);
+    db_update($table_name)
+      ->fields(array('bundle' => $bundle_new))
+      ->condition('bundle', $bundle_old)
+      ->execute();
+    db_update($revision_name)
+      ->fields(array('bundle' => $bundle_new))
+      ->condition('bundle', $bundle_old)
+      ->execute();
+  }
+}

@@ -1,0 +1,514 @@
+<?php
+// $Id$
+
+define('FIELD_TEST_ELEMENT_ID', 1);
+define('FIELD_TEST_BUNDLE', 'test_bundle');
+
+/**
+ * Implementation of hook_perm().
+ */
+function field_test_perm() {
+  $perms = array(
+    'access field_test content' => array(
+      'title' => t('Access field_test content'),
+      'description' => t('View published field_test content.'),
+    ),
+    'administer field_test content' => array(
+      'title' => t('Administer field_test content'),
+      'description' => t('Manage field_test content'),
+    ),
+  );
+  return $perms;
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function field_test_menu() {
+  $items = array();
+  $info = field_test_fieldable_info();
+
+  foreach (array_keys($info['test_entity']['bundles']) as $bundle) {
+    $bundle_url_str = str_replace('_', '-', $bundle);
+    $items['test-entity/add/' . $bundle_url_str] = array(
+      'title' => "Add $bundle test_entity",
+      'page callback' => 'field_test_entity_add',
+      'page arguments' => array(2),
+      'access arguments' => array('administer field_test content'),
+      'type' => MENU_NORMAL_ITEM,
+    );
+  }
+  $items['test-entity/%field_test_entity/edit'] = array(
+    'title' => 'Edit test entity',
+    'page callback' => 'field_test_entity_edit',
+    'page arguments' => array(1),
+    'access arguments' => array('administer field_test content'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+
+/**
+ *
+ * 'Field attach' API.
+ *
+ */
+
+
+/**
+ * Define a test fieldable entity.
+ */
+function field_test_fieldable_info() {
+  $bundles = variable_get('field_test_bundles', array('test_bundle' => 'Test Bundle'));
+  return array(
+    'test_entity' => array(
+      'name' => t('Test Entity'),
+      'id key' => 'ftid',
+      'revision key' => 'ftvid',
+      'cacheable' => FALSE,
+      'bundle key' => 'fttype',
+      'bundles' => $bundles,
+    ),
+    // This entity type doesn't get form handling for now...
+    'test_cacheable_entity' => array(
+      'name' => t('Test Entity, cacheable'),
+      'id key' => 'ftid',
+      'revision key' => 'ftvid',
+      'cacheable' => TRUE,
+      'bundle key' => 'fttype',
+      'bundles' => $bundles,
+    ),
+  );
+}
+
+function field_test_create_bundle($bundle, $text) {
+  $bundles = variable_get('field_test_bundles', array('field_text_bundle' => 'Test Bundle'));
+  $bundles += array($bundle => $text);
+  variable_set('field_test_bundles', $bundles);
+
+  field_attach_create_bundle($bundle);
+}
+
+function field_test_rename_bundle($bundle_old, $bundle_new) {
+  $bundles = variable_get('field_test_bundles', array('field_text_bundle' => 'Test Bundle'));
+  $bundles[$bundle_new] = $bundles[$bundle_old];
+  unset($bundles[$bundle_old]);
+  variable_set('field_test_bundles', $bundles);
+
+  field_attach_rename_bundle($bundle_old, $bundle_new);
+}
+
+function field_test_delete_bundle($bundle) {
+  $bundles = variable_get('field_test_bundles', array('field_text_bundle' => 'Test Bundle'));
+  unset($bundles[$bundle]);
+  variable_set('field_test_bundles', $bundles);
+
+  field_attach_delete_bundle($bundle);
+}
+
+/**
+ * Implementation of hook_field_build_modes().
+ */
+function field_test_field_build_modes($obj_type) {
+  $modes = array();
+  if ($obj_type == 'test_entity' || $obj_type == 'test_cacheable_entity') {
+    $modes = array(
+      'full' => t('Full node'),
+      'teaser' => t('Teaser'),
+    );
+  }
+  return $modes;
+}
+
+/**
+ * Helper function to create a basic 'test entity' structure.
+ *
+ * TODO : do we stil need this now that we can actualy load and save test_entities ?
+ */
+function field_test_create_stub_entity($id = 1, $vid = 1, $bundle = FIELD_TEST_BUNDLE) {
+  $entity = new stdClass();
+  $entity->ftid = $id;
+  $entity->ftvid = $vid;
+  $entity->fttype = $bundle;
+
+  return $entity;
+}
+
+function field_test_entity_load($ftid, $ftvid = NULL) {
+  // Load basic strucure.
+  $query = db_select('test_entity', 'fte', array())
+    ->fields('fte')
+    ->condition('ftid', $ftid);
+  if ($ftvid) {
+    $query->condition('ftvid', $ftvid);
+  }
+  $entities = $query->execute()->fetchAllAssoc('ftid');
+
+  // Attach fields.
+  if ($ftvid) {
+    field_attach_load_revision('test_entity', $entities);
+  }
+  else {
+    field_attach_load('test_entity', $entities);
+  }
+
+  return $entities[$ftid];
+}
+
+function field_test_entity_save(&$entity) {
+  field_attach_presave('test_entity', $entity);
+
+  $entity->is_new = FALSE;
+  if (empty($entity->ftid)) {
+    // Insert a new test_entity.
+    $entity->is_new = TRUE;
+  }
+  elseif (!empty($entity->revision)) {
+    $entity->old_ftvid = $entity->ftvid;
+  }
+
+  $update_entity = TRUE;
+  if ($entity->is_new) {
+    drupal_write_record('test_entity', $entity);
+    drupal_write_record('test_entity_revision', $entity);
+    $op = 'insert';
+  }
+  else {
+    drupal_write_record('test_entity', $entity, 'ftid');
+    if (!empty($entity->revision)) {
+      drupal_write_record('test_entity_revision', $entity);
+    }
+    else {
+      drupal_write_record('test_entity_revision', $entity, 'ftvid');
+      $update_entity = FALSE;
+    }
+    $op = 'update';
+  }
+  if ($update_entity) {
+    db_update('test_entity')
+      ->fields(array('ftvid' => $entity->ftvid))
+      ->condition('ftid', $entity->ftid)
+      ->execute();
+  }
+
+  // Save fields.
+  $function = "field_attach_$op";
+  $function('test_entity', $entity);
+}
+
+function field_test_entity_add($fttype) {
+  $fttype = str_replace('-', '_', $fttype);
+  $entity = (object)array('fttype' => $fttype);
+  drupal_set_title(t('Create test_entity @bundle', array('@bundle' => $fttype)), PASS_THROUGH);
+  return drupal_get_form('field_test_entity_form', $entity);
+}
+
+function field_test_entity_edit($entity) {
+  drupal_set_title(t('test_entity @ftid revision @ftvid', array('@ftid' => $entity->ftid, '@ftvid' => $entity->ftvid)), PASS_THROUGH);
+  return drupal_get_form('field_test_entity_form', $entity);
+}
+
+/**
+ * Form to set the value of fields attached to our entity.
+ */
+function field_test_entity_form(&$form_state, $entity) {
+  $form = array();
+
+  if (isset($form_state['test_entity'])) {
+    $entity = $form_state['test_entity'] + (array)$entity;
+  }
+  $entity = (object)$entity;
+
+  foreach (array('ftid', 'ftvid', 'fttype') as $key) {
+    $form[$key] = array(
+      '#type' => 'value',
+      '#value' => isset($entity->$key) ? $entity->$key : NULL,
+    );
+  }
+
+  // Add field widgets.
+  $form['#builder_function'] = 'field_test_entity_form_submit_builder';
+  field_attach_form('test_entity', $entity, $form, $form_state);
+
+  $form['revision'] = array(
+    '#access' => user_access('administer field_test content'),
+    '#type' => 'checkbox',
+    '#title' => t('Create new revision'),
+    '#default_value' => FALSE,
+    '#weight' => 100,
+  );
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+    '#weight' => 101,
+  );
+
+  return $form;
+}
+
+/**
+ * Validate handler for field_test_set_field_values().
+ */
+function field_test_entity_form_validate($form, &$form_state) {
+  $entity = (object)$form_state['values'];
+  field_attach_validate('test_entity', $entity, $form);
+}
+
+/**
+ * Submit handler for field_test_set_field_values().
+ */
+function field_test_entity_form_submit($form, &$form_state) {
+  $entity = field_test_entity_form_submit_builder($form, $form_state);
+  $insert = empty($entity->ftid);
+  field_test_entity_save($entity);
+
+  $message = $insert ? t('test_entity @id has been created.', array('@id' => $entity->ftid)) : t('test_entity @id has been updated.', array('@id' => $entity->ftid));
+  drupal_set_message($message);
+
+  if ($entity->ftid) {
+    unset($form_state['rebuild']);
+    $form_state['redirect'] = 'test-entity/' . $entity->ftid . '/edit';
+  }
+  else {
+    // Error on save.
+    drupal_set_message(t('The entity could not be saved.'), 'error');
+  }
+
+}
+
+/**
+ * Build a test_entity by processing submitted form values and prepare for a form rebuild.
+ */
+function field_test_entity_form_submit_builder($form, &$form_state) {
+  $entity = field_test_create_stub_entity($form_state['values']['ftid'], $form_state['values']['ftvid'], $form_state['values']['fttype']);
+  field_attach_submit('test_entity', $entity, $form, $form_state);
+
+  $form_state['test_entity'] = (array)$entity;
+  $form_state['rebuild'] = TRUE;
+
+  return $entity;
+}
+
+/**
+ *
+ * 'Field type' API.
+ *
+ */
+
+/**
+ * Implementation of hook_field_info().
+ *
+ * This field provides a textfield which only accepts the value 1.
+ */
+function field_test_field_info() {
+  return array(
+    'test_field' => array(
+      'label' => t('Test Field'),
+      'description' => t('Stores the value 1.'),
+      'settings' => array('test_field_setting' => 'dummy test string'),
+      'instance_settings' => array('test_instance_setting' => 'dummy test string'),
+      'default_widget' => 'test_field_widget',
+      'default_formatter' => 'field_test_default',
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_field_columns().
+ */
+function field_test_field_columns($field) {
+  $columns['value'] = array(
+    'type' => 'int',
+    'size' => 'tiny',
+    'not null' => FALSE,
+  );
+  return $columns;
+}
+
+/**
+ * Implementation of hook_instance_settings().
+ */
+function field_test_field_instance_settings($field_type) {
+  return array('test_instance_setting' => 'dummy test string');
+}
+
+/**
+ * Implementation of hook_field_validate().
+ */
+function field_test_field_validate(&$obj_type, $object, $field, $instance, &$items, $form) {
+  if (is_array($items)) {
+    foreach ($items as $delta => $item) {
+      $error_element = isset($item['_error_element']) ? $item['_error_element'] : '';
+      if (is_array($item) && isset($item['_error_element'])) unset($item['_error_element']);
+      if ($item['value'] == -1) {
+        form_set_error($error_element, t('%name does not accept the value -1.', array('%name' => $instance['label'])));
+      }
+    }
+  }
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_field_sanitize().
+ */
+function field_test_field_sanitize($obj_type, $object, $field, $instance, &$items) {
+  foreach ($items as $delta => $item) {
+    $value = check_plain($item['value']);
+    $items[$delta]['safe'] = $value;
+  }
+}
+
+/**
+ * Implementation of hook_field_is_empty().
+ */
+function field_test_field_is_empty($item, $field) {
+  return empty($item['value']);
+}
+
+/**
+ * Implementation of hook_field_widget_info().
+ *
+ * Here we indicate that the content module will handle
+ * the default value and multiple values for these widgets.
+ *
+ * Callbacks can be omitted if default handing is used.
+ * They're included here just so this module can be used
+ * as an example for custom modules that might do things
+ * differently.
+ */
+function field_test_field_widget_info() {
+  return array(
+    'test_field_widget' => array(
+      'label' => t('Test field'),
+      'field types' => array('test_field'),
+      'settings' => array('test_widget_setting' => 'dummy test string'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+        'default value' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+    'test_field_widget_multiple' => array(
+      'label' => t('Test field 1'),
+      'field types' => array('test_field'),
+      'settings' => array('test_widget_setting_multiple' => 'dummy test string'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_CUSTOM,
+        'default value' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_field_widget().
+ *
+ * Attach a single form element to the form. It will be built out and
+ * validated in the callback(s) listed in hook_elements. We build it
+ * out in the callbacks rather than here in hook_widget so it can be
+ * plugged into any module that can provide it with valid
+ * $field information.
+ *
+ * Content module will set the weight, field name and delta values
+ * for each form element. This is a change from earlier CCK versions
+ * where the widget managed its own multiple values.
+ *
+ * If there are multiple values for this field, the content module will
+ * call this function as many times as needed.
+ *
+ * @param $form
+ *   the entire form array, $form['#node'] holds node information
+ * @param $form_state
+ *   the form_state, $form_state['values'][$field['field_name']]
+ *   holds the field's form values.
+ * @param $field
+ *   The field structure.
+ * @param $insatnce
+ *   the insatnce array
+ * @param $items
+ *   array of default values for this field
+ * @param $delta
+ *   the order of this item in the array of subelements (0, 1, 2, etc)
+ *
+ * @return
+ *   the form item for a single element for this field
+ */
+function field_test_field_widget(&$form, &$form_state, $field, $instance, $items, $delta = 0) {
+  $element = array(
+    'value' => array(
+      '#title' => $instance['label'],
+      '#type' => 'textfield',
+      '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : '',
+      '#required' => $instance['required'],
+    ),
+  );
+  return $element;
+}
+
+/**
+ * Implementation of hook_field_formatter_info().
+ */
+function field_test_field_formatter_info() {
+  return array(
+    'field_test_default' => array(
+      'label' => t('Default'),
+      'field types' => array('test_field'),
+      'settings' => array(
+        'test_formatter_setting' => 'dummy test string',
+      ),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+    'field_test_multiple' => array(
+      'label' => t('Default'),
+      'field types' => array('test_field'),
+      'settings' => array(
+        'test_formatter_setting_multiple' => 'dummy test string',
+      ),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_CUSTOM,
+      ),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function field_test_theme() {
+  return array(
+    'field_formatter_field_test_default' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'field_formatter_field_test_multiple' => array(
+      'arguments' => array('element' => NULL),
+    ),
+  );
+}
+
+/**
+ * Theme function for 'field_test_default' formatter.
+ */
+function theme_field_formatter_field_test_default($element) {
+  $value = $element['#item']['value'];
+  $settings = $element['#settings'];
+
+  return $settings['test_formatter_setting'] . '|' . $value;
+}
+
+/**
+ * Theme function for 'field_test_multiple' formatter.
+ */
+function theme_field_formatter_field_test_multiple($element) {
+  $settings = $element['#settings'];
+
+  $items = array();
+  foreach (element_children($element) as $key) {
+    $items[$key] = $key .':'. $element[$key]['#item']['value'];
+  }
+  $output = implode('|', $items);
+  return $settings['test_formatter_setting_multiple'] . '|' . $output;
+}

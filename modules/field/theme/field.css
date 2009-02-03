@@ -1,0 +1,30 @@
+/* Node display */
+.field .field-label,
+.field .field-label-inline,
+.field .field-label-inline-first {
+  font-weight:bold;
+}
+.field .field-label-inline,
+.field .field-label-inline-first {
+  display:inline;
+}
+.field .field-label-inline {
+  visibility:hidden;
+}
+
+.node-form .field-multiple-table td.field-multiple-drag {
+  width:30px;
+  padding-right:0;
+}
+.node-form .field-multiple-table td.field-multiple-drag a.tabledrag-handle{
+  padding-right:.5em;
+}
+
+.node-form .field-add-more .form-submit{
+  margin:0;
+}
+
+.node-form .number {
+  display:inline;
+  width:auto;
+}

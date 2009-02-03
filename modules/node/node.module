@@ -152,6 +152,49 @@ function node_cron() {
 }
 
 /**
+ * Implementation of hook_fieldable_info().
+ */
+function node_fieldable_info() {
+  $return = array(
+    'node' => array(
+      'name' => t('Node'),
+      'id key' => 'nid',
+      'revision key' => 'vid',
+      'bundle key' => 'type',
+      // Node.module handles its own caching.
+      // 'cacheable' => FALSE,
+      // Bundles must provide human readable name so
+      // we can create help and error messages about them.
+      'bundles' => node_get_types('names'),
+    ),
+  );
+  return $return;
+}
+
+
+/**
+ * Implementation of hook_field_build_modes().
+ */
+function node_field_build_modes($obj_type) {
+  $modes = array();
+  if ($obj_type == 'node') {
+    $modes = array(
+      'teaser' => t('Teaser'),
+      'full' => t('Full node'),
+      NODE_BUILD_RSS => t('RSS'),
+      NODE_BUILD_PRINT => t('Print'),
+    );
+    if (module_exists('search')) {
+      $modes += array(
+        NODE_BUILD_SEARCH_INDEX => t('Search Index'),
+        NODE_BUILD_SEARCH_RESULT => t('Search Result'),
+      );
+    }
+  }
+  return $modes;
+}
+
+/**
  * Gather a listing of links to nodes.
  *
  * @param $result
@@ -537,12 +580,17 @@ function node_type_save($info) {
   if ($is_existing) {
     db_update('node_type')->fields($fields)->condition('type', $existing_type)->execute();
 
+    if (!empty($type->old_type) && $type->old_type != $type->type) {
+      field_attach_rename_bundle($type->old_type, $type->type);
+    }
     module_invoke_all('node_type', 'update', $type);
     return SAVED_UPDATED;
   }
   else {
     $fields['orig_type'] = (string) $type->orig_type;
     db_insert('node_type')->fields($fields)->execute();
+
+    field_attach_create_bundle($type->type);
 
     module_invoke_all('node_type', 'insert', $type);
     return SAVED_NEW;
@@ -861,6 +909,14 @@ function node_load_multiple($nids = array(), $conditions = array(), $reset = FAL
       }
     }
 
+    // Attach fields.
+    if ($vid) {
+      field_attach_load_revision('node', $queried_nodes);
+    }
+    else {
+      field_attach_load('node', $queried_nodes);
+    }
+
     // Call hook_nodeapi_load(), pass the node types so modules can return early
     // if not acting on types in the array.
     foreach (module_implements('nodeapi_load') as $module) {
@@ -941,6 +997,9 @@ function node_validate($node, $form = array()) {
     }
   }
 
+  // Validate fields
+  field_attach_validate('node', $node, $form);
+
   // Do node-type-specific validation checks.
   node_invoke($node, 'validate', $form);
   node_invoke_nodeapi($node, 'validate', $form);
@@ -993,6 +1052,7 @@ function node_submit($node) {
  * Save a node object into the database.
  */
 function node_save(&$node) {
+  field_attach_presave('node', $node);
   // Let modules modify the node before it is saved to the database.
   node_invoke_nodeapi($node, 'presave');
   global $user;
@@ -1068,6 +1128,11 @@ function node_save(&$node) {
   // node_invoke($node, 'insert') or
   // node_invoke($node, 'update').
   node_invoke($node, $op);
+
+  // Save fields.
+  $function = "field_attach_$op";
+  $function('node', $node);
+
   node_invoke_nodeapi($node, $op);
 
   // Update the node access table for this node.
@@ -1204,6 +1269,9 @@ function node_build_content($node, $teaser = FALSE) {
   else {
     $node = node_prepare($node, $teaser);
   }
+
+  // Build fields content.
+  $node->content += field_attach_view('node', $node, $teaser);
 
   // Allow modules to make their own additions to the node.
   node_invoke_nodeapi($node, 'view', $teaser);

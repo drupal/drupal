@@ -1,0 +1,29 @@
+<?php
+// $Id$
+
+class FieldSqlStorageTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name'  => t('Field SQL storage tests'),
+      'description'  => t("Test field SQL storage module."),
+      'group' => t('Field')
+    );
+  }
+
+  function setUp() {
+    parent::setUp('field_sql_storage', 'field', 'field_test');
+  }
+
+  function testEntityTypeId() {
+    $t1 = _field_sql_storage_etid('t1');
+    $t2 = _field_sql_storage_etid('t2');
+
+    $this->assertEqual($t1+1, $t2, 'Entity type ids are sequential');
+    $this->assertIdentical(variable_get('field_sql_storage_t1_etid', NULL), $t1, 'First entity type variable is correct');
+    $this->assertIdentical(variable_get('field_sql_storage_t2_etid', NULL), $t2, 'Second entity type variable is correct');
+    $this->assertEqual(db_result(db_query("SELECT etid FROM {field_config_entity_type} WHERE type='t1'")), $t1, 'First entity type in database is correct');
+    $this->assertEqual(db_result(db_query("SELECT etid FROM {field_config_entity_type} WHERE type='t2'")), $t2, 'Second entity type in database is correct');
+    $this->assertEqual($t1, _field_sql_storage_etid('t1'), '_field_sql_storage_etid returns the same value for the first entity type');
+    $this->assertEqual($t2, _field_sql_storage_etid('t2'), '_field_sql_storage_etid returns the same value for the second entity type');
+  }
+}

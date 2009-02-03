@@ -1,0 +1,425 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Defines numeric field types.
+ */
+
+/**
+ * Implementation of hook_theme().
+ */
+function number_theme() {
+  return array(
+    'number' => array('arguments' => array('element' => NULL)),
+    'field_formatter_number_integer' => array('arguments' => array('element' => NULL), 'function' => 'theme_field_formatter_number'),
+    'field_formatter_number_decimal' => array('arguments' => array('element' => NULL), 'function' => 'theme_field_formatter_number'),
+    'field_formatter_number_unformatted' => array('arguments' => array('element' => NULL)),
+  );
+}
+
+/**
+ * Implementation of hook_field_info().
+ */
+function number_field_info() {
+  return array(
+    'number_integer' => array(
+      'label' => t('Integer'),
+      'description' => t('This field stores a number in the database as an integer.'),
+      'instance_settings' => array('min' => '', 'max' => '', 'prefix' => '', 'suffix' => ''),
+      'default_widget' => 'number',
+      'default_formatter' => 'number_integer',
+    ),
+    'number_decimal' => array(
+      'label' => t('Decimal'),
+      'description' => t('This field stores a number in the database in a fixed decimal format.'),
+      'settings' => array('precision' => 10, 'scale' => 2, 'decimal' => ' .'),
+      'instance_settings' => array('min' => '', 'max' => '', 'prefix' => '', 'suffix' => ''),
+      'default_widget' => 'number',
+      'default_formatter' => 'number_integer',
+    ),
+    'number_float' => array(
+      'label' => t('Float'),
+      'description' => t('This field stores a number in the database in a floating point format.'),
+      'instance_settings' => array('min' => '', 'max' => '', 'prefix' => '', 'suffix' => ''),
+      'default_widget' => 'number',
+      'default_formatter' => 'number_integer',
+    ),
+  );
+}
+
+function number_field_columns($field) {
+  switch ($field['type']) {
+    case 'number_integer' :
+      $colums = array(
+        'value' => array(
+          'type' => 'int',
+          'not null' => FALSE
+        ),
+      );
+      break;
+
+    case 'number_float' :
+      $colums = array(
+        'value' => array(
+          'type' => 'float',
+          'not null' => FALSE
+        ),
+      );
+      break;
+
+    case 'number_decimal' :
+      $colums = array(
+        'value' => array(
+          'type' => 'numeric',
+          'precision' => $field['settings']['precision'],
+          'scale' => $field['settings']['scale'],
+          'not null' => FALSE
+        ),
+      );
+      break;
+  }
+  return $colums;
+}
+
+/**
+ * Implementation of hook_field_validate().
+ */
+function number_field_validate($obj_type, $node, $field, $instance, &$items, $form) {
+  if (is_array($items)) {
+    foreach ($items as $delta => $item) {
+      $error_element = isset($item['_error_element']) ? $item['_error_element'] : '';
+      if (is_array($item) && isset($item['_error_element'])) unset($item['_error_element']);
+      if ($item['value'] != '') {
+        if (is_numeric($instance['settings']['min']) && $item['value'] < $instance['settings']['min']) {
+          form_set_error($error_element, t('%name: the value may be no smaller than %min.', array('%name' => t($instance['label']), '%min' => $instance['settings']['min'])));
+        }
+        if (is_numeric($instance['settings']['max']) && $item['value'] > $instance['settings']['max']) {
+          form_set_error($error_element, t('%name: the value may be no larger than %max.', array('%name' => t($instance['label']), '%max' => $instance['settings']['max'])));
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implementation of hook_content_is_empty().
+ */
+function number_field_is_empty($item, $field) {
+  if (empty($item['value']) && (string)$item['value'] !== '0') {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Implementation of hook_field_formatter_info().
+ */
+function number_field_formatter_info() {
+  return array(
+    'number_integer' => array(
+      'label' => t('default'),
+      'field types' => array('number_integer'),
+      'settings' =>  array(
+        'thousand_separator' => ' ',
+        'decimal_separator' => '.',
+        'scale' => 0,
+        'prefix_suffix' => TRUE,
+      ),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+    'number_decimal' => array(
+      'label' => t('default'),
+      'field types' => array('number_decimal', 'number_float'),
+      'settings' =>  array(
+        'thousand_separator' => ' ',
+        'decimal_separator' => '.',
+        'scale' => 2,
+        'prefix_suffix' => TRUE,
+      ),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+    'number_unformatted' => array(
+      'label' => t('unformatted'),
+      'field types' => array('number_integer', 'number_decimal', 'number_float'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+  );
+}
+
+/**
+ * Theme function for 'unformatted' number field formatter.
+ */
+function theme_field_formatter_number_unformatted($element) {
+  return $element['#item']['value'];
+}
+
+/**
+ * Proxy theme function for number field formatters.
+ */
+function theme_field_formatter_number($element) {
+  $field = field_info_field($element['#field_name']);
+  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  $value = $element['#item']['value'];
+  $settings = $element['#settings'];
+  $formatter_type = $element['#formatter'];
+
+  if (empty($value) && $value !== '0') {
+    return '';
+  }
+
+  $output = number_format($value, $settings['scale'], $settings['decimal_separator'], $settings['thousand_separator']);
+
+  if ($settings['prefix_suffix']) {
+    $prefixes = isset($instance['settings']['prefix']) ? explode('|', check_plain($instance['settings']['prefix'])) : array(0 => '');
+    $suffixes = isset($instance['settings']['suffix']) ? explode('|', check_plain($instance['settings']['suffix'])) : array(0 => '');
+    $prefix = (count($prefixes) > 1) ? format_plural($value, $prefixes[0], $prefixes[1]) : $prefixes[0];
+    $suffix = (count($suffixes) > 1) ? format_plural($value, $suffixes[0], $suffixes[1]) : $suffixes[0];
+    $output = $prefix . $output . $suffix;
+  }
+
+  return $output;
+}
+
+/**
+ * Implementation of hook_field_widget_info().
+ *
+ * Here we indicate that the Field module will handle
+ * multiple values for these widgets.
+ *
+ * Callbacks can be omitted if default handing is used.
+ * They're included here just so this module can be used
+ * as an example for custom modules that might do things
+ * differently.
+ */
+function number_field_widget_info() {
+  return array(
+    'number' => array(
+      'label' => t('Text field'),
+      'field types' => array('number_integer', 'number_decimal', 'number_float'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+        'default value' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+  );
+}
+
+/**
+ * Implementation of FAPI hook_elements().
+ *
+ * Any FAPI callbacks needed for individual widgets can be declared here,
+ * and the element will be passed to those callbacks for processing.
+ *
+ * Drupal will automatically theme the element using a theme with
+ * the same name as the hook_elements key.
+ *
+ * Includes a regex to check for valid values as an additional parameter
+ * the validator can use. The regex can be overridden if necessary.
+ */
+function number_elements() {
+  return array(
+    'number' => array(
+      '#input' => TRUE,
+      '#columns' => array('value'), '#delta' => 0,
+      '#process' => array('number_process'),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_field_widget().
+ *
+ * Attach a single form element to the form. It will be built out and
+ * validated in the callback(s) listed in hook_elements. We build it
+ * out in the callbacks rather than here in hook_widget so it can be
+ * plugged into any module that can provide it with valid
+ * $field information.
+ *
+ * Field module will set the weight, field name and delta values
+ * for each form element. 
+ *
+ * If there are multiple values for this field, the Field module will
+ * call this function as many times as needed.
+ *
+ * @param $form
+ *   the entire form array, $form['#node'] holds node information
+ * @param $form_state
+ *   the form_state, $form_state['values'] holds the form values.
+ * @param $field
+ *   The field structure.
+ * @param $instance
+ *   the field instance array
+ * @param $delta
+ *   the order of this item in the array of subelements (0, 1, 2, etc)
+ *
+ * @return
+ *   the form item for a single element for this field
+ */
+function number_field_widget(&$form, &$form_state, $field, $instance, $items, $delta = 0) {
+  $element = array(
+    '#type' => $instance['widget']['type'],
+    '#default_value' => isset($items[$delta]) ? $items[$delta] : NULL,
+  );
+  return $element;
+}
+
+/**
+ * Process an individual element.
+ *
+ * Build the form element. When creating a form using FAPI #process,
+ * note that $element['#value'] is already set.
+ *
+ * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
+ */
+function number_process($element, $edit, $form_state, $form) {
+  $field_name = $element['#field_name'];
+  $field = field_info_field($element['#field_name']);
+  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  $field_key  = $element['#columns'][0];
+
+  $value = isset($element['#value'][$field_key]) ? $element['#value'][$field_key] : '';
+  if ($field['type'] == 'number_decimal') {
+    $value = str_replace('.', $field['settings']['decimal'], $value);
+  }
+
+  $element[$field_key] = array(
+    '#type' => 'textfield',
+    '#default_value' => $value,
+    // Need to allow a slightly larger size that the field length to allow
+    // for some configurations where all characters won't fit in input field.
+    '#size' => $field['type'] == 'number_decimal' ? $field['settings']['precision'] + 2 : 12,
+    '#maxlength' => $field['type'] == 'number_decimal' ? $field['settings']['precision'] : 10,
+    '#attributes' => array('class' => 'number'),
+    // The following values were set by the Field module and need
+    // to be passed down to the nested element.
+    '#title' => $element['#title'],
+    '#description' => $element['#description'],
+    '#required' => $element['#required'],
+    '#field_name' => $element['#field_name'],
+    '#bundle' => $element['#bundle'],
+    '#delta' => $element['#delta'],
+    '#columns' => $element['#columns'],
+  );
+
+  if (!empty($instance['settings']['prefix'])) {
+    $prefixes = explode('|', $instance['settings']['prefix']);
+    $element[$field_key]['#field_prefix'] = array_pop($prefixes);
+  }
+  if (!empty($instance['settings']['suffix'])) {
+    $suffixes = explode('|', $instance['settings']['suffix']);
+    $element[$field_key]['#field_suffix'] = array_pop($suffixes);
+  }
+
+  // Make sure we don't wipe out element validation added elsewhere.
+  if (empty($element['#element_validate'])) {
+    $element['#element_validate'] = array();
+  }
+  switch ($field['type']) {
+    case 'number_float':
+      $element['#element_validate'][] = 'number_float_validate';
+      break;
+    case 'number_integer':
+      $element['#element_validate'][] = 'number_integer_validate';
+      break;
+    case 'number_decimal':
+      $element['#element_validate'][] = 'number_decimal_validate';
+      break;
+  }
+
+  // Used so that hook_field('validate') knows where to flag an error.
+  $element['_error_element'] = array(
+    '#type' => 'value',
+    '#value' => implode('][', array_merge($element['#parents'], array($field_key))),
+  );
+
+  return $element;
+}
+
+/**
+ * FAPI validation of an individual float element.
+ */
+function number_float_validate($element, &$form_state) {
+  $field = field_info_field($element['#field_name']);
+  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  $field_key = $element['#columns'][0];
+  $value = $element['#value'][$field_key];
+
+  if (($element[$field_key]['#required'] || !empty($value))) {
+    $start = $value;
+    $value = preg_replace('@[^-0-9\.]@', '', $value);
+    if ($start != $value) {
+      $error_field = implode('][', $element['#parents']) . '][' . $field_key;
+      form_set_error($error_field, t('Only numbers and decimals are allowed in %field.', array('%field' => t($instance['label']))));
+    }
+    else {
+      form_set_value($element[$field_key], $value, $form_state);
+    }
+  }
+}
+
+/**
+ * FAPI validation of an individual integer element.
+ */
+function number_integer_validate($element, &$form_state) {
+  $field = field_info_field($element['#field_name']);
+  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  $field_key = $element['#columns'][0];
+  $value = $element['#value'][$field_key];
+
+  if (($element[$field_key]['#required'] || !empty($value))) {
+    $start = $value;
+    $value = preg_replace('@[^-0-9]@', '', $value);
+    if ($start != $value) {
+      $error_field = implode('][', $element['#parents']) . '][' . $field_key;
+      form_set_error($error_field, t('Only numbers are allowed in %field.', array('%field' => t($instance['label']))));
+    }
+    else {
+      form_set_value($element[$field_key], $value, $form_state);
+    }
+  }
+}
+
+/**
+ * FAPI validation of an individual decimal element.
+ */
+function number_decimal_validate($element, &$form_state) {
+  $field = field_info_field($element['#field_name']);
+  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  $field_key = $element['#columns'][0];
+  $value = $element['#value'][$field_key];
+
+  if (($element[$field_key]['#required'] || !empty($value))) {
+    $start = $value;
+    $value = preg_replace('@[^-0-9\\' . $field['settings']['decimal'] . ']@', '', $value);
+    if ($start != $value) {
+      $error_field = implode('][', $element['#parents']) . '][' . $field_key;
+      form_set_error($error_field, t('Only numbers and the decimal character (%decimal) are allowed in %field.', array('%decimal' => $field['settings']['decimal'], '%field' => t($instance['label']))));
+    }
+    else {
+      $value = str_replace($field['settings']['decimal'], ' .', $value);
+      $value = round($value, $field['settings']['scale']);
+      form_set_value($element[$field_key], $value, $form_state);
+    }
+  }
+}
+
+/**
+ * FAPI theme for an individual number element.
+ *
+ * The textfield is already rendered by the textfield
+ * theme and the HTML output lives in $element['#children'].
+ * Override this theme to make custom changes to the output.
+ *
+ * $element['#field_name'] contains the field name
+ * $element['#delta]  is the position of this element in the group
+ */
+function theme_number($element) {
+  return $element['#children'];
+}

@@ -1,0 +1,422 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Defines selection, check box and radio button widgets for text and numeric fields.
+ */
+/**
+ * Implementation of hook_theme().
+ */
+function options_theme() {
+  return array(
+    'options_select' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'options_buttons' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'options_onoff' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'options_none' => array(
+      'arguments' => array('widget_type' => NULL, 'field_name' => NULL, 'node_type' => NULL),
+      ),
+  );
+}
+
+/**
+ * Implementation of hook_field_widget_info().
+ *
+ * We need custom handling of multiple values because we need
+ * to combine them into a options list rather than display
+ * cardinality elements. We will use the field module's default
+ * handling for default values.
+ *
+ * Callbacks can be omitted if default handing is used.
+ * They're included here just so this module can be used
+ * as an example for custom modules that might do things
+ * differently.
+ */
+function options_field_widget_info() {
+
+  return array(
+    'options_select' => array(
+      'label' => t('Select list'),
+      'field types' => array('list', 'list_boolean', 'list_text', 'list_number'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_CUSTOM,
+        'default value' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+    'options_buttons' => array(
+      'label' => t('Check boxes/radio buttons'),
+      'field types' => array('list', 'list_boolean', 'list_text', 'list_number'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_CUSTOM,
+        'default value' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+    'options_onoff' => array(
+      'label' => t('Single on/off checkbox'),
+      'field types' => array('list_boolean'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_CUSTOM,
+        'default value' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+  );
+}
+
+/**
+ * Implementation of FAPI hook_elements().
+ *
+ * Any FAPI callbacks needed for individual widgets can be declared here,
+ * and the element will be passed to those callbacks for processing.
+ *
+ * Drupal will automatically theme the element using a theme with
+ * the same name as the hook_elements key.
+ */
+function options_elements() {
+  return array(
+    'options_select' => array(
+      '#input' => TRUE,
+      '#columns' => array('value'), '#delta' => 0,
+      '#process' => array('options_select_process'),
+      ),
+    'options_buttons' => array(
+      '#input' => TRUE,
+      '#columns' => array('value'), '#delta' => 0,
+      '#process' => array('options_buttons_process'),
+      ),
+    'options_onoff' => array(
+      '#input' => TRUE,
+      '#columns' => array('value'), '#delta' => 0,
+      '#process' => array('options_onoff_process'),
+      ),
+    );
+}
+
+/**
+ * Implementation of hook_field_widget().
+ */
+function options_field_widget(&$form, &$form_state, $field, $instance, $items, $delta = NULL) {
+  $element = array(
+    '#type' => $instance['widget']['type'],
+    '#default_value' => !empty($items) ? $items : array(),
+  );
+  return $element;
+}
+
+/**
+ * Process an individual element.
+ *
+ * Build the form element. When creating a form using FAPI #process,
+ * note that $element['#value'] is already set.
+ *
+ * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
+ */
+function options_buttons_process($element, $edit, &$form_state, $form) {
+  $field = $form['#fields'][$element['#field_name']]['field'];
+  $instance = $form['#fields'][$element['#field_name']]['instance'];
+  $field_key  = $element['#columns'][0];
+
+  // See if this element is in the database format or the transformed format,
+  // and transform it if necessary.
+  if (is_array($element['#value']) && !array_key_exists($field_key, $element['#value'])) {
+    $element['#value'] = options_data2form($element, $element['#default_value'], $field);
+  }
+  $options = options_options($field, $instance);
+  $multiple = isset($element['#multiple']) ? $element['#multiple'] : $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
+  
+  $value = array();
+  foreach ($element['#value'][$field_key] as $key) {
+    // Multiple (checkboxes) need the default value in the form of an array.
+    if ($multiple) {
+      $value[$key] = 1;
+    }
+    // Non-multiple (radios) need single default value.
+    else {
+      $value = $key;
+      break;
+    }
+  }
+
+  $element[$field_key] = array(
+    '#type' => $multiple ? 'checkboxes' : 'radios',
+    '#title' => $element['#title'],
+    '#description' => $element['#description'],
+    '#required' => isset($element['#required']) ? $element['#required'] : $instance['required'],
+    '#multiple' => $multiple,
+    '#options' => $options,
+    '#default_value' => $value,
+  );
+ 
+  // Set #element_validate in a way that it will not wipe out other
+  // validation functions already set by other modules.
+  if (empty($element['#element_validate'])) {
+    $element['#element_validate'] = array();
+  }
+  array_unshift($element['#element_validate'], 'options_validate');
+
+  // Make sure field info will be available to the validator which
+  // does not get the values in $form.
+  $form_state['#fields'][$element['#field_name']] = $form['#fields'][$element['#field_name']];
+  return $element;
+}
+
+/**
+ * Process an individual element.
+ *
+ * Build the form element. When creating a form using FAPI #process,
+ * note that $element['#value'] is already set.
+ *
+ * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
+ */
+function options_select_process($element, $edit, &$form_state, $form) {
+  $field = $form['#fields'][$element['#field_name']]['field'];
+  $instance = $form['#fields'][$element['#field_name']]['instance'];
+  $field_key  = $element['#columns'][0];
+
+  // See if this element is in the database format or the transformed format,
+  // and transform it if necessary.
+  if (is_array($element['#value']) && !array_key_exists($field_key, $element['#value'])) {
+    $element['#value'] = options_data2form($element, $element['#default_value'], $field);
+  }
+
+  $options = options_options($field, $instance);
+  $element[$field_key] = array(
+    '#type' => 'select',
+    '#title' => $element['#title'],
+    '#description' => $element['#description'],
+    '#required' => isset($element['#required']) ? $element['#required'] : $instance['required'],
+    '#multiple' => isset($element['#multiple']) ? $element['#multiple'] : $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED,
+    '#options' => $options,
+    '#default_value' => isset($element['#value'][$field_key]) ? $element['#value'][$field_key] : NULL,
+  );
+  
+  // Set #element_validate in a way that it will not wipe out other
+  // validation functions already set by other modules.
+  if (empty($element['#element_validate'])) {
+    $element['#element_validate'] = array();
+  }
+  array_unshift($element['#element_validate'], 'options_validate');
+
+  // Make sure field info will be available to the validator which
+  // does not get the values in $form.
+  $form_state['#fields'][$element['#field_name']] = $form['#fields'][$element['#field_name']];
+  return $element;
+}
+
+/**
+ * Process an individual element.
+ *
+ * Build the form element. When creating a form using FAPI #process,
+ * note that $element['#value'] is already set.
+ */
+function options_onoff_process($element, $edit, &$form_state, $form) {
+  $field = $form['#fields'][$element['#field_name']]['field'];
+  $instance = $form['#fields'][$element['#field_name']]['instance'];
+  $field_key  = $element['#columns'][0];
+
+  // See if this element is in the database format or the transformed format,
+  // and transform it if necessary.
+  if (is_array($element['#value']) && !array_key_exists($field_key, $element['#value'])) {
+    $element['#value'] = options_data2form($element, $element['#default_value'], $field);
+  }
+  $options = options_options($field, $instance);
+  $keys = array_keys($options);
+  $on_value = (!empty($keys) && isset($keys[1])) ? $keys[1] : NULL;
+  $element[$field_key] = array(
+    '#type' => 'checkbox',
+    '#title' => isset($options[$on_value]) ? $options[$on_value] : '',
+    '#description' => $element['#description'],
+    '#default_value' => isset($element['#value'][$field_key][0]) ? $element['#value'][$field_key][0] == $on_value : FALSE,
+    '#return_value' => $on_value,
+  );
+
+  // Set #element_validate in a way that it will not wipe out other
+  // validation functions already set by other modules.
+  if (empty($element['#element_validate'])) {
+    $element['#element_validate'] = array();
+  }
+  array_unshift($element['#element_validate'], 'options_validate');
+
+  // Make sure field info will be available to the validator which
+  // does not get the values in $form.
+  $form_state['#fields'][$element['#field_name']] = $form['#fields'][$element['#field_name']];
+  return $element;
+}
+
+/**
+ * FAPI function to validate options element.
+ */
+function options_validate($element, &$form_state) {
+  // Transpose selections from field => delta to delta => field,
+  // turning cardinality selected options into cardinality parent elements.
+  // Immediate parent is the delta, need to get back to parent's parent
+  // to create cardinality elements.
+  $field = $form_state['#fields'][$element['#field_name']]['field'];
+  $items = options_form2data($element, $field);
+  form_set_value($element, $items, $form_state);
+
+  // Check we don't exceed the allowed number of values.
+  if ($field['cardinality'] >= 2) {
+    // Filter out 'none' value (if present, will always be in key 0)
+    $field_key = $element['#columns'][0];
+    if (isset($items[0][$field_key]) && $items[0][$field_key] === '') {
+      unset($items[0]);
+    }
+    if (count($items) > $field['cardinality']) {
+      $field_key  = $element['#columns'][0];
+      form_error($element[$field_key], t('%name: this field cannot hold more that @count values.', array('%name' => t($field['widget']['label']), '@count' => $field['cardinality'])));
+    }
+  }
+}
+
+/**
+ * Helper function to transpose the values as stored in the database
+ * to the format the widget needs. Can be called anywhere this
+ * transformation is needed.
+ */
+function options_data2form($element, $items, $field) {
+  $field_key  = $element['#columns'][0];
+  $field = field_info_field($element['#field_name']);
+  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  $options    = options_options($field, $instance);
+
+  $items_transposed = options_transpose_array_rows_cols($items);
+  $values = (isset($items_transposed[$field_key]) && is_array($items_transposed[$field_key])) ? $items_transposed[$field_key] : array();
+  $keys = array();
+  foreach ($values as $value) {
+    $key = array_search($value, array_keys($options));
+    if (isset($key)) {
+      $keys[] = $value;
+    }
+  }
+  if ($field['cardinality'] || $element['#type'] == 'options_onoff') {
+    return array($field_key => $keys);
+  }
+  else {
+    return !empty($keys) ? array($field_key => $value) : array();
+  }
+}
+
+/**
+ * Helper function to transpose the values returned by submitting the widget
+ * to the format to be stored in the field. Can be called anywhere this
+ * transformation is needed.
+ */
+function options_form2data($element, $field) {
+  $field_key = $element['#columns'][0];
+  $field = field_info_field($element['#field_name']);
+  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+  $items = (array) $element[$field_key]['#value'];
+  $options = options_options($field, $instance);
+
+  $values = array_values($items);
+
+  if ($element['#type'] == 'options_onoff' && ($values[0] === 0)) {
+    $keys = array_keys($options);
+    $values = array(array_key_exists(0, $keys) ? $keys[0] : NULL);
+  }
+
+  if (empty($values)) {
+    $values[] = NULL;
+  }
+  $result = options_transpose_array_rows_cols(array($field_key => $values));
+  return $result;
+}
+
+/**
+ * Manipulate a 2D array to reverse rows and columns.
+ *
+ * The default data storage for fields is delta first, column names second.
+ * This is sometimes inconvenient for field modules, so this function can be
+ * used to present the data in an alternate format.
+ *
+ * @param $array
+ *   The array to be transposed. It must be at least two-dimensional, and
+ *   the subarrays must all have the same keys or behavior is undefined.
+ * @return
+ *   The transposed array.
+ */
+function options_transpose_array_rows_cols($array) {
+  $result = array();
+  if (is_array($array)) {
+    foreach ($array as $key1 => $value1) {
+      if (is_array($value1)) {
+        foreach ($value1 as $key2 => $value2) {
+          if (!isset($result[$key2])) {
+            $result[$key2] = array();
+          }
+          $result[$key2][$key1] = $value2;
+        }
+      }
+    }
+  }
+  return $result;
+}
+
+/**
+ * Helper function for finding the allowed values list for a field.
+ *
+ * See if there is a module hook for the option values.
+ * Otherwise, try list_allowed_values() for an options list.
+ */
+function options_options($field, $instance) {
+  $function = $field['module'] . '_allowed_values';
+  $options = function_exists($function) ? $function($field) : (array) list_allowed_values($field);
+  // Add an empty choice for :
+  // - non required radios
+  // - non required selects
+  if (!$instance['required']) {
+    if ((in_array($instance['widget']['type'], array('options_buttons', 'node_reference_buttons', 'user_reference_buttons')) && !$field['cardinality'])
+      || (in_array($instance['widget']['type'], array('options_select', 'node_reference_select', 'user_reference_select')))) {
+      $options = array('' => theme('options_none', $instance)) + $options;
+    }
+  }
+  return $options;
+}
+
+/**
+ *  Theme the label for the empty value for options that are not required.
+ *  The default theme will display N/A for a radio list and blank for a select.
+ */
+function theme_options_none($instance) {
+  switch ($instance['widget']['type']) {
+    case 'options_buttons':
+    case 'node_reference_buttons':
+    case 'user_reference_buttons':
+      return t('N/A');
+    case 'options_select':
+    case 'node_reference_select':
+    case 'user_reference_select':
+      return t('- None -');
+    default :
+      return '';
+  }
+}
+
+/**
+ * FAPI themes for options.
+ *
+ * The select, checkboxes or radios are already rendered by the
+ * select, checkboxes, or radios themes and the HTML output
+ * lives in $element['#children']. Override this theme to
+ * make custom changes to the output.
+ *
+ * $element['#field_name'] contains the field name
+ * $element['#delta]  is the position of this element in the group
+ */
+function theme_options_select($element) {
+  return $element['#children'];
+}
+
+function theme_options_onoff($element) {
+  return $element['#children'];
+}
+
+function theme_options_buttons($element) {
+  return $element['#children'];
+}

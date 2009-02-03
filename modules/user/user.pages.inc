@@ -174,6 +174,9 @@ function template_preprocess_user_profile(&$variables) {
   }
   // Collect all profiles to make it easier to print all items at once.
   $variables['user_profile'] = implode($variables['profile']);
+
+  // Add $FIELD_NAME_rendered variables for fields.
+  $variables += field_attach_preprocess('user', $variables['account']);
 }
 
 /**
@@ -236,6 +239,10 @@ function user_profile_form($form_state, $account, $category = 'account') {
   $edit = (empty($form_state['values'])) ? (array)$account : $form_state['values'];
 
   $form = _user_forms($edit, $account, $category);
+
+  // Attach field widgets.
+  field_attach_form('user', (object) $edit, $form, $form_state);
+
   $form['_category'] = array('#type' => 'value', '#value' => $category);
   $form['_account'] = array('#type' => 'value', '#value' => $account);
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save'), '#weight' => 30);
@@ -256,6 +263,10 @@ function user_profile_form($form_state, $account, $category = 'account') {
  * Validation function for the user account and profile editing form.
  */
 function user_profile_form_validate($form, &$form_state) {
+  // Validate field widgets.
+  $tmp_obj = (object) $form_state['values'];
+  field_attach_validate('user', $tmp_obj, $form, $form_state);
+
   user_module_invoke('validate', $form_state['values'], $form_state['values']['_account'], $form_state['values']['_category']);
   // Validate input to ensure that non-privileged users can't alter protected data.
   if ((!user_access('administer users') && array_intersect(array_keys($form_state['values']), array('uid', 'init', 'session'))) || (!user_access('administer permissions') && isset($form_state['values']['roles']))) {
@@ -272,6 +283,8 @@ function user_profile_form_submit($form, &$form_state) {
   $account = $form_state['values']['_account'];
   $category = $form_state['values']['_category'];
   unset($form_state['values']['_account'], $form_state['values']['op'], $form_state['values']['submit'], $form_state['values']['cancel'], $form_state['values']['form_token'], $form_state['values']['form_id'], $form_state['values']['_category'], $form_state['values']['form_build_id']);
+
+  field_attach_submit('user', $account, $form, $form_state);
   user_module_invoke('submit', $form_state['values'], $account, $category);
   user_save($account, $form_state['values'], $category);
 

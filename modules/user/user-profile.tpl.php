@@ -39,6 +39,7 @@
  *   - $user_profile: All user profile data. Ready for print.
  *   - $profile: Keyed array of profile categories and their items or other data
  *     provided by modules.
+ *   - TODO D7 : document $FIELD_NAME_rendered variables.
  *
  * @see template_preprocess_user_profile()
  */
