@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.467 2009/02/03 17:30:10 dries Exp $
+// $Id: theme.inc,v 1.468 2009/02/03 18:55:29 dries Exp $
 
 /**
  * @file
@@ -1584,7 +1584,7 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attribu
  */
 function theme_list($elements) {
   // Populate any missing array elements with their defaults.
-  $elements += _element_info('list');
+  $elements += element_info('list');
 
   return theme('item_list', $elements['#items'], $elements['#title'], $elements['#list_type'], $elements['#attributes']);
 }

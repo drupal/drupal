@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.37 2009/01/19 10:46:51 dries Exp $
+// $Id: node.admin.inc,v 1.38 2009/02/03 18:55:30 dries Exp $
 
 /**
  * @file
@@ -269,7 +269,7 @@ function theme_node_filter_form($form) {
   $output .= '<div id="node-admin-filter">';
   $output .= drupal_render($form['filters']);
   $output .= '</div>';
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
   return $output;
 }
 
@@ -616,7 +616,7 @@ function theme_node_admin_nodes($form) {
     $output .= drupal_render($form['pager']);
   }
 
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
 
   return $output;
 }

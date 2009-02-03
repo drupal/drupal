@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.admin.inc,v 1.20 2008/12/30 16:43:18 dries Exp $
+// $Id: profile.admin.inc,v 1.21 2009/02/03 18:55:31 dries Exp $
 
 /**
  * @file
@@ -152,7 +152,7 @@ function theme_profile_admin_overview($form) {
   $header[] = array('data' => t('Operations'), 'colspan' => 2);
 
   $output = theme('table', $header, $rows, array('id' => 'profile-fields'));
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
 
   return $output;
 }

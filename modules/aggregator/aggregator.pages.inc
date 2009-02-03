@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.23 2008/12/22 19:38:31 dries Exp $
+// $Id: aggregator.pages.inc,v 1.24 2009/02/03 18:55:29 dries Exp $
 
 /**
  * @file
@@ -250,7 +250,7 @@ function theme_aggregator_categorize_items($form) {
   }
   $output .= theme('table', array('', t('Categorize')), $rows);
   $output .= drupal_render($form['submit']);
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
 
   return theme('aggregator_wrapper', $output);
 }

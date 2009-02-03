@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.319 2009/02/01 06:48:14 webchick Exp $
+// $Id: form.inc,v 1.320 2009/02/03 18:55:29 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -512,7 +512,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
     $form['#id'] = form_clean_id($form_id);
   }
 
-  $form += _element_info('form');
+  $form += element_info('form');
   $form += array('#tree' => FALSE, '#parents' => array());
 
   if (!isset($form['#validate'])) {
@@ -861,7 +861,7 @@ function form_builder($form_id, $form, &$form_state) {
   $form['#processed'] = FALSE;
 
   // Use element defaults.
-  if ((!empty($form['#type'])) && ($info = _element_info($form['#type']))) {
+  if ((!empty($form['#type'])) && ($info = element_info($form['#type']))) {
     // Overlay $info onto $form, retaining preexisting keys in $form.
     $form += $info;
   }
@@ -1348,35 +1348,6 @@ function _form_set_value(&$form_values, $form_item, $parents, $value) {
   }
 }
 
-/**
- * Retrieve the default properties for the defined element type.
- */
-function _element_info($type, $refresh = NULL) {
-  static $cache;
-
-  $basic_defaults = array(
-    '#description' => NULL,
-    '#attributes' => array(),
-    '#required' => FALSE,
-  );
-  if (!isset($cache) || $refresh) {
-    $cache = array();
-    foreach (module_implements('elements') as $module) {
-      $elements = module_invoke($module, 'elements');
-      if (isset($elements) && is_array($elements)) {
-        $cache = array_merge_recursive($cache, $elements);
-      }
-    }
-    if (sizeof($cache)) {
-      foreach ($cache as $element_type => $info) {
-        $cache[$element_type] = array_merge_recursive($basic_defaults, $info);
-      }
-    }
-  }
-
-  return $cache[$type];
-}
-
 function form_options_flatten($array, $reset = TRUE) {
   static $return;
 
@@ -1419,7 +1390,7 @@ function theme_select($element) {
   $size = $element['#size'] ? ' size="' . $element['#size'] . '"' : '';
   _form_set_class($element, array('form-select'));
   $multiple = $element['#multiple'];
-  return theme('form_element', $element, '<select name="' . $element['#name'] . '' . ($multiple ? '[]' : '') . '"' . ($multiple ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) . ' id="' . $element['#id'] . '" ' . $size . '>' . form_select_options($element) . '</select>');
+  return '<select name="' . $element['#name'] . '' . ($multiple ? '[]' : '') . '"' . ($multiple ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) . ' id="' . $element['#id'] . '" ' . $size . '>' . form_select_options($element) . '</select>';
 }
 
 function form_select_options($element, $choices = NULL) {
@@ -1555,8 +1526,7 @@ function theme_radio($element) {
     $output = '<label class="option" for="' . $element['#id'] . '">' . $output . ' ' . $element['#title'] . '</label>';
   }
 
-  unset($element['#title']);
-  return theme('form_element', $element, $output);
+  return $output;
 }
 
 /**
@@ -1576,28 +1546,8 @@ function theme_radios($element) {
     $class .= ' ' . $element['#attributes']['class'];
   }
   $element['#children'] = '<div class="' . $class . '">' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
-  if ($element['#title'] || $element['#description']) {
-    unset($element['#id']);
-    return theme('form_element', $element, $element['#children']);
-  }
-  else {
-    return $element['#children'];
-  }
-}
 
-/**
- * Format a password_confirm item.
- *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: title, value, id, required, error.
- * @return
- *   A themed HTML string representing the form item.
- *
- * @ingroup themeable
- */
-function theme_password_confirm($element) {
-  return theme('form_element', $element, $element['#children']);
+  return $element['#children'];
 }
 
 /**
@@ -1665,7 +1615,7 @@ function password_confirm_validate($form, &$form_state) {
  * @ingroup themeable
  */
 function theme_date($element) {
-  return theme('form_element', $element, '<div class="container-inline">' . $element['#children'] . '</div>');
+  return '<div class="container-inline">' . drupal_render_children($element) . '</div>';
 }
 
 /**
@@ -1881,6 +1831,8 @@ function form_process_input_format($element) {
     // We need to break references, otherwise form_builder recurses infinitely.
     $element['value'] = (array)$element;
     $element['#type'] = 'markup';
+    $element['#theme'] = NULL;
+    $element['#theme_wrapper'] = NULL;
     $element['format'] = filter_form($element['#text_format'], 1, $element_parents);
 
     // We need to clear the #text_format from the new child otherwise we
@@ -1977,21 +1929,6 @@ function form_process_ahah($element) {
 }
 
 /**
- * Format a form item.
- *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used:  title, value, description, required, error
- * @return
- *   A themed HTML string representing the form item.
- *
- * @ingroup themeable
- */
-function theme_item($element) {
-  return theme('form_element', $element, $element['#markup'] . (!empty($element['#children']) ? $element['#children'] : ''));
-}
-
-/**
  * Format a checkbox.
  *
  * @param $element
@@ -2016,8 +1953,7 @@ function theme_checkbox($element) {
     $checkbox = '<label class="option" for="' . $element['#id'] . '">' . $checkbox . ' ' . $element['#title'] . '</label>';
   }
 
-  unset($element['#title']);
-  return theme('form_element', $element, $checkbox);
+  return $checkbox;
 }
 
 /**
@@ -2036,13 +1972,21 @@ function theme_checkboxes($element) {
     $class .= ' ' . $element['#attributes']['class'];
   }
   $element['#children'] = '<div class="' . $class . '">' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
+  
+  return $element['#children'];
+}
+
+/**
+ * Add form_element theming to an element if title or desription is set.
+ *
+ * This is used as a pre render function for checkboxes and radios.
+ */
+function form_pre_render_conditional_form_element($element) {
   if ($element['#title'] || $element['#description']) {
     unset($element['#id']);
-    return theme('form_element', $element, $element['#children']);
+    $element['#theme_wrapper'] = 'form_element';
   }
-  else {
-    return $element['#children'];
-  }
+  return $element;
 }
 
 function form_process_checkboxes($element) {
@@ -2090,7 +2034,7 @@ function theme_tableselect($element) {
       $row = array();
 
       // Render the checkbox / radio element.
-      $row[] = $element[$key]['#content'];
+      $row[] = drupal_render($element[$key]);
 
       // As theme_table only maps header and row columns by order, create the
       // correct order by iterating over the header fields.
@@ -2244,15 +2188,6 @@ function theme_hidden($element) {
 }
 
 /**
- * Format a form token.
- *
- * @ingroup themeable
- */
-function theme_token($element) {
-  return theme('hidden', $element);
-}
-
-/**
  * Format a textfield.
  *
  * @param $element
@@ -2286,8 +2221,7 @@ function theme_textfield($element) {
   if (isset($element['#field_suffix'])) {
     $output .= ' <span class="field-suffix">' . $element['#field_suffix'] . '</span>';
   }
-
-  return theme('form_element', $element, $output) . $extra;
+  return $output . $extra;
 }
 
 /**
@@ -2337,7 +2271,7 @@ function theme_textarea($element) {
   }
 
   _form_set_class($element, $class);
-  return theme('form_element', $element, '<textarea cols="' . $element['#cols'] . '" rows="' . $element['#rows'] . '" name="' . $element['#name'] . '" id="' . $element['#id'] . '" ' . drupal_attributes($element['#attributes']) . '>' . check_plain($element['#value']) . '</textarea>');
+  return '<textarea cols="' . $element['#cols'] . '" rows="' . $element['#rows'] . '" name="' . $element['#name'] . '" id="' . $element['#id'] . '" ' . drupal_attributes($element['#attributes']) . '>' . check_plain($element['#value']) . '</textarea>';
 }
 
 /**
@@ -2355,7 +2289,7 @@ function theme_textarea($element) {
  */
 
 function theme_markup($element) {
-  return (isset($element['#markup']) ? $element['#markup'] : '') . (isset($element['#children']) ? $element['#children'] : '');
+  return (!empty($element['#markup']) ? $element['#markup'] : '') . drupal_render_children($element);
 }
 
 /**
@@ -2375,7 +2309,7 @@ function theme_password($element) {
 
   _form_set_class($element, array('form-text'));
   $output = '<input type="password" name="' . $element['#name'] . '" id="' . $element['#id'] . '" ' . $maxlength . $size . drupal_attributes($element['#attributes']) . ' />';
-  return theme('form_element', $element, $output);
+  return $output;
 }
 
 /**
@@ -2388,7 +2322,7 @@ function form_process_weight($element) {
   $element['#options'] = $weights;
   $element['#type'] = 'select';
   $element['#is_weight'] = TRUE;
-  $element += _element_info('select');
+  $element += element_info('select');
   return $element;
 }
 
@@ -2415,7 +2349,7 @@ function form_process_weight($element) {
  */
 function theme_file($element) {
   _form_set_class($element, array('form-file'));
-  return theme('form_element', $element, '<input type="file" name="' . $element['#name'] . '"' . ($element['#attributes'] ? ' ' . drupal_attributes($element['#attributes']) : '') . ' id="' . $element['#id'] . '" size="' . $element['#size'] . "\" />\n");
+  return '<input type="file" name="' . $element['#name'] . '"' . ($element['#attributes'] ? ' ' . drupal_attributes($element['#attributes']) : '') . ' id="' . $element['#id'] . '" size="' . $element['#size'] . "\" />\n";
 }
 
 /**
@@ -2423,15 +2357,13 @@ function theme_file($element) {
  *
  * @param element
  *   An associative array containing the properties of the element.
- *   Properties used: title, description, id, required
- * @param $value
- *   The form element's data.
+ *   Properties used: title, description, id, required, children
  * @return
  *   A string representing the form element.
  *
  * @ingroup themeable
  */
-function theme_form_element($element, $value) {
+function theme_form_element($element) {
   // This is also used in the installer, pre-database setup.
   $t = get_t();
 
@@ -2442,7 +2374,7 @@ function theme_form_element($element, $value) {
   $output .= ">\n";
   $required = !empty($element['#required']) ? '<span class="form-required" title="' . $t('This field is required.') . '">*</span>' : '';
 
-  if (!empty($element['#title'])) {
+  if (!empty($element['#title']) && empty($element['#form_element_skip_title'])) {
     $title = $element['#title'];
     if (!empty($element['#id'])) {
       $output .= ' <label for="' . $element['#id'] . '">' . $t('!title: !required', array('!title' => filter_xss_admin($title), '!required' => $required)) . "</label>\n";
@@ -2452,7 +2384,7 @@ function theme_form_element($element, $value) {
     }
   }
 
-  $output .= " $value\n";
+  $output .= " " . $element['#children'] . "\n";
 
   if (!empty($element['#description'])) {
     $output .= ' <div class="description">' . $element['#description'] . "</div>\n";

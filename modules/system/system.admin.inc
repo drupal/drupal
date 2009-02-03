@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.123 2009/01/27 00:22:26 dries Exp $
+// $Id: system.admin.inc,v 1.124 2009/02/03 18:55:31 dries Exp $
 
 /**
  * @file
@@ -2174,7 +2174,7 @@ function theme_system_modules_uninstall($form) {
   }
 
   $output  = theme('table', $header, $rows);
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
 
   return $output;
 }
@@ -2256,6 +2256,6 @@ function theme_system_themes_form($form) {
 
   $header = array(t('Screenshot'), t('Name'), t('Version'), t('Enabled'), t('Default'), t('Operations'));
   $output = theme('table', $header, $rows);
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
   return $output;
 }

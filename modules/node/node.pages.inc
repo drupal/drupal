@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.52 2009/02/03 17:30:12 dries Exp $
+// $Id: node.pages.inc,v 1.53 2009/02/03 18:55:31 dries Exp $
 
 /**
  * @file
@@ -335,7 +335,7 @@ function theme_node_form($form) {
   $output = "\n<div class=\"node-form\">\n";
 
   $output .= "  <div class=\"standard\">\n";
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
   $output .= "  </div>\n";
 
   $output .= "</div>\n";

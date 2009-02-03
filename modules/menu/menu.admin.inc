@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.37 2009/01/31 16:56:00 webchick Exp $
+// $Id: menu.admin.inc,v 1.38 2009/02/03 18:55:30 dries Exp $
 
 /**
  * @file
@@ -216,7 +216,7 @@ function theme_menu_overview_form($form) {
   if ($rows) {
     $output .= theme('table', $header, $rows, array('id' => 'menu-overview'));
   }
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
   return $output;
 }
 

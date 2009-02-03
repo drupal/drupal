@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.admin.inc,v 1.7 2008/07/16 21:59:28 dries Exp $
+// $Id: trigger.admin.inc,v 1.8 2009/02/03 18:55:32 dries Exp $
 
 /**
  * @file
@@ -246,10 +246,10 @@ function theme_trigger_display($element) {
   }
 
   if (count($rows)) {
-    $output = theme('table', $header, $rows) . drupal_render($element);
+    $output = theme('table', $header, $rows) . drupal_render_children($element);
   }
   else {
-    $output = drupal_render($element);
+    $output = drupal_render_children($element);
   }
   return $output;
 }

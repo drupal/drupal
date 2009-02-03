@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.43 2009/01/28 01:09:58 webchick Exp $
+// $Id: taxonomy.admin.inc,v 1.44 2009/02/03 18:55:31 dries Exp $
 
 /**
  * @file
@@ -91,7 +91,7 @@ function theme_taxonomy_overview_vocabularies($form) {
     drupal_add_tabledrag('taxonomy', 'order', 'sibling', 'vocabulary-weight');
   }
   $header[] = array('data' => t('Operations'), 'colspan' => '3');
-  return theme('table', $header, $rows, array('id' => 'taxonomy')) . drupal_render($form);
+  return theme('table', $header, $rows, array('id' => 'taxonomy')) . drupal_render_children($form);
 }
 
 /**
@@ -605,7 +605,7 @@ function theme_taxonomy_overview_terms($form) {
 
   $header = array(t('Name'), t('Operations'));
   $output = theme('table', $header, $rows, array('id' => 'taxonomy'));
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
   $output .= theme('pager', NULL, $page_increment);
 
   return $output;
