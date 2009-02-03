@@ -624,3 +624,10 @@ function _block_get_cache_id($block) {
     return implode(':', $cid_parts);
   }
 }
+
+/**
+ * Implementation of hook_flush_caches().
+ */
+function block_flush_caches() {
+  return array('cache_block');
+}

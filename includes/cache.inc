@@ -150,7 +150,9 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
   if (!isset($cid) && !isset($table)) {
     // Clear the block cache first, so stale data will
     // not end up in the page cache.
-    cache_clear_all(NULL, 'cache_block');
+    if (module_exists('block')) {
+      cache_clear_all(NULL, 'cache_block');
+    }
     cache_clear_all(NULL, 'cache_page');
     return;
   }

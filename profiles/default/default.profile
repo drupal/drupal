@@ -8,7 +8,7 @@
  *   An array of modules to enable.
  */
 function default_profile_modules() {
-  return array('color', 'comment', 'help', 'menu', 'taxonomy', 'dblog');
+  return array('block', 'color', 'comment', 'help', 'menu', 'taxonomy', 'dblog');
 }
 
 /**
@@ -90,6 +90,11 @@ function default_profile_task_list() {
  *   modify the $task, otherwise discarded.
  */
 function default_profile_tasks(&$task, $url) {
+  
+  // Enable 3 standard blocks.
+  db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', 'login', 'garland', 1, 0, 'left', '', -1);
+  db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', 'navigation', 'garland', 1, 0, 'left', '', -1);
+  db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'system', 'powered-by', 'garland', 1, 10, 'footer', '', -1);
 
   // Insert default user-defined node types into the database. For a complete
   // list of available node type attributes, refer to the node type API
