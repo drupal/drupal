@@ -335,7 +335,7 @@ function theme_node_form($form) {
   $output = "\n<div class=\"node-form\">\n";
 
   $output .= "  <div class=\"standard\">\n";
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
   $output .= "  </div>\n";
 
   $output .= "</div>\n";

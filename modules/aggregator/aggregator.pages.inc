@@ -250,7 +250,7 @@ function theme_aggregator_categorize_items($form) {
   }
   $output .= theme('table', array('', t('Categorize')), $rows);
   $output .= drupal_render($form['submit']);
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
 
   return theme('aggregator_wrapper', $output);
 }

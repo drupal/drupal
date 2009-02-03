@@ -91,7 +91,7 @@ function theme_taxonomy_overview_vocabularies($form) {
     drupal_add_tabledrag('taxonomy', 'order', 'sibling', 'vocabulary-weight');
   }
   $header[] = array('data' => t('Operations'), 'colspan' => '3');
-  return theme('table', $header, $rows, array('id' => 'taxonomy')) . drupal_render($form);
+  return theme('table', $header, $rows, array('id' => 'taxonomy')) . drupal_render_children($form);
 }
 
 /**
@@ -605,7 +605,7 @@ function theme_taxonomy_overview_terms($form) {
 
   $header = array(t('Name'), t('Operations'));
   $output = theme('table', $header, $rows, array('id' => 'taxonomy'));
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
   $output .= theme('pager', NULL, $page_increment);
 
   return $output;

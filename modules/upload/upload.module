@@ -621,7 +621,7 @@ function theme_upload_form_current($form) {
     $rows[] = array('data' => $row, 'class' => 'draggable');
   }
   $output = theme('table', $header, $rows, array('id' => 'upload-attachments'));
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
   return $output;
 }
 
@@ -633,7 +633,7 @@ function theme_upload_form_current($form) {
  */
 function theme_upload_form_new($form) {
   drupal_add_tabledrag('upload-attachments', 'order', 'sibling', 'upload-weight');
-  $output = drupal_render($form);
+  $output = drupal_render_children($form);
   return $output;
 }
 

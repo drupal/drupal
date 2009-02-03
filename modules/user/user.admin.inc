@@ -651,7 +651,7 @@ function theme_user_admin_perm($form) {
   }
   $output = theme('system_compact_link');
   $output .= theme('table', $header, $rows, array('id' => 'permissions'));
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
   return $output;
 }
 
@@ -788,7 +788,7 @@ function theme_user_admin_account($form) {
     $output .= drupal_render($form['pager']);
   }
 
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
 
   return $output;
 }
@@ -811,7 +811,7 @@ function theme_user_admin_new_role($form) {
   }
   $rows[] = array(drupal_render($form['name']), array('data' => drupal_render($form['submit']), 'colspan' => 2));
 
-  $output = drupal_render($form);
+  $output = drupal_render_children($form);
   $output .= theme('table', $header, $rows);
 
   return $output;
@@ -826,7 +826,7 @@ function theme_user_filter_form($form) {
   $output = '<div id="user-admin-filter">';
   $output .= drupal_render($form['filters']);
   $output .= '</div>';
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
   return $output;
 }
 

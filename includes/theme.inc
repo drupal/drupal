@@ -1584,7 +1584,7 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attribu
  */
 function theme_list($elements) {
   // Populate any missing array elements with their defaults.
-  $elements += _element_info('list');
+  $elements += element_info('list');
 
   return theme('item_list', $elements['#items'], $elements['#title'], $elements['#list_type'], $elements['#attributes']);
 }

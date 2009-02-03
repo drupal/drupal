@@ -624,7 +624,7 @@ function template_preprocess_poll_vote(&$variables) {
   $variables['choice'] = drupal_render($form['choice']);
   $variables['title'] = check_plain($form['#node']->title);
   $variables['vote'] = drupal_render($form['vote']);
-  $variables['rest'] = drupal_render($form);
+  $variables['rest'] = drupal_render_children($form);
   $variables['block'] = $form['#block'];
   // If this is a block, allow a different tpl.php to be used.
   if ($variables['block']) {
@@ -698,7 +698,7 @@ function theme_poll_choices($form) {
   }
 
   $output = theme('table', $headers, $rows, array('id' => 'poll-choice-table'));
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
   return $output;
 }
 

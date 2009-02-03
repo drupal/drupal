@@ -216,7 +216,7 @@ function theme_menu_overview_form($form) {
   if ($rows) {
     $output .= theme('table', $header, $rows, array('id' => 'menu-overview'));
   }
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
   return $output;
 }
 

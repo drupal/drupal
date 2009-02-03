@@ -82,7 +82,7 @@ function theme_filter_admin_overview($form) {
   }
   $header = array(t('Name'), t('Roles'), t('Default'), t('Weight'), array('data' => t('Operations'), 'colspan' => 2));
   $output = theme('table', $header, $rows, array('id' => 'input-format-order'));
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
 
   drupal_add_tabledrag('input-format-order', 'order', 'sibling', 'input-format-order-weight');
 
@@ -391,7 +391,7 @@ function theme_filter_admin_order($form) {
   }
 
   $output = theme('table', $header, $rows, array('id' => 'filter-order'));
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
 
   drupal_add_tabledrag('filter-order', 'order', 'sibling', 'filter-order-weight', NULL, NULL, FALSE);
 

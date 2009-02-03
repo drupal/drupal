@@ -403,5 +403,5 @@ function template_preprocess_block_admin_display_form(&$variables) {
     }
   }
 
-  $variables['form_submit'] = drupal_render($variables['form']);
+  $variables['form_submit'] = drupal_render_children($variables['form']);
 }

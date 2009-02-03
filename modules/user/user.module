@@ -753,8 +753,12 @@ function user_search($op = 'search', $keys = NULL, $skip_access_check = FALSE) {
  */
 function user_elements() {
   return array(
-    'user_profile_category' => array(),
-    'user_profile_item' => array(),
+    'user_profile_category' => array(
+      '#theme_wrapper' => 'user_profile_category'
+    ),
+    'user_profile_item' => array(
+      '#theme' => 'user_profile_item'
+    ),
   );
 }
 

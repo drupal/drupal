@@ -1612,7 +1612,7 @@ function theme_node_search_admin($form) {
   }
   $output .= theme('table', $header, $rows);
 
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
   return $output;
 }
 
@@ -3138,7 +3138,7 @@ function node_list_permissions($type) {
  * Implementation of hook_elements().
  */
 function node_elements() {
-  $type['node_links'] = array();
+  $type['node_links'] = array('#theme' => 'node_links');
 
   return $type;
 }

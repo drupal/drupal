@@ -152,7 +152,7 @@ function theme_profile_admin_overview($form) {
   $header[] = array('data' => t('Operations'), 'colspan' => 2);
 
   $output = theme('table', $header, $rows, array('id' => 'profile-fields'));
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
 
   return $output;
 }

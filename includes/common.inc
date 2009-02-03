@@ -3217,7 +3217,7 @@ function drupal_alter($type, &$data) {
  */
 function drupal_get_page($content = NULL) {
   // Initialize page array with defaults. @see hook_elements() - 'page' element.
-  $page = _element_info('page');
+  $page = element_info('page');
   $page['content'] = is_array($content) ? $content : array('main' => array('#markup' => $content));
 
   return $page;
@@ -3253,6 +3253,28 @@ function drupal_render_page($page) {
  * Renders HTML given a structured array tree.
  *
  * Recursively iterates over each of the array elements, generating HTML code.
+ *
+ * HTML generation is controlled by two properties containing theme functions, 
+ * #theme and #theme_wrapper.
+ *
+ * #theme is the theme function called first. If it is set and the element has any
+ * children, they have to be rendered there. For elements that are not allowed
+ * to have any children, e.g. buttons or textfields, it can be used to render
+ * the element itself. If #theme is not present and the element has children,
+ * they are rendered and concatenated into a string by drupal_render_children().
+ *
+ * The theme function in #theme_wrapper will be called after #theme has run. It
+ * can be used to add further markup around the rendered children, e.g. fieldsets
+ * add the required markup for a fieldset around their rendered child elements. 
+ * A wrapper theme function always has to include the element's #children property
+ * in its output, as this contains the rendered children. 
+ *
+ * For example, for the form element type, by default only the #theme_wrapper
+ * property is set, which adds the form markup around the rendered child elements
+ * of the form. This allows you to set the #theme property on a specific form to 
+ * a custom theme function, giving you complete control over the placement of the
+ * form's children while not at all having to deal with the form markup itself.
+ *
  * This function is usually called from within a another function, like
  * drupal_get_form() or node_view(). Elements are sorted internally using
  * uasort(). Since this is expensive, when passing already sorted elements to
@@ -3267,15 +3289,27 @@ function drupal_render_page($page) {
 function drupal_render(&$elements) {
   // Early-return nothing if user does not have access.
   if (!isset($elements) || (isset($elements['#access']) && !$elements['#access'])) {
-    return NULL;
+    return;
   }
 
-  // If the default values for this element haven't been loaded yet, populate
+  // Do not print elements twice.
+  if (isset($elements['#printed']) && $elements['#printed']) {
+    return;
+  }
+
+  // If the default values for this element have not been loaded yet, populate
   // them.
-  if (!isset($elements['#defaults_loaded']) || !$elements['#defaults_loaded']) {
-    if ((!empty($elements['#type'])) && ($info = _element_info($elements['#type']))) {
-      $elements += $info;
-    }
+  if (isset($elements['#type']) && empty($elements['#defaults_loaded'])) {
+    $elements += element_info($elements['#type']);
+  }
+  else {
+    $elements += element_basic_defaults();
+  }
+  
+  // If #markup is not empty and no theme function is set, use theme_markup.
+  // This allows to specify just #markup on an element without setting the #type.
+  if (!empty($elements['#markup']) && empty($elements['#theme'])) {
+    $elements['#theme'] = 'markup';
   }
 
   // Make any final changes to the element before it is rendered. This means
@@ -3297,68 +3331,63 @@ function drupal_render(&$elements) {
     $elements['#sorted'] = TRUE;
   }
 
-  $content = '';
-  $elements += array('#title' => NULL, '#description' => NULL);
-  if (!isset($elements['#children'])) {
-    $children = element_children($elements);
-    // Render all the children that use a theme function.
-    if (isset($elements['#theme']) && empty($elements['#theme_used'])) {
-      $elements['#theme_used'] = TRUE;
+  $elements['#children'] = '';
+  // Call the element's #theme function if it is set. Then any children of the
+  // element have to be rendered there.
+  if (isset($elements['#theme'])) {
+    $elements['#children'] = theme($elements['#theme'], $elements);
+  }
+  // If #theme was not set and the element has children, render them now
+  // using drupal_render_children().
+  if ($elements['#children'] == '') {
+    $elements['#children'] = drupal_render_children($elements);
+  }
 
-      $previous = array();
-      foreach (array('#type', '#prefix', '#suffix') as $key) {
-        $previous[$key] = isset($elements[$key]) ? $elements[$key] : NULL;
-      }
-      // If we rendered a single element, then we will skip the renderer.
-      if (empty($children)) {
-        $elements['#printed'] = TRUE;
-      }
-      else {
-        $elements['#markup'] = '';
-      }
+  // Let the theme function in #theme_wrapper add markup around the rendered
+  // children.
+  if (!empty($elements['#theme_wrapper'])) {
+    $elements['#children'] = theme($elements['#theme_wrapper'], $elements);
+  }
 
-      unset($elements['#type'], $elements['#prefix'], $elements['#suffix']);
-      $content = theme($elements['#theme'], $elements);
-
-      foreach (array('#type', '#prefix', '#suffix') as $key) {
-        $elements[$key] = isset($previous[$key]) ? $previous[$key] : NULL;
-      }
-    }
-    // Render each of the children using drupal_render and concatenate them.
-    if (!isset($content) || $content === '') {
-      foreach ($children as $key) {
-        $content .= drupal_render($elements[$key]);
+  // Filter the outputted content and make any last changes before the
+  // content is sent to the browser. The changes are made on $content
+  // which allows the output'ed text to be filtered.
+  if (isset($elements['#post_render'])) {
+    foreach ($elements['#post_render'] as $function) {
+      if (drupal_function_exists($function)) {
+        $elements['#children'] = $function($elements['#children'], $elements);
       }
     }
   }
-  if (isset($content) && $content !== '') {
-    $elements['#children'] = $content;
-  }
 
-  // Until now, we rendered the children, here we render the element itself
-  if (!isset($elements['#printed'])) {
-    $content = theme(!empty($elements['#type']) ? $elements['#type'] : 'markup', $elements);
-    $elements['#printed'] = TRUE;
-  }
+  $prefix = isset($elements['#prefix']) ? $elements['#prefix'] : '';
+  $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';
 
-  if (isset($content) && $content !== '') {
-    // Filter the outputted content and make any last changes before the
-    // content is sent to the browser. The changes are made on $content
-    // which allows the output'ed text to be filtered.
-    if (isset($elements['#post_render'])) {
-      foreach ($elements['#post_render'] as $function) {
-        if (drupal_function_exists($function)) {
-          $content = $function($content, $elements);
-        }
-      }
-    }
-    $prefix = isset($elements['#prefix']) ? $elements['#prefix'] : '';
-    $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';
-    $content = $prefix . $content . $suffix;
-    // Store the rendered content, so higher level elements can reuse it.
-    $elements['#content'] = $content;
-    return $content;
+  $elements['#printed'] = TRUE;
+  return $prefix . $elements['#children'] . $suffix;
+}
+
+/**
+ * Render children of an element and concatenate them.
+ *
+ * This renders all children of an element using drupal_render() and then
+ * joins them together into a single string.
+ *
+ * @param $element
+ *   The structured array whose children shall be rendered.
+ * @param $children_keys
+ *   If the keys of the element's children are already known, they can be passed
+ *   in to save another run of element_children().
+ */
+function drupal_render_children($element, $children_keys = NULL) {
+  if ($children_keys === NULL) {
+    $children_keys = element_children($element);
   }
+  $output = '';
+  foreach ($children_keys as $key) {
+    $output .= drupal_render($element[$key]);
+  }
+  return $output;
 }
 
 /**
@@ -3371,6 +3400,44 @@ function element_sort($a, $b) {
     return 0;
   }
   return ($a_weight < $b_weight) ? -1 : 1;
+}
+
+/**
+ * Retrieve the default properties for the defined element type.
+ */
+function element_info($type, $refresh = NULL) {
+  static $cache;
+
+  if (!isset($cache) || $refresh) {
+    $basic_defaults = element_basic_defaults();
+    $cache = array();
+    foreach (module_implements('elements') as $module) {
+      $elements = module_invoke($module, 'elements');
+      if (isset($elements) && is_array($elements)) {
+        $cache = array_merge_recursive($cache, $elements);
+      }
+    }
+    if (!empty($cache)) {
+      foreach ($cache as $element_type => $info) {
+        $cache[$element_type] = array_merge_recursive($basic_defaults, $info);
+        $cache[$element_type]['#type'] = $element_type;
+      }
+    }
+  }
+
+  return $cache[$type];
+}
+
+/**
+ * Retrieve the basic default properties that are common to all elements.
+ */
+function element_basic_defaults() {
+  return array(
+    '#description' => '',
+    '#title' => '',
+    '#attributes' => array(),
+    '#required' => FALSE,
+  );
 }
 
 /**
@@ -3410,7 +3477,13 @@ function element_child($key) {
  * Get keys of a structured array tree element that are not properties (i.e., do not begin with '#').
  */
 function element_children($element) {
-  return array_filter(array_keys((array) $element), 'element_child');
+  $keys = array();
+  foreach(array_keys($element) as $key) {
+    if ($key[0] !== '#') { 
+      $keys[] = $key;
+    }
+  }
+  return $keys;
 }
 
 /**
@@ -3564,22 +3637,13 @@ function drupal_common_theme() {
     'radios' => array(
       'arguments' => array('element' => NULL),
     ),
-    'password_confirm' => array(
-      'arguments' => array('element' => NULL),
-    ),
     'date' => array(
-      'arguments' => array('element' => NULL),
-    ),
-    'item' => array(
       'arguments' => array('element' => NULL),
     ),
     'checkbox' => array(
       'arguments' => array('element' => NULL),
     ),
     'checkboxes' => array(
-      'arguments' => array('element' => NULL),
-    ),
-    'submit' => array(
       'arguments' => array('element' => NULL),
     ),
     'button' => array(
@@ -3589,9 +3653,6 @@ function drupal_common_theme() {
       'arguments' => array('element' => NULL),
     ),
     'hidden' => array(
-      'arguments' => array('element' => NULL),
-    ),
-    'token' => array(
       'arguments' => array('element' => NULL),
     ),
     'textfield' => array(
@@ -3616,7 +3677,7 @@ function drupal_common_theme() {
       'arguments' => array('element' => NULL),
     ),
     'form_element' => array(
-      'arguments' => array('element' => NULL, 'value' => NULL),
+      'arguments' => array('element' => NULL),
     ),
   );
 }

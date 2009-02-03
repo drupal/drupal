@@ -246,10 +246,10 @@ function theme_trigger_display($element) {
   }
 
   if (count($rows)) {
-    $output = theme('table', $header, $rows) . drupal_render($element);
+    $output = theme('table', $header, $rows) . drupal_render_children($element);
   }
   else {
-    $output = drupal_render($element);
+    $output = drupal_render_children($element);
   }
   return $output;
 }

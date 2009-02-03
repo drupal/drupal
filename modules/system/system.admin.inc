@@ -2174,7 +2174,7 @@ function theme_system_modules_uninstall($form) {
   }
 
   $output  = theme('table', $header, $rows);
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
 
   return $output;
 }
@@ -2256,6 +2256,6 @@ function theme_system_themes_form($form) {
 
   $header = array(t('Screenshot'), t('Name'), t('Version'), t('Enabled'), t('Default'), t('Operations'));
   $output = theme('table', $header, $rows);
-  $output .= drupal_render($form);
+  $output .= drupal_render_children($form);
   return $output;
 }
