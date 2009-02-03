@@ -1,0 +1,7 @@
+; $Id: list.info,v 1.1 2009/02/03 17:30:11 dries Exp $
+name = List
+description = Defines list field types. Use with Options to create selection lists.
+package = Core - fields
+core = 7.x
+
+files[]=list.module

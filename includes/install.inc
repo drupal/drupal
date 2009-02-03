@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.82 2009/01/18 06:56:58 webchick Exp $
+// $Id: install.inc,v 1.83 2009/02/03 17:30:10 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -490,8 +490,10 @@ function drupal_verify_profile($profile, $locale) {
  *
  * @param $module_list
  *   The modules to install.
+ * @param $disable_modules_installed_hook
+ *   Normally just testing wants to set this to TRUE.
  */
-function drupal_install_modules($module_list = array()) {
+function drupal_install_modules($module_list = array(), $disable_modules_installed_hook = FALSE) {
   $files = module_rebuild_cache();
   $module_list = array_flip(array_values($module_list));
   do {
@@ -511,7 +513,7 @@ function drupal_install_modules($module_list = array()) {
   asort($module_list);
   $module_list = array_keys($module_list);
   $modules_installed = array_filter($module_list, '_drupal_install_module');
-  if (!empty($modules_installed)) {
+  if (!$disable_modules_installed_hook && !empty($modules_installed)) {
     module_invoke_all('modules_installed', $modules_installed);
   }
   module_enable($module_list);

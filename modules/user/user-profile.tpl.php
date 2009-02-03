@@ -1,5 +1,5 @@
 <?php
-// $Id: user-profile.tpl.php,v 1.4 2008/10/15 13:51:53 dries Exp $
+// $Id: user-profile.tpl.php,v 1.5 2009/02/03 17:30:13 dries Exp $
 
 /**
  * @file
@@ -39,6 +39,7 @@
  *   - $user_profile: All user profile data. Ready for print.
  *   - $profile: Keyed array of profile categories and their items or other data
  *     provided by modules.
+ *   - TODO D7 : document $FIELD_NAME_rendered variables.
  *
  * @see template_preprocess_user_profile()
  */

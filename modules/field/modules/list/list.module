@@ -1,0 +1,188 @@
+<?php
+// $Id: list.module,v 1.1 2009/02/03 17:30:11 dries Exp $
+
+/**
+ * @file
+ * Defines list field types that can be used with the Options module.
+ */
+
+/**
+ * Implementation of hook_theme().
+ */
+function list_theme() {
+  return array(
+    'field_formatter_list_default' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'field_formatter_list_key' => array(
+      'arguments' => array('element' => NULL),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_field_info().
+ */
+function list_field_info() {
+  return array(
+    'list' => array(
+      'label' => t('List'),
+      'description' => t('This field stores numeric keys from key/value lists of allowed values where the key is a simple alias for the position of the value, i.e. 0|First option, 1|Second option, 2|Third option.'),
+      'settings' => array('allowed_values_function' => ''),
+      'default_widget' => 'options_select',
+      'default_formatter' => 'list_default',
+    ),
+    'list_boolean' => array(
+      'label' => t('Boolean'),
+      'description' => t('This field stores simple on/off or yes/no options.'),
+      'settings' => array('allowed_values_function' => ''),
+      'default_widget' => 'options_select',
+      'default_formatter' => 'list_default',
+    ),
+    'list_number' => array(
+      'label' => t('List (numeric)'),
+      'description' => t('This field stores keys from key/value lists of allowed numbers where the stored numeric key has significance and must be preserved, i.e. \'Lifetime in days\': 1|1 day, 7|1 week, 31|1 month.'),
+      'settings' => array('allowed_values_function' => ''),
+      'default_widget' => 'options_select',
+      'default_formatter' => 'list_default',
+    ),
+    'list_text' => array(
+      'label' => t('List (text)'),
+      'description' => t('This field stores keys from key/value lists of allowed values where the stored key has significance and must be a varchar, i.e. \'US States\': IL|Illinois, IA|Iowa, IN|Indiana'),
+      'settings' => array('allowed_values_function' => ''),
+      'default_widget' => 'options_select',
+      'default_formatter' => 'list_default',
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_field_schema().
+ */
+function list_field_columns($field) {
+  switch ($field['type']) {
+    case 'list_text':
+      $columns = array(
+        'value' => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => FALSE,
+        ),
+      );
+      break;
+    case 'list_number':
+      $columns = array(
+        'value' => array(
+          'type' => 'float',
+          'unsigned' => TRUE,
+          'not null' => FALSE,
+        ),
+      );
+      break;
+    default:
+      $columns = array(
+        'value' => array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => FALSE,
+        ),
+      );
+      break;
+  }
+  return $columns;
+}
+
+/**
+ * Implementation of hook_field_validate().
+ */
+function list_field_validate($obj_type, $object, $field, $instance, $items, $form) {
+  $allowed_values = list_allowed_values($field);
+  if (is_array($items)) {
+    foreach ($items as $delta => $item) {
+      $error_element = isset($item['_error_element']) ? $item['_error_element'] : '';
+      if (is_array($item) && isset($item['_error_element'])) unset($item['_error_element']);
+      if (!empty($item['value'])) {
+        if (count($allowed_values) && !array_key_exists($item['value'], $allowed_values)) {
+          form_set_error($error_element, t('%name: illegal value.', array('%name' => t($instance['label']))));
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implementation of hook_field_is_empty().
+ */
+function list_field_is_empty($item, $field) {
+  if (empty($item['value']) && (string)$item['value'] !== '0') {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Implementation of hook_field_formatter_info().
+ */
+function list_field_formatter_info() {
+  return array(
+    'list_default' => array(
+      'label' => t('Default'),
+      'field types' => array('list', 'list_boolean', 'list_text', 'list_number'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+    'list_key' => array(
+      'label' => t('Key'),
+      'field types' => array('list', 'list_boolean', 'list_text', 'list_number'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+  );
+}
+
+/**
+ * Theme function for 'default' list field formatter.
+ */
+function theme_field_formatter_list_default($element) {
+  $field = field_info_field($element['#field_name']);
+  if (($allowed_values = list_allowed_values($field)) && isset($allowed_values[$element['#item']['value']])) {
+    return $allowed_values[$element['#item']['value']];
+  }
+  // If no match was found in allowed values, fall back to the key.
+  return $element['#item']['safe'];
+}
+
+/**
+ * Theme function for 'key' list field formatter.
+ */
+function theme_field_formatter_list_key($element) {
+  return $element['#item']['safe'];
+}
+
+/**
+ *  Create an array of the allowed values for this field.
+ *
+ *  Call the allowed_values_function to retrieve the allowed
+ *  values array.
+ * 
+ *  TODO Rework this to create a method of selecting plugable allowed values lists.
+ */
+function list_allowed_values($field) {
+  static $allowed_values;
+
+  if (isset($allowed_values[$field['field_name']])) {
+    return $allowed_values[$field['field_name']];
+  }
+
+  $allowed_values[$field['field_name']] = array();
+
+  if (isset($field['settings']['allowed_values_function'])) {
+    $function = $field['settings']['allowed_values_function'];
+    if (drupal_function_exists($function)) {
+      $allowed_values[$field['field_name']] = $function($field);
+    }
+  }
+  return $allowed_values[$field['field_name']];
+}

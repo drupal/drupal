@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.81 2009/01/25 12:19:32 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.82 2009/02/03 17:30:13 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -829,7 +829,7 @@ class DrupalWebTestCase {
     // Add the specified modules to the list of modules in the default profile.
     $args = func_get_args();
     $modules = array_unique(array_merge(drupal_get_profile_modules('default', 'en'), $args));
-    drupal_install_modules($modules);
+    drupal_install_modules($modules, TRUE);
 
     // Because the schema is static cached, we need to flush
     // it between each run. If we don't, then it will contain
@@ -1996,4 +1996,58 @@ class DrupalWebTestCase {
     $match = is_array($code) ? in_array($curl_code, $code) : $curl_code == $code;
     return $this->assertTrue($match, $message ? $message : t('HTTP response expected !code, actual !curl_code', array('!code' => $code, '!curl_code' => $curl_code)), t('Browser'));
   }
+  
+  /**
+   * TODO write documentation.
+   * @param $type
+   * @param $field_name
+   * @param $settings
+   * @return unknown_type
+   */
+  protected function drupalCreateField($type, $field_name = NULL, $settings = array()) {
+    if (!isset($field_name)) {
+      $field_name = strtolower($this->randomName());
+    }
+    $field_definition = array(
+      'field_name' => $field_name,
+      'type' => $type,
+    );
+    $field_definition += $settings;
+    field_create_field($field_definition);
+    
+    $field = field_read_field($field_name);
+    $this->assertTrue($field, t('Created field @field_name of type @type.', array('@field_name' => $field_name, '@type' => $type)));
+    
+    return $field;
+  }
+  
+  /**
+   * TODO write documentation.
+   * @param $field_name
+   * @param $widget_type
+   * @param $display_type
+   * @param $bundle
+   * @return unknown_type
+   */
+  protected function drupalCreateFieldInstance($field_name, $widget_type, $formatter_type, $bundle) {
+    $instance_definition = array(
+      'field_name' => $field_name,
+      'bundle' => $bundle,
+      'widget' => array(
+        'type' => $widget_type,
+      ),
+      'display' => array(
+        'full' => array(
+          'type' => $formatter_type,
+        ),
+      ),
+    );
+    field_create_instance($instance_definition);
+    
+    $instance = field_read_instance($field_name, $bundle);
+    $this->assertTrue($instance, t('Created instance of field @field_name on bundle @bundle.', array('@field_name' => $field_name, '@bundle' => $bundle)));
+    
+    return $instance;
+  }
 }
+

@@ -1,0 +1,53 @@
+<?php
+// $Id: field_sql_storage.install,v 1.1 2009/02/03 17:30:11 dries Exp $
+
+/**
+ * Implementation of hook_install().
+ */
+function field_sql_storage_install() {
+  drupal_install_schema('field_sql_storage');
+}
+
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function field_sql_storage_uninstall() {
+  drupal_uninstall_schema('field_sql_storage');
+}
+
+
+function field_sql_storage_schema() {
+  $schema = array();
+
+  // Static (meta-data) tables.
+  $schema['field_config_entity_type'] = array(
+    'fields' => array(
+      'etid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The unique id for this entity type',
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'description' => 'An entity type',
+      ),
+    ),
+    'primary key' => array('etid'),
+    'unique keys' => array('type' => array('type')),
+  );
+
+  // Dynamic (data) tables.
+  if (db_table_exists('field_config')) {
+    $fields = field_read_fields();
+    drupal_load('module', 'field_sql_storage');
+    $schema = array();
+    foreach ($fields as $field) {
+      $schema += _field_sql_storage_schema($field);
+    }
+  }
+  return $schema;
+}

@@ -1,0 +1,7 @@
+; $Id: number.info,v 1.1 2009/02/03 17:30:11 dries Exp $
+name = Number
+description = Defines numeric field types.
+package = Core - fields
+core = 7.x
+
+files[]=number.module

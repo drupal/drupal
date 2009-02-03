@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.7 2009/01/26 14:08:43 dries Exp $
+// $Id: node.tpl.php,v 1.8 2009/02/03 17:30:12 dries Exp $
 
 /**
  * @file
@@ -20,6 +20,7 @@
  * - $terms: the themed list of taxonomy term links output from theme_links().
  * - $submitted: themed submission information output from
  *   theme_node_submitted().
+ * TODO D7 : document $FIELD_NAME_rendered variables.
  *
  * Other variables:
  * - $node: Full node object. Contains data that may not be safe.

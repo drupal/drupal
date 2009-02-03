@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.466 2009/01/27 00:22:25 dries Exp $
+// $Id: theme.inc,v 1.467 2009/02/03 17:30:10 dries Exp $
 
 /**
  * @file
@@ -624,7 +624,9 @@ function theme() {
   }
   if (isset($info['function'])) {
     // The theme call is a function.
-    $output = call_user_func_array($info['function'], $args);
+    if (drupal_function_exists($info['function'])) {
+      $output = call_user_func_array($info['function'], $args);
+    }
   }
   else {
     // The theme call is a template.
@@ -2005,6 +2007,10 @@ function template_preprocess_node(&$variables) {
   // Clean up name so there are no underscores.
   $variables['template_files'][] = 'node-' . str_replace('_', '-', $node->type);
   $variables['template_files'][] = 'node-' . $node->nid;
+
+  // Add $FIELD_NAME_rendered variables for fields.
+  drupal_function_exists('field_attach_preprocess');
+  $variables += field_attach_preprocess('node', $node);
 }
 
 /**

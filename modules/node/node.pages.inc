@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.51 2009/01/27 00:22:26 dries Exp $
+// $Id: node.pages.inc,v 1.52 2009/02/03 17:30:12 dries Exp $
 
 /**
  * @file
@@ -258,6 +258,10 @@ function node_form(&$form_state, $node) {
   }
   $form['#validate'][] = 'node_form_validate';
   $form['#theme'] = array($node->type . '_node_form', 'node_form');
+
+  $form['#builder_function'] = 'node_form_submit_build_node';
+  field_attach_form('node', $node, $form, $form_state);
+
   return $form;
 }
 
@@ -466,6 +470,9 @@ function node_form_submit_build_node($form, &$form_state) {
   unset($form_state['submit_handlers']);
   form_execute_handlers('submit', $form, $form_state);
   $node = node_submit($form_state['values']);
+
+  field_attach_submit('node', $node, $form, $form_state);
+
   $form_state['node'] = (array)$node;
   $form_state['rebuild'] = TRUE;
   return $node;
