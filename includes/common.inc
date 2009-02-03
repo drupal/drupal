@@ -1883,9 +1883,13 @@ function drupal_page_footer() {
  *   An associative array.
  */
 function drupal_map_assoc($array, $function = NULL) {
-  if (!isset($function) && !empty($array)) {
-    return array_combine($array, $array);
- }
+  if (!isset($function)) {
+    $result = array();
+    foreach ($array as $value) {
+      $result[$value] = $value;
+    }
+    return $result;
+  }
   elseif (function_exists($function)) {
     $result = array();
     foreach ($array as $value) {
