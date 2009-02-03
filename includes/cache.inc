@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.27 2008/10/12 04:30:05 webchick Exp $
+// $Id: cache.inc,v 1.28 2009/02/03 12:30:14 dries Exp $
 
 /**
  * Return data from the persistent cache. Data may be stored as either plain
@@ -150,7 +150,9 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
   if (!isset($cid) && !isset($table)) {
     // Clear the block cache first, so stale data will
     // not end up in the page cache.
-    cache_clear_all(NULL, 'cache_block');
+    if (module_exists('block')) {
+      cache_clear_all(NULL, 'cache_block');
+    }
     cache_clear_all(NULL, 'cache_page');
     return;
   }

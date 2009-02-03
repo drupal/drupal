@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.664 2009/02/01 06:48:15 webchick Exp $
+// $Id: system.module,v 1.665 2009/02/03 12:30:14 dries Exp $
 
 /**
  * @file
@@ -1553,7 +1553,7 @@ function system_cron() {
     }
   }
 
-  $core = array('cache', 'cache_block', 'cache_filter', 'cache_page', 'cache_form', 'cache_menu');
+  $core = array('cache', 'cache_filter', 'cache_page', 'cache_form', 'cache_menu');
   $cache_tables = array_merge(module_invoke_all('flush_caches'), $core);
   foreach ($cache_tables as $table) {
     cache_clear_all(NULL, $table);

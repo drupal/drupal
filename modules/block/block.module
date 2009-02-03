@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.320 2009/01/27 00:22:25 dries Exp $
+// $Id: block.module,v 1.321 2009/02/03 12:30:14 dries Exp $
 
 /**
  * @file
@@ -623,4 +623,11 @@ function _block_get_cache_id($block) {
 
     return implode(':', $cid_parts);
   }
+}
+
+/**
+ * Implementation of hook_flush_caches().
+ */
+function block_flush_caches() {
+  return array('cache_block');
 }

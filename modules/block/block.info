@@ -1,4 +1,4 @@
-; $Id: block.info,v 1.11 2008/10/12 01:23:02 webchick Exp $
+; $Id: block.info,v 1.12 2009/02/03 12:30:14 dries Exp $
 
 name = Block
 description = Controls the boxes that are displayed around the main content.
@@ -8,4 +8,3 @@ core = 7.x
 files[] = block.module
 files[] = block.admin.inc
 files[] = block.install
-required = TRUE
