@@ -91,7 +91,7 @@ function _field_sql_storage_schema($field) {
     'description' => 'Data storage for field ' . $field['field_name'],
     'fields' => array(
       'etid' => array(
-        'type' => 'serial',
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'description' => 'The entity type id this data is attached to',
