@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.module,v 1.1 2009/02/03 17:30:11 dries Exp $
+// $Id: field_sql_storage.module,v 1.2 2009/02/04 20:27:58 webchick Exp $
 
 /**
  * @file
@@ -91,7 +91,7 @@ function _field_sql_storage_schema($field) {
     'description' => 'Data storage for field ' . $field['field_name'],
     'fields' => array(
       'etid' => array(
-        'type' => 'serial',
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'description' => 'The entity type id this data is attached to',
