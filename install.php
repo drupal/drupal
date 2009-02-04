@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.151 2009/01/22 19:31:07 webchick Exp $
+// $Id: install.php,v 1.152 2009/02/04 04:42:26 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -680,7 +680,7 @@ function install_tasks($profile, $task) {
     if (!empty($install_locale) && ($install_locale != 'en')) {
       include_once DRUPAL_ROOT . '/includes/locale.inc';
       // Enable installation language as default site language.
-      locale_add_language($install_locale, NULL, NULL, NULL, NULL, NULL, 1, TRUE);
+      locale_add_language($install_locale, NULL, NULL, NULL, '', NULL, 1, TRUE);
       // Collect files to import for this language.
       $batch = locale_batch_by_language($install_locale, '_install_locale_initial_batch_finished');
       if (!empty($batch)) {
