@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.23 2009/02/03 18:55:30 dries Exp $
+// $Id: filter.admin.inc,v 1.24 2009/02/05 19:52:02 webchick Exp $
 
 /**
  * @file
@@ -72,7 +72,7 @@ function theme_filter_admin_overview($form) {
           drupal_render($element['roles']),
           drupal_render($form['default'][$id]),
           drupal_render($element['weight']),
-          drupal_render($element['edit']),
+          drupal_render($element['configure']),
           drupal_render($element['delete']),
         ),
         'class' => 'draggable',
