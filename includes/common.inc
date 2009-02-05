@@ -3379,7 +3379,7 @@ function drupal_render(&$elements) {
  *   If the keys of the element's children are already known, they can be passed
  *   in to save another run of element_children().
  */
-function drupal_render_children($element, $children_keys = NULL) {
+function drupal_render_children(&$element, $children_keys = NULL) {
   if ($children_keys === NULL) {
     $children_keys = element_children($element);
   }

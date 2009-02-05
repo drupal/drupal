@@ -149,7 +149,7 @@ function field_default_view($obj_type, $object, $field, $instance, $items, $teas
     );
 
     $element = $info + array(
-      '#type' => 'field',
+      '#theme' => 'field',
       '#title' => check_plain(t($instance['label'])),
       '#access' => field_access('view', $field),
       '#label_display' => $label_display,
@@ -171,7 +171,7 @@ function field_default_view($obj_type, $object, $field, $instance, $items, $teas
     $format_info = $info + array(
       '#formatter' => $display['type'],
       '#settings' => $display['settings'],
-      '#theme' => $theme,
+      '#theme_wrapper' => $theme,
     );
 
     if ($single) {
