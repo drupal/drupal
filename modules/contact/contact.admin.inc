@@ -10,12 +10,28 @@
  * Categories/list tab.
  */
 function contact_admin_categories() {
-  $result = db_query('SELECT cid, category, recipients, selected FROM {contact} ORDER BY weight, category');
   $rows = array();
-  while ($category = db_fetch_object($result)) {
-    $rows[] = array($category->category, $category->recipients, ($category->selected ? t('Yes') : t('No')), l(t('edit'), 'admin/build/contact/edit/' . $category->cid), l(t('delete'), 'admin/build/contact/delete/' . $category->cid));
-  }
+
   $header = array(t('Category'), t('Recipients'), t('Selected'), array('data' => t('Operations'), 'colspan' => 2));
+
+  // Get all the contact categories from the database.
+  $result = db_query('SELECT cid, category, recipients, selected FROM {contact} ORDER BY weight, category');
+
+  // Loop through the categories and add them to the table.
+  while ($category = db_fetch_object($result)) {
+    $rows[] = array(
+      $category->category,
+      $category->recipients,
+      ($category->selected ? t('Yes') : t('No')),
+      l(t('edit'), 'admin/build/contact/edit/' . $category->cid),
+      l(t('delete'), 'admin/build/contact/delete/' . $category->cid),
+    );
+  }
+
+  // If no categories were found, let the user know.
+  if (empty($rows)) {
+    $rows[] = array(array('data' => t('No categories available.'), 'colspan' => 5));
+  }
 
   return theme('table', $header, $rows);
 }
