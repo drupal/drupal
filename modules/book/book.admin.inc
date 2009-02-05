@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.17 2009/01/11 21:19:17 dries Exp $
+// $Id: book.admin.inc,v 1.18 2009/02/05 19:29:31 webchick Exp $
 
 /**
  * @file
@@ -11,10 +11,18 @@
  */
 function book_admin_overview() {
   $rows = array();
-  foreach (book_get_books() as $book) {
-    $rows[] = array(l($book['title'], $book['href'], $book['options']), l(t('edit order and titles'), "admin/content/book/" . $book['nid']));
-  }
+
   $headers = array(t('Book'), t('Operations'));
+
+  // Add any recognized books to the table list.
+  foreach (book_get_books() as $book) {
+    $rows[] = array(l($book['title'], $book['href'], $book['options']), l(t('edit order and titles'), 'admin/content/book/' . $book['nid']));
+  }
+
+  // If no books were found, let the user know.
+  if (empty($rows)) {
+    $rows[] = array(array('data' => t('No books available.'), 'colspan' => 2));
+  }
 
   return theme('table', $headers, $rows);
 }
