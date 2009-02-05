@@ -3,18 +3,36 @@
 
 /**
  * @file
- * Dummy module implementing hook menu to test changing the menu name.
+ * Dummy module implementing hook menu.
  */
 
- /**
- * The name of the menu changes during the course of this test. Use a $_GET.
+/**
+ * Implementation of hook_menu().
  */
 function menu_test_menu() {
-
+  // The name of the menu changes during the course of the test. Using a $_GET.
   $items['menu_name_test'] = array(
-    'title' => t('Test menu_name router item'),
+    'title' => 'Test menu_name router item',
     'page callback' => 'node_save',
     'menu_name' => isset($_GET["hook_menu_name"]) ? $_GET["hook_menu_name"] : 'original',
   );
+  // Use FALSE as 'title callback' to bypass t().
+  $items['menu_no_title_callback'] = array(
+    'title' => 'A title with @placeholder',
+    'title callback' => FALSE,
+    'title arguments' => array('@placeholder' => 'some other text'),
+    'page callback' => 'menu_test_callback',
+    'access arguments' => array('access content'),
+  );
   return $items;
+}
+
+/**
+ * Dummy callback for hook_menu() to point to.
+ *
+ * @return
+ *  A random string.
+ */
+function menu_test_callback() {
+  return $this->randomName();
 }

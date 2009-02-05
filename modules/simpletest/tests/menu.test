@@ -21,6 +21,15 @@ class MenuIncTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test title callback set to FALSE.
+   */
+  function testTitleCallbackFalse() {
+    $this->drupalGet('node');
+    $this->assertText('A title with @placeholder', t('Raw text found on the page'));
+    $this->assertNoText(t('A title with @placeholder', array('@placeholder' => 'some other text')), t('Text with placeholder substitutions not found.'));
+  }
+
+  /**
    * Tests for menu_name parameter for hook_menu().
    */
   function testMenuName() {

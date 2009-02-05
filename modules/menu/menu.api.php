@@ -27,6 +27,9 @@
  *   contain the following key-value pairs:
  *
  *   - "title": Required. The untranslated title of the menu item.
+ *   - "title callback": Function to generate the title, defaults to t().
+ *     If you require only the raw string to be output, set this to FALSE.
+ *   - "title arguments": Arguments to send to t() or your custom callback.
  *   - "description": The untranslated description of the menu item.
  *   - "page callback": The function to call to display a web page when the user
  *     visits the path. If omitted, the parent menu item's callback will be used
