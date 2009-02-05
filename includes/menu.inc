@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.310 2009/01/04 20:04:32 dries Exp $
+// $Id: menu.inc,v 1.311 2009/02/05 01:05:17 webchick Exp $
 
 /**
  * @file
@@ -549,7 +549,7 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
         $item['title'] = t($item['title'], menu_unserialize($item['title_arguments'], $map));
       }
     }
-    elseif (drupal_function_exists($callback)) {
+    elseif ($callback && drupal_function_exists($callback)) {
       if (empty($item['title_arguments'])) {
         $item['title'] = $callback($item['title']);
       }

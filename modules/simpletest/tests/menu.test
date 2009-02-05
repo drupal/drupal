@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.5 2009/01/26 14:08:43 dries Exp $
+// $Id: menu.test,v 1.6 2009/02/05 01:05:17 webchick Exp $
 
 /**
  * @file
@@ -18,6 +18,15 @@ class MenuIncTestCase extends DrupalWebTestCase {
   function setUp() {
     // Enable dummy module that implements hook_menu.
     parent::setUp('menu_test');
+  }
+
+  /**
+   * Test title callback set to FALSE.
+   */
+  function testTitleCallbackFalse() {
+    $this->drupalGet('node');
+    $this->assertText('A title with @placeholder', t('Raw text found on the page'));
+    $this->assertNoText(t('A title with @placeholder', array('@placeholder' => 'some other text')), t('Text with placeholder substitutions not found.'));
   }
 
   /**
