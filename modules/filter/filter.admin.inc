@@ -72,7 +72,7 @@ function theme_filter_admin_overview($form) {
           drupal_render($element['roles']),
           drupal_render($form['default'][$id]),
           drupal_render($element['weight']),
-          drupal_render($element['edit']),
+          drupal_render($element['configure']),
           drupal_render($element['delete']),
         ),
         'class' => 'draggable',
