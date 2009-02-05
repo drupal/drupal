@@ -1,5 +1,6 @@
 <?php
 // $Id$
+
 // TODO : merge with field.default.inc ?
 
 /**

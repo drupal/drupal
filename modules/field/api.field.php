@@ -560,7 +560,7 @@ function hook_field_storage_load($obj_type, $queried_objs, $age) {
  *   TRUE if this is an update to an existing object, FALSE if it is
  *   an insert of a new object.
  */
-function hook_field_storage_write($obj_type, $object, TRUE) {
+function hook_field_storage_write($obj_type, $object, $update = TRUE) {
 }
 
 /**
