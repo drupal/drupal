@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.863 2009/02/03 18:55:29 dries Exp $
+// $Id: common.inc,v 1.864 2009/02/05 01:21:16 webchick Exp $
 
 /**
  * @file
@@ -3379,7 +3379,7 @@ function drupal_render(&$elements) {
  *   If the keys of the element's children are already known, they can be passed
  *   in to save another run of element_children().
  */
-function drupal_render_children($element, $children_keys = NULL) {
+function drupal_render_children(&$element, $children_keys = NULL) {
   if ($children_keys === NULL) {
     $children_keys = element_children($element);
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.1 2009/02/03 17:30:11 dries Exp $
+// $Id: field.module,v 1.2 2009/02/05 01:21:16 webchick Exp $
 /**
  * @file
  * Allows administrators to associate custom fields to field types.
@@ -557,8 +557,7 @@ function template_preprocess_field(&$variables) {
     // Single value formatter.
     foreach (element_children($element['items']) as $delta) {
       $variables['items'][$delta] = $element['items'][$delta]['#item'];
-      // Use isset() to avoid undefined index message on #children when field values are empty.
-      $variables['items'][$delta]['view'] = isset($element['items'][$delta]['#children']) ? $element['items'][$delta]['#children'] : '';
+      $variables['items'][$delta]['view'] = drupal_render_children($element['items'], array($delta));
     }
   }
   else {
@@ -569,7 +568,7 @@ function template_preprocess_field(&$variables) {
     foreach (element_children($element['items']) as $delta) {
       $variables['items'][$delta] = $element['items'][$delta]['#item'];
     }
-    $variables['items'][0]['view'] = $element['items']['#children'];
+    $variables['items'][0]['view'] = drupal_render_children($element, array('items'));
   }
 
   $variables['teaser'] = $element['#teaser'];
