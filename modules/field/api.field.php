@@ -1,5 +1,5 @@
 <?php
-// $Id: api.field.php,v 1.1 2009/02/03 17:30:11 dries Exp $
+// $Id: api.field.php,v 1.2 2009/02/05 03:42:57 webchick Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -560,7 +560,7 @@ function hook_field_storage_load($obj_type, $queried_objs, $age) {
  *   TRUE if this is an update to an existing object, FALSE if it is
  *   an insert of a new object.
  */
-function hook_field_storage_write($obj_type, $object, TRUE) {
+function hook_field_storage_write($obj_type, $object, $update = TRUE) {
 }
 
 /**

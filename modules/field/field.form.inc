@@ -1,5 +1,6 @@
 <?php
-// $Id: field.form.inc,v 1.1 2009/02/03 17:30:11 dries Exp $
+// $Id: field.form.inc,v 1.2 2009/02/05 03:42:57 webchick Exp $
+
 // TODO : merge with field.default.inc ?
 
 /**
