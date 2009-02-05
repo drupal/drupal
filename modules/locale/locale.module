@@ -32,7 +32,7 @@ function locale_help($path, $arg) {
     case 'admin/settings/language':
       $output = '<p>' . t("This page provides an overview of your site's enabled languages. If multiple languages are available and enabled, the text on your site interface may be translated, registered users may select their preferred language on the <em>My account</em> page, and site authors may indicate a specific language when creating posts. Languages will be displayed in the order you specify in places such as the language switcher block, or the language dropdown when creating or editing posts. The site's default language is used for anonymous visitors and for users who have not selected a preferred language.") . '</p>';
       $output .= '<p>' . t('For each language available on the site, use the <em>edit</em> link to configure language details, including name, an optional language-specific path or domain, and whether the language is natively presented either left-to-right or right-to-left. These languages also appear in the <em>Language</em> selection when creating a post of a content type with multilingual support.') . '</p>';
-      $output .= '<p>' . t('Use the <a href="@add-language">add language page</a> to enable additional languages (and automatically import files from a translation package, if available), the <a href="@search">translate interface page</a> to locate strings for manual translation, or the <a href="@import">import page</a> to add translations from individual <em>.po</em> files. A number of contributed translation packages containing <em>.po</em> files are available on the <a href="@translations">Drupal.org translations page</a>.', array('@add-language' => url('admin/settings/language/add'), '@search' => url('admin/build/translate/search'), '@import' => url('admin/build/translate/import'), '@translations' => 'http://drupal.org/project/translations')) . '</p>';
+      $output .= '<p>' . t('Use the <a href="@add-language">add language page</a> to enable additional languages (and automatically import files from a translation package, if available), the <a href="@search">translate interface page</a> to locate strings for manual translation, or the <a href="@import">import page</a> to add translations from individual <em>.po</em> files. A number of contributed translation packages containing <em>.po</em> files are available on the <a href="@translations">Drupal.org translations page</a>.', array('@add-language' => url('admin/settings/language/add'), '@search' => url('admin/build/translate/translate'), '@import' => url('admin/build/translate/import'), '@translations' => 'http://drupal.org/project/translations')) . '</p>';
       $output .= '<p>' . t('To rearrange languages, grab a drag-and-drop handle under the <em>English name</em> column and drag the item to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.') . '</p>';
       return $output;
     case 'admin/settings/language/add':
@@ -55,7 +55,7 @@ function locale_help($path, $arg) {
       return $output;
     case 'admin/build/translate/export':
       return '<p>' . t('This page exports the translated strings used by your site. An export file may be in Gettext Portable Object (<em>.po</em>) form, which includes both the original string and the translation (used to share translations with others), or in Gettext Portable Object Template (<em>.pot</em>) form, which includes the original strings only (used to create new translations with a Gettext translation editor).') . '</p>';
-    case 'admin/build/translate/search':
+    case 'admin/build/translate/translate':
       return '<p>' . t('This page allows a translator to search for specific translated and untranslated strings, and is used when creating or editing translations. (Note: For translation tasks involving many strings, it may be more convenient to <a href="@export">export</a> strings for offline editing in a desktop Gettext translation editor.) Searches may be limited to strings found within a specific text group or in a specific language.', array('@export' => url('admin/build/translate/export'))) . '</p>';
     case 'admin/build/block/configure':
       if ($arg[4] == 'locale' && $arg[5] == 0) {
@@ -124,8 +124,8 @@ function locale_menu() {
     'weight' => 0,
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/build/translate/search'] = array(
-    'title' => 'Search',
+  $items['admin/build/translate/translate'] = array(
+    'title' => 'Translate',
     'weight' => 10,
     'type' => MENU_LOCAL_TASK,
     'page callback' => 'locale_translate_seek_screen', // search results and form concatenated
@@ -312,6 +312,9 @@ function locale_form_alter(&$form, &$form_state, $form_id) {
 function locale_theme() {
   return array(
     'locale_languages_overview_form' => array(
+      'arguments' => array('form' => array()),
+    ),
+    'locale_translation_filters' => array(
       'arguments' => array('form' => array()),
     ),
   );
@@ -595,4 +598,18 @@ function locale_block_view($delta = '') {
     $block['content'] = theme('links', $links, array());
     return $block;
   }
+}
+
+/**
+ * Theme locale translation filter selector.
+ *
+ * @ingroup themeable
+ */
+function theme_locale_translation_filters($form) {
+  $output = '';
+  foreach (element_children($form['status']) as $key) {
+    $output .= drupal_render($form['status'][$key]);
+  }
+  $output .= '<div id="locale-translation-buttons">' . drupal_render($form['buttons']) . '</div>';
+  return $output;
 }

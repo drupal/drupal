@@ -535,58 +535,135 @@ function locale_translate_overview_screen() {
  * String search screen.
  */
 function locale_translate_seek_screen() {
-  $output = _locale_translate_seek();
-  $output .= drupal_get_form('locale_translate_seek_form');
+  // Add CSS.
+  drupal_add_css(drupal_get_path('module', 'locale') . '/locale.css', array('preprocess' => FALSE));
+
+  $output = drupal_get_form('locale_translation_filter_form');
+  $output .= _locale_translate_seek();
   return $output;
-}
-
-/**
- * User interface for the string search screen.
- */
-function locale_translate_seek_form() {
-  // Get all languages, except English
-  $languages = locale_language_list('name', TRUE);
-  unset($languages['en']);
-
-  // Present edit form preserving previous user settings
-  $query = _locale_translate_seek_query();
-  $form = array();
-  $form['search'] = array('#type' => 'fieldset',
-    '#title' => t('Search'),
-  );
-  $form['search']['string'] = array('#type' => 'textfield',
-    '#title' => t('String contains'),
-    '#default_value' => @$query['string'],
-    '#description' => t('Leave blank to show all strings. The search is case sensitive.'),
-  );
-  $form['search']['language'] = array(
-    // Change type of form widget if more the 5 options will
-    // be present (2 of the options are added below).
-    '#type' => (count($languages) <= 3 ? 'radios' : 'select'),
-    '#title' => t('Language'),
-    '#default_value' => (!empty($query['language']) ? $query['language'] : 'all'),
-    '#options' => array_merge(array('all' => t('All languages'), 'en' => t('English (provided by Drupal)')), $languages),
-  );
-  $form['search']['translation'] = array('#type' => 'radios',
-    '#title' => t('Search in'),
-    '#default_value' => (!empty($query['translation']) ? $query['translation'] : 'all'),
-    '#options' => array('all' => t('Both translated and untranslated strings'), 'translated' => t('Only translated strings'), 'untranslated' => t('Only untranslated strings')),
-  );
-  $groups = module_invoke_all('locale', 'groups');
-  $form['search']['group'] = array('#type' => 'radios',
-    '#title' => t('Limit search to'),
-    '#default_value' => (!empty($query['group']) ? $query['group'] : 'all'),
-    '#options' => array_merge(array('all' => t('All text groups')), $groups),
-  );
-
-  $form['search']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
-  $form['#redirect'] = FALSE;
-
-  return $form;
 }
 /**
  * @} End of "locale-translate-seek"
  */
+
+/**
+ * List locale translation filters that can be applied.
+ */
+function locale_translation_filters() {
+  $filters = array();
+
+  // Get all languages, except English
+  $languages = locale_language_list('name', TRUE);
+  unset($languages['en']);
+
+  $filters['string'] = array(
+    'title' => t('String contains'),
+    'description' => t('Leave blank to show all strings. The search is case sensitive.'),
+  );
+
+  $filters['language'] = array(
+    'title' => t('Language'),
+    'options' => array_merge(array('all' => t('All languages'), 'en' => t('English (provided by Drupal)')), $languages),
+  );
+
+  $filters['translation'] = array(
+    'title' => t('Search in'),
+    'options' => array('all' => t('Both translated and untranslated strings'), 'translated' => t('Only translated strings'), 'untranslated' => t('Only untranslated strings')),
+  );
+
+  $groups = module_invoke_all('locale', 'groups');
+  $filters['group'] = array(
+    'title' => t('Limit search to'),
+    'options' => array_merge(array('all' => t('All text groups')), $groups),
+  );
+
+  return $filters;
+}
+
+/**
+ * Return form for locale translation filters.
+ *
+ * @ingroup forms
+ */
+function locale_translation_filter_form() {
+  $session = &$_SESSION['locale_translation_filter'];
+  $session = is_array($session) ? $session : array();
+  $filters = locale_translation_filters();
+
+  $form['filters'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Filter translatable strings'),
+    '#theme' => 'locale_translation_filters',
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
+  );
+  foreach ($filters as $key => $filter) {
+    // Special case for 'string' filter.
+    if ($key == 'string') {
+      $form['filters']['status']['string'] = array(
+        '#type' => 'textfield',
+        '#title' => $filter['title'],
+        '#description' => $filter['description'],
+      );
+    }
+    else {
+      $form['filters']['status'][$key] = array(
+        '#title' => $filter['title'],
+        '#type' => 'select',
+        '#multiple' => FALSE,
+        '#size' => 0,
+        '#options' => $filter['options'],
+      );
+    }
+    if (!empty($session[$key])) {
+      $form['filters']['status'][$key]['#default_value'] = $session[$key];
+    }
+  }
+
+  $form['filters']['buttons']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Filter'),
+  );
+  if (!empty($session)) {
+    $form['filters']['buttons']['reset'] = array(
+      '#type' => 'submit',
+      '#value' => t('Reset')
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * Validate result from locale translation filter form.
+ */
+function locale_translation_filter_form_validate($form, &$form_state) {
+  if ($form_state['values']['op'] == t('Filter') && empty($form_state['values']['language']) && empty($form_state['values']['group'])) {
+    form_set_error('type', t('You must select something to filter by.'));
+  }
+}
+
+/**
+ * Process result from locale translation filter form.
+ */
+function locale_translation_filter_form_submit($form, &$form_state) {
+  $op = $form_state['values']['op'];
+  $filters = locale_translation_filters();
+  switch ($op) {
+    case t('Filter'):
+      foreach ($filters as $name => $filter) {
+        if (isset($form_state['values'][$name])) {
+          $_SESSION['locale_translation_filter'][$name] = $form_state['values'][$name];
+        }
+      }
+      break;
+    case t('Reset'):
+      $_SESSION['locale_translation_filter'] = array();
+      break;
+  }
+  
+  $form_state['redirect'] = 'admin/build/translate/translate';
+}
 
 /**
  * @defgroup locale-translate-import Translation import screen.
@@ -781,7 +858,7 @@ function locale_translate_edit_form(&$form_state, $lid) {
   $source = db_fetch_object(db_query('SELECT source, textgroup, location FROM {locales_source} WHERE lid = %d', $lid));
   if (!$source) {
     drupal_set_message(t('String not found.'), 'error');
-    drupal_goto('admin/build/translate/search');
+    drupal_goto('admin/build/translate/translate');
   }
 
   // Add original text to the top and some values for form altering.
@@ -899,7 +976,7 @@ function locale_translate_edit_form_submit($form, &$form_state) {
   _locale_invalidate_js();
   cache_clear_all('locale:', 'cache', TRUE);
 
-  $form_state['redirect'] = 'admin/build/translate/search';
+  $form_state['redirect'] = 'admin/build/translate/translate';
   return;
 }
 /**
@@ -928,7 +1005,7 @@ function locale_translate_delete_page($lid) {
  */
 function locale_translate_delete_form(&$form_state, $source) {
   $form['lid'] = array('#type' => 'value', '#value' => $source->lid);
-  return confirm_form($form, t('Are you sure you want to delete the string "%source"?', array('%source' => $source->source)), 'admin/build/translate/search', t('Deleting the string will remove all translations of this string in all languages. This action cannot be undone.'), t('Delete'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to delete the string "%source"?', array('%source' => $source->source)), 'admin/build/translate/translate', t('Deleting the string will remove all translations of this string in all languages. This action cannot be undone.'), t('Delete'), t('Cancel'));
 }
 
 /**
@@ -941,7 +1018,7 @@ function locale_translate_delete_form_submit($form, &$form_state) {
   _locale_invalidate_js();
   cache_clear_all('locale:', 'cache', TRUE);
   drupal_set_message(t('The string has been removed.'));
-  $form_state['redirect'] = 'admin/build/translate/search';
+  $form_state['redirect'] = 'admin/build/translate/translate';
 }
 /**
  * @} End of "locale-translate-delete"
@@ -1988,89 +2065,96 @@ function _locale_translate_seek() {
   $output = '';
 
   // We have at least one criterion to match
-  if ($query = _locale_translate_seek_query()) {
-    $join = "SELECT s.source, s.location, s.lid, s.textgroup, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid ";
+  if (!($query = _locale_translate_seek_query())) {
+    $query = array(
+      'translation' => 'all',
+      'group' => 'all',
+      'language' => 'all',
+      'string' => '',
+    );
+  }
 
-    $arguments = array();
-    $limit_language = FALSE;
-    // Compute LIKE section
-    switch ($query['translation']) {
-      case 'translated':
-        $where = "WHERE (t.translation LIKE ?)";
-        $orderby = "ORDER BY t.translation";
-        $arguments[] = '%'. $query['string'] .'%';
-        break;
-      case 'untranslated':
-        $where = "WHERE (s.source LIKE ? AND t.translation IS NULL)";
-        $orderby = "ORDER BY s.source";
-        $arguments[] = '%'. $query['string'] .'%';
-        break;
-      case 'all' :
-      default:
-        $where = "WHERE (s.source LIKE ? OR t.translation LIKE ?)";
-        $orderby = '';
-        $arguments[] = '%'. $query['string'] .'%';
-        $arguments[] = '%'. $query['string'] .'%';
-        break;
-    }
-    $grouplimit = '';
-    if (!empty($query['group']) && $query['group'] != 'all') {
-      $grouplimit = " AND s.textgroup = ?";
-      $arguments[] = $query['group'];
-    }
+  $join = "SELECT s.source, s.location, s.lid, s.textgroup, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid ";
+  $arguments = array();
 
-    switch ($query['language']) {
-      // Force search in source strings
-      case "en":
-        $sql = $join . " WHERE s.source LIKE ? $grouplimit ORDER BY s.source";
-        $arguments = array('%' . $query['string'] . '%'); // $where is not used, discard its arguments
-        if (!empty($grouplimit)) {
-          $arguments[] = $query['group'];
-        }
-        break;
-      // Search in all languages
-      case "all":
-        $sql = "$join $where $grouplimit $orderby";
-        break;
-      // Some different language
-      default:
-        $sql = "$join AND t.language = ? $where $grouplimit $orderby";
-        array_unshift($arguments, $query['language']);
-        // Don't show translation flags for other languages, we can't see them with this search.
-        $limit_language = $query['language'];
-    }
+  $limit_language = FALSE;
+  // Compute LIKE section
+  switch ($query['translation']) {
+    case 'translated':
+      $where = "WHERE (t.translation LIKE ?)";
+      $orderby = "ORDER BY t.translation";
+      $arguments[] = '%'. $query['string'] .'%';
+      break;
+    case 'untranslated':
+      $where = "WHERE (s.source LIKE ? AND t.translation IS NULL)";
+      $orderby = "ORDER BY s.source";
+      $arguments[] = '%'. $query['string'] .'%';
+      break;
+    case 'all' :
+    default:
+      $where = "WHERE (s.source LIKE ? OR t.translation LIKE ?)";
+      $orderby = '';
+      $arguments[] = '%'. $query['string'] .'%';
+      $arguments[] = '%'. $query['string'] .'%';
+      break;
+  }
+  $grouplimit = '';
+  if (!empty($query['group']) && $query['group'] != 'all') {
+    $grouplimit = " AND s.textgroup = ?";
+    $arguments[] = $query['group'];
+  }
 
-    $result = pager_query($sql, 50, 0, NULL, $arguments);
-
-    $groups = module_invoke_all('locale', 'groups');
-    $header = array(t('Text group'), t('String'), ($limit_language) ? t('Language') : t('Languages'), array('data' => t('Operations'), 'colspan' => '2'));
-    $arr = array();
-    while ($locale = db_fetch_object($result)) {
-      $arr[$locale->lid]['group'] = $groups[$locale->textgroup];
-      $arr[$locale->lid]['languages'][$locale->language] = $locale->translation;
-      $arr[$locale->lid]['location'] = $locale->location;
-      $arr[$locale->lid]['source'] = $locale->source;
-    }
-    $rows = array();
-    foreach ($arr as $lid => $value) {
-      $rows[] = array(
-        $value['group'],
-        array('data' => check_plain(truncate_utf8($value['source'], 150, FALSE, TRUE)) . '<br /><small>' . $value['location'] . '</small>'),
-        array('data' => _locale_translate_language_list($value['languages'], $limit_language), 'align' => 'center'),
-        array('data' => l(t('edit'), "admin/build/translate/edit/$lid"), 'class' => 'nowrap'),
-        array('data' => l(t('delete'), "admin/build/translate/delete/$lid"), 'class' => 'nowrap'),
-      );
-    }
-
-    if (count($rows)) {
-      $output .= theme('table', $header, $rows);
-      if ($pager = theme('pager', NULL, 50)) {
-        $output .= $pager;
+  switch ($query['language']) {
+    // Force search in source strings
+    case "en":
+      $sql = $join . " WHERE s.source LIKE ? $grouplimit ORDER BY s.source";
+      $arguments = array('%' . $query['string'] . '%'); // $where is not used, discard its arguments
+      if (!empty($grouplimit)) {
+        $arguments[] = $query['group'];
       }
+      break;
+    // Search in all languages
+    case "all":
+      $sql = "$join $where $grouplimit $orderby";
+      break;
+    // Some different language
+    default:
+      $sql = "$join AND t.language = ? $where $grouplimit $orderby";
+      array_unshift($arguments, $query['language']);
+      // Don't show translation flags for other languages, we can't see them with this search.
+      $limit_language = $query['language'];
+  }
+
+  $result = pager_query($sql, 50, 0, NULL, $arguments);
+
+  $groups = module_invoke_all('locale', 'groups');
+  $header = array(t('Text group'), t('String'), ($limit_language) ? t('Language') : t('Languages'), array('data' => t('Operations'), 'colspan' => '2'));
+  $arr = array();
+  while ($locale = db_fetch_object($result)) {
+    $arr[$locale->lid]['group'] = $groups[$locale->textgroup];
+    $arr[$locale->lid]['languages'][$locale->language] = $locale->translation;
+    $arr[$locale->lid]['location'] = $locale->location;
+    $arr[$locale->lid]['source'] = $locale->source;
+  }
+  $rows = array();
+  foreach ($arr as $lid => $value) {
+    $rows[] = array(
+      $value['group'],
+      array('data' => check_plain(truncate_utf8($value['source'], 150, FALSE, TRUE)) . '<br /><small>' . $value['location'] . '</small>'),
+      array('data' => _locale_translate_language_list($value['languages'], $limit_language), 'align' => 'center'),
+      array('data' => l(t('edit'), "admin/build/translate/edit/$lid", array('query' => drupal_get_destination())), 'class' => 'nowrap'),
+      array('data' => l(t('delete'), "admin/build/translate/delete/$lid", array('query' => drupal_get_destination())), 'class' => 'nowrap'),
+    );
+  }
+
+  if (count($rows)) {
+    $output .= theme('table', $header, $rows);
+    if ($pager = theme('pager', NULL, 50)) {
+      $output .= $pager;
     }
-    else {
-      $output .= t('No strings found for your search.');
-    }
+  }
+  else {
+    $output .= t('No strings found for your search.');
   }
 
   return $output;
@@ -2085,8 +2169,8 @@ function _locale_translate_seek_query() {
     $query = array();
     $fields = array('string', 'language', 'translation', 'group');
     foreach ($fields as $field) {
-      if (isset($_REQUEST[$field])) {
-        $query[$field] = $_REQUEST[$field];
+      if (isset($_SESSION['locale_translation_filter'][$field])) {
+        $query[$field] = $_SESSION['locale_translation_filter'][$field];
       }
     }
   }
@@ -2260,7 +2344,7 @@ function _locale_rebuild_js($langcode = NULL) {
  * List languages in search result table
  */
 function _locale_translate_language_list($translation, $limit_language) {
-  // Add CSS
+  // Add CSS.
   drupal_add_css(drupal_get_path('module', 'locale') . '/locale.css', array('preprocess' => FALSE));
 
   $languages = language_list();
