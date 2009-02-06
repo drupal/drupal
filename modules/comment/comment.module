@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.690 2009/01/31 16:19:29 webchick Exp $
+// $Id: comment.module,v 1.691 2009/02/06 16:25:08 webchick Exp $
 
 /**
  * @file
@@ -2143,7 +2143,7 @@ function comment_unpublish_by_keyword_action_form($context) {
   $form['keywords'] = array(
     '#title' => t('Keywords'),
     '#type' => 'textarea',
-    '#description' => t('The comment will be unpublished if it contains any of the character sequences above. Use a comma-separated list of character sequences. Example: funny, bungee jumping, "Company, Inc." . Character sequences are case-sensitive.'),
+    '#description' => t('The comment will be unpublished if it contains any of the phrases above. Use a case-sensitive, comma-separated list of phrases. Example: funny, bungee jumping, "Company, Inc."'),
     '#default_value' => isset($context['keywords']) ? drupal_implode_tags($context['keywords']) : '',
   );
 
