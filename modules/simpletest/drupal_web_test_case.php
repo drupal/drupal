@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.82 2009/02/03 17:30:13 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.83 2009/02/06 00:30:36 webchick Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -927,6 +927,9 @@ class DrupalWebTestCase {
       // aren't called after tests.
       module_list(TRUE);
       module_implements(MODULE_IMPLEMENTS_CLEAR_CACHE);
+
+      // Reset the Field API.
+      field_cache_clear();
 
       // Rebuild caches.
       $this->refreshVariables();
