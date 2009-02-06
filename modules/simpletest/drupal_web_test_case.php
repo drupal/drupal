@@ -928,6 +928,9 @@ class DrupalWebTestCase {
       module_list(TRUE);
       module_implements(MODULE_IMPLEMENTS_CLEAR_CACHE);
 
+      // Reset the Field API.
+      field_cache_clear();
+
       // Rebuild caches.
       $this->refreshVariables();
 
