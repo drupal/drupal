@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.api.php,v 1.3 2009/02/05 01:05:17 webchick Exp $
+// $Id: menu.api.php,v 1.4 2009/02/07 04:46:46 webchick Exp $
 
 /**
  * @file
@@ -88,18 +88,18 @@ function hook_menu() {
  * Alter the data being saved to the {menu_router} table after hook_menu is invoked.
  *
  * This hook is invoked by menu_router_build(). The menu definitions are passed
- * in by reference. Each element of the $callbacks array is one item returned
+ * in by reference. Each element of the $items array is one item returned
  * by a module from hook_menu. Additional items may be added, or existing items
  * altered.
  *
- * @param $callbacks
+ * @param $items
  *   Associative array of menu router definitions returned from hook_menu().
  * @return
  *   None.
  */
-function hook_menu_alter(&$callbacks) {
+function hook_menu_alter(&$items) {
   // Example - disable the page at node/add
-  $callbacks['node/add']['access callback'] = FALSE;
+  $items['node/add']['access callback'] = FALSE;
 }
 
 /**
