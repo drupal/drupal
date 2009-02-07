@@ -9,23 +9,12 @@ class CommentHelperCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('comment');
     // Create users.
-    $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer comments', 'administer permissions'));
+    $this->admin_user = $this->drupalCreateUser(array('administer content types', 'administer comments', 'administer permissions', 'administer blocks'));
     $this->web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'create article content'));
 
     $this->drupalLogin($this->web_user);
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
     $this->drupalLogout();
-  }
-
-  /**
-   * Test comments as part of RSS feed.
-   */
-  function testCommentRSS() {
-    $this->drupalLogin($this->web_user);
-    $comment = $this->postComment($this->node, $this->randomName(), $this->randomName());
-    $this->drupalGet('rss.xml');
-    $raw = '<comments>' . url('node/' . $this->node->nid, array('fragment' => 'comments', 'absolute' => TRUE)) . '</comments>';
-    $this->assertRaw($raw, t('Comments as part of RSS feed.'));
   }
 
   /**
@@ -61,7 +50,9 @@ class CommentHelperCase extends DrupalWebTestCase {
 
     // Get comment.
     if ($contact !== TRUE) { // If true then attempting to find error message.
-      $this->assertText($subject, 'Comment subject posted.');
+      if ($subject) {
+        $this->assertText($subject, 'Comment subject posted.');
+      }
       $this->assertText($comment, 'Comment body posted.');
       $this->assertTrue((!empty($match) && !empty($match[1])), t('Comment id found.'));
     }
@@ -281,11 +272,11 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->assertText($subject_text, t('Individual comment subject found.'));
     $this->assertText($comment_text, t('Individual comment body found.'));
 
-    // Reply to comment.
+    // Reply to comment without a subject.
     $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
     $this->assertText($subject_text, t('Individual comment-reply subject found.'));
     $this->assertText($comment_text, t('Individual comment-reply body found.'));
-    $reply = $this->postComment(NULL, $this->randomName(), $this->randomName());
+    $reply = $this->postComment(NULL, '', $this->randomName());
     $reply_loaded = comment_load($reply->id);
     $this->assertTrue($this->commentExists($reply, TRUE), t('Reply found.'));
     $this->assertEqual($comment->id, $reply_loaded->pid, t('Pid of a reply to a comment is set correctly.'));
@@ -348,22 +339,7 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->drupalGet('node/' . $this->node->nid);
     $this->assertFalse($this->commentExists($comment), t('Comment not found.'));
     $this->assertFalse($this->commentExists($reply, TRUE), t('Reply not found.'));
-  }
-}
 
-class CommentNodePage extends CommentHelperCase {
-  function getInfo() {
-    return array(
-      'name' => t('Comment on a node page'),
-      'description' => t('Test comment form on a node page.'),
-      'group' => t('Comment'),
-    );
-  }
-
-  /**
-   * Test comment form on node page.
-   */
-  function testFormOnPage() {
     // Enabled comment form on node page.
     $this->drupalLogin($this->admin_user);
     $this->setCommentForm(TRUE);
@@ -380,7 +356,6 @@ class CommentNodePage extends CommentHelperCase {
     $this->drupalLogin($this->admin_user);
     $this->setCommentForm(FALSE);
   }
-
 }
 
 class CommentAnonymous extends CommentHelperCase {
@@ -558,32 +533,81 @@ class CommentApprovalTest extends CommentHelperCase {
   }
 }
 
-class CommentBlockTestCase extends DrupalWebTestCase {
+/**
+ * Functional tests for the comment module blocks.
+ */
+class CommentBlockFunctionalTest extends CommentHelperCase {
   function getInfo() {
     return array(
-      'name' => t('Block availability'),
-      'description' => t('Check if the recent comments block is available.'),
+      'name' => t('Comment blocks'),
+      'description' => t('Test comment block functionality.'),
       'group' => t('Comment'),
     );
   }
 
-  function setUp() {
-    parent::setUp('comment');
+  /**
+   * Test the recent comments block.
+   */
+  function testRecentCommentBlock() {
+    $this->drupalLogin($this->admin_user);
 
-    // Create and login user
-    $admin_user = $this->drupalCreateUser(array('administer blocks'));
-    $this->drupalLogin($admin_user);
+    // Set the block to a region to confirm block is available.
+    $edit = array(
+      'comment_recent[region]' => 'left',
+    );
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->assertText(t('The block settings have been updated.'), t('Block saved to left region.'));
+
+    // Set block title and variables.
+    $block = array(
+      'title' => $this->randomName(),
+      'comment_block_count' => 2,
+    );
+    $this->drupalPost('admin/build/block/configure/comment/recent', $block, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), t('Block saved.'));
+
+    // Add some test comments, one without a subject.
+    $comment1 = $this->postComment($this->node, $this->randomName(), $this->randomName());
+    $comment2 = $this->postComment($this->node, $this->randomName(), $this->randomName());
+    $comment3 = $this->postComment($this->node, '', $this->randomName());
+
+    // Test that a user without the 'access comments' permission can not see the block.
+    $this->drupalLogout();
+    $this->drupalGet('');
+    $this->assertNoText($block['title'], t('Block was not found.'));
+
+    $this->drupalLogin($this->web_user);
+    $this->drupalGet('');
+    $this->assertText($block['title'], t('Block was found.'));
+
+    // Test the only the 2 latest comments are shown and in the proper order.
+    $this->assertNoText($comment1->subject, t('Comment not found in block.'));
+    $this->assertText($comment2->subject, t('Comment found in block.'));
+    $this->assertText($comment3->comment, t('Comment found in block.'));
+    $this->assertTrue(strpos($this->drupalGetContent(), $comment3->comment) < strpos($this->drupalGetContent(), $comment2->subject), t('Comments were ordered correctly in block.'));
+  }
+}
+
+/**
+ * Unit tests for comment module integration with RSS feeds.
+ */
+class CommentRSSUnitTest extends CommentHelperCase {
+  function getInfo() {
+    return array(
+      'name' => t('Comment RSS'),
+      'description' => t('Test comments as part of an RSS feed.'),
+      'group' => t('Comment'),
+    );
   }
 
-  function testRecentCommentBlock() {
-    // Set block title to confirm that the interface is availble.
-    $this->drupalPost('admin/build/block/configure/comment/recent', array('title' => $this->randomName(8)), t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
-
-    // Set the block to a region to confirm block is availble.
-    $edit = array();
-    $edit['comment_recent[region]'] = 'footer';
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+  /**
+   * Test comments as part of an RSS feed.
+   */
+  function testCommentRSS() {
+    $this->drupalLogin($this->web_user);
+    $comment = $this->postComment($this->node, $this->randomName(), $this->randomName());
+    $this->drupalGet('rss.xml');
+    $raw = '<comments>' . url('node/' . $this->node->nid, array('fragment' => 'comments', 'absolute' => TRUE)) . '</comments>';
+    $this->assertRaw($raw, t('Comments as part of RSS feed.'));
   }
 }

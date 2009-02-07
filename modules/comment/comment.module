@@ -329,18 +329,15 @@ function comment_get_recent($number = 10) {
     // Step 2: From among the comments on the nodes selected in the first query,
     //         find the $number of most recent comments.
     // Using Query Builder here for the IN-Statement.
-    $result = db_select('comment', 'c')
-      ->fields('c', array('nid', 'subject', 'cid', 'timestamp') )
-      ->innerJoin('node', 'n', 'n.nid = c.nid')
-      ->condition('c.nid', $nids, 'IN')
-      ->condition('c.status', COMMENT_PUBLISHED)
-      ->condition('n.status', 1)
-      ->orderBy('c.cid', 'DESC')
-      ->range(0, $number)
-      ->execute();
-    foreach ($result as $comment) {
-     $comments[] = $comment;
-    }
+    $query = db_select('comment', 'c');
+    $query->fields('c', array('nid', 'subject', 'cid', 'timestamp'));
+    $query->innerJoin('node', 'n', 'n.nid = c.nid');
+    $query->condition('c.nid', $nids, 'IN');
+    $query->condition('c.status', COMMENT_PUBLISHED);
+    $query->condition('n.status', 1);
+    $query->orderBy('c.cid', 'DESC');
+    $query->range(0, $number);
+    $comments = $query->execute()->fetchAll();
   }
 
   return $comments;
