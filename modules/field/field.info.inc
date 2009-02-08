@@ -1,4 +1,10 @@
 <?php
+// $Id$
+
+/**
+ * @file
+ * TODO: Fill me in.
+ */
 
 /**
  * @defgroup field_info Field Info API

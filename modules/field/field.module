@@ -14,8 +14,8 @@
  * objects and takes care of storing, loading, editing, and rendering
  * field data.  Any object type (node, user, etc.) can use the Field
  * API to make itself "fieldable" and thus allow fields to be attached
- * to it.  Other modules can provide a user interface for managing custom 
- * fields via a web browser as well as a wide and flexible variety of 
+ * to it.  Other modules can provide a user interface for managing custom
+ * fields via a web browser as well as a wide and flexible variety of
  * data type, form element, and display format capabilities.
  *
  * - @link field_structs Data structures: Field, Instance, Bundle @endlink.
@@ -123,15 +123,6 @@ function field_menu() {
   );
 
   return $items;
-}
-
-/**
- * Implementation of hook elements().
- */
-function field_elements() {
-  return array(
-    'field' => array(),
-  );
 }
 
 /**

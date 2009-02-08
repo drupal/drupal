@@ -1,5 +1,14 @@
 <?php
+// $Id$
 
+/**
+ * @file
+ * TODO: Fill me in.
+ */
+
+/**
+ * TODO: Fill me in.
+ */
 class FieldException extends Exception {}
 
 /**

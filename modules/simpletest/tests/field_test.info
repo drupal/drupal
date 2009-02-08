@@ -2,7 +2,7 @@
 name = "Field API Test"
 description = "Support module for the Field API tests."
 core = 7.x
-package = testing
+package = Testing
 files[] = field_test.module
 files[] = field_test.install
 version = VERSION
