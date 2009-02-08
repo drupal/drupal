@@ -4,7 +4,7 @@
 /**
  * Root directory of Drupal installation.
  */
-define('DRUPAL_ROOT', dirname(realpath(__FILE__)));
+define('DRUPAL_ROOT', getcwd());
 
 require_once DRUPAL_ROOT . '/includes/install.inc';
 
