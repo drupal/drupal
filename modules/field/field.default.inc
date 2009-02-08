@@ -1,16 +1,13 @@
 <?php
+// $Id: field.default.inc,v 1.3 2009/02/08 21:22:59 webchick Exp $
 
 /**
  * @file
- *
  * Default 'implementations' of hook_field_*().
  *
  * Handles common field housekeeping.
  * Those implementations are special, as field.module does not define any field
  * types. Those functions take care of default stuff common to all field types.
- *
- * Storage ops ('load', 'insert', 'update', 'delete', 'delete revisions')
- * are not executed field by field, and are thus handled separately.
  */
 
 function field_default_validate($obj_type, $object, $field, $instance, $items, $form) {
@@ -67,7 +64,7 @@ function field_default_submit($obj_type, &$object, $field, $instance, &$items, $
  *
  * The $object array will look like:
  *   $object->content['field_foo']['wrapper'] = array(
- *     '#type' => 'field',
+ *     '#theme' => 'field',
  *     '#title' => 'label'
  *     '#field_name' => 'field_name',
  *     '#object' => $object,
@@ -171,7 +168,7 @@ function field_default_view($obj_type, $object, $field, $instance, $items, $teas
     $format_info = $info + array(
       '#formatter' => $display['type'],
       '#settings' => $display['settings'],
-      '#theme_wrapper' => $theme,
+      '#theme' => $theme,
     );
 
     if ($single) {
@@ -187,7 +184,7 @@ function field_default_view($obj_type, $object, $field, $instance, $items, $teas
     // The wrapper lets us get the themed output for the whole field
     // to populate the $FIELD_NAME_rendered variable for templates,
     // and hide it from the $content variable if needed.
-    // See 'preprocess' op and theme_content_field_wrapper()?
+    // See 'preprocess' op and theme_content_field_wrapper().
     $wrapper = $info + array(
       'field' => $element,
       '#weight' => $instance['weight'],
@@ -220,8 +217,8 @@ function field_wrapper_post_render($content, $element) {
  * This is a theme function, so it can be overridden in different
  * themes to produce different results.
  *
- * The html for individual fields and groups are available in the
- * $FIELD_NAME_rendered and $GROUP_NAME_rendered variables.
+ * The html for individual fields are available in the $FIELD_NAME_rendered
+ * variables.
  *
  * @return
  *   Whether or not the field's content is to be added in this context.

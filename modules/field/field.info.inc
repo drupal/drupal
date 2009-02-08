@@ -1,4 +1,10 @@
 <?php
+// $Id: field.info.inc,v 1.2 2009/02/08 21:22:59 webchick Exp $
+
+/**
+ * @file
+ * TODO: Fill me in.
+ */
 
 /**
  * @defgroup field_info Field Info API
