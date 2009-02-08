@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.97 2009/01/27 00:22:24 dries Exp $
+// $Id: index.php,v 1.98 2009/02/08 20:27:51 webchick Exp $
 
 /**
  * @file
@@ -15,7 +15,7 @@
 /**
  * Root directory of Drupal installation.
  */
-define('DRUPAL_ROOT', dirname(realpath(__FILE__)));
+define('DRUPAL_ROOT', getcwd());
 
 require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);

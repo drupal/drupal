@@ -1,10 +1,10 @@
 <?php
-// $Id: update.php,v 1.271 2009/01/21 14:47:12 dries Exp $
+// $Id: update.php,v 1.272 2009/02/08 20:27:51 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
  */
-define('DRUPAL_ROOT', dirname(realpath(__FILE__)));
+define('DRUPAL_ROOT', getcwd());
 
 /**
  * @file

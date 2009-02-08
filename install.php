@@ -1,10 +1,10 @@
 <?php
-// $Id: install.php,v 1.152 2009/02/04 04:42:26 webchick Exp $
+// $Id: install.php,v 1.153 2009/02/08 20:27:51 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
  */
-define('DRUPAL_ROOT', dirname(realpath(__FILE__)));
+define('DRUPAL_ROOT', getcwd());
 
 require_once DRUPAL_ROOT . '/includes/install.inc';
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.php,v 1.16 2008/09/20 20:22:23 webchick Exp $
+// $Id: xmlrpc.php,v 1.17 2009/02/08 20:27:51 webchick Exp $
 
 /**
  * @file
@@ -9,7 +9,7 @@
 /**
  * Root directory of Drupal installation.
  */
-define('DRUPAL_ROOT', dirname(realpath(__FILE__)));
+define('DRUPAL_ROOT', getcwd());
 
 include_once DRUPAL_ROOT . '/includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
