@@ -767,7 +767,7 @@ function user_elements() {
  */
 function user_user_view(&$edit, &$account, $category = NULL) {
   $account->content['user_picture'] = array(
-    '#value' => theme('user_picture', $account),
+    '#markup' => theme('user_picture', $account),
     '#weight' => -10,
   );
   if (!isset($account->content['summary'])) {
