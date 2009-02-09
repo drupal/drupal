@@ -212,7 +212,7 @@ function hook_js_alter(&$javascript) {
  *   $page['content']['nodes'][$nid]['#node']
  *   // The results pager.
  *   $page['content']['pager']
- * @code 
+ * @endcode
  *
  * Blocks may be referenced by their module/delta pair within a region:
  * @code
