@@ -42,6 +42,7 @@ class TrackerTest extends DrupalWebTestCase {
     $this->drupalGet('tracker');
     $this->assertText($page1['title'], t('Nodes show up in the tracker listing.'));
     $this->assertNoText($page2['title'], t('Unpublished nodes do not show up in the tracker listing.'));
+    $this->assertLink(t('My recent posts'), 0, t('User tab shows up on the global tracker page.'));
   }
 
   /**

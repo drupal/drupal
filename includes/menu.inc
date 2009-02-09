@@ -589,7 +589,7 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
  *
  * Translation of menu item titles and descriptions are done here to
  * allow for storage of English strings in the database, and translation
- * to the language required to generate the current page
+ * to the language required to generate the current page.
  *
  * @param $router_item
  *   A menu router item
@@ -600,20 +600,23 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
  *   path from the menu table, for example tabs.
  * @return
  *   Returns the map with objects loaded as defined in the
- *   $item['load_functions. $item['access'] becomes TRUE if the item is
+ *   $item['load_functions']. $item['access'] becomes TRUE if the item is
  *   accessible, FALSE otherwise. $item['href'] is set according to the map.
  *   If an error occurs during calling the load_functions (like trying to load
  *   a non existing node) then this function return FALSE.
  */
 function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
+  if ($to_arg) {
+    // Fill in missing path elements, such as the current uid.
+    _menu_link_map_translate($map, $router_item['to_arg_functions']);
+  }
+  // The $path_map saves the pieces of the path as strings, while elements in
+  // $map may be replaced with loaded objects.
   $path_map = $map;
   if (!_menu_load_objects($router_item, $map)) {
     // An error occurred loading an object.
     $router_item['access'] = FALSE;
     return FALSE;
-  }
-  if ($to_arg) {
-    _menu_link_map_translate($path_map, $router_item['to_arg_functions']);
   }
 
   // Generate the link path for the page request or local tasks.
