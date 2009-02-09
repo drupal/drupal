@@ -15,7 +15,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('field_sql_storage', 'field', 'field_test');
 
-    $this->field_name = strtolower($this->randomName(). '_field_name');
+    $this->field_name = drupal_strtolower($this->randomName(). '_field_name');
     $this->table = _field_sql_storage_tablename($this->field_name);
     $this->revision_table = _field_sql_storage_revision_tablename($this->field_name);
     $this->field = array('field_name' => $this->field_name, 'type' => 'test_field', 'cardinality' => 4);
@@ -371,7 +371,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
   function testFieldAttachCreateRenameBundle() {
     // Create a new bundle. This has to be initiated by the module so that its
     // hook_fieldable_info() is consistent.
-    $new_bundle = 'test_bundle_' . strtolower($this->randomName());
+    $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomName());
     field_test_create_bundle($new_bundle, $this->randomName());
 
     // Add an instance to that bundle.
@@ -395,7 +395,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
 
     // Rename the bundle. This has to be initiated by the module so that its
     // hook_fieldable_info() is consistent.
-    $new_bundle = 'test_bundle_' . strtolower($this->randomName());
+    $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomName());
     field_test_rename_bundle($this->instance['bundle'], $new_bundle);
 
     // Check that the instance definition has been updated.
@@ -411,7 +411,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
   function testFieldAttachDeleteBundle() {
     // Create a new bundle. This has to be initiated by the module so that its
     // hook_fieldable_info() is consistent.
-    $new_bundle = 'test_bundle_' . strtolower($this->randomName());
+    $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomName());
     field_test_create_bundle($new_bundle, $this->randomName());
 
     // Add an instance to that bundle.
@@ -419,7 +419,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     field_create_instance($this->instance);
 
     // Create a second field for the test bundle
-    $field_name = strtolower($this->randomName(). '_field_name');
+    $field_name = drupal_strtolower($this->randomName(). '_field_name');
     $table = _field_sql_storage_tablename($field_name);
     $revision_table = _field_sql_storage_revision_tablename($field_name);
     $field = array('field_name' => $field_name, 'type' => 'test_field', 'cardinality' => 1);
@@ -655,7 +655,7 @@ class FieldInfoTestCase extends DrupalWebTestCase {
 
     // Create a field, verify it shows up.
     $field = array(
-      'field_name' => strtolower($this->randomName()),
+      'field_name' => drupal_strtolower($this->randomName()),
       'type' => 'test_field',
     );
     field_create_field($field);
@@ -725,9 +725,9 @@ class FieldFormTestCase extends DrupalWebTestCase {
     $web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content'));
     $this->drupalLogin($web_user);
 
-    $this->field_single = array('field_name' => strtolower($this->randomName(). '_field_name'), 'type' => 'test_field');
-    $this->field_multiple = array('field_name' => strtolower($this->randomName(). '_field_name'), 'type' => 'test_field', 'cardinality' => 4);
-    $this->field_unlimited = array('field_name' => strtolower($this->randomName(). '_field_name'), 'type' => 'test_field', 'cardinality' => FIELD_CARDINALITY_UNLIMITED);
+    $this->field_single = array('field_name' => drupal_strtolower($this->randomName(). '_field_name'), 'type' => 'test_field');
+    $this->field_multiple = array('field_name' => drupal_strtolower($this->randomName(). '_field_name'), 'type' => 'test_field', 'cardinality' => 4);
+    $this->field_unlimited = array('field_name' => drupal_strtolower($this->randomName(). '_field_name'), 'type' => 'test_field', 'cardinality' => FIELD_CARDINALITY_UNLIMITED);
 
     $this->instance = array(
       'bundle' => 'test_bundle',
@@ -939,7 +939,7 @@ class FieldTestCase extends DrupalWebTestCase {
    */
   function testCreateField() {
     $field_definition = array(
-      'field_name' => strtolower($this->randomName()),
+      'field_name' => drupal_strtolower($this->randomName()),
       'type' => 'test_field',
     );
     field_create_field($field_definition);
