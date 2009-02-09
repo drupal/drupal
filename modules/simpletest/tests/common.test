@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.25 2009/01/31 19:07:45 dries Exp $
+// $Id: common.test,v 1.26 2009/02/09 03:29:54 webchick Exp $
 
 /**
  * Tests for the l() function.
@@ -535,8 +535,29 @@ class DrupalRenderUnitTestCase extends DrupalWebTestCase {
       ),
     );
     $output = drupal_render($elements);
+
     // The lowest weight element should appear last in $output.
-    $this->assertTrue(strpos($output, $second) > strpos($output, $first), t('Elements were sorted correctly by weight'));
+    $this->assertTrue(strpos($output, $second) > strpos($output, $first), t('Elements were sorted correctly by weight.'));
+
+    // Confirm that the $elements array has '#sorted' set to TRUE.
+    $this->assertTrue($elements['#sorted'], t("'#sorted' => TRUE was added to the array"));
+
+    // Now the same array structure, but with #sorted set to TRUE.
+    $elements = array(
+      'second' => array(
+        '#weight' => 10,
+        '#markup' => $second,
+      ),
+      'first' => array(
+        '#weight' => 0,
+        '#markup' => $first,
+      ),
+      '#sorted' => TRUE,
+    );
+    $output = drupal_render($elements);
+
+    // The elements should appear in output in the same order as the array.
+    $this->assertTrue(strpos($output, $second) < strpos($output, $first), t('Elements were not sorted.'));
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.864 2009/02/05 01:21:16 webchick Exp $
+// $Id: common.inc,v 1.865 2009/02/09 03:29:53 webchick Exp $
 
 /**
  * @file
@@ -3323,13 +3323,8 @@ function drupal_render(&$elements) {
     }
   }
 
-  // Sort the elements by weight if they have not been sorted elsewhere already,
-  // for example by a database query. Pre-sorted elements should have
-  // $elements['#sorted'] set to TRUE to avoid unnecessary calls to uasort().
-  if (empty($elements['#sorted'])) {
-    uasort($elements, 'element_sort');
-    $elements['#sorted'] = TRUE;
-  }
+  // Get the children of the element, sorted by weight.
+  $children = element_children($elements, TRUE);
 
   $elements['#children'] = '';
   // Call the element's #theme function if it is set. Then any children of the
@@ -3340,7 +3335,7 @@ function drupal_render(&$elements) {
   // If #theme was not set and the element has children, render them now
   // using drupal_render_children().
   if ($elements['#children'] == '') {
-    $elements['#children'] = drupal_render_children($elements);
+    $elements['#children'] = drupal_render_children($elements, $children);
   }
 
   // Let the theme function in #theme_wrapper add markup around the rendered
@@ -3474,16 +3469,36 @@ function element_child($key) {
 }
 
 /**
- * Get keys of a structured array tree element that are not properties (i.e., do not begin with '#').
+ * Return the children of an element, optionally sorted by weight.
+ *
+ * @param $elements
+ *   The element to be sorted.
+ * @param $sort
+ *   Boolean to indicate whether the children should be sorted by weight.
+ * @return
+ *   The array keys of the element's children.
  */
-function element_children($element) {
-  $keys = array();
-  foreach(array_keys($element) as $key) {
-    if ($key[0] !== '#') { 
-      $keys[] = $key;
+function element_children(&$elements, $sort = FALSE) {
+  // Do not attempt to sort elements which have already been sorted.
+  $sort = isset($elements['#sorted']) ? !$elements['#sorted'] : $sort;
+
+  // Filter out properties from the element, leaving only children.
+  $children = array();
+  $sortable = FALSE;
+  foreach ($elements as $key => $value) {
+    if ($key[0] !== '#') {
+      $children[$key] = $value;
+      if (is_array($value) && isset($value['#weight'])) {
+        $sortable = TRUE;
+      }
     }
   }
-  return $keys;
+  // Sort the element if necessary.
+  if ($sort && $sortable) {
+    uasort($children, 'element_sort');
+  }
+  $elements['#sorted'] = TRUE;
+  return array_keys($children);
 }
 
 /**
