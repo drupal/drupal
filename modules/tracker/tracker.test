@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.test,v 1.5 2008/11/25 13:14:29 dries Exp $
+// $Id: tracker.test,v 1.6 2009/02/09 16:27:35 dries Exp $
 
 class TrackerTest extends DrupalWebTestCase {
   protected $user;
@@ -42,6 +42,7 @@ class TrackerTest extends DrupalWebTestCase {
     $this->drupalGet('tracker');
     $this->assertText($page1['title'], t('Nodes show up in the tracker listing.'));
     $this->assertNoText($page2['title'], t('Unpublished nodes do not show up in the tracker listing.'));
+    $this->assertLink(t('My recent posts'), 0, t('User tab shows up on the global tracker page.'));
   }
 
   /**
