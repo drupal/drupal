@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.17 2009/01/31 16:50:57 webchick Exp $
+// $Id: system.api.php,v 1.18 2009/02/09 15:42:52 webchick Exp $
 
 /**
  * @file
@@ -212,7 +212,7 @@ function hook_js_alter(&$javascript) {
  *   $page['content']['nodes'][$nid]['#node']
  *   // The results pager.
  *   $page['content']['pager']
- * @code 
+ * @endcode
  *
  * Blocks may be referenced by their module/delta pair within a region:
  * @code
