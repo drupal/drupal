@@ -552,14 +552,17 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
  *   a non existing node) then this function return FALSE.
  */
 function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
+  if ($to_arg) {
+    // Fill in missing path elements, such as the current uid.
+    _menu_link_map_translate($map, $router_item['to_arg_functions']);
+  }
+  // The $path_map saves the pieces of the path as strings, while elements in
+  // $map may be replaced with loaded objects.
   $path_map = $map;
   if (!_menu_load_objects($router_item, $map)) {
     // An error occurred loading an object.
     $router_item['access'] = FALSE;
     return FALSE;
-  }
-  if ($to_arg) {
-    _menu_link_map_translate($path_map, $router_item['to_arg_functions']);
   }
 
   // Generate the link path for the page request or local tasks.
