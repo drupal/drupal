@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.962 2009/02/03 18:55:32 dries Exp $
+// $Id: user.module,v 1.963 2009/02/09 07:36:15 webchick Exp $
 
 /**
  * @file
@@ -767,7 +767,7 @@ function user_elements() {
  */
 function user_user_view(&$edit, &$account, $category = NULL) {
   $account->content['user_picture'] = array(
-    '#value' => theme('user_picture', $account),
+    '#markup' => theme('user_picture', $account),
     '#weight' => -10,
   );
   if (!isset($account->content['summary'])) {
