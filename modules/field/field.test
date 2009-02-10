@@ -53,7 +53,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
       $values[$evid] = array();
       // Note: we insert one extra value ('<=' instead of '<').
       for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
-        $value = mt_rand(0, 127);
+        $value = mt_rand(1, 127);
         $values[$evid][] = $value;
         $query->values(array($etid, $eid, $evid, $delta, $value));
       }
@@ -112,7 +112,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     // Note: we try to insert one extra value ('<=' instead of '<').
     // TODO : test empty values filtering and "compression" (store consecutive deltas).
     for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
-      $values[$delta]['value'] = mt_rand(0, 127);
+      $values[$delta]['value'] = mt_rand(1, 127);
     }
     $entity->{$this->field_name} = $rev_values[0] = $values;
     field_attach_insert($entity_type, $entity);
@@ -132,7 +132,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $values = array();
     // Note: we try to update one extra value ('<=' instead of '<').
     for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
-      $values[$delta]['value'] = mt_rand(0, 127);
+      $values[$delta]['value'] = mt_rand(1, 127);
     }
     $entity->{$this->field_name} = $rev_values[1] = $values;
     field_attach_update($entity_type, $entity);
@@ -223,7 +223,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     // Populate values to be displayed.
     $values = array();
     for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
-      $values[$delta]['value'] = mt_rand(0, 127);
+      $values[$delta]['value'] = mt_rand(1, 127);
     }
     $entity->{$this->field_name} = $values;
 
@@ -321,7 +321,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     // Create revision 0
     $values = array();
     for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
-      $values[$delta]['value'] = mt_rand(0, 127);
+      $values[$delta]['value'] = mt_rand(1, 127);
     }
     $rev[0]->{$this->field_name} = $values;
     field_attach_insert($entity_type, $rev[0]);
@@ -382,7 +382,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
     $values = array();
     for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
-      $values[$delta]['value'] = mt_rand(0, 127);
+      $values[$delta]['value'] = mt_rand(1, 127);
     }
     $entity->{$this->field_name} = $values;
     $entity_type = 'test_entity';
@@ -441,7 +441,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
     $values = array();
     for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
-      $values[$delta]['value'] = mt_rand(0, 127);
+      $values[$delta]['value'] = mt_rand(1, 127);
     }
     $entity->{$this->field_name} = $values;
     $entity->{$field_name} = array(0 => array('value' => 99));
@@ -474,7 +474,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
     $values = array();
     for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
-      $values[$delta]['value'] = mt_rand(0, 127);
+      $values[$delta]['value'] = mt_rand(1, 127);
     }
     $entity->{$this->field_name} = $values;
 
@@ -767,7 +767,7 @@ class FieldFormTestCase extends DrupalWebTestCase {
     // TODO : check that the correct field is flagged for error.
 
     // Create an entity
-    $value = mt_rand(0, 127);
+    $value = mt_rand(1, 127);
     $edit = array($this->field_name . '[0][value]' => $value);
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
@@ -782,7 +782,7 @@ class FieldFormTestCase extends DrupalWebTestCase {
     $this->assertNoField($this->field_name . '[1][value]', 'No extraneous widget is displayed');
 
     // Update the entity.
-    $value = mt_rand(0, 127);
+    $value = mt_rand(1, 127);
     $edit = array($this->field_name . '[0][value]' => $value);
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), 'Entity was updated');
@@ -813,7 +813,7 @@ class FieldFormTestCase extends DrupalWebTestCase {
     $this->assertRaw(t('!name field is required.', array('!name' => $this->instance['label'])), 'Required field with no value fails validation');
 
     // Create an entity
-    $value = mt_rand(0, 127);
+    $value = mt_rand(1, 127);
     $edit = array($this->field_name . '[0][value]' => $value);
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
@@ -869,7 +869,7 @@ class FieldFormTestCase extends DrupalWebTestCase {
         $weight = mt_rand(-$delta_range, $delta_range);
       } while (in_array($weight, $weights));
       $weights[] = $weight;
-      $value = mt_rand(0, 127);
+      $value = mt_rand(1, 127);
       $edit["$this->field_name[$delta][value]"] = $value;
       $edit["$this->field_name[$delta][_weight]"] = $weight;
       // We'll need three slightly different formats to check the values.
