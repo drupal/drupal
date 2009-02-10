@@ -1,5 +1,5 @@
 <?php
-// $Id: number.module,v 1.2 2009/02/05 03:42:57 webchick Exp $
+// $Id: number.module,v 1.3 2009/02/10 03:16:15 webchick Exp $
 
 /**
  * @file
@@ -243,7 +243,7 @@ function number_elements() {
  * $field information.
  *
  * Field module will set the weight, field name and delta values
- * for each form element. 
+ * for each form element.
  *
  * If there are multiple values for this field, the Field module will
  * call this function as many times as needed.
@@ -418,7 +418,7 @@ function number_decimal_validate($element, &$form_state) {
  * Override this theme to make custom changes to the output.
  *
  * $element['#field_name'] contains the field name
- * $element['#delta]  is the position of this element in the group
+ * $element['#delta] is the position of this element in the group
  */
 function theme_number($element) {
   return $element['#children'];

@@ -1,9 +1,9 @@
 <?php
-// $Id: field.info.inc,v 1.2 2009/02/08 21:22:59 webchick Exp $
+// $Id: field.info.inc,v 1.3 2009/02/10 03:16:14 webchick Exp $
 
 /**
  * @file
- * TODO: Fill me in.
+ * Field Info API, providing information about available fields and field types.
  */
 
 /**
@@ -407,7 +407,6 @@ function _field_info_field($field_name) {
     return $info['fields'][$field_name];
   }
 }
-
 
 /**
  * Return an array of instance data for a given bundle,

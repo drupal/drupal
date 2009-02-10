@@ -1,12 +1,12 @@
 <?php
-// $Id: field.install,v 1.1 2009/02/03 17:30:11 dries Exp $
+// $Id: field.install,v 1.2 2009/02/10 03:16:14 webchick Exp $
+
 /**
  * Implementation of hook_install().
  */
 function field_install() {
   drupal_install_schema('field');
 }
-
 
 /**
  * Implementation of hook_uninstall().

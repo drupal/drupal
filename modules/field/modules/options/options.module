@@ -1,10 +1,11 @@
 <?php
-// $Id: options.module,v 1.2 2009/02/05 03:42:57 webchick Exp $
+// $Id: options.module,v 1.3 2009/02/10 03:16:15 webchick Exp $
 
 /**
  * @file
  * Defines selection, check box and radio button widgets for text and numeric fields.
  */
+
 /**
  * Implementation of hook_theme().
  */
@@ -128,7 +129,7 @@ function options_buttons_process($element, $edit, &$form_state, $form) {
   }
   $options = options_options($field, $instance);
   $multiple = isset($element['#multiple']) ? $element['#multiple'] : $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
-  
+
   $value = array();
   foreach ($element['#value'][$field_key] as $key) {
     // Multiple (checkboxes) need the default value in the form of an array.
@@ -151,7 +152,7 @@ function options_buttons_process($element, $edit, &$form_state, $form) {
     '#options' => $options,
     '#default_value' => $value,
   );
- 
+
   // Set #element_validate in a way that it will not wipe out other
   // validation functions already set by other modules.
   if (empty($element['#element_validate'])) {
@@ -194,7 +195,7 @@ function options_select_process($element, $edit, &$form_state, $form) {
     '#options' => $options,
     '#default_value' => isset($element['#value'][$field_key]) ? $element['#value'][$field_key] : NULL,
   );
-  
+
   // Set #element_validate in a way that it will not wipe out other
   // validation functions already set by other modules.
   if (empty($element['#element_validate'])) {
@@ -407,7 +408,7 @@ function theme_options_none($instance) {
  * make custom changes to the output.
  *
  * $element['#field_name'] contains the field name
- * $element['#delta]  is the position of this element in the group
+ * $element['#delta] is the position of this element in the group
  */
 function theme_options_select($element) {
   return $element['#children'];

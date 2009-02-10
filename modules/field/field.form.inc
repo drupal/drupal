@@ -1,5 +1,10 @@
 <?php
-// $Id: field.form.inc,v 1.2 2009/02/05 03:42:57 webchick Exp $
+// $Id: field.form.inc,v 1.3 2009/02/10 03:16:14 webchick Exp $
+
+/**
+ * @file
+ * Field forms management.
+ */
 
 // TODO : merge with field.default.inc ?
 

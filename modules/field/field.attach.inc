@@ -1,5 +1,10 @@
 <?php
-// $Id: field.attach.inc,v 1.2 2009/02/05 03:42:57 webchick Exp $
+// $Id: field.attach.inc,v 1.3 2009/02/10 03:16:14 webchick Exp $
+
+/**
+ * @file
+ * Field attach API, allowing objects (nodes, users, ...) to be 'fieldable'.
+ */
 
 // TODO D7 : consistency - do field_attach_functions return a value or alter in place ?
 
@@ -13,8 +18,8 @@
  * Implement a storage engine for Field API data.
  *
  * The Field Attach API uses the Field Storage API to perform all
- * "database access."  Each Field Storage API hook function defines a
- * primitive database operation such as read, write, or delete.  The
+ * "database access". Each Field Storage API hook function defines a
+ * primitive database operation such as read, write, or delete. The
  * default field storage module, field_sql_storage.module, uses the
  * local SQL database to implement these operations, but alternative
  * field storage engines can choose to represent the data in SQL
@@ -44,19 +49,19 @@
  * Field Attach API functions generally take $obj_type and $object
  * arguments along with additional function-specific arguments.
  * $obj_type is the type of the fieldable entity, such as 'node' or
- * 'user', and $object is the object itself.  An individual object's
+ * 'user', and $object is the object itself. An individual object's
  * bundle, if any, is read from the object's bundle key property
  * identified by hook_fieldable_info() for $obj_type.
  *
  * Fieldable types call Field Attach API functions during their own
- * API calls; for example, node_load() calls field_attach_load().  A
+ * API calls; for example, node_load() calls field_attach_load(). A
  * fieldable type may is not required to use all of the Field Attach
  * API functions.
  *
  * Most Field Attach API functions define a corresponding hook
  * function that allows any module to act on Field Attach operations
  * for any object, and access or modify all the field, form, or
- * display data for that object and operation.  These all-module hooks
+ * display data for that object and operation. These all-module hooks
  * are distinct from those of the Field Types API, such as
  * hook_field_load(), that are only invoked for the module that
  * defines a specific field type.
@@ -186,13 +191,13 @@ function _field_attach_form($obj_type, $object, &$form, $form_state) {
  *   The type of objects for which to load fields; e.g. 'node' or
  *   'user'.
  * @param $objects
- *   An array of objects for which to load fields.  The keys for
+ *   An array of objects for which to load fields. The keys for
  *   primary id and bundle name to load are identified by
  *   hook_fieldable_info for $obj_type.
  * @param $age
  *   FIELD_LOAD_CURRENT to load the most recent revision for all
  *   fields, or FIELD_LOAD_REVISION to load the version indicated by
- *   each object.  Defaults to FIELD_LOAD_CURRENT; use
+ *   each object. Defaults to FIELD_LOAD_CURRENT; use
  *   field_attach_load_revision() instead of passing FIELD_LOAD_REVISION.
  * @returns
  *   On return, the objects in $objects are modified by having the
@@ -274,7 +279,7 @@ function _field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT) {
  *   The type of objects for which to load fields; e.g. 'node' or
  *   'user'.
  * @param $objects
- *   An array of objects for which to load fields.  The keys for
+ *   An array of objects for which to load fields. The keys for
  *   primary id, revision id, and bundle name to load are identified by
  *   hook_fieldable_info for $obj_type.
  * @returns
@@ -292,10 +297,10 @@ function _field_attach_load_revision($obj_type, $objects) {
  *
  * NOTE: This functionality does not yet exist in its final state.
  * Eventually, field validation will occur during field_attach_insert
- * or _update which will throw an exception on failure.  For now,
+ * or _update which will throw an exception on failure. For now,
  * fieldable entities must call this during their Form API validation
  * phase, and field validation will call form_set_error for any
- * errors.  See http://groups.drupal.org/node/18019.
+ * errors. See http://groups.drupal.org/node/18019.
  *
  * @param $obj_type
  *   The type of $object; e.g. 'node' or 'user'.
@@ -364,7 +369,7 @@ function _field_attach_presave($obj_type, &$object) {
 }
 
 /**
- * Save field data for a new object.  The passed in object must
+ * Save field data for a new object. The passed in object must
  * already contain its id and (if applicable) revision id attributes.
  *
  * @param $obj_type
@@ -415,7 +420,7 @@ function _field_attach_update($obj_type, &$object) {
 }
 
 /**
- * Delete field data for an existing object.  This deletes all
+ * Delete field data for an existing object. This deletes all
  * revisions of field data for the object.
  *
  * @param $obj_type
@@ -440,7 +445,7 @@ function _field_attach_delete($obj_type, &$object) {
 }
 
 /**
- * Delete field data for a single revision of an existing object.  The
+ * Delete field data for a single revision of an existing object. The
  * passed object must have a revision id attribute.
  *
  * @param $obj_type
@@ -466,7 +471,7 @@ function _field_attach_delete_revision($obj_type, &$object) {
 
 /**
  * Generate and return a structured content array tree suitable for
- * drupal_render() for all of the fields on an object.  The format of
+ * drupal_render() for all of the fields on an object. The format of
  * each field's rendered content depends on the display formatter and
  * its settings.
  *
@@ -575,7 +580,7 @@ function _field_attach_rename_bundle($bundle_old, $bundle_new) {
  * Notify field.module the a bundle was deleted.
  *
  * This deletes the data for the field instances as well as the field instances
- * themselves.  This function actually just marks the data and field instances
+ * themselves. This function actually just marks the data and field instances
  * and deleted, leaving the garbage collection for a separate process, because
  * it is not always possible to delete this much data in a single page request
  * (particularly since for some field types, the deletion is more than just a
@@ -600,7 +605,7 @@ function _field_attach_delete_bundle($bundle) {
 
 /**
  * Helper function to extract id, vid, and bundle name from an object.
- * 
+ *
  * @param $obj_type
  *   The type of $object; e.g. 'node' or 'user'.
  * @param $object
