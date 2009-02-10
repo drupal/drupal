@@ -505,7 +505,9 @@ function field_info_bundle_entity($bundle) {
  * Return array of all field data, keyed by field name.
  *
  * @return
- *   An array of Field objects.
+ *   An array of Field objects. Each Field object has an additional
+ *   property, bundles, which is an array of all the bundles to which
+ *   this field belongs.
  *
  * This function is an autoloader for _field_info_fields() in modules/field/field.info.inc.
  */
@@ -518,6 +520,11 @@ function field_info_fields() {
  * Return data about an individual field.
  *
  * @param $field_name
+ *   The name of the field to retrieve.
+ * @return
+ *   The named field object, or NULL. The Field object has an additional
+ *   property, bundles, which is an array of all the bundles to which
+ *   this field belongs.
  *
  * This function is an autoloader for _field_info_field() in modules/field/field.info.inc.
  */

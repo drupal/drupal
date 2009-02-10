@@ -156,10 +156,12 @@ function _field_info_collate_types($reset = FALSE) {
  *   If $reset is TRUE, nothing.
  *   If $reset is FALSE, an array containing the following elements:
  *
- * fields: array of all defined Field objects, keyed by field name
- *
- * instances: array of bundled field info, keyed by bundle name
- *   * contains all FieldInstance objects for this bundle, keyed by field name.
+ *   - fields: array of all defined Field objects, keyed by field
+ *     name. Each field has an additional element, bundles, which is
+ *     an array of all bundles to which the field is assigned.
+ *   - instances: array whose keys are bundle names and whose values
+ *     are an array, keyed by field name, of all Instance objects in
+ *     that bundle. 
  */
 function _field_info_collate_fields($reset = FALSE) {
   static $info;
@@ -184,6 +186,7 @@ function _field_info_collate_fields($reset = FALSE) {
       $instances = field_read_instances();
       foreach ($instances as $instance) {
         $info['instances'][$instance['bundle']][$instance['field_name']] = $instance;
+        $info['fields'][$instance['field_name']]['bundles'][] = $instance['bundle'];
       }
 
       cache_set('field_info_fields', $info, 'cache_field');
@@ -389,7 +392,9 @@ function _field_info_bundle_entity($bundle) {
  * Return array of all field data, keyed by field name.
  *
  * @return
- *   An array of Field objects.
+ *   An array of Field objects. Each Field object has an additional
+ *   property, bundles, which is an array of all the bundles to which
+ *   this field belongs.
  */
 function _field_info_fields() {
   $info = _field_info_collate_fields();
@@ -400,6 +405,11 @@ function _field_info_fields() {
  * Return data about an individual field.
  *
  * @param $field_name
+ *   The name of the field to retrieve.
+ * @return
+ *   The named field object, or NULL. The Field object has an additional
+ *   property, bundles, which is an array of all the bundles to which
+ *   this field belongs.
  */
 function _field_info_field($field_name) {
   $info = _field_info_collate_fields();
