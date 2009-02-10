@@ -8,7 +8,7 @@
  *   An array of modules to enable.
  */
 function expert_profile_modules() {
-  return array('dblog');
+  return array('block', 'dblog');
 }
 
 /**
@@ -42,6 +42,9 @@ function expert_profile_task_list() {
  * Perform any final installation tasks for this profile.
  */
 function expert_profile_tasks(&$task, $url) {
+  // Enable 2 standard blocks.
+  db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', 'login', 'garland', 1, 0, 'left', '', -1);
+  db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', 'navigation', 'garland', 1, 0, 'left', '', -1);
 }
 
 /**
