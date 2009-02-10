@@ -251,7 +251,7 @@ function text_elements() {
  * $field information.
  *
  * Field module will set the weight, field name and delta values
- * for each form element. 
+ * for each form element.
  *
  * If there are multiple values for this field, the field module will
  * call this function as many times as needed.
@@ -389,7 +389,7 @@ function text_textarea_process($element, $edit, $form_state, $form) {
  * make custom changes to the output.
  *
  * $element['#field_name'] contains the field name
- * $element['#delta]  is the position of this element in the group
+ * $element['#delta] is the position of this element in the group
  */
 function theme_text_textfield($element) {
   return $element['#children'];

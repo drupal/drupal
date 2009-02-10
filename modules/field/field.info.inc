@@ -3,7 +3,7 @@
 
 /**
  * @file
- * TODO: Fill me in.
+ * Field Info API, providing information about available fields and field types.
  */
 
 /**
@@ -407,7 +407,6 @@ function _field_info_field($field_name) {
     return $info['fields'][$field_name];
   }
 }
-
 
 /**
  * Return an array of instance data for a given bundle,

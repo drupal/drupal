@@ -3,7 +3,7 @@
 
 /**
  * @file
- * TODO: Fill me in.
+ * Field CRUD API, handling field and field instance creation and deletion.
  */
 
 /**
@@ -17,36 +17,36 @@ class FieldException extends Exception {}
  * Represent Field API fields and instances.
  *
  * The Field API defines two primary data structures, Field and
- * Instance, and the concept of a Bundle.  A Field defines a
- * particular type of data that can be attached to objects.  A Field
- * Instance is a Field attached to a single Bundle.  A Bundle is a set
+ * Instance, and the concept of a Bundle. A Field defines a
+ * particular type of data that can be attached to objects. A Field
+ * Instance is a Field attached to a single Bundle. A Bundle is a set
  * of fields that are treated as a group by the Field Attach API.
  *
  * For example, suppose a site administrator wants Article nodes to
- * have a subtitle and photo.  Using the Field API or some UI module,
+ * have a subtitle and photo. Using the Field API or some UI module,
  * the administrator creates a field named 'subtitle' of type 'text'
- * and a field named 'photo' of type 'image'.  The administrator
+ * and a field named 'photo' of type 'image'. The administrator
  * (again, via a UI) creates two Field Instances, one attaching the
  * field 'subtitle' to the bundle 'article' and one attaching the field
- * 'photo' to the bundle 'article'.  When the node system uses the
+ * 'photo' to the bundle 'article'. When the node system uses the
  * Field Attach API to load all fields for an Article node, it passes
  * the node's content type (which is 'article') as the node's bundle.
  * field_attach_load() then loads the 'subtitle' and 'photo' fields
  * because they are both attached to the bundle 'article'.
  *
  * Field objects are (currently) represented as an array of key/value
- * pairs.  The object properties are:
+ * pairs. The object properties are:
  *
  * @param array $field:
  * - field_name (string)
- *     The name of the field.  Each field name is unique within Field API.
+ *     The name of the field. Each field name is unique within Field API.
  *     When a field is attached to an object, the field's data is stored
  *     in $object->$field_name.
  * - type (string)
- *     The type of the field, such as 'text' or 'image'.  Field types
+ *     The type of the field, such as 'text' or 'image'. Field types
  *     are defined by modules that implement hook_field_into().
  * - cardinality (integer)
- *     The number of values the field can hold.  Legal values are any
+ *     The number of values the field can hold. Legal values are any
  *     positive integer or FIELD_CARDINALITY_UNLIMITED.
  * - locked (integer)
  *     TODO: undefined.
@@ -56,23 +56,23 @@ class FieldException extends Exception {}
  *     TRUE if the module that implements the field type is currently
  *     enabled, FALSE otherwise.
  * - deleted (integer, read-only)
- *     TRUE if this field has been deleted, FALSE otherwise.  Deleted
+ *     TRUE if this field has been deleted, FALSE otherwise. Deleted
  *     fields are ignored by the Field Attach API. This property exists
  *     because fields can be marked for deletion but only actually
  *     destroyed by a separate garbage-collection process.
  * - columns (array, read-only).
  *     An array of the Field API columns used to store each value of
- *     this field.  The column list may depend on field settings; it is
- *     not constant per field type.  Field API column specifications are
+ *     this field. The column list may depend on field settings; it is
+ *     not constant per field type. Field API column specifications are
  *     exactly like Schema API column specifications but, depending on
  *     the field storage module in use, the name of the column may not
  *     represent an actual column in an SQL database.
  * - settings (array)
- *     A sub-array of key/value pairs of field-type-specific settings.  Each
+ *     A sub-array of key/value pairs of field-type-specific settings. Each
  *     field type module defines and documents its own field settings.
  *
  * Field Instance objects are (currently) represented as an array of
- * key/value pairs.  The object properties are:
+ * key/value pairs. The object properties are:
  *
  * @param array $instance:
  * - field_name (string)
@@ -81,15 +81,15 @@ class FieldException extends Exception {}
  *     The name of the bundle that the field is attached to.
  * - label (string)
  *     A human-readable label for the field when used with this
- *     bundle.  For example, the label will be the title of Form API
+ *     bundle. For example, the label will be the title of Form API
  *     elements for this instance.
  * - description (string)
  *     A human-readable description for the field when used with this
- *     bundle.  For example, the description will be the help text of
+ *     bundle. For example, the description will be the help text of
  *     Form API elements for this instance.
  * - weight (float)
  *     The order in which the field should be sorted relative
- *     to other fields when used with this bundle.  The weight affects
+ *     to other fields when used with this bundle. The weight affects
  *     ordering in both forms (see field_attach_form()) and rendered output
  *     (see field_attach_view()).
  *     TODO - this should probably become a context setting so that
@@ -97,7 +97,7 @@ class FieldException extends Exception {}
  *     contexts.
  * - required (integer)
  *     TRUE if a value for this field is required when used with this
- *     bundle, FALSE otherwise.  Currently, required-ness is only enforced
+ *     bundle, FALSE otherwise. Currently, required-ness is only enforced
  *     during Form API operations, not by field_attach_load(),
  *     field_attach_insert(), or field_attach_update().
  * - default_value_function (string)
@@ -109,13 +109,13 @@ class FieldException extends Exception {}
  *     only actually destroyed by a separate garbage-collection process.
  * - settings (array)
  *     A sub-array of key/value pairs of field-type-specific instance
- *     settings.  Each field type module defines and documents its own
+ *     settings. Each field type module defines and documents its own
  *     instance settings.
  * - widget (array)
  *     A sub-array of key/value pairs identifying the Form API input widget
  *     for the field when used by this bundle.
  *     - type (string)
- *         The type of the widget, such as text_textfield.  Widget types
+ *         The type of the widget, such as text_textfield. Widget types
  *         are defined by modules that implement hook_field_widget_info().
  *     - module (string, read-only)
  *         The name of the module that implements the widget type.
@@ -153,18 +153,18 @@ class FieldException extends Exception {}
  * Create, update, and delete Field API fields, bundles, and instances.
  *
  * Modules use this API, often in hook_install(), to create custom
- * data structures.  UI modules will use it to create a user interface.
+ * data structures. UI modules will use it to create a user interface.
  *
  * The Field CRUD API uses
  * @link field_structs Field API data structures @endlink.
  */
 
 /**
- * Create a field.  This function does not bind the field to any
+ * Create a field. This function does not bind the field to any
  * bundle; use field_create_instance for that.
  *
  * @param $field
- *   A field structure.  The field_name and type properties are required.
+ *   A field structure. The field_name and type properties are required.
  * @throw
  *   FieldException
  */
@@ -217,7 +217,7 @@ function field_create_field($field) {
 }
 
 /**
- * Read a single field record directly from the database.  Generally,
+ * Read a single field record directly from the database. Generally,
  * you should use the field_info_field() instead.
  *
  * @param $field_name
@@ -309,7 +309,7 @@ function field_delete_field($field_name) {
  * Creates an instance of a field, binding it to a bundle.
  *
  * @param $instance
- *   A field instance structure.  The field_name and bundle properties
+ *   A field instance structure. The field_name and bundle properties
  *   are required.
  * @throw
  *   FieldException
@@ -351,8 +351,8 @@ function field_create_instance($instance) {
  * @param $instance
  *   An associative array represeting an instance structure. The required
  *   keys and values are:
- *     field_name:  The name of an existing field.
- *     bundle:  The bundle this field belongs to.
+ *     field_name: The name of an existing field.
+ *     bundle: The bundle this field belongs to.
  *   Any other properties specified in $instance overwrite the
  *   existing values for the instance.
  * @throw
@@ -461,7 +461,7 @@ function _field_write_instance($instance, $update = FALSE) {
 }
 
 /**
- * Read a single instance record directly from the database.  Generally,
+ * Read a single instance record directly from the database. Generally,
  * you should use the field_info_instance() instead.
  *
  * @param $field_name
@@ -488,7 +488,7 @@ function field_read_instance($field_name, $bundle, $include_additional = array()
  * @param $param
  *   An array of properties to use in selecting a field
  *   instance. Valid keys include any column of the
- *   field_config_instance table.  If NULL, all instances will be returned.
+ *   field_config_instance table. If NULL, all instances will be returned.
  * @param $include_additional
  *   The default behavior of this function is to not return field
  *   instances that are inactive or have been marked deleted. Setting

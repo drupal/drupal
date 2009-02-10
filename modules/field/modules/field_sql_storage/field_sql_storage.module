@@ -76,9 +76,9 @@ function _field_sql_storage_etid($obj_type) {
 }
 
 /**
- * Return the database schema for a field.  This may contain one or
- * more tables.  Each table will contain the columns relevant for the
- * specified field.  Leave $field['columns'] empty to get only the
+ * Return the database schema for a field. This may contain one or
+ * more tables. Each table will contain the columns relevant for the
+ * specified field. Leave $field['columns'] empty to get only the
  * base schema.
  *
  * @param $field
@@ -138,7 +138,7 @@ function _field_sql_storage_schema($field) {
     $current['fields'][_field_sql_storage_columnname($field['field_name'], $column_name)] = $attributes;
   }
 
-  // Construct the revision table.  The primary key includes
+  // Construct the revision table. The primary key includes
   // revision_id but not entity_id so that multiple revision loads can
   // use the IN operator.
   $revision = $current;
@@ -298,7 +298,7 @@ function field_sql_storage_field_storage_write($obj_type, $object, $update = FAL
 }
 
 /**
- * Delete all field data for a single object.  This function actually
+ * Delete all field data for a single object. This function actually
  * deletes the data from the database.
  *
  * @param $obj_type
@@ -330,7 +330,7 @@ function field_sql_storage_field_storage_delete($obj_type, $object) {
 /**
  * Delete field data for a single revision of a single object.
  * Deleting the current (most recently written) revision is not
- * allowed as has undefined results.  This function actually deletes
+ * allowed as has undefined results. This function actually deletes
  * the data from the database.
  *
  * @param $obj_type

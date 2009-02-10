@@ -150,7 +150,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     // We make sure each value is stored correctly, then unset it.
     // When an entire revision's values are unset (remembering that we
     // put one extra value in $values per revision), unset the entire
-    // revision.  Then, if $rev_values is empty at the end, all
+    // revision. Then, if $rev_values is empty at the end, all
     // revision data was found.
     $results = db_select($this->revision_table, 't')->fields('t')->execute();
     foreach ($results as $row) {
@@ -180,7 +180,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $this->assertEqual(count($rows), 0, t("Update with an empty field_name entry empties the field."));
   }
 
-  // Test insert and update with missing or invalid fields.  For the
+  // Test insert and update with missing or invalid fields. For the
   // most part, these tests pass by not crashing or causing exceptions.
   function testFieldAttachSaveMissingData() {
     $entity_type = 'test_entity';
@@ -203,13 +203,13 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
     $this->assertEqual($count, 1, 'Field data saved');
 
-    // Update: Field is missing.  Data should survive.
+    // Update: Field is missing. Data should survive.
     unset($entity->{$this->field_name});
     field_attach_update($entity_type, $entity);
     $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
     $this->assertEqual($count, 1, 'Missing field leaves data in table');
 
-    // Update: Field is NULL  Data should be wiped.
+    // Update: Field is NULL. Data should be wiped.
     $entity->{$this->field_name} = NULL;
     field_attach_update($entity_type, $entity);
     $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
@@ -516,8 +516,8 @@ class FieldAttachTestCase extends DrupalWebTestCase {
   }
 
   // Verify that field_attach_validate() invokes the correct
-  // hook_field_validate.  NOTE: This tests the FAPI-connected
-  // behavior of hook_field_validate.  As discussed at
+  // hook_field_validate. NOTE: This tests the FAPI-connected
+  // behavior of hook_field_validate. As discussed at
   // http://groups.drupal.org/node/18019, field validation will
   // eventually be disconnected from FAPI, at which point this
   // function will have to be rewritten.
@@ -550,7 +550,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $this->assertEqual(count($errors), 0, 'No extraneous form errors set');
   }
 
-  // Validate that FAPI elements are generated.  This could be much
+  // Validate that FAPI elements are generated. This could be much
   // more thorough, but it does verify that the correct widgets show up.
   function testFieldAttachForm() {
     $entity_type = 'test_entity';

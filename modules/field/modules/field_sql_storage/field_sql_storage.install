@@ -8,7 +8,6 @@ function field_sql_storage_install() {
   drupal_install_schema('field_sql_storage');
 }
 
-
 /**
  * Implementation of hook_uninstall().
  */
@@ -16,7 +15,9 @@ function field_sql_storage_uninstall() {
   drupal_uninstall_schema('field_sql_storage');
 }
 
-
+/**
+ * Implementation of hook_schema().
+ */
 function field_sql_storage_schema() {
   $schema = array();
 

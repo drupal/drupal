@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Field forms management.
+ */
+
 // TODO : merge with field.default.inc ?
 
 /**

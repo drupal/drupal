@@ -2,7 +2,7 @@
 // $Id$
 /**
  * @file
- * Allows administrators to associate custom fields to field types.
+ * Attach custom data fields to Drupal objects.
  */
 
 /**
@@ -12,38 +12,38 @@
  *
  * The Field API allows custom data fields to be attached to Drupal
  * objects and takes care of storing, loading, editing, and rendering
- * field data.  Any object type (node, user, etc.) can use the Field
+ * field data. Any object type (node, user, etc.) can use the Field
  * API to make itself "fieldable" and thus allow fields to be attached
- * to it.  Other modules can provide a user interface for managing custom
+ * to it. Other modules can provide a user interface for managing custom
  * fields via a web browser as well as a wide and flexible variety of
  * data type, form element, and display format capabilities.
  *
  * - @link field_structs Data structures: Field, Instance, Bundle @endlink.
  *
- * - @link field_types Field Types API @endlink.  Defines field types,
- *   widget types, and display formatters.  Field modules use this API
+ * - @link field_types Field Types API @endlink. Defines field types,
+ *   widget types, and display formatters. Field modules use this API
  *   to provide field types like Text and Node Reference along with the
  *   associated form elements and display formatters.
  *
- * - @link field_crud Field CRUD API @endlink.  Create, updates, and
+ * - @link field_crud Field CRUD API @endlink. Create, updates, and
  *   deletes fields, bundles (a.k.a. "content types"), and instances.
  *   Modules use this API, often in hook_install(), to create
- *   custom data structures.  The Content Construction Kit
+ *   custom data structures. The Content Construction Kit
  *   user-interface module uses this API for its major functionality.
  *
- * - @link field_attach Field Attach API @endlink.  Connects object
- *   types to the Field API.  Field Attach API functions load, store,
+ * - @link field_attach Field Attach API @endlink. Connects object
+ *   types to the Field API. Field Attach API functions load, store,
  *   generate Form API structures, display, and perform a vareity of
  *   other functions for field data connected to individual objects.
  *   Fieldable object types like node and user use this API to make
  *   themselves fieldable.
  *
- * - @link field_info Field Info API @endlink.  Exposes information
+ * - @link field_info Field Info API @endlink. Exposes information
  *   about all fields, instances, widgets, and related information
  *   defined by or with the Field API.
  *
- * - @link field_storage Field Storage API @endlink.  Provides a
- *   pluggable back-end storage system for actual field data.  The
+ * - @link field_storage Field Storage API @endlink. Provides a
+ *   pluggable back-end storage system for actual field data. The
  *   default implementation, field_sql_storage.module, stores field data
  *   in the local SQL database.
  */
@@ -101,7 +101,7 @@ function field_help($path, $arg) {
  * Implementation of hook_init().
  *
  * TODO D7: Determine which functions need to always be "loaded", and
- * put autoloaders for them into field.autoload.inc.  Also figure out
+ * put autoloaders for them into field.autoload.inc. Also figure out
  * how to make this work during installation.
  */
 function field_init() {
