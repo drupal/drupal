@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.153 2009/02/08 20:27:51 webchick Exp $
+// $Id: install.php,v 1.154 2009/02/10 05:43:06 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -235,23 +235,17 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
       '#description' => '<p>' . st('To set up your @drupal database, enter the following information.', array('@drupal' => drupal_install_profile_name())) . '</p>',
     );
 
+    $form['basic_options']['driver'] = array(
+      '#type' => 'radios',
+      '#title' => st('Database type'),
+      '#required' => TRUE,
+      '#options' => $drivers,
+      '#default_value' => !empty($database['driver']) ? $database['driver'] : current(array_keys($drivers)),
+      '#description' => st('The type of database your @drupal data will be stored in.', array('@drupal' => drupal_install_profile_name())),
+    );
     if (count($drivers) == 1) {
-      $form['basic_options']['driver'] = array(
-        '#type' => 'hidden',
-        '#value' => current(array_keys($drivers)),
-      );
-      $database_description = st('The name of the %driver database your @drupal data will be stored in. It must exist on your server before @drupal can be installed.', array('%driver' => current($drivers), '@drupal' => drupal_install_profile_name()));
-    }
-    else  {
-      $form['basic_options']['driver'] = array(
-        '#type' => 'radios',
-        '#title' => st('Database type'),
-        '#required' => TRUE,
-        '#options' => $drivers,
-        '#default_value' => !empty($database['driver']) ? $database['driver'] : current(array_keys($drivers)),
-        '#description' => st('The type of database your @drupal data will be stored in.', array('@drupal' => drupal_install_profile_name())),
-      );
-      $database_description  = st('The name of the database your @drupal data will be stored in. It must exist on your server before @drupal can be installed.', array('@drupal' => drupal_install_profile_name()));
+      $form['basic_options']['driver']['#disabled'] = TRUE;
+      $form['basic_options']['driver']['#description'] .= ' ' . st('Your PHP configuration only supports the %driver database type so it has been automatically selected.', array('%driver' => current($drivers)));
     }
 
     // Database name
@@ -262,7 +256,7 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
       '#size' => 45,
       '#maxlength' => 45,
       '#required' => TRUE,
-      '#description' => $database_description,
+      '#description' => st('The name of the database your @drupal data will be stored in. It must exist on your server before @drupal can be installed.', array('@drupal' => drupal_install_profile_name())),
     );
 
     // Database username
