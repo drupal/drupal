@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.460 2009/02/06 16:25:09 webchick Exp $
+// $Id: taxonomy.module,v 1.461 2009/02/11 03:53:36 webchick Exp $
 
 /**
  * @file
@@ -527,7 +527,7 @@ function taxonomy_form_alter(&$form, $form_state, $form_id) {
           '#default_value' => $typed_string,
           '#autocomplete_path' => 'taxonomy/autocomplete/' . $vocabulary->vid,
           '#weight' => $vocabulary->weight,
-          '#maxlength' => 255,
+          '#maxlength' => 1024,
         );
       }
       else {
