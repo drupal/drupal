@@ -54,6 +54,7 @@ class BlockTestCase extends DrupalWebTestCase {
     }
 
     // Delete the created box & verify that it's been deleted and no longer appearing on the page.
+    $this->clickLink(t('delete'));
     $this->drupalPost('admin/build/block/delete/' . $bid, array(), t('Delete'));
     $this->assertRaw(t('The block %title has been removed.', array('%title' => $box['info'])), t('Box successfully deleted.'));
     $this->assertNoText(t($box['title']), t('Box no longer appears on page.'));

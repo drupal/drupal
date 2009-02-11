@@ -80,7 +80,7 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
     );
     if ($block['module'] == 'block') {
       $form[$key]['delete'] = array(
-        '#value' => l(t('delete'),
+        '#markup' => l(t('delete'),
         'admin/build/block/delete/' . $block['delta']),
       );
     }
