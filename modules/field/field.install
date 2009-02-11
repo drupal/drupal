@@ -1,43 +1,11 @@
 <?php
-// $Id: field.install,v 1.2 2009/02/10 03:16:14 webchick Exp $
+// $Id: field.install,v 1.3 2009/02/11 04:45:57 webchick Exp $
 
 /**
  * Implementation of hook_install().
  */
 function field_install() {
   drupal_install_schema('field');
-}
-
-/**
- * Implementation of hook_uninstall().
- */
-function field_uninstall() {
-  drupal_uninstall_schema('field');
-}
-
-/**
- * Implementation of hook_enable().
- */
-function field_enable() {
-  // Make sure old data is emptied out of the caches, since it
-  // may no longer be valid since the module was last enabled,
-  // especially if not all the same field modules are enabled
-  // as before. Especially needed during updates.
-  module_load_include('inc', 'field', 'field.crud');
-  module_load_include('inc', 'field', 'field.info');
-  cache_clear_all('*', 'cache_field', TRUE);
-  field_cache_clear(TRUE);
-}
-
-/**
- * Implementation of hook_disable().
- */
-function field_disable() {
-  // Make sure old data is emptied out of the caches, since it
-  // may no longer be valid when the module is re-enabled.
-  module_load_include('inc', 'field', 'field.crud');
-  cache_clear_all('*', 'cache_field', TRUE);
-  field_cache_clear(TRUE);
 }
 
 /**
