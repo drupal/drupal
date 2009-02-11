@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.34 2009/02/03 18:55:30 dries Exp $
+// $Id: block.admin.inc,v 1.35 2009/02/11 03:38:46 webchick Exp $
 
 /**
  * @file
@@ -80,7 +80,7 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
     );
     if ($block['module'] == 'block') {
       $form[$key]['delete'] = array(
-        '#value' => l(t('delete'),
+        '#markup' => l(t('delete'),
         'admin/build/block/delete/' . $block['delta']),
       );
     }

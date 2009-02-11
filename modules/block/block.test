@@ -1,5 +1,5 @@
 <?php
-// $Id: block.test,v 1.10 2009/01/21 16:58:41 dries Exp $
+// $Id: block.test,v 1.11 2009/02/11 03:38:46 webchick Exp $
 
 class BlockTestCase extends DrupalWebTestCase {
   protected $regions;
@@ -54,6 +54,7 @@ class BlockTestCase extends DrupalWebTestCase {
     }
 
     // Delete the created box & verify that it's been deleted and no longer appearing on the page.
+    $this->clickLink(t('delete'));
     $this->drupalPost('admin/build/block/delete/' . $bid, array(), t('Delete'));
     $this->assertRaw(t('The block %title has been removed.', array('%title' => $box['info'])), t('Box successfully deleted.'));
     $this->assertNoText(t($box['title']), t('Box no longer appears on page.'));
