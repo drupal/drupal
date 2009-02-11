@@ -9,38 +9,6 @@ function field_install() {
 }
 
 /**
- * Implementation of hook_uninstall().
- */
-function field_uninstall() {
-  drupal_uninstall_schema('field');
-}
-
-/**
- * Implementation of hook_enable().
- */
-function field_enable() {
-  // Make sure old data is emptied out of the caches, since it
-  // may no longer be valid since the module was last enabled,
-  // especially if not all the same field modules are enabled
-  // as before. Especially needed during updates.
-  module_load_include('inc', 'field', 'field.crud');
-  module_load_include('inc', 'field', 'field.info');
-  cache_clear_all('*', 'cache_field', TRUE);
-  field_cache_clear(TRUE);
-}
-
-/**
- * Implementation of hook_disable().
- */
-function field_disable() {
-  // Make sure old data is emptied out of the caches, since it
-  // may no longer be valid when the module is re-enabled.
-  module_load_include('inc', 'field', 'field.crud');
-  cache_clear_all('*', 'cache_field', TRUE);
-  field_cache_clear(TRUE);
-}
-
-/**
  * Implementation of hook_schema.
  */
 function field_schema() {
