@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.666 2009/02/03 18:55:31 dries Exp $
+// $Id: system.module,v 1.667 2009/02/11 05:33:18 webchick Exp $
 
 /**
  * @file
@@ -504,26 +504,17 @@ function system_menu() {
     'page callback' => 'system_admin_menu_block_page',
     'access arguments' => array('access administration pages'),
   );
-  $items['admin/settings/admin'] = array(
-    'title' => 'Administration theme',
-    'description' => 'Settings for how your administrative pages should look.',
-    'position' => 'left',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_admin_theme_settings'),
-    'access arguments' => array('administer site configuration'),
-    'block callback' => 'system_admin_theme_settings',
-  );
   // Themes:
   $items['admin/build/themes'] = array(
     'title' => 'Themes',
     'description' => 'Change which theme your site uses or allows users to set.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_themes_form', NULL),
+    'page arguments' => array('system_themes_form'),
     'access arguments' => array('administer site configuration'),
   );
   $items['admin/build/themes/select'] = array(
     'title' => 'List',
-    'description' => 'Select the default theme.',
+    'description' => 'Select the default theme for your site.',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -1,
   );
@@ -782,7 +773,7 @@ function blocked_ip_load($iid) {
  * Menu item access callback - only admin or enabled themes can be accessed.
  */
 function _system_themes_access($theme) {
-  return user_access('administer site configuration') && ($theme->status || $theme->name == variable_get('admin_theme', '0'));
+  return user_access('administer site configuration') && ($theme->status || $theme->name == variable_get('admin_theme', 0));
 }
 
 /**
@@ -792,7 +783,7 @@ function system_init() {
   // Use the administrative theme if the user is looking at a page in the admin/* path.
   if (arg(0) == 'admin' || (variable_get('node_admin_theme', '0') && arg(0) == 'node' && (arg(1) == 'add' || arg(2) == 'edit'))) {
     global $custom_theme;
-    $custom_theme = variable_get('admin_theme', '0');
+    $custom_theme = variable_get('admin_theme', 0);
     drupal_add_css(drupal_get_path('module', 'system') . '/admin.css');
   }
 
@@ -979,19 +970,6 @@ function system_admin_menu_block($item) {
   }
   ksort($content);
   return $content;
-}
-
-/**
- * Process admin theme form submissions.
- */
-function system_admin_theme_submit($form, &$form_state) {
-  // If we're changing themes, make sure the theme has its blocks initialized.
-  if ($form_state['values']['admin_theme'] && $form_state['values']['admin_theme'] != variable_get('admin_theme', '0')) {
-    $result = db_result(db_query("SELECT COUNT(*) FROM {block} WHERE theme = '%s'", $form_state['values']['admin_theme']));
-    if (!$result) {
-      system_initialize_theme_blocks($form_state['values']['admin_theme']);
-    }
-  }
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.38 2009/01/25 12:19:32 webchick Exp $
+// $Id: system.test,v 1.39 2009/02/11 05:33:18 webchick Exp $
 
 /**
  * Helper class for module test cases.
@@ -826,5 +826,72 @@ class SystemSettingsForm extends DrupalWebTestCase {
     $this->assertTrue($no_automatic['system_settings_form_test_3']['#default_value']);
     $this->assertTrue($no_automatic['has_children']['system_settings_form_test_4']['#default_value']);
     $this->assertTrue($no_automatic['has_children']['system_settings_form_test_5']['#default_value']);
+  }
+}
+
+/**
+ * Tests for the theme interface functionality.
+ */
+class SystemThemeFunctionalTest extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Theme interface functionality'),
+      'description' => t('Tests the theme interface functionality by enabling and switching themes, and using an administration theme.'),
+      'group' => t('System'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer site configuration', 'bypass node access'));
+    $this->drupalLogin($this->admin_user);
+    $this->node = $this->drupalCreateNode();
+  }
+
+  /**
+   * Test the administration theme functionality.
+   */
+  function testAdministrationTheme() {
+    // Enable an administration theme and show it on the node admin pages.
+    $edit = array(
+      'theme_default' => 'stark',
+      'admin_theme' => 'garland',
+      'node_admin_theme' => TRUE,
+    );
+    $this->drupalPost('admin/build/themes', $edit, t('Save configuration'));
+
+    $this->drupalGet('admin');
+    $this->assertRaw('themes/garland', t('Administration theme used on an administration page.'));
+
+    $this->drupalGet('node/' . $this->node->nid);
+    $this->assertRaw('themes/stark', t('Site default theme used on node page.'));
+
+    $this->drupalGet('node/add');
+    $this->assertRaw('themes/garland', t('Administration theme used on the add content page.'));
+
+    $this->drupalGet('node/' . $this->node->nid . '/edit');
+    $this->assertRaw('themes/garland', t('Administration theme used on the edit content page.'));
+
+    // Disable the admin theme on the node admin pages.
+    $edit = array(
+      'node_admin_theme' => FALSE,
+    );
+    $this->drupalPost('admin/build/themes', $edit, t('Save configuration'));
+    
+    $this->drupalGet('admin');
+    $this->assertRaw('themes/garland', t('Administration theme used on an administration page.'));
+
+    $this->drupalGet('node/add');
+    $this->assertRaw('themes/stark', t('Site default theme used on the add content page.'));
+
+    // Reset to the default theme settings.
+    $this->drupalPost('admin/build/themes', array(), t('Reset to defaults'));
+    
+    $this->drupalGet('admin');
+    $this->assertRaw('themes/garland', t('Site default theme used on administration page.'));
+
+    $this->drupalGet('node/add');
+    $this->assertRaw('themes/garland', t('Site default theme used on the add content page.'));
   }
 }

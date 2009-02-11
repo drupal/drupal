@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.321 2009/02/03 12:30:14 dries Exp $
+// $Id: block.module,v 1.322 2009/02/11 05:33:18 webchick Exp $
 
 /**
  * @file
@@ -176,7 +176,7 @@ function block_menu() {
  * Menu item access callback - only admin or enabled themes can be accessed.
  */
 function _block_themes_access($theme) {
-  return user_access('administer blocks') && ($theme->status || $theme->name == variable_get('admin_theme', '0'));
+  return user_access('administer blocks') && ($theme->status || $theme->name == variable_get('admin_theme', 0));
 }
 
 /**

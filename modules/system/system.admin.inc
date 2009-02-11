@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.124 2009/02/03 18:55:31 dries Exp $
+// $Id: system.admin.inc,v 1.125 2009/02/11 05:33:18 webchick Exp $
 
 /**
  * @file
@@ -133,51 +133,15 @@ function system_settings_overview() {
 }
 
 /**
- * Form builder; This function allows selection of the theme to show in administration sections.
- *
- * @ingroup forms
- * @see system_settings_form()
- */
-function system_admin_theme_settings() {
-  $themes = system_theme_data();
-
-  uasort($themes, 'system_sort_modules_by_info_name');
-
-  $options[0] = '<' . t('System default') . '>';
-  foreach ($themes as $theme) {
-    $options[$theme->name] = $theme->info['name'];
-  }
-
-  $form['admin_theme'] = array(
-    '#type' => 'select',
-    '#options' => $options,
-    '#title' => t('Administration theme'),
-    '#description' => t('Choose which theme the administration pages should display in. If you choose "System default" the administration pages will use the same theme as the rest of the site.'),
-    '#default_value' => '0',
-  );
-
-  $form['node_admin_theme'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Use administration theme for content editing'),
-    '#description' => t('Use the administration theme when editing existing posts or creating new ones.'),
-    '#default_value' => '0',
-  );
-
-  $form['#submit'][] = 'system_admin_theme_submit';
-  return system_settings_form($form, TRUE);
-}
-
-/**
  * Menu callback; displays a listing of all themes.
  *
  * @ingroup forms
  * @see system_themes_form_submit()
  */
 function system_themes_form() {
-
   drupal_clear_css_cache();
-  $themes = system_theme_data();
 
+  $themes = system_theme_data();
   uasort($themes, 'system_sort_modules_by_info_name');
 
   $status = array();
@@ -201,9 +165,9 @@ function system_themes_form() {
       '#type' => 'value',
       '#value' => $theme->info,
     );
-    $options[$theme->name] = '';
+    $options[$theme->name] = $theme->info['name'];
 
-    if (!empty($theme->status) || $theme->name == variable_get('admin_theme', '0')) {
+    if (!empty($theme->status) || $theme->name == variable_get('admin_theme', 0)) {
       $form[$theme->name]['operations'] = array('#markup' => l(t('configure'), 'admin/build/themes/settings/' . $theme->name) );
     }
     else {
@@ -226,16 +190,38 @@ function system_themes_form() {
 
   $form['status'] = array(
     '#type' => 'checkboxes',
-    '#options' => $options,
+    '#options' => array_fill_keys(array_keys($options), ''),
     '#default_value' => $status,
     '#incompatible_themes_core' => drupal_map_assoc($incompatible_core),
     '#incompatible_themes_php' => $incompatible_php,
   );
   $form['theme_default'] = array(
     '#type' => 'radios',
-    '#options' => $options,
+    '#options' => array_fill_keys(array_keys($options), ''),
     '#default_value' => variable_get('theme_default', 'garland'),
   );
+
+  // Administration theme settings.
+  $form['admin_theme'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Administration theme'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['admin_theme']['admin_theme'] = array(
+    '#type' => 'select',
+    '#options' => array(0 => t('Default theme')) + $options,
+    '#title' => t('Administration theme'),
+    '#description' => t('Choose which theme the administration pages should display in. If you choose "Default theme" the administration pages will use the same theme as the rest of the site.'),
+    '#default_value' => variable_get('admin_theme', 0),
+  );
+  $form['admin_theme']['node_admin_theme'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use administration theme for content editing'),
+    '#description' => t('Use the administration theme when editing existing posts or creating new ones.'),
+    '#default_value' => variable_get('node_admin_theme', '0'),
+  );
+
   $form['buttons']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save configuration'),
@@ -244,6 +230,7 @@ function system_themes_form() {
     '#type' => 'submit',
     '#value' => t('Reset to defaults'),
   );
+
   return $form;
 }
 
@@ -272,18 +259,31 @@ function system_themes_form_submit($form, &$form_state) {
         }
       }
     }
-    if (($admin_theme = variable_get('admin_theme', '0')) != '0' && $admin_theme != $form_state['values']['theme_default']) {
+    if ($form_state['values']['admin_theme'] && $form_state['values']['admin_theme'] != $form_state['values']['theme_default']) {
       drupal_set_message(t('Please note that the <a href="!admin_theme_page">administration theme</a> is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', array(
         '!admin_theme_page' => url('admin/settings/admin'),
-        '%admin_theme' => $admin_theme,
+        '%admin_theme' => $form_state['values']['admin_theme'],
         '%selected_theme' => $form_state['values']['theme_default'],
       )));
     }
+    if ($form_state['values']['admin_theme'] && $form_state['values']['admin_theme'] != variable_get('admin_theme', 0)) {
+      // If we're changing themes, make sure the theme has its blocks initialized.
+      $result = db_result(db_query("SELECT COUNT(*) FROM {block} WHERE theme = '%s'", $form_state['values']['admin_theme']));
+      if (!$result) {
+        system_initialize_theme_blocks($form_state['values']['admin_theme']);
+      }
+    }
+
+    // Save the variables.
     variable_set('theme_default', $form_state['values']['theme_default']);
+    variable_set('admin_theme', $form_state['values']['admin_theme']);
+    variable_set('node_admin_theme', $form_state['values']['node_admin_theme']);
   }
   else {
     // Revert to defaults: only Garland is enabled.
     variable_del('theme_default');
+    variable_del('admin_theme');
+    variable_del('node_admin_theme');
     db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' AND name = 'garland'");
     $new_theme_list = array('garland');
   }
