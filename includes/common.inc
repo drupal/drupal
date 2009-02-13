@@ -3493,11 +3493,19 @@ function element_children(&$elements, $sort = FALSE) {
       }
     }
   }
-  // Sort the element if necessary.
+  // Sort the children if necessary.
   if ($sort && $sortable) {
     uasort($children, 'element_sort');
+    // Put the sorted children back into $elements in the correct order, to
+    // preserve sorting if the same element is passed through
+    // element_children() twice.
+    foreach ($children as $key => $child) {
+      unset($elements[$key]);
+      $elements[$key] = $child;
+    }
+    $elements['#sorted'] = TRUE;
   }
-  $elements['#sorted'] = TRUE;
+
   return array_keys($children);
 }
 
