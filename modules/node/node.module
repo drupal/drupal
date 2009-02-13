@@ -2238,7 +2238,7 @@ function node_search_validate($form, &$form_state) {
  * The node access system determines who can do what to which nodes.
  *
  * In determining access rights for a node, node_access() first checks
- * whether the user has the "administer nodes" permission. Such users have
+ * whether the user has the "bypass node access" permission. Such users have
  * unrestricted access to all nodes. Then the node module's hook_access()
  * is called, and a TRUE or FALSE return value will grant or deny access.
  * This allows, for example, the blog module to always grant access to the
