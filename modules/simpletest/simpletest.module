@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.35 2009/01/25 12:19:32 webchick Exp $
+// $Id: simpletest.module,v 1.36 2009/02/13 00:39:01 webchick Exp $
 
 /**
  * Implementation of hook_help().
@@ -550,7 +550,7 @@ function simpletest_clean_temporary_directories() {
   foreach ($files as $file) {
     $path = file_directory_path() . '/' . $file;
     if (is_dir($path) && preg_match('/^simpletest\d+/', $file)) {
-      simpletest_clean_temporary_directory($path);
+      file_unmanaged_delete_recursive($path);
       $count++;
     }
   }
@@ -561,27 +561,6 @@ function simpletest_clean_temporary_directories() {
   else {
     drupal_set_message(t('No temporary directories to remove.'));
   }
-}
-
-/**
- * Remove all files from specified directory and then remove directory.
- *
- * @param string $path Directory path.
- */
-function simpletest_clean_temporary_directory($path) {
-  $files = scandir($path);
-  foreach ($files as $file) {
-    if ($file != '.' && $file != '..') {
-      $file_path = "$path/$file";
-      if (is_dir($file_path)) {
-        simpletest_clean_temporary_directory($file_path);
-      }
-      else {
-        file_unmanaged_delete($file_path);
-      }
-    }
-  }
-  rmdir($path);
 }
 
 /**
