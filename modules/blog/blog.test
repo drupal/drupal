@@ -115,7 +115,7 @@ class BlogTestCase extends DrupalWebTestCase {
     $this->drupalGet('node/' . $node->nid . '/edit');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertTitle($node->title. ' | Drupal', t('Blog edit node was displayed'));
+      $this->assertTitle('Edit Blog entry ' . $node->title. ' | Drupal', t('Blog edit node was displayed'));
       $this->assertText(t('Home ' . $crumb . ' @title', array('@title' => $node->title)), t('Breadcrumbs were displayed'));
     }
 

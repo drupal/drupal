@@ -313,7 +313,7 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->drupalGet('node/' . $node->nid . '/edit');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertTitle($node->title . ' | Drupal', t('Forum edit node was displayed'));
+      $this->assertTitle('Edit Forum topic ' . $node->title . ' | Drupal', t('Forum edit node was displayed'));
       $this->assertText(t('Home ' . $crumb . ' @title', array('@title' => $node->title)), t('Breadcrumbs were displayed'));
     }
 
