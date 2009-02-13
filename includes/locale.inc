@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.202 2009/02/05 00:32:46 webchick Exp $
+// $Id: locale.inc,v 1.203 2009/02/13 00:45:18 webchick Exp $
 
 /**
  * @file
@@ -2283,7 +2283,7 @@ function _locale_rebuild_js($langcode = NULL) {
 
   // Delete old file, if we have no translations anymore, or a different file to be saved.
   if (!empty($language->javascript) && (!$data || $language->javascript != $data_hash)) {
-    file_delete(file_create_path($dir . '/' . $language->language . '_' . $language->javascript . '.js'));
+    file_unmanaged_delete(file_create_path($dir . '/' . $language->language . '_' . $language->javascript . '.js'));
     $language->javascript = '';
     $status = 'deleted';
   }

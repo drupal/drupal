@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.install,v 1.33 2009/01/31 16:50:56 webchick Exp $
+// $Id: locale.install,v 1.34 2009/02/13 00:45:18 webchick Exp $
 
 /**
  * Implementation of hook_install().
@@ -209,14 +209,36 @@ function locale_update_6005() {
  * Implementation of hook_uninstall().
  */
 function locale_uninstall() {
-  // Delete all JavaScript translation files
-  $files = db_query('SELECT javascript FROM {languages}');
+  // Delete all JavaScript translation files.
+  $locale_js_directory = file_create_path(variable_get('locale_js_directory', 'languages'));
+  $files = db_query('SELECT language, javascript FROM {languages}');
   while ($file = db_fetch_object($files)) {
-    if (!empty($file)) {
-      file_delete(file_create_path($file->javascript));
+    if (!empty($file->javascript)) {
+      file_unmanaged_delete(file_create_path($locale_js_directory . '/' . $file->language . '_' . $file->javascript . '.js'));
     }
   }
-
+  // Delete the JavaScript translations directory if empty.
+  @rmdir($locale_js_directory);
+  
+  // Clear variables.
+  variable_del('language_default');
+  variable_del('language_count');
+  variable_del('language_negotiation');
+  variable_del('javascript_parsed');
+  variable_del('language_content_type_default');
+  variable_del('language_content_type_negotiation');
+  variable_del('locale_cache_strings');
+  variable_del('locale_js_directory');
+  
+  foreach (node_get_types() as $type => $content_type) {
+    $setting = variable_del('language_content_type_' . $type);
+  }
+  
+  // Switch back to English: with a $language->language value different from 'en'
+  // successive calls of t() might result in calling locale(), which in turn might 
+  // try to query the unexisting {locales_source} and {locales_target} tables.
+  drupal_init_language();
+  
   // Remove tables.
   drupal_uninstall_schema('locale');
 }
