@@ -902,7 +902,7 @@ class DrupalWebTestCase {
     global $db_prefix, $user;
     if (preg_match('/simpletest\d+/', $db_prefix)) {
       // Delete temporary files directory and reset files directory path.
-      simpletest_clean_temporary_directory(file_directory_path());
+      file_unmanaged_delete_recursive(file_directory_path());
       variable_set('file_directory_path', $this->originalFileDirectory);
 
       // Remove all prefixed tables (all the tables in the schema).
@@ -1999,7 +1999,7 @@ class DrupalWebTestCase {
     $match = is_array($code) ? in_array($curl_code, $code) : $curl_code == $code;
     return $this->assertTrue($match, $message ? $message : t('HTTP response expected !code, actual !curl_code', array('!code' => $code, '!curl_code' => $curl_code)), t('Browser'));
   }
-  
+
   /**
    * TODO write documentation.
    * @param $type
@@ -2017,13 +2017,13 @@ class DrupalWebTestCase {
     );
     $field_definition += $settings;
     field_create_field($field_definition);
-    
+
     $field = field_read_field($field_name);
     $this->assertTrue($field, t('Created field @field_name of type @type.', array('@field_name' => $field_name, '@type' => $type)));
-    
+
     return $field;
   }
-  
+
   /**
    * TODO write documentation.
    * @param $field_name
@@ -2046,10 +2046,10 @@ class DrupalWebTestCase {
       ),
     );
     field_create_instance($instance_definition);
-    
+
     $instance = field_read_instance($field_name, $bundle);
     $this->assertTrue($instance, t('Created instance of field @field_name on bundle @bundle.', array('@field_name' => $field_name, '@bundle' => $bundle)));
-    
+
     return $instance;
   }
 }
