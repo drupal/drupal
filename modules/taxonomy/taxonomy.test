@@ -75,7 +75,6 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
     $edit['tags'] = 1;
     $edit['multiple'] = 1;
     $edit['required'] = 1;
-    $edit['weight'] = 0;
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertRaw(t('Created new vocabulary %name.', array('%name' => $edit['name'])), t('Vocabulary created successfully'));
 

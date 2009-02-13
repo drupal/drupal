@@ -127,7 +127,6 @@ class ForumTestCase extends DrupalWebTestCase {
       'name' => $title,
       'description' => $description,
       'help' => '',
-      'weight' => -10
     );
 
     // Edit the vocabulary.
