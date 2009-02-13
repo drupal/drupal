@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.26 2009/02/09 03:29:54 webchick Exp $
+// $Id: common.test,v 1.27 2009/02/13 02:25:59 webchick Exp $
 
 /**
  * Tests for the l() function.
@@ -783,6 +783,52 @@ class ValidUrlTestCase extends DrupalWebTestCase {
 }
 
 /**
+ * Tests for CRUD API functions.
+ */
+class DrupalDataApiTest extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Data API functions'),
+      'description' => t('Tests the performance of CRUD APIs.'),
+      'group' => t('System'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('taxonomy');
+  }
+
+  /**
+   * Test the drupal_write_record() API function.
+   */
+  function testDrupalWriteRecord() {
+    // Insert an object record for a table with a single-field primary key.
+    $vocabulary = new StdClass();
+    $vocabulary->name = 'test';
+    $insert_result = drupal_write_record('taxonomy_vocabulary', $vocabulary);
+    $this->assertTrue($insert_result == SAVED_NEW, t('Correct value returned when a record is inserted with drupal_write_record() for a table with a single-field primary key.'));
+    $this->assertTrue(isset($vocabulary->vid), t('Primary key is set on record created with drupal_write_record().'));
+
+    // Update the initial record after changing a property.
+    $vocabulary->name = 'testing';
+    $update_result = drupal_write_record('taxonomy_vocabulary', $vocabulary, array('vid'));
+    $this->assertTrue($update_result == SAVED_UPDATED, t('Correct value returned when a record updated with drupal_write_record() for table with single-field primary key.'));
+
+    // Insert an object record for a table with a multi-field primary key.
+    $vocabulary_node_type = new StdClass();
+    $vocabulary_node_type->vid = $vocabulary->vid;
+    $vocabulary_node_type->type = 'page';
+    $insert_result = drupal_write_record('taxonomy_vocabulary_node_type', $vocabulary_node_type);
+    $this->assertTrue($insert_result == SAVED_NEW, t('Correct value returned when a record is inserted with drupal_write_record() for a table with a multi-field primary key.'));
+
+    // Update the record.
+    $update_result = drupal_write_record('taxonomy_vocabulary_node_type', $vocabulary_node_type, array('vid', 'type'));
+    $this->assertTrue($update_result == SAVED_UPDATED, t('Correct value returned when a record is updated with drupal_write_record() for a table with a multi-field primary key.'));
+  }
+
+}
+
+/**
  * Tests Simpletest error and exception collecter.
  */
 class DrupalErrorCollectionUnitTest extends DrupalWebTestCase {
@@ -853,3 +899,4 @@ class DrupalErrorCollectionUnitTest extends DrupalWebTestCase {
     }
   }
 }
+

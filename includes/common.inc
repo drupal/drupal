@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.865 2009/02/09 03:29:53 webchick Exp $
+// $Id: common.inc,v 1.866 2009/02/13 02:25:58 webchick Exp $
 
 /**
  * @file
@@ -3967,7 +3967,9 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
       $object->$serial = $last_insert_id;
     }
   }
-  else {
+  // If we have a single-field primary key but got no insert ID, the
+  // query failed.
+  elseif (count($primary_keys) == 1) {
     $return = FALSE;
   }
 
