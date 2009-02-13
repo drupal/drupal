@@ -3967,7 +3967,9 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
       $object->$serial = $last_insert_id;
     }
   }
-  else {
+  // If we have a single-field primary key but got no insert ID, the
+  // query failed.
+  elseif (count($primary_keys) == 1) {
     $return = FALSE;
   }
 
