@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.27 2009/02/13 02:25:59 webchick Exp $
+// $Id: common.test,v 1.28 2009/02/13 04:43:00 webchick Exp $
 
 /**
  * Tests for the l() function.
@@ -542,7 +542,15 @@ class DrupalRenderUnitTestCase extends DrupalWebTestCase {
     // Confirm that the $elements array has '#sorted' set to TRUE.
     $this->assertTrue($elements['#sorted'], t("'#sorted' => TRUE was added to the array"));
 
-    // Now the same array structure, but with #sorted set to TRUE.
+    // Pass $elements through element_children() and ensure it remains
+    // sorted in the correct order. drupal_render() will return an empty string
+    // if used on the same array in the same request.
+    $children = element_children($elements);
+    $this->assertTrue(array_shift($children) == 'first', t('Child found in the correct order.'));
+    $this->assertTrue(array_shift($children) == 'second', t('Child found in the correct order.'));
+
+
+    // The same array structure again, but with #sorted set to TRUE.
     $elements = array(
       'second' => array(
         '#weight' => 10,
