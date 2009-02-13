@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.54 2009/02/05 03:42:58 webchick Exp $
+// $Id: node.pages.inc,v 1.55 2009/02/13 02:22:09 webchick Exp $
 
 /**
  * @file
@@ -11,7 +11,8 @@
  * Menu callback; presents the node editing form, or redirects to delete confirmation.
  */
 function node_page_edit($node) {
-  drupal_set_title($node->title);
+  $type_name = node_get_types('name', $node);
+  drupal_set_title(t('<em>Edit @type</em> @title', array('@type' => $type_name, '@title' => $node->title)), PASS_THROUGH);
   return drupal_get_form($node->type . '_node_form', $node);
 }
 

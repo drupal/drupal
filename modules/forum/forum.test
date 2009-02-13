@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.13 2009/01/28 01:09:58 webchick Exp $
+// $Id: forum.test,v 1.14 2009/02/13 02:22:09 webchick Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -313,7 +313,7 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->drupalGet('node/' . $node->nid . '/edit');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertTitle($node->title . ' | Drupal', t('Forum edit node was displayed'));
+      $this->assertTitle('Edit Forum topic ' . $node->title . ' | Drupal', t('Forum edit node was displayed'));
       $this->assertText(t('Home ' . $crumb . ' @title', array('@title' => $node->title)), t('Breadcrumbs were displayed'));
     }
 
