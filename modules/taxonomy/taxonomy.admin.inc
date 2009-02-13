@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.44 2009/02/03 18:55:31 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.45 2009/02/13 05:42:24 webchick Exp $
 
 /**
  * @file
@@ -120,35 +120,29 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
   if (isset($form_state['confirm_delete']) && isset($form_state['values']['vid'])) {
     return taxonomy_vocabulary_confirm_delete($form_state, $form_state['values']['vid']);
   }
-  $form['identification'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Identification'),
-    '#collapsible' => TRUE,
-  );
-  $form['identification']['name'] = array('#type' => 'textfield',
+  $form['name'] = array(
+    '#type' => 'textfield',
     '#title' => t('Vocabulary name'),
     '#default_value' => $edit['name'],
     '#maxlength' => 255,
     '#description' => t('The name for this vocabulary, e.g., <em>"Tags"</em>.'),
     '#required' => TRUE,
   );
-  $form['identification']['description'] = array('#type' => 'textarea',
-    '#title' => t('Description'),
-    '#default_value' => $edit['description'],
-    '#description' => t('Description of the vocabulary; can be used by modules.'),
-  );
-  $form['identification']['help'] = array('#type' => 'textfield',
+  $form['help'] = array(
+    '#type' => 'textfield',
     '#title' => t('Help text'),
     '#maxlength' => 255,
     '#default_value' => $edit['help'],
     '#description' => t('Instructions to present to the user when selecting terms, e.g., <em>"Enter a comma separated list of words"</em>.'),
   );
-  $form['content_types'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Content types'),
-    '#collapsible' => TRUE,
+  $form['description'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Description'),
+    '#default_value' => $edit['description'],
+    '#description' => t('Description of the vocabulary; can be used by modules.'),
   );
-  $form['content_types']['nodes'] = array('#type' => 'checkboxes',
+  $form['nodes'] = array(
+    '#type' => 'checkboxes',
     '#title' => t('Content types'),
     '#default_value' => $edit['nodes'],
     '#options' => array_map('check_plain', node_get_types('names')),
@@ -159,33 +153,33 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
     '#title' => t('Settings'),
     '#collapsible' => TRUE,
   );
-  $form['settings']['tags'] = array('#type' => 'checkbox',
+  $form['settings']['tags'] = array(
+    '#type' => 'checkbox',
     '#title' => t('Tags'),
     '#default_value' => $edit['tags'],
     '#description' => t('Terms are created by users when submitting posts by typing a comma separated list.'),
   );
-  $form['settings']['multiple'] = array('#type' => 'checkbox',
+  $form['settings']['multiple'] = array(
+    '#type' => 'checkbox',
     '#title' => t('Multiple select'),
     '#default_value' => $edit['multiple'],
     '#description' => t('Allows posts to have more than one term from this vocabulary (always true for tags).'),
   );
-  $form['settings']['required'] = array('#type' => 'checkbox',
+  $form['settings']['required'] = array(
+    '#type' => 'checkbox',
     '#title' => t('Required'),
     '#default_value' => $edit['required'],
     '#description' => t('At least one term in this vocabulary must be selected when submitting a post.'),
   );
-  $form['settings']['weight'] = array('#type' => 'weight',
-    '#title' => t('Weight'),
-    '#default_value' => $edit['weight'],
-    '#description' => t('Vocabularies are displayed in ascending order by weight.'),
-  );
   // Set the hierarchy to "multiple parents" by default. This simplifies the
   // vocabulary form and standardizes the term form.
-  $form['hierarchy'] = array('#type' => 'value',
+  $form['hierarchy'] = array(
+    '#type' => 'value',
     '#value' => '0',
   );
   // Enable "related terms" by default.
-  $form['relations'] = array('#type' => 'value',
+  $form['relations'] = array(
+    '#type' => 'value',
     '#value' => '1',
   );
 

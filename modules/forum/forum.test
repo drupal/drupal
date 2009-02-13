@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.14 2009/02/13 02:22:09 webchick Exp $
+// $Id: forum.test,v 1.15 2009/02/13 05:42:24 webchick Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -127,7 +127,6 @@ class ForumTestCase extends DrupalWebTestCase {
       'name' => $title,
       'description' => $description,
       'help' => '',
-      'weight' => -10
     );
 
     // Edit the vocabulary.

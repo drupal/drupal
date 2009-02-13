@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.test,v 1.24 2009/01/28 01:14:39 webchick Exp $
+// $Id: taxonomy.test,v 1.25 2009/02/13 05:42:24 webchick Exp $
 
 /**
  * @file
@@ -75,7 +75,6 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
     $edit['tags'] = 1;
     $edit['multiple'] = 1;
     $edit['required'] = 1;
-    $edit['weight'] = 0;
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertRaw(t('Created new vocabulary %name.', array('%name' => $edit['name'])), t('Vocabulary created successfully'));
 
