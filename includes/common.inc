@@ -1411,18 +1411,12 @@ function url($path = NULL, $options = array()) {
 
   global $base_url;
   static $script;
-  static $clean_url;
 
   if (!isset($script)) {
     // On some web servers, such as IIS, we can't omit "index.php". So, we
     // generate "index.php?q=foo" instead of "?q=foo" on anything that is not
     // Apache.
     $script = (strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') === FALSE) ? 'index.php' : '';
-  }
-
-  // Cache the clean_url variable to improve performance.
-  if (!isset($clean_url)) {
-    $clean_url = (bool)variable_get('clean_url', '0');
   }
 
   if (!isset($options['base_url'])) {
@@ -1450,7 +1444,7 @@ function url($path = NULL, $options = array()) {
   $prefix = empty($path) ? rtrim($options['prefix'], '/') : $options['prefix'];
   $path = drupal_urlencode($prefix . $path);
 
-  if ($clean_url) {
+  if (variable_get('clean_url', '0')) {
     // With Clean URLs.
     if ($options['query']) {
       return $base . $path .'?'. $options['query'] . $options['fragment'];
