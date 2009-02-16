@@ -1133,6 +1133,7 @@ function theme_status_messages($display = NULL) {
  *   A string containing an unordered list of links.
  */
 function theme_links($links, $attributes = array('class' => 'links')) {
+  global $language;
   $output = '';
 
   if (count($links) > 0) {
@@ -1151,7 +1152,8 @@ function theme_links($links, $attributes = array('class' => 'links')) {
       if ($i == $num_links) {
         $class .= ' last';
       }
-      if (isset($link['href']) && ($link['href'] == $_GET['q'] || ($link['href'] == '<front>' && drupal_is_front_page()))) {
+      if (isset($link['href']) && ($link['href'] == $_GET['q'] || ($link['href'] == '<front>' && drupal_is_front_page()))
+          && (empty($link['language']) || $link['language']->language == $language->language)) {
         $class .= ' active';
       }
       $output .= '<li'. drupal_attributes(array('class' => $class)) .'>';
