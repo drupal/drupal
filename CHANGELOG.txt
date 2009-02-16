@@ -2,6 +2,7 @@
 
 Drupal 6.10-dev, xxxx-xx-xx (development release)
 ----------------------
+- Fixed node_feed() so custom fields can show up in RSS feeds.
 
 Drupal 6.9, 2009-01-14
 ----------------------

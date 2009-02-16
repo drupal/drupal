@@ -1675,8 +1675,23 @@ function node_feed($nids = FALSE, $channel = array()) {
         $item = node_prepare($item, $teaser);
       }
 
-      // Allow modules to change $node->teaser before viewing.
+      // Allow modules to change $node->content before the node is rendered.
       node_invoke_nodeapi($item, 'view', $teaser, FALSE);
+
+      // Set the proper node property, then unset unused $node property so that a
+      // bad theme can not open a security hole.
+      $content = drupal_render($item->content);
+      if ($teaser) {
+        $item->teaser = $content;
+        unset($item->body);
+      }
+      else {
+        $item->body = $content;
+        unset($item->teaser);
+      }
+    
+      // Allow modules to modify the fully-built node.
+      node_invoke_nodeapi($item, 'alter', $teaser, FALSE);
     }
 
     // Allow modules to add additional item fields and/or modify $item
