@@ -40,6 +40,7 @@
  *   performs the action, keyed on action ID.
  */
 function actions_do($action_ids, &$object, $context = NULL, $a1 = NULL, $a2 = NULL) {
+  // $stack tracks the number of recursive calls.
   static $stack;
   $stack++;
   if ($stack > variable_get('actions_max_stack', 35)) {
@@ -103,6 +104,7 @@ function actions_do($action_ids, &$object, $context = NULL, $a1 = NULL, $a2 = NU
       $result[$action_ids] = $action_ids($object, $context, $a1, $a2);
     }
   }
+  $stack--;
   return $result;
 }
 
