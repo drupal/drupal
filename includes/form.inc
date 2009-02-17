@@ -1533,7 +1533,7 @@ function theme_radio($element) {
   $output .= (check_plain($element['#value']) == $element['#return_value']) ? ' checked="checked" ' : ' ';
   $output .= drupal_attributes($element['#attributes']) .' />';
   if (!is_null($element['#title'])) {
-    $output = '<label class="option">'. $output .' '. $element['#title'] .'</label>';
+    $output = '<label class="option" for="'. $element['#id'] .'">'. $output .' '. $element['#title'] .'</label>';
   }
 
   unset($element['#title']);
@@ -1872,7 +1872,7 @@ function theme_checkbox($element) {
   $checkbox .= drupal_attributes($element['#attributes']) .' />';
 
   if (!is_null($element['#title'])) {
-    $checkbox = '<label class="option">'. $checkbox .' '. $element['#title'] .'</label>';
+    $checkbox = '<label class="option" for="'. $element['#id'] .'">'. $checkbox .' '. $element['#title'] .'</label>';
   }
 
   unset($element['#title']);
