@@ -1179,7 +1179,7 @@ function system_schema() {
       'type' => array(
         'description' => 'The type of the item, either module, theme, or theme_engine.',
         'type' => 'varchar',
-        'length' => 255,
+        'length' => 12,
         'not null' => TRUE,
         'default' => '',
       ),
@@ -1217,7 +1217,8 @@ function system_schema() {
     ),
     'primary key' => array('filename'),
     'indexes' => array(
-      'modules' => array(array('type', 12), 'status', 'weight', 'filename'),
+      'modules' => array('type', 'status', 'weight', 'filename'),
+      'type_name' => array('type', 'name'),
     ),
   );
 
@@ -3209,6 +3210,18 @@ function system_update_7018() {
   db_add_index($ret, 'url_alias', 'src_language', array('src', 'language'));
   db_drop_index($ret, 'url_alias', 'src');
 
+  return $ret;
+}
+
+/**
+ * Shorten the {system}.type column and add an index on type and name.
+ */
+function system_update_7019() {
+  $ret = array();
+  db_drop_index($ret, 'system', 'modules');
+  db_change_field($ret, 'system', 'type', 'type', array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''));
+  db_add_index($ret, 'system', 'modules', array('type', 'status', 'weight', 'filename'));
+  db_add_index($ret, 'system', 'type_name', array('type', 'name'));
   return $ret;
 }
 
