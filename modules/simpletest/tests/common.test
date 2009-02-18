@@ -445,7 +445,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
    * Test adding inline scripts.
    */
   function testAddInline() {
-    $inline = '$(document).ready(function(){});';
+    $inline = 'jQuery(function(){});';
     $javascript = drupal_add_js($inline, array('type' => 'inline', 'scope' => 'footer'));
     $this->assertTrue(array_key_exists('misc/jquery.js', $javascript), t('jQuery is added when inline scripts are added.'));
     $data = end($javascript);
@@ -456,7 +456,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
    * Test drupal_get_js() with a footer scope.
    */
   function testFooterHTML() {
-    $inline = '$(document).ready(function(){});';
+    $inline = 'jQuery(function(){});';
     drupal_add_js($inline, array('type' => 'inline', 'scope' => 'footer'));
     $javascript = drupal_get_js('footer');
     $this->assertTrue(strpos($javascript, $inline) > 0, t('Rendered JavaScript footer returns the inline code.'));

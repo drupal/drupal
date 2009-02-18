@@ -1,4 +1,5 @@
 // $Id$
+(function($) {
 
 /**
  * Toggle the visibility of a fieldset using smooth animations
@@ -77,3 +78,5 @@ Drupal.behaviors.collapse = {
     });
   }
 };
+
+})(jQuery);

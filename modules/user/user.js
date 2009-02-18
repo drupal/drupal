@@ -1,4 +1,5 @@
 // $Id$
+(function($) {
 
 /**
  * Attach handlers to evaluate the strength of any password fields and to check
@@ -76,7 +77,7 @@ Drupal.behaviors.password = {
         else {
           confirmResult.css({ visibility: "hidden" });
         }
-      }
+      };
 
       // Monitor keyup and blur events.
       // Blur must be used because a mouse paste does not trigger keyup.
@@ -171,3 +172,5 @@ Drupal.behaviors.userSettings = {
     });
   }
 };
+
+})(jQuery);

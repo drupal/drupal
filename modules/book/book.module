@@ -415,7 +415,7 @@ function _book_parent_select($book_link) {
 function _book_add_form_elements(&$form, $node) {
   // Need this for AJAX.
   $form['#cache'] = TRUE;
-  drupal_add_js("if (Drupal.jsEnabled) { $(document).ready(function() { $('#edit-book-pick-book').css('display', 'none'); }); }", 'inline');
+  drupal_add_js("if (Drupal.jsEnabled) { jQuery(function() { jQuery('#edit-book-pick-book').css('display', 'none'); }); }", 'inline');
 
   $form['book'] = array(
     '#type' => 'fieldset',

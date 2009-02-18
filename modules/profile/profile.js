@@ -1,4 +1,5 @@
 // $Id$
+(function($) {
 
 /**
  * Add functionality to the profile drag and drop table.
@@ -54,3 +55,5 @@ Drupal.behaviors.profileDrag = {
     };
   }
 };
+
+})(jQuery);

@@ -1,4 +1,5 @@
 // $Id$
+(function($) {
 
 Drupal.behaviors.tableSelect = {
   attach: function(context) {
@@ -82,8 +83,10 @@ Drupal.tableSelectRange = function(from, to, state) {
       }
     }
     // A faster alternative to doing $(i).filter(to).length.
-    else if (jQuery.filter(to, [i]).r.length) {
+    else if ($.filter(to, [i]).r.length) {
       break;
     }
   }
 };
+
+})(jQuery);

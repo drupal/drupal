@@ -1,4 +1,5 @@
 // $Id$
+(function($) {
 
 Drupal.behaviors.multiselectSelector = {
   attach: function(context) {
@@ -10,3 +11,5 @@ Drupal.behaviors.multiselectSelector = {
     });
   }
 };
+
+})(jQuery);

@@ -1,4 +1,5 @@
 // $Id$
+(function($) {
 
 /**
  * Set the client's system time zone as default values of form fields.
@@ -57,8 +58,10 @@ Drupal.behaviors.setTimezone = {
           if (data) {
             $(element).val(data);
           }
-        },
+        }
       });
     });
   }
 };
+
+})(jQuery);

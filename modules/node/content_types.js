@@ -1,3 +1,6 @@
+// $Id$
+(function($) {
+
 Drupal.behaviors.contentTypes = {
   attach: function() {
     if ($('#edit-type').val() == $('#edit-name').val().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/_+/g, '_') || $('#edit-type').val() == '') {
@@ -22,3 +25,5 @@ Drupal.behaviors.contentTypes = {
     }
   }
 };
+
+})(jQuery);

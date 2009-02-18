@@ -1,4 +1,5 @@
 // $Id$
+(function($) {
 
 /**
  * Auto-attach for teaser behavior.
@@ -96,3 +97,5 @@ Drupal.behaviors.teaser = {
     });
   }
 };
+
+})(jQuery);

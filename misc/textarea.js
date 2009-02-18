@@ -1,4 +1,5 @@
 // $Id$
+(function($) {
 
 Drupal.behaviors.textarea = {
   attach: function(context) {
@@ -36,3 +37,5 @@ Drupal.behaviors.textarea = {
     });
   }
 };
+
+})(jQuery);

@@ -1,4 +1,5 @@
 // $Id$
+(function($) {
 
 Drupal.behaviors.openid = {
   attach: function(context) {
@@ -38,3 +39,5 @@ Drupal.behaviors.openid = {
       });
   }
 };
+
+})(jQuery);

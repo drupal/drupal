@@ -2,6 +2,19 @@
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'locale': {} };
 
+// Allow other JavaScript libraries to use $.
+jQuery.noConflict();
+
+// Indicate when other scripts use $ with out wrapping their code.
+if ($ === undefined) {
+  $ = function() {
+    alert("Please wrap your JavaScript code in (function($) { ... })(jQuery); to be compatible. See http://docs.jquery.com/Using_jQuery_with_Other_Libraries.");
+  };
+}
+
+
+(function($) {
+
 /**
  * Set the variable that indicates if JavaScript behaviors should be applied.
  */
@@ -42,8 +55,8 @@ Drupal.jsEnabled = document.getElementsByTagName && document.createElement && do
 Drupal.attachBehaviors = function(context) {
   context = context || document;
   // Execute all of them.
-  jQuery.each(Drupal.behaviors, function() {
-    if (jQuery.isFunction(this.attach)) {
+  $.each(Drupal.behaviors, function() {
+    if ($.isFunction(this.attach)) {
       this.attach(context);
     }
   });
@@ -71,8 +84,8 @@ Drupal.attachBehaviors = function(context) {
 Drupal.detachBehaviors = function(context) {
   context = context || document;
   // Execute all of them.
-  jQuery.each(Drupal.behaviors, function() {
-    if (jQuery.isFunction(this.detach)) {
+  $.each(Drupal.behaviors, function() {
+    if ($.isFunction(this.detach)) {
       this.detach(context);
     }
   });
@@ -286,7 +299,7 @@ Drupal.getSelection = function (element) {
  */
 Drupal.ahahError = function(xmlhttp, uri) {
   if (xmlhttp.status == 200) {
-    if (jQuery.trim(xmlhttp.responseText)) {
+    if ($.trim(xmlhttp.responseText)) {
       var message = Drupal.t("An error occurred. \n@uri\n@text", {'@uri': uri, '@text': xmlhttp.responseText });
     }
     else {
@@ -296,8 +309,8 @@ Drupal.ahahError = function(xmlhttp, uri) {
   else {
     var message = Drupal.t("An HTTP error @status occurred. \n@uri", {'@uri': uri, '@status': xmlhttp.status });
   }
-  return message.replace(/\n/g, '<br />');;
-}
+  return message.replace(/\n/g, '<br />');
+};
 
 // Global Killswitch on the <html> element.
 if (Drupal.jsEnabled) {
@@ -328,3 +341,5 @@ Drupal.theme.prototype = {
     return '<em>' + Drupal.checkPlain(str) + '</em>';
   }
 };
+
+})(jQuery);

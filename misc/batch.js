@@ -1,4 +1,5 @@
 // $Id$
+(function($) {
 
 /**
  * Attaches the batch behavior to progress bars.
@@ -38,3 +39,5 @@ Drupal.behaviors.batch = {
     });
   }
 };
+
+})(jQuery);

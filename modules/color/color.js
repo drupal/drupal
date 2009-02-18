@@ -1,4 +1,5 @@
 // $Id$
+(function($) {
 
 Drupal.behaviors.color = {
   attach: function(context) {
@@ -251,3 +252,5 @@ Drupal.behaviors.color = {
     preview();
   }
 };
+
+})(jQuery);
