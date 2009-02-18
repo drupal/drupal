@@ -36,7 +36,7 @@
  * @see template_preprocess_profile_listing()
  */
 ?>
-<div class="profile clear-block">
+<div class="profile clearfix">
   <?php print $picture; ?>
 
   <div class="name">

@@ -120,17 +120,17 @@
 
     </div> <!-- /header -->
 
-    <div id="container" class="clear-block">
+    <div id="container" class="clearfix">
 
       <div id="navigation" class="menu <?php if (!empty($main_menu)) { print "withmain"; } if (!empty($secondary_menu)) { print " withsecondary"; } ?> ">
         <?php if (!empty($main_menu)): ?>
-          <div id="main-menu" class="clear-block">
+          <div id="main-menu" class="clearfix">
             <?php print theme('links', $main_menu, array('class' => 'links main-menu')); ?>
           </div>
         <?php endif; ?>
 
         <?php if (!empty($secondary_menu)): ?>
-          <div id="secondary-menu" class="clear-block">
+          <div id="secondary-menu" class="clearfix">
             <?php print theme('links', $secondary_menu, array('class' => 'links secondary-menu')); ?>
           </div>
         <?php endif; ?>
@@ -151,7 +151,7 @@
           <?php if (!empty($tabs)): ?><div class="tabs"><?php print $tabs; ?></div><?php endif; ?>
           <?php if (!empty($messages)): print $messages; endif; ?>
           <?php if (!empty($help)): print $help; endif; ?>
-          <div id="content-content" class="clear-block">
+          <div id="content-content" class="clearfix">
             <?php print $content; ?>
           </div> <!-- /content-content -->
           <?php print $feed_icons; ?>

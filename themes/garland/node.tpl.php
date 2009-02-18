@@ -13,11 +13,11 @@
     <span class="submitted"><?php print $submitted; ?></span>
   <?php endif; ?>
 
-  <div class="content clear-block">
+  <div class="content clearfix">
     <?php print $content ?>
   </div>
 
-  <div class="clear-block">
+  <div class="clearfix">
     <div class="meta">
     <?php if ($terms): ?>
       <div class="terms"><?php print $terms ?></div>

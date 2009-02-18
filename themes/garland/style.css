@@ -145,7 +145,7 @@ ol.task-list li.active {
   margin-right: 1em; /* LTR */
 }
 
-fieldset ul.clear-block li {
+fieldset ul.clearfix li {
   margin: 0;
   padding: 0;
   background-image: none;

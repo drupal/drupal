@@ -170,7 +170,7 @@ function chameleon_comment($comment, $node, $links = array()) {
   $output .= " <h3 class=\"title\">" . l($comment->subject, $_GET['q'], array('fragment' => "comment-$comment->cid")) . "</h3>\n";
   $output .= " <div class=\"content\">" . $comment->comment;
   if (!empty($comment->signature)) {
-    $output .= "  <div class=\"clear-block\">";
+    $output .= "  <div class=\"clearfix\">";
     $output .= "<div>—</div>\n";
     $output .= $comment->signature . "\n";
     $output .= "  </div>\n";

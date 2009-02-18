@@ -12,7 +12,7 @@
 </head>
 
 <body class="<?php print $body_classes; ?>">
-  <div id="header" class="clear-block">
+  <div id="header" class="clearfix">
     <?php if ($search_box) { ?><div class="search-box"><?php print $search_box ?></div><?php }; ?>
     <?php if ($logo) { ?><a class="logo" href="<?php print $front_page ?>" title="<?php print t('Home') ?>"><img src="<?php print $logo ?>" alt="<?php print t('Home') ?>" /></a><?php } ?>
     <?php if ($site_name) { ?><h1 class='site-name'><a href="<?php print $front_page ?>" title="<?php print t('Home') ?>"><?php print $site_name ?></a></h1><?php }; ?>

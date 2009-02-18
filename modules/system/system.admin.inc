@@ -1983,11 +1983,11 @@ function theme_admin_page($blocks) {
     }
   }
 
-  $output = '<div class="admin clear-block">';
+  $output = '<div class="admin clearfix">';
   $output .= theme('system_compact_link');
 
   foreach ($container as $id => $data) {
-    $output .= '<div class="' . $id . ' clear-block">';
+    $output .= '<div class="' . $id . ' clearfix">';
     $output .= $data;
     $output .= '</div>';
   }
@@ -2031,9 +2031,9 @@ function theme_system_admin_by_module($menu_items) {
     }
   }
 
-  $output = '<div class="admin clear-block">';
+  $output = '<div class="admin clearfix">';
   foreach ($container as $id => $data) {
-    $output .= '<div class="' . $id . ' clear-block">';
+    $output .= '<div class="' . $id . ' clearfix">';
     $output .= $data;
     $output .= '</div>';
   }

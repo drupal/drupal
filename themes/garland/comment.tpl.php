@@ -3,7 +3,7 @@
 ?>
 <div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ' ' . $status; print ' ' . $zebra; ?>">
 
-  <div class="clear-block">
+  <div class="clearfix">
   <?php if ($submitted): ?>
     <span class="submitted"><?php print $submitted; ?></span>
   <?php endif; ?>
@@ -19,7 +19,7 @@
     <div class="content">
       <?php print $content ?>
       <?php if ($signature): ?>
-      <div class="clear-block">
+      <div class="clearfix">
         <div>—</div>
         <?php print $signature ?>
       </div>

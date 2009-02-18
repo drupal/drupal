@@ -219,7 +219,7 @@ function poll_form(&$node, $form_state) {
   $form['choice_wrapper'] = array(
     '#tree' => FALSE,
     '#weight' => -4,
-    '#prefix' => '<div class="clear-block" id="poll-choice-wrapper">',
+    '#prefix' => '<div class="clearfix" id="poll-choice-wrapper">',
     '#suffix' => '</div>',
   );
 

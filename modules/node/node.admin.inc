@@ -280,7 +280,7 @@ function theme_node_filter_form($form) {
  */
 function theme_node_filters($form) {
   $output = '';
-  $output .= '<ul class="clear-block">';
+  $output .= '<ul class="clearfix">';
   if (!empty($form['current'])) {
     foreach (element_children($form['current']) as $key) {
       $output .= '<li>' . drupal_render($form['current'][$key]) . '</li>';

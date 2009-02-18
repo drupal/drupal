@@ -27,10 +27,10 @@
   <body class="<?php print $body_classes ?>">
 
 <!-- Layout -->
-  <div id="header-region" class="clear-block"><?php print $header; ?></div>
+  <div id="header-region" class="clearfix"><?php print $header; ?></div>
 
     <div id="wrapper">
-    <div id="container" class="clear-block">
+    <div id="container" class="clearfix">
 
       <div id="header">
         <div id="logo-floater">
@@ -72,7 +72,7 @@
           <?php if ($title): ?><h2><?php print $title ?></h2><?php endif; ?>
           <?php print $messages; ?>
           <?php print $help; ?>
-          <div class="clear-block">
+          <div class="clearfix">
             <?php print $content ?>
           </div>
           <div id="footer"><?php print $footer_message . $footer ?></div>

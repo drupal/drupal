@@ -60,7 +60,7 @@ function help_links_as_list() {
   // Output pretty four-column list
   $count = count($modules);
   $break = ceil($count / 4);
-  $output = '<div class="clear-block"><div class="help-items"><ul>';
+  $output = '<div class="clearfix"><div class="help-items"><ul>';
   $i = 0;
   foreach ($modules as $module => $name) {
     $output .= '<li>' . l($name, 'admin/help/' . $module) . '</li>';

@@ -26,7 +26,7 @@
  * @see theme_comment()
  */
 ?>
-<div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ' ' . $status ?> clear-block">
+<div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ' ' . $status ?> clearfix">
   <?php print $picture ?>
 
   <?php if ($comment->new): ?>
@@ -42,7 +42,7 @@
   <div class="content">
     <?php print $content ?>
     <?php if ($signature): ?>
-    <div class="user-signature clear-block">
+    <div class="user-signature clearfix">
       <?php print $signature ?>
     </div>
     <?php endif; ?>

@@ -10,7 +10,7 @@
   <div class="content">
     <?php print $content ?>
     <?php if ($signature): ?>
-      <div class="clear-block">
+      <div class="clearfix">
         <div>—</div>
         <?php print $signature ?>
       </div>

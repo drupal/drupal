@@ -836,7 +836,7 @@ function theme_user_filter_form($form) {
  * @ingroup themeable
  */
 function theme_user_filters($form) {
-  $output = '<ul class="clear-block">';
+  $output = '<ul class="clearfix">';
   if (!empty($form['current'])) {
     foreach (element_children($form['current']) as $key) {
       $output .= '<li>' . drupal_render($form['current'][$key]) . '</li>';

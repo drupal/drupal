@@ -205,7 +205,7 @@ function field_multiple_value_form($field, $instance, $items, &$form, &$form_sta
       );
 
       // Add wrappers for the fields and 'more' button.
-      $form_element['#prefix'] = '<div class="clear-block" id="' . $field_name_url_str . '-add-more-wrapper"><div id="' . $field_name_url_str . '-items">';
+      $form_element['#prefix'] = '<div class="clearfix" id="' . $field_name_url_str . '-add-more-wrapper"><div id="' . $field_name_url_str . '-items">';
       $form_element[$field_name . '_add_more']['#prefix'] = '<div class="field-add-more">';
       $form_element[$field_name . '_add_more']['#suffix'] =  '</div></div></div>';
     }
