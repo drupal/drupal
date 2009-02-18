@@ -1,4 +1,5 @@
-// $Id: progress.js,v 1.21 2008/10/12 00:29:09 webchick Exp $
+// $Id: progress.js,v 1.22 2009/02/18 13:46:52 webchick Exp $
+(function($) {
 
 /**
  * A progressbar object. Initialized with the given id. Must be inserted into
@@ -105,3 +106,5 @@ Drupal.progressBar.prototype.displayError = function (string) {
     this.errorCallback(this);
   }
 };
+
+})(jQuery);

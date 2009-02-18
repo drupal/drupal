@@ -1,4 +1,5 @@
-// $Id: block.js,v 1.4 2008/10/29 10:01:27 dries Exp $
+// $Id: block.js,v 1.5 2009/02/18 13:46:53 webchick Exp $
+(function($) {
 
 /**
  * Move a block in the blocks table from one region to another via select list.
@@ -95,3 +96,5 @@ Drupal.behaviors.blockDrag = {
     };
   }
 };
+
+})(jQuery);

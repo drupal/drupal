@@ -1,4 +1,5 @@
-// $Id: system.js,v 1.18 2008/11/22 11:54:40 dries Exp $
+// $Id: system.js,v 1.19 2009/02/18 13:46:55 webchick Exp $
+(function($) {
 
 /**
  * Internal function to check using Ajax if clean URLs can be enabled on the
@@ -80,7 +81,7 @@ Drupal.behaviors.copyFieldValue = {
     for (var sourceId in Drupal.settings.copyFieldValue) {
       // Get the list of target fields.
       targetIds = Drupal.settings.copyFieldValue[sourceId];
-      if (!$('#'+ sourceId + '.copy-field-values-processed').size(), context) {
+      if (!$('#'+ sourceId + '.copy-field-values-processed', context).size()) {
         // Add the behavior to update target fields on blur of the primary field.
         sourceField = $('#' + sourceId);
         sourceField.bind('blur', function() {
@@ -132,3 +133,5 @@ Drupal.behaviors.poweredByPreview = {
     });
   }
 };
+
+})(jQuery);

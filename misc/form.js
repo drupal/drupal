@@ -1,4 +1,5 @@
-// $Id: form.js,v 1.2 2008/10/29 10:01:26 dries Exp $
+// $Id: form.js,v 1.3 2009/02/18 13:46:52 webchick Exp $
+(function($) {
 
 Drupal.behaviors.multiselectSelector = {
   attach: function(context) {
@@ -10,3 +11,5 @@ Drupal.behaviors.multiselectSelector = {
     });
   }
 };
+
+})(jQuery);

@@ -1,4 +1,5 @@
-// $Id: openid.js,v 1.7 2008/10/29 10:01:27 dries Exp $
+// $Id: openid.js,v 1.8 2009/02/18 13:46:54 webchick Exp $
+(function($) {
 
 Drupal.behaviors.openid = {
   attach: function(context) {
@@ -38,3 +39,5 @@ Drupal.behaviors.openid = {
       });
   }
 };
+
+})(jQuery);

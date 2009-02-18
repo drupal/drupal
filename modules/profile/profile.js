@@ -1,4 +1,5 @@
-// $Id: profile.js,v 1.3 2008/10/29 10:01:27 dries Exp $
+// $Id: profile.js,v 1.4 2009/02/18 13:46:54 webchick Exp $
+(function($) {
 
 /**
  * Add functionality to the profile drag and drop table.
@@ -54,3 +55,5 @@ Drupal.behaviors.profileDrag = {
     };
   }
 };
+
+})(jQuery);

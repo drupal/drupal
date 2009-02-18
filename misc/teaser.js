@@ -1,4 +1,5 @@
-// $Id: teaser.js,v 1.14 2008/10/29 10:01:26 dries Exp $
+// $Id: teaser.js,v 1.15 2009/02/18 13:46:52 webchick Exp $
+(function($) {
 
 /**
  * Auto-attach for teaser behavior.
@@ -96,3 +97,5 @@ Drupal.behaviors.teaser = {
     });
   }
 };
+
+})(jQuery);

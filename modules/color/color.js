@@ -1,4 +1,5 @@
-// $Id: color.js,v 1.8 2008/10/29 10:01:27 dries Exp $
+// $Id: color.js,v 1.9 2009/02/18 13:46:53 webchick Exp $
+(function($) {
 
 Drupal.behaviors.color = {
   attach: function(context) {
@@ -251,3 +252,5 @@ Drupal.behaviors.color = {
     preview();
   }
 };
+
+})(jQuery);

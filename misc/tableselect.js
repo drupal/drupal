@@ -1,4 +1,5 @@
-// $Id: tableselect.js,v 1.9 2008/10/29 10:01:26 dries Exp $
+// $Id: tableselect.js,v 1.10 2009/02/18 13:46:52 webchick Exp $
+(function($) {
 
 Drupal.behaviors.tableSelect = {
   attach: function(context) {
@@ -82,8 +83,10 @@ Drupal.tableSelectRange = function(from, to, state) {
       }
     }
     // A faster alternative to doing $(i).filter(to).length.
-    else if (jQuery.filter(to, [i]).r.length) {
+    else if ($.filter(to, [i]).r.length) {
       break;
     }
   }
 };
+
+})(jQuery);

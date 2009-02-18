@@ -1,4 +1,5 @@
-// $Id: batch.js,v 1.5 2008/10/29 10:01:26 dries Exp $
+// $Id: batch.js,v 1.6 2009/02/18 13:46:52 webchick Exp $
+(function($) {
 
 /**
  * Attaches the batch behavior to progress bars.
@@ -38,3 +39,5 @@ Drupal.behaviors.batch = {
     });
   }
 };
+
+})(jQuery);

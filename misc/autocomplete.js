@@ -1,4 +1,5 @@
-// $Id: autocomplete.js,v 1.25 2008/10/29 10:01:26 dries Exp $
+// $Id: autocomplete.js,v 1.26 2009/02/18 13:46:52 webchick Exp $
+(function($) {
 
 /**
  * Attaches the autocomplete behavior to all required fields.
@@ -298,3 +299,5 @@ Drupal.ACDB.prototype.cancel = function() {
   if (this.timer) clearTimeout(this.timer);
   this.searchString = '';
 };
+
+})(jQuery);

@@ -1,4 +1,5 @@
-// $Id: comment.js,v 1.7 2008/10/29 10:01:27 dries Exp $
+// $Id: comment.js,v 1.8 2009/02/18 13:46:54 webchick Exp $
+(function($) {
 
 Drupal.behaviors.comment = {
   attach: function(context) {
@@ -35,3 +36,5 @@ Drupal.comment.getCookie = function(name) {
 
   return returnValue;
 };
+
+})(jQuery);

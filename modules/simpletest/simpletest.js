@@ -1,4 +1,5 @@
-// $Id: simpletest.js,v 1.7 2009/01/19 10:15:54 dries Exp $
+// $Id: simpletest.js,v 1.8 2009/02/18 13:46:54 webchick Exp $
+(function($) {
 
 /**
  * Add the cool table collapsing on the testing overview page.
@@ -76,7 +77,7 @@ Drupal.behaviors.simpleTestSelectAll = {
           });
         }
         $(groupCheckbox).attr('checked', (checkedTests == testCheckboxes.length));
-      }
+      };
 
       // Have the single-test checkboxes follow the group checkbox.
       groupCheckbox.change(function() {
@@ -99,3 +100,5 @@ Drupal.behaviors.simpleTestSelectAll = {
     });
   }
 };
+
+})(jQuery);

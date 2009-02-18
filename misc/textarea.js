@@ -1,4 +1,5 @@
-// $Id: textarea.js,v 1.25 2008/12/20 18:24:34 dries Exp $
+// $Id: textarea.js,v 1.26 2009/02/18 13:46:52 webchick Exp $
+(function($) {
 
 Drupal.behaviors.textarea = {
   attach: function(context) {
@@ -36,3 +37,5 @@ Drupal.behaviors.textarea = {
     });
   }
 };
+
+})(jQuery);

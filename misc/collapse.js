@@ -1,4 +1,5 @@
-// $Id: collapse.js,v 1.18 2008/10/29 10:01:26 dries Exp $
+// $Id: collapse.js,v 1.19 2009/02/18 13:46:52 webchick Exp $
+(function($) {
 
 /**
  * Toggle the visibility of a fieldset using smooth animations
@@ -77,3 +78,5 @@ Drupal.behaviors.collapse = {
     });
   }
 };
+
+})(jQuery);

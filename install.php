@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.154 2009/02/10 05:43:06 webchick Exp $
+// $Id: install.php,v 1.155 2009/02/18 13:46:52 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -731,7 +731,7 @@ function install_tasks($profile, $task) {
       drupal_add_js('
 // Global Killswitch
 if (Drupal.jsEnabled) {
-  $(document).ready(function() {
+  jQuery(document).ready(function() {
     Drupal.cleanURLsInstallCheck();
   });
 }', 'inline');

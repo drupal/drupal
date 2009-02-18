@@ -1,3 +1,6 @@
+// $Id: content_types.js,v 1.2 2009/02/18 13:46:54 webchick Exp $
+(function($) {
+
 Drupal.behaviors.contentTypes = {
   attach: function() {
     if ($('#edit-type').val() == $('#edit-name').val().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/_+/g, '_') || $('#edit-type').val() == '') {
@@ -22,3 +25,5 @@ Drupal.behaviors.contentTypes = {
     }
   }
 };
+
+})(jQuery);
