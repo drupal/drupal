@@ -1382,51 +1382,65 @@ function file_download() {
  *   The base directory for the scan, without trailing slash.
  * @param $mask
  *   The preg_match() regular expression of the files to find.
- * @param $nomask
- *   The preg_match() regular expression of the files to ignore.
- * @param $callback
- *   The callback function to call for each match.
- * @param $recurse
- *   When TRUE, the directory scan will recurse the entire tree
- *   starting at the provided directory.
- * @param $key
- *   The key to be used for the returned array of files. Possible
- *   values are "filename", for the path starting with $dir,
- *   "basename", for the basename of the file, and "name" for the name
- *   of the file without an extension.
- * @param $min_depth
- *   Minimum depth of directories to return files from.
+ * @param $options
+ *   An associative array of additional options, with the following keys:
+ *   - 'nomask'
+ *     The preg_match() regular expression of the files to ignore. Defaults to
+ *     '/(\.\.?|CVS)$/'.
+ *   - 'callback'
+ *     The callback function to call for each match. There is no default
+ *     callback.
+ *   - 'recurse'
+ *     When TRUE, the directory scan will recurse the entire tree starting at
+ *     the provided directory. Defaults to TRUE.
+ *   - 'key'
+ *     The key to be used for the returned array of files. Possible values are
+ *     "filename", for the path starting with $dir, "basename", for the
+ *     basename of the file, and "name" for the name of the file without an
+ *     extension. Defaults to 'filename'.
+ *   - 'min_depth'
+ *     Minimum depth of directories to return files from. Defaults to 0.
  * @param $depth
  *   Current depth of recursion. This parameter is only used internally and
  *   should not be passed.
  * @return
  *   An associative array (keyed on the provided key) of objects with
- *   "path", "basename", and "name" members corresponding to the
+ *   "filename", "basename", and "name" members corresponding to the
  *   matching files.
  */
-function file_scan_directory($dir, $mask, $nomask = '/(\.\.?|CVS)$/', $callback = 0, $recurse = TRUE, $key = 'filename', $min_depth = 0, $depth = 0) {
-  $key = (in_array($key, array('filename', 'basename', 'name')) ? $key : 'filename');
+function file_scan_directory($dir, $mask, $options = array(), $depth = 0) {
+  // Merge in defaults.
+  $options += array(
+    'nomask' => '/(\.\.?|CVS)$/',
+    'callback' => 0,
+    'recurse' => TRUE,
+    'key' => 'filename',
+    'min_depth' => 0,
+  );
+
+  $options['key'] = (in_array($options['key'], array('filename', 'basename', 'name')) ? $options['key'] : 'filename');
   $files = array();
 
   if (is_dir($dir) && $handle = opendir($dir)) {
     while (FALSE !== ($file = readdir($handle))) {
-      if (!preg_match($nomask, $file) && $file[0] != '.') {
-        if (is_dir("$dir/$file") && $recurse) {
+      if (!preg_match($options['nomask'], $file) && $file[0] != '.') {
+        if (is_dir("$dir/$file") && $options['recurse']) {
           // Give priority to files in this folder by merging them in after any subdirectory files.
-          $files = array_merge(file_scan_directory("$dir/$file", $mask, $nomask, $callback, $recurse, $key, $min_depth, $depth + 1), $files);
+          $files = array_merge(file_scan_directory("$dir/$file", $mask, $options, $depth + 1), $files);
         }
-        elseif ($depth >= $min_depth && preg_match($mask, $file)) {
+        elseif ($depth >= $options['min_depth'] && preg_match($mask, $file)) {
           // Always use this match over anything already set in $files with the
-          // same $$key.
+          // same $$options['key'].
           $filename = "$dir/$file";
           $basename = basename($file);
           $name = substr($basename, 0, strrpos($basename, '.'));
-          $files[$$key] = new stdClass();
-          $files[$$key]->filename = $filename;
-          $files[$$key]->basename = $basename;
-          $files[$$key]->name = $name;
-          if ($callback) {
-            $callback($filename);
+          $files[${$options['key']}] = (object) array(
+            'filename' => $filename,
+            'basename' => $basename,
+            'name' => $name,
+          );
+          if ($options['callback']) {
+            $options['callback']($filename);
           }
         }
       }
