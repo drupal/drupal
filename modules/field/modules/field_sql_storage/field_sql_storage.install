@@ -43,9 +43,8 @@ function field_sql_storage_schema() {
 
   // Dynamic (data) tables.
   if (db_table_exists('field_config')) {
-    $fields = field_read_fields();
+    $fields = field_read_fields(array(), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
     drupal_load('module', 'field_sql_storage');
-    $schema = array();
     foreach ($fields as $field) {
       $schema += _field_sql_storage_schema($field);
     }
