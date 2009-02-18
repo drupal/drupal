@@ -1,5 +1,5 @@
 <?php
-// $Id: maintenance-page.tpl.php,v 1.4 2008/10/13 12:31:43 dries Exp $
+// $Id: maintenance-page.tpl.php,v 1.5 2009/02/18 14:28:23 webchick Exp $
 
 /**
  * @file
@@ -55,7 +55,7 @@
 
     </div> <!-- /header -->
 
-    <div id="container" class="clear-block">
+    <div id="container" class="clearfix">
 
       <?php if (!empty($left)): ?>
         <div id="sidebar-left" class="column sidebar">
@@ -68,7 +68,7 @@
         <div id="content">
           <?php if (!empty($title)): ?><h1 class="title" id="page-title"><?php print $title; ?></h1><?php endif; ?>
           <?php if (!empty($messages)): print $messages; endif; ?>
-          <div id="content-content" class="clear-block">
+          <div id="content-content" class="clearfix">
             <?php print $content; ?>
           </div> <!-- /content-content -->
         </div> <!-- /content -->

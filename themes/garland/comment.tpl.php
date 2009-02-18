@@ -1,9 +1,9 @@
 <?php
-// $Id: comment.tpl.php,v 1.11 2008/04/14 17:48:46 dries Exp $
+// $Id: comment.tpl.php,v 1.12 2009/02/18 14:28:25 webchick Exp $
 ?>
 <div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ' ' . $status; print ' ' . $zebra; ?>">
 
-  <div class="clear-block">
+  <div class="clearfix">
   <?php if ($submitted): ?>
     <span class="submitted"><?php print $submitted; ?></span>
   <?php endif; ?>
@@ -19,7 +19,7 @@
     <div class="content">
       <?php print $content ?>
       <?php if ($signature): ?>
-      <div class="clear-block">
+      <div class="clearfix">
         <div>—</div>
         <?php print $signature ?>
       </div>

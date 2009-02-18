@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.37 2009/02/03 18:55:32 dries Exp $
+// $Id: user.admin.inc,v 1.38 2009/02/18 14:28:23 webchick Exp $
 
 /**
  * @file
@@ -836,7 +836,7 @@ function theme_user_filter_form($form) {
  * @ingroup themeable
  */
 function theme_user_filters($form) {
-  $output = '<ul class="clear-block">';
+  $output = '<ul class="clearfix">';
   if (!empty($form['current'])) {
     foreach (element_children($form['current']) as $key) {
       $output .= '<li>' . drupal_render($form['current'][$key]) . '</li>';

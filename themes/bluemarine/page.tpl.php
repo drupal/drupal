@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.32 2008/11/24 15:27:12 dries Exp $
+// $Id: page.tpl.php,v 1.33 2009/02/18 14:28:24 webchick Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" dir="<?php print $language->dir ?>"
   <?php print $rdf_namespaces ?>>
@@ -12,7 +12,7 @@
 </head>
 
 <body class="<?php print $body_classes; ?>">
-  <div id="header" class="clear-block">
+  <div id="header" class="clearfix">
     <?php if ($search_box) { ?><div class="search-box"><?php print $search_box ?></div><?php }; ?>
     <?php if ($logo) { ?><a class="logo" href="<?php print $front_page ?>" title="<?php print t('Home') ?>"><img src="<?php print $logo ?>" alt="<?php print t('Home') ?>" /></a><?php } ?>
     <?php if ($site_name) { ?><h1 class='site-name'><a href="<?php print $front_page ?>" title="<?php print t('Home') ?>"><?php print $site_name ?></a></h1><?php }; ?>

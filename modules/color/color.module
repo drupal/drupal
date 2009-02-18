@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.55 2009/02/03 18:55:30 dries Exp $
+// $Id: color.module,v 1.56 2009/02/18 14:28:22 webchick Exp $
 
 /**
  * Implementation of hook_help().
@@ -229,11 +229,11 @@ function theme_color_scheme_form($form) {
   drupal_add_css($path . $info['preview_css']);
 
   $output  = '';
-  $output .= '<div class="color-form clear-block">';
+  $output .= '<div class="color-form clearfix">';
   // Color schemes
   $output .= drupal_render($form['scheme']);
   // Palette
-  $output .= '<div id="palette" class="clear-block">';
+  $output .= '<div id="palette" class="clearfix">';
   foreach (element_children($form['palette']) as $name) {
     $output .= drupal_render($form['palette'][$name]);
   }

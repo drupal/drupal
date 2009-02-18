@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.38 2009/02/03 18:55:30 dries Exp $
+// $Id: node.admin.inc,v 1.39 2009/02/18 14:28:22 webchick Exp $
 
 /**
  * @file
@@ -280,7 +280,7 @@ function theme_node_filter_form($form) {
  */
 function theme_node_filters($form) {
   $output = '';
-  $output .= '<ul class="clear-block">';
+  $output .= '<ul class="clearfix">';
   if (!empty($form['current'])) {
     foreach (element_children($form['current']) as $key) {
       $output .= '<li>' . drupal_render($form['current'][$key]) . '</li>';

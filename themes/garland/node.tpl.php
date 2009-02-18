@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.8 2009/01/26 14:08:44 dries Exp $
+// $Id: node.tpl.php,v 1.9 2009/02/18 14:28:25 webchick Exp $
 ?>
 <div id="node-<?php print $node->nid; ?>" class="node<?php if ($sticky) { print ' sticky'; } ?><?php if (!$status) { print ' node-unpublished'; } ?>">
 
@@ -13,11 +13,11 @@
     <span class="submitted"><?php print $submitted; ?></span>
   <?php endif; ?>
 
-  <div class="content clear-block">
+  <div class="content clearfix">
     <?php print $content ?>
   </div>
 
-  <div class="clear-block">
+  <div class="clearfix">
     <div class="meta">
     <?php if ($terms): ?>
       <div class="terms"><?php print $terms ?></div>

@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.23 2008/11/24 15:27:13 dries Exp $
+// $Id: page.tpl.php,v 1.24 2009/02/18 14:28:25 webchick Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
   "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" dir="<?php print $language->dir ?>"
@@ -15,10 +15,10 @@
   </head>
   <body class="<?php print $body_classes ?>">
 
-  <div id="header-region" class="clear-block"><?php print $header ?></div>
+  <div id="header-region" class="clearfix"><?php print $header ?></div>
 
   <div id="wrapper">
-    <div id="container" class="clear-block">
+    <div id="container" class="clearfix">
 
       <div id="header">
         <div id="logo-floater">
@@ -46,13 +46,13 @@
       <div id="center"><div id="squeeze"><div class="right-corner"><div class="left-corner">
           <?php print $breadcrumb; ?>
           <?php if ($mission): ?><div id="mission"><?php print $mission ?></div><?php endif; ?>
-          <?php if ($tabs): ?><div id="tabs-wrapper" class="clear-block"><?php endif; ?>
+          <?php if ($tabs): ?><div id="tabs-wrapper" class="clearfix"><?php endif; ?>
           <?php if ($title): ?><h2<?php print $tabs ? ' class="with-tabs"' : '' ?>><?php print $title ?></h2><?php endif; ?>
           <?php if ($tabs): ?><ul class="tabs primary"><?php print $tabs ?></ul></div><?php endif; ?>
           <?php if ($tabs2): ?><ul class="tabs secondary"><?php print $tabs2 ?></ul><?php endif; ?>
           <?php if ($show_messages && $messages): print $messages; endif; ?>
           <?php print $help; ?>
-          <div class="clear-block">
+          <div class="clearfix">
             <?php print $content ?>
           </div>
           <?php print $feed_icons ?>

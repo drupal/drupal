@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.tpl.php,v 1.7 2008/05/14 13:12:41 dries Exp $
+// $Id: comment.tpl.php,v 1.8 2009/02/18 14:28:22 webchick Exp $
 
 /**
  * @file
@@ -26,7 +26,7 @@
  * @see theme_comment()
  */
 ?>
-<div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ' ' . $status ?> clear-block">
+<div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ' ' . $status ?> clearfix">
   <?php print $picture ?>
 
   <?php if ($comment->new): ?>
@@ -42,7 +42,7 @@
   <div class="content">
     <?php print $content ?>
     <?php if ($signature): ?>
-    <div class="user-signature clear-block">
+    <div class="user-signature clearfix">
       <?php print $signature ?>
     </div>
     <?php endif; ?>

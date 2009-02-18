@@ -1,5 +1,5 @@
 <?php
-// $Id: forum-topic-navigation.tpl.php,v 1.3 2008/10/13 12:31:42 dries Exp $
+// $Id: forum-topic-navigation.tpl.php,v 1.4 2009/02/18 14:28:22 webchick Exp $
 
 /**
  * @file
@@ -24,7 +24,7 @@
  */
 ?>
 <?php if ($prev || $next): ?>
-  <div class="forum-topic-navigation clear-block">
+  <div class="forum-topic-navigation clearfix">
     <?php if ($prev): ?>
       <a href="<?php print $prev_url; ?>" class="topic-previous" title="<?php print t('Go to previous forum topic') ?>">‹ <?php print $prev_title ?></a>
     <?php endif; ?>

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.9 2009/02/05 03:42:58 webchick Exp $
+// $Id: node.tpl.php,v 1.10 2009/02/18 14:28:22 webchick Exp $
 
 /**
  * @file
@@ -49,7 +49,7 @@
  * @see template_preprocess_node()
  */
 ?>
-<div id="node-<?php print $node->nid; ?>" class="node<?php if ($sticky) { print ' sticky'; } ?><?php if (!$status) { print ' node-unpublished'; } ?> clear-block">
+<div id="node-<?php print $node->nid; ?>" class="node<?php if ($sticky) { print ' sticky'; } ?><?php if (!$status) { print ' node-unpublished'; } ?> clearfix">
 
 <?php print $picture ?>
 

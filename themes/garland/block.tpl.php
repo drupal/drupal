@@ -1,7 +1,7 @@
 <?php
-// $Id: block.tpl.php,v 1.4 2008/04/14 17:48:46 dries Exp $
+// $Id: block.tpl.php,v 1.5 2009/02/18 14:28:25 webchick Exp $
 ?>
-<div id="block-<?php print $block->module . '-' . $block->delta; ?>" class="clear-block block block-<?php print $block->module ?>">
+<div id="block-<?php print $block->module . '-' . $block->delta; ?>" class="clearfix block block-<?php print $block->module ?>">
 
 <?php if (!empty($block->subject)): ?>
   <h2><?php print $block->subject ?></h2>

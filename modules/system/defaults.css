@@ -1,4 +1,4 @@
-/* $Id: defaults.css,v 1.5 2007/10/02 12:10:40 dries Exp $ */
+/* $Id: defaults.css,v 1.6 2009/02/18 14:28:23 webchick Exp $ */
 
 /*
 ** HTML elements
@@ -31,7 +31,7 @@ th {
 ** Markup free clearing
 ** Details: http://www.positioniseverything.net/easyclearing.html
 */
-.clear-block:after {
+.clearfix:after {
   content: ".";
   display: block;
   height: 0;
@@ -39,15 +39,15 @@ th {
   visibility: hidden;
 }
 
-.clear-block {
+.clearfix {
   display: inline-block;
 }
 
 /* Hides from IE-mac \*/
-* html .clear-block {
+* html .clearfix {
   height: 1%;
 }
-.clear-block {
+.clearfix {
   display: block;
 }
 /* End hide from IE-mac */

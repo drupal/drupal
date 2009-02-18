@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.288 2009/02/03 18:55:31 dries Exp $
+// $Id: poll.module,v 1.289 2009/02/18 14:28:22 webchick Exp $
 
 /**
  * @file
@@ -219,7 +219,7 @@ function poll_form(&$node, $form_state) {
   $form['choice_wrapper'] = array(
     '#tree' => FALSE,
     '#weight' => -4,
-    '#prefix' => '<div class="clear-block" id="poll-choice-wrapper">',
+    '#prefix' => '<div class="clearfix" id="poll-choice-wrapper">',
     '#suffix' => '</div>',
   );
 

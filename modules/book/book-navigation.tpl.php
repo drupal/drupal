@@ -1,5 +1,5 @@
 <?php
-// $Id: book-navigation.tpl.php,v 1.2 2008/05/15 21:19:24 dries Exp $
+// $Id: book-navigation.tpl.php,v 1.3 2009/02/18 14:28:21 webchick Exp $
 
 /**
  * @file
@@ -35,7 +35,7 @@
     <?php print $tree; ?>
 
     <?php if ($has_links): ?>
-    <div class="page-links clear-block">
+    <div class="page-links clearfix">
       <?php if ($prev_url) : ?>
         <a href="<?php print $prev_url; ?>" class="page-previous" title="<?php print t('Go to previous page'); ?>"><?php print t('‹ ') . $prev_title; ?></a>
       <?php endif; ?>

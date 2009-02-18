@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.47 2008/12/19 15:42:26 dries Exp $ */
+/* $Id: style.css,v 1.48 2009/02/18 14:28:25 webchick Exp $ */
 
 /**
  * Generic elements
@@ -145,7 +145,7 @@ ol.task-list li.active {
   margin-right: 1em; /* LTR */
 }
 
-fieldset ul.clear-block li {
+fieldset ul.clearfix li {
   margin: 0;
   padding: 0;
   background-image: none;
