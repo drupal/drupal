@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.install,v 1.18 2009/01/21 14:42:16 dries Exp $
+// $Id: poll.install,v 1.19 2009/02/18 15:19:56 webchick Exp $
 
 /**
  * Implementation of hook_install().
@@ -92,13 +92,13 @@ function poll_schema() {
   );
 
   $schema['poll_vote'] = array(
-    'description' => 'Stores per-{users} votes for each {poll}.',
+    'description' => 'Stores per-{user} votes for each {poll}.',
     'fields' => array(
       'chid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => "The {users}'s vote for this poll.",
+        'description' => "The {user}'s vote for this poll.",
       ),
       'nid' => array(
         'type' => 'int',
@@ -111,7 +111,7 @@ function poll_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The {users}.uid this vote is from unless the voter was anonymous.',
+        'description' => 'The {user}.uid this vote is from unless the voter was anonymous.',
       ),
       'hostname' => array(
         'type' => 'varchar',

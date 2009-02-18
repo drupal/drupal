@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.39 2009/02/18 14:28:22 webchick Exp $
+// $Id: node.admin.inc,v 1.40 2009/02/18 15:19:56 webchick Exp $
 
 /**
  * @file
@@ -483,7 +483,7 @@ function node_admin_nodes() {
   $filter = node_build_filter_query();
 
   $sort = tablesort_sql($header, '', 'n.changed DESC');
-  $result = pager_query(db_rewrite_sql('SELECT n.*, u.name FROM {node} n '. $filter['join'] .' INNER JOIN {users} u ON n.uid = u.uid '. $filter['where'] . $sort), 50, 0, NULL, $filter['args']);
+  $result = pager_query(db_rewrite_sql('SELECT n.*, u.name FROM {node} n '. $filter['join'] .' INNER JOIN {user} u ON n.uid = u.uid '. $filter['where'] . $sort), 50, 0, NULL, $filter['args']);
 
   // Build the 'Update options' form.
   $form['options'] = array(

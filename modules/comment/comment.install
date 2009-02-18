@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.30 2009/01/31 16:31:59 webchick Exp $
+// $Id: comment.install,v 1.31 2009/02/18 15:19:55 webchick Exp $
 
 /**
  * Implementation of hook_install().
@@ -181,7 +181,7 @@ function comment_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The {users}.uid who authored the comment. If set to 0, this comment was created by an anonymous user.',
+        'description' => 'The {user}.uid who authored the comment. If set to 0, this comment was created by an anonymous user.',
       ),
       'subject' => array(
         'type' => 'varchar',
@@ -234,7 +234,7 @@ function comment_schema() {
         'type' => 'varchar',
         'length' => 60,
         'not null' => FALSE,
-        'description' => "The comment author's name. Uses {users}.name if the user is logged in, otherwise uses the value typed into the comment form.",
+        'description' => "The comment author's name. Uses {user}.name if the user is logged in, otherwise uses the value typed into the comment form.",
       ),
       'mail' => array(
         'type' => 'varchar',

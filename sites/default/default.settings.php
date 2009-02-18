@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.18 2008/12/23 19:59:17 dries Exp $
+// $Id: default.settings.php,v 1.19 2009/02/18 15:19:57 webchick Exp $
 
 /**
  * @file
@@ -124,7 +124,7 @@
  *
  *   $db_prefix = array(
  *     'default'   => 'main_',
- *     'users'     => 'shared_',
+ *     'user'      => 'shared_',
  *     'sessions'  => 'shared_',
  *     'role'      => 'shared_',
  *     'authmap'   => 'shared_',

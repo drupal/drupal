@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.296 2009/01/26 14:08:43 dries Exp $
+// $Id: statistics.module,v 1.297 2009/02/18 15:19:56 webchick Exp $
 
 /**
  * @file
@@ -232,7 +232,7 @@ function statistics_cron() {
  */
 function statistics_title_list($dbfield, $dbrows) {
   if (in_array($dbfield, array('totalcount', 'daycount', 'timestamp'))) {
-    return db_query_range(db_rewrite_sql("SELECT n.nid, n.title, u.uid, u.name FROM {node} n INNER JOIN {node_counter} s ON n.nid = s.nid INNER JOIN {users} u ON n.uid = u.uid WHERE s." . $dbfield . " != 0 AND n.status = 1 ORDER BY s." . $dbfield . " DESC"), 0, $dbrows);
+    return db_query_range(db_rewrite_sql("SELECT n.nid, n.title, u.uid, u.name FROM {node} n INNER JOIN {node_counter} s ON n.nid = s.nid INNER JOIN {user} u ON n.uid = u.uid WHERE s." . $dbfield . " != 0 AND n.status = 1 ORDER BY s." . $dbfield . " DESC"), 0, $dbrows);
   }
   return FALSE;
 }

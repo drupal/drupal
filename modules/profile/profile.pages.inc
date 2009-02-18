@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.pages.inc,v 1.10 2008/12/05 12:50:28 dries Exp $
+// $Id: profile.pages.inc,v 1.11 2009/02/18 15:19:56 webchick Exp $
 
 /**
  * @file
@@ -55,7 +55,7 @@ function profile_browse() {
     }
 
     // Extract the affected users:
-    $result = pager_query("SELECT u.uid, u.access FROM {users} u INNER JOIN {profile_value} v ON u.uid = v.uid WHERE v.fid = %d AND $query AND u.access != 0 AND u.status != 0 ORDER BY u.access DESC", 20, 0, NULL, $arguments);
+    $result = pager_query("SELECT u.uid, u.access FROM {user} u INNER JOIN {profile_value} v ON u.uid = v.uid WHERE v.fid = %d AND $query AND u.access != 0 AND u.status != 0 ORDER BY u.access DESC", 20, 0, NULL, $arguments);
 
     $content = '';
     while ($account = db_fetch_object($result)) {
@@ -88,7 +88,7 @@ function profile_browse() {
     }
 
     // Extract the affected users:
-    $result = pager_query('SELECT uid, access FROM {users} WHERE uid > 0 AND status != 0 AND access != 0 ORDER BY access DESC', 20, 0, NULL);
+    $result = pager_query('SELECT uid, access FROM {user} WHERE uid > 0 AND status != 0 AND access != 0 ORDER BY access DESC', 20, 0, NULL);
 
     $content = '';
     while ($account = db_fetch_object($result)) {

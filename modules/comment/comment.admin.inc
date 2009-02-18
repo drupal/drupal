@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.13 2009/01/28 07:43:26 webchick Exp $
+// $Id: comment.admin.inc,v 1.14 2009/02/18 15:19:55 webchick Exp $
 
 /**
  * @file
@@ -66,7 +66,7 @@ function comment_admin_overview($type = 'new', $arg) {
     'operations' => array('data' => t('Operations')),
   );
 
-  $result = pager_query('SELECT c.subject, c.nid, c.cid, c.comment, c.timestamp, c.status, c.name, c.homepage, u.name AS registered_name, u.uid, n.title as node_title FROM {comment} c INNER JOIN {users} u ON u.uid = c.uid INNER JOIN {node} n ON n.nid = c.nid WHERE c.status = %d' . tablesort_sql($header), 50, 0, NULL, $status);
+  $result = pager_query('SELECT c.subject, c.nid, c.cid, c.comment, c.timestamp, c.status, c.name, c.homepage, u.name AS registered_name, u.uid, n.title as node_title FROM {comment} c INNER JOIN {user} u ON u.uid = c.uid INNER JOIN {node} n ON n.nid = c.nid WHERE c.status = %d' . tablesort_sql($header), 50, 0, NULL, $status);
 
   // Build a table listing the appropriate comments.
   $options = array();
@@ -205,7 +205,7 @@ function comment_multiple_delete_confirm_submit($form, &$form_state) {
  *   The comment to be deleted.
  */
 function comment_delete($cid = NULL) {
-  $comment = db_fetch_object(db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comment} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.cid = %d', $cid));
+  $comment = db_fetch_object(db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comment} c INNER JOIN {user} u ON u.uid = c.uid WHERE c.cid = %d', $cid));
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
   $output = '';
 
@@ -272,7 +272,7 @@ function _comment_delete_thread($comment) {
   comment_invoke_comment($comment, 'delete');
 
   // Delete the comment's replies.
-  $result = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comment} c INNER JOIN {users} u ON u.uid = c.uid WHERE pid = %d', $comment->cid);
+  $result = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comment} c INNER JOIN {user} u ON u.uid = c.uid WHERE pid = %d', $comment->cid);
   while ($comment = db_fetch_object($result)) {
     $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
     _comment_delete_thread($comment);

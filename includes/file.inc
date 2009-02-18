@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.158 2009/02/18 15:07:26 webchick Exp $
+// $Id: file.inc,v 1.159 2009/02/18 15:19:54 webchick Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@
  *
  * Fields on the file object:
  * - fid - File ID
- * - uid - The {users}.uid of the user who is associated with the file.
+ * - uid - The {user}.uid of the user who is associated with the file.
  * - filename - Name of the file with no path components. This may differ from
  *   the basename of the filepath if the file is renamed to avoid overwriting
  *   an existing file.
