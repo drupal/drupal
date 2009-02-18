@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.203 2009/02/13 00:45:18 webchick Exp $
+// $Id: locale.inc,v 1.204 2009/02/18 15:07:27 webchick Exp $
 
 /**
  * @file
@@ -2617,7 +2617,7 @@ function locale_batch_by_language($langcode, $finished = NULL, $skip = array()) 
     // with names ending with $langcode.po. This allows for filenames
     // like node-module.de.po to let translators use small files and
     // be able to import in smaller chunks.
-    $files = array_merge($files, file_scan_directory(dirname($component->filename) . '/translations', '/(^|\.)' . $langcode . '\.po$/', '/(\.\.?|CVS)$/', 0, FALSE));
+    $files = array_merge($files, file_scan_directory(dirname($component->filename) . '/translations', '/(^|\.)' . $langcode . '\.po$/', array('recurse' => FALSE)));
     $components[] = $component->name;
   }
 
@@ -2649,7 +2649,7 @@ function locale_batch_by_component($components, $finished = '_locale_batch_syste
         // as $langcode.po or with names ending with $langcode.po. This allows
         // for filenames like node-module.de.po to let translators use small
         // files and be able to import in smaller chunks.
-        $files = array_merge($files, file_scan_directory(dirname($component->filename) . '/translations', '/(^|\.)(' . $language_list . ')\.po$/', '/(\.\.?|CVS)$/', 0, FALSE));
+        $files = array_merge($files, file_scan_directory(dirname($component->filename) . '/translations', '/(^|\.)(' . $language_list . ')\.po$/', array('recurse' => FALSE)));
       }
     }
     return _locale_batch_build($files, $finished);

@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.83 2009/02/03 17:30:10 dries Exp $
+// $Id: install.inc,v 1.84 2009/02/18 15:07:27 webchick Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -215,7 +215,7 @@ function drupal_detect_database_types() {
   // Because we have no registry yet, we need to also include the install.inc
   // file for the driver explicitly.
 
-  foreach (file_scan_directory(DRUPAL_ROOT . '/includes/database', '/^[a-z]*$/i', '/(\.\.?|CVS)$/', 0, FALSE) as $file) {
+  foreach (file_scan_directory(DRUPAL_ROOT . '/includes/database', '/^[a-z]*$/i', array('recurse' => FALSE)) as $file) {
     include_once "{$file->filename}/install.inc";
     include_once "{$file->filename}/database.inc";
     $drivers[$file->basename] = $file->filename;

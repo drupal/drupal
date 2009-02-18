@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.155 2009/02/18 13:46:52 webchick Exp $
+// $Id: install.php,v 1.156 2009/02/18 15:07:26 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -404,7 +404,7 @@ function install_settings_form_submit($form, &$form_state) {
  * Find all .profile files.
  */
 function install_find_profiles() {
-  return file_scan_directory('./profiles', '/\.profile$/', '/(\.\.?|CVS)$/', 0, TRUE, 'name', 0);
+  return file_scan_directory('./profiles', '/\.profile$/', array('key' => 'name'));
 }
 
 /**
@@ -490,7 +490,7 @@ function install_select_profile_form(&$form_state, $profile_files) {
  * Find all .po files for the current profile.
  */
 function install_find_locales($profilename) {
-  $locales = file_scan_directory('./profiles/' . $profilename . '/translations', '/\.po$/', '/(\.\.?|CVS)$/', 0, FALSE);
+  $locales = file_scan_directory('./profiles/' . $profilename . '/translations', '/\.po$/', array('recurse' => FALSE));
   array_unshift($locales, (object) array('name' => 'en'));
   return $locales;
 }
