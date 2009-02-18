@@ -132,7 +132,7 @@ function profile_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The {users}.uid of the profile user.',
+        'description' => 'The {user}.uid of the profile user.',
       ),
       'value' => array(
         'type' => 'text',

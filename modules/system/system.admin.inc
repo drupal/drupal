@@ -1784,7 +1784,7 @@ function system_status($check = FALSE) {
   }
   // MySQL import might have set the uid of the anonymous user to autoincrement
   // value. Let's try fixing it. See http://drupal.org/node/204411
-  db_query("UPDATE {users} SET uid = uid - uid WHERE name = '' AND pass = '' AND status = 0");
+  db_query("UPDATE {user} SET uid = uid - uid WHERE name = '' AND pass = '' AND status = 0");
 
   return theme('status_report', $requirements);
 }

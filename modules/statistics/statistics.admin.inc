@@ -17,7 +17,7 @@ function statistics_recent_hits() {
     array('data' => t('Operations'))
   );
 
-  $sql = 'SELECT a.aid, a.path, a.title, a.uid, u.name, a.timestamp FROM {accesslog} a LEFT JOIN {users} u ON u.uid = a.uid' . tablesort_sql($header);
+  $sql = 'SELECT a.aid, a.path, a.title, a.uid, u.name, a.timestamp FROM {accesslog} a LEFT JOIN {user} u ON u.uid = a.uid' . tablesort_sql($header);
 
   $result = pager_query($sql, 30);
   $rows = array();
@@ -82,7 +82,7 @@ function statistics_top_visitors() {
     array('data' => user_access('block IP addresses') ? t('Operations') : '', 'colspan' => 2),
   );
 
-  $sql = "SELECT COUNT(a.uid) AS hits, a.uid, u.name, a.hostname, SUM(a.timer) AS total, bl.iid FROM {accesslog} a LEFT JOIN {blocked_ips} bl ON a.hostname = bl.ip LEFT JOIN {users} u ON a.uid = u.uid GROUP BY a.hostname, a.uid, u.name, bl.iid" . tablesort_sql($header);
+  $sql = "SELECT COUNT(a.uid) AS hits, a.uid, u.name, a.hostname, SUM(a.timer) AS total, bl.iid FROM {accesslog} a LEFT JOIN {blocked_ips} bl ON a.hostname = bl.ip LEFT JOIN {user} u ON a.uid = u.uid GROUP BY a.hostname, a.uid, u.name, bl.iid" . tablesort_sql($header);
   $sql_cnt = "SELECT COUNT(DISTINCT(CONCAT(CAST(uid AS char), hostname))) FROM {accesslog}";
   $result = pager_query($sql, 30, 0, $sql_cnt);
 
@@ -138,7 +138,7 @@ function statistics_top_referrers() {
  * Menu callback; Displays recent page accesses.
  */
 function statistics_access_log($aid) {
-  $result = db_query('SELECT a.*, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE aid = %d', $aid);
+  $result = db_query('SELECT a.*, u.name FROM {accesslog} a LEFT JOIN {user} u ON a.uid = u.uid WHERE aid = %d', $aid);
   if ($access = db_fetch_object($result)) {
     $rows[] = array(
       array('data' => t('URL'), 'header' => TRUE),

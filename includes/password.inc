@@ -195,7 +195,7 @@ function user_hash_password($password, $count_log2 = 0) {
  * @param $password
  *   A plain-text password
  * @param $account
- *   A user object with at least the fields from the {users} table.
+ *   A user object with at least the fields from the {user} table.
  *
  * @return
  *   TRUE or FALSE.
@@ -227,7 +227,7 @@ function user_check_password($password, $account) {
  * on the fields in $account.
  *
  * @param $account
- *   A user object with at least the fields from the {users} table.
+ *   A user object with at least the fields from the {user} table.
  *
  * @return
  *   TRUE or FALSE.

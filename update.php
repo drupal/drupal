@@ -588,6 +588,8 @@ function update_prepare_d7_bootstrap() {
   // Allow the database system to work even though the registry has not
   // been created yet.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
+  update_prepare_d7_bootstrap_rename();
+
   include_once DRUPAL_ROOT . '/includes/install.inc';
   drupal_install_init_database();
   spl_autoload_unregister('drupal_autoload_class');
@@ -604,6 +606,23 @@ function update_prepare_d7_bootstrap() {
       throw $e;
     }
   }
+}
+
+/**
+ * Rename tables:
+ *   - {users} to {user}
+ *   - {users_roles} to {user_role}
+ *   - {sessions} to {session}
+ */
+function update_prepare_d7_bootstrap_rename() {
+  $ret = array();
+
+  if (db_table_exists('users')) {
+    db_rename_table($ret, 'users', 'user');
+    db_rename_table($ret, 'users_roles', 'user_role');
+  }
+
+  return $ret;
 }
 
 /**

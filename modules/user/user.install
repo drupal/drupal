@@ -18,7 +18,7 @@ function user_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => "User's {users}.uid.",
+        'description' => "User's {user}.uid.",
       ),
       'authname' => array(
         'type' => 'varchar',
@@ -87,7 +87,7 @@ function user_schema() {
     'primary key' => array('rid'),
   );
 
-  $schema['users'] = array(
+  $schema['user'] = array(
     'description' => 'Stores user data.',
     'fields' => array(
       'uid' => array(
@@ -201,7 +201,7 @@ function user_schema() {
     'primary key' => array('uid'),
   );
 
-  $schema['users_roles'] = array(
+  $schema['user_role'] = array(
     'description' => 'Maps users to roles.',
     'fields' => array(
       'uid' => array(
@@ -209,7 +209,7 @@ function user_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'Primary Key: {users}.uid for user.',
+        'description' => 'Primary Key: {user}.uid for user.',
       ),
       'rid' => array(
         'type' => 'int',
@@ -245,9 +245,9 @@ function user_update_7000(&$sandbox) {
   $hash_count_log2 = 11;
   // Multi-part update.
   if (!isset($sandbox['user_from'])) {
-    db_change_field($ret, 'users', 'pass', 'pass', array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''));
+    db_change_field($ret, 'user', 'pass', 'pass', array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''));
     $sandbox['user_from'] = 0;
-    $sandbox['user_count'] = db_result(db_query("SELECT COUNT(uid) FROM {users}"));
+    $sandbox['user_count'] = db_result(db_query("SELECT COUNT(uid) FROM {user}"));
   }
   else {
     require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
@@ -255,21 +255,21 @@ function user_update_7000(&$sandbox) {
     $has_rows = FALSE;
     // Update this many per page load.
     $count = 1000;
-    $result = db_query_range("SELECT uid, pass FROM {users} WHERE uid > 0 ORDER BY uid", $sandbox['user_from'], $count);
+    $result = db_query_range("SELECT uid, pass FROM {user} WHERE uid > 0 ORDER BY uid", $sandbox['user_from'], $count);
     while ($account = db_fetch_array($result)) {
        $has_rows = TRUE;
        $new_hash = user_hash_password($account['pass'], $hash_count_log2);
        if ($new_hash) {
          // Indicate an updated password.
          $new_hash  = 'U' . $new_hash;
-         db_query("UPDATE {users} SET pass = '%s' WHERE uid = %d", $new_hash, $account['uid']);
+         db_query("UPDATE {user} SET pass = '%s' WHERE uid = %d", $new_hash, $account['uid']);
        }
     }
     $ret['#finished'] = $sandbox['user_from']/$sandbox['user_count'];
     $sandbox['user_from'] += $count;
     if (!$has_rows) {
       $ret['#finished'] = 1;
-      $ret[] = array('success' => TRUE, 'query' => "UPDATE {users} SET pass = 'U' . user_hash_password(pass) WHERE uid > 0");
+      $ret[] = array('success' => TRUE, 'query' => "UPDATE {user} SET pass = 'U' . user_hash_password(pass) WHERE uid > 0");
     }
   }
   return $ret;
@@ -283,9 +283,9 @@ function user_update_7000(&$sandbox) {
 
 function user_update_7001() {
   $ret = array();
-  db_drop_field($ret, 'users', 'threshold');
-  db_drop_field($ret, 'users', 'mode');
-  db_drop_field($ret, 'users', 'sort');
+  db_drop_field($ret, 'user', 'threshold');
+  db_drop_field($ret, 'user', 'mode');
+  db_drop_field($ret, 'user', 'sort');
 
   return $ret;
 }
@@ -298,25 +298,25 @@ function user_update_7002(&$sandbox) {
 
   // Multi-part update.
   if (!isset($sandbox['user_from'])) {
-    db_change_field($ret, 'users', 'timezone', 'timezone', array('type' => 'varchar', 'length' => 32, 'not null' => FALSE));
+    db_change_field($ret, 'user', 'timezone', 'timezone', array('type' => 'varchar', 'length' => 32, 'not null' => FALSE));
     $sandbox['user_from'] = 0;
-    $sandbox['user_count'] = db_result(db_query("SELECT COUNT(uid) FROM {users}"));
+    $sandbox['user_count'] = db_result(db_query("SELECT COUNT(uid) FROM {user}"));
     $sandbox['user_not_migrated'] = 0;
   }
   else {
     $timezones = system_time_zones();
     // Update this many per page load.
     $count = 10000;
-    $contributed_date_module = db_column_exists('users', 'timezone_name');
-    $contributed_event_module = db_column_exists('users', 'timezone_id');
+    $contributed_date_module = db_column_exists('user', 'timezone_name');
+    $contributed_event_module = db_column_exists('user', 'timezone_id');
 
-    $results = db_query_range("SELECT uid FROM {users} ORDER BY uid", array(), $sandbox['user_from'], $count);
+    $results = db_query_range("SELECT uid FROM {user} ORDER BY uid", array(), $sandbox['user_from'], $count);
     foreach ($results as $account) {
       $timezone = NULL;
-      // If the contributed Date module has created a users.timezone_name
+      // If the contributed Date module has created a user.timezone_name
       // column, use this data to set each user's time zone.
       if ($contributed_date_module) {
-        $date_timezone = db_query("SELECT timezone_name FROM {users} WHERE uid = :uid", array(':uid' => $account->uid))->fetchField();
+        $date_timezone = db_query("SELECT timezone_name FROM {user} WHERE uid = :uid", array(':uid' => $account->uid))->fetchField();
         if (isset($timezones[$date_timezone])) {
           $timezone = $date_timezone;
         }
@@ -325,7 +325,7 @@ function user_update_7002(&$sandbox) {
       // use that information to update the user accounts.
       if (!$timezone && $contributed_event_module) {
         try {
-          $event_timezone = db_query("SELECT t.name FROM {users} u LEFT JOIN {event_timezones} t ON u.timezone_id = t.timezone WHERE u.uid = :uid", array(':uid' => $account->uid))->fetchField();
+          $event_timezone = db_query("SELECT t.name FROM {user} u LEFT JOIN {event_timezones} t ON u.timezone_id = t.timezone WHERE u.uid = :uid", array(':uid' => $account->uid))->fetchField();
           $event_timezone = str_replace(' ', '_', $event_timezone);
           if (isset($timezones[$event_timezone])) {
             $timezone = $event_timezone;
@@ -337,11 +337,11 @@ function user_update_7002(&$sandbox) {
         }
       }
       if ($timezone) {
-        db_query("UPDATE {users} SET timezone = :timezone WHERE uid = :uid", array(':timezone' => $timezone, ':uid' => $account->uid));
+        db_query("UPDATE {user} SET timezone = :timezone WHERE uid = :uid", array(':timezone' => $timezone, ':uid' => $account->uid));
       }
       else {
         $sandbox['user_not_migrated']++;
-        db_query("UPDATE {users} SET timezone = NULL WHERE uid = :uid", array(':uid' => $account->uid));
+        db_query("UPDATE {user} SET timezone = NULL WHERE uid = :uid", array(':uid' => $account->uid));
       }
       $sandbox['user_from']++;
     }
@@ -402,21 +402,21 @@ function user_update_7004(&$sandbox) {
   if (!isset($sandbox['progress'])) {
     // Check that the field hasn't been updated in an aborted run of this
     // update.
-    if (!db_column_exists('users', 'picture_fid')) {
+    if (!db_column_exists('user', 'picture_fid')) {
       // Add a new field for the fid.
-      db_add_field($ret, 'users', 'picture_fid', $picture_field);
+      db_add_field($ret, 'user', 'picture_fid', $picture_field);
     }
 
     // Initialize batch update information.
     $sandbox['progress'] = 0;
     $sandbox['last_user_processed'] = -1;
-    $sandbox['max'] = db_query("SELECT COUNT(*) FROM {users} WHERE picture <> ''")->fetchField();
+    $sandbox['max'] = db_query("SELECT COUNT(*) FROM {user} WHERE picture <> ''")->fetchField();
   }
 
   // As a batch operation move the photos into the {files} table and update the
   // {user} records.
   $limit = 500;
-  $result = db_query_range("SELECT uid, picture FROM {users} WHERE picture <> '' AND uid > :uid ORDER BY uid", array(':uid' => $sandbox['last_user_processed']), 0, $limit);
+  $result = db_query_range("SELECT uid, picture FROM {user} WHERE picture <> '' AND uid > :uid ORDER BY uid", array(':uid' => $sandbox['last_user_processed']), 0, $limit);
   foreach ($result as $user) {
     // Don't bother adding files that don't exist.
     if (!file_exists($user->picture)) {
@@ -439,7 +439,7 @@ function user_update_7004(&$sandbox) {
       $file = file_save($file);
     }
 
-    db_update('users')
+    db_update('user')
       ->fields(array('picture_fid' => $file->fid))
       ->condition('uid', $user->uid)
       ->execute();
@@ -456,8 +456,8 @@ function user_update_7004(&$sandbox) {
   // When we're finished, drop the old picture field and rename the new one to
   // replace it.
   if (isset($ret['#finished']) && $ret['#finished'] == 1) {
-    db_drop_field($ret, 'users', 'picture');
-    db_change_field($ret, 'users', 'picture_fid', 'picture', $picture_field);
+    db_drop_field($ret, 'user', 'picture');
+    db_change_field($ret, 'user', 'picture_fid', 'picture', $picture_field);
   }
 
   return $ret;

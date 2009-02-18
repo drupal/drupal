@@ -30,7 +30,7 @@ function blogapi_schema() {
         'type' => 'serial',
       ),
       'uid' => array(
-        'description' => 'The {users}.uid of the user who is associated with the file.',
+        'description' => 'The {user}.uid of the user who is associated with the file.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,

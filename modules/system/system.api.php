@@ -1423,7 +1423,7 @@ function hook_schema() {
  */
 function hook_schema_alter(&$schema) {
   // Add field to existing schema.
-  $schema['users']['fields']['timezone_id'] = array(
+  $schema['user']['fields']['timezone_id'] = array(
     'type' => 'int',
     'not null' => TRUE,
     'default' => 0,

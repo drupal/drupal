@@ -117,7 +117,7 @@ function block_schema() {
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => "The user's role ID from {users_roles}.rid.",
+        'description' => "The user's role ID from {user_role}.rid.",
       ),
     ),
     'primary key' => array('module', 'delta', 'rid'),

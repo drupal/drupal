@@ -1058,7 +1058,7 @@ function comment_render($node, $cid = 0) {
       $query->fields('c', array('cid', 'nid', 'pid', 'comment', 'subject', 'format', 'timestamp', 'name', 'mail', 'homepage', 'status') );
       $query->fields('u', array( 'uid', 'signature', 'picture', 'data', 'status') );
       $query->addField('u', 'name', 'registered_name');
-      $query->innerJoin('users', 'u', 'c.uid = u.uid');
+      $query->innerJoin('user', 'u', 'c.uid = u.uid');
       $query->condition('c.cid', $cid);
 
       if (!user_access('administer comments')) {
@@ -1084,7 +1084,7 @@ function comment_render($node, $cid = 0) {
 
       // Multiple comment view.
       $query_count = 'SELECT COUNT(*) FROM {comment} c WHERE c.nid = %d';
-      $query = 'SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.signature, u.picture, u.data, c.thread, c.status FROM {comment} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d';
+      $query = 'SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.signature, u.picture, u.data, c.thread, c.status FROM {comment} c INNER JOIN {user} u ON c.uid = u.uid WHERE c.nid = %d';
 
       $query_args = array($nid);
       if (!user_access('administer comments')) {
@@ -1292,7 +1292,7 @@ function comment_validate($edit) {
     $node = node_load($edit['nid']);
     if (variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) > COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
       if ($edit['name']) {
-        $query = db_select('users', 'u');
+        $query = db_select('user', 'u');
         $query->addField('u', 'uid', 'uid');
         $taken = $query->where('LOWER(name) = :name', array(':name' => $edit['name']))
           ->countQuery()
@@ -1635,7 +1635,7 @@ function comment_form_add_preview($form, &$form_state) {
   $output = ''; // Isn't this line a duplication of the first $output above?
 
   if ($edit['pid']) {
-    $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comment} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid AND c.status = :status', array(
+    $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comment} c INNER JOIN {user} u ON c.uid = u.uid WHERE c.cid = :cid AND c.status = :status', array(
       ':cid' => $edit['pid'],
       ':status' => COMMENT_PUBLISHED ))
       ->fetchObject();

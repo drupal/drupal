@@ -232,7 +232,7 @@ function statistics_cron() {
  */
 function statistics_title_list($dbfield, $dbrows) {
   if (in_array($dbfield, array('totalcount', 'daycount', 'timestamp'))) {
-    return db_query_range(db_rewrite_sql("SELECT n.nid, n.title, u.uid, u.name FROM {node} n INNER JOIN {node_counter} s ON n.nid = s.nid INNER JOIN {users} u ON n.uid = u.uid WHERE s." . $dbfield . " != 0 AND n.status = 1 ORDER BY s." . $dbfield . " DESC"), 0, $dbrows);
+    return db_query_range(db_rewrite_sql("SELECT n.nid, n.title, u.uid, u.name FROM {node} n INNER JOIN {node_counter} s ON n.nid = s.nid INNER JOIN {user} u ON n.uid = u.uid WHERE s." . $dbfield . " != 0 AND n.status = 1 ORDER BY s." . $dbfield . " DESC"), 0, $dbrows);
   }
   return FALSE;
 }
