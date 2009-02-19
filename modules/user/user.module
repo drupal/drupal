@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.964 2009/02/18 15:19:57 webchick Exp $
+// $Id: user.module,v 1.965 2009/02/19 12:09:30 dries Exp $
 
 /**
  * @file
@@ -572,10 +572,10 @@ function user_role_permissions($roles = array(), $reset = FALSE) {
     if ($fetch) {
       // Get from the database permissions that were not in the static variable.
       // Only role IDs with at least one permission assigned will return rows.
-      $result = db_query("SELECT r.rid, p.permission FROM {role} r INNER JOIN {role_permission} p ON p.rid = r.rid WHERE r.rid IN (:fetch)", array(':fetch' => $fetch));
+      $result = db_query("SELECT rid, permission FROM {role_permission} WHERE rid IN (:fetch)", array(':fetch' => $fetch));
 
-      while ($row = db_fetch_array($result)) {
-        $stored_permissions[$row['rid']][$row['permission']] = TRUE;
+      foreach ($result as $row) {
+        $stored_permissions[$row->rid][$row->permission] = TRUE;
       }
       foreach ($fetch as $rid) {
         // For every rid, we know we at least assigned an empty array.
