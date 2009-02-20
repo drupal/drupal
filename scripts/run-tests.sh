@@ -81,10 +81,7 @@ simpletest_script_command($args['concurrency'], $test_id, implode(",", $test_lis
 simpletest_script_reporter_display_results();
 
 // Cleanup our test results.
-db_delete("simpletest")
-  ->condition('test_id', $test_id)
-  ->execute();
-
+simpletest_clean_results_table($test_id);
 
 /**
  * Print help text.
