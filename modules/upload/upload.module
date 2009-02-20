@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.227 2009/02/03 18:55:32 dries Exp $
+// $Id: upload.module,v 1.228 2009/02/20 10:26:35 dries Exp $
 
 /**
  * @file
@@ -343,9 +343,9 @@ function upload_nodeapi_load($nodes, $types) {
 function upload_nodeapi_view($node, $teaser, $page) {
   if (isset($node->files) && user_access('view uploaded files')) {
     // Add the attachments list to node body with a heavy
-    // weight to ensure they're below other elements
+    // weight to ensure they're below other elements.
     if (count($node->files)) {
-      if (!$teaser && user_access('view uploaded files')) {
+      if (!$teaser) {
         $node->content['files'] = array(
           '#markup' => theme('upload_attachments', $node->files),
           '#weight' => 50,
