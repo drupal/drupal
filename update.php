@@ -588,12 +588,11 @@ function update_prepare_d7_bootstrap() {
   // Allow the database system to work even though the registry has not
   // been created yet.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
-  update_prepare_d7_bootstrap_rename();
-
   include_once DRUPAL_ROOT . '/includes/install.inc';
   drupal_install_init_database();
   spl_autoload_unregister('drupal_autoload_class');
   spl_autoload_unregister('drupal_autoload_interface');
+  update_prepare_d7_bootstrap_rename();
   // The new {blocked_ips} table is used in Drupal 7 to store a list of
   // banned IP addresses. If this table doesn't exist then we are still
   // running on a Drupal 6 database, so suppress the unavoidable errors
