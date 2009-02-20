@@ -343,9 +343,9 @@ function upload_nodeapi_load($nodes, $types) {
 function upload_nodeapi_view($node, $teaser, $page) {
   if (isset($node->files) && user_access('view uploaded files')) {
     // Add the attachments list to node body with a heavy
-    // weight to ensure they're below other elements
+    // weight to ensure they're below other elements.
     if (count($node->files)) {
-      if (!$teaser && user_access('view uploaded files')) {
+      if (!$teaser) {
         $node->content['files'] = array(
           '#markup' => theme('upload_attachments', $node->files),
           '#weight' => 50,
