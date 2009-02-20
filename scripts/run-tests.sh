@@ -1,5 +1,5 @@
 <?php
-// $Id: run-tests.sh,v 1.23 2009/02/01 16:42:26 dries Exp $
+// $Id: run-tests.sh,v 1.24 2009/02/20 03:37:58 webchick Exp $
 /**
  * @file
  * This script runs Drupal tests from command line.
@@ -81,10 +81,7 @@ simpletest_script_command($args['concurrency'], $test_id, implode(",", $test_lis
 simpletest_script_reporter_display_results();
 
 // Cleanup our test results.
-db_delete("simpletest")
-  ->condition('test_id', $test_id)
-  ->execute();
-
+simpletest_clean_results_table($test_id);
 
 /**
  * Print help text.

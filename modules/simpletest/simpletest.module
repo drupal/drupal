@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.36 2009/02/13 00:39:01 webchick Exp $
+// $Id: simpletest.module,v 1.37 2009/02/20 03:37:58 webchick Exp $
 
 /**
  * Implementation of hook_help().
@@ -123,10 +123,7 @@ function simpletest_test_form() {
     }
 
     // Clear test results.
-    if (variable_get('simpletest_clear_results', TRUE)) {
-      db_query('DELETE FROM {simpletest} WHERE test_id = %d', $_SESSION['test_id']);
-      db_query('DELETE FROM {simpletest_test_id} WHERE test_id = %d', $_SESSION['test_id']);
-    }
+    simpletest_clean_results_table($_SESSION['test_id']);
     unset($_SESSION['test_id']);
 
     $all_ok = TRUE;
@@ -515,7 +512,8 @@ function simpletest_categorize_tests($tests) {
 function simpletest_clean_environment() {
   simpletest_clean_database();
   simpletest_clean_temporary_directories();
-  simpletest_clean_results_table();
+  $count = simpletest_clean_results_table();
+  drupal_set_message(t('Removed @count test results.', array('@count' => $count)));
 }
 
 /**
@@ -564,16 +562,34 @@ function simpletest_clean_temporary_directories() {
 }
 
 /**
- * Clear the test results tables.
+ * Clear the test result tables.
+ *
+ * @param $test_id
+ *   Test ID to remove results for, or NULL to remove all results.
+ * @return
+ *   The number of results removed or FALSE.
  */
-function simpletest_clean_results_table() {
+function simpletest_clean_results_table($test_id = NULL) {
   if (variable_get('simpletest_clear_results', TRUE)) {
-    $count = db_result(db_query('SELECT COUNT(test_id) FROM {simpletest_test_id}'));
+    if ($test_id) {
+      $count = db_result(db_query('SELECT COUNT(test_id) FROM {simpletest_test_id} WHERE test_id = :test_id', array(':test_id' => $test_id)));
 
-    // Clear test results.
-    db_query('DELETE FROM {simpletest}');
-    db_query('DELETE FROM {simpletest_test_id}');
+      db_delete("simpletest")
+        ->condition('test_id', $test_id)
+        ->execute();
+      db_delete("simpletest_test_id")
+        ->condition('test_id', $test_id)
+        ->execute();
+    }
+    else {
+      $count = db_result(db_query('SELECT COUNT(test_id) FROM {simpletest_test_id}'));
 
-    drupal_set_message(t('Removed @count test results.', array('@count' => $count)));
+      // Clear test results.
+      db_delete("simpletest")->execute();
+      db_delete("simpletest_test_id")->execute();
+    }
+
+    return $count;
   }
+  return FALSE;
 }
