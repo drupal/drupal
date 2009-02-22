@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.85 2009/02/22 17:55:30 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.86 2009/02/22 20:12:03 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -954,6 +954,7 @@ class DrupalWebTestCase {
         CURLOPT_COOKIEJAR => $this->cookieFile,
         CURLOPT_URL => $base_url,
         CURLOPT_FOLLOWLOCATION => TRUE,
+        CURLOPT_MAXREDIRS => 5,
         CURLOPT_RETURNTRANSFER => TRUE,
         CURLOPT_SSL_VERIFYPEER => FALSE,  // Required to make the tests run on https://
         CURLOPT_SSL_VERIFYHOST => FALSE,  // Required to make the tests run on https://
