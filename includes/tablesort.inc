@@ -9,6 +9,120 @@
  * column headers that the user can click on to sort the table by that column.
  */
 
+
+/**
+ * Query extender class for tablesort queries.
+ */
+class TableSort extends SelectQueryExtender {
+
+  /**
+   * The array of fields that can be sorted by.
+   *
+   * @var array
+   */
+  protected $header = array();
+
+  public function execute() {
+    $ts = $this->init();
+    if ($ts['sql']) {
+      // Based on code from db_escape_table(), but this can also contain a dot.
+      $field = preg_replace('/[^A-Za-z0-9_.]+/', '', $ts['sql']);
+
+      // Sort order can only be ASC or DESC.
+      $sort = drupal_strtoupper($ts['sort']);
+      $sort = in_array($sort, array('ASC', 'DESC')) ? $sort : '';
+      $this->orderBy($field, $sort);
+    }
+    return $this->query->execute();
+  }
+
+  public function setHeader(Array $header) {
+    $this->header = $header;
+    return $this;
+  }
+
+  /**
+   * Initialize the table sort context.
+   */
+  protected function init() {
+    $ts = $this->order();
+    $ts['sort'] = $this->getSort();
+    $ts['query_string'] = $this->getQueryString();
+    return $ts;
+  }
+
+  /**
+   * Determine the current sort direction.
+   *
+   * @param $headers
+   *   An array of column headers in the format described in theme_table().
+   * @return
+   *   The current sort direction ("asc" or "desc").
+   */
+  protected function getSort() {
+    if (isset($_GET['sort'])) {
+      return ($_GET['sort'] == 'desc') ? 'desc' : 'asc';
+    }
+    // User has not specified a sort. Use default if specified; otherwise use "asc".
+    else {
+      foreach ($this->header as $header) {
+        if (is_array($header) && array_key_exists('sort', $header)) {
+          return $header['sort'];
+        }
+      }
+    }
+    return 'asc';
+  }
+
+  /**
+   * Compose a query string to append to table sorting requests.
+   *
+   * @return
+   *   A query string that consists of all components of the current page request
+   *   except for those pertaining to table sorting.
+   */
+  protected function getQueryString() {
+    return drupal_query_string_encode($_REQUEST, array_merge(array('q', 'sort', 'order'), array_keys($_COOKIE)));
+  }
+
+  /**
+   * Determine the current sort criterion.
+   *
+   * @param $headers
+   *   An array of column headers in the format described in theme_table().
+   * @return
+   *   An associative array describing the criterion, containing the keys:
+   *   - "name": The localized title of the table column.
+   *   - "sql": The name of the database field to sort on.
+   */
+  protected function order() {
+    $order = isset($_GET['order']) ? $_GET['order'] : '';
+    foreach ($this->header as $header) {
+      if (isset($header['data']) && $order == $header['data']) {
+        return array('name' => $header['data'], 'sql' => isset($header['field']) ? $header['field'] : '');
+      }
+
+      if (isset($header['sort']) && ($header['sort'] == 'asc' || $header['sort'] == 'desc')) {
+        $default = array('name' => $header['data'], 'sql' => isset($header['field']) ? $header['field'] : '');
+      }
+    }
+
+    if (isset($default)) {
+      return $default;
+    }
+    else {
+      // The first column specified is initial 'order by' field unless otherwise specified
+      if (is_array($this->header[0])) {
+        $this->header[0] += array('data' => NULL, 'field' => NULL);
+        return array('name' => $this->header[0]['data'], 'sql' => $this->header[0]['field']);
+      }
+      else {
+        return array('name' => $this->header[0]);
+      }
+    }
+  }
+}
+
 /**
  * Initialize the table sort context.
  */

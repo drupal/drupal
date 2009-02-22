@@ -108,6 +108,8 @@ interface QueryAlterableInterface {
    *
    * @param $tag
    *   The tag to add.
+   * @return
+   *   The called object.
    */
   public function addTag($tag);
 
@@ -154,7 +156,8 @@ interface QueryAlterableInterface {
    *   follows the same rules as any other PHP identifier.
    * @param $object
    *   The additional data to add to the query. May be any valid PHP variable.
-   *
+   * @return
+   *   The called object.
    */
   public function addMetaData($key, $object);
 
@@ -201,7 +204,12 @@ abstract class Query {
   abstract protected function execute();
 
   /**
-   * Returns the query as a prepared statement string.
+   * __toString() magic method.
+   *
+   * The toString operation is how we compile a query object to a prepared statement.
+   *
+   * @return
+   *   A prepared statement query string for this object.
    */
   abstract public function __toString();
 }

@@ -2024,7 +2024,18 @@ function node_build_multiple($nodes, $teaser = TRUE, $weight = 0) {
  * Menu callback; Generate a listing of promoted nodes.
  */
 function node_page_default() {
-  $nids = pager_query(db_rewrite_sql('SELECT n.nid, n.sticky, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC'), variable_get('default_nodes_main', 10))->fetchCol();
+  $select = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('promote', 1)
+    ->condition('status', 1)
+    ->orderBy('sticky', 'DESC')
+    ->orderBy('created', 'DESC')
+    ->extend('PagerDefault')
+    ->limit(variable_get('default_nodes_main', 10))
+    ->addTag('node_access');
+
+  $nids = $select->execute()->fetchCol();
+
   if (!empty($nids)) {
     $nodes = node_load_multiple($nids);
     $build = node_build_multiple($nodes);

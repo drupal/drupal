@@ -7,9 +7,618 @@
  */
 
 /**
+ * Interface for extendable query objects.
+ *
+ * "Extenders" follow the "Decorator" OOP design pattern.  That is, they wrap
+ * and "decorate" another object.  In our case, they implement the same interface
+ * as select queries and wrap a select query, to which they delegate almost all
+ * operations.  Subclasses of this class may implement additional methods or
+ * override existing methods as appropriate.  Extenders may also wrap other
+ * extender objects, allowing for arbitrarily complex "enhanced" queries.
+ */
+interface QueryExtendableInterface {
+
+  /**
+   * Enhance this object by wrapping it in an extender object.
+   *
+   * @param $extender_name
+   *   The base name of the extending class.  The base name will be checked
+   *   against the current database connection to allow driver-specific subclasses
+   *   as well, using the same logic as the query objects themselves.  For example,
+   *   PagerDefault_mysql is the MySQL-specific override for PagerDefault.
+   * @return
+   *   The extender object, which now contains a reference to this object.
+   */
+  public function extend($extender_name);
+}
+
+/**
+ * Interface definition for a Select Query object.
+ */
+interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableInterface, QueryExtendableInterface {
+
+  /* Alter accessors to expose the query data to alter hooks. */
+
+  /**
+   * Returns a reference to the fields array for this query.
+   *
+   * Because this method returns by reference, alter hooks may edit the fields
+   * array directly to make their changes. If just adding fields, however, the
+   * use of addField() is preferred.
+   *
+   * Note that this method must be called by reference as well:
+   *
+   * @code
+   * $fields =& $query->getFields();
+   * @endcode
+   *
+   * @return
+   *   A reference to the fields array structure.
+   */
+  public function &getFields();
+
+  /**
+   * Returns a reference to the expressions array for this query.
+   *
+   * Because this method returns by reference, alter hooks may edit the expressions
+   * array directly to make their changes. If just adding expressions, however, the
+   * use of addExpression() is preferred.
+   *
+   * Note that this method must be called by reference as well:
+   *
+   * @code
+   * $fields =& $query->getExpressions();
+   * @endcode
+   *
+   * @return
+   *   A reference to the expression array structure.
+   */
+  public function &getExpressions();
+
+  /**
+   * Returns a reference to the order by array for this query.
+   *
+   * Because this method returns by reference, alter hooks may edit the order-by
+   * array directly to make their changes. If just adding additional ordering
+   * fields, however, the use of orderBy() is preferred.
+   *
+   * Note that this method must be called by reference as well:
+   *
+   * @code
+   * $fields =& $query->getOrderBy();
+   * @endcode
+   *
+   * @return
+   *   A reference to the expression array structure.
+   */
+  public function &getOrderBy();
+
+  /**
+   * Returns a reference to the tables array for this query.
+   *
+   * Because this method returns by reference, alter hooks may edit the tables
+   * array directly to make their changes. If just adding tables, however, the
+   * use of the join() methods is preferred.
+   *
+   * Note that this method must be called by reference as well:
+   *
+   * @code
+   * $fields =& $query->getTables();
+   * @endcode
+   *
+   * @return
+   *   A reference to the tables array structure.
+   */
+  public function &getTables();
+
+  /**
+   * Compiles and returns an associative array of the arguments for this prepared statement.
+   *
+   * @return
+   *   An associative array of all placeholder arguments for this query.
+   */
+  public function getArguments();
+
+  /* Query building operations */
+
+  /**
+   * Sets this query to be DISTINCT.
+   *
+   * @param $distinct
+   *   TRUE to flag this query DISTINCT, FALSE to disable it.
+   * @return
+   *   The called object.
+   */
+  public function distinct($distinct = TRUE);
+
+  /**
+   * Adds a field to the list to be SELECTed.
+   *
+   * @param $table_alias
+   *   The name of the table from which the field comes, as an alias. Generally
+   *   you will want to use the return value of join() here to ensure that it is
+   *   valid.
+   * @param $field
+   *   The name of the field.
+   * @param $alias
+   *   The alias for this field. If not specified, one will be generated
+   *   automatically based on the $table_alias and $field. The alias will be
+   *   checked for uniqueness, so the requested alias may not be the alias
+   *   that is assigned in all cases.
+   * @return
+   *   The unique alias that was assigned for this field.
+   */
+  public function addField($table_alias, $field, $alias = NULL);
+
+  /**
+   * Add multiple fields from the same table to be SELECTed.
+   *
+   * This method does not return the aliases set for the passed fields. In the
+   * majority of cases that is not a problem, as the alias will be the field
+   * name. However, if you do need to know the alias you can call getFields()
+   * and examine the result to determine what alias was created. Alternatively,
+   * simply use addField() for the few fields you care about and this method for
+   * the rest.
+   *
+   * @param $table_alias
+   *   The name of the table from which the field comes, as an alias. Generally
+   *   you will want to use the return value of join() here to ensure that it is
+   *   valid.
+   * @param $fields
+   *   An indexed array of fields present in the specified table that should be
+   *   included in this query. If not specified, $table_alias.* will be generated
+   *   without any aliases.
+   * @return
+   *   The called object.
+   */
+  public function fields($table_alias, array $fields = array());
+
+  /**
+   * Adds an expression to the list of "fields" to be SELECTed.
+   *
+   * An expression can be any arbitrary string that is valid SQL. That includes
+   * various functions, which may in some cases be database-dependent. This
+   * method makes no effort to correct for database-specific functions.
+   *
+   * @param $expression
+   *   The expression string. May contain placeholders.
+   * @param $alias
+   *   The alias for this expression. If not specified, one will be generated
+   *   automatically in the form "expression_#". The alias will be checked for
+   *   uniqueness, so the requested alias may not be the alias that is assigned
+   *   in all cases.
+   * @param $arguments
+   *   Any placeholder arguments needed for this expression.
+   * @return
+   *   The unique alias that was assigned for this expression.
+   */
+  public function addExpression($expression, $alias = NULL, $arguments = array());
+
+  /**
+   * Default Join against another table in the database.
+   *
+   * This method is a convenience method for innerJoin().
+   *
+   * @param $table
+   *   The table against which to join.
+   * @param $alias
+   *   The alias for the table. In most cases this should be the first letter
+   *   of the table, or the first letter of each "word" in the table.
+   * @param $condition
+   *   The condition on which to join this table. If the join requires values,
+   *   this clause should use a named placeholder and the value or values to
+   *   insert should be passed in the 4th parameter. For the first table joined
+   *   on a query, this value is ignored as the first table is taken as the base
+   *   table.
+   * @param $arguments
+   *   An array of arguments to replace into the $condition of this join.
+   * @return
+   *   The unique alias that was assigned for this table.
+   */
+  public function join($table, $alias = NULL, $condition = NULL, $arguments = array());
+
+  /**
+   * Inner Join against another table in the database.
+   *
+   * @param $table
+   *   The table against which to join.
+   * @param $alias
+   *   The alias for the table. In most cases this should be the first letter
+   *   of the table, or the first letter of each "word" in the table.
+   * @param $condition
+   *   The condition on which to join this table. If the join requires values,
+   *   this clause should use a named placeholder and the value or values to
+   *   insert should be passed in the 4th parameter. For the first table joined
+   *   on a query, this value is ignored as the first table is taken as the base
+   *   table.
+   * @param $arguments
+   *   An array of arguments to replace into the $condition of this join.
+   * @return
+   *   The unique alias that was assigned for this table.
+   */
+  public function innerJoin($table, $alias = NULL, $condition = NULL, $arguments = array());
+
+  /**
+   * Left Outer Join against another table in the database.
+   *
+   * @param $table
+   *   The table against which to join.
+   * @param $alias
+   *   The alias for the table. In most cases this should be the first letter
+   *   of the table, or the first letter of each "word" in the table.
+   * @param $condition
+   *   The condition on which to join this table. If the join requires values,
+   *   this clause should use a named placeholder and the value or values to
+   *   insert should be passed in the 4th parameter. For the first table joined
+   *   on a query, this value is ignored as the first table is taken as the base
+   *   table.
+   * @param $arguments
+   *   An array of arguments to replace into the $condition of this join.
+   * @return
+   *   The unique alias that was assigned for this table.
+   */
+  public function leftJoin($table, $alias = NULL, $condition = NULL, $arguments = array());
+
+  /**
+   * Right Outer Join against another table in the database.
+   *
+   * @param $table
+   *   The table against which to join.
+   * @param $alias
+   *   The alias for the table. In most cases this should be the first letter
+   *   of the table, or the first letter of each "word" in the table.
+   * @param $condition
+   *   The condition on which to join this table. If the join requires values,
+   *   this clause should use a named placeholder and the value or values to
+   *   insert should be passed in the 4th parameter. For the first table joined
+   *   on a query, this value is ignored as the first table is taken as the base
+   *   table.
+   * @param $arguments
+   *   An array of arguments to replace into the $condition of this join.
+   * @return
+   *   The unique alias that was assigned for this table.
+   */
+  public function rightJoin($table, $alias = NULL, $condition = NULL, $arguments = array());
+
+  /**
+   * Join against another table in the database.
+   *
+   * This method does the "hard" work of queuing up a table to be joined against.
+   * In some cases, that may include dipping into the Schema API to find the necessary
+   * fields on which to join.
+   *
+   * @param $type
+   *   The type of join. Typically one one of INNER, LEFT OUTER, and RIGHT OUTER.
+   * @param $table
+   *   The table against which to join. May be a string or another SelectQuery
+   *   object. If a query object is passed, it will be used as a subselect.
+   * @param $alias
+   *   The alias for the table. In most cases this should be the first letter
+   *   of the table, or the first letter of each "word" in the table. If omitted,
+   *   one will be dynamically generated.
+   * @param $condition
+   *   The condition on which to join this table. If the join requires values,
+   *   this clause should use a named placeholder and the value or values to
+   *   insert should be passed in the 4th parameter. For the first table joined
+   *   on a query, this value is ignored as the first table is taken as the base
+   *   table.
+   * @param $arguments
+   *   An array of arguments to replace into the $condition of this join.
+   * @return
+   *   The unique alias that was assigned for this table.
+   */
+  public function addJoin($type, $table, $alias = NULL, $condition = NULL, $arguments = array());
+
+  /**
+   * Orders the result set by a given field.
+   *
+   * If called multiple times, the query will order by each specified field in the
+   * order this method is called.
+   *
+   * @param $field
+   *   The field on which to order.
+   * @param $direction
+   *   The direction to sort. Legal values are "ASC" and "DESC".
+   * @return
+   *   The called object.
+   */
+  public function orderBy($field, $direction = 'ASC');
+
+  /**
+   * Restricts a query to a given range in the result set.
+   *
+   * If this method is called with no parameters, will remove any range
+   * directives that have been set.
+   *
+   * @param $start
+   *   The first record from the result set to return. If NULL, removes any
+   *   range directives that are set.
+   * @param $limit
+   *   The number of records to return from the result set.
+   * @return
+   *   The called object.
+   */
+  public function range($start = NULL, $length = NULL);
+
+  /**
+   * Groups the result set by the specified field.
+   *
+   * @param $field
+   *   The field on which to group. This should be the field as aliased.
+   * @return
+   *   The called object.
+   */
+  public function groupBy($field);
+
+  /**
+   * Get the equivalent COUNT query of this query as a new query object.
+   *
+   * @return
+   *   A new SelectQuery object with no fields or expressions besides COUNT(*).
+   */
+  public function countQuery();
+
+  /**
+   * Clone magic method.
+   *
+   * Select queries have dependent objects that must be deep-cloned.  The
+   * connection object itself, however, should not be cloned as that would
+   * duplicate the connection itself.
+   */
+  public function __clone();
+}
+
+/**
+ * The base extender class for Select queries.
+ */
+class SelectQueryExtender implements SelectQueryInterface {
+
+  /**
+   * The SelectQuery object we are extending/decorating.
+   *
+   * @var SelectQueryInterface
+   */
+  protected $query;
+
+  /**
+   * The connection object on which to run this query.
+   *
+   * @var DatabaseConnection
+   */
+  protected $connection;
+
+
+  public function __construct(SelectQueryInterface $query, DatabaseConnection $connection) {
+    $this->query = $query;
+    $this->connection = $connection;
+  }
+
+  /* Implementations of QueryAlterableInterface. */
+
+  public function addTag($tag) {
+    $this->query->addTag($tag);
+    return $this;
+  }
+
+  public function hasTag($tag) {
+    return $this->query->hasTag($tag);
+  }
+
+  public function hasAllTags() {
+    return call_user_func_array(array($this->query, 'hasAllTags', func_get_args()));
+  }
+
+  public function hasAnyTag() {
+    return call_user_func_array(array($this->query, 'hasAnyTags', func_get_args()));
+  }
+
+  public function addMetaData($key, $object) {
+    $this->query->addMetaData($key, $object);
+    return $this;
+  }
+
+  public function getMetaData($key) {
+    return $this->query->getMetaData($key);
+  }
+
+  /* Implementations of QueryConditionInterface for the WHERE clause. */
+
+  public function condition($field, $value = NULL, $operator = '=') {
+    $this->query->condition($field, $value, $operator);
+    return $this;
+  }
+
+  public function &conditions() {
+    return $this->query->conditions();
+  }
+
+  public function arguments() {
+    return $this->query->arguments();
+  }
+
+  public function where($snippet, $args = array()) {
+    $this->query->where($snippet, $args);
+    return $this;
+  }
+
+  public function compile(DatabaseConnection $connection) {
+    return $this->query->compile($connection);
+  }
+
+  /* Implmeentations of QueryConditionInterface for the HAVING clause. */
+
+  public function havingCondition($field, $value = NULL, $operator = '=') {
+    $this->query->condition($field, $value, $operator, $num_args);
+    return $this;
+  }
+
+  public function &havingConditions() {
+    return $this->having->conditions();
+  }
+
+  public function havingArguments() {
+    return $this->having->arguments();
+  }
+
+  public function having($snippet, $args = array()) {
+    $this->query->where($snippet, $args);
+    return $this;
+  }
+
+  public function havingCompile(DatabaseConnection $connection) {
+    return $this->query->havingCompile($connection);
+  }
+
+  /* Implementations of QueryExtendableInterface. */
+
+  public function extend($extender_name) {
+    $override_class = $this->connection->driver();
+    if (class_exists($override_class)) {
+      $extender_name = $override_class;
+    }
+    return new $extender_name($this, $this->connection);
+  }
+
+  /* Alter accessors to expose the query data to alter hooks. */
+
+  public function &getFields() {
+    return $this->query->getFields();
+  }
+
+  public function &getExpressions() {
+    return $this->query->getExpressions();
+  }
+
+  public function &getOrderBy() {
+    return $this->query->getOrderBy();
+  }
+
+  public function &getTables() {
+    return $this->query->getTables();
+  }
+
+  public function getArguments() {
+    return $this->query->getArguments();
+  }
+
+  public function execute() {
+    return $this->query->execute();
+  }
+
+  public function distinct($distinct = TRUE) {
+    $this->query->distinct($distinct);
+    return $this;
+  }
+
+  public function addField($table_alias, $field, $alias = NULL) {
+    return $this->query->addField($table_alias, $field, $alias);
+  }
+
+  public function fields($table_alias, array $fields = array()) {
+    $this->query->fields($table_alias, $fields);
+    return $this;
+  }
+
+  public function addExpression($expression, $alias = NULL, $arguments = array()) {
+    return $this->query->addExpression($expression, $alias, $arguments);
+  }
+
+  public function join($table, $alias = NULL, $condition = NULL, $arguments = array()) {
+    return $this->query->join($table, $alias, $condition, $arguments);
+  }
+
+  public function innerJoin($table, $alias = NULL, $condition = NULL, $arguments = array()) {
+    return $this->query->innerJoin($table, $alias, $condition, $arguments);
+  }
+
+  public function leftJoin($table, $alias = NULL, $condition = NULL, $arguments = array()) {
+    return $this->query->leftJoin($table, $alias, $condition, $arguments);
+  }
+
+  public function rightJoin($table, $alias = NULL, $condition = NULL, $arguments = array()) {
+    return $this->query->rightJoin($table, $alias, $condition, $arguments);
+  }
+
+  public function addJoin($type, $table, $alias = NULL, $condition = NULL, $arguments = array()) {
+    return $this->query->addJoin($type, $table, $alias, $condition, $arguments);
+  }
+
+  public function orderBy($field, $direction = 'ASC') {
+    $this->query->orderBy($field, $direction);
+    return $this;
+  }
+
+  public function range($start = NULL, $length = NULL) {
+    $this->query->range($start, $length);
+    return $this;
+  }
+
+  public function groupBy($field) {
+    $this->query->groupBy($field);
+    return $this;
+  }
+
+  public function countQuery() {
+    // Create our new query object that we will mutate into a count query.
+    $count = clone($this);
+
+    // Zero-out existing fields and expressions.
+    $fields =& $count->getFields();
+    $fields = array();
+    $expressions =& $count->getExpressions();
+    $expressions = array();
+
+    // Ordering a count query is a waste of cycles, and breaks on some
+    // databases anyway.
+    $orders = &$count->getOrderBy();
+    $orders = array();
+
+    // COUNT() is an expression, so we add that back in.
+    $count->addExpression('COUNT(*)');
+
+    return $count;
+  }
+
+  public function __toString() {
+    return (string)$this->query;
+  }
+
+  public function __clone() {
+    // We need to deep-clone the query we're wrapping, which in turn may
+    // deep-clone other objects.  Exciting!
+    $this->query = clone($this->query);
+  }
+
+  /**
+   * Magic override for undefined methods.
+   *
+   * If one extender extends another extender, then methods in the inner extender
+   * will not be exposed on the outer extender.  That's because we cannot know
+   * in advance what those methods will be, so we cannot provide wrapping
+   * implementations as we do above.  Instead, we use this slower catch-all method
+   * to handle any additional methods.
+   */
+  public function __call($method, $args) {
+    $return = call_user_func_array(array($this->query, $method), $args);
+
+    // Some methods will return the called object as part of a fluent interface.
+    // Others will return some useful value.  If it's a value, then the caller
+    // probably wants that value.  If it's the called object, then we instead
+    // return this object.  That way we don't "lose" an extender layer when
+    // chaining methods together.
+    if ($return instanceof SelectQueryInterface) {
+      return $this;
+    }
+    else {
+      return $return;
+    }
+  }
+}
+
+/**
  * Query builder for SELECT statements.
  */
-class SelectQuery extends Query implements QueryConditionInterface, QueryAlterableInterface {
+class SelectQuery extends Query implements SelectQueryInterface {
 
   /**
    * The fields to SELECT.
@@ -104,6 +713,7 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
 
   public function addTag($tag) {
     $this->alterTags[$tag] = 1;
+    return $this;
   }
 
   public function hasTag($tag) {
@@ -120,6 +730,7 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
 
   public function addMetaData($key, $object) {
     $this->alterMetaData[$key] = $object;
+    return $this;
   }
 
   public function getMetaData($key) {
@@ -180,94 +791,34 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
     return $this->having->compile($connection);
   }
 
+  /* Implementations of QueryExtendableInterface. */
+
+  public function extend($extender_name) {
+    $override_class = __CLASS__ . $this->connection->driver();
+    if (class_exists($override_class)) {
+      $extender_name = $override_class;
+    }
+    return new $extender_name($this, $this->connection);
+  }
+
   /* Alter accessors to expose the query data to alter hooks. */
 
-  /**
-   * Returns a reference to the fields array for this query.
-   *
-   * Because this method returns by reference, alter hooks may edit the fields
-   * array directly to make their changes. If just adding fields, however, the
-   * use of addField() is preferred.
-   *
-   * Note that this method must be called by reference as well:
-   *
-   * @code
-   * $fields =& $query->getFields();
-   * @endcode
-   *
-   * @return
-   *   A reference to the fields array structure.
-   */
   public function &getFields() {
     return $this->fields;
   }
 
-  /**
-   * Returns a reference to the expressions array for this query.
-   *
-   * Because this method returns by reference, alter hooks may edit the expressions
-   * array directly to make their changes. If just adding expressions, however, the
-   * use of addExpression() is preferred.
-   *
-   * Note that this method must be called by reference as well:
-   *
-   * @code
-   * $fields =& $query->getExpressions();
-   * @endcode
-   *
-   * @return
-   *   A reference to the expression array structure.
-   */
   public function &getExpressions() {
     return $this->expressions;
   }
 
-  /**
-   * Returns a reference to the order by array for this query.
-   *
-   * Because this method returns by reference, alter hooks may edit the order-by
-   * array directly to make their changes. If just adding additional ordering
-   * fields, however, the use of orderBy() is preferred.
-   *
-   * Note that this method must be called by reference as well:
-   *
-   * @code
-   * $fields =& $query->getOrderBy();
-   * @endcode
-   *
-   * @return
-   *   A reference to the expression array structure.
-   */
   public function &getOrderBy() {
     return $this->order;
   }
 
-  /**
-   * Returns a reference to the tables array for this query.
-   *
-   * Because this method returns by reference, alter hooks may edit the tables
-   * array directly to make their changes. If just adding tables, however, the
-   * use of the join() methods is preferred.
-   *
-   * Note that this method must be called by reference as well:
-   *
-   * @code
-   * $fields =& $query->getTables();
-   * @endcode
-   *
-   * @return
-   *   A reference to the tables array structure.
-   */
   public function &getTables() {
     return $this->tables;
   }
 
-  /**
-   * Compiles and returns an associative array of the arguments for this prepared statement.
-   *
-   * @return
-   *   An associative array of all placeholder arguments for this query.
-   */
   public function getArguments() {
     $this->where->compile($this->connection);
     $this->having->compile($this->connection);
@@ -307,36 +858,11 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
     return $this->connection->query((string)$this, $args, $this->queryOptions);
   }
 
-  /**
-   * Sets this query to be DISTINCT.
-   *
-   * @param $distinct
-   *   TRUE to flag this query DISTINCT, FALSE to disable it.
-   * @return
-   *   The called object.
-   */
   public function distinct($distinct = TRUE) {
     $this->distinct = $distinct;
     return $this;
   }
 
-  /**
-   * Adds a field to the list to be SELECTed.
-   *
-   * @param $table_alias
-   *   The name of the table from which the field comes, as an alias. Generally
-   *   you will want to use the return value of join() here to ensure that it is
-   *   valid.
-   * @param $field
-   *   The name of the field.
-   * @param $alias
-   *   The alias for this field. If not specified, one will be generated
-   *   automatically based on the $table_alias and $field. The alias will be
-   *   checked for uniqueness, so the requested alias may not be the alias
-   *   that is assigned in all cases.
-   * @return
-   *   The unique alias that was assigned for this field.
-   */
   public function addField($table_alias, $field, $alias = NULL) {
     // If no alias is specified, first try the field name itself.
     if (empty($alias)) {
@@ -365,27 +891,6 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
     return $alias;
   }
 
-  /**
-   * Add multiple fields from the same table to be SELECTed.
-   *
-   * This method does not return the aliases set for the passed fields. In the
-   * majority of cases that is not a problem, as the alias will be the field
-   * name. However, if you do need to know the alias you can call getFields()
-   * and examine the result to determine what alias was created. Alternatively,
-   * simply use addField() for the few fields you care about and this method for
-   * the rest.
-   *
-   * @param $table_alias
-   *   The name of the table from which the field comes, as an alias. Generally
-   *   you will want to use the return value of join() here to ensure that it is
-   *   valid.
-   * @param $fields
-   *   An indexed array of fields present in the specified table that should be
-   *   included in this query. If not specified, $table_alias.* will be generated
-   *   without any aliases.
-   * @return
-   *   The called object.
-   */
   public function fields($table_alias, array $fields = array()) {
 
     if ($fields) {
@@ -402,32 +907,6 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
     return $this;
   }
 
-  /**
-   * Private list of aliases already attributed to expression fields.
-   *
-   * @var Array
-   */
-  private $expressionAliases = array();
-
-  /**
-   * Adds an expression to the list of "fields" to be SELECTed.
-   *
-   * An expression can be any arbitrary string that is valid SQL. That includes
-   * various functions, which may in some cases be database-dependent. This
-   * method makes no effort to correct for database-specific functions.
-   *
-   * @param $expression
-   *   The expression string. May contain placeholders.
-   * @param $alias
-   *   The alias for this expression. If not specified, one will be generated
-   *   automatically in the form "expression_#". The alias will be checked for
-   *   uniqueness, so the requested alias may not be the alias that is assigned
-   *   in all cases.
-   * @param $arguments
-   *   Any placeholder arguments needed for this expression.
-   * @return
-   *   The unique alias that was assigned for this expression.
-   */
   public function addExpression($expression, $alias = NULL, $arguments = array()) {
     if (empty($alias)) {
       $alias = 'expression';
@@ -449,127 +928,22 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
     return $alias;
   }
 
-  /**
-   * Default Join against another table in the database.
-   *
-   * This method is a convenience method for innerJoin().
-   *
-   * @param $table
-   *   The table against which to join.
-   * @param $alias
-   *   The alias for the table. In most cases this should be the first letter
-   *   of the table, or the first letter of each "word" in the table.
-   * @param $condition
-   *   The condition on which to join this table. If the join requires values,
-   *   this clause should use a named placeholder and the value or values to
-   *   insert should be passed in the 4th parameter. For the first table joined
-   *   on a query, this value is ignored as the first table is taken as the base
-   *   table.
-   * @param $arguments
-   *   An array of arguments to replace into the $condition of this join.
-   * @return
-   *   The unique alias that was assigned for this table.
-   */
   public function join($table, $alias = NULL, $condition = NULL, $arguments = array()) {
     return $this->addJoin('INNER', $table, $alias, $condition, $arguments);
   }
 
-  /**
-   * Inner Join against another table in the database.
-   *
-   * @param $table
-   *   The table against which to join.
-   * @param $alias
-   *   The alias for the table. In most cases this should be the first letter
-   *   of the table, or the first letter of each "word" in the table.
-   * @param $condition
-   *   The condition on which to join this table. If the join requires values,
-   *   this clause should use a named placeholder and the value or values to
-   *   insert should be passed in the 4th parameter. For the first table joined
-   *   on a query, this value is ignored as the first table is taken as the base
-   *   table.
-   * @param $arguments
-   *   An array of arguments to replace into the $condition of this join.
-   * @return
-   *   The unique alias that was assigned for this table.
-   */
   public function innerJoin($table, $alias = NULL, $condition = NULL, $arguments = array()) {
     return $this->addJoin('INNER', $table, $alias, $condition, $arguments);
   }
 
-  /**
-   * Left Outer Join against another table in the database.
-   *
-   * @param $table
-   *   The table against which to join.
-   * @param $alias
-   *   The alias for the table. In most cases this should be the first letter
-   *   of the table, or the first letter of each "word" in the table.
-   * @param $condition
-   *   The condition on which to join this table. If the join requires values,
-   *   this clause should use a named placeholder and the value or values to
-   *   insert should be passed in the 4th parameter. For the first table joined
-   *   on a query, this value is ignored as the first table is taken as the base
-   *   table.
-   * @param $arguments
-   *   An array of arguments to replace into the $condition of this join.
-   * @return
-   *   The unique alias that was assigned for this table.
-   */
   public function leftJoin($table, $alias = NULL, $condition = NULL, $arguments = array()) {
     return $this->addJoin('LEFT OUTER', $table, $alias, $condition, $arguments);
   }
 
-  /**
-   * Right Outer Join against another table in the database.
-   *
-   * @param $table
-   *   The table against which to join.
-   * @param $alias
-   *   The alias for the table. In most cases this should be the first letter
-   *   of the table, or the first letter of each "word" in the table.
-   * @param $condition
-   *   The condition on which to join this table. If the join requires values,
-   *   this clause should use a named placeholder and the value or values to
-   *   insert should be passed in the 4th parameter. For the first table joined
-   *   on a query, this value is ignored as the first table is taken as the base
-   *   table.
-   * @param $arguments
-   *   An array of arguments to replace into the $condition of this join.
-   * @return
-   *   The unique alias that was assigned for this table.
-   */
   public function rightJoin($table, $alias = NULL, $condition = NULL, $arguments = array()) {
     return $this->addJoin('RIGHT OUTER', $table, $alias, $condition, $arguments);
   }
 
-  /**
-   * Join against another table in the database.
-   *
-   * This method does the "hard" work of queuing up a table to be joined against.
-   * In some cases, that may include dipping into the Schema API to find the necessary
-   * fields on which to join.
-   *
-   * @param $type
-   *   The type of join. Typically one one of INNER, LEFT OUTER, and RIGHT OUTER.
-   * @param $table
-   *   The table against which to join. May be a string or another SelectQuery
-   *   object. If a query object is passed, it will be used as a subselect.
-   * @param $alias
-   *   The alias for the table. In most cases this should be the first letter
-   *   of the table, or the first letter of each "word" in the table. If omitted,
-   *   one will be dynamically generated.
-   * @param $condition
-   *   The condition on which to join this table. If the join requires values,
-   *   this clause should use a named placeholder and the value or values to
-   *   insert should be passed in the 4th parameter. For the first table joined
-   *   on a query, this value is ignored as the first table is taken as the base
-   *   table.
-   * @param $arguments
-   *   An array of arguments to replace into the $condition of this join.
-   * @return
-   *   The unique alias that was assigned for this table.
-   */
   public function addJoin($type, $table, $alias = NULL, $condition = NULL, $arguments = array()) {
 
     if (empty($alias)) {
@@ -599,64 +973,23 @@ class SelectQuery extends Query implements QueryConditionInterface, QueryAlterab
     return $alias;
   }
 
-  /**
-   * Orders the result set by a given field.
-   *
-   * If called multiple times, the query will order by each specified field in the
-   * order this method is called.
-   *
-   * @param $field
-   *   The field on which to order.
-   * @param $direction
-   *   The direction to sort. Legal values are "ASC" and "DESC".
-   * @return
-   *   The called object.
-   */
   public function orderBy($field, $direction = 'ASC') {
     $this->order[$field] = $direction;
     return $this;
   }
 
-  /**
-   * Restricts a query to a given range in the result set.
-   *
-   * If this method is called with no parameters, will remove any range
-   * directives that have been set.
-   *
-   * @param $start
-   *   The first record from the result set to return. If NULL, removes any
-   *   range directives that are set.
-   * @param $limit
-   *   The number of records to return from the result set.
-   * @return
-   *   The called object.
-   */
   public function range($start = NULL, $length = NULL) {
     $this->range = func_num_args() ? array('start' => $start, 'length' => $length) : array();
     return $this;
   }
 
-  /**
-   * Groups the result set by the specified field.
-   *
-   * @param $field
-   *   The field on which to group. This should be the field as aliased.
-   * @return
-   *   The called object.
-   */
   public function groupBy($field) {
     $this->group[] = $field;
+    return $this;
   }
 
-  /**
-   * Get the equivalent COUNT query of this query as a new query object.
-   *
-   * @return
-   *   A new SelectQuery object with no fields or expressions besides COUNT(*).
-   */
   public function countQuery() {
-    // Shallow-clone this query. We don't want to duplicate any of the
-    // referenced objects, so a shallow query is all we need.
+    // Create our new query object that we will mutate into a count query.
     $count = clone($this);
 
     // Zero-out existing fields and expressions.
