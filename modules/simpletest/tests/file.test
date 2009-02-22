@@ -21,14 +21,14 @@ function file_test_validator($file, $errors) {
  * When the function is called with $reset parameter TRUE the cache is cleared
  * and the results returned.
  *
- * @param $file
- *   File object
+ * @param $filepath
+ *   File path
  * @param $reset
  *   Boolean indicating that the stored files should be removed and returned.
  * @return
  *   An array of all previous $file parameters since $reset was last called.
  */
-function file_test_file_scan_callback($file, $reset = FALSE) {
+function file_test_file_scan_callback($filepath, $reset = FALSE) {
   static $files = array();
 
   if ($reset) {
@@ -37,7 +37,7 @@ function file_test_file_scan_callback($file, $reset = FALSE) {
     return $ret;
   }
 
-  $files[] = $file;
+  $files[] = $filepath;
 }
 
 /**
@@ -525,14 +525,14 @@ class FileSaveUploadTest extends FileHookTestCase {
     $this->drupalLogin($account);
 
     $this->image = current($this->drupalGetTestFiles('image'));
-    $this->assertTrue(is_file($this->image->filename), t("The file we're going to upload exists."));
+    $this->assertTrue(is_file($this->image->filepath), t("The file we're going to upload exists."));
 
     $this->maxFidBefore = db_query('SELECT MAX(fid) AS fid FROM {files}')->fetchField();
 
     // Upload with replace to gurantee there's something there.
     $edit = array(
       'file_test_replace' => FILE_EXISTS_REPLACE,
-      'files[file_test_upload]' => realpath($this->image->filename)
+      'files[file_test_upload]' => realpath($this->image->filepath)
     );
     $this->drupalPost('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, t('Received a 200 response for posted test file.'));
@@ -559,7 +559,7 @@ class FileSaveUploadTest extends FileHookTestCase {
     // Upload a second file.
     $max_fid_before = db_query('SELECT MAX(fid) AS fid FROM {files}')->fetchField();
     $image2 = current($this->drupalGetTestFiles('image'));
-    $edit = array('files[file_test_upload]' => realpath($image2->filename));
+    $edit = array('files[file_test_upload]' => realpath($image2->filepath));
     $this->drupalPost('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, t('Received a 200 response for posted test file.'));
     $this->assertRaw(t('You WIN!'));
@@ -584,7 +584,7 @@ class FileSaveUploadTest extends FileHookTestCase {
   function testExistingRename() {
     $edit = array(
       'file_test_replace' => FILE_EXISTS_RENAME,
-      'files[file_test_upload]' => realpath($this->image->filename)
+      'files[file_test_upload]' => realpath($this->image->filepath)
     );
     $this->drupalPost('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, t('Received a 200 response for posted test file.'));
@@ -600,7 +600,7 @@ class FileSaveUploadTest extends FileHookTestCase {
   function testExistingReplace() {
     $edit = array(
       'file_test_replace' => FILE_EXISTS_REPLACE,
-      'files[file_test_upload]' => realpath($this->image->filename)
+      'files[file_test_upload]' => realpath($this->image->filepath)
     );
     $this->drupalPost('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, t('Received a 200 response for posted test file.'));
@@ -616,7 +616,7 @@ class FileSaveUploadTest extends FileHookTestCase {
   function testExistingError() {
     $edit = array(
       'file_test_replace' => FILE_EXISTS_ERROR,
-      'files[file_test_upload]' => realpath($this->image->filename)
+      'files[file_test_upload]' => realpath($this->image->filepath)
     );
     $this->drupalPost('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, t('Received a 200 response for posted test file.'));
@@ -829,16 +829,16 @@ class FileScanDirectoryTest extends FileTestCase {
 
     // Check the first file.
     $file = reset($all_files);
-    $this->assertEqual(key($all_files), $file->filename, t('Correct array key was used for the first returned file.'));
-    $this->assertEqual($file->filename, $this->path . '/javascript-1.txt', t('First file name was set correctly.'));
-    $this->assertEqual($file->basename, 'javascript-1.txt', t('First basename was set correctly'));
+    $this->assertEqual(key($all_files), $file->filepath, t('Correct array key was used for the first returned file.'));
+    $this->assertEqual($file->filepath, $this->path . '/javascript-1.txt', t('First file name was set correctly.'));
+    $this->assertEqual($file->filename, 'javascript-1.txt', t('First basename was set correctly'));
     $this->assertEqual($file->name, 'javascript-1', t('First name was set correctly.'));
 
     // Check the second file.
     $file = next($all_files);
-    $this->assertEqual(key($all_files), $file->filename, t('Correct array key was used for the second returned file.'));
-    $this->assertEqual($file->filename, $this->path . '/javascript-2.script', t('Second file name was set correctly.'));
-    $this->assertEqual($file->basename, 'javascript-2.script', t('Second basename was set correctly'));
+    $this->assertEqual(key($all_files), $file->filepath, t('Correct array key was used for the second returned file.'));
+    $this->assertEqual($file->filepath, $this->path . '/javascript-2.script', t('Second file name was set correctly.'));
+    $this->assertEqual($file->filename, 'javascript-2.script', t('Second basename was set correctly'));
     $this->assertEqual($file->name, 'javascript-2', t('Second name was set correctly.'));
   }
 
@@ -879,13 +879,13 @@ class FileScanDirectoryTest extends FileTestCase {
   function testOptionKey() {
     // "filename", for the path starting with $dir.
     $expected = array($this->path . '/javascript-1.txt', $this->path . '/javascript-2.script');
-    $actual = array_keys(file_scan_directory($this->path, '/^javascript-/', array('key' => 'filename')));
+    $actual = array_keys(file_scan_directory($this->path, '/^javascript-/', array('key' => 'filepath')));
     sort($actual);
     $this->assertEqual($expected, $actual, t('Returned the correct values for the filename key.'));
 
     // "basename", for the basename of the file.
     $expected = array('javascript-1.txt', 'javascript-2.script');
-    $actual = array_keys(file_scan_directory($this->path, '/^javascript-/', array('key' => 'basename')));
+    $actual = array_keys(file_scan_directory($this->path, '/^javascript-/', array('key' => 'filename')));
     sort($actual);
     $this->assertEqual($expected, $actual, t('Returned the correct values for the basename key.'));
 

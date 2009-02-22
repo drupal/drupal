@@ -101,41 +101,41 @@ function module_rebuild_cache() {
     'files' => array(),
   );
 
-  foreach ($files as $filename => $file) {
+  foreach ($files as $filepath => $file) {
     // Look for the info file.
-    $file->info = drupal_parse_info_file(dirname($file->filename) . '/' . $file->name . '.info');
+    $file->info = drupal_parse_info_file(dirname($file->filepath) . '/' . $file->name . '.info');
 
     // Skip modules that don't provide info.
     if (empty($file->info)) {
-      unset($files[$filename]);
+      unset($files[$filepath]);
       continue;
     }
     // Merge in defaults and save.
-    $files[$filename]->info = $file->info + $defaults;
+    $files[$filepath]->info = $file->info + $defaults;
 
     // Invoke hook_system_info_alter() to give installed modules a chance to
     // modify the data in the .info files if necessary.
-    drupal_alter('system_info', $files[$filename]->info, $files[$filename]);
+    drupal_alter('system_info', $files[$filepath]->info, $files[$filepath]);
 
     // Update the contents of the system table:
-    if (isset($file->status) || (isset($file->old_filename) && $file->old_filename != $file->filename)) {
+    if (isset($file->status) || (isset($file->old_filepath) && $file->old_filepath != $file->filepath)) {
       db_update('system')
         ->fields(array(
-            'info' => serialize($files[$filename]->info),
+            'info' => serialize($files[$filepath]->info),
             'name' => $file->name,
-            'filename' => $file->filename))
-        ->condition('filename', $file->old_filename)
+            'filename' => $file->filepath))
+        ->condition('filename', $file->old_filepath)
         ->execute();
     }
     else {
       // This is a new module.
-      $files[$filename]->status = 0;
+      $files[$filepath]->status = 0;
       db_insert('system')
         ->fields(array(
             'name' => $file->name,
-            'info' => serialize($files[$filename]->info),
+            'info' => serialize($files[$filepath]->info),
             'type' => 'module',
-            'filename' => $file->filename,
+            'filename' => $file->filepath,
             'status' => 0))
         ->execute();
     }
@@ -535,7 +535,7 @@ function drupal_required_modules() {
   $files = drupal_system_listing('/\.info$/', 'modules', 'name', 0);
   $required = array();
   foreach ($files as $name => $file) {
-    $info = drupal_parse_info_file($file->filename);
+    $info = drupal_parse_info_file($file->filepath);
     if (!empty($info) && !empty($info['required']) && $info['required']) {
       $required[] = $name;
     }

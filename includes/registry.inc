@@ -43,7 +43,7 @@ function _registry_rebuild() {
   $files = array();
   foreach (module_rebuild_cache() as $module) {
     if ($module->status) {
-      $dir = dirname($module->filename);
+      $dir = dirname($module->filepath);
       foreach ($module->info['files'] as $file) {
         $files["$dir/$file"] = array('module' => $module->name, 'weight' => $module->weight);
       }

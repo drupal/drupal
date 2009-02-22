@@ -420,7 +420,7 @@ function install_select_profile() {
   // Don't need to choose profile if only one available.
   if (sizeof($profiles) == 1) {
     $profile = array_pop($profiles);
-    require_once $profile->filename;
+    require_once $profile->filepath;
     return $profile->name;
   }
   elseif (sizeof($profiles) > 1) {
@@ -451,7 +451,7 @@ function install_select_profile_form(&$form_state, $profile_files) {
   $names = array();
 
   foreach ($profile_files as $profile) {
-    include_once DRUPAL_ROOT . '/' . $profile->filename;
+    include_once DRUPAL_ROOT . '/' . $profile->filepath;
 
     // Load profile details and store them for later retrieval.
     $function = $profile->name . '_profile_details';

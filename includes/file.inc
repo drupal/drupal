@@ -1395,9 +1395,9 @@ function file_download() {
  *     the provided directory. Defaults to TRUE.
  *   - 'key'
  *     The key to be used for the returned array of files. Possible values are
- *     "filename", for the path starting with $dir, "basename", for the
- *     basename of the file, and "name" for the name of the file without an
- *     extension. Defaults to 'filename'.
+ *     'filepath', for the path starting with $dir, 'filename', for the
+ *     basename of the file, and 'name' for the name of the file without an
+ *     extension. Defaults to 'filepath'.
  *   - 'min_depth'
  *     Minimum depth of directories to return files from. Defaults to 0.
  * @param $depth
@@ -1405,8 +1405,8 @@ function file_download() {
  *   should not be passed.
  * @return
  *   An associative array (keyed on the provided key) of objects with
- *   "filename", "basename", and "name" members corresponding to the
- *   matching files.
+ *   'filepath', 'filename', and 'name' members corresponding to the
+ *   matching files. 
  */
 function file_scan_directory($dir, $mask, $options = array(), $depth = 0) {
   // Merge in defaults.
@@ -1414,33 +1414,32 @@ function file_scan_directory($dir, $mask, $options = array(), $depth = 0) {
     'nomask' => '/(\.\.?|CVS)$/',
     'callback' => 0,
     'recurse' => TRUE,
-    'key' => 'filename',
+    'key' => 'filepath',
     'min_depth' => 0,
   );
 
-  $options['key'] = (in_array($options['key'], array('filename', 'basename', 'name')) ? $options['key'] : 'filename');
+  $options['key'] = in_array($options['key'], array('filepath', 'filename', 'name')) ? $options['key'] : 'filepath';
   $files = array();
-
   if (is_dir($dir) && $handle = opendir($dir)) {
-    while (FALSE !== ($file = readdir($handle))) {
-      if (!preg_match($options['nomask'], $file) && $file[0] != '.') {
-        if (is_dir("$dir/$file") && $options['recurse']) {
+    while (FALSE !== ($filename = readdir($handle))) {
+      if (!preg_match($options['nomask'], $filename) && $filename[0] != '.') {
+        $filepath = "$dir/$filename";
+        if (is_dir($filepath) && $options['recurse']) {
           // Give priority to files in this folder by merging them in after any subdirectory files.
-          $files = array_merge(file_scan_directory("$dir/$file", $mask, $options, $depth + 1), $files);
+          $files = array_merge(file_scan_directory($filepath, $mask, $options, $depth + 1), $files);
         }
-        elseif ($depth >= $options['min_depth'] && preg_match($mask, $file)) {
+        elseif ($depth >= $options['min_depth'] && preg_match($mask, $filename)) {
           // Always use this match over anything already set in $files with the
           // same $$options['key'].
-          $filename = "$dir/$file";
-          $basename = basename($file);
-          $name = substr($basename, 0, strrpos($basename, '.'));
-          $files[${$options['key']}] = (object) array(
+          $file = (object) array(
+            'filepath' => $filepath,
             'filename' => $filename,
-            'basename' => $basename,
-            'name' => $name,
+            'name' => pathinfo($filename, PATHINFO_FILENAME),
           );
+          $key = $options['key'];
+          $files[$file->$key] = $file;
           if ($options['callback']) {
-            $options['callback']($filename);
+            $options['callback']($filepath);
           }
         }
       }

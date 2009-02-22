@@ -216,9 +216,9 @@ function drupal_detect_database_types() {
   // file for the driver explicitly.
 
   foreach (file_scan_directory(DRUPAL_ROOT . '/includes/database', '/^[a-z]*$/i', array('recurse' => FALSE)) as $file) {
-    include_once "{$file->filename}/install.inc";
-    include_once "{$file->filename}/database.inc";
-    $drivers[$file->basename] = $file->filename;
+    include_once "{$file->filepath}/install.inc";
+    include_once "{$file->filepath}/database.inc";
+    $drivers[$file->filename] = $file->filepath;
   }
 
   foreach ($drivers as $driver => $file) {
@@ -934,7 +934,7 @@ function drupal_check_profile($profile) {
   // Collect requirement testing results
   $requirements = array();
   foreach ($installs as $install) {
-    require_once DRUPAL_ROOT . '/' . $install->filename;
+    require_once DRUPAL_ROOT . '/' . $install->filepath;
     $function = $install->name. '_requirements';
     if (function_exists($function)) {
       $requirements = array_merge($requirements, $function('install'));
@@ -974,7 +974,7 @@ function drupal_check_module($module) {
   // Include install file
   $install = drupal_get_install_files(array($module));
   if (isset($install[$module])) {
-    require_once DRUPAL_ROOT . '/' . $install[$module]->filename;
+    require_once DRUPAL_ROOT . '/' . $install[$module]->filepath;
 
     // Check requirements
     $requirements = module_invoke($module, 'requirements', 'install');
