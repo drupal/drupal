@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.14 2009/02/18 15:19:55 webchick Exp $
+// $Id: comment.admin.inc,v 1.15 2009/02/22 16:53:41 dries Exp $
 
 /**
  * @file
@@ -66,13 +66,26 @@ function comment_admin_overview($type = 'new', $arg) {
     'operations' => array('data' => t('Operations')),
   );
 
-  $result = pager_query('SELECT c.subject, c.nid, c.cid, c.comment, c.timestamp, c.status, c.name, c.homepage, u.name AS registered_name, u.uid, n.title as node_title FROM {comment} c INNER JOIN {user} u ON u.uid = c.uid INNER JOIN {node} n ON n.nid = c.nid WHERE c.status = %d' . tablesort_sql($header), 50, 0, NULL, $status);
+    $query = db_select('comment', 'c');
+  $query->join('user', 'u', 'u.uid = c.uid');
+  $query->join('node', 'n', 'n.nid = c.nid');
+  $query->addField('u', 'name', 'registered_name');
+  $query->addField('n', 'title', 'node_title');
+  $query
+    ->fields('c', array('subject', 'nid', 'cid', 'comment', 'timestamp', 'status', 'name', 'homepage'))
+    ->fields('u', array('uid'))
+    ->condition('c.status', $status)
+    ->extend('PagerDefault')->extend('TableSort')
+    ->limit(50)
+    ->setHeader($header);
+  $result = $query->execute();
+
 
   // Build a table listing the appropriate comments.
   $options = array();
   $destination = drupal_get_destination();
 
-  while ($comment = db_fetch_object($result)) {
+  foreach ($result as $comment) {
     $options[$comment->cid] = array(
       'subject' => l($comment->subject, 'node/' . $comment->nid, array('attributes' => array('title' => truncate_utf8($comment->comment, 128)), 'fragment' => 'comment-' . $comment->cid)),
       'author' => theme('username', $comment),
