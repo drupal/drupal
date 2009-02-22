@@ -676,14 +676,17 @@ class MergeQuery extends Query {
           unset($update_fields[$exclude_field]);
         }
       }
-      $update = $this->connection->update($this->table, $this->queryOptions)->fields($update_fields);
-      foreach ($this->keyFields as $field => $value) {
-        $update->condition($field, $value);
+      if ($update_fields || $this->expressionFields) {
+        // Only run the update if there are no fields or expressions to update.
+        $update = $this->connection->update($this->table, $this->queryOptions)->fields($update_fields);
+        foreach ($this->keyFields as $field => $value) {
+          $update->condition($field, $value);
+        }
+        foreach ($this->expressionFields as $field => $expression) {
+          $update->expression($field, $expression['expression'], $expression['arguments']);
+        }
+        $update->execute();
       }
-      foreach ($this->expressionFields as $field => $expression) {
-        $update->expression($field, $expression['expression'], $expression['arguments']);
-      }
-      $update->execute();
     }
     else {
       // If there is no existing record, run an insert query.

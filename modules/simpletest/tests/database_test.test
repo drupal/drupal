@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.40 2009/02/18 15:19:56 webchick Exp $
+// $Id: database_test.test,v 1.41 2009/02/22 16:31:24 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -956,6 +956,58 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
     $this->assertEqual($person->name, 'Tiffany', t('Name set correctly.'));
     $this->assertEqual($person->age, $age_before + 4, t('Age updated correctly.'));
     $this->assertEqual($person->job, 'Speaker', t('Job set correctly.'));
+  }
+
+  /**
+   * Test that we can merge-insert without any update fields.
+   */
+  function testMergeInsertWithoutUpdate() {
+    $num_records_before = db_query("SELECT COUNT(*) FROM {test_people}")->fetchField();
+
+    db_merge('test_people')
+      ->key(array('job' => 'Presenter'))
+      ->execute();
+
+    $num_records_after = db_query("SELECT COUNT(*) FROM {test_people}")->fetchField();
+    $this->assertEqual($num_records_before + 1, $num_records_after, t('Merge inserted properly.'));
+
+    $person = db_query("SELECT * FROM {test_people} WHERE job = :job", array(':job' => 'Presenter'))->fetch();
+    $this->assertEqual($person->name, '', t('Name set correctly.'));
+    $this->assertEqual($person->age, 0, t('Age set correctly.'));
+    $this->assertEqual($person->job, 'Presenter', t('Job set correctly.'));
+  }
+
+  /**
+   * Confirm that we can merge-update without any update fields.
+   */
+  function testMergeUpdateWithoutUpdate() {
+    $num_records_before = db_query("SELECT COUNT(*) FROM {test_people}")->fetchField();
+
+    db_merge('test_people')
+      ->key(array('job' => 'Speaker'))
+      ->execute();
+
+    $num_records_after = db_query("SELECT COUNT(*) FROM {test_people}")->fetchField();
+    $this->assertEqual($num_records_before, $num_records_after, t('Merge skipped properly.'));
+
+    $person = db_query("SELECT * FROM {test_people} WHERE job = :job", array(':job' => 'Speaker'))->fetch();
+    $this->assertEqual($person->name, 'Meredith', t('Name skipped correctly.'));
+    $this->assertEqual($person->age, 30, t('Age skipped correctly.'));
+    $this->assertEqual($person->job, 'Speaker', t('Job skipped correctly.'));
+
+    db_merge('test_people')
+      ->key(array('job' => 'Speaker'))
+      ->fields(array('age' => 31))
+      ->updateExcept(array('age'))
+      ->execute();
+
+    $num_records_after = db_query("SELECT COUNT(*) FROM {test_people}")->fetchField();
+    $this->assertEqual($num_records_before, $num_records_after, t('Merge skipped properly.'));
+
+    $person = db_query("SELECT * FROM {test_people} WHERE job = :job", array(':job' => 'Speaker'))->fetch();
+    $this->assertEqual($person->name, 'Meredith', t('Name skipped correctly.'));
+    $this->assertEqual($person->age, 30, t('Age skipped correctly.'));
+    $this->assertEqual($person->job, 'Speaker', t('Job skipped correctly.'));
   }
 
   /**

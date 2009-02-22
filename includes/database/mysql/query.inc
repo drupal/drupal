@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.8 2008/12/26 14:23:38 dries Exp $
+// $Id: query.inc,v 1.9 2009/02/22 16:31:24 dries Exp $
 
 /**
  * @ingroup database
@@ -141,6 +141,12 @@ class MergeQuery_mysql extends MergeQuery {
       foreach ($this->excludeFields as $exclude_field) {
         unset($update_fields[$exclude_field]);
       }
+    }
+
+    // If the merge query has no fields to update, add the first key as an
+    // update field so the query will not fail if a duplicate key is found.
+    if (!$update_fields && !$this->expressionFields) {
+      $update_fields = array_slice($this->keyFields, 0, 1, TRUE);
     }
 
     $insert_fields = $this->insertFields + $this->keyFields;
