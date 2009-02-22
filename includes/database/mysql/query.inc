@@ -143,6 +143,12 @@ class MergeQuery_mysql extends MergeQuery {
       }
     }
 
+    // If the merge query has no fields to update, add the first key as an
+    // update field so the query will not fail if a duplicate key is found.
+    if (!$update_fields && !$this->expressionFields) {
+      $update_fields = array_slice($this->keyFields, 0, 1, TRUE);
+    }
+
     $insert_fields = $this->insertFields + $this->keyFields;
 
     $query = "INSERT INTO {" . $this->table . '} (' . implode(', ', array_keys($insert_fields)) . ') VALUES ';
