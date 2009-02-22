@@ -1,5 +1,5 @@
 <?php
-// $Id: update.compare.inc,v 1.15 2008/12/20 18:24:40 dries Exp $
+// $Id: update.compare.inc,v 1.16 2009/02/22 17:55:30 dries Exp $
 
 /**
  * @file
@@ -69,7 +69,7 @@ function _update_process_info_list(&$projects, $list, $project_type) {
     // which is left alone by tar and correctly set to the time the .info file
     // was unpacked.
     if (!isset($file->info['_info_file_ctime'])) {
-      $info_filename = dirname($file->filename) . '/' . $file->name . '.info';
+      $info_filename = dirname($file->filepath) . '/' . $file->name . '.info';
       $file->info['_info_file_ctime'] = filectime($info_filename);
     }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.inc,v 1.11 2008/12/20 18:24:33 dries Exp $
+// $Id: registry.inc,v 1.12 2009/02/22 17:55:29 dries Exp $
 
 /**
  * @file
@@ -43,7 +43,7 @@ function _registry_rebuild() {
   $files = array();
   foreach (module_rebuild_cache() as $module) {
     if ($module->status) {
-      $dir = dirname($module->filename);
+      $dir = dirname($module->filepath);
       foreach ($module->info['files'] as $file) {
         $files["$dir/$file"] = array('module' => $module->name, 'weight' => $module->weight);
       }

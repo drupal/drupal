@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.install,v 1.15 2009/02/01 17:11:00 dries Exp $
+// $Id: simpletest.install,v 1.16 2009/02/22 17:55:30 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -33,7 +33,7 @@ function simpletest_install() {
       $original = drupal_get_path('module', 'simpletest') . '/files';
       $files = file_scan_directory($original, '/(html|image|javascript|php|sql)-.*/');
       foreach ($files as $file) {
-        file_unmanaged_copy($file->filename, $path . '/' . $file->basename);
+        file_unmanaged_copy($file->filepath, $path);
       }
       $generated = TRUE;
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.84 2009/02/13 00:39:01 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.85 2009/02/22 17:55:30 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -593,9 +593,9 @@ class DrupalWebTestCase {
       // If size is set then remove any files that are not of that size.
       if ($size !== NULL) {
         foreach ($files as $file) {
-          $stats = stat($file->filename);
+          $stats = stat($file->filepath);
           if ($stats['size'] != $size) {
-            unset($files[$file->filename]);
+            unset($files[$file->filepath]);
           }
         }
       }
@@ -609,7 +609,7 @@ class DrupalWebTestCase {
    */
   protected function drupalCompareFiles($file1, $file2) {
     // Determine which file is larger.
-    $compare_size = (filesize($file1->filename) > filesize($file2->filename));
+    $compare_size = (filesize($file1->filepath) > filesize($file2->filepath));
     if (!$compare_size) {
       // Both files were the same size, so return whichever one is alphabetically greater.
       return strnatcmp($file1->name, $file2->name);

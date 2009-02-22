@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.37 2009/02/20 03:37:58 webchick Exp $
+// $Id: simpletest.module,v 1.38 2009/02/22 17:55:30 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -465,7 +465,7 @@ function simpletest_get_all_tests() {
       $tests_directory = $module_path . '/tests';
       if (is_dir($tests_directory)) {
         foreach (file_scan_directory($tests_directory, '/\.test$/') as $file) {
-          $files[] = $file->filename;
+          $files[] = $file->filepath;
         }
       }
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.469 2009/02/05 03:42:56 webchick Exp $
+// $Id: theme.inc,v 1.470 2009/02/22 17:55:29 dries Exp $
 
 /**
  * @file
@@ -831,7 +831,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
   $files = drupal_system_listing($regex, $path, 'name', 0);
   foreach ($files as $template => $file) {
     // Ignore sub-theme templates for the current theme.
-    if (strpos($file->filename, str_replace($subtheme_paths, '', $file->filename)) !== 0) {
+    if (strpos($file->filepath, str_replace($subtheme_paths, '', $file->filepath)) !== 0) {
       continue;
     }
     // Chop off the remaining extensions if there are any. $template already
@@ -846,7 +846,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
     if (isset($cache[$hook])) {
       $templates[$hook] = array(
         'template' => $template,
-        'path' => dirname($file->filename),
+        'path' => dirname($file->filepath),
       );
     }
     // Ensure that the pattern is maintained from base themes to its sub-themes.
@@ -872,7 +872,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
           // Put the underscores back in for the hook name and register this pattern.
           $templates[strtr($file, '-', '_')] = array(
             'template' => $file,
-            'path' => dirname($files[$match]->filename),
+            'path' => dirname($files[$match]->filepath),
             'arguments' => $info['arguments'],
           );
         }

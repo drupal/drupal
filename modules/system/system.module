@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.667 2009/02/11 05:33:18 webchick Exp $
+// $Id: system.module,v 1.668 2009/02/22 17:55:30 dries Exp $
 
 /**
  * @file
@@ -1062,7 +1062,8 @@ function system_get_files_database(&$files, $type) {
   $result = db_query("SELECT filename, name, type, status, schema_version, weight FROM {system} WHERE type = '%s'", $type);
   while ($file = db_fetch_object($result)) {
     if (isset($files[$file->name]) && is_object($files[$file->name])) {
-      $file->old_filename = $file->filename;
+      $file->filepath = $file->filename;
+      $file->old_filepath = $file->filepath;
       foreach ($file as $key => $value) {
         if (!isset($files[$file->name]) || !isset($files[$file->name]->$key)) {
           $files[$file->name]->$key = $value;
@@ -1155,7 +1156,8 @@ function _system_theme_data() {
     $sub_themes = array();
     // Read info files for each theme
     foreach ($themes as $key => $theme) {
-      $themes[$key]->info = drupal_parse_info_file($theme->filename) + $defaults;
+      $themes[$key]->filename = $theme->filepath;
+      $themes[$key]->info = drupal_parse_info_file($theme->filepath) + $defaults;
 
       // Invoke hook_system_info_alter() to give installed modules a chance to
       // modify the data in the .info files if necessary.
@@ -1165,7 +1167,7 @@ function _system_theme_data() {
         $sub_themes[] = $key;
       }
       if (empty($themes[$key]->info['engine'])) {
-        $filename = dirname($themes[$key]->filename) . '/' . $themes[$key]->name . '.theme';
+        $filename = dirname($themes[$key]->filepath) . '/' . $themes[$key]->name . '.theme';
         if (file_exists($filename)) {
           $themes[$key]->owner = $filename;
           $themes[$key]->prefix = $key;
@@ -1174,7 +1176,7 @@ function _system_theme_data() {
       else {
         $engine = $themes[$key]->info['engine'];
         if (isset($engines[$engine])) {
-          $themes[$key]->owner = $engines[$engine]->filename;
+          $themes[$key]->owner = $engines[$engine]->filepath;
           $themes[$key]->prefix = $engines[$engine]->name;
           $themes[$key]->template = TRUE;
         }
@@ -1184,7 +1186,7 @@ function _system_theme_data() {
       $pathed_stylesheets = array();
       foreach ($themes[$key]->info['stylesheets'] as $media => $stylesheets) {
         foreach ($stylesheets as $stylesheet) {
-          $pathed_stylesheets[$media][$stylesheet] = dirname($themes[$key]->filename) . '/' . $stylesheet;
+          $pathed_stylesheets[$media][$stylesheet] = dirname($themes[$key]->filepath) . '/' . $stylesheet;
         }
       }
       $themes[$key]->info['stylesheets'] = $pathed_stylesheets;
@@ -1192,12 +1194,12 @@ function _system_theme_data() {
       // Give the scripts proper path information.
       $scripts = array();
       foreach ($themes[$key]->info['scripts'] as $script) {
-        $scripts[$script] = dirname($themes[$key]->filename) . '/' . $script;
+        $scripts[$script] = dirname($themes[$key]->filepath) . '/' . $script;
       }
       $themes[$key]->info['scripts'] = $scripts;
       // Give the screenshot proper path information.
       if (!empty($themes[$key]->info['screenshot'])) {
-        $themes[$key]->info['screenshot'] = dirname($themes[$key]->filename) . '/' . $themes[$key]->info['screenshot'];
+        $themes[$key]->info['screenshot'] = dirname($themes[$key]->filepath) . '/' . $themes[$key]->info['screenshot'];
       }
     }
 

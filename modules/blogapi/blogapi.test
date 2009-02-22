@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.test,v 1.8 2008/12/30 16:43:15 dries Exp $
+// $Id: blogapi.test,v 1.9 2009/02/22 17:55:29 dries Exp $
 
 class BlogAPITestCase extends DrupalWebTestCase {
   function getInfo() {
@@ -68,7 +68,7 @@ class BlogAPITestCase extends DrupalWebTestCase {
 
     // Upload file.
     $file = current($this->drupalGetTestFiles('text'));
-    $file_contents = file_get_contents($file->filename);
+    $file_contents = file_get_contents($file->filepath);
     $file = array();
     $file['name'] = $this->randomName() . '.txt';
     $file['type'] = 'text';
