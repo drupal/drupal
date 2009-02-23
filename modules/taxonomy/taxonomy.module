@@ -730,7 +730,7 @@ function taxonomy_form_alter($form_id, &$form) {
           '#default_value' => $typed_string,
           '#autocomplete_path' => 'taxonomy/autocomplete/'. $vocabulary->vid,
           '#weight' => $vocabulary->weight,
-          '#maxlength' => 255,
+          '#maxlength' => 1024,
         );
       }
       else {
