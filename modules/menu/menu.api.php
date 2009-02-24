@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.api.php,v 1.4 2009/02/07 04:46:46 webchick Exp $
+// $Id: menu.api.php,v 1.5 2009/02/24 16:02:51 dries Exp $
 
 /**
  * @file
@@ -75,7 +75,7 @@ function hook_menu() {
     'type' => MENU_SUGGESTED_ITEM,
   );
   $items['blog/feed'] = array(
-    'title' => t('RSS feed'),
+    'title' => 'RSS feed',
     'page callback' => 'blog_feed',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
