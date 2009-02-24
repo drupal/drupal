@@ -75,7 +75,7 @@ function hook_menu() {
     'type' => MENU_SUGGESTED_ITEM,
   );
   $items['blog/feed'] = array(
-    'title' => t('RSS feed'),
+    'title' => 'RSS feed',
     'page callback' => 'blog_feed',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
