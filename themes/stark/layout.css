@@ -1,4 +1,4 @@
-/* $Id: layout.css,v 1.1 2009/01/30 23:06:23 webchick Exp $ */
+/* $Id: layout.css,v 1.2 2009/02/24 17:50:22 webchick Exp $ */
 
 /**
  * @file
@@ -10,39 +10,49 @@
  *
  * This layout method works reasonably well, but shouldn't be used on a
  * production site because it can break. For example, if an over-large image
- * (one that is wider than 20% of the viewport) is in a sidebar, the entire
- * #main content can shift completely below the sidebar.
+ * (one that is wider than 20% of the viewport) is in the left sidebar, the
+ * image will overlap with the #content to the right. The exception to this
+ * is IE6 which will just hide the navigation block completely in these
+ * instances due to a positioning bug.
  */
 
+#content,
 #sidebar-left,
-#main,
 #sidebar-right {
   float: left;
   display: inline;
   position: relative;
 }
 
-#sidebar-left,
+#content {
+  width: 100%;
+}
+body.sidebar-left #content {
+  width: 80%;
+  left: 20%;
+}
+body.sidebar-right #content {
+  width: 80%;
+}
+body.two-sidebars #content {
+  width: 60%;
+  left: 20%;
+}
+
+#sidebar-left {
+  width: 20%;
+  left: -80%;
+}
+
+body.two-sidebars #sidebar-left {
+  left: -60%;
+}
+
 #sidebar-right {
+  float: right;
   width: 20%;
 }
 
-body.one-sidebar #main {
-  width: 80%;
-}
-
-body.two-sidebars #main {
-  width: 60%;
-}
-
-body.sidebar-left #main-squeeze {
-  margin-left: 20px;
-}
-
-body.sidebar-right #main-squeeze {
-  margin-right: 20px;
-}
-
-body.two-sidebars #main-squeeze {
-  margin: 0 20px;
+.section {
+  margin: 10px;
 }
