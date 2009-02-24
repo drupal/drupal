@@ -1072,7 +1072,7 @@ function file_validate_name_length($file) {
  * @param $file
  *   A Drupal file object.
  * @param $extensions
- *   A string with a space separated
+ *   A string with a space separated list of allowed extensions.
  * @return
  *   An array. If the file extension is not allowed, it will contain an error
  *   message.
