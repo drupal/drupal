@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.160 2009/02/22 17:55:28 dries Exp $
+// $Id: file.inc,v 1.161 2009/02/24 17:08:18 dries Exp $
 
 /**
  * @file
@@ -1072,7 +1072,7 @@ function file_validate_name_length($file) {
  * @param $file
  *   A Drupal file object.
  * @param $extensions
- *   A string with a space separated
+ *   A string with a space separated list of allowed extensions.
  * @return
  *   An array. If the file extension is not allowed, it will contain an error
  *   message.
