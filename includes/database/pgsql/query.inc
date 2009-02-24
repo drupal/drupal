@@ -1,7 +1,6 @@
 <?php
 // $Id$
 
-
 /**
  * @ingroup database
  * @{
@@ -26,29 +25,28 @@ class InsertQuery_pgsql extends InsertQuery {
       return NULL;
     }
 
-    $schema = drupal_get_schema($this->table);
-
     $stmt = $this->connection->prepareQuery((string)$this);
+
+    // Fetch the list of blobs and sequences used on that table.
+    $table_information = $this->connection->schema()->queryTableInformation($this->table);
 
     $max_placeholder = 0;
     $blobs = array();
-    $blob_cnt = 0;
+    $blob_count = 0;
     foreach ($this->insertValues as &$insert_values) {
       foreach ($this->insertFields as $idx => $field) {
-        switch ($schema['fields'][$field]['type']) {
-          case 'blob':
-            $blobs[$blob_cnt] = fopen('php://memory', 'a');
-            fwrite($blobs[$blob_cnt], $insert_values[$idx]);
-            rewind($blobs[$blob_cnt]);
+        if (isset($table_information->blob_fields[$field])) {
+          $blobs[$blob_count] = fopen('php://memory', 'a');
+          fwrite($blobs[$blob_count], $insert_values[$idx]);
+          rewind($blobs[$blob_count]);
 
-            $stmt->bindParam(':db_insert_placeholder_' . $max_placeholder++, $blobs[$blob_cnt], PDO::PARAM_LOB);
+          $stmt->bindParam(':db_insert_placeholder_' . $max_placeholder++, $blobs[$blob_count], PDO::PARAM_LOB);
 
-            ++$blob_cnt;
-
-            break;
-          default:
-            $stmt->bindParam(':db_insert_placeholder_'. $max_placeholder++, $insert_values[$idx]);
-            break;
+          // Pre-increment is faster in PHP than increment.
+          ++$blob_count;
+        }
+        else {
+          $stmt->bindParam(':db_insert_placeholder_'. $max_placeholder++, $insert_values[$idx]);
         }
       }
     }
@@ -58,8 +56,8 @@ class InsertQuery_pgsql extends InsertQuery {
     // the options array.
     $options = $this->queryOptions;
 
-    if ($schema['fields'][$schema['primary key'][0]]['type'] == 'serial') {
-      $options['sequence_name'] = $this->connection->makeSequenceName($this->table, $schema['primary key'][0]);
+    if (!empty($table_information->sequences)) {
+      $options['sequence_name'] = $table_information->sequences[0];
       $options['return'] = Database::RETURN_INSERT_ID;
     }
     $last_insert_id = $this->connection->query($stmt, array(), $options);
@@ -113,11 +111,12 @@ class UpdateQuery_pgsql extends UpdateQuery {
     $blobs = array();
     $blob_count = 0;
 
-    $schema = drupal_get_schema($this->table);
-
     // Because we filter $fields the same way here and in __toString(), the
     // placeholders will all match up properly.
     $stmt = $this->connection->prepareQuery((string)$this);
+
+    // Fetch the list of blobs and sequences used on that table.
+    $table_information = $this->connection->schema()->queryTableInformation($this->table);
 
     // Expressions take priority over literal fields, so we process those first
     // and remove any literal fields that conflict.
@@ -138,17 +137,15 @@ class UpdateQuery_pgsql extends UpdateQuery {
     foreach ($fields as $field => &$value) {
       $placeholder = ':db_update_placeholder_' . ($max_placeholder++);
 
-      switch ($schema['fields'][$field]['type']) {
-        case 'blob':
-          $blobs[$blob_count] = fopen('php://memory', 'a');
-          fwrite($blobs[$blob_count], $value);
-          rewind($blobs[$blob_count]);
-          $stmt->bindParam($placeholder, $blobs[$blob_count], PDO::PARAM_LOB);
-          ++$blob_count;
-          break;
-        default:
-          $stmt->bindParam($placeholder, $value);
-          break;
+      if (isset($table_information->blob_fields[$field])) {
+        $blobs[$blob_count] = fopen('php://memory', 'a');
+        fwrite($blobs[$blob_count], $value);
+        rewind($blobs[$blob_count]);
+        $stmt->bindParam($placeholder, $blobs[$blob_count], PDO::PARAM_LOB);
+        ++$blob_count;
+      }
+      else {
+        $stmt->bindParam($placeholder, $value);
       }
     }
 
@@ -165,7 +162,6 @@ class UpdateQuery_pgsql extends UpdateQuery {
     $options['already_prepared'] = TRUE;
     $this->connection->query($stmt, $options);
 
-    //$stmt->execute(NULL, $this->queryOptions);
     return $stmt->rowCount();
   }
 }

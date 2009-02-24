@@ -78,6 +78,10 @@
  *  - 'unique keys': An associative array of unique keys ('keyname' =>
  *    specification). Each specification is an array of one or more
  *    key column specifiers (see below) that form a unique key on the table.
+ *  - 'foreign keys': An associative array, each key references a column
+ *    of the local table, each value is an array with a single key pair as
+ *    'tablename' => 'column' where 'column' is the foreign column to
+ *    reference.
  *  - 'indexes':  An associative array of indexes ('indexame' =>
  *    specification). Each specification is an array of one or more
  *    key column specifiers (see below) that form an index on the
@@ -98,6 +102,7 @@
  * $schema['node'] = array(
  *   'fields' => array(
  *     'nid'      => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+ *     'uid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
  *     'vid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
  *     'type'     => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
  *     'title'    => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
@@ -106,6 +111,9 @@
  *   'unique keys' => array(
  *     'vid'     => array('vid')
  *   ),
+ *   'foreign keys' => array(
+ *     'uid'  => array('users' => 'uid'),
+ *   )
  *   'indexes' => array(
  *     'nid'                 => array('nid'),
  *     'node_title_type'     => array('title', array('type', 4)),
