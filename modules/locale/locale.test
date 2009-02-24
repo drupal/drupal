@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.18 2009/02/22 20:55:18 dries Exp $
+// $Id: locale.test,v 1.19 2009/02/24 16:46:52 webchick Exp $
 
 /**
  * @file
@@ -55,13 +55,13 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
 
     // Add custom language.
     // Code for the language.
-    $langcode = $this->randomName(6, 'si-');
+    $langcode = 'xx';
     // The English name for the language.
     $name = $this->randomName(16);
     // The native name for the language.
     $native = $this->randomName(16);
     // The domain prefix.
-    $prefix = strtolower(str_replace('si-', '', $langcode));
+    $prefix = $langcode;
     $edit = array(
       'langcode' => $langcode,
       'name' => $name,
@@ -188,13 +188,13 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     // User to translate and delete string.
     $translate_user = $this->drupalCreateUser(array('translate interface', 'access administration pages'));
     // Code for the language.
-    $langcode = $this->randomName(6, 'si-');
+    $langcode = 'xx';
     // The English name for the language. This will be translated.
     $name = $this->randomName(16);
     // The native name for the language.
     $native = $this->randomName(16);
     // The domain prefix.
-    $prefix = strtolower(str_replace('si-', '', $langcode));
+    $prefix = $langcode;
     // This is the language indicator on the translation search screen for
     // untranslated strings. Copied straight from locale.inc.
     $language_indicator = "<em class=\"locale-untranslated\">$langcode</em> ";
@@ -314,13 +314,13 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     // User to add language and strings.
     $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'translate interface'));
     $this->drupalLogin($admin_user);
-    $langcode = $this->randomName(6, 'si-');
+    $langcode = 'xx';
     // The English name for the language. This will be translated.
     $name = $this->randomName(16);
     // The native name for the language.
     $native = $this->randomName(16);
     // The domain prefix.
-    $prefix = strtolower(str_replace('si-', '', $langcode));
+    $prefix = $langcode;
     // This is the language indicator on the translation search screen for
     // untranslated strings. Copied straight from locale.inc.
     $language_indicator = "<em class=\"locale-untranslated\">$langcode</em> ";
@@ -381,13 +381,13 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $translate_user = $this->drupalCreateUser(array('translate interface', 'access administration pages'));
 
     // Code for the language.
-    $langcode = $this->randomName(6, 'si-');
+    $langcode = 'xx';
     // The English name for the language. This will be translated.
     $name = $this->randomName(16);
     // The native name for the language.
     $native = $this->randomName(16);
     // The domain prefix.
-    $prefix = strtolower(str_replace('si-', '', $langcode));
+    $prefix = $langcode;
     // This is the language indicator on the translation search screen for
     // untranslated strings. Copied straight from locale.inc.
     $language_indicator = "<em class=\"locale-untranslated\">$langcode</em> ";
@@ -655,22 +655,14 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
    * is enabled.
    */
   function testAutomaticModuleTranslationImportLanguageEnable() {
-    // Code for the language.
-    $langcode = $this->randomName(6, 'si-');
+    // Code for the language - manually set to match the test translation file.
+    $langcode = 'xx';
     // The English name for the language.
     $name = $this->randomName(16);
     // The native name for the language.
     $native = $this->randomName(16);
     // The domain prefix.
-    $prefix = strtolower(str_replace('si-', '', $langcode));
-
-    // Create a .po file.
-    $translations_dir = drupal_get_path('module', 'locale_test') .  '/translations/';
-    if (!file_exists($translations_dir)) {
-      mkdir($translations_dir);
-    }
-    $filename = $translations_dir . $langcode . '.po';
-    file_put_contents($filename, $this->getPoFile());
+    $prefix = $langcode;
 
     // Create a custom language.
     $edit = array(
@@ -695,9 +687,6 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     );
     $this->drupalPost('admin/build/translate/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings found for your search.'), t('String successfully imported.'));
-
-    // Remove our temporary .po file.
-    unlink($filename);
   }
 
   /**
@@ -1102,13 +1091,13 @@ class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
     // Add custom language.
     $this->drupalLogin($admin_user);
     // Code for the language.
-    $langcode = $this->randomName(6, 'si-');
+    $langcode = 'xx';
     // The English name for the language.
     $name = $this->randomName(16);
     // The native name for the language.
     $native = $this->randomName(16);
     // The domain prefix.
-    $prefix = strtolower(str_replace('si-', '', $langcode));
+    $prefix = 'xx';
     $edit = array(
       'langcode' => $langcode,
       'name' => $name,
@@ -1120,13 +1109,13 @@ class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
 
     // Add custom language and disable it.
     // Code for the language.
-    $langcode_disabled = $this->randomName(6, 'si-');
+    $langcode_disabled = 'xx-yy';
     // The English name for the language. This will be translated.
     $name_disabled = $this->randomName(16);
     // The native name for the language.
     $native_disabled = $this->randomName(16);
     // The domain prefix.
-    $prefix_disabled = strtolower(str_replace('si-', '', $langcode_disabled));
+    $prefix_disabled = $langcode_disabled;
     $edit = array(
       'langcode' => $langcode_disabled,
       'name' => $name_disabled,
@@ -1195,13 +1184,13 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     // Add custom language.
     $this->drupalLogin($admin_user);
     // Code for the language.
-    $langcode = $this->randomName(6, 'si-');
+    $langcode = 'xx';
     // The English name for the language.
     $name = $this->randomName(16);
     // The native name for the language.
     $native = $this->randomName(16);
     // The domain prefix.
-    $prefix = strtolower(str_replace('si-', '', $langcode));
+    $prefix = $langcode;
     $edit = array(
       'langcode' => $langcode,
       'name' => $name,
@@ -1281,13 +1270,13 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     // Add custom language.
     $this->drupalLogin($admin_user);
     // Code for the language.
-    $langcode = $this->randomName(6, 'si-');
+    $langcode = 'xx';
     // The English name for the language.
     $name = $this->randomName(16);
     // The native name for the language.
     $native = $this->randomName(16);
     // The domain prefix.
-    $prefix = strtolower(str_replace('si-', '', $langcode));
+    $prefix = $langcode;
     $edit = array(
       'langcode' => $langcode,
       'name' => $name,
@@ -1299,13 +1288,13 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
 
     // Add disabled custom language.
     // Code for the language.
-    $langcode_disabled = $this->randomName(6, 'si-');
+    $langcode_disabled = 'xx-yy';
     // The English name for the language.
     $name_disabled = $this->randomName(16);
     // The native name for the language.
     $native_disabled = $this->randomName(16);
     // The domain prefix.
-    $prefix_disabled = strtolower(str_replace('si-', '', $langcode_disabled));
+    $prefix_disabled = $langcode_disabled;
     $edit = array(
       'langcode' => $langcode_disabled,
       'name' => $name_disabled,
