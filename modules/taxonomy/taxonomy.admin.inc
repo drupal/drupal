@@ -266,7 +266,7 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
     // We are not calling taxonomy_get_tree because that might fail with a big
     // number of tags in the freetagging vocabulary.
     $results = pager_query(db_rewrite_sql('SELECT t.*, h.parent FROM {taxonomy_term_data} t INNER JOIN {taxonomy_term_hierarchy} h ON t.tid = h.tid WHERE t.vid = %d ORDER BY weight, name', 't', 'tid'), $page_increment, 0, NULL, $vocabulary->vid);
-    $total_entries = db_query(db_rewrite_sql('SELECT count(*) FROM {taxonomy_term_data} t INNER JOIN {taxonomy_term_hierarchy} h ON t.tid = h.tid WHERE t.vid = :vid'), array(':vid' => $vocabulary->vid));
+    $total_entries = db_query(db_rewrite_sql('SELECT COUNT(*) FROM {taxonomy_term_data} t INNER JOIN {taxonomy_term_hierarchy} h ON t.tid = h.tid WHERE t.vid = :vid'), array(':vid' => $vocabulary->vid));
     while ($term = db_fetch_object($results)) {
       $key = 'tid:' . $term->tid . ':0';
       $current_page[$key] = $term;

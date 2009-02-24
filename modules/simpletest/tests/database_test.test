@@ -604,7 +604,7 @@ class DatabaseUpdateTestCase extends DatabaseTestCase {
     $num_updated = db_update('test')->fields(array('job' => 'Musician'))->condition('job', 'Singer')->execute();
     $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
 
-    $num_matches = db_query("SELECT count(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
+    $num_matches = db_query("SELECT COUNT(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
     $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
   }
 
@@ -615,7 +615,7 @@ class DatabaseUpdateTestCase extends DatabaseTestCase {
     $num_updated = db_update('test')->fields(array('job' => 'Musician'))->condition('age', 26, '>')->execute();
     $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
 
-    $num_matches = db_query("SELECT count(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
+    $num_matches = db_query("SELECT COUNT(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
     $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
   }
 
@@ -638,7 +638,7 @@ class DatabaseUpdateTestCase extends DatabaseTestCase {
     $num_updated = $update->execute();
     $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
 
-    $num_matches = db_query("SELECT count(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
+    $num_matches = db_query("SELECT COUNT(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
     $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
   }
 }
@@ -669,7 +669,7 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
     $num_updated = $update->execute();
     $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
 
-    $num_matches = db_query("SELECT count(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
+    $num_matches = db_query("SELECT COUNT(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
     $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
   }
 
@@ -682,7 +682,7 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
       ->execute();
     $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
 
-    $num_matches = db_query("SELECT count(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
+    $num_matches = db_query("SELECT COUNT(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
     $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
   }
 
@@ -695,7 +695,7 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
       ->execute();
     $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
 
-    $num_matches = db_query("SELECT count(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
+    $num_matches = db_query("SELECT COUNT(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
     $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
   }
 
@@ -708,7 +708,7 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
       ->execute();
     $this->assertIdentical($num_updated, 2, t('Updated 2 records.'));
 
-    $num_matches = db_query("SELECT count(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
+    $num_matches = db_query("SELECT COUNT(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
     $this->assertIdentical($num_matches, '2', t('Updated fields successfully.'));
   }
 
@@ -721,7 +721,7 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
       ->execute();
     $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
 
-    $num_matches = db_query("SELECT count(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
+    $num_matches = db_query("SELECT COUNT(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
     $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
   }
 
@@ -738,7 +738,7 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
       ->execute();
     $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
 
-    $num_matches = db_query("SELECT count(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
+    $num_matches = db_query("SELECT COUNT(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
     $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
 
     $person = db_query("SELECT * FROM {test} WHERE name = :name", array(':name' => 'Ringo'))->fetch();
