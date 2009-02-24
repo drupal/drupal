@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.admin.inc,v 1.24 2009/01/26 14:08:42 dries Exp $
+// $Id: aggregator.admin.inc,v 1.25 2009/02/24 16:48:18 dries Exp $
 
 /**
  * @file
@@ -31,7 +31,7 @@ function aggregator_view() {
   }
   $output .= theme('table', $header, $rows);
 
-  $result = db_query('SELECT c.cid, c.title, count(ci.iid) as items FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid GROUP BY c.cid, c.title ORDER BY title');
+  $result = db_query('SELECT c.cid, c.title, COUNT(ci.iid) as items FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid GROUP BY c.cid, c.title ORDER BY title');
 
   $output .= '<h3>' . t('Category overview') . '</h3>';
 
