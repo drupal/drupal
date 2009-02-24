@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.157 2009/02/22 17:55:28 dries Exp $
+// $Id: install.php,v 1.158 2009/02/24 16:00:01 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -254,7 +254,6 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
       '#title' => st('Database name'),
       '#default_value' => empty($database['database']) ? '' : $database['database'],
       '#size' => 45,
-      '#maxlength' => 45,
       '#required' => TRUE,
       '#description' => st('The name of the database your @drupal data will be stored in. It must exist on your server before @drupal can be installed.', array('@drupal' => drupal_install_profile_name())),
     );
@@ -265,7 +264,6 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
       '#title' => st('Database username'),
       '#default_value' => empty($database['username']) ? '' : $database['username'],
       '#size' => 45,
-      '#maxlength' => 45,
     );
 
     // Database username
@@ -274,7 +272,6 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
       '#title' => st('Database password'),
       '#default_value' => empty($database['password']) ? '' : $database['password'],
       '#size' => 45,
-      '#maxlength' => 45,
     );
 
     $form['advanced_options'] = array(
@@ -291,7 +288,8 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
       '#title' => st('Database host'),
       '#default_value' => empty($database['host']) ? 'localhost' : $database['host'],
       '#size' => 45,
-      '#maxlength' => 45,
+      // Hostnames can be 255 characters long.
+      '#maxlength' => 255,
       '#required' => TRUE,
       '#description' => st('If your database is located on a different server, change this.'),
     );
@@ -302,7 +300,8 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
       '#title' => st('Database port'),
       '#default_value' => empty($database['port']) ? '' : $database['port'],
       '#size' => 45,
-      '#maxlength' => 45,
+      // The maximum port number is 65536, 5 digits.
+      '#maxlength' => 5,
       '#description' => st('If your database server is listening to a non-standard port, enter its number.'),
     );
 
@@ -313,7 +312,6 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
       '#title' => st('Table prefix'),
       '#default_value' => '',
       '#size' => 45,
-      '#maxlength' => 45,
       '#description' => st('If more than one application will be sharing this database, enter a table prefix such as %prefix for your @drupal site here.', array('@drupal' => drupal_install_profile_name(), '%prefix' => $db_prefix)),
     );
 
