@@ -257,6 +257,7 @@ function phptemplate_page($content, $show_blocks = TRUE) {
   $suggestion = 'page';
   $suggestions = array($suggestion);
   while ($arg = arg($i++)) {
+    $arg = str_replace(array('/', '\\', '\0'), '', $arg);
     $suggestions[] = $suggestion . '-' . $arg;
     if (!is_numeric($arg)) {
       $suggestion .= '-' . $arg;
