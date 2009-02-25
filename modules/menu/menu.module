@@ -298,7 +298,7 @@ function menu_nodeapi(&$node, $op) {
     case 'insert':
     case 'update':
       if (isset($node->menu)) {
-        $item = $node->menu;
+        $item = &$node->menu;
         if (!empty($item['delete'])) {
           menu_link_delete($item['mlid']);
         }
