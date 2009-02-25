@@ -1808,7 +1808,7 @@ function system_run_cron() {
  * Menu callback: return information about PHP.
  */
 function system_php() {
-  phpinfo(INFO_ALL);
+  phpinfo();
   exit();
 }
 
