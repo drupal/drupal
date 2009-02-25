@@ -698,7 +698,7 @@ function page_get_cache($retrieve) {
   global $user, $base_root;
   static $ob_started = FALSE;
 
-  if ($user->uid || ($_SERVER['REQUEST_METHOD'] != 'GET' && $_SERVER['REQUEST_METHOD'] != 'HEAD') || count(drupal_get_messages(NULL, FALSE))) {
+  if ($user->uid || ($_SERVER['REQUEST_METHOD'] != 'GET' && $_SERVER['REQUEST_METHOD'] != 'HEAD') || count(drupal_get_messages(NULL, FALSE)) || $_SERVER['SERVER_SOFTWARE'] === 'PHP CLI') {
     return FALSE;
   }
   if ($retrieve) {
