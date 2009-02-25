@@ -49,7 +49,8 @@ function blog_user($type, &$edit, &$user) {
     $user->content['summary']['blog'] =  array(
       '#type' => 'user_profile_item',
       '#title' => t('Blog'),
-      '#value' => l(t('View recent blog entries'), "blog/$user->uid", array('attributes' => array('title' => t("Read @username's latest blog entries.", array('@username' => $user->name))))),
+      // l() escapes the attributes, so we should not escape !username here.
+      '#value' => l(t('View recent blog entries'), "blog/$user->uid", array('attributes' => array('title' => t("Read !username's latest blog entries.", array('!username' => $user->name))))),
       '#attributes' => array('class' => 'blog'),
     );
   }
@@ -104,8 +105,8 @@ function blog_form(&$node) {
  */
 function blog_view($node, $teaser = FALSE, $page = FALSE) {
   if ($page) {
-    // Breadcrumb navigation
-    drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('Blogs'), 'blog'), l(t("@name's blog", array('@name' => $node->name)), 'blog/'. $node->uid)));
+    // Breadcrumb navigation. l() escapes the title, so we should not escape !name. 
+    drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('Blogs'), 'blog'), l(t("!name's blog", array('!name' => $node->name)), 'blog/'. $node->uid)));
   }
   return node_prepare($node, $teaser);
 }
@@ -118,10 +119,11 @@ function blog_link($type, $node = NULL, $teaser = FALSE) {
 
   if ($type == 'node' && $node->type == 'blog') {
     if (arg(0) != 'blog' || arg(1) != $node->uid) {
+      // This goes to l() and therefore escapes !username in both the title and attributes.
       $links['blog_usernames_blog'] = array(
-        'title' => t("@username's blog", array('@username' => $node->name)),
+        'title' => t("!username's blog", array('!username' => $node->name)),
         'href' => "blog/$node->uid",
-        'attributes' => array('title' => t("Read @username's latest blog entries.", array('@username' => $node->name)))
+        'attributes' => array('title' => t("Read !username's latest blog entries.", array('!username' => $node->name)))
       );
     }
   }
