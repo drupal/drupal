@@ -132,6 +132,16 @@ define('LANGUAGE_NEGOTIATION_PATH', 2);
 define('LANGUAGE_NEGOTIATION_DOMAIN', 3);
 
 /**
+ * Language written left to right. Possible value of $language->direction.
+ */
+define('LANGUAGE_LTR', 0);
+
+/**
+ * Language written right to left. Possible value of $language->direction.
+ */
+define('LANGUAGE_RTL', 1);
+
+/**
  * Start the timer with the specified name. If you start and stop
  * the same timer multiple times, the measured intervals will be
  * accumulated.
