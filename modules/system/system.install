@@ -1802,6 +1802,10 @@ function system_update_6021() {
         $item['router_path'] = $item['path'];
         $item['updated'] = FALSE;
       }
+      if ($item['description']) {
+        $item['options']['attributes']['title'] = $item['description'];
+      }      
+      
       // Save the link.
       menu_link_save($item);
       $_SESSION['menu_item_map'][$item['mid']] = array('mlid' => $item['mlid'], 'menu_name' => $item['menu_name']);
