@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.38 2009/01/22 03:11:54 webchick Exp $
+// $Id: translation.module,v 1.39 2009/02/25 13:39:20 dries Exp $
 
 /**
  * @file
@@ -87,7 +87,7 @@ function _translation_tab_access($node) {
 function translation_perm() {
   return array(
     'translate content' => array(
-      'title' => t('Tranlate content'),
+      'title' => t('Translate content'),
       'description' => t('Translate website content.'),
     ),
   );
