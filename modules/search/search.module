@@ -637,7 +637,9 @@ function search_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
       while ($link = db_fetch_object($result)) {
         $output[] = $link->caption;
       }
-      return '<a>('. implode(', ', $output) .')</a>';
+      if (count($output)) {
+        return '<a>('. implode(', ', $output) .')</a>';
+      }
     // Reindex the node when it is updated.  The node is automatically indexed
     // when it is added, simply by being added to the node table.
     case 'update':
