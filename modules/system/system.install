@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.308 2009/02/18 15:19:56 webchick Exp $
+// $Id: system.install,v 1.309 2009/02/25 13:33:53 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -65,10 +65,10 @@ function system_requirements($phase) {
   $memory_limit = ini_get('memory_limit');
   $requirements['php_memory_limit'] = array(
     'title' => $t('PHP memory limit'),
-    'value' => $memory_limit,
+    'value' => $memory_limit == -1 ? t('-1 (Unlimited)') : $memory_limit,
   );
 
-  if ($memory_limit && parse_size($memory_limit) < parse_size(DRUPAL_MINIMUM_PHP_MEMORY_LIMIT)) {
+  if ($memory_limit && $memory_limit != -1 && parse_size($memory_limit) < parse_size(DRUPAL_MINIMUM_PHP_MEMORY_LIMIT)) {
     $description = '';
     if ($phase == 'install') {
       $description = $t('Consider increasing your PHP memory limit to %memory_minimum_limit to help prevent errors in the installation process.', array('%memory_minimum_limit' => DRUPAL_MINIMUM_PHP_MEMORY_LIMIT));
