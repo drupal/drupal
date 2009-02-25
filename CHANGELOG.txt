@@ -1,5 +1,8 @@
 // $Id$
 
+Drupal 6.11-dev, xxxx-xx-xx (development release)
+----------------------
+
 Drupal 6.10, 2009-02-25
 ----------------------
 - Fixed a security issue, (Local file inclusion on Windows),
