@@ -1095,7 +1095,7 @@ function system_schema() {
       ),
     'unique keys' => array('dst_language' => array('dst', 'language')),
     'primary key' => array('pid'),
-    'indexes' => array('src' => array('src')),
+    'indexes' => array('src_language' => array('src', 'language')),
     );
 
   return $schema;
@@ -2532,6 +2532,16 @@ function system_update_6048() {
   return $ret;
 }
 
+
+/**
+ * Replace src index on the {url_alias} table with src, language.
+ */
+function system_update_6049() {
+  $ret = array();
+  db_drop_index($ret, 'url_alias', 'src');
+  db_add_index($ret, 'url_alias', 'src_language', array('src', 'language'));
+  return $ret;
+}
 
 /**
  * @} End of "defgroup updates-5.x-to-6.x"
