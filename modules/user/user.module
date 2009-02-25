@@ -626,15 +626,15 @@ function user_user($type, &$edit, &$account, $category = NULL) {
   }
   if ($type == 'form' && $category == 'account') {
     $form_state = array();
-    return user_edit_form($form_state, arg(1), $edit);
+    return user_edit_form($form_state, (isset($account->uid) ? $account->uid : FALSE), $edit);
   }
 
   if ($type == 'validate' && $category == 'account') {
-    return _user_edit_validate(arg(1), $edit);
+    return _user_edit_validate((isset($account->uid) ? $account->uid : FALSE), $edit);
   }
 
   if ($type == 'submit' && $category == 'account') {
-    return _user_edit_submit(arg(1), $edit);
+    return _user_edit_submit((isset($account->uid) ? $account->uid : FALSE), $edit);
   }
 
   if ($type == 'categories') {
@@ -1441,7 +1441,8 @@ function user_edit_form(&$form_state, $uid, $edit, $register = FALSE) {
     '#title' => t('Account information'),
     '#weight' => -10,
   );
-  if (user_access('change own username') || $admin || $register) {
+  // Only show name field when: registration page; or user is editing own account and can change username; or an admin user.
+  if ($register || ($GLOBALS['user']->uid == $uid && user_access('change own username')) || $admin) {
     $form['account']['name'] = array('#type' => 'textfield',
       '#title' => t('Username'),
       '#default_value' => $edit['name'],
@@ -1543,9 +1544,8 @@ function user_edit_form(&$form_state, $uid, $edit, $register = FALSE) {
 }
 
 function _user_edit_validate($uid, &$edit) {
-  $user = user_load(array('uid' => $uid));
-  // Validate the username:
-  if (user_access('change own username') || user_access('administer users') || !$user->uid) {
+  // Validate the username when: new user account; or user is editing own account and can change username; or an admin user.
+  if (!$uid || ($GLOBALS['user']->uid == $uid && user_access('change own username')) || user_access('administer users')) {
     if ($error = user_validate_name($edit['name'])) {
       form_set_error('name', $error);
     }
@@ -1570,11 +1570,11 @@ function _user_edit_validate($uid, &$edit) {
 }
 
 function _user_edit_submit($uid, &$edit) {
-  $user = user_load(array('uid' => $uid));
+  $account = user_load($uid);
   // Delete picture if requested, and if no replacement picture was given.
   if (!empty($edit['picture_delete'])) {
-    if ($user->picture && file_exists($user->picture)) {
-      file_delete($user->picture);
+    if ($account->picture && file_exists($account->picture)) {
+      file_delete($account->picture);
     }
     $edit['picture'] = '';
   }
