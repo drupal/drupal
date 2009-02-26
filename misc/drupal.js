@@ -12,8 +12,8 @@ Drupal.jsEnabled = document.getElementsByTagName && document.createElement && do
  */
 Drupal.extend = function(obj) {
   for (var i in obj) {
-    if (this[i]) {
-      Drupal.extend.apply(this[i], [obj[i]]);
+    if (this[i] && (typeof(this[i]) == 'function' || typeof(this[i]) == 'object')) {
+   	  Drupal.extend.apply(this[i], [obj[i]]);
     }
     else {
       this[i] = obj[i];
