@@ -1265,7 +1265,19 @@ function expand_radios($element) {
   if (count($element['#options']) > 0) {
     foreach ($element['#options'] as $key => $choice) {
       if (!isset($element[$key])) {
-        $element[$key] = array('#type' => 'radio', '#title' => $choice, '#return_value' => check_plain($key), '#default_value' => $element['#default_value'], '#attributes' => $element['#attributes'], '#parents' => $element['#parents'], '#spawned' => TRUE);
+        // Generate the parents as the autogenerator does, so we will have a
+        // unique id for each radio button.
+        $parents_for_id = array_merge($element['#parents'], array($key));
+        $element[$key] = array(
+          '#type' => 'radio',
+          '#title' => $choice,
+          '#return_value' => check_plain($key),
+          '#default_value' => $element['#default_value'],
+          '#attributes' => $element['#attributes'],
+          '#id' => form_clean_id('edit-'. implode('-', $parents_for_id)),
+          '#parents' => $element['#parents'],
+          '#spawned' => TRUE
+        );
       }
     }
   }
