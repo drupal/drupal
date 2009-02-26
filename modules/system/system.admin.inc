@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.128 2009/02/25 13:36:29 dries Exp $
+// $Id: system.admin.inc,v 1.129 2009/02/26 07:30:28 webchick Exp $
 
 /**
  * @file
@@ -1784,7 +1784,7 @@ function system_status($check = FALSE) {
   }
   // MySQL import might have set the uid of the anonymous user to autoincrement
   // value. Let's try fixing it. See http://drupal.org/node/204411
-  db_query("UPDATE {user} SET uid = uid - uid WHERE name = '' AND pass = '' AND status = 0");
+  db_query("UPDATE {users} SET uid = uid - uid WHERE name = '' AND pass = '' AND status = 0");
 
   return theme('status_report', $requirements);
 }

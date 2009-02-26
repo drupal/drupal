@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.39 2009/02/18 15:19:57 webchick Exp $
+// $Id: user.admin.inc,v 1.40 2009/02/26 07:30:28 webchick Exp $
 
 /**
  * @file
@@ -144,9 +144,9 @@ function user_admin_account() {
     t('Operations')
   );
 
-  $sql = 'SELECT DISTINCT u.uid, u.name, u.status, u.created, u.access FROM {user} u LEFT JOIN {user_role} ur ON u.uid = ur.uid ' . $filter['join'] . ' WHERE u.uid != 0 ' . $filter['where'];
+  $sql = 'SELECT DISTINCT u.uid, u.name, u.status, u.created, u.access FROM {users} u LEFT JOIN {users_roles} ur ON u.uid = ur.uid ' . $filter['join'] . ' WHERE u.uid != 0 ' . $filter['where'];
   $sql .= tablesort_sql($header);
-  $query_count = 'SELECT COUNT(DISTINCT u.uid) FROM {user} u LEFT JOIN {user_role} ur ON u.uid = ur.uid ' . $filter['join'] . ' WHERE u.uid != 0 ' . $filter['where'];
+  $query_count = 'SELECT COUNT(DISTINCT u.uid) FROM {users} u LEFT JOIN {users_roles} ur ON u.uid = ur.uid ' . $filter['join'] . ' WHERE u.uid != 0 ' . $filter['where'];
   $result = pager_query($sql, 50, 0, $query_count, $filter['args']);
 
   $form['options'] = array(
@@ -178,13 +178,13 @@ function user_admin_account() {
     $accounts[$account->uid] = '';
     $form['name'][$account->uid] = array('#markup' => theme('username', $account));
     $form['status'][$account->uid] =  array('#markup' => $status[$account->status]);
-    $user_roles = array();
-    $roles_result = db_query('SELECT rid FROM {user_role} WHERE uid = %d', $account->uid);
+    $users_roles = array();
+    $roles_result = db_query('SELECT rid FROM {users_roles} WHERE uid = %d', $account->uid);
     while ($user_role = db_fetch_object($roles_result)) {
-      $user_roles[] = $roles[$user_role->rid];
+      $users_roles[] = $roles[$user_role->rid];
     }
-    asort($user_roles);
-    $form['roles'][$account->uid][0] = array('#markup' => theme('item_list', $user_role));
+    asort($users_roles);
+    $form['roles'][$account->uid][0] = array('#markup' => theme('item_list', $users_roles));
     $form['member_for'][$account->uid] = array('#markup' => format_interval(REQUEST_TIME - $account->created));
     $form['last_access'][$account->uid] =  array('#markup' => $account->access ? t('@time ago', array('@time' => format_interval(REQUEST_TIME - $account->access))) : t('never'));
     $form['operations'][$account->uid] = array('#markup' => l(t('edit'), "user/$account->uid/edit", array('query' => $destination)));
@@ -736,7 +736,7 @@ function user_admin_role_submit($form, &$form_state) {
     db_query('DELETE FROM {role} WHERE rid = %d', $form_state['values']['rid']);
     db_query('DELETE FROM {role_permission} WHERE rid = %d', $form_state['values']['rid']);
     // Update the users who have this role set:
-    db_query('DELETE FROM {user_role} WHERE rid = %d', $form_state['values']['rid']);
+    db_query('DELETE FROM {users_roles} WHERE rid = %d', $form_state['values']['rid']);
 
     drupal_set_message(t('The role has been deleted.'));
   }

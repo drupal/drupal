@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1026 2009/02/22 16:53:41 dries Exp $
+// $Id: node.module,v 1.1027 2009/02/26 07:30:27 webchick Exp $
 
 /**
  * @file
@@ -855,7 +855,7 @@ function node_load_multiple($nids = array(), $conditions = array(), $reset = FAL
     else {
       $query->join('node_revision', 'r', 'r.vid = n.vid');
     }
-    $query->join('user', 'u', 'u.uid = n.uid');
+    $query->join('users', 'u', 'u.uid = n.uid');
 
     // Add fields from the {node} table.
     $node_fields = drupal_schema_fields_sql('node');
@@ -876,7 +876,7 @@ function node_load_multiple($nids = array(), $conditions = array(), $reset = FAL
     $query->addField('r', 'timestamp', 'revision_timestamp');
     $query->fields('r', $node_revision_fields);
 
-    // Add fields from the {user} table.
+    // Add fields from the {users} table.
     $user_fields = array('name', 'picture', 'data');
     $query->fields('u', $user_fields);
 
@@ -1865,7 +1865,7 @@ function node_last_changed($nid) {
  */
 function node_revision_list($node) {
   $revisions = array();
-  $result = db_query('SELECT r.vid, r.title, r.log, r.uid, n.vid AS current_vid, r.timestamp, u.name FROM {node_revision} r LEFT JOIN {node} n ON n.vid = r.vid INNER JOIN {user} u ON u.uid = r.uid WHERE r.nid = %d ORDER BY r.timestamp DESC', $node->nid);
+  $result = db_query('SELECT r.vid, r.title, r.log, r.uid, n.vid AS current_vid, r.timestamp, u.name FROM {node_revision} r LEFT JOIN {node} n ON n.vid = r.vid INNER JOIN {users} u ON u.uid = r.uid WHERE r.nid = %d ORDER BY r.timestamp DESC', $node->nid);
   while ($revision = db_fetch_object($result)) {
     $revisions[$revision->vid] = $revision;
   }
@@ -3019,22 +3019,22 @@ function node_save_action($node) {
  */
 function node_assign_owner_action(&$node, $context) {
   $node->uid = $context['owner_uid'];
-  $owner_name = db_result(db_query("SELECT name FROM {user} WHERE uid = %d", $context['owner_uid']));
+  $owner_name = db_result(db_query("SELECT name FROM {users} WHERE uid = %d", $context['owner_uid']));
   watchdog('action', 'Changed owner of @type %title to uid %name.', array('@type' => node_get_types('type', $node), '%title' => $node->title, '%name' => $owner_name));
 }
 
 function node_assign_owner_action_form($context) {
   $description = t('The username of the user to which you would like to assign ownership.');
-  $count = db_result(db_query("SELECT COUNT(*) FROM {user}"));
+  $count = db_result(db_query("SELECT COUNT(*) FROM {users}"));
   $owner_name = '';
   if (isset($context['owner_uid'])) {
-    $owner_name = db_result(db_query("SELECT name FROM {user} WHERE uid = %d", $context['owner_uid']));
+    $owner_name = db_result(db_query("SELECT name FROM {users} WHERE uid = %d", $context['owner_uid']));
   }
 
   // Use dropdown for fewer than 200 users; textbox for more than that.
   if (intval($count) < 200) {
     $options = array();
-    $result = db_query("SELECT uid, name FROM {user} WHERE uid > 0 ORDER BY name");
+    $result = db_query("SELECT uid, name FROM {users} WHERE uid > 0 ORDER BY name");
     while ($data = db_fetch_object($result)) {
       $options[$data->name] = $data->name;
     }
@@ -3061,7 +3061,7 @@ function node_assign_owner_action_form($context) {
 }
 
 function node_assign_owner_action_validate($form, $form_state) {
-  $count = db_result(db_query("SELECT COUNT(*) FROM {user} WHERE name = '%s'", $form_state['values']['owner_name']));
+  $count = db_result(db_query("SELECT COUNT(*) FROM {users} WHERE name = '%s'", $form_state['values']['owner_name']));
   if (intval($count) != 1) {
     form_set_error('owner_name', t('Please enter a valid username.'));
   }
@@ -3069,7 +3069,7 @@ function node_assign_owner_action_validate($form, $form_state) {
 
 function node_assign_owner_action_submit($form, $form_state) {
   // Username can change, so we need to store the ID, not the username.
-  $uid = db_result(db_query("SELECT uid from {user} WHERE name = '%s'", $form_state['values']['owner_name']));
+  $uid = db_result(db_query("SELECT uid from {users} WHERE name = '%s'", $form_state['values']['owner_name']));
   return array('owner_uid' => $uid);
 }
 

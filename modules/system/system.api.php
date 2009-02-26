@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.19 2009/02/18 15:19:56 webchick Exp $
+// $Id: system.api.php,v 1.20 2009/02/26 07:30:28 webchick Exp $
 
 /**
  * @file
@@ -1423,7 +1423,7 @@ function hook_schema() {
  */
 function hook_schema_alter(&$schema) {
   // Add field to existing schema.
-  $schema['user']['fields']['timezone_id'] = array(
+  $schema['users']['fields']['timezone_id'] = array(
     'type' => 'int',
     'not null' => TRUE,
     'default' => 0,

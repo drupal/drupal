@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.29 2009/02/18 15:19:57 webchick Exp $
+// $Id: user.pages.inc,v 1.30 2009/02/26 07:30:29 webchick Exp $
 
 /**
  * @file
@@ -12,7 +12,7 @@
 function user_autocomplete($string = '') {
   $matches = array();
   if ($string) {
-    $result = db_query_range("SELECT name FROM {user} WHERE LOWER(name) LIKE LOWER(:name)", array(':name' => $string .'%'), 0, 10);
+    $result = db_query_range("SELECT name FROM {users} WHERE LOWER(name) LIKE LOWER(:name)", array(':name' => $string .'%'), 0, 10);
     while ($user = db_fetch_object($result)) {
       $matches[$user->name] = check_plain($user->name);
     }

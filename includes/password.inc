@@ -1,5 +1,5 @@
 <?php
-// $Id: password.inc,v 1.5 2009/02/18 15:19:55 webchick Exp $
+// $Id: password.inc,v 1.6 2009/02/26 07:30:26 webchick Exp $
 
 /**
  * @file
@@ -195,7 +195,7 @@ function user_hash_password($password, $count_log2 = 0) {
  * @param $password
  *   A plain-text password
  * @param $account
- *   A user object with at least the fields from the {user} table.
+ *   A user object with at least the fields from the {users} table.
  *
  * @return
  *   TRUE or FALSE.
@@ -227,7 +227,7 @@ function user_check_password($password, $account) {
  * on the fields in $account.
  *
  * @param $account
- *   A user object with at least the fields from the {user} table.
+ *   A user object with at least the fields from the {users} table.
  *
  * @return
  *   TRUE or FALSE.

@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.19 2009/02/18 15:19:55 webchick Exp $
+// $Id: block.install,v 1.20 2009/02/26 07:30:26 webchick Exp $
 
 /**
  * Implementation of hook_schema().
@@ -117,7 +117,7 @@ function block_schema() {
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'description' => "The user's role ID from {user_role}.rid.",
+        'description' => "The user's role ID from {users_roles}.rid.",
       ),
     ),
     'primary key' => array('module', 'delta', 'rid'),

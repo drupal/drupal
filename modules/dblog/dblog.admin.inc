@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.12 2009/02/18 15:19:55 webchick Exp $
+// $Id: dblog.admin.inc,v 1.13 2009/02/26 07:30:26 webchick Exp $
 
 /**
  * @file
@@ -63,7 +63,7 @@ function dblog_overview() {
     array('data' => t('Operations')),
   );
 
-  $sql = "SELECT w.wid, w.uid, w.severity, w.type, w.timestamp, w.message, w.variables, w.link, u.name FROM {watchdog} w INNER JOIN {user} u ON w.uid = u.uid";
+  $sql = "SELECT w.wid, w.uid, w.severity, w.type, w.timestamp, w.message, w.variables, w.link, u.name FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid";
   $tablesort = tablesort_sql($header);
   if (!empty($filter['where'])) {
     $result = pager_query($sql . " WHERE " . $filter['where'] . $tablesort, 50, 0, NULL, $filter['args']);
@@ -132,7 +132,7 @@ function dblog_top($type) {
 function dblog_event($id) {
   $severity = watchdog_severity_levels();
   $output = '';
-  $result = db_query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {user} u ON w.uid = u.uid WHERE w.wid = %d', $id);
+  $result = db_query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid WHERE w.wid = %d', $id);
   if ($dblog = db_fetch_object($result)) {
     $rows = array(
       array(

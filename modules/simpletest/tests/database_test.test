@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.43 2009/02/24 16:48:18 dries Exp $
+// $Id: database_test.test,v 1.44 2009/02/26 07:30:27 webchick Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -2127,10 +2127,10 @@ class DatabaseTemporaryQueryTestCase extends DrupalWebTestCase {
 
     // Now try to run two db_query_temporary() in the same request.
     $table_name_system = db_query_temporary('SELECT status FROM {system}', array());
-    $table_name_users = db_query_temporary('SELECT uid FROM {user}', array());
+    $table_name_users = db_query_temporary('SELECT uid FROM {users}', array());
 
     $this->assertEqual($this->countTableRows($table_name_system), $this->countTableRows("system"), t('A temporary table was created successfully in this request.'));
-    $this->assertEqual($this->countTableRows($table_name_users), $this->countTableRows("user"), t('A second temporary table was created successfully in this request.'));
+    $this->assertEqual($this->countTableRows($table_name_users), $this->countTableRows("users"), t('A second temporary table was created successfully in this request.'));
   }
 }
 

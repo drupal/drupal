@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.install,v 1.16 2009/02/18 15:19:56 webchick Exp $
+// $Id: statistics.install,v 1.17 2009/02/26 07:30:27 webchick Exp $
 
 /**
  * Implementation of hook_install().
@@ -91,7 +91,7 @@ function statistics_schema() {
         'unsigned' => TRUE,
         'not null' => FALSE,
         'default' => 0,
-        'description' => 'User {user}.uid that visited the page.',
+        'description' => 'User {users}.uid that visited the page.',
       ),
       'timer' => array(
         'type' => 'int',

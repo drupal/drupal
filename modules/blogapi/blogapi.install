@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.install,v 1.5 2009/02/18 15:19:55 webchick Exp $
+// $Id: blogapi.install,v 1.6 2009/02/26 07:30:26 webchick Exp $
 
 /**
  * Implementation of hook_install().
@@ -30,7 +30,7 @@ function blogapi_schema() {
         'type' => 'serial',
       ),
       'uid' => array(
-        'description' => 'The {user}.uid of the user who is associated with the file.',
+        'description' => 'The {users}.uid of the user who is associated with the file.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,

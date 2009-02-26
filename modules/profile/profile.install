@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.install,v 1.16 2009/02/18 15:19:56 webchick Exp $
+// $Id: profile.install,v 1.17 2009/02/26 07:30:27 webchick Exp $
 
 /**
  * Implementation of hook_install().
@@ -132,7 +132,7 @@ function profile_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The {user}.uid of the profile user.',
+        'description' => 'The {users}.uid of the profile user.',
       ),
       'value' => array(
         'type' => 'text',
