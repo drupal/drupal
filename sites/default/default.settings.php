@@ -124,7 +124,7 @@
  *
  *   $db_prefix = array(
  *     'default'   => 'main_',
- *     'user'      => 'shared_',
+ *     'users'      => 'shared_',
  *     'sessions'  => 'shared_',
  *     'role'      => 'shared_',
  *     'authmap'   => 'shared_',

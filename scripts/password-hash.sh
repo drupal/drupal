@@ -52,7 +52,7 @@ All arguments are long options.
   "<password1>" ["<password2>" ["<password3>" ...]]
 
               One or more plan-text passwords enclosed by double quotes. The
-              output hash may be manually entered into the {user}.pass field to
+              output hash may be manually entered into the {users}.pass field to
               change a password via SQL to a known value.
 
 To run this script without the --root argument invoke it from the root directory

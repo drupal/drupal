@@ -592,7 +592,6 @@ function update_prepare_d7_bootstrap() {
   drupal_install_init_database();
   spl_autoload_unregister('drupal_autoload_class');
   spl_autoload_unregister('drupal_autoload_interface');
-  update_prepare_d7_bootstrap_rename();
   // The new {blocked_ips} table is used in Drupal 7 to store a list of
   // banned IP addresses. If this table doesn't exist then we are still
   // running on a Drupal 6 database, so suppress the unavoidable errors
@@ -605,23 +604,6 @@ function update_prepare_d7_bootstrap() {
       throw $e;
     }
   }
-}
-
-/**
- * Rename tables:
- *   - {users} to {user}
- *   - {users_roles} to {user_role}
- *   - {sessions} to {session}
- */
-function update_prepare_d7_bootstrap_rename() {
-  $ret = array();
-
-  if (db_table_exists('users')) {
-    db_rename_table($ret, 'users', 'user');
-    db_rename_table($ret, 'users_roles', 'user_role');
-  }
-
-  return $ret;
 }
 
 /**

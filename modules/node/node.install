@@ -43,7 +43,7 @@ function node_schema() {
         'default' => '',
       ),
       'uid' => array(
-        'description' => 'The {user}.uid that owns this node; initially, this is the user that created it.',
+        'description' => 'The {users}.uid that owns this node; initially, this is the user that created it.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
@@ -227,7 +227,7 @@ function node_schema() {
         'not null' => TRUE,
       ),
       'uid' => array(
-        'description' => 'The {user}.uid that created this version.',
+        'description' => 'The {users}.uid that created this version.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,

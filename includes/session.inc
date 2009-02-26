@@ -83,7 +83,7 @@ function _sess_read($key) {
 
   // Otherwise, if the session is still active, we have a record of the
   // client's session in the database.
-  $user = db_query("SELECT u.*, s.* FROM {user} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid", array(':sid' => $key))->fetchObject();
+  $user = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid", array(':sid' => $key))->fetchObject();
 
   // We found the client's session record and they are an authenticated user.
   if ($user && $user->uid > 0) {
@@ -93,7 +93,7 @@ function _sess_read($key) {
     // Add roles element to $user.
     $user->roles = array();
     $user->roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user';
-    $user->roles += db_query("SELECT r.rid, r.name FROM {role} r INNER JOIN {user_role} ur ON ur.rid = r.rid WHERE ur.uid = :uid", array(':uid' => $user->uid))->fetchAllKeyed(0, 1);
+    $user->roles += db_query("SELECT r.rid, r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = :uid", array(':uid' => $user->uid))->fetchAllKeyed(0, 1);
   }
   // We didn't find the client's record (session has expired), or they
   // are an anonymous user.
@@ -146,7 +146,7 @@ function _sess_write($key, $value) {
   // Last access time is updated no more frequently than once every 180 seconds.
   // This reduces contention in the users table.
   if ($user->uid && REQUEST_TIME - $user->access > variable_get('session_write_interval', 180)) {
-    db_update('user')
+    db_update('users')
       ->fields(array(
         'access' => REQUEST_TIME
       ))
