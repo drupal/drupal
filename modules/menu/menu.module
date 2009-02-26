@@ -176,7 +176,7 @@ function menu_form_alter($form_id, &$form) {
   if (isset($form['type']) && $form['type']['#value'] .'_node_form' == $form_id) {
     $item = array();
     if ($form['nid']['#value'] > 0) {
-      $item = db_fetch_array(db_query("SELECT * FROM {menu} WHERE path = 'node/%d'", $form['nid']['#value']));
+      $item = db_fetch_array(db_query("SELECT * FROM {menu} WHERE path = 'node/%d' ORDER BY mid", $form['nid']['#value']));
       if (isset($form['#post']['menu']) && is_array($form['#post']['menu'])) {
         $item = !is_array($item) ? $form['#post']['menu'] : (($form['#post']['op'] == t('Preview')) ? array_merge($item, $form['#post']['menu']) : array_merge($form['#post']['menu'], $item));
       }
