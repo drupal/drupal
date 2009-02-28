@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.29 2009/02/18 13:46:54 webchick Exp $
+// $Id: common.test,v 1.30 2009/02/28 07:36:06 webchick Exp $
 
 /**
  * Tests for the l() function.
@@ -450,6 +450,17 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $this->assertTrue(array_key_exists('misc/jquery.js', $javascript), t('jQuery is added when inline scripts are added.'));
     $data = end($javascript);
     $this->assertEqual($inline, $data['data'], t('Inline JavaScript is correctly added to the footer.'));
+  }
+
+  /**
+   * Test rendering an external JavaScript file.
+   */
+  function testRenderExternal() {
+    $external = 'http://example.com/example.js';
+    drupal_add_js($external, 'external');
+    $javascript = drupal_get_js();
+    // Local files have a base_path() prefix, external files should not.
+    $this->assertTrue(strpos($javascript, 'src="' . $external) > 0, t('Rendering an external JavaScript file.'));
   }
 
   /**
