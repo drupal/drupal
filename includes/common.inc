@@ -2337,6 +2337,11 @@ function drupal_clear_css_cache() {
  *   When adding inline code, make sure that you are not relying on $ being jQuery.
  *   Wrap your code in (function($) { ... })(jQuery); or use jQuery instead of $.
  *
+ * - Add external JavaScript ('external'):
+ *   Allows the inclusion of external JavaScript files that are not hosted on the
+ *   local server. Note that these external JavaScript references do not get
+ *   aggregated when preprocessing is on.
+ *
  * - Add settings ('setting'):
  *   Adds a setting to Drupal's global storage of JavaScript settings. Per-page
  *   settings are required by some modules to function properly. All settings
@@ -2350,12 +2355,14 @@ function drupal_clear_css_cache() {
  *   drupal_add_js('jQuery(document).ready(function(){alert("Hello!");});',
  *     array('type' => 'inline', 'scope' => 'footer', 'weight' => 5)
  *   );
+ *   drupal_add_js('http://example.com/example.js', 'external');
  * @endcode
  *
  * @param $data
  *   (optional) If given, the value depends on the $options parameter:
  *   - 'file': Path to the file relative to base_path().
  *   - 'inline': The JavaScript code that should be placed in the given scope.
+ *   - 'external': The absolute path to a JavaScript file hosted externally.
  *   - 'setting': An array with configuration options as associative array. The
  *       array is directly placed in Drupal.settings. All modules should wrap
  *       their actual configuration settings in another variable to prevent
@@ -2369,8 +2376,8 @@ function drupal_clear_css_cache() {
  *   always pass the string 'setting' only.
  *   - type
  *       The type of JavaScript that is to be added to the page. Allowed
- *       values are 'file', 'inline', 'setting', or 'reset'. Defaults to
- *       'file'. Note that if type is 'reset', then $data and all other
+ *       values are 'file', 'inline', 'external', 'setting', or 'reset'. Defaults
+ *       to 'file'. Note that if type is 'reset', then $data and all other
  *       $options will be ignored and the JavaScript added so far will be
  *       reset.
  *   - scope
@@ -2404,7 +2411,8 @@ function drupal_clear_css_cache() {
  *       a JavaScript file. Defaults to TRUE.
  *   - preprocess
  *       Aggregate the JavaScript if the JavaScript optimization setting has
- *       been toggled in admin/settings/performance. Defaults to TRUE.
+ *       been toggled in admin/settings/performance. Note that JavaScript of
+ *       type 'external' is not aggregated. Defaults to TRUE.
  * @return
  *   The contructed array of JavaScript files.
  * @see drupal_get_js()
@@ -2476,9 +2484,9 @@ function drupal_add_js($data = NULL, $options = NULL) {
         $javascript[] = $options;
         break;
 
-      case 'file':
-        // Files must keep their name as the associative key so the same
-        // JavaScript files can not be added twice.
+      default: // 'file' and 'external'
+        // Local and external files must keep their name as the associative key
+        // so the same JavaScript file is not be added twice.
         $javascript[$options['data']] = $options;
         break;
     }
@@ -2595,6 +2603,11 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
         else {
           $files[$item['data']] = $item;
         }
+        break;
+
+      case 'external':
+        // Preprocessing for external JavaScript files is ignored.
+        $output .= '<script type="text/javascript"' . ($item['defer'] ? ' defer="defer"' : '') . ' src="' . $item['data'] . "\"></script>\n";
         break;
     }
   }

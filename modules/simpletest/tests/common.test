@@ -453,6 +453,17 @@ class JavaScriptTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test rendering an external JavaScript file.
+   */
+  function testRenderExternal() {
+    $external = 'http://example.com/example.js';
+    drupal_add_js($external, 'external');
+    $javascript = drupal_get_js();
+    // Local files have a base_path() prefix, external files should not.
+    $this->assertTrue(strpos($javascript, 'src="' . $external) > 0, t('Rendering an external JavaScript file.'));
+  }
+
+  /**
    * Test drupal_get_js() with a footer scope.
    */
   function testFooterHTML() {
