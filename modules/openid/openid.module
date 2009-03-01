@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.40 2009/02/01 16:45:53 dries Exp $
+// $Id: openid.module,v 1.41 2009/03/01 17:19:08 webchick Exp $
 
 /**
  * @file
@@ -114,7 +114,7 @@ function _openid_user_login_form_alter(&$form, &$form_state) {
   $form['openid_identifier'] = array(
     '#type' => 'textfield',
     '#title' => t('Log in using OpenID'),
-    '#size' => ($form_id == 'user_login') ? 58 : 13,
+    '#size' => $form['name']['#size'],
     '#maxlength' => 255,
     '#weight' => -1,
     '#description' => l(t('What is OpenID?'), 'http://openid.net/', array('external' => TRUE)),
