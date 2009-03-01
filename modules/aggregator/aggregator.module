@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.404 2009/01/26 14:08:42 dries Exp $
+// $Id: aggregator.module,v 1.405 2009/03/01 07:21:02 webchick Exp $
 
 /**
  * @file
@@ -515,6 +515,7 @@ function aggregator_remove($feed) {
     ->fields(array(
       'checked' => 0,
       'hash' => '',
+      'etag' => '',
       'modified' => 0,
       'description' => $feed->description,
       'image' => $feed->image,
