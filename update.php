@@ -282,7 +282,7 @@ function update_script_selection_form() {
     );
     $form['submit'] = array(
       '#type' => 'submit',
-      '#value' => 'apply pending updates',
+      '#value' => 'Apply pending updates',
     );
   }
   return $form;
