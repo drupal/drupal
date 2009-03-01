@@ -625,8 +625,18 @@ function update_task_list($active = NULL) {
  * Check update requirements and report any errors.
  */
 function update_check_requirements() {
+  global $db_url, $databases;
+  $requirements = array();
+
+  // If we will rewrite the settings.php then we need to make sure it is
+  // writeable.
+  if (empty($databases) && !empty($db_url) && is_string($db_url)) {
+    $requirements = install_check_requirements('', FALSE);
+  }
+  $warnings = FALSE;
+
   // Check the system module requirements only.
-  $requirements = module_invoke('system', 'requirements', 'update');
+  $requirements += module_invoke('system', 'requirements', 'update');
   $severity = drupal_requirements_severity($requirements);
 
   // If there are issues, report them.
@@ -637,9 +647,33 @@ function update_check_requirements() {
         if (isset($requirement['value']) && $requirement['value']) {
           $message .= ' (Currently using ' . $requirement['title'] . ' ' . $requirement['value'] . ')';
         }
+        $warnings = TRUE;
         drupal_set_message($message, 'warning');
       }
     }
+  }
+  return $warnings;
+}
+
+/**
+ * Converts Drupal 6 $db_url to Drupal 7 $databases array.
+ */
+function update_check_d7_settings() {
+  global $db_url, $databases;
+
+  if (empty($databases) && !empty($db_url) && is_string($db_url)) {
+    $url = parse_url($db_url);
+    $driver = substr($db_url, 0, strpos($db_url, '://'));
+    if ($driver == 'mysqli') {
+      $driver = 'mysql';
+    }
+    $databases['default']['default']['driver'] = $driver;
+    $databases['default']['default']['database'] = substr($url['path'], 1);
+    foreach (array('user' => 'username', 'pass' => 'password', 'host' => 'host', 'port' => 'port') as $old_key => $new_key) {
+      $databases['default']['default'][$new_key] =  isset($url[$old_key]) ? urldecode($url[$old_key]) : '';
+    }
+    $conf_path = conf_path();
+    file_put_contents($conf_path .'/settings.php', "\n" . '$databases = '. var_export($databases, TRUE) . ';', FILE_APPEND);
   }
 }
 
@@ -675,16 +709,18 @@ if (empty($op)) {
   drupal_maintenance_theme();
 
   // Check the update requirements for Drupal.
-  update_check_requirements();
+  $warnings = update_check_requirements();
 
   // Display the warning messages (if any) in a dedicated maintenance page,
   // or redirect to the update information page if no message.
-  $messages = drupal_set_message();
-  if (!empty($messages['warning'])) {
+  if ($warnings) {
     drupal_maintenance_theme();
     print theme('update_page', '<form method="post" action="update.php?op=info"><input type="submit" value="Continue" /></form>', FALSE);
     exit;
   }
+  // Write D7 settings file.
+  update_check_d7_settings();
+
   install_goto('update.php?op=info');
 }
 

@@ -3226,6 +3226,17 @@ function system_update_7019() {
 }
 
 /**
+ * Enable field module.
+ */
+function system_update_7020() {
+  $ret = array();
+  $module_list = array('field_sql_storage', 'field');
+  drupal_install_modules($module_list);
+  module_enable($module_list);
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
