@@ -5,7 +5,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
   private static $prefix = 'simpletest_aggregator_';
 
   function setUp() {
-    parent::setUp('aggregator');
+    parent::setUp('aggregator', 'aggregator_test');
     $web_user = $this->drupalCreateUser(array('administer news feeds', 'access news feeds', 'create article content'));
     $this->drupalLogin($web_user);
   }
@@ -13,10 +13,15 @@ class AggregatorTestCase extends DrupalWebTestCase {
   /**
    * Create an aggregator feed (simulate form submission on admin/content/aggregator/add/feed).
    *
-   * @return $feed Full feed object if possible.
+   * @param $feed_url
+   *   If given, feed will be created with this URL, otherwise /rss.xml will be used.
+   * @return $feed
+   *   Full feed object if possible.
+   * 
+   * @see getFeedEditArray()
    */
-  function createFeed() {
-    $edit = $this->getFeedEditArray();
+  function createFeed($feed_url = NULL) {
+    $edit = $this->getFeedEditArray($feed_url);
     $this->drupalPost('admin/content/aggregator/add/feed', $edit, t('Save'));
     $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), t('The feed !name has been added.', array('!name' => $edit['title'])));
 
@@ -38,11 +43,16 @@ class AggregatorTestCase extends DrupalWebTestCase {
   /**
    * Return a randomly generated feed edit array.
    *
-   * @return array Feed array.
+   * @param $feed_url
+   *   If given, feed will be created with this URL, otherwise /rss.xml will be used.
+   * @return
+   *   A feed array.
    */
-  function getFeedEditArray() {
+  function getFeedEditArray($feed_url = NULL) {
     $feed_name = $this->randomName(10, self::$prefix);
-    $feed_url = url(NULL, array('absolute' => TRUE)) . 'rss.xml?feed=' . $feed_name;
+    if (!$feed_url) {
+      $feed_url = $GLOBALS['base_url'] . '/rss.xml?feed=' . $feed_name;
+    }
     $edit = array(
       'title' => $feed_name,
       'url' => $feed_url,
@@ -52,19 +62,29 @@ class AggregatorTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Return the count of the randomly created feed array.
+   * 
+   * @return 
+   *   Number of feed items on default feed created by createFeed().
+   */
+  function getDefaultFeedItemCount() {
+    // Our tests are based off of rss.xml, so let's find out how many elements should be related.
+    $feed_count = db_query_range('SELECT COUNT(*) FROM {node} n WHERE n.promote = 1 AND n.status = 1', 0, variable_get('feed_default_items', 10))->fetchField();
+    return $feed_count > 10 ? 10 : $feed_count;
+  }
+
+  /**
    * Update feed items (simulate click to admin/content/aggregator/update/$fid).
    *
-   * @param object $feed Feed object representing the feed.
+   * @param $feed
+   *   Feed object representing the feed.
+   * @param $expected_count
+   *   Expected number of feed items.
    */
-  function updateFeedItems(&$feed) {
+  function updateFeedItems(&$feed, $expected_count) {
     // First, let's ensure we can get to the rss xml.
-    $this->drupalGet('rss.xml');
-    $this->assertResponse(200, t('rss.xml is reachable.'));
-
-    // Our tests are based off of rss.xml, so let's find out how many elements should be related.
-    // @todo: remove db_rewrite_sql() when possible
-    $feed_count = db_query_range(db_rewrite_sql('SELECT COUNT(*) FROM {node} n WHERE n.promote = 1 AND n.status = 1'), 0, variable_get('feed_default_items', 10))->fetchField();
-    $feed_count = $feed_count > 10 ? 10 : $feed_count;
+    $this->drupalGet($feed->url);
+    $this->assertResponse(200, t('!url is reachable.', array('!url' => $feed->url)));
 
     // Refresh the feed (simulated link click).
     $this->drupalGet('admin/content/aggregator/update/' . $feed->fid);
@@ -77,7 +97,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
       $feed->items[] = $item->iid;
     }
     $feed->item_count = count($feed->items);
-    $this->assertEqual($feed_count, $feed->item_count, t('Total items in feed equal to the total items in database (!val1 != !val2)', array('!val1' => $feed_count, '!val2' => $feed->item_count)));
+    $this->assertEqual($expected_count, $feed->item_count, t('Total items in feed equal to the total items in database (!val1 != !val2)', array('!val1' => $expected_count, '!val2' => $feed->item_count)));
   }
 
   /**
@@ -88,6 +108,22 @@ class AggregatorTestCase extends DrupalWebTestCase {
   function removeFeedItems($feed) {
     $this->drupalPost('admin/content/aggregator/remove/' . $feed->fid, array(), t('Remove items'));
     $this->assertRaw(t('The news items from %title have been removed.', array('%title' => $feed->title)), t('Feed items removed.'));
+  }
+
+  /**
+   * Add and remove feed items and ensure that the count is zero.
+   * 
+   * @param $feed 
+   *   Feed object representing the feed.
+   * @param $expected_count 
+   *   Expected number of feed items.
+   */
+  function updateAndRemove($feed, $expected_count) {
+    $this->updateFeedItems($feed, $expected_count);
+    $this->assertText('There is new syndicated content from');
+    $this->removeFeedItems($feed);
+    $count = db_query('SELECT COUNT(*) FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
+    $this->assertTrue($count == 0);
   }
 
   /**
@@ -192,36 +228,7 @@ EOF;
   }
 
   function getRSS091Sample() {
-    $feed = <<<EOT
-<?xml version="1.0" encoding="UTF-8"?>
-<rss version="0.91">
-  <channel>
-    <title>Example</title>
-    <link>http://example.com</link>
-    <description>Example updates</description>
-    <language>en-us</language>
-    <copyright>Copyright 2000, Example team.</copyright>
-    <managingEditor>editor@example.com</managingEditor>
-    <webMaster>webmaster@example.com</webMaster>
-    <image>
-      <title>Example</title>
-      <url>http://example.com/images/druplicon.png</url>
-      <link>http://example.com</link>
-      <width>88</width>
-      <height>100</height>
-      <description>Example updates</description>
-    </image>
-    <item>
-      <title>Example turns one</title>
-      <link>http://example.com/example-turns-one</link>
-      <description>Example turns one.</description>
-    </item>
-  </channel>
-</rss>
-EOT;
-
-    $path = file_directory_path() . '/rss091.xml';
-    return file_unmanaged_save_data($feed, $path);
+    return $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'aggregator') . '/aggregator_test_rss091.xml';
   }
 
   function createSampleNodes() {
@@ -352,7 +359,7 @@ class UpdateFeedItemTestCase extends AggregatorTestCase {
     // Create a feed and test updating feed items if possible.
     $feed = $this->createFeed();
     if (!empty($feed)) {
-      $this->updateFeedItems($feed);
+      $this->updateFeedItems($feed, $this->getDefaultFeedItemCount());
       $this->removeFeedItems($feed);
     }
 
@@ -362,8 +369,9 @@ class UpdateFeedItemTestCase extends AggregatorTestCase {
     // Test updating feed items without valid timestamp information.
     $edit = array(
       'title' => "Feed without publish timestamp",
-      'url' => file_create_url($this->getRSS091Sample()),
+      'url' => $this->getRSS091Sample(),
     );
+
     $this->drupalGet($edit['url']);
     $this->assertResponse(array(200), t('URL !url is accessible', array('!url' => $edit['url'])));
 
@@ -407,18 +415,28 @@ class RemoveFeedItemTestCase extends AggregatorTestCase {
    * Test running "remove items" from the 'admin/content/aggregator' page.
    */
   function testRemoveFeedItem() {
-    $this->createSampleNodes();
+    // Create a bunch of test feeds.
+    $feed_urls = array();
+    // No last-modified, no etag.
+    $feed_urls[] = url('aggregator/test-feed', array('absolute' => TRUE));
+    // Last-modified, but no etag.
+    $feed_urls[] = url('aggregator/test-feed/1', array('absolute' => TRUE));
+    // No Last-modified, but etag.
+    $feed_urls[] = url('aggregator/test-feed/0/1', array('absolute' => TRUE));
+    // Last-modified and etag.
+    $feed_urls[] = url('aggregator/test-feed/1/1', array('absolute' => TRUE));
 
-    $feed = $this->createFeed();
-
-    // Add and remove feed items and ensure that the count is zero.
-    $this->updateFeedItems($feed);
-    $this->removeFeedItems($feed);
-    $count = db_query('SELECT COUNT(*) FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
-    $this->assertTrue($count == 0);
-
-    // Delete feed.
-    $this->deleteFeed($feed);
+    foreach ($feed_urls as $feed_url) {
+      $feed = $this->createFeed($feed_url);
+      // Update and remove items two times in a row to make sure that removal
+      // resets all 'modified' information (modified, etag, hash) and allows for 
+      // immediate update.
+      $this->updateAndRemove($feed, 2);
+      $this->updateAndRemove($feed, 2);
+      $this->updateAndRemove($feed, 2);
+      // Delete feed.
+      $this->deleteFeed($feed);
+    }
   }
 }
 
@@ -459,7 +477,7 @@ class CategorizeFeedItemTestCase extends AggregatorTestCase {
         'fid' => $feed->fid,
       ))
       ->execute();
-    $this->updateFeedItems($feed);
+    $this->updateFeedItems($feed, $this->getDefaultFeedItemCount());
     $this->getFeedCategories($feed);
     $this->assertTrue(!empty($feed->categories), t('The category found in the feed.'));
 

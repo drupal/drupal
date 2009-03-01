@@ -515,6 +515,7 @@ function aggregator_remove($feed) {
     ->fields(array(
       'checked' => 0,
       'hash' => '',
+      'etag' => '',
       'modified' => 0,
       'description' => $feed->description,
       'image' => $feed->image,
