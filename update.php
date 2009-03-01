@@ -716,7 +716,7 @@ if (!empty($update_free_access) || $user->uid == 1) {
         break;
       }
 
-    case 'apply pending updates':
+    case 'Apply pending updates':
       if (isset($_GET['token']) && $_GET['token'] == drupal_get_token('update')) {
         update_batch();
         break;
