@@ -952,7 +952,7 @@ function do_search($keywords, $type, $join1 = '', $where1 = '1 = 1', $arguments1
   $query = search_parse_query($keywords);
 
   if ($query[2] == '') {
-    form_set_error('keys', t('You must include at least one positive keyword with @count characters or more.', array('@count' => variable_get('minimum_word_size', 3))));
+    form_set_error('keys', format_plural(variable_get('minimum_word_size', 3), 'You must include at least one positive keyword with 1 character or more.', 'You must include at least one positive keyword with @count characters or more.'));
   }
   if ($query[6]) {
     if ($query[6] == 'or') {
