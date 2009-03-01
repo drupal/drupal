@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.276 2009/03/01 08:07:36 webchick Exp $
+// $Id: update.php,v 1.277 2009/03/01 09:17:53 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -716,7 +716,7 @@ if (!empty($update_free_access) || $user->uid == 1) {
         break;
       }
 
-    case 'apply pending updates':
+    case 'Apply pending updates':
       if (isset($_GET['token']) && $_GET['token'] == drupal_get_token('update')) {
         update_batch();
         break;
