@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.270 2009/02/25 13:49:26 dries Exp $
+// $Id: bootstrap.inc,v 1.271 2009/03/01 09:32:17 webchick Exp $
 
 /**
  * @file
@@ -457,7 +457,7 @@ function conf_init() {
   global $base_url, $base_path, $base_root;
 
   // Export the following settings.php variables to the global namespace
-  global $databases, $db_prefix, $cookie_domain, $conf, $installed_profile, $update_free_access;
+  global $databases, $db_prefix, $cookie_domain, $conf, $installed_profile, $update_free_access, $db_url;
   $conf = array();
 
   if (file_exists(DRUPAL_ROOT . '/' . conf_path() . '/settings.php')) {
@@ -979,7 +979,7 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
  */
 function drupal_set_message($message = NULL, $type = 'status', $repeat = TRUE) {
   if ($message) {
-    if (!isset($_SESSION['messages'])) {
+    if (!isset($_SESSION['messages']) && function_exists('drupal_set_session')) {
       drupal_set_session('messages', array());
     }
 

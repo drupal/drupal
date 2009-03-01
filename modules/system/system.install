@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.310 2009/02/26 07:30:28 webchick Exp $
+// $Id: system.install,v 1.311 2009/03/01 09:32:17 webchick Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3222,6 +3222,17 @@ function system_update_7019() {
   db_change_field($ret, 'system', 'type', 'type', array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''));
   db_add_index($ret, 'system', 'modules', array('type', 'status', 'weight', 'filename'));
   db_add_index($ret, 'system', 'type_name', array('type', 'name'));
+  return $ret;
+}
+
+/**
+ * Enable field module.
+ */
+function system_update_7020() {
+  $ret = array();
+  $module_list = array('field_sql_storage', 'field');
+  drupal_install_modules($module_list);
+  module_enable($module_list);
   return $ret;
 }
 
