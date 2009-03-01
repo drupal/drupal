@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.275 2009/02/26 07:30:26 webchick Exp $
+// $Id: update.php,v 1.276 2009/03/01 08:07:36 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -282,7 +282,7 @@ function update_script_selection_form() {
     );
     $form['submit'] = array(
       '#type' => 'submit',
-      '#value' => 'apply pending updates',
+      '#value' => 'Apply pending updates',
     );
   }
   return $form;
