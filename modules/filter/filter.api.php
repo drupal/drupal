@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.api.php,v 1.4 2009/01/21 16:58:42 dries Exp $
+// $Id: filter.api.php,v 1.5 2009/03/08 21:25:18 dries Exp $
 
 /**
  * @file
@@ -46,7 +46,7 @@
  * the content: transforming URLs into hyperlinks, converting smileys into
  * images, etc.
  *
- * An important aspect of the filtering system are 'text formats'. Every input
+ * An important aspect of the filtering system is 'text formats'. Every text
  * format is an entire filter setup: which filters to enable, in what order
  * and with what settings. Filters that provide settings should usually store
  * these settings per format.

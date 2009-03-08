@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.pages.inc,v 1.6 2009/01/21 16:58:42 dries Exp $
+// $Id: filter.pages.inc,v 1.7 2009/03/08 21:25:18 dries Exp $
 
 /**
  * @file
@@ -27,7 +27,7 @@ function filter_tips_long() {
  *
  * @param $tips
  *   An array containing descriptions and a CSS id in the form of
- *   'module-name/filter-id' (only used when $long is TRUE) for each input
+ *   'module-name/filter-id' (only used when $long is TRUE) for each
  *   filter in one or more text formats. Example:
  *   @code
  *     array(

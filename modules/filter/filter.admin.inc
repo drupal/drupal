@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.24 2009/02/05 19:52:02 webchick Exp $
+// $Id: filter.admin.inc,v 1.25 2009/03/08 21:25:18 dries Exp $
 
 /**
  * @file
@@ -65,7 +65,7 @@ function theme_filter_admin_overview($form) {
   $rows = array();
   foreach ($form as $id => $element) {
     if (isset($element['roles']) && is_array($element['roles'])) {
-      $element['weight']['#attributes']['class'] = 'input-format-order-weight';
+      $element['weight']['#attributes']['class'] = 'text-format-order-weight';
       $rows[] = array(
         'data' => array(
           check_plain($element['name']['#markup']),
@@ -81,16 +81,16 @@ function theme_filter_admin_overview($form) {
     }
   }
   $header = array(t('Name'), t('Roles'), t('Default'), t('Weight'), array('data' => t('Operations'), 'colspan' => 2));
-  $output = theme('table', $header, $rows, array('id' => 'input-format-order'));
+  $output = theme('table', $header, $rows, array('id' => 'text-format-order'));
   $output .= drupal_render_children($form);
 
-  drupal_add_tabledrag('input-format-order', 'order', 'sibling', 'input-format-order-weight');
+  drupal_add_tabledrag('text-format-order', 'order', 'sibling', 'text-format-order-weight');
 
   return $output;
 }
 
 /**
- * Menu callback; Display a filter format form.
+ * Menu callback; Display a text format form.
  */
 function filter_admin_format_page($format = NULL) {
   if (!isset($format->name)) {
@@ -101,7 +101,7 @@ function filter_admin_format_page($format = NULL) {
 }
 
 /**
- * Generate a filter format form.
+ * Generate a text format form.
  *
  * @ingroup forms
  * @see filter_admin_format_form_validate()
@@ -117,14 +117,14 @@ function filter_admin_format_form(&$form_state, $format) {
   $form['name'] = array('#type' => 'textfield',
     '#title' => t('Name'),
     '#default_value' => $format->name,
-    '#description' => t('Specify a unique name for this filter format.'),
+    '#description' => t('Specify a unique name for this text format.'),
     '#required' => TRUE,
   );
 
   // Add a row of checkboxes for form group.
   $form['roles'] = array('#type' => 'fieldset',
     '#title' => t('Roles'),
-    '#description' => $default ? $help : t('Choose which roles may use this filter format. Note that roles with the "administer filters" permission can always use all the filter formats.'),
+    '#description' => $default ? $help : t('Choose which roles may use this text format. Note that roles with the "administer filters" permission can always use all text formats.'),
     '#tree' => TRUE,
   );
 
@@ -144,7 +144,7 @@ function filter_admin_format_form(&$form_state, $format) {
 
   $form['filters'] = array('#type' => 'fieldset',
     '#title' => t('Filters'),
-    '#description' => t('Choose the filters that will be used in this filter format.'),
+    '#description' => t('Choose the filters that will be used in this text format.'),
     '#tree' => TRUE,
   );
   foreach ($all as $id => $filter) {
@@ -176,20 +176,20 @@ function filter_admin_format_form(&$form_state, $format) {
 }
 
 /**
- * Validate filter format form submissions.
+ * Validate text format form submissions.
  */
 function filter_admin_format_form_validate($form, &$form_state) {
   if (!isset($form_state['values']['format'])) {
     $name = trim($form_state['values']['name']);
     $result = db_fetch_object(db_query("SELECT format FROM {filter_format} WHERE name='%s'", $name));
     if ($result) {
-      form_set_error('name', t('Filter format names need to be unique. A format named %name already exists.', array('%name' => $name)));
+      form_set_error('name', t('Text format names must be unique. A format named %name already exists.', array('%name' => $name)));
     }
   }
 }
 
 /**
- * Process filter format form submissions.
+ * Process text format form submissions.
  */
 function filter_admin_format_form_submit($form, &$form_state) {
   $format = isset($form_state['values']['format']) ? $form_state['values']['format'] : NULL;
@@ -197,7 +197,7 @@ function filter_admin_format_form_submit($form, &$form_state) {
   $name = trim($form_state['values']['name']);
   $cache = TRUE;
 
-  // Add a new filter format.
+  // Add a new text format.
   if (!$format) {
     $new = TRUE;
     db_query("INSERT INTO {filter_format} (name) VALUES ('%s')", $name);
