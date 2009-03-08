@@ -74,7 +74,7 @@ class HelpTestCase extends DrupalWebTestCase {
   private function getModuleList() {
     $this->modules = array();
     $result = db_query("SELECT name, filename, info FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, filename ASC");
-    while ($module = db_fetch_object($result)) {
+    foreach ($result as $module) {
       if (file_exists($module->filename)) {
         $fullname = unserialize($module->info);
         $this->modules[$module->name] = $fullname['name'];
