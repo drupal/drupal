@@ -205,7 +205,9 @@ function hook_node_delete_revision($node) {
 }
 
 /**
- * The node being created (inserted in the database).
+ * Respond to node insertion.
+ *
+ * Take action when a new node of any type is being inserted in the database.
  *
  * @param $node
  *   The node the action is being performed on.
