@@ -184,12 +184,8 @@ Drupal.ahah.prototype.success = function (response, status) {
   }
 
   // Determine what effect use and what content will receive the effect, then
-  // show the new content. For browser compatibility, Safari is excluded from
-  // using effects on table rows.
-  if (($.browser.safari && $("tr.ahah-new-content", new_content).size() > 0)) {
-    new_content.show();
-  }
-  else if ($('.ahah-new-content', new_content).size() > 0) {
+  // show the new content.
+  if ($('.ahah-new-content', new_content).size() > 0) {
     $('.ahah-new-content', new_content).hide();
     new_content.show();
     $(".ahah-new-content", new_content)[this.showEffect](this.showSpeed);

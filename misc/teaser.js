@@ -8,11 +8,6 @@
  */
 Drupal.behaviors.teaser = {
   attach: function(context) {
-    // This breaks in Konqueror. Prevent it from running.
-    if (/KDE/.test(navigator.vendor)) {
-      return;
-    }
-
     $('textarea.teaser:not(.teaser-processed)', context).each(function() {
       var teaser = $(this).addClass('teaser-processed');
 
@@ -90,8 +85,8 @@ Drupal.behaviors.teaser = {
         Drupal.behaviors.textarea.attach(teaser.parentNode);
       }
       // Set initial visibility.
-      if ($(teaser).is('[@disabled]')) {
-        $(teaser).parent().hide();
+      if (teaser[0].disabled) {
+        teaser.parent().hide();
       }
 
     });
