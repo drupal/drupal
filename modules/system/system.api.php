@@ -242,6 +242,9 @@ function hook_page_alter($page) {
  * One popular use of this hook is to add form elements to the node form. When
  * altering a node form, the node object retrieved at from $form['#node'].
  *
+ * Note that you can also use hook_FORM_ID_alter() to alter a specific form,
+ * instead of this hook, which gets called for all forms.
+ *
  * @param $form
  *   Nested array of form elements that comprise the form.
  * @param $form_state
