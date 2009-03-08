@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.11 2009/03/08 04:25:04 webchick Exp $
+// $Id: node.api.php,v 1.12 2009/03/08 22:01:36 dries Exp $
 
 /**
  * @file
@@ -205,7 +205,9 @@ function hook_node_delete_revision($node) {
 }
 
 /**
- * The node being created (inserted in the database).
+ * Respond to node insertion.
+ *
+ * Take action when a new node of any type is being inserted in the database.
  *
  * @param $node
  *   The node the action is being performed on.
