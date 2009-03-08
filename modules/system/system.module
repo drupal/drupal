@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.668 2009/02/22 17:55:30 dries Exp $
+// $Id: system.module,v 1.669 2009/03/08 04:25:07 webchick Exp $
 
 /**
  * @file
@@ -1598,7 +1598,7 @@ function system_action_info() {
       'description' => t('Display a message to the user'),
       'configurable' => TRUE,
       'hooks' => array(
-        'nodeapi' => array('view', 'insert', 'update', 'delete'),
+        'node' => array('view', 'insert', 'update', 'delete'),
         'comment' => array('view', 'insert', 'update', 'delete'),
         'user' => array('view', 'insert', 'update', 'delete', 'login'),
         'taxonomy' => array('insert', 'update', 'delete'),
@@ -1609,7 +1609,7 @@ function system_action_info() {
       'type' => 'system',
       'configurable' => TRUE,
       'hooks' => array(
-        'nodeapi' => array('view', 'insert', 'update', 'delete'),
+        'node' => array('view', 'insert', 'update', 'delete'),
         'comment' => array('view', 'insert', 'update', 'delete'),
         'user' => array('view', 'insert', 'update', 'delete', 'login'),
         'taxonomy' => array('insert', 'update', 'delete'),
@@ -1626,7 +1626,7 @@ function system_action_info() {
       'type' => 'system',
       'configurable' => TRUE,
       'hooks' => array(
-        'nodeapi' => array('view', 'insert', 'update', 'delete'),
+        'node' => array('view', 'insert', 'update', 'delete'),
         'comment' => array('view', 'insert', 'update', 'delete'),
         'user' => array('view', 'insert', 'update', 'delete', 'login'),
       )
@@ -1979,7 +1979,7 @@ function system_send_email_action($object, $context) {
   global $user;
 
   switch ($context['hook']) {
-    case 'nodeapi':
+    case 'node':
       // Because this is not an action of type 'node' the node
       // will not be passed as $object, but it will still be available
       // in $context.
@@ -2109,7 +2109,7 @@ function system_message_action(&$object, $context = array()) {
   // are used a node object must be present to be the source
   // of substituted text.
   switch ($context['hook']) {
-    case 'nodeapi':
+    case 'node':
       // Because this is not an action of type 'node' the node
       // will not be passed as $object, but it will still be available
       // in $context.

@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.api.php,v 1.2 2008/12/20 18:24:40 dries Exp $
+// $Id: trigger.api.php,v 1.3 2009/03/08 04:25:07 webchick Exp $
 
 /**
  * @file
@@ -46,7 +46,7 @@
  *       assigning actions to events. If you are writing actions in your own
  *       modules and you simply want to declare support for all possible hooks,
  *       you can set 'hooks' => array('any' => TRUE). Common hooks are 'user',
- *       'nodeapi', 'comment', or 'taxonomy'. Any hook that has been described
+ *       'node', 'comment', or 'taxonomy'. Any hook that has been described
  *       to Drupal in hook_hook_info() will work is a possiblity.
  *     - 'behavior': (optional) Human-readable array of behavior descriptions.
  *       The only one we have now is 'changes node property'. You will almost
@@ -58,7 +58,7 @@
  * hook_action_info array, and a context variable that contains the context
  * under which the action is currently running, sent as an array. For example,
  * the actions module sets the 'hook' and 'op' keys of the context array (so,
- * 'hook' may be 'nodeapi' and 'op' may be 'insert').
+ * 'hook' may be 'node' and 'op' may be 'insert').
  */
 function hook_action_info() {
   return array(
@@ -122,15 +122,15 @@ function hook_action_info_alter(&$actions) {
  *           an English description of the hook.
  *
  * For example, the node_hook_info implementation has 'node' as the outermost
- * key, as that's the module it's in. Next it has 'nodeapi' as the next key,
- * as hook_nodeapi() is what applies to changes in nodes. Finally the keys
- * after that are the various operations for hook_nodeapi() that the node module
+ * key, as that's the module it's in. Next it has 'node' as the next key,
+ * as hook_node() is what applies to changes in nodes. Finally the keys
+ * after that are the various operations for hook_node() that the node module
  * is exposing as triggers.
  */
 function hook_hook_info() {
   return array(
     'node' => array(
-      'nodeapi' => array(
+      'node' => array(
         'presave' => array(
           'runs when' => t('When either saving a new post or updating an existing post'),
         ),

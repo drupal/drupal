@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.test,v 1.25 2009/02/13 05:42:24 webchick Exp $
+// $Id: taxonomy.test,v 1.26 2009/03/08 04:25:07 webchick Exp $
 
 /**
  * @file
@@ -401,7 +401,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
   }
 
   /**
-   * Test that hook_nodeapi_$op implementations work correctly.
+   * Test that hook_node_$op implementations work correctly.
    *
    * Save & edit a node and assert that taxonomy terms are saved/loaded properly.
    */

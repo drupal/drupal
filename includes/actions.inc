@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.inc,v 1.24 2008/12/20 05:20:20 dries Exp $
+// $Id: actions.inc,v 1.25 2009/03/08 04:25:03 webchick Exp $
 
 /**
  * @file
@@ -119,7 +119,7 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
  *       'description' => t('Save node'),
  *       'configurable' => FALSE,
  *       'hooks' => array(
- *         'nodeapi' => array('delete', 'insert', 'update', 'view'),
+ *         'node' => array('delete', 'insert', 'update', 'view'),
  *         'comment' => array('delete', 'insert', 'update', 'view'),
  *       )
  *     )
@@ -147,7 +147,7 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
  *     'description' => t('Publish post'),
  *     'configurable' => FALSE,
  *     'hooks' => array(
- *       'nodeapi' => array('presave', 'insert', 'update', 'view'),
+ *       'node' => array('presave', 'insert', 'update', 'view'),
  *       'comment' => array('delete', 'insert', 'update', 'view'),
  *     ),
  *   );

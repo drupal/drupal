@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.16 2009/01/28 07:34:30 webchick Exp $
+// $Id: node.test,v 1.17 2009/03/08 04:25:04 webchick Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -617,7 +617,7 @@ class NodeRSSContentTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    // Enable dummy module that implements hook_nodeapi_view.
+    // Enable dummy module that implements hook_node_view.
     parent::setUp('node_test');
   }
 

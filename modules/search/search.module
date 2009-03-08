@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.284 2009/03/01 07:30:24 webchick Exp $
+// $Id: search.module,v 1.285 2009/03/08 04:25:05 webchick Exp $
 
 /**
  * @file
@@ -637,9 +637,9 @@ function search_touch_node($nid) {
 }
 
 /**
- * Implementation of hook_nodeapi_update_index().
+ * Implementation of hook_node_update_index().
  */
-function search_nodeapi_update_index($node) {
+function search_node_update_index($node) {
   // Transplant links to a node into the target node.
   $result = db_query("SELECT caption FROM {search_node_links} WHERE nid = %d", $node->nid);
   $output = array();
@@ -650,9 +650,9 @@ function search_nodeapi_update_index($node) {
 }
 
 /**
- * Implementation of hook_nodeapi_update().
+ * Implementation of hook_node_update().
  */
-function search_nodeapi_update($node) {
+function search_node_update($node) {
   // Reindex the node when it is updated. The node is automatically indexed
   // when it is added, simply by being added to the node table.
   search_touch_node($node->nid);
@@ -1021,10 +1021,10 @@ function search_get_keys() {
  * for all of the search features to work.
  *
  * There are three ways to interact with the search system:
- * - Specifically for searching nodes, you can implement nodeapi('update_index')
- *   and nodeapi('search_result'). However, note that the search system already
+ * - Specifically for searching nodes, you can implement node('update_index')
+ *   and node('search_result'). However, note that the search system already
  *   indexes all visible output of a node, i.e. everything displayed normally
- *   by hook_view() and hook_nodeapi('view'). This is usually sufficient.
+ *   by hook_view() and hook_node('view'). This is usually sufficient.
  *   You should only use this mechanism if you want additional, non-visible data
  *   to be indexed.
  * - Implement hook_search(). This will create a search tab for your module on

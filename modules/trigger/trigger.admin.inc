@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.admin.inc,v 1.8 2009/02/03 18:55:32 dries Exp $
+// $Id: trigger.admin.inc,v 1.9 2009/03/08 04:25:07 webchick Exp $
 
 /**
  * @file
@@ -19,9 +19,6 @@ function trigger_assign($type = NULL) {
   // are the most common.
   if (!isset($type)) {
     drupal_goto('admin/build/trigger/node');
-  }
-  if ($type == 'node') {
-    $type = 'nodeapi';
   }
 
   $output = '';
@@ -68,7 +65,7 @@ function trigger_unassign($form_state, $hook = NULL, $op = NULL, $aid = NULL) {
   $action = actions_function_lookup($aid);
   $actions = actions_get_all_actions();
 
-  $destination = 'admin/build/trigger/' . ($hook == 'nodeapi' ? 'node' : $hook);
+  $destination = 'admin/build/trigger/' . ($hook == 'node' ? 'node' : $hook);
 
   return confirm_form($form,
     t('Are you sure you want to unassign the action %title?', array('%title' => $actions[$action]['description'])),
@@ -86,7 +83,7 @@ function trigger_unassign_submit($form, &$form_state) {
     $actions = actions_get_all_actions();
     watchdog('actions', 'Action %action has been unassigned.',  array('%action' => check_plain($actions[$aid]['description'])));
     drupal_set_message(t('Action %action has been unassigned.', array('%action' => $actions[$aid]['description'])));
-    $hook = $form_values['hook'] == 'nodeapi' ? 'node' : $form_values['hook'];
+    $hook = $form_values['hook'] == 'node' ? 'node' : $form_values['hook'];
     $form_state['redirect'] = 'admin/build/trigger/' . $hook;
   }
   else {
@@ -100,7 +97,7 @@ function trigger_unassign_submit($form, &$form_state) {
  * @param $form_state
  *   Information about the current form.
  * @param $hook
- *   The name of the hook, e.g., 'nodeapi'.
+ *   The name of the hook, e.g., 'node'.
  * @param $op
  *   The name of the hook operation, e.g., 'insert'.
  * @param $description
@@ -263,7 +260,7 @@ function theme_trigger_display($element) {
  *   One of 'node', 'user', 'comment'.
  * @param $hook
  *   The name of the hook for which actions have been assigned,
- *   e.g. 'nodeapi'.
+ *   e.g. 'node'.
  * @param $op
  *   The hook operation for which the actions have been assigned,
  *   e.g., 'view'.

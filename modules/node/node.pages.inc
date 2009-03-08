@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.55 2009/02/13 02:22:09 webchick Exp $
+// $Id: node.pages.inc,v 1.56 2009/03/08 04:25:04 webchick Exp $
 
 /**
  * @file
@@ -90,7 +90,7 @@ function node_object_prepare(&$node) {
   $node->revision = in_array('revision', $node_options);
 
   node_invoke($node, 'prepare');
-  node_invoke_nodeapi($node, 'prepare');
+  node_invoke_node($node, 'prepare');
 }
 
 /**
@@ -584,7 +584,7 @@ function node_revision_delete_confirm($form_state, $node_revision) {
 function node_revision_delete_confirm_submit($form, &$form_state) {
   $node_revision = $form['#node_revision'];
   db_query("DELETE FROM {node_revision} WHERE nid = %d AND vid = %d", $node_revision->nid, $node_revision->vid);
-  node_invoke_nodeapi($node_revision, 'delete_revision');
+  node_invoke_node($node_revision, 'delete_revision');
   watchdog('content', '@type: deleted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
   drupal_set_message(t('Revision from %revision-date of @type %title has been deleted.', array('%revision-date' => format_date($node_revision->revision_timestamp), '@type' => node_get_types('name', $node_revision), '%title' => $node_revision->title)));
   $form_state['redirect'] = 'node/' . $node_revision->nid;

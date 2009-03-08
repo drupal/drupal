@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.4 2009/02/10 03:16:14 webchick Exp $
+// $Id: field.module,v 1.5 2009/03/08 04:25:04 webchick Exp $
 /**
  * @file
  * Attach custom data fields to Drupal objects.
@@ -461,7 +461,7 @@ function field_format($obj_type, $object, $field, $item, $formatter_name = NULL,
  *   The object containing the field to display. Must at least contain the id key,
  *   revision key (if applicable), bundle key, and the field data.
  * @param $teaser
- *   Similar to hook_nodeapi('view')
+ *   Similar to hook_node('view')
  * @return
  *   The themed output for the field.
  */

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.api.php,v 1.4 2009/01/14 21:16:20 dries Exp $
+// $Id: search.api.php,v 1.5 2009/03/08 04:25:05 webchick Exp $
 
 /**
  * @file
@@ -173,11 +173,11 @@ function hook_search($op = 'search', $keys = null) {
         $node->body = drupal_render($node->content);
 
         // Fetch comments for snippet.
-        $node->body .= module_invoke('comment', 'nodeapi', $node, 'update_index');
+        $node->body .= module_invoke('comment', 'node', $node, 'update_index');
         // Fetch terms for snippet.
-        $node->body .= module_invoke('taxonomy', 'nodeapi', $node, 'update_index');
+        $node->body .= module_invoke('taxonomy', 'node', $node, 'update_index');
 
-        $extra = node_invoke_nodeapi($node, 'search_result');
+        $extra = node_invoke_node($node, 'search_result');
 
         $results[] = array(
           'link' => url('node/' . $item->sid, array('absolute' => TRUE)),
@@ -265,12 +265,12 @@ function hook_update_index() {
       $node = node_prepare($node, false);
     }
     // Allow modules to change $node->body before viewing.
-    node_invoke_nodeapi($node, 'view', false, false);
+    node_invoke_node($node, 'view', false, false);
 
     $text = '<h1>' . drupal_specialchars($node->title) . '</h1>' . $node->body;
 
     // Fetch extra data normally not visible
-    $extra = node_invoke_nodeapi($node, 'update_index');
+    $extra = node_invoke_node($node, 'update_index');
     foreach ($extra as $t) {
       $text .= $t;
     }

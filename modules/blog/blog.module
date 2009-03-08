@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.316 2008/12/31 12:02:21 dries Exp $
+// $Id: blog.module,v 1.317 2009/03/08 04:25:03 webchick Exp $
 
 /**
  * @file
@@ -94,9 +94,9 @@ function blog_view($node, $teaser) {
 }
 
 /**
- * Implementation of hook_nodeapi_view.
+ * Implementation of hook_node_view.
  */
-function blog_nodeapi_view($node, $teaser = FALSE) {
+function blog_node_view($node, $teaser = FALSE) {
   if ($node->type == 'blog') {
     if (arg(0) != 'blog' || arg(1) != $node->uid) {
       $links['blog_usernames_blog'] = array(
