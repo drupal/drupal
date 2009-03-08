@@ -62,7 +62,7 @@ function filter_theme() {
     ),
     'filter_guidelines' => array(
       'arguments' => array('format' => NULL),
-     ),    
+    ),
   );
 }
 
