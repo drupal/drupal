@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.44 2009/02/26 07:30:27 webchick Exp $
+// $Id: database_test.test,v 1.45 2009/03/08 03:02:46 webchick Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -2185,8 +2185,8 @@ class DatabaseAnsiSyntaxTestCase extends DatabaseTestCase {
 class DatabaseInvalidDataTestCase extends DatabaseTestCase {
   function getInfo() {
     return array(
-      'name' => t('SQL handling tests'),
-      'description' => t('Test handling of invalid data.'),
+      'name' => t('Invalid data'),
+      'description' => t('Test handling of some invalid data.'),
       'group' => t('Database'),
     );
   }
@@ -2250,49 +2250,6 @@ class DatabaseInvalidDataTestCase extends DatabaseTestCase {
     }
   }
 
-  /**
-   * Dates do not allow zero values for month/day or a zero value for an entire date.
-   */
-  function testInvalidDate() {
-    // Test zero in month.
-    try {
-      db_insert('test_date')
-        ->fields(array(
-          'dummy_date' => '2008-00-01 12:00:00'
-        ))
-        ->execute();
-      $this->assertTrue(FALSE, t('Insert with zero as month in date unexpectedly succeeded.'));
-    }
-    catch (Exception $e) {
-      $this->assertTrue(TRUE, t('Insert with zero as month in date causes expected SQL error.'));
-    }
-
-    // Test zero in day.
-    try {
-       db_insert('test_date')
-        ->fields(array(
-          'dummy_date' => '2008-05-00 12:00:00'
-        ))
-        ->execute();
-      $this->assertTrue(FALSE, t('Insert with zero as day in date unexpectedly succeeded.'));
-    }
-    catch (Exception $e) {
-      $this->assertTrue(TRUE, t('Insert with zero as day in date causes expected SQL error.'));
-    }
-
-    // Test 0000-00-00 00:00:00 is invalid.
-    try {
-      db_insert('test_date')
-        ->fields(array(
-          'dummy_date' => '0000-00-00 00:00:00'
-        ))
-        ->execute();
-      $this->assertTrue(FALSE, t('Insertion of zero date unexpectedly succeeded.'));
-    }
-    catch (Exception $e) {
-      $this->assertTrue(TRUE, t('Insertion of zero date failed as expected.'));
-    }
-  }
 }
 
 /**
