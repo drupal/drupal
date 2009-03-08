@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.320 2009/02/03 18:55:29 dries Exp $
+// $Id: form.inc,v 1.321 2009/03/08 05:16:20 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -629,6 +629,12 @@ function drupal_redirect_form($form, $redirect = NULL) {
   }
   if (!isset($goto) || ($goto !== FALSE)) {
     if (isset($goto)) {
+      // Remove any fake destination set by drupal_not_found() or
+      // drupal_access_denied() so that we can properly redirect from those
+      // pages.
+      if (isset($_REQUEST['destination']) && $_REQUEST['destination'] == $_GET['q']) {
+        unset($_REQUEST['destination']);
+      }
       if (is_array($goto)) {
         call_user_func_array('drupal_goto', $goto);
       }

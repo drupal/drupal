@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.15 2009/01/22 04:49:58 webchick Exp $
+// $Id: search.test,v 1.16 2009/03/08 05:16:20 webchick Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -383,8 +383,13 @@ class SearchBlockTestCase extends DrupalWebTestCase {
     parent::setUp('search');
 
     // Create and login user
-    $admin_user = $this->drupalCreateUser(array('administer blocks'));
+    $admin_user = $this->drupalCreateUser(array('administer blocks', 'search content'));
     $this->drupalLogin($admin_user);
+    
+    // Disable the theme form to avoid confusion.
+    $settings = theme_get_settings();
+    $settings['toggle_search'] = FALSE;
+    variable_set('theme_settings', $settings);
   }
 
   function testSearchFormBlock() {
@@ -397,5 +402,30 @@ class SearchBlockTestCase extends DrupalWebTestCase {
     $edit['search_form[region]'] = 'footer';
     $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+  }
+  
+  /**
+   * Test that the search block form works correctly.
+   */
+  function testBlock() {
+    // Enable the block, and place it in the 'content' region so that it isn't
+    // hidden on 404 pages.
+    $edit = array('search_form[region]' => 'content');
+    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+
+    // Test a normal search via the block form, from the front page.
+    $terms = array('search_block_form' => 'test');
+    $this->drupalPost('node', $terms, t('Search'));
+    $this->assertText('Your search yielded no results');
+
+    // Test a search from the block on a 404 page.
+    $this->drupalPost('foo', $terms, t('Search'));
+    $this->assertText('Your search yielded no results');
+
+    // Test a search from the block when it doesn't appear on the search page.
+    $edit = array('pages' => 'search');
+    $this->drupalPost('admin/build/block/configure/search/form', $edit, t('Save block'));
+    $this->drupalPost('node', $terms, t('Search'));
+    $this->assertText('Your search yielded no results');
   }
 }
