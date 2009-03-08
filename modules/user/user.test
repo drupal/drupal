@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.29 2009/02/22 17:55:30 dries Exp $
+// $Id: user.test,v 1.30 2009/03/08 21:52:10 dries Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   function getInfo() {
@@ -568,7 +568,9 @@ class UserPictureTestCase extends DrupalWebTestCase {
 
         $this->drupalLogin($this->user);
 
-        $image = current($this->drupalGetTestFiles('image'));
+        // Images are sorted first by size then by name. We need an image
+        // bigger than 1 KB so we'll grab the last one.
+        $image = end($this->drupalGetTestFiles('image'));
         $info = image_get_info($image->filepath);
 
         // Set new variables: valid dimensions, invalid filesize.
