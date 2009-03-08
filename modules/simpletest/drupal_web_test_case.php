@@ -608,15 +608,14 @@ class DrupalWebTestCase {
    * Compare two files based on size and file name.
    */
   protected function drupalCompareFiles($file1, $file2) {
-    // Determine which file is larger.
-    $compare_size = (filesize($file1->filepath) > filesize($file2->filepath));
-    if (!$compare_size) {
-      // Both files were the same size, so return whichever one is alphabetically greater.
-      return strnatcmp($file1->name, $file2->name);
+    $compare_size = filesize($file1->filepath) - filesize($file2->filepath);
+    if ($compare_size) {
+      // Sort by file size.
+      return $compare_size;
     }
     else {
-      // Return TRUE if $file1 is larger than $file2.
-      return $compare_size;
+      // The files were the same size, so sort alphabetically.
+      return strnatcmp($file1->name, $file2->name);
     }
   }
 
