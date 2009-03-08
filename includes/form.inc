@@ -1825,7 +1825,7 @@ function form_process_radios($element) {
  *
  * @see system_elements(), filter_form()
  */
-function form_process_input_format($element) {
+function form_process_text_format($element) {
   if (isset($element['#text_format'])) {
     // Determine the form element parents and element name to use for the input
     // format widget. This simulates the 'element' and 'element_format' pair of
@@ -2283,11 +2283,9 @@ function theme_textarea($element) {
 /**
  * Format HTML markup for use in forms.
  *
- * This is used in more advanced forms, such as theme selection and filter format.
- *
  * @param $element
  *   An associative array containing the properties of the element.
- *   Properties used: value, children.
+ *   Properties used: markup, children.
  * @return
  *   A themed HTML string representing the HTML markup.
  *

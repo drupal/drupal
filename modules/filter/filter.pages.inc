@@ -27,7 +27,7 @@ function filter_tips_long() {
  *
  * @param $tips
  *   An array containing descriptions and a CSS id in the form of
- *   'module-name/filter-id' (only used when $long is TRUE) for each input
+ *   'module-name/filter-id' (only used when $long is TRUE) for each
  *   filter in one or more text formats. Example:
  *   @code
  *     array(

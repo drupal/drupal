@@ -138,7 +138,7 @@ function filter_format_load($arg) {
 }
 
 /**
- * Display a filter format form title.
+ * Display a text format form title.
  */
 function filter_admin_format_title($format) {
   return $format->name;
