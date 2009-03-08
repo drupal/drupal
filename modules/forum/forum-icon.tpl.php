@@ -1,5 +1,5 @@
 <?php
-// $Id: forum-icon.tpl.php,v 1.4 2008/10/13 12:31:42 dries Exp $
+// $Id: forum-icon.tpl.php,v 1.5 2009/03/08 20:58:19 dries Exp $
 
 /**
  * @file
@@ -15,7 +15,7 @@
  */
 ?>
 <?php if ($new_posts): ?>
-  <a name="new">
+  <a id="new">
 <?php endif; ?>
 
 <?php print theme('image', "misc/forum-$icon.png") ?>
