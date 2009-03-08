@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.test,v 1.14 2008/12/30 16:43:16 dries Exp $
+// $Id: contact.test,v 1.15 2009/03/08 05:08:22 webchick Exp $
 
 /**
  * Test the sitewide contact form.
@@ -65,7 +65,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     // Test update contact form category.
     $categories = $this->getCategories();
     $category_id = $this->updateCategory($categories, $category = $this->randomName(16), $recipients_str = implode(',', array($recipients[0], $recipients[1])), $reply = $this->randomName(30), FALSE);
-    $category_array = db_fetch_array(db_query('SELECT category, recipients, reply, selected FROM {contact} WHERE cid = %d', array($category_id)));
+    $category_array = db_query("SELECT category, recipients, reply, selected FROM {contact} WHERE cid = :cid", array(':cid' => $category_id))->fetchAssoc();
     $this->assertEqual($category_array['category'], $category);
     $this->assertEqual($category_array['recipients'], $recipients_str);
     $this->assertEqual($category_array['reply'], $reply);
@@ -88,7 +88,9 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $this->assertRaw(t('Category %category has been added.', array('%category' => $category)), t('Category successfully added.'));
 
     // Clear flood table in preparation for flood test and allow other checks to complete.
-    $this->assertTrue(db_query('DELETE FROM {flood}'), t('Flood table emptied.'));
+    db_delete('flood')->execute();
+    $num_records_after = db_query("SELECT COUNT(*) FROM {flood}")->fetchField();
+    $this->assertIdentical($num_records_after, '0', t('Flood table emptied.'));
 
     // Check to see that anonymous user cannot see contact page without permission.
     $this->setPermission('anonymous user', array('access site-wide contact form' => FALSE));
@@ -125,7 +127,9 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $this->assertText(t('Message field is required.'), t('Message required.'));
 
     // Test contact form with no default category selected.
-    db_query('UPDATE {contact} SET selected = 0');
+    db_update('contact')
+      ->fields(array('selected' => 0))
+      ->execute();
     $this->drupalGet('contact');
     $this->assertRaw(t('- Please choose -'), t('Without selected categories the visitor is asked to chose a category.'));
 
@@ -208,7 +212,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
   function deleteCategories() {
     $categories = $this->getCategories();
     foreach ($categories as $category) {
-      $category_name = db_result(db_query('SELECT category FROM {contact} WHERE cid = %d', array($category)));
+      $category_name = db_query("SELECT category FROM {contact} WHERE cid = :cid", array(':cid' => $category))->fetchField();
       $this->drupalPost('admin/build/contact/delete/' . $category, array(), t('Delete'));
       $this->assertRaw(t('Category %category has been deleted.', array('%category' => $category_name)), t('Category deleted sucessfully.'));
     }
@@ -220,11 +224,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
    * @return array Category ids.
    */
   function getCategories() {
-    $result = db_query('SELECT cid FROM {contact}');
-    $categories = array();
-    while ($category = db_result($result)) {
-      $categories[] = $category;
-    }
+    $categories = db_query('SELECT cid FROM {contact}')->fetchCol();
     return $categories;
   }
 
@@ -236,7 +236,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
    */
   function setPermission($role, $permissions) {
     // Get role id (rid) for specified role.
-    $rid = db_result(db_query("SELECT rid FROM {role} WHERE name = '%s'", array($role)));
+    $rid = db_query("SELECT rid FROM {role} WHERE name = :name", array(':name' => $role))->fetchField();
     if ($rid === FALSE) {
       $this->fail(t(' [permission] Role "' . $role . '" not found.'));
     }
@@ -302,7 +302,9 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
     $this->assertText(t('The message has been sent.'), t('Message sent.'));
 
     // Clear flood table in preparation for flood test and allow other checks to complete.
-    $this->assertTrue(db_query('DELETE FROM {flood}'), t('Flood table emptied.'));
+    db_delete('flood')->execute();
+    $num_records_flood = db_query("SELECT COUNT(*) FROM {flood}")->fetchField();
+    $this->assertIdentical($num_records_flood, '0', t('Flood table emptied.'));
 
     // Submit contact form with correct values and check flood interval.
     for ($i = 0; $i < $flood_control; $i++) {

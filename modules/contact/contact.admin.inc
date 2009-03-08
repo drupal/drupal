@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.admin.inc,v 1.7 2009/02/05 19:26:21 webchick Exp $
+// $Id: contact.admin.inc,v 1.8 2009/03/08 05:08:22 webchick Exp $
 
 /**
  * @file
@@ -18,13 +18,13 @@ function contact_admin_categories() {
   $result = db_query('SELECT cid, category, recipients, selected FROM {contact} ORDER BY weight, category');
 
   // Loop through the categories and add them to the table.
-  while ($category = db_fetch_object($result)) {
-    $rows[] = array(
-      $category->category,
-      $category->recipients,
-      ($category->selected ? t('Yes') : t('No')),
-      l(t('edit'), 'admin/build/contact/edit/' . $category->cid),
-      l(t('delete'), 'admin/build/contact/delete/' . $category->cid),
+  foreach ($result as $record) {
+    $row[] = array(
+      $record->category,
+      $record->recipients,
+      ($record->selected ? t('Yes') : t('No')),
+      l(t('edit'), 'admin/build/contact/edit/' . $record->cid),
+      l(t('delete'), 'admin/build/contact/delete/' . $record->cid),
     );
   }
 
@@ -109,7 +109,9 @@ function contact_admin_edit_validate($form, &$form_state) {
 function contact_admin_edit_submit($form, &$form_state) {
   if ($form_state['values']['selected']) {
     // Unselect all other contact categories.
-    db_query('UPDATE {contact} SET selected = 0');
+    db_update('contact')
+      ->fields(array('selected' => '0'))
+      ->execute();
   }
   $recipients = explode(',', $form_state['values']['recipients']);
   foreach ($recipients as $key => $recipient) {
@@ -151,7 +153,9 @@ function contact_admin_delete(&$form_state, $contact) {
  */
 function contact_admin_delete_submit($form, &$form_state) {
   $contact = $form_state['values']['contact'];
-  db_query("DELETE FROM {contact} WHERE cid = %d", $contact['cid']);
+  db_delete('contact')
+    ->condition('cid', $contact['cid'])
+    ->execute();
   drupal_set_message(t('Category %category has been deleted.', array('%category' => $contact['category'])));
   watchdog('mail', 'Contact form: category %category deleted.', array('%category' => $contact['category']), WATCHDOG_NOTICE);
 
