@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.20 2009/02/26 07:30:28 webchick Exp $
+// $Id: system.api.php,v 1.21 2009/03/08 03:46:31 webchick Exp $
 
 /**
  * @file
@@ -241,6 +241,9 @@ function hook_page_alter($page) {
  *
  * One popular use of this hook is to add form elements to the node form. When
  * altering a node form, the node object retrieved at from $form['#node'].
+ *
+ * Note that you can also use hook_FORM_ID_alter() to alter a specific form,
+ * instead of this hook, which gets called for all forms.
  *
  * @param $form
  *   Nested array of form elements that comprise the form.
