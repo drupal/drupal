@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.241 2009/03/08 01:43:57 webchick Exp $
+// $Id: filter.module,v 1.242 2009/03/08 02:38:21 webchick Exp $
 
 /**
  * @file
@@ -62,7 +62,7 @@ function filter_theme() {
     ),
     'filter_guidelines' => array(
       'arguments' => array('format' => NULL),
-     ),    
+    ),
   );
 }
 
