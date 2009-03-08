@@ -28,11 +28,16 @@ function contact_mail_page() {
 
   $form = $categories = array();
 
-  $result = db_query('SELECT cid, category, selected FROM {contact} ORDER BY weight, category');
-  while ($category = db_fetch_object($result)) {
-    $categories[$category->cid] = $category->category;
-    if ($category->selected) {
-      $default_category = $category->cid;
+  $result = db_select('contact')
+    ->fields('contact', array('cid', 'category', 'selected'))
+    ->orderby('weight')
+    ->orderby('category')
+    ->execute();
+
+  foreach ($result as $record) {
+    $categories[$record->cid] = $record->category;
+    if ($record->selected) {
+      $default_category = $record->cid;
     }
   }
 

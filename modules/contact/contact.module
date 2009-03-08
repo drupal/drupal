@@ -131,7 +131,8 @@ function _contact_user_tab_access($account) {
  * Load the data for a single contact category.
  */
 function contact_load($cid) {
-  $contact = db_fetch_array(db_query("SELECT * FROM {contact} WHERE cid = %d", $cid));
+  $contact = db_query("SELECT cid, category, recipients, reply, weight, selected FROM {contact} WHERE cid = :cid", array(':cid' => $cid))
+    ->fetchAssoc();
   return empty($contact) ? FALSE : $contact;
 }
 
