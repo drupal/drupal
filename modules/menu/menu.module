@@ -289,9 +289,9 @@ function menu_block_view($delta = '') {
 }
 
 /**
- * Implementation of hook_nodeapi_insert().
+ * Implementation of hook_node_insert().
  */
-function menu_nodeapi_insert(&$node) {
+function menu_node_insert(&$node) {
   if (isset($node->menu)) {
     $item = &$node->menu;
     if (!empty($item['delete'])) {
@@ -311,9 +311,9 @@ function menu_nodeapi_insert(&$node) {
 }
 
 /**
- * Implementation of hook_nodeapi_update().
+ * Implementation of hook_node_update().
  */
-function menu_nodeapi_update(&$node) {
+function menu_node_update(&$node) {
   if (isset($node->menu)) {
     $item = &$node->menu;
     if (!empty($item['delete'])) {
@@ -333,9 +333,9 @@ function menu_nodeapi_update(&$node) {
 }
 
 /**
- * Implementation of hook_nodeapi_delete().
+ * Implementation of hook_node_delete().
  */
-function menu_nodeapi_delete(&$node) {
+function menu_node_delete(&$node) {
   // Delete all menu module links that point to this node.
   $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu'", array(':path' => 'node/'. $node->nid));
   while ($m = db_fetch_array($result)) {
@@ -344,9 +344,9 @@ function menu_nodeapi_delete(&$node) {
 }
 
 /**
- * Implementation of hook_nodeapi_prepare().
+ * Implementation of hook_node_prepare().
  */
-function menu_nodeapi_prepare(&$node) {
+function menu_node_prepare(&$node) {
   if (empty($node->menu)) {
     // Prepare the node for the edit form so that $node->menu always exists.
     $menu_name = variable_get('menu_default_node_menu', 'main-menu');

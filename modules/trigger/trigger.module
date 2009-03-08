@@ -181,7 +181,7 @@ function trigger_forms() {
  * @param $type
  *   The type of action that is about to be called.
  * @param $node
- *   The node that was passed via the nodeapi hook.
+ *   The node that was passed via the node hook.
  * @return
  *   The object expected by the action that is about to be called.
  */
@@ -204,7 +204,7 @@ function _trigger_normalize_node_context($type, $node) {
  *
  * @TODO: Take advantage of the new API and reorganise/remove this function.
  */
-function _trigger_nodeapi($node, $op, $a3 = NULL, $a4 = NULL) {
+function _trigger_node($node, $op, $a3 = NULL, $a4 = NULL) {
   // Keep objects for reuse so that changes actions make to objects can persist.
   static $objects;
   // Prevent recursion by tracking which operations have already been called.
@@ -214,12 +214,12 @@ function _trigger_nodeapi($node, $op, $a3 = NULL, $a4 = NULL) {
   }
   $recursion[$op] = TRUE;
 
-  $aids = _trigger_get_hook_aids('nodeapi', $op);
+  $aids = _trigger_get_hook_aids('node', $op);
   if (!$aids) {
     return;
   }
   $context = array(
-    'hook' => 'nodeapi',
+    'hook' => 'node',
     'op' => $op,
   );
 
@@ -242,38 +242,38 @@ function _trigger_nodeapi($node, $op, $a3 = NULL, $a4 = NULL) {
 }
 
 /**
- * Implementation of hook_nodeapi_view().
+ * Implementation of hook_node_view().
  */
-function trigger_nodeapi_view($node, $teaser, $page) {
-  _trigger_nodeapi($node, 'view', $teaser, $page);
+function trigger_node_view($node, $teaser, $page) {
+  _trigger_node($node, 'view', $teaser, $page);
 }
 
 /**
- * Implementation of hook_nodeapi_update().
+ * Implementation of hook_node_update().
  */
-function trigger_nodeapi_update($node) {
-  _trigger_nodeapi($node, 'update');
+function trigger_node_update($node) {
+  _trigger_node($node, 'update');
 }
 
 /**
- * Implementation of hook_nodeapi_presave().
+ * Implementation of hook_node_presave().
  */
-function trigger_nodeapi_presave($node) {
-  _trigger_nodeapi($node, 'presave');
+function trigger_node_presave($node) {
+  _trigger_node($node, 'presave');
 }
 
 /**
- * Implementation of hook_nodeapi_insert().
+ * Implementation of hook_node_insert().
  */
-function trigger_nodeapi_insert($node) {
-  _trigger_nodeapi($node, 'insert');
+function trigger_node_insert($node) {
+  _trigger_node($node, 'insert');
 }
 
 /**
- * Implementation of hook_nodeapi_delete().
+ * Implementation of hook_node_delete().
  */
-function trigger_nodeapi_delete($node) {
-  _trigger_nodeapi($node, 'delete');
+function trigger_node_delete($node) {
+  _trigger_node($node, 'delete');
 }
 
 /**

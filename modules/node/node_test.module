@@ -10,7 +10,7 @@
 /**
  * When the module is enabled, text will be added to all nodes in all build modes.
  */
-function node_test_nodeapi_view($node, $teaser) {
+function node_test_node_view($node, $teaser) {
   $node->content['node_test_extra_field'] = array(
     '#markup' => '<p>' . t('Extra test data added to node !nid.', array('!nid' => $node->nid)) . '</p>',
     '#weight' => 10,

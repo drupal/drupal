@@ -32,7 +32,7 @@ function trigger_schema() {
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
-        'description' => 'Primary Key: The name of the internal Drupal hook upon which an action is firing; for example, nodeapi.',
+        'description' => 'Primary Key: The name of the internal Drupal hook upon which an action is firing; for example, node.',
       ),
       'op' => array(
         'type' => 'varchar',

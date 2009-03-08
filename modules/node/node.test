@@ -617,7 +617,7 @@ class NodeRSSContentTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    // Enable dummy module that implements hook_nodeapi_view.
+    // Enable dummy module that implements hook_node_view.
     parent::setUp('node_test');
   }
 

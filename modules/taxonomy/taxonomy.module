@@ -36,9 +36,9 @@ function taxonomy_theme() {
 }
 
 /**
- * An implementation of hook_nodeapi_view().
+ * An implementation of hook_node_view().
  */
-function taxonomy_nodeapi_view($node) {
+function taxonomy_node_view($node) {
   $links = array();
   // If previewing, the terms must be converted to objects first.
   if (isset($node->build_mode) && $node->build_mode == NODE_BUILD_PREVIEW) {
@@ -656,7 +656,7 @@ function taxonomy_node_get_terms($node, $key = 'tid') {
  */
 function taxonomy_node_save($node, $terms) {
 
-  taxonomy_nodeapi_delete_revision($node);
+  taxonomy_node_delete_revision($node);
 
   // Free tagging vocabularies do not send their tids in the form,
   // so we'll detect them here and process them independently.
@@ -1258,9 +1258,9 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
 }
 
 /**
- * Implementation of hook_nodeapi_load().
+ * Implementation of hook_node_load().
  */
-function taxonomy_nodeapi_load($nodes) {
+function taxonomy_node_load($nodes) {
   // Get an array of tid, vid associations ordered by vocabulary and term
   // weight.
   $tids = taxonomy_get_tids_from_nodes($nodes);
@@ -1284,47 +1284,47 @@ function taxonomy_nodeapi_load($nodes) {
 }
 
 /**
- * Implementation of hook_nodeapi_insert().
+ * Implementation of hook_node_insert().
  */
-function taxonomy_nodeapi_insert($node) {
+function taxonomy_node_insert($node) {
   if (!empty($node->taxonomy)) {
     taxonomy_node_save($node, $node->taxonomy);
   }
 }
 
 /**
- * Implementation of hook_nodeapi_update().
+ * Implementation of hook_node_update().
  */
-function taxonomy_nodeapi_update($node) {
+function taxonomy_node_update($node) {
   if (!empty($node->taxonomy)) {
     taxonomy_node_save($node, $node->taxonomy);
   }
 }
 
 /**
- * Implementation of hook_nodeapi_delete().
+ * Implementation of hook_node_delete().
  *
  * Remove associations of a node to its terms.
  */
-function taxonomy_nodeapi_delete($node) {
+function taxonomy_node_delete($node) {
   db_query('DELETE FROM {taxonomy_term_node} WHERE nid = %d', $node->nid);
 }
 
 /**
- * Implementation of hook_nodeapi_delete_revision().
+ * Implementation of hook_node_delete_revision().
  *
  * Remove associations of a node to its terms.
  */
-function taxonomy_nodeapi_delete_revision($node) {
+function taxonomy_node_delete_revision($node) {
   db_query('DELETE FROM {taxonomy_term_node} WHERE vid = %d', $node->vid);
 }
 
 /**
- * Implementation of hook_nodeapi_validate().
+ * Implementation of hook_node_validate().
  *
  * Make sure incoming vids are free tagging enabled.
  */
-function taxonomy_nodeapi_validate($node, $form) {
+function taxonomy_node_validate($node, $form) {
   if (!empty($node->taxonomy)) {
     $terms = $node->taxonomy;
     if (!empty($terms['tags'])) {
@@ -1341,11 +1341,11 @@ function taxonomy_nodeapi_validate($node, $form) {
 }
 
 /**
- * Implementation of hook_nodeapi_rss_item().
+ * Implementation of hook_node_rss_item().
  *
  * Provides category information for RSS feeds.
  */
-function taxonomy_nodeapi_rss_item($node) {
+function taxonomy_node_rss_item($node) {
   $output = array();
   foreach ($node->taxonomy as $term) {
     $output[] = array(
@@ -1358,9 +1358,9 @@ function taxonomy_nodeapi_rss_item($node) {
 }
 
 /**
- * Implementation of hook_nodeapi_update_index().
+ * Implementation of hook_node_update_index().
  */
-function taxonomy_nodeapi_update_index($node) {
+function taxonomy_node_update_index($node) {
   $output = array();
   foreach ($node->taxonomy as $term) {
     $output[] = $term->name;

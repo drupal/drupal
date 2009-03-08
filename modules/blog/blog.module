@@ -94,9 +94,9 @@ function blog_view($node, $teaser) {
 }
 
 /**
- * Implementation of hook_nodeapi_view.
+ * Implementation of hook_node_view.
  */
-function blog_nodeapi_view($node, $teaser = FALSE) {
+function blog_node_view($node, $teaser = FALSE) {
   if ($node->type == 'blog') {
     if (arg(0) != 'blog' || arg(1) != $node->uid) {
       $links['blog_usernames_blog'] = array(

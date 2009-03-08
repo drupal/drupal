@@ -118,9 +118,9 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
 }
 
 /**
- * Implementation of hook_nodeapi_validate().
+ * Implementation of hook_node_validate().
  */
-function path_nodeapi_validate($node, $form) {
+function path_node_validate($node, $form) {
   if (user_access('create url aliases') || user_access('administer url aliases')) {
     if (isset($node->path)) {
       $language = isset($node->language) ? $node->language : '';
@@ -133,9 +133,9 @@ function path_nodeapi_validate($node, $form) {
 }
 
 /**
- * Implementation of hook_nodeapi_load().
+ * Implementation of hook_node_load().
  */
-function path_nodeapi_load($nodes, $types) {
+function path_node_load($nodes, $types) {
   foreach ($nodes as $node) {
     $language = isset($node->language) ? $node->language : '';
     $path = 'node/' . $node->nid;
@@ -147,9 +147,9 @@ function path_nodeapi_load($nodes, $types) {
 }
 
 /**
- * Implementation of hook_nodeapi_insert().
+ * Implementation of hook_node_insert().
  */
-function path_nodeapi_insert($node) {
+function path_node_insert($node) {
   if (user_access('create url aliases') || user_access('administer url aliases')) {
     $language = isset($node->language) ? $node->language : '';
     // Don't try to insert if path is NULL. We may have already set
@@ -161,9 +161,9 @@ function path_nodeapi_insert($node) {
 }
 
 /**
- * Implementation of hook_nodeapi_update().
+ * Implementation of hook_node_update().
  */
-function path_nodeapi_update($node) {
+function path_node_update($node) {
   if (user_access('create url aliases') || user_access('administer url aliases')) {
     $language = isset($node->language) ? $node->language : '';
     path_set_alias('node/' . $node->nid, isset($node->path) ? $node->path : NULL, isset($node->pid) ? $node->pid : NULL, $language);
@@ -171,9 +171,9 @@ function path_nodeapi_update($node) {
 }
 
 /**
- * Implementation of hook_nodeapi_delete().
+ * Implementation of hook_node_delete().
  */
-function path_nodeapi_delete($node) {
+function path_node_delete($node) {
   if (user_access('create url aliases') || user_access('administer url aliases')) {
     $language = isset($node->language) ? $node->language : '';
     $path = 'node/' . $node->nid;

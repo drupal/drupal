@@ -69,7 +69,7 @@ function field_default_submit($obj_type, &$object, $field, $instance, &$items, $
  *     '#field_name' => 'field_name',
  *     '#object' => $object,
  *     '#object_type' => $obj_type,
- *     // Value of the $teaser param of hook_nodeapi('view').
+ *     // Value of the $teaser param of hook_node('view').
  *     '#teaser' => $teaser,
  *     'items' =>
  *       0 => array(

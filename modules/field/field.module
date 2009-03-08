@@ -461,7 +461,7 @@ function field_format($obj_type, $object, $field, $item, $formatter_name = NULL,
  *   The object containing the field to display. Must at least contain the id key,
  *   revision key (if applicable), bundle key, and the field data.
  * @param $teaser
- *   Similar to hook_nodeapi('view')
+ *   Similar to hook_node('view')
  * @return
  *   The themed output for the field.
  */

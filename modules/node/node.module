@@ -755,20 +755,20 @@ function node_invoke(&$node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
 }
 
 /**
- * Invoke a hook_nodeapi() operation in all modules.
+ * Invoke a hook_node() operation in all modules.
  *
  * @param &$node
  *   A node object.
  * @param $op
- *   A string containing the name of the nodeapi operation.
+ *   A string containing the name of the node operation.
  * @param $a3, $a4
  *   Arguments to pass on to the hook, after the $node and $op arguments.
  * @return
  *   The returned value of the invoked hooks.
  */
-function node_invoke_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+function node_invoke_node(&$node, $op, $a3 = NULL, $a4 = NULL) {
   $return = array();
-  $hook = 'nodeapi_' . $op;
+  $hook = 'node_' . $op;
   foreach (module_implements($hook) as $module) {
     $function = $module . '_' . $hook;
     $result = $function($node, $a3, $a4);
@@ -892,7 +892,7 @@ function node_load_multiple($nids = array(), $conditions = array(), $reset = FAL
   }
 
   // Pass all nodes loaded from the database through the node type specific
-  // callbacks and hook_nodeapi_load(), then add them to the internal cache.
+  // callbacks and hook_node_load(), then add them to the internal cache.
   if (!empty($queried_nodes)) {
     // Create an array of nodes for each content type and pass this to the
     // node type specific callback.
@@ -917,10 +917,10 @@ function node_load_multiple($nids = array(), $conditions = array(), $reset = FAL
       field_attach_load('node', $queried_nodes);
     }
 
-    // Call hook_nodeapi_load(), pass the node types so modules can return early
+    // Call hook_node_load(), pass the node types so modules can return early
     // if not acting on types in the array.
-    foreach (module_implements('nodeapi_load') as $module) {
-      $function = $module . '_nodeapi_load';
+    foreach (module_implements('node_load') as $module) {
+      $function = $module . '_node_load';
       $function($queried_nodes, array_keys($typed_nodes));
     }
     $nodes += $queried_nodes;
@@ -1002,7 +1002,7 @@ function node_validate($node, $form = array()) {
 
   // Do node-type-specific validation checks.
   node_invoke($node, 'validate', $form);
-  node_invoke_nodeapi($node, 'validate', $form);
+  node_invoke_node($node, 'validate', $form);
 }
 
 /**
@@ -1054,7 +1054,7 @@ function node_submit($node) {
 function node_save(&$node) {
   field_attach_presave('node', $node);
   // Let modules modify the node before it is saved to the database.
-  node_invoke_nodeapi($node, 'presave');
+  node_invoke_node($node, 'presave');
   global $user;
 
   $node->is_new = FALSE;
@@ -1133,7 +1133,7 @@ function node_save(&$node) {
   $function = "field_attach_$op";
   $function('node', $node);
 
-  node_invoke_nodeapi($node, $op);
+  node_invoke_node($node, $op);
 
   // Update the node access table for this node.
   node_access_acquire_grants($node);
@@ -1173,7 +1173,7 @@ function node_delete($nid) {
 
     // Call the node-specific callback (if any):
     node_invoke($node, 'delete');
-    node_invoke_nodeapi($node, 'delete');
+    node_invoke_node($node, 'delete');
 
     // Clear the page and block caches.
     cache_clear_all();
@@ -1274,7 +1274,7 @@ function node_build_content($node, $teaser = FALSE) {
   $node->content += field_attach_view('node', $node, $teaser);
 
   // Allow modules to make their own additions to the node.
-  node_invoke_nodeapi($node, 'view', $teaser);
+  node_invoke_node($node, 'view', $teaser);
 
   // Allow modules to modify the structured node.
   drupal_alter('node_build', $node, $teaser);
@@ -1499,11 +1499,11 @@ function node_search($op = 'search', $keys = NULL) {
         $node->body = drupal_render($node->content);
 
         // Fetch comments for snippet.
-        $node->body .= module_invoke('comment', 'nodeapi', $node, 'update_index');
+        $node->body .= module_invoke('comment', 'node', $node, 'update_index');
         // Fetch terms for snippet.
-        $node->body .= module_invoke('taxonomy', 'nodeapi', $node, 'update_index');
+        $node->body .= module_invoke('taxonomy', 'node', $node, 'update_index');
 
-        $extra = node_invoke_nodeapi($node, 'search_result');
+        $extra = node_invoke_node($node, 'search_result');
 
         $results[] = array(
           'link' => url('node/' . $item->sid, array('absolute' => TRUE)),
@@ -1933,7 +1933,7 @@ function node_feed($nids = FALSE, $channel = array()) {
       }
 
       // Allow modules to change $node->content before the node is rendered.
-      node_invoke_nodeapi($item, 'view', $teaser, FALSE);
+      node_invoke_node($item, 'view', $teaser, FALSE);
 
       // Set the proper node property, then unset unused $node property so that a
       // bad theme can not open a security hole.
@@ -1948,11 +1948,11 @@ function node_feed($nids = FALSE, $channel = array()) {
       }
     
       // Allow modules to modify the fully-built node.
-      node_invoke_nodeapi($item, 'alter', $teaser, FALSE);
+      node_invoke_node($item, 'alter', $teaser, FALSE);
     }
 
     // Allow modules to add additional item fields and/or modify $item
-    $extra = node_invoke_nodeapi($item, 'rss_item');
+    $extra = node_invoke_node($item, 'rss_item');
     $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' => gmdate('r', $item->created)), array('key' => 'dc:creator', 'value' => $item->name), array('key' => 'guid', 'value' => $item->nid . ' at ' . $base_url, 'attributes' => array('isPermaLink' => 'false'))));
     foreach ($extra as $element) {
       if (isset($element['namespace'])) {
@@ -2110,7 +2110,7 @@ function _node_index_node($node) {
   $text = '<h1>' . check_plain($node->title) . '</h1>' . $node->body;
 
   // Fetch extra data normally not visible
-  $extra = node_invoke_nodeapi($node, 'update_index');
+  $extra = node_invoke_node($node, 'update_index');
   foreach ($extra as $t) {
     $text .= $t;
   }
@@ -2834,7 +2834,7 @@ function theme_node_submitted($node) {
 function node_hook_info() {
   return array(
     'node' => array(
-      'nodeapi' => array(
+      'node' => array(
         'presave' => array(
           'runs when' => t('When either saving a new post or updating an existing post'),
         ),
@@ -2866,7 +2866,7 @@ function node_action_info() {
       'configurable' => FALSE,
       'behavior' => array('changes_node_property'),
       'hooks' => array(
-        'nodeapi' => array('presave'),
+        'node' => array('presave'),
         'comment' => array('insert', 'update'),
       ),
     ),
@@ -2876,7 +2876,7 @@ function node_action_info() {
       'configurable' => FALSE,
       'behavior' => array('changes_node_property'),
       'hooks' => array(
-        'nodeapi' => array('presave'),
+        'node' => array('presave'),
         'comment' => array('delete', 'insert', 'update'),
       ),
     ),
@@ -2886,7 +2886,7 @@ function node_action_info() {
       'configurable' => FALSE,
       'behavior' => array('changes_node_property'),
       'hooks' => array(
-        'nodeapi' => array('presave'),
+        'node' => array('presave'),
         'comment' => array('insert', 'update'),
       ),
     ),
@@ -2896,7 +2896,7 @@ function node_action_info() {
       'configurable' => FALSE,
       'behavior' => array('changes_node_property'),
       'hooks' => array(
-        'nodeapi' => array('presave'),
+        'node' => array('presave'),
         'comment' => array('delete', 'insert', 'update'),
       ),
     ),
@@ -2906,7 +2906,7 @@ function node_action_info() {
       'configurable' => FALSE,
       'behavior' => array('changes_node_property'),
       'hooks' => array(
-        'nodeapi' => array('presave'),
+        'node' => array('presave'),
         'comment' => array('insert', 'update'),
       ),
     ),
@@ -2916,7 +2916,7 @@ function node_action_info() {
       'configurable' => FALSE,
       'behavior' => array('changes_node_property'),
       'hooks' => array(
-        'nodeapi' => array('presave'),
+        'node' => array('presave'),
         'comment' => array('delete', 'insert', 'update'),
       ),
     ),
@@ -2927,7 +2927,7 @@ function node_action_info() {
       'behavior' => array('changes_node_property'),
       'hooks' => array(
         'any' => TRUE,
-        'nodeapi' => array('presave'),
+        'node' => array('presave'),
         'comment' => array('delete', 'insert', 'update'),
       ),
     ),
@@ -2944,7 +2944,7 @@ function node_action_info() {
       'description' => t('Unpublish post containing keyword(s)'),
       'configurable' => TRUE,
       'hooks' => array(
-        'nodeapi' => array('presave', 'insert', 'update'),
+        'node' => array('presave', 'insert', 'update'),
       ),
     ),
   );

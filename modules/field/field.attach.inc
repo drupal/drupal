@@ -512,7 +512,7 @@ function _field_attach_preprocess($obj_type, &$object) {
 }
 
 /**
- * Implementation of hook_nodeapi_prepare_translation.
+ * Implementation of hook_node_prepare_translation.
  *
  * TODO D7: We do not yet know if this really belongs in Field API.
  */

@@ -162,12 +162,12 @@ function translation_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Implementation of hook_nodeapi_view().
+ * Implementation of hook_node_view().
  *
  * Display translation links with native language names, if this node
  * is part of a translation set.
  */
-function translation_nodeapi_view(&$node, $teaser = FALSE) {
+function translation_node_view(&$node, $teaser = FALSE) {
   if (isset($node->tnid) && $translations = translation_node_get_translations($node->tnid)) {
     // Do not show link to the same node.
     unset($translations[$node->language]);
@@ -190,9 +190,9 @@ function translation_nodeapi_view(&$node, $teaser = FALSE) {
 }
 
 /**
- * Implementation of hook_nodeapi_prepare().
+ * Implementation of hook_node_prepare().
  */
-function translation_nodeapi_prepare($node) {
+function translation_node_prepare($node) {
   // Only act if we are dealing with a content type supporting translations.
   if (translation_supported_type($node->type)) {
     if (empty($node->nid) && isset($_GET['translation']) && isset($_GET['language']) &&
@@ -205,15 +205,15 @@ function translation_nodeapi_prepare($node) {
       $node->title = $node->translation_source->title;
       $node->body = $node->translation_source->body;
       // Let every module add custom translated fields.
-      node_invoke_nodeapi($node, 'prepare_translation');
+      node_invoke_node($node, 'prepare_translation');
     }
   }
 }
 
 /**
- * Implementation of hook_nodeapi_insert().
+ * Implementation of hook_node_insert().
  */
-function translation_nodeapi_insert($node) {
+function translation_node_insert($node) {
   // Only act if we are dealing with a content type supporting translations.
   if (translation_supported_type($node->type)) {
     if (!empty($node->translation_source)) {
@@ -232,9 +232,9 @@ function translation_nodeapi_insert($node) {
 }
 
 /**
- * Implementation of hook_nodeapi_update().
+ * Implementation of hook_node_update().
  */
-function translation_nodeapi_update($node) {
+function translation_node_update($node) {
   // Only act if we are dealing with a content type supporting translations.
   if (translation_supported_type($node->type)) {
     if (isset($node->translation) && $node->translation && !empty($node->language) && $node->tnid) {
@@ -249,9 +249,9 @@ function translation_nodeapi_update($node) {
 }
 
 /**
- * Implementation of hook_nodeapi_delete().
+ * Implementation of hook_node_delete().
  */
-function translation_nodeapi_delete($node) {
+function translation_node_delete($node) {
   // Only act if we are dealing with a content type supporting translations.
   if (translation_supported_type($node->type)) {
     translation_remove_from_set($node);

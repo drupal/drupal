@@ -99,9 +99,9 @@ function statistics_perm() {
 }
 
 /**
- * Implementation of hook_nodeapi_view().
+ * Implementation of hook_node_view().
  */
-function statistics_nodeapi_view($node, $teaser, $page) {
+function statistics_node_view($node, $teaser, $page) {
   global $id;
   $links = array();
 
@@ -341,9 +341,9 @@ function _statistics_format_item($title, $path) {
 }
 
 /**
- * Implementation of hook_nodeapi_delete().
+ * Implementation of hook_node_delete().
  */
-function statistics_nodeapi_delete($node) {
+function statistics_node_delete($node) {
   // clean up statistics table when node is deleted
   db_query('DELETE FROM {node_counter} WHERE nid = %d', $node->nid);
 }

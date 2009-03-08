@@ -401,7 +401,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
   }
 
   /**
-   * Test that hook_nodeapi_$op implementations work correctly.
+   * Test that hook_node_$op implementations work correctly.
    *
    * Save & edit a node and assert that taxonomy terms are saved/loaded properly.
    */

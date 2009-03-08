@@ -58,7 +58,7 @@ function upload_perm() {
 /**
  * Inject links into $node for attachments.
  */
-function upload_nodeapi_links($node, $teaser) {
+function upload_node_links($node, $teaser) {
   $links = array();
 
   // Display a link with the number of attachments
@@ -300,9 +300,9 @@ function upload_file_delete($file) {
 }
 
 /**
- * Implementation of hook_nodeapi_load().
+ * Implementation of hook_node_load().
  */
-function upload_nodeapi_load($nodes, $types) {
+function upload_node_load($nodes, $types) {
   // Collect all the revision ids for nodes with upload enabled.
   $node_vids = array();
   foreach ($nodes as $node) {
@@ -338,9 +338,9 @@ function upload_nodeapi_load($nodes, $types) {
 }
 
 /**
- * Implementation of hook_nodeapi_view().
+ * Implementation of hook_node_view().
  */
-function upload_nodeapi_view($node, $teaser, $page) {
+function upload_node_view($node, $teaser, $page) {
   if (isset($node->files) && user_access('view uploaded files')) {
     // Add the attachments list to node body with a heavy
     // weight to ensure they're below other elements.
@@ -353,32 +353,32 @@ function upload_nodeapi_view($node, $teaser, $page) {
       }
     }
 
-    upload_nodeapi_links($node, $teaser);
+    upload_node_links($node, $teaser);
   }
 }
 
 /**
- * Implementation of hook_nodeapi_insert().
+ * Implementation of hook_node_insert().
  */
-function upload_nodeapi_insert($node) {
+function upload_node_insert($node) {
   if (user_access('upload files')) {
     upload_save($node);
   }
 }
 
 /**
- * Implementation of hook_nodeapi_update().
+ * Implementation of hook_node_update().
  */
-function upload_nodeapi_update($node) {
+function upload_node_update($node) {
   if (user_access('upload files')) {
     upload_save($node);
   }
 }
 
 /**
- * Implementation of hook_nodeapi_delete().
+ * Implementation of hook_node_delete().
  */
-function upload_nodeapi_delete($node) {
+function upload_node_delete($node) {
   db_delete('upload')->condition('nid', $node->nid)->execute();
   if (!is_array($node->files)) {
     return;
@@ -389,9 +389,9 @@ function upload_nodeapi_delete($node) {
 }
 
 /**
- * Implementation of hook_nodeapi_delete_revision().
+ * Implementation of hook_node_delete_revision().
  */
-function upload_nodeapi_delete_revision($node) {
+function upload_node_delete_revision($node) {
   db_delete('upload')->condition('vid', $node->vid)->execute();
   if (!is_array($node->files)) {
     return;
@@ -402,16 +402,16 @@ function upload_nodeapi_delete_revision($node) {
 }
 
 /**
- * Implementation of hook_nodeapi_search_result().
+ * Implementation of hook_node_search_result().
  */
-function upload_nodeapi_search_result($node) {
+function upload_node_search_result($node) {
   return isset($node->files) && is_array($node->files) ? format_plural(count($node->files), '1 attachment', '@count attachments') : NULL;
 }
 
 /**
- * Implementation of hook_nodeapi_rss_item().
+ * Implementation of hook_node_rss_item().
  */
-function upload_nodeapi_rss_item($node) {
+function upload_node_rss_item($node) {
   if (is_array($node->files)) {
     $files = array();
     foreach ($node->files as $file) {

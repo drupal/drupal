@@ -414,9 +414,9 @@ function theme_comment_block() {
 }
 
 /**
- * An implementation of hook_nodeapi_view().
+ * An implementation of hook_node_view().
  */
-function comment_nodeapi_view($node, $teaser) {
+function comment_node_view($node, $teaser) {
   $links = array();
 
   if ($node->comment) {
@@ -592,9 +592,9 @@ function comment_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implementation of hook_nodeapi_load().
+ * Implementation of hook_node_load().
  */
-function comment_nodeapi_load($nodes, $types) {
+function comment_node_load($nodes, $types) {
   $comments_enabled = array();
 
   // Check if comments are enabled for each node. If comments are disabled,
@@ -623,18 +623,18 @@ function comment_nodeapi_load($nodes, $types) {
 }
 
 /**
- * Implementation of hook_nodeapi_prepare().
+ * Implementation of hook_node_prepare().
  */
-function comment_nodeapi_prepare($node) {
+function comment_node_prepare($node) {
   if (!isset($node->comment)) {
     $node->comment = variable_get("comment_$node->type", COMMENT_NODE_READ_WRITE);
   }
 }
 
 /**
- * Implementation of hook_nodeapi_insert().
+ * Implementation of hook_node_insert().
  */
-function comment_nodeapi_insert($node) {
+function comment_node_insert($node) {
   db_insert('node_comment_statistics')
     ->fields(array(
       'nid' => $node->nid,
@@ -646,9 +646,9 @@ function comment_nodeapi_insert($node) {
 }
 
 /**
- * Implementation of hook_nodeapi_delete().
+ * Implementation of hook_node_delete().
  */
-function comment_nodeapi_delete($node) {
+function comment_node_delete($node) {
   db_delete('comment')
     ->condition('nid', $node->nid)
     ->execute();
@@ -658,9 +658,9 @@ function comment_nodeapi_delete($node) {
 }
 
 /**
- * Implementation of hook_nodeapi_update_index().
+ * Implementation of hook_node_update_index().
  */
-function comment_nodeapi_update_index($node) {
+function comment_node_update_index($node) {
   $text = '';
   $comments = db_query('SELECT subject, comment, format FROM {comment} WHERE nid = :nid AND status = :status', array(':nid' => $node->nid, ':status' => COMMENT_PUBLISHED));
   foreach ($comments as $comment) {
@@ -678,17 +678,17 @@ function comment_update_index() {
 }
 
 /**
- * Implementation of hook_nodeapi_search_result().
+ * Implementation of hook_node_search_result().
  */
-function comment_nodeapi_search_result($node) {
+function comment_node_search_result($node) {
   $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
   return format_plural($comments, '1 comment', '@count comments');
 }
 
 /**
- * Implementation of hook_nodeapi_rss_item().
+ * Implementation of hook_node_rss_item().
  */
-function comment_nodeapi_rss_item($node) {
+function comment_node_rss_item($node) {
   if ($node->comment != COMMENT_NODE_DISABLED) {
     return array(array('key' => 'comments', 'value' => url('node/' . $node->nid, array('fragment' => 'comments', 'absolute' => TRUE))));
   }
