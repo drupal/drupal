@@ -10,17 +10,39 @@
  * Menu callback to provide a simple list of all polls available.
  */
 function poll_page() {
+  $polls_per_page = 15;
+
+  $count_select = db_select('node', 'n');
+  $count_select->addExpression('COUNT(*)', 'expression');
+  $count_select->join('poll', 'p', 'p.nid = n.nid');
+  $count_select->condition('n.status', 1);
+
   // List all polls.
-  $sql = db_rewrite_sql("SELECT n.nid, n.title, p.active, n.created, SUM(c.chvotes) AS votes FROM {node} n INNER JOIN {poll} p ON n.nid = p.nid INNER JOIN {poll_choice} c ON n.nid = c.nid WHERE n.status = 1 GROUP BY n.nid, n.title, p.active, n.created ORDER BY n.created DESC");
-  // Count all polls for the pager.
-  $count_sql = db_rewrite_sql('SELECT COUNT(*) FROM {node} n INNER JOIN {poll} p ON n.nid = p.nid WHERE n.status = 1');
-  $result = pager_query($sql, 15, 0, $count_sql);
+  $select = db_select('node', 'n');
+  $select->join('poll', 'p', 'p.nid = n.nid');
+  $select->join('poll_choice', 'c', 'c.nid = n.nid');
+  $select->addExpression('SUM(c.chvotes)', 'votes');
+  $select = $select->fields('n', array('nid', 'title', 'created'))
+    ->fields('p', array('active'))
+    ->condition('n.status', 1)
+    ->orderBy('n.created', 'DESC')
+    ->groupBy('n.nid')
+    ->groupBy('n.title')
+    ->groupBy('p.active')
+    ->groupBy('n.created')
+    ->extend('PagerDefault')
+    ->limit($polls_per_page)
+    ->addTag('node_access');
+  $select->setCountQuery($count_select);
+  $queried_nodes = $select->execute()
+    ->fetchAllAssoc('nid');
+
   $output = '<ul>';
-  while ($node = db_fetch_object($result)) {
+  foreach ($queried_nodes as $node) {
     $output .= '<li>' . l($node->title, "node/$node->nid") . ' - ' . format_plural($node->votes, '1 vote', '@count votes') . ' - ' . ($node->active ? t('open') : t('closed')) . '</li>';
   }
   $output .= '</ul>';
-  $output .= theme("pager", NULL, 15);
+  $output .= theme("pager", NULL, $polls_per_page);
   return $output;
 }
 
@@ -28,6 +50,7 @@ function poll_page() {
  * Callback for the 'votes' tab for polls you can see other votes on
  */
 function poll_votes($node) {
+  $votes_per_page = 20;
   drupal_set_title($node->title);
   $output = t('This table lists all the recorded votes for this poll. If anonymous users are allowed to vote, they will be identified by the IP address of the computer they used when they voted.');
 
@@ -35,9 +58,22 @@ function poll_votes($node) {
   $header[] = array('data' => t('Vote'), 'field' => 'pc.chtext');
   $header[] = array('data' => t('Timestamp'), 'field' => 'pv.timestamp', 'sort' => 'desc');
 
-  $result = pager_query("SELECT pv.chid, pv.uid, pv.hostname, pv.timestamp, pv.nid, pc.chtext, u.name FROM {poll_vote} pv INNER JOIN {poll_choice} pc ON pv.chid = pc.chid LEFT JOIN {users} u ON pv.uid = u.uid WHERE pv.nid = %d". tablesort_sql($header), 20, 0, NULL, $node->nid);
+  $select = db_select('poll_vote', 'pv');
+  $select->join('poll_choice', 'pc', 'pv.chid = pc.chid');
+  $select->join('users', 'u', 'pv.uid = u.uid');
+  $queried_votes = $select->fields('pv', array('chid', 'uid', 'hostname', 'timestamp', 'nid'))
+    ->fields('pc', array('chtext'))
+    ->fields('u', array('name'))
+    ->condition('pv.nid', $node->nid)
+    ->extend('PagerDefault')
+    ->limit($votes_per_page)
+    ->extend('TableSort')
+    ->setHeader($header)
+    ->execute()
+    ->fetchAllAssoc('hostname');
+
   $rows = array();
-  while ($vote = db_fetch_object($result)) {
+  foreach ($queried_votes as $vote) {
     $rows[] = array(
       $vote->name ? theme('username', $vote) : check_plain($vote->hostname),
       check_plain($vote->chtext),
@@ -45,7 +81,7 @@ function poll_votes($node) {
     );
   }
   $output .= theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 20, 0);
+  $output .= theme('pager', NULL, $votes_per_page, 0);
   return $output;
 }
 
