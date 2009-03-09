@@ -46,7 +46,7 @@
 /**
  * Database settings:
  *
- * The $databases array specifies the database connection or 
+ * The $databases array specifies the database connection or
  * connections that Drupal may use.  Drupal is able to connect
  * to multiple databases, including multiple types of databases,
  * during the same request.
@@ -63,7 +63,7 @@
  *   'port' => 3306,
  * );
  *
- * The "driver" property indicates what Drupal database driver the 
+ * The "driver" property indicates what Drupal database driver the
  * connection should use.  This is usually the same as the name of the
  * database type, such as mysql or sqlite, but not always.  The other
  * properties will vary depending on the driver.  For SQLite, you must
@@ -80,7 +80,7 @@
  * A target database allows Drupal to try to send certain queries to a
  * different database if it can but fall back to the default connection if not.
  * That is useful for master/slave replication, as Drupal may try to connect
- * to a slave server when appropriate and if one is not available will simply 
+ * to a slave server when appropriate and if one is not available will simply
  * fall back to the single master server.
  *
  * The general format for the $databases array is as follows:
@@ -232,7 +232,7 @@ ini_set('session.cookie_lifetime', 2000000);
  *
  * Remove the leading hash signs to enable.
  */
-# $conf = array(
+$conf = array(
 #   'site_name' => 'My Drupal site',
 #   'theme_default' => 'minnelli',
 #   'anonymous' => 'Visitor',
@@ -273,7 +273,7 @@ ini_set('session.cookie_lifetime', 2000000);
  * your web server spoofing the X-Forwarded-For headers.
  */
 #   'reverse_proxy_addresses' => array('a.b.c.d', ...), // Leave the comma here.
-# );
+);
 
 /**
  * String overrides:
