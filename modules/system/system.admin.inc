@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.129 2009/02/26 07:30:28 webchick Exp $
+// $Id: system.admin.inc,v 1.130 2009/03/09 11:44:54 dries Exp $
 
 /**
  * @file
@@ -1462,19 +1462,33 @@ function system_file_system_settings() {
  */
 function system_image_toolkit_settings() {
   $toolkits_available = image_get_available_toolkits();
+  $current_toolkit = image_get_toolkit();
+
+  if (count($toolkits_available) == 0) {
+    variable_del('image_toolkit');
+    $form['image_toolkit_help'] = array(
+      '#markup' => t("No image toolkits were detected. Drupal includes support for <a href='!gd-link'>PHP's built-in image processing functions</a> but they were not detected on this system. You should consult your system administrator to have them enabled, or try using a third party toolkit.", array('gd-link' => url('http://php.net/gd'))),
+    );
+    return $form;
+  }
+
   if (count($toolkits_available) > 1) {
     $form['image_toolkit'] = array(
       '#type' => 'radios',
       '#title' => t('Select an image processing toolkit'),
-      '#default_value' => image_get_toolkit(),
+      '#default_value' => $current_toolkit,
       '#options' => $toolkits_available
     );
   }
-  elseif (count($toolkits_available) == 1) {
+  else {
     variable_set('image_toolkit', key($toolkits_available));
   }
 
-  $form['image_toolkit_settings'] = image_toolkit_invoke('settings');
+  // Get the toolkit's settings form.
+  $function = 'image_' . $current_toolkit . '_settings';
+  if (drupal_function_exists($function)) {
+    $form['image_toolkit_settings'] = $function();
+  }
 
   return system_settings_form($form, TRUE);
 }
