@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.87 2009/03/08 21:52:10 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.88 2009/03/09 17:11:59 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -986,7 +986,7 @@ class DrupalWebTestCase {
     curl_setopt_array($this->curlHandle, $this->additionalCurlOptions + $curl_options);
     $this->headers = array();
     $this->drupalSetContent(curl_exec($this->curlHandle), curl_getinfo($this->curlHandle, CURLINFO_EFFECTIVE_URL));
-    $this->assertTrue($this->content !== FALSE, t('!method to !url, response is !length bytes.', array('!method' => !empty($curl_options[CURLOPT_NOBODY]) ? 'HEAD' : (empty($curl_options[CURLOPT_POSTFIELDS]) ? 'GET' : 'POST'), '!url' => $url, '!length' => strlen($this->content))), t('Browser'));
+    $this->assertTrue($this->content !== FALSE, t('!method to !url, status is !status, response is !length bytes.', array('!method' => !empty($curl_options[CURLOPT_NOBODY]) ? 'HEAD' : (empty($curl_options[CURLOPT_POSTFIELDS]) ? 'GET' : 'POST'), '!url' => $url, '!status' => curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE), '!length' => strlen($this->content))), t('Browser'));
     return $this->drupalGetContent();
   }
 
