@@ -1699,7 +1699,7 @@ function _comment_form_submit(&$comment_values) {
     // 2) Strip out all HTML tags
     // 3) Convert entities back to plain-text.
     // Note: format is checked by check_markup().
-    $comment_values['subject'] = trim(truncate_utf8(decode_entities(strip_tags(check_markup($comment_values['comment'], $comment_values['comment_format']))), 29, TRUE));
+    $comment_values['subject'] = truncate_utf8(trim(decode_entities(strip_tags(check_markup($comment_values['comment'], $comment_values['comment_format'])))), 29, TRUE);
     // Edge cases where the comment body is populated only by HTML tags will
     // require a default subject.
     if ($comment_values['subject'] == '') {
