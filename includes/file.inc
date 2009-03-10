@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.163 2009/03/09 11:44:54 dries Exp $
+// $Id: file.inc,v 1.164 2009/03/10 09:47:42 dries Exp $
 
 /**
  * @file
@@ -834,6 +834,7 @@ function file_unmanaged_delete_recursive($path) {
       $entry_path = $path . '/' . $entry;
       file_unmanaged_delete_recursive($entry_path);
     }
+    $dir->close();
     return rmdir($path);
   }
   return file_unmanaged_delete($path);
