@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.23 2009/03/10 09:43:01 dries Exp $
+// $Id: system.api.php,v 1.24 2009/03/10 16:08:43 dries Exp $
 
 /**
  * @file
@@ -1220,21 +1220,6 @@ function hook_file_references($file) {
 function hook_file_delete($file) {
   // Delete all information associated with the file.
   db_delete('upload')->condition('fid', $file->fid)->execute();
-}
-
-/**
- * Respond to a file that has changed status.
- *
- * The typical change in status is from temporary to permanent.
- *
- * @param $file
- *   The file being changed.
- * @return
- *   None.
- *
- * @see hook_file_status()
- */
-function hook_file_status($file) {
 }
 
 /**
