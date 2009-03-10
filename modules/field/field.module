@@ -107,6 +107,7 @@ function field_help($path, $arg) {
 function field_init() {
   module_load_include('inc', 'field', 'field.crud');
   module_load_include('inc', 'field', 'field.autoload');
+  drupal_add_css(drupal_get_path('module', 'field') . '/theme/field.css');
 }
 
 /**
