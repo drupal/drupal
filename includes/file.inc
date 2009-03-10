@@ -834,6 +834,7 @@ function file_unmanaged_delete_recursive($path) {
       $entry_path = $path . '/' . $entry;
       file_unmanaged_delete_recursive($entry_path);
     }
+    $dir->close();
     return rmdir($path);
   }
   return file_unmanaged_delete($path);
