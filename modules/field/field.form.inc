@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.4 2009/02/18 14:28:22 webchick Exp $
+// $Id: field.form.inc,v 1.5 2009/03/10 09:45:31 dries Exp $
 
 /**
  * @file
@@ -137,12 +137,17 @@ function field_multiple_value_form($field, $instance, $items, &$form, &$form_sta
   $title = check_plain(t($instance['label']));
   $description = field_filter_xss(t($instance['description']));
 
+  $bundle_name_url_css = str_replace('_', '-', $instance['bundle']);
+  $field_name_url_css = str_replace('_', '-', $field_name);
+
   $form_element = array(
     '#theme' => 'field_multiple_value_form',
     '#multiple' => $field['cardinality'],
     '#title' => $title,
     '#required' => $instance['required'],
     '#description' => $description,
+    '#prefix' => '<div id="' . $field_name_url_css . '-wrapper">',
+    '#suffix' => '</div>',
   );
 
   $function = $instance['widget']['module'] . '_field_widget';
@@ -151,6 +156,7 @@ function field_multiple_value_form($field, $instance, $items, &$form, &$form_sta
       if ($element = $function($form, $form_state, $field, $instance, $items, $delta)) {
         $multiple = $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
         $defaults = array(
+          // For multiple fields, title and description are handled by the wrapping table.
           '#title' => $multiple ? '' : $title,
           '#description' => $multiple ? '' : $description,
           '#required' => $delta == 0 && $instance['required'],
@@ -161,14 +167,14 @@ function field_multiple_value_form($field, $instance, $items, &$form, &$form_sta
           '#bundle' => $instance['bundle'],
         );
 
-        // Add an input field for the delta (drag-n-drop reordering), which will
-        // be hidden by tabledrag js behavior.
+        // Input field for the delta (drag-n-drop reordering).
         if ($multiple) {
-          // We name the element '_weight' to avoid clashing with column names
-          // defined by field modules.
+          // We name the element '_weight' to avoid clashing with elements
+          // defined by widget.
           $element['_weight'] = array(
             '#type' => 'weight',
-            '#delta' => $max, // this 'delta' is the 'weight' element's property
+             // Note: this 'delta' is the FAPI 'weight' element's property.
+            '#delta' => $max,
             '#default_value' => isset($items[$delta]['_weight']) ? $items[$delta]['_weight'] : $delta,
             '#weight' => 100,
           );
@@ -193,8 +199,8 @@ function field_multiple_value_form($field, $instance, $items, &$form, &$form_sta
         // Submit callback for disabled JavaScript.
         '#submit' => array('field_add_more_submit'),
         '#ahah' => array(
-          'path' => 'field/js_add_more/' . $bundle_name_url_str . '/' . $field_name_url_str,
-          'wrapper' => $field_name_url_str . '-items',
+          'path' => 'field/js_add_more/' . $bundle_name_url_css . '/' . $field_name_url_css,
+          'wrapper' => $field_name_url_css . '-wrapper',
           'method' => 'replace',
           'effect' => 'fade',
         ),
@@ -202,12 +208,8 @@ function field_multiple_value_form($field, $instance, $items, &$form, &$form_sta
         // the relevant field using these entries.
         '#field_name' => $field_name,
         '#bundle' => $instance['bundle'],
+        '#attributes' => array('class' => 'field-add-more-submit'),
       );
-
-      // Add wrappers for the fields and 'more' button.
-      $form_element['#prefix'] = '<div class="clearfix" id="' . $field_name_url_str . '-add-more-wrapper"><div id="' . $field_name_url_str . '-items">';
-      $form_element[$field_name . '_add_more']['#prefix'] = '<div class="field-add-more">';
-      $form_element[$field_name . '_add_more']['#suffix'] =  '</div></div></div>';
     }
   }
   return $form_element;
@@ -229,8 +231,9 @@ function theme_field_multiple_value_form($element) {
 
     $header = array(
       array(
-        'data' => t('!title: !required', array('!title' => $element['#title'], '!required' => $required)),
-        'colspan' => 2
+        'data' => '<label>' . t('!title: !required', array('!title' => $element['#title'], '!required' => $required)) . "</label>",
+        'colspan' => 2,
+        'class' => 'field-label',
       ),
       t('Order'),
     );
@@ -240,7 +243,10 @@ function theme_field_multiple_value_form($element) {
     // preview or failed validation)
     $items = array();
     foreach (element_children($element) as $key) {
-      if ($key !== $element['#field_name'] . '_add_more') {
+      if ($key === $element['#field_name'] . '_add_more') {
+        $add_more_button = &$element[$key];
+      }
+      else {
         $items[] = &$element[$key];
       }
     }
@@ -261,9 +267,11 @@ function theme_field_multiple_value_form($element) {
       );
     }
 
+    $output = '<div class="form-item">';
     $output .= theme('table', $header, $rows, array('id' => $table_id, 'class' => 'field-multiple-table'));
     $output .= $element['#description'] ? '<div class="description">' . $element['#description'] . '</div>' : '';
-    $output .= drupal_render($element[$element['#field_name'] . '_add_more']);
+    $output .= '<div class="clearfix">' . drupal_render($add_more_button) . '</div>';
+    $output .= '</div>';
 
     drupal_add_tabledrag($table_id, 'order', 'sibling', $order_class);
   }
@@ -395,10 +403,11 @@ function field_add_more_js($bundle_name, $field_name) {
   foreach ($form_path as $key) {
     $field_form = $field_form[$key];
   }
-  // We add a div around the new field to receive the ahah effect.
-  $field_form[$delta]['#prefix'] = '<div class="ahah-new-field">' . (isset($field_form[$delta]['#prefix']) ? $field_form[$delta]['#prefix'] : '');
+  // Add a div around the new field to receive the ahah effect.
+  $field_form[$delta]['#prefix'] = '<div class="ahah-new-content">' . (isset($field_form[$delta]['#prefix']) ? $field_form[$delta]['#prefix'] : '');
   $field_form[$delta]['#suffix'] = (isset($field_form[$delta]['#suffix']) ? $field_form[$delta]['#suffix'] : '') . '</div>';
-  // TODO : this causes duplication of the wrapping divs
+  // Prevent duplicate wrapper.
+  unset($field_form['#prefix'], $field_form['#suffix']);
 
   // If a newly inserted widget contains AHAH behaviors, they normally won't
   // work because AHAH doesn't know about those - it just attaches to the exact

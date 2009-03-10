@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.5 2009/03/08 04:25:04 webchick Exp $
+// $Id: field.module,v 1.6 2009/03/10 09:45:31 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal objects.
@@ -107,6 +107,7 @@ function field_help($path, $arg) {
 function field_init() {
   module_load_include('inc', 'field', 'field.crud');
   module_load_include('inc', 'field', 'field.autoload');
+  drupal_add_css(drupal_get_path('module', 'field') . '/theme/field.css');
 }
 
 /**

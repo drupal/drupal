@@ -1,5 +1,5 @@
 <?php
-// $Id: field.install,v 1.3 2009/02/11 04:45:57 webchick Exp $
+// $Id: field.install,v 1.4 2009/03/10 09:45:31 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -15,6 +15,11 @@ function field_schema() {
   // Static (meta) tables.
   $schema['field_config'] = array(
     'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'The primary identifier for a field',
+      ),
       'field_name' => array(
         'type' => 'varchar',
         'length' => 32,
@@ -66,7 +71,8 @@ function field_schema() {
         'default' => 0,
       ),
     ),
-    'primary key' => array('field_name'),
+    'primary key' => array('id'),
+    'unique keys' => array('field_name' => array('field_name')),
     'indexes' => array(
       // used by field_read_fields
       'active_deleted' => array('active', 'deleted'),
@@ -78,6 +84,16 @@ function field_schema() {
   );
   $schema['field_config_instance'] = array(
     'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'The primary identifier for a field instance',
+      ),
+      'field_id' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'The identifier of the field attached by this instance',
+      ),
       'field_name'        => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
       'bundle'            => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
       'widget_type'       => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
@@ -106,7 +122,10 @@ function field_schema() {
         'default' => 0,
       ),
     ),
-    'primary key' => array('field_name', 'bundle'),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'field_name_bundle' => array('field_name', 'bundle'),
+     ),
     'indexes' => array(
       // used by field_read_instances
       'widget_active_deleted' => array('widget_active', 'deleted'),

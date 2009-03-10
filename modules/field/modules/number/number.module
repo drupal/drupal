@@ -1,5 +1,5 @@
 <?php
-// $Id: number.module,v 1.3 2009/02/10 03:16:15 webchick Exp $
+// $Id: number.module,v 1.4 2009/03/10 09:45:31 dries Exp $
 
 /**
  * @file
@@ -51,7 +51,7 @@ function number_field_info() {
 function number_field_columns($field) {
   switch ($field['type']) {
     case 'number_integer' :
-      $colums = array(
+      $columns = array(
         'value' => array(
           'type' => 'int',
           'not null' => FALSE
@@ -60,7 +60,7 @@ function number_field_columns($field) {
       break;
 
     case 'number_float' :
-      $colums = array(
+      $columns = array(
         'value' => array(
           'type' => 'float',
           'not null' => FALSE
@@ -69,7 +69,7 @@ function number_field_columns($field) {
       break;
 
     case 'number_decimal' :
-      $colums = array(
+      $columns = array(
         'value' => array(
           'type' => 'numeric',
           'precision' => $field['settings']['precision'],
@@ -79,7 +79,7 @@ function number_field_columns($field) {
       );
       break;
   }
-  return $colums;
+  return $columns;
 }
 
 /**
