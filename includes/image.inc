@@ -226,18 +226,40 @@ function image_scale(stdClass $image, $width = NULL, $height = NULL, $upscale = 
  *   The target width, in pixels.
  * @param $height
  *   The target height, in pixels.
- * @param $toolkit
- *   An optional override of the default image toolkit.
  * @return
  *   TRUE or FALSE, based on success.
  *
  * @see image_load()
+ * @see image_gd_resize()
  */
 function image_resize(stdClass $image, $width, $height) {
   $width = (int) round($width);
   $height = (int) round($height);
 
   return image_toolkit_invoke('resize', $image, array($width, $height));
+}
+
+/**
+ * Rotate an image by the given number of degrees.
+ *
+ * @param $image
+ *   An image object returned by image_load().
+ * @param $degrees
+ *   The number of (clockwise) degrees to rotate the image.
+ * @param $background
+ *   An hexadecimal integer specifying the background color to use for the
+ *   uncovered area of the image after the rotation. E.g. 0x000000 for black,
+ *   0xff00ff for magenta, and 0xffffff for white. For images that support
+ *   transparency, this will default to transparent. Otherwise it will
+ *   be white.
+ * @return
+ *   TRUE or FALSE, based on success.
+ *
+ * @see image_load()
+ * @see image_gd_rotate()
+ */
+function image_rotate(stdClass $image, $degrees, $background = NULL) {
+  return image_toolkit_invoke('rotate', $image, array($degrees, $background));
 }
 
 /**
@@ -258,6 +280,7 @@ function image_resize(stdClass $image, $width, $height) {
  *
  * @see image_load()
  * @see image_scale_and_crop()
+ * @see image_gd_crop()
  */
 function image_crop(stdClass $image, $x, $y, $width, $height) {
   $aspect = $image->info['height'] / $image->info['width'];
@@ -279,6 +302,7 @@ function image_crop(stdClass $image, $x, $y, $width, $height) {
  *   TRUE or FALSE, based on success.
  *
  * @see image_load()
+ * @see image_gd_desaturate()
  */
 function image_desaturate(stdClass $image) {
   return image_toolkit_invoke('desaturate', $image);
@@ -307,6 +331,7 @@ function image_desaturate(stdClass $image) {
  * @see image_save()
  * @see image_get_info()
  * @see image_get_available_toolkits()
+ * @see image_gd_load()
  */
 function image_load($file, $toolkit = FALSE) {
   if (!$toolkit) {
@@ -337,6 +362,7 @@ function image_load($file, $toolkit = FALSE) {
  *   TRUE or FALSE, based on success.
  *
  * @see image_load()
+ * @see image_gd_save()
  */
 function image_save(stdClass $image, $destination = NULL) {
   if (empty($destination)) {

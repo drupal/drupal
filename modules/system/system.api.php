@@ -377,6 +377,7 @@ function hook_init() {
  *   - 'save': Required. See image_gd_save() for usage.
  *   - 'settings': Optional. See image_gd_settings() for usage.
  *   - 'resize': Optional. See image_gd_resize() for usage.
+ *   - 'rotate': Optional. See image_gd_rotate() for usage.
  *   - 'crop': Optional. See image_gd_crop() for usage.
  *   - 'desaturate': Optional. See image_gd_desaturate() for usage.
  *

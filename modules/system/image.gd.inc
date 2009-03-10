@@ -98,6 +98,76 @@ function image_gd_resize(stdClass $image, $width, $height) {
 }
 
 /**
+ * Rotate an image the given number of degrees.
+ *
+ * @param $image
+ *   An image object. The $image->resource, $image->info['width'], and
+ *   $image->info['height'] values will be modified by this call.
+ * @param $degrees
+ *   The number of (clockwise) degrees to rotate the image.
+ * @param $background
+ *   An hexadecimal integer specifying the background color to use for the
+ *   uncovered area of the image after the rotation. E.g. 0x000000 for black,
+ *   0xff00ff for magenta, and 0xffffff for white. For images that support
+ *   transparency, this will default to transparent. Otherwise it will
+ *   be white.
+ * @return
+ *   TRUE or FALSE, based on success.
+ *
+ * @see image_rotate()
+ */
+function image_gd_rotate(stdClass $image, $degrees, $background = NULL) {
+  // PHP installations using non-bundled GD do not have imagerotate.
+  if (!drupal_function_exists('imagerotate')) {
+    watchdog('image', 'The image %file could not be rotated because the imagerotate() function is not available in this PHP installation.', array('%file' => $image->source));
+    return FALSE;
+  }
+
+  $width = $image->info['width'];
+  $height = $image->info['height'];
+
+  // Convert the hexadecimal background value to a color index value.
+  if (isset($background)) {
+    $rgb = array();
+    for ($i = 16; $i >= 0; $i -= 8) {
+      $rgb[] = (($background >> $i) & 0xFF);
+    }
+    $background = imagecolorallocatealpha($image->resource, $rgb[0], $rgb[1], $rgb[2], 0);
+  }
+  // Set the background color as transparent if $background is NULL.
+  else {
+    // Get the current transparent color.
+    $background = imagecolortransparent($image->resource);
+
+    // If no transparent colors, use white.
+    if ($background == 0) {
+      $background = imagecolorallocatealpha($image->resource, 255, 255, 255, 0);
+    }
+  }
+
+  // Images are assigned a new color pallete when rotating, removing any
+  // transparency flags. For GIF images, keep a record of the transparent color.
+  if ($image->info['extension'] == 'gif') {
+    $transparent_index = imagecolortransparent($image->resource);
+    if ($transparent_index != 0) {
+      $transparent_gif_color = imagecolorsforindex($image->resource, $transparent_index);
+    }
+  }
+
+  $image->resource = imagerotate($image->resource, 360 - $degrees, $background);
+
+  // GIFs need to reassign the transparent color after performing the rotate.
+  if (isset($transparent_gif_color)) {
+    $background = imagecolorexactalpha($image->resource, $transparent_gif_color['red'], $transparent_gif_color['green'], $transparent_gif_color['blue'], $transparent_gif_color['alpha']);
+    imagecolortransparent($image->resource, $background);
+  }
+
+  $image->info['width'] = imagesx($image->resource);
+  $image->info['height'] = imagesy($image->resource);
+  return TRUE;
+}
+
+/**
  * Crop an image using the GD toolkit.
  *
  * @param $image
@@ -144,6 +214,12 @@ function image_gd_crop(stdClass $image, $x, $y, $width, $height) {
  * @see image_desaturate()
  */
 function image_gd_desaturate(stdClass $image) {
+  // PHP installations using non-bundled GD do not have imagefilter.
+  if (!drupal_function_exists('imagefilter')) {
+    watchdog('image', 'The image %file could not be rotated because the imagefilter() function is not available in this PHP installation.', array('%file' => $image->source));
+    return FALSE;
+  }
+
   return imagefilter($image->resource, IMG_FILTER_GRAYSCALE);
 }
 
