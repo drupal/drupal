@@ -1223,21 +1223,6 @@ function hook_file_delete($file) {
 }
 
 /**
- * Respond to a file that has changed status.
- *
- * The typical change in status is from temporary to permanent.
- *
- * @param $file
- *   The file being changed.
- * @return
- *   None.
- *
- * @see hook_file_status()
- */
-function hook_file_status($file) {
-}
-
-/**
  * Control access to private file downloads and specify HTTP headers.
  *
  * This hook allows modules enforce permissions on file downloads when the
