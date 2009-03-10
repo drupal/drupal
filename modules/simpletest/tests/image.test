@@ -1,5 +1,5 @@
 <?php
-// $Id: image.test,v 1.1 2009/03/09 11:44:54 dries Exp $
+// $Id: image.test,v 1.2 2009/03/10 09:43:01 dries Exp $
 
 /**
  * @file
@@ -146,6 +146,19 @@ class ImageToolkitTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test the image_rotate() function.
+   */
+  function testRotate() {
+    $this->assertTrue(image_rotate($this->image, 90, 1), t('Function returned the expected value.'));
+    $this->assertToolkitOperationsCalled(array('rotate'));
+
+    // Check the parameters.
+    $calls = image_test_get_all_calls();
+    $this->assertEqual($calls['rotate'][0][1], 90, t('Degrees were passed correctly'));
+    $this->assertEqual($calls['rotate'][0][2], 1, t('Background color was passed correctly'));
+  }
+
+  /**
    * Test the image_crop() function.
    */
   function testCrop() {
@@ -193,7 +206,7 @@ class ImageToolkitGdTestCase extends DrupalWebTestCase {
   function getInfo() {
     return array(
       'name' => t('Image GD manipulation tests'),
-      'description' => t('Check that core image manipulations work properly: scale, resize, crop, scale and crop, and desaturate.'),
+      'description' => t('Check that core image manipulations work properly: scale, resize, rotate, crop, scale and crop, and desaturate.'),
       'group' => t('Image API'),
     );
   }
@@ -304,17 +317,62 @@ class ImageToolkitGdTestCase extends DrupalWebTestCase {
         'height' => 8,
         'corners' => array_fill(0, 4, $this->black),
       ),
-      'desaturate' => array(
-        'function' => 'desaturate',
-        'arguments' => array(),
-        'height' => 20,
-        'width' => 40,
-        // Grayscale corners are a bit funky. Each of the corners are a shade of
-        // gray. The values of these were determined simply by looking at the
-        // final image to see what desaturated colors end up being.
-        'corners' => array(array_fill(0, 3, 76) + array(3 => 0), array_fill(0, 3, 149) + array(3 => 0), array_fill(0, 3, 29) + array(3 => 0), array_fill(0, 3, 0) + array(3 => 127)),
-      ),
     );
+
+    // Systems using non-bundled GD2 don't have imagerotate. Test if available.
+    if (drupal_function_exists('imagerotate')) {
+      $operations += array(
+        'rotate_5' => array(
+          'function' => 'rotate',
+          'arguments' => array(5, 0xFF00FF), // Fuchsia background.
+          'width' => 42,
+          'height' => 24,
+          'corners' => array_fill(0, 4, $this->fuchsia),
+        ),
+        'rotate_90' => array(
+          'function' => 'rotate',
+          'arguments' => array(90, 0xFF00FF), // Fuchsia background.
+          'width' => 20,
+          'height' => 40,
+          'corners' => array($this->fuchsia, $this->red, $this->green, $this->blue),
+        ),
+        'rotate_transparent_5' => array(
+          'function' => 'rotate',
+          'arguments' => array(5),
+          'width' => 42,
+          'height' => 24,
+          'corners' => array_fill(0, 4, $this->transparent),
+        ),
+        'rotate_transparent_90' => array(
+          'function' => 'rotate',
+          'arguments' => array(90),
+          'width' => 20,
+          'height' => 40,
+          'corners' => array($this->transparent, $this->red, $this->green, $this->blue),
+        ),
+      );
+    }
+
+    // Systems using non-bundled GD2 don't have imagefilter. Test if available.
+    if (drupal_function_exists('imagefilter')) {
+      $operations += array(
+        'desaturate' => array(
+          'function' => 'desaturate',
+          'arguments' => array(),
+          'height' => 20,
+          'width' => 40,
+          // Grayscale corners are a bit funky. Each of the corners are a shade of
+          // gray. The values of these were determined simply by looking at the
+          // final image to see what desaturated colors end up being.
+          'corners' => array(
+            array_fill(0, 3, 76) + array(3 => 0),
+            array_fill(0, 3, 149) + array(3 => 0),
+            array_fill(0, 3, 29) + array(3 => 0),
+            array_fill(0, 3, 0) + array(3 => 127)
+          ),
+        ),
+      );
+    }
 
     foreach ($files as $file) {
       foreach ($operations as $op => $values) {

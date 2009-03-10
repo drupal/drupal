@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.22 2009/03/09 11:44:54 dries Exp $
+// $Id: system.api.php,v 1.23 2009/03/10 09:43:01 dries Exp $
 
 /**
  * @file
@@ -377,6 +377,7 @@ function hook_init() {
  *   - 'save': Required. See image_gd_save() for usage.
  *   - 'settings': Optional. See image_gd_settings() for usage.
  *   - 'resize': Optional. See image_gd_resize() for usage.
+ *   - 'rotate': Optional. See image_gd_rotate() for usage.
  *   - 'crop': Optional. See image_gd_crop() for usage.
  *   - 'desaturate': Optional. See image_gd_desaturate() for usage.
  *
