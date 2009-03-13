@@ -39,7 +39,8 @@ class FieldException extends Exception {}
  *
  * @param array $field:
  * - id (integer, read-only)
- *     The primary identifier of the field.
+ *     The primary identifier of the field. It is assigned automatically
+ *     by field_create_field().
  * - field_name (string)
  *     The name of the field. Each field name is unique within Field API.
  *     When a field is attached to an object, the field's data is stored
@@ -78,9 +79,11 @@ class FieldException extends Exception {}
  *
  * @param array $instance:
  * - id (integer, read-only)
- *     The primary identifier of this field instance.
+ *     The primary identifier of this field instance. It is assigned
+ *     automatically by field_create_instance().
  * - field_id (integer, read-only)
  *     The foreign key of the field attached to the bundle by this instance.
+ *     It is populated automatically by field_create_instance().
  * - field_name (string)
  *     The name of the field attached to the bundle by this instance.
  * - bundle (string)
@@ -171,7 +174,7 @@ class FieldException extends Exception {}
  *
  * @param $field
  *   A field structure. The field_name and type properties are
- *   required. Read-only properties are assigned automatically.
+ *   required.
  * @throw
  *   FieldException
  */
@@ -317,7 +320,7 @@ function field_delete_field($field_name) {
  *
  * @param $instance
  *   A field instance structure. The field_name and bundle properties
- *   are required. Read-only properties are assigned automatically.
+ *   are required.
  * @throw
  *   FieldException
  */
