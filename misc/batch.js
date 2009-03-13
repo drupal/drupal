@@ -1,20 +1,20 @@
-// $Id: batch.js,v 1.6 2009/02/18 13:46:52 webchick Exp $
+// $Id: batch.js,v 1.7 2009/03/13 23:15:08 webchick Exp $
 (function($) {
 
 /**
  * Attaches the batch behavior to progress bars.
  */
 Drupal.behaviors.batch = {
-  attach: function(context) {
+  attach: function(context, settings) {
     // This behavior attaches by ID, so is only valid once on a page.
     if ($('#progress.batch-processed').size()) {
       return;
     }
     $('#progress', context).addClass('batch-processed').each(function () {
       var holder = this;
-      var uri = Drupal.settings.batch.uri;
-      var initMessage = Drupal.settings.batch.initMessage;
-      var errorMessage = Drupal.settings.batch.errorMessage;
+      var uri = settings.batch.uri;
+      var initMessage = settings.batch.initMessage;
+      var errorMessage = settings.batch.errorMessage;
 
       // Success: redirect to the summary.
       var updateCallback = function (progress, status, pb) {

@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.50 2009/02/18 13:46:52 webchick Exp $
+// $Id: drupal.js,v 1.51 2009/03/13 23:15:08 webchick Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'locale': {} };
 
@@ -51,13 +51,17 @@ Drupal.jsEnabled = document.getElementsByTagName && document.createElement && do
  * @param context
  *   An element to attach behaviors to. If none is given, the document element
  *   is used.
+ * @param settings
+ *   An object containing settings for the current context. If none given, the
+ *   global Drupal.settings object is used.
  */
-Drupal.attachBehaviors = function(context) {
+Drupal.attachBehaviors = function(context, settings) {
   context = context || document;
+  settings = settings || Drupal.settings;
   // Execute all of them.
   $.each(Drupal.behaviors, function() {
     if ($.isFunction(this.attach)) {
-      this.attach(context);
+      this.attach(context, settings);
     }
   });
 };
@@ -81,12 +85,13 @@ Drupal.attachBehaviors = function(context) {
  *
  * @see Drupal.attachBehaviors
  */
-Drupal.detachBehaviors = function(context) {
+Drupal.detachBehaviors = function(context, settings) {
   context = context || document;
+  settings = settings || Drupal.settings;
   // Execute all of them.
   $.each(Drupal.behaviors, function() {
     if ($.isFunction(this.detach)) {
-      this.detach(context);
+      this.detach(context, settings);
     }
   });
 };
@@ -320,7 +325,7 @@ if (Drupal.jsEnabled) {
   document.cookie = 'has_js=1; path=/';
   // Attach all behaviors.
   $(document).ready(function() {
-    Drupal.attachBehaviors(this);
+    Drupal.attachBehaviors(this, Drupal.settings);
   });
 }
 

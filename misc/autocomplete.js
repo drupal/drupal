@@ -1,11 +1,11 @@
-// $Id: autocomplete.js,v 1.26 2009/02/18 13:46:52 webchick Exp $
+// $Id: autocomplete.js,v 1.27 2009/03/13 23:15:08 webchick Exp $
 (function($) {
 
 /**
  * Attaches the autocomplete behavior to all required fields.
  */
 Drupal.behaviors.autocomplete = {
-  attach: function(context) {
+  attach: function(context, settings) {
     var acdb = [];
     $('input.autocomplete:not(.autocomplete-processed)', context).each(function () {
       var uri = this.value;

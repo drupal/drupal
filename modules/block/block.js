@@ -1,4 +1,4 @@
-// $Id: block.js,v 1.5 2009/02/18 13:46:53 webchick Exp $
+// $Id: block.js,v 1.6 2009/03/13 23:15:08 webchick Exp $
 (function($) {
 
 /**
@@ -8,7 +8,7 @@
  * objects initialized in that behavior to update the row.
  */
 Drupal.behaviors.blockDrag = {
-  attach: function(context) {
+  attach: function(context, settings) {
     var table = $('table#blocks');
     var tableDrag = Drupal.tableDrag.blocks; // Get the blocks tableDrag object.
 

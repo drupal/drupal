@@ -1,4 +1,4 @@
-// $Id: ahah.js,v 1.11 2009/03/08 03:16:26 webchick Exp $
+// $Id: ahah.js,v 1.12 2009/03/13 23:15:08 webchick Exp $
 (function($) {
 
 /**
@@ -17,10 +17,10 @@
  * Attaches the ahah behavior to each ahah form element.
  */
 Drupal.behaviors.ahah = {
-  attach: function(context) {
-    for (var base in Drupal.settings.ahah) {
+  attach: function(context, settings) {
+    for (var base in settings.ahah) {
       if (!$('#'+ base + '.ahah-processed').size()) {
-        var element_settings = Drupal.settings.ahah[base];
+        var element_settings = settings.ahah[base];
 
         $(element_settings.selector).each(function() {
           element_settings.element = this;

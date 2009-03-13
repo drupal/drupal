@@ -1,4 +1,4 @@
-// $Id: tabledrag.js,v 1.24 2009/03/08 03:16:26 webchick Exp $
+// $Id: tabledrag.js,v 1.25 2009/03/13 23:15:08 webchick Exp $
 (function($) {
 
 /**
@@ -13,10 +13,10 @@
  * See blocks.js for an example of adding additional functionality to tableDrag.
  */
 Drupal.behaviors.tableDrag = {
-  attach: function(context) {
-    for (var base in Drupal.settings.tableDrag) {
+  attach: function(context, settings) {
+    for (var base in settings.tableDrag) {
       if (!$('#' + base + '.tabledrag-processed', context).size()) {
-        var tableSettings = Drupal.settings.tableDrag[base];
+        var tableSettings = settings.tableDrag[base];
 
         $('#' + base).filter(':not(.tabledrag-processed)').each(function() {
           // Create the new tableDrag instance. Save in the Drupal variable

@@ -1,8 +1,8 @@
-// $Id: textarea.js,v 1.26 2009/02/18 13:46:52 webchick Exp $
+// $Id: textarea.js,v 1.27 2009/03/13 23:15:08 webchick Exp $
 (function($) {
 
 Drupal.behaviors.textarea = {
-  attach: function(context) {
+  attach: function(context, settings) {
     $('textarea.resizable:not(.textarea-processed)', context).each(function() {
       // Avoid non-processed teasers.
       if ($(this).is(('textarea.teaser:not(.teaser-processed)'))) {

@@ -1,4 +1,4 @@
-// $Id: tableheader.js,v 1.21 2009/02/18 13:46:52 webchick Exp $
+// $Id: tableheader.js,v 1.22 2009/03/13 23:15:08 webchick Exp $
 (function($) {
 
 Drupal.tableHeaderDoScroll = function() {
@@ -8,7 +8,7 @@ Drupal.tableHeaderDoScroll = function() {
 };
 
 Drupal.behaviors.tableHeader = {
-  attach: function(context) {
+  attach: function(context, settings) {
     // This breaks in anything less than IE 7. Prevent it from running.
     if ($.browser.msie && parseInt($.browser.version, 10) < 7) {
       return;

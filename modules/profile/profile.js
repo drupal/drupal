@@ -1,4 +1,4 @@
-// $Id: profile.js,v 1.4 2009/02/18 13:46:54 webchick Exp $
+// $Id: profile.js,v 1.5 2009/03/13 23:15:09 webchick Exp $
 (function($) {
 
 /**
@@ -9,7 +9,7 @@
  * a warning message when removing the last field from a profile category.
  */
 Drupal.behaviors.profileDrag = {
-  attach: function(context) {
+  attach: function(context, settings) {
     var table = $('#profile-fields');
     var tableDrag = Drupal.tableDrag['profile-fields']; // Get the profile tableDrag object.
 

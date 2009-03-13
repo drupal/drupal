@@ -1,8 +1,8 @@
-// $Id: comment.js,v 1.8 2009/02/18 13:46:54 webchick Exp $
+// $Id: comment.js,v 1.9 2009/03/13 23:15:09 webchick Exp $
 (function($) {
 
 Drupal.behaviors.comment = {
-  attach: function(context) {
+  attach: function(context, settings) {
     var parts = new Array("name", "homepage", "mail");
     var cookie = '';
     for (i=0;i<3;i++) {

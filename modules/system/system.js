@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.19 2009/02/18 13:46:55 webchick Exp $
+// $Id: system.js,v 1.20 2009/03/13 23:15:09 webchick Exp $
 (function($) {
 
 /**
@@ -9,14 +9,14 @@
  * are currently enabled.
  */
 Drupal.behaviors.cleanURLsSettingsCheck = {
-  attach: function(context) {
+  attach: function(context, settings) {
     // This behavior attaches by ID, so is only valid once on a page.
     // Also skip if we are on an install page, as Drupal.cleanURLsInstallCheck will handle
     // the processing.
     if ($("#clean-url.clean-url-processed, #clean-url.install").size()) {
       return;
     }
-    var url = Drupal.settings.basePath +"admin/settings/clean-urls/check";
+    var url = settings.basePath +"admin/settings/clean-urls/check";
     $("#clean-url .description span").html('<div id="testing">'+ Drupal.t('Testing clean URLs...') +"</div>");
     $("#clean-url p").hide();
     $.ajax({
@@ -77,10 +77,10 @@ Drupal.cleanURLsInstallCheck = function() {
  * administrator e-mail address with the same value as the site e-mail address.
  */
 Drupal.behaviors.copyFieldValue = {
-  attach: function(context) {
-    for (var sourceId in Drupal.settings.copyFieldValue) {
+  attach: function(context, settings) {
+    for (var sourceId in settings.copyFieldValue) {
       // Get the list of target fields.
-      targetIds = Drupal.settings.copyFieldValue[sourceId];
+      targetIds = settings.copyFieldValue[sourceId];
       if (!$('#'+ sourceId + '.copy-field-values-processed', context).size()) {
         // Add the behavior to update target fields on blur of the primary field.
         sourceField = $('#' + sourceId);
@@ -102,7 +102,7 @@ Drupal.behaviors.copyFieldValue = {
  * Show/hide custom format sections on the date-time settings page.
  */
 Drupal.behaviors.dateTime = {
-  attach: function(context) {
+  attach: function(context, settings) {
     // Show/hide custom format depending on the select's value.
     $('select.date-format:not(.date-time-processed)', context).change(function() {
       $(this).addClass('date-time-processed').parents("div.date-container").children("div.custom-container")[$(this).val() == "custom" ? "show" : "hide"]();
@@ -111,7 +111,7 @@ Drupal.behaviors.dateTime = {
     // Attach keyup handler to custom format inputs.
     $('input.custom-format:not(.date-time-processed)', context).addClass('date-time-processed').keyup(function() {
       var input = $(this);
-      var url = Drupal.settings.dateTime.lookup +(Drupal.settings.dateTime.lookup.match(/\?q=/) ? "&format=" : "?format=") + Drupal.encodeURIComponent(input.val());
+      var url = settings.dateTime.lookup +(settings.dateTime.lookup.match(/\?q=/) ? "&format=" : "?format=") + Drupal.encodeURIComponent(input.val());
       $.getJSON(url, function(data) {
         $("div.description span", input.parent()).html(data);
       });
@@ -126,9 +126,9 @@ Drupal.behaviors.dateTime = {
  * Show the powered by Drupal image preview
  */
 Drupal.behaviors.poweredByPreview = {
-  attach: function(context) {
+  attach: function(context, settings) {
     $('#edit-color, #edit-size').change(function() {
-      var path = Drupal.settings.basePath + 'misc/' + $('#edit-color').val() + '-' + $('#edit-size').val() + '.png';
+      var path = settings.basePath + 'misc/' + $('#edit-color').val() + '-' + $('#edit-size').val() + '.png';
       $('img.powered-by-preview').attr('src', path);
     });
   }

@@ -1,4 +1,4 @@
-// $Id: collapse.js,v 1.19 2009/02/18 13:46:52 webchick Exp $
+// $Id: collapse.js,v 1.20 2009/03/13 23:15:08 webchick Exp $
 (function($) {
 
 /**
@@ -52,7 +52,7 @@ Drupal.collapseScrollIntoView = function (node) {
 };
 
 Drupal.behaviors.collapse = {
-  attach: function(context) {
+  attach: function(context, settings) {
     $('fieldset.collapsible > legend:not(.collapse-processed)', context).each(function() {
       var fieldset = $(this.parentNode);
       // Expand if there are errors inside

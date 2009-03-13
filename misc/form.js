@@ -1,8 +1,8 @@
-// $Id: form.js,v 1.4 2009/03/08 01:43:57 webchick Exp $
+// $Id: form.js,v 1.5 2009/03/13 23:15:08 webchick Exp $
 (function($) {
 
 Drupal.behaviors.multiselectSelector = {
-  attach: function(context) {
+  attach: function(context, settings) {
     // Automatically selects the right radio button in a multiselect control.
     $('.multiselect select:not(.multiselectSelector-processed)', context)
       .addClass('multiselectSelector-processed').change(function() {

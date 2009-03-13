@@ -1,22 +1,22 @@
-// $Id: simpletest.js,v 1.8 2009/02/18 13:46:54 webchick Exp $
+// $Id: simpletest.js,v 1.9 2009/03/13 23:15:09 webchick Exp $
 (function($) {
 
 /**
  * Add the cool table collapsing on the testing overview page.
  */
 Drupal.behaviors.simpleTestMenuCollapse = {
-  attach: function() {
+  attach: function(context, settings) {
     var timeout = null;
     // Adds expand-collapse functionality.
     $('div.simpletest-image').each(function() {
-      direction = Drupal.settings.simpleTest[$(this).attr('id')].imageDirection;
-      $(this).html(Drupal.settings.simpleTest.images[direction]);
+      direction = settings.simpleTest[$(this).attr('id')].imageDirection;
+      $(this).html(settings.simpleTest.images[direction]);
     });
 
     // Adds group toggling functionality to arrow images.
     $('div.simpletest-image').click(function() {
-      var trs = $(this).parents('tbody').children('.' + Drupal.settings.simpleTest[this.id].testClass);
-      var direction = Drupal.settings.simpleTest[this.id].imageDirection;
+      var trs = $(this).parents('tbody').children('.' + settings.simpleTest[this.id].testClass);
+      var direction = settings.simpleTest[this.id].imageDirection;
       var row = direction ? trs.size() - 1 : 0;
 
       // If clicked in the middle of expanding a group, stop so we can switch directions.
@@ -48,8 +48,8 @@ Drupal.behaviors.simpleTestMenuCollapse = {
       rowToggle();
 
       // Toggle the arrow image next to the test group title.
-      $(this).html(Drupal.settings.simpleTest.images[(direction ? 0 : 1)]);
-      Drupal.settings.simpleTest[this.id].imageDirection = !direction;
+      $(this).html(settings.simpleTest.images[(direction ? 0 : 1)]);
+      settings.simpleTest[this.id].imageDirection = !direction;
 
     });
   }
@@ -60,9 +60,9 @@ Drupal.behaviors.simpleTestMenuCollapse = {
  * selected/deselected.
  */
 Drupal.behaviors.simpleTestSelectAll = {
-  attach: function() {
+  attach: function(context, settings) {
     $('td.simpletest-select-all').each(function() {
-      var testCheckboxes = Drupal.settings.simpleTest['simpletest-test-group-' + $(this).attr('id')].testNames;
+      var testCheckboxes = settings.simpleTest['simpletest-test-group-' + $(this).attr('id')].testNames;
       var groupCheckbox = $('<input type="checkbox" class="form-checkbox" id="' + $(this).attr('id') + '-select-all" />');
 
       // Each time a single-test checkbox is checked or unchecked, make sure
