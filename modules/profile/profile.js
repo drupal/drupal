@@ -9,7 +9,7 @@
  * a warning message when removing the last field from a profile category.
  */
 Drupal.behaviors.profileDrag = {
-  attach: function(context) {
+  attach: function(context, settings) {
     var table = $('#profile-fields');
     var tableDrag = Drupal.tableDrag['profile-fields']; // Get the profile tableDrag object.
 

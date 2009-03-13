@@ -2,7 +2,7 @@
 (function($) {
 
 Drupal.behaviors.multiselectSelector = {
-  attach: function(context) {
+  attach: function(context, settings) {
     // Automatically selects the right radio button in a multiselect control.
     $('.multiselect select:not(.multiselectSelector-processed)', context)
       .addClass('multiselectSelector-processed').change(function() {

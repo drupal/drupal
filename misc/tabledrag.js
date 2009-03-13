@@ -13,10 +13,10 @@
  * See blocks.js for an example of adding additional functionality to tableDrag.
  */
 Drupal.behaviors.tableDrag = {
-  attach: function(context) {
-    for (var base in Drupal.settings.tableDrag) {
+  attach: function(context, settings) {
+    for (var base in settings.tableDrag) {
       if (!$('#' + base + '.tabledrag-processed', context).size()) {
-        var tableSettings = Drupal.settings.tableDrag[base];
+        var tableSettings = settings.tableDrag[base];
 
         $('#' + base).filter(':not(.tabledrag-processed)').each(function() {
           // Create the new tableDrag instance. Save in the Drupal variable

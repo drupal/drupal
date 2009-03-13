@@ -8,7 +8,7 @@
  * objects initialized in that behavior to update the row.
  */
 Drupal.behaviors.blockDrag = {
-  attach: function(context) {
+  attach: function(context, settings) {
     var table = $('table#blocks');
     var tableDrag = Drupal.tableDrag.blocks; // Get the blocks tableDrag object.
 

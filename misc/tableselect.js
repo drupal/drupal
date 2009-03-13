@@ -2,7 +2,7 @@
 (function($) {
 
 Drupal.behaviors.tableSelect = {
-  attach: function(context) {
+  attach: function(context, settings) {
     $('form table:has(th.select-all):not(.tableSelect-processed)', context).each(Drupal.tableSelect);
   }
 };

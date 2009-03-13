@@ -8,7 +8,7 @@ Drupal.tableHeaderDoScroll = function() {
 };
 
 Drupal.behaviors.tableHeader = {
-  attach: function(context) {
+  attach: function(context, settings) {
     // This breaks in anything less than IE 7. Prevent it from running.
     if ($.browser.msie && parseInt($.browser.version, 10) < 7) {
       return;
