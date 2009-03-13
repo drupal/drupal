@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.4 2009/03/08 04:25:04 webchick Exp $
+// $Id: field.attach.inc,v 1.5 2009/03/13 21:25:40 dries Exp $
 
 /**
  * @file
@@ -29,6 +29,20 @@
  * The Drupal system variable field_storage_module identifies the
  * field storage module to use.
  */
+
+/**
+ * Argument for an insert operation.
+ * This is used in hook_field_storage_write when updating an 
+ * existing object.
+ */
+define('FIELD_STORAGE_UPDATE', 'update');
+
+/**
+ * Argument for an update operation.
+ * This is used in hook_field_storage_write when inserting a new object.
+ */
+define('FIELD_STORAGE_INSERT', 'insert');
+
 /**
  * @} End of "defgroup field_storage"
  */
@@ -386,7 +400,7 @@ function _field_attach_insert($obj_type, &$object) {
   }
 
   _field_invoke('insert', $obj_type, $object);
-  module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_write', $obj_type, $object);
+  module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_write', $obj_type, $object, FIELD_STORAGE_INSERT);
 
   list($id, $vid, $bundle, $cacheable) = field_attach_extract_ids($obj_type, $object);
   if ($cacheable) {
@@ -411,7 +425,7 @@ function _field_attach_update($obj_type, &$object) {
   }
 
   _field_invoke('update', $obj_type, $object);
-  module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_write', $obj_type, $object, TRUE);
+  module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_write', $obj_type, $object, FIELD_STORAGE_UPDATE);
 
   list($id, $vid, $bundle, $cacheable) = field_attach_extract_ids($obj_type, $object);
   if ($cacheable) {
