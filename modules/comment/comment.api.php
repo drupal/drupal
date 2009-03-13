@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.api.php,v 1.3 2009/01/26 14:08:42 dries Exp $
+// $Id: comment.api.php,v 1.4 2009/03/13 14:32:07 dries Exp $
 
 /**
  * @file
@@ -19,10 +19,9 @@
  * @return
  *   Nothing.
  */
-function hook_comment_insert(&$form_values) {
-  $nid = $form_values['nid'];
-
-  cache_clear_all_like(drupal_url(array('id' => $nid)));
+function hook_comment_insert($form_values) {
+  // Reindex the node when comments are added.
+  search_touch_node($form_values['nid']);
 }
 
 /**
@@ -50,10 +49,9 @@ function hook_comment_validate(&$form_values) {
  * @return
  *   Nothing.
  */
-function hook_comment_update(&$form_values) {
-  $nid = $form_values['nid'];
-
-  cache_clear_all_like(drupal_url(array('id' => $nid)));
+function hook_comment_update($form_values) {
+  // Reindex the node when comments are updated.
+  search_touch_node($form_values['nid']);
 }
 
 /**
