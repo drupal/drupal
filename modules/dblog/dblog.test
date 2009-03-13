@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.test,v 1.14 2009/01/08 08:42:12 webchick Exp $
+// $Id: dblog.test,v 1.15 2009/03/13 14:28:18 dries Exp $
 
 class DBLogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -57,7 +57,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $current_limit = variable_get('dblog_row_limit', 1000);
     $this->assertTrue($current_limit == $row_limit, t('[Cache] Row limit variable of @count equals row limit of @limit', array('@count' => $current_limit, '@limit' => $row_limit)));
     // Verify dblog row limit equals specified row limit.
-    $current_limit = unserialize(db_result(db_query("SELECT value FROM {variable} WHERE name = '%s'", 'dblog_row_limit')));
+    $current_limit = unserialize(db_query("SELECT value FROM {variable} WHERE name = :dblog_limit", array(':dblog_limit' => 'dblog_row_limit'))->fetchField());
     $this->assertTrue($current_limit == $row_limit, t('[Variable table] Row limit variable of @count equals row limit of @limit', array('@count' => $current_limit, '@limit' => $row_limit)));
   }
 
@@ -70,7 +70,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     // Generate additional log entries.
     $this->generateLogEntries($row_limit + 10);
     // Verify dblog row count exceeds row limit.
-    $count = db_result(db_query('SELECT COUNT(wid) FROM {watchdog}'));
+    $count = db_query('SELECT COUNT(wid) FROM {watchdog}')->fetchField();
     $this->assertTrue($count > $row_limit, t('Dblog row count of @count exceeds row limit of @limit', array('@count' => $count, '@limit' => $row_limit)));
 
     // Run cron job.
@@ -78,7 +78,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->assertResponse(200);
     $this->assertText(t('Cron ran successfully'), t('Cron ran successfully'));
     // Verify dblog row count equals row limit plus one because cron adds a record after it runs.
-    $count = db_result(db_query('SELECT COUNT(wid) FROM {watchdog}'));
+    $count = db_query('SELECT COUNT(wid) FROM {watchdog}')->fetchField();
     $this->assertTrue($count == $row_limit + 1, t('Dblog row count of @count equals row limit of @limit plus one', array('@count' => $count, '@limit' => $row_limit)));
   }
 
@@ -196,9 +196,9 @@ class DBLogTestCase extends DrupalWebTestCase {
     // Logout user.
     $this->drupalLogout();
     // Fetch row ids in watchdog that relate to the user.
-    $result = db_query('SELECT wid FROM {watchdog} WHERE uid = %d', $user->uid);
-    while ($row = db_fetch_array($result)) {
-      $ids[] = $row['wid'];
+    $result = db_query('SELECT wid FROM {watchdog} WHERE uid = :uid', array(':uid' => $user->uid));
+    foreach($result as $row) {
+      $ids[] = $row->wid;
     }
     $count_before = (isset($ids)) ? count($ids) : 0;
     $this->assertTrue($count_before > 0, t('DBLog contains @count records for @name', array('@count' => $count_before, '@name' => $user->name)));
@@ -210,7 +210,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->drupalPost('user/' . $user->uid . '/cancel', array('user_cancel_method' => 'user_cancel_reassign'), t('Cancel account'));
 
     // Count rows that have uids for the user.
-    $count = db_result(db_query('SELECT COUNT(wid) FROM {watchdog} WHERE uid = %d', $user->uid));
+    $count = db_query('SELECT COUNT(wid) FROM {watchdog} WHERE uid = %d', $user->uid)->fetchField();
     $this->assertTrue($count == 0, t('DBLog contains @count records for @name', array('@count' => $count, '@name' => $user->name)));
 
     // Count rows in watchdog that previously related to the deleted user.
@@ -224,9 +224,9 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->assertTrue($count_after == $count_before, t('DBLog contains @count records for @name that now have uid = 0', array('@count' => $count_before, '@name' => $user->name)));
     unset($ids);
     // Fetch row ids in watchdog that relate to the user.
-    $result = db_query('SELECT wid FROM {watchdog} WHERE uid = %d', $user->uid);
-    while ($row = db_fetch_array($result)) {
-      $ids[] = $row['wid'];
+    $result = db_query('SELECT wid FROM {watchdog} WHERE uid = :uid', array(':uid' => $user->uid));
+    foreach($result as $row) {
+      $ids[] = $row->wid;
     }
     $this->assertTrue(!isset($ids), t('DBLog contains no records for @name', array('@name' => $user->name)));
 
@@ -380,13 +380,13 @@ class DBLogTestCase extends DrupalWebTestCase {
     // Add a watchdog entry.
     dblog_watchdog($log);
     // Make sure the table count has actually incremented.
-    $this->assertEqual($count + 1, db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField(), t('dblog_watchdog() added an entry to the dblog %count', array('%count' => $count)));
+    $this->assertEqual($count + 1, db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField(), t('dblog_watchdog() added an entry to the dblog :count', array(':count' => $count)));
     // Login the admin user.
     $this->drupalLogin($this->big_user);
     // Now post to clear the db table.
     $this->drupalPost('admin/reports/dblog', array(), t('Clear log messages'));
     // Count rows in watchdog that previously related to the deleted user.
     $count = db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField();
-    $this->assertEqual($count, 0, t('DBLog contains %count records after a clear.', array('%count' => $count)));
+    $this->assertEqual($count, 0, t('DBLog contains :count records after a clear.', array(':count' => $count)));
   }
 }
