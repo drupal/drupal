@@ -556,11 +556,11 @@ function hook_field_storage_load($obj_type, $queried_objs, $age) {
  *   The entity type of object, such as 'node' or 'user'.
  * @param $object
  *   The object on which to operate.
- * @param $update
- *   TRUE if this is an update to an existing object, FALSE if it is
- *   an insert of a new object.
+ * @param $op
+ *   FIELD_STORAGE_UPDATE when updating an existing object,
+ *   FIELD_STORAGE_INSERT when inserting a new object.
  */
-function hook_field_storage_write($obj_type, $object, $update = TRUE) {
+function hook_field_storage_write($obj_type, $object, $op) {
 }
 
 /**

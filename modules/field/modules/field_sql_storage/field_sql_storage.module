@@ -229,7 +229,7 @@ function field_sql_storage_field_storage_load($obj_type, $objects, $age) {
   return $additions;
 }
 
-function field_sql_storage_field_storage_write($obj_type, $object, $update = FALSE) {
+function field_sql_storage_field_storage_write($obj_type, $object, $op) {
   list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
   $etid = _field_sql_storage_etid($obj_type);
 
@@ -247,7 +247,7 @@ function field_sql_storage_field_storage_write($obj_type, $object, $update = FAL
     // where it's an empty array with the faster isset().
     if (isset($object->$field_name) || property_exists($object, $field_name)) {
       // Delete and insert, rather than update, in case a value was added.
-      if ($update) {
+      if ($op == FIELD_STORAGE_UPDATE) {
         db_delete($table_name)->condition('etid', $etid)->condition('entity_id', $id)->execute();
         if (isset($vid)) {
           db_delete($revision_name)->condition('etid', $etid)->condition('entity_id', $id)->condition('revision_id', $vid)->execute();
