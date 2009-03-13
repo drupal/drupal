@@ -97,8 +97,10 @@ function dblog_init() {
  */
 function dblog_cron() {
   // Cleanup the watchdog table
-  $max = db_result(db_query('SELECT MAX(wid) FROM {watchdog}'));
-  db_query('DELETE FROM {watchdog} WHERE wid <= %d', $max - variable_get('dblog_row_limit', 1000));
+  $max = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+  db_delete('watchdog')
+    ->condition('wid', $max - variable_get('dblog_row_limit', 1000), '<=')
+    ->execute();
 }
 
 /**
@@ -107,11 +109,16 @@ function dblog_cron() {
 function dblog_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
-      db_update('watchdog')->fields(array('uid' => 0))->condition('uid', $account->uid)->execute();
+      db_update('watchdog')
+        ->fields(array('uid' => 0))
+        ->condition('uid', $account->uid)
+        ->execute();
       break;
 
     case 'user_cancel_delete':
-      db_delete('watchdog')->condition('uid', $account->uid)->execute();
+      db_delete('watchdog')
+        ->condition('uid', $account->uid)
+        ->execute();
       break;
   }
 }
@@ -120,7 +127,7 @@ function _dblog_get_message_types() {
   $types = array();
 
   $result = db_query('SELECT DISTINCT(type) FROM {watchdog} ORDER BY type');
-  while ($object = db_fetch_object($result)) {
+  foreach ($result as $object) {
     $types[] = $object->type;
   }
 

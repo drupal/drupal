@@ -63,16 +63,30 @@ function dblog_overview() {
     array('data' => t('Operations')),
   );
 
-  $sql = "SELECT w.wid, w.uid, w.severity, w.type, w.timestamp, w.message, w.variables, w.link, u.name FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid";
-  $tablesort = tablesort_sql($header);
+  $query = db_select('watchdog', 'w');
+  $query->join('users', 'u', 'w.uid = u.uid');
+  $query
+    ->fields('w', array('wid', 'uid', 'severity', 'type', 'timestamp', 'message', 'variables', 'link'))
+    ->addField('u', 'name');
   if (!empty($filter['where'])) {
-    $result = pager_query($sql . " WHERE " . $filter['where'] . $tablesort, 50, 0, NULL, $filter['args']);
+    //setHeader may not be chainable see Line 138
+    $query
+      ->where($filter['where'], $filter['args'])
+      ->extend('PagerDefault')->extend('TableSort')
+      ->limit(50, 0)
+      ->setHeader($header);
+    $result = $query->execute();
   }
   else {
-    $result = pager_query($sql . $tablesort, 50);
+    //setHeader may not be chainable see Line 138
+    $query
+      ->extend('PagerDefault')->extend('TableSort')
+      ->limit(50)
+      ->setHeader($header);
+    $result = $query->execute();
   }
 
-  while ($dblog = db_fetch_object($result)) {
+  foreach ($result as $dblog) {
     $rows[] = array('data' =>
       array(
         // Cells
@@ -108,11 +122,25 @@ function dblog_top($type) {
     array('data' => t('Count'), 'field' => 'count', 'sort' => 'desc'),
     array('data' => t('Message'), 'field' => 'message')
   );
+  $count_query = db_select('watchdog');
+  $count_query->addExpression('COUNT(DISTINCT(message))');
+  $count_query->condition('type', $type);
 
-  $result = pager_query("SELECT COUNT(wid) AS count, message, variables FROM {watchdog} WHERE type = '%s' GROUP BY message, variables " . tablesort_sql($header), 30, 0, "SELECT COUNT(DISTINCT(message)) FROM {watchdog} WHERE type = '%s'", $type);
+  $query = db_select('watchdog', 'w');
+  $query->addExpression('COUNT(wid)', 'count');
+  $query = $query
+    ->fields('w', array('message', 'variables'))
+    ->condition('w.type', $type)
+    ->groupBy('message')
+    ->groupBy('variables')
+    ->extend('PagerDefault')->extend('TableSort')
+    ->limit(30);
+  $query = $query->setHeader($header);
+  $query->setCountQuery($count_query);
+  $result = $query->execute();
 
   $rows = array();
-  while ($dblog = db_fetch_object($result)) {
+  foreach ($result as $dblog) {
     $rows[] = array($dblog->count, truncate_utf8(_dblog_format_message($dblog), 56, TRUE, TRUE));
   }
 
@@ -132,8 +160,8 @@ function dblog_top($type) {
 function dblog_event($id) {
   $severity = watchdog_severity_levels();
   $output = '';
-  $result = db_query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid WHERE w.wid = %d', $id);
-  if ($dblog = db_fetch_object($result)) {
+  $result = db_query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid WHERE w.wid = :id', array(':id' => $id))->fetchObject();
+  if ($dblog = $result) {
     $rows = array(
       array(
         array('data' => t('Type'), 'header' => TRUE),
@@ -222,14 +250,14 @@ function dblog_filters() {
   if (!empty($types)) {
     $filters['type'] = array(
       'title' => t('Type'),
-      'where' => "w.type = '%s'",
+      'where' => "w.type = ':s'",
       'options' => $types,
     );
   }
 
   $filters['severity'] = array(
     'title' => t('Severity'),
-    'where' => 'w.severity = %d',
+    'where' => 'w.severity = :d',
     'options' => watchdog_severity_levels(),
   );
 
