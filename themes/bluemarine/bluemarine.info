@@ -1,6 +1,0 @@
-; $Id$
-name = Bluemarine
-description = Tableless theme with a marine and ash color scheme.
-version = VERSION
-core = 7.x
-engine = phptemplate
