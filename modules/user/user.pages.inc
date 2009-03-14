@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.30 2009/02/26 07:30:29 webchick Exp $
+// $Id: user.pages.inc,v 1.31 2009/03/14 23:01:38 webchick Exp $
 
 /**
  * @file
@@ -44,10 +44,12 @@ function user_pass() {
 function user_pass_validate($form, &$form_state) {
   $name = trim($form_state['values']['name']);
   // Try to load by email.
-  $account = user_load(array('mail' => $name, 'status' => 1));
+  $users = user_load_multiple(array(), array('mail' => $name, 'status' => '1'));
+  $account = reset($users);
   if (!$account) {
     // No success, try to load by name.
-    $account = user_load(array('name' => $name, 'status' => 1));
+    $users = user_load_multiple(array(), array('name' => $name, 'status' => '1'));
+    $account = reset($users);
   }
   if (isset($account->uid)) {
     form_set_value(array('#parents' => array('account')), $account, $form_state);
@@ -86,7 +88,8 @@ function user_pass_reset(&$form_state, $uid, $timestamp, $hashed_pass, $action =
     $timeout = 86400;
     $current = REQUEST_TIME;
     // Some redundant checks for extra security ?
-    if ($timestamp < $current && $account = user_load(array('uid' => $uid, 'status' => 1)) ) {
+    $users = user_load_multiple(array($uid), array('status' => '1'));
+    if ($timestamp < $current && $account = reset($users)) {
       // No time out for first time login.
       if ($account->login && $current - $timestamp > $timeout) {
         drupal_set_message(t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'));

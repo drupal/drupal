@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.697 2009/03/10 11:21:27 dries Exp $
+// $Id: comment.module,v 1.698 2009/03/14 23:01:36 webchick Exp $
 
 /**
  * @file
@@ -1283,7 +1283,7 @@ function comment_validate($edit) {
       form_set_error('date', t('You have to specify a valid date.'));
     }
   }
-  if (isset($edit['author']) && !$account = user_load(array('name' => $edit['author']))) {
+  if (isset($edit['author']) && !$account = user_load_by_name($edit['author'])) {
     form_set_error('author', t('You have to specify a valid author.'));
   }
 
@@ -1607,7 +1607,7 @@ function comment_form_add_preview($form, &$form_state) {
 
     // Attach the user and time information.
     if (!empty($edit['author'])) {
-      $account = user_load(array('name' => $edit['author']));
+      $account = user_load_by_name($edit['author']);
     }
     elseif ($user->uid && !isset($edit['is_anonymous'])) {
       $account = $user;
@@ -1687,7 +1687,7 @@ function _comment_form_submit(&$comment_values) {
 
   $comment_values['timestamp'] = strtotime($comment_values['date']);
   if (isset($comment_values['author'])) {
-    $account = user_load(array('name' => $comment_values['author']));
+    $account = user_load_by_name($comment_values['author']);
     $comment_values['uid'] = $account->uid;
     $comment_values['name'] = $comment_values['author'];
   }

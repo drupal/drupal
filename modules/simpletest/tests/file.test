@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.25 2009/02/22 17:55:30 dries Exp $
+// $Id: file.test,v 1.26 2009/03/14 23:01:37 webchick Exp $
 
 /**
  *  @file
@@ -434,7 +434,7 @@ class FileValidatorTest extends DrupalWebTestCase {
     drupal_save_session(FALSE);
 
     // Run these test as uid = 1.
-    $user = user_load(array('uid' => 1));
+    $user = user_load(1);
 
     $file = new stdClass();
     $file->filesize = 999999;

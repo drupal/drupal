@@ -1,5 +1,5 @@
 <?php
-// $Id: user.api.php,v 1.3 2009/01/22 12:46:07 dries Exp $
+// $Id: user.api.php,v 1.4 2009/03/14 23:01:38 webchick Exp $
 
 /**
  * @file
@@ -82,6 +82,25 @@ function hook_user($op, &$edit, &$account, $category = NULL) {
       '#default_value' => $edit['signature'],
       '#description' => t('Your signature will be publicly displayed at the end of your comments.'));
     return $form;
+  }
+}
+/**
+ * Act on user objects when loaded from the database.
+ *
+ * Due to the static cache in user_load_multiple() you should not use this
+ * hook to modify the user properties returned by the {users} table itself
+ * since this may result in unreliable results when loading from cache.
+ *
+ * @param $users
+ *   An array of user objects, indexed by uid.
+ *
+ * @see user_load_multiple()
+ * @see profile_user_load()
+ */
+function hook_user_load($users) {
+  $result = db_query('SELECT * FROM {my_table} WHERE uid IN (:uids)', array(':uids' => array_keys($users)));
+  foreach ($result as $record) {
+    $users[$record->uid]->foo = $result->foo;
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.89 2009/03/14 21:28:50 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.90 2009/03/14 23:01:37 webchick Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -849,7 +849,7 @@ class DrupalWebTestCase {
     // Log in with a clean $user.
     $this->originalUser = $user;
     drupal_save_session(FALSE);
-    $user = user_load(array('uid' => 1));
+    $user = user_load(1);
 
     // Restore necessary variables.
     variable_set('install_profile', 'default');

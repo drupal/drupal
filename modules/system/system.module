@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.671 2009/03/09 11:44:54 dries Exp $
+// $Id: system.module,v 1.672 2009/03/14 23:01:37 webchick Exp $
 
 /**
  * @file
@@ -2013,7 +2013,7 @@ function system_send_email_action($object, $context) {
 
   if (isset($node)) {
     if (!isset($account)) {
-      $account = user_load(array('uid' => $node->uid));
+      $account = user_load($node->uid);
     }
     if ($recipient == '%author') {
       $recipient = $account->mail;

@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.29 2009/03/08 04:25:07 webchick Exp $
+// $Id: trigger.module,v 1.30 2009/03/14 23:01:37 webchick Exp $
 
 /**
  * @file
@@ -195,7 +195,7 @@ function _trigger_normalize_node_context($type, $node) {
     // An action that works on users is being called in a node context.
     // Load the user object of the node's author.
     case 'user':
-      return user_load(array('uid' => $node->uid));
+      return user_load($node->uid);
   }
 }
 
@@ -298,7 +298,7 @@ function _trigger_normalize_comment_context($type, $comment) {
 
     // An action that works on users is being called in a comment context.
     case 'user':
-      return user_load(array('uid' => is_array($comment) ? $comment['uid'] : $comment->uid));
+      return user_load(is_array($comment) ? $comment['uid'] : $comment->uid);
   }
 }
 

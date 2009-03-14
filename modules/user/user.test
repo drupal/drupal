@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.30 2009/03/08 21:52:10 dries Exp $
+// $Id: user.test,v 1.31 2009/03/14 23:01:38 webchick Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   function getInfo() {
@@ -31,7 +31,8 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->assertText(t('Your password and further instructions have been sent to your e-mail address.'), t('User registered successfully.'));
 
     // Check database for created user.
-    $user = user_load($edit);
+    $users = user_load_multiple(array(), array('name' => $name, 'mail' => $mail));
+    $user = reset($users);
     $this->assertTrue($user, t('User found in database.'));
     $this->assertTrue($user->uid > 0, t('User has valid user id.'));
 
@@ -74,7 +75,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     // Make sure password changes are present in database.
     require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
 
-    $user = user_load(array('uid' => $user->uid));
+    $user = user_load($user->uid, TRUE);
     $this->assertTrue(user_check_password($new_pass, $user), t('Correct password in database.'));
 
     // Logout of user account.
@@ -170,7 +171,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $account = $this->drupalCreateUser(array());
     $this->drupalLogin($account);
     // Load real user object.
-    $account = user_load($account->uid);
+    $account = user_load($account->uid, TRUE);
 
     // Create a node.
     $node = $this->drupalCreateNode(array('uid' => $account->uid));
@@ -183,7 +184,8 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $timestamp = $account->login;
     $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
     $this->assertResponse(403, t('Bogus cancelling request rejected.'));
-    $this->assertTrue(user_load(array('uid' => $account->uid, 'status' => 1)), t('User account was not canceled.'));
+    $account = user_load($account->uid);
+    $this->assertTrue($account->status == 1, t('User account was not canceled.'));
 
     // Confirm user's content has not been altered.
     $test_node = node_load($node->nid, NULL, TRUE);
@@ -200,7 +202,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $account = $this->drupalCreateUser(array('cancel account'));
     $this->drupalLogin($account);
     // Load real user object.
-    $account = user_load($account->uid);
+    $account = user_load($account->uid, TRUE);
 
     // Create a node.
     $node = $this->drupalCreateNode(array('uid' => $account->uid));
@@ -217,13 +219,14 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $bogus_timestamp = $timestamp + 60;
     $this->drupalGet("user/$account->uid/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account->pass, $bogus_timestamp, $account->login));
     $this->assertText(t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'), t('Bogus cancelling request rejected.'));
-    $this->assertTrue(user_load(array('uid' => $account->uid, 'status' => 1)), t('User account was not canceled.'));
+    $account = user_load($account->uid);
+    $this->assertTrue($account->status == 1, t('User account was not canceled.'));
 
     // Attempt expired account cancellation request confirmation.
     $bogus_timestamp = $timestamp - 86400 - 60;
     $this->drupalGet("user/$account->uid/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account->pass, $bogus_timestamp, $account->login));
     $this->assertText(t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'), t('Expired cancel account request rejected.'));
-    $this->assertTrue(user_load(array('uid' => $account->uid, 'status' => 1)), t('User account was not canceled.'));
+    $this->assertTrue(reset(user_load_multiple(array($account->uid), array('status' => 1))), t('User account was not canceled.'));
 
     // Confirm user's content has not been altered.
     $test_node = node_load($node->nid, NULL, TRUE);
@@ -237,10 +240,11 @@ class UserCancelTestCase extends DrupalWebTestCase {
     variable_set('user_cancel_method', 'user_cancel_block');
 
     // Create a user.
-    $account = $this->drupalCreateUser(array('cancel account'));
-    $this->drupalLogin($account);
+    $web_user = $this->drupalCreateUser(array('cancel account'));
+    $this->drupalLogin($web_user);
+
     // Load real user object.
-    $account = user_load($account->uid);
+    $account = user_load($web_user->uid, TRUE);
 
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->uid . '/edit');
@@ -251,12 +255,14 @@ class UserCancelTestCase extends DrupalWebTestCase {
 
     // Confirm account cancellation.
     $timestamp = time();
+
     $this->drupalPost(NULL, NULL, t('Cancel account'));
     $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), t('Account cancellation request mailed message displayed.'));
 
     // Confirm account cancellation request.
     $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
-    $this->assertTrue(user_load(array('uid' => $account->uid, 'status' => 0)), t('User has been blocked.'));
+    $account = user_load($account->uid, TRUE);
+    $this->assertTrue($account->status == 0, t('User has been blocked.'));
 
     // Confirm user is logged out.
     $this->assertNoText($account->name, t('Logged out.'));
@@ -272,7 +278,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $account = $this->drupalCreateUser(array('cancel account'));
     $this->drupalLogin($account);
     // Load real user object.
-    $account = user_load($account->uid);
+    $account = user_load($account->uid, TRUE);
 
     // Create a node with two revisions.
     $node = $this->drupalCreateNode(array('uid' => $account->uid));
@@ -293,7 +299,8 @@ class UserCancelTestCase extends DrupalWebTestCase {
 
     // Confirm account cancellation request.
     $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
-    $this->assertTrue(user_load(array('uid' => $account->uid, 'status' => 0)), t('User has been blocked.'));
+    $account = user_load($account->uid, TRUE);
+    $this->assertTrue($account->status == 0, t('User has been blocked.'));
 
     // Confirm user's content has been unpublished.
     $test_node = node_load($node->nid, NULL, TRUE);
@@ -315,7 +322,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $account = $this->drupalCreateUser(array('cancel account'));
     $this->drupalLogin($account);
     // Load real user object.
-    $account = user_load($account->uid);
+    $account = user_load($account->uid, TRUE);
 
     // Create a simple node.
     $node = $this->drupalCreateNode(array('uid' => $account->uid));
@@ -342,7 +349,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
 
     // Confirm account cancellation request.
     $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
-    $this->assertFalse(user_load($account->uid), t('User is not found in the database.'));
+    $this->assertFalse(user_load($account->uid, TRUE), t('User is not found in the database.'));
 
     // Confirm that user's content has been attributed to anonymous user.
     $test_node = node_load($node->nid, NULL, TRUE);
@@ -366,7 +373,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $account = $this->drupalCreateUser(array('cancel account'));
     $this->drupalLogin($account);
     // Load real user object.
-    $account = user_load($account->uid);
+    $account = user_load($account->uid, TRUE);
 
     // Create a simple node.
     $node = $this->drupalCreateNode(array('uid' => $account->uid));
@@ -398,7 +405,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
 
     // Confirm account cancellation request.
     $this->drupalGet("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
-    $this->assertFalse(user_load($account->uid), t('User is not found in the database.'));
+    $this->assertFalse(user_load($account->uid, TRUE), t('User is not found in the database.'));
 
     // Confirm that user's content has been deleted.
     $this->assertFalse(node_load($node->nid, NULL, TRUE), t('Node of the user has been deleted.'));
@@ -472,13 +479,14 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $status = TRUE;
     foreach ($users as $account) {
       $status = $status && (strpos($this->content, t('%name has been deleted.', array('%name' => $account->name))) !== FALSE);
-      $status = $status && !user_load($account->uid);
+      $status = $status && !user_load($account->uid, TRUE);
     }
     $this->assertTrue($status, t('Users deleted and not found in the database.'));
 
     // Ensure that admin account was not cancelled.
     $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), t('Account cancellation request mailed message displayed.'));
-    $this->assertTrue(user_load(array('uid' => $admin_user->uid, 'status' => 1)), t('Administrative user is found in the database and enabled.'));
+    $admin_user = user_load($admin_user->uid);
+    $this->assertTrue($admin_user->status == 1, t('Administrative user is found in the database and enabled.'));
   }
 }
 
@@ -791,13 +799,13 @@ class UserAdminTestCase extends DrupalWebTestCase {
     $this->assertText($user_c->name, t('Found user C on filtered by perm admin users page'));
 
     // Test blocking of a user.
-    $account = user_load(array('name' => $user_b->name));
+    $account = user_load($user_b->uid);
     $this->assertEqual($account->status, 1, 'User B not blocked');
     $edit = array();
     $edit['operation'] = 'block';
     $edit['accounts['. $account->uid .']'] = TRUE;
     $this->drupalPost('admin/user/user', $edit, t('Update'));
-    $account = user_load(array('name' => $user_b->name));
+    $account = user_load($user_b->uid, TRUE);
     $this->assertEqual($account->status, 0, 'User B blocked');
   }
 }

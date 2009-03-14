@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.56 2009/03/08 04:25:04 webchick Exp $
+// $Id: node.pages.inc,v 1.57 2009/03/14 23:01:36 webchick Exp $
 
 /**
  * @file
@@ -353,7 +353,7 @@ function node_preview($node) {
     if (isset($node->name)) {
       // The use of isset() is mandatory in the context of user IDs, because
       // user ID 0 denotes the anonymous user.
-      if ($user = user_load(array('name' => $node->name))) {
+      if ($user = user_load_by_name($node->name)) {
         $node->uid = $user->uid;
         $node->picture = $user->picture;
       }
@@ -362,7 +362,7 @@ function node_preview($node) {
       }
     }
     elseif ($node->uid) {
-      $user = user_load(array('uid' => $node->uid));
+      $user = user_load($node->uid);
       $node->name = $user->name;
       $node->picture = $user->picture;
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1030 2009/03/14 20:13:26 dries Exp $
+// $Id: node.module,v 1.1031 2009/03/14 23:01:36 webchick Exp $
 
 /**
  * @file
@@ -984,7 +984,7 @@ function node_validate($node, $form = array()) {
 
   if (user_access('administer nodes')) {
     // Validate the "authored by" field.
-    if (!empty($node->name) && !($account = user_load(array('name' => $node->name)))) {
+    if (!empty($node->name) && !($account = user_load_by_name($node->name))) {
       // The use of empty() is mandatory in the context of usernames
       // as the empty string denotes the anonymous user. In case we
       // are dealing with an anonymous user we set the user ID to 0.
@@ -1035,7 +1035,7 @@ function node_submit($node) {
 
   if (user_access('administer nodes')) {
     // Populate the "authored by" field.
-    if ($account = user_load(array('name' => $node->name))) {
+    if ($account = user_load_by_name($node->name)) {
       $node->uid = $account->uid;
     }
     else {

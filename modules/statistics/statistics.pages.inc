@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.pages.inc,v 1.8 2009/02/26 07:30:27 webchick Exp $
+// $Id: statistics.pages.inc,v 1.9 2009/03/14 23:01:37 webchick Exp $
 
 /**
  * @file
@@ -40,7 +40,7 @@ function statistics_node_tracker() {
 }
 
 function statistics_user_tracker() {
-  if ($account = user_load(array('uid' => arg(1)))) {
+  if ($account = user_load(arg(1))) {
 
     $header = array(
         array('data' => t('Timestamp'), 'field' => 'timestamp', 'sort' => 'desc'),
