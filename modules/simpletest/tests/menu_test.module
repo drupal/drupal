@@ -1,5 +1,5 @@
 <?php
-// $Id: menu_test.module,v 1.2 2009/02/05 01:05:17 webchick Exp $
+// $Id: menu_test.module,v 1.3 2009/03/14 20:56:06 dries Exp $
 
 /**
  * @file
@@ -23,6 +23,20 @@ function menu_test_menu() {
     'title arguments' => array('@placeholder' => 'some other text'),
     'page callback' => 'menu_test_callback',
     'access arguments' => array('access content'),
+  );
+
+  // Hierarchical tests.
+  $items['menu-test/hierarchy/parent'] = array(
+    'title' => 'Parent menu router',
+    'page callback' => 'node_page_default',
+  );
+  $items['menu-test/hierarchy/parent/child'] = array(
+    'title' => 'Child menu router',
+    'page callback' => 'node_page_default',
+  );
+  $items['menu-test/hierarchy/parent/child2/child'] = array(
+    'title' => 'Unattached subchild router',
+    'page callback' => 'node_page_default',
   );
   return $items;
 }

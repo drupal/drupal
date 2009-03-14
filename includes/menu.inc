@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.313 2009/03/14 02:28:05 webchick Exp $
+// $Id: menu.inc,v 1.314 2009/03/14 20:56:06 dries Exp $
 
 /**
  * @file
@@ -2063,16 +2063,17 @@ function menu_link_save(&$item) {
       // If not derived from a router item, we respect the specified menu name.
       $query->condition('menu_name', $item['menu_name']);
     }
+
     // Find the parent - it must be unique.
     $parent_path = $item['link_path'];
     do {
       $parent = FALSE;
       $parent_path = substr($parent_path, 0, strrpos($parent_path, '/'));
-      $query->condition('link_path', $parent_path);
-      $query_cnt = $query;
+      $new_query = clone $query;
+      $new_query->condition('link_path', $parent_path);
       // Only valid if we get a unique result.
-      if ($query_cnt->countQuery()->execute()->fetchField() == 1) {
-        $parent = $query->fields('menu_links')->execute()->fetchAssoc();
+      if ($new_query->countQuery()->execute()->fetchField() == 1) {
+        $parent = $new_query->fields('menu_links')->execute()->fetchAssoc();
       }
     } while ($parent === FALSE && $parent_path);
   }
