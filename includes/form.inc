@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.322 2009/03/08 21:25:17 dries Exp $
+// $Id: form.inc,v 1.323 2009/03/14 16:27:58 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2529,12 +2529,17 @@ function form_clean_id($id = NULL, $flush = FALSE) {
  *   if (empty($context['sandbox'])) {
  *     $context['sandbox']['progress'] = 0;
  *     $context['sandbox']['current_node'] = 0;
- *     $context['sandbox']['max'] = db_result(db_query('SELECT COUNT(DISTINCT nid) FROM {node}'));
+ *     $context['sandbox']['max'] = db_query('SELECT COUNT(DISTINCT nid) FROM {node}')->fetchField();
  *   }
  *   $limit = 5;
- *   $result = db_query_range("SELECT nid FROM {node} WHERE nid > %d ORDER BY nid ASC", $context['sandbox']['current_node'], 0, $limit);
- *   while ($row = db_fetch_array($result)) {
- *     $node = node_load($row['nid'], NULL, TRUE);
+ *   $result = db_select('node')
+ *     ->fields('node', array('nid'))
+ *     ->condition('nid', $context['sandbox']['current_node'], '>')
+ *     ->orderBy('nid')
+ *     ->range(0, $limit)
+ *     ->execute();
+ *   foreach ($result as $row) {
+ *     $node = node_load($row->nid, NULL, TRUE);
  *     $context['results'][] = $node->nid . ' : ' . $node->title;
  *     $context['sandbox']['progress']++;
  *     $context['sandbox']['current_node'] = $node->nid;
