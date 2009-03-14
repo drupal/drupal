@@ -238,6 +238,12 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
     // This is an add form, initialize the menu link.
     $item = array('link_title' => '', 'mlid' => 0, 'plid' => 0, 'menu_name' => $menu['menu_name'], 'weight' => 0, 'link_path' => '', 'options' => array(), 'module' => 'menu', 'expanded' => 0, 'hidden' => 0, 'has_children' => 0);
   }
+  $form['menu']['link_title'] = array('#type' => 'textfield',
+    '#title' => t('Menu link title'),
+    '#default_value' => $item['link_title'],
+    '#description' => t('The link text corresponding to this item that should appear in the menu.'),
+    '#required' => TRUE,
+  );
   foreach (array('link_path', 'mlid', 'module', 'has_children', 'options') as $key) {
     $form['menu'][$key] = array('#type' => 'value', '#value' => $item[$key]);
   }
@@ -275,12 +281,6 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
       '#description' => l($item['link_title'], $item['href'], $item['options']),
     );
   }
-  $form['menu']['link_title'] = array('#type' => 'textfield',
-    '#title' => t('Menu link title'),
-    '#default_value' => $item['link_title'],
-    '#description' => t('The link text corresponding to this item that should appear in the menu.'),
-    '#required' => TRUE,
-  );
   $form['menu']['description'] = array(
     '#type' => 'textarea',
     '#title' => t('Description'),
