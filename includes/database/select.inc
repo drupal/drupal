@@ -579,6 +579,16 @@ class SelectQueryExtender implements SelectQueryInterface {
     return $count;
   }
 
+  function isNull($field) {
+    $this->query->isNull($field);
+    return $this;
+  }
+
+  function isNotNull($field) {
+    $this->query->isNotNull($field);
+    return $this;
+  }
+
   public function __toString() {
     return (string)$this->query;
   }
@@ -760,6 +770,17 @@ class SelectQuery extends Query implements SelectQueryInterface {
     return $this;
   }
 
+  public function isNull($field) {
+    $this->where->isNull($field);
+    return $this;
+  }
+
+  public function isNotNull($field) {
+    $this->where->isNotNull($field);
+    return $this;
+  }
+
+
   public function compile(DatabaseConnection $connection) {
     return $this->where->compile($connection);
   }
@@ -800,6 +821,17 @@ class SelectQuery extends Query implements SelectQueryInterface {
     }
     return new $extender_name($this, $this->connection);
   }
+
+  public function havingIsNull($field) {
+    $this->having->isNull($field);
+    return $this;
+  }
+
+  public function havingIsNotNull($field) {
+    $this->having->isNotNull($field);
+    return $this;
+  }
+
 
   /* Alter accessors to expose the query data to alter hooks. */
 

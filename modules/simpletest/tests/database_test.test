@@ -27,6 +27,18 @@ class DatabaseTestCase extends DrupalWebTestCase {
     $schema['test_two_blobs'] = drupal_get_schema('test_two_blobs');
     $schema['test_task'] = drupal_get_schema('test_task');
 
+    $this->installTables($schema);
+
+    $this->addSampleData();
+  }
+
+  /**
+   * Set up several tables needed by a certain test.
+   *
+   * @param $schema
+   *   An array of table definitions to install.
+   */
+  function installTables($schema) {
     // This ends up being a test for table drop and create, too, which is nice.
     $ret = array();
     foreach ($schema as $name => $data) {
@@ -39,8 +51,30 @@ class DatabaseTestCase extends DrupalWebTestCase {
     foreach ($schema as $name => $data) {
       $this->assertTrue(db_table_exists($name), t('Table @name created successfully.', array('@name' => $name)));
     }
+  }
 
-    $this->addSampleData();
+  /**
+   * Set up tables for NULL handling.
+   */
+  function ensureSampleDataNull() {
+    $schema['test_null'] = drupal_get_schema('test_null');
+    $this->installTables($schema);
+
+    db_insert('test_null')
+    ->fields(array('name', 'age'))
+    ->values(array(
+      'name' => 'Kermit',
+      'age' => 25,
+    ))
+    ->values(array(
+      'name' => 'Fozzie',
+      'age' => NULL,
+    ))
+    ->values(array(
+      'name' => 'Gonzo',
+      'age' => 27,
+    ))
+    ->execute();
   }
 
   /**
@@ -641,6 +675,7 @@ class DatabaseUpdateTestCase extends DatabaseTestCase {
     $num_matches = db_query("SELECT COUNT(*) FROM {test} WHERE job = :job", array(':job' => 'Musician'))->fetchField();
     $this->assertIdentical($num_matches, '1', t('Updated fields successfully.'));
   }
+
 }
 
 /**
@@ -1033,7 +1068,6 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
 
 /**
  * Test the SELECT builder.
- *
  */
 class DatabaseSelectTestCase extends DatabaseTestCase {
 
@@ -1168,6 +1202,38 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
     $this->assertEqual($record->name, 'George', t('Name field has the correct value.'));
     $this->assertEqual($record->age, 27, t('Age field has the correct value.'));
     $this->assertEqual($record->job, 'Singer', t('Job field has the correct value.'));
+  }
+
+  /**
+   * Test that we can find a record with a NULL value.
+   */
+  function testNullCondition() {
+    $this->ensureSampleDataNull();
+
+    $names = db_select('test_null', 'tn')
+      ->fields('tn', array('name'))
+      ->isNull('age')
+      ->execute()->fetchCol();
+
+    $this->assertEqual(count($names), 1, t('Correct number of records found with NULL age.'));
+    $this->assertEqual($names[0], 'Fozzie', t('Correct record returned for NULL age.'));
+  }
+
+  /**
+   * Test that we can find a record without a NULL value.
+   */
+  function testNotNullCondition() {
+    $this->ensureSampleDataNull();
+
+    $names = db_select('test_null', 'tn')
+      ->fields('tn', array('name'))
+      ->isNotNull('tn.age')
+      ->orderBy('name')
+      ->execute()->fetchCol();
+
+    $this->assertEqual(count($names), 2, t('Correct number of records found withNOT NULL age.'));
+    $this->assertEqual($names[0], 'Gonzo', t('Correct record returned for NOT NULL age.'));
+    $this->assertEqual($names[1], 'Kermit', t('Correct record returned for NOT NULL age.'));
   }
 }
 
