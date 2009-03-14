@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.41 2009/03/01 17:19:08 webchick Exp $
+// $Id: openid.module,v 1.42 2009/03/14 20:13:27 dries Exp $
 
 /**
  * @file
@@ -87,7 +87,7 @@ function openid_form_user_login_alter(&$form, &$form_state) {
 function _openid_user_login_form_alter(&$form, &$form_state) {
   drupal_add_css(drupal_get_path('module', 'openid') . '/openid.css');
   drupal_add_js(drupal_get_path('module', 'openid') . '/openid.js');
-  if (!empty($form_state['post']['openid_identifier'])) {
+  if (!empty($form_state['input']['openid_identifier'])) {
     $form['name']['#required'] = FALSE;
     $form['pass']['#required'] = FALSE;
     unset($form['#submit']);

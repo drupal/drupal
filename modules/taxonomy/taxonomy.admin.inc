@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.46 2009/02/24 16:48:18 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.47 2009/03/14 20:13:27 dries Exp $
 
 /**
  * @file
@@ -344,13 +344,13 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
 
   // If this form was already submitted once, it's probably hit a validation
   // error. Ensure the form is rebuilt in the same order as the user submitted.
-  if (!empty($form_state['post'])) {
-    $order = array_flip(array_keys($form_state['post'])); // Get the $_POST order.
+  if (!empty($form_state['input'])) {
+    $order = array_flip(array_keys($form_state['input'])); // Get the $_POST order.
     $current_page = array_merge($order, $current_page); // Update our form with the new order.
     foreach ($current_page as $key => $term) {
       // Verify this is a term for the current page and set at the current depth.
-      if (is_array($form_state['post'][$key]) && is_numeric($form_state['post'][$key]['tid'])) {
-        $current_page[$key]->depth = $form_state['post'][$key]['depth'];
+      if (is_array($form_state['input'][$key]) && is_numeric($form_state['input'][$key]['tid'])) {
+        $current_page[$key]->depth = $form_state['input'][$key]['depth'];
       }
       else {
         unset($current_page[$key]);
@@ -440,7 +440,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
     return;
   }
 
-  $order = array_flip(array_keys($form['#post'])); // Get the $_POST order.
+  $order = array_flip(array_keys($form_state['input'])); // Get the $_POST order.
   $form_state['values'] = array_merge($order, $form_state['values']); // Update our original form with the new order.
 
   $vocabulary = $form['#vocabulary'];

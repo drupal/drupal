@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.966 2009/02/26 07:30:29 webchick Exp $
+// $Id: user.module,v 1.967 2009/03/14 20:13:27 dries Exp $
 
 /**
  * @file
@@ -2164,7 +2164,7 @@ function user_multiple_role_edit($accounts, $operation, $rid) {
 }
 
 function user_multiple_cancel_confirm(&$form_state) {
-  $edit = $form_state['post'];
+  $edit = $form_state['input'];
 
   $form['accounts'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
   // array_filter() returns only elements with TRUE values.

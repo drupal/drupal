@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.18 2009/02/05 19:29:31 webchick Exp $
+// $Id: book.admin.inc,v 1.19 2009/03/14 20:13:26 dries Exp $
 
 /**
  * @file
@@ -114,7 +114,7 @@ function book_admin_edit_validate($form, &$form_state) {
 function book_admin_edit_submit($form, &$form_state) {
   // Save elements in the same order as defined in post rather than the form.
   // This ensures parents are updated before their children, preventing orphans.
-  $order = array_flip(array_keys($form['#post']['table']));
+  $order = array_flip(array_keys($form_state['input']['table']));
   $form['table'] = array_merge($order, $form['table']);
 
   foreach (element_children($form['table']) as $key) {

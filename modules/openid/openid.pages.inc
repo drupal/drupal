@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.pages.inc,v 1.12 2008/11/22 10:32:42 dries Exp $
+// $Id: openid.pages.inc,v 1.13 2009/03/14 20:13:27 dries Exp $
 
 /**
  * @file
@@ -88,10 +88,10 @@ function openid_user_delete_form($form_state, $account, $aid = 0) {
 }
 
 function openid_user_delete_form_submit(&$form_state, $form_values) {
-  db_query("DELETE FROM {authmap} WHERE uid = %d AND aid = %d AND module = 'openid'", $form_state['#parameters'][2]->uid, $form_state['#parameters'][3]);
+  db_query("DELETE FROM {authmap} WHERE uid = %d AND aid = %d AND module = 'openid'", $form_state['#args'][0]->uid, $form_state['#args'][1]);
   if (db_affected_rows()) {
     drupal_set_message(t('OpenID deleted.'));
   }
-  $form_state['#redirect'] = 'user/'. $form_state['#parameters'][2]->uid .'/openid';
+  $form_state['#redirect'] = 'user/'. $form_state['#args'][0]->uid .'/openid';
 }
 

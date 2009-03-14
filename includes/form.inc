@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.323 2009/03/14 16:27:58 dries Exp $
+// $Id: form.inc,v 1.324 2009/03/14 20:13:26 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -47,29 +47,95 @@
  */
 
 /**
- * Retrieves a form from a constructor function, or from the cache if
- * the form was built in a previous page-load. The form is then passed
- * on for processing, after and rendered for display if necessary.
+ * Wrapper for drupal_build_form() for use when $form_state is not needed.
  *
  * @param $form_id
- *   The unique string identifying the desired form. If a function
- *   with that name exists, it is called to build the form array.
- *   Modules that need to generate the same form (or very similar forms)
- *   using different $form_ids can implement hook_forms(), which maps
- *   different $form_id values to the proper form constructor function. Examples
- *   may be found in node_forms(), search_forms(), and user_forms().
+ *   The unique string identifying the desired form. If a function with that
+ *   name exists, it is called to build the form array. Modules that need to
+ *   generate the same form (or very similar forms) using different $form_ids
+ *   can implement hook_forms(), which maps different $form_id values to the
+ *   proper form constructor function. Examples may be found in node_forms(),
+ *   search_forms(), and user_forms().
  * @param ...
  *   Any additional arguments are passed on to the functions called by
- *   drupal_get_form(), including the unique form constructor function.
- *   For example, the node_edit form requires that a node object be passed
- *   in here when it is called.
+ *   drupal_get_form(), including the unique form constructor function. For
+ *   example, the node_edit form requires that a node object is passed in here
+ *   when it is called.
  * @return
  *   The rendered form.
+ *
+ * @see drupal_build_form()
  */
 function drupal_get_form($form_id) {
-  $form_state = array('storage' => NULL, 'submitted' => FALSE);
+  $form_state = array();
 
   $args = func_get_args();
+  // Remove $form_id from the arguments.
+  array_shift($args);
+  $form_state['args'] = $args;
+
+  return drupal_build_form($form_id, $form_state);
+}
+
+/**
+ * Build, render, and process a form based on a form id.
+ *
+ * The form may also be retrieved from the cache if the form was built in a
+ * previous page-load. The form is then passed on for processing, validation
+ * and submission if there is proper input, and then rendered for display
+ * if necessary.
+ *
+ * @param $form_id
+ *   The unique string identifying the desired form. If a function with that
+ *   name exists, it is called to build the form array. Modules that need to
+ *   generate the same form (or very similar forms) using different $form_ids
+ *   can implement hook_forms(), which maps different $form_id values to the
+ *   proper form constructor function. Examples may be found in node_forms(),
+ *   search_forms(), and user_forms().
+ * @param &$form_state
+ *   An array which stores information about the form. This is passed as a
+ *   reference so that the caller can use it to examine what the form changed
+ *   when the form submission process is complete.
+ *
+ *   The following parameters may be set in $form_state to affect how the form
+ *   is rendered:
+ *   - args: An array of arguments to pass to the form builder.
+ *   - input: An array of input that corresponds to $_POST or $_GET, depending
+ *     on the 'method' chosen (see below).
+ *   - method: The HTTP form method to use for finding the input for this form.
+ *     May be 'post' or 'get'. Defaults to 'post'. Note that 'get' method
+ *     forms do not use form ids so are always considered to be submitted, which
+ *     can have unexpected effects. The 'get' method should only be used on
+ *     forms that do not change data, as that is exclusively the domain of post.
+ *   - rerender: May be set to FALSE to force the form to not be re-rendered
+ *     after submit. Ordinarily, forms are re-rendered after a successful submit
+ *     if there is no redirect. However, many forms may want to perform some
+ *     other action, but not necessarily re-render the form. This is
+ *     particularly true when using AHAH or AJAX where some data may be returned
+ *     to the calling JavaScript. Note that a form validation error will always
+ *     re-render the form.
+ *   - no_redirect: If set to TRUE the form will NOT perform a drupal_goto(),
+ *     even if a redirect is set.
+ *   - always_process: If TRUE and the method is GET, a form_id is not
+ *     necessary. This should only be used on RESTful GET forms that do NOT
+ *     write data, as this could lead to security issues. It is useful so that
+ *     searches do not need to have a form_id in their query arguments to
+ *     trigger the search.
+ *   - must_validate: Ordinarily, a form is only validated once but there are
+ *     times when a form is resubmitted internally and should be validated
+ *     again. Setting this to TRUE will force that to happen. This is most
+ *     likely to occur during AHAH or AJAX operations.
+ * @return
+ *   The rendered form or NULL, depending upon the $form_state flags that were set.
+ */
+function drupal_build_form($form_id, &$form_state) {
+  // Ensure some defaults; if already set they will not be overridden.
+  $form_state += form_state_defaults();
+
+  if (!isset($form_state['input'])) {
+    $form_state['input'] = $form_state['method'] == 'get' ? $_GET : $_POST;
+  }
+
   $cacheable = FALSE;
 
   if (isset($_SESSION['batch_form_state'])) {
@@ -80,36 +146,34 @@ function drupal_get_form($form_id) {
     unset($_SESSION['batch_form_state']);
   }
   else {
-    // If the incoming $_POST contains a form_build_id, we'll check the
+    // If the incoming input contains a form_build_id, we'll check the
     // cache for a copy of the form in question. If it's there, we don't
     // have to rebuild the form to proceed. In addition, if there is stored
     // form_state data from a previous step, we'll retrieve it so it can
     // be passed on to the form processing code.
-    if (isset($_POST['form_id']) && $_POST['form_id'] == $form_id && !empty($_POST['form_build_id'])) {
-      $form = form_get_cache($_POST['form_build_id'], $form_state);
+    if (isset($form_state['input']['form_id']) && $form_state['input']['form_id'] == $form_id && !empty($form_state['input']['form_build_id'])) {
+      $form = form_get_cache($form_state['input']['form_build_id'], $form_state);
     }
 
     // If the previous bit of code didn't result in a populated $form
     // object, we're hitting the form for the first time and we need
     // to build it from scratch.
     if (!isset($form)) {
-      $form_state['post'] = $_POST;
-      // Use a copy of the function's arguments for manipulation
-      $args_temp = $args;
-      $args_temp[0] = &$form_state;
-      array_unshift($args_temp, $form_id);
-
-      $form = call_user_func_array('drupal_retrieve_form', $args_temp);
+      $form = drupal_retrieve_form($form_id, $form_state);
       $form_build_id = 'form-' . md5(uniqid(mt_rand(), TRUE));
       $form['#build_id'] = $form_build_id;
+
+      // Fix the form method, if it is 'get' in $form_state, but not in $form.
+      if ($form_state['method'] == 'get' && !isset($form['#method'])) {
+        $form['#method'] = 'get';
+      }
+
       drupal_prepare_form($form_id, $form, $form_state);
       // Store a copy of the unprocessed form for caching and indicate that it
       // is cacheable if #cache will be set.
       $original_form = $form;
       $cacheable = TRUE;
-      unset($form_state['post']);
     }
-    $form['#post'] = $_POST;
 
     // Now that we know we have a form, we'll process it (validating,
     // submitting, and handling the results returned by its submission
@@ -117,7 +181,12 @@ function drupal_get_form($form_id) {
     // altering the $form_state variable, which is passed into them by
     // reference.
     drupal_process_form($form_id, $form, $form_state);
-    if ($cacheable && !empty($form['#cache'])) {
+    // If we were told not to redirect, but not told to re-render, return here.
+    if (!empty($form_state['executed']) && empty($form_state['rerender'])) {
+      return;
+    }
+
+    if ($cacheable && !empty($form['#cache']) && empty($form['#no_cache'])) {
       // Caching is done past drupal_process_form so #process callbacks can
       // set #cache. By not sending the form state, we avoid storing
       // $form_state['storage'].
@@ -140,12 +209,25 @@ function drupal_get_form($form_id) {
   // other variables passed into drupal_get_form().
 
   if (!empty($form_state['rebuild']) || !empty($form_state['storage'])) {
-    $form = drupal_rebuild_form($form_id, $form_state, $args);
+    $form = drupal_rebuild_form($form_id, $form_state);
   }
 
   // If we haven't redirected to a new location by now, we want to
   // render whatever form array is currently in hand.
   return drupal_render_form($form_id, $form);
+}
+
+/**
+ * Retrieve default values for the $form_state array.
+ */
+function form_state_defaults() {
+  return array(
+    'storage' => NULL,
+    'submitted' => FALSE,
+    'method' => 'post',
+    'rerender' => TRUE,
+    'programmed' => FALSE,
+  );
 }
 
 /**
@@ -162,6 +244,9 @@ function drupal_get_form($form_id) {
  * $form_state['clicked_button']['#array_parents'] will help you to find which
  * part.
  *
+ * When getting a form from the cache, the $form_id must be shifted off from
+ * $form['#args'], so the resulting array can be given to $form_state['args'].
+ *
  * @param $form_id
  *   The unique string identifying the desired form. If a function
  *   with that name exists, it is called to build the form array.
@@ -172,12 +257,6 @@ function drupal_get_form($form_id) {
  * @param $form_state
  *   A keyed array containing the current state of the form. Most
  *   important is the $form_state['storage'] collection.
- * @param $args
- *   Any additional arguments are passed on to the functions called by
- *   drupal_get_form(), plus the original form_state in the beginning. If you
- *   are getting a form from the cache, use $form['#parameters'] to shift off
- *   the $form_id from its beginning then the resulting array can be used as
- *   $arg here.
  * @param $form_build_id
  *   If the AHAH callback calling this function only alters part of the form,
  *   then pass in the existing form_build_id so we can re-cache with the same
@@ -185,14 +264,8 @@ function drupal_get_form($form_id) {
  * @return
  *   The newly built form.
  */
-function drupal_rebuild_form($form_id, &$form_state, $args, $form_build_id = NULL) {
-  // Remove the first argument. This is $form_id.when called from
-  // drupal_get_form and the original $form_state when called from some AHAH
-  // callback. Neither is needed. After that, put in the current state.
-  $args[0] = &$form_state;
-  // And the form_id.
-  array_unshift($args, $form_id);
-  $form = call_user_func_array('drupal_retrieve_form', $args);
+function drupal_rebuild_form($form_id, &$form_state, $form_build_id = NULL) {
+  $form = drupal_retrieve_form($form_id, $form_state);
 
   if (!isset($form_build_id)) {
     // We need a new build_id for the new version of the form.
@@ -201,17 +274,21 @@ function drupal_rebuild_form($form_id, &$form_state, $args, $form_build_id = NUL
   $form['#build_id'] = $form_build_id;
   drupal_prepare_form($form_id, $form, $form_state);
 
-  // Now, we cache the form structure so it can be retrieved later for
-  // validation. If $form_state['storage'] is populated, we'll also cache
-  // it so that it can be used to resume complex multi-step processes.
-  form_set_cache($form_build_id, $form, $form_state);
+  if (empty($form['#no_cache'])) {
+    // We cache the form structure so it can be retrieved later for validation.
+    // If $form_state['storage'] is populated, we also cache it so that it can
+    // be used to resume complex multi-step processes.
+    form_set_cache($form_build_id, $form, $form_state);
+  }
 
   // Clear out all post data, as we don't want the previous step's
   // data to pollute this one and trigger validate/submit handling,
   // then process the form for rendering.
-  $_POST = array();
-  $form['#post'] = array();
-  drupal_process_form($form_id, $form, $form_state);
+  $form_state['input'] = array();
+
+  // Do not call drupal_process_form(), since it would prevent the rebuilt form
+  // to submit.
+  $form = form_builder($form_id, $form, $form_state);
   return $form;
 }
 
@@ -290,13 +367,19 @@ function form_set_cache($form_build_id, $form, $form_state) {
  * drupal_execute('story_node_form', $form_state, (object)$node);
  */
 function drupal_execute($form_id, &$form_state) {
-  $args = func_get_args();
+  if (!isset($form_state['args'])) {
+    $args = func_get_args();
+    array_shift($args);
+    array_shift($args);
+    $form_state['args'] = $args;
+  }
 
-  // Make sure $form_state is passed around by reference.
-  $args[1] = &$form_state;
+  $form = drupal_retrieve_form($form_id, $form_state);
+  $form_state['input'] = $form_state['values'];
+  $form_state['programmed'] = TRUE;
+  // Merge in default values.
+  $form_state += form_state_defaults();
 
-  $form = call_user_func_array('drupal_retrieve_form', $args);
-  $form['#post'] = $form_state['values'];
   drupal_prepare_form($form_id, $form, $form_state);
   drupal_process_form($form_id, $form, $form_state);
 }
@@ -325,15 +408,8 @@ function drupal_retrieve_form($form_id, &$form_state) {
 
   // We save two copies of the incoming arguments: one for modules to use
   // when mapping form ids to constructor functions, and another to pass to
-  // the constructor function itself. We shift out the first argument -- the
-  // $form_id itself -- from the list to pass into the constructor function,
-  // since it's already known.
-  $args = func_get_args();
-  $saved_args = $args;
-  array_shift($args);
-  if (isset($form_state)) {
-    array_shift($args);
-  }
+  // the constructor function itself.
+  $args = $form_state['args'];
 
   // We first check to see if there's a function named after the $form_id.
   // If there is, we simply pass the arguments on to it to get the form.
@@ -362,18 +438,13 @@ function drupal_retrieve_form($form_id, &$form_state) {
     }
   }
 
-  array_unshift($args, NULL);
-  $args[0] = &$form_state;
+  $args = array_merge(array(&$form_state), $args);
 
   // If $callback was returned by a hook_forms() implementation, call it.
   // Otherwise, call the function named after the form id.
   $form = call_user_func_array(isset($callback) ? $callback : $form_id, $args);
-
-  // We store the original function arguments, rather than the final $arg
-  // value, so that form_alter functions can see what was originally
-  // passed to drupal_retrieve_form(). This allows the contents of #parameters
-  // to be saved and passed in at a later date to recreate the form.
-  $form['#parameters'] = $saved_args;
+  $form['#form_id'] = $form_id;
+  $form['#args'] = $form_state['args'];
   return $form;
 }
 
@@ -395,10 +466,23 @@ function drupal_retrieve_form($form_id, &$form_state) {
 function drupal_process_form($form_id, &$form, &$form_state) {
   $form_state['values'] = array();
 
+  // With $_GET, these forms are always submitted if requested.
+  if ($form_state['method'] == 'get' && !empty($form_state['always_process'])) {
+    if (!isset($form_state['input']['form_build_id'])) {
+      $form_state['input']['form_build_id'] = $form['#build_id'];
+    }
+    if (!isset($form_state['input']['form_id'])) {
+      $form_state['input']['form_id'] = $form_id;
+    }
+    if (!isset($form_state['input']['form_token']) && isset($form['#token'])) {
+      $form_state['input']['form_token'] = drupal_get_token($form['#token']);
+    }
+  }
+
   $form = form_builder($form_id, $form, $form_state);
   // Only process the form if it is programmed or the form_id coming
   // from the POST data is set and matches the current form_id.
-  if ((!empty($form['#programmed'])) || (!empty($form['#post']) && (isset($form['#post']['form_id']) && ($form['#post']['form_id'] == $form_id)))) {
+  if ((!empty($form_state['programmed'])) || (!empty($form_state['input']) && (isset($form_state['input']['form_id']) && ($form_state['input']['form_id'] == $form_id)))) {
     drupal_validate_form($form_id, $form, $form_state);
 
     // form_clean_id() maintains a cache of element IDs it has seen,
@@ -429,7 +513,7 @@ function drupal_process_form($form_id, &$form, &$form_state) {
         // late execution of submit handlers and post-batch redirection.
         $batch['form'] = $form;
         $batch['form_state'] = $form_state;
-        $batch['progressive'] = !$form['#programmed'];
+        $batch['progressive'] = !$form_state['programmed'];
         batch_process();
         // Execution continues only for programmatic forms.
         // For 'regular' forms, we get redirected to the batch processing
@@ -444,8 +528,13 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       // if one hasn't). If the form was called by drupal_execute(),
       // however, we'll skip this and let the calling function examine
       // the resulting $form_state bundle itself.
-      if (!$form['#programmed'] && empty($form_state['rebuild']) && empty($form_state['storage'])) {
-        drupal_redirect_form($form, $form_state['redirect']);
+      if (!$form_state['programmed'] && empty($form_state['rebuild']) && empty($form_state['storage'])) {
+        if (!empty($form_state['no_redirect'])) {
+          $form_state['executed'] = TRUE;
+        }
+        else {
+          drupal_redirect_form($form, $form_state['redirect']);
+        }
       }
     }
   }
@@ -469,7 +558,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   global $user;
 
   $form['#type'] = 'form';
-  $form['#programmed'] = isset($form['#post']);
+  $form_state['programmed'] = isset($form_state['programmed']) ? $form_state['programmed'] : FALSE;
 
   if (isset($form['#build_id'])) {
     $form['form_build_id'] = array(
@@ -485,14 +574,14 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   // requested previously by the user and protects against cross site request
   // forgeries.
   if (isset($form['#token'])) {
-    if ($form['#token'] === FALSE || $user->uid == 0 || $form['#programmed']) {
+    if ($form['#token'] === FALSE || $user->uid == 0 || $form_state['programmed']) {
       unset($form['#token']);
     }
     else {
       $form['form_token'] = array('#type' => 'token', '#default_value' => drupal_get_token($form['#token']));
     }
   }
-  elseif (isset($user->uid) && $user->uid && !$form['#programmed']) {
+  elseif (isset($user->uid) && $user->uid && !$form_state['programmed']) {
     $form['#token'] = $form_id;
     $form['form_token'] = array(
       '#id' => form_clean_id('edit-' . $form_id . '-form-token'),
@@ -568,7 +657,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
 function drupal_validate_form($form_id, $form, &$form_state) {
   static $validated_forms = array();
 
-  if (isset($validated_forms[$form_id])) {
+  if (isset($validated_forms[$form_id]) && empty($form_state['must_validate'])) {
     return;
   }
 
@@ -875,7 +964,7 @@ function form_builder($form_id, $form, &$form_state) {
   if (isset($form['#type']) && $form['#type'] == 'form') {
     $cache = NULL;
     $complete_form = $form;
-    if (!empty($form['#programmed'])) {
+    if (!empty($form_state['programmed'])) {
       $form_state['submitted'] = TRUE;
     }
   }
@@ -891,8 +980,6 @@ function form_builder($form_id, $form, &$form_state) {
   // Recurse through all child elements.
   $count = 0;
   foreach (element_children($form) as $key) {
-    $form[$key]['#post'] = $form['#post'];
-    $form[$key]['#programmed'] = $form['#programmed'];
     // Don't squash an existing tree value.
     if (!isset($form[$key]['#tree'])) {
       $form[$key]['#tree'] = $form['#tree'];
@@ -1000,15 +1087,15 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state, $com
 
   if (!isset($form['#value']) && !array_key_exists('#value', $form)) {
     $function = !empty($form['#value_callback']) ? $form['#value_callback'] : 'form_type_' . $form['#type'] . '_value';
-    if (($form['#programmed']) || ((!isset($form['#access']) || $form['#access']) && isset($form['#post']) && (isset($form['#post']['form_id']) && $form['#post']['form_id'] == $form_id))) {
-      $edit = $form['#post'];
+    if (($form_state['programmed']) || ((!isset($form['#access']) || $form['#access']) && isset($form_state['input']) && (isset($form_state['input']['form_id']) && $form_state['input']['form_id'] == $form_id))) {
+      $edit = $form_state['input'];
       foreach ($form['#parents'] as $parent) {
         $edit = isset($edit[$parent]) ? $edit[$parent] : NULL;
       }
-      if (!$form['#programmed'] || isset($edit)) {
+      if (!$form_state['programmed'] || isset($edit)) {
         // Call #type_value to set the form value;
         if (function_exists($function)) {
-          $form['#value'] = $function($form, $edit);
+          $form['#value'] = $function($form, $edit, $form_state);
         }
         if (!isset($form['#value']) && isset($edit)) {
           $form['#value'] = $edit;
@@ -1038,13 +1125,13 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state, $com
   // We compare the incoming values with the buttons defined in the form,
   // and flag the one that matches. We have to do some funky tricks to
   // deal with Internet Explorer's handling of single-button forms, though.
-  if (!empty($form['#post']) && isset($form['#executes_submit_callback'])) {
+  if (!empty($form_state['input']) && isset($form['#executes_submit_callback'])) {
     // First, accumulate a collection of buttons, divided into two bins:
     // those that execute full submit callbacks and those that only validate.
     $button_type = $form['#executes_submit_callback'] ? 'submit' : 'button';
     $form_state['buttons'][$button_type][] = $form;
 
-    if (_form_button_was_clicked($form)) {
+    if (_form_button_was_clicked($form, $form_state)) {
       $form_state['submitted'] = $form_state['submitted'] || $form['#executes_submit_callback'];
 
       // In most cases, we want to use form_set_value() to manipulate
@@ -1083,13 +1170,13 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state, $com
  * and we'll never detect a match. That special case is handled by
  * _form_builder_ie_cleanup().
  */
-function _form_button_was_clicked($form) {
+function _form_button_was_clicked($form, &$form_state) {
   // First detect normal 'vanilla' button clicks. Traditionally, all
   // standard buttons on a form share the same name (usually 'op'),
   // and the specific return value is used to determine which was
   // clicked. This ONLY works as long as $form['#name'] puts the
   // value at the top level of the tree of $_POST data.
-  if (isset($form['#post'][$form['#name']]) && $form['#post'][$form['#name']] == $form['#value']) {
+  if (isset($form_state['input'][$form['#name']]) && $form_state['input'][$form['#name']] == $form['#value']) {
     return TRUE;
   }
   // When image buttons are clicked, browsers do NOT pass the form element
@@ -1140,11 +1227,13 @@ function _form_builder_ie_cleanup($form, &$form_state) {
  * @param $edit
  *   The incoming POST data to populate the form element. If this is FALSE,
  *   the element's default value should be returned.
+* @param $form_state
+ *   A keyed array containing the current state of the form.
  * @return
  *   The data that will appear in the $form_state['values'] collection
  *   for this element. Return nothing to use the default.
  */
-function form_type_image_button_value($form, $edit = FALSE) {
+function form_type_image_button_value($form, $edit, $form_state) {
   if ($edit !== FALSE) {
     if (!empty($edit)) {
       // If we're dealing with Mozilla or Opera, we're lucky. It will
@@ -1157,7 +1246,7 @@ function form_type_image_button_value($form, $edit = FALSE) {
       // X and one for the Y coordinates on which the user clicked the
       // button. We'll find this element in the #post data, and search
       // in the same spot for its name, with '_x'.
-      $post = $form['#post'];
+      $post = $form_state['input'];
       foreach (split('\[', $form['#name']) as $element_name) {
         // chop off the ] that may exist.
         if (substr($element_name, -1) == ']') {
@@ -1595,7 +1684,7 @@ function password_confirm_validate($form, &$form_state) {
       form_error($form, t('The specified passwords do not match.'));
     }
   }
-  elseif ($form['#required'] && !empty($form['#post'])) {
+  elseif ($form['#required'] && !empty($form_state['input'])) {
     form_error($form, t('Password field is required.'));
   }
 
@@ -1718,29 +1807,28 @@ function weight_value(&$form) {
  * Menu callback for AHAH callbacks through the #ahah['callback'] FAPI property.
  */
 function form_ahah_callback() {
-  $form_state = array('storage' => NULL, 'submitted' => FALSE);
+  $form_state = form_state_defaults();
+
   $form_build_id = $_POST['form_build_id'];
 
   // Get the form from the cache.
   $form = form_get_cache($form_build_id, $form_state);
-  $args = $form['#parameters'];
-  $form_id = array_shift($args);
 
   // We will run some of the submit handlers so we need to disable redirecting.
   $form['#redirect'] = FALSE;
 
   // We need to process the form, prepare for that by setting a few internals
   // variables.
-  $form['#post'] = $_POST;
-  $form['#programmed'] = FALSE;
-  $form_state['post'] = $_POST;
+  $form_state['input'] = $_POST;
+  $form_state['args'] = $form['#args'];
+  $form_id = $form['#form_id'];
 
   // Build, validate and if possible, submit the form.
   drupal_process_form($form_id, $form, $form_state);
 
   // This call recreates the form relying solely on the form_state that the
   // drupal_process_form set up.
-  $form = drupal_rebuild_form($form_id, $form_state, $args, $form_build_id);
+  $form = drupal_rebuild_form($form_id, $form_state, $form_build_id);
 
   // Get the callback function from the clicked button.
   $callback = $form_state['clicked_button']['#ahah']['callback'];
@@ -1978,7 +2066,7 @@ function theme_checkboxes($element) {
     $class .= ' ' . $element['#attributes']['class'];
   }
   $element['#children'] = '<div class="' . $class . '">' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
-  
+
   return $element['#children'];
 }
 

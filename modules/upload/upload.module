@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.229 2009/03/08 04:25:07 webchick Exp $
+// $Id: upload.module,v 1.230 2009/03/14 20:13:27 dries Exp $
 
 /**
  * @file
@@ -689,13 +689,11 @@ function upload_js() {
 
   // Render the form for output.
   $form += array(
-    '#post' => $_POST,
-    '#programmed' => FALSE,
     '#tree' => FALSE,
     '#parents' => array(),
   );
   drupal_alter('form', $form, array(), 'upload_js');
-  $form_state = array('submitted' => FALSE);
+  $form_state = array('submitted' => FALSE, 'programmed' => FALSE);
   $form = form_builder('upload_js', $form, $form_state);
   $output = theme('status_messages') . drupal_render($form);
 

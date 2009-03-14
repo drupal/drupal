@@ -1,5 +1,5 @@
 <?php
-// $Id: book.pages.inc,v 1.13 2008/12/20 18:24:35 dries Exp $
+// $Id: book.pages.inc,v 1.14 2009/03/14 20:13:26 dries Exp $
 
 /**
  * @file
@@ -246,7 +246,6 @@ function book_form_update() {
       form_set_cache($_POST['form_build_id'], $form, $cached_form_state);
       // Build and render the new select element, then return it in JSON format.
       $form_state = array();
-      $form['#post'] = array();
       $form = form_builder($form['form_id']['#value'] , $form, $form_state);
       $output = drupal_render($form['book']['plid']);
       drupal_json(array('status' => TRUE, 'data' => $output));

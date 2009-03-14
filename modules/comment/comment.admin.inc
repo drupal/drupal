@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.16 2009/02/26 07:30:26 webchick Exp $
+// $Id: comment.admin.inc,v 1.17 2009/03/14 20:13:26 dries Exp $
 
 /**
  * @file
@@ -163,7 +163,7 @@ function comment_admin_overview_submit($form, &$form_state) {
  * @see comment_multiple_delete_confirm_submit()
  */
 function comment_multiple_delete_confirm(&$form_state) {
-  $edit = $form_state['post'];
+  $edit = $form_state['input'];
 
   $form['comments'] = array(
     '#prefix' => '<ul>',
