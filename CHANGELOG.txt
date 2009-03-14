@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.298 2009/03/09 20:41:25 dries Exp $
+// $Id: CHANGELOG.txt,v 1.299 2009/03/14 16:41:29 webchick Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -75,7 +75,10 @@ Drupal 7.0, xxxx-xx-xx (development version)
       allowing Drupal to lazy-load code as needed, resulting in significant performance
       and memory improvements.
 - Theme system:
-    * Converted the 'bluemarine' theme to a tableless layout.
+    * Removed the Bluemarine, Chameleon and Pushbutton themes. These themes live
+      on as contributed themes (http://drupal.org/project/bluemarine,
+      http://drupal.org/project/chameleon and http://drupal.org/project/pushbutton).
+    * Added Stark theme to make analyzing Drupal's default HTML and CSS easier.
 - File handling:
     * Files are now first class Drupal objects with file_load(), file_save(),
       and file_validate() functions and corresponding hooks.
