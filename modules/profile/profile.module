@@ -203,13 +203,6 @@ function profile_block_view($delta = '') {
 }
 
 /**
- * Implementation of hook_user_load().
- */
-function profile_user_load(&$edit, &$user, $category = NULL) {
-  return profile_load_profile($user);
-}
-
-/**
  * Implementation of hook_user_register().
  */
 function profile_user_register(&$edit, &$user, $category = NULL) {
@@ -270,11 +263,14 @@ function profile_user_cancel(&$edit, &$account, $method) {
   }
 }
 
-function profile_load_profile(&$user) {
-  $result = db_query('SELECT f.name, f.type, v.value FROM {profile_field} f INNER JOIN {profile_value} v ON f.fid = v.fid WHERE uid = %d', $user->uid);
-  while ($field = db_fetch_object($result)) {
-    if (empty($user->{$field->name})) {
-      $user->{$field->name} = _profile_field_serialize($field->type) ? unserialize($field->value) : $field->value;
+/**
+ * Implementation of hook_user_load().
+ */
+function profile_user_load($users) {
+  $result = db_query('SELECT f.name, f.type, v.uid, v.value FROM {profile_field} f INNER JOIN {profile_value} v ON f.fid = v.fid WHERE uid IN (:uids)', array(':uids' => array_keys($users)));
+  foreach ($result as $record) {
+    if (empty($users[$record->uid]->{$record->name})) {
+      $users[$record->uid]->{$record->name} = _profile_field_serialize($record->type) ? unserialize($record->value) : $record->value;
     }
   }
 }
@@ -341,7 +337,7 @@ function profile_view_field($user, $field) {
 
 function profile_view_profile(&$user) {
 
-  profile_load_profile($user);
+  $user = user_load($user->uid);
 
   // Show private fields to administrators and people viewing their own account.
   if (user_access('administer users') || $GLOBALS['user']->uid == $user->uid) {

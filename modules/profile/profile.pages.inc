@@ -55,11 +55,13 @@ function profile_browse() {
     }
 
     // Extract the affected users:
-    $result = pager_query("SELECT u.uid, u.access FROM {users} u INNER JOIN {profile_value} v ON u.uid = v.uid WHERE v.fid = %d AND $query AND u.access != 0 AND u.status != 0 ORDER BY u.access DESC", 20, 0, NULL, $arguments);
+    $result = pager_query("SELECT u.uid, u.access FROM {users} u INNER JOIN {profile_value} v ON u.uid = v.uid WHERE v.fid = %d AND $query AND u.access != 0 AND u.status != 0 ORDER BY u.access DESC", 20, 0, NULL, $arguments)->fetchAllAssoc('uid');
+
+    // Load the users.
+    $users = user_load_multiple(array_keys($result));
 
     $content = '';
-    while ($account = db_fetch_object($result)) {
-      $account = user_load(array('uid' => $account->uid));
+    foreach ($users as $account) {
       $profile = _profile_update_user_fields($fields, $account);
       $content .= theme('profile_listing', $account, $profile);
     }
@@ -88,11 +90,10 @@ function profile_browse() {
     }
 
     // Extract the affected users:
-    $result = pager_query('SELECT uid, access FROM {users} WHERE uid > 0 AND status != 0 AND access != 0 ORDER BY access DESC', 20, 0, NULL);
-
+    $result = pager_query('SELECT uid, access FROM {users} WHERE uid > 0 AND status != 0 AND access != 0 ORDER BY access DESC', 20, 0, NULL)->fetchAllAssoc('uid');
+    $users = user_load_multiple(array_keys($result));
     $content = '';
-    while ($account = db_fetch_object($result)) {
-      $account = user_load(array('uid' => $account->uid));
+    foreach ($users as $account) {
       $profile = _profile_update_user_fields($fields, $account);
       $content .= theme('profile_listing', $account, $profile);
     }

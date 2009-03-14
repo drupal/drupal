@@ -849,7 +849,7 @@ class DrupalWebTestCase {
     // Log in with a clean $user.
     $this->originalUser = $user;
     drupal_save_session(FALSE);
-    $user = user_load(array('uid' => 1));
+    $user = user_load(1);
 
     // Restore necessary variables.
     variable_set('install_profile', 'default');

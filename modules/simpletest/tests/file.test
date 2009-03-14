@@ -434,7 +434,7 @@ class FileValidatorTest extends DrupalWebTestCase {
     drupal_save_session(FALSE);
 
     // Run these test as uid = 1.
-    $user = user_load(array('uid' => 1));
+    $user = user_load(1);
 
     $file = new stdClass();
     $file->filesize = 999999;

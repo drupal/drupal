@@ -188,7 +188,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/user/user/create', $edit, t('Create new account'));
     $this->assertResponse(200);
     // Retrieve user object.
-    $user = user_load(array('name' => $name)); //, 'pass' => $pass, 'status' => 1));
+    $user = user_load_by_name($name);
     $this->assertTrue($user != null, t('User @name was loaded', array('@name' => $name)));
     $user->pass_raw = $pass; // Needed by drupalLogin.
     // Login user.

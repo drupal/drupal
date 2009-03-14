@@ -121,7 +121,7 @@ function _update_cron_notify() {
     if (!empty($notify_list)) {
       $default_language = language_default();
       foreach ($notify_list as $target) {
-        if ($target_user = user_load(array('mail' => $target))) {
+        if ($target_user = user_load_by_mail($target)) {
           $target_language = user_preferred_language($target_user);
         }
         else {

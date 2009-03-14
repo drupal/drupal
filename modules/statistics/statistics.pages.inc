@@ -40,7 +40,7 @@ function statistics_node_tracker() {
 }
 
 function statistics_user_tracker() {
-  if ($account = user_load(array('uid' => arg(1)))) {
+  if ($account = user_load(arg(1))) {
 
     $header = array(
         array('data' => t('Timestamp'), 'field' => 'timestamp', 'sort' => 'desc'),
