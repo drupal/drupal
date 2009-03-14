@@ -163,7 +163,7 @@ function comment_admin_overview_submit($form, &$form_state) {
  * @see comment_multiple_delete_confirm_submit()
  */
 function comment_multiple_delete_confirm(&$form_state) {
-  $edit = $form_state['post'];
+  $edit = $form_state['input'];
 
   $form['comments'] = array(
     '#prefix' => '<ul>',

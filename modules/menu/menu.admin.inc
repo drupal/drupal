@@ -132,7 +132,7 @@ function menu_overview_form_submit($form, &$form_state) {
   // parent. To prevent this, save items in the form in the same order they
   // are sent by $_POST, ensuring parents are saved first, then their children.
   // See http://drupal.org/node/181126#comment-632270
-  $order = array_flip(array_keys($form['#post'])); // Get the $_POST order.
+  $order = array_flip(array_keys($form_state['input'])); // Get the $_POST order.
   $form = array_merge($order, $form); // Update our original form with the new order.
 
   $updated_items = array();
