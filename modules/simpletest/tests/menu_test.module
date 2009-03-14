@@ -24,6 +24,20 @@ function menu_test_menu() {
     'page callback' => 'menu_test_callback',
     'access arguments' => array('access content'),
   );
+
+  // Hierarchical tests.
+  $items['menu-test/hierarchy/parent'] = array(
+    'title' => 'Parent menu router',
+    'page callback' => 'node_page_default',
+  );
+  $items['menu-test/hierarchy/parent/child'] = array(
+    'title' => 'Child menu router',
+    'page callback' => 'node_page_default',
+  );
+  $items['menu-test/hierarchy/parent/child2/child'] = array(
+    'title' => 'Unattached subchild router',
+    'page callback' => 'node_page_default',
+  );
   return $items;
 }
 

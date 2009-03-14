@@ -47,6 +47,18 @@ class MenuIncTestCase extends DrupalWebTestCase {
     $name = db_result(db_query($sql));
     $this->assertEqual($name, 'changed', t('Menu name was successfully changed after rebuild.'));
   }
+
+  /**
+   * Tests for menu hiearchy.
+   */
+  function testMenuHiearchy() {
+    $parent_link = db_query("SELECT * FROM {menu_links} WHERE link_path = :link_path", array(':link_path' => 'menu-test/hierarchy/parent'))->fetchAssoc();
+    $child_link = db_query("SELECT * FROM {menu_links} WHERE link_path = :link_path", array(':link_path' => 'menu-test/hierarchy/parent/child'))->fetchAssoc();
+    $unattached_child_link = db_query("SELECT * FROM {menu_links} WHERE link_path = :link_path", array(':link_path' => 'menu-test/hierarchy/parent/child2/child'))->fetchAssoc();
+
+    $this->assertEqual($child_link['plid'], $parent_link['mlid'], t('The parent of a directly attached child is correct.'));
+    $this->assertEqual($unattached_child_link['plid'], $parent_link['mlid'], t('The parent of a non-directly attached child is correct.'));
+  }
 }
 
 /**
