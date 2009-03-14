@@ -986,7 +986,14 @@ class DrupalWebTestCase {
     curl_setopt_array($this->curlHandle, $this->additionalCurlOptions + $curl_options);
     $this->headers = array();
     $this->drupalSetContent(curl_exec($this->curlHandle), curl_getinfo($this->curlHandle, CURLINFO_EFFECTIVE_URL));
-    $this->assertTrue($this->content !== FALSE, t('!method to !url, status is !status, response is !length bytes.', array('!method' => !empty($curl_options[CURLOPT_NOBODY]) ? 'HEAD' : (empty($curl_options[CURLOPT_POSTFIELDS]) ? 'GET' : 'POST'), '!url' => $url, '!status' => curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE), '!length' => strlen($this->content))), t('Browser'));
+    $message_vars = array(
+      '!method' => !empty($curl_options[CURLOPT_NOBODY]) ? 'HEAD' : (empty($curl_options[CURLOPT_POSTFIELDS]) ? 'GET' : 'POST'),
+      '@url' => $url,
+      '@status' => curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE),
+      '!length' => format_size(strlen($this->content))
+    );
+    $message = t('!method @url returned @status (!length).', $message_vars);
+    $this->assertTrue($this->content !== FALSE, $message, t('Browser'));
     return $this->drupalGetContent();
   }
 
