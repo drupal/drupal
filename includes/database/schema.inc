@@ -493,6 +493,22 @@ abstract class DatabaseSchema {
     }
     return $ret;
   }
+
+  /**
+   * Prepare a table or column comment for database query.
+   * 
+   * @param $comment
+   *   The comment string to prepare.
+   * @param $length
+   *   Optional upper limit on the returned string length.
+   * @return
+   *   The prepared comment.
+   */
+  public function prepareComment($comment, $length = NULL) {
+    // Decode HTML-encoded comments.
+    $comment = decode_entities(strip_tags($comment));
+    return $this->connection->quote($comment);
+  }
 }
 
 /**

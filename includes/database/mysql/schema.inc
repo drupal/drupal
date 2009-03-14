@@ -15,6 +15,16 @@
 class DatabaseSchema_mysql extends DatabaseSchema {
 
   /**
+   * Maximum length of a table comment in MySQL.
+   */
+  const COMMENT_MAX_TABLE = 60;
+
+  /**
+   * Maximum length of a column comment in MySQL.
+   */
+  const COMMENT_MAX_COLUMN = 255;
+
+  /**
    * Build a condition to match a table name against a standard information_schema.
    *
    * MySQL uses databases like schemas rather than catalogs so when we build
@@ -50,7 +60,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
    */
   protected function createTableSql($name, $table) {
     if (empty($table['mysql_suffix'])) {
-      $table['mysql_suffix'] = "/*!40100 DEFAULT CHARACTER SET UTF8 */";
+      $table['mysql_suffix'] = 'DEFAULT CHARACTER SET UTF8';
     }
 
     $sql = "CREATE TABLE {" . $name . "} (\n";
@@ -70,6 +80,11 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     $sql = substr($sql, 0, -3) . "\n) ";
 
     $sql .= $table['mysql_suffix'];
+
+    // Add table comment.
+    if (!empty($table['description'])) {
+      $sql .= ' COMMENT ' . $this->prepareComment($table['description'], self::COMMENT_MAX_TABLE);
+    }
 
     return array($sql);
   }
@@ -120,6 +135,11 @@ class DatabaseSchema_mysql extends DatabaseSchema {
 
     if (empty($spec['not null']) && !isset($spec['default'])) {
       $sql .= ' DEFAULT NULL';
+    }
+
+    // Add column comment.
+    if (!empty($spec['description'])) {
+      $sql .= ' COMMENT ' . $this->prepareComment($spec['description'], self::COMMENT_MAX_COLUMN);
     }
 
     return $sql;
@@ -323,6 +343,36 @@ class DatabaseSchema_mysql extends DatabaseSchema {
       $sql .= ', ADD ' . implode(', ADD ', $this->createKeysSql($keys_new));
     }
     $ret[] = update_sql($sql);
+  }
+
+  public function prepareComment($comment, $length = NULL) {
+    // Decode HTML-encoded comments.
+    $comment = decode_entities(strip_tags($comment));
+
+    // Work around a bug in some versions of PDO, see http://bugs.php.net/bug.php?id=41125
+    $comment = str_replace("'", '’', $comment);
+ 
+    // Truncate comment to maximum comment length.
+    if (isset($length)) {
+      // Add table prefixes before truncating.
+      $comment = truncate_utf8($this->connection->prefixTables($comment), $length, TRUE, TRUE);
+    }
+
+    return $this->connection->quote($comment);
+  }
+
+  /**
+   * Retrieve a table or column comment.
+   */
+  public function getComment($table, $column = NULL) {
+    $condition = $this->buildTableNameCondition($this->connection->prefixTables('{' . $table . '}'));
+    if (isset($column)) {
+      $condition->condition('column_name', $column);
+      $condition->compile($this->connection);
+      return db_query("SELECT column_comment FROM information_schema.columns WHERE " . (string) $condition, $condition->arguments())->fetchField();
+    }
+    $condition->compile($this->connection);
+    return db_query("SELECT table_comment FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchField();
   }
 
 }
