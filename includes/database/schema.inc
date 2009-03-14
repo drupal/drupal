@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.11 2009/02/24 16:34:46 webchick Exp $
+// $Id: schema.inc,v 1.12 2009/03/14 20:34:17 dries Exp $
 
 /**
  * @file
@@ -492,6 +492,22 @@ abstract class DatabaseSchema {
       }
     }
     return $ret;
+  }
+
+  /**
+   * Prepare a table or column comment for database query.
+   * 
+   * @param $comment
+   *   The comment string to prepare.
+   * @param $length
+   *   Optional upper limit on the returned string length.
+   * @return
+   *   The prepared comment.
+   */
+  public function prepareComment($comment, $length = NULL) {
+    // Decode HTML-encoded comments.
+    $comment = decode_entities(strip_tags($comment));
+    return $this->connection->quote($comment);
   }
 }
 

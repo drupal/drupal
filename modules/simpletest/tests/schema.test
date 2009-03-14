@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.test,v 1.3 2008/11/16 19:41:14 dries Exp $
+// $Id: schema.test,v 1.4 2009/03/14 20:34:17 dries Exp $
 
 /**
  * @file
@@ -24,6 +24,7 @@ class SchemaTestCase extends DrupalWebTestCase {
   function testSchema() {
     // Try creating a table.
     $table_specification = array(
+      'description' => 'Schema table description.',
       'fields' => array(
         'id'  => array(
           'type' => 'int',
@@ -32,6 +33,7 @@ class SchemaTestCase extends DrupalWebTestCase {
         'test_field'  => array(
           'type' => 'int',
           'not null' => TRUE,
+          'description' => 'Schema column description.',
         ),
       ),
     );
@@ -40,6 +42,12 @@ class SchemaTestCase extends DrupalWebTestCase {
 
     // Assert that the table exists.
     $this->assertTrue(db_table_exists('test_table'), t('The table exists.'));
+
+    // Assert that the table comment has been set.
+    $this->checkSchemaComment($table_specification['description'], 'test_table');
+
+    // Assert that the column comment has been set.
+    $this->checkSchemaComment($table_specification['fields']['test_field']['description'], 'test_table', 'test_field');
 
     // An insert without a value for the column 'test_table' should fail.
     $this->assertFalse($this->tryInsert(), t('Insert without a default failed.'));
@@ -72,10 +80,16 @@ class SchemaTestCase extends DrupalWebTestCase {
     // Recreate the table.
     db_create_table($ret, 'test_table', $table_specification);
     db_field_set_default($ret, 'test_table', 'test_field', 0);
-    db_add_field($ret, 'test_table', 'test_serial', array('type' => 'int', 'not null' => TRUE, 'default' => 0));
+    db_add_field($ret, 'test_table', 'test_serial', array('type' => 'int', 'not null' => TRUE, 'default' => 0, 'description' => 'Added column description.'));
+
+    // Assert that the column comment has been set.
+    $this->checkSchemaComment('Added column description.', 'test_table', 'test_serial');
 
     // Change the new field to a serial column.
-    db_change_field($ret, 'test_table', 'test_serial', 'test_serial', array('type' => 'serial', 'not null' => TRUE), array('primary key' => array('test_serial')));
+    db_change_field($ret, 'test_table', 'test_serial', 'test_serial', array('type' => 'serial', 'not null' => TRUE, 'description' => 'Changed column description.'), array('primary key' => array('test_serial')));
+
+    // Assert that the column comment has been set.
+    $this->checkSchemaComment('Changed column description.', 'test_table', 'test_serial');
 
     $this->assertTrue($this->tryInsert(), t('Insert with a serial succeeded.'));
     $max1 = db_query('SELECT MAX(test_serial) FROM {test_table}')->fetchField();
@@ -94,6 +108,23 @@ class SchemaTestCase extends DrupalWebTestCase {
     }
     catch (Exception $e) {
       return FALSE;
+    }
+  }
+
+  /**
+   * Checks that a table or column comment matches a given description.
+   *
+   * @param $description
+   *   The asserted description.
+   * @param $table
+   *   The table to test.
+   * @param $column
+   *   Optional column to test.
+   */
+  function checkSchemaComment($description, $table, $column = NULL) {
+    if (method_exists(Database::getConnection()->schema(), 'getComment')) {
+      $comment = Database::getConnection()->schema()->getComment($table, $column);
+      $this->assertEqual($comment, $description, t('The comment matches the schema description.'));
     }
   }
 }

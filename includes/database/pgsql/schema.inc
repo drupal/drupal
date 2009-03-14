@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.8 2009/02/24 16:34:46 webchick Exp $
+// $Id: schema.inc,v 1.9 2009/03/14 20:34:17 dries Exp $
 
 /**
  * @file
@@ -106,6 +106,18 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     if (isset($table['indexes']) && is_array($table['indexes'])) {
       foreach ($table['indexes'] as $key_name => $key) {
         $statements[] = $this->_createIndexSql($name, $key_name, $key);
+      }
+    }
+
+    // Add table comment.
+    if (!empty($table['description'])) {
+      $statements[] = 'COMMENT ON TABLE {' . $name . '} IS ' . $this->prepareComment($table['description']);
+    }
+
+    // Add column comments.
+    foreach ($table['fields'] as $field_name => $field) {
+      if (!empty($field['description'])) {
+        $statements[] = 'COMMENT ON COLUMN {' . $name . '}.' . $field_name . ' IS ' . $this->prepareComment($field['description']);
       }
     }
 
@@ -321,6 +333,10 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     }
     if (isset($new_keys)) {
       $this->_createKeys($ret, $table, $new_keys);
+    }
+    // Add column comment.
+    if (!empty($spec['description'])) {
+      $ret[] = update_sql('COMMENT ON COLUMN {' . $table . '}.' . $field . ' IS ' . $this->prepareComment($spec['description']));
     }
   }
 
@@ -566,5 +582,16 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
         $this->addIndex($ret, $table, $name, $fields);
       }
     }
+  }
+
+  /**
+   * Retrieve a table or column comment.
+   */
+  public function getComment($table, $column = NULL) {
+    $table = $this->connection->prefixTables('{' . $table . '}');
+    if (isset($column)) {
+      return db_query('SELECT col_description(oid, attnum) FROM pg_class, pg_attribute WHERE attrelid = oid AND relname = ? AND attname = ?', array($table, $column))->fetchField();
+    }
+    return db_query('SELECT obj_description(oid, ?) FROM pg_class WHERE relname = ?', array('pg_class', $table))->fetchField();
   }
 }
