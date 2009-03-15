@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator_test.module,v 1.1 2009/03/01 07:21:02 webchick Exp $
+// $Id: aggregator_test.module,v 1.2 2009/03/15 18:59:05 webchick Exp $
 
 /**
  * Implementation of hook_menu().
@@ -10,6 +10,7 @@ function aggregator_test_menu() {
     'description' => "A cached test feed with a static last modified date.",
     'page callback' => 'aggregator_test_feed',
     'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
   );
   return $items;
 }

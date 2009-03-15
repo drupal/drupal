@@ -1,5 +1,4 @@
-; $Id: aggregator.info,v 1.10 2008/12/22 19:38:31 dries Exp $
-
+; $Id: aggregator.info,v 1.11 2009/03/15 18:59:05 webchick Exp $
 name = Aggregator
 description = "Aggregates syndicated content (RSS, RDF, and Atom feeds)."
 package = Core
