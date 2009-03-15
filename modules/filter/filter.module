@@ -281,7 +281,8 @@ function filter_filter_tips($delta, $format, $long = FALSE) {
     case 4:
       return t('No HTML tags allowed');
       break;
-
+    case 5:
+      return t('Use [internal:foo/bar] to get a link to the internal page <em>foo/bar</em>.');
   }
 }
 
@@ -605,7 +606,14 @@ function theme_filter_guidelines($format) {
 function filter_filter($op, $delta = 0, $format = -1, $text = '') {
   switch ($op) {
     case 'list':
-      return array(0 => t('Limit allowed HTML tags'), 1 => t('Convert line breaks'), 2 => t('Convert URLs into links'), 3 => t('Correct broken HTML'), 4 => t('Escape all HTML'));
+      return array(
+        0 => t('Limit allowed HTML tags'),
+        1 => t('Convert line breaks'),
+        2 => t('Convert URLs into links'),
+        3 => t('Correct broken HTML'),
+        4 => t('Escape all HTML'),
+        5 => t('Create internal URLs'),
+      );
 
     case 'description':
       switch ($delta) {
@@ -619,6 +627,8 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
           return t('Corrects faulty and chopped off HTML in postings.');
         case 4:
           return t('Escapes all HTML tags, so they will be visible instead of being effective.');
+        case 5:
+          return t('Formats [internal:node/1234] as a URL.');
         default:
           return;
       }
@@ -635,6 +645,8 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
           return _filter_htmlcorrector($text);
         case 4:
           return trim(check_plain($text));
+        case 5:
+          return _filter_internal($text);
         default:
           return $text;
       }
@@ -851,6 +863,18 @@ function _filter_url_trim($text, $length = NULL) {
   }
 
   return $text;
+}
+
+/**
+ * Turn [internal:foo] into url(foo).
+ *
+ * @param $text
+ *   The text to apply the filter on.
+ * @return
+ *   The filtered text.
+ */
+function _filter_internal($text) {
+  return preg_replace('/\[internal:([^\]]+)\]/e', "url('\\1')", $text);
 }
 
 /**
