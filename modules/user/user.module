@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.968 2009/03/14 23:01:38 webchick Exp $
+// $Id: user.module,v 1.969 2009/03/15 13:50:45 webchick Exp $
 
 /**
  * @file
@@ -267,6 +267,8 @@ function user_load_multiple($uids = array(), $conditions = array(), $reset = FAL
         }
       }
 
+      field_attach_load('user', $queried_users);
+
       // Invoke hook_user_load() on the users loaded from the database
       // and add them to the static cache.
       foreach (module_implements('user_load') as $module) {
@@ -274,8 +276,7 @@ function user_load_multiple($uids = array(), $conditions = array(), $reset = FAL
         $function($queried_users);
       }
 
-      // TODO D7 : not sure the 3rd param ($types) is needed.
-      field_attach_load('user', $queried_users);
+
 
       $users = $users + $queried_users;
       $user_cache = $user_cache + $queried_users;
