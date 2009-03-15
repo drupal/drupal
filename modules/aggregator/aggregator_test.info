@@ -1,3 +1,4 @@
+; $Id$
 name = "Aggregator module tests"
 description = "Support module for aggregator related testing."
 package = Testing
