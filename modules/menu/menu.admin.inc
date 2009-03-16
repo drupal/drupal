@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.40 2009/03/14 21:16:42 dries Exp $
+// $Id: menu.admin.inc,v 1.41 2009/03/16 20:31:11 webchick Exp $
 
 /**
  * @file
@@ -149,7 +149,8 @@ function menu_overview_form_submit($form, &$form_state) {
       }
       // Hidden is a special case, the value needs to be reversed.
       if ($element['hidden']['#value'] != $element['hidden']['#default_value']) {
-        $element['#item']['hidden'] = !$element['hidden']['#value'];
+        // Convert to integer rather than boolean due to PDO cast to string.
+        $element['#item']['hidden'] = $element['hidden']['#value'] ? 0 : 1;
         $updated_items[$mlid] = $element['#item'];
       }
     }
