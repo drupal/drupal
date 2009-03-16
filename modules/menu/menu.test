@@ -154,6 +154,19 @@ class MenuTestCase extends DrupalWebTestCase {
     // Toggle menu links.
     $this->toggleMenuLink($item1);
     $this->toggleMenuLink($item2);
+    
+    // Enable a link via the overview form.
+    $this->disableMenuLink($item1);
+    $edit = array();
+
+    // Note in the UI the 'mlid:x[hidden]' form element maps to enabled, or
+    // NOT hidden.
+    $edit['mlid:' . $item1['mlid'] . '[hidden]'] = TRUE;
+    $this->drupalPost('admin/build/menu-customize/'. $item1['menu_name'], $edit, t('Save configuration'));
+
+    // Verify in the database.
+    $hidden = db_result(db_query("SELECT hidden FROM {menu_links} WHERE mlid = :mlid", array('mlid' => $item1['mlid'])));
+    $this->assertEqual($hidden, 0, t('Link is not hidden in the database table when enabled via the overview form'));
 
     // Save menu links for later tests.
     $this->items[] = $item1;
@@ -331,35 +344,57 @@ class MenuTestCase extends DrupalWebTestCase {
   /**
    * Alternately disable and enable a menu link.
    *
-   * @param array $item Menu link.
+   * @param $item
+   *   Menu link.
    */
   function toggleMenuLink($item) {
-    $mlid = $item['mlid'];
-    $title = $item['link_title'];
-
-    $edit = array();
-    $edit['menu[enabled]'] = FALSE;
-    $this->drupalPost("admin/build/menu/item/$mlid/edit", $edit, t('Save'));
-    $this->assertResponse(200);
-    // Unlike most other modules, there is no confirmation message displayed.
+    $this->disableMenuLink($item);
 
     // Verify menu link is absent.
     $this->drupalGet('');
-    $this->assertNoText($title, 'Menu link was not displayed');
-
-    // Edit menu link.
-    $edit['menu[enabled]'] = TRUE;
-    $this->drupalPost("admin/build/menu/item/$mlid/edit", $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->assertNoText($item['link_title'], 'Menu link was not displayed');
+    $this->enableMenuLink($item);
 
     // Verify menu link is displayed.
     $this->drupalGet('');
-    $this->assertText($title, 'Menu link was displayed');
+    $this->assertText($item['link_title'], 'Menu link was displayed');
+  }
+
+  /**
+   * Disable a menu link.
+   *
+   * @param $item
+   *   Menu link.
+   */
+  function disableMenuLink($item) {
+    $mlid = $item['mlid'];
+    $edit['menu[enabled]'] = FALSE;
+    $this->drupalPost("admin/build/menu/item/$mlid/edit", $edit, t('Save'));
+
+    // Unlike most other modules, there is no confirmation message displayed.
+    // Verify in the database.
+    $hidden = db_result(db_query("SELECT hidden FROM {menu_links} WHERE mlid = :mlid", array('mlid' => $mlid)));
+    $this->assertEqual($hidden, 1, t('Link is hidden in the database table'));
+  }
+
+  /**
+   * Enable a menu link.
+   *
+   * @param $item
+   *   Menu link.
+   */
+  function enableMenuLink($item) {
+    $mlid = $item['mlid'];
+    $edit['menu[enabled]'] = TRUE;
+    $this->drupalPost("admin/build/menu/item/$mlid/edit", $edit, t('Save'));
+
+    // Verify in the database.
+    $hidden = db_result(db_query("SELECT hidden FROM {menu_links} WHERE mlid = :mlid", array('mlid' => $mlid)));
+    $this->assertEqual($hidden, 0, t('Link is not hidden in the database table'));
   }
 
   /**
    * Get standard menu link.
-   *
    */
   private function getStandardMenuLink() {
     // Retrieve menu link id of the Log out menu link, which will always be on the front page.
