@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.41 2009/02/26 07:30:27 webchick Exp $
+// $Id: node.admin.inc,v 1.42 2009/03/17 03:34:32 webchick Exp $
 
 /**
  * @file
@@ -606,7 +606,7 @@ function theme_node_admin_nodes($form) {
   }
   else {
     $rows[] = array(
-      array('data' => t('No posts available.'), 'colspan' => count($header)),
+      array('data' => t('No content available.'), 'colspan' => count($header)),
     );
   }
 
