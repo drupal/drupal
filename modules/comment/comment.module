@@ -902,7 +902,9 @@ function comment_save($edit) {
   }
 }
 
-// An implementation of hook_link().
+/**
+ * Implementation of hook_link().
+ */
 function comment_link($type, $object, $teaser) {
   if ($type == 'comment') {
     $links = comment_links($object, FALSE);
