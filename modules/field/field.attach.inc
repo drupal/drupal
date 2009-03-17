@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.5 2009/03/13 21:25:40 dries Exp $
+// $Id: field.attach.inc,v 1.6 2009/03/17 03:46:51 webchick Exp $
 
 /**
  * @file
@@ -8,7 +8,7 @@
 
 // TODO D7 : consistency - do field_attach_functions return a value or alter in place ?
 
-// TOTO D7 : consistency - some of these functions process individual fields
+// TODO D7 : consistency - some of these functions process individual fields
 // and others process the combined value of all fields.
 // Should all iteration through available fields be done here instead of in Field?
 

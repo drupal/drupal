@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.5 2009/02/10 03:16:14 webchick Exp $
+// $Id: field.test,v 1.6 2009/03/17 03:46:51 webchick Exp $
 
 // TODO : use drupalCreateField() / drupalCreateFieldInstance() all over ?
 
@@ -516,10 +516,10 @@ class FieldAttachTestCase extends DrupalWebTestCase {
   }
 
   // Verify that field_attach_validate() invokes the correct
-  // hook_field_validate. NOTE: This tests the FAPI-connected
-  // behavior of hook_field_validate. As discussed at
-  // http://groups.drupal.org/node/18019, field validation will
-  // eventually be disconnected from FAPI, at which point this
+  // hook_field_validate.
+  // TODO: This tests the FAPI-connected behavior of hook_field_validate.
+  // As discussed at http://groups.drupal.org/node/18019, field validation
+  // will eventually be disconnected from FAPI, at which point this
   // function will have to be rewritten.
   function testFieldAttachValidate() {
     $entity_type = 'test_entity';
