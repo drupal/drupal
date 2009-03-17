@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.323 2009/03/08 21:25:17 dries Exp $
+// $Id: block.module,v 1.324 2009/03/17 03:42:30 webchick Exp $
 
 /**
  * @file
@@ -386,6 +386,7 @@ function block_box_form($edit = array()) {
     '#text_format' => isset($edit['format']) ? $edit['format'] : FILTER_FORMAT_DEFAULT,
     '#rows' => 15,
     '#description' => t('The content of the block as shown to the user.'),
+    '#required' => TRUE,
     '#weight' => -17,
   );
 
