@@ -110,10 +110,10 @@ function user_field_build_modes($obj_type) {
 }
 
 function user_external_load($authname) {
-  $result = db_query("SELECT uid FROM {authmap} WHERE authname = '%s'", $authname);
+  $uid = db_query("SELECT uid FROM {authmap} WHERE authname = :authname", array(':authname' => $authname))->fetchField();
 
-  if ($user = db_fetch_array($result)) {
-    return user_load($user);
+  if ($uid) {
+    return user_load($uid);
   }
   else {
     return FALSE;
