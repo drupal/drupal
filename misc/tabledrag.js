@@ -523,7 +523,16 @@ Drupal.tableDrag.prototype.findDropTargetRow = function(x, y) {
     var row = rows[n];
     var indentDiff = 0;
     var rowY = $(row).offset().top;
-    var rowHeight = parseInt($(row).outerHeight()) / 2;
+    // Because Safari does not report offsetHeight on table rows, but does on
+    // table cells, grab the firstChild of the row and use that instead.
+    // http://jacob.peargrove.com/blog/2006/technical/table-row-offsettop-bug-in-safari.
+    if (row.offsetHeight == 0) {
+      var rowHeight = parseInt(row.firstChild.offsetHeight) / 2;
+    }
+    // Other browsers.
+    else {
+      var rowHeight = parseInt(row.offsetHeight) / 2;
+    }
 
     // Because we always insert before, we need to offset the height a bit.
     if ((y > (rowY - rowHeight)) && (y < (rowY + rowHeight))) {
