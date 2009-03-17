@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.4 2009/03/14 20:13:27 dries Exp $
+// $Id: form.test,v 1.5 2009/03/17 23:26:33 webchick Exp $
 
 /**
  * @file
@@ -315,3 +315,32 @@ class FormsElementsTableSelectFunctionalTest extends DrupalWebTestCase {
 
 }
 
+/**
+ * Test the form_clean_id() for expected behavior.
+ */
+class FormsFormCleanIdFunctionalTest extends DrupalWebTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => t('form_clean_id() test'),
+      'description' => t('Test the function form_clean_id() for expected behavior'),
+      'group' => t('Form API'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('form_test');
+  }
+
+  /**
+   * Test the uniqueness of the form_clean_id() function.
+   */
+  function testFormCleanId() {
+    $this->drupalGet('form_test/form_clean_id');
+    $this->assertNoUniqueText('form-test-form-clean-id-presence');
+    $this->assertUniqueText('form-test-form-clean-id-presence-1');
+    $this->assertUniqueText('form-test-form-clean-id-presence-2');
+    $this->assertNoUniqueText('Test Textfield');
+  }
+
+}

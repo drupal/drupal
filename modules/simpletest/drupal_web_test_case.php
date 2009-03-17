@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.90 2009/03/14 23:01:37 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.91 2009/03/17 23:26:33 webchick Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -1702,6 +1702,78 @@ class DrupalWebTestCase {
       $message = '"' . $text . '"' . ($not_exists ? ' not found' : ' found');
     }
     return $this->assert($not_exists == (strpos($this->plainTextContent, $text) === FALSE), $message, $group);
+  }
+
+  /**
+   * Pass if the text is found ONLY ONCE on the text version of the page.
+   *
+   * The text version is the equivalent of what a user would see when viewing
+   * through a web browser. In other words the HTML has been filtered out of
+   * the contents.
+   *
+   * @param $text
+   *   Plain text to look for.
+   * @param $message
+   *   Message to display.
+   * @param $group
+   *   The group this message belongs to, defaults to 'Other'.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertUniqueText($text, $message = '', $group = 'Other') {
+    return $this->assertUniqueTextHelper($text, $message, $group, TRUE);
+  }
+
+  /**
+   * Pass if the text is found MORE THAN ONCE on the text version of the page.
+   *
+   * The text version is the equivalent of what a user would see when viewing
+   * through a web browser. In other words the HTML has been filtered out of
+   * the contents.
+   *
+   * @param $text
+   *   Plain text to look for.
+   * @param $message
+   *   Message to display.
+   * @param $group
+   *   The group this message belongs to, defaults to 'Other'.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertNoUniqueText($text, $message = '', $group = 'Other') {
+    return $this->assertUniqueTextHelper($text, $message, $group, FALSE);
+  }
+
+  /**
+   * Helper for assertUniqueText and assertNoUniqueText.
+   *
+   * It is not recommended to call this function directly.
+   *
+   * @param $text
+   *   Plain text to look for.
+   * @param $message
+   *   Message to display.
+   * @param $group
+   *   The group this message belongs to.
+   * @param $be_unique
+   *   TRUE if this text should be found only once, FALSE if it should be found more than once.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertUniqueTextHelper($text, $message, $group, $be_unique) {
+    if ($this->plainTextContent === FALSE) {
+      $this->plainTextContent = filter_xss($this->content, array());
+    }
+    if (!$message) {
+      $message = '"' . $text . '"'. ($be_unique ? ' found only once' : ' found more than once');
+    }
+    $first_occurance = strpos($this->plainTextContent, $text);
+    if ($first_occurance === FALSE) {
+      return $this->assert(FALSE, $message, $group);
+    }
+    $offset = $first_occurance + strlen($text);
+    $second_occurance = strpos($this->plainTextContent, $text, $offset);
+    return $this->assert($be_unique == ($second_occurance === FALSE), $message, $group);
   }
 
   /**
