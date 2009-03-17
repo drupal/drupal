@@ -67,7 +67,7 @@ function node_schema() {
         'default' => 0,
       ),
       'comment' => array(
-        'description' => 'Whether comments are allowed on this node: 0 = no, 1 = read only, 2 = read/write.',
+        'description' => 'Whether comments are allowed on this node: 0 = no, 1 = closed (read only), 2 = open (read/write).',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,

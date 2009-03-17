@@ -17,7 +17,7 @@ function forum_help($path, $arg) {
       $output .= '<p>' . t('When administering a forum, note that:') . '</p>';
       $output .= '<ul><li>' . t('a forum topic (and all of its comments) may be moved between forums by selecting a different forum while editing a forum topic.') . '</li>';
       $output .= '<li>' . t('when moving a forum topic between forums, the <em>Leave shadow copy</em> option creates a link in the original forum pointing to the new location.') . '</li>';
-      $output .= '<li>' . t('selecting <em>Read only</em> under <em>Comment settings</em> while editing a forum topic will lock (prevent new comments) on the thread.') . '</li>';
+      $output .= '<li>' . t('selecting <em>Closed</em> under <em>Comment settings</em> while editing a forum topic will lock (prevent new comments) on the thread.') . '</li>';
       $output .= '<li>' . t('selecting <em>Disabled</em> under <em>Comment settings</em> while editing a forum topic will hide all existing comments on the thread, and prevent new ones.') . '</li></ul>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@forum">Forum module</a>.', array('@forum' => 'http://drupal.org/handbook/modules/forum/')) . '</p>';
       return $output;
@@ -933,7 +933,7 @@ function template_preprocess_forum_icon(&$variables) {
     $variables['icon'] = $variables['new_posts'] ? 'new' : 'default';
   }
 
-  if ($variables['comment_mode'] == COMMENT_NODE_READ_ONLY || $variables['comment_mode'] == COMMENT_NODE_DISABLED) {
+  if ($variables['comment_mode'] == COMMENT_NODE_CLOSED || $variables['comment_mode'] == COMMENT_NODE_HIDDEN) {
     $variables['icon'] = 'closed';
   }
 

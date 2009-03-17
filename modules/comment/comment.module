@@ -66,19 +66,19 @@ define('COMMENT_FORM_SEPARATE_PAGE', 0);
 define('COMMENT_FORM_BELOW', 1);
 
 /**
- * Comments for this node are disabled.
+ * Comments for this node are hidden.
  */
-define('COMMENT_NODE_DISABLED', 0);
+define('COMMENT_NODE_HIDDEN', 0);
 
 /**
- * Comments for this node are locked.
+ * Comments for this node are closed.
  */
-define('COMMENT_NODE_READ_ONLY', 1);
+define('COMMENT_NODE_CLOSED', 1);
 
 /**
- * Comments are enabled on this node.
+ * Comments for this node are open.
  */
-define('COMMENT_NODE_READ_WRITE', 2);
+define('COMMENT_NODE_OPEN', 2);
 
 /**
  * Comment preview is optional.
@@ -96,7 +96,7 @@ define('COMMENT_PREVIEW_REQUIRED', 1);
 function comment_help($path, $arg) {
   switch ($path) {
     case 'admin/help#comment':
-      $output  = '<p>' . t('The comment module allows visitors to comment on your posts, creating ad hoc discussion boards. Any <a href="@content-type">content type</a> may have its <em>Default comment setting</em> set to <em>Read/Write</em> to allow comments, or <em>Disabled</em>, to prevent comments. Comment display settings and other controls may also be customized for each content type.', array('@content-type' => url('admin/build/types'))) . '</p>';
+      $output  = '<p>' . t('The comment module allows visitors to comment on your posts, creating ad hoc discussion boards. Any <a href="@content-type">content type</a> may have its <em>Default comment setting</em> set to <em>Open</em> to allow comments, <em>Hidden</em> to hide existing comments and prevent new comments or <em>Closed</em> to allow existing comments to be viewed but no new comments added. Comment display settings and other controls may also be customized for each content type.', array('@content-type' => url('admin/build/types'))) . '</p>';
       $output .= '<p>' . t('Comment permissions are assigned to user roles, and are used to determine whether anonymous users (or other roles) are allowed to comment on posts. If anonymous users are allowed to comment, their individual contact information may be retained in cookies stored on their local computer for use in later comment submissions. When a comment has no replies, it may be (optionally) edited by its author. The comment module uses the same text formats and HTML tags available when creating other forms of content.') . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@comment">Comment module</a>.', array('@comment' => 'http://drupal.org/handbook/modules/comment/')) . '</p>';
 
@@ -443,7 +443,7 @@ function comment_node_view($node, $teaser) {
           }
         }
         else {
-          if ($node->comment == COMMENT_NODE_READ_WRITE) {
+          if ($node->comment == COMMENT_NODE_OPEN) {
             if (user_access('post comments')) {
               $links['comment_add'] = array(
                 'title' => t('Add new comment'),
@@ -462,7 +462,7 @@ function comment_node_view($node, $teaser) {
     else {
       // Node page: add a "post comment" link if the user is allowed to post comments,
       // if this node is not read-only, and if the comment form isn't already shown.
-      if ($node->comment == COMMENT_NODE_READ_WRITE) {
+      if ($node->comment == COMMENT_NODE_OPEN) {
         if (user_access('post comments')) {
           if (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_SEPARATE_PAGE) {
             $links['comment_add'] = array(
@@ -512,8 +512,8 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
     $form['comment']['comment'] = array(
       '#type' => 'radios',
       '#title' => t('Default comment setting'),
-      '#default_value' => variable_get('comment_' . $form['#node_type']->type, COMMENT_NODE_READ_WRITE),
-      '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')),
+      '#default_value' => variable_get('comment_' . $form['#node_type']->type, COMMENT_NODE_OPEN),
+      '#options' => array(t('Hidden'), t('Closed'), t('Open')),
       '#description' => t('Users with the <em>administer comments</em> permission will be able to override this setting.'),
     );
     $form['comment']['comment_default_mode'] = array(
@@ -582,12 +582,52 @@ function comment_form_alter(&$form, $form_state, $form_id) {
       '#collapsed' => TRUE,
       '#weight' => 30,
     );
+    $comment_count = isset($node->nid) ? db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() : 0;
+    $comment_settings = ($node->comment == COMMENT_NODE_HIDDEN && empty($comment_count)) ? COMMENT_NODE_CLOSED : $node->comment;
     $form['comment_settings']['comment'] = array(
       '#type' => 'radios',
       '#parents' => array('comment'),
-      '#default_value' => $node->comment,
-      '#options' => array(t('Disabled'), t('Read only'), t('Read/Write')),
+      '#default_value' => $comment_settings,
+      '#options' => array(
+        COMMENT_NODE_OPEN => t('Open'),
+        COMMENT_NODE_CLOSED => t('Closed'),
+        COMMENT_NODE_HIDDEN => t('Hidden'),
+      ),
+      COMMENT_NODE_OPEN => array(
+        '#type' => 'radio',
+        '#title' => t('Open'),
+        '#description' => theme('indentation') . t("Users with 'post comments' permission can post comments."),
+        '#return_value' => COMMENT_NODE_OPEN,
+        '#default_value' => $comment_settings,
+        '#id' => 'edit-comment-2',
+        '#parents' => array('comment'),
+      ),
+      COMMENT_NODE_CLOSED => array(
+        '#type' => 'radio',
+        '#title' => t('Closed'),
+        '#description' => theme('indentation') . t('Users cannot post comments, but existing comments will be displayed.'),
+        '#return_value' => COMMENT_NODE_CLOSED,
+        '#default_value' => $comment_settings,
+        '#id' => 'edit-comment-1',
+        '#parents' => array('comment'),
+      ),
+      COMMENT_NODE_HIDDEN => array(
+        '#type' => 'radio',
+        '#title' => t('Hidden'),
+        '#description' => theme('indentation') . t('Comments are hidden from view.'),
+        '#return_value' => COMMENT_NODE_HIDDEN,
+        '#default_value' => $comment_settings,
+        '#id' => 'edit-comment-0',
+        '#parents' => array('comment'),
+      ),
     );
+    // If the node doesn't have any comments, the "hidden" option makes no
+    // sense, so don't even bother presenting it to the user.
+    if (empty($comment_count)) {
+      unset($form['comment_settings']['comment']['#options'][COMMENT_NODE_HIDDEN]);
+      unset($form['comment_settings']['comment'][COMMENT_NODE_HIDDEN]);
+      $form['comment_settings']['comment'][COMMENT_NODE_CLOSED]['#description'] = theme('indentation') . t('Users cannot post comments.');
+    }
   }
 }
 
@@ -601,7 +641,7 @@ function comment_node_load($nodes, $types) {
   // assign values without hitting the database.
   foreach ($nodes as $node) {
     // Store whether comments are enabled for this node.
-    if ($node->comment != COMMENT_NODE_DISABLED) {
+    if ($node->comment != COMMENT_NODE_HIDDEN) {
       $comments_enabled[] = $node->nid;
     }
     else {
@@ -627,7 +667,7 @@ function comment_node_load($nodes, $types) {
  */
 function comment_node_prepare($node) {
   if (!isset($node->comment)) {
-    $node->comment = variable_get("comment_$node->type", COMMENT_NODE_READ_WRITE);
+    $node->comment = variable_get("comment_$node->type", COMMENT_NODE_OPEN);
   }
 }
 
@@ -689,7 +729,7 @@ function comment_node_search_result($node) {
  * Implementation of hook_node_rss_item().
  */
 function comment_node_rss_item($node) {
-  if ($node->comment != COMMENT_NODE_DISABLED) {
+  if ($node->comment != COMMENT_NODE_HIDDEN) {
     return array(array('key' => 'comments', 'value' => url('node/' . $node->nid, array('fragment' => 'comments', 'absolute' => TRUE))));
   }
   else {
@@ -771,7 +811,7 @@ function comment_node_url() {
 function comment_save($edit) {
   global $user;
   $node = node_load($edit['nid']);
-  if (user_access('post comments') && (user_access('administer comments') || $node->comment == COMMENT_NODE_READ_WRITE)) {
+  if (user_access('post comments') && (user_access('administer comments') || $node->comment == COMMENT_NODE_OPEN)) {
     if (!form_get_errors()) {
       $edit += array(
         'mail' => '',
@@ -936,7 +976,7 @@ function comment_links($comment, $return = 1) {
   }
 
   $node = node_load($comment->nid);
-  if ($node->comment == COMMENT_NODE_READ_WRITE) {
+  if ($node->comment == COMMENT_NODE_OPEN) {
     if (user_access('administer comments') && user_access('post comments')) {
       $links['comment_delete'] = array(
         'title' => t('delete'),
@@ -1154,7 +1194,7 @@ function comment_render($node, $cid = 0) {
 
     // If enabled, show new comment form if it's not already being displayed.
     $reply = arg(0) == 'comment' && arg(1) == 'reply';
-    if (user_access('post comments') && $node->comment == COMMENT_NODE_READ_WRITE && (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_BELOW) && !$reply) {
+    if (user_access('post comments') && $node->comment == COMMENT_NODE_OPEN && (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_BELOW) && !$reply) {
       $output .= comment_form_box(array('nid' => $nid), t('Post new comment'));
     }
     $output = theme('comment_wrapper', $output, $node);
