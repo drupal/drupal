@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.145 2009/03/08 04:25:03 webchick Exp $
+// $Id: blogapi.module,v 1.146 2009/03/17 12:41:54 dries Exp $
 
 /**
  * @file
@@ -879,13 +879,13 @@ function _blogapi_mt_extra(&$node, $struct) {
   if (array_key_exists('mt_allow_comments', $struct)) {
     switch ($struct['mt_allow_comments']) {
       case 0:
-        $node->comment = COMMENT_NODE_DISABLED;
+        $node->comment = COMMENT_NODE_HIDDEN;
         break;
       case 1:
-        $node->comment = COMMENT_NODE_READ_WRITE;
+        $node->comment = COMMENT_NODE_OPEN;
         break;
       case 2:
-        $node->comment = COMMENT_NODE_READ_ONLY;
+        $node->comment = COMMENT_NODE_CLOSED;
         break;
     }
   }

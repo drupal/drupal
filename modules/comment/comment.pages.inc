@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.pages.inc,v 1.15 2009/02/26 07:30:26 webchick Exp $
+// $Id: comment.pages.inc,v 1.16 2009/03/17 12:41:54 dries Exp $
 
 /**
  * @file
@@ -96,7 +96,7 @@ function comment_reply($node, $pid = NULL) {
       }
 
       // Should we show the reply box?
-      if ($node->comment != COMMENT_NODE_READ_WRITE) {
+      if ($node->comment != COMMENT_NODE_OPEN) {
         drupal_set_message(t("This discussion is closed: you can't post new comments."), 'error');
         drupal_goto("node/$node->nid");
       }

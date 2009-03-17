@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.12 2009/03/08 22:01:36 dries Exp $
+// $Id: node.api.php,v 1.13 2009/03/17 12:41:54 dries Exp $
 
 /**
  * @file
@@ -261,7 +261,7 @@ function hook_node_load($nodes, $types) {
  */
 function hook_node_prepare($node) {
   if (!isset($node->comment)) {
-    $node->comment = variable_get("comment_$node->type", COMMENT_NODE_READ_WRITE);
+    $node->comment = variable_get("comment_$node->type", COMMENT_NODE_OPEN);
   }
 }
 
@@ -293,7 +293,7 @@ function hook_node_prepare_translation($node) {
  *   Extra information to be added to the RSS item.
  */
 function hook_node_rss_item($node) {
-  if ($node->comment != COMMENT_NODE_DISABLED) {
+  if ($node->comment != COMMENT_NODE_HIDDEN) {
     return array(array('key' => 'comments', 'value' => url('node/' . $node->nid, array('fragment' => 'comments', 'absolute' => TRUE))));
   }
   else {
@@ -491,7 +491,7 @@ function hook_node_type($op, $info) {
       break;
     case 'update':
       if (!empty($info->old_type) && $info->old_type != $info->type) {
-        $setting = variable_get('comment_' . $info->old_type, COMMENT_NODE_READ_WRITE);
+        $setting = variable_get('comment_' . $info->old_type, COMMENT_NODE_OPEN);
         variable_del('comment_' . $info->old_type);
         variable_set('comment_' . $info->type, $setting);
       }

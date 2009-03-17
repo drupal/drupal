@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.test,v 1.25 2009/02/07 20:10:40 webchick Exp $
+// $Id: comment.test,v 1.26 2009/03/17 12:41:54 dries Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -310,21 +310,21 @@ class CommentInterfaceTest extends CommentHelperCase {
     $this->setCommentsPerPage(50);
 
     // Attempt to post to node with comments disabled.
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_DISABLED));
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_HIDDEN));
     $this->assertTrue($this->node, t('Article node created.'));
     $this->drupalGet('comment/reply/' . $this->node->nid);
     $this->assertText('This discussion is closed', t('Posting to node with comments disabled'));
     $this->assertNoField('edit-comment', t('Comment body field found.'));
 
     // Attempt to post to node with read-only comments.
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_READ_ONLY));
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_CLOSED));
     $this->assertTrue($this->node, t('Article node created.'));
     $this->drupalGet('comment/reply/' . $this->node->nid);
     $this->assertText('This discussion is closed', t('Posting to node with comments read-only'));
     $this->assertNoField('edit-comment', t('Comment body field found.'));
 
     // Attempt to post to node with comments enabled (check field names etc).
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_READ_WRITE));
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_OPEN));
     $this->assertTrue($this->node, t('Article node created.'));
     $this->drupalGet('comment/reply/' . $this->node->nid);
     $this->assertNoText('This discussion is closed', t('Posting to node with comments enabled'));

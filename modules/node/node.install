@@ -1,5 +1,5 @@
 <?php
-// $Id: node.install,v 1.13 2009/02/26 07:30:27 webchick Exp $
+// $Id: node.install,v 1.14 2009/03/17 12:41:54 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -67,7 +67,7 @@ function node_schema() {
         'default' => 0,
       ),
       'comment' => array(
-        'description' => 'Whether comments are allowed on this node: 0 = no, 1 = read only, 2 = read/write.',
+        'description' => 'Whether comments are allowed on this node: 0 = no, 1 = closed (read only), 2 = open (read/write).',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,

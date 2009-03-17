@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.37 2009/02/03 12:30:14 dries Exp $
+// $Id: default.profile,v 1.38 2009/03/17 12:41:54 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -127,7 +127,7 @@ function default_profile_tasks(&$task, $url) {
 
   // Default page to not be promoted and have comments disabled.
   variable_set('node_options_page', array('status'));
-  variable_set('comment_page', COMMENT_NODE_DISABLED);
+  variable_set('comment_page', COMMENT_NODE_HIDDEN);
 
   // Don't display date and author information for page nodes by default.
   variable_set('node_submitted_page', FALSE);
