@@ -7,7 +7,9 @@
  */
 
 /**
- * Inform the Field API about one or more fieldable types (object
+ * Inform the Field API about one or more fieldable types.
+ *
+ * Inform the Field API about one or more fieldable types, (object
  * types to which fields can be attached).
  *
  * @return
@@ -222,6 +224,7 @@ function hook_field_validate($obj_type, $object, $field, $instance, $items, $for
 
 /**
  * Define custom presave behavior for this module's field types.
+ * 
  * TODO: The behavior of this hook is going to change (see
  * field_attach_presave()).
  *
@@ -274,8 +277,9 @@ function hook_field_update($obj_type, $object, $field, $instance, $items) {
 }
 
 /**
- * Define custom delete behavior for this module's field types. This
- * hook is invoked just before the data is deleted from field storage.
+ * Define custom delete behavior for this module's field types.
+ * 
+ * This hook is invoked just before the data is deleted from field storage.
  *
  * @param $obj_type
  *   The type of $object.
@@ -292,10 +296,10 @@ function hook_field_delete($obj_type, $object, $field, $instance, $items) {
 }
 
 /**
- * Define custom delete_revision behavior for this module's field
- * types. This hook is invoked just before the data is deleted from
- * field storage, and will only be called for fieldable types that are
- * versioned.
+ * Define custom delete_revision behavior for this module's field types.
+ * 
+ * This hook is invoked just before the data is deleted from field storage,
+ * and will only be called for fieldable types that are versioned.
  *
  * @param $obj_type
  *   The type of $object.
@@ -329,8 +333,9 @@ function hook_field_sanitize($obj_type, $object, $field, $instance, $items) {
 }
 
 /**
- * Define custom prepare_translation behavior for this module's field
- * types. TODO: This hook may or may not survive in Field API.
+ * Define custom prepare_translation behavior for this module's field types.
+ * 
+ * TODO: This hook may or may not survive in Field API.
  *
  * @param $obj_type
  *   The type of $object.
@@ -393,8 +398,9 @@ function hook_field_widget(&$form, &$form_state, $field, $instance, $items, $del
  */
 
 /**
- * Act on field_attach_form. This hook is invoked after the field module
- * has performed the operation.
+ * Act on field_attach_form.
+ * 
+ * This hook is invoked after the field module has performed the operation.
  *
  * See field_attach_form() for details and arguments.
  */
@@ -402,18 +408,20 @@ function hook_field_attach_form($obj_type, $object, &$form, &$form_state) {
 }
 
 /**
- * Act on field_attach_load. This hook is invoked after the field module
- * has performed the operation.
+ * Act on field_attach_load.
+ * 
+ * This hook is invoked after the field module has performed the operation.
  *
- * See field_attach_load() for details and arguments. TODO:
- * Currently, this hook only accepts a single object a time.
+ * See field_attach_load() for details and arguments.
+ * TODO: Currently, this hook only accepts a single object a time.
  */
 function hook_field_attach_load($obj_type, $object) {
 }
 
 /**
- * Act on field_attach_validate. This hook is invoked after the field module
- * has performed the operation.
+ * Act on field_attach_validate.
+ * 
+ * This hook is invoked after the field module has performed the operation.
  *
  * See field_attach_validate() for details and arguments.
  */
@@ -421,8 +429,9 @@ function hook_field_attach_validate($obj_type, $object, &$form) {
 }
 
 /**
- * Act on field_attach_submit. This hook is invoked after the field module
- * has performed the operation.
+ * Act on field_attach_submit.
+ * 
+ * This hook is invoked after the field module has performed the operation.
  *
  * See field_attach_submit() for details and arguments.
  */
@@ -430,8 +439,9 @@ function hook_field_attach_submit($obj_type, $object, $form, &$form_state) {
 }
 
 /**
- * Act on field_attach_presave. This hook is invoked after the field module
- * has performed the operation.
+ * Act on field_attach_presave.
+ * 
+ * This hook is invoked after the field module has performed the operation.
  *
  * See field_attach_presave() for details and arguments.
  */
@@ -439,8 +449,9 @@ function hook_field_attach_presave($obj_type, $object) {
 }
 
 /**
- * Act on field_attach_insert. This hook is invoked after the field module
- * has performed the operation.
+ * Act on field_attach_insert.
+ * 
+ * This hook is invoked after the field module has performed the operation.
  *
  * See field_attach_insert() for details and arguments.
  */
@@ -448,8 +459,9 @@ function hook_field_attach_insert($obj_type, $object) {
 }
 
 /**
- * Act on field_attach_update. This hook is invoked after the field module
- * has performed the operation.
+ * Act on field_attach_update.
+ * 
+ * This hook is invoked after the field module has performed the operation.
  *
  * See field_attach_update() for details and arguments.
  */
@@ -457,8 +469,9 @@ function hook_field_attach_update($obj_type, $object) {
 }
 
 /**
- * Act on field_attach_delete. This hook is invoked after the field module
- * has performed the operation.
+ * Act on field_attach_delete.
+ * 
+ * This hook is invoked after the field module has performed the operation.
  *
  * See field_attach_delete() for details and arguments.
  */
@@ -466,8 +479,9 @@ function hook_field_attach_delete($obj_type, $object) {
 }
 
 /**
- * Act on field_attach_delete_revision. This hook is invoked after
- * the field module has performed the operation.
+ * Act on field_attach_delete_revision.
+ * 
+ * This hook is invoked after the field module has performed the operation.
  *
  * See field_attach_delete_revision() for details and arguments.
  */
@@ -475,8 +489,9 @@ function hook_field_attach_delete_revision($obj_type, $object) {
 }
 
 /**
- * Act on field_attach_view. This hook is invoked after the field module
- * has performed the operation.
+ * Act on field_attach_view.
+ * 
+ * This hook is invoked after the field module has performed the operation.
  *
  * @param $output
  *  The structured content array tree for all of $object's fields.
@@ -491,8 +506,9 @@ function hook_field_attach_view($output, $obj_type, $object, $teaser) {
 }
 
 /**
- * Act on field_attach_create_bundle. This hook is invoked after the
- * field module has performed the operation.
+ * Act on field_attach_create_bundle.
+ * 
+ * This hook is invoked after the field module has performed the operation.
  *
  * See field_attach_create_bundle() for details and arguments.
  */
@@ -500,8 +516,9 @@ function hook_field_attach_create_bundle($bundle) {
 }
 
 /**
- * Act on field_attach_rename_bundle. This hook is invoked after the
- * field module has performed the operation.
+ * Act on field_attach_rename_bundle.
+ * 
+ * This hook is invoked after the field module has performed the operation.
  *
  * See field_attach_rename_bundle() for details and arguments.
  */
@@ -509,8 +526,9 @@ function hook_field_rename_bundle($bundle_old, $bundle_new) {
 }
 
 /**
- * Act on field_attach_delete_bundle. This hook is invoked after the field module
- * has performed the operation.
+ * Act on field_attach_delete_bundle.
+ * 
+ * This hook is invoked after the field module has performed the operation.
  *
  * See field_attach_delete_bundle() for details and arguments.
  */
@@ -650,8 +668,10 @@ function hook_field_storage_delete_instance($field_name, $bundle) {
  */
 
 /**
- * Act on a field being created. This hook is invoked after the field
- * is created and so it cannot modify the field itself.
+ * Act on a field being created.
+ * 
+ * This hook is invoked after the field is created and so it cannot modify the
+ * field itself.
  *
  * TODO: Not implemented.
  *
@@ -662,9 +682,10 @@ function hook_field_create_field($field) {
 }
 
 /**
- * Act on a field instance being created. This hook is invoked after
- * the instance record is saved and so it cannot modify the instance
- * itself.
+ * Act on a field instance being created.
+ * 
+ * This hook is invoked after the instance record is saved and so it cannot
+ * modify the instance itself.
  *
  * @param $instance
  *   The instance just created.
@@ -673,8 +694,9 @@ function hook_field_create_instance($instance) {
 }
 
 /**
- * Act on a field being deleted. This hook is invoked just before the
- * field is deleted.
+ * Act on a field being deleted.
+ * 
+ * This hook is invoked just before the field is deleted.
  *
  * TODO: Not implemented.
  *
@@ -686,9 +708,10 @@ function hook_field_delete_field($field) {
 
 
 /**
- * Act on a field instance being updated. This hook is invoked after
- * the instance record is saved and so it cannot modify the instance
- * itself.
+ * Act on a field instance being updated.
+ * 
+ * This hook is invoked after the instance record is saved and so it cannot
+ * modify the instance itself.
  *
  * TODO: Not implemented.
  *
@@ -699,8 +722,9 @@ function hook_field_update_instance($instance) {
 }
 
 /**
- * Act on a field instance being deleted. This hook is invoked just
- * before the instance is deleted.
+ * Act on a field instance being deleted.
+ * 
+ * This hook is invoked just before the instance is deleted.
  *
  * TODO: Not implemented.
  *

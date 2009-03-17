@@ -516,10 +516,10 @@ class FieldAttachTestCase extends DrupalWebTestCase {
   }
 
   // Verify that field_attach_validate() invokes the correct
-  // hook_field_validate. NOTE: This tests the FAPI-connected
-  // behavior of hook_field_validate. As discussed at
-  // http://groups.drupal.org/node/18019, field validation will
-  // eventually be disconnected from FAPI, at which point this
+  // hook_field_validate.
+  // TODO: This tests the FAPI-connected behavior of hook_field_validate.
+  // As discussed at http://groups.drupal.org/node/18019, field validation
+  // will eventually be disconnected from FAPI, at which point this
   // function will have to be rewritten.
   function testFieldAttachValidate() {
     $entity_type = 'test_entity';
