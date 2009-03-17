@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.40 2009/03/08 04:25:07 webchick Exp $
+// $Id: translation.module,v 1.41 2009/03/17 04:22:50 webchick Exp $
 
 /**
  * @file
@@ -200,8 +200,18 @@ function translation_node_prepare($node) {
         (user_access('translate content'))) {
       // We are translating a node from a source node, so
       // load the node to be translated and populate fields.
+      $source_node = node_load($source_nid);
+      // Ensure we don't have an existing translation in this language.
+      if (!empty($source_node->tnid)) {
+        $translations = translation_node_get_translations($source_node->tnid);
+        if (isset($translations[$language])) {
+          $languages = language_list();
+          drupal_set_message(t('A translation of %title in %language already exists, a new %type  will be created instead of a translation.', array('%title' => $source_node->title, '%language' => $languages[$language]->name, '%type' => $node->type)), 'error');
+          return;
+        }
+      }
       $node->language = $language;
-      $node->translation_source = node_load($source_nid);
+      $node->translation_source = $source_node;
       $node->title = $node->translation_source->title;
       $node->body = $node->translation_source->body;
       // Let every module add custom translated fields.
@@ -244,6 +254,22 @@ function translation_node_update($node) {
         // This is the source node, asking to mark all translations outdated.
         db_query("UPDATE {node} SET translate = 1 WHERE tnid = %d AND nid <> %d", $node->tnid, $node->nid);
       }
+    }
+  }
+}
+
+/**
+ * Implementation of hook_node_validate().
+ *
+ * Ensure that duplicate translations can not be created for the same source.
+ */
+function translation_node_validate($node, $form) {
+  // Only act on translatable nodes with a tnid or translation_source.
+  if (translation_supported_type($node->type) && (!empty($node->tnid) || !empty($form['#node']->translation_source->nid))) {
+    $tnid = !empty($node->tnid) ? $node->tnid : $form['#node']->translation_source->nid;
+    $translations = translation_node_get_translations($tnid);
+    if (isset($translations[$node->language]) && $translations[$node->language]->nid != $node->nid ) {
+      form_set_error('language', t('There is already a translation in this language.'));
     }
   }
 }

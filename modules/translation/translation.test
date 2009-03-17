@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.test,v 1.7 2008/12/30 16:43:19 dries Exp $
+// $Id: translation.test,v 1.8 2009/03/17 04:22:50 webchick Exp $
 
 class TranslationTestCase extends DrupalWebTestCase {
   protected $book;
@@ -49,6 +49,21 @@ class TranslationTestCase extends DrupalWebTestCase {
     $node_translation_title = $this->randomName();
     $node_translation_body = $this->randomName();
     $node_translation = $this->createTranslation($node->nid, $node_translation_title, $node_translation_body, 'es');
+
+    // Attempt to submit a duplicate translation by visiting the node/add page
+    // with identical query string.
+    $languages = language_list();
+    $this->drupalGet('node/add/page', array('query' => array('translation' => $node->nid, 'language' => 'es')));
+    $this->assertRaw(t('A translation of %title in %language already exists', array('%title' => $node_title, '%language' => $languages['es']->name)), t('Message regarding attempted duplicate translation is displayed.'));
+
+    // Attempt a resubmission of the form - this emulates using the back button
+    // to return to the page then resubmitting the form without a refresh.
+    $edit = array();
+    $edit['title'] = $this->randomName();
+    $edit['body'] = $this->randomName();
+    $this->drupalPost('node/add/page', $edit, t('Save'), array('query' => array('translation' => $node->nid, 'language' => 'es')));
+    $duplicate = $this->drupalGetNodeByTitle($edit['title']);
+    $this->assertEqual($duplicate->tnid, 0, t('The node does not have a tnid.'));
 
     // Update original and mark translation as outdated.
     $edit = array();
