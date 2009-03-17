@@ -1836,7 +1836,7 @@ function l($text, $path, array $options = array()) {
     $options['attributes']['title'] = strip_tags($options['attributes']['title']);
   }
 
-  return '<a href="' . url($path, $options) . '"' . drupal_attributes($options['attributes']) . '>' . ($options['html'] ? $text : check_plain($text)) . '</a>';
+  return '<a href="' . check_plain(url($path, $options)) . '"' . drupal_attributes($options['attributes']) . '>' . ($options['html'] ? $text : check_plain($text)) . '</a>';
 }
 
 /**
@@ -3269,7 +3269,7 @@ function drupal_render_page($page) {
  *
  * Recursively iterates over each of the array elements, generating HTML code.
  *
- * HTML generation is controlled by two properties containing theme functions, 
+ * HTML generation is controlled by two properties containing theme functions,
  * #theme and #theme_wrapper.
  *
  * #theme is the theme function called first. If it is set and the element has any
@@ -3280,13 +3280,13 @@ function drupal_render_page($page) {
  *
  * The theme function in #theme_wrapper will be called after #theme has run. It
  * can be used to add further markup around the rendered children, e.g. fieldsets
- * add the required markup for a fieldset around their rendered child elements. 
+ * add the required markup for a fieldset around their rendered child elements.
  * A wrapper theme function always has to include the element's #children property
- * in its output, as this contains the rendered children. 
+ * in its output, as this contains the rendered children.
  *
  * For example, for the form element type, by default only the #theme_wrapper
  * property is set, which adds the form markup around the rendered child elements
- * of the form. This allows you to set the #theme property on a specific form to 
+ * of the form. This allows you to set the #theme property on a specific form to
  * a custom theme function, giving you complete control over the placement of the
  * form's children while not at all having to deal with the form markup itself.
  *
@@ -3320,7 +3320,7 @@ function drupal_render(&$elements) {
   else {
     $elements += element_basic_defaults();
   }
-  
+
   // If #markup is not empty and no theme function is set, use theme_markup.
   // This allows to specify just #markup on an element without setting the #type.
   if (!empty($elements['#markup']) && empty($elements['#theme'])) {
