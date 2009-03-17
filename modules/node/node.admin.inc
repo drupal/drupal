@@ -606,7 +606,7 @@ function theme_node_admin_nodes($form) {
   }
   else {
     $rows[] = array(
-      array('data' => t('No posts available.'), 'colspan' => count($header)),
+      array('data' => t('No content available.'), 'colspan' => count($header)),
     );
   }
 
