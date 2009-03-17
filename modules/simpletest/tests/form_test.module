@@ -44,7 +44,36 @@ function form_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['form_test/form_clean_id'] = array(
+    'title' => 'form_clean_id test',
+    'page callback' => 'form_test_form_clean_id_page',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
+}
+
+/**
+ * Generate a page with three form, to test the clean_id generation.
+ */
+function form_test_form_clean_id_page() {
+  $output = drupal_get_form('form_test_test_form');
+  $output .= drupal_get_form('form_test_test_form');
+  $output .= drupal_get_form('form_test_test_form');
+  return $output;
+}
+
+/**
+ * A simple form to test clean_id generation.
+ */
+function form_test_test_form(&$form_state) {
+  $form['input'] = array(
+    '#type' => 'item',
+    '#title' => 'Test Textfield',
+    '#markup' => form_clean_id('form_test_form_clean_id_presence'),
+  );
+  return $form;
 }
 
 /**
