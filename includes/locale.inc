@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.205 2009/02/22 17:55:29 dries Exp $
+// $Id: locale.inc,v 1.206 2009/03/17 15:26:29 dries Exp $
 
 /**
  * @file
@@ -302,6 +302,7 @@ function locale_languages_predefined_form_validate($form, &$form_state) {
 
   if (!isset($form_state['values']['name'])) {
     // Predefined language selection.
+    include_once DRUPAL_ROOT . '/includes/iso.inc';
     $predefined = _locale_get_predefined_list();
     if (!isset($predefined[$langcode])) {
       form_set_error('langcode', t('Invalid language code.'));
@@ -325,6 +326,7 @@ function locale_languages_predefined_form_submit($form, &$form_state) {
   }
   else {
     // Predefined language selection.
+    include_once DRUPAL_ROOT . '/includes/iso.inc';
     $predefined = _locale_get_predefined_list();
     locale_add_language($langcode);
     drupal_set_message(t('The language %language has been created and can now be used. More information is available on the <a href="@locale-help">help screen</a>.', array('%language' => t($predefined[$langcode][0]), '@locale-help' => url('admin/help/locale'))));
@@ -736,6 +738,7 @@ function locale_translate_import_form_submit($form, &$form_state) {
     $languages = language_list('language', TRUE);
     $langcode = $form_state['values']['langcode'];
     if (!isset($languages[$langcode])) {
+      include_once DRUPAL_ROOT . '/includes/iso.inc';
       $predefined = _locale_get_predefined_list();
       locale_add_language($langcode);
       drupal_set_message(t('The language %language has been created.', array('%language' => t($predefined[$langcode][0]))));
@@ -1059,6 +1062,7 @@ function locale_add_language($langcode, $name = NULL, $native = NULL, $direction
 
   // If name was not set, we add a predefined language.
   if (!isset($name)) {
+    include_once DRUPAL_ROOT . '/includes/iso.inc';
     $predefined = _locale_get_predefined_list();
     $name = $predefined[$langcode][0];
     $native = isset($predefined[$langcode][1]) ? $predefined[$langcode][1] : $predefined[$langcode][0];
@@ -2371,6 +2375,7 @@ function _locale_translate_language_list($translation, $limit_language) {
  * Prepares the language code list for a select form item with only the unsupported ones
  */
 function _locale_prepare_predefined_list() {
+  include_once DRUPAL_ROOT . '/includes/iso.inc';
   $languages = language_list();
   $predefined = _locale_get_predefined_list();
   foreach ($predefined as $key => $value) {
@@ -2391,193 +2396,6 @@ function _locale_prepare_predefined_list() {
   return $predefined;
 }
 
-/**
- * Some of the common languages with their English and native names
- *
- * Based on ISO 639 and http://people.w3.org/rishida/names/languages.html
- */
-function _locale_get_predefined_list() {
-  return array(
-    "aa" => array("Afar"),
-    "ab" => array("Abkhazian", "аҧсуа бызшәа"),
-    "ae" => array("Avestan"),
-    "af" => array("Afrikaans"),
-    "ak" => array("Akan"),
-    "am" => array("Amharic", "አማርኛ"),
-    "ar" => array("Arabic", /* Left-to-right marker "‭" */ "العربية", LANGUAGE_RTL),
-    "as" => array("Assamese"),
-    "av" => array("Avar"),
-    "ay" => array("Aymara"),
-    "az" => array("Azerbaijani", "azərbaycan"),
-    "ba" => array("Bashkir"),
-    "be" => array("Belarusian", "Беларуская"),
-    "bg" => array("Bulgarian", "Български"),
-    "bh" => array("Bihari"),
-    "bi" => array("Bislama"),
-    "bm" => array("Bambara", "Bamanankan"),
-    "bn" => array("Bengali"),
-    "bo" => array("Tibetan"),
-    "br" => array("Breton"),
-    "bs" => array("Bosnian", "Bosanski"),
-    "ca" => array("Catalan", "Català"),
-    "ce" => array("Chechen"),
-    "ch" => array("Chamorro"),
-    "co" => array("Corsican"),
-    "cr" => array("Cree"),
-    "cs" => array("Czech", "Čeština"),
-    "cu" => array("Old Slavonic"),
-    "cv" => array("Chuvash"),
-    "cy" => array("Welsh", "Cymraeg"),
-    "da" => array("Danish", "Dansk"),
-    "de" => array("German", "Deutsch"),
-    "dv" => array("Maldivian"),
-    "dz" => array("Bhutani"),
-    "ee" => array("Ewe", "Ɛʋɛ"),
-    "el" => array("Greek", "Ελληνικά"),
-    "en" => array("English"),
-    "eo" => array("Esperanto"),
-    "es" => array("Spanish", "Español"),
-    "et" => array("Estonian", "Eesti"),
-    "eu" => array("Basque", "Euskera"),
-    "fa" => array("Persian", /* Left-to-right marker "‭" */ "فارسی", LANGUAGE_RTL),
-    "ff" => array("Fulah", "Fulfulde"),
-    "fi" => array("Finnish", "Suomi"),
-    "fj" => array("Fiji"),
-    "fo" => array("Faeroese"),
-    "fr" => array("French", "Français"),
-    "fy" => array("Frisian", "Frysk"),
-    "ga" => array("Irish", "Gaeilge"),
-    "gd" => array("Scots Gaelic"),
-    "gl" => array("Galician", "Galego"),
-    "gn" => array("Guarani"),
-    "gu" => array("Gujarati"),
-    "gv" => array("Manx"),
-    "ha" => array("Hausa"),
-    "he" => array("Hebrew", /* Left-to-right marker "‭" */ "עברית", LANGUAGE_RTL),
-    "hi" => array("Hindi", "हिन्दी"),
-    "ho" => array("Hiri Motu"),
-    "hr" => array("Croatian", "Hrvatski"),
-    "hu" => array("Hungarian", "Magyar"),
-    "hy" => array("Armenian", "Հայերեն"),
-    "hz" => array("Herero"),
-    "ia" => array("Interlingua"),
-    "id" => array("Indonesian", "Bahasa Indonesia"),
-    "ie" => array("Interlingue"),
-    "ig" => array("Igbo"),
-    "ik" => array("Inupiak"),
-    "is" => array("Icelandic", "Íslenska"),
-    "it" => array("Italian", "Italiano"),
-    "iu" => array("Inuktitut"),
-    "ja" => array("Japanese", "日本語"),
-    "jv" => array("Javanese"),
-    "ka" => array("Georgian"),
-    "kg" => array("Kongo"),
-    "ki" => array("Kikuyu"),
-    "kj" => array("Kwanyama"),
-    "kk" => array("Kazakh", "Қазақ"),
-    "kl" => array("Greenlandic"),
-    "km" => array("Cambodian"),
-    "kn" => array("Kannada", "ಕನ್ನಡ"),
-    "ko" => array("Korean", "한국어"),
-    "kr" => array("Kanuri"),
-    "ks" => array("Kashmiri"),
-    "ku" => array("Kurdish", "Kurdî"),
-    "kv" => array("Komi"),
-    "kw" => array("Cornish"),
-    "ky" => array("Kirghiz", "Кыргыз"),
-    "la" => array("Latin", "Latina"),
-    "lb" => array("Luxembourgish"),
-    "lg" => array("Luganda"),
-    "ln" => array("Lingala"),
-    "lo" => array("Laothian"),
-    "lt" => array("Lithuanian", "Lietuvių"),
-    "lv" => array("Latvian", "Latviešu"),
-    "mg" => array("Malagasy"),
-    "mh" => array("Marshallese"),
-    "mi" => array("Maori"),
-    "mk" => array("Macedonian", "Македонски"),
-    "ml" => array("Malayalam", "മലയാളം"),
-    "mn" => array("Mongolian"),
-    "mo" => array("Moldavian"),
-    "mr" => array("Marathi"),
-    "ms" => array("Malay", "Bahasa Melayu"),
-    "mt" => array("Maltese", "Malti"),
-    "my" => array("Burmese"),
-    "na" => array("Nauru"),
-    "nd" => array("North Ndebele"),
-    "ne" => array("Nepali"),
-    "ng" => array("Ndonga"),
-    "nl" => array("Dutch", "Nederlands"),
-    "nb" => array("Norwegian Bokmål", "Bokmål"),
-    "nn" => array("Norwegian Nynorsk", "Nynorsk"),
-    "nr" => array("South Ndebele"),
-    "nv" => array("Navajo"),
-    "ny" => array("Chichewa"),
-    "oc" => array("Occitan"),
-    "om" => array("Oromo"),
-    "or" => array("Oriya"),
-    "os" => array("Ossetian"),
-    "pa" => array("Punjabi"),
-    "pi" => array("Pali"),
-    "pl" => array("Polish", "Polski"),
-    "ps" => array("Pashto", /* Left-to-right marker "‭" */ "پښتو", LANGUAGE_RTL),
-    "pt-pt" => array("Portuguese, Portugal", "Português"),
-    "pt-br" => array("Portuguese, Brazil", "Português"),
-    "qu" => array("Quechua"),
-    "rm" => array("Rhaeto-Romance"),
-    "rn" => array("Kirundi"),
-    "ro" => array("Romanian", "Română"),
-    "ru" => array("Russian", "Русский"),
-    "rw" => array("Kinyarwanda"),
-    "sa" => array("Sanskrit"),
-    "sc" => array("Sardinian"),
-    "sd" => array("Sindhi"),
-    "se" => array("Northern Sami"),
-    "sg" => array("Sango"),
-    "sh" => array("Serbo-Croatian"),
-    "si" => array("Singhalese"),
-    "sk" => array("Slovak", "Slovenčina"),
-    "sl" => array("Slovenian", "Slovenščina"),
-    "sm" => array("Samoan"),
-    "sn" => array("Shona"),
-    "so" => array("Somali"),
-    "sq" => array("Albanian", "Shqip"),
-    "sr" => array("Serbian", "Српски"),
-    "ss" => array("Siswati"),
-    "st" => array("Sesotho"),
-    "su" => array("Sudanese"),
-    "sv" => array("Swedish", "Svenska"),
-    "sw" => array("Swahili", "Kiswahili"),
-    "ta" => array("Tamil", "தமிழ்"),
-    "te" => array("Telugu", "తెలుగు"),
-    "tg" => array("Tajik"),
-    "th" => array("Thai", "ภาษาไทย"),
-    "ti" => array("Tigrinya"),
-    "tk" => array("Turkmen"),
-    "tl" => array("Tagalog"),
-    "tn" => array("Setswana"),
-    "to" => array("Tonga"),
-    "tr" => array("Turkish", "Türkçe"),
-    "ts" => array("Tsonga"),
-    "tt" => array("Tatar", "Tatarça"),
-    "tw" => array("Twi"),
-    "ty" => array("Tahitian"),
-    "ug" => array("Uighur"),
-    "uk" => array("Ukrainian", "Українська"),
-    "ur" => array("Urdu", /* Left-to-right marker "‭" */ "اردو", LANGUAGE_RTL),
-    "uz" => array("Uzbek", "o'zbek"),
-    "ve" => array("Venda"),
-    "vi" => array("Vietnamese", "Tiếng Việt"),
-    "wo" => array("Wolof"),
-    "xh" => array("Xhosa", "isiXhosa"),
-    "yi" => array("Yiddish"),
-    "yo" => array("Yoruba", "Yorùbá"),
-    "za" => array("Zhuang"),
-    "zh-hans" => array("Chinese, Simplified", "简体中文"),
-    "zh-hant" => array("Chinese, Traditional", "繁體中文"),
-    "zu" => array("Zulu", "isiZulu"),
-  );
-}
 /**
  * @} End of "locale-api-languages-predefined"
  */
@@ -2736,3 +2554,18 @@ function _locale_batch_language_finished($success, $results) {
 /**
  * @} End of "locale-autoimport"
  */
+
+/**
+ * Get list of all predefined and custom countries.
+ *
+ * @return
+ *   An array of all country code => country name pairs.
+ */
+function country_get_list() {
+  include_once DRUPAL_ROOT . '/includes/iso.inc';
+  $countries = _country_get_predefined_list();
+  // Allow other modules to modify the country list.
+  drupal_alter('countries', $countries);
+  return $countries;
+}
+

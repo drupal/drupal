@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.43 2009/03/17 02:26:07 webchick Exp $
+// $Id: openid.module,v 1.44 2009/03/17 15:26:29 dries Exp $
 
 /**
  * @file
@@ -346,10 +346,12 @@ function openid_association($op_endpoint) {
   module_load_include('inc', 'openid');
 
   // Remove Old Associations:
-  db_query("DELETE FROM {openid_association} WHERE created + expires_in < %d", REQUEST_TIME);
+  db_delete('openid_association')
+    ->condition('created + expires_in', REQUEST_TIME, '<')
+    ->execute();
 
   // Check to see if we have an association for this IdP already
-  $assoc_handle = db_result(db_query("SELECT assoc_handle FROM {openid_association} WHERE idp_endpoint_uri = '%s'", $op_endpoint));
+  $assoc_handle = db_query("SELECT assoc_handle FROM {openid_association} WHERE idp_endpoint_uri = :endpoint", array(':endpoint' => $op_endpoint))->fetchField();
   if (empty($assoc_handle)) {
     $mod = OPENID_DH_DEFAULT_MOD;
     $gen = OPENID_DH_DEFAULT_GEN;
@@ -381,12 +383,19 @@ function openid_association($op_endpoint) {
       $shared = bcpowmod($spub, $private, $mod);
       $assoc_response['mac_key'] = base64_encode(_openid_dh_xorsecret($shared, $enc_mac_key));
     }
-    db_query("INSERT INTO {openid_association} (idp_endpoint_uri, session_type, assoc_handle, assoc_type, expires_in, mac_key, created) VALUES('%s', '%s', '%s', '%s', %d, '%s', %d)",
-             $op_endpoint, $assoc_response['session_type'], $assoc_response['assoc_handle'], $assoc_response['assoc_type'], $assoc_response['expires_in'], $assoc_response['mac_key'], REQUEST_TIME);
-
+    db_insert('openid_association')
+     ->fields(array(
+       'idp_endpoint_uri' => $op_endpoint,
+       'session_type' => $assoc_response['session_type'],
+       'assoc_handle' => $assoc_response['assoc_handle'],
+       'assoc_type' => $assoc_response['assoc_type'],
+       'expires_in' => $assoc_response['expires_in'],
+       'mac_key' => $assoc_response['mac_key'],
+       'created' => REQUEST_TIME,
+      ))
+      ->execute();
     $assoc_handle = $assoc_response['assoc_handle'];
   }
-
   return $assoc_handle;
 }
 
@@ -512,7 +521,7 @@ function openid_verify_assertion($op_endpoint, $response) {
 
   $valid = FALSE;
 
-  $association = db_fetch_object(db_query("SELECT * FROM {openid_association} WHERE assoc_handle = '%s'", $response['openid.assoc_handle']));
+  $association = db_query("SELECT * FROM {openid_association} WHERE assoc_handle = :assoc_handle", array(':assoc_handle' => $response['openid.assoc_handle']))->fetchObject();
   if ($association && isset($association->session_type)) {
     $keys_to_sign = explode(',', $response['openid.signed']);
     $self_sig = _openid_signature($association, $response, $keys_to_sign);

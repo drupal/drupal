@@ -1,5 +1,5 @@
 <?php
-// $Id: user.install,v 1.19 2009/02/26 07:30:29 webchick Exp $
+// $Id: user.install,v 1.20 2009/03/17 15:26:29 dries Exp $
 
 /**
  * Implementation of hook_schema().
@@ -351,7 +351,7 @@ function user_update_7002(&$sandbox) {
       $ret[] = array('success' => TRUE, 'query' => "Migrate user time zones.");
       if ($sandbox['user_not_migrated'] > 0) {
         variable_set('empty_timezone_message', 1);
-        drupal_set_message('Some user time zones have been emptied and need to be set to the correct values. Use the new ' . l('time zone options', 'admin/settings/date-time') . ' to choose whether to remind users at login to set the correct time zone.', 'warning');
+        drupal_set_message('Some user time zones have been emptied and need to be set to the correct values. Use the new ' . l('time zone options', 'admin/settings/regional-settings') . ' to choose whether to remind users at login to set the correct time zone.', 'warning');
       }
     }
   }

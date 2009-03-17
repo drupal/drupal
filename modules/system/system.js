@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.20 2009/03/13 23:15:09 webchick Exp $
+// $Id: system.js,v 1.21 2009/03/17 15:26:29 dries Exp $
 (function($) {
 
 /**
@@ -99,7 +99,7 @@ Drupal.behaviors.copyFieldValue = {
 };
 
 /**
- * Show/hide custom format sections on the date-time settings page.
+ * Show/hide custom format sections on the regional settings page.
  */
 Drupal.behaviors.dateTime = {
   attach: function(context, settings) {

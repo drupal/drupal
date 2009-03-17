@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.130 2009/03/09 11:44:54 dries Exp $
+// $Id: system.admin.inc,v 1.131 2009/03/17 15:26:29 dries Exp $
 
 /**
  * @file
@@ -1524,11 +1524,16 @@ function system_rss_feeds_settings() {
  *
  * @ingroup forms
  * @see system_settings_form()
- * @see system_date_time_settings_submit()
+ * @see system_regional_settings_submit()
  */
-function system_date_time_settings() {
+function system_regional_settings() {
   drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
-  drupal_add_js(array('dateTime' => array('lookup' => url('admin/settings/date-time/lookup'))), 'setting');
+  drupal_add_js(array('dateTime' => array('lookup' => url('admin/settings/regional-settings/lookup'))), 'setting');
+
+  include_once DRUPAL_ROOT . '/includes/locale.inc';
+  $countries = country_get_list();
+  // Add a 'No default country' option to the start of the list.
+  $countries = array_merge(array('' => t('No default country')), $countries);
 
   // Date settings:
   $zones = system_time_zones();
@@ -1563,12 +1568,21 @@ function system_date_time_settings() {
     '#title' => t('Locale settings'),
   );
 
+  $form['locale']['site_default_country'] = array(
+    '#type' => 'select',
+    '#title' => t('Default country'),
+    '#default_value' => variable_get('site_default_country', ''),
+    '#options' => $countries,
+    '#description' => t('Select the default country for the site.'),
+    '#attributes' => array('class' => 'country-detect'),
+  );
+
   $form['locale']['date_default_timezone'] = array(
     '#type' => 'select',
     '#title' => t('Default time zone'),
     '#default_value' => variable_get('date_default_timezone', date_default_timezone_get()),
     '#options' => $zones,
-    '#description' => t('Select the default site time zone.')
+    '#description' => t('Select the default time zone for the site.'),
   );
 
   $form['locale']['date_first_day'] = array(
@@ -1696,9 +1710,9 @@ function system_date_time_settings() {
 }
 
 /**
- * Process system_date_time_settings form submissions.
+ * Process system_regional_settings form submissions.
  */
-function system_date_time_settings_submit($form, &$form_state) {
+function system_regional_settings_submit($form, &$form_state) {
   if ($form_state['values']['date_format_short'] == 'custom') {
     $form_state['values']['date_format_short'] = $form_state['values']['date_format_short_custom'];
   }
