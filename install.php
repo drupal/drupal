@@ -567,7 +567,7 @@ function install_select_locale($profilename) {
  * Form API array definition for language selection.
  */
 function install_select_locale_form(&$form_state, $locales) {
-  include_once DRUPAL_ROOT . '/includes/locale.inc';
+  include_once DRUPAL_ROOT . '/includes/iso.inc';
   $languages = _locale_get_predefined_list();
   foreach ($locales as $locale) {
     // Try to use verbose locale name
@@ -953,6 +953,7 @@ function install_task_list($active = NULL) {
  * Form API array definition for site configuration.
  */
 function install_configure_form(&$form_state, $url) {
+  include_once DRUPAL_ROOT . '/includes/locale.inc';
 
   $form['intro'] = array(
     '#markup' => st('To configure your website, please provide the following information.'),
@@ -1016,6 +1017,18 @@ function install_configure_form(&$form_state, $url) {
     '#title' => st('Server settings'),
     '#collapsible' => FALSE,
   );
+
+  $countries = country_get_list();
+  $countries = array_merge(array('' => st('No default country')), $countries);
+  $form['server_settings']['site_default_country'] = array(
+    '#type' => 'select',
+    '#title' => t('Default country'),
+    '#default_value' => variable_get('site_default_country', ''),
+    '#options' => $countries,
+    '#description' => st('Select the default country for the site.'),
+    '#weight' => 0,
+  );
+
   $form['server_settings']['date_default_timezone'] = array(
     '#type' => 'select',
     '#title' => st('Default time zone'),
@@ -1089,6 +1102,7 @@ function install_configure_form_submit($form, &$form_state) {
   variable_set('site_name', $form_state['values']['site_name']);
   variable_set('site_mail', $form_state['values']['site_mail']);
   variable_set('date_default_timezone', $form_state['values']['date_default_timezone']);
+  variable_set('site_default_country', $form_state['values']['site_default_country']);
 
   // Enable update.module if this option was selected.
   if ($form_state['values']['update_status_module'][1]) {

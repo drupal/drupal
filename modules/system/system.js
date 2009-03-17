@@ -99,7 +99,7 @@ Drupal.behaviors.copyFieldValue = {
 };
 
 /**
- * Show/hide custom format sections on the date-time settings page.
+ * Show/hide custom format sections on the regional settings page.
  */
 Drupal.behaviors.dateTime = {
   attach: function(context, settings) {
