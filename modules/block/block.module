@@ -386,6 +386,7 @@ function block_box_form($edit = array()) {
     '#text_format' => isset($edit['format']) ? $edit['format'] : FILTER_FORMAT_DEFAULT,
     '#rows' => 15,
     '#description' => t('The content of the block as shown to the user.'),
+    '#required' => TRUE,
     '#weight' => -17,
   );
 
