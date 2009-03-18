@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.inc,v 1.25 2009/03/08 04:25:03 webchick Exp $
+// $Id: actions.inc,v 1.26 2009/03/18 09:50:46 dries Exp $
 
 /**
  * @file
@@ -285,12 +285,8 @@ function actions_synchronize($delete_orphans = FALSE) {
     $orphaned = array_keys($actions_in_db);
 
     if ($delete_orphans) {
-      $results = db_select('actions')
-        ->addField('actions', 'aid')
-        ->addField('actions', 'description')
-        ->condition('callback', $orphaned, 'IN')
-        ->execute();
-      foreach ($results as $action) {
+      $actions = db_query('SELECT aid, description FROM {actions} WHERE callback IN (:orphaned)', array(':orphaned' => $orphaned))->fetchAll();
+      foreach ($actions as $action) {
         actions_delete($action->aid);
         watchdog('actions', "Removed orphaned action '%action' from database.", array('%action' => filter_xss_admin($action->description)));
       }
