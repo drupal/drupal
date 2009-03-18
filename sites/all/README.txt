@@ -1,9 +1,8 @@
-// $Id: README.txt,v 1.3 2006/12/23 15:35:51 dries Exp $
+// $Id: README.txt,v 1.4 2009/03/18 09:53:04 dries Exp $
 
 This directory should be used to place downloaded and custom modules
-and themes which are common to all sites. This will allow you to
-more easily update Drupal core files. These modules and themes should
-be placed in subdirectories called modules and themes as follows:
+and themes which are common to all sites. Keeping contributed and
+custom modules and themes in the sites directory will aid in upgrading
+Drupal core files. Place contributed and custom modules and themes in
+the sites/all/modules and sites/all/themes directories respectively.
 
-  sites/all/modules
-  sites/all/themes
