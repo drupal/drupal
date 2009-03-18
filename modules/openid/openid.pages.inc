@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.pages.inc,v 1.14 2009/03/17 14:02:49 dries Exp $
+// $Id: openid.pages.inc,v 1.15 2009/03/18 09:49:31 dries Exp $
 
 /**
  * @file
@@ -89,7 +89,7 @@ function openid_user_add_validate($form, &$form_state) {
  * Menu callback; Delete the specified OpenID identity from the system.
  */
 function openid_user_delete_form($form_state, $account, $aid = 0) {
-  $authname = db_query('SELECT authname FROM {authmap} WHERE uid = :uid AND aid = :aid', array(
+  $authname = db_query("SELECT authname FROM {authmap} WHERE uid = :uid AND aid = :aid AND module = 'openid'", array(
     ':uid' => $account->uid,
     ':aid' => $aid,
   ))
@@ -99,12 +99,12 @@ function openid_user_delete_form($form_state, $account, $aid = 0) {
 
 function openid_user_delete_form_submit(&$form_state, $form_values) {
   $query = db_delete('authmap')
-    ->condition('uid', $form_state['#parameters'][2]->uid)
-    ->condition('aid', $form_state['#parameters'][3])
+    ->condition('uid', $form_state['#args'][0]->uid)
+    ->condition('aid', $form_state['#args'][1])
+    ->condition('module', 'openid')
     ->execute();
   if ($query) {
     drupal_set_message(t('OpenID deleted.'));
   }
   $form_state['#redirect'] = 'user/'. $form_state['#args'][0]->uid .'/openid';
 }
-
