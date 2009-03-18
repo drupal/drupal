@@ -1351,10 +1351,11 @@ function ip_address($reset = FALSE) {
         // the XFF header if request really comes from one of them.
         $reverse_proxy_addresses = variable_get('reverse_proxy_addresses', array());
         if (!empty($reverse_proxy_addresses) && in_array($ip_address, $reverse_proxy_addresses, TRUE)) {
-          // If there are several arguments, we need to check the most
-          // recently added one, i.e. the last one.
+          // The "X-Forwarded-For" header is a comma+space separated list of IP addresses,
+          // the left-most being the farthest downstream client. If there is more than
+          // one proxy, we are interested in the most recent one (i.e. last one in the list).
           $ip_address_parts = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-          $ip_address = array_pop($ip_address_parts);
+          $ip_address = trim(array_pop($ip_address_parts));
         }
       }
 
