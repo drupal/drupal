@@ -1,4 +1,4 @@
-/* $Id: forum.css,v 1.5 2007/07/22 07:01:07 dries Exp $ */
+/* $Id: forum.css,v 1.6 2009/03/20 20:53:38 dries Exp $ */
 
 #forum .description {
   font-size: 0.9em;
@@ -6,9 +6,6 @@
 }
 #forum td.created, #forum td.posts, #forum td.topics, #forum td.last-reply, #forum td.replies, #forum td.pager {
   white-space: nowrap;
-}
-#forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager {
-  text-align: center;
 }
 #forum tr td.forum {
   padding-left: 25px; /* LTR */
