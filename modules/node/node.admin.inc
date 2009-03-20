@@ -168,8 +168,6 @@ function node_filters() {
  * Build query for node administration filters based on session.
  */
 function node_build_filter_query() {
-  $filters = node_filters();
-
   // Build query
   $where = $args = array();
   $join = '';
