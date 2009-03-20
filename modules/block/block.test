@@ -1,5 +1,5 @@
 <?php
-// $Id: block.test,v 1.12 2009/03/14 16:41:29 webchick Exp $
+// $Id: block.test,v 1.13 2009/03/20 19:18:09 dries Exp $
 
 class BlockTestCase extends DrupalWebTestCase {
   protected $regions;
@@ -16,7 +16,7 @@ class BlockTestCase extends DrupalWebTestCase {
     parent::setUp();
 
     // Create and login user
-    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer filters'));
+    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer filters', 'access administration pages'));
     $this->drupalLogin($admin_user);
 
     // Define the existing regions
@@ -88,8 +88,8 @@ class BlockTestCase extends DrupalWebTestCase {
   function testBlock() {
     // Select the Navigation block to be configured and moved.
     $block = array();
-    $block['module'] = 'user';
-    $block['delta'] = 'navigation';
+    $block['module'] = 'system';
+    $block['delta'] = 'management';
     $block['title'] = $this->randomName(8);
 
     // Set block title to confirm that interface works and override any custom titles.

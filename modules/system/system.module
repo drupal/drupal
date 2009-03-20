@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.673 2009/03/17 15:26:29 dries Exp $
+// $Id: system.module,v 1.674 2009/03/20 19:18:10 dries Exp $
 
 /**
  * @file
@@ -458,6 +458,7 @@ function system_menu() {
     'access arguments' => array('access administration pages'),
     'page callback' => 'system_main_admin_page',
     'weight' => 9,
+    'menu_name' => 'management',
   );
   $items['admin/compact'] = array(
     'title' => 'Compact mode',
@@ -880,13 +881,19 @@ function system_user_timezone(&$edit, &$form) {
  * Implementation of hook_block_list().
  */
 function system_block_list() {
-  $image_path = 'misc/' . variable_get('drupal_badge_color', 'powered-blue') . '-' . variable_get('drupal_badge_size', '80x15') . '.png';
   $blocks['powered-by'] = array(
     'info' => t('Powered by Drupal'),
     'weight' => '10',
      // Not worth caching.
     'cache' => BLOCK_NO_CACHE,
   );
+  // System-defined menu blocks.
+  foreach (menu_list_system_menus() as $menu_name => $title) {
+    $blocks[$menu_name]['info'] = t($title);
+    // Menu blocks can't be cached because each menu item can have
+    // a custom access callback. menu.inc manages its own caching.
+    $blocks[$menu_name]['cache'] = BLOCK_NO_CACHE;
+  }
   return $blocks;
 }
 
@@ -929,13 +936,28 @@ function system_block_save($delta = '', $edit = NULL) {
 /**
  * Implementation of hook_block_view().
  *
- * Generate a block with a promotional link to Drupal.org.
+ * Generate a block with a promotional link to Drupal.org and
+ * all system menu blocks.
  */
 function system_block_view($delta = '') {
-  $image_path = 'misc/' . variable_get('drupal_badge_color', 'powered-blue') . '-' . variable_get('drupal_badge_size', '80x15') . '.png';
-  $block['subject'] = NULL; // Don't display a title
-  $block['content'] = theme('system_powered_by', $image_path);
-  return $block;
+  $block = array();
+  switch ($delta) {
+    case 'powered-by':
+      $image_path = 'misc/' . variable_get('drupal_badge_color', 'powered-blue') . '-' . variable_get('drupal_badge_size', '80x15') . '.png';
+      // Don't display a title.
+      $block['subject'] = NULL;
+      $block['content'] = theme('system_powered_by', $image_path);
+      return $block;
+    default:
+      // All system menu blocks.
+      $system_menus = menu_list_system_menus();
+      if (isset($system_menus[$delta])) {
+        $block['subject'] = t($system_menus[$delta]);
+        $block['content'] = menu_tree($delta);
+        return $block;
+      }
+      break;
+  }
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.38 2009/03/17 12:41:54 dries Exp $
+// $Id: default.profile,v 1.39 2009/03/20 19:18:11 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -91,9 +91,10 @@ function default_profile_task_list() {
  */
 function default_profile_tasks(&$task, $url) {
   
-  // Enable 3 standard blocks.
+  // Enable 4 standard blocks.
   db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', 'login', 'garland', 1, 0, 'left', '', -1);
-  db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', 'navigation', 'garland', 1, 0, 'left', '', -1);
+  db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'system', 'navigation', 'garland', 1, 0, 'left', '', -1);
+  db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'system', 'management', 'garland', 1, 1, 'left', '', -1);
   db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'system', 'powered-by', 'garland', 1, 10, 'footer', '', -1);
 
   // Insert default user-defined node types into the database. For a complete
@@ -155,8 +156,6 @@ function default_profile_tasks(&$task, $url) {
 
   // Save some default links.
   $link = array('link_path' => 'admin/build/menu-customize/main-menu/add', 'link_title' => 'Add a main menu link', 'menu_name' => 'main-menu');
-  menu_link_save($link);
-  $link = array('link_path' => 'admin/build/menu-customize/secondary-menu/add', 'link_title' => 'Add a secondary menu link', 'menu_name' => 'secondary-menu');
   menu_link_save($link);
 }
 

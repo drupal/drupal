@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.install,v 1.14 2008/11/15 13:01:07 dries Exp $
+// $Id: menu.install,v 1.15 2009/03/20 19:18:10 dries Exp $
 
 /**
  * Implementation of hook_install().
@@ -7,11 +7,19 @@
 function menu_install() {
   // Create tables.
   drupal_install_schema('menu');
-
+  $system_menus = menu_list_system_menus();
+  $descriptions = array(
+    'navigation' => 'The <em>Navigation</em> menu contains links such as Recent posts (if the Tracker module is enabled). Non-administrative links are added to this menu by default by modules.',
+    'user-menu' => "The <em>User menu</em> contains links to the user's account, and 'Log out' and is the source for the User links that may be displayed by the theme.",
+    'management' => 'The <em>Management</em> menu contains links for content creation, site building, user management, and similar site activites.',
+    'main-menu' => 'The <em>Main menu</em> is the default source for the Main links which are often used by themes to show the major sections of a site.',
+    'secondary-menu' => 'The <em>Secondary menu</em> is the default source for the Secondary links which are often used for legal notices, contact details, and other navigation items that play a lesser role than the Main links.',
+  );
   $t = get_t();
-  db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", 'navigation', $t('Navigation'), $t('The navigation menu is provided by Drupal and is the main interactive menu for any site. It is usually the only menu that contains personalized links for authenticated users, and is often not even visible to anonymous users.'));
-  db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", 'main-menu', $t('Main menu'), $t('The Main menu is often used by themes to show the major sections of a site.'));
-  db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", 'secondary-menu', $t('Secondary menu'), $t('The Secondary menu is often used for pages like legal notices, contact details, and other navigation items that play a lesser role than the Main menu.'));
+  $query = db_insert('menu_custom')->fields(array('menu_name', 'title', 'description'));
+  foreach ($system_menus as $menu_name => $title) {
+    $query->values(array('menu_name' => $menu_name, 'title' => $t($title), 'description' => $t($descriptions[$menu_name])))->execute();
+  }
 }
 
 /**

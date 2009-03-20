@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.179 2009/03/08 04:25:04 webchick Exp $
+// $Id: menu.module,v 1.180 2009/03/20 19:18:10 dries Exp $
 
 /**
  * @file
@@ -18,18 +18,18 @@ define('MENU_MAX_MENU_NAME_LENGTH_UI', 27);
 function menu_help($path, $arg) {
   switch ($path) {
     case 'admin/help#menu':
-      $output = '<p>' . t("The menu module provides an interface to control and customize Drupal's powerful menu system. Menus are a hierarchical collection of links, or menu items, used to navigate a website, and are positioned and displayed using Drupal's flexible block system. By default, three menus are created during installation: <em>Navigation</em>, <em>Main menu</em>, and <em>Secondary menu</em>. The <em>Navigation</em> menu contains most links necessary for working with and navigating your site, and is often displayed in either the left or right sidebar. Most Drupal themes also provide support for the <em>Main menu</em> and <em>Secondary menu</em>, by displaying them in either the header or footer of each page. By default, the <em>Main menu</em> and <em>Secondary menu</em> contain no menu items but may be configured to contain custom menu items specific to your site.") . '</p>';
-      $output .= '<p>' . t('The <a href="@menu">menus page</a> displays all menus currently available on your site. Select a menu from this list to add or edit a menu item, or to rearrange items within the menu. Create new menus using the <a href="@add-menu">add menu page</a> (the block containing a new menu must also be enabled on the <a href="@blocks">blocks administration page</a>).', array('@menu' => url('admin/build/menu'), '@add-menu' => url('admin/build/menu/add'), '@blocks' => url('admin/build/block'))) . '</p>';
+      $output = '<p>' . t("The menu module provides an interface to control and customize Drupal's powerful menu system. Menus are a hierarchical collection of links used to navigate a website.  Each menu is rendered in a block that may be positioned and displayed using Drupal's flexible block system. Five menus are provided by Drupal and are always present: <em>Navigation</em>, <em>Management</em>, <em>User menu</em>, <em>Main menu</em>, and <em>Secondary menu</em>. The <em>Management</em> menu contains links for administration and content creation, while the <em>Navigation</em> menu is the default location for site navigation links created by newly enabled modules. Both of these are often displayed in either the left or right sidebar. Most Drupal themes also provide support for the <em>Main links</em> and <em>Secondary links</em>, by displaying them in either the header or footer of each page. The <em>Main menu</em> is the default source for the <em>Main links</em> and the <em>User menu</em> is the default source for the <em>Secondary links</em>.  By default, the <em>User menu</em> has links to take the current user to their account or allow them to log out, while the <em>Main menu</em> and <em>Secondary menu</em> contain no menu links but may be configured to contain custom menu items specific to your site. You may create an unlimited number of additional menus, each of which will automatically have an associated block.") . '</p>';
+      $output .= '<p>' . t('The <a href="@menu">menus page</a> displays all menus currently available on your site. Select a menu from this list to add or edit a menu link, or to rearrange links within the menu. Create new menus using the <a href="@add-menu">add menu page</a> (the block containing a new menu must also be enabled on the <a href="@blocks">blocks administration page</a>).', array('@menu' => url('admin/build/menu'), '@add-menu' => url('admin/build/menu/add'), '@blocks' => url('admin/build/block'))) . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@menu">Menu module</a>.', array('@menu' => 'http://drupal.org/handbook/modules/menu/')) . '</p>';
       return $output;
     case 'admin/build/menu':
-      return '<p>' . t('Menus are a collection of links (menu items) used to navigate a website. The menus currently available on your site are displayed below. Select a menu from this list to manage its menu items.') . '</p>';
+      return '<p>' . t('Menus are a collection of links used to navigate a website. If the Block module is enabled, each menu has a corresponding block that is managed on the <a href="@blocks">blocks administration page</a>. Select an existing menu from this list to manage its menu links.', array('@blocks' => url('admin/build/block'))) . '</p>';
     case 'admin/build/menu/add':
       return '<p>' . t('Enter the name for your new menu. Remember to enable the newly created block in the <a href="@blocks">blocks administration page</a>.', array('@blocks' => url('admin/build/block'))) . '</p>';
     case 'admin/build/menu-customize/%':
-      return '<p>' . t('To rearrange menu items, grab a drag-and-drop handle under the <em>Menu item</em> column and drag the items (or group of items) to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.') . '</p>';
+      return '<p>' . t('To rearrange menu links, grab a drag-and-drop handle under the <em>Menu link</em> column and drag the link (or group of links) to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.') . '</p>';
     case 'admin/build/menu/item/add':
-      return '<p>' . t('Enter the title and path for your new menu item.') . '</p>';
+      return '<p>' . t('Enter the title and path for your new menu link.') . '</p>';
   }
 }
 
@@ -86,12 +86,12 @@ function menu_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['admin/build/menu-customize/%menu/list'] = array(
-    'title' => 'List items',
+    'title' => 'List links',
     'weight' => -10,
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/build/menu-customize/%menu/add'] = array(
-    'title' => 'Add item',
+    'title' => 'Add link',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_edit_item', 'add', NULL, 3),
     'access arguments' => array('administer menu'),
@@ -112,21 +112,21 @@ function menu_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['admin/build/menu/item/%menu_link/edit'] = array(
-    'title' => 'Edit menu item',
+    'title' => 'Edit menu link',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_edit_item', 'edit', 4, NULL),
     'access arguments' => array('administer menu'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/build/menu/item/%menu_link/reset'] = array(
-    'title' => 'Reset menu item',
+    'title' => 'Reset menu link',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_reset_item_confirm', 4),
     'access arguments' => array('administer menu'),
     'type' => MENU_CALLBACK,
   );
   $items['admin/build/menu/item/%menu_link/delete'] = array(
-    'title' => 'Delete menu item',
+    'title' => 'Delete menu link',
     'page callback' => 'menu_item_delete_page',
     'page arguments' => array(4),
     'access arguments' => array('administer menu'),
@@ -260,9 +260,7 @@ function menu_reset_item($item) {
  * Implementation of hook_block_list().
  */
 function menu_block_list() {
-  $menus = menu_get_menus();
-  // The Navigation menu is handled by the user module.
-  unset($menus['navigation']);
+  $menus = menu_get_menus(FALSE);
 
   $blocks = array();
   foreach ($menus as $name => $title) {
@@ -279,10 +277,7 @@ function menu_block_list() {
  * Implementation of hook_block_view().
  */
 function menu_block_view($delta = '') {
-  $menus = menu_get_menus();
-  // The Navigation menu is handled by the user module.
-  unset($menus['navigation']);
-
+  $menus = menu_get_menus(FALSE);
   $data['subject'] = check_plain($menus[$delta]);
   $data['content'] = menu_tree($delta);
   return $data;
@@ -469,7 +464,7 @@ function menu_node_form_submit($form, &$form_state) {
  *   titles as the values.
  */
 function menu_get_menus($all = TRUE) {
-  $system_menus = menu_list_system_menus();
+  $system_menus = array_keys(menu_list_system_menus());
   $query = db_select('menu_custom');
   $query->addField('menu_custom', 'menu_name', 'menu_name');
   $query->addField('menu_custom', 'title', 'title');

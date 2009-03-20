@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1031 2009/03/14 23:01:36 webchick Exp $
+// $Id: node.module,v 1.1032 2009/03/20 19:18:10 dries Exp $
 
 /**
  * @file
@@ -1737,6 +1737,7 @@ function node_menu() {
     'page callback' => 'node_add_page',
     'access callback' => '_node_add_access',
     'weight' => 1,
+    'menu_name' => 'management',
   );
   $items['rss.xml'] = array(
     'title' => 'RSS feed',

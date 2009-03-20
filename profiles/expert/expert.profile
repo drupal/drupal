@@ -1,5 +1,5 @@
 <?php
-// $Id: expert.profile,v 1.4 2009/02/10 03:28:51 webchick Exp $
+// $Id: expert.profile,v 1.5 2009/03/20 19:18:11 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -42,9 +42,10 @@ function expert_profile_task_list() {
  * Perform any final installation tasks for this profile.
  */
 function expert_profile_tasks(&$task, $url) {
-  // Enable 2 standard blocks.
+  // Enable 3 standard blocks.
   db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', 'login', 'garland', 1, 0, 'left', '', -1);
-  db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', 'navigation', 'garland', 1, 0, 'left', '', -1);
+  db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'system', 'navigation', 'garland', 1, 0, 'left', '', -1);
+  db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'system', 'management', 'garland', 1, 1, 'left', '', -1);
 }
 
 /**

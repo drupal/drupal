@@ -1,5 +1,5 @@
 <?php
-// $Id: session.test,v 1.10 2009/01/19 10:46:51 dries Exp $
+// $Id: session.test,v 1.11 2009/03/20 19:18:10 dries Exp $
 
 /**
  * @file
@@ -53,7 +53,7 @@ class SessionTestCase extends DrupalWebTestCase {
       'pass' => $user->pass_raw
     );
     $this->drupalPost('user', $edit, t('Log in'));
-    $this->drupalGet('node');
+    $this->drupalGet('user');
     $pass = $this->assertText($user->name, t('Found name: %name', array('%name' => $user->name)), t('User login'));
     $this->_logged_in = $pass;
 
