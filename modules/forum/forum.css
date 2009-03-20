@@ -7,9 +7,6 @@
 #forum td.created, #forum td.posts, #forum td.topics, #forum td.last-reply, #forum td.replies, #forum td.pager {
   white-space: nowrap;
 }
-#forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager {
-  text-align: center;
-}
 #forum tr td.forum {
   padding-left: 25px; /* LTR */
   background-position: 2px 2px; /* LTR */
