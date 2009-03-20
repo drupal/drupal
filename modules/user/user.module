@@ -1013,11 +1013,6 @@ function user_block_list() {
   // Not worth caching.
   $blocks['login']['cache'] = BLOCK_NO_CACHE;
 
-  $blocks['navigation']['info'] = t('Navigation');
-  // Menu blocks can't be cached because each menu item can have
-  // a custom access callback. menu.inc manages its own caching.
-  $blocks['navigation']['cache'] = BLOCK_NO_CACHE;
-
   $blocks['new']['info'] = t('Who\'s new');
 
   // Too dynamic to cache.
@@ -1084,13 +1079,6 @@ function user_block_view($delta = '') {
 
         $block['subject'] = t('User login');
         $block['content'] = drupal_get_form('user_login_block');
-      }
-      return $block;
-
-    case 'navigation':
-      if ($menu = menu_tree()) {
-        $block['subject'] = $user->uid ? check_plain($user->name) : t('Navigation');
-        $block['content'] = $menu;
       }
       return $block;
 
@@ -1306,6 +1294,7 @@ function user_menu() {
     'access callback' => 'user_is_logged_in',
     'page callback' => 'user_logout',
     'weight' => 10,
+    'menu_name' => 'user-menu',
   );
 
   // User administration pages.
@@ -1372,7 +1361,8 @@ function user_menu() {
     'page arguments' => array(1),
     'access callback' => 'user_view_access',
     'access arguments' => array(1),
-    'parent' => '',
+    'weight' => -10,
+    'menu_name' => 'user-menu',
   );
 
   $items['user/%user/view'] = array(

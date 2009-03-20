@@ -173,7 +173,7 @@ function theme_menu_overview_form($form) {
   drupal_add_tabledrag('menu-overview', 'order', 'sibling', 'menu-weight');
 
   $header = array(
-    t('Menu item'),
+    t('Menu link'),
     array('data' => t('Enabled'), 'class' => 'checkbox'),
     array('data' => t('Expanded'), 'class' => 'checkbox'),
     t('Weight'),
@@ -293,27 +293,27 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
     '#type' => 'checkbox',
     '#title' => t('Enabled'),
     '#default_value' => !$item['hidden'],
-    '#description' => t('Menu items that are not enabled will not be listed in any menu.'),
+    '#description' => t('Menu links that are not enabled will not be listed in any menu.'),
   );
   $form['menu']['expanded'] = array(
     '#type' => 'checkbox',
     '#title' => t('Expanded'),
     '#default_value' => $item['expanded'],
-    '#description' => t('If selected and this menu item has children, the menu will always appear expanded.'),
+    '#description' => t('If selected and this menu link has children, the menu will always appear expanded.'),
   );
 
   // Generate a list of possible parents (not including this item or descendants).
   $options = menu_parent_options(menu_get_menus(), $item);
   $default = $item['menu_name'] . ':' . $item['plid'];
   if (!isset($options[$default])) {
-    $default = 'navigation:0';
+    $default = 'main-menu:0';
   }
   $form['menu']['parent'] = array(
     '#type' => 'select',
-    '#title' => t('Parent item'),
+    '#title' => t('Parent link'),
     '#default_value' => $default,
     '#options' => $options,
-    '#description' => t('The maximum depth for an item and all its children is fixed at !maxdepth. Some menu items may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => MENU_MAX_DEPTH)),
+    '#description' => t('The maximum depth for a link and all its children is fixed at !maxdepth. Some menu links may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => MENU_MAX_DEPTH)),
     '#attributes' => array('class' => 'menu-title-select'),
   );
   $form['menu']['weight'] = array(
@@ -386,13 +386,14 @@ function menu_edit_item_submit($form, &$form_state) {
  * Menu callback; Build the form that handles the adding/editing of a custom menu.
  */
 function menu_edit_menu(&$form_state, $type, $menu = array()) {
+  $system_menus = menu_list_system_menus();
   if ($type == 'edit') {
     $form['menu_name'] = array('#type' => 'value', '#value' => $menu['menu_name']);
     $form['#insert'] = FALSE;
     $form['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete'),
-      '#access' => !in_array($menu['menu_name'], menu_list_system_menus()),
+      '#access' => !isset($system_menus[$menu['menu_name']]),
       '#submit' => array('menu_custom_delete_submit'),
       '#weight' => 10,
     );
@@ -409,12 +410,20 @@ function menu_edit_menu(&$form_state, $type, $menu = array()) {
     $form['#insert'] = TRUE;
   }
   $form['#title'] = $menu['title'];
-  $form['title'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Title'),
-    '#default_value' => $menu['title'],
-    '#required' => TRUE,
-  );
+  if (isset($system_menus[$menu['menu_name']])) {
+    $form['title'] = array(
+      '#type' => 'value',
+      '#value' => $menu['title'],
+    );
+  }
+  else {
+    $form['title'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Title'),
+      '#default_value' => $menu['title'],
+      '#required' => TRUE,
+    );
+  }
   $form['description'] = array(
     '#type' => 'textarea',
     '#title' => t('Description'),
@@ -440,7 +449,8 @@ function menu_custom_delete_submit($form, &$form_state) {
  */
 function menu_delete_menu_page($menu) {
   // System-defined menus may not be deleted.
-  if (in_array($menu['menu_name'], menu_list_system_menus())) {
+  $system_menus = menu_list_system_menus();
+  if (isset($system_menus[$menu['menu_name']])) {
     drupal_access_denied();
     return;
   }
@@ -468,7 +478,8 @@ function menu_delete_menu_confirm_submit($form, &$form_state) {
   $menu = $form['#menu'];
   $form_state['redirect'] = 'admin/build/menu';
   // System-defined menus may not be deleted - only menus defined by this module.
-  if (in_array($menu['menu_name'], menu_list_system_menus())  || !db_result(db_query("SELECT COUNT(*) FROM {menu_custom} WHERE menu_name = '%s'", $menu['menu_name']))) {
+  $system_menus = menu_list_system_menus();
+  if (isset($system_menus[$menu['menu_name']])  || !(db_query("SELECT 1 FROM {menu_custom} WHERE menu_name = :name", array('name' => $menu['menu_name']))->fetchField())) {
     return;
   }
   // Reset all the menu links defined by the system via hook_menu.
@@ -618,7 +629,7 @@ function menu_configure() {
   $form['menu_main_links_source'] = array(
     '#type' => 'select',
     '#title' => t('Source for the Main links'),
-    '#default_value' => $main,
+    '#default_value' => 'main-menu',
     '#options' => $main_options,
     '#tree' => FALSE,
     '#description' => t('Select what should be displayed as the Main links (typically at the top of the page).'),
@@ -628,7 +639,7 @@ function menu_configure() {
   $form["menu_secondary_links_source"] = array(
     '#type' => 'select',
     '#title' => t('Source for the Secondary links'),
-    '#default_value' => 'secondary-menu',
+    '#default_value' => 'user-menu',
     '#options' => $secondary_options,
     '#tree' => FALSE,
     '#description' => t("Select the source for the Secondary links. An advanced option allows you to use the same source for both Main links (currently %main) and Secondary links: if your source menu has two levels of hierarchy, the top level menu links will appear in the Main links, and the children of the active link will appear in the Secondary links." , array('%main' => $main_options[$main])),

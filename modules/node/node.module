@@ -1737,6 +1737,7 @@ function node_menu() {
     'page callback' => 'node_add_page',
     'access callback' => '_node_add_access',
     'weight' => 1,
+    'menu_name' => 'management',
   );
   $items['rss.xml'] = array(
     'title' => 'RSS feed',

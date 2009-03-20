@@ -53,7 +53,7 @@ class SessionTestCase extends DrupalWebTestCase {
       'pass' => $user->pass_raw
     );
     $this->drupalPost('user', $edit, t('Log in'));
-    $this->drupalGet('node');
+    $this->drupalGet('user');
     $pass = $this->assertText($user->name, t('Found name: %name', array('%name' => $user->name)), t('User login'));
     $this->_logged_in = $pass;
 
