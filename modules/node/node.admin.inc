@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.42 2009/03/17 03:34:32 webchick Exp $
+// $Id: node.admin.inc,v 1.43 2009/03/20 08:14:34 dries Exp $
 
 /**
  * @file
@@ -168,8 +168,6 @@ function node_filters() {
  * Build query for node administration filters based on session.
  */
 function node_build_filter_query() {
-  $filters = node_filters();
-
   // Build query
   $where = $args = array();
   $join = '';
