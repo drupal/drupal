@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.30 2009/03/14 23:01:37 webchick Exp $
+// $Id: trigger.module,v 1.31 2009/03/20 19:14:51 dries Exp $
 
 /**
  * @file
@@ -233,7 +233,7 @@ function _trigger_node($node, $op, $a3 = NULL, $a4 = NULL) {
       }
       // Since we know about the node, we pass that info along to the action.
       $context['node'] = $node;
-      $result = actions_do($aid, $objects[$action_info['type']], $context, $a4, $a4);
+      $result = actions_do($aid, $objects[$action_info['type']], $context, $a3, $a4);
     }
     else {
       actions_do($aid, $node, $context, $a3, $a4);
