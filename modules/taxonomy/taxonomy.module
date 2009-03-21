@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.462 2009/03/08 04:25:07 webchick Exp $
+// $Id: taxonomy.module,v 1.463 2009/03/21 00:59:02 webchick Exp $
 
 /**
  * @file
@@ -87,7 +87,6 @@ function taxonomy_node_view($node) {
  * @return
  *   An internal Drupal path.
  */
-
 function taxonomy_term_path($term) {
   $vocabulary = taxonomy_vocabulary_load($term->vid);
   if ($vocabulary->module != 'taxonomy' && $path = module_invoke($vocabulary->module, 'term_path', $term)) {
