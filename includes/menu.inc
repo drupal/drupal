@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.315 2009/03/20 19:18:09 dries Exp $
+// $Id: menu.inc,v 1.316 2009/03/21 17:58:14 dries Exp $
 
 /**
  * @file
@@ -1084,6 +1084,11 @@ function _menu_tree_cid($menu_name, $data) {
 
 /**
  * Recursive helper function - collect node links.
+ *
+ * @param $tree
+ *   The menu tree you wish to collect node links from.
+ * @param $node_links
+ *   An array in which to store the collected node links.
  */
 function menu_tree_collect_node_links(&$tree, &$node_links) {
   foreach ($tree as $key => $v) {
@@ -1102,6 +1107,12 @@ function menu_tree_collect_node_links(&$tree, &$node_links) {
 
 /**
  * Check access and perform other dynamic operations for each link in the tree.
+ *
+ * @param $tree
+ *   The menu tree you wish to operate on.
+ * @param $node_links
+ *   A collection of node link references generated from $tree by
+ *   menu_tree_collect_node_links().
  */
 function menu_tree_check_access(&$tree, $node_links = array()) {
 
