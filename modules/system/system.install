@@ -1257,7 +1257,7 @@ function system_update_113() {
   }
 
   // Flush the menu cache:
-  cache_clear_all('menu:', TRUE);
+  cache_clear_all('*', 'cache_menu', TRUE);
 
   return $ret;
 }
