@@ -2424,7 +2424,7 @@ function _locale_rebuild_js($langcode = NULL) {
   // just got deleted). Act only if some operation was executed.
   if ($status) {
     db_update('languages')
-      ->field(array(
+      ->fields(array(
         'javascript' => $language->javascript,
       ))
       ->condition('language', $language->language)
