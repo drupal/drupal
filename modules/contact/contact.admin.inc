@@ -19,7 +19,7 @@ function contact_admin_categories() {
 
   // Loop through the categories and add them to the table.
   foreach ($result as $record) {
-    $row[] = array(
+    $rows[] = array(
       $record->category,
       $record->recipients,
       ($record->selected ? t('Yes') : t('No')),
