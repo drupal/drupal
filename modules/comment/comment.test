@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.test,v 1.26 2009/03/17 12:41:54 dries Exp $
+// $Id: comment.test,v 1.27 2009/03/25 16:54:24 dries Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -585,6 +585,20 @@ class CommentBlockFunctionalTest extends CommentHelperCase {
     $this->assertText($comment2->subject, t('Comment found in block.'));
     $this->assertText($comment3->comment, t('Comment found in block.'));
     $this->assertTrue(strpos($this->drupalGetContent(), $comment3->comment) < strpos($this->drupalGetContent(), $comment2->subject), t('Comments were ordered correctly in block.'));
+
+    // Set the number of recent comments to show to 10.
+    $this->drupalLogout();
+    $this->drupalLogin($this->admin_user);
+    $block = array(
+      'comment_block_count' => 10,
+    );
+    $this->drupalPost('admin/build/block/configure/comment/recent', $block, t('Save block'));
+    $this->assertText(t('The block configuration has been saved.'), t('Block saved.'));
+
+    // Test that all three comments are shown.
+    $this->assertText($comment1->subject, t('Comment found in block.'));
+    $this->assertText($comment2->subject, t('Comment found in block.'));
+    $this->assertText($comment3->comment, t('Comment found in block.'));
   }
 }
 
