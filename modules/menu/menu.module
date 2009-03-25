@@ -51,7 +51,7 @@ function menu_perm() {
 function menu_menu() {
   $items['admin/build/menu'] = array(
     'title' => 'Menus',
-    'description' => "Control your site's Navigation menu, Main menu and Secondary menu. as well as rename and reorganize menu items.",
+    'description' => 'Add new menus to your site, edit existing menus, and rename and reorganize menu links.',
     'page callback' => 'menu_overview_page',
     'access callback' => 'user_access',
     'access arguments' => array('administer menu'),
