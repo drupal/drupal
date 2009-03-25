@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.admin.inc,v 1.8 2009/03/08 05:08:22 webchick Exp $
+// $Id: contact.admin.inc,v 1.9 2009/03/25 13:45:00 webchick Exp $
 
 /**
  * @file
@@ -19,7 +19,7 @@ function contact_admin_categories() {
 
   // Loop through the categories and add them to the table.
   foreach ($result as $record) {
-    $row[] = array(
+    $rows[] = array(
       $record->category,
       $record->recipients,
       ($record->selected ? t('Yes') : t('No')),
