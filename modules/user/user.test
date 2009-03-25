@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.31 2009/03/14 23:01:38 webchick Exp $
+// $Id: user.test,v 1.32 2009/03/25 16:31:18 dries Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   function getInfo() {
@@ -133,7 +133,7 @@ class UserValidationTestCase extends DrupalWebTestCase {
     foreach ($test_cases as $name => $test_case) {
       list($description, $test) = $test_case;
       $result = user_validate_name($name);
-      $this->$test($result, $description . ' ('. $name . ')');
+      $this->$test($result, $description . ' (' . $name . ')');
     }
   }
 
@@ -465,9 +465,9 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['operation'] = 'cancel';
     foreach ($users as $uid => $account) {
-      $edit['accounts['. $uid .']'] = TRUE;
+      $edit['accounts[' . $uid . ']'] = TRUE;
     }
-    $edit['accounts['. $admin_user->uid .']'] = TRUE;
+    $edit['accounts[' . $admin_user->uid . ']'] = TRUE;
     $this->drupalPost('admin/user/user', $edit, t('Update'));
     $this->assertText(t('Are you sure you want to cancel these user accounts?'), t('Confirmation form to cancel accounts displayed.'));
     $this->assertText(t('When cancelling these accounts'), t('Allows to select account cancellation method.'));
@@ -514,7 +514,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
     $file_check = file_check_directory($file_dir, FILE_CREATE_DIRECTORY, 'file_directory_path');
 
     $picture_dir = variable_get('user_picture_path', 'pictures');
-    $picture_path = $file_dir .'/'.$picture_dir;
+    $picture_path = $file_dir . '/' .$picture_dir;
 
     $pic_check = file_check_directory($picture_path, FILE_CREATE_DIRECTORY, 'user_picture_path');
     $this->_directory_test = is_writable($picture_path);
@@ -607,7 +607,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
    *
    * results: The image shouldn't be uploaded
    */
-   function testWithoutGDinvalidDimension() {
+  function testWithoutGDinvalidDimension() {
     if ($this->_directory_test)
       if (!image_get_toolkit()) {
 
@@ -632,7 +632,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
         // Check if file is not uploaded.
         $this->assertFalse(is_file($pic_path), t('File was not uploaded.'));
       }
-   }
+  }
 
   /**
    * Do the test:
@@ -641,7 +641,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
    *
    * results: The image shouldn't be uploaded
    */
-   function testWithoutGDinvalidSize() {
+  function testWithoutGDinvalidSize() {
     if ($this->_directory_test)
       if (!image_get_toolkit()) {
         $this->drupalLogin($this->user);
@@ -699,7 +699,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
 
   function saveUserPicture($image) {
     $edit = array('files[picture_upload]' => realpath($image->filepath));
-    $this->drupalPost('user/' . $this->user->uid.'/edit', $edit, t('Save'));
+    $this->drupalPost('user/' . $this->user->uid . '/edit', $edit, t('Save'));
 
     $img_info = image_get_info($image->filepath);
     $picture_dir = variable_get('user_picture_path', 'pictures');
@@ -803,7 +803,7 @@ class UserAdminTestCase extends DrupalWebTestCase {
     $this->assertEqual($account->status, 1, 'User B not blocked');
     $edit = array();
     $edit['operation'] = 'block';
-    $edit['accounts['. $account->uid .']'] = TRUE;
+    $edit['accounts[' . $account->uid . ']'] = TRUE;
     $this->drupalPost('admin/user/user', $edit, t('Update'));
     $account = user_load($user_b->uid, TRUE);
     $this->assertEqual($account->status, 0, 'User B blocked');
