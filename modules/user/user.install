@@ -257,13 +257,13 @@ function user_update_7000(&$sandbox) {
     $count = 1000;
     $result = db_query_range("SELECT uid, pass FROM {users} WHERE uid > 0 ORDER BY uid", $sandbox['user_from'], $count);
     while ($account = db_fetch_array($result)) {
-       $has_rows = TRUE;
-       $new_hash = user_hash_password($account['pass'], $hash_count_log2);
-       if ($new_hash) {
-         // Indicate an updated password.
-         $new_hash  = 'U' . $new_hash;
-         db_query("UPDATE {users} SET pass = '%s' WHERE uid = %d", $new_hash, $account['uid']);
-       }
+      $has_rows = TRUE;
+      $new_hash = user_hash_password($account['pass'], $hash_count_log2);
+      if ($new_hash) {
+        // Indicate an updated password.
+        $new_hash  = 'U' . $new_hash;
+        db_query("UPDATE {users} SET pass = '%s' WHERE uid = %d", $new_hash, $account['uid']);
+      }
     }
     $ret['#finished'] = $sandbox['user_from']/$sandbox['user_count'];
     $sandbox['user_from'] += $count;
