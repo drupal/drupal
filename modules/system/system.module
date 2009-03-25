@@ -93,7 +93,7 @@ function system_help($path, $arg) {
     case 'admin/build/modules/uninstall':
       return '<p>' . t('The uninstall process removes all data related to a module. To uninstall a module, you must first disable it. Not all modules support this feature.') . '</p>';
     case 'admin/build/block/configure':
-      if ($arg[4] == 'system' && $arg[5] == 0) {
+      if ($arg[4] == 'system' && $arg[5] == 'powered-by') {
         return '<p>' . t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') . '</p>';
       }
       break;
