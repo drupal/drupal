@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.230 2009/03/14 20:13:27 dries Exp $
+// $Id: upload.module,v 1.231 2009/03/25 16:43:02 dries Exp $
 
 /**
  * @file
@@ -28,7 +28,7 @@ function upload_help($path, $arg) {
 function upload_theme() {
   return array(
     'upload_attachments' => array(
-      'arguments' => array('files' => NULL),
+      'arguments' => array('elements' => NULL),
     ),
     'upload_form_current' => array(
       'arguments' => array('form' => NULL),
@@ -347,7 +347,8 @@ function upload_node_view($node, $teaser, $page) {
     if (count($node->files)) {
       if (!$teaser) {
         $node->content['files'] = array(
-          '#markup' => theme('upload_attachments', $node->files),
+          '#files' => $node->files,
+          '#theme' => 'upload_attachments',
           '#weight' => 50,
         );
       }
@@ -442,10 +443,10 @@ function upload_node_rss_item($node) {
  *
  * @ingroup themeable
  */
-function theme_upload_attachments($files) {
+function theme_upload_attachments($elements) {
   $header = array(t('Attachment'), t('Size'));
   $rows = array();
-  foreach ($files as $file) {
+  foreach ($elements['#files'] as $file) {
     $file = (object)$file;
     if ($file->list && empty($file->remove)) {
       $href = file_create_url($file->filepath);
