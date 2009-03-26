@@ -485,8 +485,8 @@ function user_save($account, $edit = array(), $category = 'account') {
     }
 
     // Save Field data.
-    $obj = (object) $edit;
-    field_attach_update('user', $obj);
+    $object = (object) $edit;
+    field_attach_update('user', $object);
 
     // Refresh user object.
     $user = user_load($account->uid, TRUE);
@@ -521,8 +521,8 @@ function user_save($account, $edit = array(), $category = 'account') {
     // Build the initial user object.
     $user = user_load($edit['uid'], TRUE);
 
-    $obj = (object) $edit;
-    field_attach_insert('user', $obj);
+    $object = (object) $edit;
+    field_attach_insert('user', $object);
 
     user_module_invoke('insert', $edit, $user, $category);
 

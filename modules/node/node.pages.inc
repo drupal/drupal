@@ -68,7 +68,13 @@ function node_add($type) {
 }
 
 function node_form_validate($form, &$form_state) {
-  node_validate($form_state['values'], $form);
+  $node = $form_state['values'];
+  node_validate($node, $form);
+
+  // Field validation. Requires access to $form_state, so this cannot be
+  // done in node_validate() as it currently exists.
+  $node = (object)$node;
+  field_attach_form_validate('node', $node, $form, $form_state);
 }
 
 function node_object_prepare(&$node) {

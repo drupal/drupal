@@ -284,6 +284,42 @@ function theme_field_multiple_value_form($element) {
   return $output;
 }
 
+
+/**
+ * Transfer field-level validation errors to widgets.
+ */
+function field_default_form_errors($obj_type, $object, $field, $instance, $items, $form, $errors) {
+  $field_name = $field['field_name'];
+  if (!empty($errors[$field_name])) {
+    $function = $instance['widget']['module'] . '_field_widget_error';
+    $function_exists = drupal_function_exists($function);
+
+    // Walk the form down to where the widget lives.
+    $form_path = $form['#fields'][$field_name]['form_path'];
+    $element = $form;
+    foreach ($form_path as $key) {
+      $element = $element[$key];
+    }
+
+    $multiple_widget = field_behaviors_widget('multiple values', $instance) != FIELD_BEHAVIOR_DEFAULT;
+    foreach ($errors[$field_name] as $delta => $delta_errors) {
+      // For multiple single-value widgets, pass errors by delta.
+      // For a multiple-value widget, all errors are passed to the main widget.
+      $error_element = $multiple_widget ? $element : $element[$delta];
+      foreach ($delta_errors as $error) {
+        if ($function_exists) {
+          $function($error_element, $error);
+        }
+        else {
+          // Make sure that errors are reported (even incorrectly flagged) if
+          // the widget module fails to implement hook_field_widget_error().
+          form_error($error_element, $error['error']);
+        }
+      }
+    }
+  }
+}
+
 /**
  * Submit handler to add more choices to a field form. This handler is used when
  * JavaScript is not available. It makes changes to the form state and the
@@ -292,11 +328,11 @@ function theme_field_multiple_value_form($element) {
 function field_add_more_submit($form, &$form_state) {
   // Set the form to rebuild and run submit handlers.
   if (isset($form['#builder_function']) && drupal_function_exists($form['#builder_function'])) {
-    $form['#builder_function']($form, $form_state);
+    $entity = $form['#builder_function']($form, $form_state);
 
     // Make the changes we want to the form state.
     $field_name = $form_state['clicked_button']['#field_name'];
-    if ($form_state['values'][$field_name][$field_name . '_add_more']) {
+    if ($form_state['values'][$field_name . '_add_more']) {
       $form_state['field_item_count'][$field_name] = count($form_state['values'][$field_name]);
     }
   }

@@ -110,6 +110,14 @@ function options_field_widget(&$form, &$form_state, $field, $instance, $items, $
 }
 
 /**
+ * Implementation of hook_field_widget_error().
+ */
+function options_field_widget_error($element, $error) {
+  $field_key  = $element['#columns'][0];
+  form_error($element[$field_key], $error['message']);
+}
+
+/**
  * Process an individual element.
  *
  * Build the form element. When creating a form using FAPI #process,

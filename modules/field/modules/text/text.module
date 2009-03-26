@@ -88,16 +88,18 @@ function text_field_columns($field) {
 
 /**
  * Implementation of hook_field_validate().
+ *
+ * Possible error codes:
+ * - 'text_max_length': The value exceeds the maximum length.
  */
-function text_field_validate($obj_type, $object, $field, $instance, $items, $form) {
-  if (is_array($items)) {
-    foreach ($items as $delta => $item) {
-      $error_element = isset($item['_error_element']) ? $item['_error_element'] : '';
-      if (is_array($item) && isset($item['_error_element'])) unset($item['_error_element']);
-      if (!empty($item['value'])) {
-        if (!empty($field['settings']['max_length']) && drupal_strlen($item['value']) > $field['settings']['max_length']) {
-          form_set_error($error_element, t('%name: the value may not be longer than %max characters.', array('%name' => $instance['label'], '%max' => $field['settings']['max_length'])));
-        }
+function text_field_validate($obj_type, $object, $field, $instance, $items, &$errors) {
+  foreach ($items as $delta => $item) {
+    if (!empty($item['value'])) {
+      if (!empty($field['settings']['max_length']) && drupal_strlen($item['value']) > $field['settings']['max_length']) {
+        $errors[$field['field_name']][$delta][] = array(
+          'error' => 'text_max_length',
+          'message' => t('%name: the value may not be longer than %max characters.', array('%name' => $instance['label'], '%max' => $field['settings']['max_length'])),
+        );
       }
     }
   }
@@ -284,6 +286,13 @@ function text_field_widget(&$form, &$form_state, $field, $instance, $items, $del
 }
 
 /**
+ * Implementation of hook_field_widget_error().
+ */
+function text_field_widget_error($element, $error) {
+  form_error($element['value'], $error['message']);
+}
+
+/**
  * Process an individual element.
  *
  * Build the form element. When creating a form using FAPI #process,
@@ -328,13 +337,6 @@ function text_textfield_process($element, $edit, $form_state, $form) {
     $element[$filter_key] = filter_form($format, 1, $parents);
   }
 
-  // Used so that hook_field('validate') knows where to flag an error.
-  // TODO: rework that. See http://groups.drupal.org/node/18019.
-  $element['_error_element'] = array(
-    '#type' => 'value',
-    '#value' => implode('][', array_merge($element['#parents'], array($field_key))),
-  );
-
   return $element;
 }
 
@@ -368,18 +370,11 @@ function text_textarea_process($element, $edit, $form_state, $form) {
   );
 
   if (!empty($instance['settings']['text_processing'])) {
-    $filter_key  = (count($element['#columns']) == 2) ? $element['#columns'][1] : 'format';
+    $filter_key = (count($element['#columns']) == 2) ? $element['#columns'][1] : 'format';
     $format = isset($element['#value'][$filter_key]) ? $element['#value'][$filter_key] : FILTER_FORMAT_DEFAULT;
     $parents = array_merge($element['#parents'] , array($filter_key));
     $element[$filter_key] = filter_form($format, 1, $parents);
   }
-
-  // Used so that hook_field('validate') knows where to flag an error.
-  $element['_error_element'] = array(
-    '#type' => 'value',
-    '#value' => implode('][', array_merge($element['#parents'], array($field_key))),
-  );
-  return $element;
 }
 
 /**

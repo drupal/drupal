@@ -84,7 +84,7 @@ function field_test_fieldable_info() {
 }
 
 function field_test_create_bundle($bundle, $text) {
-  $bundles = variable_get('field_test_bundles', array('field_text_bundle' => 'Test Bundle'));
+  $bundles = variable_get('field_test_bundles', array('test_bundle' => 'Test Bundle'));
   $bundles += array($bundle => $text);
   variable_set('field_test_bundles', $bundles);
 
@@ -92,7 +92,7 @@ function field_test_create_bundle($bundle, $text) {
 }
 
 function field_test_rename_bundle($bundle_old, $bundle_new) {
-  $bundles = variable_get('field_test_bundles', array('field_text_bundle' => 'Test Bundle'));
+  $bundles = variable_get('field_test_bundles', array('test_bundle' => 'Test Bundle'));
   $bundles[$bundle_new] = $bundles[$bundle_old];
   unset($bundles[$bundle_old]);
   variable_set('field_test_bundles', $bundles);
@@ -101,7 +101,7 @@ function field_test_rename_bundle($bundle_old, $bundle_new) {
 }
 
 function field_test_delete_bundle($bundle) {
-  $bundles = variable_get('field_test_bundles', array('field_text_bundle' => 'Test Bundle'));
+  $bundles = variable_get('field_test_bundles', array('test_bundle' => 'Test Bundle'));
   unset($bundles[$bundle]);
   variable_set('field_test_bundles', $bundles);
 
@@ -252,8 +252,8 @@ function field_test_entity_form(&$form_state, $entity) {
  * Validate handler for field_test_set_field_values().
  */
 function field_test_entity_form_validate($form, &$form_state) {
-  $entity = (object)$form_state['values'];
-  field_attach_validate('test_entity', $entity, $form);
+  $entity = field_test_create_stub_entity($form_state['values']['ftid'], $form_state['values']['ftvid'], $form_state['values']['fttype']);
+  field_attach_form_validate('test_entity', $entity, $form, $form_state);
 }
 
 /**
@@ -336,19 +336,19 @@ function field_test_field_instance_settings($field_type) {
 
 /**
  * Implementation of hook_field_validate().
+ *
+ * Possible error codes:
+ * - 'field_test_invalid': The value is invalid.
  */
-function field_test_field_validate(&$obj_type, $object, $field, $instance, &$items, $form) {
-  if (is_array($items)) {
-    foreach ($items as $delta => $item) {
-      $error_element = isset($item['_error_element']) ? $item['_error_element'] : '';
-      if (is_array($item) && isset($item['_error_element'])) unset($item['_error_element']);
-      if ($item['value'] == -1) {
-        form_set_error($error_element, t('%name does not accept the value -1.', array('%name' => $instance['label'])));
-      }
+function field_test_field_validate($obj_type, $object, $field, $instance, $items, &$errors) {
+  foreach ($items as $delta => $item) {
+    if ($item['value'] == -1) {
+      $errors[$field['field_name']][$delta][] = array(
+        'error' => 'field_test_invalid',
+        'message' => t('%name does not accept the value -1.', array('%name' => $instance['label'])),
+      );
     }
   }
-
-  return $items;
 }
 
 /**
@@ -445,6 +445,13 @@ function field_test_field_widget(&$form, &$form_state, $field, $instance, $items
     ),
   );
   return $element;
+}
+
+/**
+ * Implementation of hook_field_widget_error().
+ */
+function field_test_field_widget_error($element, $error) {
+  form_error($element['value'], $error['message']);
 }
 
 /**

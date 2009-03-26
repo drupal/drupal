@@ -87,26 +87,59 @@ function field_attach_load_revision($obj_type, $objects) {
 
 /**
  * Perform field validation against the field data in an object.
- * Field validation is distinct from widget validation; the latter
- * occurs during the Form API validation phase.
  *
- * NOTE: This functionality does not yet exist in its final state.
- * Eventually, field validation will occur during field_attach_insert
- * or _update which will throw an exception on failure. For now,
- * fieldable entities must call this during their Form API validation
- * phase, and field validation will call form_set_error for any
- * errors. See http://groups.drupal.org/node/18019.
+ * This function does not perform field widget validation on form
+ * submissions. It is intended to be called during API save
+ * operations. Use field_attach_form_validate() to validate form
+ * submissions.
  *
  * @param $obj_type
  *   The type of $object; e.g. 'node' or 'user'.
  * @param $object
  *   The object with fields to validate.
+ * @return
+ *   Throws a FieldValidationException if validation errors are found.
  *
  * This function is an autoloader for _field_attach_validate() in modules/field/field.attach.inc.
  */
-function field_attach_validate($obj_type, &$object, $form = NULL) {
+function field_attach_validate($obj_type, &$object) {
   require_once DRUPAL_ROOT . '/modules/field/field.attach.inc';
-  return _field_attach_validate($obj_type, $object, $form);
+  return _field_attach_validate($obj_type, $object);
+}
+
+/**
+ * Perform field validation against form-submitted field values.
+ *
+ * There are two levels of validation for fields in forms: widget
+ * validation, and field validation.
+ * - Widget validation steps are specific to a given widget's own form
+ * structure and UI metaphors. They are executed through FAPI's
+ * #element_validate property during normal form validation.
+ * - Field validation steps are common to a given field type, independently of
+ * the specific widget being used in a given form. They are defined in the
+ * field type's implementation of hook_field_validate().
+ *
+ * This function performs field validation in the context of a form
+ * submission. It converts field validation errors into form errors
+ * on the correct form elements. Fieldable object types should call
+ * this function during their own form validation function.
+ *
+ * @param $obj_type
+ *   The type of $object; e.g. 'node' or 'user'.
+ * @param $object
+ *   The object being submitted. The 'bundle key', 'id key' and (if applicable)
+ *   'revision key' should be present. The actual field values will be read
+ *   from $form_state['values'].
+ * @param $form
+ *   The form structure.
+ * @param $form_state
+ *   An associative array containing the current state of the form.
+ *
+ * This function is an autoloader for _field_attach_form_validate() in modules/field/field.attach.inc.
+ */
+function field_attach_form_validate($obj_type, &$object, $form, &$form_state) {
+  require_once DRUPAL_ROOT . '/modules/field/field.attach.inc';
+  return _field_attach_form_validate($obj_type, $object, $form, $form_state);
 }
 
 /**

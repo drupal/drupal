@@ -7,11 +7,6 @@
  */
 
 /**
- * TODO: Fill me in.
- */
-class FieldException extends Exception {}
-
-/**
  * @defgroup field_structs Field API data structures
  * @{
  * Represent Field API fields and instances.

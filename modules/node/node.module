@@ -997,9 +997,6 @@ function node_validate($node, $form = array()) {
     }
   }
 
-  // Validate fields
-  field_attach_validate('node', $node, $form);
-
   // Do node-type-specific validation checks.
   node_invoke($node, 'validate', $form);
   node_invoke_node($node, 'validate', $form);
