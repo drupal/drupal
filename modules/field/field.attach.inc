@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.6 2009/03/17 03:46:51 webchick Exp $
+// $Id: field.attach.inc,v 1.7 2009/03/26 13:31:24 webchick Exp $
 
 /**
  * @file
@@ -11,6 +11,31 @@
 // TODO D7 : consistency - some of these functions process individual fields
 // and others process the combined value of all fields.
 // Should all iteration through available fields be done here instead of in Field?
+
+/**
+ * Exception class thrown by field_attach_validate() when field
+ * validation errors occur.
+ */
+class FieldValidationException extends FieldException {
+  var $errors;
+
+ /**
+  * Constructor for FieldValidationException.
+  *
+  * @param $errors
+  *   An array of field validation errors, keyed by field name and
+  *   delta that contains two keys:
+  *   - 'error': A machine-readable error code string, prefixed by
+  *     the field module name.  A field widget may use this code to decide
+  *     how to report the error.
+  *   - 'message': A human-readable error message such as to be
+  *     passed to form_error() for the appropriate form element.
+  */
+  function __construct($errors) {
+    $this->errors = $errors;
+    parent::__construct(t('Field validation errors'));
+  }
+}
 
 /**
  * @defgroup field_storage Field Storage API
@@ -130,10 +155,6 @@ function _field_invoke($op, $obj_type, &$object, &$a = NULL, &$b = NULL, $defaul
     $field_name = $instance['field_name'];
     $field = field_info_field($field_name);
     $items = isset($object->$field_name) ? $object->$field_name : array();
-
-    // Make sure AHAH 'add more' button isn't sent to the fields for processing.
-    // TODO D7 : needed ?
-    unset($items[$field_name . '_add_more']);
 
     $function = $default ? 'field_default_' . $op : $field['module'] . '_field_' . $op;
     if (drupal_function_exists($function)) {
@@ -306,29 +327,76 @@ function _field_attach_load_revision($obj_type, $objects) {
 
 /**
  * Perform field validation against the field data in an object.
- * Field validation is distinct from widget validation; the latter
- * occurs during the Form API validation phase.
  *
- * NOTE: This functionality does not yet exist in its final state.
- * Eventually, field validation will occur during field_attach_insert
- * or _update which will throw an exception on failure. For now,
- * fieldable entities must call this during their Form API validation
- * phase, and field validation will call form_set_error for any
- * errors. See http://groups.drupal.org/node/18019.
+ * This function does not perform field widget validation on form
+ * submissions. It is intended to be called during API save
+ * operations. Use field_attach_form_validate() to validate form
+ * submissions.
  *
  * @param $obj_type
  *   The type of $object; e.g. 'node' or 'user'.
  * @param $object
  *   The object with fields to validate.
+ * @return
+ *   Throws a FieldValidationException if validation errors are found.
  */
-function _field_attach_validate($obj_type, &$object, $form = NULL) {
-  _field_invoke('validate', $obj_type, $object, $form);
-  _field_invoke_default('validate', $obj_type, $object, $form);
+function _field_attach_validate($obj_type, &$object) {
+  $errors = array();
+  _field_invoke_default('validate', $obj_type, $object, $errors);
+  _field_invoke('validate', $obj_type, $object, $errors);
 
   // Let other modules validate the object.
   foreach (module_implements('field_attach_validate') as $module) {
     $function = $module . '_field_attach_validate';
     $function($obj_type, $object, $form);
+    $function($obj_type, $object, $errors);
+  }
+
+  if ($errors) {
+    throw new FieldValidationException($errors);
+  }
+}
+
+/**
+ * Perform field validation against form-submitted field values.
+ *
+ * There are two levels of validation for fields in forms: widget
+ * validation, and field validation.
+ * - Widget validation steps are specific to a given widget's own form
+ * structure and UI metaphors. They are executed through FAPI's
+ * #element_validate property during normal form validation.
+ * - Field validation steps are common to a given field type, independently of
+ * the specific widget being used in a given form. They are defined in the
+ * field type's implementation of hook_field_validate().
+ *
+ * This function performs field validation in the context of a form
+ * submission. It converts field validation errors into form errors
+ * on the correct form elements. Fieldable object types should call
+ * this function during their own form validation function.
+ *
+ * @param $obj_type
+ *   The type of $object; e.g. 'node' or 'user'.
+ * @param $object
+ *   The object being submitted. The 'bundle key', 'id key' and (if applicable)
+ *   'revision key' should be present. The actual field values will be read
+ *   from $form_state['values'].
+ * @param $form
+ *   The form structure.
+ * @param $form_state
+ *   An associative array containing the current state of the form.
+ */
+function _field_attach_form_validate($obj_type, &$object, $form, &$form_state) {
+  // Extract field values from submitted values.
+  _field_invoke_default('extract_form_values', $obj_type, $object, $form, $form_state);
+
+  // Perform field_level validation.
+  try {
+    field_attach_validate($obj_type, $object);
+  }
+  catch (FieldValidationException $e) {
+    // Pass field-level validation errors back to widgets for accurate error
+    // flagging.
+    _field_invoke_default('form_errors', $obj_type, $object, $form, $e->errors);
   }
 }
 
@@ -350,6 +418,9 @@ function _field_attach_validate($obj_type, &$object, $form = NULL) {
  *   An associative array containing the current state of the form.
  */
 function _field_attach_submit($obj_type, &$object, $form, &$form_state) {
+  // Extract field values from submitted values.
+  _field_invoke_default('extract_form_values', $obj_type, $object, $form, $form_state);
+
   _field_invoke_default('submit', $obj_type, $object, $form, $form_state);
 
   // Let other modules act on submitting the object.

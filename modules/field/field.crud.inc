@@ -1,15 +1,10 @@
 <?php
-// $Id: field.crud.inc,v 1.6 2009/03/13 14:34:58 dries Exp $
+// $Id: field.crud.inc,v 1.7 2009/03/26 13:31:24 webchick Exp $
 
 /**
  * @file
  * Field CRUD API, handling field and field instance creation and deletion.
  */
-
-/**
- * TODO: Fill me in.
- */
-class FieldException extends Exception {}
 
 /**
  * @defgroup field_structs Field API data structures

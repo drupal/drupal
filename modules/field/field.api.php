@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.4 2009/03/17 03:46:51 webchick Exp $
+// $Id: field.api.php,v 1.5 2009/03/26 13:31:24 webchick Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -215,11 +215,25 @@ function hook_field_load($obj_type, $object, $field, $instance, $items) {
  *   The instance structure for $field on $object's bundle.
  * @param $items
  *   $object->{$field['field_name']}, or an empty array if unset.
- * @param $form
- *   The form structure being validated. NOTE: This parameter will
- *   become obsolete (see field_attach_validate()).
+ * @param $errors
+ *   The array of errors, keyed by field name and by value delta, that have
+ *   already been reported for the object. The function should add its errors
+ *   to this array. Each error is an associative array, with the following
+ *   keys and values:
+ *   - 'error': an error code (should be a string, prefixed with the module name)
+ *   - 'message': the human readable message to be displayed.
  */
-function hook_field_validate($obj_type, $object, $field, $instance, $items, $form) {
+function hook_field_validate($obj_type, $object, $field, $instance, $items, &$errors) {
+  foreach ($items as $delta => $item) {
+    if (!empty($item['value'])) {
+      if (!empty($field['settings']['max_length']) && drupal_strlen($item['value']) > $field['settings']['max_length']) {
+        $errors[$field['field_name']][$delta][] = array(
+          'error' => 'text_max_length',
+          'message' => t('%name: the value may not be longer than %max characters.', array('%name' => $instance['label'], '%max' => $field['settings']['max_length'])),
+        );
+      }
+    }
+  }
 }
 
 /**
@@ -389,6 +403,24 @@ function hook_field_widget(&$form, &$form_state, $field, $instance, $items, $del
 }
 
 /**
+ * Flag a field-level validation error.
+ *
+ * @param $element
+ *   An array containing the form element for the widget. The error needs to be
+ *   flagged on the right sub-element, according to the widget's internal
+ *   structure.
+ * @param $error
+ *   An associative array with the following key-value pairs, as returned by
+ *   hook_field_validate():
+ *   - 'error': the error code. Complex widgets might need to report different
+ *     errors to different form elements inside the widget.
+ *   - 'message': the human readable message to be displayed.
+ */
+function hook_field_widget_error($element, $error) {
+  form_error($element['value'], $error['message']);
+}
+
+/**
  * @} End of "ingroup field_type"
  */
 
@@ -425,7 +457,7 @@ function hook_field_attach_load($obj_type, $object) {
  *
  * See field_attach_validate() for details and arguments.
  */
-function hook_field_attach_validate($obj_type, $object, &$form) {
+function hook_field_attach_validate($obj_type, $object, &$errors) {
 }
 
 /**

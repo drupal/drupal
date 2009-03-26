@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.6 2009/03/10 09:45:31 dries Exp $
+// $Id: field.module,v 1.7 2009/03/26 13:31:24 webchick Exp $
 /**
  * @file
  * Attach custom data fields to Drupal objects.
@@ -77,6 +77,15 @@ define('FIELD_LOAD_CURRENT', 'FIELD_LOAD_CURRENT');
  * specified in the object with field_attach_load().
  */
 define('FIELD_LOAD_REVISION', 'FIELD_LOAD_REVISION');
+
+
+/**
+ * Base class for all exceptions thrown by Field API functions.
+ *
+ * This class has no functionality of its own other than allowing all
+ * Field API exceptions to be caught by a single catch block.
+ */
+class FieldException extends Exception {}
 
 /**
  * Implementation of hook_flush_caches.

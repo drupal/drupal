@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.31 2009/03/14 23:01:38 webchick Exp $
+// $Id: user.pages.inc,v 1.32 2009/03/26 13:31:28 webchick Exp $
 
 /**
  * @file
@@ -266,13 +266,12 @@ function user_profile_form($form_state, $account, $category = 'account') {
  * Validation function for the user account and profile editing form.
  */
 function user_profile_form_validate($form, &$form_state) {
-  // Validate field widgets.
-  $tmp_obj = (object) $form_state['values'];
-  field_attach_validate('user', $tmp_obj, $form, $form_state);
-
-  user_module_invoke('validate', $form_state['values'], $form_state['values']['_account'], $form_state['values']['_category']);
+  $edit = (object)$form_state['values'];
+  field_attach_form_validate('user', $edit, $form, $form_state);
+  $edit = (array)$edit;
+  user_module_invoke('validate', $edit, $form_state['values']['_account'], $form_state['values']['_category']);
   // Validate input to ensure that non-privileged users can't alter protected data.
-  if ((!user_access('administer users') && array_intersect(array_keys($form_state['values']), array('uid', 'init', 'session'))) || (!user_access('administer permissions') && isset($form_state['values']['roles']))) {
+  if ((!user_access('administer users') && array_intersect(array_keys($edit), array('uid', 'init', 'session'))) || (!user_access('administer permissions') && isset($form_state['values']['roles']))) {
     watchdog('security', 'Detected malicious attempt to alter protected user fields.', array(), WATCHDOG_WARNING);
     // set this to a value type field
     form_set_error('category', t('Detected malicious attempt to alter protected user fields.'));
@@ -287,9 +286,11 @@ function user_profile_form_submit($form, &$form_state) {
   $category = $form_state['values']['_category'];
   unset($form_state['values']['_account'], $form_state['values']['op'], $form_state['values']['submit'], $form_state['values']['cancel'], $form_state['values']['form_token'], $form_state['values']['form_id'], $form_state['values']['_category'], $form_state['values']['form_build_id']);
 
-  field_attach_submit('user', $account, $form, $form_state);
-  user_module_invoke('submit', $form_state['values'], $account, $category);
-  user_save($account, $form_state['values'], $category);
+  $edit = (object)$form_state['values'];
+  field_attach_submit('user', $edit, $form, $form_state);
+  $edit = (array)$edit;
+  user_module_invoke('submit', $edit, $account, $category);
+  user_save($account, $edit, $category);
 
   // Clear the page cache because pages can contain usernames and/or profile information:
   cache_clear_all();

@@ -1,5 +1,5 @@
 <?php
-// $Id: list.module,v 1.2 2009/02/05 03:42:57 webchick Exp $
+// $Id: list.module,v 1.3 2009/03/26 13:31:24 webchick Exp $
 
 /**
  * @file
@@ -94,17 +94,19 @@ function list_field_columns($field) {
 
 /**
  * Implementation of hook_field_validate().
+ *
+ * Possible error codes:
+ * - 'list_illegal_value': The value is not part of the list of allowed values.
  */
-function list_field_validate($obj_type, $object, $field, $instance, $items, $form) {
+function list_field_validate($obj_type, $object, $field, $instance, $items, &$errors) {
   $allowed_values = list_allowed_values($field);
-  if (is_array($items)) {
-    foreach ($items as $delta => $item) {
-      $error_element = isset($item['_error_element']) ? $item['_error_element'] : '';
-      if (is_array($item) && isset($item['_error_element'])) unset($item['_error_element']);
-      if (!empty($item['value'])) {
-        if (count($allowed_values) && !array_key_exists($item['value'], $allowed_values)) {
-          form_set_error($error_element, t('%name: illegal value.', array('%name' => t($instance['label']))));
-        }
+  foreach ($items as $delta => $item) {
+    if (!empty($item['value'])) {
+      if (count($allowed_values) && !array_key_exists($item['value'], $allowed_values)) {
+        $errors[$field['field_name']][$delta][] = array(
+          'error' => 'list_illegal_value',
+          'message' => t('%name: illegal value.', array('%name' => t($instance['label']))),
+        );
       }
     }
   }

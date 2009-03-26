@@ -1,5 +1,5 @@
 <?php
-// $Id: number.module,v 1.4 2009/03/10 09:45:31 dries Exp $
+// $Id: number.module,v 1.5 2009/03/26 13:31:25 webchick Exp $
 
 /**
  * @file
@@ -84,19 +84,25 @@ function number_field_columns($field) {
 
 /**
  * Implementation of hook_field_validate().
+ *
+ * Possible error codes:
+ * - 'number_min': The value is smaller than the allowed minimum value.
+ * - 'number_max': The value is larger than the allowed maximum value.
  */
-function number_field_validate($obj_type, $node, $field, $instance, &$items, $form) {
-  if (is_array($items)) {
-    foreach ($items as $delta => $item) {
-      $error_element = isset($item['_error_element']) ? $item['_error_element'] : '';
-      if (is_array($item) && isset($item['_error_element'])) unset($item['_error_element']);
-      if ($item['value'] != '') {
-        if (is_numeric($instance['settings']['min']) && $item['value'] < $instance['settings']['min']) {
-          form_set_error($error_element, t('%name: the value may be no smaller than %min.', array('%name' => t($instance['label']), '%min' => $instance['settings']['min'])));
-        }
-        if (is_numeric($instance['settings']['max']) && $item['value'] > $instance['settings']['max']) {
-          form_set_error($error_element, t('%name: the value may be no larger than %max.', array('%name' => t($instance['label']), '%max' => $instance['settings']['max'])));
-        }
+function number_field_validate($obj_type, $node, $field, $instance, $items, &$errors) {
+  foreach ($items as $delta => $item) {
+    if ($item['value'] != '') {
+      if (is_numeric($instance['settings']['min']) && $item['value'] < $instance['settings']['min']) {
+        $errors[$field['field_name']][$delta][] = array(
+          'error' => 'number_min',
+          'message' => t('%name: the value may be no smaller than %min.', array('%name' => t($instance['label']), '%min' => $instance['settings']['min'])),
+        );
+      }
+      if (is_numeric($instance['settings']['max']) && $item['value'] > $instance['settings']['max']) {
+        $errors[$field['field_name']][$delta][] = array(
+          'error' => 'number_max',
+          'message' => t('%name: the value may be no larger than %max.', array('%name' => t($instance['label']), '%max' => $instance['settings']['max'])),
+        );
       }
     }
   }
@@ -271,6 +277,13 @@ function number_field_widget(&$form, &$form_state, $field, $instance, $items, $d
 }
 
 /**
+ * Implementation of hook_field_widget_error().
+ */
+function number_field_widget_error($element, $error) {
+  form_error($element['value'], $error['message']);
+}
+
+/**
  * Process an individual element.
  *
  * Build the form element. When creating a form using FAPI #process,
@@ -332,12 +345,6 @@ function number_process($element, $edit, $form_state, $form) {
       $element['#element_validate'][] = 'number_decimal_validate';
       break;
   }
-
-  // Used so that hook_field('validate') knows where to flag an error.
-  $element['_error_element'] = array(
-    '#type' => 'value',
-    '#value' => implode('][', array_merge($element['#parents'], array($field_key))),
-  );
 
   return $element;
 }

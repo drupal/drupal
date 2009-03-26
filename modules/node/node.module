@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1032 2009/03/20 19:18:10 dries Exp $
+// $Id: node.module,v 1.1033 2009/03/26 13:31:25 webchick Exp $
 
 /**
  * @file
@@ -996,9 +996,6 @@ function node_validate($node, $form = array()) {
       form_set_error('date', t('You have to specify a valid date.'));
     }
   }
-
-  // Validate fields
-  field_attach_validate('node', $node, $form);
 
   // Do node-type-specific validation checks.
   node_invoke($node, 'validate', $form);

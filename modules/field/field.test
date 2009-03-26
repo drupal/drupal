@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.6 2009/03/17 03:46:51 webchick Exp $
+// $Id: field.test,v 1.7 2009/03/26 13:31:24 webchick Exp $
 
 // TODO : use drupalCreateField() / drupalCreateFieldInstance() all over ?
 
@@ -517,10 +517,6 @@ class FieldAttachTestCase extends DrupalWebTestCase {
 
   // Verify that field_attach_validate() invokes the correct
   // hook_field_validate.
-  // TODO: This tests the FAPI-connected behavior of hook_field_validate.
-  // As discussed at http://groups.drupal.org/node/18019, field validation
-  // will eventually be disconnected from FAPI, at which point this
-  // function will have to be rewritten.
   function testFieldAttachValidate() {
     $entity_type = 'test_entity';
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
@@ -535,19 +531,24 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $values[1]['value'] = 1;
     $entity->{$this->field_name} = $values;
 
-    field_attach_validate($entity_type, $entity, array());
+    try {
+      field_attach_validate($entity_type, $entity);
+    }
+    catch (FieldValidationException $e) {
+      $errors = $e->errors;
+    }
 
-    $errors = form_get_errors();
     foreach ($values as $delta => $value) {
       if ($value['value'] != 1) {
-        $this->assertTrue(isset($errors[$value['_error_element']]), "Error is set on {$value['_error_element']}: {$errors[$value['_error_element']]}");
-        unset($errors[$value['_error_element']]);
+        $this->assertIdentical($errors[$this->field_name][$delta][0]['error'], 'field_test_invalid', "Error set on value $delta");
+        $this->assertEqual(count($errors[$this->field_name][$delta]), 1, "Only one error set on value $delta");
+        unset($errors[$this->field_name][$delta]);
       }
       else {
-        $this->assertFalse(isset($errors[$value['_error_element']]), "Error is not set on {$value['_error_element']}");
+        $this->assertFalse(isset($errors[$this->field_name][$delta]), "No error set on value $delta");
       }
     }
-    $this->assertEqual(count($errors), 0, 'No extraneous form errors set');
+    $this->assertEqual(count($errors[$this->field_name]), 0, 'No extraneous errors set');
   }
 
   // Validate that FAPI elements are generated. This could be much

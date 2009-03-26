@@ -1,5 +1,5 @@
 <?php
-// $Id: text.test,v 1.1 2009/02/03 17:30:12 dries Exp $
+// $Id: text.test,v 1.2 2009/03/26 13:31:25 webchick Exp $
 
 class TextFieldTestCase extends DrupalWebTestCase {
   protected $instance;
@@ -14,6 +14,31 @@ class TextFieldTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('field', 'text', 'field_test');
+  }
+
+  // Test fields.
+
+  /**
+   * Test text field validation.
+   */
+  function testTextFieldValidation() {
+    // Create a field with settings to validate.
+    $max_length = 3;
+    $field = $this->drupalCreateField('text', NULL, array('settings' => array('max_length' => $max_length)));
+    $this->instance = $this->drupalCreateFieldInstance($field['field_name'], 'text_textfield', 'text_default', FIELD_TEST_BUNDLE);
+
+    // Test valid and invalid values with field_attach_validate().
+    $entity = field_test_create_stub_entity(0, 0, FIELD_TEST_BUNDLE);
+    for ($i = 0; $i <= $max_length + 2; $i++) {
+      $entity->{$field['field_name']}[0]['value'] = str_repeat('x', $i);
+      try {
+        field_attach_validate('test_entity', $entity);
+        $this->assertTrue($i <= $max_length, "Length $i does not cause validation error when max_length is $max_length");
+      }
+      catch (FieldValidationException $e) {
+        $this->assertTrue($i > $max_length, "Length $i causes validation error when max_length is $max_length");
+      }
+    }
   }
 
   // Test widgets.
