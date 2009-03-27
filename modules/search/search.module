@@ -646,7 +646,9 @@ function search_node_update_index($node) {
   while ($link = db_fetch_object($result)) {
     $output[] = $link->caption;
   }
-  return '<a>(' . implode(', ', $output) . ')</a>';
+  if (count($output)) { 
+    return '<a>(' . implode(', ', $output) . ')</a>';
+  }
 }
 
 /**
