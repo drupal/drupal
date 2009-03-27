@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.286 2009/03/15 18:51:28 webchick Exp $
+// $Id: search.module,v 1.287 2009/03/27 00:16:16 webchick Exp $
 
 /**
  * @file
@@ -646,7 +646,9 @@ function search_node_update_index($node) {
   while ($link = db_fetch_object($result)) {
     $output[] = $link->caption;
   }
-  return '<a>(' . implode(', ', $output) . ')</a>';
+  if (count($output)) { 
+    return '<a>(' . implode(', ', $output) . ')</a>';
+  }
 }
 
 /**
