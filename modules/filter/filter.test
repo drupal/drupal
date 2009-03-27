@@ -184,7 +184,7 @@ class FilterTestCase extends DrupalWebTestCase {
   function getInfo() {
     return array(
       'name' => t('Core filters'),
-      'description' => t('Filter each filter individually: Convert URLs into links, Convert line breaks, Correct broken HTML, Escape all HTML, Limit allowed HTML tags, check the internal filter.'),
+      'description' => t('Filter each filter individually: Convert URLs into links, Convert line breaks, Correct broken HTML, Escape all HTML, Limit allowed HTML tags.'),
       'group' => t('Filter'),
     );
   }
@@ -232,12 +232,5 @@ class FilterTestCase extends DrupalWebTestCase {
       // Delete new filter.
       $this->drupalPost('admin/settings/filter/delete/' . $format->format, array(), t('Delete'));
     }
-  }
-
-  /** 
-   * Unit test for the internal link filter.
-   */
-  function testInternalFilter() {
-    $this->assertEqual(_filter_internal('[internal:foo/bar] [internal:foo2/bar2]'), url('foo/bar') . ' ' . url('foo2/bar2'), t('The internal filter works'));
   }
 }
