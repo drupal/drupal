@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.181 2009/03/25 13:55:22 webchick Exp $
+// $Id: menu.module,v 1.182 2009/03/28 03:58:55 dries Exp $
 
 /**
  * @file
@@ -143,6 +143,10 @@ function menu_theme() {
     'menu_overview_form' => array(
       'file' => 'menu.admin.inc',
       'arguments' => array('form' => NULL),
+    ),
+    'menu_admin_overview' => array(
+      'file' => 'menu.admin.inc',
+      'arguments' => array('title' => NULL, 'name' => NULL, 'description' => NULL),
     ),
   );
 }
