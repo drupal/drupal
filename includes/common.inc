@@ -1802,7 +1802,7 @@ function drupal_attributes($attributes = array()) {
  *       http:). Useful for links that will be displayed outside the site, such
  *       as in an RSS feed.
  *     - 'html' (default FALSE)
- *       Whether the title is HTML, or just plain-text. For example for making
+ *       Whether $text is HTML, or just plain-text. For example for making
  *       an image a link, this must be set to TRUE, or else you will see the
  *       escaped HTML.
  *     - 'alias' (default FALSE)
