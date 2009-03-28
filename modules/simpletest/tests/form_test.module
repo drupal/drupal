@@ -51,6 +51,13 @@ function form_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['form_test/drupal_execute_batch_api'] = array(
+    'title' => 'BatchAPI Drupal_execute tests',
+    'page callback' => 'form_test_drupal_execute_batch_api',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -208,4 +215,67 @@ function _form_test_tableselect_js_select_form($form_state, $action) {
   }
 
   return _form_test_tableselect_form_builder($form_state, $options);
+}
+
+/**
+ * Page callback for the batch/drupal_execute interaction test.
+ *
+ * When called without any arguments we set up a batch that calls
+ * form_test_batch_callback. That function will submit a form using
+ * drupal_execute using the values specified in this function.
+ *
+ * The form's field test_value begins at 'initial_value', and is changed
+ * to 'form_submitted' when the form is submitted successfully. On 
+ * completion this function is passed 'done' to complete the process.
+ */
+function form_test_drupal_execute_batch_api($arg = '') {
+  // If we're at the end of the batch process, return.
+  if ($arg == 'done') {
+    return t('Done');
+  }
+
+  // Otherwise set up the batch.
+  $batch['operations'] = array(
+    array('form_test_batch_callback', array('form_submitted')),
+  );
+
+  // Set the batch and process it.
+  batch_set($batch);
+  batch_process('form_test/drupal_execute_batch_api/done');
+}
+
+/**
+ * Submits form_test_mock_form using drupal_execute using the given $value.
+ */
+function form_test_batch_callback($value) {
+  $state['values']['test_value'] = $value;
+  drupal_execute('form_test_mock_form', $state);
+}
+
+/**
+ * A simple form with a textfield and submit button.
+ */
+function form_test_mock_form($form_state) {
+  $form = array();
+
+  $form['test_value'] = array(
+    '#type' => 'textfield',
+    '#default_value' => 'initial_state',
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
+  return $form;
+}
+
+/**
+ * Form submission callback.
+ *
+ * Updates the variable 'form_test_mock_submit' to the submitted form value.
+ */
+function form_test_mock_form_submit($form, &$form_state) {
+  variable_set('form_test_mock_submit', $form_state['values']['test_value']);
 }
