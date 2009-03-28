@@ -144,6 +144,10 @@ function menu_theme() {
       'file' => 'menu.admin.inc',
       'arguments' => array('form' => NULL),
     ),
+    'menu_admin_overview' => array(
+      'file' => 'menu.admin.inc',
+      'arguments' => array('title' => NULL, 'name' => NULL, 'description' => NULL),
+    ),
   );
 }
 

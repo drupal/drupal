@@ -11,13 +11,27 @@
  */
 function menu_overview_page() {
   $result = db_query("SELECT * FROM {menu_custom} ORDER BY title");
-  $content = array();
+  $header = array(t('Title'), array('data' => t('Operations'), 'colspan' => '3'));
+  $rows = array();
   while ($menu = db_fetch_array($result)) {
-    $menu['href'] = 'admin/build/menu-customize/' . $menu['menu_name'];
-    $menu['localized_options'] = array();
-    $content[] = $menu;
+    $row = array(theme('menu_admin_overview', $menu['title'], $menu['menu_name'], $menu['description']));
+    $row[] = array('data' => l(t('list items'), 'admin/build/menu-customize/' . $menu['menu_name']));
+    $row[] = array('data' => l(t('edit menu'), 'admin/build/menu-customize/' . $menu['menu_name'] . '/edit'));
+    $row[] = array('data' => l(t('add item'), 'admin/build/menu-customize/' . $menu['menu_name'] . '/add'));
+    $rows[] = $row;
   }
-  return theme('admin_block_content', $content);
+
+  return theme('table', $header, $rows);
+}
+
+/**
+ * Theme the menu title and description for admin page
+ */
+function theme_menu_admin_overview($title, $name, $description) {
+  $output = check_plain($title);
+  $output .= '<div class="description">' . filter_xss_admin($description) . '</div>';
+  
+  return $output;
 }
 
 /**
