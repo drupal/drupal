@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.5 2009/03/17 23:26:33 webchick Exp $
+// $Id: form.test,v 1.6 2009/03/28 18:09:11 webchick Exp $
 
 /**
  * @file
@@ -341,6 +341,45 @@ class FormsFormCleanIdFunctionalTest extends DrupalWebTestCase {
     $this->assertUniqueText('form-test-form-clean-id-presence-1');
     $this->assertUniqueText('form-test-form-clean-id-presence-2');
     $this->assertNoUniqueText('Test Textfield');
+  }
+
+}
+
+/**
+ * Test using drupal_execute in a batch.
+ */
+class FormAPITestCase extends DrupalWebTestCase {
+
+  function getInfo() {
+    return array(
+      'name' => t('Drupal Execute and Batch API'),
+      'description' => t('Tests the compatibility of drupal_execute and the Batch API'),
+      'group' => t('Form API'),
+    );
+  }
+
+  /**
+   * Check that we can run drupal_execute during a batch.
+   */
+  function testDrupalExecuteInBatch() {
+
+    // Our test is going to modify the following variable.
+    variable_set('form_test_mock_submit', 'initial_state');
+
+    // This is a page that sets a batch, which calls drupal_execute, which
+    // modifies the variable we set up above.
+    $this->drupalGet('form_test/drupal_execute_batch_api');
+
+    // If the drupal_execute call executed correctly our test variable will be
+    // set to 'form_submitted'.
+    $this->assertEqual('form_submitted', variable_get('form_test_mock_submit', 'initial_state'), t('Check drupal_execute called submit handlers when running in a batch'));
+
+    // Clean our variable up.
+    variable_del('form_test_mock_submit');
+  }
+
+  function setUp() {
+    parent::setUp('form_test');
   }
 
 }

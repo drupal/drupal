@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.324 2009/03/14 20:13:26 dries Exp $
+// $Id: form.inc,v 1.325 2009/03/28 18:09:10 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -856,7 +856,10 @@ function form_execute_handlers($type, &$form, &$form_state) {
 
   foreach ($handlers as $function) {
     if (drupal_function_exists($function))  {
-      if ($type == 'submit' && ($batch =& batch_get())) {
+      // Check to see if a previous _submit handler has set a batch, but 
+      // make sure we do not react to a batch that is already being processed 
+      // (for instance if a batch operation performs a drupal_execute()).
+      if ($type == 'submit' && ($batch =& batch_get()) && !isset($batch['current_set'])) {
         // Some previous _submit handler has set a batch. We store the call
         // in a special 'control' batch set, for execution at the correct
         // time during the batch processing workflow.
