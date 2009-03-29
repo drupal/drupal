@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.install,v 1.16 2009/02/22 17:55:30 dries Exp $
+// $Id: simpletest.install,v 1.17 2009/03/29 23:14:53 webchick Exp $
 
 /**
  * Implementation of hook_install().
@@ -92,6 +92,8 @@ function simpletest_get_file_count($directory, $filename) {
  * Implementation of hook_uninstall().
  */
 function simpletest_uninstall() {
+  simpletest_clean_environment();
+
   variable_del('simpletest_httpauth');
   variable_del('simpletest_httpauth_username');
   variable_del('simpletest_httpauth_pass');
