@@ -99,7 +99,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
    * a DatabaseStatement_sqlite object, that will create a PDOStatement
    * using the semi-private PDOPrepare() method below.
    */
-  public function prepare($query, array $options = array()) {
+  public function prepare($query, $options = array()) {
     return new DatabaseStatement_sqlite($this, $query, $options);
   }
 
@@ -213,7 +213,7 @@ class DatabaseStatement_sqlite extends DatabaseStatementPrefetch implements Iter
     return $this->dbh->PDOPrepare($query);
   }
 
-  public function execute($args, $options) {
+  public function execute($args = array(), $options = array()) {
     try {
       $return = parent::execute($args, $options);
     }

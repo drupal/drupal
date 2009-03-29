@@ -142,7 +142,7 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
    * @return
    *   TRUE on success, or FALSE on failure.
    */
-  public function execute($args, $options) {
+  public function execute($args = array(), $options = array()) {
     if (isset($options['fetch'])) {
       if (is_string($options['fetch'])) {
         // Default to an object. Note: db fields will be added to the object
