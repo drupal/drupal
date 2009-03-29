@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.24 2009/03/10 16:08:43 dries Exp $
+// $Id: system.api.php,v 1.25 2009/03/29 23:11:09 webchick Exp $
 
 /**
  * @file
@@ -1576,17 +1576,54 @@ function hook_install() {
  * the same directory as mymodule.module. Drupal core's updates are implemented
  * using the system module as a name and stored in database/updates.inc.
  *
+ * If your update task is potentially time-consuming, you'll need to implement a 
+ * multipass update to avoid PHP timeouts. Multipass updates use the $sandbox 
+ * parameter provided by the batch API (normally, $context['sandbox']) to store 
+ * information between successive calls, and the $ret['#finished'] return value 
+ * to provide feedback regarding completion level.
+ *
+ * See the batch operations page for more information on how to use the batch API: 
+ * @link http://drupal.org/node/146843 http://drupal.org/node/146843 @endlink
+ *
  * @return An array with the results of the calls to update_sql(). An upate
  *   function can force the current and all later updates for this
  *   module to abort by returning a $ret array with an element like:
  *   $ret['#abort'] = array('success' => FALSE, 'query' => 'What went wrong');
  *   The schema version will not be updated in this case, and all the
  *   aborted updates will continue to appear on update.php as updates that
- *   have not yet been run.
+ *   have not yet been run. Multipass update functions will also want to pass
+ *   back the $ret['#finished'] variable to inform the batch API of progress.
  */
-function hook_update_N() {
+function hook_update_N(&$sandbox = NULL) {
+  // For most updates, the following is sufficient.
   $ret = array();
   db_add_field($ret, 'mytable1', 'newcol', array('type' => 'int', 'not null' => TRUE));
+  return $ret;
+  
+  // However, for more complex operations that may take a long time, 
+  // you may hook into Batch API as in the following example.
+  $ret = array();
+  
+  // Update 3 users at a time to have an exclamation point after their names.
+  // (They're really happy that we can do batch API in this hook!)
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $sandbox['current_uid'] = 0;
+    // We'll -1 to disregard the uid 0...
+    $sandbox['max'] = db_query('SELECT COUNT(DISTINCT uid) FROM {users}')->fetchField() - 1;
+  }
+  
+  $users = db_query_range("SELECT uid, name FROM {users} WHERE uid > %d ORDER BY uid ASC", $sandbox['current_uid'], 0, 3);
+  foreach ($users as $user) {
+    $user->name .= '!';
+    $ret[] = update_sql("UPDATE {users} SET name = '$user->name' WHERE uid = $user->uid");
+    
+    $sandbox['progress']++;
+    $sandbox['current_uid'] = $user->uid;
+  }
+
+  $ret['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+  
   return $ret;
 }
 
