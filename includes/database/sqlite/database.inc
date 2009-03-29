@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.11 2009/01/19 20:45:17 dries Exp $
+// $Id: database.inc,v 1.12 2009/03/29 12:48:33 dries Exp $
 
 /**
  * @file
@@ -99,7 +99,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
    * a DatabaseStatement_sqlite object, that will create a PDOStatement
    * using the semi-private PDOPrepare() method below.
    */
-  public function prepare($query, array $options = array()) {
+  public function prepare($query, $options = array()) {
     return new DatabaseStatement_sqlite($this, $query, $options);
   }
 
@@ -213,7 +213,7 @@ class DatabaseStatement_sqlite extends DatabaseStatementPrefetch implements Iter
     return $this->dbh->PDOPrepare($query);
   }
 
-  public function execute($args, $options) {
+  public function execute($args = array(), $options = array()) {
     try {
       $return = parent::execute($args, $options);
     }

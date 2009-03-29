@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.50 2009/01/25 12:19:31 webchick Exp $
+// $Id: database.inc,v 1.51 2009/03/29 12:48:33 dries Exp $
 
 /**
  * @file
@@ -1463,7 +1463,7 @@ interface DatabaseStatementInterface extends Traversable {
    * @return
    *   TRUE on success, or FALSE on failure.
    */
-  public function execute($args, $options);
+  public function execute($args = array(), $options = array());
 
   /**
    * Get the query string of that statement.
@@ -1640,7 +1640,7 @@ class DatabaseStatementBase extends PDOStatement implements DatabaseStatementInt
     $this->setFetchMode(PDO::FETCH_OBJ);
   }
 
-  public function execute($args, $options) {
+  public function execute($args = array(), $options = array()) {
     if (isset($options['fetch'])) {
       if (is_string($options['fetch'])) {
         // Default to an object. Note: db fields will be added to the object
