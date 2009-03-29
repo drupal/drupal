@@ -92,6 +92,8 @@ function simpletest_get_file_count($directory, $filename) {
  * Implementation of hook_uninstall().
  */
 function simpletest_uninstall() {
+  simpletest_clean_environment();
+
   variable_del('simpletest_httpauth');
   variable_del('simpletest_httpauth_username');
   variable_del('simpletest_httpauth_pass');
