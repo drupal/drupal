@@ -199,6 +199,7 @@ function path_form_alter(&$form, $form_state, $form_id) {
     );
     $form['path']['path'] = array(
       '#type' => 'textfield',
+      '#title' => t('URL alias'),
       '#default_value' => $path,
       '#maxlength' => 128,
       '#collapsible' => TRUE,
