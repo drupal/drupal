@@ -213,7 +213,7 @@ function getInfo() {
    * Ensure that the vocabulary static reset works correctly.
    */
   function testTaxonomyVocabularyLoadStaticReset() {
-    $original_vocabulary = taxonomy_vocabulary_load($this->vocabulary->vid);
+    $original_vocabulary = taxonomy_vocabulary_load($this->vocabulary->vid, TRUE);
     $this->assertTrue(is_object($original_vocabulary), t('Vocabulary loaded successfully'));
     $this->assertEqual($this->vocabulary->name, $original_vocabulary->name, t('Vocabulary loaded successfully'));
 
@@ -232,6 +232,48 @@ function getInfo() {
     taxonomy_vocabulary_delete($this->vocabulary->vid);
     $vocabularies = taxonomy_get_vocabularies();
     $this->assertTrue(!isset($vocabularies[$this->vocabulary->vid]), t('The vocabulary was deleted'));
+  }
+
+  /**
+   * Tests for loading multiple vocabularies.
+   */
+  function testTaxonomyVocabularyLoadMultiple() {
+
+    // Delete any existing vocabularies.
+    foreach (taxonomy_get_vocabularies() as $vocabulary) {
+      taxonomy_vocabulary_delete($vocabulary->vid);
+    }
+
+    // Create some vocabularies and assign weights.
+    $vocabulary1 = $this->createVocabulary();
+    $vocabulary1->weight = 0;
+    taxonomy_vocabulary_save($vocabulary1);
+    $vocabulary2 = $this->createVocabulary();
+    $vocabulary2->weight = 1;
+    taxonomy_vocabulary_save($vocabulary2);
+    $vocabulary3 = $this->createVocabulary();
+    $vocabulary3->weight = 2;
+    taxonomy_vocabulary_save($vocabulary3);
+
+    // Fetch all of the vocabularies using taxonomy_get_vocabularies().
+    // Confirm that the vocabularies are ordered by weight.
+    $vocabularies = taxonomy_get_vocabularies();
+    $this->assertEqual(array_shift($vocabularies), $vocabulary1, t('Vocabulary was found in the vocabularies array.'));
+    $this->assertEqual(array_shift($vocabularies), $vocabulary2, t('Vocabulary was found in the vocabularies array.'));
+    $this->assertEqual(array_shift($vocabularies), $vocabulary3, t('Vocabulary was found in the vocabularies array.'));
+
+    // Fetch the vocabularies with taxonomy_vocabulary_load_multiple(), specifying IDs.
+    // Ensure they are returned in the same order as the original array.
+    $vocabularies = taxonomy_vocabulary_load_multiple(array($vocabulary3->vid, $vocabulary2->vid, $vocabulary1->vid));
+    $this->assertEqual(array_shift($vocabularies), $vocabulary3, t('Vocabulary loaded successfully by ID.'));
+    $this->assertEqual(array_shift($vocabularies), $vocabulary2, t('Vocabulary loaded successfully by ID.'));
+    $this->assertEqual(array_shift($vocabularies), $vocabulary1, t('Vocabulary loaded successfully by ID.'));
+
+    // Fetch vocabulary 1 by name.
+    $this->assertTrue(current(taxonomy_vocabulary_load_multiple(array(), array('name' => $vocabulary1->name))) == $vocabulary1, t('Vocabulary loaded successfully by name.'));
+
+    // Fetch vocabulary 1 by name and ID.
+    $this->assertTrue(current(taxonomy_vocabulary_load_multiple(array($vocabulary1->vid), array('name' => $vocabulary1->name))) == $vocabulary1, t('Vocabulary loaded successfully by name and ID.'));
   }
 }
 

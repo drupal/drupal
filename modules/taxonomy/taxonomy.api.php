@@ -20,8 +20,10 @@
  * @param $vocabulary
  *   A taxonomy vocabulary object.
  */
-function hook_taxonomy_vocabulary_load($vocabulary) {
-  $vocabulary->synonyms = variable_get('taxonomy_' . $vocabulary->vid . '_synonyms', FALSE);
+function hook_taxonomy_vocabulary_load($vocabularies) {
+  foreach ($vocabularies as $vocabulary) {
+    $vocabulary->synonyms = variable_get('taxonomy_' . $vocabulary->vid . '_synonyms', FALSE);
+  }
 }
 
 /**
