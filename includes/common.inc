@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.872 2009/03/28 03:54:37 dries Exp $
+// $Id: common.inc,v 1.873 2009/03/30 03:15:40 webchick Exp $
 
 /**
  * @file
@@ -3715,6 +3715,9 @@ function drupal_common_theme() {
       'arguments' => array('element' => NULL),
     ),
     'form_element' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'text_format_wrapper' => array(
       'arguments' => array('element' => NULL),
     ),
   );
