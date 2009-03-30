@@ -178,6 +178,10 @@ function field_create_field($field) {
   if (empty($field['field_name'])) {
     throw new FieldException('Attempt to create an unnamed field.');
   }
+  // Field type is required.
+  if (empty($field['type'])) {
+    throw new FieldException('Attempt to create a field with no type.');
+  }
   // Field name cannot contain invalid characters.
   if (preg_match('/[^a-z0-9_]/', $field['field_name'])) {
     throw new FieldException('Attempt to create a field with invalid characters. Only alphanumeric characters and underscores are allowed.');
