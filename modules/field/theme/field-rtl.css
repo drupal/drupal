@@ -1,0 +1,11 @@
+/* $Id: field-rtl.css,v 1.1 2009/03/30 05:28:41 webchick Exp $ */
+
+form .field-multiple-table th.field-label {
+  padding-right: 0;
+}
+form .field-multiple-table td.field-multiple-drag {
+  padding-left: 0;
+}
+form .field-multiple-table td.field-multiple-drag a.tabledrag-handle{
+  padding-left: .5em;
+}

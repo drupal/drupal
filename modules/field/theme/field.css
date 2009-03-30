@@ -1,4 +1,4 @@
-/* $Id: field.css,v 1.3 2009/03/10 09:45:32 dries Exp $ */
+/* $Id: field.css,v 1.4 2009/03/30 05:28:41 webchick Exp $ */
 
 /* Field display */
 .field .field-label,
@@ -18,14 +18,14 @@ form .field-multiple-table {
   margin: 0;
 }
 form .field-multiple-table th.field-label {
-  padding-left: 0;
+  padding-left: 0; /*LTR*/
 }
 form .field-multiple-table td.field-multiple-drag {
   width: 30px;
-  padding-right: 0;
+  padding-right: 0; /*LTR*/
 }
 form .field-multiple-table td.field-multiple-drag a.tabledrag-handle{
-  padding-right: .5em;
+  padding-right: .5em; /*LTR*/
 }
 
 form .field-add-more-submit {
