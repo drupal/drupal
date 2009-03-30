@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.18 2008/12/30 16:43:14 dries Exp $
+// $Id: mail.inc,v 1.19 2009/03/30 05:32:31 webchick Exp $
 
 /**
  * Compose and optionally send an e-mail message.
@@ -132,7 +132,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
     // Log errors
     if (!$message['result']) {
       watchdog('mail', 'Error sending e-mail (from %from to %to).', array('%from' => $message['from'], '%to' => $message['to']), WATCHDOG_ERROR);
-      drupal_set_message(t('Unable to send e-mail. Please contact the site admin, if the problem persists.'), 'error');
+      drupal_set_message(t('Unable to send e-mail. Please contact the site administrator if the problem persists.'), 'error');
     }
   }
 
