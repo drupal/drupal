@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.487 2009/03/08 04:25:04 webchick Exp $
+// $Id: book.module,v 1.488 2009/03/30 05:40:44 webchick Exp $
 
 /**
  * @file
@@ -72,8 +72,8 @@ function book_node_view_link($node, $teaser, $page) {
       if ((user_access('add content to books') || user_access('administer book outlines')) && node_access('create', $child_type) && $node->status == 1 && $node->book['depth'] < MENU_MAX_DEPTH) {
         $links['book_add_child'] = array(
           'title' => t('Add child page'),
-          'href' => "node/add/" . str_replace('_', '-', $child_type),
-          'query' => "parent=" . $node->book['mlid'],
+          'href' => 'node/add/' . str_replace('_', '-', $child_type),
+          'query' => 'parent=' . $node->book['mlid'],
         );
       }
 
