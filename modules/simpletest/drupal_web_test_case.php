@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.91 2009/03/17 23:26:33 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.92 2009/03/30 05:35:35 webchick Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -1821,7 +1821,7 @@ class DrupalWebTestCase {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertTitle($title, $message, $group = 'Other') {
-    return $this->assertTrue($this->xpath('//title[text()="' . $title . '"]'), $message, $group);
+    return $this->assertEqual(current($this->xpath('//title')), $title, $message, $group);
   }
 
   /**
@@ -1837,7 +1837,7 @@ class DrupalWebTestCase {
    *   TRUE on pass, FALSE on fail.
    */
   protected function assertNoTitle($title, $message, $group = 'Other') {
-    return $this->assertFalse($this->xpath('//title[text()="' . $title . '"]'), $message, $group);
+    return $this->assertNotEqual(current($this->xpath('//title')), $title, $message, $group);
   }
 
   /**
