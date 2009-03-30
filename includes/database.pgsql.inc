@@ -474,7 +474,7 @@ function db_type_map() {
     'blob:big' => 'bytea',
     'blob:normal' => 'bytea',
 
-    'datetime:normal' => 'timestamp',
+    'datetime:normal' => 'timestamp without time zone',
 
     'serial:tiny' => 'serial',
     'serial:small' => 'serial',
