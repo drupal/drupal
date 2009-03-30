@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.153 2009/03/08 04:25:05 webchick Exp $
+// $Id: path.module,v 1.154 2009/03/30 05:30:39 webchick Exp $
 
 /**
  * @file
@@ -199,6 +199,7 @@ function path_form_alter(&$form, $form_state, $form_id) {
     );
     $form['path']['path'] = array(
       '#type' => 'textfield',
+      '#title' => t('URL alias'),
       '#default_value' => $path,
       '#maxlength' => 128,
       '#collapsible' => TRUE,
