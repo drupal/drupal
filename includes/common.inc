@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.873 2009/03/30 03:15:40 webchick Exp $
+// $Id: common.inc,v 1.874 2009/03/30 05:13:45 webchick Exp $
 
 /**
  * @file
@@ -1976,66 +1976,69 @@ function drupal_add_link($attributes) {
 }
 
 /**
- * Adds a CSS file to the stylesheet queue.
+ * Adds a cascading stylesheet to the stylesheet queue.
  *
- * @param $path
- *   (optional) The path to the CSS file relative to the base_path(), e.g.,
- *   /modules/devel/devel.css.
+ * @param $data
+ *   (optional) The stylesheet data to be added, depending on what is passed
+ *   through to the $options['type'] parameter:
+ *   - 'module' or 'theme': The path to the CSS file relative to the base_path(),
+ *     e.g., "modules/devel/devel.css".
  *
- *   Modules should always prefix the names of their CSS files with the module
- *   name, for example: system-menus.css rather than simply menus.css. Themes
- *   can override module-supplied CSS files based on their filenames, and this
- *   prefixing helps prevent confusing name collisions for theme developers.
- *   See drupal_get_css where the overrides are performed.
+ *     Modules should always prefix the names of their CSS files with the
+ *     module name, for example: system-menus.css rather than simply menus.css.
+ *     Themes can override module-supplied CSS files based on their filenames,
+ *     and this prefixing helps prevent confusing name collisions for theme
+ *     developers. See drupal_get_css where the overrides are performed.
  *
- *   If the direction of the current language is right-to-left (Hebrew,
- *   Arabic, etc.), the function will also look for an RTL CSS file and append
- *   it to the list. The name of this file should have an '-rtl.css' suffix.
- *   For example a CSS file called 'name.css' will have a 'name-rtl.css'
- *   file added to the list, if exists in the same directory. This CSS file
- *   should contain overrides for properties which should be reversed or
- *   otherwise different in a right-to-left display.
+ *     If the direction of the current language is right-to-left (Hebrew,
+ *     Arabic, etc.), the function will also look for an RTL CSS file and append
+ *     it to the list. The name of this file should have an '-rtl.css' suffix.
+ *     For example a CSS file called 'mymodule-name.css' will have a
+ *     'mymodule-name-rtl.css' file added to the list, if exists in the same
+ *     directory. This CSS file should contain overrides for properties which
+ *     should be reversed or otherwise different in a right-to-left display.
+ *   - 'inline': A string of CSS that should be placed in the given scope. Note
+ *     that it is better practice to use 'module' or 'theme' stylesheets, rather
+ *     than 'inline' as the CSS would then be aggregated and cached.
+ *   - 'reset': Any previously added CSS will be reset and $data will be ignored.
  *
- *   Note that if $options or $options['type'] is 'reset', then $path will be
- *   ignored.
  * @param $options
- *   (optional) A string defining the type of CSS that is being added in the
- *   $path parameter ('module' or 'theme'), or an associative array of
+ *   (optional) A string defining the 'type' of CSS that is being added in the
+ *   $data parameter ('module', 'theme' or 'inline'), or an associative array of
  *   additional options, with the following keys:
- *     - 'type'
- *       The type of stylesheet that is being added. Types are: 'module',
- *       'theme', or 'reset'. Defaults to 'module'. If the type is 'reset',
- *       then the CSS will be reset, ignoring $path and other $options.
- *     - 'media'
- *       The media type for the stylesheet, e.g., all, print, screen. Defaults
- *       to 'all'.
- *     - 'preprocess':
- *       Allow this CSS file to be aggregated and compressed if the Optimize
- *       CSS feature has been turned on under the performance section. Defaults
- *       to TRUE.
+ *   - 'type': The type of stylesheet that is being added. Types are: 'module',
+ *     'theme', 'inline' or 'reset'. Defaults to 'module'. If the type is
+ *     'reset', then the CSS will be reset, ignoring $path and other $options.
+ *   - 'media': The media type for the stylesheet, e.g., all, print, screen.
+ *     Defaults to 'all'.
+ *   - 'preprocess': Allows the CSS to be aggregated and compressed if the
+ *     Optimize CSS feature has been turned on under the performance section.
+ *     Defaults to TRUE.
  *
- *       What does this actually mean?
- *       CSS preprocessing is the process of aggregating a bunch of separate CSS
- *       files into one file that is then compressed by removing all extraneous
- *       white space.
+ *     What does this actually mean?
+ *     CSS preprocessing is the process of aggregating a bunch of separate CSS
+ *     files into one file that is then compressed by removing all extraneous
+ *     white space. Note that preprocessed inline stylesheets will not be
+ *     aggregated into this single file, instead it will just be compressed
+ *     when being output on the page.
  *
- *       The reason for merging the CSS files is outlined quite thoroughly here:
- *       http://www.die.net/musings/page_load_time/
- *       "Load fewer external objects. Due to request overhead, one bigger file
- *       just loads faster than two smaller ones half its size."
+ *     The reason for merging the CSS files is outlined quite thoroughly here:
+ *     http://www.die.net/musings/page_load_time/
+ *     "Load fewer external objects. Due to request overhead, one bigger file
+ *     just loads faster than two smaller ones half its size."
  *
- *       However, you should *not* preprocess every file as this can lead to
- *       redundant caches. You should set $preprocess = FALSE when your styles
- *       are only used rarely on the site. This could be a special admin page,
- *       the homepage, or a handful of pages that does not represent the
- *       majority of the pages on your site.
+ *     However, you should *not* preprocess every file as this can lead to
+ *     redundant caches. You should set $preprocess = FALSE when your styles
+ *     are only used rarely on the site. This could be a special admin page,
+ *     the homepage, or a handful of pages that does not represent the
+ *     majority of the pages on your site.
  *
- *       Typical candidates for caching are for example styles for nodes across
- *       the site, or used in the theme.
+ *     Typical candidates for caching are for example styles for nodes across
+ *     the site, or used in the theme.
  * @return
- *   An array of CSS files.
+ *   An array of queued cascading stylesheets.
  */
-function drupal_add_css($path = NULL, $options = NULL) {
+function drupal_add_css($data = NULL, $options = NULL) {
   static $css = array();
   global $language;
 
@@ -2056,7 +2059,7 @@ function drupal_add_css($path = NULL, $options = NULL) {
 
   // Create an array of CSS files for each media type first, since each type needs to be served
   // to the browser differently.
-  if (isset($path)) {
+  if (isset($data)) {
     $options += array(
       'type' => 'module',
       'media' => 'all',
@@ -2067,13 +2070,13 @@ function drupal_add_css($path = NULL, $options = NULL) {
 
     // This check is necessary to ensure proper cascading of styles and is faster than an asort().
     if (!isset($css[$media])) {
-      $css[$media] = array('module' => array(), 'theme' => array());
+      $css[$media] = array('module' => array(), 'theme' => array(), 'inline' => array());
     }
-    $css[$media][$type][$path] = $options['preprocess'];
+    $css[$media][$type][$data] = $options['preprocess'];
 
     // If the current language is RTL, add the CSS file with RTL overrides.
-    if ($language->direction == LANGUAGE_RTL) {
-      $rtl_path = str_replace('.css', '-rtl.css', $path);
+    if ($type != 'inline' && $language->direction == LANGUAGE_RTL) {
+      $rtl_path = str_replace('.css', '-rtl.css', $data);
       if (file_exists($rtl_path)) {
         $css[$media][$type][$rtl_path] = $options['preprocess'];
       }
@@ -2112,6 +2115,7 @@ function drupal_get_css($css = NULL) {
   }
   $no_module_preprocess = '';
   $no_theme_preprocess = '';
+  $no_inline_preprocess = '';
 
   $preprocess_css = (variable_get('preprocess_css', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
   $directory = file_directory_path();
@@ -2126,7 +2130,7 @@ function drupal_get_css($css = NULL) {
   foreach ($css as $media => $types) {
     // If CSS preprocessing is off, we still need to output the styles.
     // Additionally, go through any remaining styles if CSS preprocessing is on and output the non-cached ones.
-    foreach ($types as $type => $files) {
+    foreach ($types as $type => $information) {
       if ($type == 'module') {
         // Setup theme overrides for module styles.
         $theme_styles = array();
@@ -2134,29 +2138,33 @@ function drupal_get_css($css = NULL) {
           $theme_styles[] = basename($theme_style);
         }
       }
-      foreach ($types[$type] as $file => $preprocess) {
+      foreach ($types[$type] as $data => $preprocess) {
         // If the theme supplies its own style using the name of the module style, skip its inclusion.
         // This includes any RTL styles associated with its main LTR counterpart.
-        if ($type == 'module' && in_array(str_replace('-rtl.css', '.css', basename($file)), $theme_styles)) {
+        if ($type == 'module' && in_array(str_replace('-rtl.css', '.css', basename($data)), $theme_styles)) {
           // Unset the file to prevent its inclusion when CSS aggregation is enabled.
-          unset($types[$type][$file]);
+          unset($types[$type][$data]);
           continue;
         }
+        // Include inline stylesheets.
+        if ($type == 'inline') {
+          $no_inline_preprocess .= drupal_load_stylesheet_content($data, $preprocess);
+        }
         // Only include the stylesheet if it exists.
-        if (file_exists($file)) {
+        elseif (file_exists($data)) {
           if (!$preprocess || !($is_writable && $preprocess_css)) {
             // If a CSS file is not to be preprocessed and it's a module CSS file, it needs to *always* appear at the *top*,
             // regardless of whether preprocessing is on or off.
             if (!$preprocess && $type == 'module') {
-              $no_module_preprocess .= '<link type="text/css" rel="stylesheet" media="' . $media . '" href="' . base_path() . $file . $query_string . '" />' . "\n";
+              $no_module_preprocess .= '<link type="text/css" rel="stylesheet" media="' . $media . '" href="' . base_path() . $data . $query_string . '" />' . "\n";
             }
             // If a CSS file is not to be preprocessed and it's a theme CSS file, it needs to *always* appear at the *bottom*,
             // regardless of whether preprocessing is on or off.
             elseif (!$preprocess && $type == 'theme') {
-              $no_theme_preprocess .= '<link type="text/css" rel="stylesheet" media="' . $media . '" href="' . base_path() . $file . $query_string . '" />' . "\n";
+              $no_theme_preprocess .= '<link type="text/css" rel="stylesheet" media="' . $media . '" href="' . base_path() . $data . $query_string . '" />' . "\n";
             }
             else {
-              $output .= '<link type="text/css" rel="stylesheet" media="' . $media . '" href="' . base_path() . $file . $query_string . '" />' . "\n";
+              $output .= '<link type="text/css" rel="stylesheet" media="' . $media . '" href="' . base_path() . $data . $query_string . '" />' . "\n";
             }
           }
         }
@@ -2169,8 +2177,10 @@ function drupal_get_css($css = NULL) {
       $output .= '<link type="text/css" rel="stylesheet" media="' . $media . '" href="' . base_path() . $preprocess_file . '" />' . "\n";
     }
   }
-
-  return $no_module_preprocess . $output . $no_theme_preprocess;
+  if (!empty($no_inline_preprocess)) {
+    $no_inline_preprocess = '<style type="text/css">' . $no_inline_preprocess . '</style>';
+  }
+  return $no_module_preprocess . $output . $no_theme_preprocess . $no_inline_preprocess;
 }
 
 /**
@@ -2193,15 +2203,18 @@ function drupal_build_css_cache($types, $filename) {
 
   if (!file_exists($csspath . '/' . $filename)) {
     // Build aggregate CSS file.
-    foreach ($types as $type) {
-      foreach ($type as $file => $cache) {
-        if ($cache) {
-          $contents = drupal_load_stylesheet($file, TRUE);
-          // Return the path to where this CSS file originated from.
-          $base = base_path() . dirname($file) . '/';
-          _drupal_build_css_path(NULL, $base);
-          // Prefix all paths within this CSS file, ignoring external and absolute paths.
-          $data .= preg_replace_callback('/url\([\'"]?(?![a-z]+:|\/+)([^\'")]+)[\'"]?\)/i', '_drupal_build_css_path', $contents);
+    foreach ($types as $type => $css) {
+      // Only 'module' or 'theme' stylesheets can be aggregated.
+      if ($type == 'module' || $type == 'theme') {
+        foreach ($css as $stylesheet => $cache) {
+          if ($cache) {
+            $contents = drupal_load_stylesheet($stylesheet, TRUE);
+            // Return the path to where this CSS file originated from.
+            $base = base_path() . dirname($stylesheet) . '/';
+            _drupal_build_css_path(NULL, $base);
+            // Prefix all paths within this CSS file, ignoring external and absolute paths.
+            $data .= preg_replace_callback('/url\([\'"]?(?![a-z]+:|\/+)([^\'")]+)[\'"]?\)/i', '_drupal_build_css_path', $contents);
+          }
         }
       }
     }
@@ -2257,7 +2270,7 @@ function _drupal_build_css_path($matches, $base = NULL) {
  * @param $optimize
  *   Defines if CSS contents should be compressed or not.
  * @return
- *   Contents of the stylesheet including the imported stylesheets.
+ *   Contents of the stylesheet, including any resolved @import commands.
  */
 function drupal_load_stylesheet($file, $optimize = NULL) {
   static $_optimize;
@@ -2275,25 +2288,42 @@ function drupal_load_stylesheet($file, $optimize = NULL) {
     $cwd = getcwd();
     chdir(dirname($file));
 
-    // Replaces @import commands with the actual stylesheet content.
-    // This happens recursively but omits external files.
-    $contents = preg_replace_callback('/@import\s*(?:url\()?[\'"]?(?![a-z]+:)([^\'"\()]+)[\'"]?\)?;/', '_drupal_load_stylesheet', $contents);
-    // Remove multiple charset declarations for standards compliance (and fixing Safari problems).
-    $contents = preg_replace('/^@charset\s+[\'"](\S*)\b[\'"];/i', '', $contents);
-
-    if ($_optimize) {
-      // Perform some safe CSS optimizations.
-      $contents = preg_replace('<
-        \s*([@{}:;,]|\)\s|\s\()\s* |  # Remove whitespace around separators, but keep space around parentheses.
-        /\*([^*\\\\]|\*(?!/))+\*/ |   # Remove comments that are not CSS hacks.
-        [\n\r]                        # Remove line breaks.
-        >x', '\1', $contents);
-    }
+    // Process the stylesheet.
+    $contents = drupal_load_stylesheet_content($contents, $_optimize);
 
     // Change back directory.
     chdir($cwd);
   }
 
+  return $contents;
+}
+
+/**
+ * Process the contents of a stylesheet for aggregation.
+ *
+ * @param $contents
+ *   The contents of the stylesheet.
+ * @param $optimize
+ *   (optional) Boolean whether CSS contents should be minified. Defaults to
+ *   FALSE.
+ * @return
+ *   Contents of the stylesheet including the imported stylesheets.
+ */
+function drupal_load_stylesheet_content($contents, $optimize = FALSE) {  
+  // Replaces @import commands with the actual stylesheet content.
+  // This happens recursively but omits external files.
+  $contents = preg_replace_callback('/@import\s*(?:url\()?[\'"]?(?![a-z]+:)([^\'"\()]+)[\'"]?\)?;/', '_drupal_load_stylesheet', $contents);
+  // Remove multiple charset declarations for standards compliance (and fixing Safari problems).
+  $contents = preg_replace('/^@charset\s+[\'"](\S*)\b[\'"];/i', '', $contents);
+
+  if ($optimize) {
+    // Perform some safe CSS optimizations.
+    $contents = preg_replace('<
+      \s*([@{}:;,]|\)\s|\s\()\s* |  # Remove whitespace around separators, but keep space around parentheses.
+      /\*([^*\\\\]|\*(?!/))+\*/ |   # Remove comments that are not CSS hacks.
+      [\n\r]                        # Remove line breaks.
+      >x', '\1', $contents);
+  }
   return $contents;
 }
 

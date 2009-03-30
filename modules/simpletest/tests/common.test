@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.30 2009/02/28 07:36:06 webchick Exp $
+// $Id: common.test,v 1.31 2009/03/30 05:13:45 webchick Exp $
 
 /**
  * Tests for the l() function.
@@ -188,12 +188,12 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
     return array(
       'name' => t('Cascading stylesheets'),
       'description' => t('Tests adding various cascading stylesheets to the page.'),
-      'group' => t('System')
+      'group' => t('System'),
     );
   }
 
   function setUp() {
-    parent::setUp();
+    parent::setUp('php');
     // Reset drupal_add_css() before each test.
     drupal_add_css(NULL, 'reset');
   }
@@ -229,6 +229,48 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
     $css = drupal_get_path('module', 'simpletest') . '/simpletest.css';
     drupal_add_css($css);
     $this->assertTrue(strpos(drupal_get_css(), $css) > 0, t('Rendered CSS includes the added stylesheet.'));
+  }
+
+  /**
+   * Tests rendering inline stylesheets with preprocessing on.
+   */
+  function testRenderInlinePreprocess() {
+    $css = 'body { padding: 0px; }';
+    $css_preprocessed = '<style type="text/css">' . drupal_load_stylesheet_content($css, TRUE) . '</style>';
+    drupal_add_css($css, 'inline');
+    $css = drupal_get_css();
+    $this->assertEqual($css, $css_preprocessed, t('Rendering preprocessed inline CSS adds it to the page.'));
+  }
+
+  /**
+   * Tests rendering inline stylesheets with preprocessing off.
+   */
+  function testRenderInlineNoPreprocess() {
+    $css = 'body { padding: 0px; }';
+    drupal_add_css($css, array('type' => 'inline', 'preprocess' => FALSE));
+    $this->assertTrue(strpos(drupal_get_css(), $css) > 0, t('Rendering non-preprocessed inline CSS adds it to the page.'));
+  }
+
+  /**
+   * Tests rendering inline stylesheets through a full page request.
+   */
+  function testRenderInlineFullPage() {
+    $css = 'body { padding: 0px; }';
+    $compressed_css = '<style type="text/css">' . drupal_load_stylesheet_content($css, TRUE) . '</style>';
+
+    // Create a node, using the PHP filter that tests drupal_add_css().
+    $settings = array(
+      'type' => 'page',
+      'format' => 3, // PHP filter.
+      'body_format' => 3,
+      'body' => t('This tests the inline CSS!') . "<?php drupal_add_css('$css', 'inline'); ?>",
+      'promote' => 1,
+    );
+    $node = $this->drupalCreateNode($settings);
+
+    // Fetch the page.
+    $this->drupalGet('node/' . $node->nid);
+    $this->assertRaw($compressed_css, t('Inline stylesheets appear in the full page rendering.'));
   }
 }
 
