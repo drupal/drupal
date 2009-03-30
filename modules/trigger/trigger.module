@@ -240,7 +240,7 @@ function trigger_nodeapi(&$node, $op, $a3, $a4) {
       }
       // Since we know about the node, we pass that info along to the action.
       $context['node'] = $node;
-      $result = actions_do($aid, $objects[$action_info['type']], $context, $a4, $a4);
+      $result = actions_do($aid, $objects[$action_info['type']], $context, $a3, $a4);
     }
     else {
       actions_do($aid, $node, $context, $a3, $a4);
