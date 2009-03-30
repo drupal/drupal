@@ -501,6 +501,8 @@ class NodeTitleXSSTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode($edit);
 
     $this->drupalGet('node/' . $node->nid);
+    // assertTitle() decodes HTML-entities inside the <title> element.
+    $this->assertTitle($edit['title'] . ' | Drupal', t('Title is diplayed when viewing a node.'));
     $this->assertNoRaw($xss, t('Harmful tags are escaped when viewing a node.'));
 
     $this->drupalGet('node/' . $node->nid . '/edit');
