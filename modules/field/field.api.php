@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.5 2009/03/26 13:31:24 webchick Exp $
+// $Id: field.api.php,v 1.6 2009/03/30 03:44:55 webchick Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -440,8 +440,40 @@ function hook_field_attach_form($obj_type, $object, &$form, &$form_state) {
 }
 
 /**
+ * Act on field_attach_pre_load.
+ *
+ * This hook allows modules to load data before the Field Storage API,
+ * optionally preventing the field storage module from doing so.
+ *
+ * This lets 3rd party modules override, mirror, shard, or otherwise store a
+ * subset of fields in a different way than the current storage engine.
+ * Possible use cases include : per-bundle storage, per-combo-field storage...
+ *
+ * @param $obj_type
+ *   The type of objects for which to load fields; e.g. 'node' or 'user'.
+ * @param $objects
+ *   An array of objects for which to load fields. The keys for primary id and
+ *   bundle name to load are identified by hook_fieldable_info for $obj_type.
+ * @param $age
+ *   FIELD_LOAD_CURRENT to load the most recent revision for all fields, or
+ *   FIELD_LOAD_REVISION to load the version indicated by each object.
+ * @param $additions
+ *   An array of field data for the objects being loaded, keyed by entity id,
+ *   field name, and item delta number.
+ * @param $skip_fields
+ *   An array keyed by names of fields whose data has already been loaded and
+ *   therefore should not be loaded again. The values associated to these keys
+ *   are not specified.
+ * @return
+ *   Loaded field values are added to $additions and loaded field names are set
+ *   as keys in $skip_fields.
+ */
+function hook_field_attach_pre_load($obj_type, $objects, $age, &$additions, &$skip_fields) {
+}
+
+/**
  * Act on field_attach_load.
- * 
+ *
  * This hook is invoked after the field module has performed the operation.
  *
  * See field_attach_load() for details and arguments.
@@ -482,27 +514,47 @@ function hook_field_attach_presave($obj_type, $object) {
 
 /**
  * Act on field_attach_insert.
- * 
- * This hook is invoked after the field module has performed the operation.
  *
- * See field_attach_insert() for details and arguments.
+ * This hook allows modules to store data before the Field Storage
+ * API, optionally preventing the field storage module from doing so.
+ *
+ * @param $obj_type
+ *   The type of $object; e.g. 'node' or 'user'.
+ * @param $object
+ *   The object with fields to save.
+ * @param $skip_fields
+ *   An array keyed by names of fields whose data has already been written and
+ *   therefore should not be written again. The values associated to these keys
+ *   are not specified.
+ * @return
+ *   Saved field names are set set as keys in $skip_fields.
  */
-function hook_field_attach_insert($obj_type, $object) {
+function hook_field_attach_pre_insert($obj_type, $object, &$skip_fields) {
 }
 
 /**
  * Act on field_attach_update.
- * 
- * This hook is invoked after the field module has performed the operation.
  *
- * See field_attach_update() for details and arguments.
+ * This hook allows modules to store data before the Field Storage
+ * API, optionally preventing the field storage module from doing so.
+ *
+ * @param $obj_type
+ *   The type of $object; e.g. 'node' or 'user'.
+ * @param $object
+ *   The object with fields to save.
+ * @param $skip_fields
+ *   An array keyed by names of fields whose data has already been written and
+ *   therefore should not be written again. The values associated to these keys
+ *   are not specified.
+ * @return
+ *   Saved field names are set set as keys in $skip_fields.
  */
-function hook_field_attach_update($obj_type, $object) {
+function hook_field_attach_pre_update($obj_type, $object, &$skip_fields) {
 }
 
 /**
  * Act on field_attach_delete.
- * 
+ *
  * This hook is invoked after the field module has performed the operation.
  *
  * See field_attach_delete() for details and arguments.
@@ -592,11 +644,15 @@ function hook_field_attach_delete_bundle($bundle) {
  *   FIELD_LOAD_CURRENT to load the most recent revision for all
  *   fields, or FIELD_LOAD_REVISION to load the version indicated by
  *   each object.
+ * @param $skip_fields
+ *   An array keyed by names of fields whose data has already been loaded and
+ *   therefore should not be loaded again. The values associated to these keys
+ *   are not specified.
  * @return
  *   An array of field data for the objects, keyed by entity id, field
  *   name, and item delta number.
  */
-function hook_field_storage_load($obj_type, $queried_objs, $age) {
+function hook_field_storage_load($obj_type, $queried_objs, $age, $skip_fields) {
 }
 
 /**
@@ -609,8 +665,12 @@ function hook_field_storage_load($obj_type, $queried_objs, $age) {
  * @param $op
  *   FIELD_STORAGE_UPDATE when updating an existing object,
  *   FIELD_STORAGE_INSERT when inserting a new object.
+ * @param $skip_fields
+ *   An array keyed by names of fields whose data has already been written and
+ *   therefore should not be written again. The values associated to these keys
+ *   are not specified.
  */
-function hook_field_storage_write($obj_type, $object, $op) {
+function hook_field_storage_write($obj_type, $object, $op, $skip_fields) {
 }
 
 /**
@@ -626,6 +686,9 @@ function hook_field_storage_delete($obj_type, $object) {
 
 /**
  * Delete a single revision of field data for an object.
+ *
+ * Deleting the current (most recently written) revision is not
+ * allowed as has undefined results.
  *
  * @param $obj_type
  *   The entity type of object, such as 'node' or 'user'.

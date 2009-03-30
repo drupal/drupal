@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.7 2009/03/26 13:31:24 webchick Exp $
+// $Id: field.crud.inc,v 1.8 2009/03/30 03:44:55 webchick Exp $
 
 /**
  * @file
@@ -346,10 +346,12 @@ function field_create_instance($instance) {
 
   _field_write_instance($instance);
 
-  module_invoke_all('field_create_instance', $instance);
-
   // Clear caches
   field_cache_clear();
+
+  // Invoke external hooks after the cache is cleared for API consistency.
+  module_invoke_all('field_create_instance', $instance);
+
   return FALSE;
 }
 
