@@ -70,8 +70,12 @@ Drupal.behaviors.tableHeader = function (context) {
     // Get the height of the header table and scroll up that amount.
     if (prevAnchor != location.hash) {
       if (location.hash != '') {
-        var scrollLocation = $('td'+ location.hash).offset().top - $(e).height();
-        $('body, html').scrollTop(scrollLocation);
+        var offset = $('td' + location.hash).offset();
+        if (offset) {
+          var top = offset.top;
+          var scrollLocation = top - $(e).height();
+          $('body, html').scrollTop(scrollLocation);
+        }
       }
       prevAnchor = location.hash;
     }
