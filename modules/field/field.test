@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.7 2009/03/26 13:31:24 webchick Exp $
+// $Id: field.test,v 1.8 2009/03/30 05:24:38 webchick Exp $
 
 // TODO : use drupalCreateField() / drupalCreateFieldInstance() all over ?
 
@@ -939,6 +939,26 @@ class FieldTestCase extends DrupalWebTestCase {
    * Test the creation of a field.
    */
   function testCreateField() {
+    // Check that field type is required.
+    try {
+      $field_definition = array(
+        'field_name' => drupal_strtolower($this->randomName()),
+      );
+      field_create_field($field_definition);
+      $this->fail(t('Cannot create a field with no type.'));
+    } catch (FieldException $e) {
+      $this->pass(t('Cannot create a field with no type.'));
+    }
+    
+    // Check that field name is required.
+    try {
+      $field_definition = array('type' => 'test_field');
+      field_create_field($field_definition);
+      $this->fail(t('Cannot create an unnamed field.'));
+    } catch (FieldException $e) {
+      $this->pass(t('Cannot create an unnamed field.'));
+    }
+ 
     $field_definition = array(
       'field_name' => drupal_strtolower($this->randomName()),
       'type' => 'test_field',

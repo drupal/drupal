@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.8 2009/03/30 03:44:55 webchick Exp $
+// $Id: field.crud.inc,v 1.9 2009/03/30 05:24:38 webchick Exp $
 
 /**
  * @file
@@ -177,6 +177,10 @@ function field_create_field($field) {
   // Field name is required.
   if (empty($field['field_name'])) {
     throw new FieldException('Attempt to create an unnamed field.');
+  }
+  // Field type is required.
+  if (empty($field['type'])) {
+    throw new FieldException('Attempt to create a field with no type.');
   }
   // Field name cannot contain invalid characters.
   if (preg_match('/[^a-z0-9_]/', $field['field_name'])) {
