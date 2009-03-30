@@ -346,10 +346,12 @@ function field_create_instance($instance) {
 
   _field_write_instance($instance);
 
-  module_invoke_all('field_create_instance', $instance);
-
   // Clear caches
   field_cache_clear();
+
+  // Invoke external hooks after the cache is cleared for API consistency.
+  module_invoke_all('field_create_instance', $instance);
+
   return FALSE;
 }
 

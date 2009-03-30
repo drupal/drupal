@@ -152,6 +152,9 @@ function _field_sql_storage_schema($field) {
   );
 }
 
+/**
+ * Implementation of hook_field_storage_create_field().
+ */
 function field_sql_storage_field_storage_create_field($field) {
   $schema = _field_sql_storage_schema($field);
   foreach ($schema as $name => $table) {
@@ -159,6 +162,9 @@ function field_sql_storage_field_storage_create_field($field) {
   }
 }
 
+/**
+ * Implementation of hook_field_storage_delete_field().
+ */
 function field_sql_storage_field_storage_delete_field($field_name) {
   // Mark all data associated with the field for deletion.
   $table = _field_sql_storage_tablename($field_name);
@@ -168,22 +174,9 @@ function field_sql_storage_field_storage_delete_field($field_name) {
 }
 
 /**
- * Load field data for a set of objects from the database.
- *
- * @param $obj_type
- *   The entity type of objects being loaded, such as 'node' or
- *   'user'.
- * @param $objects
- *   The array of objects for which to load data.
- * @param $age
- *   FIELD_LOAD_CURRENT to load the most recent revision for all
- *   fields, or FIELD_LOAD_REVISION to load the version indicated by
- *   each object.
- * @return
- *   An array of field data for the objects, keyed by entity id, field
- *   name, and item delta number.
+ * Implementation of hook_field_storage_load().
  */
-function field_sql_storage_field_storage_load($obj_type, $objects, $age) {
+function field_sql_storage_field_storage_load($obj_type, $objects, $age, $skip_fields = array()) {
   $etid = _field_sql_storage_etid($obj_type);
   $load_current = $age == FIELD_LOAD_CURRENT;
 
@@ -200,6 +193,10 @@ function field_sql_storage_field_storage_load($obj_type, $objects, $age) {
 
   $additions = array();
   foreach ($field_ids as $field_name => $ids) {
+    if (isset($skip_fields[$field_name])) {
+      continue;
+    }
+
     $field = field_info_field($field_name);
     $table = $load_current ? _field_sql_storage_tablename($field_name) : _field_sql_storage_revision_tablename($field_name);
 
@@ -229,13 +226,20 @@ function field_sql_storage_field_storage_load($obj_type, $objects, $age) {
   return $additions;
 }
 
-function field_sql_storage_field_storage_write($obj_type, $object, $op) {
+/**
+ * Implementation of hook_field_storage_write().
+ */
+function field_sql_storage_field_storage_write($obj_type, $object, $op, $skip_fields) {
   list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
   $etid = _field_sql_storage_etid($obj_type);
 
   $instances = field_info_instances($bundle);
   foreach ($instances as $instance) {
     $field_name = $instance['field_name'];
+    if (isset($skip_fields[$field_name])) {
+      continue;
+    }
+
     $table_name = _field_sql_storage_tablename($field_name);
     $revision_name = _field_sql_storage_revision_tablename($field_name);
     $field = field_read_field($field_name);
@@ -298,14 +302,9 @@ function field_sql_storage_field_storage_write($obj_type, $object, $op) {
 }
 
 /**
- * Delete all field data for a single object. This function actually
- * deletes the data from the database.
+ * Implementation of hook_field_storage_delete().
  *
- * @param $obj_type
- *   The entity type of the object being deleted, such as 'node' or
- *   'user'.
- * @param $object
- *   The object for which to delete field data.
+ * This function actually deletes the data from the database.
  */
 function field_sql_storage_field_storage_delete($obj_type, $object) {
   list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
@@ -328,16 +327,9 @@ function field_sql_storage_field_storage_delete($obj_type, $object) {
 }
 
 /**
- * Delete field data for a single revision of a single object.
- * Deleting the current (most recently written) revision is not
- * allowed as has undefined results. This function actually deletes
- * the data from the database.
+ * Implementation of hook_field_storage_delete_revision().
  *
- * @param $obj_type
- *   The entity type of the object being deleted, such as 'node' or
- *   'user'.
- * @param $object
- *   The object for which to delete field data.
+ * This function actually deletes the data from the database.
  */
 function field_sql_storage_field_storage_delete_revision($obj_type, $object) {
   list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
@@ -357,8 +349,12 @@ function field_sql_storage_field_storage_delete_revision($obj_type, $object) {
   }
 }
 
+/**
+ * Implementation of hook_field_storage_delete_instance().
+ *
+ * This function simply marks for deletion all data associated with the field.
+ */
 function field_sql_storage_field_storage_delete_instance($field_name, $bundle) {
-  // Mark all data associated with the field for deletion.
   $table_name = _field_sql_storage_tablename($field_name);
   $revision_name = _field_sql_storage_revision_tablename($field_name);
   db_update($table_name)
@@ -371,6 +367,9 @@ function field_sql_storage_field_storage_delete_instance($field_name, $bundle) {
     ->execute();
 }
 
+/**
+ * Implementation of hook_field_storage_rename_bundle().
+ */
 function field_sql_storage_field_storage_rename_bundle($bundle_old, $bundle_new) {
   $instances = field_info_instances($bundle_old);
   foreach ($instances as $instance) {
