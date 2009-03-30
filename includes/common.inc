@@ -3717,6 +3717,9 @@ function drupal_common_theme() {
     'form_element' => array(
       'arguments' => array('element' => NULL),
     ),
+    'text_format_wrapper' => array(
+      'arguments' => array('element' => NULL),
+    ),
   );
 }
 

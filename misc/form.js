@@ -14,18 +14,18 @@ Drupal.behaviors.multiselectSelector = {
 
 
 /**
- * Automatically displays the guidelines of the selected text format.
+ * Automatically display the guidelines of the selected text format.
  */
 Drupal.behaviors.filterGuidelines = {
   attach: function(context) {
-  $('.filter-guidelines:not(.filterGuidelines-processed)', context)
-      .addClass('filterGuidelines-processed')
+    $('.filter-guidelines:not(.filter-guidelines-processed)', context)
+      .addClass('filter-guidelines-processed')
       .find('label').hide()
       .parents('.filter-wrapper').find('select.filter-list')
-      .bind('change', function() {
+      .bind('change', function () {
         $(this).parents('.filter-wrapper')
-        .find('.filter-guidelines-item').hide()
-        .siblings('#filter-guidelines-' + this.value).show();
+          .find('.filter-guidelines-item').hide()
+          .siblings('#filter-guidelines-' + this.value).show();
       })
       .change();
   }

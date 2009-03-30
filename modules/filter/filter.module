@@ -484,40 +484,44 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $c
 function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = array('format')) {
   $value = filter_resolve_format($value);
   $formats = filter_formats();
-  
-  $form = array(
-   '#type' => 'fieldset',
-   '#weight' => $weight,
-   '#attributes' => array('class' => 'filter-wrapper'),
-  );
-  
+
+  drupal_add_js('misc/form.js');
+  drupal_add_css(drupal_get_path('module', 'filter') . '/filter.css');
   $element_id = form_clean_id('edit-' . implode('-', $parents));
-   
-  if (count($formats) > 1) {
-    foreach ($formats as $format) {
-      $options[$format->format] = $format->name;
-      $guidelines[$format->format] = array('#markup' => theme('filter_guidelines', $format));
-    }
-    drupal_add_js('misc/form.js');
-    $form['format'] = array(
-      '#type' => 'select',
-      '#title' => t('Text format'),
-      '#options' => $options,
-      '#default_value' => $value,
-      '#parents' => $parents,
-      '#id' => $element_id,
-      '#attributes' => array('class' => 'filter-list'),
+
+  $form = array(
+    '#type' => 'fieldset',
+    '#weight' => $weight,
+    '#attributes' => array('class' => 'filter-wrapper'),
+  );
+  $form['format_guidelines'] = array(
+    '#prefix' => '<div id="' . $element_id . '-guidelines" class="filter-guidelines">',
+    '#suffix' => '</div>',
+    '#weight' => 2,
+  );
+  foreach ($formats as $format) {
+    $options[$format->format] = $format->name;
+    $form['format_guidelines'][$format->format] = array(
+      '#markup' => theme('filter_guidelines', $format),
     );
   }
-  else {
-    // Only one format available: use a form value and only show label.
-    $format = array_shift($formats);
-    unset($format->name);
-    $guidelines = array('#markup' => theme('filter_guidelines', $format));
-    $form[$format->format] = array('#type' => 'value', '#value' => $format->format, '#parents' => $parents);
-  }
-  $form['format_help'] = array('#markup' => '<div id="' . $element_id . '-help" class="filter-help">' . theme('filter_tips_more_info') . '</div>');
-  $form['format_guidelines'] = array_merge($guidelines, array('#prefix' => '<div id="' . $element_id . '-guidelines" class="filter-guidelines">', '#suffix' => '</div>'));
+  $form['format'] = array(
+    '#type' => 'select',
+    '#title' => t('Text format'),
+    '#options' => $options,
+    '#default_value' => $value,
+    '#parents' => $parents,
+    '#access' => count($formats) > 1,
+    '#id' => $element_id,
+    '#attributes' => array('class' => 'filter-list'),
+  );
+  $form['format_help'] = array(
+    '#prefix' => '<div id="' . $element_id . '-help" class="filter-help">',
+    '#markup' => theme('filter_tips_more_info'),
+    '#suffix' => '</div>',
+    '#weight' => 1,
+  );
+
   return $form;
 }
 
@@ -583,7 +587,7 @@ function theme_filter_tips_more_info() {
  * @ingroup themeable
  */
 function theme_filter_guidelines($format) {
-  $name = isset($format->name) ? '<label>' . $format->name . ':</label>' : NULL;
+  $name = isset($format->name) ? '<label>' . $format->name . ':</label>' : '';
   return '<div id="filter-guidelines-' . $format->format . '" class="filter-guidelines-item">' . $name . theme('filter_tips', _filter_tips($format->format, FALSE)) . '</div>';
 }
 

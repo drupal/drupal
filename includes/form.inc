@@ -1927,17 +1927,43 @@ function form_process_text_format($element) {
 
     // We need to break references, otherwise form_builder recurses infinitely.
     $element['value'] = (array)$element;
+    $element['value']['#weight'] = 0;
+    unset($element['value']['#description']);
     $element['#type'] = 'markup';
     $element['#theme'] = NULL;
-    $element['#theme_wrapper'] = NULL;
+    $element['#theme_wrapper'] = 'text_format_wrapper';
     $element['format'] = filter_form($element['#text_format'], 1, $element_parents);
 
     // We need to clear the #text_format from the new child otherwise we
     // would get into an infinite loop.
     unset($element['value']['#text_format']);
-    $element['value']['#weight'] = 0;
   }
   return $element;
+}
+
+/**
+ * Return a themed text format form element.
+ *
+ * @param element
+ *   An associative array containing the properties of the element.
+ *   Properties used: children, description
+ * @return
+ *   A string representing the form element.
+ *
+ * @ingroup themeable
+ */
+function theme_text_format_wrapper($element) {
+  $output = '<div class="text-format-wrapper">' . "\n";
+
+  $output .= $element['#children'] . "\n";
+
+  if (!empty($element['#description'])) {
+    $output .= '<div class="description">' . $element['#description'] . "</div>\n";
+  }
+
+  $output .= "</div>\n";
+
+  return $output;
 }
 
 /**

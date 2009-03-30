@@ -822,6 +822,10 @@ fieldset {
   background-position: 0 .75em;
   background-color: transparent;
 }
+*:first-child+html .text-format-wrapper .filter-wrapper {
+  padding: 1.5em 0 1.5em;
+  background-position: 0 0;
+}
 
 *:first-child+html fieldset > .description, *:first-child+html fieldset .fieldset-wrapper .description {
   padding-top: 1em;

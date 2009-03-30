@@ -1,0 +1,37 @@
+/* $Id$ */
+
+.text-format-wrapper .form-item {
+  margin-bottom: 0;
+}
+.filter-wrapper {
+  border-top: 0;
+  width: 95%;
+  margin: 0;
+  padding: 1.5em 0 1.5em;
+}
+.filter-wrapper .form-item {
+  float: left;
+  margin: 0;
+  padding: 0 0 0.5em 1.5em;
+}
+.filter-wrapper .form-item label {
+  display: inline;
+}
+.filter-help {
+  float: right;
+  padding: 0 1.5em 0.5em;
+}
+.filter-help p {
+  margin: 0;
+}
+.filter-help a {
+  background: transparent url(../../misc/help.png) right center no-repeat;
+  padding-right: 20px;
+}
+.filter-guidelines {
+  clear: left;
+  padding: 0 1.5em;
+}
+.text-format-wrapper .description {
+  margin-top: 0.5em;
+}
