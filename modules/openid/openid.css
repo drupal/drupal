@@ -1,4 +1,4 @@
-/* $Id: openid.css,v 1.5 2008/01/30 22:11:22 goba Exp $ */
+/* $Id: openid.css,v 1.6 2009/03/31 10:48:06 dries Exp $ */
 
 #edit-openid-identifier {
   background-image: url("login-bg.png");
@@ -6,38 +6,35 @@
   background-repeat: no-repeat;
   padding-left: 20px;
 }
-
 div#edit-openid-identifier-wrapper {
   display: block;
 }
-
 html.js #user-login-form div#edit-openid-identifier-wrapper,
 html.js #user-login div#edit-openid-identifier-wrapper {
   display: none;
 }
-
 html.js #user-login-form li.openid-link,
 html.js #user-login li.openid-link {
   display : block;
+  list-style: none;
 }
-
 #user-login-form ul {
   margin-top: 0;
 }
-
+#user-login ul {
+  margin: 0 0 5px;
+}
+#user-login ul li {
+  margin: 0;
+}
 #user-login-form li.openid-link,
 #user-login-form li.user-link,
 #user-login li.openid-link,
 #user-login li.user-link {
   display: none;
 }
-
-#user-login-form li.openid-link,
-#user-login-form li.user-link {
-  text-align : left;
-}
-
-#user-login-form li.openid-link,
-#user-login li.openid-link {
-  background: transparent url(login-bg.png) no-repeat scroll 1px 0.35em;
+#user-login-form li.openid-link a, 
+#user-login li.openid-link a {
+  background: transparent url("login-bg.png") no-repeat 0 2px;
+  padding: 0 20px;
 }
