@@ -395,7 +395,6 @@ function _field_attach_validate($obj_type, &$object) {
   // Let other modules validate the object.
   foreach (module_implements('field_attach_validate') as $module) {
     $function = $module . '_field_attach_validate';
-    $function($obj_type, $object, $form);
     $function($obj_type, $object, $errors);
   }
 
