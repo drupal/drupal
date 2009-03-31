@@ -5,7 +5,7 @@
  * Test the sitewide contact form.
  */
 class ContactSitewideTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Site-wide contact form'),
       'description' => t('Tests site-wide contact form functionality.'),
@@ -256,7 +256,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
  * Test the personal contact form.
  */
 class ContactPersonalTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Personal contact form'),
       'description' => t('Tests personal contact form functionality.'),

@@ -2,7 +2,7 @@
 // $Id$
 
 class RegistryParseFileTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Registry parse file test'),
       'description' => t('Parse a simple file and check that its resources are saved to the database.'),
@@ -51,7 +51,7 @@ CONTENTS;
 class RegistryParseFilesTestCase extends DrupalWebTestCase {
   protected $fileTypes = array('new', 'existing_changed');
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Registry parse files test'),
       'description' => t('Read two a simple files from disc, and check that their resources are saved to the database.'),

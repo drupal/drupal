@@ -2,7 +2,7 @@
 // $Id$
 
 class FieldSqlStorageTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name'  => t('Field SQL storage tests'),
       'description'  => t("Test field SQL storage module."),

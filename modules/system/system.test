@@ -58,7 +58,7 @@ class ModuleTestCase extends DrupalWebTestCase {
  * Test module enabling/disabling functionality.
  */
 class EnableDisableTestCase extends ModuleTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Enable/disable modules'),
       'description' => t('Enable/disable core module and confirm table creation/deletion.'),
@@ -118,7 +118,7 @@ class EnableDisableTestCase extends ModuleTestCase {
  * Test module dependency functionality.
  */
 class ModuleDependencyTestCase extends ModuleTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Module dependencies'),
       'description' => t('Enable module without dependency enabled.'),
@@ -157,7 +157,7 @@ class ModuleDependencyTestCase extends ModuleTestCase {
  * Test required modules functionality.
  */
 class ModuleRequiredTestCase extends ModuleTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Required modules'),
       'description' => t('Attempt disabling of required modules.'),
@@ -184,7 +184,7 @@ class IPAddressBlockingTestCase extends DrupalWebTestCase {
   /**
    * Implementation of getInfo().
    */
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('IP address blocking'),
       'description' => t('Test IP address blocking.'),
@@ -254,7 +254,7 @@ class CronRunTestCase extends DrupalWebTestCase {
   /**
    * Implementation of getInfo().
    */
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Cron run'),
       'description' => t('Test cron run.'),
@@ -325,7 +325,7 @@ class AdminOverviewTestCase extends DrupalWebTestCase {
   /**
    * Implementation of getInfo().
    */
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Admin overview'),
       'description' => t('Confirm that the admin overview page appears as expected.'),
@@ -392,7 +392,7 @@ class AdminMetaTagTestCase extends DrupalWebTestCase {
   /**
    * Implementation of getInfo().
    */
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Fingerprinting meta tag'),
       'description' => t('Confirm that the fingerprinting meta tag appears as expected.'),
@@ -420,7 +420,7 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
   /**
    * Implementation of getInfo().
    */
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('403 functionality'),
       'description' => t("Tests page access denied functionality, including custom 403 pages."),
@@ -481,7 +481,7 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
   /**
    * Implementation of getInfo().
    */
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('404 functionality'),
       'description' => t("Tests page not found functionality, including custom 404 pages."),
@@ -540,7 +540,7 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
  * Tests generic date and time handling capabilities of Drupal.
  */
 class DateTimeFunctionalTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Date and time'),
       'description' => t('Configure date and time settings. Test date formatting and time zone handling, including daylight saving time.'),
@@ -587,7 +587,7 @@ class PageTitleFiltering extends DrupalWebTestCase {
   /**
    * Implementation of getInfo().
    */
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('HTML in page titles'),
       'description' => t('Tests correct handling or conversion by drupal_set_title() and drupal_get_title().'),
@@ -649,7 +649,7 @@ class PageTitleFiltering extends DrupalWebTestCase {
  */
 class FrontPageTestCase extends DrupalWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Front page'),
       'description' => t('Tests front page functionality and administration.'),
@@ -700,7 +700,7 @@ class FrontPageTestCase extends DrupalWebTestCase {
 }
 
 class SystemBlockTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Block functionality'),
       'description' => t('Configure and move powered-by block.'),
@@ -754,7 +754,7 @@ class SystemSettingsForm extends DrupalWebTestCase {
   /**
    * Implementation of getInfo().
    */
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('System setting forms'),
       'description' => t('Tests correctness of system_settings_form() processing.'),
@@ -833,7 +833,7 @@ class SystemSettingsForm extends DrupalWebTestCase {
  * Tests for the theme interface functionality.
  */
 class SystemThemeFunctionalTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Theme interface functionality'),
       'description' => t('Tests the theme interface functionality by enabling and switching themes, and using an administration theme.'),

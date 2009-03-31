@@ -7,7 +7,7 @@ class MenuTestCase extends DrupalWebTestCase {
   protected $menu;
   protected $items;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Menu link creation/deletion'),
       'description' => t('Add a custom menu, add menu links to the custom menu and Navigation menu, check their data, and delete them using the menu module UI.'),

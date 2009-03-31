@@ -102,7 +102,7 @@ class CacheTestCase extends DrupalWebTestCase {
 }
 
 class CacheSavingCase extends CacheTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Cache saving test'),
       'description' => t('Check our variables are saved and restored the right way.'),
@@ -163,7 +163,7 @@ class CacheSavingCase extends CacheTestCase {
 }
 
 class CacheClearCase extends CacheTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Cache clear test'),
       'description' => t('Check our clearing is done the proper way.'),

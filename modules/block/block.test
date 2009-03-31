@@ -4,7 +4,7 @@
 class BlockTestCase extends DrupalWebTestCase {
   protected $regions;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Block functionality'),
       'description' => t('Add, edit and delete custom block. Configure and move a module-defined block.'),
@@ -152,7 +152,7 @@ class BlockTestCase extends DrupalWebTestCase {
 }
 
 class NonDefaultBlockAdmin extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Non default theme admin'),
       'description' => t('Check the administer page for non default theme.'),

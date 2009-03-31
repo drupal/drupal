@@ -114,7 +114,7 @@ class ProfileTestCase extends DrupalWebTestCase {
 }
 
 class ProfileTestFields extends ProfileTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Test single fields',
       'description' => t('Testing profile module with add/edit/delete textfield, textarea, list, checkbox, and url fields into profile page') ,
@@ -149,7 +149,7 @@ class ProfileTestFields extends ProfileTestCase {
 }
 
 class ProfileTestSelect extends ProfileTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Test select field',
       'description' => t('Testing profile module with add/edit/delete a select field') ,
@@ -174,7 +174,7 @@ class ProfileTestSelect extends ProfileTestCase {
 }
 
 class ProfileTestDate extends ProfileTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Test date field',
       'description' => t('Testing profile module with add/edit/delete a date field') ,
@@ -210,7 +210,7 @@ class ProfileTestDate extends ProfileTestCase {
 }
 
 class ProfileTestWeights extends ProfileTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => 'Test field weights',
       'description' => t('Testing profile modules weigting of fields') ,
@@ -239,7 +239,7 @@ class ProfileTestWeights extends ProfileTestCase {
  * Test profile field autocompletion and access.
  */
 class ProfileTestAutocomplete extends ProfileTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Autocompletion'),
       'description' => t('Test profile fields with autocompletion.'),
@@ -292,7 +292,7 @@ class ProfileTestAutocomplete extends ProfileTestCase {
 }
 
 class ProfileBlockTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Block availability'),
       'description' => t('Check if the author-information block is available.'),

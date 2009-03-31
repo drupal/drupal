@@ -37,7 +37,7 @@ class PHPTestCase extends DrupalWebTestCase {
  * Tests to make sure the PHP filter actually evaluates PHP code when used.
  */
 class PHPFilterTestCase extends PHPTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('PHP filter functionality'),
       'description' => t('Make sure that PHP filter properly evaluates PHP code when enabled.'),
@@ -80,7 +80,7 @@ class PHPFilterTestCase extends PHPTestCase {
  * Tests to make sure access to the PHP filter is properly restricted.
  */
 class PHPAccessTestCase extends PHPTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('PHP filter access check'),
       'description' => t('Make sure that users who don\'t have access to the PHP filter can\'t see it.'),

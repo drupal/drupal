@@ -5,7 +5,7 @@ class DBLogTestCase extends DrupalWebTestCase {
   protected $big_user;
   protected $any_user;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('DBLog functionality'),
       'description' => t('Generate events and verify dblog entries; verify user access to log reports based on persmissions.'),

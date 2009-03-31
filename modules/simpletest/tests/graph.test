@@ -10,7 +10,7 @@
  * Unit tests for the graph handling features.
  */
 class GraphUnitTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Graph'),
       'description' => t('Graph handling unit tests.'),

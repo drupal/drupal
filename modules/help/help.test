@@ -5,7 +5,7 @@ class HelpTestCase extends DrupalWebTestCase {
   protected $big_user;
   protected $any_user;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Help functionality'),
       'description' => t('Verify help display and user access to help based on persmissions.'),

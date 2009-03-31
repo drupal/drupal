@@ -10,7 +10,7 @@
  * Unit tests for the module API.
  */
 class ModuleUnitTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Module API'),
       'description' => t('Test low-level module functions.'),

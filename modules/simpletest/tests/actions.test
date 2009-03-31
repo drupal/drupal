@@ -2,7 +2,7 @@
 // $Id$
 
 class ActionsConfigurationTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Actions configuration'),
       'description' => t('Tests complex actions configuration by adding, editing, and deleting a complex action.'),

@@ -10,7 +10,7 @@
  * Unit tests for the Schema API.
  */
 class SchemaTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Schema API'),
       'description' => t('Tests table creation and modification via the schema API.'),

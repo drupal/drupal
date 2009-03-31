@@ -2,7 +2,7 @@
 // $Id$
 
 class FilterAdminTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Filter administration functionality'),
       'description' => t('Thoroughly test the administrative interface of the filter module.'),
@@ -181,7 +181,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 class FilterTestCase extends DrupalWebTestCase {
   protected $format;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Core filters'),
       'description' => t('Filter each filter individually: Convert URLs into links, Convert line breaks, Correct broken HTML, Escape all HTML, Limit allowed HTML tags.'),

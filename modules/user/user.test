@@ -2,7 +2,7 @@
 // $Id$
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('User registration'),
       'description' => t('Registers a user, fails login, resets password, successfully logs in with the one time password, changes password, logs out, successfully logs in with the new password, visits profile page.'),
@@ -102,7 +102,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
 
 
 class UserValidationTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Username/e-mail validation'),
       'description' => t('Verify that username/email validity checks behave as designed.'),
@@ -153,7 +153,7 @@ class UserValidationTestCase extends DrupalWebTestCase {
 }
 
 class UserCancelTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Cancel account'),
       'description' => t('Ensure that account cancellation methods work as expected.'),
@@ -494,7 +494,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
   protected $user;
   protected $_directory_test;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Upload user picture'),
       'description' => t('Assure that dimension check, extension check and image scaling work as designed.'),
@@ -714,7 +714,7 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
   protected $admin_user;
   protected $rid;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Role permissions'),
       'description' => t('Verify that role permissions can be added and removed via the permissions page.'),
@@ -761,7 +761,7 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
 }
 
 class UserAdminTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('User admininstration'),
       'description' => t('Test user admininstration page functionality.'),
@@ -814,7 +814,7 @@ class UserAdminTestCase extends DrupalWebTestCase {
  * Tests for user-configurable time zones.
  */
 class UserTimeZoneFunctionalTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('User time zones'),
       'description' => t('Set a user time zone and verify that dates are displayed in local time.'),
@@ -874,7 +874,7 @@ class UserTimeZoneFunctionalTest extends DrupalWebTestCase {
  * Test user autocompletion.
  */
 class UserAutocompleteTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('User autocompletion'),
       'description' => t('Test user autocompletion functionality.'),
@@ -914,7 +914,7 @@ class UserAutocompleteTestCase extends DrupalWebTestCase {
  * Test user blocks.
  */
 class UserBlocksUnitTests extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('User blocks'),
       'description' => t('Test user blocks.'),

@@ -2,7 +2,7 @@
 // $Id$
 
 class StatisticsBlockVisitorsTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Top visitor blocking'),
       'description' => t('Tests blocking of IP addresses via the top visitors report.'),

@@ -5,7 +5,7 @@ class TriggerContentTestCase extends DrupalWebTestCase {
   var $_cleanup_roles = array();
   var $_cleanup_users = array();
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Trigger content (node) actions'),
       'description' => t('Perform various tests with content actions.') ,

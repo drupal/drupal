@@ -6,7 +6,7 @@ class TrackerTest extends DrupalWebTestCase {
   protected $other_user;
   protected $new_node;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Tracker'),
       'description' => t('Create nodes and check for their display in the tracker listings.'),

@@ -2,7 +2,7 @@
 // $Id$
 
 class BlogAPITestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Blog API functionality'),
       'description' => t('Create, edit, and delete post; upload file; and set/get categories.'),

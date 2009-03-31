@@ -2,7 +2,7 @@
 // $Id$
 
 class SyslogTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Syslog functionality'),
       'description' => t('Test syslog settings.'),

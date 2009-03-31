@@ -4,7 +4,7 @@
 class TextFieldTestCase extends DrupalWebTestCase {
   protected $instance;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name'  => t('Text Field'),
       'description'  => t("Test the creation of text fields."),

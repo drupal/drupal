@@ -54,8 +54,7 @@ if ($args['list']) {
   echo   "-------------------------------\n\n";
   foreach ($groups as $group => $tests) {
     echo $group . "\n";
-    foreach ($tests as $class_name => $instance) {
-      $info = $instance->getInfo();
+    foreach ($tests as $class_name => $info) {
       echo " - " . $info['name'] . ' (' . $class_name . ')' . "\n";
     }
   }
@@ -377,13 +376,13 @@ function simpletest_script_get_test_list() {
 
   $test_list = array();
   if ($args['all']) {
-    $test_list = array_keys($all_tests);
+    $test_list = $all_tests;
   }
   else {
     if ($args['class']) {
       // Check for valid class names.
       foreach ($args['test_names'] as $class_name) {
-        if (isset($all_tests[$class_name])) {
+        if (in_array($class_name, $all_tests)) {
           $test_list[] = $class_name;
         }
       }
@@ -395,7 +394,7 @@ function simpletest_script_get_test_list() {
       }
 
       // Check for valid class names.
-      foreach ($all_tests as $class_name => $instance) {
+      foreach ($all_tests as $class_name => $info) {
         $refclass = new ReflectionClass($class_name);
         $file = $refclass->getFileName();
         if (isset($files[$file])) {
@@ -407,7 +406,7 @@ function simpletest_script_get_test_list() {
       // Check for valid group names and get all valid classes in group.
       foreach ($args['test_names'] as $group_name) {
         if (isset($groups[$group_name])) {
-          foreach($groups[$group_name] as $class_name => $instance) {
+          foreach($groups[$group_name] as $class_name => $info) {
             $test_list[] = $class_name;
           }
         }
@@ -440,7 +439,7 @@ function simpletest_script_reporter_init() {
   else {
     echo "Tests to be run:\n";
     foreach ($test_list as $class_name) {
-      $info = $all_tests[$class_name]->getInfo();
+      $info = call_user_func(array($class_name, 'getInfo'));
       echo " - " . $info['name'] . ' (' . $class_name . ')' . "\n";
     }
     echo "\n";

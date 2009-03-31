@@ -13,7 +13,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
    */
   protected $test_ids = array();
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('SimpleTest functionality'),
       'description' => t('Test SimpleTest\'s web interface: check that the intended tests were

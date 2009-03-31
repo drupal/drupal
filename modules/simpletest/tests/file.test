@@ -249,7 +249,7 @@ class FileHookTestCase extends FileTestCase {
  *  This will run tests against the file_space_used() function.
  */
 class FileSpaceUsedTest extends FileTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('File space used tests'),
       'description' => t('Tests the file_space_used() function.'),
@@ -309,7 +309,7 @@ class FileSpaceUsedTest extends FileTestCase {
  *  This will run tests against the file validation functions (file_validate_*).
  */
 class FileValidatorTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('File validator tests'),
       'description' => t('Tests the functions used to validate uploaded files.'),
@@ -467,7 +467,7 @@ class FileValidatorTest extends DrupalWebTestCase {
  *  Tests the file_unmanaged_save_data() function.
  */
 class FileUnmanagedSaveDataTest extends FileTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Unmanaged file save data'),
       'description' => t('Tests the unmanaged file save data function.'),
@@ -511,7 +511,7 @@ class FileSaveUploadTest extends FileHookTestCase {
    */
   var $maxFidBefore;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('File uploading'),
       'description' => t('Tests the file uploading functions.'),
@@ -639,7 +639,7 @@ class FileSaveUploadTest extends FileHookTestCase {
  * Directory related tests.
  */
 class FileDirectoryTest extends FileTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('File paths and directories'),
       'description' => t('Tests operations dealing with directories.'),
@@ -804,7 +804,7 @@ class FileDirectoryTest extends FileTestCase {
  * Tests the file_scan_directory() function.
  */
 class FileScanDirectoryTest extends FileTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('File scan directory'),
       'description' => t('Tests the file_scan_directory() function.'),
@@ -932,7 +932,7 @@ class FileScanDirectoryTest extends FileTestCase {
  * Deletion related tests.
  */
 class FileUnmanagedDeleteTest extends FileTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Unmanaged file delete'),
       'description' => t('Tests the unmanaged file delete function.'),
@@ -978,7 +978,7 @@ class FileUnmanagedDeleteTest extends FileTestCase {
  * Deletion related tests.
  */
 class FileUnmanagedDeleteRecursiveTest extends FileTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Unmanaged recursive file delete'),
       'description' => t('Tests the unmanaged file delete recursive function.'),
@@ -1055,7 +1055,7 @@ class FileUnmanagedDeleteRecursiveTest extends FileTestCase {
  * Unmanaged move related tests.
  */
 class FileUnmanagedMoveTest extends FileTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Unmanaged file moving'),
       'description' => t('Tests the unmanaged file move function.'),
@@ -1127,7 +1127,7 @@ class FileUnmanagedMoveTest extends FileTestCase {
  * Unmanaged copy related tests.
  */
 class FileUnmanagedCopyTest extends FileTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Unmanaged file copying'),
       'description' => t('Tests the unmanaged file copy function.'),
@@ -1214,7 +1214,7 @@ class FileUnmanagedCopyTest extends FileTestCase {
  * Deletion related tests.
  */
 class FileDeleteTest extends FileHookTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('File delete'),
       'description' => t('Tests the file delete function.'),
@@ -1245,7 +1245,7 @@ class FileDeleteTest extends FileHookTestCase {
  * Move related tests
  */
 class FileMoveTest extends FileHookTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('File moving'),
       'description' => t('Tests the file move function.'),
@@ -1406,7 +1406,7 @@ class FileMoveTest extends FileHookTestCase {
  * Copy related tests.
  */
 class FileCopyTest extends FileHookTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('File copying'),
       'description' => t('Tests the file copy function.'),
@@ -1552,7 +1552,7 @@ class FileCopyTest extends FileHookTestCase {
  * Tests the file_load() function.
  */
 class FileLoadTest extends FileHookTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('File loading'),
       'description' => t('Tests the file_load() function.'),
@@ -1649,7 +1649,7 @@ class FileLoadTest extends FileHookTestCase {
  * Tests the file_save() function.
  */
 class FileSaveTest extends FileHookTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('File saving'),
       'description' => t('Tests the file_save() function.'),
@@ -1705,7 +1705,7 @@ class FileSaveTest extends FileHookTestCase {
  * Tests the file_validate() function..
  */
 class FileValidateTest extends FileHookTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('File validate'),
       'description' => t('Tests the file_validate() function.'),
@@ -1744,7 +1744,7 @@ class FileValidateTest extends FileHookTestCase {
  *  Tests the file_save_data() function.
  */
 class FileSaveDataTest extends FileHookTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('File save data'),
       'description' => t('Tests the file save data function.'),
@@ -1875,7 +1875,7 @@ class FileSaveDataTest extends FileHookTestCase {
  * Tests for download/file transfer functions.
  */
 class FileDownloadTest extends FileTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('File download'),
       'description' => t('Tests for file download/transfer functions.'),
@@ -1921,7 +1921,7 @@ class FileDownloadTest extends FileTestCase {
  * Tests for file_munge_filename() and file_unmunge_filename().
  */
 class FileNameMungingTest extends FileTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('File naming'),
       'description' => t('Test filename munging and unmunging.'),

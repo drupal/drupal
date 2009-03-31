@@ -3,7 +3,7 @@
 
 class BootstrapIPAddressTestCase extends DrupalWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('IP address and HTTP_HOST test'),
       'description' => t('Get the IP address from the current visitor from the server variables, check hostname validation.'),
@@ -82,7 +82,7 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
 
 class BootstrapPageCacheTestCase extends DrupalWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Page cache test'),
       'description' => t('Enable the page cache and test it with conditional HTTP requests.'),
@@ -136,7 +136,7 @@ class BootstrapVariableTestCase extends DrupalWebTestCase {
     parent::setUp('system_test');
   }
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Variable test'),
       'description' => t('Make sure the variable system functions correctly.'),
@@ -182,7 +182,7 @@ class BootstrapVariableTestCase extends DrupalWebTestCase {
  */
 class HookBootExitTestCase extends DrupalWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Boot and exit hook invocation'),
       'description' => t('Test that hook_boot() and hook_exit() are called correctly.'),

@@ -4,7 +4,7 @@
 // TODO : use drupalCreateField() / drupalCreateFieldInstance() all over ?
 
 class FieldAttachTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name'  => t('Field attach tests'),
       'description'  => t("Test Field Attach API functions."),
@@ -606,7 +606,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
 
 class FieldInfoTestCase extends DrupalWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name'  => t('Field info tests'),
       'description'  => t("Get information about existing fields, instances and bundles."),
@@ -712,7 +712,7 @@ class FieldInfoTestCase extends DrupalWebTestCase {
 }
 
 class FieldFormTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name'  => t('Field form tests'),
       'description'  => t("Test Field form handling."),
@@ -919,7 +919,7 @@ class FieldFormTestCase extends DrupalWebTestCase {
 }
 
 class FieldTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name'  => t('Field tests'),
       'description'  => t("Create / read /update a field."),
@@ -1063,7 +1063,7 @@ class FieldTestCase extends DrupalWebTestCase {
 class FieldInstanceTestCase extends DrupalWebTestCase {
   protected $field;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name'  => t('Field instance tests'),
       'description'  => t("Create field entities by attaching fields to entities."),

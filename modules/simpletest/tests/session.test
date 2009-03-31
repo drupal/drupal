@@ -7,7 +7,7 @@
  */
 
 class SessionTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Session tests'),
       'description' => t('Drupal session handling tests.'),

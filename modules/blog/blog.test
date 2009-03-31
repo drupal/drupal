@@ -6,7 +6,7 @@ class BlogTestCase extends DrupalWebTestCase {
   protected $own_user;
   protected $any_user;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Blog functionality'),
       'description' => t('Create, view, edit, delete, and change blog entries and verify its consistency in the database.'),
