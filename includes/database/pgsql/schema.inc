@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.10 2009/03/30 04:55:59 webchick Exp $
+// $Id: schema.inc,v 1.11 2009/03/31 01:42:45 webchick Exp $
 
 /**
  * @file
@@ -547,9 +547,20 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     $not_null = isset($spec['not null']) ? $spec['not null'] : FALSE;
     unset($spec['not null']);
 
+    if (!array_key_exists('size', $spec)) {
+      $spec['size'] = 'normal';
+    }
     $this->addField($ret, $table, "$field_new", $spec);
 
-    $ret[] = update_sql("UPDATE {" . $table . "} SET $field_new = " . $field . "_old");
+    // We need to typecast the new column to best be able to transfer the data
+    // Schema_pgsql::getFieldTypeMap() will return possibilities that are not
+    // 'cast-able' such as 'serial' - so they need to be casted int instead.
+    $map = $this->getFieldTypeMap();
+    $typecast = $map[$spec['type'] . ':' . $spec['size']];
+    if (in_array($typecast, array('serial', 'bigserial', 'numeric'))) {
+      $typecast = 'int';
+    }
+    $ret[] = update_sql("UPDATE {" . $table . "} SET $field_new = CAST(" . $field . "_old as " . $typecast . ")");
 
     if ($not_null) {
       $ret[] = update_sql("ALTER TABLE {" . $table . "} ALTER $field_new SET NOT NULL");
