@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.test,v 1.9 2009/03/31 01:49:54 webchick Exp $
+// $Id: translation.test,v 1.10 2009/03/31 02:02:23 webchick Exp $
 
 class TranslationTestCase extends DrupalWebTestCase {
   protected $book;
@@ -92,13 +92,13 @@ class TranslationTestCase extends DrupalWebTestCase {
    */
   function addLanguage($language_code) {
     // Check to make sure that language has not already been installed.
-    $this->drupalGet('admin/settings/language');
+    $this->drupalGet('admin/international/language');
 
     if (strpos($this->drupalGetContent(), 'enabled[' . $language_code . ']') === FALSE) {
       // Doesn't have language installed so add it.
       $edit = array();
       $edit['langcode'] = $language_code;
-      $this->drupalPost('admin/settings/language/add', $edit, t('Add language'));
+      $this->drupalPost('admin/international/language/add', $edit, t('Add language'));
 
       $languages = language_list('language', TRUE); // Make sure we're not using a stale list.
       $this->assertTrue(array_key_exists($language_code, $languages), t('Language was installed successfully.'));

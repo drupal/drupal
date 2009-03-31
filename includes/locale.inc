@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.208 2009/03/25 13:38:09 webchick Exp $
+// $Id: locale.inc,v 1.209 2009/03/31 02:02:21 webchick Exp $
 
 /**
  * @file
@@ -88,7 +88,7 @@ function theme_locale_languages_overview_form($form) {
           array('data' => drupal_render($form['enabled'][$key]), 'align' => 'center'),
           drupal_render($form['site_default'][$key]),
           drupal_render($form['weight'][$key]),
-          l(t('edit'), 'admin/settings/language/edit/' . $key) . (($key != 'en' && $key != $default->language) ? ' ' . l(t('delete'), 'admin/settings/language/delete/' . $key) : '')
+          l(t('edit'), 'admin/international/language/edit/' . $key) . (($key != 'en' && $key != $default->language) ? ' ' . l(t('delete'), 'admin/international/language/delete/' . $key) : '')
         ),
         'class' => 'draggable'
       );
@@ -141,7 +141,7 @@ function locale_languages_overview_form_submit($form, &$form_state) {
   // Changing the language settings impacts the interface.
   cache_clear_all('*', 'cache_page', TRUE);
 
-  $form_state['redirect'] = 'admin/settings/language';
+  $form_state['redirect'] = 'admin/international/language';
   return;
 }
 /**
@@ -344,7 +344,7 @@ function locale_languages_predefined_form_submit($form, &$form_state) {
     batch_set($batch);
   }
 
-  $form_state['redirect'] = 'admin/settings/language';
+  $form_state['redirect'] = 'admin/international/language';
   return;
 }
 
@@ -390,7 +390,7 @@ function locale_languages_edit_form_submit($form, &$form_state) {
     }
     variable_set('language_default', $default);
   }
-  $form_state['redirect'] = 'admin/settings/language';
+  $form_state['redirect'] = 'admin/international/language';
   return;
 }
 /**
@@ -410,12 +410,12 @@ function locale_languages_delete_form(&$form_state, $langcode) {
   // Do not allow deletion of English locale.
   if ($langcode == 'en') {
     drupal_set_message(t('The English language cannot be deleted.'));
-    drupal_goto('admin/settings/language');
+    drupal_goto('admin/international/language');
   }
 
   if (language_default('language') == $langcode) {
     drupal_set_message(t('The default language cannot be deleted.'));
-    drupal_goto('admin/settings/language');
+    drupal_goto('admin/international/language');
   }
 
   // For other languages, warn user that data loss is ahead.
@@ -426,7 +426,7 @@ function locale_languages_delete_form(&$form_state, $langcode) {
   }
   else {
     $form['langcode'] = array('#type' => 'value', '#value' => $langcode);
-    return confirm_form($form, t('Are you sure you want to delete the language %name?', array('%name' => t($languages[$langcode]->name))), 'admin/settings/language', t('Deleting a language will remove all interface translations associated with it, and posts in this language will be set to be language neutral. This action cannot be undone.'), t('Delete'), t('Cancel'));
+    return confirm_form($form, t('Are you sure you want to delete the language %name?', array('%name' => t($languages[$langcode]->name))), 'admin/international/language', t('Deleting a language will remove all interface translations associated with it, and posts in this language will be set to be language neutral. This action cannot be undone.'), t('Delete'), t('Cancel'));
   }
 }
 
@@ -459,7 +459,7 @@ function locale_languages_delete_form_submit($form, &$form_state) {
   // Changing the language settings impacts the interface:
   cache_clear_all('*', 'cache_page', TRUE);
 
-  $form_state['redirect'] = 'admin/settings/language';
+  $form_state['redirect'] = 'admin/international/language';
   return;
 }
 /**
@@ -499,7 +499,7 @@ function locale_languages_configure_form() {
 function locale_languages_configure_form_submit($form, &$form_state) {
   variable_set('language_negotiation', $form_state['values']['language_negotiation']);
   drupal_set_message(t('Language negotiation configuration saved.'));
-  $form_state['redirect'] = 'admin/settings/language';
+  $form_state['redirect'] = 'admin/international/language';
   return;
 }
 /**
@@ -686,7 +686,7 @@ function locale_translation_filter_form_submit($form, &$form_state) {
       break;
   }
   
-  $form_state['redirect'] = 'admin/build/translate/translate';
+  $form_state['redirect'] = 'admin/international/translate/translate';
 }
 
 /**
@@ -775,11 +775,11 @@ function locale_translate_import_form_submit($form, &$form_state) {
   }
   else {
     drupal_set_message(t('File to import not found.'), 'error');
-    $form_state['redirect'] = 'admin/build/translate/import';
+    $form_state['redirect'] = 'admin/international/translate/import';
     return;
   }
 
-  $form_state['redirect'] = 'admin/build/translate';
+  $form_state['redirect'] = 'admin/international/translate';
   return;
 }
 /**
@@ -883,7 +883,7 @@ function locale_translate_edit_form(&$form_state, $lid) {
   $source = db_query('SELECT source, textgroup, location FROM {locales_source} WHERE lid = :lid', array(':lid' => $lid))->fetchObject();
   if (!$source) {
     drupal_set_message(t('String not found.'), 'error');
-    drupal_goto('admin/build/translate/translate');
+    drupal_goto('admin/international/translate/translate');
   }
 
   // Add original text to the top and some values for form altering.
@@ -1016,7 +1016,7 @@ function locale_translate_edit_form_submit($form, &$form_state) {
   _locale_invalidate_js();
   cache_clear_all('locale:', 'cache', TRUE);
 
-  $form_state['redirect'] = 'admin/build/translate/translate';
+  $form_state['redirect'] = 'admin/international/translate/translate';
   return;
 }
 /**
@@ -1045,7 +1045,7 @@ function locale_translate_delete_page($lid) {
  */
 function locale_translate_delete_form(&$form_state, $source) {
   $form['lid'] = array('#type' => 'value', '#value' => $source->lid);
-  return confirm_form($form, t('Are you sure you want to delete the string "%source"?', array('%source' => $source->source)), 'admin/build/translate/translate', t('Deleting the string will remove all translations of this string in all languages. This action cannot be undone.'), t('Delete'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to delete the string "%source"?', array('%source' => $source->source)), 'admin/international/translate/translate', t('Deleting the string will remove all translations of this string in all languages. This action cannot be undone.'), t('Delete'), t('Cancel'));
 }
 
 /**
@@ -1062,7 +1062,7 @@ function locale_translate_delete_form_submit($form, &$form_state) {
   _locale_invalidate_js();
   cache_clear_all('locale:', 'cache', TRUE);
   drupal_set_message(t('The string has been removed.'));
-  $form_state['redirect'] = 'admin/build/translate/translate';
+  $form_state['redirect'] = 'admin/international/translate/translate';
 }
 /**
  * @} End of "locale-translate-delete"
@@ -2262,8 +2262,8 @@ function _locale_translate_seek() {
       $groups[$string['group']],
       array('data' => check_plain(truncate_utf8($string['source'], 150, FALSE, TRUE)) . '<br /><small>' . $string['location'] . '</small>'),
       array('data' => _locale_translate_language_list($string['languages'], $limit_language), 'align' => 'center'),
-      array('data' => l(t('edit'), "admin/build/translate/edit/$lid", array('query' => drupal_get_destination())), 'class' => 'nowrap'),
-      array('data' => l(t('delete'), "admin/build/translate/delete/$lid", array('query' => drupal_get_destination())), 'class' => 'nowrap'),
+      array('data' => l(t('edit'), "/admin/international/translate/edit/$lid", array('query' => drupal_get_destination())), 'class' => 'nowrap'),
+      array('data' => l(t('delete'), "/admin/international/translate/delete/$lid", array('query' => drupal_get_destination())), 'class' => 'nowrap'),
     );
   }
 

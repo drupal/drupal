@@ -1,5 +1,5 @@
 <?php
-// $Id: path.test,v 1.7 2009/03/31 01:49:52 webchick Exp $
+// $Id: path.test,v 1.8 2009/03/31 02:02:22 webchick Exp $
 
 class PathTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -148,7 +148,7 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['langcode'] = 'fr';
 
-    $this->drupalPost('admin/settings/language/add', $edit, t('Add language'));
+    $this->drupalPost('admin/international/language/add', $edit, t('Add language'));
 
     // Set language negotiation to "Path prefix with fallback".
     variable_set('language_negotiation', LANGUAGE_NEGOTIATION_PATH);
