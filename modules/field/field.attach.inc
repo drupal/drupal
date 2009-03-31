@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.8 2009/03/30 03:44:55 webchick Exp $
+// $Id: field.attach.inc,v 1.9 2009/03/31 01:59:34 webchick Exp $
 
 /**
  * @file
@@ -395,7 +395,6 @@ function _field_attach_validate($obj_type, &$object) {
   // Let other modules validate the object.
   foreach (module_implements('field_attach_validate') as $module) {
     $function = $module . '_field_attach_validate';
-    $function($obj_type, $object, $form);
     $function($obj_type, $object, $errors);
   }
 
