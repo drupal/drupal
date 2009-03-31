@@ -1,12 +1,12 @@
 <?php
-// $Id: node.test,v 1.18 2009/03/30 05:35:35 webchick Exp $
+// $Id: node.test,v 1.19 2009/03/31 01:49:52 webchick Exp $
 
 /**
  * Test the node_load_multiple() function.
  */
 class NodeLoadMultipleUnitTest extends DrupalWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Load multiple nodes'),
       'description' => t('Test the loading of multiple nodes.'),
@@ -85,7 +85,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
   protected $nodes;
   protected $logs;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Node revisions'),
       'description' => t('Create a node with revisions and test viewing, reverting, and deleting revisions.'),
@@ -167,7 +167,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
 }
 
 class NodeTeaserTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Node teaser'),
       'description' => t('Test node_teaser() with different strings and lengths.'),
@@ -312,7 +312,7 @@ class NodeTeaserTestCase extends DrupalWebTestCase {
 }
 
 class PageEditTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Node edit'),
       'description' => t('Create a node and test node edit functionality.'),
@@ -366,7 +366,7 @@ class PageEditTestCase extends DrupalWebTestCase {
 }
 
 class PagePreviewTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Node preview'),
       'description' => t('Test node preview functionality.'),
@@ -403,7 +403,7 @@ class PagePreviewTestCase extends DrupalWebTestCase {
 }
 
 class PageCreationTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Node creation'),
       'description' => t('Create a node and test saving it.'),
@@ -438,7 +438,7 @@ class PageCreationTestCase extends DrupalWebTestCase {
 }
 
 class PageViewTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Node edit permissions'),
       'description' => t('Create a node and test edit permissions.'),
@@ -477,7 +477,7 @@ class PageViewTestCase extends DrupalWebTestCase {
 }
 
 class NodeTitleXSSTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
      return array(
       'name' => t('Node title XSS filtering'),
       'description' => t('Create a node with dangerous tags in its title and test that they are escaped.'),
@@ -511,7 +511,7 @@ class NodeTitleXSSTestCase extends DrupalWebTestCase {
 }
 
 class NodeBlockTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Block availability'),
       'description' => t('Check if the syndicate block is available.'),
@@ -544,7 +544,7 @@ class NodeBlockTestCase extends DrupalWebTestCase {
  * Check that the post information displays when enabled for a content type.
  */
 class NodePostSettingsTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Node post information display'),
       'description' => t('Check that the post information (submitted by Username on date) text displays appropriately.'),
@@ -610,7 +610,7 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
  * sitewide RSS feed at rss.xml.
  */
 class NodeRSSContentTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Node RSS Content'),
       'description' => t('Ensure that data added to nodes by other modules appears in RSS feeds.'),

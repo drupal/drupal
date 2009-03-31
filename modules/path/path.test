@@ -1,8 +1,8 @@
 <?php
-// $Id: path.test,v 1.6 2009/01/09 07:44:00 dries Exp $
+// $Id: path.test,v 1.7 2009/03/31 01:49:52 webchick Exp $
 
 class PathTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Path alias functionality'),
       'description' => t('Add, edit, delete, and change alias and verify its consistency in the database.'),
@@ -126,7 +126,7 @@ class PathTestCase extends DrupalWebTestCase {
 }
 
 class PathLanguageTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Path aliases with translated nodes'),
       'description' => t('Confirm that paths work with translated nodes'),

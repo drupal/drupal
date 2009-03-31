@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.38 2009/02/22 17:55:30 dries Exp $
+// $Id: simpletest.module,v 1.39 2009/03/31 01:49:53 webchick Exp $
 
 /**
  * Implementation of hook_help().
@@ -89,7 +89,7 @@ function simpletest_test_form() {
     $header = array(t('Message'), t('Group'), t('Filename'), t('Line'), t('Function'), array('colspan' => 2, 'data' => t('Status')));
     while ($result = db_fetch_object($results)) {
       $class = $result->test_class;
-      $info = $uncategorized_tests[$class]->getInfo();
+      $info = call_user_func(array($class, 'getInfo'));
       $group = $info['group'];
       $selected_tests[$group][$class] = TRUE;
       if (!isset($group_summary[$group])) {
@@ -130,7 +130,7 @@ function simpletest_test_form() {
     foreach ($form['results'] as $group => &$elements) {
       $group_ok = TRUE;
       foreach ($elements as $class => &$element) {
-        $info = $uncategorized_tests[$class]->getInfo();
+        $info = call_user_func(array($class, 'getInfo'));
         $ok = $element['summary']['#fail'] + $element['summary']['#exception'] == 0;
         $element += array(
           '#type' => 'fieldset',
@@ -166,15 +166,13 @@ function simpletest_test_form() {
     $form['tests']['table'][$group_name] = array(
       '#collapsed' => TRUE,
     );
-    foreach ($test_group as $test) {
-      $test_info = $test->getInfo();
-      $test_class = get_class($test);
-      $is_selected = isset($selected_tests[$group_name][$test_class]);
-      $form['tests']['table'][$group_name][$test_class] = array(
+    foreach ($test_group as $class => $info) {
+      $is_selected = isset($selected_tests[$group_name][$class]);
+      $form['tests']['table'][$group_name][$class] = array(
         '#type' => 'checkbox',
-        '#title' => $test_info['name'],
+        '#title' => $info['name'],
         '#default_value' => $is_selected,
-        '#description' => $test_info['description'],
+        '#description' => $info['description'],
       );
       if ($is_selected) {
         $form['tests']['table'][$group_name]['#collapsed'] = FALSE;
@@ -475,18 +473,17 @@ function simpletest_get_all_tests() {
       include_once DRUPAL_ROOT . '/' . $file;
     }
     $classes = array_values(array_diff(get_declared_classes(), $existing_classes));
-    $formatted_classes = array();
     foreach ($classes as $key => $class) {
-      if (method_exists($class, 'getInfo')) {
-        $formatted_classes[$class] = new $class;
+      if (!method_exists($class, 'getInfo')) {
+        unset($classes[$key]);
       }
     }
   }
-  if (count($formatted_classes) == 0) {
+  if (count($classes) == 0) {
     drupal_set_message('No test cases found.', 'error');
     return FALSE;
   }
-  return $formatted_classes;
+  return $classes;
 }
 
 /**
@@ -498,9 +495,9 @@ function simpletest_get_all_tests() {
  */
 function simpletest_categorize_tests($tests) {
   $groups = array();
-  foreach ($tests as $test => $instance) {
-    $info = $instance->getInfo();
-    $groups[$info['group']][$test] = $instance;
+  foreach ($tests as $test) {
+    $info = call_user_func(array($test, 'getInfo'));
+    $groups[$info['group']][$test] = $info;
   }
   uksort($groups, 'strnatcasecmp');
   return $groups;

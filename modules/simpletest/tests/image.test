@@ -1,5 +1,5 @@
 <?php
-// $Id: image.test,v 1.2 2009/03/10 09:43:01 dries Exp $
+// $Id: image.test,v 1.3 2009/03/31 01:49:53 webchick Exp $
 
 /**
  * @file
@@ -14,7 +14,7 @@ class ImageToolkitTestCase extends DrupalWebTestCase {
   protected $file;
   protected $image;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Image toolkit tests'),
       'description' => t('Check image tookit functions.'),
@@ -203,7 +203,7 @@ class ImageToolkitGdTestCase extends DrupalWebTestCase {
   protected $width = 40;
   protected $height = 20;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Image GD manipulation tests'),
       'description' => t('Check that core image manipulations work properly: scale, resize, rotate, crop, scale and crop, and desaturate.'),

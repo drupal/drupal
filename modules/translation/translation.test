@@ -1,10 +1,10 @@
 <?php
-// $Id: translation.test,v 1.8 2009/03/17 04:22:50 webchick Exp $
+// $Id: translation.test,v 1.9 2009/03/31 01:49:54 webchick Exp $
 
 class TranslationTestCase extends DrupalWebTestCase {
   protected $book;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Translation functionality'),
       'description' => t('Create a page with translation, modify the page outdating translation, and update translation.'),

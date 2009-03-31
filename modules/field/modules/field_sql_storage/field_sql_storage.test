@@ -1,8 +1,8 @@
 <?php
-// $Id: field_sql_storage.test,v 1.1 2009/02/03 17:30:11 dries Exp $
+// $Id: field_sql_storage.test,v 1.2 2009/03/31 01:49:51 webchick Exp $
 
 class FieldSqlStorageTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name'  => t('Field SQL storage tests'),
       'description'  => t("Test field SQL storage module."),

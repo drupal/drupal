@@ -1,10 +1,10 @@
 <?php
-// $Id: block.test,v 1.13 2009/03/20 19:18:09 dries Exp $
+// $Id: block.test,v 1.14 2009/03/31 01:49:50 webchick Exp $
 
 class BlockTestCase extends DrupalWebTestCase {
   protected $regions;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Block functionality'),
       'description' => t('Add, edit and delete custom block. Configure and move a module-defined block.'),
@@ -152,7 +152,7 @@ class BlockTestCase extends DrupalWebTestCase {
 }
 
 class NonDefaultBlockAdmin extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Non default theme admin'),
       'description' => t('Check the administer page for non default theme.'),

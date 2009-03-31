@@ -1,8 +1,8 @@
 <?php
-// $Id: upload.test,v 1.13 2009/02/22 17:55:30 dries Exp $
+// $Id: upload.test,v 1.14 2009/03/31 01:49:55 webchick Exp $
 
 class UploadTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Upload functionality'),
       'description' => t('Check content uploaded to nodes.'),

@@ -1,12 +1,12 @@
 <?php
-// $Id: common.test,v 1.31 2009/03/30 05:13:45 webchick Exp $
+// $Id: common.test,v 1.32 2009/03/31 01:49:53 webchick Exp $
 
 /**
  * Tests for the l() function.
  */
 class CommonLUnitTest extends DrupalWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Tests for the l() function'),
       'description' => t('Confirm that url() works correctly with various input.'),
@@ -30,7 +30,7 @@ class CommonSizeTestCase extends DrupalWebTestCase {
   protected $exact_test_cases;
   protected $rounded_test_cases;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Size parsing test'),
       'description' => t('Parse a predefined amount of bytes and compare the output with the expected value.'),
@@ -134,7 +134,7 @@ class DrupalTagsHandlingTestCase extends DrupalWebTestCase {
     '"Drupal, although it rhymes with sloopal, is as awesome as a troopal!"' => 'Drupal, although it rhymes with sloopal, is as awesome as a troopal!',
   );
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Drupal tags handling'),
       'description' => t("Performs tests on Drupal's handling of tags, both explosion and implosion tactics used."),
@@ -184,7 +184,7 @@ class DrupalTagsHandlingTestCase extends DrupalWebTestCase {
  * Test the Drupal CSS system.
  */
 class CascadingStylesheetsTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Cascading stylesheets'),
       'description' => t('Tests adding various cascading stylesheets to the page.'),
@@ -278,7 +278,7 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
  * Test drupal_http_request().
  */
 class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Drupal HTTP request'),
       'description' => t("Performs tests on Drupal's HTTP request mechanism."),
@@ -359,7 +359,7 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
  * Testing drupal_set_content and drupal_get_content.
  */
 class DrupalSetContentTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Drupal set/get content'),
       'description' => t('Performs tests on setting and retrieiving content from theme regions.'),
@@ -410,7 +410,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
    */
   var $preprocess_js = NULL;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('JavaScript'),
       'description' => t('Tests the JavaScript system.'),
@@ -562,7 +562,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
  * Tests for drupal_render().
  */
 class DrupalRenderUnitTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Drupal render'),
       'description' => t('Performs unit tests on drupal_render().'),
@@ -627,7 +627,7 @@ class DrupalRenderUnitTestCase extends DrupalWebTestCase {
  * Tests Drupal error and exception handlers.
  */
 class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Drupal error handlers'),
       'description' => t('Performs tests on the Drupal error and exception handler.'),
@@ -739,7 +739,7 @@ class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
  * Test for valid_url().
  */
 class ValidUrlTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Valid Url'),
       'description' => t("Performs tests on Drupal's valid url function."),
@@ -847,7 +847,7 @@ class ValidUrlTestCase extends DrupalWebTestCase {
  * Tests for CRUD API functions.
  */
 class DrupalDataApiTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Data API functions'),
       'description' => t('Tests the performance of CRUD APIs.'),
@@ -904,7 +904,7 @@ class DrupalErrorCollectionUnitTest extends DrupalWebTestCase {
    */
   protected $collectedErrors = array();
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('SimpleTest error collecter'),
       'description' => t('Performs tests on the Simpletest error and exception collecter.'),

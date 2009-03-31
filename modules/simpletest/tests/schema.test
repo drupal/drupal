@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.test,v 1.4 2009/03/14 20:34:17 dries Exp $
+// $Id: schema.test,v 1.5 2009/03/31 01:49:53 webchick Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  * Unit tests for the Schema API.
  */
 class SchemaTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Schema API'),
       'description' => t('Tests table creation and modification via the schema API.'),

@@ -1,11 +1,11 @@
 <?php
-// $Id: help.test,v 1.5 2009/03/08 03:39:57 webchick Exp $
+// $Id: help.test,v 1.6 2009/03/31 01:49:52 webchick Exp $
 
 class HelpTestCase extends DrupalWebTestCase {
   protected $big_user;
   protected $any_user;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Help functionality'),
       'description' => t('Verify help display and user access to help based on persmissions.'),

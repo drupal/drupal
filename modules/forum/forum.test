@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.15 2009/02/13 05:42:24 webchick Exp $
+// $Id: forum.test,v 1.16 2009/03/31 01:49:52 webchick Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -11,7 +11,7 @@ class ForumTestCase extends DrupalWebTestCase {
   protected $root_forum;
   protected $nids;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Forum functionality'),
       'description' => t('Create, view, edit, delete, and change forum entries and verify its consistency in the database.'),

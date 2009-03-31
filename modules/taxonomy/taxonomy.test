@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.test,v 1.27 2009/03/30 05:18:49 webchick Exp $
+// $Id: taxonomy.test,v 1.28 2009/03/31 01:49:54 webchick Exp $
 
 /**
  * @file
@@ -43,7 +43,7 @@ class TaxonomyWebTestCase extends DrupalWebTestCase {
 */
 class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Taxonomy vocabulary interface'),
       'description' => t('Test the taxonomy vocabulary interface.'),
@@ -173,7 +173,7 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
  */
 class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
 
-function getInfo() {
+public static function getInfo() {
      return array(
        'name' => t('Taxonomy vocabularies'),
        'description' => t('Test loading, saving and deleting vocabularies.'),
@@ -282,7 +282,7 @@ function getInfo() {
  */
 class TaxonomyTermUnitTest extends TaxonomyWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Taxonomy term unit tests'),
       'description' => t('Unit tests for taxonomy term functions.'),
@@ -357,7 +357,7 @@ class TaxonomyTermUnitTest extends TaxonomyWebTestCase {
  */
 class TaxonomyTermTestCase extends TaxonomyWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Taxonomy term functions and forms.'),
       'description' => t('Test load, save and delete for taxonomy terms.'),
@@ -563,7 +563,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
  */
 class TaxonomyLoadMultipleUnitTest extends TaxonomyWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Taxonomy term multiple loading'),
       'description' => t('Test the loading of multiple taxonomy terms at once'),
@@ -629,7 +629,7 @@ class TaxonomyLoadMultipleUnitTest extends TaxonomyWebTestCase {
  * Tests for taxonomy hook invocation.
  */
 class TaxonomyHooksTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Taxonomy term hooks'),
       'description' => t('Hooks for taxonomy term load/save/delete.'),

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.19 2009/02/24 16:46:52 webchick Exp $
+// $Id: locale.test,v 1.20 2009/03/31 01:49:52 webchick Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@
  * Functional tests for the language configuration forms.
  */
 class LocaleConfigurationTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Language configuration'),
       'description' => t('Adds a new locale and tests changing its status and the default language.'),
@@ -165,7 +165,7 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
  * Functional test for string translation and validation.
  */
 class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('String translate, search and validate'),
       'description' => t('Adds a new locale and translates its name. Checks the validation of translation strings and search results.'),
@@ -528,7 +528,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
  * Functional tests for the import of translation files.
  */
 class LocaleImportFunctionalTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Translation import'),
       'description' => t('Tests the importation of locale files.'),
@@ -778,7 +778,7 @@ EOF;
  * Functional tests for the export of translation files.
  */
 class LocaleExportFunctionalTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Translation export'),
       'description' => t('Tests the exportation of locale files.'),
@@ -860,7 +860,7 @@ EOF;
  * Locale uninstall with English UI functional test.
  */
 class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Locale uninstall (EN)'),
       'description' => t('Tests the uninstall process using the built-in UI language.'),
@@ -966,7 +966,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
  * to test with this new language.
  */
 class LocaleUninstallFrenchFunctionalTest extends LocaleUninstallFunctionalTest {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Locale uninstall (FR)'),
       'description' => t('Tests the uninstall process using French as UI language.'),
@@ -986,7 +986,7 @@ class LocaleUninstallFrenchFunctionalTest extends LocaleUninstallFunctionalTest 
  */
 class LanguageSwitchingFunctionalTest extends DrupalWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Language switching'),
       'description' => t('Tests for the language switching feature.'),
@@ -1065,7 +1065,7 @@ class LanguageSwitchingFunctionalTest extends DrupalWebTestCase {
  * Functional tests for a user's ability to change their default language.
  */
 class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('User language settings'),
       'description' => t("Tests user's ability to change their default language."),
@@ -1160,7 +1160,7 @@ class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
  * Functional tests for configuring a different path alias per language.
  */
 class LocalePathFunctionalTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Path language settings'),
       'description' => t('Checks you can configure a language for individual url aliases.'),
@@ -1243,7 +1243,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
  * Functional tests for multilingual support on nodes.
  */
 class LocaleContentFunctionalTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Content language settings'),
       'description' => t('Checks you can enable multilingual support on content types and configure a language for a node.'),

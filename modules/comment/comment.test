@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.test,v 1.27 2009/03/25 16:54:24 dries Exp $
+// $Id: comment.test,v 1.28 2009/03/31 01:49:50 webchick Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -229,7 +229,7 @@ class CommentHelperCase extends DrupalWebTestCase {
 }
 
 class CommentInterfaceTest extends CommentHelperCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Comment interface'),
       'description' => t('Test comment user interfaces.'),
@@ -359,7 +359,7 @@ class CommentInterfaceTest extends CommentHelperCase {
 }
 
 class CommentAnonymous extends CommentHelperCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Anonymous comments'),
       'description' => t('Test anonymous comments.'),
@@ -455,7 +455,7 @@ class CommentAnonymous extends CommentHelperCase {
 }
 
 class CommentApprovalTest extends CommentHelperCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Comment approval'),
       'description' => t('Test comment approval functionality.'),
@@ -537,7 +537,7 @@ class CommentApprovalTest extends CommentHelperCase {
  * Functional tests for the comment module blocks.
  */
 class CommentBlockFunctionalTest extends CommentHelperCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Comment blocks'),
       'description' => t('Test comment block functionality.'),
@@ -606,7 +606,7 @@ class CommentBlockFunctionalTest extends CommentHelperCase {
  * Unit tests for comment module integration with RSS feeds.
  */
 class CommentRSSUnitTest extends CommentHelperCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Comment RSS'),
       'description' => t('Test comments as part of an RSS feed.'),

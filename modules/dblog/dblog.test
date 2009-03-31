@@ -1,11 +1,11 @@
 <?php
-// $Id: dblog.test,v 1.16 2009/03/14 23:01:36 webchick Exp $
+// $Id: dblog.test,v 1.17 2009/03/31 01:49:51 webchick Exp $
 
 class DBLogTestCase extends DrupalWebTestCase {
   protected $big_user;
   protected $any_user;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('DBLog functionality'),
       'description' => t('Generate events and verify dblog entries; verify user access to log reports based on persmissions.'),

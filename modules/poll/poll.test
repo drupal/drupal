@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.test,v 1.15 2009/02/01 06:48:15 webchick Exp $
+// $Id: poll.test,v 1.16 2009/03/31 01:49:53 webchick Exp $
 
 class PollTestCase extends DrupalWebTestCase {
 
@@ -74,7 +74,7 @@ class PollTestCase extends DrupalWebTestCase {
 }
 
 class PollCreateTestCase extends PollTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array('name' => t('Poll create'), 'description' => 'Adds "more choices", previews and creates a poll.', 'group' => t('Poll'));
   }
 
@@ -90,7 +90,7 @@ class PollCreateTestCase extends PollTestCase {
 }
 
 class PollVoteTestCase extends PollTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array('name' => t('Poll vote'), 'description' => 'Vote on a poll', 'group' => t('Poll'));
   }
 
@@ -125,7 +125,7 @@ class PollVoteTestCase extends PollTestCase {
 }
 
 class PollBlockTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Block availability'),
       'description' => t('Check if the most recent poll block is available.'),
@@ -159,7 +159,7 @@ class PollBlockTestCase extends DrupalWebTestCase {
  */
 class PollJSAddChoice extends DrupalWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Poll add choice'),
       'description' => t('Submits a POST request for an additional poll choice.'),

@@ -1,8 +1,8 @@
 <?php
-// $Id: statistics.test,v 1.6 2008/12/30 16:43:18 dries Exp $
+// $Id: statistics.test,v 1.7 2009/03/31 01:49:54 webchick Exp $
 
 class StatisticsBlockVisitorsTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Top visitor blocking'),
       'description' => t('Tests blocking of IP addresses via the top visitors report.'),

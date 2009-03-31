@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.test,v 1.19 2009/03/01 07:21:02 webchick Exp $
+// $Id: aggregator.test,v 1.20 2009/03/31 01:49:50 webchick Exp $
 
 class AggregatorTestCase extends DrupalWebTestCase {
   private static $prefix = 'simpletest_aggregator_';
@@ -243,7 +243,7 @@ EOF;
 }
 
 class AddFeedTestCase extends AggregatorTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Add feed functionality'),
       'description' => t('Add feed test.'),
@@ -272,7 +272,7 @@ class AddFeedTestCase extends AggregatorTestCase {
 }
 
 class UpdateFeedTestCase extends AggregatorTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Update feed functionality'),
       'description' => t('Update feed test.'),
@@ -314,7 +314,7 @@ class UpdateFeedTestCase extends AggregatorTestCase {
 }
 
 class RemoveFeedTestCase extends AggregatorTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Remove feed functionality'),
       'description' => t('Remove feed test.'),
@@ -342,7 +342,7 @@ class RemoveFeedTestCase extends AggregatorTestCase {
 }
 
 class UpdateFeedItemTestCase extends AggregatorTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Update feed item functionality'),
       'description' => t('Update feed items from a feed.'),
@@ -403,7 +403,7 @@ class UpdateFeedItemTestCase extends AggregatorTestCase {
 }
 
 class RemoveFeedItemTestCase extends AggregatorTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Remove feed item functionality'),
       'description' => t('Remove feed items from a feed.'),
@@ -443,7 +443,7 @@ class RemoveFeedItemTestCase extends AggregatorTestCase {
 class CategorizeFeedItemTestCase extends AggregatorTestCase {
   private static $prefix = 'simpletest_aggregator_';
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Categorize feed item functionality'),
       'description' => t('Test feed item categorization.'),
@@ -502,7 +502,7 @@ class CategorizeFeedItemTestCase extends AggregatorTestCase {
 class ImportOPMLTestCase extends AggregatorTestCase {
   private static $prefix = 'simpletest_aggregator_';
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Import feeds from OPML functionality'),
       'description' => t('Test OPML import.'),

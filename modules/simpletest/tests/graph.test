@@ -1,5 +1,5 @@
 <?php
-// $Id: graph.test,v 1.1 2009/01/14 12:18:37 dries Exp $
+// $Id: graph.test,v 1.2 2009/03/31 01:49:53 webchick Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  * Unit tests for the graph handling features.
  */
 class GraphUnitTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Graph'),
       'description' => t('Graph handling unit tests.'),

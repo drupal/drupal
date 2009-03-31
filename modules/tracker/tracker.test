@@ -1,12 +1,12 @@
 <?php
-// $Id: tracker.test,v 1.6 2009/02/09 16:27:35 dries Exp $
+// $Id: tracker.test,v 1.7 2009/03/31 01:49:54 webchick Exp $
 
 class TrackerTest extends DrupalWebTestCase {
   protected $user;
   protected $other_user;
   protected $new_node;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Tracker'),
       'description' => t('Create nodes and check for their display in the tracker listings.'),
