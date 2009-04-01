@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.312 2009/03/17 15:26:29 dries Exp $
+// $Id: system.install,v 1.313 2009/04/01 20:00:47 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3068,10 +3068,29 @@ function system_update_7011() {
 }
 
 /**
+ * Make tables case-sensitive on MySQL.
+ */
+function system_update_7012() {
+  $ret = array();
+  if (db_driver() == 'mysql') {
+    // Table names as used in D6. Some have changed and are no longer reported
+    // by hook_schema(). The list is generated using the following command:
+    // grep -r "^ \+\$schema\['[a-z_]\+'\] =" modules | cut -d\' -f2 | sort -u | xargs -I '*' echo -n "'*', "
+    $tables = array('access', 'accesslog', 'actions', 'actions_aid', 'aggregator_category', 'aggregator_category_feed', 'aggregator_category_item', 'aggregator_feed', 'aggregator_item', 'authmap', 'batch', 'blocks', 'blocks_roles', 'blogapi_files', 'book', 'book_temp', 'boxes', 'cache', 'cache_block', 'cache_filter', 'cache_form', 'cache_menu', 'cache_page', 'cache_update', 'comments', 'contact', 'files', 'filter_formats', 'filters', 'flood', 'forum', 'history', 'languages', 'locales_source', 'locales_target', 'menu_custom', 'menu_links', 'menu_router', 'node', 'node_access', 'node_comment_statistics', 'node_counter', 'node_revisions', 'node_type', 'openid_association', 'permission', 'poll', 'poll_choices', 'poll_votes', 'profile_fields', 'profile_values', 'role', 'search_dataset', 'search_index', 'search_node_links', 'search_total', 'sessions', 'system', 'term_data', 'term_hierarchy', 'term_node', 'term_relation', 'term_synonym', 'trigger_assignments', 'upload', 'url_alias', 'users', 'users_roles', 'variable', 'vocabulary', 'vocabulary_node_types', 'watchdog');
+    foreach ($tables as $table) {
+      if (db_table_exists($table)) {
+        $ret[] = update_sql('ALTER TABLE {' . $table . '} CONVERT TO CHARACTER SET utf8 COLLATE utf8_bin');
+      }
+    }
+  }
+  return $ret;
+}
+
+/**
  * Rename {blocks} table to {block}, {blocks_roles} to {block_role} and
  * {boxes} to {box}.
  */
-function system_update_7012() {
+function system_update_7013() {
   $ret = array();
   db_rename_table($ret, 'blocks', 'block');
   db_rename_table($ret, 'blocks_roles', 'block_role');
@@ -3082,7 +3101,7 @@ function system_update_7012() {
 /**
  * Convert default time zone offset to default time zone name.
  */
-function system_update_7013() {
+function system_update_7014() {
   $ret = array();
   $timezone = NULL;
   $timezones = system_time_zones();
@@ -3123,7 +3142,7 @@ function system_update_7013() {
 /**
  * Drop the bootstrap column from the {system} table.
  */
-function system_update_7014() {
+function system_update_7015() {
   $ret = array();
   db_drop_field($ret, 'system', 'bootstrap');
   return $ret;
@@ -3132,7 +3151,7 @@ function system_update_7014() {
 /**
  * Change the user logout path.
  */
-function system_update_7015() {
+function system_update_7016() {
   $ret = array();
   $ret[] = update_sql("UPDATE {menu_links} SET link_path = 'user/logout' WHERE link_path = 'logout'");
   $ret[] = update_sql("UPDATE {menu_links} SET router_path = 'user/logout' WHERE router_path = 'logout'");
@@ -3142,7 +3161,7 @@ function system_update_7015() {
 /**
  * Remove custom datatype *_unsigned in PostgreSQL.
  */
-function system_update_7016() {
+function system_update_7017() {
   $ret = array();
   // Only run these queries if the driver used is pgsql.
   if (db_driver() == 'pgsql') {
@@ -3176,7 +3195,7 @@ function system_update_7016() {
 /**
  * Change the theme setting 'toggle_node_info' into a per content type variable.
  */
-function system_update_7017() {
+function system_update_7018() {
   $ret = array();
   $types = node_get_types();
   if (count($types)) {
@@ -3205,7 +3224,7 @@ function system_update_7017() {
 /**
  * Replace src index on the {url_alias} table with src, language.
  */
-function system_update_7018() {
+function system_update_7019() {
   $ret = array();
   db_add_index($ret, 'url_alias', 'src_language', array('src', 'language'));
   db_drop_index($ret, 'url_alias', 'src');
@@ -3216,7 +3235,7 @@ function system_update_7018() {
 /**
  * Shorten the {system}.type column and add an index on type and name.
  */
-function system_update_7019() {
+function system_update_7020() {
   $ret = array();
   db_drop_index($ret, 'system', 'modules');
   db_change_field($ret, 'system', 'type', 'type', array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''));
@@ -3228,7 +3247,7 @@ function system_update_7019() {
 /**
  * Enable field module.
  */
-function system_update_7020() {
+function system_update_7021() {
   $ret = array();
   $module_list = array('field_sql_storage', 'field');
   drupal_install_modules($module_list);

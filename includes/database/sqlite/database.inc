@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.12 2009/03/29 12:48:33 dries Exp $
+// $Id: database.inc,v 1.13 2009/04/01 20:00:46 dries Exp $
 
 /**
  * @file
@@ -31,6 +31,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     ));
 
     $this->exec('PRAGMA encoding="UTF-8"');
+    $this->exec('PRAGMA case_sensitive_like=1');
 
     // Create functions needed by SQLite.
     $this->sqliteCreateFunction('if', array($this, 'sqlFunctionIf'));

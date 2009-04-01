@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.12 2009/03/14 20:34:17 dries Exp $
+// $Id: schema.inc,v 1.13 2009/04/01 20:00:46 dries Exp $
 
 /**
  * @file
@@ -60,7 +60,8 @@ class DatabaseSchema_mysql extends DatabaseSchema {
    */
   protected function createTableSql($name, $table) {
     if (empty($table['mysql_suffix'])) {
-      $table['mysql_suffix'] = 'DEFAULT CHARACTER SET UTF8';
+      // Store strings as UTF-8 and do case-sensitive comparision.
+      $table['mysql_suffix'] = 'DEFAULT CHARACTER SET UTF8 COLLATE utf8_bin';
     }
 
     $sql = "CREATE TABLE {" . $name . "} (\n";

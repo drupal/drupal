@@ -1,14 +1,10 @@
 <?php
-// $Id: locale.install,v 1.34 2009/02/13 00:45:18 webchick Exp $
+// $Id: locale.install,v 1.35 2009/04/01 20:00:46 dries Exp $
 
 /**
  * Implementation of hook_install().
  */
 function locale_install() {
-  // locales_source.source and locales_target.target are not used as binary
-  // fields; non-MySQL database servers need to ensure the field type is text
-  // and that LIKE produces a case-sensitive comparison.
-
   // Create tables.
   drupal_install_schema('locale');
 
@@ -354,7 +350,6 @@ function locale_schema() {
       ),
       'source' => array(
         'type' => 'text',
-        'mysql_type' => 'blob',
         'not null' => TRUE,
         'description' => 'The original string in English.',
       ),
@@ -383,7 +378,6 @@ function locale_schema() {
       ),
       'translation' => array(
         'type' => 'text',
-        'mysql_type' => 'blob',
         'not null' => TRUE,
         'description' => 'Translation string value in this language.',
       ),

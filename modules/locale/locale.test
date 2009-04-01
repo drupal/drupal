@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.21 2009/03/31 02:02:21 webchick Exp $
+// $Id: locale.test,v 1.22 2009/04/01 20:00:46 dries Exp $
 
 /**
  * @file
@@ -391,8 +391,9 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     // This is the language indicator on the translation search screen for
     // untranslated strings. Copied straight from locale.inc.
     $language_indicator = "<em class=\"locale-untranslated\">$langcode</em> ";
-    // This will be the translation of $name.
-    $translation = $this->randomName(16);
+    // This will be the translation of $name. Make sure it contains at least
+    // one lower-case character in order to check case-sensitive search.
+    $translation = $this->randomName(16) . 'x';
 
     // Add custom language.
     $this->drupalLogin($admin_user);
@@ -468,6 +469,16 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     );
     $this->drupalPost('admin/international/translate/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings found for your search.'), t('Search found the translation.'));
+
+    // Ensure string search is case-sensitive.
+    $search = array(
+      'string' => drupal_strtoupper($translation),
+      'language' => 'all',
+      'translation' => 'translated',
+      'group' => 'all',
+    );
+    $this->drupalPost('admin/international/translate/translate', $search, t('Filter'));
+    $this->assertText(t('No strings found for your search.'), t("Search didn't find the translation."));
 
     // Ensure translated source string doesn't appear if searching on 'only
     // untranslated strings'.
