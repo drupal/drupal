@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.146 2009/03/17 12:41:54 dries Exp $
+// $Id: blogapi.module,v 1.147 2009/04/01 01:28:24 dries Exp $
 
 /**
  * @file
@@ -148,7 +148,7 @@ function blogapi_blogger_get_users_blogs($appid, $username, $password) {
     $types = _blogapi_get_node_types();
     $structs = array();
     foreach ($types as $type) {
-      $structs[] = array('url' => url('blog/' . $user->uid, array('absolute' => TRUE)), 'blogid' => $type, 'blogName' => $user->name . ": " . $type);
+      $structs[] = array('url' => url('user/' . $user->uid, array('absolute' => TRUE)), 'blogid' => $type, 'blogName' => $user->name . ": " . $type);
     }
 
     return $structs;
@@ -172,7 +172,7 @@ function blogapi_blogger_get_user_info($appkey, $username, $password) {
       'firstname' => $name[0],
       'nickname' => $user->name,
       'email' => $user->mail,
-      'url' => url('blog/' . $user->uid, array('absolute' => TRUE)));
+      'url' => url('user/' . $user->uid, array('absolute' => TRUE)));
   }
   else {
     return blogapi_error($user);
