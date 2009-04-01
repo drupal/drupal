@@ -1,5 +1,10 @@
 <?php
-// $Id: aggregator.test,v 1.20 2009/03/31 01:49:50 webchick Exp $
+// $Id: aggregator.test,v 1.21 2009/04/01 19:56:34 dries Exp $
+
+/**
+ * @file
+ * Creates tests for aggregator module.
+ */
 
 class AggregatorTestCase extends DrupalWebTestCase {
   private static $prefix = 'simpletest_aggregator_';
@@ -33,7 +38,8 @@ class AggregatorTestCase extends DrupalWebTestCase {
   /**
    * Delete an aggregator feed.
    *
-   * @param object $feed Feed object representing the feed.
+   * @param $feed
+   *   Feed object representing the feed.
    */
   function deleteFeed($feed) {
     $this->drupalPost('admin/content/aggregator/edit/feed/' . $feed->fid, array(), t('Delete'));
@@ -103,7 +109,8 @@ class AggregatorTestCase extends DrupalWebTestCase {
   /**
    * Confirm item removal from a feed.
    *
-   * @param object $feed Feed object representing the feed.
+   * @param $feed
+   *   Feed object representing the feed.
    */
   function removeFeedItems($feed) {
     $this->drupalPost('admin/content/aggregator/remove/' . $feed->fid, array(), t('Remove items'));
@@ -129,7 +136,8 @@ class AggregatorTestCase extends DrupalWebTestCase {
   /**
    * Pull feed categories from aggregator_category_feed table.
    *
-   * @param object $feed Feed object representing the feed.
+   * @param $feed
+   *   Feed object representing the feed.
    */
   function getFeedCategories($feed) {
     // add the categories to the feed so we can use them
@@ -142,9 +150,12 @@ class AggregatorTestCase extends DrupalWebTestCase {
   /**
    * Check if the feed name and url is unique.
    *
-   * @param string $feed_name Feed name to check.
-   * @param string $feed_url Feed url to check.
-   * @return boolean Feed is unique.
+   * @param $feed_name
+   *   String containing the feed name to check.
+   * @param $feed_url
+   *   String containing the feed url to check.
+   * @return
+   *   TRUE if feed is unique.
    */
   function uniqueFeed($feed_name, $feed_url) {
     $result = db_query("SELECT COUNT(*) FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $feed_name, ':url' => $feed_url))->fetchField();
