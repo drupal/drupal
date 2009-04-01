@@ -107,8 +107,8 @@ function statistics_top_visitors() {
  * Menu callback; presents the "referrer" page.
  */
 function statistics_top_referrers() {
-  $query = "SELECT url, COUNT(url) AS hits, MAX(timestamp) AS last FROM {accesslog} WHERE url NOT LIKE :host AND url <> '' GROUP BY url";
-  $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> '' AND url NOT LIKE :host";
+  $query = "SELECT url, COUNT(url) AS hits, MAX(timestamp) AS last FROM {accesslog} WHERE LOWER(url) NOT LIKE :host AND url <> '' GROUP BY url";
+  $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> '' AND LOWER(url) NOT LIKE :host";
   drupal_set_title(t('Top referrers in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))), PASS_THROUGH);
 
   $header = array(

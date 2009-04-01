@@ -216,14 +216,12 @@ function user_load_multiple($uids = array(), $conditions = array(), $reset = FAL
     }
     // If the conditions array is populated, add those to the query.
     if ($conditions) {
-      // TODO D7: Using LIKE() to get a case insensitive comparison because Crell
-      // and chx promise that dbtng will map it to ILIKE in postgres.
       if (isset($conditions['name'])) {
-        $query->condition('u.name', $conditions['name'], 'LIKE');
+        $query->where('LOWER(u.name) = LOWER(:name)', array(':name' => $conditions['name']));
         unset($conditions['name']);
       }
       if (isset($conditions['mail'])) {
-        $query->condition('u.mail', $conditions['mail'], 'LIKE');
+        $query->where('LOWER(u.mail) = LOWER(:mail)', array(':mail' => $conditions['mail']));
         unset($conditions['mail']);
       }
       foreach ($conditions as $field => $value) {

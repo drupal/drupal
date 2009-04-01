@@ -60,7 +60,8 @@ class DatabaseSchema_mysql extends DatabaseSchema {
    */
   protected function createTableSql($name, $table) {
     if (empty($table['mysql_suffix'])) {
-      $table['mysql_suffix'] = 'DEFAULT CHARACTER SET UTF8';
+      // Store strings as UTF-8 and do case-sensitive comparision.
+      $table['mysql_suffix'] = 'DEFAULT CHARACTER SET UTF8 COLLATE utf8_bin';
     }
 
     $sql = "CREATE TABLE {" . $name . "} (\n";
