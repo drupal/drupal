@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.test,v 1.21 2009/04/01 19:56:34 dries Exp $
+// $Id: aggregator.test,v 1.22 2009/04/02 20:50:37 dries Exp $
 
 /**
  * @file
@@ -239,7 +239,7 @@ EOF;
   }
 
   function getRSS091Sample() {
-    return $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'aggregator') . '/aggregator_test_rss091.xml';
+    return $GLOBALS['base_url'] . '/' . drupal_get_path('module', 'aggregator') . '/tests/aggregator_test_rss091.xml';
   }
 
   function createSampleNodes() {

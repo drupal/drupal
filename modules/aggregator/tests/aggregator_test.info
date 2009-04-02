@@ -1,4 +1,4 @@
-; $Id: aggregator_test.info,v 1.2 2009/03/15 18:59:05 webchick Exp $
+; $Id: aggregator_test.info,v 1.1 2009/04/02 20:50:37 dries Exp $
 name = "Aggregator module tests"
 description = "Support module for aggregator related testing."
 package = Testing
