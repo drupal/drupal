@@ -1832,30 +1832,35 @@ function menu_rebuild() {
 /**
  * Collect, alter and store the menu definitions.
  */
-function menu_router_build($reset = FALSE) {
-  static $menu;
-
-  if (!isset($menu) || $reset) {
-    if (!$reset && ($cache = cache_get('router:', 'cache_menu')) && isset($cache->data)) {
-      $menu = $cache->data;
-    }
-    else {
-      // We need to manually call each module so that we can know which module
-      // a given item came from.
-      $callbacks = array();
-      foreach (module_implements('menu', TRUE) as $module) {
-        $router_items = call_user_func($module . '_menu');
-        if (isset($router_items) && is_array($router_items)) {
-          foreach (array_keys($router_items) as $path) {
-            $router_items[$path]['module'] = $module;
-          }
-          $callbacks = array_merge($callbacks, $router_items);
-        }
+function menu_router_build() {
+  // We need to manually call each module so that we can know which module
+  // a given item came from.
+  $callbacks = array();
+  foreach (module_implements('menu') as $module) {
+    $router_items = call_user_func($module .'_menu');
+    if (isset($router_items) && is_array($router_items)) {
+      foreach (array_keys($router_items) as $path) {
+        $router_items[$path]['module'] = $module;
       }
-      // Alter the menu as defined in modules, keys are like user/%user.
-      drupal_alter('menu', $callbacks);
-      $menu = _menu_router_build($callbacks);
+      $callbacks = array_merge($callbacks, $router_items);
     }
+  }
+  // Alter the menu as defined in modules, keys are like user/%user.
+  drupal_alter('menu', $callbacks);
+  $menu = _menu_router_build($callbacks);
+  _menu_router_store($menu);
+
+  return $menu;
+}
+
+/**
+ * Helper function to store the menu router if we have it in memory.
+ */
+function _menu_router_store($new_menu = NULL) {
+  static $menu = NULL;
+  
+  if (isset($new_menu)) {
+    $menu = $new_menu;
   }
   return $menu;
 }
@@ -1951,7 +1956,7 @@ function _menu_navigation_links_rebuild($menu) {
     )
     ->execute();
   foreach ($result as $item) {
-    $router_path = _menu_find_router_path($menu, $item['link_path']);
+    $router_path = _menu_find_router_path($item['link_path']);
     if (!empty($router_path) && ($router_path != $item['router_path'] || $item['updated'])) {
       // If the router path and the link path matches, it's surely a working
       // item, so we clear the updated flag.
@@ -2048,9 +2053,8 @@ function _menu_delete_item($item, $force = FALSE) {
  *   saved.
  */
 function menu_link_save(&$item) {
-  $menu = menu_router_build();
 
-  drupal_alter('menu_link', $item, $menu);
+  drupal_alter('menu_link', $item);
 
   // This is the easiest way to handle the unique internal path '<front>',
   // since a path marked as external does not need to match a router path.
@@ -2175,7 +2179,7 @@ function menu_link_save(&$item) {
     else {
       // Find the router path which will serve this path.
       $item['parts'] = explode('/', $item['link_path'], MENU_MAX_PARTS);
-      $item['router_path'] = _menu_find_router_path($menu, $item['link_path']);
+      $item['router_path'] = _menu_find_router_path($item['link_path']);
     }
   }
   // If every value in $existing_item is the same in the $item, there is no
@@ -2257,25 +2261,40 @@ function _menu_set_expanded_menus() {
 /**
  * Find the router path which will serve this path.
  *
- * @param $menu
- *  The full built menu.
  * @param $link_path
  *  The path for we are looking up its router path.
  * @return
  *  A path from $menu keys or empty if $link_path points to a nonexisting
  *  place.
  */
-function _menu_find_router_path($menu, $link_path) {
-  $parts = explode('/', $link_path, MENU_MAX_PARTS);
+function _menu_find_router_path($link_path) {
+  // $menu will only have data during a menu rebuild.
+  $menu = _menu_router_store();
+
   $router_path = $link_path;
-  if (!isset($menu[$router_path])) {
-    $ancestors = menu_get_ancestors($parts);
+  $parts = explode('/', $link_path, MENU_MAX_PARTS);
+  $ancestors = menu_get_ancestors($parts);
+
+  if (empty($menu)) {
+    // Not during a menu rebuild, so look up in the database.
+    $router_path = (string) db_select('menu_router')
+      ->fields('menu_router', array('path'))
+      ->condition('path', $ancestors, 'IN')
+      ->orderBy('fit', 'DESC')
+      ->range(0, 1)
+      ->execute()->fetchField();
+  }
+  elseif (!isset($menu[$router_path])) {
+    // Add an empty router path as a fallback.
     $ancestors[] = '';
     foreach ($ancestors as $key => $router_path) {
       if (isset($menu[$router_path])) {
+        // Exit the loop leaving $router_path as the first match.
         break;
       }
     }
+    // If we did not find the path, $router_path will be the empty string
+    // at the end of $ancestors.
   }
   return $router_path;
 }
@@ -2654,7 +2673,7 @@ function _menu_router_build($callbacks) {
   $masks = array_keys($masks);
   rsort($masks);
   variable_set('menu_masks', $masks);
-  cache_set('router:', $menu, 'cache_menu');
+
   return $menu;
 }
 
