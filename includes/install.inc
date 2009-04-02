@@ -335,7 +335,8 @@ abstract class DatabaseInstaller {
  */
 function drupal_rewrite_settings($settings = array(), $prefix = '') {
   $default_settings = 'sites/default/default.settings.php';
-  $settings_file = conf_path(FALSE, TRUE) . '/' . $prefix . 'settings.php';
+  drupal_static_reset('conf_path');
+  $settings_file = conf_path(FALSE) . '/' . $prefix . 'settings.php';
 
   // Build list of setting names and insert the values into the global namespace.
   $keys = array();

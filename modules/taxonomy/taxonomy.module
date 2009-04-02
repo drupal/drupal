@@ -227,6 +227,7 @@ function taxonomy_vocabulary_save($vocabulary) {
   }
 
   cache_clear_all();
+  drupal_static_reset('taxonomy_vocabulary_load_multiple');
 
   return $status;
 }
@@ -252,6 +253,7 @@ function taxonomy_vocabulary_delete($vid) {
   module_invoke_all('taxonomy', 'delete', 'vocabulary', $vocabulary);
 
   cache_clear_all();
+  drupal_static_reset('taxonomy_vocabulary_load_multiple');
 
   return SAVED_DELETED;
 }
@@ -361,6 +363,7 @@ function taxonomy_term_save($term) {
   }
 
   cache_clear_all();
+  taxonomy_terms_static_reset();
 
   return $status;
 }
@@ -404,8 +407,20 @@ function taxonomy_term_delete($tid) {
   }
 
   cache_clear_all();
-
+  taxonomy_terms_static_reset();
+  
   return SAVED_DELETED;
+}
+
+/**
+ * Clear all static cache variables for terms..
+ */
+function taxonomy_terms_static_reset() {
+  drupal_static_reset('taxonomy_term_count_nodes');
+  drupal_static_reset('taxonomy_get_tree');
+  drupal_static_reset('taxonomy_get_synonym_root');
+  drupal_static_reset('taxonomy_term_load_multiple');
+  drupal_static_reset('taxonomy_get_term_data');
 }
 
 /**
@@ -452,9 +467,9 @@ function taxonomy_form_all($free_tags = 0) {
  * @param $type
  *   If set, return only those vocabularies associated with this node type.
  */
-function taxonomy_get_vocabularies($type = NULL, $reset = FALSE) {
+function taxonomy_get_vocabularies($type = NULL) {
   $conditions = !empty($type) ? array('type' => $type) : NULL;
-  return taxonomy_vocabulary_load_multiple(array(), $conditions, $reset);
+  return taxonomy_vocabulary_load_multiple(array(), $conditions);
 }
 
 /**
@@ -616,7 +631,7 @@ function taxonomy_get_tids_from_nodes($nodes) {
  * Find all terms associated with the given node, ordered by vocabulary and term weight.
  */
 function taxonomy_node_get_terms($node, $key = 'tid') {
-  static $terms;
+  $terms = &drupal_static(__FUNCTION__);
 
   if (!isset($terms[$node->vid][$key])) {
     $result = db_query(db_rewrite_sql('SELECT t.* FROM {taxonomy_term_node} r INNER JOIN {taxonomy_term_data} t ON r.tid = t.tid INNER JOIN {taxonomy_vocabulary} v ON t.vid = v.vid WHERE r.vid = %d ORDER BY v.weight, t.weight, t.name', 't', 'tid'), $node->vid);
@@ -701,6 +716,7 @@ function taxonomy_node_type($op, $info) {
   elseif ($op == 'delete') {
     db_query("DELETE FROM {taxonomy_vocabulary_node_type} WHERE type = '%s'", $info->type);
   }
+  drupal_static_reset('taxonomy_term_count_nodes');
 }
 
 /**
@@ -780,9 +796,6 @@ function taxonomy_get_children($tid, $vid = 0, $key = 'tid') {
  *   for the entire vocabulary.
  * @param $max_depth
  *   The number of levels of the tree to return. Leave NULL to return all levels.
- * @param $reset
- *   Whether to reset the static cache, you should only use this if
- *   updating and loading term hierarchies during a page request.
  * @param $depth
  *   Internal use only.
  *
@@ -791,12 +804,10 @@ function taxonomy_get_children($tid, $vid = 0, $key = 'tid') {
  *   to have "depth" and "parents" attributes in addition to its normal ones.
  *   Results are statically cached.
  */
-function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $reset = FALSE, $depth = -1) {
-  static $children, $parents, $terms;
-
-  if ($reset) {
-    $children = $parents = $terms = array();
-  }
+function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $depth = -1) {
+  $children = &drupal_static(__FUNCTION__, array());
+  $parents = &drupal_static(__FUNCTION__ . 'parents', array());
+  $terms = &drupal_static(__FUNCTION__ . 'terms', array());
 
   $depth++;
 
@@ -804,6 +815,8 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $reset = FALSE,
   // and its children, too.
   if (!isset($children[$vid])) {
     $children[$vid] = array();
+    $parents[$vid] = array();
+    $terms[$vid] = array();
 
     $result = db_query(db_rewrite_sql('SELECT t.tid, t.*, parent FROM {taxonomy_term_data} t INNER JOIN {taxonomy_term_hierarchy} h ON t.tid = h.tid WHERE t.vid = %d ORDER BY weight, name', 't', 'tid'), $vid);
     while ($term = db_fetch_object($result)) {
@@ -826,7 +839,7 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $reset = FALSE,
         $tree[] = $term;
 
         if (!empty($children[$vid][$child])) {
-          $tree = array_merge($tree, taxonomy_get_tree($vid, $child, $max_depth, $reset, $depth));
+          $tree = array_merge($tree, taxonomy_get_tree($vid, $child, $max_depth, $depth));
         }
       }
     }
@@ -857,17 +870,11 @@ function taxonomy_get_synonyms($tid) {
  *
  * @param $synonym
  *   The string to compare against.
- * @param $reset
- *   Whether to reset the internal cache for this synonym.
  * @return
  *   A term object, or FALSE if no matching term is found.
  */
-function taxonomy_get_synonym_root($synonym, $reset = FALSE) {
-  static $synonyms = array();
-
-  if ($reset) {
-    unset($synonyms[$synonym]);
-  }
+function taxonomy_get_synonym_root($synonym) {
+  $synonyms = &drupal_static(__FUNCTION__, array());
 
   if (!isset($synonyms[$synonym])) {
     $synonyms[$synonym] = db_query("SELECT * FROM {taxonomy_term_synonym} s, {taxonomy_term_data} t WHERE t.tid = s.tid AND s.name = :name", array(':name' => $synonym))->fetch();
@@ -883,26 +890,24 @@ function taxonomy_get_synonym_root($synonym, $reset = FALSE) {
  * @param $type
  *   (Optional) The $node->type. If given, taxonomy_term_count_nodes only counts
  *   nodes of $type that are classified with the term $tid.
- * @param $reset
- *   (Optional) Boolean to indicated whether to reset the internal cache.
  *
  * @return
  *   An integer representing a number of nodes.
  *   Results are statically cached.
  */
-function taxonomy_term_count_nodes($tid, $type = NULL, $reset = FALSE) {
-  static $count = array();
-  if ($reset) {
-    $count = array();
+function taxonomy_term_count_nodes($tid, $type = NULL) {
+  $count = &drupal_static(__FUNCTION__, array());
+  // Reset the taxonomy tree when first called (or if reset).
+  if (empty($count)) {
+    drupal_static_reset('taxonomy_get_tree');
   }
-
   // If $type is NULL, change it to 0 to allow it to be used as an array key
   // for the static cache.
   $type = empty($type) ? 0 : $type;
 
   if (!isset($count[$type][$tid])) {
     $term = taxonomy_term_load($tid);
-    $tree = taxonomy_get_tree($term->vid, $tid, NULL, $reset);
+    $tree = taxonomy_get_tree($term->vid, $tid, NULL);
     $tids = array($tid);
     foreach ($tree as $descendent) {
       $tids[] = $descendent->tid;
@@ -955,23 +960,17 @@ function taxonomy_get_term_by_name($name) {
  *  An array of taxonomy vocabulary IDs.
  * @param $conditions
  *  An array of conditions to add to the query.
- * @param $reset
- *  Whether to reset the internal cache.
  *
  * @return
  *  An array of vocabulary objects, indexed by vid.
  */
-function taxonomy_vocabulary_load_multiple($vids = array(), $conditions = array(), $reset = FALSE) {
-  static $vocabulary_cache = array();
+function taxonomy_vocabulary_load_multiple($vids = array(), $conditions = array()) {
+  $vocabulary_cache = &drupal_static(__FUNCTION__, array());
   // Node type associations are not stored in the vocabulary table, so remove
   // this from conditions into it's own variable.
   if (isset($conditions['type'])) {
     $type = $conditions['type'];
     unset($conditions['type']);
-  }
-
-  if ($reset) {
-    $vocabulary_cache = array();
   }
 
   $vocabularies = array();
@@ -1087,15 +1086,12 @@ function taxonomy_vocabulary_load_multiple($vids = array(), $conditions = array(
  * @param $vid
  *   The vocabulary's ID.
  *
- * @param $reset
- *   A boolean flag indicating whether to reset the internal cache.
- *
  * @return
  *   The vocabulary object with all of its metadata, if exists, FALSE otherwise.
  *   Results are statically cached.
  */
-function taxonomy_vocabulary_load($vid, $reset = FALSE) {
-  return reset(taxonomy_vocabulary_load_multiple(array($vid), array(), $reset));
+function taxonomy_vocabulary_load($vid) {
+  return reset(taxonomy_vocabulary_load_multiple(array($vid), array()));
 }
 
 /**
@@ -1120,18 +1116,12 @@ function taxonomy_terms_load($str_tids) {
  *  An array of taxonomy term IDs.
  * @param $conditions
  *  An array of conditions to add to the query.
- * @param $reset
- *  Whether to reset the internal cache.
  *
  * @return
  *  An array of term objects, indexed by tid.
  */
-function taxonomy_term_load_multiple($tids = array(), $conditions = array(), $reset = FALSE) {
-  static $term_cache = array();
-
-  if ($reset) {
-    $term_cache = array();
-  }
+function taxonomy_term_load_multiple($tids = array(), $conditions = array()) {
+  $term_cache = &drupal_static(__FUNCTION__, array());
 
   $terms = array();
 
@@ -1216,17 +1206,15 @@ function taxonomy_term_load_multiple($tids = array(), $conditions = array(), $re
  *
  * @param $tid
  *   A term's ID
- * @param $reset
- *   Whether to reset the static cache.
  *
  * @return
  *   A term object. Results are statically cached.
  */
-function taxonomy_term_load($tid, $reset = FALSE) {
+function taxonomy_term_load($tid) {
   if (!is_numeric($tid)) {
     return FALSE;
   }
-  $term = taxonomy_term_load_multiple(array($tid), array(), $reset);
+  $term = taxonomy_term_load_multiple(array($tid), array());
   return $term ? $term[$tid] : FALSE;
 }
 
@@ -1237,10 +1225,10 @@ function taxonomy_term_load($tid, $reset = FALSE) {
  * @return Object
  *  A term object. Results are statically cached.
  */
-function taxonomy_get_term_data($tid, $reset = FALSE) {
-   static $terms = array();
+function taxonomy_get_term_data($tid) {
+   $terms = &drupal_static(__FUNCTION__, array());
 
-  if (!isset($terms[$tid]) || $reset) {
+  if (!isset($terms[$tid])) {
     $terms[$tid] = db_query('SELECT * FROM {taxonomy_term_data} WHERE tid = :tid', array(':tid' => $tid))->fetchObject();
   }
   return $terms[$tid];
@@ -1398,6 +1386,7 @@ function taxonomy_node_update($node) {
  */
 function taxonomy_node_delete($node) {
   db_query('DELETE FROM {taxonomy_term_node} WHERE nid = %d', $node->nid);
+  drupal_static_reset('taxonomy_term_count_nodes');
 }
 
 /**
@@ -1407,6 +1396,7 @@ function taxonomy_node_delete($node) {
  */
 function taxonomy_node_delete_revision($node) {
   db_query('DELETE FROM {taxonomy_term_node} WHERE vid = %d', $node->vid);
+  drupal_static_reset('taxonomy_term_count_nodes');
 }
 
 /**

@@ -360,7 +360,7 @@ function timer_stop($name) {
  *   The path of the matching directory.
  */
 function conf_path($require_settings = TRUE, $reset = FALSE) {
-  static $conf = '';
+  $conf = &drupal_static(__FUNCTION__, '');
 
   if ($conf && !$reset) {
     return $conf;
@@ -558,7 +558,7 @@ function conf_init() {
  *   The filename of the requested item.
  */
 function drupal_get_filename($type, $name, $filename = NULL) {
-  static $files = array();
+  $files = &drupal_static(__FUNCTION__, array());
 
   if (!isset($files[$type])) {
     $files[$type] = array();
@@ -727,7 +727,7 @@ function page_get_cache($retrieve) {
  *   TRUE if the item is loaded or has already been loaded.
  */
 function drupal_load($type, $name) {
-  static $files = array();
+  $files = &drupal_static(__FUNCTION__, array());
 
   if (isset($files[$type][$name])) {
     return TRUE;
@@ -1093,7 +1093,19 @@ function drupal_anonymous_user($session = '') {
  *     DRUPAL_BOOTSTRAP_FULL: Drupal is fully loaded, validate and fix input data.
  */
 function drupal_bootstrap($phase = NULL) {
-  static $phases = array(DRUPAL_BOOTSTRAP_CONFIGURATION, DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE, DRUPAL_BOOTSTRAP_DATABASE, DRUPAL_BOOTSTRAP_ACCESS, DRUPAL_BOOTSTRAP_SESSION, DRUPAL_BOOTSTRAP_VARIABLES, DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE, DRUPAL_BOOTSTRAP_LANGUAGE, DRUPAL_BOOTSTRAP_PATH, DRUPAL_BOOTSTRAP_FULL), $completed_phase = -1;
+  $phases = &drupal_static(__FUNCTION__ . '_phases', array(
+    DRUPAL_BOOTSTRAP_CONFIGURATION,
+    DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE,
+    DRUPAL_BOOTSTRAP_DATABASE,
+    DRUPAL_BOOTSTRAP_ACCESS,
+    DRUPAL_BOOTSTRAP_SESSION,
+    DRUPAL_BOOTSTRAP_VARIABLES,
+    DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE,
+    DRUPAL_BOOTSTRAP_LANGUAGE,
+    DRUPAL_BOOTSTRAP_PATH,
+    DRUPAL_BOOTSTRAP_FULL,
+  ));
+  $completed_phase = &drupal_static(__FUNCTION__ . '_completed_phase', -1);
 
   if (isset($phase)) {
     while ($phases && $phase > $completed_phase) {
@@ -1251,7 +1263,9 @@ function drupal_maintenance_theme() {
  */
 function get_t() {
   static $t;
-  if (is_null($t)) {
+  // This is not converted to drupal_static because there is no point in
+  // resetting this as it can not change in the course of a request.
+  if (!isset($t)) {
     $t = function_exists('install_main') ? 'st' : 't';
   }
   return $t;
@@ -1278,16 +1292,9 @@ function drupal_init_language() {
  * Get a list of languages set up indexed by the specified key
  *
  * @param $field The field to index the list with.
- * @param $reset Boolean to request a reset of the list.
  */
-function language_list($field = 'language', $reset = FALSE) {
-  static $languages = NULL;
-
-  // Reset language list
-  if ($reset) {
-    $languages = NULL;
-  }
-
+function language_list($field = 'language') {
+  $languages = &drupal_static(__FUNCTION__);
   // Init language list
   if (!isset($languages)) {
     if (variable_get('language_count', 1) > 1 || module_exists('locale')) {
@@ -1333,16 +1340,14 @@ function language_default($property = NULL) {
  * the proxy server, and not the client's. If Drupal is run in a cluster
  * we use the X-Cluster-Client-Ip header instead.
  *
- * @param $reset
- *   Reset the current IP address saved in static.
  * @return
  *   IP address of client machine, adjusted for reverse proxy and/or cluster
  *   environments.
  */
-function ip_address($reset = FALSE) {
-  static $ip_address = NULL;
+function ip_address() {
+  $ip_address = &drupal_static(__FUNCTION__);
 
-  if (!isset($ip_address) || $reset) {
+  if (!isset($ip_address)) {
     $ip_address = $_SERVER['REMOTE_ADDR'];
 
     if (variable_get('reverse_proxy', 0)) {
@@ -1616,3 +1621,55 @@ function registry_rebuild() {
 /**
  * @} End of "ingroup registry".
  */
+
+/**
+ * Central static variable storage.
+ *
+ * @param $name
+ *   Globally unique name for the variable. For a function with only one static,
+ *   variable, the function name (e.g. via the PHP magic __FUNCTION__ constant)
+ *   is recommended. For a function with multiple static variables add a 
+ *   distinguishing suffix to the function name for each one.
+ * @param $default_value
+ *   Optional default value.
+ * @param $reset
+ *   TRUE to reset a specific named variable, or all variables if $name is NULL.
+ *   Resetting every variable should only be used, for example, for running
+ *   unit tests with a clean environment. Should be used only though via
+ *   function drupal_static_reset().
+ *
+ * @return
+ *   Returns a variable by reference if $reset is FALSE.
+ */
+function &drupal_static($name, $default_value = NULL, $reset = FALSE) {
+  static $data = array();
+
+  // Reset a single value, or all values.
+  if ($reset) {
+    if (isset($name)) {
+      unset($data[$name]);
+    }
+    else {
+      $data = array();
+    }
+    // We must return a reference to a variable.
+    $dummy = NULL;
+    return $dummy;
+  }
+
+  if (!isset($data[$name])) {
+    $data[$name] = $default_value;
+  }
+
+  return $data[$name];
+}
+
+/**
+ * Reset one or all centrally stored static variable(s).
+ *
+ * @param $name
+ *   Name of the static variable to reset. Omit to reset all variables.
+ */
+function drupal_static_reset($name = NULL) {
+  drupal_static($name, NULL, TRUE);
+}

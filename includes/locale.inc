@@ -32,7 +32,8 @@ define('LOCALE_IMPORT_KEEP', 1);
  * User interface for the language overview screen.
  */
 function locale_languages_overview_form() {
-  $languages = language_list('language', TRUE);
+  drupal_static_reset('language');
+  $languages = language_list('language');
 
   $options = array();
   $form['weight'] = array('#tree' => TRUE);
@@ -515,7 +516,8 @@ function locale_languages_configure_form_submit($form, &$form_state) {
  * Overview screen for translations.
  */
 function locale_translate_overview_screen() {
-  $languages = language_list('language', TRUE);
+  drupal_static_reset('language_list');
+  $languages = language_list('language');
   $groups = module_invoke_all('locale', 'groups');
 
   // Build headers with all groups in order.
@@ -577,7 +579,8 @@ function locale_translation_filters() {
   $filters = array();
 
   // Get all languages, except English
-  $languages = locale_language_list('name', TRUE);
+  drupal_static_reset('language_list');
+  $languages = locale_language_list('name');
   unset($languages['en']);
 
   $filters['string'] = array(
@@ -699,7 +702,8 @@ function locale_translation_filter_form_submit($form, &$form_state) {
  */
 function locale_translate_import_form() {
   // Get all languages, except English
-  $names = locale_language_list('name', TRUE);
+  drupal_static_reset('language_list');
+  $names = locale_language_list('name');
   unset($names['en']);
 
   if (!count($names)) {
@@ -757,7 +761,8 @@ function locale_translate_import_form_submit($form, &$form_state) {
   if ($file = file_save_upload('file')) {
 
     // Add language, if not yet supported
-    $languages = language_list('language', TRUE);
+    drupal_static_reset('language_list');
+    $languages = language_list('language');
     $langcode = $form_state['values']['langcode'];
     if (!isset($languages[$langcode])) {
       include_once DRUPAL_ROOT . '/includes/iso.inc';
@@ -796,7 +801,8 @@ function locale_translate_import_form_submit($form, &$form_state) {
  */
 function locale_translate_export_screen() {
   // Get all languages, except English
-  $names = locale_language_list('name', TRUE);
+  drupal_static_reset('language_list');
+  $names = locale_language_list('name');
   unset($names['en']);
   $output = '';
   // Offer translation export if any language is set up.

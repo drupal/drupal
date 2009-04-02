@@ -100,7 +100,9 @@ class TranslationTestCase extends DrupalWebTestCase {
       $edit['langcode'] = $language_code;
       $this->drupalPost('admin/international/language/add', $edit, t('Add language'));
 
-      $languages = language_list('language', TRUE); // Make sure we're not using a stale list.
+      // Make sure we're not using a stale list.
+      drupal_static_reset('language_list');
+      $languages = language_list('language');
       $this->assertTrue(array_key_exists($language_code, $languages), t('Language was installed successfully.'));
 
       if (array_key_exists($language_code, $languages)) {

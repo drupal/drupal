@@ -135,7 +135,8 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->assertRaw(t('Updated vocabulary %name.', array('%name' => $title)), t('Vocabulary was edited'));
 
     // Grab the newly edited vocabulary.
-    $current_settings = taxonomy_vocabulary_load($vid, TRUE);
+    drupal_static_reset('taxonomy_vocabulary_load_multiple');
+    $current_settings = taxonomy_vocabulary_load($vid);
 
     // Make sure we actually edited the vocabulary properly.
     $this->assertEqual($current_settings->name, $title, t('The name was updated'));
@@ -143,7 +144,8 @@ class ForumTestCase extends DrupalWebTestCase {
 
     // Restore the original vocabulary.
     taxonomy_vocabulary_save($original_settings);
-    $current_settings = taxonomy_vocabulary_load($vid, TRUE);
+    drupal_static_reset('taxonomy_vocabulary_load');
+    $current_settings = taxonomy_vocabulary_load($vid);
     $this->assertEqual($current_settings->name, $original_settings->name, 'The original vocabulary settings were restored');
   }
 
