@@ -1,4 +1,4 @@
-; $Id: node_test.info,v 1.1 2009/01/28 07:34:30 webchick Exp $
+; $Id: node_test.info,v 1.1 2009/04/02 20:47:54 dries Exp $
 name = "Node module tests"
 description = "Support module for node related testing."
 package = Testing
