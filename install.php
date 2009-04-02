@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.161 2009/03/25 16:40:51 dries Exp $
+// $Id: install.php,v 1.162 2009/04/02 20:39:44 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -185,7 +185,8 @@ function install_verify_settings() {
     include_once DRUPAL_ROOT . '/includes/form.inc';
 
     $database = $databases['default']['default'];
-    $settings_file = './' . conf_path(FALSE, TRUE) . '/settings.php';
+    drupal_static_reset('conf_path');
+    $settings_file = './' . conf_path(FALSE) . '/settings.php';
 
     $form_state = array();
     _install_settings_form_validate($database, $settings_file, $form_state);
@@ -202,7 +203,8 @@ function install_verify_settings() {
 function install_change_settings($profile = 'default', $install_locale = '') {
   global $databases, $db_prefix;
 
-  $conf_path = './' . conf_path(FALSE, TRUE);
+  drupal_static_reset('conf_path');
+  $conf_path = './' . conf_path(FALSE);
   $settings_file = $conf_path . '/settings.php';
   $database = isset($databases['default']['default']) ? $databases['default']['default'] : array();
 

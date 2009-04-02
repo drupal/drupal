@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.test,v 1.10 2009/03/31 02:02:23 webchick Exp $
+// $Id: translation.test,v 1.11 2009/04/02 20:39:45 dries Exp $
 
 class TranslationTestCase extends DrupalWebTestCase {
   protected $book;
@@ -100,7 +100,9 @@ class TranslationTestCase extends DrupalWebTestCase {
       $edit['langcode'] = $language_code;
       $this->drupalPost('admin/international/language/add', $edit, t('Add language'));
 
-      $languages = language_list('language', TRUE); // Make sure we're not using a stale list.
+      // Make sure we're not using a stale list.
+      drupal_static_reset('language_list');
+      $languages = language_list('language');
       $this->assertTrue(array_key_exists($language_code, $languages), t('Language was installed successfully.'));
 
       if (array_key_exists($language_code, $languages)) {

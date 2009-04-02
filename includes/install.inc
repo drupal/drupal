@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.86 2009/03/01 09:32:17 webchick Exp $
+// $Id: install.inc,v 1.87 2009/04/02 20:39:44 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -335,7 +335,8 @@ abstract class DatabaseInstaller {
  */
 function drupal_rewrite_settings($settings = array(), $prefix = '') {
   $default_settings = 'sites/default/default.settings.php';
-  $settings_file = conf_path(FALSE, TRUE) . '/' . $prefix . 'settings.php';
+  drupal_static_reset('conf_path');
+  $settings_file = conf_path(FALSE) . '/' . $prefix . 'settings.php';
 
   // Build list of setting names and insert the values into the global namespace.
   $keys = array();
