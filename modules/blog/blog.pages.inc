@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.15 2009/01/27 00:22:25 dries Exp $
+// $Id: blog.pages.inc,v 1.16 2009/04/03 20:24:57 dries Exp $
 
 /**
  * @file
@@ -58,7 +58,7 @@ function blog_page_last() {
   global $user;
   $build = array();
 
-  if (user_access('edit own blog')) {
+  if (user_access('create blog content')) {
     $items[] = l(t('Create new blog entry.'), "node/add/blog");
     $build['blog_actions'] = array(
       '#items' => $items,
