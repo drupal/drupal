@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.67 2009/02/26 07:30:26 webchick Exp $
+// $Id: session.inc,v 1.68 2009/04/03 17:41:32 dries Exp $
 
 /**
  * @file
@@ -169,7 +169,7 @@ function _sess_write($key, $value) {
  *   TRUE if session has already been started, or FALSE if it has not.
  */
 function drupal_session_start($start = TRUE) {
-  static $started = FALSE;
+  $started = &drupal_static(__FUNCTION__, FALSE);
   if ($start && !$started) {
     $started = TRUE;
     session_start();
@@ -329,7 +329,7 @@ function _sess_gc($lifetime) {
  *   FALSE if writing session data has been disabled. Otherwise, TRUE.
  */
 function drupal_save_session($status = NULL) {
-  static $save_session = TRUE;
+  $save_session = &drupal_static(__FUNCTION__, TRUE);
   if (isset($status)) {
     $save_session = $status;
   }

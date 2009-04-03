@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.32 2009/01/04 20:04:32 dries Exp $
+// $Id: path.inc,v 1.33 2009/04/03 17:41:32 dries Exp $
 
 /**
  * @file
@@ -46,7 +46,9 @@ function drupal_init_path() {
 function drupal_lookup_path($action, $path = '', $path_language = '') {
   global $language;
   // $map is an array with language keys, holding arrays of Drupal paths to alias relations
-  static $map = array(), $no_src = array(), $count;
+  $map = &drupal_static(__FUNCTION__, array());
+  $no_src = &drupal_static(__FUNCTION__ . ':no_src', array());
+  $count = &drupal_static(__FUNCTION__ . ':count');
 
   $path_language = $path_language ? $path_language : $language->language;
 
@@ -165,7 +167,7 @@ function drupal_get_normal_path($path, $path_language = '') {
  *   not found.
  */
 function arg($index = NULL, $path = NULL) {
-  static $arguments;
+  $arguments = &drupal_static(__FUNCTION__);
 
   if (!isset($path)) {
     $path = $_GET['q'];
@@ -214,7 +216,7 @@ function drupal_get_title() {
  *   The updated title of the current page.
  */
 function drupal_set_title($title = NULL, $output = CHECK_PLAIN) {
-  static $stored_title;
+  $stored_title = &drupal_static(__FUNCTION__);
 
   if (isset($title)) {
     $stored_title = ($output == PASS_THROUGH) ? $title : check_plain($title);
@@ -230,7 +232,7 @@ function drupal_set_title($title = NULL, $output = CHECK_PLAIN) {
  *   Boolean value: TRUE if the current page is the front page; FALSE if otherwise.
  */
 function drupal_is_front_page() {
-  static $is_front_page;
+  $is_front_page = &drupal_static(__FUNCTION__);
 
   if (!isset($is_front_page)) {
     // As drupal_init_path updates $_GET['q'] with the 'site_frontpage' path,
@@ -253,7 +255,7 @@ function drupal_is_front_page() {
  *   Boolean value: TRUE if the path matches a pattern, FALSE otherwise.
  */
 function drupal_match_path($path, $patterns) {
-  static $regexps;
+  $regexps = &drupal_static(__FUNCTION__);
 
   if (!isset($regexps[$patterns])) {
     $regexps[$patterns] = '/^(' . preg_replace(array('/(\r\n?|\n)/', '/\\\\\*/', '/(^|\|)\\\\<front\\\\>($|\|)/'), array('|', '.*', '\1' . preg_quote(variable_get('site_frontpage', 'node'), '/') . '\2'), preg_quote($patterns, '/')) . ')$/';
