@@ -145,7 +145,7 @@ function _registry_parse_files($files) {
  *   (optional) Weight of the module.
  */
 function _registry_parse_file($filename, $contents, $module = '', $weight = 0) {
-  static $map = array(T_FUNCTION => 'function', T_CLASS => 'class', T_INTERFACE => 'interface');
+  $map = &drupal_static(__FUNCTION__, array(T_FUNCTION => 'function', T_CLASS => 'class', T_INTERFACE => 'interface'));
   // Delete registry entries for this file, so we can insert the new resources.
   db_delete('registry')
     ->condition('filename', $filename)
@@ -207,7 +207,7 @@ function _registry_parse_file($filename, $contents, $module = '', $weight = 0) {
 function _registry_get_resource_name(&$tokens = NULL, $type = NULL) {
   // Keep a running list of all resources we've saved so far, so that we never
   // save one more than once.
-  static $resources;
+  $resources = &drupal_static(__FUNCTION__);
 
   if (!isset($tokens)) {
     $resources = array();
