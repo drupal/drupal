@@ -58,7 +58,7 @@ function blog_page_last() {
   global $user;
   $build = array();
 
-  if (user_access('edit own blog')) {
+  if (user_access('create blog content')) {
     $items[] = l(t('Create new blog entry.'), "node/add/blog");
     $build['blog_actions'] = array(
       '#items' => $items,
