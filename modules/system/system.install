@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.313 2009/04/01 20:00:47 dries Exp $
+// $Id: system.install,v 1.314 2009/04/03 17:50:21 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -2686,6 +2686,15 @@ function system_update_6047() {
 }
 
 /**
+ * @} End of "defgroup updates-5.x-to-6.x"
+ */
+
+/**
+ * @defgroup updates-6.x-extra Extra system updates for 6.x
+ * @{
+ */
+
+/**
  * Increase the size of the 'load_functions' and 'to_arg_functions' fields in
  * table 'menu_router'.
  */
@@ -2693,12 +2702,21 @@ function system_update_6048() {
   $ret = array();
   db_change_field($ret, 'menu_router', 'load_functions', 'load_functions', array('type' => 'text', 'not null' => TRUE));
   db_change_field($ret, 'menu_router', 'to_arg_functions', 'to_arg_functions', array('type' => 'text', 'not null' => TRUE));
-
   return $ret;
 }
 
 /**
- * @} End of "defgroup updates-5.x-to-6.x"
+ * Replace src index on the {url_alias} table with src, language.
+ */
+function system_update_6049() {
+  $ret = array();
+  db_drop_index($ret, 'url_alias', 'src');
+  db_add_index($ret, 'url_alias', 'src_language', array('src', 'language'));
+  return $ret;
+}
+
+/**
+ * @} End of "defgroup updates-6.x-extra"
  * The next series of updates should start at 7000.
  */
 
@@ -3222,20 +3240,9 @@ function system_update_7018() {
 }
 
 /**
- * Replace src index on the {url_alias} table with src, language.
- */
-function system_update_7019() {
-  $ret = array();
-  db_add_index($ret, 'url_alias', 'src_language', array('src', 'language'));
-  db_drop_index($ret, 'url_alias', 'src');
-
-  return $ret;
-}
-
-/**
  * Shorten the {system}.type column and add an index on type and name.
  */
-function system_update_7020() {
+function system_update_7019() {
   $ret = array();
   db_drop_index($ret, 'system', 'modules');
   db_change_field($ret, 'system', 'type', 'type', array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''));
@@ -3247,7 +3254,7 @@ function system_update_7020() {
 /**
  * Enable field module.
  */
-function system_update_7021() {
+function system_update_7020() {
   $ret = array();
   $module_list = array('field_sql_storage', 'field');
   drupal_install_modules($module_list);
