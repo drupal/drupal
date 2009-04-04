@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.470 2009/02/22 17:55:29 dries Exp $
+// $Id: theme.inc,v 1.471 2009/04/04 00:58:09 dries Exp $
 
 /**
  * @file
@@ -1901,12 +1901,42 @@ function template_preprocess_page(&$variables) {
   $body_classes[] = $variables['is_front'] ? 'front' : 'not-front';
   // Add a class that tells us whether the page is viewed by an authenticated user or not.
   $body_classes[] = $variables['logged_in'] ? 'logged-in' : 'not-logged-in';
-  // Add arg(0) to make it possible to theme the page depending on the current page
-  // type (e.g. node, admin, user, etc.). To avoid illegal characters in the class,
-  // we're removing everything disallowed. We are not using 'a-z' as that might leave
-  // in certain international characters (e.g. German umlauts).
-  $body_classes[] = preg_replace('![^abcdefghijklmnopqrstuvwxyz0-9-_]+!s', '', 'page-' . form_clean_id(drupal_strtolower(arg(0))));
-  // If on an individual node page, add the node type.
+
+  // Build a list of suggested template files and body classes in order of 
+  // specificity. One suggestion is made for every element of the current path,
+  // though numeric elements are not carried to subsequent suggestions. For 
+  // example, http://www.example.com/node/1/edit would result in the following
+  // suggestions and body classes:
+  //
+  // page-node-edit.tpl.php  page-node-edit
+  // page-node-1.tpl.php     page-node-1
+  // page-node.tpl.php       page-node
+  // page.tpl.php
+  $i = 0;
+  $suggestion = 'page';
+  $suggestions = array();
+  while ($arg = arg($i++)) {
+    $suggestions[] = $suggestion . '-' . $arg;
+    if (!is_numeric($arg)) {
+      $suggestion .= '-' . $arg;
+    }
+    if ($suggestion != 'page') {
+      // Add current suggestion to page classes to make it possible to theme the page 
+      // depending on the current page type (e.g. node, admin, user, etc.) as well as
+      // more specific data like node-12 or node-edit. To avoid illegal characters in 
+      // the class, we're removing everything disallowed. We are not using 'a-z' as
+      //  that might leave in certain international characters (e.g. German umlauts).
+      $body_classes[] = preg_replace('![^abcdefghijklmnopqrstuvwxyz0-9-_]+!s', '', form_clean_id(drupal_strtolower($suggestion)));
+    }
+  }
+  if (drupal_is_front_page()) {
+    $suggestions[] = 'page-front';
+  }
+  if ($suggestions) {
+    $variables['template_files'] = $suggestions;
+  }
+
+  // If on an individual node page, add the node type to body classes.
   if (isset($variables['node']) && $variables['node']->type) {
     $body_classes[] = 'node-type-' . form_clean_id($variables['node']->type);
   }
@@ -1922,33 +1952,6 @@ function template_preprocess_page(&$variables) {
   }
   // Implode with spaces.
   $variables['body_classes'] = implode(' ', $body_classes);
-
-  // Build a list of suggested template files in order of specificity. One
-  // suggestion is made for every element of the current path, though
-  // numeric elements are not carried to subsequent suggestions. For example,
-  // http://www.example.com/node/1/edit would result in the following
-  // suggestions:
-  //
-  // page-node-edit.tpl.php
-  // page-node-1.tpl.php
-  // page-node.tpl.php
-  // page.tpl.php
-  $i = 0;
-  $suggestion = 'page';
-  $suggestions = array();
-  while ($arg = arg($i++)) {
-    $suggestions[] = $suggestion . '-' . $arg;
-    if (!is_numeric($arg)) {
-      $suggestion .= '-' . $arg;
-    }
-  }
-  if (drupal_is_front_page()) {
-    $suggestions[] = 'page-front';
-  }
-
-  if ($suggestions) {
-    $variables['template_files'] = $suggestions;
-  }
 }
 
 /**
