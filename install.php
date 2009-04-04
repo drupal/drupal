@@ -727,7 +727,7 @@ function install_tasks($profile, $task) {
       drupal_add_js('misc/timezone.js');
       // We add these strings as settings because JavaScript translation does not
       // work on install time.
-      drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail')), 'cleanURL' => array('success' => st('Your server has been successfully tested to support this feature.'), 'failure' => st('Your system configuration does not currently support this feature. The <a href="http://drupal.org/node/15365">handbook page on Clean URLs</a> has additional troubleshooting information.'), 'testing' => st('Testing clean URLs...'))), 'setting');
+      drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail'))), 'setting');
       drupal_add_js('
 // Global Killswitch
 if (Drupal.jsEnabled) {
@@ -1042,15 +1042,9 @@ function install_configure_form(&$form_state, $url) {
   );
 
   $form['server_settings']['clean_url'] = array(
-    '#type' => 'radios',
-    '#title' => st('Clean URLs'),
+    '#type' => 'hidden',
     '#default_value' => 0,
-    '#options' => array(0 => st('Disabled'), 1 => st('Enabled')),
-    '#description' => st('This option makes Drupal emit "clean" URLs (i.e. without <code>?q=</code> in the URL).'),
-    '#disabled' => TRUE,
-    '#prefix' => '<div id="clean-url" class="install">',
-    '#suffix' => '</div>',
-    '#weight' => 10,
+    '#attributes' => array('class' => 'install'),
   );
 
   $form['server_settings']['update_status_module'] = array(
