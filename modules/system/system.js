@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.21 2009/03/17 15:26:29 dries Exp $
+// $Id: system.js,v 1.22 2009/04/04 00:35:46 dries Exp $
 (function($) {
 
 /**
@@ -13,7 +13,7 @@ Drupal.behaviors.cleanURLsSettingsCheck = {
     // This behavior attaches by ID, so is only valid once on a page.
     // Also skip if we are on an install page, as Drupal.cleanURLsInstallCheck will handle
     // the processing.
-    if ($("#clean-url.clean-url-processed, #clean-url.install").size()) {
+    if ($(".clean-url-processed, #edit-clean-url.install").size()) {
       return;
     }
     var url = settings.basePath +"admin/settings/clean-urls/check";
@@ -47,8 +47,6 @@ Drupal.behaviors.cleanURLsSettingsCheck = {
  */
 Drupal.cleanURLsInstallCheck = function() {
   var url = location.protocol +"//"+ location.host + Drupal.settings.basePath +"admin/settings/clean-urls/check";
-  $("#clean-url .description").append('<span><div id="testing">'+ Drupal.settings.cleanURL.testing +"</div></span>");
-  $("#clean-url.install").css("display", "block");
   // Submit a synchronous request to avoid database errors associated with
   // concurrent requests during install.
   $.ajax({
@@ -57,18 +55,10 @@ Drupal.cleanURLsInstallCheck = function() {
     dataType: 'json',
     success: function () {
       // Check was successful.
-      $("#clean-url input.form-radio").attr("disabled", false);
-      $("#clean-url input.form-radio").attr("checked", 1);
-      $("#clean-url .description span").append('<div class="ok">'+ Drupal.settings.cleanURL.success +"</div>");
-      $("#testing").hide();
+      $("#edit-clean-url").attr("value", 1);
     },
-    error: function() {
-      // Check failed.
-      $("#clean-url .description span").append('<div class="warning">'+ Drupal.settings.cleanURL.failure +"</div>");
-      $("#testing").hide();
-    }
   });
-  $("#clean-url").addClass('clean-url-processed');
+  $("#edit-clean-url").addClass('clean-url-processed');
 };
 
 /**
