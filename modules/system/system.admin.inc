@@ -1322,6 +1322,7 @@ function system_performance_settings() {
     '#type' => 'fieldset',
     '#title' => t('Page cache'),
     '#description' => t('Enabling the page cache will offer a significant performance boost. Drupal can store and send compressed cached pages requested by <em>anonymous</em> users. By caching a web page, Drupal does not have to construct the page each time it is viewed.'),
+    '#weight' => -1,
   );
 
   $form['page_cache']['cache'] = array(
@@ -1347,21 +1348,6 @@ function system_performance_settings() {
     '#default_value' => variable_get('page_compression', TRUE),
     '#options' => array(t('Disabled'), t('Enabled')),
     '#description' => t("By default, Drupal compresses the pages it caches in order to save bandwidth and improve download times. This option should be disabled when using a webserver that performs compression."),
-  );
-
-  $form['block_cache'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Block cache'),
-    '#description' => t('Enabling the block cache can offer a performance increase for all users by preventing blocks from being reconstructed on each page load. If the page cache is also enabled, performance increases from enabling the block cache will mainly benefit authenticated users.'),
-  );
-
-  $form['block_cache']['block_cache'] = array(
-    '#type' => 'radios',
-    '#title' => t('Block cache'),
-    '#default_value' => variable_get('block_cache', CACHE_DISABLED),
-    '#options' => array(CACHE_DISABLED => t('Disabled'), CACHE_NORMAL => t('Enabled (recommended)')),
-    '#disabled' => count(module_implements('node_grants')),
-    '#description' => t('Note that block caching is inactive when modules defining content access restrictions are enabled.'),
   );
 
   $form['bandwidth_optimizations'] = array(
