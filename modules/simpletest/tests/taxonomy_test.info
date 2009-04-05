@@ -5,5 +5,5 @@ package = Testing
 version = VERSION
 core = 7.x
 files[] = taxonomy_test.module
-hidden[] = TRUE
+hidden = TRUE
 dependencies[] = taxonomy
