@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.13 2009/04/01 20:00:46 dries Exp $
+// $Id: schema.inc,v 1.14 2009/04/05 12:08:49 dries Exp $
 
 /**
  * @file
@@ -373,7 +373,9 @@ class DatabaseSchema_mysql extends DatabaseSchema {
       return db_query("SELECT column_comment FROM information_schema.columns WHERE " . (string) $condition, $condition->arguments())->fetchField();
     }
     $condition->compile($this->connection);
-    return db_query("SELECT table_comment FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchField();
+    $comment = db_query("SELECT table_comment FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchField();
+    // Work-around for MySQL 5.0 bug http://bugs.mysql.com/bug.php?id=11379
+    return preg_replace('/; InnoDB free:.*$/', '', $comment);
   }
 
 }
