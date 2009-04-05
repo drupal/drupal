@@ -1051,7 +1051,9 @@ function comment_render($node, $cid = 0) {
       $output .= comment_form_box(array('nid' => $nid), t('Post new comment'));
     }
 
-    $output = theme('comment_wrapper', $output, $node);
+    if ($output) {
+      $output = theme('comment_wrapper', $output, $node);
+    }
   }
 
   return $output;
