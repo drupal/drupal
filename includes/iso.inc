@@ -1,5 +1,5 @@
 <?php
-// $Id: iso.inc,v 1.1 2009/03/17 15:26:29 dries Exp $
+// $Id: iso.inc,v 1.2 2009/04/08 02:52:49 dries Exp $
 
 /**
  * @file
@@ -428,7 +428,7 @@ function _locale_get_predefined_list() {
     "se" => array("Northern Sami"),
     "sg" => array("Sango"),
     "sh" => array("Serbo-Croatian"),
-    "si" => array("Singhalese"),
+    "si" => array("Sinhala", "සිංහල"),
     "sk" => array("Slovak", "Slovenčina"),
     "sl" => array("Slovenian", "Slovenščina"),
     "sm" => array("Samoan"),
