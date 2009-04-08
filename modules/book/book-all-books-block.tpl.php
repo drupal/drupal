@@ -1,5 +1,5 @@
 <?php
-// $Id: book-all-books-block.tpl.php,v 1.2 2008/10/13 12:31:42 dries Exp $
+// $Id: book-all-books-block.tpl.php,v 1.3 2009/04/08 03:23:46 dries Exp $
 
 /**
  * @file
@@ -11,8 +11,6 @@
  * - $book_menus: Array of book outlines rendered as an unordered list. It is
  *   keyed to the parent book ID which is also the ID of the parent node
  *   containing an entire outline.
- *
- * @see template_preprocess_book_all_books_block()
  */
 ?>
 <?php foreach ($book_menus as $book_id => $menu) : ?>
