@@ -1184,9 +1184,9 @@ function _locale_import_po($file, $langcode, $mode, $group = NULL) {
   }
 
   // Get status information on import process.
-  list($headerdone, $additions, $updates, $deletes, $skips) = _locale_import_one_string('db-report');
+  list($header_done, $additions, $updates, $deletes, $skips) = _locale_import_one_string('db-report');
 
-  if (!$headerdone) {
+  if (!$header_done) {
     drupal_set_message(t('The translation file %filename appears to have a missing or malformed header.', array('%filename' => $file->filename)), 'error');
   }
 
@@ -1393,9 +1393,9 @@ function _locale_import_message($message, $file, $lineno = NULL) {
  *   Text group to import PO file into (eg. 'default' for interface translations)
  */
 function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NULL, $file = NULL, $group = 'default') {
-  static $report = array('additions' => 0, 'updates' => 0, 'deletes' => 0, 'skips' => 0);
-  static $headerdone = FALSE;
-  static $strings = array();
+  $report = &drupal_static(__FUNCTION__, array('additions' => 0, 'updates' => 0, 'deletes' => 0, 'skips' => 0));
+  $header_done = &drupal_static(__FUNCTION__ . ':header_done', FALSE);
+  $strings = &drupal_static(__FUNCTION__ . ':strings', array());
 
   switch ($op) {
     // Return stored strings
@@ -1409,7 +1409,7 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
 
     // Called at end of import to inform the user
     case 'db-report':
-      return array($headerdone, $report['additions'], $report['updates'], $report['deletes'], $report['skips']);
+      return array($header_done, $report['additions'], $report['updates'], $report['deletes'], $report['skips']);
 
     // Store the string we got in the database.
     case 'db-store':
@@ -1437,7 +1437,7 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
             ->condition('language', $lang)
             ->execute();
         }
-        $headerdone = TRUE;
+        $header_done = TRUE;
       }
 
       else {
@@ -2290,7 +2290,7 @@ function _locale_translate_seek() {
  * Build array out of search criteria specified in request variables
  */
 function _locale_translate_seek_query() {
-  static $query = NULL;
+  $query = &drupal_static(__FUNCTION__);
   if (!isset($query)) {
     $query = array();
     $fields = array('string', 'language', 'translation', 'group');
