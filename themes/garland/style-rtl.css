@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.11 2008/12/19 15:42:26 dries Exp $ */
+/* $Id: style-rtl.css,v 1.12 2009/04/11 22:19:46 webchick Exp $ */
 
 html {
   direction: rtl;
@@ -196,6 +196,14 @@ html.js fieldset.collapsible legend a {
 
 html.js fieldset.collapsed legend a {
   background: url("images/menu-collapsed-rtl.gif") no-repeat 100% 50%;
+}
+
+/**
+ * Vertical tabs.
+ */
+div.vertical-tabs {
+  margin-left: 5%;
+  margin-right: 15em;
 }
 
 /**

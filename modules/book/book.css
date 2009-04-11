@@ -1,4 +1,4 @@
-/* $Id: book.css,v 1.8 2008/12/19 15:42:26 dries Exp $ */
+/* $Id: book.css,v 1.9 2009/04/11 22:19:44 webchick Exp $ */
 
 .book-navigation .menu {
   border-top: 1px solid #888;
@@ -34,6 +34,9 @@
 .book-outline-form .form-item {
   margin-top: 0;
   margin-bottom: 0;
+}
+html.js #edit-book-pick-book {
+  display: none;
 }
 #edit-book-bid-wrapper .description {
   clear: both;

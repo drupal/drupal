@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.701 2009/04/04 12:35:16 dries Exp $
+// $Id: comment.module,v 1.702 2009/04/11 22:19:44 webchick Exp $
 
 /**
  * @file
@@ -580,6 +580,8 @@ function comment_form_alter(&$form, $form_state, $form_id) {
       '#title' => t('Comment settings'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
+      '#group' => 'additional_settings',
+      '#attached_js' => array(drupal_get_path('module', 'comment') . '/comment-node-form.js'),
       '#weight' => 30,
     );
     $comment_count = isset($node->nid) ? db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() : 0;

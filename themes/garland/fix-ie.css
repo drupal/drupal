@@ -1,4 +1,4 @@
-/* $Id: fix-ie.css,v 1.10 2008/03/13 20:02:18 dries Exp $ */
+/* $Id: fix-ie.css,v 1.11 2009/04/11 22:19:46 webchick Exp $ */
 
 body {
   /* Center layout */
@@ -23,6 +23,10 @@ body {
 fieldset {
   /* Don't draw backgrounds on fieldsets in IE, as they look really bad. */
   background: none;
+}
+
+div.vertical-tabs ul.vertical-tabs-list li.first {
+  background-image: none;
 }
 
 ul.primary {

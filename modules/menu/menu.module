@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.183 2009/04/02 03:40:05 dries Exp $
+// $Id: menu.module,v 1.184 2009/04/11 22:19:45 webchick Exp $
 
 /**
  * @file
@@ -395,6 +395,8 @@ function menu_form_alter(&$form, $form_state, $form_id) {
       '#access' => user_access('administer menu'),
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
+      '#group' => 'additional_settings',
+      '#attached_js' => array(drupal_get_path('module', 'menu') . '/menu.js'),
       '#tree' => TRUE,
       '#weight' => -2,
       '#attributes' => array('class' => 'menu-item-form'),

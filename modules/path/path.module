@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.154 2009/03/30 05:30:39 webchick Exp $
+// $Id: path.module,v 1.155 2009/04/11 22:19:45 webchick Exp $
 
 /**
  * @file
@@ -194,6 +194,8 @@ function path_form_alter(&$form, $form_state, $form_id) {
       '#title' => t('URL path settings'),
       '#collapsible' => TRUE,
       '#collapsed' => empty($path),
+      '#group' => 'additional_settings',
+      '#attached_js' => array(drupal_get_path('module', 'path') . '/path.js'),
       '#access' => user_access('create url aliases'),
       '#weight' => 30,
     );

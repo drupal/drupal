@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.58 2009/03/26 13:31:25 webchick Exp $
+// $Id: node.pages.inc,v 1.59 2009/04/11 22:19:45 webchick Exp $
 
 /**
  * @file
@@ -152,6 +152,10 @@ function node_form(&$form_state, $node) {
 
   $form['#node'] = $node;
 
+  $form['additional_settings'] = array(
+    '#type' => 'vertical_tabs',
+  );
+
   // Add a log field if the "Create new revision" option is checked, or if the
   // current user has the ability to check that option.
   if (!empty($node->revision) || user_access('administer nodes')) {
@@ -161,6 +165,8 @@ function node_form(&$form_state, $node) {
       '#collapsible' => TRUE,
       // Collapsed by default when "Create new revision" is unchecked
       '#collapsed' => !$node->revision,
+      '#group' => 'additional_settings',
+      '#attached_js' => array(drupal_get_path('module', 'node') . '/node.js'),
       '#weight' => 20,
     );
     $form['revision_information']['revision'] = array(
@@ -172,7 +178,7 @@ function node_form(&$form_state, $node) {
     $form['revision_information']['log'] = array(
       '#type' => 'textarea',
       '#title' => t('Revision log message'),
-      '#rows' => 2,
+      '#rows' => 4,
       '#description' => t('Provide an explanation of the changes you are making. This will help other authors understand your motivations.'),
     );
   }
@@ -184,6 +190,8 @@ function node_form(&$form_state, $node) {
     '#title' => t('Authoring information'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
+    '#group' => 'additional_settings',
+    '#attached_js' => array(drupal_get_path('module', 'node') . '/node.js'),
     '#weight' => 90,
   );
   $form['author']['name'] = array(
@@ -213,6 +221,8 @@ function node_form(&$form_state, $node) {
     '#title' => t('Publishing options'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
+    '#group' => 'additional_settings',
+    '#attached_js' => array(drupal_get_path('module', 'node') . '/node.js'),
     '#weight' => 95,
   );
   $form['options']['status'] = array(
@@ -283,7 +293,7 @@ function node_body_field(&$node, $label, $word_count) {
   $form = array(
     '#after_build' => array('node_teaser_js', 'node_teaser_include_verify'));
 
-  $form['#prefix'] = '<div class="body-field-wrapper">';
+  $form['#prefix'] = '<div class="body-field-wrapper clearfix">';
   $form['#suffix'] = '</div>';
 
   $form['teaser_js'] = array(

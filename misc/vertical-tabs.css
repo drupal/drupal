@@ -1,0 +1,68 @@
+/* $Id */
+
+.vertical-tabs {
+  margin: 1em 0 1em 15em;
+  border: 1px solid #ccc;
+}
+.vertical-tabs-list {
+  width: 15em;
+  list-style: none;
+  list-style-image: none; /* IE6 */
+  border-top: 1px solid #ccc;
+  padding: 0;
+  position: relative; /* IE6 */
+  margin: -1px -100% -1px 0;
+  left: -15em;
+  float: left;
+}
+.vertical-tabs .vertical-tabs-panes fieldset.vertical-tabs-pane {
+  margin: 0 !important;
+  padding: 0 1em;
+  border: 0;
+}
+.vertical-tabs .vertical-tabs-panes fieldset.vertical-tabs-pane legend {
+  display: none;
+}
+
+/* Layout of each tab */
+.vertical-tabs-list li {
+  background: #eee;
+  border: 1px solid #ccc;
+  border-top: 0;
+  padding: 0;
+  margin: 0;
+  height: 1%;
+}
+.vertical-tabs-list li a {
+  display: block;
+  text-decoration: none;
+  padding: 0.5em 0.6em;
+  line-height: 1.3em;
+  height: 1%;
+}
+.vertical-tabs-list li a:focus {
+  position: relative;
+  z-index: 5;
+}
+.vertical-tabs-list li a:hover {
+  text-decoration: none;
+}
+.vertical-tabs-list li.selected {
+  background: #fff;
+  border-right-width: 0;
+  position: relative;
+}
+.vertical-tabs-list li.selected a:focus {
+  outline: 0;
+}
+.vertical-tabs-list li.selected .title {
+  font-weight: bold;
+  color: #000;
+}
+.vertical-tabs-list .summary {
+  display: block;
+}
+.vertical-tabs ul.vertical-tabs-list .summary {
+  line-height: normal;
+  margin-bottom: 0;
+}
