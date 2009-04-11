@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.51 2009/04/11 22:19:46 webchick Exp $ */
+/* $Id: style.css,v 1.52 2009/04/11 22:55:28 webchick Exp $ */
 
 /**
  * Generic elements
@@ -14,13 +14,11 @@ body {
 input {
   font: 1em/100% Verdana, sans-serif;
   color: #494949;
-  background-color: #fff;
 }
 
 textarea, select {
   font: 1em/160% Verdana, sans-serif;
   color: #494949;
-  background-color: #fff;
 }
 
 h1, h2, h3, h4, h5, h6 {
