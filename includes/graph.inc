@@ -1,5 +1,5 @@
 <?php
-// $Id: graph.inc,v 1.1 2009/01/14 12:18:37 dries Exp $
+// $Id: graph.inc,v 1.2 2009/04/11 17:58:17 webchick Exp $
 
 /**
  * @file
@@ -121,19 +121,23 @@ function _drupal_depth_first_search(&$graph, &$state, $start, &$component = NULL
         unset($state['components'][$component]);
         $component = $new_component;
       }
+      // Only visit existing vertices.
+      if (isset($graph[$end])) {
+        // Visit the connected vertex.
+        _drupal_depth_first_search($graph, $state, $end, $component);
 
-      // Visit the connected vertex.
-      _drupal_depth_first_search($graph, $state, $end, $component);
-
-      // All vertices reachable by $end are also reachable by $start.
-      $graph[$start]['paths'] += $graph[$end]['paths'];
+        // All vertices reachable by $end are also reachable by $start.
+        $graph[$start]['paths'] += $graph[$end]['paths'];
+      }
     }
   }
 
   // Now that any other subgraph has been explored, add $start to all reverse
   // paths.
   foreach ($graph[$start]['paths'] as $end => $v) {
-    $graph[$end]['reverse_paths'][$start] = TRUE;
+    if (isset($graph[$end])) {
+      $graph[$end]['reverse_paths'][$start] = TRUE;
+    }
   }
 
   // Record the order of the last visit. This is the reverse of the

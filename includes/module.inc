@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.139 2009/02/22 17:55:29 dries Exp $
+// $Id: module.inc,v 1.140 2009/04/11 17:58:17 webchick Exp $
 
 /**
  * @file
@@ -170,7 +170,7 @@ function _module_build_dependencies($files) {
   }
   drupal_depth_first_search($graph, array_keys($roots));
   foreach ($graph as $module => $data) {
-    $files[$module]->required_by= isset($data['reverse_paths']) ? $data['reverse_paths'] : array();
+    $files[$module]->required_by = isset($data['reverse_paths']) ? $data['reverse_paths'] : array();
     $files[$module]->requires = isset($data['paths']) ? $data['paths'] : array();
     $files[$module]->sort = $data['weight'];
   }

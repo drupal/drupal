@@ -1,5 +1,5 @@
 <?php
-// $Id: graph.test,v 1.2 2009/03/31 01:49:53 webchick Exp $
+// $Id: graph.test,v 1.3 2009/04/11 17:58:18 webchick Exp $
 
 /**
  * @file
@@ -39,6 +39,7 @@ class GraphUnitTest extends DrupalWebTestCase {
       5 => array(6),
       7 => array(4, 5),
       8 => array(9),
+      9 => array(),
     ));
     drupal_depth_first_search($graph);
 
@@ -48,7 +49,6 @@ class GraphUnitTest extends DrupalWebTestCase {
       3 => array(),
       4 => array(3),
       5 => array(6),
-      6 => array(),
       7 => array(4, 3, 5, 6),
       8 => array(9),
       9 => array(),
@@ -61,15 +61,17 @@ class GraphUnitTest extends DrupalWebTestCase {
       3 => array(2, 1, 4, 7),
       4 => array(2, 1, 7),
       5 => array(7),
-      6 => array(5, 7),
       7 => array(),
       8 => array(),
       9 => array(8),
     );
     $this->assertReversePaths($graph, $expected_reverse_paths);
 
+    // Assert that DFS didn't created "missing" vertexes automatically.
+    $this->assertFALSE(isset($graph[6]), t('Vertex 6 has not been created'));
+
     $expected_components = array(
-      array(1, 2, 3, 4, 5, 6, 7),
+      array(1, 2, 3, 4, 5, 7),
       array(8, 9),
     );
     $this->assertComponents($graph, $expected_components);
@@ -78,7 +80,7 @@ class GraphUnitTest extends DrupalWebTestCase {
       array(1, 2, 3),
       array(2, 4, 3),
       array(7, 4, 3),
-      array(7, 5, 6),
+      array(7, 5),
       array(8, 9),
     );
     $this->assertWeights($graph, $expected_weights);
@@ -90,6 +92,8 @@ class GraphUnitTest extends DrupalWebTestCase {
   function normalizeGraph($graph) {
     $normalized_graph = array();
     foreach ($graph as $vertex => $edges) {
+      // Create vertex even if it hasn't any edges.
+      $normalized_graph[$vertex] = array();
       foreach ($edges as $edge) {
         $normalized_graph[$vertex]['edges'][$edge] = TRUE;
       }
