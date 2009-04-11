@@ -35,6 +35,9 @@
   margin-top: 0;
   margin-bottom: 0;
 }
+html.js #edit-book-pick-book {
+  display: none;
+}
 #edit-book-bid-wrapper .description {
   clear: both;
 }

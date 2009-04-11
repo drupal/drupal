@@ -227,6 +227,7 @@ function form_state_defaults() {
     'method' => 'post',
     'rerender' => TRUE,
     'programmed' => FALSE,
+    'groups' => array(),
   );
 }
 
@@ -285,6 +286,10 @@ function drupal_rebuild_form($form_id, &$form_state, $form_build_id = NULL) {
   // data to pollute this one and trigger validate/submit handling,
   // then process the form for rendering.
   $form_state['input'] = array();
+
+  // Also clear out all group associations as these might be different
+  // when rerendering the form.
+  $form_state['groups'] = array();
 
   // Do not call drupal_process_form(), since it would prevent the rebuilt form
   // to submit.
@@ -939,7 +944,8 @@ function form_error(&$element, $message = '') {
 /**
  * Walk through the structured form array, adding any required
  * properties to each element and mapping the incoming $_POST
- * data to the proper elements.
+ * data to the proper elements. Also, execute any #process handlers
+ * attached to a specific element.
  *
  * @param $form_id
  *   A unique string identifying the form for validation, submission,
@@ -972,8 +978,21 @@ function form_builder($form_id, $form, &$form_state) {
     }
   }
 
+  if (!isset($form['#id'])) {
+    $form['#id'] = form_clean_id('edit-' . implode('-', $form['#parents']));
+  }
   if (isset($form['#input']) && $form['#input']) {
     _form_builder_handle_input_element($form_id, $form, $form_state, $complete_form);
+  }
+  // Allow for elements to expand to multiple elements, e.g., radios,
+  // checkboxes and files.
+  if (isset($form['#process']) && !$form['#processed']) {
+    foreach ($form['#process'] as $process) {
+      if (drupal_function_exists($process)) {
+        $form = $process($form, $form_state, $complete_form);
+      }
+    }
+    $form['#processed'] = TRUE;
   }
   $form['#defaults_loaded'] = TRUE;
 
@@ -1062,8 +1081,7 @@ function form_builder($form_id, $form, &$form_state) {
 
 /**
  * Populate the #value and #name properties of input elements so they
- * can be processed and rendered. Also, execute any #process handlers
- * attached to a specific element.
+ * can be processed and rendered.
  */
 function _form_builder_handle_input_element($form_id, &$form, &$form_state, $complete_form) {
   if (!isset($form['#name'])) {
@@ -1079,9 +1097,6 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state, $com
       $form['#name'] .= '[' . implode('][', $form['#parents']) . ']';
     }
     array_unshift($form['#parents'], $name);
-  }
-  if (!isset($form['#id'])) {
-    $form['#id'] = form_clean_id('edit-' . implode('-', $form['#parents']));
   }
 
   if (!empty($form['#disabled'])) {
@@ -1150,16 +1165,6 @@ function _form_builder_handle_input_element($form_id, &$form, &$form_state, $com
         $form_state['submit_handlers'] = $form['#submit'];
       }
     }
-  }
-  // Allow for elements to expand to multiple elements, e.g., radios,
-  // checkboxes and files.
-  if (isset($form['#process']) && !$form['#processed']) {
-    foreach ($form['#process'] as $process) {
-      if (drupal_function_exists($process)) {
-        $form = $process($form, isset($edit) ? $edit : NULL, $form_state, $complete_form);
-      }
-    }
-    $form['#processed'] = TRUE;
   }
   form_set_value($form, $form['#value'], $form_state);
 }
@@ -1597,6 +1602,7 @@ function theme_fieldset($element) {
       $element['#attributes']['class'] .= ' collapsed';
     }
   }
+  $element['#attributes']['id'] = $element['#id'];
 
   return '<fieldset' . drupal_attributes($element['#attributes']) . '>' . ($element['#title'] ? '<legend>' . $element['#title'] . '</legend>' : '') . (isset($element['#description']) && $element['#description'] ? '<div class="description">' . $element['#description'] . '</div>' : '') . (!empty($element['#children']) ? $element['#children'] : '') . (isset($element['#value']) ? $element['#value'] : '') . "</fieldset>\n";
 }
@@ -2143,7 +2149,6 @@ function form_process_checkboxes($element) {
  *   An associative array containing the properties and children of the
  *   tableselect element.
  *   Properties used: header, options, empty, js_select.
- *
  * @return
  *   A themed HTML string representing the table.
  *
@@ -2186,7 +2191,6 @@ function theme_tableselect($element) {
  * @param $element
  *   An associative array containing the properties and children of the
  *   tableselect element.
- *
  * @return
  *   The processed element.
  */
@@ -2245,6 +2249,142 @@ function form_process_tableselect($element) {
     $element['#value'] = array();
   }
   return $element;
+}
+
+/**
+ * Adds fieldsets to the specified group or adds group members to this
+ * fieldset.
+ *
+ * @param $element
+ *   An associative array containing the properties and children of the
+ *   fieldset.
+ * @param $form_state
+ *   The $form_state array for the form this fieldset belongs to.
+ * @return
+ *   The processed element.
+ */
+function form_process_fieldset(&$element, &$form_state) {
+  $parents = implode('][', $element['#parents']);
+
+  // Add this fieldset to a group if one is set and if it's not being
+  // added to itself.
+  if (isset($element['#group']) && $element['#group'] != $parents) {
+    if (isset($form_state['groups'][$element['#group']]) && !empty($form_state['groups'][$element['#group']]['#group_exists'])) {
+      // Trick drupal_render() into believing this has already been output.
+      // The group widget will rerender this later. This only happens when the
+      // group is actually defined ('#group_exists' is TRUE). This prevents
+      // fieldsets from disappearing when the group they are associated to
+      // does not exist.
+      // If the group does not exist yet, the element's #printed value is left
+      // as is. As soon as the group is processed (fieldsets are also groups;
+      // see below), this element's #printed value is set to TRUE to prevent
+      // rendering in the original context.
+      $element['#printed'] = TRUE;
+    }
+
+    // Store a reference to this fieldset for the vertical tabs processing
+    // function.
+    $form_state['groups'][$element['#group']][] = &$element;
+  }
+
+  // Each fieldset can be a group itself and gets a reference to all
+  // elements in its group.
+  $form_state['groups'][$parents]['#group_exists'] = TRUE;
+  // There might already be elements associated with this group. Since the
+  // group did not exist yet at the time they were added to this group, they
+  // couldn't set #printed to TRUE (see above). We now know that this group
+  // does in fact exist and set #printed to TRUE to prevent rendering in the
+  // original context.
+  foreach (element_children($form_state['groups'][$parents]) as $key) {
+    $form_state['groups'][$parents][$key]['#printed'] = TRUE;
+  }
+  $element['#group_members'] = &$form_state['groups'][$parents];
+
+  // Contains form element summary functionalities.
+  drupal_add_js('misc/form.js', array('weight' => JS_LIBRARY + 1));
+
+  return $element;
+}
+
+/**
+ * Adds members of this group as actual elements for rendering.
+ *
+ * @param $element
+ *   An associative array containing the properties and children of the
+ *   fieldset.
+ * @return
+ *   The modified element with all group members.
+ */
+function form_pre_render_fieldset($element) {
+  if (!empty($element['#group_members'])) {
+    // Add the group members to this fieldset for rendering purposes only.
+    foreach (element_children($element['#group_members']) as $key) {
+      // This was set in form_process_fieldset so that fieldsets which are
+      // added to groups are not rendered at their original location.
+      // drupal_render_children() will set this back to TRUE.
+      unset($element['#group_members'][$key]['#printed']);
+      $element[] = &$element['#group_members'][$key];
+    }
+
+    // Resort the element's children after the group members have been added.
+    $element['#sorted'] = FALSE;
+  }
+
+  return $element;
+}
+
+/**
+ * Creates a group formatted as vertical tabs.
+ *
+ * @param $element
+ *   An associative array containing the properties and children of the
+ *   fieldset.
+ * @param $form_state
+ *   The $form_state array for the form this vertical tab widget belongs to.
+ * @return
+ *   The processed element.
+ */
+function form_process_vertical_tabs($element, &$form_state) {
+  // To save us from modifying the existing element and changing its #type,
+  // a new form element is created as a child. The default #process hooks
+  // are called automatically by the form renderer and we don't have to do
+  // that manually.
+  $element['group'] = array(
+    '#type' => 'fieldset',
+    '#theme_wrapper' => '',
+    '#parents' => $element['#parents'],
+  );
+
+  // The JavaScript stores the currently selected tab in this hidden
+  // field so that the active tab can be restored the next time the
+  // form is rendered, e.g. on preview pages or when form validation
+  // fails.
+  $name = implode('__', $element['#parents']);
+  if (isset($form_state['values'][$name . '__active_tab'])) {
+    $element['#default_tab'] = $form_state['values'][$name . '__active_tab'];
+  }
+  $element[$name . '__active_tab'] = array(
+    '#type' => 'hidden',
+    '#default_value' => $element['#default_tab'],
+    '#attributes' => array('class' => 'vertical-tabs-active-tab'),
+  );
+
+  return $element;
+}
+
+/**
+ * Makes the element's children fieldsets be vertical tabs.
+ *
+ * @param $element
+ *   An associative array containing the properties and children of the
+ *   fieldset.
+ */
+function theme_vertical_tabs(&$element) {
+  // Add required JavaScript and Stylesheet.
+  drupal_add_js('misc/vertical-tabs.js', array('weight' => JS_DEFAULT - 1));
+  drupal_add_css('misc/vertical-tabs.css');
+
+  return '<div class="vertical-tabs-panes">' . $element['#children'] . '</div>';
 }
 
 /**

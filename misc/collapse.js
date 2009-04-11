@@ -60,6 +60,14 @@ Drupal.behaviors.collapse = {
         fieldset.removeClass('collapsed');
       }
 
+      var summary = $('<span class="summary"></span>');
+      fieldset.
+        bind('summaryUpdated', function() {
+          var text = $.trim(fieldset.getSummary());
+          summary.html(text ? ' (' + text + ')' : '');
+        })
+        .trigger('summaryUpdated');
+
       // Turn the legend into a clickable link and wrap the contents of the fieldset
       // in a div for easier animation
       var text = this.innerHTML;
@@ -72,6 +80,7 @@ Drupal.behaviors.collapse = {
           }
           return false;
         }))
+        .append(summary)
         .after($('<div class="fieldset-wrapper"></div>')
         .append(fieldset.children(':not(legend):not(.action)')))
         .addClass('collapse-processed');

@@ -199,6 +199,14 @@ html.js fieldset.collapsed legend a {
 }
 
 /**
+ * Vertical tabs.
+ */
+div.vertical-tabs {
+  margin-left: 5%;
+  margin-right: 15em;
+}
+
+/**
  * Syndication Block
  */
 #block-node-syndicate h2 {

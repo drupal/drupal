@@ -320,10 +320,18 @@ html.js fieldset.collapsed * {
 }
 html.js fieldset.collapsed legend {
   display: block;
+  overflow: hidden;
 }
 html.js fieldset.collapsible legend a {
+  display: inline;
   padding-left: 15px; /* LTR */
   background: url(../../misc/menu-expanded.png) 5px 75% no-repeat; /* LTR */
+}
+html.js fieldset.collapsible legend span.summary {
+  display: inline;
+  font-size: 0.9em;
+  color: #999;
+  margin-left: 0.5em;
 }
 html.js fieldset.collapsed legend a {
   background-image: url(../../misc/menu-collapsed.png); /* LTR */
@@ -338,9 +346,6 @@ html.js fieldset.collapsed legend a {
 /* For Safari 2 to prevent collapsible fieldsets containing tables from dissapearing due to tableheader.js. */
 html.js fieldset.collapsible {
   position: relative;
-}
-html.js fieldset.collapsible legend a {
-  display: block;
 }
 /* Avoid jumping around due to margins collapsing into collapsible fieldset border */
 html.js fieldset.collapsible .fieldset-wrapper {

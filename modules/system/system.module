@@ -381,6 +381,7 @@ function system_elements() {
     '#theme' => 'file',
     '#theme_wrapper' => 'form_element',
   );
+
   $type['tableselect'] = array(
     '#input' => TRUE,
     '#js_select' => TRUE,
@@ -419,8 +420,15 @@ function system_elements() {
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
     '#value' => NULL,
-    '#process' => array('form_process_ahah'),
+    '#process' => array('form_process_fieldset', 'form_process_ahah'),
+    '#pre_render' => array('form_pre_render_fieldset'),
     '#theme_wrapper' => 'fieldset',
+  );
+
+  $type['vertical_tabs'] = array(
+    '#theme_wrapper' => 'vertical_tabs',
+    '#default_tab' => '',
+    '#process' => array('form_process_vertical_tabs'),
   );
 
   $type['token'] = array(

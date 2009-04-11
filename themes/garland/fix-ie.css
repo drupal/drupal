@@ -25,6 +25,10 @@ fieldset {
   background: none;
 }
 
+div.vertical-tabs ul.vertical-tabs-list li.first {
+  background-image: none;
+}
+
 ul.primary {
   /* Fix missing top margin */
   position: relative; /* LTR */
