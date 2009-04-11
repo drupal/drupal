@@ -170,7 +170,7 @@ function _module_build_dependencies($files) {
   }
   drupal_depth_first_search($graph, array_keys($roots));
   foreach ($graph as $module => $data) {
-    $files[$module]->required_by= isset($data['reverse_paths']) ? $data['reverse_paths'] : array();
+    $files[$module]->required_by = isset($data['reverse_paths']) ? $data['reverse_paths'] : array();
     $files[$module]->requires = isset($data['paths']) ? $data['paths'] : array();
     $files[$module]->sort = $data['weight'];
   }
