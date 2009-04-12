@@ -47,6 +47,11 @@
 .vertical-tabs-list li a:hover {
   text-decoration: none;
 }
+.vertical-tabs-list li strong {
+  /* Strong tags are used around tab titles to indicate importance; however,
+     only the currently active tab should actually look bold. */
+  font-weight:normal;
+}
 .vertical-tabs-list li.selected {
   background: #fff;
   border-right-width: 0;
@@ -55,7 +60,7 @@
 .vertical-tabs-list li.selected a:focus {
   outline: 0;
 }
-.vertical-tabs-list li.selected .title {
+.vertical-tabs-list li.selected strong {
   font-weight: bold;
   color: #000;
 }
