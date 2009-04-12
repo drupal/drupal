@@ -1,5 +1,5 @@
 <?php
-// $Id: options.module,v 1.4 2009/03/26 13:31:25 webchick Exp $
+// $Id: options.module,v 1.5 2009/04/12 02:18:51 webchick Exp $
 
 /**
  * @file
@@ -125,7 +125,7 @@ function options_field_widget_error($element, $error) {
  *
  * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
  */
-function options_buttons_process($element, $edit, &$form_state, $form) {
+function options_buttons_process($element, &$form_state, $form) {
   $field = $form['#fields'][$element['#field_name']]['field'];
   $instance = $form['#fields'][$element['#field_name']]['instance'];
   $field_key  = $element['#columns'][0];
@@ -182,7 +182,7 @@ function options_buttons_process($element, $edit, &$form_state, $form) {
  *
  * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
  */
-function options_select_process($element, $edit, &$form_state, $form) {
+function options_select_process($element, &$form_state, $form) {
   $field = $form['#fields'][$element['#field_name']]['field'];
   $instance = $form['#fields'][$element['#field_name']]['instance'];
   $field_key  = $element['#columns'][0];
@@ -223,7 +223,7 @@ function options_select_process($element, $edit, &$form_state, $form) {
  * Build the form element. When creating a form using FAPI #process,
  * note that $element['#value'] is already set.
  */
-function options_onoff_process($element, $edit, &$form_state, $form) {
+function options_onoff_process($element, &$form_state, $form) {
   $field = $form['#fields'][$element['#field_name']]['field'];
   $instance = $form['#fields'][$element['#field_name']]['instance'];
   $field_key  = $element['#columns'][0];

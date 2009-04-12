@@ -1,5 +1,5 @@
 <?php
-// $Id: text.module,v 1.5 2009/03/26 13:31:25 webchick Exp $
+// $Id: text.module,v 1.6 2009/04/12 02:18:51 webchick Exp $
 
 /**
  * @file
@@ -111,7 +111,7 @@ function text_field_sanitize($obj_type, $object, $field, $instance, &$items) {
     // TODO D7 : this code is really node-related.
     if (!empty($instance['settings']['text_processing'])) {
       $check = is_null($object) || (isset($object->build_mode) && $object->build_mode == NODE_BUILD_PREVIEW);
-      $text = isset($item['value']) ? check_markup($item['value'], $item['format'], isset($object->language) ? $object->language : $language, $check) : '';
+      $text = isset($item['value']) ? check_markup($item['value'], $item['format'], isset($object->language) ? $object->language : $language->language, $check) : '';
     }
     else {
       $text = check_plain($item['value']);
@@ -305,7 +305,7 @@ function text_field_widget_error($element, $error) {
  * information needed to adjust the behavior of the 'element' should be
  * extracted in hook_field_widget() above.
  */
-function text_textfield_process($element, $edit, $form_state, $form) {
+function text_textfield_process($element, $form_state, $form) {
   $field = $form['#fields'][$element['#field_name']]['field'];
   $instance = $form['#fields'][$element['#field_name']]['instance'];
   $field_key = $element['#columns'][0];
@@ -348,7 +348,7 @@ function text_textfield_process($element, $edit, $form_state, $form) {
  *
  * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
  */
-function text_textarea_process($element, $edit, $form_state, $form) {
+function text_textarea_process($element, $form_state, $form) {
   $field = $form['#fields'][$element['#field_name']]['field'];
   $instance = $form['#fields'][$element['#field_name']]['instance'];
   $field_key = $element['#columns'][0];
@@ -375,6 +375,8 @@ function text_textarea_process($element, $edit, $form_state, $form) {
     $parents = array_merge($element['#parents'] , array($filter_key));
     $element[$filter_key] = filter_form($format, 1, $parents);
   }
+
+  return $element;
 }
 
 /**
