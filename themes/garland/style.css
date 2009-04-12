@@ -894,7 +894,7 @@ div.vertical-tabs ul.vertical-tabs-list li.selected.first {
   background-image: url(images/gradient-inner.png);
 }
 
-div.vertical-tabs ul.vertical-tabs-list li.selected a .title {
+div.vertical-tabs ul.vertical-tabs-list li.selected a strong {
   color: #494949;
 }
 
