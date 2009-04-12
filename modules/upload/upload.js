@@ -2,7 +2,7 @@
 
 (function($) {
 
-Drupal.behaviors.bookFieldsetSummaries = {
+Drupal.behaviors.uploadFieldsetSummaries = {
   attach: function(context) {
     $('fieldset#edit-attachments', context).setSummary(function(context) {
       var size = $('#upload-attachments tbody tr').size();
