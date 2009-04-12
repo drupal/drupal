@@ -14,6 +14,9 @@ class TextFieldTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('field', 'text', 'field_test');
+
+    $web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content'));
+    $this->drupalLogin($web_user);
   }
 
   // Test fields.
@@ -41,21 +44,134 @@ class TextFieldTestCase extends DrupalWebTestCase {
     }
   }
 
-  // Test widgets.
-
   /**
-   * Test textfield widget.
+   * Test widgets.
    */
-  function testTextfieldWidget() {
-    // Create a field
-    $field = $this->drupalCreateField('text');
-    $this->instance = $this->drupalCreateFieldInstance($field['field_name'], 'text_textfield', 'text_default', FIELD_TEST_BUNDLE);
-
+  function testTextfieldWidgets() {
+    $this->_testTextfieldWidgets('text', 'text_textfield');
+    $this->_testTextfieldWidgets('text_long', 'text_textarea');
   }
 
   /**
-   * Test textarea widget.
+   * Helper function for testTextfieldWidgets().
    */
+  function _testTextfieldWidgets($field_type, $widget_type) {
+    // Setup a field and instance
+    $entity_type = 'test_entity';
+    $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
+    $this->field = array('field_name' => $this->field_name, 'type' => $field_type);
+    field_create_field($this->field);
+    $this->instance = array(
+      'field_name' => $this->field_name,
+      'bundle' => FIELD_TEST_BUNDLE,
+      'label' => $this->randomName() . '_label',
+      'settings' => array(
+        'text_processing' => TRUE,
+      ),
+      'widget' => array(
+        'type' => $widget_type,
+      )
+    );
+    field_create_instance($this->instance);
+
+    // Display creation form.
+    $this->drupalGet('test-entity/add/test-bundle');
+    $this->assertFieldByName($this->field_name . '[0][value]', '', t('Widget is displayed'));
+    $this->assertNoFieldByName($this->field_name . '[0][format]', '1', t('Format selector is not displayed'));
+
+    // Submit with some value.
+    $value = $this->randomName();
+    $edit = array(
+      $this->field_name . '[0][value]' => $value,
+    );
+    $this->drupalPost(NULL, $edit, t('Save'));
+    preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
+    $id = $match[1];
+    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), t('Entity was created'));
+
+    // Display the object.
+    $entity = field_test_entity_load($id);
+    $entity->content = field_attach_view($entity_type, $entity);
+    $this->content = drupal_render($entity->content);
+    $this->assertText($value, 'Filtered tags are not displayed');
+  }
+
+  /**
+   * Test widgets + 'formatted_text' setting.
+   */
+  function testTextfieldWidgetsFormatted() {
+    $this->_testTextfieldWidgetsFormatted('text', 'text_textfield');
+    $this->_testTextfieldWidgetsFormatted('text_long', 'text_textarea');
+  }
+
+  /**
+   * Helper function for testTextfieldWidgetsFormatted().
+   */
+  function _testTextfieldWidgetsFormatted($field_type, $widget_type) {
+    // Setup a field and instance
+    $entity_type = 'test_entity';
+    $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
+    $this->field = array('field_name' => $this->field_name, 'type' => $field_type);
+    field_create_field($this->field);
+    $this->instance = array(
+      'field_name' => $this->field_name,
+      'bundle' => FIELD_TEST_BUNDLE,
+      'label' => $this->randomName() . '_label',
+      'settings' => array(
+        'text_processing' => TRUE,
+      ),
+      'widget' => array(
+        'type' => $widget_type,
+      )
+    );
+    field_create_instance($this->instance);
+
+    // Display creation form.
+    // By default, the user only has access to 'Filtered HTML', and no format
+    // selector is displayed
+    $this->drupalGet('test-entity/add/test-bundle');
+    $this->assertFieldByName($this->field_name . '[0][value]', '', t('Widget is displayed'));
+    $this->assertNoFieldByName($this->field_name . '[0][format]', '1', t('Format selector is not displayed'));
+
+    // Submit with data that should be filtered.
+    $value = $this->randomName() . '<br />' . $this->randomName();
+    $edit = array(
+      $this->field_name . '[0][value]' => $value,
+    );
+    $this->drupalPost(NULL, $edit, t('Save'));
+    preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
+    $id = $match[1];
+    $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), t('Entity was created'));
+
+    // Display the object.
+    $entity = field_test_entity_load($id);
+    $entity->content = field_attach_view($entity_type, $entity);
+    $this->content = drupal_render($entity->content);
+    $this->assertNoRaw($value, 'Filtered tags are not displayed');
+    $this->assertRaw(str_replace('<br />', '', $value), t('Filtered value is displayed correctly'));
+
+    // Allow the user to use the 'Full HTML' format.
+    db_update('filter_format')->fields(array('roles' => ',2,'))->condition('format', 2)->execute();
+
+    // Display edition form.
+    // We should now have a 'text format' selector.
+    $this->drupalGet('test-entity/' . $id . '/edit');
+    $this->assertFieldByName($this->field_name . '[0][value]', '', t('Widget is displayed'));
+    $this->assertFieldByName($this->field_name . '[0][format]', '1', t('Format selector is displayed'));
+
+    // Edit and change the format to 'Full HTML'.
+    $edit = array(
+      $this->field_name . '[0][format]' => 2,
+    );
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), t('Entity was updated'));
+
+    // Display the object.
+    $entity = field_test_entity_load($id);
+    $entity->content = field_attach_view($entity_type, $entity);
+    $this->content = drupal_render($entity->content);
+    $this->assertRaw($value, t('Value is displayed unfiltered'));
+  }
 
   // Test formatters.
   /**

@@ -291,7 +291,7 @@ function number_field_widget_error($element, $error) {
  *
  * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
  */
-function number_process($element, $edit, $form_state, $form) {
+function number_process($element, $form_state, $form) {
   $field_name = $element['#field_name'];
   $field = field_info_field($element['#field_name']);
   $instance = field_info_instance($element['#field_name'], $element['#bundle']);
