@@ -107,12 +107,10 @@ function hook_menu_alter(&$items) {
  *
  * @param $item
  *   Associative array defining a menu link as passed into menu_link_save().
- * @param $menu
- *   Associative array containg the menu router returned from menu_router_build().
  * @return
  *   None.
  */
-function hook_menu_link_alter(&$item, $menu) {
+function hook_menu_link_alter(&$item) {
   // Example 1 - make all new admin links hidden (a.k.a disabled).
   if (strpos($item['link_path'], 'admin') === 0 && empty($item['mlid'])) {
     $item['hidden'] = 1;

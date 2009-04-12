@@ -1819,9 +1819,10 @@ function menu_cache_clear_all() {
  */
 function menu_rebuild() {
   variable_del('menu_rebuild_needed');
-  menu_cache_clear_all();
-  $menu = menu_router_build(TRUE);
+  list($menu, $masks) = menu_router_build();
+  _menu_router_save($menu, $masks);
   _menu_navigation_links_rebuild($menu);
+  menu_cache_clear_all();
   // Clear the page and block caches.
   _menu_clear_page_cache();
   if (defined('MAINTENANCE_MODE')) {
@@ -1830,7 +1831,7 @@ function menu_rebuild() {
 }
 
 /**
- * Collect, alter and store the menu definitions.
+ * Collect and alter the menu definitions.
  */
 function menu_router_build() {
   // We need to manually call each module so that we can know which module
@@ -1847,20 +1848,32 @@ function menu_router_build() {
   }
   // Alter the menu as defined in modules, keys are like user/%user.
   drupal_alter('menu', $callbacks);
-  $menu = _menu_router_build($callbacks);
-  _menu_router_store($menu);
+  list($menu, $masks) = _menu_router_build($callbacks);
+  _menu_router_cache($menu);
 
-  return $menu;
+  return array($menu, $masks);
 }
 
 /**
  * Helper function to store the menu router if we have it in memory.
  */
-function _menu_router_store($new_menu = NULL) {
-  static $menu = NULL;
+function _menu_router_cache($new_menu = NULL) {
+  $menu = &drupal_static(__FUNCTION__);
   
   if (isset($new_menu)) {
     $menu = $new_menu;
+  }
+  return $menu;
+}
+
+/**
+ * Get the menu router.
+ */
+function menu_get_router() {
+  // Check first if we have it in memory already.
+  $menu = _menu_router_cache();
+  if (empty($menu)) {
+    list($menu, $masks) = menu_router_build();
   }
   return $menu;
 }
@@ -2269,7 +2282,7 @@ function _menu_set_expanded_menus() {
  */
 function _menu_find_router_path($link_path) {
   // $menu will only have data during a menu rebuild.
-  $menu = _menu_router_store();
+  $menu = _menu_router_cache();
 
   $router_path = $link_path;
   $parts = explode('/', $link_path, MENU_MAX_PARTS);
@@ -2470,6 +2483,7 @@ function _menu_router_build($callbacks) {
   // First pass: separate callbacks from paths, making paths ready for
   // matching. Calculate fitness, and fill some default values.
   $menu = array();
+  $masks = array();
   foreach ($callbacks as $path => $item) {
     $load_functions = array();
     $to_arg_functions = array();
@@ -2548,36 +2562,6 @@ function _menu_router_build($callbacks) {
     }
   }
   array_multisort($sort, SORT_NUMERIC, $menu);
-
-  if (!$menu) {
-    return array();
-  }
-  // Delete the existing router since we have some data to replace it.
-  db_delete('menu_router')->execute();
-
-  // Prepare insert object.
-  $insert = db_insert('menu_router')
-    ->fields(array(
-      'path',
-      'load_functions',
-      'to_arg_functions',
-      'access_callback',
-      'access_arguments',
-      'page_callback',
-      'page_arguments',
-      'fit',
-      'number_parts',
-      'tab_parent',
-      'tab_root',
-      'title',
-      'title_callback',
-      'title_arguments',
-      'type',
-      'block_callback',
-      'description',
-      'position',
-      'weight',
-    ));
   // Apply inheritance rules.
   foreach ($menu as $path => $v) {
     $item = &$menu[$path];
@@ -2642,7 +2626,47 @@ function _menu_router_build($callbacks) {
       'tab_root' => $path,
       'path' => $path,
     );
+  }
 
+  // Sort the masks so they are in order of descending fit.
+  $masks = array_keys($masks);
+  rsort($masks);
+
+  return array($menu, $masks);
+}
+
+/**
+ * Helper function to save data from menu_router_build() to the router table.
+ */
+function _menu_router_save($menu, $masks) {
+  // Delete the existing router since we have some data to replace it.
+  db_delete('menu_router')->execute();
+
+  // Prepare insert object.
+  $insert = db_insert('menu_router')
+    ->fields(array(
+      'path',
+      'load_functions',
+      'to_arg_functions',
+      'access_callback',
+      'access_arguments',
+      'page_callback',
+      'page_arguments',
+      'fit',
+      'number_parts',
+      'tab_parent',
+      'tab_root',
+      'title',
+      'title_callback',
+      'title_arguments',
+      'type',
+      'block_callback',
+      'description',
+      'position',
+      'weight',
+    ));
+
+  foreach ($menu as $path => $item) {
     // Fill in insert object values.
     $insert->values(array(
       'path' => $item['path'],
@@ -2668,10 +2692,7 @@ function _menu_router_build($callbacks) {
   }
   // Execute insert object.
   $insert->execute();
-
-  // Sort the masks so they are in order of descending fit, and store them.
-  $masks = array_keys($masks);
-  rsort($masks);
+  // Store the masks.
   variable_set('menu_masks', $masks);
 
   return $menu;
