@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.14 2009/03/13 14:28:18 dries Exp $
+// $Id: dblog.admin.inc,v 1.15 2009/04/13 08:48:58 dries Exp $
 
 /**
  * @file
@@ -7,21 +7,17 @@
  */
 
 /**
- * dblog module settings form.
- *
- * @ingroup forms
- * @see system_settings_form()
+ * Implementation of hook_form_FORM_ID_alter().
  */
-function dblog_admin_settings() {
+function dblog_form_system_logging_settings_alter(&$form, $form_state) {
   $form['dblog_row_limit'] = array(
     '#type' => 'select',
-    '#title' => t('Discard log entries above the following row limit'),
-    '#default_value' => 1000,
+    '#title' => t('Database log entries to keep'),
+    '#default_value' => variable_get('dblog_row_limit', 1000),
     '#options' => drupal_map_assoc(array(100, 1000, 10000, 100000, 1000000)),
-    '#description' => t('The maximum number of rows to keep in the database log. Older entries will be automatically discarded. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status')))
+    '#description' => t('The maximum number of entries to keep in the database log. Requires a <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status')))
   );
-
-  return system_settings_form($form, TRUE);
+  $form['buttons']['#weight'] = 1;
 }
 
 /**

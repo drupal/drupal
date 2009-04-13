@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.module,v 1.36 2009/03/13 14:28:18 dries Exp $
+// $Id: dblog.module,v 1.37 2009/04/13 08:48:58 dries Exp $
 
 /**
  * @file
@@ -42,14 +42,6 @@ function dblog_theme() {
  * Implementation of hook_menu().
  */
 function dblog_menu() {
-  $items['admin/settings/logging/dblog'] = array(
-    'title' => 'Database logging',
-    'description' => 'Settings for logging to the Drupal database logs. This is the most common method for small to medium sites on shared hosting. The logs are viewable from the admin pages.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('dblog_admin_settings'),
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_LOCAL_TASK,
-  );
   $items['admin/reports/dblog'] = array(
     'title' => 'Recent log entries',
     'description' => 'View events that have recently been logged.',
