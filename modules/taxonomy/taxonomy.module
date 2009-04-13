@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.465 2009/04/02 20:39:45 dries Exp $
+// $Id: taxonomy.module,v 1.466 2009/04/13 18:52:38 dries Exp $
 
 /**
  * @file
@@ -1019,7 +1019,7 @@ function taxonomy_vocabulary_load_multiple($vids = array(), $conditions = array(
     $query->orderBy('v.name');
 
     if (!empty($type)) {
-      $query->leftJoin('taxonomy_vocabulary_node_type', 'n', 'v.vid = n.vid WHERE n.type  = :type', array(':type' => $type));
+      $query->leftJoin('taxonomy_vocabulary_node_type', 'n', 'v.vid = n.vid AND n.type  = :type', array(':type' => $type));
     }
     else {
       $query->leftJoin('taxonomy_vocabulary_node_type', 'n', 'v.vid = n.vid');
