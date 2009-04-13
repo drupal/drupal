@@ -276,6 +276,11 @@ public static function getInfo() {
 
     // Fetch vocabulary 1 by name and ID.
     $this->assertTrue(current(taxonomy_vocabulary_load_multiple(array($vocabulary1->vid), array('name' => $vocabulary1->name))) == $vocabulary1, t('Vocabulary loaded successfully by name and ID.'));
+
+    // Fetch vocabulary 1 with specified node type.
+    drupal_static_reset('taxonomy_vocabulary_load_multiple');
+    $vocabulary_node_type = current(taxonomy_vocabulary_load_multiple(array($vocabulary1->vid), array('type' => 'article')));
+    $this->assertEqual($vocabulary_node_type, $vocabulary1, t('Vocabulary with specified node type loaded successfully.'));
   }
 }
 
