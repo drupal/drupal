@@ -463,8 +463,8 @@ function file_space_used($uid = NULL) {
  * @param $validators
  *   An optional, associative array of callback functions used to validate the
  *   file. The keys are function names and the values arrays of callback
- *   parameters which will be passed in after the user and file objects. The
- *   functions should return an array of error messages, an empty array
+ *   parameters which will be passed in after the file object. The
+ *   functions should return an array of error messages; an empty array
  *   indicates that the file passed validation. The functions will be called in
  *   the order specified.
  * @param $dest
