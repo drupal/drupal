@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.9 2009/03/31 01:59:34 webchick Exp $
+// $Id: field.attach.inc,v 1.10 2009/04/13 05:18:17 webchick Exp $
 
 /**
  * @file
@@ -57,7 +57,7 @@ class FieldValidationException extends FieldException {
 
 /**
  * Argument for an insert operation.
- * This is used in hook_field_storage_write when updating an 
+ * This is used in hook_field_storage_write when updating an
  * existing object.
  */
 define('FIELD_STORAGE_UPDATE', 'update');
@@ -284,7 +284,7 @@ function _field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT) {
     // results are merged into the $queried_objects, and into the $additions
     // array, that will eventually get cached.
 
-    // Invoke hook_field_attach_pre_load(): let any module load field 
+    // Invoke hook_field_attach_pre_load(): let any module load field
     // data before the storage engine, accumulating along the way.
     $additions_pre_load = array();
     $skip_fields = array();

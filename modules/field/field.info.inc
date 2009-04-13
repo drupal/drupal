@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.4 2009/02/10 16:09:00 webchick Exp $
+// $Id: field.info.inc,v 1.5 2009/04/13 05:18:17 webchick Exp $
 
 /**
  * @file
@@ -161,7 +161,7 @@ function _field_info_collate_types($reset = FALSE) {
  *     an array of all bundles to which the field is assigned.
  *   - instances: array whose keys are bundle names and whose values
  *     are an array, keyed by field name, of all Instance objects in
- *     that bundle. 
+ *     that bundle.
  */
 function _field_info_collate_fields($reset = FALSE) {
   static $info;

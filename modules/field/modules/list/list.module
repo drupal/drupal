@@ -1,5 +1,5 @@
 <?php
-// $Id: list.module,v 1.3 2009/03/26 13:31:24 webchick Exp $
+// $Id: list.module,v 1.4 2009/04/13 05:18:18 webchick Exp $
 
 /**
  * @file
@@ -168,7 +168,7 @@ function theme_field_formatter_list_key($element) {
  *
  *  Call the allowed_values_function to retrieve the allowed
  *  values array.
- * 
+ *
  *  TODO Rework this to create a method of selecting plugable allowed values lists.
  */
 function list_allowed_values($field) {
