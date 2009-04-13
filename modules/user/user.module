@@ -398,7 +398,7 @@ function user_save($account, $edit = array(), $category = 'account') {
 
   if (is_object($account) && $account->uid) {
     user_module_invoke('update', $edit, $account, $category);
-    $data = unserialize(db_result(db_query('SELECT data FROM {users} WHERE uid = %d', $account->uid)));
+    $data = unserialize(db_query('SELECT data FROM {users} WHERE uid = :uid', array(':uid' => $account->uid))->fetchField());
     // Consider users edited by an administrator as logged in, if they haven't
     // already, so anonymous users can view the profile (if allowed).
     if (empty($edit['access']) && empty($account->access) && user_access('administer users')) {
@@ -459,11 +459,16 @@ function user_save($account, $edit = array(), $category = 'account') {
 
     // Reload user roles if provided.
     if (isset($edit['roles']) && is_array($edit['roles'])) {
-      db_query('DELETE FROM {users_roles} WHERE uid = %d', $account->uid);
+      db_delete('users_roles')->condition('uid', $account->uid)->execute();
 
       foreach (array_keys($edit['roles']) as $rid) {
         if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-          db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $account->uid, $rid);
+          db_insert('users_roles')
+            ->fields(array(
+              'uid' => $account->uid,
+              'rid' => $rid,
+            ))
+            ->execute();
         }
       }
     }
@@ -542,10 +547,15 @@ function user_save($account, $edit = array(), $category = 'account') {
 
     // Save user roles (delete just to be safe).
     if (isset($edit['roles']) && is_array($edit['roles'])) {
-      db_query('DELETE FROM {users_roles} WHERE uid = %d', $edit['uid']);
+      db_delete('users_roles')->condition('uid', $edit['uid'])->execute();
       foreach (array_keys($edit['roles']) as $rid) {
         if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-          db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $edit['uid'], $rid);
+          db_insert('users_roles')
+            ->fields(array(
+              'uid' => $edit['uid'],
+              'rid' => $rid,
+            ))
+            ->execute();
         }
       }
     }
@@ -757,7 +767,7 @@ function user_access($string, $account = NULL, $reset = FALSE) {
  * @return boolean TRUE for blocked users, FALSE for active.
  */
 function user_is_blocked($name) {
-  $deny = db_fetch_object(db_query("SELECT name FROM {users} WHERE status = 0 AND name = LOWER('%s')", $name));
+  $deny = db_query("SELECT name FROM {users} WHERE status = 0 AND name = LOWER(:name)", array(':name' => $name))->fetchObject();
 
   return $deny;
 }
@@ -843,18 +853,22 @@ function user_search($op = 'search', $keys = NULL, $skip_access_check = FALSE) {
         $find = array();
         // Replace wildcards with MySQL/PostgreSQL wildcards.
         $keys = preg_replace('!\*+!', '%', $keys);
+        $query = db_select('users');
+        $query->fields('users', array('name', 'uid', 'mail'));
         if (user_access('administer users')) {
           // Administrators can also search in the otherwise private email field.
-          $result = pager_query("SELECT name, uid, mail FROM {users} WHERE LOWER(name) LIKE LOWER('%%%s%%') OR LOWER(mail) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys, $keys);
-          while ($account = db_fetch_object($result)) {
-            $find[] = array('title' => $account->name . ' (' . $account->mail . ')', 'link' => url('user/' . $account->uid, array('absolute' => TRUE)));
-          }
+          $query->condition(db_or()->
+                            where('LOWER(name) LIKE LOWER(:name)', array(':name' => "%$keys%"))->
+                            where('LOWER(mail) LIKE LOWER(:mail)', array(':mail' => "%$keys%")));
         }
         else {
-          $result = pager_query("SELECT name, uid FROM {users} WHERE LOWER(name) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys);
-          while ($account = db_fetch_object($result)) {
-            $find[] = array('title' => $account->name, 'link' => url('user/' . $account->uid, array('absolute' => TRUE)));
-          }
+          $query->where('LOWER(name) LIKE LOWER(:name)', array(':name' => "%$keys%"));
+        }
+        $query = $query->extend('PagerDefault')
+                       ->limit(2);
+        $result = $query->execute();
+        foreach ($result as $account) {
+          $find[] = array('title' => $account->name . ' (' . $account->mail . ')', 'link' => url('user/' . $account->uid, array('absolute' => TRUE)));
         }
         return $find;
       }
@@ -920,7 +934,7 @@ function user_user_validate(&$edit, &$account, $category = NULL) {
       if ($error = user_validate_name($edit['name'])) {
         form_set_error('name', $error);
       }
-      elseif (db_result(db_query("SELECT COUNT(*) FROM {users} WHERE uid != %d AND LOWER(name) = LOWER('%s')", $uid, $edit['name'])) > 0) {
+      elseif (db_query("SELECT COUNT(*) FROM {users} WHERE uid != :uid AND LOWER(name) = LOWER(:name)", array(':uid' => $uid, ':name' => $edit['name']))->fetchField() > 0) {
         form_set_error('name', t('The name %name is already taken.', array('%name' => $edit['name'])));
       }
     }
@@ -929,7 +943,7 @@ function user_user_validate(&$edit, &$account, $category = NULL) {
     if ($error = user_validate_mail($edit['mail'])) {
       form_set_error('mail', $error);
     }
-    elseif (db_result(db_query("SELECT COUNT(*) FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $uid, $edit['mail'])) > 0) {
+    elseif (db_query("SELECT COUNT(*) FROM {users} WHERE uid != :uid AND LOWER(mail) = LOWER(:mail)", array(':uid' => $uid, ':mail' => $edit['mail']))->fetchField() > 0) {
       // Format error message dependent on whether the user is logged in or not.
       if ($GLOBALS['user']->uid) {
         form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => $edit['mail'])));
@@ -1501,10 +1515,10 @@ function user_page_title($account) {
  *   An associative array with module as key and username as value.
  */
 function user_get_authmaps($authname = NULL) {
-  $result = db_query("SELECT authname, module FROM {authmap} WHERE authname = '%s'", $authname);
+  $result = db_query("SELECT authname, module FROM {authmap} WHERE authname = :authname", array(':authname' => $authname));
   $authmaps = array();
   $has_rows = FALSE;
-  while ($authmap = db_fetch_object($result)) {
+  foreach ($result as $authmap) {
     $authmaps[$authmap->module] = $authmap->authname;
     $has_rows = TRUE;
   }
@@ -1645,7 +1659,7 @@ function user_authenticate($form_values = array()) {
   $password = trim($form_values['pass']);
   // Name and pass keys are required.
   if (!empty($form_values['name']) && !empty($password)) {
-    $account = db_fetch_object(db_query("SELECT * FROM {users} WHERE name = '%s' AND status = 1", $form_values['name']));
+    $account = db_query("SELECT * FROM {users} WHERE name = :name AND status = 1", array(':name' => $form_values['name']))->fetchObject();
     if ($account) {
       // Allow alternate password hashing schemes.
       require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
@@ -1653,7 +1667,10 @@ function user_authenticate($form_values = array()) {
         if (user_needs_new_hash($account)) {
            $new_hash = user_hash_password($password);
            if ($new_hash) {
-             db_query("UPDATE {users} SET pass = '%s' WHERE uid = %d", $new_hash, $account->uid);
+             db_update('users')
+               ->fields(array('pass' => $new_hash))
+               ->condition('uid', $account->uid)
+               ->execute();
            }
         }
         $users = user_load_multiple(array($account->uid), array('status' => '1'));
@@ -1680,7 +1697,10 @@ function user_authenticate_finalize(&$edit) {
   // Update the user table timestamp noting user has logged in.
   // This is also used to invalidate one-time login links.
   $user->login = REQUEST_TIME;
-  db_query("UPDATE {users} SET login = %d WHERE uid = %d", $user->login, $user->uid);
+  db_update('users')
+    ->fields(array('login' => $user->login))
+    ->condition('uid', $user->uid)
+    ->execute();
   // Regenerate the session ID to prevent against session fixation attacks.
   // This is called before hook_user in case one of those functions fails
   // or incorrectly does a redirect which would leave the old session in place.
@@ -2112,13 +2132,13 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
   );
 
   if (!empty($permission)) {
-    $result = db_query("SELECT r.* FROM {role} r INNER JOIN {role_permission} p ON r.rid = p.rid WHERE p.permission = '%s' ORDER BY r.name", $permission);
+    $result = db_query("SELECT r.* FROM {role} r INNER JOIN {role_permission} p ON r.rid = p.rid WHERE p.permission = :permission ORDER BY r.name", array(':permission' => $permission));
   }
   else {
     $result = db_query('SELECT * FROM {role} ORDER BY name');
   }
 
-  while ($role = db_fetch_object($result)) {
+  foreach ($result as $role) {
     switch ($role->rid) {
       // We only translate the built in role names
       case DRUPAL_ANONYMOUS_RID:
@@ -2239,7 +2259,7 @@ function user_user_operations_block($accounts) {
 function user_multiple_role_edit($accounts, $operation, $rid) {
   // The role name is not necessary as user_save() will reload the user
   // object, but some modules' hook_user() may look at this first.
-  $role_name = db_result(db_query('SELECT name FROM {role} WHERE rid = %d', $rid));
+  $role_name = db_query('SELECT name FROM {role} WHERE rid = :rid', array(':rid' => $rid))->fetchField();
 
   switch ($operation) {
     case 'add_role':
@@ -2271,7 +2291,7 @@ function user_multiple_cancel_confirm(&$form_state) {
   $form['accounts'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
   // array_filter() returns only elements with TRUE values.
   foreach (array_filter($edit['accounts']) as $uid => $value) {
-    $user = db_result(db_query('SELECT name FROM {users} WHERE uid = %d', $uid));
+    $user = db_query('SELECT name FROM {users} WHERE uid = :uid', array(':uid' => $uid))->fetchField();
     $form['accounts'][$uid] = array('#type' => 'hidden', '#value' => $uid, '#prefix' => '<li>', '#suffix' => check_plain($user) . "</li>\n");
   }
 
@@ -2697,7 +2717,7 @@ function user_block_user_action(&$object, $context = array()) {
     global $user;
     $uid = $user->uid;
   }
-  db_query("UPDATE {users} SET status = 0 WHERE uid = %d", $uid);
+  db_update('users')->fields(array('status' => 0))->condition('uid', $uid)->execute();
   drupal_session_destroy_uid($uid);
   watchdog('action', 'Blocked user %name.', array('%name' => $user->name));
 }

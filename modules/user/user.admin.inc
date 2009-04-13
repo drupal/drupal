@@ -144,7 +144,11 @@ function user_admin_account() {
     t('Operations')
   );
 
-  $sql = 'SELECT DISTINCT u.uid, u.name, u.status, u.created, u.access FROM {users} u LEFT JOIN {users_roles} ur ON u.uid = ur.uid ' . $filter['join'] . ' WHERE u.uid != 0 ' . $filter['where'];
+  $query = db_select('users', 'u');
+  $query->fields('u', array('uid', 'name', 'status', 'created', 'access'));
+  $sql = 'SELECT DISTINCT u.uid, u.name, u.status, u.created, u.access FROM {users} u
+          LEFT JOIN {users_roles} ur ON u.uid = ur.uid ' . $filter['join'] . '
+          WHERE u.uid != 0 ' . $filter['where'];
   $sql .= tablesort_sql($header);
   $query_count = 'SELECT COUNT(DISTINCT u.uid) FROM {users} u LEFT JOIN {users_roles} ur ON u.uid = ur.uid ' . $filter['join'] . ' WHERE u.uid != 0 ' . $filter['where'];
   $result = pager_query($sql, 50, 0, $query_count, $filter['args']);
@@ -174,13 +178,13 @@ function user_admin_account() {
   $status = array(t('blocked'), t('active'));
   $roles = user_roles(TRUE);
   $accounts = array();
-  while ($account = db_fetch_object($result)) {
+  foreach ($result as $account) {
     $accounts[$account->uid] = '';
     $form['name'][$account->uid] = array('#markup' => theme('username', $account));
     $form['status'][$account->uid] =  array('#markup' => $status[$account->status]);
     $users_roles = array();
-    $roles_result = db_query('SELECT rid FROM {users_roles} WHERE uid = %d', $account->uid);
-    while ($user_role = db_fetch_object($roles_result)) {
+    $roles_result = db_query('SELECT rid FROM {users_roles} WHERE uid = :uid', array(':uid' => $account->uid));
+    foreach ($roles_result as $user_role) {
       $users_roles[] = $roles[$user_role->rid];
     }
     asort($users_roles);
@@ -601,9 +605,14 @@ function user_admin_perm_submit($form, &$form_state) {
   foreach ($form_state['values']['role_names'] as $rid => $name) {
     $checked = array_filter($form_state['values'][$rid]);
     // Delete existing permissions for the role. This handles "unchecking" checkboxes.
-    db_query("DELETE FROM {role_permission} WHERE rid = %d", $rid);
+    db_delete('role_permission')->condition('rid', $rid)->execute();
     foreach ($checked as $permission) {
-      db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", $rid, $permission);
+      db_insert('role_permission')
+        ->fields(array(
+          'rid' => $rid,
+          'permission' => $permission,
+        ))
+        ->execute();
     }
   }
 
@@ -670,7 +679,7 @@ function user_admin_role() {
       drupal_goto('admin/user/roles');
     }
     // Display the edit role form.
-    $role = db_fetch_object(db_query('SELECT * FROM {role} WHERE rid = %d', $rid));
+    $role = db_query('SELECT * FROM {role} WHERE rid = :rid', array(':rid' => $rid))->fetchObject();
     $form['name'] = array(
       '#type' => 'textfield',
       '#title' => t('Role name'),
@@ -712,12 +721,16 @@ function user_admin_role() {
 function user_admin_role_validate($form, &$form_state) {
   if ($form_state['values']['name']) {
     if ($form_state['values']['op'] == t('Save role')) {
-      if (db_result(db_query("SELECT COUNT(*) FROM {role} WHERE name = '%s' AND rid != %d", $form_state['values']['name'], $form_state['values']['rid']))) {
+      $existing_role = db_query("SELECT COUNT(*) FROM {role} WHERE name = :name AND rid != :rid",
+                                array(':name' => $form_state['values']['name'],
+                                      ':rid' => $form_state['values']['rid']))
+                       ->fetchField();
+      if ($existing_role) {
         form_set_error('name', t('The role name %name already exists. Please choose another role name.', array('%name' => $form_state['values']['name'])));
       }
     }
     elseif ($form_state['values']['op'] == t('Add role')) {
-      if (db_result(db_query("SELECT COUNT(*) FROM {role} WHERE name = '%s'", $form_state['values']['name']))) {
+      if (db_query("SELECT COUNT(*) FROM {role} WHERE name = :name", array(':name' => $form_state['values']['name']))->fetchField()) {
         form_set_error('name', t('The role name %name already exists. Please choose another role name.', array('%name' => $form_state['values']['name'])));
       }
     }
@@ -729,19 +742,24 @@ function user_admin_role_validate($form, &$form_state) {
 
 function user_admin_role_submit($form, &$form_state) {
   if ($form_state['values']['op'] == t('Save role')) {
-    db_query("UPDATE {role} SET name = '%s' WHERE rid = %d", $form_state['values']['name'], $form_state['values']['rid']);
+    db_update('role')
+      ->fields(array(
+        'name' => $form_state['values']['name'],
+      ))
+      ->condition('rid', $form_state['values']['rid'])
+      ->execute();
     drupal_set_message(t('The role has been renamed.'));
   }
   elseif ($form_state['values']['op'] == t('Delete role')) {
-    db_query('DELETE FROM {role} WHERE rid = %d', $form_state['values']['rid']);
-    db_query('DELETE FROM {role_permission} WHERE rid = %d', $form_state['values']['rid']);
+    db_delete('role')->condition('rid', $form_state['values']['rid'])->execute();
+    db_delete('role_permission')->condition('rid', $form_state['values']['rid'])->execute();
     // Update the users who have this role set:
-    db_query('DELETE FROM {users_roles} WHERE rid = %d', $form_state['values']['rid']);
+    db_delete('users_roles')->condition('rid', $form_state['values']['rid'])->execute();
 
     drupal_set_message(t('The role has been deleted.'));
   }
   elseif ($form_state['values']['op'] == t('Add role')) {
-    db_query("INSERT INTO {role} (name) VALUES ('%s')", $form_state['values']['name']);
+    db_insert('role')->fields(array('name' => $form_state['values']['name']))->execute();
     drupal_set_message(t('The role has been added.'));
   }
   $form_state['redirect'] = 'admin/user/roles';

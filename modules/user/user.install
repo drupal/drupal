@@ -247,7 +247,7 @@ function user_update_7000(&$sandbox) {
   if (!isset($sandbox['user_from'])) {
     db_change_field($ret, 'users', 'pass', 'pass', array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''));
     $sandbox['user_from'] = 0;
-    $sandbox['user_count'] = db_result(db_query("SELECT COUNT(uid) FROM {users}"));
+    $sandbox['user_count'] = db_query("SELECT COUNT(uid) FROM {users}")->fetchField();
   }
   else {
     require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
@@ -255,14 +255,14 @@ function user_update_7000(&$sandbox) {
     $has_rows = FALSE;
     // Update this many per page load.
     $count = 1000;
-    $result = db_query_range("SELECT uid, pass FROM {users} WHERE uid > 0 ORDER BY uid", $sandbox['user_from'], $count);
-    while ($account = db_fetch_array($result)) {
+    $result = db_query_range("SELECT uid, pass FROM {users} WHERE uid > 0 ORDER BY uid", array(), $sandbox['user_from'], $count);
+    foreach ($result as $account) {
       $has_rows = TRUE;
-      $new_hash = user_hash_password($account['pass'], $hash_count_log2);
+      $new_hash = user_hash_password($account->pass, $hash_count_log2);
       if ($new_hash) {
         // Indicate an updated password.
         $new_hash  = 'U' . $new_hash;
-        db_query("UPDATE {users} SET pass = '%s' WHERE uid = %d", $new_hash, $account['uid']);
+        db_update('users')->fields(array('pass' => $new_hash))->condition('uid', $account->uid)->execute();
       }
     }
     $ret['#finished'] = $sandbox['user_from']/$sandbox['user_count'];
@@ -300,7 +300,7 @@ function user_update_7002(&$sandbox) {
   if (!isset($sandbox['user_from'])) {
     db_change_field($ret, 'users', 'timezone', 'timezone', array('type' => 'varchar', 'length' => 32, 'not null' => FALSE));
     $sandbox['user_from'] = 0;
-    $sandbox['user_count'] = db_result(db_query("SELECT COUNT(uid) FROM {users}"));
+    $sandbox['user_count'] = db_query("SELECT COUNT(uid) FROM {users}")->fetchField();
     $sandbox['user_not_migrated'] = 0;
   }
   else {
