@@ -2349,9 +2349,10 @@ function menu_link_maintain($module, $op, $link_path, $link_title) {
         ->condition('link_path', $link_path)
         ->condition('customized', 0)
         ->condition('module', $module)
-        ->execute();
-      foreach ($result as $item) {
-        menu_cache_clear($item['menu_name']);
+        ->groupBy('menu_name')
+        ->execute()->fetchCol();
+      foreach ($result as $menu_name) {
+        menu_cache_clear($menu_name);
       }
       break;
     case 'delete':

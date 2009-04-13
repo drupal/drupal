@@ -25,6 +25,12 @@ function menu_test_menu() {
     'access arguments' => array('access content'),
   );
 
+  // Hidden link for menu_link_maintain tests
+  $items['menu_test_maintain/%'] = array(
+    'title' => 'Menu maintain test',
+    'page callback' => 'node_page_default',
+    'access arguments' => array('access content'),
+   );
   // Hierarchical tests.
   $items['menu-test/hierarchy/parent'] = array(
     'title' => 'Parent menu router',
