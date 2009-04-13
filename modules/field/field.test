@@ -949,7 +949,7 @@ class FieldTestCase extends DrupalWebTestCase {
     } catch (FieldException $e) {
       $this->pass(t('Cannot create a field with no type.'));
     }
-    
+
     // Check that field name is required.
     try {
       $field_definition = array('type' => 'test_field');
@@ -958,7 +958,7 @@ class FieldTestCase extends DrupalWebTestCase {
     } catch (FieldException $e) {
       $this->pass(t('Cannot create an unnamed field.'));
     }
- 
+
     $field_definition = array(
       'field_name' => drupal_strtolower($this->randomName()),
       'type' => 'test_field',

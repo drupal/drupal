@@ -168,7 +168,7 @@ function theme_field_formatter_list_key($element) {
  *
  *  Call the allowed_values_function to retrieve the allowed
  *  values array.
- * 
+ *
  *  TODO Rework this to create a method of selecting plugable allowed values lists.
  */
 function list_allowed_values($field) {
