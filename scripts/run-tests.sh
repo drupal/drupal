@@ -1,5 +1,5 @@
 <?php
-// $Id: run-tests.sh,v 1.25 2009/03/31 01:49:55 webchick Exp $
+// $Id: run-tests.sh,v 1.26 2009/04/13 12:23:26 dries Exp $
 /**
  * @file
  * This script runs Drupal tests from command line.
@@ -250,7 +250,7 @@ function simpletest_script_init() {
   // Get url from arguments.
   if (!empty($args['url'])) {
     $parsed_url = parse_url($args['url']);
-    $host = $parsed_url['host'];
+    $host = $parsed_url['host'] . (isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '');
     $path = $parsed_url['path'];
   }
 
