@@ -250,7 +250,7 @@ function simpletest_script_init() {
   // Get url from arguments.
   if (!empty($args['url'])) {
     $parsed_url = parse_url($args['url']);
-    $host = $parsed_url['host'];
+    $host = $parsed_url['host'] . (isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '');
     $path = $parsed_url['path'];
   }
 
