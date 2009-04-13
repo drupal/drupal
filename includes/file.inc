@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.164 2009/03/10 09:47:42 dries Exp $
+// $Id: file.inc,v 1.165 2009/04/13 19:06:32 dries Exp $
 
 /**
  * @file
@@ -875,7 +875,7 @@ function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
  *   A string specifying the name of the upload field to save.
  * @param $validators
  *   An optional, associative array of callback functions used to validate the
- *   file. See @file_validate for a full discussion of the array format.
+ *   file. See file_validate() for a full discussion of the array format.
  * @param $destination
  *   A string containing the directory $source should be copied to. If this is
  *   not provided or is not writable, the temporary directory will be used.
@@ -1026,8 +1026,8 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
  * @param $validators
  *   An optional, associative array of callback functions used to validate the
  *   file. The keys are function names and the values arrays of callback
- *   parameters which will be passed in after the user and file objects. The
- *   functions should return an array of error messages, an empty array
+ *   parameters which will be passed in after the file object. The
+ *   functions should return an array of error messages; an empty array
  *   indicates that the file passed validation. The functions will be called in
  *   the order specified.
  * @return
