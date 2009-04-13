@@ -1274,14 +1274,13 @@ function system_site_information_settings_validate($form, &$form_state) {
 function system_logging_settings() {
   $form['error_level'] = array(
     '#type' => 'radios',
-    '#title' => t('Error reporting'),
+    '#title' => t('Display PHP messages'),
     '#default_value' => 2,
     '#options' => array(
-      0 => t('Site in production: do not display any errors.'),
-      1 => t('Site in development: display functional errors only.'),
-      2 => t('For developers: display all errors.'),
+      0 => t('None'),
+      1 => t('Errors and warnings'),
+      2 => t('All messages'),
     ),
-    '#description' => t('Display settings for error messages. Note that all error messages are always logged.'),
   );
 
   return system_settings_form($form);
