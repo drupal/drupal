@@ -26,28 +26,19 @@ function syslog_help($path, $arg) {
   }
 }
 
-function syslog_menu() {
-  $items['admin/settings/logging/syslog'] = array(
-    'title' => 'Syslog logging',
-    'description' => 'Settings for syslog logging. Syslog is an operating system administrative logging tool used in systems management and security auditing. Most suited to medium and large sites, syslog provides filtering tools that allow messages to be routed by type and severity.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('syslog_admin_settings'),
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_LOCAL_TASK,
-  );
-  return $items;
-}
-
-function syslog_admin_settings() {
+/**
+ * Implementation of hook_form_FORM_ID_alter().
+ */
+function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
   $form['syslog_facility'] = array(
     '#type'          => 'select',
     '#title'         => t('Send events to this syslog facility'),
-    '#default_value' => DEFAULT_SYSLOG_FACILITY,
+    '#default_value' => variable_get('syslog_facility', DEFAULT_SYSLOG_FACILITY),
     '#options'       => syslog_facility_list(),
     '#description'   => t('Select the syslog facility code under which Drupal\'s messages should be sent. On UNIX/Linux systems, Drupal can flag its messages with the code LOG_LOCAL0 through LOG_LOCAL7; for Microsoft Windows, all messages are flagged with the code LOG_USER. Depending on the system configuration, syslog and other logging tools use this code to identify or filter Drupal messages from within the entire system log. For more information on syslog, see <a href="@syslog_help">Syslog help</a>.', array(
       '@syslog_help' => url('admin/help/syslog'))),
   );
-  return system_settings_form($form, TRUE);
+  $form['buttons']['#weight'] = 1;
 }
 
 function syslog_facility_list() {
