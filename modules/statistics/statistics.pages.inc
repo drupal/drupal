@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.pages.inc,v 1.9 2009/03/14 23:01:37 webchick Exp $
+// $Id: statistics.pages.inc,v 1.10 2009/04/13 10:40:13 dries Exp $
 
 /**
  * @file
@@ -15,9 +15,19 @@ function statistics_node_tracker() {
         array('data' => t('User'), 'field' => 'u.name'),
         array('data' => t('Operations')));
 
-    $result = pager_query('SELECT a.aid, a.timestamp, a.url, a.uid, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE a.path LIKE \'node/%d%%\'' . tablesort_sql($header), 30, 0, NULL, $node->nid);
+    $query = db_select('accesslog', 'a')->extend('PagerDefault')->extend('TableSort');
+    $query->join('users', 'u', 'a.uid = u.uid');
+
+    $query
+      ->fields('a', array('aid', 'timestamp', 'url', 'uid'))
+      ->fields('u', array('name'))
+      ->condition('path', 'node/' . $node->nid . '%', 'LIKE')
+      ->limit(30)
+      ->setHeader($header);
+
+    $result = $query->execute();
     $rows = array();
-    while ($log = db_fetch_object($result)) {
+    foreach ($result as $log) {
       $rows[] = array(
         array('data' => format_date($log->timestamp, 'small'), 'class' => 'nowrap'),
         _statistics_link($log->url),
@@ -46,10 +56,16 @@ function statistics_user_tracker() {
         array('data' => t('Timestamp'), 'field' => 'timestamp', 'sort' => 'desc'),
         array('data' => t('Page'), 'field' => 'path'),
         array('data' => t('Operations')));
+    $query = db_select('accesslog', 'a')->extend('PagerDefault')->extend('TableSort');
+    $query
+      ->fields('a', array('aid', 'timestamp', 'path', 'title'))
+      ->condition('uid', $account->uid)
+      ->limit(30)
+      ->setHeader($header);
 
-    $result = pager_query('SELECT aid, timestamp, path, title FROM {accesslog} WHERE uid = %d' . tablesort_sql($header), 30, 0, NULL, $account->uid);
+    $result = $query->execute();
     $rows = array();
-    while ($log = db_fetch_object($result)) {
+    foreach ($result as $log) {
       $rows[] = array(
         array('data' => format_date($log->timestamp, 'small'), 'class' => 'nowrap'),
         _statistics_format_item($log->title, $log->path),

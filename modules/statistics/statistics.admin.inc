@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.admin.inc,v 1.20 2009/04/01 20:00:47 dries Exp $
+// $Id: statistics.admin.inc,v 1.21 2009/04/13 10:40:13 dries Exp $
 
 /**
  * @file
@@ -17,11 +17,17 @@ function statistics_recent_hits() {
     array('data' => t('Operations'))
   );
 
-  $sql = 'SELECT a.aid, a.path, a.title, a.uid, u.name, a.timestamp FROM {accesslog} a LEFT JOIN {users} u ON u.uid = a.uid' . tablesort_sql($header);
+  $query = db_select('accesslog', 'a')->extend('PagerDefault')->extend('TableSort');
+  $query->join('users', 'u', 'a.uid = u.uid');
+  $query
+    ->fields('a', array('aid', 'timestamp', 'path', 'title', 'uid'))
+    ->fields('u', array('name'))
+    ->limit(30)
+    ->setHeader($header);
 
-  $result = pager_query($sql, 30);
+  $result = $query->execute();
   $rows = array();
-  while ($log = db_fetch_object($result)) {
+  foreach ($result as $log) {
     $rows[] = array(
       array('data' => format_date($log->timestamp, 'small'), 'class' => 'nowrap'),
       _statistics_format_item($log->title, $log->path),
@@ -42,21 +48,33 @@ function statistics_recent_hits() {
  * Menu callback; presents the "top pages" page.
  */
 function statistics_top_pages() {
-  // MAX(title) avoids having empty node titles which otherwise causes duplicates in the top pages list
-  $sql = "SELECT COUNT(path) AS hits, path, MAX(title) AS title, AVG(timer) AS average_time, SUM(timer) AS total_time FROM {accesslog} GROUP BY path";
-  $sql_cnt = "SELECT COUNT(DISTINCT(path)) FROM {accesslog}";
-
   $header = array(
     array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
     array('data' => t('Page'), 'field' => 'path'),
     array('data' => t('Average page generation time'), 'field' => 'average_time'),
     array('data' => t('Total page generation time'), 'field' => 'total_time')
   );
-  $sql .= tablesort_sql($header);
-  $result = pager_query($sql, 30, 0, $sql_cnt);
 
+  $query = db_select('accesslog')->extend('PagerDefault')->extend('TableSort');
+  $query->addExpression('COUNT(path)', 'hits');
+  // MAX(title) avoids having empty node titles which otherwise causes duplicates in the top pages list
+  $query->addExpression('MAX(title)', 'title');
+  $query->addExpression('AVG(timer)', 'average_time');
+  $query->addExpression('SUM(timer)', 'total_time');
+  
+  $query
+    ->fields('accesslog', array('path'))
+    ->groupBy('path')
+    ->limit(30)
+    ->setHeader($header);
+
+  $count_query = db_select('accesslog');
+  $count_query->addExpression('COUNT(DISTINCT path)');
+  $query->setCountQuery($count_query);
+
+  $result = $query->execute();
   $rows = array();
-  while ($page = db_fetch_object($result)) {
+  foreach ($result as $page) {
     $rows[] = array($page->hits, _statistics_format_item($page->title, $page->path), t('%time ms', array('%time' => round($page->average_time))), format_interval(round($page->total_time / 1000)));
   }
 
@@ -81,13 +99,30 @@ function statistics_top_visitors() {
     array('data' => t('Total page generation time'), 'field' => 'total'),
     array('data' => user_access('block IP addresses') ? t('Operations') : '', 'colspan' => 2),
   );
+  $query = db_select('accesslog', 'a')->extend('PagerDefault')->extend('TableSort');
+  $query->leftJoin('blocked_ips', 'bl', 'a.hostname = bl.ip');
+  $query->leftJoin('users', 'u', 'a.uid = u.uid');
 
-  $sql = "SELECT COUNT(a.uid) AS hits, a.uid, u.name, a.hostname, SUM(a.timer) AS total, bl.iid FROM {accesslog} a LEFT JOIN {blocked_ips} bl ON a.hostname = bl.ip LEFT JOIN {users} u ON a.uid = u.uid GROUP BY a.hostname, a.uid, u.name, bl.iid" . tablesort_sql($header);
-  $sql_cnt = "SELECT COUNT(DISTINCT(CONCAT(CAST(uid AS char), hostname))) FROM {accesslog}";
-  $result = pager_query($sql, 30, 0, $sql_cnt);
+  $query->addExpression('COUNT(a.uid)', 'hits');
+  $query->addExpression('SUM(a.timer)', 'total');
+  $query
+    ->fields('a', array('uid', 'hostname'))
+    ->fields('u', array('name'))
+    ->fields('bl', array('iid'))
+    ->groupBy('a.hostname')
+    ->groupBy('a.uid')
+    ->groupBy('u.name')
+    ->groupBy('bl.iid')
+    ->limit(30)
+    ->setHeader($header);
 
+  $count_query = db_select('accesslog');
+  $count_query->addExpression('COUNT(DISTINCT CONCAT(CAST(uid AS char), hostname))');
+  $query->setCountQuery($count_query);
+  
+  $result = $query->execute();
   $rows = array();
-  while ($account = db_fetch_object($result)) {
+  foreach ($result as $account) {
     $qs = drupal_get_destination();
     $ban_link =  $account->iid ? l(t('unblock IP address'), "admin/settings/ip-blocking/delete/$account->iid", array('query' => $qs)) : l(t('block IP address'), "admin/settings/ip-blocking/$account->hostname", array('query' => $qs));
     $rows[] = array($account->hits, ($account->uid ? theme('username', $account) : $account->hostname), format_interval(round($account->total / 1000)), (user_access('block IP addresses') && !$account->uid) ? $ban_link : '');
@@ -107,8 +142,6 @@ function statistics_top_visitors() {
  * Menu callback; presents the "referrer" page.
  */
 function statistics_top_referrers() {
-  $query = "SELECT url, COUNT(url) AS hits, MAX(timestamp) AS last FROM {accesslog} WHERE LOWER(url) NOT LIKE :host AND url <> '' GROUP BY url";
-  $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> '' AND LOWER(url) NOT LIKE :host";
   drupal_set_title(t('Top referrers in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))), PASS_THROUGH);
 
   $header = array(
@@ -116,12 +149,28 @@ function statistics_top_referrers() {
     array('data' => t('Url'), 'field' => 'url'),
     array('data' => t('Last visit'), 'field' => 'last'),
   );
+  $query = db_select('accesslog', 'a')->extend('PagerDefault')->extend('TableSort');
 
-  $query .= tablesort_sql($header);
-  $result = pager_query($query, 30, 0, $query_cnt, array(':host' => '%'. $_SERVER['HTTP_HOST'] .'%'));
+  $query->addExpression('COUNT(url)', 'hits');
+  $query->addExpression('MAX(timestamp)', 'last');
+  $query
+    ->fields('a', array('url'))
+    ->where('LOWER(url) NOT LIKE :host', array(':host' => '%'. $_SERVER['HTTP_HOST'] .'%'))
+    ->condition('url', '', '<>')
+    ->groupBy('url')
+    ->limit(30)
+    ->setHeader($header);
 
+  $count_query = db_select('accesslog');
+  $count_query->addExpression('COUNT(DISTINCT url)');
+  $count_query
+    ->where('LOWER(url) NOT LIKE :host', array(':host' => '%'. $_SERVER['HTTP_HOST'] .'%'))
+    ->condition('url', '', '<>');
+  $query->setCountQuery($count_query);
+
+  $result = $query->execute();
   $rows = array();
-  while ($referrer = db_fetch_object($result)) {
+  foreach ($result as $referrer) {
     $rows[] = array($referrer->hits, _statistics_link($referrer->url), t('@time ago', array('@time' => format_interval(REQUEST_TIME - $referrer->last))));
   }
 
@@ -138,8 +187,8 @@ function statistics_top_referrers() {
  * Menu callback; Displays recent page accesses.
  */
 function statistics_access_log($aid) {
-  $result = db_query('SELECT a.*, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE aid = %d', $aid);
-  if ($access = db_fetch_object($result)) {
+  $access = db_query('SELECT a.*, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE aid = :aid', array(':aid' => $aid))->fetch();
+  if ($access) {
     $rows[] = array(
       array('data' => t('URL'), 'header' => TRUE),
       l(url($access->path, array('absolute' => TRUE)), $access->path)
