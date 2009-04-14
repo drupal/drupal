@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.14 2009/04/05 12:08:49 dries Exp $
+// $Id: schema.inc,v 1.15 2009/04/14 06:22:08 dries Exp $
 
 /**
  * @file
@@ -175,6 +175,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     // Put :normal last so it gets preserved by array_flip. This makes
     // it much easier for modules (such as schema.module) to map
     // database types back into schema types.
+    // $map does not use drupal_static as its value never changes.
     static $map = array(
       'varchar:normal'  => 'VARCHAR',
       'char:normal'     => 'CHAR',

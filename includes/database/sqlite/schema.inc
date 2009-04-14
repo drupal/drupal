@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.2 2008/11/23 21:01:03 webchick Exp $
+// $Id: schema.inc,v 1.3 2009/04/14 06:22:10 dries Exp $
 
 /**
  * @file
@@ -168,7 +168,8 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     // Put :normal last so it gets preserved by array_flip. This makes
     // it much easier for modules (such as schema.module) to map
     // database types back into schema types.
-    $map = array(
+    // $map does not use drupal_static as its value never changes.
+    static $map = array(
       'varchar:normal'  => 'VARCHAR',
 
       'text:tiny'       => 'TEXT',

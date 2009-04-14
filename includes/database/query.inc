@@ -1077,6 +1077,8 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
     // rather than just this query. That is OK, because we only need definitive
     // placeholder names if we're going to use them for _alter hooks, which we
     // are not. The alter hook would intervene before compilation.
+    // $next_placeholder does not use drupal_static as it increments and should
+    // never be reset during a request.
     static $next_placeholder = 1;
 
     if ($this->changed) {
@@ -1168,6 +1170,7 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
    *   The extra handling directives for the specified operator, or NULL.
    */
   protected function mapConditionOperator($operator) {
+    // $specials does not use drupal_static as its value never changes.
     static $specials = array(
       'BETWEEN' => array('delimiter' => ' AND '),
       'IN' => array('delimiter' => ', ', 'prefix' => ' (', 'postfix' => ')'),
