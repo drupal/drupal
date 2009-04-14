@@ -213,7 +213,8 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     // Put :normal last so it gets preserved by array_flip. This makes
     // it much easier for modules (such as schema.module) to map
     // database types back into schema types.
-    $map = array(
+    // $map does not use drupal_static as its value never changes.
+    static $map = array(
       'varchar:normal' => 'varchar',
       'char:normal' => 'character',
 
