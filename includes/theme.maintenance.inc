@@ -206,7 +206,7 @@ function theme_update_page($content, $show_messages = TRUE) {
 function template_preprocess_maintenance_page(&$variables) {
   // Add favicon
   if (theme_get_setting('toggle_favicon')) {
-    drupal_set_html_head('<link rel="shortcut icon" href="' . check_url(theme_get_setting('favicon')) . '" type="image/x-icon" />');
+    drupal_add_html_head('<link rel="shortcut icon" href="' . check_url(theme_get_setting('favicon')) . '" type="image/x-icon" />');
   }
 
   global $theme;

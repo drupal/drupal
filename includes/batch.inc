@@ -190,7 +190,7 @@ function _batch_progress_page_nojs() {
   }
 
   $url = url($batch['url'], array('query' => array('id' => $batch['id'], 'op' => $new_op)));
-  drupal_set_html_head('<meta http-equiv="Refresh" content="0; URL=' . $url . '">');
+  drupal_add_html_head('<meta http-equiv="Refresh" content="0; URL=' . $url . '">');
 
   return theme('progress_bar', $percentage, $message);
 }
