@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.8 2009/02/24 16:34:46 webchick Exp $
+// $Id: query.inc,v 1.9 2009/04/15 13:30:16 dries Exp $
 
 /**
  * @ingroup database
@@ -22,6 +22,11 @@ class InsertQuery_pgsql extends InsertQuery {
     }
 
     if (count($this->insertFields) + count($this->defaultFields) == 0) {
+      return NULL;
+    }
+    
+    // Don't execute query without values.
+    if (!isset($this->insertValues[0]) && count($this->insertFields) > 0) {
       return NULL;
     }
 

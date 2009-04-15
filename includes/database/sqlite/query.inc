@@ -19,6 +19,10 @@ class InsertQuery_sqlite extends InsertQuery {
     if (count($this->insertFields) + count($this->defaultFields) == 0) {
       return NULL;
     }
+    // Don't execute query without values.
+    if (!isset($this->insertValues[0]) && count($this->insertFields) > 0) {
+      return NULL;
+    }
     if (count($this->insertFields)) {
       return parent::execute();
     }
