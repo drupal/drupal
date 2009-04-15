@@ -672,8 +672,8 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
     }
     $exclude[] = $edit['tid'];
 
-    $form['advanced']['parent'] = _taxonomy_term_select(t('Parents'), 'parent', $parent, $vocabulary->vid, t('Parent terms') . '.', 1, '<' . t('root') . '>', $exclude);
-    $form['advanced']['relations'] = _taxonomy_term_select(t('Related terms'), 'relations', array_keys(taxonomy_get_related($edit['tid'])), $vocabulary->vid, NULL, 1, '<' . t('none') . '>', array($edit['tid']));
+    $form['advanced']['parent'] = _taxonomy_term_select(t('Parents'), $parent, $vocabulary->vid, t('Parent terms') . '.', 1, '<' . t('root') . '>', $exclude);
+    $form['advanced']['relations'] = _taxonomy_term_select(t('Related terms'), array_keys(taxonomy_get_related($edit['tid'])), $vocabulary->vid, NULL, 1, '<' . t('none') . '>', array($edit['tid']));
   }
   $form['advanced']['synonyms'] = array(
     '#type' => 'textarea',
