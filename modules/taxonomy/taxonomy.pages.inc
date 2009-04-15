@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.23 2009/01/27 00:22:27 dries Exp $
+// $Id: taxonomy.pages.inc,v 1.24 2009/04/15 14:12:55 dries Exp $
 
 /**
  * @file
@@ -16,13 +16,17 @@ function taxonomy_term_page($terms, $depth = 0, $op = 'page') {
   $str_tids = $terms['str_tids'];
 
   if ($terms['tids']) {
-    $result = db_query(db_rewrite_sql('SELECT t.tid, t.name FROM {taxonomy_term_data} t WHERE t.tid IN (' . db_placeholders($terms['tids']) . ')', 't', 'tid'), $terms['tids']);
-    $tids = array(); // we rebuild the $tids-array so it only contains terms the user has access to.
-    $names = array();
-    while ($term = db_fetch_object($result)) {
-      $tids[] = $term->tid;
-      $names[] = $term->name;
-    }
+    $query = db_select('taxonomy_term_data', 't');
+    $query->addTag('term_access');
+
+    // Load array with all tid's the user has access to in the format tid => name.
+    $term_results = $query
+      ->fields('t', array('tid', 'name'))
+      ->condition('tid', $terms['tids'], 'IN')
+      ->execute()
+      ->fetchAllKeyed();
+    $tids = array_keys($term_results);
+    $names = array_values($term_results);
 
     if ($names) {
       $title = check_plain(implode(', ', $names));
@@ -124,20 +128,26 @@ function taxonomy_autocomplete($vid, $string = '') {
   $last_string = trim(array_pop($array));
   $matches = array();
   if ($last_string != '') {
-    $result = db_query_range(db_rewrite_sql("SELECT t.tid, t.name FROM {taxonomy_term_data} t WHERE t.vid = :vid AND LOWER(t.name) LIKE LOWER(:last_string)", 't', 'tid'), array(
-      ':vid' => $vid,
-      ':last_string' => '%'. $last_string .'%',
-    ), 0, 10);
+    $query = db_select('taxonomy_term_data', 't');
+    $query->addTag('term_access');
 
+    $tags = $query
+      ->fields('t', array('tid', 'name'))
+      ->condition('t.vid', $vid)
+      ->where("LOWER(t.name) LIKE LOWER(:last_string)", array(':last_string' => '%'. $last_string .'%'))
+      ->range(0, 10)
+      ->execute()
+      ->fetchAllKeyed();
+      
     $prefix = count($array) ? implode(', ', $array) . ', ' : '';
 
-    while ($tag = db_fetch_object($result)) {
-      $n = $tag->name;
+    foreach ($tags as $tid => $name) {
+      $n = $name;
       // Commas and quotes in terms are special cases, so encode 'em.
-      if (strpos($tag->name, ',') !== FALSE || strpos($tag->name, '"') !== FALSE) {
-        $n = '"' . str_replace('"', '""', $tag->name) . '"';
+      if (strpos($name, ',') !== FALSE || strpos($name, '"') !== FALSE) {
+        $n = '"' . str_replace('"', '""', $name) . '"';
       }
-      $matches[$prefix . $n] = check_plain($tag->name);
+      $matches[$prefix . $n] = check_plain($name);
     }
   }
 
