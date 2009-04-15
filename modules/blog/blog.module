@@ -161,7 +161,15 @@ function blog_page_user_access($account) {
  * Helper function to determine if a user has blog posts already.
  */
 function _blog_post_exists($account) {
-  return (bool)db_result(db_query_range(db_rewrite_sql("SELECT 1 FROM {node} n WHERE n.type = 'blog' AND n.uid = %d AND n.status = 1"), $account->uid, 0, 1));
+  return (bool)db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('type', 'blog')
+    ->condition('uid', $account->uid)
+    ->condition('status', 1)
+    ->range(0, 1)
+    ->addTag('node_access')
+    ->execute()
+    ->fetchField();
 }
 
 /**
@@ -181,7 +189,15 @@ function blog_block_view($delta = '') {
   global $user;
 
   if (user_access('access content')) {
-    $result = db_query_range(db_rewrite_sql("SELECT n.nid, n.title, n.created FROM {node} n WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.created DESC"), 0, 10);
+    $result = db_select('node', 'n')
+      ->fields('n', array('nid', 'title', 'created'))
+      ->condition('type', 'blog')
+      ->condition('status', 1)
+      ->orderBy('created', 'DESC')
+      ->range(0, 10)
+      ->addTag('node_access')
+      ->execute();
+
     if ($node_title_list = node_title_list($result)) {
       $block['content'] = $node_title_list;
       $block['content'] .= theme('more_link', url('blog'), t('Read the latest blog entries.'));
