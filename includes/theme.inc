@@ -710,11 +710,16 @@ function theme() {
 function drupal_discover_template($paths, $suggestions, $extension = '.tpl.php') {
   global $theme_engine;
 
+  // Remove slashes or null to prevent files from being included from
+  // an unexpected location (especially on Windows servers).
+  $extension = str_replace(array("/", "\\", "\0"), '', $extension);
+
   // Loop through all paths and suggestions in FIFO order.
   $suggestions = array_reverse($suggestions);
   $paths = array_reverse($paths);
   foreach ($suggestions as $suggestion) {
     if (!empty($suggestion)) {
+      $suggestion = str_replace(array("/", "\\", "\0"), '', $suggestion);
       foreach ($paths as $path) {
         if (file_exists($file = $path . '/' . $suggestion . $extension)) {
           return $file;
@@ -1900,40 +1905,6 @@ function template_preprocess_page(&$variables) {
   // Add a class that tells us whether the page is viewed by an authenticated user or not.
   $body_classes[] = $variables['logged_in'] ? 'logged-in' : 'not-logged-in';
 
-  // Build a list of suggested template files and body classes in order of 
-  // specificity. One suggestion is made for every element of the current path,
-  // though numeric elements are not carried to subsequent suggestions. For 
-  // example, http://www.example.com/node/1/edit would result in the following
-  // suggestions and body classes:
-  //
-  // page-node-edit.tpl.php  page-node-edit
-  // page-node-1.tpl.php     page-node-1
-  // page-node.tpl.php       page-node
-  // page.tpl.php
-  $i = 0;
-  $suggestion = 'page';
-  $suggestions = array();
-  while ($arg = arg($i++)) {
-    $suggestions[] = $suggestion . '-' . $arg;
-    if (!is_numeric($arg)) {
-      $suggestion .= '-' . $arg;
-    }
-    if ($suggestion != 'page') {
-      // Add current suggestion to page classes to make it possible to theme the page 
-      // depending on the current page type (e.g. node, admin, user, etc.) as well as
-      // more specific data like node-12 or node-edit. To avoid illegal characters in 
-      // the class, we're removing everything disallowed. We are not using 'a-z' as
-      //  that might leave in certain international characters (e.g. German umlauts).
-      $body_classes[] = preg_replace('![^abcdefghijklmnopqrstuvwxyz0-9-_]+!s', '', form_clean_id(drupal_strtolower($suggestion)));
-    }
-  }
-  if (drupal_is_front_page()) {
-    $suggestions[] = 'page-front';
-  }
-  if ($suggestions) {
-    $variables['template_files'] = $suggestions;
-  }
-
   // If on an individual node page, add the node type to body classes.
   if (isset($variables['node']) && $variables['node']->type) {
     $body_classes[] = 'node-type-' . form_clean_id($variables['node']->type);
@@ -1948,8 +1919,63 @@ function template_preprocess_page(&$variables) {
   else {
     $body_classes[] = 'one-sidebar sidebar-' . $variables['layout'];
   }
+
+  // Populate the page template suggestions.
+  if ($suggestions = template_page_suggestions(arg())) {
+    $variables['template_files'] = $suggestions;
+    foreach ($suggestions as $suggestion) {
+      if ($suggestion != 'page-front') {
+        // Add current suggestion to page classes to make it possible to theme the page 
+        // depending on the current page type (e.g. node, admin, user, etc.) as well as
+        // more specific data like node-12 or node-edit. To avoid illegal characters in 
+        // the class, we're removing everything disallowed. We are not using 'a-z' as
+        //  that might leave in certain international characters (e.g. German umlauts).
+        $body_classes[] = preg_replace('![^abcdefghijklmnopqrstuvwxyz0-9-_]+!s', '', form_clean_id(drupal_strtolower($suggestion)));
+      }
+    }
+  }
   // Implode with spaces.
   $variables['body_classes'] = implode(' ', $body_classes);
+
+}
+
+/**
+ * Generate an array of page template suggestions.
+ *
+ * @param $args
+ *   An array of path arguments, such as from function arg().
+ *
+ * @return
+ *   An array of suggested template files.
+ */
+function template_page_suggestions($args) {
+
+  // Build a list of suggested template files and body classes in order of 
+  // specificity. One suggestion is made for every element of the current path,
+  // though numeric elements are not carried to subsequent suggestions. For 
+  // example, http://www.example.com/node/1/edit would result in the following
+  // suggestions and body classes:
+  //
+  // page-node-edit.tpl.php  page-node-edit
+  // page-node-1.tpl.php     page-node-1
+  // page-node.tpl.php       page-node
+  // page.tpl.php
+
+  $suggestion = 'page';
+  $suggestions = array();
+  foreach ($args as $arg) {
+    // Remove slashes or null per SA-CORE-2009-003.
+    $arg = str_replace(array("/", "\\", "\0"), '', $arg);
+    $suggestions[] = $suggestion . '-' . $arg;
+    if (!is_numeric($arg)) {
+      $suggestion .= '-' . $arg;
+    }
+  }
+  if (drupal_is_front_page()) {
+    $suggestions[] = 'page-front';
+  }
+
+  return $suggestions;
 }
 
 /**

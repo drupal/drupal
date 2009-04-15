@@ -1,0 +1,54 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Tests for the theme API.
+ */
+
+/**
+ * Unit tests for the theme API.
+ */
+class TemplateUnitTest extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Theme API'),
+      'description' => t('Test low-level theme template functions.'),
+      'group' => t('Theme'),
+    );
+  }
+
+  /**
+   * Test function template_page_suggestions() for SA-CORE-2009-003.
+   */
+  function testTemplateSuggestions() {
+    // Set the front page as something random otherwise the CLI
+    // test runner fails.
+    variable_set('site_frontpage', 'nobody-home');
+    $args = array('node', '1', 'edit');
+    $suggestions = template_page_suggestions($args);
+    $this->assertEqual($suggestions, array('page-node', 'page-node-1', 'page-node-edit'), t('Found expected node edit page template suggestions'));
+    // Check attack vectors.
+    $args = array('node', '\\1');
+    $suggestions = template_page_suggestions($args);
+    $this->assertEqual($suggestions, array('page-node', 'page-node-1'), t('Removed invalid \\ from template suggestions'));
+    $args = array('node', '1/');
+    $suggestions = template_page_suggestions($args);
+    $this->assertEqual($suggestions, array('page-node', 'page-node-1'), t('Removed invalid / from template suggestions'));
+    $args = array('node', "1\0");
+    $suggestions = template_page_suggestions($args);
+    $this->assertEqual($suggestions, array('page-node', 'page-node-1'), t('Removed invalid \\0 from template suggestions'));
+    // Tests for drupal_discover_template()
+    $suggestions = array('page');
+    $this->assertEqual(drupal_discover_template(array('themes/garland'), $suggestions), 'themes/garland/page.tpl.php', t('Safe template discovered'));
+    $suggestions = array('page');
+    $this->assertEqual(drupal_discover_template(array('themes/garland'), $suggestions, '\\.tpl.php'), 'themes/garland/page.tpl.php', t('Unsafe extension fixed'));
+    $suggestions = array('page\\');
+    $this->assertEqual(drupal_discover_template(array('themes/garland'), $suggestions), 'themes/garland/page.tpl.php', t('Unsafe template suggestion fixed'));
+    $suggestions = array('page/');
+    $this->assertEqual(drupal_discover_template(array('themes/garland'), $suggestions), 'themes/garland/page.tpl.php', t('Unsafe template suggestion fixed'));
+    $suggestions = array("page\0");
+    $this->assertEqual(drupal_discover_template(array('themes/garland'), $suggestions), 'themes/garland/page.tpl.php', t('Unsafe template suggestion fixed'));
+  }
+
+}
