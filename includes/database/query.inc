@@ -428,6 +428,11 @@ class InsertQuery extends Query {
       return NULL;
     }
 
+    // Don't execute query without values.
+    if (!isset($this->insertValues[0]) && count($this->insertFields) > 0) {
+      return NULL;
+    }
+
     // Each insert happens in its own query in the degenerate case. However,
     // we wrap it in a transaction so that it is atomic where possible. On many
     // databases, such as SQLite, this is also a notable performance boost.

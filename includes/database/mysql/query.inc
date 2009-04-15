@@ -20,6 +20,11 @@ class InsertQuery_mysql extends InsertQuery {
       return NULL;
     }
 
+    // Don't execute query without values.
+    if (!isset($this->insertValues[0]) && count($this->insertFields) > 0) {
+      return NULL;
+    }
+
     $last_insert_id = 0;
 
     $max_placeholder = 0;
