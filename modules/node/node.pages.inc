@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.59 2009/04/11 22:19:45 webchick Exp $
+// $Id: node.pages.inc,v 1.60 2009/04/15 13:28:08 dries Exp $
 
 /**
  * @file
@@ -91,6 +91,8 @@ function node_object_prepare(&$node) {
   }
   else {
     $node->date = format_date($node->created, 'custom', 'Y-m-d H:i:s O');
+    // Remove the log message from the original node object.
+    $node->log = NULL;
   }
   // Always use the default revision setting.
   $node->revision = in_array('revision', $node_options);
@@ -179,6 +181,7 @@ function node_form(&$form_state, $node) {
       '#type' => 'textarea',
       '#title' => t('Revision log message'),
       '#rows' => 4,
+      '#default_value' => !empty($node->log) ? $node->log : '',
       '#description' => t('Provide an explanation of the changes you are making. This will help other authors understand your motivations.'),
     );
   }

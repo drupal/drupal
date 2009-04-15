@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.19 2009/03/31 01:49:52 webchick Exp $
+// $Id: node.test,v 1.20 2009/04/15 13:28:08 dries Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -399,6 +399,33 @@ class PagePreviewTestCase extends DrupalWebTestCase {
     // Check that the title and body fields are displayed with the correct values.
     $this->assertFieldByName('title', $edit['title'], t('Title field displayed.'));
     $this->assertFieldByName('body', '<!--break-->' . $edit['body'], t('Body field displayed.'));
+  }
+
+  /**
+   * Check the node preview functionality, when using revisions.
+   */
+  function testPagePreviewWithRevisions() {
+    // Force revision on page content.
+    variable_set('node_options_page', array('status', 'revision'));
+
+    // Fill in node creation form and preview node.
+    $edit = array();
+    $edit['title'] = $this->randomName(8);
+    $edit['body'] = $this->randomName(16);
+    $edit['log'] = $this->randomName(32);
+    $this->drupalPost('node/add/page', $edit, t('Preview'));
+
+    // Check that the preview is displaying the title and body.
+    $this->assertTitle(t('Preview | Drupal'), t('Page title is preview.'));
+    $this->assertText($edit['title'], t('Title displayed.'));
+    $this->assertText($edit['body'], t('Body displayed.'));
+
+    // Check that the title and body fields are displayed with the correct values.
+    $this->assertFieldByName('title', $edit['title'], t('Title field displayed.'));
+    $this->assertFieldByName('body', '<!--break-->' . $edit['body'], t('Body field displayed.'));
+
+    // Check that the log field has the correct value.
+    $this->assertFieldByName('log', $edit['log'], t('Log field displayed.'));
   }
 }
 
