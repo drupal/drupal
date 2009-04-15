@@ -1475,12 +1475,10 @@ function theme_tablesort_indicator($style) {
  *   The subject of the box.
  * @param $content
  *   The content of the box.
- * @param $region
- *   The region in which the box is displayed.
  * @return
  *   A string containing the box output.
  */
-function theme_box($title, $content, $region = 'main') {
+function theme_box($title, $content) {
   $output = '<h2 class="title">' . $title . '</h2><div>' . $content . '</div>';
   return $output;
 }
