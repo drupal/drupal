@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.32 2009/01/26 14:08:40 dries Exp $
+// $Id: batch.inc,v 1.33 2009/04/15 23:49:06 webchick Exp $
 
 
 /**
@@ -190,7 +190,7 @@ function _batch_progress_page_nojs() {
   }
 
   $url = url($batch['url'], array('query' => array('id' => $batch['id'], 'op' => $new_op)));
-  drupal_set_html_head('<meta http-equiv="Refresh" content="0; URL=' . $url . '">');
+  drupal_add_html_head('<meta http-equiv="Refresh" content="0; URL=' . $url . '">');
 
   return theme('progress_bar', $percentage, $message);
 }

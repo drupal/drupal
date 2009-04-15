@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.875 2009/04/11 22:19:44 webchick Exp $
+// $Id: common.inc,v 1.876 2009/04/15 23:49:06 webchick Exp $
 
 /**
  * @file
@@ -130,7 +130,7 @@ function drupal_get_rdf_namespaces() {
  *
  * This function can be called as long the headers aren't sent.
  */
-function drupal_set_html_head($data = NULL) {
+function drupal_add_html_head($data = NULL) {
   static $stored_head = '';
 
   if (!is_null($data)) {
@@ -144,7 +144,7 @@ function drupal_set_html_head($data = NULL) {
  */
 function drupal_get_html_head() {
   $output = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
-  return $output . drupal_set_html_head();
+  return $output . drupal_add_html_head();
 }
 
 /**
@@ -1972,7 +1972,7 @@ function base_path() {
  * This function can be called as long the HTML header hasn't been sent.
  */
 function drupal_add_link($attributes) {
-  drupal_set_html_head('<link' . drupal_attributes($attributes) . " />\n");
+  drupal_add_html_head('<link' . drupal_attributes($attributes) . " />\n");
 }
 
 /**
