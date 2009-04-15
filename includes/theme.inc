@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.471 2009/04/04 00:58:09 dries Exp $
+// $Id: theme.inc,v 1.472 2009/04/15 13:59:49 dries Exp $
 
 /**
  * @file
@@ -1475,12 +1475,10 @@ function theme_tablesort_indicator($style) {
  *   The subject of the box.
  * @param $content
  *   The content of the box.
- * @param $region
- *   The region in which the box is displayed.
  * @return
  *   A string containing the box output.
  */
-function theme_box($title, $content, $region = 'main') {
+function theme_box($title, $content) {
   $output = '<h2 class="title">' . $title . '</h2><div>' . $content . '</div>';
   return $output;
 }
