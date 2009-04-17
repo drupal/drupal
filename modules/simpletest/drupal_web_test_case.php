@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.92 2009/03/30 05:35:35 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.93 2009/04/17 07:07:09 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -983,6 +983,14 @@ class DrupalWebTestCase {
   protected function curlExec($curl_options) {
     $this->curlInitialize();
     $url = empty($curl_options[CURLOPT_URL]) ? curl_getinfo($this->curlHandle, CURLINFO_EFFECTIVE_URL) : $curl_options[CURLOPT_URL];
+    if (!empty($curl_options[CURLOPT_POST])) {
+      // This is a fix for the Curl library to prevent Expect: 100-continue
+      // headers in POST requests, that may cause unexpected HTTP response
+      // codes from some webservers (like lighttpd that returns a 417 error
+      // code). It is done by setting an empty "Expect" header field that is
+      // not overwritten by Curl.
+      $curl_options[CURLOPT_HTTPHEADER][] = 'Expect:';
+    }
     curl_setopt_array($this->curlHandle, $this->additionalCurlOptions + $curl_options);
     $this->headers = array();
     $this->drupalSetContent(curl_exec($this->curlHandle), curl_getinfo($this->curlHandle, CURLINFO_EFFECTIVE_URL));
