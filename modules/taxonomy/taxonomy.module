@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.468 2009/04/15 14:12:55 dries Exp $
+// $Id: taxonomy.module,v 1.469 2009/04/17 19:59:51 dries Exp $
 
 /**
  * @file
@@ -983,19 +983,16 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $depth = -1) {
 
   $max_depth = (is_null($max_depth)) ? count($children[$vid]) : $max_depth;
   $tree = array();
-  if (!empty($children[$vid][$parent])) {
+  if ($max_depth > $depth && !empty($children[$vid][$parent])) {
     foreach ($children[$vid][$parent] as $child) {
-      if ($max_depth > $depth) {
-        $term = clone $terms[$vid][$child];
-        $term->depth = $depth;
-        // The "parent" attribute is not useful, as it would show one parent only.
-        unset($term->parent);
-        $term->parents = $parents[$vid][$child];
-        $tree[] = $term;
-
-        if (!empty($children[$vid][$child])) {
-          $tree = array_merge($tree, taxonomy_get_tree($vid, $child, $max_depth, $depth));
-        }
+      $term = clone $terms[$vid][$child];
+      $term->depth = $depth;
+      // The "parent" attribute is not useful, as it would show one parent only.
+      unset($term->parent);
+      $term->parents = $parents[$vid][$child];
+      $tree[] = $term;
+      if (!empty($children[$vid][$child])) {
+        $tree = array_merge($tree, taxonomy_get_tree($vid, $child, $max_depth, $depth));
       }
     }
   }
