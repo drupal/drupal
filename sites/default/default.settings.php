@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.21 2009/03/09 17:14:31 dries Exp $
+// $Id: default.settings.php,v 1.22 2009/04/17 20:08:32 dries Exp $
 
 /**
  * @file
@@ -169,7 +169,7 @@ $update_free_access = FALSE;
  *
  * If you are experiencing issues with different site domains,
  * uncomment the Base URL statement below (remove the leading hash sign)
- * and fill in the URL to your Drupal installation.
+ * and fill in the absolute URL to your Drupal installation.
  *
  * You might also want to force users to use a given domain.
  * See the .htaccess file for more information.
