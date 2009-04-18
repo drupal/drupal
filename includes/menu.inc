@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.319 2009/04/13 12:18:52 dries Exp $
+// $Id: menu.inc,v 1.320 2009/04/18 06:34:46 dries Exp $
 
 /**
  * @file
@@ -502,7 +502,7 @@ function _menu_check_access(&$item, $map) {
     if ($callback == 'user_access') {
       $item['access'] = (count($arguments) == 1) ? user_access($arguments[0]) : user_access($arguments[0], $arguments[1]);
     }
-    else {
+    elseif (drupal_function_exists($callback)) {
       $item['access'] = call_user_func_array($callback, $arguments);
     }
   }
