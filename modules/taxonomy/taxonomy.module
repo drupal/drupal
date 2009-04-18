@@ -1599,7 +1599,7 @@ function taxonomy_node_rss_item($node) {
   foreach ($node->taxonomy as $term) {
     $output[] = array(
       'key' => 'category',
-      'value' => check_plain($term->name),
+      'value' => $term->name,
       'attributes' => array('domain' => url(taxonomy_term_path($term), array('absolute' => TRUE))),
     );
   }

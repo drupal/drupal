@@ -29,7 +29,7 @@ function taxonomy_term_page($terms, $depth = 0, $op = 'page') {
     $names = array_values($term_results);
 
     if ($names) {
-      $title = check_plain(implode(', ', $names));
+      $title = implode(', ', $names);
       drupal_set_title($title);
 
       switch ($op) {
