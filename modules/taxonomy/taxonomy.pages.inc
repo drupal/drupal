@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.24 2009/04/15 14:12:55 dries Exp $
+// $Id: taxonomy.pages.inc,v 1.25 2009/04/18 06:32:24 dries Exp $
 
 /**
  * @file
@@ -29,7 +29,7 @@ function taxonomy_term_page($terms, $depth = 0, $op = 'page') {
     $names = array_values($term_results);
 
     if ($names) {
-      $title = check_plain(implode(', ', $names));
+      $title = implode(', ', $names);
       drupal_set_title($title);
 
       switch ($op) {

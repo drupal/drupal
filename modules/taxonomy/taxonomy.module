@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.469 2009/04/17 19:59:51 dries Exp $
+// $Id: taxonomy.module,v 1.470 2009/04/18 06:32:24 dries Exp $
 
 /**
  * @file
@@ -1599,7 +1599,7 @@ function taxonomy_node_rss_item($node) {
   foreach ($node->taxonomy as $term) {
     $output[] = array(
       'key' => 'category',
-      'value' => check_plain($term->name),
+      'value' => $term->name,
       'attributes' => array('domain' => url(taxonomy_term_path($term), array('absolute' => TRUE))),
     );
   }
