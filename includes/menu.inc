@@ -502,7 +502,7 @@ function _menu_check_access(&$item, $map) {
     if ($callback == 'user_access') {
       $item['access'] = (count($arguments) == 1) ? user_access($arguments[0]) : user_access($arguments[0], $arguments[1]);
     }
-    else {
+    elseif (drupal_function_exists($callback)) {
       $item['access'] = call_user_func_array($callback, $arguments);
     }
   }
