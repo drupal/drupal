@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.pages.inc,v 1.10 2009/04/13 10:40:13 dries Exp $
+// $Id: statistics.pages.inc,v 1.11 2009/04/19 18:51:37 dries Exp $
 
 /**
  * @file
@@ -21,7 +21,9 @@ function statistics_node_tracker() {
     $query
       ->fields('a', array('aid', 'timestamp', 'url', 'uid'))
       ->fields('u', array('name'))
-      ->condition('path', 'node/' . $node->nid . '%', 'LIKE')
+      ->condition(db_or()
+        ->condition('a.path', 'node/' . $node->nid)
+        ->condition('a.path', 'node/' . $node->nid . '/%', 'LIKE'))
       ->limit(30)
       ->setHeader($header);
 
@@ -32,7 +34,8 @@ function statistics_node_tracker() {
         array('data' => format_date($log->timestamp, 'small'), 'class' => 'nowrap'),
         _statistics_link($log->url),
         theme('username', $log),
-        l(t('details'), "admin/reports/access/$log->aid"));
+        l(t('details'), "admin/reports/access/$log->aid"),
+      );
     }
 
     if (empty($rows)) {
