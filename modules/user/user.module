@@ -1576,7 +1576,6 @@ function user_login(&$form_state) {
     '#size' => 60,
     '#maxlength' => USERNAME_MAX_LENGTH,
     '#required' => TRUE,
-    '#attributes' => array('tabindex' => '1'),
   );
 
   $form['name']['#description'] = t('Enter your @s username.', array('@s' => variable_get('site_name', 'Drupal')));
@@ -1584,10 +1583,9 @@ function user_login(&$form_state) {
     '#title' => t('Password'),
     '#description' => t('Enter the password that accompanies your username.'),
     '#required' => TRUE,
-    '#attributes' => array('tabindex' => '2'),
   );
   $form['#validate'] = user_login_default_validators();
-  $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'), '#weight' => 2, '#attributes' => array('tabindex' => '3'));
+  $form['submit'] = array('#type' => 'submit', '#value' => t('Log in'), '#weight' => 2);
 
   return $form;
 }
