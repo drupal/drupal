@@ -290,7 +290,7 @@ function update_script_selection_form() {
 function update_batch() {
   global $base_url;
 
-  // During the update, toggle site maintenance so that schema changes do not
+  // During the update, bring the site offline so that schema changes do not
   // affect visiting users.
   drupal_set_session('site_offline', variable_get('site_offline', FALSE));
   if ($_SESSION['site_offline'] == FALSE) {
@@ -330,7 +330,7 @@ function update_finished($success, $results, $operations) {
   drupal_set_session('update_success', $success);
   drupal_set_session('updates_remaining', $operations);
 
-  // Now that the update is done, we can disable site maintenance if it was
+  // Now that the update is done, we can put the site back online if it was
   // previously turned off.
   if (isset($_SESSION['site_offline']) && $_SESSION['site_offline'] == FALSE) {
     variable_set('site_offline', FALSE);
@@ -424,7 +424,7 @@ function update_info_page() {
   $output .= "<ol>\n";
   $output .= "<li><strong>Back up your database</strong>. This process will change your database values and in case of emergency you may need to revert to a backup.</li>\n";
   $output .= "<li><strong>Back up your code</strong>. Hint: when backing up module code, do not leave that backup in the 'modules' or 'sites/*/modules' directories as this may confuse Drupal's auto-discovery mechanism.</li>\n";
-  $output .= '<li>Put your site into <a href="' . base_path() . '?q=admin/settings/site-maintenance">maintenance mode</a>.</li>' . "\n";
+  $output .= '<li>Put your site into <a href="' . base_path() . '?q=admin/settings/maintenance-mode">maintenance mode</a>.</li>' . "\n";
   $output .= "<li>Install your new files in the appropriate location, as described in the handbook.</li>\n";
   $output .= "</ol>\n";
   $output .= "<p>When you have performed the steps above, you may proceed.</p>\n";

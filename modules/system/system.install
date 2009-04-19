@@ -2812,7 +2812,7 @@ function system_update_7003() {
     }
   }
   if (isset($invalid_host)) {
-    drupal_set_message('Drupal no longer supports wildcard IP address blocking. Visitors whose IP addresses match ranges you have previously set using <em>access rules</em> will no longer be blocked from your site when you take it out of maintenance mode. See the <a href="http://drupal.org/node/24302">IP address and referrer blocking Handbook page</a> for alternative methods.', 'warning');
+    drupal_set_message('Drupal no longer supports wildcard IP address blocking. Visitors whose IP addresses match ranges you have previously set using <em>access rules</em> will no longer be blocked from your site when you put the site online. See the <a href="http://drupal.org/node/24302">IP address and referrer blocking Handbook page</a> for alternative methods.', 'warning');
     $ret[] = array('success' => TRUE, 'query' => '');
   }
   // Make sure not to block any IP addresses that were specifically allowed by access rules.

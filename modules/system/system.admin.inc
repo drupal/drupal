@@ -1724,7 +1724,7 @@ function system_date_time_lookup() {
  * @ingroup forms
  * @see system_settings_form()
  */
-function system_site_maintenance_settings() {
+function system_site_maintenance_mode() {
 
   $form['site_offline'] = array(
     '#type' => 'radios',
@@ -1738,7 +1738,7 @@ function system_site_maintenance_settings() {
     '#type' => 'textarea',
     '#title' => t('Site offline message'),
     '#default_value' => t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal'))),
-    '#description' => t('Message to show visitors when the site is in offline mode.')
+    '#description' => t('Message to show visitors when the site is in maintenance mode.')
   );
 
   return system_settings_form($form, TRUE);
