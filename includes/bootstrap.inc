@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.274 2009/04/11 23:01:35 webchick Exp $
+// $Id: bootstrap.inc,v 1.275 2009/04/19 19:10:07 dries Exp $
 
 /**
  * @file
@@ -1246,7 +1246,7 @@ function _drupal_bootstrap($phase) {
  * Enables use of the theme system without requiring database access.
  *
  * Loads and initializes the theme system for site installs, updates and when
- * the site is in offline mode. This also applies when the database fails.
+ * the site is in maintenance mode. This also applies when the database fails.
  *
  * @see _drupal_maintenance_theme()
  */

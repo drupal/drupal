@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.22 2009/04/17 20:08:32 dries Exp $
+// $Id: default.settings.php,v 1.23 2009/04/19 19:10:08 dries Exp $
 
 /**
  * @file
@@ -238,7 +238,7 @@ $conf = array(
 #   'anonymous' => 'Visitor',
 /**
  * A custom theme can be set for the offline page. This applies when the site
- * is explicitly set to offline mode through the administration page or when
+ * is explicitly set to maintenance mode through the administration page or when
  * the database is inactive due to an error. It can be set through the
  * 'maintenance_theme' key. The template file should also be copied into the
  * theme. It is located inside 'modules/system/maintenance-page.tpl.php'.

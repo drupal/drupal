@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.320 2009/04/18 06:34:46 dries Exp $
+// $Id: menu.inc,v 1.321 2009/04/19 19:10:07 dries Exp $
 
 /**
  * @file
@@ -2719,15 +2719,15 @@ function menu_path_is_external($path) {
  *   TRUE for anonymous users not on the login page if the site is offline.
  */
 function _menu_site_is_offline() {
-  // Check if site is set to offline mode.
+  // Check if site is set to maintenance mode.
   if (variable_get('site_offline', 0)) {
     // Check if the user has administration privileges.
     if (user_access('administer site configuration')) {
       // Ensure that the offline message is displayed only once [allowing for
       // page redirects], and specifically suppress its display on the site
       // maintenance page.
-      if (drupal_get_normal_path($_GET['q']) != 'admin/settings/site-maintenance') {
-        drupal_set_message(t('Operating in offline mode. <a href="@url">Go online.</a>', array('@url' => url('admin/settings/site-maintenance'))), 'status', FALSE);
+      if (drupal_get_normal_path($_GET['q']) != 'admin/settings/maintenance-mode') {
+        drupal_set_message(t('Operating in maintenance mode. <a href="@url">Go online.</a>', array('@url' => url('admin/settings/maintenance-mode'))), 'status', FALSE);
       }
     }
     else {
