@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.25 2009/03/29 23:11:09 webchick Exp $
+// $Id: system.api.php,v 1.26 2009/04/20 07:42:22 dries Exp $
 
 /**
  * @file
@@ -1451,14 +1451,17 @@ function hook_schema_alter(&$schema) {
  *
  * @see hook_query_TAG_alter()
  * @see node_query_node_access_alter()
- *
+ * @see QueryAlterableInterface
+ * @see SelectQueryInterface
  * @param $query
  *   A Query object describing the composite parts of a SQL query.
  * @return
  *   None.
  */
 function hook_query_alter(QueryAlterableInterface $query) {
-
+  if ($query->hasTag('micro_limit')) {
+    $query->range(0, 2);
+  }
 }
 
 /**
@@ -1466,6 +1469,8 @@ function hook_query_alter(QueryAlterableInterface $query) {
  *
  * @see hook_query_alter()
  * @see node_query_node_access_alter()
+ * @see QueryAlterableInterface
+ * @see SelectQueryInterface
  *
  * @param $query
  *   An Query object describing the composite parts of a SQL query.
