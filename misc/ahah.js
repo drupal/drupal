@@ -220,7 +220,7 @@ Drupal.ahah.prototype.error = function (response, uri) {
   // Undo hide.
   $(this.wrapper).show();
   // Re-enable the element.
-  $(this.element).removeClass('progess-disabled').attr('disabled', false);
+  $(this.element).removeClass('progress-disabled').attr('disabled', false);
 };
 
 })(jQuery);
