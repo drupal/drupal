@@ -68,7 +68,8 @@ function image_get_toolkit() {
     if (!isset($toolkits[$toolkit]) || !drupal_function_exists('image_' . $toolkit . '_load')) {
       // The selected toolkit isn't available so return the first one found. If
       // none are available this will return FALSE.
-      $toolkit = reset($toolkits);
+      reset($toolkits);
+      $toolkit = key($toolkits);
     }
   }
 

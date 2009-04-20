@@ -31,7 +31,6 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     ));
 
     $this->exec('PRAGMA encoding="UTF-8"');
-    $this->exec('PRAGMA case_sensitive_like=1');
 
     // Create functions needed by SQLite.
     $this->sqliteCreateFunction('if', array($this, 'sqlFunctionIf'));
