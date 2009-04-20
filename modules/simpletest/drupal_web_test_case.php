@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.94 2009/04/20 02:46:25 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.95 2009/04/20 20:02:31 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -861,7 +861,9 @@ class DrupalWebTestCase {
     $this->originalFileDirectory = file_directory_path();
     variable_set('file_directory_path', file_directory_path() . '/' . $db_prefix);
     $directory = file_directory_path();
-    file_check_directory($directory, FILE_CREATE_DIRECTORY); // Create the files directory.
+    // Create the files directory.
+    file_check_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+
     set_time_limit($this->timeLimit);
   }
 

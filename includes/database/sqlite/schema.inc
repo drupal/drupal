@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.3 2009/04/14 06:22:10 dries Exp $
+// $Id: schema.inc,v 1.4 2009/04/20 20:02:31 dries Exp $
 
 /**
  * @file
@@ -66,7 +66,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     // Add the SQL statement for each field.
     foreach ($schema['fields'] as $name => $field) {
       if ($field['type'] == 'serial') {
-        if (isset($schema['primary key']) && ($key = array_search($name, $schema['primary key'])) !== false) {
+        if (isset($schema['primary key']) && ($key = array_search($name, $schema['primary key'])) !== FALSE) {
           unset($schema['primary key'][$key]);
         }
       }
@@ -294,7 +294,8 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
    * @param $table
    *   Name of the table.
    * @return
-   *   An array representing the schema, @see drupal_get_schema.
+   *   An array representing the schema, from drupal_get_schema().
+   * @see drupal_get_schema()
    */
   protected function introspectSchema($table) {
     $mapped_fields = array_flip($this->getFieldTypeMap());

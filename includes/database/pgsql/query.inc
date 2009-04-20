@@ -1,10 +1,16 @@
 <?php
-// $Id: query.inc,v 1.9 2009/04/15 13:30:16 dries Exp $
+// $Id: query.inc,v 1.10 2009/04/20 20:02:30 dries Exp $
 
 /**
  * @ingroup database
  * @{
  */
+
+/**
+ * @file
+ * Query code for PostgreSQL embedded database engine.
+ */
+
 
 class InsertQuery_pgsql extends InsertQuery {
 
@@ -51,7 +57,7 @@ class InsertQuery_pgsql extends InsertQuery {
           ++$blob_count;
         }
         else {
-          $stmt->bindParam(':db_insert_placeholder_'. $max_placeholder++, $insert_values[$idx]);
+          $stmt->bindParam(':db_insert_placeholder_' . $max_placeholder++, $insert_values[$idx]);
         }
       }
     }
@@ -101,7 +107,7 @@ class InsertQuery_pgsql extends InsertQuery {
     else {
       // If there are no values, then this is a default-only query. We still need to handle that.
       $placeholders = array_fill(0, count($this->defaultFields), 'default');
-      $values[] = '(' . implode(', ', $placeholders) .')';
+      $values[] = '(' . implode(', ', $placeholders) . ')';
     }
 
     $query .= implode(', ', $values);

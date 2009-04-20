@@ -1,5 +1,11 @@
 <?php
-// $Id: install.inc,v 1.1 2008/08/21 19:36:36 dries Exp $
+// $Id: install.inc,v 1.2 2009/04/20 20:02:30 dries Exp $
+
+/**
+ * @file
+ * Install functions for PostgreSQL embedded database engine.
+ */
+
 
 // PostgreSQL specific install functions
 

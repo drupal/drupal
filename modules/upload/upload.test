@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.test,v 1.14 2009/03/31 01:49:55 webchick Exp $
+// $Id: upload.test,v 1.15 2009/04/20 20:02:31 dries Exp $
 
 class UploadTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -199,6 +199,9 @@ class UploadTestCase extends DrupalWebTestCase {
     $this->drupalGet($base_url . '/' . file_directory_path() . '/' . $filename, array('external' => TRUE));
     $this->assertResponse(array(200), 'Uploaded ' . $filename . ' is accessible.');
     $this->assertEqual(file_get_contents($file), $this->drupalGetContent(), 'Uploaded contents of ' . $filename . ' verified.');
+    // Verify file actually is readable and writeable by PHP.
+    $this->assertTrue(is_readable($file), t('Uploaded file is readable.'));
+    $this->assertTrue(is_writeable($file), t('Uploaded file is writeable.'));
   }
 
   /**

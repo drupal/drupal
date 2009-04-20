@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.21 2009/04/20 02:23:16 webchick Exp $
+// $Id: database.inc,v 1.22 2009/04/20 20:02:30 dries Exp $
 
 /**
  * @file
@@ -72,7 +72,7 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
         else {
           $query_string = $query;
         }
-        throw new PDOException($query_string . " - \n" . print_r($args,1) . $e->getMessage());
+        throw new PDOException($query_string . " - \n" . print_r($args, 1) . $e->getMessage());
       }
       return NULL;
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.14 2009/04/20 02:23:16 webchick Exp $
+// $Id: database.inc,v 1.15 2009/04/20 20:02:30 dries Exp $
 
 /**
  * @file
@@ -25,7 +25,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     // This driver defaults to transaction support, except if explicitly passed FALSE.
     $this->transactionSupport = !isset($connection_options['transactions']) || $connection_options['transactions'] !== FALSE;
 
-    parent::__construct('sqlite:'. $connection_options['database'], '', '', array(
+    parent::__construct('sqlite:' . $connection_options['database'], '', '', array(
       // Force column names to lower case.
       PDO::ATTR_CASE => PDO::CASE_LOWER,
     ));
@@ -162,8 +162,10 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
 /**
  * Specific SQLite implementation of DatabaseConnection.
  *
- * @see DatabaseConnection_sqlite::PDOPrepare for reasons why we must prefetch
+ * See DatabaseConnection_sqlite::PDOPrepare() for reasons why we must prefetch
  * the data instead of using PDOStatement.
+ *
+ * @see DatabaseConnection_sqlite::PDOPrepare()
  */
 class DatabaseStatement_sqlite extends DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface {
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.56 2009/02/18 14:28:22 webchick Exp $
+// $Id: color.module,v 1.57 2009/04/20 20:02:31 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -455,7 +455,7 @@ function _color_save_stylesheet($file, $style, &$paths) {
   $paths['files'][] = $filepath;
 
   // Set standard file permissions for webserver-generated files.
-  @chmod($file, 0664);
+  drupal_chmod($file);
 }
 
 /**
@@ -513,7 +513,7 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
     $paths['files'][] = $image;
 
     // Set standard file permissions for webserver-generated files
-    @chmod(realpath($image), 0664);
+    drupal_chmod($image);
 
     // Build before/after map of image paths.
     $paths['map'][$file] = $base;

@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.32 2009/04/20 05:38:06 webchick Exp $
+// $Id: image.inc,v 1.33 2009/04/20 20:02:30 dries Exp $
 
 /**
  * @file
@@ -376,10 +376,9 @@ function image_save(stdClass $image, $destination = NULL) {
     clearstatcache();
     $image->info = image_get_info($destination);
 
-    if (@chmod($destination, 0664)) {
+    if (drupal_chmod($destination)) {
       return $return;
     }
-    watchdog('image', 'Could not set permissions on destination file: %file', array('%file' => $destination));
   }
   return FALSE;
 }
