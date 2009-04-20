@@ -103,6 +103,8 @@ function image_toolkit_invoke($method, stdClass $image, array $params = array())
  *
  * Drupal only supports GIF, JPG and PNG file formats.
  *
+ * @param $filepath
+ *   String specifying the path of the image file.
  * @return
  *   FALSE, if the file could not be found or is not an image. Otherwise, a
  *   keyed array containing information about the image:
@@ -112,14 +114,14 @@ function image_toolkit_invoke($method, stdClass $image, array $params = array())
  *    'mime_type' - MIME type ('image/jpeg', 'image/gif', 'image/png').
  *    'file_size' - File size in bytes.
  */
-function image_get_info($file) {
-  if (!is_file($file)) {
+function image_get_info($filepath) {
+  if (!is_file($filepath)) {
     return FALSE;
   }
 
   $details = FALSE;
-  $data = @getimagesize($file);
-  $file_size = @filesize($file);
+  $data = @getimagesize($filepath);
+  $file_size = @filesize($filepath);
 
   if (isset($data) && is_array($data)) {
     $extensions = array('1' => 'gif', '2' => 'jpg', '3' => 'png');
