@@ -1165,8 +1165,15 @@ function node_delete($nid) {
   $node = node_load($nid);
 
   if (node_access('delete', $node)) {
-    db_query('DELETE FROM {node} WHERE nid = %d', $node->nid);
-    db_query('DELETE FROM {node_revision} WHERE nid = %d', $node->nid);
+    db_delete('node')
+      ->condition('nid', $node->nid)
+      ->execute();
+    db_delete('node_revision')
+      ->condition('nid', $node->nid)
+      ->execute();
+    db_delete('history')
+      ->condition('nid', $node->nid)
+      ->execute();
 
     // Call the node-specific callback (if any):
     node_invoke($node, 'delete');
