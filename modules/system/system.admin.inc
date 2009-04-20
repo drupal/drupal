@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.134 2009/04/19 19:10:07 dries Exp $
+// $Id: system.admin.inc,v 1.135 2009/04/20 07:36:34 dries Exp $
 
 /**
  * @file
@@ -1295,18 +1295,6 @@ function system_logging_settings() {
 function system_performance_settings() {
 
   $description = '<p>' . t("The normal cache mode is suitable for most sites and does not cause any side effects. The aggressive cache mode causes Drupal to skip the loading (boot) and unloading (exit) of enabled modules when serving a cached page. This results in an additional performance boost but can cause unwanted side effects.") . '</p>';
-
-  // Check if the "Who's online" block is enabled.
-  $online_block_enabled = db_select('block')
-    ->condition('module', 'user')
-    ->condition('delta', 'online')
-    ->condition('status', 1)
-    ->countQuery()
-    ->execute()
-    ->fetchField();
-  if ($online_block_enabled) {
-    $description .= '<p>' . t("When caching is enabled, anonymous user sessions are only saved to the database when needed, so the \"Who's online\" block does not display the number of anonymous users.") . '</p>';
-  }
 
   $problem_modules = array_unique(array_merge(module_implements('boot'), module_implements('exit')));
   sort($problem_modules);
