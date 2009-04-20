@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.976 2009/04/20 02:23:17 webchick Exp $
+// $Id: user.module,v 1.977 2009/04/20 04:41:35 webchick Exp $
 
 /**
  * @file
@@ -40,7 +40,7 @@ function user_theme() {
       'template' => 'user-picture',
     ),
     'user_profile' => array(
-      'arguments' => array('account' => NULL),
+      'arguments' => array('elements' => NULL),
       'template' => 'user-profile',
       'file' => 'user.pages.inc',
     ),
