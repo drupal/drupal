@@ -456,6 +456,22 @@ function block_form_system_performance_settings_alter(&$form, &$form_state) {
     '#disabled' => count(module_implements('node_grants')),
     '#description' => t('Note that block caching is inactive when modules defining content access restrictions are enabled.'),
   );
+  
+  // Check if the "Who's online" block is enabled.
+  $online_block_enabled = db_select('block')
+    ->condition('module', 'user')
+    ->condition('delta', 'online')
+    ->condition('status', 1)
+    ->countQuery()
+    ->execute()
+    ->fetchField();
+  
+  // If the "Who's online" block is enabled, append some descriptive text to
+  // the end of the form description.
+  if ($online_block_enabled) {
+    $form['page_cache']['cache']['#description'] .=  '<p>' . t('When caching is enabled, anonymous user sessions are only saved to the database when needed, so the "Who\'s online" block does not display the number of anonymous users.') . '</p>';
+  }
+  
 }
 
 /**
