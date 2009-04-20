@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.474 2009/04/15 23:49:06 webchick Exp $
+// $Id: theme.inc,v 1.475 2009/04/20 21:28:13 dries Exp $
 
 /**
  * @file
@@ -1471,21 +1471,6 @@ function theme_tablesort_indicator($style) {
   else {
     return theme('image', 'misc/arrow-desc.png', t('sort icon'), t('sort descending'));
   }
-}
-
-/**
- * Return a themed box.
- *
- * @param $title
- *   The subject of the box.
- * @param $content
- *   The content of the box.
- * @return
- *   A string containing the box output.
- */
-function theme_box($title, $content) {
-  $output = '<h2 class="title">' . $title . '</h2><div>' . $content . '</div>';
-  return $output;
 }
 
 /**

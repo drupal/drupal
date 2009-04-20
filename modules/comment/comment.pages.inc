@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.pages.inc,v 1.16 2009/03/17 12:41:54 dries Exp $
+// $Id: comment.pages.inc,v 1.17 2009/04/20 21:28:14 dries Exp $
 
 /**
  * @file
@@ -20,7 +20,7 @@ function comment_edit($cid) {
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
 
   if (comment_access('edit', $comment)) {
-    return comment_form_box((array)$comment);
+    return theme('comment_form_box', (array)$comment);
   }
   else {
     drupal_access_denied();
@@ -58,7 +58,7 @@ function comment_reply($node, $pid = NULL) {
     // The user is previewing a comment prior to submitting it.
     if ($op == t('Preview')) {
       if (user_access('post comments')) {
-        $output .= comment_form_box(array('pid' => $pid, 'nid' => $node->nid), NULL);
+        $output .= theme('comment_form_box', array('pid' => $pid, 'nid' => $node->nid), NULL);
       }
       else {
         drupal_set_message(t('You are not authorized to post comments.'), 'error');
@@ -101,7 +101,7 @@ function comment_reply($node, $pid = NULL) {
         drupal_goto("node/$node->nid");
       }
       elseif (user_access('post comments')) {
-        $output .= comment_form_box(array('pid' => $pid, 'nid' => $node->nid), t('Reply'));
+        $output .= theme('comment_form_box', array('pid' => $pid, 'nid' => $node->nid), t('Reply'));
       }
       else {
         drupal_set_message(t('You are not authorized to post comments.'), 'error');

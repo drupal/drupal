@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.287 2009/03/27 00:16:16 webchick Exp $
+// $Id: search.module,v 1.288 2009/04/20 21:28:15 dries Exp $
 
 /**
  * @file
@@ -133,6 +133,9 @@ function search_theme() {
       'arguments' => array('results' => NULL, 'type' => NULL),
       'file' => 'search.pages.inc',
       'template' => 'search-results',
+    ),
+    'search_results_listing' => array(
+      'arguments' => array('title' => NULL, 'content' => NULL),
     ),
   );
 }
