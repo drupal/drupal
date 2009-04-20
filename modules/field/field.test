@@ -1,7 +1,5 @@
 <?php
-// $Id: field.test,v 1.10 2009/04/13 05:18:17 webchick Exp $
-
-// TODO : use drupalCreateField() / drupalCreateFieldInstance() all over ?
+// $Id: field.test,v 1.11 2009/04/20 02:46:22 webchick Exp $
 
 class FieldAttachTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -1013,8 +1011,10 @@ class FieldTestCase extends DrupalWebTestCase {
     // TODO: Also test deletion of the data stored in the field ?
 
     // Create two fields (so we can test that only one is deleted).
-    $this->field = $this->drupalCreateField('test_field', 'test_field_name');
-    $this->another_field = $this->drupalCreateField('test_field', 'another_test_field_name');
+    $this->field = array('field_name' => 'test_field_name', 'type' => 'test_field');
+    field_create_field($this->field);
+    $this->another_field = array('field_name' => 'another_test_field_name', 'type' => 'test_field');
+    field_create_field($this->another_field);
 
     // Create instances for each.
     $this->instance_definition = array(
@@ -1073,8 +1073,11 @@ class FieldInstanceTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('field_sql_storage', 'field', 'field_test');
-
-    $this->field = $this->drupalCreateField('test_field');
+    $this->field = array(
+      'field_name' => drupal_strtolower($this->randomName()),
+      'type' => 'test_field',
+    );
+    field_create_field($this->field);
     $this->instance_definition = array(
       'field_name' => $this->field['field_name'],
       'bundle' => FIELD_TEST_BUNDLE,
