@@ -6,6 +6,12 @@
  * @{
  */
 
+/**
+ * @file
+ * Query code for MySQL embedded database engine.
+ */
+
+
 class InsertQuery_mysql extends InsertQuery {
 
   public function execute() {
@@ -64,16 +70,16 @@ class InsertQuery_mysql extends InsertQuery {
 
         $new_placeholder = $max_placeholder + count($insert_values);
         for ($i = $max_placeholder; $i < $new_placeholder; ++$i) {
-          $placeholders[] = ':db_insert_placeholder_'. $i;
+          $placeholders[] = ':db_insert_placeholder_' . $i;
         }
         $max_placeholder = $new_placeholder;
-        $values[] = '('. implode(', ', $placeholders) .')';
+        $values[] = '(' . implode(', ', $placeholders) . ')';
       }
     }
     else {
       // If there are no values, then this is a default-only query. We still need to handle that.
       $placeholders = array_fill(0, count($this->defaultFields), 'default');
-      $values[] = '(' . implode(', ', $placeholders) .')';
+      $values[] = '(' . implode(', ', $placeholders) . ')';
     }
 
     $query .= implode(', ', $values);

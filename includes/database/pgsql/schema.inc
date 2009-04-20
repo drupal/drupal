@@ -19,7 +19,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    * This is collected by DatabaseConnection_pgsql->queryTableInformation(),
    * by introspecting the database.
    *
-   * @see DatabaseConnection_pgsql->queryTableInformation().
+   * @see DatabaseConnection_pgsql->queryTableInformation()
    * @var array
    */
   protected $tableInformation = array();
@@ -46,7 +46,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
 
     if (!isset($this->tableInformation[$key])) {
       // Split the key into schema and table for querying.
-      list($schema,$table_name) = explode('.', $key);
+      list($schema, $table_name) = explode('.', $key);
       $table_information = (object) array(
         'blob_fields' => array(),
         'sequences' => array(),
@@ -56,7 +56,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
         if ($column->data_type == 'bytea') {
           $table_information->blob_fields[$column->column_name] = TRUE;
         }
-        else if (preg_match("/nextval\('([^']+)'/", $column->column_default, $matches)) {
+        elseif (preg_match("/nextval\('([^']+)'/", $column->column_default, $matches)) {
           // We must know of any sequences in the table structure to help us
           // return the last insert id. If there is more than 1 sequences the
           // first one (index 0 of the sequences array) will be used.
@@ -311,8 +311,10 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    *   table along with adding the field. The format is the same as a
    *   table specification but without the 'fields' element. If you are
    *   adding a type 'serial' field, you MUST specify at least one key
-   *   or index including it in this array. @see db_change_field for more
+   *   or index including it in this array. See db_change_field() for more
    *   explanation why.
+   *
+   * @see db_change_field()
    */
   public function addField(&$ret, $table, $field, $spec, $new_keys = array()) {
     $fixnull = FALSE;

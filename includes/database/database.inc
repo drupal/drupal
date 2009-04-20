@@ -516,7 +516,7 @@ abstract class DatabaseConnection extends PDO {
    *   A table prefix-parsed string for the sequence name.
    */
   public function makeSequenceName($table, $field) {
-    return $this->prefixTables('{'. $table .'}_'. $field .'_seq');
+    return $this->prefixTables('{' . $table . '}_' . $field . '_seq');
   }
 
   /**
@@ -594,7 +594,7 @@ abstract class DatabaseConnection extends PDO {
         else {
           $query_string = $query;
         }
-        throw new PDOException($query_string . " - \n" . print_r($args,1) . $e->getMessage());
+        throw new PDOException($query_string . " - \n" . print_r($args, 1) . $e->getMessage());
       }
       return NULL;
     }
@@ -1006,7 +1006,7 @@ abstract class DatabaseConnection extends PDO {
    * overridable lookup function. Database connections should define only
    * those operators they wish to be handled differently than the default.
    *
-   * @see DatabaseCondition::compile().
+   * @see DatabaseCondition::compile()
    * @param $operator
    *   The condition operator, such as "IN", "BETWEEN", etc. Case-sensitive.
    * @return
@@ -2191,8 +2191,9 @@ function db_drop_table(&$ret, $table) {
  *   table along with adding the field. The format is the same as a
  *   table specification but without the 'fields' element. If you are
  *   adding a type 'serial' field, you MUST specify at least one key
- *   or index including it in this array. @see db_change_field for more
+ *   or index including it in this array. See db_change_field() for more
  *   explanation why.
+ * @see db_change_field()
  */
 function db_add_field(&$ret, $table, $field, $spec, $keys_new = array()) {
   return Database::getConnection()->schema()->addField($ret, $table, $field, $spec, $keys_new);
@@ -2616,7 +2617,7 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
     if ($where) {
       $n = strlen($matches[1]);
       $second_part = substr($query, $n);
-      $first_part = substr($matches[1], 0, $n - 5) ." $join WHERE $where AND ( ";
+      $first_part = substr($matches[1], 0, $n - 5) . " $join WHERE $where AND ( ";
       foreach (array('GROUP', 'ORDER', 'LIMIT') as $needle) {
         $pos = strrpos($second_part, $needle);
         if ($pos !== FALSE) {

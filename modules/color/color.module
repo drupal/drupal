@@ -455,7 +455,7 @@ function _color_save_stylesheet($file, $style, &$paths) {
   $paths['files'][] = $filepath;
 
   // Set standard file permissions for webserver-generated files.
-  @chmod($file, 0664);
+  drupal_chmod($file);
 }
 
 /**
@@ -513,7 +513,7 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
     $paths['files'][] = $image;
 
     // Set standard file permissions for webserver-generated files
-    @chmod(realpath($image), 0664);
+    drupal_chmod($image);
 
     // Build before/after map of image paths.
     $paths['map'][$file] = $base;

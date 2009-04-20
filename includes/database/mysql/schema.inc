@@ -224,7 +224,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     }
     if (!empty($spec['unique keys'])) {
       foreach ($spec['unique keys'] as $key => $fields) {
-        $keys[] = 'UNIQUE KEY ' . $key .' ('. $this->createKeysSqlHelper($fields) . ')';
+        $keys[] = 'UNIQUE KEY ' . $key . ' (' . $this->createKeysSqlHelper($fields) . ')';
       }
     }
     if (!empty($spec['indexes'])) {
@@ -352,7 +352,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
 
     // Work around a bug in some versions of PDO, see http://bugs.php.net/bug.php?id=41125
     $comment = str_replace("'", '’', $comment);
- 
+
     // Truncate comment to maximum comment length.
     if (isset($length)) {
       // Add table prefixes before truncating.

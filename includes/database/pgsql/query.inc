@@ -6,6 +6,12 @@
  * @{
  */
 
+/**
+ * @file
+ * Query code for PostgreSQL embedded database engine.
+ */
+
+
 class InsertQuery_pgsql extends InsertQuery {
 
   public function __construct($connection, $table, array $options = array()) {
@@ -51,7 +57,7 @@ class InsertQuery_pgsql extends InsertQuery {
           ++$blob_count;
         }
         else {
-          $stmt->bindParam(':db_insert_placeholder_'. $max_placeholder++, $insert_values[$idx]);
+          $stmt->bindParam(':db_insert_placeholder_' . $max_placeholder++, $insert_values[$idx]);
         }
       }
     }
@@ -101,7 +107,7 @@ class InsertQuery_pgsql extends InsertQuery {
     else {
       // If there are no values, then this is a default-only query. We still need to handle that.
       $placeholders = array_fill(0, count($this->defaultFields), 'default');
-      $values[] = '(' . implode(', ', $placeholders) .')';
+      $values[] = '(' . implode(', ', $placeholders) . ')';
     }
 
     $query .= implode(', ', $values);

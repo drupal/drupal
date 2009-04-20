@@ -376,10 +376,9 @@ function image_save(stdClass $image, $destination = NULL) {
     clearstatcache();
     $image->info = image_get_info($destination);
 
-    if (@chmod($destination, 0664)) {
+    if (drupal_chmod($destination)) {
       return $return;
     }
-    watchdog('image', 'Could not set permissions on destination file: %file', array('%file' => $destination));
   }
   return FALSE;
 }

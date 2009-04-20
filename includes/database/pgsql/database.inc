@@ -72,7 +72,7 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
         else {
           $query_string = $query;
         }
-        throw new PDOException($query_string . " - \n" . print_r($args,1) . $e->getMessage());
+        throw new PDOException($query_string . " - \n" . print_r($args, 1) . $e->getMessage());
       }
       return NULL;
     }

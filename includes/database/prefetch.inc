@@ -1,5 +1,5 @@
 <?php
-// $Id $
+// $Id$
 
 /**
  * @file
@@ -89,7 +89,7 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
 
   /**
    * Holds the current fetch style (which will be used by the next fetch).
-   * @see PDOStatement::fetch.
+   * @see PDOStatement::fetch()
    *
    * @var int
    */
@@ -177,7 +177,8 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
     $this->rowCount = $statement->rowCount();
     $this->data = $statement->fetchAll(PDO::FETCH_ASSOC);
     // Destroy the statement as soon as possible.
-    // @see DatabaseConnection_sqlite::PDOPrepare for explanation.
+    // See DatabaseConnection_sqlite::PDOPrepare() for explanation.
+    // @see DatabaseConnection_sqlite::PDOPrepare()
     unset($statement);
 
     $this->resultRowCount = count($this->data);
@@ -236,7 +237,7 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
   }
 
   /**
-   * @see PDOStatement::setFetchMode.
+   * @see PDOStatement::setFetchMode()
    */
   public function setFetchMode($fetchStyle, $a2 = NULL, $a3 = NULL) {
     $this->defaultFetchStyle = $fetchStyle;

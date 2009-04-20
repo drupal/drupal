@@ -157,7 +157,7 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
   // Check if directory exists.
   if (!is_dir($directory)) {
     if (($mode & FILE_CREATE_DIRECTORY) && @mkdir($directory)) {
-      @chmod($directory, 0775); // Necessary for non-webserver users.
+      drupal_chmod($directory);
     }
     else {
       if ($form_item) {
@@ -172,7 +172,7 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
   if (!is_writable($directory)) {
     // If not able to modify permissions, or if able to, but chmod
     // fails, return false.
-    if (!$mode || (($mode & FILE_MODIFY_PERMISSIONS) && !@chmod($directory, 0775))) {
+    if (!$mode || (($mode & FILE_MODIFY_PERMISSIONS) && !drupal_chmod($directory))) {
       if ($form_item) {
         form_set_error($form_item, t('The directory %directory is not writable', array('%directory' => $directory)));
         watchdog('file system', 'The directory %directory is not writable, because it does not have the correct permissions set.', array('%directory' => $directory), WATCHDOG_ERROR);
@@ -183,9 +183,8 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
 
   if ((file_directory_path() == $directory || file_directory_temp() == $directory) && !is_file("$directory/.htaccess")) {
     $htaccess_lines = "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nOptions None\nOptions +FollowSymLinks";
-    if (($fp = fopen("$directory/.htaccess", 'w')) && fputs($fp, $htaccess_lines)) {
-      fclose($fp);
-      chmod($directory . '/.htaccess', 0664);
+    if (file_put_contents("$directory/.htaccess", $htaccess_lines)) {
+      drupal_chmod("$directory/.htaccess");
     }
     else {
       $variables = array('%directory' => $directory, '!htaccess' => '<br />' . nl2br(check_plain($htaccess_lines)));
@@ -483,11 +482,8 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
     return FALSE;
   }
 
-  // Give everyone read access so that FTP'd users or
-  // non-webserver users can see/read these files,
-  // and give group write permissions so group members
-  // can alter files uploaded by the webserver.
-  @chmod($destination, 0664);
+  // Set the permissions on the new file.
+  drupal_chmod($destination);
 
   return $destination;
 }
@@ -995,6 +991,9 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
     watchdog('file', 'Upload error. Could not move uploaded file %file to destination %destination.', array('%file' => $file->filename, '%destination' => $file->filepath));
     return FALSE;
   }
+
+  // Set the permissions on the new file.
+  drupal_chmod($file->filepath);
 
   // If we are replacing an existing file re-use its database record.
   if ($replace == FILE_EXISTS_REPLACE) {
@@ -1889,6 +1888,43 @@ function file_get_mimetype($filename, $mapping = NULL) {
 
   return 'application/octet-stream';
 }
+
+/**
+ * Set the permissions on a file or directory.
+ *
+ * This function will use the 'file_chmod_directory' and 'file_chmod_file'
+ * variables for the default modes for directories and uploaded/generated files.
+ * By default these will give everyone read access so that users accessing the
+ * files with a user account without the webserver group (e.g. via FTP) can read
+ * these files, and give group write permissions so webserver group members
+ * (e.g. a vhost account) can alter files uploaded and owned by the webserver.
+ *
+ * @param $path
+ *   String containing the path to a file or directory.
+ * @param $mode
+ *   Integer value for the permissions. Consult PHP chmod() documentation for
+ *   more information.
+ * @return
+ *   TRUE for success, FALSE in the event of an error.
+ */
+function drupal_chmod($path, $mode = NULL) {
+  if (!isset($mode)) {
+    if (is_dir($path)) {
+      $mode = variable_get('file_chmod_directory', 0775);
+    }
+    else {
+      $mode = variable_get('file_chmod_file', 0664);
+    }
+  }
+
+  if (@chmod($path, $mode)) {
+    return TRUE;
+  }
+
+  watchdog('file', 'The file permissions could not be set on %path.', array('%path' => $path), WATCHDOG_ERROR);
+  return FALSE;
+}
+
 /**
  * @} End of "defgroup file".
  */

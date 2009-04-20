@@ -1,5 +1,10 @@
 <?php
-// $Id $
+// $Id$
+
+/**
+ * @file
+ * Query code for SQLite embedded database engine.
+ */
 
 /**
  * @ingroup database
@@ -27,14 +32,14 @@ class InsertQuery_sqlite extends InsertQuery {
       return parent::execute();
     }
     else {
-      return $this->connection->query('INSERT INTO {'. $this->table .'} DEFAULT VALUES', array(), $this->queryOptions);
+      return $this->connection->query('INSERT INTO {' . $this->table . '} DEFAULT VALUES', array(), $this->queryOptions);
     }
   }
 
   public function __toString() {
     // Produce as many generic placeholders as necessary.
     $placeholders = array_fill(0, count($this->insertFields), '?');
-    return 'INSERT INTO {'. $this->table .'} ('. implode(', ', $this->insertFields) .') VALUES ('. implode(', ', $placeholders) .')';
+    return 'INSERT INTO {' . $this->table . '} (' . implode(', ', $this->insertFields) . ') VALUES (' . implode(', ', $placeholders) . ')';
   }
 
 }
@@ -87,7 +92,7 @@ class UpdateQuery_sqlite extends UpdateQuery {
         // The IS NULL operator is badly managed by DatabaseCondition.
         $condition->where($field . ' IS NULL');
       }
-      else if (is_null($data)) {
+      elseif (is_null($data)) {
         // The field will be set to NULL.
         // The IS NULL operator is badly managed by DatabaseCondition.
         $condition->where($field . ' IS NOT NULL');

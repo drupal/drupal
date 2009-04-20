@@ -1,8 +1,14 @@
 <?php
+// $Id$
 
 /**
  * @ingroup database
  * @{
+ */
+
+/**
+ * @file
+ * Non-specific Database query code. Used by all engines.
  */
 
 /**
@@ -462,7 +468,7 @@ class InsertQuery extends Query {
     $placeholders = array_pad($placeholders, count($this->defaultFields), 'default');
     $placeholders = array_pad($placeholders, count($this->insertFields), '?');
 
-    return 'INSERT INTO {'. $this->table .'} ('. implode(', ', $insert_fields) .') VALUES ('. implode(', ', $placeholders) .')';
+    return 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES (' . implode(', ', $placeholders) . ')';
   }
 }
 
