@@ -128,6 +128,9 @@ function comment_theme() {
       'template' => 'comment',
       'arguments' => array('comment' => NULL, 'node' => NULL, 'links' => array()),
     ),
+    'comment_form_box' => array(
+      'arguments' => array('edit' => NULL, 'title' => NULL),
+    ),
     'comment_folded' => array(
       'template' => 'comment-folded',
       'arguments' => array('comment' => NULL),
@@ -1197,7 +1200,7 @@ function comment_render($node, $cid = 0) {
     // If enabled, show new comment form if it's not already being displayed.
     $reply = arg(0) == 'comment' && arg(1) == 'reply';
     if (user_access('post comments') && $node->comment == COMMENT_NODE_OPEN && (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_BELOW) && !$reply) {
-      $output .= comment_form_box(array('nid' => $nid), t('Post new comment'));
+      $output .= theme('comment_form_box', array('nid' => $nid), t('Post new comment'));
     }
     if ($output) {
       $output = theme('comment_wrapper', $output, $node);
@@ -1624,9 +1627,13 @@ function comment_form(&$form_state, $edit, $title = NULL) {
  *   The form structure.
  * @param $title
  *   The form title.
+ * @return
+ *   A string containing the box output.
  */
-function comment_form_box($edit, $title = NULL) {
-  return theme('box', $title, drupal_get_form('comment_form', $edit, $title));
+function theme_comment_form_box($edit, $title = NULL) {
+  $content = drupal_get_form('comment_form', $edit, $title);
+  $output = '<h2 class="title">' . $title . '</h2><div>' . $content . '</div>';
+  return $output;
 }
 
 /**

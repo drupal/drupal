@@ -32,10 +32,10 @@ function search_view($type = 'node') {
       $results = search_data($keys, $type);
 
       if ($results) {
-        $results = theme('box', t('Search results'), $results);
+        $results = theme('search_results_listing', t('Search results'), $results);
       }
       else {
-        $results = theme('box', t('Your search yielded no results'), search_help('search#noresults', drupal_help_arg()));
+        $results = theme('search_results_listing', t('Your search yielded no results'), search_help('search#noresults', drupal_help_arg()));
       }
     }
 
@@ -47,6 +47,21 @@ function search_view($type = 'node') {
   }
 
   return drupal_get_form('search_form', NULL, empty($keys) ? '' : $keys, $type);
+}
+
+/**
+ * Theme the listing of search results
+ *
+ * @param $title
+ *   The subject of the listing.
+ * @param $content
+ *   The content of the listing.
+ * @return
+ *   A string containing the listing output.
+ */
+function theme_search_results_listing($title, $content) {
+  $output = '<h2 class="title">' . $title . '</h2><div>' . $content . '</div>';
+  return $output;
 }
 
 /**

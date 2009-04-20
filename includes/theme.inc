@@ -1474,21 +1474,6 @@ function theme_tablesort_indicator($style) {
 }
 
 /**
- * Return a themed box.
- *
- * @param $title
- *   The subject of the box.
- * @param $content
- *   The content of the box.
- * @return
- *   A string containing the box output.
- */
-function theme_box($title, $content) {
-  $output = '<h2 class="title">' . $title . '</h2><div>' . $content . '</div>';
-  return $output;
-}
-
-/**
  * Return a themed marker, useful for marking new or updated
  * content.
  *
