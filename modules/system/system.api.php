@@ -1451,14 +1451,17 @@ function hook_schema_alter(&$schema) {
  *
  * @see hook_query_TAG_alter()
  * @see node_query_node_access_alter()
- *
+ * @see QueryAlterableInterface
+ * @see SelectQueryInterface
  * @param $query
  *   A Query object describing the composite parts of a SQL query.
  * @return
  *   None.
  */
 function hook_query_alter(QueryAlterableInterface $query) {
-
+  if ($query->hasTag('micro_limit')) {
+    $query->range(0, 2);
+  }
 }
 
 /**
@@ -1466,6 +1469,8 @@ function hook_query_alter(QueryAlterableInterface $query) {
  *
  * @see hook_query_alter()
  * @see node_query_node_access_alter()
+ * @see QueryAlterableInterface
+ * @see SelectQueryInterface
  *
  * @param $query
  *   An Query object describing the composite parts of a SQL query.
