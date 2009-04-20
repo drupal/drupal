@@ -40,7 +40,7 @@ function user_theme() {
       'template' => 'user-picture',
     ),
     'user_profile' => array(
-      'arguments' => array('account' => NULL),
+      'arguments' => array('elements' => NULL),
       'template' => 'user-profile',
       'file' => 'user.pages.inc',
     ),
