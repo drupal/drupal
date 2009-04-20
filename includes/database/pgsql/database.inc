@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.20 2009/04/01 20:00:46 dries Exp $
+// $Id: database.inc,v 1.21 2009/04/20 02:23:16 webchick Exp $
 
 /**
  * @file
@@ -97,8 +97,13 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
   }
 
   public function mapConditionOperator($operator) {
-    // We don't want to override any of the defaults.
-    return NULL;
+    static $specials = array(
+      // In PostgreSQL, 'LIKE' is case-sensitive. For case-insensitive LIKE
+      // statements, we need to use ILIKE instead.
+      'LIKE' => array('operator' => 'ILIKE'),
+    );
+
+    return isset($specials[$operator]) ? $specials[$operator] : NULL;
   }
 
   /**

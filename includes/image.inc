@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.30 2009/03/10 09:43:01 dries Exp $
+// $Id: image.inc,v 1.31 2009/04/20 02:23:15 webchick Exp $
 
 /**
  * @file
@@ -68,7 +68,8 @@ function image_get_toolkit() {
     if (!isset($toolkits[$toolkit]) || !drupal_function_exists('image_' . $toolkit . '_load')) {
       // The selected toolkit isn't available so return the first one found. If
       // none are available this will return FALSE.
-      $toolkit = reset($toolkits);
+      reset($toolkits);
+      $toolkit = key($toolkits);
     }
   }
 
