@@ -1,4 +1,4 @@
-// $Id: ahah.js,v 1.12 2009/03/13 23:15:08 webchick Exp $
+// $Id: ahah.js,v 1.13 2009/04/20 20:07:14 dries Exp $
 (function($) {
 
 /**
@@ -220,7 +220,7 @@ Drupal.ahah.prototype.error = function (response, uri) {
   // Undo hide.
   $(this.wrapper).show();
   // Re-enable the element.
-  $(this.element).removeClass('progess-disabled').attr('disabled', false);
+  $(this.element).removeClass('progress-disabled').attr('disabled', false);
 };
 
 })(jQuery);

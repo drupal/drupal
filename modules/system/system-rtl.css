@@ -1,4 +1,4 @@
-/* $Id: system-rtl.css,v 1.14 2008/10/19 20:55:07 dries Exp $ */
+/* $Id: system-rtl.css,v 1.15 2009/04/20 20:07:14 dries Exp $ */
 
 thead th {
   text-align: right;
@@ -78,7 +78,7 @@ div.teaser-button-wrapper {
 .progress .percentage {
   float: left;
 }
-.progess-disabled {
+.progress-disabled {
   float: right;
 }
 .ahah-progress {
