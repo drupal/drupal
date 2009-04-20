@@ -2086,58 +2086,5 @@ class DrupalWebTestCase {
     $match = is_array($code) ? in_array($curl_code, $code) : $curl_code == $code;
     return $this->assertTrue($match, $message ? $message : t('HTTP response expected !code, actual !curl_code', array('!code' => $code, '!curl_code' => $curl_code)), t('Browser'));
   }
-
-  /**
-   * TODO write documentation.
-   * @param $type
-   * @param $field_name
-   * @param $settings
-   * @return unknown_type
-   */
-  protected function drupalCreateField($type, $field_name = NULL, $settings = array()) {
-    if (!isset($field_name)) {
-      $field_name = strtolower($this->randomName());
-    }
-    $field_definition = array(
-      'field_name' => $field_name,
-      'type' => $type,
-    );
-    $field_definition += $settings;
-    field_create_field($field_definition);
-
-    $field = field_read_field($field_name);
-    $this->assertTrue($field, t('Created field @field_name of type @type.', array('@field_name' => $field_name, '@type' => $type)));
-
-    return $field;
-  }
-
-  /**
-   * TODO write documentation.
-   * @param $field_name
-   * @param $widget_type
-   * @param $display_type
-   * @param $bundle
-   * @return unknown_type
-   */
-  protected function drupalCreateFieldInstance($field_name, $widget_type, $formatter_type, $bundle) {
-    $instance_definition = array(
-      'field_name' => $field_name,
-      'bundle' => $bundle,
-      'widget' => array(
-        'type' => $widget_type,
-      ),
-      'display' => array(
-        'full' => array(
-          'type' => $formatter_type,
-        ),
-      ),
-    );
-    field_create_instance($instance_definition);
-
-    $instance = field_read_instance($field_name, $bundle);
-    $this->assertTrue($instance, t('Created instance of field @field_name on bundle @bundle.', array('@field_name' => $field_name, '@bundle' => $bundle)));
-
-    return $instance;
-  }
 }
 

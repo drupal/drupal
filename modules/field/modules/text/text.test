@@ -27,13 +27,31 @@ class TextFieldTestCase extends DrupalWebTestCase {
   function testTextFieldValidation() {
     // Create a field with settings to validate.
     $max_length = 3;
-    $field = $this->drupalCreateField('text', NULL, array('settings' => array('max_length' => $max_length)));
-    $this->instance = $this->drupalCreateFieldInstance($field['field_name'], 'text_textfield', 'text_default', FIELD_TEST_BUNDLE);
-
+    $this->field = array(
+      'field_name' => drupal_strtolower($this->randomName()),
+      'type' => 'text',
+      'settings' => array(
+        'max_length' => $max_length,
+      )
+    );
+    field_create_field($this->field);
+    $this->instance = array(
+      'field_name' => $this->field['field_name'],
+      'bundle' => FIELD_TEST_BUNDLE,
+      'widget' => array(
+        'type' => 'text_textfield',
+      ),
+      'display' => array(
+        'full' => array(
+          'type' => 'text_default',
+        ),
+      ),
+    );
+    field_create_instance($this->instance);
     // Test valid and invalid values with field_attach_validate().
     $entity = field_test_create_stub_entity(0, 0, FIELD_TEST_BUNDLE);
     for ($i = 0; $i <= $max_length + 2; $i++) {
-      $entity->{$field['field_name']}[0]['value'] = str_repeat('x', $i);
+      $entity->{$this->field['field_name']}[0]['value'] = str_repeat('x', $i);
       try {
         field_attach_validate('test_entity', $entity);
         $this->assertTrue($i <= $max_length, "Length $i does not cause validation error when max_length is $max_length");
