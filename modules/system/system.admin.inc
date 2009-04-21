@@ -253,7 +253,6 @@ function system_themes_form_submit($form, &$form_state) {
       foreach ($form_state['values']['status'] as $key => $choice) {
         // Always enable the default theme, despite its status checkbox being checked:
         if ($choice || $form_state['values']['theme_default'] == $key) {
-          system_initialize_theme_blocks($key);
           $new_theme_list[] = $key;
           db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' and name = '%s'", $key);
         }
@@ -265,13 +264,6 @@ function system_themes_form_submit($form, &$form_state) {
         '%admin_theme' => $form_state['values']['admin_theme'],
         '%selected_theme' => $form_state['values']['theme_default'],
       )));
-    }
-    if ($form_state['values']['admin_theme'] && $form_state['values']['admin_theme'] != variable_get('admin_theme', 0)) {
-      // If we're changing themes, make sure the theme has its blocks initialized.
-      $result = db_result(db_query("SELECT COUNT(*) FROM {block} WHERE theme = '%s'", $form_state['values']['admin_theme']));
-      if (!$result) {
-        system_initialize_theme_blocks($form_state['values']['admin_theme']);
-      }
     }
 
     // Save the variables.
