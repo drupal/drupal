@@ -1602,7 +1602,7 @@ function hook_install() {
 function hook_update_N(&$sandbox = NULL) {
   // For most updates, the following is sufficient.
   $ret = array();
-  db_add_field($ret, 'mytable1', 'newcol', array('type' => 'int', 'not null' => TRUE));
+  db_add_field($ret, 'mytable1', 'newcol', array('type' => 'int', 'not null' => TRUE, 'description' => 'My new integer column.'));
   return $ret;
   
   // However, for more complex operations that may take a long time, 
