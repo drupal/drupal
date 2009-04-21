@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.44 2009/03/31 01:45:31 webchick Exp $
+// $Id: menu.admin.inc,v 1.45 2009/04/21 09:31:31 dries Exp $
 
 /**
  * @file
@@ -510,8 +510,10 @@ function menu_delete_menu_confirm_submit($form, &$form_state) {
   db_query("DELETE FROM {menu_links} WHERE menu_name = '%s'", $menu['menu_name']);
   db_query("DELETE FROM {menu_custom} WHERE menu_name = '%s'", $menu['menu_name']);
   // Delete all the blocks for this menu.
-  db_query("DELETE FROM {block} WHERE module = 'menu' AND delta = '%s'", $menu['menu_name']);
-  db_query("DELETE FROM {block_role} WHERE module = 'menu' AND delta = '%s'", $menu['menu_name']);
+  if (module_exists('block')) {
+    db_query("DELETE FROM {block} WHERE module = 'menu' AND delta = '%s'", $menu['menu_name']);
+    db_query("DELETE FROM {block_role} WHERE module = 'menu' AND delta = '%s'", $menu['menu_name']);
+  }
   menu_cache_clear_all();
   cache_clear_all();
   $t_args = array('%title' => $menu['title']);

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.876 2009/04/15 23:49:06 webchick Exp $
+// $Id: common.inc,v 1.877 2009/04/21 09:31:30 dries Exp $
 
 /**
  * @file
@@ -4276,7 +4276,7 @@ function drupal_flush_all_caches() {
   node_types_rebuild();
   // Don't clear cache_form - in-progress form submissions may break.
   // Ordered so clearing the page cache will always be the last action.
-  $core = array('cache', 'cache_block', 'cache_filter', 'cache_registry', 'cache_page');
+  $core = array('cache', 'cache_filter', 'cache_registry', 'cache_page');
   $cache_tables = array_merge(module_invoke_all('flush_caches'), $core);
   foreach ($cache_tables as $table) {
     cache_clear_all('*', $table, TRUE);

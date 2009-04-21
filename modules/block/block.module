@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.326 2009/04/20 07:36:34 dries Exp $
+// $Id: block.module,v 1.327 2009/04/21 09:31:31 dries Exp $
 
 /**
  * @file
@@ -436,7 +436,7 @@ function block_user_validate(&$edit, &$account, $category = NULL) {
 }
 
 /**
- * Implementation of hook_form_FORM_ID_form_alter().
+ * Implementation of hook_form_FORM_ID_alter().
  */
 function block_form_system_performance_settings_alter(&$form, &$form_state) {
 
@@ -472,6 +472,63 @@ function block_form_system_performance_settings_alter(&$form, &$form_state) {
     $form['page_cache']['cache']['#description'] .=  '<p>' . t('When caching is enabled, anonymous user sessions are only saved to the database when needed, so the "Who\'s online" block does not display the number of anonymous users.') . '</p>';
   }
   
+}
+
+/**
+ * Implementation of hook_form_FORM_ID_alter().
+ */
+function block_form_system_themes_form_alter(&$form, &$form_state) {
+  $form['#submit'][] = 'block_system_themes_form_submit';
+}
+
+/**
+ * Initialize blocks for enabled themes.
+ */
+function block_system_themes_form_submit(&$form, &$form_state) {
+  if ($form_state['values']['op'] == t('Save configuration')) {
+    if (is_array($form_state['values']['status'])) {
+      foreach ($form_state['values']['status'] as $key => $choice) {
+        if ($choice || $form_state['values']['theme_default'] == $key) {
+          block_initialize_theme_blocks($key);
+        }
+      }
+    }
+    if ($form_state['values']['admin_theme'] && $form_state['values']['admin_theme'] != variable_get('admin_theme', 0)) {
+      // If we're changing themes, make sure the theme has its blocks initialized.
+      $result = db_result(db_query("SELECT COUNT(*) FROM {block} WHERE theme = '%s'", $form_state['values']['admin_theme']));
+      if (!$result) {
+        block_initialize_theme_blocks($form_state['values']['admin_theme']);
+      }
+    }
+  }
+}
+
+/**
+ * Assign an initial, default set of blocks for a theme.
+ * 
+ * This function is called the first time a new theme is enabled. The new theme
+ * gets a copy of the default theme's blocks, with the difference that if a
+ * particular region isn't available in the new theme, the block is assigned
+ * to the new theme's default region.
+ * 
+ * @param $theme
+ *   The name of a theme.
+ */
+function block_initialize_theme_blocks($theme) {
+  // Initialize theme's blocks if none already registered.
+  if (!(db_result(db_query("SELECT COUNT(*) FROM {block} WHERE theme = '%s'", $theme)))) {
+    $default_theme = variable_get('theme_default', 'garland');
+    $regions = system_region_list($theme);
+    $result = db_query("SELECT * FROM {block} WHERE theme = '%s'", $default_theme);
+    while ($block = db_fetch_array($result)) {
+      // If the region isn't supported by the theme, assign the block to the theme's default region.
+      if (!array_key_exists($block['region'], $regions)) {
+        $block['region'] = system_default_region($theme);
+      }
+      db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, visibility, pages, custom, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d)",
+          $block['module'], $block['delta'], $theme, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['cache']);
+    }
+  }
 }
 
 /**
