@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.test,v 1.18 2009/04/21 05:05:27 dries Exp $
+// $Id: contact.test,v 1.19 2009/04/21 09:27:52 dries Exp $
 
 /**
  * Test the sitewide contact form.
@@ -22,7 +22,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
    */
   function testSiteWideContact() {
     // Create and login administrative user.
-    $admin_user = $this->drupalCreateUser(array('administer site-wide contact form', 'administer permissions'));
+    $admin_user = $this->drupalCreateUser(array('access site-wide contact form', 'administer site-wide contact form', 'administer permissions'));
     $this->drupalLogin($admin_user);
 
     // Set settings.
@@ -41,8 +41,11 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $this->setPermission('anonymous user', array('access site-wide contact form' => TRUE));
     $this->drupalLogout();
     $this->drupalGet('contact');
-    $this->assertText(t('The contact form has not been configured.'), t('Contact form will not work without categories configured.'));
+    $this->assertResponse(404);
     $this->drupalLogin($admin_user);
+    $this->drupalGet('contact');
+    $this->assertResponse(200);
+    $this->assertText(t('The contact form has not been configured.'));
 
     // Add categories.
     // Test invalid recipients.
