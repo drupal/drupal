@@ -504,7 +504,7 @@ function forum_block_view($delta = '') {
         $title = t('Active forum topics');
         $query = db_select('node', 'n');
         $tn_alias = $query->join('taxonomy_term_node', 'tn', 'tn.vid = n.vid');
-        $td_alias = $query->join('taxonomy_term_data', 'td', 'tn.tid = tn.tid');
+        $td_alias = $query->join('taxonomy_term_data', 'td', 'td.tid = tn.tid');
         $l_alias = $query->join('node_comment_statistics', 'l', 'n.nid = l.nid');
         $query->addField('n', 'nid', 'nid');
         $query->addField('n', 'title', 'title');
