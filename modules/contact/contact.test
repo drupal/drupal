@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.test,v 1.17 2009/04/05 12:10:56 dries Exp $
+// $Id: contact.test,v 1.18 2009/04/21 05:05:27 dries Exp $
 
 /**
  * Test the sitewide contact form.
@@ -61,6 +61,9 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $recipients = array('simpletest@example.com', 'simpletest2@example.com', 'simpletest3@example.com');
     $this->addCategory($category = $this->randomName(16), implode(',', array($recipients[0])), '', TRUE);
     $this->assertRaw(t('Category %category has been added.', array('%category' => $category)), t('Category successfully added.'));
+
+    // Make sure the newly created category is included in the list of categories.
+    $this->assertNoUniqueText($category, t('New category included in categories list.'));
 
     // Test update contact form category.
     $categories = $this->getCategories();
