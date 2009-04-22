@@ -34,8 +34,6 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Highlight duplicate URL aliases.
     * Renamed "input formats" to "text formats".
     * Added configurable ability for users to cancel their own accounts.
-    * Added optional filter that can use [internal:node/123] to link to internal
-      pages.
     * Added "vertical tabs", a reusable interface component that features automatic
       summaries and increases usability.
     * Replaced fieldsets on node edit and add pages with vertical tabs.
