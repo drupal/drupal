@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.327 2009/04/11 22:19:44 webchick Exp $
+// $Id: form.inc,v 1.328 2009/04/22 09:12:44 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -188,9 +188,8 @@ function drupal_build_form($form_id, &$form_state) {
 
     if ($cacheable && !empty($form['#cache']) && empty($form['#no_cache'])) {
       // Caching is done past drupal_process_form so #process callbacks can
-      // set #cache. By not sending the form state, we avoid storing
-      // $form_state['storage'].
-      form_set_cache($form_build_id, $original_form, NULL);
+      // set #cache.
+      form_set_cache($form_build_id, $original_form, $form_state);
     }
   }
 
@@ -201,14 +200,14 @@ function drupal_build_form($form_id, &$form_state) {
   // the form will simply be re-rendered with the values still in its
   // fields.
   //
-  // If $form_state['storage'] or $form_state['rebuild'] have been
-  // set by any submit or validate handlers, however, we know that
-  // we're in a complex multi-part process of some sort and the form's
-  // workflow is NOT complete. We need to construct a fresh copy of
-  // the form, passing in the latest $form_state in addition to any
-  // other variables passed into drupal_get_form().
+  // If $form_state['storage'] or $form_state['rebuild'] has been set
+  // and the form has been submitted, we know that we're in a complex
+  // multi-part process of some sort and the form's workflow is NOT
+  // complete. We need to construct a fresh copy of the form, passing
+  // in the latest $form_state in addition to any other variables passed
+  // into drupal_get_form().
 
-  if (!empty($form_state['rebuild']) || !empty($form_state['storage'])) {
+  if ((!empty($form_state['storage']) || !empty($form_state['rebuild'])) && !empty($form_state['submitted']) && !form_get_errors()) {
     $form = drupal_rebuild_form($form_id, $form_state);
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.7 2009/03/31 01:49:53 webchick Exp $
+// $Id: form.test,v 1.8 2009/04/22 09:12:44 dries Exp $
 
 /**
  * @file
@@ -382,4 +382,70 @@ class FormAPITestCase extends DrupalWebTestCase {
     parent::setUp('form_test');
   }
 
+}
+
+/**
+ * Test the form storage on a multistep form.
+ *
+ * The tested form puts data into the storage during the initial form
+ * construction. These tests verify that there are no duplicate form
+ * constructions, with and without manual form caching activiated. Furthermore
+ * when a validation error occurs, it makes sure that changed form element
+ * values aren't lost due to a wrong form rebuild.
+ */
+class FormsFormStorageTestCase extends DrupalWebTestCase {
+
+  function getInfo() {
+    return array(
+      'name'  => t('Multistep form using form storage'),
+      'description'  => t('Tests a multistep form using form storage and makes sure validation and caching works right.'),
+      'group' => t('Form API'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('form_test');
+  }
+
+  /**
+   * Tests using the form in a usual way.
+   */
+  function testForm() {
+    
+    $user = $this->drupalCreateUser(array('access content'));
+    $this->drupalLogin($user);
+
+    $this->drupalPost('form_test/form-storage', array('title' => 'new', 'value' => 'value_is_set'), 'Continue');
+    $this->assertText('Form constructions: 2', t('The form has been constructed two times till now.'));
+
+    $this->drupalPost(NULL, array(), 'Save');
+    $this->assertText('Form constructions: 3', t('The form has been constructed three times till now.'));
+    $this->assertText('Title: new', t('The form storage has stored the values.'));
+  }
+
+  /**
+   * Tests using the form with an activated #cache property.
+   */
+  function testFormCached() {
+    $user = $this->drupalCreateUser(array('access content'));
+    $this->drupalLogin($user);
+
+    $this->drupalPost('form_test/form-storage', array('title' => 'new', 'value' => 'value_is_set'), 'Continue', array('query' => 'cache=1'));
+    $this->assertText('Form constructions: 1', t('The form has been constructed one time till now.'));
+    
+    $this->drupalPost(NULL, array(), 'Save', array('query' => 'cache=1'));
+    $this->assertText('Form constructions: 2', t('The form has been constructed two times till now.'));
+    $this->assertText('Title: new', t('The form storage has stored the values.'));
+  }
+
+  /**
+   * Tests validation when form storage is used.
+   */
+  function testValidation() {
+    $user = $this->drupalCreateUser(array('access content'));
+    $this->drupalLogin($user);
+
+    $this->drupalPost('form_test/form-storage', array('title' => '', 'value' => 'value_is_set'), 'Continue');
+    $this->assertPattern('/value_is_set/', t("The input values have been kept."));
+  }
 }
