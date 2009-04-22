@@ -17,6 +17,11 @@ function system_test_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
+  $items['system-test/set-header'] = array(
+    'page callback' => 'system_test_set_header',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
   $items['system-test/redirect-noscheme'] = array(
     'page callback' => 'system_test_redirect_noscheme',
     'access arguments' => array('access content'),
@@ -93,6 +98,11 @@ function system_test_redirect($code) {
     exit;
   }
   return '';
+}
+
+function system_test_set_header() {
+  drupal_set_header($_GET['name'], $_GET['value']);
+  return t('The following header was set: %name: %value', array('%name' => $_GET['name'], '%value' => $_GET['value']));
 }
 
 function system_test_redirect_noscheme() {

@@ -371,7 +371,7 @@ function aggregator_page_rss() {
  * @ingroup themeable
  */
 function theme_aggregator_page_rss($feeds, $category = NULL) {
-  drupal_set_header('Content-Type: application/rss+xml; charset=utf-8');
+  drupal_set_header('Content-Type', 'application/rss+xml; charset=utf-8');
 
   $items = '';
   $feed_length = variable_get('feed_item_length', 'teaser');
@@ -431,7 +431,7 @@ function aggregator_page_opml($cid = NULL) {
  * @ingroup themeable
  */
 function theme_aggregator_page_opml($feeds) {
-  drupal_set_header('Content-Type: text/xml; charset=utf-8');
+  drupal_set_header('Content-Type', 'text/xml; charset=utf-8');
 
   $output  = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<opml version=\"1.1\">\n";

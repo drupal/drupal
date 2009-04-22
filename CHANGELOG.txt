@@ -42,6 +42,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
 - Performance:
     * Improved performance on uncached page views by loading multiple core
       objects in a single database query.
+    * Improved support for HTTP proxies (including reverse proxies), allowing
+      anonymous pageviews to be served entirely from the proxy.
 - Documentation:
     * Hook API documentation now included in Drupal core.
 - News aggregator:

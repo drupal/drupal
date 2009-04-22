@@ -647,21 +647,21 @@ class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
       '%type' => 'Notice',
       '%message' => 'Undefined variable: bananas',
       '%function' => 'system_test_generate_warnings()',
-      '%line' => 184,
+      '%line' => 194,
       '%file' => realpath('modules/simpletest/tests/system_test.module'),
     );
     $error_warning = array(
       '%type' => 'Warning',
       '%message' => 'Division by zero',
       '%function' => 'system_test_generate_warnings()',
-      '%line' => 186,
+      '%line' => 196,
       '%file' => realpath('modules/simpletest/tests/system_test.module'),
     );
     $error_user_notice = array(
       '%type' => 'User notice',
       '%message' => 'Drupal is awesome',
       '%function' => 'system_test_generate_warnings()',
-      '%line' => 188,
+      '%line' => 198,
       '%file' => realpath('modules/simpletest/tests/system_test.module'),
     );
 
@@ -695,14 +695,14 @@ class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
       '%type' => 'Exception',
       '%message' => 'Drupal is awesome',
       '%function' => 'system_test_trigger_exception()',
-      '%line' => 197,
+      '%line' => 207,
       '%file' => realpath('modules/simpletest/tests/system_test.module'),
     );
     $error_pdo_exception = array(
       '%type' => 'PDOException',
       '%message' => 'SQLSTATE',
       '%function' => 'system_test_trigger_pdo_exception()',
-      '%line' => 205,
+      '%line' => 215,
       '%file' => realpath('modules/simpletest/tests/system_test.module'),
     );
 

@@ -48,8 +48,10 @@ DirectoryIndex index.php
   # Cache all files for 2 weeks after access (A).
   ExpiresDefault A1209600
 
-  # Do not cache dynamically generated pages.
-  ExpiresByType text/html A1
+  <Files index.php>
+    # Caching headers for dynamically generated pages are set from PHP.
+    ExpiresActive Off
+  </Files>
 </IfModule>
 
 # Various rewrite rules.

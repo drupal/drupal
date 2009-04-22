@@ -849,7 +849,7 @@ function blogapi_rsd() {
   $base = url('', array('absolute' => TRUE));
   $blogid = 1; # until we figure out how to handle multiple bloggers
 
-  drupal_set_header('Content-Type: application/rsd+xml; charset=utf-8');
+  drupal_set_header('Content-Type', 'application/rsd+xml; charset=utf-8');
   print <<<__RSD__
 <?xml version="1.0"?>
 <rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">

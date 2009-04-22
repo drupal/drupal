@@ -163,7 +163,7 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->assertSessionCookie(TRUE);
     $this->assertSessionStarted(TRUE);
     $this->assertSessionEmpty(TRUE);
-    $this->assertFalse($this->drupalGetHeader('ETag'), t('Page was not cached.'));
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', t('Page was not cached.'));
     // When PHP deletes a cookie, it sends "Set-Cookie: cookiename=deleted;
     // expires=..."
     $this->assertTrue(preg_match('/SESS\w+=deleted/', $this->drupalGetHeader('Set-Cookie')), t('Session cookie was deleted.'));
@@ -185,7 +185,7 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->assertSessionCookie(TRUE);
     $this->assertSessionStarted(TRUE);
     $this->assertSessionEmpty(FALSE);
-    $this->assertFalse($this->drupalGetHeader('ETag'), t('Page was not cached.'));
+    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), t('Caching was bypassed.'));
     $this->assertText(t('This is a dummy message.'), t('Message was displayed.'));
 
     // During this request the session is destroyed in _drupal_bootstrap(),
@@ -194,7 +194,7 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->assertSessionCookie(TRUE);
     $this->assertSessionStarted(TRUE);
     $this->assertSessionEmpty(TRUE);
-    $this->assertTrue($this->drupalGetHeader('ETag'), t('Page was cached.'));
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
     $this->assertNoText(t('This is a dummy message.'), t('Message was not cached.'));
     $this->assertTrue(preg_match('/SESS\w+=deleted/', $this->drupalGetHeader('Set-Cookie')), t('Session cookie was deleted.'));
 
@@ -202,7 +202,7 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->drupalGet('');
     $this->assertSessionCookie(FALSE);
     $this->assertSessionStarted(FALSE);
-    $this->assertTrue($this->drupalGetHeader('ETag'), t('Page was cached.'));
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
     $this->assertFalse($this->drupalGetHeader('Set-Cookie'), t('New session was not started.'));
 
     // Verify that modifying $_SESSION without having started a session

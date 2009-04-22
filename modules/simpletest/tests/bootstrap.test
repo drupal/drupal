@@ -96,18 +96,22 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
     );
   }
 
+  function setUp() {
+    parent::setUp('system_test');
+  }
+
   /**
-   * Enable cache and examine HTTP headers.
+   * Test support for requests containing If-Modified-Since and If-None-Match headers.
    */
-  function testPageCache() {
+  function testConditionalRequests() {
     variable_set('cache', CACHE_NORMAL);
 
     // Fill the cache.
     $this->drupalGet('');
 
     $this->drupalHead('');
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
     $etag = $this->drupalGetHeader('ETag');
-    $this->assertTrue($etag, t('An ETag header was sent, indicating that page was cached.'));
     $last_modified = $this->drupalGetHeader('Last-Modified');
 
     $this->drupalGet('', array(), array('If-Modified-Since: ' . $last_modified, 'If-None-Match: ' . $etag));
@@ -121,19 +125,58 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
 
     $this->drupalGet('', array(), array('If-Modified-Since: ' . $last_modified));
     $this->assertResponse(200, t('Conditional request without If-None-Match returned 200 OK.'));
-    $this->assertTrue($this->drupalGetHeader('ETag'), t('An ETag header was sent, indicating that page was cached.'));
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
 
     $this->drupalGet('', array(), array('If-Modified-Since: ' . gmdate(DATE_RFC1123, strtotime($last_modified) + 1), 'If-None-Match: ' . $etag));
     $this->assertResponse(200, t('Conditional request with new a If-Modified-Since date newer than Last-Modified returned 200 OK.'));
-    $this->assertTrue($this->drupalGetHeader('ETag'), t('An ETag header was sent, indicating that page was cached.'));
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
 
     $user = $this->drupalCreateUser();
     $this->drupalLogin($user);
     $this->drupalGet('', array(), array('If-Modified-Since: ' . $last_modified, 'If-None-Match: ' . $etag));
     $this->assertResponse(200, t('Conditional request returned 200 OK for authenticated user.'));
-    $this->assertFalse($this->drupalGetHeader('ETag'), t('An ETag header was not sent, indicating that page was not cached.'));
+    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), t('Absense of Page was not cached.'));
   }
 
+  /**
+   * Test cache headers.
+   */
+  function testPageCache() {
+    variable_set('cache', CACHE_NORMAL);
+
+    // Fill the cache.
+    $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', t('Page was not cached.'));
+    $this->assertEqual($this->drupalGetHeader('Vary'), 'Cookie,Accept-Encoding', t('Vary header was sent.'));
+    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'public, max-age=0', t('Cache-Control header was sent.'));
+    $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', t('Expires header was sent.'));
+    $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', t('Custom header was sent.'));
+
+    // Check cache.
+    $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
+    $this->assertEqual($this->drupalGetHeader('Vary'), 'Cookie,Accept-Encoding', t('Vary: Cookie header was sent.'));
+    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'public, max-age=0', t('Cache-Control header was sent.'));
+    $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', t('Expires header was sent.'));
+    $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', t('Custom header was sent.'));
+
+    // Check replacing default headers.
+    $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Expires', 'value' => 'Fri, 19 Nov 2008 05:00:00 GMT')));
+    $this->assertEqual($this->drupalGetHeader('Expires'), 'Fri, 19 Nov 2008 05:00:00 GMT', t('Default header was replaced.'));
+    $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Vary', 'value' => 'User-Agent')));
+    $this->assertEqual($this->drupalGetHeader('Vary'), 'User-Agent,Accept-Encoding', t('Default header was replaced.'));
+
+    // Check that authenticated users bypass the cache.
+    $user = $this->drupalCreateUser();
+    $this->drupalLogin($user);
+    $this->drupalGet('system-test/set-header', array('query' => array('name' => 'Foo', 'value' => 'bar')));
+    $this->assertFalse($this->drupalGetHeader('X-Drupal-Cache'), t('Caching was bypassed.'));
+    $this->assertFalse($this->drupalGetHeader('Vary'), t('Vary header was not sent.'));
+    $this->assertEqual($this->drupalGetHeader('Cache-Control'), 'no-cache, must-revalidate, post-check=0, pre-check=0', t('Cache-Control header was sent.'));
+    $this->assertEqual($this->drupalGetHeader('Expires'), 'Sun, 19 Nov 1978 05:00:00 GMT', t('Expires header was sent.'));
+    $this->assertEqual($this->drupalGetHeader('Foo'), 'bar', t('Custom header was sent.'));
+
+  }
 }
 
 class BootstrapVariableTestCase extends DrupalWebTestCase {
