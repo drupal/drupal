@@ -20,7 +20,7 @@ class UploadTestCase extends DrupalWebTestCase {
   function testNodeUpload() {
     global $base_url;
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
-    $web_user = $this->drupalCreateUser(array('access content', 'edit any page content', 'upload files', 'view uploaded files'));
+    $web_user = $this->drupalCreateUser(array('access content', 'edit own page content', 'upload files', 'view uploaded files'));
 
     $this->drupalLogin($admin_user);
 
@@ -88,7 +88,7 @@ class UploadTestCase extends DrupalWebTestCase {
    */
   function testFilesFilter() {
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
-    $web_user = $this->drupalCreateUser(array('access content', 'edit any page content', 'upload files', 'view uploaded files'));
+    $web_user = $this->drupalCreateUser(array('access content', 'edit own page content', 'upload files', 'view uploaded files'));
 
     $this->drupalLogin($admin_user);
 
@@ -131,7 +131,7 @@ class UploadTestCase extends DrupalWebTestCase {
     $file = current($files)->filepath;
 
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
-    $web_user = $this->drupalCreateUser(array('access content', 'edit any page content', 'upload files', 'view uploaded files'));
+    $web_user = $this->drupalCreateUser(array('access content', 'edit own page content', 'upload files', 'view uploaded files'));
 
     $this->drupalLogin($admin_user);
 

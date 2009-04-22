@@ -136,8 +136,8 @@ class MenuTestCase extends DrupalWebTestCase {
    */
   function doMenuTests($menu_name = 'navigation') {
     // Add nodes to use as links for menu links.
-    $node1 = $this->drupalCreateNode(array('type' => 'article', 'uid' => $this->big_user->uid));
-    $node2 = $this->drupalCreateNode(array('type' => 'article', 'uid' => $this->big_user->uid));
+    $node1 = $this->drupalCreateNode(array('type' => 'article'));
+    $node2 = $this->drupalCreateNode(array('type' => 'article'));
 
     // Add menu links.
     $item1 = $this->addMenuLink(0, 'node/' . $node1->nid, $menu_name);

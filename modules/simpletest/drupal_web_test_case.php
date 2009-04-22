@@ -56,11 +56,11 @@ class DrupalWebTestCase {
   protected $elements = NULL;
 
   /**
-   * Whether a user is logged in the internal browser.
+   * The current user logged in using the internal browser.
    *
    * @var bool
    */
-  protected $isLoggedIn = FALSE;
+  protected $loggedInUser = FALSE;
 
   /**
    * The current cookie file used by cURL.
@@ -486,7 +486,7 @@ class DrupalWebTestCase {
    */
   protected function drupalCreateNode($settings = array()) {
     // Populate defaults array
-    $defaults = array(
+    $settings += array(
       'body'      => $this->randomName(32),
       'title'     => $this->randomName(8),
       'comment'   => 2,
@@ -502,18 +502,30 @@ class DrupalWebTestCase {
       'revisions' => NULL,
       'taxonomy'  => NULL,
     );
-    $defaults['teaser'] = $defaults['body'];
-    // If we already have a node, we use the original node's created time, and this
-    if (isset($defaults['created'])) {
-      $defaults['date'] = format_date($defaults['created'], 'custom', 'Y-m-d H:i:s O');
-    }
-    if (empty($settings['uid'])) {
-      global $user;
-      $defaults['uid'] = $user->uid;
-    }
-    $node = ($settings + $defaults);
-    $node = (object)$node;
 
+    // Use the original node's created time for existing nodes.
+    if (isset($settings['created']) && !isset($settings['date'])) {
+      $settings['date'] = format_date($settings['created'], 'custom', 'Y-m-d H:i:s O');
+    }
+
+    // Add the default teaser.
+    if (!isset($settings['teaser'])) {
+      $settings['teaser'] = $settings['body'];      
+    }
+
+    // If the node's user uid is not specified manually, use the currently
+    // logged in user if available, or else the user running the test.
+    if (!isset($settings['uid'])) {
+      if ($this->loggedInUser) {
+        $settings['uid'] = $this->loggedInUser->uid;
+      }
+      else {
+        global $user;
+        $settings['uid'] = $user->uid;
+      }
+    }
+
+    $node = (object) $settings;
     node_save($node);
 
     // small hack to link revisions to our test user
@@ -768,7 +780,7 @@ class DrupalWebTestCase {
    * @see drupalCreateUser()
    */
   protected function drupalLogin(stdClass $user) {
-    if ($this->isLoggedIn) {
+    if ($this->loggedInUser) {
       $this->drupalLogout();
     }
 
@@ -782,7 +794,9 @@ class DrupalWebTestCase {
     $pass = $pass && $this->assertNoText(t('The username %name has been blocked.', array('%name' => $user->name)), t('No blocked message at login page'), t('User login'));
     $pass = $pass && $this->assertNoText(t('The name %name is a reserved username.', array('%name' => $user->name)), t('No reserved message at login page'), t('User login'));
 
-    $this->isLoggedIn = $pass;
+    if ($pass) {
+      $this->loggedInUser = $user;
+    }
   }
 
   /*
@@ -797,7 +811,9 @@ class DrupalWebTestCase {
     $pass = $this->assertField('name', t('Username field found.'), t('Logout'));
     $pass = $pass && $this->assertField('pass', t('Password field found.'), t('Logout'));
 
-    $this->isLoggedIn = !$pass;
+    if ($pass) {
+      $this->loggedInUser = FALSE;
+    }
   }
 
   /**
@@ -921,7 +937,7 @@ class DrupalWebTestCase {
       drupal_save_session(TRUE);
 
       // Ensure that internal logged in variable and cURL options are reset.
-      $this->isLoggedIn = FALSE;
+      $this->loggedInUser = FALSE;
       $this->additionalCurlOptions = array();
 
       // Reload module list and implementations to ensure that test module hooks
