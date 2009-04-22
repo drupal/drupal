@@ -1,5 +1,5 @@
 <?php
-// $Id: file.test,v 1.28 2009/04/20 20:02:31 dries Exp $
+// $Id: file.test,v 1.29 2009/04/22 09:45:03 dries Exp $
 
 /**
  *  @file
@@ -1919,7 +1919,7 @@ class FileDownloadTest extends FileTestCase {
     $url = file_create_url($file->filename);
 
     // Set file_test access header to allow the download.
-    file_test_set_return('download', array('x-foo: Bar'));
+    file_test_set_return('download', array('x-foo' => 'Bar'));
     $this->drupalHead($url);
     $headers = $this->drupalGetHeaders();
     $this->assertEqual($headers['x-foo'] , 'Bar', t('Found header set by file_test module on private download.'));

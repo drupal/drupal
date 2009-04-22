@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.23 2009/04/19 19:10:07 dries Exp $
+// $Id: theme.maintenance.inc,v 1.24 2009/04/22 09:45:02 dries Exp $
 
 /**
  * @file
@@ -108,7 +108,7 @@ function theme_task_list($items, $active = NULL) {
  *   The page content to show.
  */
 function theme_install_page($content) {
-  drupal_set_header('Content-Type: text/html; charset=utf-8');
+  drupal_set_header('Content-Type', 'text/html; charset=utf-8');
 
   // Assign content.
   $variables['content'] = $content;
@@ -162,7 +162,7 @@ function theme_install_page($content) {
  */
 function theme_update_page($content, $show_messages = TRUE) {
   // Set required headers.
-  drupal_set_header('Content-Type: text/html; charset=utf-8');
+  drupal_set_header('Content-Type', 'text/html; charset=utf-8');
 
   // Assign content and show message flag.
   $variables['content'] = $content;

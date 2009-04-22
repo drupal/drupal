@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.166 2009/04/20 20:02:29 dries Exp $
+// $Id: file.inc,v 1.167 2009/04/22 09:45:02 dries Exp $
 
 /**
  * @file
@@ -1311,13 +1311,10 @@ function file_transfer($source, $headers) {
     ob_end_clean();
   }
 
-  foreach ($headers as $header) {
-    // To prevent HTTP header injection, we delete new lines that are
-    // not followed by a space or a tab.
-    // See http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
-    $header = preg_replace('/\r?\n(?!\t| )/', '', $header);
-    drupal_set_header($header);
+  foreach ($headers as $name => $value) {
+    drupal_set_header($name, $value);
   }
+  drupal_send_headers();
 
   $source = file_create_path($source);
 

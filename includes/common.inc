@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.877 2009/04/21 09:31:30 dries Exp $
+// $Id: common.inc,v 1.878 2009/04/22 09:45:02 dries Exp $
 
 /**
  * @file
@@ -152,32 +152,6 @@ function drupal_get_html_head() {
  */
 function drupal_clear_path_cache() {
   drupal_lookup_path('wipe');
-}
-
-/**
- * Set an HTTP response header for the current page.
- *
- * Note: When sending a Content-Type header, always include a 'charset' type,
- * too. This is necessary to avoid security bugs (e.g. UTF-7 XSS).
- */
-function drupal_set_header($header = NULL) {
-  // We use an array to guarantee there are no leading or trailing delimiters.
-  // Otherwise, header('') could get called when serving the page later, which
-  // ends HTTP headers prematurely on some PHP versions.
-  static $stored_headers = array();
-
-  if (strlen($header)) {
-    header($header);
-    $stored_headers[] = $header;
-  }
-  return implode("\n", $stored_headers);
-}
-
-/**
- * Get the HTTP response headers for the current page.
- */
-function drupal_get_headers() {
-  return drupal_set_header();
 }
 
 /**
@@ -357,7 +331,7 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response
  */
 function drupal_site_offline() {
   drupal_maintenance_theme();
-  drupal_set_header($_SERVER['SERVER_PROTOCOL'] . ' 503 Service unavailable');
+  drupal_set_header('503 Service unavailable');
   drupal_set_title(t('Site offline'));
   print theme('maintenance_page', filter_xss_admin(variable_get('site_offline_message',
     t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal'))))));
@@ -367,7 +341,7 @@ function drupal_site_offline() {
  * Generates a 404 error if the request can not be handled.
  */
 function drupal_not_found() {
-  drupal_set_header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
+  drupal_set_header('404 Not Found');
 
   watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
@@ -401,7 +375,7 @@ function drupal_not_found() {
  * Generates a 403 error if the request is not allowed.
  */
 function drupal_access_denied() {
-  drupal_set_header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
+  drupal_set_header('403 Forbidden');
   watchdog('access denied', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
   // Keep old path for reference.
@@ -818,7 +792,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
   }
 
   if ($fatal) {
-    drupal_set_header($_SERVER['SERVER_PROTOCOL'] . ' Service unavailable');
+    drupal_set_header('503 Service unavailable');
     drupal_set_title(t('Error'));
     if (!defined('MAINTENANCE_MODE') && drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
       // To conserve CPU and bandwidth, omit the blocks.
@@ -2847,7 +2821,7 @@ function drupal_to_js($var) {
  */
 function drupal_json($var = NULL) {
   // We are returning JavaScript, so tell the browser.
-  drupal_set_header('Content-Type: text/javascript; charset=utf-8');
+  drupal_set_header('Content-Type', 'text/javascript; charset=utf-8');
 
   if (isset($var)) {
     echo drupal_to_js($var);
@@ -3015,7 +2989,7 @@ function _drupal_bootstrap_full() {
   set_exception_handler('_drupal_exception_handler');
 
   // Emit the correct charset HTTP header.
-  drupal_set_header('Content-Type: text/html; charset=utf-8');
+  drupal_set_header('Content-Type', 'text/html; charset=utf-8');
   // Detect string handling method
   unicode_check();
   // Undo magic quotes
@@ -3047,24 +3021,35 @@ function page_set_cache() {
   global $user, $base_root;
 
   if (page_get_cache(FALSE)) {
-    $cache = TRUE;
-    $data = ob_get_contents();
+    $cache_page = TRUE;
+    $cache = (object) array(
+      'cid' => $base_root . request_uri(),
+      'data' => ob_get_clean(),
+      'expire' => CACHE_TEMPORARY,
+      'created' => REQUEST_TIME,
+      'headers' => drupal_get_header(),
+    );
     if (variable_get('page_compression', TRUE) && function_exists('gzencode')) {
       // We do not store the data in case the zlib mode is deflate. This should
       // be rarely happening.
       if (zlib_get_coding_type() == 'deflate') {
-        $cache = FALSE;
+        $cache_page = FALSE;
       }
       elseif (zlib_get_coding_type() == FALSE) {
-        $data = gzencode($data, 9, FORCE_GZIP);
+        $cache->data = gzencode($cache->data, 9, FORCE_GZIP);
       }
       // The remaining case is 'gzip' which means the data is already
       // compressed and nothing left to do but to store it.
     }
-    ob_end_flush();
-    if ($cache && $data) {
-      cache_set($base_root . request_uri(), $data, 'cache_page', CACHE_TEMPORARY, drupal_get_headers());
+    if ($cache_page && $cache->data) {
+      cache_set($cache->cid, $cache->data, 'cache_page', $cache->expire, $cache->headers);
     }
+    drupal_page_cache_header($cache);
+  }
+  else {
+    // If output buffering was enabled during bootstrap, and the headers were
+    // not sent in the DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE phase, send them now.
+    drupal_page_header();
   }
 }
 

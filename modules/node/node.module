@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1034 2009/04/20 19:57:18 dries Exp $
+// $Id: node.module,v 1.1035 2009/04/22 09:45:02 dries Exp $
 
 /**
  * @file
@@ -1998,7 +1998,7 @@ function node_feed($nids = FALSE, $channel = array()) {
   $output .= format_rss_channel($channel['title'], $channel['link'], $channel['description'], $items, $channel['language']);
   $output .= "</rss>\n";
 
-  drupal_set_header('Content-Type: application/rss+xml; charset=utf-8');
+  drupal_set_header('Content-Type', 'application/rss+xml; charset=utf-8');
   print $output;
 }
 

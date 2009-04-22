@@ -1,5 +1,5 @@
 <?php
-// $Id: system_test.module,v 1.8 2008/12/09 11:09:26 dries Exp $
+// $Id: system_test.module,v 1.9 2009/04/22 09:45:03 dries Exp $
 
 /**
  * Implementation of hook_menu().
@@ -14,6 +14,11 @@ function system_test_menu() {
     'title' => 'Redirect',
     'page callback' => 'system_test_redirect',
     'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['system-test/set-header'] = array(
+    'page callback' => 'system_test_set_header',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
@@ -93,6 +98,11 @@ function system_test_redirect($code) {
     exit;
   }
   return '';
+}
+
+function system_test_set_header() {
+  drupal_set_header($_GET['name'], $_GET['value']);
+  return t('The following header was set: %name: %value', array('%name' => $_GET['name'], '%value' => $_GET['value']));
 }
 
 function system_test_redirect_noscheme() {

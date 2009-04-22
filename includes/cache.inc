@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.29 2009/04/21 17:15:51 dries Exp $
+// $Id: cache.inc,v 1.30 2009/04/22 09:45:02 dries Exp $
 
 /**
  * Return data from the persistent cache. Data may be stored as either plain
@@ -30,33 +30,30 @@ function cache_get($cid, $table = 'cache') {
   }
 
   $cache = db_query("SELECT data, created, headers, expire, serialized FROM {" . $table . "} WHERE cid = :cid", array(':cid' => $cid))->fetchObject();
-  if (isset($cache->data)) {
-    // If the data is permanent or we're not enforcing a minimum cache lifetime
-    // always return the cached data.
-    if ($cache->expire == CACHE_PERMANENT || !variable_get('cache_lifetime', 0)) {
-      if ($cache->serialized) {
-        $cache->data = unserialize($cache->data);
-      }
-    }
-    // If enforcing a minimum cache lifetime, validate that the data is
-    // currently valid for this user before we return it by making sure the
-    // cache entry was created before the timestamp in the current session's
-    // cache timer. The cache variable is loaded into the $user object by
-    // _sess_read() in session.inc.
-    else {
-      if ($user->cache > $cache->created) {
-        // This cache data is too old and thus not valid for us, ignore it.
-        return FALSE;
-      }
-      else {
-        if ($cache->serialized) {
-          $cache->data = unserialize($cache->data);
-        }
-      }
-    }
-    return $cache;
+
+  if (!isset($cache->data)) {
+    return FALSE;
   }
-  return FALSE;
+
+  // If enforcing a minimum cache lifetime, validate that the data is
+  // currently valid for this user before we return it by making sure the cache
+  // entry was created before the timestamp in the current session's cache
+  // timer. The cache variable is loaded into the $user object by _sess_read()
+  // in session.inc. If the data is permanent or we're not enforcing a minimum
+  // cache lifetime always return the cached data.
+  if ($cache->expire != CACHE_PERMANENT && variable_get('cache_lifetime', 0) && $user->cache > $cache->created) {
+    // This cache data is too old and thus not valid for us, ignore it.
+    return FALSE;
+  }
+
+  if ($cache->serialized) {
+    $cache->data = unserialize($cache->data);
+  }
+  if (isset($cache->headers)) {
+    $cache->headers = unserialize($cache->headers);
+  }
+
+  return $cache;
 }
 
 /**
@@ -104,12 +101,12 @@ function cache_get($cid, $table = 'cache') {
  * @param $headers
  *   A string containing HTTP header information for cached pages.
  */
-function cache_set($cid, $data, $table = 'cache', $expire = CACHE_PERMANENT, $headers = NULL) {
+function cache_set($cid, $data, $table = 'cache', $expire = CACHE_PERMANENT, array $headers = NULL) {
   $fields = array(
     'serialized' => 0,
     'created' => REQUEST_TIME,
     'expire' => $expire,
-    'headers' => $headers,
+    'headers' => isset($headers) ? serialize($headers) : NULL,
   );
   if (!is_string($data)) {
     $fields['data'] = serialize($data);
