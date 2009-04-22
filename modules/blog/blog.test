@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.test,v 1.9 2009/04/03 20:24:57 dries Exp $
+// $Id: blog.test,v 1.10 2009/04/22 09:57:10 dries Exp $
 
 class BlogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -66,7 +66,7 @@ class BlogTestCase extends DrupalWebTestCase {
     // Login the user.
     $this->drupalLogin($user);
     // Create blog node.
-    $node = $this->drupalCreateNode(array('type' => 'blog', 'uid' => $user->uid));
+    $node = $this->drupalCreateNode(array('type' => 'blog'));
     // Verify the user has access to all the blog nodes.
     $this->verifyBlogs($user, $node, $admin);
     // Verify the blog links are displayed.

@@ -1,5 +1,5 @@
 <?php
-// $Id: path.test,v 1.8 2009/03/31 02:02:22 webchick Exp $
+// $Id: path.test,v 1.9 2009/04/22 09:57:10 dries Exp $
 
 class PathTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -15,8 +15,9 @@ class PathTestCase extends DrupalWebTestCase {
    */
   function setUp() {
     parent::setUp('path');
-    // create and login user
-    $web_user = $this->drupalCreateUser(array('edit any page content', 'create page content', 'administer url aliases', 'create url aliases'));
+
+    // Create test user and login.
+    $web_user = $this->drupalCreateUser(array('create page content', 'edit own page content', 'administer url aliases', 'create url aliases'));
     $this->drupalLogin($web_user);
   }
 
@@ -24,7 +25,7 @@ class PathTestCase extends DrupalWebTestCase {
    * Test alias functionality through the admin interfaces.
    */
   function testAdminAlias() {
-    // create test node
+    // Create test node.
     $node1 = $this->drupalCreateNode();
 
     // Create alias.
