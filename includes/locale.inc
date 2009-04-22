@@ -2268,8 +2268,8 @@ function _locale_translate_seek() {
       $groups[$string['group']],
       array('data' => check_plain(truncate_utf8($string['source'], 150, FALSE, TRUE)) . '<br /><small>' . $string['location'] . '</small>'),
       array('data' => _locale_translate_language_list($string['languages'], $limit_language), 'align' => 'center'),
-      array('data' => l(t('edit'), "/admin/international/translate/edit/$lid", array('query' => drupal_get_destination())), 'class' => 'nowrap'),
-      array('data' => l(t('delete'), "/admin/international/translate/delete/$lid", array('query' => drupal_get_destination())), 'class' => 'nowrap'),
+      array('data' => l(t('edit'), "admin/international/translate/edit/$lid", array('query' => drupal_get_destination())), 'class' => 'nowrap'),
+      array('data' => l(t('delete'), "admin/international/translate/delete/$lid", array('query' => drupal_get_destination())), 'class' => 'nowrap'),
     );
   }
 
