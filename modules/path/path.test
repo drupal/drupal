@@ -1,5 +1,10 @@
 <?php
-// $Id: path.test,v 1.9 2009/04/22 09:57:10 dries Exp $
+// $Id: path.test,v 1.10 2009/04/22 15:53:00 dries Exp $
+
+/**
+ * @file
+ * Tests for the path module
+ */
 
 class PathTestCase extends DrupalWebTestCase {
   public static function getInfo() {

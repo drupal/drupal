@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.155 2009/04/11 22:19:45 webchick Exp $
+// $Id: path.module,v 1.156 2009/04/22 15:53:00 dries Exp $
 
 /**
  * @file
@@ -18,8 +18,8 @@ function path_help($path, $arg) {
       $output .= '<li>' . t('%alias for the path %path', array('%alias' => 'store', '%path' => 'image/tid/16')) . '</li>';
       $output .= '<li>' . t('%alias for the path %path', array('%alias' => 'store/products/whirlygigs', '%path' => 'taxonomy/term/7+19+20+21')) . '</li>';
       $output .= '<li>' . t('%alias for the path %path', array('%alias' => 'contact', '%path' => 'node/3')) . '</li></ul>';
-      $output .= '<p>' . t('The path module enables appropriately permissioned users to specify an optional alias in all node input and editing forms, and provides an interface to view and edit all URL aliases. The two permissions related to URL aliasing are <em>administer url aliases</em> and <em>create url aliases</em>. ') . '</p>';
-      $output .= '<p>' . t('This module also provides user-defined mass URL aliasing capabilities, which is useful if you wish to uniformly use URLs different from the default. For example, you may want to have your URLs presented in a different language. Access to the Drupal source code on the web server is required to set up mass URL aliasing. ') . '</p>';
+      $output .= '<p>' . t('The path module enables appropriately permissioned users to specify an optional alias in all node input and editing forms, and provides an interface to view and edit all URL aliases. The two permissions related to URL aliasing are <em>administer url aliases</em> and <em>create url aliases</em>.') . ' </p>';
+      $output .= '<p>' . t('This module also provides user-defined mass URL aliasing capabilities, which is useful if you wish to uniformly use URLs different from the default. For example, you may want to have your URLs presented in a different language. Access to the Drupal source code on the web server is required to set up mass URL aliasing.') . ' </p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@path">Path module</a>.', array('@path' => 'http://drupal.org/handbook/modules/path/')) . '</p>';
       return $output;
     case 'admin/build/path':
@@ -125,7 +125,7 @@ function path_node_validate($node, $form) {
     if (isset($node->path)) {
       $language = isset($node->language) ? $node->language : '';
       $node->path = trim($node->path);
-      if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s' AND src != '%s' AND language = '%s'", $node->path, "node/$node->nid", $language))) {
+      if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s' AND src <> '%s' AND language = '%s'", $node->path, "node/$node->nid", $language))) {
         form_set_error('path', t('The path is already in use.'));
       }
     }
