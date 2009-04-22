@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Tests for the path module
+ */
+
 class PathTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(

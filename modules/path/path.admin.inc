@@ -15,14 +15,14 @@ function path_admin_overview($keys = NULL) {
   // Add the filter form above the overview table.
   $output = drupal_get_form('path_admin_filter_form', $keys);
   // Enable language column if locale is enabled or if we have any alias with language
-  $count = db_result(db_query("SELECT COUNT(*) FROM {url_alias} WHERE language != ''"));
+  $count = db_result(db_query("SELECT COUNT(*) FROM {url_alias} WHERE language <> ''"));
   $multilanguage = (module_exists('locale') || $count);
 
   if ($keys) {
     // Replace wildcards with PDO wildcards.
     $keys = preg_replace('!\*+!', '%', $keys);
     $sql = "SELECT * FROM {url_alias} WHERE dst LIKE :keys";
-    $args = array(':keys' => '%'. $keys .'%');
+    $args = array(':keys' => '%' . $keys . '%');
   }
   else {
     $sql = 'SELECT * FROM {url_alias}';
@@ -144,7 +144,7 @@ function path_admin_form_validate($form, &$form_state) {
   // Language is only set if locale module is enabled, otherwise save for all languages.
   $language = isset($form_state['values']['language']) ? $form_state['values']['language'] : '';
 
-  if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid != %d AND dst = '%s' AND language = '%s'", $pid, $dst, $language))) {
+  if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid <> %d AND dst = '%s' AND language = '%s'", $pid, $dst, $language))) {
     form_set_error('dst', t('The alias %alias is already in use in this language.', array('%alias' => $dst)));
   }
   $item = menu_get_item($src);
