@@ -1,5 +1,5 @@
 <?php
-// $Id: user-picture.tpl.php,v 1.3 2008/10/13 12:31:43 dries Exp $
+// $Id: user-picture.tpl.php,v 1.4 2009/04/24 09:03:21 dries Exp $
 
 /**
  * @file
@@ -15,6 +15,8 @@
  * @see template_preprocess_user_picture()
  */
 ?>
-<div class="picture">
-  <?php print $picture; ?>
-</div>
+<?php if ($picture): ?>
+  <div class="picture">
+    <?php print $picture; ?>
+  </div>
+<?php endif; ?>
