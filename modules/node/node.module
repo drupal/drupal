@@ -2086,8 +2086,6 @@ function node_page_view($node) {
 function node_update_index() {
   $limit = (int)variable_get('search_cron_limit', 100);
 
-  variable_set('node_cron_views_scale', 1.0 / max(1, db_result(db_query('SELECT MAX(totalcount) FROM {node_counter}'))));
-
   $result = db_query_range("SELECT n.nid FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, n.nid ASC", 0, $limit);
 
   while ($node = db_fetch_object($result)) {

@@ -174,42 +174,6 @@ function node_schema() {
     'primary key' => array('nid', 'gid', 'realm'),
   );
 
-  $schema['node_counter'] = array(
-    'description' => 'Access statistics for {node}s.',
-    'fields' => array(
-      'nid' => array(
-        'description' => 'The {node}.nid for these statistics.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'totalcount' => array(
-        'description' => 'The total number of times the {node} has been viewed.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'big',
-      ),
-      'daycount' => array(
-        'description' => 'The total number of times the {node} has been viewed today.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'medium',
-      ),
-      'timestamp' => array(
-        'description' => 'The most recent time the {node} has been viewed.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'primary key' => array('nid'),
-  );
-
   $schema['node_revision'] = array(
     'description' => 'Stores information about each saved version of a {node}.',
     'fields' => array(
@@ -382,7 +346,8 @@ function node_schema() {
 }
 
 /**
- * Drupal 6.x to 7.x updates
+ * @defgroup updates-6.x-to-7.x System updates from 6.x to 7.x
+ * @{
  */
 
 /**
@@ -417,5 +382,17 @@ function node_update_7002() {
 }
 
 /**
- * End of 6.x to 7.x updates
+ * Remove the node_counter if the statistics module is uninstalled.
+ */
+function node_update_7003() {
+  $ret = array();
+  if (!drupal_get_installed_schema_version('statistics')) {
+    db_drop_table($ret, 'node_counter');
+  }
+  return $ret;
+}
+
+/**
+ * @} End of "defgroup updates-6.x-to-7.x"
+ * The next series of updates should start at 8000.
  */

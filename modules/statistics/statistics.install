@@ -10,31 +10,13 @@ function statistics_install() {
 }
 
 /**
- * Changes session ID  field to VARCHAR(64) to add support for SHA-1 hashes.
- */
-function statistics_update_1000() {
-  $ret = array();
-
-  switch ($GLOBALS['db_type']) {
-    case 'mysql':
-    case 'mysqli':
-      $ret[] = update_sql("ALTER TABLE {accesslog} CHANGE COLUMN sid sid varchar(64) NOT NULL default ''");
-      break;
-    case 'pgsql':
-      db_change_column($ret, 'accesslog', 'sid', 'sid', 'varchar(64)', array('not null' => TRUE, 'default' => "''"));
-      break;
-  }
-
-  return $ret;
-}
-
-/**
  * Implementation of hook_uninstall().
  */
 function statistics_uninstall() {
   // Remove tables.
   drupal_uninstall_schema('statistics');
 
+  // Remove variables.
   variable_del('statistics_count_content_views');
   variable_del('statistics_enable_access_log');
   variable_del('statistics_flush_accesslog_timer');
@@ -115,8 +97,49 @@ function statistics_schema() {
     'primary key' => array('aid'),
   );
 
+  $schema['node_counter'] = array(
+    'description' => 'Access statistics for {node}s.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The {node}.nid for these statistics.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'totalcount' => array(
+        'description' => 'The total number of times the {node} has been viewed.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'big',
+      ),
+      'daycount' => array(
+        'description' => 'The total number of times the {node} has been viewed today.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'medium',
+      ),
+      'timestamp' => array(
+        'description' => 'The most recent time the {node} has been viewed.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('nid'),
+  );
+
   return $schema;
 }
+
+/**
+ * @defgroup updates-6.x-to-7.x System updates from 6.x to 7.x
+ * @{
+ */
 
 /**
  * Allow longer referrers.
@@ -126,3 +149,8 @@ function statistics_update_7000() {
   db_change_field($ret, 'accesslog', 'url', 'url', array('type' => 'text', 'not null' => FALSE));
   return $ret;
 }
+
+/**
+ * @} End of "defgroup updates-6.x-to-7.x"
+ * The next series of updates should start at 8000.
+ */
