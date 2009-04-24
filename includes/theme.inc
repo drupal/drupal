@@ -1910,9 +1910,9 @@ function template_preprocess_page(&$variables) {
     $variables['template_files'] = $suggestions;
     foreach ($suggestions as $suggestion) {
       if ($suggestion != 'page-front') {
-        // Add current suggestion to page classes to make it possible to theme the page 
+        // Add current suggestion to page classes to make it possible to theme the page
         // depending on the current page type (e.g. node, admin, user, etc.) as well as
-        // more specific data like node-12 or node-edit. To avoid illegal characters in 
+        // more specific data like node-12 or node-edit. To avoid illegal characters in
         // the class, we're removing everything disallowed. We are not using 'a-z' as
         //  that might leave in certain international characters (e.g. German umlauts).
         $body_classes[] = preg_replace('![^abcdefghijklmnopqrstuvwxyz0-9-_]+!s', '', form_clean_id(drupal_strtolower($suggestion)));
@@ -1935,9 +1935,9 @@ function template_preprocess_page(&$variables) {
  */
 function template_page_suggestions($args) {
 
-  // Build a list of suggested template files and body classes in order of 
+  // Build a list of suggested template files and body classes in order of
   // specificity. One suggestion is made for every element of the current path,
-  // though numeric elements are not carried to subsequent suggestions. For 
+  // though numeric elements are not carried to subsequent suggestions. For
   // example, http://www.example.com/node/1/edit would result in the following
   // suggestions and body classes:
   //
@@ -1987,17 +1987,17 @@ function template_preprocess_node(&$variables) {
   $variables['node_url']  = url('node/' . $node->nid);
   $variables['title']     = check_plain($node->title);
   $variables['page']      = (bool)menu_get_object();
-  
+
   if ($node->build_mode == NODE_BUILD_PREVIEW) {
     unset($node->content['links']);
   }
-  
+
   // Render taxonomy links separately.
   $variables['terms']     = !empty($node->content['links']['terms']) ? drupal_render($node->content['links']['terms']) : '';
-  
+
   // Render all remaining node links.
   $variables['links']     = !empty($node->content['links']) ? drupal_render($node->content['links']) : '';
-  
+
   // Render any comments.
   $variables['comments']  = !empty($node->content['comments']) ? drupal_render($node->content['comments']) : '';
 
