@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.276 2009/04/22 09:45:02 dries Exp $
+// $Id: bootstrap.inc,v 1.277 2009/04/24 08:15:50 dries Exp $
 
 /**
  * @file
@@ -768,25 +768,25 @@ function drupal_set_header($name = NULL, $value = NULL, $append = FALSE) {
   // Save status codes using the special key ":status".
   if (preg_match('/^\d{3} /', $name)) {
     $value = $name;
-    $name = ':status';
+    $name = $name_lower = ':status';
   }
   else {
-    _drupal_set_preferred_header_name($name);
-    $name = strtolower($name);
+    $name_lower = strtolower($name);
   }
+  _drupal_set_preferred_header_name($name);
 
   if (!isset($value)) {
-    $headers[$name] = FALSE;
+    $headers[$name_lower] = FALSE;
   }
-  elseif (isset($headers[$name]) && $append) {
+  elseif (isset($headers[$name_lower]) && $append) {
     // Multiple headers with identical names may be combined using comma (RFC
     // 2616, section 4.2).
-    $headers[$name] .= ',' . $value;
+    $headers[$name_lower] .= ',' . $value;
   }
   else {
-    $headers[$name] = $value;
+    $headers[$name_lower] = $value;
   }
-  drupal_send_headers(array($name => $headers[$name]), TRUE);
+  drupal_send_headers(array($name => $headers[$name_lower]), TRUE);
 }
 
 /**

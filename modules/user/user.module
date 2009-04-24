@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.977 2009/04/20 04:41:35 webchick Exp $
+// $Id: user.module,v 1.978 2009/04/24 08:15:51 dries Exp $
 
 /**
  * @file
@@ -814,7 +814,7 @@ function user_perm() {
 function user_file_download($filepath) {
   if (strpos($filepath, variable_get('user_picture_path', 'pictures') . '/picture-') === 0) {
     $info = image_get_info(file_create_path($filepath));
-    return array('Content-type: ' . $info['mime_type']);
+    return array('Content-Type' => $info['mime_type']);
   }
 }
 

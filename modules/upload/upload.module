@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.232 2009/04/11 22:19:45 webchick Exp $
+// $Id: upload.module,v 1.233 2009/04/24 08:15:51 dries Exp $
 
 /**
  * @file
@@ -156,8 +156,8 @@ function upload_file_download($filepath) {
 
   if ($file && user_access('view uploaded files') && ($node = node_load($file->nid)) && node_access('view', $node)) {
     return array(
-      'Content-Type: ' . $file->filemime,
-      'Content-Length: ' . $file->filesize,
+      'Content-Type' => $file->filemime,
+      'Content-Length' => $file->filesize,
     );
   }
   else {

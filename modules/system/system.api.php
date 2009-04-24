@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.27 2009/04/21 05:07:08 dries Exp $
+// $Id: system.api.php,v 1.28 2009/04/24 08:15:50 dries Exp $
 
 /**
  * @file
@@ -1249,8 +1249,8 @@ function hook_file_download($filepath) {
       return -1;
     }
     return array(
-      'Content-Type: ' . $file->filemime,
-      'Content-Length: ' . $file->filesize,
+      'Content-Type' => $file->filemime,
+      'Content-Length' => $file->filesize,
     );
   }
 }

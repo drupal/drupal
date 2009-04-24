@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.test,v 1.16 2009/04/22 09:57:10 dries Exp $
+// $Id: upload.test,v 1.17 2009/04/24 08:15:51 dries Exp $
 
 class UploadTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -48,6 +48,11 @@ class UploadTestCase extends DrupalWebTestCase {
     $this->assertText(basename($files[0]), basename($files[0]) . ' found on node.');
     $this->assertText(basename($files[1]), basename($files[1]) . ' found on node.');
 
+    $this->checkUploadedFile(basename($files[0]));
+    $this->checkUploadedFile(basename($files[1]));
+
+    // Check that files are also accessible when using private files.
+    variable_set('file_downloads', FILE_DOWNLOADS_PRIVATE);
     $this->checkUploadedFile(basename($files[0]));
     $this->checkUploadedFile(basename($files[1]));
 
@@ -195,9 +200,10 @@ class UploadTestCase extends DrupalWebTestCase {
    */
   function checkUploadedFile($filename) {
     global $base_url;
-    $file = realpath(file_directory_path() . '/' . $filename);
-    $this->drupalGet($base_url . '/' . file_directory_path() . '/' . $filename, array('external' => TRUE));
+    $file = file_directory_path() . '/' . $filename;
+    $this->drupalGet(file_create_url($file), array('external' => TRUE));
     $this->assertResponse(array(200), 'Uploaded ' . $filename . ' is accessible.');
+    $this->assertTrue(strpos($this->drupalGetHeader('Content-Type'), 'text/plain') === 0, t('MIME type is text/plain.'));
     $this->assertEqual(file_get_contents($file), $this->drupalGetContent(), 'Uploaded contents of ' . $filename . ' verified.');
     // Verify file actually is readable and writeable by PHP.
     $this->assertTrue(is_readable($file), t('Uploaded file is readable.'));
