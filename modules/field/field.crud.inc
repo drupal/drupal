@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.9 2009/03/30 05:24:38 webchick Exp $
+// $Id: field.crud.inc,v 1.10 2009/04/24 03:44:17 webchick Exp $
 
 /**
  * @file
@@ -42,7 +42,7 @@
  *     in $object->$field_name.
  * - type (string)
  *     The type of the field, such as 'text' or 'image'. Field types
- *     are defined by modules that implement hook_field_into().
+ *     are defined by modules that implement hook_field_info().
  * - cardinality (integer)
  *     The number of values the field can hold. Legal values are any
  *     positive integer or FIELD_CARDINALITY_UNLIMITED.
