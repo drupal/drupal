@@ -156,8 +156,8 @@ function upload_file_download($filepath) {
 
   if ($file && user_access('view uploaded files') && ($node = node_load($file->nid)) && node_access('view', $node)) {
     return array(
-      'Content-Type: ' . $file->filemime,
-      'Content-Length: ' . $file->filesize,
+      'Content-Type' => $file->filemime,
+      'Content-Length' => $file->filesize,
     );
   }
   else {

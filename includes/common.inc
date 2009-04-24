@@ -3027,8 +3027,14 @@ function page_set_cache() {
       'data' => ob_get_clean(),
       'expire' => CACHE_TEMPORARY,
       'created' => REQUEST_TIME,
-      'headers' => drupal_get_header(),
+      'headers' => array(),
     );
+    // Restore preferred header names based on the lower-case names returned
+    // by drupal_get_header().
+    $header_names = _drupal_set_preferred_header_name();
+    foreach (drupal_get_header() as $name_lower => $value) {
+      $cache->headers[$header_names[$name_lower]] = $value;
+    }
     if (variable_get('page_compression', TRUE) && function_exists('gzencode')) {
       // We do not store the data in case the zlib mode is deflate. This should
       // be rarely happening.

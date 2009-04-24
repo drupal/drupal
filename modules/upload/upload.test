@@ -51,6 +51,11 @@ class UploadTestCase extends DrupalWebTestCase {
     $this->checkUploadedFile(basename($files[0]));
     $this->checkUploadedFile(basename($files[1]));
 
+    // Check that files are also accessible when using private files.
+    variable_set('file_downloads', FILE_DOWNLOADS_PRIVATE);
+    $this->checkUploadedFile(basename($files[0]));
+    $this->checkUploadedFile(basename($files[1]));
+
     // Assure that the attachment link appears on teaser view and has correct count.
     $node = node_load($node->nid);
     $teaser = drupal_render(node_build($node, TRUE));
@@ -195,9 +200,10 @@ class UploadTestCase extends DrupalWebTestCase {
    */
   function checkUploadedFile($filename) {
     global $base_url;
-    $file = realpath(file_directory_path() . '/' . $filename);
-    $this->drupalGet($base_url . '/' . file_directory_path() . '/' . $filename, array('external' => TRUE));
+    $file = file_directory_path() . '/' . $filename;
+    $this->drupalGet(file_create_url($file), array('external' => TRUE));
     $this->assertResponse(array(200), 'Uploaded ' . $filename . ' is accessible.');
+    $this->assertTrue(strpos($this->drupalGetHeader('Content-Type'), 'text/plain') === 0, t('MIME type is text/plain.'));
     $this->assertEqual(file_get_contents($file), $this->drupalGetContent(), 'Uploaded contents of ' . $filename . ' verified.');
     // Verify file actually is readable and writeable by PHP.
     $this->assertTrue(is_readable($file), t('Uploaded file is readable.'));

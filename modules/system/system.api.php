@@ -1249,8 +1249,8 @@ function hook_file_download($filepath) {
       return -1;
     }
     return array(
-      'Content-Type: ' . $file->filemime,
-      'Content-Length: ' . $file->filesize,
+      'Content-Type' => $file->filemime,
+      'Content-Length' => $file->filesize,
     );
   }
 }
