@@ -15,6 +15,8 @@
  * @see template_preprocess_user_picture()
  */
 ?>
-<div class="picture">
-  <?php print $picture; ?>
-</div>
+<?php if ($picture): ?>
+  <div class="picture">
+    <?php print $picture; ?>
+  </div>
+<?php endif; ?>
