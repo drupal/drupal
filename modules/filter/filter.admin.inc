@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.25 2009/03/08 21:25:18 dries Exp $
+// $Id: filter.admin.inc,v 1.26 2009/04/25 18:01:10 dries Exp $
 
 /**
  * @file
@@ -50,7 +50,10 @@ function filter_admin_overview_submit($form, &$form_state) {
   foreach ($form_state['values'] as $id => $data) {
     if (is_array($data) && isset($data['weight'])) {
       // Only update if this is a form element with weight.
-      db_query("UPDATE {filter_format} SET weight = %d WHERE format = %d", $data['weight'], $id);
+      db_update('filter_format')
+        ->fields(array('weight' => $data['weight']))
+        ->condition('format', $id)
+        ->execute();
     }
   }
   drupal_set_message(t('The text format ordering has been saved.'));
@@ -239,7 +242,14 @@ function filter_admin_format_form_submit($form, &$form_state) {
     $roles = ',' . implode(',', $roles) . ',';
   }
 
-  db_query("UPDATE {filter_format} SET cache = %d, name='%s', roles = '%s' WHERE format = %d", $cache, $name, $roles, $format);
+  db_update('filter_format')
+    ->fields(array(
+      'cache' => $cache,
+      'name'  => $name,
+      'roles' => $roles,
+    ))
+    ->condition('format', $format)
+    ->execute();
 
   cache_clear_all($format . ':', 'cache_filter', TRUE);
 
@@ -260,7 +270,7 @@ function filter_admin_format_form_submit($form, &$form_state) {
  */
 function filter_admin_delete() {
   $format = arg(4);
-  $format = db_fetch_object(db_query('SELECT * FROM {filter_format} WHERE format = %d', $format));
+  $format = db_query('SELECT * FROM {filter_format} WHERE format = :format', array(':format' => $format))->fetchObject();
 
   if ($format) {
     if ($format->format != variable_get('filter_default_format', 1)) {
@@ -283,14 +293,31 @@ function filter_admin_delete() {
  * Process filter delete form submission.
  */
 function filter_admin_delete_submit($form, &$form_state) {
-  db_query("DELETE FROM {filter_format} WHERE format = %d", $form_state['values']['format']);
-  db_query("DELETE FROM {filter} WHERE format = %d", $form_state['values']['format']);
+  db_delete('filter_format')
+    ->condition('format', $form_state['values']['format'])
+    ->execute();
+  db_delete('filter')
+    ->condition('format', $form_state['values']['format'])
+    ->execute();
 
   $default = variable_get('filter_default_format', 1);
   // Replace existing instances of the deleted format with the default format.
-  db_query("UPDATE {node_revision} SET format = %d WHERE format = %d", $default, $form_state['values']['format']);
-  db_query("UPDATE {comment} SET format = %d WHERE format = %d", $default, $form_state['values']['format']);
-  db_query("UPDATE {box} SET format = %d WHERE format = %d", $default, $form_state['values']['format']);
+  db_update('node_revision')
+    ->fields(array('format' => $default))
+    ->condition('format', $form_state['values']['format'])
+    ->execute();
+  if (db_table_exists('comment')) {
+    db_update('comment')
+      ->fields(array('format' => $default))
+      ->condition('format', $form_state['values']['format'])
+      ->execute();
+  }
+  if (db_table_exists('box')) {
+    db_update('box')
+      ->fields(array('format' => $default))
+      ->condition('format', $form_state['values']['format'])
+      ->execute();
+  }
 
   cache_clear_all($form_state['values']['format'] . ':', 'cache_filter', TRUE);
   drupal_set_message(t('Deleted text format %format.', array('%format' => $form_state['values']['name'])));
@@ -404,7 +431,12 @@ function theme_filter_admin_order($form) {
 function filter_admin_order_submit($form, &$form_state) {
   foreach ($form_state['values']['weights'] as $id => $weight) {
     list($module, $delta) = explode('/', $id);
-    db_query("UPDATE {filter} SET weight = %d WHERE format = %d AND module = '%s' AND delta = %d", $weight, $form_state['values']['format'], $module, $delta);
+    db_update('filter')
+      ->fields(array('weight' => $weight))
+      ->condition('format', $form_state['values']['format'])
+      ->condition('module', $module)
+      ->condition('delta', $delta)
+      ->execute();
   }
   drupal_set_message(t('The filter ordering has been saved.'));
 
