@@ -365,7 +365,7 @@ function _install_settings_form_validate($database, $settings_file, &$form_state
     }
     $class = "DatabaseInstaller_$driver";
     $test = new $class;
-    $databases = array('default' => array('default' => $database));
+    $databases['default']['default'] = $database;
     $return = $test->test();
     if (!$return || $test->error) {
       if (!empty($test->success)) {
