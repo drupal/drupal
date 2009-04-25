@@ -1327,13 +1327,15 @@ function theme_submenu($links) {
  *   These optional tags are used to group and set properties on columns
  *   within a table. For example, one may easily group three columns and
  *   apply same background style to all.
+ * @param $sticky
+ *   Use a "sticky" table header. 
  * @return
  *   An HTML string representing the table.
  */
-function theme_table($header, $rows, $attributes = array(), $caption = NULL, $colgroups = array()) {
+function theme_table($header, $rows, $attributes = array(), $caption = NULL, $colgroups = array(), $sticky = TRUE) {
 
   // Add sticky headers, if applicable.
-  if (count($header)) {
+  if (count($header) && $sticky) {
     drupal_add_js('misc/tableheader.js');
     // Add 'sticky-enabled' class to the table to identify it for JS.
     // This is needed to target tables constructed by this function.
