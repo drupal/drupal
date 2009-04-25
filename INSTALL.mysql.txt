@@ -38,3 +38,6 @@ If successful, MySQL will reply with:
 
   Query OK, 0 rows affected
 
+If the InnoDB storage engine is available, it will be used for all database
+tables. InnoDB provides features over MyISAM such as transaction support,
+row-level locks, and consistent non-locking reads.

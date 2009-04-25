@@ -8,6 +8,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Support for master/slave replication, transactions, multi-insert queries,
       delayed inserts, and other features.
     * Added support for the SQLite database engine.
+    * Default to InnoDB engine, rather than MyISAM, on MySQL when available.
+      This offers increased scalability and data integrity.
 - Security:
     * Protected cron.php -- cron will only run if the proper key is provided.
     * Implemented much stronger password hashes that are also compatible with the
