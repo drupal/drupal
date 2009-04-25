@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.96 2009/04/22 09:57:10 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.97 2009/04/25 13:40:41 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -831,6 +831,7 @@ class DrupalWebTestCase {
 
     // Store necessary current values before switching to prefixed database.
     $this->originalPrefix = $db_prefix;
+    $this->originalFileDirectory = file_directory_path();
     $clean_url_original = variable_get('clean_url', 0);
 
     // Generate temporary prefixed database to ensure that tests have a clean starting point.
@@ -874,8 +875,7 @@ class DrupalWebTestCase {
     variable_set('site_mail', 'simpletest@example.com');
 
     // Use temporary files directory with the same prefix as database.
-    $this->originalFileDirectory = file_directory_path();
-    variable_set('file_directory_path', file_directory_path() . '/' . $db_prefix);
+    variable_set('file_directory_path', $this->originalFileDirectory . '/' . $db_prefix);
     $directory = file_directory_path();
     // Create the files directory.
     file_check_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
