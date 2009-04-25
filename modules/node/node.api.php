@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.13 2009/03/17 12:41:54 dries Exp $
+// $Id: node.api.php,v 1.14 2009/04/25 16:33:48 dries Exp $
 
 /**
  * @file
@@ -181,7 +181,9 @@ function hook_node_alter($node, $teaser) {
  *   None.
  */
 function hook_node_delete($node) {
-  db_query('DELETE FROM {mytable} WHERE nid = %d', $node->nid);
+  db_delete('mytable')
+    ->condition('nid', $node->nid)
+    ->execute();
 }
 
 /**
@@ -215,7 +217,12 @@ function hook_node_delete_revision($node) {
  *   None.
  */
 function hook_node_insert($node) {
-  db_query("INSERT INTO {mytable} (nid, extra) VALUES (%d, '%s')", $node->nid, $node->extra);
+  db_insert('mytable')
+    ->fields(array(
+      'nid' => $node->nid,
+      'extra' => $node->extra,
+    ))
+    ->execute();
 }
 
 /**
@@ -344,7 +351,10 @@ function hook_node_presave($node) {
  *   None.
  */
 function hook_node_update($node) {
-  db_query("UPDATE {mytable} SET extra = '%s' WHERE nid = %d", $node->extra, $node->nid);
+  db_update('mytable')
+    ->fields(array('extra' => $node->extra))
+    ->condition('nid', $node->nid)
+    ->execute();
 }
 
 /**
@@ -565,7 +575,9 @@ function hook_access($op, $node, $account) {
  * For a detailed usage example, see node_example.module.
  */
 function hook_delete(&$node) {
-  db_query('DELETE FROM {mytable} WHERE nid = %d', $node->nid);
+  db_delete('mytable')
+    ->condition('nid', $nid->nid)
+    ->execute();
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1036 2009/04/24 08:23:02 dries Exp $
+// $Id: node.module,v 1.1037 2009/04/25 16:33:48 dries Exp $
 
 /**
  * @file
@@ -148,7 +148,9 @@ function node_theme() {
  * Implementation of hook_cron().
  */
 function node_cron() {
-  db_query('DELETE FROM {history} WHERE timestamp < %d', NODE_NEW_LIMIT);
+  db_delete('history')
+    ->condition('timestamp', NODE_NEW_LIMIT, '<')
+    ->execute();
 }
 
 /**
@@ -212,7 +214,7 @@ function node_field_build_modes($obj_type) {
 function node_title_list($result, $title = NULL) {
   $items = array();
   $num_rows = FALSE;
-  while ($node = db_fetch_object($result)) {
+  foreach ($result as $node) {
     $items[] = l($node->title, 'node/' . $node->nid, !empty($node->comment_count) ? array('attributes' => array('title' => format_plural($node->comment_count, '1 comment', '@count comments'))) : array());
     $num_rows = TRUE;
   }
@@ -236,12 +238,13 @@ function node_tag_new($nid) {
   global $user;
 
   if ($user->uid) {
-    if (node_last_viewed($nid)) {
-      db_query('UPDATE {history} SET timestamp = %d WHERE uid = %d AND nid = %d', REQUEST_TIME, $user->uid, $nid);
-    }
-    else {
-      @db_query('INSERT INTO {history} (uid, nid, timestamp) VALUES (%d, %d, %d)', $user->uid, $nid, REQUEST_TIME);
-    }
+    db_merge('history')
+      ->key(array(
+        'uid' => $user->uid,
+        'nid' => $nid,
+      ))
+      ->fields(array('timestamp' => REQUEST_TIME))
+      ->execute();
   }
 }
 
@@ -254,7 +257,7 @@ function node_last_viewed($nid) {
   static $history;
 
   if (!isset($history[$nid])) {
-    $history[$nid] = db_fetch_object(db_query("SELECT timestamp FROM {history} WHERE uid = %d AND nid = %d", $user->uid, $nid));
+    $history[$nid] = db_query("SELECT timestamp FROM {history} WHERE uid = :uid AND nid = :nid", array(':uid' => $user->uid, ':nid' => $nid))->fetchObject();
   }
 
   return (isset($history[$nid]->timestamp) ? $history[$nid]->timestamp : 0);
@@ -558,7 +561,7 @@ function node_types_rebuild() {
 function node_type_save($info) {
   $is_existing = FALSE;
   $existing_type = !empty($info->old_type) ? $info->old_type : $info->type;
-  $is_existing = db_result(db_query("SELECT COUNT(*) FROM {node_type} WHERE type = '%s'", $existing_type));
+  $is_existing = db_query("SELECT COUNT(*) FROM {node_type} WHERE type = :type", array(':type' => $existing_type))->fetchField();
   $type = node_type_set_defaults($info);
 
   $fields = array(
@@ -578,7 +581,10 @@ function node_type_save($info) {
   );
 
   if ($is_existing) {
-    db_update('node_type')->fields($fields)->condition('type', $existing_type)->execute();
+    db_update('node_type')
+      ->fields($fields)
+      ->condition('type', $existing_type)
+      ->execute();
 
     if (!empty($type->old_type) && $type->old_type != $type->type) {
       field_attach_rename_bundle($type->old_type, $type->type);
@@ -588,7 +594,9 @@ function node_type_save($info) {
   }
   else {
     $fields['orig_type'] = (string) $type->orig_type;
-    db_insert('node_type')->fields($fields)->execute();
+    db_insert('node_type')
+      ->fields($fields)
+      ->execute();
 
     field_attach_create_bundle($type->type);
 
@@ -605,7 +613,9 @@ function node_type_save($info) {
  */
 function node_type_delete($type) {
   $info = node_get_types('type', $type);
-  db_query("DELETE FROM {node_type} WHERE type = '%s'", $type);
+  db_delete('node_type')
+    ->condition('type', $type)
+    ->execute();
   module_invoke_all('node_type', 'delete', $info);
 }
 
@@ -621,7 +631,10 @@ function node_type_delete($type) {
  *   The number of nodes whose node type field was modified.
  */
 function node_type_update_nodes($old_type, $type) {
-  db_query("UPDATE {node} SET type = '%s' WHERE type = '%s'", $type, $old_type);
+  db_update('node')
+    ->fields(array('type' => $type))
+    ->condition('type', $old_type)
+    ->execute();
   return db_affected_rows();
 }
 
@@ -642,9 +655,12 @@ function _node_types_build() {
     $_node_types[$type] = node_type_set_defaults($info);
     $_node_names[$type] = $info['name'];
   }
-
-  $type_result = db_query(db_rewrite_sql('SELECT nt.type, nt.* FROM {node_type} nt ORDER BY nt.type ASC', 'nt', 'type'));
-  while ($type_object = db_fetch_object($type_result)) {
+  $type_result = db_select('node_type', 'nt')
+    ->fields('nt')
+    ->orderBy('nt.type', 'ASC')
+    ->addTag('node_type_access')
+    ->execute();
+  foreach ($type_result as $type_object) {
     // Check for node types from disabled modules and mark their types for removal.
     // Types defined by the node module in the database (rather than by a separate
     // module using hook_node_info) have a base value of 'node_content'. The isset()
@@ -1118,7 +1134,10 @@ function node_save(&$node) {
     $op = 'update';
   }
   if ($update_node) {
-    db_query('UPDATE {node} SET vid = %d WHERE nid = %d', $node->vid, $node->nid);
+    db_update('node')
+      ->fields(array('vid' => $node->vid))
+      ->condition('nid', $node->nid)
+      ->execute();
   }
 
   // Call the node specific callback (if any). This can be
@@ -1403,12 +1422,15 @@ function node_search($op = 'search', $keys = NULL) {
       return t('Content');
 
     case 'reset':
-      db_query("UPDATE {search_dataset} SET reindex = %d WHERE type = 'node'", REQUEST_TIME);
+      db_update('search_dataset')
+        ->fields(array('reindex' => REQUEST_TIME))
+        ->condition('type', 'node')
+        ->execute();
       return;
 
     case 'status':
-      $total = db_result(db_query('SELECT COUNT(*) FROM {node} WHERE status = 1'));
-      $remaining = db_result(db_query("SELECT COUNT(*) FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE n.status = 1 AND d.sid IS NULL OR d.reindex <> 0"));
+      $total = db_query('SELECT COUNT(*) FROM {node} WHERE status = 1')->fetchField();
+      $remaining = db_query("SELECT COUNT(*) FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE n.status = 1 AND d.sid IS NULL OR d.reindex <> 0")->fetchField();
       return array('remaining' => $remaining, 'total' => $total);
 
     case 'admin':
@@ -1568,32 +1590,53 @@ function node_user_cancel($edit, $account, $method) {
     case 'user_cancel_block_unpublish':
       // Unpublish nodes (current revisions).
       module_load_include('inc', 'node', 'node.admin');
-      $nodes = db_select('node', 'n')->fields('n', array('nid'))->condition('uid', $account->uid)->execute()->fetchCol();
+      $nodes = db_select('node', 'n')
+        ->fields('n', array('nid'))
+        ->condition('uid', $account->uid)
+        ->execute()
+        ->fetchCol();
       node_mass_update($nodes, array('status' => 0));
       break;
 
     case 'user_cancel_reassign':
       // Anonymize nodes (current revisions).
       module_load_include('inc', 'node', 'node.admin');
-      $nodes = db_select('node', 'n')->fields('n', array('nid'))->condition('uid', $account->uid)->execute()->fetchCol();
+      $nodes = db_select('node', 'n')
+        ->fields('n', array('nid'))
+        ->condition('uid', $account->uid)
+        ->execute()
+        ->fetchCol();
       node_mass_update($nodes, array('uid' => 0));
       // Anonymize old revisions.
-      db_update('node_revision')->fields(array('uid' => 0))->condition('uid', $account->uid)->execute();
+      db_update('node_revision')
+        ->fields(array('uid' => 0))
+        ->condition('uid', $account->uid)
+        ->execute();
       // Clean history.
-      db_delete('history')->condition('uid', $account->uid)->execute();
+      db_delete('history')
+        ->condition('uid', $account->uid)
+        ->execute();
       break;
 
     case 'user_cancel_delete':
       // Delete nodes (current revisions).
       // @todo Introduce node_mass_delete() or make node_mass_update() more flexible.
-      $nodes = db_select('node', 'n')->fields('n', array('nid'))->condition('uid', $account->uid)->execute()->fetchCol();
+      $nodes = db_select('node', 'n')
+        ->fields('n', array('nid'))
+        ->condition('uid', $account->uid)
+        ->execute()
+        ->fetchCol();
       foreach ($nodes as $nid) {
         node_delete($nid);
       }
       // Delete old revisions.
-      db_delete('node_revision')->condition('uid', $account->uid)->execute();
+      db_delete('node_revision')
+        ->condition('uid', $account->uid)
+        ->execute();
       // Clean history.
-      db_delete('history')->condition('uid', $account->uid)->execute();
+      db_delete('history')
+        ->condition('uid', $account->uid)
+          ->execute();
       break;
   }
 }
@@ -1651,7 +1694,7 @@ function _node_revision_access($node, $op = 'view') {
     // different revisions so there is no need for a separate database check.
     // Also, if you try to revert to or delete the current revision, that's
     // not good.
-    if ($is_current_revision && (db_result(db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = %d', $node->nid)) == 1 || $op == 'update' || $op == 'delete')) {
+    if ($is_current_revision && (db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField() == 1 || $op == 'update' || $op == 'delete')) {
       $access[$node->vid] = FALSE;
     }
     elseif (user_access('administer nodes')) {
@@ -1861,8 +1904,7 @@ function node_init() {
 }
 
 function node_last_changed($nid) {
-  $node = db_fetch_object(db_query('SELECT changed FROM {node} WHERE nid = %d', $nid));
-  return ($node->changed);
+  return db_query('SELECT changed FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetch()->changed;
 }
 
 /**
@@ -1870,8 +1912,8 @@ function node_last_changed($nid) {
  */
 function node_revision_list($node) {
   $revisions = array();
-  $result = db_query('SELECT r.vid, r.title, r.log, r.uid, n.vid AS current_vid, r.timestamp, u.name FROM {node_revision} r LEFT JOIN {node} n ON n.vid = r.vid INNER JOIN {users} u ON u.uid = r.uid WHERE r.nid = %d ORDER BY r.timestamp DESC', $node->nid);
-  while ($revision = db_fetch_object($result)) {
+  $result = db_query('SELECT r.vid, r.title, r.log, r.uid, n.vid AS current_vid, r.timestamp, u.name FROM {node_revision} r LEFT JOIN {node} n ON n.vid = r.vid INNER JOIN {users} u ON u.uid = r.uid WHERE r.nid = :nid ORDER BY r.timestamp DESC', array(':nid' => $node->nid));
+  foreach ($result as $revision) {
     $revisions[$revision->vid] = $revision;
   }
 
@@ -1913,7 +1955,15 @@ function node_feed($nids = FALSE, $channel = array()) {
   global $base_url, $language;
 
   if ($nids === FALSE) {
-    $nids = db_query_range(db_rewrite_sql('SELECT n.nid, n.created FROM {node} n WHERE n.promote = 1 AND n.status = 1 ORDER BY n.created DESC'), 0, variable_get('feed_default_items', 10))->fetchCol();
+    $nids = db_select('node', 'n')
+      ->fields('n', array('nid', 'created'))
+      ->condition('n.promote', 1)
+      ->condition('status', 1)
+      ->orderBy('n.created', 'DESC')
+      ->range(0, variable_get('feed_default_items', 10))
+      ->addTag('node_access')
+      ->execute()
+      ->fetchCol();
   }
 
   $item_length = variable_get('feed_item_length', 'teaser');
@@ -2088,7 +2138,7 @@ function node_update_index() {
 
   $result = db_query_range("SELECT n.nid FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, n.nid ASC", 0, $limit);
 
-  while ($node = db_fetch_object($result)) {
+  foreach($result as $node) {
     _node_index_node($node);
   }
 }
@@ -2338,21 +2388,30 @@ function node_access($op, $node, $account = NULL) {
   // If the module did not override the access rights, use those set in the
   // node_access table.
   if ($op != 'create' && $node->nid && $node->status) {
-    $grants = array();
+    $query = db_select('node_access');
+    $query->addExpression('COUNT(*)');
+    $query
+      ->condition(db_or()
+        ->condition('nid', 0)
+        ->condition('nid', $node->nid)
+      )
+      ->condition('grant_' . $op, 1, '>=');
+
+    $grants = db_or();
     foreach (node_access_grants($op, $account) as $realm => $gids) {
       foreach ($gids as $gid) {
-        $grants[] = "(gid = $gid AND realm = '$realm')";
+        $grants->condition(db_and()
+          ->condition('gid', $gid)
+          ->condition('realm', $realm)
+        );
       }
     }
-
-    $grants_sql = '';
-    if (count($grants)) {
-      $grants_sql = 'AND (' . implode(' OR ', $grants) . ')';
+    if (count($grants) > 0 ) {
+      $query->condition($grants);
     }
-
-    $sql = "SELECT COUNT(*) FROM {node_access} WHERE (nid = 0 OR nid = %d) $grants_sql AND grant_$op >= 1";
-    $result = db_query($sql, $node->nid);
-    return (db_result($result));
+    return $query
+      ->execute()
+      ->fetchField();
   }
 
   // Let authors view their own nodes.
@@ -2455,22 +2514,28 @@ function node_access_view_all_nodes() {
       $access = TRUE;
     }
     else {
-      $grants = array();
+      $query = db_select('node_access');
+      $query->addExpression('COUNT(*)');
+      $query
+        ->condition('nid', 0)
+        ->condition('grant_view', 1, '>=');
+
+      $grants = db_or();
       foreach (node_access_grants('view') as $realm => $gids) {
         foreach ($gids as $gid) {
-          $grants[] = "(gid = $gid AND realm = '$realm')";
+          $or->condition(db_and()
+            ->condition('gid', $gid)
+            ->condition('realm', $realm)
+          );
         }
       }
-
-      $grants_sql = '';
-      if (count($grants)) {
-        $grants_sql = 'AND (' . implode(' OR ', $grants) . ')';
+      if (count($grants) > 0 ) {
+        $query->condition($grants);
       }
-
-      $sql = "SELECT COUNT(*) FROM {node_access} WHERE nid = 0 $grants_sql AND grant_view >= 1";
-      $result = db_query($sql);
-      $access = db_result($result);
-    }
+      $access = $query
+        ->execute()
+        ->fetchField();
+      }
   }
 
   return $access;
@@ -2587,15 +2652,18 @@ function node_access_write_grants($node, $grants, $realm = NULL, $delete = TRUE)
 
   // Only perform work when node_access modules are active.
   if (count(module_implements('node_grants'))) {
+    $query = db_insert('node_access')->fields(array('nid', 'realm', 'gid', 'grant_view', 'grant_update', 'grant_delete'));
     foreach ($grants as $grant) {
       if ($realm && $realm != $grant['realm']) {
         continue;
       }
       // Only write grants; denies are implicit.
       if ($grant['grant_view'] || $grant['grant_update'] || $grant['grant_delete']) {
-        db_query("INSERT INTO {node_access} (nid, realm, gid, grant_view, grant_update, grant_delete) VALUES (%d, '%s', %d, %d, %d, %d)", $node->nid, $grant['realm'], $grant['gid'], $grant['grant_view'], $grant['grant_update'], $grant['grant_delete']);
+        $grant['nid'] = $node->nid;
+        $query->values($grant);
       }
     }
+    $query->execute();
   }
 }
 
@@ -2651,7 +2719,7 @@ function node_access_needs_rebuild($rebuild = NULL) {
  *   hook_taxonomy, hook_node_type...) might consider using the non-batch mode.
  */
 function node_access_rebuild($batch_mode = FALSE) {
-  db_query("DELETE FROM {node_access}");
+  db_delete('node_access')->execute();
   // Only recalculate if the site is using a node_access module.
   if (count(module_implements('node_grants'))) {
     if ($batch_mode) {
@@ -2669,20 +2737,29 @@ function node_access_rebuild($batch_mode = FALSE) {
       if (!ini_get('safe_mode')) {
         set_time_limit(240);
       }
-      $result = db_query("SELECT nid FROM {node}");
-      while ($node = db_fetch_object($result)) {
-        $loaded_node = node_load($node->nid, NULL, TRUE);
+      $nids = db_query("SELECT nid FROM {node}")->fetchCol();
+      foreach ($nids as $nid) {
+        $node = node_load($nid, NULL, TRUE);
         // To preserve database integrity, only acquire grants if the node
         // loads successfully.
-        if (!empty($loaded_node)) {
-          node_access_acquire_grants($loaded_node);
+        if (!empty($node)) {
+          node_access_acquire_grants($node);
         }
       }
     }
   }
   else {
     // Not using any node_access modules. Add the default grant.
-    db_query("INSERT INTO {node_access} VALUES (0, 0, 'all', 1, 0, 0)");
+    db_insert('node_accesss')
+      ->fields(array(
+        'nid' => 0,
+        'realm' => 'all',
+        'gid' => 0,
+        'grant_view' => 1,
+        'grant_update' => 0,
+        'grant_delete' => 0,
+      ))
+      ->execute();
   }
 
   if (!isset($batch)) {
@@ -2704,21 +2781,21 @@ function _node_access_rebuild_batch_operation(&$context) {
     // Initiate multistep processing.
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['current_node'] = 0;
-    $context['sandbox']['max'] = db_result(db_query('SELECT COUNT(DISTINCT nid) FROM {node}'));
+    $context['sandbox']['max'] = db_query('SELECT COUNT(DISTINCT nid) FROM {node}')->fetchField();
   }
 
   // Process the next 20 nodes.
   $limit = 20;
-  $result = db_query_range("SELECT nid FROM {node} WHERE nid > %d ORDER BY nid ASC", $context['sandbox']['current_node'], 0, $limit);
-  while ($row = db_fetch_array($result)) {
-    $loaded_node = node_load($row['nid'], NULL, TRUE);
+  $nids = db_query_range("SELECT nid FROM {node} WHERE nid > %d ORDER BY nid ASC", $context['sandbox']['current_node'], 0, $limit)->fetchCol();
+  $nodes = node_load_multiple($nids, array(), TRUE);
+  foreach ($nodes as $node) {
     // To preserve database integrity, only acquire grants if the node
     // loads successfully.
-    if (!empty($loaded_node)) {
-      node_access_acquire_grants($loaded_node);
+    if (!empty($node)) {
+      node_access_acquire_grants($node);
     }
     $context['sandbox']['progress']++;
-    $context['sandbox']['current_node'] = $loaded_node->nid;
+    $context['sandbox']['current_node'] = $node->nid;
   }
 
   // Multistep processing : report progress.
@@ -3022,23 +3099,23 @@ function node_save_action($node) {
  */
 function node_assign_owner_action(&$node, $context) {
   $node->uid = $context['owner_uid'];
-  $owner_name = db_result(db_query("SELECT name FROM {users} WHERE uid = %d", $context['owner_uid']));
+  $owner_name = db_query("SELECT name FROM {users} WHERE uid = :uid", array(':uid' => $context['owner_uid']))->fetchField();
   watchdog('action', 'Changed owner of @type %title to uid %name.', array('@type' => node_get_types('type', $node), '%title' => $node->title, '%name' => $owner_name));
 }
 
 function node_assign_owner_action_form($context) {
   $description = t('The username of the user to which you would like to assign ownership.');
-  $count = db_result(db_query("SELECT COUNT(*) FROM {users}"));
+  $count = db_query("SELECT COUNT(*) FROM {users}")->fetchField();
   $owner_name = '';
   if (isset($context['owner_uid'])) {
-    $owner_name = db_result(db_query("SELECT name FROM {users} WHERE uid = %d", $context['owner_uid']));
+    $owner_name = db_query("SELECT name FROM {users} WHERE uid = :uid", array(':uid' => $context['owner_uid']))->fetchField();
   }
 
   // Use dropdown for fewer than 200 users; textbox for more than that.
   if (intval($count) < 200) {
     $options = array();
     $result = db_query("SELECT uid, name FROM {users} WHERE uid > 0 ORDER BY name");
-    while ($data = db_fetch_object($result)) {
+    foreach ($result as $data) {
       $options[$data->name] = $data->name;
     }
     $form['owner_name'] = array(
@@ -3064,7 +3141,7 @@ function node_assign_owner_action_form($context) {
 }
 
 function node_assign_owner_action_validate($form, $form_state) {
-  $count = db_result(db_query("SELECT COUNT(*) FROM {users} WHERE name = '%s'", $form_state['values']['owner_name']));
+  $count = db_query('SELECT COUNT(*) FROM {users} WHERE name = :name', array(':name' => $form_state['values']['owner_name']))->fetchField();
   if (intval($count) != 1) {
     form_set_error('owner_name', t('Please enter a valid username.'));
   }
@@ -3072,7 +3149,7 @@ function node_assign_owner_action_validate($form, $form_state) {
 
 function node_assign_owner_action_submit($form, $form_state) {
   // Username can change, so we need to store the ID, not the username.
-  $uid = db_result(db_query("SELECT uid from {users} WHERE name = '%s'", $form_state['values']['owner_name']));
+  $uid = db_query('SELECT uid from {users} WHERE name = :name', array(':name' => $form_state['values']['owner_name']))->fetchField();
   return array('owner_uid' => $uid);
 }
 
