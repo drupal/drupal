@@ -120,6 +120,11 @@ class DrupalWebTestCase {
    * Time limit for the test.
    */
   protected $timeLimit = 180;
+  
+  /**
+   * HTTP authentication credentials (<username>:<password>).
+   */
+  protected $httpauth_credentials = NULL;
 
 
   /**
@@ -395,6 +400,10 @@ class DrupalWebTestCase {
    * Run all tests in this class.
    */
   public function run() {
+    // HTTP auth settings (<username>:<password>) for the simpletest browser
+    // when sending requests to the test site.
+    $this->httpauth_credentials = variable_get('simpletest_httpauth_credentials', NULL);
+
     set_error_handler(array($this, 'errorHandler'));
     $methods = array();
     // Iterate through all the methods in this class.
@@ -959,9 +968,10 @@ class DrupalWebTestCase {
   /**
    * Initializes the cURL connection.
    *
-   * This function will add authentication headers as specified in the
-   * simpletest_httpauth_username and simpletest_httpauth_pass variables. Also,
-   * see the description of $curl_options among the properties.
+   * If the simpletest_httpauth_credentials variable is set, this function will
+   * add HTTP authentication headers. This is necessary for testing sites that
+   * are protected by login credentials from public access.
+   * See the description of $curl_options for other options.
    */
   protected function curlInitialize() {
     global $base_url, $db_prefix;
@@ -980,11 +990,8 @@ class DrupalWebTestCase {
       if (preg_match('/simpletest\d+/', $db_prefix, $matches)) {
         $curl_options[CURLOPT_USERAGENT] = $matches[0];
       }
-      if (!isset($curl_options[CURLOPT_USERPWD]) && ($auth = variable_get('simpletest_httpauth_username', ''))) {
-        if ($pass = variable_get('simpletest_httpauth_pass', '')) {
-          $auth .= ':' . $pass;
-        }
-        $curl_options[CURLOPT_USERPWD] = $auth;
+      if (isset($this->httpauth_credentials)) {
+        $curl_options[CURLOPT_USERPWD] = $this->httpauth_credentials;
       }
       curl_setopt_array($this->curlHandle, $this->additionalCurlOptions + $curl_options);
     }
