@@ -13,7 +13,7 @@ function node_configure() {
   // Only show rebuild button if there are either 0, or 2 or more, rows
   // in the {node_access} table, or if there are modules that
   // implement hook_node_grants().
-  if (db_result(db_query('SELECT COUNT(*) FROM {node_access}')) != 1 || count(module_implements('node_grants')) > 0) {
+  if (db_query('SELECT COUNT(*) FROM {node_access}')->fetchField() != 1 || count(module_implements('node_grants')) > 0) {
     $status = '<p>' . t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Possible causes for permission problems are disabling modules or configuration changes to permissions. Rebuilding will remove all privileges to posts, and replace them with permissions based on the current modules and settings.') . '</p>';
     $status .= '<p>' . t('Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed posts will automatically use the new permissions.') . '</p>';
 
@@ -457,7 +457,7 @@ function node_admin_content($form_state) {
 function node_admin_nodes() {
   // Enable language column if translation module is enabled
   // or if we have any node with language.
-  $multilanguage = (module_exists('translation') || db_result(db_query("SELECT COUNT(*) FROM {node} WHERE language != ''")));
+  $multilanguage = (module_exists('translation') || db_query("SELECT COUNT(*) FROM {node} WHERE language != ''")->fetchField());
 
   // Build the sortable table header.
   $header = array();
@@ -624,7 +624,7 @@ function node_multiple_delete_confirm(&$form_state, $nodes) {
   $form['nodes'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
   // array_filter returns only elements with TRUE values
   foreach ($nodes as $nid => $value) {
-    $title = db_result(db_query('SELECT title FROM {node} WHERE nid = %d', $nid));
+    $title = db_query('SELECT title FROM {node} WHERE nid = :nid', array(':nid' => $nid))->fetchField();
     $form['nodes'][$nid] = array(
       '#type' => 'hidden',
       '#value' => $nid,

@@ -391,7 +391,7 @@ function node_type_delete_confirm(&$form_state, $type) {
   $message = t('Are you sure you want to delete the content type %type?', array('%type' => $type->name));
   $caption = '';
 
-  $num_nodes = db_result(db_query("SELECT COUNT(*) FROM {node} WHERE type = '%s'", $type->type));
+  $num_nodes = db_query("SELECT COUNT(*) FROM {node} WHERE type = :type", array(':type' => $type->type))->fetchField();
   if ($num_nodes) {
     $caption .= '<p>' . format_plural($num_nodes, '<strong>Warning:</strong> there is currently 1 %type post on your site. It may not be able to be displayed or edited correctly, once you have removed this content type.', '<strong>Warning:</strong> there are currently @count %type posts on your site. They may not be able to be displayed or edited correctly, once you have removed this content type.', array('%type' => $type->name)) . '</p>';
   }
