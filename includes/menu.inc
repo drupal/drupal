@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.321 2009/04/19 19:10:07 dries Exp $
+// $Id: menu.inc,v 1.322 2009/04/25 15:19:12 dries Exp $
 
 /**
  * @file
@@ -350,7 +350,7 @@ function menu_set_item($path, $router_item) {
  *   filled in based on the database values and the objects loaded.
  */
 function menu_get_item($path = NULL, $router_item = NULL) {
-  static $router_items;
+  $router_items = &drupal_static(__FUNCTION__);
   if (!isset($path)) {
     $path = $_GET['q'];
   }
@@ -777,7 +777,7 @@ function menu_get_object($type = 'node', $position = 1, $path = NULL) {
  *   The rendered HTML of that menu on the current page.
  */
 function menu_tree($menu_name) {
-  static $menu_output = array();
+  $menu_output = &drupal_static(__FUNCTION__, array());
 
   if (!isset($menu_output[$menu_name])) {
     $tree = menu_tree_page_data($menu_name);
@@ -842,7 +842,7 @@ function menu_tree_output($tree) {
  *   An tree of menu links in an array, in the order they should be rendered.
  */
 function menu_tree_all_data($menu_name, $item = NULL) {
-  static $tree = array();
+  $tree = &drupal_static(__FUNCTION__, array());
 
   // Use $mlid as a flag for whether the data being loaded is for the whole tree.
   $mlid = isset($item['mlid']) ? $item['mlid'] : 0;
@@ -938,7 +938,7 @@ function menu_tree_all_data($menu_name, $item = NULL) {
  *   same structure described for the top-level array.
  */
 function menu_tree_page_data($menu_name) {
-  static $tree = array();
+  $tree = &drupal_static(__FUNCTION__, array());
 
   // Load the menu item corresponding to the current page.
   if ($item = menu_get_item()) {
@@ -1326,10 +1326,10 @@ function menu_get_active_help() {
 /**
  * Build a list of named menus.
  */
-function menu_get_names($reset = FALSE) {
-  static $names;
+function menu_get_names() {
+  $names = &drupal_static(__FUNCTION__);
 
-  if ($reset || empty($names)) {
+  if (empty($names)) {
     $names = db_select('menu_links')
       ->distinct()
       ->fields('menu_links', 'menu_name')
@@ -1430,8 +1430,8 @@ function menu_navigation_links($menu_name, $level = 0) {
  *   a parent tab, if the current page is a default local task.
  */
 function menu_local_tasks($level = 0, $return_root = FALSE) {
-  static $tabs;
-  static $root_path;
+  $tabs = &drupal_static(__FUNCTION__);
+  $root_path = &drupal_static(__FUNCTION__ . ':root_path');
 
   if (!isset($tabs)) {
     $tabs = array();
@@ -1595,7 +1595,7 @@ function theme_menu_local_tasks() {
  * Set (or get) the active menu for the current page - determines the active trail.
  */
 function menu_set_active_menu_names($menu_names = NULL) {
-  static $active;
+  $active = &drupal_static(__FUNCTION__);
 
   if (isset($menu_names) && is_array($menu_names)) {
     $active = $menu_names;
@@ -1631,7 +1631,7 @@ function menu_set_active_item($path) {
  * Set (or get) the active trail for the current page - the path to root in the menu tree.
  */
 function menu_set_active_trail($new_trail = NULL) {
-  static $trail;
+  $trail = &drupal_static(__FUNCTION__);
 
   if (isset($new_trail)) {
     $trail = $new_trail;
@@ -1787,7 +1787,7 @@ function menu_link_load($mlid) {
  * Clears the cached cached data for a single named menu.
  */
 function menu_cache_clear($menu_name = 'navigation') {
-  static $cache_cleared = array();
+  $cache_cleared = &drupal_static(__FUNCTION__, array());
 
   if (empty($cache_cleared[$menu_name])) {
     cache_clear_all('links:' . $menu_name . ':', 'cache_menu', TRUE);
@@ -2245,11 +2245,11 @@ function menu_link_save(&$item) {
  * Helper function to clear the page and block caches at most twice per page load.
  */
 function _menu_clear_page_cache() {
-  static $cache_cleared = 0;
+  $cache_cleared = &drupal_static(__FUNCTION__, 0);
 
   // Clear the page and block caches, but at most twice, including at
   //  the end of the page load when there are multiple links saved or deleted.
-  if (empty($cache_cleared)) {
+  if ($cache_cleared == 0) {
     cache_clear_all();
     // Keep track of which menus have expanded items.
     _menu_set_expanded_menus();
