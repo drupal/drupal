@@ -1,5 +1,5 @@
 <?php
-// $Id: book.test,v 1.8 2009/03/31 01:49:50 webchick Exp $
+// $Id: book.test,v 1.9 2009/04/25 23:01:43 webchick Exp $
 
 class BookTestCase extends DrupalWebTestCase {
   protected $book;
@@ -47,16 +47,16 @@ class BookTestCase extends DrupalWebTestCase {
     $nodes[] = $this->createBookNode($book->nid); // Node 4.
 
     $this->drupalLogout();
-
-    // Check that book pages display.
     $this->drupalLogin($web_user);
 
-    $this->checkBookNode($book, array($nodes[0], $nodes[3], $nodes[4]), false, false, $nodes[0]);
-    $this->checkBookNode($nodes[0], array($nodes[1], $nodes[2]), $book, $book, $nodes[1]);
-    $this->checkBookNode($nodes[1], NULL, $nodes[0], $nodes[0], $nodes[2]);
-    $this->checkBookNode($nodes[2], NULL, $nodes[1], $nodes[0], $nodes[3]);
-    $this->checkBookNode($nodes[3], NULL, $nodes[2], $book, $nodes[4]);
-    $this->checkBookNode($nodes[4], NULL, $nodes[3], $book, false);
+    // Check that book pages display along with the correct outlines and
+    // previous/next links.
+    $this->checkBookNode($book, array($nodes[0], $nodes[3], $nodes[4]), FALSE, FALSE, $nodes[0], array());
+    $this->checkBookNode($nodes[0], array($nodes[1], $nodes[2]), $book, $book, $nodes[1], array($book));
+    $this->checkBookNode($nodes[1], NULL, $nodes[0], $nodes[0], $nodes[2], array($book, $nodes[0]));
+    $this->checkBookNode($nodes[2], NULL, $nodes[1], $nodes[0], $nodes[3], array($book, $nodes[0]));
+    $this->checkBookNode($nodes[3], NULL, $nodes[2], $book, $nodes[4], array($book));
+    $this->checkBookNode($nodes[4], NULL, $nodes[3], $book, FALSE, array($book));
 
     $this->drupalLogout();
 
@@ -74,25 +74,27 @@ class BookTestCase extends DrupalWebTestCase {
     // First we must set $this->book to the second book, so that the
     // correct regex will be generated for testing the outline.
     $this->book = $other_book;
-    $this->checkBookNode($other_book, array($node), false, false, $node);
-    $this->checkBookNode($node, NULL, $other_book, $other_book, false);
+    $this->checkBookNode($other_book, array($node), FALSE, FALSE, $node, array());
+    $this->checkBookNode($node, NULL, $other_book, $other_book, FALSE, array($other_book));
   }
 
   /**
    * Check the outline of sub-pages; previous, up, and next; and printer friendly version.
    *
-   * @param Node $node
+   * @param $node
    *   Node to check.
-   * @param array $nodes
+   * @param $nodes
    *   Nodes that should be in outline.
-   * @param Node $previous
+   * @param $previous
    *   Previous link node.
-   * @param Node $up
+   * @param $up
    *   Up link node.
-   * @param Node $next
+   * @param $next
    *   Next link node.
+   * @param $breadcrumb
+   *   The nodes that should be displayed in the breadcrumb.
    */
-  function checkBookNode($node, $nodes, $previous = false, $up = false, $next = false) {
+  function checkBookNode($node, $nodes, $previous = FALSE, $up = FALSE, $next = FALSE, array $breadcrumb) {
     static $number = 0;
     $this->drupalGet('node/' . $node->nid);
 
@@ -116,6 +118,23 @@ class BookTestCase extends DrupalWebTestCase {
     if ($next) {
       $this->assertRaw(l($next->title . ' ›', 'node/' . $next->nid, array('attributes' => array('class' => 'page-next', 'title' => t('Go to next page')))), t('Next page link found.'));
     }
+
+    // Compute the expected breadcrumb.
+    $expected_breadcrumb = array();
+    $expected_breadcrumb[] = url('');
+    foreach ($breadcrumb as $a_node) {
+      $expected_breadcrumb[] = url('node/' . $a_node->nid);
+    }
+
+    // Fetch links in the current breadcrumb.
+    $links = $this->xpath("//div[@class='breadcrumb']/a");
+    $got_breadcrumb = array();
+    foreach ($links as $link) {
+      $got_breadcrumb[] = (string) $link['href'];
+    }
+
+    // Compare expected and got breadcrumbs.
+    $this->assertIdentical($expected_breadcrumb, $got_breadcrumb, t('The breadcrumb is correctly displayed on the page.'));
 
     // Check printer friendly version.
     $this->drupalGet('book/export/html/' . $node->nid);
