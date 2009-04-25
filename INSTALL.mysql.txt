@@ -1,4 +1,4 @@
-// $Id: INSTALL.mysql.txt,v 1.10 2007/11/19 19:53:51 goba Exp $
+// $Id: INSTALL.mysql.txt,v 1.11 2009/04/25 16:57:19 webchick Exp $
 
 CREATE THE MySQL DATABASE
 --------------------------
@@ -38,3 +38,6 @@ If successful, MySQL will reply with:
 
   Query OK, 0 rows affected
 
+If the InnoDB storage engine is available, it will be used for all database
+tables. InnoDB provides features over MyISAM such as transaction support,
+row-level locks, and consistent non-locking reads.

@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.17 2009/04/20 20:02:30 dries Exp $
+// $Id: schema.inc,v 1.18 2009/04/25 16:57:19 webchick Exp $
 
 /**
  * @file
@@ -59,9 +59,11 @@ class DatabaseSchema_mysql extends DatabaseSchema {
    *   An array of SQL statements to create the table.
    */
   protected function createTableSql($name, $table) {
-    if (empty($table['mysql_suffix'])) {
-      $table['mysql_suffix'] = 'DEFAULT CHARACTER SET UTF8';
-    }
+    // Provide some defaults if needed
+    $table += array(
+      'mysql_engine' => 'InnoDB',
+      'mysql_character_set' => 'UTF8',
+    );
 
     $sql = "CREATE TABLE {" . $name . "} (\n";
 
@@ -79,7 +81,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     // Remove the last comma and space.
     $sql = substr($sql, 0, -3) . "\n) ";
 
-    $sql .= $table['mysql_suffix'];
+    $sql .= 'ENGINE = ' . $table['mysql_engine'] . ' DEFAULT CHARACTER SET ' . $table['mysql_character_set'];
 
     // Add table comment.
     if (!empty($table['description'])) {
