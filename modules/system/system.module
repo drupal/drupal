@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.682 2009/04/22 09:45:03 dries Exp $
+// $Id: system.module,v 1.683 2009/04/25 13:47:15 dries Exp $
 
 /**
  * @file
@@ -807,7 +807,7 @@ function system_init() {
  */
 function system_preprocess_page(&$variables) {
   // Get the major version
-  list($version,) = explode('.', VERSION);
+  list($version, ) = explode('.', VERSION);
 
   // Emit the META tag in the HTML HEAD section
   theme('meta_generator_html', $version);
@@ -911,7 +911,7 @@ function system_block_list() {
 function system_block_configure($delta = '') {
   if ($delta == 'powered-by') {
     $image_path = 'misc/' . variable_get('drupal_badge_color', 'powered-blue') . '-' . variable_get('drupal_badge_size', '80x15') . '.png';
-    drupal_add_js(drupal_get_path('module', 'system') .'/system.js');
+    drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
     // Compile a list of fields to show
     $form['wrapper']['color'] = array(
       '#type' => 'select',
@@ -931,7 +931,7 @@ function system_block_configure($delta = '') {
       '#markup' => theme('image', $image_path, t('Powered by Drupal, an open source content management system'), t('Powered by Drupal, an open source content management system'), array('class' => 'powered-by-preview'), FALSE),
     );
     return $form;
-  }  
+  }
 }
 
 /**
@@ -1562,8 +1562,8 @@ function system_cron() {
 
   // Remove temporary files that are older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
   // Use separate placeholders for the status to avoid a bug in some versions
-  // of PHP. @see http://drupal.org/node/352956
-  $result = db_query('SELECT fid FROM {files} WHERE status & :permanent1 != :permanent2 AND timestamp < :timestamp', array(':permanent1' => FILE_STATUS_PERMANENT, ':permanent2' => FILE_STATUS_PERMANENT, ':timestamp' => REQUEST_TIME - DRUPAL_MAXIMUM_TEMP_FILE_AGE));
+  // of PHP. See http://drupal.org/node/352956
+  $result = db_query('SELECT fid FROM {files} WHERE status & :permanent1 <> :permanent2 AND timestamp < :timestamp', array(':permanent1' => FILE_STATUS_PERMANENT, ':permanent2' => FILE_STATUS_PERMANENT, ':timestamp' => REQUEST_TIME - DRUPAL_MAXIMUM_TEMP_FILE_AGE));
   foreach ($result as $row) {
     if ($file = file_load($row->fid)) {
       if (!file_delete($file)) {
@@ -1827,7 +1827,7 @@ function system_actions_configure($form_state, $action = NULL) {
 function system_actions_configure_validate($form, $form_state) {
   $function = actions_function_lookup($form_state['values']['actions_action']) . '_validate';
   // Hand off validation to the action.
-  if (function_exists($function)) {
+  if (drupal_function_exists($function)) {
     $function($form, $form_state);
   }
 }
