@@ -426,12 +426,16 @@ function drupal_access_denied() {
  *   - code
  *       An integer containing the response status code, or the error code if
  *       an error occurred.
+ *   - protocol
+ *      The response protocol (e.g. HTTP/1.1 or HTTP/1.0).
+ *   - status_message
+ *      The status message from the response, if a response was received.
  *   - redirect_code
  *       If redirected, an integer containing the initial response status code.
  *   - redirect_url
  *       If redirected, a string containing the redirection location.
  *   - error
- *       If an error occurred, the error message.
+ *       If an error occurred, the error message. Otherwise not set.
  *   - headers
  *       An array containing the response headers as name/value pairs.
  *   - data
@@ -550,7 +554,10 @@ function drupal_http_request($url, array $options = array()) {
   $response = preg_split("/\r\n|\n|\r/", $response);
 
   // Parse the response status line.
-  list($protocol, $code, $status) = explode(' ', trim(array_shift($response)), 3);
+  list($protocol, $code, $status_message) = explode(' ', trim(array_shift($response)), 3);
+  $result->protocol = $protocol;
+  $result->status_message = $status_message;
+
   $result->headers = array();
 
   // Parse the response headers.
@@ -632,7 +639,7 @@ function drupal_http_request($url, array $options = array()) {
       $result->redirect_url = $location;
       break;
     default:
-      $result->error = $status;
+      $result->error = $status_message;
   }
 
   return $result;
