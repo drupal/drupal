@@ -63,7 +63,7 @@ function book_perm() {
 /**
  * Inject links into $node as needed.
  */
-function book_node_view_link($node, $teaser, $page) {
+function book_node_view_link($node, $teaser) {
   $links = array();
 
   if (isset($node->book['depth'])) {
@@ -690,37 +690,6 @@ function book_menu_name($bid) {
 }
 
 /**
- * Build an active trail to show in the breadcrumb.
- */
-function book_build_active_trail($book_link) {
-  static $trail;
-
-  if (!isset($trail)) {
-    $trail = array();
-    $trail[] = array('title' => t('Home'), 'href' => '<front>', 'localized_options' => array());
-
-    $tree = menu_tree_all_data($book_link['menu_name'], $book_link);
-    $curr = array_shift($tree);
-
-    while ($curr) {
-      if ($curr['link']['href'] == $book_link['href']) {
-        $trail[] = $curr['link'];
-        $curr = FALSE;
-      }
-      else {
-        if ($curr['below'] && $curr['link']['in_active_trail']) {
-          $trail[] = $curr['link'];
-          $tree = $curr['below'];
-        }
-        $curr = array_shift($tree);
-      }
-    }
-  }
-
-  return $trail;
-}
-
-/**
  * Implementation of hook_node_load().
  */
 function book_node_load($nodes, $types) {
@@ -736,22 +705,31 @@ function book_node_load($nodes, $types) {
 /**
  * Implementation of hook_node_view().
  */
-function book_node_view($node, $teaser, $page) {
+function book_node_view($node, $teaser) {
   if (!$teaser) {
     if (!empty($node->book['bid']) && $node->build_mode == NODE_BUILD_NORMAL) {
       $node->content['book_navigation'] = array(
         '#markup' => theme('book_navigation', $node->book),
         '#weight' => 100,
       );
-
-      if ($page) {
-        menu_set_active_trail(book_build_active_trail($node->book));
-        menu_set_active_menu_name($node->book['menu_name']);
-      }
     }
   }
 
-  book_node_view_link($node, $teaser, $page);
+  book_node_view_link($node, $teaser);
+}
+
+/**
+ * Implementation of hook_page_alter().
+ *
+ * Add the book menu to the list of menus used to build the active trail when
+ * viewing a book page.
+ */
+function book_page_alter(&$page) {
+  if (($node = menu_get_object()) && !empty($node->book['bid'])) {
+    $active_menus = menu_get_active_menu_names();
+    $active_menus[] = $node->book['menu_name'];
+    menu_set_active_menu_names($active_menus);
+  }
 }
 
 /**
