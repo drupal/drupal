@@ -3976,8 +3976,6 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
     // NOTE: Each table should come with one serial field only.
     if ($info['type'] == 'serial') {
       $serial = $field;
-      // Ignore values for serial when inserting data. Unsupported.
-      unset($object->$field);
     }
 
     // Build arrays for the fields and values in our query.

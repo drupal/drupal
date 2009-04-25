@@ -353,7 +353,7 @@ function user_load_by_name($name) {
  *
  * @param $account
  *   The $user object for the user to modify or add. If $user->uid is
- *   omitted, a new user will be added.
+ *   omitted (or $user->is_new == TRUE), a new user will be added.
  *
  * @param $edit
  *   An array of fields and values to save. For example array('name'
@@ -398,7 +398,10 @@ function user_save($account, $edit = array(), $category = 'account') {
 
   $edit = (array) $edit;
 
-  if (is_object($account) && $account->uid) {
+  if (!isset($account->is_new)) {
+    $account->is_new = empty($account->uid); 
+  }
+  if (is_object($account) && !$account->is_new) {
     user_module_invoke('update', $edit, $account, $category);
     $data = unserialize(db_query('SELECT data FROM {users} WHERE uid = :uid', array(':uid' => $account->uid))->fetchField());
     // Consider users edited by an administrator as logged in, if they haven't
@@ -410,7 +413,7 @@ function user_save($account, $edit = array(), $category = 'account') {
       // Form fields that don't pertain to the users, user_roles, or
       // Field API are automatically serialized into the users.data
       // column.
-      if ($key != 'roles' && empty($user_fields[$key]) && empty($field_form[$key])) {
+      if (!in_array($key, array('roles', 'is_new')) && empty($user_fields[$key]) && empty($field_form[$key])) {
         if ($value === NULL) {
           unset($data[$key]);
         }
@@ -538,7 +541,7 @@ function user_save($account, $edit = array(), $category = 'account') {
       // Form fields that don't pertain to the users, user_roles, or
       // Field API are automatically serialized into the user.data
       // column.
-      if (($key != 'roles') && (empty($user_fields[$key]) && empty($field_form[$key])) && ($value !== NULL)) {
+      if ((!in_array($key, array('roles', 'is_new'))) && (empty($user_fields[$key]) && empty($field_form[$key])) && ($value !== NULL)) {
         $data[$key] = $value;
       }
     }

@@ -1062,7 +1062,11 @@ function node_submit($node) {
 }
 
 /**
- * Save a node object into the database.
+ * Save changes to a node or add a new node.
+ *
+ * @param $node
+ *   The $node object to be saved. If $node->nid is
+ *   omitted (or $node->is_new is TRUE), a new node will be added.
  */
 function node_save(&$node) {
   field_attach_presave('node', $node);
@@ -1070,10 +1074,12 @@ function node_save(&$node) {
   node_invoke_node($node, 'presave');
   global $user;
 
-  $node->is_new = FALSE;
+  if (!isset($node->is_new)) {
+    $node->is_new = empty($node->nid); 
+  }
 
   // Apply filters to some default node fields:
-  if (empty($node->nid)) {
+  if ($node->is_new) {
     // Insert a new node.
     $node->is_new = TRUE;
 
@@ -1098,6 +1104,7 @@ function node_save(&$node) {
   }
   elseif (!empty($node->revision)) {
     $node->old_vid = $node->vid;
+    unset($node->vid);
   }
   else {
     // When updating a node, avoid clobbering an existing log entry with an empty one.
@@ -1153,6 +1160,9 @@ function node_save(&$node) {
 
   // Update the node access table for this node.
   node_access_acquire_grants($node);
+  
+  // Clear internal properties.
+  unset($node->is_new);
 
   // Clear the page and block caches.
   cache_clear_all();
