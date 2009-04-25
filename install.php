@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.163 2009/04/04 00:35:45 dries Exp $
+// $Id: install.php,v 1.164 2009/04/25 17:10:36 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -365,7 +365,7 @@ function _install_settings_form_validate($database, $settings_file, &$form_state
     }
     $class = "DatabaseInstaller_$driver";
     $test = new $class;
-    $databases = array('default' => array('default' => $database));
+    $databases['default']['default'] = $database;
     $return = $test->test();
     if (!$return || $test->error) {
       if (!empty($test->success)) {
