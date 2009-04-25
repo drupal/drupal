@@ -386,7 +386,7 @@ function node_update_7002() {
  */
 function node_update_7003() {
   $ret = array();
-  if (!drupal_get_installed_schema_version('statistics')) {
+  if (drupal_get_installed_schema_version('statistics') == SCHEMA_UNINSTALLED) {
     db_drop_table($ret, 'node_counter');
   }
   return $ret;
