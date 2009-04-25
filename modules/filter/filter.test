@@ -41,7 +41,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 
     $this->assertRaw(htmlentities($edit['allowed_html_1']), t('Tag displayed.'));
 
-    $result = db_fetch_object(db_query('SELECT * FROM {cache_filter}'));
+    $result = db_query('SELECT * FROM {cache_filter}')->fetchObject();
     $this->assertFalse($result, t('Cache cleared.'));
 
     // Reorder filters.
@@ -51,9 +51,9 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/settings/filter/' . $filtered . '/order', $edit, t('Save configuration'));
     $this->assertText(t('The filter ordering has been saved.'), t('Order saved successfully.'));
 
-    $result = db_query('SELECT * FROM {filter} WHERE format = %d ORDER BY weight ASC', $filtered);
+    $result = db_query('SELECT * FROM {filter} WHERE format = :format ORDER BY weight ASC', array(':format' => $filtered));
     $filters = array();
-    while ($filter = db_fetch_object($result)) {
+    foreach ($result as $filter) {
       if ($filter->delta == $second_filter || $filter->delta == $first_filter) {
         $filters[] = $filter;
       }
@@ -155,7 +155,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 
     $filtered = -1;
     $full = -1;
-    while ($format = db_fetch_object($result)) {
+    foreach ($result as $format) {
       if ($format->name == 'Filtered HTML') {
         $filtered = $format->format;
       }
@@ -174,7 +174,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
    * @return object Filter object.
    */
   function getFilter($name) {
-    return db_fetch_object(db_query("SELECT * FROM {filter_format} WHERE name = '%s'", $name));
+    return db_query("SELECT * FROM {filter_format} WHERE name = :name", array(':name' => $name))->fetchObject();
   }
 }
 
@@ -224,7 +224,7 @@ class FilterTestCase extends DrupalWebTestCase {
       'filters[filter/' . $filter . ']' => TRUE,
     );
     $this->drupalPost('admin/settings/filter/add', $edit, t('Save configuration'));
-    return db_fetch_object(db_query("SELECT * FROM {filter_format} WHERE name = '%s'", $edit['name']));
+    return db_query("SELECT * FROM {filter_format} WHERE name = :name", array(':name' => $edit['name']))->fetchObject();
   }
 
   function deleteFormat($format) {
