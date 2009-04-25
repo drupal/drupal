@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.881 2009/04/25 15:20:43 dries Exp $
+// $Id: common.inc,v 1.882 2009/04/25 17:52:43 webchick Exp $
 
 /**
  * @file
@@ -3976,8 +3976,6 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
     // NOTE: Each table should come with one serial field only.
     if ($info['type'] == 'serial') {
       $serial = $field;
-      // Ignore values for serial when inserting data. Unsupported.
-      unset($object->$field);
     }
 
     // Build arrays for the fields and values in our query.

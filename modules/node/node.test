@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.21 2009/04/25 16:33:48 dries Exp $
+// $Id: node.test,v 1.22 2009/04/25 17:52:43 webchick Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -662,5 +662,57 @@ class NodeRSSContentTestCase extends DrupalWebTestCase {
 
     $this->drupalGet('rss.xml');
     $this->assertText($test_text, t('Extra node content appears in RSS feed.'));
+  }
+}
+
+/**
+ * Test case to check node save related functionality, including import-save
+ */
+class NodeSaveTestCase extends DrupalWebTestCase {
+  
+  function getInfo() {
+    return array(
+      'name' => t('Node save'),
+      'description' => t('Test node_save() for saving content.'),
+      'group' => t('Node'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    // Create a user that is allowed to post; we'll use this to test the submission.
+    $web_user = $this->drupalCreateUser(array('create article content'));
+    $this->drupalLogin($web_user);
+    $this->web_user = $web_user;
+  }
+
+  /**
+   * Import test, to check if custom node ids are saved properly.
+   * Workflow: 
+   *  - first create a piece of content
+   *  - save the content
+   *  - check if node exists
+   */
+  function testImport() {
+    // Node ID must be a number that is not in the database.
+    $max_nid = db_result(db_query('SELECT MAX(nid) FROM {node}'));
+    $test_nid = $max_nid + mt_rand(1000, 1000000);
+    $title = $this->randomName(8); 
+    $node = array(
+      'title' => $title,
+      'body' => $this->randomName(32),
+      'uid' => $this->web_user->uid,
+      'type' => 'article',
+      'nid' => $test_nid,
+      'is_new' => TRUE,
+    );
+    $node = (object)$node;
+    node_save($node);
+    // Test the import.
+    $node_by_nid = node_load($test_nid);
+    $this->assertTrue($node_by_nid, t('Node load by node ID.'));
+
+    $node_by_title = $this->drupalGetNodeByTitle($title);
+    $this->assertTrue($node_by_title, t('Node load by node title.'));
   }
 }
