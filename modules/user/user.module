@@ -2486,10 +2486,11 @@ function user_build_filter_query() {
   $where = !empty($where) ? 'AND ' . implode(' AND ', $where) : '';
   $join = !empty($join) ? ' ' . implode(' ', array_unique($join)) : '';
 
-  return array('where' => $where,
-           'join' => $join,
-           'args' => $args,
-         );
+  return array(
+    'where' => $where,
+    'join' => $join,
+    'args' => $args,
+  );
 }
 
 /**
