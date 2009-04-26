@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.65 2009/04/25 16:33:48 dries Exp $
+// $Id: content_types.inc,v 1.66 2009/04/26 05:26:17 webchick Exp $
 
 /**
  * @file
@@ -108,7 +108,7 @@ function node_type_form(&$form_state, $type = NULL) {
     '#type' => 'fieldset',
     '#title' => t('Submission form settings'),
     '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
+    '#collapsed' => FALSE,
   );
   $form['submission']['title_label'] = array(
     '#title' => t('Title field label'),
