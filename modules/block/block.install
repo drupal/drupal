@@ -1,5 +1,10 @@
 <?php
-// $Id: block.install,v 1.20 2009/02/26 07:30:26 webchick Exp $
+// $Id: block.install,v 1.21 2009/04/26 16:30:28 dries Exp $
+
+/**
+ * @file
+ * Install instructions for the block module
+ */
 
 /**
  * Implementation of hook_schema().
