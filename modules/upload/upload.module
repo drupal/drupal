@@ -340,7 +340,7 @@ function upload_node_load($nodes, $types) {
 /**
  * Implementation of hook_node_view().
  */
-function upload_node_view($node, $teaser, $page) {
+function upload_node_view($node, $teaser) {
   if (isset($node->files) && user_access('view uploaded files')) {
     // Add the attachments list to node body with a heavy
     // weight to ensure they're below other elements.

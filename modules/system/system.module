@@ -1125,6 +1125,7 @@ function system_theme_default() {
     'description' => '',
     'features' => array(
       'comment_user_picture',
+      'comment_user_verification',
       'favicon',
       'mission',
       'logo',

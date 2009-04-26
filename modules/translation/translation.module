@@ -215,7 +215,7 @@ function translation_node_prepare($node) {
       $node->title = $node->translation_source->title;
       $node->body = $node->translation_source->body;
       // Let every module add custom translated fields.
-      node_invoke_node($node, 'prepare_translation');
+      module_invoke_all('node_prepare_translation', $node);
     }
   }
 }

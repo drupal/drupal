@@ -177,7 +177,7 @@ function hook_search($op = 'search', $keys = null) {
         // Fetch terms for snippet.
         $node->body .= module_invoke('taxonomy', 'node', $node, 'update_index');
 
-        $extra = node_invoke_node($node, 'search_result');
+        $extra = module_invoke_all('node_search_result', $node);
 
         $results[] = array(
           'link' => url('node/' . $item->sid, array('absolute' => TRUE)),
@@ -265,12 +265,12 @@ function hook_update_index() {
       $node = node_prepare($node, false);
     }
     // Allow modules to change $node->body before viewing.
-    node_invoke_node($node, 'view', false, false);
+    module_invoke_all('node_view', $node, false, false);
 
     $text = '<h1>' . drupal_specialchars($node->title) . '</h1>' . $node->body;
 
     // Fetch extra data normally not visible
-    $extra = node_invoke_node($node, 'update_index');
+    $extra = module_invoke_all('node_update_index', $node);
     foreach ($extra as $t) {
       $text .= $t;
     }

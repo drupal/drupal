@@ -354,16 +354,17 @@ function system_theme_settings(&$form_state, $key = '') {
 
   // Toggle settings
   $toggles = array(
-    'logo'                 => t('Logo'),
-    'name'                 => t('Site name'),
-    'slogan'               => t('Site slogan'),
-    'mission'              => t('Mission statement'),
-    'node_user_picture'    => t('User pictures in posts'),
-    'comment_user_picture' => t('User pictures in comments'),
-    'search'               => t('Search box'),
-    'favicon'              => t('Shortcut icon'),
-    'main_menu'            => t('Main menu'),
-    'secondary_menu'      => t('Secondary menu'),
+    'logo'                      => t('Logo'),
+    'name'                      => t('Site name'),
+    'slogan'                    => t('Site slogan'),
+    'mission'                   => t('Mission statement'),
+    'node_user_picture'         => t('User pictures in posts'),
+    'comment_user_picture'      => t('User pictures in comments'),
+    'comment_user_verification' => t('User verification status in comments'),
+    'search'                    => t('Search box'),
+    'favicon'                   => t('Shortcut icon'),
+    'main_menu'                 => t('Main menu'),
+    'secondary_menu'            => t('Secondary menu'),
   );
 
   // Some features are not always available

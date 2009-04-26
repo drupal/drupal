@@ -103,7 +103,7 @@ function statistics_perm() {
 /**
  * Implementation of hook_node_view().
  */
-function statistics_node_view($node, $teaser, $page) {
+function statistics_node_view($node, $teaser) {
   global $id;
   $links = array();
 

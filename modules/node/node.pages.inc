@@ -98,7 +98,7 @@ function node_object_prepare(&$node) {
   $node->revision = in_array('revision', $node_options);
 
   node_invoke($node, 'prepare');
-  node_invoke_node($node, 'prepare');
+  module_invoke_all('node_prepare', $node);
 }
 
 /**
@@ -606,7 +606,7 @@ function node_revision_delete_confirm_submit($form, &$form_state) {
     ->condition('nid', $node_revision->nid)
     ->condition('vid', $node_revision->vid)
     ->execute();
-  node_invoke_node($node_revision, 'delete_revision');
+  module_invoke_all('node_delete_revision', $node_revision);
   watchdog('content', '@type: deleted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
   drupal_set_message(t('Revision from %revision-date of @type %title has been deleted.', array('%revision-date' => format_date($node_revision->revision_timestamp), '@type' => node_get_types('name', $node_revision), '%title' => $node_revision->title)));
   $form_state['redirect'] = 'node/' . $node_revision->nid;
