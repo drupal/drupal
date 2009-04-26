@@ -3631,10 +3631,6 @@ function drupal_common_theme() {
       'arguments' => array('title' => NULL, 'content' => NULL, 'region' => 'main'),
       'template' => 'box',
     ),
-    'block' => array(
-      'arguments' => array('block' => NULL),
-      'template' => 'block',
-    ),
     'mark' => array(
       'arguments' => array('type' => MARK_NEW),
     ),
