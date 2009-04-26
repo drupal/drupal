@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.66 2009/04/26 05:26:17 webchick Exp $
+// $Id: content_types.inc,v 1.67 2009/04/26 20:57:01 dries Exp $
 
 /**
  * @file
@@ -133,7 +133,7 @@ function node_type_form(&$form_state, $type = NULL) {
     '#type' => 'select',
     '#title' => t('Minimum number of words'),
     '#default_value' => $type->min_word_count,
-    '#options' => drupal_map_assoc(array(0, 10, 25, 50, 75, 100, 125, 150, 175, 200)),
+    '#options' => drupal_map_assoc(array(0, 1, 10, 25, 50, 75, 100, 125, 150, 175, 200)),
     '#description' => t('The minimum number of words for the body field to be considered valid for this content type. This can be useful to rule out submissions that do not meet the site\'s standards, such as short test posts.')
   );
   $form['submission']['help']  = array(
