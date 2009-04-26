@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.884 2009/04/26 07:50:51 dries Exp $
+// $Id: common.inc,v 1.885 2009/04/26 15:50:34 dries Exp $
 
 /**
  * @file
@@ -4035,7 +4035,7 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
   }
   else {
     $query = db_update($table)->fields($fields);
-    foreach ($primary_keys as $key){
+    foreach ($primary_keys as $key) {
       $query->condition($key, $object->$key);
     }
     $return = SAVED_UPDATED;
