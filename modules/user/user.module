@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.979 2009/04/25 17:52:43 webchick Exp $
+// $Id: user.module,v 1.980 2009/04/26 09:53:50 dries Exp $
 
 /**
  * @file
@@ -2486,10 +2486,11 @@ function user_build_filter_query() {
   $where = !empty($where) ? 'AND ' . implode(' AND ', $where) : '';
   $join = !empty($join) ? ' ' . implode(' ', array_unique($join)) : '';
 
-  return array('where' => $where,
-           'join' => $join,
-           'args' => $args,
-         );
+  return array(
+    'where' => $where,
+    'join' => $join,
+    'args' => $args,
+  );
 }
 
 /**
