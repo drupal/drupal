@@ -2221,7 +2221,7 @@ function comment_unpublish_by_keyword_action_submit($form, $form_state) {
  */
 function comment_unpublish_by_keyword_action($comment, $context) {
   foreach ($context['keywords'] as $keyword) {
-    if (strstr($comment->comment, $keyword) || strstr($comment->subject, $keyword)) {
+    if (strpos($comment->comment, $keyword) !== FALSE || strpos($comment->subject, $keyword) !== FALSE) {
       db_update('comment')
         ->fields(array('status' => COMMENT_NOT_PUBLISHED,))
         ->condition('cid', $comment->cid)

@@ -24,7 +24,7 @@ function filter_admin_overview() {
     $roles = array();
     foreach (user_roles() as $rid => $name) {
       // Prepare a roles array with roles that may access the filter.
-      if (strstr($format->roles, ",$rid,")) {
+      if (strpos($format->roles, ",$rid,") !== FALSE) {
         $roles[] = $name;
       }
     }
@@ -132,7 +132,7 @@ function filter_admin_format_form(&$form_state, $format) {
   );
 
   foreach (user_roles() as $rid => $name) {
-    $checked = strstr($format->roles, ",$rid,");
+    $checked = strpos($format->roles, ",$rid,") !== FALSE;
     $form['roles'][$rid] = array('#type' => 'checkbox',
       '#title' => $name,
       '#default_value' => ($default || $checked),
