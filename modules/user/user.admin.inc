@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.41 2009/04/13 12:14:57 dries Exp $
+// $Id: user.admin.inc,v 1.42 2009/04/26 15:03:22 dries Exp $
 
 /**
  * @file
@@ -568,6 +568,7 @@ function user_admin_perm($form_state, $rid = NULL) {
       $info = drupal_parse_info_file(drupal_get_path('module', $module) . "/$module.info");
       $form['permission'][] = array(
         '#markup' => $info['name'],
+        '#id' => $module,
         );
       foreach ($permissions as $perm => $perm_item) {
         $options[$perm] = '';
@@ -635,7 +636,7 @@ function theme_user_admin_perm($form) {
       $row = array();
       // Module name
       if (is_numeric($key)) {
-        $row[] = array('data' => drupal_render($form['permission'][$key]), 'class' => 'module', 'id' => 'module-' . $form['permission'][$key]['#markup'], 'colspan' => count($form['role_names']) + 1);
+        $row[] = array('data' => drupal_render($form['permission'][$key]), 'class' => 'module', 'id' => 'module-' . $form['permission'][$key]['#id'], 'colspan' => count($form['role_names']) + 1);
       }
       else {
         // Permission row.
