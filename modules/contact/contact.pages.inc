@@ -174,11 +174,11 @@ function contact_mail_user(&$form_state, $recipient) {
   $form['recipient'] = array('#type' => 'value', '#value' => $recipient);
   $form['from'] = array('#type' => 'item',
     '#title' => t('From'),
-    '#markup' => check_plain($user->name) . ' &lt;' . check_plain($user->mail) . '&gt;',
+    '#markup' => theme('username', $user) . ' &lt;' . check_plain($user->mail) . '&gt;',
   );
   $form['to'] = array('#type' => 'item',
     '#title' => t('To'),
-    '#markup' => check_plain($recipient->name),
+    '#markup' => theme('username', $recipient),
   );
   $form['subject'] = array('#type' => 'textfield',
     '#title' => t('Subject'),
