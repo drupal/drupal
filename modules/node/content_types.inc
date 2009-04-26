@@ -108,7 +108,7 @@ function node_type_form(&$form_state, $type = NULL) {
     '#type' => 'fieldset',
     '#title' => t('Submission form settings'),
     '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
+    '#collapsed' => FALSE,
   );
   $form['submission']['title_label'] = array(
     '#title' => t('Title field label'),
