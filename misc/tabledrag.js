@@ -1,4 +1,4 @@
-// $Id: tabledrag.js,v 1.26 2009/03/17 02:59:27 webchick Exp $
+// $Id: tabledrag.js,v 1.27 2009/04/26 19:18:44 webchick Exp $
 (function($) {
 
 /**
@@ -64,11 +64,11 @@ Drupal.tableDrag = function(table, tableSettings) {
   this.indentEnabled = false;
   for (group in tableSettings) {
     for (n in tableSettings[group]) {
-      if (tableSettings[group][n]['relationship'] == 'parent') {
+      if (tableSettings[group][n].relationship == 'parent') {
         this.indentEnabled = true;
       }
-      if (tableSettings[group][n]['limit'] > 0) {
-        this.maxDepth = tableSettings[group][n]['limit'];
+      if (tableSettings[group][n].limit > 0) {
+        this.maxDepth = tableSettings[group][n].limit;
       }
     }
   }
@@ -100,13 +100,13 @@ Drupal.tableDrag = function(table, tableSettings) {
  * Hide the columns containing form elements according to the settings for
  * this tableDrag instance.
  */
-Drupal.tableDrag.prototype.hideColumns = function(){
+Drupal.tableDrag.prototype.hideColumns = function() {
   for (var group in this.tableSettings) {
     // Find the first field in this group.
     for (var d in this.tableSettings[group]) {
-      var field = $('.' + this.tableSettings[group][d]['target'] + ':first', this.table);
-      if (field.size() && this.tableSettings[group][d]['hidden']) {
-        var hidden = this.tableSettings[group][d]['hidden'];
+      var field = $('.' + this.tableSettings[group][d].target + ':first', this.table);
+      if (field.size() && this.tableSettings[group][d].hidden) {
+        var hidden = this.tableSettings[group][d].hidden;
         var cell = field.parents('td:first');
         break;
       }
@@ -117,7 +117,7 @@ Drupal.tableDrag.prototype.hideColumns = function(){
       // Add 1 to our indexes. The nth-child selector is 1 based, not 0 based.
       var columnIndex = $('td', cell.parent()).index(cell.get(0)) + 1;
       var headerIndex = $('td:not(:hidden)', cell.parent()).index(cell.get(0)) + 1;
-      $('tr', this.table).each(function(){
+      $('tr', this.table).each(function() {
         var row = $(this);
         var parentTag = row.parent().get(0).tagName.toLowerCase();
         var index = (parentTag == 'thead') ? headerIndex : columnIndex;
@@ -151,10 +151,10 @@ Drupal.tableDrag.prototype.hideColumns = function(){
 Drupal.tableDrag.prototype.rowSettings = function(group, row) {
   var field = $('.' + group, row);
   for (delta in this.tableSettings[group]) {
-    var targetClass = this.tableSettings[group][delta]['target'];
+    var targetClass = this.tableSettings[group][delta].target;
     if (field.is('.' + targetClass)) {
       // Return a copy of the row settings.
-      var rowSettings = new Object();
+      var rowSettings = {};
       for (var n in this.tableSettings[group][delta]) {
         rowSettings[n] = this.tableSettings[group][delta][n];
       }
@@ -190,7 +190,7 @@ Drupal.tableDrag.prototype.makeDraggable = function(item) {
   // Add the mousedown action for the handle.
   handle.mousedown(function(event) {
     // Create a new dragObject recording the event information.
-    self.dragObject = new Object();
+    self.dragObject = {};
     self.dragObject.initMouseOffset = self.getMouseOffset(item, event);
     self.dragObject.initMouseCoords = self.mouseCoords(event);
     if (self.indentEnabled) {
@@ -322,7 +322,7 @@ Drupal.tableDrag.prototype.makeDraggable = function(item) {
             var groupHeight = 0;
             nextGroup = new self.row(nextRow, 'keyboard', self.indentEnabled, self.maxDepth, false);
             if (nextGroup) {
-              $(nextGroup.group).each(function () { 
+              $(nextGroup.group).each(function() {
                 groupHeight += $(this).is(':hidden') ? 0 : this.offsetHeight;
               });
               nextGroupRow = $(nextGroup.group).filter(':last').get(0);
@@ -488,13 +488,13 @@ Drupal.tableDrag.prototype.dropRow = function(event, self) {
 /**
  * Get the mouse coordinates from the event (allowing for browser differences).
  */
-Drupal.tableDrag.prototype.mouseCoords = function(event){
+Drupal.tableDrag.prototype.mouseCoords = function(event) {
   if (event.pageX || event.pageY) {
-    return {x:event.pageX, y:event.pageY};
+    return { x: event.pageX, y: event.pageY };
   }
   return {
-    x:event.clientX + document.body.scrollLeft - document.body.clientLeft,
-    y:event.clientY + document.body.scrollTop  - document.body.clientTop
+    x: event.clientX + document.body.scrollLeft - document.body.clientLeft,
+    y: event.clientY + document.body.scrollTop  - document.body.clientTop
   };
 };
 
@@ -519,7 +519,7 @@ Drupal.tableDrag.prototype.getMouseOffset = function(target, event) {
  */
 Drupal.tableDrag.prototype.findDropTargetRow = function(x, y) {
   var rows = this.table.tBodies[0].rows;
-  for (var n=0; n<rows.length; n++) {
+  for (var n = 0; n < rows.length; n++) {
     var row = rows[n];
     var indentDiff = 0;
     var rowY = $(row).offset().top;
@@ -682,7 +682,7 @@ Drupal.tableDrag.prototype.updateField = function(changedRow, group) {
         var siblings = this.rowObject.findSiblings(rowSettings);
         if ($(targetElement).is('select')) {
           // Get a list of acceptable values.
-          var values = new Array();
+          var values = [];
           $('option', targetElement).each(function() {
             values.push(this.value);
           });
@@ -802,7 +802,7 @@ Drupal.tableDrag.prototype.onDrop = function() {
 Drupal.tableDrag.prototype.row = function(tableRow, method, indentEnabled, maxDepth, addClasses) {
   this.element = tableRow;
   this.method = method;
-  this.group = new Array(tableRow);
+  this.group = [tableRow];
   this.groupDepth = $('.indentation', tableRow).size();
   this.changed = false;
   this.table = $(tableRow).parents('table:first').get(0);
@@ -830,7 +830,7 @@ Drupal.tableDrag.prototype.row = function(tableRow, method, indentEnabled, maxDe
 Drupal.tableDrag.prototype.row.prototype.findChildren = function(addClasses) {
   var parentIndentation = this.indents;
   var currentRow = $(this.element, this.table).next('tr.draggable');
-  var rows = new Array();
+  var rows = [];
   var child = 0;
   while (currentRow.length) {
     var rowIndentation = $('.indentation', currentRow).length;
@@ -921,7 +921,7 @@ Drupal.tableDrag.prototype.row.prototype.swap = function(position, row) {
  *   DOM object for the row after the tested position
  *   (or null for last position in the table).
  */
-Drupal.tableDrag.prototype.row.prototype.validIndentInterval = function (prevRow, nextRow) {
+Drupal.tableDrag.prototype.row.prototype.validIndentInterval = function(prevRow, nextRow) {
   var minIndent, maxIndent;
 
   // Minimum indentation:
@@ -942,7 +942,7 @@ Drupal.tableDrag.prototype.row.prototype.validIndentInterval = function (prevRow
     }
   }
 
-  return {'min':minIndent, 'max':maxIndent};
+  return { 'min': minIndent, 'max': maxIndent };
 };
 
 /**
@@ -996,8 +996,8 @@ Drupal.tableDrag.prototype.row.prototype.indent = function(indentDiff) {
  *   The field settings we're using to identify what constitutes a sibling.
  */
 Drupal.tableDrag.prototype.row.prototype.findSiblings = function(rowSettings) {
-  var siblings = new Array();
-  var directions = new Array('prev', 'next');
+  var siblings = [];
+  var directions = ['prev', 'next'];
   var rowIndentation = this.indents;
   for (var d in directions) {
     var checkRow = $(this.element)[directions[d]]();
@@ -1071,16 +1071,16 @@ Drupal.tableDrag.prototype.row.prototype.onSwap = function(swappedRow) {
   return null;
 };
 
-Drupal.theme.prototype.tableDragChangedMarker = function () {
+Drupal.theme.prototype.tableDragChangedMarker = function() {
   return '<span class="warning tabledrag-changed">*</span>';
 };
 
-Drupal.theme.prototype.tableDragIndentation = function () {
+Drupal.theme.prototype.tableDragIndentation = function() {
   return '<div class="indentation">&nbsp;</div>';
 };
 
-Drupal.theme.prototype.tableDragChangedWarning = function () {
-  return '<div class="warning">' + Drupal.theme('tableDragChangedMarker') + ' ' + Drupal.t("Changes made in this table will not be saved until the form is submitted.") + '</div>';
+Drupal.theme.prototype.tableDragChangedWarning = function() {
+  return '<div class="warning">' + Drupal.theme('tableDragChangedMarker') + ' ' + Drupal.t('Changes made in this table will not be saved until the form is submitted.') + '</div>';
 };
 
 })(jQuery);

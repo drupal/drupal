@@ -1,4 +1,4 @@
-// $Id: profile.js,v 1.5 2009/03/13 23:15:09 webchick Exp $
+// $Id: profile.js,v 1.6 2009/04/26 19:18:46 webchick Exp $
 (function($) {
 
 /**
@@ -45,7 +45,7 @@ Drupal.behaviors.profileDrag = {
         var weightField = $('select.profile-weight', dragObject.rowObject.element);
         var oldcategoryNum = weightField[0].className.replace(/([^ ]+[ ]+)*profile-weight-([^ ]+)([ ]+[^ ]+)*/, '$2');
 
-        if (!categoryField.is('.profile-category-'+ categoryNum)) {
+        if (!categoryField.is('.profile-category-' + categoryNum)) {
           categoryField.removeClass('profile-category-' + oldcategoryNum).addClass('profile-category-' + categoryNum);
           weightField.removeClass('profile-weight-' + oldcategoryNum).addClass('profile-weight-' + categoryNum);
 

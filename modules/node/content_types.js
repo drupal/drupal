@@ -1,4 +1,4 @@
-// $Id: content_types.js,v 1.2 2009/02/18 13:46:54 webchick Exp $
+// $Id: content_types.js,v 1.3 2009/04/26 19:18:45 webchick Exp $
 (function($) {
 
 Drupal.behaviors.contentTypes = {
@@ -9,7 +9,7 @@ Drupal.behaviors.contentTypes = {
         var machine = $(this).val().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/_+/g, '_');
         if (machine != '_' && machine != '') {
           $('#edit-type').val(machine);
-          $('#node-type-name-suffix').empty().append(' Machine name: ' + machine + ' [').append($('<a href="#">'+ Drupal.t('Edit') +'</a>').click(function() {
+          $('#node-type-name-suffix').empty().append(' Machine name: ' + machine + ' [').append($('<a href="#">' + Drupal.t('Edit') + '</a>').click(function() {
             $('#edit-type-wrapper').show();
             $('#node-type-name-suffix').hide();
             $('#edit-name').unbind('keyup');

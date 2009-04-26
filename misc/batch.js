@@ -1,4 +1,4 @@
-// $Id: batch.js,v 1.7 2009/03/13 23:15:08 webchick Exp $
+// $Id: batch.js,v 1.8 2009/04/26 19:18:44 webchick Exp $
 (function($) {
 
 /**
@@ -10,32 +10,26 @@ Drupal.behaviors.batch = {
     if ($('#progress.batch-processed').size()) {
       return;
     }
-    $('#progress', context).addClass('batch-processed').each(function () {
-      var holder = this;
-      var uri = settings.batch.uri;
-      var initMessage = settings.batch.initMessage;
-      var errorMessage = settings.batch.errorMessage;
+    $('#progress', context).addClass('batch-processed').each(function() {
+      var holder = $(this);
 
       // Success: redirect to the summary.
-      var updateCallback = function (progress, status, pb) {
+      var updateCallback = function(progress, status, pb) {
         if (progress == 100) {
           pb.stopMonitoring();
-          window.location = uri+'&op=finished';
+          window.location = settings.batch.uri + '&op=finished';
         }
       };
 
-      var errorCallback = function (pb) {
-        var div = document.createElement('p');
-        div.className = 'error';
-        $(div).html(errorMessage);
-        $(holder).prepend(div);
+      var errorCallback = function(pb) {
+        holder.prepend($('<p class="error"></p>').html(settings.batch.errorMessage));
         $('#wait').hide();
       };
 
-      var progress = new Drupal.progressBar('updateprogress', updateCallback, "POST", errorCallback);
-      progress.setProgress(-1, initMessage);
-      $(holder).append(progress.element);
-      progress.startMonitoring(uri+'&op=do', 10);
+      var progress = new Drupal.progressBar('updateprogress', updateCallback, 'POST', errorCallback);
+      progress.setProgress(-1, settings.batch.initMessage);
+      holder.append(progress.element);
+      progress.startMonitoring(settings.batch.uri + '&op=do', 10);
     });
   }
 };

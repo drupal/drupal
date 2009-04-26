@@ -1,4 +1,4 @@
-// $Id: user.js,v 1.11 2009/03/13 23:15:09 webchick Exp $
+// $Id: user.js,v 1.12 2009/04/26 19:18:46 webchick Exp $
 (function($) {
 
 /**
@@ -8,30 +8,30 @@
 Drupal.behaviors.password = {
   attach: function(context, settings) {
     var translate = settings.password;
-    $("input.password-field:not(.password-processed)", context).each(function() {
+    $('input.password-field:not(.password-processed)', context).each(function() {
       var passwordInput = $(this).addClass('password-processed');
       var innerWrapper = $(this).parent();
       var outerWrapper = $(this).parent().parent();
 
       // Add the password strength layers.
-      var passwordStrength = $("span.password-strength", innerWrapper);
-      var passwordResult = $("span.password-result", passwordStrength);
-      innerWrapper.addClass("password-parent");
+      var passwordStrength = $('span.password-strength', innerWrapper);
+      var passwordResult = $('span.password-result', passwordStrength);
+      innerWrapper.addClass('password-parent');
 
       // Add the description box at the end.
       var passwordMeter = '<div id="password-strength"><div class="password-strength-title">' + translate.strengthTitle + '</div><div id="password-indicator"><div id="indicator"></div></div></div>';
-      $("div.description", outerWrapper).prepend('<div class="password-suggestions"></div>');
+      $('div.description', outerWrapper).prepend('<div class="password-suggestions"></div>');
       $(innerWrapper).append(passwordMeter);
-      var passwordDescription = $("div.password-suggestions", outerWrapper).hide();
+      var passwordDescription = $('div.password-suggestions', outerWrapper).hide();
 
       // Add the password confirmation layer.
-      $("input.password-confirm", outerWrapper).after('<div class="password-confirm">' + translate["confirmTitle"] + ' <span></span></div>').parent().addClass("confirm-parent");
-      var confirmInput = $("input.password-confirm", outerWrapper);
-      var confirmResult = $("div.password-confirm", outerWrapper);
-      var confirmChild = $("span", confirmResult);
+      $('input.password-confirm', outerWrapper).after('<div class="password-confirm">' + translate['confirmTitle'] + ' <span></span></div>').parent().addClass('confirm-parent');
+      var confirmInput = $('input.password-confirm', outerWrapper);
+      var confirmResult = $('div.password-confirm', outerWrapper);
+      var confirmChild = $('span', confirmResult);
 
       // Check the password strength.
-      var passwordCheck = function () {
+      var passwordCheck = function() {
 
         // Evaluate the password strength.
         var result = Drupal.evaluatePasswordStrength(passwordInput.val(), settings.password);
@@ -50,19 +50,19 @@ Drupal.behaviors.password = {
         }
 
         // Adjust the length of the strength indicator.
-        $("#indicator").css('width', result.strength + '%');
+        $('#indicator').css('width', result.strength + '%');
 
         passwordCheckMatch();
       };
 
       // Check that password and confirmation inputs match.
-      var passwordCheckMatch = function () {
+      var passwordCheckMatch = function() {
 
         if (confirmInput.val()) {
           var success = passwordInput.val() === confirmInput.val();
 
           // Show the confirm result.
-          confirmResult.css({ visibility: "visible" });
+          confirmResult.css({ visibility: 'visible' });
 
           // Remove the previous styling if any exists.
           if (this.confirmClass) {
@@ -70,12 +70,12 @@ Drupal.behaviors.password = {
           }
 
           // Fill in the success message and set the class accordingly.
-          var confirmClass = success ? "ok" : 'error';
-          confirmChild.html(translate["confirm" + (success ? "Success" : "Failure")]).addClass(confirmClass);
+          var confirmClass = success ? 'ok' : 'error';
+          confirmChild.html(translate['confirm' + (success ? 'Success' : 'Failure')]).addClass(confirmClass);
           this.confirmClass = confirmClass;
         }
         else {
-          confirmResult.css({ visibility: "hidden" });
+          confirmResult.css({ visibility: 'hidden' });
         }
       };
 
@@ -92,7 +92,7 @@ Drupal.behaviors.password = {
  *
  * Returns the estimated strength and the relevant output message.
  */
-Drupal.evaluatePasswordStrength = function (password, translate) {
+Drupal.evaluatePasswordStrength = function(password, translate) {
   var weaknesses = 0, strength = 100, msg = [];
 
   var hasLowercase = password.match(/[a-z]+/);
@@ -102,7 +102,7 @@ Drupal.evaluatePasswordStrength = function (password, translate) {
 
   // If there is a username edit box on the page, compare password to that, otherwise
   // use value from the database.
-  var usernameBox = $("input.username");
+  var usernameBox = $('input.username');
   var username = (usernameBox.length > 0) ? usernameBox.val() : translate.username;
 
   // Lose 10 points for every character less than 6.
@@ -149,14 +149,14 @@ Drupal.evaluatePasswordStrength = function (password, translate) {
   }
 
   // Check if password is the same as the username.
-  if ((password !== '') && (password.toLowerCase() === username.toLowerCase())){
+  if (password !== '' && password.toLowerCase() === username.toLowerCase()) {
     msg.push(translate.sameAsUsername);
     // Passwords the same as username are always very weak.
     strength = 5;
   }
 
   // Assemble the final message.
-  msg = translate.hasWeaknesses + "<ul><li>" + msg.join("</li><li>") + "</li></ul>";
+  msg = translate.hasWeaknesses + '<ul><li>' + msg.join('</li><li>') + '</li></ul>';
   return { strength: strength, message: msg };
 };
 
@@ -167,7 +167,7 @@ Drupal.evaluatePasswordStrength = function (password, translate) {
  */
 Drupal.behaviors.userSettings = {
   attach: function(context, settings) {
-    $('div.user-admin-picture-radios input[type=radio]:not(.userSettings-processed)', context).addClass('userSettings-processed').click(function () {
+    $('div.user-admin-picture-radios input[type=radio]:not(.userSettings-processed)', context).addClass('userSettings-processed').click(function() {
       $('div.user-admin-picture-settings', context)[['hide', 'show'][this.value]]();
     });
   }

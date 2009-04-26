@@ -1,4 +1,4 @@
-// $Id: vertical-tabs.js,v 1.2 2009/04/12 02:37:56 webchick Exp $
+// $Id: vertical-tabs.js,v 1.3 2009/04/26 19:18:44 webchick Exp $
 
 (function($) {
 
@@ -8,7 +8,7 @@
  * tab.
  *
  * Each tab may have a summary which can be updated by another
- * script. For that to work, each fieldset has an associated 
+ * script. For that to work, each fieldset has an associated
  * 'verticalTabCallback' (with jQuery.data() attached to the fieldset),
  * which is called every time the user performs an update to a form
  * element inside the tab pane.

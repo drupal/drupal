@@ -1,4 +1,4 @@
-// $Id: timezone.js,v 1.4 2009/03/13 23:15:08 webchick Exp $
+// $Id: timezone.js,v 1.5 2009/04/26 19:18:44 webchick Exp $
 (function($) {
 
 /**
@@ -54,7 +54,7 @@ Drupal.behaviors.setTimezone = {
         url: settings.basePath,
         data: { q: path, date: dateString },
         dataType: 'json',
-        success: function (data) {
+        success: function(data) {
           if (data) {
             $(element).val(data);
           }

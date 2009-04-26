@@ -1,4 +1,4 @@
-// $Id: simpletest.js,v 1.9 2009/03/13 23:15:09 webchick Exp $
+// $Id: simpletest.js,v 1.10 2009/04/26 19:18:46 webchick Exp $
 (function($) {
 
 /**
@@ -83,7 +83,7 @@ Drupal.behaviors.simpleTestSelectAll = {
       groupCheckbox.change(function() {
         var checked = !!($(this).attr('checked'));
         for (var i = 0; i < testCheckboxes.length; i++) {
-          $('#'+ testCheckboxes[i]).attr('checked', checked);
+          $('#' + testCheckboxes[i]).attr('checked', checked);
         }
       });
 

@@ -1,18 +1,16 @@
-// $Id: comment.js,v 1.9 2009/03/13 23:15:09 webchick Exp $
+// $Id: comment.js,v 1.10 2009/04/26 19:18:45 webchick Exp $
 (function($) {
 
 Drupal.behaviors.comment = {
   attach: function(context, settings) {
-    var parts = new Array("name", "homepage", "mail");
-    var cookie = '';
-    for (i=0;i<3;i++) {
-      cookie = Drupal.comment.getCookie('comment_info_' + parts[i]);
-      if (cookie != '') {
-        $("#comment-form input[name=" + parts[i] + "]:not(.comment-processed)", context)
+    $.each(['name', 'homepage', 'mail'], function() {
+      var cookie = Drupal.comment.getCookie('comment_info_' + this);
+      if (cookie) {
+        $('#comment-form input[name=' + this + ']:not(.comment-processed)', context)
           .val(cookie)
           .addClass('comment-processed');
       }
-    }
+    });
   }
 };
 
