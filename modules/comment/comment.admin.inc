@@ -103,7 +103,7 @@ function comment_admin_overview($type = 'new', $arg) {
   );
 
   $form['pager'] = array(
-    '#markup' => theme('pager', NULL, 50, 0)
+    '#markup' => theme('pager', NULL)
   );
 
   return $form;

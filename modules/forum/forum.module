@@ -909,7 +909,7 @@ function template_preprocess_forum_topic_list(&$variables) {
   $variables['topic_id'] = $variables['tid'];
   unset($variables['tid']);
 
-  $variables['pager'] = theme('pager', NULL, $variables['forum_per_page'], 0);
+  $variables['pager'] = theme('pager', NULL);
 }
 
 /**

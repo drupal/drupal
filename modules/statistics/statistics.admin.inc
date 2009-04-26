@@ -40,7 +40,7 @@ function statistics_recent_hits() {
   }
 
   $output = theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 30, 0);
+  $output .= theme('pager', NULL);
   return $output;
 }
 
@@ -84,7 +84,7 @@ function statistics_top_pages() {
 
   drupal_set_title(t('Top pages in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))), PASS_THROUGH);
   $output = theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 30, 0);
+  $output .= theme('pager', NULL);
   return $output;
 }
 
@@ -134,7 +134,7 @@ function statistics_top_visitors() {
 
   drupal_set_title(t('Top visitors in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))), PASS_THROUGH);
   $output = theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 30, 0);
+  $output .= theme('pager', NULL);
   return $output;
 }
 
@@ -179,7 +179,7 @@ function statistics_top_referrers() {
   }
 
   $output = theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 30, 0);
+  $output .= theme('pager', NULL);
   return $output;
 }
 

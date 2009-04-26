@@ -261,7 +261,7 @@ function theme_aggregator_categorize_items($form) {
  * @see aggregator-wrapper.tpl.php
  */
 function template_preprocess_aggregator_wrapper(&$variables) {
-  $variables['pager'] = theme('pager', NULL, 20, 0);
+  $variables['pager'] = theme('pager', NULL);
 }
 
 /**

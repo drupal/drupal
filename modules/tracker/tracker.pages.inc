@@ -82,7 +82,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
 
   $output = '<div id="tracker">';
   $output .= theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 25, 0);
+  $output .= theme('pager', NULL);
   $output .= '</div>';
 
   return $output;

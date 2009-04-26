@@ -525,7 +525,7 @@ function node_admin_nodes() {
     '#type' => 'checkboxes',
     '#options' => $nodes,
   );
-  $form['pager'] = array('#markup' => theme('pager', NULL, 50, 0));
+  $form['pager'] = array('#markup' => theme('pager', NULL));
   $form['#theme'] = 'node_admin_nodes';
   return $form;
 }

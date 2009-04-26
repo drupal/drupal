@@ -1683,7 +1683,7 @@ function system_actions_manage() {
   }
 
   if ($row) {
-    $pager = theme('pager', NULL, 50, 0);
+    $pager = theme('pager', NULL);
     if (!empty($pager)) {
       $row[] = array(array('data' => $pager, 'colspan' => '3'));
     }

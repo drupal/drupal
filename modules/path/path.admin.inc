@@ -65,7 +65,7 @@ function path_admin_overview($keys = NULL) {
   }
 
   $output .= theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 50, 0);
+  $output .= theme('pager', NULL);
 
   return $output;
 }

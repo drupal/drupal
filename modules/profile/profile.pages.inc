@@ -66,7 +66,7 @@ function profile_browse() {
       $content .= theme('profile_listing', $account, $profile);
     }
     $output = theme('profile_wrapper', $content);
-    $output .= theme('pager', NULL, 20);
+    $output .= theme('pager', NULL);
 
     if ($field->type == 'selection' || $field->type == 'list' || $field->type == 'textfield') {
       $title = strtr(check_plain($field->page), array('%value' => theme('placeholder', $value)));
@@ -98,7 +98,7 @@ function profile_browse() {
       $content .= theme('profile_listing', $account, $profile);
     }
     $output = theme('profile_wrapper', $content);
-    $output .= theme('pager', NULL, 20);
+    $output .= theme('pager', NULL);
 
     drupal_set_title(t('User list'), PASS_THROUGH);
     return $output;

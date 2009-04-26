@@ -2275,7 +2275,7 @@ function _locale_translate_seek() {
 
   if (count($rows)) {
     $output .= theme('table', $header, $rows);
-    if ($pager = theme('pager', NULL, 50)) {
+    if ($pager = theme('pager', NULL)) {
       $output .= $pager;
     }
   }

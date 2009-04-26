@@ -44,7 +44,7 @@ function statistics_node_tracker() {
 
     drupal_set_title($node->title);
     $output = theme('table', $header, $rows);
-    $output .= theme('pager', NULL, 30, 0);
+    $output .= theme('pager', NULL);
     return $output;
   }
   else {
@@ -81,7 +81,7 @@ function statistics_user_tracker() {
 
     drupal_set_title($account->name);
     $output = theme('table', $header, $rows);
-    $output .= theme('pager', NULL, 30, 0);
+    $output .= theme('pager', NULL);
     return $output;
   }
   else {

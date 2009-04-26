@@ -3687,19 +3687,19 @@ function drupal_common_theme() {
     ),
     // from pager.inc
     'pager' => array(
-      'arguments' => array('tags' => array(), 'limit' => 10, 'element' => 0, 'parameters' => array()),
+      'arguments' => array('tags' => array(), 'element' => 0, 'parameters' => array()),
     ),
     'pager_first' => array(
-      'arguments' => array('text' => NULL, 'limit' => NULL, 'element' => 0, 'parameters' => array()),
+      'arguments' => array('text' => NULL, 'element' => 0, 'parameters' => array()),
     ),
     'pager_previous' => array(
-      'arguments' => array('text' => NULL, 'limit' => NULL, 'element' => 0, 'interval' => 1, 'parameters' => array()),
+      'arguments' => array('text' => NULL, 'element' => 0, 'interval' => 1, 'parameters' => array()),
     ),
     'pager_next' => array(
-      'arguments' => array('text' => NULL, 'limit' => NULL, 'element' => 0, 'interval' => 1, 'parameters' => array()),
+      'arguments' => array('text' => NULL, 'element' => 0, 'interval' => 1, 'parameters' => array()),
     ),
     'pager_last' => array(
-      'arguments' => array('text' => NULL, 'limit' => NULL, 'element' => 0, 'parameters' => array()),
+      'arguments' => array('text' => NULL, 'element' => 0, 'parameters' => array()),
     ),
     'pager_link' => array(
       'arguments' => array('text' => NULL, 'page_new' => NULL, 'element' => NULL, 'parameters' => array(), 'attributes' => array()),

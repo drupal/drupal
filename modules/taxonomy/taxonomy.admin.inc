@@ -620,7 +620,7 @@ function theme_taxonomy_overview_terms($form) {
   $header = array(t('Name'), t('Operations'));
   $output = theme('table', $header, $rows, array('id' => 'taxonomy'));
   $output .= drupal_render_children($form);
-  $output .= theme('pager', NULL, $page_increment);
+  $output .= theme('pager', NULL);
 
   return $output;
 }

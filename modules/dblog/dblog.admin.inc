@@ -103,7 +103,7 @@ function dblog_overview() {
   }
 
   $output .= theme('table', $header, $rows, array('id' => 'admin-dblog'));
-  $output .= theme('pager', NULL, 50, 0);
+  $output .= theme('pager', NULL);
 
   return $output;
 }
@@ -145,7 +145,7 @@ function dblog_top($type) {
   }
 
   $output  = theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 30, 0);
+  $output .= theme('pager', NULL);
 
   return $output;
 }

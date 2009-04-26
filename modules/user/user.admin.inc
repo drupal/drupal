@@ -197,7 +197,7 @@ function user_admin_account() {
     '#type' => 'checkboxes',
     '#options' => $accounts
   );
-  $form['pager'] = array('#markup' => theme('pager', NULL, 50, 0));
+  $form['pager'] = array('#markup' => theme('pager', NULL));
 
   return $form;
 }

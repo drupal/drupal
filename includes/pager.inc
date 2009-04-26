@@ -243,8 +243,6 @@ function pager_get_querystring() {
  *
  * @param $tags
  *   An array of labels for the controls in the pager.
- * @param $limit
- *   The number of query results to display per page.
  * @param $element
  *   An optional integer to distinguish between multiple pagers on one page.
  * @param $parameters
@@ -256,7 +254,7 @@ function pager_get_querystring() {
  *
  * @ingroup themeable
  */
-function theme_pager($tags = array(), $limit = 10, $element = 0, $parameters = array(), $quantity = 9) {
+function theme_pager($tags = array(), $element = 0, $parameters = array(), $quantity = 9) {
   global $pager_page_array, $pager_total;
 
   // Calculate various markers within this pager piece:
@@ -286,10 +284,10 @@ function theme_pager($tags = array(), $limit = 10, $element = 0, $parameters = a
   }
   // End of generation loop preparation.
 
-  $li_first = theme('pager_first', (isset($tags[0]) ? $tags[0] : t('« first')), $limit, $element, $parameters);
-  $li_previous = theme('pager_previous', (isset($tags[1]) ? $tags[1] : t('‹ previous')), $limit, $element, 1, $parameters);
-  $li_next = theme('pager_next', (isset($tags[3]) ? $tags[3] : t('next ›')), $limit, $element, 1, $parameters);
-  $li_last = theme('pager_last', (isset($tags[4]) ? $tags[4] : t('last »')), $limit, $element, $parameters);
+  $li_first = theme('pager_first', (isset($tags[0]) ? $tags[0] : t('« first')), $element, $parameters);
+  $li_previous = theme('pager_previous', (isset($tags[1]) ? $tags[1] : t('‹ previous')), $element, 1, $parameters);
+  $li_next = theme('pager_next', (isset($tags[3]) ? $tags[3] : t('next ›')), $element, 1, $parameters);
+  $li_last = theme('pager_last', (isset($tags[4]) ? $tags[4] : t('last »')), $element, $parameters);
 
   if ($pager_total[$element] > 1) {
     if ($li_first) {
@@ -318,7 +316,7 @@ function theme_pager($tags = array(), $limit = 10, $element = 0, $parameters = a
         if ($i < $pager_current) {
           $items[] = array(
             'class' => 'pager-item',
-            'data' => theme('pager_previous', $i, $limit, $element, ($pager_current - $i), $parameters),
+            'data' => theme('pager_previous', $i, $element, ($pager_current - $i), $parameters),
           );
         }
         if ($i == $pager_current) {
@@ -330,7 +328,7 @@ function theme_pager($tags = array(), $limit = 10, $element = 0, $parameters = a
         if ($i > $pager_current) {
           $items[] = array(
             'class' => 'pager-item',
-            'data' => theme('pager_next', $i, $limit, $element, ($i - $pager_current), $parameters),
+            'data' => theme('pager_next', $i, $element, ($i - $pager_current), $parameters),
           );
         }
       }
@@ -371,8 +369,6 @@ function theme_pager($tags = array(), $limit = 10, $element = 0, $parameters = a
  *
  * @param $text
  *   The name (or image) of the link.
- * @param $limit
- *   The number of query results to display per page.
  * @param $element
  *   An optional integer to distinguish between multiple pagers on one page.
  * @param $parameters
@@ -382,7 +378,7 @@ function theme_pager($tags = array(), $limit = 10, $element = 0, $parameters = a
  *
  * @ingroup themeable
  */
-function theme_pager_first($text, $limit, $element = 0, $parameters = array()) {
+function theme_pager_first($text, $element = 0, $parameters = array()) {
   global $pager_page_array;
   $output = '';
 
@@ -399,8 +395,6 @@ function theme_pager_first($text, $limit, $element = 0, $parameters = array()) {
  *
  * @param $text
  *   The name (or image) of the link.
- * @param $limit
- *   The number of query results to display per page.
  * @param $element
  *   An optional integer to distinguish between multiple pagers on one page.
  * @param $interval
@@ -412,7 +406,7 @@ function theme_pager_first($text, $limit, $element = 0, $parameters = array()) {
  *
  * @ingroup themeable
  */
-function theme_pager_previous($text, $limit, $element = 0, $interval = 1, $parameters = array()) {
+function theme_pager_previous($text, $element = 0, $interval = 1, $parameters = array()) {
   global $pager_page_array;
   $output = '';
 
@@ -422,7 +416,7 @@ function theme_pager_previous($text, $limit, $element = 0, $interval = 1, $param
 
     // If the previous page is the first page, mark the link as such.
     if ($page_new[$element] == 0) {
-      $output = theme('pager_first', $text, $limit, $element, $parameters);
+      $output = theme('pager_first', $text, $element, $parameters);
     }
     // The previous page is not the first page.
     else {
@@ -438,8 +432,6 @@ function theme_pager_previous($text, $limit, $element = 0, $interval = 1, $param
  *
  * @param $text
  *   The name (or image) of the link.
- * @param $limit
- *   The number of query results to display per page.
  * @param $element
  *   An optional integer to distinguish between multiple pagers on one page.
  * @param $interval
@@ -451,7 +443,7 @@ function theme_pager_previous($text, $limit, $element = 0, $interval = 1, $param
  *
  * @ingroup themeable
  */
-function theme_pager_next($text, $limit, $element = 0, $interval = 1, $parameters = array()) {
+function theme_pager_next($text, $element = 0, $interval = 1, $parameters = array()) {
   global $pager_page_array, $pager_total;
   $output = '';
 
@@ -460,7 +452,7 @@ function theme_pager_next($text, $limit, $element = 0, $interval = 1, $parameter
     $page_new = pager_load_array($pager_page_array[$element] + $interval, $element, $pager_page_array);
     // If the next page is the last page, mark the link as such.
     if ($page_new[$element] == ($pager_total[$element] - 1)) {
-      $output = theme('pager_last', $text, $limit, $element, $parameters);
+      $output = theme('pager_last', $text, $element, $parameters);
     }
     // The next page is not the last page.
     else {
@@ -476,8 +468,6 @@ function theme_pager_next($text, $limit, $element = 0, $interval = 1, $parameter
  *
  * @param $text
  *   The name (or image) of the link.
- * @param $limit
- *   The number of query results to display per page.
  * @param $element
  *   An optional integer to distinguish between multiple pagers on one page.
  * @param $parameters
@@ -487,7 +477,7 @@ function theme_pager_next($text, $limit, $element = 0, $interval = 1, $parameter
  *
  * @ingroup themeable
  */
-function theme_pager_last($text, $limit, $element = 0, $parameters = array()) {
+function theme_pager_last($text, $element = 0, $parameters = array()) {
   global $pager_page_array, $pager_total;
   $output = '';
 
