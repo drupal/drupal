@@ -1,5 +1,10 @@
 <?php
-// $Id: poll.test,v 1.16 2009/03/31 01:49:53 webchick Exp $
+// $Id: poll.test,v 1.17 2009/04/26 16:31:23 dries Exp $
+
+/**
+ * @file
+ * Tests for the poll module.
+ */
 
 class PollTestCase extends DrupalWebTestCase {
 
@@ -25,7 +30,7 @@ class PollTestCase extends DrupalWebTestCase {
 
     if (count($choices) > 2) {
       // Re-submit the form while the choices are all in
-      while($index < count($choices)) {
+      while ($index < count($choices)) {
         $this->drupalPost(NULL, $edit, t('More choices'));
         list($edit, $index) = $this->_pollGenerateEdit($title, $choices, $index);
       }
@@ -33,7 +38,7 @@ class PollTestCase extends DrupalWebTestCase {
 
     if ($test_preview) {
       $this->drupalPost(NULL, $edit, t('Preview'));
-      foreach($choices as $k => $choice_text) {
+      foreach ($choices as $k => $choice_text) {
         $this->assertRaw($choice_text, t('Choice @choice found was in preview.', array('@choice' => $k)));
       }
       list($edit, $index) = $this->_pollGenerateEdit($title, $choices, $index);
@@ -55,10 +60,10 @@ class PollTestCase extends DrupalWebTestCase {
     $edit = array(
       'title' => $title
     );
-    foreach($already_submitted_choices as $k => $text) {
+    foreach ($already_submitted_choices as $k => $text) {
       $edit['choice[chid:' . $k . '][chtext]'] = $text;
     }
-    foreach($new_choices as $k => $text) {
+    foreach ($new_choices as $k => $text) {
       $edit['choice[new:' . $k . '][chtext]'] = $text;
     }
     return array($edit, count($already_submitted_choices) + count($new_choices));
@@ -66,7 +71,7 @@ class PollTestCase extends DrupalWebTestCase {
 
   function _generateChoices($count = 7) {
     $choices = array();
-    for($i = 1; $i <= $count; $i++) {
+    for ($i = 1; $i <= $count; $i++) {
       $choices[] = $this->randomName();
     }
     return $choices;
@@ -112,10 +117,10 @@ class PollVoteTestCase extends PollTestCase {
     $this->drupalLogin($web_user);
 
     // Record a vote for the first choice.
-    $edit = array (
+    $edit = array(
       'choice' => '1',
     );
-    $this->drupalPost('node/'. $poll_nid, $edit, t('Vote'));
+    $this->drupalPost('node/' . $poll_nid, $edit, t('Vote'));
     $this->assertText('Your vote was recorded.', 'Your vote was recorded.');
 
     $this->drupalGet("node/$poll_nid/votes");

@@ -1,5 +1,10 @@
 <?php
-// $Id: poll.install,v 1.20 2009/02/26 07:30:27 webchick Exp $
+// $Id: poll.install,v 1.21 2009/04/26 16:31:23 dries Exp $
+
+/**
+ * @file
+ * Install file for poll module.
+ */
 
 /**
  * Implementation of hook_install().
