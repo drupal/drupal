@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.42 2009/04/17 06:55:07 dries Exp $
+// $Id: translation.module,v 1.43 2009/04/26 09:14:32 dries Exp $
 
 /**
  * @file
@@ -215,7 +215,7 @@ function translation_node_prepare($node) {
       $node->title = $node->translation_source->title;
       $node->body = $node->translation_source->body;
       // Let every module add custom translated fields.
-      node_invoke_node($node, 'prepare_translation');
+      module_invoke_all('node_prepare_translation', $node);
     }
   }
 }

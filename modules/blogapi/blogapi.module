@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.148 2009/04/22 09:45:02 dries Exp $
+// $Id: blogapi.module,v 1.149 2009/04/26 09:14:31 dries Exp $
 
 /**
  * @file
@@ -224,7 +224,7 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
     $edit['date'] = format_date(REQUEST_TIME, 'custom', 'Y-m-d H:i:s O');
   }
 
-  node_invoke_node($edit, 'blogapi_new');
+  module_invoke_all('node_blogapi_new', $edit);
 
   $valid = blogapi_status_error_check($edit, $publish);
   if ($valid !== TRUE) {
@@ -282,7 +282,7 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
     $node->body = $content;
   }
 
-  node_invoke_node($node, 'blogapi_edit');
+  module_invoke_all('node_blogapi_edit', $node);
 
   $valid = blogapi_status_error_check($node, $original_status);
   if ($valid !== TRUE) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1039 2009/04/26 06:00:31 dries Exp $
+// $Id: node.module,v 1.1040 2009/04/26 09:14:31 dries Exp $
 
 /**
  * @file
@@ -1015,7 +1015,7 @@ function node_validate($node, $form = array()) {
 
   // Do node-type-specific validation checks.
   node_invoke($node, 'validate', $form);
-  node_invoke_node($node, 'validate', $form);
+  module_invoke_all('node_validate', $node, $form);
 }
 
 /**
@@ -1071,7 +1071,7 @@ function node_submit($node) {
 function node_save(&$node) {
   field_attach_presave('node', $node);
   // Let modules modify the node before it is saved to the database.
-  node_invoke_node($node, 'presave');
+  module_invoke_all('node_presave', $node);
   global $user;
 
   if (!isset($node->is_new)) {
@@ -1206,7 +1206,7 @@ function node_delete($nid) {
 
     // Call the node-specific callback (if any):
     node_invoke($node, 'delete');
-    node_invoke_node($node, 'delete');
+    module_invoke_all('node_delete', $node);
 
     // Clear the page and block caches.
     cache_clear_all();
@@ -1307,7 +1307,7 @@ function node_build_content($node, $teaser = FALSE) {
   $node->content += field_attach_view('node', $node, $teaser);
 
   // Allow modules to make their own additions to the node.
-  node_invoke_node($node, 'view', $teaser);
+  module_invoke_all('node_view', $node, $teaser);
 
   // Allow modules to modify the structured node.
   drupal_alter('node_build', $node, $teaser);
@@ -1539,7 +1539,7 @@ function node_search($op = 'search', $keys = NULL) {
         // Fetch terms for snippet.
         $node->body .= module_invoke('taxonomy', 'node', $node, 'update_index');
 
-        $extra = node_invoke_node($node, 'search_result');
+        $extra = module_invoke_all('node_search_result', $node);
 
         $results[] = array(
           'link' => url('node/' . $item->sid, array('absolute' => TRUE)),
@@ -1998,7 +1998,7 @@ function node_feed($nids = FALSE, $channel = array()) {
       }
 
       // Allow modules to change $node->content before the node is rendered.
-      node_invoke_node($item, 'view', $teaser, FALSE);
+      module_invoke_all('node_view', $item, $teaser);
 
       // Set the proper node property, then unset unused $node property so that a
       // bad theme can not open a security hole.
@@ -2013,11 +2013,11 @@ function node_feed($nids = FALSE, $channel = array()) {
       }
 
       // Allow modules to modify the fully-built node.
-      node_invoke_node($item, 'alter', $teaser, FALSE);
+      module_invoke_all('node_alter', $item, $teaser, FALSE);
     }
 
     // Allow modules to add additional item fields and/or modify $item
-    $extra = node_invoke_node($item, 'rss_item');
+    $extra = module_invoke_all('node_rss_item', $item);
     $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' => gmdate('r', $item->created)), array('key' => 'dc:creator', 'value' => $item->name), array('key' => 'guid', 'value' => $item->nid . ' at ' . $base_url, 'attributes' => array('isPermaLink' => 'false'))));
     foreach ($extra as $element) {
       if (isset($element['namespace'])) {
@@ -2173,7 +2173,7 @@ function _node_index_node($node) {
   $text = '<h1>' . check_plain($node->title) . '</h1>' . $node->body;
 
   // Fetch extra data normally not visible
-  $extra = node_invoke_node($node, 'update_index');
+  $extra = module_invoke_all('node_update_index', $node);
   foreach ($extra as $t) {
     $text .= $t;
   }

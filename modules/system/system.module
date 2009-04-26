@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.683 2009/04/25 13:47:15 dries Exp $
+// $Id: system.module,v 1.684 2009/04/26 09:14:32 dries Exp $
 
 /**
  * @file
@@ -1125,6 +1125,7 @@ function system_theme_default() {
     'description' => '',
     'features' => array(
       'comment_user_picture',
+      'comment_user_verification',
       'favicon',
       'mission',
       'logo',

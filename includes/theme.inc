@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.478 2009/04/26 01:15:04 webchick Exp $
+// $Id: theme.inc,v 1.479 2009/04/26 09:14:31 dries Exp $
 
 /**
  * @file
@@ -906,23 +906,24 @@ function drupal_find_theme_templates($cache, $extension, $path) {
  */
 function theme_get_settings($key = NULL) {
   $defaults = array(
-    'mission'                       =>  '',
-    'default_logo'                  =>  1,
-    'logo_path'                     =>  '',
-    'default_favicon'               =>  1,
-    'favicon_path'                  =>  '',
-    'main_menu'                     =>  1,
-    'secondary_menu'                =>  1,
-    'toggle_logo'                   =>  1,
-    'toggle_favicon'                =>  1,
-    'toggle_name'                   =>  1,
-    'toggle_search'                 =>  0,
-    'toggle_slogan'                 =>  0,
-    'toggle_mission'                =>  1,
-    'toggle_node_user_picture'      =>  0,
-    'toggle_comment_user_picture'   =>  0,
-    'toggle_main_menu'              =>  1,
-    'toggle_secondary_menu'         =>  1,
+    'mission'                          =>  '',
+    'default_logo'                     =>  1,
+    'logo_path'                        =>  '',
+    'default_favicon'                  =>  1,
+    'favicon_path'                     =>  '',
+    'main_menu'                        =>  1,
+    'secondary_menu'                   =>  1,
+    'toggle_logo'                      =>  1,
+    'toggle_favicon'                   =>  1,
+    'toggle_name'                      =>  1,
+    'toggle_search'                    =>  0,
+    'toggle_slogan'                    =>  0,
+    'toggle_mission'                   =>  1,
+    'toggle_node_user_picture'         =>  0,
+    'toggle_comment_user_picture'      =>  0,
+    'toggle_comment_user_verification' =>  1,
+    'toggle_main_menu'                 =>  1,
+    'toggle_secondary_menu'            =>  1,
   );
 
   $settings = array_merge($defaults, variable_get('theme_settings', array()));
@@ -1680,7 +1681,9 @@ function theme_username($object) {
       $output = check_plain($object->name);
     }
 
-    $output .= ' (' . t('not verified') . ')';
+    if (theme_get_setting('toggle_comment_user_verification')) {
+      $output .= ' (' . t('not verified') . ')';
+    }
   }
   else {
     $output = variable_get('anonymous', t('Anonymous'));
