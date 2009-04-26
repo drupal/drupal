@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.pages.inc,v 1.17 2009/04/21 09:27:52 dries Exp $
+// $Id: contact.pages.inc,v 1.18 2009/04/26 20:09:12 webchick Exp $
 
 /**
  * @file
@@ -174,11 +174,11 @@ function contact_mail_user(&$form_state, $recipient) {
   $form['recipient'] = array('#type' => 'value', '#value' => $recipient);
   $form['from'] = array('#type' => 'item',
     '#title' => t('From'),
-    '#markup' => check_plain($user->name) . ' &lt;' . check_plain($user->mail) . '&gt;',
+    '#markup' => theme('username', $user) . ' &lt;' . check_plain($user->mail) . '&gt;',
   );
   $form['to'] = array('#type' => 'item',
     '#title' => t('To'),
-    '#markup' => check_plain($recipient->name),
+    '#markup' => theme('username', $recipient),
   );
   $form['subject'] = array('#type' => 'textfield',
     '#title' => t('Subject'),
