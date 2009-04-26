@@ -249,7 +249,7 @@ function poll_form(&$node, $form_state) {
     $delta = count($node->choice);
     $weight = -$delta;
     foreach ($node->choice as $chid => $choice) {
-      $key = 'chid:'. $chid;
+      $key = 'chid:' . $chid;
       $form['choice_wrapper']['choice'][$key] = _poll_choice_form($key, $choice['chid'], $choice['chtext'], $choice['chvotes'], $choice['weight'], $choice_count);
       $weight = ($choice['weight'] > $weight) ? $choice['weight'] : $weight;
     }
@@ -258,7 +258,7 @@ function poll_form(&$node, $form_state) {
   // Add initial or additional choices.
   $existing_delta = $delta;
   for ($delta; $delta < $choice_count; $delta++) {
-    $key = 'new:'. ($delta - $existing_delta);
+    $key = 'new:' . ($delta - $existing_delta);
     $form['choice_wrapper']['choice'][$key] = _poll_choice_form($key, NULL, '', 0, $weight, $choice_count);
   }
 
@@ -537,7 +537,7 @@ function poll_delete($node) {
     ->execute();
   db_delete('poll_vote')
     ->condition('nid', $node->nid)
-    ->execute();  
+    ->execute();
 }
 
 /**
@@ -751,7 +751,7 @@ function theme_poll_choices($form) {
     );
 
     // Add any additional classes set on the row.
-    $row['class'] .= isset($form[$key]['#attributes']['class']) ? ' '. $form[$key]['#attributes']['class'] : '';
+    $row['class'] .= isset($form[$key]['#attributes']['class']) ? ' ' . $form[$key]['#attributes']['class'] : '';
 
     $rows[] = $row;
   }

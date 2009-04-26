@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Install file for poll module.
+ */
+
+/**
  * Implementation of hook_install().
  */
 function poll_install() {
