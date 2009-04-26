@@ -728,13 +728,7 @@ function install_tasks($profile, $task) {
       // We add these strings as settings because JavaScript translation does not
       // work on install time.
       drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail'))), 'setting');
-      drupal_add_js('
-// Global Killswitch
-if (Drupal.jsEnabled) {
-  jQuery(document).ready(function() {
-    Drupal.cleanURLsInstallCheck();
-  });
-}', 'inline');
+      drupal_add_js('jQuery(function() { Drupal.cleanURLsInstallCheck(); });', 'inline');
       // Build menu to allow clean URL check.
       menu_rebuild();
 

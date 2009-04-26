@@ -16,11 +16,6 @@ if ($ === undefined) {
 (function($) {
 
 /**
- * Set the variable that indicates if JavaScript behaviors should be applied.
- */
-Drupal.jsEnabled = document.getElementsByTagName && document.createElement && document.createTextNode && document.documentElement && document.getElementById;
-
-/**
  * Attach all registered behaviors to a page element.
  *
  * Behaviors are event-triggered actions that attach to page elements, enhancing
@@ -317,17 +312,16 @@ Drupal.ahahError = function(xmlhttp, uri) {
   return message.replace(/\n/g, '<br />');
 };
 
-// Global Killswitch on the <html> element.
-if (Drupal.jsEnabled) {
-  // Global Killswitch on the <html> element.
-  $(document.documentElement).addClass('js');
-  // 'js enabled' cookie.
-  document.cookie = 'has_js=1; path=/';
-  // Attach all behaviors.
-  $(document).ready(function() {
-    Drupal.attachBehaviors(this, Drupal.settings);
-  });
-}
+// Class indicating that JS is enabled; used for styling purpose.
+$('html').addClass('js');
+
+// 'js enabled' cookie.
+document.cookie = 'has_js=1; path=/';
+
+// Attach all behaviors.
+$(function() {
+  Drupal.attachBehaviors(document, Drupal.settings);
+});
 
 /**
  * The default themes.
