@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.15 2009/04/13 08:48:58 dries Exp $
+// $Id: dblog.admin.inc,v 1.16 2009/04/26 19:44:38 dries Exp $
 
 /**
  * @file
@@ -103,7 +103,7 @@ function dblog_overview() {
   }
 
   $output .= theme('table', $header, $rows, array('id' => 'admin-dblog'));
-  $output .= theme('pager', NULL, 50, 0);
+  $output .= theme('pager', NULL);
 
   return $output;
 }
@@ -145,7 +145,7 @@ function dblog_top($type) {
   }
 
   $output  = theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 30, 0);
+  $output .= theme('pager', NULL);
 
   return $output;
 }

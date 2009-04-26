@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.44 2009/04/25 16:33:48 dries Exp $
+// $Id: node.admin.inc,v 1.45 2009/04/26 19:44:38 dries Exp $
 
 /**
  * @file
@@ -525,7 +525,7 @@ function node_admin_nodes() {
     '#type' => 'checkboxes',
     '#options' => $nodes,
   );
-  $form['pager'] = array('#markup' => theme('pager', NULL, 50, 0));
+  $form['pager'] = array('#markup' => theme('pager', NULL));
   $form['#theme'] = 'node_admin_nodes';
   return $form;
 }

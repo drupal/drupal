@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.pages.inc,v 1.17 2009/04/05 12:26:12 dries Exp $
+// $Id: tracker.pages.inc,v 1.18 2009/04/26 19:44:40 dries Exp $
 
 /**
  * @file
@@ -82,7 +82,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
 
   $output = '<div id="tracker">';
   $output .= theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 25, 0);
+  $output .= theme('pager', NULL);
   $output .= '</div>';
 
   return $output;

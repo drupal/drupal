@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.212 2009/04/22 16:07:03 webchick Exp $
+// $Id: locale.inc,v 1.213 2009/04/26 19:44:37 dries Exp $
 
 /**
  * @file
@@ -2275,7 +2275,7 @@ function _locale_translate_seek() {
 
   if (count($rows)) {
     $output .= theme('table', $header, $rows);
-    if ($pager = theme('pager', NULL, 50)) {
+    if ($pager = theme('pager', NULL)) {
       $output .= $pager;
     }
   }

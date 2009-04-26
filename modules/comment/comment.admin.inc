@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.17 2009/03/14 20:13:26 dries Exp $
+// $Id: comment.admin.inc,v 1.18 2009/04/26 19:44:38 dries Exp $
 
 /**
  * @file
@@ -103,7 +103,7 @@ function comment_admin_overview($type = 'new', $arg) {
   );
 
   $form['pager'] = array(
-    '#markup' => theme('pager', NULL, 50, 0)
+    '#markup' => theme('pager', NULL)
   );
 
   return $form;

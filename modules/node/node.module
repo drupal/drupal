@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1041 2009/04/26 15:40:24 dries Exp $
+// $Id: node.module,v 1.1042 2009/04/26 19:44:39 dries Exp $
 
 /**
  * @file
@@ -2080,7 +2080,7 @@ function node_page_default() {
     $feed_url = url('rss.xml', array('absolute' => TRUE));
     drupal_add_feed($feed_url, variable_get('site_name', 'Drupal') . ' ' . t('RSS'));
     $build['pager'] = array(
-      '#markup' => theme('pager', NULL, variable_get('default_nodes_main', 10)),
+      '#markup' => theme('pager', NULL),
       '#weight' => 5,
     );
   }

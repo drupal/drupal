@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.704 2009/04/26 06:00:31 dries Exp $
+// $Id: comment.module,v 1.705 2009/04/26 19:44:38 dries Exp $
 
 /**
  * @file
@@ -1194,7 +1194,7 @@ function comment_render($node, $cid = 0) {
         $comments .= '</div>';
       }
       $output .= $comments;
-      $output .= theme('pager', NULL, $comments_per_page, 0);
+      $output .= theme('pager', NULL);
     }
 
     // If enabled, show new comment form if it's not already being displayed.

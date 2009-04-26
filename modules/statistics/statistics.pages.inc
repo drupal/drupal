@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.pages.inc,v 1.11 2009/04/19 18:51:37 dries Exp $
+// $Id: statistics.pages.inc,v 1.12 2009/04/26 19:44:39 dries Exp $
 
 /**
  * @file
@@ -44,7 +44,7 @@ function statistics_node_tracker() {
 
     drupal_set_title($node->title);
     $output = theme('table', $header, $rows);
-    $output .= theme('pager', NULL, 30, 0);
+    $output .= theme('pager', NULL);
     return $output;
   }
   else {
@@ -81,7 +81,7 @@ function statistics_user_tracker() {
 
     drupal_set_title($account->name);
     $output = theme('table', $header, $rows);
-    $output .= theme('pager', NULL, 30, 0);
+    $output .= theme('pager', NULL);
     return $output;
   }
   else {

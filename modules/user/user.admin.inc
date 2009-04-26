@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.42 2009/04/26 15:03:22 dries Exp $
+// $Id: user.admin.inc,v 1.43 2009/04/26 19:44:40 dries Exp $
 
 /**
  * @file
@@ -197,7 +197,7 @@ function user_admin_account() {
     '#type' => 'checkboxes',
     '#options' => $accounts
   );
-  $form['pager'] = array('#markup' => theme('pager', NULL, 50, 0));
+  $form['pager'] = array('#markup' => theme('pager', NULL));
 
   return $form;
 }

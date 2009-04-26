@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.18 2009/04/22 15:53:00 dries Exp $
+// $Id: path.admin.inc,v 1.19 2009/04/26 19:44:39 dries Exp $
 
 /**
  * @file
@@ -65,7 +65,7 @@ function path_admin_overview($keys = NULL) {
   }
 
   $output .= theme('table', $header, $rows);
-  $output .= theme('pager', NULL, 50, 0);
+  $output .= theme('pager', NULL);
 
   return $output;
 }
