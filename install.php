@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.164 2009/04/25 17:10:36 webchick Exp $
+// $Id: install.php,v 1.165 2009/04/26 00:59:24 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -728,13 +728,7 @@ function install_tasks($profile, $task) {
       // We add these strings as settings because JavaScript translation does not
       // work on install time.
       drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail'))), 'setting');
-      drupal_add_js('
-// Global Killswitch
-if (Drupal.jsEnabled) {
-  jQuery(document).ready(function() {
-    Drupal.cleanURLsInstallCheck();
-  });
-}', 'inline');
+      drupal_add_js('jQuery(function() { Drupal.cleanURLsInstallCheck(); });', 'inline');
       // Build menu to allow clean URL check.
       menu_rebuild();
 
