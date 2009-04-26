@@ -1,5 +1,5 @@
 <?php
-// $Id $
+// $Id: unicode.entities.inc,v 1.2 2009/04/26 15:14:55 dries Exp $
 
 /**
  * @file

@@ -1,4 +1,4 @@
-; $Id $
+; $Id: locale_test.info,v 1.2 2009/04/26 15:14:55 dries Exp $
 name = "Locale Test"
 description = "Support module for the locale layer tests."
 core = 7.x
