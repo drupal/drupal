@@ -1472,7 +1472,15 @@ function format_size($size, $langcode = NULL) {
  *   A translated string representation of the interval.
  */
 function format_interval($timestamp, $granularity = 2, $langcode = NULL) {
-  $units = array('1 year|@count years' => 31536000, '1 week|@count weeks' => 604800, '1 day|@count days' => 86400, '1 hour|@count hours' => 3600, '1 min|@count min' => 60, '1 sec|@count sec' => 1);
+  $units = array(
+    '1 year|@count years' => 31536000,
+    '1 month|@count months' => 2592000,
+    '1 week|@count weeks' => 604800,
+    '1 day|@count days' => 86400,
+    '1 hour|@count hours' => 3600,
+    '1 min|@count min' => 60,
+    '1 sec|@count sec' => 1
+  );
   $output = '';
   foreach ($units as $key => $value) {
     $key = explode('|', $key);
