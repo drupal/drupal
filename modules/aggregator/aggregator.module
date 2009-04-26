@@ -332,9 +332,9 @@ function aggregator_block_configure($delta = '') {
 function aggregator_block_save($delta = '', $edit = array()) {
   list($type, $id) = explode('-', $delta);
   if ($type == 'category') {
-    db_merge('aggregator_category')
-      ->key(array('cid' => $id))
+    db_update('aggregator_category')
       ->fields(array('block' => $edit['block']))
+      ->condition('cid', $id)
       ->execute();
   }
 }
