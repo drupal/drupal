@@ -19,7 +19,7 @@
 Drupal.behaviors.ahah = {
   attach: function(context, settings) {
     for (var base in settings.ahah) {
-      if (!$('#'+ base + '.ahah-processed').size()) {
+      if (!$('#' + base + '.ahah-processed').size()) {
         var element_settings = settings.ahah[base];
 
         $(element_settings.selector).each(function() {
@@ -27,7 +27,7 @@ Drupal.behaviors.ahah = {
           var ahah = new Drupal.ahah(base, element_settings);
         });
 
-        $('#'+ base).addClass('ahah-processed');
+        $('#' + base).addClass('ahah-processed');
       }
     }
   }
@@ -43,7 +43,7 @@ Drupal.ahah = function(base, element_settings) {
   this.event = element_settings.event;
   this.keypress = element_settings.keypress;
   this.url = element_settings.url;
-  this.wrapper = '#'+ element_settings.wrapper;
+  this.wrapper = '#' + element_settings.wrapper;
   this.effect = element_settings.effect;
   this.method = element_settings.method;
   this.progress = element_settings.progress;
@@ -83,7 +83,7 @@ Drupal.ahah = function(base, element_settings) {
     success: function(response, status) {
       // Sanity check for browser support (object expected).
       // When using iFrame uploads, responses must be returned as a string.
-      if (typeof(response) == 'string') {
+      if (typeof response == 'string') {
         response = Drupal.parseJson(response);
       }
       return ahah.success(response, status);
@@ -119,7 +119,7 @@ Drupal.ahah = function(base, element_settings) {
 /**
  * Handler for the form redirection submission.
  */
-Drupal.ahah.prototype.beforeSubmit = function (form_values, element, options) {
+Drupal.ahah.prototype.beforeSubmit = function(form_values, element, options) {
   // Disable the element that received the change.
   $(this.element).addClass('progress-disabled').attr('disabled', true);
 
@@ -148,7 +148,7 @@ Drupal.ahah.prototype.beforeSubmit = function (form_values, element, options) {
 /**
  * Handler for the form redirection completion.
  */
-Drupal.ahah.prototype.success = function (response, status) {
+Drupal.ahah.prototype.success = function(response, status) {
   var wrapper = $(this.wrapper);
   var form = $(this.element).parents('form');
   // Manually insert HTML into the jQuery object, using $() directly crashes
@@ -188,7 +188,7 @@ Drupal.ahah.prototype.success = function (response, status) {
   if ($('.ahah-new-content', new_content).size() > 0) {
     $('.ahah-new-content', new_content).hide();
     new_content.show();
-    $(".ahah-new-content", new_content)[this.showEffect](this.showSpeed);
+    $('.ahah-new-content', new_content)[this.showEffect](this.showSpeed);
   }
   else if (this.showEffect != 'show') {
     new_content[this.showEffect](this.showSpeed);
@@ -206,10 +206,10 @@ Drupal.ahah.prototype.success = function (response, status) {
 /**
  * Handler for the form redirection error.
  */
-Drupal.ahah.prototype.error = function (response, uri) {
+Drupal.ahah.prototype.error = function(response, uri) {
   alert(Drupal.ahahError(response, uri));
   // Resore the previous action and target to the form.
-  $(this.element).parent('form').attr( { action: this.form_action, target: this.form_target} );
+  $(this.element).parent('form').attr({ action: this.form_action, target: this.form_target });
   // Remove the progress element.
   if (this.progress.element) {
     $(this.progress.element).remove();

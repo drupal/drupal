@@ -20,7 +20,7 @@ $.fn.setSummary = function(callback) {
   var that = this;
 
   // To facilitate things, the callback should always be a function. If it's
-  //  not, we wrap it into an anonymous function which just returns the value.
+  // not, we wrap it into an anonymous function which just returns the value.
   if (typeof callback != 'function') {
     var val = callback;
     callback = function() { return val; };
@@ -63,7 +63,7 @@ Drupal.behaviors.multiselectSelector = {
     // Automatically selects the right radio button in a multiselect control.
     $('.multiselect select:not(.multiselectSelector-processed)', context)
       .addClass('multiselectSelector-processed').change(function() {
-        $('.multiselect input:radio[value="'+ this.id.substr(5) +'"]')
+        $('.multiselect input:radio[value="' + this.id.substr(5) + '"]')
           .attr('checked', true);
     });
   }
@@ -79,7 +79,7 @@ Drupal.behaviors.filterGuidelines = {
       .addClass('filter-guidelines-processed')
       .find('label').hide()
       .parents('.filter-wrapper').find('select.filter-list')
-      .bind('change', function () {
+      .bind('change', function() {
         $(this).parents('.filter-wrapper')
           .find('.filter-guidelines-item').hide()
           .siblings('#filter-guidelines-' + this.value).show();

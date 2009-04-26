@@ -45,7 +45,7 @@ Drupal.behaviors.profileDrag = {
         var weightField = $('select.profile-weight', dragObject.rowObject.element);
         var oldcategoryNum = weightField[0].className.replace(/([^ ]+[ ]+)*profile-weight-([^ ]+)([ ]+[^ ]+)*/, '$2');
 
-        if (!categoryField.is('.profile-category-'+ categoryNum)) {
+        if (!categoryField.is('.profile-category-' + categoryNum)) {
           categoryField.removeClass('profile-category-' + oldcategoryNum).addClass('profile-category-' + categoryNum);
           weightField.removeClass('profile-weight-' + oldcategoryNum).addClass('profile-weight-' + categoryNum);
 

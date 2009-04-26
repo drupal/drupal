@@ -54,7 +54,7 @@ Drupal.behaviors.setTimezone = {
         url: settings.basePath,
         data: { q: path, date: dateString },
         dataType: 'json',
-        success: function (data) {
+        success: function(data) {
           if (data) {
             $(element).val(data);
           }

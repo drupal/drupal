@@ -11,7 +11,7 @@ Drupal.toggleFieldset = function(fieldset) {
     var content = $('> div:not(.action)', fieldset);
     $(fieldset).removeClass('collapsed');
     content.hide();
-    content.slideDown( {
+    content.slideDown({
       duration: 'fast',
       easing: 'linear',
       complete: function() {
@@ -37,7 +37,7 @@ Drupal.toggleFieldset = function(fieldset) {
 /**
  * Scroll a given fieldset into view as much as possible.
  */
-Drupal.collapseScrollIntoView = function (node) {
+Drupal.collapseScrollIntoView = function(node) {
   var h = self.innerHeight || document.documentElement.clientHeight || $('body')[0].clientHeight || 0;
   var offset = self.pageYOffset || document.documentElement.scrollTop || $('body')[0].scrollTop || 0;
   var posY = $(node).offset().top;
@@ -71,7 +71,7 @@ Drupal.behaviors.collapse = {
       // Turn the legend into a clickable link and wrap the contents of the fieldset
       // in a div for easier animation
       var text = this.innerHTML;
-        $(this).empty().append($('<a href="#">'+ text +'</a>').click(function() {
+        $(this).empty().append($('<a href="#">' + text + '</a>').click(function() {
           var fieldset = $(this).parents('fieldset:first')[0];
           // Don't animate multiple times
           if (!fieldset.animating) {
@@ -82,8 +82,8 @@ Drupal.behaviors.collapse = {
         }))
         .append(summary)
         .after($('<div class="fieldset-wrapper"></div>')
-        .append(fieldset.children(':not(legend):not(.action)')))
-        .addClass('collapse-processed');
+          .append(fieldset.children(':not(legend):not(.action)'))
+        ).addClass('collapse-processed');
     });
   }
 };

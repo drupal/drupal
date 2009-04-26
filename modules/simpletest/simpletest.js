@@ -83,7 +83,7 @@ Drupal.behaviors.simpleTestSelectAll = {
       groupCheckbox.change(function() {
         var checked = !!($(this).attr('checked'));
         for (var i = 0; i < testCheckboxes.length; i++) {
-          $('#'+ testCheckboxes[i]).attr('checked', checked);
+          $('#' + testCheckboxes[i]).attr('checked', checked);
         }
       });
 

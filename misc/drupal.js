@@ -8,7 +8,7 @@ jQuery.noConflict();
 // Indicate when other scripts use $ with out wrapping their code.
 if ($ === undefined) {
   $ = function() {
-    alert("Please wrap your JavaScript code in (function($) { ... })(jQuery); to be compatible. See http://docs.jquery.com/Using_jQuery_with_Other_Libraries.");
+    alert('Please wrap your JavaScript code in (function($) { ... })(jQuery); to be compatible. See http://docs.jquery.com/Using_jQuery_with_Other_Libraries.');
   };
 }
 
@@ -195,9 +195,9 @@ Drupal.formatPlural = function(count, singular, plural, args) {
     return Drupal.t(plural, args);
   }
   else {
-    args['@count['+ index +']'] = args['@count'];
+    args['@count[' + index + ']'] = args['@count'];
     delete args['@count'];
-    return Drupal.t(plural.replace('@count', '@count['+ index +']'));
+    return Drupal.t(plural.replace('@count', '@count[' + index + ']'));
   }
 };
 
@@ -233,7 +233,7 @@ Drupal.theme = function(func) {
  *
  * The result is either the JSON object, or an object with 'status' 0 and 'data' an error message.
  */
-Drupal.parseJson = function (data) {
+Drupal.parseJson = function(data) {
   if ((data.substring(0, 1) != '{') && (data.substring(0, 1) != '[')) {
     return { status: 0, data: data.length ? data : Drupal.t('Unspecified error') };
   }
@@ -244,23 +244,21 @@ Drupal.parseJson = function (data) {
  * Freeze the current body height (as minimum height). Used to prevent
  * unnecessary upwards scrolling when doing DOM manipulations.
  */
-Drupal.freezeHeight = function () {
+Drupal.freezeHeight = function() {
   Drupal.unfreezeHeight();
-  var div = document.createElement('div');
-  $(div).css({
+  $('<div id="freeze-height"></div>').css({
     position: 'absolute',
     top: '0px',
     left: '0px',
     width: '1px',
     height: $('body').css('height')
-  }).attr('id', 'freeze-height');
-  $('body').append(div);
+  }).appendTo('body');
 };
 
 /**
  * Unfreeze the body height.
  */
-Drupal.unfreezeHeight = function () {
+Drupal.unfreezeHeight = function() {
   $('#freeze-height').remove();
 };
 
@@ -268,7 +266,7 @@ Drupal.unfreezeHeight = function () {
  * Wrapper to address the mod_rewrite url encoding bug
  * (equivalent of drupal_urlencode() in PHP).
  */
-Drupal.encodeURIComponent = function (item, uri) {
+Drupal.encodeURIComponent = function(item, uri) {
   uri = uri || location.href;
   item = encodeURIComponent(item).replace(/%2F/g, '/');
   return (uri.indexOf('?q=') != -1) ? item : item.replace(/%26/g, '%2526').replace(/%23/g, '%2523').replace(/\/\//g, '/%252F');
@@ -277,8 +275,8 @@ Drupal.encodeURIComponent = function (item, uri) {
 /**
  * Get the text selection in a textarea.
  */
-Drupal.getSelection = function (element) {
-  if (typeof(element.selectionStart) != 'number' && document.selection) {
+Drupal.getSelection = function(element) {
+  if (typeof element.selectionStart != 'number' && document.selection) {
     // The current selection.
     var range1 = document.selection.createRange();
     var range2 = range1.duplicate();
@@ -300,14 +298,14 @@ Drupal.getSelection = function (element) {
 Drupal.ahahError = function(xmlhttp, uri) {
   if (xmlhttp.status == 200) {
     if ($.trim(xmlhttp.responseText)) {
-      var message = Drupal.t("An error occurred. \n@uri\n@text", {'@uri': uri, '@text': xmlhttp.responseText });
+      var message = Drupal.t('An error occurred. \n@uri\n@text', { '@uri': uri, '@text': xmlhttp.responseText });
     }
     else {
-      var message = Drupal.t("An error occurred. \n@uri\n(no information available).", {'@uri': uri });
+      var message = Drupal.t('An error occurred. \n@uri\n(no information available).', { '@uri': uri });
     }
   }
   else {
-    var message = Drupal.t("An HTTP error @status occurred. \n@uri", {'@uri': uri, '@status': xmlhttp.status });
+    var message = Drupal.t('An HTTP error @status occurred. \n@uri', { '@uri': uri, '@status': xmlhttp.status });
   }
   return message.replace(/\n/g, '<br />');
 };

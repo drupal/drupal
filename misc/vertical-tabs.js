@@ -8,7 +8,7 @@
  * tab.
  *
  * Each tab may have a summary which can be updated by another
- * script. For that to work, each fieldset has an associated 
+ * script. For that to work, each fieldset has an associated
  * 'verticalTabCallback' (with jQuery.data() attached to the fieldset),
  * which is called every time the user performs an update to a form
  * element inside the tab pane.

@@ -42,7 +42,7 @@ Drupal.behaviors.color = {
     }
 
     // Set up colorscheme selector.
-    $('#edit-scheme', form).change(function () {
+    $('#edit-scheme', form).change(function() {
       var colors = this.options[this.selectedIndex].value;
       if (colors != '') {
         colors = colors.split(',');
@@ -75,7 +75,7 @@ Drupal.behaviors.color = {
         var accum = top;
 
         // Render gradient lines.
-        $('#gradient > div', form).each(function () {
+        $('#gradient > div', form).each(function() {
           for (i in accum) {
             accum[i] += delta[i];
           }
@@ -175,7 +175,7 @@ Drupal.behaviors.color = {
      * Reset the color scheme selector.
      */
     function resetScheme() {
-      $('#edit-scheme', form).each(function () {
+      $('#edit-scheme', form).each(function() {
         this.selectedIndex = this.options.length - 1;
       });
     }
@@ -190,7 +190,7 @@ Drupal.behaviors.color = {
 
       // Add new bindings.
       focused = this;
-      farb.linkTo(function (color) { callback(input, color, true, false); });
+      farb.linkTo(function(color) { callback(input, color, true, false); });
       farb.setColor(this.value);
       $(focused).keyup(farb.updateValue).keyup(preview).keyup(resetScheme)
         .parent().addClass('item-selected');
@@ -198,18 +198,18 @@ Drupal.behaviors.color = {
 
     // Initialize color fields.
     $('#palette input.form-text', form)
-    .each(function () {
+    .each(function() {
       // Extract palette field name
       this.key = this.id.substring(13);
 
       // Link to color picker temporarily to initialize.
-      farb.linkTo(function () {}).setColor('#000').linkTo(this);
+      farb.linkTo(function() {}).setColor('#000').linkTo(this);
 
       // Add lock.
       var i = inputs.length;
       if (inputs.length) {
         var lock = $('<div class="lock"></div>').toggle(
-          function () {
+          function() {
             $(this).addClass('unlocked');
             $(hooks[i - 1]).attr('class',
               locks[i - 2] && $(locks[i - 2]).is(':not(.unlocked)') ? 'hook up' : 'hook'
@@ -218,7 +218,7 @@ Drupal.behaviors.color = {
               locks[i] && $(locks[i]).is(':not(.unlocked)') ? 'hook down' : 'hook'
             );
           },
-          function () {
+          function() {
             $(this).removeClass('unlocked');
             $(hooks[i - 1]).attr('class',
               locks[i - 2] && $(locks[i - 2]).is(':not(.unlocked)') ? 'hook both' : 'hook down'
