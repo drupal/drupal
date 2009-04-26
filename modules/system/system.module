@@ -1622,6 +1622,7 @@ function system_action_info() {
         'comment' => array('view', 'insert', 'update', 'delete'),
         'user' => array('view', 'insert', 'update', 'delete', 'login'),
         'taxonomy' => array('insert', 'update', 'delete'),
+        'cron' => array('run'),
       )
     ),
     'system_block_ip_action' => array(
