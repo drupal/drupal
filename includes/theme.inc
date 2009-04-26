@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.477 2009/04/25 12:52:24 webchick Exp $
+// $Id: theme.inc,v 1.478 2009/04/26 01:15:04 webchick Exp $
 
 /**
  * @file
@@ -2027,35 +2027,3 @@ function template_preprocess_node(&$variables) {
   $variables += field_attach_preprocess('node', $node);
 }
 
-/**
- * Process variables for block.tpl.php
- *
- * Prepare the values passed to the theme_block function to be passed
- * into a pluggable template engine. Uses block properties to generate a
- * series of template file suggestions. If none are found, the default
- * block.tpl.php is used.
- *
- * Most themes utilize their own copy of block.tpl.php. The default is located
- * inside "modules/system/block.tpl.php". Look in there for the full list of
- * variables.
- *
- * The $variables array contains the following arguments:
- * - $block
- *
- * @see block.tpl.php
- */
-function template_preprocess_block(&$variables) {
-  static $block_counter = array();
-  $variables['block'] = $variables['block']['#block'];
-  // All blocks get an independent counter for each region.
-  if (!isset($block_counter[$variables['block']->region])) {
-    $block_counter[$variables['block']->region] = 1;
-  }
-  // Same with zebra striping.
-  $variables['block_zebra'] = ($block_counter[$variables['block']->region] % 2) ? 'odd' : 'even';
-  $variables['block_id'] = $block_counter[$variables['block']->region]++;
-
-  $variables['template_files'][] = 'block-' . $variables['block']->region;
-  $variables['template_files'][] = 'block-' . $variables['block']->module;
-  $variables['template_files'][] = 'block-' . $variables['block']->module . '-' . $variables['block']->delta;
-}
