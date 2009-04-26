@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.28 2009/04/24 08:15:50 dries Exp $
+// $Id: system.api.php,v 1.29 2009/04/26 06:00:31 dries Exp $
 
 /**
  * @file
@@ -462,7 +462,7 @@ function hook_link($type, $object, $teaser = FALSE) {
  */
 function hook_link_alter(array &$links, $node) {
   foreach ($links as $module => $link) {
-    if (strstr($module, 'taxonomy_term')) {
+    if (strpos($module, 'taxonomy_term') !== FALSE) {
       // Link back to the forum and not the taxonomy term page
       $links[$module]['href'] = str_replace('taxonomy/term', 'forum', $link['href']);
     }
