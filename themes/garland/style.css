@@ -649,7 +649,7 @@ ul.secondary li.active a {
  */
 .node {
   border-bottom: 1px solid #e9eff3;
-  margin: -1.5em -26px 1.5em;
+  margin: 0 -26px 1.5em;
   padding: 1.5em 26px;
 }
 
