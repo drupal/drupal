@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.405 2009/03/01 07:21:02 webchick Exp $
+// $Id: aggregator.module,v 1.406 2009/04/26 19:59:31 webchick Exp $
 
 /**
  * @file
@@ -332,9 +332,9 @@ function aggregator_block_configure($delta = '') {
 function aggregator_block_save($delta = '', $edit = array()) {
   list($type, $id) = explode('-', $delta);
   if ($type == 'category') {
-    db_merge('aggregator_category')
-      ->key(array('cid' => $id))
+    db_update('aggregator_category')
       ->fields(array('block' => $edit['block']))
+      ->condition('cid', $id)
       ->execute();
   }
 }
