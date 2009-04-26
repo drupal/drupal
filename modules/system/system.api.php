@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.29 2009/04/26 06:00:31 dries Exp $
+// $Id: system.api.php,v 1.30 2009/04/26 16:44:25 dries Exp $
 
 /**
  * @file
@@ -313,10 +313,14 @@ function hook_form_FORM_ID_alter(&$form, &$form_state) {
  * See node_forms() for an actual example of how multiple forms share a common
  * building function.
  *
+ * @param $form_id
+ *   The unique string identifying the desired form.
+ * @param $args
+ *   An array containing the original arguments provided to drupal_get_form().
  * @return
- *   An array keyed by form id with callbacks and optional, callback arguments.
+ *   An array keyed by form_id with callbacks and optional, callback arguments.
  */
-function hook_forms() {
+function hook_forms($form_id, $args) {
   $forms['mymodule_first_form'] = array(
     'callback' => 'mymodule_form_builder',
     'callback arguments' => array('some parameter'),
@@ -324,6 +328,7 @@ function hook_forms() {
   $forms['mymodule_second_form'] = array(
     'callback' => 'mymodule_form_builder',
   );
+
   return $forms;
 }
 
