@@ -413,7 +413,7 @@ function block_box_save($edit, $delta) {
 function block_user_form(&$edit, &$account, $category = NULL) {
   if ($category == 'account') {
     $rids = array_keys($account->roles);
-    $result = db_query("SELECT DISTINCT b.* FROM {block} b LEFT JOIN {block_role} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom != 0 AND (r.rid IN (:rids) OR r.rid IS NULL) ORDER BY b.weight, b.module", array(':rids' => $rids));
+    $result = db_query("SELECT DISTINCT b.* FROM {block} b LEFT JOIN {block_role} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom <> 0 AND (r.rid IN (:rids) OR r.rid IS NULL) ORDER BY b.weight, b.module", array(':rids' => $rids));
     $form['block'] = array('#type' => 'fieldset', '#title' => t('Block configuration'), '#weight' => 3, '#collapsible' => TRUE, '#tree' => TRUE);
     while ($block = db_fetch_object($result)) {
       $data = module_invoke($block->module, 'block_list');
@@ -460,7 +460,7 @@ function block_form_system_performance_settings_alter(&$form, &$form_state) {
     '#disabled' => count(module_implements('node_grants')),
     '#description' => t('Note that block caching is inactive when modules defining content access restrictions are enabled.'),
   );
-  
+
   // Check if the "Who's online" block is enabled.
   $online_block_enabled = db_select('block')
     ->condition('module', 'user')
@@ -469,13 +469,13 @@ function block_form_system_performance_settings_alter(&$form, &$form_state) {
     ->countQuery()
     ->execute()
     ->fetchField();
-  
+
   // If the "Who's online" block is enabled, append some descriptive text to
   // the end of the form description.
   if ($online_block_enabled) {
     $form['page_cache']['cache']['#description'] .=  '<p>' . t('When caching is enabled, anonymous user sessions are only saved to the database when needed, so the "Who\'s online" block does not display the number of anonymous users.') . '</p>';
   }
-  
+
 }
 
 /**
@@ -509,12 +509,12 @@ function block_system_themes_form_submit(&$form, &$form_state) {
 
 /**
  * Assign an initial, default set of blocks for a theme.
- * 
+ *
  * This function is called the first time a new theme is enabled. The new theme
  * gets a copy of the default theme's blocks, with the difference that if a
  * particular region isn't available in the new theme, the block is assigned
  * to the new theme's default region.
- * 
+ *
  * @param $theme
  *   The name of a theme.
  */

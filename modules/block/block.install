@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Install instructions for the block module
+ */
+
+/**
  * Implementation of hook_schema().
  */
 function block_schema() {

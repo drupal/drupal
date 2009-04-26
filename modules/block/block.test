@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Tests for the block module
+ */
+
 class BlockTestCase extends DrupalWebTestCase {
   protected $regions;
 
@@ -116,7 +121,7 @@ class BlockTestCase extends DrupalWebTestCase {
 
     // Confirm that the regions xpath is not availble
     $xpath = '//div[@id="block-block-' . $bid . '"]/*';
-    $this->assertNoFieldByXPath($xpath, FALSE, t('Box found in no regions. '));
+    $this->assertNoFieldByXPath($xpath, FALSE, t('Box found in no regions.'));
 
     // For convenience of developers, put the navigation block back.
     $edit = array();
@@ -140,7 +145,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
 
     // Confirm that the block was moved to the proper region.
-    $this->assertText(t('The block settings have been updated.'), t('Block successfully moved to %region_name region.', array( '%region_name'=> $region['name'])));
+    $this->assertText(t('The block settings have been updated.'), t('Block successfully moved to %region_name region.', array( '%region_name' => $region['name'])));
 
     // Confirm that the block is being displayed.
     $this->assertText(t($block['title']), t('Block successfully being displayed on the page.'));

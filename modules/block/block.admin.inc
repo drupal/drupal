@@ -272,7 +272,7 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
 
 function block_admin_configure_validate($form, &$form_state) {
   if ($form_state['values']['module'] == 'block') {
-    if (empty($form_state['values']['info']) || db_result(db_query("SELECT COUNT(*) FROM {box} WHERE bid != %d AND info = '%s'", $form_state['values']['delta'], $form_state['values']['info']))) {
+    if (empty($form_state['values']['info']) || db_result(db_query("SELECT COUNT(*) FROM {box} WHERE bid <> %d AND info = '%s'", $form_state['values']['delta'], $form_state['values']['info']))) {
       form_set_error('info', t('Please ensure that each block description is unique.'));
     }
   }
