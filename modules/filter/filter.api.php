@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.api.php,v 1.5 2009/03/08 21:25:18 dries Exp $
+// $Id: filter.api.php,v 1.6 2009/04/26 09:40:25 dries Exp $
 
 /**
  * @file
@@ -114,16 +114,16 @@ function hook_filter($op, $delta = 0, $format = -1, $text = '', $langcode = '', 
       return t('Allows users to post code verbatim using &lt;code&gt; and &lt;?php ?&gt; tags.');
 
     case 'prepare':
-      // Note: we use the bytes 0xFE and 0xFF to replace < > during the
-      // filtering process. These bytes are not valid in UTF-8 data and thus
-      // least likely to cause problems.
-      $text = preg_replace('@<code>(.+?)</code>@se', "'\xFEcode\xFF' . codefilter_escape('\\1') . '\xFE/code\xFF'", $text);
-      $text = preg_replace('@<(\?(php)?|%)(.+?)(\?|%)>@se', "'\xFEphp\xFF' . codefilter_escape('\\3') . '\xFE/php\xFF'", $text);
+      // Note: we use [ and ] to replace < > during the filtering process. 
+      // For more information, see "Temporary placeholders and
+      // delimiters" at http://drupal.org/node/209715.
+      $text = preg_replace('@<code>(.+?)</code>@se', "'[codefilter-code]' . codefilter_escape('\\1') . '[/codefilter-code]'", $text);
+      $text = preg_replace('@<(\?(php)?|%)(.+?)(\?|%)>@se', "'[codefilter-php]' . codefilter_escape('\\3') . '[/codefilter-php]'", $text);
       return $text;
 
     case "process":
-      $text = preg_replace('@\xFEcode\xFF(.+?)\xFE/code\xFF@se', "codefilter_process_code('$1')", $text);
-      $text = preg_replace('@\xFEphp\xFF(.+?)\xFE/php\xFF@se', "codefilter_process_php('$1')", $text);
+      $text = preg_replace('@[codefilter-code](.+?)[/codefilter-code]@se', "codefilter_process_code('$1')", $text);
+      $text = preg_replace('@[codefilter-php](.+?)[/codefilter-php]@se', "codefilter_process_php('$1')", $text);
       return $text;
 
     default:
