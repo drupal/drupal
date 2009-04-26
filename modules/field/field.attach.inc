@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.10 2009/04/13 05:18:17 webchick Exp $
+// $Id: field.attach.inc,v 1.11 2009/04/26 09:18:20 dries Exp $
 
 /**
  * @file
@@ -729,16 +729,16 @@ function _field_attach_rename_bundle($bundle_old, $bundle_new) {
  *   The bundle to delete.
  */
 function _field_attach_delete_bundle($bundle) {
-  // Let other modules act on deleting the bundle
-  foreach (module_implements('field_attach_delete_bundle') as $module) {
-    $function = $module . '_field_attach_delete_bundle';
-    $function($bundle);
-  }
-
   // Delete the instances themseves
   $instances = field_info_instances($bundle);
   foreach ($instances as $instance) {
     field_delete_instance($instance['field_name'], $bundle);
+  }
+
+  // Let other modules act on deleting the bundle
+  foreach (module_implements('field_attach_delete_bundle') as $module) {
+    $function = $module . '_field_attach_delete_bundle';
+    $function($bundle, $instances);
   }
 }
 

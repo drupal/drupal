@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.7 2009/04/13 05:18:17 webchick Exp $
+// $Id: field.api.php,v 1.8 2009/04/26 09:18:20 dries Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -614,9 +614,13 @@ function hook_field_rename_bundle($bundle_old, $bundle_new) {
  *
  * This hook is invoked after the field module has performed the operation.
  *
- * See field_attach_delete_bundle() for details and arguments.
+ * @param $bundle
+ *   The bundle that was just deleted.
+ * @param $instances
+ *   An array of all instances that existed for $bundle before it was
+ *   deleted.
  */
-function hook_field_attach_delete_bundle($bundle) {
+function hook_field_attach_delete_bundle($bundle, $instances) {
 }
 
 /**
