@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.685 2009/04/26 09:25:42 dries Exp $
+// $Id: system.module,v 1.686 2009/04/26 14:54:31 dries Exp $
 
 /**
  * @file
@@ -1622,6 +1622,7 @@ function system_action_info() {
         'comment' => array('view', 'insert', 'update', 'delete'),
         'user' => array('view', 'insert', 'update', 'delete', 'login'),
         'taxonomy' => array('insert', 'update', 'delete'),
+        'cron' => array('run'),
       )
     ),
     'system_block_ip_action' => array(
