@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1040 2009/04/26 09:14:31 dries Exp $
+// $Id: node.module,v 1.1041 2009/04/26 15:40:24 dries Exp $
 
 /**
  * @file
@@ -771,34 +771,6 @@ function node_invoke(&$node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
 }
 
 /**
- * Invoke a hook_node() operation in all modules.
- *
- * @param &$node
- *   A node object.
- * @param $op
- *   A string containing the name of the node operation.
- * @param $a3, $a4
- *   Arguments to pass on to the hook, after the $node and $op arguments.
- * @return
- *   The returned value of the invoked hooks.
- */
-function node_invoke_node(&$node, $op, $a3 = NULL, $a4 = NULL) {
-  $return = array();
-  $hook = 'node_' . $op;
-  foreach (module_implements($hook) as $module) {
-    $function = $module . '_' . $hook;
-    $result = $function($node, $a3, $a4);
-    if (isset($result) && is_array($result)) {
-      $return = array_merge($return, $result);
-    }
-    elseif (isset($result)) {
-      $return[] = $result;
-    }
-  }
-  return $return;
-}
-
-/**
  * Load node objects from the database.
  *
  * This function should be used whenever you need to load more than one node
@@ -1156,7 +1128,7 @@ function node_save(&$node) {
   $function = "field_attach_$op";
   $function('node', $node);
 
-  node_invoke_node($node, $op);
+  module_invoke_all('node_' . $op, $node);
 
   // Update the node access table for this node.
   node_access_acquire_grants($node);
