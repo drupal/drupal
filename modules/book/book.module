@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.490 2009/04/25 23:01:43 webchick Exp $
+// $Id: book.module,v 1.491 2009/04/27 07:08:00 dries Exp $
 
 /**
  * @file
@@ -401,7 +401,7 @@ function _book_parent_select($book_link) {
       '#title' => t('Parent item'),
       '#default_value' => $book_link['plid'],
       '#description' => t('The parent page in the book. The maximum depth for a book and all child pages is !maxdepth. Some pages in the selected book may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => MENU_MAX_DEPTH)),
-      '#options' => book_toc($book_link['bid'], array($book_link['mlid']), $book_link['parent_depth_limit']),
+      '#options' => book_toc($book_link['bid'], $book_link['parent_depth_limit'], array($book_link['mlid'])),
       '#attributes' => array('class' => 'book-title-select'),
     );
   }
@@ -945,15 +945,15 @@ function _book_toc_recurse($tree, $indent, &$toc, $exclude, $depth_limit) {
  *
  * @param $bid
  *   The ID of the book whose pages are to be listed.
+ * @param $depth_limit
+ *   Any link deeper than this value will be excluded (along with its children).
  * @param $exclude
  *   Optional array of mlid values. Any link whose mlid is in this array
  *   will be excluded (along with its children).
- * @param $depth_limit
- *   Any link deeper than this value will be excluded (along with its children).
  * @return
  *   An array of mlid, title pairs for use as options for selecting a book page.
  */
-function book_toc($bid, $exclude = array(), $depth_limit) {
+function book_toc($bid, $depth_limit, $exclude = array()) {
   $tree = menu_tree_all_data(book_menu_name($bid));
   $toc = array();
   _book_toc_recurse($tree, '', $toc, $exclude, $depth_limit);
