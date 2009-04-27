@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.705 2009/04/26 19:44:38 dries Exp $
+// $Id: comment.module,v 1.706 2009/04/27 07:09:58 dries Exp $
 
 /**
  * @file
@@ -1768,7 +1768,9 @@ function comment_form_submit($form, &$form_state) {
   _comment_form_submit($form_state['values']);
   if ($cid = comment_save($form_state['values'])) {
     $node = node_load($form_state['values']['nid']);
-    $page = comment_new_page_count($node->comment_count, 1, $node);
+    // Add 1 to existing $node->comment count to include new comment.
+    $comment_count = $node->comment_count + 1;
+    $page = comment_new_page_count($comment_count, 1, $node);
     $form_state['redirect'] = array('node/' . $node->nid, $page, "comment-$cid");
     return;
   }
