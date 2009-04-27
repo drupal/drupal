@@ -2526,6 +2526,15 @@ function system_update_6047() {
 }
 
 /**
+ * @} End of "defgroup updates-5.x-to-6.x"
+ */
+
+/**
+ * @defgroup updates-6.x-extra Extra system updates for 6.x
+ * @{
+ */
+
+/**
 * Increase the size of the 'load_functions' and 'to_arg_functions' fields in table 'menu_router'.
 */
 function system_update_6048() {
@@ -2535,7 +2544,6 @@ function system_update_6048() {
 
   return $ret;
 }
-
 
 /**
  * Replace src index on the {url_alias} table with src, language.
@@ -2548,6 +2556,7 @@ function system_update_6049() {
 }
 
 /**
- * @} End of "defgroup updates-5.x-to-6.x"
+ * @} End of "defgroup updates-6.x-extra"
  * The next series of updates should start at 7000.
  */
+
