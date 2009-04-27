@@ -41,6 +41,21 @@
  *     user_access() unless a value is inherited from a parent menu item..
  *   - "access arguments": An array of arguments to pass to the access callback
  *     function. Integer values pass the corresponding URL component.
+ *   - "file": A file that will be included before the callbacks are accessed.
+ *     this allows callback functions to be in separate files. The file should
+ *     be relative to the implementing module's directory unless otherwise
+ *     specified by the "file path" option.
+ *   - "file path": The path to the folder containing the file specified in
+ *     "file". This defaults to the path to the module implementing the hook.
+ *   - "load arguments": An array of arguments to be passed to each of the
+ *     object loaders in the path. For example, for the router item at
+ *     node/%node/revisions/%/view, the array(1, 3) will call node_load() with
+ *     the arguments corresponding to the second and fourth url argument;
+ *     as with other arguments, integers are automatically cast to url
+ *     arguments. There are also two "magic" values: "%index" will correspond
+ *     to the url index where the object's load function is specified; "%map"
+ *     will correspond to the full menu map, passed in by reference to the
+ *     load function.
  *   - "weight": An integer that determines relative position of items in the
  *     menu; higher-weighted items sink. Defaults to 0. When in doubt, leave
  *     this alone; the default alphabetical order is usually best.
