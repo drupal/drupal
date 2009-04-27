@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.137 2009/04/26 09:14:32 dries Exp $
+// $Id: system.admin.inc,v 1.138 2009/04/27 02:07:48 webchick Exp $
 
 /**
  * @file
@@ -1287,16 +1287,16 @@ function system_logging_settings() {
  */
 function system_performance_settings() {
 
-  $description = '<p>' . t("The normal cache mode is suitable for most sites and does not cause any side effects. The aggressive cache mode causes Drupal to skip the loading (boot) and unloading (exit) of enabled modules when serving a cached page. This results in an additional performance boost but can cause unwanted side effects.") . '</p>';
+  $description = '<p>' . t("The normal page cache mode is suitable for most sites and does not cause any side effects. The aggressive page cache mode causes Drupal to skip the loading (boot) and unloading (exit) of enabled modules when serving a cached page. This results in an additional performance boost but can cause unwanted side effects.") . '</p>';
 
   $problem_modules = array_unique(array_merge(module_implements('boot'), module_implements('exit')));
   sort($problem_modules);
 
   if (count($problem_modules) > 0) {
-    $description .= '<p>' . t('<strong class="error">The following enabled modules are incompatible with aggressive mode caching and will not function properly: %modules</strong>', array('%modules' => implode(', ', $problem_modules))) . '.</p>';
+    $description .= '<p>' . t('<strong class="error">The following enabled modules are incompatible with aggressive page caching mode and will not function properly: %modules</strong>', array('%modules' => implode(', ', $problem_modules))) . '.</p>';
   }
   else {
-    $description .= '<p>' . t('<strong class="ok">Currently, all enabled modules are compatible with the aggressive caching policy.</strong> Please note, if you use aggressive caching and enable new modules, you will need to check this page again to ensure compatibility.') . '</p>';
+    $description .= '<p>' . t('<strong class="ok">Currently, all enabled modules are compatible with the aggressive page caching policy.</strong> Please note, if you use aggressive page caching and enable new modules, you will need to check this setting again to ensure compatibility.') . '</p>';
   }
   $form['page_cache'] = array(
     '#type' => 'fieldset',
@@ -1307,7 +1307,7 @@ function system_performance_settings() {
 
   $form['page_cache']['cache'] = array(
     '#type' => 'radios',
-    '#title' => t('Caching mode'),
+    '#title' => t('Page caching mode'),
     '#default_value' => variable_get('cache', CACHE_DISABLED),
     '#options' => array(CACHE_DISABLED => t('Disabled'), CACHE_NORMAL => t('Normal (recommended for production sites, no side effects)'), CACHE_AGGRESSIVE => t('Aggressive (experts only, possible side effects)')),
     '#description' => $description
