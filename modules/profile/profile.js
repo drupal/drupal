@@ -1,5 +1,5 @@
-// $Id: profile.js,v 1.6 2009/04/26 19:18:46 webchick Exp $
-(function($) {
+// $Id: profile.js,v 1.7 2009/04/27 20:19:37 webchick Exp $
+(function ($) {
 
 /**
  * Add functionality to the profile drag and drop table.
@@ -9,14 +9,14 @@
  * a warning message when removing the last field from a profile category.
  */
 Drupal.behaviors.profileDrag = {
-  attach: function(context, settings) {
+  attach: function (context, settings) {
     var table = $('#profile-fields');
     var tableDrag = Drupal.tableDrag['profile-fields']; // Get the profile tableDrag object.
 
     // Add a handler for when a row is swapped, update empty categories.
-    tableDrag.row.prototype.onSwap = function(swappedRow) {
+    tableDrag.row.prototype.onSwap = function (swappedRow) {
       var rowObject = this;
-      $('tr.category-message', table).each(function() {
+      $('tr.category-message', table).each(function () {
         // If the dragged row is in this category, but above the message row, swap it down one space.
         if ($(this).prev('tr').get(0) == rowObject.element) {
           // Prevent a recursion problem when using the keyboard to move rows up.
@@ -36,7 +36,7 @@ Drupal.behaviors.profileDrag = {
     };
 
     // Add a handler so when a row is dropped, update fields dropped into new categories.
-    tableDrag.onDrop = function() {
+    tableDrag.onDrop = function () {
       dragObject = this;
       if ($(dragObject.rowObject.element).prev('tr').is('.category-message')) {
         var categoryRow = $(dragObject.rowObject.element).prev('tr').get(0);

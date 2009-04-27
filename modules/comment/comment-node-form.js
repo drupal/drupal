@@ -1,10 +1,10 @@
-// $Id: comment-node-form.js,v 1.1 2009/04/11 22:19:44 webchick Exp $
+// $Id: comment-node-form.js,v 1.2 2009/04/27 20:19:36 webchick Exp $
 
-(function($) {
+(function ($) {
 
 Drupal.behaviors.commentFieldsetSummaries = {
-  attach: function(context) {
-    $('fieldset#edit-comment-settings', context).setSummary(function(context) {
+  attach: function (context) {
+    $('fieldset#edit-comment-settings', context).setSummary(function (context) {
       return Drupal.checkPlain($('input:checked', context).parent().text());
     });
   }

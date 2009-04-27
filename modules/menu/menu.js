@@ -1,10 +1,10 @@
-// $Id: menu.js,v 1.1 2009/04/11 22:19:45 webchick Exp $
+// $Id: menu.js,v 1.2 2009/04/27 20:19:36 webchick Exp $
 
-(function($) {
+(function ($) {
 
 Drupal.behaviors.menuFieldsetSummaries = {
-  attach: function(context) {
-    $('fieldset#edit-menu', context).setSummary(function(context) {
+  attach: function (context) {
+    $('fieldset#edit-menu', context).setSummary(function (context) {
       return Drupal.checkPlain($('#edit-menu-link-title', context).val()) || Drupal.t('Not in menu');
     });
   }

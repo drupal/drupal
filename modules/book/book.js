@@ -1,10 +1,10 @@
-// $Id: book.js,v 1.5 2009/04/11 22:19:44 webchick Exp $
+// $Id: book.js,v 1.6 2009/04/27 20:19:35 webchick Exp $
 
-(function($) {
+(function ($) {
 
 Drupal.behaviors.bookFieldsetSummaries = {
-  attach: function(context) {
-    $('fieldset#edit-book', context).setSummary(function(context) {
+  attach: function (context) {
+    $('fieldset#edit-book', context).setSummary(function (context) {
       var val = $('#edit-book-bid').val();
 
       if (val === '0') {

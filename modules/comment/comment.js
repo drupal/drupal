@@ -1,9 +1,9 @@
-// $Id: comment.js,v 1.10 2009/04/26 19:18:45 webchick Exp $
-(function($) {
+// $Id: comment.js,v 1.11 2009/04/27 20:19:36 webchick Exp $
+(function ($) {
 
 Drupal.behaviors.comment = {
-  attach: function(context, settings) {
-    $.each(['name', 'homepage', 'mail'], function() {
+  attach: function (context, settings) {
+    $.each(['name', 'homepage', 'mail'], function () {
       var cookie = Drupal.comment.getCookie('comment_info_' + this);
       if (cookie) {
         $('#comment-form input[name=' + this + ']:not(.comment-processed)', context)
@@ -16,7 +16,7 @@ Drupal.behaviors.comment = {
 
 Drupal.comment = {};
 
-Drupal.comment.getCookie = function(name) {
+Drupal.comment.getCookie = function (name) {
   var search = name + '=';
   var returnValue = '';
 

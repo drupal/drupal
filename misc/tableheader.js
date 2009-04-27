@@ -1,14 +1,14 @@
-// $Id: tableheader.js,v 1.23 2009/04/26 19:18:44 webchick Exp $
-(function($) {
+// $Id: tableheader.js,v 1.24 2009/04/27 20:19:35 webchick Exp $
+(function ($) {
 
-Drupal.tableHeaderDoScroll = function() {
+Drupal.tableHeaderDoScroll = function () {
   if ($.isFunction(Drupal.tableHeaderOnScroll)) {
     Drupal.tableHeaderOnScroll();
   }
 };
 
 Drupal.behaviors.tableHeader = {
-  attach: function(context, settings) {
+  attach: function (context, settings) {
     // This breaks in anything less than IE 7. Prevent it from running.
     if ($.browser.msie && parseInt($.browser.version) < 7) {
       return;
@@ -17,7 +17,7 @@ Drupal.behaviors.tableHeader = {
     // Keep track of all cloned table headers.
     var headers = [];
 
-    $('table.sticky-enabled thead:not(.tableHeader-processed)', context).each(function() {
+    $('table.sticky-enabled thead:not(.tableHeader-processed)', context).each(function () {
       // Clone thead so it inherits original jQuery properties.
       var headerClone = $(this).clone(true).insertBefore(this.parentNode).wrap('<table class="sticky-header"></table>').parent().css({
         position: 'fixed',
@@ -51,7 +51,7 @@ Drupal.behaviors.tableHeader = {
         e.vLength = e.table.clientHeight - 100;
         // Resize header and its cell widths.
         var parentCell = $('th', e.table);
-        $('th', e).each(function(index) {
+        $('th', e).each(function (index) {
           var cellWidth = parentCell.eq(index).css('width');
           // Exception for IE7.
           if (cellWidth == 'auto') {
@@ -88,21 +88,21 @@ Drupal.behaviors.tableHeader = {
     }
 
     // Track scrolling.
-    Drupal.tableHeaderOnScroll = function() {
-      $(headers).each(function() {
+    Drupal.tableHeaderOnScroll = function () {
+      $(headers).each(function () {
         tracker(this);
       });
     };
 
     // Track resizing.
     var time = null;
-    var resize = function() {
+    var resize = function () {
       // Ensure minimum time between adjustments.
       if (time) {
         return;
       }
-      time = setTimeout(function() {
-        $('table.sticky-header').each(function() {
+      time = setTimeout(function () {
+        $('table.sticky-header').each(function () {
           // Force cell width calculation.
           this.viewHeight = 0;
           tracker(this);

@@ -1,13 +1,13 @@
-// $Id: tableselect.js,v 1.11 2009/03/13 23:15:08 webchick Exp $
-(function($) {
+// $Id: tableselect.js,v 1.12 2009/04/27 20:19:35 webchick Exp $
+(function ($) {
 
 Drupal.behaviors.tableSelect = {
-  attach: function(context, settings) {
+  attach: function (context, settings) {
     $('form table:has(th.select-all):not(.tableSelect-processed)', context).each(Drupal.tableSelect);
   }
 };
 
-Drupal.tableSelect = function() {
+Drupal.tableSelect = function () {
   // Do not add a "Select all" checkbox if there are no rows with checkboxes in the table
   if ($('td input:checkbox', this).size() == 0) {
     return;
@@ -16,18 +16,18 @@ Drupal.tableSelect = function() {
   // Keep track of the table, which checkbox is checked and alias the settings.
   var table = this, checkboxes, lastChecked;
   var strings = { 'selectAll': Drupal.t('Select all rows in this table'), 'selectNone': Drupal.t('Deselect all rows in this table') };
-  var updateSelectAll = function(state) {
-    $('th.select-all input:checkbox', table).each(function() {
+  var updateSelectAll = function (state) {
+    $('th.select-all input:checkbox', table).each(function () {
       $(this).attr('title', state ? strings.selectNone : strings.selectAll);
       this.checked = state;
     });
   };
 
   // Find all <th> with class select-all, and insert the check all checkbox.
-  $('th.select-all', table).prepend($('<input type="checkbox" class="form-checkbox" />').attr('title', strings.selectAll)).click(function(event) {
+  $('th.select-all', table).prepend($('<input type="checkbox" class="form-checkbox" />').attr('title', strings.selectAll)).click(function (event) {
     if ($(event.target).is('input:checkbox')) {
       // Loop through all checkboxes and set their state to the select all checkbox' state.
-      checkboxes.each(function() {
+      checkboxes.each(function () {
         this.checked = event.target.checked;
         // Either add or remove the selected class based on the state of the check all checkbox.
         $(this).parents('tr:first')[ this.checked ? 'addClass' : 'removeClass' ]('selected');
@@ -38,7 +38,7 @@ Drupal.tableSelect = function() {
   });
 
   // For each of the checkboxes within the table.
-  checkboxes = $('td input:checkbox', table).click(function(e) {
+  checkboxes = $('td input:checkbox', table).click(function (e) {
     // Either add or remove the selected class based on the state of the check all checkbox.
     $(this).parents('tr:first')[ this.checked ? 'addClass' : 'removeClass' ]('selected');
 
@@ -59,7 +59,7 @@ Drupal.tableSelect = function() {
   $(this).addClass('tableSelect-processed');
 };
 
-Drupal.tableSelectRange = function(from, to, state) {
+Drupal.tableSelectRange = function (from, to, state) {
   // We determine the looping mode based on the the order of from and to.
   var mode = from.rowIndex > to.rowIndex ? 'previousSibling' : 'nextSibling';
 
@@ -72,7 +72,7 @@ Drupal.tableSelectRange = function(from, to, state) {
 
     // Either add or remove the selected class based on the state of the target checkbox.
     $(i)[ state ? 'addClass' : 'removeClass' ]('selected');
-    $('input:checkbox', i).each(function() {
+    $('input:checkbox', i).each(function () {
       this.checked = state;
     });
 

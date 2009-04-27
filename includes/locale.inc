@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.213 2009/04/26 19:44:37 dries Exp $
+// $Id: locale.inc,v 1.214 2009/04/27 20:19:35 webchick Exp $
 
 /**
  * @file
@@ -2391,7 +2391,7 @@ function _locale_rebuild_js($langcode = NULL) {
     $data = "Drupal.locale = { ";
 
     if (!empty($language->formula)) {
-      $data .= "'pluralFormula': function(\$n) { return Number({$language->formula}); }, ";
+      $data .= "'pluralFormula': function (\$n) { return Number({$language->formula}); }, ";
     }
 
     $data .= "'strings': " . drupal_to_js($translations) . " };";
