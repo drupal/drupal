@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.test,v 1.17 2009/03/31 01:49:53 webchick Exp $
+// $Id: simpletest.test,v 1.18 2009/04/27 07:44:09 dries Exp $
 
 class SimpleTestFunctionalTest extends DrupalWebTestCase {
   /**
@@ -84,7 +84,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
       // Run twice so test_ids can be accumulated.
       for ($i = 0; $i < 2; $i++) {
         // Run this test from web interface.
-        $this->drupalGet('admin/build/testing');
+        $this->drupalGet('admin/development/testing');
 
         $edit = array();
         $edit['SimpleTestFunctionalTest'] = TRUE;

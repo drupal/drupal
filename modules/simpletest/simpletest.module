@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.39 2009/03/31 01:49:53 webchick Exp $
+// $Id: simpletest.module,v 1.40 2009/04/27 07:44:09 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -8,7 +8,7 @@ function simpletest_help($path, $arg) {
   switch ($path) {
     case 'admin/help#simpletest':
       $output  = '<p>' . t('The SimpleTest module is a framework for running automated unit tests in Drupal. It can be used to verify a working state of Drupal before and after any code changes, or as a means for developers to write and execute tests for their modules.') .'</p>';
-      $output .= '<p>' . t('Visit <a href="@admin-simpletest">Administer >> Site building >> SimpleTest</a> to display a list of available tests. For comprehensive testing, select <em>all</em> tests, or individually select tests for more targeted testing. Note that it might take several minutes for all tests to complete.)', array('@admin-simpletest' => url('admin/build/testing'))) .'</p>';
+      $output .= '<p>' . t('Visit <a href="@admin-simpletest">Administer >> Site building >> SimpleTest</a> to display a list of available tests. For comprehensive testing, select <em>all</em> tests, or individually select tests for more targeted testing. Note that it might take several minutes for all tests to complete.)', array('@admin-simpletest' => url('admin/development/testing'))) .'</p>';
       $output .= '<p>' . t('After the tests have run, a message will be displayed next to each test group indicating whether tests within it passed, failed, or had exceptions. A pass means that a test returned the expected results, while fail means that it did not. An exception normally indicates an error outside of the test, such as a PHP warning or notice. If there were fails or exceptions, the results are expanded, and the tests that had issues will be indicated in red or pink rows. Use these results to refine your code and tests until all tests return a pass.') .'</p>';
       $output .= '<p>' . t('For more information on creating and modifying your own tests, see the <a href="@simpletest-api">SimpleTest API Documentation</a> in the Drupal handbook.', array('@simpletest-api' => 'http://drupal.org/simpletest')) .'</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@simpletest">SimpleTest module</a>.', array('@simpletest' => 'http://drupal.org/handbook/modules/simpletest')) .'</p>';
@@ -20,7 +20,15 @@ function simpletest_help($path, $arg) {
  * Implementation of hook_menu().
  */
 function simpletest_menu() {
-  $items['admin/build/testing'] = array(
+  $items['admin/development'] = array(
+    'title' => 'Development',
+    'description' => 'Development tools.',
+    'position' => 'right',
+    'weight' => -7,
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('access administration pages'),
+  );
+  $items['admin/development/testing'] = array(
     'title' => 'Testing',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('simpletest_test_form'),
@@ -362,7 +370,7 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
       array('_simpletest_batch_operation', array($test_list, $test_id)),
     ),
     'finished' => '_simpletest_batch_finished',
-    'redirect' => 'admin/build/testing',
+    'redirect' => 'admin/development/testing',
     'progress_message' => '',
     'css' => array(drupal_get_path('module', 'simpletest') . '/simpletest.css'),
     'init_message' => t('Processing test @num of @max - %test.', array('%test' => $info['name'], '@num' => '1', '@max' => count($test_list))),
