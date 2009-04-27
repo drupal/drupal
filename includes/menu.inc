@@ -1670,10 +1670,10 @@ function menu_cache_clear_all() {
  */
 function menu_rebuild() {
   variable_del('menu_rebuild_needed');
-  menu_cache_clear_all();
   $menu = menu_router_build(TRUE);
   _menu_navigation_links_rebuild($menu);
-  // Clear the page and block caches.
+  // Clear the menu, page and block caches.
+  menu_cache_clear_all();
   _menu_clear_page_cache();
   if (defined('MAINTENANCE_MODE')) {
     variable_set('menu_rebuild_needed', TRUE);
@@ -1687,26 +1687,34 @@ function menu_router_build($reset = FALSE) {
   static $menu;
 
   if (!isset($menu) || $reset) {
-    if (!$reset && ($cache = cache_get('router:', 'cache_menu')) && isset($cache->data)) {
-      $menu = $cache->data;
-    }
-    else {
-      // We need to manually call each module so that we can know which module
-      // a given item came from.
-      $callbacks = array();
-      foreach (module_implements('menu') as $module) {
-        $router_items = call_user_func($module .'_menu');
-        if (isset($router_items) && is_array($router_items)) {
-          foreach (array_keys($router_items) as $path) {
-            $router_items[$path]['module'] = $module;
-          }
-          $callbacks = array_merge($callbacks, $router_items);
+    // We need to manually call each module so that we can know which module
+    // a given item came from.
+    $callbacks = array();
+    foreach (module_implements('menu') as $module) {
+      $router_items = call_user_func($module .'_menu');
+      if (isset($router_items) && is_array($router_items)) {
+        foreach (array_keys($router_items) as $path) {
+          $router_items[$path]['module'] = $module;
         }
+        $callbacks = array_merge($callbacks, $router_items);
       }
-      // Alter the menu as defined in modules, keys are like user/%user.
-      drupal_alter('menu', $callbacks);
-      $menu = _menu_router_build($callbacks);
     }
+    // Alter the menu as defined in modules, keys are like user/%user.
+    drupal_alter('menu', $callbacks);
+    $menu = _menu_router_build($callbacks);
+    _menu_router_cache($menu);
+  }
+  return $menu;
+}
+
+/**
+ * Helper function to store the menu router if we have it in memory.
+ */
+function _menu_router_cache($new_menu = NULL) {
+  static $menu = NULL;
+
+  if (isset($new_menu)) {
+    $menu = $new_menu;
   }
   return $menu;
 }
@@ -1773,7 +1781,7 @@ function _menu_navigation_links_rebuild($menu) {
   // Updated and customized items whose router paths are gone need new ones.
   $result = db_query("SELECT ml.link_path, ml.mlid, ml.router_path, ml.updated FROM {menu_links} ml WHERE ml.updated = 1 OR (router_path NOT IN ($placeholders) AND external = 0 AND customized = 1)", $paths);
   while ($item = db_fetch_array($result)) {
-    $router_path = _menu_find_router_path($menu, $item['link_path']);
+    $router_path = _menu_find_router_path($item['link_path']);
     if (!empty($router_path) && ($router_path != $item['router_path'] || $item['updated'])) {
       // If the router path and the link path matches, it's surely a working
       // item, so we clear the updated flag.
@@ -1856,8 +1864,10 @@ function _menu_delete_item($item, $force = FALSE) {
  *   saved.
  */
 function menu_link_save(&$item) {
-  $menu = menu_router_build();
 
+  // Get the router if it's already in memory. $menu will be NULL, unless this
+  // is during a menu rebuild
+  $menu = _menu_router_cache();
   drupal_alter('menu_link', $item, $menu);
 
   // This is the easiest way to handle the unique internal path '<front>',
@@ -1975,7 +1985,7 @@ function menu_link_save(&$item) {
     else {
       // Find the router path which will serve this path.
       $item['parts'] = explode('/', $item['link_path'], MENU_MAX_PARTS);
-      $item['router_path'] = _menu_find_router_path($menu, $item['link_path']);
+      $item['router_path'] = _menu_find_router_path($item['link_path']);
     }
   }
   db_query("UPDATE {menu_links} SET menu_name = '%s', plid = %d, link_path = '%s',
@@ -2036,25 +2046,35 @@ function _menu_set_expanded_menus() {
 /**
  * Find the router path which will serve this path.
  *
- * @param $menu
- *  The full built menu.
  * @param $link_path
  *  The path for we are looking up its router path.
  * @return
  *  A path from $menu keys or empty if $link_path points to a nonexisting
  *  place.
  */
-function _menu_find_router_path($menu, $link_path) {
-  $parts = explode('/', $link_path, MENU_MAX_PARTS);
+function _menu_find_router_path($link_path) {
+  // $menu will only have data during a menu rebuild.
+  $menu = _menu_router_cache();
+
   $router_path = $link_path;
-  if (!isset($menu[$router_path])) {
-    list($ancestors) = menu_get_ancestors($parts);
+  $parts = explode('/', $link_path, MENU_MAX_PARTS);
+  list($ancestors, $placeholders) = menu_get_ancestors($parts);
+
+  if (empty($menu)) {
+    // Not during a menu rebuild, so look up in the database.
+    $router_path = (string)db_result(db_query_range('SELECT path FROM {menu_router} WHERE path IN ('. implode (',', $placeholders) .') ORDER BY fit DESC', $ancestors, 0, 1));
+  }
+  elseif (!isset($menu[$router_path])) {
+    // Add an empty path as a fallback.
     $ancestors[] = '';
     foreach ($ancestors as $key => $router_path) {
       if (isset($menu[$router_path])) {
+        // Exit the loop leaving $router_path as the first match.
         break;
       }
     }
+    // If we did not find the path, $router_path will be the empty string
+    // at the end of $ancestors.
   }
   return $router_path;
 }
@@ -2406,7 +2426,7 @@ function _menu_router_build($callbacks) {
   $masks = array_keys($masks);
   rsort($masks);
   variable_set('menu_masks', $masks);
-  cache_set('router:', $menu, 'cache_menu');
+
   return $menu;
 }
 

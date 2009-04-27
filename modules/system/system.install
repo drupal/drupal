@@ -2556,6 +2556,15 @@ function system_update_6049() {
 }
 
 /**
+ * Clear any menu router blobs stored in the cache table.
+ */
+function system_update_6050() {
+  $ret = array();
+  cache_clear_all('router:', 'cache_menu', TRUE);
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-6.x-extra"
  * The next series of updates should start at 7000.
  */
