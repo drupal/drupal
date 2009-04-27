@@ -1,10 +1,10 @@
 // $Id$
 
-(function($) {
+(function ($) {
 
 Drupal.behaviors.bookFieldsetSummaries = {
-  attach: function(context) {
-    $('fieldset#edit-book', context).setSummary(function(context) {
+  attach: function (context) {
+    $('fieldset#edit-book', context).setSummary(function (context) {
       var val = $('#edit-book-bid').val();
 
       if (val === '0') {

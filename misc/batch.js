@@ -1,27 +1,27 @@
 // $Id$
-(function($) {
+(function ($) {
 
 /**
  * Attaches the batch behavior to progress bars.
  */
 Drupal.behaviors.batch = {
-  attach: function(context, settings) {
+  attach: function (context, settings) {
     // This behavior attaches by ID, so is only valid once on a page.
     if ($('#progress.batch-processed').size()) {
       return;
     }
-    $('#progress', context).addClass('batch-processed').each(function() {
+    $('#progress', context).addClass('batch-processed').each(function () {
       var holder = $(this);
 
       // Success: redirect to the summary.
-      var updateCallback = function(progress, status, pb) {
+      var updateCallback = function (progress, status, pb) {
         if (progress == 100) {
           pb.stopMonitoring();
           window.location = settings.batch.uri + '&op=finished';
         }
       };
 
-      var errorCallback = function(pb) {
+      var errorCallback = function (pb) {
         holder.prepend($('<p class="error"></p>').html(settings.batch.errorMessage));
         $('#wait').hide();
       };

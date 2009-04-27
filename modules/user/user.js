@@ -1,14 +1,14 @@
 // $Id$
-(function($) {
+(function ($) {
 
 /**
  * Attach handlers to evaluate the strength of any password fields and to check
  * that its confirmation is correct.
  */
 Drupal.behaviors.password = {
-  attach: function(context, settings) {
+  attach: function (context, settings) {
     var translate = settings.password;
-    $('input.password-field:not(.password-processed)', context).each(function() {
+    $('input.password-field:not(.password-processed)', context).each(function () {
       var passwordInput = $(this).addClass('password-processed');
       var innerWrapper = $(this).parent();
       var outerWrapper = $(this).parent().parent();
@@ -31,7 +31,7 @@ Drupal.behaviors.password = {
       var confirmChild = $('span', confirmResult);
 
       // Check the password strength.
-      var passwordCheck = function() {
+      var passwordCheck = function () {
 
         // Evaluate the password strength.
         var result = Drupal.evaluatePasswordStrength(passwordInput.val(), settings.password);
@@ -56,7 +56,7 @@ Drupal.behaviors.password = {
       };
 
       // Check that password and confirmation inputs match.
-      var passwordCheckMatch = function() {
+      var passwordCheckMatch = function () {
 
         if (confirmInput.val()) {
           var success = passwordInput.val() === confirmInput.val();
@@ -92,7 +92,7 @@ Drupal.behaviors.password = {
  *
  * Returns the estimated strength and the relevant output message.
  */
-Drupal.evaluatePasswordStrength = function(password, translate) {
+Drupal.evaluatePasswordStrength = function (password, translate) {
   var weaknesses = 0, strength = 100, msg = [];
 
   var hasLowercase = password.match(/[a-z]+/);
@@ -166,8 +166,8 @@ Drupal.evaluatePasswordStrength = function(password, translate) {
  * "Picture support" radio buttons.
  */
 Drupal.behaviors.userSettings = {
-  attach: function(context, settings) {
-    $('div.user-admin-picture-radios input[type=radio]:not(.userSettings-processed)', context).addClass('userSettings-processed').click(function() {
+  attach: function (context, settings) {
+    $('div.user-admin-picture-radios input[type=radio]:not(.userSettings-processed)', context).addClass('userSettings-processed').click(function () {
       $('div.user-admin-picture-settings', context)[['hide', 'show'][this.value]]();
     });
   }

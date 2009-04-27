@@ -1,6 +1,6 @@
 // $Id$
 
-(function($) {
+(function ($) {
 
 /**
  * This script transforms a set of fieldsets into a stack of vertical
@@ -14,8 +14,8 @@
  * element inside the tab pane.
  */
 Drupal.behaviors.verticalTabs = {
-  attach: function(context) {
-    $('.vertical-tabs-panes:not(.vertical-tabs-processed)', context).each(function() {
+  attach: function (context) {
+    $('.vertical-tabs-panes:not(.vertical-tabs-processed)', context).each(function () {
       var focusID = $(':hidden.vertical-tabs-active-tab', this).val();
       var focus;
       // Create the tab column.
@@ -23,7 +23,7 @@ Drupal.behaviors.verticalTabs = {
       $(this).wrap('<div class="vertical-tabs clearfix"></div>').before(list);
 
       // Transform each fieldset into a tab.
-      $('> fieldset', this).each(function() {
+      $('> fieldset', this).each(function () {
         var tab = new Drupal.verticalTab({ title: $('> legend', this).text(), fieldset: $(this) });
         list.append(tab.item);
         $(this)
@@ -54,17 +54,17 @@ Drupal.behaviors.verticalTabs = {
  *   - title: The name of the tab.
  *   - fieldset: The jQuery object of the fieldset that is the tab pane.
  */
-Drupal.verticalTab = function(settings) {
+Drupal.verticalTab = function (settings) {
   var that = this;
   $.extend(this, settings, Drupal.theme('verticalTab', settings));
 
-  this.link.click(function() {
+  this.link.click(function () {
     that.focus();
     return false;
   });
 
   this.fieldset
-    .bind('summaryUpdated', function() {
+    .bind('summaryUpdated', function () {
       that.updateSummary();
     })
     .trigger('summaryUpdated');
@@ -72,10 +72,10 @@ Drupal.verticalTab = function(settings) {
 
 Drupal.verticalTab.prototype = {
   // Displays the tab's content pane.
-  focus: function() {
+  focus: function () {
     this.fieldset
       .siblings('fieldset.vertical-tabs-pane')
-        .each(function() {
+        .each(function () {
           var tab = $(this).data('verticalTab');
           tab.fieldset.hide();
           tab.item.removeClass('selected');
@@ -88,7 +88,7 @@ Drupal.verticalTab.prototype = {
   },
 
   // Updates the tab's summary.
-  updateSummary: function() {
+  updateSummary: function () {
     this.summary.html(this.fieldset.getSummary());
   }
 };
@@ -106,7 +106,7 @@ Drupal.verticalTab.prototype = {
  *       (jQuery version)
  *   - summary: The jQuery element that contains the tab summary
  */
-Drupal.theme.prototype.verticalTab = function(settings) {
+Drupal.theme.prototype.verticalTab = function (settings) {
   var tab = {};
   tab.item = $('<li class="vertical-tab-button"></li>')
     .append(tab.link = $('<a href="#"></a>')

@@ -1,5 +1,5 @@
 // $Id$
-(function($) {
+(function ($) {
 
 /**
  * Auto-attach for teaser behavior.
@@ -7,8 +7,8 @@
  * Note: depends on resizable textareas.
  */
 Drupal.behaviors.teaser = {
-  attach: function(context, settings) {
-    $('textarea.teaser:not(.teaser-processed)', context).each(function() {
+  attach: function (context, settings) {
+    $('textarea.teaser:not(.teaser-processed)', context).each(function () {
       var teaser = $(this).addClass('teaser-processed');
 
       // Move teaser textarea before body, and remove its form-item wrapper.

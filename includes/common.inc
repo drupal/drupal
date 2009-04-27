@@ -2362,7 +2362,7 @@ function drupal_clear_css_cache() {
  *   a new message arrived, by opening a pop up, alert box etc. This should only
  *   be used for JavaScript which cannot be placed and executed from a file.
  *   When adding inline code, make sure that you are not relying on $ being jQuery.
- *   Wrap your code in (function($) { ... })(jQuery); or use jQuery instead of $.
+ *   Wrap your code in (function ($) { ... })(jQuery); or use jQuery instead of $.
  *
  * - Add external JavaScript ('external'):
  *   Allows the inclusion of external JavaScript files that are not hosted on the
@@ -2378,8 +2378,8 @@ function drupal_clear_css_cache() {
  * @code
  *   drupal_add_js('misc/collapse.js');
  *   drupal_add_js('misc/collapse.js', 'file');
- *   drupal_add_js('jQuery(document).ready(function(){alert("Hello!");});', 'inline');
- *   drupal_add_js('jQuery(document).ready(function(){alert("Hello!");});',
+ *   drupal_add_js('jQuery(document).ready(function () { alert("Hello!"); });', 'inline');
+ *   drupal_add_js('jQuery(document).ready(function () { alert("Hello!"); });',
  *     array('type' => 'inline', 'scope' => 'footer', 'weight' => 5)
  *   );
  *   drupal_add_js('http://example.com/example.js', 'external');

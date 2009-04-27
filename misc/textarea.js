@@ -1,9 +1,9 @@
 // $Id$
-(function($) {
+(function ($) {
 
 Drupal.behaviors.textarea = {
-  attach: function(context, settings) {
-    $('textarea.resizable:not(.textarea-processed)', context).each(function() {
+  attach: function (context, settings) {
+    $('textarea.resizable:not(.textarea-processed)', context).each(function () {
       // Avoid non-processed teasers.
       if ($(this).is(('textarea.teaser:not(.teaser-processed)'))) {
         return false;

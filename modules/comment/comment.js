@@ -1,9 +1,9 @@
 // $Id$
-(function($) {
+(function ($) {
 
 Drupal.behaviors.comment = {
-  attach: function(context, settings) {
-    $.each(['name', 'homepage', 'mail'], function() {
+  attach: function (context, settings) {
+    $.each(['name', 'homepage', 'mail'], function () {
       var cookie = Drupal.comment.getCookie('comment_info_' + this);
       if (cookie) {
         $('#comment-form input[name=' + this + ']:not(.comment-processed)', context)
@@ -16,7 +16,7 @@ Drupal.behaviors.comment = {
 
 Drupal.comment = {};
 
-Drupal.comment.getCookie = function(name) {
+Drupal.comment.getCookie = function (name) {
   var search = name + '=';
   var returnValue = '';
 

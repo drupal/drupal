@@ -1,5 +1,5 @@
 // $Id$
-(function($) {
+(function ($) {
 
 /**
  * Provides AJAX-like page updating via AHAH (Asynchronous HTML and HTTP).
@@ -17,12 +17,12 @@
  * Attaches the ahah behavior to each ahah form element.
  */
 Drupal.behaviors.ahah = {
-  attach: function(context, settings) {
+  attach: function (context, settings) {
     for (var base in settings.ahah) {
       if (!$('#' + base + '.ahah-processed').size()) {
         var element_settings = settings.ahah[base];
 
-        $(element_settings.selector).each(function() {
+        $(element_settings.selector).each(function () {
           element_settings.element = this;
           var ahah = new Drupal.ahah(base, element_settings);
         });
@@ -36,7 +36,7 @@ Drupal.behaviors.ahah = {
 /**
  * AHAH object.
  */
-Drupal.ahah = function(base, element_settings) {
+Drupal.ahah = function (base, element_settings) {
   // Set the properties for this object.
   this.element = element_settings.element;
   this.selector = element_settings.selector;
@@ -77,10 +77,10 @@ Drupal.ahah = function(base, element_settings) {
   var options = {
     url: ahah.url,
     data: ahah.button,
-    beforeSubmit: function(form_values, element_settings, options) {
+    beforeSubmit: function (form_values, element_settings, options) {
       return ahah.beforeSubmit(form_values, element_settings, options);
     },
-    success: function(response, status) {
+    success: function (response, status) {
       // Sanity check for browser support (object expected).
       // When using iFrame uploads, responses must be returned as a string.
       if (typeof response == 'string') {
@@ -88,7 +88,7 @@ Drupal.ahah = function(base, element_settings) {
       }
       return ahah.success(response, status);
     },
-    complete: function(response, status) {
+    complete: function (response, status) {
       if (status == 'error' || status == 'parsererror') {
         return ahah.error(response, ahah.url);
       }
@@ -98,7 +98,7 @@ Drupal.ahah = function(base, element_settings) {
   };
 
   // Bind the ajaxSubmit function to the element event.
-  $(element_settings.element).bind(element_settings.event, function() {
+  $(element_settings.element).bind(element_settings.event, function () {
     $(element_settings.element).parents('form').ajaxSubmit(options);
     return false;
   });
@@ -106,7 +106,7 @@ Drupal.ahah = function(base, element_settings) {
   // can be triggered through keyboard input as well as e.g. a mousedown
   // action.
   if (element_settings.keypress) {
-    $(element_settings.element).keypress(function(event) {
+    $(element_settings.element).keypress(function (event) {
       // Detect enter key.
       if (event.keyCode == 13) {
         $(element_settings.element).trigger(element_settings.event);
@@ -119,7 +119,7 @@ Drupal.ahah = function(base, element_settings) {
 /**
  * Handler for the form redirection submission.
  */
-Drupal.ahah.prototype.beforeSubmit = function(form_values, element, options) {
+Drupal.ahah.prototype.beforeSubmit = function (form_values, element, options) {
   // Disable the element that received the change.
   $(this.element).addClass('progress-disabled').attr('disabled', true);
 
@@ -148,7 +148,7 @@ Drupal.ahah.prototype.beforeSubmit = function(form_values, element, options) {
 /**
  * Handler for the form redirection completion.
  */
-Drupal.ahah.prototype.success = function(response, status) {
+Drupal.ahah.prototype.success = function (response, status) {
   var wrapper = $(this.wrapper);
   var form = $(this.element).parents('form');
   // Manually insert HTML into the jQuery object, using $() directly crashes
@@ -206,7 +206,7 @@ Drupal.ahah.prototype.success = function(response, status) {
 /**
  * Handler for the form redirection error.
  */
-Drupal.ahah.prototype.error = function(response, uri) {
+Drupal.ahah.prototype.error = function (response, uri) {
   alert(Drupal.ahahError(response, uri));
   // Resore the previous action and target to the form.
   $(this.element).parent('form').attr({ action: this.form_action, target: this.form_target });

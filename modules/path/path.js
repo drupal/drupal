@@ -1,10 +1,10 @@
 // $Id$
 
-(function($) {
+(function ($) {
 
 Drupal.behaviors.pathFieldsetSummaries = {
-  attach: function(context) {
-    $('fieldset#edit-path', context).setSummary(function(context) {
+  attach: function (context) {
+    $('fieldset#edit-path', context).setSummary(function (context) {
       var path = $('#edit-path-1').val();
 
       return path ?

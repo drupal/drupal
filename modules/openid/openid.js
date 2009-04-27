@@ -1,8 +1,8 @@
 // $Id$
-(function($) {
+(function ($) {
 
 Drupal.behaviors.openid = {
-  attach: function(context) {
+  attach: function (context) {
     var loginElements = $('#edit-name-wrapper, #edit-pass-wrapper, li.openid-link');
     var openidElements = $('#edit-openid-identifier-wrapper, li.user-link');
 
@@ -15,7 +15,7 @@ Drupal.behaviors.openid = {
     }
     $('li.openid-link:not(.openid-processed)', context)
       .addClass('openid-processed')
-      .click(function() {
+      .click(function () {
          loginElements.hide();
          openidElements.css('display', 'block');
         // Remove possible error message.
@@ -27,7 +27,7 @@ Drupal.behaviors.openid = {
       });
     $('li.user-link:not(.openid-processed)', context)
       .addClass('openid-processed')
-      .click(function() {
+      .click(function () {
          openidElements.hide();
          loginElements.css('display', 'block');
         // Clear OpenID Identifier field and remove possible error message.

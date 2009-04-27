@@ -1,5 +1,5 @@
 // $Id$
-(function($) {
+(function ($) {
 
 /**
  * A progressbar object. Initialized with the given id. Must be inserted into
@@ -11,7 +11,7 @@
  * e.g. pb = new progressBar('myProgressBar');
  *      some_element.appendChild(pb.element);
  */
-Drupal.progressBar = function(id, updateCallback, method, errorCallback) {
+Drupal.progressBar = function (id, updateCallback, method, errorCallback) {
   var pb = this;
   this.id = id;
   this.method = method || 'GET';
@@ -27,7 +27,7 @@ Drupal.progressBar = function(id, updateCallback, method, errorCallback) {
 /**
  * Set the percentage and status message for the progressbar.
  */
-Drupal.progressBar.prototype.setProgress = function(percentage, message) {
+Drupal.progressBar.prototype.setProgress = function (percentage, message) {
   if (percentage >= 0 && percentage <= 100) {
     $('div.filled', this.element).css('width', percentage + '%');
     $('div.percentage', this.element).html(percentage + '%');
@@ -41,7 +41,7 @@ Drupal.progressBar.prototype.setProgress = function(percentage, message) {
 /**
  * Start monitoring progress via Ajax.
  */
-Drupal.progressBar.prototype.startMonitoring = function(uri, delay) {
+Drupal.progressBar.prototype.startMonitoring = function (uri, delay) {
   this.delay = delay;
   this.uri = uri;
   this.sendPing();
@@ -50,7 +50,7 @@ Drupal.progressBar.prototype.startMonitoring = function(uri, delay) {
 /**
  * Stop monitoring progress via Ajax.
  */
-Drupal.progressBar.prototype.stopMonitoring = function() {
+Drupal.progressBar.prototype.stopMonitoring = function () {
   clearTimeout(this.timer);
   // This allows monitoring to be stopped from within the callback.
   this.uri = null;
@@ -59,7 +59,7 @@ Drupal.progressBar.prototype.stopMonitoring = function() {
 /**
  * Request progress data from server.
  */
-Drupal.progressBar.prototype.sendPing = function() {
+Drupal.progressBar.prototype.sendPing = function () {
   if (this.timer) {
     clearTimeout(this.timer);
   }
@@ -72,7 +72,7 @@ Drupal.progressBar.prototype.sendPing = function() {
       url: this.uri,
       data: '',
       dataType: 'json',
-      success: function(progress) {
+      success: function (progress) {
         // Display errors.
         if (progress.status == 0) {
           pb.displayError(progress.data);
@@ -81,9 +81,9 @@ Drupal.progressBar.prototype.sendPing = function() {
         // Update display.
         pb.setProgress(progress.percentage, progress.message);
         // Schedule next timer.
-        pb.timer = setTimeout(function() { pb.sendPing(); }, pb.delay);
+        pb.timer = setTimeout(function () { pb.sendPing(); }, pb.delay);
       },
-      error: function(xmlhttp) {
+      error: function (xmlhttp) {
         pb.displayError(Drupal.ahahError(xmlhttp, pb.uri));
       }
     });
@@ -93,7 +93,7 @@ Drupal.progressBar.prototype.sendPing = function() {
 /**
  * Display errors on the page.
  */
-Drupal.progressBar.prototype.displayError = function(string) {
+Drupal.progressBar.prototype.displayError = function (string) {
   var error = $('<div class="error"></div>').html(string);
   $(this.element).before(error).hide();
 

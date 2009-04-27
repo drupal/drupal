@@ -1,5 +1,5 @@
 // $Id$
-(function($) {
+(function ($) {
 
 /**
  * Move a block in the blocks table from one region to another via select list.
@@ -8,22 +8,22 @@
  * objects initialized in that behavior to update the row.
  */
 Drupal.behaviors.blockDrag = {
-  attach: function(context, settings) {
+  attach: function (context, settings) {
     var table = $('table#blocks');
     var tableDrag = Drupal.tableDrag.blocks; // Get the blocks tableDrag object.
 
     // Add a handler for when a row is swapped, update empty regions.
-    tableDrag.row.prototype.onSwap = function(swappedRow) {
+    tableDrag.row.prototype.onSwap = function (swappedRow) {
       checkEmptyRegions(table, this);
     };
 
     // A custom message for the blocks page specifically.
-    Drupal.theme.tableDragChangedWarning = function() {
+    Drupal.theme.tableDragChangedWarning = function () {
       return '<div class="warning">' + Drupal.theme('tableDragChangedMarker') + ' ' + Drupal.t('The changes to these blocks will not be saved until the <em>Save blocks</em> button is clicked.') + '</div>';
     };
 
     // Add a handler so when a row is dropped, update fields dropped into new regions.
-    tableDrag.onDrop = function() {
+    tableDrag.onDrop = function () {
       dragObject = this;
       if ($(dragObject.rowObject.element).prev('tr').is('.region-message')) {
         var regionRow = $(dragObject.rowObject.element).prev('tr').get(0);
@@ -41,15 +41,15 @@ Drupal.behaviors.blockDrag = {
     };
 
     // Add the behavior to each region select list.
-    $('select.block-region-select:not(.blockregionselect-processed)', context).each(function() {
-      $(this).change(function(event) {
+    $('select.block-region-select:not(.blockregionselect-processed)', context).each(function () {
+      $(this).change(function (event) {
         // Make our new row and select field.
         var row = $(this).parents('tr:first');
         var select = $(this);
         tableDrag.rowObject = new tableDrag.row(row);
 
         // Find the correct region and insert the row as the first in the region.
-        $('tr.region-message', table).each(function() {
+        $('tr.region-message', table).each(function () {
           if ($(this).is('.region-' + select[0].value + '-message')) {
             // Add the new row and remove the old one.
             $(this).after(row);
@@ -75,8 +75,8 @@ Drupal.behaviors.blockDrag = {
       $(this).addClass('blockregionselect-processed');
     });
 
-    var checkEmptyRegions = function(table, rowObject) {
-      $('tr.region-message', table).each(function() {
+    var checkEmptyRegions = function (table, rowObject) {
+      $('tr.region-message', table).each(function () {
         // If the dragged row is in this region, but above the message row, swap it down one space.
         if ($(this).prev('tr').get(0) == rowObject.element) {
           // Prevent a recursion problem when using the keyboard to move rows up.

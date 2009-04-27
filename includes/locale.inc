@@ -2391,7 +2391,7 @@ function _locale_rebuild_js($langcode = NULL) {
     $data = "Drupal.locale = { ";
 
     if (!empty($language->formula)) {
-      $data .= "'pluralFormula': function(\$n) { return Number({$language->formula}); }, ";
+      $data .= "'pluralFormula': function (\$n) { return Number({$language->formula}); }, ";
     }
 
     $data .= "'strings': " . drupal_to_js($translations) . " };";
