@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.138 2009/04/27 02:07:48 webchick Exp $
+// $Id: system.admin.inc,v 1.139 2009/04/27 16:33:05 dries Exp $
 
 /**
  * @file
@@ -468,7 +468,7 @@ function system_theme_settings(&$form_state, $key = '') {
     // Call engine-specific settings.
     $function = $themes[$key]->prefix . '_engine_settings';
     if (function_exists($function)) {
-      $group = $function($settings);
+      $group = $function($settings, $form);
       if (!empty($group)) {
         $form['engine_specific'] = array('#type' => 'fieldset', '#title' => t('Theme-engine-specific settings'), '#description' => t('These settings only exist for all the templates and styles based on the %engine theme engine.', array('%engine' => $themes[$key]->prefix)));
         $form['engine_specific'] = array_merge($form['engine_specific'], $group);
@@ -480,7 +480,7 @@ function system_theme_settings(&$form_state, $key = '') {
       $function = $themes[$key]->prefix . '_settings';
     }
     if (function_exists($function)) {
-      $group = $function($settings);
+      $group = $function($settings, $form);
       if (!empty($group)) {
         $form['theme_specific'] = array('#type' => 'fieldset', '#title' => t('Theme-specific settings'), '#description' => t('These settings only exist for the %theme theme and all the styles based on it.', array('%theme' => $themes[$key]->info['name'])));
         $form['theme_specific'] = array_merge($form['theme_specific'], $group);
