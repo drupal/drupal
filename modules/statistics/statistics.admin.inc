@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.admin.inc,v 1.22 2009/04/26 19:44:39 dries Exp $
+// $Id: statistics.admin.inc,v 1.23 2009/04/27 18:58:41 webchick Exp $
 
 /**
  * @file
@@ -230,35 +230,36 @@ function statistics_access_log($aid) {
  * @see system_settings_form()
  */
 function statistics_settings_form() {
-  // Access log settings:
-  $options = array('1' => t('Enabled'), '0' => t('Disabled'));
+  // Access log settings.
   $form['access'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Access log settings'));
+    '#title' => t('Access log settings'),
+  );
   $form['access']['statistics_enable_access_log'] = array(
-    '#type' => 'radios',
+    '#type' => 'checkbox',
     '#title' => t('Enable access log'),
     '#default_value' => 0,
-    '#options' => $options,
-    '#description' => t('Log each page access. Required for referrer statistics.'));
-  $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), 'format_interval');
+    '#description' => t('Log each page access. Required for referrer statistics.'),
+  );
   $form['access']['statistics_flush_accesslog_timer'] = array(
     '#type' => 'select',
     '#title' => t('Discard access logs older than'),
-    '#default_value'   => 259200,
-    '#options' => $period,
-    '#description' => t('Older access log entries (including referrer statistics) will be automatically discarded. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status'))));
+    '#default_value' => 259200,
+    '#options' => drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), 'format_interval'),
+    '#description' => t('Older access log entries (including referrer statistics) will be automatically discarded. (Requires a correctly configured <a href="@cron">cron maintenance task</a>.)', array('@cron' => url('admin/reports/status'))),
+  );
 
-  // count content views settings
+  // Content counter settings.
   $form['content'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Content viewing counter settings'));
+    '#title' => t('Content viewing counter settings'),
+  );
   $form['content']['statistics_count_content_views'] = array(
-    '#type' => 'radios',
+    '#type' => 'checkbox',
     '#title' => t('Count content views'),
     '#default_value' => 0,
-    '#options' => $options,
-    '#description' => t('Increment a counter each time content is viewed.'));
+    '#description' => t('Increment a counter each time content is viewed.'),
+  );
 
-  return system_settings_form($form, TRUE);
+  return system_settings_form($form);
 }
