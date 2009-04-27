@@ -306,7 +306,7 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
 
     // Test that code and status message is returned.
     $result = drupal_http_request(url('pagedoesnotexist', array('absolute' => TRUE)));
-    $this->assertEqual($result->protocol, 'HTTP/1.0', t('Result protocol is set as HTTP/1.0'));
+    $this->assertTrue(!empty($result->protocol),  t('Result protocol is returned.'));
     $this->assertEqual($result->code, '404', t('Result code is 404'));
     $this->assertEqual($result->status_message, 'Not Found', t('Result status message is "Not Found"'));
   }
