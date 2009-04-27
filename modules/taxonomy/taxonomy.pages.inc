@@ -25,8 +25,8 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
     }
 
     if ($names) {
-      $title = check_plain(implode(', ', $names));
-      drupal_set_title($title);
+      $title = implode(', ', $names);
+      drupal_set_title(check_plain($title));
 
       switch ($op) {
         case 'page':
