@@ -989,7 +989,7 @@ class FieldTestCase extends DrupalWebTestCase {
     }
 
     // Check that invalid field names are rejected.
-    $field_definition['field_name'] += '_#';
+    $field_definition['field_name'] .= '_#';
     try {
       field_create_field($field_definition);
       $this->fail(t('Cannot create a field with an invalid name.'));
