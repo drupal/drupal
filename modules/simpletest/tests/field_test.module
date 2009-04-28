@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.3 2009/03/26 13:31:25 webchick Exp $
+// $Id: field_test.module,v 1.4 2009/04/28 05:24:41 webchick Exp $
 
 define('FIELD_TEST_ELEMENT_ID', 1);
 define('FIELD_TEST_BUNDLE', 'test_bundle');
@@ -129,8 +129,13 @@ function field_test_field_build_modes($obj_type) {
  */
 function field_test_create_stub_entity($id = 1, $vid = 1, $bundle = FIELD_TEST_BUNDLE) {
   $entity = new stdClass();
-  $entity->ftid = $id;
-  $entity->ftvid = $vid;
+  // Only set id and vid properties if they don't come as NULL (creation form).
+  if (isset($id)) {
+    $entity->ftid = $id;
+  }
+  if (isset($vid)) {
+    $entity->ftvid = $vid;
+  }
   $entity->fttype = $bundle;
 
   return $entity;
