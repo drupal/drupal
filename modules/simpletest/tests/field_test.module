@@ -129,8 +129,13 @@ function field_test_field_build_modes($obj_type) {
  */
 function field_test_create_stub_entity($id = 1, $vid = 1, $bundle = FIELD_TEST_BUNDLE) {
   $entity = new stdClass();
-  $entity->ftid = $id;
-  $entity->ftvid = $vid;
+  // Only set id and vid properties if they don't come as NULL (creation form).
+  if (isset($id)) {
+    $entity->ftid = $id;
+  }
+  if (isset($vid)) {
+    $entity->ftvid = $vid;
+  }
   $entity->fttype = $bundle;
 
   return $entity;
