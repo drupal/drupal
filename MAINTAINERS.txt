@@ -52,7 +52,6 @@ Joon Park 'dvessel' <http://drupal.org/user/56782>
 
 UPDATE MODULE
 Derek Wright 'dww' <http://drupal.org/user/46549>
-Earl Miles 'merlinofchaos' <http://drupal.org/user/26979>
 
 TRANSLATIONS COORDINATOR
 Gerhard Killesreiter 'killes' <http://drupal.org/user/83>
