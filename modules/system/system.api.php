@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.30 2009/04/26 16:44:25 dries Exp $
+// $Id: system.api.php,v 1.31 2009/04/28 00:27:06 webchick Exp $
 
 /**
  * @file
@@ -242,8 +242,8 @@ function hook_page_alter($page) {
  * One popular use of this hook is to add form elements to the node form. When
  * altering a node form, the node object retrieved at from $form['#node'].
  *
- * Note that you can also use hook_FORM_ID_alter() to alter a specific form,
- * instead of this hook, which gets called for all forms.
+ * Note that instead of hook_form_alter(), which is called for all forms, you
+ * can also use hook_form_FORM_ID_alter() to alter a specific form.
  *
  * @param $form
  *   Nested array of form elements that comprise the form.
@@ -252,8 +252,6 @@ function hook_page_alter($page) {
  * @param $form_id
  *   String representing the name of the form itself. Typically this is the
  *   name of the function that generated the form.
- * @return
- *   None.
  */
 function hook_form_alter(&$form, $form_state, $form_id) {
   if (isset($form['type']) && $form['type']['#value'] . '_node_settings' == $form_id) {
