@@ -1,0 +1,13 @@
+<?php
+// $Id: openid_test.install,v 1.1 2009/04/29 07:29:59 dries Exp $
+
+/**
+ * Implementation of hook_install().
+ */
+function openid_test_install() {
+  module_load_include('inc', 'openid');
+  // Generate a MAC key (Message Authentication Code) used for signing messages.
+  // The variable is base64-encoded, because variables cannot contain non-UTF-8
+  // data.
+  variable_set('openid_test_mac_key', base64_encode(_openid_get_bytes(20)));
+}

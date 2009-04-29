@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.44 2009/03/17 15:26:29 dries Exp $
+// $Id: openid.module,v 1.45 2009/04/29 07:29:59 dries Exp $
 
 /**
  * @file
@@ -125,7 +125,7 @@ function _openid_user_login_form_alter(&$form, &$form_state) {
  * Implementation of hook_form_alter(). Adds OpenID login to the login forms.
  */
 function openid_form_user_register_alter(&$form, &$form_state) {
-  if (isset($_SESSION['openid'])) {
+  if (isset($_SESSION['openid']['values'])) {
     // We were unable to auto-register a new user. Prefill the registration
     // form with the values we have.
     $form['name']['#default_value'] = $_SESSION['openid']['values']['name'];
@@ -420,6 +420,7 @@ function openid_authentication($response) {
   }
   elseif (variable_get('user_register', 1)) {
     // Register new user
+    $form_state['args'] = array();
     $form_state['redirect'] = NULL;
     $form_state['values']['name'] = (empty($response['openid.sreg.nickname'])) ? $identity : $response['openid.sreg.nickname'];
     $form_state['values']['mail'] = (empty($response['openid.sreg.email'])) ? '' : $response['openid.sreg.email'];
