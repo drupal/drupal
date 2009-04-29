@@ -29,11 +29,11 @@ class TrackerTest extends DrupalWebTestCase {
     $this->drupalLogin($this->user);
 
     $page1 = array(
-      'title' => $this->randomName(4, 'published_'),
+      'title' => $this->randomName(8),
       'status' => 1,
     );
     $page2 = array(
-      'title' => $this->randomName(4, 'unpublished_'),
+      'title' => $this->randomName(8),
       'status' => 0,
     );
     $this->drupalCreateNode($page1);
@@ -52,12 +52,12 @@ class TrackerTest extends DrupalWebTestCase {
     $this->drupalLogin($this->user);
 
     $page1 = array(
-      'title' => $this->randomName(4, 'published_'),
+      'title' => $this->randomName(8),
       'uid' => $this->user->uid,
       'status' => 1,
     );
     $page2 = array(
-      'title' => $this->randomName(4, 'unpublished_'),
+      'title' => $this->randomName(8),
       'uid' => $this->user->uid,
       'status' => 0,
     );

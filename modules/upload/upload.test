@@ -218,7 +218,7 @@ class UploadTestCase extends DrupalWebTestCase {
    */
   function getSimpletestRoleId($user) {
     foreach ($user->roles as $rid => $role) {
-      if (strpos($role, 'simpletest') !== FALSE) {
+      if (preg_match('/s\d+/', $role)) {
         return $rid;
       }
     }

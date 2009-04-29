@@ -114,7 +114,7 @@ class CacheSavingCase extends CacheTestCase {
    * Test the saving and restoring of a string.
    */
   function testString() {
-    $this->checkVariable($this->randomName('100'));
+    $this->checkVariable($this->randomName(100));
   }
 
   /**
@@ -143,7 +143,7 @@ class CacheSavingCase extends CacheTestCase {
    */
   function testObject() {
     $test_object = new stdClass();
-    $test_object->test1 = $this->randomName('100');
+    $test_object->test1 = $this->randomName(100);
     $test_object->test2 = 100;
     $test_object->test3 = array('drupal1', 'drupal2' => 'drupal3', 'drupal4' => array('drupal5', 'drupal6'));
 

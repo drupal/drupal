@@ -120,7 +120,7 @@ class DrupalWebTestCase {
    * Time limit for the test.
    */
   protected $timeLimit = 180;
-  
+
   /**
    * HTTP authentication credentials (<username>:<password>).
    */
@@ -519,7 +519,7 @@ class DrupalWebTestCase {
 
     // Add the default teaser.
     if (!isset($settings['teaser'])) {
-      $settings['teaser'] = $settings['body'];      
+      $settings['teaser'] = $settings['body'];
     }
 
     // If the node's user uid is not specified manually, use the currently
@@ -554,7 +554,7 @@ class DrupalWebTestCase {
   protected function drupalCreateContentType($settings = array()) {
     // find a non-existent random type name.
     do {
-      $name = strtolower($this->randomName(3, 'type_'));
+      $name = strtolower($this->randomName(8));
     } while (node_get_types('type', $name));
 
     // Populate defaults array
@@ -641,25 +641,45 @@ class DrupalWebTestCase {
   }
 
   /**
-   * Generates a random string.
+   * Generates a random string of ASCI characters of codes 32 to 126. That
+   * includes alpha-numeric characters and common misc characters.
    *
-   * @param $number
-   *   Number of characters in length to append to the prefix.
-   * @param $prefix
-   *   Prefix to use.
+   * @param $length
+   *   Length of random string to generate which will be appended to $db_prefx.
    * @return
    *   Randomly generated string.
    */
-  public static function randomName($number = 4, $prefix = 'simpletest_') {
-    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_';
-    for ($x = 0; $x < $number; $x++) {
-      $prefix .= $chars{mt_rand(0, strlen($chars) - 1)};
-      if ($x == 0) {
-        $chars .= '0123456789';
-      }
+  public static function randomString($length = 8) {
+    global $db_prefix;
+
+    $str = '';
+    for ($i = 0; $i < $length; $i++) {
+      $str .= chr(mt_rand(32, 126));
     }
-    return $prefix;
+    return str_replace('simpletest', 's', $db_prefix) . $str;
   }
+
+  /**
+   * Generates a random string containing letters, both capital and lower, and
+   * numbers. This method is better for restricted inputs that do not accept
+   * certain characters.
+   *
+   * @param $length
+   *   Length of random string to generate which will be appended to $db_prefx.
+   * @return
+   *   Randomly generated string.
+   */
+  public static function randomName($length = 8) {
+    global $db_prefix;
+
+    $values = array_merge(range(65, 90), range(97, 122), range(48, 57));
+    $max = count($values) - 1;
+    $str = '';
+    for ($i = 0; $i < $length; $i++) {
+      $str .= chr($values[mt_rand(0, $max)]);
+    }
+    return str_replace('simpletest', 's', $db_prefix) . $str;
+   }
 
   /**
    * Create a user with a given set of permissions. The permissions correspond to the

@@ -7,8 +7,6 @@
  */
 
 class AggregatorTestCase extends DrupalWebTestCase {
-  private static $prefix = 'simpletest_aggregator_';
-
   function setUp() {
     parent::setUp('aggregator', 'aggregator_test');
     $web_user = $this->drupalCreateUser(array('administer news feeds', 'access news feeds', 'create article content'));
@@ -55,7 +53,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
    *   A feed array.
    */
   function getFeedEditArray($feed_url = NULL) {
-    $feed_name = $this->randomName(10, self::$prefix);
+    $feed_name = $this->randomName(10);
     if (!$feed_url) {
       $feed_url = $GLOBALS['base_url'] . '/rss.xml?feed=' . $feed_name;
     }
@@ -452,8 +450,6 @@ class RemoveFeedItemTestCase extends AggregatorTestCase {
 }
 
 class CategorizeFeedItemTestCase extends AggregatorTestCase {
-  private static $prefix = 'simpletest_aggregator_';
-
   public static function getInfo() {
     return array(
       'name' => t('Categorize feed item functionality'),
@@ -470,7 +466,7 @@ class CategorizeFeedItemTestCase extends AggregatorTestCase {
     $this->createSampleNodes();
 
     // Simulate form submission on "admin/content/aggregator/add/category".
-    $edit = array('title' => $this->randomName(10, self::$prefix), 'description' => '');
+    $edit = array('title' => $this->randomName(10), 'description' => '');
     $this->drupalPost('admin/content/aggregator/add/category', $edit, t('Save'));
     $this->assertRaw(t('The category %title has been added.', array('%title' => $edit['title'])), t('The category %title has been added.', array('%title' => $edit['title'])));
 
@@ -511,8 +507,6 @@ class CategorizeFeedItemTestCase extends AggregatorTestCase {
 }
 
 class ImportOPMLTestCase extends AggregatorTestCase {
-  private static $prefix = 'simpletest_aggregator_';
-
   public static function getInfo() {
     return array(
       'name' => t('Import feeds from OPML functionality'),
@@ -527,7 +521,7 @@ class ImportOPMLTestCase extends AggregatorTestCase {
   function openImportForm() {
     db_delete('aggregator_category')->execute();
 
-    $category = $this->randomName(10, self::$prefix);
+    $category = $this->randomName(10);
     $cid = db_insert('aggregator_category')
       ->fields(array(
         'title' => $category,
@@ -590,7 +584,7 @@ class ImportOPMLTestCase extends AggregatorTestCase {
     db_delete('aggregator_category')->execute();
     db_delete('aggregator_category_feed')->execute();
 
-    $category = $this->randomName(10, self::$prefix);
+    $category = $this->randomName(10);
     db_insert('aggregator_category')
       ->fields(array(
         'cid' => 1,

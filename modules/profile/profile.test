@@ -31,7 +31,7 @@ class ProfileTestCase extends DrupalWebTestCase {
    *   The fid of the field that was just created.
    */
   function createProfileField($type = 'textfield', $category = 'simpletest', $edit = array()) {
-    $edit['title'] = $title = $this->randomName(4, $type . '_');
+    $edit['title'] = $title = $this->randomName(8);
     $edit['name'] = $form_name = 'profile_' . $title;
     $edit['category'] = $category;
     $edit['explanation'] = $this->randomName(50);
@@ -224,8 +224,8 @@ class ProfileTestWeights extends ProfileTestCase {
     $field1 = $this->createProfileField('textfield', $category, array('weight' => 1));
     $field2 = $this->createProfileField('textfield', $category, array('weight' => -1));
 
-    $this->setProfileField($field1, $this->randomName(4, 'first_'));
-    $this->setProfileField($field2, $this->randomName(4, 'second_'));
+    $this->setProfileField($field1, $this->randomName(8));
+    $this->setProfileField($field2, $this->randomName(8));
 
     $profile_edit = $this->drupalGet('user/' . $this->normal_user->uid . '/edit/' . $category);
     $this->assertTrue(strpos($profile_edit, $field1['title']) > strpos($profile_edit, $field2['title']), t('Profile field weights are respected on the user edit form.'));
