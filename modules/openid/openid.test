@@ -1,0 +1,222 @@
+<?php
+// $Id$
+
+/**
+ * Test login and account registration using OpenID.
+ */
+class OpenIDFunctionalTest extends DrupalWebTestCase {
+  protected $web_user;
+
+  function getInfo() {
+    return array(
+      'name' => t('OpenID login and account registration'),
+      'description' => t("Adds an identity to a user's profile and uses it to log in, creates a user account using auto-registration."),
+      'group' => t('OpenID')
+    );
+  }
+
+  function setUp() {
+    parent::setUp('openid', 'openid_test');
+
+    // User doesn't need special permissions; only the ability to log in.
+    $this->web_user = $this->drupalCreateUser(array());
+  }
+
+  /**
+   * Test discovery of OpenID Provider Endpoint via Yadis and HTML.
+   */
+  function testDiscovery() {
+    $this->drupalLogin($this->web_user);
+
+    // The User-supplied Identifier entered by the user may indicate the URL of
+    // the OpenID Provider Endpoint in various ways, as described in OpenID
+    // Authentication 2.0 and Yadis Specification 1.0.
+    // Note that all of the tested identifiers refer to the same endpoint, so
+    // only the first will trigger an associate request in openid_association()
+    // (association is only done the first time Drupal encounters a given
+    // endpoint).
+
+
+    // Yadis discovery (see Yadis Specification 1.0, section 6.2.5):
+    // If the User-supplied Identifier is a URL, it may be a direct or indirect
+    // reference to an XRDS document (a Yadis Resource Descriptor) that contains
+    // the URL of the OpenID Provider Endpoint.
+
+    // Identifier is the URL of an XRDS document.
+    $this->addIdentity(url('openid-test/yadis/xrds', array('absolute' => TRUE)), 2);
+
+    // Identifier is the URL of an HTML page that is sent with an HTTP header
+    // that contains the URL of an XRDS document.
+    $this->addIdentity(url('openid-test/yadis/x-xrds-location', array('absolute' => TRUE)), 2);
+
+    // Identifier is the URL of an HTML page containing a <meta http-equiv=...>
+    // element that contains the URL of an XRDS document.
+    $this->addIdentity(url('openid-test/yadis/http-equiv', array('absolute' => TRUE)), 2);
+
+
+    // HTML-based discovery:
+    // If the User-supplied Identifier is a URL of an HTML page, the page may
+    // contain a <link rel=...> element containing the URL of the OpenID
+    // Provider Endpoint. OpenID 1 and 2 describe slightly different formats.
+
+    // OpenID Authentication 1.1, section 3.1:
+    $this->addIdentity(url('openid-test/html/openid1', array('absolute' => TRUE)), 1);
+
+    // OpenID Authentication 2.0, section 7.3.3:
+    $this->addIdentity(url('openid-test/html/openid2', array('absolute' => TRUE)), 2);
+  }
+
+  /**
+   * Test login using OpenID.
+   */
+  function testLogin() {
+    $this->drupalLogin($this->web_user);
+
+    // Use a User-supplied Identity that is the URL of an XRDS document.
+    $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
+    $this->addIdentity($identity);
+
+    $this->drupalLogout();
+
+    // Fill out and submit the login form.
+    $edit = array('openid_identifier' => $identity);
+    $this->drupalPost(NULL, $edit, t('Log in'));
+
+    // Check we are on the OpenID redirect form.
+    $this->assertTitle(t('OpenID redirect'), t('OpenID redirect page was displayed.'));
+
+    // Submit form to the OpenID Provider Endpoint.
+    $this->drupalPost(NULL, array(), t('Send'));
+
+    $this->assertText(t('My account'), t('User was logged in.'));
+  }
+
+  /**
+   * Test deleting an OpenID identity from a user's profile.
+   */
+  function testDelete() {
+    $this->drupalLogin($this->web_user);
+
+    // Add identity to user's profile.
+    $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
+    $this->addIdentity($identity);
+    $this->assertText($identity, t('Identity appears in list.'));
+
+    // Delete the newly added identity.
+    $this->clickLink(t('Delete'));
+    $this->drupalPost(NULL, array(), t('Confirm'));
+
+    $this->assertText(t('OpenID deleted.'), t('Identity deleted'));
+    $this->assertNoText($identity, t('Identity no longer appears in list.'));
+  }
+
+  /**
+   * Add OpenID identity to user's profile.
+   */
+  function addIdentity($identity, $version = 2) {
+    $this->drupalGet('user/' . $this->web_user->uid . '/openid');
+    $edit = array('openid_identifier' => $identity);
+    $this->drupalPost(NULL, $edit, t('Add an OpenID'));
+
+    // OpenID 1 used a HTTP redirect, OpenID 2 uses a HTML form that is submitted automatically using JavaScript.
+    if ($version == 2) {
+      // Manually submit form because SimpleTest is not able to execute JavaScript.
+      $this->assertRaw('<script type="text/javascript">document.getElementById("openid-redirect-form").submit();</script>', t('JavaScript form submission found.'));
+      $this->drupalPost(NULL, array(), t('Send'));
+    }
+
+    $this->assertRaw(t('Successfully added %identity', array('%identity' => $identity)), t('Identity %identity was added.', array('%identity' => $identity)));
+  }
+
+  /**
+   * Test openID auto-registration with e-mail verification disabled.
+   */
+  function testRegisterUserWithoutEmailVerification() {
+    variable_set('user_email_verification', FALSE);
+
+    // Load the front page to get the user login block.
+    $this->drupalGet('');
+
+    // Use a User-supplied Identity that is the URL of an XRDS document.
+    $identity = url('openid-test/yadis/xrds', array('absolute' => TRUE));
+
+    // Fill out and submit the login form.
+    $edit = array('openid_identifier' => $identity);
+    $this->drupalPost(NULL, $edit, t('Log in'));
+
+    // The OpenID module responds with an HTML form that is to be submitted
+    // to the OpenID Provider Endpoint. This is usually done automatically
+    // using JavaScript, but the SimpleTest browser does not support JavaScript,
+    // so the form is submitted manually instead.
+    $this->assertRaw('<script type="text/javascript">document.getElementById("openid-redirect-form").submit();</script>', t('JavaScript form submission found.'));
+    $this->drupalPost(NULL, array(), t('Send'));
+    $this->assertText(t('My account'), t('User was logged in.'));
+
+    $user = user_load_by_name('johndoe');
+    $this->assertTrue($user, t('User was found.'));
+    $this->assertEqual($user->mail, 'johndoe@example.com', t('User was registered with right email address.'));
+  }
+}
+
+/**
+ * Test internal helper functions.
+ */
+class OpenIDUnitTest extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('OpenID helper functions'),
+      'description' => t('Test OpenID helper functions.'),
+      'group' => t('OpenID')
+    );
+  }
+
+  function setUp() {
+    parent::setUp('openid');
+    module_load_include('inc', 'openid');
+  }
+
+  /**
+   * Test _openid_dh_XXX_to_XXX() functions.
+   */
+  function testConversion() {
+    $this->assertEqual(_openid_dh_long_to_base64('12345678901234567890123456789012345678901234567890'), 'CHJ/Y2mq+DyhUCZ0evjH8ZbOPwrS', t('_openid_dh_long_to_base64() returned expected result.'));
+    $this->assertEqual(_openid_dh_base64_to_long('BsH/g8Nrpn2dtBSdu/sr1y8hxwyx'), '09876543210987654321098765432109876543210987654321', t('_openid_dh_base64_to_long() returned expected result.'));
+
+    $this->assertEqual(_openid_dh_long_to_binary('12345678901234567890123456789012345678901234567890'), "\x08r\x7fci\xaa\xf8<\xa1P&tz\xf8\xc7\xf1\x96\xce?\x0a\xd2", t('_openid_dh_long_to_binary() returned expected result.'));
+    $this->assertEqual(_openid_dh_binary_to_long("\x06\xc1\xff\x83\xc3k\xa6}\x9d\xb4\x14\x9d\xbb\xfb+\xd7/!\xc7\x0c\xb1"), '09876543210987654321098765432109876543210987654321', t('_openid_dh_binary_to_long() returned expected result.'));
+  }
+
+  /**
+   * Test _openid_dh_xorsecret().
+   */
+  function testOpenidDhXorsecret() {
+    $this->assertEqual(_openid_dh_xorsecret('123456790123456790123456790', "abc123ABC\x00\xFF"), "\xa4'\x06\xbe\xf1.\x00y\xff\xc2\xc1", t('_openid_dh_xorsecret() returned expected result.'));
+  }
+
+  /**
+   * Test _openid_get_bytes().
+   */
+  function testOpenidGetBytes() {
+    $this->assertEqual(strlen(_openid_get_bytes(20)), 20, t('_openid_get_bytes() returned expected result.'));
+  }
+
+  /**
+   * Test _openid_signature().
+   */
+  function testOpenidSignature() {
+    // Test that signature is calculated according to OpenID Authentication 2.0,
+    // section 6.1. In the following array, only the two first entries should be
+    // included in the calculation, because the substring following the period
+    // is mentioned in the third argument for _openid_signature(). The last
+    // entry should not be included, because it does not start with "openid.".
+    $response = array(
+      'openid.foo' => 'abc1',
+      'openid.bar' => 'abc2',
+      'openid.baz' => 'abc3',
+      'foobar.foo' => 'abc4',
+    );
+    $association = new stdClass;
+    $association->mac_key = "1234567890abcdefghij\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\xF0\xF1\xF2\xF3\xF4\xF5\xF6\xF7\xF8\xF9";
+    $this->assertEqual(_openid_signature($association, $response, array('foo', 'bar')), 'QnKZQzSFstT+GNiJDFOptdcZjrc=', t('Expected signature calculated.'));
+  }
+}
