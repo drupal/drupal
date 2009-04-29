@@ -1,5 +1,5 @@
 <?php
-// $Id: number.module,v 1.6 2009/04/12 02:18:51 webchick Exp $
+// $Id: number.module,v 1.7 2009/04/29 22:36:42 webchick Exp $
 
 /**
  * @file
@@ -183,8 +183,8 @@ function theme_field_formatter_number($element) {
   $output = number_format($value, $settings['scale'], $settings['decimal_separator'], $settings['thousand_separator']);
 
   if ($settings['prefix_suffix']) {
-    $prefixes = isset($instance['settings']['prefix']) ? explode('|', check_plain($instance['settings']['prefix'])) : array(0 => '');
-    $suffixes = isset($instance['settings']['suffix']) ? explode('|', check_plain($instance['settings']['suffix'])) : array(0 => '');
+    $prefixes = isset($instance['settings']['prefix']) ? array_map('field_filter_xss', explode('|', $instance['settings']['prefix'])) : array('');
+    $suffixes = isset($instance['settings']['suffix']) ? array_map('field_filter_xss', explode('|', $instance['settings']['suffix'])) : array('');
     $prefix = (count($prefixes) > 1) ? format_plural($value, $prefixes[0], $prefixes[1]) : $prefixes[0];
     $suffix = (count($suffixes) > 1) ? format_plural($value, $suffixes[0], $suffixes[1]) : $suffixes[0];
     $output = $prefix . $output . $suffix;
@@ -323,11 +323,11 @@ function number_process($element, $form_state, $form) {
 
   if (!empty($instance['settings']['prefix'])) {
     $prefixes = explode('|', $instance['settings']['prefix']);
-    $element[$field_key]['#field_prefix'] = array_pop($prefixes);
+    $element[$field_key]['#field_prefix'] = field_filter_xss(array_pop($prefixes));
   }
   if (!empty($instance['settings']['suffix'])) {
     $suffixes = explode('|', $instance['settings']['suffix']);
-    $element[$field_key]['#field_suffix'] = array_pop($suffixes);
+    $element[$field_key]['#field_suffix'] = field_filter_xss(array_pop($suffixes));
   }
 
   // Make sure we don't wipe out element validation added elsewhere.
