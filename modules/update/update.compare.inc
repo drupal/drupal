@@ -16,9 +16,18 @@
  * that logic is only required when preparing the status report, not for
  * fetching the available release data.
  *
+ * This array is fairly expensive to construct, since it involves a lot of
+ * disk I/O, so we cache the results into the {cache_update} table using the
+ * 'update_project_projects' cache ID. However, since this is not the data
+ * about available updates fetched from the network, it is ok to invalidate it
+ * somewhat quickly. If we keep this data for very long, site administrators
+ * are more likely to see incorrect results if they upgrade to a newer version
+ * of a module or theme but do not visit certain pages that automatically
+ * clear this cache.
+ *
  * @see update_process_project_info()
  * @see update_calculate_project_data()
- *
+ * @see update_project_cache()
  */
 function update_get_projects() {
   static $projects = array();
@@ -29,8 +38,8 @@ function update_get_projects() {
       // Still empty, so we have to rebuild the cache.
       _update_process_info_list($projects, module_rebuild_cache(), 'module');
       _update_process_info_list($projects, system_theme_data(), 'theme');
-      // Set the projects array into the cache table.
-      cache_set('update_project_projects', $projects, 'cache_update', time() + 3600);
+      // Cache the site's project data for at most 1 hour.
+      _update_cache_set('update_project_projects', $projects, time() + 3600);
     }
   }
   return $projects;
@@ -223,12 +232,23 @@ function update_process_project_info(&$projects) {
  * version (e.g. 5.x-1.5-beta1, 5.x-1.5-beta2, and 5.x-1.5). Development
  * snapshots for a given major version are always listed last.
  *
+ * The results of this function are expensive to compute, especially on sites
+ * with lots of modules or themes, since it involves a lot of comparisons and
+ * other operations. Therefore, we cache the results into the {cache_update}
+ * table using the 'update_project_data' cache ID. However, since this is not
+ * the data about available updates fetched from the network, it is ok to
+ * invalidate it somewhat quickly. If we keep this data for very long, site
+ * administrators are more likely to see incorrect results if they upgrade to
+ * a newer version of a module or theme but do not visit certain pages that
+ * automatically clear this cache.
+ *
  * @param $available
  *  Array of data about available project releases.
  *
  * @see update_get_available()
  * @see update_get_projects()
  * @see update_process_project_info()
+ * @see update_project_cache()
  */
 function update_calculate_project_data($available) {
   // Retrieve the projects from cache, if present.
@@ -444,7 +464,7 @@ function update_calculate_project_data($available) {
 
         // If we're running a dev snapshot and have a timestamp, stop
         // searching for security updates once we hit an official release
-        // older than what we've got.  Allow 100 seconds of leeway to handle
+        // older than what we've got. Allow 100 seconds of leeway to handle
         // differences between the datestamp in the .info file and the
         // timestamp of the tarball itself (which are usually off by 1 or 2
         // seconds) so that we don't flag that as a new release.
@@ -550,8 +570,8 @@ function update_calculate_project_data($available) {
   // projects or releases).
   drupal_alter('update_status', $projects);
 
-  // Set the projects array into the cache table.
-  cache_set('update_project_data', $projects, 'cache_update', time() + 3600);
+  // Cache the site's update status for at most 1 hour.
+  _update_cache_set('update_project_data', $projects, time() + 3600);
   return $projects;
 }
 
@@ -567,6 +587,13 @@ function update_calculate_project_data($available) {
  * administration pages, since we should always recompute the most current
  * values on any of those pages.
  *
+ * Note: while both of these arrays are expensive to compute (in terms of disk
+ * I/O and some fairly heavy CPU processing), neither of these is the actual
+ * data about available updates that we have to fetch over the network from
+ * updates.drupal.org. That information is stored with the
+ * 'update_available_releases' cache ID -- it needs to persist longer than 1
+ * hour and never get invalidated just by visiting a page on the site.
+ *
  * @param $cid
  *   The cache id of data to return from the cache. Valid options are
  *   'update_project_data' and 'update_project_projects'.
@@ -579,15 +606,15 @@ function update_calculate_project_data($available) {
 function update_project_cache($cid) {
   $projects = array();
 
-  // In some cases, we must clear the cache.  Rather than do so on a time
-  // basis, we check for specific paths.
+  // On certain paths, we should clear the cache and recompute the projects or
+  // update status of the site to avoid presenting stale information.
   $q = $_GET['q'];
   $paths = array('admin/build/modules', 'admin/build/themes', 'admin/reports', 'admin/reports/updates', 'admin/reports/status', 'admin/reports/updates/check');
   if (in_array($q, $paths)) {
-    cache_clear_all($cid, 'cache_update');
+    _update_cache_clear($cid);
   }
   else {
-    $cache = cache_get($cid, 'cache_update');
+    $cache = _update_cache_get($cid);
     if (!empty($cache->data) && $cache->expire > time()) {
       $projects = $cache->data;
     }
