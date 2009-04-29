@@ -257,7 +257,7 @@ function phptemplate_page($content, $show_blocks = TRUE) {
   $suggestion = 'page';
   $suggestions = array($suggestion);
   while ($arg = arg($i++)) {
-    $arg = str_replace(array('/', '\\', '\0'), '', $arg);
+    $arg = str_replace(array("/", "\\", "\0"), '', $arg);
     $suggestions[] = $suggestion . '-' . $arg;
     if (!is_numeric($arg)) {
       $suggestion .= '-' . $arg;
@@ -377,9 +377,14 @@ function phptemplate_box($title, $content, $region = 'main') {
 function _phptemplate_default($hook, $variables, $suggestions = array(), $extension = '.tpl.php') {
   global $theme_engine;
 
+  // Remove slashes or null to prevent files from being included from
+  // an unexpected location (especially on Windows servers).
+  $extension = str_replace(array("/", "\\", "\0"), '', $extension);
+
   // Loop through any suggestions in FIFO order.
   $suggestions = array_reverse($suggestions);
   foreach ($suggestions as $suggestion) {
+    $suggestion = str_replace(array("/", "\\", "\0"), '', $suggestion);
     if (!empty($suggestion) && file_exists(path_to_theme() .'/'. $suggestion . $extension)) {
       $file = path_to_theme() .'/'. $suggestion . $extension;
       break;
