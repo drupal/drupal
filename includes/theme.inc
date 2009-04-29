@@ -698,11 +698,16 @@ function theme() {
 function drupal_discover_template($paths, $suggestions, $extension = '.tpl.php') {
   global $theme_engine;
 
+  // Remove slashes or null to prevent files from being included from
+  // an unexpected location (especially on Windows servers).
+  $extension = str_replace(array("/", "\\", "\0"), '', $extension);
+
   // Loop through all paths and suggestions in FIFO order.
   $suggestions = array_reverse($suggestions);
   $paths = array_reverse($paths);
   foreach ($suggestions as $suggestion) {
     if (!empty($suggestion)) {
+      $suggestion = str_replace(array("/", "\\", "\0"), '', $suggestion);
       foreach ($paths as $path) {
         if (file_exists($file = $path .'/'. $suggestion . $extension)) {
           return $file;
@@ -1868,7 +1873,7 @@ function template_preprocess_page(&$variables) {
   $suggestion = 'page';
   $suggestions = array();
   while ($arg = arg($i++)) {
-    $arg = str_replace(array('/', '\\', '\0'), '', $arg);
+    $arg = str_replace(array("/", "\\", "\0"), '', $arg);
     $suggestions[] = $suggestion .'-'. $arg;
     if (!is_numeric($arg)) {
       $suggestion .= '-'. $arg;
