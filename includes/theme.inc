@@ -1238,17 +1238,6 @@ function theme_breadcrumb($breadcrumb) {
 }
 
 /**
- * Return a themed help message.
- *
- * @return a string containing the helptext for the current page.
- */
-function theme_help() {
-  if ($help = menu_get_active_help()) {
-    return '<div class="help">' . $help . '</div>';
-  }
-}
-
-/**
  * Return a themed submenu, typically displayed under the tabs.
  *
  * @param $links
@@ -1859,7 +1848,6 @@ function template_preprocess_page(&$variables) {
   $variables['feed_icons']        = drupal_get_feeds();
   $variables['footer_message']    = filter_xss_admin(variable_get('site_footer', FALSE));
   $variables['head']              = drupal_get_html_head();
-  $variables['help']              = theme('help');
   $variables['language']          = $GLOBALS['language'];
   $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
   $variables['logo']              = theme_get_setting('logo');

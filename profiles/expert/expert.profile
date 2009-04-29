@@ -42,10 +42,54 @@ function expert_profile_task_list() {
  * Perform any final installation tasks for this profile.
  */
 function expert_profile_tasks(&$task, $url) {
-  // Enable 3 standard blocks.
-  db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'user', 'login', 'garland', 1, 0, 'left', '', -1);
-  db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'system', 'navigation', 'garland', 1, 0, 'left', '', -1);
-  db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', '%s', %d)", 'system', 'management', 'garland', 1, 1, 'left', '', -1);
+  // Enable 4 standard blocks.
+  $values = array(
+    array(
+      'module' => 'user',
+      'delta' => 'login',
+      'theme' => 'garland',
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'left',
+      'pages' => '',
+      'cache' => -1
+    ),
+    array(
+      'module' => 'system',
+      'delta' => 'navigation',
+      'theme' => 'garland',
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'left',
+      'pages' => '',
+      'cache' => -1
+    ),
+    array(
+      'module' => 'system',
+      'delta' => 'management',
+      'theme' => 'garland',
+      'status' => 1,
+      'weight' => 1,
+      'region' => 'left',
+      'pages' => '',
+      'cache' => -1
+    ),
+    array(
+      'module' => 'system',
+      'delta' => 'help',
+      'theme' => 'garland',
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'help',
+      'pages' => '',
+      'cache' => -1
+    ),
+  );
+  $query = db_insert('block')->fields(array('module', 'delta', 'theme', 'status', 'weight', 'region', 'pages', 'cache'));
+  foreach ($values as $record) {
+    $query->values($record);
+  }
+  $query->execute();  
 }
 
 /**

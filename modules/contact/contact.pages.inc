@@ -47,9 +47,6 @@ function contact_mail_page() {
   }
 
   $form['#token'] = $user->uid ? $user->name . $user->mail : '';
-  $form['contact_information'] = array(
-    '#markup' => filter_xss_admin(variable_get('contact_form_information', t('You can leave a message using the contact form below.'))),
-  );
   $form['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Your name'),
