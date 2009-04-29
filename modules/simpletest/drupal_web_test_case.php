@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.98 2009/04/25 22:35:49 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.99 2009/04/29 12:04:47 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -671,9 +671,9 @@ class DrupalWebTestCase {
    *   A fully loaded user object with pass_raw property, or FALSE if account
    *   creation fails.
    */
-  protected function drupalCreateUser($permissions = NULL) {
+  protected function drupalCreateUser($permissions = array('access comments', 'access content', 'post comments', 'post comments without approval')) {
     // Create a role with the given permission set.
-    if (!($rid = $this->_drupalCreateRole($permissions))) {
+    if (!($rid = $this->drupalCreateRole($permissions))) {
       return FALSE;
     }
 
@@ -705,12 +705,7 @@ class DrupalWebTestCase {
    * @return
    *   Role ID of newly created role, or FALSE if role creation failed.
    */
-  protected function _drupalCreateRole(array $permissions = NULL) {
-    // Generate string version of permissions list.
-    if ($permissions === NULL) {
-      $permissions = array('access comments', 'access content', 'post comments', 'post comments without approval');
-    }
-
+  protected function drupalCreateRole(array $permissions) {
     if (!$this->checkPermissions($permissions)) {
       return FALSE;
     }
