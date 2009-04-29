@@ -641,11 +641,13 @@ class DrupalWebTestCase {
   }
 
   /**
-   * Generates a random string of ASCI characters of codes 32 to 126. That
-   * includes alpha-numeric characters and common misc characters.
+   * Generates a random string of ASCII characters of codes 32 to 126.
+   *
+   * The generated string includes alpha-numeric characters and common misc
+   * characters.
    *
    * @param $length
-   *   Length of random string to generate which will be appended to $db_prefx.
+   *   Length of random string to generate which will be appended to $db_prefix.
    * @return
    *   Randomly generated string.
    */
@@ -660,12 +662,13 @@ class DrupalWebTestCase {
   }
 
   /**
-   * Generates a random string containing letters, both capital and lower, and
-   * numbers. This method is better for restricted inputs that do not accept
-   * certain characters.
+   * Generates a random string containing letters and numbers.
+   *
+   * The letters may be upper or lower case. This method is better for
+   * restricted inputs that do not accept certain characters.
    *
    * @param $length
-   *   Length of random string to generate which will be appended to $db_prefx.
+   *   Length of random string to generate which will be appended to $db_prefix.
    * @return
    *   Randomly generated string.
    */
