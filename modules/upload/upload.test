@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.test,v 1.17 2009/04/24 08:15:51 dries Exp $
+// $Id: upload.test,v 1.18 2009/04/29 12:08:28 dries Exp $
 
 class UploadTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -218,7 +218,7 @@ class UploadTestCase extends DrupalWebTestCase {
    */
   function getSimpletestRoleId($user) {
     foreach ($user->roles as $rid => $role) {
-      if (strpos($role, 'simpletest') !== FALSE) {
+      if (preg_match('/s\d+/', $role)) {
         return $rid;
       }
     }

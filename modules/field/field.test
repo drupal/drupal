@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.12 2009/04/28 04:21:15 webchick Exp $
+// $Id: field.test,v 1.13 2009/04/29 12:08:27 dries Exp $
 
 class FieldAttachTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -724,9 +724,9 @@ class FieldFormTestCase extends DrupalWebTestCase {
     $web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content'));
     $this->drupalLogin($web_user);
 
-    $this->field_single = array('field_name' => drupal_strtolower($this->randomName(). '_field_name'), 'type' => 'test_field');
-    $this->field_multiple = array('field_name' => drupal_strtolower($this->randomName(). '_field_name'), 'type' => 'test_field', 'cardinality' => 4);
-    $this->field_unlimited = array('field_name' => drupal_strtolower($this->randomName(). '_field_name'), 'type' => 'test_field', 'cardinality' => FIELD_CARDINALITY_UNLIMITED);
+    $this->field_single = array('field_name' => drupal_strtolower($this->randomName()), 'type' => 'test_field');
+    $this->field_multiple = array('field_name' => drupal_strtolower($this->randomName()), 'type' => 'test_field', 'cardinality' => 4);
+    $this->field_unlimited = array('field_name' => drupal_strtolower($this->randomName()), 'type' => 'test_field', 'cardinality' => FIELD_CARDINALITY_UNLIMITED);
 
     $this->instance = array(
       'bundle' => 'test_bundle',
