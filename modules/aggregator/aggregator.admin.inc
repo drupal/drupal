@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.admin.inc,v 1.25 2009/02/24 16:48:18 dries Exp $
+// $Id: aggregator.admin.inc,v 1.26 2009/04/29 07:18:04 dries Exp $
 
 /**
  * @file
@@ -338,7 +338,7 @@ function aggregator_form_opml_submit($form, &$form_state) {
 
     $form_state['values']['title'] = $feed['title'];
     $form_state['values']['url'] = $feed['url'];
-    drupal_execute('aggregator_form_feed', $form_state);
+    drupal_form_submit('aggregator_form_feed', $form_state);
   }
 
   $form_state['redirect'] = 'admin/content/aggregator';

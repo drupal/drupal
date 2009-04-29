@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.329 2009/04/27 07:35:48 dries Exp $
+// $Id: form.inc,v 1.330 2009/04/29 07:18:04 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -38,7 +38,7 @@
  * @endcode
  *
  * Forms can also be built and submitted programmatically without any user input
- * using the drupal_execute() function.
+ * using the drupal_form_submit() function.
  *
  * For information on the format of the structured arrays used to define forms,
  * and more detailed explanations of the Form API workflow, see the
@@ -347,7 +347,7 @@ function form_set_cache($form_build_id, $form, $form_state) {
  *   form submission.
  * @param ...
  *   Any additional arguments are passed on to the functions called by
- *   drupal_execute(), including the unique form constructor function.
+ *   drupal_form_submit(), including the unique form constructor function.
  *   For example, the node_edit form requires that a node object be passed
  *   in here when it is called.
  * For example:
@@ -358,7 +358,7 @@ function form_set_cache($form_build_id, $form, $form_state) {
  * $form_state['values']['mail'] = 'robouser@example.com';
  * $form_state['values']['pass'] = 'password';
  * $form_state['values']['op'] = t('Create new account');
- * drupal_execute('user_register', $form_state);
+ * drupal_form_submit('user_register', $form_state);
  *
  * // Create a new node
  * $form_state = array();
@@ -368,9 +368,9 @@ function form_set_cache($form_build_id, $form, $form_state) {
  * $form_state['values']['body'] = 'This is the body text!';
  * $form_state['values']['name'] = 'robo-user';
  * $form_state['values']['op'] = t('Save');
- * drupal_execute('story_node_form', $form_state, (object)$node);
+ * drupal_form_submit('story_node_form', $form_state, (object)$node);
  */
-function drupal_execute($form_id, &$form_state) {
+function drupal_form_submit($form_id, &$form_state) {
   if (!isset($form_state['args'])) {
     $args = func_get_args();
     array_shift($args);
@@ -402,7 +402,7 @@ function drupal_execute($form_id, &$form_state) {
  * @param ...
  *   Any additional arguments needed by the unique form constructor
  *   function. Generally, these are any arguments passed into the
- *   drupal_get_form() or drupal_execute() functions after the first
+ *   drupal_get_form() or drupal_form_submit() functions after the first
  *   argument. If a module implements hook_forms(), it can examine
  *   these additional arguments and conditionally return different
  *   builder functions as well.
@@ -511,7 +511,7 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       // If batches were set in the submit handlers, we process them now,
       // possibly ending execution. We make sure we do not react to the batch
       // that is already being processed (if a batch operation performs a
-      // drupal_execute).
+      // drupal_form_submit).
       if ($batch =& batch_get() && !isset($batch['current_set'])) {
         // The batch uses its own copies of $form and $form_state for
         // late execution of submit handlers and post-batch redirection.
@@ -529,7 +529,7 @@ function drupal_process_form($form_id, &$form, &$form_state) {
       // bundle, and the $form_state['rebuild'] flag has not been set,
       // we're finished and should redirect to a new destination page
       // if one has been set (and a fresh, unpopulated copy of the form
-      // if one hasn't). If the form was called by drupal_execute(),
+      // if one hasn't). If the form was called by drupal_form_submit(),
       // however, we'll skip this and let the calling function examine
       // the resulting $form_state bundle itself.
       if (!$form_state['programmed'] && empty($form_state['rebuild']) && empty($form_state['storage'])) {
@@ -862,7 +862,7 @@ function form_execute_handlers($type, &$form, &$form_state) {
     if (drupal_function_exists($function))  {
       // Check to see if a previous _submit handler has set a batch, but 
       // make sure we do not react to a batch that is already being processed 
-      // (for instance if a batch operation performs a drupal_execute()).
+      // (for instance if a batch operation performs a drupal_form_submit()).
       if ($type == 'submit' && ($batch =& batch_get()) && !isset($batch['current_set'])) {
         // Some previous _submit handler has set a batch. We store the call
         // in a special 'control' batch set, for execution at the correct
