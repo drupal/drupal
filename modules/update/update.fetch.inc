@@ -27,17 +27,24 @@ function _update_refresh() {
   module_load_include('inc', 'update', 'update.compare');
 
   // Since we're fetching new available update data, we want to clear
-  // everything in our cache, to ensure we recompute the status. Note that
-  // this does not cause update_get_projects() to be recomputed twice in the
-  // same page load (e.g. when manually checking) since that function stashes
-  // its answer in a static array.
-  update_invalidate_cache();
+  // our cache of both the projects we care about, and the current update
+  // status of the site. We do *not* want to clear the cache of available
+  // releases just yet, since that data (even if it's stale) can be useful
+  // during update_get_projects(); for example, to modules that implement
+  // hook_system_info_alter() such as cvs_deploy.
+  _update_cache_clear('update_project_projects');
+  _update_cache_clear('update_project_data');
 
   $available = array();
   $data = array();
   $site_key = md5($base_url . drupal_get_private_key());
   $projects = update_get_projects();
 
+  // Now that we have the list of projects, we should also clear our cache of
+  // available release data, since even if we fail to fetch new data, we need
+  // to clear out the stale data at this point.
+  _update_cache_clear('update_available_releases');
+  
   foreach ($projects as $key => $project) {
     $url = _update_build_fetch_url($project, $site_key);
     $xml = drupal_http_request($url);
@@ -51,7 +58,7 @@ function _update_refresh() {
   }
   if (!empty($available) && is_array($available)) {
     $frequency = variable_get('update_check_frequency', 1);
-    cache_set('update_info', $available, 'cache_update', REQUEST_TIME + (60 * 60 * 24 * $frequency));
+    _update_cache_set('update_available_releases', $available, REQUEST_TIME + (60 * 60 * 24 * $frequency));
     variable_set('update_last_check', REQUEST_TIME);
     watchdog('update', 'Fetched information about all available new releases and updates.', array(), WATCHDOG_NOTICE, l(t('view'), 'admin/reports/updates'));
   }
