@@ -338,7 +338,7 @@ function aggregator_form_opml_submit($form, &$form_state) {
 
     $form_state['values']['title'] = $feed['title'];
     $form_state['values']['url'] = $feed['url'];
-    drupal_execute('aggregator_form_feed', $form_state);
+    drupal_form_submit('aggregator_form_feed', $form_state);
   }
 
   $form_state['redirect'] = 'admin/content/aggregator';

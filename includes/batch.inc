@@ -213,7 +213,7 @@ function _batch_process() {
   $set_changed = TRUE;
 
   // If this batch was marked for progressive execution (e.g. forms submitted by
-  // drupal_execute()), initialize a timer to determine whether we need to
+  // drupal_form_submit()), initialize a timer to determine whether we need to
   // proceed with the same batch phase when a processing time of 1 second has
   // been exceeded.
   if ($batch['progressive']) {
