@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.30 2009/01/22 03:11:54 webchick Exp $
+// $Id: update.module,v 1.31 2009/04/29 03:57:21 webchick Exp $
 
 /**
  * @file
@@ -254,7 +254,7 @@ function _update_requirement_check($project, $type) {
       break;
     case UPDATE_NOT_CURRENT:
       $requirement_label = t('Out of date');
-      $requirement['severity'] = variable_get('update_notification_threshold', 'all') == 'all' ? REQUIREMENT_ERROR : REQUIREMENT_WARNING;
+      $requirement['severity'] = REQUIREMENT_WARNING;
       break;
     case UPDATE_UNKNOWN:
     case UPDATE_NOT_CHECKED:

@@ -1,5 +1,5 @@
 <?php
-// $Id: update.report.inc,v 1.15 2008/09/17 07:11:59 dries Exp $
+// $Id: update.report.inc,v 1.16 2009/04/29 03:57:21 webchick Exp $
 
 /**
  * @file
@@ -47,17 +47,18 @@ function theme_update_report($data) {
         $class = 'ok';
         $icon = theme('image', 'misc/watchdog-ok.png', t('ok'), t('ok'));
         break;
+      case UPDATE_UNKNOWN:
+        $class = 'unknown';
+        $icon = theme('image', 'misc/watchdog-warning.png', t('warning'), t('warning'));
+        break;
       case UPDATE_NOT_SECURE:
       case UPDATE_REVOKED:
       case UPDATE_NOT_SUPPORTED:
+        $class = 'error';
+        $icon = theme('image', 'misc/watchdog-error.png', t('error'), t('error'));
+        break;
+      case UPDATE_NOT_CHECKED:
       case UPDATE_NOT_CURRENT:
-        if ($notification_level == 'all'
-            || $project['status'] != UPDATE_NOT_CURRENT) {
-          $class = 'error';
-          $icon = theme('image', 'misc/watchdog-error.png', t('error'), t('error'));
-          break;
-        }
-        // Otherwise, deliberate no break and use the warning class/icon.
       default:
         $class = 'warning';
         $icon = theme('image', 'misc/watchdog-warning.png', t('warning'), t('warning'));
