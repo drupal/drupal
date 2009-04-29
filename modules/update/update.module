@@ -263,7 +263,7 @@ function _update_requirement_check($project, $type) {
       break;
     case UPDATE_NOT_CURRENT:
       $requirement_label = t('Out of date');
-      $requirement['severity'] = variable_get('update_notification_threshold', 'all') == 'all' ? REQUIREMENT_ERROR : REQUIREMENT_WARNING;
+      $requirement['severity'] = REQUIREMENT_WARNING;
       break;
     case UPDATE_UNKNOWN:
     case UPDATE_NOT_CHECKED:

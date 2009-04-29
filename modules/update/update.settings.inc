@@ -34,13 +34,13 @@ function update_settings() {
 
   $form['update_notification_threshold'] = array(
     '#type' => 'radios',
-    '#title' => t('Notification threshold'),
+    '#title' => t('E-mail notification threshold'),
     '#default_value' => variable_get('update_notification_threshold', 'all'),
     '#options' => array(
       'all' => t('All newer versions'),
       'security' => t('Only security updates'),
     ),
-    '#description' => t('If there are updates available of Drupal core or any of your installed modules and themes, your site will print an error message on the <a href="@status_report">status report</a>, the <a href="@modules_page">modules page</a>, and the <a href="@themes_page">themes page</a>. You can choose to only see these error messages if a security update is available, or to be notified about any newer versions.', array('@status_report' => url('admin/reports/status'), '@modules_page' => url('admin/build/modules'), '@themes_page' => url('admin/build/themes')))
+    '#description' => t('You can choose to send e-mail only if a security update is available, or to be notified about all newer versions. If there are updates available of Drupal core or any of your installed modules and themes, your site will always print a message on the <a href="@status_report">status report</a> page, and will also display an error message on administration pages if there is a security update.', array('@status_report' => url('admin/reports/status')))
   );
 
   $form = system_settings_form($form);

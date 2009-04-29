@@ -56,6 +56,10 @@
   direction: ltr; /* Note: version numbers should always be LTR. */
 }
 
+.update tr.unknown {
+  background: #ddd;
+}
+
 table.update,
 .update table.version {
   width: 100%;
