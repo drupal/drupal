@@ -1,6 +1,17 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Unit test file for fields in core.
+ */
+
+/**
+ * Unit test class for field_attach_* functions.
+ *
+ * All field_attach_* test work with all field_storage plugins and
+ * all hook_field_attach_pre_{load,insert,update}() hooks.
+ */
 class FieldAttachTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
@@ -11,18 +22,16 @@ class FieldAttachTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('field_sql_storage', 'field', 'field_test');
+    parent::setUp('field_test');
 
-    $this->field_name = drupal_strtolower($this->randomName(). '_field_name');
-    $this->table = _field_sql_storage_tablename($this->field_name);
-    $this->revision_table = _field_sql_storage_revision_tablename($this->field_name);
+    $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
     $this->field = array('field_name' => $this->field_name, 'type' => 'test_field', 'cardinality' => 4);
     field_create_field($this->field);
     $this->instance = array(
       'field_name' => $this->field_name,
       'bundle' => 'test_bundle',
-      'label' => $this->randomName(). '_label',
-      'description' => $this->randomName(). '_description',
+      'label' => $this->randomName() . '_label',
+      'description' => $this->randomName() . '_description',
       'weight' => mt_rand(0, 127),
       'settings' => array(
         'test_instance_setting' => $this->randomName(),
@@ -38,60 +47,6 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     field_create_instance($this->instance);
   }
 
-  function testFieldAttachLoad() {
-    $entity_type = 'test_entity';
-    $eid = 0;
-
-    $etid = _field_sql_storage_etid($entity_type);
-    $columns = array('etid', 'entity_id', 'revision_id', 'delta', $this->field_name . '_value');
-
-    // Insert data for four revisions to the field revisions table
-    $query = db_insert($this->revision_table)->fields($columns);
-    for ($evid = 0; $evid < 4; ++$evid) {
-      $values[$evid] = array();
-      // Note: we insert one extra value ('<=' instead of '<').
-      for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
-        $value = mt_rand(1, 127);
-        $values[$evid][] = $value;
-        $query->values(array($etid, $eid, $evid, $delta, $value));
-      }
-    }
-    $query->execute();
-
-    // Insert data for the "most current revision" into the field table
-    $query = db_insert($this->table)->fields($columns);
-    foreach ($values[0] as $delta => $value) {
-      $query->values(array($etid, $eid, 0, $delta, $value));
-    }
-    $query->execute();
-
-    // Load the "most current revision"
-    $entity = field_test_create_stub_entity($eid, 0, $this->instance['bundle']);
-    field_attach_load($entity_type, array($eid => $entity));
-    foreach ($values[0] as $delta => $value) {
-      if ($delta < $this->field['cardinality']) {
-        $this->assertEqual($entity->{$this->field_name}[$delta]['value'], $value, "Value $delta is loaded correctly for current revision");
-      }
-      else {
-        $this->assertFalse(array_key_exists($delta, $entity->{$this->field_name}), "No extraneous value gets loaded for current revision.");
-      }
-    }
-
-    // Load every revision
-    for ($evid = 0; $evid < 4; ++$evid) {
-      $entity = field_test_create_stub_entity($eid, $evid, $this->instance['bundle']);
-      field_attach_load_revision($entity_type, array($eid => $entity));
-      foreach ($values[$evid] as $delta => $value) {
-        if ($delta < $this->field['cardinality']) {
-          $this->assertEqual($entity->{$this->field_name}[$delta]['value'], $value, "Value $delta for revision $evid is loaded correctly");
-        }
-        else {
-          $this->assertFalse(array_key_exists($delta, $entity->{$this->field_name}), "No extraneous value gets loaded for revision $evid.");
-        }
-      }
-    }
-  }
-
 //  function testFieldAttachLoadMultiple() {
     // TODO : test the 'multiple' aspect of load:
     // define 2 bundles, 3 fields
@@ -101,117 +56,111 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     // check that everything gets loaded ok.
 //  }
 
+  /**
+   * Verify that field_attach_insert and field_attach_update store
+   * values correctly.
+   *
+   * Works independently of the underlying field storage
+   * technology. Inserts or updates random field data and then loads
+   * and verifies the data.
+   *
+   * Phase one: Build three revisions and insert or update random
+   * field data into them. Store the random values in a test array
+   * $values to be reused in the verification phase. 
+   *
+   * Phase two: Load field data from all revisions and verify that the
+   * data is exactly the same data that was inserted or updated.
+   */
   function testFieldAttachInsertAndUpdate() {
     $entity_type = 'test_entity';
-    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
-
-    // Test insert.
     $values = array();
-    // Note: we try to insert one extra value ('<=' instead of '<').
+
     // TODO : test empty values filtering and "compression" (store consecutive deltas).
-    for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
-      $values[$delta]['value'] = mt_rand(1, 127);
-    }
-    $entity->{$this->field_name} = $rev_values[0] = $values;
-    field_attach_insert($entity_type, $entity);
-
-    $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
-    foreach ($values as $delta => $value) {
-      if ($delta < $this->field['cardinality']) {
-        $this->assertEqual($rows[$delta][$this->field_name . '_value'], $value['value'], t("Value $delta is inserted correctly"));
+    // 1. Start first phase of test build revisions and insert or update data.
+    // Create three revisions and store them in $revision array.
+    for ($revision_id = 0; $revision_id < 3; $revision_id++) {
+      $revision[$revision_id] = field_test_create_stub_entity(0, $revision_id, $this->instance['bundle']);
+      // Generate random number for each field value. Cardinality
+      // greater than 1 means multiple values per field. Note that a
+      // field with only one value, the typical case, stores that
+      // value as an array with only one element. Note: we try to
+      // insert one extra value ('<=' instead of '<').
+      for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
+        $values[$revision_id][$delta]['value'] = mt_rand(1, 127);
+      }
+      $current_revision = $revision_id;
+      // If this is the first revision do an  insert.
+      if (!$revision_id) {
+        $revision[$revision_id]->{$this->field_name} = $values[$revision_id];
+        field_attach_insert($entity_type, $revision[$revision_id]);
       }
       else {
-        $this->assertFalse(array_key_exists($delta, $rows), "No extraneous value gets inserted.");
+        // Otherwise do  an update.
+        $revision[$revision_id]->{$this->field_name} = $values[$revision_id];
+        field_attach_update($entity_type, $revision[$revision_id]);
       }
+    }
+    // Start second phase of test. Load revisions and verify that the field data is correct.
+    // Confirm current revision loads and has the "current_revision" data.
+    $load = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    field_attach_load($entity_type, array(0 => $load));
+    // Number of values per field loaded equals the field cardinality.
+    $this->assertEqual(count($load->{$this->field_name}), $this->field['cardinality'], "The test object currrent revision has {$this->field['cardinality']} values.");
+    for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
+      // The field value loaded matches the one inserted or updated.
+      $this->assertEqual($load->{$this->field_name}[$delta]['value'] , $values[$current_revision][$delta]['value'], "current revision  field $delta ok");
     }
 
-    // Test update.
-    $entity = field_test_create_stub_entity(0, 1, $this->instance['bundle']);
-    $values = array();
-    // Note: we try to update one extra value ('<=' instead of '<').
-    for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
-      $values[$delta]['value'] = mt_rand(1, 127);
-    }
-    $entity->{$this->field_name} = $rev_values[1] = $values;
-    field_attach_update($entity_type, $entity);
-    $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
-    foreach ($values as $delta => $value) {
-      if ($delta < $this->field['cardinality']) {
-        $this->assertEqual($rows[$delta][$this->field_name . '_value'], $value['value'], t("Value $delta is updated correctly"));
-      }
-      else {
-        $this->assertFalse(array_key_exists($delta, $rows), "No extraneous value gets updated.");
+    // Confirm each revision loads the correct data.
+    foreach (array_keys($revision) as $revision_id) {
+      $load = field_test_create_stub_entity(0, $revision_id, $this->instance['bundle']);
+      field_attach_load_revision($entity_type, array(0 => $load));
+      // Number of values per field loaded equals the field cardinality.
+      $this->assertEqual(count($load->{$this->field_name}), $this->field['cardinality'], "The test object revision $revision_id has {$this->field['cardinality']} values.");
+      for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
+        // The field value  loaded matches the one inserted or updated.
+        $this->assertEqual($load->{$this->field_name}[$delta]['value'], $values[$revision_id][$delta]['value'], "The test object revision $revision_id field $delta ok.");
       }
     }
-
-    // Check that data for both revisions are in the revision table.
-    // We make sure each value is stored correctly, then unset it.
-    // When an entire revision's values are unset (remembering that we
-    // put one extra value in $values per revision), unset the entire
-    // revision. Then, if $rev_values is empty at the end, all
-    // revision data was found.
-    $results = db_select($this->revision_table, 't')->fields('t')->execute();
-    foreach ($results as $row) {
-      $this->assertEqual($row->{$this->field_name . '_value'}, $rev_values[$row->revision_id][$row->delta]['value'], "Value {$row->delta} for revision {$row->revision_id} stored correctly");
-      unset($rev_values[$row->revision_id][$row->delta]);
-      if (count($rev_values[$row->revision_id]) == 1) {
-        unset($rev_values[$row->revision_id]);
-      }
-    }
-    $this->assertTrue(empty($rev_values), "All values for all revisions are stored in revision table {$this->revision_table}");
-
-    // Check that update leaves the field data untouched if $object has no
-    // $field_name key.
-    unset($entity->{$this->field_name});
-    field_attach_update($entity_type, $entity);
-    $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
-    foreach ($values as $delta => $value) {
-      if ($delta < $this->field['cardinality']) {
-        $this->assertEqual($rows[$delta][$this->field_name . '_value'], $value['value'], t("Update with no field_name entry leaves value $delta untouched"));
-      }
-    }
-
-    // Check that update with an empty $object->$field_name empties the field.
-    $entity->{$this->field_name} = NULL;
-    field_attach_update($entity_type, $entity);
-    $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
-    $this->assertEqual(count($rows), 0, t("Update with an empty field_name entry empties the field."));
   }
-
-  // Test insert and update with missing or invalid fields. For the
-  // most part, these tests pass by not crashing or causing exceptions.
+  /**
+   * Tests insert and update with missing or NULL fields.
+   */
   function testFieldAttachSaveMissingData() {
     $entity_type = 'test_entity';
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
 
-    // Insert: Field is missing
+    // Insert: Field is missing.
     field_attach_insert($entity_type, $entity);
-    $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
-    $this->assertEqual($count, 0, 'Missing field results in no inserts');
+    field_attach_load($entity_type, array(0 => $entity));
+    $this->assertEqual(count($entity->{$this->field_name}), 0, 'Missing field results in no inserts');
 
-    // Insert: Field is NULL
+    // Insert: Field is NULL.
     $entity->{$this->field_name} = NULL;
     field_attach_insert($entity_type, $entity);
-    $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
-    $this->assertEqual($count, 0, 'NULL field results in no inserts');
+    field_attach_load($entity_type, array(0 => $entity));
+    $this->assertTrue($entity->{$this->field_name} == NULL, 'NULL field results in no inserts');
 
     // Add some real data
-    $entity->{$this->field_name} = array(0 => array('value' => 1));
+    $value = 5;
+    $entity->{$this->field_name} = array(0 => array('value' => $value));
     field_attach_insert($entity_type, $entity);
-    $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
-    $this->assertEqual($count, 1, 'Field data saved');
+    $entity->{$this->field_name} = NULL;
+    field_attach_load($entity_type, array(0 => $entity));
+    $this->assertTrue($entity->{$this->field_name}[0]['value'] == $value, 'Field data saved');
 
     // Update: Field is missing. Data should survive.
     unset($entity->{$this->field_name});
     field_attach_update($entity_type, $entity);
-    $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
-    $this->assertEqual($count, 1, 'Missing field leaves data in table');
+    $entity->{$this->field_name} = NULL;
+    field_attach_load($entity_type, array(0 => $entity));
+    $this->assertEqual($entity->{$this->field_name}[0]['value'], $value, 'Field missing data survives');
 
     // Update: Field is NULL. Data should be wiped.
     $entity->{$this->field_name} = NULL;
     field_attach_update($entity_type, $entity);
-    $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
-    $this->assertEqual($count, 0, 'NULL field leaves no data in table');
+    field_attach_load($entity_type, array(0 => $entity));
+    $this->assertTrue($entity->{$this->field_name} == NULL, 'NULL field update');
   }
 
   function testFieldAttachViewAndPreprocess() {
@@ -417,16 +366,14 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     field_create_instance($this->instance);
 
     // Create a second field for the test bundle
-    $field_name = drupal_strtolower($this->randomName(). '_field_name');
-    $table = _field_sql_storage_tablename($field_name);
-    $revision_table = _field_sql_storage_revision_tablename($field_name);
+    $field_name = drupal_strtolower($this->randomName() . '_field_name');
     $field = array('field_name' => $field_name, 'type' => 'test_field', 'cardinality' => 1);
     field_create_field($field);
     $instance = array(
       'field_name' => $field_name,
       'bundle' => $this->instance['bundle'],
-      'label' => $this->randomName(). '_label',
-      'description' => $this->randomName(). '_description',
+      'label' => $this->randomName() . '_label',
+      'description' => $this->randomName() . '_description',
       'weight' => mt_rand(0, 127),
       // test_field has no instance settings
       'widget' => array(
@@ -730,8 +677,8 @@ class FieldFormTestCase extends DrupalWebTestCase {
 
     $this->instance = array(
       'bundle' => 'test_bundle',
-      'label' => $this->randomName(). '_label',
-      'description' => $this->randomName(). '_description',
+      'label' => $this->randomName() . '_label',
+      'description' => $this->randomName() . '_description',
       'weight' => mt_rand(0, 127),
       'settings' => array(
         'test_instance_setting' => $this->randomName(),
@@ -890,7 +837,7 @@ class FieldFormTestCase extends DrupalWebTestCase {
     $this->assertPattern("|$pattern|s", 'Widgets are displayed in the correct order');
     $this->assertFieldByName("$this->field_name[$delta][value]", '', "New widget is displayed");
     $this->assertFieldByName("$this->field_name[$delta][_weight]", $delta, "New widget has the right weight");
-    $this->assertNoField("$this->field_name[". ($delta + 1) . '][value]', 'No extraneous widget is displayed');
+    $this->assertNoField("$this->field_name[" . ($delta + 1) . '][value]', 'No extraneous widget is displayed');
 
     // Submit the form and create the entity.
     $this->drupalPost(NULL, $edit, t('Save'));
@@ -944,7 +891,8 @@ class FieldTestCase extends DrupalWebTestCase {
       );
       field_create_field($field_definition);
       $this->fail(t('Cannot create a field with no type.'));
-    } catch (FieldException $e) {
+    }
+    catch (FieldException $e) {
       $this->pass(t('Cannot create a field with no type.'));
     }
 
@@ -953,7 +901,8 @@ class FieldTestCase extends DrupalWebTestCase {
       $field_definition = array('type' => 'test_field');
       field_create_field($field_definition);
       $this->fail(t('Cannot create an unnamed field.'));
-    } catch (FieldException $e) {
+    }
+    catch (FieldException $e) {
       $this->pass(t('Cannot create an unnamed field.'));
     }
 
@@ -977,14 +926,12 @@ class FieldTestCase extends DrupalWebTestCase {
     $settings = $info['settings'];
     $this->assertIdentical($settings, $field['settings'] , t('Default field settings have been written.'));
 
-    // Check that a table has been created for the field.
-    $this->assertTrue(db_table_exists('field_data_' . $field_definition['field_name']), t('A table has been created for the field.'));
-
     // Guarantee that the name is unique.
     try {
       field_create_field($field_definition);
       $this->fail(t('Cannot create two fields with the same name.'));
-    } catch (FieldException $e) {
+    }
+    catch (FieldException $e) {
       $this->pass(t('Cannot create two fields with the same name.'));
     }
 
@@ -993,7 +940,8 @@ class FieldTestCase extends DrupalWebTestCase {
     try {
       field_create_field($field_definition);
       $this->fail(t('Cannot create a field with an invalid name.'));
-    } catch (FieldException $e) {
+    }
+    catch (FieldException $e) {
       $this->pass(t('Cannot create a field with an invalid name.'));
     }
 

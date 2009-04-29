@@ -1,6 +1,17 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Unit tests for field_sql_ storage.module
+ *
+ * Field_sql_storage.module implements the default back-end storage plugin
+ * for the Field Strage API.
+ */
+
+/**
+ * Tests field storage.
+ */
 class FieldSqlStorageTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
@@ -12,6 +23,17 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('field_sql_storage', 'field', 'field_test');
+    $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
+    $this->field = array('field_name' => $this->field_name, 'type' => 'test_field', 'cardinality' => 4);
+    field_create_field($this->field);
+    $this->instance = array(
+      'field_name' => $this->field_name,
+      'bundle' => 'test_bundle'
+    );
+    field_create_instance($this->instance);
+    $this->table = _field_sql_storage_tablename($this->field_name);
+    $this->revision_table = _field_sql_storage_revision_tablename($this->field_name);
+
   }
 
   function testEntityTypeId() {
@@ -25,5 +47,181 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $this->assertEqual(db_result(db_query("SELECT etid FROM {field_config_entity_type} WHERE type='t2'")), $t2, 'Second entity type in database is correct');
     $this->assertEqual($t1, _field_sql_storage_etid('t1'), '_field_sql_storage_etid returns the same value for the first entity type');
     $this->assertEqual($t2, _field_sql_storage_etid('t2'), '_field_sql_storage_etid returns the same value for the second entity type');
+  }
+
+  /**
+   * Uses the mysql tables and records to verify
+   * field_load_revision works correctly.
+   */
+  function testFieldAttachLoad() {
+    $entity_type = 'test_entity';
+    $eid = 0;
+
+    $etid = _field_sql_storage_etid($entity_type);
+    $columns = array('etid', 'entity_id', 'revision_id', 'delta', $this->field_name . '_value');
+
+    // Insert data for four revisions to the field revisions table
+    $query = db_insert($this->revision_table)->fields($columns);
+    for ($evid = 0; $evid < 4; ++$evid) {
+      $values[$evid] = array();
+      // Note: we insert one extra value ('<=' instead of '<').
+      for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
+        $value = mt_rand(1, 127);
+        $values[$evid][] = $value;
+        $query->values(array($etid, $eid, $evid, $delta, $value));
+      }
+    }
+    $query->execute();
+
+    // Insert data for the "most current revision" into the field table
+    $query = db_insert($this->table)->fields($columns);
+    foreach ($values[0] as $delta => $value) {
+      $query->values(array($etid, $eid, 0, $delta, $value));
+    }
+    $query->execute();
+
+    // Load the "most current revision"
+    $entity = field_test_create_stub_entity($eid, 0, $this->instance['bundle']);
+    field_attach_load($entity_type, array($eid => $entity));
+    foreach ($values[0] as $delta => $value) {
+      if ($delta < $this->field['cardinality']) {
+        $this->assertEqual($entity->{$this->field_name}[$delta]['value'], $value, "Value $delta is loaded correctly for current revision");
+      }
+      else {
+        $this->assertFalse(array_key_exists($delta, $entity->{$this->field_name}), "No extraneous value gets loaded for current revision.");
+      }
+    }
+
+    // Load every revision
+    for ($evid = 0; $evid < 4; ++$evid) {
+      $entity = field_test_create_stub_entity($eid, $evid, $this->instance['bundle']);
+      field_attach_load_revision($entity_type, array($eid => $entity));
+      foreach ($values[$evid] as $delta => $value) {
+        if ($delta < $this->field['cardinality']) {
+          $this->assertEqual($entity->{$this->field_name}[$delta]['value'], $value, "Value $delta for revision $evid is loaded correctly");
+        }
+        else {
+          $this->assertFalse(array_key_exists($delta, $entity->{$this->field_name}), "No extraneous value gets loaded for revision $evid.");
+        }
+      }
+    }
+  }
+
+  /**
+   * Reads mysql to verify correct data is
+   * written when using insert and update.
+   */
+  function testFieldAttachInsertAndUpdate() {
+    $entity_type = 'test_entity';
+    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+
+    // Test insert.
+    $values = array();
+    // Note: we try to insert one extra value ('<=' instead of '<').
+    // TODO : test empty values filtering and "compression" (store consecutive deltas).
+    for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
+      $values[$delta]['value'] = mt_rand(1, 127);
+    }
+    $entity->{$this->field_name} = $rev_values[0] = $values;
+    field_attach_insert($entity_type, $entity);
+
+    $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
+    foreach ($values as $delta => $value) {
+      if ($delta < $this->field['cardinality']) {
+        $this->assertEqual($rows[$delta][$this->field_name . '_value'], $value['value'], t("Value $delta is inserted correctly"));
+      }
+      else {
+        $this->assertFalse(array_key_exists($delta, $rows), "No extraneous value gets inserted.");
+      }
+    }
+
+    // Test update.
+    $entity = field_test_create_stub_entity(0, 1, $this->instance['bundle']);
+    $values = array();
+    // Note: we try to update one extra value ('<=' instead of '<').
+    for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
+      $values[$delta]['value'] = mt_rand(1, 127);
+    }
+    $entity->{$this->field_name} = $rev_values[1] = $values;
+    field_attach_update($entity_type, $entity);
+    $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
+    foreach ($values as $delta => $value) {
+      if ($delta < $this->field['cardinality']) {
+        $this->assertEqual($rows[$delta][$this->field_name . '_value'], $value['value'], t("Value $delta is updated correctly"));
+      }
+      else {
+        $this->assertFalse(array_key_exists($delta, $rows), "No extraneous value gets updated.");
+      }
+    }
+
+    // Check that data for both revisions are in the revision table.
+    // We make sure each value is stored correctly, then unset it.
+    // When an entire revision's values are unset (remembering that we
+    // put one extra value in $values per revision), unset the entire
+    // revision. Then, if $rev_values is empty at the end, all
+    // revision data was found.
+    $results = db_select($this->revision_table, 't')->fields('t')->execute();
+    foreach ($results as $row) {
+      $this->assertEqual($row->{$this->field_name . '_value'}, $rev_values[$row->revision_id][$row->delta]['value'], "Value {$row->delta} for revision {$row->revision_id} stored correctly");
+      unset($rev_values[$row->revision_id][$row->delta]);
+      if (count($rev_values[$row->revision_id]) == 1) {
+        unset($rev_values[$row->revision_id]);
+      }
+    }
+    $this->assertTrue(empty($rev_values), "All values for all revisions are stored in revision table {$this->revision_table}");
+
+    // Check that update leaves the field data untouched if $object has no
+    // $field_name key.
+    unset($entity->{$this->field_name});
+    field_attach_update($entity_type, $entity);
+    $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
+    foreach ($values as $delta => $value) {
+      if ($delta < $this->field['cardinality']) {
+        $this->assertEqual($rows[$delta][$this->field_name . '_value'], $value['value'], t("Update with no field_name entry leaves value $delta untouched"));
+      }
+    }
+
+    // Check that update with an empty $object->$field_name empties the field.
+    $entity->{$this->field_name} = NULL;
+    field_attach_update($entity_type, $entity);
+    $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
+    $this->assertEqual(count($rows), 0, t("Update with an empty field_name entry empties the field."));
+  }
+
+  /**
+   * Tests insert and update with missing or NULL fields.
+   */
+  function testFieldAttachSaveMissingData() {
+    $entity_type = 'test_entity';
+    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+
+    // Insert: Field is missing
+    field_attach_insert($entity_type, $entity);
+    $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
+    $this->assertEqual($count, 0, 'Missing field results in no inserts');
+
+    // Insert: Field is NULL
+    $entity->{$this->field_name} = NULL;
+    field_attach_insert($entity_type, $entity);
+    $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
+    $this->assertEqual($count, 0, 'NULL field results in no inserts');
+
+    // Add some real data
+    $entity->{$this->field_name} = array(0 => array('value' => 1));
+    field_attach_insert($entity_type, $entity);
+    $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
+    $this->assertEqual($count, 1, 'Field data saved');
+
+    // Update: Field is missing. Data should survive.
+    unset($entity->{$this->field_name});
+    field_attach_update($entity_type, $entity);
+    $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
+    $this->assertEqual($count, 1, 'Missing field leaves data in table');
+
+    // Update: Field is NULL. Data should be wiped.
+    $entity->{$this->field_name} = NULL;
+    field_attach_update($entity_type, $entity);
+    $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
+    $this->assertEqual($count, 0, 'NULL field leaves no data in table');
   }
 }
