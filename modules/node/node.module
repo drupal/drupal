@@ -1507,9 +1507,9 @@ function node_search($op = 'search', $keys = NULL) {
         $node->body = drupal_render($node->content);
 
         // Fetch comments for snippet.
-        $node->body .= module_invoke('comment', 'node', $node, 'update_index');
+        $node->body .= module_invoke('comment', 'node_update_index', $node);
         // Fetch terms for snippet.
-        $node->body .= module_invoke('taxonomy', 'node', $node, 'update_index');
+        $node->body .= module_invoke('taxonomy', 'node_update_index', $node);
 
         $extra = module_invoke_all('node_search_result', $node);
 
