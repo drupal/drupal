@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.31 2009/04/29 03:57:21 webchick Exp $
+// $Id: update.module,v 1.32 2009/04/29 18:39:50 webchick Exp $
 
 /**
  * @file
@@ -277,9 +277,9 @@ function _update_requirement_check($project, $type) {
 function update_cron() {
   $frequency = variable_get('update_check_frequency', 1);
   $interval = 60 * 60 * 24 * $frequency;
-  // Cron should check for updates if there is no update data cached or if the configured
-  // update interval has elapsed.
-  if (!cache_get('update_info', 'cache_update') || ((REQUEST_TIME - variable_get('update_last_check', 0)) > $interval)) {
+  // Cron should check for updates if there is no update data cached or if the
+  // configured update interval has elapsed.
+  if (!_update_cache_get('update_available_releases') || ((REQUEST_TIME - variable_get('update_last_check', 0)) > $interval)) {
     update_refresh();
     _update_cron_notify();
   }
@@ -291,10 +291,10 @@ function update_cron() {
  * Adds a submit handler to the system modules and themes forms, so that if a
  * site admin saves either form, we invalidate the cache of available updates.
  *
- * @see update_invalidate_cache()
+ * @see _update_cache_clear()
  */
 function update_form_system_themes_alter(&$form, $form_state) {
-  $form['#submit'][] = 'update_invalidate_cache';
+  $form['#submit'][] = 'update_cache_clear_submit';
 }
 
 /**
@@ -303,10 +303,18 @@ function update_form_system_themes_alter(&$form, $form_state) {
  * Adds a submit handler to the system modules and themes forms, so that if a
  * site admin saves either form, we invalidate the cache of available updates.
  *
- * @see update_invalidate_cache()
+ * @see _update_cache_clear()
  */
 function update_form_system_modules_alter(&$form, $form_state) {
-  $form['#submit'][] = 'update_invalidate_cache';
+  $form['#submit'][] = 'update_cache_clear_submit';
+}
+
+/**
+ * Helper function for use as a form submit callback.
+ */
+function update_cache_clear_submit($form, &$form_state) {
+  // Clear all update module caches.
+  _update_cache_clear();
 }
 
 /**
@@ -354,8 +362,7 @@ function update_get_available($refresh = FALSE) {
       break;
     }
   }
-  if (!$needs_refresh && ($cache = cache_get('update_info', 'cache_update'))
-       && $cache->expire > REQUEST_TIME) {
+  if (!$needs_refresh && ($cache = _update_cache_get('update_available_releases')) && $cache->expire > REQUEST_TIME) {
     $available = $cache->data;
   }
   elseif ($needs_refresh || $refresh) {
@@ -365,24 +372,6 @@ function update_get_available($refresh = FALSE) {
     $available = update_refresh();
   }
   return $available;
-}
-
-/**
- * Implementation of hook_flush_caches().
- *
- * The function update.php (among others) calls this hook to flush the caches.
- * Since we're running update.php, we are likely to install a new version of
- * something, in which case, we want to check for available update data again.
- */
-function update_flush_caches() {
-  return array('cache_update');
-}
-
-/**
- * Invalidates any cached data relating to update status.
- */
-function update_invalidate_cache() {
-  cache_clear_all('*', 'cache_update', TRUE);
 }
 
 /**
@@ -515,3 +504,120 @@ function _update_project_status_sort($a, $b) {
   $b_status = $b['status'] > 0 ? $b['status'] : (-10 * $b['status']);
   return $a_status - $b_status;
 }
+
+/**
+ * @defgroup update_status_cache Private update status cache system
+ * @{
+ *
+ * We specifically do NOT use the core cache API for saving the fetched data
+ * about available updates. It is vitally important that this cache is only
+ * cleared when we're populating it after successfully fetching new available
+ * update data. Usage of the core cache API results in all sorts of potential
+ * problems that would result in attempting to fetch available update data all
+ * the time, including if a site has a "minimum cache lifetime" (which is both
+ * a minimum and a maximum) defined, or if a site uses memcache or another
+ * plug-able cache system that assumes volatile caches.
+ *
+ * Update module still uses the {cache_update} table, but instead of using
+ * cache_set(), cache_get(), and cache_clear_all(), there are private helper
+ * functions that implement these same basic tasks but ensure that the cache
+ * is not prematurely cleared, and that the data is always stored in the
+ * database, even if memcache or another cache backend is in use.
+ */
+
+/**
+ * Store data in the private update status cache table.
+ *
+ * Note: this function completely ignores the {cache_update}.headers field
+ * since that is meaningless for the kinds of data we're caching.
+ *
+ * @param $cid
+ *   The cache ID to save the data with.
+ * @param $data
+ *   The data to store.
+ * @param $expire
+ *   One of the following values:
+ *   - CACHE_PERMANENT: Indicates that the item should never be removed except
+ *     by explicitly using _update_cache_clear().
+ *   - A Unix timestamp: Indicates that the item should be kept at least until
+ *     the given time, after which it will be invalidated.
+ */
+function _update_cache_set($cid, $data, $expire) {
+  $fields = array(
+    'created' => REQUEST_TIME,
+    'expire' => $expire,
+    'headers' => NULL,
+  );
+  if (!is_string($data)) {
+    $fields['data'] = serialize($data);
+    $fields['serialized'] = 1;
+  }
+  else {
+    $fields['data'] = $data;
+    $fields['serialized'] = 0;
+  }
+  db_merge('cache_update')
+    ->key(array('cid' => $cid))
+    ->fields($fields)
+    ->execute();
+}
+
+/** 
+ * Retrieve data from the private update status cache table.
+ *
+ * @param $cid
+ *   The cache ID to retrieve.
+ * @return
+ *   The data for the given cache ID, or NULL if the ID was not found.
+ */
+function _update_cache_get($cid) {
+  $cache = db_query("SELECT data, created, expire, serialized FROM {cache_update} WHERE cid = :cid", array(':cid' => $cid))->fetchObject();
+  if (isset($cache->data)) {
+    if ($cache->serialized) {
+      $cache->data = unserialize($cache->data);
+    }
+  }
+  return $cache;
+}
+
+/**
+ * Invalidates cached data relating to update status.
+ *
+ * @param $cid
+ *   Optional cache ID of the record to clear from the private update module
+ *   cache. If empty, all records will be cleared from the table.
+ */
+function _update_cache_clear($cid = NULL) {
+  $query = db_delete('cache_update');
+  if (!empty($cid)) {
+    $query->condition('cid', $cid);
+  }
+  $query->execute();
+}
+
+/**
+ * Implementation of hook_flush_caches().
+ *
+ * Called from update.php (among others) to flush the caches.
+ * Since we're running update.php, we are likely to install a new version of
+ * something, in which case, we want to check for available update data again.
+ * However, because we have our own caching system, we need to directly clear
+ * the database table ourselves at this point and return nothing, for example,
+ * on sites that use memcache where cache_clear_all() won't know how to purge
+ * this data.
+ *
+ * However, we only want to do this from update.php, since otherwise, we'd
+ * lose all the available update data on every cron run. So, we specifically
+ * check if the site is in MAINTENANCE_MODE == 'update' (which indicates
+ * update.php is running, not update module... alas for overloaded names).
+ */
+function update_flush_caches() {
+  if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update') {
+    _update_cache_clear();
+  }
+  return array();
+}
+
+/**
+ * @} End of "defgroup update_status_cache".
+ */
