@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.687 2009/04/26 19:44:39 dries Exp $
+// $Id: system.module,v 1.688 2009/04/29 08:04:24 dries Exp $
 
 /**
  * @file
@@ -895,6 +895,10 @@ function system_block_list() {
      // Not worth caching.
     'cache' => BLOCK_NO_CACHE,
   );
+  $blocks['help'] = array(
+   'info' => t('System help'),
+   'weight' => '5',
+  );
   // System-defined menu blocks.
   foreach (menu_list_system_menus() as $menu_name => $title) {
     $blocks[$menu_name]['info'] = t($title);
@@ -960,6 +964,13 @@ function system_block_view($delta = '') {
       $block['subject'] = NULL;
       $block['content'] = theme('system_powered_by', $image_path);
       return $block;
+    case 'help':
+      return array(
+        // Don't display a title.
+        'subject' => NULL, 
+        'content' => menu_get_active_help(),
+      );
+      break;
     default:
       // All system menu blocks.
       $system_menus = menu_list_system_menus();
@@ -1121,6 +1132,7 @@ function system_theme_default() {
       'content' => 'Content',
       'header' => 'Header',
       'footer' => 'Footer',
+      'help' => 'Help',
     ),
     'description' => '',
     'features' => array(

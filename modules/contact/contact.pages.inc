@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.pages.inc,v 1.18 2009/04/26 20:09:12 webchick Exp $
+// $Id: contact.pages.inc,v 1.19 2009/04/29 08:04:23 dries Exp $
 
 /**
  * @file
@@ -47,9 +47,6 @@ function contact_mail_page() {
   }
 
   $form['#token'] = $user->uid ? $user->name . $user->mail : '';
-  $form['contact_information'] = array(
-    '#markup' => filter_xss_admin(variable_get('contact_form_information', t('You can leave a message using the contact form below.'))),
-  );
   $form['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Your name'),

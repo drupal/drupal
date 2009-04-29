@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.test,v 1.19 2009/04/21 09:27:52 dries Exp $
+// $Id: contact.test,v 1.20 2009/04/29 08:04:23 dries Exp $
 
 /**
  * Test the sitewide contact form.
@@ -27,8 +27,6 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
 
     // Set settings.
     $edit = array();
-    $contact_form_information = $this->randomName(100);
-    $edit['contact_form_information'] = $contact_form_information;
     $edit['contact_hourly_threshold'] = 3;
     $edit['contact_default_status'] = TRUE;
     $this->drupalPost('admin/build/contact/settings', $edit, t('Save configuration'));
@@ -82,7 +80,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $this->setPermission('anonymous user', array('access site-wide contact form' => TRUE));
     $this->drupalLogout();
     $this->drupalGet('contact');
-    $this->assertText($contact_form_information, t('Contact form is shown when there is one category.'));
+    $this->assertText(t('Contact'), t('Contact form is shown when there is one category.'));
     $this->assertNoText(t('Category'), t('When there is only one category, the category selection element is hidden.'));
     $this->drupalLogin($admin_user);
 
@@ -112,9 +110,6 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
 
     $this->drupalGet('contact');
     $this->assertResponse(200, t('Access granted to anonymous user with permission.'));
-
-    // Check that "Additional information" is displayed on the page.
-    $this->assertText($edit['contact_form_information'], t('Contact information displayed.'));
 
     // Submit contact form with invalid values.
     $this->submitContact('', $recipients[0], $this->randomName(16), $categories[0], $this->randomName(64));
