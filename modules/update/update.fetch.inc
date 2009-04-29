@@ -109,10 +109,11 @@ function _update_cron_notify() {
   include_once DRUPAL_ROOT . '/includes/install.inc';
   $status = update_requirements('runtime');
   $params = array();
+  $notify_all = (variable_get('update_notification_threshold', 'all') == 'all');
   foreach (array('core', 'contrib') as $report_type) {
     $type = 'update_' . $report_type;
     if (isset($status[$type]['severity'])
-        && $status[$type]['severity'] == REQUIREMENT_ERROR) {
+        && ($status[$type]['severity'] == REQUIREMENT_ERROR || ($notify_all && $status[$type]['reason'] == UPDATE_NOT_CURRENT))) {
       $params[$report_type] = $status[$type]['reason'];
     }
   }
