@@ -80,7 +80,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $this->setPermission('anonymous user', array('access site-wide contact form' => TRUE));
     $this->drupalLogout();
     $this->drupalGet('contact');
-    $this->assertText(t('Contact'), t('Contact form is shown when there is one category.'));
+    $this->assertText(t('Your e-mail address'), t('Contact form is shown when there is one category.'));
     $this->assertNoText(t('Category'), t('When there is only one category, the category selection element is hidden.'));
     $this->drupalLogin($admin_user);
 

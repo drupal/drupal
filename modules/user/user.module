@@ -2851,10 +2851,8 @@ function user_register() {
     drupal_goto('user/' . $user->uid);
   }
 
-  $form = array();
-
-  // Merge in the default user edit fields.
-  $form = array_merge($form, user_edit_form($form_state, NULL, NULL, TRUE));
+  // Start with the default user edit fields.
+  $form = user_edit_form($form_state, NULL, NULL, TRUE);
   if ($admin) {
     $form['account']['notify'] = array(
      '#type' => 'checkbox',

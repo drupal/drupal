@@ -892,12 +892,11 @@ function system_block_list() {
   $blocks['powered-by'] = array(
     'info' => t('Powered by Drupal'),
     'weight' => '10',
-     // Not worth caching.
     'cache' => BLOCK_NO_CACHE,
   );
   $blocks['help'] = array(
-   'info' => t('System help'),
-   'weight' => '5',
+    'info' => t('System help'),
+    'weight' => '5',
   );
   // System-defined menu blocks.
   foreach (menu_list_system_menus() as $menu_name => $title) {
@@ -960,17 +959,13 @@ function system_block_view($delta = '') {
   switch ($delta) {
     case 'powered-by':
       $image_path = 'misc/' . variable_get('drupal_badge_color', 'powered-blue') . '-' . variable_get('drupal_badge_size', '80x15') . '.png';
-      // Don't display a title.
       $block['subject'] = NULL;
       $block['content'] = theme('system_powered_by', $image_path);
       return $block;
     case 'help':
-      return array(
-        // Don't display a title.
-        'subject' => NULL, 
-        'content' => menu_get_active_help(),
-      );
-      break;
+      $block['subject'] = NULL;
+      $block['content'] = menu_get_active_help();
+      return $block;
     default:
       // All system menu blocks.
       $system_menus = menu_list_system_menus();

@@ -52,7 +52,7 @@ function expert_profile_tasks(&$task, $url) {
       'weight' => 0,
       'region' => 'left',
       'pages' => '',
-      'cache' => -1
+      'cache' => -1,
     ),
     array(
       'module' => 'system',
@@ -62,7 +62,7 @@ function expert_profile_tasks(&$task, $url) {
       'weight' => 0,
       'region' => 'left',
       'pages' => '',
-      'cache' => -1
+      'cache' => -1,
     ),
     array(
       'module' => 'system',
@@ -72,7 +72,7 @@ function expert_profile_tasks(&$task, $url) {
       'weight' => 1,
       'region' => 'left',
       'pages' => '',
-      'cache' => -1
+      'cache' => -1,
     ),
     array(
       'module' => 'system',
@@ -82,7 +82,7 @@ function expert_profile_tasks(&$task, $url) {
       'weight' => 0,
       'region' => 'help',
       'pages' => '',
-      'cache' => -1
+      'cache' => -1,
     ),
   );
   $query = db_insert('block')->fields(array('module', 'delta', 'theme', 'status', 'weight', 'region', 'pages', 'cache'));
