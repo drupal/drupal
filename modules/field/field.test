@@ -57,72 +57,60 @@ class FieldAttachTestCase extends DrupalWebTestCase {
 //  }
 
   /**
-   * Verify that field_attach_insert and field_attach_update store
-   * values correctly.
+   * Check field values insert, update and load.
    *
-   * Works independently of the underlying field storage
-   * technology. Inserts or updates random field data and then loads
-   * and verifies the data.
-   *
-   * Phase one: Build three revisions and insert or update random
-   * field data into them. Store the random values in a test array
-   * $values to be reused in the verification phase. 
-   *
-   * Phase two: Load field data from all revisions and verify that the
-   * data is exactly the same data that was inserted or updated.
+   * Works independently of the underlying field storage backend. Inserts or
+   * updates random field data and then loads and verifies the data.
    */
-  function testFieldAttachInsertAndUpdate() {
+  function testFieldAttachSaveLoad() {
     $entity_type = 'test_entity';
     $values = array();
 
     // TODO : test empty values filtering and "compression" (store consecutive deltas).
-    // 1. Start first phase of test build revisions and insert or update data.
-    // Create three revisions and store them in $revision array.
+
+    // Preparation: create three revisions and store them in $revision array.
     for ($revision_id = 0; $revision_id < 3; $revision_id++) {
       $revision[$revision_id] = field_test_create_stub_entity(0, $revision_id, $this->instance['bundle']);
-      // Generate random number for each field value. Cardinality
-      // greater than 1 means multiple values per field. Note that a
-      // field with only one value, the typical case, stores that
-      // value as an array with only one element. Note: we try to
-      // insert one extra value ('<=' instead of '<').
+      // Note: we try to insert one extra value ('<=' instead of '<').
       for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
         $values[$revision_id][$delta]['value'] = mt_rand(1, 127);
       }
       $current_revision = $revision_id;
-      // If this is the first revision do an  insert.
+      // If this is the first revision do an insert.
       if (!$revision_id) {
         $revision[$revision_id]->{$this->field_name} = $values[$revision_id];
         field_attach_insert($entity_type, $revision[$revision_id]);
       }
       else {
-        // Otherwise do  an update.
+        // Otherwise do an update.
         $revision[$revision_id]->{$this->field_name} = $values[$revision_id];
         field_attach_update($entity_type, $revision[$revision_id]);
       }
     }
-    // Start second phase of test. Load revisions and verify that the field data is correct.
-    // Confirm current revision loads and has the "current_revision" data.
-    $load = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
-    field_attach_load($entity_type, array(0 => $load));
+
+    // Confirm current revision loads the correct data.
+    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    field_attach_load($entity_type, array(0 => $entity));
     // Number of values per field loaded equals the field cardinality.
-    $this->assertEqual(count($load->{$this->field_name}), $this->field['cardinality'], "The test object currrent revision has {$this->field['cardinality']} values.");
+    $this->assertEqual(count($entity->{$this->field_name}), $this->field['cardinality'], t('Currrent revision: expected number of values'));
     for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
       // The field value loaded matches the one inserted or updated.
-      $this->assertEqual($load->{$this->field_name}[$delta]['value'] , $values[$current_revision][$delta]['value'], "current revision  field $delta ok");
+      $this->assertEqual($entity->{$this->field_name}[$delta]['value'] , $values[$current_revision][$delta]['value'], t('Currrent revision: expected value %delta was found.', array('%delta' => $delta)));
     }
 
     // Confirm each revision loads the correct data.
     foreach (array_keys($revision) as $revision_id) {
-      $load = field_test_create_stub_entity(0, $revision_id, $this->instance['bundle']);
-      field_attach_load_revision($entity_type, array(0 => $load));
+      $entity = field_test_create_stub_entity(0, $revision_id, $this->instance['bundle']);
+      field_attach_load_revision($entity_type, array(0 => $entity));
       // Number of values per field loaded equals the field cardinality.
-      $this->assertEqual(count($load->{$this->field_name}), $this->field['cardinality'], "The test object revision $revision_id has {$this->field['cardinality']} values.");
+      $this->assertEqual(count($entity->{$this->field_name}), $this->field['cardinality'], t('Revision %revision_id: expected number of values.', array('%revision_id' => $revision_id)));
       for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
-        // The field value  loaded matches the one inserted or updated.
-        $this->assertEqual($load->{$this->field_name}[$delta]['value'], $values[$revision_id][$delta]['value'], "The test object revision $revision_id field $delta ok.");
+        // The field value loaded matches the one inserted or updated.
+        $this->assertEqual($entity->{$this->field_name}[$delta]['value'], $values[$revision_id][$delta]['value'], t('Revision %revision_id: expected value %delta was found.', array('%revision_id' => $revision_id, '%delta' => $delta)));
       }
     }
   }
+
   /**
    * Tests insert and update with missing or NULL fields.
    */
