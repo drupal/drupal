@@ -1,7 +1,12 @@
 // $Id$
 
-Drupal 6.11-dev, xxxx-xx-xx (development release)
+Drupal 6.11, 2009-04-29
 ----------------------
+- Fixed security issues (Cross site scripting and limited information
+  disclosure), see SA-CORE-2009-005
+- Fixed performance issues with the menu router cache, the update
+  status cache and improved cache invalidation
+- Fixed a variety of small bugs.
 
 Drupal 6.10, 2009-02-25
 ----------------------
@@ -175,6 +180,16 @@ Drupal 6.0, 2008-02-13
   contributed module (http://drupal.org/project/site_network).
 - Removed old system updates. Updates from Drupal versions prior to 5.x will
   require upgrading to 5.x before upgrading to 6.x.
+
+Drupal 5.17, 2009-04-29
+-----------------------
+- Fixed security issues (Cross site scripting and limited information disclosure) see SA-CORE-2009-005.
+- Fixed a variety of small bugs.
+
+Drupal 5.16, 2009-02-25
+-----------------------
+- Fixed a security issue, (Local file inclusion on Windows), see SA-CORE-2009-004.
+- Fixed a variety of small bugs.
 
 Drupal 5.15, 2009-01-14
 ----------------------
