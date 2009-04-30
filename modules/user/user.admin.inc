@@ -132,7 +132,6 @@ function user_filter_form_submit($form, &$form_state) {
  * @see user_admin_account_submit()
  */
 function user_admin_account() {
-  $filter = user_build_filter_query();
 
   $header = array(
     array(),
@@ -145,13 +144,20 @@ function user_admin_account() {
   );
 
   $query = db_select('users', 'u');
-  $query->fields('u', array('uid', 'name', 'status', 'created', 'access'));
-  $sql = 'SELECT DISTINCT u.uid, u.name, u.status, u.created, u.access FROM {users} u
-          LEFT JOIN {users_roles} ur ON u.uid = ur.uid ' . $filter['join'] . '
-          WHERE u.uid != 0 ' . $filter['where'];
-  $sql .= tablesort_sql($header);
-  $query_count = 'SELECT COUNT(DISTINCT u.uid) FROM {users} u LEFT JOIN {users_roles} ur ON u.uid = ur.uid ' . $filter['join'] . ' WHERE u.uid != 0 ' . $filter['where'];
-  $result = pager_query($sql, 50, 0, $query_count, $filter['args']);
+  $query->leftJoin('users_roles', 'ur', 'u.uid = ur.uid');
+  $query->condition('u.uid', 0, '<>');
+  user_build_filter_query($query);
+  
+  $count_query = clone $query;
+  $count_query->addExpression('COUNT(DISTINCT u.uid)');
+
+  $query = $query->extend('PagerDefault')->extend('TableSort');
+  $query
+    ->fields('u', array('uid', 'name', 'status', 'created', 'access'))
+    ->limit(50)
+    ->setHeader($header)
+    ->setCountQuery($count_query);
+  $result = $query->execute();
 
   $form['options'] = array(
     '#type' => 'fieldset',
@@ -605,15 +611,17 @@ function user_admin_perm_submit($form, &$form_state) {
   foreach ($form_state['values']['role_names'] as $rid => $name) {
     $checked = array_filter($form_state['values'][$rid]);
     // Delete existing permissions for the role. This handles "unchecking" checkboxes.
-    db_delete('role_permission')->condition('rid', $rid)->execute();
+    db_delete('role_permission')
+      ->condition('rid', $rid)
+      ->execute();
+    $query = db_insert('role_permission')->fields(array('rid', 'permission'));
     foreach ($checked as $permission) {
-      db_insert('role_permission')
-        ->fields(array(
-          'rid' => $rid,
-          'permission' => $permission,
-        ))
-        ->execute();
+      $query->values(array(
+        'rid' => $rid,
+        'permission' => $permission,
+      ));
     }
+    $query->execute();
   }
 
   drupal_set_message(t('The changes have been saved.'));
@@ -743,23 +751,29 @@ function user_admin_role_validate($form, &$form_state) {
 function user_admin_role_submit($form, &$form_state) {
   if ($form_state['values']['op'] == t('Save role')) {
     db_update('role')
-      ->fields(array(
-        'name' => $form_state['values']['name'],
-      ))
+      ->fields(array('name' => $form_state['values']['name']))
       ->condition('rid', $form_state['values']['rid'])
       ->execute();
     drupal_set_message(t('The role has been renamed.'));
   }
   elseif ($form_state['values']['op'] == t('Delete role')) {
-    db_delete('role')->condition('rid', $form_state['values']['rid'])->execute();
-    db_delete('role_permission')->condition('rid', $form_state['values']['rid'])->execute();
+    db_delete('role')
+      ->condition('rid', $form_state['values']['rid'])
+      ->execute();
+    db_delete('role_permission')
+      ->condition('rid', $form_state['values']['rid'])
+      ->execute();
     // Update the users who have this role set:
-    db_delete('users_roles')->condition('rid', $form_state['values']['rid'])->execute();
+    db_delete('users_roles')
+      ->condition('rid', $form_state['values']['rid'])
+      ->execute();
 
     drupal_set_message(t('The role has been deleted.'));
   }
   elseif ($form_state['values']['op'] == t('Add role')) {
-    db_insert('role')->fields(array('name' => $form_state['values']['name']))->execute();
+    db_insert('role')
+      ->fields(array('name' => $form_state['values']['name']))
+      ->execute();
     drupal_set_message(t('The role has been added.'));
   }
   $form_state['redirect'] = 'admin/user/roles';

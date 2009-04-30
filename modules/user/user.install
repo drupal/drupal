@@ -262,7 +262,10 @@ function user_update_7000(&$sandbox) {
       if ($new_hash) {
         // Indicate an updated password.
         $new_hash  = 'U' . $new_hash;
-        db_update('users')->fields(array('pass' => $new_hash))->condition('uid', $account->uid)->execute();
+        db_update('users')
+          ->fields(array('pass' => $new_hash))
+          ->condition('uid', $account->uid)
+          ->execute();
       }
     }
     $ret['#finished'] = $sandbox['user_from']/$sandbox['user_count'];

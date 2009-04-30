@@ -464,18 +464,20 @@ function user_save($account, $edit = array(), $category = 'account') {
 
     // Reload user roles if provided.
     if (isset($edit['roles']) && is_array($edit['roles'])) {
-      db_delete('users_roles')->condition('uid', $account->uid)->execute();
+      db_delete('users_roles')
+        ->condition('uid', $account->uid)
+        ->execute();
 
+      $query = db_insert('users_roles')->fields(array('uid', 'rid'));
       foreach (array_keys($edit['roles']) as $rid) {
         if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-          db_insert('users_roles')
-            ->fields(array(
-              'uid' => $account->uid,
-              'rid' => $rid,
-            ))
-            ->execute();
+          $query->values(array(
+            'uid' => $account->uid,
+            'rid' => $rid,
+          ));
         }
       }
+      $query->execute();
     }
 
     // Delete a blocked user's sessions to kick them if they are online.
@@ -552,17 +554,19 @@ function user_save($account, $edit = array(), $category = 'account') {
 
     // Save user roles (delete just to be safe).
     if (isset($edit['roles']) && is_array($edit['roles'])) {
-      db_delete('users_roles')->condition('uid', $edit['uid'])->execute();
+      db_delete('users_roles')
+        ->condition('uid', $edit['uid'])
+        ->execute();
+      $query = db_insert('users_roles')->fields(array('uid', 'rid'));
       foreach (array_keys($edit['roles']) as $rid) {
         if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
-          db_insert('users_roles')
-            ->fields(array(
-              'uid' => $edit['uid'],
-              'rid' => $rid,
-            ))
-            ->execute();
+          $query->values(array(
+            'uid' => $edit['uid'],
+            'rid' => $rid,
+          ));
         }
       }
+      $query->execute();
     }
 
     // Build the finished user object.
@@ -858,20 +862,20 @@ function user_search($op = 'search', $keys = NULL, $skip_access_check = FALSE) {
         $find = array();
         // Replace wildcards with MySQL/PostgreSQL wildcards.
         $keys = preg_replace('!\*+!', '%', $keys);
-        $query = db_select('users');
+        $query = db_select('users')->extend('PagerDefault');
         $query->fields('users', array('name', 'uid', 'mail'));
         if (user_access('administer users')) {
           // Administrators can also search in the otherwise private email field.
           $query->condition(db_or()->
-                            where('LOWER(name) LIKE LOWER(:name)', array(':name' => "%$keys%"))->
-                            where('LOWER(mail) LIKE LOWER(:mail)', array(':mail' => "%$keys%")));
+            where('LOWER(name) LIKE LOWER(:name)', array(':name' => "%$keys%"))->
+            where('LOWER(mail) LIKE LOWER(:mail)', array(':mail' => "%$keys%")));
         }
         else {
           $query->where('LOWER(name) LIKE LOWER(:name)', array(':name' => "%$keys%"));
         }
-        $query = $query->extend('PagerDefault')
-                       ->limit(2);
-        $result = $query->execute();
+        $result = $query
+          ->limit(15)
+          ->execute();
         foreach ($result as $account) {
           $find[] = array('title' => $account->name . ' (' . $account->mail . ')', 'link' => url('user/' . $account->uid, array('absolute' => TRUE)));
         }
@@ -1520,14 +1524,8 @@ function user_page_title($account) {
  *   An associative array with module as key and username as value.
  */
 function user_get_authmaps($authname = NULL) {
-  $result = db_query("SELECT authname, module FROM {authmap} WHERE authname = :authname", array(':authname' => $authname));
-  $authmaps = array();
-  $has_rows = FALSE;
-  foreach ($result as $authmap) {
-    $authmaps[$authmap->module] = $authmap->authname;
-    $has_rows = TRUE;
-  }
-  return $has_rows ? $authmaps : 0;
+  $authmaps = db_query("SELECT authname, module FROM {authmap} WHERE authname = :authname", array(':authname' => $authname))->fetchAllKeyed();
+  return count($authmaps) ? $authmaps : 0;
 }
 
 /**
@@ -1548,16 +1546,17 @@ function user_set_authmaps($account, $authmaps) {
     if ($value) {
       db_merge('authmap')
         ->key(array(
-        'uid' => $account->uid,
-        'module' => $module[1],
+          'uid' => $account->uid,
+          'module' => $module[1],
         ))
-        ->fields(array(
-        'authname' => $value,
-        ))
+        ->fields(array('authname' => $value))
         ->execute();
     }
     else {
-      db_delete('authmap')->condition('uid', $account->uid)->condition('module', $module[1])->execute();
+      db_delete('authmap')
+        ->condition('uid', $account->uid)
+        ->condition('module', $module[1])
+        ->execute();
     }
   }
 }
@@ -1974,7 +1973,10 @@ function _user_cancel($edit, $account, $method) {
       if (!empty($edit['user_cancel_notify'])) {
         _user_mail_notify('status_blocked', $account);
       }
-      db_update('users')->fields(array('status' => 0))->condition('uid', $account->uid)->execute();
+      db_update('users')
+        ->fields(array('status' => 0))
+        ->condition('uid', $account->uid)
+        ->execute();
       drupal_set_message(t('%name has been disabled.', array('%name' => $account->name)));
       watchdog('user', 'Blocked user: %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
       break;
@@ -1985,9 +1987,15 @@ function _user_cancel($edit, $account, $method) {
       if (!empty($edit['user_cancel_notify'])) {
         _user_mail_notify('status_canceled', $account);
       }
-      db_delete('users')->condition('uid', $account->uid)->execute();
-      db_delete('users_roles')->condition('uid', $account->uid)->execute();
-      db_delete('authmap')->condition('uid', $account->uid)->execute();
+      db_delete('users')
+        ->condition('uid', $account->uid)
+        ->execute();
+      db_delete('users_roles')
+        ->condition('uid', $account->uid)
+        ->execute();
+      db_delete('authmap')
+        ->condition('uid', $account->uid)
+        ->execute();
       drupal_set_message(t('%name has been deleted.', array('%name' => $account->name)));
       watchdog('user', 'Deleted user: %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
       break;
@@ -2425,9 +2433,8 @@ function user_filters() {
   if (count($roles)) {
     $filters['role'] = array(
       'title' => t('role'),
-      'where' => "ur.rid = %d",
+      'field' => 'ur.rid',
       'options' => $roles,
-      'join' => '',
     );
   }
 
@@ -2444,28 +2451,27 @@ function user_filters() {
   ksort($options);
   $filters['permission'] = array(
     'title' => t('permission'),
-    'join' => 'LEFT JOIN {role_permission} p ON ur.rid = p.rid',
-    'where' => " (p.permission = '%s' OR u.uid = 1) ",
     'options' => $options,
   );
 
   $filters['status'] = array(
     'title' => t('status'),
-    'where' => 'u.status = %d',
-    'join' => '',
+    'field' => 'u.status',
     'options' => array(1 => t('active'), 0 => t('blocked')),
   );
   return $filters;
 }
 
 /**
- * Build query for user administration filters based on session.
+ * Extends a query object for user administration filters based on session.
+ *
+ * @param $query
+ *   Query object that should be filtered.
  */
-function user_build_filter_query() {
+function user_build_filter_query(SelectQuery $query) {
   $filters = user_filters();
 
-  // Build query
-  $where = $args = $join = array();
+  // Extend Query with filter conditions.
   foreach ($_SESSION['user_overview_filter'] as $filter) {
     list($key, $value) = $filter;
     // This checks to see if this permission filter is an enabled permission for
@@ -2478,19 +2484,13 @@ function user_build_filter_query() {
       if (user_access($value, $account)) {
         continue;
       }
+      $query->leftJoin('role_permission', 'p', 'ur.rid = p.rid');
+      $query->condition(db_or()->condition('u.uid', 1)->condition('p.permission', $value));
     }
-    $where[] = $filters[$key]['where'];
-    $args[] = $value;
-    $join[] = $filters[$key]['join'];
+    else {
+      $query->condition($filters[$key]['field'], $value);
+    }
   }
-  $where = !empty($where) ? 'AND ' . implode(' AND ', $where) : '';
-  $join = !empty($join) ? ' ' . implode(' ', array_unique($join)) : '';
-
-  return array(
-    'where' => $where,
-    'join' => $join,
-    'args' => $args,
-  );
 }
 
 /**
@@ -2721,7 +2721,10 @@ function user_block_user_action(&$object, $context = array()) {
     global $user;
     $uid = $user->uid;
   }
-  db_update('users')->fields(array('status' => 0))->condition('uid', $uid)->execute();
+  db_update('users')
+    ->fields(array('status' => 0))
+    ->condition('uid', $uid)
+    ->execute();
   drupal_session_destroy_uid($uid);
   watchdog('action', 'Blocked user %name.', array('%name' => $user->name));
 }
