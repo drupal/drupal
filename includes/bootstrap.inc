@@ -1085,6 +1085,8 @@ function request_uri() {
       $uri = $_SERVER['SCRIPT_NAME'];
     }
   }
+  // Prevent multiple slashes to avoid cross site requests via the Form API.
+  $uri = '/' . ltrim($uri, '/');
 
   return $uri;
 }
