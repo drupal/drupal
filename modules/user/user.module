@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.982 2009/04/30 16:10:10 dries Exp $
+// $Id: user.module,v 1.983 2009/04/30 21:44:19 dries Exp $
 
 /**
  * @file
@@ -2851,10 +2851,8 @@ function user_register() {
     drupal_goto('user/' . $user->uid);
   }
 
-  $form = array();
-
-  // Merge in the default user edit fields.
-  $form = array_merge($form, user_edit_form($form_state, NULL, NULL, TRUE));
+  // Start with the default user edit fields.
+  $form = user_edit_form($form_state, NULL, NULL, TRUE);
   if ($admin) {
     $form['account']['notify'] = array(
      '#type' => 'checkbox',
