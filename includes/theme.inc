@@ -168,7 +168,12 @@ function theme() {
     $functions[$function] = theme_get_function($function);
   }
   if ($functions[$function]) {
-    return call_user_func_array($functions[$function], $args);
+    $output = call_user_func_array($functions[$function], $args);
+    // Add final markup to the full page.
+    if ($function == 'page') {
+      $output = drupal_final_markup($output);
+    }
+    return $output;
   }
 }
 

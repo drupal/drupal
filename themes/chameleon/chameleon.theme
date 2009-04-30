@@ -39,8 +39,8 @@ function chameleon_page($content, $show_blocks = TRUE) {
   $output  = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
   $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"$language\" xml:lang=\"$language\">\n";
   $output .= "<head>\n";
-  $output .= " <title>". ($title ? strip_tags($title) ." | ". variable_get("site_name", "Drupal") : variable_get("site_name", "Drupal") ." | ". variable_get("site_slogan", "")) ."</title>\n";
   $output .= drupal_get_html_head();
+  $output .= " <title>". ($title ? strip_tags($title) ." | ". variable_get("site_name", "Drupal") : variable_get("site_name", "Drupal") ." | ". variable_get("site_slogan", "")) ."</title>\n";
   $output .= drupal_get_css();
   $output .= drupal_get_js();
   $output .= "</head>";

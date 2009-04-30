@@ -2,8 +2,8 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language ?>" lang="<?php print $language ?>">
   <head>
-    <title><?php print $head_title ?></title>
     <?php print $head ?>
+    <title><?php print $head_title ?></title>
     <?php print $styles ?>
     <?php print $scripts ?>
     <style type="text/css" media="print">@import "<?php print base_path() . path_to_theme() ?>/print.css";</style>

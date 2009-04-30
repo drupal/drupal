@@ -1,7 +1,10 @@
 // $Id$
 
-Drupal 5.17, xxxx-xx-xx (development version)
+Drupal 5.17, 2009-04-29
 -----------------------
+- Fixed security issues (Cross site scripting and limited information
+  disclosure) see SA-CORE-2009-005.
+- Fixed a variety of small bugs.
 
 Drupal 5.16, 2009-02-25
 -----------------------

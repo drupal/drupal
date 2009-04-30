@@ -725,6 +725,8 @@ function request_uri() {
       $uri = $_SERVER['SCRIPT_NAME'] .'?'. $_SERVER['QUERY_STRING'];
     }
   }
+  // Prevent multiple slashes to avoid cross site requests via the FAPI.
+  $uri = '/'. ltrim($uri, '/');
 
   return $uri;
 }

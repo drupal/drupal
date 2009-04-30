@@ -152,6 +152,15 @@ function drupal_get_headers() {
 }
 
 /**
+ * Make any final alterations to the rendered xhtml.
+ */
+function drupal_final_markup($content) {
+  // Make sure that the charset is always specified as the first element of the
+  // head region to prevent encoding-based attacks.
+  return preg_replace('/<head[^>]*>/i', "\$0\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />", $content, 1);
+}
+
+/**
  * Add a feed URL for the current page.
  *
  * @param $url
