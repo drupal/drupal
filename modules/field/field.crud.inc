@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.10 2009/04/24 03:44:17 webchick Exp $
+// $Id: field.crud.inc,v 1.11 2009/04/30 14:40:03 dries Exp $
 
 /**
  * @file
@@ -131,18 +131,26 @@
  *         Each field widget type module defines and documents its own
  *         widget settings.
  * - display (array)
- *     A sub-array of key/value pairs identifying display contexts
- *     and the way the field should be displayed in that context.
- *     TODO more work to do here.
- *     - (context_1)
- *       - label
- *       - exclude
- *       - type
- *       - settings
+ *     A sub-array of key/value pairs identifying display contexts and the way
+ *     the field should be displayed in that context.
+ *     - example_context_1 (array)
+ *         A sub-array of key/value pairs of the display options to be used
+ *         when the field is being displayed in the "example_context_1" context.
+ *         - label (string)
+ *             Position of the label. 'inline', 'above' and 'hidden' are the
+ *             values recognized by the default 'field' theme implementation.
+ *         - exclude (integer)
+ *             TODO This is subject to change, see: http://drupal.org/node/367215
+ *         - type (string)
+ *             The type of the display formatter to use for the field in
+ *             this context.
+ *         - settings (array)
+ *             A sub-array of key/value pairs of display options specific to
+ *             the display formatter used in this context.
+ *         - module (string, read-only)
+ *             The name of the module which implements the display formatter.
+ *     - example_context_2 
  *         - ...
- *       - module (internal)
- *     - (context 2)
- *       - ...
  *
  * TODO D7 : document max length for field types, widget types,
  * formatter names...
