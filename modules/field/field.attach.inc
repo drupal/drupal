@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.11 2009/04/26 09:18:20 dries Exp $
+// $Id: field.attach.inc,v 1.12 2009/04/30 14:41:41 dries Exp $
 
 /**
  * @file
@@ -735,7 +735,7 @@ function _field_attach_delete_bundle($bundle) {
     field_delete_instance($instance['field_name'], $bundle);
   }
 
-  // Let other modules act on deleting the bundle
+  // Let other modules act on deleting the bundle.
   foreach (module_implements('field_attach_delete_bundle') as $module) {
     $function = $module . '_field_attach_delete_bundle';
     $function($bundle, $instances);
