@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.6 2009/03/26 13:31:24 webchick Exp $
+// $Id: field.form.inc,v 1.7 2009/05/01 15:28:13 dries Exp $
 
 /**
  * @file
@@ -22,9 +22,8 @@ function field_default_form($obj_type, $object, $field, $instance, $items, &$for
   $field_name = $field['field_name'];
 
   // If the field is not accessible, don't add anything. The field value will
-  // be left unchanged on update, or considered empty on insert.
-  // TODO : if/when field_attach_insert() takes care of default values,
-  // unaccessible fields will automatically get the default value on insert.
+  // be left unchanged on update, or considered empty on insert (default value
+  // will be inserted if applicable).
   if (!field_access('edit', $field)) {
     return $addition;
   }
