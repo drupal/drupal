@@ -3,11 +3,12 @@
 
 /**
  * @file
- * Default 'implementations' of hook_field_*().
+ * Default 'implementations' of hook_field_*(): common field housekeeping.
  *
- * Handles common field housekeeping.
  * Those implementations are special, as field.module does not define any field
  * types. Those functions take care of default stuff common to all field types.
+ * They are called through the _field_invoke_default() iterator, generally in
+ * the corresponding field_attach_[operation]() function.
  */
 
 function field_default_extract_form_values($obj_type, $object, $field, $instance, &$items, $form, &$form_state) {
@@ -15,18 +16,8 @@ function field_default_extract_form_values($obj_type, $object, $field, $instance
 
   if (isset($form_state['values'][$field_name])) {
     $items = $form_state['values'][$field_name];
-
     // Remove the 'value' of the 'add more' button.
     unset($items[$field_name . '_add_more']);
-
-    // _field_invoke() does not add back items for fields not present in the
-    // original $object, so we add them manually.
-    $object->{$field_name} = $items;
-  }
-  else {
-    // The form did not include this field, for instance because of access
-    // rules: make sure any existing value for the field stays unchanged.
-    unset($object->{$field_name});
   }
 }
 
@@ -46,6 +37,24 @@ function field_default_submit($obj_type, &$object, $field, $instance, &$items, $
 
   // Filter out empty values.
   $items = field_set_empty($field, $items);
+}
+
+/**
+ * Default field 'insert' operation.
+ *
+ * Insert default value if no $object->$field_name entry was provided.
+ * This can happen with programmatic saves, or on form-based creation where
+ * the current user doesn't have 'edit' permission for the field.
+ */
+function field_default_insert($obj_type, &$object, $field, $instance, &$items) {
+  // _field_invoke() populates $items with an empty array if the $object has no
+  // entry for the field, so we check on the $object itself.
+  if (!property_exists($object, $field['field_name']) && !empty($instance['default_value_function'])) {
+    $function = $instance['default_value_function'];
+    if (drupal_function_exists($function)) {
+      $items = $function($obj_type, $object, $field, $instance);
+    }
+  }
 }
 
 /**

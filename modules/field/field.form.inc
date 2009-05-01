@@ -22,9 +22,8 @@ function field_default_form($obj_type, $object, $field, $instance, $items, &$for
   $field_name = $field['field_name'];
 
   // If the field is not accessible, don't add anything. The field value will
-  // be left unchanged on update, or considered empty on insert.
-  // TODO : if/when field_attach_insert() takes care of default values,
-  // unaccessible fields will automatically get the default value on insert.
+  // be left unchanged on update, or considered empty on insert (default value
+  // will be inserted if applicable).
   if (!field_access('edit', $field)) {
     return $addition;
   }

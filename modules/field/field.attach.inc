@@ -183,10 +183,9 @@ function _field_invoke($op, $obj_type, &$object, &$a = NULL, &$b = NULL, $defaul
         $return[] = $result;
       }
     }
-    // Put back the altered items in the object, if the field was present to
-    // begin with (avoid replacing missing field with empty array(), those are
-    // not semantically equivalent on update).
-    if (isset($object->$field_name)) {
+    // Populate $items back in the field values, but avoid replacing missing
+    // fields with an empty array (those are not equivalent on update).
+    if ($items !== array() || property_exists($object, $field_name)) {
       $object->$field_name = $items;
     }
   }
@@ -500,28 +499,35 @@ function _field_attach_presave($obj_type, &$object) {
 }
 
 /**
- * Save field data for a new object. The passed in object must
- * already contain its id and (if applicable) revision id attributes.
+ * Save field data for a new object.
+ *
+ * The passed in object must already contain its id and (if applicable)
+ * revision id attributes.
+ * Default values (if any) will be saved for fields not present in the
+ * $object.
  *
  * @param $obj_type
  *   The type of $object; e.g. 'node' or 'user'.
  * @param $object
  *   The object with fields to save.
+ * @return
+ *   Default values (if any) will be added to the $object parameter for fields
+ *   it leaves unspecified.
  */
 function _field_attach_insert($obj_type, &$object) {
-
+  _field_invoke_default('insert', $obj_type, $object);
   _field_invoke('insert', $obj_type, $object);
 
   // Let other modules act on inserting the object, accumulating saved
   // fields along the way.
-  $saved = array();
+  $skip_fields = array();
   foreach (module_implements('field_attach_pre_insert') as $module) {
     $function = $module . '_field_attach_pre_insert';
-    $function($obj_type, $object, $saved);
+    $function($obj_type, $object, $skip_fields);
   }
 
   // Field storage module saves any remaining unsaved fields.
-  module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_write', $obj_type, $object, FIELD_STORAGE_INSERT, $saved);
+  module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_write', $obj_type, $object, FIELD_STORAGE_INSERT, $skip_fields);
 
   list($id, $vid, $bundle, $cacheable) = field_attach_extract_ids($obj_type, $object);
   if ($cacheable) {
@@ -543,14 +549,14 @@ function _field_attach_update($obj_type, &$object) {
 
   // Let other modules act on updating the object, accumulating saved
   // fields along the way.
-  $saved = array();
+  $skip_fields = array();
   foreach (module_implements('field_attach_pre_update') as $module) {
     $function = $module . '_field_attach_pre_update';
-    $function($obj_type, $object, $saved);
+    $function($obj_type, $object, $skip_fields);
   }
 
   // Field storage module saves any remaining unsaved fields.
-  module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_write', $obj_type, $object, FIELD_STORAGE_UPDATE, $saved);
+  module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_write', $obj_type, $object, FIELD_STORAGE_UPDATE, $skip_fields);
 
   list($id, $vid, $bundle, $cacheable) = field_attach_extract_ids($obj_type, $object);
   if ($cacheable) {

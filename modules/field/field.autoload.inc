@@ -185,13 +185,20 @@ function field_attach_presave($obj_type, &$object) {
 }
 
 /**
- * Save field data for a new object. The passed in object must
- * already contain its id and (if applicable) revision id attributes.
+ * Save field data for a new object.
+ *
+ * The passed in object must already contain its id and (if applicable)
+ * revision id attributes.
+ * Default values (if any) will be inserted for fields not present in the
+ * $object.
  *
  * @param $obj_type
  *   The type of $object; e.g. 'node' or 'user'.
  * @param $object
  *   The object with fields to save.
+ * @return
+ *   Default values (if any) will be added to the $object parameter for fields
+ *   it leaves unspecified.
  *
  * This function is an autoloader for _field_attach_insert() in modules/field/field.attach.inc.
  */
