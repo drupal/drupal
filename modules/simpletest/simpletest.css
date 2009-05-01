@@ -1,4 +1,4 @@
-/* $Id: simpletest.css,v 1.4 2008/11/01 18:32:22 dries Exp $ */
+/* $Id: simpletest.css,v 1.5 2009/05/01 11:01:53 dries Exp $ */
 
 /* Addon for the simpletest module */
 #simpletest {
@@ -6,7 +6,7 @@
 
 /* Test Table */
 #simpletest-form-table th.select-all {
-  width: 50px;
+  width: 25px;
 }
 
 th.simpletest_test {
