@@ -524,3 +524,10 @@ function theme_field_formatter_field_test_multiple($element) {
   $output = implode('|', $items);
   return $settings['test_formatter_setting_multiple'] . '|' . $output;
 }
+
+/**
+ * Sample function to test default value assignment.
+ */
+function field_test_default_value($obj_type, $object, $field, $instance) {
+  return array(array('value' => 99));
+}
