@@ -204,10 +204,10 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
       if ($fieldset = $this->getResultFieldSet()) {
         // Code assumes this is the only test in group.
         $results['summary'] = $this->asText($fieldset->div);
-        $results['name'] = $this->asText($fieldset->fieldset->legend);
+        $results['name'] = $this->asText($fieldset->legend);
 
         $results['assertions'] = array();
-        $tbody = $fieldset->fieldset->table->tbody;
+        $tbody = $fieldset->table->tbody;
         foreach ($tbody->tr as $row) {
           $assertion = array();
           $assertion['message'] = $this->asText($row->td[0]);
@@ -233,7 +233,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
     $fieldsets = $this->xpath('//fieldset');
     $info = $this->getInfo();
     foreach ($fieldsets as $fieldset) {
-      if ($fieldset->legend == $info['group']) {
+      if ($fieldset->legend == $info['name']) {
         return $fieldset;
       }
     }
