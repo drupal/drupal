@@ -1821,6 +1821,14 @@ function form_ahah_callback() {
 
   // Get the form from the cache.
   $form = form_get_cache($form_build_id, $form_state);
+  if (!$form) {
+    // If $form cannot be loaded from the cache, the form_build_id in $_POST must
+    // be invalid, which means that someone performed a POST request onto
+    // system/ahah without actually viewing the concerned form in the browser.
+    // This is likely a hacking attempt as it never happens under normal
+    // circumstances, so we just do nothing.
+    exit;
+  }
 
   // We will run some of the submit handlers so we need to disable redirecting.
   $form['#redirect'] = FALSE;
@@ -1840,7 +1848,9 @@ function form_ahah_callback() {
 
   // Get the callback function from the clicked button.
   $callback = $form_state['clicked_button']['#ahah']['callback'];
-  $callback($form, $form_state);
+  if (drupal_function_exists($callback)) {
+    $callback($form, $form_state);
+  }
 }
 
 /**
