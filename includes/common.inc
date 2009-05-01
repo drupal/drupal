@@ -1946,18 +1946,14 @@ function drupal_get_path($type, $name) {
 }
 
 /**
- * Returns the base URL path of the Drupal installation, i.e.,
- * the directory where Drupal is installed. At the very least,
- * this will return "/".
+ * Return the base URL path (i.e., directory) of the Drupal installation.
  *
- * NOTE: base_path prefixes and suffixes a "/" onto the returned
- * path if the path is not empty. See examples below.
+ * base_path() prefixes and suffixes a "/" onto the returned path if the path is 
+ * not empty. At the very least, this will return "/".
  *
- * Example #1: Drupal installed at "http://yoursite.com" means
- * this will just return "/" because the path is empty.
- *
- * Example #2: Drupal installed at "http://yoursite.com/drupal/folder"
- * means this function will return "/drupal/folder/".
+ * Examples:
+ * - http://example.com returns "/" because the path is empty.
+ * - http://example.com/drupal/folder returns "/drupal/folder/".
  */
 function base_path() {
   return $GLOBALS['base_path'];
