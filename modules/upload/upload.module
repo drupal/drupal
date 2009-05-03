@@ -62,25 +62,23 @@ function upload_node_links($node, $teaser) {
   $links = array();
 
   // Display a link with the number of attachments
-  if ($teaser && isset($node->files) && user_access('view uploaded files')) {
-    $num_files = 0;
-    foreach ($node->files as $file) {
-      if ($file->list) {
-        $num_files++;
-      }
+  $num_files = 0;
+  foreach ($node->files as $file) {
+    if ($file->list) {
+      $num_files++;
     }
-    if ($num_files) {
-      $links['upload_attachments'] = array(
-        'title' => format_plural($num_files, '1 attachment', '@count attachments'),
-        'href' => "node/$node->nid",
-        'attributes' => array('title' => t('Read full article to view attachments.')),
-        'fragment' => 'attachments'
-      );
-      $node->content['links']['upload_attachments'] = array(
-        '#type' => 'node_links',
-        '#value' => $links,
-      );
-    }
+  }
+  if ($num_files) {
+    $links['upload_attachments'] = array(
+      'title' => format_plural($num_files, '1 attachment', '@count attachments'),
+      'href' => "node/$node->nid",
+      'attributes' => array('title' => t('Read full article to view attachments.')),
+      'fragment' => 'attachments'
+    );
+    $node->content['links']['upload_attachments'] = array(
+      '#type' => 'node_links',
+      '#value' => $links,
+    );
   }
 }
 
@@ -341,20 +339,45 @@ function upload_node_load($nodes, $types) {
  * Implementation of hook_node_view().
  */
 function upload_node_view($node, $teaser) {
-  if (isset($node->files) && user_access('view uploaded files')) {
-    // Add the attachments list to node body with a heavy
-    // weight to ensure they're below other elements.
+  if (!isset($node->files)) {
+    return;
+  }
+
+  if (user_access('view uploaded files') && $node->build_mode != NODE_BUILD_RSS) {
     if (count($node->files)) {
       if (!$teaser) {
+        // Add the attachments list to node body with a heavy weight to ensure
+        // they're below other elements.
         $node->content['files'] = array(
           '#files' => $node->files,
           '#theme' => 'upload_attachments',
           '#weight' => 50,
         );
       }
+      else {
+        upload_node_links($node, $teaser);
+      }
     }
+  }
 
-    upload_node_links($node, $teaser);
+  if ($node->build_mode == NODE_BUILD_RSS) {
+    // Add the first file as an enclosure to the RSS item. RSS allows only one
+    // enclosure per item. See: http://en.wikipedia.org/wiki/RSS_enclosure
+    foreach ($node->files as $file) {
+      if ($file->list) {
+        break;
+      }
+    }
+    if ($file->list) {
+      $node->rss_elements[] = array(
+        'key' => 'enclosure',
+        'attributes' => array(
+          'url' => file_create_url($file->filepath),
+          'length' => $file->filesize,
+          'type' => $file->filemime
+        )
+      );
+    }
   }
 }
 
@@ -407,35 +430,6 @@ function upload_node_delete_revision($node) {
  */
 function upload_node_search_result($node) {
   return isset($node->files) && is_array($node->files) ? format_plural(count($node->files), '1 attachment', '@count attachments') : NULL;
-}
-
-/**
- * Implementation of hook_node_rss_item().
- */
-function upload_node_rss_item($node) {
-  if (is_array($node->files)) {
-    $files = array();
-    foreach ($node->files as $file) {
-      if ($file->list) {
-        $files[] = $file;
-      }
-    }
-    if (count($files) > 0) {
-      // RSS only allows one enclosure per item
-      $file = array_shift($files);
-      return array(
-        array(
-          'key' => 'enclosure',
-          'attributes' => array(
-            'url' => file_create_url($file->filepath),
-            'length' => $file->filesize,
-            'type' => $file->filemime
-          )
-        )
-      );
-    }
-  }
-  return array();
 }
 
 /**

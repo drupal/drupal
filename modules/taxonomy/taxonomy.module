@@ -39,12 +39,28 @@ function taxonomy_theme() {
  * An implementation of hook_node_view().
  */
 function taxonomy_node_view($node) {
-  $links = array();
-  // If previewing, the terms must be converted to objects first.
-  if (isset($node->build_mode) && $node->build_mode == NODE_BUILD_PREVIEW) {
-    $node->taxonomy = taxonomy_preview_terms($node);
+  if (empty($node->taxonomy)) {
+    return;
   }
-  if (!empty($node->taxonomy)) {
+
+  if ($node->build_mode == NODE_BUILD_RSS) {
+    // Provide category information for RSS feeds.
+    foreach ($node->taxonomy as $term) {
+      $node->rss_elements[] = array(
+        'key' => 'category',
+        'value' => $term->name,
+        'attributes' => array('domain' => url(taxonomy_term_path($term), array('absolute' => TRUE))),
+      );
+    }
+  }
+  else {
+    $links = array();
+
+    // If previewing, the terms must be converted to objects first.
+    if ($node->build_mode == NODE_BUILD_PREVIEW) {
+      $node->taxonomy = taxonomy_preview_terms($node);
+    }
+
     foreach ($node->taxonomy as $term) {
       // During preview the free tagging terms are in an array unlike the
       // other terms which are objects. So we have to check if a $term
@@ -69,13 +85,13 @@ function taxonomy_node_view($node) {
         }
       }
     }
-  }
   
-  $node->content['links']['terms'] = array(
-    '#type' => 'node_links',
-    '#value' => $links,
-    '#sorted' => TRUE,
-  );
+    $node->content['links']['terms'] = array(
+      '#type' => 'node_links',
+      '#value' => $links,
+      '#sorted' => TRUE,
+    );
+  }
 }
 
 /**
@@ -1587,23 +1603,6 @@ function taxonomy_node_validate($node, $form) {
       }
     }
   }
-}
-
-/**
- * Implementation of hook_node_rss_item().
- *
- * Provides category information for RSS feeds.
- */
-function taxonomy_node_rss_item($node) {
-  $output = array();
-  foreach ($node->taxonomy as $term) {
-    $output[] = array(
-      'key' => 'category',
-      'value' => $term->name,
-      'attributes' => array('domain' => url(taxonomy_term_path($term), array('absolute' => TRUE))),
-    );
-  }
-  return $output;
 }
 
 /**

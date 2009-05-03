@@ -423,7 +423,14 @@ function comment_node_view($node, $teaser) {
   $links = array();
 
   if ($node->comment) {
-    if ($teaser) {
+    if ($node->build_mode == NODE_BUILD_RSS) {
+      // Add a comments RSS element which is a URL to the comments of this node.
+      $node->rss_elements[] = array(
+        'key' => 'comments',
+        'value' => url('node/' . $node->nid, array('fragment' => 'comments', 'absolute' => TRUE))
+      );
+    }
+    else if ($teaser) {
       // Main page: display the number of comments that have been posted.
       if (user_access('access comments')) {
         if (!empty($node->comment_count)) {
@@ -728,18 +735,6 @@ function comment_update_index() {
 function comment_node_search_result($node) {
   $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
   return format_plural($comments, '1 comment', '@count comments');
-}
-
-/**
- * Implementation of hook_node_rss_item().
- */
-function comment_node_rss_item($node) {
-  if ($node->comment != COMMENT_NODE_HIDDEN) {
-    return array(array('key' => 'comments', 'value' => url('node/' . $node->nid, array('fragment' => 'comments', 'absolute' => TRUE))));
-  }
-  else {
-    return array();
-  }
 }
 
 /**

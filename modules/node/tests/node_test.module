@@ -8,11 +8,28 @@
  */
 
 /**
- * When the module is enabled, text will be added to all nodes in all build modes.
+ * Implementation of hook_node_view().
  */
 function node_test_node_view($node, $teaser) {
-  $node->content['node_test_extra_field'] = array(
-    '#markup' => '<p>' . t('Extra test data added to node !nid.', array('!nid' => $node->nid)) . '</p>',
-    '#weight' => 10,
-  );
+  if ($node->build_mode == NODE_BUILD_RSS) {
+    // Add RSS elements and namespaces when building the RSS feed.
+    $node->rss_elements[] = array(
+      'key' => 'testElement',
+      'value' => t('Value of testElement RSS element for node !nid.', array('!nid' => $node->nid)),
+    );
+    $node->rss_namespaces['xmlns:drupaltest'] = 'http://example.com/test-namespace';
+
+    // Add content that should be displayed only in the RSS feed.
+    $node->content['extra_feed_content'] = array(
+      '#markup' => '<p>' . t('Extra data that should appear only in the RSS feed for node !nid.', array('!nid' => $node->nid)) . '</p>',
+      '#weight' => 10,
+    );
+  }
+
+  if ($node->build_mode != NODE_BUILD_RSS) {
+    // Add content that should NOT be displayed in the RSS feed.
+    $node->content['extra_non_feed_content'] = array(
+      '#markup' => '<p>' . t('Extra data that should appear everywhere except the RSS feed for node !nid.', array('!nid' => $node->nid)) . '</p>',
+    );
+  }
 }

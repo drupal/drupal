@@ -715,7 +715,9 @@ function book_node_view($node, $teaser) {
     }
   }
 
-  book_node_view_link($node, $teaser);
+  if ($node->build_mode != NODE_BUILD_RSS) {
+    book_node_view_link($node, $teaser);
+  }
 }
 
 /**

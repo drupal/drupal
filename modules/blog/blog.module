@@ -97,8 +97,8 @@ function blog_view($node, $teaser) {
  * Implementation of hook_node_view.
  */
 function blog_node_view($node, $teaser = FALSE) {
-  if ($node->type == 'blog') {
-    if (arg(0) != 'blog' || arg(1) != $node->uid) {
+  if ($node->build_mode != NODE_BUILD_RSS) {
+    if ($node->type == 'blog' && arg(0) != 'blog' || arg(1) != $node->uid) {
       $links['blog_usernames_blog'] = array(
         'title' => t("!username's blog", array('!username' => $node->name)),
         'href' => "blog/$node->uid",

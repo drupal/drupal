@@ -287,28 +287,6 @@ function hook_node_prepare_translation($node) {
 }
 
 /**
- * An RSS feed is being generated.
- *
- * The module can return properties to be added to the RSS item generated for
- * this node. This hook should only be used to add XML elements to the RSS
- * feed item itself. See comment_node_rss_item() and upload_node_rss_item()
- * for examples.
- *
- * @param $node
- *   The node the action is being performed on.
- * @return
- *   Extra information to be added to the RSS item.
- */
-function hook_node_rss_item($node) {
-  if ($node->comment != COMMENT_NODE_HIDDEN) {
-    return array(array('key' => 'comments', 'value' => url('node/' . $node->nid, array('fragment' => 'comments', 'absolute' => TRUE))));
-  }
-  else {
-    return array();
-  }
-}
-
-/**
  * The node is being displayed as a search result.
  *
  * If you want to display extra information with the result, return it.
@@ -401,9 +379,20 @@ function hook_node_validate($node, $form) {
 /**
  * The node content is being assembled before rendering.
  *
- * The module may add elements $node->content prior to rendering. This hook
- * will be called after hook_view(). The structure of $node->content is a renderable
- * array as expected by drupal_render().
+ * TODO D7 This needs work to clearly explain the different build modes.
+ *
+ * The module may add elements to $node->content prior to rendering. This hook
+ * will be called after hook_view(). The structure of $node->content is a
+ * renderable array as expected by drupal_render().
+ *
+ * When $node->build_mode is NODE_BUILD_RSS modules can also add extra RSS
+ * elements and namespaces to $node->rss_elements and $node->rss_namespaces
+ * respectively for the RSS item generated for this node. For details on how
+ * this is used @see node_feed()
+ *
+ * @see taxonomy_node_view()
+ * @see upload_node_view()
+ * @see comment_node_view()
  *
  * @param $node
  *   The node the action is being performed on.

@@ -658,10 +658,29 @@ class NodeRSSContentTestCase extends DrupalWebTestCase {
     // Create a node.
     $node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
 
-    $test_text = t('Extra test data added to node !nid.', array('!nid' => $node->nid));
-
     $this->drupalGet('rss.xml');
-    $this->assertText($test_text, t('Extra node content appears in RSS feed.'));
+
+    // Check that content added in NODE_BUILD_RSS appear in RSS feed.
+    $rss_only_content = t('Extra data that should appear only in the RSS feed for node !nid.', array('!nid' => $node->nid));
+    $this->assertText($rss_only_content, t('Node content designated for RSS appear in RSS feed.'));
+
+    // Check that content added in build modes other than NODE_BUILD_RSS doesn't
+    // appear in RSS feed.
+    $non_rss_content = t('Extra data that should appear everywhere except the RSS feed for node !nid.', array('!nid' => $node->nid));
+    $this->assertNoText($non_rss_content, t('Node content not designed for RSS doesn\'t appear in RSS feed.'));
+
+    // Check that extra RSS elements and namespaces are added to RSS feed.
+    $test_element = array(
+      'key' => 'testElement',
+      'value' => t('Value of testElement RSS element for node !nid.', array('!nid' => $node->nid)),
+    );
+    $test_ns = 'xmlns:drupaltest="http://example.com/test-namespace"';
+    $this->assertRaw(format_xml_elements(array($test_element)), t('Extra RSS elements appear in RSS feed.'));
+    $this->assertRaw($test_ns, t('Extra namespaces appear in RSS feed.'));
+
+    // Check that content added in NODE_BUILD_RSS doesn't appear when viewing node.
+    $this->drupalGet("node/$node->nid");
+    $this->assertNoText($rss_only_content, t('Node content designed for RSS doesn\'t appear when viewing node.'));
   }
 }
 
