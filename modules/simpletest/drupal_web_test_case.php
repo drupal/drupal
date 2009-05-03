@@ -644,7 +644,8 @@ class DrupalWebTestCase {
    * Generates a random string of ASCII characters of codes 32 to 126.
    *
    * The generated string includes alpha-numeric characters and common misc
-   * characters.
+   * characters. Use this method when testing general input where the content
+   * is not restricted.
    *
    * @param $length
    *   Length of random string to generate which will be appended to $db_prefix.
@@ -665,7 +666,9 @@ class DrupalWebTestCase {
    * Generates a random string containing letters and numbers.
    *
    * The letters may be upper or lower case. This method is better for
-   * restricted inputs that do not accept certain characters.
+   * restricted inputs that do not accept certain characters. For example,
+   * when testing input fields that require machine readable values (ie without
+   * spaces and non-standard characters) this method is best.
    *
    * @param $length
    *   Length of random string to generate which will be appended to $db_prefix.
@@ -682,7 +685,7 @@ class DrupalWebTestCase {
       $str .= chr($values[mt_rand(0, $max)]);
     }
     return str_replace('simpletest', 's', $db_prefix) . $str;
-   }
+  }
 
   /**
    * Create a user with a given set of permissions. The permissions correspond to the
