@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.10 2009/04/22 09:57:10 dries Exp $
+// $Id: menu.test,v 1.11 2009/05/03 05:06:11 dries Exp $
 
 class MenuTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -373,7 +373,7 @@ class MenuTestCase extends DrupalWebTestCase {
 
     // Unlike most other modules, there is no confirmation message displayed.
     // Verify in the database.
-    $hidden = db_result(db_query("SELECT hidden FROM {menu_links} WHERE mlid = :mlid", array('mlid' => $mlid)));
+    $hidden = db_query("SELECT hidden FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $mlid))->fetchField();
     $this->assertEqual($hidden, 1, t('Link is hidden in the database table'));
   }
 
