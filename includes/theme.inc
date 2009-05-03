@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.480 2009/04/29 08:04:23 dries Exp $
+// $Id: theme.inc,v 1.481 2009/05/03 08:12:12 dries Exp $
 
 /**
  * @file
@@ -1574,21 +1574,6 @@ function theme_list($elements) {
  */
 function theme_more_help_link($url) {
   return '<div class="more-help-link">' . t('<a href="@link">More help</a>', array('@link' => check_url($url))) . '</div>';
-}
-
-/**
- * Return code that emits an XML icon.
- *
- * For most use cases, this function has been superseded by theme_feed_icon().
- *
- * @see theme_feed_icon()
- * @param $url
- *   The url of the feed.
- */
-function theme_xml_icon($url) {
-  if ($image = theme('image', 'misc/xml.png', t('XML feed'), t('XML feed'))) {
-    return '<a href="' . check_url($url) . '" class="xml-icon">' . $image . '</a>';
-  }
 }
 
 /**
