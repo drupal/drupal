@@ -184,7 +184,7 @@ function field_multiple_value_form($field, $instance, $items, &$form, &$form_sta
     }
 
     // Add AHAH add more button, if not working with a programmed form.
-    if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED && empty($form['#programmed'])) {
+    if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED && empty($form_state['programmed'])) {
       // Make sure the form is cached so ahah can work.
       $form['#cache'] = TRUE;
       $bundle_name_url_str = str_replace('_', '-', $instance['bundle']);
@@ -351,7 +351,7 @@ function field_add_more_js($bundle_name, $field_name) {
   }
 
   // Retrieve the cached form.
-  $form_state = array('submitted' => FALSE);
+  $form_state = form_state_defaults();
   $form_build_id = $_POST['form_build_id'];
   $form = form_get_cache($form_build_id, $form_state);
   if (!$form) {
@@ -387,7 +387,7 @@ function field_add_more_js($bundle_name, $field_name) {
   // $form_state, so we use copies of $form and $form_state.
   $form_copy = $form;
   $form_state_copy = $form_state;
-  $form_copy['#post'] = array();
+  $form_state_copy['input'] = array();
   form_builder($_POST['form_id'], $form_copy, $form_state_copy);
   // Just grab the data we need.
   $form_state['values'] = $form_state_copy['values'];
@@ -425,15 +425,12 @@ function field_add_more_js($bundle_name, $field_name) {
   // render the new element.
   $delta = max(array_keys($_POST[$field_name])) + 1;
   $_POST[$field_name][$delta]['_weight'] = $delta;
-  $form_state = array('submitted' => FALSE);
-  $form += array(
-    '#post' => $_POST,
-    '#programmed' => FALSE,
-  );
+  $form_state = form_state_defaults();
+  $form_state['input'] = $_POST;
   $form = form_builder($_POST['form_id'], $form, $form_state);
 
   // Render the new output.
-  // We get fetch the form element from the built $form.
+  // We fetch the form element from the built $form.
   $field_form = $form;
   foreach ($form_path as $key) {
     $field_form = $field_form[$key];
