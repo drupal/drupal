@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.54 2009/04/27 20:19:35 webchick Exp $
+// $Id: drupal.js,v 1.55 2009/05/03 07:35:37 dries Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'locale': {} };
 
@@ -296,16 +296,16 @@ Drupal.getSelection = function (element) {
  * Build an error message from ahah response.
  */
 Drupal.ahahError = function (xmlhttp, uri) {
-  if (xmlhttp.status == 200) {
+  if (xmlhttp.status == 200 || (xmlhttp.status == 500 && xmlhttp.statusText == 'Service unavailable (with message)')) {
     if ($.trim(xmlhttp.responseText)) {
-      var message = Drupal.t('An error occurred. \n@uri\n@text', { '@uri': uri, '@text': xmlhttp.responseText });
+      var message = Drupal.t("An error occurred. \nPath: @uri\nMessage: !text", { '@uri': uri, '!text': xmlhttp.responseText });
     }
     else {
-      var message = Drupal.t('An error occurred. \n@uri\n(no information available).', { '@uri': uri });
+      var message = Drupal.t("An error occurred. \nPath: @uri\n(no information available).", {'@uri': uri });
     }
   }
   else {
-    var message = Drupal.t('An HTTP error @status occurred. \n@uri', { '@uri': uri, '@status': xmlhttp.status });
+    var message = Drupal.t("An HTTP error @status occurred. \nPath: @uri", { '@uri': uri, '@status': xmlhttp.status });
   }
   return message.replace(/\n/g, '<br />');
 };
