@@ -3679,9 +3679,6 @@ function drupal_common_theme() {
     'more_help_link' => array(
       'arguments' => array('url' => NULL),
     ),
-    'xml_icon' => array(
-      'arguments' => array('url' => NULL),
-    ),
     'feed_icon' => array(
       'arguments' => array('url' => NULL, 'title' => NULL),
     ),
