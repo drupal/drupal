@@ -672,21 +672,21 @@ class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
     );
 
     // Set error reporting to collect notices.
-    variable_set('error_level', 2);
+    variable_set('error_level', ERROR_REPORTING_DISPLAY_ALL);
     $this->drupalGet('system-test/generate-warnings');
     $this->assertErrorMessage($error_notice);
     $this->assertErrorMessage($error_warning);
     $this->assertErrorMessage($error_user_notice);
 
     // Set error reporting to not collect notices.
-    variable_set('error_level', 1);
+    variable_set('error_level', ERROR_REPORTING_DISPLAY_SOME);
     $this->drupalGet('system-test/generate-warnings');
     $this->assertNoErrorMessage($error_notice);
     $this->assertErrorMessage($error_warning);
     $this->assertErrorMessage($error_user_notice);
 
     // Set error reporting to not show any errors.
-    variable_set('error_level', 0);
+    variable_set('error_level', ERROR_REPORTING_HIDE);
     $this->drupalGet('system-test/generate-warnings');
     $this->assertNoErrorMessage($error_notice);
     $this->assertNoErrorMessage($error_warning);

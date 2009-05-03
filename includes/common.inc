@@ -10,6 +10,21 @@
  */
 
 /**
+ * Error reporting level: display no errors.
+ */
+define('ERROR_REPORTING_HIDE', 0);
+
+/**
+ * Error reporting level: display errors and warnings.
+ */
+define('ERROR_REPORTING_DISPLAY_SOME', 1);
+
+/**
+ * Error reporting level: display all messages.
+ */
+define('ERROR_REPORTING_DISPLAY_ALL', 2);
+
+/**
  * Return status for saving which involved creating a new item.
  */
 define('SAVED_NEW', 1);
@@ -754,7 +769,7 @@ function _drupal_decode_exception($exception) {
  *   TRUE if the error is fatal.
  */
 function _drupal_log_error($error, $fatal = FALSE) {
-  // Initialize a maintenance theme early if the boostrap was not complete.
+  // Initialize a maintenance theme if the boostrap was not complete.
   // Do it early because drupal_set_message() triggers an init_theme().
   if ($fatal && (drupal_get_bootstrap_phase() != DRUPAL_BOOTSTRAP_FULL)) {
     unset($GLOBALS['theme']);
@@ -781,34 +796,41 @@ function _drupal_log_error($error, $fatal = FALSE) {
     $number++;
   }
 
-  // Force display of error messages in update.php or if the proper error
-  // reporting level is set.
-  $error_level = variable_get('error_level', 2);
-  if ($error_level == 2 || ($error_level == 1 && $error['%type'] != 'Notice') || (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update')) {
-    drupal_set_message(t('%type: %message in %function (line %line of %file).', $error), 'error');
-  }
-
   try {
     watchdog('php', '%type: %message in %function (line %line of %file).', $error, WATCHDOG_ERROR);
   }
   catch (Exception $e) {
-    $new_error = _drupal_decode_exception($e);
-    drupal_set_message(t('%type: %message in %function (line %line of %file).', $new_error), 'error');
+    // Ignore any additional watchdog exception, as that probably means
+    // that the database was not initialized correctly.
   }
 
   if ($fatal) {
-    drupal_set_header('503 Service unavailable');
-    drupal_set_title(t('Error'));
-    if (!defined('MAINTENANCE_MODE') && drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL) {
-      // To conserve CPU and bandwidth, omit the blocks.
-      $page = drupal_get_page(t('The website encountered an unexpected error. Please try again later.'));
-      $page['#show_blocks'] = FALSE;
-      print drupal_render_page($page);
+    drupal_set_header($_SERVER['SERVER_PROTOCOL'] . ' 500 Service unavailable (with message)');
+  }
+
+  if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+    if ($fatal) {
+      // When called from JavaScript, simply output the error message.
+      print t('%type: %message in %function (line %line of %file).', $error);
+      exit;
     }
-    else {
+  }
+  else {
+    // Display the message if the current error reporting level allows this type
+    // of message to be displayed, and unconditionnaly in update.php.
+    $error_level = variable_get('error_level', ERROR_REPORTING_DISPLAY_ALL);
+    $display_error = $error_level == ERROR_REPORTING_DISPLAY_ALL || ($error_level == ERROR_REPORTING_DISPLAY_SOME && $error['%type'] != 'Notice');
+    if ($display_error || (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update')) {
+      drupal_set_message(t('%type: %message in %function (line %line of %file).', $error), 'error');
+    }
+
+    if ($fatal) {
+      drupal_set_title(t('Error'));
+      // We fallback to a maintenance page at this point, because the page generation
+      // itself can generate errors.
       print theme('maintenance_page', t('The website encountered an unexpected error. Please try again later.'), FALSE);
+      exit;
     }
-    exit;
   }
 }
 

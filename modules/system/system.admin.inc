@@ -1268,11 +1268,11 @@ function system_logging_settings() {
   $form['error_level'] = array(
     '#type' => 'radios',
     '#title' => t('Display PHP messages'),
-    '#default_value' => 2,
+    '#default_value' => ERROR_REPORTING_DISPLAY_ALL,
     '#options' => array(
-      0 => t('None'),
-      1 => t('Errors and warnings'),
-      2 => t('All messages'),
+      ERROR_REPORTING_HIDE => t('None'),
+      ERROR_REPORTING_DISPLAY_SOME => t('Errors and warnings'),
+      ERROR_REPORTING_DISPLAY_ALL => t('All messages'),
     ),
   );
 
