@@ -535,6 +535,7 @@ function drupal_install_modules($module_list = array(), $disable_modules_install
 function _drupal_install_module($module) {
   if (drupal_get_installed_schema_version($module, TRUE) == SCHEMA_UNINSTALLED) {
     module_load_install($module);
+    drupal_load('module', $module);
     module_invoke($module, 'install');
     $versions = drupal_get_schema_versions($module);
     drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
