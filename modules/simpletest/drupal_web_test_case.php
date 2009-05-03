@@ -1672,7 +1672,10 @@ class DrupalWebTestCase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertRaw($raw, $message = '%s found', $group = 'Other') {
+  protected function assertRaw($raw, $message = '', $group = 'Other') {
+    if (!$message) {
+      $message = t('Raw "@raw" found', array('@raw' => check_plain($raw)));
+    }
     return $this->assert(strpos($this->content, $raw) !== FALSE, $message, $group);
   }
 
@@ -1689,7 +1692,10 @@ class DrupalWebTestCase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoRaw($raw, $message = '%s found', $group = 'Other') {
+  protected function assertNoRaw($raw, $message = '', $group = 'Other') {
+    if (!$message) {
+      $message = t('Raw "@raw" not found', array('@raw' => check_plain($raw)));
+    }
     return $this->assert(strpos($this->content, $raw) === FALSE, $message, $group);
   }
 
@@ -1750,7 +1756,7 @@ class DrupalWebTestCase {
       $this->plainTextContent = filter_xss($this->content, array());
     }
     if (!$message) {
-      $message = '"' . $text . '"' . ($not_exists ? ' not found' : ' found');
+      $message = !$not_exists ? t('"@text" found', array('@text' => $text)) : t('"@text" not found', array('@text' => $text));
     }
     return $this->assert($not_exists == (strpos($this->plainTextContent, $text) === FALSE), $message, $group);
   }
@@ -1839,7 +1845,10 @@ class DrupalWebTestCase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertPattern($pattern, $message = 'Pattern %s found', $group = 'Other') {
+  protected function assertPattern($pattern, $message = '', $group = 'Other') {
+    if (!$message) {
+      $message = t('Pattern "@pattern" found', array('@pattern' => $pattern));
+    }
     return $this->assert((bool) preg_match($pattern, $this->drupalGetContent()), $message, $group);
   }
 
@@ -1855,7 +1864,10 @@ class DrupalWebTestCase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoPattern($pattern, $message = 'Pattern %s not found', $group = 'Other') {
+  protected function assertNoPattern($pattern, $message = '', $group = 'Other') {
+    if (!$message) {
+      $message = t('Pattern "@pattern" not found', array('@pattern' => $pattern));
+    }
     return $this->assert(!preg_match($pattern, $this->drupalGetContent()), $message, $group);
   }
 
