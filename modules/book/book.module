@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.491 2009/04/27 07:08:00 dries Exp $
+// $Id: book.module,v 1.492 2009/05/03 10:11:34 dries Exp $
 
 /**
  * @file
@@ -715,7 +715,9 @@ function book_node_view($node, $teaser) {
     }
   }
 
-  book_node_view_link($node, $teaser);
+  if ($node->build_mode != NODE_BUILD_RSS) {
+    book_node_view_link($node, $teaser);
+  }
 }
 
 /**

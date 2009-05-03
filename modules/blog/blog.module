@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.318 2009/04/15 13:50:07 dries Exp $
+// $Id: blog.module,v 1.319 2009/05/03 10:11:33 dries Exp $
 
 /**
  * @file
@@ -97,8 +97,8 @@ function blog_view($node, $teaser) {
  * Implementation of hook_node_view.
  */
 function blog_node_view($node, $teaser = FALSE) {
-  if ($node->type == 'blog') {
-    if (arg(0) != 'blog' || arg(1) != $node->uid) {
+  if ($node->build_mode != NODE_BUILD_RSS) {
+    if ($node->type == 'blog' && arg(0) != 'blog' || arg(1) != $node->uid) {
       $links['blog_usernames_blog'] = array(
         'title' => t("!username's blog", array('!username' => $node->name)),
         'href' => "blog/$node->uid",
