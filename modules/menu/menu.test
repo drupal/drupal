@@ -373,7 +373,7 @@ class MenuTestCase extends DrupalWebTestCase {
 
     // Unlike most other modules, there is no confirmation message displayed.
     // Verify in the database.
-    $hidden = db_result(db_query("SELECT hidden FROM {menu_links} WHERE mlid = :mlid", array('mlid' => $mlid)));
+    $hidden = db_query("SELECT hidden FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $mlid))->fetchField();
     $this->assertEqual($hidden, 1, t('Link is hidden in the database table'));
   }
 
