@@ -868,7 +868,7 @@ function taxonomy_node_type($op, $info) {
  */
 function taxonomy_get_related($tid, $key = 'tid') {
   if ($tid) {
-    $result = db_query('SELECT t.*, tid1, tid2 FROM {taxonomy_term_relation}, {taxonomy_term_data} t WHERE (t.tid = tid1 OR t.tid = tid2) AND (tid1 = :tid1 OR tid2 = :tid2) AND t.tid != :tid ORDER BY weight, name', array(':tid' => $tid, ':tid1' => $tid, 'tid2' => $tid));
+    $result = db_query('SELECT t.*, tid1, tid2 FROM {taxonomy_term_relation}, {taxonomy_term_data} t WHERE (t.tid = tid1 OR t.tid = tid2) AND (tid1 = :tid1 OR tid2 = :tid2) AND t.tid != :tid ORDER BY weight, name', array(':tid' => $tid, ':tid1' => $tid, ':tid2' => $tid));
     $related = array();
     foreach ($result as $term) {
       $related[$term->$key] = $term;
