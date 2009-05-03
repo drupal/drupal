@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.87 2009/04/02 20:39:44 dries Exp $
+// $Id: install.inc,v 1.88 2009/05/03 19:38:53 webchick Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -535,6 +535,7 @@ function drupal_install_modules($module_list = array(), $disable_modules_install
 function _drupal_install_module($module) {
   if (drupal_get_installed_schema_version($module, TRUE) == SCHEMA_UNINSTALLED) {
     module_load_install($module);
+    drupal_load('module', $module);
     module_invoke($module, 'install');
     $versions = drupal_get_schema_versions($module);
     drupal_set_installed_schema_version($module, $versions ? max($versions) : SCHEMA_INSTALLED);
