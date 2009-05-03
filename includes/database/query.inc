@@ -829,6 +829,38 @@ class DeleteQuery extends Query implements QueryConditionInterface {
   }
 }
 
+
+/**
+ * General class for an abstracted TRUNCATE operation.
+ */
+class TruncateQuery extends Query {
+
+  /**
+   * The table from which to delete.
+   *
+   * @var string
+   */
+  protected $table;
+
+  public function __construct(DatabaseConnection $connection, $table, array $options = array()) {
+    $options['return'] = Database::RETURN_AFFECTED;
+    parent::__construct($connection, $options);
+    $this->table = $table;
+  }
+
+  public function compile(DatabaseConnection $connection) {
+    return $this->condition->compile($connection);
+  }
+
+  public function execute() {
+    return $this->connection->query((string)$this, array(), $this->queryOptions);
+  }
+
+  public function __toString() {
+    return 'TRUNCATE {' . $this->connection->escapeTable($this->table) . '} ';
+  }
+}
+
 /**
  * General class for an abstracted UPDATE operation.
  */

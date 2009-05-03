@@ -136,5 +136,17 @@ class DeleteQuery_sqlite extends DeleteQuery {
 }
 
 /**
+ * SQLite specific implementation of TruncateQuery.
+ *
+ * SQLite doesn't support TRUNCATE, but a DELETE query with no condition has
+ * exactly the effect (it is implemented by DROPing the table).
+ */
+class TruncateQuery_sqlite extends TruncateQuery {
+  public function __toString() {
+    return 'DELETE FROM {' . $this->connection->escapeTable($this->table) . '} ';
+  }
+}
+
+/**
  * @} End of "ingroup database".
  */

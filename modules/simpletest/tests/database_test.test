@@ -847,19 +847,22 @@ class DatabaseUpdateLOBTestCase extends DatabaseTestCase {
 }
 
 /**
- * Delete tests.
+ * Delete/Truncate tests.
  *
  * The DELETE tests are not as extensive, as all of the interesting code for
  * DELETE queries is in the conditional which is identical to the UPDATE and
  * SELECT conditional handling.
  *
+ * The TRUNCATE tests are not extensive either, because the behavior of
+ * TRUNCATE queries is not consistent across database engines. We only test
+ * that a TRUNCATE query actually deletes all rows from the target table.
  */
-class DatabaseDeleteTestCase extends DatabaseTestCase {
+class DatabaseDeleteTruncateTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Delete tests'),
-      'description' => t('Test the Delete query builder.'),
+      'name' => t('Delete/Truncate tests'),
+      'description' => t('Test the Delete and Truncate query builders.'),
       'group' => t('Database'),
     );
   }
@@ -875,6 +878,19 @@ class DatabaseDeleteTestCase extends DatabaseTestCase {
 
     $num_records_after = db_query("SELECT COUNT(*) FROM {test}")->fetchField();
     $this->assertEqual($num_records_before, $num_records_after + $num_deleted, t('Deletion adds up.'));
+  }
+
+
+  /**
+   * Confirm that we can truncate a whole table successfully.
+   */
+  function testTruncate() {
+    $num_records_before = db_query("SELECT COUNT(*) FROM {test}")->fetchField();
+
+    db_truncate('test')->execute();
+
+    $num_records_after = db_query("SELECT COUNT(*) FROM {test}")->fetchField();
+    $this->assertEqual(0, $num_records_after, t('Truncate really deletes everything.'));
   }
 }
 
