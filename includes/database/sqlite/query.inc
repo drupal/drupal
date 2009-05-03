@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.4 2009/04/20 20:02:31 dries Exp $
+// $Id: query.inc,v 1.5 2009/05/03 08:55:06 dries Exp $
 
 /**
  * @file
@@ -132,6 +132,18 @@ class DeleteQuery_sqlite extends DeleteQuery {
     else {
       return parent::execute();
     }
+  }
+}
+
+/**
+ * SQLite specific implementation of TruncateQuery.
+ *
+ * SQLite doesn't support TRUNCATE, but a DELETE query with no condition has
+ * exactly the effect (it is implemented by DROPing the table).
+ */
+class TruncateQuery_sqlite extends TruncateQuery {
+  public function __toString() {
+    return 'DELETE FROM {' . $this->connection->escapeTable($this->table) . '} ';
   }
 }
 

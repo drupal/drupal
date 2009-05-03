@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.52 2009/04/20 20:02:30 dries Exp $
+// $Id: database.inc,v 1.53 2009/05/03 08:55:06 dries Exp $
 
 /**
  * @file
@@ -253,6 +253,13 @@ abstract class DatabaseConnection extends PDO {
    * @var string
    */
   protected $deleteClass = NULL;
+
+  /**
+   * The name of the Truncate class for this connection.
+   *
+   * @var string
+   */
+  protected $truncateClass = NULL;
 
   /**
    * The name of the Insert class for this connection.
@@ -759,6 +766,26 @@ abstract class DatabaseConnection extends PDO {
       }
     }
     $class = $this->deleteClass;
+    return new $class($this, $table, $options);
+  }
+
+  /**
+   * Prepare and return a TRUNCATE query object.
+   *
+   * @see TruncateQuery
+   * @param $options
+   *   An array of options on the query.
+   * @return
+   *   A new DeleteQuery object.
+   */
+  public function truncate($table, array $options = array()) {
+    if (empty($this->truncateClass)) {
+      $this->truncateClass = 'TruncateQuery_' . $this->driver();
+      if (!class_exists($this->truncateClass)) {
+        $this->truncateClass = 'TruncateQuery';
+      }
+    }
+    $class = $this->truncateClass;
     return new $class($this, $table, $options);
   }
 
@@ -1878,6 +1905,23 @@ function db_delete($table, array $options = array()) {
     $options['target'] = 'default';
   }
   return Database::getConnection($options['target'])->delete($table, $options);
+}
+
+/**
+ * Returns a new TruncateQuery object for the active database.
+ *
+ * @param $table
+ *   The table from which to delete.
+ * @param $options
+ *   An array of options to control how the query operates.
+ * @return
+ *   A new TruncateQuery object for this connection.
+ */
+function db_truncate($table, array $options = array()) {
+  if (empty($options['target']) || $options['target'] == 'slave') {
+    $options['target'] = 'default';
+  }
+  return Database::getConnection($options['target'])->truncate($table, $options);
 }
 
 /**

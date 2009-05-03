@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.20 2009/04/20 20:02:30 dries Exp $
+// $Id: query.inc,v 1.21 2009/05/03 08:55:06 dries Exp $
 
 /**
  * @ingroup database
@@ -826,6 +826,38 @@ class DeleteQuery extends Query implements QueryConditionInterface {
     }
 
     return $query;
+  }
+}
+
+
+/**
+ * General class for an abstracted TRUNCATE operation.
+ */
+class TruncateQuery extends Query {
+
+  /**
+   * The table from which to delete.
+   *
+   * @var string
+   */
+  protected $table;
+
+  public function __construct(DatabaseConnection $connection, $table, array $options = array()) {
+    $options['return'] = Database::RETURN_AFFECTED;
+    parent::__construct($connection, $options);
+    $this->table = $table;
+  }
+
+  public function compile(DatabaseConnection $connection) {
+    return $this->condition->compile($connection);
+  }
+
+  public function execute() {
+    return $this->connection->query((string)$this, array(), $this->queryOptions);
+  }
+
+  public function __toString() {
+    return 'TRUNCATE {' . $this->connection->escapeTable($this->table) . '} ';
   }
 }
 
