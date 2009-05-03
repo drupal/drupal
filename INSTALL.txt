@@ -14,11 +14,13 @@ CONTENTS OF THIS FILE
 REQUIREMENTS
 ------------
 
-Drupal requires a web server, PHP 5 (5.2.0 or greater) (http://www.php.net/) and
-either MySQL (http://www.mysql.com/) or PostgreSQL (http://www.postgresql.org/).
-The Apache web server and MySQL database are recommended; other web server and
-database combinations such as IIS and PostgreSQL have been tested to a lesser
-extent. When using MySQL, version 5.0 or greater is required.
+Drupal requires:
+
+ - a web server, Apache (version 2.0 or greater) is recommended,
+ - PHP 5 (5.2.0 or greater) (http://www.php.net/),
+ - and either MySQL (5.0 or greater) (http://www.mysql.com/), PostgreSQL (8.3
+   or greater) (http://www.postgresql.org/), or SQLite (3.4.2 or greater)
+   (http://www.sqlite.org/).
 
 For more detailed information about Drupal requirements, see "Requirements"
 (http://drupal.org/requirements) in the Drupal handbook.
