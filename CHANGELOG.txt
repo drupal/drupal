@@ -1,9 +1,10 @@
-// $Id: CHANGELOG.txt,v 1.305 2009/04/30 21:44:18 dries Exp $
+// $Id: CHANGELOG.txt,v 1.306 2009/05/03 05:03:44 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
 - Database:
     * Fully rewritten database layer utilizing PHP 5's PDO abstraction layer.
+    * Drupal now requires MySQL >= 5.0 or PostgreSQL >= 8.3.
     * Added query builders for INSERT, UPDATE, DELETE, MERGE, and SELECT queries.
     * Support for master/slave replication, transactions, multi-insert queries,
       delayed inserts, and other features.
