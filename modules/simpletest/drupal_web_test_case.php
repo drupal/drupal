@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.102 2009/05/03 09:30:21 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.103 2009/05/03 20:01:11 webchick Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -644,7 +644,8 @@ class DrupalWebTestCase {
    * Generates a random string of ASCII characters of codes 32 to 126.
    *
    * The generated string includes alpha-numeric characters and common misc
-   * characters.
+   * characters. Use this method when testing general input where the content
+   * is not restricted.
    *
    * @param $length
    *   Length of random string to generate which will be appended to $db_prefix.
@@ -665,7 +666,9 @@ class DrupalWebTestCase {
    * Generates a random string containing letters and numbers.
    *
    * The letters may be upper or lower case. This method is better for
-   * restricted inputs that do not accept certain characters.
+   * restricted inputs that do not accept certain characters. For example,
+   * when testing input fields that require machine readable values (ie without
+   * spaces and non-standard characters) this method is best.
    *
    * @param $length
    *   Length of random string to generate which will be appended to $db_prefix.
@@ -682,7 +685,7 @@ class DrupalWebTestCase {
       $str .= chr($values[mt_rand(0, $max)]);
     }
     return str_replace('simpletest', 's', $db_prefix) . $str;
-   }
+  }
 
   /**
    * Create a user with a given set of permissions. The permissions correspond to the
