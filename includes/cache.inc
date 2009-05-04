@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.30 2009/04/22 09:45:02 dries Exp $
+// $Id: cache.inc,v 1.31 2009/05/04 10:40:10 dries Exp $
 
 /**
  * Return data from the persistent cache. Data may be stored as either plain
@@ -188,7 +188,7 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
   else {
     if ($wildcard) {
       if ($cid == '*') {
-        db_delete($table)->execute();
+        db_truncate($table)->execute();
       }
       else {
         db_delete($table)
