@@ -417,13 +417,28 @@ function xmlrpc_base64_get_xml($xmlrpc_base64) {
 }
 
 /**
- * Execute an XML remote procedural call. This is private function; call xmlrpc()
- * in common.inc instead of this function.
+ * Performs one or more XML-RPC request(s).
  *
+ * @param $url
+ *   An absolute URL of the XML-RPC endpoint.
+ *     Example:
+ *     http://www.example.com/xmlrpc.php
+ * @param ...
+ *   For one request:
+ *     The method name followed by a variable number of arguments to the method.
+ *   For multiple requests (system.multicall):
+ *     An array of call arrays. Each call array follows the pattern of the single
+ *     request: method name followed by the arguments to the method.
  * @return
- *   A $xmlrpc_message object if the call succeeded; FALSE if the call failed
+ *   For one request:
+ *     Either the return value of the method on success, or FALSE.
+ *     If FALSE is returned, see xmlrpc_errno() and xmlrpc_error_msg().
+ *   For multiple requests:
+ *     An array of results. Each result will either be the result
+ *     returned by the method called, or an xmlrpc_error object if the call
+ *     failed. See xmlrpc_error().
  */
-function _xmlrpc() {
+function xmlrpc() {
   $args = func_get_args();
   $url = array_shift($args);
   if (is_array($args[0])) {

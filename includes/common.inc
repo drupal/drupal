@@ -2980,34 +2980,6 @@ function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
   return (($skip_anonymous && $user->uid == 0) || ($token == md5(session_id() . $value . variable_get('drupal_private_key', ''))));
 }
 
-/**
- * Performs one or more XML-RPC request(s).
- *
- * @param $url
- *   An absolute URL of the XML-RPC endpoint.
- *     Example:
- *     http://www.example.com/xmlrpc.php
- * @param ...
- *   For one request:
- *     The method name followed by a variable number of arguments to the method.
- *   For multiple requests (system.multicall):
- *     An array of call arrays. Each call array follows the pattern of the single
- *     request: method name followed by the arguments to the method.
- * @return
- *   For one request:
- *     Either the return value of the method on success, or FALSE.
- *     If FALSE is returned, see xmlrpc_errno() and xmlrpc_error_msg().
- *   For multiple requests:
- *     An array of results. Each result will either be the result
- *     returned by the method called, or an xmlrpc_error object if the call
- *     failed. See xmlrpc_error().
- */
-function xmlrpc($url) {
-  require_once DRUPAL_ROOT . '/includes/xmlrpc.inc';
-  $args = func_get_args();
-  return call_user_func_array('_xmlrpc', $args);
-}
-
 function _drupal_bootstrap_full() {
   static $called;
 

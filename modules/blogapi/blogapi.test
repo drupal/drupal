@@ -12,6 +12,9 @@ class BlogAPITestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('blog', 'blogapi', 'taxonomy');
+
+    // Force loading the xmlrpc.inc to have the xmlrpc() function.
+    drupal_function_exists('xmlrpc');
   }
 
   /**
