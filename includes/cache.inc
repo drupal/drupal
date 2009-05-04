@@ -188,7 +188,7 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
   else {
     if ($wildcard) {
       if ($cid == '*') {
-        db_delete($table)->execute();
+        db_truncate($table)->execute();
       }
       else {
         db_delete($table)
