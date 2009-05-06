@@ -294,8 +294,9 @@ function _batch_process() {
       $progress_message = $old_set['progress_message'];
     }
 
-    $current    = $total - $remaining + $finished;
-    $percentage = $total ? floor($current / $total * 100) : 100;
+    $current = $total - $remaining + $finished;
+    $percentage = _batch_api_percentage($total, $current);
+
     $elapsed    = $current_set['elapsed'];
     // Estimate remaining with percentage in floating format.
     $estimate   = $elapsed * ($total - $current) / $current;
@@ -321,6 +322,34 @@ function _batch_process() {
     // If we are not in progressive mode, the entire batch has been processed.
     return _batch_finished();
   }
+}
+
+/**
+ * Helper function for _batch_process(): returns the formatted percentage.
+ *
+ * @param $total
+ *   The total number of operations.
+ * @param $current
+ *   The number of the current operation.
+ * @return
+ *   The properly formatted percentage, as a string. We output percentages
+ *   using the correct number of decimal places so that we never print "100%"
+ *   until we are finished, but we also never print more decimal places than
+ *   are meaningful.
+ */
+function _batch_api_percentage($total, $current) {
+  if (!$total || $total == $current) {
+    // If $total doesn't evaluate as true or is equal to the current set, then
+    // we're finished, and we can return "100".
+    $percentage = "100";
+  }
+  else {
+    // We add a new digit at 200, 2000, etc. (since, for example, 199/200
+    // would round up to 100% if we didn't).
+    $decimal_places = max(0, floor(log10($total / 2.0)) - 1);
+    $percentage = sprintf('%01.' . $decimal_places . 'f', round($current / $total * 100, $decimal_places));
+  }
+  return $percentage;
 }
 
 /**
