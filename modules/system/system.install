@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.319 2009/04/30 21:44:18 dries Exp $
+// $Id: system.install,v 1.320 2009/05/06 10:37:28 dries Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -1050,6 +1050,67 @@ function system_schema() {
       'router_path' => array(array('router_path', 128)),
     ),
     'primary key' => array('mlid'),
+  );
+
+  $schema['queue'] = array(
+    'description' => 'Stores items in queues.',
+    'fields' => array(
+      'item_id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique item ID.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The queue name.',
+      ),
+      'consumer_id' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The ID of the dequeuing consumer.',
+      ),
+      'data' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'serialize' => TRUE,
+        'description' => 'The arbitrary data for the item.',
+      ),
+      'expire' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp when the claim lease expires on the item.',
+      ),
+      'created' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp when the item was created.',
+      ),
+    ),
+    'primary key' => array('item_id'),
+    'indexes' => array(
+      'consumer_queue' => array('consumer_id', 'name', 'created'),
+      'consumer_expire' => array('consumer_id', 'expire'),
+    ),
+  );
+
+  $schema['queue_consumer_id'] = array(
+    'description' => 'Stores queue consumer IDs, used to auto-increment the consumer ID so that a unique consumer ID is used.',
+    'fields' => array(
+      'consumer_id'  => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique consumer ID used to make sure only one consumer gets one item.',
+      ),
+    ),
+    'primary key' => array('consumer_id'),
   );
 
   $schema['registry'] = array(
@@ -3294,6 +3355,76 @@ function system_update_7021() {
   
   // Rebuild theme data, so the new 'help' region is identified.
   _system_theme_data();
+
+  return $ret;
+}
+
+/**
+ * Add the queue tables.
+ */
+function system_update_7022() {
+  $schema['queue'] = array(
+    'description' => 'Stores items in queues.',
+    'fields' => array(
+      'item_id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique item ID.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The queue name.',
+      ),
+      'consumer_id' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The ID of the dequeuing consumer.',
+      ),
+      'data' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'serialize' => TRUE,
+        'description' => 'The arbitrary data for the item.',
+      ),
+      'expire' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp when the claim lease expires on the item.',
+      ),
+      'created' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp when the item was created.',
+      ),
+    ),
+    'primary key' => array('item_id'),
+    'indexes' => array(
+      'consumer_queue' => array('consumer_id', 'name', 'created'),
+      'consumer_expire' => array('consumer_id', 'expire'),
+    ),
+  );
+
+  $schema['queue_consumer_id'] = array(
+    'description' => 'Stores queue consumer IDs, used to auto-incrament the consumer ID so that a unique consumer ID is used.',
+    'fields' => array(
+      'consumer_id'  => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique consumer ID used to make sure only one consumer gets one item.',
+      ),
+    ),
+    'primary key' => array('consumer_id'),
+  );
+  db_create_table($ret, 'queue', $schema['queue']);
+  db_create_table($ret, 'queue_consumer_id', $schema['queue_consumer_id']);
 
   return $ret;
 }
