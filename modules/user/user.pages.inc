@@ -201,7 +201,7 @@ function template_preprocess_user_profile(&$variables) {
   $variables['user_profile'] = implode($variables['profile']);
 
   // Add $FIELD_NAME_rendered variables for fields.
-  $variables += field_attach_preprocess('user', $variables['account']);
+  $variables += field_attach_preprocess('user', $account);
 }
 
 /**
