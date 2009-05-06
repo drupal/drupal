@@ -186,10 +186,3 @@ function block_install() {
 function block_uninstall() {
   drupal_uninstall_schema('block');
 }
-
-/**
- * Refresh the block cache.
- */
-function block_update_7000() {
-  return array();
-}
