@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.21 2009/04/26 16:30:28 dries Exp $
+// $Id: block.install,v 1.22 2009/05/06 10:39:42 dries Exp $
 
 /**
  * @file
@@ -185,11 +185,4 @@ function block_install() {
  */
 function block_uninstall() {
   drupal_uninstall_schema('block');
-}
-
-/**
- * Refresh the block cache.
- */
-function block_update_7000() {
-  return array();
 }
