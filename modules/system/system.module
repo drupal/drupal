@@ -1587,6 +1587,16 @@ function system_cron() {
   foreach ($cache_tables as $table) {
     cache_clear_all(NULL, $table);
   }
+
+  // Reset expired items in the default queue implementation table. If that's
+  // not used, this will simply be a no-op.
+  db_update('queue')
+    ->fields(array(
+      'consumer_id' => 0,
+      'expire' => 0,
+    ))
+    ->condition('expire', REQUEST_TIME, '<')
+    ->execute();
 }
 
 /**
