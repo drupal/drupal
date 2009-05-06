@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.31 2009/04/28 00:27:06 webchick Exp $
+// $Id: system.api.php,v 1.32 2009/05/06 11:30:19 dries Exp $
 
 /**
  * @file
@@ -454,7 +454,8 @@ function hook_link($type, $object, $teaser = FALSE) {
 
 /**
  * Perform alterations before links on a comment are rendered. One popular use of
- * this hook is to add/delete links from other modules.
+ * this hook is to modify/remove links from other modules. If you want to add a link 
+ * to the links section of a node, use hook_link instead.
  *
  * @param $links
  *   Nested array of links for the node keyed by providing module.
