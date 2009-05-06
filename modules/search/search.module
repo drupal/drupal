@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.288 2009/04/20 21:28:15 dries Exp $
+// $Id: search.module,v 1.289 2009/05/06 10:48:01 dries Exp $
 
 /**
  * @file
@@ -1098,7 +1098,8 @@ function search_form(&$form_state, $action = '', $keys = '', $type = NULL, $prom
  *
  * @ingroup forms
  * @see search_box_form_submit()
- * @see theme_search_box_form()
+ * @see search-theme-form.tpl.php
+ * @see search-block-form.tpl.php
  */
 function search_box(&$form_state, $form_id) {
   $form[$form_id] = array(
