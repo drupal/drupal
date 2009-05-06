@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.34 2009/04/20 04:41:35 webchick Exp $
+// $Id: user.pages.inc,v 1.35 2009/05/06 11:31:44 dries Exp $
 
 /**
  * @file
@@ -201,7 +201,7 @@ function template_preprocess_user_profile(&$variables) {
   $variables['user_profile'] = implode($variables['profile']);
 
   // Add $FIELD_NAME_rendered variables for fields.
-  $variables += field_attach_preprocess('user', $variables['account']);
+  $variables += field_attach_preprocess('user', $account);
 }
 
 /**
