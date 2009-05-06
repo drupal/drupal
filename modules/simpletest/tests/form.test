@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.9 2009/04/29 07:18:04 dries Exp $
+// $Id: form.test,v 1.10 2009/05/06 19:56:21 webchick Exp $
 
 /**
  * @file
@@ -395,7 +395,7 @@ class FormAPITestCase extends DrupalWebTestCase {
  */
 class FormsFormStorageTestCase extends DrupalWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name'  => t('Multistep form using form storage'),
       'description'  => t('Tests a multistep form using form storage and makes sure validation and caching works right.'),

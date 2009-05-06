@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.test,v 1.1 2009/04/15 20:45:46 webchick Exp $
+// $Id: theme.test,v 1.2 2009/05/06 19:56:21 webchick Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  * Unit tests for the theme API.
  */
 class TemplateUnitTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Theme API'),
       'description' => t('Test low-level theme template functions.'),
