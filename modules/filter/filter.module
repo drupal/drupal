@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.248 2009/04/25 18:01:10 dries Exp $
+// $Id: filter.module,v 1.249 2009/05/06 10:49:08 dries Exp $
 
 /**
  * @file
@@ -468,7 +468,6 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $c
  * Generate a selector for choosing a format in a form.
  *
  * @ingroup forms
- * @see filter_form_validate()
  * @param $value
  *   The ID of the format that is currently selected.
  * @param $weight
