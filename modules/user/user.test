@@ -979,7 +979,7 @@ class UserBlocksUnitTests extends DrupalWebTestCase {
  */
 class UserSaveTestCase extends DrupalWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('User save test'),
       'description' => t('Test user_save() for arbitrary new uid.'),

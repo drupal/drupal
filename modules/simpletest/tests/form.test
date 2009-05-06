@@ -395,7 +395,7 @@ class FormAPITestCase extends DrupalWebTestCase {
  */
 class FormsFormStorageTestCase extends DrupalWebTestCase {
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name'  => t('Multistep form using form storage'),
       'description'  => t('Tests a multistep form using form storage and makes sure validation and caching works right.'),

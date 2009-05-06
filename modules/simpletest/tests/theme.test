@@ -10,7 +10,7 @@
  * Unit tests for the theme API.
  */
 class TemplateUnitTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Theme API'),
       'description' => t('Test low-level theme template functions.'),

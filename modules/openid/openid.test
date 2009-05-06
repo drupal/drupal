@@ -7,7 +7,7 @@
 class OpenIDFunctionalTest extends DrupalWebTestCase {
   protected $web_user;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('OpenID login and account registration'),
       'description' => t("Adds an identity to a user's profile and uses it to log in, creates a user account using auto-registration."),
@@ -162,7 +162,7 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
  * Test internal helper functions.
  */
 class OpenIDUnitTest extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('OpenID helper functions'),
       'description' => t('Test OpenID helper functions.'),

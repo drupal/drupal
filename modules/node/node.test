@@ -689,7 +689,7 @@ class NodeRSSContentTestCase extends DrupalWebTestCase {
  */
 class NodeSaveTestCase extends DrupalWebTestCase {
   
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Node save'),
       'description' => t('Test node_save() for saving content.'),
