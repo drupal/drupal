@@ -449,7 +449,7 @@ function theme_upload_attachments($elements) {
     }
   }
   if (count($rows)) {
-    return theme('table', $header, $rows, array('id' => 'attachments'));
+    return theme('table', $header, $rows, array('class' => 'attachments'));
   }
 }
 
