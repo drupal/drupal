@@ -101,10 +101,10 @@ function contact_menu() {
   );
   $items['user/%user/contact'] = array(
     'title' => 'Contact',
-    'page callback' => 'contact_user_page',
+    'page callback' => 'contact_personal_page',
     'page arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
-    'access callback' => '_contact_user_tab_access',
+    'access callback' => '_contact_personal_tab_access',
     'access arguments' => array(1),
     'weight' => 2,
   );
@@ -112,9 +112,9 @@ function contact_menu() {
 }
 
 /**
- * Determine if a user can access to the contact tab.
+ * Determine permission to a user's personal contact form.
  */
-function _contact_user_tab_access($account) {
+function _contact_personal_tab_access($account) {
   global $user;
   if (!isset($account->contact)) {
     $account->contact = FALSE;

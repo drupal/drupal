@@ -23,13 +23,16 @@ function contact_site_page() {
     }
   }
   else {
-    $output = drupal_get_form('contact_mail_page');
+    $output = drupal_get_form('contact_site_form');
   }
 
   return $output;
 }
 
-function contact_mail_page() {
+/*
+ * Form builder; the site-wide contact form.
+ */
+function contact_site_form() {
   global $user;
 
   $categories = db_query("SELECT cid, category FROM {contact} ORDER BY weight, category")->fetchAllKeyed();
@@ -96,9 +99,9 @@ function contact_mail_page() {
 }
 
 /**
- * Validate the site-wide contact page form submission.
+ * Form validation handler for contact_site_form().
  */
-function contact_mail_page_validate($form, &$form_state) {
+function contact_site_form_validate($form, &$form_state) {
   if (!$form_state['values']['cid']) {
     form_set_error('cid', t('You must select a valid category.'));
   }
@@ -108,9 +111,9 @@ function contact_mail_page_validate($form, &$form_state) {
 }
 
 /**
- * Process the site-wide contact page form submission.
+ * Form submission handler for contact_site_form().
  */
-function contact_mail_page_submit($form, &$form_state) {
+function contact_site_form_submit($form, &$form_state) {
   global $language;
 
   $values = $form_state['values'];
@@ -148,7 +151,7 @@ function contact_mail_page_submit($form, &$form_state) {
 /**
  * Personal contact page.
  */
-function contact_user_page($account) {
+function contact_personal_page($account) {
   global $user;
 
   if (!valid_email_address($user->mail)) {
@@ -159,13 +162,16 @@ function contact_user_page($account) {
   }
   else {
     drupal_set_title($account->name);
-    $output = drupal_get_form('contact_mail_user', $account);
+    $output = drupal_get_form('contact_personal_form', $account);
   }
 
   return $output;
 }
 
-function contact_mail_user(&$form_state, $recipient) {
+/*
+ * Form builder; the personal contact form.
+ */
+function contact_personal_form(&$form_state, $recipient) {
   global $user;
   $form['#token'] = $user->name . $user->mail;
   $form['recipient'] = array('#type' => 'value', '#value' => $recipient);
@@ -197,9 +203,9 @@ function contact_mail_user(&$form_state, $recipient) {
 }
 
 /**
- * Process the personal contact page form submission.
+ * Form submission handler for contact_personal_form().
  */
-function contact_mail_user_submit($form, &$form_state) {
+function contact_personal_form_submit($form, &$form_state) {
   global $user, $language;
 
   $account = $form_state['values']['recipient'];
