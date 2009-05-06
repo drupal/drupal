@@ -468,7 +468,6 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $c
  * Generate a selector for choosing a format in a form.
  *
  * @ingroup forms
- * @see filter_form_validate()
  * @param $value
  *   The ID of the format that is currently selected.
  * @param $weight
