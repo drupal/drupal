@@ -1,5 +1,5 @@
 <?php
-// $Id: mail.inc,v 1.19 2009/03/30 05:32:31 webchick Exp $
+// $Id: mail.inc,v 1.20 2009/05/07 10:41:12 dries Exp $
 
 /**
  * Compose and optionally send an e-mail message.
@@ -45,7 +45,7 @@
  *     switch($key) {
  *       case 'notice':
  *         $message['subject'] = t('Notification from !site', $variables, $language->language);
- *         $message['body'] = t("Dear !username\n\nThere is new content available on the site.", $variables, $language->language);
+ *         $message['body'][] = t("Dear !username\n\nThere is new content available on the site.", $variables, $language->language);
  *         break;
  *     }
  *   }
