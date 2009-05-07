@@ -61,6 +61,12 @@ class MenuTestCase extends DrupalWebTestCase {
     $old_title = $item['link_title'];
     $this->modifyMenuLink($item);
     $item = menu_link_load($item['mlid']);
+    // Verify that a change to the description is saved.
+    $description = $this->randomName(16);
+    $item['options']['attributes']['title']  = $description;
+    menu_link_save($item);
+    $saved_item = menu_link_load($item['mlid']);
+    $this->assertEqual($description, $saved_item['options']['attributes']['title'], t('Saving an existing link updates the description (title attribute)'));
     $this->resetMenuLink($item, $old_title);
   }
 
