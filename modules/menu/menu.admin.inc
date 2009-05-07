@@ -10,10 +10,10 @@
  * Menu callback which shows an overview page of all the custom menus and their descriptions.
  */
 function menu_overview_page() {
-  $result = db_query("SELECT * FROM {menu_custom} ORDER BY title");
+  $result = db_query("SELECT * FROM {menu_custom} ORDER BY title", array(), array('fetch' => PDO::FETCH_ASSOC));
   $header = array(t('Title'), array('data' => t('Operations'), 'colspan' => '3'));
   $rows = array();
-  while ($menu = db_fetch_array($result)) {
+  foreach ($result as $menu) {
     $row = array(theme('menu_admin_overview', $menu['title'], $menu['menu_name'], $menu['description']));
     $row[] = array('data' => l(t('list links'), 'admin/build/menu-customize/' . $menu['menu_name']));
     $row[] = array('data' => l(t('edit menu'), 'admin/build/menu-customize/' . $menu['menu_name'] . '/edit'));
@@ -45,9 +45,9 @@ function menu_overview_form(&$form_state, $menu) {
   $sql = "
     SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, m.description, ml.*
     FROM {menu_links} ml LEFT JOIN {menu_router} m ON m.path = ml.router_path
-    WHERE ml.menu_name = '%s'
+    WHERE ml.menu_name = :menu
     ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC, p6 ASC, p7 ASC, p8 ASC, p9 ASC";
-  $result = db_query($sql, $menu['menu_name']);
+  $result = db_query($sql, array(':menu' => $menu['menu_name']), array('fetch' => PDO::FETCH_ASSOC));
   $tree = menu_tree_data($result);
   $node_links = array();
   menu_tree_collect_node_links($tree, $node_links);
@@ -477,7 +477,7 @@ function menu_delete_menu_page($menu) {
 function menu_delete_menu_confirm(&$form_state, $menu) {
   $form['#menu'] = $menu;
   $caption = '';
-  $num_links = db_result(db_query("SELECT COUNT(*) FROM {menu_links} WHERE menu_name = '%s'", $menu['menu_name']));
+  $num_links = db_query("SELECT COUNT(*) FROM {menu_links} WHERE menu_name = :menu", array(':menu' => $menu['menu_name']))->fetchField();
   if ($num_links) {
     $caption .= '<p>' . format_plural($num_links, '<strong>Warning:</strong> There is currently 1 menu link in %title. It will be deleted (system-defined items will be reset).', '<strong>Warning:</strong> There are currently @count menu links in %title. They will be deleted (system-defined links will be reset).', array('%title' => $menu['title'])) . '</p>';
   }
@@ -493,26 +493,36 @@ function menu_delete_menu_confirm_submit($form, &$form_state) {
   $form_state['redirect'] = 'admin/build/menu';
   // System-defined menus may not be deleted - only menus defined by this module.
   $system_menus = menu_list_system_menus();
-  if (isset($system_menus[$menu['menu_name']])  || !(db_query("SELECT 1 FROM {menu_custom} WHERE menu_name = :name", array('name' => $menu['menu_name']))->fetchField())) {
+  if (isset($system_menus[$menu['menu_name']])  || !(db_query("SELECT 1 FROM {menu_custom} WHERE menu_name = :menu", array(':menu' => $menu['menu_name']))->fetchField())) {
     return;
   }
   // Reset all the menu links defined by the system via hook_menu.
-  $result = db_query("SELECT * FROM {menu_links} ml INNER JOIN {menu_router} m ON ml.router_path = m.path WHERE ml.menu_name = '%s' AND ml.module = 'system' ORDER BY m.number_parts ASC", $menu['menu_name']);
-  while ($item = db_fetch_array($result)) {
+  $result = db_query("SELECT * FROM {menu_links} ml INNER JOIN {menu_router} m ON ml.router_path = m.path WHERE ml.menu_name = :menu AND ml.module = 'system' ORDER BY m.number_parts ASC", array(':menu' => $menu['menu_name']), array('fetch' => PDO::FETCH_ASSOC));
+  foreach ($result as $item) {
     menu_reset_item($item);
   }
   // Delete all links to the overview page for this menu.
-  $result = db_query("SELECT mlid FROM {menu_links} ml WHERE ml.link_path = '%s'", 'admin/build/menu-customize/' . $menu['menu_name']);
-  while ($m = db_fetch_array($result)) {
+  $result = db_query("SELECT mlid FROM {menu_links} ml WHERE ml.link_path = :link", array(':link' => 'admin/build/menu-customize/' . $menu['menu_name']), array('fetch' => PDO::FETCH_ASSOC));
+  foreach ($result as $m) {
     menu_link_delete($m['mlid']);
   }
   // Delete all the links in the menu and the menu from the list of custom menus.
-  db_query("DELETE FROM {menu_links} WHERE menu_name = '%s'", $menu['menu_name']);
-  db_query("DELETE FROM {menu_custom} WHERE menu_name = '%s'", $menu['menu_name']);
+  db_delete('menu_links')
+    ->condition('menu_name', $menu['menu_name'])
+    ->execute();
+  db_delete('menu_custom')
+    ->condition('menu_name', $menu['menu_name'])
+    ->execute();
   // Delete all the blocks for this menu.
   if (module_exists('block')) {
-    db_query("DELETE FROM {block} WHERE module = 'menu' AND delta = '%s'", $menu['menu_name']);
-    db_query("DELETE FROM {block_role} WHERE module = 'menu' AND delta = '%s'", $menu['menu_name']);
+    db_delete('block')
+      ->condition('module', 'menu')
+      ->condition('delta', $menu['menu_name'])
+      ->execute();
+    db_delete('block_role')
+      ->condition('module', 'menu')
+      ->condition('delta', $menu['menu_name'])
+      ->execute();
   }
   menu_cache_clear_all();
   cache_clear_all();
@@ -535,8 +545,9 @@ function menu_edit_menu_validate($form, &$form_state) {
   if ($form['#insert']) {
     // We will add 'menu-' to the menu name to help avoid name-space conflicts.
     $item['menu_name'] = 'menu-' . $item['menu_name'];
-    if (db_result(db_query("SELECT menu_name FROM {menu_custom} WHERE menu_name = '%s'", $item['menu_name'])) ||
-      db_result(db_query_range("SELECT menu_name FROM {menu_links} WHERE menu_name = '%s'", $item['menu_name'], 0, 1))) {
+    $custom_exists = db_query('SELECT menu_name FROM {menu_custom} WHERE menu_name = :menu', array(':menu' => $item['menu_name']))->fetchField();
+    $link_exists = db_query_range("SELECT menu_name FROM {menu_links} WHERE menu_name = :menu", array(':menu' => $item['menu_name']), 0, 1)->fetchField();
+    if ($custom_exists || $link_exists) {
       form_set_error('menu_name', t('The menu already exists.'));
     }
   }
@@ -555,14 +566,31 @@ function menu_edit_menu_submit($form, &$form_state) {
     $link['link_path'] = $path . $menu['menu_name'];
     $link['router_path'] = $path . '%';
     $link['module'] = 'menu';
-    $link['plid'] = db_result(db_query("SELECT mlid FROM {menu_links} WHERE link_path = '%s' AND module = '%s'", 'admin/build/menu', 'system'));
+    $link['plid'] = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :link AND module = :module", array(
+      ':link' => 'admin/build/menu',
+      ':module' => 'system'
+    ))
+    ->fetchField();
+
     menu_link_save($link);
-    db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", $menu['menu_name'], $menu['title'], $menu['description']);
+    db_insert('menu_custom')
+      ->fields(array(
+        'menu_name' => $menu['menu_name'],
+        'title' => $menu['title'],
+        'description' => $menu['description'],
+      ))
+      ->execute();
   }
   else {
-    db_query("UPDATE {menu_custom} SET title = '%s', description = '%s' WHERE menu_name = '%s'", $menu['title'], $menu['description'], $menu['menu_name']);
-    $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = '%s'", $path . $menu['menu_name']);
-    while ($m = db_fetch_array($result)) {
+    db_update('menu_custom')
+      ->fields(array(
+        'title' => $menu['title'],
+        'description' => $menu['description'],
+      ))
+      ->condition('menu_name', $menu['menu_name'])
+      ->execute();
+    $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path", array(':path' => $path . $menu['menu_name']), array('fetch' => PDO::FETCH_ASSOC));
+    foreach ($result as $m) {
       $link = menu_link_load($m['mlid']);
       $link['link_title'] = $menu['title'];
       menu_link_save($link);

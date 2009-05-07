@@ -165,7 +165,7 @@ class MenuTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/build/menu-customize/'. $item1['menu_name'], $edit, t('Save configuration'));
 
     // Verify in the database.
-    $hidden = db_result(db_query("SELECT hidden FROM {menu_links} WHERE mlid = :mlid", array('mlid' => $item1['mlid'])));
+    $hidden = db_query("SELECT hidden FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $item1['mlid']))->fetchField();
     $this->assertEqual($hidden, 0, t('Link is not hidden in the database table when enabled via the overview form'));
 
     // Save menu links for later tests.
@@ -205,7 +205,7 @@ class MenuTestCase extends DrupalWebTestCase {
     $this->assertText($title, 'Menu link was added');
 
     // Retrieve menu link.
-    $item = db_fetch_array(db_query("SELECT * FROM {menu_links} WHERE link_title = '%s'", $title));
+    $item = db_query("SELECT * FROM {menu_links} WHERE link_title = :title", array(':title' => $title))->fetchAssoc();
 
     // Check the structure in the DB of the two menu links.
     // In general, if $n = $item['depth'] then $item['p'. $n] == $item['mlid'] and $item['p' . ($n - 1)] == $item['plid'] (unless depth == 0).
@@ -389,7 +389,7 @@ class MenuTestCase extends DrupalWebTestCase {
     $this->drupalPost("admin/build/menu/item/$mlid/edit", $edit, t('Save'));
 
     // Verify in the database.
-    $hidden = db_result(db_query("SELECT hidden FROM {menu_links} WHERE mlid = :mlid", array('mlid' => $mlid)));
+    $hidden = db_query("SELECT hidden FROM {menu_links} WHERE mlid = :mlid", array(':mlid' => $mlid))->fetchField();
     $this->assertEqual($hidden, 0, t('Link is not hidden in the database table'));
   }
 

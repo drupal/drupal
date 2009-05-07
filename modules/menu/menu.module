@@ -158,17 +158,22 @@ function menu_theme() {
  */
 function menu_enable() {
   menu_rebuild();
-  $base_link = db_fetch_array(db_query("SELECT mlid AS plid, menu_name from {menu_links} WHERE link_path = 'admin/build/menu' AND module = 'system'"));
+  $base_link = db_query("SELECT mlid AS plid, menu_name from {menu_links} WHERE link_path = 'admin/build/menu' AND module = 'system'")->fetchAssoc();
   $base_link['router_path'] = 'admin/build/menu-customize/%';
   $base_link['module'] = 'menu';
-  $result = db_query("SELECT * FROM {menu_custom}");
-  while ($menu = db_fetch_array($result)) {
+  $result = db_query("SELECT * FROM {menu_custom}", array(), array('fetch' => PDO::FETCH_ASSOC));
+  foreach ($result as $menu) {
     // $link is passed by reference to menu_link_save(), so we make a copy of $base_link.
     $link = $base_link;
     $link['mlid'] = 0;
     $link['link_title'] = $menu['title'];
     $link['link_path'] = 'admin/build/menu-customize/' . $menu['menu_name'];
-    if (!db_result(db_query("SELECT mlid FROM {menu_links} WHERE link_path = '%s' AND plid = %d", $link['link_path'], $link['plid']))) {
+    $menu_link = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path AND plid = :plid", array(
+      ':path' => $link['link_path'],
+      ':plid' => $link['plid']
+    ))
+    ->fetchField();
+    if (!$menu_link) {
       menu_link_save($link);
     }
   }
@@ -186,7 +191,7 @@ function menu_overview_title($menu) {
  * Load the data for a single custom menu.
  */
 function menu_load($menu_name) {
-  return db_fetch_array(db_query("SELECT * FROM {menu_custom} WHERE menu_name = '%s'", $menu_name));
+  return db_query("SELECT * FROM {menu_custom} WHERE menu_name = :menu", array(':menu' => $menu_name))->fetchAssoc();
 }
 
 /**
@@ -335,8 +340,8 @@ function menu_node_update(&$node) {
  */
 function menu_node_delete(&$node) {
   // Delete all menu module links that point to this node.
-  $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu'", array(':path' => 'node/'. $node->nid));
-  while ($m = db_fetch_array($result)) {
+  $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu'", array(':path' => 'node/'. $node->nid), array('fetch' => PDO::FETCH_ASSOC));
+  foreach ($result as $m) {
     menu_link_delete($m['mlid']);
   }
 }
@@ -351,15 +356,17 @@ function menu_node_prepare(&$node) {
     $item = array();
     if (isset($node->nid)) {
       // Give priority to the default menu
-      $mlid = db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND menu_name = :menu_name AND module = 'menu' ORDER BY mlid ASC", array(
+      $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND menu_name = :menu_name AND module = 'menu' ORDER BY mlid ASC", array(
         ':path' => 'node/'. $node->nid,
         ':menu_name' => $menu_name,
-      ), 0, 1));
+      ), 0, 1)
+      ->fetchField();
       // Check all menus if a link does not exist in the default menu.
       if (!$mlid) {
-        $mlid = db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu' ORDER BY mlid ASC", array(
+        $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu' ORDER BY mlid ASC", array(
           ':path' => 'node/'. $node->nid,
-        ), 0, 1));
+        ), 0, 1)
+        ->fetchField();
       }
       if ($mlid) {
         $item = menu_link_load($mlid);
