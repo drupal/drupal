@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.320 2009/05/06 10:37:28 dries Exp $
+// $Id: system.install,v 1.321 2009/05/07 15:29:08 webchick Exp $
 
 /**
  * Test and report Drupal installation requirements.
@@ -3426,6 +3426,15 @@ function system_update_7022() {
   db_create_table($ret, 'queue', $schema['queue']);
   db_create_table($ret, 'queue_consumer_id', $schema['queue_consumer_id']);
 
+  return $ret;
+}
+
+/**
+ * Change the PHP for settings permission.
+ */
+function system_update_7023() {
+  $ret = array();
+  $ret[] = update_sql("UPDATE {role_permission} SET permission = 'use PHP for settings' WHERE permission = 'use PHP for block visibility'");
   return $ret;
 }
 
