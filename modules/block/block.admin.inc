@@ -190,7 +190,7 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
     '#collapsed' => TRUE,
   );
 
-  $access = user_access('use PHP for block visibility');
+  $access = user_access('use PHP for settings');
   if ($edit['visibility'] == 2 && !$access) {
     $form['page_vis_settings'] = array();
     $form['page_vis_settings']['visibility'] = array('#type' => 'value', '#value' => 2);
@@ -200,7 +200,7 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
     $options = array(t('Show on every page except the listed pages.'), t('Show on only the listed pages.'));
     $description = t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>'));
 
-    if ($access) {
+    if (module_exists('php') && $access) {
       $options[] = t('Show if the following PHP code returns <code>TRUE</code> (PHP-mode, experts only).');
       $description .= ' ' . t('If the PHP-mode is chosen, enter PHP code between %php. Note that executing incorrect PHP-code can break your Drupal site.', array('%php' => '<?php ?>'));
     }

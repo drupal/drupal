@@ -3430,6 +3430,15 @@ function system_update_7022() {
 }
 
 /**
+ * Change the PHP for settings permission.
+ */
+function system_update_7023() {
+  $ret = array();
+  $ret[] = update_sql("UPDATE {role_permission} SET permission = 'use PHP for settings' WHERE permission = 'use PHP for block visibility'");
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */

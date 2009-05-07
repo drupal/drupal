@@ -113,10 +113,6 @@ function block_perm() {
       'title' => t('Administer blocks'),
       'description' => t('Select which blocks are displayed, and arrange them on the page.'),
     ),
-    'use PHP for block visibility' => array(
-      'title' => t('Use PHP for block visibility'),
-      'description' => t('Enter PHP code in the field for block visibility settings. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
-    ),
   );
 }
 
@@ -608,8 +604,11 @@ function _block_load_blocks() {
         // is displayed only on those pages listed in $block->pages.
         $page_match = !($block->visibility xor $page_match);
       }
+      elseif (module_exists('php')) {
+        $page_match = php_eval($block->pages);
+      }
       else {
-        $page_match = drupal_eval($block->pages);
+        $page_match = FALSE;
       }
     }
     else {
