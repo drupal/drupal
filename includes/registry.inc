@@ -39,10 +39,16 @@ function _registry_rebuild() {
 
   // Reset the resources cache.
   _registry_get_resource_name();
+
+  // Get current list of modules and their files.
+  $modules = drupal_system_listing('/\.module$/', 'modules', 'name', 0);
+  system_get_files_database($modules, 'module');
   // Get the list of files we are going to parse.
   $files = array();
-  foreach (module_rebuild_cache() as $module) {
+  foreach ($modules as $module) {
     if ($module->status) {
+      // Parse .info file only for enabled modules.
+      $module->info = drupal_parse_info_file(dirname($module->filepath) . '/' . $module->name . '.info');
       $dir = dirname($module->filepath);
       foreach ($module->info['files'] as $file) {
         $files["$dir/$file"] = array('module' => $module->name, 'weight' => $module->weight);
