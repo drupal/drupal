@@ -1,5 +1,5 @@
 <?php
-// $Id: profile-listing.tpl.php,v 1.5 2009/02/18 14:28:23 webchick Exp $
+// $Id: profile-listing.tpl.php,v 1.6 2009/05/07 10:39:38 dries Exp $
 
 /**
  * @file
@@ -10,6 +10,7 @@
  *      where all the data is collected and printed out.
  *
  * Available variables:
+ * - $account: User's account object.
  * - $picture: Image configured for the account linking to the users page.
  * - $name: User's account name linking to the users page.
  * - $profile: Keyed array of all profile fields that are set as visible
