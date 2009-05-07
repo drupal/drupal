@@ -10,6 +10,7 @@
  *      where all the data is collected and printed out.
  *
  * Available variables:
+ * - $account: User's account object.
  * - $picture: Image configured for the account linking to the users page.
  * - $name: User's account name linking to the users page.
  * - $profile: Keyed array of all profile fields that are set as visible
