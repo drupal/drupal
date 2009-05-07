@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.34 2009/05/06 15:51:36 dries Exp $
+// $Id: path.inc,v 1.35 2009/05/07 15:49:57 webchick Exp $
 
 /**
  * @file
@@ -105,6 +105,9 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
 /**
  * Given an internal Drupal path, return the alias set by the administrator.
  *
+ * If no path is provided, the function will return the alias of the current
+ * page.
+ *
  * @param $path
  *   An internal Drupal path.
  * @param $path_language
@@ -114,7 +117,11 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
  *   An aliased path if one was found, or the original path if no alias was
  *   found.
  */
-function drupal_get_path_alias($path, $path_language = '') {
+function drupal_get_path_alias($path = NULL, $path_language = '') {
+  // If no path is specified, use the current page's path.
+  if ($path == NULL) {
+    $path = $_GET['q'];
+  }
   $result = $path;
   if ($alias = drupal_lookup_path('alias', $path, $path_language)) {
     $result = $alias;
