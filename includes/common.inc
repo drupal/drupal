@@ -521,13 +521,14 @@ function drupal_http_request($url, array $options = array()) {
 
   // Merge the default headers.
   $options['headers'] += array(
-    // RFC 2616: "non-standard ports MUST, default ports MAY be included".
-    // We don't add the port to prevent from breaking rewrite rules checking the
-    // host that do not take into account the port number.
-    'Host' => $host,
     'User-Agent' => 'Drupal (+http://drupal.org/)',
     'Content-Length' => strlen($options['data']),
   );
+
+  // RFC 2616: "non-standard ports MUST, default ports MAY be included".
+  // We don't add the standard port to prevent from breaking rewrite rules
+  // checking the host that do not take into account the port number.
+  $options['headers']['Host'] = $host;
 
   // If the server url has a user then attempt to use basic authentication
   if (isset($uri['user'])) {
@@ -544,13 +545,11 @@ function drupal_http_request($url, array $options = array()) {
     $options['headers']['User-Agent'] = $matches[0];
   }
 
-  foreach ($options['headers'] as $name => $value) {
-    $options['headers'][$name] = $name . ': ' . trim($value);
-  }
-
   $request = $options['method'] . ' ' . $path . " HTTP/1.0\r\n";
-  $request .= implode("\r\n", $options['headers']);
-  $request .= "\r\n\r\n" . $options['data'];
+  foreach ($options['headers'] as $name => $value) {
+    $request .= $name . ': ' . trim($value) . "\r\n";
+  }
+  $request .= "\r\n" . $options['data'];
   $result->request = $request;
 
   fwrite($fp, $request);
