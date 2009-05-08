@@ -3262,28 +3262,31 @@ function drupal_render_page($page) {
  * HTML generation is controlled by two properties containing theme functions,
  * #theme and #theme_wrapper.
  *
- * #theme is the theme function called first. If it is set and the element has any
- * children, they have to be rendered there. For elements that are not allowed
- * to have any children, e.g. buttons or textfields, it can be used to render
- * the element itself. If #theme is not present and the element has children,
- * they are rendered and concatenated into a string by drupal_render_children().
+ * #theme is the theme function called first. If it is set and the element has
+ * any children, they have to be rendered there. For elements that are not
+ * allowed to have any children, e.g. buttons or textfields, it can be used to
+ * render the element itself. If #theme is not present and the element has
+ * children, they are rendered and concatenated into a string by
+ * drupal_render_children().
  *
- * The theme function in #theme_wrapper will be called after #theme has run. It
- * can be used to add further markup around the rendered children, e.g. fieldsets
- * add the required markup for a fieldset around their rendered child elements.
- * A wrapper theme function always has to include the element's #children property
- * in its output, as this contains the rendered children.
+ * The theme function in #theme_wrapper will be called after #theme has run.
+ * It can be used to add further markup around the rendered children, e.g.
+ * fieldsets add the required markup for a fieldset around their rendered
+ * child elements.  A wrapper theme function always has to include the
+ * element's #children property in its output, as this contains the rendered
+ * children.
  *
  * For example, for the form element type, by default only the #theme_wrapper
- * property is set, which adds the form markup around the rendered child elements
- * of the form. This allows you to set the #theme property on a specific form to
- * a custom theme function, giving you complete control over the placement of the
- * form's children while not at all having to deal with the form markup itself.
+ * property is set, which adds the form markup around the rendered child
+ * elements of the form. This allows you to set the #theme property on a
+ * specific form to a custom theme function, giving you complete control over
+ * the placement of the form's children while not at all having to deal with
+ * the form markup itself.
  *
  * This function is usually called from within a another function, like
- * drupal_get_form() or node_view(). Elements are sorted internally using
- * uasort(). Since this is expensive, when passing already sorted elements to
- * drupal_render(), for example from a database query, set
+ * drupal_get_form() or a theme function. Elements are sorted internally
+ * using uasort(). Since this is expensive, when passing already sorted
+ * elements to drupal_render(), for example from a database query, set
  * $elements['#sorted'] = TRUE to avoid sorting them a second time.
  *
  * @param $elements

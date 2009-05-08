@@ -397,9 +397,7 @@ function hook_node_validate($node, $form) {
  * @param $node
  *   The node the action is being performed on.
  * @param $teaser
- *   The $teaser parameter from node_view().
- * @return
- *   None.
+ *   The $teaser parameter from node_build().
  */
 function hook_node_view($node, $teaser) {
   $node->content['my_additional_field'] = array(
