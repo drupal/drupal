@@ -1,5 +1,5 @@
 <?php
-// $Id: openid_test.install,v 1.1 2009/04/29 07:29:59 dries Exp $
+// $Id: openid_test.install,v 1.1 2009/05/08 21:44:48 dries Exp $
 
 /**
  * Implementation of hook_install().
