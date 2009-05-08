@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.16 2009/05/03 10:11:34 dries Exp $
+// $Id: node.api.php,v 1.17 2009/05/08 12:23:32 dries Exp $
 
 /**
  * @file
@@ -397,9 +397,7 @@ function hook_node_validate($node, $form) {
  * @param $node
  *   The node the action is being performed on.
  * @param $teaser
- *   The $teaser parameter from node_view().
- * @return
- *   None.
+ *   The $teaser parameter from node_build().
  */
 function hook_node_view($node, $teaser) {
   $node->content['my_additional_field'] = array(
