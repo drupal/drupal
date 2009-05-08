@@ -24,6 +24,35 @@ class BlogTestCase extends DrupalWebTestCase {
     $this->own_user = $this->drupalCreateUser(array('create blog content', 'edit own blog content', 'delete own blog content'));
     $this->any_user = $this->drupalCreateUser(array('create blog content', 'edit any blog content', 'delete any blog content', 'access administration pages'));
   }
+  
+  /**
+   * Confirm that the "You are not allowed to post a new blog entry." message 
+   * shows up if a user submitted blog entries, has been denied that 
+   * permission, and goes to the blog page.
+   */
+   function testUnprivilegedUser() {
+     // Create a blog node for a user with no blog permissions.
+     $this->drupalCreateNode(array('type' => 'blog', 'uid' => $this->big_user->uid));
+
+     $this->drupalLogin($this->big_user);
+
+     $this->drupalGet('blog/'. $this->big_user->uid);
+     $this->assertResponse(200);
+     $this->assertTitle(t("@name's blog", array('@name' => $this->big_user->name)) .' | Drupal', t('Blog title was displayed'));
+     $this->assertText(t('You are not allowed to post a new blog entry.'), t('No new entries can be posted without the right permission'));
+   }
+   
+   /**
+    * View the blog of a user with no blog entries as another user.
+    */
+   function testBlogPageNoEntries() {
+     $this->drupalLogin($this->big_user);
+
+     $this->drupalGet('blog/'. $this->own_user->uid);
+     $this->assertResponse(200);
+     $this->assertTitle(t("@name's blog", array('@name' => $this->own_user->name)) .' | Drupal', t('Blog title was displayed'));
+     $this->assertText(t('!author has not created any blog entries.', array('!author' => $this->own_user->name)), t('Users blog displayed with no entries'));
+   }
 
   /**
    * Login users, create blog nodes, and test blog functionality through the admin and user interfaces.
@@ -69,6 +98,8 @@ class BlogTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode(array('type' => 'blog'));
     // Verify the user has access to all the blog nodes.
     $this->verifyBlogs($user, $node, $admin);
+    // Create one more node to test the blog page with more than one node
+    $this->drupalCreateNode(array('type' => 'blog', 'uid' => $user->uid));
     // Verify the blog links are displayed.
     $this->verifyBlogLinks($user);
   }
