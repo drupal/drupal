@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.278 2009/04/30 16:15:44 webchick Exp $
+// $Id: bootstrap.inc,v 1.279 2009/05/09 18:35:00 dries Exp $
 
 /**
  * @file
@@ -1167,7 +1167,7 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
  */
 function drupal_set_message($message = NULL, $type = 'status', $repeat = TRUE) {
   if ($message) {
-    if (!isset($_SESSION['messages']) && function_exists('drupal_set_session')) {
+    if (!isset($_SESSION['messages'])) {
       drupal_set_session('messages', array());
     }
 
