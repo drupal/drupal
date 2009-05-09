@@ -25,7 +25,6 @@
  *   An array of menu items. Each menu item has a key corresponding to the
  *   Drupal path being registered. The item is an associative array that may
  *   contain the following key-value pairs:
- *
  *   - "title": Required. The untranslated title of the menu item.
  *   - "title callback": Function to generate the title, defaults to t().
  *     If you require only the raw string to be output, set this to FALSE.
@@ -38,10 +37,10 @@
  *     function. Integer values pass the corresponding URL component (see arg()).
  *   - "access callback": A  function returning a boolean value that determines
  *     whether the user has access rights to this menu item. Defaults to
- *     user_access() unless a value is inherited from a parent menu item..
+ *     user_access() unless a value is inherited from a parent menu item.
  *   - "access arguments": An array of arguments to pass to the access callback
  *     function. Integer values pass the corresponding URL component.
- *   - "file": A file that will be included before the callbacks are accessed.
+ *   - "file": A file that will be included before the callbacks are accessed;
  *     this allows callback functions to be in separate files. The file should
  *     be relative to the implementing module's directory unless otherwise
  *     specified by the "file path" option.
@@ -50,10 +49,10 @@
  *   - "load arguments": An array of arguments to be passed to each of the
  *     object loaders in the path. For example, for the router item at
  *     node/%node/revisions/%/view, the array(1, 3) will call node_load() with
- *     the arguments corresponding to the second and fourth url argument;
- *     as with other arguments, integers are automatically cast to url
+ *     the arguments corresponding to the second and fourth URL argument;
+ *     as with other arguments, integers are automatically cast to URL
  *     arguments. There are also two "magic" values: "%index" will correspond
- *     to the url index where the object's load function is specified; "%map"
+ *     to the URL index where the object's load function is specified; "%map"
  *     will correspond to the full menu map, passed in by reference to the
  *     load function.
  *   - "weight": An integer that determines relative position of items in the
@@ -73,12 +72,9 @@
  *     - MENU_DEFAULT_LOCAL_TASK: Every set of local tasks should provide one
  *       "default" task, that links to the same path as its parent when clicked.
  *     If the "type" key is omitted, MENU_NORMAL_ITEM is assumed.
- *
  * For a detailed usage example, see page_example.module.
- *
  * For comprehensive documentation on the menu system, see
  * http://drupal.org/node/102338.
- *
  */
 function hook_menu() {
   $items = array();
