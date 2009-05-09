@@ -522,7 +522,6 @@ function drupal_http_request($url, array $options = array()) {
   // Merge the default headers.
   $options['headers'] += array(
     'User-Agent' => 'Drupal (+http://drupal.org/)',
-    'Content-Length' => strlen($options['data']),
   );
 
   // RFC 2616: "non-standard ports MUST, default ports MAY be included".
@@ -530,7 +529,15 @@ function drupal_http_request($url, array $options = array()) {
   // checking the host that do not take into account the port number.
   $options['headers']['Host'] = $host;
 
-  // If the server url has a user then attempt to use basic authentication
+  // Only add Content-Length if we actually have any content or if it is a POST
+  // or PUT request. Some non-standard servers get confused by Content-Length in
+  // at least HEAD/GET requests, and Squid always requires Content-Length in
+  // POST/PUT requests.
+  if (!empty($options['data']) || $options['method'] == 'POST' || $options['method'] == 'PUT') {
+    $options['headers']['Content-Length'] = strlen($options['data']);
+  }
+
+  // If the server URL has a user then attempt to use basic authentication.
   if (isset($uri['user'])) {
     $options['headers']['Authorization'] = 'Basic ' . base64_encode($uri['user'] . (!empty($uri['pass']) ? ":" . $uri['pass'] : ''));
   }
