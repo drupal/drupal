@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.8 2009/04/26 09:18:20 dries Exp $
+// $Id: field.api.php,v 1.9 2009/05/09 19:02:11 dries Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -586,7 +586,7 @@ function hook_field_attach_delete_revision($obj_type, $object) {
  * @param $teaser
  *   Whether to display the teaser only, as on the main page.
  */
-function hook_field_attach_view($output, $obj_type, $object, $teaser) {
+function hook_field_attach_view_alter($output, $obj_type, $object, $teaser) {
 }
 
 /**
