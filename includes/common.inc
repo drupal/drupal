@@ -1122,7 +1122,10 @@ function t($string, $args = array(), $langcode = NULL) {
     $string = $custom_strings[$langcode][$string];
   }
   // Translate with locale module if enabled.
-  elseif (function_exists('locale') && $langcode != 'en') {
+  // We don't use drupal_function_exists() here, because it breaks the testing
+  // framework if the locale module is enabled in the parent site (we cannot
+  // unload functions in PHP).
+  elseif (module_exists('locale') && $langcode != 'en') {
     $string = locale($string, $langcode);
   }
   if (empty($args)) {
