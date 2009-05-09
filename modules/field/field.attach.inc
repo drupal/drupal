@@ -102,7 +102,7 @@ define('FIELD_STORAGE_INSERT', 'insert');
  * for any object after the operation is complete, and access or
  * modify all the field, form, or display data for that object and
  * operation. For example, field_attach_view() invokes
- * hook_field_attach_view().  These all-module hooks are distinct from
+ * hook_field_attach_view_alter().  These all-module hooks are distinct from
  * those of the Field Types API, such as hook_field_load(), that are
  * only invoked for the module that defines a specific field type.
  *
@@ -636,10 +636,7 @@ function _field_attach_view($obj_type, &$object, $teaser = FALSE) {
   $output = _field_invoke_default('view', $obj_type, $object, $teaser);
 
   // Let other modules make changes after rendering the view.
-  foreach (module_implements('field_attach_view') as $module) {
-    $function = $module . '_field_attach_view';
-    $function($output, $obj_type, $object, $teaser);
-  }
+  drupal_alter('field_attach_view', $output, $obj_type, $object, $teaser);
 
   return $output;
 

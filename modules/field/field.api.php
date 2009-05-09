@@ -586,7 +586,7 @@ function hook_field_attach_delete_revision($obj_type, $object) {
  * @param $teaser
  *   Whether to display the teaser only, as on the main page.
  */
-function hook_field_attach_view($output, $obj_type, $object, $teaser) {
+function hook_field_attach_view_alter($output, $obj_type, $object, $teaser) {
 }
 
 /**
