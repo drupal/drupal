@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.149 2009/04/26 09:14:31 dries Exp $
+// $Id: blogapi.module,v 1.150 2009/05/09 18:28:11 dries Exp $
 
 /**
  * @file
@@ -870,7 +870,7 @@ __RSD__;
 /**
  * Handles extra information sent by clients according to MovableType's spec.
  */
-function _blogapi_mt_extra(&$node, $struct) {
+function _blogapi_mt_extra($node, $struct) {
   if (is_array($node)) {
     $was_array = TRUE;
     $node = (object)$node;

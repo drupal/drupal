@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.63 2009/05/06 11:27:47 dries Exp $
+// $Id: node.pages.inc,v 1.64 2009/05/09 18:28:12 dries Exp $
 
 /**
  * @file
@@ -77,7 +77,7 @@ function node_form_validate($form, &$form_state) {
   field_attach_form_validate('node', $node, $form, $form_state);
 }
 
-function node_object_prepare(&$node) {
+function node_object_prepare($node) {
   // Set up default values, if required.
   $node_options = variable_get('node_options_' . $node->type, array('status', 'promote'));
   // If this is a new node, fill in the default values.
@@ -288,7 +288,7 @@ function node_form(&$form_state, $node) {
 /**
  * Return a node body field, with format and teaser.
  */
-function node_body_field(&$node, $label, $word_count) {
+function node_body_field($node, $label, $word_count) {
 
   // Check if we need to restore the teaser at the beginning of the body.
   $include = !isset($node->teaser) || ($node->teaser == substr($node->body, 0, strlen($node->teaser)));

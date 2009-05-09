@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.236 2009/05/06 11:28:47 dries Exp $
+// $Id: upload.module,v 1.237 2009/05/09 18:28:13 dries Exp $
 
 /**
  * @file
@@ -475,7 +475,7 @@ function upload_total_space_used() {
   return db_query('SELECT SUM(f.filesize) FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid')->fetchField();
 }
 
-function upload_save(&$node) {
+function upload_save($node) {
   if (empty($node->files) || !is_array($node->files)) {
     return;
   }

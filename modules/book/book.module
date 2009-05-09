@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.492 2009/05/03 10:11:34 dries Exp $
+// $Id: book.module,v 1.493 2009/05/09 18:28:11 dries Exp $
 
 /**
  * @file
@@ -490,7 +490,7 @@ function _book_add_form_elements(&$form, $node) {
  * Performs all additions and updates to the book outline through node addition,
  * node editing, node deletion, or the outline tab.
  */
-function _book_update_outline(&$node) {
+function _book_update_outline($node) {
   if (empty($node->book['bid'])) {
     return FALSE;
   }

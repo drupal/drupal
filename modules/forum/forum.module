@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.491 2009/04/26 19:44:38 dries Exp $
+// $Id: forum.module,v 1.492 2009/05/09 18:28:12 dries Exp $
 
 /**
  * @file
@@ -538,7 +538,7 @@ function forum_block_view($delta = '') {
 /**
  * Implementation of hook_form().
  */
-function forum_form(&$node, $form_state) {
+function forum_form($node, $form_state) {
   $type = node_get_types('type', $node);
   $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#default_value' => !empty($node->title) ? $node->title : '', '#required' => TRUE, '#weight' => -5);
 

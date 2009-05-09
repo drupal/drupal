@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.13 2009/05/01 15:28:13 dries Exp $
+// $Id: field.attach.inc,v 1.14 2009/05/09 18:28:12 dries Exp $
 
 /**
  * @file
@@ -661,7 +661,7 @@ function _field_attach_preprocess($obj_type, &$object) {
  *
  * TODO D7: We do not yet know if this really belongs in Field API.
  */
-function _field_attach_prepare_translation(&$node) {
+function _field_attach_prepare_translation($node) {
   // Prevent against invalid 'nodes' built by broken 3rd party code.
   if (isset($node->type)) {
     $type = content_types($node->type);
