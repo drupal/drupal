@@ -584,10 +584,30 @@ function update_fix_d6_requirements() {
  * changes to the database should be made here.
  */
 function update_prepare_d7_bootstrap() {
-  // Allow the database system to work even though the registry has not
-  // been created yet.
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
+  // Allow the bootstrap to proceed even if a Drupal 6 settings.php file is
+  // still being used.
   include_once DRUPAL_ROOT . '/includes/install.inc';
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
+  global $databases, $db_url, $update_rewrite_settings;
+  if (empty($databases) && !empty($db_url)) {
+    $databases = update_parse_db_url($db_url);
+    // Record the fact that the settings.php file will need to be rewritten.
+    $update_rewrite_settings = TRUE;
+    $settings_file = conf_path() . '/settings.php';
+    $writable = drupal_verify_install_file($settings_file, FILE_EXIST|FILE_READABLE|FILE_WRITABLE);
+    $requirements = array(
+      'settings file' => array(
+        'title' => 'Settings file',
+        'value' => $writable ? 'The settings file is writable.' : 'The settings file is not writable.',
+        'severity' => $writable ? REQUIREMENT_OK : REQUIREMENT_ERROR,
+        'description' => $writable ? '' : 'Drupal requires write permissions to <em>' . $settings_file . '</em> during the update process. If you are unsure how to grant file permissions, please consult the <a href="http://drupal.org/server-permissions">online handbook</a>.',
+      ),
+    );
+    update_extra_requirements($requirements);
+  }
+  // Allow the database system to work even if the registry has not been
+  // created yet.
+  drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
   drupal_install_init_database();
   spl_autoload_unregister('drupal_autoload_class');
   spl_autoload_unregister('drupal_autoload_interface');
@@ -606,11 +626,56 @@ function update_prepare_d7_bootstrap() {
 }
 
 /**
+ * Perform Drupal 6.x to 7.x updates that are required for update.php
+ * to function properly.
+ *
+ * This function runs when update.php is run the first time for 7.x,
+ * even before updates are selected or performed. It is important
+ * that if updates are not ultimately performed that no changes are
+ * made which make it impossible to continue using the prior version.
+ */
+function update_fix_d7_requirements() {
+  // Rewrite the settings.php file if necessary.
+  // @see update_prepare_d7_bootstrap().
+  global $update_rewrite_settings, $db_url;
+  if (!empty($update_rewrite_settings)) {
+    $databases = update_parse_db_url($db_url);
+    file_put_contents(conf_path() . '/settings.php', "\n" . '$databases = ' . var_export($databases, TRUE) . ';', FILE_APPEND);
+  }
+}
+
+/**
+ * Parse database connection URLs (in the old, pre-Drupal 7 format) and
+ * return them as an array of database connection information.
+ */
+function update_parse_db_url($db_url) {
+  $databases = array();
+  if (!is_array($db_url)) {
+    $db_url = array('default' => $db_url);
+  }
+  foreach ($db_url as $database => $url) {
+    $url = parse_url($url);
+    $databases[$database]['default'] = array(
+      // MySQLi uses the mysql driver.
+      'driver' => $url['scheme'] == 'mysqli' ? 'mysql' : $url['scheme'],
+      // Remove the leading slash to get the database name.
+      'database' => substr(urldecode($url['path']), 1),
+      'username' => urldecode($url['user']),
+      'password' => isset($url['pass']) ? urldecode($url['pass']) : '',
+      'host' => urldecode($url['host']),
+      'port' => isset($url['port']) ? urldecode($url['port']) : '',
+    );
+  }
+  return $databases;
+}
+
+/**
  * Add the update task list to the current page.
  */
 function update_task_list($active = NULL) {
   // Default list of tasks.
   $tasks = array(
+    'requirements' => 'Verify requirements',
     'info' => 'Overview',
     'select' => 'Review updates',
     'run' => 'Run updates',
@@ -621,58 +686,34 @@ function update_task_list($active = NULL) {
 }
 
 /**
- * Check update requirements and report any errors.
+ * Returns (and optionally stores) extra requirements that only apply during
+ * particular parts of the update.php process.
  */
-function update_check_requirements() {
-  global $db_url, $databases;
-  $requirements = array();
-
-  // If we will rewrite the settings.php then we need to make sure it is
-  // writeable.
-  if (empty($databases) && !empty($db_url) && is_string($db_url)) {
-    $requirements = install_check_requirements('', FALSE);
+function update_extra_requirements($requirements = NULL) {
+  static $extra_requirements = array();
+  if (isset($requirements)) {
+    $extra_requirements += $requirements;
   }
-  $warnings = FALSE;
-
-  // Check the system module requirements only.
-  $requirements += module_invoke('system', 'requirements', 'update');
-  $severity = drupal_requirements_severity($requirements);
-
-  // If there are issues, report them.
-  if ($severity != REQUIREMENT_OK) {
-    foreach ($requirements as $requirement) {
-      if (isset($requirement['severity']) && $requirement['severity'] != REQUIREMENT_OK) {
-        $message = isset($requirement['description']) ? $requirement['description'] : '';
-        if (isset($requirement['value']) && $requirement['value']) {
-          $message .= ' (Currently using ' . $requirement['title'] . ' ' . $requirement['value'] . ')';
-        }
-        $warnings = TRUE;
-        drupal_set_message($message, 'warning');
-      }
-    }
-  }
-  return $warnings;
+  return $extra_requirements;
 }
 
 /**
- * Converts Drupal 6 $db_url to Drupal 7 $databases array.
+ * Check update requirements and report any errors.
  */
-function update_check_d7_settings() {
-  global $db_url, $databases;
+function update_check_requirements() {
+  // Check the system module and update.php requirements only.
+  $requirements = module_invoke('system', 'requirements', 'update');
+  $requirements += update_extra_requirements();
+  $severity = drupal_requirements_severity($requirements);
 
-  if (empty($databases) && !empty($db_url) && is_string($db_url)) {
-    $url = parse_url($db_url);
-    $driver = substr($db_url, 0, strpos($db_url, '://'));
-    if ($driver == 'mysqli') {
-      $driver = 'mysql';
-    }
-    $databases['default']['default']['driver'] = $driver;
-    $databases['default']['default']['database'] = substr($url['path'], 1);
-    foreach (array('user' => 'username', 'pass' => 'password', 'host' => 'host', 'port' => 'port') as $old_key => $new_key) {
-      $databases['default']['default'][$new_key] =  isset($url[$old_key]) ? urldecode($url[$old_key]) : '';
-    }
-    $conf_path = conf_path();
-    file_put_contents($conf_path .'/settings.php', "\n" . '$databases = '. var_export($databases, TRUE) . ';', FILE_APPEND);
+  // If there are issues, report them.
+  if ($severity == REQUIREMENT_ERROR) {
+    update_task_list('requirements');
+    drupal_set_title('Requirements problem');
+    $status_report = theme('status_report', $requirements);
+    $status_report .= 'Please check the error messages and <a href="' . request_uri() . '">try again</a>.';
+    print theme('update_page', $status_report);
+    exit();
   }
 }
 
@@ -680,15 +721,20 @@ function update_check_d7_settings() {
 // Our custom error handler is not yet installed, so we just suppress them.
 ini_set('display_errors', FALSE);
 
+// We prepare a minimal bootstrap for the update requirements check to avoid
+// reaching the PHP memory limit.
 require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+update_prepare_d7_bootstrap();
 
-// We only load DRUPAL_BOOTSTRAP_CONFIGURATION for the update requirements
-// check to avoid reaching the PHP memory limit.
+// Determine if the current user has access to run update.php.
+drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
+$update_access_allowed = !empty($update_free_access) || $user->uid == 1;
+
+// Only allow the requirements check to proceed if the current user has access
+// to run updates (since it may expose sensitive information about the site's
+// configuration).
 $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
-if (empty($op)) {
-  // Minimum load of components.
-  drupal_bootstrap(DRUPAL_BOOTSTRAP_CONFIGURATION);
-
+if (empty($op) && $update_access_allowed) {
   require_once DRUPAL_ROOT . '/includes/install.inc';
   require_once DRUPAL_ROOT . '/includes/file.inc';
   require_once DRUPAL_ROOT . '/modules/system/system.install';
@@ -708,22 +754,12 @@ if (empty($op)) {
   drupal_maintenance_theme();
 
   // Check the update requirements for Drupal.
-  $warnings = update_check_requirements();
+  update_check_requirements();
 
-  // Display the warning messages (if any) in a dedicated maintenance page,
-  // or redirect to the update information page if no message.
-  if ($warnings) {
-    drupal_maintenance_theme();
-    print theme('update_page', '<form method="post" action="update.php?op=info"><input type="submit" value="Continue" /></form>', FALSE);
-    exit;
-  }
-  // Write D7 settings file.
-  update_check_d7_settings();
-
+  // Redirect to the update information page if all requirements were met.
   install_goto('update.php?op=info');
 }
 
-update_prepare_d7_bootstrap();
 drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 drupal_maintenance_theme();
 
@@ -731,14 +767,15 @@ drupal_maintenance_theme();
 // not passed through the error handler) will cause a message to be printed.
 ini_set('display_errors', TRUE);
 
-// Access check:
-if (!empty($update_free_access) || $user->uid == 1) {
+// Only proceed with updates if the user is allowed to run them.
+if ($update_access_allowed) {
 
   include_once DRUPAL_ROOT . '/includes/install.inc';
   include_once DRUPAL_ROOT . '/includes/batch.inc';
   drupal_load_updates();
 
   update_fix_d6_requirements();
+  update_fix_d7_requirements();
   update_fix_compatibility();
 
   $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
