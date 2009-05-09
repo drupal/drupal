@@ -297,7 +297,7 @@ function field_attach_preprocess($obj_type, &$object) {
  *
  * This function is an autoloader for _field_attach_prepare_translation() in modules/field/field.attach.inc.
  */
-function field_attach_prepare_translation(&$node) {
+function field_attach_prepare_translation($node) {
   require_once DRUPAL_ROOT . '/modules/field/field.attach.inc';
   return _field_attach_prepare_translation($node);
 }

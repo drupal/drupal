@@ -201,7 +201,7 @@ function poll_node_info() {
 /**
  * Implementation of hook_form().
  */
-function poll_form(&$node, $form_state) {
+function poll_form($node, $form_state) {
   global $user;
 
   $admin = user_access('administer nodes') || user_access('edit any poll content') || (user_access('edit own poll content') && $user->uid == $node->uid);
@@ -694,7 +694,7 @@ function template_preprocess_poll_vote(&$variables) {
 /**
  * Generates a graphical representation of the results of a poll.
  */
-function poll_view_results(&$node, $teaser, $block) {
+function poll_view_results($node, $teaser, $block) {
   // Count the votes and find the maximum
   $total_votes = 0;
   $max_votes = 0;

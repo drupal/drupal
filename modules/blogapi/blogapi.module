@@ -870,7 +870,7 @@ __RSD__;
 /**
  * Handles extra information sent by clients according to MovableType's spec.
  */
-function _blogapi_mt_extra(&$node, $struct) {
+function _blogapi_mt_extra($node, $struct) {
   if (is_array($node)) {
     $was_array = TRUE;
     $node = (object)$node;

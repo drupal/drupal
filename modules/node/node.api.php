@@ -551,7 +551,7 @@ function hook_access($op, $node, $account) {
  * to take action when a node is being deleted from the database by, for
  * example, deleting information from related tables.
  *
- * @param &$node
+ * @param $node
  *   The node being deleted.
  * @return
  *   None.
@@ -561,7 +561,7 @@ function hook_access($op, $node, $account) {
  *
  * For a detailed usage example, see node_example.module.
  */
-function hook_delete(&$node) {
+function hook_delete($node) {
   db_delete('mytable')
     ->condition('nid', $nid->nid)
     ->execute();
@@ -571,14 +571,14 @@ function hook_delete(&$node) {
  * This is a hook used by node modules. It is called after load but before the
  * node is shown on the add/edit form.
  *
- * @param &$node
+ * @param $node
  *   The node being saved.
  * @return
  *   None.
  *
  * For a usage example, see image.module.
  */
-function hook_prepare(&$node) {
+function hook_prepare($node) {
   if ($file = file_check_upload($field_name)) {
     $file = file_save_upload($field_name, _image_filename($file->filename, NULL, TRUE));
     if ($file) {
@@ -603,7 +603,7 @@ function hook_prepare(&$node) {
  * that is displayed when one attempts to "create/edit" an item. This form is
  * displayed at the URI http://www.example.com/?q=node/<add|edit>/nodetype.
  *
- * @param &$node
+ * @param $node
  *   The node being added or edited.
  * @param $form_state
  *   The form state array. Changes made to this variable will have no effect.
@@ -618,7 +618,7 @@ function hook_prepare(&$node) {
  *
  * For a detailed usage example, see node_example.module.
  */
-function hook_form(&$node, $form_state) {
+function hook_form($node, $form_state) {
   $type = node_get_types('type', $node);
 
   $form['title'] = array(

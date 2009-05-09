@@ -661,7 +661,7 @@ function _field_attach_preprocess($obj_type, &$object) {
  *
  * TODO D7: We do not yet know if this really belongs in Field API.
  */
-function _field_attach_prepare_translation(&$node) {
+function _field_attach_prepare_translation($node) {
   // Prevent against invalid 'nodes' built by broken 3rd party code.
   if (isset($node->type)) {
     $type = content_types($node->type);

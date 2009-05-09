@@ -490,7 +490,7 @@ function _book_add_form_elements(&$form, $node) {
  * Performs all additions and updates to the book outline through node addition,
  * node editing, node deletion, or the outline tab.
  */
-function _book_update_outline(&$node) {
+function _book_update_outline($node) {
   if (empty($node->book['bid'])) {
     return FALSE;
   }

@@ -2388,7 +2388,7 @@ function form_process_vertical_tabs($element, &$form_state) {
  *   An associative array containing the properties and children of the
  *   fieldset.
  */
-function theme_vertical_tabs(&$element) {
+function theme_vertical_tabs($element) {
   // Add required JavaScript and Stylesheet.
   drupal_add_js('misc/vertical-tabs.js', array('weight' => JS_DEFAULT - 1));
   drupal_add_css('misc/vertical-tabs.css');

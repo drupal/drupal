@@ -475,7 +475,7 @@ function upload_total_space_used() {
   return db_query('SELECT SUM(f.filesize) FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid')->fetchField();
 }
 
-function upload_save(&$node) {
+function upload_save($node) {
   if (empty($node->files) || !is_array($node->files)) {
     return;
   }

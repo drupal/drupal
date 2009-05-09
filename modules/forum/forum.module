@@ -538,7 +538,7 @@ function forum_block_view($delta = '') {
 /**
  * Implementation of hook_form().
  */
-function forum_form(&$node, $form_state) {
+function forum_form($node, $form_state) {
   $type = node_get_types('type', $node);
   $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#default_value' => !empty($node->title) ? $node->title : '', '#required' => TRUE, '#weight' => -5);
 
