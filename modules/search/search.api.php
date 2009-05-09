@@ -23,47 +23,50 @@
  * process their values on submission using a custom validation function.
  * You will need to merge any custom search values into the search keys
  * using a key:value syntax. This allows all search queries to have a clean
- * and permanent URL. See node_form_alter() for an example.
- *
- * @param $op
- *   A string defining which operation to perform:
- *   - 'name': the hook should return a translated name defining the type of
- *     items that are searched for with this module ('content', 'users', ...)
- *   - 'reset': the search index is going to be rebuilt. Modules which use
- *     hook_update_index() should update their indexing bookkeeping so that it
- *     starts from scratch the next time hook_update_index() is called.
- *   - 'search': the hook should perform a search using the keywords in $keys
- *   - 'status': if the module implements hook_update_index(), it should return
- *     an array containing the following keys:
- *     - remaining: the amount of items that still need to be indexed
- *     - total: the total amount of items (both indexed and unindexed)
- *
- * @param $keys
- *   The search keywords as entered by the user.
- *
- * @return
- *   An array of search results.
- *   Each item in the result set array may contain whatever information
- *   the module wishes to display as a search result.
- *   To use the default search result display, each item should be an
- *   array which can have the following keys:
- *   - link: the URL of the found item
- *   - type: the type of item
- *   - title: the name of the item
- *   - user: the author of the item
- *   - date: a timestamp when the item was last modified
- *   - extra: an array of optional extra information items
- *   - snippet: an excerpt or preview to show with the result
- *     (can be generated with search_excerpt())
- *   Only 'link' and 'title' are required, but it is advised to fill in
- *   as many of these fields as possible.
+ * and permanent URL. See node_form_search_form_alter() for an example.
  *
  * The example given here is for node.module, which uses the indexed search
  * capabilities. To do this, node module also implements hook_update_index()
  * which is used to create and maintain the index.
  *
- * We call do_search() with the keys, the module name and extra SQL fragments
+ * We call do_search() with the keys, the module name, and extra SQL fragments
  * to use when searching. See hook_update_index() for more information.
+ *
+ * @param $op
+ *   A string defining which operation to perform:
+ *   - 'admin': The hook should return a form array containing any fieldsets the
+ *     module wants to add to the Search settings page at admin/settings/search.
+ *   - 'name': The hook should return a translated name defining the type of
+ *     items that are searched for with this module ('content', 'users', ...).
+ *   - 'reset': The search index is going to be rebuilt. Modules which use
+ *     hook_update_index() should update their indexing bookkeeping so that it
+ *     starts from scratch the next time hook_update_index() is called.
+ *   - 'search': The hook should perform a search using the keywords in $keys.
+ *   - 'status': If the module implements hook_update_index(), it should return
+ *     an array containing the following keys:
+ *     - remaining: The amount of items that still need to be indexed.
+ *     - total: The total amount of items (both indexed and unindexed).
+ * @param $keys
+ *   The search keywords as entered by the user.
+ * @return
+ *   This varies depending on the operation.
+ *   - 'admin': The form array for the Search settings page at
+ *     admin/settings/search.
+ *   - 'name': The translated string of 'Content'.
+ *   - 'reset': None.
+ *   - 'search': An array of search results. To use the default search result
+ *     display, each item should have the following keys':
+ *     - 'link': Required. The URL of the found item.
+ *     - 'type': The type of item.
+ *     - 'title': Required. The name of the item.
+ *     - 'user': The author of the item.
+ *     - 'date': A timestamp when the item was last modified.
+ *     - 'extra': An array of optional extra information items.
+ *     - 'snippet': An excerpt or preview to show with the result (can be
+ *     generated with search_excerpt()).
+ *   - 'status': An associative array with the key-value pairs:
+ *     - 'remaining': The number of items left to index.
+ *     - 'total': The total number of items to index.
  *
  * @ingroup search
  */
