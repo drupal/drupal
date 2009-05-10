@@ -1,7 +1,8 @@
-; $Id: field.info,v 1.1 2009/02/03 17:30:11 dries Exp $
+; $Id: field.info,v 1.2 2009/05/10 18:56:56 dries Exp $
 name = Field
 description = Field API to add fields to objects like nodes and users.
 package = Core - fields
+version = VERSION
 core = 7.x
 files[] = field.module
 files[] = field.install

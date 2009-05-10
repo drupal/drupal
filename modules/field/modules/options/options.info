@@ -1,6 +1,7 @@
-; $Id: options.info,v 1.1 2009/02/03 17:30:11 dries Exp $
+; $Id: options.info,v 1.2 2009/05/10 18:56:57 dries Exp $
 name = Options
 description = Defines selection, check box and radio button widgets for text and numeric fields.
 package = Core - fields
+version = VERSION
 core = 7.x
 files[]=options.module
