@@ -1,5 +1,5 @@
 <?php
-// $Id: path.test,v 1.10 2009/04/22 15:53:00 dries Exp $
+// $Id: path.test,v 1.11 2009/05/10 16:50:19 dries Exp $
 
 /**
  * @file
@@ -127,7 +127,7 @@ class PathTestCase extends DrupalWebTestCase {
   }
 
   function getPID($dst) {
-    return db_result(db_query("SELECT pid FROM {url_alias} WHERE dst = '%s'", $dst));
+    return db_query("SELECT pid FROM {url_alias} WHERE dst = :dst", array(':dst' => $dst))->fetchField();
   }
 }
 
