@@ -155,24 +155,6 @@ function hook_node_operations() {
 }
 
 /**
- * Fiter, substitute or otherwise alter the $node's raw text.
- *
- * The $node->content array has been rendered, so the node body or
- * teaser is filtered and now contains HTML. This hook should only be
- * used when text substitution, filtering, or other raw text operations
- * are necessary.
- *
- * @param $node
- *   The node the action is being performed on.
- * @param $teaser
- *   The $teaser parameter from node_view().
- * @return
- *   None.
- */
-function hook_node_alter($node, $teaser) {
-}
-
-/**
  * Act on node deletion.
  *
  * @param $node
@@ -405,6 +387,34 @@ function hook_node_view($node, $teaser) {
     '#weight' => 10,
     '#theme' => 'mymodule_my_additional_field',
   );
+}
+
+/**
+ * The node content was built, the module may modify the structured content.
+ *
+ * This hook is called after the content has been assembled in $node->content
+ * and may be used for doing processing which requires that the complete node
+ * content structure has been built.
+ *
+ * If the module wishes to act on the rendered HTML of the node rather than the
+ * structured content array, it may use this hook to add a #post_render callback.
+ * Alternatively, it could also implement hook_preprocess_node(). See
+ * drupal_render() and theme() documentation respectively for details.
+ *
+ * @param $node
+ *   The node the action is being performed on.
+ * @param $teaser
+ *   The $teaser parameter from node_build().
+ */
+function hook_node_build_alter($node, $teaser) {
+  // Check for the existence of a field added by another module.
+  if (isset($node->content['an_additional_field'])) {
+    // Change its weight.
+    $node->content['an_additional_field']['#weight'] = -10;
+  );
+
+  // Add a #post_render callback to act on the rendered HTML of the node.
+  $node->content['#post_render'][] = 'my_module_node_post_render';
 }
 
 /**
