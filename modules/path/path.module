@@ -71,7 +71,9 @@ function path_menu() {
  * Post-confirmation; delete an URL alias.
  */
 function path_admin_delete($pid = 0) {
-  db_query('DELETE FROM {url_alias} WHERE pid = %d', $pid);
+  db_delete('url_alias')
+    ->condition('pid', $pid)
+    ->execute();
   drupal_set_message(t('The alias has been deleted.'));
 }
 
@@ -86,11 +88,19 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
     // An existing alias.
     if (!$path || !$alias) {
       // Delete the alias based on pid.
-      db_query('DELETE FROM {url_alias} WHERE pid = %d', $pid);
+      db_delete('url_alias')
+        ->condition('pid', $pid)
+        ->execute();
     }
     else {
       // Update the existing alias.
-      db_query("UPDATE {url_alias} SET src = '%s', dst = '%s', language = '%s' WHERE pid = %d", $path, $alias, $language, $pid);
+      db_update('url_alias')
+        ->fields(array(
+          'src'      => $path,
+          'dst'      => $alias,
+          'language' => $language))
+        ->condition('pid', $pid)
+        ->execute();
     }
   }
   elseif ($path && $alias) {
@@ -98,20 +108,37 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
     if ($alias == drupal_get_path_alias($path, $language)) {
       // There is already such an alias, neutral or in this language.
       // Update the alias based on alias; setting the language if not yet done.
-      db_query("UPDATE {url_alias} SET src = '%s', dst = '%s', language = '%s' WHERE dst = '%s'", $path, $alias, $language, $alias);
+      db_update('url_alias')
+        ->fields(array(
+          'src' => $path,
+          'dst' => $alias,
+          'language' => $language
+        ))
+        ->condition('dst', $alias)
+        ->execute();
     }
     else {
       // A new alias. Add it to the database.
-      db_query("INSERT INTO {url_alias} (src, dst, language) VALUES ('%s', '%s', '%s')", $path, $alias, $language);
+      db_insert('url_alias')
+        ->fields(array(
+          'src'     => $path,
+          'dst'      => $alias,
+          'language' => $language,
+        ))
+        ->execute();
     }
   }
   else {
     // Delete the alias.
     if ($alias) {
-      db_query("DELETE FROM {url_alias} WHERE dst = '%s'", $alias);
+      db_delete('url_alias')
+        ->condition('dst', $alias)
+        ->execute();
     }
     else {
-      db_query("DELETE FROM {url_alias} WHERE src = '%s'", $path);
+      db_delete('url_alias')
+        ->condition('src', $path)
+        ->execute();
     }
   }
   drupal_clear_path_cache();
@@ -125,7 +152,14 @@ function path_node_validate($node, $form) {
     if (isset($node->path)) {
       $language = isset($node->language) ? $node->language : '';
       $node->path = trim($node->path);
-      if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s' AND src <> '%s' AND language = '%s'", $node->path, "node/$node->nid", $language))) {
+      $has_alias = db_query("SELECT COUNT(dst) FROM {url_alias} WHERE src <> :src AND dst = :dst AND language = :language", array(
+        ':src' => "node/$node->nid",
+        ':dst' => $node->path,
+        ':language' => $language,
+      ))
+      ->fetchField();
+
+      if ($has_alias) {
         form_set_error('path', t('The path is already in use.'));
       }
     }
@@ -211,7 +245,11 @@ function path_form_alter(&$form, $form_state, $form_id) {
     if ($path) {
       $form['path']['pid'] = array(
         '#type' => 'value',
-        '#value' => db_result(db_query("SELECT pid FROM {url_alias} WHERE dst = '%s' AND language = '%s'", $path, $form['#node']->language))
+        '#value' => db_query("SELECT pid FROM {url_alias} WHERE dst = :dst AND language = :language", array(
+          ':dst' => $path,
+          ':language' => $form['#node']->language
+        ))
+        ->fetchField(),
       );
     }
   }
@@ -237,5 +275,5 @@ function path_perm() {
  * Fetch a specific URL alias from the database.
  */
 function path_load($pid) {
-  return db_fetch_array(db_query('SELECT * FROM {url_alias} WHERE pid = %d', $pid));
+  return db_query('SELECT * FROM {url_alias} WHERE pid = :pid', array(':pid' => $pid))->fetchAssoc();
 }

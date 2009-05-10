@@ -127,7 +127,7 @@ class PathTestCase extends DrupalWebTestCase {
   }
 
   function getPID($dst) {
-    return db_result(db_query("SELECT pid FROM {url_alias} WHERE dst = '%s'", $dst));
+    return db_query("SELECT pid FROM {url_alias} WHERE dst = :dst", array(':dst' => $dst))->fetchField();
   }
 }
 

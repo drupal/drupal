@@ -15,19 +15,9 @@ function path_admin_overview($keys = NULL) {
   // Add the filter form above the overview table.
   $output = drupal_get_form('path_admin_filter_form', $keys);
   // Enable language column if locale is enabled or if we have any alias with language
-  $count = db_result(db_query("SELECT COUNT(*) FROM {url_alias} WHERE language <> ''"));
+  $count = db_query("SELECT COUNT(*) FROM {url_alias} WHERE language <> ''")->fetchField();
   $multilanguage = (module_exists('locale') || $count);
 
-  if ($keys) {
-    // Replace wildcards with PDO wildcards.
-    $keys = preg_replace('!\*+!', '%', $keys);
-    $sql = "SELECT * FROM {url_alias} WHERE dst LIKE :keys";
-    $args = array(':keys' => '%' . $keys . '%');
-  }
-  else {
-    $sql = 'SELECT * FROM {url_alias}';
-    $args = array();
-  }
   $header = array(
     array('data' => t('Alias'), 'field' => 'dst', 'sort' => 'asc'),
     array('data' => t('System'), 'field' => 'src'),
@@ -36,12 +26,21 @@ function path_admin_overview($keys = NULL) {
   if ($multilanguage) {
     array_splice($header, 2, 0, array(array('data' => t('Language'), 'field' => 'language')));
   }
-  $sql .= tablesort_sql($header);
-  $result = pager_query($sql, 50, 0 , NULL, $args);
+
+  $query = db_select('url_alias')->extend('PagerDefault')->extend('TableSort');
+  if ($keys) {
+    // Replace wildcards with PDO wildcards.
+    $query->condition('dst', '%' . preg_replace('!\*+!', '%', $keys) . '%', 'LIKE');
+  }
+  $result = $query
+    ->fields('url_alias')
+    ->setHeader($header)
+    ->limit(50)
+    ->execute();
 
   $rows = array();
   $destination = drupal_get_destination();
-  while ($data = db_fetch_object($result)) {
+  foreach ($result as $data) {
     $row = array(
       // If the system path maps to a different URL alias, highlight this table
       // row to let the user know of old aliases.
@@ -144,7 +143,14 @@ function path_admin_form_validate($form, &$form_state) {
   // Language is only set if locale module is enabled, otherwise save for all languages.
   $language = isset($form_state['values']['language']) ? $form_state['values']['language'] : '';
 
-  if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid <> %d AND dst = '%s' AND language = '%s'", $pid, $dst, $language))) {
+  $has_alias = db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid <> :pid AND dst = :dst AND language = :language", array(
+    ':pid' => $pid,
+    ':dst' => $dst,
+    ':language' => $language,
+  ))
+  ->fetchField();
+
+  if ($has_alias) {
     form_set_error('dst', t('The alias %alias is already in use in this language.', array('%alias' => $dst)));
   }
   $item = menu_get_item($src);
