@@ -254,7 +254,9 @@ function _registry_skip_body(&$tokens) {
   // Scan through the rest of the tokens until we reach the matching
   // end brace.
   while ($num_braces && ($token = next($tokens))) {
-    if ($token == '{') {
+    // PHP is really logical to have three different tokens for { with
+    // inconsistent names and only one for a closing brace.
+    if ($token == '{' || (is_array($token) && ($token[0] == T_DOLLAR_OPEN_CURLY_BRACES || $token[0] == T_CURLY_OPEN))) {
       ++$num_braces;
     }
     elseif ($token == '}') {

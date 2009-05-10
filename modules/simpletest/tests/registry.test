@@ -135,3 +135,23 @@ CONTENTS;
 
 }
 
+class RegistrySkipBodyTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => t('Skip function body test'),
+      'description' => t('Tokenize a simple function and check that the body is skipped right'),
+      'group' => t('System'),
+    );
+  }
+  
+  function testRegistrySkipBody () {
+    // This string contains all three kinds of opening braces.
+    $function = '<?php function foo () { $x = "{$y}"; $x = "${y}" }';
+    $tokens = token_get_all($function);
+    _registry_skip_body($tokens);
+    // Consume the last }
+    each($tokens);
+    $this->assertIdentical(each($tokens), FALSE, t('Tokens skipped'));
+  }
+
+}
