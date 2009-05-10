@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.45 2009/04/30 16:10:10 dries Exp $
+// $Id: user.admin.inc,v 1.46 2009/05/10 19:16:03 dries Exp $
 
 /**
  * @file
@@ -598,6 +598,8 @@ function user_admin_perm($form_state, $rid = NULL) {
     $form['role_names'][$rid] = array('#markup' => $name, '#tree' => TRUE);
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save permissions'));
+
+  $form['#attached_js'] = array(drupal_get_path('module', 'user') . '/user.permissions.js');
 
   return $form;
 }
