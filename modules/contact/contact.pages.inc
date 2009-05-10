@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.pages.inc,v 1.20 2009/05/06 10:38:40 dries Exp $
+// $Id: contact.pages.inc,v 1.21 2009/05/10 05:06:50 dries Exp $
 
 /**
  * @file
@@ -92,7 +92,7 @@ function contact_site_form() {
   );
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Send e-mail'),
+    '#value' => t('Send message'),
   );
 
   return $form;
@@ -197,7 +197,7 @@ function contact_personal_form(&$form_state, $recipient) {
     '#title' => t('Send yourself a copy.'),
   );
   $form['submit'] = array('#type' => 'submit',
-    '#value' => t('Send e-mail'),
+    '#value' => t('Send message'),
   );
   return $form;
 }
@@ -229,7 +229,7 @@ function contact_personal_form_submit($form, &$form_state) {
 
   flood_register_event('contact');
   watchdog('mail', '%name-from sent %name-to an e-mail.', array('%name-from' => $user->name, '%name-to' => $account->name));
-  drupal_set_message(t('The message has been sent.'));
+  drupal_set_message(t('Your message has been sent.'));
 
   // Back to the requested users profile page.
   $form_state['redirect'] = "user/$account->uid";
