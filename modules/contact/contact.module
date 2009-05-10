@@ -149,7 +149,7 @@ function contact_user_form(&$edit, &$user, $category = NULL) {
     $form['contact']['contact'] = array('#type' => 'checkbox',
       '#title' => t('Personal contact form'),
       '#default_value' => !empty($edit['contact']) ? $edit['contact'] : FALSE,
-      '#description' => t('Allow other users to contact you by e-mail via <a href="@url">your personal contact form</a>. Note that while your e-mail address is not made public to other members of the community, privileged users such as site administrators are able to contact you even if you choose not to enable this feature.', array('@url' => url("user/$user->uid/contact"))),
+      '#description' => t('Allow other users to contact you via a <a href="@url">personal contact form</a> which keeps your e-mail address hidden. Note that some privileged users such as site administrators are still able to contact you even if you choose to disable this feature.', array('@url' => url("user/$user->uid/contact"))),
     );
     return $form;
   }
