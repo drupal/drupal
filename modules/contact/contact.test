@@ -204,7 +204,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $edit['subject'] = $subject;
     $edit['cid'] = $cid;
     $edit['message'] = $message;
-    $this->drupalPost('contact', $edit, t('Send e-mail'));
+    $this->drupalPost('contact', $edit, t('Send message'));
   }
 
   /**
@@ -299,8 +299,8 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['subject'] = $this->randomName(16);
     $edit['message'] = $this->randomName(64);
-    $this->drupalPost(NULL, $edit, t('Send e-mail'));
-    $this->assertText(t('The message has been sent.'), t('Message sent.'));
+    $this->drupalPost(NULL, $edit, t('Send message'));
+    $this->assertText(t('Your message has been sent.'), t('Message sent.'));
 
     // Clear flood table in preparation for flood test and allow other checks to complete.
     db_delete('flood')->execute();
@@ -310,8 +310,8 @@ class ContactPersonalTestCase extends DrupalWebTestCase {
     // Submit contact form with correct values and check flood interval.
     for ($i = 0; $i < $flood_control; $i++) {
       $this->drupalGet('user/' . $web_user2->uid . '/contact');
-      $this->drupalPost(NULL, $edit, t('Send e-mail'));
-      $this->assertText(t('The message has been sent.'), t('Message sent.'));
+      $this->drupalPost(NULL, $edit, t('Send message'));
+      $this->assertText(t('Your message has been sent.'), t('Message sent.'));
     }
 
     // Submit contact form one over limit.
