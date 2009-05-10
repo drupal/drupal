@@ -599,6 +599,8 @@ function user_admin_perm($form_state, $rid = NULL) {
   }
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save permissions'));
 
+  $form['#attached_js'] = array(drupal_get_path('module', 'user') . '/user.permissions.js');
+
   return $form;
 }
 
