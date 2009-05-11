@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.15 2009/03/14 17:45:55 webchick Exp $
+// $Id: select.inc,v 1.16 2009/05/11 20:13:43 webchick Exp $
 
 /**
  * @ingroup database
@@ -568,6 +568,12 @@ class SelectQueryExtender implements SelectQueryInterface {
     $expressions =& $count->getExpressions();
     $expressions = array();
 
+    // Also remove 'all_fields' statements, which are expanded into tablename.*
+    // when the query is executed.
+    foreach ($count->tables as $alias => &$table) {
+      unset($table['all_fields']);
+    }
+
     // Ordering a count query is a waste of cycles, and breaks on some
     // databases anyway.
     $orders = &$count->getOrderBy();
@@ -1029,6 +1035,13 @@ class SelectQuery extends Query implements SelectQueryInterface {
     $fields = array();
     $expressions =& $count->getExpressions();
     $expressions = array();
+
+
+    // Also remove 'all_fields' statements, which are expanded into tablename.*
+    // when the query is executed.
+    foreach ($count->tables as $alias => &$table) {
+      unset($table['all_fields']);
+    }
 
     // Ordering a count query is a waste of cycles, and breaks on some
     // databases anyway.
