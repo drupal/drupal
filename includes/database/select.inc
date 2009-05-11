@@ -568,6 +568,12 @@ class SelectQueryExtender implements SelectQueryInterface {
     $expressions =& $count->getExpressions();
     $expressions = array();
 
+    // Also remove 'all_fields' statements, which are expanded into tablename.*
+    // when the query is executed.
+    foreach ($count->tables as $alias => &$table) {
+      unset($table['all_fields']);
+    }
+
     // Ordering a count query is a waste of cycles, and breaks on some
     // databases anyway.
     $orders = &$count->getOrderBy();
@@ -1029,6 +1035,13 @@ class SelectQuery extends Query implements SelectQueryInterface {
     $fields = array();
     $expressions =& $count->getExpressions();
     $expressions = array();
+
+
+    // Also remove 'all_fields' statements, which are expanded into tablename.*
+    // when the query is executed.
+    foreach ($count->tables as $alias => &$table) {
+      unset($table['all_fields']);
+    }
 
     // Ordering a count query is a waste of cycles, and breaks on some
     // databases anyway.
