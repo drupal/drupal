@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.66 2009/04/26 19:44:37 dries Exp $
+// $Id: pager.inc,v 1.67 2009/05/12 18:26:41 dries Exp $
 
 /**
  * @file
@@ -62,6 +62,10 @@ class PagerDefault extends SelectQueryExtender {
 
     // Convert comma-separated $page to an array, used by other functions.
     $pager_page_array = explode(',', $page);
+
+    if (!isset($pager_page_array[$this->element])) {
+      $pager_page_array[$this->element] = 0;
+    }
 
     // We calculate the total of pages as ceil(items / limit).
     $pager_total_items[$this->element] = $this->getCountQuery()->execute()->fetchField();
