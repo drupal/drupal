@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.18 2009/03/02 19:23:54 webchick Exp $
+// $Id: page.tpl.php,v 1.19 2009/05/12 08:31:17 dries Exp $
 
 /**
  * @file
@@ -41,8 +41,6 @@
  *   in theme settings.
  * - $site_slogan: The slogan of the site, empty when display has been disabled
  *   in theme settings.
- * - $mission: The text of the site mission, empty when display has been disabled
- *   in theme settings.
  *
  * Navigation:
  * - $search_box: HTML to display the search box, empty if search has been disabled.
@@ -62,6 +60,7 @@
  * - $feed_icons: A string of all feed icons for the current page.
  * - $left: The HTML for the left sidebar.
  * - $right: The HTML for the right sidebar.
+ * - $highlight: The HTML for the highlighted content region.
  *
  * Footer/closing data:
  * - $footer_message: The footer message as defined in the admin settings.
@@ -138,7 +137,7 @@
 
       <div id="content" class="column"><div class="section">
         <?php if ($breadcrumb): ?><div id="breadcrumb"><?php print $breadcrumb; ?></div><?php endif; ?>
-        <?php if ($mission): ?><div id="mission"><?php print $mission; ?></div><?php endif; ?>
+        <?php if ($highlight): ?><div id="highlight"><?php print $highlight; ?></div><?php endif; ?>
         <?php if ($title): ?><h1 class="title" id="page-title"><?php print $title; ?></h1><?php endif; ?>
         <?php print $messages; ?>
         <?php if ($tabs): ?><div class="tabs"><?php print $tabs; ?></div><?php endif; ?>

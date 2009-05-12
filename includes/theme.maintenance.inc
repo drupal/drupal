@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.24 2009/04/22 09:45:02 dries Exp $
+// $Id: theme.maintenance.inc,v 1.25 2009/05/12 08:31:16 dries Exp $
 
 /**
  * @file
@@ -252,7 +252,6 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
   $variables['logo']              = theme_get_setting('logo');
   $variables['messages']          = $variables['show_messages'] ? theme('status_messages') : '';
-  $variables['mission']           = '';
   $variables['main_menu']         = array();
   $variables['secondary_menu']    = array();
   $variables['search_box']        = '';

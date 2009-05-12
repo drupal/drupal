@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1045 2009/05/09 18:28:12 dries Exp $
+// $Id: node.module,v 1.1046 2009/05/12 08:31:17 dries Exp $
 
 /**
  * @file
@@ -1988,7 +1988,7 @@ function node_feed($nids = FALSE, $channel = array()) {
     'version'     => '2.0',
     'title'       => variable_get('site_name', 'Drupal'),
     'link'        => $base_url,
-    'description' => variable_get('site_mission', ''),
+    'description' => variable_get('feed_description', ''),
     'language'    => $language->language
   );
   $channel = array_merge($channel_defaults, $channel);

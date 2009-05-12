@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.24 2009/02/18 14:28:25 webchick Exp $
+// $Id: page.tpl.php,v 1.25 2009/05/12 08:31:17 dries Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
   "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" dir="<?php print $language->dir ?>"
@@ -45,7 +45,7 @@
 
       <div id="center"><div id="squeeze"><div class="right-corner"><div class="left-corner">
           <?php print $breadcrumb; ?>
-          <?php if ($mission): ?><div id="mission"><?php print $mission ?></div><?php endif; ?>
+          <?php if ($highlight): ?><div id="highlight"><?php print $highlight ?></div><?php endif; ?>
           <?php if ($tabs): ?><div id="tabs-wrapper" class="clearfix"><?php endif; ?>
           <?php if ($title): ?><h2<?php print $tabs ? ' class="with-tabs"' : '' ?>><?php print $title ?></h2><?php endif; ?>
           <?php if ($tabs): ?><ul class="tabs primary"><?php print $tabs ?></ul></div><?php endif; ?>
