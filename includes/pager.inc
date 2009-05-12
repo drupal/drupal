@@ -63,6 +63,10 @@ class PagerDefault extends SelectQueryExtender {
     // Convert comma-separated $page to an array, used by other functions.
     $pager_page_array = explode(',', $page);
 
+    if (!isset($pager_page_array[$this->element])) {
+      $pager_page_array[$this->element] = 0;
+    }
+
     // We calculate the total of pages as ceil(items / limit).
     $pager_total_items[$this->element] = $this->getCountQuery()->execute()->fetchField();
     $pager_total[$this->element] = ceil($pager_total_items[$this->element] / $this->limit);
