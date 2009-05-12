@@ -411,7 +411,7 @@ function hook_node_build_alter($node, $teaser) {
   if (isset($node->content['an_additional_field'])) {
     // Change its weight.
     $node->content['an_additional_field']['#weight'] = -10;
-  );
+  }
 
   // Add a #post_render callback to act on the rendered HTML of the node.
   $node->content['#post_render'][] = 'my_module_node_post_render';
