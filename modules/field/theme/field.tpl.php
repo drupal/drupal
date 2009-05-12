@@ -1,12 +1,12 @@
 <?php
-// $Id: field.tpl.php,v 1.1 2009/02/03 17:30:12 dries Exp $
+// $Id: field.tpl.php,v 1.2 2009/05/12 14:36:12 dries Exp $
 
 /**
  * @file field-field.tpl.php
  * Default theme implementation to display the value of a field.
  *
  * Available variables:
- * - $node: The node object.
+ * - $object: The object to which the field is attached.
  * - $field: The field array.
  * - $items: An array of values for each item in the field array.
  * - $teaser: Whether this is displayed as a teaser.
