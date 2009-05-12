@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.483 2009/05/12 08:37:44 dries Exp $
+// $Id: theme.inc,v 1.484 2009/05/12 13:43:44 dries Exp $
 
 /**
  * @file
@@ -1816,7 +1816,6 @@ function template_preprocess_page(&$variables) {
   $variables['front_page']        = url();
   $variables['breadcrumb']        = theme('breadcrumb', drupal_get_breadcrumb());
   $variables['feed_icons']        = drupal_get_feeds();
-  $variables['footer_message']    = filter_xss_admin(variable_get('site_footer', FALSE));
   $variables['head']              = drupal_get_html_head();
   $variables['language']          = $GLOBALS['language'];
   $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';

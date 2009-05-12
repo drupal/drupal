@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.142 2009/05/12 08:37:45 dries Exp $
+// $Id: system.admin.inc,v 1.143 2009/05/12 13:43:44 dries Exp $
 
 /**
  * @file
@@ -1187,12 +1187,6 @@ function system_site_information_settings() {
     '#title' => t('Slogan'),
     '#default_value' => '',
     '#description' => t("Your site's motto, tag line, or catchphrase (often displayed alongside the title of the site).")
-  );
-  $form['site_footer'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Footer message'),
-    '#default_value' => '',
-    '#description' => t('This text will be displayed at the bottom of each page. Useful for adding a copyright notice to your pages.')
   );
   $form['anonymous'] = array(
     '#type' => 'textfield',

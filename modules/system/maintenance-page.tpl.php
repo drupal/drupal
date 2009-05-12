@@ -1,5 +1,5 @@
 <?php
-// $Id: maintenance-page.tpl.php,v 1.5 2009/02/18 14:28:23 webchick Exp $
+// $Id: maintenance-page.tpl.php,v 1.6 2009/05/12 13:43:44 dries Exp $
 
 /**
  * @file
@@ -85,7 +85,6 @@
 
     <div id="footer-wrapper">
       <div id="footer">
-        <?php print $footer_message; ?>
         <?php if (!empty($footer)): print $footer; endif; ?>
       </div> <!-- /footer -->
     </div> <!-- /footer-wrapper -->

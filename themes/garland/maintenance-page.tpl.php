@@ -1,5 +1,5 @@
 <?php
-// $Id: maintenance-page.tpl.php,v 1.8 2009/02/18 14:28:25 webchick Exp $
+// $Id: maintenance-page.tpl.php,v 1.9 2009/05/12 13:43:46 dries Exp $
 
 /**
  * @file
@@ -75,7 +75,7 @@
           <div class="clearfix">
             <?php print $content ?>
           </div>
-          <div id="footer"><?php print $footer_message . $footer ?></div>
+          <div id="footer"><?php print $footer ?></div>
       </div></div></div></div> <!-- /.left-corner, /.right-corner, /#squeeze, /#center -->
 
       <?php if ($right): ?>

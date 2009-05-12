@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.25 2009/05/12 08:31:17 dries Exp $
+// $Id: page.tpl.php,v 1.26 2009/05/12 13:43:46 dries Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
   "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" dir="<?php print $language->dir ?>"
@@ -56,7 +56,7 @@
             <?php print $content ?>
           </div>
           <?php print $feed_icons ?>
-          <div id="footer"><?php print $footer_message . $footer ?></div>
+          <div id="footer"><?php print $footer ?></div>
       </div></div></div></div> <!-- /.left-corner, /.right-corner, /#squeeze, /#center -->
 
       <?php if ($right): ?>
