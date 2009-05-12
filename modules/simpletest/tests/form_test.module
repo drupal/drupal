@@ -70,13 +70,13 @@ function form_test_menu() {
 }
 
 /**
- * Generate a page with three form, to test the clean_id generation.
+ * Generate a page with three forms, to test the clean_id generation.
  */
 function form_test_form_clean_id_page() {
-  $output = drupal_get_form('form_test_test_form');
-  $output .= drupal_get_form('form_test_test_form');
-  $output .= drupal_get_form('form_test_test_form');
-  return $output;
+  $build['form_test_test_form1'] = drupal_get_form('form_test_test_form');
+  $build['form_test_test_form2'] = drupal_get_form('form_test_test_form');
+  $build['form_test_test_form3'] = drupal_get_form('form_test_test_form');
+  return $build;
 }
 
 /**
@@ -335,7 +335,7 @@ function form_storage_test_form(&$form_state) {
     );
   }
   else {
-    $form['content'] = array('#value' => 'This is the second step.');
+    $form['body'] = array('#value' => 'This is the second step.');
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => 'Save',

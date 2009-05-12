@@ -195,7 +195,7 @@ function update_do_one($module, $number, &$context) {
 
 function update_selection_page() {
   drupal_set_title('Drupal database update');
-  $output = drupal_get_form('update_script_selection_form');
+  $output = drupal_render(drupal_get_form('update_script_selection_form'));
 
   update_task_list('select');
 

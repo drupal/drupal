@@ -212,7 +212,7 @@ function install_change_settings($profile = 'default', $install_locale = '') {
   include_once DRUPAL_ROOT . '/includes/form.inc';
   install_task_list('database');
 
-  $output = drupal_get_form('install_settings_form', $profile, $install_locale, $settings_file, $database);
+  $output = drupal_render(drupal_get_form('install_settings_form', $profile, $install_locale, $settings_file, $database));
   drupal_set_title(st('Database configuration'));
   print theme('install_page', $output);
   exit;
@@ -433,7 +433,7 @@ function install_select_profile() {
     install_task_list('profile-select');
 
     drupal_set_title(st('Select an installation profile'));
-    print theme('install_page', drupal_get_form('install_select_profile_form', $profiles));
+    print theme('install_page', drupal_render(drupal_get_form('install_select_profile_form', $profiles)));
     exit;
   }
 }
@@ -560,7 +560,8 @@ function install_select_locale($profilename) {
     install_task_list('locale-select');
 
     drupal_set_title(st('Choose language'));
-    print theme('install_page', drupal_get_form('install_select_locale_form', $locales));
+    
+    print theme('install_page', drupal_render(drupal_get_form('install_select_locale_form', $locales)));
     exit;
   }
 }
@@ -703,7 +704,7 @@ function install_tasks($profile, $task) {
       // got accidentally blown somewhere. Stop it now.
       install_already_done_error();
     }
-    $form = drupal_get_form('install_configure_form', $url);
+    $form = drupal_render(drupal_get_form('install_configure_form', $url));
 
     if (!variable_get('site_name', FALSE) && !variable_get('site_mail', FALSE)) {
       // Not submitted yet: Prepare to display the form.

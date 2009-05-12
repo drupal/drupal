@@ -1626,7 +1626,7 @@ function comment_form(&$form_state, $edit, $title = NULL) {
  *   A string containing the box output.
  */
 function theme_comment_form_box($edit, $title = NULL) {
-  $content = drupal_get_form('comment_form', $edit, $title);
+  $content = drupal_render(drupal_get_form('comment_form', $edit, $title));
   $output = '<h2 class="title">' . $title . '</h2><div>' . $content . '</div>';
   return $output;
 }

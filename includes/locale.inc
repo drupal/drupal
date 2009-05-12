@@ -158,9 +158,9 @@ function locale_languages_overview_form_submit($form, &$form_state) {
  * User interface for the language addition screen.
  */
 function locale_languages_add_screen() {
-  $output = drupal_get_form('locale_languages_predefined_form');
-  $output .= drupal_get_form('locale_languages_custom_form');
-  return $output;
+  $build['predefined'] = drupal_get_form('locale_languages_predefined_form');
+  $build['custom'] = drupal_get_form('locale_languages_custom_form');
+  return $build;
 }
 
 /**
@@ -564,7 +564,7 @@ function locale_translate_seek_screen() {
   // Add CSS.
   drupal_add_css(drupal_get_path('module', 'locale') . '/locale.css', array('preprocess' => FALSE));
 
-  $output = drupal_get_form('locale_translation_filter_form');
+  $output = drupal_render(drupal_get_form('locale_translation_filter_form'));
   $output .= _locale_translate_seek();
   return $output;
 }
@@ -807,9 +807,9 @@ function locale_translate_export_screen() {
   $output = '';
   // Offer translation export if any language is set up.
   if (count($names)) {
-    $output = drupal_get_form('locale_translate_export_po_form', $names);
+    $output = drupal_render(drupal_get_form('locale_translate_export_po_form', $names));
   }
-  $output .= drupal_get_form('locale_translate_export_pot_form');
+  $output .= drupal_render(drupal_get_form('locale_translate_export_pot_form'));
   return $output;
 }
 

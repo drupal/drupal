@@ -21,17 +21,17 @@ function trigger_assign($type = NULL) {
     drupal_goto('admin/build/trigger/node');
   }
 
-  $output = '';
+  $build = array();
   $hooks = module_invoke_all('hook_info');
   foreach ($hooks as $module => $hook) {
     if (isset($hook[$type])) {
       foreach ($hook[$type] as $op => $description) {
         $form_id = 'trigger_' . $type . '_' . $op . '_assign_form';
-        $output .= drupal_get_form($form_id, $type, $op, $description['runs when']);
+        $build[$form_id] = drupal_get_form($form_id, $type, $op, $description['runs when']);
       }
     }
   }
-  return $output;
+  return $build;
 }
 
 /**

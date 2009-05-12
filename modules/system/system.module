@@ -1709,7 +1709,7 @@ function system_actions_manage() {
   }
 
   if ($actions_map) {
-    $output .= drupal_get_form('system_actions_manage_form', $options);
+    $output .= drupal_render(drupal_get_form('system_actions_manage_form', $options));
   }
 
   return $output;

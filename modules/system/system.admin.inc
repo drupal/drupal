@@ -1084,11 +1084,11 @@ function system_ip_blocking() {
     );
   }
 
-  $output .= drupal_get_form('system_ip_blocking_form');
+  $build['system_ip_blocking_form'] = drupal_get_form('system_ip_blocking_form');
 
-  $output .= theme('table', $header, $rows);
+  $build['system_ip_blocking_table'] = array('#markup' => theme('table', $header, $rows));
 
-  return $output;
+  return $build;
 }
 
 /**

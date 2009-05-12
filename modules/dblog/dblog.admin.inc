@@ -47,8 +47,8 @@ function dblog_overview() {
     WATCHDOG_EMERG    => 'dblog-emerg',
   );
 
-  $output = drupal_get_form('dblog_filter_form');
-  $output .= drupal_get_form('dblog_clear_log_form');
+  $output = drupal_render(drupal_get_form('dblog_filter_form'));
+  $output .= drupal_render(drupal_get_form('dblog_clear_log_form'));
 
   $header = array(
     ' ',

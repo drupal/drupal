@@ -12,18 +12,18 @@ function user_admin($callback_arg = '') {
   switch ($op) {
     case t('Create new account'):
     case 'create':
-      $output = drupal_get_form('user_register');
+      $build['user_register'] = drupal_get_form('user_register');
       break;
     default:
       if (!empty($_POST['accounts']) && isset($_POST['operation']) && ($_POST['operation'] == 'cancel')) {
-        $output = drupal_get_form('user_multiple_cancel_confirm');
+        $build['user_multiple_cancel_confirm'] = drupal_get_form('user_multiple_cancel_confirm');
       }
       else {
-        $output = drupal_get_form('user_filter_form');
-        $output .= drupal_get_form('user_admin_account');
+        $build['user_filter_form'] = drupal_get_form('user_filter_form');
+        $build['user_admin_account'] = drupal_get_form('user_admin_account');
       }
   }
-  return $output;
+  return $build;
 }
 
 /**

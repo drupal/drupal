@@ -567,14 +567,10 @@ function poll_view($node, $teaser = FALSE, $block = FALSE) {
   }
 
   if (!empty($node->allowvotes) && ($block || empty($node->show_results))) {
-    $node->content['body'] = array(
-      '#markup' => drupal_get_form('poll_view_voting', $node, $block),
-    );
+    $node->content['poll_view_voting'] = drupal_get_form('poll_view_voting', $node, $block);
   }
   else {
-    $node->content['body'] = array(
-      '#markup' => poll_view_results($node, $teaser, $block),
-    );
+    $node->content['poll_view_results'] = array('#markup' => poll_view_results($node, $teaser, $block));
   }
   return $node;
 }
