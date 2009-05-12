@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.140 2009/04/11 17:58:17 webchick Exp $
+// $Id: module.inc,v 1.141 2009/05/12 18:08:42 dries Exp $
 
 /**
  * @file
@@ -258,6 +258,7 @@ function module_enable($module_list) {
         ->execute();
       drupal_load('module', $module);
       $invoke_modules[] = $module;
+      watchdog('system', '%module module enabled.', array('%module' => $module), WATCHDOG_INFO);
     }
   }
 
@@ -309,6 +310,7 @@ function module_disable($module_list) {
         ->condition('name', $module)
         ->execute();
       $invoke_modules[] = $module;
+      watchdog('system', '%module module disabled.', array('%module' => $module), WATCHDOG_INFO);
     }
   }
 
