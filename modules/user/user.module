@@ -961,6 +961,15 @@ function user_user_validate(&$edit, &$account, $category = NULL) {
         form_set_error('mail', t('The e-mail address %email is already registered. <a href="@password">Have you forgotten your password?</a>', array('%email' => $edit['mail'], '@password' => url('user/password'))));
       }
     }
+
+    // Make sure the signature isn't longer than the size of the database field.
+    // Signatures are disabled by default, so make sure it exists first.
+    if (isset($edit['signature'])) {
+      $user_schema = drupal_get_schema('users');
+      if (strlen($edit['signature']) > $user_schema['fields']['signature']['length']) {
+        form_set_error('signature', t('The signature is too long: it must be %max characters or less.', array('%max' => $user_schema['fields']['signature']['length'])));
+      }
+    }
   }
 }
 
