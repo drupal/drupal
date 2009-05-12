@@ -6,7 +6,7 @@
  * Default theme implementation to display the value of a field.
  *
  * Available variables:
- * - $node: The node object.
+ * - $object: The object to which the field is attached.
  * - $field: The field array.
  * - $items: An array of values for each item in the field array.
  * - $teaser: Whether this is displayed as a teaser.
