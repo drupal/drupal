@@ -221,7 +221,6 @@ function forum_overview(&$form_state) {
   $vid = variable_get('forum_nav_vocabulary', '');
   $vocabulary = taxonomy_vocabulary_load($vid);
   $form = taxonomy_overview_terms($form_state, $vocabulary);
-  drupal_set_title('Forums');
 
   foreach (element_children($form) as $key) {
     if (isset($form[$key]['#term'])) {
