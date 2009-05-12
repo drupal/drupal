@@ -252,7 +252,6 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
   $variables['logo']              = theme_get_setting('logo');
   $variables['messages']          = $variables['show_messages'] ? theme('status_messages') : '';
-  $variables['mission']           = '';
   $variables['main_menu']         = array();
   $variables['secondary_menu']    = array();
   $variables['search_box']        = '';

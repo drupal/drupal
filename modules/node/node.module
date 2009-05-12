@@ -1988,7 +1988,7 @@ function node_feed($nids = FALSE, $channel = array()) {
     'version'     => '2.0',
     'title'       => variable_get('site_name', 'Drupal'),
     'link'        => $base_url,
-    'description' => variable_get('site_mission', ''),
+    'description' => variable_get('feed_description', ''),
     'language'    => $language->language
   );
   $channel = array_merge($channel_defaults, $channel);

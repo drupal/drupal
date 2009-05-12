@@ -906,7 +906,6 @@ function drupal_find_theme_templates($cache, $extension, $path) {
  */
 function theme_get_settings($key = NULL) {
   $defaults = array(
-    'mission'                          =>  '',
     'default_logo'                     =>  1,
     'logo_path'                        =>  '',
     'default_favicon'                  =>  1,
@@ -918,7 +917,6 @@ function theme_get_settings($key = NULL) {
     'toggle_name'                      =>  1,
     'toggle_search'                    =>  0,
     'toggle_slogan'                    =>  0,
-    'toggle_mission'                   =>  1,
     'toggle_node_user_picture'         =>  0,
     'toggle_comment_user_picture'      =>  0,
     'toggle_comment_user_verification' =>  1,
@@ -965,14 +963,6 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
 
     $themes = list_themes();
     $theme_object = $themes[$theme_key];
-
-    if ($settings['mission'] == '') {
-      $settings['mission'] = variable_get('site_mission', '');
-    }
-
-    if (!$settings['toggle_mission']) {
-      $settings['mission'] = '';
-    }
 
     if ($settings['toggle_logo']) {
       if ($settings['default_logo']) {
@@ -1811,11 +1801,6 @@ function template_preprocess_page(&$variables) {
     $variables['layout'] = ($variables['layout'] == 'left') ? 'both' : 'right';
   }
 
-  // Set mission when viewing the frontpage.
-  if (drupal_is_front_page()) {
-    $mission = filter_xss_admin(theme_get_setting('mission'));
-  }
-
   // Construct page title
   if (drupal_get_title()) {
     $head_title = array(strip_tags(drupal_get_title()), variable_get('site_name', 'Drupal'));
@@ -1837,7 +1822,6 @@ function template_preprocess_page(&$variables) {
   $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
   $variables['logo']              = theme_get_setting('logo');
   $variables['messages']          = $variables['show_messages'] ? theme('status_messages') : '';
-  $variables['mission']           = isset($mission) ? $mission : '';
   $variables['main_menu']         = theme_get_setting('toggle_main_menu') ? menu_main_menu() : array();
   $variables['secondary_menu']    = theme_get_setting('toggle_secondary_menu') ? menu_secondary_menu() : array();
   $variables['search_box']        = (theme_get_setting('toggle_search') ? drupal_get_form('search_theme_form') : '');

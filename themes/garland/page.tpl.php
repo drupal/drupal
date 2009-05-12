@@ -45,7 +45,7 @@
 
       <div id="center"><div id="squeeze"><div class="right-corner"><div class="left-corner">
           <?php print $breadcrumb; ?>
-          <?php if ($mission): ?><div id="mission"><?php print $mission ?></div><?php endif; ?>
+          <?php if ($highlight): ?><div id="highlight"><?php print $highlight ?></div><?php endif; ?>
           <?php if ($tabs): ?><div id="tabs-wrapper" class="clearfix"><?php endif; ?>
           <?php if ($title): ?><h2<?php print $tabs ? ' class="with-tabs"' : '' ?>><?php print $title ?></h2><?php endif; ?>
           <?php if ($tabs): ?><ul class="tabs primary"><?php print $tabs ?></ul></div><?php endif; ?>
