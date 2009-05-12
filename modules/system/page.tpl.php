@@ -63,7 +63,6 @@
  * - $highlight: The HTML for the highlighted content region.
  *
  * Footer/closing data:
- * - $footer_message: The footer message as defined in the admin settings.
  * - $footer : The footer region.
  * - $closure: Final closing markup from any modules that have altered the page.
  *   This variable should always be output last, after all other dynamic content.
@@ -164,7 +163,6 @@
 
     <div id="footer"><div class="section">
       <?php print theme('links', $secondary_menu, array('id' => 'secondary-menu', 'class' => 'links clearfix')); ?>
-      <?php if ($footer_message): ?><div id="footer-message"><?php print $footer_message; ?></div><?php endif; ?>
       <?php if ($footer): ?><div id="footer-region" class="region"><?php print $footer; ?></div><?php endif; ?>
     </div></div> <!-- /.section, /#footer -->
 

@@ -75,7 +75,7 @@
           <div class="clearfix">
             <?php print $content ?>
           </div>
-          <div id="footer"><?php print $footer_message . $footer ?></div>
+          <div id="footer"><?php print $footer ?></div>
       </div></div></div></div> <!-- /.left-corner, /.right-corner, /#squeeze, /#center -->
 
       <?php if ($right): ?>

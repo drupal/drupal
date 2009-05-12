@@ -1188,12 +1188,6 @@ function system_site_information_settings() {
     '#default_value' => '',
     '#description' => t("Your site's motto, tag line, or catchphrase (often displayed alongside the title of the site).")
   );
-  $form['site_footer'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Footer message'),
-    '#default_value' => '',
-    '#description' => t('This text will be displayed at the bottom of each page. Useful for adding a copyright notice to your pages.')
-  );
   $form['anonymous'] = array(
     '#type' => 'textfield',
     '#title' => t('Anonymous user'),

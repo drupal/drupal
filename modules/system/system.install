@@ -3362,11 +3362,24 @@ function system_update_7021() {
     variable_set('feed_description', $mission);
   }
 
+  // Migrate site footer message to a custom block.
+  if ($footer_message = variable_get('site_footer', '')) {
+    $bid = db_insert('box')->fields(array('body' => $footer_message, 'info' => 'Footer message', 'format' => FILTER_FORMAT_DEFAULT))->execute();
+    foreach ($themes_with_blocks as $theme) {
+      // Add site footer block for themes, which had blocks.
+      // Set low weight, so the block comes early (it used to be 
+      // before the other blocks).
+      $ret[] = update_sql("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('block', '" . $bid . "', '" . $theme . "', 1, -10, 'footer', '', -1)");
+    }
+    drupal_set_message('The footer message was migrated to <a href="' . url('admin/build/block/configure/block/' . $bid) . '">a custom block</a> and set up to appear in the footer. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right. If your theme does not have a footer region, you might need to <a href="' . url('admin/build/block') . '">relocate the block</a>.');
+  }
+  
   // Remove the variables (even if they were saved empty on the admin interface),
   // to avoid keeping clutter in the variables table.
   variable_del('contact_form_information');
   variable_del('user_registration_help');
   variable_del('site_mission');
+  variable_del('site_footer');
   
   // Rebuild theme data, so the new 'help' region is identified.
   system_theme_data();
