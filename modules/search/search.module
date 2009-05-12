@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.289 2009/05/06 10:48:01 dries Exp $
+// $Id: search.module,v 1.290 2009/05/12 08:37:45 dries Exp $
 
 /**
  * @file
@@ -175,7 +175,7 @@ function search_block_list() {
  */
 function search_block_view($delta = '') {
   if (user_access('search content')) {
-    $block['content'] = drupal_get_form('search_block_form');
+    $block['content'] = drupal_render(drupal_get_form('search_block_form'));
     $block['subject'] = t('Search');
     return $block;
   }

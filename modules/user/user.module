@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.983 2009/04/30 21:44:19 dries Exp $
+// $Id: user.module,v 1.984 2009/05/12 08:37:45 dries Exp $
 
 /**
  * @file
@@ -138,7 +138,7 @@ function user_external_load($authname) {
  *    TRUE if the login succeeds, FALSE otherwise.
  */
 function user_external_login($account, $edit = array()) {
-  $form = drupal_get_form('user_login');
+  $form = drupal_render(drupal_get_form('user_login'));
 
   $state['values'] = $edit;
   if (empty($state['values']['name'])) {
@@ -1099,7 +1099,7 @@ function user_block_view($delta = '') {
       if (!$user->uid && !(arg(0) == 'user' && !is_numeric(arg(1)))) {
 
         $block['subject'] = t('User login');
-        $block['content'] = drupal_get_form('user_login_block');
+        $block['content'] = drupal_render(drupal_get_form('user_login_block'));
       }
       return $block;
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.281 2009/05/09 18:35:00 dries Exp $
+// $Id: update.php,v 1.282 2009/05/12 08:37:44 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -195,7 +195,7 @@ function update_do_one($module, $number, &$context) {
 
 function update_selection_page() {
   drupal_set_title('Drupal database update');
-  $output = drupal_get_form('update_script_selection_form');
+  $output = drupal_render(drupal_get_form('update_script_selection_form'));
 
   update_task_list('select');
 

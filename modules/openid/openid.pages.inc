@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.pages.inc,v 1.15 2009/03/18 09:49:31 dries Exp $
+// $Id: openid.pages.inc,v 1.16 2009/05/12 08:37:44 dries Exp $
 
 /**
  * @file
@@ -54,7 +54,7 @@ function openid_user_identities($account) {
   }
 
   $output = theme('table', $header, $rows);
-  $output .= drupal_get_form('openid_user_add');
+  $output .= drupal_render(drupal_get_form('openid_user_add'));
   return $output;
 }
 

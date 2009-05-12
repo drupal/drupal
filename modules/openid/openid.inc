@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.14 2009/04/29 07:22:49 dries Exp $
+// $Id: openid.inc,v 1.15 2009/05/12 08:37:44 dries Exp $
 
 /**
  * @file
@@ -69,7 +69,7 @@ function openid_redirect_http($url, $message) {
  */
 function openid_redirect($url, $message) {
   $output = '<html><head><title>' . t('OpenID redirect') . "</title></head>\n<body>";
-  $output .= drupal_get_form('openid_redirect_form', $url, $message);
+  $output .= drupal_render(drupal_get_form('openid_redirect_form', $url, $message));
   $output .= '<script type="text/javascript">document.getElementById("openid-redirect-form").submit();</script>';
   $output .= "</body></html>\n";
   print $output;

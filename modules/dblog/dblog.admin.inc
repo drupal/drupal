@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.16 2009/04/26 19:44:38 dries Exp $
+// $Id: dblog.admin.inc,v 1.17 2009/05/12 08:37:44 dries Exp $
 
 /**
  * @file
@@ -47,8 +47,8 @@ function dblog_overview() {
     WATCHDOG_EMERG    => 'dblog-emerg',
   );
 
-  $output = drupal_get_form('dblog_filter_form');
-  $output .= drupal_get_form('dblog_clear_log_form');
+  $output = drupal_render(drupal_get_form('dblog_filter_form'));
+  $output .= drupal_render(drupal_get_form('dblog_clear_log_form'));
 
   $header = array(
     ' ',

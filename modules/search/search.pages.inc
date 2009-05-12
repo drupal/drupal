@@ -1,5 +1,5 @@
 <?php
-// $Id: search.pages.inc,v 1.7 2009/04/26 19:44:39 dries Exp $
+// $Id: search.pages.inc,v 1.8 2009/05/12 08:37:45 dries Exp $
 
 /**
  * @file
@@ -40,7 +40,7 @@ function search_view($type = 'node') {
     }
 
     // Construct the search form.
-    $output = drupal_get_form('search_form', NULL, $keys, $type);
+    $output = drupal_render(drupal_get_form('search_form', NULL, $keys, $type));
     $output .= $results;
 
     return $output;

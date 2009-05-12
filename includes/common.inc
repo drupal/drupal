@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.897 2009/05/09 22:16:37 dries Exp $
+// $Id: common.inc,v 1.898 2009/05/12 08:37:44 dries Exp $
 
 /**
  * @file
@@ -3252,8 +3252,8 @@ function drupal_get_page($content = NULL) {
  * @see drupal_get_page()
  */
 function drupal_render_page($page) {
-  // Allow menu callbacks to return strings.
-  if (is_string($page)) {
+  // Allow menu callbacks to return strings, or bare content arrays.
+  if (is_string($page) || empty($page['content'])) {
     $page = drupal_get_page($page);
   }
   // Modules alter the $page as needed. Blocks are populated into regions like
