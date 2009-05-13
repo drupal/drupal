@@ -418,5 +418,3 @@ function _phptemplate_render($file, $variables) {
   ob_end_clean();                  // End buffering and discard
   return $contents;                // Return the contents
 }
-
-?>
