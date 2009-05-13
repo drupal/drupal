@@ -1,5 +1,8 @@
 // $Id$
 
+Drupal 6.13-dev, xxxx-xx-xx (development release)
+----------------------
+
 Drupal 6.12, 2009-05-13
 ----------------------
 - Fixed security issues (Cross site scripting), see SA-CORE-2009-006.
