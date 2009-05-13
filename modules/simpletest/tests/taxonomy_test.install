@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Install, update and uninstall functions for the taxonomy_test module.
+ */
+
+/**
  * Implementation of hook_schema().
  */
 function taxonomy_test_schema() {

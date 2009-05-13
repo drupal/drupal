@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Install, update and uninstall functions for the book module.
+ */
+
+/**
  * Implementation of hook_install().
  */
 function book_install() {

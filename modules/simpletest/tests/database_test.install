@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Install, update and uninstall functions for the database_test module.
+ */
+
+/**
  * Implementation of hook_schema().
  *
  * The database tests use the database API which depends on schema

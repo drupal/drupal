@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Install, update and uninstall functions for the forum module.
+ */
+
+/**
  * Implementation of hook_install().
  */
 function forum_install() {

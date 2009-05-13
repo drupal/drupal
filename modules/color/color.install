@@ -1,6 +1,11 @@
 <?php
 /* $Id$ */
 
+/**
+ * @file
+ * Install, update and uninstall functions for the color module.
+ */
+
 function color_requirements($phase) {
   $requirements = array();
 

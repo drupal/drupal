@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Install instructions for the block module
+ * Install, update and uninstall functions for the block module.
  */
 
 /**

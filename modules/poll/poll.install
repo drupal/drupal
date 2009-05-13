@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Install file for poll module.
+ * Install, update and uninstall functions for the poll module.
  */
 
 /**

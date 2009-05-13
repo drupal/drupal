@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Install, update and uninstall functions for the taxonomy module.
+ */
+
  /**
  * Implementation of hook_install().
  */

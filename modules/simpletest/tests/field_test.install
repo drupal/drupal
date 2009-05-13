@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Install, update and uninstall functions for the field_test module.
+ */
+
+/**
  * Implementation of hook_schema().
  */
 function field_test_schema() {
