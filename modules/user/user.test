@@ -923,6 +923,30 @@ class UserBlocksUnitTests extends DrupalWebTestCase {
   }
 
   /**
+   * Test the user login block.
+   */
+  function testUserLoginBlock() {
+    // Create a user with some permission that anonymous users lack.
+    $user = $this->drupalCreateUser(array('administer permissions'));
+
+    // Log in using the block.
+    $edit = array();
+    $edit['name'] = $user->name;
+    $edit['pass'] = $user->pass_raw;
+    $this->drupalPost('admin/user/permissions', $edit, t('Log in'));
+    $this->assertText(t('Log out'), t('Logged in.'));
+
+    // Check that we are still on the same page.
+    $this->assertPattern('!<title.*?' . t('Permissions') . '.*?</title>!', t('Still on the same page after login for access denied page'));
+
+    // Now, log out and repeat with a non-403 page.
+    $this->clickLink(t('Log out'));
+    $this->drupalPost('filter/tips', $edit, t('Log in'));
+    $this->assertText(t('Log out'), t('Logged in.'));
+    $this->assertPattern('!<title.*?' . t('Compose tips') . '.*?</title>!', t('Still on the same page after login for allowed page'));
+  }
+
+  /**
    * Test the Who's Online block.
    */
   function testWhosOnlineBlock() {
