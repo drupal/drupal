@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.32 2009/04/29 18:39:50 webchick Exp $
+// $Id: update.module,v 1.33 2009/05/13 18:21:42 webchick Exp $
 
 /**
  * @file
@@ -293,7 +293,7 @@ function update_cron() {
  *
  * @see _update_cache_clear()
  */
-function update_form_system_themes_alter(&$form, $form_state) {
+function update_form_system_themes_form_alter(&$form, $form_state) {
   $form['#submit'][] = 'update_cache_clear_submit';
 }
 
