@@ -170,7 +170,7 @@ function theme() {
   if ($functions[$function]) {
     $output = call_user_func_array($functions[$function], $args);
     // Add final markup to the full page.
-    if ($function == 'page') {
+    if ($function == 'page' || $function == 'book_export_html') {
       $output = drupal_final_markup($output);
     }
     return $output;

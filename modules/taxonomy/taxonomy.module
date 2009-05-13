@@ -621,7 +621,7 @@ function taxonomy_term_confirm_delete_submit($form_id, $form_values) {
  */
 function taxonomy_form($vid, $value = 0, $help = NULL, $name = 'taxonomy') {
   $vocabulary = taxonomy_get_vocabulary($vid);
-  $help = ($help) ? $help : $vocabulary->help;
+  $help = ($help) ? $help : filter_xss_admin($vocabulary->help);
 
   if (!$vocabulary->multiple) {
     $blank = ($vocabulary->required) ? t('- Please choose -') : t('- None selected -');
@@ -718,7 +718,7 @@ function taxonomy_form_alter($form_id, &$form) {
         $typed_string = implode(', ', $typed_terms) . (array_key_exists('tags', $terms) ? $terms['tags'][$vocabulary->vid] : NULL);
 
         if ($vocabulary->help) {
-          $help = $vocabulary->help;
+          $help = filter_xss_admin($vocabulary->help);
         }
         else {
           $help = t('A comma-separated list of terms describing this content. Example: funny, bungee jumping, "Company, Inc.".');
@@ -741,7 +741,7 @@ function taxonomy_form_alter($form_id, &$form) {
             $default_terms[$term->tid] = $term;
           }
         }
-        $form['taxonomy'][$vocabulary->vid] = taxonomy_form($vocabulary->vid, array_keys($default_terms), $vocabulary->help);
+        $form['taxonomy'][$vocabulary->vid] = taxonomy_form($vocabulary->vid, array_keys($default_terms), filter_xss_admin($vocabulary->help));
         $form['taxonomy'][$vocabulary->vid]['#weight'] = $vocabulary->weight;
         $form['taxonomy'][$vocabulary->vid]['#required'] = $vocabulary->required;
       }

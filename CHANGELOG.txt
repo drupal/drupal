@@ -1,5 +1,10 @@
 // $Id$
 
+Drupal 5.18, 2009-05-13
+-----------------------
+- Fixed security issues (Cross site scripting), see SA-CORE-2009-006.
+- Fixed a variety of small bugs.
+
 Drupal 5.17, 2009-04-29
 -----------------------
 - Fixed security issues (Cross site scripting and limited information
