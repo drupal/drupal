@@ -688,7 +688,7 @@ function theme() {
   // restore path_to_theme()
   $theme_path = $temp;
   // Add final markup to the full page.
-  if ($hook == 'page') {
+  if ($hook == 'page' || $hook == 'book_export_html') {
     $output = drupal_final_markup($output);
   }
   return $output;
