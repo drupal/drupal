@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.35 2009/05/06 19:56:21 webchick Exp $
+// $Id: user.test,v 1.36 2009/05/13 17:23:48 webchick Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -920,6 +920,30 @@ class UserBlocksUnitTests extends DrupalWebTestCase {
       'description' => t('Test user blocks.'),
       'group' => t('User')
     );
+  }
+
+  /**
+   * Test the user login block.
+   */
+  function testUserLoginBlock() {
+    // Create a user with some permission that anonymous users lack.
+    $user = $this->drupalCreateUser(array('administer permissions'));
+
+    // Log in using the block.
+    $edit = array();
+    $edit['name'] = $user->name;
+    $edit['pass'] = $user->pass_raw;
+    $this->drupalPost('admin/user/permissions', $edit, t('Log in'));
+    $this->assertText(t('Log out'), t('Logged in.'));
+
+    // Check that we are still on the same page.
+    $this->assertPattern('!<title.*?' . t('Permissions') . '.*?</title>!', t('Still on the same page after login for access denied page'));
+
+    // Now, log out and repeat with a non-403 page.
+    $this->clickLink(t('Log out'));
+    $this->drupalPost('filter/tips', $edit, t('Log in'));
+    $this->assertText(t('Log out'), t('Logged in.'));
+    $this->assertPattern('!<title.*?' . t('Compose tips') . '.*?</title>!', t('Still on the same page after login for allowed page'));
   }
 
   /**

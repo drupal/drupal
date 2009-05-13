@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.898 2009/05/12 08:37:44 dries Exp $
+// $Id: common.inc,v 1.899 2009/05/13 17:23:48 webchick Exp $
 
 /**
  * @file
@@ -358,11 +358,6 @@ function drupal_not_found() {
 
   watchdog('page not found', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
-  // Keep old path for reference.
-  if (!isset($_REQUEST['destination'])) {
-    $_REQUEST['destination'] = $_GET['q'];
-  }
-
   $path = drupal_get_normal_path(variable_get('site_404', ''));
   if ($path && $path != $_GET['q']) {
     // Custom 404 handler. Set the active item in case there are tabs to
@@ -389,12 +384,8 @@ function drupal_not_found() {
  */
 function drupal_access_denied() {
   drupal_set_header('403 Forbidden');
+  
   watchdog('access denied', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
-
-  // Keep old path for reference.
-  if (!isset($_REQUEST['destination'])) {
-    $_REQUEST['destination'] = $_GET['q'];
-  }
 
   $path = drupal_get_normal_path(variable_get('site_403', ''));
   if ($path && $path != $_GET['q']) {
