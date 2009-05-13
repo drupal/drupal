@@ -1,5 +1,10 @@
 <?php
-// $Id: field_test.install,v 1.2 2009/02/05 03:42:58 webchick Exp $
+// $Id: field_test.install,v 1.3 2009/05/13 19:42:17 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the field_test module.
+ */
 
 /**
  * Implementation of hook_schema().

@@ -1,5 +1,10 @@
 <?php
-// $Id: contact.install,v 1.11 2008/11/15 13:01:05 dries Exp $
+// $Id: contact.install,v 1.12 2009/05/13 19:42:14 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the contact module.
+ */
 
 /**
  * Implementation of hook_install().

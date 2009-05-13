@@ -1,5 +1,10 @@
 <?php
-// $Id: taxonomy.install,v 1.15 2009/01/31 16:22:50 webchick Exp $
+// $Id: taxonomy.install,v 1.16 2009/05/13 19:42:17 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the taxonomy module.
+ */
 
  /**
  * Implementation of hook_install().

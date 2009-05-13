@@ -1,5 +1,10 @@
 <?php
-// $Id: system.install,v 1.323 2009/05/12 13:43:45 dries Exp $
+// $Id: system.install,v 1.324 2009/05/13 19:42:17 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the system module.
+ */
 
 /**
  * Test and report Drupal installation requirements.

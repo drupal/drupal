@@ -1,5 +1,10 @@
 <?php
-// $Id: dblog.install,v 1.14 2009/02/26 07:30:26 webchick Exp $
+// $Id: dblog.install,v 1.15 2009/05/13 19:42:14 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the dblog module.
+ */
 
 /**
  * Implementation of hook_install().

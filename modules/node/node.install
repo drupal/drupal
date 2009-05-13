@@ -1,5 +1,10 @@
 <?php
-// $Id: node.install,v 1.16 2009/04/25 14:01:05 dries Exp $
+// $Id: node.install,v 1.17 2009/05/13 19:42:15 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the node module.
+ */
 
 /**
  * Implementation of hook_schema().

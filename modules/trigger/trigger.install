@@ -1,5 +1,10 @@
 <?php
-// $Id: trigger.install,v 1.8 2009/03/08 04:25:07 webchick Exp $
+// $Id: trigger.install,v 1.9 2009/05/13 19:42:17 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the trigger module.
+ */
 
 /**
  * Implementation of hook_install().

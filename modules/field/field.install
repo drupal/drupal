@@ -1,5 +1,10 @@
 <?php
-// $Id: field.install,v 1.4 2009/03/10 09:45:31 dries Exp $
+// $Id: field.install,v 1.5 2009/05/13 19:42:15 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the field module.
+ */
 
 /**
  * Implementation of hook_install().

@@ -1,5 +1,10 @@
 <?php
-// $Id: profile.install,v 1.17 2009/02/26 07:30:27 webchick Exp $
+// $Id: profile.install,v 1.18 2009/05/13 19:42:16 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the profile module.
+ */
 
 /**
  * Implementation of hook_install().

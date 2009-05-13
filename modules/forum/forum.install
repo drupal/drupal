@@ -1,5 +1,10 @@
 <?php
-// $Id: forum.install,v 1.26 2009/01/14 21:16:20 dries Exp $
+// $Id: forum.install,v 1.27 2009/05/13 19:42:15 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the forum module.
+ */
 
 /**
  * Implementation of hook_install().

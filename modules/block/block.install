@@ -1,9 +1,9 @@
 <?php
-// $Id: block.install,v 1.22 2009/05/06 10:39:42 dries Exp $
+// $Id: block.install,v 1.23 2009/05/13 19:42:14 webchick Exp $
 
 /**
  * @file
- * Install instructions for the block module
+ * Install, update and uninstall functions for the block module.
  */
 
 /**

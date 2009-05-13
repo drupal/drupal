@@ -1,9 +1,9 @@
 <?php
-// $Id: poll.install,v 1.21 2009/04/26 16:31:23 dries Exp $
+// $Id: poll.install,v 1.22 2009/05/13 19:42:16 webchick Exp $
 
 /**
  * @file
- * Install file for poll module.
+ * Install, update and uninstall functions for the poll module.
  */
 
 /**

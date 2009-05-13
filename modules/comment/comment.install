@@ -1,5 +1,10 @@
 <?php
-// $Id: comment.install,v 1.32 2009/02/26 07:30:26 webchick Exp $
+// $Id: comment.install,v 1.33 2009/05/13 19:42:14 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the comment module.
+ */
 
 /**
  * Implementation of hook_install().

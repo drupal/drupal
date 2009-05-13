@@ -1,5 +1,10 @@
 <?php
-// $Id: user.install,v 1.23 2009/04/30 16:10:10 dries Exp $
+// $Id: user.install,v 1.24 2009/05/13 19:42:18 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the user module.
+ */
 
 /**
  * Implementation of hook_schema().

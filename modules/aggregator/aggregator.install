@@ -1,5 +1,10 @@
 <?php
-// $Id: aggregator.install,v 1.20 2008/12/22 19:38:31 dries Exp $
+// $Id: aggregator.install,v 1.21 2009/05/13 19:42:14 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the aggregator module.
+ */
 
 /**
  * Implementation of hook_install().

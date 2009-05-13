@@ -1,5 +1,10 @@
 <?php
-// $Id: php.install,v 1.5 2009/03/13 21:35:02 dries Exp $
+// $Id: php.install,v 1.6 2009/05/13 19:42:16 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the php module.
+ */
 
 /**
  * Implementation of hook_install().

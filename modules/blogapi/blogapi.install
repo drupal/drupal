@@ -1,5 +1,10 @@
 <?php
-// $Id: blogapi.install,v 1.6 2009/02/26 07:30:26 webchick Exp $
+// $Id: blogapi.install,v 1.7 2009/05/13 19:42:14 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the blogapi module.
+ */
 
 /**
  * Implementation of hook_install().

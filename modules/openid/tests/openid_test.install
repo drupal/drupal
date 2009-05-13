@@ -1,5 +1,10 @@
 <?php
-// $Id: openid_test.install,v 1.1 2009/05/08 21:44:48 dries Exp $
+// $Id: openid_test.install,v 1.2 2009/05/13 19:42:16 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the openid_test module.
+ */
 
 /**
  * Implementation of hook_install().

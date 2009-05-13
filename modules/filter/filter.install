@@ -1,5 +1,10 @@
 <?php
-// $Id: filter.install,v 1.13 2009/04/25 18:01:10 dries Exp $
+// $Id: filter.install,v 1.14 2009/05/13 19:42:15 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the filter module.
+ */
 
 /**
  * Implementation of hook_schema().

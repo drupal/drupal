@@ -1,5 +1,10 @@
 <?php
-// $Id: book.install,v 1.27 2009/01/19 10:46:50 dries Exp $
+// $Id: book.install,v 1.28 2009/05/13 19:42:14 webchick Exp $
+
+/**
+ * @file
+ * Install, update and uninstall functions for the book module.
+ */
 
 /**
  * Implementation of hook_install().
