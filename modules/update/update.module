@@ -303,7 +303,7 @@ function update_cron() {
  * @see update_invalidate_cache()
  */
 function update_form_alter(&$form, $form_state, $form_id) {
-  if ($form_id == 'system_modules' || $form_id == 'system_themes' ) {
+  if ($form_id == 'system_modules' || $form_id == 'system_themes_form' ) {
     $form['#submit'][] = 'update_invalidate_cache';
   }
 }
