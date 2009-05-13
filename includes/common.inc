@@ -2047,7 +2047,7 @@ function page_set_cache() {
  * @param $body
  *   Message to be sent. Drupal will format the correct line endings for you.
  * @param $from
- *   Sets From, Reply-To, Return-Path and Error-To to this value, if given.
+ *   Sets From to this value, if given.
  * @param $headers
  *   Associative array containing the headers to add. This is typically
  *   used to add extra headers (From, Cc, and Bcc).
@@ -2067,10 +2067,10 @@ function drupal_mail($mailkey, $to, $subject, $body, $from = NULL, $headers = ar
   // SMTP server.  Errors-To is redundant, but shouldn't hurt.
   $default_from = variable_get('site_mail', ini_get('sendmail_from'));
   if ($default_from) {
-    $defaults['From'] = $defaults['Reply-To'] = $defaults['Sender'] = $defaults['Return-Path'] = $defaults['Errors-To'] = $default_from;
+    $defaults['From'] = $defaults['Sender'] = $defaults['Return-Path'] = $defaults['Errors-To'] = $default_from;
   }
   if ($from) {
-    $defaults['From'] = $defaults['Reply-To'] = $from;
+    $defaults['From'] = $from;
   }
   $headers = array_merge($defaults, $headers);
   // Custom hook traversal to allow pass by reference
