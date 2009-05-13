@@ -415,7 +415,7 @@ function taxonomy_del_term($tid) {
  */
 function taxonomy_form($vid, $value = 0, $help = NULL, $name = 'taxonomy') {
   $vocabulary = taxonomy_vocabulary_load($vid);
-  $help = ($help) ? $help : $vocabulary->help;
+  $help = ($help) ? $help : filter_xss_admin($vocabulary->help);
 
   if (!$vocabulary->multiple) {
     $blank = ($vocabulary->required) ? t('- Please choose -') : t('- None selected -');
@@ -424,7 +424,7 @@ function taxonomy_form($vid, $value = 0, $help = NULL, $name = 'taxonomy') {
     $blank = ($vocabulary->required) ? 0 : t('- None -');
   }
 
-  return _taxonomy_term_select(check_plain($vocabulary->name), $name, $value, $vid, filter_xss_admin($help), intval($vocabulary->multiple), $blank);
+  return _taxonomy_term_select(check_plain($vocabulary->name), $name, $value, $vid, $help, intval($vocabulary->multiple), $blank);
 }
 
 /**
@@ -538,7 +538,7 @@ function taxonomy_form_alter(&$form, $form_state, $form_id) {
             $default_terms[$term->tid] = $term;
           }
         }
-        $form['taxonomy'][$vocabulary->vid] = taxonomy_form($vocabulary->vid, array_keys($default_terms), $vocabulary->help);
+        $form['taxonomy'][$vocabulary->vid] = taxonomy_form($vocabulary->vid, array_keys($default_terms), filter_xss_admin($vocabulary->help));
         $form['taxonomy'][$vocabulary->vid]['#weight'] = $vocabulary->weight;
         $form['taxonomy'][$vocabulary->vid]['#required'] = $vocabulary->required;
       }
