@@ -54,15 +54,6 @@ function aggregator_view() {
  */
 function aggregator_form_feed(&$form_state, stdClass $feed = NULL) {
   $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
-
-  if (!isset($feed)) {
-    $feed = new stdClass();
-  }
-
-  if (empty($feed->refresh)) {
-    $feed->refresh = 3600;
-  }
-
   $form['title'] = array('#type' => 'textfield',
     '#title' => t('Title'),
     '#default_value' => isset($feed->title) ? $feed->title : '',
@@ -79,7 +70,7 @@ function aggregator_form_feed(&$form_state, stdClass $feed = NULL) {
   );
   $form['refresh'] = array('#type' => 'select',
     '#title' => t('Update interval'),
-    '#default_value' => isset($feed->refresh) ? $feed->refresh : 900,
+    '#default_value' => isset($feed->refresh) ? $feed->refresh : 3600,
     '#options' => $period,
     '#description' => t('The length of time between feed updates. Requires a correctly configured <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status'))),
   );
