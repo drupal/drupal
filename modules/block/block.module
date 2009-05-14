@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.330 2009/05/07 15:29:08 webchick Exp $
+// $Id: block.module,v 1.331 2009/05/14 08:23:14 dries Exp $
 
 /**
  * @file
@@ -98,7 +98,6 @@ function block_theme() {
     ),  
     'block_admin_display_form' => array(
       'template' => 'block-admin-display-form',
-      'file' => 'block.admin.inc',
       'arguments' => array('form' => NULL),
     ),
   );

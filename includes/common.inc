@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.899 2009/05/13 17:23:48 webchick Exp $
+// $Id: common.inc,v 1.900 2009/05/14 08:23:14 dries Exp $
 
 /**
  * @file
@@ -3555,8 +3555,7 @@ function drupal_common_theme() {
     'maintenance_page' => array(
       'arguments' => array('content' => NULL, 'show_blocks' => TRUE, 'show_messages' => TRUE),
       'template' => 'maintenance-page',
-      'path' => 'includes',
-      'file' => 'theme.maintenance.inc',
+      'path' => 'includes'
     ),
     'update_page' => array(
       'arguments' => array('content' => NULL, 'show_messages' => TRUE),

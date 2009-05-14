@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.252 2009/03/14 23:01:37 webchick Exp $
+// $Id: profile.module,v 1.253 2009/05/14 08:23:15 dries Exp $
 
 /**
  * @file
@@ -67,7 +67,6 @@ function profile_theme() {
     ),
     'profile_admin_overview' => array(
       'arguments' => array('form' => NULL),
-      'file' => 'profile.admin.inc',
     )
   );
 }
