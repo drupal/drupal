@@ -126,12 +126,10 @@ function search_theme() {
     ),
     'search_result' => array(
       'arguments' => array('result' => NULL, 'type' => NULL),
-      'file' => 'search.pages.inc',
       'template' => 'search-result',
     ),
     'search_results' => array(
       'arguments' => array('results' => NULL, 'type' => NULL),
-      'file' => 'search.pages.inc',
       'template' => 'search-results',
     ),
     'search_results_listing' => array(
