@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.323 2009/05/07 16:24:33 dries Exp $
+// $Id: menu.inc,v 1.324 2009/05/14 08:35:58 dries Exp $
 
 /**
  * @file
@@ -366,6 +366,7 @@ function menu_get_item($path = NULL, $router_item = NULL) {
       ->condition('path', $ancestors, 'IN')
       ->orderBy('fit', 'DESC')
       ->range(0, 1)
+      ->addTag('menu_get_item')
       ->execute()->fetchAssoc();
     if ($router_item) {
       $map = _menu_translate($router_item, $original_map);
