@@ -366,6 +366,7 @@ function menu_get_item($path = NULL, $router_item = NULL) {
       ->condition('path', $ancestors, 'IN')
       ->orderBy('fit', 'DESC')
       ->range(0, 1)
+      ->addTag('menu_get_item')
       ->execute()->fetchAssoc();
     if ($router_item) {
       $map = _menu_translate($router_item, $original_map);
