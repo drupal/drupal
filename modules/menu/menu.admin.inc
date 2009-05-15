@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.46 2009/05/07 16:22:45 dries Exp $
+// $Id: menu.admin.inc,v 1.47 2009/05/15 04:07:20 dries Exp $
 
 /**
  * @file
@@ -539,10 +539,11 @@ function menu_edit_menu_validate($form, &$form_state) {
   if (preg_match('/[^a-z0-9-]/', $item['menu_name'])) {
     form_set_error('menu_name', t('The menu name may only consist of lowercase letters, numbers, and hyphens.'));
   }
-  if (strlen($item['menu_name']) > MENU_MAX_MENU_NAME_LENGTH_UI) {
-    form_set_error('menu_name', format_plural(MENU_MAX_MENU_NAME_LENGTH_UI, "The menu name can't be longer than 1 character.", "The menu name can't be longer than @count characters."));
-  }
   if ($form['#insert']) {
+    if (strlen($item['menu_name']) > MENU_MAX_MENU_NAME_LENGTH_UI) {
+      form_set_error('menu_name', format_plural(MENU_MAX_MENU_NAME_LENGTH_UI, "The menu name can't be longer than 1 character.", "The menu name can't be longer than @count characters."));
+    }
+
     // We will add 'menu-' to the menu name to help avoid name-space conflicts.
     $item['menu_name'] = 'menu-' . $item['menu_name'];
     $custom_exists = db_query('SELECT menu_name FROM {menu_custom} WHERE menu_name = :menu', array(':menu' => $item['menu_name']))->fetchField();
