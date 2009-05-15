@@ -634,10 +634,13 @@ function node_multiple_delete_confirm(&$form_state, $nodes) {
   }
   $form['operation'] = array('#type' => 'hidden', '#value' => 'delete');
   $form['#submit'][] = 'node_multiple_delete_confirm_submit';
-  return confirm_form($form,
-                      t('Are you sure you want to delete these items?'),
-                      'admin/content/node', t('This action cannot be undone.'),
-                      t('Delete all'), t('Cancel'));
+  $confirm_question = format_plural(count($nodes), 
+                                  'Are you sure you want to delete this item?', 
+                                  'Are you sure you want to delete these items?');
+  return confirm_form($form, 
+                    $confirm_question,
+                    'admin/content/node', t('This action cannot be undone.'),
+                    t('Delete'), t('Cancel'));
 }
 
 function node_multiple_delete_confirm_submit($form, &$form_state) {
@@ -645,7 +648,10 @@ function node_multiple_delete_confirm_submit($form, &$form_state) {
     foreach ($form_state['values']['nodes'] as $nid => $value) {
       node_delete($nid);
     }
-    drupal_set_message(t('The items have been deleted.'));
+    $message = format_plural(count($form_state['values']['nodes']),
+                            'The item has been deleted.',
+                            'The items have been deleted.');
+    drupal_set_message($message);
   }
   $form_state['redirect'] = 'admin/content/node';
   return;
