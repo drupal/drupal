@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.24 2009/04/27 20:19:38 webchick Exp $
+// $Id: system.js,v 1.25 2009/05/15 03:38:25 dries Exp $
 (function ($) {
 
 /**
@@ -110,6 +110,19 @@ Drupal.behaviors.dateTime = {
     // Trigger the event handler to show the form input if necessary.
     $('select.date-format', context).trigger('change');
   }
+};
+
+/**
+ * Show/hide settings for user configurable time zones depending on whether
+ * users are able to set their own time zones or not.
+ */
+Drupal.behaviors.userTimeZones = {
+  attach: function (context, settings) {
+    $('#empty-timezone-message-wrapper .description').hide();
+    $('#edit-configurable-timezones', context).change(function () {
+      $('#empty-timezone-message-wrapper').toggle();
+    });
+  },
 };
 
 /**
