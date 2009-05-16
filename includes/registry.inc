@@ -262,6 +262,12 @@ function _registry_skip_body(&$tokens) {
     elseif ($token == '}') {
       --$num_braces;
     }
+    // Consume strings manually as workaround for a bug in PHP < 5.2.3 (see
+    // http://drupal.org/node/368116).
+    elseif ($token == '"' || $token == '`' || (is_array($token) && $token[0] == T_START_HEREDOC)) {
+      $stop = is_array($token) ? T_END_HEREDOC : $token;
+      while (($token = next($tokens)) && (is_array($token) ? $token[0] : $token) != $stop);
+    }
   }
 }
 

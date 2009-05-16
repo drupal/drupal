@@ -146,12 +146,20 @@ class RegistrySkipBodyTestCase extends DrupalWebTestCase {
   
   function testRegistrySkipBody () {
     // This string contains all three kinds of opening braces.
-    $function = '<?php function foo () { $x = "{$y}"; $x = "${y}" }';
+    $function = '<?php function foo () { $x = "{$y}"; $x = "${y}"; }';
     $tokens = token_get_all($function);
     _registry_skip_body($tokens);
     // Consume the last }
     each($tokens);
     $this->assertIdentical(each($tokens), FALSE, t('Tokens skipped'));
+
+    // Check workaround for PHP < 5.2.3 regarding tokenization of strings
+    // containing variables. The { contained in the string should not be
+    // treated as a separate token.
+    $function = '<?php function foo() { $x = "$y {"; $x = `$y {`; $x = ' . "<<<EOD\n\$y {\nEOD\n; } function bar() {}";
+    $tokens = token_get_all($function);
+    _registry_skip_body($tokens);
+    $this->assertTrue(each($tokens), t('Tokens not skipped to end of file.'));
   }
 
 }
