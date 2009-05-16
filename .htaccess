@@ -23,7 +23,7 @@ ErrorDocument 404 /index.php
 </Files>
 
 # Set the default handler.
-DirectoryIndex index.php
+DirectoryIndex index.php index.html index.htm
 
 # Override PHP settings that cannot be changed at runtime. See
 # sites/default/default.settings.php and drupal_initialize_variables() in
@@ -91,4 +91,4 @@ DirectoryIndex index.php
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.100 2009/04/22 09:45:02 dries Exp $
+# $Id: .htaccess,v 1.101 2009/05/16 13:19:12 webchick Exp $
