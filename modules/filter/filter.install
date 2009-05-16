@@ -81,7 +81,7 @@ function filter_schema() {
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => 'Flag to indicate whether format is cachable. (1 = cachable, 0 = not cachable)',
+        'description' => 'Flag to indicate whether format is cacheable. (1 = cacheable, 0 = not cacheable)',
       ),
       'weight' => array(
         'type' => 'int',
