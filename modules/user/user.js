@@ -161,14 +161,13 @@ Drupal.evaluatePasswordStrength = function (password, translate) {
 };
 
 /**
- * On the admin/user/settings page, conditionally show all of the
- * picture-related form elements depending on the current value of the
- * "Picture support" radio buttons.
+ * Show all of the picture-related form elements at admin/user/settings
+ * depending on whether user pictures are enabled or not.
  */
 Drupal.behaviors.userSettings = {
   attach: function (context, settings) {
-    $('div.user-admin-picture-radios input[type=radio]:not(.userSettings-processed)', context).addClass('userSettings-processed').click(function () {
-      $('div.user-admin-picture-settings', context)[['hide', 'show'][this.value]]();
+    $('#edit-user-pictures', context).change(function () {
+      $('div.user-admin-picture-settings', context).toggle();
     });
   }
 };

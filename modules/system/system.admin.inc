@@ -1203,13 +1203,6 @@ function system_site_information_settings() {
     '#default_value' => '',
     '#description' => t("Your site's motto, tag line, or catchphrase (often displayed alongside the title of the site).")
   );
-  $form['anonymous'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Anonymous user'),
-    '#default_value' => t('Anonymous'),
-    '#description' => t('The name used to indicate anonymous users.'),
-    '#required' => TRUE,
-  );
   $form['site_frontpage'] = array(
     '#type' => 'textfield',
     '#title' => t('Default front page'),
