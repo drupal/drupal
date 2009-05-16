@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.145 2009/05/16 18:34:22 dries Exp $
+// $Id: system.admin.inc,v 1.146 2009/05/16 20:10:50 webchick Exp $
 
 /**
  * @file
@@ -1202,13 +1202,6 @@ function system_site_information_settings() {
     '#title' => t('Slogan'),
     '#default_value' => '',
     '#description' => t("Your site's motto, tag line, or catchphrase (often displayed alongside the title of the site).")
-  );
-  $form['anonymous'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Anonymous user'),
-    '#default_value' => t('Anonymous'),
-    '#description' => t('The name used to indicate anonymous users.'),
-    '#required' => TRUE,
   );
   $form['site_frontpage'] = array(
     '#type' => 'textfield',
