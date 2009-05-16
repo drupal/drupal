@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.291 2009/05/14 08:23:15 dries Exp $
+// $Id: search.module,v 1.292 2009/05/16 16:06:04 dries Exp $
 
 /**
  * @file
@@ -509,7 +509,7 @@ function search_index($sid, $type, $text) {
             if (preg_match('!(?:node|book)/(?:view/)?([0-9]+)!i', $path, $match)) {
               $linknid = $match[1];
               if ($linknid > 0) {
-                // Note: ignore links to uncachable nodes to avoid redirect bugs.
+                // Note: ignore links to uncacheable nodes to avoid redirect bugs.
                 $node = db_fetch_object(db_query('SELECT n.title, n.nid, n.vid, r.format FROM {node} n INNER JOIN {node_revision} r ON n.vid = r.vid WHERE n.nid = %d', $linknid));
                 if (filter_format_allowcache($node->format)) {
                   $link = TRUE;

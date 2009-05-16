@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.14 2009/05/13 19:42:15 webchick Exp $
+// $Id: filter.install,v 1.15 2009/05/16 16:06:04 dries Exp $
 
 /**
  * @file
@@ -81,7 +81,7 @@ function filter_schema() {
         'not null' => TRUE,
         'default' => 0,
         'size' => 'tiny',
-        'description' => 'Flag to indicate whether format is cachable. (1 = cachable, 0 = not cachable)',
+        'description' => 'Flag to indicate whether format is cacheable. (1 = cacheable, 0 = not cacheable)',
       ),
       'weight' => array(
         'type' => 'int',
