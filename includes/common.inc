@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.902 2009/05/16 18:24:37 webchick Exp $
+// $Id: common.inc,v 1.903 2009/05/16 19:07:02 dries Exp $
 
 /**
  * @file
@@ -1873,6 +1873,7 @@ function drupal_page_footer() {
 
   module_implements(MODULE_IMPLEMENTS_WRITE_CACHE);
   _registry_check_code(REGISTRY_WRITE_LOOKUP_CACHE);
+  drupal_cache_system_paths();
 }
 
 /**

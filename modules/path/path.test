@@ -1,5 +1,5 @@
 <?php
-// $Id: path.test,v 1.11 2009/05/10 16:50:19 dries Exp $
+// $Id: path.test,v 1.12 2009/05/16 19:07:02 dries Exp $
 
 /**
  * @file
@@ -24,6 +24,31 @@ class PathTestCase extends DrupalWebTestCase {
     // Create test user and login.
     $web_user = $this->drupalCreateUser(array('create page content', 'edit own page content', 'administer url aliases', 'create url aliases'));
     $this->drupalLogin($web_user);
+  }
+
+  /**
+   * Test the path cache.
+   */
+  function testPathCache() {
+    // Create test node.
+    $node1 = $this->drupalCreateNode();
+
+    // Create alias.
+    $edit = array();
+    $edit['src'] = 'node/' . $node1->nid;
+    $edit['dst'] = $this->randomName(8);
+    $this->drupalPost('admin/build/path/add', $edit, t('Create new alias'));
+
+    // Visit the system path for the node and confirm a cache entry is
+    // created.
+    cache_clear_all('*', 'cache_path', TRUE);
+    $this->drupalGet($edit['src']);
+    $this->assertTrue(cache_get($edit['src'], 'cache_path'), t('Cache entry was created.'));
+
+    // Visit the alias for the node and confirm a cache entry is created.
+    cache_clear_all('*', 'cache_path', TRUE);
+    $this->drupalGet($edit['dst']);
+    $this->assertTrue(cache_get($edit['src'], 'cache_path'), t('Cache entry was created.'));
   }
 
   /**
