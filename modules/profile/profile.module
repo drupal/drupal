@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.253 2009/05/14 08:23:15 dries Exp $
+// $Id: profile.module,v 1.254 2009/05/16 15:23:16 webchick Exp $
 
 /**
  * @file
@@ -511,7 +511,8 @@ function profile_category_access($account, $category) {
     return TRUE;
   }
   else {
-    return user_edit_access($account) && db_result(db_query("SELECT COUNT(*) FROM {profile_field} WHERE category = '%s' AND visibility <> %d", $category, PROFILE_HIDDEN));
+    $category_visible = (bool) db_query_range('SELECT 1 FROM {profile_field} WHERE category = :category AND visibility <> :visibility', array(':category' => $category, ':visibility' => PROFILE_HIDDEN), 0, 1)->fetchField();
+    return user_edit_access($account) && $category_visible;
   }
 }
 
