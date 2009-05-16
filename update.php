@@ -635,6 +635,8 @@ function update_prepare_d7_bootstrap() {
  * made which make it impossible to continue using the prior version.
  */
 function update_fix_d7_requirements() {
+  $ret = array();
+
   // Rewrite the settings.php file if necessary.
   // @see update_prepare_d7_bootstrap().
   global $update_rewrite_settings, $db_url;
@@ -642,6 +644,16 @@ function update_fix_d7_requirements() {
     $databases = update_parse_db_url($db_url);
     file_put_contents(conf_path() . '/settings.php', "\n" . '$databases = ' . var_export($databases, TRUE) . ';', FILE_APPEND);
   }
+  if (drupal_get_installed_schema_version('system') < 7000 && !variable_get('update_d7_requirements', FALSE)) {
+
+    // Add the cache_path table.
+    $schema['cache_path'] = drupal_get_schema_unprocessed('system', 'cache');
+    $schema['cache_path']['description'] = t('Cache table used for path alias lookups.');
+    db_create_table($ret, 'cache_path', $schema['cache_path']);
+    variable_set('update_d7_requirements', TRUE);
+  }
+
+  return $ret;
 }
 
 /**

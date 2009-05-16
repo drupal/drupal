@@ -3498,17 +3498,6 @@ function system_update_7023() {
 }
 
 /**
- * Create the cache_path table.
- */
-function system_update_7024() {
-  $ret = array();
-  $schema['cache_path'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_path']['description'] = t('Cache table used for path alias lookups.');
-  db_create_table($ret, 'cache_path', $schema['cache_path']);
-  return $ret;
-}
-
-/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
