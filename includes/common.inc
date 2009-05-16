@@ -1873,6 +1873,7 @@ function drupal_page_footer() {
 
   module_implements(MODULE_IMPLEMENTS_WRITE_CACHE);
   _registry_check_code(REGISTRY_WRITE_LOOKUP_CACHE);
+  drupal_cache_system_paths();
 }
 
 /**

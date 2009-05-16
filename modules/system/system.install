@@ -611,6 +611,8 @@ function system_schema() {
   $schema['cache_page']['description'] = 'Cache table used to store compressed pages for anonymous users, if page caching is enabled.';
   $schema['cache_menu'] = $schema['cache'];
   $schema['cache_menu']['description'] = 'Cache table for the menu system to store router information as well as generated link trees for various menu/page/user combinations.';
+  $schema['cache_path'] = $schema['cache'];
+  $schema['cache_path']['description'] = 'Cache table for path alias lookup.';
   $schema['cache_registry'] = $schema['cache'];
   $schema['cache_registry']['description'] = 'Cache table for the code registry system to remember what code files need to be loaded on any given page.';
 
@@ -3492,6 +3494,17 @@ function system_update_7022() {
 function system_update_7023() {
   $ret = array();
   $ret[] = update_sql("UPDATE {role_permission} SET permission = 'use PHP for settings' WHERE permission = 'use PHP for block visibility'");
+  return $ret;
+}
+
+/**
+ * Create the cache_path table.
+ */
+function system_update_7024() {
+  $ret = array();
+  $schema['cache_path'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_path']['description'] = t('Cache table used for path alias lookups.');
+  db_create_table($ret, 'cache_path', $schema['cache_path']);
   return $ret;
 }
 

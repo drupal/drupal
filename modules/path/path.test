@@ -27,6 +27,31 @@ class PathTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test the path cache.
+   */
+  function testPathCache() {
+    // Create test node.
+    $node1 = $this->drupalCreateNode();
+
+    // Create alias.
+    $edit = array();
+    $edit['src'] = 'node/' . $node1->nid;
+    $edit['dst'] = $this->randomName(8);
+    $this->drupalPost('admin/build/path/add', $edit, t('Create new alias'));
+
+    // Visit the system path for the node and confirm a cache entry is
+    // created.
+    cache_clear_all('*', 'cache_path', TRUE);
+    $this->drupalGet($edit['src']);
+    $this->assertTrue(cache_get($edit['src'], 'cache_path'), t('Cache entry was created.'));
+
+    // Visit the alias for the node and confirm a cache entry is created.
+    cache_clear_all('*', 'cache_path', TRUE);
+    $this->drupalGet($edit['dst']);
+    $this->assertTrue(cache_get($edit['src'], 'cache_path'), t('Cache entry was created.'));
+  }
+
+  /**
    * Test alias functionality through the admin interfaces.
    */
   function testAdminAlias() {
