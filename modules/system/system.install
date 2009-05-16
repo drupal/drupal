@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.326 2009/05/16 19:07:02 dries Exp $
+// $Id: system.install,v 1.327 2009/05/16 20:25:20 webchick Exp $
 
 /**
  * @file
@@ -3494,17 +3494,6 @@ function system_update_7022() {
 function system_update_7023() {
   $ret = array();
   $ret[] = update_sql("UPDATE {role_permission} SET permission = 'use PHP for settings' WHERE permission = 'use PHP for block visibility'");
-  return $ret;
-}
-
-/**
- * Create the cache_path table.
- */
-function system_update_7024() {
-  $ret = array();
-  $schema['cache_path'] = drupal_get_schema_unprocessed('system', 'cache');
-  $schema['cache_path']['description'] = t('Cache table used for path alias lookups.');
-  db_create_table($ret, 'cache_path', $schema['cache_path']);
   return $ret;
 }
 
