@@ -195,7 +195,7 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp('php');
     // Reset drupal_add_css() before each test.
-    drupal_add_css(NULL, 'reset');
+    drupal_static_reset('drupal_add_css');
   }
 
   /**
@@ -218,7 +218,7 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
    * Makes sure that reseting the CSS empties the cache.
    */
   function testReset() {
-    drupal_add_css(NULL, 'reset');
+    drupal_static_reset('drupal_add_css');
     $this->assertEqual(array(), drupal_add_css(), t('Resetting the CSS empties the cache.'));
   }
 
@@ -433,7 +433,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     variable_set('preprocess_js', 0);
 
     // Reset drupal_add_js() before each test.
-    drupal_add_js(NULL, 'reset');
+    drupal_static_reset('drupal_add_js');
   }
 
   function tearDown() {
@@ -485,7 +485,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
    */
   function testReset() {
     drupal_add_js('misc/collapse.js');
-    drupal_add_js(NULL, 'reset');
+    drupal_static_reset('drupal_add_js');
     $this->assertEqual(array(), drupal_add_js(), t('Resetting the JavaScript correctly empties the cache.'));
   }
 

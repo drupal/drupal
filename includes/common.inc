@@ -1949,6 +1949,9 @@ function drupal_add_link($attributes) {
 /**
  * Adds a cascading stylesheet to the stylesheet queue.
  *
+ * Calling drupal_static_reset('drupal_add_css') will clear all cascading
+ * stylesheets added so far.
+ *
  * @param $data
  *   (optional) The stylesheet data to be added, depending on what is passed
  *   through to the $options['type'] parameter:
@@ -1971,15 +1974,13 @@ function drupal_add_link($attributes) {
  *   - 'inline': A string of CSS that should be placed in the given scope. Note
  *     that it is better practice to use 'module' or 'theme' stylesheets, rather
  *     than 'inline' as the CSS would then be aggregated and cached.
- *   - 'reset': Any previously added CSS will be reset and $data will be ignored.
  *
  * @param $options
  *   (optional) A string defining the 'type' of CSS that is being added in the
  *   $data parameter ('module', 'theme' or 'inline'), or an associative array of
  *   additional options, with the following keys:
  *   - 'type': The type of stylesheet that is being added. Types are: 'module',
- *     'theme', 'inline' or 'reset'. Defaults to 'module'. If the type is
- *     'reset', then the CSS will be reset, ignoring $path and other $options.
+ *     'theme' or 'inline'. Defaults to 'module'.
  *   - 'media': The media type for the stylesheet, e.g., all, print, screen.
  *     Defaults to 'all'.
  *   - 'preprocess': Allows the CSS to be aggregated and compressed if the
@@ -2010,7 +2011,7 @@ function drupal_add_link($attributes) {
  *   An array of queued cascading stylesheets.
  */
 function drupal_add_css($data = NULL, $options = NULL) {
-  static $css = array();
+  $css = &drupal_static(__FUNCTION__, array());
   global $language;
 
   // Construct the options, taking the defaults into consideration.
@@ -2021,11 +2022,6 @@ function drupal_add_css($data = NULL, $options = NULL) {
   }
   else {
     $options = array();
-  }
-
-  // Request made to reset the CSS added so far.
-  if (isset($options['type']) && $options['type'] == 'reset') {
-    return $css = array();
   }
 
   // Create an array of CSS files for each media type first, since each type needs to be served
@@ -2359,6 +2355,9 @@ function drupal_clear_css_cache() {
  *   drupal_add_js('http://example.com/example.js', 'external');
  * @endcode
  *
+ * Calling drupal_static_reset('drupal_add_js') will clear all JavaScript added
+ * so far.
+ *
  * @param $data
  *   (optional) If given, the value depends on the $options parameter:
  *   - 'file': Path to the file relative to base_path().
@@ -2368,8 +2367,6 @@ function drupal_clear_css_cache() {
  *       array is directly placed in Drupal.settings. All modules should wrap
  *       their actual configuration settings in another variable to prevent
  *       the pollution of the Drupal.settings namespace.
- *   - 'reset': Anything in $data will be ignored and the JavaScript added so
- *       far will be reset.
  * @param $options
  *   (optional) A string defining the type of JavaScript that is being added
  *   in the $data parameter ('file'/'setting'/'inline'), or an array which
@@ -2377,10 +2374,8 @@ function drupal_clear_css_cache() {
  *   always pass the string 'setting' only.
  *   - type
  *       The type of JavaScript that is to be added to the page. Allowed
- *       values are 'file', 'inline', 'external', 'setting', or 'reset'. Defaults
- *       to 'file'. Note that if type is 'reset', then $data and all other
- *       $options will be ignored and the JavaScript added so far will be
- *       reset.
+ *       values are 'file', 'inline', 'external' or 'setting'. Defaults
+ *       to 'file'.
  *   - scope
  *       The location in which you want to place the script. Possible values
  *       are 'header' or 'footer'. If your theme implements different regions,
@@ -2419,7 +2414,7 @@ function drupal_clear_css_cache() {
  * @see drupal_get_js()
  */
 function drupal_add_js($data = NULL, $options = NULL) {
-  static $javascript = array();
+  $javascript = &drupal_static(__FUNCTION__, array());
 
   // Construct the options, taking the defaults into consideration.
   if (isset($options)) {
@@ -2431,11 +2426,6 @@ function drupal_add_js($data = NULL, $options = NULL) {
     $options = array();
   }
   $options += drupal_js_defaults($data);
-
-  if ($options['type'] == 'reset') {
-    // Request made to reset the JavaScript added so far
-    return $javascript = array();
-  }
 
   // Preprocess can only be set if caching is enabled.
   $options['preprocess'] = $options['cache'] ? $options['preprocess'] : FALSE;
