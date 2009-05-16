@@ -764,8 +764,7 @@ function system_menu() {
  *   The blocked IP address from the database as an array.
  */
 function blocked_ip_load($iid) {
-  $blocked_ip = db_fetch_array(db_query("SELECT * FROM {blocked_ips} WHERE iid = %d", $iid));
-  return $blocked_ip;
+  return db_query("SELECT * FROM {blocked_ips} WHERE iid = :iid", array(':iid' => $iid))->fetchAssoc();
 }
 
 /**
@@ -977,14 +976,14 @@ function system_block_view($delta = '') {
 function system_admin_menu_block($item) {
   $content = array();
   if (!isset($item['mlid'])) {
-    $item += db_fetch_array(db_query("SELECT mlid, menu_name FROM {menu_links} ml WHERE ml.router_path = '%s' AND module = 'system'", $item['path']));
+    $item += db_query("SELECT mlid, menu_name FROM {menu_links} ml WHERE ml.router_path = :path AND module = 'system'", array(':path' => $item['path']))->fetchAssoc();
   }
   $result = db_query("
     SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, m.description, ml.*
     FROM {menu_links} ml
     LEFT JOIN {menu_router} m ON ml.router_path = m.path
-    WHERE ml.plid = %d AND ml.menu_name = '%s' AND hidden = 0", $item['mlid'], $item['menu_name']);
-  while ($item = db_fetch_array($result)) {
+    WHERE ml.plid = :plid AND ml.menu_name = :name AND hidden = 0", array(':plid' => $item['mlid'], ':name' => $item['menu_name']), array('fetch' => PDO::FETCH_ASSOC));
+  foreach ($result as $item) {
     _menu_link_translate($item);
     if (!$item['access']) {
       continue;
@@ -1089,8 +1088,8 @@ function system_check_directory($form_element) {
  */
 function system_get_files_database(&$files, $type) {
   // Extract current files from database.
-  $result = db_query("SELECT filename, name, type, status, schema_version, weight FROM {system} WHERE type = '%s'", $type);
-  while ($file = db_fetch_object($result)) {
+  $result = db_query("SELECT filename, name, type, status, schema_version, weight FROM {system} WHERE type = :type", array(':type' => $type));
+  foreach ($result as $file) {
     if (isset($files[$file->name]) && is_object($files[$file->name])) {
       $file->filepath = $file->filename;
       $file->old_filepath = $file->filepath;
@@ -1155,15 +1154,26 @@ function system_theme_data() {
   // Extract current files from database.
   system_get_files_database($themes, 'theme');
 
-  db_query("DELETE FROM {system} WHERE type = 'theme'");
+  db_delete('system')
+    ->condition('type', 'theme')
+    ->execute();
 
+  $query = db_insert('system')->fields(array('name', 'owner', 'info', 'type', 'filename', 'status'));
   foreach ($themes as $theme) {
     if (!isset($theme->owner)) {
       $theme->owner = '';
     }
 
-    db_query("INSERT INTO {system} (name, owner, info, type, filename, status) VALUES ('%s', '%s', '%s', '%s', '%s', %d)", $theme->name, $theme->owner, serialize($theme->info), 'theme', $theme->filename, isset($theme->status) ? $theme->status : 0);
+    $query->values(array(
+      'name' => $theme->name,
+      'owner' => $theme->owner,
+      'info' => serialize($theme->info),
+      'type' => 'theme',
+      'filename' => $theme->filename,
+      'status' => isset($theme->status) ? $theme->status : 0,
+    ));
   }
+  $query->execute();
 
   return $themes;
 }
@@ -1307,7 +1317,7 @@ function system_region_list($theme_key) {
   static $list = array();
 
   if (!array_key_exists($theme_key, $list)) {
-    $info = unserialize(db_result(db_query("SELECT info FROM {system} WHERE type = :type AND name = :name", array(':type' => 'theme', ':name' => $theme_key))));
+    $info = unserialize(db_query("SELECT info FROM {system} WHERE type = :type AND name = :name", array(':type' => 'theme', ':name' => $theme_key))->fetchField());
     $list[$theme_key] = array_map('t', $info['regions']);
   }
 
@@ -1519,9 +1529,9 @@ function system_get_module_admin_tasks($module) {
   if (!isset($items)) {
     $result = db_query("
        SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, ml.*
-       FROM {menu_links} ml INNER JOIN {menu_router} m ON ml.router_path = m.path WHERE ml.link_path LIKE 'admin/%' AND hidden >= 0 AND module = 'system' AND m.number_parts > 2");
+       FROM {menu_links} ml INNER JOIN {menu_router} m ON ml.router_path = m.path WHERE ml.link_path LIKE 'admin/%' AND hidden >= 0 AND module = 'system' AND m.number_parts > 2", array(), array('fetch' => PDO::FETCH_ASSOC));
     $items = array();
-    while ($item = db_fetch_array($result)) {
+    foreach ($result as $item) {
       _menu_link_translate($item);
       if ($item['access']) {
         $items[$item['router_path']] = $item;
@@ -1556,14 +1566,22 @@ function system_get_module_admin_tasks($module) {
  */
 function system_cron() {
   // Cleanup the flood.
-  db_query('DELETE FROM {flood} WHERE timestamp < %d', REQUEST_TIME - 3600);
+  db_delete('flood')
+    ->condition('timestamp', REQUEST_TIME - 3600, '<')
+    ->execute();
   // Cleanup the batch table.
-  db_query('DELETE FROM {batch} WHERE timestamp < %d', REQUEST_TIME - 864000);
+  db_delete('batch')
+    ->condition('timestamp', REQUEST_TIME - 864000, '<')
+    ->execute();
 
   // Remove temporary files that are older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
   // Use separate placeholders for the status to avoid a bug in some versions
   // of PHP. See http://drupal.org/node/352956
-  $result = db_query('SELECT fid FROM {files} WHERE status & :permanent1 <> :permanent2 AND timestamp < :timestamp', array(':permanent1' => FILE_STATUS_PERMANENT, ':permanent2' => FILE_STATUS_PERMANENT, ':timestamp' => REQUEST_TIME - DRUPAL_MAXIMUM_TEMP_FILE_AGE));
+  $result = db_query('SELECT fid FROM {files} WHERE status & :permanent1 <> :permanent2 AND timestamp < :timestamp', array(
+    ':permanent1' => FILE_STATUS_PERMANENT,
+    ':permanent2' => FILE_STATUS_PERMANENT,
+    ':timestamp' => REQUEST_TIME - DRUPAL_MAXIMUM_TEMP_FILE_AGE
+  ));
   foreach ($result as $row) {
     if ($file = file_load($row->fid)) {
       if (!file_delete($file)) {
@@ -1672,15 +1690,20 @@ function system_actions_manage() {
   }
 
   $row = array();
-  $instances_present = db_fetch_object(db_query("SELECT aid FROM {actions} WHERE parameters <> ''"));
+  $instances_present = db_query("SELECT aid FROM {actions} WHERE parameters <> ''")->fetchField();
   $header = array(
     array('data' => t('Action type'), 'field' => 'type'),
     array('data' => t('Description'), 'field' => 'description'),
     array('data' => $instances_present ? t('Operations') : '', 'colspan' => '2')
   );
-  $sql = 'SELECT * FROM {actions}';
-  $result = pager_query($sql . tablesort_sql($header), 50);
-  while ($action = db_fetch_object($result)) {
+  $query = db_select('actions')->extend('PagerDefault')->extend('TableSort');
+  $result = $query
+    ->fields('actions')
+    ->limit(50)
+    ->setHeader($header)
+    ->execute();
+
+  foreach ($result as $action) {
     $row[] = array(
       array('data' => $action->type),
       array('data' => $action->description),
@@ -1776,7 +1799,7 @@ function system_actions_configure($form_state, $action = NULL) {
   if (is_numeric($action)) {
     $aid = $action;
     // Load stored parameter values from database.
-    $data = db_fetch_object(db_query("SELECT * FROM {actions} WHERE aid = '%s'", $aid));
+    $data = db_query("SELECT * FROM {actions} WHERE aid = :aid", array(':aid' => $aid))->fetch();
     $edit['actions_description'] = $data->description;
     $edit['actions_type'] = $data->type;
     $function = $data->callback;
@@ -2199,7 +2222,9 @@ function system_goto_action($object, $context) {
  */
 function system_block_ip_action() {
   $ip = ip_address();
-  db_query("INSERT INTO {blocked_ips} (ip) VALUES ('%s')", $ip);
+  db_insert('blocked_ips')
+    ->fields(array('ip' => $ip))
+    ->execute();
   watchdog('action', 'Banned IP address %ip', array('%ip' => $ip));
 }
 

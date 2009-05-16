@@ -22,13 +22,13 @@ function system_main_admin_page($arg = NULL) {
     drupal_set_message(t('One or more problems were detected with your Drupal installation. Check the <a href="@status">status report</a> for more information.', array('@status' => url('admin/reports/status'))), 'error');
   }
   $blocks = array();
-  if ($admin = db_fetch_array(db_query("SELECT menu_name, mlid FROM {menu_links} WHERE link_path = 'admin' AND module = 'system'"))) {
+  if ($admin = db_query("SELECT menu_name, mlid FROM {menu_links} WHERE link_path = 'admin' AND module = 'system'")->fetchAssoc()) {
     $result = db_query("
       SELECT m.*, ml.*
       FROM {menu_links} ml
       INNER JOIN {menu_router} m ON ml.router_path = m.path
-      WHERE ml.link_path != 'admin/help' AND menu_name = '%s' AND ml.plid = %d AND hidden = 0", $admin);
-    while ($item = db_fetch_array($result)) {
+      WHERE ml.link_path != 'admin/help' AND menu_name = :menu_name AND ml.plid = :mlid AND hidden = 0", $admin, array('fetch' => PDO::FETCH_ASSOC));
+    foreach ($result as $item) {
       _menu_link_translate($item);
       if (!$item['access']) {
         continue;
@@ -246,7 +246,10 @@ function system_themes_form_submit($form, &$form_state) {
       $old_theme_list[] = $theme->name;
     }
   }
-  db_query("UPDATE {system} SET status = 0 WHERE type = 'theme'");
+  db_update('system')
+    ->fields(array('status' => 0))
+    ->condition('type', 'theme')
+    ->execute();
 
   if ($form_state['values']['op'] == t('Save configuration')) {
     if (is_array($form_state['values']['status'])) {
@@ -254,7 +257,11 @@ function system_themes_form_submit($form, &$form_state) {
         // Always enable the default theme, despite its status checkbox being checked:
         if ($choice || $form_state['values']['theme_default'] == $key) {
           $new_theme_list[] = $key;
-          db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' and name = '%s'", $key);
+          db_update('system')
+            ->fields(array('status' => 1))
+            ->condition('type', 'theme')
+            ->condition('name', $key)
+            ->execute();
         }
       }
     }
@@ -276,7 +283,11 @@ function system_themes_form_submit($form, &$form_state) {
     variable_del('theme_default');
     variable_del('admin_theme');
     variable_del('node_admin_theme');
-    db_query("UPDATE {system} SET status = 1 WHERE type = 'theme' AND name = 'garland'");
+    db_update('system')
+      ->fields(array('status' => 1))
+      ->condition('type', 'theme')
+      ->condition('name', 'garland')
+      ->execute();
     $new_theme_list = array('garland');
   }
 
@@ -962,8 +973,8 @@ function system_modules_uninstall($form_state = NULL) {
   $form = array();
 
   // Pull all disabled modules from the system table.
-  $disabled_modules = db_query("SELECT name, filename, info FROM {system} WHERE type = 'module' AND status = 0 AND schema_version > %d ORDER BY name", SCHEMA_UNINSTALLED);
-  while ($module = db_fetch_object($disabled_modules)) {
+  $disabled_modules = db_query("SELECT name, filename, info FROM {system} WHERE type = 'module' AND status = 0 AND schema_version > :schema ORDER BY name", array(':schema' => SCHEMA_UNINSTALLED));
+  foreach ($disabled_modules as $module) {
 
     // Grab the module info
     $info = unserialize($module->info);
@@ -1077,7 +1088,7 @@ function system_ip_blocking() {
   $rows = array();
   $header = array(t('IP address'), t('Operations'));
   $result = db_query('SELECT * FROM {blocked_ips}');
-  while ($ip = db_fetch_object($result)) {
+  foreach ($result as $ip) {
     $rows[] = array(
       $ip->ip,
       l(t('delete'), "admin/settings/ip-blocking/delete/$ip->iid"),
@@ -1118,7 +1129,7 @@ function system_ip_blocking_form($form_state) {
 
 function system_ip_blocking_form_validate($form, &$form_state) {
   $ip = trim($form_state['values']['ip']);
-  if (db_result(db_query("SELECT * FROM {blocked_ips} WHERE ip = '%s'", $ip))) {
+  if (db_query("SELECT * FROM {blocked_ips} WHERE ip = :ip", array(':ip' => $ip))->fetchField()) {
     form_set_error('ip', t('This IP address is already blocked.'));
   }
   elseif ($ip == ip_address()) {
@@ -1131,7 +1142,9 @@ function system_ip_blocking_form_validate($form, &$form_state) {
 
 function system_ip_blocking_form_submit($form, &$form_state) {
   $ip = trim($form_state['values']['ip']);
-  db_query("INSERT INTO {blocked_ips} (ip) VALUES ('%s')", $ip);
+  db_insert('blocked_ips')
+    ->fields(array('ip' => $ip))
+    ->execute();
   drupal_set_message(t('The IP address %ip has been blocked.', array('%ip' => $ip)));
   $form_state['redirect'] = 'admin/settings/ip-blocking';
   return;
@@ -1155,7 +1168,9 @@ function system_ip_blocking_delete(&$form_state, $iid) {
  */
 function system_ip_blocking_delete_submit($form, &$form_state) {
   $blocked_ip = $form_state['values']['blocked_ip'];
-  db_query("DELETE FROM {blocked_ips} WHERE iid = %d", $blocked_ip['iid']);
+  db_delete('blocked_ips')
+    ->condition('iid', $blocked_ip['iid'])
+    ->execute();
   watchdog('user', 'Deleted %ip', array('%ip' => $blocked_ip['ip']));
   drupal_set_message(t('The IP address %ip was deleted.', array('%ip' => $blocked_ip['ip'])));
   $form_state['redirect'] = 'admin/settings/ip-blocking';
@@ -1766,8 +1781,12 @@ function system_status($check = FALSE) {
   }
   // MySQL import might have set the uid of the anonymous user to autoincrement
   // value. Let's try fixing it. See http://drupal.org/node/204411
-  db_query("UPDATE {users} SET uid = uid - uid WHERE name = '' AND pass = '' AND status = 0");
-
+  db_update('users')
+    ->expression('uid', 'uid - uid')
+    ->condition('name', '')
+    ->condition('pass', '')
+    ->condition('status', 0)
+    ->execute();
   return theme('status_report', $requirements);
 }
 
@@ -1821,7 +1840,7 @@ function _system_sql($data, $keys) {
 function system_sql() {
 
   $result = db_query("SHOW STATUS");
-  while ($entry = db_fetch_object($result)) {
+  foreach ($result as $entry) {
     // 'SHOW STATUS' returns fields named 'Variable_name' and 'Value',
     // case is important.
     $data[$entry->Variable_name] = $entry->Value;

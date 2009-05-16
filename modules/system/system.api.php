@@ -141,7 +141,10 @@ function hook_elements() {
  *   None.
  */
 function hook_exit($destination = NULL) {
-  db_query('UPDATE {counter} SET hits = hits + 1 WHERE type = 1');
+  db_update('counter')
+    ->expression('hits', 'hits + 1')
+    ->condition('type', 1)
+    ->execute();
 }
 
 /**
@@ -1243,8 +1246,8 @@ function hook_file_delete($file) {
 function hook_file_download($filepath) {
   // Check if the file is controlled by the current module.
   $filepath = file_create_path($filepath);
-  $result = db_query("SELECT f.* FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid WHERE filepath = '%s'", $filepath);
-  if ($file = db_fetch_object($result)) {
+  $result = db_query("SELECT f.* FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid WHERE filepath = :filepath", array('filepath' => $filepath));
+  foreach ($result as $file) {
     if (!user_access('view uploaded files')) {
       return -1;
     }
@@ -1617,8 +1620,12 @@ function hook_update_N(&$sandbox = NULL) {
     // We'll -1 to disregard the uid 0...
     $sandbox['max'] = db_query('SELECT COUNT(DISTINCT uid) FROM {users}')->fetchField() - 1;
   }
-  
-  $users = db_query_range("SELECT uid, name FROM {users} WHERE uid > %d ORDER BY uid ASC", $sandbox['current_uid'], 0, 3);
+  db_select('users', 'u')
+    ->fields('u', array('uid', 'name'))
+    ->condition('uid', $sandbox['current_uid'], '>')
+    ->range(0, 3)
+    ->orderBy('uid', 'ASC')
+    ->execute();
   foreach ($users as $user) {
     $user->name .= '!';
     $ret[] = update_sql("UPDATE {users} SET name = '$user->name' WHERE uid = $user->uid");
