@@ -4243,7 +4243,8 @@ function drupal_flush_all_caches() {
 function _drupal_flush_css_js() {
   $string_history = variable_get('css_js_query_string', '00000000000000000000');
   $new_character = $string_history[0];
-  $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  // Not including 'q' to allow certain JavaScripts to re-use query string.
+  $characters = 'abcdefghijklmnoprstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   while (strpos($string_history, $new_character) !== FALSE) {
     $new_character = $characters[mt_rand(0, strlen($characters) - 1)];
   }
