@@ -1,10 +1,15 @@
 <?php
-// $Id: aggregator.processor.inc,v 1.3 2009/01/26 14:08:42 dries Exp $
+// $Id: aggregator.processor.inc,v 1.4 2009/05/16 17:58:30 dries Exp $
 
 /**
  * @file
  * Processor functions for the aggregator module.
  */
+
+/**
+ * Denotes that a feed's items should never expire.
+ */
+define('AGGREGATOR_CLEAR_NEVER', 0);
 
 /**
  * Implementation of hook_aggregator_process_info().
@@ -72,6 +77,7 @@ function aggregator_form_aggregator_admin_form_alter(&$form, $form_state) {
     $info = module_invoke('aggregator', 'aggregator_process', 'info');
     $items = array(0 => t('none')) + drupal_map_assoc(array(3, 5, 10, 15, 20, 25), '_aggregator_items');
     $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), 'format_interval');
+    $period[AGGREGATOR_CLEAR_NEVER] = t('Never');
 
     // Only wrap into a collapsible fieldset if there is a basic configuration.
     if (isset($form['basic_conf'])) {
@@ -163,15 +169,23 @@ function aggregator_save_item($edit) {
  *   Object describing feed.
  */
 function aggregator_expire($feed) {
-  // Remove all items that are older than flush item timer.
-  $age = REQUEST_TIME - variable_get('aggregator_clear', 9676800);
-  $iids = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid AND timestamp < :timestamp', array(':fid' => $feed->fid, ':timestamp' => $age))->fetchCol();
-  if ($iids) {
-    db_delete('aggregator_category_item')
-      ->condition('iid', $iids, 'IN')
-      ->execute();
-    db_delete('aggregator_item')
-      ->condition('iid', $iids, 'IN')
-      ->execute();
+  $aggregator_clear = variable_get('aggregator_clear', 9676800);
+
+  if ($aggregator_clear != AGGREGATOR_CLEAR_NEVER) {
+    // Remove all items that are older than flush item timer.
+    $age = REQUEST_TIME - $aggregator_clear;
+    $iids = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid AND timestamp < :timestamp', array(
+      ':fid' => $feed->fid, 
+      ':timestamp' => $age,
+    ))
+    ->fetchCol();
+    if ($iids) {
+      db_delete('aggregator_category_item')
+        ->condition('iid', $iids, 'IN')
+        ->execute();
+      db_delete('aggregator_item')
+        ->condition('iid', $iids, 'IN')
+        ->execute();
+    }
   }
 }
