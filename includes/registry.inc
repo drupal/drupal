@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.inc,v 1.15 2009/05/10 16:46:23 dries Exp $
+// $Id: registry.inc,v 1.16 2009/05/16 16:04:42 dries Exp $
 
 /**
  * @file
@@ -261,6 +261,12 @@ function _registry_skip_body(&$tokens) {
     }
     elseif ($token == '}') {
       --$num_braces;
+    }
+    // Consume strings manually as workaround for a bug in PHP < 5.2.3 (see
+    // http://drupal.org/node/368116).
+    elseif ($token == '"' || $token == '`' || (is_array($token) && $token[0] == T_START_HEREDOC)) {
+      $stop = is_array($token) ? T_END_HEREDOC : $token;
+      while (($token = next($tokens)) && (is_array($token) ? $token[0] : $token) != $stop);
     }
   }
 }
