@@ -110,7 +110,8 @@ function profile_browse() {
  */
 function profile_autocomplete($field, $string) {
   $matches = array();
-  if (db_result(db_query("SELECT COUNT(*) FROM {profile_field} WHERE fid = %d AND autocomplete = 1", $field))) {
+  $autocomplete_field = (bool) db_query_range("SELECT 1 FROM {profile_field} WHERE fid = :fid AND autocomplete = 1", array(':fid' => $field), 0, 1)->fetchField();
+  if ($autocomplete_field) {
     $result = db_query_range("SELECT value FROM {profile_value} WHERE fid = :fid AND LOWER(value) LIKE LOWER(:value) GROUP BY value ORDER BY value ASC", array(
       ':fid' => $field,
       ':value' => $string .'%',

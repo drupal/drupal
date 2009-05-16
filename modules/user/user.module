@@ -822,8 +822,8 @@ function user_file_download($filepath) {
  */
 function user_file_references($file) {
   // Determine if the file is used by this module.
-  $count = db_query('SELECT COUNT(*) FROM {users} WHERE picture = :fid', array(':fid' => $file->fid))->fetchField();
-  if ($count) {
+  $file_used = (bool) db_query_range('SELECT 1 FROM {users} WHERE picture = :fid', array(':fid' => $file->fid), 0, 1)->fetchField();
+  if ($file_used) {
     // Return the name of the module and how many references it has to the file.
     return array('user' => $count);
   }
@@ -935,7 +935,7 @@ function user_user_validate(&$edit, &$account, $category = NULL) {
       if ($error = user_validate_name($edit['name'])) {
         form_set_error('name', $error);
       }
-      elseif (db_query("SELECT COUNT(*) FROM {users} WHERE uid != :uid AND LOWER(name) = LOWER(:name)", array(':uid' => $uid, ':name' => $edit['name']))->fetchField() > 0) {
+      elseif ((bool) db_query_range("SELECT 1 FROM {users} WHERE uid != :uid AND LOWER(name) = LOWER(:name)", array(':uid' => $uid, ':name' => $edit['name']), 0, 1)->fetchField()) {
         form_set_error('name', t('The name %name is already taken.', array('%name' => $edit['name'])));
       }
     }
@@ -944,7 +944,7 @@ function user_user_validate(&$edit, &$account, $category = NULL) {
     if ($error = user_validate_mail($edit['mail'])) {
       form_set_error('mail', $error);
     }
-    elseif (db_query("SELECT COUNT(*) FROM {users} WHERE uid != :uid AND LOWER(mail) = LOWER(:mail)", array(':uid' => $uid, ':mail' => $edit['mail']))->fetchField() > 0) {
+    elseif ((bool) db_query_range("SELECT 1 FROM {users} WHERE uid != :uid AND LOWER(mail) = LOWER(:mail)", array(':uid' => $uid, ':mail' => $edit['mail']), 0, 1)->fetchField()) {
       // Format error message dependent on whether the user is logged in or not.
       if ($GLOBALS['user']->uid) {
         form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => $edit['mail'])));

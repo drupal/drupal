@@ -272,7 +272,8 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
 
 function block_admin_configure_validate($form, &$form_state) {
   if ($form_state['values']['module'] == 'block') {
-    if (empty($form_state['values']['info']) || db_result(db_query("SELECT COUNT(*) FROM {box} WHERE bid <> %d AND info = '%s'", $form_state['values']['delta'], $form_state['values']['info']))) {
+    $box_exists = (bool) db_query_range('SELECT 1 FROM {box} WHERE bid <> :bid AND info = :info', array(':bid' => $form_state['values']['delta'], ':info' => $form_state['values']['info']), 0, 1)->fetchField();
+    if (empty($form_state['values']['info']) || $box_exists) {
       form_set_error('info', t('Please ensure that each block description is unique.'));
     }
   }
@@ -301,7 +302,9 @@ function block_add_block_form(&$form_state) {
 }
 
 function block_add_block_form_validate($form, &$form_state) {
-  if (empty($form_state['values']['info']) || db_result(db_query("SELECT COUNT(*) FROM {box} WHERE info = '%s'", $form_state['values']['info']))) {
+  $box_exists = (bool) db_query_range('SELECT 1 FROM {box} WHERE info = :info', array(':info' => $form_state['values']['info']), 0, 1)->fetchField();
+
+  if (empty($form_state['values']['info']) || $box_exists) {
     form_set_error('info', t('Please ensure that each block description is unique.'));
   }
 }

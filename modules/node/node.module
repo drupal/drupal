@@ -555,7 +555,7 @@ function node_types_rebuild() {
 function node_type_save($info) {
   $is_existing = FALSE;
   $existing_type = !empty($info->old_type) ? $info->old_type : $info->type;
-  $is_existing = db_query("SELECT COUNT(*) FROM {node_type} WHERE type = :type", array(':type' => $existing_type))->fetchField();
+  $is_existing = (bool) db_query_range('SELECT 1 FROM {node_type} WHERE type = :type', array(':type' => $existing_type), 0, 1)->fetchField();
   $type = node_type_set_defaults($info);
 
   $fields = array(
@@ -3085,8 +3085,8 @@ function node_assign_owner_action_form($context) {
 }
 
 function node_assign_owner_action_validate($form, $form_state) {
-  $count = db_query('SELECT COUNT(*) FROM {users} WHERE name = :name', array(':name' => $form_state['values']['owner_name']))->fetchField();
-  if (intval($count) != 1) {
+  $exists = (bool) db_query_range('SELECT 1 FROM {users} WHERE name = :name', array(':name' => $form_state['values']['owner_name']), 0, 1)->fetchField();
+  if (!$exists) {
     form_set_error('owner_name', t('Please enter a valid username.'));
   }
 }

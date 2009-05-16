@@ -15,8 +15,8 @@ function path_admin_overview($keys = NULL) {
   // Add the filter form above the overview table.
   $output = drupal_get_form('path_admin_filter_form', $keys);
   // Enable language column if locale is enabled or if we have any alias with language
-  $count = db_query("SELECT COUNT(*) FROM {url_alias} WHERE language <> ''")->fetchField();
-  $multilanguage = (module_exists('locale') || $count);
+  $alias_exists = (bool) db_query_range('SELECT 1 FROM {url_alias} WHERE language <> :language', array(':language' => ''), 0, 1)->fetchField();
+  $multilanguage = (module_exists('locale') || $alias_exists);
 
   $header = array(
     array('data' => t('Alias'), 'field' => 'dst', 'sort' => 'asc'),
