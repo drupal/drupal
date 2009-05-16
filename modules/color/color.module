@@ -220,7 +220,7 @@ function color_scheme_form(&$form_state, $theme) {
 /**
  * Theme the color form.
  *
- * @ingroup @themeable
+ * @ingroup themeable
  */
 function theme_color_scheme_form($form) {
   $theme = $form['theme']['#value'];
