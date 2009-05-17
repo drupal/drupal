@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.167 2009/04/22 09:45:02 dries Exp $
+// $Id: file.inc,v 1.168 2009/05/17 10:42:16 dries Exp $
 
 /**
  * @file
@@ -1798,7 +1798,7 @@ function file_get_mimetype($filename, $mapping = NULL) {
       'cdr' => 'image/x-coreldraw',
       'pat' => 'image/x-coreldrawpattern',
       'cdt' => 'image/x-coreldrawtemplate',
-      'ico' => 'image/x-icon',
+      'ico' => 'image/vnd.microsoft.icon',
       'art' => 'image/x-jg',
       'jng' => 'image/x-jng',
       'bmp' => 'image/x-ms-bmp',
