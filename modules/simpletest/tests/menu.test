@@ -105,6 +105,24 @@ class MenuIncTestCase extends DrupalWebTestCase {
     $this->assertEqual($child_link['plid'], $parent_link['mlid'], t('The parent of a directly attached child is correct.'));
     $this->assertEqual($unattached_child_link['plid'], $parent_link['mlid'], t('The parent of a non-directly attached child is correct.'));
   }
+
+  /**
+   * Test menu_set_item().
+   */
+  function testMenuSetItem() {
+    $item = menu_get_item('node');
+
+    $this->assertEqual($item['path'], 'node', t("Path from menu_get_item('node') is equal to 'node'"), 'menu');
+
+    // Modify the path for the item then save it.
+    $item['path'] = 'node_test';
+    $item['href'] = 'node_test';
+
+    menu_set_item('node', $item);
+    $compare_item = menu_get_item('node');
+    $this->assertEqual($compare_item, $item, t('Modified menu item is equal to newly retrieved menu item.'), 'menu');
+  }
+
 }
 
 /**
