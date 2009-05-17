@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.42 2009/05/14 08:23:15 dries Exp $
+// $Id: simpletest.module,v 1.43 2009/05/17 08:46:48 dries Exp $
 
 /**
  * @file
@@ -205,8 +205,8 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
  *   versions of the classes as the values.
  */
 function simpletest_get_all_tests() {
-  static $formatted_classes;
-  if (!isset($formatted_classes)) {
+  static $classes;
+  if (!isset($classes)) {
     require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'simpletest') . '/drupal_web_test_case.php';
     $files = array();
     foreach (array_keys(module_rebuild_cache()) as $module) {
