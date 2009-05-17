@@ -188,13 +188,13 @@ function field_test_entity_load($ftid, $ftvid = NULL) {
 function field_test_entity_save(&$entity) {
   field_attach_presave('test_entity', $entity);
 
-  $entity->is_new = FALSE;
-  if (empty($entity->ftid)) {
-    // Insert a new test_entity.
-    $entity->is_new = TRUE;
+  if (!isset($entity->is_new)) {
+    $entity->is_new = empty($entity->ftid);
   }
-  elseif (!empty($entity->revision)) {
+
+  if (!$entity->is_new && !empty($entity->revision)) {
     $entity->old_ftvid = $entity->ftvid;
+    unset($entity->ftvid);
   }
 
   $update_entity = TRUE;
