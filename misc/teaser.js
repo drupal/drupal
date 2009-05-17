@@ -68,10 +68,10 @@ Drupal.behaviors.teaser = {
       $(include).parent().parent().before(button);
 
       // Extract the teaser from the body, if set. Otherwise, stay in joined mode.
-      var text = body.val().split('<!--break-->', 2);
-      if (text.length == 2) {
-        teaser[0].value = trim(text[0]);
-        body[0].value = trim(text[1]);
+      var text = body.val().split('<!--break-->');
+      if (text.length >= 2) {
+        teaser[0].value = trim(text.shift());
+        body[0].value = trim(text.join('<!--break-->'));
         $(teaser).attr('disabled', '');
         $('input', button).val(Drupal.t('Join summary')).toggle(join_teaser, split_teaser);
       }
