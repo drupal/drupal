@@ -206,7 +206,13 @@ function theme_update_page($content, $show_messages = TRUE) {
 function template_preprocess_maintenance_page(&$variables) {
   // Add favicon
   if (theme_get_setting('toggle_favicon')) {
-    drupal_add_html_head('<link rel="shortcut icon" href="' . check_url(theme_get_setting('favicon')) . '" type="image/x-icon" />');
+    $favicon = theme_get_setting('favicon');
+    $type = file_get_mimetype($favicon);
+    // Use the genereic MIME type for favicons if no other was found.
+    if ($type == 'application/octet-stream') {
+      $type = 'image/x-icon';
+    }
+    drupal_add_html_head('<link rel="shortcut icon" href="' . check_url($favicon) . '" type="' . check_plain($type) . '" />');
   }
 
   global $theme;
