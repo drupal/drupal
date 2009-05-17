@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.6 2009/05/17 00:32:29 webchick Exp $
+// $Id: field_test.module,v 1.7 2009/05/17 00:49:18 webchick Exp $
 
 define('FIELD_TEST_ELEMENT_ID', 1);
 define('FIELD_TEST_BUNDLE', 'test_bundle');
@@ -188,13 +188,13 @@ function field_test_entity_load($ftid, $ftvid = NULL) {
 function field_test_entity_save(&$entity) {
   field_attach_presave('test_entity', $entity);
 
-  $entity->is_new = FALSE;
-  if (empty($entity->ftid)) {
-    // Insert a new test_entity.
-    $entity->is_new = TRUE;
+  if (!isset($entity->is_new)) {
+    $entity->is_new = empty($entity->ftid);
   }
-  elseif (!empty($entity->revision)) {
+
+  if (!$entity->is_new && !empty($entity->revision)) {
     $entity->old_ftvid = $entity->ftvid;
+    unset($entity->ftvid);
   }
 
   $update_entity = TRUE;
