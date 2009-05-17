@@ -176,7 +176,7 @@ function field_sql_storage_field_storage_delete_field($field_name) {
 /**
  * Implementation of hook_field_storage_load().
  */
-function field_sql_storage_field_storage_load($obj_type, $objects, $age, $skip_fields = array()) {
+function field_sql_storage_field_storage_load($obj_type, &$objects, $age, $skip_fields = array()) {
   $etid = _field_sql_storage_etid($obj_type);
   $load_current = $age == FIELD_LOAD_CURRENT;
 
@@ -185,18 +185,16 @@ function field_sql_storage_field_storage_load($obj_type, $objects, $age, $skip_f
   $delta_count = array();
   foreach ($objects as $obj) {
     list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $obj);
-    foreach (field_info_instances($bundle) as $instance) {
-      $field_ids[$instance['field_name']][] = $load_current ? $id : $vid;
-      $delta_count[$id][$instance['field_name']] = 0;
+    foreach (field_info_instances($bundle) as $field_name => $instance) {
+      if (!isset($skip_fields[$field_name])) {
+        $objects[$id]->{$field_name} = array();
+        $field_ids[$field_name][] = $load_current ? $id : $vid;
+        $delta_count[$id][$field_name] = 0;
+      }
     }
   }
 
-  $additions = array();
   foreach ($field_ids as $field_name => $ids) {
-    if (isset($skip_fields[$field_name])) {
-      continue;
-    }
-
     $field = field_info_field($field_name);
     $table = $load_current ? _field_sql_storage_tablename($field_name) : _field_sql_storage_revision_tablename($field_name);
 
@@ -218,12 +216,11 @@ function field_sql_storage_field_storage_load($obj_type, $objects, $age, $skip_f
         }
 
         // Add the item to the field values for the entity.
-        $additions[$row->entity_id][$field_name][] = $item;
+        $objects[$row->entity_id]->{$field_name}[] = $item;
         $delta_count[$row->entity_id][$field_name]++;
       }
     }
   }
-  return $additions;
 }
 
 /**

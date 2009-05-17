@@ -83,14 +83,31 @@ function field_test_fieldable_info() {
   );
 }
 
-function field_test_create_bundle($bundle, $text) {
+/**
+ * Create a new bundle for test_entity objects.
+ *
+ * @param $bundle
+ *   The machine-readable name of the bundle.
+ * @param $text
+ *   The human-readable name of the bundle. If none is provided, the machine
+ *   name will be used.
+ */
+function field_test_create_bundle($bundle, $text = NULL) {
   $bundles = variable_get('field_test_bundles', array('test_bundle' => 'Test Bundle'));
-  $bundles += array($bundle => $text);
+  $bundles += array($bundle => $text ? $text : $bundle);
   variable_set('field_test_bundles', $bundles);
 
   field_attach_create_bundle($bundle);
 }
 
+/**
+ * Rename a bundle for test_entity objects.
+ *
+ * @param $bundle_old
+ *   The machine-readable name of the bundle to rename.
+ * @param $bundle_new
+ *   The new machine-readable name of the bundle.
+ */
 function field_test_rename_bundle($bundle_old, $bundle_new) {
   $bundles = variable_get('field_test_bundles', array('test_bundle' => 'Test Bundle'));
   $bundles[$bundle_new] = $bundles[$bundle_old];
@@ -100,6 +117,12 @@ function field_test_rename_bundle($bundle_old, $bundle_new) {
   field_attach_rename_bundle($bundle_old, $bundle_new);
 }
 
+/**
+ * Delete a bundle for test_entity objects.
+ *
+ * @param $bundle
+ *   The machine-readable name of the bundle to delete.
+ */
 function field_test_delete_bundle($bundle) {
   $bundles = variable_get('field_test_bundles', array('test_bundle' => 'Test Bundle'));
   unset($bundles[$bundle]);
@@ -311,9 +334,13 @@ function field_test_field_info() {
   return array(
     'test_field' => array(
       'label' => t('Test Field'),
-      'description' => t('Stores the value 1.'),
-      'settings' => array('test_field_setting' => 'dummy test string'),
-      'instance_settings' => array('test_instance_setting' => 'dummy test string'),
+      'settings' => array(
+        'test_field_setting' => 'dummy test string',
+      ),
+      'instance_settings' => array(
+        'test_instance_setting' => 'dummy test string',
+        'test_hook_field_load' => FALSE,
+      ),
       'default_widget' => 'test_field_widget',
       'default_formatter' => 'field_test_default',
     ),
@@ -330,13 +357,6 @@ function field_test_field_columns($field) {
     'not null' => FALSE,
   );
   return $columns;
-}
-
-/**
- * Implementation of hook_instance_settings().
- */
-function field_test_field_instance_settings($field_type) {
-  return array('test_instance_setting' => 'dummy test string');
 }
 
 /**
@@ -485,6 +505,24 @@ function field_test_field_formatter_info() {
       ),
     ),
   );
+}
+
+/**
+ * Implementation of hook_field_load().
+ */
+function field_test_field_load($obj_type, $objects, $field, $instances, &$items, $age) {
+  foreach ($items as $id => $item) {
+    // To keep the test non-intrusive, only act for instances with the
+    // test_hook_field_load setting explicitly set to TRUE.
+    if ($instances[$id]['settings']['test_hook_field_load']) {
+      foreach ($item as $delta => $value) {
+        // Don't add anything on empty values.
+        if ($value) {
+          $items[$id][$delta]['additional_key'] = 'additional_value';
+        }
+      }
+    }
+  }
 }
 
 /**

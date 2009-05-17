@@ -41,20 +41,19 @@ function field_attach_form($obj_type, $object, &$form, $form_state) {
  * objects of a single object type.
  *
  * @param $obj_type
- *   The type of objects for which to load fields; e.g. 'node' or
- *   'user'.
+ *   The type of $object; e.g. 'node' or 'user'.
  * @param $objects
- *   An array of objects for which to load fields. The keys for
- *   primary id and bundle name to load are identified by
- *   hook_fieldable_info for $obj_type.
+ *   An array of objects for which to load fields, keyed by object id.
+ *   Each object needs to have its 'bundle key', 'id key' and (if applicable)
+ *   'revision key' filled.
  * @param $age
  *   FIELD_LOAD_CURRENT to load the most recent revision for all
  *   fields, or FIELD_LOAD_REVISION to load the version indicated by
  *   each object. Defaults to FIELD_LOAD_CURRENT; use
  *   field_attach_load_revision() instead of passing FIELD_LOAD_REVISION.
  * @returns
- *   On return, the objects in $objects are modified by having the
- *   appropriate set of fields added.
+ *   Loaded field values are added to $objects. Fields with no values should be
+ *   set as an empty array.
  *
  * This function is an autoloader for _field_attach_load() in modules/field/field.attach.inc.
  */
@@ -67,13 +66,15 @@ function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT) {
  * Load all fields for a previous version of each of a set of
  * objects of a single object type.
  *
+ * Loading different versions of the same objects is not supported,
+ * and should be done by separate calls to the function.
+ *
  * @param $obj_type
- *   The type of objects for which to load fields; e.g. 'node' or
- *   'user'.
+ *   The type of $object; e.g. 'node' or 'user'.
  * @param $objects
- *   An array of objects for which to load fields. The keys for
- *   primary id, revision id, and bundle name to load are identified by
- *   hook_fieldable_info for $obj_type.
+ *   An array of objects for which to load fields, keyed by object id.
+ *   Each object needs to have its 'bundle key', 'id key' and 'revision key'
+ *   filled.
  * @returns
  *   On return, the objects in $objects are modified by having the
  *   appropriate set of fields added.
