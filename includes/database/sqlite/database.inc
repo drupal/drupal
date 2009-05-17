@@ -202,11 +202,20 @@ class DatabaseStatement_sqlite extends DatabaseStatementPrefetch implements Iter
         // Else, this is using named placeholders.
         foreach ($args as $placeholder => $value) {
           if (is_numeric($value)) {
+            // We will remove this placeholder from the query and PDO throws an
+            // exception if the number of placeholders in the query and the
+            // arguments does not match.
+            unset($args[$placeholder]);
+            // PDO allows placeholders to not be prefixed by a colon. See
+            // http://marc.info/?l=php-internals&m=111234321827149&w=2 for
+            // more.
+            if ($placeholder[0] != ':') {
+              $placeholder = ":$placeholder";
+            }
             // When replacing the placeholders, make sure we search for the
             // exact placeholder. For example, if searching for
             // ':db_placeholder_1', do not replace ':db_placeholder_11'.
             $query = preg_replace('/' . preg_quote($placeholder) . '\b/', $value, $query);
-            unset($args[$placeholder]);
           }
         }
       }
