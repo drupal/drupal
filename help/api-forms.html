@@ -1,0 +1,88 @@
+Views allows handlers to output form elements, wrapping them automatically in a form, and handling validation / submission.
+The form is multistep by default, allowing other modules to add additional steps, such as confirmation screens.
+
+<h2>Implementation</h2>
+A views handler outputs a special placeholder in render(), while the real form with matching structure gets added in views_form().
+When the View is being preprocessed for the theme file, all placeholders get replaced with the rendered form elements.
+
+The views handler can also implement views_form_validate() and views_form_submit().
+<pre>
+  function render($values) {
+    return '&lt;!--form-item-' . $this-&gt;options['id'] . '--' . $this-&gt;view-&gt;row_index . '--&gt;';
+  }
+
+  function form_element_name() {
+    // Make sure this value is unique for all the view fields
+    return $this-&gt;options['id'];
+  }
+
+  function form_element_row_id($row_id) {
+    // You could use values from $this-&gt;view-&gt;result[$row_id]
+    // to provide complex row ids.
+    return $row_id;
+  }
+
+  function views_form(&$form, &$form_state) {
+    // The view is empty, abort.
+    if (empty($this-&gt;view-&gt;result)) {
+      return;
+    }
+
+    $field_name = $this-&gt;form_element_name();
+    $form[$field_name] = array(
+      '#tree' => TRUE,
+    );
+    // At this point, the query has already been run, so we can access the results
+    foreach ($this-&gt;view-&gt;result as $row_id => $row) {
+      $form_element_row_id = $this-&gt;form_element_row_id($row_id);
+      $form[$field_name][$form_element_row_id] = array(
+        '#type' => 'textfield',
+        '#title' => t('Your name'),
+        '#default_value' => '',
+      );
+    }
+  }
+
+  // Optional validate function.
+  function views_form_validate($form, &$form_state) {
+    $field_name = $this->form_element_name();
+    foreach ($form_state['values'][$field_name] as $row_id => $value) {
+      if ($value == 'Drupal') {
+        form_set_error($field_name . '][' . $row_id, "You can't be named Drupal. That's my name.");
+      }
+    }
+  }
+
+  // Optional submit function.
+  function views_form_submit($form, &$form_state) {
+    // Do something here
+  }
+</pre>
+
+The form is multistep by default, with one step: 'views_form_views_form'.
+A "form_example" module could add a confirmation step by setting:
+<pre>
+ $form_state['step'] = 'form_example_confirmation';
+</pre>
+in form_example_views_form_submit().
+Then, views_form would call form_example_confirmation($form, $form_state, $view, $output) to get that step.
+
+<b>Important:</b> You can fetch the Views object in form_alter and validate / submit hooks from the form state:
+<pre>
+  $view = $form_state['build_info']['args'][0];
+</pre>
+
+<h2>Relevant Views functions</h2>
+<ul>
+<li>template_preprocess_views_view()</li>
+<li>views_form()</li>
+<li>views_form_views_form()</li>
+<li>views_form_views_form_validate()</li>
+<li>views_form_views_form_submit()</li>
+<li>theme_views_form_views_form()</li>
+</ul>
+
+<h2>Hooks</h2>
+<ul>
+<li>hook_views_form_substitutions()</li>
+</ul>

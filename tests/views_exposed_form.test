@@ -1,0 +1,100 @@
+<?php
+
+/**
+ * @file
+ * Definition of ViewsExposedFormTest.
+ */
+
+/**
+ * Tests exposed forms.
+ */
+class ViewsExposedFormTest extends ViewsSqlTest {
+  public static function getInfo() {
+    return array(
+      'name' => 'Exposed forms',
+      'description' => 'Test exposed forms functionality.',
+      'group' => 'Views Plugins',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('views_ui');
+    module_enable(array('views_ui'));
+    // @TODO Figure out why it's required to clear the cache here.
+    views_module_include('views_default', TRUE);
+    views_get_all_views(TRUE);
+    menu_rebuild();
+  }
+
+  /**
+   * Tests, whether and how the reset button can be renamed.
+   */
+  public function testRenameResetButton() {
+    $account = $this->drupalCreateUser();
+    $this->drupalLogin($account);
+    // Create some random nodes.
+    for ($i = 0; $i < 5; $i++) {
+      $this->drupalCreateNode();
+    }
+    // Look at the page and check the label "reset".
+    $this->drupalGet('test_rename_reset_button');
+    // Rename the label of the reset button.
+    $view = views_get_view('test_rename_reset_button');
+    $view->set_display('default');
+
+    $exposed_form = $view->display_handler->get_option('exposed_form');
+    $exposed_form['options']['reset_button_label'] = $expected_label = $this->randomName();
+    $exposed_form['options']['reset_button'] = TRUE;
+    $view->display_handler->set_option('exposed_form', $exposed_form);
+    $view->save();
+
+    views_invalidate_cache();
+
+    // Look whether ther reset button label changed.
+    $this->drupalGet('test_rename_reset_button');
+
+    $this->helperButtonHasLabel('edit-reset', $expected_label);
+  }
+
+  /**
+   * Tests the admin interface of exposed filter and sort items.
+   */
+  function testExposedAdminUi() {
+    $admin_user = $this->drupalCreateUser(array('administer views', 'administer site configuration'));
+    $this->drupalLogin($admin_user);
+    menu_rebuild();
+    $edit = array();
+
+    $this->drupalGet('admin/structure/views/nojs/config-item/test_exposed_admin_ui/default/filter/type');
+    // Be sure that the button is called exposed
+    $this->helperButtonHasLabel('edit-options-expose-button-button', t('Expose filter'));
+
+    // Click the Expose filter button.
+    $this->drupalPost('admin/structure/views/nojs/config-item/test_exposed_admin_ui/default/filter/type', $edit, t('Expose filter'));
+    // Check the label of the expose button
+    $this->helperButtonHasLabel('edit-options-expose-button-button', t('Hide filter'));
+
+    // Check the validations of the filter handler.
+    $edit = array();
+    $edit['options[expose][identifier]'] = '';
+    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->assertText(t('The identifier is required if the filter is exposed.'));
+
+    $edit = array();
+    $edit['options[expose][identifier]'] = 'value';
+    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->assertText(t('This identifier is not allowed.'));
+
+    // Now check the sort criteria.
+    $this->drupalGet('admin/structure/views/nojs/config-item/test_exposed_admin_ui/default/sort/created');
+    $this->helperButtonHasLabel('edit-options-expose-button-button', t('Expose sort'));
+    $this->assertNoFieldById('edit-options-expose-label', '', t('Make sure no label field is shown'));
+
+    // Click the Expose sort button.
+    $edit = array();
+    $this->drupalPost('admin/structure/views/nojs/config-item/test_exposed_admin_ui/default/sort/created', $edit, t('Expose sort'));
+    // Check the label of the expose button
+    $this->helperButtonHasLabel('edit-options-expose-button-button', t('Hide sort'));
+    $this->assertFieldById('edit-options-expose-label', '', t('Make sure a label field is shown'));
+  }
+}

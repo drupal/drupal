@@ -1,0 +1,41 @@
+NOTE: This page has not been updated for 7.x-3.x
+Views 2 provides a way to override the taxonomy pages of any term. The view is included by default but is disabled. This page covers three minor aspects that some users could use to control the aspect of their taxonomy pages.
+
+<h3>Background</h3>
+The Taxonomy module provides a way to organize content through the site. It also presents a page with nodes that belong to some term. The style can't be changed easily and taxonomy only displays node teasers.
+
+<h3>Force All</h3>
+When using vocabularies with multiple term levels, a top level won't include the nodes that belongs to the levels inside. Let's clarify this with an example, let's assume the site have this vocabulary:
+
+<code>
+Vocab
+ - Term 1
+   -- Term 2
+   -- Term 3
+ - Term 4
+   -- Term 5
+   -- Term 6
+</code>
+
+If you go to taxonomy/term/1, then you see all nodes in Term 1 listed, but not nodes in Term 2 and Term 3. If you want to see all nodes in Term 1, Term 2 and Term 3 in a single page, you have to go to
+
+<code>
+taxonomy/term/1/all
+</code>
+
+Views 2 allows you to show all terms inside another term.
+
+<h3>Step 1. Enabling taxonomy_term</h3>
+The first step we need to do is to enable the "taxonomy term" view that views provides for us. After we've done that we need to edit it.
+
+<h3>Step 2. Changing minor aspects</h3>
+On the Display: Page, we can change the Style to any of the styles that views provides for us, it could be a table or a list. If we do this it's necessary to add some fields to the view.
+
+The most important thing we're going to change it's the argument <strong>Taxonomy: Term ID: (with depth)</strong>. At the bottom of the screen, you'll have 2 options, the first one to change it's the <strong>depth</strong>, if we want to do what the <a href="http://drupal.org/project/taxonomy_forceall" target="_blank">Taxonomy Force All</a> modules does, you'll have to set it up for at least 1.
+
+The next thing you have to do it's check the <strong>Set the breadcrumb for the term parents</strong> option. This will allow your view to show  the breadcrumb with all the term levels in your taxonomy.
+
+Save the changes and try. Next you could do whatever you want, like adding fields, theming, exposing filters, sorting or adding feeds.
+
+<h3>Theme every vocabulary/term independently</h3>
+Using <a href="http://drupal.org/project/tvi">TVI: Taxonomy Views Integrator</a>  it's possible to theme every vocabulary or term with it's own view. All you have to do is clone the view in Step 1 and set it as the TVI active view in the vocab or term edit pages.

@@ -1,0 +1,21 @@
+<p>The <strong>view type</strong> describes how this view is stored; Views is capable of having Views entirely in code that are not in the database. This allows modules to easily ship with Views built in, and it allows you to create a module to store your views for easy deployment between development and production servers.</p>
+
+<dl>
+<dt><strong>Normal</strong></dt>
+<dd>Normal views are stored in your database and are completely local to your system.</dd>
+
+<dt><strong>Default</strong></dt>
+<dd>Default views are stored only in code and are not anywhere in your database. They may be <strong>enabled</strong> or <strong>disabled</strong> but you may not completely remove them from your system. You can <strong>override</strong> the view which will create a local copy of your view. If you do this, future updates to the version in code will not affect your view.</dd>
+
+<dt><strong>Overridden</strong></dt>
+<dd>Overridden views are stored both in code and in the database; while overridden, the version that is in code is completely dormant. If you <strong>revert</strong> the view, the version in the database will be deleted, and the version that is in code will once again be used.</dd>
+</dl>
+
+You may store your views in code with the following procedure:
+<ol>
+<li> Create a module to store the views. </li>
+<li> Add the function <em>MODULENAME_views_default_views()</em> to this module. </li>
+<li> Export the view you wish to store in your module in code. Cut and paste that into the abovenamed function. Make sure the last line of the view is: <em>$views[$view-&gt;name] = $view;</em></li>
+<li> Make sure the last line of the function is <em>return $views;</em></li>
+<li> After you make any changes, be sure to <strong>clear the Views' cache</strong>. You may do this from the <strong>Tools</strong> menu.</li>
+</ol>

@@ -1,0 +1,20 @@
+Filters are used to reduce the data set that Views provides. That is to say, without any filters applied, Views will return all of your content. You don't want that, so at least some filters must be used.
+
+Some very commonly used filters:
+<ul>
+<li> The 'Node: Published' filter is used to restrict a node View to only nodes that are are have the 'published' box checked. This can be very important to prevent users from viewing content they should not have access to.</li>
+<li> The 'Node: Promoted to front page' filter can be used to show only nodes that have the 'promote to front page' turned on. </li>
+<li> The 'Node: Type' filter is useful for showing only certain types of nodes. Let's say you wanted users to see only nodes that were 'book' nodes, or a combination of 'book' nodes and 'staff-blog' nodes. This filter allows you to select exactly that.</li>
+<li> The 'User: Current' filter will show only nodes that the logged in user has authored.</li>
+<li> The 'Node: Post date' filter can be used to show only nodes posted before, after, or between a range of dates.</li>
+</ul>
+
+The above list is only a tiny fraction of the filters available in Views, referenced here to give an idea of the kinds of tasks filters can accomplish. When you do not find a filter type, you may need to choose a <a href="topic:views/relationship">Relationship</a> before the expected filter will show, or to install a new module that contains the requested filter.
+
+When you click the Rearrange Icon you can first rearrange your filters, easily delete filters and select an operator: "AND" or "Or". By default the "AND" operator is selcted. At the lower right of the window is the new button "Add new group". When you click on it, you can drag and drop an individual filter to the new group "Group 1". For this new group and the default group you can select the "Group operator": "And" or "Or". To remove a group, remove all filters and click the "Remove group 1" button.
+
+When you want that the user to select their own filter, you can expose the filter. A selection box will show for the user and they will be able to select one item. After that the view will reload and only the selected item will be displayed. You can also choose to expose the selection to a block, see <a href="topic:views/exposed-form">here</a>.
+
+Taxonomy filters have been significantly altered in Views 7.x-3.x. D7 significantly re-organized taxonomy, there was a lot of duplicate taxonomy related fields and filters. Some of them were removed to try and reduce confusion between them. Implicit relationships to taxonomy have been removed, in favor of explicit relationships. If the filters you can find don't do what you need, try adding either the related taxonomy terms relationship, or a relationship on the specific taxonomy field. That will give you the term specific filters.
+
+You can override the complete filter section - see <a href="topic:views/overrides">here</a> for more information.

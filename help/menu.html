@@ -1,0 +1,21 @@
+Page displays can hook into the Drupal menu system and provide <strong>menu links</strong> that will appear in the Navigation system as well as <strong>tabs</strong> that can be used to keep Views next to each other.
+
+For simple <strong>menu links</strong>, there is very little you need to do; simply select 'Normal menu entry' and fill in the text for the title. This will appear in the Navigation menu by default; you will need to visit the menu administration page to move this to another menu.
+
+Tabs are not quite so simple; there are some complex rules for using tabs in Drupal.
+<ol>
+<li> All tabs must have a parent, which is the next level up in the path hierarchy. For example, if the view path is 'example/taba' then the parent must be 'example'.
+<li> All tabs must have one and only one default tab; this is usually the same content as the parent.
+<li> If a parent does not exist, when creating the 'default' tab, Views will allow you to also create a parent item. It will automatically set up the URL for you when it does this.
+<li> Tab weight is used to control what order the tabs are displayed in. Lower numbers will display more to the left. For tabs whose numbers are the same, they will be displayed alphabetically.
+<li> Drupal only supports 2 levels of tabs, so be careful about trying to put tabs within tabs within tabs. That won't work.
+</ol>
+
+For example, if you have two views that you want to be tabs, you could set it up like this:
+<ul>
+<li> In the first view, set the path to 'tabs/tab1'. Set it to be the 'default tab', set the title to 'Tab 1' and the weight to 0.
+<li> Click update and you will be taken to a form that lets you define the parent. Since 'tabs' doesn't already exist in the system, select 'Normal menu item', and set the title to 'Tabs'.
+<li> On the second view, set the path to 'tabs/tab2'; set it to be a 'Menu tab', and set the title to 'Tab 2'.
+</ul>
+
+With this done, you will now have a Navigation link named 'Tabs' and when you click on it, you will go to the tabs, with 'Tab 1' being the default tab that appears. You can then click between Tab 1 and Tab 2.

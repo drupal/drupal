@@ -1,0 +1,73 @@
+<p>In this example you will create a <em>Feed display</em> to show nodes by individual users, dynamically selected through the URL. You will become familiar with the Views 2 interface, as well as learn how to use an argument to pull in a user name and use it in a dynamically created path.</p>
+<p>A <em>feed</em> is a data format that places your site's content into a file that can be read and displayed by news reader programs. When visiting a site, you may notice a small <a href="http://drupal.org/misc/feed.png">RSS transmission icon</a>, whereby clicking on it, you can subscribe to the site's most recent content. This makes it easier for your visitors to keep up to date with your website. You can also use this format to aggregate information into other sites. For more information, please watch a video from Common Craft about <a href="http://www.commoncraft.com/rss_plain_english">RSS in plain English</a>.</p>
+<p>Note, Drupal automatically creates a feed for your website, but you may want to create feeds with specific information. In this case, a list per user.  </p>
+<ol>
+  <li>
+    <h3>Creating a new view </h3>
+    <ol>
+      <li>Go to <a target="_blank" href="base_url:admin/structure/views/add">add new view</a>. Give it the name 'user_feed', description 'A feed of user nodes.', tag 'users', type 'Node' and click Next.</li>
+    </ol>
+  </li>
+  <li><strong>About the Interface.</strong> You have been brought to the Views User Interface. As you start, you are editing the &quot;Default&quot; options for the view. In the 1st column on the left- you can see the pull-down menu offers 'Feed', for example, to select settings specific only to RSS views. In the remaining columns, you will be able to add or change options by clicking on links or icons. These options appear below this main area. Most likely, you will need to scroll to see the options appear. As you make changes, these options will appear in bold until you save your view.</li>
+  <li>
+    <h3>Change default display</h3>
+    <ol>
+      <li>Under <strong>Basic Settings</strong> in the 2nd column, click <em>Row style: Fields</em></li>
+      <li>A menu loads below, <em>Defaults: How should each row in this view be styled</em>, check the <em>Node</em> option, and click <strong>Update</strong>.</li>
+      <li>This loads another options menu, <em>Defaults: Row style options</em> click <strong>Update</strong>.</li>
+    </ol>
+  </li>
+  <li>
+    <h3>Create the RSS view </h3>
+    <ol>
+      <li>In the 1st column, select 'Feed' in the drop-down menu, and click <strong>Add Display</strong>.</li>
+      <li>Under <strong>Basic Settings </strong>in the 2nd column, click<em> Row style:Missing style plugin</em></li>
+      <li>Note, options appear below the Views Interface, you may need to scroll to see <em>Feed: How should each row in this view be styled</em><br />
+        tick <strong>Node</strong>, then <strong>Update</strong></li>
+      <li>This loads the next options menu- <em>Display type: </em>select &quot;Use default RSS settings&quot;, click <strong>Update</strong>.</li>
+    </ol>
+  </li>
+  <li>
+    <h3>Set the path for accessing your feed</h3>
+    <ol>
+      <li> In the 2nd column under <strong>Feed settings</strong>, click <em>Path: None </em></li>
+      <li>In options below <em>Feed: The menu path or URL of this view</em> enter in the path with an argument feeds/%/rss.xml</li>
+      <li>Click <strong>Update</strong></li>
+    </ol>
+  </li>
+  <li>
+    <h3>Set up your arguments to say which user's nodes to display</h3>
+    <ol>
+      <li>To the right of <strong>Arguments</strong>, click the + sign to add and argument</li>
+      <li>In the Feed: Add arguments menu that loads below, select User in the pull-down menu</li>
+      <li>Check the box <em>User: Name</em>, click <strong>Add</strong></li>
+      <li>Scroll down to options to find <strong>Case in path:</strong> select <em>Lower case</em></li>
+      <li>Check the box <em>Transform spaces to dashes in URL</em></li>
+      <li>Click <strong>Update default display</strong></li>
+    </ol>
+  </li>
+  <li>
+    <h3>Sort to show most recent at top of feed</h3>
+    <ol>
+      <li>Scroll  up to <strong>Sort criteria</strong> in the right most column and click the + icon.</li>
+      <li>In the <strong>Groups</strong> drop-down menu below, select 'Node', then check <em>Node: Post date</em>, and click <strong>Add</strong>. </li>
+      <li>Select <em>Descending</em> <strong>Sort order</strong>. Click <strong>Update</strong>.</li>
+    </ol>
+  </li>
+  <li>
+    <h3>Set filters to hide unpublished entries</h3>
+    <ol>
+      <li>Click the + icon next to <strong>Filters</strong>. In the options below, select <em>Node</em> under <strong>Groups</strong> drop-down menu, choose the <em>Node: Published</em> filter, and click <strong>Add</strong>.</li>
+      <li>Check the box <em>Published</em>. Click <strong>Update default display</strong></li>
+    </ol>
+  </li>
+  <li>
+    <h3>Test</h3>
+    <ol>
+      <li>Click <strong>Save</strong></li>
+      <li>Under <strong>Live preview</strong> type in the name of a user, in lowercase, replacing spaces with dashes, click <strong>Preview</strong>.</li>
+      <li>You should test and find your feeds at URLs like http://yoursite.com/feeds/user-name/rss.xml</li>
+      <li>You can use this path for aggregating on another site. You can also attach the RSS feed to another display of view to make the feed link appear on that display.</li>
+    </ol>
+  </li>
+</ol>

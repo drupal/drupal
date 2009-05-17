@@ -1,0 +1,103 @@
+Views can be stored in the database, which is typical of smaller sites and hobby sites. However, Views may also be stored directly in the code as "default" views, (which simply means they're available by default). Modules often come with views that are specific to the module data, but it's also possible -- and <b>highly</b> recommended -- that sites which have separate "development" and "production" sites export their views into default views in a site-specific module. This makes it very easy to transfer views from dev to production without making database changes.
+
+<h3>Creating a module</h3>
+First, create a directory in <em>sites/all/modules</em> for your new module. Call it whatever you like, but for this example we will call it <em>mymodule</em>.
+
+In this directory, create a <em>mymodule.module</em> file. It can be empty for now, but it should at least contain an opening PHP tag:
+<pre>&lt;?php
+</pre>
+
+It should not contain a closing ?&gt; tag, as the closing ?&gt; tag is not required and anything AFTER the closing tag, such as a space or a linefeed, will be displayed directly to the browser and can potentially cause problems.
+
+The .module file will contain functions and drupal hooks. Hooks are specially named functions that Drupal will call in order to get your module's response at certain times while generating pages. The only function you will need for this exercise is the 'views_api' hook that tells Views that this module supports the Views API and what version:
+
+<pre>function mymodule_views_api() {
+  return array('api' => 2.0);
+}
+</pre>
+
+For other uses you may well add additional functions.
+
+Second, you need to create a <em>mymodule.info</em> file:
+
+<pre>name = My module
+description = My site specific module.
+core = 6.x
+</pre>
+
+Once you have these two files set up, you should be able to activate your new module at the <em>Administer >> Modules</em> page.
+<h3>Exporting your views</h3>
+
+The easiest way to do this is to activate the 'views_export' module, and navigate to <em>Administer >> Structure >> Views >> Tools >> Bulk export</em> Place a check next to each view that you want in your module, type the module name into the text field, and click export. This will create the entire <em>hook_views_default_views()</em> function for you.
+
+You can also export individual views. If you do this, keep in mind that this export does not include the line that adds the exported $view into the larger $views array:
+
+<pre>$views[$view->name] = $view</pre>
+
+To place this into your <em>hook_views_default_views()</em> you will need to place that after the view, and make sure the function returns $views at the end.
+
+<h3>Placing your exported views into your module</h3>
+Cut and paste the entire output of the bulk export tool into mymodule.views_default.inc -- and be sure to put a &lt;?php at the top of the file so that the webserver knows that it's PHP code! Then visit the Views tools page and clear the Views cache. Your views should now be listed as <b>Overridden</b> on the view list page. If you <b>revert</b> these views, they will be removed from the database, but will remain in code.
+
+<h3>Theming your views in your module</h3>
+You can theme these views in the module and not need to rely on the theme to do this at all; and in fact, the theme can continue to override these just like it ordinarily would, even if your module provides a theme. This is very useful for distributing a module where the view needs to look "just so."
+
+To do this, you need to implement <em>hook_theme()</em> in your module:
+<pre>function mymodule_theme($existing) {
+  return array(
+    'views_view__viewname__displayid' => array (
+      'arguments' => array('view' => NULL),
+      'template' => 'views-view--viewname--displayid',
+      'base hook' => 'views_view',
+      'path' => drupal_get_path('module', 'mymodule'),
+    ),
+  );
+}
+</pre>
+
+There are a small number of gotchas in doing this that you must be aware of.
+
+<ol>
+<li>When referring to a template filename, you always use dashes in the name. i.e, <em>views-view--viewname--displayid.tpl.php</em>. However, when referring to the hook or function names, you use underscores instead of dashes. i.e, <em>views_view</em> and <em>views_view__viewname__displayid</em></li>
+
+<li>The 'arguments' change based upon which of the 3 types you're overriding. There's the 'display', the 'style' and the 'row' style. The above code is assuming the display, which is usually just <em>views_view</em>. Here are the possibilities:
+
+<pre>display: array('view_array' => array(), 'view' => NULL),
+style: array('view' => NULL, 'options' => NULL, 'rows' => NULL, 'title' => NULL),
+row: array('view' => NULL, 'options' => NULL, 'row' => NULL, 'field_alias' => NULL),
+field: array('view' => NULL, 'field' => NULL, 'row' => NULL),
+</pre>
+
+Be sure to use the right arguments line or the theme system will not properly translate.
+</li>
+<li>The 'template' line should never include the extension, so drop the .tpl.php from it.</li>
+
+<li>You need to make sure that the Views preprocess functions get registered. The 'base hook' line in the definition does that, but it can only do it if it comes after the Views registration, which actually happens very late in theme building. 99% of the time, your module will come before Views. You have two choices to deal with this:
+<ol>
+  <li>Set your module's weight to 11 or higher in the database. Views' weight is 10. You can make this happen automatically when the module is first installed by creating a mymodule.install file and using this code:
+  <pre>function mymodule_install() {
+  db_query("UPDATE {system} SET weight = 11 WHERE name = 'mymodule'");
+}
+</pre>
+  If you use this method, the <em>base hook</em> should be set to the name of the original template being used. i.e, if this is a variate of views-view-list.tpl.php, this should be 'views_view_list'.
+  </li>
+  <li>You can also just force it to list the preprocessors without actually having to detect them. This doesn't require modifying your module's weight, which is not always possible, you can insert this code into the array:
+  <pre>      'preprocess functions' => array(
+        'template_preprocess',
+        'template_preprocess_views_view',
+        'mymodule_preprocess_views_view__viewname_displayid',
+      ),
+</pre>
+
+  The first one is the global 'template_preprocess' function which all templates utilize. It does some basic things such as setting up $zebra and a few other items. See <a href="http://api.drupal.org/api/function/template_preprocess/6">api.drupal.org</a> for specifics.
+
+  The second one is the plugin specific preprocess. Like 'base hook' it should conform to the name used by the original template. i.e, if the original template was <em>views-view-list.tpl.php</em> then that preprocess function would be named <em>template_preprocess_views_view_list</em>.
+
+  The third one is your module's preprocess function, if it needs one. In general, you probably will not need one, and you should only attempt to use one if you are reasonably familiar with the concept of preprocess functions and Drupal's theme system in general. See Drupal's theme documentation for more information.
+  </li>
+</ol>
+</li>
+<li>
+  If you leave the path blank the template file will be searched for in "./" which is the Drupal install base path.
+</li>
+</ol>

@@ -1,0 +1,82 @@
+/* @group Buttons */
+
+.ctools-dropbutton .ctools-content {
+  border-left: 1px solid #e8e8e8;
+}
+
+.ctools-content ul.actions {
+  padding-left: auto;
+  padding-right: 0;
+}
+
+.ctools-dropbutton .ctools-link {
+  border-right: 1px solid #ffffff;
+}
+
+.ctools-dropbutton li {
+  padding-left: 9px;
+  padding-left: auto;
+}
+
+.views-display-top .ctools-button {
+  left: 12px;
+  right: auto;
+}
+
+.views-ui-display-tab-bucket .ctools-button {
+  left: 5px;
+  right: auto;
+}
+
+/* @end */
+
+/* @group Collapsible */
+
+.ctools-toggle {
+  float: right;
+  margin-left: 2px;
+  margin-right: 0;
+}
+
+.ctools-toggle.ctools-toggle-collapsed {
+  border-left: 0;
+  border-right: 4px solid;
+  border-left-color: transparent;
+  border-width: 5px 5px 5px 0;
+  margin-left: 5px;
+  margin-right: 2px;
+}
+
+.ctools-export-ui-row label {
+  float: right;
+}
+
+.views-display-column > .ctools-toggle {
+  margin-left: 3px;
+  margin-right: 6px;
+}
+.views-display-column > .ctools-toggle.ctools-toggle-collapsed {
+  margin-left: 5px;
+  margin-right: 9px;
+}
+
+/* @end */
+
+/* @group Dependent */
+
+.dependent-options {
+  margin-left: 0;
+  margin-right: 18px;
+}
+
+/* @end */
+
+/* @group Export */
+
+/* Override for filter button on the views list screen */
+#ctools-export-ui-list-form .form-submit {
+  margin-left: 0em;
+  margin-right: auto;
+}
+
+/* @end */

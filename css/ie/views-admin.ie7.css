@@ -1,0 +1,91 @@
+/**
+ * The query details collapsible divs are not visible in IE7 because has-layout
+ * is not being triggered. Trigger has-layout with height: 1%;
+ */
+.views-edit-view .collapsible > .fieldset-wrapper {
+  height: 1%;
+}
+
+/**
+ * The column width for the bucket containers in the query details section
+ * is not being calculated to 32% correctly. Give IE7 a slightly smaller
+ * width so that the three columns line up next to each other
+ */
+.views-edit-view .views-display-column {
+  width: 31.95%;
+}
+
+/**
+ * IE7 has no idea how large this container should be and it doesn't
+ * apply has-layout. Expand it's width to 100% and trigger has-layout.
+ */
+.views-edit-view .views-displays {
+  height: 1%;
+  width: 100%;
+}
+
+/**
+ * IE7 isn't positioning the span correctly as a display-inline element
+ */
+.views-edit-view .views-displays .icon {
+  display: block;
+  float: left;
+}
+
+.views-edit-view .views-displays .icon-add {
+  top: 2px;
+}
+
+/**
+ * The add display query dropdown needs a lot of help
+ */
+
+.views-edit-view .views-displays .tabs.secondary {
+  position: relative;
+  z-index: 100;
+}
+
+.views-edit-view .views-displays .secondary .open > a {
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.views-edit-view .views-displays .secondary .action-list {
+  border-bottom: 1px solid #cbcbcb;
+  top: 30px;
+}
+
+.views-edit-view .views-displays .secondary input {
+  text-align: left;
+}
+
+/**
+ * IE7 does not interpret div > * correctly
+ */
+.page-admin-structure-views #content .views-ui-display-tab-bucket {
+  padding-left: 0;
+  padding-right: 0;
+  zoom: 1;
+}
+
+.page-admin-structure-views #content .views-display-column + .views-display-column {
+  margin-top: 0;
+}
+
+/**
+ * IE7 is interpreting a top margin of 18px from somewhere. remove it
+ */
+
+.page-admin-structure-views #content .views-display-setting {
+  margin-top: 0;
+}
+
+/**
+ * IE7 can't handle the + selector that indents form wrappers after a checkbox on the add page
+ * zoom is necessary to trigger has layout. !imporant is necessary because IE7 is precedent
+ * to the theme.css stylesheet, even though it is included before this file.
+ */
+
+.page-admin-structure-views #content .form-type-checkbox + .form-wrapper {
+  margin-left: 27px !important;
+  zoom: 1;
+}

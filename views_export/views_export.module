@@ -1,0 +1,10 @@
+<?php
+
+/**
+ * @file
+ * The Views Export module has been removed.
+ *
+ * This note is left here to ensure that users who don't delete their directory
+ * before upgrading have the code removed and to let people looking for it to
+ * know to use the CTools bulk export module instead.
+ */

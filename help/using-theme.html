@@ -1,0 +1,50 @@
+Views theme templates are straightforward to use with the Drupal theming system. If you are unfamiliar with the theming system at all, you should probably at least read <a href="http://drupal.org/node/173880">drupal.org theming documentation</a>. That said, these are the important things you need to know:
+
+<ol>
+<li> Copy a base Views template to one of the names provided from the Theme: Information section of the View. Copy this template right into your theme directory. </li>
+<li> Clear the theme registry. See the <a href="http://drupal.org/node/173880#theme-registry">instructions</a> for how to do this. </li>
+<li> Your new template should now operate; assuming you picked a nicely named template that includes the view name, that template should now be active for your view. A good example is <strong>views-view-list--foobar.tpl.php</strong> which would work for a view named 'foobar'.</li>
+<li> You can now modify this template all you like.</li>
+</ol>
+
+For any template that uses fields, the fields will be in array. In order to use this effectively, you will need to understand enough PHP to fetch data from an array. This is a place where the <a href="http://drupal.org/project/devel">devel module</a> can really help you, because you can use its dsm() function right in your template to see what variables it uses. There is an alternative to dsm() that works without devel module, but it's a bit longer to use.
+
+For example, I placed the following code inside a loop in views-view-table.php.php:
+<code> &lt;?php drupal_set_message('&lt;pre&gt;' . var_export($row, true) . '&lt;/pre&gt;'); ?&gt;
+</code>
+
+And it produced this output:
+<code>  array (
+    'nid' =&gt; '97',
+    'title' =&gt; 'Scisco Ideo Vicis Feugiat Qui',
+    'name' =&gt; 'luwrepuslan',
+  )
+</code>
+
+My view had three fields:
+<code>Node: Nid
+Node: Title
+User: Name
+</code>
+
+The contents of the $row variable included these fields, in precisely the order that I had arranged them to using the Views rearrange link. Also worth noting, though, is that each field also has an identifier so it can easily be pulled out of the row should I want to display it differently. Using
+<code>&lt;?php print $row['title']; ?&gt;
+</code>
+
+Would print just the title for that row. Please remember that I'm doing this inside the loop, so this will get repeated for every row of the view.
+
+The IDs used to fetch items from the array, id <strong>$row['title']</strong> can be quickly and easily looked up on the Theme: Information page. Once a field has been added to the view, its ID will not change, but note that if there are two "title" fields in a view, one will be 'title' and the other will be 'title_1', in order to prevent namespace collisions.
+
+The important thing here is that Views does provide IDs. Views doesn't tell you what these IDs are, but it's easy to get them by dumping the row data and doing a simple visual inspection. Views does guarantee that these IDs will not change, unless you actually add a new field and remove the existing one (in which case 'title', above, would become 'title_1').
+
+<h2>The basic fields template</h2>
+
+The most common template people will need to rewrite is the "simple" views-view-fields.tpl.php, which is the template used by the <i>Fields</i> row style and all it does is display a simple list of fields. However, it is not that simple to the user. Because the template can't inherently know what the fields are, it has to go through an array in a loop.
+
+This loop isn't very handy when you really want to have fine control over the template by placing your fields precisely where and how you want. Relax, though; if you know what your fields are, you can rewrite this. If you end up writing your own HTML, the only part that is really important is the content for each field. We know from above that you can get the ID for each field on the Theme: Information page from the view. In the header for the template, we can see that the fields are all in the $fields array, and each field is an object. That leads us to this:
+
+<code>&lt;?php print $fields['some_id']-&gt;content; ?&gt;</code>
+
+Assuming you replace some_id with an id found on the theme: information page, this code will print the content for that field. You can also get the label and some other data about the field, as well as the raw information. Complete details for what is available are documented directly in views-view-fields.tpl.php.
+
+Keep in mind that if you rewrite your templates using this, you'll need to maintain this template whenever changes are made to the fields of the view; while this isn't generally recommend, sometimes it's necessary to get the kind of control you might ultimately need.

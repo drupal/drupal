@@ -1,0 +1,106 @@
+Contextual Filters (known in previous versions of Views as "Arguments") are input. While they often come from the URL, they don't always. Don't be shocked when they don't. Each display type may have its own source for contextual filters. Block displays have no source of contextual filters at all; they cannot pull contextual filters from the URL, and often require use of PHP code as a default contextual filter. Various default values can be applied against contextual filters to use filters in a block view. See "Provide default value," under "When the filter value is NOT in the URL" below.
+
+In general, contextual filters are used to filter the view, and in that sense they have a very close relationship to filters. However, this isn't necessarily true for every contextual filter. Contextual filters can be used for any purpose, really; the extent of what the contextual filter does is up to the developer of the contextual filter.
+
+A typical use of an contextual filter might be to reduce a view to a single node, a single user, or nodes with a given taxonomy term.
+
+<h3>When the filter value is NOT in the URL</h3>
+
+<dl>
+<dt>Display all results for the specified field</dt>
+<dd>If this option is selected, the contextual filter is removed from the view as though it weren't there and all results will be displayed.</dd>
+<dt>Provide default value</dt>
+<dd>If no contextual filter is given, a default contextual filter can be selected. You may choose from a number of different default filter options.  See "Default contextual filters" below.</dd>
+<dt>Hide view</dt>
+<dd>The view will remove itself entirely if the contextual filter is not present; for a block this means it simply won't appear. For page views the view will return a 404 and present a "Page not found" error. </dd>
+<dt>Display a summary</dt>
+<dd>The view will attempt to display a summary of contextual filters available, based upon the view, and provide links to the view with those contextual filters. Summaries have their own style handlers as well as options. The default summary style simply displays a list of contextual filters with a count of entries found per contextual filter. This special mode is a very powerful part of Views.</dd>
+<dt>Display contents of "No results found"</dt>
+<dd>If this option is selected, the value specified under "No results behavior" on the main view page will be displayed when there is no filter value in the URL.</dd>
+</dl>
+
+An exception value can be set under the "Exceptions" menu.  If this exception value is received, any filter value specified under "When the filter value is NOT in the URL" will be ignored.  This is a literal value: if you enter the word "everything" here, the exception will apply only if the value "everything" is received.
+
+<h3>Default contextual filters</h3>
+
+The Default contextual filter selection is available <strong>only if the action to take is "Provide default value"</strong> under "When the filter value is NOT in the URL." When that option is selected, a new fieldset will appear that will allow you to choose default contextual filters. Views provides the following default selectors by default (but other modules may add more):
+
+<dl>
+<dt>Content ID from URL</dt>
+<dd>This will attempt to find a Node ID from the URL, and is primarily useful for the Node: ID contextual filter (though other contextual filters that use Node IDs, such as the CCK Node Reference contextual filter, will find it useful, too). For example, when visiting the path "node/1" or "node/1/edit" it will know that the "1" in that path is a node ID and use it.</dd>
+<dt>Fixed value</dt>
+<dd>You may directly enter what the contextual filter will be. This is not a variable, it will always be the same contextual filter. </dd>
+<dt>PHP Code</dt>
+<dd>Arbitrary php code inserted here will run whenever a contextual filter is not present in the URL.</dd>
+<dt>Taxonomy term ID from URL</dt>
+<dd>This default filter will attempt to return a taxonomy term from the current path.  Selecting this option gives you the choice to also load default filters from terms.</dd>
+<dt>User ID from URL</dt>
+<dd>Like Node ID and Taxonomy term ID from URL, this will attempt to find a user ID from the path. It also includes an option to look for a node and use the node author as the user ID.</dd>
+<dt>User ID from logged in user</dt>
+<dd>If a user is currently logged in and accessing this view, their user ID will be returned as the contextual filter.</dd>
+<dt>Current date</dt>
+<dd>This option simply returns today's date.</dd>
+<dt>Current node's creation time</dt>
+<dd>Select this to return a node's creation time as a contextual filter.</dd>
+<dt>Current node's update time</dt>
+<dd>Not surprisingly, this filter returns the current node's update time</dd>
+</dl>
+
+Please bear in mind that the selection of a default contextual filter happens only if a contextual filter is not provided. If you are using a display that has no contextual filter source, such as a block, the contextual filter value selected here will always be used. However, if using a display that reads contextual filters from the URL, the options selected here will only be applied if the URL did not contain an contextual filter.
+
+The "Skip default argument for view URL" option gives you the choice of ignoring the default argument totally.  This is useful for certain applications, like the creation of feeds.
+
+<h3>When the filter value IS in the URL or a default is provided</h3>
+
+<dl>
+<dt>Override title</dt>
+<dd>Selecting this option will allow you to replace the default view title with a piece of arbitrary text.  Argument substitutions in the form of %1, %2, etc. may be used here.</dd>
+<dt>Override breadcrumb</dt>
+<dd>This option will allow you to overwrite the view name in breadcrumbs.  The same substitution values as in "Override title" may be used.</dd>
+<dt>Specify validation criteria</dt>
+<dd>Contextual filters can have validators, which are pluggable systems used to ensure that contextual filters fit within certain parameters. When a validator is chosen, it may provide some specific settings, including the action to take if an contextual filter is presented, but it fails to validate. These actions are generally the same as the default actions above, excluding the ability to provide another default filter.  See "Contextual filter validation" below for a detailed description.</dd>
+</dl>
+
+<h3>Contextual filter validation</h3>
+
+Note: If a view provides a menu option, such as a tab, the tab will not appear if the contextual filter does not validate.
+
+This sytem can have other validators plugged in; by default, Views provides:
+
+<dl>
+<dt>Basic validation</dt>
+<dd>This validator ensures that the contextual filter is present. A PHP NULL value (from eg. PHP default contextual filter code) will invalidate.</dd>
+<dt>Content</dt>
+<dd>This validator ensures that the contextual filter is a valid Node ID. You may select which node types the validator will accept.</dd>
+<dt>Numeric</dt>
+<dd>This validator ensures that the contextual filter is a valid number.</dd>
+<dt>PHP Code</dt>
+<dd>You may enter arbitrary PHP code here, similar to the "PHP code" option under "Provide default value" in "When the filter value is NOT in the URL" above, to determine if the contextual filter is valid or not.</dd>
+<dt>Taxonomy term</dt>
+<dd>Ensures that the contextual filter is a valid taxonomy term. This includes options to limit to specific vocabularies and can transform the contextual filter to the right type depending upon the actual contextual filter. Set the contextual filter value type option to the actual type of data that the contextual filter being used is expecting.</dd>
+<dt>User</dt>
+<dd>Ensures that the contextual filter refers to a valid user.  If you select this validator, additional options are available to accept numeric user IDs, usernames or both, as well as to consider a user's role when filtering the view.</dd>
+</dl>
+
+If you select the "Specify validation criteria" option to select a specific validator, you will have the option to select an action to take if the filter value does not validate.
+
+<dl>
+<dt>Display all results for the specified field</dt>
+<dd>Selecting this option will return all values if the filter value does not validate, similar to "Display all results for the specified field" under "When the filter value is not in the URL" above.</dd>
+<dt>Hide View</dt>
+<dd>Similar to "Hide view" under "When the filter value is NOT in the URL" above, if this option is selected and the selector does not validate, the view will hide itself.  If the view is a block, nothing will appear.  If it is a page, it will throw a 404 and present a "Page not found" error.</dd>
+<dt>Return Summary</dt>
+<dd>If you select this option and the filter does not validate, a summary of all values that are valid will be returned, as in the option of the same name under "When the filter value is NOT in the URL above."</dd>
+<dt>Display contents of "No results found"</dt>
+<dd>If this option is selected and the selector does not validate, the value specified under "No results behavior" on the main view page will be displayed.</dd>
+</dl>
+
+<h3>Adminstrative title</h3>
+
+Located under the "More" group at the bottom of the "Contextual filters" menu, this option allows you to specify a custom name for the contextual filter.  This may be particularly useful if you use the same contextual filter twice and you'd like to distinguish between the two filters.
+
+<h3>Grouping of contextual filters</h3>
+
+Even though contextual filters do not appear in the "<em>and/or</em>" user interface for sorting and grouping regular filters, contextual filters are always added to the <em>first</em> group of filters.  Thus the order of the groups can cause the contextual filter to have entirely different effects on the results of a view that has contextual filters.  Even though differences might not be apparent through the user interface.
+
+Multiple contextual filters are therefore always in the same "and/or" group of filters, and can not be placed in different groups.  There is <a href="http://drupal.org/node/357082">an effort to add this feature</a>.

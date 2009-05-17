@@ -1,0 +1,151 @@
+<?php
+
+/**
+ * @file
+ * Definition of ViewsCacheTest.
+ */
+
+/**
+ * Basic test for pluggable caching.
+ *
+ * @see views_plugin_cache
+ */
+class ViewsCacheTest extends ViewsSqlTest {
+  public static function getInfo() {
+    return array(
+      'name' => 'Cache',
+      'description' => 'Tests pluggable caching for views.',
+      'group' => 'Views Plugins'
+    );
+  }
+
+  /**
+   * Build and return a basic view of the views_test table.
+   *
+   * @return view
+   */
+  protected function getBasicView() {
+    views_include('view');
+
+    // Create the basic view.
+    $view = new view();
+    $view->vid = 'test_view';
+    $view->add_display('default');
+    $view->base_table = 'views_test';
+
+    // Set up the fields we need.
+    $display = $view->new_display('default', 'Master', 'default');
+    $display->override_option('fields', array(
+      'id' => array(
+        'id' => 'id',
+        'table' => 'views_test',
+        'field' => 'id',
+        'relationship' => 'none',
+      ),
+      'name' => array(
+        'id' => 'name',
+        'table' => 'views_test',
+        'field' => 'name',
+        'relationship' => 'none',
+      ),
+      'age' => array(
+        'id' => 'age',
+        'table' => 'views_test',
+        'field' => 'age',
+        'relationship' => 'none',
+      ),
+    ));
+
+    // Set up the sort order.
+    $display->override_option('sorts', array(
+      'id' => array(
+        'order' => 'ASC',
+        'id' => 'id',
+        'table' => 'views_test',
+        'field' => 'id',
+        'relationship' => 'none',
+      ),
+    ));
+
+    return $view;
+  }
+
+  /**
+   * Tests time based caching.
+   *
+   * @see views_plugin_cache_time
+   */
+  function testTimeCaching() {
+    // Create a basic result which just 2 results.
+    $view = $this->getBasicView();
+    $view->set_display();
+    $view->display_handler->override_option('cache', array(
+      'type' => 'time',
+      'results_lifespan' => '3600',
+      'output_lifespan' => '3600',
+    ));
+
+    $this->executeView($view);
+    // Verify the result.
+    $this->assertEqual(5, count($view->result), t('The number of returned rows match.'));
+
+    // Add another man to the beatles.
+    $record = array(
+      'name' => 'Rod Davis',
+      'age' => 29,
+      'job' => 'Banjo',
+    );
+    drupal_write_record('views_test', $record);
+
+    // The Result should be the same as before, because of the caching.
+    $view = $this->getBasicView();
+    $view->set_display();
+    $view->display_handler->override_option('cache', array(
+      'type' => 'time',
+      'results_lifespan' => '3600',
+      'output_lifespan' => '3600',
+    ));
+
+    $this->executeView($view);
+    // Verify the result.
+    $this->assertEqual(5, count($view->result), t('The number of returned rows match.'));
+  }
+
+  /**
+   * Tests no caching.
+   *
+   * @see views_plugin_cache_time
+   */
+  function testNoneCaching() {
+    // Create a basic result which just 2 results.
+    $view = $this->getBasicView();
+    $view->set_display();
+    $view->display_handler->override_option('cache', array(
+      'type' => 'none',
+    ));
+
+    $this->executeView($view);
+    // Verify the result.
+    $this->assertEqual(5, count($view->result), t('The number of returned rows match.'));
+
+    // Add another man to the beatles.
+    $record = array(
+      'name' => 'Rod Davis',
+      'age' => 29,
+      'job' => 'Banjo',
+    );
+
+    drupal_write_record('views_test', $record);
+
+    // The Result changes, because the view is not cached.
+    $view = $this->getBasicView();
+    $view->set_display();
+    $view->display_handler->override_option('cache', array(
+      'type' => 'none',
+    ));
+
+    $this->executeView($view);
+    // Verify the result.
+    $this->assertEqual(6, count($view->result), t('The number of returned rows match.'));
+  }
+}

@@ -1,0 +1,105 @@
+<?php
+
+/**
+ * @file
+ * Definition of ViewsHandlerFilterCombineTest.
+ */
+
+/**
+ * Tests the combine filter handler.
+ */
+class ViewsHandlerFilterCombineTest extends ViewsSqlTest {
+  var $column_map = array();
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Filter: Combine',
+      'description' => 'Tests the combine filter handler.',
+      'group' => 'Views Handlers',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    $this->column_map = array(
+      'views_test_name' => 'name',
+      'views_test_job' => 'job',
+    );
+  }
+
+  protected function getBasicView() {
+    $view = parent::getBasicView();
+    $fields = $view->display['default']->handler->options['fields'];
+    $view->display['default']->display_options['fields']['job'] = array(
+      'id' => 'job',
+      'table' => 'views_test',
+      'field' => 'job',
+      'relationship' => 'none',
+    );
+    return $view;
+  }
+
+  public function testFilterCombineContains() {
+    $view = $this->getBasicView();
+
+    // Change the filtering.
+    $view->display['default']->handler->override_option('filters', array(
+      'age' => array(
+        'id' => 'combine',
+        'table' => 'views',
+        'field' => 'combine',
+        'relationship' => 'none',
+        'operator' => 'contains',
+        'fields' => array(
+          'name',
+          'job',
+        ),
+        'value' => 'ing',
+      ),
+    ));
+
+    $this->executeView($view);
+    $resultset = array(
+      array(
+        'name' => 'John',
+        'job' => 'Singer',
+      ),
+      array(
+        'name' => 'George',
+        'job' => 'Singer',
+      ),
+      array(
+        'name' => 'Ringo',
+        'job' => 'Drummer',
+      ),
+      array(
+        'name' => 'Ginger',
+        'job' => NULL,
+      ),
+    );
+    $this->assertIdenticalResultset($view, $resultset, $this->column_map);
+  }
+
+  /**
+   * Additional data to test the NULL issue.
+   */
+  protected function dataSet() {
+    $data_set = parent::dataSet();
+    $data_set[] = array(
+      'name' => 'Ginger',
+      'age' => 25,
+      'job' => NULL,
+      'created' => gmmktime(0, 0, 0, 1, 2, 2000),
+    );
+    return $data_set;
+  }
+
+  /**
+   * Allow {views_test}.job to be NULL.
+   */
+  protected function schemaDefinition() {
+    $schema = parent::schemaDefinition();
+    unset($schema['views_test']['fields']['job']['not null']);
+    return $schema;
+  }
+}

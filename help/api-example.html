@@ -1,0 +1,179 @@
+
+For the new table defined by the Node example module to be understood by the views module you need to create a node_example.views.inc file that describes the table and its relationships to the rest of the database.  In order for views to know that this file is to be loaded you need to implement hook_views_api.  This is done by adding the following function into your node_example.module file
+
+<pre>
+&lt;?php
+/**
+ * Implements hook_views_api().
+ *
+ * This tells drupal that there is Views integration file named
+ * module-name.views.inc
+ */
+function node_example_views_api() {
+  // Note that you can include 'path' in this array so that your views.inc
+  // file can be stored in a different location.
+  return array(
+    'api' => 2.0
+  );
+}
+?&gt;
+</pre>
+
+Below is the contents of a simple node_example.views.inc file that allows you to create views that include the new color and quantity information.
+
+<pre>
+&lt;?php
+
+/**
+ * This file is used to tell the views module about the new node_example table.
+ *
+ * Database definition:
+ * @code
+ *   CREATE TABLE node_example (
+ *     vid int(10) unsigned NOT NULL default '0',
+ *     nid int(10) unsigned NOT NULL default '0',
+ *     color varchar(255) NOT NULL default '',
+ *     quantity int(10) unsigned NOT NULL default '0',
+ *     PRIMARY KEY (vid, nid),
+ *     KEY `node_example_nid` (nid)
+ *   )
+ * @endcode
+ */
+
+function node_example_views_data()  {
+  // Basic table information.
+
+  // ----------------------------------------------------------------
+  // node_example table
+  //  New group within Views called 'Example'
+  //  The group will appear in the UI in the dropdown tha allows you
+  //  to narrow down which fields and filters are available.
+
+  $data = array();
+  $data['node_example']['table']['group']  = t('Example');
+
+  // Let Views know that our example table joins to the 'node'
+  // base table. This means it will be available when listing
+  // nodes and automatically make its fields appear.
+  //
+  // We also show up for node revisions.
+  $data['node_example']['table']['join'] = array(
+    'node_revisions' => array(
+      'left_field' => 'vid',
+      'field' => 'vid',
+    ),
+    'node' => array(
+      'left_field' => 'vid',
+      'field' => 'vid',
+    ),
+  );
+
+  // quantity
+  $data['node_example']['quantity'] = array(
+    'title' => t('Quantity'),
+    'help' => t('Quantity of items.'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+     ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+
+  // Color
+  $data['node_example']['color'] = array(
+    'title' => t('Color'),
+    'help' => t('Color of item.'),
+
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE,
+     ),
+     'filter' => array(
+      'handler' => 'views_handler_filter_string',
+     ),
+     'argument' => array(
+       'handler' => 'views_handler_argument_string',
+     ),
+     'sort' => array(
+      'handler' => 'views_handler_sort',
+     ),
+  );
+
+  return $data;
+}
+
+?&gt;
+</pre>
+
+Some notes on usage:
+
+Within Views, click on the Add tab.  You have a number of type options here.  Normally you would select either 'Node' (if you only want to display information on current nodes) or 'Node revision' (if you want to display information on all revisions of the nodes)
+
+With this configuration you always pull out of the database, data for every single node, whether or not it has color and quantity information.  To display information on just those nodes that have color and quantity information you can use a filter so that only nodes which don't have a NULL color or a NULL quantity are displayed.
+
+<h3>Type/relationship extension</h3>
+
+When your tables have first class data, you will often need to have own View types and View relationships defined.  With the current node_example table this isn't required although I try to justify it below on an efficiency basis. See [[http://groups.drupal.org/node/17236#comment-58980|this discussion]] as to why it isn't justified.
+
+Pulling data out of the database for every node when you only want data for the new Example node type is inefficient.  To reduce the initial data extraction to just that relating to the new Example nodes requires that you make the node_example table the base table.  This can be done by adding the following code into the node_example.views.inc file just before the 'return $data;'
+
+<pre>
+&lt;?php
+
+//  **** Begin optional extra for type and relationships ****
+
+  //  Use node_example as a new base table
+  //     by creating a new views type called 'Node example'
+  //  This allows it to be selected as the 'view type'
+  //          when you initially add a new view.
+  $data['node_example']['table']['base'] = array(
+    'field' => 'vid',
+    'title' => t('Node example'),
+    'help' => t("Node example type with color and quantity information."),
+    'weight' => -9,
+  );
+
+  // When using the new 'Node example' type you need to use relationships
+  //   to access fields in other tables.
+
+  // Relationship to the 'Node revision' table
+  $data['node_example']['vid'] = array(
+    'title' => t('Node revision'),
+    'help' => t('The particular node revision the color and quantity is attached to'),
+    'relationship' => array(
+      'label' => t('Node revision'),
+      'base' => 'node_revisions',
+      'base field' => 'vid',
+      // This allows us to not show this relationship if the base is already
+      // node_revisions so users won't create circular relationships.
+      'skip base' => array('node', 'node_revisions'),
+    ),
+  );
+
+  // Relationship to the 'Node' table
+  $data['node_example']['nid'] = array(
+    'title' => t('Node'),
+    'help' => t('The particular node the color and quantity is attached to'),
+    'relationship' => array(
+      'label' => t('Node'),
+      'base' => 'node',
+      'base field' => 'nid',
+      // This allows us to not show this relationship if the base is already
+      // node so users won't create circular relationships.
+      'skip base' => array('node', 'node_revisions'),
+    ),
+  );
+
+//  **** End optional extra for type and relationships ****
+
+?&gt;
+</pre>
+
+The above code adds a new 'Node example' to the view types that can be selected within the Add tab window of views.  Selecting this sets the node_example table to be the base table.
+
+If you select 'Node example' as view type, when you initially go into the edit window of views you will find  the only fields available are the color and quantity fields.  To get fields from other tables you need to add a relationship.  Relationships may be found at the top in the same column as the fields.

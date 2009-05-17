@@ -1,0 +1,20 @@
+You choose the <strong>name</strong> of the current display.
+This <strong>title</strong> will be displayed with the view, wherever titles are normally displayed; i.e, as the page title, block title, etc.
+
+When you use have many items to display, you have the choice to display them in different variants.
+<dl>
+<dt>Display a specified number of items</dt>
+<dd>Specify the number of items to display per page and an offset. The offset is the number of items to skip. For example, if this field is 3, the first 3 items will be skipped and not displayed.
+<dt>Display all items</dt>
+<dd>All items will display, but you can choose an offset. The number of items to skip. For example, if this field is 3, the first 3 items will be skipped and not displayed.</dd>
+<dt>Paged output, full pager</dt>
+<dd>A Pager can be used to display items, with the possibility to select the next page and also the first and last page. When you have many items the query is very <i>expensive</i>. To avoid this, you can choose the mini pager.
+You can also choose the number of items per page. If you enter 0, then there is no limit. Pagers also will respect an offset, if present. If multiple pagers are present on one page you may need to set this number to a higher value so as not to conflict within the ?page= array. Large values will add commas to your URLs, so avoid this if possible. Unless you're experiencing problems with pagers related to this view, you should leave this at 0. Enter the total number of pages to limit the number of values. When you leave the field empty all pages will show.
+The <strong>Exposed options</strong> allow users to define their values in a exposed form when view is displayed.
+You can choose "Expose items per page". With this option the user can determine how many items per page show in a view. Options for which label should display and what numberic options are also available.
+Furthermore, you can choose "Expose Offset". When checked, users can determine how many items should be skipped at the beginning. You can define a label.
+</dd>
+<dt>Paged output, mini pager</dt>
+<dd>The pager optiona are the same as for the "Paged output, full pager" but you have no possibility to jump to the last or first items. </dd>
+</dl>
+Normally, all views are created with <strong>unrestricted access</strong>. This means any site visitor can see the views. Please consider this when you make a view with a menu link and private data as output. You have by default two options: "Permission" and "Role". If you choose permission, you get a list of all permissions. Only users with the selected permission flag will be able to access this display. If you choose role, you get all roles as checkboxes. Only the checked roles will be able to access this display. Note that users with "access all views" can see any view, regardless of role.

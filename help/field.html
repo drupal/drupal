@@ -1,0 +1,27 @@
+Fields are the individual pieces of data being displayed. Adding the fields <em>Node: Title</em>, <em>Node: Type</em>, and <em>Node: Post date</em> to a node view, for example, includes the title, content type and creation date in the displayed results).
+
+Fields may not appear on every display, because not all style plugins actually use <a href="topic:views/style-fields">fields</a>. For example, the '<a href="topic:views/style-node">node</a>' <a href="topic:views/style-row">row plugin</a> simply displays the node through Drupal's normal mechanisms, and fields are not involved.
+For the most  part, the field settings should be self explanatory. Fields will appear in the order that they are arranged in, and they will usually appear with the label they are given.
+
+If you add new cck fields you will find them under the Group "Content". Search for the field name. With new modules the list of groups will grow. Modules can add new items with the <em>hook_views_data()</em> hook.
+
+If you do not find a field, consider whether or not you need a <a href="topic:views/relationship">Relationship</a>.
+
+You can override the entire field section - see <a href="topic:views/overrides">here</a> for more information.
+
+When a field is added, the "Configure field" modal opens. It has a dropdown at the top that lets you choose what display this field configuration is valid for (ie, this display, or all displays.)
+
+You start by configuring three checkboxes:
+<ul>
+<li>Create a label: when checked, this opens a textbox that can be filled out to label the field. </li>
+<li>Exclude from display: Loads the field, but hides it from general view. This is useful for grouping fields by hiding the group from the user's view.</li>
+<li>Link this field to the original piece of content: overrides any default link set up.</li>
+</ul>
+
+Style settings give you several options for wrapping an HTML element around a field; title, for example, can be wrapped in an H1-H6, a SPAN, DIV, etc. It can also be given a particular identifying CSS class of its own here. You can do the same with the label or do them both at the same time. This  is part of the Semantic Views integration. Alternately, you can leave the default Views classes to identify the field and content.
+
+If you have No Results, you can customize that in this modal also. You have the options to count 0 as empty, or to hide the entire field if it's empty.
+
+Next up is the Rewrite results: all the options you need to rewrite the output of the field with tokens, custom text, a link, etc. If your field is output as a link using the <strong>Output this field as a link</strong> option, you can include the "Alt" text for a link hover in a Title attribute. This is important for accessibility.
+
+The last section is the administrative title, which just gives you a place to give the field a special name on the admin screen in case you have more than one copy.

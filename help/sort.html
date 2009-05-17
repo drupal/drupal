@@ -1,0 +1,28 @@
+Sort criteria determine what order the records are retrieved from the database and displayed in; generally, all you need to do is pick a field and choose ascending (1, 2, 3, 4) or descending (4, 3, 2, 1) and it will be done. If you have multiple sort criteria, the second (and later) items only come into play if the first item is the same.
+
+In Views 3.x, sorts may be exposed just as filters are. Note that if only one item is exposed for sorting, the dropdown menu created by the exposed sort will only have one item in it. Some users may find this odd.
+
+Different data types sort just a little bit differently from others:
+<dl>
+<dt>Number fields</dt>
+<dd>Number fields sort like you would expect. 1 comes before 2 which comes before 10 which comes before 100 which comes before 200, etc.</dd>
+<dt>Text fields</dt>
+<dd>Text fields always sort alphabetically, even if the text contains numbers. This can have some odd effects if you have numbers stored in text, because the values 1, 3, 7, 10, 12, 20, 100, 120 will sort like this:
+<ul>
+<li> 1 </li>
+<li> 10 </li>
+<li> 100 </li>
+<li> 12 </li>
+<li> 120 </li>
+<li> 200 </li>
+<li> 3 </li>
+<li> 7 </li>
+</ul>
+
+This is because these fields sort purely by characters, and not numeric value. i.e, comparing 200 and 3, the '2' comes before the '3', therefore, '200' is "smaller" than '3'.
+</dd>
+<dt>Date fields</dt>
+<dd>Date fields often can have a 'granularity', which is a way of making similar dates actually be the same date. Take two dates that are close to each other: <strong>May 1, 2007 5:30 am</strong> and <strong>May 1, 2007 9:45am</strong>. Without granularity, the two dates are compared and the first date comes before the second date. However, if the granularity is set to 'day' it only looks at the parts of the date up to the day: <strong>May 1, 2007</strong> and <strong>May 1, 2007</strong>. At that point, they are the same, and the sort would move on to the next sort criterion.</dd>
+</dl>
+
+You can override the complete sort criteria section - see <a href="topic:views/overrides">here</a> for more information.

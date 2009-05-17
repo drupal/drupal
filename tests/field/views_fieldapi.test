@@ -1,0 +1,490 @@
+<?php
+
+/**
+ * @file
+ * Tests the fieldapi integration of viewsdata.
+ */
+
+/**
+ * @TODO
+ *   - Test on a generic entity not on a node.
+ *
+ * What has to be tested:
+ *   - Take sure that every wanted field is added to the according entity type.
+ *   - Take sure the joins are done correct.
+ *   - Use basic fields and take sure that the full wanted object is build.
+ *   - Use relationships between different entity types, for example node and the node author(user).
+ */
+
+/**
+ * Provides some helper methods for testing fieldapi integration into views.
+ */
+class ViewsFieldApiTestHelper extends ViewsSqlTest {
+  /**
+   * Stores the field definitions used by the test.
+   * @var array
+   */
+  public $fields;
+  /**
+   * Stores the instances of the fields. They have
+   * the same keys as the fields.
+   * @var array
+   */
+  public $instances;
+
+  protected function CreateUser($extra_edit = array()) {
+    $permissions = array('access comments', 'access content', 'post comments', 'skip comment approval');
+    // Create a role with the given permission set.
+    if (!($rid = $this->drupalCreateRole($permissions))) {
+      return FALSE;
+    }
+
+    // Create a user assigned to that role.
+    $edit = array();
+    $edit['name']   = $this->randomName();
+    $edit['mail']   = $edit['name'] . '@example.com';
+    $edit['roles']  = array($rid => $rid);
+    $edit['pass']   = user_password();
+    $edit['status'] = 1;
+    $edit += $extra_edit;
+
+    $account = user_save(drupal_anonymous_user(), $edit);
+
+    $this->assertTrue(!empty($account->uid), t('User created with name %name and pass %pass', array('%name' => $edit['name'], '%pass' => $edit['pass'])), t('User login'));
+    if (empty($account->uid)) {
+      return FALSE;
+    }
+
+    // Add the raw password so that we can log in as this user.
+    $account->pass_raw = $edit['pass'];
+    return $account;
+  }
+
+  function setUpFields($amount = 3) {
+    // Create three fields.
+    $field_names = array();
+    for ($i = 0; $i < $amount; $i++) {
+      $field_names[$i] = 'field_name_' . $i;
+      $field = array('field_name' => $field_names[$i], 'type' => 'text');
+
+      $this->fields[$i] = $field = field_create_field($field);
+    }
+    return $field_names;
+  }
+
+  function setUpInstances($bundle = 'page') {
+    foreach ($this->fields as $key => $field) {
+      $instance = array(
+        'field_name' => $field['field_name'],
+        'entity_type' => 'node',
+        'bundle' => 'page',
+      );
+      $this->instances[$key] = field_create_instance($instance);
+    }
+  }
+
+  /**
+   * Clear all views caches and static caches which are required for the patch.
+   */
+  function clearViewsCaches() {
+    // Reset views data cache.
+    $cache = &drupal_static('_views_fetch_data' . '_cache');
+    $recursion_protection = &drupal_static('_views_fetch_data' . '_recursion_protected');
+    $cache = NULL;
+    $recursion_protection = NULL;
+  }
+}
+
+/**
+ * Test the produced views_data.
+ */
+class viewsFieldApiDataTest extends ViewsFieldApiTestHelper {
+  /**
+   * Stores the fields for this test case.
+   */
+  var $fields;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Fieldapi: Views Data',
+      'description' => 'Tests the fieldapi views data.',
+      'group' => 'Views Modules',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    $langcode = LANGUAGE_NONE;
+
+
+    $field_names = $this->setUpFields();
+
+    // The first one will be attached to nodes only.
+    $instance = array(
+      'field_name' => $field_names[0],
+      'entity_type' => 'node',
+      'bundle' => 'page',
+    );
+    field_create_instance($instance);
+
+    // The second one will be attached to users only.
+    $instance = array(
+      'field_name' => $field_names[1],
+      'entity_type' => 'user',
+      'bundle' => 'user',
+    );
+    field_create_instance($instance);
+
+    // The third will be attached to both nodes and users.
+    $instance = array(
+      'field_name' => $field_names[2],
+      'entity_type' => 'node',
+      'bundle' => 'page',
+    );
+    field_create_instance($instance);
+    $instance = array(
+      'field_name' => $field_names[2],
+      'entity_type' => 'user',
+      'bundle' => 'user',
+    );
+    field_create_instance($instance);
+
+    // Now create some example nodes/users for the view result.
+    for ($i = 0; $i < 5; $i++) {
+      $edit = array(
+        // @TODO Write a helper method to create such values.
+        'field_name_0' => array($langcode => array((array('value' => $this->randomName())))),
+        'field_name_2' => array($langcode => array((array('value' => $this->randomName())))),
+      );
+      $this->nodes[] = $this->drupalCreateNode($edit);
+    }
+
+    for ($i = 0; $i < 5; $i++) {
+      $edit = array(
+        'field_name_1' => array($langcode => array((array('value' => $this->randomName())))),
+        'field_name_2' => array($langcode => array((array('value' => $this->randomName())))),
+      );
+      $this->users[] = $this->CreateUser($edit);
+    }
+
+    // Reset views data cache.
+    $cache = &drupal_static('_views_fetch_data' . '_cache');
+    $recursion_protection = &drupal_static('_views_fetch_data' . '_recursion_protected');
+    $cache = NULL;
+    $recursion_protection = NULL;
+  }
+
+  /**
+   * Unit testing the views data structure.
+   *
+   * We check data structure for both node and node revision tables.
+   */
+  function testViewsData() {
+    $data = views_fetch_data();
+    
+    // Check the table and the joins of the first field.
+    // Attached to node only.
+    $field = $this->fields[0];
+    $current_table = _field_sql_storage_tablename($field);
+    $revision_table = _field_sql_storage_revision_tablename($field);
+
+    $this->assertTrue(isset($data[$current_table]));
+    $this->assertTrue(isset($data[$revision_table]));
+    // The node field should join against node.
+    $this->assertTrue(isset($data[$current_table]['table']['join']['node']));
+    $this->assertTrue(isset($data[$revision_table]['table']['join']['node_revision']));
+
+    $expected_join = array(
+      'left_field' => 'nid',
+      'field' => 'entity_id',
+      'extra' => array(
+        array('field' => 'entity_type', 'value' => 'node'),
+        array('field' => 'deleted', 'value' => 0, 'numeric' => TRUE),
+      ),
+    );
+    $this->assertEqual($expected_join, $data[$current_table]['table']['join']['node']);
+    $expected_join = array(
+      'left_field' => 'vid',
+      'field' => 'revision_id',
+      'extra' => array(
+        array('field' => 'entity_type', 'value' => 'node'),
+        array('field' => 'deleted', 'value' => 0, 'numeric' => TRUE),
+      ),
+    );
+    $this->assertEqual($expected_join, $data[$revision_table]['table']['join']['node_revision']);
+
+
+    // Check the table and the joins of the second field.
+    // Attached to both node and user.
+    $field_2 = $this->fields[2];
+    $current_table_2 = _field_sql_storage_tablename($field_2);
+    $revision_table_2 = _field_sql_storage_revision_tablename($field_2);
+
+    $this->assertTrue(isset($data[$current_table_2]));
+    $this->assertTrue(isset($data[$revision_table_2]));
+    // The second field should join against both node and users.
+    $this->assertTrue(isset($data[$current_table_2]['table']['join']['node']));
+    $this->assertTrue(isset($data[$revision_table_2]['table']['join']['node_revision']));
+    $this->assertTrue(isset($data[$current_table_2]['table']['join']['users']));
+
+    $expected_join = array(
+      'left_field' => 'nid',
+      'field' => 'entity_id',
+      'extra' => array(
+        array('field' => 'entity_type', 'value' => 'node'),
+        array('field' => 'deleted', 'value' => 0, 'numeric' => TRUE),
+      )
+    );
+    $this->assertEqual($expected_join, $data[$current_table_2]['table']['join']['node']);
+    $expected_join = array(
+      'left_field' => 'vid',
+      'field' => 'revision_id',
+      'extra' => array(
+        array('field' => 'entity_type', 'value' => 'node'),
+        array('field' => 'deleted', 'value' => 0, 'numeric' => TRUE),
+      )
+    );
+    $this->assertEqual($expected_join, $data[$revision_table_2]['table']['join']['node_revision']);
+    $expected_join = array(
+      'left_field' => 'uid',
+      'field' => 'entity_id',
+      'extra' => array(
+        array('field' => 'entity_type', 'value' => 'user'),
+        array('field' => 'deleted', 'value' => 0, 'numeric' => TRUE),
+      )
+    );
+    $this->assertEqual($expected_join, $data[$current_table_2]['table']['join']['users']);
+
+    // Check the fields
+    // @todo
+
+    // Check the arguments
+    // @todo
+
+    // Check the sort criterias
+    // @todo
+
+    // Check the relationships
+    // @todo
+
+  }
+}
+
+/**
+ * Tests the field_field handler.
+ * @TODO
+ *   Check a entity-type with bundles
+ *   Check a entity-type without bundles
+ *   Check locale:disabled, locale:enabled and locale:enabled with another language
+ *   Check revisions
+ */
+class viewsHandlerFieldFieldTest extends ViewsFieldApiTestHelper {
+  public $nodes;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Fieldapi: Field handler',
+      'description' => 'Tests the field itself of the fieldapi integration',
+      'group' => 'Views Modules'
+    );
+  }
+
+  protected function setUp() {
+    parent::setUp();
+
+    // Setup basic fields.
+    $this->setUpFields(3);
+
+    // Setup a field with cardinality > 1.
+    $this->fields[3] = $field = field_create_field(array('field_name' => 'field_name_3', 'type' => 'text', 'cardinality' => FIELD_CARDINALITY_UNLIMITED));
+
+    $this->setUpInstances();
+
+    $this->clearViewsCaches();
+
+    // Create some nodes.
+    $this->nodes = array();
+    for ($i = 0; $i < 3; $i++) {
+      $edit = array('type' => 'page');
+
+      for ($key = 0; $key < 3; $key++) {
+        $field = $this->fields[$key];
+        $edit[$field['field_name']][LANGUAGE_NONE][0]['value'] = $this->randomName(8);
+      }
+      for ($j = 0; $j < 5; $j++) {
+        $edit[$this->fields[3]['field_name']][LANGUAGE_NONE][$j]['value'] = $this->randomName(8);
+      }
+
+      $this->nodes[$i] = $this->drupalCreateNode($edit);
+    }
+  }
+
+  public function testFieldRender() {
+    $this->_testSimpleFieldRender();
+    $this->_testFormatterSimpleFieldRender();
+    $this->_testMultipleFieldRender();
+  }
+
+  public function _testSimpleFieldRender() {
+    $view = $this->getFieldView();
+    $this->executeView($view);
+
+    // Tests that the rendered fields match the actual value of the fields.
+    for ($i = 0; $i < 3; $i++) {
+      for ($key = 0; $key < 2; $key++) {
+        $field = $this->fields[$key];
+        $rendered_field = $view->style_plugin->get_field($i, $field['field_name']);
+        $expected_field = $this->nodes[$i]->{$field['field_name']}[LANGUAGE_NONE][0]['value'];
+        $this->assertEqual($rendered_field, $expected_field);
+      }
+    }
+  }
+
+  /**
+   * Tests that fields with formatters runs as expected.
+   */
+  public function _testFormatterSimpleFieldRender() {
+    $view = $this->getFieldView();
+    $view->display['default']->display_options['fields'][$this->fields[0]['field_name']]['type'] = 'text_trimmed';
+    $view->display['default']->display_options['fields'][$this->fields[0]['field_name']]['settings'] = array(
+      'trim_length' => 3,
+    );
+    $this->executeView($view);
+
+    // Take sure that the formatter works as expected.
+    // @TODO: actually there should be a specific formatter.
+    for ($i = 0; $i < 2; $i++) {
+      $rendered_field = $view->style_plugin->get_field($i, $this->fields[0]['field_name']);
+      $this->assertEqual(strlen($rendered_field), 3);
+    }
+  }
+
+  public function _testMultipleFieldRender() {
+    $view = $this->getFieldView();
+
+    // Test delta limit.
+    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
+    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
+    $this->executeView($view);
+
+    for ($i = 0; $i < 3; $i++) {
+      $rendered_field = $view->style_plugin->get_field($i, $this->fields[3]['field_name']);
+      $items = array();
+      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NONE];
+      $pure_items = array_splice($pure_items, 0, 3);
+      foreach ($pure_items as $j => $item) {
+        $items[] = $pure_items[$j]['value'];
+      }
+      $this->assertEqual($rendered_field, implode(', ', $items), 'Take sure that the amount of items are limited.');
+    }
+    $view->destroy();
+
+    // Test delta limit + offset
+    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
+    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
+    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_offset'] = 1;
+    $this->executeView($view);
+
+    for ($i = 0; $i < 3; $i++) {
+      $rendered_field = $view->style_plugin->get_field($i, $this->fields[3]['field_name']);
+      $items = array();
+      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NONE];
+      $pure_items = array_splice($pure_items, 1, 3);
+      foreach ($pure_items as $j => $item) {
+        $items[] = $pure_items[$j]['value'];
+      }
+      $this->assertEqual($rendered_field, implode(', ', $items), 'Take sure that the amount of items are limited.');
+    }
+    $view->destroy();
+
+    // Test delta limit + reverse.
+    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_offset'] = 0;
+    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
+    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
+    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_reversed'] = TRUE;
+    $this->executeView($view);
+
+    for ($i = 0; $i < 3; $i++) {
+      $rendered_field = $view->style_plugin->get_field($i, $this->fields[3]['field_name']);
+      $items = array();
+      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NONE];
+      array_splice($pure_items, 0, -3);
+      $pure_items = array_reverse($pure_items);
+      foreach ($pure_items as $j => $item) {
+        $items[] = $pure_items[$j]['value'];
+      }
+      $this->assertEqual($rendered_field, implode(', ', $items), 'Take sure that the amount of items are limited.');
+    }
+    $view->destroy();
+
+    // Test delta first last.
+    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
+    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_limit'] = 0;
+    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_first_last'] = TRUE;
+    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_reversed'] = FALSE;
+    $this->executeView($view);
+
+    for ($i = 0; $i < 3; $i++) {
+      $rendered_field = $view->style_plugin->get_field($i, $this->fields[3]['field_name']);
+      $items = array();
+      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NONE];
+      $items[] = $pure_items[0]['value'];
+      $items[] = $pure_items[4]['value'];
+      $this->assertEqual($rendered_field, implode(', ', $items), 'Take sure that the amount of items are limited.');
+    }
+    $view->destroy();
+
+    // Test delta limit + custom seperator.
+    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_first_last'] = FALSE;
+    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['delta_limit'] = 3;
+    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['group_rows'] = TRUE;
+    $view->display['default']->display_options['fields'][$this->fields[3]['field_name']]['separator'] = ':';
+    $this->executeView($view);
+
+    for ($i = 0; $i < 3; $i++) {
+      $rendered_field = $view->style_plugin->get_field($i, $this->fields[3]['field_name']);
+      $items = array();
+      $pure_items = $this->nodes[$i]->{$this->fields[3]['field_name']}[LANGUAGE_NONE];
+      $pure_items = array_splice($pure_items, 0, 3);
+      foreach ($pure_items as $j => $item) {
+        $items[] = $pure_items[$j]['value'];
+      }
+      $this->assertEqual($rendered_field, implode(':', $items), 'Take sure that the amount of items are limited.');
+    }
+  }
+
+  protected function getFieldView() {
+    $view = new view;
+    $view->name = 'view_fieldapi';
+    $view->description = '';
+    $view->tag = 'default';
+    $view->base_table = 'node';
+    $view->human_name = 'view_fieldapi';
+    $view->core = 7;
+    $view->api_version = '3.0';
+    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+    /* Display: Master */
+    $handler = $view->new_display('default', 'Master', 'default');
+    $handler->display->display_options['access']['type'] = 'perm';
+    $handler->display->display_options['cache']['type'] = 'none';
+    $handler->display->display_options['query']['type'] = 'views_query';
+    $handler->display->display_options['exposed_form']['type'] = 'basic';
+    $handler->display->display_options['pager']['type'] = 'full';
+    $handler->display->display_options['style_plugin'] = 'default';
+    $handler->display->display_options['row_plugin'] = 'fields';
+
+    $handler->display->display_options['fields']['nid']['id'] = 'nid';
+    $handler->display->display_options['fields']['nid']['table'] = 'node';
+    $handler->display->display_options['fields']['nid']['field'] = 'nid';
+    foreach ($this->fields as $key => $field) {
+      $handler->display->display_options['fields'][$field['field_name']]['id'] = $field['field_name'];
+      $handler->display->display_options['fields'][$field['field_name']]['table'] = 'field_data_' . $field['field_name'];
+      $handler->display->display_options['fields'][$field['field_name']]['field'] = $field['field_name'];
+    }
+    return $view;
+  }
+
+}
+

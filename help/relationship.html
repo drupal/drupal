@@ -1,0 +1,17 @@
+Relationships allow you to expand the query to include objects other than the base query. This is actually made more difficult to understand by the fact that Views actually includes a few relationships by default, and doesn't tell you they're there. For historical reasons, it would be inconvenient to remove these default relationships. When relationships are present, all fields (including relationships) will gain a new form item to let you select which relationship they will use. They will default to using no relationship at all.
+
+The main example of the relationship that is there by default is the node --&gt; user relationship; every node has an author, and if a node is in the query, the user who wrote that node is automatically made available. [Note: the author considers it an error that this relationship is automatic, but by the time it was realized this was in error, it was too late to change it.]
+
+A similar relationship that is <b>not</b> automatically made available is for node revisions. Each revision has its own author, which is the user who made the revision. By adding the "Node revision: User" relationship, all of the 'user' fields, sorts, filters and arguments available to a user will now be available for the revision author.
+
+When a relationship is added to the view, all applicable items will gain a "Relationship" select box, where you can choose which version of that particular item you wish to use. This can be illustrated with an example:
+
+A 'comment' view contains the relationships 'Comment: node' and 'Comment: user'. This means that all the fields for the node that a comment is attached to are available, and all the user fields for that node author also become available. The other relationship makes fields for the author of the comment available -- very often not the author of the node!
+
+When you add the "User: name" field, you will be presented with a select box. Either the node relationship or the user relationship must be selected, because there are two possible user names in the view to choose from.
+
+Another example of relationships involves the <strong>Files</strong> table. In Drupal, files are related to users, but files are not necessarily related to nodes. However, the upload.module allows some files to be attached to nodes. The only way for Views to deal with this discrepancy is with relationships. When creating a 'node' view, it's possible to add an uploaded files relationship to get file data for nodes that were attached with the upload module. It is also possible to go the other way; from a files view you may add a relationship via the Upload table to view information about the node.
+
+Drupal 7 made significant changes to Taxonomy. Because of this, many taxonomy functions Views can perform are now part of relationships. If you can't find the filter you need, add either the related taxonomy terms relationship, or a relationship on the specific taxonomy field.
+
+You can override the complete relationship section - see <a href="topic:views/overrides">overrides</a> for more information.

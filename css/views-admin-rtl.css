@@ -1,0 +1,98 @@
+/**
+ * The .css file is intended to only contain positioning and size declarations
+ * For example: display, position, float, clear, and overflow.
+ */
+
+/* @group Inline lists */
+
+.horizontal > * {
+  float: right;
+}
+
+.horizontal.right {
+  float: left;
+}
+
+/* @end */
+
+/* @group Attachment details
+ *
+ * The attachment details section, its tabs for each section and the buttons
+ * to add a new section
+ */
+
+.form-actions {
+  float: left;
+}
+
+/* @end */
+
+/* @group Attachment details tabs
+ *
+ * The tabs that switch between sections
+ */
+
+.views-displays .secondary > li {
+  float: right;
+}
+
+/* @end */
+
+/* @group Attachment details new section button */
+
+.views-displays .secondary .action-list {
+  left: auto;
+  right: 0;
+}
+
+/* @end */
+
+/* @group Attachment details collapsible fieldset */
+
+.views-display-tab .fieldset-legend {
+  left: auto;
+  right: -5px;
+}
+
+/* @end */
+
+/* @group Attachment details actions
+ *
+ * Display the "Delete" and "Duplicate" buttons to the right.
+ */
+.views-display-tab .fieldset-wrapper > .views-ui-display-tab-bucket .actions {
+  left: 0;
+  right: auto;
+}
+
+/* @end */
+
+/* @group Attachment configuration columns */
+
+.views-display-columns > * {
+  float: right;
+  margin-left: 0;
+  margin-right: 1%;
+  padding-left: 0;
+  padding-right: 1%;
+}
+
+.views-display-columns > *:first-child {
+  margin-right: 0;
+  padding-right: 0;
+}
+
+/* @end */
+
+/* @group Settings forms */
+
+.views-dependent {
+  margin-right: 1.5em;
+}
+
+.views-display-setting .label,
+.views-display-setting .views-ajax-link {
+  float: right;
+}
+
+/* @end */

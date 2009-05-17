@@ -1,0 +1,11 @@
+<h3>Image Assist &amp; ImageField Assist</h3>
+Under certain conditions these modules can block access to the header input section of the admin.
+They need to be disabled on certain views paths. To do this go to
+Image assist ->Access settings
+check "NOT on specific paths":
+and enter
+
+Drupal 7.x has different paths
+admin/structure/views/ajax/display/*
+admin/structure/views/ajax/*
+For futher reference please see <a href="http://drupal.org/node/415990">this issue for more information</a>

@@ -1,0 +1,361 @@
+/**
+ * The .css file is intended to only contain positioning and size declarations
+ * For example: display, position, float, clear, and overflow.
+ */
+
+/* @group Resets */
+
+.views-admin ul,
+.views-admin menu,
+.views-admin dir {
+  padding-left: 0; /* LTR for IE */
+  /* padding-start is used so that RTL works out of the box */
+  -moz-padding-start: 0;
+  -webkit-padding-start: 0;
+  padding-start: 0;
+}
+
+.views-admin pre {
+  margin-bottom: 0;
+  margin-top: 0;
+  white-space: pre-wrap;
+}
+
+/* @end */
+
+/* @group Inline lists */
+
+.horizontal > * {
+  clear: none;
+  float: left; /* LTR */
+}
+
+.horizontal.right {
+  float: right;
+}
+
+.horizontal label {
+  position: absolute;
+}
+
+.horizontal .form-item > [class] {
+  margin-top: 25px;
+}
+
+.horizontal .form-item > [class] + [class] {
+  margin-top: 0;
+}
+
+/* @end */
+
+/* @group Columns */
+
+.views-left-25 {
+  float: left;
+  width: 25%;
+}
+
+.views-left-30 {
+  float: left;
+  width: 30%;
+}
+
+.views-left-40 {
+  float: left;
+  width: 40%;
+}
+
+.views-left-50 {
+  float: left;
+  width: 50%;
+}
+
+.views-left-75 {
+  float: left;
+  width: 75%;
+}
+
+.views-right-50 {
+  float: right;
+  width: 50%;
+}
+
+.views-right-60 {
+  float: right;
+  width: 60%;
+}
+
+.views-right-70 {
+  float: right;
+  width: 70%;
+}
+
+.views-group-box .form-item {
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+/* @end */
+
+/* @group Attachment details
+ *
+ * The attachment details section, its tabs for each section and the buttons
+ * to add a new section
+ */
+
+.form-edit .form-actions {
+  float: right; /* LTR */
+}
+
+.views-displays {
+  clear: both;
+}
+
+/* @end */
+
+/* @group Attachment details tabs
+ *
+ * The tabs that switch between sections
+ */
+ .views-displays .secondary {
+   border-bottom: 0 none;
+   margin: 0;
+   overflow: visible;
+   padding: 0;
+ }
+
+.views-displays .secondary > li {
+  border-right: 0 none;
+  display: inline-block;
+  float: left; /* LTR */
+  padding: 0;
+}
+
+.views-displays .secondary .open > a {
+  position: relative;
+  z-index: 51;
+}
+
+.views-displays .views-display-deleted-link {
+  text-decoration: line-through;
+}
+
+.views-display-deleted > fieldset > legend,
+.views-display-deleted .fieldset-wrapper > .views-ui-display-tab-bucket > *,
+.views-display-deleted .views-display-columns {
+  opacity: 0.25;
+}
+
+.views-display-disabled > fieldset > legend,
+.views-display-disabled .fieldset-wrapper > .views-ui-display-tab-bucket > *,
+.views-display-disabled .views-display-columns {
+  opacity: 0.5;
+}
+
+.views-display-tab .fieldset-wrapper > .views-ui-display-tab-bucket .actions {
+  opacity: 1.0;
+}
+/* @end */
+
+/* @group Attachment details new section button */
+
+.views-displays .secondary li.add {
+  position: relative;
+}
+
+.views-displays .secondary .action-list {
+  left: 0; /* LTR */
+  margin: 0;
+  position: absolute;
+  top: 23px;
+  z-index: 50;
+}
+
+.views-displays .secondary .action-list  li {
+  display: block;
+}
+
+/* @end */
+
+/* @group Attachment details collapsible fieldset */
+
+.views-display-tab .fieldset-legend {
+  left: -5px; /* LTR */
+  position: relative;
+}
+
+.views-display-tab .fieldset-wrapper {
+  position: relative;
+}
+
+/* @end */
+
+/* @group Attachment details actions
+ *
+ * Display the "Delete" and "Duplicate" buttons to the right.
+ */
+.views-display-tab .fieldset-wrapper > .views-ui-display-tab-bucket .actions {
+  position: absolute;
+  right: 0; /* LTR */
+  top: -5px;
+}
+
+/* @end */
+
+/* @group Attachment configuration columns */
+
+.views-display-columns > * {
+  float: left; /* LTR */
+  margin-left: 1%; /* LTR */
+  padding-left: 1%; /* LTR */
+  width: 32%;
+}
+
+.views-display-columns > *:first-child {
+  margin-left: 0; /* LTR */
+  padding-left: 0; /* LTR */
+}
+
+/* @end */
+
+/* @group Modal dialog box */
+
+.views-ui-dialog {
+  /* We need this so the button is visible. */
+  overflow: visible;
+  position: fixed;
+}
+
+.views-ui-dialog .ui-dialog-titlebar-close {
+  border: 1px solid transparent;
+  display: block;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  right: 0;
+  top: 2px;
+  /* Make sure this is in front of the modal backdrop. */
+  z-index: 1002;
+}
+
+.views-ui-dialog .ui-dialog-titlebar {
+  padding: 0;
+  margin: 0;
+}
+
+.views-ui-dialog .ui-dialog-title {
+  display: none;
+}
+
+.views-ui-dialog #views-ajax-popup {
+  padding: 0;
+  overflow: hidden;
+}
+
+.views-ui-dialog #views-ajax-title,
+.views-ui-dialog #views-ajax-body {
+  margin: 0;
+  padding: 0;
+}
+
+.views-ui-dialog #views-ajax-popup {
+  overflow: hidden;
+}
+
+.views-ui-dialog .scroll {
+  max-height: 400px;
+  overflow: auto;
+}
+
+#views-filterable-options-controls {
+  display: none;
+}
+
+.views-ui-dialog #views-filterable-options-controls {
+  display: block;
+}
+
+/* Don't let the messages overwhelm the modal */
+.views-ui-dialog .views-messages {
+  max-height: 200px;
+  overflow: auto;
+}
+
+/* @end */
+
+/* @group Settings forms */
+
+.views-display-setting .label,
+.views-display-setting .views-ajax-link {
+  display: inline-block;
+  float: left; /* LTR */
+}
+
+/* @end */
+
+/* @group Filter Settings form */
+
+div.form-item-options-value-all {
+  display: none;
+}
+/* @end */
+
+/* @group Drupal overrides */
+
+/* The .progress-disabled class added to the form on submit floats the element
+ * left and causes the form width to shrink-wrap to the content. Setting the
+ * width to 100% prevents this.
+ */
+#views-ajax-body form {
+  width: 100%;
+}
+
+/* @end */
+
+
+
+/* @group Javascript dependent styling */
+
+.js-only {
+  display: none;
+}
+
+html.js .js-only {
+  display: inherit;
+}
+
+html.js span.js-only {
+  display: inline;
+}
+
+/* @end */
+
+/* @group AJAX throbber */
+
+/* Base Page */
+#views-ui-list-page .ajax-progress-throbber,
+.views-admin .ajax-progress-throbber {
+  /* Can't do center:50% middle: 50%, so approximate it for a typical window size. */
+  left: 49%;
+  position: fixed;
+  top: 48.5%;
+  z-index: 1000;
+}
+#views-ui-list-page .ajax-progress-throbber .message,
+.views-admin .ajax-progress-throbber .message {
+  display: none;
+}
+
+/* Modal */
+#views-ajax-popup .ajax-progress-throbber {
+  /* Can't do center:50% middle: 50%, so approximate it for a typical window size. */
+  left: 49%;
+  position: fixed;
+  top: 48.5%;
+  z-index: 1000;
+}
+#views-ajax-popup .ajax-progress-throbber .message {
+  display: none;
+}
+
+/* @end */

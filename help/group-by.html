@@ -1,0 +1,17 @@
+This is another major new feature for Views that has been long requested. It incorporates another module that has seen a relatively wide amount of use: views_groupby. This feature provides multiple new options for manipulating data. First, it includes the important “group” SQL functionality, and then enables aggregation functions for Views, such as SUM and COUNT.
+<div class="help-box" style="text-align:center">
+<a href="path:images/views3-group-aggregation.png"><img src="path:images/views3-group-aggregation.png" /></a>
+<em>Where to set aggregation to get group settings</em>
+</div>
+
+Grouping is available for sorts and filters. To use grouping, “Use grouping” must be enabled on a per-view basis in the Views UI. This is toggled in the Advanced settings box by clicking the link next to “Use grouping”. Once you activate this checkbox (be sure to read the notes in the UI!), functions for aggregating particular fields will become available. The gear icon that should be familiar to users with any amount of Views experience will now appear next to any sorted or filtered field with aggregation capabilities. Choosing that icon will open up the configuration for the aggregation functions. As an example, this could be used to count things like number of posts in a day, or number of published posts. This could also be used to sum the values of a row, instead of everything in the view.
+
+Setting only the "Use aggregation" turned on itself does nothing. It only gives the possibility to set Aggregation types.
+
+<div class="help-box" style="text-align:center">
+<a href="path:images/views3-group-aggregation-types.png"><img src="path:images/views3-group-aggregation-types.png" /></a>
+<em>Different aggregation possibilities</em>
+</div>
+
+
+It should be noted that modules that are providing data to Views are responsible for noting whether a field supports aggregation or not; modules that do not provide this information may not have all of their fields available to Views if this data is not in place.

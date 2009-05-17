@@ -1,0 +1,15 @@
+The Views' <strong>style</strong> system is how you customize the output produced by your view. A view style is basically a smart theme template that processes the view data and then outputs it. All styles in Views can be <a href="topic:views/using-theme">overridden</a> by placing copies of the templates in your theme directory and then modifying them. See the <a href="topic:views/analyze-theme">theme: information</a> link available on all views to get hints for which templates a given view is using.
+
+<div class="help-box" style="text-align:center">
+<a href="path:images/style-breakdown-large.png"><img src="path:images/style-breakdown.png" /></a>
+<em>A breakdown of View output</em>
+</div>
+By default, the style is <em>unformatted</em>, which means that there is very little style actually used; the records are simply displayed one after another, enclosed in a &lt;div&gt; tag so that you can use <a href="topic:views/theme-css">CSS to manipulate the view</a>.
+
+Some styles use a separate <a href="topic:views/style-row">row style</a> to determine how each row of the View looks. This is useful for mixing and matching styles to more readily produce exactly the kind of output you need.
+
+Many styles can be <strong>grouped</strong>. For styles that can, there will be a 'grouping field' option; pick one of the fields to group by. Please see <a href="topic:views/style-grouping">Grouping in styles</a> for more information.
+
+Each style is its own entity.
+
+If you want your fields to be templatable, you need to use values that are acceptable in function names. That's actually more strict, since that basically limits you to alphanumeric and _. Even though Views may be able to query datastores that use special characters, naming is still important for use in templates.

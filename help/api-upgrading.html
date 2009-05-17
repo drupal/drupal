@@ -1,0 +1,224 @@
+In order to take advantage of the changes in Drupal 7, Views has gone through several API changes.
+Here's what you should know.
+
+<h3>Handler registry</h3>
+
+Views now uses Drupal's dynamic-loading code registry.
+You can safely remove your implementations of hook_views_handlers(), since they are no longer used.
+
+Please remember to specify the handlers in your module's .info file. For example:
+<pre>
+name = Example module
+description = "Gives an example of a module."
+core = 7.x
+files[] = example.module
+files[] = example.install
+
+; Views handlers
+files[] = includes/views/handlers/example_handler_argument_string.inc
+</pre>
+
+<h3>Removed handlers</h3>
+
+Note that views_handler_filter_float has been removed.
+This functionality is now handled by views_handler_filter_numeric.
+There's no need for having a special handler any more, thanks to the new DB layer in Drupal 7.
+
+views_handler_sort_formula has been removed.
+Everyone who used it can extend from views_handler_sort, too.
+
+<h3>Ctools dependency</h3>
+Views requires ctools now, so it can use the dependency system of ctools.
+The only thing you have to do is to remove views_process_dependency.
+
+<h3>Changed add_where api</h3>
+If your field is a plain sql field:
+<pre>
+$this->query->add_where($this->options['group'], "$this->table_alias.$this->real_field " . $this->operator . " '%s'", $this->value);
+</pre>
+has to be converted to
+<pre>
+$this->query->add_where($this->options['group'], "$this->table_alias.$this->real_field", $this->value, $this->operator);
+</pre>
+If your field is a complex where condition:
+<pre>
+$this->query->add_where($this->options['group'], "$upper($field) NOT LIKE $upper('%%%s')", $this->value);
+</pre>
+has to be converted to
+<pre>
+$placeholder = $this->placeholder();
+$this->query->add_where_expression($this->options['group'], "$field LIKE $placeholder", array($placeholder => '%' . db_like($this->value)));
+</pre>
+placeholder() generates a automatic unique placeholder for you.
+
+add_where with operator 'formula' can be converted to add_where_expression.
+add_having with operator 'formula' can be converted to add_having_expression.
+
+<h3>Changed place for display specific settings</h3>
+In the new ui the new place for display settings is at the top of the second column.
+Therefore use something like this code in your display plugin:
+<pre>
+$categories['block'] = array(
+  'title' => t('Block settings'),
+  'column' => 'second',
+  'build' => array(
+    '#weight' => -10,
+  ),
+);
+</pre>
+
+<h3>Changed filter settings and associated class variables</h3>
+'optional' and 'single' are now 'required' and 'multiple', the logic is now opposite.
+Also, the 'no_single' and 'no_optional' class variables (known as "object flags" in the API docs)
+are now 'always_multiple' and 'always_required'.
+
+<h3>Changed argument settings</h3>
+See the init() function in views_handler_argument for an overview of everything
+that changed.
+
+1. The default actions 'summary asc', 'summary desc', 'summary asc by count', 'summary asc by count'
+have been replaced by a single 'summary' action (which takes the sort order and type as options).
+2. Wildcards are now called exceptions.
+<pre>
+$this->options['exception']['value'] = $options['wildcard'];
+$this->options['exception']['title'] = $options['wildcard_substitution'];
+</pre>
+3. Summary plugin options are now stored in 'summary_options' instead of 'style_options'
+<pre>
+$this->options['summary_options'] = $options['style_options'];
+</pre>
+4. The selected summary plugin is no longer stored in 'style_plugin'.
+<pre>
+$this->options['summary']['format'] = $options['style_plugin'];
+</pre>
+5. The validator options have been moved.
+<pre>
+$options['validate']['type'] = $options['validate_type'];
+$options['validate']['fail'] = $options['validate_fail'];
+</pre>
+6. The validator settings have been moved from $form['argument_validate'] to ['validate_options']
+This means that dependent code in validate plugins needs to change.
+Example change for views_plugin_argument_validate_user:
+<pre>
+    $form['roles'] = array(
+       '#dependency' => array(
+-        'edit-options-argument-validate-user-restrict-roles' => array(1),
++        'edit-options-validate-options-user-restrict-roles' => array(1),
+       ),
+</pre>
+
+<h3>The introduction of get_value() and sanitize_value()</h3>
+The views_handler class got two new functions:
+<pre>
+/**
+ * Get the value that's supposed to be rendered.
+ *
+ * @param $values
+ *   An object containing all retrieved values.
+ * @param $field
+ *   Optional name of the field where the value is stored.
+ */
+function get_value($values, $field = NULL) {
+  $alias = isset($field) ? $this->aliases[$field] : $this->field_alias;
+  if (isset($values->{$alias})) {
+    return $values->{$alias};
+  }
+}
+
+/**
+ * Sanitize the value for output.
+ *
+ * @param $value
+ *   The value being rendered.
+ * @param $type
+ *   The type of sanitization needed. If not provided, check_plain() is used.
+ */
+function sanitize_value($value, $type = NULL) {
+  switch ($type) {
+    case 'xss':
+      $value = filter_xss($value);
+      break;
+    case 'url':
+      $value = check_url($value);
+      break;
+    default:
+      $value = check_plain($value);
+      break;
+  }
+  return $value;
+}
+</pre>
+These functions are meant to be used in the render() functions of field handlers,
+for fetching data (usually by alias) from the $values object, and for sanitizing values.
+
+The abstraction of fetching data from rendering data is important because
+different query backends have different ways of storing data in $values, and the field alias
+is a SQL specific thing. So instead of overriding the whole render() function and copying
+all of the logic there (as well as having to constantly keep up with upstream Views changes),
+the backend can just override get_values(), which is significantly less code.
+
+Of course, different ways of fetching and displaying data might require different
+ways of sanitizing it, hence the usage of the sanitize_value() function.
+
+Examples of converting render() field handler implementations:
+<pre>
+// This
+$value = $values->{$this->field_alias};
+// Becomes this
+$value = $this->get_value($values);
+
+// And this
+$format = $values->{$this->aliases['format']};
+// Becomes this
+$format = $this->get_values($values, 'format');
+
+// Instead of this:
+return check_plain($value);
+// We write:
+return $this->sanitize_value($value);
+
+// Since sanitize_value() supports different sanitization functions, this:
+return filter_xss($value);
+// Can become:
+return $this->sanitize_value($value, 'xss');
+</pre>
+
+
+<h3>Changed views_get_page_view</h3>
+In contrast to 6.x views_get_page_view now does stores the current view, not the current page display.
+
+<h3>Removed views-view-row-node</h3>
+Due to changes in comment.module there is no extra views-view-row-node template needed to display the comments. If you do some custom stuff there you should now be able to do everything in your node.tpl.php.
+
+<h3>Entity type Key on Base tables</h3>
+During the development of the drupal7 version of views the entity type associated with a table got added to $data['name']['table']['base']['entity type']. It should be moved to $data['name']['table']['entity type'].
+
+<h3>Changed views_plugin_style::render_grouping()</h3>
+The parameters as well as the structure of the methods return have changed.
+The method now accepts a third optional parameter called "$group_rendered".
+This parameter defines whether to use the rendered or the raw field value for grouping.
+Intention for adding the parameter was that the grouping could have been acted
+unexpected if the rendered field contained unique values e.g. by using drupal_html_id().
+<dl>
+<dt>New return structure</dt>
+<dd>
+{grouping value} is the value affected by the new parameter.
+<pre>
+  array (
+    {grouping value} => array(
+      'group' => {rendered_value of the grouping field},
+      'rows' => array({group rows}),
+    ),
+  );
+</pre>
+</dd>
+<dt>Old return structure</dt>
+<dd>
+<strong>If the new parameter isn't explicitly set or its value is NULL the structure of the return will be the same as in D6!</strong>
+<pre>
+  array (
+    {rendered_value of the grouping field} => array({group rows}),
+  );
+</pre>
+</dd>
+</dl>

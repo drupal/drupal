@@ -1,0 +1,143 @@
+<?php
+
+/**
+ * @file
+ * Definition of ViewsUserTestCase.
+ */
+
+/**
+ * Tests basic user module integration into views.
+ */
+class ViewsUserTestCase extends ViewsSqlTest {
+  var $users = array();
+  var $nodes = array();
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Tests basic user integration',
+      'description' => 'Tests the integration of user module',
+      'group' => 'Views Modules',
+    );
+  }
+
+
+  protected function setUp() {
+    parent::setUp();
+
+    $this->users[] = $this->drupalCreateUser();
+    $this->users[] = user_load(1);
+    $this->nodes[] = $this->drupalCreateNode(array('uid' => $this->users[0]->uid));
+    $this->nodes[] = $this->drupalCreateNode(array('uid' => 1));
+  }
+
+  /**
+   * Add a view which has no explicit relationship to the author and check the result.
+   *
+   * @todo: Remove the following comment once the relationship is required.
+   * One day a view will require the relationship so it should still work
+   */
+  public function testRelationship() {
+    $view = $this->test_view_user_relationship();
+
+    $view->execute_display();
+    $expected = array();
+    for ($i = 0; $i <= 1; $i++) {
+      $expected[$i] = array(
+        'node_title' => $this->nodes[$i]->title,
+        'users_uid' => $this->nodes[$i]->uid,
+        'users_name' => $this->users[$i]->name,
+      );
+    }
+    $this->assertIdenticalResultset($view, $expected);
+  }
+
+  function test_view_user_relationship() {
+    $view = new view;
+    $view->name = 'test_user_relationship';
+    $view->description = '';
+    $view->tag = 'default';
+    $view->base_table = 'node';
+    $view->human_name = 'test_user_relationship';
+    $view->core = 7;
+    $view->api_version = '3.0-alpha1';
+    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+    /* Display: Master */
+    $handler = $view->new_display('default', 'Master', 'default');
+    $handler->display->display_options['title'] = 'test_user_relationship';
+    $handler->display->display_options['access']['type'] = 'perm';
+    $handler->display->display_options['cache']['type'] = 'none';
+    $handler->display->display_options['query']['type'] = 'views_query';
+    $handler->display->display_options['query']['options']['query_comment'] = FALSE;
+    $handler->display->display_options['exposed_form']['type'] = 'basic';
+    $handler->display->display_options['pager']['type'] = 'full';
+    $handler->display->display_options['pager']['options']['items_per_page'] = '10';
+    $handler->display->display_options['style_plugin'] = 'default';
+    $handler->display->display_options['row_plugin'] = 'fields';
+    $handler->display->display_options['row_options']['hide_empty'] = 0;
+    $handler->display->display_options['row_options']['default_field_elements'] = 1;
+    /* Field: Content: Title */
+    $handler->display->display_options['fields']['title']['id'] = 'title';
+    $handler->display->display_options['fields']['title']['table'] = 'node';
+    $handler->display->display_options['fields']['title']['field'] = 'title';
+    $handler->display->display_options['fields']['title']['label'] = '';
+    $handler->display->display_options['fields']['title']['alter']['alter_text'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['make_link'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['absolute'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['word_boundary'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['ellipsis'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['strip_tags'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['trim'] = 0;
+    $handler->display->display_options['fields']['title']['alter']['html'] = 0;
+    $handler->display->display_options['fields']['title']['hide_empty'] = 0;
+    $handler->display->display_options['fields']['title']['empty_zero'] = 0;
+    $handler->display->display_options['fields']['title']['link_to_node'] = 1;
+    /* Field: User: Name */
+    $handler->display->display_options['fields']['name']['id'] = 'name';
+    $handler->display->display_options['fields']['name']['table'] = 'users';
+    $handler->display->display_options['fields']['name']['field'] = 'name';
+    $handler->display->display_options['fields']['name']['alter']['alter_text'] = 0;
+    $handler->display->display_options['fields']['name']['alter']['make_link'] = 0;
+    $handler->display->display_options['fields']['name']['alter']['absolute'] = 0;
+    $handler->display->display_options['fields']['name']['alter']['external'] = 0;
+    $handler->display->display_options['fields']['name']['alter']['replace_spaces'] = 0;
+    $handler->display->display_options['fields']['name']['alter']['trim_whitespace'] = 0;
+    $handler->display->display_options['fields']['name']['alter']['nl2br'] = 0;
+    $handler->display->display_options['fields']['name']['alter']['word_boundary'] = 1;
+    $handler->display->display_options['fields']['name']['alter']['ellipsis'] = 1;
+    $handler->display->display_options['fields']['name']['alter']['strip_tags'] = 0;
+    $handler->display->display_options['fields']['name']['alter']['trim'] = 0;
+    $handler->display->display_options['fields']['name']['alter']['html'] = 0;
+    $handler->display->display_options['fields']['name']['element_label_colon'] = 1;
+    $handler->display->display_options['fields']['name']['element_default_classes'] = 1;
+    $handler->display->display_options['fields']['name']['hide_empty'] = 0;
+    $handler->display->display_options['fields']['name']['empty_zero'] = 0;
+    $handler->display->display_options['fields']['name']['hide_alter_empty'] = 0;
+    $handler->display->display_options['fields']['name']['link_to_user'] = 1;
+    $handler->display->display_options['fields']['name']['overwrite_anonymous'] = 0;
+    /* Field: User: Uid */
+    $handler->display->display_options['fields']['uid']['id'] = 'uid';
+    $handler->display->display_options['fields']['uid']['table'] = 'users';
+    $handler->display->display_options['fields']['uid']['field'] = 'uid';
+    $handler->display->display_options['fields']['uid']['alter']['alter_text'] = 0;
+    $handler->display->display_options['fields']['uid']['alter']['make_link'] = 0;
+    $handler->display->display_options['fields']['uid']['alter']['absolute'] = 0;
+    $handler->display->display_options['fields']['uid']['alter']['external'] = 0;
+    $handler->display->display_options['fields']['uid']['alter']['replace_spaces'] = 0;
+    $handler->display->display_options['fields']['uid']['alter']['trim_whitespace'] = 0;
+    $handler->display->display_options['fields']['uid']['alter']['nl2br'] = 0;
+    $handler->display->display_options['fields']['uid']['alter']['word_boundary'] = 1;
+    $handler->display->display_options['fields']['uid']['alter']['ellipsis'] = 1;
+    $handler->display->display_options['fields']['uid']['alter']['strip_tags'] = 0;
+    $handler->display->display_options['fields']['uid']['alter']['trim'] = 0;
+    $handler->display->display_options['fields']['uid']['alter']['html'] = 0;
+    $handler->display->display_options['fields']['uid']['element_label_colon'] = 1;
+    $handler->display->display_options['fields']['uid']['element_default_classes'] = 1;
+    $handler->display->display_options['fields']['uid']['hide_empty'] = 0;
+    $handler->display->display_options['fields']['uid']['empty_zero'] = 0;
+    $handler->display->display_options['fields']['uid']['hide_alter_empty'] = 0;
+    $handler->display->display_options['fields']['uid']['link_to_user'] = 1;
+
+    return $view;
+  }
+}

@@ -1,0 +1,96 @@
+<?php
+
+/**
+ * @file
+ * Definition of viewsHandlerFieldUserNameTest.
+ */
+
+/**
+ * Tests the field username handler.
+ *
+ * @see views_handler_field_user_name
+ */
+class viewsHandlerFieldUserNameTest extends ViewsSqlTest {
+  public static function getInfo() {
+    return array(
+      'name' => 'Tests user: name field',
+      'description' => 'Tests the handler of the user: name field',
+      'group' => 'Views Modules',
+    );
+  }
+
+  function testUserName() {
+    $view = $this->view_user_name();
+    $view->init_display();
+    $this->executeView($view);
+
+    $view->row_index = 0;
+
+    $view->field['name']->options['link_to_user'] = TRUE;
+    $username = $view->result[0]->users_name = $this->randomName();
+    $view->result[0]->uid = 1;
+    $render = $view->field['name']->advanced_render($view->result[0]);
+    $this->assertTrue(strpos($render, $username) !== FALSE, 'If link to user is checked the username should be part of the output.');
+    $this->assertTrue(strpos($render, 'user/1') !== FALSE, 'If link to user is checked the link to the user should appear as well.');
+
+    $view->field['name']->options['link_to_user'] = FALSE;
+    $username = $view->result[0]->users_name = $this->randomName();
+    $view->result[0]->uid = 1;
+    $render = $view->field['name']->advanced_render($view->result[0]);
+    $this->assertIdentical($render, $username, 'If the user is not linked the username should be printed out for a normal user.');
+
+    $view->result[0]->uid = 0;
+    $anon_name = variable_get('anonymous', t('Anonymous'));
+    $view->result[0]->users_name = '';
+    $render = $view->field['name']->advanced_render($view->result[0]);
+    $this->assertIdentical($render, $anon_name , 'For user0 it should use the default anonymous name by default.');
+
+    $view->field['name']->options['overwrite_anonymous'] = TRUE;
+    $anon_name = $view->field['name']->options['anonymous_text'] = $this->randomName();
+    $render = $view->field['name']->advanced_render($view->result[0]);
+    $this->assertIdentical($render, $anon_name , 'For user0 it should use the configured anonymous text if overwrite_anonymous is checked.');
+
+
+  }
+  function view_user_name() {
+    $view = new view;
+    $view->name = 'test_views_handler_field_user_name';
+    $view->description = '';
+    $view->tag = 'default';
+    $view->base_table = 'users';
+    $view->human_name = 'test_views_handler_field_user_name';
+    $view->core = 7;
+    $view->api_version = '3.0';
+    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+    /* Display: Master */
+    $handler = $view->new_display('default', 'Master', 'default');
+    $handler->display->display_options['access']['type'] = 'none';
+    $handler->display->display_options['cache']['type'] = 'none';
+    $handler->display->display_options['query']['type'] = 'views_query';
+    $handler->display->display_options['query']['options']['query_comment'] = FALSE;
+    $handler->display->display_options['exposed_form']['type'] = 'basic';
+    $handler->display->display_options['pager']['type'] = 'full';
+    $handler->display->display_options['style_plugin'] = 'default';
+    $handler->display->display_options['row_plugin'] = 'fields';
+    /* Field: User: Name */
+    $handler->display->display_options['fields']['name']['id'] = 'name';
+    $handler->display->display_options['fields']['name']['table'] = 'users';
+    $handler->display->display_options['fields']['name']['field'] = 'name';
+    $handler->display->display_options['fields']['name']['label'] = '';
+    $handler->display->display_options['fields']['name']['alter']['alter_text'] = 0;
+    $handler->display->display_options['fields']['name']['alter']['make_link'] = 0;
+    $handler->display->display_options['fields']['name']['alter']['absolute'] = 0;
+    $handler->display->display_options['fields']['name']['alter']['word_boundary'] = 0;
+    $handler->display->display_options['fields']['name']['alter']['ellipsis'] = 0;
+    $handler->display->display_options['fields']['name']['alter']['strip_tags'] = 0;
+    $handler->display->display_options['fields']['name']['alter']['trim'] = 0;
+    $handler->display->display_options['fields']['name']['alter']['html'] = 0;
+    $handler->display->display_options['fields']['name']['hide_empty'] = 0;
+    $handler->display->display_options['fields']['name']['empty_zero'] = 0;
+    $handler->display->display_options['fields']['name']['link_to_user'] = 1;
+    $handler->display->display_options['fields']['name']['overwrite_anonymous'] = 0;
+
+    return $view;
+  }
+}

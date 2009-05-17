@@ -1,0 +1,208 @@
+/**
+ * The .theme.css file is intended to contain presentation declarations including
+ * images, borders, colors, and fonts.
+ */
+
+/* @end */
+
+/* @group Icons */
+
+.actions a,
+.views-admin .icon,
+.views-admin .icon-text {
+  background-position: right top;
+}
+
+/* Targets any element with an icon -> text combo */
+.views-admin .icon-text {
+  padding-right: 19px;
+}
+
+.views-admin .icon-linked {
+  background-position: right -153px;
+}
+
+.views-admin .icon-unlinked {
+  background-position: right -195px;
+}
+
+.actions .views-button-add {
+  background-position: right -39px;
+}
+
+.actions .views-button-rearrange {
+  background-position: right -96px;
+}
+
+.actions .views-button-add:hover {
+  background-position: right -58px;
+}
+
+.actions .views-button-rearrange:hover {
+  background-position: right -115px;
+}
+
+.actions .views-button-add:active {
+  background-position: right -77px;
+}
+
+.actions .views-button-rearrange:active {
+  background-position: right -134px;
+}
+
+.views-displays .icon-add {
+  background-position: right -3px;
+}
+
+.views-displays .secondary a:hover > .icon-add {
+  background-position: right -21px;
+}
+
+.views-displays .secondary .open a:hover > .icon-add {
+  background-position: right -3px;
+}
+
+/* @end */
+
+/* @group Forms */
+
+.form-submit + .form-submit,
+.views-admin a.button + a.button {
+  margin-right: 1em;
+}
+
+.container-inline > * + *,
+.container-inline .fieldset-wrapper > * + * {
+  padding-left: 0;
+  padding-right: 4pt;
+}
+
+.views-admin .form-type-checkbox + .form-wrapper {
+  margin-right: 16px;
+}
+
+/* @end */
+
+/* @group Lists */
+
+.horizontal > * + * {
+  margin-right: 9px;
+  padding-right: 9px;
+}
+
+/* @end */
+
+/* @group Attachments */
+
+.views-displays .secondary {
+  padding: 6px 8px 8px;
+}
+
+.views-displays .views-display-top > ul > li + li {
+  margin-right: 3px;
+}
+
+.views-displays .views-extra-actions {
+  left: 10px;
+}
+
+/* @end */
+
+/* @group Attachment details tabs
+ *
+ * The tabs that switch between sections
+ */
+
+.views-displays .secondary .action-list  li:first-child {
+  -moz-border-radius: 7px 0 0 0;
+  -webkit-border-top-left-radius: 7px;
+  -webkit-border-top-right-radius: 0;
+  border-radius: 7px 0 0 0;
+}
+
+/* @end */
+
+/* @group Attachment details collapsible fieldset
+ *
+ * The attachment details section is a collapsible fieldset, but should not
+ * have a border around it.
+ */
+
+.views-display-tab .fieldset-legend {
+  left: auto;
+  right: -5px;
+}
+
+/* @end */
+
+/* @group Auto preview
+ *
+ * The auto-preview checkbox line. This may have more stuff added to it.
+ */
+
+div.form-item-displays-live-preview {
+  text-align: left;
+}
+
+/* @end */
+
+/* @group Attachment buckets
+ *
+ * These are the individual "buckets," or boxes, inside the three columns in the
+ * attachment details section.
+ */
+
+.views-ui-display-tab-bucket .icon-text {
+  padding-right: 25px;
+}
+
+/* @end */
+
+/* @group Attachment bucket rows
+ *
+ * This is each row within one of the "boxes."
+ */
+
+.views-display-setting .label {
+  margin-left: 3pt;
+}
+
+/* @end */
+
+/* @group Modal dialog box
+ *
+ * The contents of the popup dialog on the views edit form.
+ */
+
+#views-filterable-options-controls .form-item {
+  margin-left: 2%;
+}
+
+.views-ui-dialog #views-progress-indicator {
+  left: 10px;
+  right: auto;
+}
+
+/* @end */
+
+/* @group Rearrange filters
+ *
+ * Styling for the form that allows views filters to be rearranged.
+ */
+.views-operator-label {
+  padding-right: 0.5em;
+}
+
+/* @end */
+
+/* @group Live preview elements */
+
+/* @group HTML list */
+
+#views-live-preview .view-content > .item-list > ul {
+  padding-right: 21px;
+}
+
+/* @end */
+
+/* @end */

@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @file
+ * Definition of ViewsHandlerFieldCustomTest.
+ */
+
+/**
+ * Tests the core views_handler_field_custom handler.
+ */
+class ViewsHandlerFieldCustomTest extends ViewsSqlTest {
+  public static function getInfo() {
+    return array(
+      'name' => 'Field: Custom',
+      'description' => 'Test the core views_handler_field_custom handler.',
+      'group' => 'Views Handlers',
+    );
+  }
+
+  function viewsData() {
+    $data = parent::viewsData();
+    $data['views_test']['name']['field']['handler'] = 'views_handler_field_custom';
+    return $data;
+  }
+
+  public function testFieldCustom() {
+    $view = $this->getBasicView();
+
+    // Alter the text of the field to a random string.
+    $random = $this->randomName();
+    $view->display['default']->handler->override_option('fields', array(
+      'name' => array(
+        'id' => 'name',
+        'table' => 'views_test',
+        'field' => 'name',
+        'relationship' => 'none',
+        'alter' => array(
+          'text' => $random,
+        ),
+      ),
+    ));
+
+    $this->executeView($view);
+
+    $this->assertEqual($random, $view->style_plugin->get_field(0, 'name'));
+  }
+}

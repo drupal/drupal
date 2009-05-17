@@ -1,0 +1,190 @@
+<?php
+
+/**
+ * @file
+ * Definition of ViewsHandlerFilterDateTest.
+ */
+
+/**
+ * Tests the core views_handler_filter_date handler.
+ */
+class ViewsHandlerFilterDateTest extends ViewsSqlTest {
+  public static function getInfo() {
+    return array(
+      'name' => 'Filter: Date',
+      'description' => 'Test the core views_handler_filter_date handler.',
+      'group' => 'Views Handlers',
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    // Add some basic test nodes.
+    $this->nodes = array();
+    $this->nodes[] = $this->drupalCreateNode(array('created' => 100000));
+    $this->nodes[] = $this->drupalCreateNode(array('created' => 200000));
+    $this->nodes[] = $this->drupalCreateNode(array('created' => 300000));
+    $this->nodes[] = $this->drupalCreateNode(array('created' => time() + 86400));
+
+    $this->map = array(
+      'nid' => 'nid',
+    );
+    $this->enableViewsUi();
+  }
+
+  /**
+  /* Test the general offset functionality.
+   */
+  function testOffset() {
+    $view = $this->views_test_offset();
+    // Test offset for simple operator.
+    $view->set_display('default');
+    $view->init_handlers();
+    $view->filter['created']->operator = '>';
+    $view->filter['created']->value['type'] = 'offset';
+    $view->filter['created']->value['value'] = '+1 hour';
+    $view->execute_display('default');
+    $expected_result = array(
+      array('nid' => $this->nodes[3]->nid),
+    );
+    $this->assertIdenticalResultset($view, $expected_result, $this->map);
+    $view->destroy();
+
+    // Test offset for between operator.
+    $view->set_display('default');
+    $view->init_handlers();
+    $view->filter['created']->operator = 'between';
+    $view->filter['created']->value['type'] = 'offset';
+    $view->filter['created']->value['max'] = '+2 days';
+    $view->filter['created']->value['min'] = '+1 hour';
+    $view->execute_display('default');
+    $expected_result = array(
+      array('nid' => $this->nodes[3]->nid),
+    );
+    $this->assertIdenticalResultset($view, $expected_result, $this->map);
+    $view->destroy();
+  }
+
+
+  /**
+   * Tests the filter operator between/not between.
+   */
+  function testBetween() {
+    // Test between with min and max.
+    $view = $this->views_test_between();
+    $view->set_display('default');
+    $view->init_handlers();
+    $view->filter['created']->operator = 'between';
+    $view->filter['created']->value['min'] = format_date(150000, 'custom', 'Y-m-d H:s');
+    $view->filter['created']->value['max'] = format_date(250000, 'custom', 'Y-m-d H:s');
+    $view->execute_display('default');
+    $expected_result = array(
+      array('nid' => $this->nodes[1]->nid),
+    );
+    $this->assertIdenticalResultset($view, $expected_result, $this->map);
+    $view->destroy();
+
+    // Test between with just max.
+    $view = $this->views_test_between();
+    $view->set_display('default');
+    $view->init_handlers();
+    $view->filter['created']->operator = 'between';
+    $view->filter['created']->value['max'] = format_date(250000, 'custom', 'Y-m-d H:s');
+    $view->execute_display('default');
+    $expected_result = array(
+      array('nid' => $this->nodes[0]->nid),
+      array('nid' => $this->nodes[1]->nid),
+    );
+    $this->assertIdenticalResultset($view, $expected_result, $this->map);
+    $view->destroy();
+
+    // Test not between with min and max.
+    $view = $this->views_test_between();
+    $view->set_display('default');
+    $view->init_handlers();
+    $view->filter['created']->operator = 'not between';
+    $view->filter['created']->value['min'] = format_date(150000, 'custom', 'Y-m-d H:s');
+    $view->filter['created']->value['max'] = format_date(250000, 'custom', 'Y-m-d H:s');
+    $view->execute_display('default');
+    $expected_result = array(
+      array('nid' => $this->nodes[0]->nid),
+      array('nid' => $this->nodes[2]->nid),
+      array('nid' => $this->nodes[3]->nid),
+    );
+    $this->assertIdenticalResultset($view, $expected_result, $this->map);
+    $view->destroy();
+
+    // Test not between with just max.
+    $view = $this->views_test_between();
+    $view->set_display('default');
+    $view->init_handlers();
+    $view->filter['created']->operator = 'not between';
+    $view->filter['created']->value['max'] = format_date(150000, 'custom', 'Y-m-d H:s');
+    $view->execute_display('default');
+    $expected_result = array(
+      array('nid' => $this->nodes[1]->nid),
+      array('nid' => $this->nodes[2]->nid),
+      array('nid' => $this->nodes[3]->nid),
+    );
+    $this->assertIdenticalResultset($view, $expected_result, $this->map);
+    $view->destroy();
+  }
+
+  /**
+   * Make sure the validation callbacks works.
+   */
+  function testUiValidation() {
+    $view = $this->views_test_between();
+    $view->save();
+
+    $admin_user =   $this->drupalCreateUser(array('administer views', 'administer site configuration'));
+    $this->drupalLogin($admin_user);
+    menu_rebuild();
+    $this->drupalGet('admin/structure/views/view/test_filter_date_between/edit');
+    $this->drupalGet('admin/structure/views/nojs/config-item/test_filter_date_between/default/filter/created');
+
+    $edit = array();
+    // Generate a definitive wrong value, which should be checked by validation.
+    $edit['options[value][value]'] = $this->randomString() . '-------';
+    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->assertText(t('Invalid date format.'), 'Make sure that validation is runned and the invalidate date format is identified.');
+  }
+
+  function views_test_between() {
+    $view = new view;
+    $view->name = 'test_filter_date_between';
+    $view->description = '';
+    $view->tag = '';
+    $view->base_table = 'node';
+    $view->human_name = '';
+    $view->core = 0;
+    $view->api_version = '3.0';
+    $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
+
+    /* Display: Master */
+    $handler = $view->new_display('default', 'Master', 'default');
+    $handler->display->display_options['access']['type'] = 'none';
+    $handler->display->display_options['cache']['type'] = 'none';
+    $handler->display->display_options['query']['type'] = 'views_query';
+    $handler->display->display_options['query']['options']['query_comment'] = FALSE;
+    $handler->display->display_options['exposed_form']['type'] = 'basic';
+    $handler->display->display_options['pager']['type'] = 'full';
+    $handler->display->display_options['style_plugin'] = 'default';
+    $handler->display->display_options['row_plugin'] = 'fields';
+    /* Field: Content: Nid */
+    $handler->display->display_options['fields']['nid']['id'] = 'nid';
+    $handler->display->display_options['fields']['nid']['table'] = 'node';
+    $handler->display->display_options['fields']['nid']['field'] = 'nid';
+    /* Filter criterion: Content: Post date */
+    $handler->display->display_options['filters']['created']['id'] = 'created';
+    $handler->display->display_options['filters']['created']['table'] = 'node';
+    $handler->display->display_options['filters']['created']['field'] = 'created';
+
+    return $view;
+  }
+
+  function views_test_offset() {
+    $view = $this->views_test_between();
+    return $view;
+  }
+}

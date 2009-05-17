@@ -1,0 +1,233 @@
+/**
+ * The .bartik.css file is intended to contain styles that override declarations
+ * in the Bartik theme.
+ */
+
+/* @group Lists */
+
+.views-display-top .secondary .action-list {
+  padding-left: 0; /* LTR */
+}
+
+/* @end */
+
+/* @group Attachment details tabs
+ *
+ * The tabs that switch between sections
+ */
+
+.views-displays .region-content .secondary,
+.views-displays .region-content .secondary {
+  padding-bottom: 0;
+  padding-left: 0;
+}
+
+.views-displays .secondary a {
+  font-size: smaller;
+}
+
+.views-displays .secondary > li a {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+
+.views-displays .secondary > li.open a {
+  -moz-border-radius: 5px 5px 0 0;
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+  border-radius: 5px 5px 0 0;
+}
+
+.views-displays .secondary .open > a:hover {
+  color: #0071B3;
+}
+
+.views-displays .secondary input.form-submit {
+  font-size: smaller;
+}
+
+/* @end */
+
+/* @group Modal dialog box
+ *
+ * The contents of the popup dialog on the views edit form.
+ */
+
+.views-filterable-options .even .form-type-checkbox {
+  background-color: #F9F9F9;
+}
+
+.views-ui-dialog .ui-dialog-titlebar-close,
+.views-ui-dialog #views-ajax-title,
+.views-ui-dialog .views-override,
+.views-ui-dialog .form-buttons {
+  background-color: #f6f6f6;
+}
+
+.views-ui-dialog a {
+  color: #0071b3;
+}
+
+.views-ui-dialog a:hover,
+.views-ui-dialog a:focus {
+  color: #018fe2;
+}
+
+/* @end */
+
+/* @group CTools */
+
+/* @group Buttons */
+
+.ctools-button-processed {
+  background-image:
+    -moz-linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f9f9f9 100%);
+  background-image:
+    -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0.0, rgba(255, 255, 255, 1.0)),
+      color-stop(1.0, rgba(249, 249, 249, 1.0))
+    );
+  background-image:
+    -webkit-linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f9f9f9 100%);
+  background-image:
+    linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f9f9f9 100%);
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  padding-bottom: 1px;
+  padding-top: 1px;
+}
+
+.ctools-button-processed:hover {
+  background-image:
+    -moz-linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f1f1f1 100%);
+  background-image:
+    -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0.0, rgba(255, 255, 255, 1.0)),
+      color-stop(1.0, rgba(241, 241, 241, 1.0))
+    );
+  background-image:
+    -webkit-linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f1f1f1 100%);
+  background-image:
+    linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f1f1f1 100%);
+}
+
+.ctools-button-processed li a,
+.views-ui-display-tab-actions .ctools-button-processed input {
+  padding-left: 9px;
+  padding-right: 9px;
+}
+
+.ctools-content ul.actions {
+  padding-bottom: 0;
+}
+
+.ctools-dropbutton-processed.open:hover {
+  background-image:
+    -moz-linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f9f9f9 100%);
+  background-image:
+    -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0.0, rgba(255, 255, 255, 1.0)),
+      color-stop(1.0, rgba(249, 249, 249, 1.0))
+    );
+  background-image:
+    -webkit-linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f9f9f9 100%);
+  background-image:
+    linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f9f9f9 100%);
+}
+
+.ctools-dropbutton-processed.open {
+  -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.25);
+  -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.25);
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.25);
+}
+
+.ctools-twisty {
+  top: 0.6667em;
+}
+
+.ctools-dropbutton-processed.open .ctools-twisty {
+  top: 0.3333em;
+}
+
+.ctools-dropbutton-processed li a,
+.views-ui-display-tab-actions .ctools-dropbutton-processed input {
+  padding-right: 7px;
+}
+
+.views-ui-display-tab-actions .ctools-button-processed input.form-submit {
+  margin-right: 0;
+  margin-top: 0;
+}
+
+/* @end */
+
+/* @group Collapsible */
+
+.ctools-toggle {
+  margin-top: 0.9em;
+}
+
+.ctools-toggle.ctools-toggle-collapsed {
+  margin-top: 0.72em;
+}
+
+.views-display-column > .ctools-toggle {
+  margin-top: 14px;
+}
+
+.views-display-column > .ctools-toggle.ctools-toggle-collapsed {
+  margin-top: 12px;
+}
+
+.views-ui-display-tab-actions .ctools-button input {
+  color: #0071B3;
+}
+
+.views-ui-display-tab-actions .ctools-button input:hover,
+.views-ui-display-tab-actions .ctools-button input:focus {
+  color: #018FE2;
+}
+
+/* @end */
+
+/* @end */

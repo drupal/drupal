@@ -1,0 +1,12 @@
+/**
+ * The .bartik.css file is intended to contain styles that override declarations
+ * in the Bartik theme.
+ */
+
+ /* @group Lists */
+
+.views-display-top .secondary .action-list {
+  padding-right: 0;
+}
+
+/* @end */

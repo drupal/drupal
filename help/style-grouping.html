@@ -1,0 +1,7 @@
+Many styles can be <strong>grouped</strong>. For styles that can, there will be a 'grouping field' option; pick one of the fields to group by. This grouping field will be displayed as a header, and all rows will be displayed beneath it.
+
+If the style is not <strong>grouped</strong> then the corresponding style output template will by invoked once when displaying the view. If the style is grouped, then the style output template will be invoked once per group. The text if the grouping filed is passed to the template in the <strong>$title</strong> variable.
+
+Views is very naive about <strong>grouping</strong>, and it can only group on one field. It doesn't understand anything about which object (node, comment, etc.) the field belongs to, and doesn't make any smart grouping choices based on the parent object of the grouping field. The grouping field does not modify the views SQL query - grouping is handed after records are retrieved from the database.
+
+The devel_themer module is known to break grouping. If grouping is not working, please check and make sure the devel modules are disabled.

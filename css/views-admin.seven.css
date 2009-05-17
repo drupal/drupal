@@ -1,0 +1,550 @@
+/**
+ * The .seven.css file is intended to contain styles that override declarations
+ * in the Seven admin theme.
+ */
+
+/* @group Content */
+
+.views-ui-display-tab-bucket h1,
+.views-ui-display-tab-bucket h2,
+.views-ui-display-tab-bucket h3,
+.views-ui-display-tab-bucket h4,
+.views-ui-display-tab-bucket h5 {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+/* @end */
+
+/* @group Forms */
+
+.views-ui-dialog fieldset {
+  padding-top: 2.5em;
+}
+
+fieldset fieldset {
+  border: medium none;
+}
+
+/**
+ * Seven positions the legend absolutely, but does not have a way to ignore
+ * fieldsets without a legend so we make one up.
+ */
+fieldset.fieldset-no-legend {
+  padding-top: 0;
+}
+
+/**
+ * Being extra safe here and scoping this to the add view wizard form (where
+ * a layout problem occurs for the Display format fieldset if we don't fix its
+ * padding), but it's probably safe to just let it apply everywhere.
+ */
+#views-ui-add-form fieldset fieldset .fieldset-wrapper {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.views-display-tab fieldset {
+  padding: 0 12px;
+}
+
+.views-display-tab .fieldset-wrapper {
+  padding: 10px 12px 12px;
+}
+
+.views-display-tab fieldset.box-padding .fieldset-wrapper {
+  padding: 0;
+}
+
+.views-display-tab legend + .fieldset-wrapper {
+  padding-top: 2.5em;
+}
+
+.views-admin .form-item label.option,
+#views-ui-preview-form .form-item label.option {
+  font-size: 1em;
+}
+
+#views-ui-preview-form .form-submit {
+  margin-top: 3px;
+}
+
+.views-admin input.form-submit,
+.views-ui-dialog input.form-submit,
+.views-admin a.button,
+.views-ui-dialog a.button {
+  margin-bottom: 0;
+  margin-right: 0; /* LTR */
+  margin-top: 0;
+}
+
+/* Override for a button on the edit display screen */
+#edit-displays-preview-controls .form-submit {
+  display: inline-block;
+  margin-right: 1em;
+}
+
+/* Override for filter button on the views list screen */
+#ctools-export-ui-list-form .form-submit {
+  margin-bottom: 0;
+}
+
+#ctools-export-ui-list-form .ctools-export-ui-first-row .form-item {
+  margin-top: 3px;
+  margin-right: 5px; /* LTR */
+}
+
+.form-item,
+.form-item .form-item {
+  margin-bottom: 0;
+  margin-top: 9px;
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+.form-actions {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.form-item .form-item {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+.form-radios > .form-item {
+  margin-top: 3px;
+}
+
+/* @group Dependent options
+ *
+ * Dependent options are identified in CTools dependent.js
+ */
+
+/* The .dependent-options.form-item is necessary to supercede the Seven .form-item
+ * reset declaration that sets the margin to zero.
+ */
+.dependent-options,
+.dependent-options.form-item,
+.form-item-options-expose-required,
+.form-item-options-expose-label {
+  margin-left: 1.5em;
+}
+
+.views-admin-dependent .form-item .form-item,
+.views-admin-dependent .form-type-checkboxes,
+.views-admin-dependent .form-type-radios,
+.views-admin-dependent .dependent-options,
+.views-admin-dependent .form-item .form-item,
+.views-admin-dependent .dependent-options .form-type-select,
+.views-admin-dependent .dependent-options .form-type-textfield,
+.form-item-options-expose-required,
+.form-item-options-expose-label {
+  margin-bottom: 6px;
+  margin-top: 6px;
+}
+
+.views-admin-dependent .form-type-radio,
+.views-admin-dependent .form-radios .form-item {
+  margin-bottom: 2px;
+  margin-top: 2px;
+}
+
+/* @end */
+
+/* @end */
+
+/* @group Lists */
+
+.views-admin ul.secondary,
+.views-admin .item-list ul {
+  margin: 0;
+  padding: 0;
+}
+
+.views-admin ul.secondary {
+  clear: none;
+}
+
+.views-displays ul.secondary li a,
+.views-displays ul.secondary li.active a,
+.views-displays ul.secondary li.active a.active {
+  padding: 2px 7px 3px;
+}
+
+.views-displays ul.secondary li.active a,
+.views-displays ul.secondary li.active a.active {
+  border: 1px solid transparent;
+}
+
+.views-admin .links li {
+  padding-right: 0; /* LTR */
+}
+
+.views-admin .button .links li {
+  padding-right: 12px; /* LTR */
+}
+
+.page-admin-structure-views #content ul.action-links {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.views-display-top ul.secondary {
+  background-color: transparent;
+  float: left
+}
+
+.views-display-top .secondary .action-list li {
+  float: none;
+  margin: 0;
+}
+
+/* @end */
+
+/* @group Buttons */
+
+.ctools-button-processed ul {
+  margin: 0;
+}
+
+/* Override for input elements that are themed like ctools-buttons */
+.ctools-button-processed input.form-submit:hover {
+  background-image: none;
+  color: #0074BD;
+  text-shadow: none;
+}
+
+.ctools-button-processed input.form-submit:active {
+  background: none;
+  border: medium none;
+  color: #0074BD;
+  text-shadow: none;
+}
+
+/* @end */
+
+/* @group Tables */
+
+table td,
+table th {
+  vertical-align: top;
+}
+
+/* @end */
+
+/* @group Attachment details */
+
+#edit-display-settings-title {
+  color: #008BCB;
+}
+
+/* @end */
+
+/* @group Attachment details tabs
+ *
+ * The tabs that switch between sections
+ */
+
+.views-displays .secondary {
+ text-align: left; /* LTR */
+}
+
+.views-displays .secondary > li:first-child {
+ padding-left: 0;
+}
+
+.views-admin .icon.add {
+  background-position: center 3px;
+}
+
+.views-displays .secondary a {
+  background-color: #f1f1f1;
+  -moz-border-radius: 7px;
+  -webkit-border-radius: 7px;
+  border-radius: 7px;
+  color: #008BCB;
+}
+
+.views-displays .secondary a:hover > .icon.add {
+  background-position: center -25px;
+}
+
+.views-displays .secondary .open > a {
+  -moz-border-radius: 7px 7px 0 0;
+  -webkit-border-radius: 7px 7px 0 0;
+  border-radius: 7px 7px 0 0;
+}
+
+.views-displays .secondary .open > a:hover {
+  background-color: #f1f1f1;
+  color: #008BCB;
+}
+
+.views-displays .secondary .action-list  li:first-child {
+  -moz-border-radius: 0 7px 0 0;
+  -webkit-border-radius: 0 7px 0 0;
+  border-radius: 0 7px 0 0;
+}
+
+.views-displays .secondary .action-list  li:last-child {
+  -moz-border-radius: 0 0 7px 7px;
+  -webkit-border-radius: 0 0 7px 7px;
+  border-radius: 0 0 7px 7px;
+}
+
+.views-displays .secondary .action-list input.form-submit {
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  color: #008BCB;
+}
+
+/* @end */
+
+/* @group Attachment buckets
+ *
+ * These are the individual "buckets," or boxes, inside the display settings area
+ */
+
+.views-ui-display-tab-bucket h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.views-ui-display-tab-bucket .links {
+  padding: 2px 6px 4px;
+}
+
+.views-ui-display-tab-bucket .links li + li {
+  margin-left: 3px;
+}
+
+/* @end */
+
+/* @group Rearrange filter criteria */
+
+#views-ui-rearrange-filter-form .action-links {
+  margin: 0;
+  padding: 0;
+}
+
+#views-ui-rearrange-filter-form table {
+  border: medium none;
+}
+
+#views-ui-rearrange-filter-form [id^="views-row"] {
+  border: medium none;
+}
+
+#views-ui-rearrange-filter-form tr td:last-child {
+  border-right: medium none;
+}
+
+#views-ui-rearrange-filter-form .filter-group-operator-row {
+  border-left: 1px solid transparent !important;
+  border-right: 1px solid transparent !important;
+}
+
+#views-ui-rearrange-filter-form tr.drag td {
+  background-color: #FFEE77 !important;
+}
+
+#views-ui-rearrange-filter-form tr.drag-previous td {
+  background-color: #FFFFBB !important;
+}
+
+/* @end */
+
+/* @group Live preview elements */
+
+.views-query-info pre {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+/* @group Query info table */
+
+.views-query-info table {
+  -moz-border-radius: 7px;
+  -webkit-border-radius: 7px;
+  border-radius: 7px;
+  -webkit-border-horizontal-spacing: 1px;
+  -webkit-border-vertical-spacing: 1px;
+}
+
+.views-query-info table tr td:last-child {
+  /* Fixes a Seven style that bleeds down into this table unnecessarily */
+  border-right: 0 none;
+}
+
+/* @end */
+
+/* @end */
+
+/* @group Add view */
+
+.form-item-page-create,
+.form-item-block-create {
+  margin-top: 13px;
+}
+
+/* @end */
+
+/* @group Modal dialog box
+ *
+ * The contents of the popup dialog on the views edit form.
+ */
+
+.views-ui-dialog .ui-dialog-titlebar-close {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-color: #cccccc;
+  right: -27px;
+  top: -1px;
+}
+
+.views-ui-dialog fieldset.collapsible {
+  padding-top: 1.5em;
+}
+
+.views-ui-dialog fieldset.collapsed {
+  padding-top: 2.5em;
+}
+
+.filterable-option .form-item.form-type-checkbox {
+  /* This selector is aggressive because Seven's reset for .form-items is aggressive. */
+  padding-bottom: 4px;
+  padding-left: 4px;
+  padding-top: 4px;
+}
+
+/* @end */
+
+/* @group CTools */
+
+/* @group Buttons */
+
+.ctools-button-processed {
+  background-image:
+    -moz-linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f9f9f9 100%);
+  background-image:
+    -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0.0, rgba(255, 255, 255, 1.0)),
+      color-stop(1.0, rgba(249, 249, 249, 1.0))
+    );
+  background-image:
+    -webkit-linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f9f9f9 100%);
+  background-image:
+    linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f9f9f9 100%);
+  -moz-border-radius: 11px 11px 11px 11px;
+  -webkit-border-radius: 11px 11px 11px 11px;
+  border-radius: 11px 11px 11px 11px;
+}
+
+.ctools-button-processed:hover {
+  background-image:
+    -moz-linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f1f1f1 100%);
+  background-image:
+    -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0.0, rgba(255, 255, 255, 1.0)),
+      color-stop(1.0, rgba(241, 241, 241, 1.0))
+    );
+  background-image:
+    -webkit-linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f1f1f1 100%);
+  background-image:
+    linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f1f1f1 100%);
+}
+
+.ctools-dropbutton-processed.open:hover {
+  background-image:
+    -moz-linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f9f9f9 100%);
+  background-image:
+    -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0.0, rgba(255, 255, 255, 1.0)),
+      color-stop(1.0, rgba(249, 249, 249, 1.0))
+    );
+  background-image:
+    -webkit-linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f9f9f9 100%);
+  background-image:
+    linear-gradient(
+      -90deg,
+      #ffffff 0px,
+      #f9f9f9 100%);
+}
+
+.ctools-dropbutton-processed.open {
+  -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.25);
+  -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.25);
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.25);
+}
+
+/* @end */
+
+/* @group Collapsible */
+
+.ctools-toggle {
+  margin-top: 0.6667em;
+}
+
+.ctools-toggle.ctools-toggle-collapsed {
+  margin-top: 0.5em;
+}
+
+.views-display-settings .ctools-toggle {
+  color: #008BCB;
+}
+
+.views-display-column > .ctools-toggle {
+  margin-top: 14px;
+}
+
+.views-display-column > .ctools-toggle.ctools-toggle-collapsed {
+  margin-top: 12px;
+}
+
+.views-display-column > .ctools-collapsible-handle {
+  color: #008BCB;
+}
+
+.views-ui-display-tab-actions .ctools-button-processed input {
+  color: #0074BD;
+}
+
+/* @end */
+
+/* @end */
