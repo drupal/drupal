@@ -332,23 +332,31 @@ function _field_attach_form($obj_type, $object, &$form, $form_state) {
  *   set as an empty array.
  */
 function _field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT) {
-  $queried_objects = array();
+  $load_current = $age == FIELD_LOAD_CURRENT;
 
   $info = field_info_fieldable_types($obj_type);
-  $cacheable = isset($info['cacheable']) ? $info['cacheable'] : FALSE;
+  $cacheable = $load_current && $info['cacheable'];
+
+  $queried_objects = array();
 
   // Fetch avaliable objects from cache.
-  foreach ($objects as $object) {
-    list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
-    if ($cacheable && $cached = cache_get("field:$obj_type:$id:$vid", 'cache_field')) {
-      foreach ($cached->data as $field_name => $items) {
-        $object->$field_name = $items;
+  if ($cacheable) {
+    foreach ($objects as $id => $object) {
+      $cid = "field:$obj_type:$id";
+      if ($cached = cache_get($cid, 'cache_field')) {
+        foreach ($cached->data as $key => $value) {
+          $object->$key = $value;
+        }
+      }
+      else {
+        $queried_objects[$id] = $objects[$id];
       }
     }
-    else {
-      $queried_objects[$id] = $object;
-    }
   }
+  else {
+    $queried_objects = $objects;
+  }
+
 
   // Fetch other objects from the database.
   if ($queried_objects) {
@@ -389,7 +397,7 @@ function _field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT) {
         foreach ($instances as $instance) {
           $data[$instance['field_name']] = $queried_objects[$id]->{$instance['field_name']};
         }
-        $cid = "field:$obj_type:$id:$vid";
+        $cid = "field:$obj_type:$id";
         cache_set($cid, $data, 'cache_field');
       }
     }
@@ -577,7 +585,7 @@ function _field_attach_insert($obj_type, &$object) {
 
   list($id, $vid, $bundle, $cacheable) = field_attach_extract_ids($obj_type, $object);
   if ($cacheable) {
-    cache_clear_all("field:$obj_type:$id:", 'cache_field', TRUE);
+    cache_clear_all("field:$obj_type:$id", 'cache_field');
   }
 }
 
@@ -590,7 +598,6 @@ function _field_attach_insert($obj_type, &$object) {
  *   The object with fields to save.
  */
 function _field_attach_update($obj_type, &$object) {
-
   _field_invoke('update', $obj_type, $object);
 
   // Let other modules act on updating the object, accumulating saved
@@ -606,7 +613,7 @@ function _field_attach_update($obj_type, &$object) {
 
   list($id, $vid, $bundle, $cacheable) = field_attach_extract_ids($obj_type, $object);
   if ($cacheable) {
-    cache_clear_all("field:$obj_type:$id:$vid", 'cache_field');
+    cache_clear_all("field:$obj_type:$id", 'cache_field');
   }
 }
 
@@ -631,7 +638,7 @@ function _field_attach_delete($obj_type, &$object) {
 
   list($id, $vid, $bundle, $cacheable) = field_attach_extract_ids($obj_type, $object);
   if ($cacheable) {
-    cache_clear_all("field:$obj_type:$id:", 'cache_field', TRUE);
+    cache_clear_all("field:$obj_type:$id", 'cache_field');
   }
 }
 
@@ -652,11 +659,6 @@ function _field_attach_delete_revision($obj_type, &$object) {
   foreach (module_implements('field_attach_delete_revision') as $module) {
     $function = $module . '_field_attach_delete_revision';
     $function($obj_type, $object);
-  }
-
-  list($id, $vid, $bundle, $cacheable) = field_attach_extract_ids($obj_type, $object);
-  if ($cacheable) {
-    cache_clear_all("field:$obj_type:$id:$vid", 'cache_field');
   }
 }
 
@@ -816,7 +818,7 @@ function _field_attach_extract_ids($object_type, $object) {
   // If no bundle key provided, then we assume a single bundle, named after the
   // type of the object.
   $bundle = $info['bundle key'] ? $object->{$info['bundle key']} : $object_type;
-  $cacheable = isset($info['cacheable']) ? $info['cacheable'] : FALSE;
+  $cacheable = $info['cacheable'];
   return array($id, $vid, $bundle, $cacheable);
 }
 
