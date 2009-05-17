@@ -279,7 +279,7 @@ function aggregator_perm() {
  * Checks news feeds for updates once their refresh interval has elapsed.
  */
 function aggregator_cron() {
-  $result = db_query('SELECT * FROM {aggregator_feed} WHERE checked + refresh < :time', array(':time' => REQUEST_TIME));
+  $result = db_query('SELECT * FROM {aggregator_feed} WHERE checked + refresh < :time AND refresh > 0', array(':time' => REQUEST_TIME));
   foreach ($result as $feed) {
     aggregator_refresh($feed);
   }
