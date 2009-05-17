@@ -127,6 +127,9 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
     'init_message' => t('Processing test @num of @max - %test.', array('%test' => $info['name'], '@num' => '1', '@max' => count($test_list))),
   );
   batch_set($batch);
+  
+  module_invoke_all('test_group_started');
+  
   // Normally, the forms portion of the batch API takes care of calling
   // batch_process(), but in the process it saves the whole $form into the
   // database (which is huge for the test selection form).
@@ -164,6 +167,8 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
   $size = count($test_list);
   $info = $test->getInfo();
 
+  module_invoke_all('test_finished', $test->results);
+
   // Gather results and compose the report.
   $test_results[$test_class] = $test->results;
   foreach ($test_results[$test_class] as $key => $value) {
@@ -195,6 +200,7 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
   else {
     drupal_set_message(t('The tests did not successfully finish.'), 'error');
   }
+  module_invoke_all('test_group_finished');
 }
 
 /**
