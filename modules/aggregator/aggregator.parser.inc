@@ -36,8 +36,8 @@ function aggregator_aggregator_parse($feed) {
       $image[$key] = trim($value);
     }
 
-    if (!empty($image['LINK']) && !empty($image['URL']) && !empty($image['TITLE'])) {
-      $image = l(theme('image', $image['URL'], $image['TITLE']), $image['LINK'], array('html' => TRUE));
+    if (!empty($image['link']) && !empty($image['url']) && !empty($image['title'])) {
+      $image = l(theme('image', $image['url'], $image['title']), $image['link'], array('html' => TRUE));
     }
     else {
       $image = '';
@@ -50,8 +50,8 @@ function aggregator_aggregator_parse($feed) {
       ->fields(array(
         'url' => $feed->url,
         'checked' => REQUEST_TIME,
-        'link' => !empty($channel['LINK']) ? $channel['LINK'] : '',
-        'description' => !empty($channel['DESCRIPTION']) ? $channel['DESCRIPTION'] : '',
+        'link' => !empty($channel['link']) ? $channel['link'] : '',
+        'description' => !empty($channel['description']) ? $channel['description'] : '',
         'image' => $image,
         'hash' => md5($feed->source_string),
         'etag' => $etag,
@@ -119,52 +119,52 @@ function aggregator_parse_feed(&$data, $feed) {
     // Resolve the item's title. If no title is found, we use up to 40
     // characters of the description ending at a word boundary, but not
     // splitting potential entities.
-    if (!empty($item['TITLE'])) {
-      $item['TITLE'] = $item['TITLE'];
+    if (!empty($item['title'])) {
+      $item['title'] = $item['title'];
     }
-    elseif (!empty($item['DESCRIPTION'])) {
-      $item['TITLE'] = preg_replace('/^(.*)[^\w;&].*?$/', "\\1", truncate_utf8($item['DESCRIPTION'], 40));
+    elseif (!empty($item['description'])) {
+      $item['title'] = preg_replace('/^(.*)[^\w;&].*?$/', "\\1", truncate_utf8($item['description'], 40));
     }
     else {
-      $item['TITLE'] = '';
+      $item['title'] = '';
     }
 
     // Resolve the items link.
-    if (!empty($item['LINK'])) {
-      $item['LINK'] = $item['LINK'];
+    if (!empty($item['link'])) {
+      $item['link'] = $item['link'];
     }
     else {
-      $item['LINK'] = $feed->link;
+      $item['link'] = $feed->link;
     }
-    $item['GUID'] = isset($item['GUID']) ? $item['GUID'] : '';
+    $item['guid'] = isset($item['guid']) ? $item['guid'] : '';
 
-    // Atom feeds have a CONTENT and/or SUMMARY tag instead of a DESCRIPTION tag.
-    if (!empty($item['CONTENT:ENCODED'])) {
-      $item['DESCRIPTION'] = $item['CONTENT:ENCODED'];
+    // Atom feeds have a content and/or summary tag instead of a description tag.
+    if (!empty($item['content:encoded'])) {
+      $item['description'] = $item['content:encoded'];
     }
-    elseif (!empty($item['SUMMARY'])) {
-      $item['DESCRIPTION'] = $item['SUMMARY'];
+    elseif (!empty($item['summary'])) {
+      $item['description'] = $item['summary'];
     }
-    elseif (!empty($item['CONTENT'])) {
-      $item['DESCRIPTION'] = $item['CONTENT'];
+    elseif (!empty($item['content'])) {
+      $item['description'] = $item['content'];
     }
 
     // Try to resolve and parse the item's publication date.
     $date = '';
-    foreach (array('PUBDATE', 'DC:DATE', 'DCTERMS:ISSUED', 'DCTERMS:CREATED', 'DCTERMS:MODIFIED', 'ISSUED', 'CREATED', 'MODIFIED', 'PUBLISHED', 'UPDATED') as $key) {
+    foreach (array('pubdate', 'dc:date', 'dcterms:issued', 'dcterms:created', 'dcterms:modified', 'issued', 'created', 'modified', 'published', 'updated') as $key) {
       if (!empty($item[$key])) {
         $date = $item[$key];
         break;
       }
     }
 
-    $item['TIMESTAMP'] = strtotime($date);
+    $item['timestamp'] = strtotime($date);
 
-    if ($item['TIMESTAMP'] === FALSE) {
-      $item['TIMESTAMP'] = aggregator_parse_w3cdtf($date); // Aggregator_parse_w3cdtf() returns FALSE on failure.
+    if ($item['timestamp'] === FALSE) {
+      $item['timestamp'] = aggregator_parse_w3cdtf($date); // Aggregator_parse_w3cdtf() returns FALSE on failure.
     }
 
-    $item += array('AUTHOR' => '', 'DESCRIPTION' => '');
+    $item += array('author' => '', 'description' => '');
 
     // Store on $feed object. This is where processors will look for parsed items.
     $feed->items[] = $item;
@@ -179,37 +179,38 @@ function aggregator_parse_feed(&$data, $feed) {
 function aggregator_element_start($parser, $name, $attributes) {
   global $item, $element, $tag, $items, $channel;
 
+  $name = strtolower($name);
   switch ($name) {
-    case 'IMAGE':
-    case 'TEXTINPUT':
-    case 'CONTENT':
-    case 'SUMMARY':
-    case 'TAGLINE':
-    case 'SUBTITLE':
-    case 'LOGO':
-    case 'INFO':
+    case 'image':
+    case 'textinput':
+    case 'content':
+    case 'summary':
+    case 'tagline':
+    case 'subtitle':
+    case 'logo':
+    case 'info':
       $element = $name;
       break;
-    case 'ID':
-      if ($element != 'ITEM') {
+    case 'id':
+      if ($element != 'item') {
         $element = $name;
       }
-    case 'LINK':
-      if (!empty($attributes['REL']) && $attributes['REL'] == 'alternate') {
-        if ($element == 'ITEM') {
-          $items[$item]['LINK'] = $attributes['HREF'];
+    case 'link':
+      if (!empty($attributes['rel']) && $attributes['rel'] == 'alternate') {
+        if ($element == 'item') {
+          $items[$item]['link'] = $attributes['href'];
         }
         else {
-          $channel['LINK'] = $attributes['HREF'];
+          $channel['link'] = $attributes['href'];
         }
       }
       break;
-    case 'ITEM':
+    case 'item':
       $element = $name;
       $item += 1;
       break;
-    case 'ENTRY':
-      $element = 'ITEM';
+    case 'entry':
+      $element = 'item';
       $item += 1;
       break;
   }
@@ -224,16 +225,16 @@ function aggregator_element_end($parser, $name) {
   global $element;
 
   switch ($name) {
-    case 'IMAGE':
-    case 'TEXTINPUT':
-    case 'ITEM':
-    case 'ENTRY':
-    case 'CONTENT':
-    case 'INFO':
+    case 'image':
+    case 'textinput':
+    case 'item':
+    case 'entry':
+    case 'content':
+    case 'info':
       $element = '';
       break;
-    case 'ID':
-      if ($element == 'ID') {
+    case 'id':
+      if ($element == 'id') {
         $element = '';
       }
   }
@@ -246,37 +247,37 @@ function aggregator_element_data($parser, $data) {
   global $channel, $element, $items, $item, $image, $tag;
   $items += array($item => array());
   switch ($element) {
-    case 'ITEM':
+    case 'item':
       $items[$item] += array($tag => '');
       $items[$item][$tag] .= $data;
       break;
-    case 'IMAGE':
-    case 'LOGO':
+    case 'image':
+    case 'logo':
       $image += array($tag => '');
       $image[$tag] .= $data;
       break;
-    case 'LINK':
+    case 'link':
       if ($data) {
         $items[$item] += array($tag => '');
         $items[$item][$tag] .= $data;
       }
       break;
-    case 'CONTENT':
-      $items[$item] += array('CONTENT' => '');
-      $items[$item]['CONTENT'] .= $data;
+    case 'content':
+      $items[$item] += array('content' => '');
+      $items[$item]['content'] .= $data;
       break;
-    case 'SUMMARY':
-      $items[$item] += array('SUMMARY' => '');
-      $items[$item]['SUMMARY'] .= $data;
+    case 'summary':
+      $items[$item] += array('summary' => '');
+      $items[$item]['summary'] .= $data;
       break;
-    case 'TAGLINE':
-    case 'SUBTITLE':
-      $channel += array('DESCRIPTION' => '');
-      $channel['DESCRIPTION'] .= $data;
+    case 'tagline':
+    case 'subtitle':
+      $channel += array('description' => '');
+      $channel['description'] .= $data;
       break;
-    case 'INFO':
-    case 'ID':
-    case 'TEXTINPUT':
+    case 'info':
+    case 'id':
+    case 'textinput':
       // The sub-element is not supported. However, we must recognize
       // it or its contents will end up in the item array.
       break;
