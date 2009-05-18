@@ -1241,6 +1241,21 @@ function node_prepare($node, $teaser = FALSE) {
 /**
  * Builds a structured array representing the node's content.
  *
+ * The content built for the node will vary depending on the $node->build_mode
+ * attribute.  The node module defines a set of common build mode constants:
+ *   - NODE_BUILD_NORMAL: Node is being built to be viewed normally.
+ *   - NODE_BUILD_PREVIEW: Node is being built to be previewed.
+ *   - NODE_BUILD_SEARCH_INDEX: Node is being built to be indexed for search.
+ *   - NODE_BUILD_SEARCH_RESULT: Node is being built as a search result.
+ *   - NODE_BUILD_RSS: Node is being built to be displayed in an RSS feed.
+ *
+ * The default mode is NODE_BUILD_NORMAL, which will be used if
+ * $node->build_mode is not set.
+ *
+ * When defining an additional build mode constant in a contributed module,
+ * the suggested standard is to use the unix timestamp of when you write the
+ * code to minimize the likelihood of two modules using the same value.
+ *
  * @param $node
  *   A node object.
  * @param $teaser
