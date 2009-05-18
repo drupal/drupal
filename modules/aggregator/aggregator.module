@@ -122,12 +122,11 @@ function aggregator_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
-  $items['admin/content/aggregator/settings'] = array(
-    'title' => 'Settings',
+  $items['admin/settings/aggregator'] = array(
+    'title' => 'Aggregator',
+    'description' => 'Configure the behavior of the feed aggregator, including when to discard feed items and how to present feed items and categories.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_admin_form'),
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 10,
     'access arguments' => array('administer news feeds'),
   );
   $items['aggregator'] = array(
