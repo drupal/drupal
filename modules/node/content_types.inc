@@ -143,7 +143,7 @@ function node_type_form(&$form_state, $type = NULL) {
   );
   $form['workflow'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Workflow settings'),
+    '#title' => t('Publishing options'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   );
