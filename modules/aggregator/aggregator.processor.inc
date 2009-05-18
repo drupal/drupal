@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.processor.inc,v 1.4 2009/05/16 17:58:30 dries Exp $
+// $Id: aggregator.processor.inc,v 1.5 2009/05/18 09:41:40 dries Exp $
 
 /**
  * @file
@@ -31,19 +31,19 @@ function aggregator_aggregator_process($feed) {
         // Save this item. Try to avoid duplicate entries as much as possible. If
         // we find a duplicate entry, we resolve it and pass along its ID is such
         // that we can update it if needed.
-        if (!empty($item['GUID'])) {
-          $entry = db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = :fid AND guid = :guid", array(':fid' => $feed->fid, ':guid' => $item['GUID']))->fetchObject();
+        if (!empty($item['guid'])) {
+          $entry = db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = :fid AND guid = :guid", array(':fid' => $feed->fid, ':guid' => $item['guid']))->fetchObject();
         }
-        elseif ($item['LINK'] && $item['LINK'] != $feed->link && $item['LINK'] != $feed->url) {
-          $entry = db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = :fid AND link = :link", array(':fid' => $feed->fid, ':link' => $item['LINK']))->fetchObject();
+        elseif ($item['link'] && $item['link'] != $feed->link && $item['link'] != $feed->url) {
+          $entry = db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = :fid AND link = :link", array(':fid' => $feed->fid, ':link' => $item['link']))->fetchObject();
         }
         else {
-          $entry = db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = :fid AND title = :title", array(':fid' => $feed->fid, ':title' => $item['TITLE']))->fetchObject();
+          $entry = db_query("SELECT iid, timestamp FROM {aggregator_item} WHERE fid = :fid AND title = :title", array(':fid' => $feed->fid, ':title' => $item['title']))->fetchObject();
         }
-        if (!$item['TIMESTAMP']) {
-          $item['TIMESTAMP'] = isset($entry->timestamp) ? $entry->timestamp : REQUEST_TIME;
+        if (!$item['timestamp']) {
+          $item['timestamp'] = isset($entry->timestamp) ? $entry->timestamp : REQUEST_TIME;
         }
-        aggregator_save_item(array('iid' => (isset($entry->iid) ? $entry->iid : ''), 'fid' => $feed->fid, 'timestamp' => $item['TIMESTAMP'], 'title' => $item['TITLE'], 'link' => $item['LINK'], 'author' => $item['AUTHOR'], 'description' => $item['DESCRIPTION'], 'guid' => $item['GUID']));
+        aggregator_save_item(array('iid' => (isset($entry->iid) ? $entry->iid : ''), 'fid' => $feed->fid, 'timestamp' => $item['timestamp'], 'title' => $item['title'], 'link' => $item['link'], 'author' => $item['author'], 'description' => $item['description'], 'guid' => $item['guid']));
       }
     }
   }
