@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.20 2009/05/12 13:43:44 dries Exp $
+// $Id: page.tpl.php,v 1.21 2009/05/19 17:23:16 dries Exp $
 
 /**
  * @file
@@ -132,13 +132,17 @@
       </div></div> <!-- /.section, /#navigation -->
     <?php endif; ?>
 
+    <?php if ($breadcrumb): ?>
+      <div id="breadcrumb"><?php print $breadcrumb; ?></div>
+    <?php endif; ?>
+
+    <?php print $messages; ?>
+
     <div id="main-wrapper"><div id="main" class="clearfix">
 
       <div id="content" class="column"><div class="section">
-        <?php if ($breadcrumb): ?><div id="breadcrumb"><?php print $breadcrumb; ?></div><?php endif; ?>
         <?php if ($highlight): ?><div id="highlight"><?php print $highlight; ?></div><?php endif; ?>
         <?php if ($title): ?><h1 class="title" id="page-title"><?php print $title; ?></h1><?php endif; ?>
-        <?php print $messages; ?>
         <?php if ($tabs): ?><div class="tabs"><?php print $tabs; ?></div><?php endif; ?>
         <?php print $help; ?>
         <div id="content-area" class="region">
