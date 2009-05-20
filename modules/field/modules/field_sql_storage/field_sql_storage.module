@@ -239,7 +239,7 @@ function field_sql_storage_field_storage_write($obj_type, $object, $op, $skip_fi
 
     $table_name = _field_sql_storage_tablename($field_name);
     $revision_name = _field_sql_storage_revision_tablename($field_name);
-    $field = field_read_field($field_name);
+    $field = field_info_field($field_name);
 
     // Leave the field untouched if $object comes with no $field_name property.
     // Empty the field if $object->$field_name is NULL or an empty array.
