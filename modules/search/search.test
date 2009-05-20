@@ -456,7 +456,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
    * Verify that comments are rendered using proper format in search results.
    */
   function testSearchResultsComment() {
-    $comment_body = $this->randomName(5, '');
+    $comment_body = $this->randomName(5);
 
     variable_set('comment_preview_article', COMMENT_PREVIEW_OPTIONAL);
     // Enable check_plain() for 'Filtered HTML' text format.
@@ -481,7 +481,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     $node = $this->drupalCreateNode(array('type' => 'article'));
     // Post a comment using 'Full HTML' text format.
     $edit_comment = array(
-      'subject' => $this->randomName(2, ''),
+      'subject' => $this->randomName(2),
       'comment' => '<h1>' . $comment_body . '</h1>',
       'comment_format' => 2,
     );
