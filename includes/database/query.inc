@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.21 2009/05/03 08:55:06 dries Exp $
+// $Id: query.inc,v 1.22 2009/05/20 05:44:02 webchick Exp $
 
 /**
  * @ingroup database
@@ -288,7 +288,9 @@ class InsertQuery extends Query {
   protected $insertValues = array();
 
   public function __construct($connection, $table, array $options = array()) {
-    $options['return'] = Database::RETURN_INSERT_ID;
+    if (!isset($options['return'])) {
+      $options['return'] = Database::RETURN_INSERT_ID;
+    }
     $options += array('delay' => FALSE);
     parent::__construct($connection, $options);
     $this->table = $table;

@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.10 2009/04/20 20:02:30 dries Exp $
+// $Id: query.inc,v 1.11 2009/05/20 05:44:03 webchick Exp $
 
 /**
  * @ingroup database
@@ -13,11 +13,6 @@
 
 
 class InsertQuery_pgsql extends InsertQuery {
-
-  public function __construct($connection, $table, array $options = array()) {
-    parent::__construct($connection, $table, $options);
-    $this->queryOptions['return'] = Database::RETURN_NULL;
-  }
 
   public function execute() {
 
@@ -69,7 +64,10 @@ class InsertQuery_pgsql extends InsertQuery {
 
     if (!empty($table_information->sequences)) {
       $options['sequence_name'] = $table_information->sequences[0];
-      $options['return'] = Database::RETURN_INSERT_ID;
+    }
+    // If there are no sequences then we can't get a last insert id.
+    elseif ($options['return'] == Database::RETURN_INSERT_ID) {
+      $options['return'] = Database::RETURN_NULL;
     }
     $last_insert_id = $this->connection->query($stmt, array(), $options);
 
