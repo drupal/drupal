@@ -1,5 +1,5 @@
 <?php
-// $Id: list.module,v 1.4 2009/04/13 05:18:18 webchick Exp $
+// $Id: list.module,v 1.5 2009/05/20 09:48:47 dries Exp $
 
 /**
  * @file
@@ -59,7 +59,7 @@ function list_field_info() {
 /**
  * Implementation of hook_field_schema().
  */
-function list_field_columns($field) {
+function list_field_schema($field) {
   switch ($field['type']) {
     case 'list_text':
       $columns = array(
@@ -89,7 +89,12 @@ function list_field_columns($field) {
       );
       break;
   }
-  return $columns;
+  return array(
+    'columns' => $columns,
+    'indexes' => array(
+      'value' => array('value'),
+    ),
+  );
 }
 
 /**

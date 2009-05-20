@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.7 2009/05/17 00:49:18 webchick Exp $
+// $Id: field_test.module,v 1.8 2009/05/20 09:48:47 dries Exp $
 
 define('FIELD_TEST_ELEMENT_ID', 1);
 define('FIELD_TEST_BUNDLE', 'test_bundle');
@@ -348,15 +348,21 @@ function field_test_field_info() {
 }
 
 /**
- * Implementation of hook_field_columns().
+ * Implementation of hook_field_schema().
  */
-function field_test_field_columns($field) {
-  $columns['value'] = array(
-    'type' => 'int',
-    'size' => 'tiny',
-    'not null' => FALSE,
+function field_test_field_schema($field) {
+  return array(
+    'columns' => array(
+      'value' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => FALSE,
+      ),
+    ),
+    'indexes' => array(
+      'value' => array('value'),
+    ),
   );
-  return $columns;
 }
 
 /**

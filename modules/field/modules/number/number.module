@@ -1,5 +1,5 @@
 <?php
-// $Id: number.module,v 1.7 2009/04/29 22:36:42 webchick Exp $
+// $Id: number.module,v 1.8 2009/05/20 09:48:47 dries Exp $
 
 /**
  * @file
@@ -48,7 +48,10 @@ function number_field_info() {
   );
 }
 
-function number_field_columns($field) {
+/**
+ * Implementation of hook_field_schema().
+ */
+function number_field_schema($field) {
   switch ($field['type']) {
     case 'number_integer' :
       $columns = array(
@@ -79,7 +82,9 @@ function number_field_columns($field) {
       );
       break;
   }
-  return $columns;
+  return array(
+    'columns' => $columns,
+  );
 }
 
 /**

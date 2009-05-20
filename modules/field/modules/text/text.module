@@ -1,5 +1,5 @@
 <?php
-// $Id: text.module,v 1.6 2009/04/12 02:18:51 webchick Exp $
+// $Id: text.module,v 1.7 2009/05/20 09:48:47 dries Exp $
 
 /**
  * @file
@@ -57,7 +57,7 @@ function text_field_info() {
 /**
  * Implementation of hook_field_schema().
  */
-function text_field_columns($field) {
+function text_field_schema($field) {
   if ($field['type'] == 'text_long') {
     $columns = array(
       'value' => array(
@@ -83,7 +83,12 @@ function text_field_columns($field) {
       'not null' => FALSE,
     ),
   );
-  return $columns;
+  return array(
+    'columns' => $columns,
+    'indexes' => array(
+      'format' => array('format'),
+    ),
+  );
 }
 
 /**
