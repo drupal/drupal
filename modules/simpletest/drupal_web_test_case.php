@@ -191,7 +191,14 @@ class DrupalWebTestCase {
 
     // Return to testing prefix.
     $db_prefix = $current_db_prefix;
-    return $status == 'pass' ? TRUE : FALSE;
+    // We do not use a ternary operator here to allow a breakpoint on
+    // test failure.
+    if ($status == 'pass') {
+      return TRUE;
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
