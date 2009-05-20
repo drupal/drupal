@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.905 2009/05/20 05:44:02 webchick Exp $
+// $Id: common.inc,v 1.906 2009/05/20 06:03:06 webchick Exp $
 
 /**
  * @file
@@ -3032,8 +3032,10 @@ function drupal_cron_run() {
   // Allow execution to continue even if the request gets canceled.
   @ignore_user_abort(TRUE);
 
-  // Increase the maximum execution time.
-  @set_time_limit(240);
+  // Try to increase the maximum execution time if it is too low.
+  if (ini_get('max_execution_time') < 240) {
+    @set_time_limit(240);
+  }
 
   // Fetch the cron semaphore
   $semaphore = variable_get('cron_semaphore', FALSE);
