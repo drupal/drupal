@@ -288,7 +288,9 @@ class InsertQuery extends Query {
   protected $insertValues = array();
 
   public function __construct($connection, $table, array $options = array()) {
-    $options['return'] = Database::RETURN_INSERT_ID;
+    if (!isset($options['return'])) {
+      $options['return'] = Database::RETURN_INSERT_ID;
+    }
     $options += array('delay' => FALSE);
     parent::__construct($connection, $options);
     $this->table = $table;

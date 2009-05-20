@@ -14,11 +14,6 @@
 
 class InsertQuery_pgsql extends InsertQuery {
 
-  public function __construct($connection, $table, array $options = array()) {
-    parent::__construct($connection, $table, $options);
-    $this->queryOptions['return'] = Database::RETURN_NULL;
-  }
-
   public function execute() {
 
     // Confirm that the user did not try to specify an identical
@@ -69,7 +64,10 @@ class InsertQuery_pgsql extends InsertQuery {
 
     if (!empty($table_information->sequences)) {
       $options['sequence_name'] = $table_information->sequences[0];
-      $options['return'] = Database::RETURN_INSERT_ID;
+    }
+    // If there are no sequences then we can't get a last insert id.
+    elseif ($options['return'] == Database::RETURN_INSERT_ID) {
+      $options['return'] = Database::RETURN_NULL;
     }
     $last_insert_id = $this->connection->query($stmt, array(), $options);
 

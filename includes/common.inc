@@ -3978,7 +3978,20 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
 
   // Build the SQL.
   if (empty($primary_keys)) {
-    $query = db_insert($table)->fields($fields);
+    $options = array('return' => Database::RETURN_INSERT_ID);
+    if (isset($serial) && isset($fields[$serial])) {
+      // If the serial column has been explicitly set with an ID, then we don't 
+      // require the database to return the last insert id.
+      if ($fields[$serial]) {
+        $options['return'] = Database::RETURN_AFFECTED;
+      }
+      // If a serial column does exist with no value (i.e. 0) then remove it as
+      // the database will insert the correct value for us.
+      else {
+        unset($fields[$serial]);
+      }
+    }
+    $query = db_insert($table, $options)->fields($fields);
     $return = SAVED_NEW;
   }
   else {
@@ -3992,8 +4005,14 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
   // Execute the SQL.
   if ($last_insert_id = $query->execute()) {
     if (isset($serial)) {
-      // Populate the serial field.
-      $object->$serial = $last_insert_id;
+      // If the database was not told to return the last insert id, it will be
+      // because we already know it.
+      if (isset($options) && $options['return'] != Database::RETURN_INSERT_ID) {
+        $object->$serial = $fields[$serial];
+      }
+      else {
+        $object->$serial = $last_insert_id;
+      }
     }
   }
   // If we have a single-field primary key but got no insert ID, the
