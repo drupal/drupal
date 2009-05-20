@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.103 2009/05/03 20:01:11 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.104 2009/05/20 22:16:38 webchick Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -191,7 +191,14 @@ class DrupalWebTestCase {
 
     // Return to testing prefix.
     $db_prefix = $current_db_prefix;
-    return $status == 'pass' ? TRUE : FALSE;
+    // We do not use a ternary operator here to allow a breakpoint on
+    // test failure.
+    if ($status == 'pass') {
+      return TRUE;
+    }
+    else {
+      return FALSE;
+    }
   }
 
   /**
