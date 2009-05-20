@@ -1382,27 +1382,27 @@ function hook_requirements($phase) {
 function hook_schema() {
   $schema['node'] = array(
     // example (partial) specification for table "node"
-    'description' => t('The base table for nodes.'),
+    'description' => 'The base table for nodes.',
     'fields' => array(
       'nid' => array(
-        'description' => t('The primary identifier for a node.'),
+        'description' => 'The primary identifier for a node.',
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE),
       'vid' => array(
-        'description' => t('The current {node_revision}.vid version identifier.'),
+        'description' => 'The current {node_revision}.vid version identifier.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0),
       'type' => array(
-        'description' => t('The {node_type} of this node.'),
+        'description' => 'The {node_type} of this node.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => ''),
       'title' => array(
-        'description' => t('The title of this node, always treated a non-markup plain text.'),
+        'description' => 'The title of this node, always treated a non-markup plain text.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -1442,7 +1442,7 @@ function hook_schema_alter(&$schema) {
     'type' => 'int',
     'not null' => TRUE,
     'default' => 0,
-    'description' => t('Per-user timezone configuration.'),
+    'description' => 'Per-user timezone configuration.',
   );
 }
 
