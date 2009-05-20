@@ -57,6 +57,21 @@ function _field_sql_storage_columnname($name, $column) {
 }
 
 /**
+ * Generate an index name for a field data table.
+ *
+ * @param $name
+ *   The name of the field
+ * @param $column
+ *   The name of the index
+ * @return
+ *   A string containing a generated index name for a field data
+ *   table that is unique among all other fields.
+ */
+function _field_sql_storage_indexname($name, $index) {
+  return $name . '_' . $index;
+}
+
+/**
  * Retrieve or assign an entity type id for an object type.
  *
  * @param $obj_type
@@ -78,8 +93,8 @@ function _field_sql_storage_etid($obj_type) {
 /**
  * Return the database schema for a field. This may contain one or
  * more tables. Each table will contain the columns relevant for the
- * specified field. Leave $field['columns'] empty to get only the
- * base schema.
+ * specified field. Leave the $field's 'columns' and 'indexes' keys
+ * empty to get only the base schema.
  *
  * @param $field
  *   The field structure for which to generate a database schema.
@@ -134,8 +149,17 @@ function _field_sql_storage_schema($field) {
   );
 
   // Add field columns.
-  foreach ($field['columns'] as $column_name => $attributes) {
-    $current['fields'][_field_sql_storage_columnname($field['field_name'], $column_name)] = $attributes;
+  foreach ((array) $field['columns'] as $column_name => $attributes) {
+    $real_name = _field_sql_storage_columnname($field['field_name'], $column_name);
+    $current['fields'][$real_name] = $attributes;
+  }
+
+  // Add indexes.
+  foreach ((array) $field['indexes'] as $index_name => $columns) {
+    $real_name = _field_sql_storage_indexname($field['field_name'], $index_name);
+    foreach ($columns as $column_name) {
+      $current['indexes'][$real_name][] = _field_sql_storage_columnname($field['field_name'], $column_name);
+    }
   }
 
   // Construct the revision table. The primary key includes

@@ -59,7 +59,7 @@ function list_field_info() {
 /**
  * Implementation of hook_field_schema().
  */
-function list_field_columns($field) {
+function list_field_schema($field) {
   switch ($field['type']) {
     case 'list_text':
       $columns = array(
@@ -89,7 +89,12 @@ function list_field_columns($field) {
       );
       break;
   }
-  return $columns;
+  return array(
+    'columns' => $columns,
+    'indexes' => array(
+      'value' => array('value'),
+    ),
+  );
 }
 
 /**

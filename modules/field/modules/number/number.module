@@ -48,7 +48,10 @@ function number_field_info() {
   );
 }
 
-function number_field_columns($field) {
+/**
+ * Implementation of hook_field_schema().
+ */
+function number_field_schema($field) {
   switch ($field['type']) {
     case 'number_integer' :
       $columns = array(
@@ -79,7 +82,9 @@ function number_field_columns($field) {
       );
       break;
   }
-  return $columns;
+  return array(
+    'columns' => $columns,
+  );
 }
 
 /**

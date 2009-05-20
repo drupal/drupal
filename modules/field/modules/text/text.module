@@ -57,7 +57,7 @@ function text_field_info() {
 /**
  * Implementation of hook_field_schema().
  */
-function text_field_columns($field) {
+function text_field_schema($field) {
   if ($field['type'] == 'text_long') {
     $columns = array(
       'value' => array(
@@ -83,7 +83,12 @@ function text_field_columns($field) {
       'not null' => FALSE,
     ),
   );
-  return $columns;
+  return array(
+    'columns' => $columns,
+    'indexes' => array(
+      'format' => array('format'),
+    ),
+  );
 }
 
 /**

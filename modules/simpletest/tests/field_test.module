@@ -348,15 +348,21 @@ function field_test_field_info() {
 }
 
 /**
- * Implementation of hook_field_columns().
+ * Implementation of hook_field_schema().
  */
-function field_test_field_columns($field) {
-  $columns['value'] = array(
-    'type' => 'int',
-    'size' => 'tiny',
-    'not null' => FALSE,
+function field_test_field_schema($field) {
+  return array(
+    'columns' => array(
+      'value' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => FALSE,
+      ),
+    ),
+    'indexes' => array(
+      'value' => array('value'),
+    ),
   );
-  return $columns;
 }
 
 /**

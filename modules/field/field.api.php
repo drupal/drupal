@@ -120,15 +120,25 @@ function hook_field_info() {
  * @param $field
  *   A field structure.
  * @return
- *   A Field API schema is an array of Schema API column
- *   specifications, keyed by field-independent column name. For
- *   example, a field may declare a column named 'value'. The SQL
- *   storage engine may create a table with a column named
- *   <fieldname>_value_0, but the Field API schema column name is
- *   still 'value'.
+ *   An associative array with the following keys:
+ *   - 'columns': an array of Schema API column specifications, keyed by
+ *     column name. This specifies what comprises a value for a given field.
+ *     For example, a value for a number field is simply 'value', while a
+ *     value for a formatted text field is the combination of 'value' and
+ *     'format'.
+ *     It is recommended to avoid having the columns definitions depend on
+ *     field settings when possible.
+ *     No assumptions should be made on how storage engines internally use the
+ *     original column name to structure their storage.
+ *   - 'indexes': an array of Schema API indexes definitions. Only columns that
+ *     appear in the 'columns' array are allowed.
+ *     Those indexes will be used as default indexes. Callers of
+ *     field_create_field() can specify additional indexes, or, at their own
+ *     risk, modify the default indexes specified by the field-type module.
+ *     Some storage engines might not support indexes.
  */
-function hook_field_columns($field) {
-  if ($field['type'] == 'textarea') {
+function hook_field_schema($field) {
+  if ($field['type'] == 'text_long') {
     $columns = array(
       'value' => array(
         'type' => 'text',
@@ -153,7 +163,12 @@ function hook_field_columns($field) {
       'not null' => FALSE,
     ),
   );
-  return $columns;
+  return array(
+    'columns' => $columns,
+    'indexes' => array(
+      'format' => array('format'),
+    ),
+  );
 }
 
 /**

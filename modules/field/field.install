@@ -44,7 +44,7 @@ function field_schema() {
         'default' => 0,
         'description' => '@TODO',
       ),
-      'settings' => array(
+      'data' => array(
         'type' => 'text',
         'size' => 'medium',
         'not null' => TRUE,

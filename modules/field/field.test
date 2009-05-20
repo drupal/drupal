@@ -1096,7 +1096,7 @@ class FieldTestCase extends DrupalWebTestCase {
     // Check that field type is required.
     try {
       $field_definition = array(
-        'field_name' => drupal_strtolower($this->randomName()),
+        'field_name' => 'field_1',
       );
       field_create_field($field_definition);
       $this->fail(t('Cannot create a field with no type.'));
@@ -1116,7 +1116,7 @@ class FieldTestCase extends DrupalWebTestCase {
     }
 
     $field_definition = array(
-      'field_name' => drupal_strtolower($this->randomName()),
+      'field_name' => 'field_2',
       'type' => 'test_field',
     );
     field_create_field($field_definition);
@@ -1145,7 +1145,10 @@ class FieldTestCase extends DrupalWebTestCase {
     }
 
     // Check that invalid field names are rejected.
-    $field_definition['field_name'] .= '_#';
+    $field_definition = array(
+      'field_name' => 'field_#',
+      'type' => 'test_field',
+    );
     try {
       field_create_field($field_definition);
       $this->fail(t('Cannot create a field with an invalid name.'));
@@ -1153,8 +1156,50 @@ class FieldTestCase extends DrupalWebTestCase {
     catch (FieldException $e) {
       $this->pass(t('Cannot create a field with an invalid name.'));
     }
-
     // TODO : other failures
+  }
+
+  /**
+   * Test creation of indexes on data column.
+   */
+  function testFieldIndexes() {
+    // Check that indexes specified by the field type are used by default.
+    $field_definition = array(
+      'field_name' => 'field_1',
+      'type' => 'test_field',
+    );
+    field_create_field($field_definition);
+    $field = field_read_field($field_definition['field_name']);
+    $expected_indexes = array('value' => array('value'));
+    $this->assertEqual($field['indexes'], $expected_indexes, t('Field type indexes saved by default'));
+
+    // Check that indexes specified by the field definition override the field
+    // type indexes.
+    $field_definition = array(
+      'field_name' => 'field_2',
+      'type' => 'test_field',
+      'indexes' => array(
+        'value' => array(),
+      ),
+    );
+    field_create_field($field_definition);
+    $field = field_read_field($field_definition['field_name']);
+    $expected_indexes = array('value' => array());
+    $this->assertEqual($field['indexes'], $expected_indexes, t('Field definition indexes override field type indexes'));
+
+    // Check that indexes specified by the field definition add to the field
+    // type indexes.
+    $field_definition = array(
+      'field_name' => 'field_3',
+      'type' => 'test_field',
+      'indexes' => array(
+        'value_2' => array('value'),
+      ),
+    );
+    field_create_field($field_definition);
+    $field = field_read_field($field_definition['field_name']);
+    $expected_indexes = array('value' => array('value'), 'value_2' => array('value'));
+    $this->assertEqual($field['indexes'], $expected_indexes, t('Field definition indexes are merged with field type indexes'));
   }
 
   function testReadField() {
@@ -1168,9 +1213,9 @@ class FieldTestCase extends DrupalWebTestCase {
     // TODO: Also test deletion of the data stored in the field ?
 
     // Create two fields (so we can test that only one is deleted).
-    $this->field = array('field_name' => 'test_field_name', 'type' => 'test_field');
+    $this->field = array('field_name' => 'field_1', 'type' => 'test_field');
     field_create_field($this->field);
-    $this->another_field = array('field_name' => 'another_test_field_name', 'type' => 'test_field');
+    $this->another_field = array('field_name' => 'field_2', 'type' => 'test_field');
     field_create_field($this->another_field);
 
     // Create instances for each.
