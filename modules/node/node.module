@@ -782,7 +782,8 @@ function node_invoke($node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
  *   An array of node objects indexed by nid.
  */
 function node_load_multiple($nids = array(), $conditions = array(), $reset = FALSE) {
-  static $node_cache = array();
+  $node_cache = &drupal_static(__FUNCTION__, array());
+
   if ($reset) {
     $node_cache = array();
   }
@@ -934,7 +935,7 @@ function node_load_multiple($nids = array(), $conditions = array(), $reset = FAL
  * @param $vid
  *   The revision ID.
  * @param $reset
- *   Whether to reset the internal node_load cache.
+ *   Whether to reset the node_load_multiple cache.
  *
  * @return
  *   A fully-populated node object.
@@ -1154,39 +1155,50 @@ function _node_save_revision($node, $uid, $update = NULL) {
 
 /**
  * Delete a node.
+ *
+ * @param $nid
+ *   A node ID.
  */
 function node_delete($nid) {
+  node_delete_multiple(array($nid));
+}
 
-  $node = node_load($nid);
+/**
+ * Delete multiple nodes.
+ *
+ * @param $nids
+ *   An array of node IDs.
+ */
+function node_delete_multiple($nids) {
+  $nodes = node_load_multiple($nids, array());
 
-  if (node_access('delete', $node)) {
-    db_delete('node')
-      ->condition('nid', $node->nid)
-      ->execute();
-    db_delete('node_revision')
-      ->condition('nid', $node->nid)
-      ->execute();
-    db_delete('history')
-      ->condition('nid', $node->nid)
-      ->execute();
+  db_delete('node')
+    ->condition('nid', $nids, 'IN')
+    ->execute();
+  db_delete('node_revision')
+    ->condition('nid', $nids, 'IN')
+    ->execute();
+  db_delete('history')
+    ->condition('nid', $nids, 'IN')
+    ->execute();
 
+  foreach ($nodes as $nid => $node) {
     // Call the node-specific callback (if any):
     node_invoke($node, 'delete');
     module_invoke_all('node_delete', $node);
-
-    // Clear the page and block caches.
-    cache_clear_all();
 
     // Remove this node from the search index if needed.
     // This code is implemented in node module rather than in search module,
     // because node module is implementing search module's API, not the other
     // way around.
     if (module_exists('search')) {
-      search_wipe($node->nid, 'node');
+      search_wipe($nid, 'node');
     }
-    watchdog('content', '@type: deleted %title.', array('@type' => $node->type, '%title' => $node->title));
-    drupal_set_message(t('@type %title has been deleted.', array('@type' => node_get_types('name', $node), '%title' => $node->title)));
   }
+
+  // Clear the page and block and node_load_multiple caches.
+  cache_clear_all();
+  drupal_static_reset('node_load_multiple');
 }
 
 /**

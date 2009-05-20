@@ -620,7 +620,6 @@ function theme_node_admin_nodes($form) {
 }
 
 function node_multiple_delete_confirm(&$form_state, $nodes) {
-
   $form['nodes'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
   // array_filter returns only elements with TRUE values
   foreach ($nodes as $nid => $value) {
@@ -645,13 +644,10 @@ function node_multiple_delete_confirm(&$form_state, $nodes) {
 
 function node_multiple_delete_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
-    foreach ($form_state['values']['nodes'] as $nid => $value) {
-      node_delete($nid);
-    }
-    $message = format_plural(count($form_state['values']['nodes']),
-                            'The item has been deleted.',
-                            'The items have been deleted.');
-    drupal_set_message($message);
+    node_delete_multiple(array_keys($form_state['values']['nodes']));
+    $count = count($form_state['values']['nodes']);
+    watchdog('content', 'Deleted @count posts.', array('@count' => $count));
+    drupal_set_message(t('Deleted @count posts.', array('@count' => $count)));
   }
   $form_state['redirect'] = 'admin/content/node';
   return;
