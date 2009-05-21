@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.32 2009/05/16 16:06:04 dries Exp $
+// $Id: cache.inc,v 1.33 2009/05/21 10:17:37 dries Exp $
 
 /**
  * Return data from the persistent cache. Data may be stored as either plain
@@ -168,7 +168,7 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
         variable_set('cache_flush_' . $table, REQUEST_TIME);
       }
       elseif (REQUEST_TIME > ($cache_flush + variable_get('cache_lifetime', 0))) {
-        // Clear the cache for everyone, cache_flush_delay seconds have
+        // Clear the cache for everyone, cache_lifetime seconds have
         // passed since the first request to clear the cache.
         db_delete($table)
           ->condition('expire', CACHE_PERMANENT, '<>')
