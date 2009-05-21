@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.36 2009/05/20 19:56:36 webchick Exp $
+// $Id: system.api.php,v 1.37 2009/05/21 23:07:16 webchick Exp $
 
 /**
  * @file
@@ -583,6 +583,10 @@ function hook_perm() {
  *   used as the default value if not specified to the theme() function.
  *   These arguments must be in the same order that they will be given to
  *   the theme() function.
+ * - file: The file the implementation resides in. This file will be included
+ *   prior to the theme being rendered, to make sure that the function or
+ *   preprocess function (as needed) is actually loaded; this makes it possible
+ *   to split theme functions out into separate files quite easily.
  * - path: Override the path of the file to be used. Ordinarily the module or
  *   theme path will be used, but if the file will not be in the default path,
  *   include it here. This path should be relative to the Drupal root

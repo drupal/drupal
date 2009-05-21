@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.250 2009/05/14 08:23:14 dries Exp $
+// $Id: filter.module,v 1.251 2009/05/21 23:07:15 webchick Exp $
 
 /**
  * @file
@@ -47,12 +47,15 @@ function filter_theme() {
   return array(
     'filter_admin_overview' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'filter.admin.inc',
     ),
     'filter_admin_order' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'filter.admin.inc',
     ),
     'filter_tips' => array(
       'arguments' => array('tips' => NULL, 'long' => FALSE),
+      'file' => 'filter.pages.inc',
     ),
     'filter_tips_more_info' => array(
       'arguments' => array(),

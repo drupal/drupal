@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1052 2009/05/21 21:12:23 dries Exp $
+// $Id: node.module,v 1.1053 2009/05/21 23:07:15 webchick Exp $
 
 /**
  * @file
@@ -105,21 +105,27 @@ function node_theme() {
     ),
     'node_filter_form' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'node.admin.inc',
     ),
     'node_filters' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'node.admin.inc',
     ),
     'node_admin_nodes' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'node.admin.inc',
     ),
     'node_add_list' => array(
       'arguments' => array('content' => NULL),
+      'file' => 'node.pages.inc',
     ),
     'node_form' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'node.pages.inc',
     ),
     'node_preview' => array(
       'arguments' => array('node' => NULL),
+      'file' => 'node.pages.inc',
     ),
     'node_log_message' => array(
       'arguments' => array('log' => NULL),

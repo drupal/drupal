@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.44 2009/05/17 10:49:40 dries Exp $
+// $Id: simpletest.module,v 1.45 2009/05/21 23:07:16 webchick Exp $
 
 /**
  * @file
@@ -70,9 +70,11 @@ function simpletest_theme() {
   return array(
     'simpletest_test_table' => array(
       'arguments' => array('table' => NULL),
+      'file' => 'simpletest.pages.inc',
     ),
     'simpletest_result_summary' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'simpletest.pages.inc',
     ),
   );
 }

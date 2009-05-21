@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.33 2009/05/14 08:23:15 dries Exp $
+// $Id: trigger.module,v 1.34 2009/05/21 23:07:16 webchick Exp $
 
 /**
  * @file
@@ -149,6 +149,7 @@ function trigger_theme() {
   return array(
     'trigger_display' => array(
       'arguments' => array('element'),
+      'file' => 'trigger.admin.inc',
     ),
   );
 }
