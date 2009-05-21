@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.26 2009/04/26 19:44:40 dries Exp $
+// $Id: taxonomy.pages.inc,v 1.27 2009/05/21 21:12:25 dries Exp $
 
 /**
  * @file
@@ -79,7 +79,7 @@ function taxonomy_term_page($terms, $depth = 0, $op = 'page') {
             );
           }
 
-          return drupal_get_page($build);
+          return $build;
 
         case 'feed':
           $channel['link'] = url('taxonomy/term/' . $str_tids . '/' . $depth, array('absolute' => TRUE));

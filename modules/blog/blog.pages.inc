@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.18 2009/04/26 19:44:38 dries Exp $
+// $Id: blog.pages.inc,v 1.19 2009/05/21 21:12:23 dries Exp $
 
 /**
  * @file
@@ -60,7 +60,7 @@ function blog_page_user($account) {
   }
   drupal_add_feed(url('blog/' . $account->uid . '/feed'), t('RSS - !title', array('!title' => $title)));
 
-  return drupal_get_page($build);
+  return $build;
 }
 
 /**
@@ -104,7 +104,7 @@ function blog_page_last() {
   }
   drupal_add_feed(url('blog/feed'), t('RSS - blogs'));
 
-  return drupal_get_page($build);
+  return $build;
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.283 2009/05/16 20:25:19 webchick Exp $
+// $Id: update.php,v 1.284 2009/05/21 21:12:22 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -694,7 +694,7 @@ function update_task_list($active = NULL) {
     'finished' => 'Review log',
   );
 
-  drupal_set_content('left', theme('task_list', $tasks, $active));
+  drupal_add_region_content('left', theme('task_list', $tasks, $active));
 }
 
 /**

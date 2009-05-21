@@ -1,5 +1,5 @@
 <?php
-// $Id: expert.profile,v 1.7 2009/04/30 21:44:20 dries Exp $
+// $Id: expert.profile,v 1.8 2009/05/21 21:12:25 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -42,8 +42,19 @@ function expert_profile_task_list() {
  * Perform any final installation tasks for this profile.
  */
 function expert_profile_tasks(&$task, $url) {
-  // Enable 4 standard blocks.
+
+  // Enable some standard blocks.
   $values = array(
+    array(
+      'module' => 'system',
+      'delta' => 'main',
+      'theme' => 'garland',
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'content',
+      'pages' => '',
+      'cache' => -1,
+    ),
     array(
       'module' => 'user',
       'delta' => 'login',

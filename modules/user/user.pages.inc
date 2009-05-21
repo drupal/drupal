@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.35 2009/05/06 11:31:44 dries Exp $
+// $Id: user.pages.inc,v 1.36 2009/05/21 21:12:25 dries Exp $
 
 /**
  * @file
@@ -176,7 +176,7 @@ function user_view($account) {
     '#account' => $account,
   );
 
-  return drupal_get_page($build);
+  return $build;
 }
 
 /**

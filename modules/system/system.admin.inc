@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.146 2009/05/16 20:10:50 webchick Exp $
+// $Id: system.admin.inc,v 1.147 2009/05/21 21:12:24 dries Exp $
 
 /**
  * @file
@@ -179,7 +179,9 @@ function system_themes_form() {
     }
     else {
       // Ensure this theme is compatible with this version of core.
-      if (!isset($theme->info['core']) || $theme->info['core'] != DRUPAL_CORE_COMPATIBILITY) {
+      // Require the 'content' region to make sure the main page 
+      // content has a common place in all themes.
+      if (!isset($theme->info['core']) || ($theme->info['core'] != DRUPAL_CORE_COMPATIBILITY) || (!isset($theme->info['regions']['content']))) {
         $incompatible_core[] = $theme->name;
       }
       if (version_compare(phpversion(), $theme->info['php']) < 0) {
@@ -1882,7 +1884,8 @@ function system_batch_page() {
   elseif (isset($output)) {
     // Force a page without blocks or messages to
     // display a list of collected messages later.
-    $page = drupal_get_page($output);
+    drupal_set_page_content($output);
+    $page = element_info('page');
     $page['#show_blocks'] = FALSE;
     $page['#show_messages'] = FALSE;
     return $page;

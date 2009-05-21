@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.38 2009/05/16 15:23:15 webchick Exp $
+// $Id: block.admin.inc,v 1.39 2009/05/21 21:12:22 dries Exp $
 
 /**
  * @file
@@ -85,6 +85,8 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
       );
     }
   }
+  // Do not allow disabling the main system content block.
+  unset($form['system_main']['region']['#options'][BLOCK_REGION_NONE]);
 
   $form['submit'] = array(
     '#type' => 'submit',

@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.168 2009/05/12 08:37:44 dries Exp $
+// $Id: install.php,v 1.169 2009/05/21 21:12:22 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -1001,7 +1001,7 @@ function install_task_list($active = NULL) {
   if (in_array($active, array('finished', 'done'))) {
     $active = NULL;
   }
-  drupal_set_content('left', theme_task_list($tasks, $active));
+  drupal_add_region_content('left', theme_task_list($tasks, $active));
 }
 
 /**
