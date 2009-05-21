@@ -1,6 +1,12 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * This file contains tests for the upload module.
+ */
+
+
 class UploadTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
@@ -125,7 +131,7 @@ class UploadTestCase extends DrupalWebTestCase {
     // extension.
     $html_file = $html_files[1]->filepath;
     $this->uploadFile($node, $html_file);
-    $this->assertNoRaw(t('The specified file %name could not be uploaded.', array('%name' => basename($html_file))), t('File '. $html_file . ' was allowed to be uploaded'));
+    $this->assertNoRaw(t('The specified file %name could not be uploaded.', array('%name' => basename($html_file))), t('File ' . $html_file . ' was allowed to be uploaded'));
   }
 
   /**

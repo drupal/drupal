@@ -7,6 +7,11 @@
  */
 
 /**
+ * @file
+ * This is the install file for the upload module.
+ */
+
+/**
  * Implementation of hook_install().
  */
 function upload_install() {

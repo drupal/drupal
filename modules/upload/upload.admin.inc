@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * This file creates the administration form for the upload module.
+ */
+
+/**
  * Form API callback to validate the upload settings form.
  */
 function upload_admin_settings_validate($form, &$form_state) {

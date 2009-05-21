@@ -407,7 +407,7 @@ function upload_node_delete($node) {
   if (!is_array($node->files)) {
     return;
   }
-  foreach($node->files as $file) {
+  foreach ($node->files as $file) {
     file_delete($file);
   }
 }
@@ -560,16 +560,16 @@ function _upload_form($node) {
   if (user_access('upload files')) {
     $limits = _upload_file_limits($user);
 
-    $limit_description = t('The maximum size of file uploads is %filesize. ', array('%filesize' => format_size($limits['file_size'])));
+    $limit_description = t('The maximum size of file uploads is %filesize.', array('%filesize' => format_size($limits['file_size']))) . ' ';
     if (!empty($limits['resolution'])) {
       if (image_get_toolkit()) {
-        $limit_description .= t('Images larger than %resolution will be resized. ', array('%resolution' => $limits['resolution']));
+        $limit_description .= t('Images larger than %resolution will be resized.', array('%resolution' => $limits['resolution'])) . ' ';
       }
       else {
-        $limit_description .= t('Images may not be larger than %resolution. ', array('%resolution' => $limits['resolution']));
+        $limit_description .= t('Images may not be larger than %resolution.', array('%resolution' => $limits['resolution'])) . ' ';
       }
     }
-    $limit_description .= t('Only files with the following extensions may be uploaded: %extensions. ', array('%extensions' => $limits['extensions']));
+    $limit_description .= t('Only files with the following extensions may be uploaded: %extensions.', array('%extensions' => $limits['extensions'])) . ' ';
 
     $form['new']['#weight'] = 10;
     $form['new']['upload'] = array(
