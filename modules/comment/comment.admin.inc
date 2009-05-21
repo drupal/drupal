@@ -66,7 +66,7 @@ function comment_admin_overview($type = 'new', $arg) {
     'operations' => array('data' => t('Operations')),
   );
 
-    $query = db_select('comment', 'c');
+  $query = db_select('comment', 'c');
   $query->join('users', 'u', 'u.uid = c.uid');
   $query->join('node', 'n', 'n.nid = c.nid');
   $query->addField('u', 'name', 'registered_name');
@@ -218,7 +218,7 @@ function comment_multiple_delete_confirm_submit($form, &$form_state) {
  *   The comment to be deleted.
  */
 function comment_delete($cid = NULL) {
-  $comment = db_fetch_object(db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comment} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.cid = %d', $cid));
+  $comment = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comment} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.cid = :cid', array(':cid' => $cid))->fetch();
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
   $output = '';
 
@@ -280,13 +280,15 @@ function _comment_delete_thread($comment) {
   }
 
   // Delete the comment.
-  db_query('DELETE FROM {comment} WHERE cid = %d', $comment->cid);
+  db_delete('comment')
+    ->condition('cid', $comment->cid)
+    ->execute();
   watchdog('content', 'Comment: deleted %subject.', array('%subject' => $comment->subject));
   comment_invoke_comment($comment, 'delete');
 
   // Delete the comment's replies.
-  $result = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comment} c INNER JOIN {users} u ON u.uid = c.uid WHERE pid = %d', $comment->cid);
-  while ($comment = db_fetch_object($result)) {
+  $result = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comment} c INNER JOIN {users} u ON u.uid = c.uid WHERE pid = :cid', array(':cid' => $comment->cid));
+  foreach ($result as $comment) {
     $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
     _comment_delete_thread($comment);
   }

@@ -15,7 +15,7 @@
  */
 function comment_edit($cid) {
   global $user;
-  $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.data FROM {comment} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid', array(':cid'=>$cid) )->fetchObject();
+  $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.data FROM {comment} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid', array(':cid'=>$cid))->fetchObject();
   $comment = drupal_unpack($comment);
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
 
@@ -70,8 +70,9 @@ function comment_reply($node, $pid = NULL) {
       if ($pid) {
         // Load the comment whose cid = $pid
         $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comment} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid AND c.status = :status', array(
-          ':cid'=>$pid,
-          ':status'=>COMMENT_PUBLISHED))->fetchObject();
+          ':cid' => $pid,
+          ':status' => COMMENT_PUBLISHED,
+        ))->fetchObject();
         if ( $comment ) {
           // If that comment exists, make sure that the current comment and the
           // parent comment both belong to the same parent node.

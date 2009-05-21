@@ -327,14 +327,16 @@ function comment_get_recent($number = 10) {
     //         find the $number of most recent comments.
     // Using Query Builder here for the IN-Statement.
     $query = db_select('comment', 'c');
-    $query->fields('c', array('nid', 'subject', 'cid', 'timestamp'));
     $query->innerJoin('node', 'n', 'n.nid = c.nid');
-    $query->condition('c.nid', $nids, 'IN');
-    $query->condition('c.status', COMMENT_PUBLISHED);
-    $query->condition('n.status', 1);
-    $query->orderBy('c.cid', 'DESC');
-    $query->range(0, $number);
-    $comments = $query->execute()->fetchAll();
+    return $query
+      ->fields('c', array('nid', 'subject', 'cid', 'timestamp'))
+      ->condition('c.nid', $nids, 'IN')
+      ->condition('c.status', COMMENT_PUBLISHED)
+      ->condition('n.status', 1)
+      ->orderBy('c.cid', 'DESC')
+      ->range(0, $number)
+      ->execute()
+      ->fetchAll();
   }
 
   return $comments;
@@ -374,13 +376,12 @@ function comment_new_page_count($num_comments, $new_replies, $node) {
       WHERE nid = :nid
         AND status = 0
       ORDER BY timestamp DESC)
-      ORDER BY SUBSTRING(thread, 1, (LENGTH(thread) - 1))', array(':nid' => $node->nid), 0, $new_replies)
-      ->fetchField();
+      ORDER BY SUBSTRING(thread, 1, (LENGTH(thread) - 1))', array(':nid' => $node->nid), 0, $new_replies)->fetchField();
     $thread = substr($result, 0, -1);
     $count = db_query('SELECT COUNT(*) FROM {comment} WHERE nid = :nid AND status = 0 AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < :thread', array(
       ':nid' => $node->nid,
-      ':thread' => $thread))
-      ->fetchField();
+      ':thread' => $thread,
+    ))->fetchField();
     $pageno =  $count / $comments_per_page;
   }
 
@@ -687,7 +688,8 @@ function comment_node_insert($node) {
       'last_comment_timestamp' => $node->changed,
       'last_comment_name' => NULL,
       'last_comment_uid' => $node->uid,
-      'comment_count' => 0 ))
+      'comment_count' => 0,
+    ))
     ->execute();
 }
 
@@ -708,7 +710,10 @@ function comment_node_delete($node) {
  */
 function comment_node_update_index($node) {
   $text = '';
-  $comments = db_query('SELECT subject, comment, format FROM {comment} WHERE nid = :nid AND status = :status', array(':nid' => $node->nid, ':status' => COMMENT_PUBLISHED));
+  $comments = db_query('SELECT subject, comment, format FROM {comment} WHERE nid = :nid AND status = :status', array(
+    ':nid' => $node->nid,
+    ':status' => COMMENT_PUBLISHED
+  ));
   foreach ($comments as $comment) {
     $text .= '<h2>' . check_plain($comment->subject) . '</h2>' . check_markup($comment->comment, $comment->format, '', FALSE);
   }
@@ -737,19 +742,31 @@ function comment_node_search_result($node) {
 function comment_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_block_unpublish':
-      db_update('comment')->fields(array('status' => 0))->condition('uid', $account->uid)->execute();
-      db_update('node_comment_statistics')->fields(array('last_comment_uid' => 0))->condition('last_comment_uid', $account->uid)->execute();
+      db_update('comment')
+        ->fields(array('status' => 0))
+        ->condition('uid', $account->uid)
+        ->execute();
+      db_update('node_comment_statistics')
+        ->fields(array('last_comment_uid' => 0))
+        ->condition('last_comment_uid', $account->uid)
+        ->execute();
       break;
 
     case 'user_cancel_reassign':
-      db_update('comment')->fields(array('uid' => 0))->condition('uid', $account->uid)->execute();
-      db_update('node_comment_statistics')->fields(array('last_comment_uid' => 0))->condition('last_comment_uid', $account->uid)->execute();
+      db_update('comment')
+        ->fields(array('uid' => 0))
+        ->condition('uid', $account->uid)
+        ->execute();
+      db_update('node_comment_statistics')
+        ->fields(array('last_comment_uid' => 0))
+        ->condition('last_comment_uid', $account->uid)
+        ->execute();
       break;
 
     case 'user_cancel_delete':
       module_load_include('inc', 'comment', 'comment.admin');
-      $comments = db_select('comment', 'c')->fields('c', array('cid'))->condition('uid', $account->uid)->execute()->fetchCol();
-      foreach ($comments as $cid) {
+      $result = db_query('SELECT c.cid FROM {comment} c WHERE uid = :uid', array(':uid' => $account->uid))->fetchCol();
+      foreach ($result as $cid) {
         $comment = comment_load($cid);
         // Delete the comment and its replies.
         _comment_delete_thread($comment);
@@ -825,7 +842,7 @@ function comment_save($edit) {
             'uid' => $edit['uid'],
             'name' => $edit['name'],
             'mail' => $edit['mail'],
-            'homepage' => $edit['homepage']
+            'homepage' => $edit['homepage'],
           ))
           ->condition('cid', $edit['cid'])
           ->execute();
@@ -857,8 +874,8 @@ function comment_save($edit) {
           // Get the max value in *this* thread.
           $max = db_query("SELECT MAX(thread) FROM {comment} WHERE thread LIKE :thread AND nid = :nid", array(
             ':thread' => $parent->thread .'.%',
-            ':nid' => $edit['nid']))
-            ->fetchField();
+            ':nid' => $edit['nid'],
+          ))->fetchField();
 
           if ($max == '') {
             // First child of this parent.
@@ -898,7 +915,7 @@ function comment_save($edit) {
             'thread' => $thread,
             'name' => $edit['name'],
             'mail' => $edit['mail'],
-            'homepage' => $edit['homepage']
+            'homepage' => $edit['homepage'],
           ))
           ->execute();
         // Tell the other modules a new comment has been submitted.
@@ -1091,11 +1108,12 @@ function comment_render($node, $cid = 0) {
     if ($cid && is_numeric($cid)) {
       // Single comment view.
       $query = db_select('comment', 'c');
-      $query->fields('c', array('cid', 'nid', 'pid', 'comment', 'subject', 'format', 'timestamp', 'name', 'mail', 'homepage', 'status') );
-      $query->fields('u', array( 'uid', 'signature', 'picture', 'data', 'status') );
       $query->addField('u', 'name', 'registered_name');
       $query->innerJoin('users', 'u', 'c.uid = u.uid');
-      $query->condition('c.cid', $cid);
+      $query
+        ->fields('c', array('cid', 'nid', 'pid', 'comment', 'subject', 'format', 'timestamp', 'name', 'mail', 'homepage', 'status'))
+        ->fields('u', array( 'uid', 'signature', 'picture', 'data', 'status'))
+        ->condition('c.cid', $cid);
 
       if (!user_access('administer comments')) {
         $query->condition('c.status', COMMENT_PUBLISHED);
@@ -1116,32 +1134,39 @@ function comment_render($node, $cid = 0) {
     // comments unconditionally if the user is an administrator.
     elseif ($node->comment_count || user_access('administer comments')) {
 
-      // TODO: Convert to dynamic queries once the pager query is updated to the new DBTNG API.
-
       // Multiple comment view.
-      $query_count = 'SELECT COUNT(*) FROM {comment} c WHERE c.nid = %d';
-      $query = 'SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.signature, u.picture, u.data, c.thread, c.status FROM {comment} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d';
+      $query = db_select('comment', 'c')->extend('PagerDefault');
+      $query->join('users', 'u', 'c.uid = u.uid');
+      $query->addField('u', 'name', 'registered_name');
+      $query
+        ->fields('c', array('cid', 'pid', 'nid', 'subject', 'comment', 'format', 'timestamp', 'name', 'mail', 'homepage', 'thread', 'status'))
+        ->fields('u', array('uid', 'signature', 'picture', 'data'))
+        ->condition('c.nid', $nid)
+        ->addTag('node_access')
+        ->limit($comments_per_page);
 
-      $query_args = array($nid);
+      $count_query = db_select('comment', 'c');
+      $count_query
+        ->fields('c', array('cid'))
+        ->condition('c.nid', $nid)
+        ->addTag('node_access');
+
       if (!user_access('administer comments')) {
-        $query .= ' AND c.status = %d';
-        $query_count .= ' AND c.status = %d';
-        $query_args[] = COMMENT_PUBLISHED;
+        $query->condition('c.status', COMMENT_PUBLISHED);
+        $count_query->condition('c.status', COMMENT_PUBLISHED);
       }
       if ($mode == COMMENT_MODE_FLAT_COLLAPSED || $mode == COMMENT_MODE_FLAT_EXPANDED) {
-        $query .= ' ORDER BY c.cid';
+        $query->orderBy('c.cid', 'ASC');
       }
       else {
         // See comment above. Analysis reveals that this doesn't cost too
         // much. It scales much much better than having the whole comment
         // structure.
-        $query .= ' ORDER BY SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1))';
+        $query->orderBy('SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1))', 'ASC');
       }
 
-      $query = db_rewrite_sql($query, 'c', 'cid');
-      $query_count = db_rewrite_sql($query_count, 'c', 'cid');
-
-      $result = pager_query($query, $comments_per_page, 0, $query_count, $query_args);
+      $query->setCountQuery($count_query);
+      $result = $query->execute();
 
       $divs = 0;
       $num_rows = FALSE;
@@ -1262,8 +1287,8 @@ function comment_num_replies($pid) {
   if (!isset($cache[$pid])) {
     $cache[$pid] = db_query('SELECT COUNT(cid) FROM {comment} WHERE pid = :pid AND status = :status', array(
       ':pid' => $pid,
-      ':status' => COMMENT_PUBLISHED))
-      ->fetchField();
+      ':status' => COMMENT_PUBLISHED,
+    ))->fetchField();
   }
 
   return $cache[$pid];
@@ -1293,8 +1318,8 @@ function comment_num_new($nid, $timestamp = 0) {
     return db_query('SELECT COUNT(c.cid) FROM {node} n INNER JOIN {comment} c ON n.nid = c.nid WHERE n.nid = :nid AND timestamp > :timestamp AND c.status = :status', array(
       ':nid' => $nid,
       ':timestamp' => $timestamp,
-      ':status' => COMMENT_PUBLISHED ))
-      ->fetchField();
+      ':status' => COMMENT_PUBLISHED,
+      ))->fetchField();
   }
   else {
     return FALSE;
@@ -1679,8 +1704,8 @@ function comment_form_add_preview($form, &$form_state) {
   if ($edit['pid']) {
     $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comment} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid AND c.status = :status', array(
       ':cid' => $edit['pid'],
-      ':status' => COMMENT_PUBLISHED ))
-      ->fetchObject();
+      ':status' => COMMENT_PUBLISHED,
+      ))->fetchObject();
     $comment = drupal_unpack($comment);
     $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
     $output .= theme('comment_view', $comment, $node);
@@ -2022,17 +2047,24 @@ function _comment_get_display_setting($setting, $node) {
  * - comment_count: the total number of approved/published comments on this node.
  */
 function _comment_update_node_statistics($nid) {
-  $count = db_query('SELECT COUNT(cid) FROM {comment} WHERE nid = :nid AND status = :status', array(':nid' => $nid, ':status' => COMMENT_PUBLISHED))->fetchField();
+  $count = db_query('SELECT COUNT(cid) FROM {comment} WHERE nid = :nid AND status = :status', array(
+    ':nid' => $nid,
+    ':status' => COMMENT_PUBLISHED,
+  ))->fetchField();
 
   if ($count > 0) {
     // Comments exist.
-    $last_reply = db_query_range('SELECT cid, name, timestamp, uid FROM {comment} WHERE nid = :nid AND status = :status ORDER BY cid DESC', array(':nid' => $nid, ':status' => COMMENT_PUBLISHED), 0, 1)->fetchObject();
+    $last_reply = db_query_range('SELECT cid, name, timestamp, uid FROM {comment} WHERE nid = :nid AND status = :status ORDER BY cid DESC', array(
+      ':nid' => $nid,
+      ':status' => COMMENT_PUBLISHED,
+    ), 0, 1)->fetchObject();
     db_update('node_comment_statistics')
       ->fields( array(
         'comment_count' => $count,
         'last_comment_timestamp' => $last_reply->timestamp,
         'last_comment_name' => $last_reply->uid ? '' : $last_reply->name,
-        'last_comment_uid' => $last_reply->uid ))
+        'last_comment_uid' => $last_reply->uid,
+      ))
       ->condition('nid', $nid)
       ->execute();
   }
@@ -2044,7 +2076,8 @@ function _comment_update_node_statistics($nid) {
         'comment_count' => 0,
         'last_comment_timestamp' => $node->created,
         'last_comment_name' => '',
-        'last_comment_uid' => $node->uid ))
+        'last_comment_uid' => $node->uid,
+      ))
       ->condition('nid', $nid)
       ->execute();
   }
@@ -2169,7 +2202,7 @@ function comment_unpublish_action($comment, $context = array()) {
     $subject = db_query('SELECT subject FROM {comment} WHERE cid = :cid', array(':cid', $cid))->fetchField();
   }
   db_update('comment')
-    ->fields(array('status' => COMMENT_NOT_PUBLISHED,))
+    ->fields(array('status' => COMMENT_NOT_PUBLISHED))
     ->condition('cid', $cid)
     ->execute();
   watchdog('action', 'Unpublished comment %subject.', array('%subject' => $subject));
@@ -2214,7 +2247,7 @@ function comment_unpublish_by_keyword_action($comment, $context) {
   foreach ($context['keywords'] as $keyword) {
     if (strpos($comment->comment, $keyword) !== FALSE || strpos($comment->subject, $keyword) !== FALSE) {
       db_update('comment')
-        ->fields(array('status' => COMMENT_NOT_PUBLISHED,))
+        ->fields(array('status' => COMMENT_NOT_PUBLISHED))
         ->condition('cid', $comment->cid)
         ->execute();
       watchdog('action', 'Unpublished comment %subject.', array('%subject' => $comment->subject));
