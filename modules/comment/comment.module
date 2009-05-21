@@ -101,12 +101,6 @@ function comment_help($path, $arg) {
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@comment">Comment module</a>.', array('@comment' => 'http://drupal.org/handbook/modules/comment/')) . '</p>';
 
       return $output;
-
-    case 'admin/content/comment':
-      return '<p>' . t("Below is a list of the latest comments posted to your site. Click on a subject to see the comment, the author's name to edit the author's user information, 'edit' to modify the text, and 'delete' to remove their submission.") . '</p>';
-
-    case 'admin/content/comment/approval':
-      return '<p>' . t("Below is a list of the unapproved comments posted to your site. To approve comments, select them with the checkbox, choose <em>Publish the selected comments</em> from <em>Update options</em> and click the <em>Update</em> button. To delete them, choose <em>Delete the selected comments</em> instead. Use <em>edit</em> to individually modify a comment's content.") . '</p>';
   }
 }
 
