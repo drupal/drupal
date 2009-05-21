@@ -22,14 +22,15 @@ function menu_help($path, $arg) {
       $output .= '<p>' . t('The <a href="@menu">menus page</a> displays all menus currently available on your site. Select a menu from this list to add or edit a menu link, or to rearrange links within the menu. Create new menus using the <a href="@add-menu">add menu page</a> (the block containing a new menu must also be enabled on the <a href="@blocks">blocks administration page</a>).', array('@menu' => url('admin/build/menu'), '@add-menu' => url('admin/build/menu/add'), '@blocks' => url('admin/build/block'))) . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@menu">Menu module</a>.', array('@menu' => 'http://drupal.org/handbook/modules/menu/')) . '</p>';
       return $output;
-    case 'admin/build/menu':
-      return '<p>' . t('Menus are a collection of links used to navigate a website. If the Block module is enabled, each menu has a corresponding block that is managed on the <a href="@blocks">blocks administration page</a>. Select an existing menu from this list to manage its menu links.', array('@blocks' => url('admin/build/block'))) . '</p>';
     case 'admin/build/menu/add':
       return '<p>' . t('Enter the name for your new menu. Remember to enable the newly created block in the <a href="@blocks">blocks administration page</a>.', array('@blocks' => url('admin/build/block'))) . '</p>';
     case 'admin/build/menu-customize/%':
       return '<p>' . t('To rearrange menu links, grab a drag-and-drop handle under the <em>Menu link</em> column and drag the link (or group of links) to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.') . '</p>';
     case 'admin/build/menu/item/add':
       return '<p>' . t('Enter the title and path for your new menu link.') . '</p>';
+  }
+  if ($path == 'admin/build/menu' && module_exists('block')) {
+    return '<p>' . t('Each menu has a corresponding block that is managed on the <a href="@blocks">blocks administration page</a>.', array('@blocks' => url('admin/build/block'))) . '</p>';
   }
 }
 
