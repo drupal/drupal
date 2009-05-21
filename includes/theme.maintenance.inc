@@ -220,10 +220,10 @@ function template_preprocess_maintenance_page(&$variables) {
   $theme_data = _system_theme_data();
   $regions = $theme_data[$theme]->info['regions'];
 
-  // Get all region content set with drupal_set_content().
+  // Get all region content set with drupal_add_region_content().
   foreach (array_keys($regions) as $region) {
     // Assign region to a region variable.
-    $region_content = drupal_get_content($region);
+    $region_content = drupal_get_region_content($region);
     isset($variables[$region]) ? $variables[$region] .= $region_content : $variables[$region] = $region_content;
   }
 

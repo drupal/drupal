@@ -3347,7 +3347,7 @@ function system_update_7020() {
 }
 
 /**
- * Add help block to the help region, migrate custom variables to blocks.
+ * Add new blocks to new regions, migrate custom variables to blocks.
  */
 function system_update_7021() {
   $ret = array();
@@ -3359,6 +3359,8 @@ function system_update_7021() {
     $themes_with_blocks[] = $theme->name;
     // Add new system generated help block.
     $ret[] = update_sql("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('system', 'help', '" . $theme->name . "', 1, 0, 'help', '', 1)");
+    // Add new system generated main page content block.
+    $ret[] = update_sql("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('system', 'main', '" . $theme->name . "', 1, 0, 'content', '', -1)");
   }
 
   // Migrate contact form information.

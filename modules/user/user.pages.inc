@@ -176,7 +176,7 @@ function user_view($account) {
     '#account' => $account,
   );
 
-  return drupal_get_page($build);
+  return $build;
 }
 
 /**

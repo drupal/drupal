@@ -878,6 +878,11 @@ function system_user_timezone(&$edit, &$form) {
  * Implementation of hook_block_list().
  */
 function system_block_list() {
+  $blocks['main'] = array(
+    'info' => t('Main page content'),
+     // Cached elsewhere.
+    'cache' => BLOCK_NO_CACHE,
+  );
   $blocks['powered-by'] = array(
     'info' => t('Powered by Drupal'),
     'weight' => '10',
@@ -946,6 +951,10 @@ function system_block_save($delta = '', $edit = NULL) {
 function system_block_view($delta = '') {
   $block = array();
   switch ($delta) {
+    case 'main':
+      $block['subject'] = NULL;
+      $block['content'] = drupal_set_page_content();
+      return $block;
     case 'powered-by':
       $image_path = 'misc/' . variable_get('drupal_badge_color', 'powered-blue') . '-' . variable_get('drupal_badge_size', '80x15') . '.png';
       $block['subject'] = NULL;

@@ -241,7 +241,7 @@ function block_page_alter($page) {
   // Load all region content assigned via blocks.
   foreach (array_keys($regions) as $region) {
     // Prevent left and right regions from rendering blocks when 'show_blocks' == FALSE.
-    if ($page['#show_blocks'] || ($region != 'left' && $region != 'right')) {
+    if (!empty($page['#show_blocks']) || ($region != 'left' && $region != 'right')) {
       // Assign blocks to region.
       if ($blocks = block_get_blocks_by_region($region)) {
         $page[$region]['blocks'] = $blocks;
@@ -759,6 +759,11 @@ function template_preprocess_block(&$variables) {
   // Same with zebra striping.
   $variables['block_zebra'] = ($block_counter[$variables['block']->region] % 2) ? 'odd' : 'even';
   $variables['block_id'] = $block_counter[$variables['block']->region]++;
+
+  if (is_array($variables['block']->content)) {
+    // Render the block contents if it is not already rendered.
+    $variables['block']->content = drupal_render($variables['block']->content);
+  }
 
   $variables['template_files'][] = 'block-' . $variables['block']->region;
   $variables['template_files'][] = 'block-' . $variables['block']->module;

@@ -362,12 +362,12 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Testing drupal_set_content and drupal_get_content.
+ * Testing drupal_add_region_content and drupal_get_region_content.
  */
 class DrupalSetContentTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Drupal set/get content'),
+      'name' => t('Drupal set/get regions'),
       'description' => t('Performs tests on setting and retrieiving content from theme regions.'),
       'group' => t('System')
     );
@@ -386,22 +386,22 @@ class DrupalSetContentTestCase extends DrupalWebTestCase {
     // Set some random content for each region available.
     foreach ($block_regions as $region) {
       $first_chunk = $this->randomName(32);
-      drupal_set_content($region, $first_chunk);
+      drupal_add_region_content($region, $first_chunk);
       $second_chunk = $this->randomName(32);
-      drupal_set_content($region, $second_chunk);
-      // Store the expected result for a drupal_get_content call for this region.
+      drupal_add_region_content($region, $second_chunk);
+      // Store the expected result for a drupal_get_region_content call for this region.
       $values[$region] = $first_chunk . $delimiter . $second_chunk;
     }
 
-    // Ensure drupal_get_content returns expected results when fetching all regions.
-    $content = drupal_get_content(NULL, $delimiter);
+    // Ensure drupal_get_region_content returns expected results when fetching all regions.
+    $content = drupal_get_region_content(NULL, $delimiter);
     foreach ($content as $region => $region_content) {
       $this->assertEqual($region_content, $values[$region], t('@region region text verified when fetching all regions', array('@region' => $region)));
     }
 
-    // Ensure drupal_get_content returns expected results when fetching a single region.
+    // Ensure drupal_get_region_content returns expected results when fetching a single region.
     foreach ($block_regions as $region) {
-      $region_content = drupal_get_content($region, $delimiter);
+      $region_content = drupal_get_region_content($region, $delimiter);
       $this->assertEqual($region_content, $values[$region], t('@region region text verified when fetching single region.', array('@region' => $region)));
     }
   }

@@ -79,7 +79,7 @@ function taxonomy_term_page($terms, $depth = 0, $op = 'page') {
             );
           }
 
-          return drupal_get_page($build);
+          return $build;
 
         case 'feed':
           $channel['link'] = url('taxonomy/term/' . $str_tids . '/' . $depth, array('absolute' => TRUE));

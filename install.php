@@ -1001,7 +1001,7 @@ function install_task_list($active = NULL) {
   if (in_array($active, array('finished', 'done'))) {
     $active = NULL;
   }
-  drupal_set_content('left', theme_task_list($tasks, $active));
+  drupal_add_region_content('left', theme_task_list($tasks, $active));
 }
 
 /**

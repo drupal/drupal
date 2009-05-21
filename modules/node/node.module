@@ -1325,7 +1325,7 @@ function node_show($node, $message = FALSE) {
   node_tag_new($node->nid);
 
   // For markup consistency with other pages, use node_build_multiple() rather than node_build().
-  return drupal_get_page(node_build_multiple(array($node), FALSE));
+  return node_build_multiple(array($node), FALSE);
 }
 
 /**
@@ -2088,7 +2088,7 @@ function node_page_default() {
     );
   }
   drupal_set_title('');
-  return drupal_get_page($build);
+  return $build;
 }
 
 /**

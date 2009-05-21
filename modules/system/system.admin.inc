@@ -179,7 +179,9 @@ function system_themes_form() {
     }
     else {
       // Ensure this theme is compatible with this version of core.
-      if (!isset($theme->info['core']) || $theme->info['core'] != DRUPAL_CORE_COMPATIBILITY) {
+      // Require the 'content' region to make sure the main page 
+      // content has a common place in all themes.
+      if (!isset($theme->info['core']) || ($theme->info['core'] != DRUPAL_CORE_COMPATIBILITY) || (!isset($theme->info['regions']['content']))) {
         $incompatible_core[] = $theme->name;
       }
       if (version_compare(phpversion(), $theme->info['php']) < 0) {
@@ -1882,7 +1884,8 @@ function system_batch_page() {
   elseif (isset($output)) {
     // Force a page without blocks or messages to
     // display a list of collected messages later.
-    $page = drupal_get_page($output);
+    drupal_set_page_content($output);
+    $page = element_info('page');
     $page['#show_blocks'] = FALSE;
     $page['#show_messages'] = FALSE;
     return $page;

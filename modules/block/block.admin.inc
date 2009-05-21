@@ -85,6 +85,8 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
       );
     }
   }
+  // Do not allow disabling the main system content block.
+  unset($form['system_main']['region']['#options'][BLOCK_REGION_NONE]);
 
   $form['submit'] = array(
     '#type' => 'submit',

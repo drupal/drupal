@@ -25,10 +25,18 @@ Drupal.behaviors.blockDrag = {
     // Add a handler so when a row is dropped, update fields dropped into new regions.
     tableDrag.onDrop = function () {
       dragObject = this;
-      if ($(dragObject.rowObject.element).prev('tr').is('.region-message')) {
-        var regionRow = $(dragObject.rowObject.element).prev('tr').get(0);
-        var regionName = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
-        var regionField = $('select.block-region-select', dragObject.rowObject.element);
+      var regionRow = $(dragObject.rowObject.element).prev('tr').get(0);
+      var regionName = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
+      var regionField = $('select.block-region-select', dragObject.rowObject.element);
+      // Check whether the newly picked region is available for this block.
+      if ($('option[value=' + regionName + ']', regionField).length == 0) {
+        // If not, alert the user and keep the block in its old region setting.
+        alert(Drupal.t('The block cannot be placed in this region.'));
+        // Simulate that there was a selected element change, so the row is put
+        // back to from where the user tried to drag it.
+        regionField.change();
+      }
+      else if ($(dragObject.rowObject.element).prev('tr').is('.region-message')) {
         var weightField = $('select.block-weight', dragObject.rowObject.element);
         var oldRegionName = weightField[0].className.replace(/([^ ]+[ ]+)*block-weight-([^ ]+)([ ]+[^ ]+)*/, '$2');
 

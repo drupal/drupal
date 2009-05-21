@@ -56,14 +56,14 @@ define('JS_DEFAULT', 0);
 define('JS_THEME', 100);
 
 /**
- * Set content for a specified region.
+ * Add content to a specified region.
  *
  * @param $region
- *   Page region the content is assigned to.
+ *   Page region the content is added to.
  * @param $data
- *   Content to be set.
+ *   Content to be added.
  */
-function drupal_set_content($region = NULL, $data = NULL) {
+function drupal_add_region_content($region = NULL, $data = NULL) {
   static $content = array();
 
   if (!is_null($region) && !is_null($data)) {
@@ -73,7 +73,7 @@ function drupal_set_content($region = NULL, $data = NULL) {
 }
 
 /**
- * Get assigned content.
+ * Get assigned content for a given region.
  *
  * @param $region
  *   A specified region to fetch content for. If NULL, all regions will be
@@ -81,8 +81,8 @@ function drupal_set_content($region = NULL, $data = NULL) {
  * @param $delimiter
  *   Content to be inserted between exploded array elements.
  */
-function drupal_get_content($region = NULL, $delimiter = ' ') {
-  $content = drupal_set_content();
+function drupal_get_region_content($region = NULL, $delimiter = ' ') {
+  $content = drupal_add_region_content();
   if (isset($region)) {
     if (isset($content[$region]) && is_array($content[$region])) {
       return implode($delimiter, $content[$region]);
@@ -372,7 +372,8 @@ function drupal_not_found() {
     $return = t('The requested page could not be found.');
   }
 
-  $page = drupal_get_page($return);
+  drupal_set_page_content($return);
+  $page = element_info('page');
   // To conserve CPU and bandwidth, omit the blocks.
   $page['#show_blocks'] = FALSE;
 
@@ -3205,24 +3206,25 @@ function drupal_alter($type, &$data) {
 }
 
 /**
- * Retrieve a $page element that is ready for decorating.
+ * Set the main page content value for later use.
  *
- * Used by menu callbacks in order to populate the page with content
- * and behavior (e.g. #show_blocks).
+ * Given the nature of the Drupal page handling, this will be called once with
+ * a string or array. We store that and return it later as the block is being
+ * displayed.
  *
  * @param $content
  *   A string or renderable array representing the body of the page.
  * @return
- *   A $page element that should be decorated and then passed to drupal_render_page().
- *
- * @see drupal_render_page().
+ *   A renderable array representing the body of the page.
  */
-function drupal_get_page($content = NULL) {
-  // Initialize page array with defaults. @see hook_elements() - 'page' element.
-  $page = element_info('page');
-  $page['content'] = is_array($content) ? $content : array('main' => array('#markup' => $content));
-
-  return $page;
+function drupal_set_page_content($content = NULL) {
+  $content_block = &drupal_static(__FUNCTION__, NULL);
+  if (!empty($content)) {
+    $content_block = (is_array($content) ? $content : array('main' => array('#markup' => $content)));
+  }
+  else {
+    return $content_block;
+  }
 }
 
 /**
@@ -3232,17 +3234,19 @@ function drupal_get_page($content = NULL) {
  *   A string or array representing the content of a page. The array consists of
  *   the following keys:
  *   - #type: Value is always 'page'. This pushes the theming through page.tpl.php (required).
- *   - content: A renderable array as built by the menu callback (required).
  *   - #show_blocks: A marker which suppresses left/right regions if FALSE (optional).
  *   - #show_messages: Suppress drupal_get_message() items. Used by Batch API (optional).
  *
  * @see hook_page_alter()
- * @see drupal_get_page()
+ * @see element_info('page')
  */
 function drupal_render_page($page) {
-  // Allow menu callbacks to return strings, or bare content arrays.
-  if (is_string($page) || empty($page['content'])) {
-    $page = drupal_get_page($page);
+  // Allow menu callbacks to return strings or arbitrary arrays to render.
+  // If the array returned is not of #type page directly, we need to fill
+  // in the page with defaults.
+  if (is_string($page) || (is_array($page) && (!isset($page['#type']) || ($page['#type'] != 'page')))) {
+    drupal_set_page_content($page);
+    $page = element_info('page');
   }
   // Modules alter the $page as needed. Blocks are populated into regions like
   // 'left', 'footer', etc.

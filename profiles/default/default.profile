@@ -91,8 +91,18 @@ function default_profile_task_list() {
  */
 function default_profile_tasks(&$task, $url) {
   
-  // Enable 5 standard blocks.
+  // Enable some standard blocks.
   $values = array(
+    array(
+      'module' => 'system',
+      'delta' => 'main',
+      'theme' => 'garland',
+      'status' => 1,
+      'weight' => 0,
+      'region' => 'content',
+      'pages' => '',
+      'cache' => -1,
+    ),
     array(
       'module' => 'user',
       'delta' => 'login',

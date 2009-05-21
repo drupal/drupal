@@ -694,7 +694,7 @@ function update_task_list($active = NULL) {
     'finished' => 'Review log',
   );
 
-  drupal_set_content('left', theme('task_list', $tasks, $active));
+  drupal_add_region_content('left', theme('task_list', $tasks, $active));
 }
 
 /**
