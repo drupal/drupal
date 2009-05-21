@@ -47,12 +47,15 @@ function filter_theme() {
   return array(
     'filter_admin_overview' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'filter.admin.inc',
     ),
     'filter_admin_order' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'filter.admin.inc',
     ),
     'filter_tips' => array(
       'arguments' => array('tips' => NULL, 'long' => FALSE),
+      'file' => 'filter.pages.inc',
     ),
     'filter_tips_more_info' => array(
       'arguments' => array(),

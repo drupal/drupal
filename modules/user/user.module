@@ -42,32 +42,40 @@ function user_theme() {
     'user_profile' => array(
       'arguments' => array('elements' => NULL),
       'template' => 'user-profile',
+      'file' => 'user.pages.inc',
     ),
     'user_profile_category' => array(
       'arguments' => array('element' => NULL),
       'template' => 'user-profile-category',
+      'file' => 'user.pages.inc',
     ),
     'user_profile_item' => array(
       'arguments' => array('element' => NULL),
       'template' => 'user-profile-item',
+      'file' => 'user.pages.inc',
     ),
     'user_list' => array(
       'arguments' => array('users' => NULL, 'title' => NULL),
     ),
     'user_admin_perm' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'user.admin.inc',
     ),
     'user_admin_new_role' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'user.admin.inc',
     ),
     'user_admin_account' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'user.admin.inc',
     ),
     'user_filter_form' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'user.admin.inc',
     ),
     'user_filters' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'user.admin.inc',
     ),
     'user_signature' => array(
       'arguments' => array('signature' => NULL),

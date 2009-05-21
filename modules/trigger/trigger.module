@@ -149,6 +149,7 @@ function trigger_theme() {
   return array(
     'trigger_display' => array(
       'arguments' => array('element'),
+      'file' => 'trigger.admin.inc',
     ),
   );
 }

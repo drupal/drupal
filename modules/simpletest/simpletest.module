@@ -70,9 +70,11 @@ function simpletest_theme() {
   return array(
     'simpletest_test_table' => array(
       'arguments' => array('table' => NULL),
+      'file' => 'simpletest.pages.inc',
     ),
     'simpletest_result_summary' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'simpletest.pages.inc',
     ),
   );
 }

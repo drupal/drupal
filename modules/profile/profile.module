@@ -67,6 +67,7 @@ function profile_theme() {
     ),
     'profile_admin_overview' => array(
       'arguments' => array('form' => NULL),
+      'file' => 'profile.admin.inc',
     )
   );
 }

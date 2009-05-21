@@ -311,7 +311,7 @@ function drupal_theme_rebuild() {
 function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
   $result = array();
   $function = $name . '_theme';
-  if (drupal_function_exists($function)) {
+  if (function_exists($function)) {
     $result = $function($cache, $type, $theme, $path);
 
     foreach ($result as $hook => $info) {
@@ -321,6 +321,18 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
       // conventions.
       if (!isset($info['template']) && !isset($info['function'])) {
         $result[$hook]['function'] = ($type == 'module' ? 'theme_' : $name . '_') . $hook;
+      }
+      // If a path is set in the info, use what was set. Otherwise use the
+      // default path. This is mostly so system.module can declare theme
+      // functions on behalf of core .include files.
+      // All files are included to be safe. Conditionally included
+      // files can prevent them from getting registered.
+      if (isset($info['file']) && !isset($info['path'])) {
+        $result[$hook]['file'] = $path . '/' . $info['file'];
+        include_once DRUPAL_ROOT . '/' . $result[$hook]['file'];
+      }
+      elseif (isset($info['file']) && isset($info['path'])) {
+        include_once DRUPAL_ROOT . '/' . $info['path'] . '/' . $info['file'];
       }
 
       if (isset($info['template']) && !isset($info['path'])) {
@@ -364,10 +376,10 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
         }
 
         foreach ($prefixes as $prefix) {
-          if (drupal_function_exists($prefix . '_preprocess')) {
+          if (function_exists($prefix . '_preprocess')) {
             $info['preprocess functions'][] = $prefix . '_preprocess';
           }
-          if (drupal_function_exists($prefix . '_preprocess_' . $hook)) {
+          if (function_exists($prefix . '_preprocess_' . $hook)) {
             $info['preprocess functions'][] = $prefix . '_preprocess_' . $hook;
           }
         }
@@ -396,10 +408,10 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
         if (!isset($info['preprocess functions'])) {
           $cache[$hook]['preprocess functions'] = array();
         }
-        if (drupal_function_exists($name . '_preprocess')) {
+        if (function_exists($name . '_preprocess')) {
           $cache[$hook]['preprocess functions'][] = $name . '_preprocess';
         }
-        if (drupal_function_exists($name . '_preprocess_' . $hook)) {
+        if (function_exists($name . '_preprocess_' . $hook)) {
           $cache[$hook]['preprocess functions'][] = $name . '_preprocess_' . $hook;
         }
         // Ensure uniqueness.
@@ -647,6 +659,14 @@ function theme() {
   // point path_to_theme() to the currently used theme path:
   $theme_path = $info['theme path'];
 
+  // Include a file if the theme function or preprocess function is held elsewhere.
+  if (!empty($info['file'])) {
+    $include_file = $info['file'];
+    if (isset($info['path'])) {
+      $include_file = $info['path'] . '/' . $include_file;
+    }
+    include_once DRUPAL_ROOT . '/' . $include_file;
+  }
   if (isset($info['function'])) {
     // The theme call is a function.
     if (drupal_function_exists($info['function'])) {
