@@ -221,11 +221,10 @@ function _theme_set_registry($registry = NULL) {
 }
 
 /**
- * Get the theme_registry cache from the database; if it doesn't exist, build
- * it.
+ * Get the theme_registry cache from the database; if it doesn't exist, build it.
  *
  * @param $theme
- *   The loaded $theme object.
+ *   The loaded $theme object as returned by list_themes().
  * @param $base_theme
  *   An array of loaded $theme objects representing the ancestor themes in
  *   oldest first order.
@@ -263,19 +262,51 @@ function drupal_theme_rebuild() {
 }
 
 /**
- * Process a single invocation of the theme hook. $type will be one
- * of 'module', 'theme_engine', 'base_theme_engine', 'theme', or 'base_theme'
- * and it tells us some important information.
+ * Process a single implementation of hook_theme().
  *
- * Because $cache is a reference, the cache will be continually
- * expanded upon; new entries will replace old entries in the
- * array_merge, but we are careful to ensure some data is carried
- * forward, such as the arguments a theme hook needs.
+ * @param $cache
+ *   The theme registry that will eventually be cached; It is an associative
+ *   array keyed by theme hooks, whose values are associative arrays describing
+ *   the hook:
+ *   - 'type': The passed in $type.
+ *   - 'theme path': The passed in $path.
+ *   - 'function': The name of the function generating output for this theme
+ *     hook. Either defined explicitly in hook_theme() or, if neither 'function'
+ *     nor 'template' is defined, then the default theme function name is used.
+ *     The default theme function name is the theme hook prefixed by either
+ *     'theme_' for modules or '$name_' for everything else. If 'function' is
+ *     defined, 'template' is not used.
+ *   - 'template': The filename of the template generating output for this
+ *     theme hook. The template is in the directory defined by the 'path' key of
+ *     hook_theme() or defaults to $path.
+ *   - 'arguments': The arguments for this theme hook as defined in
+ *     hook_theme(). If there is more than one implementation and 'arguments' is
+ *     not specified in a later one, then the previous definition is kept.
+ *   - 'theme paths': The paths where implementations of a theme hook can be
+ *     found. Its definition is similarly inherited like 'arguments'. Each time
+ *     _theme_process_registry() is called for this theme hook, either the
+ *     'path' key from hook_theme() (if defined) or $path is added.
+ *   - 'preprocess functions': See theme() for detailed documentation.
+ * @param $name
+ *   The name of the module, theme engine, base theme engine, theme or base
+ *   theme implementing hook_theme().
+ * @param $type
+ *   One of 'module', 'theme_engine', 'base_theme_engine', 'theme', or
+ *   'base_theme'. Unlike regular hooks that can only be implemented by modules,
+ *   each of these can implement hook_theme(). _theme_process_registry() is
+ *   called in aforementioned order and new entries override older ones. For
+ *   example, if a theme hook is both defined by a module and a theme, then the
+ *   definition in the theme will be used.
+ * @param $theme
+ *   The loaded $theme object as returned from list_themes().
+ * @param $path
+ *   The directory where $name is. For example, modules/system or
+ *   themes/garland.
  *
- * An override flag can be set for preprocess functions. When detected the
- * cached preprocessors for the hook will not be merged with the newly set.
- * This can be useful to themes and theme engines by giving them more control
- * over how and when the preprocess functions are run.
+ * @see theme()
+ * @see _theme_process_registry()
+ * @see hook_theme()
+ * @see list_themes()
  */
 function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
   $result = array();
@@ -379,10 +410,10 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
 }
 
 /**
- * Rebuild the hook theme_registry cache.
+ * Rebuild the theme registry cache.
  *
  * @param $theme
- *   The loaded $theme object.
+ *   The loaded $theme object as returned by list_themes().
  * @param $base_theme
  *   An array of loaded $theme objects representing the ancestor themes in
  *   oldest first order.
@@ -421,15 +452,29 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
 }
 
 /**
- * Provides a list of currently available themes.
+ * Return a list of all currently available themes.
  *
- * If the database is active then it will be retrieved from the database.
- * Otherwise it will retrieve a new list.
+ * Retrieved from the database, if available and the site is not in maintenance
+ * mode; otherwise compiled freshly from the filesystem.
  *
  * @param $refresh
- *   Whether to reload the list of themes from the database.
+ *   Whether to reload the list of themes from the database. Defaults to FALSE.
  * @return
- *   An array of the currently available themes.
+ *   An associative array of the currently available themes. The keys are the
+ *   names of the themes and the values are objects having the following
+ *   properties:
+ *   - 'filename': The name of the .info file.
+ *   - 'name': The name of the theme.
+ *   - 'status': 1 for enabled, 0 for disabled themes.
+ *   - 'info': The contents of the .info file.
+ *   - 'stylesheets': A two dimensional array, using the first key for the
+ *     'media' attribute (e.g. 'all'), the second for the name of the file
+ *     (e.g. style.css). The value is a complete filepath
+ *     (e.g. themes/garland/style.css).
+ *   - 'scripts': An associative array of JavaScripts, using the filename as key
+ *     and the complete filepath as value.
+ *   - 'engine': The name of the theme engine.
+ *   - 'base theme': The name of the base theme.
  */
 function list_themes($refresh = FALSE) {
   static $list = array();
@@ -683,9 +728,29 @@ function theme() {
 }
 
 /**
- * Choose which template file to actually render. These are all suggested
- * templates from themes and modules. Theming implementations can occur on
- * multiple levels. All paths are checked to account for this.
+ * Determine and return which template file will generate the output.
+ *
+ * This helper allows the theme system to pick the template at runtime instead
+ * of build time.
+ *
+ * @see template_page_suggestions()
+ * @see template_preprocess_block()
+ *
+ * @param $paths
+ *   The paths where templates can be found. See _theme_process_registry()
+ *   'theme paths' for more information.
+ * @param $suggestions
+ *   The possible template names. These are derived from
+ *   $variables['template_files'] and $variables['template_file], defined by
+ *   preprocess functions. Each file is checked on every path in the order of
+ *   precedence defined by theme().
+ * @return
+ *   The filepath to the template that will generate the output. If none is
+ *   found, then theme() will use the 'template' as set by
+ *   _theme_process_registry().
+ *
+ * @see _theme_process_registry()
+ * @see theme()
  */
 function drupal_discover_template($paths, $suggestions, $extension = '.tpl.php') {
   global $theme_engine;
