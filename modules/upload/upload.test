@@ -1,5 +1,11 @@
 <?php
-// $Id: upload.test,v 1.18 2009/04/29 12:08:28 dries Exp $
+// $Id: upload.test,v 1.19 2009/05/21 12:00:06 dries Exp $
+
+/**
+ * @file
+ * This file contains tests for the upload module.
+ */
+
 
 class UploadTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -125,7 +131,7 @@ class UploadTestCase extends DrupalWebTestCase {
     // extension.
     $html_file = $html_files[1]->filepath;
     $this->uploadFile($node, $html_file);
-    $this->assertNoRaw(t('The specified file %name could not be uploaded.', array('%name' => basename($html_file))), t('File '. $html_file . ' was allowed to be uploaded'));
+    $this->assertNoRaw(t('The specified file %name could not be uploaded.', array('%name' => basename($html_file))), t('File ' . $html_file . ' was allowed to be uploaded'));
   }
 
   /**

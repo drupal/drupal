@@ -1,5 +1,10 @@
 <?php
-// $Id: upload.admin.inc,v 1.11 2009/01/11 21:19:19 dries Exp $
+// $Id: upload.admin.inc,v 1.12 2009/05/21 12:00:06 dries Exp $
+
+/**
+ * @file
+ * This file creates the administration form for the upload module.
+ */
 
 /**
  * Form API callback to validate the upload settings form.
