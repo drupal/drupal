@@ -521,6 +521,7 @@ function user_save($account, $edit = array(), $category = 'account') {
       $edit['access'] = REQUEST_TIME;
     }
 
+    $edit['mail'] = trim($edit['mail']);
     $success = drupal_write_record('users', $edit);
     if (!$success) {
       // On a failed INSERT some other existing user's uid may be returned.
@@ -613,6 +614,7 @@ function user_validate_name($name) {
 }
 
 function user_validate_mail($mail) {
+  $mail = trim($mail);
   if (!$mail) {
     return t('You must enter an e-mail address.');
   }
