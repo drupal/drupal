@@ -109,12 +109,6 @@ function system_requirements($phase) {
     }
   }
 
-  // Test DB version
-  global $db_type;
-  if (function_exists('db_status_report')) {
-    $requirements += db_status_report($phase);
-  }
-
   // Test settings.php file writability
   if ($phase == 'runtime') {
     $conf_dir = drupal_verify_install_file(conf_path(), FILE_NOT_WRITABLE, 'dir');
