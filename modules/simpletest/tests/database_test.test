@@ -1689,6 +1689,46 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
       $this->assertEqual(count($data->names), $correct_number, t('Correct number of records returned by pager: @number', array('@number' => $correct_number)));
     }
   }
+
+  /**
+   * Confirm that a pager query with inner pager query returns valid results.
+   *
+   * This is a regression test for #467984.
+   */
+  function testInnerPagerQuery() {
+    $query = db_select('test', 't')->extend('PagerDefault');
+    $query
+      ->fields('t', array('age'))
+      ->orderBy('age')
+      ->limit(5);
+
+    $outer_query = db_select($query);
+    $outer_query->addField('subquery', 'age');
+
+    $ages = $outer_query
+      ->execute()
+      ->fetchCol();
+    $this->assertEqual($ages, array(25, 26, 27, 28), 'Inner pager query returned the correct ages.');
+  }
+
+  /**
+   * Confirm that a paging query with a having expression returns valid results.
+   *
+   * This is a regression test for #467984.
+   */
+  function testHavingPagerQuery() {
+    $query = db_select('test', 't')->extend('PagerDefault');
+    $query
+      ->fields('t', array('age'))
+      ->orderBy('age')
+      ->having('COUNT(age) > :count', array(':count' => 1))
+      ->limit(5);
+
+    $ages = $query
+      ->execute()
+      ->fetchCol();
+    $this->assertEqual($ages, array(25), ' pager query with having expression returned the correct ages.');
+  }
 }
 
 
