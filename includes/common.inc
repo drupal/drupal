@@ -3595,10 +3595,6 @@ function drupal_common_theme() {
     'tablesort_indicator' => array(
       'arguments' => array('style' => NULL),
     ),
-    'box' => array(
-      'arguments' => array('title' => NULL, 'content' => NULL, 'region' => 'main'),
-      'template' => 'box',
-    ),
     'mark' => array(
       'arguments' => array('type' => MARK_NEW),
     ),
