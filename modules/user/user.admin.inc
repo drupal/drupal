@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.49 2009/05/16 20:10:50 webchick Exp $
+// $Id: user.admin.inc,v 1.50 2009/05/22 11:33:18 dries Exp $
 
 /**
  * @file
@@ -155,7 +155,7 @@ function user_admin_account() {
   $query
     ->fields('u', array('uid', 'name', 'status', 'created', 'access'))
     ->limit(50)
-    ->setHeader($header)
+    ->orderByHeader($header)
     ->setCountQuery($count_query);
   $result = $query->execute();
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.admin.inc,v 1.23 2009/04/27 18:58:41 webchick Exp $
+// $Id: statistics.admin.inc,v 1.24 2009/05/22 11:33:18 dries Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@ function statistics_recent_hits() {
     ->fields('a', array('aid', 'timestamp', 'path', 'title', 'uid'))
     ->fields('u', array('name'))
     ->limit(30)
-    ->setHeader($header);
+    ->orderByHeader($header);
 
   $result = $query->execute();
   $rows = array();
@@ -66,7 +66,7 @@ function statistics_top_pages() {
     ->fields('accesslog', array('path'))
     ->groupBy('path')
     ->limit(30)
-    ->setHeader($header);
+    ->orderByHeader($header);
 
   $count_query = db_select('accesslog');
   $count_query->addExpression('COUNT(DISTINCT path)');
@@ -114,7 +114,7 @@ function statistics_top_visitors() {
     ->groupBy('u.name')
     ->groupBy('bl.iid')
     ->limit(30)
-    ->setHeader($header);
+    ->orderByHeader($header);
 
   $count_query = db_select('accesslog');
   $count_query->addExpression('COUNT(DISTINCT CONCAT(CAST(uid AS char), hostname))');
@@ -159,7 +159,7 @@ function statistics_top_referrers() {
     ->condition('url', '', '<>')
     ->groupBy('url')
     ->limit(30)
-    ->setHeader($header);
+    ->orderByHeader($header);
 
   $count_query = db_select('accesslog');
   $count_query->addExpression('COUNT(DISTINCT url)');

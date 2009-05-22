@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.50 2009/02/22 16:53:41 dries Exp $
+// $Id: tablesort.inc,v 1.51 2009/05/22 11:33:17 dries Exp $
 
 /**
  * @file
@@ -23,8 +23,13 @@ class TableSort extends SelectQueryExtender {
   protected $header = array();
 
   public function execute() {
+    return $this->query->execute();
+  }
+
+  public function orderByHeader(Array $header) {
+    $this->header = $header;
     $ts = $this->init();
-    if ($ts['sql']) {
+    if (!empty($ts['sql'])) {
       // Based on code from db_escape_table(), but this can also contain a dot.
       $field = preg_replace('/[^A-Za-z0-9_.]+/', '', $ts['sql']);
 
@@ -33,11 +38,6 @@ class TableSort extends SelectQueryExtender {
       $sort = in_array($sort, array('ASC', 'DESC')) ? $sort : '';
       $this->orderBy($field, $sort);
     }
-    return $this->query->execute();
-  }
-
-  public function setHeader(Array $header) {
-    $this->header = $header;
     return $this;
   }
 

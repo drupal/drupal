@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.pages.inc,v 1.16 2009/04/26 19:44:39 dries Exp $
+// $Id: poll.pages.inc,v 1.17 2009/05/22 11:33:17 dries Exp $
 
 /**
  * @file
@@ -68,7 +68,7 @@ function poll_votes($node) {
     ->extend('PagerDefault')
     ->limit($votes_per_page)
     ->extend('TableSort')
-    ->setHeader($header)
+    ->orderByHeader($header)
     ->execute()
     ->fetchAllAssoc('hostname');
 

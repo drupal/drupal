@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.697 2009/05/22 07:02:09 dries Exp $
+// $Id: system.module,v 1.698 2009/05/22 11:33:18 dries Exp $
 
 /**
  * @file
@@ -1713,7 +1713,7 @@ function system_actions_manage() {
   $result = $query
     ->fields('actions')
     ->limit(50)
-    ->setHeader($header)
+    ->orderByHeader($header)
     ->execute();
 
   foreach ($result as $action) {

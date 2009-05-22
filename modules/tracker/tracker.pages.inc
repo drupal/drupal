@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.pages.inc,v 1.18 2009/04/26 19:44:40 dries Exp $
+// $Id: tracker.pages.inc,v 1.19 2009/05/22 11:33:18 dries Exp $
 
 /**
  * @file
@@ -50,7 +50,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
   $query->distinct();
   $query->extend('PagerDefault')->extend('TableSort')
     ->limit(25, 0)
-    ->setHeader($header);
+    ->orderByHeader($header);
 
   $result = $query->execute();
 

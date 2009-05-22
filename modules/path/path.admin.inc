@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.21 2009/05/16 15:23:16 webchick Exp $
+// $Id: path.admin.inc,v 1.22 2009/05/22 11:33:17 dries Exp $
 
 /**
  * @file
@@ -34,7 +34,7 @@ function path_admin_overview($keys = NULL) {
   }
   $result = $query
     ->fields('url_alias')
-    ->setHeader($header)
+    ->orderByHeader($header)
     ->limit(50)
     ->execute();
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.20 2009/05/21 10:34:55 dries Exp $
+// $Id: comment.admin.inc,v 1.21 2009/05/22 11:33:17 dries Exp $
 
 /**
  * @file
@@ -77,7 +77,7 @@ function comment_admin_overview($type = 'new', $arg) {
     ->condition('c.status', $status)
     ->extend('PagerDefault')->extend('TableSort')
     ->limit(50)
-    ->setHeader($header);
+    ->orderByHeader($header);
   $result = $query->execute();
 
 
