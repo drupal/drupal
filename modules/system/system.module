@@ -749,12 +749,6 @@ function system_menu() {
     'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/reports/status/sql'] = array(
-    'title' => 'SQL',
-    'page callback' => 'system_sql',
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_CALLBACK,
-  );
   // Default page for batch operations
   $items['batch'] = array(
     'page callback' => 'system_batch_page',
