@@ -5,7 +5,7 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => t('User registration'),
-      'description' => t('Registers a user, fails login, resets password, successfully logs in with the one time password, changes password, logs out, successfully logs in with the new password, visits profile page.'),
+      'description' => t('Registers a user, fails login, resets password, successfully logs in with the one time password, fails password change, changes password, logs out, successfully logs in with the new password, visits profile page.'),
       'group' => t('User')
     );
   }
@@ -64,6 +64,14 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, NULL, t('Log in'));
     $this->assertText(t('You have just used your one-time login link. It is no longer necessary to use this link to login. Please change your password.'), t('This link is no longer valid.'));
 
+    // Check password type validation
+    $edit = array();
+    $edit['pass[pass1]'] = '99999.0';
+    $edit['pass[pass2]'] = '99999';
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->assertText(t('The specified passwords do not match.'), t('Type mismatched passwords display an error message.'));    
+    $this->assertNoText(t('The changes have been saved.'), t('Save user password with mismatched type in password confirm.'));
+    
     // Change user password.
     $new_pass = user_password();
     $edit = array();
