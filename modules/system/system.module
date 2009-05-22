@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.696 2009/05/21 23:07:16 webchick Exp $
+// $Id: system.module,v 1.697 2009/05/22 07:02:09 dries Exp $
 
 /**
  * @file
@@ -746,12 +746,6 @@ function system_menu() {
   $items['admin/reports/status/php'] = array(
     'title' => 'PHP',
     'page callback' => 'system_php',
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_CALLBACK,
-  );
-  $items['admin/reports/status/sql'] = array(
-    'title' => 'SQL',
-    'page callback' => 'system_sql',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
   );
