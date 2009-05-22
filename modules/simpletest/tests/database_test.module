@@ -60,6 +60,10 @@ function database_test_menu() {
     'access callback' => TRUE,
     'page callback' => 'database_test_tablesort',
   );
+  $items['database_test/tablesort_first'] = array(
+    'access callback' => TRUE,
+    'page callback' => 'database_test_tablesort_first',
+  );
 
   return $items;
 }
@@ -146,7 +150,36 @@ function database_test_tablesort() {
   $query
     ->fields('t', array('tid', 'pid', 'task', 'priority'));
   
-  $query = $query->extend('TableSort')->setHeader($header);
+  $query = $query->extend('TableSort')->orderByHeader($header);
+
+  // We need all the results at once to check the sort.
+  $tasks = $query->execute()->fetchAll();
+
+  drupal_json(array(
+    'tasks' => $tasks,
+  ));
+  exit;
+}
+
+/**
+ * Run a tablesort query with a second order_by after and return the results.
+ *
+ * This function does care about the page GET parameter, as set by the
+ * simpletest HTTP call.
+ */
+function database_test_tablesort_first() {
+  $header = array(
+    'tid' => array('data' => t('Task ID'), 'field' => 'tid', 'sort' => 'desc'),
+    'pid' => array('data' => t('Person ID'), 'field' => 'pid'),
+    'task' => array('data' => t('Task'), 'field' => 'task'),
+    'priority' => array('data' => t('Priority'), 'field' => 'priority', ),
+  );
+
+  $query = db_select('test_task', 't');
+  $query
+    ->fields('t', array('tid', 'pid', 'task', 'priority'));
+  
+  $query = $query->extend('TableSort')->orderByHeader($header)->orderBy('priority');
 
   // We need all the results at once to check the sort.
   $tasks = $query->execute()->fetchAll();

@@ -25,7 +25,7 @@ function statistics_node_tracker() {
         ->condition('a.path', 'node/' . $node->nid)
         ->condition('a.path', 'node/' . $node->nid . '/%', 'LIKE'))
       ->limit(30)
-      ->setHeader($header);
+      ->orderByHeader($header);
 
     $result = $query->execute();
     $rows = array();
@@ -64,7 +64,7 @@ function statistics_user_tracker() {
       ->fields('a', array('aid', 'timestamp', 'path', 'title'))
       ->condition('uid', $account->uid)
       ->limit(30)
-      ->setHeader($header);
+      ->orderByHeader($header);
 
     $result = $query->execute();
     $rows = array();

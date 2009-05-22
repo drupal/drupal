@@ -155,7 +155,7 @@ function user_admin_account() {
   $query
     ->fields('u', array('uid', 'name', 'status', 'created', 'access'))
     ->limit(50)
-    ->setHeader($header)
+    ->orderByHeader($header)
     ->setCountQuery($count_query);
   $result = $query->execute();
 

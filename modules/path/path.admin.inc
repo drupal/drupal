@@ -34,7 +34,7 @@ function path_admin_overview($keys = NULL) {
   }
   $result = $query
     ->fields('url_alias')
-    ->setHeader($header)
+    ->orderByHeader($header)
     ->limit(50)
     ->execute();
 

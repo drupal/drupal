@@ -50,7 +50,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
   $query->distinct();
   $query->extend('PagerDefault')->extend('TableSort')
     ->limit(25, 0)
-    ->setHeader($header);
+    ->orderByHeader($header);
 
   $result = $query->execute();
 

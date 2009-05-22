@@ -65,20 +65,18 @@ function dblog_overview() {
     ->fields('w', array('wid', 'uid', 'severity', 'type', 'timestamp', 'message', 'variables', 'link'))
     ->addField('u', 'name');
   if (!empty($filter['where'])) {
-    //setHeader may not be chainable see Line 138
     $query
       ->where($filter['where'], $filter['args'])
       ->extend('PagerDefault')->extend('TableSort')
       ->limit(50, 0)
-      ->setHeader($header);
+      ->orderByHeader($header);
     $result = $query->execute();
   }
   else {
-    //setHeader may not be chainable see Line 138
     $query
       ->extend('PagerDefault')->extend('TableSort')
       ->limit(50)
-      ->setHeader($header);
+      ->orderByHeader($header);
     $result = $query->execute();
   }
 
@@ -131,7 +129,7 @@ function dblog_top($type) {
     ->groupBy('variables')
     ->extend('PagerDefault')->extend('TableSort')
     ->limit(30);
-  $query = $query->setHeader($header);
+  $query = $query->orderByHeader($header);
   $query->setCountQuery($count_query);
   $result = $query->execute();
 

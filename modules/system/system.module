@@ -1713,7 +1713,7 @@ function system_actions_manage() {
   $result = $query
     ->fields('actions')
     ->limit(50)
-    ->setHeader($header)
+    ->orderByHeader($header)
     ->execute();
 
   foreach ($result as $action) {

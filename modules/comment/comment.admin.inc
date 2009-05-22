@@ -77,7 +77,7 @@ function comment_admin_overview($type = 'new', $arg) {
     ->condition('c.status', $status)
     ->extend('PagerDefault')->extend('TableSort')
     ->limit(50)
-    ->setHeader($header);
+    ->orderByHeader($header);
   $result = $query->execute();
 
 
