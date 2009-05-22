@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.908 2009/05/21 23:07:14 webchick Exp $
+// $Id: common.inc,v 1.909 2009/05/22 03:19:42 webchick Exp $
 
 /**
  * @file
@@ -3594,10 +3594,6 @@ function drupal_common_theme() {
     ),
     'tablesort_indicator' => array(
       'arguments' => array('style' => NULL),
-    ),
-    'box' => array(
-      'arguments' => array('title' => NULL, 'content' => NULL, 'region' => 'main'),
-      'template' => 'box',
     ),
     'mark' => array(
       'arguments' => array('type' => MARK_NEW),
