@@ -628,119 +628,6 @@ class DrupalRenderUnitTestCase extends DrupalWebTestCase {
   }
 }
 
-
-/**
- * Tests Drupal error and exception handlers.
- */
-class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
-  public static function getInfo() {
-    return array(
-      'name' => t('Drupal error handlers'),
-      'description' => t('Performs tests on the Drupal error and exception handler.'),
-      'group' => t('System'),
-    );
-  }
-
-  function setUp() {
-    parent::setUp('system_test');
-  }
-
-  /**
-   * Test the error handler.
-   */
-  function testErrorHandler() {
-    $error_notice = array(
-      '%type' => 'Notice',
-      '%message' => 'Undefined variable: bananas',
-      '%function' => 'system_test_generate_warnings()',
-      '%line' => 194,
-      '%file' => realpath('modules/simpletest/tests/system_test.module'),
-    );
-    $error_warning = array(
-      '%type' => 'Warning',
-      '%message' => 'Division by zero',
-      '%function' => 'system_test_generate_warnings()',
-      '%line' => 196,
-      '%file' => realpath('modules/simpletest/tests/system_test.module'),
-    );
-    $error_user_notice = array(
-      '%type' => 'User notice',
-      '%message' => 'Drupal is awesome',
-      '%function' => 'system_test_generate_warnings()',
-      '%line' => 198,
-      '%file' => realpath('modules/simpletest/tests/system_test.module'),
-    );
-
-    // Set error reporting to collect notices.
-    variable_set('error_level', ERROR_REPORTING_DISPLAY_ALL);
-    $this->drupalGet('system-test/generate-warnings');
-    $this->assertErrorMessage($error_notice);
-    $this->assertErrorMessage($error_warning);
-    $this->assertErrorMessage($error_user_notice);
-
-    // Set error reporting to not collect notices.
-    variable_set('error_level', ERROR_REPORTING_DISPLAY_SOME);
-    $this->drupalGet('system-test/generate-warnings');
-    $this->assertNoErrorMessage($error_notice);
-    $this->assertErrorMessage($error_warning);
-    $this->assertErrorMessage($error_user_notice);
-
-    // Set error reporting to not show any errors.
-    variable_set('error_level', ERROR_REPORTING_HIDE);
-    $this->drupalGet('system-test/generate-warnings');
-    $this->assertNoErrorMessage($error_notice);
-    $this->assertNoErrorMessage($error_warning);
-    $this->assertNoErrorMessage($error_user_notice);
-  }
-
-  /**
-   * Test the exception handler.
-   */
-  function testExceptionHandler() {
-    $error_exception = array(
-      '%type' => 'Exception',
-      '%message' => 'Drupal is awesome',
-      '%function' => 'system_test_trigger_exception()',
-      '%line' => 207,
-      '%file' => realpath('modules/simpletest/tests/system_test.module'),
-    );
-    $error_pdo_exception = array(
-      '%type' => 'PDOException',
-      '%message' => 'SQLSTATE',
-      '%function' => 'system_test_trigger_pdo_exception()',
-      '%line' => 215,
-      '%file' => realpath('modules/simpletest/tests/system_test.module'),
-    );
-
-    $this->drupalGet('system-test/trigger-exception');
-    $this->assertErrorMessage($error_exception);
-
-    $this->drupalGet('system-test/trigger-pdo-exception');
-    // We cannot use assertErrorMessage() since the extact error reported
-    // varies from database to database. Check for the error keyword 'SQLSTATE'.
-    $this->assertText($error_pdo_exception['%type'], t('Found %type in error page.', $error_pdo_exception));
-    $this->assertText($error_pdo_exception['%message'], t('Found %message in error page.', $error_pdo_exception));
-    $error_details = t('in %function (line %line of %file)', $error_pdo_exception);
-    $this->assertRaw($error_details, t("Found '!message' in error page.", array('!message' => $error_details)));
-  }
-
-  /**
-   * Helper function: assert that the error message is found.
-   */
-  function assertErrorMessage(array $error) {
-    $message = t('%type: %message in %function (line %line of %file).', $error);
-    $this->assertRaw($message, t('Error !message found.', array('!message' => $message)));
-  }
-
-  /**
-   * Helper function: assert that the error message is not found.
-   */
-  function assertNoErrorMessage(array $error) {
-    $message = t('%type: %message in %function (line %line of %file).', $error);
-    $this->assertNoRaw($message, t('Error !message not found.', array('!message' => $message)));
-  }
-}
-
 /**
  * Test for valid_url().
  */
@@ -919,7 +806,7 @@ class DrupalErrorCollectionUnitTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('system_test');
+    parent::setUp('system_test', 'error_test');
   }
 
   /**
@@ -927,14 +814,13 @@ class DrupalErrorCollectionUnitTest extends DrupalWebTestCase {
    */
   function testErrorCollect() {
     $this->collectedErrors = array();
-    $this->drupalGet('system-test/generate-warnings-with-report');
-
+    $this->drupalGet('error-test/generate-warnings-with-report');
     $this->assertEqual(count($this->collectedErrors), 3, t('Three errors were collected'));
 
     if (count($this->collectedErrors) == 3) {
-      $this->assertError($this->collectedErrors[0], 'Notice', 'system_test_generate_warnings()', 'system_test.module', 'Undefined variable: bananas');
-      $this->assertError($this->collectedErrors[1], 'Warning', 'system_test_generate_warnings()', 'system_test.module', 'Division by zero');
-      $this->assertError($this->collectedErrors[2], 'User notice', 'system_test_generate_warnings()', 'system_test.module', 'Drupal is awesome');
+      $this->assertError($this->collectedErrors[0], 'Notice', 'error_test_generate_warnings()', 'error_test.module', 'Undefined variable: bananas');
+      $this->assertError($this->collectedErrors[1], 'Warning', 'error_test_generate_warnings()', 'error_test.module', 'Division by zero');
+      $this->assertError($this->collectedErrors[2], 'User notice', 'error_test_generate_warnings()', 'error_test.module', 'Drupal is awesome');
     }
     else {
       // Give back the errors to the log report.
