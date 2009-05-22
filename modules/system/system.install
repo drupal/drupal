@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.328 2009/05/21 21:12:24 dries Exp $
+// $Id: system.install,v 1.329 2009/05/22 15:48:54 webchick Exp $
 
 /**
  * @file
@@ -107,12 +107,6 @@ function system_requirements($phase) {
       $requirements['php_memory_limit']['description'] = $description . ' ' . $t('See the <a href="@url">Drupal requirements</a> for more information.', array('@url' => 'http://drupal.org/requirements'));
       $requirements['php_memory_limit']['severity'] = REQUIREMENT_WARNING;
     }
-  }
-
-  // Test DB version
-  global $db_type;
-  if (function_exists('db_status_report')) {
-    $requirements += db_status_report($phase);
   }
 
   // Test settings.php file writability
