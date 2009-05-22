@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.335 2009/05/13 17:23:48 webchick Exp $
+// $Id: form.inc,v 1.336 2009/05/22 07:39:09 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1651,7 +1651,7 @@ function password_confirm_validate($form, &$form_state) {
   $pass1 = trim($form['pass1']['#value']);
   if (!empty($pass1)) {
     $pass2 = trim($form['pass2']['#value']);
-    if ($pass1 != $pass2) {
+    if (strcmp($pass1, $pass2)) {
       form_error($form, t('The specified passwords do not match.'));
     }
   }
