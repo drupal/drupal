@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.281 2009/05/23 19:14:42 dries Exp $
+// $Id: bootstrap.inc,v 1.282 2009/05/23 19:21:30 dries Exp $
 
 /**
  * @file
@@ -661,12 +661,14 @@ function variable_set($name, $value) {
  *   The name of the variable to undefine.
  */
 function variable_del($name) {
+  global $conf;
+
   db_delete('variable')
     ->condition('name', $name)
     ->execute();
   cache_clear_all('variables', 'cache');
 
-  unset($GLOBALS['conf'][$name]);
+  unset($conf[$name]);
 }
 
 
