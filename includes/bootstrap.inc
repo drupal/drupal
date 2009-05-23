@@ -661,14 +661,12 @@ function variable_set($name, $value) {
  *   The name of the variable to undefine.
  */
 function variable_del($name) {
-  global $conf;
-
   db_delete('variable')
     ->condition('name', $name)
     ->execute();
   cache_clear_all('variables', 'cache');
 
-  unset($conf[$name]);
+  unset($GLOBALS['conf'][$name]);
 }
 
 
