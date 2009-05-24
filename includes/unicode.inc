@@ -1,5 +1,5 @@
 <?php
-// $Id: unicode.inc,v 1.37 2009/01/02 22:09:53 dries Exp $
+// $Id: unicode.inc,v 1.38 2009/05/24 05:21:55 dries Exp $
 
 /**
  * Indicates an error during check for PHP unicode support.
@@ -207,7 +207,9 @@ function drupal_truncate_bytes($string, $len) {
   if ((ord($string[$len]) < 0x80) || (ord($string[$len]) >= 0xC0)) {
     return substr($string, 0, $len);
   }
-  while (--$len >= 0 && ord($string[$len]) >= 0x80 && ord($string[$len]) < 0xC0) {};
+  // Scan backwards to beginning of the byte sequence. 
+  while (--$len >= 0 && ord($string[$len]) >= 0x80 && ord($string[$len]) < 0xC0);
+
   return substr($string, 0, $len);
 }
 

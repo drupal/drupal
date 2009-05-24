@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.20 2009/05/12 23:19:13 webchick Exp $
+// $Id: node.api.php,v 1.21 2009/05/24 05:21:55 dries Exp $
 
 /**
  * @file
@@ -601,7 +601,7 @@ function hook_prepare($node) {
       return;
     }
     $node->images['_original'] = $file->filepath;
-    _image_build_derivatives($node, true);
+    _image_build_derivatives($node, TRUE);
     $node->new_file = TRUE;
   }
 }

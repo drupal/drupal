@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.api.php,v 1.6 2009/04/26 09:40:25 dries Exp $
+// $Id: filter.api.php,v 1.7 2009/05/24 05:21:55 dries Exp $
 
 /**
  * @file
@@ -149,7 +149,7 @@ function hook_filter($op, $delta = 0, $format = -1, $text = '', $langcode = '', 
  *
  *
  */
-function hook_filter_tips($delta, $format, $long = false) {
+function hook_filter_tips($delta, $format, $long = FALSE) {
   if ($long) {
     return t('To post pieces of code, surround them with &lt;code&gt;...&lt;/code&gt; tags. For PHP code, you can use &lt;?php ... ?&gt;, which will also colour it based on syntax.');
   }

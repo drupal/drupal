@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.24 2009/05/06 19:56:21 webchick Exp $
+// $Id: node.test,v 1.25 2009/05/24 05:21:55 dries Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -343,7 +343,7 @@ class PageEditTestCase extends DrupalWebTestCase {
 
     // Check that "edit" link points to correct page.
     $this->clickLink(t('Edit'));
-    $edit_url = url("node/$node->nid/edit", array('absolute' => true));
+    $edit_url = url("node/$node->nid/edit", array('absolute' => TRUE));
     $actual_url = $this->getURL();
     $this->assertEqual($edit_url, $actual_url, t('On edit page.'));
 

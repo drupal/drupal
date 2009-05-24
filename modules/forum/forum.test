@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.17 2009/04/02 20:39:44 dries Exp $
+// $Id: forum.test,v 1.18 2009/05/24 05:21:55 dries Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -257,7 +257,7 @@ class ForumTestCase extends DrupalWebTestCase {
 
     // Retrieve node object.
     $node = $this->drupalGetNodeByTitle($title);
-    $this->assertTrue($node != null, t('Node @title was loaded', array('@title' => $title)));
+    $this->assertTrue($node != NULL, t('Node @title was loaded', array('@title' => $title)));
 
     // View forum topic.
     $this->drupalGet('node/' . $node->nid);
