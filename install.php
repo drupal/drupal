@@ -1009,10 +1009,6 @@ function install_task_list($active = NULL) {
 function install_configure_form(&$form_state, $url) {
   include_once DRUPAL_ROOT . '/includes/locale.inc';
 
-  $form['intro'] = array(
-    '#markup' => st('To configure your website, please provide the following information.'),
-    '#weight' => -10,
-  );
   $form['site_information'] = array(
     '#type' => 'fieldset',
     '#title' => st('Site information'),
@@ -1028,7 +1024,7 @@ function install_configure_form(&$form_state, $url) {
     '#type' => 'textfield',
     '#title' => st('Site e-mail address'),
     '#default_value' => ini_get('sendmail_from'),
-    '#description' => st("The <em>From</em> address in automated e-mails sent during registration and new password requests, and other notifications. (Use an address ending in your site's domain to help prevent this e-mail being flagged as spam.)"),
+    '#description' => st("Automated e-mails, such as registration information, will be sent from this address. Use an address ending in your site's domain to help prevent these e-mails from being flagged as spam."),
     '#required' => TRUE,
     '#weight' => -15,
   );
@@ -1036,11 +1032,6 @@ function install_configure_form(&$form_state, $url) {
     '#type' => 'fieldset',
     '#title' => st('Administrator account'),
     '#collapsible' => FALSE,
-  );
-  $form['admin_account']['account']['#tree'] = TRUE;
-  $form['admin_account']['markup'] = array(
-    '#markup' => '<p class="description">' . st('The administrator account has complete access to the site; it will automatically be granted all permissions and can perform any administrative activity. This will be the only account that can perform certain activities, so keep its credentials safe.') . '</p>',
-    '#weight' => -10,
   );
 
   $form['admin_account']['account']['name'] = array('#type' => 'textfield',
@@ -1055,7 +1046,6 @@ function install_configure_form(&$form_state, $url) {
   $form['admin_account']['account']['mail'] = array('#type' => 'textfield',
     '#title' => st('E-mail address'),
     '#maxlength' => EMAIL_MAX_LENGTH,
-    '#description' => st('All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
     '#required' => TRUE,
     '#weight' => -5,
   );
