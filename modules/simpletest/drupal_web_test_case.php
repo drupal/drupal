@@ -864,9 +864,11 @@ class DrupalWebTestCase {
    *   List of modules to enable for the duration of the test.
    */
   protected function setUp() {
-    global $db_prefix, $user;
+    global $db_prefix, $user, $language;
 
     // Store necessary current values before switching to prefixed database.
+    $this->originalLanguage = $language;
+    $this->originalLanguageDefault = variable_get('language_default');
     $this->originalPrefix = $db_prefix;
     $this->originalFileDirectory = file_directory_path();
     $clean_url_original = variable_get('clean_url', 0);
@@ -910,6 +912,9 @@ class DrupalWebTestCase {
     variable_set('install_task', 'profile-finished');
     variable_set('clean_url', $clean_url_original);
     variable_set('site_mail', 'simpletest@example.com');
+    // Set up English language.
+    unset($GLOBALS['conf']['language_default']);
+    $language = language_default();
 
     // Use temporary files directory with the same prefix as database.
     variable_set('file_directory_path', $this->originalFileDirectory . '/' . $db_prefix);
@@ -953,7 +958,7 @@ class DrupalWebTestCase {
    * and reset the database prefix.
    */
   protected function tearDown() {
-    global $db_prefix, $user;
+    global $db_prefix, $user, $language;
     if (preg_match('/simpletest\d+/', $db_prefix)) {
       // Delete temporary files directory and reset files directory path.
       file_unmanaged_delete_recursive(file_directory_path());
@@ -987,6 +992,12 @@ class DrupalWebTestCase {
 
       // Rebuild caches.
       $this->refreshVariables();
+      
+      // Reset language
+      $language = $this->originalLanguage;
+      if ($this->originalLanguageDefault) {
+        $GLOBALS['conf']['language_default'] = $this->originalLanguageDefault;
+      }
 
       // Close the CURL handler.
       $this->curlClose();
