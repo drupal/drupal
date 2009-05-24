@@ -33,18 +33,23 @@ function simpletest_install() {
     }
 
     // Copy other test files for consistency.
-    $files = file_scan_directory($path, '/(html|image|javascript|php|sql)-.*/');
-    if (count($files) == 0) {
-      $original = drupal_get_path('module', 'simpletest') . '/files';
-      $files = file_scan_directory($original, '/(html|image|javascript|php|sql)-.*/');
+    $original = drupal_get_path('module', 'simpletest') . '/files';
+    $files = file_scan_directory($original, '/(html|image|javascript|php|sql)-.*/');
+
+    // If there are more files in SimpleTest's files directory than the site's
+    // files directory, restore all the files. This situation might occur when
+    // an errant test deletes one or more files from the site's files
+    // directory. It serves a convenience to developers so that they can get
+    // the test files back easily.
+    if (count($files) > count(file_scan_directory($path, '/(html|image|javascript|php|sql)-.*/'))) {
       foreach ($files as $file) {
-        file_unmanaged_copy($file->filepath, $path);
+        file_unmanaged_copy($file->filepath, $path, FILE_EXISTS_REPLACE);
       }
       $generated = TRUE;
     }
 
     if ($generated) {
-      drupal_set_message('Extra test files generated.');
+      drupal_set_message('Extra test files generated/copied.');
     }
   }
 }
@@ -99,11 +104,22 @@ function simpletest_get_file_count($directory, $filename) {
 function simpletest_uninstall() {
   simpletest_clean_environment();
 
+  // Remove settings variables.
   variable_del('simpletest_httpauth');
   variable_del('simpletest_httpauth_username');
   variable_del('simpletest_httpauth_pass');
   variable_del('simpletest_devel');
+
+  // Uninstall schema.
   drupal_uninstall_schema('simpletest');
+
+  // Remove generated files.
+  $path = file_directory_path() . '/simpletest';
+  $files = file_scan_directory($path, '/.*/');
+  foreach ($files as $file) {
+    file_unmanaged_delete($file->filepath);
+  }
+  rmdir($path);
 }
 
 /**
