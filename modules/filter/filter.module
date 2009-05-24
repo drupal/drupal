@@ -279,7 +279,7 @@ function filter_filter_tips($delta, $format, $long = FALSE) {
       break;
 
     case 4:
-      return t('No HTML tags allowed');
+      return t('No HTML tags allowed.');
       break;
 
   }
