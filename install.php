@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.169 2009/05/21 21:12:22 dries Exp $
+// $Id: install.php,v 1.170 2009/05/24 05:19:40 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -234,7 +234,6 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
     $form['basic_options'] = array(
       '#type' => 'fieldset',
       '#title' => st('Basic options'),
-      '#description' => '<p>' . st('To set up your @drupal database, enter the following information.', array('@drupal' => drupal_install_profile_name())) . '</p>',
     );
 
     $form['basic_options']['driver'] = array(
