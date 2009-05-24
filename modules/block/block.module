@@ -202,9 +202,7 @@ function block_block_configure($delta = 0, $edit = array()) {
   if ($delta) {
     $box = block_box_get($delta);
   }
-  if (filter_access($box['format'])) {
-    return block_box_form($box);
-  }
+  return block_box_form($box);
 }
 
 /**
@@ -388,16 +386,13 @@ function block_box_form($edit = array()) {
     '#description' => t('The content of the block as shown to the user.'),
     '#required' => TRUE,
     '#weight' => -17,
+    '#access' => filter_access($edit['format']),
   );
 
   return $form;
 }
 
 function block_box_save($edit, $delta) {
-  if (!filter_access($edit['body_format'])) {
-    $edit['body_format'] = FILTER_FORMAT_DEFAULT;
-  }
-
   db_query("UPDATE {box} SET body = '%s', info = '%s', format = %d WHERE bid = %d", $edit['body'], $edit['info'], $edit['body_format'], $delta);
 
   return TRUE;
