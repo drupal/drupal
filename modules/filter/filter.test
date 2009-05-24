@@ -208,6 +208,10 @@ class FilterTestCase extends DrupalWebTestCase {
 
     $f = _filter_autop('<blockquote><pre>aaa</pre></blockquote>');
     $this->assertEqual(substr_count($f, '<p>'), substr_count($f, '</p>'), t('Make sure line breaking produces matching paragraph tags.'));
+
+    $limit = max(ini_get('pcre.backtrack_limit'), ini_get('pcre.recursion_limit'));
+    $f = _filter_autop($this->randomName($limit));
+    $this->assertNotEqual($f, '', t('Make sure line breaking can process long strings.'));
   }
 
   /**
