@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.105 2009/05/24 07:04:33 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.106 2009/05/24 17:39:34 dries Exp $
 
 /**
  * Test case for typical Drupal tests.
@@ -1843,7 +1843,7 @@ class DrupalWebTestCase {
       $this->plainTextContent = filter_xss($this->content, array());
     }
     if (!$message) {
-      $message = '"' . $text . '"'. ($be_unique ? ' found only once' : ' found more than once');
+      $message = '"' . $text . '"' . ($be_unique ? ' found only once' : ' found more than once');
     }
     $first_occurance = strpos($this->plainTextContent, $text);
     if ($first_occurance === FALSE) {

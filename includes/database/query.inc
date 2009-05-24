@@ -1,5 +1,5 @@
 <?php
-// $Id: query.inc,v 1.22 2009/05/20 05:44:02 webchick Exp $
+// $Id: query.inc,v 1.23 2009/05/24 17:39:30 dries Exp $
 
 /**
  * @ingroup database
@@ -611,7 +611,7 @@ class MergeQuery extends Query {
    *   The called object.
    */
   public function update(array $fields, array $values = array()) {
-   if ($values) {
+    if ($values) {
       $fields = array_combine($fields, $values);
     }
     $this->updateFields = $fields;

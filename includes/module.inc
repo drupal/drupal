@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.141 2009/05/12 18:08:42 dries Exp $
+// $Id: module.inc,v 1.142 2009/05/24 17:39:30 dries Exp $
 
 /**
  * @file
@@ -157,7 +157,7 @@ function module_rebuild_cache() {
  *     without this module.
  */
 function _module_build_dependencies($files) {
-  require_once DRUPAL_ROOT .'/includes/graph.inc';
+  require_once DRUPAL_ROOT . '/includes/graph.inc';
   $roots = $files;
   foreach ($files as $filename => $file) {
     $graph[$file->name]['edges'] = array();

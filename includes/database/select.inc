@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.17 2009/05/22 07:08:14 dries Exp $
+// $Id: select.inc,v 1.18 2009/05/24 17:39:30 dries Exp $
 
 /**
  * @ingroup database
@@ -1091,7 +1091,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
 
       // If the table is a subquery, compile it and integrate it into this query.
       if ($table['table'] instanceof SelectQueryInterface) {
-        $table_string = '(' . (string)$table['table'] .')';
+        $table_string = '(' . (string)$table['table'] . ')';
       }
       else {
         $table_string = '{' . $this->connection->escapeTable($table['table']) . '}';

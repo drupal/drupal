@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.284 2009/05/21 21:12:22 dries Exp $
+// $Id: update.php,v 1.285 2009/05/24 17:39:30 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -237,7 +237,7 @@ function update_script_selection_form() {
       foreach (array_keys($updates) as $update) {
         if ($update > $schema_version) {
           // The description for an update comes from its Doxygen.
-          $func = new ReflectionFunction($module. '_update_'. $update);
+          $func = new ReflectionFunction($module . '_update_' . $update);
           $description = str_replace(array("\n", '*', '/'), '', $func->getDocComment());
           $pending[] = "$update - $description";
           if (!isset($default)) {
@@ -253,7 +253,7 @@ function update_script_selection_form() {
           '#type' => 'hidden',
           '#value' => $default,
         );
-        $form['start'][$module. '_updates'] = array(
+        $form['start'][$module . '_updates'] = array(
           '#markup' => theme('item_list', $pending, $module . ' module'),
         );
       }

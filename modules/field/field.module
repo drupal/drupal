@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.7 2009/03/26 13:31:24 webchick Exp $
+// $Id: field.module,v 1.8 2009/05/24 17:39:32 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal objects.
@@ -101,7 +101,7 @@ function field_help($path, $arg) {
   switch ($path) {
     case 'admin/help#field':
       $output = '<p>' . t('The Field API allows custom data fields to be attached to Drupal objects and takes care of storing, loading, editing, and rendering field data.  Any object type (node, user, etc.) can use the Field API to make itself "fieldable" and thus allow fields to be attached to it.') . '</p>';
-      $output .= '<p>' .t('The Field API provides no user interface on its own.  Use the Content Construction Kit (CCK) contrib module to manage custom fields via a web browser.') . '</p>';
+      $output .= '<p>' . t('The Field API provides no user interface on its own.  Use the Content Construction Kit (CCK) contrib module to manage custom fields via a web browser.') . '</p>';
       return $output;
   }
 }

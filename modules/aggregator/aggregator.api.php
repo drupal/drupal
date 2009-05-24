@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.api.php,v 1.3 2009/05/18 14:23:22 dries Exp $
+// $Id: aggregator.api.php,v 1.4 2009/05/24 17:39:30 dries Exp $
 
 /**
  * @file
@@ -109,8 +109,8 @@ function hook_aggregator_parse($feed) {
  * parser.
  *
  * The title and the description provided are shown on admin/settings/aggregator
- * among other places. Use as title the human readable name of the parser and 
- * as description a brief (40 to 80 characters) explanation of the parser's 
+ * among other places. Use as title the human readable name of the parser and
+ * as description a brief (40 to 80 characters) explanation of the parser's
  * functionality.
  *
  * This hook is only called if your module implements hook_aggregator_parse().
@@ -167,8 +167,8 @@ function hook_aggregator_process($feed) {
  * processor.
  *
  * The title and the description provided are shown most importantly on
- * admin/settings/aggregator. Use as title the natural name of the processor 
- * and as description a brief (40 to 80 characters) explanation of the 
+ * admin/settings/aggregator. Use as title the natural name of the processor
+ * and as description a brief (40 to 80 characters) explanation of the
  * functionality.
  *
  * This hook is only called if your module implements

@@ -1,5 +1,5 @@
 <?php
-// $Id: update.api.php,v 1.1 2008/11/25 02:37:33 webchick Exp $
+// $Id: update.api.php,v 1.2 2009/05/24 17:39:35 dries Exp $
 
 /**
  * @file
@@ -25,8 +25,8 @@ function hook_update_status_alter(&$projects) {
   foreach ($projects as $project => $project_info) {
     if (isset($settings[$project]) && isset($settings[$project]['check']) &&
         ($settings[$project]['check'] == 'never' ||
-         (isset($project_info['recommended']) &&
-          $settings[$project]['check'] === $project_info['recommended']))) {
+          (isset($project_info['recommended']) &&
+            $settings[$project]['check'] === $project_info['recommended']))) {
       $projects[$project]['status'] = UPDATE_NOT_CHECKED;
       $projects[$project]['reason'] = t('Ignored from settings');
       if (!empty($settings[$project]['notes'])) {

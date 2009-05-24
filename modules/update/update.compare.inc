@@ -1,5 +1,5 @@
 <?php
-// $Id: update.compare.inc,v 1.17 2009/04/29 18:39:50 webchick Exp $
+// $Id: update.compare.inc,v 1.18 2009/05/24 17:39:35 dries Exp $
 
 /**
  * @file
@@ -402,8 +402,8 @@ function update_calculate_project_data($available) {
         // Otherwise, ignore unpublished, insecure, or unsupported releases.
         if ($release['status'] == 'unpublished' ||
             (isset($release['terms']['Release type']) &&
-             (in_array('Insecure', $release['terms']['Release type']) ||
-              in_array('Unsupported', $release['terms']['Release type'])))) {
+              (in_array('Insecure', $release['terms']['Release type']) ||
+                in_array('Unsupported', $release['terms']['Release type'])))) {
           continue;
         }
 

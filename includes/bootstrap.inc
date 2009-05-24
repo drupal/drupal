@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.282 2009/05/23 19:21:30 dries Exp $
+// $Id: bootstrap.inc,v 1.283 2009/05/24 17:39:30 dries Exp $
 
 /**
  * @file
@@ -800,7 +800,7 @@ function drupal_set_header($name = NULL, $value = NULL, $append = FALSE) {
  *   or NULL if the header has not been set.
  */
 function drupal_get_header($name = NULL) {
-  $headers = drupal_set_header(); 
+  $headers = drupal_set_header();
   if (isset($name)) {
     $name = strtolower($name);
     return isset($headers[$name]) ? $headers[$name] : NULL;
@@ -1824,7 +1824,7 @@ function registry_rebuild() {
  * @param $name
  *   Globally unique name for the variable. For a function with only one static,
  *   variable, the function name (e.g. via the PHP magic __FUNCTION__ constant)
- *   is recommended. For a function with multiple static variables add a 
+ *   is recommended. For a function with multiple static variables add a
  *   distinguishing suffix to the function name for each one.
  * @param $default_value
  *   Optional default value.

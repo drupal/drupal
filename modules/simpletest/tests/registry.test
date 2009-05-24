@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.test,v 1.8 2009/05/16 16:04:42 dries Exp $
+// $Id: registry.test,v 1.9 2009/05/24 17:39:34 dries Exp $
 
 class RegistryParseFileTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -143,8 +143,8 @@ class RegistrySkipBodyTestCase extends DrupalWebTestCase {
       'group' => t('System'),
     );
   }
-  
-  function testRegistrySkipBody () {
+
+  function testRegistrySkipBody() {
     // This string contains all three kinds of opening braces.
     $function = '<?php function foo () { $x = "{$y}"; $x = "${y}"; }';
     $tokens = token_get_all($function);

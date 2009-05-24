@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.19 2009/04/25 18:01:10 dries Exp $
+// $Id: filter.test,v 1.20 2009/05/24 17:39:32 dries Exp $
 
 class FilterAdminTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -101,7 +101,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->drupalLogin($web_user);
 
     $this->drupalGet('node/add/page');
-    $this->assertRaw('<option value="' . $full .'">Full HTML</option>', t('Full HTML filter accessible.'));
+    $this->assertRaw('<option value="' . $full . '">Full HTML</option>', t('Full HTML filter accessible.'));
 
     // Use filtered HTML and see if it removes tags that arn't allowed.
     $body = $this->randomName();

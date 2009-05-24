@@ -1,5 +1,5 @@
 <?php
-// $Id: update.fetch.inc,v 1.18 2009/04/29 18:39:50 webchick Exp $
+// $Id: update.fetch.inc,v 1.19 2009/05/24 17:39:35 dries Exp $
 
 /**
  * @file
@@ -44,7 +44,7 @@ function _update_refresh() {
   // available release data, since even if we fail to fetch new data, we need
   // to clear out the stale data at this point.
   _update_cache_clear('update_available_releases');
-  
+
   foreach ($projects as $key => $project) {
     $url = _update_build_fetch_url($project, $site_key);
     $xml = drupal_http_request($url);

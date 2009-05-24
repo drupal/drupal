@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.admin.inc,v 1.23 2009/02/26 07:30:27 webchick Exp $
+// $Id: profile.admin.inc,v 1.24 2009/05/24 17:39:33 dries Exp $
 
 /**
  * @file
@@ -397,7 +397,7 @@ function profile_field_delete_submit($form, &$form_state) {
  */
 function profile_admin_settings_autocomplete($string) {
   $matches = array();
-  $result = db_query_range("SELECT category FROM {profile_field} WHERE LOWER(category) LIKE LOWER(:category)", array(':category' => $string .'%'), 0, 10);
+  $result = db_query_range("SELECT category FROM {profile_field} WHERE LOWER(category) LIKE LOWER(:category)", array(':category' => $string . '%'), 0, 10);
   while ($data = db_fetch_object($result)) {
     $matches[$data->category] = check_plain($data->category);
   }

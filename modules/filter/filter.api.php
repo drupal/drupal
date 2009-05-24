@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.api.php,v 1.7 2009/05/24 05:21:55 dries Exp $
+// $Id: filter.api.php,v 1.8 2009/05/24 17:39:32 dries Exp $
 
 /**
  * @file
@@ -114,7 +114,7 @@ function hook_filter($op, $delta = 0, $format = -1, $text = '', $langcode = '', 
       return t('Allows users to post code verbatim using &lt;code&gt; and &lt;?php ?&gt; tags.');
 
     case 'prepare':
-      // Note: we use [ and ] to replace < > during the filtering process. 
+      // Note: we use [ and ] to replace < > during the filtering process.
       // For more information, see "Temporary placeholders and
       // delimiters" at http://drupal.org/node/209715.
       $text = preg_replace('@<code>(.+?)</code>@se', "'[codefilter-code]' . codefilter_escape('\\1') . '[/codefilter-code]'", $text);

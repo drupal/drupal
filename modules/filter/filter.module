@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.253 2009/05/24 07:17:14 dries Exp $
+// $Id: filter.module,v 1.254 2009/05/24 17:39:32 dries Exp $
 
 /**
  * @file
@@ -310,7 +310,7 @@ function filter_formats($index = NULL) {
     if (!$all) {
       $or = db_or()->condition('format', variable_get('filter_default_format', 1));
       foreach ($user->roles as $rid => $role) {
-        $or->condition('roles', '%'. (int)$rid .'%', 'LIKE');
+        $or->condition('roles', '%' . (int)$rid . '%', 'LIKE');
       }
       $query->condition($or);
     }

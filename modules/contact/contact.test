@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.test,v 1.22 2009/05/10 05:06:50 dries Exp $
+// $Id: contact.test,v 1.23 2009/05/24 17:39:31 dries Exp $
 
 /**
  * Test the sitewide contact form.
@@ -185,7 +185,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $edit['reply'] = $reply;
     $edit['selected'] = ($selected ? '1' : '0');
     $this->drupalPost('admin/build/contact/edit/' . $category_id, $edit, t('Save'));
-    return($category_id);
+    return ($category_id);
   }
 
   /**

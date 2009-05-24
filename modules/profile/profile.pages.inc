@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.pages.inc,v 1.15 2009/05/16 15:23:16 webchick Exp $
+// $Id: profile.pages.inc,v 1.16 2009/05/24 17:39:33 dries Exp $
 
 /**
  * @file
@@ -114,7 +114,7 @@ function profile_autocomplete($field, $string) {
   if ($autocomplete_field) {
     $result = db_query_range("SELECT value FROM {profile_value} WHERE fid = :fid AND LOWER(value) LIKE LOWER(:value) GROUP BY value ORDER BY value ASC", array(
       ':fid' => $field,
-      ':value' => $string .'%',
+      ':value' => $string . '%',
     ), 0, 10);
     while ($data = db_fetch_object($result)) {
       $matches[$data->value] = check_plain($data->value);

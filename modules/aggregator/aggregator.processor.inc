@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.processor.inc,v 1.5 2009/05/18 09:41:40 dries Exp $
+// $Id: aggregator.processor.inc,v 1.6 2009/05/24 17:39:30 dries Exp $
 
 /**
  * @file
@@ -175,7 +175,7 @@ function aggregator_expire($feed) {
     // Remove all items that are older than flush item timer.
     $age = REQUEST_TIME - $aggregator_clear;
     $iids = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid AND timestamp < :timestamp', array(
-      ':fid' => $feed->fid, 
+      ':fid' => $feed->fid,
       ':timestamp' => $age,
     ))
     ->fetchCol();

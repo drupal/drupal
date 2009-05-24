@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.50 2009/05/22 11:33:18 dries Exp $
+// $Id: user.admin.inc,v 1.51 2009/05/24 17:39:35 dries Exp $
 
 /**
  * @file
@@ -147,7 +147,7 @@ function user_admin_account() {
   $query->leftJoin('users_roles', 'ur', 'u.uid = ur.uid');
   $query->condition('u.uid', 0, '<>');
   user_build_filter_query($query);
-  
+
   $count_query = clone $query;
   $count_query->addExpression('COUNT(DISTINCT u.uid)');
 

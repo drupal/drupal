@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.pages.inc,v 1.27 2009/05/21 21:12:25 dries Exp $
+// $Id: taxonomy.pages.inc,v 1.28 2009/05/24 17:39:35 dries Exp $
 
 /**
  * @file
@@ -134,11 +134,11 @@ function taxonomy_autocomplete($vid, $string = '') {
     $tags = $query
       ->fields('t', array('tid', 'name'))
       ->condition('t.vid', $vid)
-      ->where("LOWER(t.name) LIKE LOWER(:last_string)", array(':last_string' => '%'. $last_string .'%'))
+      ->where("LOWER(t.name) LIKE LOWER(:last_string)", array(':last_string' => '%' . $last_string . '%'))
       ->range(0, 10)
       ->execute()
       ->fetchAllKeyed();
-      
+
     $prefix = count($array) ? implode(', ', $array) . ', ' : '';
 
     foreach ($tags as $tid => $name) {

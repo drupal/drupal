@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.51 2009/05/12 08:37:45 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.52 2009/05/24 17:39:35 dries Exp $
 
 /**
  * @file
@@ -64,7 +64,7 @@ function taxonomy_overview_vocabularies_submit($form, &$form_state) {
  */
 function theme_taxonomy_overview_vocabularies($form) {
   $rows = array();
- 
+
   foreach (element_children($form) as $key) {
     if (isset($form[$key]['name'])) {
       $vocabulary = &$form[$key];

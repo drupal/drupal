@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.47 2009/05/15 04:07:20 dries Exp $
+// $Id: menu.admin.inc,v 1.48 2009/05/24 17:39:32 dries Exp $
 
 /**
  * @file
@@ -30,7 +30,7 @@ function menu_overview_page() {
 function theme_menu_admin_overview($title, $name, $description) {
   $output = check_plain($title);
   $output .= '<div class="description">' . filter_xss_admin($description) . '</div>';
-  
+
   return $output;
 }
 

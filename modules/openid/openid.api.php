@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.api.php,v 1.1 2009/03/08 05:38:12 webchick Exp $
+// $Id: openid.api.php,v 1.2 2009/05/24 17:39:33 dries Exp $
 
 /**
  * @file
@@ -19,7 +19,7 @@
  *   Possible values:
  *   - request: Modify parameters before they are sent to the OpenID provider.
  * @param $request
- *   An associative array of parameter defaults to which to modify or append. 
+ *   An associative array of parameter defaults to which to modify or append.
  * @return
  *   An associative array of parameters to be merged with the default list.
  *

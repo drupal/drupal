@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.33 2009/05/13 18:21:42 webchick Exp $
+// $Id: update.module,v 1.34 2009/05/24 17:39:35 dries Exp $
 
 /**
  * @file
@@ -562,7 +562,7 @@ function _update_cache_set($cid, $data, $expire) {
     ->execute();
 }
 
-/** 
+/**
  * Retrieve data from the private update status cache table.
  *
  * @param $cid

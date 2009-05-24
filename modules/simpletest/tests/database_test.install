@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.install,v 1.6 2009/05/13 19:42:17 webchick Exp $
+// $Id: database_test.install,v 1.7 2009/05/24 17:39:34 dries Exp $
 
 /**
  * @file
@@ -64,7 +64,7 @@ function database_test_schema() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-       ),
+      ),
       'age' => array(
         'description' => "The person's age",
         'type' => 'int',
@@ -109,7 +109,7 @@ function database_test_schema() {
         'description' => 'Simple unique ID.',
         'type' => 'serial',
         'not null' => TRUE,
-       ),
+      ),
       'blob1' => array(
         'description' => 'A dummy BLOB field.',
         'type' => 'blob',

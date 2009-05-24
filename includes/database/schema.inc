@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.12 2009/03/14 20:34:17 dries Exp $
+// $Id: schema.inc,v 1.13 2009/05/24 17:39:30 dries Exp $
 
 /**
  * @file
@@ -496,7 +496,7 @@ abstract class DatabaseSchema {
 
   /**
    * Prepare a table or column comment for database query.
-   * 
+   *
    * @param $comment
    *   The comment string to prepare.
    * @param $length
