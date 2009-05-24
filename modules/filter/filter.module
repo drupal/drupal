@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.251 2009/05/21 23:07:15 webchick Exp $
+// $Id: filter.module,v 1.252 2009/05/24 05:23:51 dries Exp $
 
 /**
  * @file
@@ -279,7 +279,7 @@ function filter_filter_tips($delta, $format, $long = FALSE) {
       break;
 
     case 4:
-      return t('No HTML tags allowed');
+      return t('No HTML tags allowed.');
       break;
 
   }
