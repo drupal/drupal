@@ -757,7 +757,7 @@ class DrupalDataApiTest extends DrupalWebTestCase {
    */
   function testDrupalWriteRecord() {
     // Insert an object record for a table with a single-field primary key.
-    $vocabulary = new StdClass();
+    $vocabulary = new stdClass();
     $vocabulary->name = 'test';
     $insert_result = drupal_write_record('taxonomy_vocabulary', $vocabulary);
     $this->assertTrue($insert_result == SAVED_NEW, t('Correct value returned when a record is inserted with drupal_write_record() for a table with a single-field primary key.'));
@@ -769,7 +769,7 @@ class DrupalDataApiTest extends DrupalWebTestCase {
     $this->assertTrue($update_result == SAVED_UPDATED, t('Correct value returned when a record updated with drupal_write_record() for table with single-field primary key.'));
 
     // Insert an object record for a table with a multi-field primary key.
-    $vocabulary_node_type = new StdClass();
+    $vocabulary_node_type = new stdClass();
     $vocabulary_node_type->vid = $vocabulary->vid;
     $vocabulary_node_type->type = 'page';
     $insert_result = drupal_write_record('taxonomy_vocabulary_node_type', $vocabulary_node_type);

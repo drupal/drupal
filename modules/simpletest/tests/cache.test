@@ -18,8 +18,8 @@ class CacheTestCase extends DrupalWebTestCase {
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function checkCacheExists($cid, $var, $table = null) {
-    if ($table == null) {
+  protected function checkCacheExists($cid, $var, $table = NULL) {
+    if ($table == NULL) {
       $table = $this->default_table;
     }
 

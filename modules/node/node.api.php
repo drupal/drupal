@@ -601,7 +601,7 @@ function hook_prepare($node) {
       return;
     }
     $node->images['_original'] = $file->filepath;
-    _image_build_derivatives($node, true);
+    _image_build_derivatives($node, TRUE);
     $node->new_file = TRUE;
   }
 }

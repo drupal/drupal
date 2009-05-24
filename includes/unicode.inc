@@ -207,7 +207,9 @@ function drupal_truncate_bytes($string, $len) {
   if ((ord($string[$len]) < 0x80) || (ord($string[$len]) >= 0xC0)) {
     return substr($string, 0, $len);
   }
-  while (--$len >= 0 && ord($string[$len]) >= 0x80 && ord($string[$len]) < 0xC0) {};
+  // Scan backwards to beginning of the byte sequence. 
+  while (--$len >= 0 && ord($string[$len]) >= 0x80 && ord($string[$len]) < 0xC0);
+
   return substr($string, 0, $len);
 }
 

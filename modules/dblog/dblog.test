@@ -189,7 +189,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->assertResponse(200);
     // Retrieve user object.
     $user = user_load_by_name($name);
-    $this->assertTrue($user != null, t('User @name was loaded', array('@name' => $name)));
+    $this->assertTrue($user != NULL, t('User @name was loaded', array('@name' => $name)));
     $user->pass_raw = $pass; // Needed by drupalLogin.
     // Login user.
     $this->drupalLogin($user);
@@ -266,7 +266,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->assertResponse(200);
     // Retrieve node object.
     $node = $this->drupalGetNodeByTitle($title);
-    $this->assertTrue($node != null, t('Node @title was loaded', array('@title' => $title)));
+    $this->assertTrue($node != NULL, t('Node @title was loaded', array('@title' => $title)));
     // Edit node.
     $edit = $this->getContentUpdate($type);
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));

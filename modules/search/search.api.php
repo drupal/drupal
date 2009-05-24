@@ -70,7 +70,7 @@
  *
  * @ingroup search
  */
-function hook_search($op = 'search', $keys = null) {
+function hook_search($op = 'search', $keys = NULL) {
   switch ($op) {
     case 'name':
       return t('Content');
@@ -262,13 +262,13 @@ function hook_update_index() {
 
     // Get node output (filtered and with module-specific fields).
     if (node_hook($node, 'view')) {
-      node_invoke($node, 'view', false, false);
+      node_invoke($node, 'view', FALSE, FALSE);
     }
     else {
-      $node = node_prepare($node, false);
+      $node = node_prepare($node, FALSE);
     }
     // Allow modules to change $node->body before viewing.
-    module_invoke_all('node_view', $node, false, false);
+    module_invoke_all('node_view', $node, FALSE, FALSE);
 
     $text = '<h1>' . drupal_specialchars($node->title) . '</h1>' . $node->body;
 

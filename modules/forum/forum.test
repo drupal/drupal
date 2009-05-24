@@ -257,7 +257,7 @@ class ForumTestCase extends DrupalWebTestCase {
 
     // Retrieve node object.
     $node = $this->drupalGetNodeByTitle($title);
-    $this->assertTrue($node != null, t('Node @title was loaded', array('@title' => $title)));
+    $this->assertTrue($node != NULL, t('Node @title was loaded', array('@title' => $title)));
 
     // View forum topic.
     $this->drupalGet('node/' . $node->nid);

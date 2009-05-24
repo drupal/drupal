@@ -149,7 +149,7 @@ function hook_filter($op, $delta = 0, $format = -1, $text = '', $langcode = '', 
  *
  *
  */
-function hook_filter_tips($delta, $format, $long = false) {
+function hook_filter_tips($delta, $format, $long = FALSE) {
   if ($long) {
     return t('To post pieces of code, surround them with &lt;code&gt;...&lt;/code&gt; tags. For PHP code, you can use &lt;?php ... ?&gt;, which will also colour it based on syntax.');
   }

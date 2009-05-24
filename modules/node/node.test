@@ -343,7 +343,7 @@ class PageEditTestCase extends DrupalWebTestCase {
 
     // Check that "edit" link points to correct page.
     $this->clickLink(t('Edit'));
-    $edit_url = url("node/$node->nid/edit", array('absolute' => true));
+    $edit_url = url("node/$node->nid/edit", array('absolute' => TRUE));
     $actual_url = $this->getURL();
     $this->assertEqual($edit_url, $actual_url, t('On edit page.'));
 

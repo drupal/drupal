@@ -154,7 +154,7 @@ function _openid_create_message($data) {
 
   foreach ($data as $key => $value) {
     if ((strpos($key, ':') !== FALSE) || (strpos($key, "\n") !== FALSE) || (strpos($value, "\n") !== FALSE)) {
-      return null;
+      return NULL;
     }
     $serialized .= "$key:$value\n";
   }
@@ -381,7 +381,7 @@ function _openid_dh_rand($stop) {
 }
 
 function _openid_get_bytes($num_bytes) {
-  static $f = null;
+  static $f = NULL;
   $bytes = '';
   if (!isset($f)) {
     $f = @fopen(OPENID_RAND_SOURCE, "r");
