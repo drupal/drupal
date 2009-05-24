@@ -399,7 +399,7 @@ function user_save($account, $edit = array(), $category = 'account') {
   $edit = (array) $edit;
 
   if (!isset($account->is_new)) {
-    $account->is_new = empty($account->uid); 
+    $account->is_new = empty($account->uid);
   }
   if (is_object($account) && !$account->is_new) {
     user_module_invoke('update', $edit, $account, $category);
@@ -597,15 +597,15 @@ function user_validate_name($name) {
     return t('The username contains an illegal character.');
   }
   if (preg_match('/[\x{80}-\x{A0}' .         // Non-printable ISO-8859-1 + NBSP
-                   '\x{AD}' .                // Soft-hyphen
-                   '\x{2000}-\x{200F}' .     // Various space characters
-                   '\x{2028}-\x{202F}' .     // Bidirectional text overrides
-                   '\x{205F}-\x{206F}' .     // Various text hinting characters
-                   '\x{FEFF}' .              // Byte order mark
-                   '\x{FF01}-\x{FF60}' .     // Full-width latin
-                   '\x{FFF9}-\x{FFFD}' .     // Replacement characters
-                   '\x{0}-\x{1F}]/u',        // NULL byte and control characters
-                   $name)) {
+                  '\x{AD}' .                // Soft-hyphen
+                  '\x{2000}-\x{200F}' .     // Various space characters
+                  '\x{2028}-\x{202F}' .     // Bidirectional text overrides
+                  '\x{205F}-\x{206F}' .     // Various text hinting characters
+                  '\x{FEFF}' .              // Byte order mark
+                  '\x{FF01}-\x{FF60}' .     // Full-width latin
+                  '\x{FFF9}-\x{FFFD}' .     // Replacement characters
+                  '\x{0}-\x{1F}]/u',        // NULL byte and control characters
+                  $name)) {
     return t('The username contains an illegal character.');
   }
   if (drupal_strlen($name) > USERNAME_MAX_LENGTH) {
@@ -787,32 +787,32 @@ function user_is_blocked($name) {
  * Implementation of hook_perm().
  */
 function user_perm() {
-   return array(
-     'administer permissions' =>  array(
-       'title' => t('Administer permissions'),
-       'description' => t('Manage the permissions assigned to user roles. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
-     ),
-     'administer users' => array(
-       'title' => t('Administer users'),
-       'description' => t('Manage or block users, and manage their role assignments.'),
-     ),
-     'access user profiles' => array(
-       'title' => t('Access user profiles'),
-       'description' => t('View profiles of users on the site, which may contain personal information.'),
-     ),
-     'change own username' => array(
-       'title' => t('Change own username'),
-       'description' => t('Select a different username.'),
-     ),
-     'cancel account' => array(
-       'title' => t('Cancel account'),
-       'description' => t('Remove or disable own user account and unpublish, anonymize, or remove own submissions depending on the configured <a href="@user-settings-url">user settings</a>.', array('@user-settings-url' => url('admin/user/settings'))),
-     ),
-     'select account cancellation method' => array(
-       'title' => t('Select method for cancelling own account'),
-       'description' => t('Select the method for cancelling own user account. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
-     ),
-   );
+  return array(
+    'administer permissions' =>  array(
+      'title' => t('Administer permissions'),
+      'description' => t('Manage the permissions assigned to user roles. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+    ),
+    'administer users' => array(
+      'title' => t('Administer users'),
+      'description' => t('Manage or block users, and manage their role assignments.'),
+    ),
+    'access user profiles' => array(
+      'title' => t('Access user profiles'),
+      'description' => t('View profiles of users on the site, which may contain personal information.'),
+    ),
+    'change own username' => array(
+      'title' => t('Change own username'),
+      'description' => t('Select a different username.'),
+    ),
+    'cancel account' => array(
+      'title' => t('Cancel account'),
+      'description' => t('Remove or disable own user account and unpublish, anonymize, or remove own submissions depending on the configured <a href="@user-settings-url">user settings</a>.', array('@user-settings-url' => url('admin/user/settings'))),
+    ),
+    'select account cancellation method' => array(
+      'title' => t('Select method for cancelling own account'),
+      'description' => t('Select the method for cancelling own user account. %warning', array('%warning' => t('Warning: Give to trusted roles only; this permission has security implications.'))),
+    ),
+  );
 }
 
 /**
@@ -1059,7 +1059,7 @@ function user_block_list() {
 function user_block_configure($delta = '') {
   global $user;
 
-  switch($delta) {
+  switch ($delta) {
     case 'new':
       $form['user_block_whois_new_count'] = array(
         '#type' => 'select',
@@ -1678,13 +1678,13 @@ function user_authenticate($form_values = array()) {
       require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
       if (user_check_password($password, $account)) {
         if (user_needs_new_hash($account)) {
-           $new_hash = user_hash_password($password);
-           if ($new_hash) {
-             db_update('users')
-               ->fields(array('pass' => $new_hash))
-               ->condition('uid', $account->uid)
-               ->execute();
-           }
+          $new_hash = user_hash_password($password);
+          if ($new_hash) {
+            db_update('users')
+              ->fields(array('pass' => $new_hash))
+              ->condition('uid', $account->uid)
+              ->execute();
+          }
         }
         $users = user_load_multiple(array($account->uid), array('status' => '1'));
         $user = reset($users);

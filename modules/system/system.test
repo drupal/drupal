@@ -166,7 +166,7 @@ class ModuleDependencyTestCase extends ModuleTestCase {
   /**
    * Attempt to enable translation module without locale enabled.
    */
-  function testEnableWithoutDependency () {
+  function testEnableWithoutDependency() {
     // Attempt to enable content translation without locale enabled.
     $edit = array();
     $edit['modules[Core][translation][enable]'] = 'translation';
@@ -208,7 +208,7 @@ class ModuleRequiredTestCase extends ModuleTestCase {
   function testDisableRequired() {
     $required_modules = drupal_required_modules();
     $this->drupalGet('admin/build/modules');
-    foreach($required_modules as $module) {
+    foreach ($required_modules as $module) {
       // Check to make sure the checkbox for required module is not found.
       $this->assertNoFieldByName('modules[Core][' . $module . '][enable]');
     }
@@ -453,8 +453,8 @@ class AdminMetaTagTestCase extends DrupalWebTestCase {
    * Verify that the meta tag HTML is generated correctly.
    */
   public function testMetaTag() {
-    list($version,) = explode('.', VERSION);
-    $string = '<meta name="Generator" content="Drupal ' . $version. ' (http://drupal.org)" />';
+    list($version, ) = explode('.', VERSION);
+    $string = '<meta name="Generator" content="Drupal ' . $version . ' (http://drupal.org)" />';
     $this->drupalGet('node');
     $this->assertRaw($string, t('Fingerprinting meta tag generated correctly.'), t('System'));
   }
@@ -927,7 +927,7 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
       'node_admin_theme' => FALSE,
     );
     $this->drupalPost('admin/build/themes', $edit, t('Save configuration'));
-    
+
     $this->drupalGet('admin');
     $this->assertRaw('themes/garland', t('Administration theme used on an administration page.'));
 
@@ -936,7 +936,7 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
 
     // Reset to the default theme settings.
     $this->drupalPost('admin/build/themes', array(), t('Reset to defaults'));
-    
+
     $this->drupalGet('admin');
     $this->assertRaw('themes/garland', t('Site default theme used on administration page.'));
 

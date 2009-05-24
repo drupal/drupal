@@ -402,8 +402,8 @@ function update_calculate_project_data($available) {
         // Otherwise, ignore unpublished, insecure, or unsupported releases.
         if ($release['status'] == 'unpublished' ||
             (isset($release['terms']['Release type']) &&
-             (in_array('Insecure', $release['terms']['Release type']) ||
-              in_array('Unsupported', $release['terms']['Release type'])))) {
+              (in_array('Insecure', $release['terms']['Release type']) ||
+                in_array('Unsupported', $release['terms']['Release type'])))) {
           continue;
         }
 

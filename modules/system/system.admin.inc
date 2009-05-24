@@ -179,7 +179,7 @@ function system_themes_form() {
     }
     else {
       // Ensure this theme is compatible with this version of core.
-      // Require the 'content' region to make sure the main page 
+      // Require the 'content' region to make sure the main page
       // content has a common place in all themes.
       if (!isset($theme->info['core']) || ($theme->info['core'] != DRUPAL_CORE_COMPATIBILITY) || (!isset($theme->info['regions']['content']))) {
         $incompatible_core[] = $theme->name;
@@ -2040,15 +2040,15 @@ function theme_system_modules_fieldset($form) {
     // If we have help, it becomes the first part
     // of the description - with CSS, it is float: right'd.
     if (isset($module['help'])) {
-      $description = '<div class="module-help">'. drupal_render($module['help']) .'</div>';
+      $description = '<div class="module-help">' . drupal_render($module['help']) . '</div>';
     }
     // Add the description, along with any modules it requires.
     $description .= drupal_render($module['description']);
     if ($module['#requires']) {
-     $description .= '<div class="admin-requirements">' . t('Requires: !module-list', array('!module-list' => implode(', ', $module['#requires']))) . '</div>';
+      $description .= '<div class="admin-requirements">' . t('Requires: !module-list', array('!module-list' => implode(', ', $module['#requires']))) . '</div>';
     }
     if ($module['#required_by']) {
-     $description .= '<div class="admin-requirements">' . t('Required by: !module-list', array('!module-list' => implode(', ', $module['#required_by']))) . '</div>';
+      $description .= '<div class="admin-requirements">' . t('Required by: !module-list', array('!module-list' => implode(', ', $module['#required_by']))) . '</div>';
     }
     $row[] = array('data' => $description, 'class' => 'description');
     $rows[] = $row;
@@ -2067,7 +2067,7 @@ function theme_system_modules_fieldset($form) {
  *   An HTML string for the message.
  */
 function theme_system_modules_incompatible($message) {
-  return '<div class="incompatible">'. $message .'</div>';
+  return '<div class="incompatible">' . $message . '</div>';
 }
 
 /**

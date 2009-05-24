@@ -341,7 +341,7 @@ function menu_node_update($node) {
  */
 function menu_node_delete($node) {
   // Delete all menu module links that point to this node.
-  $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu'", array(':path' => 'node/'. $node->nid), array('fetch' => PDO::FETCH_ASSOC));
+  $result = db_query("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu'", array(':path' => 'node/' . $node->nid), array('fetch' => PDO::FETCH_ASSOC));
   foreach ($result as $m) {
     menu_link_delete($m['mlid']);
   }
@@ -358,14 +358,14 @@ function menu_node_prepare($node) {
     if (isset($node->nid)) {
       // Give priority to the default menu
       $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND menu_name = :menu_name AND module = 'menu' ORDER BY mlid ASC", array(
-        ':path' => 'node/'. $node->nid,
+        ':path' => 'node/' . $node->nid,
         ':menu_name' => $menu_name,
       ), 0, 1)
       ->fetchField();
       // Check all menus if a link does not exist in the default menu.
       if (!$mlid) {
         $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = :path AND module = 'menu' ORDER BY mlid ASC", array(
-          ':path' => 'node/'. $node->nid,
+          ':path' => 'node/' . $node->nid,
         ), 0, 1)
         ->fetchField();
       }

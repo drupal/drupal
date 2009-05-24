@@ -76,7 +76,7 @@ function simpletest_generate_file($filename, $width, $lines, $type = 'binary-tex
         break;
     }
   }
-  $text = wordwrap($text, $width - 1, "\n", TRUE) ."\n"; // Add \n for symetrical file.
+  $text = wordwrap($text, $width - 1, "\n", TRUE) . "\n"; // Add \n for symetrical file.
 
   // Create filename.
   $path = file_directory_path() . '/simpletest/';

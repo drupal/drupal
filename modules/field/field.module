@@ -101,7 +101,7 @@ function field_help($path, $arg) {
   switch ($path) {
     case 'admin/help#field':
       $output = '<p>' . t('The Field API allows custom data fields to be attached to Drupal objects and takes care of storing, loading, editing, and rendering field data.  Any object type (node, user, etc.) can use the Field API to make itself "fieldable" and thus allow fields to be attached to it.') . '</p>';
-      $output .= '<p>' .t('The Field API provides no user interface on its own.  Use the Content Construction Kit (CCK) contrib module to manage custom fields via a web browser.') . '</p>';
+      $output .= '<p>' . t('The Field API provides no user interface on its own.  Use the Content Construction Kit (CCK) contrib module to manage custom fields via a web browser.') . '</p>';
       return $output;
   }
 }

@@ -1839,7 +1839,7 @@ function menu_router_build() {
   // a given item came from.
   $callbacks = array();
   foreach (module_implements('menu') as $module) {
-    $router_items = call_user_func($module .'_menu');
+    $router_items = call_user_func($module . '_menu');
     if (isset($router_items) && is_array($router_items)) {
       foreach (array_keys($router_items) as $path) {
         $router_items[$path]['module'] = $module;
@@ -1860,7 +1860,7 @@ function menu_router_build() {
  */
 function _menu_router_cache($new_menu = NULL) {
   $menu = &drupal_static(__FUNCTION__);
-  
+
   if (isset($new_menu)) {
     $menu = $new_menu;
   }

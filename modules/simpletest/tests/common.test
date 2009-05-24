@@ -316,7 +316,7 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
     $password = $this->randomName();
     $url = url('system-test/auth', array('absolute' => TRUE));
 
-    $auth = str_replace('http://', 'http://' . $username . ':' . $password .'@', $url);
+    $auth = str_replace('http://', 'http://' . $username . ':' . $password . '@', $url);
     $result = drupal_http_request($auth);
 
     $this->drupalSetContent($result->data);
@@ -711,7 +711,7 @@ class ValidUrlTestCase extends DrupalWebTestCase {
       foreach ($valid_relative_urls as $url) {
         $test_url = $front . $url;
         $valid_url = valid_url($test_url);
-        $this->assertTrue($valid_url,t('@url is a valid url.', array('@url' => $test_url)));
+        $this->assertTrue($valid_url, t('@url is a valid url.', array('@url' => $test_url)));
       }
     }
   }
@@ -730,7 +730,7 @@ class ValidUrlTestCase extends DrupalWebTestCase {
       foreach ($invalid_relative_urls as $url) {
         $test_url = $front . $url;
         $valid_url = valid_url($test_url);
-        $this->assertFALSE($valid_url,t('@url is NOT a valid url.', array('@url' => $test_url)));
+        $this->assertFALSE($valid_url, t('@url is NOT a valid url.', array('@url' => $test_url)));
       }
     }
   }

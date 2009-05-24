@@ -24,35 +24,35 @@ class BlogTestCase extends DrupalWebTestCase {
     $this->own_user = $this->drupalCreateUser(array('create blog content', 'edit own blog content', 'delete own blog content'));
     $this->any_user = $this->drupalCreateUser(array('create blog content', 'edit any blog content', 'delete any blog content', 'access administration pages'));
   }
-  
+
   /**
-   * Confirm that the "You are not allowed to post a new blog entry." message 
-   * shows up if a user submitted blog entries, has been denied that 
+   * Confirm that the "You are not allowed to post a new blog entry." message
+   * shows up if a user submitted blog entries, has been denied that
    * permission, and goes to the blog page.
    */
-   function testUnprivilegedUser() {
-     // Create a blog node for a user with no blog permissions.
-     $this->drupalCreateNode(array('type' => 'blog', 'uid' => $this->big_user->uid));
+  function testUnprivilegedUser() {
+    // Create a blog node for a user with no blog permissions.
+    $this->drupalCreateNode(array('type' => 'blog', 'uid' => $this->big_user->uid));
 
-     $this->drupalLogin($this->big_user);
+    $this->drupalLogin($this->big_user);
 
-     $this->drupalGet('blog/'. $this->big_user->uid);
-     $this->assertResponse(200);
-     $this->assertTitle(t("@name's blog", array('@name' => $this->big_user->name)) .' | Drupal', t('Blog title was displayed'));
-     $this->assertText(t('You are not allowed to post a new blog entry.'), t('No new entries can be posted without the right permission'));
-   }
-   
-   /**
-    * View the blog of a user with no blog entries as another user.
-    */
-   function testBlogPageNoEntries() {
-     $this->drupalLogin($this->big_user);
+    $this->drupalGet('blog/' . $this->big_user->uid);
+    $this->assertResponse(200);
+    $this->assertTitle(t("@name's blog", array('@name' => $this->big_user->name)) . ' | Drupal', t('Blog title was displayed'));
+    $this->assertText(t('You are not allowed to post a new blog entry.'), t('No new entries can be posted without the right permission'));
+  }
 
-     $this->drupalGet('blog/'. $this->own_user->uid);
-     $this->assertResponse(200);
-     $this->assertTitle(t("@name's blog", array('@name' => $this->own_user->name)) .' | Drupal', t('Blog title was displayed'));
-     $this->assertText(t('!author has not created any blog entries.', array('!author' => $this->own_user->name)), t('Users blog displayed with no entries'));
-   }
+  /**
+   * View the blog of a user with no blog entries as another user.
+   */
+  function testBlogPageNoEntries() {
+    $this->drupalLogin($this->big_user);
+
+    $this->drupalGet('blog/' . $this->own_user->uid);
+    $this->assertResponse(200);
+    $this->assertTitle(t("@name's blog", array('@name' => $this->own_user->name)) . ' | Drupal', t('Blog title was displayed'));
+    $this->assertText(t('!author has not created any blog entries.', array('!author' => $this->own_user->name)), t('Users blog displayed with no entries'));
+  }
 
   /**
    * Login users, create blog nodes, and test blog functionality through the admin and user interfaces.
@@ -139,14 +139,14 @@ class BlogTestCase extends DrupalWebTestCase {
     // View blog node.
     $this->drupalGet('node/' . $node->nid);
     $this->assertResponse(200);
-    $this->assertTitle($node->title. ' | Drupal', t('Blog node was displayed'));
+    $this->assertTitle($node->title . ' | Drupal', t('Blog node was displayed'));
     $this->assertText(t('Home ' . $crumb . ' Blogs ' . $crumb . ' @name' . $quote . 's blog', array('@name' => $node_user->name)), t('Breadcrumbs were displayed'));
 
     // View blog edit node.
     $this->drupalGet('node/' . $node->nid . '/edit');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertTitle('Edit Blog entry ' . $node->title. ' | Drupal', t('Blog edit node was displayed'));
+      $this->assertTitle('Edit Blog entry ' . $node->title . ' | Drupal', t('Blog edit node was displayed'));
       $this->assertText(t('Home ' . $crumb . ' @title', array('@title' => $node->title)), t('Breadcrumbs were displayed'));
     }
 

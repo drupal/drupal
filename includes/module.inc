@@ -157,7 +157,7 @@ function module_rebuild_cache() {
  *     without this module.
  */
 function _module_build_dependencies($files) {
-  require_once DRUPAL_ROOT .'/includes/graph.inc';
+  require_once DRUPAL_ROOT . '/includes/graph.inc';
   $roots = $files;
   foreach ($files as $filename => $file) {
     $graph[$file->name]['edges'] = array();

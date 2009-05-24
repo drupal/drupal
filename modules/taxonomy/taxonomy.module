@@ -85,7 +85,7 @@ function taxonomy_node_view($node) {
         }
       }
     }
-  
+
     $node->content['links']['terms'] = array(
       '#type' => 'node_links',
       '#value' => $links,
@@ -361,7 +361,7 @@ function taxonomy_term_save($term) {
     $status = drupal_write_record('taxonomy_term_data', $term);
     module_invoke_all('taxonomy_term_update', $term);
   }
-  
+
   db_delete('taxonomy_term_relation')
     ->condition(db_or()
       ->condition('tid1', $term->tid)
@@ -409,10 +409,10 @@ function taxonomy_term_save($term) {
     }
   }
   else {
-     $query->values(array(
-       'tid' => $term->tid,
-       'parent' => $parent
-     ));
+    $query->values(array(
+     'tid' => $term->tid,
+     'parent' => $parent
+    ));
   }
   $query->execute();
 
@@ -492,7 +492,7 @@ function taxonomy_term_delete($tid) {
 
   cache_clear_all();
   taxonomy_terms_static_reset();
-  
+
   return SAVED_DELETED;
 }
 
@@ -826,7 +826,7 @@ function taxonomy_node_save($node, $terms) {
   if (is_array($terms) && !empty($terms)) {
     $query = db_insert('taxonomy_term_node')
       ->fields(array('nid', 'vid', 'tid'));
-    
+
     foreach ($terms as $term) {
       if (is_array($term)) {
         foreach ($term as $tid) {
@@ -1406,7 +1406,7 @@ function taxonomy_term_load($tid) {
  *  A term object. Results are statically cached.
  */
 function taxonomy_get_term_data($tid) {
-   $terms = &drupal_static(__FUNCTION__, array());
+  $terms = &drupal_static(__FUNCTION__, array());
 
   if (!isset($terms[$tid])) {
     $terms[$tid] = db_query('SELECT * FROM {taxonomy_term_data} WHERE tid = :tid', array(':tid' => $tid))->fetch();
@@ -1494,7 +1494,7 @@ function theme_taxonomy_term_select($element) {
  *   Whether the nodes are to be used with a pager (the case on most Drupal
  *   pages) or not (in an XML feed, for example).
  * @param $order
- *   The order clause for the query that retrieve the nodes. 
+ *   The order clause for the query that retrieve the nodes.
  *   It is important to specifc the table alias (n).
  *
  *   Example:
@@ -1532,7 +1532,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
       $query->condition($alias . '.tid', $tids, 'IN');
     }
   }
-  
+
   if ($pager) {
     $count_query = clone $query;
     $count_query->addExpression('COUNT(DISTINCT n.nid)');
@@ -1540,7 +1540,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
     $query = $query
       ->extend('PagerDefault')
       ->limit(variable_get('default_nodes_main', 10));
-     $query->setCountQuery($count_query);
+    $query->setCountQuery($count_query);
   }
   else {
     $query->range(0, variable_get('feed_default_items', 10));

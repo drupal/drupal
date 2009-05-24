@@ -101,7 +101,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->drupalLogin($web_user);
 
     $this->drupalGet('node/add/page');
-    $this->assertRaw('<option value="' . $full .'">Full HTML</option>', t('Full HTML filter accessible.'));
+    $this->assertRaw('<option value="' . $full . '">Full HTML</option>', t('Full HTML filter accessible.'));
 
     // Use filtered HTML and see if it removes tags that arn't allowed.
     $body = $this->randomName();

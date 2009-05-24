@@ -55,7 +55,7 @@ class PHPFilterTestCase extends PHPTestCase {
     $node = $this->createNodeWithCode();
 
     // Make sure that the PHP code shows up as text.
-    $this->drupalGet('node/'. $node->nid);
+    $this->drupalGet('node/' . $node->nid);
     $this->assertText('print', t('PHP code is displayed.'));
 
     // Change filter to PHP filter and see that PHP code is evaluated.
@@ -92,7 +92,7 @@ class PHPAccessTestCase extends PHPTestCase {
     $node = $this->createNodeWithCode();
 
     // Make sure that the PHP code shows up as text.
-    $this->drupalGet('node/'. $node->nid);
+    $this->drupalGet('node/' . $node->nid);
     $this->assertText('print', t('PHP code is displayed.'));
 
     // Make sure that user doesn't have access to filter.

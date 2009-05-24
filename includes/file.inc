@@ -916,7 +916,7 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
       // Final check that this is a valid upload, if it isn't, use the
       // default error handler.
       if (is_uploaded_file($_FILES['files']['tmp_name'][$source])) {
-         break;
+        break;
       }
 
     // Unknown error
@@ -1401,7 +1401,7 @@ function file_download() {
  * @return
  *   An associative array (keyed on the provided key) of objects with
  *   'filepath', 'filename', and 'name' members corresponding to the
- *   matching files. 
+ *   matching files.
  */
 function file_scan_directory($dir, $mask, $options = array(), $depth = 0) {
   // Merge in defaults.
@@ -1878,7 +1878,7 @@ function file_get_mimetype($filename, $mapping = NULL) {
     ));
   }
   foreach ($mapping as $ext_preg => $mime_match) {
-    if (preg_match('!\.('. $ext_preg .')$!i', $filename)) {
+    if (preg_match('!\.(' . $ext_preg . ')$!i', $filename)) {
       return $mime_match;
     }
   }

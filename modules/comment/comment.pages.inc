@@ -15,7 +15,7 @@
  */
 function comment_edit($cid) {
   global $user;
-  $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.data FROM {comment} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid', array(':cid'=>$cid))->fetchObject();
+  $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.data FROM {comment} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid', array(':cid' => $cid))->fetchObject();
   $comment = drupal_unpack($comment);
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
 

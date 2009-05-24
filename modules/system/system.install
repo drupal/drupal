@@ -2582,9 +2582,9 @@ function system_update_6043() {
   db_add_index($ret, 'history', 'nid', array('nid'));
   // Change length of theme field in {blocks} to be consistent with module, and
   // to avoid a MySQL error regarding a too-long index. Also add new indices.
-  db_change_field($ret, 'blocks', 'theme', 'theme', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''),array(
-                  'unique keys' => array('tmd' => array('theme', 'module', 'delta'),),
-                  'indexes' => array('list' => array('theme', 'status', 'region', 'weight', 'module'),),));
+  db_change_field($ret, 'blocks', 'theme', 'theme', array('type' => 'varchar', 'length' => 64, 'not null' => TRUE, 'default' => ''), array(
+                  'unique keys' => array('tmd' => array('theme', 'module', 'delta')),
+                  'indexes' => array('list' => array('theme', 'status', 'region', 'weight', 'module'))));
   db_add_index($ret, 'blocks_roles', 'rid', array('rid'));
   // Improve filter module indices.
   db_drop_index($ret, 'filters', 'weight');
@@ -2626,8 +2626,8 @@ function system_update_6043() {
   if (db_table_exists('profile_values')) {
     db_drop_index($ret, 'profile_values', 'uid');
     db_drop_index($ret, 'profile_values', 'fid');
-    db_change_field($ret,'profile_values' ,'fid', 'fid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0,), array('indexes' => array('fid' => array('fid'),)));
-    db_change_field($ret,'profile_values' ,'uid', 'uid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0,));
+    db_change_field($ret,'profile_values' ,'fid', 'fid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0), array('indexes' => array('fid' => array('fid'))));
+    db_change_field($ret,'profile_values' ,'uid', 'uid', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0));
     db_add_primary_key($ret, 'profile_values', array('uid', 'fid'));
   }
   // Alter a statistics module table to add an index.
@@ -2941,7 +2941,7 @@ function system_update_7004(&$sandbox) {
       foreach ($renamed_deltas as $module => $deltas) {
         foreach ($deltas as $old_delta => $new_delta) {
           // Only do the update if the old block actually exists.
-          $block_exists = db_query("SELECT COUNT(*) FROM {" . $table . "} WHERE module = :module AND delta = :delta",array(
+          $block_exists = db_query("SELECT COUNT(*) FROM {" . $table . "} WHERE module = :module AND delta = :delta", array(
             ':module' => $module,
             ':delta' => $old_delta,
           ))
@@ -3345,7 +3345,7 @@ function system_update_7020() {
  */
 function system_update_7021() {
   $ret = array();
-  
+
   // Collect a list of themes with blocks.
   $themes_with_blocks = array();
   $result = db_query("SELECT s.name FROM {system} s INNER JOIN {block} b ON s.name = b.theme WHERE s.type = 'theme' GROUP by s.name");
@@ -3366,7 +3366,7 @@ function system_update_7021() {
     }
     drupal_set_message('The contact form information setting was migrated to <a href="' . url('admin/build/block/configure/block/' . $bid) . '">a custom block</a> and set up to only show on the site-wide contact page. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right.');
   }
-  
+
   // Migrate user help setting.
   if ($user_help = variable_get('user_registration_help', '')) {
     $bid = db_insert('box')->fields(array('body' => $user_help, 'info' => 'User registration guidelines', 'format' => FILTER_FORMAT_DEFAULT))->execute();
@@ -3376,7 +3376,7 @@ function system_update_7021() {
     }
     drupal_set_message('The user registration guidelines were migrated to <a href="' . url('admin/build/block/configure/block/' . $bid) . '">a custom block</a> and set up to only show on the user registration page. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right.');
   }
-  
+
   // Migrate site mission setting.
   if ($mission = variable_get('site_mission')) {
     $bid = db_insert('box')->fields(array('body' => $mission, 'info' => 'Site mission', 'format' => FILTER_FORMAT_DEFAULT))->execute();
@@ -3394,20 +3394,20 @@ function system_update_7021() {
     $bid = db_insert('box')->fields(array('body' => $footer_message, 'info' => 'Footer message', 'format' => FILTER_FORMAT_DEFAULT))->execute();
     foreach ($themes_with_blocks as $theme) {
       // Add site footer block for themes, which had blocks.
-      // Set low weight, so the block comes early (it used to be 
+      // Set low weight, so the block comes early (it used to be
       // before the other blocks).
       $ret[] = update_sql("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('block', '" . $bid . "', '" . $theme . "', 1, -10, 'footer', '', -1)");
     }
     drupal_set_message('The footer message was migrated to <a href="' . url('admin/build/block/configure/block/' . $bid) . '">a custom block</a> and set up to appear in the footer. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right. If your theme does not have a footer region, you might need to <a href="' . url('admin/build/block') . '">relocate the block</a>.');
   }
-  
+
   // Remove the variables (even if they were saved empty on the admin interface),
   // to avoid keeping clutter in the variables table.
   variable_del('contact_form_information');
   variable_del('user_registration_help');
   variable_del('site_mission');
   variable_del('site_footer');
-  
+
   // Rebuild theme data, so the new 'help' region is identified.
   system_theme_data();
 

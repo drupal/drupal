@@ -224,7 +224,7 @@ function locale_uninstall() {
   }
   // Delete the JavaScript translations directory if empty.
   @rmdir($locale_js_directory);
-  
+
   // Clear variables.
   variable_del('language_default');
   variable_del('language_count');
@@ -234,16 +234,16 @@ function locale_uninstall() {
   variable_del('language_content_type_negotiation');
   variable_del('locale_cache_strings');
   variable_del('locale_js_directory');
-  
+
   foreach (node_get_types() as $type => $content_type) {
     $setting = variable_del('language_content_type_' . $type);
   }
-  
+
   // Switch back to English: with a $language->language value different from 'en'
-  // successive calls of t() might result in calling locale(), which in turn might 
+  // successive calls of t() might result in calling locale(), which in turn might
   // try to query the unexisting {locales_source} and {locales_target} tables.
   drupal_init_language();
-  
+
   // Remove tables.
   drupal_uninstall_schema('locale');
 }

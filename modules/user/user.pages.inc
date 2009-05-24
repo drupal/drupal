@@ -12,7 +12,7 @@
 function user_autocomplete($string = '') {
   $matches = array();
   if ($string) {
-    $result = db_query_range("SELECT name FROM {users} WHERE LOWER(name) LIKE LOWER(:name)", array(':name' => $string .'%'), 0, 10);
+    $result = db_query_range("SELECT name FROM {users} WHERE LOWER(name) LIKE LOWER(:name)", array(':name' => $string . '%'), 0, 10);
     foreach ($result as $user) {
       $matches[$user->name] = check_plain($user->name);
     }
@@ -161,7 +161,7 @@ function user_logout() {
  *   Contains the default "History" profile data for a user.
  * - $page['content']['#account']:
  *   The user account of the profile being viewed.
- * 
+ *
  * To theme user profiles, copy modules/user/user-profile.tpl.php
  * to your theme directory, and edit it as instructed in that file's comments.
  */
@@ -169,7 +169,7 @@ function user_view($account) {
   drupal_set_title($account->name);
   // Retrieve all profile fields and attach to $account->content.
   user_build_content($account);
-  
+
   $build = $account->content;
   $build += array(
     '#theme' => 'user_profile',
@@ -189,7 +189,7 @@ function user_view($account) {
  */
 function template_preprocess_user_profile(&$variables) {
   $account = $variables['elements']['#account'];
-  
+
   $variables['profile'] = array();
   // Sort sections by weight
   uasort($account->content, 'element_sort');

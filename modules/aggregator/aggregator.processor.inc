@@ -175,7 +175,7 @@ function aggregator_expire($feed) {
     // Remove all items that are older than flush item timer.
     $age = REQUEST_TIME - $aggregator_clear;
     $iids = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid AND timestamp < :timestamp', array(
-      ':fid' => $feed->fid, 
+      ':fid' => $feed->fid,
       ':timestamp' => $age,
     ))
     ->fetchCol();

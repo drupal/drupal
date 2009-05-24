@@ -143,7 +143,7 @@ class CommentHelperCase extends DrupalWebTestCase {
    *   Comments per page value.
    */
   function setCommentsPerPage($number) {
-    $this->setCommentSettings('comment_default_per_page_article', $number, 'Number of comments per page set to ' . $number .'.');
+    $this->setCommentSettings('comment_default_per_page_article', $number, 'Number of comments per page set to ' . $number . '.');
   }
 
   /**
@@ -280,7 +280,7 @@ class CommentInterfaceTest extends CommentHelperCase {
     $reply_loaded = comment_load($reply->id);
     $this->assertTrue($this->commentExists($reply, TRUE), t('Reply found.'));
     $this->assertEqual($comment->id, $reply_loaded->pid, t('Pid of a reply to a comment is set correctly.'));
-    $this->assertEqual(rtrim($comment_loaded->thread,'/').'.00/', $reply_loaded->thread, t('Thread of reply grows correctly.'));
+    $this->assertEqual(rtrim($comment_loaded->thread, '/') . '.00/', $reply_loaded->thread, t('Thread of reply grows correctly.'));
 
     // Second reply to comment
     $this->drupalGet('comment/reply/' . $this->node->nid . '/' . $comment->id);
@@ -289,7 +289,7 @@ class CommentInterfaceTest extends CommentHelperCase {
     $reply = $this->postComment(NULL, $this->randomName(), $this->randomName());
     $reply_loaded = comment_load($reply->id);
     $this->assertTrue($this->commentExists($reply, TRUE), t('Second reply found.'));
-    $this->assertEqual(rtrim($comment_loaded->thread,'/').'.01/', $reply_loaded->thread, t('Thread of second reply grows correctly.'));
+    $this->assertEqual(rtrim($comment_loaded->thread, '/') . '.01/', $reply_loaded->thread, t('Thread of second reply grows correctly.'));
 
     // Edit reply.
     $this->drupalGet('comment/edit/' . $reply->id);
@@ -524,11 +524,11 @@ class CommentApprovalTest extends CommentHelperCase {
 
     // Approve comment.
     $this->drupalLogin($this->admin_user);
-    $this->drupalGet('node/'. $this->node->nid);
+    $this->drupalGet('node/' . $this->node->nid);
     $this->clickLink(t('approve'));
     $this->drupalLogout();
 
-    $this->drupalGet('node/'. $this->node->nid);
+    $this->drupalGet('node/' . $this->node->nid);
     $this->assertTrue($this->commentExists($anonymous_comment4), t('Anonymous comment visible.'));
   }
 }

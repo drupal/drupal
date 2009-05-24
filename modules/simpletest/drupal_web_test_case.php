@@ -1843,7 +1843,7 @@ class DrupalWebTestCase {
       $this->plainTextContent = filter_xss($this->content, array());
     }
     if (!$message) {
-      $message = '"' . $text . '"'. ($be_unique ? ' found only once' : ' found more than once');
+      $message = '"' . $text . '"' . ($be_unique ? ' found only once' : ' found more than once');
     }
     $first_occurance = strpos($this->plainTextContent, $text);
     if ($first_occurance === FALSE) {

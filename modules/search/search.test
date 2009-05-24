@@ -385,7 +385,7 @@ class SearchBlockTestCase extends DrupalWebTestCase {
     // Create and login user
     $admin_user = $this->drupalCreateUser(array('administer blocks', 'search content'));
     $this->drupalLogin($admin_user);
-    
+
     // Disable the theme form to avoid confusion.
     $settings = theme_get_settings();
     $settings['toggle_search'] = FALSE;
@@ -403,7 +403,7 @@ class SearchBlockTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
   }
-  
+
   /**
    * Test that the search block form works correctly.
    */

@@ -385,7 +385,7 @@ function drupal_not_found() {
  */
 function drupal_access_denied() {
   drupal_set_header('403 Forbidden');
-  
+
   watchdog('access denied', check_plain($_GET['q']), NULL, WATCHDOG_WARNING);
 
   $path = drupal_get_normal_path(variable_get('site_403', ''));
@@ -741,8 +741,8 @@ function _drupal_decode_exception($exception) {
     // or in one of its global functions.
     $db_functions = array('db_query', 'pager_query', 'db_query_range', 'db_query_temporary', 'update_sql');
     while (!empty($backtrace[1]) && ($caller = $backtrace[1]) &&
-         ((isset($caller['class']) && (strpos($caller['class'], 'Query') !== FALSE || strpos($caller['class'], 'Database') !== FALSE)) ||
-         in_array($caller['function'], $db_functions))) {
+        ((isset($caller['class']) && (strpos($caller['class'], 'Query') !== FALSE || strpos($caller['class'], 'Database') !== FALSE)) ||
+        in_array($caller['function'], $db_functions))) {
       // We remove that call.
       array_shift($backtrace);
     }
@@ -2219,7 +2219,7 @@ function drupal_get_path($type, $name) {
 /**
  * Return the base URL path (i.e., directory) of the Drupal installation.
  *
- * base_path() prefixes and suffixes a "/" onto the returned path if the path is 
+ * base_path() prefixes and suffixes a "/" onto the returned path if the path is
  * not empty. At the very least, this will return "/".
  *
  * Examples:
@@ -2571,7 +2571,7 @@ function drupal_load_stylesheet($file, $optimize = NULL) {
  * @return
  *   Contents of the stylesheet including the imported stylesheets.
  */
-function drupal_load_stylesheet_content($contents, $optimize = FALSE) {  
+function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
   // Replaces @import commands with the actual stylesheet content.
   // This happens recursively but omits external files.
   $contents = preg_replace_callback('/@import\s*(?:url\()?[\'"]?(?![a-z]+:)([^\'"\()]+)[\'"]?\)?;/', '_drupal_load_stylesheet', $contents);
@@ -3134,8 +3134,8 @@ function drupal_json($var = NULL) {
 function drupal_urlencode($text) {
   if (variable_get('clean_url', '0')) {
     return str_replace(array('%2F', '%26', '%23', '//'),
-                       array('/', '%2526', '%2523', '/%252F'),
-                       rawurlencode($text));
+                        array('/', '%2526', '%2523', '/%252F'),
+                        rawurlencode($text));
   }
   else {
     return str_replace('%2F', '/', rawurlencode($text));
@@ -4274,7 +4274,7 @@ function drupal_write_record($table, &$object, $primary_keys = array()) {
   if (empty($primary_keys)) {
     $options = array('return' => Database::RETURN_INSERT_ID);
     if (isset($serial) && isset($fields[$serial])) {
-      // If the serial column has been explicitly set with an ID, then we don't 
+      // If the serial column has been explicitly set with an ID, then we don't
       // require the database to return the last insert id.
       if ($fields[$serial]) {
         $options['return'] = Database::RETURN_AFFECTED;

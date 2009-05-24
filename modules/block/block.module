@@ -95,7 +95,7 @@ function block_theme() {
     'block' => array(
       'arguments' => array('block' => NULL),
       'template' => 'block',
-    ),  
+    ),
     'block_admin_display_form' => array(
       'template' => 'block-admin-display-form',
       'file' => 'block.admin.inc',

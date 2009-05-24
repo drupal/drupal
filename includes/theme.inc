@@ -895,7 +895,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
   $subtheme_paths = isset($theme_paths[$theme]) ? $theme_paths[$theme] : array();
 
   // Escape the periods in the extension.
-  $regex = '/'. str_replace('.', '\.', $extension) . '$/';
+  $regex = '/' . str_replace('.', '\.', $extension) . '$/';
   // Because drupal_system_listing works the way it does, we check for real
   // templates separately from checking for patterns.
   $files = drupal_system_listing($regex, $path, 'name', 0);
@@ -1373,7 +1373,7 @@ function theme_submenu($links) {
  *   within a table. For example, one may easily group three columns and
  *   apply same background style to all.
  * @param $sticky
- *   Use a "sticky" table header. 
+ *   Use a "sticky" table header.
  * @return
  *   An HTML string representing the table.
  */

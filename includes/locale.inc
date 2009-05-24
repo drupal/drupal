@@ -542,7 +542,7 @@ function locale_translate_overview_screen() {
   // Languages with at least one record in the locale table.
   $translations = db_query("SELECT COUNT(*) AS translation, t.language, s.textgroup FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid GROUP BY textgroup, language");
   foreach ($translations as $data) {
-    $ratio = (!empty($groupsums[$data->textgroup]) && $data->translation > 0) ? round(($data->translation/$groupsums[$data->textgroup])*100., 2) : 0;
+    $ratio = (!empty($groupsums[$data->textgroup]) && $data->translation > 0) ? round(($data->translation/$groupsums[$data->textgroup]) * 100.0, 2) : 0;
     $rows[$data->language][$data->textgroup] = $data->translation . '/' . $groupsums[$data->textgroup] . " ($ratio%)";
   }
 
@@ -688,7 +688,7 @@ function locale_translation_filter_form_submit($form, &$form_state) {
       $_SESSION['locale_translation_filter'] = array();
       break;
   }
-  
+
   $form_state['redirect'] = 'admin/international/translate/translate';
 }
 

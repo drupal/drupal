@@ -333,9 +333,9 @@ function decode_entities($text, $exclude = array()) {
   // Flip the exclude list so that we can do quick lookups later.
   $exclude = array_flip($exclude);
 
-  // Use a regexp to select all entities in one pass, to avoid decoding 
+  // Use a regexp to select all entities in one pass, to avoid decoding
   // double-escaped entities twice. The PREG_REPLACE_EVAL modifier 'e' is
-  // being used to allow for a callback (see 
+  // being used to allow for a callback (see
   // http://php.net/manual/en/reference.pcre.pattern.modifiers).
   return preg_replace('/&(#x?)?([A-Za-z0-9]+);/e', '_decode_entities("$1", "$2", "$0", $html_entities, $exclude)', $text);
 }

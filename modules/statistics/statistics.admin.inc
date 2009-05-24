@@ -61,7 +61,7 @@ function statistics_top_pages() {
   $query->addExpression('MAX(title)', 'title');
   $query->addExpression('AVG(timer)', 'average_time');
   $query->addExpression('SUM(timer)', 'total_time');
-  
+
   $query
     ->fields('accesslog', array('path'))
     ->groupBy('path')
@@ -119,7 +119,7 @@ function statistics_top_visitors() {
   $count_query = db_select('accesslog');
   $count_query->addExpression('COUNT(DISTINCT CONCAT(CAST(uid AS char), hostname))');
   $query->setCountQuery($count_query);
-  
+
   $result = $query->execute();
   $rows = array();
   foreach ($result as $account) {
@@ -155,7 +155,7 @@ function statistics_top_referrers() {
   $query->addExpression('MAX(timestamp)', 'last');
   $query
     ->fields('a', array('url'))
-    ->where('LOWER(url) NOT LIKE :host', array(':host' => '%'. $_SERVER['HTTP_HOST'] .'%'))
+    ->where('LOWER(url) NOT LIKE :host', array(':host' => '%' . $_SERVER['HTTP_HOST'] . '%'))
     ->condition('url', '', '<>')
     ->groupBy('url')
     ->limit(30)
@@ -164,7 +164,7 @@ function statistics_top_referrers() {
   $count_query = db_select('accesslog');
   $count_query->addExpression('COUNT(DISTINCT url)');
   $count_query
-    ->where('LOWER(url) NOT LIKE :host', array(':host' => '%'. $_SERVER['HTTP_HOST'] .'%'))
+    ->where('LOWER(url) NOT LIKE :host', array(':host' => '%' . $_SERVER['HTTP_HOST'] . '%'))
     ->condition('url', '', '<>');
   $query->setCountQuery($count_query);
 

@@ -481,7 +481,7 @@ function node_admin_nodes() {
   $filter = node_build_filter_query();
 
   $sort = tablesort_sql($header, '', 'n.changed DESC');
-  $result = pager_query(db_rewrite_sql('SELECT n.*, u.name FROM {node} n '. $filter['join'] .' INNER JOIN {users} u ON n.uid = u.uid '. $filter['where'] . $sort), 50, 0, NULL, $filter['args']);
+  $result = pager_query(db_rewrite_sql('SELECT n.*, u.name FROM {node} n ' . $filter['join'] . ' INNER JOIN {users} u ON n.uid = u.uid ' . $filter['where'] . $sort), 50, 0, NULL, $filter['args']);
 
   // Build the 'Update options' form.
   $form['options'] = array(
@@ -633,10 +633,10 @@ function node_multiple_delete_confirm(&$form_state, $nodes) {
   }
   $form['operation'] = array('#type' => 'hidden', '#value' => 'delete');
   $form['#submit'][] = 'node_multiple_delete_confirm_submit';
-  $confirm_question = format_plural(count($nodes), 
-                                  'Are you sure you want to delete this item?', 
+  $confirm_question = format_plural(count($nodes),
+                                  'Are you sure you want to delete this item?',
                                   'Are you sure you want to delete these items?');
-  return confirm_form($form, 
+  return confirm_form($form,
                     $confirm_question,
                     'admin/content/node', t('This action cannot be undone.'),
                     t('Delete'), t('Cancel'));

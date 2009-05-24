@@ -346,7 +346,7 @@ function simpletest_result_form_submit($form, &$form_state) {
  * @return HTML output.
  */
 function theme_simpletest_result_summary($form) {
-  return '<div class="simpletest-' . ($form['#ok'] ? 'pass' : 'fail') .'">' . _simpletest_format_summary_line($form) . '</div>';
+  return '<div class="simpletest-' . ($form['#ok'] ? 'pass' : 'fail') . '">' . _simpletest_format_summary_line($form) . '</div>';
 }
 
 /**

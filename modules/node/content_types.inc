@@ -52,7 +52,7 @@ function theme_node_admin_overview($name, $type) {
  * Generates the node type editing form.
  */
 function node_type_form(&$form_state, $type = NULL) {
-  drupal_add_js(drupal_get_path('module', 'node') .'/content_types.js');
+  drupal_add_js(drupal_get_path('module', 'node') . '/content_types.js');
   if (!isset($type->type)) {
     // This is a new type. Node module managed types are custom and unlocked.
     $type = node_type_set_defaults(array('custom' => 1, 'locked' => 0));
@@ -167,7 +167,7 @@ function node_type_form(&$form_state, $type = NULL) {
   $form['display']['node_submitted'] = array(
     '#type' => 'checkbox',
     '#title' => t('Display post information'),
-    '#default_value' => variable_get('node_submitted_'. $type->type, TRUE),
+    '#default_value' => variable_get('node_submitted_' . $type->type, TRUE),
     '#description' => t('Enable the <em>submitted by Username on date</em> text.'),
   );
   $form['old_type'] = array(

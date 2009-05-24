@@ -457,7 +457,7 @@ function hook_link($type, $object, $teaser = FALSE) {
 
 /**
  * Perform alterations before links on a comment are rendered. One popular use of
- * this hook is to modify/remove links from other modules. If you want to add a link 
+ * this hook is to modify/remove links from other modules. If you want to add a link
  * to the links section of a node, use hook_link instead.
  *
  * @param $links
@@ -1588,13 +1588,13 @@ function hook_install() {
  * the same directory as mymodule.module. Drupal core's updates are implemented
  * using the system module as a name and stored in database/updates.inc.
  *
- * If your update task is potentially time-consuming, you'll need to implement a 
- * multipass update to avoid PHP timeouts. Multipass updates use the $sandbox 
- * parameter provided by the batch API (normally, $context['sandbox']) to store 
- * information between successive calls, and the $ret['#finished'] return value 
+ * If your update task is potentially time-consuming, you'll need to implement a
+ * multipass update to avoid PHP timeouts. Multipass updates use the $sandbox
+ * parameter provided by the batch API (normally, $context['sandbox']) to store
+ * information between successive calls, and the $ret['#finished'] return value
  * to provide feedback regarding completion level.
  *
- * See the batch operations page for more information on how to use the batch API: 
+ * See the batch operations page for more information on how to use the batch API:
  * @link http://drupal.org/node/146843 http://drupal.org/node/146843 @endlink
  *
  * @return An array with the results of the calls to update_sql(). An upate
@@ -1611,11 +1611,11 @@ function hook_update_N(&$sandbox = NULL) {
   $ret = array();
   db_add_field($ret, 'mytable1', 'newcol', array('type' => 'int', 'not null' => TRUE, 'description' => 'My new integer column.'));
   return $ret;
-  
-  // However, for more complex operations that may take a long time, 
+
+  // However, for more complex operations that may take a long time,
   // you may hook into Batch API as in the following example.
   $ret = array();
-  
+
   // Update 3 users at a time to have an exclamation point after their names.
   // (They're really happy that we can do batch API in this hook!)
   if (!isset($sandbox['progress'])) {
@@ -1633,13 +1633,13 @@ function hook_update_N(&$sandbox = NULL) {
   foreach ($users as $user) {
     $user->name .= '!';
     $ret[] = update_sql("UPDATE {users} SET name = '$user->name' WHERE uid = $user->uid");
-    
+
     $sandbox['progress']++;
     $sandbox['current_uid'] = $user->uid;
   }
 
   $ret['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
-  
+
   return $ret;
 }
 

@@ -611,7 +611,7 @@ class MergeQuery extends Query {
    *   The called object.
    */
   public function update(array $fields, array $values = array()) {
-   if ($values) {
+    if ($values) {
       $fields = array_combine($fields, $values);
     }
     $this->updateFields = $fields;

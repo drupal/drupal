@@ -1039,7 +1039,7 @@ class FieldFormTestCase extends DrupalWebTestCase {
     $this->assertPattern("|$pattern|s", 'Widgets are displayed in the correct order');
     $this->assertFieldByName("$this->field_name[$delta][value]", '', "New widget is displayed");
     $this->assertFieldByName("$this->field_name[$delta][_weight]", $delta, "New widget has the right weight");
-    $this->assertNoField("$this->field_name[". ($delta + 1) . '][value]', 'No extraneous widget is displayed');
+    $this->assertNoField("$this->field_name[" . ($delta + 1) . '][value]', 'No extraneous widget is displayed');
   }
 
   /**

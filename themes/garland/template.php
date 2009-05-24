@@ -45,7 +45,7 @@ function garland_preprocess_page(&$vars) {
   }
   $vars['site_title'] = implode(' ', $site_fields);
   if (!empty($site_fields)) {
-    $site_fields[0] = '<span>'. $site_fields[0] .'</span>';
+    $site_fields[0] = '<span>' . $site_fields[0] . '</span>';
   }
   $vars['site_html'] = implode(' ', $site_fields);
 
@@ -91,9 +91,9 @@ function garland_node_submitted($node) {
 function garland_get_ie_styles() {
   global $language;
 
-  $ie_styles = '<link type="text/css" rel="stylesheet" media="all" href="' . base_path() . path_to_theme() . '/fix-ie.css" />'. "\n";
+  $ie_styles = '<link type="text/css" rel="stylesheet" media="all" href="' . base_path() . path_to_theme() . '/fix-ie.css" />' . "\n";
   if ($language->direction == LANGUAGE_RTL) {
-    $ie_styles .= '      <style type="text/css" media="all">@import "' . base_path() . path_to_theme() . '/fix-ie-rtl.css";</style>'. "\n";
+    $ie_styles .= '      <style type="text/css" media="all">@import "' . base_path() . path_to_theme() . '/fix-ie-rtl.css";</style>' . "\n";
   }
 
   return $ie_styles;

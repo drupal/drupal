@@ -769,7 +769,7 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
     $num_updated = db_update('test')
       ->condition('name', 'Ringo')
       ->fields(array('job' => 'Musician'))
-      ->expression('age', 'age + :age',array(':age' => 4))
+      ->expression('age', 'age + :age', array(':age' => 4))
       ->execute();
     $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
 
@@ -790,7 +790,7 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
     $before_age = db_query("SELECT age FROM {test} WHERE name = 'Ringo'")->fetchField();
     $num_updated = db_update('test')
       ->condition('name', 'Ringo')
-      ->expression('age', 'age + :age',array(':age' => 4))
+      ->expression('age', 'age + :age', array(':age' => 4))
       ->execute();
     $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
 
@@ -1643,7 +1643,7 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
     if (!($num_pages * $limit < $count)) {
       $num_pages--;
     }
-    
+
     for ($page = 0; $page <= $num_pages; ++$page) {
       $this->drupalGet('database_test/pager_query_even/' . $limit, array('query' => array('page' => $page)));
       $data = json_decode($this->drupalGetContent());
@@ -1769,7 +1769,7 @@ class DatabaseSelectTableSortDefaultTestCase extends DatabaseTestCase {
       $this->assertEqual($last->task, $sort['last'], t('Items appear in the correct order.'));
     }
   }
-  
+
   /**
    * Confirm that if a tablesort's orderByHeader is called before another orderBy, that the header happens first.
    *
@@ -2391,7 +2391,7 @@ class DatabaseInvalidDataTestCase extends DatabaseTestCase {
       // Ensure the other values were not inserted.
       $record = db_select('test')
         ->fields('test', array('name', 'age'))
-        ->condition('age', array(17, 75),'IN')
+        ->condition('age', array(17, 75), 'IN')
         ->execute()->fetchObject();
 
       $this->assertFalse($record, t('The rest of the insert aborted as expected.'));
@@ -2596,7 +2596,7 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
       $saved_age = db_query("SELECT age FROM {test} WHERE name = :name", array(':name' => 'DanielB'))->fetchField();
       $this->assertNotIdentical($saved_age, '19', t('Cannot retrieve DanielB row after commit.'));
     }
-    catch(Exception $e) {
+    catch (Exception $e) {
       $this->fail($e->getMessage());
     }
   }
@@ -2622,7 +2622,7 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
       $saved_age = db_query("SELECT age FROM {test} WHERE name = :name", array(':name' => 'DanielB'))->fetchField();
       $this->assertIdentical($saved_age, '19', t('DanielB not rolled back, since transactions are not supported.'));
     }
-    catch(Exception $e) {
+    catch (Exception $e) {
       $this->fail($e->getMessage());
     }
   }
@@ -2644,7 +2644,7 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
       $saved_age = db_query("SELECT age FROM {test} WHERE name = :name", array(':name' => 'DanielA'))->fetchField();
       $this->assertIdentical($saved_age, '19', t('Can retrieve DanielA row after commit.'));
     }
-    catch(Exception $e) {
+    catch (Exception $e) {
       $this->fail($e->getMessage());
     }
   }

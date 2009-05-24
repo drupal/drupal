@@ -94,7 +94,7 @@ function openid_user_delete_form($form_state, $account, $aid = 0) {
     ':aid' => $aid,
   ))
   ->fetchField();
-  return confirm_form(array(), t('Are you sure you want to delete the OpenID %authname for %user?', array('%authname' => $authname, '%user' => $account->name)), 'user/'. $account->uid .'/openid');
+  return confirm_form(array(), t('Are you sure you want to delete the OpenID %authname for %user?', array('%authname' => $authname, '%user' => $account->name)), 'user/' . $account->uid . '/openid');
 }
 
 function openid_user_delete_form_submit(&$form_state, $form_values) {
@@ -106,5 +106,5 @@ function openid_user_delete_form_submit(&$form_state, $form_values) {
   if ($query) {
     drupal_set_message(t('OpenID deleted.'));
   }
-  $form_state['#redirect'] = 'user/'. $form_state['#args'][0]->uid .'/openid';
+  $form_state['#redirect'] = 'user/' . $form_state['#args'][0]->uid . '/openid';
 }

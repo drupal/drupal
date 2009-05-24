@@ -559,7 +559,7 @@ function install_select_locale($profilename) {
     install_task_list('locale-select');
 
     drupal_set_title(st('Choose language'));
-    
+
     print theme('install_page', drupal_render(drupal_get_form('install_select_locale_form', $locales)));
     exit;
   }
@@ -665,7 +665,7 @@ function install_tasks($profile, $task) {
   // to the same address, until the batch finished callback is invoked
   // and the task advances to 'locale-initial-import'.
   if ($task == 'profile-install-batch') {
-    include_once DRUPAL_ROOT .'/includes/batch.inc';
+    include_once DRUPAL_ROOT . '/includes/batch.inc';
     $output = _batch_page();
   }
 
@@ -917,7 +917,7 @@ function install_check_requirements($profile, $verify) {
         'title'       => st('Settings file'),
         'value'       => st('The settings file does not exist.'),
         'severity'    => REQUIREMENT_ERROR,
-        'description' => st('The @drupal installer requires that you create a settings file as part of the installation process. Copy the %default_file file to %file. More details about installing Drupal are available in <a href="@install_txt">INSTALL.txt</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '%default_file' => $conf_path .'/default.settings.php', '@install_txt' => base_path() .'INSTALL.txt')),
+        'description' => st('The @drupal installer requires that you create a settings file as part of the installation process. Copy the %default_file file to %file. More details about installing Drupal are available in <a href="@install_txt">INSTALL.txt</a>.', array('@drupal' => drupal_install_profile_name(), '%file' => $file, '%default_file' => $conf_path . '/default.settings.php', '@install_txt' => base_path() . 'INSTALL.txt')),
       );
     }
     else {

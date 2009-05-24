@@ -873,7 +873,7 @@ function comment_save($edit) {
           $parent->thread = (string) rtrim((string) $parent->thread, '/');
           // Get the max value in *this* thread.
           $max = db_query("SELECT MAX(thread) FROM {comment} WHERE thread LIKE :thread AND nid = :nid", array(
-            ':thread' => $parent->thread .'.%',
+            ':thread' => $parent->thread . '.%',
             ':nid' => $edit['nid'],
           ))->fetchField();
 

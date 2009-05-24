@@ -414,7 +414,7 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
 function drupal_get_install_files($module_list = array()) {
   $installs = array();
   foreach ($module_list as $module) {
-    $installs = array_merge($installs, drupal_system_listing('/'. $module . '.install$/', 'modules'));
+    $installs = array_merge($installs, drupal_system_listing('/' . $module . '.install$/', 'modules'));
   }
   return $installs;
 }
@@ -628,11 +628,11 @@ function drupal_uninstall_modules($module_list = array()) {
       $placeholders = implode(', ', array_fill(0, count($paths), "'%s'"));
 
       $result = db_select('menu_links')
-         ->fields('menu_links')
-         ->condition('router_path', $paths, 'IN')
-         ->condition('external', 0)
-         ->orderBy('depth')
-         ->execute();
+        ->fields('menu_links')
+        ->condition('router_path', $paths, 'IN')
+        ->condition('external', 0)
+        ->orderBy('depth')
+        ->execute();
       // Remove all such items. Starting from those with the greatest depth will
       // minimize the amount of re-parenting done by menu_link_delete().
       foreach ($result as $item) {
@@ -938,7 +938,7 @@ function drupal_check_profile($profile) {
   $requirements = array();
   foreach ($installs as $install) {
     require_once DRUPAL_ROOT . '/' . $install->filepath;
-    $function = $install->name. '_requirements';
+    $function = $install->name . '_requirements';
     if (function_exists($function)) {
       $requirements = array_merge($requirements, $function('install'));
     }

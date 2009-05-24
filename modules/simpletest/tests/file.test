@@ -705,13 +705,13 @@ class FileDirectoryTest extends FileTestCase {
     $this->assertDirectoryPermissions($directory, variable_get('file_chmod_directory', 0775));
 
     // Remove .htaccess file to then test that it gets re-created.
-    @unlink(file_directory_path() .'/.htaccess');
+    @unlink(file_directory_path() . '/.htaccess');
     $directory = file_directory_path();
     file_check_directory($directory);
     $this->assertTrue(is_file(file_directory_path() . '/.htaccess'), t('Successfully created the .htaccess file in the files directory.'), 'File');
 
     // Verify contents of .htaccess file.
-    $file = file_get_contents(file_directory_path() .'/.htaccess');
+    $file = file_get_contents(file_directory_path() . '/.htaccess');
     $this->assertEqual($file, "SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nOptions None\nOptions +FollowSymLinks", t('The .htaccess file contains the proper content.'), 'File');
   }
 
@@ -773,14 +773,14 @@ class FileDirectoryTest extends FileTestCase {
     // directory.
     $basename = 'xyz.txt';
     $directory = 'misc';
-    $original = $directory .'/'. $basename;
+    $original = $directory . '/' . $basename;
     $path = file_create_filename($basename, $directory);
     $this->assertEqual($path, $original, t('New filepath %new equals %original.', array('%new' => $path, '%original' => $original)), 'File');
 
     // Then we test against a file that already exists within that directory.
     $basename = 'druplicon.png';
-    $original = $directory .'/'. $basename;
-    $expected = $directory .'/druplicon_0.png';
+    $original = $directory . '/' . $basename;
+    $expected = $directory . '/druplicon_0.png';
     $path = file_create_filename($basename, $directory);
     $this->assertEqual($path, $expected, t('Creating a new filepath from %original equals %new.', array('%new' => $path, '%original' => $original)), 'File');
 

@@ -134,11 +134,11 @@ function taxonomy_autocomplete($vid, $string = '') {
     $tags = $query
       ->fields('t', array('tid', 'name'))
       ->condition('t.vid', $vid)
-      ->where("LOWER(t.name) LIKE LOWER(:last_string)", array(':last_string' => '%'. $last_string .'%'))
+      ->where("LOWER(t.name) LIKE LOWER(:last_string)", array(':last_string' => '%' . $last_string . '%'))
       ->range(0, 10)
       ->execute()
       ->fetchAllKeyed();
-      
+
     $prefix = count($array) ? implode(', ', $array) . ', ' : '';
 
     foreach ($tags as $tid => $name) {

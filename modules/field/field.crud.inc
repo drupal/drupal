@@ -70,7 +70,7 @@
  *     as Schema API index specifications. Only columns that appear in the
  *     'columns' setting are allowed. Note that field types can specify
  *     default indexes, which can be modified or added to when
- *     creating a field. 
+ *     creating a field.
  * - settings (array)
  *     A sub-array of key/value pairs of field-type-specific settings. Each
  *     field type module defines and documents its own field settings.
@@ -155,7 +155,7 @@
  *             the display formatter used in this context.
  *         - module (string, read-only)
  *             The name of the module which implements the display formatter.
- *     - example_context_2 
+ *     - example_context_2
  *         - ...
  *
  * TODO D7 : document max length for field types, widget types,
@@ -194,7 +194,7 @@
  *     definition of a field-type index by providing an index with the
  *     same name, or to remove it by redefining it as an empty array
  *     of columns. Overriding field-type indexes should be done
- *     carefully, for it might seriously affect the site's performance. 
+ *     carefully, for it might seriously affect the site's performance.
  *   - settings: each omitted setting is given the default value defined in
  *     hook_field_info().
  * @throw

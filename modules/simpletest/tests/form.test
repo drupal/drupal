@@ -42,7 +42,7 @@ class FormsTestCase extends DrupalWebTestCase {
     $elements['radios']['element'] = array('#title' => $this->randomName(), '#type' => 'radios', '#required' => TRUE, '#options' => array($this->randomName(), $this->randomName(), $this->randomName()));
     $elements['radios']['empty_values'] = $empty_arrays;
 
-    $elements['checkboxes']['element'] = array('#title' => $this->randomName(), '#type' => 'checkboxes', '#required' => TRUE,'#options' => array($this->randomName(), $this->randomName(), $this->randomName()));
+    $elements['checkboxes']['element'] = array('#title' => $this->randomName(), '#type' => 'checkboxes', '#required' => TRUE, '#options' => array($this->randomName(), $this->randomName(), $this->randomName()));
     $elements['checkboxes']['empty_values'] = $empty_arrays;
 
     $elements['select']['element'] = array('#title' => $this->randomName(), '#type' => 'select', '#required' => TRUE, '#options' => array($this->randomName(), $this->randomName(), $this->randomName()));
@@ -142,7 +142,7 @@ class FormsElementsTableSelectFunctionalTest extends DrupalWebTestCase {
     $this->assertFieldByXPath('//th[@class="select-all"]', NULL, t('Presence of the "Select all" checkbox.'));
 
     $rows = array('row1', 'row2', 'row3');
-    foreach($rows as $row) {
+    foreach ($rows as $row) {
       $this->assertFieldByXPath('//input[@type="checkbox"]', $row, t('Checkbox for value @row.', array('@row' => $row)));
     }
   }
@@ -159,7 +159,7 @@ class FormsElementsTableSelectFunctionalTest extends DrupalWebTestCase {
     $this->assertNoFieldByXPath('//th[@class="select-all"]', '', t('Absence of the "Select all" checkbox.'));
 
     $rows = array('row1', 'row2', 'row3');
-    foreach($rows as $row) {
+    foreach ($rows as $row) {
       $this->assertFieldByXPath('//input[@type="radio"]', $row, t('Radio button for value @row.', array('@row' => $row)));
     }
   }
@@ -411,7 +411,7 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
    * Tests using the form in a usual way.
    */
   function testForm() {
-    
+
     $user = $this->drupalCreateUser(array('access content'));
     $this->drupalLogin($user);
 
@@ -432,7 +432,7 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
 
     $this->drupalPost('form_test/form-storage', array('title' => 'new', 'value' => 'value_is_set'), 'Continue', array('query' => 'cache=1'));
     $this->assertText('Form constructions: 1', t('The form has been constructed one time till now.'));
-    
+
     $this->drupalPost(NULL, array(), 'Save', array('query' => 'cache=1'));
     $this->assertText('Form constructions: 2', t('The form has been constructed two times till now.'));
     $this->assertText('Title: new', t('The form storage has stored the values.'));

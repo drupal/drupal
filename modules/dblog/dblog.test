@@ -197,7 +197,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->drupalLogout();
     // Fetch row ids in watchdog that relate to the user.
     $result = db_query('SELECT wid FROM {watchdog} WHERE uid = :uid', array(':uid' => $user->uid));
-    foreach($result as $row) {
+    foreach ($result as $row) {
       $ids[] = $row->wid;
     }
     $count_before = (isset($ids)) ? count($ids) : 0;
@@ -225,7 +225,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     unset($ids);
     // Fetch row ids in watchdog that relate to the user.
     $result = db_query('SELECT wid FROM {watchdog} WHERE uid = :uid', array(':uid' => $user->uid));
-    foreach($result as $row) {
+    foreach ($result as $row) {
       $ids[] = $row->wid;
     }
     $this->assertTrue(!isset($ids), t('DBLog contains no records for @name', array('@name' => $user->name)));

@@ -384,14 +384,14 @@ function openid_association($op_endpoint) {
       $assoc_response['mac_key'] = base64_encode(_openid_dh_xorsecret($shared, $enc_mac_key));
     }
     db_insert('openid_association')
-     ->fields(array(
-       'idp_endpoint_uri' => $op_endpoint,
-       'session_type' => $assoc_response['session_type'],
-       'assoc_handle' => $assoc_response['assoc_handle'],
-       'assoc_type' => $assoc_response['assoc_type'],
-       'expires_in' => $assoc_response['expires_in'],
-       'mac_key' => $assoc_response['mac_key'],
-       'created' => REQUEST_TIME,
+      ->fields(array(
+        'idp_endpoint_uri' => $op_endpoint,
+        'session_type' => $assoc_response['session_type'],
+        'assoc_handle' => $assoc_response['assoc_handle'],
+        'assoc_type' => $assoc_response['assoc_type'],
+        'expires_in' => $assoc_response['expires_in'],
+        'mac_key' => $assoc_response['mac_key'],
+        'created' => REQUEST_TIME,
       ))
       ->execute();
     $assoc_handle = $assoc_response['assoc_handle'];

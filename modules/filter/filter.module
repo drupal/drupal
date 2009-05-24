@@ -310,7 +310,7 @@ function filter_formats($index = NULL) {
     if (!$all) {
       $or = db_or()->condition('format', variable_get('filter_default_format', 1));
       foreach ($user->roles as $rid => $role) {
-        $or->condition('roles', '%'. (int)$rid .'%', 'LIKE');
+        $or->condition('roles', '%' . (int)$rid . '%', 'LIKE');
       }
       $query->condition($or);
     }

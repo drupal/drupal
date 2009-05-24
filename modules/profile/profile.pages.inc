@@ -114,7 +114,7 @@ function profile_autocomplete($field, $string) {
   if ($autocomplete_field) {
     $result = db_query_range("SELECT value FROM {profile_value} WHERE fid = :fid AND LOWER(value) LIKE LOWER(:value) GROUP BY value ORDER BY value ASC", array(
       ':fid' => $field,
-      ':value' => $string .'%',
+      ':value' => $string . '%',
     ), 0, 10);
     while ($data = db_fetch_object($result)) {
       $matches[$data->value] = check_plain($data->value);

@@ -64,7 +64,7 @@ function taxonomy_overview_vocabularies_submit($form, &$form_state) {
  */
 function theme_taxonomy_overview_vocabularies($form) {
   $rows = array();
- 
+
   foreach (element_children($form) as $key) {
     if (isset($form[$key]['name'])) {
       $vocabulary = &$form[$key];

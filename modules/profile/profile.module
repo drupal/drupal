@@ -293,8 +293,8 @@ function profile_view_field($user, $field) {
   // and if a user has permission to view profiles. Note that this check is
   // necessary because a user may always see their own profile.
   $browse = user_access('access user profiles')
-         && (user_access('administer users') || $field->visibility != PROFILE_PRIVATE)
-         && !empty($field->page);
+        && (user_access('administer users') || $field->visibility != PROFILE_PRIVATE)
+        && !empty($field->page);
 
   if (isset($user->{$field->name}) && $value = $user->{$field->name}) {
     switch ($field->type) {

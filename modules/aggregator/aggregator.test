@@ -20,7 +20,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
    *   If given, feed will be created with this URL, otherwise /rss.xml will be used.
    * @return $feed
    *   Full feed object if possible.
-   * 
+   *
    * @see getFeedEditArray()
    */
   function createFeed($feed_url = NULL) {
@@ -67,8 +67,8 @@ class AggregatorTestCase extends DrupalWebTestCase {
 
   /**
    * Return the count of the randomly created feed array.
-   * 
-   * @return 
+   *
+   * @return
    *   Number of feed items on default feed created by createFeed().
    */
   function getDefaultFeedItemCount() {
@@ -117,10 +117,10 @@ class AggregatorTestCase extends DrupalWebTestCase {
 
   /**
    * Add and remove feed items and ensure that the count is zero.
-   * 
-   * @param $feed 
+   *
+   * @param $feed
    *   Feed object representing the feed.
-   * @param $expected_count 
+   * @param $expected_count
    *   Expected number of feed items.
    */
   function updateAndRemove($feed, $expected_count) {
@@ -242,7 +242,7 @@ EOF;
 
   function createSampleNodes() {
     // Post 5 articles.
-    for($i = 0; $i < 5; $i++) {
+    for ($i = 0; $i < 5; $i++) {
       $edit = array();
       $edit['title'] = $this->randomName();
       $edit['body'] = $this->randomName();
@@ -438,7 +438,7 @@ class RemoveFeedItemTestCase extends AggregatorTestCase {
     foreach ($feed_urls as $feed_url) {
       $feed = $this->createFeed($feed_url);
       // Update and remove items two times in a row to make sure that removal
-      // resets all 'modified' information (modified, etag, hash) and allows for 
+      // resets all 'modified' information (modified, etag, hash) and allows for
       // immediate update.
       $this->updateAndRemove($feed, 2);
       $this->updateAndRemove($feed, 2);

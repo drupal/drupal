@@ -64,7 +64,7 @@ function database_test_schema() {
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
-       ),
+      ),
       'age' => array(
         'description' => "The person's age",
         'type' => 'int',
@@ -109,7 +109,7 @@ function database_test_schema() {
         'description' => 'Simple unique ID.',
         'type' => 'serial',
         'not null' => TRUE,
-       ),
+      ),
       'blob1' => array(
         'description' => 'A dummy BLOB field.',
         'type' => 'blob',

@@ -185,7 +185,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $edit['reply'] = $reply;
     $edit['selected'] = ($selected ? '1' : '0');
     $this->drupalPost('admin/build/contact/edit/' . $category_id, $edit, t('Save'));
-    return($category_id);
+    return ($category_id);
   }
 
   /**

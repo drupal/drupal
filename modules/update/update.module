@@ -562,7 +562,7 @@ function _update_cache_set($cid, $data, $expire) {
     ->execute();
 }
 
-/** 
+/**
  * Retrieve data from the private update status cache table.
  *
  * @param $cid

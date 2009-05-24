@@ -30,7 +30,7 @@ function menu_overview_page() {
 function theme_menu_admin_overview($title, $name, $description) {
   $output = check_plain($title);
   $output .= '<div class="description">' . filter_xss_admin($description) . '</div>';
-  
+
   return $output;
 }
 

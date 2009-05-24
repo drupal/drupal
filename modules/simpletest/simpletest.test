@@ -159,7 +159,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
    * Fetch the test id from the test results.
    */
   function getTestIdFromResults() {
-    foreach($this->childTestResults['assertions'] as $assertion) {
+    foreach ($this->childTestResults['assertions'] as $assertion) {
       if (preg_match('@^Test ID is ([0-9]*)\.$@', $assertion['message'], $matches)) {
         return $matches[1];
       }

@@ -69,9 +69,9 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
     $edit['pass[pass1]'] = '99999.0';
     $edit['pass[pass2]'] = '99999';
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertText(t('The specified passwords do not match.'), t('Type mismatched passwords display an error message.'));    
+    $this->assertText(t('The specified passwords do not match.'), t('Type mismatched passwords display an error message.'));
     $this->assertNoText(t('The changes have been saved.'), t('Save user password with mismatched type in password confirm.'));
-    
+
     // Change user password.
     $new_pass = user_password();
     $edit = array();
@@ -522,7 +522,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
     $file_check = file_check_directory($file_dir, FILE_CREATE_DIRECTORY, 'file_directory_path');
 
     $picture_dir = variable_get('user_picture_path', 'pictures');
-    $picture_path = $file_dir . '/' .$picture_dir;
+    $picture_path = $file_dir . '/' . $picture_dir;
 
     $pic_check = file_check_directory($picture_path, FILE_CREATE_DIRECTORY, 'user_picture_path');
     $this->_directory_test = is_writable($picture_path);
@@ -1026,7 +1026,7 @@ class UserSaveTestCase extends DrupalWebTestCase {
     // User ID must be a number that is not in the database.
     $max_uid = db_result(db_query('SELECT MAX(uid) FROM {users}'));
     $test_uid = $max_uid + mt_rand(1000, 1000000);
-    $test_name = $this->randomName(); 
+    $test_name = $this->randomName();
 
     // Create the base user, based on drupalCreateUser().
     $user = array(

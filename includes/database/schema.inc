@@ -496,7 +496,7 @@ abstract class DatabaseSchema {
 
   /**
    * Prepare a table or column comment for database query.
-   * 
+   *
    * @param $comment
    *   The comment string to prepare.
    * @param $length

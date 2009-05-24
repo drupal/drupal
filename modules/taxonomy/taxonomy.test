@@ -104,7 +104,7 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
     foreach ($vocabularies as $key => $vocabulary) {
       $vocabulary->weight = -$vocabulary->weight;
       $vocabularies[$key]->weight = $vocabulary->weight;
-      $edit[$key .'[weight]'] = $vocabulary->weight;
+      $edit[$key . '[weight]'] = $vocabulary->weight;
     }
     // Saving the new weights via the interface.
     $this->drupalPost('admin/content/taxonomy/', $edit, t('Save'));
@@ -157,7 +157,7 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
 
     // Delete the vocabulary.
     $edit = array();
-    $this->drupalPost('admin/content/taxonomy/' .$vid, $edit, t('Delete'));
+    $this->drupalPost('admin/content/taxonomy/' . $vid, $edit, t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the vocabulary %name?', array('%name' => $vocabulary->name)), t('[confirm deletion] Asks for confirmation.'));
     $this->assertText(t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'), t('[confirm deletion] Inform that all terms will be deleted.'));
 
@@ -175,13 +175,13 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
  */
 class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
 
-public static function getInfo() {
-     return array(
-       'name' => t('Taxonomy vocabularies'),
-       'description' => t('Test loading, saving and deleting vocabularies.'),
-       'group' => t('Taxonomy'),
-     );
-   }
+  public static function getInfo() {
+    return array(
+      'name' => t('Taxonomy vocabularies'),
+      'description' => t('Test loading, saving and deleting vocabularies.'),
+      'group' => t('Taxonomy'),
+    );
+  }
 
   function setUp() {
     parent::setUp('taxonomy');
@@ -501,7 +501,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $edit['title'] = $this->randomName();
     // Insert the terms in a comma separated list. Vocabulary 1 is a
     // free-tagging field created by the default profile.
-    $edit['taxonomy[tags][' . $this->vocabulary->vid .']'] =  implode(', ', $terms);
+    $edit['taxonomy[tags][' . $this->vocabulary->vid . ']'] =  implode(', ', $terms);
     $edit['body'] = $this->randomName();
     $this->drupalPost('node/add/article', $edit, t('Save'));
     $this->assertRaw(t('@type %title has been created.', array('@type' => t('Article'), '%title' => $edit['title'])), t('The node was created successfully'));
