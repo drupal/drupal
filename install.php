@@ -234,7 +234,6 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
     $form['basic_options'] = array(
       '#type' => 'fieldset',
       '#title' => st('Basic options'),
-      '#description' => '<p>' . st('To set up your @drupal database, enter the following information.', array('@drupal' => drupal_install_profile_name())) . '</p>',
     );
 
     $form['basic_options']['driver'] = array(
