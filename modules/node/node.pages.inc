@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.65 2009/05/20 05:39:45 webchick Exp $
+// $Id: node.pages.inc,v 1.66 2009/05/25 15:39:12 dries Exp $
 
 /**
  * @file
@@ -289,6 +289,10 @@ function node_form(&$form_state, $node) {
  * Return a node body field, with format and teaser.
  */
 function node_body_field($node, $label, $word_count) {
+  // Do not generate a body field if the type does not specify one.
+  if (!node_get_types('type', $node)->has_body) {
+    return array();
+  }
 
   // Check if we need to restore the teaser at the beginning of the body.
   $include = !isset($node->teaser) || ($node->teaser == substr($node->body, 0, strlen($node->teaser)));
