@@ -13,10 +13,10 @@ function comment_admin($type = 'new') {
   $edit = $_POST;
 
   if (isset($edit['operation']) && ($edit['operation'] == 'delete') && isset($edit['comments']) && $edit['comments']) {
-    return drupal_render(drupal_get_form('comment_multiple_delete_confirm'));
+    return drupal_get_form('comment_multiple_delete_confirm');
   }
   else {
-    return drupal_render(drupal_get_form('comment_admin_overview', $type, arg(4)));
+    return drupal_get_form('comment_admin_overview', $type, arg(4));
   }
 }
 

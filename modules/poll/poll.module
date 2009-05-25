@@ -161,7 +161,7 @@ function poll_block_view($delta = '') {
       if ($poll->nid) {
         $poll = poll_view($poll, TRUE, FALSE, TRUE);
         $block['subject'] = t('Poll');
-        $block['content'] = drupal_render($poll->content);
+        $block['content'] = $poll->content;
         return $block;
       }
     }

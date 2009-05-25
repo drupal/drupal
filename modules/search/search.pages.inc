@@ -40,10 +40,10 @@ function search_view($type = 'node') {
     }
 
     // Construct the search form.
-    $output = drupal_render(drupal_get_form('search_form', NULL, $keys, $type));
-    $output .= $results;
+    $build['search_form'] = drupal_get_form('search_form', NULL, $keys, $type);
+    $build['search_results'] = array('#markup' => $results);
 
-    return $output;
+    return $build;
   }
 
   return drupal_get_form('search_form', NULL, empty($keys) ? '' : $keys, $type);

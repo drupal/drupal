@@ -453,7 +453,7 @@ function field_format($obj_type, $object, $field, $item, $formatter_name = NULL,
 }
 
 /**
- * Render a single field, fully themed with label and multiple values.
+ * Return a single field, fully themed with label and multiple values.
  *
  * To be used by third-party code (Views, Panels...) that needs to output
  * an isolated field. Do *not* use inside node templates, use the
@@ -494,8 +494,8 @@ function field_view_field($obj_type, $object, $field, $instance, $teaser = FALSE
     // TODO : what about hook_field_attach_view ?
 
     // field_default_view() adds a wrapper to handle variables and 'excluded'
-    // fields for node templates. We bypass it and render the actual field.
-    $output = drupal_render($view[$field['field_name']]['field']);
+    // fields for node templates. We bypass it and return the actual field.
+    $output = $view[$field['field_name']]['field'];
   }
   return $output;
 }

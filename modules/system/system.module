@@ -1686,7 +1686,6 @@ function system_action_info() {
  * Menu callback. Display an overview of available and configured actions.
  */
 function system_actions_manage() {
-  $output = '';
   actions_synchronize();
   $actions = actions_list();
   $actions_map = actions_actions_map($actions);
@@ -1730,15 +1729,15 @@ function system_actions_manage() {
     if (!empty($pager)) {
       $row[] = array(array('data' => $pager, 'colspan' => '3'));
     }
-    $output .= '<h3>' . t('Actions available to Drupal:') . '</h3>';
-    $output .= theme('table', $header, $row);
+    $build['system_actions_header'] = array('#markup' => '<h3>' . t('Actions available to Drupal:') . '</h3>');
+    $build['system_actions_table'] = array('#markup' => theme('table', $header, $row));
   }
 
   if ($actions_map) {
-    $output .= drupal_render(drupal_get_form('system_actions_manage_form', $options));
+    $build['system_actions_manage_form'] = drupal_get_form('system_actions_manage_form', $options);
   }
 
-  return $output;
+  return $build;
 }
 
 /**

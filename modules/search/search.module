@@ -175,7 +175,7 @@ function search_block_list() {
  */
 function search_block_view($delta = '') {
   if (user_access('search content')) {
-    $block['content'] = drupal_render(drupal_get_form('search_block_form'));
+    $block['content'] = drupal_get_form('search_block_form');
     $block['subject'] = t('Search');
     return $block;
   }

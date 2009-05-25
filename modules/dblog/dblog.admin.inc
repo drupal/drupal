@@ -47,8 +47,8 @@ function dblog_overview() {
     WATCHDOG_EMERG    => 'dblog-emerg',
   );
 
-  $output = drupal_render(drupal_get_form('dblog_filter_form'));
-  $output .= drupal_render(drupal_get_form('dblog_clear_log_form'));
+  $build['dblog_filter_form'] = drupal_get_form('dblog_filter_form');
+  $build['dblog_clear_log_form'] = drupal_get_form('dblog_clear_log_form');
 
   $header = array(
     ' ',
@@ -100,10 +100,10 @@ function dblog_overview() {
     $rows[] = array(array('data' => t('No log messages available.'), 'colspan' => 6));
   }
 
-  $output .= theme('table', $header, $rows, array('id' => 'admin-dblog'));
-  $output .= theme('pager', NULL);
+  $build['dblog_table'] = array('#markup' => theme('table', $header, $rows, array('id' => 'admin-dblog')));
+  $build['dblog_pager'] = array('#markup' => theme('pager', NULL));
 
-  return $output;
+  return $build;
 }
 
 /**
