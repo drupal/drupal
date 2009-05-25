@@ -4,7 +4,7 @@
 /**
  * Tests for the l() function.
  */
-class CommonLUnitTest extends DrupalWebTestCase {
+class CommonLUnitTest extends DrupalUnitTestCase {
 
   public static function getInfo() {
     return array(
@@ -26,7 +26,7 @@ class CommonLUnitTest extends DrupalWebTestCase {
   }
 }
 
-class CommonSizeTestCase extends DrupalWebTestCase {
+class CommonSizeTestCase extends DrupalUnitTestCase {
   protected $exact_test_cases;
   protected $rounded_test_cases;
 
@@ -631,7 +631,7 @@ class DrupalRenderUnitTestCase extends DrupalWebTestCase {
 /**
  * Test for valid_url().
  */
-class ValidUrlTestCase extends DrupalWebTestCase {
+class ValidUrlTestCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
       'name' => t('Valid Url'),

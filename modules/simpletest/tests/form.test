@@ -77,7 +77,7 @@ class FormsTestCase extends DrupalWebTestCase {
 /**
  * Test form type functions for expected behavior.
  */
-class FormsTestTypeCase extends DrupalWebTestCase {
+class FormsTestTypeCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
       'name' => t('Form type-specific tests'),

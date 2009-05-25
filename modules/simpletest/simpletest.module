@@ -238,7 +238,7 @@ function simpletest_get_all_tests() {
     }
     $classes = array_values(array_diff(get_declared_classes(), $existing_classes));
     foreach ($classes as $key => $class) {
-      if (!method_exists($class, 'getInfo')) {
+      if (!is_subclass_of($class, 'DrupalTestCase') || !method_exists($class, 'getInfo')) {
         unset($classes[$key]);
       }
     }

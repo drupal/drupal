@@ -2,80 +2,17 @@
 // $Id$
 
 /**
- * Test case for typical Drupal tests.
+ * Base class for Drupal tests.
+ *
+ * Do not extend this class, use one of the subclasses in this file.
  */
-class DrupalWebTestCase {
-
+abstract class DrupalTestCase {
   /**
    * The test run ID.
    *
    * @var string
    */
   protected $testId;
-
-  /**
-   * The URL currently loaded in the internal browser.
-   *
-   * @var string
-   */
-  protected $url;
-
-  /**
-   * The handle of the current cURL connection.
-   *
-   * @var resource
-   */
-  protected $curlHandle;
-
-  /**
-   * The headers of the page currently loaded in the internal browser.
-   *
-   * @var Array
-   */
-  protected $headers;
-
-  /**
-   * The content of the page currently loaded in the internal browser.
-   *
-   * @var string
-   */
-  protected $content;
-
-  /**
-   * The content of the page currently loaded in the internal browser (plain text version).
-   *
-   * @var string
-   */
-  protected $plainTextContent;
-
-  /**
-   * The parsed version of the page.
-   *
-   * @var SimpleXMLElement
-   */
-  protected $elements = NULL;
-
-  /**
-   * The current user logged in using the internal browser.
-   *
-   * @var bool
-   */
-  protected $loggedInUser = FALSE;
-
-  /**
-   * The current cookie file used by cURL.
-   *
-   * We do not reuse the cookies in further runs, so we do not need a file
-   * but we still need cookie handling, so we set the jar to NULL.
-   */
-  protected $cookieFile = NULL;
-
-  /**
-   * Additional cURL options.
-   *
-   * DrupalWebTestCase itself never sets this but always obeys what is set.
-   */
-  protected $additionalCurlOptions = array();
 
   /**
    * The original database prefix, before it was changed for testing purposes.
@@ -92,11 +29,9 @@ class DrupalWebTestCase {
   protected $originalFileDirectory = NULL;
 
   /**
-   * The original user, before it was changed to a clean uid = 1 for testing purposes.
-   *
-   * @var object
+   * Time limit for the test.
    */
-  protected $originalUser = NULL;
+  protected $timeLimit = 180;
 
   /**
    * Current results of this test case.
@@ -117,15 +52,14 @@ class DrupalWebTestCase {
   protected $assertions = array();
 
   /**
-   * Time limit for the test.
+   * This class is skipped when looking for the source of an assertion.
+   *
+   * When displaying which function an assert comes from, it's not too useful
+   * to see "drupalWebTestCase->drupalLogin()', we would like to see the test
+   * that called it. So we need to skip the classes defining these helper
+   * methods.
    */
-  protected $timeLimit = 180;
-
-  /**
-   * HTTP authentication credentials (<username>:<password>).
-   */
-  protected $httpauth_credentials = NULL;
-
+  protected $skipClasses = array(__CLASS__ => TRUE);
 
   /**
    * Constructor for DrupalWebTestCase.
@@ -154,7 +88,7 @@ class DrupalWebTestCase {
    *   the name of the source file, 'line' is the line number and 'function'
    *   is the caller function itself.
    */
-  private function assert($status, $message = '', $group = 'Other', array $caller = NULL) {
+  protected function assert($status, $message = '', $group = 'Other', array $caller = NULL) {
     global $db_prefix;
 
     // Convert boolean status to string status.
@@ -211,11 +145,11 @@ class DrupalWebTestCase {
     $backtrace = debug_backtrace();
 
     // The first element is the call. The second element is the caller.
-    // We skip calls that occurred in one of the methods of DrupalWebTestCase
+    // We skip calls that occurred in one of the methods of our base classes
     // or in an assertion function.
-    while (($caller = $backtrace[1]) &&
-          ((isset($caller['class']) && $caller['class'] == 'DrupalWebTestCase') ||
-            substr($caller['function'], 0, 6) == 'assert')) {
+   while (($caller = $backtrace[1]) &&
+         ((isset($caller['class']) && isset($this->skipClasses[$caller['class']])) ||
+           substr($caller['function'], 0, 6) == 'assert')) {
       // We remove that call.
       array_shift($backtrace);
     }
@@ -475,6 +409,197 @@ class DrupalWebTestCase {
     $this->error($exception->getMessage(), 'Uncaught exception', _drupal_get_last_caller($backtrace));
   }
 
+
+  /**
+   * Generates a random string of ASCII characters of codes 32 to 126.
+   *
+   * The generated string includes alpha-numeric characters and common misc
+   * characters. Use this method when testing general input where the content
+   * is not restricted.
+   *
+   * @param $length
+   *   Length of random string to generate which will be appended to $db_prefix.
+   * @return
+   *   Randomly generated string.
+   */
+  public static function randomString($length = 8) {
+    global $db_prefix;
+
+    $str = '';
+    for ($i = 0; $i < $length; $i++) {
+      $str .= chr(mt_rand(32, 126));
+    }
+    return str_replace('simpletest', 's', $db_prefix) . $str;
+  }
+
+  /**
+   * Generates a random string containing letters and numbers.
+   *
+   * The letters may be upper or lower case. This method is better for
+   * restricted inputs that do not accept certain characters. For example,
+   * when testing input fields that require machine readable values (ie without
+   * spaces and non-standard characters) this method is best.
+   *
+   * @param $length
+   *   Length of random string to generate which will be appended to $db_prefix.
+   * @return
+   *   Randomly generated string.
+   */
+  public static function randomName($length = 8) {
+    global $db_prefix;
+
+    $values = array_merge(range(65, 90), range(97, 122), range(48, 57));
+    $max = count($values) - 1;
+    $str = '';
+    for ($i = 0; $i < $length; $i++) {
+      $str .= chr($values[mt_rand(0, $max)]);
+    }
+    return str_replace('simpletest', 's', $db_prefix) . $str;
+  }
+
+}
+
+/**
+ * Test case for Drupal unit tests.
+ *
+ * These tests can not access the database nor files. Calling any Drupal
+ * function that needs the database will throw exceptions. These include
+ * watchdog(), drupal_function_exists(), module_implements(),
+ * module_invoke_all() etc.
+ */
+class DrupalUnitTestCase extends DrupalTestCase {
+
+  /**
+   * Constructor for DrupalUnitTestCase.
+   */
+  function __construct($test_id = NULL) {
+    parent::__construct($test_id);
+    $this->skipClasses[__CLASS__] = TRUE;
+  }
+  
+  function setUp() {
+    global $db_prefix, $conf;
+
+    // Store necessary current values before switching to prefixed database.
+    $this->originalPrefix = $db_prefix;
+    $this->originalFileDirectory = file_directory_path();
+
+    // Generate temporary prefixed database to ensure that tests have a clean starting point.
+    $db_prefix = Database::getConnection()->prefixTables('{simpletest' . mt_rand(1000, 1000000) . '}');
+    $conf['file_directory_path'] = $this->originalFileDirectory . '/' . $db_prefix;
+
+    // If locale is enabled then t() will try to access the database and
+    // subsequently will fail as the database is not accessible.
+    $module_list = module_list();
+    if (isset($module_list['locale'])) {
+      $this->originalModuleList = $module_list;
+      unset($module_list['locale']);
+      module_list(TRUE, FALSE, $module_list);
+    }
+  }
+
+  function tearDown() {
+    global $db_prefix, $conf;
+    if (preg_match('/simpletest\d+/', $db_prefix)) {
+      $conf['file_directory_path'] = $this->originalFileDirectory;
+      // Return the database prefix to the original.
+      $db_prefix = $this->originalPrefix;
+      // Restore modules if necessary.
+      if (isset($this->originalModuleList)) {
+        module_list(TRUE, FALSE, $this->originalModuleList);
+      }
+    }
+  }
+}
+
+/**
+ * Test case for typical Drupal tests.
+ */
+class DrupalWebTestCase extends DrupalTestCase {
+  /**
+   * The URL currently loaded in the internal browser.
+   *
+   * @var string
+   */
+  protected $url;
+
+  /**
+   * The handle of the current cURL connection.
+   *
+   * @var resource
+   */
+  protected $curlHandle;
+
+  /**
+   * The headers of the page currently loaded in the internal browser.
+   *
+   * @var Array
+   */
+  protected $headers;
+
+  /**
+   * The content of the page currently loaded in the internal browser.
+   *
+   * @var string
+   */
+  protected $content;
+
+  /**
+   * The content of the page currently loaded in the internal browser (plain text version).
+   *
+   * @var string
+   */
+  protected $plainTextContent;
+
+  /**
+   * The parsed version of the page.
+   *
+   * @var SimpleXMLElement
+   */
+  protected $elements = NULL;
+
+  /**
+   * The current user logged in using the internal browser.
+   *
+   * @var bool
+   */
+  protected $loggedInUser = FALSE;
+
+  /**
+   * The current cookie file used by cURL.
+   *
+   * We do not reuse the cookies in further runs, so we do not need a file
+   * but we still need cookie handling, so we set the jar to NULL.
+   */
+  protected $cookieFile = NULL;
+
+  /**
+   * Additional cURL options.
+   *
+   * DrupalWebTestCase itself never sets this but always obeys what is set.
+   */
+  protected $additionalCurlOptions = array();
+
+  /**
+   * The original user, before it was changed to a clean uid = 1 for testing purposes.
+   *
+   * @var object
+   */
+  protected $originalUser = NULL;
+
+  /**
+   * HTTP authentication credentials (<username>:<password>).
+   */
+  protected $httpauth_credentials = NULL;
+
+  /**
+   * Constructor for DrupalWebTestCase.
+   */
+  function __construct($test_id = NULL) {
+    parent::__construct($test_id);
+    $this->skipClasses[__CLASS__] = TRUE;
+  }
+
   /**
    * Get a node from the database based on its title.
    *
@@ -645,53 +770,6 @@ class DrupalWebTestCase {
       // The files were the same size, so sort alphabetically.
       return strnatcmp($file1->name, $file2->name);
     }
-  }
-
-  /**
-   * Generates a random string of ASCII characters of codes 32 to 126.
-   *
-   * The generated string includes alpha-numeric characters and common misc
-   * characters. Use this method when testing general input where the content
-   * is not restricted.
-   *
-   * @param $length
-   *   Length of random string to generate which will be appended to $db_prefix.
-   * @return
-   *   Randomly generated string.
-   */
-  public static function randomString($length = 8) {
-    global $db_prefix;
-
-    $str = '';
-    for ($i = 0; $i < $length; $i++) {
-      $str .= chr(mt_rand(32, 126));
-    }
-    return str_replace('simpletest', 's', $db_prefix) . $str;
-  }
-
-  /**
-   * Generates a random string containing letters and numbers.
-   *
-   * The letters may be upper or lower case. This method is better for
-   * restricted inputs that do not accept certain characters. For example,
-   * when testing input fields that require machine readable values (ie without
-   * spaces and non-standard characters) this method is best.
-   *
-   * @param $length
-   *   Length of random string to generate which will be appended to $db_prefix.
-   * @return
-   *   Randomly generated string.
-   */
-  public static function randomName($length = 8) {
-    global $db_prefix;
-
-    $values = array_merge(range(65, 90), range(97, 122), range(48, 57));
-    $max = count($values) - 1;
-    $str = '';
-    for ($i = 0; $i < $length; $i++) {
-      $str .= chr($values[mt_rand(0, $max)]);
-    }
-    return str_replace('simpletest', 's', $db_prefix) . $str;
   }
 
   /**

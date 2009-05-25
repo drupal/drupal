@@ -9,7 +9,7 @@
 /**
  * Unit tests for the graph handling features.
  */
-class GraphUnitTest extends DrupalWebTestCase {
+class GraphUnitTest extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
       'name' => t('Graph'),

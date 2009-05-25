@@ -135,7 +135,7 @@ CONTENTS;
 
 }
 
-class RegistrySkipBodyTestCase extends DrupalWebTestCase {
+class RegistrySkipBodyTestCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
       'name' => t('Skip function body test'),
@@ -148,6 +148,7 @@ class RegistrySkipBodyTestCase extends DrupalWebTestCase {
     // This string contains all three kinds of opening braces.
     $function = '<?php function foo () { $x = "{$y}"; $x = "${y}"; }';
     $tokens = token_get_all($function);
+    require_once DRUPAL_ROOT . '/includes/registry.inc';
     _registry_skip_body($tokens);
     // Consume the last }
     each($tokens);
