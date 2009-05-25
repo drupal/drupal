@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.22 2009/04/20 20:02:30 dries Exp $
+// $Id: database.inc,v 1.23 2009/05/25 05:22:52 dries Exp $
 
 /**
  * @file
@@ -33,6 +33,9 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
       // Force column names to lower case.
       PDO::ATTR_CASE => PDO::CASE_LOWER,
     ));
+
+    // Force PostgreSQL to use the UTF-8 character set by default.
+    $this->exec('SET NAMES "UTF8"');
   }
 
   public function query($query, array $args = array(), $options = array()) {
