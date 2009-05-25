@@ -1034,6 +1034,7 @@ function install_configure_form(&$form_state, $url) {
     '#collapsible' => FALSE,
   );
 
+  $form['admin_account']['account']['#tree'] = TRUE;
   $form['admin_account']['account']['name'] = array('#type' => 'textfield',
     '#title' => st('Username'),
     '#maxlength' => USERNAME_MAX_LENGTH,
