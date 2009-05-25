@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.test,v 1.20 2009/05/24 17:39:34 dries Exp $
+// $Id: simpletest.test,v 1.21 2009/05/25 05:20:16 dries Exp $
 
 class SimpleTestFunctionalTest extends DrupalWebTestCase {
   /**
@@ -199,7 +199,6 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
    */
   function getTestResults() {
     $results = array();
-
     if ($this->parse()) {
       if ($fieldset = $this->getResultFieldSet()) {
         // Code assumes this is the only test in group.
