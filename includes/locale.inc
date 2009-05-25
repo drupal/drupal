@@ -748,7 +748,6 @@ function locale_translate_import_form() {
     ),
   );
   $form['import']['submit'] = array('#type' => 'submit', '#value' => t('Import'));
-  $form['#attributes']['enctype'] = 'multipart/form-data';
 
   return $form;
 }

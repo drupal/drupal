@@ -27,7 +27,6 @@ function file_test_menu() {
  * Form to test file uploads.
  */
 function _file_test_form(&$form_state) {
-  $form['#attributes'] = array('enctype' => 'multipart/form-data');
   $form['file_test_upload'] = array(
     '#type' => 'file',
     '#title' => t('Upload an image'),

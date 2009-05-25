@@ -227,8 +227,6 @@ function aggregator_admin_remove_feed_submit($form, &$form_state) {
 function aggregator_form_opml(&$form_state) {
   $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
 
-  $form['#attributes'] = array('enctype' => "multipart/form-data");
-
   $form['upload'] = array(
     '#type' => 'file',
     '#title' => t('OPML File'),

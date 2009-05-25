@@ -279,7 +279,6 @@ function user_profile_form($form_state, $account, $category = 'account') {
       '#submit' => array('user_edit_cancel_submit'),
     );
   }
-  $form['#attributes']['enctype'] = 'multipart/form-data';
 
   return $form;
 }
