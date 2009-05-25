@@ -2908,9 +2908,7 @@ function node_content_form($node, $form_state) {
     );
   }
 
-  if ($type->has_body) {
-    $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
-  }
+  $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
 
   return $form;
 }

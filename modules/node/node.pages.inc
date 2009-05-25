@@ -289,6 +289,10 @@ function node_form(&$form_state, $node) {
  * Return a node body field, with format and teaser.
  */
 function node_body_field($node, $label, $word_count) {
+  // Do not generate a body field if the type does not specify one.
+  if (!node_get_types('type', $node)->has_body) {
+    return array();
+  }
 
   // Check if we need to restore the teaser at the beginning of the body.
   $include = !isset($node->teaser) || ($node->teaser == substr($node->body, 0, strlen($node->teaser)));
