@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.4 2009/04/20 20:02:31 dries Exp $
+// $Id: schema.inc,v 1.5 2009/05/25 13:42:53 dries Exp $
 
 /**
  * @file
@@ -15,6 +15,7 @@
 class DatabaseSchema_sqlite extends DatabaseSchema {
 
   public function tableExists($table) {
+    // Don't use {} around sqlite_master table.
     return (bool) $this->connection->query("SELECT name FROM sqlite_master WHERE type = 'table' AND name LIKE '{" . $table . "}'", array(), array())->fetchField();
   }
 
@@ -564,6 +565,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
    *   Array, both the keys and the values are the matching tables.
    */
   public function findTables($table_expression) {
+    // Don't use {} around sqlite_master table.
     $result = db_query("SELECT name FROM sqlite_master WHERE name LIKE :table_name", array(
       ':table_name' => $table_expression,
     ));

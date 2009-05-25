@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.48 2009/05/24 17:39:32 dries Exp $
+// $Id: node.admin.inc,v 1.49 2009/05/25 13:42:54 dries Exp $
 
 /**
  * @file
@@ -457,7 +457,7 @@ function node_admin_content($form_state) {
 function node_admin_nodes() {
   // Enable language column if translation module is enabled
   // or if we have any node with language.
-  $multilanguage = (module_exists('translation') || db_query("SELECT COUNT(*) FROM {node} WHERE language != ''")->fetchField());
+  $multilanguage = (module_exists('translation') || db_query("SELECT COUNT(*) FROM {node} WHERE language <> ''")->fetchField());
 
   // Build the sortable table header.
   $header = array();
