@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.37 2009/05/24 17:39:35 dries Exp $
+// $Id: user.pages.inc,v 1.38 2009/05/25 18:22:31 dries Exp $
 
 /**
  * @file
@@ -279,7 +279,6 @@ function user_profile_form($form_state, $account, $category = 'account') {
       '#submit' => array('user_edit_cancel_submit'),
     );
   }
-  $form['#attributes']['enctype'] = 'multipart/form-data';
 
   return $form;
 }

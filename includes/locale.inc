@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.216 2009/05/24 17:39:30 dries Exp $
+// $Id: locale.inc,v 1.217 2009/05/25 18:22:30 dries Exp $
 
 /**
  * @file
@@ -748,7 +748,6 @@ function locale_translate_import_form() {
     ),
   );
   $form['import']['submit'] = array('#type' => 'submit', '#value' => t('Import'));
-  $form['#attributes']['enctype'] = 'multipart/form-data';
 
   return $form;
 }

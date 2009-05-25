@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.149 2009/05/24 17:39:34 dries Exp $
+// $Id: system.admin.inc,v 1.150 2009/05/25 18:22:30 dries Exp $
 
 /**
  * @file
@@ -499,7 +499,6 @@ function system_theme_settings(&$form_state, $key = '') {
       }
     }
   }
-  $form['#attributes'] = array('enctype' => 'multipart/form-data');
 
   $form = system_settings_form($form, FALSE);
   // We don't want to call system_settings_form_submit(), so change #submit.
