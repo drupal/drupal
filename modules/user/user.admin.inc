@@ -754,7 +754,7 @@ function user_admin_role() {
 function user_admin_role_validate($form, &$form_state) {
   if ($form_state['values']['name']) {
     if ($form_state['values']['op'] == t('Save role')) {
-      $existing_role = (bool) db_query_range("SELECT 1 FROM {role} WHERE name = :name AND rid != :rid", array(':name' => $form_state['values']['name'], ':rid' => $form_state['values']['rid']), 0, 1)->fetchField();
+      $existing_role = (bool) db_query_range("SELECT 1 FROM {role} WHERE name = :name AND rid <> :rid", array(':name' => $form_state['values']['name'], ':rid' => $form_state['values']['rid']), 0, 1)->fetchField();
       if ($existing_role) {
         form_set_error('name', t('The role name %name already exists. Please choose another role name.', array('%name' => $form_state['values']['name'])));
       }

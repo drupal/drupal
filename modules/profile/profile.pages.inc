@@ -29,7 +29,7 @@ function profile_browse() {
 
     // Compile a list of fields to show.
     $fields = array();
-    $result = db_query('SELECT name, title, type, weight, page FROM {profile_field} WHERE fid != %d AND visibility = %d ORDER BY weight', $field->fid, PROFILE_PUBLIC_LISTINGS);
+    $result = db_query('SELECT name, title, type, weight, page FROM {profile_field} WHERE fid <> %d AND visibility = %d ORDER BY weight', $field->fid, PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
       $fields[] = $record;
     }
@@ -55,7 +55,7 @@ function profile_browse() {
     }
 
     // Extract the affected users:
-    $result = pager_query("SELECT u.uid, u.access FROM {users} u INNER JOIN {profile_value} v ON u.uid = v.uid WHERE v.fid = %d AND $query AND u.access != 0 AND u.status != 0 ORDER BY u.access DESC", 20, 0, NULL, $arguments)->fetchAllAssoc('uid');
+    $result = pager_query("SELECT u.uid, u.access FROM {users} u INNER JOIN {profile_value} v ON u.uid = v.uid WHERE v.fid = %d AND $query AND u.access <> 0 AND u.status <> 0 ORDER BY u.access DESC", 20, 0, NULL, $arguments)->fetchAllAssoc('uid');
 
     // Load the users.
     $users = user_load_multiple(array_keys($result));
@@ -90,7 +90,7 @@ function profile_browse() {
     }
 
     // Extract the affected users:
-    $result = pager_query('SELECT uid, access FROM {users} WHERE uid > 0 AND status != 0 AND access != 0 ORDER BY access DESC', 20, 0, NULL)->fetchAllAssoc('uid');
+    $result = pager_query('SELECT uid, access FROM {users} WHERE uid > 0 AND status <> 0 AND access <> 0 ORDER BY access DESC', 20, 0, NULL)->fetchAllAssoc('uid');
     $users = user_load_multiple(array_keys($result));
     $content = '';
     foreach ($users as $account) {

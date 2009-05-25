@@ -187,6 +187,7 @@ abstract class DatabaseSchema {
     // concatination for conditionals like this however, we
     // couldn't use db_select() here because it would prefix
     // information_schema.tables and the query would fail.
+    // Don't use {} around information_schema table.
     return db_query("SELECT table_name FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchField();
   }
 
@@ -206,6 +207,7 @@ abstract class DatabaseSchema {
     // concatination for conditionals like this however, we
     // couldn't use db_select() here because it would prefix
     // information_schema.tables and the query would fail.
+    // Don't use {} around information_schema table.
     return db_query("SELECT table_name FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchAllKeyed(0, 0);
   }
 
@@ -220,6 +222,7 @@ abstract class DatabaseSchema {
     // concatination for conditionals like this however, we
     // couldn't use db_select() here because it would prefix
     // information_schema.tables and the query would fail.
+    // Don't use {} around information_schema table.
     return db_query("SELECT column_name FROM information_schema.columns WHERE " . (string) $condition, $condition->arguments())->fetchAllKeyed(0, 0);
   }
 

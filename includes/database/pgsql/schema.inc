@@ -51,6 +51,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
         'blob_fields' => array(),
         'sequences' => array(),
       );
+      // Don't use {} around information_schema table.
       $result = db_query("SELECT column_name, data_type, column_default FROM information_schema.columns WHERE table_schema = :schema AND table_name = :table AND (data_type = 'bytea' OR (numeric_precision IS NOT NULL AND column_default LIKE :default))", array(':schema' => $schema, ':table' => $table_name, ':default' => '%nextval%'));
       foreach ($result as $column) {
         if ($column->data_type == 'bytea') {
@@ -603,6 +604,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    */
   public function getComment($table, $column = NULL) {
     $table = $this->connection->prefixTables('{' . $table . '}');
+    // Don't use {} around pg_class, pg_attribute tables.
     if (isset($column)) {
       return db_query('SELECT col_description(oid, attnum) FROM pg_class, pg_attribute WHERE attrelid = oid AND relname = ? AND attname = ?', array($table, $column))->fetchField();
     }

@@ -316,6 +316,7 @@ function system_install() {
       \'SELECT greatest($1, greatest($2, $3));\'
       LANGUAGE \'sql\''
     );
+    // Don't use {} around pg_proc table.
     if (!db_query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'rand'")->fetchField()) {
       db_query('CREATE OR REPLACE FUNCTION "rand"() RETURNS float AS
         \'SELECT random();\'
@@ -323,6 +324,7 @@ function system_install() {
       );
     }
 
+    // Don't use {} around pg_proc table.
     if (!db_query("SELECT COUNT(*) FROM pg_proc WHERE proname = 'concat'")->fetchField()) {
       db_query('CREATE OR REPLACE FUNCTION "concat"(text, text) RETURNS text AS
         \'SELECT $1 || $2;\'
