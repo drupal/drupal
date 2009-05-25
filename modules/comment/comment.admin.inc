@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.21 2009/05/22 11:33:17 dries Exp $
+// $Id: comment.admin.inc,v 1.22 2009/05/25 10:43:52 dries Exp $
 
 /**
  * @file
@@ -13,10 +13,10 @@ function comment_admin($type = 'new') {
   $edit = $_POST;
 
   if (isset($edit['operation']) && ($edit['operation'] == 'delete') && isset($edit['comments']) && $edit['comments']) {
-    return drupal_render(drupal_get_form('comment_multiple_delete_confirm'));
+    return drupal_get_form('comment_multiple_delete_confirm');
   }
   else {
-    return drupal_render(drupal_get_form('comment_admin_overview', $type, arg(4)));
+    return drupal_get_form('comment_admin_overview', $type, arg(4));
   }
 }
 

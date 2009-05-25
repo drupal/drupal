@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.294 2009/05/12 08:37:45 dries Exp $
+// $Id: poll.module,v 1.295 2009/05/25 10:43:52 dries Exp $
 
 /**
  * @file
@@ -161,7 +161,7 @@ function poll_block_view($delta = '') {
       if ($poll->nid) {
         $poll = poll_view($poll, TRUE, FALSE, TRUE);
         $block['subject'] = t('Poll');
-        $block['content'] = drupal_render($poll->content);
+        $block['content'] = $poll->content;
         return $block;
       }
     }

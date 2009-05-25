@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.pages.inc,v 1.17 2009/05/24 17:39:33 dries Exp $
+// $Id: openid.pages.inc,v 1.18 2009/05/25 10:43:52 dries Exp $
 
 /**
  * @file
@@ -53,9 +53,9 @@ function openid_user_identities($account) {
     $rows[] = array(check_plain($identity->authname), l(t('Delete'), 'user/' . $account->uid . '/openid/delete/' . $identity->aid));
   }
 
-  $output = theme('table', $header, $rows);
-  $output .= drupal_render(drupal_get_form('openid_user_add'));
-  return $output;
+  $build['openid_table'] = array('#markup' => theme('table', $header, $rows));
+  $build['openid_user_add'] = drupal_get_form('openid_user_add');
+  return $build;
 }
 
 /**
