@@ -503,5 +503,18 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     $this->assertText($comment_body, t('Comment body text found in search results.'));
     $this->assertNoRaw(t('n/a'), t('HTML in comment body is not hidden.'));
     $this->assertNoRaw(check_plain($edit_comment['comment']), t('HTML in comment body is not escaped.'));
+
+    // Hide comments.
+    $this->drupalLogin($this->admin_user);
+    $node->comment = 0;
+    node_save($node);
+
+    // Invoke search index update.
+    $this->drupalLogout();
+    $this->drupalGet($GLOBALS['base_url'] . '/cron.php', array('external' => TRUE, 'query' => 'cron_key=' . variable_get('cron_key', 'drupal')));
+
+    // Search for $title.
+    $this->drupalPost('', $edit, t('Search'));
+    $this->assertNoText($comment_body, t('Comment body text not found in search results.'));
   }
 }

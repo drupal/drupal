@@ -710,12 +710,14 @@ function comment_node_delete($node) {
  */
 function comment_node_update_index($node) {
   $text = '';
-  $comments = db_query('SELECT subject, comment, format FROM {comment} WHERE nid = :nid AND status = :status', array(
-    ':nid' => $node->nid,
-    ':status' => COMMENT_PUBLISHED
-  ));
-  foreach ($comments as $comment) {
-    $text .= '<h2>' . check_plain($comment->subject) . '</h2>' . check_markup($comment->comment, $comment->format, '', FALSE);
+  if ($node->comment != COMMENT_NODE_HIDDEN) {
+    $comments = db_query('SELECT subject, comment, format FROM {comment} WHERE nid = :nid AND status = :status', array(
+      ':nid' => $node->nid,
+      ':status' => COMMENT_PUBLISHED
+    ));
+    foreach ($comments as $comment) {
+      $text .= '<h2>' . check_plain($comment->subject) . '</h2>' . check_markup($comment->comment, $comment->format, '', FALSE);
+    }
   }
   return $text;
 }
@@ -732,8 +734,11 @@ function comment_update_index() {
  * Implementation of hook_node_search_result().
  */
 function comment_node_search_result($node) {
-  $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
-  return format_plural($comments, '1 comment', '@count comments');
+  if ($node->comment != COMMENT_NODE_HIDDEN) {
+    $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
+    return format_plural($comments, '1 comment', '@count comments');
+  }
+  return '';
 }
 
 /**
