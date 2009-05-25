@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.172 2009/05/24 23:21:12 webchick Exp $
+// $Id: install.php,v 1.173 2009/05/25 04:40:22 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -1034,6 +1034,7 @@ function install_configure_form(&$form_state, $url) {
     '#collapsible' => FALSE,
   );
 
+  $form['admin_account']['account']['#tree'] = TRUE;
   $form['admin_account']['account']['name'] = array('#type' => 'textfield',
     '#title' => st('Username'),
     '#maxlength' => USERNAME_MAX_LENGTH,
