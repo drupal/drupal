@@ -409,7 +409,6 @@ abstract class DrupalTestCase {
     $this->error($exception->getMessage(), 'Uncaught exception', _drupal_get_last_caller($backtrace));
   }
 
-
   /**
    * Generates a random string of ASCII characters of codes 32 to 126.
    *
@@ -476,7 +475,7 @@ class DrupalUnitTestCase extends DrupalTestCase {
     parent::__construct($test_id);
     $this->skipClasses[__CLASS__] = TRUE;
   }
-  
+
   function setUp() {
     global $db_prefix, $conf;
 
@@ -739,7 +738,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Make sure type is valid.
     if (in_array($type, array('binary', 'html', 'image', 'javascript', 'php', 'sql', 'text'))) {
-     // Use original file directory instead of one created during setUp().
+      // Use original file directory instead of one created during setUp().
       $path = $this->originalFileDirectory . '/simpletest';
       $files = file_scan_directory($path, '/' . $type . '\-.*/');
 
@@ -994,6 +993,10 @@ class DrupalWebTestCase extends DrupalTestCase {
     unset($GLOBALS['conf']['language_default']);
     $language = language_default();
 
+    // Make sure our drupal_mail_wrapper function is called instead of the
+    // default mail handler.
+    variable_set('smtp_library', drupal_get_path('module', 'simpletest') . '/drupal_web_test_case.php');
+
     // Use temporary files directory with the same prefix as database.
     variable_set('file_directory_path', $this->originalFileDirectory . '/' . $db_prefix);
     $directory = file_directory_path();
@@ -1037,6 +1040,13 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function tearDown() {
     global $db_prefix, $user, $language;
+
+    $emailCount = count(variable_get('simpletest_emails', array()));
+    if ($emailCount) {
+      $message = format_plural($emailCount, t('!count e-mail was sent during this test.'), t('!count e-mails were sent during this test.'), array('!count' => $emailCount));
+      $this->pass($message, t('E-mail'));
+    }
+
     if (preg_match('/simpletest\d+/', $db_prefix)) {
       // Delete temporary files directory and reset files directory path.
       file_unmanaged_delete_recursive(file_directory_path());
@@ -1070,7 +1080,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
       // Rebuild caches.
       $this->refreshVariables();
-      
+
       // Reset language
       $language = $this->originalLanguage;
       if ($this->originalLanguageDefault) {
@@ -1743,6 +1753,30 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
+   * Gets an array containing all e-mails sent during this test case.
+   *
+   * @param $filter
+   *   An array containing key/value pairs used to filter the e-mails that are returned.
+   * @return
+   *   An array containing e-mail messages captured during the current test.
+   */
+  protected function drupalGetMails($filter = array()) {
+    $captured_emails = variable_get('simpletest_emails', array());
+    $filtered_emails = array();
+
+    foreach ($captured_emails as $message) {
+      foreach ($filter as $key => $value) {
+        if (!isset($message[$key]) || $message[$key] != $value) {
+          continue 2;
+        }
+      }
+      $filtered_emails[] = $message;
+    }
+
+    return $filtered_emails;
+  }
+
+  /**
    * Sets the raw HTML content. This can be useful when a page has been fetched
    * outside of the internal browser and assertions need to be made on the
    * returned page.
@@ -2240,5 +2274,38 @@ class DrupalWebTestCase extends DrupalTestCase {
     $match = is_array($code) ? in_array($curl_code, $code) : $curl_code == $code;
     return $this->assertTrue($match, $message ? $message : t('HTTP response expected !code, actual !curl_code', array('!code' => $code, '!curl_code' => $curl_code)), t('Browser'));
   }
+
+  /**
+   * Assert that the most recently sent e-mail message has a field with the given value.
+   *
+   * @param $name
+   *   Name of field or message property to assert. Examples: subject, body, id, ...
+   * @param $value
+   *   Value of the field to assert.
+   * @param $message
+   *   Message to display.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertMail($name, $value = '', $message = '') {
+    $captured_emails = variable_get('simpletest_emails', array());
+    $email = end($captured_emails);
+    return $this->assertTrue($email && isset($email[$name]) && $email[$name] == $value, $message, t('E-mail'));
+  }
 }
 
+/**
+ * Wrapper function to override the default mail handler function.
+ *
+ * @param  $message
+ *   An e-mail message. See drupal_mail() for information on how $message is composed.
+ * @return
+ *   Returns TRUE to indicate that the e-mail was successfully accepted for delivery.
+ */
+function drupal_mail_wrapper($message) {
+  $captured_emails = variable_get('simpletest_emails', array());
+  $captured_emails[] = $message;
+  variable_set('simpletest_emails', $captured_emails);
+
+  return TRUE;
+}
