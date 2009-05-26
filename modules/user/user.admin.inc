@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.52 2009/05/25 13:42:56 dries Exp $
+// $Id: user.admin.inc,v 1.53 2009/05/26 21:01:21 dries Exp $
 
 /**
  * @file
@@ -668,7 +668,7 @@ function theme_user_admin_perm($form) {
       $row = array();
       // Module name
       if (is_numeric($key)) {
-        $row[] = array('data' => drupal_render($form['permission'][$key]), 'class' => 'module', 'id' => 'module-' . $form['permission'][$key]['#id'], 'colspan' => count($form['role_names']) + 1);
+        $row[] = array('data' => drupal_render($form['permission'][$key]), 'class' => 'module', 'id' => 'module-' . $form['permission'][$key]['#id'], 'colspan' => count($form['role_names']['#value']) + 1);
       }
       else {
         // Permission row.
