@@ -271,7 +271,7 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
   $original_status = $node->status;
   $node->status = $publish;
 
-  // check for bloggerAPI vs. metaWeblogAPI
+  // Check for bloggerAPI vs. metaWeblogAPI.
   if (is_array($content)) {
     $node->title = $content['title'];
     $node->body = $content['description'];

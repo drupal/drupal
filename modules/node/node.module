@@ -2189,7 +2189,8 @@ function node_update_index() {
 function _node_index_node($node) {
   $node = node_load($node->nid);
 
-  // save the changed time of the most recent indexed node, for the search results half-life calculation
+  // Save the changed time of the most recent indexed node, for the search
+  // results half-life calculation.
   variable_set('node_cron_last', $node->changed);
 
   // Build the node body.
@@ -2302,7 +2303,8 @@ function node_search_validate($form, &$form_state) {
 
   // Insert extra restrictions into the search keywords string.
   if (isset($form_state['values']['type']) && is_array($form_state['values']['type'])) {
-    // Retrieve selected types - Forms API sets the value of unselected checkboxes to 0.
+    // Retrieve selected types - Forms API sets the value of unselected
+    // checkboxes to 0.
     $form_state['values']['type'] = array_filter($form_state['values']['type']);
     if (count($form_state['values']['type'])) {
       $keys = search_query_insert($keys, 'type', implode(',', array_keys($form_state['values']['type'])));
@@ -2594,7 +2596,8 @@ function node_db_rewrite_sql($query, $primary_table, $primary_field) {
  * Implementation of hook_query_TAG_alter().
  */
 function node_query_node_access_alter(QueryAlterableInterface $query) {
-  // Skip the extra expensive alterations if site has no node access control modules.
+  // Skip the extra expensive alterations if site has no node access control
+  // modules.
   if (!node_access_view_all_nodes()) {
     // Prevent duplicate records.
     $query->distinct();
@@ -2607,7 +2610,8 @@ function node_query_node_access_alter(QueryAlterableInterface $query) {
       // The node_access table has the access grants for any given node.
       $access_alias = $query->join('node_access', 'na', 'na.nid = n.nid');
       $or = db_or();
-      // If any grant exists for the specified user, then user has access to the node for the specified operation.
+      // If any grant exists for the specified user, then user has access to the
+      // node for the specified operation.
       foreach (node_access_grants($op, $query->getMetaData('account')) as $realm => $gids) {
         foreach ($gids as $gid) {
           $or->condition(db_and()
@@ -2644,7 +2648,7 @@ function node_access_acquire_grants($node) {
     $grants[] = array('realm' => 'all', 'gid' => 0, 'grant_view' => 1, 'grant_update' => 0, 'grant_delete' => 0);
   }
   else {
-    // retain grants by highest priority
+    // Retain grants by highest priority.
     $grant_by_priority = array();
     foreach ($grants as $g) {
       $grant_by_priority[intval($g['priority'])][] = $g;
@@ -2918,7 +2922,8 @@ function node_content_form($node, $form_state) {
  */
 
 /**
- * Implementation of hook_forms(). All node forms share the same form handler
+ * Implementation of hook_forms().
+ * All node forms share the same form handler.
  */
 function node_forms() {
   $forms = array();
@@ -3207,7 +3212,8 @@ function node_unpublish_by_keyword_action_submit($form, $form_state) {
  * Unpublish a node if it contains a certain string.
  *
  * @param $context
- *   An array providing more information about the context of the call to this action.
+ *   An array providing more information about the context of the call to this
+ *   action.
  * @param $comment
  *   A node object.
  */

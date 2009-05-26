@@ -496,7 +496,7 @@ function system_menu() {
     'access arguments' => array('access administration pages'),
   );
 
-  // menu items that are basically just menu blocks
+  // Menu items that are basically just menu blocks.
   $items['admin/settings'] = array(
     'title' => 'Site configuration',
     'description' => 'Configure site settings.',
@@ -513,7 +513,7 @@ function system_menu() {
     'page callback' => 'system_admin_menu_block_page',
     'access arguments' => array('access administration pages'),
   );
-  // Themes:
+  // Themes.
   $items['admin/build/themes'] = array(
     'title' => 'Themes',
     'description' => 'Change which theme your site uses or allows users to set.',
@@ -533,7 +533,7 @@ function system_menu() {
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
   );
-  // Theme configuration subtabs
+  // Theme configuration subtabs.
   $items['admin/build/themes/settings/global'] = array(
     'title' => 'Global settings',
     'type' => MENU_DEFAULT_LOCAL_TASK,
@@ -550,7 +550,7 @@ function system_menu() {
     );
   }
 
-  // Modules:
+  // Modules.
   $items['admin/build/modules'] = array(
     'title' => 'Modules',
     'description' => 'Enable or disable add-on modules for your site.',
@@ -579,7 +579,7 @@ function system_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  // Actions:
+  // Actions.
   $items['admin/settings/actions'] = array(
     'title' => 'Actions',
     'description' => 'Manage the actions defined for your site.',
@@ -637,7 +637,7 @@ function system_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  // Settings:
+  // Settings.
   $items['admin/settings/site-information'] = array(
     'title' => 'Site information',
     'description' => 'Change basic site information, such as the site name, slogan, e-mail address, mission, front page and more.',
@@ -721,7 +721,7 @@ function system_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  // Reports:
+  // Reports.
   $items['admin/reports'] = array(
     'title' => 'Reports',
     'description' => 'View reports from system logs and other status information.',
@@ -749,7 +749,7 @@ function system_menu() {
     'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
   );
-  // Default page for batch operations
+  // Default page for batch operations.
   $items['batch'] = array(
     'page callback' => 'system_batch_page',
     'access callback' => TRUE,

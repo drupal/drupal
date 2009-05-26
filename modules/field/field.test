@@ -978,17 +978,19 @@ class FieldFormTestCase extends DrupalWebTestCase {
     $field_values = array_values($field_values);
     $this->assertIdentical($entity->{$this->field_name}, $field_values, 'Field values were saved in the correct order');
 
-    // display edit form: check that the expected number of widgets is displayed, with correct values
-    // change values, reorder, leave an empty value in the middle, submit: check that the entity is updated with correct values
-    // re-submit: check that the field can be emptied.
+    // Display edit form: check that the expected number of widgets is
+    // displayed, with correct values change values, reorder, leave an empty
+    // value in the middle.
+    // Submit: check that the entity is updated with correct values
+    // Re-submit: check that the field can be emptied.
 
     // Test with several multiple fields in a form
   }
 
-  // check with a multiple widget (implement a textfield with comma separated values)
+  // Check with a multiple widget (implement a textfield with comma separated values).
 
-  // check inaccessible fields are preserved on update
-  // check inaccessible fields get default value on insert (not implemented yet)
+  // Check inaccessible fields are preserved on update.
+  // Check inaccessible fields get default value on insert (not implemented yet).
 
   function testFieldFormJSAddMore() {
     $this->field = $this->field_unlimited;
@@ -1000,8 +1002,8 @@ class FieldFormTestCase extends DrupalWebTestCase {
     // Display creation form -> 1 widget.
     $this->drupalGet('test-entity/add/test-bundle');
 
-    // Press 'add more' button a couple times -> 3 widgets
-    // The drupalPostAhah() helper will not work iteratively, so we add those
+    // Press 'add more' button a couple times -> 3 widgets.
+    // The drupalPostAhah() helper will not work iteratively, so we add those.
     // through non-'JS' submission.
     $this->drupalPost(NULL, array(), t('Add another item'));
     $this->drupalPost(NULL, array(), t('Add another item'));

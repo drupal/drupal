@@ -953,7 +953,7 @@ function template_preprocess_forum_icon(&$variables) {
 function template_preprocess_forum_topic_navigation(&$variables) {
   $output = '';
 
-  // get previous and next topic
+  // Get previous and next topic.
   $sql = "SELECT n.nid, n.title, n.sticky, l.comment_count, l.last_comment_timestamp FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {taxonomy_term_node} r ON n.nid = r.nid AND r.tid = %d WHERE n.status = 1 ORDER BY n.sticky DESC, " . _forum_get_topic_order_sql(variable_get('forum_order', 1));
   $result = db_query(db_rewrite_sql($sql), isset($variables['node']->tid) ? $variables['node']->tid : 0);
 

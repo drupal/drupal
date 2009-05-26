@@ -155,7 +155,7 @@ function menu_theme() {
 /**
  * Implementation of hook_enable().
  *
- *  Add a link for each custom menu.
+ * Add a link for each custom menu.
  */
 function menu_enable() {
   menu_rebuild();
