@@ -155,7 +155,7 @@ function cache_clear_all($cid = NULL, $table = NULL, $wildcard = FALSE) {
         variable_set('cache_flush_'. $table, time());
       }
       else if (time() > ($cache_flush + variable_get('cache_lifetime', 0))) {
-        // Clear the cache for everyone, cache_flush_delay seconds have
+        // Clear the cache for everyone, cache_lifetime seconds have
         // passed since the first request to clear the cache.
         db_query("DELETE FROM {". $table ."} WHERE expire != %d AND expire < %d", CACHE_PERMANENT, time());
         variable_set('cache_flush_'. $table, 0);
