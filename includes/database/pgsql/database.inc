@@ -35,7 +35,7 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
     ));
 
     // Force PostgreSQL to use the UTF-8 character set by default.
-    $this->exec('SET NAMES "UTF8"');
+    $this->exec("SET NAMES 'UTF8'");
   }
 
   public function query($query, array $args = array(), $options = array()) {
