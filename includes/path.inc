@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.36 2009/05/16 19:07:02 dries Exp $
+// $Id: path.inc,v 1.37 2009/05/26 09:12:28 dries Exp $
 
 /**
  * @file
@@ -255,7 +255,7 @@ function arg($index = NULL, $path = NULL) {
 function drupal_get_title() {
   $title = drupal_set_title();
 
-  // during a bootstrap, menu.inc is not included and thus we cannot provide a title
+  // During a bootstrap, menu.inc is not included and thus we cannot provide a title.
   if (!isset($title) && function_exists('menu_get_active_title')) {
     $title = check_plain(menu_get_active_title());
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.283 2009/05/24 17:39:30 dries Exp $
+// $Id: bootstrap.inc,v 1.284 2009/05/26 09:12:28 dries Exp $
 
 /**
  * @file
@@ -1182,7 +1182,7 @@ function drupal_set_message($message = NULL, $type = 'status', $repeat = TRUE) {
     }
   }
 
-  // messages not set when DB connection fails
+  // Messages not set when DB connection fails.
   return isset($_SESSION['messages']) ? $_SESSION['messages'] : NULL;
 }
 

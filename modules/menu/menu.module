@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.190 2009/05/24 17:39:32 dries Exp $
+// $Id: menu.module,v 1.191 2009/05/26 09:12:29 dries Exp $
 
 /**
  * @file
@@ -155,7 +155,7 @@ function menu_theme() {
 /**
  * Implementation of hook_enable().
  *
- *  Add a link for each custom menu.
+ * Add a link for each custom menu.
  */
 function menu_enable() {
   menu_rebuild();

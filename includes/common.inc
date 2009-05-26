@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.911 2009/05/24 17:39:30 dries Exp $
+// $Id: common.inc,v 1.912 2009/05/26 09:12:28 dries Exp $
 
 /**
  * @file
@@ -1496,7 +1496,7 @@ function _filter_xss_attributes($attr) {
     }
   }
 
-  // the attribute list ends with a valueless attribute like "selected"
+  // The attribute list ends with a valueless attribute like "selected".
   if ($mode == 1) {
     $attrarr[] = $attrname;
   }
