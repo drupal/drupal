@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.490 2009/05/24 17:39:30 dries Exp $
+// $Id: theme.inc,v 1.491 2009/05/26 10:41:06 dries Exp $
 
 /**
  * @file
@@ -1715,7 +1715,7 @@ function theme_username($object) {
     }
   }
   else {
-    $output = variable_get('anonymous', t('Anonymous'));
+    $output = check_plain(variable_get('anonymous', t('Anonymous')));
   }
 
   return $output;
