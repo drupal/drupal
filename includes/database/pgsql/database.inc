@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.23 2009/05/25 05:22:52 dries Exp $
+// $Id: database.inc,v 1.24 2009/05/26 08:50:04 dries Exp $
 
 /**
  * @file
@@ -35,7 +35,7 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
     ));
 
     // Force PostgreSQL to use the UTF-8 character set by default.
-    $this->exec('SET NAMES "UTF8"');
+    $this->exec("SET NAMES 'UTF8'");
   }
 
   public function query($query, array $args = array(), $options = array()) {
