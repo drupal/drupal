@@ -109,6 +109,113 @@ function hook_node_access_records($node) {
 }
 
 /**
+ * Alter permissions for a node before it is written to the database.
+ *
+ * Node access modules establish rules for user access to content. Node access
+ * records are stored in the {node_access} table and define which permissions
+ * are required to access a node. This hook is invoked after node access modules
+ * returned their requirements via hook_node_access_records(); doing so allows
+ * modules to modify the $grants array by reference before it is stored, so
+ * custom or advanced business logic can be applied.
+ *
+ * @see hook_node_access_records()
+ *
+ * Upon viewing, editing or deleting a node, hook_node_grants() builds a
+ * permissions array that is compared against the stored access records. The
+ * user must have one or more matching permissions in order to complete the
+ * requested operation.
+ *
+ * @see hook_node_grants()
+ * @see hook_node_grants_alter()
+ *
+ * @param &$grants
+ *   The $grants array returned by hook_node_access_records().
+ * @param $node
+ *   The node for which the grants were acquired.
+ *
+ * The preferred use of this hook is in a module that bridges multiple node
+ * access modules with a configurable behavior, as shown in the example
+ * by the variable 'example_preview_terms'. This variable would
+ * be a configuration setting for your module.
+ *
+ * @ingroup node_access
+ */
+function hook_node_access_records_alter(&$grants, $node) {
+  // Our module allows editors to tag specific articles as 'preview'
+  // content using the taxonomy system. If the node being saved
+  // contains one of the preview terms defined in our variable
+  // 'example_preview_terms', then only our grants are retained,
+  // and other grants are removed. Doing so ensures that our rules
+  // are enforced no matter what priority other grants are given.
+  $preview = variable_get('example_preview_terms', array());
+  // Check to see if we have enabled complex behavior.
+  if (!empty($preview)) {
+    foreach ($preview as $term_id) {
+      if (isset($node->taxonomy[$term_id])) {
+        // Our module grants are set in $grants['example'].
+        $temp = $grants['example'];
+        // Now remove all module grants but our own.
+        $grants = array('example' => $temp);
+        // No need to check additonal terms.
+        break;
+      }
+    }
+  }
+}
+
+/**
+ * Alter user access rules when trying to view, edit or delete a node.
+ *
+ * Node access modules establish rules for user access to content.
+ * hook_node_grants() defines permissions for a user to view, edit or
+ * delete nodes by building a $grants array that indicates the permissions
+ * assigned to the user by each node access module. This hook is called to allow
+ * modules to modify the $grants array by reference, so the interaction of
+ * multiple node access modules can be altered or advanced business logic can be
+ * applied.
+ *
+ * @see hook_node_grants()
+ *
+ * The resulting grants are then checked against the records stored in the
+ * {node_access} table to determine if the operation may be completed.
+ *
+ * @see hook_node_access_records()
+ * @see hook_node_access_records_alter()
+ *
+ * @param &$grants
+ *   The $grants array returned by hook_node_grants().
+ * @param $account
+ *   The user account requesting access to content.
+ * @param $op
+ *   The operation being performed, 'view', 'update' or 'delete'.
+ *
+ * Developers may use this hook to either add additional grants to a user
+ * or to remove existing grants. These rules are typically based on either the
+ * permissions assigned to a user role, or specific attributes of a user
+ * account.
+ *
+ * @ingroup node_access
+ */
+function hook_node_grants_alter(&$grants, $account, $op) {
+  // Our sample module never allows certain roles to edit or delete
+  // content. Since some other node access modules might allow this
+  // permission, we expressly remove it by returning an empty $grants
+  // array for roles specified in our variable setting.
+
+  // Get our list of banned roles.
+  $restricted = variable_get('example_restricted_roles', array());
+  
+  if ($op != 'view' && !empty($restricted)) {
+    // Now check the roles for this account against the restrictions.
+    foreach ($restricted as $role_id) {
+      if (isset($user->roles[$role_id])) {
+        $grants = array();
+      }
+    }
+  }
+}
+
+/**
  * Add mass node operations.
  *
  * This hook enables modules to inject custom operations into the mass operations

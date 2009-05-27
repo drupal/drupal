@@ -2523,6 +2523,10 @@ function _node_access_where_sql($op = 'view', $node_access_alias = 'na', $accoun
  * access module should implement hook_node_grants() to provide a grant
  * list for the user.
  *
+ * After the default grants have been loaded, we allow modules to alter
+ * the grants array by reference. This hook allows for complex business
+ * logic to be applied when integrating multiple node access modules.
+ *
  * @param $op
  *   The operation that the user is trying to perform.
  * @param $account
@@ -2538,7 +2542,12 @@ function node_access_grants($op, $account = NULL) {
     $account = $GLOBALS['user'];
   }
 
-  return array_merge(array('all' => array(0)), module_invoke_all('node_grants', $account, $op));
+  // Fetch node access grants from other modules.
+  $grants = module_invoke_all('node_grants', $account, $op);
+  // Allow modules to alter the assigned grants.
+  drupal_alter('node_grants', $grants, $account, $op);
+
+  return array_merge(array('all' => array(0)), $grants);
 }
 
 /**
@@ -2562,7 +2571,7 @@ function node_access_view_all_nodes() {
       $grants = db_or();
       foreach (node_access_grants('view') as $realm => $gids) {
         foreach ($gids as $gid) {
-          $or->condition(db_and()
+          $grants->condition(db_and()
             ->condition('gid', $gid)
             ->condition('realm', $realm)
           );
@@ -2636,6 +2645,12 @@ function node_query_node_access_alter(QueryAlterableInterface $query) {
  * called by modules whenever something other than a node_save causes
  * the permissions on a node to change.
  *
+ * After the default grants have been loaded, we allow modules to alter
+ * the grants array by reference. This hook allows for complex business
+ * logic to be applied when integrating multiple node access modules.
+ *
+ * @see hook_node_access_records()
+ *
  * This function is the only function that should write to the node_access
  * table.
  *
@@ -2644,6 +2659,9 @@ function node_query_node_access_alter(QueryAlterableInterface $query) {
  */
 function node_access_acquire_grants($node) {
   $grants = module_invoke_all('node_access_records', $node);
+  // Let modules alter the grants.
+  drupal_alter('node_access_records', $grants, $node);
+  // If no grants are set, then use the default grant.
   if (empty($grants)) {
     $grants[] = array('realm' => 'all', 'gid' => 0, 'grant_view' => 1, 'grant_update' => 0, 'grant_delete' => 0);
   }
