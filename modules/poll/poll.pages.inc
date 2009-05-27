@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.pages.inc,v 1.17 2009/05/22 11:33:17 dries Exp $
+// $Id: poll.pages.inc,v 1.18 2009/05/27 19:25:16 dries Exp $
 
 /**
  * @file
@@ -42,7 +42,7 @@ function poll_page() {
     $output .= '<li>' . l($node->title, "node/$node->nid") . ' - ' . format_plural($node->votes, '1 vote', '@count votes') . ' - ' . ($node->active ? t('open') : t('closed')) . '</li>';
   }
   $output .= '</ul>';
-  $output .= theme("pager", NULL, $polls_per_page);
+  $output .= theme("pager", NULL);
   return $output;
 }
 
