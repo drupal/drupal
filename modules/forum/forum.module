@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.495 2009/05/27 18:33:57 dries Exp $
+// $Id: forum.module,v 1.496 2009/05/27 23:16:41 webchick Exp $
 
 /**
  * @file
@@ -86,7 +86,6 @@ function forum_menu() {
     'title' => 'Forums',
     'page callback' => 'forum_page',
     'access arguments' => array('access content'),
-    'type' => MENU_SUGGESTED_ITEM,
   );
   $items['admin/build/forum'] = array(
     'title' => 'Forums',
