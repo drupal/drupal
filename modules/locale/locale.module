@@ -377,8 +377,8 @@ function locale($string = NULL, $langcode = NULL, $reset = FALSE) {
         // Refresh database stored cache of translations for given language.
         // We only store short strings used in current version, to improve
         // performance and consume less memory.
-        $result = db_query("SELECT s.source, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = '%s' WHERE s.textgroup = 'default' AND s.version = '%s' AND LENGTH(s.source) < 75", $langcode, VERSION);
-        while ($data = db_fetch_object($result)) {
+        $result = db_query("SELECT s.source, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.textgroup = 'default' AND s.version = :version AND LENGTH(s.source) < 75", array(':language' => $langcode, ':version' => VERSION));
+        foreach ($result as $data) {
           $locale_t[$langcode][$data->source] = (empty($data->translation) ? TRUE : $data->translation);
         }
         cache_set('locale:' . $langcode, $locale_t[$langcode]);
@@ -390,7 +390,10 @@ function locale($string = NULL, $langcode = NULL, $reset = FALSE) {
   if (!isset($locale_t[$langcode][$string])) {
 
     // We do not have this translation cached, so get it from the DB.
-    $translation = db_fetch_object(db_query("SELECT s.lid, t.translation, s.version FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = '%s' WHERE s.source = '%s' AND s.textgroup = 'default'", $langcode, $string));
+    $translation = db_query("SELECT s.lid, t.translation, s.version FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.source = :source AND s.textgroup = 'default'", array(
+      ':language' => $langcode,
+      ':source' => $string,
+    ))->fetchObject();
     if ($translation) {
       // We have the source string at least.
       // Cache translation string or TRUE if no translation exists.
@@ -400,13 +403,23 @@ function locale($string = NULL, $langcode = NULL, $reset = FALSE) {
         // This is the first use of this string under current Drupal version. Save version
         // and clear cache, to include the string into caching next time. Saved version is
         // also a string-history information for later pruning of the tables.
-        db_query("UPDATE {locales_source} SET version = '%s' WHERE lid = %d", VERSION, $translation->lid);
+        db_update('locales_source')
+          ->fields(array('version' => VERSION))
+          ->condition('lid', $translation->lid)
+          ->execute();
         cache_clear_all('locale:', 'cache', TRUE);
       }
     }
     else {
       // We don't have the source string, cache this as untranslated.
-      db_query("INSERT INTO {locales_source} (location, source, textgroup, version) VALUES ('%s', '%s', 'default', '%s')", request_uri(), $string, VERSION);
+      db_insert('locales_source')
+        ->fields(array(
+          'location' => request_uri(),
+          'source' => $string,
+          'textgroup' => 'default',
+          'version' => VERSION,
+        ))
+        ->execute();
       $locale_t[$langcode][$string] = TRUE;
       // Clear locale cache so this string can be added in a later request.
       cache_clear_all('locale:', 'cache', TRUE);
