@@ -370,6 +370,10 @@ class CronRunTestCase extends DrupalWebTestCase {
   }
 }
 
+
+/**
+ * Test administration pages and categories.
+ */
 class AdminOverviewTestCase extends DrupalWebTestCase {
   /**
    * Implementation of getInfo().
@@ -434,6 +438,26 @@ class AdminOverviewTestCase extends DrupalWebTestCase {
       $this->assertTrue(count($panels) == $found, t('Required panels found.'));
       $this->assertFalse($extra, t('No extra panels found.'));
     }
+  }
+
+  /**
+   * Test administrative menu categories.
+   */
+  public function testHideEmptyCategories() {
+    $user = $this->drupalCreateUser(array('administer nodes', 'access administration pages'));
+    $this->drupalLogin($user);
+
+    $this->drupalGet('admin');
+
+    // Make sure menu items with children are displayed.
+    $this->assertLink(t('Administer'));
+    $this->assertLink(t('Content management'));
+
+    // Make sure menu items without children are hidden.
+    $this->assertNoLink(t('Site building'));
+    $this->assertNoLink(t('Site configuration'));
+    $this->assertNoLink(t('User management'));
+    $this->assertNoLink(t('Reports'));
   }
 }
 

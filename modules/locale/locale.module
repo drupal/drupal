@@ -76,7 +76,8 @@ function locale_menu() {
    'position' => 'left',
    'weight' => -7,
    'page callback' => 'system_admin_menu_block_page',
-   'access arguments' => array('access administration pages'),
+   'access callback' => 'system_admin_menu_block_access',
+   'access arguments' => array('admin/international', 'access administration pages'),
   );
   $items['admin/international/language'] = array(
     'title' => 'Languages',

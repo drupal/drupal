@@ -493,7 +493,8 @@ function system_menu() {
     'position' => 'left',
     'weight' => -10,
     'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
+    'access callback' => 'system_admin_menu_block_access',
+    'access arguments' => array('admin/content', 'access administration pages'),
   );
 
   // Menu items that are basically just menu blocks.
@@ -503,7 +504,8 @@ function system_menu() {
     'position' => 'right',
     'weight' => -5,
     'page callback' => 'system_settings_overview',
-    'access arguments' => array('access administration pages'),
+    'access callback' => 'system_admin_menu_block_access',
+    'access arguments' => array('admin/settings', 'access administration pages'),
   );
   $items['admin/build'] = array(
     'title' => 'Site building',
@@ -511,7 +513,8 @@ function system_menu() {
     'position' => 'right',
     'weight' => -10,
     'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
+    'access callback' => 'system_admin_menu_block_access',
+    'access arguments' => array('admin/build', 'access administration pages'),
   );
   // Themes.
   $items['admin/build/themes'] = array(
@@ -726,7 +729,8 @@ function system_menu() {
     'title' => 'Reports',
     'description' => 'View reports from system logs and other status information.',
     'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access site reports'),
+    'access callback' => 'system_admin_menu_block_access',
+    'access arguments' => array('admin/reports', 'access site reports'),
     'weight' => 5,
     'position' => 'left',
   );
@@ -776,6 +780,25 @@ function blocked_ip_load($iid) {
  */
 function _system_themes_access($theme) {
   return user_access('administer site configuration') && ($theme->status || $theme->name == variable_get('admin_theme', 0));
+}
+
+/**
+ * Menu item access callback - hides empty system settings overview pages.
+ *
+ * @param $path
+ *   The path of the menu item to check for child menu entries.
+ * @param $string
+ *   The permission, such as "administer nodes", being checked for.
+ * @return
+ *   Boolean TRUE if the current user has the requested permission and the
+ *   current menu item has children.
+ */
+function system_admin_menu_block_access($path, $permission) {
+  if (!user_access($permission)) {
+    return FALSE;
+  }
+  $content = system_admin_menu_block(array('path' => $path));
+  return !empty($content);
 }
 
 /**
@@ -987,10 +1010,14 @@ function system_block_view($delta = '') {
  *   The menu item to be displayed.
  */
 function system_admin_menu_block($item) {
-  $content = array();
+  $cache = &drupal_static(__FUNCTION__, array());
   if (!isset($item['mlid'])) {
     $item += db_query("SELECT mlid, menu_name FROM {menu_links} ml WHERE ml.router_path = :path AND module = 'system'", array(':path' => $item['path']))->fetchAssoc();
   }
+  else if (isset($cache[$item['mlid']])) {
+    return $cache[$item['mlid']];
+  }
+  $content = array();
   $result = db_query("
     SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, m.description, ml.*
     FROM {menu_links} ml
@@ -1011,6 +1038,7 @@ function system_admin_menu_block($item) {
     $content[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['mlid']] = $item;
   }
   ksort($content);
+  $cache[$item['mlid']] = $content;
   return $content;
 }
 

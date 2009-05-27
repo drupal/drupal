@@ -31,7 +31,8 @@ function simpletest_menu() {
     'position' => 'right',
     'weight' => -7,
     'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
+    'access callback' => 'system_admin_menu_block_access',
+    'access arguments' => array('admin/development', 'access administration pages'),
   );
   $items['admin/development/testing'] = array(
     'title' => 'Testing',
