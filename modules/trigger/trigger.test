@@ -114,7 +114,7 @@ class TriggerContentTestCase extends DrupalWebTestCase {
  * Test cron trigger.
  */
 class TriggerCronTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Trigger cron (system) actions'),
       'description' => t('Perform various tests with cron trigger.') ,
