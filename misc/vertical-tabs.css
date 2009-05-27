@@ -1,10 +1,10 @@
-/* $Id: vertical-tabs.css,v 1.3 2009/05/19 06:03:25 dries Exp $ */
+/* $Id: vertical-tabs.css,v 1.4 2009/05/27 13:30:49 webchick Exp $ */
 
 .vertical-tabs {
   margin: 1em 0 1em 15em;
   border: 1px solid #ccc;
 }
-.vertical-tabs-list {
+div.vertical-tabs ul.vertical-tabs-list {
   width: 15em;
   list-style: none;
   list-style-image: none; /* IE6 */
