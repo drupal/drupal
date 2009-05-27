@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.24 2009/05/26 08:50:04 dries Exp $
+// $Id: database.inc,v 1.25 2009/05/27 01:50:35 webchick Exp $
 
 /**
  * @file
@@ -41,6 +41,17 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
   public function query($query, array $args = array(), $options = array()) {
 
     $options += $this->defaultOptions();
+
+    // The PDO PostgreSQL driver has a bug which 
+    // doesn't type cast booleans correctly when
+    // parameters are bound using associative 
+    // arrays. 
+    // See http://bugs.php.net/bug.php?id=48383
+    foreach ($args as &$value) {
+      if (is_bool($value)) {
+        $value = (int) $value;
+      }
+    }
 
     try {
       if ($query instanceof DatabaseStatementInterface) {
