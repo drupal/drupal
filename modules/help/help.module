@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.81 2008/05/06 12:18:47 dries Exp $
+// $Id: help.module,v 1.82 2009/05/27 18:33:57 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function help_menu() {
   $items['admin/help'] = array(
@@ -31,7 +31,7 @@ function help_menu() {
 }
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function help_help($path, $arg) {
   switch ($path) {

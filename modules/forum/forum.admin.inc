@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.18 2009/05/12 18:28:23 dries Exp $
+// $Id: forum.admin.inc,v 1.19 2009/05/27 18:33:57 dries Exp $
 
 /**
  * @file
@@ -170,7 +170,7 @@ function forum_confirm_delete(&$form_state, $tid) {
 }
 
 /**
- * Implementation of forms api _submit call. Deletes a forum after confirmation.
+ * Implement forms api _submit call. Deletes a forum after confirmation.
  */
 function forum_confirm_delete_submit($form, &$form_state) {
   taxonomy_term_delete($form_state['values']['tid']);

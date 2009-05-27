@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.install,v 1.5 2009/05/13 19:42:16 webchick Exp $
+// $Id: openid.install,v 1.6 2009/05/27 18:33:58 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function openid_install() {
   // Create table.
@@ -15,7 +15,7 @@ function openid_install() {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function openid_uninstall() {
   // Remove table.
@@ -23,7 +23,7 @@ function openid_uninstall() {
 }
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function openid_schema() {
   $schema['openid_association'] = array(

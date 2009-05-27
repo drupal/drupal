@@ -1,5 +1,5 @@
 <?php
-// $Id: phptemplate.engine,v 1.71 2008/09/20 20:22:25 webchick Exp $
+// $Id: phptemplate.engine,v 1.72 2009/05/27 18:34:03 dries Exp $
 
 /**
  * @file
@@ -14,7 +14,7 @@ function phptemplate_init($template) {
 }
 
 /**
- * Implementation of hook_theme to tell Drupal what templates the engine
+ * Implement hook_theme to tell Drupal what templates the engine
  * and the current theme use. The $existing argument will contain hooks
  * pre-defined by Drupal so that we can use that information if
  * we need to.

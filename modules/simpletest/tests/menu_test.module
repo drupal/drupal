@@ -1,5 +1,5 @@
 <?php
-// $Id: menu_test.module,v 1.4 2009/04/13 12:18:52 dries Exp $
+// $Id: menu_test.module,v 1.5 2009/05/27 18:34:00 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function menu_test_menu() {
   // The name of the menu changes during the course of the test. Using a $_GET.

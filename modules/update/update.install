@@ -1,5 +1,5 @@
 <?php
-// $Id: update.install,v 1.7 2009/05/13 19:42:17 webchick Exp $
+// $Id: update.install,v 1.8 2009/05/27 18:34:02 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function update_install() {
   // Create cache table.
@@ -17,7 +17,7 @@ function update_install() {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function update_uninstall() {
   // Remove cache table.
@@ -37,7 +37,7 @@ function update_uninstall() {
 }
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function update_schema() {
   $schema['cache_update'] = drupal_get_schema_unprocessed('system', 'cache');

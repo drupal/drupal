@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.49 2009/05/25 13:42:54 dries Exp $
+// $Id: node.admin.inc,v 1.50 2009/05/27 18:33:58 dries Exp $
 
 /**
  * @file
@@ -84,7 +84,7 @@ function node_configure_rebuild_confirm_submit($form, &$form_state) {
 }
 
 /**
- * Implementation of hook_node_operations().
+ * Implement hook_node_operations().
  */
 function node_node_operations() {
   $operations = array(

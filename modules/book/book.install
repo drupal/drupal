@@ -1,5 +1,5 @@
 <?php
-// $Id: book.install,v 1.28 2009/05/13 19:42:14 webchick Exp $
+// $Id: book.install,v 1.29 2009/05/27 18:33:55 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function book_install() {
   // Create tables.
@@ -17,7 +17,7 @@ function book_install() {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function book_uninstall() {
   // Delete menu links.
@@ -252,7 +252,7 @@ function book_update_6000() {
 }
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function book_schema() {
   $schema['book'] = array(

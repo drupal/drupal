@@ -1,8 +1,8 @@
 <?php
-// $Id: error_test.module,v 1.1 2009/05/22 15:03:47 webchick Exp $
+// $Id: error_test.module,v 1.2 2009/05/27 18:34:00 dries Exp $
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function error_test_menu() {
   $items['error-test/generate-warnings'] = array(

@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.install,v 1.7 2009/05/13 19:42:14 webchick Exp $
+// $Id: blogapi.install,v 1.8 2009/05/27 18:33:54 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function blogapi_install() {
   // Create tables.
@@ -15,7 +15,7 @@ function blogapi_install() {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function blogapi_uninstall() {
   // Remove tables.
@@ -24,7 +24,7 @@ function blogapi_uninstall() {
 
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function blogapi_schema() {
   $schema['blogapi_files'] = array(

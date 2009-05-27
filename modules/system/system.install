@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.331 2009/05/25 13:42:56 dries Exp $
+// $Id: system.install,v 1.332 2009/05/27 18:34:01 dries Exp $
 
 /**
  * @file
@@ -297,7 +297,7 @@ function system_requirements($phase) {
 }
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function system_install() {
   if (db_driver() == 'pgsql') {
@@ -418,7 +418,7 @@ function system_install() {
 }
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function system_schema() {
   // NOTE: {variable} needs to be created before all other tables, as

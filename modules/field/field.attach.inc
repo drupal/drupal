@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.17 2009/05/17 03:12:17 webchick Exp $
+// $Id: field.attach.inc,v 1.18 2009/05/27 18:33:56 dries Exp $
 
 /**
  * @file
@@ -702,7 +702,7 @@ function _field_attach_preprocess($obj_type, &$object) {
 }
 
 /**
- * Implementation of hook_node_prepare_translation.
+ * Implement hook_node_prepare_translation.
  *
  * TODO D7: We do not yet know if this really belongs in Field API.
  */

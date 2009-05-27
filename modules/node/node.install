@@ -1,5 +1,5 @@
 <?php
-// $Id: node.install,v 1.17 2009/05/13 19:42:15 webchick Exp $
+// $Id: node.install,v 1.18 2009/05/27 18:33:58 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function node_schema() {
   $schema['node'] = array(

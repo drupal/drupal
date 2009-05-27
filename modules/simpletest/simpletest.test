@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.test,v 1.22 2009/05/26 08:46:03 dries Exp $
+// $Id: simpletest.test,v 1.23 2009/05/27 18:34:00 dries Exp $
 
 class SimpleTestFunctionalTest extends DrupalWebTestCase {
   /**
@@ -266,7 +266,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
 
 class SimpleTestMailCaptureTestCase extends DrupalWebTestCase {
   /**
-   * Implementation of getInfo().
+   * Implement getInfo().
    */
   public static function getInfo() {
     return array(

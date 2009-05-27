@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.42 2009/05/21 21:12:25 dries Exp $
+// $Id: default.profile,v 1.43 2009/05/27 18:34:02 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -223,7 +223,7 @@ function default_profile_tasks(&$task, $url) {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implement hook_form_alter().
  *
  * Allows the profile to alter the site-configuration form. This is
  * called through custom invocation, so $form_state is not populated.

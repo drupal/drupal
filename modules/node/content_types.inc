@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.71 2009/05/26 09:13:47 dries Exp $
+// $Id: content_types.inc,v 1.72 2009/05/27 18:33:58 dries Exp $
 
 /**
  * @file
@@ -222,7 +222,7 @@ function node_type_form(&$form_state, $type = NULL) {
 }
 
 /**
- * Implementation of hook_form_validate().
+ * Implement hook_form_validate().
  */
 function node_type_form_validate($form, &$form_state) {
   $type = new stdClass();
@@ -256,7 +256,7 @@ function node_type_form_validate($form, &$form_state) {
 }
 
 /**
- * Implementation of hook_form_submit().
+ * Implement hook_form_submit().
  */
 function node_type_form_submit($form, &$form_state) {
   $op = isset($form_state['values']['op']) ? $form_state['values']['op'] : '';
@@ -347,7 +347,7 @@ function node_type_form_submit($form, &$form_state) {
 }
 
 /**
- * Implementation of hook_node_type().
+ * Implement hook_node_type().
  */
 function node_node_type($op, $info) {
   if ($op != 'delete' && !empty($info->old_type) && $info->old_type != $info->type) {

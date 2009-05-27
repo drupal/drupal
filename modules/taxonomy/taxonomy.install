@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.16 2009/05/13 19:42:17 webchick Exp $
+// $Id: taxonomy.install,v 1.17 2009/05/27 18:34:01 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
  /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function taxonomy_install() {
   // Create tables.
@@ -15,7 +15,7 @@ function taxonomy_install() {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function taxonomy_uninstall() {
   // Remove tables.
@@ -27,7 +27,7 @@ function taxonomy_uninstall() {
 }
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function taxonomy_schema() {
   $schema['taxonomy_term_data'] = array(

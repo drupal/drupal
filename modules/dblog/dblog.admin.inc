@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.19 2009/05/25 10:43:52 dries Exp $
+// $Id: dblog.admin.inc,v 1.20 2009/05/27 18:33:56 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_form_FORM_ID_alter().
+ * Implement hook_form_FORM_ID_alter().
  */
 function dblog_form_system_logging_settings_alter(&$form, $form_state) {
   $form['dblog_row_limit'] = array(

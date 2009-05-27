@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.157 2008/05/06 12:18:51 dries Exp $
+// $Id: tracker.module,v 1.158 2009/05/27 18:34:01 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function tracker_help($path, $arg) {
   switch ($path) {
@@ -20,7 +20,7 @@ function tracker_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function tracker_menu() {
   $items['tracker'] = array(

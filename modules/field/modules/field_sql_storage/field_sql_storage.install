@@ -1,5 +1,5 @@
 <?php
-// $Id: field_sql_storage.install,v 1.4 2009/05/13 19:42:15 webchick Exp $
+// $Id: field_sql_storage.install,v 1.5 2009/05/27 18:33:56 dries Exp $
 
 /**
  * @file
@@ -7,21 +7,21 @@
  */
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function field_sql_storage_install() {
   drupal_install_schema('field_sql_storage');
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function field_sql_storage_uninstall() {
   drupal_uninstall_schema('field_sql_storage');
 }
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function field_sql_storage_schema() {
   $schema = array();

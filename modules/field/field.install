@@ -1,5 +1,5 @@
 <?php
-// $Id: field.install,v 1.7 2009/05/24 17:39:32 dries Exp $
+// $Id: field.install,v 1.8 2009/05/27 18:33:56 dries Exp $
 
 /**
  * @file
@@ -7,14 +7,14 @@
  */
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function field_install() {
   drupal_install_schema('field');
 }
 
 /**
- * Implementation of hook_schema.
+ * Implement hook_schema.
  */
 function field_schema() {
   // Static (meta) tables.

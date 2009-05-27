@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.install,v 1.15 2009/05/16 16:06:04 dries Exp $
+// $Id: filter.install,v 1.16 2009/05/27 18:33:57 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function filter_schema() {
   $schema['filter'] = array(

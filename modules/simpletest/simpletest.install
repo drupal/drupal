@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.install,v 1.20 2009/05/24 17:39:34 dries Exp $
+// $Id: simpletest.install,v 1.21 2009/05/27 18:34:00 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function simpletest_install() {
   drupal_install_schema('simpletest');
@@ -99,7 +99,7 @@ function simpletest_get_file_count($directory, $filename) {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function simpletest_uninstall() {
   simpletest_clean_environment();
