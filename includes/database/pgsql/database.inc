@@ -42,6 +42,17 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
 
     $options += $this->defaultOptions();
 
+    // The PDO PostgreSQL driver has a bug which 
+    // doesn't type cast booleans correctly when
+    // parameters are bound using associative 
+    // arrays. 
+    // See http://bugs.php.net/bug.php?id=48383
+    foreach ($args as &$value) {
+      if (is_bool($value)) {
+        $value = (int) $value;
+      }
+    }
+
     try {
       if ($query instanceof DatabaseStatementInterface) {
         $stmt = $query;

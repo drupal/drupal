@@ -377,7 +377,7 @@ function filter_list_format($format) {
 
   if (!isset($filters[$format])) {
     $filters[$format] = array();
-    $result = db_query("SELECT * FROM {filter} WHERE format = :format ORDER BY weight, module, delta", array(':format' => $format));
+    $result = db_query("SELECT * FROM {filter} WHERE format = :format ORDER BY weight, module, delta", array(':format' => (int) $format));
     foreach ($result as $filter) {
       $list = module_invoke($filter->module, 'filter', 'list');
       if (isset($list) && is_array($list) && isset($list[$filter->delta])) {
