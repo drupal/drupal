@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function path_help($path, $arg) {
   switch ($path) {
@@ -30,7 +30,7 @@ function path_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function path_menu() {
   $items['admin/build/path'] = array(
@@ -145,7 +145,7 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL, $language = ''
 }
 
 /**
- * Implementation of hook_node_validate().
+ * Implement hook_node_validate().
  */
 function path_node_validate($node, $form) {
   if (user_access('create url aliases') || user_access('administer url aliases')) {
@@ -167,7 +167,7 @@ function path_node_validate($node, $form) {
 }
 
 /**
- * Implementation of hook_node_load().
+ * Implement hook_node_load().
  */
 function path_node_load($nodes, $types) {
   foreach ($nodes as $node) {
@@ -181,7 +181,7 @@ function path_node_load($nodes, $types) {
 }
 
 /**
- * Implementation of hook_node_insert().
+ * Implement hook_node_insert().
  */
 function path_node_insert($node) {
   if (user_access('create url aliases') || user_access('administer url aliases')) {
@@ -195,7 +195,7 @@ function path_node_insert($node) {
 }
 
 /**
- * Implementation of hook_node_update().
+ * Implement hook_node_update().
  */
 function path_node_update($node) {
   if (user_access('create url aliases') || user_access('administer url aliases')) {
@@ -205,7 +205,7 @@ function path_node_update($node) {
 }
 
 /**
- * Implementation of hook_node_delete().
+ * Implement hook_node_delete().
  */
 function path_node_delete($node) {
   if (user_access('create url aliases') || user_access('administer url aliases')) {
@@ -218,7 +218,7 @@ function path_node_delete($node) {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implement hook_form_alter().
  */
 function path_form_alter(&$form, $form_state, $form_id) {
   if (!empty($form['#node_edit_form'])) {
@@ -256,7 +256,7 @@ function path_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function path_perm() {
   return array(

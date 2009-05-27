@@ -31,7 +31,7 @@ function user_module_invoke($type, &$array, &$user, $category = NULL) {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function user_theme() {
   return array(
@@ -84,7 +84,7 @@ function user_theme() {
 }
 
 /**
- * Implementation of hook_fieldable_info().
+ * Implement hook_fieldable_info().
  */
 function user_fieldable_info() {
   $return = array(
@@ -97,7 +97,7 @@ function user_fieldable_info() {
 }
 
 /**
- * Implementation of hook_field_build_modes().
+ * Implement hook_field_build_modes().
  */
 function user_field_build_modes($obj_type) {
   $modes = array();
@@ -784,7 +784,7 @@ function user_is_blocked($name) {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function user_perm() {
   return array(
@@ -816,7 +816,7 @@ function user_perm() {
 }
 
 /**
- * Implementation of hook_file_download().
+ * Implement hook_file_download().
  *
  * Ensure that user pictures (avatars) are always downloadable.
  */
@@ -828,7 +828,7 @@ function user_file_download($filepath) {
 }
 
 /**
- * Implementation of hook_file_references().
+ * Implement hook_file_references().
  */
 function user_file_references($file) {
   // Determine if the file is used by this module.
@@ -840,7 +840,7 @@ function user_file_references($file) {
 }
 
 /**
- * Implementation of hook_file_delete().
+ * Implement hook_file_delete().
  */
 function user_file_delete($file) {
   // Remove any references to the file.
@@ -851,7 +851,7 @@ function user_file_delete($file) {
 }
 
 /**
- * Implementation of hook_search().
+ * Implement hook_search().
  */
 function user_search($op = 'search', $keys = NULL, $skip_access_check = FALSE) {
   switch ($op) {
@@ -887,7 +887,7 @@ function user_search($op = 'search', $keys = NULL, $skip_access_check = FALSE) {
 }
 
 /**
- * Implementation of hook_elements().
+ * Implement hook_elements().
  */
 function user_elements() {
   return array(
@@ -901,7 +901,7 @@ function user_elements() {
 }
 
 /**
- * Implementation of hook_user_view().
+ * Implement hook_user_view().
  */
 function user_user_view(&$edit, &$account, $category = NULL) {
   $account->content['user_picture'] = array(
@@ -925,7 +925,7 @@ function user_user_view(&$edit, &$account, $category = NULL) {
 }
 
 /**
- * Implementation of hook_user_form.
+ * Implement hook_user_form.
  */
 function user_user_form(&$edit, &$account, $category = NULL) {
   if ($category == 'account') {
@@ -935,7 +935,7 @@ function user_user_form(&$edit, &$account, $category = NULL) {
 }
 
 /**
- * Implementation of hook_user_validate().
+ * Implement hook_user_validate().
  */
 function user_user_validate(&$edit, &$account, $category = NULL) {
   if ($category == 'account') {
@@ -976,7 +976,7 @@ function user_user_validate(&$edit, &$account, $category = NULL) {
 }
 
 /**
- * Implementation of hook_user_submit().
+ * Implement hook_user_submit().
  */
 function user_user_submit(&$edit, &$account, $category = NULL) {
   if ($category == 'account') {
@@ -998,7 +998,7 @@ function user_user_submit(&$edit, &$account, $category = NULL) {
 }
 
 /**
- * Implementation of hook_user_categories.
+ * Implement hook_user_categories.
  */
 function user_user_categories($edit, $account, $category = NULL) {
     return array(array('name' => 'account', 'title' => t('Account settings'), 'weight' => 1));
@@ -1036,7 +1036,7 @@ function user_login_block() {
 }
 
 /**
- * Implementation of hook_block_list().
+ * Implement hook_block_list().
  */
 function user_block_list() {
   global $user;
@@ -1054,7 +1054,7 @@ function user_block_list() {
 }
 
 /**
- * Implementation of hook_block_configure().
+ * Implement hook_block_configure().
  */
 function user_block_configure($delta = '') {
   global $user;
@@ -1079,7 +1079,7 @@ function user_block_configure($delta = '') {
 }
 
 /**
- * Implementation of hook_block_save().
+ * Implement hook_block_save().
  */
 function user_block_save($delta = '', $edit = array()) {
   global $user;
@@ -1097,7 +1097,7 @@ function user_block_save($delta = '', $edit = array()) {
 }
 
 /**
- * Implementation of hook_block_view().
+ * Implement hook_block_view().
  */
 function user_block_view($delta = '') {
   global $user;
@@ -1273,7 +1273,7 @@ function user_load_self($arg) {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function user_menu() {
   $items['user/autocomplete'] = array(
@@ -2055,7 +2055,7 @@ function user_build_content(&$account) {
 }
 
 /**
- * Implementation of hook_mail().
+ * Implement hook_mail().
  */
 function user_mail($key, &$message, $params) {
   $language = $message['language'];
@@ -2182,7 +2182,7 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
 }
 
 /**
- * Implementation of hook_user_operations().
+ * Implement hook_user_operations().
  */
 function user_user_operations($form_state = array()) {
   $operations = array(
@@ -2381,7 +2381,7 @@ function user_multiple_cancel_confirm_submit($form, &$form_state) {
 }
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function user_help($path, $arg) {
   global $user;
@@ -2504,7 +2504,7 @@ function user_build_filter_query(SelectQuery $query) {
 }
 
 /**
- * Implementation of hook_forms().
+ * Implement hook_forms().
  */
 function user_forms() {
   $forms['user_admin_access_add_form']['callback'] = 'user_admin_access_form';
@@ -2514,7 +2514,7 @@ function user_forms() {
 }
 
 /**
- * Implementation of hook_comment_view().
+ * Implement hook_comment_view().
  */
 function user_comment_view(&$comment) {
   if (variable_get('user_signatures', 0) && !empty($comment->signature)) {
@@ -2673,7 +2673,7 @@ function _user_password_dynamic_validation() {
 }
 
 /**
- * Implementation of hook_hook_info().
+ * Implement hook_hook_info().
  */
 function user_hook_info() {
   return array(
@@ -2703,7 +2703,7 @@ function user_hook_info() {
 }
 
 /**
- * Implementation of hook_action_info().
+ * Implement hook_action_info().
  */
 function user_action_info() {
   return array(
@@ -2717,7 +2717,7 @@ function user_action_info() {
 }
 
 /**
- * Implementation of a Drupal action.
+ * Implement a Drupal action.
  * Blocks the current user.
  */
 function user_block_user_action(&$object, $context = array()) {

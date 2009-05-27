@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function taxonomy_test_schema() {
   $schema['term_antonym'] = array(
@@ -44,14 +44,14 @@ function taxonomy_test_schema() {
 }
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function taxonomy_test_install() {
   drupal_install_schema('taxonomy_test');
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function taxonomy_test_uninstall() {
   drupal_uninstall_schema('taxonomy_test');

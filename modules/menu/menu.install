@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function menu_install() {
   // Create tables.
@@ -28,7 +28,7 @@ function menu_install() {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function menu_uninstall() {
   // Remove tables.
@@ -37,7 +37,7 @@ function menu_uninstall() {
 }
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function menu_schema() {
   $schema['menu_custom'] = array(

@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function forum_help($path, $arg) {
   switch ($path) {
@@ -33,7 +33,7 @@ function forum_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function forum_theme() {
   return array(
@@ -79,7 +79,7 @@ function forum_term_load($tid) {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function forum_menu() {
   $items['forum'] = array(
@@ -149,7 +149,7 @@ function forum_menu() {
 
 
 /**
- * Implementation of hook_init().
+ * Implement hook_init().
  */
 function forum_init() {
   drupal_add_css(drupal_get_path('module', 'forum') . '/forum.css');
@@ -181,7 +181,7 @@ function _forum_node_check_node_type($node, $vocabulary) {
 }
 
 /**
- * Implementation of hook_node_view().
+ * Implement hook_node_view().
  */
 function forum_node_view($node, $teaser) {
   $vid = variable_get('forum_nav_vocabulary', '');
@@ -219,7 +219,7 @@ function forum_node_view($node, $teaser) {
 }
 
 /**
- * Implementation of hook_node_prepare().
+ * Implement hook_node_prepare().
  */
 function forum_node_prepare($node) {
   $vid = variable_get('forum_nav_vocabulary', '');
@@ -236,7 +236,7 @@ function forum_node_prepare($node) {
 }
 
 /**
- * Implementation of hook_node_validate().
+ * Implement hook_node_validate().
  *
  * Check in particular that only a "leaf" term in the associated taxonomy.
  */
@@ -262,7 +262,7 @@ function forum_node_validate($node, $form) {
 }
 
 /**
- * Implementation of hook_node_presave().
+ * Implement hook_node_presave().
  *
  * Assign forum taxonomy when adding a topic from within a forum.
  */
@@ -293,7 +293,7 @@ function forum_node_presave($node) {
 }
 
 /**
- * Implementation of hook_node_update().
+ * Implement hook_node_update().
  */
 function forum_node_update($node) {
   $vid = variable_get('forum_nav_vocabulary', '');
@@ -317,7 +317,7 @@ function forum_node_update($node) {
 }
 
 /**
- * Implementation of hook_node_insert().
+ * Implement hook_node_insert().
  */
 function forum_node_insert($node) {
   $vid = variable_get('forum_nav_vocabulary', '');
@@ -330,7 +330,7 @@ function forum_node_insert($node) {
 }
 
 /**
- * Implementation of hook_node_delete().
+ * Implement hook_node_delete().
  */
 function forum_node_delete($node) {
   $vid = variable_get('forum_nav_vocabulary', '');
@@ -341,7 +341,7 @@ function forum_node_delete($node) {
 }
 
 /**
- * Implementation of hook_node_load().
+ * Implement hook_node_load().
  */
 function forum_node_load($nodes, $types) {
   $vid = variable_get('forum_nav_vocabulary', '');
@@ -366,7 +366,7 @@ function forum_node_load($nodes, $types) {
 }
 
 /**
- * Implementation of hook_node_info().
+ * Implement hook_node_info().
  */
 function forum_node_info() {
   return array(
@@ -380,7 +380,7 @@ function forum_node_info() {
 }
 
 /**
- * Implementation of hook_access().
+ * Implement hook_access().
  */
 function forum_access($op, $node, $account) {
   switch ($op) {
@@ -394,7 +394,7 @@ function forum_access($op, $node, $account) {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function forum_perm() {
   $perms = array(
@@ -408,7 +408,7 @@ function forum_perm() {
 }
 
 /**
- * Implementation of hook_taxonomy().
+ * Implement hook_taxonomy().
  */
 function forum_taxonomy($op, $type, $term = NULL) {
   if ($op == 'delete' && $term['vid'] == variable_get('forum_nav_vocabulary', '')) {
@@ -435,7 +435,7 @@ function forum_taxonomy($op, $type, $term = NULL) {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implement hook_form_alter().
  */
 function forum_form_alter(&$form, $form_state, $form_id) {
   $vid = variable_get('forum_nav_vocabulary', '');
@@ -468,7 +468,7 @@ function forum_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implementation of hook_block_list().
+ * Implement hook_block_list().
  */
 function forum_block_list() {
   $blocks['active']['info'] = t('Active forum topics');
@@ -477,7 +477,7 @@ function forum_block_list() {
 }
 
 /**
- * Implementation of hook_block_configure().
+ * Implement hook_block_configure().
  */
 function forum_block_configure($delta = '') {
   $form['forum_block_num_' . $delta] = array('#type' => 'select', '#title' => t('Number of topics'), '#default_value' => variable_get('forum_block_num_' . $delta, '5'), '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
@@ -485,14 +485,14 @@ function forum_block_configure($delta = '') {
 }
 
 /**
- * Implementation of hook_block_save().
+ * Implement hook_block_save().
  */
 function forum_block_save($delta = '', $edit = array()) {
   variable_set('forum_block_num_' . $delta, $edit['forum_block_num_' . $delta]);
 }
 
 /**
- * Implementation of hook_block_view().
+ * Implement hook_block_view().
  *
  * Generates a block containing the currently active forum topics and the
  * most recently added forum topics.
@@ -536,7 +536,7 @@ function forum_block_view($delta = '') {
 }
 
 /**
- * Implementation of hook_form().
+ * Implement hook_form().
  */
 function forum_form($node, $form_state) {
   $type = node_get_types('type', $node);
@@ -559,7 +559,7 @@ function forum_form($node, $form_state) {
 }
 
 /**
- * Implementation of hook_term_path().
+ * Implement hook_term_path().
  */
 function forum_term_path($term) {
   return 'forum/' . $term->tid;

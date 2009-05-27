@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function session_test_menu() {
   $items['session-test/get'] = array(
@@ -125,7 +125,7 @@ function _session_test_set_not_started() {
 }
 
 /**
- * Implementation of hook_user().
+ * Implement hook_user().
  */
 function session_test_user_login($edit = array(), $user = NULL) {
   if ($edit['name'] == 'session_test_user') {

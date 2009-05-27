@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function openid_menu() {
   $items['openid/authenticate'] = array(
@@ -36,7 +36,7 @@ function openid_menu() {
 }
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function openid_help($path, $arg) {
   switch ($path) {
@@ -57,7 +57,7 @@ function openid_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_user_insert().
+ * Implement hook_user_insert().
  */
 function openid_user_insert(&$edit, &$account, $category = NULL) {
   if (isset($_SESSION['openid']['values'])) {
@@ -70,14 +70,14 @@ function openid_user_insert(&$edit, &$account, $category = NULL) {
 }
 
 /**
- * Implementation of hook_form_FORM_ID_alter().
+ * Implement hook_form_FORM_ID_alter().
  */
 function openid_form_user_login_block_alter(&$form, &$form_state) {
   _openid_user_login_form_alter($form, $form_state);
 }
 
 /**
- * Implementation of hook_form_FORM_ID_alter().
+ * Implement hook_form_FORM_ID_alter().
  */
 function openid_form_user_login_alter(&$form, &$form_state) {
   _openid_user_login_form_alter($form, $form_state);
@@ -122,7 +122,7 @@ function _openid_user_login_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implementation of hook_form_alter(). Adds OpenID login to the login forms.
+ * Implement hook_form_alter(). Adds OpenID login to the login forms.
  */
 function openid_form_user_register_alter(&$form, &$form_state) {
   if (isset($_SESSION['openid']['values'])) {

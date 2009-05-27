@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function text_theme() {
   return array(
@@ -30,7 +30,7 @@ function text_theme() {
 }
 
 /**
- * Implementation of hook_field_info().
+ * Implement hook_field_info().
  */
 function text_field_info() {
   return array(
@@ -55,7 +55,7 @@ function text_field_info() {
 }
 
 /**
- * Implementation of hook_field_schema().
+ * Implement hook_field_schema().
  */
 function text_field_schema($field) {
   if ($field['type'] == 'text_long') {
@@ -92,7 +92,7 @@ function text_field_schema($field) {
 }
 
 /**
- * Implementation of hook_field_validate().
+ * Implement hook_field_validate().
  *
  * Possible error codes:
  * - 'text_max_length': The value exceeds the maximum length.
@@ -126,7 +126,7 @@ function text_field_sanitize($obj_type, $object, $field, $instance, &$items) {
 }
 
 /**
- * Implementation of hook_field_is_empty().
+ * Implement hook_field_is_empty().
  */
 function text_field_is_empty($item, $field) {
   if (empty($item['value']) && (string)$item['value'] !== '0') {
@@ -136,7 +136,7 @@ function text_field_is_empty($item, $field) {
 }
 
 /**
- * Implementation of hook_field_formatter_info().
+ * Implement hook_field_formatter_info().
  */
 function text_field_formatter_info() {
   return array(
@@ -188,7 +188,7 @@ function theme_field_formatter_text_trimmed($element) {
 }
 
 /**
- * Implementation of hook_field_widget_info().
+ * Implement hook_field_widget_info().
  *
  * Here we indicate that the field module will handle
  * the default value and multiple values for these widgets.
@@ -222,7 +222,7 @@ function text_field_widget_info() {
 }
 
 /**
- * Implementation of FAPI hook_elements().
+ * Implement FAPI hook_elements().
  *
  * Any FAPI callbacks needed for individual widgets can be declared here,
  * and the element will be passed to those callbacks for processing.
@@ -251,7 +251,7 @@ function text_elements() {
 }
 
 /**
- * Implementation of hook_field_widget().
+ * Implement hook_field_widget().
  *
  * Attach a single form element to the form. It will be built out and
  * validated in the callback(s) listed in hook_elements. We build it
@@ -291,7 +291,7 @@ function text_field_widget(&$form, &$form_state, $field, $instance, $items, $del
 }
 
 /**
- * Implementation of hook_field_widget_error().
+ * Implement hook_field_widget_error().
  */
 function text_field_widget_error($element, $error) {
   form_error($element['value'], $error['message']);

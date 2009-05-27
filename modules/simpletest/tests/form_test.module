@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function form_test_menu() {
   $items = array();

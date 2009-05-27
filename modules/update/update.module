@@ -53,7 +53,7 @@ define('UPDATE_UNKNOWN', -2);
 
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function update_help($path, $arg) {
   switch ($path) {
@@ -112,7 +112,7 @@ function update_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function update_menu() {
   $items = array();
@@ -142,7 +142,7 @@ function update_menu() {
 }
 
 /**
- * Implementation of the hook_theme() registry.
+ * Implement the hook_theme() registry.
  */
 function update_theme() {
   return array(
@@ -159,7 +159,7 @@ function update_theme() {
 }
 
 /**
- * Implementation of hook_requirements().
+ * Implement hook_requirements().
  *
  * @return
  *   An array describing the status of the site regarding available updates.
@@ -272,7 +272,7 @@ function _update_requirement_check($project, $type) {
 }
 
 /**
- * Implementation of hook_cron().
+ * Implement hook_cron().
  */
 function update_cron() {
   $frequency = variable_get('update_check_frequency', 1);
@@ -286,7 +286,7 @@ function update_cron() {
 }
 
 /**
- * Implementation of hook_form_FORM_ID_alter().
+ * Implement hook_form_FORM_ID_alter().
  *
  * Adds a submit handler to the system modules and themes forms, so that if a
  * site admin saves either form, we invalidate the cache of available updates.
@@ -298,7 +298,7 @@ function update_form_system_themes_form_alter(&$form, $form_state) {
 }
 
 /**
- * Implementation of hook_form_FORM_ID_alter().
+ * Implement hook_form_FORM_ID_alter().
  *
  * Adds a submit handler to the system modules and themes forms, so that if a
  * site admin saves either form, we invalidate the cache of available updates.
@@ -383,7 +383,7 @@ function update_refresh() {
 }
 
 /**
- * Implementation of hook_mail().
+ * Implement hook_mail().
  *
  * Constructs the email notification message when the site is out of date.
  *
@@ -596,7 +596,7 @@ function _update_cache_clear($cid = NULL) {
 }
 
 /**
- * Implementation of hook_flush_caches().
+ * Implement hook_flush_caches().
  *
  * Called from update.php (among others) to flush the caches.
  * Since we're running update.php, we are likely to install a new version of

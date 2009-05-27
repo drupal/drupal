@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function taxonomy_perm() {
   return array(
@@ -19,7 +19,7 @@ function taxonomy_perm() {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function taxonomy_theme() {
   return array(
@@ -112,7 +112,7 @@ function taxonomy_term_path($term) {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function taxonomy_menu() {
   $items['admin/content/taxonomy'] = array(
@@ -572,7 +572,7 @@ function taxonomy_get_vocabularies($type = NULL) {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implement hook_form_alter().
  * Generate a form for selecting terms to associate with a node.
  * We check for taxonomy_override_selector before loading the full
  * vocabulary, so contrib modules can intercept before hook_form_alter
@@ -859,7 +859,7 @@ function taxonomy_node_save($node, $terms) {
 }
 
 /**
- * Implementation of hook_node_type().
+ * Implement hook_node_type().
  */
 function taxonomy_node_type($op, $info) {
   if ($op == 'update' && !empty($info->old_type) && $info->type != $info->old_type) {
@@ -1559,7 +1559,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
 }
 
 /**
- * Implementation of hook_node_load().
+ * Implement hook_node_load().
  */
 function taxonomy_node_load($nodes) {
   // Get an array of tid, vid associations ordered by vocabulary and term
@@ -1585,7 +1585,7 @@ function taxonomy_node_load($nodes) {
 }
 
 /**
- * Implementation of hook_node_insert().
+ * Implement hook_node_insert().
  */
 function taxonomy_node_insert($node) {
   if (!empty($node->taxonomy)) {
@@ -1594,7 +1594,7 @@ function taxonomy_node_insert($node) {
 }
 
 /**
- * Implementation of hook_node_update().
+ * Implement hook_node_update().
  */
 function taxonomy_node_update($node) {
   if (!empty($node->taxonomy)) {
@@ -1603,7 +1603,7 @@ function taxonomy_node_update($node) {
 }
 
 /**
- * Implementation of hook_node_delete().
+ * Implement hook_node_delete().
  *
  * Remove associations of a node to its terms.
  */
@@ -1615,7 +1615,7 @@ function taxonomy_node_delete($node) {
 }
 
 /**
- * Implementation of hook_node_delete_revision().
+ * Implement hook_node_delete_revision().
  *
  * Remove associations of a node to its terms.
  */
@@ -1627,7 +1627,7 @@ function taxonomy_node_delete_revision($node) {
 }
 
 /**
- * Implementation of hook_node_validate().
+ * Implement hook_node_validate().
  *
  * Make sure incoming vids are free tagging enabled.
  */
@@ -1648,7 +1648,7 @@ function taxonomy_node_validate($node, $form) {
 }
 
 /**
- * Implementation of hook_node_update_index().
+ * Implement hook_node_update_index().
  */
 function taxonomy_node_update_index($node) {
   $output = array();
@@ -1687,7 +1687,7 @@ function taxonomy_terms_parse_string($str_tids) {
 }
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function taxonomy_help($path, $arg) {
   switch ($path) {
@@ -1751,7 +1751,7 @@ function taxonomy_implode_tags($tags, $vid = NULL) {
 }
 
 /**
- * Implementation of hook_hook_info().
+ * Implement hook_hook_info().
  */
 function taxonomy_hook_info() {
   return array(

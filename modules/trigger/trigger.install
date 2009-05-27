@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function trigger_install() {
   // Create tables.
@@ -18,7 +18,7 @@ function trigger_install() {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function trigger_uninstall() {
   // Remove tables.
@@ -26,7 +26,7 @@ function trigger_uninstall() {
 }
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function trigger_schema() {
   $schema['trigger_assignments'] = array(

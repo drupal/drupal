@@ -46,7 +46,7 @@ define('NODE_BUILD_RSS', 4);
 define('NODE_BUILD_PRINT', 5);
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function node_help($path, $arg) {
   // Remind site administrators about the {node_access} table being flagged
@@ -89,7 +89,7 @@ function node_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function node_theme() {
   return array(
@@ -143,7 +143,7 @@ function node_theme() {
 }
 
 /**
- * Implementation of hook_cron().
+ * Implement hook_cron().
  */
 function node_cron() {
   db_delete('history')
@@ -152,7 +152,7 @@ function node_cron() {
 }
 
 /**
- * Implementation of hook_fieldable_info().
+ * Implement hook_fieldable_info().
  */
 function node_fieldable_info() {
   $return = array(
@@ -173,7 +173,7 @@ function node_fieldable_info() {
 
 
 /**
- * Implementation of hook_field_build_modes().
+ * Implement hook_field_build_modes().
  */
 function node_field_build_modes($obj_type) {
   $modes = array();
@@ -1406,7 +1406,7 @@ function theme_node_log_message($log) {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function node_perm() {
   $perms = array(
@@ -1483,7 +1483,7 @@ function _node_rankings() {
 
 
 /**
- * Implementation of hook_search().
+ * Implement hook_search().
  */
 function node_search($op = 'search', $keys = NULL) {
   switch ($op) {
@@ -1617,7 +1617,7 @@ function node_search($op = 'search', $keys = NULL) {
 }
 
 /**
- * Implementation of hook_ranking().
+ * Implement hook_ranking().
  */
 function node_ranking() {
   // Create the ranking array and add the basic ranking options.
@@ -1652,7 +1652,7 @@ function node_ranking() {
 }
 
 /**
- * Implementation of hook_user_cancel().
+ * Implement hook_user_cancel().
  */
 function node_user_cancel($edit, $account, $method) {
   switch ($method) {
@@ -1733,7 +1733,7 @@ function theme_node_search_admin($form) {
 }
 
 /**
- * Implementation of hook_link().
+ * Implement hook_link().
  */
 function node_link($type, $node = NULL, $teaser = FALSE) {
   $links = array();
@@ -1791,7 +1791,7 @@ function _node_add_access() {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function node_menu() {
   $items['admin/content/node'] = array(
@@ -1966,7 +1966,7 @@ function node_page_title($node) {
 }
 
 /**
- * Implementation of hook_init().
+ * Implement hook_init().
  */
 function node_init() {
   drupal_add_css(drupal_get_path('module', 'node') . '/node.css');
@@ -1990,7 +1990,7 @@ function node_revision_list($node) {
 }
 
 /**
- * Implementation of hook_block_list().
+ * Implement hook_block_list().
  */
 function node_block_list() {
   $blocks['syndicate']['info'] = t('Syndicate');
@@ -2000,7 +2000,7 @@ function node_block_list() {
 }
 
 /**
- * Implementation of hook_block_view().
+ * Implement hook_block_view().
  */
 function node_block_view($delta = '') {
   $block['subject'] = t('Syndicate');
@@ -2168,7 +2168,7 @@ function node_page_view($node) {
 }
 
 /**
- * Implementation of hook_update_index().
+ * Implement hook_update_index().
  */
 function node_update_index() {
   $limit = (int)variable_get('search_cron_limit', 100);
@@ -2211,7 +2211,7 @@ function _node_index_node($node) {
 }
 
 /**
- * Implementation of hook_form_FORM_ID_alter().
+ * Implement hook_form_FORM_ID_alter().
  */
 function node_form_search_form_alter(&$form, $form_state) {
   if ($form['module']['#value'] == 'node' && user_access('use advanced search')) {
@@ -2590,7 +2590,7 @@ function node_access_view_all_nodes() {
 }
 
 /**
- * Implementation of hook_db_rewrite_sql().
+ * Implement hook_db_rewrite_sql().
  */
 function node_db_rewrite_sql($query, $primary_table, $primary_field) {
   if ($primary_field == 'nid' && !node_access_view_all_nodes()) {
@@ -2602,7 +2602,7 @@ function node_db_rewrite_sql($query, $primary_table, $primary_field) {
 }
 
 /**
- * Implementation of hook_query_TAG_alter().
+ * Implement hook_query_TAG_alter().
  */
 function node_query_node_access_alter(QueryAlterableInterface $query) {
   // Skip the extra expensive alterations if site has no node access control
@@ -2888,7 +2888,7 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
  */
 
 /**
- * Implementation of hook_access().
+ * Implement hook_access().
  *
  * Named so as not to conflict with node_access()
  */
@@ -2913,7 +2913,7 @@ function node_content_access($op, $node, $account) {
 }
 
 /**
- * Implementation of hook_form().
+ * Implement hook_form().
  */
 function node_content_form($node, $form_state) {
   $type = node_get_types('type', $node);
@@ -2940,7 +2940,7 @@ function node_content_form($node, $form_state) {
  */
 
 /**
- * Implementation of hook_forms().
+ * Implement hook_forms().
  * All node forms share the same form handler.
  */
 function node_forms() {
@@ -2967,7 +2967,7 @@ function theme_node_submitted($node) {
 }
 
 /**
- * Implementation of hook_hook_info().
+ * Implement hook_hook_info().
  */
 function node_hook_info() {
   return array(
@@ -2994,7 +2994,7 @@ function node_hook_info() {
 }
 
 /**
- * Implementation of hook_action_info().
+ * Implement hook_action_info().
  */
 function node_action_info() {
   return array(
@@ -3089,7 +3089,7 @@ function node_action_info() {
 }
 
 /**
- * Implementation of a Drupal action.
+ * Implement a Drupal action.
  * Sets the status of a node to 1, meaning published.
  */
 function node_publish_action($node, $context = array()) {
@@ -3098,7 +3098,7 @@ function node_publish_action($node, $context = array()) {
 }
 
 /**
- * Implementation of a Drupal action.
+ * Implement a Drupal action.
  * Sets the status of a node to 0, meaning unpublished.
  */
 function node_unpublish_action($node, $context = array()) {
@@ -3107,7 +3107,7 @@ function node_unpublish_action($node, $context = array()) {
 }
 
 /**
- * Implementation of a Drupal action.
+ * Implement a Drupal action.
  * Sets the sticky-at-top-of-list property of a node to 1.
  */
 function node_make_sticky_action($node, $context = array()) {
@@ -3116,7 +3116,7 @@ function node_make_sticky_action($node, $context = array()) {
 }
 
 /**
- * Implementation of a Drupal action.
+ * Implement a Drupal action.
  * Sets the sticky-at-top-of-list property of a node to 0.
  */
 function node_make_unsticky_action($node, $context = array()) {
@@ -3125,7 +3125,7 @@ function node_make_unsticky_action($node, $context = array()) {
 }
 
 /**
- * Implementation of a Drupal action.
+ * Implement a Drupal action.
  * Sets the promote property of a node to 1.
  */
 function node_promote_action($node, $context = array()) {
@@ -3134,7 +3134,7 @@ function node_promote_action($node, $context = array()) {
 }
 
 /**
- * Implementation of a Drupal action.
+ * Implement a Drupal action.
  * Sets the promote property of a node to 0.
  */
 function node_unpromote_action($node, $context = array()) {
@@ -3143,7 +3143,7 @@ function node_unpromote_action($node, $context = array()) {
 }
 
 /**
- * Implementation of a Drupal action.
+ * Implement a Drupal action.
  * Saves a node.
  */
 function node_save_action($node) {
@@ -3152,7 +3152,7 @@ function node_save_action($node) {
 }
 
 /**
- * Implementation of a configurable Drupal action.
+ * Implement a configurable Drupal action.
  * Assigns ownership of a node to a user.
  */
 function node_assign_owner_action($node, $context) {
@@ -3226,7 +3226,7 @@ function node_unpublish_by_keyword_action_submit($form, $form_state) {
 }
 
 /**
- * Implementation of a configurable Drupal action.
+ * Implement a configurable Drupal action.
  * Unpublish a node if it contains a certain string.
  *
  * @param $context
@@ -3285,7 +3285,7 @@ function node_list_permissions($type) {
 }
 
 /**
- * Implementation of hook_elements().
+ * Implement hook_elements().
  */
 function node_elements() {
   $type['node_links'] = array('#theme' => 'node_links');

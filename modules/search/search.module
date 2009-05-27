@@ -91,7 +91,7 @@ define('PREG_CLASS_CJK', '\x{3041}-\x{30ff}\x{31f0}-\x{31ff}\x{3400}-\x{4db5}' .
 '\x{4e00}-\x{9fbb}\x{f900}-\x{fad9}');
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function search_help($path, $arg) {
   switch ($path) {
@@ -112,7 +112,7 @@ function search_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function search_theme() {
   return array(
@@ -141,7 +141,7 @@ function search_theme() {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function search_perm() {
   return array(
@@ -161,7 +161,7 @@ function search_perm() {
 }
 
 /**
- * Implementation of hook_block_list().
+ * Implement hook_block_list().
  */
 function search_block_list() {
   $blocks['form']['info'] = t('Search form');
@@ -171,7 +171,7 @@ function search_block_list() {
 }
 
 /**
- * Implementation of hook_block_view().
+ * Implement hook_block_view().
  */
 function search_block_view($delta = '') {
   if (user_access('search content')) {
@@ -182,7 +182,7 @@ function search_block_view($delta = '') {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function search_menu() {
   $items['search'] = array(
@@ -273,7 +273,7 @@ function search_dirty($word = NULL) {
 }
 
 /**
- * Implementation of hook_cron().
+ * Implement hook_cron().
  *
  * Fires hook_update_index() in all modules and cleans up dirty words (see
  * search_dirty).
@@ -640,7 +640,7 @@ function search_touch_node($nid) {
 }
 
 /**
- * Implementation of hook_node_update_index().
+ * Implement hook_node_update_index().
  */
 function search_node_update_index($node) {
   // Transplant links to a node into the target node.
@@ -655,7 +655,7 @@ function search_node_update_index($node) {
 }
 
 /**
- * Implementation of hook_node_update().
+ * Implement hook_node_update().
  */
 function search_node_update($node) {
   // Reindex the node when it is updated. The node is automatically indexed
@@ -664,7 +664,7 @@ function search_node_update($node) {
 }
 
 /**
- * Implementation of hook_comment_insert().
+ * Implement hook_comment_insert().
  */
 function search_comment_insert($form_values) {
   // Reindex the node when comments are added.
@@ -672,7 +672,7 @@ function search_comment_insert($form_values) {
 }
 
 /**
- * Implementation of hook_comment_update().
+ * Implement hook_comment_update().
  */
 function search_comment_update($form_values) {
   // Reindex the node when comments are changed.
@@ -680,7 +680,7 @@ function search_comment_update($form_values) {
 }
 
 /**
- * Implementation of hook_comment_delete().
+ * Implement hook_comment_delete().
  */
 function search_comment_delete($comment) {
   // Reindex the node when comments are deleted.
@@ -688,7 +688,7 @@ function search_comment_delete($comment) {
 }
 
 /**
- * Implementation of hook_comment_publish().
+ * Implement hook_comment_publish().
  */
 function search_comment_publish($form_values) {
   // Reindex the node when comments are published.
@@ -696,7 +696,7 @@ function search_comment_publish($form_values) {
 }
 
 /**
- * Implementation of hook_comment_unpublish().
+ * Implement hook_comment_unpublish().
  */
 function search_comment_unpublish($comment) {
   // Reindex the node when comments are unpublished.

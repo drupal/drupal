@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function aggregator_test_menu() {
   $items['aggregator/test-feed'] = array(

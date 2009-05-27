@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function system_test_menu() {
   $items['system-test/auth'] = array(
@@ -96,7 +96,7 @@ function system_test_destination() {
 }
 
 /**
- * Implementation of hook_modules_installed().
+ * Implement hook_modules_installed().
  */
 function system_test_modules_installed($modules) {
   if (in_array('aggregator', $modules)) {
@@ -105,7 +105,7 @@ function system_test_modules_installed($modules) {
 }
 
 /**
- * Implementation of hook_modules_enabled().
+ * Implement hook_modules_enabled().
  */
 function system_test_modules_enabled($modules) {
   if (in_array('aggregator', $modules)) {
@@ -114,7 +114,7 @@ function system_test_modules_enabled($modules) {
 }
 
 /**
- * Implementation of hook_modules_disabled().
+ * Implement hook_modules_disabled().
  */
 function system_test_modules_disabled($modules) {
   if (in_array('aggregator', $modules)) {
@@ -123,7 +123,7 @@ function system_test_modules_disabled($modules) {
 }
 
 /**
- * Implementation of hook_modules_uninstalled().
+ * Implement hook_modules_uninstalled().
  */
 function system_test_modules_uninstalled($modules) {
   if (in_array('aggregator', $modules)) {
@@ -132,14 +132,14 @@ function system_test_modules_uninstalled($modules) {
 }
 
 /**
- * Implementation of hook_boot().
+ * Implement hook_boot().
  */
 function system_test_boot() {
   watchdog('system_test', 'hook_boot');
 }
 
 /**
- * Implementation of hook_init().
+ * Implement hook_init().
  */
 function system_test_init() {
   // Used by FrontPageTestCase to get the results of drupal_is_front_page().
@@ -149,7 +149,7 @@ function system_test_init() {
 }
 
 /**
- * Implementation of hook_exit().
+ * Implement hook_exit().
  */
 function system_test_exit() {
   watchdog('system_test', 'hook_exit');

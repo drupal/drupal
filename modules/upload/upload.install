@@ -12,7 +12,7 @@
  */
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function upload_install() {
   // Create table. The upload table might have been created in the Drupal 5
@@ -24,7 +24,7 @@ function upload_install() {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function upload_uninstall() {
   // Remove tables.
@@ -32,7 +32,7 @@ function upload_uninstall() {
 }
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function upload_schema() {
   $schema['upload'] = array(

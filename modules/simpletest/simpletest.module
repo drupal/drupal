@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function simpletest_help($path, $arg) {
   switch ($path) {
@@ -22,7 +22,7 @@ function simpletest_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function simpletest_menu() {
   $items['admin/development'] = array(
@@ -53,7 +53,7 @@ function simpletest_menu() {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function simpletest_perm() {
   return array(
@@ -65,7 +65,7 @@ function simpletest_perm() {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function simpletest_theme() {
   return array(
@@ -81,7 +81,7 @@ function simpletest_theme() {
 }
 
 /**
- * Implementation of hook_js_alter().
+ * Implement hook_js_alter().
  */
 function simpletest_js_alter(&$javascript) {
   // Since SimpleTest is a special use case for the table select, stick the

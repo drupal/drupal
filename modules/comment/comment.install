@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function comment_install() {
   // Create tables.
@@ -15,7 +15,7 @@ function comment_install() {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function comment_uninstall() {
   // Remove tables.
@@ -38,7 +38,7 @@ function comment_uninstall() {
 }
 
 /**
- * Implementation of hook_enable().
+ * Implement hook_enable().
  */
 function comment_enable() {
   // Insert records into the node_comment_statistics for nodes that are missing.
@@ -159,7 +159,7 @@ function comment_update_7002() {
  */
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function comment_schema() {
   $schema['comment'] = array(

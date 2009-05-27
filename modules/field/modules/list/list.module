@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function list_theme() {
   return array(
@@ -21,7 +21,7 @@ function list_theme() {
 }
 
 /**
- * Implementation of hook_field_info().
+ * Implement hook_field_info().
  */
 function list_field_info() {
   return array(
@@ -57,7 +57,7 @@ function list_field_info() {
 }
 
 /**
- * Implementation of hook_field_schema().
+ * Implement hook_field_schema().
  */
 function list_field_schema($field) {
   switch ($field['type']) {
@@ -98,7 +98,7 @@ function list_field_schema($field) {
 }
 
 /**
- * Implementation of hook_field_validate().
+ * Implement hook_field_validate().
  *
  * Possible error codes:
  * - 'list_illegal_value': The value is not part of the list of allowed values.
@@ -118,7 +118,7 @@ function list_field_validate($obj_type, $object, $field, $instance, $items, &$er
 }
 
 /**
- * Implementation of hook_field_is_empty().
+ * Implement hook_field_is_empty().
  */
 function list_field_is_empty($item, $field) {
   if (empty($item['value']) && (string)$item['value'] !== '0') {
@@ -128,7 +128,7 @@ function list_field_is_empty($item, $field) {
 }
 
 /**
- * Implementation of hook_field_formatter_info().
+ * Implement hook_field_formatter_info().
  */
 function list_field_formatter_info() {
   return array(

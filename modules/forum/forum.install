@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function forum_install() {
   // Create tables.
@@ -45,7 +45,7 @@ function forum_enable() {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function forum_uninstall() {
   // Load the dependent Taxonomy module, in case it has been disabled.
@@ -66,7 +66,7 @@ function forum_uninstall() {
 }
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function forum_schema() {
   $schema['forum'] = array(

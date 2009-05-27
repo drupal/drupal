@@ -13,7 +13,7 @@
 define('MENU_MAX_MENU_NAME_LENGTH_UI', 27);
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function menu_help($path, $arg) {
   switch ($path) {
@@ -35,7 +35,7 @@ function menu_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function menu_perm() {
   return array(
@@ -47,7 +47,7 @@ function menu_perm() {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function menu_menu() {
   $items['admin/build/menu'] = array(
@@ -137,7 +137,7 @@ function menu_menu() {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function menu_theme() {
   return array(
@@ -153,7 +153,7 @@ function menu_theme() {
 }
 
 /**
- * Implementation of hook_enable().
+ * Implement hook_enable().
  *
  * Add a link for each custom menu.
  */
@@ -266,7 +266,7 @@ function menu_reset_item($item) {
 }
 
 /**
- * Implementation of hook_block_list().
+ * Implement hook_block_list().
  */
 function menu_block_list() {
   $menus = menu_get_menus(FALSE);
@@ -283,7 +283,7 @@ function menu_block_list() {
 }
 
 /**
- * Implementation of hook_block_view().
+ * Implement hook_block_view().
  */
 function menu_block_view($delta = '') {
   $menus = menu_get_menus(FALSE);
@@ -293,7 +293,7 @@ function menu_block_view($delta = '') {
 }
 
 /**
- * Implementation of hook_node_insert().
+ * Implement hook_node_insert().
  */
 function menu_node_insert($node) {
   if (isset($node->menu)) {
@@ -315,7 +315,7 @@ function menu_node_insert($node) {
 }
 
 /**
- * Implementation of hook_node_update().
+ * Implement hook_node_update().
  */
 function menu_node_update($node) {
   if (isset($node->menu)) {
@@ -337,7 +337,7 @@ function menu_node_update($node) {
 }
 
 /**
- * Implementation of hook_node_delete().
+ * Implement hook_node_delete().
  */
 function menu_node_delete($node) {
   // Delete all menu module links that point to this node.
@@ -348,7 +348,7 @@ function menu_node_delete($node) {
 }
 
 /**
- * Implementation of hook_node_prepare().
+ * Implement hook_node_prepare().
  */
 function menu_node_prepare($node) {
   if (empty($node->menu)) {
@@ -390,7 +390,7 @@ function _menu_parent_depth_limit($item) {
 }
 
 /**
- * Implementation of hook_form_alter(). Adds menu item fields to the node form.
+ * Implement hook_form_alter(). Adds menu item fields to the node form.
  */
 function menu_form_alter(&$form, $form_state, $form_id) {
   if (!empty($form['#node_edit_form'])) {

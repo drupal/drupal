@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function php_install() {
   $format_exists = (bool) db_query_range('SELECT 1 FROM {filter_format} WHERE name = :name', array(':name' => 'PHP code'), 0, 1)->fetchField();
@@ -39,7 +39,7 @@ function php_install() {
 }
 
 /**
- * Implementation of hook_disable().
+ * Implement hook_disable().
  */
 function php_disable() {
   drupal_set_message(t('The PHP module has been disabled. Please note that any existing content that was using the PHP filter will now be visible in plain text. This might pose a security risk by exposing sensitive information, if any, used in the PHP code.'));

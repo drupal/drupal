@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function aggregator_help($path, $arg) {
   switch ($path) {
@@ -30,7 +30,7 @@ function aggregator_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function aggregator_theme() {
   return array(
@@ -78,7 +78,7 @@ function aggregator_theme() {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function aggregator_menu() {
   $items['admin/content/aggregator'] = array(
@@ -248,7 +248,7 @@ function _aggregator_category_title($category) {
 }
 
 /**
- * Implementation of hook_init().
+ * Implement hook_init().
  */
 function aggregator_init() {
   drupal_add_css(drupal_get_path('module', 'aggregator') . '/aggregator.css');
@@ -265,7 +265,7 @@ function _aggregator_has_categories() {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function aggregator_perm() {
   return array(
@@ -281,7 +281,7 @@ function aggregator_perm() {
 }
 
 /**
- * Implementation of hook_cron().
+ * Implement hook_cron().
  *
  * Checks news feeds for updates once their refresh interval has elapsed.
  */
@@ -293,7 +293,7 @@ function aggregator_cron() {
 }
 
 /**
- * Implementation of hook_block_list().
+ * Implement hook_block_list().
  */
 function aggregator_block_list() {
   $block = array();
@@ -309,7 +309,7 @@ function aggregator_block_list() {
 }
 
 /**
- * Implementation of hook_block_configure().
+ * Implement hook_block_configure().
  */
 function aggregator_block_configure($delta = '') {
   list($type, $id) = explode('-', $delta);
@@ -326,7 +326,7 @@ function aggregator_block_configure($delta = '') {
 }
 
 /**
- * Implementation of hook_block_save().
+ * Implement hook_block_save().
  */
 function aggregator_block_save($delta = '', $edit = array()) {
   list($type, $id) = explode('-', $delta);
@@ -339,7 +339,7 @@ function aggregator_block_save($delta = '', $edit = array()) {
 }
 
 /**
- * Implementation of hook_block_view().
+ * Implement hook_block_view().
  *
  * Generates blocks for the latest news items in each category and feed.
  */

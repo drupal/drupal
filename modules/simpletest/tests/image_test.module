@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_image_toolkits().
+ * Implement hook_image_toolkits().
  */
 function image_test_image_toolkits() {
   return array(

@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function field_sql_storage_help($path, $arg) {
   switch ($path) {
@@ -177,7 +177,7 @@ function _field_sql_storage_schema($field) {
 }
 
 /**
- * Implementation of hook_field_storage_create_field().
+ * Implement hook_field_storage_create_field().
  */
 function field_sql_storage_field_storage_create_field($field) {
   $schema = _field_sql_storage_schema($field);
@@ -187,7 +187,7 @@ function field_sql_storage_field_storage_create_field($field) {
 }
 
 /**
- * Implementation of hook_field_storage_delete_field().
+ * Implement hook_field_storage_delete_field().
  */
 function field_sql_storage_field_storage_delete_field($field_name) {
   // Mark all data associated with the field for deletion.
@@ -198,7 +198,7 @@ function field_sql_storage_field_storage_delete_field($field_name) {
 }
 
 /**
- * Implementation of hook_field_storage_load().
+ * Implement hook_field_storage_load().
  */
 function field_sql_storage_field_storage_load($obj_type, &$objects, $age, $skip_fields = array()) {
   $etid = _field_sql_storage_etid($obj_type);
@@ -248,7 +248,7 @@ function field_sql_storage_field_storage_load($obj_type, &$objects, $age, $skip_
 }
 
 /**
- * Implementation of hook_field_storage_write().
+ * Implement hook_field_storage_write().
  */
 function field_sql_storage_field_storage_write($obj_type, $object, $op, $skip_fields) {
   list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
@@ -323,7 +323,7 @@ function field_sql_storage_field_storage_write($obj_type, $object, $op, $skip_fi
 }
 
 /**
- * Implementation of hook_field_storage_delete().
+ * Implement hook_field_storage_delete().
  *
  * This function actually deletes the data from the database.
  */
@@ -348,7 +348,7 @@ function field_sql_storage_field_storage_delete($obj_type, $object) {
 }
 
 /**
- * Implementation of hook_field_storage_delete_revision().
+ * Implement hook_field_storage_delete_revision().
  *
  * This function actually deletes the data from the database.
  */
@@ -371,7 +371,7 @@ function field_sql_storage_field_storage_delete_revision($obj_type, $object) {
 }
 
 /**
- * Implementation of hook_field_storage_delete_instance().
+ * Implement hook_field_storage_delete_instance().
  *
  * This function simply marks for deletion all data associated with the field.
  */
@@ -389,7 +389,7 @@ function field_sql_storage_field_storage_delete_instance($field_name, $bundle) {
 }
 
 /**
- * Implementation of hook_field_storage_rename_bundle().
+ * Implement hook_field_storage_rename_bundle().
  */
 function field_sql_storage_field_storage_rename_bundle($bundle_old, $bundle_new) {
   $instances = field_info_instances($bundle_old);

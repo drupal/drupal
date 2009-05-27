@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function help_menu() {
   $items['admin/help'] = array(
@@ -31,7 +31,7 @@ function help_menu() {
 }
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function help_help($path, $arg) {
   switch ($path) {

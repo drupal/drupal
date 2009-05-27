@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function block_schema() {
   $schema['block'] = array(
@@ -174,7 +174,7 @@ function block_schema() {
 }
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function block_install() {
   drupal_install_schema('block');
@@ -191,7 +191,7 @@ function block_install() {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function block_uninstall() {
   drupal_uninstall_schema('block');

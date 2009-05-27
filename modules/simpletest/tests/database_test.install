@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  *
  * The database tests use the database API which depends on schema
  * information for certain operations on certain databases.
@@ -206,14 +206,14 @@ function database_test_schema() {
 }
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function database_test_install() {
   drupal_install_schema('database_test');
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function database_test_uninstall() {
   drupal_uninstall_schema('database_test');

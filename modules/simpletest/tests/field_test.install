@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function field_test_schema() {
   $schema['test_entity'] = array(
@@ -66,14 +66,14 @@ function field_test_schema() {
 }
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function field_test_install() {
   drupal_install_schema('field_test');
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function field_test_uninstall() {
   drupal_uninstall_schema('field_test');

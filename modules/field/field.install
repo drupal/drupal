@@ -7,14 +7,14 @@
  */
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function field_install() {
   drupal_install_schema('field');
 }
 
 /**
- * Implementation of hook_schema.
+ * Implement hook_schema.
  */
 function field_schema() {
   // Static (meta) tables.

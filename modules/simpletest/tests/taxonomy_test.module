@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_taxonomy_term_load().
+ * Implement hook_taxonomy_term_load().
  */
 function taxonomy_test_taxonomy_term_load(&$terms) {
   foreach ($terms as $term) {
@@ -16,7 +16,7 @@ function taxonomy_test_taxonomy_term_load(&$terms) {
 }
 
 /**
- * Implementation of hook_taxonomy_term_insert().
+ * Implement hook_taxonomy_term_insert().
  */
 function taxonomy_test_taxonomy_term_insert($term) {
   if (!empty($term->antonyms)) {
@@ -29,7 +29,7 @@ function taxonomy_test_taxonomy_term_insert($term) {
 }
 
 /**
- * Implementation of hook_taxonomy_term_update().
+ * Implement hook_taxonomy_term_update().
  */
 function taxonomy_test_taxonomy_term_update($term) {
   taxonomy_test_taxonomy_term_delete($term);
@@ -43,14 +43,14 @@ function taxonomy_test_taxonomy_term_update($term) {
 }
 
 /**
- * Implementation of hook_taxonomy_term_delete().
+ * Implement hook_taxonomy_term_delete().
  */
 function taxonomy_test_taxonomy_term_delete($term) {
   db_delete('term_antonym')->condition('tid', $term->tid)->execute();
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implement hook_form_alter().
  */
 function taxonomy_test_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'taxonomy_form_term') {

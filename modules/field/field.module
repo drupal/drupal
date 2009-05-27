@@ -88,14 +88,14 @@ define('FIELD_LOAD_REVISION', 'FIELD_LOAD_REVISION');
 class FieldException extends Exception {}
 
 /**
- * Implementation of hook_flush_caches.
+ * Implement hook_flush_caches.
  */
 function field_flush_caches() {
   return array('cache_field');
 }
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function field_help($path, $arg) {
   switch ($path) {
@@ -107,7 +107,7 @@ function field_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_init().
+ * Implement hook_init().
  *
  * TODO D7: Determine which functions need to always be "loaded", and
  * put autoloaders for them into field.autoload.inc. Also figure out
@@ -120,7 +120,7 @@ function field_init() {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function field_menu() {
   $items = array();
@@ -136,7 +136,7 @@ function field_menu() {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function field_theme() {
   $path = drupal_get_path('module', 'field') . '/theme';
@@ -161,14 +161,14 @@ function field_theme() {
 }
 
 /**
- * Implementation of hook_modules_installed().
+ * Implement hook_modules_installed().
  */
 function field_modules_installed($modules) {
   field_cache_clear();
 }
 
 /**
- * Implementation of hook_modules_uninstalled().
+ * Implement hook_modules_uninstalled().
  */
 function field_modules_uninstalled($modules) {
   module_load_include('inc', 'field', 'field.crud');
@@ -179,7 +179,7 @@ function field_modules_uninstalled($modules) {
 }
 
 /**
- * Implementation of hook_modules_enabled().
+ * Implement hook_modules_enabled().
  */
 function field_modules_enabled($modules) {
   foreach ($modules as $module) {
@@ -189,7 +189,7 @@ function field_modules_enabled($modules) {
 }
 
 /**
- * Implementation of hook_modules_disabled().
+ * Implement hook_modules_disabled().
  */
 function field_modules_disabled($modules) {
   foreach ($modules as $module) {

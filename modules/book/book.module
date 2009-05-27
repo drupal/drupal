@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function book_theme() {
   return array(
@@ -37,7 +37,7 @@ function book_theme() {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function book_perm() {
   return array(
@@ -96,7 +96,7 @@ function book_node_view_link($node, $teaser) {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function book_menu() {
   $items['admin/content/book'] = array(
@@ -178,14 +178,14 @@ function _book_outline_remove_access($node) {
 }
 
 /**
- * Implementation of hook_init().
+ * Implement hook_init().
  */
 function book_init() {
   drupal_add_css(drupal_get_path('module', 'book') . '/book.css');
 }
 
 /**
- * Implementation of hook_block_list().
+ * Implement hook_block_list().
  */
 function book_block_list() {
   $block = array();
@@ -196,7 +196,7 @@ function book_block_list() {
 }
 
 /**
- * Implementation of hook_block_view().
+ * Implement hook_block_view().
  *
  * Displays the book table of contents in a block when the current page is a
  * single-node view of a book node.
@@ -249,7 +249,7 @@ function book_block_view($delta = '') {
 }
 
 /**
- * Implementation of hook_block_configure().
+ * Implement hook_block_configure().
  */
 function book_block_configure($delta = '') {
   $block = array();
@@ -269,7 +269,7 @@ function book_block_configure($delta = '') {
 }
 
 /**
- * Implementation of hook_block_save().
+ * Implement hook_block_save().
  */
 function book_block_save($delta = '', $edit = array()) {
   $block = array();
@@ -326,7 +326,7 @@ function book_get_books() {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implement hook_form_alter().
  *
  * Adds the book fieldset to the node form.
  *
@@ -690,7 +690,7 @@ function book_menu_name($bid) {
 }
 
 /**
- * Implementation of hook_node_load().
+ * Implement hook_node_load().
  */
 function book_node_load($nodes, $types) {
   $result = db_query("SELECT * FROM {book} b INNER JOIN {menu_links} ml ON b.mlid = ml.mlid WHERE b.nid IN (:nids)", array(':nids' =>  array_keys($nodes)), array('fetch' => PDO::FETCH_ASSOC));
@@ -703,7 +703,7 @@ function book_node_load($nodes, $types) {
 }
 
 /**
- * Implementation of hook_node_view().
+ * Implement hook_node_view().
  */
 function book_node_view($node, $teaser) {
   if (!$teaser) {
@@ -721,7 +721,7 @@ function book_node_view($node, $teaser) {
 }
 
 /**
- * Implementation of hook_page_alter().
+ * Implement hook_page_alter().
  *
  * Add the book menu to the list of menus used to build the active trail when
  * viewing a book page.
@@ -735,7 +735,7 @@ function book_page_alter(&$page) {
 }
 
 /**
- * Implementation of hook_node_presave().
+ * Implement hook_node_presave().
  */
 function book_node_presave($node) {
   // Always save a revision for non-administrators.
@@ -753,7 +753,7 @@ function book_node_presave($node) {
 }
 
 /**
- * Implementation of hook_node_insert().
+ * Implement hook_node_insert().
  */
 function book_node_insert($node) {
   if (!empty($node->book['bid'])) {
@@ -768,7 +768,7 @@ function book_node_insert($node) {
 }
 
 /**
- * Implementation of hook_node_update().
+ * Implement hook_node_update().
  */
 function book_node_update($node) {
   if (!empty($node->book['bid'])) {
@@ -783,7 +783,7 @@ function book_node_update($node) {
 }
 
 /**
- * Implementation of hook_node_delete().
+ * Implement hook_node_delete().
  */
 function book_node_delete($node) {
   if (!empty($node->book['bid'])) {
@@ -806,7 +806,7 @@ function book_node_delete($node) {
 }
 
 /**
- * Implementation of hook_node_prepare().
+ * Implement hook_node_prepare().
  */
 function book_node_prepare($node) {
   // Prepare defaults for the add/edit form.
@@ -1065,7 +1065,7 @@ function book_type_is_allowed($type) {
 }
 
 /**
- * Implementation of hook_node_type().
+ * Implement hook_node_type().
  *
  * Update book module's persistent variables if the machine-readable name of a
  * node type is changed.
@@ -1094,7 +1094,7 @@ function book_node_type($op, $type) {
 }
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function book_help($path, $arg) {
   switch ($path) {

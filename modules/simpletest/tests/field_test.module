@@ -5,7 +5,7 @@ define('FIELD_TEST_ELEMENT_ID', 1);
 define('FIELD_TEST_BUNDLE', 'test_bundle');
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function field_test_perm() {
   $perms = array(
@@ -22,7 +22,7 @@ function field_test_perm() {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function field_test_menu() {
   $items = array();
@@ -132,7 +132,7 @@ function field_test_delete_bundle($bundle) {
 }
 
 /**
- * Implementation of hook_field_build_modes().
+ * Implement hook_field_build_modes().
  */
 function field_test_field_build_modes($obj_type) {
   $modes = array();
@@ -326,7 +326,7 @@ function field_test_entity_form_submit_builder($form, &$form_state) {
  */
 
 /**
- * Implementation of hook_field_info().
+ * Implement hook_field_info().
  *
  * This field provides a textfield which only accepts the value 1.
  */
@@ -348,7 +348,7 @@ function field_test_field_info() {
 }
 
 /**
- * Implementation of hook_field_schema().
+ * Implement hook_field_schema().
  */
 function field_test_field_schema($field) {
   return array(
@@ -366,7 +366,7 @@ function field_test_field_schema($field) {
 }
 
 /**
- * Implementation of hook_field_validate().
+ * Implement hook_field_validate().
  *
  * Possible error codes:
  * - 'field_test_invalid': The value is invalid.
@@ -383,7 +383,7 @@ function field_test_field_validate($obj_type, $object, $field, $instance, $items
 }
 
 /**
- * Implementation of hook_field_sanitize().
+ * Implement hook_field_sanitize().
  */
 function field_test_field_sanitize($obj_type, $object, $field, $instance, &$items) {
   foreach ($items as $delta => $item) {
@@ -393,14 +393,14 @@ function field_test_field_sanitize($obj_type, $object, $field, $instance, &$item
 }
 
 /**
- * Implementation of hook_field_is_empty().
+ * Implement hook_field_is_empty().
  */
 function field_test_field_is_empty($item, $field) {
   return empty($item['value']);
 }
 
 /**
- * Implementation of hook_field_widget_info().
+ * Implement hook_field_widget_info().
  *
  * Here we indicate that the content module will handle
  * the default value and multiple values for these widgets.
@@ -434,7 +434,7 @@ function field_test_field_widget_info() {
 }
 
 /**
- * Implementation of hook_field_widget().
+ * Implement hook_field_widget().
  *
  * Attach a single form element to the form. It will be built out and
  * validated in the callback(s) listed in hook_elements. We build it
@@ -479,14 +479,14 @@ function field_test_field_widget(&$form, &$form_state, $field, $instance, $items
 }
 
 /**
- * Implementation of hook_field_widget_error().
+ * Implement hook_field_widget_error().
  */
 function field_test_field_widget_error($element, $error) {
   form_error($element['value'], $error['message']);
 }
 
 /**
- * Implementation of hook_field_formatter_info().
+ * Implement hook_field_formatter_info().
  */
 function field_test_field_formatter_info() {
   return array(
@@ -514,7 +514,7 @@ function field_test_field_formatter_info() {
 }
 
 /**
- * Implementation of hook_field_load().
+ * Implement hook_field_load().
  */
 function field_test_field_load($obj_type, $objects, $field, $instances, &$items, $age) {
   foreach ($items as $id => $item) {
@@ -532,7 +532,7 @@ function field_test_field_load($obj_type, $objects, $field, $instances, &$items,
 }
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function field_test_theme() {
   return array(

@@ -219,7 +219,7 @@ class IPAddressBlockingTestCase extends DrupalWebTestCase {
   protected $blocking_user;
 
   /**
-   * Implementation of getInfo().
+   * Implement getInfo().
    */
   public static function getInfo() {
     return array(
@@ -230,7 +230,7 @@ class IPAddressBlockingTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Implementation of setUp().
+   * Implement setUp().
    */
   function setUp() {
     parent::setUp();
@@ -289,7 +289,7 @@ class IPAddressBlockingTestCase extends DrupalWebTestCase {
 
 class CronRunTestCase extends DrupalWebTestCase {
   /**
-   * Implementation of getInfo().
+   * Implement getInfo().
    */
   public static function getInfo() {
     return array(
@@ -376,7 +376,7 @@ class CronRunTestCase extends DrupalWebTestCase {
  */
 class AdminOverviewTestCase extends DrupalWebTestCase {
   /**
-   * Implementation of getInfo().
+   * Implement getInfo().
    */
   public static function getInfo() {
     return array(
@@ -463,7 +463,7 @@ class AdminOverviewTestCase extends DrupalWebTestCase {
 
 class AdminMetaTagTestCase extends DrupalWebTestCase {
   /**
-   * Implementation of getInfo().
+   * Implement getInfo().
    */
   public static function getInfo() {
     return array(
@@ -491,7 +491,7 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
   protected $admin_user;
 
   /**
-   * Implementation of getInfo().
+   * Implement getInfo().
    */
   public static function getInfo() {
     return array(
@@ -502,7 +502,7 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Implementation of setUp().
+   * Implement setUp().
    */
   function setUp() {
     parent::setUp();
@@ -552,7 +552,7 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
   protected $admin_user;
 
   /**
-   * Implementation of getInfo().
+   * Implement getInfo().
    */
   public static function getInfo() {
     return array(
@@ -563,7 +563,7 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Implementation of setUp().
+   * Implement setUp().
    */
   function setUp() {
     parent::setUp();
@@ -658,7 +658,7 @@ class PageTitleFiltering extends DrupalWebTestCase {
   protected $saved_title;
 
   /**
-   * Implementation of getInfo().
+   * Implement getInfo().
    */
   public static function getInfo() {
     return array(
@@ -669,7 +669,7 @@ class PageTitleFiltering extends DrupalWebTestCase {
   }
 
   /**
-   * Implementation of setUp().
+   * Implement setUp().
    */
   function setUp() {
     parent::setUp();
@@ -825,7 +825,7 @@ class SystemBlockTestCase extends DrupalWebTestCase {
 
 class SystemSettingsForm extends DrupalWebTestCase {
   /**
-   * Implementation of getInfo().
+   * Implement getInfo().
    */
   public static function getInfo() {
     return array(
@@ -836,7 +836,7 @@ class SystemSettingsForm extends DrupalWebTestCase {
   }
 
   /**
-   * Implementation of setUp().
+   * Implement setUp().
    */
   function setUp() {
     parent::setUp();

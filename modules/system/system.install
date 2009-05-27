@@ -297,7 +297,7 @@ function system_requirements($phase) {
 }
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function system_install() {
   if (db_driver() == 'pgsql') {
@@ -418,7 +418,7 @@ function system_install() {
 }
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function system_schema() {
   // NOTE: {variable} needs to be created before all other tables, as

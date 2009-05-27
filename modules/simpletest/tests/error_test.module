@@ -2,7 +2,7 @@
 // $Id$
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function error_test_menu() {
   $items['error-test/generate-warnings'] = array(

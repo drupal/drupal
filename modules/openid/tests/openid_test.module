@@ -22,7 +22,7 @@
  */
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function openid_test_menu() {
   $items['openid-test/yadis/xrds'] = array(

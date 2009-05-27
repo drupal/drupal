@@ -91,7 +91,7 @@ define('COMMENT_PREVIEW_OPTIONAL', 0);
 define('COMMENT_PREVIEW_REQUIRED', 1);
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function comment_help($path, $arg) {
   switch ($path) {
@@ -105,7 +105,7 @@ function comment_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function comment_theme() {
   return array(
@@ -155,7 +155,7 @@ function comment_theme() {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function comment_menu() {
   $items['admin/content/comment'] = array(
@@ -208,7 +208,7 @@ function comment_menu() {
 }
 
 /**
- * Implementation of hook_node_type().
+ * Implement hook_node_type().
  */
 function comment_node_type($op, $info) {
   $settings = array(
@@ -231,7 +231,7 @@ function comment_node_type($op, $info) {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function comment_perm() {
   return array(
@@ -255,7 +255,7 @@ function comment_perm() {
 }
 
 /**
- * Implementation of hook_block_list().
+ * Implement hook_block_list().
  */
 function comment_block_list() {
   $blocks['recent']['info'] = t('Recent comments');
@@ -264,7 +264,7 @@ function comment_block_list() {
 }
 
 /**
- * Implementation of hook_block_configure().
+ * Implement hook_block_configure().
  */
 function comment_block_configure($delta = '') {
   $form['comment_block_count'] = array(
@@ -279,14 +279,14 @@ function comment_block_configure($delta = '') {
 }
 
 /**
- * Implementation of hook_block_save().
+ * Implement hook_block_save().
  */
 function comment_block_save($delta = '', $edit = array()) {
   variable_set('comment_block_count', (int)$edit['comment_block_count']);
 }
 
 /**
- * Implementation of hook_block_view().
+ * Implement hook_block_view().
  *
  * Generates a block with the most recent comments.
  */
@@ -504,7 +504,7 @@ function comment_node_view($node, $teaser) {
 }
 
 /**
- * Implementation of hook_form_FORM_ID_alter().
+ * Implement hook_form_FORM_ID_alter().
  */
 function comment_form_node_type_form_alter(&$form, $form_state) {
   if (isset($form['identity']['type'])) {
@@ -574,7 +574,7 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implement hook_form_alter().
  */
 function comment_form_alter(&$form, $form_state, $form_id) {
   if (!empty($form['#node_edit_form'])) {
@@ -639,7 +639,7 @@ function comment_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implementation of hook_node_load().
+ * Implement hook_node_load().
  */
 function comment_node_load($nodes, $types) {
   $comments_enabled = array();
@@ -670,7 +670,7 @@ function comment_node_load($nodes, $types) {
 }
 
 /**
- * Implementation of hook_node_prepare().
+ * Implement hook_node_prepare().
  */
 function comment_node_prepare($node) {
   if (!isset($node->comment)) {
@@ -679,7 +679,7 @@ function comment_node_prepare($node) {
 }
 
 /**
- * Implementation of hook_node_insert().
+ * Implement hook_node_insert().
  */
 function comment_node_insert($node) {
   db_insert('node_comment_statistics')
@@ -694,7 +694,7 @@ function comment_node_insert($node) {
 }
 
 /**
- * Implementation of hook_node_delete().
+ * Implement hook_node_delete().
  */
 function comment_node_delete($node) {
   db_delete('comment')
@@ -706,7 +706,7 @@ function comment_node_delete($node) {
 }
 
 /**
- * Implementation of hook_node_update_index().
+ * Implement hook_node_update_index().
  */
 function comment_node_update_index($node) {
   $text = '';
@@ -723,7 +723,7 @@ function comment_node_update_index($node) {
 }
 
 /**
- * Implementation of hook_update_index().
+ * Implement hook_update_index().
  */
 function comment_update_index() {
   // Store the maximum possible comments per thread (used for ranking by reply count)
@@ -731,7 +731,7 @@ function comment_update_index() {
 }
 
 /**
- * Implementation of hook_node_search_result().
+ * Implement hook_node_search_result().
  */
 function comment_node_search_result($node) {
   if ($node->comment != COMMENT_NODE_HIDDEN) {
@@ -742,7 +742,7 @@ function comment_node_search_result($node) {
 }
 
 /**
- * Implementation of hook_user_cancel().
+ * Implement hook_user_cancel().
  */
 function comment_user_cancel($edit, $account, $method) {
   switch ($method) {
@@ -959,7 +959,7 @@ function comment_save($edit) {
 }
 
 /**
- * Implementation of hook_link().
+ * Implement hook_link().
  */
 function comment_link($type, $object, $teaser) {
   if ($type == 'comment') {
@@ -2142,7 +2142,7 @@ function vancode2int($c = '00') {
 }
 
 /**
- * Implementation of hook_hook_info().
+ * Implement hook_hook_info().
  */
 function comment_hook_info() {
   return array(
@@ -2166,7 +2166,7 @@ function comment_hook_info() {
 }
 
 /**
- * Implementation of hook_action_info().
+ * Implement hook_action_info().
  */
 function comment_action_info() {
   return array(
@@ -2237,7 +2237,7 @@ function comment_unpublish_by_keyword_action_submit($form, $form_state) {
 }
 
 /**
- * Implementation of a configurable Drupal action.
+ * Implement a configurable Drupal action.
  *
  * Unpublish a comment if it contains a certain string.
  *
@@ -2262,7 +2262,7 @@ function comment_unpublish_by_keyword_action($comment, $context) {
 }
 
 /**
- * Implementation of hook_ranking().
+ * Implement hook_ranking().
  */
 function comment_ranking() {
   return array(

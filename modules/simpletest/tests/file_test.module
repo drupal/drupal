@@ -10,7 +10,7 @@
  */
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function file_test_menu() {
   $items['file-test/upload'] = array(
@@ -169,7 +169,7 @@ function file_test_set_return($op, $value) {
 }
 
 /**
- * Implementation of hook_file_load().
+ * Implement hook_file_load().
  */
 function file_test_file_load($files) {
   foreach ($files as $file) {
@@ -181,7 +181,7 @@ function file_test_file_load($files) {
 }
 
 /**
- * Implementation of hook_file_validate().
+ * Implement hook_file_validate().
  */
 function file_test_file_validate($file) {
   _file_test_log_call('validate', array($file));
@@ -189,7 +189,7 @@ function file_test_file_validate($file) {
 }
 
 /**
- * Implementation of hook_file_download().
+ * Implement hook_file_download().
  */
 function file_test_file_download($file) {
   _file_test_log_call('download', array($file));
@@ -197,7 +197,7 @@ function file_test_file_download($file) {
 }
 
 /**
- * Implementation of hook_file_references().
+ * Implement hook_file_references().
  */
 function file_test_file_references($file) {
   _file_test_log_call('references', array($file));
@@ -205,35 +205,35 @@ function file_test_file_references($file) {
 }
 
 /**
- * Implementation of hook_file_insert().
+ * Implement hook_file_insert().
  */
 function file_test_file_insert($file) {
   _file_test_log_call('insert', array($file));
 }
 
 /**
- * Implementation of hook_file_update().
+ * Implement hook_file_update().
  */
 function file_test_file_update($file) {
   _file_test_log_call('update', array($file));
 }
 
 /**
- * Implementation of hook_file_copy().
+ * Implement hook_file_copy().
  */
 function file_test_file_copy($file, $source) {
   _file_test_log_call('copy', array($file, $source));
 }
 
 /**
- * Implementation of hook_file_move().
+ * Implement hook_file_move().
  */
 function file_test_file_move($file, $source) {
   _file_test_log_call('move', array($file, $source));
 }
 
 /**
- * Implementation of hook_file_delete().
+ * Implement hook_file_delete().
  */
 function file_test_file_delete($file) {
   _file_test_log_call('delete', array($file));

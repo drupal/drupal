@@ -57,7 +57,7 @@ define('DRUPAL_USER_TIMEZONE_EMPTY', 1);
 define('DRUPAL_USER_TIMEZONE_SELECT', 2);
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function system_help($path, $arg) {
   global $base_url;
@@ -115,7 +115,7 @@ function system_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function system_theme() {
   return array_merge(drupal_common_theme(), array(
@@ -173,7 +173,7 @@ function system_theme() {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function system_perm() {
   return array(
@@ -209,7 +209,7 @@ function system_perm() {
 }
 
 /**
- * Implementation of hook_rdf_namespaces().
+ * Implement hook_rdf_namespaces().
  */
 function system_rdf_namespaces() {
   return array(
@@ -228,7 +228,7 @@ function system_rdf_namespaces() {
 }
 
 /**
- * Implementation of hook_elements().
+ * Implement hook_elements().
  */
 function system_elements() {
   // Top level form
@@ -440,7 +440,7 @@ function system_elements() {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function system_menu() {
   $items['system/files'] = array(
@@ -802,7 +802,7 @@ function system_admin_menu_block_access($path, $permission) {
 }
 
 /**
- * Implementation of hook_init().
+ * Implement hook_init().
  */
 function system_init() {
   // Use the administrative theme if the user is looking at a page in the admin/* path.
@@ -819,7 +819,7 @@ function system_init() {
 }
 
 /**
- * Implementation of MODULE_preprocess_HOOK().
+ * Implement MODULE_preprocess_HOOK().
  */
 function system_preprocess_page(&$variables) {
   // Get the major version
@@ -835,7 +835,7 @@ function system_preprocess_page(&$variables) {
 }
 
 /**
- * Implementation of hook_user_form().
+ * Implement hook_user_form().
  */
 function system_user_form(&$edit, &$user, $category = NULL) {
   if ($category == 'account') {
@@ -848,7 +848,7 @@ function system_user_form(&$edit, &$user, $category = NULL) {
 }
 
 /**
- * Implementation of hook_user_register().
+ * Implement hook_user_register().
  */
 function system_user_register(&$edit, &$user, $category = NULL) {
   if (variable_get('configurable_timezones', 1)) {
@@ -867,7 +867,7 @@ function system_user_register(&$edit, &$user, $category = NULL) {
 }
 
 /**
- * Implementation of hook_user_login().
+ * Implement hook_user_login().
  */
 function system_user_login(&$edit, &$user, $category = NULL) {
   // If the user has a NULL time zone, notify them to set a time zone.
@@ -902,7 +902,7 @@ function system_user_timezone(&$edit, &$form) {
 }
 
 /**
- * Implementation of hook_block_list().
+ * Implement hook_block_list().
  */
 function system_block_list() {
   $blocks['main'] = array(
@@ -930,7 +930,7 @@ function system_block_list() {
 }
 
 /**
- * Implementation of hook_block_configure().
+ * Implement hook_block_configure().
  */
 function system_block_configure($delta = '') {
   if ($delta == 'powered-by') {
@@ -959,7 +959,7 @@ function system_block_configure($delta = '') {
 }
 
 /**
- * Implementation of hook_block_save().
+ * Implement hook_block_save().
  */
 function system_block_save($delta = '', $edit = NULL) {
   if ($delta == 'powered-by') {
@@ -970,7 +970,7 @@ function system_block_save($delta = '', $edit = NULL) {
 }
 
 /**
- * Implementation of hook_block_view().
+ * Implement hook_block_view().
  *
  * Generate a block with a promotional link to Drupal.org and
  * all system menu blocks.
@@ -1601,7 +1601,7 @@ function system_get_module_admin_tasks($module) {
 }
 
 /**
- * Implementation of hook_cron().
+ * Implement hook_cron().
  *
  * Remove older rows from flood and batch table. Remove old temporary files.
  */
@@ -1649,7 +1649,7 @@ function system_cron() {
 }
 
 /**
- * Implementation of hook_hook_info().
+ * Implement hook_hook_info().
  */
 function system_hook_info() {
   return array(
@@ -1664,7 +1664,7 @@ function system_hook_info() {
 }
 
 /**
- * Implementation of hook_action_info().
+ * Implement hook_action_info().
  */
 function system_action_info() {
   return array(
@@ -2053,7 +2053,7 @@ function system_send_email_action_submit($form, $form_state) {
 }
 
 /**
- * Implementation of a configurable Drupal action. Sends an email.
+ * Implement a configurable Drupal action. Sends an email.
  */
 function system_send_email_action($object, $context) {
   global $user;
@@ -2119,7 +2119,7 @@ function system_send_email_action($object, $context) {
 }
 
 /**
- * Implementation of hook_mail().
+ * Implement hook_mail().
  */
 function system_mail($key, &$message, $params) {
   $account = $params['account'];
@@ -2233,7 +2233,7 @@ function system_message_action(&$object, $context = array()) {
 }
 
 /**
- * Implementation of a configurable Drupal action. Redirect user to a URL.
+ * Implement a configurable Drupal action. Redirect user to a URL.
  */
 function system_goto_action_form($context) {
   $form['url'] = array(
@@ -2257,7 +2257,7 @@ function system_goto_action($object, $context) {
 }
 
 /**
- * Implementation of a Drupal action.
+ * Implement a Drupal action.
  * Blocks the user's IP address.
  */
 function system_block_ip_action() {
@@ -2369,7 +2369,7 @@ function theme_meta_generator_header($version = VERSION) {
 }
 
 /**
- * Implementation of hook_image_toolkits().
+ * Implement hook_image_toolkits().
  */
 function system_image_toolkits() {
   return array(

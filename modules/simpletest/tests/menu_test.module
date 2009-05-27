@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function menu_test_menu() {
   // The name of the menu changes during the course of the test. Using a $_GET.

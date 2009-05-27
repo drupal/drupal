@@ -14,7 +14,7 @@ else {
 }
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function syslog_help($path, $arg) {
   switch ($path) {
@@ -27,7 +27,7 @@ function syslog_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_form_FORM_ID_alter().
+ * Implement hook_form_FORM_ID_alter().
  */
 function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
   $form['syslog_facility'] = array(
@@ -61,7 +61,7 @@ function syslog_facility_list() {
 }
 
 /**
- * Implementation of hook_watchdog().
+ * Implement hook_watchdog().
  */
 function syslog_watchdog(array $log_entry) {
   static $log_init = FALSE;

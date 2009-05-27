@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function blogapi_help($path, $arg) {
   switch ($path) {
@@ -21,7 +21,7 @@ function blogapi_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function blogapi_perm() {
   return array(
@@ -33,7 +33,7 @@ function blogapi_perm() {
 }
 
 /**
- * Implementation of hook_xmlrpc().
+ * Implement hook_xmlrpc().
  */
 function blogapi_xmlrpc() {
   return array(
@@ -809,7 +809,7 @@ function blogapi_admin_settings() {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function blogapi_menu() {
   $items['blogapi/rsd'] = array(
@@ -831,7 +831,7 @@ function blogapi_menu() {
 }
 
 /**
- * Implementation of hook_init().
+ * Implement hook_init().
  */
 function blogapi_init() {
   if (drupal_is_front_page()) {

@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function tracker_help($path, $arg) {
   switch ($path) {
@@ -20,7 +20,7 @@ function tracker_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function tracker_menu() {
   $items['tracker'] = array(

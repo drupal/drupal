@@ -8,7 +8,7 @@
  */
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function poll_help($path, $arg) {
   switch ($path) {
@@ -21,14 +21,14 @@ function poll_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_init().
+ * Implement hook_init().
  */
 function poll_init() {
   drupal_add_css(drupal_get_path('module', 'poll') . '/poll.css');
 }
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function poll_theme() {
   return array(
@@ -51,7 +51,7 @@ function poll_theme() {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function poll_perm() {
   $perms = node_list_permissions('poll');
@@ -74,7 +74,7 @@ function poll_perm() {
 }
 
 /**
- * Implementation of hook_access().
+ * Implement hook_access().
  */
 function poll_access($op, $node, $account) {
   switch ($op) {
@@ -88,7 +88,7 @@ function poll_access($op, $node, $account) {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function poll_menu() {
   $items['poll'] = array(
@@ -129,7 +129,7 @@ function _poll_menu_access($node, $perm, $inspect_allowvotes) {
 }
 
 /**
- * Implementation of hook_block_list().
+ * Implement hook_block_list().
  */
 function poll_block_list() {
   if (user_access('access content')) {
@@ -139,7 +139,7 @@ function poll_block_list() {
 }
 
 /**
- * Implementation of hook_block_view().
+ * Implement hook_block_view().
  *
  * Generates a block containing the latest poll.
  */
@@ -169,7 +169,7 @@ function poll_block_view($delta = '') {
 }
 
 /**
- * Implementation of hook_cron().
+ * Implement hook_cron().
  *
  * Closes polls that have exceeded their allowed runtime.
  */
@@ -184,7 +184,7 @@ function poll_cron() {
 }
 
 /**
- * Implementation of hook_node_info().
+ * Implement hook_node_info().
  */
 function poll_node_info() {
   return array(
@@ -199,7 +199,7 @@ function poll_node_info() {
 }
 
 /**
- * Implementation of hook_form().
+ * Implement hook_form().
  */
 function poll_form($node, $form_state) {
   global $user;
@@ -379,7 +379,7 @@ function poll_choice_js($form, $form_state) {
 }
 
 /**
- * Implementation of hook_submit().
+ * Implement hook_submit().
  */
 function poll_node_form_submit(&$form, &$form_state) {
   // Renumber fields
@@ -388,7 +388,7 @@ function poll_node_form_submit(&$form, &$form_state) {
 }
 
 /**
- * Implementation of hook_validate().
+ * Implement hook_validate().
  */
 function poll_validate($node, $form) {
   if (isset($node->title)) {
@@ -412,7 +412,7 @@ function poll_validate($node, $form) {
 }
 
 /**
- * Implementation of hook_node_prepare_translation().
+ * Implement hook_node_prepare_translation().
  */
 function poll_node_prepare_translation($node) {
   if ($node->type == 'poll') {
@@ -421,7 +421,7 @@ function poll_node_prepare_translation($node) {
 }
 
 /**
- * Implementation of hook_load().
+ * Implement hook_load().
  */
 function poll_load($nodes) {
   global $user;
@@ -455,7 +455,7 @@ function poll_load($nodes) {
 }
 
 /**
- * Implementation of hook_insert().
+ * Implement hook_insert().
  */
 function poll_insert($node) {
   if (!user_access('administer nodes')) {
@@ -489,7 +489,7 @@ function poll_insert($node) {
 }
 
 /**
- * Implementation of hook_update().
+ * Implement hook_update().
  */
 function poll_update($node) {
   // Update poll settings.
@@ -526,7 +526,7 @@ function poll_update($node) {
 }
 
 /**
- * Implementation of hook_delete().
+ * Implement hook_delete().
  */
 function poll_delete($node) {
   db_delete('poll')
@@ -541,7 +541,7 @@ function poll_delete($node) {
 }
 
 /**
- * Implementation of hook_view().
+ * Implement hook_view().
  *
  * @param $block
  *   An extra parameter that adapts the hook to display a block-ready
@@ -841,7 +841,7 @@ function poll_cancel($form, &$form_state) {
 }
 
 /**
- * Implementation of hook_user_cancel().
+ * Implement hook_user_cancel().
  */
 function poll_user_cancel($edit, $account, $method) {
   switch ($method) {

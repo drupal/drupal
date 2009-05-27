@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_form_FORM_ID_alter().
+ * Implement hook_form_FORM_ID_alter().
  */
 function dblog_form_system_logging_settings_alter(&$form, $form_state) {
   $form['dblog_row_limit'] = array(

@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function user_schema() {
   $schema['authmap'] = array(

@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_node_info().
+ * Implement hook_node_info().
  */
 function blog_node_info() {
   return array(
@@ -20,14 +20,14 @@ function blog_node_info() {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function blog_perm() {
   return node_list_permissions('blog');
 }
 
 /**
- * Implementation of hook_access().
+ * Implement hook_access().
  */
 function blog_access($op, $node, $account) {
   switch ($op) {
@@ -42,7 +42,7 @@ function blog_access($op, $node, $account) {
 }
 
 /**
- * Implementation of hook_user_view().
+ * Implement hook_user_view().
  */
 function blog_user_view(&$edit, &$user, $category) {
   if (user_access('create blog content', $user)) {
@@ -56,7 +56,7 @@ function blog_user_view(&$edit, &$user, $category) {
 }
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function blog_help($path, $arg) {
   switch ($path) {
@@ -70,7 +70,7 @@ function blog_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_form().
+ * Implement hook_form().
  */
 function blog_form($node, $form_state) {
   global $nid;
@@ -82,7 +82,7 @@ function blog_form($node, $form_state) {
 }
 
 /**
- * Implementation of hook_view().
+ * Implement hook_view().
  */
 function blog_view($node, $teaser) {
   if ((bool)menu_get_object()) {
@@ -94,7 +94,7 @@ function blog_view($node, $teaser) {
 }
 
 /**
- * Implementation of hook_node_view.
+ * Implement hook_node_view.
  */
 function blog_node_view($node, $teaser = FALSE) {
   if ($node->build_mode != NODE_BUILD_RSS) {
@@ -113,7 +113,7 @@ function blog_node_view($node, $teaser = FALSE) {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function blog_menu() {
   $items['blog'] = array(
@@ -173,7 +173,7 @@ function _blog_post_exists($account) {
 }
 
 /**
- * Implementation of hook_block_list().
+ * Implement hook_block_list().
  */
 function blog_block_list() {
   $block['recent']['info'] = t('Recent blog posts');
@@ -181,7 +181,7 @@ function blog_block_list() {
 }
 
 /**
- * Implementation of hook_block_view().
+ * Implement hook_block_view().
  *
  * Displays the most recent 10 blog titles.
  */

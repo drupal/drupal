@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_aggregator_parse_info().
+ * Implement hook_aggregator_parse_info().
  */
 function aggregator_aggregator_parse_info() {
   return array(
@@ -17,7 +17,7 @@ function aggregator_aggregator_parse_info() {
 }
 
 /**
- * Implementation of hook_aggregator_parse().
+ * Implement hook_aggregator_parse().
  */
 function aggregator_aggregator_parse($feed) {
   global $channel, $image;

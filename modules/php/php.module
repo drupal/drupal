@@ -8,7 +8,7 @@
 
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function php_help($path, $arg) {
   switch ($path) {
@@ -22,7 +22,7 @@ function php_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function php_perm() {
   return array(
@@ -78,7 +78,7 @@ function php_eval($code) {
 }
 
 /**
- * Implementation of hook_filter_tips().
+ * Implement hook_filter_tips().
  */
 function php_filter_tips($delta, $format, $long = FALSE) {
   global $base_url;
@@ -121,7 +121,7 @@ else {
 }
 
 /**
- * Implementation of hook_filter(). Contains a basic PHP evaluator.
+ * Implement hook_filter(). Contains a basic PHP evaluator.
  *
  * Executes PHP code. Use with care.
  */

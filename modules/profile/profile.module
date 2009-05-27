@@ -27,7 +27,7 @@ define('PROFILE_PUBLIC_LISTINGS', 3);
 define('PROFILE_HIDDEN', 4);
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function profile_help($path, $arg) {
   switch ($path) {
@@ -49,7 +49,7 @@ function profile_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function profile_theme() {
   return array(
@@ -73,7 +73,7 @@ function profile_theme() {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function profile_menu() {
   $items['profile'] = array(
@@ -126,7 +126,7 @@ function profile_menu() {
 }
 
 /**
- * Implementation of hook_block_list().
+ * Implement hook_block_list().
  */
 function profile_block_list() {
   $blocks['author-information']['info'] = t('Author information');
@@ -135,7 +135,7 @@ function profile_block_list() {
 }
 
 /**
- * Implementation of hook_block_configure().
+ * Implement hook_block_configure().
  */
 function profile_block_configure($delta = '') {
   // Compile a list of fields to show
@@ -156,14 +156,14 @@ function profile_block_configure($delta = '') {
 }
 
 /**
- * Implementation of hook_block_save().
+ * Implement hook_block_save().
  */
 function profile_block_save($delta = '', $edit = array()) {
   variable_set('profile_block_author_fields', $edit['profile_block_author_fields']);
 }
 
 /**
- * Implementation of hook_block_view().
+ * Implement hook_block_view().
  */
 function profile_block_view($delta = '') {
   if (user_access('access user profiles')) {
@@ -203,56 +203,56 @@ function profile_block_view($delta = '') {
 }
 
 /**
- * Implementation of hook_user_register().
+ * Implement hook_user_register().
  */
 function profile_user_register(&$edit, &$user, $category = NULL) {
   return profile_form_profile($edit, $user, $category, TRUE);
 }
 
 /**
- * Implementation of hook_user_update().
+ * Implement hook_user_update().
  */
 function profile_user_update(&$edit, &$user, $category = NULL) {
   return profile_save_profile($edit, $user, $category);
 }
 
 /**
- * Implementation of hook_user_insert().
+ * Implement hook_user_insert().
  */
 function profile_user_insert(&$edit, &$user, $category = NULL) {
   return profile_save_profile($edit, $user, $category, TRUE);
 }
 
 /**
- * Implementation of hook_user_view().
+ * Implement hook_user_view().
  */
 function profile_user_view(&$edit, &$user, $category = NULL) {
   return profile_view_profile($user);
 }
 
 /**
- * Implementation of hook_user_form().
+ * Implement hook_user_form().
  */
 function profile_user_form(&$edit, &$user, $category = NULL) {
   return profile_form_profile($edit, $user, $category);
 }
 
 /**
- * Implementation of hook_user_validate().
+ * Implement hook_user_validate().
  */
 function profile_user_validate(&$edit, &$user, $category = NULL) {
   return profile_validate_profile($edit, $category);
 }
 
 /**
- * Implementation of hook_user_categories().
+ * Implement hook_user_categories().
  */
 function profile_user_categories($edit, $user, $category = NULL) {
   return profile_categories();
 }
 
 /**
- * Implementation of hook_user_cancel().
+ * Implement hook_user_cancel().
  */
 function profile_user_cancel(&$edit, &$account, $method) {
   switch ($method) {
@@ -266,7 +266,7 @@ function profile_user_cancel(&$edit, &$account, $method) {
 }
 
 /**
- * Implementation of hook_user_load().
+ * Implement hook_user_load().
  */
 function profile_user_load($users) {
   $result = db_query('SELECT f.name, f.type, v.uid, v.value FROM {profile_field} f INNER JOIN {profile_value} v ON f.fid = v.fid WHERE uid IN (:uids)', array(':uids' => array_keys($users)));

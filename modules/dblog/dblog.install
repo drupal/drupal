@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function dblog_install() {
   // Create tables.
@@ -15,7 +15,7 @@ function dblog_install() {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function dblog_uninstall() {
   // Remove tables.
@@ -23,7 +23,7 @@ function dblog_uninstall() {
 }
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function dblog_schema() {
   $schema['watchdog'] = array(

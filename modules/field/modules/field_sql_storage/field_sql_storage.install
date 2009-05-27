@@ -7,21 +7,21 @@
  */
 
 /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function field_sql_storage_install() {
   drupal_install_schema('field_sql_storage');
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function field_sql_storage_uninstall() {
   drupal_uninstall_schema('field_sql_storage');
 }
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function field_sql_storage_schema() {
   $schema = array();

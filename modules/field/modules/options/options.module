@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function options_theme() {
   return array(
@@ -27,7 +27,7 @@ function options_theme() {
 }
 
 /**
- * Implementation of hook_field_widget_info().
+ * Implement hook_field_widget_info().
  *
  * We need custom handling of multiple values because we need
  * to combine them into a options list rather than display
@@ -70,7 +70,7 @@ function options_field_widget_info() {
 }
 
 /**
- * Implementation of FAPI hook_elements().
+ * Implement FAPI hook_elements().
  *
  * Any FAPI callbacks needed for individual widgets can be declared here,
  * and the element will be passed to those callbacks for processing.
@@ -99,7 +99,7 @@ function options_elements() {
 }
 
 /**
- * Implementation of hook_field_widget().
+ * Implement hook_field_widget().
  */
 function options_field_widget(&$form, &$form_state, $field, $instance, $items, $delta = NULL) {
   $element = array(
@@ -110,7 +110,7 @@ function options_field_widget(&$form, &$form_state, $field, $instance, $items, $
 }
 
 /**
- * Implementation of hook_field_widget_error().
+ * Implement hook_field_widget_error().
  */
 function options_field_widget_error($element, $error) {
   $field_key  = $element['#columns'][0];

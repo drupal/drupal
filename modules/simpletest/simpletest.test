@@ -266,7 +266,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
 
 class SimpleTestMailCaptureTestCase extends DrupalWebTestCase {
   /**
-   * Implementation of getInfo().
+   * Implement getInfo().
    */
   public static function getInfo() {
     return array(

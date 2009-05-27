@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_aggregator_fetch_info().
+ * Implement hook_aggregator_fetch_info().
  */
 function aggregator_aggregator_fetch_info() {
   return array(
@@ -17,7 +17,7 @@ function aggregator_aggregator_fetch_info() {
 }
 
 /**
- * Implementation of hook_aggregator_fetch().
+ * Implement hook_aggregator_fetch().
  */
 function aggregator_aggregator_fetch($feed) {
   $feed->source_string = FALSE;

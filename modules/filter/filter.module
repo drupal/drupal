@@ -15,7 +15,7 @@
 define('FILTER_FORMAT_DEFAULT', 0);
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function filter_help($path, $arg) {
   switch ($path) {
@@ -41,7 +41,7 @@ function filter_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function filter_theme() {
   return array(
@@ -67,7 +67,7 @@ function filter_theme() {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function filter_menu() {
   $items['admin/settings/filter'] = array(
@@ -145,7 +145,7 @@ function filter_admin_format_title($format) {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function filter_perm() {
   return array(
@@ -157,7 +157,7 @@ function filter_perm() {
 }
 
 /**
- * Implementation of hook_cron().
+ * Implement hook_cron().
  *
  * Expire outdated filter cache entries
  */
@@ -166,7 +166,7 @@ function filter_cron() {
 }
 
 /**
- * Implementation of hook_filter_tips().
+ * Implement hook_filter_tips().
  */
 function filter_filter_tips($delta, $format, $long = FALSE) {
   global $base_url;
@@ -594,7 +594,7 @@ function theme_filter_guidelines($format) {
  */
 
 /**
- * Implementation of hook_filter(). Contains a basic set of essential filters.
+ * Implement hook_filter(). Contains a basic set of essential filters.
  * - HTML filter:
  *     Validates user-supplied HTML, transforming it as necessary.
  * - Line break converter:

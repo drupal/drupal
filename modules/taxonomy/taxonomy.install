@@ -7,7 +7,7 @@
  */
 
  /**
- * Implementation of hook_install().
+ * Implement hook_install().
  */
 function taxonomy_install() {
   // Create tables.
@@ -15,7 +15,7 @@ function taxonomy_install() {
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implement hook_uninstall().
  */
 function taxonomy_uninstall() {
   // Remove tables.
@@ -27,7 +27,7 @@ function taxonomy_uninstall() {
 }
 
 /**
- * Implementation of hook_schema().
+ * Implement hook_schema().
  */
 function taxonomy_schema() {
   $schema['taxonomy_term_data'] = array(

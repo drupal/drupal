@@ -170,7 +170,7 @@ function forum_confirm_delete(&$form_state, $tid) {
 }
 
 /**
- * Implementation of forms api _submit call. Deletes a forum after confirmation.
+ * Implement forms api _submit call. Deletes a forum after confirmation.
  */
 function forum_confirm_delete_submit($form, &$form_state) {
   taxonomy_term_delete($form_state['values']['tid']);

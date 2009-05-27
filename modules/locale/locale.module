@@ -16,7 +16,7 @@
 // Hook implementations
 
 /**
- * Implementation of hook_help().
+ * Implement hook_help().
  */
 function locale_help($path, $arg) {
   switch ($path) {
@@ -66,7 +66,7 @@ function locale_help($path, $arg) {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implement hook_menu().
  */
 function locale_menu() {
   // Manage languages
@@ -184,7 +184,7 @@ function locale_inc_callback() {
 }
 
 /**
- * Implementation of hook_perm().
+ * Implement hook_perm().
  */
 function locale_perm() {
   return array(
@@ -200,7 +200,7 @@ function locale_perm() {
 }
 
 /**
- * Implementation of hook_locale().
+ * Implement hook_locale().
  */
 function locale_locale($op = 'groups') {
   switch ($op) {
@@ -210,7 +210,7 @@ function locale_locale($op = 'groups') {
 }
 
 /**
- * Implementation of hook_user_register().
+ * Implement hook_user_register().
  */
 function locale_user_register(&$edit, &$user, $category = NULL) {
   // If we have more then one language and either creating a user on the
@@ -221,7 +221,7 @@ function locale_user_register(&$edit, &$user, $category = NULL) {
 }
 
 /**
- * Implementation of hook_user_form().
+ * Implement hook_user_form().
  */
 function locale_user_form(&$edit, &$user, $category = NULL) {
   // If we have more then one language and either creating a user on the
@@ -263,7 +263,7 @@ function locale_language_selector_form($user) {
 }
 
 /**
- * Implementation of hook_form_FORM_ID_alter().
+ * Implement hook_form_FORM_ID_alter().
  */
 function locale_form_path_admin_form_alter(&$form, &$form_state) {
   $form['language'] = array(
@@ -277,7 +277,7 @@ function locale_form_path_admin_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implementation of hook_form_FORM_ID_alter().
+ * Implement hook_form_FORM_ID_alter().
  */
 function locale_form_node_type_form_alter(&$form, &$form_state) {
   if (isset($form['identity']['type'])) {
@@ -292,7 +292,7 @@ function locale_form_node_type_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implementation of hook_form_alter(). Adds language fields to forms.
+ * Implement hook_form_alter(). Adds language fields to forms.
  */
 function locale_form_alter(&$form, &$form_state, $form_id) {
   if (isset($form['#id']) && $form['#id'] == 'node-form') {
@@ -316,7 +316,7 @@ function locale_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function locale_theme() {
   return array(
@@ -518,7 +518,7 @@ function locale_system_update($components) {
 }
 
 /**
- * Implementation of hook_js_alter().
+ * Implement hook_js_alter().
  *
  * This function checks all JavaScript files currently added via drupal_add_js()
  * and invokes parsing if they have not yet been parsed for Drupal.t()
@@ -583,7 +583,7 @@ function locale_js_alter(&$javascript) {
 // Language switcher block
 
 /**
- * Implementation of hook_block_list().
+ * Implement hook_block_list().
  */
 function locale_block_list() {
   $block['language-switcher']['info'] = t('Language switcher');
@@ -593,7 +593,7 @@ function locale_block_list() {
 }
 
 /**
- * Implementation of hook_block_view().
+ * Implement hook_block_view().
  *
  * Displays a language switcher. Translation links may be provided by other modules.
  * Only show if we have at least two languages and language dependent
