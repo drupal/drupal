@@ -4,7 +4,7 @@
   margin: 1em 0 1em 15em;
   border: 1px solid #ccc;
 }
-.vertical-tabs-list {
+div.vertical-tabs ul.vertical-tabs-list {
   width: 15em;
   list-style: none;
   list-style-image: none; /* IE6 */
