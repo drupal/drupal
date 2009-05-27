@@ -371,10 +371,10 @@ function _trigger_comment($a1, $op) {
  * Implementation of hook_cron().
  */
 function trigger_cron() {
-  $aids = _trigger_get_hook_aids('cron');
+  $aids = _trigger_get_hook_aids('cron', 'run');
   $context = array(
     'hook' => 'cron',
-    'op' => '',
+    'op' => 'run',
   );
   // Cron does not act on any specific object.
   $object = NULL;
