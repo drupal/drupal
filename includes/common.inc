@@ -432,9 +432,9 @@ function drupal_access_denied() {
  *       An integer containing the response status code, or the error code if
  *       an error occurred.
  *   - protocol
- *      The response protocol (e.g. HTTP/1.1 or HTTP/1.0).
+ *       The response protocol (e.g. HTTP/1.1 or HTTP/1.0).
  *   - status_message
- *      The status message from the response, if a response was received.
+ *       The status message from the response, if a response was received.
  *   - redirect_code
  *       If redirected, an integer containing the initial response status code.
  *   - redirect_url
