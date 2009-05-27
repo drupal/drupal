@@ -217,6 +217,15 @@ function locale_update_6005() {
 }
 
 /**
+ * Allow longer location.
+ */
+function locale_update_6006() {
+  $ret = array();
+  db_change_field($ret, 'locales_source', 'location', 'location', array('type' => 'text', 'not null' => FALSE));
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-5.x-to-6.x"
  */
 
@@ -354,10 +363,9 @@ function locale_schema() {
         'description' => 'Unique identifier of this string.',
       ),
       'location' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
         'description' => 'Drupal path in case of online discovered translations or file path in case of imported strings.',
       ),
       'textgroup' => array(
