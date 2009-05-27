@@ -641,7 +641,7 @@ function poll_view_voting_validate($form, &$form_state) {
 }
 
 /**
- * Submit handler for processing a vote
+ * Submit handler for processing a vote.
  */
 function poll_vote($form, &$form_state) {
   $node = $form['#node'];
@@ -773,7 +773,7 @@ function theme_poll_choices($form) {
 function template_preprocess_poll_results(&$variables) {
   $variables['links'] = theme('links', $variables['raw_links']);
   if (isset($variables['vote']) && $variables['vote'] > -1 && user_access('cancel own vote')) {
-    $variables['cancel_form'] = drupal_get_form('poll_cancel_form', $variables['nid']);
+    $variables['cancel_form'] = drupal_render(drupal_get_form('poll_cancel_form', $variables['nid']));
   }
   $variables['title'] = check_plain($variables['raw_title']);
 
@@ -822,7 +822,7 @@ function poll_cancel_form(&$form_state, $nid) {
 }
 
 /**
- * Submit callback for poll_cancel_form
+ * Submit callback for poll_cancel_form().
  */
 function poll_cancel($form, &$form_state) {
   global $user;
@@ -838,6 +838,8 @@ function poll_cancel($form, &$form_state) {
     ->expression('chvotes', 'chvotes - 1')
     ->condition('chid', $node->vote)
     ->execute();
+
+  drupal_set_message(t('Your vote was cancelled.'));
 }
 
 /**
