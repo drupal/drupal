@@ -86,7 +86,6 @@ function forum_menu() {
     'title' => 'Forums',
     'page callback' => 'forum_page',
     'access arguments' => array('access content'),
-    'type' => MENU_SUGGESTED_ITEM,
   );
   $items['admin/build/forum'] = array(
     'title' => 'Forums',
