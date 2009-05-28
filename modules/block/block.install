@@ -183,9 +183,7 @@ function block_install() {
   // during hook_page_alter(). Almost everything on the page is a block,
   // so before block module runs, there will not be much to alter.
   db_update('system')
-    ->fields(array(
-      'weight' => -5,
-    ))
+    ->fields(array('weight' => -5))
     ->condition('name', 'block')
     ->execute();
 }

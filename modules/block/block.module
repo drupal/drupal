@@ -186,7 +186,7 @@ function block_block_list() {
   $blocks = array();
 
   $result = db_query('SELECT bid, info FROM {box} ORDER BY info');
-  while ($block = db_fetch_object($result)) {
+  foreach ($result as $block) {
     $blocks[$block->bid]['info'] = $block->info;
     // Not worth caching.
     $blocks[$block->bid]['cache'] = BLOCK_NO_CACHE;
@@ -218,7 +218,7 @@ function block_block_save($delta = 0, $edit = array()) {
  * Generates the administrator-defined blocks for display.
  */
 function block_block_view($delta = 0, $edit = array()) {
-  $block = db_fetch_object(db_query('SELECT body, format FROM {box} WHERE bid = %d', $delta));
+  $block = db_query('SELECT body, format FROM {box} WHERE bid = :bid', array(':bid' => $delta))->fetchObject();
   $data['content'] = check_markup($block->body, $block->format, '', FALSE);
   return $data;
 }
@@ -289,9 +289,10 @@ function _block_rehash() {
 
   init_theme();
 
-  $result = db_query("SELECT * FROM {block} WHERE theme = '%s'", $theme_key);
   $old_blocks = array();
-  while ($old_block = db_fetch_array($result)) {
+  $result = db_query("SELECT * FROM {block} WHERE theme = :theme", array(':theme' => $theme_key));
+  foreach ($result as $old_block) {
+    $old_block = is_object($old_block) ? get_object_vars($old_block) : $old_block;
     $old_blocks[$old_block['module']][$old_block['delta']] = $old_block;
   }
 
@@ -349,14 +350,18 @@ function _block_rehash() {
   // Remove blocks that are no longer defined by the code from the database.
   foreach ($old_blocks as $module => $old_module_blocks) {
     foreach ($old_module_blocks as $delta => $block) {
-      db_query("DELETE FROM {block} WHERE module = '%s' AND delta = '%s' AND theme = '%s'", $module, $delta, $theme_key);
+      db_delete('block')
+        ->condition('module', $module)
+        ->condition('delta', $delta)
+        ->condition('theme', $theme_key)
+        ->execute();
     }
   }
   return $blocks;
 }
 
 function block_box_get($bid) {
-  return db_fetch_array(db_query("SELECT * FROM {box} WHERE bid = %d", $bid));
+  return db_query("SELECT * FROM {box} WHERE bid = :bid", array(':bid' => $bid))->fetchAssoc();
 }
 
 /**
@@ -393,8 +398,14 @@ function block_box_form($edit = array()) {
 }
 
 function block_box_save($edit, $delta) {
-  db_query("UPDATE {box} SET body = '%s', info = '%s', format = %d WHERE bid = %d", $edit['body'], $edit['info'], $edit['body_format'], $delta);
-
+  db_update('box')
+    ->fields(array(
+      'body' => $edit['body'],
+      'info' => $edit['info'],
+      'format' => $edit['body_format'],
+    ))
+    ->condition('bid', $delta)
+    ->execute();
   return TRUE;
 }
 
@@ -406,11 +417,15 @@ function block_user_form(&$edit, &$account, $category = NULL) {
     $rids = array_keys($account->roles);
     $result = db_query("SELECT DISTINCT b.* FROM {block} b LEFT JOIN {block_role} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom <> 0 AND (r.rid IN (:rids) OR r.rid IS NULL) ORDER BY b.weight, b.module", array(':rids' => $rids));
     $form['block'] = array('#type' => 'fieldset', '#title' => t('Block configuration'), '#weight' => 3, '#collapsible' => TRUE, '#tree' => TRUE);
-    while ($block = db_fetch_object($result)) {
+    foreach ($result as $block) {
       $data = module_invoke($block->module, 'block_list');
       if ($data[$block->delta]['info']) {
         $return = TRUE;
-        $form['block'][$block->module][$block->delta] = array('#type' => 'checkbox', '#title' => check_plain($data[$block->delta]['info']), '#default_value' => isset($account->block[$block->module][$block->delta]) ? $account->block[$block->module][$block->delta] : ($block->custom == 1));
+        $form['block'][$block->module][$block->delta] = array(
+          '#type' => 'checkbox',
+          '#title' => check_plain($data[$block->delta]['info']),
+          '#default_value' => isset($account->block[$block->module][$block->delta]) ? $account->block[$block->module][$block->delta] : ($block->custom == 1),
+        );
       }
     }
 
@@ -453,13 +468,7 @@ function block_form_system_performance_settings_alter(&$form, &$form_state) {
   );
 
   // Check if the "Who's online" block is enabled.
-  $online_block_enabled = db_select('block')
-    ->condition('module', 'user')
-    ->condition('delta', 'online')
-    ->condition('status', 1)
-    ->countQuery()
-    ->execute()
-    ->fetchField();
+  $online_block_enabled = db_query_range("SELECT 1 FROM {block} b WHERE module = 'user' AND delta = 'online' AND status = 1", array(), 0, 1)->fetchField();
 
   // If the "Who's online" block is enabled, append some descriptive text to
   // the end of the form description.
@@ -515,15 +524,17 @@ function block_initialize_theme_blocks($theme) {
   if (!$has_blocks) {
     $default_theme = variable_get('theme_default', 'garland');
     $regions = system_region_list($theme);
-    $result = db_query("SELECT * FROM {block} WHERE theme = '%s'", $default_theme);
-    while ($block = db_fetch_array($result)) {
+    $result = db_query("SELECT * FROM {block} WHERE theme = :theme", array(':theme' => $default_theme), array('fetch' => PDO::FETCH_ASSOC));
+    $query = db_insert('block')->fields(array('module', 'delta', 'theme', 'status', 'weight', 'region', 'visibility', 'pages', 'custom', 'cache'));
+    foreach ($result as $block) {
       // If the region isn't supported by the theme, assign the block to the theme's default region.
       if (!array_key_exists($block['region'], $regions)) {
         $block['region'] = system_default_region($theme);
       }
-      db_query("INSERT INTO {block} (module, delta, theme, status, weight, region, visibility, pages, custom, cache) VALUES ('%s', '%s', '%s', %d, %d, '%s', %d, '%s', %d, %d)",
-          $block['module'], $block['delta'], $theme, $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['cache']);
+      $block['theme'] = $theme;
+      $query->values($block);
     }
+    $query->execute();
   }
 }
 
@@ -568,8 +579,23 @@ function _block_load_blocks() {
 
   $blocks = array();
   $rids = array_keys($user->roles);
-  $result = db_query(db_rewrite_sql("SELECT DISTINCT b.* FROM {block} b LEFT JOIN {block_role} r ON b.module = r.module AND b.delta = r.delta WHERE b.theme = '%s' AND b.status = 1 AND (r.rid IN (" . db_placeholders($rids) . ") OR r.rid IS NULL) ORDER BY b.region, b.weight, b.module", 'b', 'bid'), array_merge(array($theme_key), $rids));
-  while ($block = db_fetch_object($result)) {
+  $query = db_select('block', 'b');
+  $query->leftJoin('block_role', 'r', 'b.module = r.module AND b.delta = r.delta');
+  $result = $query
+    ->distinct()
+    ->fields('b')
+    ->condition('b.theme', $theme_key)
+    ->condition('b.status', 1)
+    ->condition(db_or()
+      ->condition('r.rid', $rids, 'IN')
+      ->isNull('r.rid')
+    )
+    ->orderBy('b.region')
+    ->orderBy('b.weight')
+    ->orderBy('b.module')
+    ->addTag('block_load')
+    ->execute();
+  foreach ($result as $block) {
     if (!isset($blocks[$block->region])) {
       $blocks[$block->region] = array();
     }
