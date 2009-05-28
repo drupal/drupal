@@ -409,20 +409,20 @@ function filter_list_format($format) {
  * Run all the enabled filters on a piece of text.
  *
  * @param $text
- *    The text to be filtered.
+ *   The text to be filtered.
  * @param $format
- *    The format of the text to be filtered. Specify FILTER_FORMAT_DEFAULT for
- *    the default format.
+ *   The format of the text to be filtered. Specify FILTER_FORMAT_DEFAULT for
+ *   the default format.
  * @param $langcode
- *    Optional: the language code of the text to be filtered, e.g. 'en' for
- *    English. This allows filters to be language aware so language specific
- *    text replacement can be implemented.
+ *   Optional: the language code of the text to be filtered, e.g. 'en' for
+ *   English. This allows filters to be language aware so language specific
+ *   text replacement can be implemented.
  * @param $check
- *    Whether to check the $format with filter_access() first. Defaults to TRUE.
- *    Note that this will check the permissions of the current user, so you
- *    should specify $check = FALSE when viewing other people's content. When
- *    showing content that is not (yet) stored in the database (eg. upon preview),
- *    set to TRUE so the user's permissions are checked.
+ *   Whether to check the $format with filter_access() first. Defaults to TRUE.
+ *   Note that this will check the permissions of the current user, so you
+ *   should specify $check = FALSE when viewing other people's content. When
+ *   showing content that is not (yet) stored in the database (eg. upon preview),
+ *   set to TRUE so the user's permissions are checked.
  */
 function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $check = TRUE) {
   // When $check = TRUE, do an access check on $format.
