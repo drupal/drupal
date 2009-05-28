@@ -1,5 +1,5 @@
 <?php
-// $Id: maintenance-page.tpl.php,v 1.6 2009/05/12 13:43:44 dries Exp $
+// $Id: maintenance-page.tpl.php,v 1.7 2009/05/28 16:44:06 webchick Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@
   <?php print $scripts; ?>
   <script type="text/javascript"><?php /* Needed to avoid Flash of Unstyled Content in IE */ ?> </script>
 </head>
-<body class="<?php print $body_classes; ?>">
+<body class="<?php print $classes; ?>">
   <div id="page">
     <div id="header">
       <div id="logo-title">

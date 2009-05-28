@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.338 2009/05/28 11:31:20 dries Exp $
+// $Id: block.module,v 1.339 2009/05/28 16:44:06 webchick Exp $
 
 /**
  * @file
@@ -786,6 +786,8 @@ function template_preprocess_block(&$variables) {
     // Render the block contents if it is not already rendered.
     $variables['block']->content = drupal_render($variables['block']->content);
   }
+
+  $variables['classes_array'][] = 'block-' . $variables['block']->module;
 
   $variables['template_files'][] = 'block-' . $variables['block']->region;
   $variables['template_files'][] = 'block-' . $variables['block']->module;

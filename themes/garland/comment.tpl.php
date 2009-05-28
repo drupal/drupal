@@ -1,7 +1,7 @@
 <?php
-// $Id: comment.tpl.php,v 1.12 2009/02/18 14:28:25 webchick Exp $
+// $Id: comment.tpl.php,v 1.13 2009/05/28 16:44:07 webchick Exp $
 ?>
-<div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ' ' . $status; print ' ' . $zebra; ?>">
+<div class="<?php print $classes . ' ' . $zebra; ?>">
 
   <div class="clearfix">
   <?php if ($submitted): ?>

@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.26 2009/05/12 13:43:46 dries Exp $
+// $Id: page.tpl.php,v 1.27 2009/05/28 16:44:07 webchick Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
   "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" dir="<?php print $language->dir ?>"
@@ -13,7 +13,7 @@
       <?php print $ie_styles ?>
     <![endif]-->
   </head>
-  <body class="<?php print $body_classes ?>">
+  <body class="<?php print $classes ?>">
 
   <div id="header-region" class="clearfix"><?php print $header ?></div>
 

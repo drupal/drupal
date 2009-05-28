@@ -1,7 +1,7 @@
 <?php
-// $Id: node.tpl.php,v 1.9 2009/02/18 14:28:25 webchick Exp $
+// $Id: node.tpl.php,v 1.10 2009/05/28 16:44:07 webchick Exp $
 ?>
-<div id="node-<?php print $node->nid; ?>" class="node<?php if ($sticky) { print ' sticky'; } ?><?php if (!$status) { print ' node-unpublished'; } ?>">
+<div id="node-<?php print $node->nid; ?>" class="<?php print $classes ?>">
 
 <?php print $picture ?>
 

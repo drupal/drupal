@@ -1,5 +1,5 @@
 <?php
-// $Id: maintenance-page.tpl.php,v 1.9 2009/05/12 13:43:46 dries Exp $
+// $Id: maintenance-page.tpl.php,v 1.10 2009/05/28 16:44:07 webchick Exp $
 
 /**
  * @file
@@ -24,7 +24,7 @@
       <?php print garland_get_ie_styles(); ?>
     <![endif]-->
   </head>
-  <body class="<?php print $body_classes ?>">
+  <body class="<?php print $classes ?>">
 
 <!-- Layout -->
   <div id="header-region" class="clearfix"><?php print $header; ?></div>
