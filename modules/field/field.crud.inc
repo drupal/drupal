@@ -197,6 +197,8 @@
  *     carefully, for it might seriously affect the site's performance.
  *   - settings: each omitted setting is given the default value defined in
  *     hook_field_info().
+ * @return
+ *   The $field structure with the id property filled in.
  * @throw
  *   FieldException
  */
@@ -222,9 +224,10 @@ function field_create_field($field) {
     throw new FieldException(t('Attempt to create a field of unknown type %type.', array('%type' => $field['type'])));
   }
 
-  // Ensure the field name is unique. We also check disabled or deleted fields.
+  // Ensure the field name is unique over active and disabled fields.
+  // We do not care about deleted fields.
   // TODO : do we want specific messages when clashing with a disabled or inactive field ?
-  $prior_field = field_read_field($field['field_name'], array('include_inactive' => TRUE, 'include_deleted' => TRUE));
+  $prior_field = field_read_field($field['field_name'], array('include_inactive' => TRUE));
   if (!empty($prior_field)) {
     throw new FieldException(t('Attempt to create field name %name which already exists.', array('%name' => $field['field_name'])));
   }
@@ -255,9 +258,6 @@ function field_create_field($field) {
   );
   $field['indexes'] += $schema['indexes'];
 
-  // Inform the storage engine.
-  module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_create_field', $field);
-
   // The serialized 'data' column contains everything from $field that does not
   // have its own column and is not automatically populated when the field is
   // read.
@@ -265,23 +265,32 @@ function field_create_field($field) {
   unset($data['columns'], $data['field_name'], $data['type'], $data['locked'], $data['module'], $data['active'], $data['deleted']);
   $field['data'] = $data;
 
+  // Store the field and create the id.
   drupal_write_record('field_config', $field);
+
+  // Invoke hook_field_storage_create_field after the field is
+  // complete (e.g. it has its id).
+  module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_create_field', $field);
 
   // Clear caches
   field_cache_clear(TRUE);
+
+  return $field;
 }
 
 /**
  * Read a single field record directly from the database. Generally,
  * you should use the field_info_field() instead.
  *
+ * This function will not return deleted fields. Use
+ * field_read_fields() instead for this purpose.
+ *
  * @param $field_name
  *   The field name to read.
  * @param array $include_additional
  *   The default behavior of this function is to not return a field that
- *   is inactive or has been deleted. Setting
- *   $include_additional['include_inactive'] or
- *   $include_additional['include_deleted'] to TRUE will override this
+ *   is inactive. Setting
+ *   $include_additional['include_inactive'] to TRUE will override this
  *   behavior.
  * @return
  *   A field structure, or FALSE.
@@ -303,7 +312,9 @@ function field_read_field($field_name, $include_additional = array()) {
  *   $include_additional['include_deleted'] to TRUE will override this
  *   behavior.
  * @return
- *   An array of fields matching $params.
+ *   An array of fields matching $params. If
+ *   $include_additional['include_deletd'] is TRUE, the array is keyed
+ *   by field id, otherwise it is keyed by field name.
  */
 function field_read_fields($params = array(), $include_additional = array()) {
   $query = db_select('field_config', 'fc', array('fetch' => PDO::FETCH_ASSOC));
@@ -316,7 +327,8 @@ function field_read_fields($params = array(), $include_additional = array()) {
   if (!isset($include_additional['include_inactive']) || !$include_additional['include_inactive']) {
     $query->condition('fc.active', 1);
   }
-  if (!isset($include_additional['include_deleted']) || !$include_additional['include_deleted']) {
+  $include_deleted = (isset($include_additional['include_deleted']) && $include_additional['include_deleted']);
+  if (!$include_deleted) {
     $query->condition('fc.deleted', 0);
   }
 
@@ -335,7 +347,11 @@ function field_read_fields($params = array(), $include_additional = array()) {
     $schema += array('columns' => array(), 'indexes' => array());
     $field['columns'] = $schema['columns'];
 
-    $fields[$field['field_name']] = $field;
+    $field_name = $field['field_name'];
+    if ($include_deleted) {
+      $field_name = $field['id'];
+    }
+    $fields[$field_name] = $field;
   }
   return $fields;
 }
@@ -348,18 +364,21 @@ function field_read_fields($params = array(), $include_additional = array()) {
  *   The field name to delete.
  */
 function field_delete_field($field_name) {
-  // Mark the field for deletion.
-  db_update('field_config')
-    ->fields(array('deleted' => 1))
-    ->condition('field_name', $field_name)
-    ->execute();
+  // Mark field storage for deletion.
+  module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_delete_field', $field_name);
 
   // Mark any instances of the field for deletion.
   db_update('field_config_instance')
     ->fields(array('deleted' => 1))
     ->condition('field_name', $field_name)
     ->execute();
-  module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_delete_field', $field_name);
+
+  // Mark the field for deletion.
+  db_update('field_config')
+    ->fields(array('deleted' => 1))
+    ->condition('field_name', $field_name)
+    ->execute();
+
   // Clear the cache.
   field_cache_clear(TRUE);
 }
@@ -391,6 +410,8 @@ function field_delete_field($field_name) {
  *     - type: the default formatter specified in hook_field_info().
  *     - settings: each omitted setting is given the default value specified in
  *       hook_field_formatter_info().
+ * @return
+ *   The $instance structure with the id property filled in.
  * @throw
  *   FieldException
  */
@@ -414,7 +435,7 @@ function field_create_instance($instance) {
 
   // Ensure the field instance is unique.
   // TODO : do we want specific messages when clashing with a disabled or inactive instance ?
-  $prior_instance = field_read_instance($instance['field_name'], $instance['bundle'], array('include_inactive' => TRUE, 'include_deleted' => TRUE));
+  $prior_instance = field_read_instance($instance['field_name'], $instance['bundle'], array('include_inactive' => TRUE));
   if (!empty($prior_instance)) {
     throw new FieldException('Attempt to create a field instance which already exists.');
   }
@@ -427,7 +448,7 @@ function field_create_instance($instance) {
   // Invoke external hooks after the cache is cleared for API consistency.
   module_invoke_all('field_create_instance', $instance);
 
-  return FALSE;
+  return $instance;
 }
 
 /*
@@ -561,15 +582,17 @@ function _field_write_instance($instance, $update = FALSE) {
  * Read a single instance record directly from the database. Generally,
  * you should use the field_info_instance() instead.
  *
+ * This function will not return deleted instances. Use
+ * field_read_instances() instead for this purpose.
+ *
  * @param $field_name
  *   The field name to read.
  * @param $bundle
  *   The bundle to which the field is bound.
  * @param array $include_additional
  *   The default behavior of this function is to not return an instance that
- *   is inactive or has been deleted. Setting
- *   $include_additional['include_inactive'] or
- *   $include_additional['include_deleted'] to TRUE will override this
+ *   is inactive. Setting
+ *   $include_additional['include_inactive'] to TRUE will override this
  *   behavior.
  * @return
  *   An instance structure, or FALSE.

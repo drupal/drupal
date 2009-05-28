@@ -29,7 +29,7 @@ function field_schema() {
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
-        'description' => 'The name of this field',
+        'description' => 'The name of this field. Non-deleted field names are unique, but multiple deleted fields can have the same name.',
       ),
       'type' => array(
         'type' => 'varchar',
@@ -61,13 +61,13 @@ function field_schema() {
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,
-          'default' => 0,
+        'default' => 0,
       ),
       'active' => array(
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,
-          'default' => 0,
+        'default' => 0,
       ),
       'deleted' => array(
         'type' => 'int',
@@ -77,13 +77,14 @@ function field_schema() {
       ),
     ),
     'primary key' => array('id'),
-    'unique keys' => array('field_name' => array('field_name')),
     'indexes' => array(
-      // used by field_read_fields
+      // used by field_delete_field() among others
+      'field_name' => array('field_name'),
+      // used by field_read_fields()
       'active_deleted' => array('active', 'deleted'),
-      // used by field_modules_disabled
+      // used by field_modules_disabled()
       'module' => array('module'),
-      // used by field_associate_fields
+      // used by field_associate_fields()
       'type' => array('type'),
     ),
   );
@@ -129,14 +130,14 @@ function field_schema() {
     ),
     'primary key' => array('id'),
     'unique keys' => array(
-      'field_name_bundle' => array('field_name', 'bundle'),
+      'field_id_bundle' => array('field_id', 'bundle'),
     ),
     'indexes' => array(
-      // used by field_read_instances
+      // used by field_read_instances()
       'widget_active_deleted' => array('widget_active', 'deleted'),
-      // used by field_modules_disabled
+      // used by field_modules_disabled()
       'widget_module' => array('widget_module'),
-      // used by field_associate_fields
+      // used by field_associate_fields()
       'widget_type' => array('widget_type'),
     ),
   );

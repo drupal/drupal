@@ -1074,10 +1074,10 @@ class FieldFormTestCase extends DrupalWebTestCase {
   }
 }
 
-class FieldTestCase extends DrupalWebTestCase {
+class FieldCrudTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name'  => t('Field tests'),
+      'name'  => t('Field CRUD tests'),
       'description'  => t("Create / read /update a field."),
       'group' => t('Field')
     );
@@ -1121,7 +1121,7 @@ class FieldTestCase extends DrupalWebTestCase {
       'field_name' => 'field_2',
       'type' => 'test_field',
     );
-    field_create_field($field_definition);
+    $field_definition = field_create_field($field_definition);
 
     $field = field_read_field($field_definition['field_name']);
 
@@ -1240,7 +1240,8 @@ class FieldTestCase extends DrupalWebTestCase {
 
     // Make sure that the field is marked as deleted when it is specifically
     // loaded.
-    $field = field_read_field($this->field['field_name'], array('include_deleted' => TRUE));
+    $fields = field_read_fields(array(), array('include_deleted' => TRUE));
+    $field = current($field);
     $this->assertTrue(!empty($field['deleted']), t('A deleted field is marked for deletion.'));
 
     // Make sure that this field's instance is marked as deleted when it is
@@ -1261,6 +1262,30 @@ class FieldTestCase extends DrupalWebTestCase {
     $this->assertTrue(!empty($another_field) && empty($another_field['deleted']), t('A non-deleted field is not marked for deletion.'));
     $another_instance = field_read_instance($this->another_instance_definition['field_name'], $this->another_instance_definition['bundle']);
     $this->assertTrue(!empty($another_instance) && empty($another_instance['deleted']), t('An instance of a non-deleted field is not marked for deletion.'));
+
+    // Try to create a new field the same name as a deleted field and
+    // write data into it.
+    field_create_field($this->field);
+    field_create_instance($this->instance_definition);
+    $field = field_read_field($this->field['field_name']);
+    $this->assertTrue(!empty($field) && empty($field['deleted']), t('A new field with a previously used name is created.'));
+    $instance = field_read_instance($this->instance_definition['field_name'], $this->instance_definition['bundle']);
+    $this->assertTrue(!empty($instance) && empty($instance['deleted']), t('A new instance for a previously used field name is created.'));
+
+    // Save an object with data for the field
+    $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
+    $values[0]['value'] = mt_rand(1, 127);
+    $entity->{$field['field_name']} = $values;
+    $entity_type = 'test_entity';
+    field_attach_insert($entity_type, $entity);
+
+    // Verify the field is present on load
+    $entity = field_test_create_stub_entity(0, 0, $this->instance_definition['bundle']);
+    field_attach_load($entity_type, array(0 => $entity));
+    $this->assertIdentical(count($entity->{$field['field_name']}), count($values), "Data in previously deleted field saves and loads correctly");
+    foreach ($values as $delta => $value) {
+      $this->assertEqual($entity->{$field['field_name']}[$delta]['value'], $values[$delta]['value'], "Data in previously deleted field saves and loads correctly");
+    }
   }
 }
 
