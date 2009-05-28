@@ -7,11 +7,6 @@
  */
 
 /**
- * Denotes that a feed's items should never expire.
- */
-define('AGGREGATOR_CLEAR_NEVER', 0);
-
-/**
  * Implement hook_aggregator_process_info().
  */
 function aggregator_aggregator_process_info() {

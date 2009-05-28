@@ -54,7 +54,7 @@ function aggregator_view() {
  */
 function aggregator_form_feed(&$form_state, stdClass $feed = NULL) {
   $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
-  $period[0] = t('Never');
+  $period[AGGREGATOR_CLEAR_NEVER] = t('Never');
 
   $form['title'] = array('#type' => 'textfield',
     '#title' => t('Title'),
