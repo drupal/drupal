@@ -238,13 +238,13 @@ function text_elements() {
     'text_textfield' => array(
       '#input' => TRUE,
       '#columns' => array('value'), '#delta' => 0,
-      '#process' => array('text_textfield_process'),
+      '#process' => array('text_textfield_elements_process'),
       '#autocomplete_path' => FALSE,
       ),
     'text_textarea' => array(
       '#input' => TRUE,
       '#columns' => array('value', 'format'), '#delta' => 0,
-      '#process' => array('text_textarea_process'),
+      '#process' => array('text_textarea_elements_process'),
       '#filter_value' => FILTER_FORMAT_DEFAULT,
       ),
   );
@@ -310,7 +310,7 @@ function text_field_widget_error($element, $error) {
  * information needed to adjust the behavior of the 'element' should be
  * extracted in hook_field_widget() above.
  */
-function text_textfield_process($element, $form_state, $form) {
+function text_textfield_elements_process($element, $form_state, $form) {
   $field = $form['#fields'][$element['#field_name']]['field'];
   $instance = $form['#fields'][$element['#field_name']]['instance'];
   $field_key = $element['#columns'][0];
@@ -353,7 +353,7 @@ function text_textfield_process($element, $form_state, $form) {
  *
  * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
  */
-function text_textarea_process($element, $form_state, $form) {
+function text_textarea_elements_process($element, $form_state, $form) {
   $field = $form['#fields'][$element['#field_name']]['field'];
   $instance = $form['#fields'][$element['#field_name']]['instance'];
   $field_key = $element['#columns'][0];

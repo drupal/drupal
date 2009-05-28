@@ -1,7 +1,7 @@
 <?php
 // $Id$
 ?>
-<div class="comment<?php print ($comment->new) ? ' comment-new' : ''; print ' ' . $status; print ' ' . $zebra; ?>">
+<div class="<?php print $classes . ' ' . $zebra; ?>">
 
   <div class="clearfix">
   <?php if ($submitted): ?>

@@ -787,6 +787,8 @@ function template_preprocess_block(&$variables) {
     $variables['block']->content = drupal_render($variables['block']->content);
   }
 
+  $variables['classes_array'][] = 'block-' . $variables['block']->module;
+
   $variables['template_files'][] = 'block-' . $variables['block']->region;
   $variables['template_files'][] = 'block-' . $variables['block']->module;
   $variables['template_files'][] = 'block-' . $variables['block']->module . '-' . $variables['block']->delta;

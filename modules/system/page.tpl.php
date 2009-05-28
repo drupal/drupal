@@ -13,6 +13,8 @@
  * - $css: An array of CSS files for the current page.
  * - $directory: The directory the template is located in, e.g. modules/system
  *   or themes/garland.
+ * - $classes_array: Array of html class attribute values. It is flattened
+ *   into a string within the variable $classes.
  * - $is_front: TRUE if the current page is the front page. Used to toggle the mission statement.
  * - $logged_in: TRUE if the user is registered and signed in.
  * - $is_admin: TRUE if the user has permission to access administration pages.
@@ -29,9 +31,26 @@
  * - $styles: Style tags necessary to import all CSS files for the page.
  * - $scripts: Script tags necessary to load the JavaScript files and settings
  *   for the page.
- * - $body_classes: A set of CSS classes for the BODY tag. This contains flags
- *   indicating the current layout (multiple columns, single column), the current
- *   path, whether the user is logged in, and so on.
+ * - $classes: String of classes that can be used to style contextually through
+ *   CSS. It should be placed within the <body> tag. When selecting through CSS
+ *   it's recommended that you use the body tag, e.g., "body.front". It can be
+ *   manipulated through the variable $classes_array from preprocess functions.
+ *   The default values can be one or more of the following:
+ *   - page: The current template type, i.e., "theming hook".
+ *   - front: Page is the home page.
+ *   - not-front: Page is not the home page.
+ *   - logged-in: The current viewer is logged in.
+ *   - not-logged-in: The current viewer is not logged in.
+ *   - page-[level 1 path]: The internal first level path. For example, viewing
+ *     example.com/user/2 would result in "page-user". Path aliases do not apply.
+ *   - node-type-[node type]: When viewing a single node, the type of that node.
+ *     For example, if the node is a "Blog entry" it would result in "node-type-blog".
+ *     Note that the machine name will often be in a short form of the human readable label.
+ *   The following only apply with the default 'left' and 'right' block regions:
+ *     - two-sidebars: When both sidebars have content.
+ *     - no-sidebars: When no sidebar content exists.
+ *     - one-sidebar and sidebar-left or sidebar-right: A combination of the two classes
+ *       when only one of the two sidebars have content.
  *
  * Site identity:
  * - $front_page: The URL of the front page. Use this instead of $base_path,
@@ -69,6 +88,7 @@
  *
  * @see template_preprocess()
  * @see template_preprocess_page()
+ * @see template_process()
  */
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
@@ -82,7 +102,7 @@
   <?php print $styles; ?>
   <?php print $scripts; ?>
 </head>
-<body class="<?php print $body_classes; ?>">
+<body class="<?php print $classes; ?>">
 
   <div id="page-wrapper"><div id="page">
 

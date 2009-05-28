@@ -128,7 +128,7 @@ function comment_theme() {
     ),
     'comment_folded' => array(
       'template' => 'comment-folded',
-      'arguments' => array('comment' => NULL),
+      'arguments' => array('comment' => NULL, 'node' => NULL),
     ),
     'comment_flat_collapsed' => array(
       'arguments' => array('comment' => NULL, 'node' => NULL),
@@ -1833,7 +1833,7 @@ function theme_comment_view($comment, $node, $links = array(), $visible = TRUE) 
     $output .= theme('comment', $comment, $node, $links);
   }
   else {
-    $output .= theme('comment_folded', $comment);
+    $output .= theme('comment_folded', $comment, $node);
   }
 
   return $output;
@@ -1865,6 +1865,25 @@ function template_preprocess_comment(&$variables) {
   else {
     $variables['status']  = ($comment->status == COMMENT_NOT_PUBLISHED) ? 'comment-unpublished' : 'comment-published';
   }
+  // Gather comment classes.
+  if ($comment->uid === 0) {
+    $variables['classes_array'][] = 'comment-by-anonymous';
+  }
+  else {
+    // Published class is not needed. It is either 'comment-preview' or 'comment-unpublished'.
+    if ($variables['status'] != 'comment-published') {
+      $variables['classes_array'][] = $variables['status'];
+    }
+    if ($comment->uid === $variables['node']->uid) {
+      $variables['classes_array'][] = 'comment-by-node-author';
+    }
+    if ($comment->uid === $variables['user']->uid) {
+      $variables['classes_array'][] = 'comment-by-viewer';
+    }
+    if ($comment->new) {
+      $variables['classes_array'][] = 'comment-new';
+    }
+  }
 }
 
 /**
@@ -1879,6 +1898,25 @@ function template_preprocess_comment_folded(&$variables) {
   $variables['date']   = format_date($comment->timestamp);
   $variables['new']    = $comment->new ? t('new') : '';
   $variables['title']  = l($comment->subject, comment_node_url() . '/' . $comment->cid, array('fragment' => "comment-$comment->cid"));
+  // Gather comment classes.
+  if ($comment->uid === 0) {
+    $variables['classes_array'][] = 'comment-by-anonymous';
+  }
+  else {
+    if ($comment->status == COMMENT_NOT_PUBLISHED) {
+      $variables['classes_array'][] = 'comment-unpublished';
+    }
+    if ($comment->uid === $variables['node']->uid) {
+      $variables['classes_array'][] = 'comment-by-node-author';
+    }
+    if ($comment->uid === $variables['user']->uid) {
+      $variables['classes_array'][] = 'comment-by-viewer';
+    }
+    if ($comment->new) {
+      $variables['classes_array'][] = 'comment-new';
+    }
+  }
+  
 }
 
 /**

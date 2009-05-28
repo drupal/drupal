@@ -1387,6 +1387,25 @@ function template_preprocess_node(&$variables) {
     $variables['submitted'] = '';
     $variables['picture'] = '';
   }
+
+  // Gather node classes.
+  $variables['classes_array'][] = 'node-' . $node->type;
+  if ($variables['promote']) {
+    $variables['classes_array'][] = 'node-promoted';
+  }
+  if ($variables['sticky']) {
+    $variables['classes_array'][] = 'node-sticky';
+  }
+  if (!$variables['status']) {
+    $variables['classes_array'][] = 'node-unpublished';
+  }
+  if ($variables['teaser']) {
+    $variables['classes_array'][] = 'node-teaser';
+  }
+  if (isset($variables['preview'])) {
+    $variables['classes_array'][] = 'node-preview';
+  }
+
   // Clean up name so there are no underscores.
   $variables['template_files'][] = 'node-' . str_replace('_', '-', $node->type);
   $variables['template_files'][] = 'node-' . $node->nid;

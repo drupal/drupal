@@ -20,6 +20,19 @@
  * - $terms: the themed list of taxonomy term links output from theme_links().
  * - $submitted: themed submission information output from
  *   theme_node_submitted().
+ * - $classes: String of classes that can be used to style contextually through
+ *   CSS. It can be manipulated through the variable $classes_array from
+ *   preprocess functions. The default values can be one or more of the following:
+ *   - node: The current template type, i.e., "theming hook".
+ *   - node-[type]: The current node type. For example, if the node is a
+ *     "Blog entry" it would result in "node-blog". Note that the machine
+ *     name will often be in a short form of the human readable label.
+ *   - node-teaser: Nodes in teaser form.
+ *   - node-preview: Nodes in preview mode.
+ *   The following are controlled through the node publishing options.
+ *   - node-promoted: Nodes promoted to the front page.
+ *   - node-sticky: Nodes ordered above other non-sticky nodes in teaser listings.
+ *   - node-unpublished: Unpublished nodes visible only to administrators.
  * TODO D7 : document $FIELD_NAME_rendered variables.
  *
  * Other variables:
@@ -28,6 +41,8 @@
  * - $comment_count: Number of comments attached to the node.
  * - $uid: User ID of the node author.
  * - $created: Time the node was published formatted in Unix timestamp.
+ * - $classes_array: Array of html class attribute values. It is flattened
+ *   into a string within the variable $classes.
  * - $zebra: Outputs either "even" or "odd". Useful for zebra striping in
  *   teaser listings.
  * - $id: Position of the node. Increments each time it's output.
@@ -47,9 +62,10 @@
  *
  * @see template_preprocess()
  * @see template_preprocess_node()
+ * @see template_process()
  */
 ?>
-<div id="node-<?php print $node->nid; ?>" class="node<?php if ($sticky) { print ' sticky'; } ?><?php if (!$status) { print ' node-unpublished'; } ?> clearfix">
+<div id="node-<?php print $node->nid; ?>" class="<?php print $classes ?> clearfix">
 
 <?php print $picture ?>
 

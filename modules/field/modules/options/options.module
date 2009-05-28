@@ -83,17 +83,17 @@ function options_elements() {
     'options_select' => array(
       '#input' => TRUE,
       '#columns' => array('value'), '#delta' => 0,
-      '#process' => array('options_select_process'),
+      '#process' => array('options_select_elements_process'),
       ),
     'options_buttons' => array(
       '#input' => TRUE,
       '#columns' => array('value'), '#delta' => 0,
-      '#process' => array('options_buttons_process'),
+      '#process' => array('options_buttons_elements_process'),
       ),
     'options_onoff' => array(
       '#input' => TRUE,
       '#columns' => array('value'), '#delta' => 0,
-      '#process' => array('options_onoff_process'),
+      '#process' => array('options_onoff_elements_process'),
       ),
     );
 }
@@ -125,7 +125,7 @@ function options_field_widget_error($element, $error) {
  *
  * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
  */
-function options_buttons_process($element, &$form_state, $form) {
+function options_buttons_elements_process($element, &$form_state, $form) {
   $field = $form['#fields'][$element['#field_name']]['field'];
   $instance = $form['#fields'][$element['#field_name']]['instance'];
   $field_key  = $element['#columns'][0];
@@ -182,7 +182,7 @@ function options_buttons_process($element, &$form_state, $form) {
  *
  * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
  */
-function options_select_process($element, &$form_state, $form) {
+function options_select_elements_process($element, &$form_state, $form) {
   $field = $form['#fields'][$element['#field_name']]['field'];
   $instance = $form['#fields'][$element['#field_name']]['instance'];
   $field_key  = $element['#columns'][0];
@@ -223,7 +223,7 @@ function options_select_process($element, &$form_state, $form) {
  * Build the form element. When creating a form using FAPI #process,
  * note that $element['#value'] is already set.
  */
-function options_onoff_process($element, &$form_state, $form) {
+function options_onoff_elements_process($element, &$form_state, $form) {
   $field = $form['#fields'][$element['#field_name']]['field'];
   $instance = $form['#fields'][$element['#field_name']]['instance'];
   $field_key  = $element['#columns'][0];

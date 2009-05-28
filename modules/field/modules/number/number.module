@@ -239,7 +239,7 @@ function number_elements() {
     'number' => array(
       '#input' => TRUE,
       '#columns' => array('value'), '#delta' => 0,
-      '#process' => array('number_process'),
+      '#process' => array('number_elements_process'),
     ),
   );
 }
@@ -296,7 +296,7 @@ function number_field_widget_error($element, $error) {
  *
  * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
  */
-function number_process($element, $form_state, $form) {
+function number_elements_process($element, $form_state, $form) {
   $field_name = $element['#field_name'];
   $field = field_info_field($element['#field_name']);
   $instance = field_info_instance($element['#field_name'], $element['#bundle']);

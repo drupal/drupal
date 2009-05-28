@@ -114,8 +114,11 @@ function theme_install_page($content) {
   $variables['content'] = $content;
   // Delay setting the message variable so it can be processed below.
   $variables['show_messages'] = FALSE;
-  // The maintenance preprocess function is recycled here.
+  // Variable processors invoked manually since this function and theme_update_page()
+  // are exceptions in how it works within the theme system.
+  template_preprocess($variables, 'install_page');
   template_preprocess_maintenance_page($variables);
+  template_process($variables, 'install_page');
 
   // Special handling of error messages
   $messages = drupal_set_message();
@@ -167,8 +170,11 @@ function theme_update_page($content, $show_messages = TRUE) {
   // Assign content and show message flag.
   $variables['content'] = $content;
   $variables['show_messages'] = $show_messages;
-  // The maintenance preprocess function is recycled here.
+  // Variable processors invoked manually since this function and theme_install_page()
+  // are exceptions in how it works within the theme system.
+  template_preprocess($variables, 'update_page');
   template_preprocess_maintenance_page($variables);
+  template_process($variables, 'update_page');
 
   // Special handling of warning messages.
   $messages = drupal_set_message();
@@ -270,21 +276,19 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['closure']           = '';
 
   // Compile a list of classes that are going to be applied to the body element.
-  $body_classes = array();
-  $body_classes[] = 'in-maintenance';
+  $variables['classes_array'][] = 'in-maintenance';
   if (isset($variables['db_is_active']) && !$variables['db_is_active']) {
-    $body_classes[] = 'db-offline';
+    $variables['classes_array'][] = 'db-offline';
   }
   if ($variables['layout'] == 'both') {
-    $body_classes[] = 'two-sidebars';
+    $variables['classes_array'][] = 'two-sidebars';
   }
   elseif ($variables['layout'] == 'none') {
-    $body_classes[] = 'no-sidebars';
+    $variables['classes_array'][] = 'no-sidebars';
   }
   else {
-    $body_classes[] = 'one-sidebar sidebar-' . $variables['layout'];
+    $variables['classes_array'][] = 'one-sidebar sidebar-' . $variables['layout'];
   }
-  $variables['body_classes'] = implode(' ', $body_classes);
 
   // Dead databases will show error messages so supplying this template will
   // allow themers to override the page and the content completely.

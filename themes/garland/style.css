@@ -690,14 +690,14 @@ ul.links li, ul.inline li {
   float: right; /* LTR */
 }
 
-.preview .node, .preview .comment, .sticky {
+.preview .node, .preview .comment, .node-sticky {
   margin: 0;
   padding: 0.5em 0;
   border: 0;
   background: 0;
 }
 
-.sticky {
+.node-sticky {
   padding: 1em;
   background-color: #fff;
   border: 1px solid #e0e5fb;

@@ -13,7 +13,7 @@
       <?php print $ie_styles ?>
     <![endif]-->
   </head>
-  <body class="<?php print $body_classes ?>">
+  <body class="<?php print $classes ?>">
 
   <div id="header-region" class="clearfix"><?php print $header ?></div>
 
