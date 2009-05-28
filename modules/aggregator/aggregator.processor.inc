@@ -1,15 +1,10 @@
 <?php
-// $Id: aggregator.processor.inc,v 1.7 2009/05/27 18:33:54 dries Exp $
+// $Id: aggregator.processor.inc,v 1.8 2009/05/28 09:30:58 dries Exp $
 
 /**
  * @file
  * Processor functions for the aggregator module.
  */
-
-/**
- * Denotes that a feed's items should never expire.
- */
-define('AGGREGATOR_CLEAR_NEVER', 0);
 
 /**
  * Implement hook_aggregator_process_info().
