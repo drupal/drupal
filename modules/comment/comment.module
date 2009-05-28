@@ -420,11 +420,13 @@ function comment_node_view($node, $teaser) {
 
   if ($node->comment) {
     if ($node->build_mode == NODE_BUILD_RSS) {
-      // Add a comments RSS element which is a URL to the comments of this node.
-      $node->rss_elements[] = array(
-        'key' => 'comments',
-        'value' => url('node/' . $node->nid, array('fragment' => 'comments', 'absolute' => TRUE))
-      );
+      if ($node->comment != COMMENT_NODE_HIDDEN) {
+        // Add a comments RSS element which is a URL to the comments of this node.
+        $node->rss_elements[] = array(
+          'key' => 'comments',
+          'value' => url('node/' . $node->nid, array('fragment' => 'comments', 'absolute' => TRUE))
+        );
+      }
     }
     else if ($teaser) {
       // Main page: display the number of comments that have been posted.
