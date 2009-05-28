@@ -1,5 +1,5 @@
 <?php
-// $Id: block.install,v 1.26 2009/05/27 18:33:54 dries Exp $
+// $Id: block.install,v 1.27 2009/05/28 11:31:20 dries Exp $
 
 /**
  * @file
@@ -183,9 +183,7 @@ function block_install() {
   // during hook_page_alter(). Almost everything on the page is a block,
   // so before block module runs, there will not be much to alter.
   db_update('system')
-    ->fields(array(
-      'weight' => -5,
-    ))
+    ->fields(array('weight' => -5))
     ->condition('name', 'block')
     ->execute();
 }
