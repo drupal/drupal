@@ -344,8 +344,8 @@ function install_settings_form_validate($form, &$form_state) {
 function _install_settings_form_validate($database, $settings_file, &$form_state, $form = NULL) {
   global $databases;
   // Verify the table prefix
-  if (!empty($database['prefix']) && is_string($database['prefix']) && !preg_match('/^[A-Za-z0-9_.]+$/', $database['dprefix'])) {
-    form_set_error('db_prefix', st('The database table prefix you have entered, %db_prefix, is invalid. The table prefix can only contain alphanumeric characters, periods, or underscores.', array('%db_prefix' => $db_prefix)), 'error');
+  if (!empty($database['db_prefix']) && is_string($database['db_prefix']) && !preg_match('/^[A-Za-z0-9_.]+$/', $database['db_prefix'])) {
+    form_set_error('db_prefix', st('The database table prefix you have entered, %db_prefix, is invalid. The table prefix can only contain alphanumeric characters, periods, or underscores.', array('%db_prefix' => $database['db_prefix'])), 'error');
   }
 
   if (!empty($database['port']) && !is_numeric($database['port'])) {
