@@ -372,11 +372,11 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     if (isset($column)) {
       $condition->condition('column_name', $column);
       $condition->compile($this->connection);
-      // Don't use {} around information_schema table.
+      // Don't use {} around information_schema.columns table.
       return db_query("SELECT column_comment FROM information_schema.columns WHERE " . (string) $condition, $condition->arguments())->fetchField();
     }
     $condition->compile($this->connection);
-    // Don't use {} around information_schema table.
+    // Don't use {} around information_schema.tables table.
     $comment = db_query("SELECT table_comment FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchField();
     // Work-around for MySQL 5.0 bug http://bugs.mysql.com/bug.php?id=11379
     return preg_replace('/; InnoDB free:.*$/', '', $comment);
