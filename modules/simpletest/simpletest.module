@@ -25,15 +25,6 @@ function simpletest_help($path, $arg) {
  * Implement hook_menu().
  */
 function simpletest_menu() {
-  $items['admin/development'] = array(
-    'title' => 'Development',
-    'description' => 'Development tools.',
-    'position' => 'right',
-    'weight' => -7,
-    'page callback' => 'system_admin_menu_block_page',
-    'access callback' => 'system_admin_menu_block_access',
-    'access arguments' => array('admin/development', 'access administration pages'),
-  );
   $items['admin/development/testing'] = array(
     'title' => 'Testing',
     'page callback' => 'drupal_get_form',
