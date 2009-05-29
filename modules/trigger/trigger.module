@@ -92,7 +92,10 @@ function trigger_menu() {
     if (in_array($module, array('node', 'comment', 'user', 'system', 'taxonomy'))) {
       continue;
     }
-    $info = db_result(db_query("SELECT info FROM {system} WHERE name = '%s'", $module));
+    $info = db_select('system')
+      ->condition('name', $module)
+      ->execute()
+      ->fetchField();
     $info = unserialize($info);
     $nice_name = $info['name'];
     $items["admin/build/trigger/$module"] = array(
@@ -135,8 +138,11 @@ function trigger_access_check($module) {
  */
 function _trigger_get_hook_aids($hook, $op = '') {
   $aids = array();
-  $result = db_query("SELECT aa.aid, a.type FROM {trigger_assignments} aa LEFT JOIN {actions} a ON aa.aid = a.aid WHERE aa.hook = '%s' AND aa.op = '%s' ORDER BY weight", $hook, $op);
-  while ($action = db_fetch_object($result)) {
+  $result = db_query("SELECT aa.aid, a.type FROM {trigger_assignments} aa LEFT JOIN {actions} a ON aa.aid = a.aid WHERE aa.hook = :hook AND aa.op = :op ORDER BY weight", array(
+    ':hook' => $hook,
+    ':op' => $op,
+  ));
+  foreach ($result as $action) {
     $aids[$action->aid]['type'] = $action->type;
   }
   return $aids;
@@ -534,5 +540,7 @@ function trigger_options($type = 'all') {
  * Remove all trigger entries for the given action, when deleted.
  */
 function trigger_actions_delete($aid) {
-  db_query("DELETE FROM {trigger_assignments} WHERE aid = '%s'", $aid);
+  db_delete('trigger_assignments')
+    ->condition('aid', $aid)
+    ->execute();
 }

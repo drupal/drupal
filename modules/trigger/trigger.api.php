@@ -88,7 +88,9 @@ function hook_action_info() {
  *   The action ID.
  */
 function hook_actions_delete($aid) {
-  db_query("DELETE FROM {actions_assignments} WHERE aid = '%s'", $aid);
+  db_delete('actions_assignments')
+    ->condition('aid', $aid)
+    ->execute();  
 }
 
 /**
