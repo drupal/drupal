@@ -222,7 +222,7 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
       '#type' => 'radios',
       '#title' => t('Show block on specific pages'),
       '#options' => $options,
-      '#default_value' => (int) $edit['visibility'],
+      '#default_value' => $edit['visibility'],
     );
     $form['page_vis_settings']['pages'] = array(
       '#type' => 'textarea',
@@ -268,7 +268,7 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
       t('Hide this block by default but let individual users show it.')
     ),
     '#description' => t('Allow individual users to customize the visibility of this block in their account settings.'),
-    '#default_value' => (int) $edit['custom'],
+    '#default_value' => $edit['custom'],
   );
 
   $form['submit'] = array(
@@ -295,9 +295,9 @@ function block_admin_configure_submit($form, &$form_state) {
   if (!form_get_errors()) {
     db_update('block')
       ->fields(array(
-        'visibility' => $form_state['values']['visibility'],
+        'visibility' => (int) $form_state['values']['visibility'],
         'pages' => trim($form_state['values']['pages']),
-        'custom' => $form_state['values']['custom'],
+        'custom' => (int) $form_state['values']['custom'],
         'title' => $form_state['values']['title'],
       ))
       ->condition('module', $form_state['values']['module'])
@@ -355,9 +355,9 @@ function block_add_block_form_submit($form, &$form_state) {
   foreach (list_themes() as $key => $theme) {
     if ($theme->status) {
       $query->values(array(
-        'visibility' => $form_state['values']['visibility'],
+        'visibility' => (int) $form_state['values']['visibility'],
         'pages' => trim($form_state['values']['pages']),
-        'custom' => $form_state['values']['custom'],
+        'custom' => (int) $form_state['values']['custom'],
         'title' => $form_state['values']['title'], 
         'module' => $form_state['values']['module'],
         'theme' => $theme->name, 
