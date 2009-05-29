@@ -1723,36 +1723,53 @@ function system_site_maintenance_mode() {
 }
 
 /**
- * Form builder; Configure Clean URL settings.
+ * Form builder; Configure clean URL settings.
  *
  * @ingroup forms
  * @see system_settings_form()
  */
 function system_clean_url_settings() {
-  $form['clean_url'] = array(
-    '#type' => 'radios',
-    '#title' => t('Clean URLs'),
-    '#default_value' => 0,
-    '#options' => array(t('Disabled'), t('Enabled')),
-    '#description' => t('This option makes Drupal emit "clean" URLs (i.e. without <code>?q=</code> in the URL).'),
-  );
+  global $base_url;
 
-  if (!variable_get('clean_url', 0)) {
-    if (strpos(request_uri(), '?q=') !== FALSE) {
-      drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
-
-      $form['clean_url']['#description'] .= ' <span>' . t('Before enabling clean URLs, you must perform a test to determine if your server is properly configured. If you are able to see this page again after clicking the "Run the clean URL test" link, the test has succeeded and the radio buttons above will be available. If instead you are directed to a "Page not found" error, you will need to change the configuration of your server. The <a href="@handbook">handbook page on Clean URLs</a> has additional troubleshooting information.', array('@handbook' => 'http://drupal.org/node/15365')) . '</span>';
-
-      $form['clean_url']['#disabled'] = TRUE;
-      $form['clean_url']['#prefix'] = '<div id="clean-url">';
-      $form['clean_url']['#suffix'] = '<p>' . t('<a href="@clean_url">Run the clean url test</a>.', array('@clean_url' => base_path() . 'admin/settings/clean-urls')) . '</p></div>';
-    }
-    else {
-      $form['clean_url']['#description'] .= ' <div class="ok">' . t('Your server has been successfully tested to support this feature.') . '</div>';
+  // When accessing this form using a non-clean URL, allow a re-check to make
+  // sure clean URLs can be disabled at all times.
+  $available = FALSE;
+  if (strpos(request_uri(), '?q=') === FALSE || drupal_get_session('clean_url')) {
+    $available = TRUE;
+  }
+  else {
+    $request = drupal_http_request($base_url . '/admin/settings/clean-urls/check');
+    if (isset($request->code) && $request->code == 200) {
+      $available = TRUE;
     }
   }
 
-  return system_settings_form($form, TRUE);
+  if ($available) {
+    drupal_set_session('clean_url', TRUE);
+
+    $form['clean_url'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Enable clean URLs'),
+      '#default_value' => 0,
+      '#description' => t('Use URLs like <code>example.com/user</code> instead of <code>example.com/?q=user</code>.'),
+    );
+    $form = system_settings_form($form);
+  }
+  else {
+    drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
+
+    $form['#redirect'] = $base_url . '/admin/settings/clean-urls';
+    $form['clean_url_description'] = array(
+      '#type' => 'markup',
+      '#markup' => '<p>' . t('Use URLs like <code>example.com/user</code> instead of <code>example.com/?q=user</code>.') . ' ' . t('If you are directed to a <em>Page not found (404)</em> error after testing for clean URLs, see the <a href="@handbook">online handbook</a>.', array('@handbook' => 'http://drupal.org/node/15365')) . '</p>',
+    );
+    $form['clean_url_test'] = array(
+      '#type' => 'submit',
+      '#value' => t('Run the clean URL test'),
+    );
+  }
+
+  return $form;
 }
 
 /**

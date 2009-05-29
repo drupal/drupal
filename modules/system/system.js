@@ -17,21 +17,12 @@ Drupal.behaviors.cleanURLsSettingsCheck = {
       return;
     }
     var url = settings.basePath + 'admin/settings/clean-urls/check';
-    $('#clean-url .description span').html('<div id="testing">' + Drupal.t('Testing clean URLs...') + '</div>');
-    $('#clean-url p').hide();
     $.ajax({
       url: location.protocol + '//' + location.host + url,
       dataType: 'json',
       success: function () {
-        // Check was successful.
-        $('#clean-url input.form-radio').attr('disabled', false);
-        $('#clean-url .description span').append('<div class="ok">' + Drupal.t('Your server has been successfully tested to support this feature.') + '</div>');
-        $('#testing').hide();
-      },
-      error: function () {
-        // Check failed.
-        $('#clean-url .description span').append('<div class="warning">' + Drupal.t('Your system configuration does not currently support this feature. The <a href="http://drupal.org/node/15365">handbook page on Clean URLs</a> has additional troubleshooting information.') + '</div>');
-        $('#testing').hide();
+        // Check was successful. Redirect using a "clean URL". This will force the form that allows enabling clean URLs.
+        location = settings.basePath +"admin/settings/clean-urls";
       }
     });
     $('#clean-url').addClass('clean-url-processed');
