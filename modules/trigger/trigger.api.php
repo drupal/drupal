@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.api.php,v 1.3 2009/03/08 04:25:07 webchick Exp $
+// $Id: trigger.api.php,v 1.4 2009/05/29 19:15:08 dries Exp $
 
 /**
  * @file
@@ -88,7 +88,9 @@ function hook_action_info() {
  *   The action ID.
  */
 function hook_actions_delete($aid) {
-  db_query("DELETE FROM {actions_assignments} WHERE aid = '%s'", $aid);
+  db_delete('actions_assignments')
+    ->condition('aid', $aid)
+    ->execute();  
 }
 
 /**
