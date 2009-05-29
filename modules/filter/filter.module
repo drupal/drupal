@@ -423,15 +423,19 @@ function filter_list_format($format) {
  *   should specify $check = FALSE when viewing other people's content. When
  *   showing content that is not (yet) stored in the database (eg. upon preview),
  *   set to TRUE so the user's permissions are checked.
+ * @param $cache
+ *   Boolean whether to cache the filtered output in the {cache_filter} table.
+ *   The caller may set this to FALSE when the output is already cached
+ *   elsewhere to avoid duplicate cache lookups and storage.
  */
-function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $check = TRUE) {
+function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $check = TRUE, $cache = TRUE) {
   // When $check = TRUE, do an access check on $format.
   if (isset($text) && (!$check || filter_access($format))) {
     $format = filter_resolve_format($format);
 
     // Check for a cached version of this piece of text.
     $cache_id = $format . ':' . $langcode . ':' . md5($text);
-    if ($cached = cache_get($cache_id, 'cache_filter')) {
+    if ($cache && $cached = cache_get($cache_id, 'cache_filter')) {
       return $cached->data;
     }
 
@@ -453,7 +457,7 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $c
     }
 
     // Store in cache with a minimum expiration time of 1 day.
-    if (filter_format_allowcache($format)) {
+    if ($cache && filter_format_allowcache($format)) {
       cache_set($cache_id, $text, 'cache_filter', REQUEST_TIME + (60 * 60 * 24));
     }
   }

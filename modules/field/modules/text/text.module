@@ -110,18 +110,60 @@ function text_field_validate($obj_type, $object, $field, $instance, $items, &$er
   }
 }
 
+/**
+ * Implement hook_field_load().
+ *
+ * Where possible, generate the sanitized version of each field early so that
+ * it is cached in the field cache. This avoids looking up from the filter cache
+ * separately.
+ * @see text_field_sanitize().
+ */
+function text_field_load($obj_type, $objects, $field, $instances, &$items) {
+  global $language;
+
+  foreach ($objects as $id => $object) {
+    foreach ($items[$id] as $delta => $item) {
+      // TODO D7 : this code is really node-related.
+      if (!empty($instances[$id]['settings']['text_processing'])) {
+        $check = is_null($object) || (isset($object->build_mode) && $object->build_mode == NODE_BUILD_PREVIEW);
+
+        // Only process items with a cacheable format, the rest will be
+        // handled by text_field_sanitize().
+        if (filter_format_allowcache($item['format'])) {
+          $text = isset($item['value']) ? check_markup($item['value'], $item['format'], isset($object->language) ? $object->language : $language->language, $check, FALSE) : '';
+        }
+      }
+      else {
+        $text = check_plain($item['value']);
+      }
+      if (isset($text)) {
+        $items[$id][$delta]['safe'] = $text;
+      }
+    }
+  }
+}
+
+/**
+ * Implement hook_field_sanitize().
+ *
+ * @see text_field_load()
+ */
 function text_field_sanitize($obj_type, $object, $field, $instance, &$items) {
   global $language;
   foreach ($items as $delta => $item) {
-    // TODO D7 : this code is really node-related.
-    if (!empty($instance['settings']['text_processing'])) {
-      $check = is_null($object) || (isset($object->build_mode) && $object->build_mode == NODE_BUILD_PREVIEW);
-      $text = isset($item['value']) ? check_markup($item['value'], $item['format'], isset($object->language) ? $object->language : $language->language, $check) : '';
+    // Only sanitize items which were not already processed inside
+    // text_field_load(), i.e. items with uncacheable text formats.
+    if (!isset($items[$delta]['safe'])) {
+      // TODO D7 : this code is really node-related.
+      if (!empty($instance['settings']['text_processing'])) {
+        $check = is_null($object) || (isset($object->build_mode) && $object->build_mode == NODE_BUILD_PREVIEW);
+        $text = isset($item['value']) ? check_markup($item['value'], $item['format'], isset($object->language) ? $object->language : $language->language, $check) : '';
+      }
+      else {
+        $text = check_plain($item['value']);
+      }
+      $items[$delta]['safe'] = $text;
     }
-    else {
-      $text = check_plain($item['value']);
-    }
-    $items[$delta]['safe'] = $text;
   }
 }
 
