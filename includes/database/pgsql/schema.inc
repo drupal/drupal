@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.14 2009/05/25 13:42:53 dries Exp $
+// $Id: schema.inc,v 1.15 2009/05/29 01:51:46 webchick Exp $
 
 /**
  * @file
@@ -51,7 +51,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
         'blob_fields' => array(),
         'sequences' => array(),
       );
-      // Don't use {} around information_schema table.
+      // Don't use {} around information_schema.columns table.
       $result = db_query("SELECT column_name, data_type, column_default FROM information_schema.columns WHERE table_schema = :schema AND table_name = :table AND (data_type = 'bytea' OR (numeric_precision IS NOT NULL AND column_default LIKE :default))", array(':schema' => $schema, ':table' => $table_name, ':default' => '%nextval%'));
       foreach ($result as $column) {
         if ($column->data_type == 'bytea') {
