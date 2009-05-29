@@ -189,10 +189,10 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
 
 function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
   if ($success) {
-    drupal_set_message(t('The tests finished in @elapsed.', array('@elapsed' => $elapsed)));
+    drupal_set_message(t('The test run finished in @elapsed.', array('@elapsed' => $elapsed)));
   }
   else {
-    drupal_set_message(t('The tests did not successfully finish.'), 'error');
+    drupal_set_message(t('The test run did not successfully finish.'), 'error');
   }
   module_invoke_all('test_group_finished');
 }
@@ -266,7 +266,7 @@ function simpletest_clean_environment() {
   simpletest_clean_database();
   simpletest_clean_temporary_directories();
   $count = simpletest_clean_results_table();
-  drupal_set_message(t('Removed @count test results.', array('@count' => $count)));
+  drupal_set_message(format_plural($count, 'Removed 1 test result.', 'Removed @count test results.'));
 }
 
 /**
@@ -285,15 +285,15 @@ function simpletest_clean_database() {
   }
 
   if (count($ret) > 0) {
-    drupal_set_message(t('Removed @count left over tables.', array('@count' => count($ret))));
+    drupal_set_message(format_plural(count($ret), 'Removed 1 leftover table.', 'Removed @count leftover tables.'));
   }
   else {
-    drupal_set_message(t('No left over tables to remove.'));
+    drupal_set_message(t('No leftover tables to remove.'));
   }
 }
 
 /**
- * Find all left over temporary directories and remove them.
+ * Find all leftover temporary directories and remove them.
  */
 function simpletest_clean_temporary_directories() {
   $files = scandir(file_directory_path());
@@ -307,7 +307,7 @@ function simpletest_clean_temporary_directories() {
   }
 
   if ($count > 0) {
-    drupal_set_message(t('Removed @count temporary directories.', array('@count' => $count)));
+    drupal_set_message(format_plural($count, 'Removed 1 temporary directory.', 'Removed @count temporary directories.'));
   }
   else {
     drupal_set_message(t('No temporary directories to remove.'));
