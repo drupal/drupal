@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.test,v 1.24 2009/05/24 17:39:30 dries Exp $
+// $Id: aggregator.test,v 1.25 2009/05/30 11:12:12 dries Exp $
 
 /**
  * @file
@@ -55,7 +55,10 @@ class AggregatorTestCase extends DrupalWebTestCase {
   function getFeedEditArray($feed_url = NULL) {
     $feed_name = $this->randomName(10);
     if (!$feed_url) {
-      $feed_url = $GLOBALS['base_url'] . '/rss.xml?feed=' . $feed_name;
+      $feed_url = url('rss.xml', array(
+        'query' => 'feed=' . $feed_name,
+        'absolute' => TRUE,
+      ));
     }
     $edit = array(
       'title' => $feed_name,
@@ -169,6 +172,10 @@ class AggregatorTestCase extends DrupalWebTestCase {
    *   Path to valid OPML file.
    */
   function getValidOpml($feeds) {
+    // Properly escape URLs so that XML parsers don't choke on them.
+    foreach ($feeds as &$feed) {
+      $feed['url'] = htmlspecialchars($feed['url']);
+    }
     /**
      * Does not have an XML declaration, must pass the parser.
      */
