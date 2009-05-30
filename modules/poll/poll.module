@@ -159,7 +159,7 @@ function poll_block_view($delta = '') {
     if ($record) {
       $poll = node_load($record->nid);
       if ($poll->nid) {
-        $poll = poll_view($poll, TRUE, FALSE, TRUE);
+        $poll = poll_block_latest_poll_view($poll);
         $block['subject'] = t('Poll');
         $block['content'] = $poll->content;
         return $block;
@@ -541,36 +541,58 @@ function poll_delete($node) {
 }
 
 /**
- * Implement hook_view().
+ * Return content for 'latest poll' block.
  *
- * @param $block
- *   An extra parameter that adapts the hook to display a block-ready
- *   rendering of the poll.
+ * @param $node
+ *   The node object to load.
  */
-function poll_view($node, $teaser = FALSE, $block = FALSE) {
+function poll_block_latest_poll_view($node) {
   global $user;
   $output = '';
 
-  // Special display for side-block
-  if ($block) {
-    // No 'read more' link
-    $node->readmore = FALSE;
-    $node->teaser = '';
+  // This is necessary for shared objects because PHP doesn't copy objects, but
+  // passes them by reference.  So when the objects are cached it can result in
+  // the wrong output being displayed on subsequent calls.  The cloning and
+  // unsetting of $node->content prevents the block output from being the same
+  // as the node output.
+  $node = clone $node;
+  unset($node->content);
 
-    $links = module_invoke_all('link', 'node', $node, 1);
-    $links[] = array('title' => t('Older polls'), 'href' => 'poll', 'attributes' => array('title' => t('View the list of polls on this site.')));
-    if ($node->allowvotes && $block) {
-      $links[] = array('title' => t('Results'), 'href' => 'node/' . $node->nid . '/results', 'attributes' => array('title' => t('View the current poll results.')));
-    }
+  // No 'read more' link.
+  $node->readmore = FALSE;
+  $node->teaser = '';
 
-    $node->links = $links;
+  $links = module_invoke_all('link', 'node', $node, 1);
+  $links[] = array('title' => t('Older polls'), 'href' => 'poll', 'attributes' => array('title' => t('View the list of polls on this site.')));
+  if ($node->allowvotes) {
+    $links[] = array('title' => t('Results'), 'href' => 'node/' . $node->nid . '/results', 'attributes' => array('title' => t('View the current poll results.')));
   }
 
-  if (!empty($node->allowvotes) && ($block || empty($node->show_results))) {
-    $node->content['poll_view_voting'] = drupal_get_form('poll_view_voting', $node, $block);
+  $node->links = $links;
+
+  if (!empty($node->allowvotes)) {
+    $node->content['poll_view_voting'] = drupal_get_form('poll_view_voting', $node, TRUE);
   }
   else {
-    $node->content['poll_view_results'] = array('#markup' => poll_view_results($node, $teaser, $block));
+    $node->content['poll_view_results'] = array('#markup' => poll_view_results($node, TRUE, TRUE));
+  }
+
+  return $node;
+}
+
+
+/**
+ * Implement hook_view().
+ */
+function poll_view($node, $teaser = FALSE) {
+  global $user;
+  $output = '';
+
+  if (!empty($node->allowvotes) && empty($node->show_results)) {
+    $node->content['poll_view_voting'] = drupal_get_form('poll_view_voting', $node);
+  }
+  else {
+    $node->content['poll_view_results'] = array('#markup' => poll_view_results($node, $teaser));
   }
   return $node;
 }
@@ -599,7 +621,7 @@ function poll_teaser($node) {
  * @see poll_vote()
  * @see phptemplate_preprocess_poll_vote()
  */
-function poll_view_voting(&$form_state, $node, $block) {
+function poll_view_voting(&$form_state, $node, $block = FALSE) {
   if ($node->choice) {
     $list = array();
     foreach ($node->choice as $i => $choice) {
@@ -690,7 +712,7 @@ function template_preprocess_poll_vote(&$variables) {
 /**
  * Generates a graphical representation of the results of a poll.
  */
-function poll_view_results($node, $teaser, $block) {
+function poll_view_results($node, $teaser, $block = FALSE) {
   // Count the votes and find the maximum
   $total_votes = 0;
   $max_votes = 0;
