@@ -184,7 +184,7 @@ function filter_admin_format_form(&$form_state, $format) {
 function filter_admin_format_form_validate($form, &$form_state) {
   if (!isset($form_state['values']['format'])) {
     $name = trim($form_state['values']['name']);
-    $result = db_fetch_object(db_query("SELECT format FROM {filter_format} WHERE name='%s'", $name));
+    $result = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $name))->fetchField();
     if ($result) {
       form_set_error('name', t('Text format names must be unique. A format named %name already exists.', array('%name' => $name)));
     }
@@ -203,25 +203,34 @@ function filter_admin_format_form_submit($form, &$form_state) {
   // Add a new text format.
   if (!$format) {
     $new = TRUE;
-    db_query("INSERT INTO {filter_format} (name) VALUES ('%s')", $name);
-    $format = db_result(db_query("SELECT MAX(format) AS format FROM {filter_format}"));
+    db_insert('filter_format')
+      ->fields(array('name' => $name))
+      ->execute();
+    $format = db_query("SELECT MAX(format) AS format FROM {filter_format}")->fetchField();
     drupal_set_message(t('Added text format %format.', array('%format' => $name)));
   }
   else {
     drupal_set_message(t('The text format settings have been updated.'));
   }
-
-  db_query("DELETE FROM {filter} WHERE format = %d", $format);
+  db_delete('filter')
+    ->condition('format', $format)
+    ->execute();
+  $query = db_insert('filter')->fields(array('format', 'module', 'delta', 'weight'));
   foreach ($form_state['values']['filters'] as $id => $checked) {
     if ($checked) {
       list($module, $delta) = explode('/', $id);
       // Add new filters to the bottom.
       $weight = isset($current[$id]->weight) ? $current[$id]->weight : 10;
-      db_query("INSERT INTO {filter} (format, module, delta, weight) VALUES (%d, '%s', %d, %d)", $format, $module, $delta, $weight);
-
+      $query->values(array(
+        'format' => $format,
+        'module' => $module,
+        'delta'  => $delta,
+        'weight' => $weight,
+      ));
       // Check if there are any 'no cache' filters.
       $cache &= !module_invoke($module, 'filter', 'no cache', $delta);
     }
+    $query->execute();
   }
 
   // We store the roles as a string for ease of use.
