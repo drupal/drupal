@@ -2673,6 +2673,27 @@ function _user_password_dynamic_validation() {
 }
 
 /**
+ * Implementation of hook_node_load().
+ */
+function user_node_load($nodes, $types) {
+  // Build an array of all uids for node authors, keyed by nid.
+  $uids = array();
+  foreach ($nodes as $nid => $node) {
+    $uids[$nid] = $node->uid;
+  }
+
+  // Fetch name, picture, and data for these users.
+  $user_fields = db_query("SELECT uid, name, picture, data FROM {users} WHERE uid IN (:uids)", array(':uids' => $uids))->fetchAllAssoc('uid');
+
+  // Add these values back into the node objects.
+  foreach ($uids as $nid => $uid) {
+    $nodes[$nid]->name = $user_fields[$uid]->name;
+    $nodes[$nid]->picture = $user_fields[$uid]->picture;
+    $nodes[$nid]->data = $user_fields[$uid]->data;
+  }
+}
+
+/**
  * Implement hook_hook_info().
  */
 function user_hook_info() {

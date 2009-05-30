@@ -842,7 +842,6 @@ function node_load_multiple($nids = array(), $conditions = array(), $reset = FAL
     else {
       $query->join('node_revision', 'r', 'r.vid = n.vid');
     }
-    $query->join('users', 'u', 'u.uid = n.uid');
 
     // Add fields from the {node} table.
     $node_fields = drupal_schema_fields_sql('node');
@@ -862,10 +861,6 @@ function node_load_multiple($nids = array(), $conditions = array(), $reset = FAL
     unset($node_revision_fields['timestamp']);
     $query->addField('r', 'timestamp', 'revision_timestamp');
     $query->fields('r', $node_revision_fields);
-
-    // Add fields from the {users} table.
-    $user_fields = array('name', 'picture', 'data');
-    $query->fields('u', $user_fields);
 
     if ($nids) {
       $query->condition('n.nid', $nids, 'IN');
