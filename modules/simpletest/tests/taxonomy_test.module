@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy_test.module,v 1.4 2009/05/27 18:34:00 dries Exp $
+// $Id: taxonomy_test.module,v 1.5 2009/05/30 11:17:32 dries Exp $
 
 /**
  * @file
@@ -22,7 +22,12 @@ function taxonomy_test_taxonomy_term_insert($term) {
   if (!empty($term->antonyms)) {
     foreach (explode ("\n", str_replace("\r", '', $term->antonyms)) as $antonym) {
       if ($antonym) {
-        db_insert('term_antonym')->fields(array('tid' => $term->tid, 'name' => rtrim($antonym)))->execute();
+        db_insert('term_antonym')
+          ->fields(array(
+            'tid' => $term->tid,
+            'name' => rtrim($antonym),
+          ))
+          ->execute();
       }
     }
   }
@@ -36,7 +41,12 @@ function taxonomy_test_taxonomy_term_update($term) {
   if (!empty($term->antonyms)) {
     foreach (explode ("\n", str_replace("\r", '', $term->antonyms)) as $antonym) {
       if ($antonym) {
-        db_insert('term_antonym')->fields(array('tid' => $term->tid, 'name' => rtrim($antonym)))->execute();
+        db_insert('term_antonym')
+          ->fields(array(
+            'tid' => $term->tid,
+            'name' => rtrim($antonym),
+          ))
+          ->execute();
       }
     }
   }
@@ -46,7 +56,9 @@ function taxonomy_test_taxonomy_term_update($term) {
  * Implement hook_taxonomy_term_delete().
  */
 function taxonomy_test_taxonomy_term_delete($term) {
-  db_delete('term_antonym')->condition('tid', $term->tid)->execute();
+  db_delete('term_antonym')
+    ->condition('tid', $term->tid)
+    ->execute();
 }
 
 /**

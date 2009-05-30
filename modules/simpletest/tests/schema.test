@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.test,v 1.6 2009/05/24 17:39:34 dries Exp $
+// $Id: schema.test,v 1.7 2009/05/30 11:17:32 dries Exp $
 
 /**
  * @file
@@ -103,7 +103,9 @@ class SchemaTestCase extends DrupalWebTestCase {
 
   function tryInsert($table = 'test_table') {
     try {
-      db_query("INSERT INTO {" . $table . "} (id) VALUES (:id)", array(':id' => mt_rand(10, 20)));
+       db_insert($table)
+         ->fields(array('id' => mt_rand(10, 20)))
+         ->execute();
       return TRUE;
     }
     catch (Exception $e) {

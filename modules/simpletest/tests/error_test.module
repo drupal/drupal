@@ -1,5 +1,5 @@
 <?php
-// $Id: error_test.module,v 1.2 2009/05/27 18:34:00 dries Exp $
+// $Id: error_test.module,v 1.3 2009/05/30 11:17:32 dries Exp $
 
 /**
  * Implement hook_menu().
@@ -62,5 +62,5 @@ function error_test_trigger_exception() {
  */
 function error_test_trigger_pdo_exception() {
   define('SIMPLETEST_COLLECT_ERRORS', FALSE);
-  db_query("SELECT * FROM bananas_are_awesome");
+  db_query('SELECT * FROM bananas_are_awesome');
 }
