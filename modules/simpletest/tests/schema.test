@@ -103,7 +103,9 @@ class SchemaTestCase extends DrupalWebTestCase {
 
   function tryInsert($table = 'test_table') {
     try {
-      db_query("INSERT INTO {" . $table . "} (id) VALUES (:id)", array(':id' => mt_rand(10, 20)));
+       db_insert($table)
+         ->fields(array('id' => mt_rand(10, 20)))
+         ->execute();
       return TRUE;
     }
     catch (Exception $e) {

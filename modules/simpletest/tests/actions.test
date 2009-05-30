@@ -57,7 +57,7 @@ class ActionsConfigurationTestCase extends DrupalWebTestCase {
     $this->assertRaw(t('Action %action was deleted', array('%action' => $new_action_description)), t('Make sure that we get a delete confirmation message.'));
     $this->drupalGet('admin/settings/actions/manage');
     $this->assertNoText($new_action_description, t("Make sure the action description does not appear on the overview page after we've deleted the action."));
-    $exists = db_result(db_query("SELECT aid FROM {actions} WHERE callback = 'drupal_goto_action'"));
+    $exists = db_query('SELECT aid FROM {actions} WHERE callback = :callback', array(':callback' => 'drupal_goto_action'))->fetchField();
     $this->assertFalse($exists, t('Make sure the action is gone from the database after being deleted.'));
   }
 }

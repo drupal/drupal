@@ -121,7 +121,9 @@ abstract class DrupalTestCase {
     );
 
     // Store assertion for display after the test has completed.
-    db_insert('simpletest')->fields($assertion)->execute();
+    db_insert('simpletest')
+      ->fields($assertion)
+      ->execute();
 
     // Return to testing prefix.
     $db_prefix = $current_db_prefix;
@@ -679,7 +681,10 @@ class DrupalWebTestCase extends DrupalTestCase {
     node_save($node);
 
     // small hack to link revisions to our test user
-    db_query('UPDATE {node_revision} SET uid = %d WHERE vid = %d', $node->uid, $node->vid);
+    db_update('node_revision')
+      ->fields(array('uid' => $node->uid))
+      ->condition('vid', $node->vid)
+      ->execute();
     return $node;
   }
 
@@ -832,15 +837,22 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Create new role.
     $role_name = $this->randomName();
-    db_query("INSERT INTO {role} (name) VALUES ('%s')", $role_name);
-    $role = db_fetch_object(db_query("SELECT * FROM {role} WHERE name = '%s'", $role_name));
+    db_insert('role')
+      ->fields(array('name' => $role_name))
+      ->execute();
+    $role = db_query('SELECT * FROM {role} WHERE name = :name', array(':name' => $role_name))->fetchObject();
     $this->assertTrue($role, t('Created role of name: @role_name, id: @rid', array('@role_name' => $role_name, '@rid' => (isset($role->rid) ? $role->rid : t('-n/a-')))), t('Role'));
     if ($role && !empty($role->rid)) {
       // Assign permissions to role and mark it for clean-up.
+      $query = db_insert('role_permission')->fields(array('rid', 'permission'));
       foreach ($permissions as $permission_string) {
-        db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", $role->rid, $permission_string);
+        $query->values(array(
+          'rid' => $role->rid,
+          'permission' => $permission_string,
+        ));
       }
-      $count = db_result(db_query("SELECT COUNT(*) FROM {role_permission} WHERE rid = %d", $role->rid));
+      $query->execute();
+      $count = db_query('SELECT COUNT(*) FROM {role_permission} WHERE rid = :rid', array(':rid' => $role->rid))->fetchField();
       $this->assertTrue($count == count($permissions), t('Created permissions: @perms', array('@perms' => implode(', ', $permissions))), t('Role'));
       return $role->rid;
     }

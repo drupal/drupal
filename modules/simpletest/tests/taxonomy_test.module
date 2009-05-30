@@ -22,7 +22,12 @@ function taxonomy_test_taxonomy_term_insert($term) {
   if (!empty($term->antonyms)) {
     foreach (explode ("\n", str_replace("\r", '', $term->antonyms)) as $antonym) {
       if ($antonym) {
-        db_insert('term_antonym')->fields(array('tid' => $term->tid, 'name' => rtrim($antonym)))->execute();
+        db_insert('term_antonym')
+          ->fields(array(
+            'tid' => $term->tid,
+            'name' => rtrim($antonym),
+          ))
+          ->execute();
       }
     }
   }
@@ -36,7 +41,12 @@ function taxonomy_test_taxonomy_term_update($term) {
   if (!empty($term->antonyms)) {
     foreach (explode ("\n", str_replace("\r", '', $term->antonyms)) as $antonym) {
       if ($antonym) {
-        db_insert('term_antonym')->fields(array('tid' => $term->tid, 'name' => rtrim($antonym)))->execute();
+        db_insert('term_antonym')
+          ->fields(array(
+            'tid' => $term->tid,
+            'name' => rtrim($antonym),
+          ))
+          ->execute();
       }
     }
   }
@@ -46,7 +56,9 @@ function taxonomy_test_taxonomy_term_update($term) {
  * Implement hook_taxonomy_term_delete().
  */
 function taxonomy_test_taxonomy_term_delete($term) {
-  db_delete('term_antonym')->condition('tid', $term->tid)->execute();
+  db_delete('term_antonym')
+    ->condition('tid', $term->tid)
+    ->execute();
 }
 
 /**

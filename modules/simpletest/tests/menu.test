@@ -83,14 +83,14 @@ class MenuIncTestCase extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     $sql = "SELECT menu_name FROM {menu_links} WHERE router_path = 'menu_name_test'";
-    $name = db_result(db_query($sql));
+    $name = db_query($sql)->fetchField();
     $this->assertEqual($name, 'original', t('Menu name is "original".'));
 
     // Force a menu rebuild by going to the modules page.
     $this->drupalGet('admin/build/modules', array('query' => array("hook_menu_name" => 'changed')));
 
     $sql = "SELECT menu_name FROM {menu_links} WHERE router_path = 'menu_name_test'";
-    $name = db_result(db_query($sql));
+    $name = db_query($sql)->fetchField();
     $this->assertEqual($name, 'changed', t('Menu name was successfully changed after rebuild.'));
   }
 
@@ -98,9 +98,9 @@ class MenuIncTestCase extends DrupalWebTestCase {
    * Tests for menu hiearchy.
    */
   function testMenuHiearchy() {
-    $parent_link = db_query("SELECT * FROM {menu_links} WHERE link_path = :link_path", array(':link_path' => 'menu-test/hierarchy/parent'))->fetchAssoc();
-    $child_link = db_query("SELECT * FROM {menu_links} WHERE link_path = :link_path", array(':link_path' => 'menu-test/hierarchy/parent/child'))->fetchAssoc();
-    $unattached_child_link = db_query("SELECT * FROM {menu_links} WHERE link_path = :link_path", array(':link_path' => 'menu-test/hierarchy/parent/child2/child'))->fetchAssoc();
+    $parent_link = db_query('SELECT * FROM {menu_links} WHERE link_path = :link_path', array(':link_path' => 'menu-test/hierarchy/parent'))->fetchAssoc();
+    $child_link = db_query('SELECT * FROM {menu_links} WHERE link_path = :link_path', array(':link_path' => 'menu-test/hierarchy/parent/child'))->fetchAssoc();
+    $unattached_child_link = db_query('SELECT * FROM {menu_links} WHERE link_path = :link_path', array(':link_path' => 'menu-test/hierarchy/parent/child2/child'))->fetchAssoc();
 
     $this->assertEqual($child_link['plid'], $parent_link['mlid'], t('The parent of a directly attached child is correct.'));
     $this->assertEqual($unattached_child_link['plid'], $parent_link['mlid'], t('The parent of a non-directly attached child is correct.'));
@@ -142,14 +142,14 @@ class MenuRebuildTestCase extends DrupalWebTestCase {
    */
   function testMenuRebuildByVariable() {
     // Check if 'admin' path exists.
-    $admin_exists = db_result(db_query("SELECT path from {menu_router} WHERE path = 'admin'"));
+    $admin_exists = db_query('SELECT path from {menu_router} WHERE path = :path', array(':path' => 'admin'))->fetchField();
     $this->assertEqual($admin_exists, 'admin', t("The path 'admin/' exists prior to deleting."));
 
     // Delete the path item 'admin', and test that the path doesn't exist in the database.
     $delete = db_delete('menu_router')
       ->condition('path', 'admin')
       ->execute();
-    $admin_exists = db_result(db_query("SELECT path from {menu_router} WHERE path = 'admin'"));
+    $admin_exists = db_query('SELECT path from {menu_router} WHERE path = :path', array(':path' => 'admin'))->fetchField();
     $this->assertFalse($admin_exists, t("The path 'admin/' has been deleted and doesn't exist in the database."));
 
     // Now we enable the rebuild variable and trigger menu_execute_active_handler()
@@ -157,7 +157,7 @@ class MenuRebuildTestCase extends DrupalWebTestCase {
     variable_set('menu_rebuild_needed', TRUE);
     // menu_execute_active_handler() should trigger the rebuild.
     $this->drupalGet('<front>');
-    $admin_exists = db_result(db_query("SELECT path from {menu_router} WHERE path = 'admin'"));
+    $admin_exists = db_query('SELECT path from {menu_router} WHERE path = :path', array(':path' => 'admin'))->fetchField();
     $this->assertEqual($admin_exists, 'admin', t("The menu has been rebuilt, the path 'admin' now exists again."));
   }
 

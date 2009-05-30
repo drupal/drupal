@@ -568,7 +568,7 @@ class FileSaveUploadTest extends FileHookTestCase {
    * Test the file_save_upload() function.
    */
   function testNormal() {
-    $max_fid_after = db_result(db_query('SELECT MAX(fid) AS fid FROM {files}'));
+    $max_fid_after = db_query('SELECT MAX(fid) AS fid FROM {files}')->fetchField();
     $this->assertTrue($max_fid_after > $this->maxFidBefore, t('A new file was created.'));
     $file1 = file_load($max_fid_after);
     $this->assertTrue($file1, t('Loaded the file.'));

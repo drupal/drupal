@@ -37,7 +37,11 @@ class ModuleUnitTest extends DrupalWebTestCase {
     $this->assertModuleList($base_module_list, t('After adding a module'));
 
     // Try to mess with the module weights.
-    db_query("UPDATE {system} SET weight = 20 WHERE name = 'path' AND type = 'module'");
+    db_update('system')
+      ->fields(array('weight' => 20))
+      ->condition('name', 'path')
+      ->condition('type', 'module')
+      ->execute();
     // Reset the module list.
     module_list(TRUE);
     // Move path at the end of the array.
