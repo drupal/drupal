@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.325 2009/05/24 17:39:30 dries Exp $
+// $Id: menu.inc,v 1.326 2009/05/30 13:11:38 dries Exp $
 
 /**
  * @file
@@ -809,13 +809,14 @@ function menu_tree_output($tree) {
 
   $num_items = count($items);
   foreach ($items as $i => $data) {
-    $extra_class = NULL;
+    $extra_class = array();
     if ($i == 0) {
-      $extra_class = 'first';
+      $extra_class[] = 'first';
     }
     if ($i == $num_items - 1) {
-      $extra_class = 'last';
+      $extra_class[] = 'last';
     }
+    $extra_class = implode(' ', $extra_class);
     $link = theme('menu_item_link', $data['link']);
     if ($data['below']) {
       $output .= theme('menu_item', $link, $data['link']['has_children'], menu_tree_output($data['below']), $data['link']['in_active_trail'], $extra_class);
