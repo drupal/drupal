@@ -106,7 +106,7 @@ function drupal_get_region_content($region = NULL, $delimiter = ' ') {
  *   the current page.
  */
 function drupal_set_breadcrumb($breadcrumb = NULL) {
-  static $stored_breadcrumb;
+  $stored_breadcrumb = &drupal_static(__FUNCTION__);
 
   if (!is_null($breadcrumb)) {
     $stored_breadcrumb = $breadcrumb;
@@ -146,7 +146,7 @@ function drupal_get_rdf_namespaces() {
  * This function can be called as long the headers aren't sent.
  */
 function drupal_add_html_head($data = NULL) {
-  static $stored_head = '';
+  $stored_head = &drupal_static(__FUNCTION__, '');
 
   if (!is_null($data)) {
     $stored_head .= $data . "\n";
@@ -180,7 +180,7 @@ function drupal_clear_path_cache() {
  *   The title of the feed.
  */
 function drupal_add_feed($url = NULL, $title = '') {
-  static $stored_feed_links = array();
+  $stored_feed_links = &drupal_static(__FUNCTION__, array());
 
   if (!is_null($url) && !isset($stored_feed_links[$url])) {
     $stored_feed_links[$url] = theme('feed_icon', $url, $title);
@@ -780,6 +780,8 @@ function _drupal_log_error($error, $fatal = FALSE) {
   // When running inside the testing framework, we relay the errors
   // to the tested site by the way of HTTP headers.
   if (preg_match("/^simpletest\d+/", $_SERVER['HTTP_USER_AGENT']) && !headers_sent() && (!defined('SIMPLETEST_COLLECT_ERRORS') || SIMPLETEST_COLLECT_ERRORS)) {
+    // $number does not use drupal_static as it should not be reset
+    // as it uniquely identifies each PHP error.
     static $number = 0;
     $assertion = array(
       $error['%message'],
@@ -897,7 +899,7 @@ function _fix_gpc_magic_files(&$item, $key) {
  * Fix double-escaping problems caused by "magic quotes" in some PHP installations.
  */
 function fix_gpc_magic() {
-  static $fixed = FALSE;
+  $fixed = &drupal_static(__FUNCTION__, FALSE);
   if (!$fixed && ini_get('magic_quotes_gpc')) {
     array_walk($_GET, '_fix_gpc_magic');
     array_walk($_POST, '_fix_gpc_magic');
@@ -1103,7 +1105,7 @@ function fix_gpc_magic() {
  */
 function t($string, $args = array(), $langcode = NULL) {
   global $language;
-  static $custom_strings;
+  $custom_strings = &drupal_static(__FUNCTION__);
 
   if (!isset($langcode)) {
     $langcode = isset($language->language) ? $language->language : 'en';
@@ -1836,7 +1838,7 @@ function format_interval($timestamp, $granularity = 2, $langcode = NULL) {
  *   A translated date string in the requested format.
  */
 function format_date($timestamp, $type = 'medium', $format = '', $timezone = NULL, $langcode = NULL) {
-  static $timezones = array();
+  $timezones = &drupal_static(__FUNCTION__, array());
   if (!isset($timezone)) {
     global $user;
     if (variable_get('configurable_timezones', 1) && $user->uid && $user->timezone) {
@@ -1989,7 +1991,7 @@ function url($path = NULL, array $options = array()) {
   }
 
   global $base_url;
-  static $script;
+  $script = &drupal_static(__FUNCTION__);
 
   if (!isset($script)) {
     // On some web servers, such as IIS, we can't omit "index.php". So, we
@@ -2500,7 +2502,7 @@ function drupal_build_css_cache($types, $filename) {
  * This function will prefix all paths within a CSS file.
  */
 function _drupal_build_css_path($matches, $base = NULL) {
-  static $_base;
+  $_base = &drupal_static(__FUNCTION__);
   // Store base path for preg_replace_callback.
   if (isset($base)) {
     $_base = $base;
@@ -2535,6 +2537,7 @@ function _drupal_build_css_path($matches, $base = NULL) {
  *   Contents of the stylesheet, including any resolved @import commands.
  */
 function drupal_load_stylesheet($file, $optimize = NULL) {
+  // $_optimize does not use drupal_static as it is set by $optimize.
   static $_optimize;
   // Store optimization parameter for preg_replace_callback with nested @import loops.
   if (isset($optimize)) {
@@ -3020,7 +3023,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
  * @see theme_menu_overview_form()
  */
 function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgroup = NULL, $source = NULL, $hidden = TRUE, $limit = 0) {
-  static $js_added = FALSE;
+  $js_added = &drupal_static(__FUNCTION__, FALSE);
   if (!$js_added) {
     // Add the table drag JavaScript to the page before the module JavaScript
     // to ensure that table drag behaviors are registered before any module
@@ -3153,6 +3156,7 @@ function drupal_urlencode($text) {
  *   The number of characters (bytes) to return in the string.
  */
 function drupal_random_bytes($count)  {
+  // $random_state does not use drupal_static as it stores random bytes.
   static $random_state;
   // We initialize with the somewhat random PHP process ID on the first call.
   if (empty($random_state)) {
@@ -3224,7 +3228,7 @@ function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
 }
 
 function _drupal_bootstrap_full() {
-  static $called;
+  $called = &drupal_static(__FUNCTION__);
 
   if ($called) {
     return;
@@ -3722,10 +3726,10 @@ function element_sort($a, $b) {
 /**
  * Retrieve the default properties for the defined element type.
  */
-function element_info($type, $refresh = NULL) {
-  static $cache;
+function element_info($type) {
+  $cache = &drupal_static(__FUNCTION__);
 
-  if (!isset($cache) || $refresh) {
+  if (!isset($cache)) {
     $basic_defaults = element_basic_defaults();
     $cache = array();
     foreach (module_implements('elements') as $module) {
