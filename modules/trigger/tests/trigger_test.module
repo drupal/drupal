@@ -20,6 +20,14 @@ function trigger_test_action_info() {
         'cron' => array('run'),
       ),
     ),
+    'trigger_test_system_cron_conf_action' => array(
+      'type' => 'system',
+      'description' => t('Cron test configurable action'),
+      'configurable' => TRUE,
+      'hooks' => array(
+        'cron' => array('run'),
+      ),
+    ),
   );
 }
 
@@ -29,4 +37,40 @@ function trigger_test_action_info() {
 function trigger_test_system_cron_action() {
   // Indicate successful execution by setting a persistent variable.
   variable_set('trigger_test_system_cron_action', TRUE);
+}
+
+/**
+ * Implement a configurable Drupal action.
+ */
+function trigger_test_system_cron_conf_action($object, $context) {
+  // Indicate successful execution by incrementing a persistent variable.
+  $value = variable_get('trigger_test_system_cron_conf_action', 0) + 1;
+  variable_set('trigger_test_system_cron_conf_action', $value);
+}
+
+/**
+ * Form for configurable test action.
+ */
+function trigger_test_system_cron_conf_action_form($context) {
+  if (!isset($context['subject'])) {
+    $context['subject'] = '';
+  }
+  $form['subject'] = array(
+    '#type' => 'textfield',
+    '#default_value' => $context['subject'],
+  );
+  return $form;
+}
+
+/**
+ * Form submission handler for configurable test action.
+ */
+function trigger_test_system_cron_conf_action_submit($form, $form_state) {
+  $form_values = $form_state['values'];
+  // Process the HTML form to store configuration. The keyed array that
+  // we return will be serialized to the database.
+  $params = array(
+    'subject' => $form_values['subject'],
+  );
+  return $params;
 }

@@ -47,7 +47,7 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
   }
   $actions = array();
   $available_actions = actions_list();
-  $result = array();
+  $actions_result = array();
   if (is_array($action_ids)) {
     $conditions = array();
     foreach ($action_ids as $action_id) {
@@ -82,11 +82,11 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
       if (is_numeric($action_id)) {
         $function = $params['callback'];
         $context = array_merge($context, $params);
-        $result[$action_id] = $function($object, $context, $a1, $a2);
+        $actions_result[$action_id] = $function($object, $context, $a1, $a2);
       }
       // Singleton action; $action_id is the function name.
       else {
-        $result[$action_id] = $action_id($object, $context, $a1, $a2);
+        $actions_result[$action_id] = $action_id($object, $context, $a1, $a2);
       }
     }
   }
@@ -97,15 +97,15 @@ function actions_do($action_ids, $object = NULL, $context = NULL, $a1 = NULL, $a
       $action = db_query("SELECT callback, parameters FROM {actions} WHERE aid = :aid", array(':aid' => $action_ids))->fetchObject();
       $function = $action->callback;
       $context = array_merge($context, unserialize($action->parameters));
-      $result[$action_ids] = $function($object, $context, $a1, $a2);
+      $actions_result[$action_ids] = $function($object, $context, $a1, $a2);
     }
     // Singleton action; $action_ids is the function name.
     else {
-      $result[$action_ids] = $action_ids($object, $context, $a1, $a2);
+      $actions_result[$action_ids] = $action_ids($object, $context, $a1, $a2);
     }
   }
   $stack--;
-  return $result;
+  return $actions_result;
 }
 
 /**

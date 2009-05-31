@@ -127,25 +127,51 @@ class TriggerCronTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Assign an action to a trigger, then pull the trigger, and make sure the actions fire.
+   * Test assigning multiple actions to the cron trigger.
+   *
+   * This test ensures that both simple and multiple complex actions
+   * succeed properly. This is done in the cron trigger test because
+   * cron allows passing multiple actions in at once.
    */
   function testActionsCron() {
-    $action = 'trigger_test_system_cron_action';
-    $hash = md5($action);
-
-    // Create administrative user.
+    // Create an administrative user.
     $test_user = $this->drupalCreateUser(array('administer actions'));
     $this->drupalLogin($test_user);
-
-    // Select our test action and assign it to a cron run trigger.
-    $edit = array('aid' => $hash);
+ 
+    // Assign a non-configurable action to the cron run trigger.
+    $edit = array('aid' => md5('trigger_test_system_cron_action'));
     $this->drupalPost('admin/build/trigger/cron', $edit, t('Assign'));
-
+ 
+    // Assign a configurable action to the cron trigger.
+    $hash = md5('trigger_test_system_cron_conf_action');
+    $action_description = $this->randomName();
+    $edit = array(
+      'actions_description' => $action_description,
+      'subject' => $action_description,
+    );
+    $this->drupalPost('admin/settings/actions/configure/' . $hash, $edit, t('Save'));
+    $edit = array('aid' => md5('1'));
+    $this->drupalPost('admin/build/trigger/cron', $edit, t('Assign'));
+ 
+    // Add a second configurable action to the cron trigger.
+    $action_description = $this->randomName();
+    $edit = array(
+      'actions_description' => $action_description,
+      'subject' => $action_description,
+    );
+    $this->drupalPost('admin/settings/actions/configure/' . $hash, $edit, t('Save'));
+    $edit = array('aid' => md5('2'));
+    $this->drupalPost('admin/build/trigger/cron', $edit, t('Assign'));
+ 
     // Force a cron run.
     drupal_cron_run();
-
-    // Make sure the actions fire.
+ 
+    // Make sure the non-configurable action has fired.
     $action_run = variable_get('trigger_test_system_cron_action', FALSE);
     $this->assertTrue($action_run, t('Check that the cron run triggered the test action.'));
+ 
+    // Make sure that both configurable actions have fired.
+    $action_run = variable_get('trigger_test_system_cron_conf_action', 0) == 2;
+    $this->assertTrue($action_run, t('Check that the cron run triggered both complex actions.'));
   }
 }
