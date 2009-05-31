@@ -1,4 +1,4 @@
-// $Id: vertical-tabs.js,v 1.4 2009/04/27 20:19:35 webchick Exp $
+// $Id: vertical-tabs.js,v 1.5 2009/05/31 00:51:41 webchick Exp $
 
 (function ($) {
 
@@ -111,7 +111,7 @@ Drupal.theme.prototype.verticalTab = function (settings) {
   tab.item = $('<li class="vertical-tab-button"></li>')
     .append(tab.link = $('<a href="#"></a>')
       .append(tab.title = $('<strong></strong>').text(settings.title))
-      .append(tab.summary = $('<span class="summary"></span>')
+      .append(tab.summary = $('<small class="summary"></small>')
     )
   );
   return tab;

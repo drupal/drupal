@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.56 2009/05/28 16:44:07 webchick Exp $ */
+/* $Id: style.css,v 1.57 2009/05/31 00:51:41 webchick Exp $ */
 
 /**
  * Generic elements
@@ -884,6 +884,18 @@ div.vertical-tabs ul.vertical-tabs-list {
 div.vertical-tabs ul.vertical-tabs-list li {
   background-color: #edf5fa;
   border-color: #d9eaf5;
+}
+
+div.vertical-tabs ul.vertical-tabs-list li strong {
+  font-weight: normal;
+}
+
+div.vertical-tabs ul.vertical-tabs-list li.selected strong {
+  font-weight: bold;
+}
+
+div.vertical-tabs ul.vertical-tabs-list li.selected small {
+  color: #898989;
 }
 
 div.vertical-tabs ul.vertical-tabs-list li.selected {
