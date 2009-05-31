@@ -191,3 +191,35 @@ class NonDefaultBlockAdmin extends DrupalWebTestCase {
     $this->assertRaw('stark/layout.css', t('Stark CSS found'));
   }
 }
+
+/**
+ * Test the block system with admin themes.
+ */
+class BlockAdminThemeTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => t('Admin theme block admin accessibility'),
+      'description' => t("Check whether the block administer page for a disabled theme acccessible if and only if it's the admin theme."),
+      'group' => t('Block'),
+    );
+  }
+  
+  /**
+   * Check for the accessibility of the admin theme on the  block admin page.
+   */
+  function testAdminTheme() {
+    // Create administrative user.
+    $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer site configuration'));
+    $this->drupalLogin($admin_user);
+
+    // Ensure that access to block admin page is denied when theme is disabled.
+    $this->drupalGet('admin/build/block/list/stark');
+    $this->assertResponse(403, t('The block admin page for a disabled theme can not be accessed'));
+
+    // Enable admin theme and confirm that tab is accessible.
+    $edit['admin_theme'] = 'stark';
+    $this->drupalPost('admin/build/themes', $edit, t('Save configuration'));
+    $this->drupalGet('admin/build/block/list/stark');
+    $this->assertResponse(200, t('The block admin page for the admin theme can be accessed'));
+  }
+}
