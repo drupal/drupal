@@ -886,6 +886,18 @@ div.vertical-tabs ul.vertical-tabs-list li {
   border-color: #d9eaf5;
 }
 
+div.vertical-tabs ul.vertical-tabs-list li strong {
+  font-weight: normal;
+}
+
+div.vertical-tabs ul.vertical-tabs-list li.selected strong {
+  font-weight: bold;
+}
+
+div.vertical-tabs ul.vertical-tabs-list li.selected small {
+  color: #898989;
+}
+
 div.vertical-tabs ul.vertical-tabs-list li.selected {
   background: #fff repeat-x 0 0;
 }

@@ -47,11 +47,6 @@ div.vertical-tabs ul.vertical-tabs-list li a:focus {
 div.vertical-tabs ul.vertical-tabs-list li a:hover {
   text-decoration: none;
 }
-div.vertical-tabs ul.vertical-tabs-list li strong {
-  /* Strong tags are used around tab titles to indicate importance; however,
-     only the currently active tab should actually look bold. */
-  font-weight:normal;
-}
 div.vertical-tabs ul.vertical-tabs-list li.selected {
   background: #fff;
   border-right-width: 0;
@@ -60,8 +55,8 @@ div.vertical-tabs ul.vertical-tabs-list li.selected {
 div.vertical-tabs ul.vertical-tabs-list li.selected a:focus {
   outline: 0;
 }
-div.vertical-tabs ul.vertical-tabs-list li.selected strong {
-  font-weight: bold;
+div.vertical-tabs ul.vertical-tabs-list li.selected strong,
+div.vertical-tabs ul.vertical-tabs-list li.selected small {
   color: #000;
 }
 div.vertical-tabs ul.vertical-tabs-list .summary {
