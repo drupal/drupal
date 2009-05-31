@@ -483,7 +483,10 @@ function block_form_system_performance_settings_alter(&$form, &$form_state) {
  * Implement hook_form_FORM_ID_alter().
  */
 function block_form_system_themes_form_alter(&$form, &$form_state) {
-  $form['#submit'][] = 'block_system_themes_form_submit';
+  // This function needs to fire before the theme changes are recorded in the
+  // database, otherwise it will populate the default list of blocks from the
+  // new theme, which is empty.
+  array_unshift($form['#submit'], 'block_system_themes_form_submit');
 }
 
 /**

@@ -193,6 +193,50 @@ class NonDefaultBlockAdmin extends DrupalWebTestCase {
 }
 
 /**
+ * Test blocks correctly initialized when picking a new default theme.
+ */
+class NewDefaultThemeBlocks extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => t('New default theme blocks'),
+      'description' => t('Checks that the new default theme gets blocks.'),
+      'group' => t('Block'),
+    );
+  }
+  
+  /**
+   * Check the enabled Garland blocks are correctly copied over.
+   */
+  function testNewDefaultThemeBlocks() {
+    // Create administrative user.
+    $admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->drupalLogin($admin_user);
+
+    // Ensure no other theme's blocks are in the block table yet.
+    $count = db_query_range("SELECT 1 FROM {block} WHERE theme != 'garland'", 0, 1)->fetchField();
+    $this->assertFalse($count, t('Only Garland has blocks.'));
+
+    // Populate list of all blocks for matching against new theme.
+    $blocks = array();
+    $result = db_query('SELECT * FROM {block}');
+    foreach ($result as $block) {
+      // $block->theme and $block->bid will not match, so remove them.
+      unset($block->theme, $block->bid);
+      $blocks[$block->module][$block->delta] = $block;
+    }
+
+    // Turn on the Stark theme and ensure that it contains all of the blocks
+    // that Garland did.
+    $this->drupalPost('admin/build/themes', array('theme_default' => 'stark'), t('Save configuration'));
+    $result = db_query("SELECT * FROM {block} WHERE theme='stark'");
+    foreach ($result as $block) {
+      unset($block->theme, $block->bid);
+      $this->assertEqual($blocks[$block->module][$block->delta], $block, t('Block matched'));
+    }
+  }
+}
+
+/**
  * Test the block system with admin themes.
  */
 class BlockAdminThemeTestCase extends DrupalWebTestCase {
