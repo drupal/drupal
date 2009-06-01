@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.333 2009/06/01 11:23:27 dries Exp $
+// $Id: system.install,v 1.334 2009/06/01 22:07:10 dries Exp $
 
 /**
  * @file
@@ -681,6 +681,9 @@ function system_schema() {
       'timestamp' => array('timestamp'),
     ),
     'primary key' => array('fid'),
+    'foreign keys' => array(
+      'uid' => array('users' => 'uid'),
+    ),
   );
 
   $schema['flood'] = array(
@@ -1236,6 +1239,9 @@ function system_schema() {
     'indexes' => array(
       'timestamp' => array('timestamp'),
       'uid' => array('uid'),
+    ),
+    'foreign keys' => array(
+      'uid' => array('users' => 'uid'),
     ),
   );
 

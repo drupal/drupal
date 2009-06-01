@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.34 2009/05/27 18:33:56 dries Exp $
+// $Id: comment.install,v 1.35 2009/06/01 22:07:08 dries Exp $
 
 /**
  * @file
@@ -261,6 +261,9 @@ function comment_schema() {
       'status' => array('status'),
     ),
     'primary key' => array('cid'),
+    'foreign keys' => array(
+      'nid' => array('node' => 'nid'),
+    ),
   );
 
   $schema['node_comment_statistics'] = array(
@@ -302,6 +305,9 @@ function comment_schema() {
     'primary key' => array('nid'),
     'indexes' => array(
       'node_comment_timestamp' => array('last_comment_timestamp'),
+    ),
+    'foreign keys' => array(
+      'nid' => array('node' => 'nid'),
     ),
   );
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.install,v 1.11 2009/05/27 18:34:02 dries Exp $
+// $Id: upload.install,v 1.12 2009/06/01 22:07:10 dries Exp $
 
 /**
  * @file
@@ -83,6 +83,11 @@ function upload_schema() {
       ),
     ),
     'primary key' => array('vid', 'fid'),
+    'foreign keys' => array(
+      'fid' => array('files' => 'fid'),
+      'nid' => array('node' => 'nid'),
+      'vid' => array('node' => 'vid'),
+    ),
     'indexes' => array(
       'fid' => array('fid'),
       'nid' => array('nid'),

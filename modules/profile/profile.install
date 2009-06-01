@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.install,v 1.19 2009/05/27 18:34:00 dries Exp $
+// $Id: profile.install,v 1.20 2009/06/01 22:07:09 dries Exp $
 
 /**
  * @file
@@ -148,6 +148,10 @@ function profile_schema() {
     'primary key' => array('uid', 'fid'),
     'indexes' => array(
       'fid' => array('fid'),
+    ),
+    'foreign keys' => array(
+      'fid' => array('profile_field' => 'fid'),
+      'uid' => array('users' => 'uid'),
     ),
   );
 
