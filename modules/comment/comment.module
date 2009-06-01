@@ -436,7 +436,8 @@ function comment_node_view($node, $teaser) {
             'title' => format_plural($node->comment_count, '1 comment', '@count comments'),
             'href' => "node/$node->nid",
             'attributes' => array('title' => t('Jump to the first comment of this posting.')),
-            'fragment' => 'comments'
+            'fragment' => 'comments',
+            'html' => TRUE,
           );
 
           $new = comment_num_new($node->nid);
@@ -446,7 +447,8 @@ function comment_node_view($node, $teaser) {
               'href' => "node/$node->nid",
               'query' => comment_new_page_count($node->comment_count, $new, $node),
               'attributes' => array('title' => t('Jump to the first new comment of this posting.')),
-              'fragment' => 'new'
+              'fragment' => 'new',
+              'html' => TRUE,
             );
           }
         }
@@ -457,7 +459,8 @@ function comment_node_view($node, $teaser) {
                 'title' => t('Add new comment'),
                 'href' => "comment/reply/$node->nid",
                 'attributes' => array('title' => t('Add a new comment to this page.')),
-                'fragment' => 'comment-form'
+                'fragment' => 'comment-form',
+                'html' => TRUE,
               );
             }
             else {
@@ -477,7 +480,8 @@ function comment_node_view($node, $teaser) {
               'title' => t('Add new comment'),
               'href' => "comment/reply/$node->nid",
               'attributes' => array('title' => t('Share your thoughts and opinions related to this posting.')),
-              'fragment' => 'comment-form'
+              'fragment' => 'comment-form',
+              'html' => TRUE,
             );
           }
         }
@@ -999,20 +1003,24 @@ function comment_links($comment, $return = 1) {
     if (user_access('administer comments') && user_access('post comments')) {
       $links['comment_delete'] = array(
         'title' => t('delete'),
-        'href' => "comment/delete/$comment->cid"
+        'href' => "comment/delete/$comment->cid",
+        'html' => TRUE,
       );
       $links['comment_edit'] = array(
         'title' => t('edit'),
-        'href' => "comment/edit/$comment->cid"
+        'href' => "comment/edit/$comment->cid",
+        'html' => TRUE,
       );
       $links['comment_reply'] = array(
         'title' => t('reply'),
-        'href' => "comment/reply/$comment->nid/$comment->cid"
+        'href' => "comment/reply/$comment->nid/$comment->cid",
+        'html' => TRUE,
       );
       if ($comment->status == COMMENT_NOT_PUBLISHED) {
         $links['comment_approve'] = array(
           'title' => t('approve'),
-          'href' => "comment/approve/$comment->cid"
+          'href' => "comment/approve/$comment->cid",
+          'html' => TRUE,
         );
       }
     }
@@ -1020,17 +1028,20 @@ function comment_links($comment, $return = 1) {
       if (comment_access('edit', $comment)) {
         $links['comment_edit'] = array(
           'title' => t('edit'),
-          'href' => "comment/edit/$comment->cid"
+          'href' => "comment/edit/$comment->cid",
+          'html' => TRUE,
         );
       }
       $links['comment_reply'] = array(
         'title' => t('reply'),
-        'href' => "comment/reply/$comment->nid/$comment->cid"
+        'href' => "comment/reply/$comment->nid/$comment->cid",
+        'html' => TRUE,
       );
     }
     else {
       $node = node_load($comment->nid);
       $links['comment_forbidden']['title'] = theme('comment_post_forbidden', $node);
+      $links['comment_forbidden']['html'] = TRUE;
     }
   }
 
