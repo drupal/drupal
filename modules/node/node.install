@@ -124,6 +124,10 @@ function node_schema() {
     'unique keys' => array(
       'vid' => array('vid'),
     ),
+    'foreign keys' => array(
+      'vid' => array('node_revision' => 'vid'),
+      'uid' => array('users' => 'uid'),
+    ),
     'primary key' => array('nid'),
   );
 
@@ -177,6 +181,7 @@ function node_schema() {
       ),
     ),
     'primary key' => array('nid', 'gid', 'realm'),
+    'foreign keys' => array('node' => 'nid'),
   );
 
   $schema['node_revision'] = array(
@@ -244,6 +249,10 @@ function node_schema() {
       'uid' => array('uid'),
     ),
     'primary key' => array('vid'),
+    'foreign keys' => array(
+      'node' => 'nid',
+      'users' => 'uid'
+    ),
   );
 
   $schema['node_type'] = array(

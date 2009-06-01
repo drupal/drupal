@@ -60,6 +60,9 @@ function blogapi_schema() {
     'indexes' => array(
       'uid' => array('uid'),
     ),
+    'foreign keys' => array(
+      'uid' => array('users' => 'uid'),
+    ),
   );
 
   return $schema;

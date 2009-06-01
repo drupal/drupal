@@ -99,6 +99,10 @@ function forum_schema() {
       'tid' => array('tid'),
     ),
     'primary key' => array('vid'),
+    'foreign keys' => array(
+      'nid' => array('node' => 'nid'),
+      'vid' => array('node' => 'vid'),
+    ),
   );
 
   return $schema;

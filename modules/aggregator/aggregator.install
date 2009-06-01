@@ -89,6 +89,9 @@ function aggregator_schema() {
     'indexes' => array(
       'fid' => array('fid'),
     ),
+    'foreign keys' => array(
+      'cid' => array('aggregator_category' => 'cid'),
+    ),
   );
 
   $schema['aggregator_category_item'] = array(
@@ -110,6 +113,9 @@ function aggregator_schema() {
     'primary key' => array('cid', 'iid'),
     'indexes' => array(
       'iid' => array('iid'),
+    ),
+    'foreign keys' => array(
+      'cid' => array('aggregator_category' => 'cid'),
     ),
   );
 
@@ -257,6 +263,9 @@ function aggregator_schema() {
     'primary key' => array('iid'),
     'indexes' => array(
       'fid' => array('fid'),
+    ),
+    'foreign keys' => array(
+      'fid' => array('aggregator_feed' => 'fid'),
     ),
   );
 

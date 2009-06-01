@@ -83,6 +83,11 @@ function upload_schema() {
       ),
     ),
     'primary key' => array('vid', 'fid'),
+    'foreign keys' => array(
+      'fid' => array('files' => 'fid'),
+      'nid' => array('node' => 'nid'),
+      'vid' => array('node' => 'vid'),
+    ),
     'indexes' => array(
       'fid' => array('fid'),
       'nid' => array('nid'),

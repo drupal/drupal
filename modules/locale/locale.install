@@ -431,6 +431,9 @@ function locale_schema() {
       ),
     ),
     'primary key' => array('language', 'lid', 'plural'),
+    'foreign keys' => array(
+      'lid' => array('locales_source' => 'lid'),
+    ),
     'indexes' => array(
       'lid'      => array('lid'),
       'plid'     => array('plid'),

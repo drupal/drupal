@@ -681,6 +681,9 @@ function system_schema() {
       'timestamp' => array('timestamp'),
     ),
     'primary key' => array('fid'),
+    'foreign keys' => array(
+      'uid' => array('users' => 'uid'),
+    ),
   );
 
   $schema['flood'] = array(
@@ -1236,6 +1239,9 @@ function system_schema() {
     'indexes' => array(
       'timestamp' => array('timestamp'),
       'uid' => array('uid'),
+    ),
+    'foreign keys' => array(
+      'uid' => array('users' => 'uid'),
     ),
   );
 

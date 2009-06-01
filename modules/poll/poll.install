@@ -51,6 +51,9 @@ function poll_schema() {
       ),
     ),
     'primary key' => array('nid'),
+    'foreign keys' => array(
+      'nid' => array('node' => 'nid'),
+    ),
   );
 
   $schema['poll_choice'] = array(
@@ -94,6 +97,9 @@ function poll_schema() {
       'nid' => array('nid'),
     ),
     'primary key' => array('chid'),
+    'foreign keys' => array(
+      'nid' => array('node' => 'nid'),
+    ),
   );
 
   $schema['poll_vote'] = array(
@@ -133,6 +139,10 @@ function poll_schema() {
       ),
     ),
     'primary key' => array('nid', 'uid', 'hostname'),
+    'foreign keys' => array(
+      'nid' => array('node' => 'nid'),
+      'uid' => array('users' => 'uid'),
+    ),
     'indexes' => array(
       'chid'     => array('chid'),
       'hostname' => array('hostname'),

@@ -100,24 +100,44 @@
  *
  * @code
  * $schema['node'] = array(
+ *   'description' => 'The base table for nodes.',
  *   'fields' => array(
- *     'nid'      => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
- *     'uid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
- *     'vid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
- *     'type'     => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
- *     'title'    => array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''),
+ *     'nid'       => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+ *     'vid'       => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE,'default' => 0),
+ *     'type'      => array('type' => 'varchar','length' => 32,'not null' => TRUE, 'default' => ''),
+ *     'language'  => array('type' => 'varchar','length' => 12,'not null' => TRUE,'default' => ''),
+ *     'title'     => array('type' => 'varchar','length' => 255,'not null' => TRUE, 'default' => ''),
+ *     'uid'       => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+ *     'status'    => array('type' => 'int', 'not null' => TRUE, 'default' => 1),
+ *     'created'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+ *     'changed'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+ *     'comment'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+ *     'promote'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+ *     'moderate'  => array('type' => 'int', 'not null' => TRUE,'default' => 0),
+ *     'sticky'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+ *     'tnid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
+ *     'translate' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
  *   ),
- *   'primary key' => array('nid'),
+ *   'indexes' => array(
+ *     'node_changed'        => array('changed'),
+ *     'node_created'        => array('created'),
+ *     'node_moderate'       => array('moderate'),
+ *     'node_frontpage'      => array('promote', 'status', 'sticky', 'created'),
+ *     'node_status_type'    => array('status', 'type', 'nid'),
+ *     'node_title_type'     => array('title', array('type', 4)),
+ *     'node_type'           => array(array('type', 4)),
+ *     'uid'                 => array('uid'),
+ *     'tnid'                => array('tnid'),
+ *     'translate'           => array('translate'),
+ *   ),
  *   'unique keys' => array(
- *     'vid'     => array('vid')
+ *     'vid' => array('vid'),
  *   ),
  *   'foreign keys' => array(
- *     'uid'  => array('users' => 'uid'),
- *   )
- *   'indexes' => array(
- *     'nid'                 => array('nid'),
- *     'node_title_type'     => array('title', array('type', 4)),
- *   ),
+ *      'vid' => array('node_revision' => 'vid'),
+ *      'uid' => array('users' => 'uid'),
+ *    ),
+ *   'primary key' => array('nid'),
  * );
  * @endcode
  *

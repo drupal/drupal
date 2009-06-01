@@ -68,6 +68,9 @@ function taxonomy_schema() {
       ),
     ),
     'primary key' => array('tid'),
+    'foreign keys' => array(
+      'vid' => array('taxonomy_vocabulary' => 'vid'),
+    ),
     'indexes' => array(
       'taxonomy_tree' => array('vid', 'weight', 'name'),
       'vid_name' => array('vid', 'name'),
@@ -94,6 +97,9 @@ function taxonomy_schema() {
     ),
     'indexes' => array(
       'parent' => array('parent'),
+    ),
+    'foreign keys' => array(
+      'tid' => array('taxonomy_term_data' => 'tid'),
     ),
     'primary key' => array('tid', 'parent'),
   );
@@ -127,6 +133,11 @@ function taxonomy_schema() {
       'vid' => array('vid'),
       'nid' => array('nid'),
     ),
+    'foreign keys' => array(
+      'nid' => array('node' => 'nid'),
+      'vid' => array('node' => 'vid'),
+      'tid' => array('taxonomy_term_data' => 'tid'),
+    ),
     'primary key' => array('tid', 'vid'),
   );
 
@@ -159,6 +170,10 @@ function taxonomy_schema() {
     'indexes' => array(
       'tid2' => array('tid2'),
     ),
+    'foreign keys' => array(
+      'tid1' => array('taxonomy_term_data' => 'tid'),
+      'tid2' => array('taxonomy_term_data' => 'tid'),
+    ),
     'primary key' => array('trid'),
   );
 
@@ -188,6 +203,9 @@ function taxonomy_schema() {
     'indexes' => array(
       'tid' => array('tid'),
       'name_tid' => array('name', 'tid'),
+    ),
+    'foreign keys' => array(
+      'tid' => array('taxonomy_term_data' => 'tid'),
     ),
     'primary key' => array('tsid'),
   );
@@ -303,6 +321,9 @@ function taxonomy_schema() {
     'primary key' => array('type', 'vid'),
     'indexes' => array(
       'vid' => array('vid'),
+    ),
+    'foreign keys' => array(
+      'vid' => array('taxonomy_vocabulary' => 'vid'),
     ),
   );
 

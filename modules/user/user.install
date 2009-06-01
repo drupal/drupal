@@ -44,6 +44,9 @@ function user_schema() {
       'authname' => array('authname'),
     ),
     'primary key' => array('aid'),
+    'foreign keys' => array(
+      'uid' => array('users' => 'uid'),
+    ),
   );
 
   $schema['role_permission'] = array(
@@ -66,6 +69,9 @@ function user_schema() {
     'primary key' => array('rid', 'permission'),
     'indexes' => array(
       'permission' => array('permission'),
+    ),
+    'foreign keys' => array(
+      'rid' => array('role' => 'rid'),
     ),
   );
 
@@ -227,6 +233,10 @@ function user_schema() {
     'primary key' => array('uid', 'rid'),
     'indexes' => array(
       'rid' => array('rid'),
+    ),
+    'foreign keys' => array(
+      'uid' => array('users' => 'uid'),
+      'rid' => array('role' => 'rid'),
     ),
   );
 

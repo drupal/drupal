@@ -149,6 +149,10 @@ function profile_schema() {
     'indexes' => array(
       'fid' => array('fid'),
     ),
+    'foreign keys' => array(
+      'fid' => array('profile_field' => 'fid'),
+      'uid' => array('users' => 'uid'),
+    ),
   );
 
   return $schema;

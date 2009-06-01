@@ -100,6 +100,9 @@ function statistics_schema() {
       'uid' => array('uid'),
     ),
     'primary key' => array('aid'),
+    'foreign keys' => array(
+      'uid' => array('users' => 'uid'),
+    ),
   );
 
   $schema['node_counter'] = array(
