@@ -637,7 +637,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   Created node object.
    */
   protected function drupalCreateNode($settings = array()) {
-    // Populate defaults array
+    // Populate defaults array.
     $settings += array(
       'body'      => $this->randomName(32),
       'title'     => $this->randomName(8),
@@ -680,7 +680,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $node = (object) $settings;
     node_save($node);
 
-    // small hack to link revisions to our test user
+    // Small hack to link revisions to our test user.
     db_update('node_revision')
       ->fields(array('uid' => $node->uid))
       ->condition('vid', $node->vid)
@@ -698,12 +698,12 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   Created content type.
    */
   protected function drupalCreateContentType($settings = array()) {
-    // find a non-existent random type name.
+    // Find a non-existent random type name.
     do {
       $name = strtolower($this->randomName(8));
     } while (node_get_types('type', $name));
 
-    // Populate defaults array
+    // Populate defaults array.
     $defaults = array(
       'type' => $name,
       'name' => $name,
@@ -715,7 +715,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       'has_title' => 1,
       'has_body' => 1,
     );
-    // imposed values for a custom type
+    // Imposed values for a custom type.
     $forced = array(
       'orig_type' => '',
       'old_type' => '',
@@ -1111,7 +1111,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       // Rebuild caches.
       $this->refreshVariables();
 
-      // Reset language
+      // Reset language.
       $language = $this->originalLanguage;
       if ($this->originalLanguageDefault) {
         $GLOBALS['conf']['language_default'] = $this->originalLanguageDefault;
@@ -1140,8 +1140,8 @@ class DrupalWebTestCase extends DrupalTestCase {
         CURLOPT_FOLLOWLOCATION => TRUE,
         CURLOPT_MAXREDIRS => 5,
         CURLOPT_RETURNTRANSFER => TRUE,
-        CURLOPT_SSL_VERIFYPEER => FALSE,  // Required to make the tests run on https://
-        CURLOPT_SSL_VERIFYHOST => FALSE,  // Required to make the tests run on https://
+        CURLOPT_SSL_VERIFYPEER => FALSE, // Required to make the tests run on https.
+        CURLOPT_SSL_VERIFYHOST => FALSE, // Required to make the tests run on https.
         CURLOPT_HEADERFUNCTION => array(&$this, 'curlHeaderCallback'),
       );
       if (preg_match('/simpletest\d+/', $db_prefix, $matches)) {
@@ -1568,8 +1568,8 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   The xpath string to use in the search.
    * @return
    *   The return value of the xpath search. For details on the xpath string
-   *   format and return values see the SimpleXML documentation.
-   *   http://us.php.net/manual/function.simplexml-element-xpath.php
+   *   format and return values see the SimpleXML documentation,
+   *   http://us.php.net/manual/function.simplexml-element-xpath.php.
    */
   protected function xpath($xpath) {
     if ($this->parse()) {
