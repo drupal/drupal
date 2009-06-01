@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.53 2009/05/03 08:55:06 dries Exp $
+// $Id: database.inc,v 1.54 2009/06/01 16:47:06 dries Exp $
 
 /**
  * @file
@@ -595,13 +595,15 @@ abstract class DatabaseConnection extends PDO {
     catch (PDOException $e) {
       _db_check_install_needed();
       if ($options['throw_exception']) {
+        // Add additional debug information.
         if ($query instanceof DatabaseStatementInterface) {
-          $query_string = $stmt->getQueryString();
+          $e->query_string = $stmt->getQueryString();
         }
         else {
-          $query_string = $query;
+          $e->query_string = $query;
         }
-        throw new PDOException($query_string . " - \n" . print_r($args, 1) . $e->getMessage());
+        $e->args = $args;
+        throw $e;
       }
       return NULL;
     }
