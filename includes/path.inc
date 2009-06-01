@@ -48,17 +48,20 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
   // $map is an array with language keys, holding arrays of Drupal paths to alias relations
   $map = &drupal_static(__FUNCTION__, array());
   $no_src = &drupal_static(__FUNCTION__ . ':no_src', array());
-  $count = &drupal_static(__FUNCTION__ . ':count');
+  $whitelist = &drupal_static(__FUNCTION__ . ':whitelist');
   $system_paths = &drupal_static(__FUNCTION__ . ':system_paths');
   $no_aliases = &drupal_static(__FUNCTION__ . ':no_alias', array());
   $first_call = &drupal_static(__FUNCTION__ . ':first_call', TRUE);
 
-  $path_language = $path_language ? $path_language : $language->language;
-
-  // Use $count to avoid looking up paths in subsequent calls if there simply are no aliases
-  if (!isset($count)) {
-    $count = db_query('SELECT COUNT(pid) FROM {url_alias}')->fetchField();
+  // Retrieve the path alias whitelist.
+  if (!isset($whitelist)) {
+    $whitelist = variable_get('path_alias_whitelist', NULL);
+    if (!isset($whitelist)) {
+      $whitelist = drupal_path_alias_whitelist_rebuild();
+    }
   }
+
+  $path_language = $path_language ? $path_language : $language->language;
 
   if ($action == 'wipe') {
     $map = array();
@@ -66,13 +69,16 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
     $count = NULL;
     $system_paths = array();
     $no_aliases = array();
+
+    $whitelist = drupal_path_alias_whitelist_rebuild();
   }
-  elseif ($count > 0 && $path != '') {
+  elseif ($whitelist && $path != '') {
     if ($action == 'alias') {
       // During the first call to drupal_lookup_path() per language, load the
       // expected system paths for the page from cache.
       if ($first_call) {
         $first_call = FALSE;
+
         $map[$path_language] = array();
         // Load system paths from cache.
         $cid = current_path();
@@ -92,6 +98,12 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
       // If the alias has already been loaded, return it.
       if (isset($map[$path_language][$path])) {
         return $map[$path_language][$path];
+      }
+      // Check the path whitelist, if the top_level part before the first /
+      // is not in the list, then there is no need to do anything further,
+      // it is not in the database.
+      elseif (!isset($whitelist[strtok($path, '/')])) {
+        return FALSE;
       }
       // For system paths which were not cached, query aliases individually.
       else if (!isset($no_aliases[$path_language][$path])) {
@@ -346,4 +358,23 @@ function drupal_match_path($path, $patterns) {
  */
 function current_path() {
   return $_GET['q'];
+}
+
+/**
+ * Rebuild the path alias white list.
+ *
+ * @return
+ *   An array containing a white list of path aliases.
+ */
+function drupal_path_alias_whitelist_rebuild() {
+  // For each alias in the database, get the top level component of the system
+  // path it corresponds to. This is the portion of the path before the first /
+  // if present, otherwise the whole path itself.
+  $whitelist = array();
+  $result = db_query("SELECT SUBSTRING_INDEX(src, '/', 1) AS path FROM {url_alias} GROUP BY path");
+  foreach ($result as $row) {
+    $whitelist[$row->path] = TRUE;
+  }
+  variable_set('path_alias_whitelist', $whitelist);
+  return $whitelist;
 }

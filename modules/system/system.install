@@ -339,6 +339,11 @@ function system_install() {
       \'SELECT CASE WHEN $1 THEN $2 ELSE $3 END;\'
       LANGUAGE \'sql\''
     );
+
+    db_query('CREATE OR REPLACE FUNCTION "substr_index"(text, text, integer) RETURNS text AS
+      \'SELECT array_to_string((string_to_array($1, $2)) [1:$3], $2);\'
+      LANGUAGE \'sql\''
+    );
   }
 
   // Create tables.
@@ -3492,6 +3497,25 @@ function system_update_7022() {
 function system_update_7023() {
   $ret = array();
   $ret[] = update_sql("UPDATE {role_permission} SET permission = 'use PHP for settings' WHERE permission = 'use PHP for block visibility'");
+  return $ret;
+}
+
+/**
+ * Add the substr_index() function to PostgreSQL.
+ *
+ * Note: this should go into the driver itself, but we have no support
+ * for driver-specific updates yet.
+ */
+function system_update_7024() {
+  $ret = array();
+
+  if (db_driver() == 'pgsql') {
+    $ret[] = update_sql('CREATE OR REPLACE FUNCTION "substr_index"(text, text, integer) RETURNS text AS
+      \'SELECT array_to_string((string_to_array($1, $2)) [1:$3], $2);\'
+      LANGUAGE \'sql\''
+    );
+  }
+
   return $ret;
 }
 

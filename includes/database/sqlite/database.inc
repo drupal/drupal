@@ -39,6 +39,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     $this->sqliteCreateFunction('length', 'strlen', 1);
     $this->sqliteCreateFunction('concat', array($this, 'sqlFunctionConcat'));
     $this->sqliteCreateFunction('substring', array($this, 'sqlFunctionSubstring'), 3);
+    $this->sqliteCreateFunction('substring_index', array($this, 'sqlFunctionSubstringIndex'), 3);
     $this->sqliteCreateFunction('rand', array($this, 'sqlFunctionRand'));
   }
 
@@ -80,6 +81,20 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
    */
   public function sqlFunctionSubstring($string, $from, $length) {
     return substr($string, $from - 1, $length);
+  }
+
+  /**
+   * SQLite compatibility implementation for the SUBSTRING_INDEX() SQL function.
+   */
+  public function sqlFunctionSubstringIndex($string, $delimiter, $count) {
+    $end = 0;
+    for ($i = 0; $i < $count; $i++) {
+      $end = strpos($string, $delimiter, $end + 1);
+      if ($end === FALSE) {
+        $end = strlen($string);
+      }
+    }
+    return substr($string, 0, $end);
   }
 
   /**

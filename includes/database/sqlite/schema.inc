@@ -430,7 +430,10 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
    */
   public function addIndex(&$ret, $table, $name, $fields) {
     $schema['indexes'][$name] = $fields;
-    $ret[] = update_sql($this->createIndexSql($table, $schema));
+    $statements = $this->createIndexSql($table, $schema);
+    foreach ($statements as $statement) {
+      $ret[] = update_sql($statement);
+    }
   }
 
   /**
@@ -461,8 +464,10 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
    */
   public function addUniqueKey(&$ret, $table, $name, $fields) {
     $schema['unique keys'][$name] = $fields;
-    $ret[] = update_sql($this->createIndexSql($table, $schema));
-
+    $statements = $this->createIndexSql($table, $schema);
+    foreach ($statements as $statement) {
+      $ret[] = update_sql($statement);
+    }
   }
 
   /**
