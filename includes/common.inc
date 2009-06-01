@@ -729,6 +729,8 @@ function _drupal_exception_handler($exception) {
  * @return An error in the format expected by _drupal_log_error().
  */
 function _drupal_decode_exception($exception) {
+  $message = $exception->getMessage();
+
   $backtrace = $exception->getTrace();
   // Add the line throwing the exception to the backtrace.
   array_unshift($backtrace, array('line' => $exception->getLine(), 'file' => $exception->getFile()));
@@ -741,17 +743,20 @@ function _drupal_decode_exception($exception) {
     // or in one of its global functions.
     $db_functions = array('db_query', 'pager_query', 'db_query_range', 'db_query_temporary', 'update_sql');
     while (!empty($backtrace[1]) && ($caller = $backtrace[1]) &&
-        ((isset($caller['class']) && (strpos($caller['class'], 'Query') !== FALSE || strpos($caller['class'], 'Database') !== FALSE)) ||
+        ((isset($caller['class']) && (strpos($caller['class'], 'Query') !== FALSE || strpos($caller['class'], 'Database') !== FALSE || $caller['class'] == 'PDOStatement')) ||
         in_array($caller['function'], $db_functions))) {
       // We remove that call.
       array_shift($backtrace);
+    }
+    if (isset($exception->query_string, $exception->args)) {
+      $message .= ": " . $exception->query_string . "; " . print_r($exception->args, TRUE);
     }
   }
   $caller = _drupal_get_last_caller($backtrace);
 
   return array(
     '%type' => get_class($exception),
-    '%message' => $exception->getMessage(),
+    '%message' => $message,
     '%function' => $caller['function'],
     '%file' => $caller['file'],
     '%line' => $caller['line'],

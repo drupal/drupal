@@ -2446,6 +2446,9 @@ class DatabaseInvalidDataTestCase extends DatabaseTestCase {
         $this->pass(t('The whole transaction is rolled back when a duplicate key insert occurs.'));
       }
 
+      // 23000 means "Integrity constraint violation" according to ANSI SQL.
+      $this->assertEqual($e->errorInfo[0], '23000', t('Exception has proper SQLSTATE.'));
+
       // Ensure the other values were not inserted.
       $record = db_select('test')
         ->fields('test', array('name', 'age'))
