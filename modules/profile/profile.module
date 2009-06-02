@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.259 2009/05/27 18:34:00 dries Exp $
+// $Id: profile.module,v 1.260 2009/06/02 00:23:42 webchick Exp $
 
 /**
  * @file
@@ -618,7 +618,7 @@ function _profile_get_fields($category, $register = FALSE) {
     $query->where('LOWER(category) = LOWER(:category)', array(':category' => $category));
   }
   if (!user_access('administer users')) {
-    $query->condition('visibility', PROFILE_HIDDEN);
+    $query->condition('visibility', PROFILE_HIDDEN, '<>');
   }
   return $query
     ->fields('profile_field')
