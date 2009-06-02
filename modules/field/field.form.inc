@@ -392,7 +392,7 @@ function field_add_more_js($bundle_name, $field_name) {
   // Just grab the data we need.
   $form_state['values'] = $form_state_copy['values'];
   // Reset cached ids, so that they don't affect the actual form we output.
-  form_clean_id(NULL, TRUE);
+  drupal_static_reset('form_clean_id');
 
   // Sort the $form_state['values'] we just built *and* the incoming $_POST data
   // according to d-n-d reordering.

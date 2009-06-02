@@ -306,7 +306,7 @@ class FormsElementsTableSelectFunctionalTest extends DrupalWebTestCase {
 
     // Clear errors and messages.
     drupal_get_messages();
-    form_set_error(NULL, '', TRUE);
+    form_clear_error();
 
     // Return the processed form together with form_state and errors
     // to allow the caller lowlevel access to the form.

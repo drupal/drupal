@@ -402,7 +402,7 @@ function drupal_form_submit($form_id, &$form_state) {
  *   builder functions as well.
  */
 function drupal_retrieve_form($form_id, &$form_state) {
-  static $forms;
+  $forms = &drupal_static(__FUNCTION__);
 
   // We save two copies of the incoming arguments: one for modules to use
   // when mapping form ids to constructor functions, and another to pass to
@@ -488,7 +488,7 @@ function drupal_process_form($form_id, &$form, &$form_state) {
     // cache when a form is processed, so scenarios that result in
     // the form being built behind the scenes and again for the
     // browser don't increment all the element IDs needlessly.
-    form_clean_id(NULL, TRUE);
+    drupal_static_reset('form_clean_id');
 
     if ((!empty($form_state['submitted'])) && !form_get_errors() && empty($form_state['rebuild'])) {
       $form_state['redirect'] = NULL;
@@ -653,7 +653,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
  *   not be repeated in the submission step.
  */
 function drupal_validate_form($form_id, $form, &$form_state) {
-  static $validated_forms = array();
+  $validated_forms = &drupal_static(__FUNCTION__, array());
 
   if (isset($validated_forms[$form_id]) && empty($form_state['must_validate'])) {
     return;
@@ -724,7 +724,7 @@ function drupal_redirect_form($form, $redirect = NULL) {
  *   theming, and hook_form_alter functions.
  */
 function _form_validate($elements, &$form_state, $form_id = NULL) {
-  static $complete_form;
+  $complete_form = &drupal_static(__FUNCTION__);
 
   // Also used in the installer, pre-database setup.
   $t = get_t();
@@ -857,11 +857,8 @@ function form_execute_handlers($type, &$form, &$form_state) {
  *   Never use the return value of this function, use form_get_errors and
  *   form_get_error instead.
  */
-function form_set_error($name = NULL, $message = '', $reset = FALSE) {
-  static $form = array();
-  if ($reset) {
-    $form = array();
-  }
+function form_set_error($name = NULL, $message = '') {
+  $form = &drupal_static(__FUNCTION__, array());
   if (isset($name) && !isset($form[$name])) {
     $form[$name] = $message;
     if ($message) {
@@ -869,6 +866,13 @@ function form_set_error($name = NULL, $message = '', $reset = FALSE) {
     }
   }
   return $form;
+}
+
+/**
+ * Clear all errors against all form elements made by form_set_error().
+ */
+function form_clear_error() {
+  drupal_static_reset('form_set_error');
 }
 
 /**
@@ -921,7 +925,9 @@ function form_error(&$element, $message = '') {
  *   $_POST data.
  */
 function form_builder($form_id, $form, &$form_state) {
-  static $complete_form, $cache, $file;
+  $complete_form = &drupal_static(__FUNCTION__);
+  $cache = &drupal_static(__FUNCTION__ . ':cache');
+  $file = &drupal_static(__FUNCTION__ . ':file');
 
   // Initialize as unprocessed.
   $form['#processed'] = FALSE;
@@ -1414,6 +1420,8 @@ function _form_set_value(&$form_values, $form_item, $parents, $value) {
 }
 
 function form_options_flatten($array, $reset = TRUE) {
+  // $reset has been ignored here as the function recurses, retaining
+  // its value while recursing and resetting itself when called.
   static $return;
 
   if ($reset) {
@@ -1745,7 +1753,7 @@ function date_validate($form) {
  * Helper function for usage with drupal_map_assoc to display month names.
  */
 function map_month($month) {
-  static $months = array(
+  $months = &drupal_static(__FUNCTION__, array(
     1 => 'Jan',
     2 => 'Feb',
     3 => 'Mar',
@@ -1758,7 +1766,7 @@ function map_month($month) {
     10 => 'Oct',
     11 => 'Nov',
     12 => 'Dec',
-  );
+  ));
   return t($months[$month]);
 }
 
@@ -1959,7 +1967,7 @@ function theme_text_format_wrapper($element) {
  *   drupal_add_js.
  */
 function form_process_ahah($element) {
-  static $js_added = array();
+  $js_added = &drupal_static(__FUNCTION__, array());
   // Add a reasonable default event handler if none specified.
   if (isset($element['#ahah']) && !isset($element['#ahah']['event'])) {
     switch ($element['#type']) {
@@ -2667,13 +2675,8 @@ function _form_set_class(&$element, $class = array()) {
  * @return
  *   The cleaned ID.
  */
-function form_clean_id($id = NULL, $flush = FALSE) {
-  static $seen_ids = array();
-
-  if ($flush) {
-    $seen_ids = array();
-    return;
-  }
+function form_clean_id($id = NULL) {
+  $seen_ids = &drupal_static(__FUNCTION__, array());
   $id = str_replace(array('][', '_', ' '), '-', $id);
 
   // Ensure IDs are unique. The first occurrence is held but left alone.
@@ -2970,7 +2973,7 @@ function batch_process($redirect = NULL, $url = NULL) {
  * Retrieve the current batch.
  */
 function &batch_get() {
-  static $batch = array();
+  $batch = &drupal_static(__FUNCTION__, array());
   return $batch;
 }
 
