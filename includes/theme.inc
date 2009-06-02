@@ -381,8 +381,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
             elseif ($type == 'theme_engine' || $type == 'base_theme_engine') {
               // Theme engines get an extra set that come before the normally named variable processors.
               $prefixes[] = $name . '_engine';
-              // The theme engine also registers on behalf of the theme. The theme or engine name can be used.
-              $prefixes[] = $name;
+              // The theme engine registers on behalf of the theme using the theme's name.
               $prefixes[] = $theme;
             }
             else {
@@ -605,26 +604,11 @@ function list_themes($refresh = FALSE) {
  *   This is the same as the previous function, but it is called for a single
  *   theming hook.
  *
- * - ENGINE_preprocess(&$variables)
- *   This is meant to be used by themes that utilize a theme engine. It is
- *   provided so that the preprocessor is not locked into a specific theme.
- *   This makes it easy to share and transport code but theme authors must be
- *   careful to prevent fatal re-declaration errors when using sub-themes that
- *   have their own preprocessor named exactly the same as its base theme. In
- *   the default theme engine (PHPTemplate), sub-themes will load their own
- *   template.php file in addition to the one used for its parent theme. This
- *   increases the risk for these errors. A good practice is to use the engine
- *   name for the base theme and the theme name for the sub-themes to minimize
- *   this possibility.
- *
- * - ENGINE_preprocess_HOOK(&$variables)
- *   The same applies from the previous function, but it is called for a
- *   specific hook.
- *
  * - THEME_preprocess(&$variables)
- *   These functions are based upon the raw theme; they should primarily be
- *   used by themes that do not use an engine or by sub-themes. It serves the
- *   same purpose as ENGINE_preprocess().
+ *   This is for themes that want to alter or provide extra variables. For
+ *   example, if a theme named "foo" wanted to alter the $submitted variable for
+ *   the hook "node" a preprocess function of foo_preprocess_node() can be
+ *   created to intercept and alter the variable.
  *
  * - THEME_preprocess_HOOK(&$variables)
  *   The same applies from the previous function, but it is called for a
@@ -1197,19 +1181,17 @@ function theme_render_template($template_file, $variables) {
  * Drupal and implemented in phptemplate.engine, which uses Drupal's default
  * template renderer.
  *
- * In order to create theme-specific implementations of these hooks,
- * themes can implement their own version of theme hooks, either as functions
- * or templates. These implementations will be used instead of the default
- * implementation. If using a pure .theme without an engine, the .theme is
- * required to implement its own version of hook_theme() to tell Drupal what
- * it is implementing; themes utilizing an engine will have their well-named
- * theming functions automatically registered for them. While this can vary
- * based upon the theme engine, the standard set by phptemplate is that theme
- * functions should be named either phptemplate_HOOK or THEMENAME_HOOK. For
- * example, for Drupal's default theme (Garland) to implement the 'table' hook,
- * the phptemplate.engine would find phptemplate_table() or garland_table().
- * The ENGINE_HOOK() syntax is preferred, as this can be used by sub-themes
- * (which are themes that share code but use different stylesheets).
+ * In order to create theme-specific implementations of these hooks, themes can
+ * implement their own version of theme hooks, either as functions or templates.
+ * These implementations will be used instead of the default implementation. If
+ * using a pure .theme without an engine, the .theme is required to implement
+ * its own version of hook_theme() to tell Drupal what it is implementing;
+ * themes utilizing an engine will have their well-named theming functions
+ * automatically registered for them. While this can vary based upon the theme
+ * engine, the standard set by phptemplate is that theme functions should be
+ * named THEMENAME_HOOK. For example, for Drupal's default theme (Garland) to
+ * implement the 'table' hook, the phptemplate.engine would find
+ * garland_table().
  *
  * The theme system is described and defined in theme.inc.
  *

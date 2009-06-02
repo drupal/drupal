@@ -66,7 +66,7 @@ function garland_menu_local_tasks() {
 /**
  * Format the "Submitted by username on date/time" for each comment.
  */
-function phptemplate_comment_submitted($comment) {
+function garland_comment_submitted($comment) {
   return t('!datetime — !username',
     array(
       '!username' => theme('username', $comment),
