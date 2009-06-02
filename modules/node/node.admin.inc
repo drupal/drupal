@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.50 2009/05/27 18:33:58 dries Exp $
+// $Id: node.admin.inc,v 1.51 2009/06/02 06:58:16 dries Exp $
 
 /**
  * @file
@@ -171,7 +171,8 @@ function node_build_filter_query() {
   // Build query
   $where = $args = array();
   $join = '';
-  foreach ($_SESSION['node_overview_filter'] as $index => $filter) {
+  $filter_data = isset($_SESSION['node_overview_filter']) ? $_SESSION['node_overview_filter'] : array();
+  foreach ($filter_data as $index => $filter) {
     list($key, $value) = $filter;
     switch ($key) {
       case 'status':
@@ -202,10 +203,7 @@ function node_build_filter_query() {
  * Return form for node administration filters.
  */
 function node_filter_form() {
-  if (!isset($_SESSION['node_overview_filter'])) {
-    drupal_set_session('node_overview_filter', array());
-  }
-  $session = &$_SESSION['node_overview_filter'];
+  $session = isset($_SESSION['node_overview_filter']) ? $_SESSION['node_overview_filter'] : array();
   $filters = node_filters();
 
   $i = 0;
@@ -320,9 +318,6 @@ function node_filter_form_submit($form, &$form_state) {
         $flat_options = form_options_flatten($filters[$filter]['options']);
 
         if (isset($flat_options[$form_state['values'][$filter]])) {
-          if (!isset($_SESSION['node_overview_filter'])) {
-            drupal_set_session('node_overview_filter', array());
-          }
           $_SESSION['node_overview_filter'][] = array($filter, $form_state['values'][$filter]);
         }
       }
@@ -331,7 +326,7 @@ function node_filter_form_submit($form, &$form_state) {
       array_pop($_SESSION['node_overview_filter']);
       break;
     case t('Reset'):
-      drupal_set_session('node_overview_filter', array());
+      $_SESSION['node_overview_filter'] = array();
       break;
   }
 }

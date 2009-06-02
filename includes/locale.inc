@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.217 2009/05/25 18:22:30 dries Exp $
+// $Id: locale.inc,v 1.218 2009/06/02 06:58:15 dries Exp $
 
 /**
  * @file
@@ -613,8 +613,6 @@ function locale_translation_filters() {
  * @ingroup forms
  */
 function locale_translation_filter_form() {
-  $session = &$_SESSION['locale_translation_filter'];
-  $session = is_array($session) ? $session : array();
   $filters = locale_translation_filters();
 
   $form['filters'] = array(
@@ -642,8 +640,8 @@ function locale_translation_filter_form() {
         '#options' => $filter['options'],
       );
     }
-    if (!empty($session[$key])) {
-      $form['filters']['status'][$key]['#default_value'] = $session[$key];
+    if (!empty($_SESSION['locale_translation_filter'][$key])) {
+      $form['filters']['status'][$key]['#default_value'] = $_SESSION['locale_translation_filter'][$key];
     }
   }
 
@@ -651,7 +649,7 @@ function locale_translation_filter_form() {
     '#type' => 'submit',
     '#value' => t('Filter'),
   );
-  if (!empty($session)) {
+  if (!empty($_SESSION['locale_translation_filter'])) {
     $form['filters']['buttons']['reset'] = array(
       '#type' => 'submit',
       '#value' => t('Reset')

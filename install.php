@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.175 2009/06/02 03:33:35 webchick Exp $
+// $Id: install.php,v 1.176 2009/06/02 06:58:15 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -625,7 +625,7 @@ function install_tasks($profile, $task) {
   drupal_install_init_database();
 
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-  drupal_set_session('messages', $messages);
+  $_SESSION['messages'] = $messages;
 
   // URL used to direct page requests.
   $url = $base_url . '/install.php?locale=' . $install_locale . '&profile=' . $profile;
