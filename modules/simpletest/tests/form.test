@@ -1,5 +1,5 @@
 <?php
-// $Id: form.test,v 1.12 2009/05/25 05:20:16 dries Exp $
+// $Id: form.test,v 1.13 2009/06/02 13:47:26 dries Exp $
 
 /**
  * @file
@@ -306,7 +306,7 @@ class FormsElementsTableSelectFunctionalTest extends DrupalWebTestCase {
 
     // Clear errors and messages.
     drupal_get_messages();
-    form_set_error(NULL, '', TRUE);
+    form_clear_error();
 
     // Return the processed form together with form_state and errors
     // to allow the caller lowlevel access to the form.
