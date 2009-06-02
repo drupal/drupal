@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.111 2009/06/01 11:35:09 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.112 2009/06/02 00:01:52 webchick Exp $
 
 /**
  * Base class for Drupal tests.
@@ -1004,6 +1004,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     default_profile_tasks($task, '');
 
     // Rebuild caches.
+    node_types_rebuild();
     actions_synchronize();
     _drupal_flush_css_js();
     $this->refreshVariables();
