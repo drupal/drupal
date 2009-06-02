@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.174 2009/05/28 08:34:14 dries Exp $
+// $Id: install.php,v 1.175 2009/06/02 03:33:35 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -800,6 +800,7 @@ function install_tasks($profile, $task) {
     $messages = drupal_set_message();
     $output = '<p>' . st('Congratulations, @drupal has been successfully installed.', array('@drupal' => drupal_install_profile_name())) . '</p>';
     $output .= '<p>' . (isset($messages['error']) ? st('Please review the messages above before continuing on to <a href="@url">your new site</a>.', array('@url' => url(''))) : st('You may now visit <a href="@url">your new site</a>.', array('@url' => url('')))) . '</p>';
+    $output .= '<p>' . st('For more information on configuring Drupal, please refer to the <a href="@help">help section</a>.', array('@help' => url('admin/help'))) . '</p>';
     $task = 'done';
   }
 
