@@ -174,9 +174,6 @@ function openid_begin($claimed_id, $return_to = '', $form_values = array()) {
   }
 
   // Store discovered information in the users' session so we don't have to rediscover.
-  if (!isset($_SESSION['openid'])) {
-    drupal_set_session('openid', array());
-  }
   $_SESSION['openid']['service'] = $services[0];
   // Store the claimed id
   $_SESSION['openid']['claimed_id'] = $claimed_id;
@@ -434,9 +431,6 @@ function openid_authentication($response) {
       // We were unable to register a valid new user, redirect to standard
       // user/register and prefill with the values we received.
       drupal_set_message(t('OpenID registration failed for the reasons listed. You may register now, or if you already have an account you can <a href="@login">log in</a> now and add your OpenID under "My Account"', array('@login' => url('user/login'))), 'error');
-      if (!isset($_SESSION['openid'])) {
-        drupal_set_session('openid', array());
-      }
       $_SESSION['openid']['values'] = $form_state['values'];
       // We'll want to redirect back to the same place.
       $destination = drupal_get_destination();

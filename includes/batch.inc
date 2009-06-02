@@ -416,6 +416,12 @@ function _batch_finished() {
   $_batch = $batch;
   $batch = NULL;
 
+  // Clean-up the session.
+  unset($_SESSION['batches'][$batch['id']]);
+  if (empty($_SESSION['batches'])) {
+    unset($_SESSION['batches']);
+  }
+
   // Redirect if needed.
   if ($_batch['progressive']) {
     // Revert the 'destination' that was saved in batch_process().
@@ -443,7 +449,7 @@ function _batch_finished() {
     // We get here if $form['#redirect'] was FALSE, or if the form is a
     // multi-step form. We save the final $form_state value to be retrieved
     // by drupal_get_form(), and redirect to the originating page.
-    drupal_set_session('batch_form_state', $_batch['form_state']);
+    $_SESSION['batch_form_state'] = $_batch['form_state'];
     drupal_goto($_batch['source_page']);
   }
 }

@@ -51,19 +51,7 @@ function session_test_menu() {
  * Implement hook_boot().
  */
 function session_test_boot() {
-  header('X-Session-Cookie: ' . intval(isset($_COOKIE[session_name()])));
-  header('X-Session-Started: ' . intval(drupal_session_is_started()));
   header('X-Session-Empty: ' . intval(empty($_SESSION)));
-}
-
-/**
- * Implement hook_init().
- */
-function session_test_init() {
-  // hook_init() is called later in the bootstrap process, but not in cached
-  // requests. Here the header set in hook_boot() is overwritten, so the
-  // session state is reported as late in the bootstrap process as possible.
-  header('X-Session-Started: ' . intval(drupal_session_is_started()));
 }
 
 /**
@@ -82,7 +70,7 @@ function _session_test_get() {
  * Page callback, stores a value in $_SESSION['session_test_value'].
  */
 function _session_test_set($value) {
-  drupal_set_session('session_test_value', $value);
+  $_SESSION['session_test_value'] = $value;
   return t('The current value of the stored session variable has been set to %val', array('%val' => $value));
 }
 
@@ -100,6 +88,12 @@ function _session_test_no_set($value) {
  * Menu callback: print the current session ID.
  */
 function _session_test_id() {
+  // Set a value in $_SESSION, so that drupal_session_commit() will start
+  // a session.
+  $_SESSION['test'] = 'test';
+
+  drupal_session_commit();
+
   return 'session_id:' . session_id() . "\n";
 }
 
@@ -119,7 +113,7 @@ function _session_test_set_message() {
  * having started the session in advance.
  */
 function _session_test_set_not_started() {
-  if (!drupal_session_is_started()) {
+  if (!drupal_session_will_start()) {
     $_SESSION['session_test_value'] = t('Session was not started');
   }
 }

@@ -325,11 +325,9 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response
     module_invoke_all('exit', $url);
   }
 
-  if (drupal_session_is_started()) {
-    // Even though session_write_close() is registered as a shutdown function,
-    // we need all session data written to the database before redirecting.
-    session_write_close();
-  }
+  // Commit the session, if necessary. We need all session data written to the
+  // database before redirecting.
+  drupal_session_commit();
 
   header('Location: ' . $url, TRUE, $http_response_code);
 
@@ -2156,19 +2154,17 @@ function l($text, $path, array $options = array()) {
 function drupal_page_footer() {
   global $user;
 
-  // Destroy empty anonymous sessions if possible.
-  if (!headers_sent() && drupal_session_is_started() && empty($_SESSION) && !$user->uid) {
-    session_destroy();
-  }
-  elseif (!empty($_SESSION) && !drupal_session_is_started()) {
-    watchdog('session', '$_SESSION is non-empty yet no code has called drupal_session_start().', array(), WATCHDOG_NOTICE);
-  }
-
-  if (variable_get('cache', CACHE_DISABLED) != CACHE_DISABLED) {
-    page_set_cache();
-  }
-
   module_invoke_all('exit');
+
+  // Commit the user session, if needed.
+  drupal_session_commit();
+
+  if (variable_get('cache', CACHE_DISABLED) != CACHE_DISABLED && ($cache = drupal_page_set_cache())) {
+    drupal_serve_page_from_cache($cache);
+  }
+  else {
+    ob_flush();
+  }
 
   module_implements(MODULE_IMPLEMENTS_WRITE_CACHE);
   _registry_check_code(REGISTRY_WRITE_LOOKUP_CACHE);
@@ -3282,11 +3278,12 @@ function _drupal_bootstrap_full() {
  *
  * @see drupal_page_header
  */
-function page_set_cache() {
-  global $user, $base_root;
+function drupal_page_set_cache() {
+  global $base_root;
 
-  if (page_get_cache(FALSE)) {
+  if (drupal_page_is_cacheable()) {
     $cache_page = TRUE;
+
     $cache = (object) array(
       'cid' => $base_root . request_uri(),
       'data' => ob_get_clean(),
@@ -3294,12 +3291,14 @@ function page_set_cache() {
       'created' => REQUEST_TIME,
       'headers' => array(),
     );
+
     // Restore preferred header names based on the lower-case names returned
     // by drupal_get_header().
     $header_names = _drupal_set_preferred_header_name();
     foreach (drupal_get_header() as $name_lower => $value) {
       $cache->headers[$header_names[$name_lower]] = $value;
     }
+
     if (variable_get('page_compression', TRUE) && function_exists('gzencode')) {
       // We do not store the data in case the zlib mode is deflate. This should
       // be rarely happening.
@@ -3315,12 +3314,7 @@ function page_set_cache() {
     if ($cache_page && $cache->data) {
       cache_set($cache->cid, $cache->data, 'cache_page', $cache->expire, $cache->headers);
     }
-    drupal_page_cache_header($cache);
-  }
-  else {
-    // If output buffering was enabled during bootstrap, and the headers were
-    // not sent in the DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE phase, send them now.
-    drupal_page_header();
+    return $cache;
   }
 }
 

@@ -1734,7 +1734,7 @@ function system_clean_url_settings() {
   // When accessing this form using a non-clean URL, allow a re-check to make
   // sure clean URLs can be disabled at all times.
   $available = FALSE;
-  if (strpos(request_uri(), '?q=') === FALSE || drupal_get_session('clean_url')) {
+  if (strpos(request_uri(), '?q=') === FALSE || !empty($_SESSION['clean_url'])) {
     $available = TRUE;
   }
   else {
@@ -1745,7 +1745,7 @@ function system_clean_url_settings() {
   }
 
   if ($available) {
-    drupal_set_session('clean_url', TRUE);
+    $_SESSION['clean_url'] = TRUE;
 
     $form['clean_url'] = array(
       '#type' => 'checkbox',

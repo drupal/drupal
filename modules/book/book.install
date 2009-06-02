@@ -134,8 +134,8 @@ function book_update_6000() {
 
       db_create_table($ret, 'book', $schema['book']);
 
-      drupal_set_session('book_update_6000_orphans', array('from' => 0));
-      drupal_set_session('book_update_6000', array());
+      $_SESSION['book_update_6000_orphans'] = array('from' => 0);
+      $_SESSION['book_update_6000'] = array();
       $result = db_query("SELECT * from {book_temp} WHERE parent = 0");
 
       // Collect all books - top-level nodes.
@@ -152,7 +152,7 @@ function book_update_6000() {
       return $ret;
     }
   }
-  elseif ($_SESSION['book_update_6000_orphans']) {
+  elseif (isset($_SESSION['book_update_6000_orphans'])) {
     // Do the first batched part of the update - collect orphans.
     $update_count = 400; // Update this many at a time.
 

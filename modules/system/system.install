@@ -1983,10 +1983,10 @@ function system_update_6021() {
   // Multi-part update
   if (!isset($_SESSION['system_update_6021'])) {
     db_add_field($ret, 'menu', 'converted', array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0, 'size' => 'tiny'));
-    drupal_set_session('system_update_6021_max', db_result(db_query('SELECT COUNT(*) FROM {menu}')));
-    drupal_set_session('menu_menu_map', array(1 => 'navigation'));
+    $_SESSION['system_update_6021_max'] = db_result(db_query('SELECT COUNT(*) FROM {menu}'));
+    $_SESSION['menu_menu_map'] = array(1 => 'navigation');
     // 0 => FALSE is for new menus, 1 => FALSE is for the navigation.
-    drupal_set_session('menu_item_map', array(0 => FALSE, 1 => FALSE));
+    $_SESSION['menu_item_map'] = array(0 => FALSE, 1 => FALSE);
     $table = array(
       'fields' => array(
         'menu_name'   => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
@@ -1997,7 +1997,7 @@ function system_update_6021() {
     );
     db_create_table($ret, 'menu_custom', $table);
     db_query("INSERT INTO {menu_custom} (menu_name, title, description) VALUES ('%s', '%s', '%s')", $menus['navigation']);
-    drupal_set_session('system_update_6021', 0);
+    $_SESSION['system_update_6021'] = 0;
   }
 
   $limit = 50;

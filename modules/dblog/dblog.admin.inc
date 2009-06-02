@@ -284,10 +284,6 @@ function _dblog_format_message($dblog) {
  * @see dblog_filter_form_validate()
  */
 function dblog_filter_form() {
-  if (!isset($_SESSION['dblog_overview_filter'])) {
-    drupal_set_session('dblog_overview_filter', array());
-  }
-  $session = &$_SESSION['dblog_overview_filter'];
   $filters = dblog_filters();
 
   $form['filters'] = array(
@@ -305,8 +301,8 @@ function dblog_filter_form() {
       '#size' => 8,
       '#options' => $filter['options'],
     );
-    if (!empty($session[$key])) {
-      $form['filters']['status'][$key]['#default_value'] = $session[$key];
+    if (!empty($_SESSION['dblog_overview_filter'][$key])) {
+      $form['filters']['status'][$key]['#default_value'] = $_SESSION['dblog_overview_filter'][$key];
     }
   }
 
@@ -314,7 +310,7 @@ function dblog_filter_form() {
     '#type' => 'submit',
     '#value' => t('Filter'),
   );
-  if (!empty($session)) {
+  if (!empty($_SESSION['dblog_overview_filter'])) {
     $form['filters']['buttons']['reset'] = array(
       '#type' => 'submit',
       '#value' => t('Reset')
@@ -343,15 +339,12 @@ function dblog_filter_form_submit($form, &$form_state) {
     case t('Filter'):
       foreach ($filters as $name => $filter) {
         if (isset($form_state['values'][$name])) {
-          if (!isset($_SESSION['dblog_overview_filter'])) {
-            drupal_set_session('dblog_overview_filter', array());
-          }
           $_SESSION['dblog_overview_filter'][$name] = $form_state['values'][$name];
         }
       }
       break;
     case t('Reset'):
-      drupal_set_session('dblog_overview_filter', array());
+      $_SESSION['dblog_overview_filter'] = array();
       break;
   }
   return 'admin/reports/dblog';

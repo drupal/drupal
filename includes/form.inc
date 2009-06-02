@@ -2794,7 +2794,7 @@ function form_clean_id($id = NULL, $flush = FALSE) {
  *   foreach ($results as $result) {
  *     $items[] = t('Loaded node %title.', array('%title' => $result));
  *   }
- *   drupal_set_session('my_batch_results', $items);
+ *   $_SESSION['my_batch_results'] = $items;
  * }
  * @endcode
  */
@@ -2951,6 +2951,9 @@ function batch_process($redirect = NULL, $url = NULL) {
           'batch' => serialize($batch),
         ))
         ->execute();
+
+      // Set the batch number in the session to guarantee that it will stay alive.
+      $_SESSION['batches'][$batch['id']] = TRUE;
 
       drupal_goto($batch['url'], 'op=start&id=' . $batch['id']);
     }

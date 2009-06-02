@@ -128,7 +128,7 @@ function _sess_write($key, $value) {
   // has been started, do nothing. This keeps anonymous users, including
   // crawlers, out of the session table, unless they actually have something
   // stored in $_SESSION.
-  if (!drupal_save_session() || ($user->uid == 0 && empty($_COOKIE[session_name()]) && empty($value))) {
+  if (!drupal_save_session() || empty($user) || (empty($user->uid) && empty($_COOKIE[session_name()]) && empty($value))) {
     return TRUE;
   }
 
@@ -158,86 +158,117 @@ function _sess_write($key, $value) {
 }
 
 /**
- * Propagate $_SESSION and set session cookie if not already set. This function
- * should be called before writing to $_SESSION, usually via
- * drupal_set_session().
- *
- * @param $start
- *   If FALSE, the session is not actually started. This is only used by
- *   drupal_session_is_started().
- * @return
- *   TRUE if session has already been started, or FALSE if it has not.
+ * Initialize the session handler, starting a session if needed.
  */
-function drupal_session_start($start = TRUE) {
-  $started = &drupal_static(__FUNCTION__, FALSE);
-  if ($start && !$started) {
-    $started = TRUE;
-    session_start();
-  }
-  return $started;
-}
+function drupal_session_initialize() {
+  global $user;
 
-/**
- * Return whether a session has been started and the $_SESSION variable is
- * available.
- */
-function drupal_session_is_started() {
-  return drupal_session_start(FALSE);
-}
+  session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy_sid', '_sess_gc');
 
-/**
- * Get a session variable.
- *
- * @param $name
- *   The name of the variable to get. If not supplied, all variables are returned.
- * @return
- *   The value of the variable, or FALSE if the variable is not set.
- */
-function drupal_get_session($name = NULL) {
-  if (is_null($name)) {
-    return $_SESSION;
-  }
-  elseif (isset($_SESSION[$name])) {
-    return $_SESSION[$name];
+  if (isset($_COOKIE[session_name()])) {
+    // If a session cookie exists, initialize the session. Otherwise the
+    // session is only started on demand in drupal_session_commit(), making
+    // anonymous users not use a session cookie unless something is stored in
+    // $_SESSION. This allows HTTP proxies to cache anonymous pageviews.
+    drupal_session_start();
+    if (!empty($user->uid) || !empty($_SESSION)) {
+      drupal_page_is_cacheable(FALSE);
+    }
   }
   else {
-    return FALSE;
+    // Set a session identifier for this request. This is necessary because
+    // we lazyly start sessions at the end of this request, and some
+    // processes (like drupal_get_token()) needs to know the future
+    // session ID in advance.
+    $user = drupal_anonymous_user();
+    session_id(md5(uniqid('', TRUE)));
   }
 }
 
 /**
- * Set a session variable. The variable becomes accessible via $_SESSION[$name]
- * in the current and later requests. If there is no active PHP session prior
- * to the call, one is started automatically.
- *
- * Anonymous users generate less server load if their $_SESSION variable is
- * empty, so unused entries should be unset using unset($_SESSION['foo']).
- *
- * @param $name
- *   The name of the variable to set.
- * @param $value
- *   The value to set.
+ * Forcefully start a session, preserving already set session data.
  */
-function drupal_set_session($name, $value) {
-  drupal_session_start();
-  $_SESSION[$name] = $value;
+function drupal_session_start() {
+  if (!drupal_session_started()) {
+    // Save current session data before starting it, as PHP will destroy it.
+    $session_data = isset($_SESSION) ? $_SESSION : NULL;
+
+    session_start();
+    drupal_session_started(TRUE);
+
+    // Restore session data.
+    if (!empty($session_data)) {
+      $_SESSION += $session_data;
+    }
+  }
+}
+
+/**
+ * Commit the current session, if necessary.
+ *
+ * If an anonymous user already have an empty session, destroy it.
+ */
+function drupal_session_commit() {
+  global $user;
+
+  if (empty($user->uid) && empty($_SESSION)) {
+    if (drupal_session_started()) {
+      // Destroy empty anonymous sessions.
+      session_destroy();
+    }
+  }
+  else {
+    if (!drupal_session_started()) {
+      drupal_session_start();
+    }
+    // Write the session data.
+    session_write_close();
+  }
+}
+
+/**
+ * Return whether a session has been started.
+ */
+function drupal_session_started($set = NULL) {
+  static $session_started = FALSE;
+  if (isset($set)) {
+    $session_started = $set;
+  }
+  return $session_started && session_id();
 }
 
 /**
  * Called when an anonymous user becomes authenticated or vice-versa.
  */
 function drupal_session_regenerate() {
-  $old_session_id = session_id();
+  global $user;
+
+  // Set the session cookie "httponly" flag to reduce the risk of session
+  // stealing via XSS.
   extract(session_get_cookie_params());
-  // Set "httponly" to TRUE to reduce the risk of session stealing via XSS.
   session_set_cookie_params($lifetime, $path, $domain, $secure, TRUE);
-  session_regenerate_id();
-  db_update('sessions')
-    ->fields(array(
-      'sid' => session_id()
-    ))
-    ->condition('sid', $old_session_id)
-    ->execute();
+
+  if (drupal_session_started()) {
+    $old_session_id = session_id();
+    session_regenerate_id();
+  }
+  else {
+    // Start the session when it doesn't exist yet.
+    // Preserve the logged in user, as it will be reset to anonymous
+    // by _sess_read.
+    $account = $user;
+    drupal_session_start();
+    $user = $account;
+  }
+
+  if (isset($old_session_id)) {
+    db_update('sessions')
+      ->fields(array(
+        'sid' => session_id()
+      ))
+      ->condition('sid', $old_session_id)
+      ->execute();
+  }
 }
 
 /**
