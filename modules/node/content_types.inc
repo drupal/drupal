@@ -71,6 +71,7 @@ function node_type_form(&$form_state, $type = NULL) {
     '#default_value' => $type->name,
     '#description' => t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>add new content</em> page. It is recommended that this name begin with a capital letter and contain only letters, numbers, and <strong>spaces</strong>. This name must be unique.'),
     '#required' => TRUE,
+    '#size' => 30,
     '#field_suffix' => ' <small id="node-type-name-suffix">&nbsp;</small>',
   );
 
