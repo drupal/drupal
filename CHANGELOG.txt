@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.310 2009/05/21 21:12:22 dries Exp $
+// $Id: CHANGELOG.txt,v 1.311 2009/06/02 06:24:06 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -57,6 +57,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
 - Aggregator:
     * Introduced architecture that allows pluggable parsers and processors for
       syndicating RSS and Atom feeds.
+    * Added options to suspend updating specific feeds and never discard feeds 
+      items.
 - Testing:
     * Added test framework and tests.
 - Improved time zone support:
