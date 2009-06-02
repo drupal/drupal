@@ -1004,6 +1004,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     default_profile_tasks($task, '');
 
     // Rebuild caches.
+    node_types_rebuild();
     actions_synchronize();
     _drupal_flush_css_js();
     $this->refreshVariables();
