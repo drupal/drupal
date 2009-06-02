@@ -87,7 +87,7 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
           // Now fetch the aliases corresponding to these system paths.
           // We order by ASC and overwrite array keys to ensure the correct
           // alias is used when there are multiple aliases per path.
-          $map[$path_language] = db_query("SELECT src, dst FROM {url_alias} WHERE src IN(:system) AND language IN(:language, '') ORDER BY language ASC", array(
+          $map[$path_language] = db_query("SELECT src, dst FROM {url_alias} WHERE src IN(:system) AND language IN(:language, '') ORDER BY language ASC, pid ASC", array(
             ':system' => $system_paths,
             ':language' => $path_language
           ))->fetchAllKeyed();
@@ -108,7 +108,7 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
       // For system paths which were not cached, query aliases individually.
       else if (!isset($no_aliases[$path_language][$path])) {
         // Get the most fitting result falling back with alias without language
-        $alias = db_query("SELECT dst FROM {url_alias} WHERE src = :src AND language IN(:language, '') ORDER BY language DESC", array(
+        $alias = db_query("SELECT dst FROM {url_alias} WHERE src = :src AND language IN(:language, '') ORDER BY language DESC, pid DESC", array(
           ':src' => $path,
           ':language' => $path_language
         ))->fetchField();
@@ -123,7 +123,7 @@ function drupal_lookup_path($action, $path = '', $path_language = '') {
       $src = '';
       if (!isset($map[$path_language]) || !($src = array_search($path, $map[$path_language]))) {
         // Get the most fitting result falling back with alias without language
-        if ($src = db_query("SELECT src FROM {url_alias} WHERE dst = :dst AND language IN(:language, '') ORDER BY language DESC", array(
+        if ($src = db_query("SELECT src FROM {url_alias} WHERE dst = :dst AND language IN(:language, '') ORDER BY language DESC, pid DESC", array(
                      ':dst' => $path,
                      ':language' => $path_language))
             ->fetchField()) {
