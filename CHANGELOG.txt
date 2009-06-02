@@ -57,6 +57,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
 - Aggregator:
     * Introduced architecture that allows pluggable parsers and processors for
       syndicating RSS and Atom feeds.
+    * Added options to suspend updating specific feeds and never discard feeds 
+      items.
 - Testing:
     * Added test framework and tests.
 - Improved time zone support:
