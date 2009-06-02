@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.335 2009/06/02 06:58:17 dries Exp $
+// $Id: system.install,v 1.336 2009/06/02 15:06:09 dries Exp $
 
 /**
  * @file
@@ -1340,11 +1340,11 @@ function system_schema() {
       ),
     ),
     'unique keys' => array(
-      'dst_language' => array('dst', 'language'),
+      'dst_language_pid' => array('dst', 'language', 'pid'),
     ),
     'primary key' => array('pid'),
     'indexes' => array(
-      'src_language' => array('src', 'language'),
+      'src_language_pid' => array('src', 'language', 'pid'),
     ),
   );
 
@@ -3522,6 +3522,18 @@ function system_update_7024() {
     );
   }
 
+  return $ret;
+}
+
+ /**
+  * Improve indexes on the {url_alias} table.
+  */
+function system_update_7025() {
+  $ret = array();
+  db_drop_index($ret, 'url_alias', 'src_language');
+  db_drop_index($ret, 'url_alias', 'dst_language');
+  db_add_index($ret, 'url_alias', 'dst_language_pid', array('dst', 'language', 'pid'));
+  db_add_index($ret, 'url_alias', 'src_language_pid', array('src', 'language', 'pid'));
   return $ret;
 }
 
