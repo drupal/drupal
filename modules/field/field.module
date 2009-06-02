@@ -5,6 +5,14 @@
  * Attach custom data fields to Drupal objects.
  */
 
+/*
+ * Load all Field API functions, either directly or via an
+ * autoloader.  We can't do this during hook_init() because it isn't
+ * run during update.php.
+ */
+require(DRUPAL_ROOT . '/modules/field/field.crud.inc');
+require(DRUPAL_ROOT . '/modules/field/field.autoload.inc');
+
 /**
  * @defgroup field Field API
  * @{
@@ -108,14 +116,8 @@ function field_help($path, $arg) {
 
 /**
  * Implement hook_init().
- *
- * TODO D7: Determine which functions need to always be "loaded", and
- * put autoloaders for them into field.autoload.inc. Also figure out
- * how to make this work during installation.
  */
 function field_init() {
-  module_load_include('inc', 'field', 'field.crud');
-  module_load_include('inc', 'field', 'field.autoload');
   drupal_add_css(drupal_get_path('module', 'field') . '/theme/field.css');
 }
 
