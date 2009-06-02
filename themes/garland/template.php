@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.21 2009/05/24 17:39:35 dries Exp $
+// $Id: template.php,v 1.22 2009/06/02 03:57:22 webchick Exp $
 
 /**
  * Return a themed breadcrumb trail.
@@ -66,7 +66,7 @@ function garland_menu_local_tasks() {
 /**
  * Format the "Submitted by username on date/time" for each comment.
  */
-function phptemplate_comment_submitted($comment) {
+function garland_comment_submitted($comment) {
   return t('!datetime — !username',
     array(
       '!username' => theme('username', $comment),
