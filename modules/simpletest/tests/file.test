@@ -1997,3 +1997,37 @@ class FileNameMungingTest extends FileTestCase {
     // $this->assertIdentical($unmunged_name, $this->name, t('The unmunged (%unmunged) filename matches the original (%original)', array('%unmunged' => $unmunged_name, '%original' => $this->name)));
   }
 }
+
+/**
+ * Tests for file_get_mimetype().
+ */
+class FileMimeTypeTest extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => t('File mimetypes'),
+      'description' => t('Test filename mimetype detection.'),
+      'group' => t('File'),
+    );
+  }
+
+  /**
+   * Test basic extraction of mimetypes from the filename.
+   */
+  public function testFileMimeTypeDetection() {
+    $test_case = array(
+      'test.jar' => 'application/java-archive',
+      'test.jpeg' => 'image/jpeg',
+      'test.jpg' => 'image/jpeg',
+      'test.jar.jpg' => 'image/jpeg',
+      'test.jpg.jar' => 'application/java-archive',
+      'test.pcf.Z' => 'application/x-font',
+      'pcf.Z' => 'application/octet-stream',
+      'jar' => 'application/octet-stream',
+    );
+
+    foreach ($test_case as $input => $expected) {
+      $output = file_get_mimetype($input);
+      $this->assertIdentical($output, $expected, t('Mimetype for %input is %output (expected: %expected).', array('%input' => $input, '%output' => $output, '%expected' => $expected)));
+    }
+  }
+}
