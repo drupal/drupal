@@ -753,11 +753,11 @@ function template_preprocess_forums(&$variables) {
     if (empty($forum_types)) {
       // The user is logged-in; but denied access to create any new forum content type.
       if ($user->uid) {
-        $forum_types['disallowed'] = array('title' => t('You are not allowed to post new content in forum.'));
+        $forum_types['disallowed'] = array('title' => t('You are not allowed to post new content in the forum.'));
       }
       // The user is not logged-in; and denied access to create any new forum content type.
       else {
-        $forum_types['login'] = array('title' => t('<a href="@login">Login</a> to post new content in forum.', array('@login' => url('user/login', array('query' => drupal_get_destination())))), 'html' => TRUE);
+        $forum_types['login'] = array('title' => t('<a href="@login">Login</a> to post new content in the forum.', array('@login' => url('user/login', array('query' => drupal_get_destination())))), 'html' => TRUE);
       }
     }
     $variables['links'] = $forum_types;
