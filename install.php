@@ -800,6 +800,7 @@ function install_tasks($profile, $task) {
     $messages = drupal_set_message();
     $output = '<p>' . st('Congratulations, @drupal has been successfully installed.', array('@drupal' => drupal_install_profile_name())) . '</p>';
     $output .= '<p>' . (isset($messages['error']) ? st('Please review the messages above before continuing on to <a href="@url">your new site</a>.', array('@url' => url(''))) : st('You may now visit <a href="@url">your new site</a>.', array('@url' => url('')))) . '</p>';
+    $output .= '<p>' . st('For more information on configuring Drupal, please refer to the <a href="@help">help section</a>.', array('@help' => url('admin/help'))) . '</p>';
     $task = 'done';
   }
 
