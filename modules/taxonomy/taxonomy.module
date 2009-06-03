@@ -504,7 +504,6 @@ function taxonomy_terms_static_reset() {
   drupal_static_reset('taxonomy_get_tree');
   drupal_static_reset('taxonomy_get_synonym_root');
   drupal_static_reset('taxonomy_term_load_multiple');
-  drupal_static_reset('taxonomy_get_term_data');
 }
 
 /**
@@ -1119,13 +1118,7 @@ function taxonomy_term_count_nodes($tid, $type = NULL) {
  *   An array of matching term objects.
  */
 function taxonomy_get_term_by_name($name) {
-  $query = db_select('taxonomy_term_data', 't');
-  $query->addTag('term_access');
-
-  return $query
-    ->fields('t')
-    ->where("LOWER(t.name) = LOWER(:name)", array(':name' => trim($name)))
-    ->execute()->fetchAll();
+  return taxonomy_term_load_multiple(array(), array('name' => trim($name)));
 }
 
 /**
@@ -1328,9 +1321,14 @@ function taxonomy_term_load_multiple($tids = array(), $conditions = array()) {
 
   // Remove any loaded terms from the array if they don't match $conditions.
   if ($conditions) {
+    // Name matching is case insensitive, note that with some collations 
+    // LOWER() and drupal_strtolower() may return different results.
     foreach ($terms as $term) {
       $term_values = (array) $term;
-      if (array_diff_assoc($conditions, $term_values)) {
+      if (isset($conditions['name']) && drupal_strtolower($conditions['name'] != drupal_strtolower($term_values['name']))) {
+        unset($terms[$term->tid]);
+      }
+      elseif (array_diff_assoc($conditions, $term_values)) {
         unset($terms[$term->tid]);
       }
     }
@@ -1350,6 +1348,11 @@ function taxonomy_term_load_multiple($tids = array(), $conditions = array()) {
 
     // If the conditions array is populated, add those to the query.
     if ($conditions) {
+      // When name is passed as a condition use LIKE.
+      if (isset($conditions['name'])) {
+        $query->condition('t.name', $conditions['name'], 'LIKE');
+        unset($conditions['name']);
+      }
       foreach ($conditions as $field => $value) {
         $query->condition('t.' . $field, $value);
       }
@@ -1396,22 +1399,6 @@ function taxonomy_term_load($tid) {
   }
   $term = taxonomy_term_load_multiple(array($tid), array());
   return $term ? $term[$tid] : FALSE;
-}
-
-/**
- * Return a term object from the taxonomy_term_data table.
- * @param $tid
- *   A term's ID
- * @return Object
- *  A term object. Results are statically cached.
- */
-function taxonomy_get_term_data($tid) {
-  $terms = &drupal_static(__FUNCTION__, array());
-
-  if (!isset($terms[$tid])) {
-    $terms[$tid] = db_query('SELECT * FROM {taxonomy_term_data} WHERE tid = :tid', array(':tid' => $tid))->fetch();
-  }
-  return $terms[$tid];
 }
 
 /**
@@ -1511,10 +1498,10 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
   if ($depth === 'all') {
     $depth = NULL;
   }
-  foreach ($tids as $index => $tid) {
-    $term = taxonomy_get_term_data($tid);
-    $tree = taxonomy_get_tree($term->vid, $tid, $depth);
-    $descendant_tids[] = array_merge(array($tid), array_map('_taxonomy_get_tid_from_term', $tree));
+  $terms = taxonomy_term_load_multiple($tids);
+  foreach ($terms as $term) {
+    $tree = taxonomy_get_tree($term->vid, $term->tid, $depth);
+    $descendant_tids[] = array_merge(array($term->tid), array_map('_taxonomy_get_tid_from_term', $tree));
   }
 
   $query = db_select('node', 'n');

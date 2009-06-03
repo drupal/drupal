@@ -525,7 +525,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     // Create the term to edit.
     $this->drupalPost('admin/content/taxonomy/' . $this->vocabulary->vid . '/add', $edit, t('Save'));
 
-    $term = taxonomy_get_term_by_name($edit['name']);
+    $term = reset(taxonomy_get_term_by_name($edit['name']));
     $this->assertNotNull($term, t('Term found in database'));
 
     // Submitting a term takes us to the add page; we need the List page.
@@ -546,20 +546,51 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     );
 
     // Edit the term.
-    $this->drupalPost('taxonomy/term/' . $term[0]->tid . '/edit', $edit, t('Save'));
+    $this->drupalPost('taxonomy/term/' . $term->tid . '/edit', $edit, t('Save'));
 
     // View the term and check that it is correct.
-    $this->drupalGet('taxonomy/term/' . $term[0]->tid);
+    $this->drupalGet('taxonomy/term/' . $term->tid);
     $this->assertText($edit['name'], t('The randomly generated term name is present.'));
     $this->assertText($edit['description'], t('The randomly generated term description is present.'));
 
     // Delete the term.
-    $this->drupalPost('taxonomy/term/' . $term[0]->tid . '/edit', array(), t('Delete'));
+    $this->drupalPost('taxonomy/term/' . $term->tid . '/edit', array(), t('Delete'));
     $this->drupalPost(NULL, NULL, t('Delete'));
 
     // Assert that the term no longer exists.
-    $this->drupalGet('taxonomy/term/' . $term[0]->tid);
+    $this->drupalGet('taxonomy/term/' . $term->tid);
     $this->assertResponse(404, t('The taxonomy term page was not found'));
+  }
+
+  /**
+   * Test taxonomy_get_term_by_name().
+   */
+  function testTaxonomyGetTermByName() {
+    $term = $this->createTerm($this->vocabulary->vid);
+
+    // Load the term with the exact name.
+    $terms = taxonomy_get_term_by_name($term->name);
+    $this->assertTrue(isset($terms[$term->tid]), t('Term loaded using exact name.'));
+
+    // Load the term with space concatenated.
+    $terms  = taxonomy_get_term_by_name('  ' . $term->name . '   ');
+    $this->assertTrue(isset($terms[$term->tid]), t('Term loaded with extra whitespace.'));
+
+    // Load the term with name uppercased.
+    $terms = taxonomy_get_term_by_name(strtoupper($term->name));
+    $this->assertTrue(isset($terms[$term->tid]), t('Term loaded with uppercased name.'));
+
+    // Load the term with name lowercased.
+    $terms = taxonomy_get_term_by_name(strtolower($term->name));
+    $this->assertTrue(isset($terms[$term->tid]), t('Term loaded with lowercased name.'));
+
+    // Try to load an invalid term name.
+    $terms = taxonomy_get_term_by_name('Banana');
+    $this->assertFalse($terms);
+
+    // Try to load the term using a substring of the name.
+    $terms = taxonomy_get_term_by_name(drupal_substr($term->name, 2));
+    $this->assertFalse($terms);
   }
 }
 
@@ -664,8 +695,7 @@ class TaxonomyHooksTestCase extends DrupalWebTestCase {
       'antonyms' => 'Long',
     );
     $this->drupalPost('admin/content/taxonomy/1/add', $edit, t('Save'));
-    $terms = taxonomy_get_term_by_name($edit['name']);
-    $term = taxonomy_term_load($terms[0]->tid);
+    $term = reset(taxonomy_get_term_by_name($edit['name']));
     $this->assertEqual($term->antonyms[0], $edit['antonyms'], t('Antonyms were loaded into the term object'));
 
     // Update the term with a different antonym.
