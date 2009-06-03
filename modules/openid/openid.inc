@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.inc,v 1.17 2009/06/02 06:58:17 dries Exp $
+// $Id: openid.inc,v 1.18 2009/06/03 19:27:21 dries Exp $
 
 /**
  * @file
@@ -350,7 +350,7 @@ function _openid_dh_xorsecret($shared, $secret) {
 }
 
 function _openid_dh_rand($stop) {
-  static $duplicate_cache = array();
+  $duplicate_cache = &drupal_static(__FUNCTION__, array());
 
   // Used as the key for the duplicate cache
   $rbytes = _openid_dh_long_to_binary($stop);
@@ -389,7 +389,7 @@ function _openid_dh_rand($stop) {
 }
 
 function _openid_get_bytes($num_bytes) {
-  static $f = NULL;
+  $f = &drupal_static(__FUNCTION__);
   $bytes = '';
   if (!isset($f)) {
     $f = @fopen(OPENID_RAND_SOURCE, "r");
