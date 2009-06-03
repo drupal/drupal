@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.12 2009/04/11 22:19:46 webchick Exp $ */
+/* $Id: style-rtl.css,v 1.13 2009/06/03 06:58:57 dries Exp $ */
 
 html {
   direction: rtl;
@@ -125,6 +125,7 @@ ul.main-menu li {
 ul.secondary-menu {
   float: left;
   clear: left;
+  margin-left: 16em;
 }
 
 ul.secondary-menu li {
