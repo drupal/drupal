@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.11 2009/05/20 09:48:47 dries Exp $
+// $Id: field.api.php,v 1.12 2009/06/03 02:41:07 webchick Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -494,7 +494,7 @@ function hook_field_attach_form($obj_type, $object, &$form, &$form_state) {
  *   set as an empty array.
  *   - Loaded field names are set as keys in $skip_fields.
  */
-function hook_field_attach_pre_load($obj_type, &$objects, $age, &$skip_fields) {
+function hook_field_attach_pre_load($obj_type, $objects, $age, &$skip_fields) {
 }
 
 /**
@@ -512,7 +512,7 @@ function hook_field_attach_pre_load($obj_type, &$objects, $age, &$skip_fields) {
  *
  * See field_attach_load() for details and arguments.
  */
-function hook_field_attach_load($obj_type, &$objects, $age) {
+function hook_field_attach_load($obj_type, $objects, $age) {
 }
 
 /**
@@ -688,7 +688,7 @@ function hook_field_attach_delete_bundle($bundle, $instances) {
  *   Loaded field values are added to $objects. Fields with no values should be
  *   set as an empty array.
  */
-function hook_field_storage_load($obj_type, &$objects, $age, $skip_fields) {
+function hook_field_storage_load($obj_type, $objects, $age, $skip_fields) {
 }
 
 /**
