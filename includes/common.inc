@@ -3426,9 +3426,6 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
   $searchdir = array($directory);
   $files = array();
 
-  // Always search sites/all/* as well as the global directories
-  $searchdir[] = 'sites/all/' . $directory;
-
   // The 'profiles' directory contains pristine collections of modules and
   // themes as organized by a distribution. It is pristine in the same way
   // that /modules is pristine for core; users should avoid changing anything
@@ -3436,6 +3433,9 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
   if (file_exists("profiles/$profile/$directory")) {
     $searchdir[] = "profiles/$profile/$directory";
   }
+
+  // Always search sites/all/* as well as the global directories
+  $searchdir[] = 'sites/all/' . $directory;
 
   if (file_exists("$config/$directory")) {
     $searchdir[] = "$config/$directory";
