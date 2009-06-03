@@ -948,7 +948,8 @@ function comment_save($edit) {
       }
       else {
         drupal_set_message(t('Your comment has been posted.'));
-        comment_invoke_comment($edit, 'publish');
+        $comment = (object)$edit;
+        comment_invoke_comment($comment, 'publish');
       }
 
       return $edit['cid'];

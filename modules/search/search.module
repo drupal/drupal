@@ -690,9 +690,9 @@ function search_comment_delete($comment) {
 /**
  * Implement hook_comment_publish().
  */
-function search_comment_publish($form_values) {
+function search_comment_publish($comment) {
   // Reindex the node when comments are published.
-  search_touch_node($form_values['nid']);
+  search_touch_node($comment->nid);
 }
 
 /**

@@ -62,7 +62,7 @@ function hook_comment_update($form_values) {
  * @return
  *   Nothing.
  */
-function hook_comment_view(&$comment) {
+function hook_comment_view($comment) {
   // how old is the comment
   $comment->time_ago = time() - $comment->timestamp;
 }
@@ -71,12 +71,12 @@ function hook_comment_view(&$comment) {
  * The comment is being published by the moderator.
  *
  * @param $form_values
- *   Passes in an array of form values submitted by the user.
+ *   Passes in the comment the action is being performed on.
  * @return
  *   Nothing.
  */
-function hook_comment_publish($form_values) {
-  drupal_set_message(t('Comment: @subject has been published', array('@subject' => $form_values['subject'])));
+function hook_comment_publish($comment) {
+  drupal_set_message(t('Comment: @subject has been published', array('@subject' => $comment->subject)));
 }
 
 /**
@@ -87,7 +87,7 @@ function hook_comment_publish($form_values) {
  * @return
  *   Nothing.
  */
-function hook_comment_unpublish(&$comment) {
+function hook_comment_unpublish($comment) {
   drupal_set_message(t('Comment: @subject has been unpublished', array('@subject' => $comment->subject)));
 }
 
@@ -99,7 +99,7 @@ function hook_comment_unpublish(&$comment) {
  * @return
  *   Nothing.
  */
-function hook_comment_delete(&$comment) {
+function hook_comment_delete($comment) {
   drupal_set_message(t('Comment: @subject has been deleted', array('@subject' => $comment->subject)));
 }
 
