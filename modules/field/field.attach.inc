@@ -155,7 +155,7 @@ define('FIELD_STORAGE_INSERT', 'insert');
  *   - TRUE: use the default field implementation of the field hook.
  *   - FALSE: use the field module's implementation of the field hook.
  */
-function _field_invoke($op, $obj_type, &$object, &$a = NULL, &$b = NULL, $default = FALSE) {
+function _field_invoke($op, $obj_type, $object, &$a = NULL, &$b = NULL, $default = FALSE) {
   list(, , $bundle) = field_attach_extract_ids($obj_type, $object);
   $instances = field_info_instances($bundle);
 
@@ -206,7 +206,7 @@ function _field_invoke($op, $obj_type, &$object, &$a = NULL, &$b = NULL, $defaul
  * @return
  *   An array of returned values keyed by object id.
  */
-function _field_invoke_multiple($op, $obj_type, &$objects, &$a = NULL, &$b = NULL, $default = FALSE) {
+function _field_invoke_multiple($op, $obj_type, $objects, &$a = NULL, &$b = NULL, $default = FALSE) {
   $fields = array();
   $grouped_instances = array();
   $grouped_objects = array();
@@ -226,7 +226,7 @@ function _field_invoke_multiple($op, $obj_type, &$objects, &$a = NULL, &$b = NUL
         $fields[$field_name] = field_info_field($field_name);
       }
       $grouped_instances[$field_name][$id] = $instance;
-      $grouped_objects[$field_name][$id] = &$objects[$id];
+      $grouped_objects[$field_name][$id] = $objects[$id];
       $grouped_items[$field_name][$id] = isset($object->$field_name) ? $object->$field_name : array();
     }
     $return[$id] = array();
@@ -267,14 +267,14 @@ function _field_invoke_multiple($op, $obj_type, &$objects, &$a = NULL, &$b = NUL
 /**
  * Invoke field.module's version of a field hook.
  */
-function _field_invoke_default($op, $obj_type, &$object, &$a = NULL, &$b = NULL) {
+function _field_invoke_default($op, $obj_type, $object, &$a = NULL, &$b = NULL) {
   return _field_invoke($op, $obj_type, $object, $a, $b, TRUE);
 }
 
 /**
  * Invoke field.module's version of a field hook on multiple objects.
  */
-function _field_invoke_multiple_default($op, $obj_type, &$objects, &$a = NULL, &$b = NULL) {
+function _field_invoke_multiple_default($op, $obj_type, $objects, &$a = NULL, &$b = NULL) {
   return _field_invoke_multiple($op, $obj_type, $objects, $a, $b, TRUE);
 }
 
@@ -440,7 +440,7 @@ function _field_attach_load_revision($obj_type, $objects) {
  * @return
  *   Throws a FieldValidationException if validation errors are found.
  */
-function _field_attach_validate($obj_type, &$object) {
+function _field_attach_validate($obj_type, $object) {
   $errors = array();
   _field_invoke_default('validate', $obj_type, $object, $errors);
   _field_invoke('validate', $obj_type, $object, $errors);
@@ -484,7 +484,7 @@ function _field_attach_validate($obj_type, &$object) {
  * @param $form_state
  *   An associative array containing the current state of the form.
  */
-function _field_attach_form_validate($obj_type, &$object, $form, &$form_state) {
+function _field_attach_form_validate($obj_type, $object, $form, &$form_state) {
   // Extract field values from submitted values.
   _field_invoke_default('extract_form_values', $obj_type, $object, $form, $form_state);
 
@@ -516,7 +516,7 @@ function _field_attach_form_validate($obj_type, &$object, $form, &$form_state) {
  * @param $form_state
  *   An associative array containing the current state of the form.
  */
-function _field_attach_submit($obj_type, &$object, $form, &$form_state) {
+function _field_attach_submit($obj_type, $object, $form, &$form_state) {
   // Extract field values from submitted values.
   _field_invoke_default('extract_form_values', $obj_type, $object, $form, $form_state);
 
@@ -540,7 +540,7 @@ function _field_attach_submit($obj_type, &$object, $form, &$form_state) {
  * @param $object
  *   The object with fields to process.
  */
-function _field_attach_presave($obj_type, &$object) {
+function _field_attach_presave($obj_type, $object) {
   // TODO : to my knowledge, no field module has any use for 'presave' on D6.
   // should we keep this ?
   _field_invoke('presave', $obj_type, $object);
@@ -568,7 +568,7 @@ function _field_attach_presave($obj_type, &$object) {
  *   Default values (if any) will be added to the $object parameter for fields
  *   it leaves unspecified.
  */
-function _field_attach_insert($obj_type, &$object) {
+function _field_attach_insert($obj_type, $object) {
   _field_invoke_default('insert', $obj_type, $object);
   _field_invoke('insert', $obj_type, $object);
 
@@ -597,7 +597,7 @@ function _field_attach_insert($obj_type, &$object) {
  * @param $object
  *   The object with fields to save.
  */
-function _field_attach_update($obj_type, &$object) {
+function _field_attach_update($obj_type, $object) {
   _field_invoke('update', $obj_type, $object);
 
   // Let other modules act on updating the object, accumulating saved
@@ -626,7 +626,7 @@ function _field_attach_update($obj_type, &$object) {
  * @param $object
  *   The object whose field data to delete.
  */
-function _field_attach_delete($obj_type, &$object) {
+function _field_attach_delete($obj_type, $object) {
   _field_invoke('delete', $obj_type, $object);
   module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_delete', $obj_type, $object);
 
@@ -651,7 +651,7 @@ function _field_attach_delete($obj_type, &$object) {
  * @param $object
  *   The object with fields to save.
  */
-function _field_attach_delete_revision($obj_type, &$object) {
+function _field_attach_delete_revision($obj_type, $object) {
   _field_invoke('delete revision', $obj_type, $object);
   module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_delete_revision', $obj_type, $object);
 
@@ -677,7 +677,7 @@ function _field_attach_delete_revision($obj_type, &$object) {
  * @return
  *   A structured content array tree for drupal_render().
  */
-function _field_attach_view($obj_type, &$object, $teaser = FALSE) {
+function _field_attach_view($obj_type, $object, $teaser = FALSE) {
   // Let field modules sanitize their data for output.
   _field_invoke('sanitize', $obj_type, $object);
 
@@ -697,7 +697,7 @@ function _field_attach_view($obj_type, &$object, $teaser = FALSE) {
  *   containing the themed output for the whole field.
  * - Adds the formatted values in the 'view' key of the items.
  */
-function _field_attach_preprocess($obj_type, &$object) {
+function _field_attach_preprocess($obj_type, $object) {
   return _field_invoke_default('preprocess', $obj_type, $object);
 }
 

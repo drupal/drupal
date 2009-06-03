@@ -25,7 +25,7 @@ function field_default_validate($obj_type, $object, $field, $instance, $items) {
   // TODO: here we could validate that required fields are filled in (for programmatic save)
 }
 
-function field_default_submit($obj_type, &$object, $field, $instance, &$items, $form, &$form_state) {
+function field_default_submit($obj_type, $object, $field, $instance, &$items, $form, &$form_state) {
   $field_name = $field['field_name'];
 
   // TODO: should me move what's below to __extract_form_values ?
@@ -46,7 +46,7 @@ function field_default_submit($obj_type, &$object, $field, $instance, &$items, $
  * This can happen with programmatic saves, or on form-based creation where
  * the current user doesn't have 'edit' permission for the field.
  */
-function field_default_insert($obj_type, &$object, $field, $instance, &$items) {
+function field_default_insert($obj_type, $object, $field, $instance, &$items) {
   // _field_invoke() populates $items with an empty array if the $object has no
   // entry for the field, so we check on the $object itself.
   if (!property_exists($object, $field['field_name']) && !empty($instance['default_value_function'])) {

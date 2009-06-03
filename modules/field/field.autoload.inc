@@ -103,7 +103,7 @@ function field_attach_load_revision($obj_type, $objects) {
  *
  * This function is an autoloader for _field_attach_validate() in modules/field/field.attach.inc.
  */
-function field_attach_validate($obj_type, &$object) {
+function field_attach_validate($obj_type, $object) {
   require_once DRUPAL_ROOT . '/modules/field/field.attach.inc';
   return _field_attach_validate($obj_type, $object);
 }
@@ -138,7 +138,7 @@ function field_attach_validate($obj_type, &$object) {
  *
  * This function is an autoloader for _field_attach_form_validate() in modules/field/field.attach.inc.
  */
-function field_attach_form_validate($obj_type, &$object, $form, &$form_state) {
+function field_attach_form_validate($obj_type, $object, $form, &$form_state) {
   require_once DRUPAL_ROOT . '/modules/field/field.attach.inc';
   return _field_attach_form_validate($obj_type, $object, $form, $form_state);
 }
@@ -162,7 +162,7 @@ function field_attach_form_validate($obj_type, &$object, $form, &$form_state) {
  *
  * This function is an autoloader for _field_attach_submit() in modules/field/field.attach.inc.
  */
-function field_attach_submit($obj_type, &$object, $form, &$form_state) {
+function field_attach_submit($obj_type, $object, $form, &$form_state) {
   require_once DRUPAL_ROOT . '/modules/field/field.attach.inc';
   return _field_attach_submit($obj_type, $object, $form, $form_state);
 }
@@ -180,7 +180,7 @@ function field_attach_submit($obj_type, &$object, $form, &$form_state) {
  *
  * This function is an autoloader for _field_attach_presave() in modules/field/field.attach.inc.
  */
-function field_attach_presave($obj_type, &$object) {
+function field_attach_presave($obj_type, $object) {
   require_once DRUPAL_ROOT . '/modules/field/field.attach.inc';
   return _field_attach_presave($obj_type, $object);
 }
@@ -203,7 +203,7 @@ function field_attach_presave($obj_type, &$object) {
  *
  * This function is an autoloader for _field_attach_insert() in modules/field/field.attach.inc.
  */
-function field_attach_insert($obj_type, &$object) {
+function field_attach_insert($obj_type, $object) {
   require_once DRUPAL_ROOT . '/modules/field/field.attach.inc';
   return _field_attach_insert($obj_type, $object);
 }
@@ -218,7 +218,7 @@ function field_attach_insert($obj_type, &$object) {
  *
  * This function is an autoloader for _field_attach_update() in modules/field/field.attach.inc.
  */
-function field_attach_update($obj_type, &$object) {
+function field_attach_update($obj_type, $object) {
   require_once DRUPAL_ROOT . '/modules/field/field.attach.inc';
   return _field_attach_update($obj_type, $object);
 }
@@ -234,7 +234,7 @@ function field_attach_update($obj_type, &$object) {
  *
  * This function is an autoloader for _field_attach_delete() in modules/field/field.attach.inc.
  */
-function field_attach_delete($obj_type, &$object) {
+function field_attach_delete($obj_type, $object) {
   require_once DRUPAL_ROOT . '/modules/field/field.attach.inc';
   return _field_attach_delete($obj_type, $object);
 }
@@ -250,7 +250,7 @@ function field_attach_delete($obj_type, &$object) {
  *
  * This function is an autoloader for _field_attach_delete_revision() in modules/field/field.attach.inc.
  */
-function field_attach_delete_revision($obj_type, &$object) {
+function field_attach_delete_revision($obj_type, $object) {
   require_once DRUPAL_ROOT . '/modules/field/field.attach.inc';
   return _field_attach_delete_revision($obj_type, $object);
 }
@@ -272,7 +272,7 @@ function field_attach_delete_revision($obj_type, &$object) {
  *
  * This function is an autoloader for _field_attach_view() in modules/field/field.attach.inc.
  */
-function field_attach_view($obj_type, &$object, $teaser = FALSE) {
+function field_attach_view($obj_type, $object, $teaser = FALSE) {
   require_once DRUPAL_ROOT . '/modules/field/field.attach.inc';
   return _field_attach_view($obj_type, $object, $teaser);
 }
@@ -286,7 +286,7 @@ function field_attach_view($obj_type, &$object, $teaser = FALSE) {
  *
  * This function is an autoloader for _field_attach_preprocess() in modules/field/field.attach.inc.
  */
-function field_attach_preprocess($obj_type, &$object) {
+function field_attach_preprocess($obj_type, $object) {
   require_once DRUPAL_ROOT . '/modules/field/field.attach.inc';
   return _field_attach_preprocess($obj_type, $object);
 }
