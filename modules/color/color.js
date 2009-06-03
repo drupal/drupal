@@ -1,4 +1,4 @@
-// $Id: color.js,v 1.12 2009/04/27 20:19:35 webchick Exp $
+// $Id: color.js,v 1.13 2009/06/03 06:50:59 dries Exp $
 (function ($) {
 
 Drupal.behaviors.color = {
@@ -7,7 +7,7 @@ Drupal.behaviors.color = {
     if ($('#color_scheme_form .color-form.color-processed').size()) {
       return;
     }
-    var form = $('#color_scheme_form .color-form', context);
+    var form = $('#system-theme-settings .color-form', context);
     var inputs = [];
     var hooks = [];
     var locks = [];
