@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.718 2009/06/01 22:01:56 dries Exp $
+// $Id: comment.module,v 1.719 2009/06/03 06:52:29 dries Exp $
 
 /**
  * @file
@@ -948,7 +948,8 @@ function comment_save($edit) {
       }
       else {
         drupal_set_message(t('Your comment has been posted.'));
-        comment_invoke_comment($edit, 'publish');
+        $comment = (object)$edit;
+        comment_invoke_comment($comment, 'publish');
       }
 
       return $edit['cid'];
