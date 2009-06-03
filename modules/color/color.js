@@ -7,7 +7,7 @@ Drupal.behaviors.color = {
     if ($('#color_scheme_form .color-form.color-processed').size()) {
       return;
     }
-    var form = $('#color_scheme_form .color-form', context);
+    var form = $('#system-theme-settings .color-form', context);
     var inputs = [];
     var hooks = [];
     var locks = [];
