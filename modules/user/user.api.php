@@ -251,6 +251,19 @@ function hook_user_operations() {
   return $operations;
 }
 
+
+/**
+ * Retrieve a list of all user setting/information categories.
+ */
+function hook_user_categories() {
+  return array(array(
+    'name' => 'account',
+    'title' => t('Account settings'),
+    'weight' => 1,
+  ));
+}
+
+
 /**
  * @} End of "addtogroup hooks".
  */

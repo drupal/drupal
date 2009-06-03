@@ -245,13 +245,6 @@ function profile_user_validate(&$edit, &$user, $category = NULL) {
 }
 
 /**
- * Implement hook_user_categories().
- */
-function profile_user_categories($edit, $user, $category = NULL) {
-  return profile_categories();
-}
-
-/**
  * Implement hook_user_cancel().
  */
 function profile_user_cancel(&$edit, &$account, $method) {
@@ -495,8 +488,10 @@ function profile_validate_profile($edit, $category) {
 
   return $edit;
 }
-
-function profile_categories() {
+/**
+ * Implement hook_user_categories().
+ */
+function profile_user_categories() {
   $result = db_query("SELECT DISTINCT(category) FROM {profile_field}");
   $data = array();
   foreach ($result as $category) {

@@ -998,10 +998,14 @@ function user_user_submit(&$edit, &$account, $category = NULL) {
 }
 
 /**
- * Implement hook_user_categories.
+ * Implement hook_user_categories().
  */
-function user_user_categories($edit, $account, $category = NULL) {
-    return array(array('name' => 'account', 'title' => t('Account settings'), 'weight' => 1));
+function user_user_categories() {
+  return array(array(
+    'name' => 'account',
+    'title' => t('Account settings'),
+    'weight' => 1,
+  ));
 }
 
 function user_login_block() {
@@ -1437,8 +1441,7 @@ function user_menu() {
     'load arguments' => array('%map', '%index'),
   );
 
-  $empty_account = new stdClass();
-  if (($categories = _user_categories($empty_account)) && (count($categories) > 1)) {
+  if (($categories = _user_categories()) && (count($categories) > 1)) {
     foreach ($categories as $key => $category) {
       // 'account' is already handled by the MENU_DEFAULT_LOCAL_TASK.
       if ($category['name'] != 'account') {
@@ -1489,8 +1492,7 @@ function user_category_load($uid, &$map, $index) {
       // Check that the requested category exists.
       $valid = FALSE;
       if (!isset($user_categories)) {
-        $empty_account = new stdClass();
-        $user_categories = _user_categories($empty_account);
+        $user_categories = _user_categories();
       }
       foreach ($user_categories as $category) {
         if ($category['name'] == $category_path) {
@@ -2414,15 +2416,8 @@ function user_help($path, $arg) {
 /**
  * Retrieve a list of all user setting/information categories and sort them by weight.
  */
-function _user_categories($account) {
-  $categories = array();
-
-  foreach (module_implements('user_categories') as $module) {
-    if ($data = module_invoke($module, 'user_categories', NULL, $account, '')) {
-      $categories = array_merge($data, $categories);
-    }
-  }
-
+function _user_categories() {
+  $categories = module_invoke_all('user_categories');
   usort($categories, '_user_sort');
 
   return $categories;
