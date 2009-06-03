@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.260 2009/06/02 00:23:42 webchick Exp $
+// $Id: profile.module,v 1.261 2009/06/03 07:28:28 dries Exp $
 
 /**
  * @file
@@ -242,13 +242,6 @@ function profile_user_form(&$edit, &$user, $category = NULL) {
  */
 function profile_user_validate(&$edit, &$user, $category = NULL) {
   return profile_validate_profile($edit, $category);
-}
-
-/**
- * Implement hook_user_categories().
- */
-function profile_user_categories($edit, $user, $category = NULL) {
-  return profile_categories();
 }
 
 /**
@@ -495,8 +488,10 @@ function profile_validate_profile($edit, $category) {
 
   return $edit;
 }
-
-function profile_categories() {
+/**
+ * Implement hook_user_categories().
+ */
+function profile_user_categories() {
   $result = db_query("SELECT DISTINCT(category) FROM {profile_field}");
   $data = array();
   foreach ($result as $category) {

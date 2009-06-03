@@ -1,5 +1,5 @@
 <?php
-// $Id: user.api.php,v 1.5 2009/04/30 16:10:10 dries Exp $
+// $Id: user.api.php,v 1.6 2009/06/03 07:28:28 dries Exp $
 
 /**
  * @file
@@ -250,6 +250,19 @@ function hook_user_operations() {
   );
   return $operations;
 }
+
+
+/**
+ * Retrieve a list of all user setting/information categories.
+ */
+function hook_user_categories() {
+  return array(array(
+    'name' => 'account',
+    'title' => t('Account settings'),
+    'weight' => 1,
+  ));
+}
+
 
 /**
  * @} End of "addtogroup hooks".
