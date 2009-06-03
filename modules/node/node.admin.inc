@@ -10,25 +10,19 @@
  * Menu callback; presents general node configuration options.
  */
 function node_configure() {
-  // Only show rebuild button if there are either 0, or 2 or more, rows
-  // in the {node_access} table, or if there are modules that
-  // implement hook_node_grants().
-  if (db_query('SELECT COUNT(*) FROM {node_access}')->fetchField() != 1 || count(module_implements('node_grants')) > 0) {
-    $status = '<p>' . t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Possible causes for permission problems are disabling modules or configuration changes to permissions. Rebuilding will remove all privileges to posts, and replace them with permissions based on the current modules and settings.') . '</p>';
-    $status .= '<p>' . t('Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed posts will automatically use the new permissions.') . '</p>';
+  $status = '<p>' . t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Possible causes for permission problems are disabling modules or configuration changes to permissions. Rebuilding will remove all privileges to posts, and replace them with permissions based on the current modules and settings.') . '</p>';
+  $status .= '<p>' . t('Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed posts will automatically use the new permissions.') . '</p>';
 
-    $form['access'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Node access status'),
-    );
-    $form['access']['status'] = array('#markup' => $status);
-    $form['access']['rebuild'] = array(
-      '#type' => 'submit',
-      '#value' => t('Rebuild permissions'),
-      '#submit' => array('node_configure_access_submit'),
-    );
-  }
-
+  $form['access'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Node access status'),
+  );
+  $form['access']['status'] = array('#markup' => $status);
+  $form['access']['rebuild'] = array(
+    '#type' => 'submit',
+    '#value' => t('Rebuild permissions'),
+    '#submit' => array('node_configure_access_submit'),
+  );
   $form['default_nodes_main'] = array(
     '#type' => 'select', '#title' => t('Number of posts on main page'),
     '#default_value' => 10,
