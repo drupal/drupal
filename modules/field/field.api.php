@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.12 2009/06/03 02:41:07 webchick Exp $
+// $Id: field.api.php,v 1.13 2009/06/04 03:33:27 webchick Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -47,7 +47,7 @@ function hook_fieldable_info() {
       'cacheable' => FALSE,
       // Bundles must provide human readable name so
       // we can create help and error messages about them.
-      'bundles' => node_get_types('names'),
+      'bundles' => node_type_get_names(),
     ),
   );
   return $return;

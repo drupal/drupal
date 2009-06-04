@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.22 2009/05/27 02:01:53 webchick Exp $
+// $Id: node.api.php,v 1.23 2009/06/04 03:33:28 webchick Exp $
 
 /**
  * @file
@@ -736,7 +736,7 @@ function hook_prepare($node) {
  * For a detailed usage example, see node_example.module.
  */
 function hook_form($node, $form_state) {
-  $type = node_get_types('type', $node);
+  $type = node_type_get_type($node);
 
   $form['title'] = array(
     '#type' => 'textfield',

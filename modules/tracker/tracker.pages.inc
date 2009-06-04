@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.pages.inc,v 1.20 2009/05/29 18:51:46 dries Exp $
+// $Id: tracker.pages.inc,v 1.21 2009/06/04 03:33:29 webchick Exp $
 
 /**
  * @file
@@ -61,7 +61,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
     }
 
     $rows[] = array(
-      check_plain(node_get_types('name', $node->type)),
+      check_plain(node_type_get_name($node->type)),
       l($node->title, "node/$node->nid") . ' ' . theme('mark', node_mark($node->nid, $node->changed)),
       theme('username', $node),
       array('class' => 'replies', 'data' => $comments),

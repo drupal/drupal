@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.298 2009/05/30 04:49:10 webchick Exp $
+// $Id: poll.module,v 1.299 2009/06/04 03:33:28 webchick Exp $
 
 /**
  * @file
@@ -206,7 +206,7 @@ function poll_form($node, $form_state) {
 
   $admin = user_access('administer nodes') || user_access('edit any poll content') || (user_access('edit own poll content') && $user->uid == $node->uid);
 
-  $type = node_get_types('type', $node);
+  $type = node_type_get_type($node);
 
   $form = array(
     '#cache' => TRUE,

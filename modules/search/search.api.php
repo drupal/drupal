@@ -1,5 +1,5 @@
 <?php
-// $Id: search.api.php,v 1.8 2009/05/24 05:21:55 dries Exp $
+// $Id: search.api.php,v 1.9 2009/06/04 03:33:28 webchick Exp $
 
 /**
  * @file
@@ -184,7 +184,7 @@ function hook_search($op = 'search', $keys = NULL) {
 
         $results[] = array(
           'link' => url('node/' . $item->sid, array('absolute' => TRUE)),
-          'type' => check_plain(node_get_types('name', $node)),
+          'type' => check_plain(node_type_get_name($node)),
           'title' => $node->title,
           'user' => theme('username', $node),
           'date' => $node->changed,

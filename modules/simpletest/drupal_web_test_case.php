@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.112 2009/06/02 00:01:52 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.113 2009/06/04 03:33:28 webchick Exp $
 
 /**
  * Base class for Drupal tests.
@@ -701,7 +701,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Find a non-existent random type name.
     do {
       $name = strtolower($this->randomName(8));
-    } while (node_get_types('type', $name));
+    } while (node_type_get_type($name));
 
     // Populate defaults array.
     $defaults = array(

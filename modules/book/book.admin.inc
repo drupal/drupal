@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.19 2009/03/14 20:13:26 dries Exp $
+// $Id: book.admin.inc,v 1.20 2009/06/04 03:33:27 webchick Exp $
 
 /**
  * @file
@@ -35,7 +35,7 @@ function book_admin_overview() {
  * @ingroup forms
  */
 function book_admin_settings() {
-  $types = node_get_types('names');
+  $types = node_type_get_names();
   $form['book_allowed_types'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Allowed book outline types'),

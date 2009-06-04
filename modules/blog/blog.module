@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.321 2009/05/27 18:33:54 dries Exp $
+// $Id: blog.module,v 1.322 2009/06/04 03:33:27 webchick Exp $
 
 /**
  * @file
@@ -74,7 +74,7 @@ function blog_help($path, $arg) {
  */
 function blog_form($node, $form_state) {
   global $nid;
-  $type = node_get_types('type', $node);
+  $type = node_type_get_type($node);
 
   $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#required' => TRUE, '#default_value' => !empty($node->title) ? $node->title : NULL, '#weight' => -5);
   $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
