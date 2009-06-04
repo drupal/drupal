@@ -254,10 +254,10 @@ function user_admin_settings() {
   // Administrative role option.
   $form['admin_role'] = array(
     '#type' => 'fieldset',
-    '#title' => t ('Administrator role'),
+    '#title' => t('Administrator role'),
   );
 
-  // Don't allow users to set the anonymous or authenticated user roles as the
+  // Do not allow users to set the anonymous or authenticated user roles as the
   // administrator role.
   $roles = user_roles();
   $roles = array_slice($roles, 2, NULL, TRUE);
@@ -944,7 +944,7 @@ function user_modules_installed($modules) {
           db_insert('role_permission')
             ->fields(array(
               'rid' => $rid,
-               'permission' => $permission,
+              'permission' => $permission,
             ))->execute();
         }
       }

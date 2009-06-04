@@ -221,16 +221,12 @@ function default_profile_tasks(&$task, $url) {
   variable_set('user_admin_role', $rid);
 
   // Assign all available permissions to this role.
-  foreach (module_implements('perm') as $module) {
-    if ($permissions = module_invoke($module, 'perm')) {
-      foreach (array_keys($permissions) as $permission) {
-        db_insert('role_permission')
-          ->fields(array(
-            'rid' => $rid,
-             'permission' => $permission,
-          ))->execute();
-      }
-    }
+  foreach (module_invoke_all('perm') as $key => $value) {
+    db_insert('role_permission')
+      ->fields(array(
+        'rid' => $rid,
+        'permission' => $key,
+      ))->execute();
   }
 
   // Update the menu router information.
