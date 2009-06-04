@@ -733,7 +733,7 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
   function setUp() {
     parent::setUp();
 
-    $this->admin_user = $this->drupalCreateUser(array('administer permissions', 'access user profiles'));
+    $this->admin_user = $this->drupalCreateUser(array('administer permissions', 'access user profiles', 'administer site configuration', 'administer users'));
 
     // Find the new role ID - it must be the maximum.
     $all_rids = array_keys($this->admin_user->roles);
@@ -766,6 +766,26 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
     $this->assertFalse(user_access('access user profiles', $account, TRUE), t('User no longer has "access user profiles" permission.'));
   }
 
+  /**
+   * Test assigning of permissions for the administrator role.
+   */
+  function testAdministratorRole() {
+    $this->drupalLogin($this->admin_user);
+    $this->drupalGet('admin/user/settings');
+
+    // Set the user's role to be the administrator role.
+    $edit = array();
+    $edit['user_admin_role'] = $this->rid;
+    $this->drupalPost('admin/user/settings', $edit, t('Save configuration'));
+
+    // Enable aggregator module and ensure the 'administer news feeds'
+    // permission is assigned by default.
+    $edit = array();
+    $edit['modules[Core][aggregator][enable]'] = TRUE;
+    $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
+
+    $this->assertTrue(user_access('administer news feeds', $this->admin_user, TRUE), t('The permission was automatically assigned to the administrator role'));
+  }
 }
 
 class UserAdminTestCase extends DrupalWebTestCase {
