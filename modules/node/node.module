@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1064 2009/06/04 03:33:28 webchick Exp $
+// $Id: node.module,v 1.1065 2009/06/04 19:03:29 webchick Exp $
 
 /**
  * @file
@@ -689,7 +689,7 @@ function node_type_update_nodes($old_type, $type) {
  *
  */
 function _node_types_build() {
-  $_node_types = drupal_static(__FUNCTION__);
+  $_node_types = &drupal_static(__FUNCTION__);
   if (is_object($_node_types)) {
     return $_node_types;
   }
