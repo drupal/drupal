@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.54 2009/06/02 06:58:17 dries Exp $
+// $Id: user.admin.inc,v 1.55 2009/06/04 09:52:33 dries Exp $
 
 /**
  * @file
@@ -249,6 +249,26 @@ function user_admin_settings() {
     '#default_value' => variable_get('anonymous', t('Anonymous')),
     '#description' => t('The name used to indicate anonymous users.'),
     '#required' => TRUE,
+  );
+
+  // Administrative role option.
+  $form['admin_role'] = array(
+    '#type' => 'fieldset',
+    '#title' => t ('Administrator role'),
+  );
+
+  // Don't allow users to set the anonymous or authenticated user roles as the
+  // administrator role.
+  $roles = user_roles();
+  $roles = array_slice($roles, 2, NULL, TRUE);
+  $roles[0] = t('disabled');
+
+  $form['admin_role']['user_admin_role'] = array(
+    '#type' => 'select',
+    '#title' => t('Administrator role'),
+    '#default_value' => variable_get('user_admin_role', 0),
+    '#options' => $roles,
+    '#description' => t('This role will be automatically assigned new permissions whenever a module is enabled. Changing this setting will not affect existing permissions.'),
   );
 
   // User registration settings.
@@ -909,4 +929,25 @@ function theme_user_filters($form) {
   $output .= '</li></ul>';
 
   return $output;
+}
+
+/**
+ * Implementation of hook_modules_installed().
+ */
+function user_modules_installed($modules) {
+  // Assign all available permissions to the administrator role.
+  $rid = variable_get('user_admin_role', 0);
+  if ($rid) {
+    foreach ($modules as $module) {
+      if ($permissions = module_invoke($module, 'perm')) {
+        foreach (array_keys($permissions) as $permission) {
+          db_insert('role_permission')
+            ->fields(array(
+              'rid' => $rid,
+               'permission' => $permission,
+            ))->execute();
+        }
+      }
+    }
+  }
 }

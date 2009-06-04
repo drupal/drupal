@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.44 2009/05/29 21:39:17 webchick Exp $
+// $Id: default.profile,v 1.45 2009/06/04 09:52:33 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -213,6 +213,25 @@ function default_profile_tasks(&$task, $url) {
     'weight' => 0,
   ))->execute();
   db_insert('taxonomy_vocabulary_node_type')->fields(array('vid' => $vid, 'type' => 'article'))->execute();
+
+  // Create a default role for site administrators.
+  $rid = db_insert('role')->fields(array('name' => 'administrator'))->execute();
+
+  // Set this as the administrator role.
+  variable_set('user_admin_role', $rid);
+
+  // Assign all available permissions to this role.
+  foreach (module_implements('perm') as $module) {
+    if ($permissions = module_invoke($module, 'perm')) {
+      foreach (array_keys($permissions) as $permission) {
+        db_insert('role_permission')
+          ->fields(array(
+            'rid' => $rid,
+             'permission' => $permission,
+          ))->execute();
+      }
+    }
+  }
 
   // Update the menu router information.
   menu_rebuild();
