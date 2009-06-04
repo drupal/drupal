@@ -1763,7 +1763,7 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
     $ages = $outer_query
       ->execute()
       ->fetchCol();
-    $this->assertEqual($ages, array(25, 26, 27, 28), 'Inner pager query returned the correct ages.');
+    $this->assertEqual($ages, array(25, 26, 27, 28), t('Inner pager query returned the correct ages.'));
   }
 
   /**
@@ -1774,15 +1774,16 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
   function testHavingPagerQuery() {
     $query = db_select('test', 't')->extend('PagerDefault');
     $query
-      ->fields('t', array('age'))
-      ->orderBy('age')
-      ->having('COUNT(age) > :count', array(':count' => 1))
+      ->fields('t', array('name'))
+      ->orderBy('name')
+      ->groupBy('name')
+      ->having('MAX(age) > :count', array(':count' => 26))
       ->limit(5);
 
     $ages = $query
       ->execute()
       ->fetchCol();
-    $this->assertEqual($ages, array(25), ' pager query with having expression returned the correct ages.');
+    $this->assertEqual($ages, array('George', 'Ringo'), t('Pager query with having expression returned the correct ages.'));
   }
 }
 
