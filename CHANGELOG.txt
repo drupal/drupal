@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.311 2009/06/02 06:24:06 dries Exp $
+// $Id: CHANGELOG.txt,v 1.312 2009/06/04 20:09:29 webchick Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -29,6 +29,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
       order can now be customised using the Views module.
     * Added additional features to the default install profile, and implemented
       a "slimmed down" install profile designed for developers.
+    * Added an administrator role which is assigned all permisions for
+      installed modules automatically.
     * Image toolkits are now provided by modules (rather than requiring a manual
       file copy to the includes directory).
     * Added an edit tab to taxonomy term pages.

@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.45 2009/06/04 09:52:33 dries Exp $
+// $Id: default.profile,v 1.46 2009/06/04 20:09:29 webchick Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -221,16 +221,12 @@ function default_profile_tasks(&$task, $url) {
   variable_set('user_admin_role', $rid);
 
   // Assign all available permissions to this role.
-  foreach (module_implements('perm') as $module) {
-    if ($permissions = module_invoke($module, 'perm')) {
-      foreach (array_keys($permissions) as $permission) {
-        db_insert('role_permission')
-          ->fields(array(
-            'rid' => $rid,
-             'permission' => $permission,
-          ))->execute();
-      }
-    }
+  foreach (module_invoke_all('perm') as $key => $value) {
+    db_insert('role_permission')
+      ->fields(array(
+        'rid' => $rid,
+        'permission' => $key,
+      ))->execute();
   }
 
   // Update the menu router information.
