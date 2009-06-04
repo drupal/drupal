@@ -19,7 +19,7 @@ function taxonomy_overview_vocabularies() {
   foreach ($vocabularies as $vocabulary) {
     $types = array();
     foreach ($vocabulary->nodes as $type) {
-      $node_type = node_get_types('name', $type);
+      $node_type = node_type_get_name($type);
       $types[] = $node_type ? check_plain($node_type) : check_plain($type);
     }
     $form[$vocabulary->vid]['#vocabulary'] = $vocabulary;
@@ -146,7 +146,7 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
     '#type' => 'checkboxes',
     '#title' => t('Content types'),
     '#default_value' => $edit['nodes'],
-    '#options' => array_map('check_plain', node_get_types('names')),
+    '#options' => array_map('check_plain', node_type_get_names()),
     '#description' => t('Select content types to categorize using this vocabulary.'),
   );
   $form['settings'] = array(

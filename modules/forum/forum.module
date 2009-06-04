@@ -538,7 +538,7 @@ function forum_block_view($delta = '') {
  * Implement hook_form().
  */
 function forum_form($node, $form_state) {
-  $type = node_get_types('type', $node);
+  $type = node_type_get_type($node);
   $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#default_value' => !empty($node->title) ? $node->title : '', '#required' => TRUE, '#weight' => -5);
 
   if (!empty($node->nid)) {
@@ -746,7 +746,7 @@ function template_preprocess_forums(&$variables) {
       if (node_access('create', $type)) {
         // Fetch the "General" name of the content type;
         // Push the link with title and url to the array.
-        $forum_types[$type] = array('title' => t('Post new @node_type', array('@node_type' => node_get_types('name', $type))), 'href' => 'node/add/' . str_replace('_', '-', $type) . '/' . $variables['tid']);
+        $forum_types[$type] = array('title' => t('Post new @node_type', array('@node_type' => node_type_get_name($type))), 'href' => 'node/add/' . str_replace('_', '-', $type) . '/' . $variables['tid']);
       }
     }
 

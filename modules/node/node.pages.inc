@@ -11,7 +11,7 @@
  * Menu callback; presents the node editing form, or redirects to delete confirmation.
  */
 function node_page_edit($node) {
-  $type_name = node_get_types('name', $node);
+  $type_name = node_type_get_name($node);
   drupal_set_title(t('<em>Edit @type</em> @title', array('@type' => $type_name, '@title' => $node->title)), PASS_THROUGH);
   return drupal_get_form($node->type . '_node_form', $node);
 }
@@ -53,7 +53,7 @@ function theme_node_add_list($content) {
 function node_add($type) {
   global $user;
 
-  $types = node_get_types();
+  $types = node_type_get_types();
   $type = isset($type) ? str_replace('-', '_', $type) : NULL;
   // If a node type has been specified, validate its existence.
   if (isset($types[$type]) && node_access('create', $type)) {
@@ -290,7 +290,7 @@ function node_form(&$form_state, $node) {
  */
 function node_body_field($node, $label, $word_count) {
   // Do not generate a body field if the type does not specify one.
-  if (!node_get_types('type', $node)->has_body) {
+  if (!node_type_get_type($node->type)->has_body) {
     return array();
   }
 
@@ -463,7 +463,7 @@ function node_form_submit($form, &$form_state) {
   node_save($node);
   $node_link = l(t('view'), 'node/' . $node->nid);
   $watchdog_args = array('@type' => $node->type, '%title' => $node->title);
-  $t_args = array('@type' => node_get_types('name', $node), '%title' => $node->title);
+  $t_args = array('@type' => node_type_get_name($node), '%title' => $node->title);
 
   if ($insert) {
     watchdog('content', '@type: added %title.', $watchdog_args, WATCHDOG_NOTICE, $node_link);
@@ -528,7 +528,7 @@ function node_delete_confirm_submit($form, &$form_state) {
     $node = node_load($form_state['values']['nid']);
     node_delete($form_state['values']['nid']);
     watchdog('content', '@type: deleted %title.', array('@type' => $node->type, '%title' => $node->title));
-    drupal_set_message(t('@type %title has been deleted.', array('@type' => node_get_types('name', $node), '%title' => $node->title)));
+    drupal_set_message(t('@type %title has been deleted.', array('@type' => node_type_get_name($node), '%title' => $node->title)));
   }
 
   $form_state['redirect'] = '<front>';
@@ -598,7 +598,7 @@ function node_revision_revert_confirm_submit($form, &$form_state) {
   node_save($node_revision);
 
   watchdog('content', '@type: reverted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
-  drupal_set_message(t('@type %title has been reverted back to the revision from %revision-date.', array('@type' => node_get_types('name', $node_revision), '%title' => $node_revision->title, '%revision-date' => format_date($node_revision->revision_timestamp))));
+  drupal_set_message(t('@type %title has been reverted back to the revision from %revision-date.', array('@type' => node_type_get_name($node_revision), '%title' => $node_revision->title, '%revision-date' => format_date($node_revision->revision_timestamp))));
   $form_state['redirect'] = 'node/' . $node_revision->nid . '/revisions';
 }
 
@@ -615,7 +615,7 @@ function node_revision_delete_confirm_submit($form, &$form_state) {
     ->execute();
   module_invoke_all('node_delete_revision', $node_revision);
   watchdog('content', '@type: deleted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
-  drupal_set_message(t('Revision from %revision-date of @type %title has been deleted.', array('%revision-date' => format_date($node_revision->revision_timestamp), '@type' => node_get_types('name', $node_revision), '%title' => $node_revision->title)));
+  drupal_set_message(t('Revision from %revision-date of @type %title has been deleted.', array('%revision-date' => format_date($node_revision->revision_timestamp), '@type' => node_type_get_name($node_revision), '%title' => $node_revision->title)));
   $form_state['redirect'] = 'node/' . $node_revision->nid;
   if (db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid', array(':nid' => $node_revision->nid))->fetchField() > 1) {
     $form_state['redirect'] .= '/revisions';

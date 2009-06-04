@@ -23,7 +23,7 @@ function comment_uninstall() {
 
   // Remove variables.
   variable_del('comment_block_count');
-  $node_types = array_keys(node_get_types());
+  $node_types = array_keys(node_type_get_types());
   foreach ($node_types as $node_type) {
     variable_del('comment_' . $node_type);
     variable_del('comment_anonymous_' . $node_type);
@@ -90,7 +90,7 @@ function comment_update_6002() {
     'comment_preview' => COMMENT_PREVIEW_REQUIRED,
     'comment_form_location' => COMMENT_FORM_SEPARATE_PAGE,
   );
-  $types = node_get_types();
+  $types = node_type_get_types();
   foreach ($settings as $setting => $default) {
     $value = variable_get($setting, $default);
     foreach ($types as $type => $object) {
@@ -125,7 +125,7 @@ function comment_update_6003() {
  * Remove comment settings for page ordering.
  */
 function comment_update_7000() {
-  $types = node_get_types();
+  $types = node_type_get_types();
   foreach ($types as $type => $object) {
     variable_del('comment_default_order' . $type);
   }

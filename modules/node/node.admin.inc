@@ -144,7 +144,7 @@ function node_filters() {
     );
   }
 
-  $filters['type'] = array('title' => t('type'), 'options' => node_get_types('names'));
+  $filters['type'] = array('title' => t('type'), 'options' => node_type_get_names());
 
   // The taxonomy filter
   if ($taxonomy = module_invoke('taxonomy', 'form_all', 1)) {
@@ -501,7 +501,7 @@ function node_admin_nodes() {
     $nodes[$node->nid] = '';
     $options = empty($node->language) ? array() : array('language' => $languages[$node->language]);
     $form['title'][$node->nid] = array('#markup' => l($node->title, 'node/' . $node->nid, $options) . ' ' . theme('mark', node_mark($node->nid, $node->changed)));
-    $form['name'][$node->nid] =  array('#markup' => check_plain(node_get_types('name', $node)));
+    $form['name'][$node->nid] =  array('#markup' => check_plain(node_type_get_name($node)));
     $form['username'][$node->nid] = array('#markup' => theme('username', $node));
     $form['status'][$node->nid] =  array('#markup' => ($node->status ? t('published') : t('not published')));
     $form['changed'][$node->nid] = array('#markup' => format_date($node->changed, 'small'));

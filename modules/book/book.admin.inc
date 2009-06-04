@@ -35,7 +35,7 @@ function book_admin_overview() {
  * @ingroup forms
  */
 function book_admin_settings() {
-  $types = node_get_types('names');
+  $types = node_type_get_names();
   $form['book_allowed_types'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Allowed book outline types'),

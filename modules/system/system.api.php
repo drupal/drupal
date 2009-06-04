@@ -902,7 +902,7 @@ function hook_mail($key, &$message, $params) {
     $variables += array(
       '%uid' => $node->uid,
       '%node_url' => url('node/' . $node->nid, array('absolute' => TRUE)),
-      '%node_type' => node_get_types('name', $node),
+      '%node_type' => node_type_get_name($node),
       '%title' => $node->title,
       '%teaser' => $node->teaser,
       '%body' => $node->body,

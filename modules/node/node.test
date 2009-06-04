@@ -801,3 +801,35 @@ class NodeSaveTestCase extends DrupalWebTestCase {
     $this->assertTrue($node_by_title, t('Node load by node title.'));
   }
 }
+
+/**
+ * Tests related to node types.
+ */
+class NodeTypeTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Node types'),
+      'description' => t('Ensures that node type functions work correctly.'),
+      'group' => t('Node'),
+    );
+  }
+
+  /**
+   * Ensure that node type functions (node_type_get_*) work correctly.
+   *
+   * Load available node types and validate the returned data.
+   */
+  function testNodeTypeGetFunctions() {
+    $node_types = node_type_get_types();
+    $node_names = node_type_get_names();
+
+    $this->assertTrue(isset($node_types['article']), t('Node type article is available.'));
+    $this->assertTrue(isset($node_types['page']), t('Node type page is available.'));
+
+    $this->assertEqual($node_types['article']->name, $node_names['article'], t('Correct node type base has been returned.'));
+
+    $this->assertEqual($node_types['article'], node_type_get_type('article'), t('Correct node type has been returned.'));
+    $this->assertEqual($node_types['article']->name, node_type_get_name('article'), t('Correct node type name has been returned.'));
+    $this->assertEqual($node_types['page']->base, node_type_get_base('page'), t('Correct node type base has been returned.'));
+  }
+}

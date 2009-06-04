@@ -736,7 +736,7 @@ function hook_prepare($node) {
  * For a detailed usage example, see node_example.module.
  */
 function hook_form($node, $form_state) {
-  $type = node_get_types('type', $node);
+  $type = node_type_get_type($node);
 
   $form['title'] = array(
     '#type' => 'textfield',

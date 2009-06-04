@@ -206,7 +206,7 @@ function poll_form($node, $form_state) {
 
   $admin = user_access('administer nodes') || user_access('edit any poll content') || (user_access('edit own poll content') && $user->uid == $node->uid);
 
-  $type = node_get_types('type', $node);
+  $type = node_type_get_type($node);
 
   $form = array(
     '#cache' => TRUE,

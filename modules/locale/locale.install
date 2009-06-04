@@ -185,7 +185,7 @@ function locale_update_6004() {
  * interfere with language variables.
  */
 function locale_update_6005() {
-  foreach (node_get_types() as $type => $content_type) {
+  foreach (node_type_get_types() as $type => $content_type) {
     // Default to NULL, so we can skip dealing with non-existent settings.
     $setting = variable_get('language_' . $type);
     if ($type == 'default' && is_numeric($setting)) {
@@ -254,7 +254,7 @@ function locale_uninstall() {
   variable_del('locale_cache_strings');
   variable_del('locale_js_directory');
 
-  foreach (node_get_types() as $type => $content_type) {
+  foreach (node_type_get_types() as $type => $content_type) {
     $setting = variable_del('language_content_type_' . $type);
   }
 

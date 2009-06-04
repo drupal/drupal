@@ -184,7 +184,7 @@ function hook_search($op = 'search', $keys = NULL) {
 
         $results[] = array(
           'link' => url('node/' . $item->sid, array('absolute' => TRUE)),
-          'type' => check_plain(node_get_types('name', $node)),
+          'type' => check_plain(node_type_get_name($node)),
           'title' => $node->title,
           'user' => theme('username', $node),
           'date' => $node->changed,

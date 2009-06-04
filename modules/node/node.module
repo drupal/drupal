@@ -78,12 +78,12 @@ function node_help($path, $arg) {
       return '<p>' . t('The revisions let you track differences between multiple versions of a post.') . '</p>';
     case 'node/%/edit':
       $node = node_load($arg[1]);
-      $type = node_get_types('type', $node->type);
+      $type = node_type_get_type($node);
       return (!empty($type->help) ? '<p>' . filter_xss_admin($type->help) . '</p>' : '');
   }
 
   if ($arg[0] == 'node' && $arg[1] == 'add' && $arg[2]) {
-    $type = node_get_types('type', str_replace('-', '_', $arg[2]));
+    $type = node_type_get_type(str_replace('-', '_', $arg[2]));
     return (!empty($type->help) ? '<p>' . filter_xss_admin($type->help) . '</p>' : '');
   }
 }
@@ -165,7 +165,7 @@ function node_fieldable_info() {
       // 'cacheable' => FALSE,
       // Bundles must provide human readable name so
       // we can create help and error messages about them.
-      'bundles' => node_get_types('names'),
+      'bundles' => node_type_get_names(),
     ),
   );
   return $return;
@@ -471,57 +471,103 @@ function node_teaser($body, $format = NULL, $size = NULL) {
 }
 
 /**
- * Builds a list of available node types, and returns all of part of this list
- * in the specified format.
+ * Extract the type name.
  *
- * @param $op
- *   The format in which to return the list. When this is set to 'type',
- *   'base', or 'name', only the specified node type is returned. When set to
- *   'types' or 'names', all node types are returned.
  * @param $node
- *   A node object, array, or string that indicates the node type to return.
- *   Leave at default value (NULL) to return a list of all node types.
- * @param $reset
- *   Whether or not to reset this function's internal cache (defaults to
- *   FALSE).
+ *   Either a string or object, containing the node type information.
  *
  * @return
- *   Either an array of all available node types, or a single node type, in a
- *   variable format. Returns FALSE if the node type is not found.
+ *   Node type of the passed in data.
  */
-function node_get_types($op = 'types', $node = NULL, $reset = FALSE) {
-  static $_node_types, $_node_names;
+function _node_extract_type($node) {
+  return is_object($node) ? $node->type : $node;
+}
 
-  if ($reset || !isset($_node_types)) {
-    list($_node_types, $_node_names) = _node_types_build();
-  }
+/**
+ * Clear the statically cached node type information.
+ */
+function node_type_clear() {
+  drupal_static_reset('_node_types_build');
+}
 
-  if ($node) {
-    if (is_array($node)) {
-      $type = $node['type'];
-    }
-    elseif (is_object($node)) {
-      $type = $node->type;
-    }
-    elseif (is_string($node)) {
-      $type = $node;
-    }
-    if (!isset($_node_types[$type])) {
-      return FALSE;
-    }
-  }
-  switch ($op) {
-    case 'types':
-      return $_node_types;
-    case 'type':
-      return isset($_node_types[$type]) ? $_node_types[$type] : FALSE;
-    case 'base':
-      return isset($_node_types[$type]->base) ? $_node_types[$type]->base : FALSE;
-    case 'names':
-      return $_node_names;
-    case 'name':
-      return isset($_node_names[$type]) ? $_node_names[$type] : FALSE;
-  }
+/**
+ * Returns a list of all the available node types.
+ *
+ * @return
+ *   An array of node types, keyed by the type.
+ * @see node_type_get_type()
+ */
+function node_type_get_types() {
+  return _node_types_build()->types;
+}
+
+/**
+ * Returns the node type of the passed node or node type string.
+ *
+ *@param $node
+ *   A node object or string that indicates the node type to return.
+ * @return
+ *   A single node type, as an object or FALSE if the node type is not found.
+ *   The node type is an array with following content:
+ *
+ *   @code
+ *   array(
+ *     'type' => 'Machine readable type name',
+ *     'name' => 'Name of the node type',
+ *     'base' => 'Indicates to which module this node type belongs',
+ *     'description' => 'Description of the node type',
+ *     // ...
+ *   )
+ *   @endcode
+ */
+function node_type_get_type($node) {
+  $type = _node_extract_type($node);
+  $types = _node_types_build()->types;
+  return isset($types[$type]) ? $types[$type] : FALSE;
+}
+
+/**
+ * Returns the node type base of the passed node or node type string.
+ *
+ * The base indicates which module implement this node type and is used to
+ * execute node type specific hooks.
+ *
+ * @see node_invoke()
+ *
+ * @param $node
+ *   A node object or string that indicates the node type to return.
+ * @return
+ *   The node type base or FALSE if the node type is not found.
+ */
+function node_type_get_base($node) {
+  $type = _node_extract_type($node);
+  $types = _node_types_build()->types;
+  return isset($types[$type]) && isset($types[$type]->base) ? $types[$type]->base : FALSE;
+}
+
+/**
+ * Returns a list of available node names.
+ *
+ * @return
+ *   An array of node type names, keyed by the type.
+ */
+function node_type_get_names() {
+  return _node_types_build()->names;
+}
+
+/**
+ * Returns the node type name of the passed node or node type string.
+ *
+ * @param $node
+ *   A node object or string that indicates the node type to return.
+ *
+ * @return
+ *   The node type name or FALSE if the node type is not found.
+ */
+function node_type_get_name($node) {
+  $type = _node_extract_type($node);
+  $types = _node_types_build()->names;
+  return isset($types[$type]) ? $types[$type] : FALSE;
 }
 
 /**
@@ -529,11 +575,9 @@ function node_get_types($op = 'types', $node = NULL, $reset = FALSE) {
  * module-defined node types to the database.
  */
 function node_types_rebuild() {
-  _node_types_build();
-
-  $node_types = node_get_types('types', NULL, TRUE);
-
-  foreach ($node_types as $type => $info) {
+  // Reset and load updated node types.
+  node_type_clear();
+  foreach (node_type_get_types() as $type => $info) {
     if (!empty($info->is_new)) {
       node_type_save($info);
     }
@@ -541,8 +585,9 @@ function node_types_rebuild() {
       node_type_delete($info->type);
     }
   }
-
-  _node_types_build();
+  // Reset cached node type information so that the next access
+  // will use the updated data.
+  node_type_clear();
   // This is required for proper menu items at node/add/type.
   menu_rebuild();
 }
@@ -610,7 +655,7 @@ function node_type_save($info) {
  *   The machine-readable name of the node type to be deleted.
  */
 function node_type_delete($type) {
-  $info = node_get_types('type', $type);
+  $info = node_type_get_type($type);
   db_delete('node_type')
     ->condition('type', $type)
     ->execute();
@@ -644,14 +689,17 @@ function node_type_update_nodes($old_type, $type) {
  *
  */
 function _node_types_build() {
-  $_node_types = array();
-  $_node_names = array();
+  $_node_types = drupal_static(__FUNCTION__);
+  if (is_object($_node_types)) {
+    return $_node_types;
+  }
+  $_node_types = (object) array('types' => array(), 'names' => array());
 
   $info_array = module_invoke_all('node_info');
   foreach ($info_array as $type => $info) {
     $info['type'] = $type;
-    $_node_types[$type] = node_type_set_defaults($info);
-    $_node_names[$type] = $info['name'];
+    $_node_types->types[$type] = node_type_set_defaults($info);
+    $_node_types->names[$type] = $info['name'];
   }
   $type_result = db_select('node_type', 'nt')
     ->fields('nt')
@@ -666,20 +714,20 @@ function _node_types_build() {
     if (isset($type_object->base) && $type_object->base != 'node_content' && empty($info_array[$type_object->type])) {
       $type_object->disabled = TRUE;
     }
-    if (!isset($_node_types[$type_object->type]) || $type_object->modified) {
-      $_node_types[$type_object->type] = $type_object;
-      $_node_names[$type_object->type] = $type_object->name;
+    if (!isset($_node_types->types[$type_object->type]) || $type_object->modified) {
+      $_node_types->types[$type_object->type] = $type_object;
+      $_node_types->names[$type_object->type] = $type_object->name;
 
       if ($type_object->type != $type_object->orig_type) {
-        unset($_node_types[$type_object->orig_type]);
-        unset($_node_names[$type_object->orig_type]);
+        unset($_node_types->types[$type_object->orig_type]);
+        unset($_node_types->names[$type_object->orig_type]);
       }
     }
   }
 
-  asort($_node_names);
+  asort($_node_types->names);
 
-  return array($_node_types, $_node_names);
+  return $_node_types;
 }
 
 /**
@@ -744,7 +792,7 @@ function node_type_set_defaults($info = array()) {
  *   TRUE iff the $hook exists in the node type of $node.
  */
 function node_hook($node, $hook) {
-  $base = node_get_types('base', $node);
+  $base = node_type_get_base($node);
   return module_hook($base, $hook);
 }
 
@@ -762,7 +810,7 @@ function node_hook($node, $hook) {
  */
 function node_invoke($node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
   if (node_hook($node, $hook)) {
-    $base = node_get_types('base', $node);
+    $base = node_type_get_base($node);
     $function = $base . '_' . $hook;
     return ($function($node, $a2, $a3, $a4));
   }
@@ -886,7 +934,7 @@ function node_load_multiple($nids = array(), $conditions = array(), $reset = FAL
     // Call node type specific callbacks on each typed array of nodes.
     foreach ($typed_nodes as $type => $nodes_of_type) {
       if (node_hook($type, 'load')) {
-        $function = node_get_types('base', $type) . '_load';
+        $function = node_type_get_base($type) . '_load';
         $function($nodes_of_type);
       }
     }
@@ -952,7 +1000,7 @@ function node_load($nid, $vid = array(), $reset = FALSE) {
 function node_validate($node, $form = array()) {
   // Convert the node to an object, if necessary.
   $node = (object)$node;
-  $type = node_get_types('type', $node);
+  $type = node_type_get_type($node);
 
   // Make sure the body has the minimum number of words.
   // TODO : use a better word counting algorithm that will work in other languages
@@ -1454,7 +1502,7 @@ function node_perm() {
     ),
   );
 
-  foreach (node_get_types() as $type) {
+  foreach (node_type_get_types() as $type) {
     if ($type->base == 'node_content') {
       $perms += node_list_permissions($type);
     }
@@ -1616,7 +1664,7 @@ function node_search($op = 'search', $keys = NULL) {
 
         $results[] = array(
           'link' => url('node/' . $item->sid, array('absolute' => TRUE)),
-          'type' => check_plain(node_get_types('name', $node)),
+          'type' => check_plain(node_type_get_name($node)),
           'title' => $node->title,
           'user' => theme('username', $node),
           'date' => $node->changed,
@@ -1795,7 +1843,7 @@ function _node_revision_access($node, $op = 'view') {
 }
 
 function _node_add_access() {
-  $types = node_get_types();
+  $types = node_type_get_types();
   foreach ($types as $type) {
     if (node_hook($type->type, 'form') && node_access('create', $type->type)) {
       return TRUE;
@@ -1875,7 +1923,9 @@ function node_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
-  foreach (node_get_types('types', NULL, TRUE) as $type) {
+  // Reset internal static cache of _node_types_build, forces to rebuild the node type information.
+  node_type_clear();
+  foreach (node_type_get_types() as $type) {
     $type_url_str = str_replace('_', '-', $type->type);
     $items['node/add/' . $type_url_str] = array(
       'title' => $type->name,
@@ -2277,7 +2327,7 @@ function node_form_search_form_alter(&$form, $form_state) {
     }
 
     // Node types:
-    $types = array_map('check_plain', node_get_types('names'));
+    $types = array_map('check_plain', node_type_get_names());
     $form['advanced']['type'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Only of the type(s)'),
@@ -2435,7 +2485,7 @@ function node_access($op, $node, $account = NULL) {
 
   // Can't use node_invoke('access', $node), because the access hook takes the
   // $op parameter before the $node parameter.
-  $base = node_get_types('base', $node);
+  $base = node_type_get_base($node);
   $access = module_invoke($base, 'access', $op, $node, $account);
   if (!is_null($access)) {
     return $access;
@@ -2933,7 +2983,9 @@ function node_content_access($op, $node, $account) {
  * Implement hook_form().
  */
 function node_content_form($node, $form_state) {
-  $type = node_get_types('type', $node);
+  
+  $type = node_type_get_type($node);
+  
   $form = array();
 
   if ($type->has_title) {
@@ -2962,7 +3014,7 @@ function node_content_form($node, $form_state) {
  */
 function node_forms() {
   $forms = array();
-  if ($types = node_get_types()) {
+  if ($types = node_type_get_types()) {
     foreach (array_keys($types) as $type) {
       $forms[$type . '_node_form']['callback'] = 'node_form';
     }
@@ -3111,7 +3163,7 @@ function node_action_info() {
  */
 function node_publish_action($node, $context = array()) {
   $node->status = 1;
-  watchdog('action', 'Set @type %title to published.', array('@type' => node_get_types('name', $node), '%title' => $node->title));
+  watchdog('action', 'Set @type %title to published.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
 
 /**
@@ -3120,7 +3172,7 @@ function node_publish_action($node, $context = array()) {
  */
 function node_unpublish_action($node, $context = array()) {
   $node->status = 0;
-  watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_get_types('name', $node), '%title' => $node->title));
+  watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
 
 /**
@@ -3129,7 +3181,7 @@ function node_unpublish_action($node, $context = array()) {
  */
 function node_make_sticky_action($node, $context = array()) {
   $node->sticky = 1;
-  watchdog('action', 'Set @type %title to sticky.', array('@type' => node_get_types('name', $node), '%title' => $node->title));
+  watchdog('action', 'Set @type %title to sticky.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
 
 /**
@@ -3138,7 +3190,7 @@ function node_make_sticky_action($node, $context = array()) {
  */
 function node_make_unsticky_action($node, $context = array()) {
   $node->sticky = 0;
-  watchdog('action', 'Set @type %title to unsticky.', array('@type' => node_get_types('name', $node), '%title' => $node->title));
+  watchdog('action', 'Set @type %title to unsticky.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
 
 /**
@@ -3147,7 +3199,7 @@ function node_make_unsticky_action($node, $context = array()) {
  */
 function node_promote_action($node, $context = array()) {
   $node->promote = 1;
-  watchdog('action', 'Promoted @type %title to front page.', array('@type' => node_get_types('name', $node), '%title' => $node->title));
+  watchdog('action', 'Promoted @type %title to front page.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
 
 /**
@@ -3156,7 +3208,7 @@ function node_promote_action($node, $context = array()) {
  */
 function node_unpromote_action($node, $context = array()) {
   $node->promote = 0;
-  watchdog('action', 'Removed @type %title from front page.', array('@type' => node_get_types('name', $node), '%title' => $node->title));
+  watchdog('action', 'Removed @type %title from front page.', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
 
 /**
@@ -3165,7 +3217,7 @@ function node_unpromote_action($node, $context = array()) {
  */
 function node_save_action($node) {
   node_save($node);
-  watchdog('action', 'Saved @type %title', array('@type' => node_get_types('name', $node), '%title' => $node->title));
+  watchdog('action', 'Saved @type %title', array('@type' => node_type_get_name($node), '%title' => $node->title));
 }
 
 /**
@@ -3175,7 +3227,7 @@ function node_save_action($node) {
 function node_assign_owner_action($node, $context) {
   $node->uid = $context['owner_uid'];
   $owner_name = db_query("SELECT name FROM {users} WHERE uid = :uid", array(':uid' => $context['owner_uid']))->fetchField();
-  watchdog('action', 'Changed owner of @type %title to uid %name.', array('@type' => node_get_types('type', $node), '%title' => $node->title, '%name' => $owner_name));
+  watchdog('action', 'Changed owner of @type %title to uid %name.', array('@type' =>  node_type_get_type($node), '%title' => $node->title, '%name' => $owner_name));
 }
 
 function node_assign_owner_action_form($context) {
@@ -3256,7 +3308,7 @@ function node_unpublish_by_keyword_action($node, $context) {
   foreach ($context['keywords'] as $keyword) {
     if (strpos(drupal_render(node_build(clone $node)), $keyword) !== FALSE || strpos($node->title, $keyword) !== FALSE) {
       $node->status = 0;
-      watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_get_types('name', $node), '%title' => $node->title));
+      watchdog('action', 'Set @type %title to unpublished.', array('@type' => node_type_get_name($node), '%title' => $node->title));
       break;
     }
   }
@@ -3271,7 +3323,7 @@ function node_unpublish_by_keyword_action($node, $context) {
  *   An array of permission names and descriptions.
  */
 function node_list_permissions($type) {
-  $info = node_get_types('type', $type);
+  $info = node_type_get_type($type);
   $type = check_plain($info->type);
 
   // Build standard list of node permissions for this type.

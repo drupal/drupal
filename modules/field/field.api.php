@@ -47,7 +47,7 @@ function hook_fieldable_info() {
       'cacheable' => FALSE,
       // Bundles must provide human readable name so
       // we can create help and error messages about them.
-      'bundles' => node_get_types('names'),
+      'bundles' => node_type_get_names(),
     ),
   );
   return $return;

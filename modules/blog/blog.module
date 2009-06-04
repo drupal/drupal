@@ -74,7 +74,7 @@ function blog_help($path, $arg) {
  */
 function blog_form($node, $form_state) {
   global $nid;
-  $type = node_get_types('type', $node);
+  $type = node_type_get_type($node);
 
   $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#required' => TRUE, '#default_value' => !empty($node->title) ? $node->title : NULL, '#weight' => -5);
   $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);

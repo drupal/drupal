@@ -2158,7 +2158,7 @@ function system_mail($key, &$message, $params) {
     $variables += array(
       '%uid' => $node->uid,
       '%node_url' => url('node/' . $node->nid, array('absolute' => TRUE)),
-      '%node_type' => node_get_types('name', $node),
+      '%node_type' => node_type_get_name($node),
       '%title' => $node->title,
       '%teaser' => $node->teaser,
       '%body' => $node->body,
@@ -2232,7 +2232,7 @@ function system_message_action(&$object, $context = array()) {
     $variables = array_merge($variables, array(
       '%uid' => $node->uid,
       '%node_url' => url('node/' . $node->nid, array('absolute' => TRUE)),
-      '%node_type' => check_plain(node_get_types('name', $node)),
+      '%node_type' => check_plain(node_type_get_name($node)),
       '%title' => filter_xss($node->title),
       '%teaser' => filter_xss($node->teaser),
       '%body' => filter_xss($node->body),

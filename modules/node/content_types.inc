@@ -10,14 +10,14 @@
  * Displays the content type admin overview page.
  */
 function node_overview_types() {
-  $types = node_get_types();
-  $names = node_get_types('names');
+  $types = node_type_get_types();
+  $names = node_type_get_names();
   $header = array(t('Name'), array('data' => t('Operations'), 'colspan' => '2'));
   $rows = array();
 
   foreach ($names as $key => $name) {
-    $type = $types[$key];
-    if (node_hook($type, 'form')) {
+    $type = $types[$key]; 
+    if (node_hook($type->type, 'form')) {
       $type_url_str = str_replace('_', '-', $type->type);
       $row = array(theme('node_admin_overview', $name, $type));
       // Set the edit column.
@@ -233,7 +233,7 @@ function node_type_form_validate($form, &$form_state) {
   // Work out what the type was before the user submitted this form
   $old_type = trim($form_state['values']['old_type']);
 
-  $types = node_get_types('names');
+  $types = node_type_get_names();
 
   if (!$form_state['values']['locked']) {
     if (isset($types[$type->type]) && $type->type != $old_type) {
