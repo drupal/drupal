@@ -861,31 +861,3 @@ class NodeAccessRebuildTestCase extends DrupalWebTestCase {
     $this->assertText(t('Content permissions have been rebuilt.'));
   }
 }
-
-/**
- * Rebuild the node_access table.
- */
-class NodeAccessRebuildTestCase extends DrupalWebTestCase {
-  function getInfo() {
-    return array(
-      'name' => t('Node access rebuild'),
-      'description' => t('Ensures that node access rebuild functions work correctly.'),
-      'group' => t('Node'),
-    );
-  }
-  
-  function setUp() {
-    parent::setUp();
-
-    $web_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages', 'access site reports'));
-    $this->drupalLogin($web_user);
-    $this->web_user = $web_user;
-  }
-  
-  function testNodeAccessRebuild() {
-    $this->drupalGet('admin/reports/status');
-    $this->clickLink(t('Rebuild permissions'));
-    $this->drupalPost(NULL, array(), t('Rebuild permissions'));
-    $this->assertText(t('Content permissions have been rebuilt.'));
-  }
-}
