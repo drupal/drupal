@@ -91,7 +91,10 @@ function _update_build_fetch_url($project, $site_key = '') {
   $name = $project['name'];
   $url = $project['info']['project status url'];
   $url .= '/' . $name . '/' . DRUPAL_CORE_COMPATIBILITY;
-  if (!empty($site_key)) {
+  // Only append a site_key and the version information if we have a site_key
+  // in the first place, and if this is not a disabled module or theme. We do
+  // not want to record usage statistics for disabled code.
+  if (!empty($site_key) && (strpos($project['project_type'], 'disabled') === FALSE)) {
     $url .= (strpos($url, '?') === TRUE) ? '&' : '?';
     $url .= 'site_key=';
     $url .= drupal_urlencode($site_key);
