@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.476 2009/06/03 19:34:53 dries Exp $
+// $Id: taxonomy.module,v 1.477 2009/06/05 05:23:57 dries Exp $
 
 /**
  * @file
@@ -1639,8 +1639,10 @@ function taxonomy_node_validate($node, $form) {
  */
 function taxonomy_node_update_index($node) {
   $output = array();
-  foreach ($node->taxonomy as $term) {
-    $output[] = $term->name;
+  if (isset($node->taxonomy) && is_array($node->taxonomy)) {
+    foreach ($node->taxonomy as $term) {
+      $output[] = $term->name;
+    }
   }
   if (count($output)) {
     return '<strong>(' . implode(', ', $output) . ')</strong>';
