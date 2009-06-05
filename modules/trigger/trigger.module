@@ -137,15 +137,10 @@ function trigger_access_check($module) {
  *   An array of action IDs.
  */
 function _trigger_get_hook_aids($hook, $op = '') {
-  $aids = array();
-  $result = db_query("SELECT aa.aid, a.type FROM {trigger_assignments} aa LEFT JOIN {actions} a ON aa.aid = a.aid WHERE aa.hook = :hook AND aa.op = :op ORDER BY weight", array(
+  return db_query("SELECT ta.aid, a.type FROM {trigger_assignments} ta LEFT JOIN {actions} a ON ta.aid = a.aid WHERE ta.hook = :hook AND ta.op = :op ORDER BY ta.weight", array(
     ':hook' => $hook,
     ':op' => $op,
-  ));
-  foreach ($result as $action) {
-    $aids[$action->aid]['type'] = $action->type;
-  }
-  return $aids;
+  ))->fetchAllKeyed();
 }
 
 /**
@@ -232,14 +227,14 @@ function _trigger_node($node, $op, $a3 = NULL, $a4 = NULL) {
   // We need to get the expected object if the action's type is not 'node'.
   // We keep the object in $objects so we can reuse it if we have multiple actions
   // that make changes to an object.
-  foreach ($aids as $aid => $action_info) {
-    if ($action_info['type'] != 'node') {
-      if (!isset($objects[$action_info['type']])) {
-        $objects[$action_info['type']] = _trigger_normalize_node_context($action_info['type'], $node);
+  foreach ($aids as $aid => $type) {
+    if ($type != 'node') {
+      if (!isset($objects[$type])) {
+        $objects[$type] = _trigger_normalize_node_context($type, $node);
       }
       // Since we know about the node, we pass that info along to the action.
       $context['node'] = $node;
-      $result = actions_do($aid, $objects[$action_info['type']], $context, $a3, $a4);
+      $result = actions_do($aid, $objects[$type], $context, $a3, $a4);
     }
     else {
       actions_do($aid, $node, $context, $a3, $a4);
@@ -356,15 +351,15 @@ function _trigger_comment($a1, $op) {
   // We need to get the expected object if the action's type is not 'comment'.
   // We keep the object in $objects so we can reuse it if we have multiple actions
   // that make changes to an object.
-  foreach ($aids as $aid => $action_info) {
-    if ($action_info['type'] != 'comment') {
-      if (!isset($objects[$action_info['type']])) {
-        $objects[$action_info['type']] = _trigger_normalize_comment_context($action_info['type'], $a1);
+  foreach ($aids as $aid => $type) {
+    if ($type != 'comment') {
+      if (!isset($objects[$type])) {
+        $objects[$type] = _trigger_normalize_comment_context($type, $a1);
       }
       // Since we know about the comment, we pass it along to the action
       // in case it wants to peek at it.
       $context['comment'] = (object) $a1;
-      actions_do($aid, $objects[$action_info['type']], $context);
+      actions_do($aid, $objects[$type], $context);
     }
     else {
       $a1 = (object) $a1;
@@ -479,13 +474,13 @@ function _trigger_user($op, &$edit, &$account, $category = NULL) {
     'op' => $op,
     'form_values' => &$edit,
   );
-  foreach ($aids as $aid => $action_info) {
-    if ($action_info['type'] != 'user') {
-      if (!isset($objects[$action_info['type']])) {
-        $objects[$action_info['type']] = _trigger_normalize_user_context($action_info['type'], $account);
+  foreach ($aids as $aid => $type) {
+    if ($type != 'user') {
+      if (!isset($objects[$type])) {
+        $objects[$type] = _trigger_normalize_user_context($type, $account);
       }
       $context['account'] = $account;
-      actions_do($aid, $objects[$action_info['type']], $context);
+      actions_do($aid, $objects[$type], $context);
     }
     else {
       actions_do($aid, $account, $context, $category);
@@ -505,10 +500,7 @@ function trigger_taxonomy($op, $type, $array) {
     'hook' => 'taxonomy',
     'op' => $op
   );
-  $_array = (object) $array;
-  foreach ($aids as $aid => $action_info) {
-    actions_do($aid, $_array, $context);
-  }
+  actions_do(array_keys($aids), (object) $array, $context);
 }
 
 /**
