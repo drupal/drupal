@@ -416,10 +416,10 @@ function node_update_7004() {
 
   // Map old preview setting to new values order.
   $original_preview ? $original_preview = 2 : $original_preview = 1;
-  $type_list = node_get_types('types');
+  $type_list = node_type_get_types();
 
   // Apply original settings to all types.
-  foreach ($type_list as $type) {
+  foreach ($type_list as $type => $object) {
     variable_set('teaser_length_' . $type, $original_length);
     variable_set('node_preview_' . $type, $original_preview);
   }
