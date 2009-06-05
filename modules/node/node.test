@@ -1,5 +1,5 @@
 <?php
-// $Id: node.test,v 1.28 2009/06/04 03:33:28 webchick Exp $
+// $Id: node.test,v 1.29 2009/06/05 19:17:53 dries Exp $
 
 /**
  * Test the node_load_multiple() function.
@@ -831,5 +831,61 @@ class NodeTypeTestCase extends DrupalWebTestCase {
     $this->assertEqual($node_types['article'], node_type_get_type('article'), t('Correct node type has been returned.'));
     $this->assertEqual($node_types['article']->name, node_type_get_name('article'), t('Correct node type name has been returned.'));
     $this->assertEqual($node_types['page']->base, node_type_get_base('page'), t('Correct node type base has been returned.'));
+  }
+}
+
+/**
+ * Rebuild the node_access table.
+ */
+class NodeAccessRebuildTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Node access rebuild'),
+      'description' => t('Ensures that node access rebuild functions work correctly.'),
+      'group' => t('Node'),
+    );
+  }
+  
+  function setUp() {
+    parent::setUp();
+
+    $web_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages', 'access site reports'));
+    $this->drupalLogin($web_user);
+    $this->web_user = $web_user;
+  }
+  
+  function testNodeAccessRebuild() {
+    $this->drupalGet('admin/reports/status');
+    $this->clickLink(t('Rebuild permissions'));
+    $this->drupalPost(NULL, array(), t('Rebuild permissions'));
+    $this->assertText(t('Content permissions have been rebuilt.'));
+  }
+}
+
+/**
+ * Rebuild the node_access table.
+ */
+class NodeAccessRebuildTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => t('Node access rebuild'),
+      'description' => t('Ensures that node access rebuild functions work correctly.'),
+      'group' => t('Node'),
+    );
+  }
+  
+  function setUp() {
+    parent::setUp();
+
+    $web_user = $this->drupalCreateUser(array('administer site configuration', 'access administration pages', 'access site reports'));
+    $this->drupalLogin($web_user);
+    $this->web_user = $web_user;
+  }
+  
+  function testNodeAccessRebuild() {
+    $this->drupalGet('admin/reports/status');
+    $this->clickLink(t('Rebuild permissions'));
+    $this->drupalPost(NULL, array(), t('Rebuild permissions'));
+    $this->assertText(t('Content permissions have been rebuilt.'));
   }
 }
