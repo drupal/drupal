@@ -789,7 +789,7 @@ function node_type_set_defaults($info = array()) {
  * @param $hook
  *   A string containing the name of the hook.
  * @return
- *   TRUE iff the $hook exists in the node type of $node.
+ *   TRUE if the $hook exists in the node type of $node.
  */
 function node_hook($node, $hook) {
   $base = node_type_get_base($node);
@@ -2870,7 +2870,7 @@ function node_access_rebuild($batch_mode = FALSE) {
   }
   else {
     // Not using any node_access modules. Add the default grant.
-    db_insert('node_accesss')
+    db_insert('node_access')
       ->fields(array(
         'nid' => 0,
         'realm' => 'all',
@@ -3392,7 +3392,7 @@ function node_requirements($phase) {
   $requirements['node_access'] = array(
     'title' => $t('Node Access Permissions'),
     'value' => $value,
-    'description' => $description . ' ' . l('Rebuild Permissions', 'admin/reports/status/rebuild'),
+    'description' => $description . ' ' . l('Rebuild permissions', 'admin/reports/status/rebuild'),
   );
   return $requirements;
 }
