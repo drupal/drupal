@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.38 2009/05/25 18:22:31 dries Exp $
+// $Id: user.pages.inc,v 1.39 2009/06/05 09:26:06 dries Exp $
 
 /**
  * @file
@@ -89,13 +89,13 @@ function user_pass_reset(&$form_state, $uid, $timestamp, $hashed_pass, $action =
     $current = REQUEST_TIME;
     // Some redundant checks for extra security ?
     $users = user_load_multiple(array($uid), array('status' => '1'));
-    if ($timestamp < $current && $account = reset($users)) {
+    if ($timestamp <= $current && $account = reset($users)) {
       // No time out for first time login.
       if ($account->login && $current - $timestamp > $timeout) {
         drupal_set_message(t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'));
         drupal_goto('user/password');
       }
-      elseif ($account->uid && $timestamp > $account->login && $timestamp < $current && $hashed_pass == user_pass_rehash($account->pass, $timestamp, $account->login)) {
+      elseif ($account->uid && $timestamp >= $account->login && $timestamp <= $current && $hashed_pass == user_pass_rehash($account->pass, $timestamp, $account->login)) {
         // First stage is a confirmation form, then login
         if ($action == 'login') {
           watchdog('user', 'User %name used one-time login link at time %timestamp.', array('%name' => $account->name, '%timestamp' => $timestamp));
