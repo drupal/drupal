@@ -1,5 +1,5 @@
 <?php
-// $Id: update.compare.inc,v 1.19 2009/06/05 01:04:11 webchick Exp $
+// $Id: update.compare.inc,v 1.20 2009/06/05 01:10:12 webchick Exp $
 
 /**
  * @file
@@ -30,7 +30,7 @@
  * @see update_project_cache()
  */
 function update_get_projects() {
-  static $projects = array();
+  $projects = &drupal_static(__FUNCTION__, array());
   if (empty($projects)) {
     // Retrieve the projects from cache, if present.
     $projects = update_project_cache('update_project_projects');
