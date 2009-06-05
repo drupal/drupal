@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.707 2009/06/04 03:33:28 webchick Exp $
+// $Id: system.module,v 1.708 2009/06/05 05:28:28 dries Exp $
 
 /**
  * @file
@@ -55,6 +55,21 @@ define('DRUPAL_USER_TIMEZONE_EMPTY', 1);
  * New users will select their own timezone at registration.
  */
 define('DRUPAL_USER_TIMEZONE_SELECT', 2);
+
+ /**
+ * Disabled option on forms and settings
+ */
+define('DRUPAL_DISABLED', 0);
+
+/**
+ * Optional option on forms and settings
+ */
+define('DRUPAL_OPTIONAL', 1);
+
+/**
+ * Required option on forms and settings
+ */
+define('DRUPAL_REQUIRED', 2);
 
 /**
  * Implement hook_help().

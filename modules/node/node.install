@@ -1,5 +1,5 @@
 <?php
-// $Id: node.install,v 1.19 2009/06/01 22:07:09 dries Exp $
+// $Id: node.install,v 1.20 2009/06/05 05:28:28 dries Exp $
 
 /**
  * @file
@@ -404,6 +404,27 @@ function node_update_7003() {
     db_drop_table($ret, 'node_counter');
   }
   return $ret;
+}
+
+/**
+ * Extend the existing default preview and teaser settings to all node types.
+ */
+function node_update_7004() {
+  // Get original settings and all types.
+  $original_length = variable_get('teaser_length', 600);
+  $original_preview = variable_get('node_preview', 0);
+
+  // Map old preview setting to new values order.
+  $original_preview ? $original_preview = 2 : $original_preview = 1;
+  $type_list = node_get_types('types');
+
+  // Apply original settings to all types.
+  foreach ($type_list as $type) {
+    variable_set('teaser_length_' . $type, $original_length);
+    variable_set('node_preview_' . $type, $original_preview);
+  }
+  // Delete old variable but leave 'teaser_length' for aggregator module upgrade.
+  variable_del('node_preview');
 }
 
 /**

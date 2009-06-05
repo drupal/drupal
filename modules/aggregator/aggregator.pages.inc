@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.26 2009/04/26 19:44:37 dries Exp $
+// $Id: aggregator.pages.inc,v 1.27 2009/06/05 05:28:28 dries Exp $
 
 /**
  * @file
@@ -378,7 +378,7 @@ function theme_aggregator_page_rss($feeds, $category = NULL) {
   foreach ($feeds as $feed) {
     switch ($feed_length) {
       case 'teaser':
-        $teaser = node_teaser($feed->description);
+        $teaser = node_teaser($feed->description, NULL, variable_get('aggregator_teaser_length', 600));
         if ($teaser != $feed->description) {
           $teaser .= '<p><a href="' . check_url($feed->link) . '">' . t('read more') . "</a></p>\n";
         }
