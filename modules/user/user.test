@@ -57,7 +57,6 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
 
     // Login using password reset page.
     $url = user_pass_reset_url($user);
-    sleep(1); // TODO Find better way.
     $this->drupalGet($url);
     $this->assertText(t('This login can be used only once.'), t('Login can be used only once.'));
 
