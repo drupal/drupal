@@ -30,7 +30,7 @@
  * @see update_project_cache()
  */
 function update_get_projects() {
-  static $projects = array();
+  $projects = &drupal_static(__FUNCTION__, array());
   if (empty($projects)) {
     // Retrieve the projects from cache, if present.
     $projects = update_project_cache('update_project_projects');
