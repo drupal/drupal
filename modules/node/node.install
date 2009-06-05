@@ -425,6 +425,8 @@ function node_update_7004() {
   }
   // Delete old variable but leave 'teaser_length' for aggregator module upgrade.
   variable_del('node_preview');
+
+  return array();
 }
 
 /**
