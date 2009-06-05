@@ -28,6 +28,7 @@ function aggregator_uninstall() {
   variable_del('aggregator_fetcher');
   variable_del('aggregator_parser');
   variable_del('aggregator_processors');
+  variable_del('aggregator_teaser_length');
 }
 
 /**
@@ -279,4 +280,10 @@ function aggregator_update_7000() {
   $ret = array();
   db_add_field($ret, 'aggregator_feed', 'hash', array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''));
   return $ret;
+}
+/**
+ * Add aggregator teaser length to settings from old global default teaser length
+ */
+function aggregator_update_7001() {
+  variable_set('aggregator_teaser_length', variable_get('teaser_length'));
 }

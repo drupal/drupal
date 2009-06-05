@@ -257,12 +257,13 @@ function node_form(&$form_state, $node) {
   $form['buttons']['#weight'] = 100;
   $form['buttons']['submit'] = array(
     '#type' => 'submit',
-    '#access' => !variable_get('node_preview', 0) || (!form_get_errors() && isset($form_state['node_preview'])),
+    '#access' => variable_get('node_preview_' . $node->type, 1) != DRUPAL_REQUIRED || (!form_get_errors() && isset($form_state['node_preview'])),
     '#value' => t('Save'),
     '#weight' => 5,
     '#submit' => array('node_form_submit'),
   );
   $form['buttons']['preview'] = array(
+    '#access' => variable_get('node_preview_' . $node->type, 1) != DRUPAL_DISABLED,
     '#type' => 'submit',
     '#value' => t('Preview'),
     '#weight' => 10,
@@ -395,7 +396,7 @@ function node_preview($node) {
     // Extract a teaser, if it hasn't been set (e.g. by a module-provided
     // 'teaser' form item).
     if (!isset($node->teaser)) {
-      $node->teaser = empty($node->body) ? '' : node_teaser($node->body, $node->format);
+      $node->teaser = empty($node->body) ? '' : node_teaser($node->body, $node->format, variable_get('teaser_length_' . $type, 600));
       // Chop off the teaser from the body if needed.
       if (!$node->teaser_include && $node->teaser == substr($node->body, 0, strlen($node->teaser))) {
         $node->body = substr($node->body, strlen($node->teaser));

@@ -1213,6 +1213,12 @@ function system_site_information_settings() {
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
     '#required' => TRUE,
   );
+  $form['default_nodes_main'] = array(
+    '#type' => 'select', '#title' => t('Number of posts on front page'),
+    '#default_value' => 10,
+    '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
+    '#description' => t('The maximum number of posts per page to display on overview pages like the front page above.')
+  );
   $form['site_403'] = array(
     '#type' => 'textfield',
     '#title' => t('Default 403 (access denied) page'),

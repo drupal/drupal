@@ -56,6 +56,21 @@ define('DRUPAL_USER_TIMEZONE_EMPTY', 1);
  */
 define('DRUPAL_USER_TIMEZONE_SELECT', 2);
 
+ /**
+ * Disabled option on forms and settings
+ */
+define('DRUPAL_DISABLED', 0);
+
+/**
+ * Optional option on forms and settings
+ */
+define('DRUPAL_OPTIONAL', 1);
+
+/**
+ * Required option on forms and settings
+ */
+define('DRUPAL_REQUIRED', 2);
+
 /**
  * Implement hook_help().
  */

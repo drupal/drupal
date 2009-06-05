@@ -1046,7 +1046,7 @@ function node_submit($node) {
   if (!isset($node->teaser)) {
     if (isset($node->body)) {
       $node->format = (!empty($node->body_format) ? $node->body_format : FILTER_FORMAT_DEFAULT);
-      $node->teaser = node_teaser($node->body, isset($node->format) ? $node->format : NULL);
+      $node->teaser = node_teaser($node->body, isset($node->format) ? $node->format : NULL, variable_get('teaser_length_' . $node->type, 600));
       // Chop off the teaser from the body if needed. The teaser_include
       // property might not be set (eg. in Blog API postings), so only act on
       // it, if it was set with a given value.
@@ -1870,15 +1870,9 @@ function node_menu() {
     'weight' => -10,
   );
 
-  $items['admin/content/node-settings'] = array(
-    'title' => 'Post settings',
-    'description' => 'Control posting behavior, such as teaser length, requiring previews before posting, and the number of posts on the front page.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('node_configure'),
-    'access arguments' => array('administer nodes'),
-  );
-  $items['admin/content/node-settings/rebuild'] = array(
+  $items['admin/reports/status/rebuild'] = array(
     'title' => 'Rebuild permissions',
+    'page callback' => 'drupal_get_form',
     'page arguments' => array('node_configure_rebuild_confirm'),
     // Any user than can potentially trigger a node_access_needs_rebuild(TRUE)
     // has to be allowed access to the 'node access rebuild' confirm form.
@@ -2191,7 +2185,7 @@ function node_page_default() {
     ->addTag('node_access');
 
   $nids = $select->execute()->fetchCol();
-  
+
   if (!empty($nids)) {
     $nodes = node_load_multiple($nids);
     $build = node_build_multiple($nodes);
@@ -2206,7 +2200,7 @@ function node_page_default() {
   }
   else {
     drupal_set_title(t('Welcome to @site-name', array('@site-name' => variable_get('site_name', 'Drupal'))));
-    
+
     $default_message = '<p>' . t('No front page content has been created yet.') . '</p>';
 
     if (user_access('access administration pages')) {
@@ -3375,4 +3369,30 @@ function node_elements() {
  */
 function theme_node_links($element) {
   return theme('links', $element['#value'],  array('class' => 'links inline'));
+}
+
+/**
+ * Implement hook_requirements().
+ */
+function node_requirements($phase) {
+  $requirements = array();
+  // Ensure translations don't break at install time
+  $t = get_t();
+  // Only show rebuild button if there are either 0, or 2 or more, rows
+  // in the {node_access} table, or if there are modules that
+  // implement hook_node_grants().
+  $grant_count = db_result(db_query('SELECT COUNT(*) FROM {node_access}'));
+  if ($grant_count != 1 || count(module_implements('node_grants')) > 0) {
+    $value = format_plural($grant_count, 'One permission in use', '@count permissions in use', array('@count' => $grant_count));
+  } else {
+    $value = $t('Disabled');
+  }
+  $description = $t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Rebuilding will remove all privileges to posts, and replace them with permissions based on the current modules and settings. Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed posts will automatically use the new permissions.');
+
+  $requirements['node_access'] = array(
+    'title' => $t('Node Access Permissions'),
+    'value' => $value,
+    'description' => $description . ' ' . l('Rebuild Permissions', 'admin/reports/status/rebuild'),
+  );
+  return $requirements;
 }

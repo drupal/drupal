@@ -112,7 +112,22 @@ function aggregator_form_aggregator_admin_form_alter(&$form, $form_state) {
       'select' => t('multiple selector')),
       '#description' => t('The type of category selection widget displayed on categorization pages. (For a small number of categories, checkboxes are easier to use, while a multiple selector works well with large numbers of categories.)'),
     );
+    $form['modules']['aggregator']['aggregator_teaser_length'] = array(
+      '#type' => 'select',
+      '#title' => t('Length of trimmed description'),
+      '#default_value' => 600,
+      '#options' => drupal_map_assoc(array(0, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000), '_aggregator_characters'),
+      '#description' => t("The maximum number of characters used in the trimmed version of a description. Drupal will use this setting to determine at which offset long descriptions should be trimmed. Note that this setting will only affect new or updated content and will not affect existing teasers.")
+    );
+
   }
+}
+
+/**
+ * Helper function for teaser length choices.
+ */
+function _aggregator_characters($length) {
+  return ($length == 0) ? t('Unlimited') : format_plural($length, '1 character', '@count characters');
 }
 
 /**

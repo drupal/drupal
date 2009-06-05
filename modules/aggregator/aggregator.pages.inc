@@ -378,7 +378,7 @@ function theme_aggregator_page_rss($feeds, $category = NULL) {
   foreach ($feeds as $feed) {
     switch ($feed_length) {
       case 'teaser':
-        $teaser = node_teaser($feed->description);
+        $teaser = node_teaser($feed->description, NULL, variable_get('aggregator_teaser_length', 600));
         if ($teaser != $feed->description) {
           $teaser .= '<p><a href="' . check_url($feed->link) . '">' . t('read more') . "</a></p>\n";
         }

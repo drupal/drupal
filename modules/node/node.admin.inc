@@ -48,13 +48,6 @@ function node_configure() {
 }
 
 /**
- * Helper function for teaser length choices.
- */
-function _node_characters($length) {
-  return ($length == 0) ? t('Unlimited') : format_plural($length, '1 character', '@count characters');
-}
-
-/**
  * Form button submit callback.
  */
 function node_configure_access_submit($form, &$form_state) {
@@ -74,7 +67,7 @@ function node_configure_rebuild_confirm() {
  */
 function node_configure_rebuild_confirm_submit($form, &$form_state) {
   node_access_rebuild(TRUE);
-  $form_state['redirect'] = 'admin/content/node-settings';
+  $form_state['redirect'] = 'admin/reports/status';
 }
 
 /**

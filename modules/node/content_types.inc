@@ -136,6 +136,17 @@ function node_type_form(&$form_state, $type = NULL) {
     '#options' => drupal_map_assoc(array(0, 1, 10, 25, 50, 75, 100, 125, 150, 175, 200)),
     '#description' => t('The minimum number of words for the body field to be considered valid for this content type. This can be useful to rule out submissions that do not meet the site\'s standards, such as short test posts.')
   );
+  $form['submission']['node_preview'] = array(
+    '#type' => 'radios',
+    '#title' => t('Preview post'),
+    '#default_value' => variable_get('node_preview_' . $type->type, DRUPAL_OPTIONAL),
+    '#options' => array(
+      DRUPAL_DISABLED => t('Disabled'),
+      DRUPAL_OPTIONAL => t('Optional'),
+      DRUPAL_REQUIRED => t('Required'),
+    ),
+    '#description' => t('Should users preview posts before submitting?'),
+    );
   $form['submission']['help']  = array(
     '#type' => 'textarea',
     '#title' => t('Explanation or submission guidelines'),
@@ -170,6 +181,13 @@ function node_type_form(&$form_state, $type = NULL) {
     '#title' => t('Display post information'),
     '#default_value' => variable_get('node_submitted_' . $type->type, TRUE),
     '#description' => t('Enable the <em>submitted by Username on date</em> text.'),
+  );
+  $form['display']['teaser_length'] = array(
+    '#type' => 'select', 
+    '#title' => t('Length of trimmed posts'),
+    '#default_value' => 600,
+    '#options' => drupal_map_assoc(array(0, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000), '_node_characters'),
+    '#description' => t("The maximum number of characters used in the trimmed version of a post. Drupal will use this setting to determine at which offset long posts should be trimmed. The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc. To disable teasers, set to 'Unlimited' . Note that this setting will only affect new or updated content and will not affect existing teasers.")
   );
   $form['old_type'] = array(
     '#type' => 'value',
@@ -223,7 +241,14 @@ function node_type_form(&$form_state, $type = NULL) {
 }
 
 /**
- * Implement hook_form_validate().
+ * Helper function for teaser length choices.
+ */
+function _node_characters($length) {
+  return ($length == 0) ? t('Unlimited') : format_plural($length, '1 character', '@count characters');
+}
+
+/**
+ * Implementation of hook_form_validate().
  */
 function node_type_form_validate($form, &$form_state) {
   $type = new stdClass();
@@ -407,6 +432,8 @@ function node_type_delete_confirm(&$form_state, $type) {
 function node_type_delete_confirm_submit($form, &$form_state) {
   node_type_delete($form_state['values']['type']);
 
+  variable_del('teaser_length_' . $form_state['values']['type']);
+  variable_del('node_preview_' . $form_state['values']['type']);
   $t_args = array('%name' => $form_state['values']['name']);
   drupal_set_message(t('The content type %name has been deleted.', $t_args));
   watchdog('menu', 'Deleted content type %name.', $t_args, WATCHDOG_NOTICE);
