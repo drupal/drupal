@@ -513,6 +513,21 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
 
     $this->assertIdentical($id, '5', t('Auto-increment ID returned successfully.'));
   }
+
+  /**
+   * Test that the INSERT INTO ... SELECT ... syntax works.
+   */
+  function testInsertSelect() {
+    $query = db_select('test_people', 'tp')->fields('tp', array('name', 'age', 'job'));
+
+    db_insert('test')
+      ->fields(array('name', 'age', 'job'))
+      ->from($query)
+      ->execute();
+
+    $saved_age = db_query('SELECT age FROM {test} WHERE name = :name', array(':name' => 'Meredith'))->fetchField();
+    $this->assertIdentical($saved_age, '30', t('Can retrieve after inserting.'));
+  }
 }
 
 /**

@@ -22,12 +22,12 @@ class InsertQuery_pgsql extends InsertQuery {
       throw new PDOException('You may not specify the same field to have a value and a schema-default value.');
     }
 
-    if (count($this->insertFields) + count($this->defaultFields) == 0) {
+    if (count($this->insertFields) + count($this->defaultFields) == 0 && empty($this->fromQuery)) {
       return NULL;
     }
 
     // Don't execute query without values.
-    if (!isset($this->insertValues[0]) && count($this->insertFields) > 0) {
+    if (!isset($this->insertValues[0]) && count($this->insertFields) > 0 && empty($this->fromQuery)) {
       return NULL;
     }
 
@@ -81,6 +81,10 @@ class InsertQuery_pgsql extends InsertQuery {
 
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
+
+    if (!empty($this->fromQuery)) {
+      return "INSERT INTO {" . $this->table . '} (' . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
+    }
 
     $query = "INSERT INTO {" . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
 

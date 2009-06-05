@@ -287,6 +287,12 @@ class InsertQuery extends Query {
    */
   protected $insertValues = array();
 
+  /**
+   * A SelectQuery object to fetch the rows that should be inserted.
+   * 
+   */
+  protected $fromQuery;
+
   public function __construct($connection, $table, array $options = array()) {
     if (!isset($options['return'])) {
       $options['return'] = Database::RETURN_INSERT_ID;
@@ -410,6 +416,11 @@ class InsertQuery extends Query {
     return $this;
   }
 
+  public function from(SelectQueryInterface $query) {
+    $this->fromQuery = $query;
+    return $this;
+  }
+
   /**
    * Executes the insert query.
    *
@@ -425,6 +436,11 @@ class InsertQuery extends Query {
   public function execute() {
 
     $last_insert_id = 0;
+
+    // Check if a SelectQuery is passed in and use that.
+    if (!empty($this->fromQuery)) {
+      return $this->connection->query((string) $this, array(), $this->queryOptions);
+    }
 
     // Confirm that the user did not try to specify an identical
     //  field and default field.
@@ -462,6 +478,10 @@ class InsertQuery extends Query {
 
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
+
+    if (!empty($this->fromQuery)) {
+      return "INSERT $delay INTO {" . $this->table . '} (' . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
+    }
 
     // For simplicity, we will use the $placeholders array to inject
     // default keywords even though they are not, strictly speaking,

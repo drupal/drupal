@@ -21,11 +21,11 @@
 class InsertQuery_sqlite extends InsertQuery {
 
   public function execute() {
-    if (count($this->insertFields) + count($this->defaultFields) == 0) {
+    if (count($this->insertFields) + count($this->defaultFields) == 0 && empty($this->fromQuery)) {
       return NULL;
     }
     // Don't execute query without values.
-    if (!isset($this->insertValues[0]) && count($this->insertFields) > 0) {
+    if (!isset($this->insertValues[0]) && count($this->insertFields) > 0 && empty($this->fromQuery)) {
       return NULL;
     }
     if (count($this->insertFields)) {
@@ -39,6 +39,11 @@ class InsertQuery_sqlite extends InsertQuery {
   public function __toString() {
     // Produce as many generic placeholders as necessary.
     $placeholders = array_fill(0, count($this->insertFields), '?');
+
+    if (!empty($this->fromQuery)) {
+      return "INSERT INTO {" . $this->table . '} (' . implode(', ', $this->insertFields) . ') ' . $this->fromQuery;
+    }
+
     return 'INSERT INTO {' . $this->table . '} (' . implode(', ', $this->insertFields) . ') VALUES (' . implode(', ', $placeholders) . ')';
   }
 
