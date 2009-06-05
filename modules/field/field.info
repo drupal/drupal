@@ -11,6 +11,5 @@ files[] = field.info.inc
 files[] = field.default.inc
 files[] = field.attach.inc
 files[] = field.form.inc
-files[] = field.autoload.inc
 dependencies[] = field_sql_storage
 required = TRUE

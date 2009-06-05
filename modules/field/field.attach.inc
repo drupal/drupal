@@ -73,10 +73,6 @@ define('FIELD_STORAGE_INSERT', 'insert');
  */
 
 /**
- * @autoload field_attach_.* field_attach FieldException {
- */
-
-/**
  * @defgroup field_attach Field Attach API
  * @{
  * Operate on Field API data attached to Drupal objects.
@@ -279,13 +275,6 @@ function _field_invoke_multiple_default($op, $obj_type, $objects, &$a = NULL, &$
 }
 
 /**
- * @} End of "defgroup field_attach"
- *
- * The rest of the functions in this file are not in a group, but
- * their automatically-generated autoloaders are (see field.autoload.inc).
- */
-
-/**
  * Add form elements for all fields for an object to a form structure.
  *
  * @param $obj_type
@@ -301,7 +290,7 @@ function _field_invoke_multiple_default($op, $obj_type, $objects, &$a = NULL, &$
  * TODO : document the resulting $form structure, like we do for
  * field_attach_view().
  */
-function _field_attach_form($obj_type, $object, &$form, $form_state) {
+function field_attach_form($obj_type, $object, &$form, $form_state) {
   // TODO : something's not right here : do we alter the form or return a value ?
   $form += (array) _field_invoke_default('form', $obj_type, $object, $form, $form_state);
 
@@ -331,7 +320,7 @@ function _field_attach_form($obj_type, $object, &$form, $form_state) {
  *   Loaded field values are added to $objects. Fields with no values should be
  *   set as an empty array.
  */
-function _field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT) {
+function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT) {
   $load_current = $age == FIELD_LOAD_CURRENT;
 
   $info = field_info_fieldable_types($obj_type);
@@ -421,7 +410,7 @@ function _field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT) {
  *   On return, the objects in $objects are modified by having the
  *   appropriate set of fields added.
  */
-function _field_attach_load_revision($obj_type, $objects) {
+function field_attach_load_revision($obj_type, $objects) {
   return field_attach_load($obj_type, $objects, FIELD_LOAD_REVISION);
 }
 
@@ -440,7 +429,7 @@ function _field_attach_load_revision($obj_type, $objects) {
  * @return
  *   Throws a FieldValidationException if validation errors are found.
  */
-function _field_attach_validate($obj_type, $object) {
+function field_attach_validate($obj_type, $object) {
   $errors = array();
   _field_invoke_default('validate', $obj_type, $object, $errors);
   _field_invoke('validate', $obj_type, $object, $errors);
@@ -484,7 +473,7 @@ function _field_attach_validate($obj_type, $object) {
  * @param $form_state
  *   An associative array containing the current state of the form.
  */
-function _field_attach_form_validate($obj_type, $object, $form, &$form_state) {
+function field_attach_form_validate($obj_type, $object, $form, &$form_state) {
   // Extract field values from submitted values.
   _field_invoke_default('extract_form_values', $obj_type, $object, $form, $form_state);
 
@@ -516,7 +505,7 @@ function _field_attach_form_validate($obj_type, $object, $form, &$form_state) {
  * @param $form_state
  *   An associative array containing the current state of the form.
  */
-function _field_attach_submit($obj_type, $object, $form, &$form_state) {
+function field_attach_submit($obj_type, $object, $form, &$form_state) {
   // Extract field values from submitted values.
   _field_invoke_default('extract_form_values', $obj_type, $object, $form, $form_state);
 
@@ -540,7 +529,7 @@ function _field_attach_submit($obj_type, $object, $form, &$form_state) {
  * @param $object
  *   The object with fields to process.
  */
-function _field_attach_presave($obj_type, $object) {
+function field_attach_presave($obj_type, $object) {
   // TODO : to my knowledge, no field module has any use for 'presave' on D6.
   // should we keep this ?
   _field_invoke('presave', $obj_type, $object);
@@ -568,7 +557,7 @@ function _field_attach_presave($obj_type, $object) {
  *   Default values (if any) will be added to the $object parameter for fields
  *   it leaves unspecified.
  */
-function _field_attach_insert($obj_type, $object) {
+function field_attach_insert($obj_type, $object) {
   _field_invoke_default('insert', $obj_type, $object);
   _field_invoke('insert', $obj_type, $object);
 
@@ -597,7 +586,7 @@ function _field_attach_insert($obj_type, $object) {
  * @param $object
  *   The object with fields to save.
  */
-function _field_attach_update($obj_type, $object) {
+function field_attach_update($obj_type, $object) {
   _field_invoke('update', $obj_type, $object);
 
   // Let other modules act on updating the object, accumulating saved
@@ -626,7 +615,7 @@ function _field_attach_update($obj_type, $object) {
  * @param $object
  *   The object whose field data to delete.
  */
-function _field_attach_delete($obj_type, $object) {
+function field_attach_delete($obj_type, $object) {
   _field_invoke('delete', $obj_type, $object);
   module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_delete', $obj_type, $object);
 
@@ -651,7 +640,7 @@ function _field_attach_delete($obj_type, $object) {
  * @param $object
  *   The object with fields to save.
  */
-function _field_attach_delete_revision($obj_type, $object) {
+function field_attach_delete_revision($obj_type, $object) {
   _field_invoke('delete revision', $obj_type, $object);
   module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_delete_revision', $obj_type, $object);
 
@@ -677,7 +666,7 @@ function _field_attach_delete_revision($obj_type, $object) {
  * @return
  *   A structured content array tree for drupal_render().
  */
-function _field_attach_view($obj_type, $object, $teaser = FALSE) {
+function field_attach_view($obj_type, $object, $teaser = FALSE) {
   // Let field modules sanitize their data for output.
   _field_invoke('sanitize', $obj_type, $object);
 
@@ -697,7 +686,7 @@ function _field_attach_view($obj_type, $object, $teaser = FALSE) {
  *   containing the themed output for the whole field.
  * - Adds the formatted values in the 'view' key of the items.
  */
-function _field_attach_preprocess($obj_type, $object) {
+function field_attach_preprocess($obj_type, $object) {
   return _field_invoke_default('preprocess', $obj_type, $object);
 }
 
@@ -706,7 +695,7 @@ function _field_attach_preprocess($obj_type, $object) {
  *
  * TODO D7: We do not yet know if this really belongs in Field API.
  */
-function _field_attach_prepare_translation($node) {
+function field_attach_prepare_translation($node) {
   // Prevent against invalid 'nodes' built by broken 3rd party code.
   if (isset($node->type)) {
     $type = content_types($node->type);
@@ -730,7 +719,7 @@ function _field_attach_prepare_translation($node) {
  * @param $bundle
  *   The name of the newly created bundle.
  */
-function _field_attach_create_bundle($bundle) {
+function field_attach_create_bundle($bundle) {
   module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_create_bundle', $bundle);
 
   // Clear the cache.
@@ -750,7 +739,7 @@ function _field_attach_create_bundle($bundle) {
  * @param $bundle_new
  *   The new name of the bundle.
  */
-function _field_attach_rename_bundle($bundle_old, $bundle_new) {
+function field_attach_rename_bundle($bundle_old, $bundle_new) {
   module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_rename_bundle', $bundle_old, $bundle_new);
   db_update('field_config_instance')
     ->fields(array('bundle' => $bundle_new))
@@ -779,7 +768,7 @@ function _field_attach_rename_bundle($bundle_old, $bundle_new) {
  * @param $bundle
  *   The bundle to delete.
  */
-function _field_attach_delete_bundle($bundle) {
+function field_attach_delete_bundle($bundle) {
   // Delete the instances themseves
   $instances = field_info_instances($bundle);
   foreach ($instances as $instance) {
@@ -809,7 +798,7 @@ function _field_attach_delete_bundle($bundle) {
  *   2: bundle name of the object
  *   3: whether $obj_type's fields should be cached (TRUE/FALSE)
  */
-function _field_attach_extract_ids($object_type, $object) {
+function field_attach_extract_ids($object_type, $object) {
   // TODO D7 : prevent against broken 3rd party $node without 'type'.
   $info = field_info_fieldable_types($object_type);
   // Objects being created might not have id/vid yet.
@@ -823,5 +812,5 @@ function _field_attach_extract_ids($object_type, $object) {
 }
 
 /**
- * @autoload} End of "@autoload field_attach"
+ * @} End of "defgroup field_attach"
  */
