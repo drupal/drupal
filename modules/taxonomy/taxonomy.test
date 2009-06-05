@@ -354,6 +354,20 @@ class TaxonomyTermUnitTest extends TaxonomyWebTestCase {
 
     // Confirm that the node type argument returns a single node association.
     $this->assertEqual(taxonomy_term_count_nodes($term3->tid, 'page'), 1, t("Term is associated with one node of type 'page'."));
+
+    // Test hook_nodeapi_update_index().
+    // Load the node so taxonomy terms are fully populated.
+    $node = node_load($node1->nid);
+    $output = taxonomy_node_update_index($node);
+    $this->assertFalse(empty($output), t('Node with taxonomy has content when calling update index'));
+    // Remove all taxonomy.
+    unset($node->taxonomy);
+    $output = taxonomy_node_update_index($node);
+    $this->assertTrue(empty($output), t('Node with no taxonomy has no content when calling update index'));
+    // Set taxonomy  to a scalar (non-array).
+    $node->taxonomy = 1;
+    $output = taxonomy_node_update_index($node);
+    $this->assertTrue(empty($output), t('Node with non-array taxonomy has no content when calling update index'));
   }
 }
 

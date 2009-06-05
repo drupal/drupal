@@ -1639,8 +1639,10 @@ function taxonomy_node_validate($node, $form) {
  */
 function taxonomy_node_update_index($node) {
   $output = array();
-  foreach ($node->taxonomy as $term) {
-    $output[] = $term->name;
+  if (isset($node->taxonomy) && is_array($node->taxonomy)) {
+    foreach ($node->taxonomy as $term) {
+      $output[] = $term->name;
+    }
   }
   if (count($output)) {
     return '<strong>(' . implode(', ', $output) . ')</strong>';
