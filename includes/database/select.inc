@@ -1,5 +1,5 @@
 <?php
-// $Id: select.inc,v 1.18 2009/05/24 17:39:30 dries Exp $
+// $Id: select.inc,v 1.19 2009/06/06 16:57:52 webchick Exp $
 
 /**
  * @ingroup database
@@ -423,7 +423,7 @@ class SelectQueryExtender implements SelectQueryInterface {
 
   /* Implementations of QueryConditionInterface for the WHERE clause. */
 
-  public function condition($field, $value = NULL, $operator = '=') {
+  public function condition($field, $value = NULL, $operator = NULL) {
     $this->query->condition($field, $value, $operator);
     return $this;
   }
