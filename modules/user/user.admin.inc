@@ -260,7 +260,8 @@ function user_admin_settings() {
   // Do not allow users to set the anonymous or authenticated user roles as the
   // administrator role.
   $roles = user_roles();
-  $roles = array_slice($roles, 2, NULL, TRUE);
+  unset($roles[DRUPAL_ANONYMOUS_RID]);
+  unset($roles[DRUPAL_AUTHENTICATED_RID]);
   $roles[0] = t('disabled');
 
   $form['admin_role']['user_admin_role'] = array(
