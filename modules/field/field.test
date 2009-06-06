@@ -261,6 +261,216 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $this->assertEqual($entity->{$this->field_name}, $values, t('Insert: missing field results in default value saved'));
   }
 
+  /**
+   * Test field_attach_query().
+   */
+  function testFieldAttachQuery() {
+    $cardinality = $this->field['cardinality'];
+
+    // Create an additional bundle with an instance of the field.
+    field_test_create_bundle('test_bundle_1', 'Test Bundle 1');
+    $this->instance2 = $this->instance;
+    $this->instance2['bundle'] = 'test_bundle_1';
+    field_create_instance($this->instance2);
+
+    // Create two test objects, using two different types and bundles.
+    $entity_types = array(1 => 'test_entity', 2 => 'test_cacheable_entity');
+    $entities = array(1 => field_test_create_stub_entity(1, 1, 'test_bundle'), 2 => field_test_create_stub_entity(2, 2, 'test_bundle_1'));
+
+    // Create first test object with random (distinct) values.
+    $values = array();
+    for ($delta = 0; $delta < $cardinality; $delta++) {
+      do {
+        $value = mt_rand(1, 127);
+      } while (in_array($value, $values));
+      $values[$delta] = $value;
+      $entities[1]->{$this->field_name}[$delta] = array('value' => $values[$delta]);
+    }
+    field_attach_insert($entity_types[1], $entities[1]);
+
+    // Create second test object, sharing a value with the first one.
+    $common_value = $values[$cardinality - 1];
+    $entities[2]->{$this->field_name} = array(array('value' => $common_value));
+    field_attach_insert($entity_types[2], $entities[2]);
+
+    // Query on the object's values.
+    for ($delta = 0; $delta < $cardinality; $delta++) {
+      $conditions = array(array('value', $values[$delta]));
+      $result = field_attach_query($this->field_name, $conditions);
+      $this->assertTrue(isset($result[$entity_types[1]][1]), t('Query on value %delta returns the object', array('%delta' => $delta)));
+    }
+
+    // Query on a value that is not in the object.
+    do {
+      $different_value = mt_rand(1, 127);
+    } while (in_array($different_value, $values));
+    $conditions = array(array('value', $different_value));
+    $result = field_attach_query($this->field_name, $conditions);
+    $this->assertFalse(isset($result[$entity_types[1]][1]), t("Query on a value that is not in the object doesn't return the object"));
+
+    // Query on the value shared by both objects, and discriminate using
+    // additional conditions.
+
+    $conditions = array(array('value', $common_value));
+    $result = field_attach_query($this->field_name, $conditions);
+    $this->assertTrue(isset($result[$entity_types[1]][1]) && isset($result[$entity_types[2]][2]), t('Query on a value common to both objects returns both objects'));
+
+    $conditions = array(array('type', $entity_types[1]), array('value', $common_value));
+    $result = field_attach_query($this->field_name, $conditions);
+    $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both objects and a 'type' condition only returns the relevant object"));
+
+    $conditions = array(array('bundle', $entities[1]->fttype), array('value', $common_value));
+    $result = field_attach_query($this->field_name, $conditions);
+    $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both objects and a 'bundle' condition only returns the relevant object"));
+
+    $conditions = array(array('entity_id', $entities[1]->ftid), array('value', $common_value));
+    $result = field_attach_query($this->field_name, $conditions);
+    $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both objects and an 'entity_id' condition only returns the relevant object"));
+
+    // Test FIELD_QUERY_RETURN_IDS result format.
+    $conditions = array(array('value', $values[0]));
+    $result = field_attach_query($this->field_name, $conditions);
+    $expected = array(
+      $entity_types[1] => array(
+        $entities[1]->ftid => $entities[1]->ftid,
+      )
+    );
+    $this->assertEqual($result, $expected, t('FIELD_QUERY_RETURN_IDS result format returns the expect result'));
+
+    // Test FIELD_QUERY_RETURN_VALUES result format.
+    // Configure the instances so that we test hook_field_load() (see
+    // field_test_field_load() in field_test.module).
+    $this->instance['settings']['test_hook_field_load'] = TRUE;
+    field_update_instance($this->instance);
+    $this->instance2['settings']['test_hook_field_load'] = TRUE;
+    field_update_instance($this->instance2);
+
+    // Query for one of the values in the 1st object and the value shared by
+    // both objects.
+    $conditions = array(array('value', array($values[0], $common_value)));
+    $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_RETURN_VALUES);
+    $expected = array(
+      $entity_types[1] => array(
+        $entities[1]->ftid => (object) array(
+          'ftid' => $entities[1]->ftid,
+          'ftvid' => $entities[1]->ftvid,
+          'fttype' => $entities[1]->fttype,
+          $this->field_name => array(
+            array('value' => $values[0], 'additional_key' => 'additional_value'),
+            array('value' => $common_value, 'additional_key' => 'additional_value'),
+          ),
+        ),
+      ),
+      $entity_types[2] => array(
+        $entities[2]->ftid => (object) array(
+          'ftid' => $entities[2]->ftid,
+          'ftvid' => $entities[2]->ftvid,
+          'fttype' => $entities[2]->fttype,
+          $this->field_name => array(
+            array('value' => $common_value, 'additional_key' => 'additional_value'),
+          ),
+        ),
+      ),
+    );
+    $this->assertEqual($result, $expected, t('FIELD_QUERY_RETURN_VALUES result format returns the expect result'));
+  }
+
+  /**
+   * Test field_attach_query_revisions().
+   */
+  function testFieldAttachQueryRevisions() {
+    $cardinality = $this->field['cardinality'];
+
+    // Create first object revision with random (distinct) values.
+    $entity_type = 'test_entity';
+    $entities = array(1 => field_test_create_stub_entity(1, 1), 2 => field_test_create_stub_entity(1, 2));
+    $values = array();
+    for ($delta = 0; $delta < $cardinality; $delta++) {
+      do {
+        $value = mt_rand(1, 127);
+      } while (in_array($value, $values));
+      $values[$delta] = $value;
+      $entities[1]->{$this->field_name}[$delta] = array('value' => $values[$delta]);
+    }
+    field_attach_insert($entity_type, $entities[1]);
+
+    // Create second object revision, sharing a value with the first one.
+    $common_value = $values[$cardinality - 1];
+    $entities[2]->{$this->field_name}[0] = array('value' => $common_value);
+    field_attach_update($entity_type, $entities[2]);
+
+    // Query on the object's values.
+    for ($delta = 0; $delta < $cardinality; $delta++) {
+      $conditions = array(array('value', $values[$delta]));
+      $result = field_attach_query_revisions($this->field_name, $conditions);
+      $this->assertTrue(isset($result[$entity_type][1]), t('Query on value %delta returns the object', array('%delta' => $delta)));
+    }
+
+    // Query on a value that is not in the object.
+    do {
+      $different_value = mt_rand(1, 127);
+    } while (in_array($different_value, $values));
+    $conditions = array(array('value', $different_value));
+    $result = field_attach_query_revisions($this->field_name, $conditions);
+    $this->assertFalse(isset($result[$entity_type][1]), t("Query on a value that is not in the object doesn't return the object"));
+
+    // Query on the value shared by both objects, and discriminate using
+    // additional conditions.
+
+    $conditions = array(array('value', $common_value));
+    $result = field_attach_query_revisions($this->field_name, $conditions);
+    $this->assertTrue(isset($result[$entity_type][1]) && isset($result[$entity_type][2]), t('Query on a value common to both objects returns both objects'));
+
+    $conditions = array(array('revision_id', $entities[1]->ftvid), array('value', $common_value));
+    $result = field_attach_query_revisions($this->field_name, $conditions);
+    $this->assertTrue(isset($result[$entity_type][1]) && !isset($result[$entity_type][2]), t("Query on a value common to both objects and a 'revision_id' condition only returns the relevant object"));
+
+    // Test FIELD_QUERY_RETURN_IDS result format.
+    $conditions = array(array('value', $values[0]));
+    $result = field_attach_query_revisions($this->field_name, $conditions);
+    $expected = array(
+      $entity_type => array(
+        $entities[1]->ftvid => $entities[1]->ftid,
+      )
+    );
+    $this->assertEqual($result, $expected, t('FIELD_QUERY_RETURN_IDS result format returns the expect result'));
+
+    // Test FIELD_QUERY_RETURN_VALUES result format.
+    // Configure the instance so that we test hook_field_load() (see
+    // field_test_field_load() in field_test.module).
+    $this->instance['settings']['test_hook_field_load'] = TRUE;
+    field_update_instance($this->instance);
+
+    // Query for one of the values in the 1st object and the value shared by
+    // both objects.
+    $conditions = array(array('value', array($values[0], $common_value)));
+    $result = field_attach_query_revisions($this->field_name, $conditions, FIELD_QUERY_RETURN_VALUES);
+    $expected = array(
+      $entity_type => array(
+        $entities[1]->ftvid => (object) array(
+          'ftid' => $entities[1]->ftid,
+          'ftvid' => $entities[1]->ftvid,
+          'fttype' => $entities[1]->fttype,
+          $this->field_name => array(
+            array('value' => $values[0], 'additional_key' => 'additional_value'),
+            array('value' => $common_value, 'additional_key' => 'additional_value'),
+          ),
+        ),
+        $entities[2]->ftvid => (object) array(
+          'ftid' => $entities[2]->ftid,
+          'ftvid' => $entities[2]->ftvid,
+          'fttype' => $entities[2]->fttype,
+          $this->field_name => array(
+            array('value' => $common_value, 'additional_key' => 'additional_value'),
+          ),
+        ),
+      ),
+    );
+    $this->assertEqual($result, $expected, t('FIELD_QUERY_RETURN_VALUES result format returns the expect result'));
+
+    // TODO : test
+  }
+
   function testFieldAttachViewAndPreprocess() {
     $entity_type = 'test_entity';
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);

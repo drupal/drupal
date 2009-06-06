@@ -238,7 +238,8 @@ function field_sql_storage_field_storage_load($obj_type, &$objects, $age, $skip_
         // For each column declared by the field, populate the item
         // from the prefixed database column.
         foreach ($field['columns'] as $column => $attributes) {
-          $item[$column] = $row->{_field_sql_storage_columnname($field_name, $column)};
+          $column_name = _field_sql_storage_columnname($field_name, $column);
+          $item[$column] = $row->$column_name;
         }
 
         // Add the item to the field values for the entity.
@@ -348,6 +349,108 @@ function field_sql_storage_field_storage_delete($obj_type, $object) {
       ->condition('entity_id', $id)
       ->execute();
   }
+}
+
+
+/**
+ * Implement hook_field_storage_query().
+ */
+function field_sql_storage_field_storage_query($field_name, $conditions, $result_format, $age) {
+  $load_values = $result_format == FIELD_QUERY_RETURN_VALUES;
+  $load_current = $age == FIELD_LOAD_CURRENT;
+
+  $field = field_info_field($field_name);
+  $table = $load_current ? _field_sql_storage_tablename($field) : _field_sql_storage_revision_tablename($field);
+  $field_columns = array_keys($field['columns']);
+
+  // Build the query.
+  $query = db_select($table, 't');
+  $query->join('field_config_entity_type', 'e', 't.etid = e.etid');
+  $query
+    ->fields('e', array('type'))
+    ->condition('deleted', 0)
+    ->orderBy('delta');
+  // Add fields, depending on the return format.
+  if ($load_values) {
+    $query->fields('t');
+  }
+  else {
+    $query->fields('t', array('entity_id', 'revision_id'));
+  }
+  // Add conditions.
+  foreach ($conditions as $condition) {
+    // A condition is either a (column, value, operator) triple, or a
+    // (column, value) pair with implied operator.
+    @list($column, $value, $operator) = $condition;
+    // Translate operator and value if needed.
+    switch ($operator) {
+      case NULL:
+        $operator = is_array($value) ? 'IN' : '=';
+        break;
+
+      case 'STARTS_WITH':
+        $operator = 'LIKE';
+        $value .= '%';
+        break;
+
+      case 'ENDS_WITH':
+        $operator = 'LIKE';
+        $value = "$value%";
+        break;
+
+      case 'CONTAINS':
+        $operator = 'LIKE';
+        $value = "%$value%";
+        break;
+    }
+    // Translate field columns into prefixed db columns.
+    if (in_array($column, $field_columns)) {
+      $column = _field_sql_storage_columnname($field_name, $column);
+    }
+    $query->condition($column, $value, $operator);
+  }
+
+  $results = $query->execute();
+
+  // Build results.
+  $return = array();
+  $delta_count = array();
+  foreach ($results as $row) {
+    // If querying all revisions and the entity type has revisions, we need to
+    // key the results by revision_ids.
+    $entity_type = field_info_fieldable_types($row->type);
+    $id = ($load_current || empty($entity_type['revision key'])) ? $row->entity_id : $row->revision_id;
+
+    if ($load_values) {
+      // Populate actual field values.
+      if (!isset($delta_count[$row->type][$id])) {
+        $delta_count[$row->type][$id] = 0;
+      }
+      if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED || $delta_count[$row->type][$id] < $field['cardinality']) {
+        $item = array();
+        // For each column declared by the field, populate the item
+        // from the prefixed database column.
+        foreach ($field['columns'] as $column => $attributes) {
+          $column_name = _field_sql_storage_columnname($field_name, $column);
+          $item[$column] = $row->$column_name;
+        }
+
+        // Initialize the 'pseudo object' if needed.
+        if (!isset($return[$row->type][$id])) {
+          $return[$row->type][$id] = field_attach_create_stub_object($row->type, array($row->entity_id, $row->revision_id, $row->bundle));
+        }
+        // Add the item to the field values for the entity.
+        $return[$row->type][$id]->{$field_name}[] = $item;
+        $delta_count[$row->type][$id]++;
+      }
+    }
+    else {
+      // Simply return the list of selected ids.
+      $return[$row->type][$id] = $row->entity_id;
+    }
+  }
+
+  return $return;
 }
 
 /**

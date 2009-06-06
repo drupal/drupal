@@ -238,6 +238,10 @@ function hook_field_load($obj_type, $objects, $field, $instances, &$items, $age)
  *   The type of $object.
  * @param $object
  *   The object for the operation.
+ *   Note that this might not be a full-fledged 'object'. When invoked through
+ *   field_attach_query(), the $object will only include properties that the
+ *   Field API knows about: bundle, id, revision id, and field values (no node
+ *   title, user name...).
  * @param $field
  *   The field structure for the operation.
  * @param $instance
@@ -503,12 +507,17 @@ function hook_field_attach_pre_load($obj_type, $objects, $age, &$skip_fields) {
  * This hook is invoked after the field module has performed the operation.
  *
  * Unlike other field_attach hooks, this hook accounts for 'multiple loads'.
- * It takes an array of objects indexed by object id as its first parameter.
- * For performance reasons, information for all available objects should be
- * loaded in a single query where possible.
+ * Instead of the usual $object parameter, it accepts an array of objects,
+ * indexed by object id. For performance reasons, information for all available
+ * objects should be loaded in a single query where possible.
  *
- * Note that the changes made to the objects' field values get cached by the
- * field cache for subsequent loads.
+ * Note that $objects might not be full-fledged 'objects'. When invoked through
+ * field_attach_query(), each object only includes properties that the Field
+ * API knows about: bundle, id, revision id, and field values (no node title,
+ * user name...)
+
+ * The changes made to the objects' field values get cached by the field cache
+ * for subsequent loads.
  *
  * See field_attach_load() for details and arguments.
  */
@@ -583,6 +592,38 @@ function hook_field_attach_pre_insert($obj_type, $object, &$skip_fields) {
  *   Saved field names are set set as keys in $skip_fields.
  */
 function hook_field_attach_pre_update($obj_type, $object, &$skip_fields) {
+}
+
+/**
+ * Act on field_attach_pre_query.
+ *
+ * This hook should be implemented by modules that use
+ * hook_field_attach_pre_load(), hook_field_attach_pre_insert() and
+ * hook_field_attach_pre_update() to bypass the regular storage engine, to
+ * handle field queries.
+ *
+ * @param $field_name
+ *   The name of the field to query.
+ * @param $conditions
+ *   See field_attach_query().
+ *   A storage module that doesn't support querying a given column should raise
+ *   a FieldQueryException. Incompatibilities should be mentioned on the module
+ *   project page.
+ * @param $result_format
+ *   See field_attach_query().
+ * @param $age
+ *   - FIELD_LOAD_CURRENT: query the most recent revisions for all
+ *     objects. The results will be keyed by object type and object id.
+ *   - FIELD_LOAD_REVISION: query all revisions. The results will be keyed by
+ *     object type and object revision id.
+ * @param $skip_field
+ *   Boolean, always coming as FALSE.
+ * @return
+ *   See field_attach_query().
+ *   The $skip_field parameter should be set to TRUE if the query has been
+ *   handled.
+ */
+function hook_field_attach_pre_query($field_name, $conditions, $result_format, $age, &$skip_field) {
 }
 
 /**
@@ -734,6 +775,26 @@ function hook_field_storage_delete($obj_type, $object) {
  *   hook_fieldable_info() for $obj_type.
  */
 function hook_field_storage_delete_revision($obj_type, $object) {
+}
+
+/**
+ * Handle a field query.
+ *
+ * @param $field_name
+ *   The name of the field to query.
+ * @param $conditions
+ *   See field_attach_query().
+ *   A storage module that doesn't support querying a given column should raise
+ *   a FieldQueryException. Incompatibilities should be mentioned on the module
+ *   project page.
+ * @param $result_format
+ *   See field_attach_query().
+ * @param $age
+ *   See field_attach_query().
+ * @return
+ *   See field_attach_query().
+ */
+function hook_field_storage_query($field_name, $conditions, $result_format, $age) {
 }
 
 /**
