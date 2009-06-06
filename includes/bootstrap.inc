@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.285 2009/06/02 06:58:15 dries Exp $
+// $Id: bootstrap.inc,v 1.286 2009/06/06 20:15:23 dries Exp $
 
 /**
  * @file
@@ -431,6 +431,7 @@ function drupal_initialize_variables() {
   ini_set('magic_quotes_runtime', '0');
   // Use session cookies, not transparent sessions that puts the session id in
   // the query string.
+  ini_set('session.use_cookies', '1');
   ini_set('session.use_only_cookies', '1');
   ini_set('session.use_trans_sid', '0');
   // Don't send HTTP headers using PHP's session handler.
