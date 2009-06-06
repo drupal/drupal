@@ -806,7 +806,7 @@ class NodeSaveTestCase extends DrupalWebTestCase {
  * Tests related to node types.
  */
 class NodeTypeTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Node types'),
       'description' => t('Ensures that node type functions work correctly.'),
@@ -838,7 +838,7 @@ class NodeTypeTestCase extends DrupalWebTestCase {
  * Rebuild the node_access table.
  */
 class NodeAccessRebuildTestCase extends DrupalWebTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
       'name' => t('Node access rebuild'),
       'description' => t('Ensures that node access rebuild functions work correctly.'),
