@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.22 2009/05/25 10:43:52 dries Exp $
+// $Id: comment.admin.inc,v 1.23 2009/06/06 10:27:42 dries Exp $
 
 /**
  * @file
@@ -66,19 +66,18 @@ function comment_admin_overview($type = 'new', $arg) {
     'operations' => array('data' => t('Operations')),
   );
 
-  $query = db_select('comment', 'c');
+  $query = db_select('comment', 'c')->extend('PagerDefault')->extend('TableSort');
   $query->join('users', 'u', 'u.uid = c.uid');
   $query->join('node', 'n', 'n.nid = c.nid');
   $query->addField('u', 'name', 'registered_name');
   $query->addField('n', 'title', 'node_title');
-  $query
+  $result = $query
     ->fields('c', array('subject', 'nid', 'cid', 'comment', 'timestamp', 'status', 'name', 'homepage'))
     ->fields('u', array('uid'))
     ->condition('c.status', $status)
-    ->extend('PagerDefault')->extend('TableSort')
     ->limit(50)
-    ->orderByHeader($header);
-  $result = $query->execute();
+    ->orderByHeader($header)
+    ->execute();
 
 
   // Build a table listing the appropriate comments.
