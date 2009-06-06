@@ -86,7 +86,7 @@ function system_admin_menu_block_page() {
  */
 function system_admin_by_module() {
 
-  $modules = module_rebuild_cache();
+  $modules = system_get_module_data();
   $menu_items = array();
   $help_arg = module_exists('help') ? drupal_help_arg() : FALSE;
 
@@ -141,7 +141,7 @@ function system_settings_overview() {
 function system_themes_form() {
   drupal_clear_css_cache();
 
-  $themes = system_theme_data();
+  $themes = system_get_theme_data();
   uasort($themes, 'system_sort_modules_by_info_name');
 
   $status = array();
@@ -325,7 +325,7 @@ function system_theme_settings(&$form_state, $key = '') {
   if ($key) {
     $settings = theme_get_settings($key);
     $var = str_replace('/', '_', 'theme_' . $key . '_settings');
-    $themes = system_theme_data();
+    $themes = system_get_theme_data();
     $features = $themes[$key]->info['features'];
   }
   else {
@@ -580,7 +580,7 @@ function system_modules($form_state = array()) {
   node_types_rebuild();
   cache_clear_all('schema', 'cache');
   // Get current list of modules.
-  $files = module_rebuild_cache();
+  $files = system_get_module_data();
 
   // Remove hidden modules from display list.
   foreach ($files as $filename => $file) {
@@ -761,7 +761,7 @@ function _system_modules_build_row($info, $extra) {
  * Display confirmation form for required modules.
  *
  * @param $modules
- *   Array of module file objects as returned from module_rebuild_cache().
+ *   Array of module file objects as returned from system_get_module_data().
  * @param $storage
  *   The contents of $form_state['storage']; an array with two
  *   elements: the list of required modules and the list of status
@@ -819,7 +819,7 @@ function system_modules_submit($form, &$form_state) {
 
   // Get a list of all modules, it will be used to find which module requires
   // which.
-  $files = module_rebuild_cache();
+  $files = system_get_module_data();
 
   // The modules to be enabled.
   $modules_to_be_enabled = array();

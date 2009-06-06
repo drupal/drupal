@@ -36,8 +36,8 @@ function update_get_projects() {
     $projects = update_project_cache('update_project_projects');
     if (empty($projects)) {
       // Still empty, so we have to rebuild the cache.
-      _update_process_info_list($projects, module_rebuild_cache(), 'module');
-      _update_process_info_list($projects, system_theme_data(), 'theme');
+      _update_process_info_list($projects, system_get_module_data(), 'module');
+      _update_process_info_list($projects, system_get_theme_data(), 'theme');
       // Allow other modules to alter projects before fetching and comparing.
       drupal_alter('update_projects', $projects);
       // Cache the site's project data for at most 1 hour.

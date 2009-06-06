@@ -642,7 +642,7 @@ function install_tasks($profile, $task) {
   // Install profile modules.
   if ($task == 'profile-install') {
     $modules = variable_get('install_profile_modules', array());
-    $files = module_rebuild_cache();
+    $files = system_get_module_data();
     variable_del('install_profile_modules');
     $operations = array();
     foreach ($modules as $module) {

@@ -47,7 +47,7 @@ function help_page($name) {
 
 function help_links_as_list() {
   $empty_arg = drupal_help_arg();
-  $module_info = module_rebuild_cache();
+  $module_info = system_get_module_data();
 
   $modules = array();
   foreach (module_implements('help', TRUE) as $module) {

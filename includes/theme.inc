@@ -528,7 +528,7 @@ function list_themes($refresh = FALSE) {
     }
     else {
       // Scan the installation when the database should not be read.
-      $themes = _system_theme_data();
+      $themes = _system_get_theme_data();
     }
 
     foreach ($themes as $theme) {

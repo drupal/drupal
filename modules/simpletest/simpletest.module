@@ -211,7 +211,7 @@ function simpletest_get_all_tests() {
   if (!isset($classes)) {
     require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'simpletest') . '/drupal_web_test_case.php';
     $files = array();
-    foreach (array_keys(module_rebuild_cache()) as $module) {
+    foreach (array_keys(system_get_module_data()) as $module) {
       $module_path = drupal_get_path('module', $module);
       $test = $module_path . "/$module.test";
       if (file_exists($test)) {
