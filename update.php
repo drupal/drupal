@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.286 2009/06/02 06:58:15 dries Exp $
+// $Id: update.php,v 1.287 2009/06/06 16:05:26 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -499,8 +499,8 @@ function update_check_incompatibility($name, $type = 'module') {
 
   // Store values of expensive functions for future use.
   if (empty($themes) || empty($modules)) {
-    $themes = _system_theme_data();
-    $modules = module_rebuild_cache();
+    $themes = _system_get_theme_data();
+    $modules = system_get_module_data();
   }
 
   if ($type == 'module' && isset($modules[$name])) {

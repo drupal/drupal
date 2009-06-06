@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.176 2009/06/02 06:58:15 dries Exp $
+// $Id: install.php,v 1.177 2009/06/06 16:05:26 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -642,7 +642,7 @@ function install_tasks($profile, $task) {
   // Install profile modules.
   if ($task == 'profile-install') {
     $modules = variable_get('install_profile_modules', array());
-    $files = module_rebuild_cache();
+    $files = system_get_module_data();
     variable_del('install_profile_modules');
     $operations = array();
     foreach ($modules as $module) {

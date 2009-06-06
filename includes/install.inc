@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.91 2009/05/24 17:39:30 dries Exp $
+// $Id: install.inc,v 1.92 2009/06/06 16:05:26 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -495,7 +495,7 @@ function drupal_verify_profile($profile, $locale) {
  *   Normally just testing wants to set this to TRUE.
  */
 function drupal_install_modules($module_list = array(), $disable_modules_installed_hook = FALSE) {
-  $files = module_rebuild_cache();
+  $files = system_get_module_data();
   $module_list = array_flip(array_values($module_list));
   do {
     $moved = FALSE;
@@ -592,7 +592,7 @@ function drupal_install_system() {
     ->execute();
   // Now that we've installed things properly, bootstrap the full Drupal environment
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
-  module_rebuild_cache();
+  system_get_module_data();
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.493 2009/06/02 03:57:22 webchick Exp $
+// $Id: theme.inc,v 1.494 2009/06/06 16:05:26 dries Exp $
 
 /**
  * @file
@@ -528,7 +528,7 @@ function list_themes($refresh = FALSE) {
     }
     else {
       // Scan the installation when the database should not be read.
-      $themes = _system_theme_data();
+      $themes = _system_get_theme_data();
     }
 
     foreach ($themes as $theme) {
