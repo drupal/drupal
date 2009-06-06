@@ -1,10 +1,16 @@
 <?php
-// $Id: system_test.module,v 1.11 2009/05/27 18:34:00 dries Exp $
+// $Id: system_test.module,v 1.12 2009/06/06 15:43:05 dries Exp $
 
 /**
  * Implement hook_menu().
  */
 function system_test_menu() {
+  $items['system-test/sleep/%'] = array(
+    'page callback' => 'system_test_sleep',
+    'page arguments' => array(2),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
   $items['system-test/auth'] = array(
     'page callback' => 'system_test_basic_auth_page',
     'access callback' => TRUE,
@@ -54,6 +60,10 @@ function system_test_menu() {
   );
 
   return $items;
+}
+
+function system_test_sleep($seconds) {
+  sleep($seconds);
 }
 
 function system_test_basic_auth_page() {
