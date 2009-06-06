@@ -56,6 +56,12 @@ define('JS_DEFAULT', 0);
 define('JS_THEME', 100);
 
 /**
+ * Error code indicating that the request made by drupal_http_request() exceeded
+ * the specified timeout.
+ */
+define('HTTP_REQUEST_TIMEOUT', 1);
+
+/**
  * Add content to a specified region.
  *
  * @param $region
@@ -422,6 +428,10 @@ function drupal_access_denied() {
  *   - max_redirects
  *       An integer representing how many times a redirect may be followed.
  *       Defaults to 3.
+ *   - timeout
+ *       A float representing the maximum number of seconds the function call
+ *       may take. The default is 30 seconds. If a timeout occurs, the error
+ *       code is set to the HTTP_REQUEST_TIMEOUT constant.
  * @return
  *   An object which can have one or more of the following parameters:
  *   - request
@@ -462,17 +472,28 @@ function drupal_http_request($url, array $options = array()) {
     return $result;
   }
 
+  timer_start(__FUNCTION__);
+
+  // Merge the default options.
+  $options += array(
+    'headers' => array(),
+    'method' => 'GET',
+    'data' => NULL,
+    'max_redirects' => 3,
+    'timeout' => 30,
+  );
+
   switch ($uri['scheme']) {
     case 'http':
       $port = isset($uri['port']) ? $uri['port'] : 80;
       $host = $uri['host'] . ($port != 80 ? ':' . $port : '');
-      $fp = @fsockopen($uri['host'], $port, $errno, $errstr, 15);
+      $fp = @fsockopen($uri['host'], $port, $errno, $errstr, $options['timeout']);
       break;
     case 'https':
       // Note: Only works when PHP is compiled with OpenSSL support.
       $port = isset($uri['port']) ? $uri['port'] : 443;
       $host = $uri['host'] . ($port != 443 ? ':' . $port : '');
-      $fp = @fsockopen('ssl://' . $uri['host'], $port, $errno, $errstr, 20);
+      $fp = @fsockopen('ssl://' . $uri['host'], $port, $errno, $errstr, $options['timeout']);
       break;
     default:
       $result->error = 'invalid schema ' . $uri['scheme'];
@@ -500,14 +521,6 @@ function drupal_http_request($url, array $options = array()) {
   if (isset($uri['query'])) {
     $path .= '?' . $uri['query'];
   }
-
-  // Merge the default options.
-  $options += array(
-    'headers' => array(),
-    'method' => 'GET',
-    'data' => NULL,
-    'max_redirects' => 3,
-  );
 
   // Merge the default headers.
   $options['headers'] += array(
@@ -553,8 +566,16 @@ function drupal_http_request($url, array $options = array()) {
 
   // Fetch response.
   $response = '';
-  while (!feof($fp) && $chunk = fread($fp, 1024)) {
-    $response .= $chunk;
+  while (!feof($fp)) {
+    // Calculate how much time is left of the original timeout value.
+    $timeout = $options['timeout'] - timer_read(__FUNCTION__) / 1000;
+    if ($timeout <= 0) {
+      $result->code = HTTP_REQUEST_TIMEOUT;
+      $result->error = 'request timed out';
+      return $result;
+    }
+    stream_set_timeout($fp, floor($timeout), floor(1000000 * fmod($timeout, 1)));
+    $response .= fread($fp, 1024);
   }
   fclose($fp);
 
@@ -639,7 +660,12 @@ function drupal_http_request($url, array $options = array()) {
     case 302: // Moved temporarily
     case 307: // Moved temporarily
       $location = $result->headers['Location'];
-      if ($options['max_redirects']) {
+      $options['timeout'] -= timer_read(__FUNCTION__) / 1000;
+      if ($options['timeout'] <= 0) {
+        $result->code = HTTP_REQUEST_TIMEOUT;
+        $result->error = 'request timed out';
+      }
+      elseif ($options['max_redirects']) {
         // Redirect to the new location.
         $options['max_redirects']--;
         $result = drupal_http_request($location, $options);
