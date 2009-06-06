@@ -11,7 +11,7 @@
  */
 function update_manual_status() {
   if (_update_refresh()) {
-    drupal_set_message(t('Fetched information about all available new releases and updates.'));
+    drupal_set_message(t('Attempted to fetch information about all available new releases and updates.'));
   }
   else {
     drupal_set_message(t('Unable to fetch any information about available new releases and updates.'), 'error');
@@ -24,6 +24,7 @@ function update_manual_status() {
  */
 function _update_refresh() {
   global $base_url;
+  $fail = &drupal_static(__FUNCTION__, array());
   module_load_include('inc', 'update', 'update.compare');
 
   // Since we're fetching new available update data, we want to clear
@@ -45,11 +46,24 @@ function _update_refresh() {
   // to clear out the stale data at this point.
   _update_cache_clear('update_available_releases');
 
+   $max_fetch_attempts = variable_get('update_max_fetch_attempts', UPDATE_MAX_FETCH_ATTEMPTS);
+
   foreach ($projects as $key => $project) {
     $url = _update_build_fetch_url($project, $site_key);
-    $xml = drupal_http_request($url);
-    if (isset($xml->data)) {
-      $data[] = $xml->data;
+    $fetch_url_base = _update_get_fetch_url_base($project);
+    if (empty($fail[$fetch_url_base]) || count($fail[$fetch_url_base]) < $max_fetch_attempts) {
+      $xml = drupal_http_request($url);
+      if (isset($xml->data)) {
+        $data[] = $xml->data;
+      }
+      else {
+        // Connection likely broken; prepare to give up.
+        $fail[$fetch_url_base][$key] = 1;
+      }
+    }
+    else {
+      // Didn't bother trying to fetch.
+      $fail[$fetch_url_base][$key] = 1;
     }
   }
 
@@ -57,14 +71,21 @@ function _update_refresh() {
     $available = update_parse_xml($data);
   }
   if (!empty($available) && is_array($available)) {
+    // Record the projects where we failed to fetch data.
+    foreach ($fail as $fetch_url_base => $failures) {
+      foreach ($failures as $key => $value) {
+        $available[$key]['project_status'] = 'not-fetched';
+      }
+    }
     $frequency = variable_get('update_check_frequency', 1);
     _update_cache_set('update_available_releases', $available, REQUEST_TIME + (60 * 60 * 24 * $frequency));
-    variable_set('update_last_check', REQUEST_TIME);
-    watchdog('update', 'Fetched information about all available new releases and updates.', array(), WATCHDOG_NOTICE, l(t('view'), 'admin/reports/updates'));
+    watchdog('update', 'Attempted to fetch information about all available new releases and updates.', array(), WATCHDOG_NOTICE, l(t('view'), 'admin/reports/updates'));
   }
   else {
     watchdog('update', 'Unable to fetch any information about available new releases and updates.', array(), WATCHDOG_ERROR, l(t('view'), 'admin/reports/updates'));
   }
+  // Whether this worked or not, we did just (try to) check for updates.
+  variable_set('update_last_check', REQUEST_TIME);
   return $available;
 }
 
@@ -84,12 +105,8 @@ function _update_refresh() {
  * @see update_get_projects()
  */
 function _update_build_fetch_url($project, $site_key = '') {
-  $default_url = variable_get('update_fetch_url', UPDATE_DEFAULT_URL);
-  if (!isset($project['info']['project status url'])) {
-    $project['info']['project status url'] = $default_url;
-  }
   $name = $project['name'];
-  $url = $project['info']['project status url'];
+  $url = _update_get_fetch_url_base($project);
   $url .= '/' . $name . '/' . DRUPAL_CORE_COMPATIBILITY;
   // Only append a site_key and the version information if we have a site_key
   // in the first place, and if this is not a disabled module or theme. We do
@@ -104,6 +121,22 @@ function _update_build_fetch_url($project, $site_key = '') {
     }
   }
   return $url;
+}
+
+/**
+ * Return the base of the URL to fetch available update data for a project.
+ *
+ * @param $project
+ *   The array of project information from update_get_projects().
+ * @return
+ *   The base of the URL used for fetching available update data. This does
+ *   not include the path elements to specify a particular project, version,
+ *   site_key, etc.
+ *
+ * @see _update_build_fetch_url()
+ */
+function _update_get_fetch_url_base($project) {
+  return isset($project['info']['project status url']) ? $project['info']['project status url'] : variable_get('update_fetch_url', UPDATE_DEFAULT_URL);
 }
 
 /**

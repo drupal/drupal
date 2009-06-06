@@ -51,6 +51,15 @@ define('UPDATE_NOT_CHECKED', -1);
  */
 define('UPDATE_UNKNOWN', -2);
 
+/**
+ * There was a failure fetching available update data for this project.
+ */
+define('UPDATE_NOT_FETCHED', -3);
+
+/**
+ * Maximum number of attempts to fetch available update data from a given host.
+ */
+define('UPDATE_MAX_FETCH_ATTEMPTS', 2);
 
 /**
  * Implement hook_help().
@@ -258,6 +267,7 @@ function _update_requirement_check($project, $type) {
       break;
     case UPDATE_UNKNOWN:
     case UPDATE_NOT_CHECKED:
+    case UPDATE_NOT_FETCHED:
       $requirement_label = isset($project['reason']) ? $project['reason'] : t('Can not determine status');
       $requirement['severity'] = REQUIREMENT_WARNING;
       break;
@@ -473,6 +483,7 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
 
     case UPDATE_UNKNOWN:
     case UPDATE_NOT_CHECKED:
+    case UPDATE_NOT_FETCHED:
       if ($msg_type == 'core') {
         $text = t('There was a problem determining the status of available updates for your version of Drupal.', array(), $langcode);
       }
