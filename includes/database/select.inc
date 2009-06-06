@@ -423,7 +423,7 @@ class SelectQueryExtender implements SelectQueryInterface {
 
   /* Implementations of QueryConditionInterface for the WHERE clause. */
 
-  public function condition($field, $value = NULL, $operator = '=') {
+  public function condition($field, $value = NULL, $operator = NULL) {
     $this->query->condition($field, $value, $operator);
     return $this;
   }

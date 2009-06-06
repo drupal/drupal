@@ -31,10 +31,8 @@ interface QueryConditionInterface {
    *   dependent on the $operator.
    * @param $operator
    *   The comparison operator, such as =, <, or >=. It also accepts more complex
-   *   options such as IN, LIKE, or BETWEEN.
-   * @param $num_args
-   *   For internal use only. This argument is used to track the recursive calls when
-   *   processing complex conditions.
+   *   options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is an array
+   *   = otherwise.
    * @return
    *   The called object.
    */
@@ -794,11 +792,8 @@ class DeleteQuery extends Query implements QueryConditionInterface {
     $this->condition = new DatabaseCondition('AND');
   }
 
-  public function condition($field, $value = NULL, $operator = '=') {
-    if (!isset($num_args)) {
-      $num_args = func_num_args();
-    }
-    $this->condition->condition($field, $value, $operator, $num_args);
+  public function condition($field, $value = NULL, $operator = NULL) {
+    $this->condition->condition($field, $value, $operator);
     return $this;
   }
 
@@ -939,11 +934,8 @@ class UpdateQuery extends Query implements QueryConditionInterface {
     $this->condition = new DatabaseCondition('AND');
   }
 
-  public function condition($field, $value = NULL, $operator = '=') {
-    if (!isset($num_args)) {
-      $num_args = func_num_args();
-    }
-    $this->condition->condition($field, $value, $operator, $num_args);
+  public function condition($field, $value = NULL, $operator = NULL) {
+    $this->condition->condition($field, $value, $operator);
     return $this;
   }
 
@@ -1094,7 +1086,10 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
     return count($this->conditions) - 1;
   }
 
-  public function condition($field, $value = NULL, $operator = '=') {
+  public function condition($field, $value = NULL, $operator = NULL) {
+    if (!isset($operator)) {
+      $operator = is_array($value) ? 'IN' : '=';
+    }
     $this->conditions[] = array(
       'field' => $field,
       'value' => $value,
