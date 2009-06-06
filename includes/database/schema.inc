@@ -44,6 +44,8 @@
  *       just map to the according database engine specific
  *       datatypes. Use 'serial' for auto incrementing fields. This
  *       will expand to 'int auto_increment' on mysql.
+ *     - 'serialize': A boolean indicating whether the field will be stored
+         as a serialized string.
  *     - 'size': The data size: 'tiny', 'small', 'medium', 'normal',
  *       'big'. This is a hint about the largest value the field will
  *       store and determines which of the database engine specific
