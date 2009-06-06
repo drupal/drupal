@@ -51,7 +51,7 @@ function dblog_overview() {
   $build['dblog_clear_log_form'] = drupal_get_form('dblog_clear_log_form');
 
   $header = array(
-    ' ',
+    '', // Icon column.
     array('data' => t('Type'), 'field' => 'w.type'),
     array('data' => t('Date'), 'field' => 'w.wid', 'sort' => 'desc'),
     t('Message'),
@@ -59,26 +59,18 @@ function dblog_overview() {
     array('data' => t('Operations')),
   );
 
-  $query = db_select('watchdog', 'w');
+  $query = db_select('watchdog', 'w')->extend('PagerDefault')->extend('TableSort');
   $query->join('users', 'u', 'w.uid = u.uid');
   $query
     ->fields('w', array('wid', 'uid', 'severity', 'type', 'timestamp', 'message', 'variables', 'link'))
     ->addField('u', 'name');
   if (!empty($filter['where'])) {
-    $query
-      ->where($filter['where'], $filter['args'])
-      ->extend('PagerDefault')->extend('TableSort')
-      ->limit(50, 0)
-      ->orderByHeader($header);
-    $result = $query->execute();
+    $query->where($filter['where'], $filter['args']);
   }
-  else {
-    $query
-      ->extend('PagerDefault')->extend('TableSort')
-      ->limit(50)
-      ->orderByHeader($header);
-    $result = $query->execute();
-  }
+  $result = $query
+    ->limit(50)
+    ->orderByHeader($header)
+    ->execute();
 
   foreach ($result as $dblog) {
     $rows[] = array('data' =>
@@ -120,16 +112,15 @@ function dblog_top($type) {
   $count_query->addExpression('COUNT(DISTINCT(message))');
   $count_query->condition('type', $type);
 
-  $query = db_select('watchdog', 'w');
+  $query = db_select('watchdog', 'w')->extend('PagerDefault')->extend('TableSort');
   $query->addExpression('COUNT(wid)', 'count');
   $query = $query
     ->fields('w', array('message', 'variables'))
     ->condition('w.type', $type)
     ->groupBy('message')
     ->groupBy('variables')
-    ->extend('PagerDefault')->extend('TableSort')
-    ->limit(30);
-  $query = $query->orderByHeader($header);
+    ->limit(30)
+    ->orderByHeader($header);
   $query->setCountQuery($count_query);
   $result = $query->execute();
 
