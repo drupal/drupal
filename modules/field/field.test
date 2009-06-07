@@ -467,8 +467,6 @@ class FieldAttachTestCase extends DrupalWebTestCase {
       ),
     );
     $this->assertEqual($result, $expected, t('FIELD_QUERY_RETURN_VALUES result format returns the expect result'));
-
-    // TODO : test
   }
 
   function testFieldAttachViewAndPreprocess() {

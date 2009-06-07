@@ -384,10 +384,6 @@ function field_sql_storage_field_storage_query($field_name, $conditions, $result
     @list($column, $value, $operator) = $condition;
     // Translate operator and value if needed.
     switch ($operator) {
-      case NULL:
-        $operator = is_array($value) ? 'IN' : '=';
-        break;
-
       case 'STARTS_WITH':
         $operator = 'LIKE';
         $value .= '%';
