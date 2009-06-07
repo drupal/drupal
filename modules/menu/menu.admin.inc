@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.admin.inc,v 1.48 2009/05/24 17:39:32 dries Exp $
+// $Id: menu.admin.inc,v 1.49 2009/06/07 02:30:13 dries Exp $
 
 /**
  * @file
@@ -74,7 +74,7 @@ function menu_overview_form(&$form_state, $menu) {
  * Recursive helper function for menu_overview_form().
  */
 function _menu_overview_tree_form($tree) {
-  static $form = array('#tree' => TRUE);
+  $form = &drupal_static(__FUNCTION__, array('#tree' => TRUE));
   foreach ($tree as $data) {
     $title = '';
     $item = $data['link'];
