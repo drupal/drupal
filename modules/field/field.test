@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.24 2009/06/06 16:17:30 webchick Exp $
+// $Id: field.test,v 1.25 2009/06/07 00:00:57 webchick Exp $
 
 /**
  * @file
@@ -467,8 +467,6 @@ class FieldAttachTestCase extends DrupalWebTestCase {
       ),
     );
     $this->assertEqual($result, $expected, t('FIELD_QUERY_RETURN_VALUES result format returns the expect result'));
-
-    // TODO : test
   }
 
   function testFieldAttachViewAndPreprocess() {

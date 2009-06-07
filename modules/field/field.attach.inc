@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.21 2009/06/06 16:17:30 webchick Exp $
+// $Id: field.attach.inc,v 1.22 2009/06/07 00:00:57 webchick Exp $
 
 /**
  * @file
@@ -833,7 +833,7 @@ function field_attach_query($field_name, $conditions, $result_format = FIELD_QUE
         // are therefore called on each object separately, which might cause
         // performance issues when large numbers of revisions are retrieved.
         foreach ($pseudo_objects as $vid => $pseudo_object) {
-          list($id) = _field_attach_extract_ids($obj_type, $pseudo_object);
+          list($id) = field_attach_extract_ids($obj_type, $pseudo_object);
           $objects = array($id => $pseudo_object);
 
           // Invoke hook_field_load().
