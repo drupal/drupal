@@ -355,9 +355,9 @@ function translation_remove_from_set($node) {
  *   need more properties. The array is indexed by language code.
  */
 function translation_node_get_translations($tnid) {
-  static $translations = array();
-
   if (is_numeric($tnid) && $tnid) {
+    $translations = &drupal_static(__FUNCTION__, array());
+
     if (!isset($translations[$tnid])) {
       $translations[$tnid] = array();
       $result = db_select('node', 'n')
