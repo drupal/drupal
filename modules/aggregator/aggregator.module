@@ -569,7 +569,7 @@ function aggregator_refresh($feed) {
  *   An object describing the feed.
  */
 function aggregator_feed_load($fid) {
-  static $feeds;
+  $feeds = &drupal_static(__FUNCTION__);
   if (!isset($feeds[$fid])) {
     $feeds[$fid] = db_query('SELECT * FROM {aggregator_feed} WHERE fid = :fid', array(':fid' => $fid))->fetchObject();
   }
@@ -586,7 +586,7 @@ function aggregator_feed_load($fid) {
  *   An associative array describing the category.
  */
 function aggregator_category_load($cid) {
-  static $categories;
+  $categories = &drupal_static(__FUNCTION__);
   if (!isset($categories[$cid])) {
     $categories[$cid] = db_query('SELECT * FROM {aggregator_category} WHERE cid = :cid', array(':cid' => $cid))->fetchAssoc();
   }
