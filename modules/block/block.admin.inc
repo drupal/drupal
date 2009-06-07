@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.41 2009/05/29 21:28:58 dries Exp $
+// $Id: block.admin.inc,v 1.42 2009/06/07 02:29:07 dries Exp $
 
 /**
  * @file
@@ -126,7 +126,7 @@ function block_admin_display_form_submit($form, &$form_state) {
  */
 function _block_compare($a, $b) {
   global $theme_key;
-  static $regions;
+  $regions = &drupal_static(__FUNCTION__);
 
   // We need the region list to correctly order by region.
   if (!isset($regions)) {
