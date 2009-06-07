@@ -294,7 +294,7 @@ function theme_book_title_link($link) {
  * the options for a form select.
  */
 function book_get_books() {
-  static $all_books;
+  $all_books = &drupal_static(__FUNCTION__);
 
   if (!isset($all_books)) {
     $all_books = array();
@@ -580,7 +580,7 @@ function book_update_bid($book_link) {
  *   immediately after it in the array.
  */
 function book_get_flat_menu($book_link) {
-  static $flat = array();
+  $flat = &drupal_static(__FUNCTION__, array());
 
   if (!isset($flat[$book_link['mlid']])) {
     // Call menu_tree_all_data() to take advantage of the menu system's caching.
@@ -1144,7 +1144,7 @@ function book_link_load($mlid) {
  *   An subtree of menu links in an array, in the order they should be rendered.
  */
 function book_menu_subtree_data($item) {
-  static $tree = array();
+  $tree = &drupal_static(__FUNCTION__, array());
 
   // Generate a cache ID (cid) specific for this $menu_name and $item.
   $cid = 'links:' . $item['menu_name'] . ':subtree-cid:' . $item['mlid'];

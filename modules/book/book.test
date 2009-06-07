@@ -95,6 +95,8 @@ class BookTestCase extends DrupalWebTestCase {
    *   The nodes that should be displayed in the breadcrumb.
    */
   function checkBookNode($node, $nodes, $previous = FALSE, $up = FALSE, $next = FALSE, array $breadcrumb) {
+    // $number does not use drupal_static as it should not be reset
+    // since it uniquely identifies each call to checkBookNode().
     static $number = 0;
     $this->drupalGet('node/' . $node->nid);
 
@@ -166,6 +168,8 @@ class BookTestCase extends DrupalWebTestCase {
    * @param integer $parent Parent book reference id.
    */
   function createBookNode($book_nid, $parent = NULL) {
+    // $number does not use drupal_static as it should not be reset
+    // since it uniquely identifies each call to createBookNode().
     static $number = 0; // Used to ensure that when sorted nodes stay in same order.
 
     $edit = array();
