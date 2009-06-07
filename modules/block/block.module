@@ -559,9 +559,9 @@ function block_initialize_theme_blocks($theme) {
  *   array key instead of <i>module</i>_<i>delta</i>.
  */
 function block_list($region) {
-  static $blocks = array();
+  $blocks = &drupal_static(__FUNCTION__, array());
 
-  if (!count($blocks)) {
+  if (empty($blocks)) {
     $blocks = _block_load_blocks();
   }
 
@@ -776,7 +776,7 @@ function block_flush_caches() {
  * @see block.tpl.php
  */
 function template_preprocess_block(&$variables) {
-  static $block_counter = array();
+  $block_counter = &drupal_static(__FUNCTION__, array());
   $variables['block'] = $variables['block']['#block'];
   // All blocks get an independent counter for each region.
   if (!isset($block_counter[$variables['block']->region])) {

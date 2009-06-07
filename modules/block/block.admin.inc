@@ -126,7 +126,7 @@ function block_admin_display_form_submit($form, &$form_state) {
  */
 function _block_compare($a, $b) {
   global $theme_key;
-  static $regions;
+  $regions = &drupal_static(__FUNCTION__);
 
   // We need the region list to correctly order by region.
   if (!isset($regions)) {
