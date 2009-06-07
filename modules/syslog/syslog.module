@@ -64,7 +64,7 @@ function syslog_facility_list() {
  * Implement hook_watchdog().
  */
 function syslog_watchdog(array $log_entry) {
-  static $log_init = FALSE;
+  $log_init = &drupal_static(__FUNCTION__, FALSE);
 
   if (!$log_init) {
     $log_init = TRUE;
