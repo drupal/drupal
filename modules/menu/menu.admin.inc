@@ -74,7 +74,7 @@ function menu_overview_form(&$form_state, $menu) {
  * Recursive helper function for menu_overview_form().
  */
 function _menu_overview_tree_form($tree) {
-  static $form = array('#tree' => TRUE);
+  $form = &drupal_static(__FUNCTION__, array('#tree' => TRUE));
   foreach ($tree as $data) {
     $title = '';
     $item = $data['link'];
