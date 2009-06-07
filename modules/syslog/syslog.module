@@ -1,5 +1,5 @@
 <?php
-// $Id: syslog.module,v 1.23 2009/05/27 18:34:01 dries Exp $
+// $Id: syslog.module,v 1.24 2009/06/07 02:44:11 dries Exp $
 
 /**
  * @file
@@ -64,7 +64,7 @@ function syslog_facility_list() {
  * Implement hook_watchdog().
  */
 function syslog_watchdog(array $log_entry) {
-  static $log_init = FALSE;
+  $log_init = &drupal_static(__FUNCTION__, FALSE);
 
   if (!$log_init) {
     $log_init = TRUE;
