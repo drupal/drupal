@@ -991,7 +991,7 @@ function template_preprocess_forum_submitted(&$variables) {
 
 function _forum_user_last_visit($nid) {
   global $user;
-  static $history = array();
+  $history = &drupal_static(__FUNCTION__, array());
 
   if (empty($history)) {
     $result = db_query('SELECT nid, timestamp FROM {history} WHERE uid = %d', $user->uid);
