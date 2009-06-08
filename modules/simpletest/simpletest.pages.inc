@@ -187,12 +187,12 @@ function simpletest_test_form_submit($form, &$form_state) {
 /**
  * Test results form for $test_id.
  */
-function simpletest_result_form(&$form_sate, $test_id) {
+function simpletest_result_form(&$form_state, $test_id) {
   $form = array();
 
-  // Make sure there are test results to display and are-run is not being performed.
-  $results = simpletest_result_get($test_id);
-  if ($test_id != 're-run' && !$results) {
+  // Make sure there are test results to display and a re-run is not being performed.
+  $results = array();
+  if (is_numeric($test_id) && !$results = simpletest_result_get($test_id)) {
     drupal_set_message(t('No test results to display.'), 'error');
     drupal_goto('admin/development/testing');
     return $form;
@@ -305,7 +305,9 @@ function simpletest_result_form(&$form_sate, $test_id) {
     '#markup' => l(t('Return to list'), 'admin/development/testing'),
   );
 
-  simpletest_clean_results_table($test_id);
+  if (is_numeric($test_id)) {
+    simpletest_clean_results_table($test_id);
+  }
 
   return $form;
 }
