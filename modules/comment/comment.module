@@ -610,7 +610,7 @@ function comment_form_alter(&$form, $form_state, $form_id) {
       COMMENT_NODE_OPEN => array(
         '#type' => 'radio',
         '#title' => t('Open'),
-        '#description' => theme('indentation') . t("Users with 'post comments' permission can post comments."),
+        '#description' => theme('indentation') . t('Users with the "Post comments" permission can post comments.'),
         '#return_value' => COMMENT_NODE_OPEN,
         '#default_value' => $comment_settings,
         '#id' => 'edit-comment-2',
