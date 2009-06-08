@@ -1380,7 +1380,7 @@ function system_performance_settings() {
  *
  * @ingroup forms
  */
-function system_clear_cache_submit(&$form_state, $form) {
+function system_clear_cache_submit($form, &$form_state) {
   drupal_flush_all_caches();
   drupal_set_message(t('Caches cleared.'));
 }
