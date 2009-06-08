@@ -463,7 +463,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     $edit = array(
       'filters[filter/4]' => 1,
     );
-    $this->drupalPost('admin/settings/filter/1', $edit, t('Save configuration'));
+    $this->drupalPost('admin/settings/formats/1', $edit, t('Save configuration'));
     // Allow anonymous users to search content.
     $edit = array(
       DRUPAL_ANONYMOUS_RID . '[search content]' => 1,

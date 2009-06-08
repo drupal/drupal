@@ -32,8 +32,8 @@ function filter_admin_overview() {
     $options[$id] = '';
     $form[$id]['name'] = array('#markup' => $format->name);
     $form[$id]['roles'] = array('#markup' => $default ? t('All roles may use the default format') : ($roles ? implode(', ', $roles) : t('No roles may use this format')));
-    $form[$id]['configure'] = array('#markup' => l(t('configure'), 'admin/settings/filter/' . $id));
-    $form[$id]['delete'] = array('#markup' => $default ? '' : l(t('delete'), 'admin/settings/filter/delete/' . $id));
+    $form[$id]['configure'] = array('#markup' => l(t('configure'), 'admin/settings/formats/' . $id));
+    $form[$id]['delete'] = array('#markup' => $default ? '' : l(t('delete'), 'admin/settings/formats/delete/' . $id));
     $form[$id]['weight'] = array('#type' => 'weight', '#default_value' => $format->weight);
   }
   $form['default'] = array('#type' => 'radios', '#options' => $options, '#default_value' => variable_get('filter_default_format', 1));
@@ -263,7 +263,7 @@ function filter_admin_format_form_submit($form, &$form_state) {
   cache_clear_all($format . ':', 'cache_filter', TRUE);
 
   // If a new filter was added, return to the main list of filters. Otherwise, stay on edit filter page to show new changes.
-  $return = 'admin/settings/filter';
+  $return = 'admin/settings/formats';
   if (!empty($new)) {
     $return .= '/' . $format;
   }
@@ -286,11 +286,11 @@ function filter_admin_delete() {
       $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
       $form['name'] = array('#type' => 'hidden', '#value' => $format->name);
 
-      return confirm_form($form, t('Are you sure you want to delete the text format %format?', array('%format' => $format->name)), 'admin/settings/filter', t('If you have any content left in this text format, it will be switched to the default text format. This action cannot be undone.'), t('Delete'), t('Cancel'));
+      return confirm_form($form, t('Are you sure you want to delete the text format %format?', array('%format' => $format->name)), 'admin/settings/formats', t('If you have any content left in this text format, it will be switched to the default text format. This action cannot be undone.'), t('Delete'), t('Cancel'));
     }
     else {
       drupal_set_message(t('The default format cannot be deleted.'));
-      drupal_goto('admin/settings/filter');
+      drupal_goto('admin/settings/formats');
     }
   }
   else {
@@ -331,7 +331,7 @@ function filter_admin_delete_submit($form, &$form_state) {
   cache_clear_all($form_state['values']['format'] . ':', 'cache_filter', TRUE);
   drupal_set_message(t('Deleted text format %format.', array('%format' => $form_state['values']['name'])));
 
-  $form_state['redirect'] = 'admin/settings/filter';
+  $form_state['redirect'] = 'admin/settings/formats';
   return;
 }
 
