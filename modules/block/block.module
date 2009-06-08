@@ -417,7 +417,14 @@ function block_user_form(&$edit, &$account, $category = NULL) {
   if ($category == 'account') {
     $rids = array_keys($account->roles);
     $result = db_query("SELECT DISTINCT b.* FROM {block} b LEFT JOIN {block_role} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom <> 0 AND (r.rid IN (:rids) OR r.rid IS NULL) ORDER BY b.weight, b.module", array(':rids' => $rids));
-    $form['block'] = array('#type' => 'fieldset', '#title' => t('Block configuration'), '#weight' => 3, '#collapsible' => TRUE, '#tree' => TRUE);
+    $form['block'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Personalize blocks'),
+      '#description' => t('Blocks consist of content or information that complements the main content of the page. Enable or disable optional blocks using the checkboxes below.'),
+      '#weight' => 3,
+      '#collapsible' => TRUE,
+      '#tree' => TRUE
+    );
     foreach ($result as $block) {
       $data = module_invoke($block->module, 'block_list');
       if ($data[$block->delta]['info']) {
