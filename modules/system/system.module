@@ -1311,7 +1311,7 @@ function system_get_module_data() {
  *   An associative array of themes information.
  */
 function _system_get_theme_data() {
-  static $themes_info = array();
+  $themes_info = &drupal_static(__FUNCTION__, array());
 
   if (empty($themes_info)) {
     // Find themes
@@ -1488,7 +1488,7 @@ function system_find_base_theme($themes, $key, $used_keys = array()) {
  *   An array of regions in the form $region['name'] = 'description'.
  */
 function system_region_list($theme_key) {
-  static $list = array();
+  $list = &drupal_static(__FUNCTION__, array());
 
   if (!array_key_exists($theme_key, $list)) {
     $info = unserialize(db_query("SELECT info FROM {system} WHERE type = :type AND name = :name", array(':type' => 'theme', ':name' => $theme_key))->fetchField());
@@ -1698,13 +1698,12 @@ function system_admin_compact_page($mode = 'off') {
  *   An array of task links.
  */
 function system_get_module_admin_tasks($module) {
-  static $items;
+  $items = &drupal_static(__FUNCTION__, array());
 
-  if (!isset($items)) {
+  if (empty($items)) {
     $result = db_query("
        SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, ml.*
        FROM {menu_links} ml INNER JOIN {menu_router} m ON ml.router_path = m.path WHERE ml.link_path LIKE 'admin/%' AND hidden >= 0 AND module = 'system' AND m.number_parts > 2", array(), array('fetch' => PDO::FETCH_ASSOC));
-    $items = array();
     foreach ($result as $item) {
       _menu_link_translate($item);
       if ($item['access']) {
