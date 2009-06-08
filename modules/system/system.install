@@ -3525,9 +3525,9 @@ function system_update_7024() {
   return $ret;
 }
 
- /**
-  * Improve indexes on the {url_alias} table.
-  */
+/**
+ * Improve indexes on the {url_alias} table.
+ */
 function system_update_7025() {
   $ret = array();
   db_drop_index($ret, 'url_alias', 'src_language');
