@@ -1,5 +1,5 @@
 <?php
-// $Id: php.test,v 1.10 2009/05/24 17:39:33 dries Exp $
+// $Id: php.test,v 1.11 2009/06/08 04:51:45 webchick Exp $
 
 /**
  * Base PHP test case class.
@@ -13,7 +13,7 @@ class PHPTestCase extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     // Confirm that the PHP filter is #3.
-    $this->drupalGet('admin/settings/filter/3');
+    $this->drupalGet('admin/settings/formats/3');
     $this->assertText('PHP code', t('On PHP code filter page.'));
   }
 
