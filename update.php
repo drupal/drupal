@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.287 2009/06/06 16:05:26 dries Exp $
+// $Id: update.php,v 1.288 2009/06/08 05:00:11 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -648,9 +648,12 @@ function update_fix_d7_requirements() {
 
     // Add the cache_path table.
     $schema['cache_path'] = drupal_get_schema_unprocessed('system', 'cache');
-    $schema['cache_path']['description'] = t('Cache table used for path alias lookups.');
+    $schema['cache_path']['description'] = 'Cache table used for path alias lookups.';
     db_create_table($ret, 'cache_path', $schema['cache_path']);
     variable_set('update_d7_requirements', TRUE);
+
+    // Add column for locale context.
+    db_add_field($ret, 'locales_source', 'context', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The context this string applies to.'));
   }
 
   return $ret;

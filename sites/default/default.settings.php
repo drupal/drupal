@@ -1,5 +1,5 @@
 <?php
-// $Id: default.settings.php,v 1.24 2009/04/24 08:16:56 dries Exp $
+// $Id: default.settings.php,v 1.25 2009/06/08 05:00:12 dries Exp $
 
 /**
  * @file
@@ -303,7 +303,7 @@ $conf = array(
  *
  * Remove the leading hash signs to enable.
  */
-# $conf['locale_custom_strings_en'] = array(
+# $conf['locale_custom_strings_en'][''] = array(
 #   'forum'      => 'Discussion board',
 #   '@count min' => '@count minutes',
 # );
