@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.177 2009/06/06 16:05:26 dries Exp $
+// $Id: install.php,v 1.178 2009/06/08 04:33:35 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -267,7 +267,7 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
       '#size' => 45,
     );
 
-    // Database username
+    // Database password
     $form['basic_options']['password'] = array(
       '#type' => 'password',
       '#title' => st('Database password'),
