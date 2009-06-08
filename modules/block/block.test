@@ -100,6 +100,37 @@ class BlockTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test block visibility.
+   */
+  function testBlockVisibility() {
+    $block = array();
+    $block['title'] = 'Syndicate';
+    $block['module'] = 'node';
+    $block['delta'] = 'syndicate';
+
+    // Set the block to be hidden on any user path, and to be shown only to
+    // authenticated users.
+    $edit = array();
+    $edit['pages'] = 'user*';
+    $edit['roles[2]'] = TRUE;
+    $this->drupalPost('admin/build/block/configure/' . $block['module'] . '/' . $block['delta'], $edit, t('Save block'));
+
+    // Move block to the left sidebar.
+    $this->moveBlockToRegion($block, $this->regions[1]);
+
+    $this->drupalGet('');
+    $this->assertText('Syndicate', t('Block was displayed on the front page.'));
+
+    $this->drupalGet('user*');
+    $this->assertNoText('Syndicate', t('Block was not displayed according to block visibility rules.'));
+
+    // Confirm that the block is not displayed to anonymous users.
+    $this->drupalLogout();
+    $this->drupalGet('');
+    $this->assertNoText('Syndicate', t('Block was not displayed to anonymous users.'));
+  }
+
+  /**
    * Test configuring and moving a module-define block to specific regions.
    */
   function testBlock() {

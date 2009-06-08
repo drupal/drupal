@@ -7,3 +7,4 @@ core = 7.x
 files[] = poll.module
 files[] = poll.pages.inc
 files[] = poll.install
+files[] = poll.test

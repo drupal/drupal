@@ -6,3 +6,4 @@ version = VERSION
 core = 7.x
 files[] = php.module
 files[] = php.install
+files[] = php.test

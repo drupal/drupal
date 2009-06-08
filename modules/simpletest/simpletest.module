@@ -139,9 +139,6 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
  * Batch operation callback.
  */
 function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
-  // Ensure that all classes are loaded before we unserialize some instances.
-  simpletest_get_all_tests();
-
   // Get working values.
   if (!isset($context['sandbox']['max'])) {
     // First iteration: initialize working values.
@@ -200,65 +197,94 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
 }
 
 /**
- * Get a list of all of the tests.
+ * Get a list of all of the tests provided by the system.
+ *
+ * The list of test classes is loaded from the registry where it looks for
+ * files ending in ".test". Once loaded the test list is cached and stored in
+ * a static variable. In order to list tests provided by disabled modules
+ * hook_registry_files_alter() is used to forcefully add them to the registry.
  *
  * @return
- *   An array of tests, with the class name as the keys and the instantiated
- *   versions of the classes as the values.
+ *   An array of tests keyed with the groups specified in each of the tests
+ *   getInfo() method and then keyed by the test class. An example of the array
+ *   structure is provided below.
+ *
+ *   @code
+ *     $groups['Blog'] => array(
+ *       'BlogTestCase' => array(
+ *         'name' => 'Blog functionality',
+ *         'description' => 'Create, view, edit, delete, ...',
+ *         'group' => 'Blog',
+ *       ),
+ *     );
+ *   @endcode
+ * @see simpletest_registry_files_alter()
  */
-function simpletest_get_all_tests() {
-  static $classes;
-  if (!isset($classes)) {
-    require_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'simpletest') . '/drupal_web_test_case.php';
-    $files = array();
-    foreach (array_keys(system_get_module_data()) as $module) {
-      $module_path = drupal_get_path('module', $module);
-      $test = $module_path . "/$module.test";
-      if (file_exists($test)) {
-        $files[] = $test;
-      }
+function simpletest_test_get_all() {
+  $groups = &drupal_static(__FUNCTION__);
 
-      $tests_directory = $module_path . '/tests';
-      if (is_dir($tests_directory)) {
-        foreach (file_scan_directory($tests_directory, '/\.test$/') as $file) {
-          $files[] = $file->filepath;
+  if (!$groups) {
+    // Load test information from cache if available, otherwise retrieve the
+    // information from each tests getInfo() method.
+    if ($cache = cache_get('simpletest', 'cache')) {
+      $groups = $cache->data;
+    }
+    else {
+      // Select all clases in files ending with .test.
+      $classes = db_select('registry')
+        ->fields('registry', array('name'))
+        ->condition('type', 'class')
+        ->condition('filename', '%.test', 'LIKE')
+        ->execute();
+
+      $groups = array();
+
+      // Check that each class has a getInfo() method and store the information
+      // in an array keyed with the group specified in the test information.
+      foreach ($classes as $class) {
+        $class = $class->name;
+        if (class_exists($class) && method_exists($class, 'getInfo')) {
+          // Valid test class, retrieve test information.
+          $info = call_user_func(array($class, 'getInfo'));
+
+          // Initialize test groups.
+          if (!isset($groups[$info['group']])) {
+            $groups[$info['group']] = array();
+          }
+          $groups[$info['group']][$class] = $info;
         }
       }
-    }
-
-    $existing_classes = get_declared_classes();
-    foreach ($files as $file) {
-      include_once DRUPAL_ROOT . '/' . $file;
-    }
-    $classes = array_values(array_diff(get_declared_classes(), $existing_classes));
-    foreach ($classes as $key => $class) {
-      if (!is_subclass_of($class, 'DrupalTestCase') || !method_exists($class, 'getInfo')) {
-        unset($classes[$key]);
+      // Sort the groups and tests within the groups by name.
+      uksort($groups, 'strnatcasecmp');
+      foreach ($groups as $group => &$tests) {
+        uksort($tests, 'strnatcasecmp');
       }
+
+      cache_set('simpletest', $groups);
     }
   }
-  if (count($classes) == 0) {
-    drupal_set_message('No test cases found.', 'error');
-    return FALSE;
-  }
-  return $classes;
+  return $groups;
 }
 
 /**
- * Categorize the tests into groups.
+ * Implementation of hook_registry_files_alter().
  *
- * @param $tests
- *   A list of tests from simpletest_get_all_tests.
- * @see simpletest_get_all_tests.
+ * Add the test files for disabled modules so that we get a list containing
+ * all the avialable tests.
  */
-function simpletest_categorize_tests($tests) {
-  $groups = array();
-  foreach ($tests as $test) {
-    $info = call_user_func(array($test, 'getInfo'));
-    $groups[$info['group']][$test] = $info;
+function simpletest_registry_files_alter(&$files, $modules) {
+  foreach ($modules as $module) {
+    // Only add test files for disabled modules, as enabled modules should
+    // already include any test files they provide.
+    if (!$module->status) {
+      $dir = $module->dir;
+      foreach ($module->info['files'] as $file) {
+        if (substr($file, -5) == '.test') {
+          $files["$dir/$file"] = array('module' => $module->name, 'weight' => $module->weight);
+        }
+      }
+    }
   }
-  uksort($groups, 'strnatcasecmp');
-  return $groups;
 }
 
 /**

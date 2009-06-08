@@ -8,3 +8,4 @@ files[] = profile.module
 files[] = profile.admin.inc
 files[] = profile.pages.inc
 files[] = profile.install
+files[] = profile.test

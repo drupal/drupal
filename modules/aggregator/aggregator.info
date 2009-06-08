@@ -11,3 +11,4 @@ files[] = aggregator.fetcher.inc
 files[] = aggregator.parser.inc
 files[] = aggregator.processor.inc
 files[] = aggregator.install
+files[] = aggregator.test

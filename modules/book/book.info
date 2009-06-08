@@ -9,3 +9,4 @@ files[] = book.module
 files[] = book.admin.inc
 files[] = book.pages.inc
 files[] = book.install
+files[] = book.test

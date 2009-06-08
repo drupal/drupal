@@ -45,11 +45,19 @@ function _registry_rebuild() {
   system_get_files_database($modules, 'module');
   // Get the list of files we are going to parse.
   $files = array();
-  foreach ($modules as $module) {
+  foreach ($modules as &$module) {
+    $dir = dirname($module->filepath);
+
+    // Store the module directory for use in hook_registry_files_alter().
+    $module->dir = $dir;
+
+    // Parse the .info file for all modules, reguardless of their status so the
+    // list of files can then be used in hook_registry_files_alter()
+    // implementations.
+    $module->info = drupal_parse_info_file($dir . '/' . $module->name . '.info');
+
     if ($module->status) {
-      // Parse .info file only for enabled modules.
-      $module->info = drupal_parse_info_file(dirname($module->filepath) . '/' . $module->name . '.info');
-      $dir = dirname($module->filepath);
+      // Add files for enabled modules to the registry.
       foreach ($module->info['files'] as $file) {
         $files["$dir/$file"] = array('module' => $module->name, 'weight' => $module->weight);
       }
@@ -58,6 +66,13 @@ function _registry_rebuild() {
   foreach (file_scan_directory('includes', '/\.inc$/') as $filename => $file) {
     $files["$filename"] = array('module' => '', 'weight' => 0);
   }
+
+  // Allow modules to manually modify the list of files before the registry
+  // parses them. The $modules array provides the .info file information, which
+  // includes the list of files registered to each module. Any files in the
+  // list can then be added to the list of files that the registry will parse,
+  // or modify attributes of a file.
+  drupal_alter('registry_files', $files, $modules);
 
   foreach (registry_get_parsed_files() as $filename => $file) {
     // Add the md5 to those files we've already parsed.

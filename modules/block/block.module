@@ -586,30 +586,64 @@ function block_list($region) {
  * Load blocks information from the database.
  */
 function _block_load_blocks() {
-  global $user, $theme_key;
+  global $theme_key;
 
-  $blocks = array();
-  $rids = array_keys($user->roles);
   $query = db_select('block', 'b');
-  $query->leftJoin('block_role', 'r', 'b.module = r.module AND b.delta = r.delta');
   $result = $query
-    ->distinct()
     ->fields('b')
     ->condition('b.theme', $theme_key)
     ->condition('b.status', 1)
-    ->condition(db_or()
-      ->condition('r.rid', $rids, 'IN')
-      ->isNull('r.rid')
-    )
     ->orderBy('b.region')
     ->orderBy('b.weight')
     ->orderBy('b.module')
     ->addTag('block_load')
     ->execute();
-  foreach ($result as $block) {
-    if (!isset($blocks[$block->region])) {
-      $blocks[$block->region] = array();
+
+  $block_list = $result->fetchAllAssoc('bid');
+  // Allow modules to modify the block list.
+  drupal_alter('block_list', $block_list);
+
+  $blocks = array();
+  foreach ($block_list as $block) {
+    $blocks[$block->region]["{$block->module}_{$block->delta}"] = $block;
+  }
+  return $blocks;
+}
+
+/**
+ * Implement hook_block_list_alter().
+ *
+ * Check the page, role and user specific visibilty settings. Remove the block
+ * if the visibility conditions are not met.
+ */
+function block_block_list_alter(&$blocks) {
+  global $user, $theme_key;
+
+  // Build an array of roles for each block.
+  $block_roles = array();
+  $result = db_query('SELECT module, delta, rid FROM {block_role}');
+  foreach ($result as $record) {
+    $block_roles[$record->module][$record->delta][] = $record->rid;
+  }
+
+  foreach ($blocks as $key => $block) {
+    if ($block->theme != $theme_key || $block->status != 1) {
+      // This block was added by a contrib module, leave it in the list.
+      continue;
     }
+
+    // If a block has no roles associated, it is displayed for every role.
+    // For blocks with roles associated, if none of the user's roles matches
+    // the settings from this block, remove it from the block list.
+    if (!isset($block_roles[$block->module][$block->delta])) {
+      // No roles associated.
+    }
+    elseif (!array_intersect($block_roles[$block->module][$block->delta], array_keys($user->roles))) {
+      // No match.
+      unset($blocks[$key]);
+      continue;
+     }
+
     // Use the user's block visibility setting, if necessary.
     if ($block->custom != 0) {
       if ($user->uid && isset($user->block[$block->module][$block->delta])) {
@@ -621,6 +655,10 @@ function _block_load_blocks() {
     }
     else {
       $enabled = TRUE;
+    }
+    if (!$enabled) {
+      unset($blocks[$key]);
+      continue;
     }
 
     // Match path if necessary.
@@ -647,12 +685,10 @@ function _block_load_blocks() {
     else {
       $page_match = TRUE;
     }
-    $block->enabled = $enabled;
-    $block->page_match = $page_match;
-    $blocks[$block->region]["{$block->module}_{$block->delta}"] = $block;
+    if (!$page_match) {
+      unset($blocks[$key]);
+    }
   }
-
-  return $blocks;
 }
 
 /**
@@ -668,38 +704,39 @@ function _block_render_blocks($region_blocks) {
   foreach ($region_blocks as $key => $block) {
     // Render the block content if it has not been created already.
     if (!isset($block->content)) {
-      // Erase the block from the static array - we'll put it back if it has content.
+      // Erase the block from the static array - we'll put it back if it has
+      // content.
       unset($region_blocks[$key]);
-      if ($block->enabled && $block->page_match) {
-        // Try fetching the block from cache. Block caching is not compatible with
-        // node_access modules. We also preserve the submission of forms in blocks,
-        // by fetching from cache only if the request method is 'GET' (or 'HEAD').
-        if (!count(module_implements('node_grants')) && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD') && ($cid = _block_get_cache_id($block)) && ($cache = cache_get($cid, 'cache_block'))) {
-          $array = $cache->data;
+      // Try fetching the block from cache. Block caching is not compatible
+      // with node_access modules. We also preserve the submission of forms in
+      // blocks, by fetching from cache only if the request method is 'GET'
+      // (or 'HEAD').
+      if (!count(module_implements('node_grants')) && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD') && ($cid = _block_get_cache_id($block)) && ($cache = cache_get($cid, 'cache_block'))) {
+        $array = $cache->data;
+      }
+      else {
+        $array = module_invoke($block->module, 'block_view', $block->delta);
+        if (isset($cid)) {
+          cache_set($cid, $array, 'cache_block', CACHE_TEMPORARY);
         }
-        else {
-          $array = module_invoke($block->module, 'block_view', $block->delta);
-          if (isset($cid)) {
-            cache_set($cid, $array, 'cache_block', CACHE_TEMPORARY);
-          }
-        }
+      }
 
-        if (isset($array) && is_array($array)) {
-          foreach ($array as $k => $v) {
-            $block->$k = $v;
-          }
+      if (isset($array) && is_array($array)) {
+        foreach ($array as $k => $v) {
+          $block->$k = $v;
         }
-        if (isset($block->content) && $block->content) {
-          // Override default block title if a custom display title is present.
-          if ($block->title) {
-            // Check plain here to allow module generated titles to keep any markup.
-            $block->subject = $block->title == '<none>' ? '' : check_plain($block->title);
-          }
-          if (!isset($block->subject)) {
-            $block->subject = '';
-          }
-          $region_blocks["{$block->module}_{$block->delta}"] = $block;
+      }
+      if (isset($block->content) && $block->content) {
+        // Override default block title if a custom display title is present.
+        if ($block->title) {
+          // Check plain here to allow module generated titles to keep any
+          // markup.
+          $block->subject = $block->title == '<none>' ? '' : check_plain($block->title);
         }
+        if (!isset($block->subject)) {
+          $block->subject = '';
+        }
+        $region_blocks["{$block->module}_{$block->delta}"] = $block;
       }
     }
   }

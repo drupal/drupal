@@ -172,5 +172,51 @@ function hook_block_view($delta = '') {
 }
 
 /**
+ * Act on blocks prior to rendering.
+ *
+ * This hook allows you to add, remove or modify blocks in the block list. The
+ * block list contains the block definitions not the rendered blocks. The blocks
+ * are rendered after the modules have had a chance to manipulate the block
+ * list.
+ * Alternatively you can set $block->content here, which will override the
+ * content of the block and prevent hook_block_view() from running.
+ *
+ * @param $blocks
+ *   An array of $blocks, keyed by $bid
+ *
+ * This example shows how to achieve language specific visibility setting for
+ * blocks.
+ */
+function hook_block_list_alter(&$blocks) {
+  global $language, $theme_key;
+
+  $result = db_query('SELECT module, delta, language FROM {my_table}');
+  $block_languages = array();
+  foreach ($result as $record) {
+    $block_languages[$record->module][$record->delta][$record->language] = TRUE;
+  }
+
+  foreach ($blocks as $key => $block) {
+    // Any module using this alter should inspect the data before changing it,
+    // to ensure it is what they expect.
+    if ($block->theme != $theme_key || $block->status != 1) {
+      // This block was added by a contrib module, leave it in the list.
+      continue;
+    }
+
+    if (!isset($block_languages[$block->module][$block->delta])) {
+      // No language setting for this block, leave it in the list.
+      continue;
+    }
+
+    if (!isset($block_languages[$block->module][$block->delta][$language->language])) {
+      // This block should not be displayed with the active language, remove
+      // from the list.
+      unset($blocks[$key]);
+    }
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

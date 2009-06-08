@@ -7,3 +7,4 @@ core = 7.x
 files[] = dblog.module
 files[] = dblog.admin.inc
 files[] = dblog.install
+files[] = dblog.test

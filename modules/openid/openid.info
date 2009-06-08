@@ -9,3 +9,4 @@ files[] = openid.inc
 files[] = openid.pages.inc
 files[] = xrds.inc
 files[] = openid.install
+files[] = openid.test

@@ -9,4 +9,5 @@ files[] = content_types.inc
 files[] = node.admin.inc
 files[] = node.pages.inc
 files[] = node.install
+files[] = node.test
 required = TRUE

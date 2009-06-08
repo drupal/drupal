@@ -4,4 +4,5 @@ description = Defines simple text field types.
 package = Core - fields
 version = VERSION
 core = 7.x
-files[]=text.module
+files[] = text.module
+files[] = text.test

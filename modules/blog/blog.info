@@ -7,3 +7,4 @@ version = VERSION
 core = 7.x
 files[] = blog.module
 files[] = blog.pages.inc
+files[] = blog.test

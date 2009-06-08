@@ -12,10 +12,6 @@
 function simpletest_test_form() {
   $form = array();
 
-  // Categorize the tests for display.
-  $uncategorized_tests = simpletest_get_all_tests();
-  $tests = simpletest_categorize_tests($uncategorized_tests);
-
   $form['tests'] = array(
     '#type' => 'fieldset',
     '#title' => t('Tests'),
@@ -27,13 +23,14 @@ function simpletest_test_form() {
   );
 
   // Generate the list of tests arranged by group.
-  foreach ($tests as $group_name => $test_group) {
-    $form['tests']['table'][$group_name] = array(
+  $groups = simpletest_test_get_all();
+  foreach ($groups as $group => $tests) {
+    $form['tests']['table'][$group] = array(
       '#collapsed' => TRUE,
     );
 
-    foreach ($test_group as $class => $info) {
-      $form['tests']['table'][$group_name][$class] = array(
+    foreach ($tests as $class => $info) {
+      $form['tests']['table'][$group][$class] = array(
         '#type' => 'checkbox',
         '#title' => $info['name'],
         '#description' => $info['description'],
@@ -166,9 +163,6 @@ function theme_simpletest_test_table($table) {
  * Run selected tests.
  */
 function simpletest_test_form_submit($form, &$form_state) {
-  // Ensure that all classes are loaded before we create instances to get test information and run.
-  simpletest_get_all_tests();
-
   // Get list of tests.
   $tests_list = array();
   foreach ($form_state['values'] as $class_name => $value) {
@@ -200,7 +194,6 @@ function simpletest_result_form(&$form_state, $test_id) {
 
   // Load all classes and include CSS.
   drupal_add_css(drupal_get_path('module', 'simpletest') . '/simpletest.css');
-  simpletest_get_all_tests();
 
   // Keep track of which test cases passed or failed.
   $filter = array(
