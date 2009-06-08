@@ -267,7 +267,7 @@ function install_settings_form(&$form_state, $profile, $install_locale, $setting
       '#size' => 45,
     );
 
-    // Database username
+    // Database password
     $form['basic_options']['password'] = array(
       '#type' => 'password',
       '#title' => st('Database password'),

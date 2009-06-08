@@ -287,7 +287,7 @@ abstract class DatabaseInstaller {
       return FALSE;
     }
     foreach ($this->tests as $test) {
-      $return = $this->runTestQuery($test['query'], $test['success'], $test['message'], !empty($tests['fatal']));
+      $return = $this->runTestQuery($test['query'], $test['success'], $test['message'], !empty($test['fatal']));
       if ($return === FALSE) {
         return FALSE;
       }
@@ -303,11 +303,14 @@ abstract class DatabaseInstaller {
    */
   protected function testConnect() {
     try {
+      // This doesn't actually test the connection.
       db_set_active();
+      // Now actually do a check.
+      Database::getConnection();
       $this->success[] = 'CONNECT';
     }
     catch (Exception $e) {
-      drupal_set_message(st('Failed to connect to your %name database server. %name reports the following message: %error.<ul><li>Are you sure you have the correct username and password?</li><li>Are you sure that you have typed the correct database hostname?</li><li>Are you sure that the database server is running?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%error' => $e->getMessage(), 'name' => $this->name())), 'error');
+      drupal_set_message(st('Failed to connect to your %name database server. %name reports the following message: <strong>%error</strong>.<ul><li>Are you sure that you have typed the correct database hostname?</li><li>Are you sure that the database server is running?</li><li>Are you sure you have the correct database name?</li><li>Are you sure you have the correct username and password?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%error' => $e->getMessage(), '%name' => $this->name())), 'error');
       return FALSE;
     }
   }
