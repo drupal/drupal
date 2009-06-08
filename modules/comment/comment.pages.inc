@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.pages.inc,v 1.19 2009/05/24 17:39:31 dries Exp $
+// $Id: comment.pages.inc,v 1.20 2009/06/08 05:10:37 dries Exp $
 
 /**
  * @file
@@ -102,7 +102,7 @@ function comment_reply($node, $pid = NULL) {
         drupal_goto("node/$node->nid");
       }
       elseif (user_access('post comments')) {
-        $output .= theme('comment_form_box', array('pid' => $pid, 'nid' => $node->nid), t('Reply'));
+        $output .= theme('comment_form_box', array('pid' => $pid, 'nid' => $node->nid), t('Add new comment'));
       }
       else {
         drupal_set_message(t('You are not authorized to post comments.'), 'error');

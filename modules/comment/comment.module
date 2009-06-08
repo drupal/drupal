@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.719 2009/06/03 06:52:29 dries Exp $
+// $Id: comment.module,v 1.720 2009/06/08 05:10:37 dries Exp $
 
 /**
  * @file
@@ -190,7 +190,7 @@ function comment_menu() {
     'type' => MENU_CALLBACK,
   );
   $items['comment/reply/%node'] = array(
-    'title' => 'Reply to comment',
+    'title' => 'Add new comment',
     'page callback' => 'comment_reply',
     'page arguments' => array(2),
     'access callback' => 'node_access',
