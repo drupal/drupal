@@ -212,9 +212,9 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     );
     $this->drupalPost('admin/international/language/add', $edit, t('Add custom language'));
     // Add string.
-    t($name, array(), $langcode);
+    t($name, array(), array('langcode' => $langcode));
     // Reset locale cache.
-    locale(NULL, NULL, TRUE);
+    locale(NULL, NULL, NULL, TRUE);
     $this->assertText($langcode, t('Language code found.'));
     $this->assertText($name, t('Name found.'));
     $this->assertText($native, t('Native found.'));
@@ -251,7 +251,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost(NULL, $edit, t('Save translations'));
     $this->assertText(t('The string has been saved.'), t('The string has been saved.'));
     $this->assertEqual($this->getUrl(), url('admin/international/translate/translate', array('absolute' => TRUE)), t('Correct page redirection.'));
-    $this->assertTrue($name != $translation && t($name, array(), $langcode) == $translation, t('t() works.'));
+    $this->assertTrue($name != $translation && t($name, array(), array('langcode' => $langcode)) == $translation, t('t() works.'));
     $this->drupalPost('admin/international/translate/translate', $search, t('Filter'));
     // The indicator should not be here.
     $this->assertNoRaw($language_indicator, t('String is translated.'));
@@ -344,7 +344,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     );
     $this->drupalPost('admin/international/language/add', $edit, t('Add custom language'));
     // Add string.
-    t($name, array(), $langcode);
+    t($name, array(), array('langcode' => $langcode));
     // Reset locale cache.
     $search = array(
       'string' => $name,
@@ -405,9 +405,9 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     );
     $this->drupalPost('admin/international/language/add', $edit, t('Add custom language'));
     // Add string.
-    t($name, array(), $langcode);
+    t($name, array(), array('langcode' => $langcode));
     // Reset locale cache.
-    locale(NULL, NULL, TRUE);
+    locale(NULL, NULL, NULL, TRUE);
     $this->drupalLogout();
 
     // Search for the name.
@@ -553,13 +553,9 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
    */
   function testStandalonePoFile() {
     // Try importing a .po file.
-    $name = tempnam(file_directory_temp(), "po_");
-    file_put_contents($name, $this->getPoFile());
-    $this->drupalPost('admin/international/translate/import', array(
+    $this->importPoFile($this->getPoFile(), array(
       'langcode' => 'fr',
-      'files[file]' => $name,
-    ), t('Import'));
-    unlink($name);
+    ));
 
     // The import should automatically create the corresponding language.
     $this->assertRaw(t('The language %language has been created.', array('%language' => 'French')), t('The language has been automatically created.'));
@@ -570,30 +566,27 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     // Ensure we were redirected correctly.
     $this->assertEqual($this->getUrl(), url('admin/international/translate', array('absolute' => TRUE)), t('Correct page redirection.'));
 
+
     // Try importing a .po file with invalid tags in the default text group.
-    $name = tempnam(file_directory_temp(), "po_");
-    file_put_contents($name, $this->getBadPoFile());
-    $this->drupalPost('admin/international/translate/import', array(
+    $this->importPoFile($this->getBadPoFile(), array(
       'langcode' => 'fr',
-      'files[file]' => $name,
-    ), t('Import'));
-    unlink($name);
+    ));
+
     // The import should have created 1 string and rejected 2.
     $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
     $skip_message = format_plural(2, 'One translation string was skipped because it contains disallowed HTML.', '@count translation strings were skipped because they contain disallowed HTML.');
     $this->assertRaw($skip_message, t('Unsafe strings were skipped.'));
 
+
     // Try importing a .po file with invalid tags in a non default text group.
-    $name = tempnam(file_directory_temp(), "po_");
-    file_put_contents($name, $this->getBadPoFile());
-    $this->drupalPost('admin/international/translate/import', array(
+    $this->importPoFile($this->getBadPoFile(), array(
       'langcode' => 'fr',
-      'files[file]' => $name,
       'group' => 'custom',
-    ), t('Import'));
-    unlink($name);
+    ));
+
     // The import should have created 3 strings.
     $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 3, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
+
 
     // Try importing a .po file which doesn't exist.
     $name = $this->randomName(16);
@@ -605,16 +598,14 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     $this->assertEqual($this->getUrl(), url('admin/international/translate/import', array('absolute' => TRUE)), t('Correct page redirection.'));
     $this->assertText(t('File to import not found.'), t('File to import not found message.'));
 
+
     // Try importing a .po file with overriding strings, and ensure existing
     // strings are kept.
-    $name = tempnam(file_directory_temp(), "po_");
-    file_put_contents($name, $this->getOverwritePoFile());
-    $this->drupalPost('admin/international/translate/import', array(
+    $this->importPoFile($this->getOverwritePoFile(), array(
       'langcode' => 'fr',
-      'files[file]' => $name,
       'mode' => 1, // Existing strings are kept, only new strings are added.
-    ), t('Import'));
-    unlink($name);
+    ));
+
     // The import should have created 1 string.
     $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
     // Ensure string wasn't overwritten.
@@ -627,16 +618,14 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/international/translate/translate', $search, t('Filter'));
     $this->assertText(t('No strings found for your search.'), t('String not overwritten by imported string.'));
 
+
     // Try importing a .po file with overriding strings, and ensure existing
     // strings are overwritten.
-    $name = tempnam(file_directory_temp(), "po_");
-    file_put_contents($name, $this->getOverwritePoFile());
-    $this->drupalPost('admin/international/translate/import', array(
+    $this->importPoFile($this->getOverwritePoFile(), array(
       'langcode' => 'fr',
-      'files[file]' => $name,
       'mode' => 0, // Strings in the uploaded file replace existing ones, new ones are added.
-    ), t('Import'));
-    unlink($name);
+    ));
+
     // The import should have updated 2 strings.
     $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 0, '%update' => 2, '%delete' => 0)), t('The translation file was successfully imported.'));
     // Ensure string was overwritten.
@@ -687,6 +676,36 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     );
     $this->drupalPost('admin/international/translate/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings found for your search.'), t('String successfully imported.'));
+  }
+
+  /**
+   * Test automatic importation of a module's translation files when a language
+   * is enabled.
+   */
+  function testLanguageContext() {
+    // Try importing a .po file.
+    $this->importPoFile($this->getPoFileWithContext(), array(
+      'langcode' => 'hr',
+    ));
+
+    $this->assertIdentical(t('May', array(), array('langcode' => 'hr', 'context' => 'Long month name')), 'Svibanj', t('Long month name context is working.'));
+    $this->assertIdentical(t('May', array(), array('langcode' => 'hr', 'context' => 'Short month name')), 'Svi.', t('Short month name context is working.'));
+  }
+
+  /**
+   * Helper function: import a standalone .po file in a given language.
+   *
+   * @param $contents
+   *   Contents of the .po file to import.
+   * @param $options
+   *   Additional options to pass to the translation import form.
+   */
+  function importPoFile($contents, array $options = array()) {
+    $name = tempnam(file_directory_temp(), "po_");
+    file_put_contents($name, $contents);
+    $options['files[file]'] = $name;
+    $this->drupalPost('admin/international/translate/import', $options, t('Import'));
+    unlink($name);
   }
 
   /**
@@ -771,6 +790,32 @@ msgid "Day"
 msgstr "Jour"
 EOF;
   }
+
+  /**
+   * Helper function that returns a .po file with context.
+   */
+  function getPoFileWithContext() {
+    // Croatian (code hr) is one the the languages that have a different
+    // form for the full name and the abbreviated name for the month May.
+    return <<< EOF
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 6\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\\n"
+
+msgctxt "Long month name"
+msgid "May"
+msgstr "Svibanj"
+
+msgctxt "Short month name"
+msgid "May"
+msgstr "Svi."
+EOF;
+  }
+
 
 }
 

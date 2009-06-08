@@ -2084,35 +2084,35 @@ function _user_mail_text($key, $language = NULL, $variables = array()) {
     // No override, return default string.
     switch ($key) {
       case 'register_no_approval_required_subject':
-        return t('Account details for !username at !site', $variables, $langcode);
+        return t('Account details for !username at !site', $variables, array('langcode' => $langcode));
       case 'register_no_approval_required_body':
-        return t("!username,\n\nThank you for registering at !site. You may now log in to !login_uri using the following username and password:\n\nusername: !username\npassword: !password\n\nYou may also log in by clicking on this link or copying and pasting it in your browser:\n\n!login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you will be redirected to !edit_uri so you can change your password.\n\n\n--  !site team", $variables, $langcode);
+        return t("!username,\n\nThank you for registering at !site. You may now log in to !login_uri using the following username and password:\n\nusername: !username\npassword: !password\n\nYou may also log in by clicking on this link or copying and pasting it in your browser:\n\n!login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you will be redirected to !edit_uri so you can change your password.\n\n\n--  !site team", $variables, array('langcode' => $langcode));
       case 'register_admin_created_subject':
-        return t('An administrator created an account for you at !site', $variables, $langcode);
+        return t('An administrator created an account for you at !site', $variables, array('langcode' => $langcode));
       case 'register_admin_created_body':
-        return t("!username,\n\nA site administrator at !site has created an account for you. You may now log in to !login_uri using the following username and password:\n\nusername: !username\npassword: !password\n\nYou may also log in by clicking on this link or copying and pasting it in your browser:\n\n!login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you will be redirected to !edit_uri so you can change your password.\n\n\n--  !site team", $variables, $langcode);
+        return t("!username,\n\nA site administrator at !site has created an account for you. You may now log in to !login_uri using the following username and password:\n\nusername: !username\npassword: !password\n\nYou may also log in by clicking on this link or copying and pasting it in your browser:\n\n!login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you will be redirected to !edit_uri so you can change your password.\n\n\n--  !site team", $variables, array('langcode' => $langcode));
       case 'register_pending_approval_subject':
       case 'register_pending_approval_admin_subject':
-        return t('Account details for !username at !site (pending admin approval)', $variables, $langcode);
+        return t('Account details for !username at !site (pending admin approval)', $variables, array('langcode' => $langcode));
       case 'register_pending_approval_body':
-        return t("!username,\n\nThank you for registering at !site. Your application for an account is currently pending approval. Once it has been approved, you will receive another e-mail containing information about how to log in, set your password, and other details.\n\n\n--  !site team", $variables, $langcode);
+        return t("!username,\n\nThank you for registering at !site. Your application for an account is currently pending approval. Once it has been approved, you will receive another e-mail containing information about how to log in, set your password, and other details.\n\n\n--  !site team", $variables, array('langcode' => $langcode));
       case 'register_pending_approval_admin_body':
-        return t("!username has applied for an account.\n\n!edit_uri", $variables, $langcode);
+        return t("!username has applied for an account.\n\n!edit_uri", $variables, array('langcode' => $langcode));
       case 'password_reset_subject':
-        return t('Replacement login information for !username at !site', $variables, $langcode);
+        return t('Replacement login information for !username at !site', $variables, array('langcode' => $langcode));
       case 'password_reset_body':
-        return t("!username,\n\nA request to reset the password for your account has been made at !site.\n\nYou may now log in to !uri_brief by clicking on this link or copying and pasting it in your browser:\n\n!login_url\n\nThis is a one-time login, so it can be used only once. It expires after one day and nothing will happen if it's not used.\n\nAfter logging in, you will be redirected to !edit_uri so you can change your password.", $variables, $langcode);
+        return t("!username,\n\nA request to reset the password for your account has been made at !site.\n\nYou may now log in to !uri_brief by clicking on this link or copying and pasting it in your browser:\n\n!login_url\n\nThis is a one-time login, so it can be used only once. It expires after one day and nothing will happen if it's not used.\n\nAfter logging in, you will be redirected to !edit_uri so you can change your password.", $variables, array('langcode' => $langcode));
       case 'status_activated_subject':
-        return t('Account details for !username at !site (approved)', $variables, $langcode);
+        return t('Account details for !username at !site (approved)', $variables, array('langcode' => $langcode));
       case 'status_activated_body':
-        return t("!username,\n\nYour account at !site has been activated.\n\nYou may now log in by clicking on this link or copying and pasting it in your browser:\n\n!login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you will be redirected to !edit_uri so you can change your password.\n\nOnce you have set your own password, you will be able to log in to !login_uri in the future using:\n\nusername: !username\n", $variables, $langcode);
+        return t("!username,\n\nYour account at !site has been activated.\n\nYou may now log in by clicking on this link or copying and pasting it in your browser:\n\n!login_url\n\nThis is a one-time login, so it can be used only once.\n\nAfter logging in, you will be redirected to !edit_uri so you can change your password.\n\nOnce you have set your own password, you will be able to log in to !login_uri in the future using:\n\nusername: !username\n", $variables, array('langcode' => $langcode));
       case 'status_blocked_subject':
-        return t('Account details for !username at !site (blocked)', $variables, $langcode);
+        return t('Account details for !username at !site (blocked)', $variables, array('langcode' => $langcode));
       case 'status_blocked_body':
-        return t("!username,\n\nYour account on !site has been blocked.", $variables, $langcode);
+        return t("!username,\n\nYour account on !site has been blocked.", $variables, array('langcode' => $langcode));
 
       case 'cancel_confirm_subject':
-        return t('Account cancellation request for !username at !site', $variables, $langcode);
+        return t('Account cancellation request for !username at !site', $variables, array('langcode' => $langcode));
       case 'cancel_confirm_body':
         return t("!username,
 
@@ -2124,14 +2124,14 @@ You may now cancel your account on !uri_brief by clicking this link or copying a
 
 NOTE: The cancellation of your account is not reversible.
 
-This link expires in one day and nothing will happen if it is not used.", $variables, $langcode);
+This link expires in one day and nothing will happen if it is not used.", $variables, array('langcode' => $langcode));
 
       case 'status_canceled_subject':
-        return t('Account details for !username at !site (canceled)', $variables, $langcode);
+        return t('Account details for !username at !site (canceled)', $variables, array('langcode' => $langcode));
       case 'status_canceled_body':
         return t("!username,
 
-Your account on !site has been canceled.", $variables, $langcode);
+Your account on !site has been canceled.", $variables, array('langcode' => $langcode));
     }
   }
 }

@@ -414,11 +414,11 @@ function update_refresh() {
 function update_mail($key, &$message, $params) {
   $language = $message['language'];
   $langcode = $language->language;
-  $message['subject'] .= t('New release(s) available for !site_name', array('!site_name' => variable_get('site_name', 'Drupal')), $langcode);
+  $message['subject'] .= t('New release(s) available for !site_name', array('!site_name' => variable_get('site_name', 'Drupal')), array('langcode' => $langcode));
   foreach ($params as $msg_type => $msg_reason) {
     $message['body'][] = _update_message_text($msg_type, $msg_reason, FALSE, $language);
   }
-  $message['body'][] = t('See the available updates page for more information:', array(), $langcode) . "\n" . url('admin/reports/updates', array('absolute' => TRUE, 'language' => $language));
+  $message['body'][] = t('See the available updates page for more information:', array(), array('langcode' => $langcode)) . "\n" . url('admin/reports/updates', array('absolute' => TRUE, 'language' => $language));
 }
 
 /**
@@ -447,37 +447,37 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
   switch ($msg_reason) {
     case UPDATE_NOT_SECURE:
       if ($msg_type == 'core') {
-        $text = t('There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately!', array(), $langcode);
+        $text = t('There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately!', array(), array('langcode' => $langcode));
       }
       else {
-        $text = t('There are security updates available for one or more of your modules or themes. To ensure the security of your server, you should update immediately!', array(), $langcode);
+        $text = t('There are security updates available for one or more of your modules or themes. To ensure the security of your server, you should update immediately!', array(), array('langcode' => $langcode));
       }
       break;
 
     case UPDATE_REVOKED:
       if ($msg_type == 'core') {
-        $text = t('Your version of Drupal has been revoked and is no longer available for download. Upgrading is strongly recommended!', array(), $langcode);
+        $text = t('Your version of Drupal has been revoked and is no longer available for download. Upgrading is strongly recommended!', array(), array('langcode' => $langcode));
       }
       else {
-        $text = t('The installed version of at least one of your modules or themes has been revoked and is no longer available for download. Upgrading or disabling is strongly recommended!', array(), $langcode);
+        $text = t('The installed version of at least one of your modules or themes has been revoked and is no longer available for download. Upgrading or disabling is strongly recommended!', array(), array('langcode' => $langcode));
       }
       break;
 
     case UPDATE_NOT_SUPPORTED:
       if ($msg_type == 'core') {
-        $text = t('Your version of Drupal is no longer supported. Upgrading is strongly recommended!', array(), $langcode);
+        $text = t('Your version of Drupal is no longer supported. Upgrading is strongly recommended!', array(), array('langcode' => $langcode));
       }
       else {
-        $text = t('The installed version of at least one of your modules or themes is no longer supported. Upgrading or disabling is strongly recommended! Please see the project homepage for more details.', array(), $langcode);
+        $text = t('The installed version of at least one of your modules or themes is no longer supported. Upgrading or disabling is strongly recommended! Please see the project homepage for more details.', array(), array('langcode' => $langcode));
       }
       break;
 
     case UPDATE_NOT_CURRENT:
       if ($msg_type == 'core') {
-        $text = t('There are updates available for your version of Drupal. To ensure the proper functioning of your site, you should update as soon as possible.', array(), $langcode);
+        $text = t('There are updates available for your version of Drupal. To ensure the proper functioning of your site, you should update as soon as possible.', array(), array('langcode' => $langcode));
       }
       else {
-        $text = t('There are updates available for one or more of your modules or themes. To ensure the proper functioning of your site, you should update as soon as possible.', array(), $langcode);
+        $text = t('There are updates available for one or more of your modules or themes. To ensure the proper functioning of your site, you should update as soon as possible.', array(), array('langcode' => $langcode));
       }
       break;
 
@@ -485,16 +485,16 @@ function _update_message_text($msg_type, $msg_reason, $report_link = FALSE, $lan
     case UPDATE_NOT_CHECKED:
     case UPDATE_NOT_FETCHED:
       if ($msg_type == 'core') {
-        $text = t('There was a problem determining the status of available updates for your version of Drupal.', array(), $langcode);
+        $text = t('There was a problem determining the status of available updates for your version of Drupal.', array(), array('langcode' => $langcode));
       }
       else {
-        $text = t('There was a problem determining the status of available updates for one or more of your modules or themes.', array(), $langcode);
+        $text = t('There was a problem determining the status of available updates for one or more of your modules or themes.', array(), array('langcode' => $langcode));
       }
       break;
   }
 
   if ($report_link) {
-    $text .= ' ' . t('See the <a href="@available_updates">available updates</a> page for more information.', array('@available_updates' => url('admin/reports/updates', array('language' => $language))), $langcode);
+    $text .= ' ' . t('See the <a href="@available_updates">available updates</a> page for more information.', array('@available_updates' => url('admin/reports/updates', array('language' => $language))), array('langcode' => $langcode));
   }
 
   return $text;

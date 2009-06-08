@@ -1126,37 +1126,44 @@ function fix_gpc_magic() {
  *    - @variable: escape plain text to HTML (check_plain)
  *    - %variable: escape text and theme as a placeholder for user-submitted
  *      content (check_plain + theme_placeholder)
- * @param $langcode
- *   Optional language code to translate to a language other than what is used
- *   to display the page.
+ * @param $options
+ *   An associative array of additional options, with the following keys:
+ *     - 'langcode' (default to the current language) The language code to
+ *       translate to a language other than what is used to display the page.
+ *     - 'context' (default to the empty context) The context the source string
+ *       belongs to.
  * @return
  *   The translated string.
  */
-function t($string, $args = array(), $langcode = NULL) {
+function t($string, array $args = array(), array $options = array()) {
   global $language;
   $custom_strings = &drupal_static(__FUNCTION__);
 
-  if (!isset($langcode)) {
-    $langcode = isset($language->language) ? $language->language : 'en';
+  // Merge in default.
+  if (empty($options['langcode'])) {
+    $options['langcode'] = isset($language->language) ? $language->language : 'en';
+  }
+  if (empty($options['context'])) {
+    $options['context'] = '';
   }
 
   // First, check for an array of customized strings. If present, use the array
   // *instead of* database lookups. This is a high performance way to provide a
   // handful of string replacements. See settings.php for examples.
   // Cache the $custom_strings variable to improve performance.
-  if (!isset($custom_strings[$langcode])) {
-    $custom_strings[$langcode] = variable_get('locale_custom_strings_' . $langcode, array());
+  if (!isset($custom_strings[$options['langcode']])) {
+    $custom_strings[$options['langcode']] = variable_get('locale_custom_strings_' . $options['langcode'], array());
   }
   // Custom strings work for English too, even if locale module is disabled.
-  if (isset($custom_strings[$langcode][$string])) {
-    $string = $custom_strings[$langcode][$string];
+  if (isset($custom_strings[$options['langcode']][$options['context']][$string])) {
+    $string = $custom_strings[$options['langcode']][$options['context']][$string];
   }
   // Translate with locale module if enabled.
   // We don't use drupal_function_exists() here, because it breaks the testing
   // framework if the locale module is enabled in the parent site (we cannot
   // unload functions in PHP).
-  elseif (module_exists('locale') && $langcode != 'en') {
-    $string = locale($string, $langcode);
+  elseif (module_exists('locale') && $options['langcode'] != 'en') {
+    $string = locale($string, $options['context'], $options['langcode']);
   }
   if (empty($args)) {
     return $string;
@@ -1711,34 +1718,37 @@ function format_xml_elements($array) {
  *      content (check_plain + theme_placeholder)
  *   Note that you do not need to include @count in this array.
  *   This replacement is done automatically for the plural case.
- * @param $langcode
- *   Optional language code to translate to a language other than
- *   what is used to display the page.
+ * @param $options
+ *   An associative array of additional options, with the following keys:
+ *     - 'langcode' (default to the current language) The language code to
+ *       translate to a language other than what is used to display the page.
+ *     - 'context' (default to the empty context) The context the source string
+ *       belongs to.
  * @return
  *   A translated string.
  */
-function format_plural($count, $singular, $plural, $args = array(), $langcode = NULL) {
+function format_plural($count, $singular, $plural, array $args = array(), array $options = array()) {
   $args['@count'] = $count;
   if ($count == 1) {
-    return t($singular, $args, $langcode);
+    return t($singular, $args, $options);
   }
 
   // Get the plural index through the gettext formula.
-  $index = (function_exists('locale_get_plural')) ? locale_get_plural($count, $langcode) : -1;
+  $index = (function_exists('locale_get_plural')) ? locale_get_plural($count, isset($options['langcode']) ? $options['langcode'] : NULL) : -1;
   // Backwards compatibility.
   if ($index < 0) {
-    return t($plural, $args, $langcode);
+    return t($plural, $args, $options);
   }
   else {
     switch ($index) {
       case "0":
-        return t($singular, $args, $langcode);
+        return t($singular, $args, $options);
       case "1":
-        return t($plural, $args, $langcode);
+        return t($plural, $args, $options);
       default:
         unset($args['@count']);
         $args['@count[' . $index . ']'] = $count;
-        return t(strtr($plural, array('@count' => '@count[' . $index . ']')), $args, $langcode);
+        return t(strtr($plural, array('@count' => '@count[' . $index . ']')), $args, $options);
     }
   }
 }
@@ -1777,19 +1787,19 @@ function parse_size($size) {
  */
 function format_size($size, $langcode = NULL) {
   if ($size < DRUPAL_KILOBYTE) {
-    return format_plural($size, '1 byte', '@count bytes', array(), $langcode);
+    return format_plural($size, '1 byte', '@count bytes', array(), array('langcode' => $langcode));
   }
   else {
     $size = $size / DRUPAL_KILOBYTE; // Convert bytes to kilobytes.
     $units = array(
-      t('@size KB', array(), $langcode),
-      t('@size MB', array(), $langcode),
-      t('@size GB', array(), $langcode),
-      t('@size TB', array(), $langcode),
-      t('@size PB', array(), $langcode),
-      t('@size EB', array(), $langcode),
-      t('@size ZB', array(), $langcode),
-      t('@size YB', array(), $langcode),
+      t('@size KB', array(), array('langcode' => $langcode)),
+      t('@size MB', array(), array('langcode' => $langcode)),
+      t('@size GB', array(), array('langcode' => $langcode)),
+      t('@size TB', array(), array('langcode' => $langcode)),
+      t('@size PB', array(), array('langcode' => $langcode)),
+      t('@size EB', array(), array('langcode' => $langcode)),
+      t('@size ZB', array(), array('langcode' => $langcode)),
+      t('@size YB', array(), array('langcode' => $langcode)),
     );
     foreach ($units as $unit) {
       if (round($size, 2) >= DRUPAL_KILOBYTE) {
@@ -1830,7 +1840,7 @@ function format_interval($timestamp, $granularity = 2, $langcode = NULL) {
   foreach ($units as $key => $value) {
     $key = explode('|', $key);
     if ($timestamp >= $value) {
-      $output .= ($output ? ' ' : '') . format_plural(floor($timestamp / $value), $key[0], $key[1], array(), $langcode);
+      $output .= ($output ? ' ' : '') . format_plural(floor($timestamp / $value), $key[0], $key[1], array(), array('langcode' => $langcode));
       $timestamp %= $value;
       $granularity--;
     }
@@ -1839,7 +1849,7 @@ function format_interval($timestamp, $granularity = 2, $langcode = NULL) {
       break;
     }
   }
-  return $output ? $output : t('0 sec', array(), $langcode);
+  return $output ? $output : t('0 sec', array(), array('langcode' => $langcode));
 }
 
 /**
@@ -1908,13 +1918,13 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   for ($i = 0; $i < $max; $i++) {
     $c = $format[$i];
     if (strpos('AaeDlMT', $c) !== FALSE) {
-      $date .= t(date_format($date_time, $c), array(), $langcode);
+      $date .= t(date_format($date_time, $c), array(), array('langcode' => $langcode));
     }
     elseif ($c == 'F') {
       // Special treatment for long month names: May is both an abbreviation
       // and a full month name in English, but other languages have
       // different abbreviations.
-      $date .= trim(t('!long-month-name ' . date_format($date_time, $c), array('!long-month-name' => ''), $langcode));
+      $date .= t(date_format($date_time, $c), array(), array('context' => 'Long month name', 'langcode' => $langcode));
     }
     elseif (strpos('BcdGgHhIijLmNnOoPSstUuWwYyZz', $c) !== FALSE) {
       $date .= date_format($date_time, $c);

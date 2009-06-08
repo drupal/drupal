@@ -303,7 +303,7 @@ $conf = array(
  *
  * Remove the leading hash signs to enable.
  */
-# $conf['locale_custom_strings_en'] = array(
+# $conf['locale_custom_strings_en'][''] = array(
 #   'forum'      => 'Discussion board',
 #   '@count min' => '@count minutes',
 # );

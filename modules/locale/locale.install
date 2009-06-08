@@ -230,6 +230,25 @@ function locale_update_6006() {
  */
 
 /**
+ * @defgroup updates-6.x-to-7.x Locale updates from 6.x to 7.x
+ * @{
+ */
+
+/**
+ * Allow longer location.
+ */
+function locale_update_7000() {
+  $ret = array();
+  db_drop_index($ret, 'locales_source', 'source');
+  db_add_index($ret, 'locales_source', 'source_context', array(array('source', 30), 'context'));
+  return $ret;
+}
+
+/**
+ * @} End of "defgroup updates-6.x-to-7.x"
+ */
+
+/**
  * Implement hook_uninstall().
  */
 function locale_uninstall() {
@@ -381,6 +400,13 @@ function locale_schema() {
         'not null' => TRUE,
         'description' => 'The original string in English.',
       ),
+      'context' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The context this string applies to.',
+      ),
       'version' => array(
         'type' => 'varchar',
         'length' => 20,
@@ -391,7 +417,7 @@ function locale_schema() {
     ),
     'primary key' => array('lid'),
     'indexes' => array(
-      'source' => array(array('source', 30)),
+      'source_context' => array(array('source', 30), 'context'),
     ),
   );
 

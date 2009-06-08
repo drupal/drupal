@@ -341,12 +341,14 @@ function locale_theme() {
  *   A string to look up translation for. If omitted, all the
  *   cached strings will be returned in all languages already
  *   used on the page.
+ * @param $context
+ *   The context of this string.
  * @param $langcode
  *   Language code to use for the lookup.
  * @param $reset
  *   Set to TRUE to reset the in-memory cache.
  */
-function locale($string = NULL, $langcode = NULL, $reset = FALSE) {
+function locale($string = NULL, $context = NULL, $langcode = NULL, $reset = FALSE) {
   global $language;
   static $locale_t;
 
@@ -377,9 +379,9 @@ function locale($string = NULL, $langcode = NULL, $reset = FALSE) {
         // Refresh database stored cache of translations for given language.
         // We only store short strings used in current version, to improve
         // performance and consume less memory.
-        $result = db_query("SELECT s.source, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.textgroup = 'default' AND s.version = :version AND LENGTH(s.source) < 75", array(':language' => $langcode, ':version' => VERSION));
+        $result = db_query("SELECT s.source, s.context, t.translation, t.language FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.textgroup = 'default' AND s.version = :version AND LENGTH(s.source) < 75", array(':language' => $langcode, ':version' => VERSION));
         foreach ($result as $data) {
-          $locale_t[$langcode][$data->source] = (empty($data->translation) ? TRUE : $data->translation);
+          $locale_t[$langcode][$data->context][$data->source] = (empty($data->translation) ? TRUE : $data->translation);
         }
         cache_set('locale:' . $langcode, $locale_t[$langcode]);
       }
@@ -387,17 +389,18 @@ function locale($string = NULL, $langcode = NULL, $reset = FALSE) {
   }
 
   // If we have the translation cached, skip checking the database
-  if (!isset($locale_t[$langcode][$string])) {
+  if (!isset($locale_t[$langcode][$context][$string])) {
 
     // We do not have this translation cached, so get it from the DB.
-    $translation = db_query("SELECT s.lid, t.translation, s.version FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.source = :source AND s.textgroup = 'default'", array(
+    $translation = db_query("SELECT s.lid, t.translation, s.version FROM {locales_source} s LEFT JOIN {locales_target} t ON s.lid = t.lid AND t.language = :language WHERE s.source = :source AND s.context = :context AND s.textgroup = 'default'", array(
       ':language' => $langcode,
       ':source' => $string,
+      ':context' => (string) $context,
     ))->fetchObject();
     if ($translation) {
       // We have the source string at least.
       // Cache translation string or TRUE if no translation exists.
-      $locale_t[$langcode][$string] = (empty($translation->translation) ? TRUE : $translation->translation);
+      $locale_t[$langcode][$context][$string] = (empty($translation->translation) ? TRUE : $translation->translation);
 
       if ($translation->version != VERSION) {
         // This is the first use of this string under current Drupal version. Save version
@@ -416,17 +419,18 @@ function locale($string = NULL, $langcode = NULL, $reset = FALSE) {
         ->fields(array(
           'location' => request_uri(),
           'source' => $string,
+          'context' => (string) $context,
           'textgroup' => 'default',
           'version' => VERSION,
         ))
         ->execute();
-      $locale_t[$langcode][$string] = TRUE;
+      $locale_t[$langcode][$context][$string] = TRUE;
       // Clear locale cache so this string can be added in a later request.
       cache_clear_all('locale:', 'cache', TRUE);
     }
   }
 
-  return ($locale_t[$langcode][$string] === TRUE ? $string : $locale_t[$langcode][$string]);
+  return ($locale_t[$langcode][$context][$string] === TRUE ? $string : $locale_t[$langcode][$context][$string]);
 }
 
 /**
