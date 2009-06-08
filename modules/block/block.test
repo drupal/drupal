@@ -1,5 +1,5 @@
 <?php
-// $Id: block.test,v 1.19 2009/05/31 07:46:54 webchick Exp $
+// $Id: block.test,v 1.20 2009/06/08 09:23:50 dries Exp $
 
 /**
  * @file
@@ -97,6 +97,37 @@ class BlockTestCase extends DrupalWebTestCase {
 
     // Confirm that the box is still being displayed using configured text format.
     $this->assertRaw('<h1>Full HTML</h1>', t('Box successfully being displayed using Full HTML.'));
+  }
+
+  /**
+   * Test block visibility.
+   */
+  function testBlockVisibility() {
+    $block = array();
+    $block['title'] = 'Syndicate';
+    $block['module'] = 'node';
+    $block['delta'] = 'syndicate';
+
+    // Set the block to be hidden on any user path, and to be shown only to
+    // authenticated users.
+    $edit = array();
+    $edit['pages'] = 'user*';
+    $edit['roles[2]'] = TRUE;
+    $this->drupalPost('admin/build/block/configure/' . $block['module'] . '/' . $block['delta'], $edit, t('Save block'));
+
+    // Move block to the left sidebar.
+    $this->moveBlockToRegion($block, $this->regions[1]);
+
+    $this->drupalGet('');
+    $this->assertText('Syndicate', t('Block was displayed on the front page.'));
+
+    $this->drupalGet('user*');
+    $this->assertNoText('Syndicate', t('Block was not displayed according to block visibility rules.'));
+
+    // Confirm that the block is not displayed to anonymous users.
+    $this->drupalLogout();
+    $this->drupalGet('');
+    $this->assertNoText('Syndicate', t('Block was not displayed to anonymous users.'));
   }
 
   /**

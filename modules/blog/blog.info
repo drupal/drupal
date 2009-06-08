@@ -1,4 +1,4 @@
-; $Id: blog.info,v 1.10 2008/10/11 02:32:36 webchick Exp $
+; $Id: blog.info,v 1.11 2009/06/08 09:23:51 dries Exp $
 
 name = Blog
 description = Enables multi-user blogs.
@@ -7,3 +7,4 @@ version = VERSION
 core = 7.x
 files[] = blog.module
 files[] = blog.pages.inc
+files[] = blog.test

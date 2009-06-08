@@ -1,4 +1,4 @@
-; $Id: locale.info,v 1.10 2008/10/11 02:32:49 webchick Exp $
+; $Id: locale.info,v 1.11 2009/06/08 09:23:52 dries Exp $
 name = Locale
 description = Adds language handling functionality and enables the translation of the user interface to languages other than English.
 package = Core
@@ -6,3 +6,4 @@ version = VERSION
 core = 7.x
 files[] = locale.module
 files[] = locale.install
+files[] = locale.test

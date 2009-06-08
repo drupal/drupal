@@ -1,4 +1,4 @@
-; $Id: openid.info,v 1.6 2008/10/11 02:32:53 webchick Exp $
+; $Id: openid.info,v 1.7 2009/06/08 09:23:53 dries Exp $
 name = OpenID
 description = "Allows users to log into your site using OpenID."
 version = VERSION
@@ -9,3 +9,4 @@ files[] = openid.inc
 files[] = openid.pages.inc
 files[] = xrds.inc
 files[] = openid.install
+files[] = openid.test

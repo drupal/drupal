@@ -1,5 +1,5 @@
 <?php
-// $Id: graph.test,v 1.4 2009/05/25 05:20:16 dries Exp $
+// $Id: graph.test,v 1.5 2009/06/08 09:23:53 dries Exp $
 
 /**
  * @file
@@ -23,7 +23,7 @@ class GraphUnitTest extends DrupalUnitTestCase {
    */
   function testDepthFirstSearch() {
     // Provoke the inclusion of graph.inc.
-    drupal_function_exists('drupal_depth_first_search');
+    require_once 'includes/graph.inc';
 
     // The sample graph used is:
     // 1 --> 2 --> 3     5 ---> 6
