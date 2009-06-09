@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.288 2009/06/08 05:00:11 dries Exp $
+// $Id: update.php,v 1.289 2009/06/09 11:20:16 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -653,7 +653,9 @@ function update_fix_d7_requirements() {
     variable_set('update_d7_requirements', TRUE);
 
     // Add column for locale context.
-    db_add_field($ret, 'locales_source', 'context', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The context this string applies to.'));
+    if (db_table_exists('locales_source')) {
+      db_add_field($ret, 'locales_source', 'context', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The context this string applies to.'));
+    }
   }
 
   return $ret;

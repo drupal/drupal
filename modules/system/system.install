@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.340 2009/06/08 21:00:56 dries Exp $
+// $Id: system.install,v 1.341 2009/06/09 11:20:16 dries Exp $
 
 /**
  * @file
@@ -3422,7 +3422,7 @@ function system_update_7021() {
   variable_del('site_footer');
 
   // Rebuild theme data, so the new 'help' region is identified.
-  system_theme_data();
+  system_get_theme_data();
 
   return $ret;
 }
