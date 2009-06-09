@@ -483,6 +483,16 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
     $defaults['Authorization'] = 'Authorization: Basic '. base64_encode($uri['user'] . (!empty($uri['pass']) ? ":". $uri['pass'] : ''));
   }
 
+  // If the database prefix is being used by SimpleTest to run the tests in a copied
+  // database then set the user-agent header to the database prefix so that any
+  // calls to other Drupal pages will run the SimpleTest prefixed database. The
+  // user-agent is used to ensure that multiple testing sessions running at the
+  // same time won't interfere with each other as they would if the database
+  // prefix were stored statically in a file or database variable.
+  if (preg_match("/simpletest\d+/", $GLOBALS['db_prefix'], $matches)) {
+    $defaults['User-Agent'] = 'User-Agent: ' . $matches[0];
+  }
+
   foreach ($headers as $header => $value) {
     $defaults[$header] = $header .': '. $value;
   }
