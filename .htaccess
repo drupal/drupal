@@ -64,15 +64,15 @@ DirectoryIndex index.php index.html index.htm
   #
   # To redirect all users to access the site WITH the 'www.' prefix,
   # (http://example.com/... will be redirected to http://www.example.com/...)
-  # adapt and uncomment the following:
-  # RewriteCond %{HTTP_HOST} ^example\.com$ [NC]
-  # RewriteRule ^(.*)$ http://www.example.com/$1 [L,R=301]
+  # uncomment the following:
+  # RewriteCond %{HTTP_HOST} !^www\. [NC]
+  # RewriteRule ^ http://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
   #
   # To redirect all users to access the site WITHOUT the 'www.' prefix,
   # (http://www.example.com/... will be redirected to http://example.com/...)
-  # uncomment and adapt the following:
-  # RewriteCond %{HTTP_HOST} ^www\.example\.com$ [NC]
-  # RewriteRule ^(.*)$ http://example.com/$1 [L,R=301]
+  # uncomment the following:
+  # RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  # RewriteRule ^ http://%1%{REQUEST_URI} [L,R=301]
 
   # Modify the RewriteBase if you are using Drupal in a subdirectory or in a
   # VirtualDocumentRoot and the rewrite rules are not working properly.
