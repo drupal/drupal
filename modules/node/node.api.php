@@ -855,9 +855,8 @@ function hook_update($node) {
  *
  * Changes made to the $node object within a hook_validate() function will
  * have no effect. The preferred method to change a node's content is to use
- * hook_submit() or hook_node($op='submit') instead. If it is really
- * necessary to change the node at the validate stage, you can use function
- * form_set_value().
+ * hook_node_presave() instead. If it is really necessary to change 
+ * the node at the validate stage, you can use function form_set_value().
  *
  * For a detailed usage example, see node_example.module.
  */
