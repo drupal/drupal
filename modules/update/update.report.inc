@@ -48,6 +48,7 @@ function theme_update_report($data) {
         $icon = theme('image', 'misc/watchdog-ok.png', t('ok'), t('ok'));
         break;
       case UPDATE_UNKNOWN:
+      case UPDATE_NOT_FETCHED:
         $class = 'unknown';
         $icon = theme('image', 'misc/watchdog-warning.png', t('warning'), t('warning'));
         break;

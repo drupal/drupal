@@ -303,6 +303,11 @@ function update_calculate_project_data($available) {
               'data' => t('This project is no longer supported, and is no longer available for download. Disabling everything included by this project is strongly recommended!'),
             );
             break;
+          case 'not-fetched':
+            $projects[$project]['status'] = UPDATE_NOT_FETCHED;
+            $projects[$project]['reason'] = t('Failed to fetch available update data');
+            break;
+
           default:
             // Assume anything else (e.g. 'published') is valid and we should
             // perform the rest of the logic in this function.
