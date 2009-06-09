@@ -790,7 +790,7 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
 class UserAdminTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('User admininstration'),
+      'name' => t('User administration'),
       'description' => t('Test user admininstration page functionality.'),
       'group' => t('User')
     );
