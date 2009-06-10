@@ -13,10 +13,7 @@
  *
  * Drupal maintains an internal registry of all functions or classes in the
  * system, allowing it to lazy-load code files as needed (reducing the amount
- * of code that must be parsed on each request). The list of included files is
- * cached per menu callback for subsequent loading by the menu router. This way,
- * a given page request will have all the code it needs but little else, minimizing
- * time spent parsing unneeded code.
+ * of code that must be parsed on each request). 
  */
 
 /**
@@ -73,7 +70,6 @@ function _registry_rebuild() {
   // list can then be added to the list of files that the registry will parse,
   // or modify attributes of a file.
   drupal_alter('registry_files', $files, $modules);
-
   foreach (registry_get_parsed_files() as $filename => $file) {
     // Add the md5 to those files we've already parsed.
     if (isset($files[$filename])) {
@@ -81,7 +77,7 @@ function _registry_rebuild() {
     }
     else {
       // Flush the registry of resources in files that are no longer on disc
-      // or don't belong to installed modules.
+      // or are in files that no installed modules require to be parsed.
       db_delete('registry')
         ->condition('filename', $filename)
         ->execute();
