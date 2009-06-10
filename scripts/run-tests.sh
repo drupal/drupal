@@ -12,15 +12,19 @@ define('SIMPLETEST_SCRIPT_COLOR_EXCEPTION', 33); // Brown.
 // Set defaults and get overrides.
 list($args, $count) = simpletest_script_parse_args();
 
-simpletest_script_init();
-
 if ($args['help'] || $count == 0) {
   simpletest_script_help();
   exit;
 }
 
 if ($args['execute-batch']) {
+  // Masquerade as Apache for running tests.
+  simpletest_script_init("Apache");
   simpletest_script_execute_batch();
+}
+else {
+  // Run administrative functions as CLI.
+  simpletest_script_init("PHP CLI");
 }
 
 // Bootstrap to perform initial validation or other operations.
@@ -226,7 +230,7 @@ function simpletest_script_parse_args() {
 /**
  * Initialize script variables and perform general setup requirements.
  */
-function simpletest_script_init() {
+function simpletest_script_init($server_software) {
   global $args, $php;
 
   $host = 'localhost';
@@ -260,7 +264,7 @@ function simpletest_script_init() {
   $_SERVER['HTTP_HOST'] = $host;
   $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
   $_SERVER['SERVER_ADDR'] = '127.0.0.1';
-  $_SERVER['SERVER_SOFTWARE'] = 'Apache';
+  $_SERVER['SERVER_SOFTWARE'] = $server_software;
   $_SERVER['SERVER_NAME'] = 'localhost';
   $_SERVER['REQUEST_URI'] = $path .'/';
   $_SERVER['REQUEST_METHOD'] = 'GET';
