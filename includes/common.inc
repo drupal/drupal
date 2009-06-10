@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.920 2009/06/08 05:00:11 dries Exp $
+// $Id: common.inc,v 1.921 2009/06/10 20:00:10 dries Exp $
 
 /**
  * @file
@@ -834,7 +834,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
   }
 
   if ($fatal) {
-    drupal_set_header($_SERVER['SERVER_PROTOCOL'] . ' 500 Service unavailable (with message)');
+    drupal_set_header('500 Service unavailable (with message)');
   }
 
   if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {

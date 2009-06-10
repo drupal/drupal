@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.286 2009/06/06 20:15:23 dries Exp $
+// $Id: bootstrap.inc,v 1.287 2009/06/10 20:00:10 dries Exp $
 
 /**
  * @file
@@ -1403,8 +1403,10 @@ function _drupal_bootstrap($phase) {
       }
 
       // Prepare for non-cached page workflow.
-      ob_start();
-      drupal_page_header();
+      if ($_SERVER['SERVER_SOFTWARE'] !== 'PHP CLI') {
+        ob_start();
+        drupal_page_header();
+      }
       break;
 
     case DRUPAL_BOOTSTRAP_LANGUAGE:
