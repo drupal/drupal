@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.327 2009/06/01 22:07:08 dries Exp $
+// $Id: menu.inc,v 1.328 2009/06/10 21:52:36 dries Exp $
 
 /**
  * @file
@@ -1266,7 +1266,26 @@ function theme_menu_tree($tree) {
 /**
  * Generate the HTML output for a menu item and submenu.
  *
+ * The menu item's LI element is given one of the following classes:
+ * - expanded: The menu item is showing its submenu.
+ * - collapsed: The menu item has a submenu which is not shown.
+ * - leaf: The menu item has no submenu. 
+ *
  * @ingroup themeable
+ *
+ * @param $link
+ *   The fully-formatted link for this menu item.
+ * @param $has_children
+ *   Boolean value indicating if this menu item has children.
+ * @param $menu
+ *   Contains a fully-formatted submenu, if one exists for this menu item.
+ *   Defaults to NULL.
+ * @param $in_active_trail
+ *   Boolean determining if the current page is below the menu item in the
+ *   menu system. Defaults to FALSE.
+ * @param $extra_class
+ *   Extra classes that should be added to the class of the list item.
+ *   Defaults to NULL.
  */
 function theme_menu_item($link, $has_children, $menu = '', $in_active_trail = FALSE, $extra_class = NULL) {
   $class = ($menu ? 'expanded' : ($has_children ? 'collapsed' : 'leaf'));
