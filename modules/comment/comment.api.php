@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.api.php,v 1.6 2009/06/03 06:52:29 dries Exp $
+// $Id: comment.api.php,v 1.7 2009/06/10 05:09:51 dries Exp $
 
 /**
  * @file
@@ -70,7 +70,7 @@ function hook_comment_view($comment) {
 /**
  * The comment is being published by the moderator.
  *
- * @param $form_values
+ * @param $comment
  *   Passes in the comment the action is being performed on.
  * @return
  *   Nothing.
