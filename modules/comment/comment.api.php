@@ -70,7 +70,7 @@ function hook_comment_view($comment) {
 /**
  * The comment is being published by the moderator.
  *
- * @param $form_values
+ * @param $comment
  *   Passes in the comment the action is being performed on.
  * @return
  *   Nothing.
