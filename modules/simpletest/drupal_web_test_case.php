@@ -926,9 +926,9 @@ class DrupalWebTestCase extends DrupalTestCase {
     );
     $this->drupalPost('user', $edit, t('Log in'));
 
-    $pass = $this->assertText($user->name, t('Found name: %name', array('%name' => $user->name)), t('User login'));
-    $pass = $pass && $this->assertNoText(t('The username %name has been blocked.', array('%name' => $user->name)), t('No blocked message at login page'), t('User login'));
-    $pass = $pass && $this->assertNoText(t('The name %name is a reserved username.', array('%name' => $user->name)), t('No reserved message at login page'), t('User login'));
+    // If a "log out" link appears on the page, it is almost certainly because
+    // the login was successful.
+    $pass = $this->assertLink(t('Log out'), 0, t('User %name successfully logged in.', array('%name' => $user->name)), t('User login'));
 
     if ($pass) {
       $this->loggedInUser = $user;
