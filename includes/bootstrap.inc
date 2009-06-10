@@ -1403,8 +1403,10 @@ function _drupal_bootstrap($phase) {
       }
 
       // Prepare for non-cached page workflow.
-      ob_start();
-      drupal_page_header();
+      if ($_SERVER['SERVER_SOFTWARE'] !== 'PHP CLI') {
+        ob_start();
+        drupal_page_header();
+      }
       break;
 
     case DRUPAL_BOOTSTRAP_LANGUAGE:
