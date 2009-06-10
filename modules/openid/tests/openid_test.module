@@ -206,10 +206,11 @@ function _openid_test_endpoint_authenticate() {
   // entries contain profile data stored by the OpenID Provider (see OpenID
   // Simple Registration Extension 1.0).
   $response = array(
-    'openid.ns' => 'http://specs.openid.net/auth/2.0',
+    'openid.ns' => OPENID_NS_2_0,
     'openid.mode' => 'id_res',
     'openid.op_endpoint' => $base_url . url('openid/provider'),
-    'openid.claimed_id' => $_REQUEST['openid_claimed_id'],
+    // openid.claimed_id is not sent by OpenID 1 clients.
+    'openid.claimed_id' => isset($_REQUEST['openid_claimed_id']) ? $_REQUEST['openid_claimed_id'] : '',
     'openid.identity' => $_REQUEST['openid_identity'],
     'openid.return_to' => $_REQUEST['openid_return_to'],
     'openid.response_nonce' => $nonce,

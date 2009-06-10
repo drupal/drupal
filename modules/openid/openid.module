@@ -477,17 +477,16 @@ function openid_association_request($public) {
 function openid_authentication_request($claimed_id, $identity, $return_to = '', $assoc_handle = '', $version = 2) {
   module_load_include('inc', 'openid');
 
-  $ns = ($version == 2) ? OPENID_NS_2_0 : OPENID_NS_1_0;
   $request =  array(
-    'openid.ns' => $ns,
     'openid.mode' => 'checkid_setup',
     'openid.identity' => $identity,
-    'openid.claimed_id' => $claimed_id,
     'openid.assoc_handle' => $assoc_handle,
     'openid.return_to' => $return_to,
   );
 
   if ($version == 2) {
+    $request['openid.ns'] = OPENID_NS_2_0;
+    $request['openid.claimed_id'] = $claimed_id;
     $request['openid.realm'] = url('', array('absolute' => TRUE));
   }
   else {
