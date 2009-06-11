@@ -791,7 +791,7 @@ class UserAdminTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => t('User administration'),
-      'description' => t('Test user admininstration page functionality.'),
+      'description' => t('Test user administration page functionality.'),
       'group' => t('User')
     );
   }
