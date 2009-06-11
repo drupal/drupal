@@ -1166,8 +1166,8 @@ function comment_render($node, $cid = 0) {
         ->limit($comments_per_page);
 
       $count_query = db_select('comment', 'c');
+      $count_query->addExpression('COUNT(*)');
       $count_query
-        ->fields('c', array('cid'))
         ->condition('c.nid', $nid)
         ->addTag('node_access');
 
