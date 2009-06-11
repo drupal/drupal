@@ -1263,8 +1263,10 @@ function _system_get_module_data() {
     'dependencies' => array(),
     'dependents' => array(),
     'description' => '',
+    'package' => 'Other',
     'version' => NULL,
     'php' => DRUPAL_MINIMUM_PHP,
+    'files' => array(),
   );
 
   // Read info files for each module.
