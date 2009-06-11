@@ -1619,7 +1619,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected function assertLink($label, $index = 0, $message = '', $group = 'Other') {
     $links = $this->xpath('//a[text()="' . $label . '"]');
     $message = ($message ?  $message : t('Link with label "!label" found.', array('!label' => $label)));
-    $this->assert(isset($links[$index]), $message, $group);
+    return $this->assert(isset($links[$index]), $message, $group);
   }
 
   /**
@@ -1637,7 +1637,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected function assertNoLink($label, $message = '', $group = 'Other') {
     $links = $this->xpath('//a[text()="' . $label . '"]');
     $message = ($message ?  $message : t('Link with label "!label" not found.', array('!label' => $label)));
-    $this->assert(empty($links), $message, $group);
+    return $this->assert(empty($links), $message, $group);
   }
 
   /**
