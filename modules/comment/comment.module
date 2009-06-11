@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.721 2009/06/08 05:12:15 webchick Exp $
+// $Id: comment.module,v 1.722 2009/06/11 15:17:15 dries Exp $
 
 /**
  * @file
@@ -1166,8 +1166,8 @@ function comment_render($node, $cid = 0) {
         ->limit($comments_per_page);
 
       $count_query = db_select('comment', 'c');
+      $count_query->addExpression('COUNT(*)');
       $count_query
-        ->fields('c', array('cid'))
         ->condition('c.nid', $nid)
         ->addTag('node_access');
 
