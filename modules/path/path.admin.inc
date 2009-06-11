@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.22 2009/05/22 11:33:17 dries Exp $
+// $Id: path.admin.inc,v 1.23 2009/06/11 04:59:26 dries Exp $
 
 /**
  * @file
@@ -100,7 +100,7 @@ function path_admin_form(&$form_state, $edit = array('src' => '', 'dst' => '', '
     '#type' => 'textfield',
     '#title' => t('Existing system path'),
     '#default_value' => $edit['src'],
-    '#maxlength' => 128,
+    '#maxlength' => 255,
     '#size' => 45,
     '#description' => t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
@@ -110,7 +110,7 @@ function path_admin_form(&$form_state, $edit = array('src' => '', 'dst' => '', '
     '#type' => 'textfield',
     '#title' => t('Path alias'),
     '#default_value' => $edit['dst'],
-    '#maxlength' => 128,
+    '#maxlength' => 255,
     '#size' => 45,
     '#description' => t('Specify an alternative path by which this data can be accessed. For example, type "about" when writing an about page. Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q='),
