@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.710 2009/06/08 04:28:19 dries Exp $
+// $Id: system.module,v 1.711 2009/06/11 04:36:22 dries Exp $
 
 /**
  * @file
@@ -1263,8 +1263,10 @@ function _system_get_module_data() {
     'dependencies' => array(),
     'dependents' => array(),
     'description' => '',
+    'package' => 'Other',
     'version' => NULL,
     'php' => DRUPAL_MINIMUM_PHP,
+    'files' => array(),
   );
 
   // Read info files for each module.
