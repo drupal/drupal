@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.114 2009/06/10 19:57:13 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.115 2009/06/11 04:16:24 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -1619,7 +1619,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected function assertLink($label, $index = 0, $message = '', $group = 'Other') {
     $links = $this->xpath('//a[text()="' . $label . '"]');
     $message = ($message ?  $message : t('Link with label "!label" found.', array('!label' => $label)));
-    $this->assert(isset($links[$index]), $message, $group);
+    return $this->assert(isset($links[$index]), $message, $group);
   }
 
   /**
@@ -1637,7 +1637,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected function assertNoLink($label, $message = '', $group = 'Other') {
     $links = $this->xpath('//a[text()="' . $label . '"]');
     $message = ($message ?  $message : t('Link with label "!label" not found.', array('!label' => $label)));
-    $this->assert(empty($links), $message, $group);
+    return $this->assert(empty($links), $message, $group);
   }
 
   /**
