@@ -1320,14 +1320,14 @@ function system_schema() {
       'src' => array(
         'description' => 'The Drupal path this alias is for; e.g. node/12.',
         'type' => 'varchar',
-        'length' => 128,
+        'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'dst' => array(
         'description' => 'The alias for this path; e.g. title-of-the-story.',
         'type' => 'varchar',
-        'length' => 128,
+        'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
@@ -3534,6 +3534,17 @@ function system_update_7025() {
   db_drop_index($ret, 'url_alias', 'dst_language');
   db_add_index($ret, 'url_alias', 'dst_language_pid', array('dst', 'language', 'pid'));
   db_add_index($ret, 'url_alias', 'src_language_pid', array('src', 'language', 'pid'));
+  return $ret;
+}
+
+/**
+ * Increase permitted length of url aliases to 255 characters.
+ *
+ */
+function system_update_7026() {
+  $ret = array();
+  db_change_field($ret, 'url_alias', 'src', 'src', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE));
+  db_change_field($ret, 'url_alias', 'dst', 'dst', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE));
   return $ret;
 }
 
