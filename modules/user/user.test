@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.41 2009/06/09 21:30:24 dries Exp $
+// $Id: user.test,v 1.42 2009/06/11 07:51:30 dries Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -791,7 +791,7 @@ class UserAdminTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => t('User administration'),
-      'description' => t('Test user admininstration page functionality.'),
+      'description' => t('Test user administration page functionality.'),
       'group' => t('User')
     );
   }
