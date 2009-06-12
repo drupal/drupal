@@ -14,6 +14,9 @@ function text_theme() {
     'text_textarea' => array(
       'arguments' => array('element' => NULL),
     ),
+    'text_textarea_with_summary' => array(
+      'arguments' => array('element' => NULL),
+    ),
     'text_textfield' => array(
       'arguments' => array('element' => NULL),
     ),
@@ -26,11 +29,22 @@ function text_theme() {
     'field_formatter_text_trimmed' => array(
       'arguments' => array('element' => NULL),
     ),
+    'field_formatter_text_summary_or_trimmed' => array(
+      'arguments' => array('element' => NULL),
+    ),
   );
 }
 
 /**
  * Implement hook_field_info().
+ *
+ * Field settings:
+ *   - max_length: the maximum length for a varchar field.
+ * Instance settings:
+ *   - text_processing: whether text input filters should be used.
+ *   - display_summary: whether the summary field should be displayed.
+ *     When empty and not displayed the summary will take its value from the
+ *     trimmed value of the main text field.
  */
 function text_field_info() {
   return array(
@@ -39,17 +53,24 @@ function text_field_info() {
       'description' => t('This field stores varchar text in the database.'),
       'settings' => array('max_length' => 255),
       'instance_settings' => array('text_processing' => 0),
-      'widget_settings' => array('size' => 60),
       'default_widget' => 'text_textfield',
       'default_formatter' => 'text_default',
     ),
     'text_long' => array(
       'label' => t('Long text'),
       'description' => t('This field stores long text in the database.'),
+      'settings' => array('max_length' => ''),
       'instance_settings' => array('text_processing' => 0),
-      'widget_settings' => array('rows' => 5),
       'default_widget' => 'text_textarea',
       'default_formatter' => 'text_default',
+    ),
+    'text_with_summary' => array(
+      'label' => t('Long text and summary'),
+      'description' => t('This field stores long text in the database along with optional summary text.'),
+      'settings' => array('max_length' => ''),
+      'instance_settings' => array('text_processing' => 1, 'display_summary' => 0),
+      'default_widget' => 'text_textarea_with_summary',
+      'default_formatter' => 'text_summary_or_trimmed',
     ),
   );
 }
@@ -58,23 +79,39 @@ function text_field_info() {
  * Implement hook_field_schema().
  */
 function text_field_schema($field) {
-  if ($field['type'] == 'text_long') {
-    $columns = array(
-      'value' => array(
-        'type' => 'text',
-        'size' => 'big',
-        'not null' => FALSE,
-      ),
-    );
-  }
-  else {
-    $columns = array(
-      'value' => array(
-        'type' => 'varchar',
-        'length' => $field['settings']['max_length'],
-        'not null' => FALSE,
-      ),
-    );
+  switch ($field['type']) {
+    case 'text':
+      $columns = array(
+        'value' => array(
+          'type' => 'varchar',
+          'length' => $field['settings']['max_length'],
+          'not null' => FALSE,
+        ),
+      );
+      break;
+    case 'text_long':
+      $columns = array(
+        'value' => array(
+          'type' => 'text',
+          'size' => 'big',
+          'not null' => FALSE,
+        ),
+      );
+      break;
+    case 'text_with_summary':
+      $columns = array(
+        'value' => array(
+          'type' => 'text',
+          'size' => 'big',
+          'not null' => FALSE,
+        ),
+        'summary' => array(
+          'type' => 'text',
+          'size' => 'big',
+          'not null' => FALSE,
+        ),
+      );
+      break;
   }
   $columns += array(
     'format' => array(
@@ -95,16 +132,27 @@ function text_field_schema($field) {
  * Implement hook_field_validate().
  *
  * Possible error codes:
- * - 'text_max_length': The value exceeds the maximum length.
+ * - 'text_value_max_length': The value exceeds the maximum length.
+ * - 'text_summary_max_length': The summary exceeds the maximum length.
  */
 function text_field_validate($obj_type, $object, $field, $instance, $items, &$errors) {
   foreach ($items as $delta => $item) {
-    if (!empty($item['value'])) {
-      if (!empty($field['settings']['max_length']) && drupal_strlen($item['value']) > $field['settings']['max_length']) {
-        $errors[$field['field_name']][$delta][] = array(
-          'error' => 'text_max_length',
-          'message' => t('%name: the value may not be longer than %max characters.', array('%name' => $instance['label'], '%max' => $field['settings']['max_length'])),
-        );
+    foreach (array('value' => t('full text'), 'summary' => t('summary')) as $column => $desc) {
+      if (!empty($item[$column])) {
+        if (!empty($field['settings']['max_length']) && drupal_strlen($item[$column]) > $field['settings']['max_length']) {
+          switch ($column) {
+            case 'value':
+              $message = t('%name: the text may not be longer than %max characters.', array('%name' => $instance['label'], '%max' => $field['settings']['max_length']));
+              break;
+            case 'summary':
+              $message = t('%name: the summary may not be longer than %max characters.', array('%name' => $instance['label'], '%max' => $field['settings']['max_length']));
+              break;
+          }
+          $errors[$field['field_name']][$delta][] = array(
+            'error' => "text_{$column}_length",
+            'message' => $message,
+          );
+        }
       }
     }
   }
@@ -126,17 +174,22 @@ function text_field_load($obj_type, $objects, $field, $instances, &$items) {
       if (!empty($instances[$id]['settings']['text_processing'])) {
         // Only process items with a cacheable format, the rest will be
         // handled by text_field_sanitize().
-        if (filter_format_allowcache($item['format'])) {
+        $format = $item['format'];
+        if (filter_format_allowcache($format)) {
           // TODO D7 : this code is really node-related.
           $check = is_null($object) || (isset($object->build_mode) && $object->build_mode == NODE_BUILD_PREVIEW);
-          $text = isset($item['value']) ? check_markup($item['value'], $item['format'], isset($object->language) ? $object->language : $language->language, $check, FALSE) : '';
+          $lang = isset($object->language) ? $object->language : $language->language;
+          $items[$id][$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $lang, $check, FALSE) : '';
+          if ($field['type'] == 'text_with_summary') {
+            $items[$id][$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $lang, $check, FALSE) : '';
+          }
         }
       }
       else {
-        $text = check_plain($item['value']);
-      }
-      if (isset($text)) {
-        $items[$id][$delta]['safe'] = $text;
+        $items[$id][$delta]['safe'] = check_plain($item['value']);
+        if ($field['type'] == 'text_with_summary') {
+          $items[$id][$delta]['safe_summary'] = check_plain($item['summary']);
+        }
       }
     }
   }
@@ -155,14 +208,21 @@ function text_field_sanitize($obj_type, $object, $field, $instance, &$items) {
     // from a form preview.
     if (!isset($items[$delta]['safe'])) {
       if (!empty($instance['settings']['text_processing'])) {
+        $format = $item['format'];
         // TODO D7 : this code is really node-related.
         $check = is_null($object) || (isset($object->build_mode) && $object->build_mode == NODE_BUILD_PREVIEW);
-        $text = isset($item['value']) ? check_markup($item['value'], $item['format'], isset($object->language) ? $object->language : $language->language, $check) : '';
+        $lang = isset($object->language) ? $object->language : $language->language;
+        $items[$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $lang, $check) : '';
+        if ($field['type'] == 'text_with_summary') {
+          $items[$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $lang, $check) : '';
+        }
       }
       else {
-        $text = check_plain($item['value']);
+        $item[$delta]['safe'] = check_plain($item['value']);
+        if ($field['type'] == 'text_with_summary') {
+          $item[$delta]['safe_summary'] = check_plain($item['summary']);
+        }
       }
-      $items[$delta]['safe'] = $text;
     }
   }
 }
@@ -184,21 +244,39 @@ function text_field_formatter_info() {
   return array(
     'text_default' => array(
       'label' => t('Default'),
-      'field types' => array('text', 'text_long'),
+      'field types' => array('text', 'text_long', 'text_with_summary'),
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_DEFAULT,
       ),
     ),
     'text_plain' => array(
       'label' => t('Plain text'),
-      'field types' => array('text', 'text_long'),
+      'field types' => array('text', 'text_long', 'text_with_summary'),
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_DEFAULT,
       ),
     ),
+
+    // The text_trimmed formatter displays the trimmed version of the
+    // full element of the field.  It is intended to be used with text
+    // and text_long fields.  It also works with text_with_summary
+    // fields though the text_summary_or_trimmed formatter makes more
+    // sense for that field type.
     'text_trimmed' => array(
       'label' => t('Trimmed'),
-      'field types' => array('text', 'text_long'),
+      'field types' => array('text', 'text_long', 'text_with_summary'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+
+    // The 'summary or trimmed' field formatter for text_with_summary
+    // fields displays returns the summary element of the field or, if
+    // the summary is empty, the trimmed version of the full element
+    // of the field.
+    'text_summary_or_trimmed' => array(
+      'label' => t('Summary or trimmed'),
+      'field types' => array('text_with_summary'),
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_DEFAULT,
       ),
@@ -226,7 +304,150 @@ function theme_field_formatter_text_plain($element) {
 function theme_field_formatter_text_trimmed($element) {
   $field = field_info_field($element['#field_name']);
   $instance = field_info_instance($element['#field_name'], $element['#bundle']);
-  return $instance['settings']['text_processing'] ? $element['#item']['format'] : NULL;
+  return text_summary($element['#item']['safe'], $instance['settings']['text_processing'] ? $element['#item']['format'] : NULL);
+}
+
+/**
+ * Theme function for 'summary or trimmed' field formatter for
+ * text_with_summary fields.  This formatter returns the summary
+ * element of the field or, if the summary is empty, the trimmed
+ * version of the full element of the field.
+ */
+function theme_field_formatter_text_summary_or_trimmed($element) {
+  $field = field_info_field($element['#field_name']);
+  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
+
+  if (!empty($element['#item']['safe_summary'])) {
+    return $element['#item']['safe_summary'];
+  }
+  else {
+    return text_summary($element['#item']['safe'], $instance['settings']['text_processing'] ? $element['#item']['format'] : NULL);
+  }
+}
+
+/**
+ * Generate a trimmed, formatted version of a text field value.
+ *
+ * If the end of the summary is not indicated using the <!--break--> delimiter
+ * then we generate the summary automatically, trying to end it at a sensible
+ * place such as the end of a paragraph, a line break, or the end of a
+ * sentence (in that order of preference).
+ *
+ * @param $text
+ *   The content for which a summary will be generated.
+ * @param $format
+ *   The format of the content.
+ *   If the PHP filter is present and $text contains PHP code, we do not
+ *   split it up to prevent parse errors.
+ *   If the line break filter is present then we treat newlines embedded in
+ *   $text as line breaks.
+ *   If the htmlcorrector filter is present, it will be run on the generated
+ *   summary (if different from the incoming $text).
+ * @param $size
+ *   The desired character length of the summary. If omitted, the default
+ *   value will be used. Ignored if the special delimiter is present
+ *   in $text.
+ * @return
+ *   The generated summary.
+ */
+function text_summary($text, $format = NULL, $size = NULL) {
+
+  if (!isset($size)) {
+    // What used to be called 'teaser' is now called 'summary', but
+    // the variable 'teaser_length' is preserved for backwards compatibility.
+    $size = variable_get('teaser_length', 600);
+  }
+
+  // Find where the delimiter is in the body
+  $delimiter = strpos($text, '<!--break-->');
+
+  // If the size is zero, and there is no delimiter, the entire body is the summary.
+  if ($size == 0 && $delimiter === FALSE) {
+    return $text;
+  }
+
+  // If a valid delimiter has been specified, use it to chop off the summary.
+  if ($delimiter !== FALSE) {
+    return substr($text, 0, $delimiter);
+  }
+
+  // We check for the presence of the PHP evaluator filter in the current
+  // format. If the body contains PHP code, we do not split it up to prevent
+  // parse errors.
+  if (isset($format)) {
+    $filters = filter_list_format($format);
+    if (isset($filters['php/0']) && strpos($text, '<?') !== FALSE) {
+      return $text;
+    }
+  }
+
+  // If we have a short body, the entire body is the summary.
+  if (drupal_strlen($text) <= $size) {
+    return $text;
+  }
+
+  // If the delimiter has not been specified, try to split at paragraph or
+  // sentence boundaries.
+
+  // The summary may not be longer than maximum length specified. Initial slice.
+  $summary = truncate_utf8($text, $size);
+
+  // Store the actual length of the UTF8 string -- which might not be the same
+  // as $size.
+  $max_rpos = strlen($summary);
+
+  // How much to cut off the end of the summary so that it doesn't end in the
+  // middle of a paragraph, sentence, or word.
+  // Initialize it to maximum in order to find the minimum.
+  $min_rpos = $max_rpos;
+
+  // Store the reverse of the summary. We use strpos on the reversed needle and
+  // haystack for speed and convenience.
+  $reversed = strrev($summary);
+
+  // Build an array of arrays of break points grouped by preference.
+  $break_points = array();
+
+  // A paragraph near the end of sliced summary is most preferable.
+  $break_points[] = array('</p>' => 0);
+
+  // If no complete paragraph then treat line breaks as paragraphs.
+  $line_breaks = array('<br />' => 6, '<br>' => 4);
+  // Newline only indicates a line break if line break converter
+  // filter is present.
+  if (isset($filters['filter/1'])) {
+    $line_breaks["\n"] = 1;
+  }
+  $break_points[] = $line_breaks;
+
+  // If the first paragraph is too long, split at the end of a sentence.
+  $break_points[] = array('. ' => 1, '! ' => 1, '? ' => 1, '。' => 0, '؟ ' => 1);
+
+  // Iterate over the groups of break points until a break point is found.
+  foreach ($break_points as $points) {
+    // Look for each break point, starting at the end of the summary.
+    foreach ($points as $point => $offset) {
+      // The summary is already reversed, but the break point isn't.
+      $rpos = strpos($reversed, strrev($point));
+      if ($rpos !== FALSE) {
+        $min_rpos = min($rpos + $offset, $min_rpos);
+      }
+    }
+
+    // If a break point was found in this group, slice and stop searching.
+    if ($min_rpos !== $max_rpos) {
+      // Don't slice with length 0. Length must be <0 to slice from RHS.
+      $summary = ($min_rpos === 0) ? $summary : substr($summary, 0, 0 - $min_rpos);
+      break;
+    }
+  }
+
+  // If the htmlcorrector filter is present, apply it to the generated summary.
+  if (isset($filters['filter/3'])) {
+    $summary = _filter_htmlcorrector($summary);
+  }
+
+  return $summary;
 }
 
 /**
@@ -260,6 +481,15 @@ function text_field_widget_info() {
         'default value' => FIELD_BEHAVIOR_DEFAULT,
       ),
     ),
+    'text_textarea_with_summary' => array(
+      'label' => t('Text area with a summary'),
+      'field types' => array('text_with_summary'),
+      'settings' => array('rows' => 20, 'summary_rows' => 5),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+        'default value' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
   );
 }
 
@@ -281,14 +511,23 @@ function text_elements() {
       '#input' => TRUE,
       '#columns' => array('value'), '#delta' => 0,
       '#process' => array('text_textfield_elements_process'),
+      '#theme_wrapper' => 'text_textfield',
       '#autocomplete_path' => FALSE,
-      ),
+    ),
     'text_textarea' => array(
       '#input' => TRUE,
       '#columns' => array('value', 'format'), '#delta' => 0,
       '#process' => array('text_textarea_elements_process'),
+      '#theme_wrapper' => 'text_textarea',
       '#filter_value' => FILTER_FORMAT_DEFAULT,
-      ),
+    ),
+    'text_textarea_with_summary' => array(
+      '#input' => TRUE,
+      '#columns' => array('value', 'format', 'summary'), '#delta' => 0,
+      '#process' => array('text_textarea_with_summary_process'),
+      '#theme_wrapper' => 'text_textarea_with_summary',
+      '#filter_value' => FILTER_FORMAT_DEFAULT,
+    ),
   );
 }
 
@@ -329,6 +568,10 @@ function text_field_widget(&$form, &$form_state, $field, $instance, $items, $del
     '#type' => $instance['widget']['type'],
     '#default_value' => isset($items[$delta]) ? $items[$delta] : '',
   );
+  if (!empty($instance['settings']['text_processing'])) {
+    $element['#value_callback'] = 'text_field_widget_formatted_text_value';
+  }
+
   return $element;
 }
 
@@ -336,7 +579,17 @@ function text_field_widget(&$form, &$form_state, $field, $instance, $items, $del
  * Implement hook_field_widget_error().
  */
 function text_field_widget_error($element, $error) {
-  form_error($element['value'], $error['message']);
+  switch ($error['error']) {
+    case 'text_summary_max_length':
+      $error_element = $element[$element['#columns'][1]];
+      break;
+
+    default:
+      $error_element = $element[$element['#columns'][0]];
+      break;
+  }
+
+  form_error($error_element, $error['message']);
 }
 
 /**
@@ -364,24 +617,17 @@ function text_textfield_elements_process($element, $form_state, $form) {
     '#autocomplete_path' => $element['#autocomplete_path'],
     '#size' => $instance['widget']['settings']['size'],
     '#attributes' => array('class' => 'text'),
-    // The following values were set by the field module and need
-    // to be passed down to the nested element.
     '#title' => $element['#title'],
     '#description' => $element['#description'],
     '#required' => $element['#required'],
-    '#field_name' => $element['#field_name'],
-    '#bundle' => $element['#bundle'],
-    '#delta' => $element['#delta'],
-    '#columns' => $element['#columns'],
   );
 
   $element[$field_key]['#maxlength'] = !empty($field['settings']['max_length']) ? $field['settings']['max_length'] : NULL;
 
   if (!empty($instance['settings']['text_processing'])) {
-    $filter_key = $element['#columns'][1];
+    $filter_key  = (count($element['#columns']) == 2) ? $element['#columns'][1] : 'format';
     $format = isset($element['#value'][$filter_key]) ? $element['#value'][$filter_key] : FILTER_FORMAT_DEFAULT;
-    $parents = array_merge($element['#parents'] , array($filter_key));
-    $element[$filter_key] = filter_form($format, 1, $parents);
+    $element[$field_key]['#text_format'] = $format;
   }
 
   return $element;
@@ -400,30 +646,92 @@ function text_textarea_elements_process($element, $form_state, $form) {
   $instance = $form['#fields'][$element['#field_name']]['instance'];
   $field_key = $element['#columns'][0];
   $delta = $element['#delta'];
+
   $element[$field_key] = array(
     '#type' => 'textarea',
     '#default_value' => isset($element['#value'][$field_key]) ? $element['#value'][$field_key] : NULL,
     '#rows' => $instance['widget']['settings']['rows'],
     '#weight' => 0,
-    // The following values were set by the field module and need
-    // to be passed down to the nested element.
     '#title' => $element['#title'],
     '#description' => $element['#description'],
     '#required' => $element['#required'],
-    '#field_name' => $element['#field_name'],
-    '#bundle' => $element['#bundle'],
-    '#delta' => $element['#delta'],
-    '#columns' => $element['#columns'],
   );
 
   if (!empty($instance['settings']['text_processing'])) {
     $filter_key = (count($element['#columns']) == 2) ? $element['#columns'][1] : 'format';
     $format = isset($element['#value'][$filter_key]) ? $element['#value'][$filter_key] : FILTER_FORMAT_DEFAULT;
-    $parents = array_merge($element['#parents'] , array($filter_key));
-    $element[$filter_key] = filter_form($format, 1, $parents);
+    $element[$field_key]['#text_format'] = $format;
   }
 
   return $element;
+}
+
+/**
+ * Process an individual element.
+ *
+ * Build the form element. When creating a form using FAPI #process,
+ * note that $element['#value'] is already set.
+ *
+ * The $field and $instance arrays are in $form['#fields'][$element['#field_name']].
+ */
+function text_textarea_with_summary_process($element, $form_state, $form) {
+  $field = $form['#fields'][$element['#field_name']]['field'];
+  $instance = $form['#fields'][$element['#field_name']]['instance'];
+  $delta = $element['#delta'];
+
+  $field_key = $element['#columns'][1];
+  $display = !empty($element['#value'][$field_key]) || !empty($instance['settings']['display_summary']);
+  $element[$field_key] = array(
+    '#title' => t('Summary'),
+    '#type' => $display ? 'textarea' : 'value',
+    '#default_value' => isset($element['#value'][$field_key]) ? $element['#value'][$field_key] : NULL,
+    '#rows' => $instance['widget']['settings']['summary_rows'],
+    '#weight' => 0,
+    '#title' => t('Summary'),
+    '#description' => t('Leave blank to use trimmed value of full text as the summary.'),
+    '#required' => $element['#required'],
+    '#display' => $display,
+  );
+
+  $field_key = $element['#columns'][0];
+  $element[$field_key] = array(
+    '#type' => 'textarea',
+    '#default_value' => isset($element['#value'][$field_key]) ? $element['#value'][$field_key] : NULL,
+    '#rows' => $instance['widget']['settings']['rows'],
+    '#weight' => 1,
+    '#title' => $display ? t('Full text') : $element['#title'],
+    '#description' => $element['#description'],
+    '#required' => $element['#required'],
+    '#required' => $instance['required'],
+  );
+
+  if (!empty($instance['settings']['text_processing'])) {
+    $filter_key  = (count($element['#columns']) == 2) ? $element['#columns'][1] : 'format';
+    $format = isset($element['#value'][$filter_key]) ? $element['#value'][$filter_key] : FILTER_FORMAT_DEFAULT;
+    $element[$field_key]['#text_format'] = $format;
+  }
+
+  return $element;
+}
+
+/**
+ * Helper function to determine the value for a formatted text widget.
+ *
+ * '#text_format' puts the format in '[column 0]_format' in incoming values,
+ * while we need it in '[column 1]'.
+ */
+function text_field_widget_formatted_text_value($form, $edit = FALSE) {
+  if ($edit !== FALSE) {
+    $field_key = $form['#columns'][0];
+    $filter_key = (count($form['#columns']) == 2) ? $form['#columns'][1] : 'format';
+    $default_key = $field_key . '_format';
+    // The format selector uses #access = FALSE if only one format is
+    // available. In this case, we don't receive its value, and need to
+    // manually set it.
+    $edit['format'] = !empty($edit[$default_key]) ? $edit[$default_key] : filter_resolve_format(FILTER_FORMAT_DEFAULT);
+    unset($edit[$default_key]);
+    return $edit;
+  }
 }
 
 /**
@@ -443,4 +751,22 @@ function theme_text_textfield($element) {
 
 function theme_text_textarea($element) {
   return $element['#children'];
+}
+
+function theme_text_textarea_with_summary($element) {
+  // If displaying both a textarea and a summary field, wrap them
+  // in a fieldset to make it clear they belong together.
+  $field_key = $element['#columns'][1];
+  if (!empty($element[$field_key]['#display'])) {
+    $fieldset = array(
+      '#title' => $element['#title'],
+      '#value' => $element['#children'],
+      '#attributes' => array('class' => 'text-textarea'),
+      '#id' => str_replace('_', '-', $element['#field_name']) . '-summary-wrapper',
+    );
+    return theme('fieldset', $fieldset);
+  }
+  else {
+    return $element['#children'];
+  }
 }

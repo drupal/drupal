@@ -518,7 +518,7 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
 
     $edit = array(
       'title' => $this->randomName(10),
-      'body' => $this->randomName(100)
+      'body' => array(array('value' => $this->randomName(100))),
     );
     $node = $this->drupalCreateNode($edit);
 
@@ -579,7 +579,7 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
 
     $edit = array(
       'title' => $this->randomName(10),
-      'body' => $this->randomName(100)
+      'body' => array(array('value' => $this->randomName(100))),
     );
     $node = $this->drupalCreateNode($edit);
 
@@ -705,7 +705,7 @@ class PageTitleFiltering extends DrupalWebTestCase {
     // Generate node content.
     $edit = array(
      'title' => '!SimpleTest! ' . $title . $this->randomName(20),
-     'body' => '!SimpleTest! test body' . $this->randomName(200),
+     'body[0][value]' => '!SimpleTest! test body' . $this->randomName(200),
     );
     // Create the node with HTML in the title.
     $this->drupalPost('node/add/page', $edit, t('Save'));

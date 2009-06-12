@@ -213,18 +213,6 @@ function node_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'body' => array(
-        'description' => 'The body of this version.',
-        'type' => 'text',
-        'not null' => TRUE,
-        'size' => 'big',
-      ),
-      'teaser' => array(
-        'description' => 'The teaser of this version.',
-        'type' => 'text',
-        'not null' => TRUE,
-        'size' => 'big',
-      ),
       'log' => array(
         'description' => 'The log entry explaining the changes in this version.',
         'type' => 'text',
@@ -233,12 +221,6 @@ function node_schema() {
       ),
       'timestamp' => array(
         'description' => 'A Unix timestamp indicating when this version was created.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'format' => array(
-        'description' => "The text format used by this version's body.",
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
@@ -304,7 +286,7 @@ function node_schema() {
         'default' => '',
       ),
       'has_body' => array(
-        'description' => 'Boolean indicating whether this type uses the {node_revision}.body field.',
+        'description' => 'Boolean indicating whether this type has the body field attached.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -416,6 +398,7 @@ function node_update_7004() {
 
   // Map old preview setting to new values order.
   $original_preview ? $original_preview = 2 : $original_preview = 1;
+  $node_types_clear();
   $type_list = node_type_get_types();
 
   // Apply original settings to all types.
@@ -428,6 +411,119 @@ function node_update_7004() {
 
   return array();
 }
+
+/**
+ * Convert body and teaser from node properties to fields.
+ */
+function node_update_7005(&$context) {
+  $ret = array('#finished' => 0);
+
+  // Get node type info for every invocation.
+  node_type_clear();
+  $node_types = node_type_get_types();
+  $body_types = array();
+  foreach ($node_types as $type => $info) {
+    if ($info->has_body) {
+      $body_types[] = $type;
+    }
+  }
+
+  if (!isset($context['total'])) {
+    // Initial invocation.
+
+    // Re-save node types to create body field instances.
+    foreach ($node_types as $type => $info) {
+      if ($info->has_body) {
+        node_type_save($info);
+      }
+    }
+
+    // Initialize state for future calls.
+    $context['last'] = 0;
+    $context['count'] = 0;
+
+    $query = db_select('node', 'n');
+    $query->join('node_revision', 'nr', 'n.vid = nr.vid');
+    $query->condition('n.type', $body_types, 'IN');
+    $context['total'] = $query->countQuery()->execute()->fetchField();
+  }
+  else {
+    // Subsequent invocations.
+
+    $found = FALSE;
+    if ($context['total']) {
+      // Operate on every revision of every node (whee!), in batches.
+      $batch_size = 50;
+      $query = db_select('node', 'n');
+      $nr = $query->innerJoin('node_revision', 'nr', 'n.vid = nr.vid');
+      $revisions = $query
+        ->fields('n', array('type'))
+        ->fields($nr)
+        ->condition('nr.vid', $context['last'], '>')
+        ->condition('n.type', $body_types, 'IN')
+        ->orderBy('nr.vid', 'ASC')
+        ->execute();
+
+      // Load each reversion of each node, set up 'body'
+      // appropriately, and save the node's field data.  Note that
+      // node_load() will not return the body or teaser values from
+      // {node_revision} because those columns have been removed from the
+      // schema structure in memory (but not yet from the database),
+      // so we get the values from the explicit query of the table
+      // instead.
+      foreach ($revisions as $revision) {
+        $found = TRUE;
+
+        if ($node_types[$revision->type]->has_body) {
+          $node = (object) array(
+            'nid' => $revision->nid,
+            'vid' => $revision->vid,
+            'type' => $revision->type,
+          );
+          if (!empty($revision->teaser) && $revision->teaser != text_summary($revision->body)) {
+            $node->body[0]['summary'] = $revision->teaser;
+          }
+          // Do this after text_summary() above.
+          $break = '<!--break-->';
+          if (substr($revision->body, 0, strlen($break)) == $break) {
+            $revision->body = substr($revision->body, strlen($break));
+          }
+          $node->body[0]['value'] = $revision->body;
+          $node->body[0]['format'] = $revision->format;
+          // This is a core update and no contrib modules are enabled yet, so
+          // we can assume default field storage for a faster update.
+          field_sql_storage_field_storage_write('node', $node, FIELD_STORAGE_INSERT, array());
+        }
+
+        $context['last'] = $revision->vid;
+        $context['count'] += 1;
+
+        if (--$batch_size == 0) {
+          break;
+        }
+      }
+
+      $ret['#finished'] = min(0.99, $context['count'] / $context['total']);
+    }
+
+    if (!$found) {
+      // All nodes are processed.
+      $ret[] = array('success' => TRUE, 'query' => "{$context['total']} node body and teaser properties migrated to the 'body' field.");
+
+      // Remove the now-obsolete body info from node_revision.
+      db_drop_field($ret, 'node_revision', 'body');
+      db_drop_field($ret, 'node_revision', 'teaser');
+      db_drop_field($ret, 'node_revision', 'format');
+
+      // We're done.
+      $ret['#finished'] = 1;
+    }
+  }
+
+  return $ret;
+}
+
+
 
 /**
  * @} End of "defgroup updates-6.x-to-7.x"

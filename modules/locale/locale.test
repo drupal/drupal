@@ -1395,7 +1395,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       'type' => 'page',
       'title' => $node_title,
-      'body' => $node_body,
+      'body' => array(array('value' => $node_body)),
       'language' => $langcode,
     );
     $node = $this->drupalCreateNode($edit);

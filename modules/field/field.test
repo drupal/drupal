@@ -930,10 +930,9 @@ class FieldInfoTestCase extends DrupalWebTestCase {
       $this->assertEqual($info[$w_key]['module'], 'field_test',  t("Widget type field_test module appears"));
     }
 
-    // Verify that no fields or instances exist
-    $fields = field_info_fields();
+    // Verify that no unexpected instances exist.
+    $core_fields = field_info_fields();
     $instances = field_info_instances(FIELD_TEST_BUNDLE);
-    $this->assertTrue(empty($fields), t('With no fields, info fields is empty.'));
     $this->assertTrue(empty($instances), t('With no instances, info bundles is empty.'));
 
     // Create a field, verify it shows up.
@@ -943,7 +942,7 @@ class FieldInfoTestCase extends DrupalWebTestCase {
     );
     field_create_field($field);
     $fields = field_info_fields();
-    $this->assertEqual(count($fields), 1, t('One field exists'));
+    $this->assertEqual(count($fields), count($core_fields) + 1, t('One new field exists'));
     $this->assertEqual($fields[$field['field_name']]['field_name'], $field['field_name'], t('info fields contains field name'));
     $this->assertEqual($fields[$field['field_name']]['type'], $field['type'], t('info fields contains field type'));
     $this->assertEqual($fields[$field['field_name']]['module'], 'field_test', t('info fields contains field module'));

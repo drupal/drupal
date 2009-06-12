@@ -73,12 +73,7 @@ function blog_help($path, $arg) {
  * Implement hook_form().
  */
 function blog_form($node, $form_state) {
-  global $nid;
-  $type = node_type_get_type($node);
-
-  $form['title'] = array('#type' => 'textfield', '#title' => check_plain($type->title_label), '#required' => TRUE, '#default_value' => !empty($node->title) ? $node->title : NULL, '#weight' => -5);
-  $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
-  return $form;
+  return node_content_form($node, $form_state);
 }
 
 /**
@@ -89,8 +84,7 @@ function blog_view($node, $teaser) {
     // Breadcrumb navigation.
     drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('Blogs'), 'blog'), l(t("!name's blog", array('!name' => $node->name)), 'blog/' . $node->uid)));
   }
-
-  return node_prepare($node, $teaser);
+  return $node;
 }
 
 /**

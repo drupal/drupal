@@ -32,7 +32,11 @@ form .field-add-more-submit {
   margin: .5em 0 0;
 }
 
-.form-item .number {
+form .form-item .text {
+  display: inline;
+  width: auto;
+}
+form .form-item .number {
   display: inline;
   width: auto;
 }

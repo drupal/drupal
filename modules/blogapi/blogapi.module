@@ -213,7 +213,7 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
   }
   else {
     $edit['title'] = blogapi_blogger_title($content);
-    $edit['body'] = $content;
+    $edit['body'][0]['value'] = $content;
   }
 
   if (!node_access('create', $edit['type'])) {
@@ -274,12 +274,12 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
   // Check for bloggerAPI vs. metaWeblogAPI.
   if (is_array($content)) {
     $node->title = $content['title'];
-    $node->body = $content['description'];
+    $node->body[0]['value'] = $content['description'];
     _blogapi_mt_extra($node, $content);
   }
   else {
     $node->title = blogapi_blogger_title($content);
-    $node->body = $content;
+    $node->body[0]['value'] = $content;
   }
 
   module_invoke_all('node_blogapi_edit', $node);
@@ -379,7 +379,7 @@ function blogapi_blogger_get_recent_posts($appkey, $blogid, $username, $password
   }
 
   if ($bodies) {
-    $result = db_query_range("SELECT n.nid, n.title, r.body, r.format, n.comment, n.created, u.name FROM {node} n, {node_revision} r, {users} u WHERE n.uid = u.uid AND n.vid = r.vid AND n.type = :type AND n.uid = :uid ORDER BY n.created DESC",  array(
+    $result = db_query_range("SELECT n.nid, n.title, n.comment, n.created, u.name FROM {node} n, {node_revision} r, {users} u WHERE n.uid = u.uid AND n.vid = r.vid AND n.type = :type AND n.uid = :uid ORDER BY n.created DESC",  array(
       ':type' => $blogid,
       ':uid' => $user->uid
     ), 0, $number_of_posts);
@@ -892,14 +892,14 @@ function _blogapi_mt_extra($node, $struct) {
 
   // Merge the 3 body sections (description, mt_excerpt, mt_text_more) into one body.
   if ($struct['mt_excerpt']) {
-    $node->body = $struct['mt_excerpt'] . '<!--break-->' . $node->body;
+    $node->body[0]['value'] = $struct['mt_excerpt'] . '<!--break-->' . $node->body[0]['value'];
   }
   if ($struct['mt_text_more']) {
-    $node->body = $node->body . '<!--extended-->' . $struct['mt_text_more'];
+    $node->body[0]['value'] = $node->body[0]['value'] . '<!--extended-->' . $struct['mt_text_more'];
   }
 
   if ($struct['mt_convert_breaks']) {
-    $node->format = $struct['mt_convert_breaks'];
+    $node->body[0]['format'] = $struct['mt_convert_breaks'];
   }
 
   if ($struct['dateCreated']) {
@@ -922,17 +922,19 @@ function _blogapi_get_post($node, $bodies = TRUE) {
   );
 
   if ($bodies) {
+    $body = $node->body[0]['value'];
+    $format = $node->body[0]['format'];
     if ($node->comment == 1) {
       $comment = 2;
     }
     elseif ($node->comment == 2) {
       $comment = 1;
     }
-    $xmlrpcval['content'] = "<title>$node->title</title>$node->body";
-    $xmlrpcval['description'] = $node->body;
+    $xmlrpcval['content'] = "<title>$node->title</title>$body";
+    $xmlrpcval['description'] = $body;
     // Add MT specific fields
     $xmlrpcval['mt_allow_comments'] = (int) $comment;
-    $xmlrpcval['mt_convert_breaks'] = $node->format;
+    $xmlrpcval['mt_convert_breaks'] = $format;
   }
 
   return $xmlrpcval;

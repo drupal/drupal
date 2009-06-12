@@ -1037,7 +1037,7 @@ function book_export_traverse($tree, $visit_func) {
 function book_node_export($node, $children = '') {
   $node->build_mode = NODE_BUILD_PRINT;
   $node = node_build_content($node, FALSE, FALSE);
-  $node->body = drupal_render($node->content);
+  $node->rendered = drupal_render($node->content);
 
   return theme('book_node_export_html', $node, $children);
 }
@@ -1054,7 +1054,7 @@ function book_node_export($node, $children = '') {
 function template_preprocess_book_node_export_html(&$variables) {
   $variables['depth'] = $variables['node']->book['depth'];
   $variables['title'] = check_plain($variables['node']->title);
-  $variables['content'] = $variables['node']->body;
+  $variables['content'] = $variables['node']->rendered;
 }
 
 /**

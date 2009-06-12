@@ -291,186 +291,6 @@ function node_mark($nid, $timestamp) {
 }
 
 /**
- * See if the user used JS to submit a teaser.
- */
-function node_teaser_js(&$form, &$form_state) {
-  if (isset($form_state['input']['teaser_js'])) {
-    // Glue the teaser to the body.
-    if (trim($form_state['values']['teaser_js'])) {
-      // Space the teaser from the body
-      $body = trim($form_state['values']['teaser_js']) . "\r\n<!--break-->\r\n" . trim($form_state['values']['body']);
-    }
-    else {
-      // Empty teaser, no spaces.
-      $body = '<!--break-->' . $form_state['values']['body'];
-    }
-    // Pass updated body value on to preview/submit form processing.
-    form_set_value($form['body'], $body, $form_state);
-    // Pass updated body value back onto form for those cases
-    // in which the form is redisplayed.
-    $form['body']['#value'] = $body;
-  }
-  return $form;
-}
-
-/**
- * Ensure value of "teaser_include" checkbox is consistent with other form data.
- *
- * This handles two situations in which an unchecked checkbox is rejected:
- *
- *   1. The user defines a teaser (summary) but it is empty;
- *   2. The user does not define a teaser (summary) (in this case an
- *      unchecked checkbox would cause the body to be empty, or missing
- *      the auto-generated teaser).
- *
- * If JavaScript is active then it is used to force the checkbox to be
- * checked when hidden, and so the second case will not arise.
- *
- * In either case a warning message is output.
- */
-function node_teaser_include_verify(&$form, &$form_state) {
-  $message = '';
-
-  // $form_state['input'] is set only when the form is built for preview/submit.
-  if (isset($form_state['input']['body']) && isset($form_state['values']['teaser_include']) && !$form_state['values']['teaser_include']) {
-    // "teaser_include" checkbox is present and unchecked.
-    if (strpos($form_state['values']['body'], '<!--break-->') === 0) {
-      // Teaser is empty string.
-      $message = t('You specified that the summary should not be shown when this post is displayed in full view. This setting is ignored when the summary is empty.');
-    }
-    elseif (strpos($form_state['values']['body'], '<!--break-->') === FALSE) {
-      // Teaser delimiter is not present in the body.
-      $message = t('You specified that the summary should not be shown when this post is displayed in full view. This setting has been ignored since you have not defined a summary for the post. (To define a summary, insert the delimiter "&lt;!--break--&gt;" (without the quotes) in the Body of the post to indicate the end of the summary and the start of the main content.)');
-    }
-
-    if (!empty($message)) {
-      drupal_set_message($message, 'warning');
-      // Pass new checkbox value on to preview/submit form processing.
-      form_set_value($form['teaser_include'], 1, $form_state);
-      // Pass new checkbox value back onto form for those cases
-      // in which form is redisplayed.
-      $form['teaser_include']['#value'] = 1;
-    }
-  }
-
-  return $form;
-}
-
-/**
- * Generate a teaser for a node body.
- *
- * If the end of the teaser is not indicated using the <!--break--> delimiter
- * then we generate the teaser automatically, trying to end it at a sensible
- * place such as the end of a paragraph, a line break, or the end of a
- * sentence (in that order of preference).
- *
- * @param $body
- *   The content for which a teaser will be generated.
- * @param $format
- *   The format of the content. If the content contains PHP code, we do not
- *   split it up to prevent parse errors. If the line break filter is present
- *   then we treat newlines embedded in $body as line breaks.
- * @param $size
- *   The desired character length of the teaser. If omitted, the default
- *   value will be used. Ignored if the special delimiter is present
- *   in $body.
- * @return
- *   The generated teaser.
- */
-function node_teaser($body, $format = NULL, $size = NULL) {
-
-  if (!isset($size)) {
-    $size = variable_get('teaser_length', 600);
-  }
-
-  // Find where the delimiter is in the body
-  $delimiter = strpos($body, '<!--break-->');
-
-  // If the size is zero, and there is no delimiter, the entire body is the teaser.
-  if ($size == 0 && $delimiter === FALSE) {
-    return $body;
-  }
-
-  // If a valid delimiter has been specified, use it to chop off the teaser.
-  if ($delimiter !== FALSE) {
-    return substr($body, 0, $delimiter);
-  }
-
-  // We check for the presence of the PHP evaluator filter in the current
-  // format. If the body contains PHP code, we do not split it up to prevent
-  // parse errors.
-  if (isset($format)) {
-    $filters = filter_list_format($format);
-    if (isset($filters['php/0']) && strpos($body, '<?') !== FALSE) {
-      return $body;
-    }
-  }
-
-  // If we have a short body, the entire body is the teaser.
-  if (drupal_strlen($body) <= $size) {
-    return $body;
-  }
-
-  // If the delimiter has not been specified, try to split at paragraph or
-  // sentence boundaries.
-
-  // The teaser may not be longer than maximum length specified. Initial slice.
-  $teaser = truncate_utf8($body, $size);
-
-  // Store the actual length of the UTF8 string -- which might not be the same
-  // as $size.
-  $max_rpos = strlen($teaser);
-
-  // How much to cut off the end of the teaser so that it doesn't end in the
-  // middle of a paragraph, sentence, or word.
-  // Initialize it to maximum in order to find the minimum.
-  $min_rpos = $max_rpos;
-
-  // Store the reverse of the teaser. We use strpos on the reversed needle and
-  // haystack for speed and convenience.
-  $reversed = strrev($teaser);
-
-  // Build an array of arrays of break points grouped by preference.
-  $break_points = array();
-
-  // A paragraph near the end of sliced teaser is most preferable.
-  $break_points[] = array('</p>' => 0);
-
-  // If no complete paragraph then treat line breaks as paragraphs.
-  $line_breaks = array('<br />' => 6, '<br>' => 4);
-  // Newline only indicates a line break if line break converter
-  // filter is present.
-  if (isset($filters['filter/1'])) {
-    $line_breaks["\n"] = 1;
-  }
-  $break_points[] = $line_breaks;
-
-  // If the first paragraph is too long, split at the end of a sentence.
-  $break_points[] = array('. ' => 1, '! ' => 1, '? ' => 1, '。' => 0, '؟ ' => 1);
-
-  // Iterate over the groups of break points until a break point is found.
-  foreach ($break_points as $points) {
-    // Look for each break point, starting at the end of the teaser.
-    foreach ($points as $point => $offset) {
-      // The teaser is already reversed, but the break point isn't.
-      $rpos = strpos($reversed, strrev($point));
-      if ($rpos !== FALSE) {
-        $min_rpos = min($rpos + $offset, $min_rpos);
-      }
-    }
-
-    // If a break point was found in this group, slice and return the teaser.
-    if ($min_rpos !== $max_rpos) {
-      // Don't slice with length 0. Length must be <0 to slice from RHS.
-      return ($min_rpos === 0) ? $teaser : substr($teaser, 0, 0 - $min_rpos);
-    }
-  }
-
-  // If a break point was not found, still return a teaser.
-  return $teaser;
-}
-
-/**
  * Extract the type name.
  *
  * @param $node
@@ -632,6 +452,7 @@ function node_type_save($info) {
     if (!empty($type->old_type) && $type->old_type != $type->type) {
       field_attach_rename_bundle($type->old_type, $type->type);
     }
+    node_configure_fields($type);
     module_invoke_all('node_type', 'update', $type);
     return SAVED_UPDATED;
   }
@@ -642,10 +463,71 @@ function node_type_save($info) {
       ->execute();
 
     field_attach_create_bundle($type->type);
-
+    node_configure_fields($type);
     module_invoke_all('node_type', 'insert', $type);
     return SAVED_NEW;
   }
+}
+
+/**
+ * Manage the field(s) for a node type.
+ *
+ * Currently, the node module manages a single Field API field,
+ * 'body'.  If $type->has_body is true, this function ensures the
+ * 'body' field exists and creates an instance of it for the bundle
+ * $type->type (e.g. 'page', 'story', ...).  If $type->has_body is
+ * false, this function removes the instance (if it exists) for the
+ * 'body' field on $type->type.
+ */
+function node_configure_fields($type) {
+   // Add or remove the body field, as needed.
+  $field = field_info_field('body');
+  $instance = field_info_instance('body', $type->type);
+  if ($type->has_body) {
+    if (empty($field)) {
+      $field = array(
+        'field_name' => 'body',
+        'type' => 'text_with_summary',
+      );
+      $field = field_create_field($field);
+    }
+    if (empty($instance)) {
+      $instance = array(
+        'field_name' => 'body',
+        'bundle' => $type->type,
+        'label' => $type->body_label,
+        'widget_type' => 'text_textarea_with_summary',
+        'settings' => array('display_summary' => TRUE),
+
+        // With no UI in core, we have to define default
+        // formatters for the teaser and full view.
+        // This may change if the method of handling displays
+        // is changed or if a UI gets into core.
+        'display' => array(
+          'full' => array(
+            'label' => 'hidden',
+            'type' => 'text_default',
+            'exclude' => 0,
+            ),
+          'teaser' => array(
+            'label' => 'hidden',
+            'type' => 'text_summary_or_trimmed',
+            'exclude' => 0,
+            ),
+          ),
+        );
+      field_create_instance($instance);
+    }
+    else {
+      $instance['label'] = $type->body_label;
+      $instance['settings']['display_summary'] = TRUE;
+      field_update_instance($instance);
+    }
+  }
+  elseif (!empty($instance)) {
+    field_delete_instance($instance);
+  }
+
 }
 
 /**
@@ -1004,7 +886,8 @@ function node_validate($node, $form = array()) {
 
   // Make sure the body has the minimum number of words.
   // TODO : use a better word counting algorithm that will work in other languages
-  if (!empty($type->min_word_count) && isset($node->body) && count(explode(' ', $node->body)) < $type->min_word_count) {
+  if (!empty($type->min_word_count) && isset($node->body[0]['value']) && count(explode(' ', $node->body[0]['value'])) < $type->min_word_count) {
+    // TODO: Use Field API to set this error.
     form_set_error('body', t('The body of your @type is too short. You need at least %words words.', array('%words' => $type->min_word_count, '@type' => $type->name)));
   }
 
@@ -1040,25 +923,6 @@ function node_submit($node) {
 
   // Convert the node to an object, if necessary.
   $node = (object)$node;
-
-  // Generate the teaser, but only if it hasn't been set (e.g. by a
-  // module-provided 'teaser' form item).
-  if (!isset($node->teaser)) {
-    if (isset($node->body)) {
-      $node->format = (!empty($node->body_format) ? $node->body_format : FILTER_FORMAT_DEFAULT);
-      $node->teaser = node_teaser($node->body, isset($node->format) ? $node->format : NULL, variable_get('teaser_length_' . $node->type, 600));
-      // Chop off the teaser from the body if needed. The teaser_include
-      // property might not be set (eg. in Blog API postings), so only act on
-      // it, if it was set with a given value.
-      if (isset($node->teaser_include) && !$node->teaser_include && $node->teaser == substr($node->body, 0, strlen($node->teaser))) {
-        $node->body = substr($node->body, strlen($node->teaser));
-      }
-    }
-    else {
-      $node->teaser = '';
-      $node->format = 0;
-    }
-  }
 
   if (user_access('administer nodes')) {
     // Populate the "authored by" field.
@@ -1104,16 +968,6 @@ function node_save($node) {
     // log so $node->log will be unset at this point.
     if (!isset($node->log)) {
       $node->log = '';
-    }
-
-    // For the same reasons, make sure we have $node->teaser and
-    // $node->body. We should consider making these fields nullable
-    // in a future version since node types are not required to use them.
-    if (!isset($node->teaser)) {
-      $node->teaser = '';
-    }
-    if (!isset($node->body)) {
-      $node->body = '';
     }
   }
   elseif (!empty($node->revision)) {
@@ -1274,30 +1128,6 @@ function node_build($node, $teaser = FALSE) {
 }
 
 /**
- * Apply filters and build the node's standard elements.
- */
-function node_prepare($node, $teaser = FALSE) {
-  // First we'll overwrite the existing node teaser and body with
-  // the filtered copies! Then, we'll stick those into the content
-  // array and set the read more flag if appropriate.
-  $node->readmore = (strlen($node->teaser) < strlen($node->body));
-
-  if ($teaser == FALSE) {
-    $node->body = check_markup($node->body, $node->format, $node->language, FALSE);
-  }
-  else {
-    $node->teaser = check_markup($node->teaser, $node->format, $node->language, FALSE);
-  }
-
-  $node->content['body'] = array(
-    '#markup' => $teaser ? $node->teaser : $node->body,
-    '#weight' => 0,
-  );
-
-  return $node;
-}
-
-/**
  * Builds a structured array representing the node's content.
  *
  * The content built for the node will vary depending on the $node->build_mode
@@ -1322,29 +1152,40 @@ function node_prepare($node, $teaser = FALSE) {
  *
  * @return
  *   An structured array containing the individual elements
- *   of the node's body.
+ *   of the node's content.
  */
 function node_build_content($node, $teaser = FALSE) {
-
   // The build mode identifies the target for which the node is built.
   if (!isset($node->build_mode)) {
     $node->build_mode = NODE_BUILD_NORMAL;
   }
-
-  // Remove the delimiter (if any) that separates the teaser from the body.
-  $node->body = isset($node->body) ? str_replace('<!--break-->', '', $node->body) : '';
 
   // The 'view' hook can be implemented to overwrite the default function
   // to display nodes.
   if (node_hook($node, 'view')) {
     $node = node_invoke($node, 'view', $teaser);
   }
-  else {
-    $node = node_prepare($node, $teaser);
-  }
 
   // Build fields content.
+  if (empty($node->content)) {
+    $node->content = array();
+  };
   $node->content += field_attach_view('node', $node, $teaser);
+
+  // Always display a read more link on teasers because we have no way
+  // to know when a teaser view is different than a full view.
+  $links = array();
+  if ($teaser) {
+    $links['node_readmore'] = array(
+      'title' => t('Read more'),
+      'href' => 'node/' . $node->nid,
+      'attributes' => array('rel' => 'tag', 'title' => strip_tags($node->title))
+    );
+  }
+  $node->content['links']['node'] = array(
+    '#type' => 'node_links',
+    '#value' => $links
+  );
 
   // Allow modules to make their own additions to the node.
   module_invoke_all('node_view', $node, $teaser);
@@ -1649,16 +1490,16 @@ function node_search($op = 'search', $keys = NULL) {
       // Load results.
       $results = array();
       foreach ($find as $item) {
-        // Build the node body.
+        // Render the node.
         $node = node_load($item->sid);
         $node->build_mode = NODE_BUILD_SEARCH_RESULT;
         $node = node_build_content($node, FALSE, FALSE);
-        $node->body = drupal_render($node->content);
+        $node->rendered = drupal_render($node->content);
 
         // Fetch comments for snippet.
-        $node->body .= module_invoke('comment', 'node_update_index', $node);
+        $node->rendered .= module_invoke('comment', 'node_update_index', $node);
         // Fetch terms for snippet.
-        $node->body .= module_invoke('taxonomy', 'node_update_index', $node);
+        $node->rendered .= module_invoke('taxonomy', 'node_update_index', $node);
 
         $extra = module_invoke_all('node_search_result', $node);
 
@@ -1671,7 +1512,7 @@ function node_search($op = 'search', $keys = NULL) {
           'node' => $node,
           'extra' => $extra,
           'score' => $total ? ($item->calculated_score / $total) : 0,
-          'snippet' => search_excerpt($keys, $node->body),
+          'snippet' => search_excerpt($keys, $node->rendered),
         );
       }
       return $results;
@@ -1801,7 +1642,7 @@ function node_link($type, $node = NULL, $teaser = FALSE) {
   $links = array();
 
   if ($type == 'node') {
-    if ($teaser == 1 && $node->teaser && !empty($node->readmore)) {
+    if ($teaser == 1) {
       $links['node_read_more'] = array(
         'title' => t('Read more'),
         'href' => "node/$node->nid",
@@ -2254,12 +2095,12 @@ function _node_index_node($node) {
   // results half-life calculation.
   variable_set('node_cron_last', $node->changed);
 
-  // Build the node body.
+  // Render the node.
   $node->build_mode = NODE_BUILD_SEARCH_INDEX;
   $node = node_build_content($node, FALSE, FALSE);
-  $node->body = drupal_render($node->content);
+  $node->rendered = drupal_render($node->content);
 
-  $text = '<h1>' . check_plain($node->title) . '</h1>' . $node->body;
+  $text = '<h1>' . check_plain($node->title) . '</h1>' . $node->rendered;
 
   // Fetch extra data normally not visible
   $extra = module_invoke_all('node_update_index', $node);
@@ -2463,10 +2304,6 @@ function node_access($op, $node, $account = NULL) {
   // If no user object is supplied, the access check is for the current user.
   if (empty($account)) {
     $account = $user;
-  }
-  // If the node is in a restricted format, disallow editing.
-  if ($op == 'update' && !filter_access($node->format)) {
-    return FALSE;
   }
 
   if (user_access('bypass node access', $account)) {
@@ -2977,9 +2814,9 @@ function node_content_access($op, $node, $account) {
  * Implement hook_form().
  */
 function node_content_form($node, $form_state) {
-  
+
   $type = node_type_get_type($node);
-  
+
   $form = array();
 
   if ($type->has_title) {
@@ -2992,8 +2829,6 @@ function node_content_form($node, $form_state) {
       '#weight' => -5,
     );
   }
-
-  $form['body_field'] = node_body_field($node, $type->body_label, $type->min_word_count);
 
   return $form;
 }

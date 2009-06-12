@@ -233,7 +233,7 @@ class ForumTestCase extends DrupalWebTestCase {
 
     $edit = array(
       'title' => $title,
-      'body' => $body,
+      'body[0][value]' => $body,
       'taxonomy[1]' => $tid
     );
 
@@ -322,7 +322,7 @@ class ForumTestCase extends DrupalWebTestCase {
       // Edit forum node (including moving it to another forum).
       $edit = array();
       $edit['title'] = 'node/' . $node->nid;
-      $edit['body'] = $this->randomName(256);
+      $edit['body[0][value]'] = $this->randomName(256);
       $edit['taxonomy[1]'] = $this->root_forum['tid']; // Assumes the topic is initially associated with $forum.
       $edit['shadow'] = TRUE;
       $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));

@@ -632,18 +632,17 @@ class DrupalWebTestCase extends DrupalTestCase {
    *
    * @param $settings
    *   An associative array of settings to change from the defaults, keys are
-   *   node properties, for example 'body' => 'Hello, world!'.
+   *   node properties, for example 'title' => 'Hello, world!'.
    * @return
    *   Created node object.
    */
   protected function drupalCreateNode($settings = array()) {
     // Populate defaults array.
     $settings += array(
-      'body'      => $this->randomName(32),
+      'body'      => array(array()),
       'title'     => $this->randomName(8),
       'comment'   => 2,
       'changed'   => REQUEST_TIME,
-      'format'    => FILTER_FORMAT_DEFAULT,
       'moderate'  => 0,
       'promote'   => 0,
       'revision'  => 1,
@@ -660,11 +659,6 @@ class DrupalWebTestCase extends DrupalTestCase {
       $settings['date'] = format_date($settings['created'], 'custom', 'Y-m-d H:i:s O');
     }
 
-    // Add the default teaser.
-    if (!isset($settings['teaser'])) {
-      $settings['teaser'] = $settings['body'];
-    }
-
     // If the node's user uid is not specified manually, use the currently
     // logged in user if available, or else the user running the test.
     if (!isset($settings['uid'])) {
@@ -676,6 +670,13 @@ class DrupalWebTestCase extends DrupalTestCase {
         $settings['uid'] = $user->uid;
       }
     }
+
+    // Merge body field value and format separately.
+    $body = array(
+      'value' => $this->randomName(32),
+      'format' => FILTER_FORMAT_DEFAULT
+    );
+    $settings['body'][0] += $body;
 
     $node = (object) $settings;
     node_save($node);
@@ -989,9 +990,18 @@ class DrupalWebTestCase extends DrupalTestCase {
     $this->preloadRegistry();
 
     // Add the specified modules to the list of modules in the default profile.
-    $args = func_get_args();
-    $modules = array_unique(array_merge(drupal_get_profile_modules('default', 'en'), $args));
-    drupal_install_modules($modules, TRUE);
+    // Install the modules specified by the default profile.
+    $core_modules = drupal_get_profile_modules('default', 'en');
+    drupal_install_modules($core_modules, TRUE);
+
+    node_type_clear();
+
+    // Install additional modules one at a time in order to make sure that the
+    // list of modules is updated between each module's installation.
+    $modules = func_get_args();
+    foreach ($modules as $module) {
+      drupal_install_modules(array($module), TRUE);
+    }
 
     // Because the schema is static cached, we need to flush
     // it between each run. If we don't, then it will contain

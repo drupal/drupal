@@ -110,6 +110,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
       for RDFa support.
 - Field API:
     * Custom data fields may be attached to nodes and users in Drupal.
+    * Node bodies and teasers are now Field API fields instead of
+      being a hard-coded property of node objects.
     * In addition, any other object type may register with Field API
       and allow custom data fields to be attached to itself.
     * Provides a subset of the features of the Content Construction

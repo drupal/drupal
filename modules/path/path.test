@@ -212,7 +212,7 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     $this->clickLink(t('add translation'));
     $edit = array();
     $edit['title'] = $this->randomName();
-    $edit['body'] = $this->randomName();
+    $edit['body[0][value]'] = $this->randomName();
     $edit['path'] = $this->randomName();
     $this->drupalPost(NULL, $edit, t('Save'));
 

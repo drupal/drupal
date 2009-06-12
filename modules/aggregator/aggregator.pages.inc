@@ -378,11 +378,11 @@ function theme_aggregator_page_rss($feeds, $category = NULL) {
   foreach ($feeds as $feed) {
     switch ($feed_length) {
       case 'teaser':
-        $teaser = node_teaser($feed->description, NULL, variable_get('aggregator_teaser_length', 600));
-        if ($teaser != $feed->description) {
-          $teaser .= '<p><a href="' . check_url($feed->link) . '">' . t('read more') . "</a></p>\n";
+        $summary = text_summary($feed->description, NULL, variable_get('aggregator_teaser_length', 600));
+        if ($summary != $feed->description) {
+          $summary .= '<p><a href="' . check_url($feed->link) . '">' . t('read more') . "</a></p>\n";
         }
-        $feed->description = $teaser;
+        $feed->description = $summary;
         break;
       case 'title':
         $feed->description = '';

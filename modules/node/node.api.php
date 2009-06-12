@@ -204,7 +204,7 @@ function hook_node_grants_alter(&$grants, $account, $op) {
 
   // Get our list of banned roles.
   $restricted = variable_get('example_restricted_roles', array());
-  
+
   if ($op != 'view' && !empty($restricted)) {
     // Now check the roles for this account against the restrictions.
     foreach ($restricted as $role_id) {
@@ -904,7 +904,6 @@ function hook_view($node, $teaser = FALSE) {
     menu_set_location($breadcrumb);
   }
 
-  $node = node_prepare($node, $teaser);
   $node->content['myfield'] = array(
     '#value' => theme('mymodule_myfield', $node->myfield),
     '#weight' => 1,

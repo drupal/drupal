@@ -6,3 +6,4 @@ version = VERSION
 core = 7.x
 files[] = text.module
 files[] = text.test
+required = TRUE

@@ -311,10 +311,6 @@ function filter_admin_delete_submit($form, &$form_state) {
 
   $default = variable_get('filter_default_format', 1);
   // Replace existing instances of the deleted format with the default format.
-  db_update('node_revision')
-    ->fields(array('format' => $default))
-    ->condition('format', $form_state['values']['format'])
-    ->execute();
   if (db_table_exists('comment')) {
     db_update('comment')
       ->fields(array('format' => $default))

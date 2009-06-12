@@ -245,32 +245,23 @@ function hook_search_preprocess($text) {
  * @ingroup search
  */
 function hook_update_index() {
-  $last = variable_get('node_cron_last', 0);
   $limit = (int)variable_get('search_cron_limit', 100);
 
-  $result = db_query_range('SELECT n.nid, c.last_comment_timestamp FROM {node} n LEFT JOIN {node_comment_statistics} c ON n.nid = c.nid WHERE n.status = 1 AND n.moderate = 0 AND (n.created > %d OR n.changed > %d OR c.last_comment_timestamp > %d) ORDER BY GREATEST(n.created, n.changed, c.last_comment_timestamp) ASC', $last, $last, $last, 0, $limit);
+  $result = db_query_range("SELECT n.nid FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, n.nid ASC", 0, $limit);
 
-  while ($node = db_fetch_object($result)) {
-    $last_comment = $node->last_comment_timestamp;
-    $node = node_load(array('nid' => $node->nid));
+  foreach ($result as $node) {
+    $node = node_load($node->nid);
 
-    // We update this variable per node in case cron times out, or if the node
-    // cannot be indexed (PHP nodes which call drupal_goto, for example).
-    // In rare cases this can mean a node is only partially indexed, but the
-    // chances of this happening are very small.
-    variable_set('node_cron_last', max($last_comment, $node->changed, $node->created));
+    // Save the changed time of the most recent indexed node, for the search
+    // results half-life calculation.
+    variable_set('node_cron_last', $node->changed);
 
-    // Get node output (filtered and with module-specific fields).
-    if (node_hook($node, 'view')) {
-      node_invoke($node, 'view', FALSE, FALSE);
-    }
-    else {
-      $node = node_prepare($node, FALSE);
-    }
-    // Allow modules to change $node->body before viewing.
-    module_invoke_all('node_view', $node, FALSE, FALSE);
+    // Render the node.
+    $node->build_mode = NODE_BUILD_SEARCH_INDEX;
+    $node = node_build_content($node, FALSE, FALSE);
+    $node->rendered = drupal_render($node->content);
 
-    $text = '<h1>' . drupal_specialchars($node->title) . '</h1>' . $node->body;
+    $text = '<h1>' . check_plain($node->title) . '</h1>' . $node->rendered;
 
     // Fetch extra data normally not visible
     $extra = module_invoke_all('node_update_index', $node);

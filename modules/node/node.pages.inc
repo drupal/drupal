@@ -114,7 +114,7 @@ function node_form(&$form_state, $node) {
     $form['#prefix'] = $form_state['node_preview'];
   }
   $node = (object)$node;
-  foreach (array('body', 'title', 'format') as $key) {
+  foreach (array('title') as $key) {
     if (!isset($node->$key)) {
       $node->$key = NULL;
     }
@@ -287,52 +287,6 @@ function node_form(&$form_state, $node) {
 }
 
 /**
- * Return a node body field, with format and teaser.
- */
-function node_body_field($node, $label, $word_count) {
-  // Do not generate a body field if the type does not specify one.
-  if (!node_type_get_type($node->type)->has_body) {
-    return array();
-  }
-
-  // Check if we need to restore the teaser at the beginning of the body.
-  $include = !isset($node->teaser) || ($node->teaser == substr($node->body, 0, strlen($node->teaser)));
-
-  $form = array(
-    '#after_build' => array('node_teaser_js', 'node_teaser_include_verify'));
-
-  $form['#prefix'] = '<div class="body-field-wrapper clearfix">';
-  $form['#suffix'] = '</div>';
-
-  $form['teaser_js'] = array(
-    '#type' => 'textarea',
-    '#rows' => 10,
-    '#teaser' => 'edit-body',
-    '#teaser_checkbox' => 'edit-teaser-include',
-    '#disabled' => TRUE,
-  );
-
-  $form['teaser_include'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Show summary in full view'),
-    '#default_value' => $include,
-    '#prefix' => '<div class="teaser-checkbox">',
-    '#suffix' => '</div>',
-  );
-
-  $form['body'] = array(
-    '#type' => 'textarea',
-    '#title' => check_plain($label),
-    '#default_value' => $include ? $node->body : ($node->teaser . $node->body),
-    '#rows' => 20,
-    '#required' => ($word_count > 0),
-    '#text_format' => isset($node->format) ? $node->format : FILTER_FORMAT_DEFAULT,
-  );
-
-  return $form;
-}
-
-/**
  * Button submit function: handle the 'Delete' button on the node form.
  */
 function node_form_delete_submit($form, &$form_state) {
@@ -393,16 +347,6 @@ function node_preview($node) {
 
     $node->changed = REQUEST_TIME;
 
-    // Extract a teaser, if it hasn't been set (e.g. by a module-provided
-    // 'teaser' form item).
-    if (!isset($node->teaser)) {
-      $node->teaser = empty($node->body) ? '' : node_teaser($node->body, $node->format, variable_get('teaser_length_' . $type, 600));
-      // Chop off the teaser from the body if needed.
-      if (!$node->teaser_include && $node->teaser == substr($node->body, 0, strlen($node->teaser))) {
-        $node->body = substr($node->body, strlen($node->teaser));
-      }
-    }
-
     // Display a preview of the node.
     // Previewing alters $node so it needs to be cloned.
     if (!form_get_errors()) {
@@ -428,28 +372,20 @@ function theme_node_preview($node) {
   $output = '<div class="preview">';
 
   $preview_trimmed_version = FALSE;
+
+  $trimmed = drupal_render(node_build(clone $node, TRUE));
+  $full = drupal_render(node_build($node, FALSE));
+
   // Do we need to preview trimmed version of post as well as full version?
-  if (isset($node->teaser) && isset($node->body)) {
-    $teaser = trim($node->teaser);
-    $body = trim(str_replace('<!--break-->', '', $node->body));
-
-    // Preview trimmed version if teaser and body will appear different;
-    // also (edge case) if both teaser and body have been specified by the user
-    // and are actually the same.
-    if ($teaser != $body || ($body && strpos($node->body, '<!--break-->') === 0)) {
-      $preview_trimmed_version = TRUE;
-    }
-  }
-
-  if ($preview_trimmed_version) {
+  if ($trimmed != $full) {
     drupal_set_message(t('The trimmed version of your post shows what your post looks like when promoted to the main page or when exported for syndication.<span class="no-js"> You can insert the delimiter "&lt;!--break--&gt;" (without the quotes) to fine-tune where your post gets split.</span>'));
     $output .= '<h3>' . t('Preview trimmed version') . '</h3>';
-    $output .= drupal_render(node_build(clone $node, TRUE));
+    $output .= $trimmed;
     $output .= '<h3>' . t('Preview full version') . '</h3>';
-    $output .= drupal_render(node_build($node, FALSE));
+    $output .= $full;
   }
   else {
-    $output .= drupal_render(node_build($node, FALSE));
+    $output .= $full;
   }
   $output .= "</div>\n";
 

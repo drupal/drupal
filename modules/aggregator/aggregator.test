@@ -252,7 +252,7 @@ EOF;
     for ($i = 0; $i < 5; $i++) {
       $edit = array();
       $edit['title'] = $this->randomName();
-      $edit['body'] = $this->randomName();
+      $edit['body[0][value]'] = $this->randomName();
       $this->drupalPost('node/add/article', $edit, t('Save'));
     }
   }
