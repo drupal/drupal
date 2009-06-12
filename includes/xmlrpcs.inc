@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpcs.inc,v 1.27 2008/05/06 12:18:45 dries Exp $
+// $Id: xmlrpcs.inc,v 1.28 2009/06/12 08:44:45 dries Exp $
 
 /**
  * The main entry point for XML-RPC requests.
@@ -106,10 +106,8 @@ function xmlrpc_server_error($error, $message = FALSE) {
 
 function xmlrpc_server_output($xml) {
   $xml = '<?xml version="1.0"?>' . "\n" . $xml;
-  header('Connection: close');
-  header('Content-Length: ' . strlen($xml));
-  header('Content-Type: text/xml');
-  header('Date: ' . date('r'));
+  drupal_set_header('Content-Length', strlen($xml));
+  drupal_set_header('Content-Type', 'text/xml');
   echo $xml;
   exit;
 }
