@@ -7,7 +7,7 @@
  *
  * Available variables:
  * - $block->subject: Block title.
- * - $block->content: Block content.
+ * - $content: Block content.
  * - $block->module: Module that generated the block.
  * - $block->delta: An ID for the block, unique within each module.
  * - $block->region: The block region embedding the current block.
@@ -41,6 +41,6 @@
 <?php endif;?>
 
   <div class="content">
-    <?php print $block->content ?>
+    <?php print $content ?>
   </div>
 </div>

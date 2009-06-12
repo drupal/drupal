@@ -93,7 +93,7 @@ function block_help($path, $arg) {
 function block_theme() {
   return array(
     'block' => array(
-      'arguments' => array('block' => NULL),
+      'arguments' => array('elements' => NULL),
       'template' => 'block',
     ),
     'block_admin_display_form' => array(
@@ -244,14 +244,17 @@ function block_page_alter($page) {
     if (!empty($page['#show_blocks']) || ($region != 'left' && $region != 'right')) {
       // Assign blocks to region.
       if ($blocks = block_get_blocks_by_region($region)) {
-        $page[$region]['blocks'] = $blocks;
+        $page[$region] = $blocks;
       }
 
       // Append region description if we are rendering the block admin page.
       $item = menu_get_item();
       if ($item['path'] == 'admin/build/block') {
         $description = '<div class="block-region">' . $regions[$region] . '</div>';
-        $page[$region]['blocks']['block_description'] = array('#markup' => $description);
+        $page[$region]['block_description'] = array(
+          '#markup' => $description,
+          '#weight' => 15,
+        );
       }
     }
   }
@@ -268,8 +271,10 @@ function block_get_blocks_by_region($region) {
   $build = array();
   if ($list = block_list($region)) {
     foreach ($list as $key => $block) {
-      $build[$key] = array(
-        '#theme' => 'block',
+      $build[$key] = $block->content;
+      unset($block->content);
+      $build[$key] += array(
+        '#theme_wrapper' => 'block',
         '#block' => $block,
         '#weight' => ++$weight,
       );
@@ -727,6 +732,8 @@ function _block_render_blocks($region_blocks) {
         }
       }
       if (isset($block->content) && $block->content) {
+        // Normalize to the drupal_render() structure.
+        $block->content = array('content' => is_string($block->content) ? array('#markup' => $block->content) : $block->content);
         // Override default block title if a custom display title is present.
         if ($block->title) {
           // Check plain here to allow module generated titles to keep any
@@ -821,7 +828,7 @@ function block_flush_caches() {
  */
 function template_preprocess_block(&$variables) {
   $block_counter = &drupal_static(__FUNCTION__, array());
-  $variables['block'] = $variables['block']['#block'];
+  $variables['block'] = $variables['elements']['#block'];
   // All blocks get an independent counter for each region.
   if (!isset($block_counter[$variables['block']->region])) {
     $block_counter[$variables['block']->region] = 1;
@@ -830,10 +837,8 @@ function template_preprocess_block(&$variables) {
   $variables['block_zebra'] = ($block_counter[$variables['block']->region] % 2) ? 'odd' : 'even';
   $variables['block_id'] = $block_counter[$variables['block']->region]++;
 
-  if (is_array($variables['block']->content)) {
-    // Render the block contents if it is not already rendered.
-    $variables['block']->content = drupal_render($variables['block']->content);
-  }
+  // Create the $content variable that templates expect.
+  $variables['content'] = $variables['elements']['#children'];
 
   $variables['classes_array'][] = 'block-' . $variables['block']->module;
 
