@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.46 2009/06/04 20:09:29 webchick Exp $
+// $Id: default.profile,v 1.47 2009/06/12 13:59:56 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -203,6 +203,7 @@ function default_profile_tasks(&$task, $url) {
   $vid = db_insert('taxonomy_vocabulary')->fields(array(
     'name' => 'Tags',
     'description' => $description,
+    'machine_name' => 'tags',
     'help' => $help,
     'relations' => 0,
     'hierarchy' => 0,

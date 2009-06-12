@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.test,v 1.20 2009/06/12 08:39:37 dries Exp $
+// $Id: forum.test,v 1.21 2009/06/12 13:59:56 dries Exp $
 
 class ForumTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -126,6 +126,7 @@ class ForumTestCase extends DrupalWebTestCase {
     $edit = array(
       'name' => $title,
       'description' => $description,
+      'machine_name' => drupal_strtolower($this->randomName()),
       'help' => '',
     );
 
