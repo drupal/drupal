@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.342 2009/06/11 04:59:26 dries Exp $
+// $Id: system.install,v 1.343 2009/06/12 08:39:40 dries Exp $
 
 /**
  * @file
@@ -3545,6 +3545,17 @@ function system_update_7026() {
   $ret = array();
   db_change_field($ret, 'url_alias', 'src', 'src', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE));
   db_change_field($ret, 'url_alias', 'dst', 'dst', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE));
+  return $ret;
+}
+
+/**
+ * Enable field type modules.
+ */
+function system_update_7027() {
+  $ret = array();
+  $module_list = array('text', 'number', 'list', 'options');
+  drupal_install_modules($module_list);
+  module_enable($module_list);
   return $ret;
 }
 

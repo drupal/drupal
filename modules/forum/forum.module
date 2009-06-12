@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.499 2009/06/07 02:26:05 dries Exp $
+// $Id: forum.module,v 1.500 2009/06/12 08:39:37 dries Exp $
 
 /**
  * @file
@@ -548,8 +548,6 @@ function forum_form($node, $form_state) {
     $shadow = (count($forum_terms) > 1);
     $form['shadow'] = array('#type' => 'checkbox', '#title' => t('Leave shadow copy'), '#default_value' => $shadow, '#description' => t('If you move this topic, you can leave a link in the old forum to the new forum.'));
   }
-
-  $form['body_field'] = node_body_field($node, $type->body_label, 1);
 
   $form['#submit'][] = 'forum_submit';
   // Assign the forum topic submit handler.

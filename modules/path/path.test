@@ -1,5 +1,5 @@
 <?php
-// $Id: path.test,v 1.12 2009/05/16 19:07:02 dries Exp $
+// $Id: path.test,v 1.13 2009/06/12 08:39:38 dries Exp $
 
 /**
  * @file
@@ -212,7 +212,7 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     $this->clickLink(t('add translation'));
     $edit = array();
     $edit['title'] = $this->randomName();
-    $edit['body'] = $this->randomName();
+    $edit['body[0][value]'] = $this->randomName();
     $edit['path'] = $this->randomName();
     $this->drupalPost(NULL, $edit, t('Save'));
 

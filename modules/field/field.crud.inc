@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.14 2009/05/28 10:05:32 dries Exp $
+// $Id: field.crud.inc,v 1.15 2009/06/12 08:39:36 dries Exp $
 
 /**
  * @file
@@ -425,7 +425,9 @@ function field_create_instance($instance) {
   // Set the field id.
   $instance['field_id'] = $field['id'];
 
-  // TODO: Check that the specifed bundle exists.
+  // Note that we do *not* prevent creating a field on non-existing bundles,
+  // because that would break the 'Body as field' upgrade for contrib
+  // node types.
 
   // TODO: Check that the widget type is known and can handle the field type ?
   // TODO: Check that the formatters are known and can handle the field type ?

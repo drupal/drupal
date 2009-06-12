@@ -1,4 +1,4 @@
-/* $Id: field.css,v 1.4 2009/03/30 05:28:41 webchick Exp $ */
+/* $Id: field.css,v 1.5 2009/06/12 08:39:37 dries Exp $ */
 
 /* Field display */
 .field .field-label,
@@ -32,7 +32,11 @@ form .field-add-more-submit {
   margin: .5em 0 0;
 }
 
-.form-item .number {
+form .form-item .text {
+  display: inline;
+  width: auto;
+}
+form .form-item .number {
   display: inline;
   width: auto;
 }

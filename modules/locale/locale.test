@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.25 2009/06/08 05:00:11 dries Exp $
+// $Id: locale.test,v 1.26 2009/06/12 08:39:38 dries Exp $
 
 /**
  * @file
@@ -1395,7 +1395,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       'type' => 'page',
       'title' => $node_title,
-      'body' => $node_body,
+      'body' => array(array('value' => $node_body)),
       'language' => $langcode,
     );
     $node = $this->drupalCreateNode($edit);

@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.test,v 1.11 2009/05/31 03:12:19 webchick Exp $
+// $Id: trigger.test,v 1.12 2009/06/12 08:39:40 dries Exp $
 
 class TriggerContentTestCase extends DrupalWebTestCase {
   var $_cleanup_roles = array();
@@ -37,8 +37,8 @@ class TriggerContentTestCase extends DrupalWebTestCase {
       $web_user = $this->drupalCreateUser(array('create page content', 'access content', 'administer nodes'));
       $this->drupalLogin($web_user);
       $edit = array();
-      $edit['title']    = '!SimpleTest test node! ' . $this->randomName(10);
-      $edit['body']     = '!SimpleTest test body! ' . $this->randomName(32) . ' ' . $this->randomName(32);
+      $edit['title'] = '!SimpleTest test node! ' . $this->randomName(10);
+      $edit['body[0][value]'] = '!SimpleTest test body! ' . $this->randomName(32) . ' ' . $this->randomName(32);
       $edit[$info['property']] = !$info['expected'];
       $this->drupalPost('node/add/page', $edit, t('Save'));
       // Make sure the text we want appears.
