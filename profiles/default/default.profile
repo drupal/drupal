@@ -203,6 +203,7 @@ function default_profile_tasks(&$task, $url) {
   $vid = db_insert('taxonomy_vocabulary')->fields(array(
     'name' => 'Tags',
     'description' => $description,
+    'machine_name' => 'tags',
     'help' => $help,
     'relations' => 0,
     'hierarchy' => 0,

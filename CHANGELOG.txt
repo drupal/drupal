@@ -109,7 +109,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Modules can declare RDF namespaces which are serialized in the <html> tag
       for RDFa support.
 - Field API:
-    * Custom data fields may be attached to nodes and users in Drupal.
+    * Custom data fields may be attached to nodes and users, and taxonomy terms.
     * Node bodies and teasers are now Field API fields instead of
       being a hard-coded property of node objects.
     * In addition, any other object type may register with Field API

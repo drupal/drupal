@@ -112,24 +112,17 @@ class BlogAPITestCase extends DrupalWebTestCase {
    *   The vocab ID.
    */
   function addVocabulary($vocab) {
-    $edit = array();
-    $edit['name'] = $vocab;
-    $edit['nodes[blog]'] = TRUE;
-    $this->drupalPost('admin/content/taxonomy/add', $edit, t('Save'));
-    $this->assertRaw(t('Created new vocabulary %vocab.', array('%vocab' => $edit['name'])), t('Taxonomy vocabulary added.'));
+    // Create a vocabulary.
+    $vocabulary = new stdClass();
+    $vocabulary->name = $vocab;
+    $vocabulary->description = $this->randomName();
+    $vocabulary->machine_name = $this->randomName();
+    $vocabulary->help = '';
+    $vocabulary->nodes = array('blog' => 'blog');
+    $vocabulary->weight = mt_rand(0, 10);
+    taxonomy_vocabulary_save($vocabulary);
 
-    $vocab_arr = taxonomy_get_vocabularies();
-    $vid = NULL;
-    foreach ($vocab_arr as $vocab_item) {
-      if ($vocab_item->name == $vocab) {
-        $vid = $vocab_item->vid;
-        break;
-      }
-    }
-
-    $this->assertNotNull($vid, t('Vocabulary found in database.'));
-
-    return $vid;
+    return $vocabulary->vid;
   }
 
   /**
@@ -142,23 +135,11 @@ class BlogAPITestCase extends DrupalWebTestCase {
    * @return integer
    *   The Term ID.
    */
-  function addTerm($vid, $term) {
-    $edit = array();
-    $edit['name'] = $term;
-    $this->drupalPost('admin/content/taxonomy/' . $vid . '/add', $edit, t('Save'));
-    $this->assertRaw(t('Created new term %term.', array('%term' => $edit['name'])), t('Taxonomy term added.'));
-
-    $tree = taxonomy_get_tree($vid);
-    $tid = NULL;
-    foreach ($tree as $tree_term) {
-      if ($tree_term->name == $term) {
-        $tid = $tree_term->tid;
-        break;
-      }
-    }
-
-    $this->assertNotNull($tid, t('Term found in database.'));
-
-    return $tid;
+  function addTerm($vid, $term_name) {
+    $term = new stdClass();
+    $term->name = $term_name;
+    $term->vid = $vid;
+    taxonomy_term_save($term);
+    return $term->tid;
   }
 }

@@ -50,9 +50,11 @@ function taxonomy_term_page($terms, $depth = 0, $op = 'page') {
           drupal_add_css(drupal_get_path('module', 'taxonomy') . '/taxonomy.css');
 
           $build = array();
-          // Only display the description if we have a single term, to avoid clutter and confusion.
+          // Only display fields if we have a single term, to avoid clutter and
+          // confusion.
           if (count($tids) == 1) {
             $term = taxonomy_term_load($tids[0]);
+            $build += field_attach_view('taxonomy_term', $term);
             if (!empty($term->description)) {
               $build['term_description'] = array(
                 '#markup' => filter_xss_admin($term->description),

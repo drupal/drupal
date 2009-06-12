@@ -226,6 +226,13 @@ function taxonomy_schema() {
         'default' => '',
         'description' => 'Name of the vocabulary.',
       ),
+      'machine_name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The vocabulary machine name.',
+      ),
       'description' => array(
         'type' => 'text',
         'not null' => FALSE,
@@ -343,5 +350,31 @@ function taxonomy_update_7001() {
   db_rename_table($ret, 'vocabulary', 'taxonomy_vocabulary');
   db_rename_table($ret, 'vocabulary_node_types', 'taxonomy_vocabulary_node_type');
 
+  return $ret;
+}
+
+/**
+ * Add vocabulary machine_name column.
+ */
+function taxonomy_update_7002() {
+  $ret = array();
+  $field = array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+    'description' => 'The vocabulary machine name.',
+  );
+
+  db_add_field($ret, 'taxonomy_vocabulary', 'machine_name', $field);
+
+  foreach (taxonomy_get_vocabularies() as $vid => $vocabulary) {
+    $machine_name = 'vocabulary_' . $vid;
+    db_update('taxonomy_vocabulary')
+      ->fields(array('machine_name' => 'vocabulary_' . $vid))
+      ->condition('vid', $vid)
+      ->execute();
+    field_attach_create_bundle($machine_name);
+  }
   return $ret;
 }

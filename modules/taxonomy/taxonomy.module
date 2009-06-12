@@ -19,6 +19,36 @@ function taxonomy_perm() {
 }
 
 /**
+ * Implement hook_fieldable_info().
+ */
+function taxonomy_fieldable_info() {
+  $return = array(
+    'taxonomy_term' => array(
+      'name' => t('Taxonomy term'),
+      'id key' => 'tid',
+      'bundle key' => 'vocabulary_machine_name',
+      'bundles' => taxonomy_vocabulary_get_names(),
+    ),
+  );
+  return $return;
+}
+
+/**
+ * Implement hook_field_build_modes();
+ *
+ * @TODO: build mode for display as a field (when attached to nodes etc.).
+ */
+function taxonomy_field_build_modes($obj_type) {
+  $modes = array();
+  if ($obj_type == 'term') {
+    $modes = array(
+      'full' => t('Taxonomy term page'),
+    );
+  }
+  return $modes;
+}
+
+/**
  * Implement hook_theme().
  */
 function taxonomy_theme() {
@@ -259,6 +289,7 @@ function taxonomy_vocabulary_save($vocabulary) {
       }
       $query->execute();
     }
+    field_attach_create_bundle($vocabulary->machine_name);
     module_invoke_all('taxonomy_vocabulary_insert', $vocabulary);
   }
 
@@ -290,6 +321,7 @@ function taxonomy_vocabulary_delete($vid) {
     taxonomy_term_delete($tid);
   }
 
+  field_attach_delete_bundle($vocabulary['machine_name']);
   module_invoke_all('taxonomy', 'delete', 'vocabulary', $vocabulary);
 
   cache_clear_all();
@@ -352,13 +384,21 @@ function taxonomy_term_save($term) {
     // Prevent leading and trailing spaces in term names.
     $term->name = trim($term->name);
   }
+  if (!isset($term->vocabulary_machine_name)) {
+    $vocabulary = taxonomy_vocabulary_load($term->vid);
+    $term->vocabulary_machine_name = $vocabulary->machine_name;
+  }
+
+  field_attach_presave('taxonomy_term', $term);
 
   if (!empty($term->tid) && $term->name) {
     $status = drupal_write_record('taxonomy_term_data', $term, 'tid');
+    field_attach_update('taxonomy_term', $term);
     module_invoke_all('taxonomy_term_insert', $term);
   }
   else {
     $status = drupal_write_record('taxonomy_term_data', $term);
+    field_attach_insert('taxonomy_term', $term);
     module_invoke_all('taxonomy_term_update', $term);
   }
 
@@ -484,6 +524,7 @@ function taxonomy_term_delete($tid) {
         ->condition('tid', $tid)
         ->execute();
 
+      field_attach_delete('taxonomy_term', $term);
       module_invoke_all('taxonomy_term_delete', $term);
     }
 
@@ -568,6 +609,21 @@ function taxonomy_form_all($free_tags = 0) {
 function taxonomy_get_vocabularies($type = NULL) {
   $conditions = !empty($type) ? array('type' => $type) : NULL;
   return taxonomy_vocabulary_load_multiple(array(), $conditions);
+}
+
+/**
+ * Get names for all taxonomy vocabularies.
+ *
+ * @return
+ *   An array of vocabulary names in the format 'machine_name' => 'name'.
+ */
+function taxonomy_vocabulary_get_names() {
+  $names = array();
+  $vocabularies = taxonomy_get_vocabularies();
+  foreach ($vocabularies as $vocabulary) {
+    $names[$vocabulary->machine_name] = $vocabulary->name;
+  }
+  return $names;
 }
 
 /**
@@ -786,6 +842,7 @@ function taxonomy_node_save($node, $terms) {
     unset($terms['tags']);
 
     foreach ($typed_input as $vid => $vid_value) {
+      $vocabulary = taxonomy_vocabulary_load($vid);
       $typed_terms = drupal_explode_tags($vid_value);
 
       $inserted = array();
@@ -801,7 +858,11 @@ function taxonomy_node_save($node, $terms) {
         }
 
         if (!$typed_term_tid) {
-          $edit = array('vid' => $vid, 'name' => $typed_term);
+          $edit = array(
+            'vid' => $vid,
+            'name' => $typed_term,
+            'vocabulary_machine_name' => $vocabulary->machine_name,
+          );
           $term = (object)$edit;
           $status = taxonomy_term_save($term);
           $typed_term_tid = $term->tid;
@@ -1321,7 +1382,7 @@ function taxonomy_term_load_multiple($tids = array(), $conditions = array()) {
 
   // Remove any loaded terms from the array if they don't match $conditions.
   if ($conditions) {
-    // Name matching is case insensitive, note that with some collations 
+    // Name matching is case insensitive, note that with some collations
     // LOWER() and drupal_strtolower() may return different results.
     foreach ($terms as $term) {
       $term_values = (array) $term;
@@ -1338,8 +1399,10 @@ function taxonomy_term_load_multiple($tids = array(), $conditions = array()) {
   // $tids still to load, or if $conditions was passed without $tids.
   if ($tids || ($conditions && !$passed_tids)) {
     $query = db_select('taxonomy_term_data', 't');
+    $query->join('taxonomy_vocabulary', 'v', 't.vid = v.vid');
     $taxonomy_term_data = drupal_schema_fields_sql('taxonomy_term_data');
     $query->fields('t', $taxonomy_term_data);
+    $query->addField('v', 'machine_name', 'vocabulary_machine_name');
 
     // If the $tids array is populated, add those to the query.
     if ($tids) {
@@ -1358,9 +1421,14 @@ function taxonomy_term_load_multiple($tids = array(), $conditions = array()) {
       }
     }
     $queried_terms = $query->execute()->fetchAllAssoc('tid');
-    // Invoke hook_taxonomy_term_load() on the terms loaded from the database
-    // and add them to the static cache.
+
     if (!empty($queried_terms)) {
+
+      // Attach fields.
+      field_attach_load('taxonomy_term', $queried_terms);
+
+      // Invoke hook_taxonomy_term_load() and add the term objects to the
+      // static cache.
       foreach (module_implements('taxonomy_term_load') as $module) {
         $function = $module . '_taxonomy_term_load';
         $function($queried_terms);

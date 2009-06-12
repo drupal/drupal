@@ -126,6 +126,7 @@ class ForumTestCase extends DrupalWebTestCase {
     $edit = array(
       'name' => $title,
       'description' => $description,
+      'machine_name' => drupal_strtolower($this->randomName()),
       'help' => '',
     );
 
