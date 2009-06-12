@@ -106,10 +106,8 @@ function xmlrpc_server_error($error, $message = FALSE) {
 
 function xmlrpc_server_output($xml) {
   $xml = '<?xml version="1.0"?>' . "\n" . $xml;
-  header('Connection: close');
-  header('Content-Length: ' . strlen($xml));
-  header('Content-Type: text/xml');
-  header('Date: ' . date('r'));
+  drupal_set_header('Content-Length', strlen($xml));
+  drupal_set_header('Content-Type', 'text/xml');
   echo $xml;
   exit;
 }
