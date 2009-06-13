@@ -117,7 +117,7 @@ function update_get_project_name($file) {
   elseif (isset($file->info['package']) && (strpos($file->info['package'], 'Core') !== FALSE)) {
     $project_name = 'drupal';
   }
-  elseif (in_array($file->name, array('bluemarine', 'chameleon', 'garland', 'marvin', 'minnelli', 'pushbutton'))) {
+  elseif (in_array($file->name, array('garland', 'minnelli', 'stark'))) {
     // Unfortunately, there's no way to tell if a theme is part of core,
     // so we must hard-code a list here.
     $project_name = 'drupal';
