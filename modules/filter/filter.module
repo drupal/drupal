@@ -598,13 +598,20 @@ function theme_filter_guidelines($format) {
  */
 
 /**
- * Implement hook_filter(). Contains a basic set of essential filters.
- * - HTML filter:
- *     Validates user-supplied HTML, transforming it as necessary.
- * - Line break converter:
+ * Implement hook_filter().
+ *  
+ * Set up a basic set of essential filters:
+ * - Limit allowed HTML tags:
+ *     Restricts user-supplied HTML to certain tags, and removes dangerous
+ *     components in allowed tags.
+ * - Convert line breaks:
  *     Converts newlines into paragraph and break tags.
- * - URL and e-mail address filter:
- *     Converts newlines into paragraph and break tags.
+ * - Convert URLs into links:
+ *     Converts URLs and e-mail addresses into links.
+ * - Correct broken HTML:
+ *     Fixes faulty HTML.
+ * - Escape all HTML:
+ *     Converts all HTML tags into visible text.
  */
 function filter_filter($op, $delta = 0, $format = -1, $text = '') {
   switch ($op) {
