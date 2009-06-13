@@ -1,5 +1,5 @@
 <?php
-// $Id: poll-vote.tpl.php,v 1.3 2008/10/13 12:31:42 dries Exp $
+// $Id: poll-vote.tpl.php,v 1.4 2009/06/13 19:38:42 dries Exp $
 
 /**
  * @file
@@ -19,7 +19,7 @@
   <div class="vote-form">
     <div class="choices">
       <?php if ($block): ?>
-        <div class="title"><?php print $title; ?>:</div>
+        <div class="title"><?php print $title; ?></div>
       <?php endif; ?>
       <?php print $choice; ?>
     </div>
