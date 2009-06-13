@@ -518,11 +518,7 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
 
     $edit = array(
       'title' => $this->randomName(10),
-<<<<<<< system.test
-      NODE_BODY_FIELD => array(array('value' => $this->randomName(100))),
-=======
       'body' => array(array('value' => $this->randomName(100))),
->>>>>>> 1.47
     );
     $node = $this->drupalCreateNode($edit);
 
