@@ -19,7 +19,7 @@
   <div class="vote-form">
     <div class="choices">
       <?php if ($block): ?>
-        <div class="title"><?php print $title; ?>:</div>
+        <div class="title"><?php print $title; ?></div>
       <?php endif; ?>
       <?php print $choice; ?>
     </div>
