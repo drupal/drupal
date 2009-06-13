@@ -1,5 +1,5 @@
 <?php
-// $Id: user.test,v 1.42 2009/06/11 07:51:30 dries Exp $
+// $Id: user.test,v 1.43 2009/06/13 20:40:09 dries Exp $
 
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -770,12 +770,12 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
    */
   function testAdministratorRole() {
     $this->drupalLogin($this->admin_user);
-    $this->drupalGet('admin/user/settings');
+    $this->drupalGet('admin/settings/user');
 
     // Set the user's role to be the administrator role.
     $edit = array();
     $edit['user_admin_role'] = $this->rid;
-    $this->drupalPost('admin/user/settings', $edit, t('Save configuration'));
+    $this->drupalPost('admin/settings/user', $edit, t('Save configuration'));
 
     // Enable aggregator module and ensure the 'administer news feeds'
     // permission is assigned by default.
