@@ -378,8 +378,8 @@ function drupal_not_found() {
 
   drupal_set_page_content($return);
   $page = element_info('page');
-  // To conserve CPU and bandwidth, omit the blocks.
-  $page['#show_blocks'] = FALSE;
+  // Optionally omit the blocks to conserve CPU and bandwidth.
+  $page['#show_blocks'] = variable_get('site_404_blocks', FALSE);
 
   print drupal_render_page($page);
 }
