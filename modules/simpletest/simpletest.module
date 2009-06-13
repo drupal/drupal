@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.54 2009/06/08 09:23:53 dries Exp $
+// $Id: simpletest.module,v 1.55 2009/06/13 11:29:25 dries Exp $
 
 /**
  * @file
@@ -278,9 +278,11 @@ function simpletest_registry_files_alter(&$files, $modules) {
     // already include any test files they provide.
     if (!$module->status) {
       $dir = $module->dir;
-      foreach ($module->info['files'] as $file) {
-        if (substr($file, -5) == '.test') {
-          $files["$dir/$file"] = array('module' => $module->name, 'weight' => $module->weight);
+      if (!empty($module->info['files'])) {
+        foreach ($module->info['files'] as $file) {
+          if (substr($file, -5) == '.test') {
+            $files["$dir/$file"] = array('module' => $module->name, 'weight' => $module->weight);
+          }
         }
       }
     }
