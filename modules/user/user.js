@@ -161,7 +161,7 @@ Drupal.evaluatePasswordStrength = function (password, translate) {
 };
 
 /**
- * Show all of the picture-related form elements at admin/user/settings
+ * Show all of the picture-related form elements at admin/settings/user
  * depending on whether user pictures are enabled or not.
  */
 Drupal.behaviors.userSettings = {

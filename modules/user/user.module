@@ -806,7 +806,7 @@ function user_perm() {
     ),
     'cancel account' => array(
       'title' => t('Cancel account'),
-      'description' => t('Remove or disable own user account and unpublish, anonymize, or remove own submissions depending on the configured <a href="@user-settings-url">user settings</a>.', array('@user-settings-url' => url('admin/user/settings'))),
+      'description' => t('Remove or disable own user account and unpublish, anonymize, or remove own submissions depending on the configured <a href="@user-settings-url">user settings</a>.', array('@user-settings-url' => url('admin/settings/user'))),
     ),
     'select account cancellation method' => array(
       'title' => t('Select method for cancelling own account'),
@@ -1360,8 +1360,8 @@ function user_menu() {
     'access arguments' => array('administer users'),
     'type' => MENU_LOCAL_TASK,
   );
-  $items['admin/user/settings'] = array(
-    'title' => 'User settings',
+  $items['admin/settings/user'] = array(
+    'title' => 'Users',
     'description' => 'Configure default behavior of users, including registration requirements, e-mails, and user pictures.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_settings'),
@@ -2401,7 +2401,7 @@ function user_help($path, $arg) {
     case 'admin/user/user/account/create':
       return '<p>' . t("This web page allows administrators to register new users. Users' e-mail addresses and usernames must be unique.") . '</p>';
     case 'admin/user/permissions':
-      return '<p>' . t('Permissions let you control what users can do and see on your site. You can define a specific set of permissions for each role. (See the <a href="@role">Roles</a> page to create a role). Two important roles to consider are Authenticated Users and Administrators. Any permissions granted to the Authenticated Users role will be given to any user who can log into your site.  You can make any role the Administrator role for the site, meaning this will be granted all new permissions automatically. You can do this on the <a href="@settings">User Settings</a> page. You should be careful to ensure that only trusted users are given this access and level of control of your site.', array('@role' => url('admin/user/roles'), '@settings' => url('admin/user/settings'))) . '</p>';
+      return '<p>' . t('Permissions let you control what users can do and see on your site. You can define a specific set of permissions for each role. (See the <a href="@role">Roles</a> page to create a role). Two important roles to consider are Authenticated Users and Administrators. Any permissions granted to the Authenticated Users role will be given to any user who can log into your site.  You can make any role the Administrator role for the site, meaning this will be granted all new permissions automatically. You can do this on the <a href="@settings">User Settings</a> page. You should be careful to ensure that only trusted users are given this access and level of control of your site.', array('@role' => url('admin/user/roles'), '@settings' => url('admin/settings/user'))) . '</p>';
     case 'admin/user/roles':
       return t('<p>Roles allow you to fine tune the security and administration of Drupal. A role defines a group of users that have certain privileges as defined in <a href="@permissions">user permissions</a>. Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <em>role names</em> of the various roles. To delete a role choose "edit".</p><p>By default, Drupal comes with two user roles:</p>
       <ul>
