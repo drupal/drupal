@@ -579,11 +579,7 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
 
     $edit = array(
       'title' => $this->randomName(10),
-<<<<<<< system.test
-      NODE_BODY_FIELD => array(array('value' => $this->randomName(100))),
-=======
       'body' => array(array('value' => $this->randomName(100))),
->>>>>>> 1.47
     );
     $node = $this->drupalCreateNode($edit);
 
@@ -709,11 +705,7 @@ class PageTitleFiltering extends DrupalWebTestCase {
     // Generate node content.
     $edit = array(
      'title' => '!SimpleTest! ' . $title . $this->randomName(20),
-<<<<<<< system.test
-     NODE_BODY_FIELD . '[0][value]' => '!SimpleTest! test body' . $this->randomName(200),
-=======
      'body[0][value]' => '!SimpleTest! test body' . $this->randomName(200),
->>>>>>> 1.47
     );
     // Create the node with HTML in the title.
     $this->drupalPost('node/add/page', $edit, t('Save'));
