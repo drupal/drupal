@@ -1,5 +1,5 @@
 <?php
-// $Id: update.compare.inc,v 1.22 2009/06/06 16:05:28 dries Exp $
+// $Id: update.compare.inc,v 1.23 2009/06/13 11:27:35 dries Exp $
 
 /**
  * @file
@@ -117,7 +117,7 @@ function update_get_project_name($file) {
   elseif (isset($file->info['package']) && (strpos($file->info['package'], 'Core') !== FALSE)) {
     $project_name = 'drupal';
   }
-  elseif (in_array($file->name, array('bluemarine', 'chameleon', 'garland', 'marvin', 'minnelli', 'pushbutton'))) {
+  elseif (in_array($file->name, array('garland', 'minnelli', 'stark'))) {
     // Unfortunately, there's no way to tell if a theme is part of core,
     // so we must hard-code a list here.
     $project_name = 'drupal';
