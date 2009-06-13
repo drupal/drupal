@@ -1958,8 +1958,8 @@ function template_preprocess_page(&$variables) {
   $variables['main_menu']         = theme_get_setting('toggle_main_menu') ? menu_main_menu() : array();
   $variables['secondary_menu']    = theme_get_setting('toggle_secondary_menu') ? menu_secondary_menu() : array();
   $variables['search_box']        = (theme_get_setting('toggle_search') ? drupal_render(drupal_get_form('search_theme_form')) : '');
-  $variables['site_name']         = (theme_get_setting('toggle_name') ? variable_get('site_name', 'Drupal') : '');
-  $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? variable_get('site_slogan', '') : '');
+  $variables['site_name']         = (theme_get_setting('toggle_name') ? filter_xss_admin(variable_get('site_name', 'Drupal')) : '');
+  $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? filter_xss_admin(variable_get('site_slogan', '')) : '');
   $variables['css']               = drupal_add_css();
   $variables['styles']            = drupal_get_css();
   $variables['scripts']           = drupal_get_js();
