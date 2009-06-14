@@ -1,4 +1,4 @@
-/* $Id: user.css,v 1.10 2008/10/09 04:19:44 webchick Exp $ */
+/* $Id: user.css,v 1.11 2009/06/14 08:04:25 dries Exp $ */
 
 #permissions td.module {
   font-weight: bold;
@@ -23,7 +23,7 @@
   margin-left: 0.5em; /* LTR */
   clear: right; /* LTR */
 }
-#user-admin-settings fieldset .description {
+#user-admin-settings fieldset .fieldset-description {
   font-size: 0.85em;
   padding-bottom: .5em;
 }
