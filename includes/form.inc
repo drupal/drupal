@@ -1574,7 +1574,7 @@ function theme_fieldset($element) {
   }
   $element['#attributes']['id'] = $element['#id'];
 
-  return '<fieldset' . drupal_attributes($element['#attributes']) . '>' . ($element['#title'] ? '<legend>' . $element['#title'] . '</legend>' : '') . (isset($element['#description']) && $element['#description'] ? '<div class="description">' . $element['#description'] . '</div>' : '') . (!empty($element['#children']) ? $element['#children'] : '') . (isset($element['#value']) ? $element['#value'] : '') . "</fieldset>\n";
+  return '<fieldset' . drupal_attributes($element['#attributes']) . '>' . ($element['#title'] ? '<legend>' . $element['#title'] . '</legend>' : '') . (isset($element['#description']) && $element['#description'] ? '<div class="fieldset-description">' . $element['#description'] . '</div>' : '') . (!empty($element['#children']) ? $element['#children'] : '') . (isset($element['#value']) ? $element['#value'] : '') . "</fieldset>\n";
 }
 
 /**
@@ -2608,7 +2608,16 @@ function theme_form_element($element) {
   // This is also used in the installer, pre-database setup.
   $t = get_t();
 
-  $output = '<div class="form-item"';
+  // Add element's #type and #name as class to aid with JS/CSS selectors.
+  $class = array('form-item');
+  if (!empty($element['#type'])) {
+    $class[] = 'form-item-' . strtr($element['#type'], array('_' => '-'));
+  }
+  if (!empty($element['#name'])) {
+    $class[] = strtr($element['#name'], array('_' => '-', '[' => '-', ']' => '')) . '-wrapper';
+  }
+
+  $output = '<div class="' . implode(' ', $class) . '"';
   if (!empty($element['#id'])) {
     $output .= ' id="' . $element['#id'] . '-wrapper"';
   }

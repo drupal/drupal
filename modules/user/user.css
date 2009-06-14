@@ -23,7 +23,7 @@
   margin-left: 0.5em; /* LTR */
   clear: right; /* LTR */
 }
-#user-admin-settings fieldset .description {
+#user-admin-settings fieldset .fieldset-description {
   font-size: 0.85em;
   padding-bottom: .5em;
 }
