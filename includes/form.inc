@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.340 2009/06/14 08:04:25 dries Exp $
+// $Id: form.inc,v 1.341 2009/06/15 09:51:49 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2497,15 +2497,6 @@ function theme_form($element) {
  */
 function theme_textarea($element) {
   $class = array('form-textarea');
-
-  // Add teaser behavior (must come before resizable)
-  if (!empty($element['#teaser'])) {
-    drupal_add_js('misc/teaser.js');
-    // Note: arrays are merged in drupal_get_js().
-    drupal_add_js(array('teaserCheckbox' => array($element['#id'] => $element['#teaser_checkbox'])), 'setting');
-    drupal_add_js(array('teaser' => array($element['#id'] => $element['#teaser'])), 'setting');
-    $class[] = 'teaser';
-  }
 
   // Add resizable behavior
   if ($element['#resizable'] !== FALSE) {
