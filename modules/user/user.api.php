@@ -29,9 +29,9 @@
  *     custom additions to the user object into the database and set the saved
  *     fields to NULL in $edit.
  *   - "load": The user account is being loaded. The module may respond to this
+ *     and insert additional information into the user object.
  *   - "login": The user just logged in.
  *   - "logout": The user just logged out.
- *     and insert additional information into the user object.
  *   - "register": The user account registration form is about to be displayed.
  *     The module should present the form elements it wishes to inject into the
  *     form.
