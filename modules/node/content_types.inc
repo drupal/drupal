@@ -389,12 +389,12 @@ function node_node_type($op, $info) {
  * Resets all of the relevant fields of a module-defined node type to their
  * default values.
  *
- * @param &$type
+ * @param $type
  *   The node type to reset. The node type is passed back by reference with its
  *   resetted values. If there is no module-defined info for this node type,
  *   then nothing happens.
  */
-function node_type_reset(&$type) {
+function node_type_reset($type) {
   $info_array = module_invoke_all('node_info');
   if (isset($info_array[$type->orig_type])) {
     $info_array[$type->orig_type]['type'] = $type->orig_type;

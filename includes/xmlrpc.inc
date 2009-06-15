@@ -51,7 +51,7 @@ function xmlrpc_value($data, $type = FALSE) {
  * @see
  *   http://www.xmlrpc.com/spec#scalars
  */
-function xmlrpc_value_calculate_type(&$xmlrpc_value) {
+function xmlrpc_value_calculate_type($xmlrpc_value) {
   // http://www.php.net/gettype: Never use gettype() to test for a certain type [...] Instead, use the is_* functions.
   if (is_bool($xmlrpc_value->data)) {
     return 'boolean';
@@ -156,7 +156,7 @@ function xmlrpc_message($message) {
  * @return
  *   TRUE if parsing succeeded; FALSE otherwise
  */
-function xmlrpc_message_parse(&$xmlrpc_message) {
+function xmlrpc_message_parse($xmlrpc_message) {
   // First remove the XML declaration
   $xmlrpc_message->message = preg_replace('/<\?xml(.*)?\?' . '>/', '', $xmlrpc_message->message);
   if (trim($xmlrpc_message->message) == '') {
