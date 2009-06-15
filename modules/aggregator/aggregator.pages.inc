@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.28 2009/06/12 08:39:35 dries Exp $
+// $Id: aggregator.pages.inc,v 1.29 2009/06/15 09:49:58 dries Exp $
 
 /**
  * @file
@@ -238,14 +238,12 @@ function aggregator_categorize_items_submit($form, &$form_state) {
 function theme_aggregator_categorize_items($form) {
   $output = drupal_render($form['feed_source']);
   $rows = array();
-  if ($form['items']) {
+  if (!empty($form['items'])) {
     foreach (element_children($form['items']) as $key) {
-      if (is_array($form['items'][$key])) {
-        $rows[] = array(
-          drupal_render($form['items'][$key]),
-          array('data' => drupal_render($form['categories'][$key]), 'class' => 'categorize-item'),
-        );
-      }
+      $rows[] = array(
+        drupal_render($form['items'][$key]),
+        array('data' => drupal_render($form['categories'][$key]), 'class' => 'categorize-item'),
+      );
     }
   }
   $output .= theme('table', array('', t('Categorize')), $rows);
