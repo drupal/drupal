@@ -154,6 +154,18 @@ function comment_update_7002() {
 }
 
 /**
+ * Improve indexes on the comment table.
+ */
+function comment_update_7003() {
+  $ret = array();
+  db_drop_index($ret, 'comment', 'status');
+  db_drop_index($rest, 'comment', 'pid');
+  db_add_index($ret, 'comment', 'comment_pid_status', array('pid', 'status'));
+  db_add_index($ret, 'comment', 'comment_num_new', array('nid', 'timestamp', 'status'));
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
@@ -255,10 +267,8 @@ function comment_schema() {
       )
     ),
     'indexes' => array(
-      'pid' => array('pid'),
-      'nid' => array('nid'),
-      // This index is probably unused.
-      'status' => array('status'),
+      'comment_status_pid' => array('pid', 'status'),
+      'comment_num_new' => array('nid', 'timestamp', 'status'),
     ),
     'primary key' => array('cid'),
     'foreign keys' => array(
