@@ -678,33 +678,26 @@ function user_admin_perm_submit($form, &$form_state) {
 function theme_user_admin_perm($form) {
   $roles = user_roles();
   foreach (element_children($form['permission']) as $key) {
-    // Don't take form control structures
-    if (is_array($form['permission'][$key])) {
-      $row = array();
-      // Module name
-      if (is_numeric($key)) {
-        $row[] = array('data' => drupal_render($form['permission'][$key]), 'class' => 'module', 'id' => 'module-' . $form['permission'][$key]['#id'], 'colspan' => count($form['role_names']['#value']) + 1);
-      }
-      else {
-        // Permission row.
-        $row[] = array(
-          'data' => drupal_render($form['permission'][$key]),
-          'class' => 'permission',
-        );
-        foreach (element_children($form['checkboxes']) as $rid) {
-          if (is_array($form['checkboxes'][$rid])) {
-            $row[] = array('data' => drupal_render($form['checkboxes'][$rid][$key]), 'class' => 'checkbox', 'title' => $roles[$rid] . ' : ' . t($key));
-          }
-        }
-      }
-      $rows[] = $row;
+    $row = array();
+    // Module name
+    if (is_numeric($key)) {
+      $row[] = array('data' => drupal_render($form['permission'][$key]), 'class' => 'module', 'id' => 'module-' . $form['permission'][$key]['#id'], 'colspan' => count($form['role_names']['#value']) + 1);
     }
+    else {
+      // Permission row.
+      $row[] = array(
+        'data' => drupal_render($form['permission'][$key]),
+        'class' => 'permission',
+      );
+      foreach (element_children($form['checkboxes']) as $rid) {
+        $row[] = array('data' => drupal_render($form['checkboxes'][$rid][$key]), 'class' => 'checkbox', 'title' => $roles[$rid] . ' : ' . t($key));
+      }
+    }
+    $rows[] = $row;
   }
   $header[] = (t('Permission'));
   foreach (element_children($form['role_names']) as $rid) {
-    if (is_array($form['role_names'][$rid])) {
-      $header[] = array('data' => drupal_render($form['role_names'][$rid]), 'class' => 'checkbox');
-    }
+    $header[] = array('data' => drupal_render($form['role_names'][$rid]), 'class' => 'checkbox');
   }
   $output = theme('system_compact_link');
   $output .= theme('table', $header, $rows, array('id' => 'permissions'));
@@ -835,7 +828,7 @@ function theme_user_admin_account($form) {
   );
 
   $output = drupal_render($form['options']);
-  if (isset($form['name']) && is_array($form['name'])) {
+  if (!empty($form['name'])) {
     foreach (element_children($form['name']) as $key) {
       $rows[] = array(
         drupal_render($form['accounts'][$key]),
