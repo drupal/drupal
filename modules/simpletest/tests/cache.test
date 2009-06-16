@@ -2,7 +2,7 @@
 // $Id$
 
 class CacheTestCase extends DrupalWebTestCase {
-  protected $default_table = 'cache';
+  protected $default_bin = 'cache';
   protected $default_cid = 'test_temporary';
   protected $default_value = 'CacheTest';
 
@@ -13,17 +13,17 @@ class CacheTestCase extends DrupalWebTestCase {
    *   The cache id.
    * @param $var
    *   The variable the cache should contain.
-   * @param $table
-   *   The table the cache item was stored in.
+   * @param $bin
+   *   The bin the cache item was stored in.
    * @return
    *   TRUE on pass, FALSE on fail.
    */
-  protected function checkCacheExists($cid, $var, $table = NULL) {
-    if ($table == NULL) {
-      $table = $this->default_table;
+  protected function checkCacheExists($cid, $var, $bin = NULL) {
+    if ($bin == NULL) {
+      $bin = $this->default_bin;
     }
 
-    $cache = cache_get($cid, $table);
+    $cache = cache_get($cid, $bin);
 
     return isset($cache->data) && $cache->data == $var;
   }
@@ -37,12 +37,12 @@ class CacheTestCase extends DrupalWebTestCase {
    *   The variable the cache should contain.
    * @param $cid
    *   The cache id.
-   * @param $table
-   *   The table the cache item was stored in.
+   * @param $bin
+   *   The bin the cache item was stored in.
    */
-  protected function assertCacheExists($message, $var = NULL, $cid = NULL, $table = NULL) {
-    if ($table == NULL) {
-      $table = $this->default_table;
+  protected function assertCacheExists($message, $var = NULL, $cid = NULL, $bin = NULL) {
+    if ($bin == NULL) {
+      $bin = $this->default_bin;
     }
     if ($cid == NULL) {
       $cid = $this->default_cid;
@@ -51,7 +51,7 @@ class CacheTestCase extends DrupalWebTestCase {
       $var = $this->default_value;
     }
 
-    $this->assertTrue($this->checkCacheExists($cid, $var, $table), $message);
+    $this->assertTrue($this->checkCacheExists($cid, $var, $bin), $message);
   }
 
   /**
@@ -61,32 +61,32 @@ class CacheTestCase extends DrupalWebTestCase {
    *   Message to display.
    * @param $cid
    *   The cache id.
-   * @param $table
-   *   The table the cache item was stored in.
+   * @param $bin
+   *   The bin the cache item was stored in.
    */
-  function assertCacheRemoved($message, $cid = NULL, $table = NULL) {
-    if ($table == NULL) {
-      $table = $this->default_table;
+  function assertCacheRemoved($message, $cid = NULL, $bin = NULL) {
+    if ($bin == NULL) {
+      $bin = $this->default_bin;
     }
     if ($cid == NULL) {
       $cid = $this->default_cid;
     }
 
-    $cache = cache_get($cid, $table);
+    $cache = cache_get($cid, $bin);
     $this->assertFalse($cache, $message);
   }
 
   /**
    * Perform the general wipe.
-   * @param $table
-   *   The table to perform the wipe on.
+   * @param $bin
+   *   The bin to perform the wipe on.
    */
-  protected function generalWipe($table = NULL) {
-    if ($table == NULL) {
-      $table = $this->default_table;
+  protected function generalWipe($bin = NULL) {
+    if ($bin == NULL) {
+      $bin = $this->default_bin;
     }
 
-    cache_clear_all(NULL, $table);
+    cache_clear_all(NULL, $bin);
   }
 
   /**
@@ -172,7 +172,7 @@ class CacheClearCase extends CacheTestCase {
   }
 
   function setUp() {
-    $this->default_table = 'cache_page';
+    $this->default_bin = 'cache_page';
     $this->default_value = $this->randomName(10);
 
     parent::setUp();
@@ -182,19 +182,19 @@ class CacheClearCase extends CacheTestCase {
    * Test clearing using a cid.
    */
   function testClearCid() {
-    cache_set('test_cid_clear', $this->default_value, $this->default_table);
+    cache_set('test_cid_clear', $this->default_value, $this->default_bin);
 
     $this->assertCacheExists(t('Cache was set for clearing cid.'), $this->default_value, 'test_cid_clear');
-    cache_clear_all('test_cid_clear', $this->default_table);
+    cache_clear_all('test_cid_clear', $this->default_bin);
 
     $this->assertCacheRemoved(t('Cache was removed after clearing cid.'), 'test_cid_clear');
 
-    cache_set('test_cid_clear1', $this->default_value, $this->default_table);
-    cache_set('test_cid_clear2', $this->default_value, $this->default_table);
+    cache_set('test_cid_clear1', $this->default_value, $this->default_bin);
+    cache_set('test_cid_clear2', $this->default_value, $this->default_bin);
     $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value)
                       && $this->checkCacheExists('test_cid_clear2', $this->default_value),
                       t('Two caches were created for checking cid "*" with wildcard false.'));
-    cache_clear_all('*', $this->default_table);
+    cache_clear_all('*', $this->default_bin);
     $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value)
                       && $this->checkCacheExists('test_cid_clear2', $this->default_value),
                       t('Two caches still exists after clearing cid "*" with wildcard false.'));
@@ -204,22 +204,22 @@ class CacheClearCase extends CacheTestCase {
    * Test clearing using wildcard.
    */
   function testClearWildcard() {
-    cache_set('test_cid_clear1', $this->default_value, $this->default_table);
-    cache_set('test_cid_clear2', $this->default_value, $this->default_table);
+    cache_set('test_cid_clear1', $this->default_value, $this->default_bin);
+    cache_set('test_cid_clear2', $this->default_value, $this->default_bin);
     $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value)
                       && $this->checkCacheExists('test_cid_clear2', $this->default_value),
                       t('Two caches were created for checking cid "*" with wildcard true.'));
-    cache_clear_all('*', $this->default_table, TRUE);
+    cache_clear_all('*', $this->default_bin, TRUE);
     $this->assertFalse($this->checkCacheExists('test_cid_clear1', $this->default_value)
                       || $this->checkCacheExists('test_cid_clear2', $this->default_value),
                       t('Two caches removed after clearing cid "*" with wildcard true.'));
 
-    cache_set('test_cid_clear1', $this->default_value, $this->default_table);
-    cache_set('test_cid_clear2', $this->default_value, $this->default_table);
+    cache_set('test_cid_clear1', $this->default_value, $this->default_bin);
+    cache_set('test_cid_clear2', $this->default_value, $this->default_bin);
     $this->assertTrue($this->checkCacheExists('test_cid_clear1', $this->default_value)
                       && $this->checkCacheExists('test_cid_clear2', $this->default_value),
                       t('Two caches were created for checking cid substring with wildcard true.'));
-    cache_clear_all('test_', $this->default_table, TRUE);
+    cache_clear_all('test_', $this->default_bin, TRUE);
     $this->assertFalse($this->checkCacheExists('test_cid_clear1', $this->default_value)
                       || $this->checkCacheExists('test_cid_clear2', $this->default_value),
                       t('Two caches removed after clearing cid substring with wildcard true.'));
