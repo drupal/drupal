@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.711 2009/06/11 04:36:22 dries Exp $
+// $Id: system.module,v 1.712 2009/06/16 08:41:35 dries Exp $
 
 /**
  * @file
@@ -2300,7 +2300,7 @@ function system_message_action_form($context) {
     '#default_value' => isset($context['message']) ? $context['message'] : '',
     '#required' => TRUE,
     '#rows' => '8',
-    '#description' => t('The message to be displayed to the current user. You may include the following variables: %site_name, %username, %node_url, %node_type, %title, %teaser, %body. Not all variables will be available in all contexts.'),
+    '#description' => t('The message to be displayed to the current user. You may include the following variables: %site_name, %username, %node_url, %node_type, %title, %teaser, %body, %term_name, %term_description, %term_id, %vocabulary_name, %vocabulary_description, %vocabulary_id. Not all variables will be available in all contexts.'),
   );
   return $form;
 }
