@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.37 2009/06/15 19:28:55 dries Exp $
+// $Id: comment.install,v 1.38 2009/06/16 20:50:26 dries Exp $
 
 /**
  * @file
@@ -159,7 +159,7 @@ function comment_update_7002() {
 function comment_update_7003() {
   $ret = array();
   db_drop_index($ret, 'comment', 'status');
-  db_drop_index($rest, 'comment', 'pid');
+  db_drop_index($ret, 'comment', 'pid');
   db_add_index($ret, 'comment', 'comment_pid_status', array('pid', 'status'));
   db_add_index($ret, 'comment', 'comment_num_new', array('nid', 'timestamp', 'status'));
   return $ret;
