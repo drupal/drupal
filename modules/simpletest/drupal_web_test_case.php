@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.116 2009/06/12 08:39:39 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.117 2009/06/16 04:43:47 webchick Exp $
 
 /**
  * Base class for Drupal tests.
@@ -1625,6 +1625,8 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   Message to display.
    * @param $group
    *   The group this message belongs to, defaults to 'Other'.
+   * @return
+   *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertLink($label, $index = 0, $message = '', $group = 'Other') {
     $links = $this->xpath('//a[text()="' . $label . '"]');
@@ -1643,6 +1645,8 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   Message to display.
    * @param $group
    *   The group this message belongs to, defaults to 'Other'.
+   * @return
+   *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNoLink($label, $message = '', $group = 'Other') {
     $links = $this->xpath('//a[text()="' . $label . '"]');
