@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.922 2009/06/13 19:28:57 dries Exp $
+// $Id: common.inc,v 1.923 2009/06/17 11:08:46 dries Exp $
 
 /**
  * @file
@@ -536,8 +536,9 @@ function drupal_http_request($url, array $options = array()) {
   // or PUT request. Some non-standard servers get confused by Content-Length in
   // at least HEAD/GET requests, and Squid always requires Content-Length in
   // POST/PUT requests.
-  if (!empty($options['data']) || $options['method'] == 'POST' || $options['method'] == 'PUT') {
-    $options['headers']['Content-Length'] = strlen($options['data']);
+  $content_length = strlen($options['data']);
+  if ($content_length > 0 || $options['method'] == 'POST' || $options['method'] == 'PUT') {
+    $options['headers']['Content-Length'] = $content_length;
   }
 
   // If the server URL has a user then attempt to use basic authentication.
