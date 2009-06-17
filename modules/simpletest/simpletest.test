@@ -260,7 +260,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
    * @return The test is being run from inside a CURL request.
    */
   function inCURL() {
-    return preg_match("/^simpletest\d+/", $_SERVER['HTTP_USER_AGENT']);
+    return isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/^simpletest\d+/", $_SERVER['HTTP_USER_AGENT']);
   }
 }
 
