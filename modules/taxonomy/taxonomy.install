@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.install,v 1.19 2009/06/12 13:59:56 dries Exp $
+// $Id: taxonomy.install,v 1.20 2009/06/18 15:46:30 dries Exp $
 
 /**
  * @file
@@ -335,22 +335,6 @@ function taxonomy_schema() {
   );
 
   return $schema;
-}
-
-/**
- * Rename taxonomy tables.
- */
-function taxonomy_update_7001() {
-  $ret = array();
-  db_rename_table($ret, 'term_data', 'taxonomy_term_data');
-  db_rename_table($ret, 'term_hierarchy', 'taxonomy_term_hierarchy');
-  db_rename_table($ret, 'term_node', 'taxonomy_term_node');
-  db_rename_table($ret, 'term_relation', 'taxonomy_term_relation');
-  db_rename_table($ret, 'term_synonym', 'taxonomy_term_synonym');
-  db_rename_table($ret, 'vocabulary', 'taxonomy_vocabulary');
-  db_rename_table($ret, 'vocabulary_node_types', 'taxonomy_vocabulary_node_type');
-
-  return $ret;
 }
 
 /**
