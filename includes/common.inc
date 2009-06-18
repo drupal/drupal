@@ -3748,6 +3748,56 @@ function drupal_render_children(&$element, $children_keys = NULL) {
 }
 
 /**
+ * Render and print an element.
+ *
+ * This function renders an element using drupal_render() and then prints out
+ * the rendered output. The top level element is always rendered and printed
+ * even if hide() had been previously used on it.
+ *
+ * Any nested elements are only printed if they haven't been printed before or
+ * if they have been re-enabled with show(). If the element is a string instead
+ * of a renderable array it is also printed.
+ *
+ * @see drupal_render()
+ * @see show()
+ * @see hide()
+ */
+function render(&$element) {
+  if (is_array($element)) {
+    show($element);
+    print drupal_render($element);
+  }
+  else {
+    print $element;
+  }
+}
+
+/**
+ * Hide an element from later rendering.
+ *
+ * @see render()
+ * @see show()
+ */
+function hide(&$element) {
+  $element['#printed'] = TRUE;
+  return $element;
+}
+
+/**
+ * Show a hidden or already printed element from later rendering.
+ *
+ * Alternatively, render($element) could be used which automatically shows the
+ * element while rendering and printing it.
+ *
+ * @see render()
+ * @see hide()
+ */
+function show(&$element) {
+  $element['#printed'] = FALSE;
+  return $element;
+}
+
+/**
  * Function used by uasort to sort structured arrays by weight.
  */
 function element_sort($a, $b) {

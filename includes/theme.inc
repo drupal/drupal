@@ -1886,7 +1886,7 @@ function template_process(&$variables, $hook) {
 }
 
 /**
- * Process variables for page.tpl.php
+ * Preprocess variables for page.tpl.php
  *
  * Most themes utilize their own copy of page.tpl.php. The default is located
  * inside "modules/system/page.tpl.php". Look in there for the full list of
@@ -1897,23 +1897,15 @@ function template_process(&$variables, $hook) {
  *
  * Any changes to variables in this preprocessor should also be changed inside
  * template_preprocess_maintenance_page() to keep all of them consistent.
- *
- * The $variables array contains two keys:
- * - 'page': the fully decorated page.
- * - 'content': the content of the page, already rendered.
- *
+ * 
  * @see drupal_render_page
+ * @see template_process_page
  * @see page.tpl.php
  */
 function template_preprocess_page(&$variables) {
   // Move some variables to the top level for themer convenience and template cleanliness.
   $variables['show_blocks'] = $variables['page']['#show_blocks'];
   $variables['show_messages'] = $variables['page']['#show_messages'];
-
-  // Render each region into top level variables.
-  foreach (system_region_list($GLOBALS['theme']) as $region_key => $region_name) {
-    $variables[$region_key] = empty($variables['page'][$region_key]) ? '' : drupal_render($variables['page'][$region_key]);
-  }
 
   // Add favicon.
   if (theme_get_setting('toggle_favicon')) {
@@ -1928,10 +1920,10 @@ function template_preprocess_page(&$variables) {
 
   // Set up layout variable.
   $variables['layout'] = 'none';
-  if (!empty($variables['left'])) {
+  if (!empty($variables['page']['left'])) {
     $variables['layout'] = 'left';
   }
-  if (!empty($variables['right'])) {
+  if (!empty($variables['page']['right'])) {
     $variables['layout'] = ($variables['layout'] == 'left') ? 'both' : 'right';
   }
 
@@ -1950,7 +1942,6 @@ function template_preprocess_page(&$variables) {
   $variables['front_page']        = url();
   $variables['breadcrumb']        = theme('breadcrumb', drupal_get_breadcrumb());
   $variables['feed_icons']        = drupal_get_feeds();
-  $variables['head']              = drupal_get_html_head();
   $variables['language']          = $GLOBALS['language'];
   $variables['language']->dir     = $GLOBALS['language']->direction ? 'rtl' : 'ltr';
   $variables['logo']              = theme_get_setting('logo');
@@ -1960,9 +1951,6 @@ function template_preprocess_page(&$variables) {
   $variables['search_box']        = (theme_get_setting('toggle_search') ? drupal_render(drupal_get_form('search_theme_form')) : '');
   $variables['site_name']         = (theme_get_setting('toggle_name') ? filter_xss_admin(variable_get('site_name', 'Drupal')) : '');
   $variables['site_slogan']       = (theme_get_setting('toggle_slogan') ? filter_xss_admin(variable_get('site_slogan', '')) : '');
-  $variables['css']               = drupal_add_css();
-  $variables['styles']            = drupal_get_css();
-  $variables['scripts']           = drupal_get_js();
   $variables['tabs']              = theme('menu_local_tasks');
   $variables['title']             = drupal_get_title();
   // RDFa allows annotation of XHTML pages with RDF data, while GRDDL provides
@@ -2013,6 +2001,27 @@ function template_preprocess_page(&$variables) {
   else {
     $variables['classes_array'][] = 'one-sidebar sidebar-' . $variables['layout'];
   }
+}
+/**
+ * Process variables for page.tpl.php
+ *
+ * Perform final addition and modification of variables before passing into 
+ * the template. To customize these variables, call drupal_render() on elements 
+ * in $variables['page'] during THEME_preprocess_page().
+ *
+ * @see template_preprocess_page()
+ * @see page.tpl.php
+ */
+function template_process_page(&$variables) {
+  // Render each region into top level variables.
+  foreach (system_region_list($GLOBALS['theme']) as $region_key => $region_name) {
+    $variables[$region_key] = drupal_render($variables['page'][$region_key]);
+  }
+
+  $variables['head']    = drupal_get_html_head();
+  $variables['css']     = drupal_add_css();
+  $variables['styles']  = drupal_get_css();
+  $variables['scripts'] = drupal_get_js();
 }
 
 /**

@@ -1247,18 +1247,6 @@ function template_preprocess_node(&$variables) {
     unset($node->content['links']);
   }
 
-  // Render taxonomy links separately.
-  $variables['terms']     = !empty($node->content['links']['terms']) ? drupal_render($node->content['links']['terms']) : '';
-
-  // Render all remaining node links.
-  $variables['links']     = !empty($node->content['links']) ? drupal_render($node->content['links']) : '';
-
-  // Render any comments.
-  $variables['comments']  = !empty($node->content['comments']) ? drupal_render($node->content['comments']) : '';
-
-  // Render the rest of the node into $content.
-  $variables['content'] = drupal_render($node->content);
-
   // Flatten the node object's member fields.
   $variables = array_merge((array)$node, $variables);
 

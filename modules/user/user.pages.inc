@@ -185,20 +185,11 @@ function user_view($account) {
  * The $variables array contains the following arguments:
  * - $account
  *
- * @see user-picture.tpl.php
+ * @see user-profile.tpl.php
  */
 function template_preprocess_user_profile(&$variables) {
   $account = $variables['elements']['#account'];
-
-  $variables['profile'] = array();
-  // Sort sections by weight
-  uasort($account->content, 'element_sort');
-  // Provide keyed variables so themers can print each section independently.
-  foreach (element_children($account->content) as $key) {
-    $variables['profile'][$key] = drupal_render($account->content[$key]);
-  }
-  // Collect all profiles to make it easier to print all items at once.
-  $variables['user_profile'] = implode($variables['profile']);
+  $variables['user_profile'] = $account->content;
 
   // Add $FIELD_NAME_rendered variables for fields.
   $variables += field_attach_preprocess('user', $account);

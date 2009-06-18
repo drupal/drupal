@@ -75,11 +75,11 @@
  * - $tabs: Tabs linking to any sub-pages beneath the current page (e.g., the view
  *   and edit tabs when displaying a node).
  * - $help: Dynamic help text, mostly for admin pages.
- * - $content: The main content of the current Drupal page.
+ * - $content: The main content of the current page.
  * - $feed_icons: A string of all feed icons for the current page.
- * - $left: The HTML for the left sidebar.
- * - $right: The HTML for the right sidebar.
- * - $highlight: The HTML for the highlighted content region.
+ * - $left: Items for the left sidebar.
+ * - $right: Items for the right sidebar.
+ * - $highlight: Items for the highlighted content region.
  *
  * Footer/closing data:
  * - $footer : The footer region.

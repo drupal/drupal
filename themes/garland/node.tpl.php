@@ -4,7 +4,6 @@
 <div id="node-<?php print $node->nid; ?>" class="<?php print $classes ?>">
 
 <?php print $picture ?>
-
 <?php if ($page == 0): ?>
   <h2><a href="<?php print $node_url ?>" title="<?php print $title ?>"><?php print $title ?></a></h2>
 <?php endif; ?>
@@ -14,21 +13,21 @@
   <?php endif; ?>
 
   <div class="content clearfix">
-    <?php print $content ?>
+    <?php hide($content['links']); hide($content['comments']); render($content); ?>
   </div>
 
   <div class="clearfix">
     <div class="meta">
-    <?php if ($terms): ?>
-      <div class="terms"><?php print $terms ?></div>
+    <?php if (!empty($content['links']['terms'])): ?>
+      <div class="terms"><?php render($content['links']['terms']) ?></div>
     <?php endif;?>
     </div>
 
-    <?php if ($links): ?>
-      <div class="links"><?php print $links; ?></div>
+    <?php if (!empty($content['links'])): ?>
+      <div class="links"><?php render($content['links']) ?></div>
     <?php endif; ?>
 
-    <?php print $comments; ?>
+    <?php render($content['comments']); ?>
 
   </div>
 
