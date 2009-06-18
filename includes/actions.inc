@@ -305,6 +305,9 @@ function actions_synchronize($delete_orphans = FALSE) {
  *
  * @param $function
  *   The name of the function to be called when this action is performed.
+ * @param $type
+ *   The type of action, to describe grouping and/or context, e.g., 'node',
+ *   'user', 'comment', or 'system'.
  * @param $params
  *   An associative array with parameter names as keys and parameter values as
  *   values.
