@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1070 2009/06/12 08:39:38 dries Exp $
+// $Id: node.module,v 1.1071 2009/06/18 21:19:02 webchick Exp $
 
 /**
  * @file
@@ -1246,18 +1246,6 @@ function template_preprocess_node(&$variables) {
   if ($node->build_mode == NODE_BUILD_PREVIEW) {
     unset($node->content['links']);
   }
-
-  // Render taxonomy links separately.
-  $variables['terms']     = !empty($node->content['links']['terms']) ? drupal_render($node->content['links']['terms']) : '';
-
-  // Render all remaining node links.
-  $variables['links']     = !empty($node->content['links']) ? drupal_render($node->content['links']) : '';
-
-  // Render any comments.
-  $variables['comments']  = !empty($node->content['comments']) ? drupal_render($node->content['comments']) : '';
-
-  // Render the rest of the node into $content.
-  $variables['content'] = drupal_render($node->content);
 
   // Flatten the node object's member fields.
   $variables = array_merge((array)$node, $variables);
