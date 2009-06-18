@@ -3554,10 +3554,29 @@ function system_update_7026() {
 function system_update_7027() {
   $ret = array();
   $module_list = array('text', 'number', 'list', 'options');
+  db_delete('system')->condition('type', 'module')->condition('name', $module_list)->execute();
   drupal_install_modules($module_list);
   module_enable($module_list);
   return $ret;
 }
+
+/**
+ * Rename taxonomy tables.
+ */
+function system_update_7028() {
+  $ret = array();
+  db_rename_table($ret, 'term_data', 'taxonomy_term_data');
+  db_rename_table($ret, 'term_hierarchy', 'taxonomy_term_hierarchy');
+  db_rename_table($ret, 'term_node', 'taxonomy_term_node');
+  db_rename_table($ret, 'term_relation', 'taxonomy_term_relation');
+  db_rename_table($ret, 'term_synonym', 'taxonomy_term_synonym');
+  db_rename_table($ret, 'vocabulary', 'taxonomy_vocabulary');
+  db_rename_table($ret, 'vocabulary_node_types', 'taxonomy_vocabulary_node_type');
+
+  return $ret;
+}
+
+
 
 /**
  * @} End of "defgroup updates-6.x-to-7.x"

@@ -398,7 +398,7 @@ function node_update_7004() {
 
   // Map old preview setting to new values order.
   $original_preview ? $original_preview = 2 : $original_preview = 1;
-  $node_types_clear();
+  node_type_clear();
   $type_list = node_type_get_types();
 
   // Apply original settings to all types.
