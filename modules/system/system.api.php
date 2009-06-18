@@ -551,11 +551,13 @@ function hook_system_info_alter(&$info, $file) {
  * Define user permissions.
  *
  * This hook can supply permissions that the module defines, so that they
- * can be selected on the user permissions page and used to restrict
+ * can be selected on the user permissions page and used to grant or restrict
  * access to actions the module performs.
  *
  * @return
- *   An array of which permission names are the keys and their corresponding value is a description of the permission
+ *   An array of permissions where the permission name is the array key and the
+ *   corresponding key value is an array of key/value pairs specifying
+ *   the permission's title and description
  *
  * The permissions in the array do not need to be wrapped with the function t(),
  * since the string extractor takes care of extracting permission names defined in the perm hook for translation.
@@ -566,7 +568,10 @@ function hook_system_info_alter(&$info, $file) {
  */
 function hook_perm() {
   return array(
-    'administer my module' => t('Perform maintenance tasks for my module'),
+    'administer my module' =>  array(
+      'title' => t('Administer my module'),
+      'description' => t('Perform administration tasks for my module.'),
+    ),
   );
 }
 
