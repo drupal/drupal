@@ -45,7 +45,7 @@
  *     switch($key) {
  *       case 'notice':
  *         $message['subject'] = t('Notification from !site', $variables, $language->language);
- *         $message['body'] = t("Dear !username\n\nThere is new content available on the site.", $variables, $language->language);
+ *         $message['body'][] = t("Dear !username\n\nThere is new content available on the site.", $variables, $language->language);
  *         break;
  *     }
  *   }
