@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.341 2009/06/15 09:51:49 dries Exp $
+// $Id: form.inc,v 1.342 2009/06/18 15:48:13 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -346,6 +346,7 @@ function form_set_cache($form_build_id, $form, $form_state) {
  *   in here when it is called.
  * For example:
  *
+ * @code
  * // register a new user
  * $form_state = array();
  * $form_state['values']['name'] = 'robo-user';
@@ -363,6 +364,7 @@ function form_set_cache($form_build_id, $form, $form_state) {
  * $form_state['values']['name'] = 'robo-user';
  * $form_state['values']['op'] = t('Save');
  * drupal_form_submit('story_node_form', $form_state, (object)$node);
+ * @endcode
  */
 function drupal_form_submit($form_id, &$form_state) {
   if (!isset($form_state['args'])) {
