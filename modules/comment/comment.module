@@ -471,18 +471,21 @@ function comment_node_view($node, $teaser) {
       }
     }
     else {
-      // Node page: add a "post comment" link if the user is allowed to post comments,
-      // if this node is not read-only, and if the comment form isn't already shown.
+      // Node page: add a "post comment" link if the user is allowed to post
+      // comments and if this node is not read-only.
       if ($node->comment == COMMENT_NODE_OPEN) {
         if (user_access('post comments')) {
+          $links['comment_add'] = array(
+            'title' => t('Add new comment'),
+            'attributes' => array('title' => t('Share your thoughts and opinions related to this posting.')),
+            'fragment' => 'comment-form',
+            'html' => TRUE,
+          );
           if (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_SEPARATE_PAGE) {
-            $links['comment_add'] = array(
-              'title' => t('Add new comment'),
-              'href' => "comment/reply/$node->nid",
-              'attributes' => array('title' => t('Share your thoughts and opinions related to this posting.')),
-              'fragment' => 'comment-form',
-              'html' => TRUE,
-            );
+            $links['comment_add']['href'] = "comment/reply/$node->nid";
+          }
+          else {
+            $links['comment_add']['href'] = "node/$node->nid";
           }
         }
         else {
