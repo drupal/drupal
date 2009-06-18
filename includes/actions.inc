@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.inc,v 1.27 2009/05/31 03:12:18 webchick Exp $
+// $Id: actions.inc,v 1.28 2009/06/18 10:37:37 dries Exp $
 
 /**
  * @file
@@ -305,6 +305,9 @@ function actions_synchronize($delete_orphans = FALSE) {
  *
  * @param $function
  *   The name of the function to be called when this action is performed.
+ * @param $type
+ *   The type of action, to describe grouping and/or context, e.g., 'node',
+ *   'user', 'comment', or 'system'.
  * @param $params
  *   An associative array with parameter names as keys and parameter values as
  *   values.
