@@ -89,7 +89,7 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->assertText(t('The block settings have been updated.'), t('[New forum topics] Forum block was enabled'));
 
     // Retrieve forum menu id.
-    $mlid = db_result(db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = 'forum' AND menu_name = 'navigation' AND module = 'system' ORDER BY mlid ASC", 0, 1));
+    $mlid = db_query_range("SELECT mlid FROM {menu_links} WHERE link_path = 'forum' AND menu_name = 'navigation' AND module = 'system' ORDER BY mlid ASC", 0, 1)->fetchField();
 
     // Add forum to navigation menu.
     $edit = array();
@@ -176,12 +176,12 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->assertRaw(t('Created new @type %term.', array('%term' => $name, '@type' => t($type))), t(ucfirst($type) . ' was created'));
 
     // Verify forum.
-    $term = db_fetch_array(db_query("SELECT * FROM {taxonomy_term_data} t WHERE t.vid = %d AND t.name = '%s' AND t.description = '%s'", variable_get('forum_nav_vocabulary', ''), $name, $description));
+    $term = db_query("SELECT * FROM {taxonomy_term_data} t WHERE t.vid = :vid AND t.name = :name AND t.description = :desc", array(':vid' => variable_get('forum_nav_vocabulary', ''), ':name' => $name, ':desc' => $description))->fetchAssoc();
     $this->assertTrue(!empty($term), 'The ' . $type . ' exists in the database');
 
     // Verify forum hierarchy.
     $tid = $term['tid'];
-    $parent_tid = db_result(db_query("SELECT t.parent FROM {taxonomy_term_hierarchy} t WHERE t.tid = %d", $tid));
+    $parent_tid = db_query("SELECT t.parent FROM {taxonomy_term_hierarchy} t WHERE t.tid = :tid", array(':tid' => $tid))->fetchField();
     $this->assertTrue($parent == $parent_tid, 'The ' . $type . ' is linked to its container');
 
     return $term;
@@ -286,7 +286,7 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->drupalGet('admin/help/forum');
     $this->assertResponse($response2);
     if ($response2 == 200) {
-      $this->assertTitle(t('Forum | Drupal'), t('Forum help node was displayed'));
+      $this->assertTitle(t('Forum | Drupal'), t('Forum help title was displayed'));
       $this->assertText(t('Forum'), t('Forum help node was displayed'));
       $this->assertText(t('Home ' . $crumb . ' Administer ' . $crumb . ' Help'), t('Breadcrumbs were displayed'));
     }
@@ -330,7 +330,10 @@ class ForumTestCase extends DrupalWebTestCase {
       $this->assertRaw(t('Forum topic %title has been updated.', array('%title' => $edit['title'])), t('Forum node was edited'));
 
       // Verify topic was moved to a different forum.
-      $forum_tid = db_result(db_query("SELECT tid FROM {forum} WHERE nid = %d AND vid = %d", $node->nid, $node->vid));
+      $forum_tid = db_query("SELECT tid FROM {forum} WHERE nid = :nid AND vid = :vid", array(
+        ':nid' => $node->nid,
+        ':vid' => $node->vid,
+      ))->fetchField();
       $this->assertTrue($forum_tid == $this->root_forum['tid'], 'The forum topic is linked to a different forum');
 
       // Delete forum node.
@@ -351,7 +354,7 @@ class ForumTestCase extends DrupalWebTestCase {
     // View forum page.
     $this->drupalGet('forum/' . $forum['tid']);
     $this->assertResponse(200);
-    $this->assertTitle($forum['name'] . ' | Drupal', t('Forum node was displayed'));
+    $this->assertTitle($forum['name'] . ' | Drupal', t('Forum name was displayed'));
     if (isset($parent)) {
       $this->assertText(t('Home ' . $crumb . ' Forums ' . $crumb . ' @name', array('@name' => $parent['name'])), t('Breadcrumbs were displayed'));
     }
