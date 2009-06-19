@@ -1889,7 +1889,7 @@ EOT;
 /**
  * This function formats the content of an administrative block.
  *
- * @param $block
+ * @param $content
  *   An array containing information about the block. It should
  *   include a 'title', a 'description' and a formatted 'content'.
  * @ingroup themeable
