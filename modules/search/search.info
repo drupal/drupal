@@ -8,3 +8,4 @@ files[] = search.module
 files[] = search.admin.inc
 files[] = search.pages.inc
 files[] = search.install
+files[] = search.test
