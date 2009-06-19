@@ -29,5 +29,5 @@
  */
 ?>
 <div class="profile">
-  <?php print render($user_profile); ?>
+  <?php render($user_profile); ?>
 </div>
