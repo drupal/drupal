@@ -204,6 +204,13 @@ function comment_menu() {
     'access arguments' => array('administer comments'),
     'type' => MENU_CALLBACK,
   );
+  $items['comment/%comment'] = array(
+    'title' => 'Comment permalink',
+    'page callback' => 'comment_permalink',
+    'page arguments' => array(1),
+    'access arguments' => array('access comments'),
+    'type' => MENU_CALLBACK,
+  );
 
   return $items;
 }
@@ -298,6 +305,43 @@ function comment_block_view($delta = '') {
 
     return $block;
   }
+}
+
+/**
+ * Redirects comment links to the correct page depending on comment settings.
+ *
+ * Since comments are paged there is no way to guarantee which page a comment
+ * appears on. Comment paging and threading settings may be changed at any time.
+ * With threaded comments, an individual comment may move between pages as
+ * comments can be added either before or after it in the overall discussion.
+ * Therefore we use a central routing function for comment links, which
+ * calculates the page number based on current comment settings and returns
+ * the full comment view with the pager set dynamically.
+ *
+ * @param $comment
+ *   A comment object.
+ * @return
+ *   The comment listing set to the page on which the comment appears.
+ */
+function comment_permalink($comment) {
+  $node = node_load($comment->nid);
+  if ($node && $comment) {
+
+    // Find the current display page for this comment.
+    $page = comment_get_display_page($comment->cid, $node->type);
+
+    // Set $_GET['q'] and $_GET['page'] ourselves so that the node callback
+    // behaves as it would when visiting the page directly.
+    $_GET['q'] = 'node/' . $node->nid;
+    $_GET['page'] = $page;
+
+    // Set the node path as the canonical URL to prevent duplicate content.
+    drupal_add_link(array('rel' => 'canonical', 'href' => url('node/' . $node->nid)));
+
+    // Return the node view, this will show the correct comment in context.
+    return menu_execute_active_handler('node/' . $node->nid);
+  }
+  drupal_not_found();
 }
 
 /**
@@ -404,7 +448,7 @@ function theme_comment_block() {
   $items = array();
   $number = variable_get('comment_block_count', 10);
   foreach (comment_get_recent($number) as $comment) {
-    $items[] = l($comment->subject, 'node/' . $comment->nid, array('fragment' => 'comment-' . $comment->cid)) . '<br />' . t('@time ago', array('@time' => format_interval(REQUEST_TIME - $comment->timestamp)));
+    $items[] = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)) . '<br />' . t('@time ago', array('@time' => format_interval(REQUEST_TIME - $comment->timestamp)));
   }
 
   if ($items) {
@@ -1178,7 +1222,7 @@ function comment_render($node, $cid = 0) {
         $query->condition('c.status', COMMENT_PUBLISHED);
         $count_query->condition('c.status', COMMENT_PUBLISHED);
       }
-      if ($mode == COMMENT_MODE_FLAT_COLLAPSED || $mode == COMMENT_MODE_FLAT_EXPANDED) {
+      if ($mode === COMMENT_MODE_FLAT_COLLAPSED || $mode === COMMENT_MODE_FLAT_EXPANDED) {
         $query->orderBy('c.cid', 'ASC');
       }
       else {
@@ -1348,6 +1392,67 @@ function comment_num_new($nid, $timestamp = 0) {
     return FALSE;
   }
 
+}
+
+/**
+ * Get the display ordinal for a comment, starting from 0.
+ *
+ * Count the number of comments which appear before the comment we want to
+ * display, taking into account display settings and threading.
+ *
+ * @param $cid
+ *   The comment ID.
+ * @param $node_type
+ *   The node type of the comment's parent.
+ * @return
+ *   The display ordinal for the comment.
+ * @see comment_get_display_page()
+ */
+function comment_get_display_ordinal($cid, $node_type) {
+  // Count how many comments (c1) are before $cid (c2) in display order. This is
+  // the 0-based display ordinal.
+  $query = db_select('comment', 'c1');
+  $query->innerJoin('comment', 'c2', 'c2.nid = c1.nid');
+  $query->addExpression('COUNT(*)', 'count');
+  $query->condition('c2.cid', $cid);
+  if (!user_access('administer comments')) {
+    $query->condition('c1.status', COMMENT_PUBLISHED);
+  }
+  $mode = variable_get('comment_default_mode_' . $node_type, COMMENT_MODE_THREADED_EXPANDED);
+
+  if ($mode == COMMENT_MODE_FLAT_EXPANDED || $mode == COMMENT_MODE_FLAT_COLLAPSED) {
+    // For flat comments, cid is used for ordering comments due to
+    // unpredicatable behavior with timestamp, so we make the same assumption
+    // here.
+    $query->condition('c1.cid', 'c2.cid', '<');
+  }
+  else {
+    // For threaded comments, the c.thread column is used for ordering. We can
+    // use the vancode for comparison, but must remove the trailing slash.
+    // @see comment_render().
+    $query->where('SUBSTRING(c1.thread, 1, (LENGTH(c1.thread) -1)) < SUBSTRING(c2.thread, 1, (LENGTH(c2.thread) -1))');
+  }
+
+  return $query->execute()->fetchField();
+}
+
+/**
+ * Return the page number for a comment.
+ *
+ * Finds the correct page number for a comment taking into account display
+ * and paging settings.
+ *
+ * @param $cid
+ *   The comment ID.
+ * @param $node_type
+ *   The node type the comment is attached to.
+ * @return
+ *   The page number.
+ */
+function comment_get_display_page($cid, $node_type) {
+  $ordinal = comment_get_display_ordinal($cid, $node_type);
+  $comments_per_page = variable_get('comment_default_per_page_' . $node_type, 50);
+  return floor($ordinal / $comments_per_page);
 }
 
 /**
@@ -1804,11 +1909,7 @@ function _comment_form_submit(&$comment_values) {
 function comment_form_submit($form, &$form_state) {
   _comment_form_submit($form_state['values']);
   if ($cid = comment_save($form_state['values'])) {
-    $node = node_load($form_state['values']['nid']);
-    // Add 1 to existing $node->comment count to include new comment.
-    $comment_count = $node->comment_count + 1;
-    $page = comment_new_page_count($comment_count, 1, $node);
-    $form_state['redirect'] = array('node/' . $node->nid, $page, "comment-$cid");
+    $form_state['redirect'] = array('comment/' . $cid, array(), "comment-$cid");
     return;
   }
 }
@@ -1871,7 +1972,7 @@ function template_preprocess_comment(&$variables) {
   $variables['picture']   = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', $comment) : '';
   $variables['signature'] = $comment->signature;
   $variables['submitted'] = theme('comment_submitted', $comment);
-  $variables['title']     = l($comment->subject, $_GET['q'], array('fragment' => "comment-$comment->cid"));
+  $variables['title']     = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => "comment-$comment->cid"));
   $variables['template_files'][] = 'comment-' . $node->type;
   // Set status to a string representation of comment->status.
   if (isset($comment->preview)) {
@@ -1912,7 +2013,7 @@ function template_preprocess_comment_folded(&$variables) {
   $variables['author'] = theme('username', $comment);
   $variables['date']   = format_date($comment->timestamp);
   $variables['new']    = $comment->new ? t('new') : '';
-  $variables['title']  = l($comment->subject, comment_node_url() . '/' . $comment->cid, array('fragment' => "comment-$comment->cid"));
+  $variables['title']  = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => "comment-$comment->cid"));
   // Gather comment classes.
   if ($comment->uid === 0) {
     $variables['classes_array'][] = 'comment-by-anonymous';
