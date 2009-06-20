@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.26 2009/06/12 08:39:38 dries Exp $
+// $Id: locale.test,v 1.27 2009/06/20 15:17:38 dries Exp $
 
 /**
  * @file
@@ -1366,7 +1366,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
 
     // Set page content type to use multilingual support.
     $this->drupalGet('admin/build/node-type/page');
-    $this->assertText(t('Multilingual support:'), t('Multilingual support fieldset present on content type configuration form.'));
+    $this->assertText(t('Multilingual support'), t('Multilingual support fieldset present on content type configuration form.'));
     $edit = array(
       'language_content_type' => 1,
     );

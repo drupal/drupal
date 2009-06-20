@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.342 2009/06/18 15:48:13 dries Exp $
+// $Id: form.inc,v 1.343 2009/06/20 15:17:38 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2620,10 +2620,10 @@ function theme_form_element($element) {
   if (!empty($element['#title']) && empty($element['#form_element_skip_title'])) {
     $title = $element['#title'];
     if (!empty($element['#id'])) {
-      $output .= ' <label for="' . $element['#id'] . '">' . $t('!title: !required', array('!title' => filter_xss_admin($title), '!required' => $required)) . "</label>\n";
+      $output .= ' <label for="' . $element['#id'] . '">' . $t('!title !required', array('!title' => filter_xss_admin($title), '!required' => $required)) . "</label>\n";
     }
     else {
-      $output .= ' <label>' . $t('!title: !required', array('!title' => filter_xss_admin($title), '!required' => $required)) . "</label>\n";
+      $output .= ' <label>' . $t('!title !required', array('!title' => filter_xss_admin($title), '!required' => $required)) . "</label>\n";
     }
   }
 
