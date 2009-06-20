@@ -69,9 +69,10 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
     // Create a new vocabulary.
     $this->clickLink(t('Add vocabulary'));
     $edit = array();
+    $machine_name = drupal_strtolower($this->randomName());
     $edit['name'] = $this->randomName();
     $edit['description'] = $this->randomName();
-    $edit['machine_name'] = drupal_strtolower($this->randomName());
+    $edit['machine_name'] = $machine_name;
     $edit['help'] = $this->randomName();
     $edit['nodes[article]'] = 'article';
     $edit['tags'] = 1;
@@ -86,12 +87,12 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
     $this->clickLink(t('edit vocabulary'));
     $edit = array();
     $edit['name'] = $this->randomName();
-    $edit['machine_name'] = drupal_strtolower($this->randomName());
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->drupalGet('admin/content/taxonomy');
     $this->assertText($edit['name'], t('Vocabulary found in the vocabulary overview listing.'));
 
     // Try to submit a vocabulary with a duplicate machine name.
+    $edit['machine_name'] = $machine_name;
     $this->drupalPost('admin/content/taxonomy/add', $edit, t('Save'));
     $this->assertText(t('This machine-readable name is already in use by another vocabulary and must be unique.'), t('Duplicate machine name validation was successful'));
 

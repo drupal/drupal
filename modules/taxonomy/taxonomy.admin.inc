@@ -222,7 +222,7 @@ function taxonomy_form_vocabulary_validate($form, &$form_state) {
     // Do not allow duplicate machine names.
     $vocabularies = taxonomy_get_vocabularies();
     foreach ($vocabularies as $vocabulary) {
-      if ($machine_name == $vocabulary->machine_name && (!(isset($form_state['values']['vid']) && $vocabulary->vid != $form_state['values']['vid']))) {
+      if ($machine_name == $vocabulary->machine_name && (!isset($form_state['values']['vid']) || $vocabulary->vid != $form_state['values']['vid'])) {
         form_set_error('machine_name', t('This machine-readable name is already in use by another vocabulary and must be unique.'));
       }
     }
