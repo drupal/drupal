@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.54 2009/06/12 13:59:56 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.55 2009/06/20 18:32:04 dries Exp $
 
 /**
  * @file
@@ -222,7 +222,7 @@ function taxonomy_form_vocabulary_validate($form, &$form_state) {
     // Do not allow duplicate machine names.
     $vocabularies = taxonomy_get_vocabularies();
     foreach ($vocabularies as $vocabulary) {
-      if ($machine_name == $vocabulary->machine_name && (!(isset($form_state['values']['vid']) && $vocabulary->vid != $form_state['values']['vid']))) {
+      if ($machine_name == $vocabulary->machine_name && (!isset($form_state['values']['vid']) || $vocabulary->vid != $form_state['values']['vid'])) {
         form_set_error('machine_name', t('This machine-readable name is already in use by another vocabulary and must be unique.'));
       }
     }
