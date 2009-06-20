@@ -121,6 +121,9 @@ function theme_simpletest_test_table($table) {
       'clickActive' => FALSE,
     );
 
+    // Sorting $element by children's #title attribute instead of by class name.
+    uasort($element, '_simpletest_sort_by_title');
+
     // Cycle through each test within the current group.
     foreach (element_children($element) as $test_name) {
       $test = $element[$test_name];
@@ -157,6 +160,18 @@ function theme_simpletest_test_table($table) {
   else {
     return theme('table', $header, $rows, array('id' => 'simpletest-form-table'));
   }
+}
+
+/**
+ * Sort element by title instead of by class name.
+ */
+function _simpletest_sort_by_title($a, $b) {
+  // This is for parts of $element that are not an array.
+  if (!isset($a['#title']) || !isset($b['#title'])) {
+    return 1;
+  }
+
+  return strcasecmp($a['#title'], $b['#title']);
 }
 
 /**
