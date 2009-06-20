@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.57 2009/05/31 00:51:41 webchick Exp $ */
+/* $Id: style.css,v 1.58 2009/06/20 07:40:36 webchick Exp $ */
 
 /**
  * Generic elements
@@ -708,7 +708,7 @@ ul.links li, ul.inline li {
   position: relative;
   top: -1px;
   border-bottom: 1px solid #e9eff3;
-  margin: -1.5em -25px 0;
+  margin: 1.5em -25px 0;
   padding: 0 25px;
 }
 
