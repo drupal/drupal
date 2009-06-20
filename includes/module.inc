@@ -34,8 +34,8 @@ function module_load_all() {
  *   Whether to force the module list to be regenerated (such as after the
  *   administrator has changed the system settings).
  * @param $sort
- *   By default, modules are ordered by weight and filename. Set this option to
- *   TRUE to return a module list ordered only by module name.
+ *   By default, modules are ordered by weight and module name. Set this option
+ *   to TRUE to return a module list ordered only by module name.
  * @param $fixed_list
  *   (Optional) Override the module list with the given modules. Stays until the
  *   next call with $refresh = TRUE.
@@ -56,7 +56,12 @@ function module_list($refresh = FALSE, $sort = FALSE, $fixed_list = NULL) {
       }
     }
     else {
-      $result = db_query("SELECT name, filename FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, filename ASC");
+      // The module name (rather than the filename) is used as the fallback
+      // weighting in order to guarantee consistent behavior across different
+      // Drupal installations, which might have modules installed in different
+      // locations in the file system. The ordering here must also be
+      // consistent with the one used in module_implements().
+      $result = db_query("SELECT name, filename FROM {system} WHERE type = 'module' AND status = 1 ORDER BY weight ASC, name ASC");
       foreach ($result as $module) {
         if (file_exists($module->filename)) {
           drupal_get_filename('module', $module->name, $module->filename);
@@ -315,7 +320,7 @@ function module_hook($module, $hook) {
  *     MODULE_IMPLEMENTS_WRITE_CACHE: Write the stored list of hook
  *     implementations into the cache_registry table.
  * @param $sort
- *   By default, modules are ordered by weight and filename. By setting this
+ *   By default, modules are ordered by weight and module name. By setting this
  *   option to TRUE, modules will be ordered by module name.
  * @return
  *   An array with the names of the modules which are implementing this hook.
@@ -350,6 +355,11 @@ function module_implements($hook, $sort = FALSE) {
       $cached_hooks = count($implementations);
     }
     if (!isset($implementations[$hook])) {
+      // The module name (rather than the filename) is used as the fallback
+      // weighting in order to guarantee consistent behavior across different
+      // Drupal installations, which might have modules installed in different
+      // locations in the file system. The ordering here must also be
+      // consistent with the one used in module_list().
       $implementations[$hook] = db_query("SELECT module FROM {registry} WHERE type = 'function' AND suffix = :hook ORDER BY weight, module", array(':hook' => $hook))->fetchCol();
     }
     foreach ($implementations[$hook] as $module) {

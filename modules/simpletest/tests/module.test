@@ -22,37 +22,32 @@ class ModuleUnitTest extends DrupalWebTestCase {
    * The basic functionality of module_list().
    */
   function testModuleList() {
-    // Build a list of modules filenames.
-    $base_module_list = array();
-    foreach (drupal_get_profile_modules('default', 'en') as $module) {
-      $base_module_list[$module] = drupal_get_path('module', $module);
-    }
-    asort($base_module_list);
-    // Build a list of module names based on that order. Since all default
-    // profile modules have a weight equal to 0, the default sort order is
-    // simply alphabetical.
-    $module_list = array_keys($base_module_list);
+    // Build a list of modules, sorted alphabetically.
+    $module_list = drupal_get_profile_modules('default', 'en');
+    sort($module_list);
+    // Compare this list to the one returned by module_list(). We expect them
+    // to match, since all default profile modules have a weight equal to 0
+    // (except for block.module, which has a lower weight but comes first in
+    // the alphabet anyway).
     $this->assertModuleList($module_list, t('Default profile'));
 
     // Try to install a new module.
-    drupal_install_modules(array('path'));
-    $base_module_list['path'] = drupal_get_path('module', 'path');
-    asort($base_module_list);
-    $module_list = array_keys($base_module_list);
+    drupal_install_modules(array('contact'));
+    $module_list[] = 'contact';
+    sort($module_list);
     $this->assertModuleList($module_list, t('After adding a module'));
 
     // Try to mess with the module weights.
     db_update('system')
       ->fields(array('weight' => 20))
-      ->condition('name', 'path')
+      ->condition('name', 'contact')
       ->condition('type', 'module')
       ->execute();
     // Reset the module list.
     module_list(TRUE);
-    // Move path at the end of the array.
-    unset($base_module_list['path']);
-    $base_module_list['path'] = drupal_get_path('module', 'path');
-    $module_list = array_keys($base_module_list);
+    // Move contact to the end of the array.
+    unset($module_list[array_search('contact', $module_list)]);
+    $module_list[] = 'contact';
     $this->assertModuleList($module_list, t('After changing weights'));
 
     // Test the fixed list feature.
@@ -73,7 +68,7 @@ class ModuleUnitTest extends DrupalWebTestCase {
    * Assert that module_list() return the expected values.
    *
    * @param $expected_values
-   *   The expected values, sorted by weight and file name.
+   *   The expected values, sorted by weight and module name.
    */
   protected function assertModuleList(Array $expected_values, $condition) {
     $expected_values = array_combine($expected_values, $expected_values);
