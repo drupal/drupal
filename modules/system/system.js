@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.26 2009/05/29 19:51:43 dries Exp $
+// $Id: system.js,v 1.27 2009/06/20 08:02:29 webchick Exp $
 (function ($) {
 
 /**
@@ -13,7 +13,7 @@ Drupal.behaviors.cleanURLsSettingsCheck = {
     // This behavior attaches by ID, so is only valid once on a page.
     // Also skip if we are on an install page, as Drupal.cleanURLsInstallCheck will handle
     // the processing.
-    if ($('.clean-url-processed, #edit-clean-url.install').size()) {
+    if (!($('#edit-clean-url').size()) || $('.clean-url-processed, #edit-clean-url.install').size()) {
       return;
     }
     var url = settings.basePath + 'admin/settings/clean-urls/check';
