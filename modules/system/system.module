@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.712 2009/06/16 08:41:35 dries Exp $
+// $Id: system.module,v 1.713 2009/06/20 06:14:28 webchick Exp $
 
 /**
  * @file
@@ -1345,10 +1345,6 @@ function _system_get_theme_data() {
         'main_menu',
         'secondary_menu',
       ),
-      'stylesheets' => array(
-        'all' => array('style.css')
-      ),
-      'scripts' => array('script.js'),
       'screenshot' => 'screenshot.png',
       'php' => DRUPAL_MINIMUM_PHP,
     );
