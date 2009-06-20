@@ -1345,10 +1345,6 @@ function _system_get_theme_data() {
         'main_menu',
         'secondary_menu',
       ),
-      'stylesheets' => array(
-        'all' => array('style.css')
-      ),
-      'scripts' => array('script.js'),
       'screenshot' => 'screenshot.png',
       'php' => DRUPAL_MINIMUM_PHP,
     );
