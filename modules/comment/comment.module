@@ -1349,7 +1349,7 @@ function comment_load($cid) {
  *   The replies count.
  */
 function comment_num_replies($pid) {
-  static $cache;
+  $cache = &drupal_static(__FUNCTION__, array());
 
   if (!isset($cache[$pid])) {
     $cache[$pid] = db_query('SELECT COUNT(cid) FROM {comment} WHERE pid = :pid AND status = :status', array(
@@ -1928,7 +1928,7 @@ function comment_form_submit($form, &$form_state) {
  * @ingroup themeable
  */
 function theme_comment_view($comment, $node, $links = array(), $visible = TRUE) {
-  static $first_new = TRUE;
+  $first_new = &drupal_static(__FUNCTION__, TRUE);
   $comment->new = node_mark($comment->nid, $comment->timestamp);
   $output = '';
 
@@ -2096,14 +2096,11 @@ function theme_comment_thread_expanded($comment, $node) {
  */
 function theme_comment_post_forbidden($node) {
   global $user;
-  static $authenticated_post_comments;
 
   if (!$user->uid) {
-    if (!isset($authenticated_post_comments)) {
-      // We only output any link if we are certain, that users get permission
-      // to post comments by logging in. We also locally cache this information.
-      $authenticated_post_comments = array_key_exists(DRUPAL_AUTHENTICATED_RID, user_roles(TRUE, 'post comments') + user_roles(TRUE, 'post comments without approval'));
-    }
+    // We only output any link if we are certain, that users get permission
+    // to post comments by logging in. We also locally cache this information.
+    $authenticated_post_comments = &drupal_static(__FUNCTION__, array_key_exists(DRUPAL_AUTHENTICATED_RID, user_roles(TRUE, 'post comments') + user_roles(TRUE, 'post comments without approval')));
 
     if ($authenticated_post_comments) {
       // We cannot use drupal_get_destination() because these links
