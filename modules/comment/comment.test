@@ -164,18 +164,20 @@ class CommentHelperCase extends DrupalWebTestCase {
   /**
    * Set anonymous comment setting.
    *
-   * @param boolean $enabled
-   *   Allow anonymous commenting.
+   * @param boolean $access_comments
+   *   Allow anonymous access to comments.
+   * @param boolean $post_comments
+   *   Allow anonymous posting of comments.
    * @param boolean $without_approval
    *   Allow anonymous commenting without approval.
    */
-  function setAnonymousUserComment($enabled, $without_approval) {
+  function setAnonymousUserComment($access_comments, $post_comments, $without_approval) {
     $edit = array();
-    $edit['1[access comments]'] = $enabled;
-    $edit['1[post comments]'] = $enabled;
+    $edit['1[access comments]'] = $access_comments;
+    $edit['1[post comments]'] = $post_comments;
     $edit['1[post comments without approval]'] = $without_approval;
     $this->drupalPost('admin/user/permissions', $edit, t('Save permissions'));
-    $this->assertText(t('The changes have been saved.'), t('Anonymous user comments ' . ($enabled ? 'enabled' : 'disabled') . '.'));
+    $this->assertText(t('The changes have been saved.'), t('Anonymous user comments ' . ($access_comments ? 'access comments' : 'not access comments'). '.'));
   }
 
   /**
@@ -374,7 +376,7 @@ class CommentAnonymous extends CommentHelperCase {
   function testAnonymous() {
     $this->drupalLogin($this->admin_user);
     // Enabled anonymous user comments.
-    $this->setAnonymousUserComment(TRUE, TRUE);
+    $this->setAnonymousUserComment(TRUE, TRUE, TRUE);
     $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
     $this->drupalLogout();
 
@@ -437,7 +439,7 @@ class CommentAnonymous extends CommentHelperCase {
 
     // Reset.
     $this->drupalLogin($this->admin_user);
-    $this->setAnonymousUserComment(FALSE, FALSE);
+    $this->setAnonymousUserComment(FALSE, FALSE, FALSE);
 
     // Attempt to view comments while disallowed.
     // NOTE: if authenticated user has permission to post comments, then a
@@ -452,6 +454,14 @@ class CommentAnonymous extends CommentHelperCase {
     $this->assertText('You are not authorized to view comments', t('Error attempting to post comment.'));
     $this->assertNoFieldByName('subject', '', t('Subject field not found.'));
     $this->assertNoFieldByName('comment', '', t('Comment field not found.'));
+
+    $this->drupalLogin($this->admin_user);
+    $this->setAnonymousUserComment(TRUE, FALSE, FALSE);
+    $this->drupalLogout();
+    $this->drupalGet('node/' . $this->node->nid);
+    $this->assertRaw('<div id="comments">', t('Comments were displayed.'));
+    $this->assertLink('Login', 1, t('Link to login was found.'));
+    $this->assertLink('register', 1, t('Link to register was found.'));
   }
 }
 
@@ -558,7 +568,7 @@ class CommentApprovalTest extends CommentHelperCase {
     $this->drupalLogin($this->admin_user);
 
     // Set anonymous comments to require approval.
-    $this->setAnonymousUserComment(TRUE, FALSE);
+    $this->setAnonymousUserComment(TRUE, TRUE, FALSE);
     $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
     $this->drupalLogout();
 
@@ -592,7 +602,7 @@ class CommentApprovalTest extends CommentHelperCase {
     $this->drupalLogin($this->admin_user);
 
     // Set anonymous comments to require approval.
-    $this->setAnonymousUserComment(TRUE, FALSE);
+    $this->setAnonymousUserComment(TRUE, TRUE, FALSE);
     $this->setCommentAnonymous('0'); // Ensure that doesn't require contact info.
     $this->drupalLogout();
 
