@@ -2620,10 +2620,10 @@ function theme_form_element($element) {
   if (!empty($element['#title']) && empty($element['#form_element_skip_title'])) {
     $title = $element['#title'];
     if (!empty($element['#id'])) {
-      $output .= ' <label for="' . $element['#id'] . '">' . $t('!title: !required', array('!title' => filter_xss_admin($title), '!required' => $required)) . "</label>\n";
+      $output .= ' <label for="' . $element['#id'] . '">' . $t('!title !required', array('!title' => filter_xss_admin($title), '!required' => $required)) . "</label>\n";
     }
     else {
-      $output .= ' <label>' . $t('!title: !required', array('!title' => filter_xss_admin($title), '!required' => $required)) . "</label>\n";
+      $output .= ' <label>' . $t('!title !required', array('!title' => filter_xss_admin($title), '!required' => $required)) . "</label>\n";
     }
   }
 

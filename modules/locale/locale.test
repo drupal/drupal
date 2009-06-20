@@ -1366,7 +1366,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
 
     // Set page content type to use multilingual support.
     $this->drupalGet('admin/build/node-type/page');
-    $this->assertText(t('Multilingual support:'), t('Multilingual support fieldset present on content type configuration form.'));
+    $this->assertText(t('Multilingual support'), t('Multilingual support fieldset present on content type configuration form.'));
     $edit = array(
       'language_content_type' => 1,
     );
