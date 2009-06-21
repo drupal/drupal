@@ -1335,8 +1335,8 @@ function _system_get_theme_data() {
       'description' => '',
       'features' => array(
         'comment_user_picture',
+        'comment_user_verification',
         'favicon',
-        'mission',
         'logo',
         'name',
         'node_user_picture',
