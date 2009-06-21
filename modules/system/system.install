@@ -372,17 +372,17 @@ function system_install() {
   db_query("UPDATE {users} SET uid = 1 WHERE name = '%s'", 'placeholder-for-uid-1');
 
   // Built-in roles.
-  db_query("INSERT INTO {role} (name) VALUES ('%s')", 'anonymous user');
-  db_query("INSERT INTO {role} (name) VALUES ('%s')", 'authenticated user');
+  db_query("INSERT INTO {role} (rid, name) VALUES (%d, '%s')", DRUPAL_ANONYMOUS_RID, 'anonymous user');
+  db_query("INSERT INTO {role} (rid, name) VALUES (%d, '%s')", DRUPAL_AUTHENTICATED_RID, 'authenticated user');
 
   // Anonymous role permissions.
-  db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", 1, 'access content');
+  db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", DRUPAL_ANONYMOUS_RID, 'access content');
 
   // Authenticated role permissions.
-  db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", 2, 'access comments');
-  db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", 2, 'access content');
-  db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", 2, 'post comments');
-  db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", 2, 'post comments without approval');
+  db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", DRUPAL_AUTHENTICATED_RID, 'access comments');
+  db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", DRUPAL_AUTHENTICATED_RID, 'access content');
+  db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", DRUPAL_AUTHENTICATED_RID, 'post comments');
+  db_query("INSERT INTO {role_permission} (rid, permission) VALUES (%d, '%s')", DRUPAL_AUTHENTICATED_RID, 'post comments without approval');
 
   db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", 'theme_default', 's:7:"garland";');
   db_query("UPDATE {system} SET status = %d WHERE type = '%s' AND name = '%s'", 1, 'theme', 'garland');
@@ -390,7 +390,7 @@ function system_install() {
   db_query("INSERT INTO {node_access} (nid, gid, realm, grant_view, grant_update, grant_delete) VALUES (%d, %d, '%s', %d, %d, %d)", 0, 0, 'all', 1, 0, 0);
 
   // Add text formats.
-  db_query("INSERT INTO {filter_format} (name, roles, cache) VALUES ('%s', '%s', %d)", 'Filtered HTML', ',1,2,', 1);
+  db_query("INSERT INTO {filter_format} (name, roles, cache) VALUES ('%s', '%s', %d)", 'Filtered HTML', ',' . DRUPAL_ANONYMOUS_RID . ',' . DRUPAL_AUTHENTICATED_RID . ',', 1 );
   db_query("INSERT INTO {filter_format} (name, roles, cache) VALUES ('%s', '%s', %d)", 'Full HTML', '', 1);
 
   // Enable filters for each text format.
