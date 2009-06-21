@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.713 2009/06/20 06:14:28 webchick Exp $
+// $Id: system.module,v 1.714 2009/06/21 14:16:28 dries Exp $
 
 /**
  * @file
@@ -1335,8 +1335,8 @@ function _system_get_theme_data() {
       'description' => '',
       'features' => array(
         'comment_user_picture',
+        'comment_user_verification',
         'favicon',
-        'mission',
         'logo',
         'name',
         'node_user_picture',
