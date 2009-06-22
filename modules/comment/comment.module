@@ -871,145 +871,118 @@ function comment_node_url() {
 /**
  * Accepts a submission of new or changed comment content.
  *
- * @param $edit
+ * @param $comment
  *   A comment array.
- *
- * @return
- *   If the comment is successfully saved the comment ID is returned. If the comment
- *   is not saved, FALSE is returned.
  */
-function comment_save($edit) {
+function comment_save(&$comment) {
   global $user;
-  $node = node_load($edit['nid']);
-  if (user_access('post comments') && (user_access('administer comments') || $node->comment == COMMENT_NODE_OPEN)) {
-    if (!form_get_errors()) {
-      $edit += array(
-        'mail' => '',
-        'homepage' => '',
-        'name' => '',
-        'status' => user_access('post comments without approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED,
-      );
-      if ($edit['cid']) {
-        // Update the comment in the database.
-        db_update('comment')
-          ->fields(array(
-            'status' => $edit['status'],
-            'timestamp' => $edit['timestamp'],
-            'subject' => $edit['subject'],
-            'comment' => $edit['comment'],
-            'format' => $edit['comment_format'],
-            'uid' => $edit['uid'],
-            'name' => $edit['name'],
-            'mail' => $edit['mail'],
-            'homepage' => $edit['homepage'],
-          ))
-          ->condition('cid', $edit['cid'])
-          ->execute();
-        // Allow modules to respond to the updating of a comment.
-        comment_invoke_comment($edit, 'update');
-        // Add an entry to the watchdog log.
-        watchdog('content', 'Comment: updated %subject.', array('%subject' => $edit['subject']), WATCHDOG_NOTICE, l(t('view'), 'node/' . $edit['nid'], array('fragment' => 'comment-' . $edit['cid'])));
-      }
-      else {
-        // Add the comment to database. This next section builds the thread field.
-        // Also see the documentation for comment_render().
-        if ($edit['pid'] == 0) {
-          // This is a comment with no parent comment (depth 0): we start
-          // by retrieving the maximum thread level.
-          $max = db_query('SELECT MAX(thread) FROM {comment} WHERE nid = :nid', array(':nid' => $edit['nid']))->fetchField();
-          // Strip the "/" from the end of the thread.
-          $max = rtrim($max, '/');
-          // Finally, build the thread field for this new comment.
-          $thread = int2vancode(vancode2int($max) + 1) . '/';
-        }
-        else {
-          // This is a comment with a parent comment, so increase
-          // the part of the thread value at the proper depth.
 
-          // Get the parent comment:
-          $parent = comment_load($edit['pid']);
-          // Strip the "/" from the end of the parent thread.
-          $parent->thread = (string) rtrim((string) $parent->thread, '/');
-          // Get the max value in *this* thread.
-          $max = db_query("SELECT MAX(thread) FROM {comment} WHERE thread LIKE :thread AND nid = :nid", array(
-            ':thread' => $parent->thread . '.%',
-            ':nid' => $edit['nid'],
-          ))->fetchField();
-
-          if ($max == '') {
-            // First child of this parent.
-            $thread = $parent->thread . '.' . int2vancode(0) . '/';
-          }
-          else {
-            // Strip the "/" at the end of the thread.
-            $max = rtrim($max, '/');
-            // Get the value at the correct depth.
-            $parts = explode('.', $max);
-            $parent_depth = count(explode('.', $parent->thread));
-            $last = $parts[$parent_depth];
-            // Finally, build the thread field for this new comment.
-            $thread = $parent->thread . '.' . int2vancode(vancode2int($last) + 1) . '/';
-          }
-        }
-
-        if (empty($edit['timestamp'])) {
-          $edit['timestamp'] = REQUEST_TIME;
-        }
-
-        if ($edit['uid'] === $user->uid && isset($user->name)) { // '===' Need to modify anonymous users as well.
-          $edit['name'] = $user->name;
-        }
-
-        $edit['cid'] = db_insert('comment')
-          ->fields(array(
-           'nid' => $edit['nid'],
-            'pid' => empty($edit['pid']) ? 0 : $edit['pid'],
-            'uid' => $edit['uid'],
-            'subject' => $edit['subject'],
-            'comment' => $edit['comment'],
-            'format' => $edit['comment_format'],
-            'hostname' => ip_address(),
-            'timestamp' => $edit['timestamp'],
-            'status' => $edit['status'],
-            'thread' => $thread,
-            'name' => $edit['name'],
-            'mail' => $edit['mail'],
-            'homepage' => $edit['homepage'],
-          ))
-          ->execute();
-        // Tell the other modules a new comment has been submitted.
-        comment_invoke_comment($edit, 'insert');
-        // Add an entry to the watchdog log.
-        watchdog('content', 'Comment: added %subject.', array('%subject' => $edit['subject']), WATCHDOG_NOTICE, l(t('view'), 'node/' . $edit['nid'], array('fragment' => 'comment-' . $edit['cid'])));
-      }
-      _comment_update_node_statistics($edit['nid']);
-      // Clear the cache so an anonymous user can see his comment being added.
-      cache_clear_all();
-
-      // Explain the approval queue if necessary, and then
-      // redirect the user to the node he's commenting on.
-      if ($edit['status'] == COMMENT_NOT_PUBLISHED) {
-        if (!user_access('administer comments')) {
-          drupal_set_message(t('Your comment has been queued for review by site administrators and will be published after approval.'));
-        }
-      }
-      else {
-        drupal_set_message(t('Your comment has been posted.'));
-        $comment = (object)$edit;
-        comment_invoke_comment($comment, 'publish');
-      }
-
-      return $edit['cid'];
-    }
-    else {
-      return FALSE;
-    }
+  $comment += array(
+    'mail' => '',
+    'homepage' => '',
+    'name' => '',
+    'status' => user_access('post comments without approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED,
+  );
+  if ($comment['cid']) {
+    // Update the comment in the database.
+    db_update('comment')
+      ->fields(array(
+        'status' => $comment['status'],
+        'timestamp' => $comment['timestamp'],
+        'subject' => $comment['subject'],
+        'comment' => $comment['comment'],
+        'format' => $comment['comment_format'],
+        'uid' => $comment['uid'],
+        'name' => $comment['name'],
+        'mail' => $comment['mail'],
+        'homepage' => $comment['homepage'],
+      ))
+      ->condition('cid', $comment['cid'])
+      ->execute();
+    // Allow modules to respond to the updating of a comment.
+    comment_invoke_comment($comment, 'update');
+    // Add an entry to the watchdog log.
+    watchdog('content', 'Comment: updated %subject.', array('%subject' => $comment['subject']), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment['cid'], array('fragment' => 'comment-' . $comment['cid'])));
   }
   else {
-    watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $edit['subject']), WATCHDOG_WARNING);
-    drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $edit['subject'])), 'error');
+    // Add the comment to database. This next section builds the thread field.
+    // Also see the documentation for comment_render().
+    if ($comment['pid'] == 0) {
+      // This is a comment with no parent comment (depth 0): we start
+      // by retrieving the maximum thread level.
+      $max = db_query('SELECT MAX(thread) FROM {comment} WHERE nid = :nid', array(':nid' => $comment['nid']))->fetchField();
+      // Strip the "/" from the end of the thread.
+      $max = rtrim($max, '/');
+      // Finally, build the thread field for this new comment.
+      $thread = int2vancode(vancode2int($max) + 1) . '/';
+    }
+    else {
+      // This is a comment with a parent comment, so increase the part of the
+      // thread value at the proper depth.
 
-    return FALSE;
+      // Get the parent comment:
+      $parent = comment_load($comment['pid']);
+      // Strip the "/" from the end of the parent thread.
+      $parent->thread = (string) rtrim((string) $parent->thread, '/');
+      // Get the max value in *this* thread.
+      $max = db_query("SELECT MAX(thread) FROM {comment} WHERE thread LIKE :thread AND nid = :nid", array(
+        ':thread' => $parent->thread . '.%',
+        ':nid' => $comment['nid'],
+      ))->fetchField();
+
+      if ($max == '') {
+        // First child of this parent.
+        $thread = $parent->thread . '.' . int2vancode(0) . '/';
+      }
+      else {
+        // Strip the "/" at the end of the thread.
+        $max = rtrim($max, '/');
+        // Get the value at the correct depth.
+        $parts = explode('.', $max);
+        $parent_depth = count(explode('.', $parent->thread));
+        $last = $parts[$parent_depth];
+        // Finally, build the thread field for this new comment.
+        $thread = $parent->thread . '.' . int2vancode(vancode2int($last) + 1) . '/';
+      }
+    }
+
+    if (empty($comment['timestamp'])) {
+      $comment['timestamp'] = REQUEST_TIME;
+    }
+
+    if ($comment['uid'] === $user->uid && isset($user->name)) { // '===' Need to modify anonymous users as well.
+      $comment['name'] = $user->name;
+    }
+
+    $comment['cid'] = db_insert('comment')
+      ->fields(array(
+        'nid' => $comment['nid'],
+        'pid' => empty($comment['pid']) ? 0 : $comment['pid'],
+        'uid' => $comment['uid'],
+        'subject' => $comment['subject'],
+        'comment' => $comment['comment'],
+        'format' => $comment['comment_format'],
+        'hostname' => ip_address(),
+        'timestamp' => $comment['timestamp'],
+        'status' => $comment['status'],
+        'thread' => $thread,
+        'name' => $comment['name'],
+        'mail' => $comment['mail'],
+        'homepage' => $comment['homepage'],
+      ))
+      ->execute();
+    // Tell the other modules a new comment has been submitted.
+    comment_invoke_comment($comment, 'insert');
+    // Add an entry to the watchdog log.
+    watchdog('content', 'Comment: added %subject.', array('%subject' => $comment['subject']), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment['cid'], array('fragment' => 'comment-' . $comment['cid'])));
+  }
+  _comment_update_node_statistics($comment['nid']);
+  // Clear the cache so an anonymous user can see his comment being added.
+  cache_clear_all();
+
+  if ($comment['status'] == COMMENT_PUBLISHED) {
+    $comment_object = (object) $comment;
+    comment_invoke_comment($comment_object, 'publish');
   }
 }
 
@@ -1456,68 +1429,6 @@ function comment_get_display_page($cid, $node_type) {
 }
 
 /**
- * Validate comment data.
- *
- * @param $edit
- *   An associative array containing the comment data.
- * @return
- *   The original $edit.
- */
-function comment_validate($edit) {
-  global $user;
-
-  // Invoke other validation handlers.
-  comment_invoke_comment($edit, 'validate');
-
-  if (isset($edit['date'])) {
-    if (strtotime($edit['date']) === FALSE) {
-      form_set_error('date', t('You have to specify a valid date.'));
-    }
-  }
-  if (isset($edit['author']) && !$account = user_load_by_name($edit['author'])) {
-    form_set_error('author', t('You have to specify a valid author.'));
-  }
-
-  // Check validity of name, mail and homepage (if given).
-  if (!$user->uid || isset($edit['is_anonymous'])) {
-    $node = node_load($edit['nid']);
-    if (variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) > COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
-      if ($edit['name']) {
-        $query = db_select('users', 'u');
-        $query->addField('u', 'uid', 'uid');
-        $taken = $query->where('LOWER(name) = :name', array(':name' => $edit['name']))
-          ->countQuery()
-          ->execute()
-          ->fetchField();
-        if ($taken != 0) {
-          form_set_error('name', t('The name you used belongs to a registered user.'));
-        }
-      }
-      elseif (variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) == COMMENT_ANONYMOUS_MUST_CONTACT) {
-        form_set_error('name', t('You have to leave your name.'));
-      }
-
-      if ($edit['mail']) {
-        if (!valid_email_address($edit['mail'])) {
-          form_set_error('mail', t('The e-mail address you specified is not valid.'));
-        }
-      }
-      elseif (variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) == COMMENT_ANONYMOUS_MUST_CONTACT) {
-        form_set_error('mail', t('You have to leave an e-mail address.'));
-      }
-
-      if ($edit['homepage']) {
-        if (!valid_url($edit['homepage'], TRUE)) {
-          form_set_error('homepage', t('The URL of your homepage is not valid. Remember that it must be fully qualified, i.e. of the form <code>http://example.com/directory</code>.'));
-        }
-      }
-    }
-  }
-
-  return $edit;
-}
-
-/**
  * Generate the basic commenting form, for appending to a node or display on a separate page.
  *
  * @param $title
@@ -1865,7 +1776,55 @@ function comment_form_validate($form, &$form_state) {
       }
     }
   }
-  comment_validate($form_state['values']);
+
+  // Invoke other validation handlers.
+  comment_invoke_comment($form_state['values'], 'validate');
+
+  if (isset($form_state['values']['date'])) {
+    if (strtotime($form_state['values']['date']) === FALSE) {
+      form_set_error('date', t('You have to specify a valid date.'));
+    }
+  }
+  if (isset($form_state['values']['author']) && !$account = user_load_by_name($form_state['values']['author'])) {
+    form_set_error('author', t('You have to specify a valid author.'));
+  }
+
+  // Check validity of name, mail and homepage (if given).
+  if (!$user->uid || isset($form_state['values']['is_anonymous'])) {
+    $node = node_load($form_state['values']['nid']);
+    if (variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) > COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
+      if ($form_state['values']['name']) {
+        $query = db_select('users', 'u');
+        $query->addField('u', 'uid', 'uid');
+        $taken = $query
+          ->where('LOWER(name) = :name', array(':name' => $form_state['values']['name']))
+          ->countQuery()
+          ->execute()
+          ->fetchField();
+        if ($taken != 0) {
+          form_set_error('name', t('The name you used belongs to a registered user.'));
+        }
+      }
+      elseif (variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) == COMMENT_ANONYMOUS_MUST_CONTACT) {
+        form_set_error('name', t('You have to leave your name.'));
+      }
+
+      if ($form_state['values']['mail']) {
+        if (!valid_email_address($form_state['values']['mail'])) {
+          form_set_error('mail', t('The e-mail address you specified is not valid.'));
+        }
+      }
+      elseif (variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) == COMMENT_ANONYMOUS_MUST_CONTACT) {
+        form_set_error('mail', t('You have to leave an e-mail address.'));
+      }
+
+      if ($form_state['values']['homepage']) {
+        if (!valid_url($form_state['values']['homepage'], TRUE)) {
+          form_set_error('homepage', t('The URL of your homepage is not valid. Remember that it must be fully qualified, i.e. of the form <code>http://example.com/directory</code>.'));
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -1907,11 +1866,32 @@ function _comment_form_submit(&$comment_values) {
  * Process comment form submissions; prepare the comment, store it, and set a redirection target.
  */
 function comment_form_submit($form, &$form_state) {
-  _comment_form_submit($form_state['values']);
-  if ($cid = comment_save($form_state['values'])) {
-    $form_state['redirect'] = array('comment/' . $cid, array(), "comment-$cid");
-    return;
+  $edit = $form_state['values'];
+  $node = node_load($edit['nid']);
+  _comment_form_submit($edit);
+  if (user_access('post comments') && (user_access('administer comments') || $node->comment == COMMENT_NODE_OPEN)) {
+    $comment = $edit;
+    comment_save($comment);
+    // Explain the approval queue if necessary.
+    if ($comment['status'] == COMMENT_NOT_PUBLISHED) {
+      if (!user_access('administer comments')) {
+        drupal_set_message(t('Your comment has been queued for review by site administrators and will be published after approval.'));
+      }
+    }
+    else {
+      drupal_set_message(t('Your comment has been posted.'));
+    }
+    $redirect = array('comment/' . $comment['cid'], array(), 'comment-' . $comment['cid']);
   }
+  else {
+    watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $edit['subject']), WATCHDOG_WARNING);
+    drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $edit['subject'])), 'error');
+    $page = comment_new_page_count($node->comment_count, 1, $node);
+    $redirect = array('node/' . $node->nid, $page);
+  }
+
+  // Redirect the user to the node they're commenting on.
+  $form_state['redirect'] = $redirect;
 }
 
 /**
