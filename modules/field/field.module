@@ -482,8 +482,7 @@ function field_format($obj_type, $object, $field, $item, $formatter_name = NULL,
  * $FIELD_NAME_rendered variables instead.
  *
  * By default, the field is displayed using the settings defined for the
- * 'full' or 'teaser' contexts (depending on the value of the $teaser param).
- * Set $node->build_mode to a different value to use a different context.
+ * 'full' or 'teaser' contexts (depending on the value of the $build_mode param).
  *
  * Different settings can be specified by adjusting $field['display'].
  *
@@ -492,18 +491,15 @@ function field_format($obj_type, $object, $field, $item, $formatter_name = NULL,
  * @param $object
  *   The object containing the field to display. Must at least contain the id key,
  *   revision key (if applicable), bundle key, and the field data.
- * @param $teaser
- *   Similar to hook_node('view')
+ * @param $build_mode
+ *   Build mode, e.g. 'full', 'teaser'...
  * @return
  *   The themed output for the field.
  */
-function field_view_field($obj_type, $object, $field, $instance, $teaser = FALSE) {
+function field_view_field($obj_type, $object, $field, $instance, $build_mode = 'full') {
   $output = '';
   if (isset($object->$field['field_name'])) {
     $items = $object->$field['field_name'];
-
-    // Use 'full'/'teaser' if not specified otherwise.
-    $object->build_mode = isset($object->build_mode) ? $object->build_mode : NODE_BUILD_NORMAL;
 
     // One-field equivalent to _field_invoke('sanitize').
     $function = $field['module'] . '_field_sanitize';
@@ -512,7 +508,7 @@ function field_view_field($obj_type, $object, $field, $instance, $teaser = FALSE
       $object->$field['field_name'] = $items;
     }
 
-    $view = field_default_view($obj_type, $object, $field, $instance, $items, $teaser);
+    $view = field_default_view($obj_type, $object, $field, $instance, $items, $build_mode);
     // TODO : what about hook_field_attach_view ?
 
     // field_default_view() adds a wrapper to handle variables and 'excluded'
@@ -594,7 +590,7 @@ function template_preprocess_field(&$variables) {
     $variables['items'][0]['view'] = drupal_render_children($element, array('items'));
   }
 
-  $variables['teaser'] = $element['#teaser'];
+  $variables['build_mode'] = $element['#build_mode'];
   $variables['page'] = (bool)menu_get_object();
 
   $field_empty = TRUE;

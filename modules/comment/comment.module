@@ -457,13 +457,13 @@ function theme_comment_block() {
 }
 
 /**
- * An implementation of hook_node_view().
+ * Implement hook_node_view().
  */
-function comment_node_view($node, $teaser) {
+function comment_node_view($node, $build_mode) {
   $links = array();
 
   if ($node->comment) {
-    if ($node->build_mode == NODE_BUILD_RSS) {
+    if ($build_mode == 'rss') {
       if ($node->comment != COMMENT_NODE_HIDDEN) {
         // Add a comments RSS element which is a URL to the comments of this node.
         $node->rss_elements[] = array(
@@ -472,7 +472,7 @@ function comment_node_view($node, $teaser) {
         );
       }
     }
-    else if ($teaser) {
+    elseif ($build_mode == 'teaser') {
       // Main page: display the number of comments that have been posted.
       if (user_access('access comments')) {
         if (!empty($node->comment_count)) {
@@ -548,7 +548,7 @@ function comment_node_view($node, $teaser) {
     );
 
     // Append the list of comments to $node->content for node detail pages.
-    if ($node->comment && (bool)menu_get_object() && $node->build_mode != NODE_BUILD_PREVIEW) {
+    if ($node->comment && (bool)menu_get_object() && empty($node->in_preview)) {
       $node->content['comments'] = array(
         '#markup' => comment_render($node),
         '#sorted' => TRUE,
@@ -1016,7 +1016,7 @@ function comment_save($edit) {
 /**
  * Implement hook_link().
  */
-function comment_link($type, $object, $teaser) {
+function comment_link($type, $object, $build_mode) {
   if ($type == 'comment') {
     $links = comment_links($object, FALSE);
     return $links;
@@ -2032,7 +2032,7 @@ function template_preprocess_comment_folded(&$variables) {
       $variables['classes_array'][] = 'comment-new';
     }
   }
-  
+
 }
 
 /**

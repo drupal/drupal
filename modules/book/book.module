@@ -63,11 +63,11 @@ function book_perm() {
 /**
  * Inject links into $node as needed.
  */
-function book_node_view_link($node, $teaser) {
+function book_node_view_link($node, $build_mode) {
   $links = array();
 
   if (isset($node->book['depth'])) {
-    if (!$teaser) {
+    if ($build_mode == 'full') {
       $child_type = variable_get('book_child_type', 'book');
       if ((user_access('add content to books') || user_access('administer book outlines')) && node_access('create', $child_type) && $node->status == 1 && $node->book['depth'] < MENU_MAX_DEPTH) {
         $links['book_add_child'] = array(
@@ -182,6 +182,19 @@ function _book_outline_remove_access($node) {
  */
 function book_init() {
   drupal_add_css(drupal_get_path('module', 'book') . '/book.css');
+}
+
+/**
+ * Implement hook_field_build_modes().
+ */
+function book_field_build_modes($obj_type) {
+  $modes = array();
+  if ($obj_type == 'node') {
+    $modes = array(
+      'print' => t('Print'),
+    );
+  }
+  return $modes;
 }
 
 /**
@@ -705,9 +718,9 @@ function book_node_load($nodes, $types) {
 /**
  * Implement hook_node_view().
  */
-function book_node_view($node, $teaser) {
-  if (!$teaser) {
-    if (!empty($node->book['bid']) && $node->build_mode == NODE_BUILD_NORMAL) {
+function book_node_view($node, $build_mode) {
+  if ($build_mode == 'full') {
+    if (!empty($node->book['bid']) && empty($node->in_preview)) {
       $node->content['book_navigation'] = array(
         '#markup' => theme('book_navigation', $node->book),
         '#weight' => 100,
@@ -715,8 +728,8 @@ function book_node_view($node, $teaser) {
     }
   }
 
-  if ($node->build_mode != NODE_BUILD_RSS) {
-    book_node_view_link($node, $teaser);
+  if ($build_mode != 'rss') {
+    book_node_view_link($node, $build_mode);
   }
 }
 
@@ -1035,8 +1048,7 @@ function book_export_traverse($tree, $visit_func) {
  *   The HTML generated for the given node.
  */
 function book_node_export($node, $children = '') {
-  $node->build_mode = NODE_BUILD_PRINT;
-  $node = node_build_content($node, FALSE, FALSE);
+  $node = node_build_content($node, 'print');
   $node->rendered = drupal_render($node->content);
 
   return theme('book_node_export_html', $node, $children);

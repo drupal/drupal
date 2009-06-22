@@ -2047,7 +2047,6 @@ function user_build_content(&$account) {
 
   // Build fields content.
   // TODO D7 : figure out where exactly this needs to go
-  // TODO D7 : $page / $teaser ??
   $account->content += field_attach_view('user', $account);
 
   user_module_invoke('view', $edit, $account);

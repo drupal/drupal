@@ -16,36 +16,6 @@
 define('NODE_NEW_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
 
 /**
- * Node is being built before being viewed normally.
- */
-define('NODE_BUILD_NORMAL', 0);
-
-/**
- * Node is being built before being previewed.
- */
-define('NODE_BUILD_PREVIEW', 1);
-
-/**
- * Node is being built before being indexed by search module.
- */
-define('NODE_BUILD_SEARCH_INDEX', 2);
-
-/**
- * Node is being built before being displayed as a search result.
- */
-define('NODE_BUILD_SEARCH_RESULT', 3);
-
-/**
- * Node is being built before being displayed as part of an RSS feed.
- */
-define('NODE_BUILD_RSS', 4);
-
-/**
- * Node is being built before being printed.
- */
-define('NODE_BUILD_PRINT', 5);
-
-/**
  * Implement hook_help().
  */
 function node_help($path, $arg) {
@@ -181,13 +151,14 @@ function node_field_build_modes($obj_type) {
     $modes = array(
       'teaser' => t('Teaser'),
       'full' => t('Full node'),
-      NODE_BUILD_RSS => t('RSS'),
-      NODE_BUILD_PRINT => t('Print'),
+      'rss' => t('RSS'),
     );
+    // Search integration is provided by node.module, so search-related
+    // build-modes for nodes are defined here and not in search.module.
     if (module_exists('search')) {
       $modes += array(
-        NODE_BUILD_SEARCH_INDEX => t('Search Index'),
-        NODE_BUILD_SEARCH_RESULT => t('Search Result'),
+        'search_index' => t('Search Index'),
+        'search_result' => t('Search Result'),
       );
     }
   }
@@ -1107,22 +1078,22 @@ function node_delete_multiple($nids) {
  *
  * @param $node
  *   A node array or node object.
- * @param $teaser
- *   Whether to display the teaser only or the full form.
+ * @param $build_mode
+ *   Build mode, e.g. 'full', 'teaser'...
  *
  * @return
  *   An array as expected by drupal_render().
  */
-function node_build($node, $teaser = FALSE) {
+function node_build($node, $build_mode = 'full') {
   $node = (object)$node;
 
-  $node = node_build_content($node, $teaser);
+  $node = node_build_content($node, $build_mode);
 
   $build = $node->content;
   $build += array(
     '#theme' => 'node',
     '#node' => $node,
-    '#teaser' => $teaser,
+    '#build_mode' => $build_mode,
   );
   return $build;
 }
@@ -1130,52 +1101,49 @@ function node_build($node, $teaser = FALSE) {
 /**
  * Builds a structured array representing the node's content.
  *
- * The content built for the node will vary depending on the $node->build_mode
- * attribute.  The node module defines a set of common build mode constants:
- *   - NODE_BUILD_NORMAL: Node is being built to be viewed normally.
- *   - NODE_BUILD_PREVIEW: Node is being built to be previewed.
- *   - NODE_BUILD_SEARCH_INDEX: Node is being built to be indexed for search.
- *   - NODE_BUILD_SEARCH_RESULT: Node is being built as a search result.
- *   - NODE_BUILD_RSS: Node is being built to be displayed in an RSS feed.
+ * The content built for the node (field values, comments, file attachments or
+ * other node components) will vary depending on the $build_mode parameter.
  *
- * The default mode is NODE_BUILD_NORMAL, which will be used if
- * $node->build_mode is not set.
- *
- * When defining an additional build mode constant in a contributed module,
- * the suggested standard is to use the unix timestamp of when you write the
- * code to minimize the likelihood of two modules using the same value.
+ * Drupal core defines the following build modes for nodes, with the following
+ * default use cases:
+ *   - full (default): node is being displayed on its own page (node/123)
+ *   - teaser: node is being displayed on the default home page listing, on
+ *     taxonomy listing pages, or on blog listing pages.
+ *   - rss: node displayed in an RSS feed.
+ *   If search.module is enabled:
+ *   - search_index: node is being indexed for search.
+ *   - search_result: node is being displayed as a search result.
+ *   If book.module is enabled:
+ *   - print: node is being displayed in print-friendly mode.
+ * Contributed modules might define additional build modes, or use existing
+ * build modes in additional contexts.
  *
  * @param $node
  *   A node object.
- * @param $teaser
- *   Whether to display the teaser only, as on the main page.
+ * @param $build_mode
+ *   Build mode, e.g. 'full', 'teaser'...
  *
  * @return
- *   An structured array containing the individual elements
+ *   A structured array containing the individual elements
  *   of the node's content.
  */
-function node_build_content($node, $teaser = FALSE) {
-  // The build mode identifies the target for which the node is built.
-  if (!isset($node->build_mode)) {
-    $node->build_mode = NODE_BUILD_NORMAL;
-  }
-
+function node_build_content($node, $build_mode = 'full') {
   // The 'view' hook can be implemented to overwrite the default function
   // to display nodes.
   if (node_hook($node, 'view')) {
-    $node = node_invoke($node, 'view', $teaser);
+    $node = node_invoke($node, 'view', $build_mode);
   }
 
   // Build fields content.
   if (empty($node->content)) {
     $node->content = array();
   };
-  $node->content += field_attach_view('node', $node, $teaser);
+  $node->content += field_attach_view('node', $node, $build_mode);
 
   // Always display a read more link on teasers because we have no way
   // to know when a teaser view is different than a full view.
   $links = array();
-  if ($teaser) {
+  if ($build_mode == 'teaser') {
     $links['node_readmore'] = array(
       'title' => t('Read more'),
       'href' => 'node/' . $node->nid,
@@ -1188,10 +1156,10 @@ function node_build_content($node, $teaser = FALSE) {
   );
 
   // Allow modules to make their own additions to the node.
-  module_invoke_all('node_view', $node, $teaser);
+  module_invoke_all('node_view', $node, $build_mode);
 
   // Allow modules to modify the structured node.
-  drupal_alter('node_build', $node, $teaser);
+  drupal_alter('node_build', $node, $build_mode);
 
   return $node;
 }
@@ -1215,7 +1183,7 @@ function node_show($node, $message = FALSE) {
   node_tag_new($node->nid);
 
   // For markup consistency with other pages, use node_build_multiple() rather than node_build().
-  return node_build_multiple(array($node), FALSE);
+  return node_build_multiple(array($node), 'full');
 }
 
 /**
@@ -1227,13 +1195,15 @@ function node_show($node, $message = FALSE) {
  *
  * The $variables array contains the following arguments:
  * - $node
- * - $teaser
+ * - $build_mode
  * - $page
  *
  * @see node.tpl.php
  */
 function template_preprocess_node(&$variables) {
-  $variables['teaser'] = $variables['elements']['#teaser'];
+  $variables['build_mode'] = $variables['elements']['#build_mode'];
+  // Provide a distinct $teaser boolean.
+  $variables['teaser'] = $variables['build_mode'] == 'teaser';
   $variables['node'] = $variables['elements']['#node'];
   $node = $variables['node'];
 
@@ -1243,7 +1213,7 @@ function template_preprocess_node(&$variables) {
   $variables['title']     = check_plain($node->title);
   $variables['page']      = (bool)menu_get_object();
 
-  if ($node->build_mode == NODE_BUILD_PREVIEW) {
+  if (!empty($node->in_preview)) {
     unset($node->content['links']);
   }
 
@@ -1480,8 +1450,7 @@ function node_search($op = 'search', $keys = NULL) {
       foreach ($find as $item) {
         // Render the node.
         $node = node_load($item->sid);
-        $node->build_mode = NODE_BUILD_SEARCH_RESULT;
-        $node = node_build_content($node, FALSE, FALSE);
+        $node = node_build_content($node, 'search_result');
         $node->rendered = drupal_render($node->content);
 
         // Fetch comments for snippet.
@@ -1626,11 +1595,11 @@ function theme_node_search_admin($form) {
 /**
  * Implement hook_link().
  */
-function node_link($type, $node = NULL, $teaser = FALSE) {
+function node_link($type, $node, $build_mode) {
   $links = array();
 
   if ($type == 'node') {
-    if ($teaser == 1) {
+    if ($build_mode == 'teaser') {
       $links['node_read_more'] = array(
         'title' => t('Read more'),
         'href' => "node/$node->nid",
@@ -1932,7 +1901,6 @@ function node_feed($nids = FALSE, $channel = array()) {
   foreach ($nodes as $node) {
     $item_text = '';
 
-    $node->build_mode = NODE_BUILD_RSS;
     $node->link = url("node/$node->nid", array('absolute' => TRUE));
     $node->rss_namespaces = array();
     $node->rss_elements = array(
@@ -1943,7 +1911,7 @@ function node_feed($nids = FALSE, $channel = array()) {
 
     // The node gets built and modules add to or modify $node->rss_elements
     // and $node->rss_namespaces.
-    $node = node_build_content($node, $teaser);
+    $node = node_build_content($node, 'rss');
 
     if (!empty($node->rss_namespaces)) {
       $namespaces = array_merge($namespaces, $node->rss_namespaces);
@@ -1981,17 +1949,17 @@ function node_feed($nids = FALSE, $channel = array()) {
  *
  * @param $nodes
  *   An array of nodes as returned by node_load_multiple().
- * @param $teaser
- *   Display nodes into teaser view or full view.
+ * @param $build_mode
+ *   Build mode, e.g. 'full', 'teaser'...
  * @param $weight
  *   An integer representing the weight of the first node in the list.
  * @return
  *   An array in the format expected by drupal_render().
  */
-function node_build_multiple($nodes, $teaser = TRUE, $weight = 0) {
+function node_build_multiple($nodes, $build_mode = 'teaser', $weight = 0) {
   $build = array();
   foreach ($nodes as $node) {
-    $build['nodes'][$node->nid] = node_build($node, $teaser);
+    $build['nodes'][$node->nid] = node_build($node, $build_mode);
     $build['nodes'][$node->nid]['#weight'] = $weight;
     $weight++;
   }
@@ -2084,8 +2052,7 @@ function _node_index_node($node) {
   variable_set('node_cron_last', $node->changed);
 
   // Render the node.
-  $node->build_mode = NODE_BUILD_SEARCH_INDEX;
-  $node = node_build_content($node, FALSE, FALSE);
+  $node = node_build_content($node, 'search_index');
   $node->rendered = drupal_render($node->content);
 
   $text = '<h1>' . check_plain($node->title) . '</h1>' . $node->rendered;

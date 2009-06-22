@@ -79,7 +79,7 @@ function blog_form($node, $form_state) {
 /**
  * Implement hook_view().
  */
-function blog_view($node, $teaser) {
+function blog_view($node, $build_mode) {
   if ((bool)menu_get_object()) {
     // Breadcrumb navigation.
     drupal_set_breadcrumb(array(l(t('Home'), NULL), l(t('Blogs'), 'blog'), l(t("!name's blog", array('!name' => $node->name)), 'blog/' . $node->uid)));
@@ -88,10 +88,10 @@ function blog_view($node, $teaser) {
 }
 
 /**
- * Implement hook_node_view.
+ * Implement hook_node_view().
  */
-function blog_node_view($node, $teaser = FALSE) {
-  if ($node->build_mode != NODE_BUILD_RSS) {
+function blog_node_view($node, $build_mode = 'full') {
+  if ($build_mode != 'rss') {
     if ($node->type == 'blog' && arg(0) != 'blog' || arg(1) != $node->uid) {
       $links['blog_usernames_blog'] = array(
         'title' => t("!username's blog", array('!username' => $node->name)),

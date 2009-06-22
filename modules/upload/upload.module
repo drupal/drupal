@@ -58,7 +58,7 @@ function upload_perm() {
 /**
  * Inject links into $node for attachments.
  */
-function upload_node_links($node, $teaser) {
+function upload_node_links($node, $build_mode) {
   $links = array();
 
   // Display a link with the number of attachments
@@ -337,14 +337,14 @@ function upload_node_load($nodes, $types) {
 /**
  * Implement hook_node_view().
  */
-function upload_node_view($node, $teaser) {
+function upload_node_view($node, $build_mode) {
   if (!isset($node->files)) {
     return;
   }
 
-  if (user_access('view uploaded files') && $node->build_mode != NODE_BUILD_RSS) {
+  if (user_access('view uploaded files') && $build_mode != 'rss') {
     if (count($node->files)) {
-      if (!$teaser) {
+      if ($build_mode == 'full') {
         // Add the attachments list to node body with a heavy weight to ensure
         // they're below other elements.
         $node->content['files'] = array(
@@ -354,12 +354,12 @@ function upload_node_view($node, $teaser) {
         );
       }
       else {
-        upload_node_links($node, $teaser);
+        upload_node_links($node, $build_mode);
       }
     }
   }
 
-  if ($node->build_mode == NODE_BUILD_RSS) {
+  if ($build_mode == 'rss') {
     // Add the first file as an enclosure to the RSS item. RSS allows only one
     // enclosure per item. See: http://en.wikipedia.org/wiki/RSS_enclosure
     foreach ($node->files as $file) {

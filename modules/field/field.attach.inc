@@ -149,7 +149,7 @@ define('FIELD_STORAGE_INSERT', 'insert');
  *   The fully formed $obj_type object.
  * @param $a
  *   - The $form in the 'form' operation.
- *   - The value of $teaser in the 'view' operation.
+ *   - The value of $build_mode in the 'view' operation.
  *   - Otherwise NULL.
  * @param $b
  *   - The $form_state in the 'submit' operation.
@@ -883,19 +883,19 @@ function field_attach_query_revisions($field_name, $conditions, $result_format =
  *   The type of $object; e.g. 'node' or 'user'.
  * @param $object
  *   The object with fields to render.
- * @param $teaser
- *   Whether to display the teaser only, as on the main page.
+ * @param $build_mode
+ *   Build mode, e.g. 'full', 'teaser'...
  * @return
  *   A structured content array tree for drupal_render().
  */
-function field_attach_view($obj_type, $object, $teaser = FALSE) {
+function field_attach_view($obj_type, $object, $build_mode = 'full') {
   // Let field modules sanitize their data for output.
   _field_invoke('sanitize', $obj_type, $object);
 
-  $output = _field_invoke_default('view', $obj_type, $object, $teaser);
+  $output = _field_invoke_default('view', $obj_type, $object, $build_mode);
 
   // Let other modules make changes after rendering the view.
-  drupal_alter('field_attach_view', $output, $obj_type, $object, $teaser);
+  drupal_alter('field_attach_view', $output, $obj_type, $object, $build_mode);
 
   return $output;
 

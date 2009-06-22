@@ -187,7 +187,7 @@ function _forum_node_check_node_type($node, $vocabulary) {
 /**
  * Implement hook_node_view().
  */
-function forum_node_view($node, $teaser) {
+function forum_node_view($node, $build_mode) {
   $vid = variable_get('forum_nav_vocabulary', 0);
   $vocabulary = taxonomy_vocabulary_load($vid);
   if (_forum_node_check_node_type($node, $vocabulary)) {
@@ -212,7 +212,7 @@ function forum_node_view($node, $teaser) {
       }
       drupal_set_breadcrumb($breadcrumb);
 
-      if (!$teaser) {
+      if ($build_mode == 'full') {
         $node->content['forum_navigation'] = array(
           '#markup' => theme('forum_topic_navigation', $node),
           '#weight' => 100,
@@ -642,7 +642,7 @@ function forum_get_forums($tid = 0) {
     $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
     $query->join('users', 'u2', 'ncs.last_comment_uid = u2.uid');
     $query->addExpression('IF (ncs.last_comment_uid != 0, u2.name, ncs.last_comment_name)', 'last_comment_name');
-    
+
     $topic = $query
       ->fields('ncs', array('last_comment_timestamp', 'last_comment_uid'))
       ->condition('n.status', 1)
@@ -651,7 +651,7 @@ function forum_get_forums($tid = 0) {
       ->addTag('node_access')
       ->execute()
       ->fetchObject();
-    
+
     $last_post = new stdClass();
     if (!empty($topic->last_comment_timestamp)) {
       $last_post->timestamp = $topic->last_comment_timestamp;
@@ -724,14 +724,14 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
     ->orderByHeader($forum_topic_list_header)
     ->orderBy('n.created', 'DESC')
     ->limit($forum_per_page);
-    
+
   $count_query = db_select('node', 'n');
   $count_query->join('taxonomy_term_node', 'r', 'n.vid = r.vid AND r.tid = :tid', array(':tid' => $tid));
   $count_query->addExpression('COUNT(*)');
   $count_query
     ->condition('n.status', 1)
     ->addTag('node_access');
-    
+
   $query->setCountQuery($count_query);
   $result = $query->execute();
   $topics = array();

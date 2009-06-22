@@ -474,10 +474,10 @@ function hook_node_validate($node, $form) {
  * will be called after hook_view(). The structure of $node->content is a
  * renderable array as expected by drupal_render().
  *
- * When $node->build_mode is NODE_BUILD_RSS modules can also add extra RSS
- * elements and namespaces to $node->rss_elements and $node->rss_namespaces
- * respectively for the RSS item generated for this node. For details on how
- * this is used @see node_feed()
+ * When $build_mode is 'rss', modules can also add extra RSS elements and
+ * namespaces to $node->rss_elements and $node->rss_namespaces respectively for
+ * the RSS item generated for this node.
+ * For details on how this is used @see node_feed()
  *
  * @see taxonomy_node_view()
  * @see upload_node_view()
@@ -485,10 +485,10 @@ function hook_node_validate($node, $form) {
  *
  * @param $node
  *   The node the action is being performed on.
- * @param $teaser
- *   The $teaser parameter from node_build().
+ * @param $build_mode
+ *   The $build_mode parameter from node_build().
  */
-function hook_node_view($node, $teaser) {
+function hook_node_view($node, $build_mode) {
   $node->content['my_additional_field'] = array(
     '#value' => $additional_field,
     '#weight' => 10,
@@ -510,10 +510,10 @@ function hook_node_view($node, $teaser) {
  *
  * @param $node
  *   The node the action is being performed on.
- * @param $teaser
- *   The $teaser parameter from node_build().
+ * @param $build_mode
+ *   The $build_mode parameter from node_build().
  */
-function hook_node_build_alter($node, $teaser) {
+function hook_node_build_alter($node, $build_mode) {
   // Check for the existence of a field added by another module.
   if (isset($node->content['an_additional_field'])) {
     // Change its weight.
@@ -855,7 +855,7 @@ function hook_update($node) {
  *
  * Changes made to the $node object within a hook_validate() function will
  * have no effect. The preferred method to change a node's content is to use
- * hook_node_presave() instead. If it is really necessary to change 
+ * hook_node_presave() instead. If it is really necessary to change
  * the node at the validate stage, you can use function form_set_value().
  *
  * For a detailed usage example, see node_example.module.
@@ -877,9 +877,8 @@ function hook_validate($node, &$form) {
  *
  * @param $node
  *   The node to be displayed.
- * @param $teaser
- *   Whether we are to generate a "teaser" or summary of the node, rather than
- *   display the whole thing.
+ * @param $build_mode
+ *   Build mode, e.g. 'full', 'teaser'...
  * @return
  *   $node. The passed $node parameter should be modified as necessary and
  *   returned so it can be properly presented. Nodes are prepared for display
@@ -894,7 +893,7 @@ function hook_validate($node, &$form) {
  *
  * For a detailed usage example, see node_example.module.
  */
-function hook_view($node, $teaser = FALSE) {
+function hook_view($node, $build_mode = 'full') {
   if ((bool)menu_get_object()) {
     $breadcrumb = array();
     $breadcrumb[] = array('path' => 'example', 'title' => t('example'));

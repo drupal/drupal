@@ -103,8 +103,8 @@ function statistics_perm() {
 /**
  * Implement hook_node_view().
  */
-function statistics_node_view($node, $teaser) {
-  if ($node->build_mode != NODE_BUILD_RSS) {
+function statistics_node_view($node, $build_mode) {
+  if ($build_mode != 'rss') {
     $links = array();
     if (user_access('view post access counter')) {
       $statistics = statistics_get($node->nid);

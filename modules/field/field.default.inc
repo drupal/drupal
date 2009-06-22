@@ -76,8 +76,8 @@ function field_default_insert($obj_type, $object, $field, $instance, &$items) {
  *     '#field_name' => 'field_name',
  *     '#object' => $object,
  *     '#object_type' => $obj_type,
- *     // Value of the $teaser param of hook_node('view').
- *     '#teaser' => $teaser,
+ *     // Value of the $build_mode param of hook_node('view').
+ *     '#build_mode' => $build_mode,
  *     'items' =>
  *       0 => array(
  *         '#item' => $items[0],
@@ -112,27 +112,14 @@ function field_default_insert($obj_type, $object, $field, $instance, &$items) {
  *     ),
  *   );
  */
-function field_default_view($obj_type, $object, $field, $instance, $items, $teaser) {
+function field_default_view($obj_type, $object, $field, $instance, $items, $build_mode) {
   list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
 
   $addition = array();
 
-  // Entities without build modes should provide a 'full' context.
-  // NODE_BUILD_NORMAL is 0, and ('whatever' == 0) is TRUE, so we need a ===.
-  if (!isset($object->build_mode)) {
-    $context = 'full';
-  }
-  elseif ($object->build_mode === NODE_BUILD_NORMAL
-    || $object->build_mode == NODE_BUILD_PREVIEW) {
-    $context = $teaser ? 'teaser' : 'full';
-  }
-  else {
-    $context = $object->build_mode;
-  }
-
   // If we don't have specific settings for the current build_mode, we use the
   // (required) 'full' build_mode.
-  $display = isset($instance['display'][$context]) ? $instance['display'][$context] : $instance['display']['full'];
+  $display = isset($instance['display'][$build_mode]) ? $instance['display'][$build_mode] : $instance['display']['full'];
   // Ensure we have a valid formatter and formatter settings.
   $display = _field_get_formatter($display, $field);
 
@@ -141,7 +128,7 @@ function field_default_view($obj_type, $object, $field, $instance, $items, $teas
     $single = (field_behaviors_formatter('multiple values', $display) == FIELD_BEHAVIOR_DEFAULT);
 
     $label_display = $display['label'];
-    if (isset($object->build_mode) && $object->build_mode == NODE_BUILD_SEARCH_INDEX) {
+    if ($build_mode == 'search_index') {
       $label_display = 'hidden';
     }
 
@@ -157,7 +144,7 @@ function field_default_view($obj_type, $object, $field, $instance, $items, $teas
       '#title' => check_plain(t($instance['label'])),
       '#access' => field_access('view', $field),
       '#label_display' => $label_display,
-      '#teaser' => $teaser,
+      '#build_mode' => $build_mode,
       '#single' => $single,
       'items' => array(),
     );
@@ -196,7 +183,7 @@ function field_default_view($obj_type, $object, $field, $instance, $items, $teas
       'field' => $element,
       '#weight' => $instance['weight'],
       '#post_render' => array('field_wrapper_post_render'),
-      '#context' => $context,
+      '#build_mode' => $build_mode,
     );
 
     $addition = array($field['field_name'] => $wrapper);
@@ -209,7 +196,7 @@ function field_default_view($obj_type, $object, $field, $instance, $items, $teas
  */
 function field_wrapper_post_render($content, $element) {
   $instance = field_info_instance($element['#field_name'], $element['#bundle']);
-  if (theme('field_exclude', $content, $instance, $element['#context'])) {
+  if (theme('field_exclude', $content, $instance, $element['#build_mode'])) {
     return '';
   }
   return $content;
@@ -231,10 +218,10 @@ function field_wrapper_post_render($content, $element) {
  *   Whether or not the field's content is to be added in this context.
  *   Uses the 'exclude' value from the field's display settings.
  */
-function theme_field_exclude($content, $object, $context) {
+function theme_field_exclude($content, $object, $build_mode) {
   if (empty($object['display'])
-    || empty($object['display'][$context])
-    || empty($object['display'][$context]['exclude'])) {
+    || empty($object['display'][$build_mode])
+    || empty($object['display'][$build_mode]['exclude'])) {
     return FALSE;
   }
   else {

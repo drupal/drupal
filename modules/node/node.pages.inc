@@ -123,7 +123,7 @@ function node_form(&$form_state, $node) {
     node_object_prepare($node);
   }
   else {
-    $node->build_mode = NODE_BUILD_PREVIEW;
+    $node->in_preview = TRUE;
   }
 
   // Set the id and identify this as a node edit form.
@@ -351,7 +351,7 @@ function node_preview($node) {
     // Previewing alters $node so it needs to be cloned.
     if (!form_get_errors()) {
       $cloned_node = clone $node;
-      $cloned_node->build_mode = NODE_BUILD_PREVIEW;
+      $cloned_node->in_preview = TRUE;
       $output = theme('node_preview', $cloned_node);
     }
     drupal_set_title(t('Preview'), PASS_THROUGH);
@@ -373,8 +373,8 @@ function theme_node_preview($node) {
 
   $preview_trimmed_version = FALSE;
 
-  $trimmed = drupal_render(node_build(clone $node, TRUE));
-  $full = drupal_render(node_build($node, FALSE));
+  $trimmed = drupal_render(node_build(clone $node, 'teaser'));
+  $full = drupal_render(node_build($node, 'full'));
 
   // Do we need to preview trimmed version of post as well as full version?
   if ($trimmed != $full) {
