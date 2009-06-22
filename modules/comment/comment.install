@@ -61,62 +61,6 @@ function comment_update_1() {
 }
 
 /**
- * @defgroup updates-5.x-to-6.x Comment updates from 5.x to 6.x
- * @{
- */
-
-function comment_update_6001() {
-  $ret[] = update_sql("ALTER TABLE {comments} DROP score");
-  $ret[] = update_sql("ALTER TABLE {comments} DROP users");
-
-  return $ret;
-}
-
-/**
- * Changed comment settings from global to per-node -- copy global
- * settings to all node types.
- */
-function comment_update_6002() {
-  // Comment module might not be enabled when this is run, but we need the
-  // constants defined by the module for this update.
-  drupal_load('module', 'comment');
-  $settings = array(
-    'comment_default_mode' => COMMENT_MODE_THREADED_EXPANDED,
-    'comment_default_order' => COMMENT_ORDER_NEWEST_FIRST,
-    'comment_default_per_page' => 50,
-    'comment_controls' => COMMENT_CONTROLS_HIDDEN,
-    'comment_anonymous' => COMMENT_ANONYMOUS_MAYNOT_CONTACT,
-    'comment_subject_field' => 1,
-    'comment_preview' => COMMENT_PREVIEW_REQUIRED,
-    'comment_form_location' => COMMENT_FORM_SEPARATE_PAGE,
-  );
-  $types = node_type_get_types();
-  foreach ($settings as $setting => $default) {
-    $value = variable_get($setting, $default);
-    foreach ($types as $type => $object) {
-      variable_set($setting . '_' . $type, $value);
-    }
-    variable_del($setting);
-  }
-  return array(array('success' => TRUE, 'query' => 'Global comment settings copied to all node types.'));
-}
-
-/**
- * Add index to parent ID field.
- */
-function comment_update_6003() {
-  $ret = array();
-  db_add_index($ret, 'comments', 'pid', array('pid'));
-
-  return $ret;
-}
-
-/**
- * @} End of "defgroup updates-5.x-to-6.x"
- * The next series of updates should start at 7000.
- */
-
-/**
  * @defgroup updates-6.x-to-7.x Comment updates from 6.x to 7.x
  * @{
  */

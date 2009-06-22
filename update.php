@@ -445,34 +445,6 @@ function update_access_denied_page() {
 }
 
 /**
- * Create the batch table.
- *
- * This is part of the Drupal 5.x to 6.x migration.
- */
-function update_create_batch_table() {
-
-  // If batch table exists, update is not necessary
-  if (db_table_exists('batch')) {
-    return;
-  }
-
-  $schema['batch'] = array(
-    'fields' => array(
-      'bid'       => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
-      'token'     => array('type' => 'varchar', 'length' => 64, 'not null' => TRUE),
-      'timestamp' => array('type' => 'int', 'not null' => TRUE),
-      'batch'     => array('type' => 'text', 'not null' => FALSE, 'size' => 'big')
-    ),
-    'primary key' => array('bid'),
-    'indexes' => array('token' => array('token')),
-  );
-
-  $ret = array();
-  db_create_table($ret, 'batch', $schema['batch']);
-  return $ret;
-}
-
-/**
  * Disable anything in the {system} table that is not compatible with the
  * current version of Drupal core.
  */
@@ -517,61 +489,6 @@ function update_check_incompatibility($name, $type = 'module') {
     return TRUE;
   }
   return FALSE;
-}
-
-/**
- * Perform Drupal 5.x to 6.x updates that are required for update.php
- * to function properly.
- *
- * This function runs when update.php is run the first time for 6.x,
- * even before updates are selected or performed. It is important
- * that if updates are not ultimately performed that no changes are
- * made which make it impossible to continue using the prior version.
- * Just adding columns is safe. However, renaming the
- * system.description column to owner is not. Therefore, we add the
- * system.owner column and leave it to system_update_6008() to copy
- * the data from description and remove description. The same for
- * renaming locales_target.locale to locales_target.language, which
- * will be finished by locale_update_6002().
- */
-function update_fix_d6_requirements() {
-  $ret = array();
-
-  if (drupal_get_installed_schema_version('system') < 6000 && !variable_get('update_d6_requirements', FALSE)) {
-    $spec = array('type' => 'int', 'size' => 'small', 'default' => 0, 'not null' => TRUE);
-    db_add_field($ret, 'cache', 'serialized', $spec);
-    db_add_field($ret, 'cache_filter', 'serialized', $spec);
-    db_add_field($ret, 'cache_page', 'serialized', $spec);
-    db_add_field($ret, 'cache_menu', 'serialized', $spec);
-
-    db_add_field($ret, 'system', 'info', array('type' => 'text'));
-    db_add_field($ret, 'system', 'owner', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''));
-    if (db_table_exists('locales_target')) {
-      db_add_field($ret, 'locales_target', 'language', array('type' => 'varchar', 'length' => 12, 'not null' => TRUE, 'default' => ''));
-    }
-    if (db_table_exists('locales_source')) {
-      db_add_field($ret, 'locales_source', 'textgroup', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => 'default'));
-      db_add_field($ret, 'locales_source', 'version', array('type' => 'varchar', 'length' => 20, 'not null' => TRUE, 'default' => 'none'));
-    }
-    variable_set('update_d6_requirements', TRUE);
-
-    // Create the cache_block table. See system_update_6027() for more details.
-    $schema['cache_block'] = array(
-      'fields' => array(
-        'cid'        => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-        'data'       => array('type' => 'blob', 'not null' => FALSE, 'size' => 'big'),
-        'expire'     => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-        'created'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
-        'headers'    => array('type' => 'text', 'not null' => FALSE),
-        'serialized' => array('type' => 'int', 'size' => 'small', 'not null' => TRUE, 'default' => 0)
-      ),
-      'indexes' => array('expire' => array('expire')),
-      'primary key' => array('cid'),
-    );
-    db_create_table($ret, 'cache_block', $schema['cache_block']);
-  }
-
-  return $ret;
 }
 
 /**
