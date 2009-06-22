@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.479 2009/06/21 14:13:59 dries Exp $
+// $Id: taxonomy.module,v 1.480 2009/06/22 09:10:06 dries Exp $
 
 /**
  * @file
@@ -66,14 +66,14 @@ function taxonomy_theme() {
 }
 
 /**
- * An implementation of hook_node_view().
+ * Implement hook_node_view().
  */
-function taxonomy_node_view($node) {
+function taxonomy_node_view($node, $build_mode) {
   if (empty($node->taxonomy)) {
     return;
   }
 
-  if ($node->build_mode == NODE_BUILD_RSS) {
+  if ($build_mode == 'rss') {
     // Provide category information for RSS feeds.
     foreach ($node->taxonomy as $term) {
       $node->rss_elements[] = array(
@@ -87,7 +87,7 @@ function taxonomy_node_view($node) {
     $links = array();
 
     // If previewing, the terms must be converted to objects first.
-    if ($node->build_mode == NODE_BUILD_PREVIEW) {
+    if (!empty($node->in_preview)) {
       $node->taxonomy = taxonomy_preview_terms($node);
     }
 

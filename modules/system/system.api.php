@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.42 2009/06/18 10:20:22 dries Exp $
+// $Id: system.api.php,v 1.43 2009/06/22 09:10:06 dries Exp $
 
 /**
  * @file
@@ -437,14 +437,13 @@ function hook_image_toolkits() {
  *   - comment: Links to be placed below a comment being viewed.
  * @param $object
  *   A comment object.
- * @param $teaser
- *   A 0/1 flag depending on whether the node is
- *   displayed with its teaser or its full form.
+ * @param $build_mode
+ *   Build mode for the node, e.g. 'full', 'teaser'...
  * @return
  *   An array of the requested links.
  *
  */
-function hook_link($type, $object, $teaser = FALSE) {
+function hook_link($type, $object, $build_mode) {
   $links = array();
 
   if ($type == 'comment') {

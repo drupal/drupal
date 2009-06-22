@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.module,v 1.38 2009/06/05 15:41:05 dries Exp $
+// $Id: trigger.module,v 1.39 2009/06/22 09:10:06 dries Exp $
 
 /**
  * @file
@@ -245,8 +245,8 @@ function _trigger_node($node, $op, $a3 = NULL, $a4 = NULL) {
 /**
  * Implement hook_node_view().
  */
-function trigger_node_view($node, $teaser) {
-  _trigger_node($node, 'view', $teaser);
+function trigger_node_view($node, $build_mode) {
+  _trigger_node($node, 'view', $build_mode);
 }
 
 /**

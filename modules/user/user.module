@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1001 2009/06/13 20:40:09 dries Exp $
+// $Id: user.module,v 1.1002 2009/06/22 09:10:07 dries Exp $
 
 /**
  * @file
@@ -2047,7 +2047,6 @@ function user_build_content(&$account) {
 
   // Build fields content.
   // TODO D7 : figure out where exactly this needs to go
-  // TODO D7 : $page / $teaser ??
   $account->content += field_attach_view('user', $account);
 
   user_module_invoke('view', $edit, $account);

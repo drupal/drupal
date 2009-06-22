@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.13 2009/06/18 21:19:02 webchick Exp $
+// $Id: node.tpl.php,v 1.14 2009/06/22 09:10:05 dries Exp $
 
 /**
  * @file
@@ -51,7 +51,8 @@
  * - $id: Position of the node. Increments each time it's output.
  *
  * Node status variables:
- * - $teaser: Flag for the teaser state.
+ * - $build_mode: Build mode, e.g. 'full', 'teaser'...
+ * - $teaser: Flag for the teaser state (shortcut for $build_mode == 'teaser').
  * - $page: Flag for the full page state.
  * - $promote: Flag for front page promotion state.
  * - $sticky: Flags for sticky post setting.

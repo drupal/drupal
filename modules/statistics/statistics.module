@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.304 2009/05/27 18:34:01 dries Exp $
+// $Id: statistics.module,v 1.305 2009/06/22 09:10:06 dries Exp $
 
 /**
  * @file
@@ -103,8 +103,8 @@ function statistics_perm() {
 /**
  * Implement hook_node_view().
  */
-function statistics_node_view($node, $teaser) {
-  if ($node->build_mode != NODE_BUILD_RSS) {
+function statistics_node_view($node, $build_mode) {
+  if ($build_mode != 'rss') {
     $links = array();
     if (user_access('view post access counter')) {
       $statistics = statistics_get($node->nid);

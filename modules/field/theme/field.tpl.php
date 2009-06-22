@@ -1,5 +1,5 @@
 <?php
-// $Id: field.tpl.php,v 1.2 2009/05/12 14:36:12 dries Exp $
+// $Id: field.tpl.php,v 1.3 2009/06/22 09:10:04 dries Exp $
 
 /**
  * @file field-field.tpl.php
@@ -9,7 +9,7 @@
  * - $object: The object to which the field is attached.
  * - $field: The field array.
  * - $items: An array of values for each item in the field array.
- * - $teaser: Whether this is displayed as a teaser.
+ * - $build_mode: Build mode, e.g. 'full', 'teaser'...
  * - $page: Whether this is displayed as a page.
  * - $field_name: The field name.
  * - $field_type: The field type.
