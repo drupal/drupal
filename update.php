@@ -708,7 +708,6 @@ if ($update_access_allowed) {
   include_once DRUPAL_ROOT . '/includes/batch.inc';
   drupal_load_updates();
 
-  update_fix_d6_requirements();
   update_fix_d7_requirements();
   update_fix_compatibility();
 
