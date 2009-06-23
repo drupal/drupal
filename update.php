@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.290 2009/06/22 13:21:37 dries Exp $
+// $Id: update.php,v 1.291 2009/06/23 12:06:09 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -708,7 +708,6 @@ if ($update_access_allowed) {
   include_once DRUPAL_ROOT . '/includes/batch.inc';
   drupal_load_updates();
 
-  update_fix_d6_requirements();
   update_fix_d7_requirements();
   update_fix_compatibility();
 
