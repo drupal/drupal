@@ -1,5 +1,5 @@
 <?php
-// $Id: ftp.inc,v 1.1 2009/06/23 12:11:19 dries Exp $
+// $Id: ftp.inc,v 1.2 2009/06/23 23:24:36 webchick Exp $
 
 /**
  * Common code for the FTP connections.
@@ -15,7 +15,7 @@ abstract class FileTransferFTP extends FileTransfer {
 /**
  * Connection class using the FTP URL wrapper.
  */
-class FileTransferFTPWrapper extends FileTransfer {
+class FileTransferFTPWrapper extends FileTransferFTP {
   function connect() {
     $this->connection = 'ftp://' . urlencode($this->username) . ':' . urlencode($this->password) . '@' . $this->hostname . ':' . $this->port . '/';
     if (!is_dir($this->connection)) {
@@ -69,7 +69,7 @@ class FileTransferFTPWrapper extends FileTransfer {
   }
 }
 
-class FileTransferFTPExtension extends FileTransfer {
+class FileTransferFTPExtension extends FileTransferFTP {
   function connect() {
     $this->connection = ftp_connect($this->hostname, $this->port);
 
