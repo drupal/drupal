@@ -15,7 +15,7 @@ abstract class FileTransferFTP extends FileTransfer {
 /**
  * Connection class using the FTP URL wrapper.
  */
-class FileTransferFTPWrapper extends FileTransferFTP {
+class FileTransferFTPWrapper extends FileTransfer {
   function connect() {
     $this->connection = 'ftp://' . urlencode($this->username) . ':' . urlencode($this->password) . '@' . $this->hostname . ':' . $this->port . '/';
     if (!is_dir($this->connection)) {
@@ -69,7 +69,7 @@ class FileTransferFTPWrapper extends FileTransferFTP {
   }
 }
 
-class FileTransferFTPExtension extends FileTransferFTP {
+class FileTransferFTPExtension extends FileTransfer {
   function connect() {
     $this->connection = ftp_connect($this->hostname, $this->port);
 
