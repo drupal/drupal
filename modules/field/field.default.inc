@@ -70,7 +70,7 @@ function field_default_insert($obj_type, $object, $field, $instance, &$items) {
  * designated as such in formatter_info().
  *
  * The $object array will look like:
- *   $object->content['field_foo']['wrapper'] = array(
+ *   $object->content['field_foo'] = array(
  *     '#theme' => 'field',
  *     '#title' => 'label'
  *     '#field_name' => 'field_name',
@@ -141,6 +141,7 @@ function field_default_view($obj_type, $object, $field, $instance, $items, $buil
 
     $element = $info + array(
       '#theme' => 'field',
+      '#weight' => $instance['weight'],
       '#title' => check_plain(t($instance['label'])),
       '#access' => field_access('view', $field),
       '#label_display' => $label_display,
@@ -175,64 +176,9 @@ function field_default_view($obj_type, $object, $field, $instance, $items, $buil
       $element['items'] += $format_info;
     }
 
-    // The wrapper lets us get the themed output for the whole field
-    // to populate the $FIELD_NAME_rendered variable for templates,
-    // and hide it from the $content variable if needed.
-    // See 'preprocess' op and theme_content_field_wrapper().
-    $wrapper = $info + array(
-      'field' => $element,
-      '#weight' => $instance['weight'],
-      '#post_render' => array('field_wrapper_post_render'),
-      '#build_mode' => $build_mode,
-    );
-
-    $addition = array($field['field_name'] => $wrapper);
+    $addition = array($field['field_name'] => $element);
   }
   return $addition;
-}
-
-/**
- * Hide excluded fields from the $content variable in templates.
- */
-function field_wrapper_post_render($content, $element) {
-  $instance = field_info_instance($element['#field_name'], $element['#bundle']);
-  if (theme('field_exclude', $content, $instance, $element['#build_mode'])) {
-    return '';
-  }
-  return $content;
-}
-
-/**
- * 'Theme' function for a field's addition to the combined template output,
- * i.e. the node's $content or the user's $user_profile value.
- * This allows more flexibility in templates : you can use custom markup
- * around a few specific fields, and print the rest normally.
- *
- * This is a theme function, so it can be overridden in different
- * themes to produce different results.
- *
- * The html for individual fields are available in the $FIELD_NAME_rendered
- * variables.
- *
- * @return
- *   Whether or not the field's content is to be added in this context.
- *   Uses the 'exclude' value from the field's display settings.
- */
-function theme_field_exclude($content, $object, $build_mode) {
-  if (empty($object['display'])
-    || empty($object['display'][$build_mode])
-    || empty($object['display'][$build_mode]['exclude'])) {
-    return FALSE;
-  }
-  else {
-    return TRUE;
-  }
-}
-
-function field_default_preprocess($obj_type, $object, $field, $instance, &$items) {
-  return array(
-    $field['field_name'] . '_rendered' => isset($object->content[$field['field_name']]['#children']) ? $object->content[$field['field_name']]['#children'] : '',
-  );
 }
 
 function field_default_prepare_translation($obj_type, $object, $field, $instance, &$items) {

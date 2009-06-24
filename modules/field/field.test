@@ -491,18 +491,11 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     field_update_instance($this->instance);
     $entity->content = field_attach_view($entity_type, $entity);
     $output = drupal_render($entity->content);
-    $variables = field_attach_preprocess($entity_type, $entity);
-    $variable = $this->instance['field_name'] . '_rendered';
-    $this->assertTrue(isset($variables[$variable]), "Variable $variable is available in templates.");
     $this->content = $output;
     $this->assertRaw($this->instance['label'], "Label is displayed.");
-    $this->content = $variables[$variable];
-    $this->assertRaw($this->instance['label'], "Label is displayed (template variable).");
     foreach ($values as $delta => $value) {
       $this->content = $output;
       $this->assertRaw("$formatter_setting|{$value['value']}", "Value $delta is displayed, formatter settings are applied.");
-      $this->content = $variables[$variable];
-      $this->assertRaw("$formatter_setting|{$value['value']}", "Value $delta is displayed, formatter settings are applied (template variable).");
     }
 
     // Label hidden.
@@ -510,11 +503,8 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     field_update_instance($this->instance);
     $entity->content = field_attach_view($entity_type, $entity);
     $output = drupal_render($entity->content);
-    $variables = field_attach_preprocess($entity_type, $entity);
     $this->content = $output;
     $this->assertNoRaw($this->instance['label'], "Hidden label: label is not displayed.");
-    $this->content = $variables[$variable];
-    $this->assertNoRaw($this->instance['label'], "Hidden label: label is not displayed (template variable).");
 
     // Field hidden.
     $this->instance['display'] = array(
@@ -526,8 +516,6 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     field_update_instance($this->instance);
     $entity->content = field_attach_view($entity_type, $entity);
     $output = drupal_render($entity->content);
-    $variables = field_attach_preprocess($entity_type, $entity);
-    $this->assertTrue(isset($variables[$variable]), "Hidden field: variable $variable is available in templates.");
     $this->content = $output;
     $this->assertNoRaw($this->instance['label'], "Hidden field: label is not displayed.");
     foreach ($values as $delta => $value) {
@@ -548,18 +536,14 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     field_update_instance($this->instance);
     $entity->content = field_attach_view($entity_type, $entity);
     $output = drupal_render($entity->content);
-    $variables = field_attach_preprocess($entity_type, $entity);
     $display = $formatter_setting;
     foreach ($values as $delta => $value) {
       $display .= "|$delta:{$value['value']}";
     }
     $this->content = $output;
     $this->assertRaw($display, "Multiple formatter: all values are displayed, formatter settings are applied.");
-    $this->content = $variables[$variable];
-    $this->assertRaw($display, "Multiple formatter: all values are displayed, formatter settings are applied (template variable).");
 
     // TODO:
-    // - check that the 'exclude' option works (if we keep it in core)
     // - check display order with several fields
   }
 

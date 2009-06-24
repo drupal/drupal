@@ -902,17 +902,6 @@ function field_attach_view($obj_type, $object, $build_mode = 'full') {
 }
 
 /**
- * To be called in entity preprocessor.
- *
- * - Adds $FIELD_NAME_rendered variables
- *   containing the themed output for the whole field.
- * - Adds the formatted values in the 'view' key of the items.
- */
-function field_attach_preprocess($obj_type, $object) {
-  return _field_invoke_default('preprocess', $obj_type, $object);
-}
-
-/**
  * Implement hook_node_prepare_translation.
  *
  * TODO D7: We do not yet know if this really belongs in Field API.

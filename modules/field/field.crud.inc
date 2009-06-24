@@ -145,8 +145,6 @@
  *         - label (string)
  *             Position of the label. 'inline', 'above' and 'hidden' are the
  *             values recognized by the default 'field' theme implementation.
- *         - exclude (integer)
- *             TODO This is subject to change, see: http://drupal.org/node/367215
  *         - type (string)
  *             The type of the display formatter to use for the field in
  *             this context.
@@ -405,8 +403,6 @@ function field_delete_field($field_name) {
  *     Settings for the 'full' build mode will be added, and each build mode
  *     will be completed with the follwong default values:
  *     - label: 'above'
- *     - exclude: FALSE
- *       TODO This is subject to change, see: http://drupal.org/node/367215
  *     - type: the default formatter specified in hook_field_info().
  *     - settings: each omitted setting is given the default value specified in
  *       hook_field_formatter_info().
@@ -540,7 +536,6 @@ function _field_write_instance($instance, $update = FALSE) {
   foreach ($instance['display'] as $context => $display) {
     $instance['display'][$context] += array(
       'label' => 'above',
-      'exclude' => 0,
       // TODO: what if no 'default_formatter' specified ?
       'type' => $field_type['default_formatter'],
       'settings' => array(),

@@ -478,15 +478,13 @@ function node_configure_fields($type) {
           'full' => array(
             'label' => 'hidden',
             'type' => 'text_default',
-            'exclude' => 0,
-            ),
+          ),
           'teaser' => array(
             'label' => 'hidden',
             'type' => 'text_summary_or_trimmed',
-            'exclude' => 0,
-            ),
           ),
-        );
+        ),
+      );
       field_create_instance($instance);
     }
     else {
@@ -1251,10 +1249,6 @@ function template_preprocess_node(&$variables) {
   // Clean up name so there are no underscores.
   $variables['template_files'][] = 'node-' . str_replace('_', '-', $node->type);
   $variables['template_files'][] = 'node-' . $node->nid;
-
-  // Add $FIELD_NAME_rendered variables for fields.
-  drupal_function_exists('field_attach_preprocess');
-  $variables += field_attach_preprocess('node', $node);
 }
 
 /**

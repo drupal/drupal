@@ -23,7 +23,6 @@
  *
  * Available variables:
  *   - $user_profile: An array of profile items. Use render() to print them.
- *   - TODO D7 : document $FIELD_NAME_rendered variables.
  *
  * @see template_preprocess_user_profile()
  */

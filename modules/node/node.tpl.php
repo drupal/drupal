@@ -7,9 +7,9 @@
  *
  * Available variables:
  * - $title: the (sanitized) title of the node.
- * - $content: An array of node items. Use render($content) to print them all, or 
- *   print a subset such as render($content['field_example']). Use 
- *   hide($content['field_example]) to temporarily suppress the printing of a 
+ * - $content: An array of node items. Use render($content) to print them all, or
+ *   print a subset such as render($content['field_example']). Use
+ *   hide($content['field_example]) to temporarily suppress the printing of a
  *   given element.
  * - $comments: the themed list of comments (if any).
  * - $picture: The authors picture of the node output from
@@ -36,7 +36,6 @@
  *   - node-promoted: Nodes promoted to the front page.
  *   - node-sticky: Nodes ordered above other non-sticky nodes in teaser listings.
  *   - node-unpublished: Unpublished nodes visible only to administrators.
- * TODO D7 : document $FIELD_NAME_rendered variables.
  *
  * Other variables:
  * - $node: Full node object. Contains data that may not be safe.
