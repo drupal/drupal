@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.23 2009/06/22 09:10:04 dries Exp $
+// $Id: field.attach.inc,v 1.24 2009/06/24 18:16:38 dries Exp $
 
 /**
  * @file
@@ -899,17 +899,6 @@ function field_attach_view($obj_type, $object, $build_mode = 'full') {
 
   return $output;
 
-}
-
-/**
- * To be called in entity preprocessor.
- *
- * - Adds $FIELD_NAME_rendered variables
- *   containing the themed output for the whole field.
- * - Adds the formatted values in the 'view' key of the items.
- */
-function field_attach_preprocess($obj_type, $object) {
-  return _field_invoke_default('preprocess', $obj_type, $object);
 }
 
 /**

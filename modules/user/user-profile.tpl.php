@@ -1,5 +1,5 @@
 <?php
-// $Id: user-profile.tpl.php,v 1.8 2009/06/19 00:33:27 webchick Exp $
+// $Id: user-profile.tpl.php,v 1.9 2009/06/24 18:16:38 dries Exp $
 
 /**
  * @file
@@ -23,7 +23,6 @@
  *
  * Available variables:
  *   - $user_profile: An array of profile items. Use render() to print them.
- *   - TODO D7 : document $FIELD_NAME_rendered variables.
  *
  * @see template_preprocess_user_profile()
  */
