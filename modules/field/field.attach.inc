@@ -363,7 +363,7 @@ function _field_invoke_multiple_default($op, $obj_type, $objects, &$a = NULL, &$
  * TODO : document the resulting $form structure, like we do for
  * field_attach_view().
  */
-function field_attach_form($obj_type, $object, &$form, $form_state) {
+function field_attach_form($obj_type, $object, &$form, &$form_state) {
   // TODO : something's not right here : do we alter the form or return a value ?
   $form += (array) _field_invoke_default('form', $obj_type, $object, $form, $form_state);
 
