@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.24 2009/06/24 18:16:38 dries Exp $
+// $Id: field.attach.inc,v 1.25 2009/06/25 05:13:17 dries Exp $
 
 /**
  * @file
@@ -141,7 +141,6 @@ define('FIELD_STORAGE_INSERT', 'insert');
  *   - delete revision
  *   - sanitize
  *   - view
- *   - preprocess
  *   - prepare translation
  * @param $obj_type
  *   The type of $object; e.g. 'node' or 'user'.
