@@ -141,7 +141,6 @@ define('FIELD_STORAGE_INSERT', 'insert');
  *   - delete revision
  *   - sanitize
  *   - view
- *   - preprocess
  *   - prepare translation
  * @param $obj_type
  *   The type of $object; e.g. 'node' or 'user'.
