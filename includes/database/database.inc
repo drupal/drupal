@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.55 2009/06/17 13:40:26 dries Exp $
+// $Id: database.inc,v 1.56 2009/06/27 09:44:05 dries Exp $
 
 /**
  * @file
@@ -451,7 +451,7 @@ abstract class DatabaseConnection extends PDO {
    * @return
    *   A PDO prepared statement ready for its execute() method.
    */
-  protected function prepareQuery($query, $cache = TRUE) {
+  public function prepareQuery($query, $cache = TRUE) {
     $query = $this->prefixTables($query);
     if (empty($this->preparedStatements[$query])) {
       // Call PDO::prepare.
