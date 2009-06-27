@@ -1179,6 +1179,7 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
             }
             $operator += $operator_defaults;
 
+            $placeholders = array();
             if ($condition['value'] instanceof SelectQuery) {
               $placeholders[] = (string)$condition['value'];
               $arguments += $condition['value']->arguments();
@@ -1189,7 +1190,6 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
             elseif (!$operator['delimiter']) {
               $condition['value'] = array($condition['value']);
             }
-            $placeholders = array();
             if ($operator['use_value']) {
               foreach ($condition['value'] as $value) {
                 $placeholder = ':db_condition_placeholder_' . $next_placeholder++;

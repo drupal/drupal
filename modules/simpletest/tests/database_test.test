@@ -1365,6 +1365,29 @@ class DatabaseSelectSubqueryTestCase extends DatabaseTestCase {
   }
 
   /**
+   * Test that we can use a subquery in a FROM clause.
+   */
+  function testConditionSubquerySelect() {
+    // Create a subquery, which is just a normal query object.
+    $subquery = db_select('test_task', 'tt');
+    $subquery->addField('tt', 'pid', 'pid');
+    $subquery->condition('tt.priority', 1);
+
+    // Create another query that joins against the virtual table resulting
+    // from the subquery.
+    $select = db_select('test_task', 'tt2');
+    $select->addField('tt2', 'task');
+    $select->condition('tt2.pid', $subquery, 'IN');
+
+    // The resulting query should be equivalent to:
+    // SELECT tt2.name
+    // FROM test tt2
+    // WHERE tt2.pid IN (SELECT tt.pid AS pid FROM test_task tt WHERE tt.priority=1)
+    $people = $select->execute()->fetchCol();
+    $this->assertEqual(count($people), 5, t('Returned the correct number of rows.'));
+  }
+
+  /**
    * Test that we can use a subquery in a JOIN clause.
    */
   function testJoinSubquerySelect() {
