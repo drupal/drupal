@@ -1648,16 +1648,15 @@ function _node_add_access() {
  * Implement hook_menu().
  */
 function node_menu() {
-  $items['admin/content/node'] = array(
+  $items['admin/content/content'] = array(
     'title' => 'Content',
     'description' => "View, edit, and delete your site's content.",
     'page callback' => 'drupal_get_form',
     'page arguments' => array('node_admin_content'),
     'access arguments' => array('administer nodes'),
   );
-
-  $items['admin/content/node/overview'] = array(
-    'title' => 'List',
+  $items['admin/content/content/node'] = array(
+    'title' => 'Content',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
