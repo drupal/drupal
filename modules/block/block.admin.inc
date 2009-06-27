@@ -211,7 +211,7 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
     $form['page_vis_settings']['pages'] = array('#type' => 'value', '#value' => $edit['pages']);
   }
   else {
-    $options = array(t('Show on every page except the listed pages.'), t('Show on only the listed pages.'));
+    $options = array(t('Every page except those specified below.'), t('Only the pages specified below.'));
     $description = t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are %blog for the blog page and %blog-wildcard for every personal blog. %front is the front page.", array('%blog' => 'blog', '%blog-wildcard' => 'blog/*', '%front' => '<front>'));
 
     if (module_exists('php') && $access) {
