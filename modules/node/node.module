@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1073 2009/06/24 18:16:38 dries Exp $
+// $Id: node.module,v 1.1074 2009/06/27 10:13:28 dries Exp $
 
 /**
  * @file
@@ -1648,16 +1648,15 @@ function _node_add_access() {
  * Implement hook_menu().
  */
 function node_menu() {
-  $items['admin/content/node'] = array(
+  $items['admin/content/content'] = array(
     'title' => 'Content',
     'description' => "View, edit, and delete your site's content.",
     'page callback' => 'drupal_get_form',
     'page arguments' => array('node_admin_content'),
     'access arguments' => array('administer nodes'),
   );
-
-  $items['admin/content/node/overview'] = array(
-    'title' => 'List',
+  $items['admin/content/content/node'] = array(
+    'title' => 'Content',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
