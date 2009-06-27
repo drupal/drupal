@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.50 2009/06/27 16:23:48 webchick Exp $
+// $Id: default.profile,v 1.51 2009/06/27 17:32:00 webchick Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -8,7 +8,7 @@
  *   An array of modules to enable.
  */
 function default_profile_modules() {
-  return array('block', 'color', 'comment', 'help', 'menu', 'path', 'taxonomy', 'dblog');
+  return array('block', 'color', 'comment', 'help', 'menu', 'path', 'taxonomy', 'dblog', 'search');
 }
 
 /**
