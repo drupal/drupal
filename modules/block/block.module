@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.345 2009/06/12 09:02:55 dries Exp $
+// $Id: block.module,v 1.346 2009/06/27 10:10:06 dries Exp $
 
 /**
  * @file
@@ -383,7 +383,7 @@ function block_box_form($edit = array()) {
     '#title' => t('Block description'),
     '#default_value' => $edit['info'],
     '#maxlength' => 64,
-    '#description' => t('A brief description of your block. Used on the <a href="@overview">block overview page</a>.', array('@overview' => url('admin/build/block'))),
+    '#description' => t('A brief description of your block. Used on the <a href="@overview">blocks administration page</a>.', array('@overview' => url('admin/build/block'))),
     '#required' => TRUE,
     '#weight' => -19,
   );
