@@ -491,34 +491,32 @@ function hook_profile_alter(&$account) {
 }
 
 /**
- * Alter any aspect of the emails sent by Drupal. You can use this hook
- * to add a common site footer to all outgoing emails; add extra header
- * fields and/or modify the mails sent out in any way. HTML-izing the
- * outgoing mails is one possibility. See also drupal_mail().
+ * Alter any aspect of email sent by Drupal. You can use this hook
+ * to add a common site footer to all outgoing email, add extra header
+ * fields, and/or modify the email in any way. HTML-izing the
+ * outgoing email is one possibility. See also drupal_mail().
  *
  * @param $message
  *   A structured array containing the message to be altered. Keys in this
  *   array include:
- *   mail_id
- *     An id to identify the mail sent. Look into the module source codes
- *     for possible mail_id values.
- *   to
- *     The mail address or addresses where the message will be send to. The
+ *  - 'id':
+ *     An id to identify the mail sent. Look at module source code
+ *     or drupal_mail() for possible id values.
+ *   - 'to'
+ *     The address or addresses the message will be sent to. The
  *     formatting of this string must comply with RFC 2822.
- *   subject
- *     Subject of the e-mail to be sent. This must not contain any newline
- *     characters, or the mail may not be sent properly.
- *   body
+ *   - 'subject'
+ *     Subject of the email to be sent. This must not contain any newline
+ *     characters, or the email may not be sent properly.
+ *   - 'body'
  *     An array of lines containing the message to be sent. Drupal will format
  *     the correct line endings for you.
- *   from
- *     The From, Reply-To, Return-Path and Error-To headers in $headers
- *     are already set to this value (if given).
- *   headers
- *     Associative array containing the headers to add. This is typically
- *     used to add extra headers (From, Cc, and Bcc).
- * @return
- *   None.
+ *   - 'from'
+ *     The address the message will be marked as being from, which is
+ *     either a custom address or the site-wide default email address.
+ *   - 'headers'
+ *     Associative array containing mail headers, such as From, Sender,
+ *     MIME-Version, Content-Type, etc. 
  */
 function hook_mail_alter(&$message) {
   if ($message['mail_id'] == 'my_message') {
@@ -852,33 +850,36 @@ function hook_watchdog(array $log_entry) {
 }
 
 /**
- * Prepare a message based on parameters. @see drupal_mail for more.
+ * Prepare a message based on parameters; called from drupal_mail().
  *
  * @param $key
  *   An identifier of the mail.
  * @param $message
  *  An array to be filled in. Keys in this array include:
- *  - 'mail_id':
- *     An id to identify the mail sent. Look into the module source codes
- *     for possible mail_id values.
+ *  - 'id':
+ *     An id to identify the mail sent. Look at module source code
+ *     or drupal_mail() for possible id values.
  *  - 'to':
- *     The mail address or addresses where the message will be send to. The
+ *     The address or addresses the message will be sent to. The
  *     formatting of this string must comply with RFC 2822.
  *  - 'subject':
  *     Subject of the e-mail to be sent. This must not contain any newline
- *     characters, or the mail may not be sent properly. Empty string when
- *     the hook is invoked.
+ *     characters, or the mail may not be sent properly. drupal_mail() sets
+ *     this to an empty string when the hook is invoked.
  *  - 'body':
  *     An array of lines containing the message to be sent. Drupal will format
- *     the correct line endings for you. Empty array when the hook is invoked.
+ *     the correct line endings for you. drupal_mail() sets this to an empty
+ *     array when the hook is invoked.
  *  - 'from':
- *     The From, Reply-To, Return-Path and Error-To headers in $headers
- *     are already set to this value (if given).
+ *     The address the message will be marked as being from, which is
+ *     set by drupal_mail() to either a custom address or the site-wide 
+ *     default email address when the hook is invoked.
  *  - 'headers':
- *     Associative array containing the headers to add. This is typically
- *     used to add extra headers (From, Cc, and Bcc).
+ *     Associative array containing mail headers, such as From, Sender,
+ *     MIME-Version, Content-Type, etc. drupal_mail() pre-fills
+ *     several headers in this array.
  * @param $params
- *   An arbitrary array of parameters set by the caller to drupal_mail.
+ *   An array of parameters supplied by the caller of drupal_mail().
  */
 function hook_mail($key, &$message, $params) {
   $account = $params['account'];
