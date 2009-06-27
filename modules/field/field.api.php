@@ -680,7 +680,7 @@ function hook_field_attach_create_bundle($bundle) {
  *
  * See field_attach_rename_bundle() for details and arguments.
  */
-function hook_field_rename_bundle($bundle_old, $bundle_new) {
+function hook_field_attach_rename_bundle($bundle_old, $bundle_new) {
 }
 
 /**
