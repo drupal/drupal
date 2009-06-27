@@ -65,7 +65,7 @@ function menu_overview_form(&$form_state, $menu) {
     );
   }
   else {
-    $form['empty_menu'] = array('#markup' => t('There are no menu links yet.'));
+    $form['#empty_text'] = t('There are no menu links yet. <a href="@link">Add link</a> now.', array('@link' => url('admin/build/menu-customize/'. $form['#menu']['menu_name'] .'/add')));
   }
   return $form;
 }
@@ -228,9 +228,10 @@ function theme_menu_overview_form($form) {
     }
   }
   $output = '';
-  if ($rows) {
-    $output .= theme('table', $header, $rows, array('id' => 'menu-overview'));
+  if (empty($rows)) {
+    $rows[] = array(array('data' => $form['#empty_text'], 'colspan' => '7'));
   }
+  $output .= theme('table', $header, $rows, array('id' => 'menu-overview'));
   $output .= drupal_render_children($form);
   return $output;
 }
