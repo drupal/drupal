@@ -425,18 +425,13 @@ class AdminOverviewTestCase extends DrupalWebTestCase {
   function checkOverview(array $panels = array()) {
     if ($this->parse()) {
       $found = 0;
-      $extra = 0;
       $divs = $this->xpath("//div[@class='admin-panel']");
       foreach ($divs as $panel) {
         if (in_array(trim($panel->h3), $panels)) {
           $found++;
         }
-        else {
-          $extra++;
-        }
       }
       $this->assertTrue(count($panels) == $found, t('Required panels found.'));
-      $this->assertFalse($extra, t('No extra panels found.'));
     }
   }
 
