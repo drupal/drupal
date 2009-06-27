@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.15 2009/06/22 09:10:04 dries Exp $
+// $Id: field.api.php,v 1.16 2009/06/27 02:11:34 webchick Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -680,7 +680,7 @@ function hook_field_attach_create_bundle($bundle) {
  *
  * See field_attach_rename_bundle() for details and arguments.
  */
-function hook_field_rename_bundle($bundle_old, $bundle_new) {
+function hook_field_attach_rename_bundle($bundle_old, $bundle_new) {
 }
 
 /**
