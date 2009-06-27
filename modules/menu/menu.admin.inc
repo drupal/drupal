@@ -189,7 +189,7 @@ function theme_menu_overview_form($form) {
   $header = array(
     t('Menu link'),
     array('data' => t('Enabled'), 'class' => 'checkbox'),
-    array('data' => t('Expanded'), 'class' => 'checkbox'),
+    array('data' => t('Show as expanded'), 'class' => 'checkbox'),
     t('Weight'),
     array('data' => t('Operations'), 'colspan' => '3'),
   );
@@ -311,7 +311,7 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
   );
   $form['menu']['expanded'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Expanded'),
+    '#title' => t('Show as expanded'),
     '#default_value' => $item['expanded'],
     '#description' => t('If selected and this menu link has children, the menu will always appear expanded.'),
   );
