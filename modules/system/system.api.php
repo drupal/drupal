@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.43 2009/06/22 09:10:06 dries Exp $
+// $Id: system.api.php,v 1.44 2009/06/27 09:52:24 dries Exp $
 
 /**
  * @file
@@ -1028,11 +1028,11 @@ function hook_modules_uninstalled($modules) {
  * This function should change the value of $path and $options by reference.
  *
  * @param $path
- *   The alias of the $priginal_path as defined in the database.
+ *   The alias of the $original_path as defined in the database.
  *   If there is no match in the database it'll be the same as $original_path
  * @param $options
  *   An array of link attributes such as querystring and fragment. See url().
- * @param $orignal_path
+ * @param $original_path
  *   The unaliased Drupal path that is being linked to.
  */
 function custom_url_rewrite_outbound(&$path, &$options, $original_path) {
