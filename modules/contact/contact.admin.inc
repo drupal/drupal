@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.admin.inc,v 1.10 2009/04/29 08:04:23 dries Exp $
+// $Id: contact.admin.inc,v 1.11 2009/06/28 16:05:57 webchick Exp $
 
 /**
  * @file
@@ -30,7 +30,7 @@ function contact_admin_categories() {
 
   // If no categories were found, let the user know.
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No categories available.'), 'colspan' => 5));
+    $rows[] = array(array('data' => t('No categories available. <a href="@link">Add category</a> now.', array('@link' => url('admin/build/contact/add'))), 'colspan' => 5));
   }
 
   return theme('table', $header, $rows);
