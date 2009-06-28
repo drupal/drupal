@@ -174,7 +174,7 @@ function trigger_assign_form($form_state, $hook, $op, $description) {
   }
   else {
     $form[$op]['none'] = array(
-      '#markup' => t('No available actions for this trigger.')
+      '#markup' => t('No actions available for this trigger. <a href="@link">Add action</a> now.', array('@link' => url('admin/settings/actions/manage')))
     );
   }
   return $form;

@@ -35,7 +35,7 @@ function node_overview_types() {
   }
 
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No content types available.'), 'colspan' => '5', 'class' => 'message'));
+    $rows[] = array(array('data' => t('No content types available. <a href="@link">Add content type</a> now.', array('@link' => url('admin/build/types/add'))), 'colspan' => '5', 'class' => 'message'));
   }
 
   return theme('table', $header, $rows);
