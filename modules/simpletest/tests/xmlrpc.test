@@ -105,7 +105,7 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
     $int_8 = mt_rand(-100, 100);
     $l_res_8 = xmlrpc_test_simpleStructReturnTest($int_8);
     $r_res_8 = xmlrpc($xml_url, 'validator1.simpleStructReturnTest', $int_8);
-    $this->assertIdentical($l_res_8, $r_res_8, 'nested struct test: %s');
+    $this->assertIdentical($l_res_8, $r_res_8, 'simple struct test: %s');
 
     /* Now test multicall */
     $x = array();
