@@ -2893,18 +2893,16 @@ function user_register() {
   // Create a dummy variable for pass-by-reference parameters.
   $null = NULL;
   $extra = _user_forms($null, NULL, NULL, 'register');
-
-  // Remove form_group around default fields if there are no other groups.
-  if (!$extra) {
-    foreach (array('name', 'mail', 'pass', 'status', 'roles', 'notify') as $key) {
-      if (isset($form['account'][$key])) {
-        $form[$key] = $form['account'][$key];
-      }
-    }
-    unset($form['account']);
+  if ($extra) {
+    $form = array_merge_recursive($form, $extra);
   }
-  else {
-    $form = array_merge($form, $extra);
+
+  // If the "account" fieldset is the only element at the top level, its
+  // borders are hidden for aesthetic reasons. We do not remove the fieldset but
+  // preserve the form structure so that modules implementing
+  // hook_form_FORM_ID_alter() know where to find the basic elements.
+  if (count(element_children($form)) == 1) {
+    $form['account']['#type'] = 'markup';
   }
 
   $form['submit'] = array('#type' => 'submit', '#value' => t('Create new account'), '#weight' => 30);
