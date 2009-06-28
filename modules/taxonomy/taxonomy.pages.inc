@@ -122,36 +122,52 @@ function taxonomy_term_edit($term) {
 /**
  * Helper function for autocompletion
  */
-function taxonomy_autocomplete($vid, $string = '') {
+function taxonomy_autocomplete($vid = 0, $tags_typed = '') {
   // The user enters a comma-separated list of tags. We only autocomplete the last tag.
-  $array = drupal_explode_tags($string);
+  $tags_typed = drupal_explode_tags($tags_typed);
+  $tag_last = drupal_strtolower(array_pop($tags_typed));
 
-  // Fetch last tag
-  $last_string = trim(array_pop($array));
   $matches = array();
-  if ($last_string != '') {
+  if ($tag_last != '') {
     $query = db_select('taxonomy_term_data', 't');
     $query->addTag('term_access');
-
-    $tags = $query
+    $query->leftJoin('taxonomy_term_synonym', 'ts', 't.tid = ts.tid');
+    // Don't select already entered terms.
+    if (count($tags_typed)) {
+      $query->condition('t.name', $tags_typed, 'NOT IN');
+    }
+    $tags_return = $query
       ->fields('t', array('tid', 'name'))
       ->condition('t.vid', $vid)
-      ->where("LOWER(t.name) LIKE LOWER(:last_string)", array(':last_string' => '%' . $last_string . '%'))
+      // Select rows that either match by term or synonym name.
+      ->condition(db_or()
+	    ->where("LOWER(t.name) LIKE :last_string", array(':last_string' => '%' . $tag_last . '%'))
+	    ->where("LOWER(ts.name) LIKE :last_string", array(':last_string' => '%' . $tag_last . '%'))
+      )
       ->range(0, 10)
       ->execute()
       ->fetchAllKeyed();
 
-    $prefix = count($array) ? implode(', ', $array) . ', ' : '';
+    $prefix = count($tags_typed) ? implode(', ', $tags_typed) . ', ' : '';
 
-    foreach ($tags as $tid => $name) {
+    // We use two arrays to make sure synonym suggestions appear last.
+    $term_matches = $synonym_matches = array();
+    foreach ($tags_return as $tid => $name) {
       $n = $name;
       // Commas and quotes in terms are special cases, so encode 'em.
       if (strpos($name, ',') !== FALSE || strpos($name, '"') !== FALSE) {
         $n = '"' . str_replace('"', '""', $name) . '"';
       }
-      $matches[$prefix . $n] = check_plain($name);
+      // Inform the user his query matched a synonym rather than a term.
+      if (strpos(drupal_strtolower($name), $tag_last) === FALSE) {
+        $name = t('Did you mean %suggestion', array('%suggestion' => $name));
+        $synonym_matches[$prefix . $n] = filter_xss($name);
+      }
+      else {
+        $term_matches[$prefix . $n] = filter_xss($name);
+      }
     }
   }
 
-  drupal_json($matches);
+  drupal_json(array_merge($term_matches, $synonym_matches));
 }

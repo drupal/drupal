@@ -255,6 +255,12 @@ Drupal.ACDB.prototype.search = function (searchString) {
   var db = this;
   this.searchString = searchString;
 
+  // See if this string needs to be searched for anyway.
+  searchString = searchString.replace(/^\s+|\s+$/, '');
+  if (searchString.charAt(searchString.length - 1) == ',') {
+    return;
+  }
+
   // See if this key has been searched for before.
   if (this.cache[searchString]) {
     return this.owner.found(this.cache[searchString]);
