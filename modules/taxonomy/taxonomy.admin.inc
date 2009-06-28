@@ -126,10 +126,9 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
   }
   $form['name'] = array(
     '#type' => 'textfield',
-    '#title' => t('Vocabulary name'),
+    '#title' => t('Name'),
     '#default_value' => $edit['name'],
     '#maxlength' => 255,
-    '#description' => t('The name for this vocabulary, e.g., <em>"Tags"</em>.'),
     '#required' => TRUE,
     '#field_suffix' => ' <small id="vocabulary-name-suffix">&nbsp;</small>',
   );
@@ -152,14 +151,12 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
     '#type' => 'textfield',
     '#title' => t('Description'),
     '#default_value' => $edit['description'],
-    '#description' => t('Description of the vocabulary; can be used by modules.'),
   );
   $form['nodes'] = array(
     '#type' => 'checkboxes',
-    '#title' => t('Content types'),
+    '#title' => t('Apply to content types'),
     '#default_value' => $edit['nodes'],
     '#options' => array_map('check_plain', node_type_get_names()),
-    '#description' => t('Select content types to categorize using this vocabulary.'),
   );
   $form['settings'] = array(
     '#type' => 'fieldset',
