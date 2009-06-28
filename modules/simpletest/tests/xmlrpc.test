@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.test,v 1.9 2009/05/24 17:39:34 dries Exp $
+// $Id: xmlrpc.test,v 1.10 2009/06/28 03:08:38 webchick Exp $
 
 class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -105,7 +105,7 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
     $int_8 = mt_rand(-100, 100);
     $l_res_8 = xmlrpc_test_simpleStructReturnTest($int_8);
     $r_res_8 = xmlrpc($xml_url, 'validator1.simpleStructReturnTest', $int_8);
-    $this->assertIdentical($l_res_8, $r_res_8, 'nested struct test: %s');
+    $this->assertIdentical($l_res_8, $r_res_8, 'simple struct test: %s');
 
     /* Now test multicall */
     $x = array();
