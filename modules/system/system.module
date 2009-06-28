@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.715 2009/06/23 12:11:19 dries Exp $
+// $Id: system.module,v 1.716 2009/06/28 12:52:57 webchick Exp $
 
 /**
  * @file
@@ -913,7 +913,7 @@ function system_user_register(&$edit, &$user, $category = NULL) {
       system_user_timezone($edit, $form);
     }
     else {
-      $form['timezone'] = array(
+      $form['account']['timezone'] = array(
         '#type' => 'hidden',
         '#value' => variable_get('user_default_timezone', DRUPAL_USER_TIMEZONE_DEFAULT) ? '' : variable_get('date_default_timezone', ''),
       );
