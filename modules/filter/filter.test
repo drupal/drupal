@@ -14,13 +14,14 @@ class FilterAdminTestCase extends DrupalWebTestCase {
    * Test filter administration functionality.
    */
   function testFilterAdmin() {
-    $first_filter = 2; // URL filter.
-    $second_filter = 1; // Line filter.
+    // URL filter.
+    $first_filter = 2;
+    // Line filter.
+    $second_filter = 1;
 
     // Create users.
     $admin_user = $this->drupalCreateUser(array('administer filters'));
     $web_user = $this->drupalCreateUser(array('create page content'));
-
     $this->drupalLogin($admin_user);
 
     list($filtered, $full) = $this->checkFilterFormats();
@@ -35,7 +36,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 
     // Add an additional tag.
     $edit = array();
-    $edit['allowed_html_1'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>' . ' <quote>'; // Adding <quote> tag.
+    $edit['allowed_html_1'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd> <quote>';
     $this->drupalPost('admin/settings/formats/' . $filtered . '/configure', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Allowed HTML tag added.'));
 
@@ -103,7 +104,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->drupalGet('node/add/page');
     $this->assertRaw('<option value="' . $full . '">Full HTML</option>', t('Full HTML filter accessible.'));
 
-    // Use filtered HTML and see if it removes tags that arn't allowed.
+    // Use filtered HTML and see if it removes tags that are not allowed.
     $body = $this->randomName();
     $extra_text = 'text';
 
@@ -148,7 +149,8 @@ class FilterAdminTestCase extends DrupalWebTestCase {
   /**
    * Query the database to get the two basic formats.
    *
-   * @return Array Array containing filtered and full filter ids.
+   * @return
+   *   An array containing filtered and full filter ids.
    */
   function checkFilterFormats() {
     $result = db_query('SELECT format, name FROM {filter_format}');
@@ -170,8 +172,10 @@ class FilterAdminTestCase extends DrupalWebTestCase {
   /**
    * Get filter by name.
    *
-   * @param string $name Name of filter to find.
-   * @return object Filter object.
+   * @param $name
+   *   Name of filter to find.
+   * @return
+   *   A filter object.
    */
   function getFilter($name) {
     return db_query("SELECT * FROM {filter_format} WHERE name = :name", array(':name' => $name))->fetchObject();
@@ -200,7 +204,6 @@ class FilterTestCase extends DrupalWebTestCase {
    * Test the line break filter.
    */
   function testLineBreakFilter() {
-
     // Single line breaks should be changed to <br /> tags, while paragraphs
     // separated with double line breaks should be enclosed with <p></p> tags.
     $f = _filter_autop("aaa\nbbb\n\nccc");
@@ -226,14 +229,15 @@ class FilterTestCase extends DrupalWebTestCase {
 
   /**
    * Test limiting allowed tags, XSS prevention and adding 'nofollow' to links.
-   * XSS tests assume that script is dissallowed on default and src is allowed on default, but on* and style are dissallowed.
+   *
+   * XSS tests assume that script is dissallowed on default and src is allowed
+   * on default, but on* and style are dissallowed.
    *
    * Script injection vectors mostly adopted from http://ha.ckers.org/xss.html.
    *
    * Relevant CVEs:
-   *     CVE-2002-1806, ~CVE-2005-0682, ~CVE-2005-2106, CVE-2005-3973,
-   *     CVE-2006-1226 (= rev. 1.112?), CVE-2008-0273, CVE-2008-3740.
-   *
+   * - CVE-2002-1806, ~CVE-2005-0682, ~CVE-2005-2106, CVE-2005-3973,
+   *   CVE-2006-1226 (= rev. 1.112?), CVE-2008-0273, CVE-2008-3740.
    */
   function testHtmlFilter() {
     // Tag stripping, different ways to work around removal of HTML tags.
@@ -268,8 +272,8 @@ class FilterTestCase extends DrupalWebTestCase {
     $f = filter_xss('<script src=http://www.example.com/a.js?<b>');
     $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- no closing tag.'));
 
-    // DRUPAL-SA-2008-047 (rev. 1.219) This doesn't seem exploitable, but the
-    // filter should work consistently.
+    // DRUPAL-SA-2008-047: This doesn't seem exploitable, but the filter should
+    // work consistently.
     $f = filter_xss('<script>>');
     $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- double closing tag.'));
 
@@ -320,7 +324,7 @@ class FilterTestCase extends DrupalWebTestCase {
     $f = filter_xss("<img o\0nfocus\0=alert(0)>", array('img'));
     $this->assertNoNormalized($f, 'focus', t('HTML filter attributes removal evasion -- breaking with nulls.'));
 
-    // Only whitelisted scheme names in allowed attributes.
+    // Only whitelisted scheme names allowed in attributes.
     $f = filter_xss('<img src="javascript:alert(0)">', array('img'));
     $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing -- no evasion.'));
 
@@ -388,8 +392,9 @@ class FilterTestCase extends DrupalWebTestCase {
     $f = filter_xss('<br size="&{alert(0)}">', array('br'));
     $this->assertNoNormalized($f, 'alert', t('Netscape 4.x javascript entities.'));
 
-    // Invalid UTF-8, these only work as reflected XSS with Internet Explorer 6.
-    $f = filter_xss("<p arg=\"\xe0\">\" style=\"background-image: url(javascript:alert(0));\"\xe0<p>", array('p')); // DRUPAL-SA-2008-006
+    // DRUPAL-SA-2008-006: Invalid UTF-8, these only work as reflected XSS with
+    // Internet Explorer 6.
+    $f = filter_xss("<p arg=\"\xe0\">\" style=\"background-image: url(javascript:alert(0));\"\xe0<p>", array('p'));
     $this->assertNoNormalized($f, 'style', t('HTML filter -- invalid UTF-8.'));
 
     $f = filter_xss("\xc0aaa");
@@ -399,16 +404,16 @@ class FilterTestCase extends DrupalWebTestCase {
   /**
    * Test filter settings, defaults, access restrictions and similar.
    *
-   * TODO: This is for functions like filter_filter and check_markup, whose
-   * functionality is not completely focused on filtering. Some ideas:
-   * restricting formats according to user permissions, proper cache
-   * handling, defaults -- allowed tags/attributes/protocols.
+   * @todo This is for functions like filter_filter and check_markup, whose
+   *   functionality is not completely focused on filtering. Some ideas:
+   *   restricting formats according to user permissions, proper cache
+   *   handling, defaults -- allowed tags/attributes/protocols.
    *
-   * TODO: It is possible to add script, iframe etc. to allowed tags, but
-   * this makes HTML filter completely ineffective.
+   * @todo It is possible to add script, iframe etc. to allowed tags, but this
+   *   makes HTML filter completely ineffective.
    *
-   * TODO: Class, id, name and xmlns should be added to disallowed attributes,
-   * or better a whitelist approach should be used for that too.
+   * @todo Class, id, name and xmlns should be added to disallowed attributes,
+   *   or better a whitelist approach should be used for that too.
    */
   function testFilter() {
     // Check that access restriction really works.
@@ -483,8 +488,9 @@ class FilterTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test the HTML escaping filter. Here we test only whether check_plain()
-   * does what it should.
+   * Test the HTML escaping filter.
+   *
+   * Here we test only whether check_plain() does what it should.
    */
   function testNoHtmlFilter() {
     // Test that characters that have special meaning in XML are changed into
@@ -567,7 +573,7 @@ class FilterTestCase extends DrupalWebTestCase {
     // Even though a dot at the end of a URL can indicate a fully qualified
     // domain name, such usage is rare compared to using a link at the end
     // of a sentence, so remove the dot from the link.
-    // name. It can also be used at the end of a filename or a query string
+    // @todo It can also be used at the end of a filename or a query string.
     $f = _filter_url('www.example.com.', 'f');
     $this->assertEqual($f, '<a href="http://www.example.com" title="www.example.com">www.example.com</a>.', t('Converting URLs -- do not recognize a dot at the end of a domain name (FQDNs).'));
 
@@ -581,7 +587,7 @@ class FilterTestCase extends DrupalWebTestCase {
   /**
    * Test the HTML corrector.
    *
-   * TODO: This test could really use some validity checking function.
+   * @todo This test could really use some validity checking function.
    */
   function testHtmlCorrector() {
     // Tag closing.
@@ -614,14 +620,12 @@ class FilterTestCase extends DrupalWebTestCase {
 
   function deleteFormat($format) {
     if ($format !== NULL) {
-      // Delete new filter.
       $this->drupalPost('admin/settings/formats/delete/' . $format->format, array(), t('Delete'));
     }
   }
 
   /**
-   * Asserts that a text transformed to lowercase with HTML entities decoded
-   * does contains a given string.
+   * Asserts that a text transformed to lowercase with HTML entities decoded does contains a given string.
    *
    * Otherwise fails the test with a given message, similar to all the
    * SimpleTest assert* functions.
@@ -645,8 +649,7 @@ class FilterTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Asserts that text transformed to lowercase with HTML entities decoded does
-   * not contain a given string.
+   * Asserts that text transformed to lowercase with HTML entities decoded does not contain a given string.
    *
    * Otherwise fails the test with a given message, similar to all the
    * SimpleTest assert* functions.
