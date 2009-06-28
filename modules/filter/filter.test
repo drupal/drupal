@@ -197,9 +197,19 @@ class FilterTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test the line break filter
+   * Test the line break filter.
    */
   function testLineBreakFilter() {
+
+    // Single line breaks should be changed to <br /> tags, while paragraphs
+    // separated with double line breaks should be enclosed with <p></p> tags.
+    $f = _filter_autop("aaa\nbbb\n\nccc");
+    $this->assertEqual(str_replace("\n", '', $f), "<p>aaa<br />bbb</p><p>ccc</p>", t('Line breaking basic case.'));
+
+    // Text within some contexts should not be processed.
+    $f = _filter_autop("<script>aaa\nbbb\n\nccc</script>");
+    $this->assertEqual($f, "<script>aaa\nbbb\n\nccc</script>", t('Line breaking -- do not break scripts.'));
+
     $f = _filter_autop('<p><div>  </div></p>');
     $this->assertEqual(substr_count($f, '<p>'), substr_count($f, '</p>'), t('Make sure line breaking produces matching paragraph tags.'));
 
@@ -215,10 +225,381 @@ class FilterTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test the HTML filter
+   * Test limiting allowed tags, XSS prevention and adding 'nofollow' to links.
+   * XSS tests assume that script is dissallowed on default and src is allowed on default, but on* and style are dissallowed.
+   *
+   * Script injection vectors mostly adopted from http://ha.ckers.org/xss.html.
+   *
+   * Relevant CVEs:
+   *     CVE-2002-1806, ~CVE-2005-0682, ~CVE-2005-2106, CVE-2005-3973,
+   *     CVE-2006-1226 (= rev. 1.112?), CVE-2008-0273, CVE-2008-3740.
+   *
    */
   function testHtmlFilter() {
+    // Tag stripping, different ways to work around removal of HTML tags.
+    $f = filter_xss('<script>alert(0)</script>');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping -- simple script without special characters.'));
 
+    $f = filter_xss('<script src="http://www.example.com" />');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping -- empty script with source.'));
+
+    $f = filter_xss('<ScRipt sRc=http://www.example.com/>');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- varying case.'));
+
+    $f = filter_xss("<script\nsrc\n=\nhttp://www.example.com/\n>");
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- multiline tag.'));
+
+    $f = filter_xss('<script/a src=http://www.example.com/a.js></script>');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- non whitespace character after tag name.'));
+
+    $f = filter_xss('<script/src=http://www.example.com/a.js></script>');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- no space between tag and attribute.'));
+
+    // Null between < and tag name works at least with IE6.
+    $f = filter_xss("<\0scr\0ipt>alert(0)</script>");
+    $this->assertNoNormalized($f, 'ipt', t('HTML tag stripping evasion -- breaking HTML with nulls.'));
+
+    $f = filter_xss("<scrscriptipt src=http://www.example.com/a.js>");
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- filter just removing "script".'));
+
+    $f = filter_xss('<<script>alert(0);//<</script>');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- double opening brackets.'));
+
+    $f = filter_xss('<script src=http://www.example.com/a.js?<b>');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- no closing tag.'));
+
+    // DRUPAL-SA-2008-047 (rev. 1.219) This doesn't seem exploitable, but the
+    // filter should work consistently.
+    $f = filter_xss('<script>>');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- double closing tag.'));
+
+    $f = filter_xss('<script src=//www.example.com/.a>');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- no scheme or ending slash.'));
+
+    $f = filter_xss('<script src=http://www.example.com/.a');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- no closing bracket.'));
+
+    $f = filter_xss('<script src=http://www.example.com/ <');
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- opening instead of closing bracket.'));
+
+    $f = filter_xss('<nosuchtag attribute="newScriptInjectionVector">');
+    $this->assertNoNormalized($f, 'nosuchtag', t('HTML tag stripping evasion -- unknown tag.'));
+
+    $f = filter_xss('<?xml:namespace ns="urn:schemas-microsoft-com:time">');
+    $this->assertTrue(stripos($f, '<?xml') === FALSE, t('HTML tag stripping evasion -- starting with a question sign (processing instructions).'));
+
+    $f = filter_xss('<t:set attributeName="innerHTML" to="&lt;script defer&gt;alert(0)&lt;/script&gt;">');
+    $this->assertNoNormalized($f, 't:set', t('HTML tag stripping evasion -- colon in the tag name (namespaces\' tricks).'));
+
+    $f = filter_xss('<img """><script>alert(0)</script>', array('img'));
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- a malformed image tag.'));
+
+    $f = filter_xss('<blockquote><script>alert(0)</script></blockquote>', array('blockquote'));
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- script in a blockqoute.'));
+
+    $f = filter_xss("<!--[if true]><script>alert(0)</script><![endif]-->");
+    $this->assertNoNormalized($f, 'script', t('HTML tag stripping evasion -- script within a comment.'));
+
+    // Dangerous attributes removal.
+    $f = filter_xss('<p onmouseover="http://www.example.com/">', array('p'));
+    $this->assertNoNormalized($f, 'onmouseover', t('HTML filter attributes removal -- events, no evasion.'));
+
+    $f = filter_xss('<li style="list-style-image: url(javascript:alert(0))">', array('li'));
+    $this->assertNoNormalized($f, 'style', t('HTML filter attributes removal -- style, no evasion.'));
+
+    $f = filter_xss('<img onerror   =alert(0)>', array('img'));
+    $this->assertNoNormalized($f, 'onerror', t('HTML filter attributes removal evasion -- spaces before equals sign.'));
+
+    $f = filter_xss('<img onabort!#$%&()*~+-_.,:;?@[/|\]^`=alert(0)>', array('img'));
+    $this->assertNoNormalized($f, 'onabort', t('HTML filter attributes removal evasion -- non alphanumeric characters before equals sign.'));
+
+    $f = filter_xss('<img oNmediAError=alert(0)>', array('img'));
+    $this->assertNoNormalized($f, 'onmediaerror', t('HTML filter attributes removal evasion -- varying case.'));
+
+    // Works at least with IE6.
+    $f = filter_xss("<img o\0nfocus\0=alert(0)>", array('img'));
+    $this->assertNoNormalized($f, 'focus', t('HTML filter attributes removal evasion -- breaking with nulls.'));
+
+    // Only whitelisted scheme names in allowed attributes.
+    $f = filter_xss('<img src="javascript:alert(0)">', array('img'));
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing -- no evasion.'));
+
+    $f = filter_xss('<img src=javascript:alert(0)>', array('img'));
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- no quotes.'));
+
+    // A bit like CVE-2006-0070.
+    $f = filter_xss('<img src="javascript:confirm(0)">', array('img'));
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- no alert ;)'));
+
+    $f = filter_xss('<img src=`javascript:alert(0)`>', array('img'));
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- grave accents.'));
+
+    $f = filter_xss('<img dynsrc="javascript:alert(0)">', array('img'));
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing -- rare attribute.'));
+
+    $f = filter_xss('<table background="javascript:alert(0)">', array('table'));
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing -- another tag.'));
+
+    $f = filter_xss('<base href="javascript:alert(0);//">', array('base'));
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing -- one more attribute and tag.'));
+
+    $f = filter_xss('<img src="jaVaSCriPt:alert(0)">', array('img'));
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- varying case.'));
+
+    $f = filter_xss('<img src=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#48;&#41;>', array('img'));
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- UTF-8 decimal encoding.'));
+
+    $f = filter_xss('<img src=&#00000106&#0000097&#00000118&#0000097&#00000115&#0000099&#00000114&#00000105&#00000112&#00000116&#0000058&#0000097&#00000108&#00000101&#00000114&#00000116&#0000040&#0000048&#0000041>', array('img'));
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- long UTF-8 encoding.'));
+
+    $f = filter_xss('<img src=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x30&#x29>', array('img'));
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- UTF-8 hex encoding.'));
+
+    $f = filter_xss("<img src=\"jav\tascript:alert(0)\">", array('img'));
+    $this->assertNoNormalized($f, 'script', t('HTML scheme clearing evasion -- an embedded tab.'));
+
+    $f = filter_xss('<img src="jav&#x09;ascript:alert(0)">', array('img'));
+    $this->assertNoNormalized($f, 'script', t('HTML scheme clearing evasion -- an encoded, embedded tab.'));
+
+    $f = filter_xss('<img src="jav&#x000000A;ascript:alert(0)">', array('img'));
+    $this->assertNoNormalized($f, 'script', t('HTML scheme clearing evasion -- an encoded, embedded newline.'));
+
+    // With &#xD; this test would fail, but the entity gets turned into
+    // &amp;#xD;, so it's OK.
+    $f = filter_xss('<img src="jav&#x0D;ascript:alert(0)">', array('img'));
+    $this->assertNoNormalized($f, 'script', t('HTML scheme clearing evasion -- an encoded, embedded carriage return.'));
+
+    $f = filter_xss("<img src=\"\n\n\nj\na\nva\ns\ncript:alert(0)\">", array('img'));
+    $this->assertNoNormalized($f, 'cript', t('HTML scheme clearing evasion -- broken into many lines.'));
+
+    $f = filter_xss("<img src=\"jav\0a\0\0cript:alert(0)\">", array('img'));
+    $this->assertNoNormalized($f, 'cript', t('HTML scheme clearing evasion -- embedded nulls.'));
+
+    $f = filter_xss('<img src=" &#14;  javascript:alert(0)">', array('img'));
+    $this->assertNoNormalized($f, 'javascript', t('HTML scheme clearing evasion -- spaces and metacharacters before scheme.'));
+
+    $f = filter_xss('<img src="vbscript:msgbox(0)">', array('img'));
+    $this->assertNoNormalized($f, 'vbscript', t('HTML scheme clearing evasion -- another scheme.'));
+
+    $f = filter_xss('<img src="nosuchscheme:notice(0)">', array('img'));
+    $this->assertNoNormalized($f, 'nosuchscheme', t('HTML scheme clearing evasion -- unknown scheme.'));
+
+    // Netscape 4.x javascript entities.
+    $f = filter_xss('<br size="&{alert(0)}">', array('br'));
+    $this->assertNoNormalized($f, 'alert', t('Netscape 4.x javascript entities.'));
+
+    // Invalid UTF-8, these only work as reflected XSS with Internet Explorer 6.
+    $f = filter_xss("<p arg=\"\xe0\">\" style=\"background-image: url(javascript:alert(0));\"\xe0<p>", array('p')); // DRUPAL-SA-2008-006
+    $this->assertNoNormalized($f, 'style', t('HTML filter -- invalid UTF-8.'));
+
+    $f = filter_xss("\xc0aaa");
+    $this->assertEqual($f, '', t('HTML filter -- overlong UTF-8 sequences.'));
+  }
+
+  /**
+   * Test filter settings, defaults, access restrictions and similar.
+   *
+   * TODO: This is for functions like filter_filter and check_markup, whose
+   * functionality is not completely focused on filtering. Some ideas:
+   * restricting formats according to user permissions, proper cache
+   * handling, defaults -- allowed tags/attributes/protocols.
+   *
+   * TODO: It is possible to add script, iframe etc. to allowed tags, but
+   * this makes HTML filter completely ineffective.
+   *
+   * TODO: Class, id, name and xmlns should be added to disallowed attributes,
+   * or better a whitelist approach should be used for that too.
+   */
+  function testFilter() {
+    // Check that access restriction really works.
+
+    // HTML filter is not able to secure some tags, these should never be
+    // allowed.
+    $f = filter_filter('process', 0, 'no_such_format', '<script />');
+    $this->assertNoNormalized($f, 'script', t('HTML filter should always remove script tags.'));
+
+    $f = filter_filter('process', 0, 'no_such_format', '<iframe />');
+    $this->assertNoNormalized($f, 'iframe', t('HTML filter should always remove iframe tags.'));
+
+    $f = filter_filter('process', 0, 'no_such_format', '<object />');
+    $this->assertNoNormalized($f, 'object', t('HTML filter should always remove object tags.'));
+
+    $f = filter_filter('process', 0, 'no_such_format', '<style />');
+    $this->assertNoNormalized($f, 'style', t('HTML filter should always remove style tags.'));
+
+    // Some tags make CSRF attacks easier, let the user take the risk herself.
+    $f = filter_filter('process', 0, 'no_such_format', '<img />');
+    $this->assertNoNormalized($f, 'img', t('HTML filter should remove img tags on default.'));
+
+    $f = filter_filter('process', 0, 'no_such_format', '<input />');
+    $this->assertNoNormalized($f, 'img', t('HTML filter should remove input tags on default.'));
+
+    // Filtering content of some attributes is infeasible, these shouldn't be
+    // allowed too.
+    $f = filter_filter('process', 0, 'no_such_format', '<p style="display: none;" />');
+    $this->assertNoNormalized($f, 'style', t('HTML filter should remove style attribute on default.'));
+
+    $f = filter_filter('process', 0, 'no_such_format', '<p onerror="alert(0);" />');
+    $this->assertNoNormalized($f, 'onerror', t('HTML filter should remove on* attributes on default.'));
+  }
+
+  /**
+   * Test the spam deterrent.
+   */
+  function testNoFollowFilter() {
+    variable_set('filter_html_nofollow_f', TRUE);
+
+    // Test if the rel="nofollow" attribute is added, even if we try to prevent
+    // it.
+    $f = _filter_html('<a href="http://www.example.com/">text</a>', 'f');
+    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent -- no evasion.'));
+
+    $f = _filter_html('<A href="http://www.example.com/">text</a>', 'f');
+    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- capital A.'));
+
+    $f = _filter_html("<a/href=\"http://www.example.com/\">text</a>", 'f');
+    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- non whitespace character after tag name.'));
+
+    $f = _filter_html("<\0a\0 href=\"http://www.example.com/\">text</a>", 'f');
+    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- some nulls.'));
+
+    $f = _filter_html('<!--[if true]><a href="http://www.example.com/">text</a><![endif]-->', 'f');
+    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- link within a comment.'));
+  }
+
+  /**
+   * Test the loose, admin HTML filter.
+   */
+  function testAdminHtmlFilter() {
+    // DRUPAL-SA-2008-044
+    $f = filter_xss_admin('<object />');
+    $this->assertNoNormalized($f, 'object', t('Admin HTML filter -- should not allow object tag.'));
+
+    $f = filter_xss_admin('<script />');
+    $this->assertNoNormalized($f, 'script', t('Admin HTML filter -- should not allow script tag.'));
+
+    $f = filter_xss_admin('<style /><iframe /><frame /><frameset /><meta /><link /><embed /><applet /><param /><layer />');
+    $this->assertEqual($f, '', t('Admin HTML filter -- should never allow some tags.'));
+  }
+
+  /**
+   * Test the HTML escaping filter. Here we test only whether check_plain()
+   * does what it should.
+   */
+  function testNoHtmlFilter() {
+    // Test that characters that have special meaning in XML are changed into
+    // entities.
+    $f = check_plain('<>&"');
+    $this->assertEqual($f, '&lt;&gt;&amp;&quot;', t('No HTML filter basic test.'));
+
+    // A single quote can also be used for evil things in some contexts.
+    $f = check_plain('\'');
+    $this->assertEqual($f, '&#039;', t('No HTML filter -- single quote.'));
+
+    // Test that the filter is not fooled by different evasion techniques.
+    $f = check_plain("\xc2\"");
+    $this->assertEqual($f, '', t('No HTML filter -- invalid UTF-8.'));
+  }
+
+  /**
+   * Test the URL filter.
+   */
+  function testUrlFilter() {
+    variable_set('filter_url_length_f', 496);
+
+    // Converting URLs.
+    $f = _filter_url('http://www.example.com/', 'f');
+    $this->assertEqual($f, '<a href="http://www.example.com/" title="http://www.example.com/">http://www.example.com/</a>', t('Converting URLs.'));
+
+    $f = _filter_url('http://www.example.com/?a=1&b=2', 'f');
+    $this->assertEqual($f, '<a href="http://www.example.com/?a=1&amp;b=2" title="http://www.example.com/?a=1&amp;b=2">http://www.example.com/?a=1&amp;b=2</a>', t('Converting URLs -- ampersands.'));
+
+    $f = _filter_url('ftp://user:pass@ftp.example.com/dir1/dir2', 'f');
+    $this->assertEqual($f, '<a href="ftp://user:pass@ftp.example.com/dir1/dir2" title="ftp://user:pass@ftp.example.com/dir1/dir2">ftp://user:pass@ftp.example.com/dir1/dir2</a>', t('Converting URLs -- FTP scheme.'));
+
+    // Converting domain names.
+    $f = _filter_url('www.example.com', 'f');
+    $this->assertEqual($f, '<a href="http://www.example.com" title="www.example.com">www.example.com</a>', t('Converting domain names.'));
+
+    $f = _filter_url('<li>www.example.com</li>', 'f');
+    $this->assertEqual($f, '<li><a href="http://www.example.com" title="www.example.com">www.example.com</a></li>', t('Converting domain names -- domain in a list.'));
+
+    $f = _filter_url('(www.example.com/dir?a=1&b=2#a)', 'f');
+    $this->assertEqual($f, '(<a href="http://www.example.com/dir?a=1&amp;b=2#a" title="www.example.com/dir?a=1&amp;b=2#a">www.example.com/dir?a=1&amp;b=2#a</a>)', t('Converting domain names --  domain in parentheses.'));
+
+    // Converting e-mail addresses.
+    $f = _filter_url('johndoe@example.com', 'f');
+    $this->assertEqual($f, '<a href="mailto:johndoe@example.com">johndoe@example.com</a>', t('Converting e-mail addresses.'));
+
+    $f = _filter_url('aaa@sub.tv', 'f');
+    $this->assertEqual($f, '<a href="mailto:aaa@sub.tv">aaa@sub.tv</a>', t('Converting e-mail addresses -- a short e-mail from Tuvalu.'));
+
+    // URL trimming.
+    variable_set('filter_url_length_f', 28);
+
+    $f = _filter_url('http://www.example.com/d/ff.ext?a=1&b=2#a1', 'f');
+    $this->assertNormalized($f, 'http://www.example.com/d/ff....', t('URL trimming.'));
+
+    // Not breaking existing links.
+    $f = _filter_url('<a href="http://www.example.com">www.example.com</a>', 'f');
+    $this->assertEqual($f, '<a href="http://www.example.com">www.example.com</a>', t('Converting URLs -- do not break existing links.'));
+
+    $f = _filter_url('<a href="foo">http://www.example.com</a>', 'f');
+    $this->assertEqual($f, '<a href="foo">http://www.example.com</a>', t('Converting URLs -- do not break existing, relative links.'));
+
+    // Addresses within some tags such as code or script should not be converted.
+    $f = _filter_url('<code>http://www.example.com</code>', 'f');
+    $this->assertEqual($f, '<code>http://www.example.com</code>', t('Converting URLs -- skip code contents.'));
+
+    $f = _filter_url('<code><em>http://www.example.com</em></code>', 'f');
+    $this->assertEqual($f, '<code><em>http://www.example.com</em></code>', t('Converting URLs -- really skip code contents.'));
+
+    $f = _filter_url('<script>http://www.example.com</script>', 'f');
+    $this->assertEqual($f, '<script>http://www.example.com</script>', t('Converting URLs -- do not process scripts.'));
+
+    // Addresses in attributes should not be converted.
+    $f = _filter_url('<p xmlns="http://www.example.com" />', 'f');
+    $this->assertEqual($f, '<p xmlns="http://www.example.com" />', t('Converting URLs -- do not convert addresses in attributes.'));
+
+    $f = _filter_url('<a title="Go to www.example.com" href="http://www.example.com">text</a>', 'f');
+    $this->assertEqual($f, '<a title="Go to www.example.com" href="http://www.example.com">text</a>', t('Converting URLs -- do not break existing links with custom title attribute.'));
+
+    // Even though a dot at the end of a URL can indicate a fully qualified
+    // domain name, such usage is rare compared to using a link at the end
+    // of a sentence, so remove the dot from the link.
+    // name. It can also be used at the end of a filename or a query string
+    $f = _filter_url('www.example.com.', 'f');
+    $this->assertEqual($f, '<a href="http://www.example.com" title="www.example.com">www.example.com</a>.', t('Converting URLs -- do not recognize a dot at the end of a domain name (FQDNs).'));
+
+    $f = _filter_url('http://www.example.com.', 'f');
+    $this->assertEqual($f, '<a href="http://www.example.com" title="http://www.example.com">http://www.example.com</a>.', t('Converting URLs -- do not recognize a dot at the end of an URL (FQDNs).'));
+
+    $f = _filter_url('www.example.com/index.php?a=.', 'f');
+    $this->assertEqual($f, '<a href="http://www.example.com/index.php?a=" title="www.example.com/index.php?a=">www.example.com/index.php?a=</a>.', t('Converting URLs -- do forget about a dot at the end of a query string.'));
+  }
+
+  /**
+   * Test the HTML corrector.
+   *
+   * TODO: This test could really use some validity checking function.
+   */
+  function testHtmlCorrector() {
+    // Tag closing.
+    $f = _filter_htmlcorrector('<p>text');
+    $this->assertEqual($f, '<p>text</p>', t('HTML corrector -- tag closing at the end of input.'));
+
+    $f = _filter_htmlcorrector('<p>text<p><p>text');
+    $this->assertEqual($f, '<p>text</p><p></p><p>text</p>', t('HTML corrector -- tag closing.'));
+
+    $f = _filter_htmlcorrector("<ul><li>e1<li>e2");
+    $this->assertEqual($f, "<ul><li>e1</li><li>e2</li></ul>", t('HTML corrector -- unclosed list tags.'));
+
+    $f = _filter_htmlcorrector('<div id="d">content');
+    $this->assertEqual($f, '<div id="d">content</div>', t('HTML corrector -- unclosed tag with attribute.'));
+
+    // XHTML slash for empty elements.
+    $f = _filter_htmlcorrector('<hr><br>');
+    $this->assertEqual($f, '<hr /><br />', t('HTML corrector -- XHTML closing slash.'));
   }
 
   function createFormat($filter) {
@@ -236,5 +617,55 @@ class FilterTestCase extends DrupalWebTestCase {
       // Delete new filter.
       $this->drupalPost('admin/settings/formats/delete/' . $format->format, array(), t('Delete'));
     }
+  }
+
+  /**
+   * Asserts that a text transformed to lowercase with HTML entities decoded
+   * does contains a given string.
+   *
+   * Otherwise fails the test with a given message, similar to all the
+   * SimpleTest assert* functions.
+   *
+   * Note that this does not remove nulls, new lines and other characters that
+   * could be used to obscure a tag or an attribute name.
+   *
+   * @param $haystack
+   *   Text to look in.
+   * @param $needle
+   *   Lowercase, plain text to look for.
+   * @param $message
+   *   Message to display if failed.
+   * @param $group
+   *   The group this message belongs to, defaults to 'Other'.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  function assertNormalized($haystack, $needle, $message = '', $group = 'Other') {
+    return $this->assertTrue(strpos(strtolower(decode_entities($haystack)), $needle) !== FALSE, $message, $group);
+  }
+
+  /**
+   * Asserts that text transformed to lowercase with HTML entities decoded does
+   * not contain a given string.
+   *
+   * Otherwise fails the test with a given message, similar to all the
+   * SimpleTest assert* functions.
+   *
+   * Note that this does not remove nulls, new lines, and other character that
+   * could be used to obscure a tag or an attribute name.
+   *
+   * @param $haystack
+   *   Text to look in.
+   * @param $needle
+   *   Lowercase, plain text to look for.
+   * @param $message
+   *   Message to display if failed.
+   * @param $group
+   *   The group this message belongs to, defaults to 'Other'.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  function assertNoNormalized($haystack, $needle, $message = '', $group = 'Other') {
+    return $this->assertTrue(strpos(strtolower(decode_entities($haystack)), $needle) === FALSE, $message, $group);
   }
 }
