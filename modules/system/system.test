@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.52 2009/06/27 17:29:38 webchick Exp $
+// $Id: system.test,v 1.53 2009/06/28 03:56:43 webchick Exp $
 
 /**
  * Helper class for module test cases.
@@ -113,6 +113,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     // Install (and enable) aggregator module.
     $edit = array();
     $edit['modules[Core][aggregator][enable]'] = 'aggregator';
+    $edit['modules[Core][forum][enable]'] = 'forum';
     $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
 

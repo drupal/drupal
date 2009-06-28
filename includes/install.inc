@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.93 2009/06/08 04:33:35 dries Exp $
+// $Id: install.inc,v 1.94 2009/06/28 03:56:43 webchick Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -516,11 +516,7 @@ function drupal_install_modules($module_list = array(), $disable_modules_install
   } while ($moved);
   asort($module_list);
   $module_list = array_keys($module_list);
-  $modules_installed = array_filter($module_list, '_drupal_install_module');
-  if (!$disable_modules_installed_hook && !empty($modules_installed)) {
-    module_invoke_all('modules_installed', $modules_installed);
-  }
-  module_enable($module_list);
+  module_enable($module_list, $disable_modules_installed_hook);
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.54 2009/06/05 05:28:28 dries Exp $
+// $Id: node.admin.inc,v 1.55 2009/06/28 03:56:43 webchick Exp $
 
 /**
  * @file
@@ -633,4 +633,12 @@ function node_multiple_delete_confirm_submit($form, &$form_state) {
   }
   $form_state['redirect'] = 'admin/content/node';
   return;
+}
+
+/**
+ * Implement hook_modules_installed()
+ */
+function node_modules_installed($modules) {
+  // Clear node type cache for node permissions.
+  node_type_clear();
 }
