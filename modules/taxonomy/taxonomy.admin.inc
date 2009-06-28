@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.57 2009/06/28 12:04:56 dries Exp $
+// $Id: taxonomy.admin.inc,v 1.58 2009/06/28 13:37:29 dries Exp $
 
 /**
  * @file
@@ -751,7 +751,7 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
     '#type' => 'textarea',
     '#title' => t('Synonyms'),
     '#default_value' => implode("\n", taxonomy_get_synonyms($edit['tid'])),
-    '#description' => t('Synonyms of this term, one synonym per line.'));
+    '#description' => t('One synonym per line. Text input term selection widgets will show terms whose synonyms match the entered value as suggestions.'));
   $form['advanced']['weight'] = array(
     '#type' => 'textfield',
     '#title' => t('Weight'),
