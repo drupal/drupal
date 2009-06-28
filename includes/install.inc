@@ -516,11 +516,7 @@ function drupal_install_modules($module_list = array(), $disable_modules_install
   } while ($moved);
   asort($module_list);
   $module_list = array_keys($module_list);
-  $modules_installed = array_filter($module_list, '_drupal_install_module');
-  if (!$disable_modules_installed_hook && !empty($modules_installed)) {
-    module_invoke_all('modules_installed', $modules_installed);
-  }
-  module_enable($module_list);
+  module_enable($module_list, $disable_modules_installed_hook);
 }
 
 /**

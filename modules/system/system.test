@@ -113,6 +113,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     // Install (and enable) aggregator module.
     $edit = array();
     $edit['modules[Core][aggregator][enable]'] = 'aggregator';
+    $edit['modules[Core][forum][enable]'] = 'forum';
     $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
 

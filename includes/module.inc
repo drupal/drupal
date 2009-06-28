@@ -177,9 +177,15 @@ function module_load_all_includes($type, $name = NULL) {
  *
  * @param $module_list
  *   An array of module names.
+ * @param $disable_modules_installed_hook
+ *   Normally just testing wants to set this to TRUE.
  */
-function module_enable($module_list) {
+function module_enable($module_list, $disable_modules_installed_hook = FALSE) {
   $invoke_modules = array();
+  
+  // Try to install the enabled modules and collect which were installed.
+  // $module_list is not changed and already installed modules are ignored.
+  $modules_installed = array_filter($module_list, '_drupal_install_module');
   foreach ($module_list as $module) {
     $existing = db_query("SELECT status FROM {system} WHERE type = :type AND name = :name", array(
       ':type' => 'module',
@@ -203,6 +209,11 @@ function module_enable($module_list) {
     module_list(TRUE);
     // Force to regenerate the stored list of hook implementations.
     registry_rebuild();
+
+    // If any modules were newly installed, execute the hook for them.
+    if (!$disable_modules_installed_hook && !empty($modules_installed)) {
+      module_invoke_all('modules_installed', $modules_installed);
+    }
   }
 
   foreach ($invoke_modules as $module) {
