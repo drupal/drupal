@@ -46,6 +46,21 @@ function cache_get($cid, $bin = 'cache') {
 }
 
 /**
+ * Return data from the persistent cache when given an array of cache IDs.
+ *
+ * @param $cids
+ *   An array of cache IDs for the data to retrieve. This is passed by
+ *   reference, and will have the IDs successfully returned from cache removed.
+ * @param $bin
+ *   The cache bin where the data is stored.
+ * @return
+ *   An array of the items successfully returned from cache indexed by cid.
+ */
+function cache_get_multiple(array &$cids, $bin = 'cache') {
+  return _cache_get_object($bin)->getMultiple($cids);
+}
+
+/**
  * Store data in the persistent cache.
  *
  * The persistent cache is split up into several cache bins. In the default
@@ -198,6 +213,18 @@ interface DrupalCacheInterface {
   function get($cid);
 
   /**
+   * Return data from the persistent cache when given an array of cache IDs.
+   *
+   * @param $cids
+   *   An array of cache IDs for the data to retrieve. This is passed by
+   *   reference, and will have the IDs successfully returned from cache
+   *   removed.
+   * @return
+   *   An array of the items successfully returned from cache indexed by cid.
+   */
+   function getMultiple(&$cids);
+
+  /**
    * Store data in the persistent cache.
    *
    * @param $cid
@@ -249,9 +276,41 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
   }
 
   function get($cid) {
+    // Garbage collection necessary when enforcing a minimum cache lifetime.
+    $this->garbageCollection($this->bin);
+    $cache = db_query("SELECT data, created, headers, expire, serialized FROM {" . $this->bin . "} WHERE cid = :cid", array(':cid' => $cid))->fetchObject();
+
+    return $this->prepareItem($cache);
+  }
+
+  function getMultiple(&$cids) {
+    // Garbage collection necessary when enforcing a minimum cache lifetime.
+    $this->garbageCollection($this->bin);
+    $query = db_select($this->bin);
+    $query->fields($this->bin, array('cid', 'data', 'created', 'headers', 'expire', 'serialized'));
+    $query->condition($this->bin . '.cid', $cids, 'IN');
+    $result = $query->execute();
+    $cache = array();
+    foreach ($result as $item) {
+      $item = $this->prepareItem($item);
+      if ($item) {
+        $cache[$item->cid] = $item;
+      }
+    }
+    $cids = array_diff($cids, array_keys($cache));
+    return $cache;
+  }
+
+  /**
+   * Garbage collection for get() and getMultiple().
+   *
+   * @param $bin
+   *   The bin being requested.
+   */
+  protected function garbageCollection() {
     global $user;
 
-    // Garbage collection is necessary when enforcing a minimum cache lifetime.
+    // Garbage collection necessary when enforcing a minimum cache lifetime.
     $cache_flush = variable_get('cache_flush_' . $this->bin, 0);
     if ($cache_flush && ($cache_flush + variable_get('cache_lifetime', 0) <= REQUEST_TIME)) {
       // Reset the variable immediately to prevent a meltdown in heavy load situations.
@@ -262,13 +321,31 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
         ->condition('expire', $cache_flush, '<=')
         ->execute();
     }
+  }
 
-    $cache = db_query("SELECT data, created, headers, expire, serialized FROM {" . $this->bin . "} WHERE cid = :cid", array(':cid' => $cid))->fetchObject();
-
+  /**
+   * Prepare a cached item.
+   *
+   * Checks that items are either permanent or did not expire, and unserializes
+   * data as appropriate.
+   *
+   * @param $cache
+   *   An item loaded from cache_get() or cache_get_multiple().
+   * @return
+   *   The item with data unserialized as appropriate or FALSE if there is no
+   *   valid item to load.
+   */
+  protected function prepareItem($cache) {
     if (!isset($cache->data)) {
       return FALSE;
     }
-
+    // If the data is permanent or we are not enforcing a minimum cache lifetime
+    // always return the cached data.
+    if ($cache->expire == CACHE_PERMANENT || !variable_get('cache_lifetime', 0)) {
+      if ($cache->serialized) {
+        $cache->data = unserialize($cache->data);
+      }
+    }
     // If enforcing a minimum cache lifetime, validate that the data is
     // currently valid for this user before we return it by making sure the cache
     // entry was created before the timestamp in the current session's cache
@@ -280,9 +357,6 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
       return FALSE;
     }
 
-    if ($cache->serialized) {
-      $cache->data = unserialize($cache->data);
-    }
     if (isset($cache->headers)) {
       $cache->headers = unserialize($cache->headers);
     }
@@ -356,6 +430,15 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
             ->condition('cid', $cid . '%', 'LIKE')
             ->execute();
         }
+      }
+      elseif (is_array($cid)) {
+        // Delete in chunks when a large array is passed.
+        do {
+          db_delete($this->bin)
+            ->condition('cid', array_splice($cid, 0, 1000), 'IN')
+            ->execute();
+        }
+        while (count($cid));
       }
       else {
         db_delete($this->bin)

@@ -399,28 +399,36 @@ function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT) {
   $info = field_info_fieldable_types($obj_type);
   $cacheable = $load_current && $info['cacheable'];
 
-  $queried_objects = array();
+  if (empty($objects)) {
+    return;
+  }
 
-  // Fetch avaliable objects from cache.
+  // Assume all objects will need to be queried. Objects found in the cache
+  // will be removed from the list.
+  $queried_objects = $objects;
+
+  // Fetch available objects from cache, if applicable.
   if ($cacheable) {
+    // Build the list of cache entries to retrieve.
+    $cids = array();
+    foreach ($objects as $id => $object) {
+      $cids[] = "field:$obj_type:$id";
+    }
+    $cache = cache_get_multiple($cids, 'cache_field');
+    // Put the cached field values back into the objects and remove them from
+    // the list of objects to query.
     foreach ($objects as $id => $object) {
       $cid = "field:$obj_type:$id";
-      if ($cached = cache_get($cid, 'cache_field')) {
-        foreach ($cached->data as $key => $value) {
-          $object->$key = $value;
+      if (isset($cache[$cid])) {
+        unset($queried_objects[$id]);
+        foreach ($cache[$cid]->data as $field_name => $values) {
+          $object->$field_name = $values;
         }
-      }
-      else {
-        $queried_objects[$id] = $objects[$id];
       }
     }
   }
-  else {
-    $queried_objects = $objects;
-  }
 
-
-  // Fetch other objects from the database.
+  // Fetch other objects from their storage location.
   if ($queried_objects) {
     // The invoke order is:
     // - hook_field_attach_pre_load()
