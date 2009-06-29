@@ -59,7 +59,7 @@ function path_admin_overview($keys = NULL) {
   }
 
   if (empty($rows)) {
-    $empty_message = $keys ? t('No URL aliases found.') : t('No URL aliases available. <a href="@link">Add alias</a> now.', array('@link' => url('admin/build/path/add'))) ;
+    $empty_message = $keys ? t('No URL aliases found.') : t('No URL aliases available. <a href="@link">Add alias</a>.', array('@link' => url('admin/build/path/add'))) ;
     $rows[] = array(array('data' => $empty_message, 'colspan' => ($multilanguage ? 5 : 4)));
   }
 

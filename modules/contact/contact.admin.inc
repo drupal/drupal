@@ -30,7 +30,7 @@ function contact_admin_categories() {
 
   // If no categories were found, let the user know.
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No categories available. <a href="@link">Add category</a> now.', array('@link' => url('admin/build/contact/add'))), 'colspan' => 5));
+    $rows[] = array(array('data' => t('No categories available. <a href="@link">Add category</a>.', array('@link' => url('admin/build/contact/add'))), 'colspan' => 5));
   }
 
   return theme('table', $header, $rows);

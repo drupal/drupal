@@ -242,7 +242,7 @@ function forum_overview(&$form_state) {
   $form['#theme'] = 'taxonomy_overview_terms';
   $form['#submit'] = array('taxonomy_overview_terms_submit'); // Use the existing taxonomy overview submit handler.
   $form['#validate'] = array('taxonomy_overview_terms_validate');
-  $form['#empty_text'] = t('No containers or forums available. <a href="@container">Add container</a> or <a href="@forum">Add forum</a> now.', array('@container' => url('admin/build/forum/add/container'), '@forum' => url('admin/build/forum/add/forum')));
+  $form['#empty_text'] = t('No containers or forums available. <a href="@container">Add container</a> or <a href="@forum">Add forum</a>.', array('@container' => url('admin/build/forum/add/container'), '@forum' => url('admin/build/forum/add/forum')));
   return $form;
 }
 

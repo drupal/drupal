@@ -65,7 +65,7 @@ function menu_overview_form(&$form_state, $menu) {
     );
   }
   else {
-    $form['#empty_text'] = t('There are no menu links yet. <a href="@link">Add link</a> now.', array('@link' => url('admin/build/menu-customize/'. $form['#menu']['menu_name'] .'/add')));
+    $form['#empty_text'] = t('There are no menu links yet. <a href="@link">Add link</a>.', array('@link' => url('admin/build/menu-customize/'. $form['#menu']['menu_name'] .'/add')));
   }
   return $form;
 }
