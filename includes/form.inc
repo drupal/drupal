@@ -1205,7 +1205,7 @@ function _form_builder_ie_cleanup($form, &$form_state) {
  * @param $edit
  *   The incoming POST data to populate the form element. If this is FALSE,
  *   the element's default value should be returned.
-* @param $form_state
+ * @param $form_state
  *   A keyed array containing the current state of the form.
  * @return
  *   The data that will appear in the $form_state['values'] collection
@@ -1225,7 +1225,7 @@ function form_type_image_button_value($form, $edit, $form_state) {
       // button. We'll find this element in the #post data, and search
       // in the same spot for its name, with '_x'.
       $post = $form_state['input'];
-      foreach (split('\[', $form['#name']) as $element_name) {
+      foreach (explode('[', $form['#name']) as $element_name) {
         // chop off the ] that may exist.
         if (substr($element_name, -1) == ']') {
           $element_name = substr($element_name, 0, -1);
