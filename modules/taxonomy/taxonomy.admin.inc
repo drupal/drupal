@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.59 2009/06/28 16:05:58 webchick Exp $
+// $Id: taxonomy.admin.inc,v 1.60 2009/06/29 14:24:57 webchick Exp $
 
 /**
  * @file
@@ -84,7 +84,7 @@ function theme_taxonomy_overview_vocabularies($form) {
   }
 
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No vocabularies available. <a href="@link">Add vocabulary</a> now.', array('@link' => url('admin/content/taxonomy/add'))), 'colspan' => '5'));
+    $rows[] = array(array('data' => t('No vocabularies available. <a href="@link">Add vocabulary</a>.', array('@link' => url('admin/content/taxonomy/add'))), 'colspan' => '5'));
   }
 
   $header = array(t('Vocabulary name'), t('Content types'));
@@ -451,7 +451,7 @@ function taxonomy_overview_terms(&$form_state, $vocabulary) {
   $form['#page_entries'] = $page_entries;
   $form['#back_peddle'] = $back_peddle;
   $form['#forward_peddle'] = $forward_peddle;
-  $form['#empty_text'] = t('No terms available. <a href="@link">Add term</a> now.', array('@link' => url('admin/build/taxonomy/' . $vocabulary->vid . '/add')));
+  $form['#empty_text'] = t('No terms available. <a href="@link">Add term</a>.', array('@link' => url('admin/build/taxonomy/' . $vocabulary->vid . '/add')));
 
   if (!$vocabulary->tags && $vocabulary->hierarchy < 2 && count($tree) > 1) {
     $form['submit'] = array(

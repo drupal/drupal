@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.admin.inc,v 1.12 2009/06/28 16:05:58 webchick Exp $
+// $Id: trigger.admin.inc,v 1.13 2009/06/29 14:24:57 webchick Exp $
 
 /**
  * @file
@@ -174,7 +174,7 @@ function trigger_assign_form($form_state, $hook, $op, $description) {
   }
   else {
     $form[$op]['none'] = array(
-      '#markup' => t('No actions available for this trigger. <a href="@link">Add action</a> now.', array('@link' => url('admin/settings/actions/manage')))
+      '#markup' => t('No actions available for this trigger. <a href="@link">Add action</a>.', array('@link' => url('admin/settings/actions/manage')))
     );
   }
   return $form;
