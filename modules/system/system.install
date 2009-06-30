@@ -512,7 +512,7 @@ function system_install() {
 
   variable_set('node_options_forum', array(0 => 'status'));
 
-  $cron_key = serialize(md5(mt_rand()));
+  $cron_key = md5(mt_rand());
 
   variable_set('cron_key', $cron_key);
 }
