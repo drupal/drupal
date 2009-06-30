@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.18 2009/06/27 09:44:05 dries Exp $
+// $Id: database.inc,v 1.19 2009/06/30 00:09:55 webchick Exp $
 
 /**
  * @file
@@ -37,6 +37,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     $this->sqliteCreateFunction('greatest', array($this, 'sqlFunctionGreatest'));
     $this->sqliteCreateFunction('pow', 'pow', 2);
     $this->sqliteCreateFunction('length', 'strlen', 1);
+    $this->sqliteCreateFunction('md5', 'md5', 1);
     $this->sqliteCreateFunction('concat', array($this, 'sqlFunctionConcat'));
     $this->sqliteCreateFunction('substring', array($this, 'sqlFunctionSubstring'), 3);
     $this->sqliteCreateFunction('substring_index', array($this, 'sqlFunctionSubstringIndex'), 3);
