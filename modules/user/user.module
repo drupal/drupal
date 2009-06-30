@@ -121,45 +121,6 @@ function user_external_load($authname) {
 }
 
 /**
- * Perform standard Drupal login operations for a user object.
- *
- * The user object must already be authenticated. This function verifies
- * that the user account is not blocked and then performs the login,
- * updates the login timestamp in the database, invokes hook_user('login'),
- * and regenerates the session.
- *
- * @param $account
- *    An authenticated user object to be set as the currently logged
- *    in user.
- * @param $edit
- *    The array of form values submitted by the user, if any.
- *    This array is passed to hook_user op login.
- * @return boolean
- *    TRUE if the login succeeds, FALSE otherwise.
- */
-function user_external_login($account, $edit = array()) {
-  $form = drupal_render(drupal_get_form('user_login'));
-
-  $state['values'] = $edit;
-  if (empty($state['values']['name'])) {
-    $state['values']['name'] = $account->name;
-  }
-
-  // Check if user is blocked.
-  user_login_name_validate($form, $state, (array)$account);
-  if (form_get_errors()) {
-    // Invalid login.
-    return FALSE;
-  }
-
-  // Valid login.
-  global $user;
-  $user = $account;
-  user_authenticate_finalize($state['values']);
-  return TRUE;
-}
-
-/**
  * Load multiple users based on certain conditions.
  *
  * This function should be used whenever you need to load more than one user
@@ -1614,7 +1575,8 @@ function user_login(&$form_state) {
  * authentication fails. Distributed authentication modules are welcome
  * to use hook_form_alter() to change this series in order to
  * authenticate against their user database instead of the local users
- * table.
+ * table. If a distributed authentication module is successful, it 
+ * should set $form_state['uid'] to a user ID.
  *
  * We use three validators instead of one since external authentication
  * modules usually only need to alter the second validator.
@@ -1641,10 +1603,11 @@ function user_login_name_validate($form, &$form_state) {
 
 /**
  * A validate handler on the login form. Check supplied username/password
- * against local users table. If successful, sets the global $user object.
+ * against local users table. If successful, $form_state['uid'] 
+ * is set to the matching user ID.
  */
 function user_login_authenticate_validate($form, &$form_state) {
-  user_authenticate($form_state['values']);
+  user_authenticate($form_state);
 }
 
 /**
@@ -1652,34 +1615,33 @@ function user_login_authenticate_validate($form, &$form_state) {
  * error if user has not been authenticated yet.
  */
 function user_login_final_validate($form, &$form_state) {
-  global $user;
-  if (!$user->uid) {
+  if (empty($form_state['uid'])) {
     form_set_error('name', t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password'))));
     watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_state['values']['name']));
   }
 }
 
 /**
- * Try to log in the user locally.
+ * Try to log in the user locally. $form_state['uid'] is set to
+ * a user ID if successful.
  *
- * @param $form_values
- *   Form values with at least 'name' and 'pass' keys, as well as anything else
- *   which should be passed along to hook_user op 'login'.
- *
- * @return
- *  A $user object, if successful.
+ * @param $form_state
+ *   Form submission state with at least 'name' and 'pass' keys.
  */
-function user_authenticate($form_values = array()) {
-  global $user;
-
-  $password = trim($form_values['pass']);
+function user_authenticate(&$form_state) {
+  $password = trim($form_state['values']['pass']);
   // Name and pass keys are required.
-  if (!empty($form_values['name']) && !empty($password)) {
-    $account = db_query("SELECT * FROM {users} WHERE name = :name AND status = 1", array(':name' => $form_values['name']))->fetchObject();
+  if (!empty($form_state['values']['name']) && !empty($password)) {
+    $account = db_query("SELECT * FROM {users} WHERE name = :name AND status = 1", array(':name' => $form_state['values']['name']))->fetchObject();
     if ($account) {
       // Allow alternate password hashing schemes.
       require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
       if (user_check_password($password, $account)) {
+        
+        // Successful authentication. Set a flag for user_login_final_validate().
+        $form_state['uid'] = $account->uid;
+        
+        // Update user to new password scheme if needed.
         if (user_needs_new_hash($account)) {
           $new_hash = user_hash_password($password);
           if ($new_hash) {
@@ -1689,10 +1651,6 @@ function user_authenticate($form_values = array()) {
               ->execute();
           }
         }
-        $users = user_load_multiple(array($account->uid), array('status' => '1'));
-        $user = reset($users);
-        user_authenticate_finalize($form_values);
-        return $user;
       }
     }
   }
@@ -1702,12 +1660,9 @@ function user_authenticate($form_values = array()) {
  * Finalize the login process. Must be called when logging in a user.
  *
  * The function records a watchdog message about the new session, saves the
- * login timestamp, calls hook_user op 'login' and generates a new session.
- *
- * $param $edit
- *   This array is passed to hook_user op login.
+ * login timestamp, calls hook_user op 'login' and generates a new session. *
  */
-function user_authenticate_finalize(&$edit) {
+function user_login_finalize(&$edit = array()) {
   global $user;
   watchdog('user', 'Session opened for %name.', array('%name' => $user->name));
   // Update the user table timestamp noting user has logged in.
@@ -1727,32 +1682,26 @@ function user_authenticate_finalize(&$edit) {
 }
 
 /**
- * Submit handler for the login form. Redirects the user to a page.
- *
- * The user is redirected to the My Account page. Setting the destination in
- * the query string (as done by the user login block) overrides the redirect.
+ * Submit handler for the login form. Load $user object and perform standard login 
+ * tasks. The user is then redirected to the My Account page. Setting the 
+ * destination in the query string overrides the redirect.
  */
 function user_login_submit($form, &$form_state) {
   global $user;
-  if ($user->uid) {
-    $form_state['redirect'] = 'user/' . $user->uid;
-    return;
-  }
+  $user = user_load($form_state['uid']);
+  user_login_finalize();
+  
+  $form_state['redirect'] = 'user/' . $user->uid;
 }
 
 /**
- * Helper function for authentication modules. Either login in or registers
+ * Helper function for authentication modules. Either logs in or registers
  * the current user, based on username. Either way, the global $user object is
- * populated based on $name.
+ * populated and login tasks are performed.
  */
 function user_external_login_register($name, $module) {
-  global $user;
-
-  $existing_user = user_load_by_name($name);
-  if (isset($existing_user->uid)) {
-    $user = $existing_user;
-  }
-  else {
+  $account = user_load_by_name($name);
+  if (!$account->uid) {
     // Register this new user.
     $userinfo = array(
       'name' => $name,
@@ -1768,9 +1717,11 @@ function user_external_login_register($name, $module) {
       return;
     }
     user_set_authmaps($account, array("authname_$module" => $name));
-    $user = $account;
-    watchdog('user', 'New external user: %name using module %module.', array('%name' => $name, '%module' => $module), WATCHDOG_NOTICE, l(t('edit'), 'user/' . $user->uid . '/edit'));
   }
+  
+  // Log user in.
+  $form_state['uid'] = $account->uid;
+  user_login_submit(array(), $form_state);
 }
 
 function user_pass_reset_url($account) {
@@ -2816,7 +2767,8 @@ function user_register_submit($form, &$form_state) {
       drupal_set_message(t('</p><p> Your password is <strong>%pass</strong>. You may change your password below.</p>', array('%pass' => $pass)));
     }
 
-    user_authenticate(array_merge($form_state['values'], $merge_data));
+    $form_state['values'] += $merge_data; 
+    user_authenticate(array_merge($form_state));
 
     $form_state['redirect'] = 'user/1/edit';
     return;

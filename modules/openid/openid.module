@@ -409,7 +409,13 @@ function openid_authentication($response) {
   $account = user_external_load($identity);
   if (isset($account->uid)) {
     if (!variable_get('user_email_verification', TRUE) || $account->login) {
-      user_external_login($account, $_SESSION['openid']['user_login_values']);
+      // Check if user is blocked.
+      user_login_name_validate(array(), $state, (array)$account);
+      if (!form_get_errors()) {
+        // Load global $user and perform final login tasks.
+        $form_state['uid'] = $account->uid;
+        user_login_submit(array(), $form_state);
+      }
     }
     else {
       drupal_set_message(t('You must validate your email address for this account before logging in via OpenID'));
@@ -446,7 +452,9 @@ function openid_authentication($response) {
         drupal_goto();
       }
       user_set_authmaps($account, array("authname_openid" => $identity));
-      user_external_login($account);
+      // Load global $user and perform final login tasks.
+      $form_state['uid'] = $account->uid;
+      user_login_submit(array(), $form_state);
     }
     drupal_redirect_form($form, $form_state['redirect']);
   }

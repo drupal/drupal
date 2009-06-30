@@ -1158,8 +1158,9 @@ function install_configure_form_submit($form, &$form_state) {
   $account = user_load(1);
   $merge_data = array('init' => $form_state['values']['mail'], 'roles' => array(), 'status' => 1);
   user_save($account, array_merge($form_state['values'], $merge_data));
-  // Log in the first user.
-  user_authenticate($form_state['values']);
+  // Load global $user and perform final login tasks.
+  $form_state['uid'] = 1;
+  user_login_submit(array(), $form_state);
   $form_state['values'] = $form_state['old_values'];
   unset($form_state['old_values']);
   variable_set('user_email_verification', TRUE);
@@ -1167,9 +1168,6 @@ function install_configure_form_submit($form, &$form_state) {
   if (isset($form_state['values']['clean_url'])) {
     variable_set('clean_url', $form_state['values']['clean_url']);
   }
-  // The user is now logged in, but has no session ID yet, which
-  // would be required later in the request, so remember it.
-  $user->sid = session_id();
 
   // Record when this install ran.
   variable_set('install_time', $_SERVER['REQUEST_TIME']);

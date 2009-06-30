@@ -31,7 +31,6 @@ class BlogAPITestCase extends DrupalWebTestCase {
 
     // Create user.
     $web_user = $this->drupalCreateUser(array('create blog content', 'delete own blog content', 'edit own blog content', 'administer content with blog api'));
-    $this->drupalLogin($web_user);
 
     // Init common variables.
     $local = url($base_url . '/xmlrpc.php', array('external' => TRUE));

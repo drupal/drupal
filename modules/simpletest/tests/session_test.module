@@ -122,7 +122,7 @@ function _session_test_set_not_started() {
  * Implement hook_user().
  */
 function session_test_user_login($edit = array(), $user = NULL) {
-  if ($edit['name'] == 'session_test_user') {
+  if ($user->name == 'session_test_user') {
     // Exit so we can verify that the session was regenerated
     // before hook_user() was called.
     exit;
