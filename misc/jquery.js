@@ -1,3 +1,5 @@
+// $Id$
+
 /*
  * jQuery JavaScript Library v1.3.2
  * http://jquery.com/
