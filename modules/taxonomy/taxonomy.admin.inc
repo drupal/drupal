@@ -708,7 +708,6 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
     '#title' => t('Term name'),
     '#default_value' => $edit['name'],
     '#maxlength' => 255,
-    '#description' => t('The name of this term.'),
     '#required' => TRUE);
   $form['identification']['description'] = array(
     '#type' => 'textarea',
