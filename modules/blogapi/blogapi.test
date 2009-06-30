@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.test,v 1.12 2009/06/12 13:59:56 dries Exp $
+// $Id: blogapi.test,v 1.13 2009/06/30 11:32:08 dries Exp $
 
 class BlogAPITestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -31,7 +31,6 @@ class BlogAPITestCase extends DrupalWebTestCase {
 
     // Create user.
     $web_user = $this->drupalCreateUser(array('create blog content', 'delete own blog content', 'edit own blog content', 'administer content with blog api'));
-    $this->drupalLogin($web_user);
 
     // Init common variables.
     $local = url($base_url . '/xmlrpc.php', array('external' => TRUE));

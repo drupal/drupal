@@ -1,5 +1,5 @@
 <?php
-// $Id: session_test.module,v 1.8 2009/06/02 06:58:17 dries Exp $
+// $Id: session_test.module,v 1.9 2009/06/30 11:32:08 dries Exp $
 
 /**
  * Implement hook_menu().
@@ -122,7 +122,7 @@ function _session_test_set_not_started() {
  * Implement hook_user().
  */
 function session_test_user_login($edit = array(), $user = NULL) {
-  if ($edit['name'] == 'session_test_user') {
+  if ($user->name == 'session_test_user') {
     // Exit so we can verify that the session was regenerated
     // before hook_user() was called.
     exit;

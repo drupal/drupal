@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.155 2009/06/12 08:39:35 dries Exp $
+// $Id: blogapi.module,v 1.156 2009/06/30 11:32:08 dries Exp $
 
 /**
  * @file
@@ -683,13 +683,14 @@ function blogapi_error($message) {
  * Ensure that the given user has permission to edit a blog.
  */
 function blogapi_validate_user($username, $password) {
-  global $user;
+  $form_state['values']['name'] = $username;
+  $form_state['values']['pass'] = $password;
+  $form_state['values']['op'] = t('Login');
+  drupal_form_submit('user_login', $form_state);
 
-  $user = user_authenticate(array('name' => $username, 'pass' => $password));
-
-  if ($user->uid) {
+  if (!form_get_error()) {
     if (user_access('administer content with blog api', $user)) {
-      return $user;
+      return $GLOBALS['user'];
     }
     else {
       return t('You do not have permission to edit this blog.');
