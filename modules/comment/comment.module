@@ -1398,7 +1398,7 @@ function comment_get_display_ordinal($cid, $node_type) {
     // For flat comments, cid is used for ordering comments due to
     // unpredicatable behavior with timestamp, so we make the same assumption
     // here.
-    $query->condition('c1.cid', 'c2.cid', '<');
+    $query->condition('c1.cid', $cid, '<');
   }
   else {
     // For threaded comments, the c.thread column is used for ordering. We can
