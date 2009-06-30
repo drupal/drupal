@@ -1,5 +1,5 @@
 <?php
-// $Id: cache.inc,v 1.36 2009/06/28 01:00:42 webchick Exp $
+// $Id: cache.inc,v 1.37 2009/06/30 17:37:36 webchick Exp $
 
 /**
  * Get the cache object for a cache bin.
@@ -336,6 +336,8 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
    *   valid item to load.
    */
   protected function prepareItem($cache) {
+    global $user;
+
     if (!isset($cache->data)) {
       return FALSE;
     }
