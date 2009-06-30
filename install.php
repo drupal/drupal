@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.180 2009/06/30 11:39:38 dries Exp $
+// $Id: install.php,v 1.181 2009/06/30 21:44:06 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -1096,7 +1096,7 @@ function install_configure_form(&$form_state, $url) {
     '#title' => st('Update notifications'),
     '#options' => array(1 => st('Check for updates automatically')),
     '#default_value' => array(1),
-    '#description' => st('The system will notify you if any updates, including important security updates, are available for installed components. Will send anonymous information to <a href="@drupal">Drupal.org</a>.', array('@drupal' => 'http://drupal.org')),
+    '#description' => st('The system will notify you when updates and important security releases are available for installed components. Anonymous information about your site is sent to <a href="@drupal">Drupal.org</a>.', array('@drupal' => 'http://drupal.org')),
     '#weight' => 15,
   );
 
