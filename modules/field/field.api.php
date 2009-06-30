@@ -54,6 +54,19 @@ function hook_fieldable_info() {
 }
 
 /**
+ * Perform alterations on fieldable types.
+ *
+ * @param $info
+ *   Array of informations on fieldable types exposed by hook_fieldable_info()
+ *   implementations.
+ */
+function hook_fieldable_info_alter(&$info) {
+  // A contributed module handling node-level caching would want to disable
+  // field cache for nodes.
+  $info['node']['cacheable'] = FALSE;
+}
+
+/**
  * @} End of "ingroup field_fieldable_type"
  */
 
@@ -112,6 +125,25 @@ function hook_field_info() {
       'default_formatter' => 'text_default',
     ),
   );
+}
+
+/**
+ * Perform alterations on Field API field types.
+ *
+ * @param $info
+ *   Array of informations on widget types exposed by hook_field_info()
+ *   implementations.
+ */
+function hook_field_info_alter(&$info) {
+  // Add a setting to all field types.
+  foreach ($info as $field_type => $field_type_info) {
+    $info[$field_type]['settings'][] = array('mymodule_additional_setting' => 'default value');
+  }
+
+  // Change the default widget for fields of type 'foo'.
+  if (isset($info['foo'])) {
+    $info['foo']['default widget'] = 'mymodule_widget';
+  }
 }
 
 /**
@@ -186,6 +218,21 @@ function hook_field_schema($field) {
 function hook_field_widget_info() {
 }
 
+/**
+ * Perform alterations on Field API widget types.
+ *
+ * @param $info
+ *   Array of informations on widget types exposed by hook_field_widget_info()
+ *   implementations.
+ */
+function hook_field_widget_info_alter(&$info) {
+  // Add a setting to a widget type.
+  $info['text_textfield']['settings'][] = array('mymodule_additional_setting' => 'default value');
+
+  // Let a new field type re-use an existing widget.
+  $info['options_select']['field types'][] = 'my_field_type';
+}
+
 /*
  * Define Field API formatter types.
  *
@@ -198,6 +245,21 @@ function hook_field_widget_info() {
  *   behaviors: TODO
  */
 function hook_field_formatter_info() {
+}
+
+/**
+ * Perform alterations on Field API formatter types.
+ *
+ * @param $info
+ *   Array of informations on widget types exposed by
+ *   hook_field_field_formatter_info() implementations.
+ */
+function hook_field_formatter_info_alter(&$info) {
+  // Add a setting to a formatter type.
+  $info['text_default']['settings'][] = array('mymodule_additional_setting' => 'default value');
+
+  // Let a new field type re-use an existing formatter.
+  $info['text_default']['field types'][] = 'my_field_type';
 }
 
 /**

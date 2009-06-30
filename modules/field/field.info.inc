@@ -98,6 +98,7 @@ function _field_info_collate_types($reset = FALSE) {
           $info['field types'][$name]['module'] = $module;
         }
       }
+      drupal_alter('field_info', $info['field types']);
 
       // Populate widget types.
       foreach (module_implements('field_widget_info') as $module) {
@@ -107,6 +108,7 @@ function _field_info_collate_types($reset = FALSE) {
           $info['widget types'][$name]['module'] = $module;
         }
       }
+      drupal_alter('field_widget_info', $info['widget types']);
 
       // Populate formatters.
       foreach (module_implements('field_formatter_info') as $module) {
@@ -116,6 +118,7 @@ function _field_info_collate_types($reset = FALSE) {
           $info['formatter types'][$name]['module'] = $module;
         }
       }
+      drupal_alter('field_formatter_info', $info['formatter types']);
 
       // Populate information about 'fieldable' entities.
       foreach (module_implements('fieldable_info') as $module) {
@@ -138,6 +141,7 @@ function _field_info_collate_types($reset = FALSE) {
           $info['fieldable types'][$name]['module'] = $module;
         }
       }
+      drupal_alter('fieldable_info', $info['fieldable types']);
 
       cache_set('field_info_types', $info, 'cache_field');
     }
