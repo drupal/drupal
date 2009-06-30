@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.15 2009/06/24 18:16:38 dries Exp $
+// $Id: node.tpl.php,v 1.16 2009/06/30 17:18:10 webchick Exp $
 
 /**
  * @file
@@ -18,7 +18,7 @@
  *   format_date()).
  * - $links: Themed links like "Read more", "Add new comment", etc. output
  *   from theme_links().
- * - $name: Themed username of node author output from theme_user().
+ * - $name: Themed username of node author output from theme_username().
  * - $node_url: Direct url of the current node.
  * - $terms: the themed list of taxonomy term links output from theme_links().
  * - $submitted: themed submission information output from
