@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.60 2009/06/29 14:24:57 webchick Exp $
+// $Id: taxonomy.admin.inc,v 1.61 2009/06/30 17:23:12 webchick Exp $
 
 /**
  * @file
@@ -708,7 +708,6 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
     '#title' => t('Term name'),
     '#default_value' => $edit['name'],
     '#maxlength' => 255,
-    '#description' => t('The name of this term.'),
     '#required' => TRUE);
   $form['identification']['description'] = array(
     '#type' => 'textarea',
