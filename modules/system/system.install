@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.348 2009/06/28 17:04:52 webchick Exp $
+// $Id: system.install,v 1.349 2009/06/30 17:15:09 webchick Exp $
 
 /**
  * @file
@@ -512,7 +512,7 @@ function system_install() {
 
   variable_set('node_options_forum', array(0 => 'status'));
 
-  $cron_key = serialize(md5(mt_rand()));
+  $cron_key = md5(mt_rand());
 
   variable_set('cron_key', $cron_key);
 }
