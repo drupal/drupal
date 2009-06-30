@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.27 2009/06/20 15:17:38 dries Exp $
+// $Id: locale.test,v 1.28 2009/06/30 18:21:06 webchick Exp $
 
 /**
  * @file
@@ -1258,7 +1258,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $node = $this->drupalCreateNode(array('type' => 'page'));
 
     // Create a path alias in default language (English).
-    $path = 'admin/build/path/add';
+    $path = 'admin/settings/path/add';
     $english_path = $this->randomName(8);
     $edit = array(
       'src' => 'node/' . $node->nid,
