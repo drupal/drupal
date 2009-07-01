@@ -110,6 +110,23 @@ function comment_update_7003() {
 }
 
 /**
+ * Rename comment display setting variables.
+ */
+function comment_update_7004() {
+  $types = node_type_get_types();
+  foreach ($types as $type => $object) {
+    $setting = variable_get('comment_default_mode_' . $type, 4);
+    if ($setting == 3 || $setting == 4) {
+      variable_set('comment_default_mode_' . $type, 1);
+    }
+    else {
+      variable_set('comment_default_mode_' . $type, 0);
+    }
+  }
+  return array();
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */

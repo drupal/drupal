@@ -21,24 +21,14 @@ define('COMMENT_NOT_PUBLISHED', 0);
 define('COMMENT_PUBLISHED', 1);
 
 /**
- * Comments are displayed in a flat list - collapsed.
- */
-define('COMMENT_MODE_FLAT_COLLAPSED', 1);
-
-/**
  * Comments are displayed in a flat list - expanded.
  */
-define('COMMENT_MODE_FLAT_EXPANDED', 2);
-
-/**
- * Comments are displayed as a threaded list - collapsed.
- */
-define('COMMENT_MODE_THREADED_COLLAPSED', 3);
+define('COMMENT_MODE_FLAT', 0);
 
 /**
  * Comments are displayed as a threaded list - expanded.
  */
-define('COMMENT_MODE_THREADED_EXPANDED', 4);
+define('COMMENT_MODE_THREADED', 1);
 
 /**
  * Anonymous posters cannot enter their contact information.
@@ -130,13 +120,7 @@ function comment_theme() {
       'template' => 'comment-folded',
       'arguments' => array('comment' => NULL, 'node' => NULL),
     ),
-    'comment_flat_collapsed' => array(
-      'arguments' => array('comment' => NULL, 'node' => NULL),
-    ),
     'comment_flat_expanded' => array(
-      'arguments' => array('comment' => NULL, 'node' => NULL),
-    ),
-    'comment_thread_collapsed' => array(
       'arguments' => array('comment' => NULL, 'node' => NULL),
     ),
     'comment_thread_expanded' => array(
@@ -404,7 +388,7 @@ function comment_new_page_count($num_comments, $new_replies, $node) {
   $comments_per_page = _comment_get_display_setting('comments_per_page', $node);
   $mode = _comment_get_display_setting('mode', $node);
   $pagenum = NULL;
-  $flat = in_array($mode, array(COMMENT_MODE_FLAT_COLLAPSED, COMMENT_MODE_FLAT_EXPANDED));
+  $flat = $mode == COMMENT_MODE_FLAT ? TRUE : FALSE;
   if ($num_comments <= $comments_per_page) {
     // Only one page of comments.
     $pageno = 0;
@@ -526,7 +510,7 @@ function comment_node_view($node, $build_mode) {
             'fragment' => 'comment-form',
             'html' => TRUE,
           );
-          if (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_SEPARATE_PAGE) {
+          if (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW) == COMMENT_FORM_SEPARATE_PAGE) {
             $links['comment_add']['href'] = "comment/reply/$node->nid";
           }
           else {
@@ -569,61 +553,53 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
     );
-    $form['comment']['comment'] = array(
-      '#type' => 'radios',
-      '#title' => t('Default comment setting'),
-      '#default_value' => variable_get('comment_' . $form['#node_type']->type, COMMENT_NODE_OPEN),
-      '#options' => array(t('Hidden'), t('Closed'), t('Open')),
-      '#description' => t('Users with the <em>administer comments</em> permission will be able to override this setting.'),
-    );
     $form['comment']['comment_default_mode'] = array(
-      '#type' => 'radios',
-      '#title' => t('Default display mode'),
-      '#default_value' => variable_get('comment_default_mode_' . $form['#node_type']->type, COMMENT_MODE_THREADED_EXPANDED),
-      '#options' => _comment_get_modes(),
-      '#description' => t('Expanded views display the body of the comment. Threaded views keep replies together.'),
+      '#type' => 'checkbox',
+      '#title' => t('Threading'),
+      '#default_value' => variable_get('comment_default_mode_' . $form['#node_type']->type, COMMENT_MODE_THREADED),
+      '#description' => t('Show comment replies in a threaded list.'),
     );
     $form['comment']['comment_default_per_page'] = array(
       '#type' => 'select',
       '#title' => t('Comments per page'),
       '#default_value' => variable_get('comment_default_per_page_' . $form['#node_type']->type, 50),
       '#options' => _comment_per_page(),
-      '#description' => t('Additional comments will be displayed on separate pages.'),
+    );
+
+    $form['comment']['comment'] = array(
+      '#type' => 'select',
+      '#title' => t('Default comment setting for new content'),
+      '#default_value' => variable_get('comment_' . $form['#node_type']->type, COMMENT_NODE_OPEN),
+      '#options' => array(t('Hidden'), t('Closed'), t('Open')),
     );
     $form['comment']['comment_anonymous'] = array(
-      '#type' => 'radios',
+      '#type' => 'select',
       '#title' => t('Anonymous commenting'),
       '#default_value' => variable_get('comment_anonymous_' . $form['#node_type']->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT),
       '#options' => array(
         COMMENT_ANONYMOUS_MAYNOT_CONTACT => t('Anonymous posters may not enter their contact information'),
         COMMENT_ANONYMOUS_MAY_CONTACT => t('Anonymous posters may leave their contact information'),
-        COMMENT_ANONYMOUS_MUST_CONTACT => t('Anonymous posters must leave their contact information')),
-      '#description' => t('This option is enabled when anonymous users have permission to post comments on the <a href="@url">permissions page</a>.', array('@url' => url('admin/user/permissions', array('fragment' => 'module-comment')))),
+        COMMENT_ANONYMOUS_MUST_CONTACT => t('Anonymous posters must leave their contact information'))
     );
 
     if (!user_access('post comments', drupal_anonymous_user())) {
-      $form['comment']['comment_anonymous']['#disabled'] = TRUE;
+      $form['comment']['comment_anonymous']['#access'] = FALSE;
     }
 
     $form['comment']['comment_subject_field'] = array(
-      '#type' => 'radios',
-      '#title' => t('Comment subject field'),
+      '#type' => 'checkbox',
+      '#title' => t('Allow comment title'),
       '#default_value' => variable_get('comment_subject_field_' . $form['#node_type']->type, 1),
-      '#options' => array(t('Disabled'), t('Enabled')),
-      '#description' => t('Can users provide a unique subject for their comments?'),
-    );
-    $form['comment']['comment_preview'] = array(
-      '#type' => 'radios',
-      '#title' => t('Preview comment'),
-      '#default_value' => variable_get('comment_preview_' . $form['#node_type']->type, COMMENT_PREVIEW_REQUIRED),
-      '#options' => array(t('Optional'), t('Required')),
-      '#description' => t("Forces a user to look at their comment by clicking on a 'Preview' button before they can actually add the comment"),
     );
     $form['comment']['comment_form_location'] = array(
-      '#type' => 'radios',
-      '#title' => t('Location of comment submission form'),
-      '#default_value' => variable_get('comment_form_location_' . $form['#node_type']->type, COMMENT_FORM_SEPARATE_PAGE),
-      '#options' => array(t('Display on separate page'), t('Display below post or comments')),
+      '#type' => 'checkbox',
+      '#title' => t('Show reply form on the same page as comments'),
+      '#default_value' => variable_get('comment_form_location_' . $form['#node_type']->type, COMMENT_FORM_BELOW),
+    );
+    $form['comment']['comment_preview'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Require preview'),
+      '#default_value' => variable_get('comment_preview_' . $form['#node_type']->type, COMMENT_PREVIEW_OPTIONAL),
     );
   }
 }
@@ -1193,7 +1169,7 @@ function comment_render($node, $cid = 0) {
         $query->condition('c.status', COMMENT_PUBLISHED);
         $count_query->condition('c.status', COMMENT_PUBLISHED);
       }
-      if ($mode === COMMENT_MODE_FLAT_COLLAPSED || $mode === COMMENT_MODE_FLAT_EXPANDED) {
+      if ($mode === COMMENT_MODE_FLAT) {
         $query->orderBy('c.cid', 'ASC');
       }
       else {
@@ -1215,7 +1191,7 @@ function comment_render($node, $cid = 0) {
         $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
         $comment->depth = count(explode('.', $comment->thread)) - 1;
 
-        if ($mode == COMMENT_MODE_THREADED_COLLAPSED || $mode == COMMENT_MODE_THREADED_EXPANDED) {
+        if ($mode == COMMENT_MODE_THREADED) {
           if ($comment->depth > $divs) {
             $divs++;
             $comments .= '<div class="indented">';
@@ -1228,16 +1204,10 @@ function comment_render($node, $cid = 0) {
           }
         }
 
-        if ($mode == COMMENT_MODE_FLAT_COLLAPSED) {
-          $comments .= theme('comment_flat_collapsed', $comment, $node);
-        }
-        elseif ($mode == COMMENT_MODE_FLAT_EXPANDED) {
+        if ($mode == COMMENT_MODE_FLAT) {
           $comments .= theme('comment_flat_expanded', $comment, $node);
         }
-        elseif ($mode == COMMENT_MODE_THREADED_COLLAPSED) {
-          $comments .= theme('comment_thread_collapsed', $comment, $node);
-        }
-        elseif ($mode == COMMENT_MODE_THREADED_EXPANDED) {
+        elseif ($mode == COMMENT_MODE_THREADED) {
           $comments .= theme('comment_thread_expanded', $comment, $node);
         }
         $num_rows = TRUE;
@@ -1251,7 +1221,7 @@ function comment_render($node, $cid = 0) {
 
     // If enabled, show new comment form if it's not already being displayed.
     $reply = arg(0) == 'comment' && arg(1) == 'reply';
-    if (user_access('post comments') && $node->comment == COMMENT_NODE_OPEN && (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_BELOW) && !$reply) {
+    if (user_access('post comments') && $node->comment == COMMENT_NODE_OPEN && (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW) == COMMENT_FORM_BELOW) && !$reply) {
       $output .= theme('comment_form_box', array('nid' => $nid), t('Post new comment'));
     }
     if ($output) {
@@ -1389,9 +1359,9 @@ function comment_get_display_ordinal($cid, $node_type) {
   if (!user_access('administer comments')) {
     $query->condition('c1.status', COMMENT_PUBLISHED);
   }
-  $mode = variable_get('comment_default_mode_' . $node_type, COMMENT_MODE_THREADED_EXPANDED);
+  $mode = variable_get('comment_default_mode_' . $node_type, COMMENT_MODE_THREADED);
 
-  if ($mode == COMMENT_MODE_FLAT_EXPANDED || $mode == COMMENT_MODE_FLAT_COLLAPSED) {
+  if ($mode == COMMENT_MODE_FLAT) {
     // For flat comments, cid is used for ordering comments due to
     // unpredicatable behavior with timestamp, so we make the same assumption
     // here.
@@ -1646,7 +1616,7 @@ function comment_form(&$form_state, $edit, $title = NULL) {
   // already previewing the submission. However, if there are form errors,
   // we hide the save button no matter what, so that optional form elements
   // (e.g., captchas) can be updated.
-  if (!form_get_errors() && ((variable_get('comment_preview_' . $node->type, COMMENT_PREVIEW_REQUIRED) == COMMENT_PREVIEW_OPTIONAL) || ($op == t('Preview')) || ($op == t('Save')))) {
+  if (!form_get_errors() && ((variable_get('comment_preview_' . $node->type, COMMENT_PREVIEW_OPTIONAL) == COMMENT_PREVIEW_OPTIONAL) || ($op == t('Preview')) || ($op == t('Save')))) {
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save'),
@@ -2014,19 +1984,6 @@ function template_preprocess_comment_folded(&$variables) {
 }
 
 /**
- * Theme comment flat collapsed view.
- *
- * @param $comment
- *   The comment to be themed.
- * @param $node
- *   The comment node.
- * @ingroup themeable
- */
-function theme_comment_flat_collapsed($comment, $node) {
-  return theme('comment_view', $comment, $node, '', 0);
-}
-
-/**
  * Theme comment flat expanded view.
  *
  * @param $comment
@@ -2037,19 +1994,6 @@ function theme_comment_flat_collapsed($comment, $node) {
  */
 function theme_comment_flat_expanded($comment, $node) {
   return theme('comment_view', $comment, $node, module_invoke_all('link', 'comment', $comment, 0));
-}
-
-/**
- * Theme comment thread collapsed view.
- *
- * @param $comment
- *   The comment to be themed.
- * @param $node
- *   The comment node.
- * @ingroup themeable
- */
-function theme_comment_thread_collapsed($comment, $node) {
-  return theme('comment_view', $comment, $node, '', 0);
 }
 
 /**
@@ -2083,7 +2027,7 @@ function theme_comment_post_forbidden($node) {
     if ($authenticated_post_comments) {
       // We cannot use drupal_get_destination() because these links
       // sometimes appear on /node and taxonomy listing pages.
-      if (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_SEPARATE_PAGE) == COMMENT_FORM_SEPARATE_PAGE) {
+      if (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW) == COMMENT_FORM_SEPARATE_PAGE) {
         $destination = 'destination=' . drupal_urlencode("comment/reply/$node->nid#comment-form");
       }
       else {
@@ -2137,10 +2081,8 @@ function theme_comment_submitted($comment) {
  */
 function _comment_get_modes() {
   return array(
-    COMMENT_MODE_FLAT_COLLAPSED => t('Flat list - collapsed'),
-    COMMENT_MODE_FLAT_EXPANDED => t('Flat list - expanded'),
-    COMMENT_MODE_THREADED_COLLAPSED => t('Threaded list - collapsed'),
-    COMMENT_MODE_THREADED_EXPANDED => t('Threaded list - expanded')
+    COMMENT_MODE_FLAT => t('Flat list'),
+    COMMENT_MODE_THREADED => t('Threaded list')
   );
 }
 
@@ -2163,7 +2105,7 @@ function _comment_per_page() {
 function _comment_get_display_setting($setting, $node) {
   switch ($setting) {
     case 'mode':
-      $value = variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED_EXPANDED);
+      $value = variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED);
       break;
 
     case 'comments_per_page':
