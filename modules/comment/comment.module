@@ -962,12 +962,19 @@ function comment_save(&$comment) {
         'homepage' => $comment['homepage'],
       ))
       ->execute();
+      
+    // Ignore slave server temporarily to give time for the
+    // saved node to be propagated to the slave.
+    db_ignore_slave();
+   
     // Tell the other modules a new comment has been submitted.
     comment_invoke_comment($comment, 'insert');
+    
     // Add an entry to the watchdog log.
     watchdog('content', 'Comment: added %subject.', array('%subject' => $comment['subject']), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment['cid'], array('fragment' => 'comment-' . $comment['cid'])));
   }
   _comment_update_node_statistics($comment['nid']);
+  
   // Clear the cache so an anonymous user can see his comment being added.
   cache_clear_all();
 

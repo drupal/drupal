@@ -2687,6 +2687,19 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
   return $query;
 }
 
+/**
+ * Helper function to get duration lag from variable
+ * and set the session variable that contains the lag.
+ */
+function db_ignore_slave() {
+  // Five minutes is long enough to allow the slave to break and resume
+  // interrupted replication without causing problems on the Drupal site
+  // from the old data.
+  $duration = variable_get('maximum_replication_lag', 300);
+  
+  // Set session variable with amount of time to delay  before using slave.
+  $_SESSION['ignore_slave_server'] = REQUEST_TIME + $duration;
+}
 
 /**
  * @} End of "ingroup database-legacy".

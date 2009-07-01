@@ -1003,6 +1003,10 @@ function node_save($node) {
 
   // Clear the page and block caches.
   cache_clear_all();
+
+  // Ignore slave server temporarily to give time for the
+  // saved node to be propagated to the slave.
+  db_ignore_slave();
 }
 
 /**
