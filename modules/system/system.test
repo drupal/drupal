@@ -1,5 +1,5 @@
 <?php
-// $Id: system.test,v 1.53 2009/06/28 03:56:43 webchick Exp $
+// $Id: system.test,v 1.54 2009/07/01 08:39:55 dries Exp $
 
 /**
  * Helper class for module test cases.
@@ -149,6 +149,12 @@ class EnableDisableTestCase extends ModuleTestCase {
     $this->assertModules(array('aggregator'), FALSE);
     $this->assertTableCount('aggregator', FALSE);
     $this->assertLogMessage('system', "%module module uninstalled.", array('%module' => 'aggregator'), WATCHDOG_INFO);
+
+    // Reinstall (and enable) aggregator module.
+    $edit = array();
+    $edit['modules[Core][aggregator][enable]'] = 'aggregator';
+    $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
   }
 }
 

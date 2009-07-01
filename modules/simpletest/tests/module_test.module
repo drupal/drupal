@@ -1,0 +1,11 @@
+<?php
+// $Id: module_test.module,v 1.1 2009/07/01 08:39:55 dries Exp $
+
+/**
+ * Implement hook_perm().
+ */
+function module_test_perm() {
+  return array(
+    'module_test perm' => t('example perm for module_test module'),
+  );
+}

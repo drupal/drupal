@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.59 2009/06/28 20:51:09 dries Exp $
+// $Id: user.admin.inc,v 1.60 2009/07/01 08:39:56 dries Exp $
 
 /**
  * @file
@@ -943,5 +943,20 @@ function user_modules_installed($modules) {
         }
       }
     }
+  }
+}
+
+/**
+ * Implement hook_modules_uninstalled().
+ */
+function user_modules_uninstalled($modules) {
+  $permissions = array();
+  foreach ($modules as $module) {
+    $permissions = array_merge($permissions, array_keys(module_invoke($module, 'perm')));
+  }
+  if (!empty($permissions)) {
+    db_delete('role_permission')
+      ->condition('permission', $permissions, 'IN')
+      ->execute();
   }
 }
