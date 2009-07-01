@@ -1,5 +1,8 @@
 // $Id$
 
+Drupal 5.20-dev xxxx-xx-xx
+-----------------------
+
 Drupal 5.19, 2009-07-01
 -----------------------
 - Fixed security issues (Cross site scripting and Password leakage in URL), see
