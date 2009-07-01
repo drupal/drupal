@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1075 2009/06/27 18:19:41 dries Exp $
+// $Id: node.module,v 1.1076 2009/07/01 08:11:27 dries Exp $
 
 /**
  * @file
@@ -1003,6 +1003,10 @@ function node_save($node) {
 
   // Clear the page and block caches.
   cache_clear_all();
+
+  // Ignore slave server temporarily to give time for the
+  // saved node to be propagated to the slave.
+  db_ignore_slave();
 }
 
 /**
