@@ -860,16 +860,6 @@ function comment_access($op, $comment) {
 }
 
 /**
- * A simple helper function.
- *
- * @return
- *   The 0th and the 1st path components joined by a slash.
- */
-function comment_node_url() {
-  return arg(0) . '/' . arg(1);
-}
-
-/**
  * Accepts a submission of new or changed comment content.
  *
  * @param $comment
@@ -1011,11 +1001,11 @@ function comment_links($comment, $return = 1) {
   global $user;
   $links = array();
 
-  // If viewing just this comment, link back to the node.
+  // If viewing just this comment, link back to the in-context view.
   if ($return) {
     $links['comment_parent'] = array(
       'title' => t('parent'),
-      'href' => comment_node_url(),
+      'href' => 'comment/' . $comment->cid,
       'fragment' => "comment-$comment->cid"
     );
   }
