@@ -6,12 +6,12 @@
  * User session handling functions.
  *
  * The user-level session storage handlers:
- * - _sess_open()
- * - _sess_close()
- * - _sess_read()
- * - _sess_write()
- * - _sess_destroy_sid()
- * - _sess_gc()
+ * - _drupal_session_open()
+ * - _drupal_session_close()
+ * - _drupal_session_read()
+ * - _drupal_session_write()
+ * - _drupal_session_destroy()
+ * - _drupal_session_garbage_collection()
  * are assigned by session_set_save_handler() in bootstrap.inc and are called
  * automatically by PHP. These functions should not be called directly. Session
  * data should instead be accessed via the $_SESSION superglobal.
@@ -29,7 +29,7 @@
  * @return
  *   This function will always return TRUE.
  */
-function _sess_open() {
+function _drupal_session_open() {
   return TRUE;
 }
 
@@ -45,7 +45,7 @@ function _sess_open() {
  * @return
  *   This function will always return TRUE.
  */
-function _sess_close() {
+function _drupal_session_close() {
   return TRUE;
 }
 
@@ -59,13 +59,13 @@ function _sess_close() {
  * This function should not be called directly. Session data should
  * instead be accessed via the $_SESSION superglobal.
  *
- * @param $key
+ * @param $sid
  *   Session ID.
  * @return
  *   Either an array of the session data, or an empty string, if no data
  *   was found or the user is anonymous.
  */
-function _sess_read($key) {
+function _drupal_session_read($sid) {
   global $user;
 
   // Write and Close handlers are called after destructing objects
@@ -83,7 +83,7 @@ function _sess_read($key) {
 
   // Otherwise, if the session is still active, we have a record of the
   // client's session in the database.
-  $user = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid", array(':sid' => $key))->fetchObject();
+  $user = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = :sid", array(':sid' => $sid))->fetchObject();
 
   // We found the client's session record and they are an authenticated user.
   if ($user && $user->uid > 0) {
@@ -114,26 +114,23 @@ function _sess_read($key) {
  * This function should not be called directly. Session data should
  * instead be accessed via the $_SESSION superglobal.
  *
- * @param $key
+ * @param $sid
  *   Session ID.
  * @param $value
  *   Serialized array of the session data.
  * @return
  *   This function will always return TRUE.
  */
-function _sess_write($key, $value) {
+function _drupal_session_write($sid, $value) {
   global $user;
 
-  // If saving of session data is disabled, or if a new empty anonymous session
-  // has been started, do nothing. This keeps anonymous users, including
-  // crawlers, out of the session table, unless they actually have something
-  // stored in $_SESSION.
-  if (!drupal_save_session() || empty($user) || (empty($user->uid) && empty($_COOKIE[session_name()]) && empty($value))) {
-    return TRUE;
+  if (!drupal_save_session()) {
+    // We don't have anything to do if we are not allowed to save the session.
+    return;
   }
 
   db_merge('sessions')
-    ->key(array('sid' => $key))
+    ->key(array('sid' => $sid))
     ->fields(array(
       'uid' => $user->uid,
       'cache' => isset($user->cache) ? $user->cache : 0,
@@ -163,7 +160,7 @@ function _sess_write($key, $value) {
 function drupal_session_initialize() {
   global $user;
 
-  session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy_sid', '_sess_gc');
+  session_set_save_handler('_drupal_session_open', '_drupal_session_close', '_drupal_session_read', '_drupal_session_write', '_drupal_session_destroy', '_drupal_session_garbage_collection');
 
   if (isset($_COOKIE[session_name()])) {
     // If a session cookie exists, initialize the session. Otherwise the
@@ -211,13 +208,21 @@ function drupal_session_start() {
 function drupal_session_commit() {
   global $user;
 
+  if (!drupal_save_session()) {
+    // We don't have anything to do if we are not allowed to save the session.
+    return;
+  }
+
   if (empty($user->uid) && empty($_SESSION)) {
+    // There is no session data to store, destroy the session if it was
+    // previously started.
     if (drupal_session_started()) {
-      // Destroy empty anonymous sessions.
       session_destroy();
     }
   }
   else {
+    // There is session data to store. Start the session if it is not already
+    // started.
     if (!drupal_session_started()) {
       drupal_session_start();
     }
@@ -243,11 +248,6 @@ function drupal_session_started($set = NULL) {
 function drupal_session_regenerate() {
   global $user;
 
-  // Set the session cookie "httponly" flag to reduce the risk of session
-  // stealing via XSS.
-  extract(session_get_cookie_params());
-  session_set_cookie_params($lifetime, $path, $domain, $secure, TRUE);
-
   if (drupal_session_started()) {
     $old_session_id = session_id();
     session_regenerate_id();
@@ -255,7 +255,7 @@ function drupal_session_regenerate() {
   else {
     // Start the session when it doesn't exist yet.
     // Preserve the logged in user, as it will be reset to anonymous
-    // by _sess_read.
+    // by _drupal_session_read.
     $account = $user;
     drupal_session_start();
     $user = $account;
@@ -303,13 +303,25 @@ function drupal_session_count($timestamp = 0, $anonymous = TRUE) {
  * @param string $sid
  *   Session ID.
  */
-function _sess_destroy_sid($sid) {
+function _drupal_session_destroy($sid) {
+  global $user;
+
+  // Delete session data.
   db_delete('sessions')
     ->condition('sid', $sid)
     ->execute();
-  // Unset cookie.
-  extract(session_get_cookie_params());
-  setcookie(session_name(), '', time() - 3600, $path, $domain, $secure, $httponly);
+
+  // Reset $_SESSION and $user to prevent a new session from being started
+  // in drupal_session_commit().
+  $_SESSION = array();
+  $user = drupal_anonymous_user();
+
+  // Unset the session cookie.
+  if (isset($_COOKIE[session_name()])) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', REQUEST_TIME - 3600, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+    unset($_COOKIE[session_name()]);
+  }
 }
 
 /**
@@ -333,7 +345,7 @@ function drupal_session_destroy_uid($uid) {
  *   The value of session.gc_maxlifetime, passed by PHP.
  *   Sessions not updated for more than $lifetime seconds will be removed.
  */
-function _sess_gc($lifetime) {
+function _drupal_session_garbage_collection($lifetime) {
   // Be sure to adjust 'php_value session.gc_maxlifetime' to a large enough
   // value. For example, if you want user sessions to stay in your database
   // for three weeks before deleting them, you need to set gc_maxlifetime

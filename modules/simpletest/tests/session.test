@@ -195,6 +195,17 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->assertNoText(t('This is a dummy message.'), t('Message was not cached.'));
     $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', t('Page was cached.'));
     $this->assertFalse($this->drupalGetHeader('Set-Cookie'), t('New session was not started.'));
+
+    // Verify that no session is created if drupal_save_session(FALSE) is called.
+    $this->drupalGet('session-test/set-message-but-dont-save');
+    $this->assertSessionCookie(FALSE);
+    $this->assertSessionEmpty(TRUE);
+
+    // Verify that no message is displayed.
+    $this->drupalGet('');
+    $this->assertSessionCookie(FALSE);
+    $this->assertSessionEmpty(TRUE);
+    $this->assertNoText(t('This is a dummy message.'), t('The message was not saved.'));
   }
 
   /**
@@ -205,6 +216,7 @@ class SessionTestCase extends DrupalWebTestCase {
   function sessionReset($uid = 0) {
     // Close the internal browser.
     $this->curlClose();
+    $this->loggedInUser = FALSE;
 
     // Change cookie file for user.
     $this->cookieFile = file_directory_temp() . '/cookie.' . $uid . '.txt';

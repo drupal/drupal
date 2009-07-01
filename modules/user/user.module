@@ -1970,10 +1970,8 @@ function _user_cancel($edit, $account, $method) {
 
   // After cancelling account, ensure that user is logged out.
   if ($account->uid == $user->uid) {
-    // Destroy the current session.
+    // Destroy the current session, and reset $user to the anonymous user.
     session_destroy();
-    // Load the anonymous user.
-    $user = drupal_anonymous_user();
   }
   else {
     drupal_session_destroy_uid($account->uid);

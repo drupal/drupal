@@ -351,7 +351,7 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
     // If enforcing a minimum cache lifetime, validate that the data is
     // currently valid for this user before we return it by making sure the cache
     // entry was created before the timestamp in the current session's cache
-    // timer. The cache variable is loaded into the $user object by _sess_read()
+    // timer. The cache variable is loaded into the $user object by _drupal_session_read()
     // in session.inc. If the data is permanent or we're not enforcing a minimum
     // cache lifetime always return the cached data.
     if ($cache->expire != CACHE_PERMANENT && variable_get('cache_lifetime', 0) && $user->cache > $cache->created) {
@@ -394,7 +394,7 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
     if (empty($cid)) {
       if (variable_get('cache_lifetime', 0)) {
         // We store the time in the current user's $user->cache variable which
-        // will be saved into the sessions bin by _sess_write(). We then
+        // will be saved into the sessions bin by _drupal_session_write(). We then
         // simulate that the cache was flushed for this user by not returning
         // cached data that was cached before the timestamp.
         $user->cache = REQUEST_TIME;
