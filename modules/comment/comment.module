@@ -839,45 +839,50 @@ function comment_access($op, $comment) {
  * Accepts a submission of new or changed comment content.
  *
  * @param $comment
- *   A comment array.
+ *   A comment object.
  */
-function comment_save(&$comment) {
+function comment_save($comment) {
   global $user;
 
-  $comment += array(
+  $defaults =  array(
     'mail' => '',
     'homepage' => '',
     'name' => '',
     'status' => user_access('post comments without approval') ? COMMENT_PUBLISHED : COMMENT_NOT_PUBLISHED,
   );
-  if ($comment['cid']) {
+  foreach ($defaults as $key => $default) {
+    if (!isset($comment->$key)) {
+      $comment->$key = $default;
+    }
+  }
+  if ($comment->cid) {
     // Update the comment in the database.
     db_update('comment')
       ->fields(array(
-        'status' => $comment['status'],
-        'timestamp' => $comment['timestamp'],
-        'subject' => $comment['subject'],
-        'comment' => $comment['comment'],
-        'format' => $comment['comment_format'],
-        'uid' => $comment['uid'],
-        'name' => $comment['name'],
-        'mail' => $comment['mail'],
-        'homepage' => $comment['homepage'],
+        'status' => $comment->status,
+        'timestamp' => $comment->timestamp,
+        'subject' => $comment->subject,
+        'comment' => $comment->comment,
+        'format' => $comment->comment_format,
+        'uid' => $comment->uid,
+        'name' => $comment->name,
+        'mail' => $comment->mail,
+        'homepage' => $comment->homepage,
       ))
-      ->condition('cid', $comment['cid'])
+      ->condition('cid', $comment->cid)
       ->execute();
     // Allow modules to respond to the updating of a comment.
-    comment_invoke_comment($comment, 'update');
+    module_invoke_all('comment_update', $comment);
     // Add an entry to the watchdog log.
-    watchdog('content', 'Comment: updated %subject.', array('%subject' => $comment['subject']), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment['cid'], array('fragment' => 'comment-' . $comment['cid'])));
+    watchdog('content', 'Comment: updated %subject.', array('%subject' => $comment->subject), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)));
   }
   else {
     // Add the comment to database. This next section builds the thread field.
     // Also see the documentation for comment_render().
-    if ($comment['pid'] == 0) {
+    if ($comment->pid == 0) {
       // This is a comment with no parent comment (depth 0): we start
       // by retrieving the maximum thread level.
-      $max = db_query('SELECT MAX(thread) FROM {comment} WHERE nid = :nid', array(':nid' => $comment['nid']))->fetchField();
+      $max = db_query('SELECT MAX(thread) FROM {comment} WHERE nid = :nid', array(':nid' => $comment->nid))->fetchField();
       // Strip the "/" from the end of the thread.
       $max = rtrim($max, '/');
       // Finally, build the thread field for this new comment.
@@ -888,13 +893,13 @@ function comment_save(&$comment) {
       // thread value at the proper depth.
 
       // Get the parent comment:
-      $parent = comment_load($comment['pid']);
+      $parent = comment_load($comment->pid);
       // Strip the "/" from the end of the parent thread.
       $parent->thread = (string) rtrim((string) $parent->thread, '/');
       // Get the max value in *this* thread.
       $max = db_query("SELECT MAX(thread) FROM {comment} WHERE thread LIKE :thread AND nid = :nid", array(
         ':thread' => $parent->thread . '.%',
-        ':nid' => $comment['nid'],
+        ':nid' => $comment->nid,
       ))->fetchField();
 
       if ($max == '') {
@@ -913,50 +918,47 @@ function comment_save(&$comment) {
       }
     }
 
-    if (empty($comment['timestamp'])) {
-      $comment['timestamp'] = REQUEST_TIME;
+    if (empty($comment->timestamp)) {
+      $comment->timestamp = REQUEST_TIME;
     }
 
-    if ($comment['uid'] === $user->uid && isset($user->name)) { // '===' Need to modify anonymous users as well.
-      $comment['name'] = $user->name;
+    if ($comment->uid === $user->uid && isset($user->name)) { // '===' Need to modify anonymous users as well.
+      $comment->name = $user->name;
     }
 
-    $comment['cid'] = db_insert('comment')
+    $comment->cid = db_insert('comment')
       ->fields(array(
-        'nid' => $comment['nid'],
-        'pid' => empty($comment['pid']) ? 0 : $comment['pid'],
-        'uid' => $comment['uid'],
-        'subject' => $comment['subject'],
-        'comment' => $comment['comment'],
-        'format' => $comment['comment_format'],
+        'nid' => $comment->nid,
+        'pid' => empty($comment->pid) ? 0 : $comment->pid,
+        'uid' => $comment->uid,
+        'subject' => $comment->subject,
+        'comment' => $comment->comment,
+        'format' => $comment->comment_format,
         'hostname' => ip_address(),
-        'timestamp' => $comment['timestamp'],
-        'status' => $comment['status'],
+        'timestamp' => $comment->timestamp,
+        'status' => $comment->status,
         'thread' => $thread,
-        'name' => $comment['name'],
-        'mail' => $comment['mail'],
-        'homepage' => $comment['homepage'],
+        'name' => $comment->name,
+        'mail' => $comment->mail,
+        'homepage' => $comment->homepage,
       ))
       ->execute();
-      
+
     // Ignore slave server temporarily to give time for the
     // saved node to be propagated to the slave.
     db_ignore_slave();
-   
+
     // Tell the other modules a new comment has been submitted.
-    comment_invoke_comment($comment, 'insert');
-    
+    module_invoke_all('comment_insert', $comment);
     // Add an entry to the watchdog log.
-    watchdog('content', 'Comment: added %subject.', array('%subject' => $comment['subject']), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment['cid'], array('fragment' => 'comment-' . $comment['cid'])));
+    watchdog('content', 'Comment: added %subject.', array('%subject' => $comment->subject), WATCHDOG_NOTICE, l(t('view'), 'comment/' . $comment->cid, array('fragment' => 'comment-' . $comment->cid)));
   }
-  _comment_update_node_statistics($comment['nid']);
-  
+  _comment_update_node_statistics($comment->nid);
   // Clear the cache so an anonymous user can see his comment being added.
   cache_clear_all();
 
-  if ($comment['status'] == COMMENT_PUBLISHED) {
-    $comment_object = (object) $comment;
-    comment_invoke_comment($comment_object, 'publish');
+  if ($comment->status == COMMENT_PUBLISHED) {
+    module_invoke_all('comment_publish', $comment);
   }
 }
 
@@ -1746,7 +1748,7 @@ function comment_form_validate($form, &$form_state) {
   }
 
   // Invoke other validation handlers.
-  comment_invoke_comment($form_state['values'], 'validate');
+  module_invoke_all('comment_validate', $form_state['values']);
 
   if (isset($form_state['values']['date'])) {
     if (strtotime($form_state['values']['date']) === FALSE) {
@@ -1838,10 +1840,10 @@ function comment_form_submit($form, &$form_state) {
   $node = node_load($edit['nid']);
   _comment_form_submit($edit);
   if (user_access('post comments') && (user_access('administer comments') || $node->comment == COMMENT_NODE_OPEN)) {
-    $comment = $edit;
+    $comment = (object) $edit;
     comment_save($comment);
     // Explain the approval queue if necessary.
-    if ($comment['status'] == COMMENT_NOT_PUBLISHED) {
+    if ($comment->status == COMMENT_NOT_PUBLISHED) {
       if (!user_access('administer comments')) {
         drupal_set_message(t('Your comment has been queued for review by site administrators and will be published after approval.'));
       }
@@ -1849,7 +1851,7 @@ function comment_form_submit($form, &$form_state) {
     else {
       drupal_set_message(t('Your comment has been posted.'));
     }
-    $redirect = array('comment/' . $comment['cid'], array(), 'comment-' . $comment['cid']);
+    $redirect = array('comment/' . $comment->cid, array(), 'comment-' . $comment->cid);
   }
   else {
     watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $edit['subject']), WATCHDOG_WARNING);
@@ -1893,7 +1895,7 @@ function theme_comment_view($comment, $node, $links = array(), $visible = TRUE) 
   if ($visible) {
     $comment->comment = check_markup($comment->comment, $comment->format, '', FALSE);
     // Comment API hook.
-    comment_invoke_comment($comment, 'view');
+    module_invoke_all('comment_view', $comment);
     $output .= theme('comment', $comment, $node, $links);
   }
   else {
@@ -2160,32 +2162,6 @@ function _comment_update_node_statistics($nid) {
       ->condition('nid', $nid)
       ->execute();
   }
-}
-
-/**
- * Invoke a hook_comment_[$op]() operation in all modules.
- *
- * @param &$comment
- *   A comment object.
- * @param $op
- *   A string containing the name of the comment operation.
- * @return
- *   The returned value of the invoked hooks.
- */
-function comment_invoke_comment(&$comment, $op) {
-  $return = array();
-  foreach (module_implements('comment_' . $op) as $module) {
-    $function = $module . '_comment_' . $op;
-    $result = $function($comment);
-    if (isset($result) && is_array($result)) {
-      $return = array_merge($return, $result);
-    }
-    elseif (isset($result)) {
-      $return[] = $result;
-    }
-  }
-
-  return $return;
 }
 
 /**

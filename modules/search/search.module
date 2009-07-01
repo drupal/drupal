@@ -664,17 +664,17 @@ function search_node_update($node) {
 /**
  * Implement hook_comment_insert().
  */
-function search_comment_insert($form_values) {
+function search_comment_insert($comment) {
   // Reindex the node when comments are added.
-  search_touch_node($form_values['nid']);
+  search_touch_node($comment->nid);
 }
 
 /**
  * Implement hook_comment_update().
  */
-function search_comment_update($form_values) {
+function search_comment_update($comment) {
   // Reindex the node when comments are changed.
-  search_touch_node($form_values['nid']);
+  search_touch_node($comment->nid);
 }
 
 /**

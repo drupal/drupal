@@ -14,14 +14,12 @@
 /**
  * The comment is being inserted.
  *
- * @param $form_values
- *   Passes in an array of form values submitted by the user.
- * @return
- *   Nothing.
+ * @param $comment
+ *   The comment object.
  */
-function hook_comment_insert($form_values) {
+function hook_comment_insert($comment) {
   // Reindex the node when comments are added.
-  search_touch_node($form_values['nid']);
+  search_touch_node($comment->nid);
 }
 
 /**
@@ -44,14 +42,12 @@ function hook_comment_validate(&$form_values) {
 /**
  * The comment is being updated.
  *
- * @param $form_values
- *   Passes in an array of form values submitted by the user.
- * @return
- *   Nothing.
+ * @param $comment
+ *   The comment object.
  */
-function hook_comment_update($form_values) {
+function hook_comment_update($comment) {
   // Reindex the node when comments are updated.
-  search_touch_node($form_values['nid']);
+  search_touch_node($comment->nid);
 }
 
 /**

@@ -140,7 +140,7 @@ function comment_admin_overview_submit($form, &$form_state) {
         $comment = comment_load($cid);
         _comment_update_node_statistics($comment->nid);
         // Allow modules to respond to the updating of a comment.
-        comment_invoke_comment($comment, $form_state['values']['operation']);
+        module_invoke_all('comment_' . $form_state['values']['operation'], $comment);
         // Add an entry to the watchdog log.
         watchdog('content', 'Comment: updated %subject.', array('%subject' => $comment->subject), WATCHDOG_NOTICE, l(t('view'), 'node/' . $comment->nid, array('fragment' => 'comment-' . $comment->cid)));
       }
@@ -283,7 +283,7 @@ function _comment_delete_thread($comment) {
     ->condition('cid', $comment->cid)
     ->execute();
   watchdog('content', 'Comment: deleted %subject.', array('%subject' => $comment->subject));
-  comment_invoke_comment($comment, 'delete');
+  module_invoke_all('comment_delete', $comment);
 
   // Delete the comment's replies.
   $result = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comment} c INNER JOIN {users} u ON u.uid = c.uid WHERE pid = :cid', array(':cid' => $comment->cid));

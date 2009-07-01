@@ -306,15 +306,15 @@ function _trigger_normalize_comment_context($type, $comment) {
 /**
  * Implement hook_comment_insert().
  */
-function trigger_comment_insert($form_values) {
-  _trigger_comment($form_values, 'insert');
+function trigger_comment_insert($comment) {
+  _trigger_comment($comment, 'insert');
 }
 
 /**
  * Implement hook_comment_update().
  */
-function trigger_comment_update($form_values) {
-  _trigger_comment($form_values, 'update');
+function trigger_comment_update($comment) {
+  _trigger_comment($comment, 'update');
 }
 
 /**
