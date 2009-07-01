@@ -252,6 +252,25 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
     '#description' => t('Show this block only for the selected role(s). If you select no roles, the block will be visible to all users.'),
   );
 
+  // Content type specific configuration.
+  $default_type_options = db_query("SELECT type FROM {block_node_type} WHERE module = :module AND delta = :delta", array(
+    ':module' => $module,
+    ':delta' => $delta,
+  ))->fetchCol();
+  $form['content_type_vis_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Content type specific visibility settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+  );
+  $form['content_type_vis_settings']['types'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Show block for specific content types'),
+    '#default_value' => $default_type_options,
+    '#options' => node_type_get_names(),
+    '#description' => t('Show this block only when on a page displaying a post of the given type(s). If you select no types, there will be no type specific limitation.'),
+  );
+
   // Standard block configurations.
   $form['user_vis_settings'] = array(
     '#type' => 'fieldset',
@@ -303,6 +322,7 @@ function block_admin_configure_submit($form, &$form_state) {
       ->condition('module', $form_state['values']['module'])
       ->condition('delta', $form_state['values']['delta'])
       ->execute();
+
     db_delete('block_role')
       ->condition('module', $form_state['values']['module'])
       ->condition('delta', $form_state['values']['delta'])
@@ -316,11 +336,25 @@ function block_admin_configure_submit($form, &$form_state) {
       ));
     }
     $query->execute();
+
+    db_delete('block_node_type')
+      ->condition('module', $form_state['values']['module'])
+      ->condition('delta', $form_state['values']['delta'])
+      ->execute();
+    $query = db_insert('block_node_type')->fields(array('type', 'module', 'delta'));
+    foreach (array_filter($form_state['values']['types']) as $type) {
+      $query->values(array(
+        'type' => $type,
+        'module' => $form_state['values']['module'],
+        'delta' => $form_state['values']['delta'],
+      ));
+    }
+    $query->execute();
+
     module_invoke($form_state['values']['module'], 'block_save', $form_state['values']['delta'], $form_state['values']);
     drupal_set_message(t('The block configuration has been saved.'));
     cache_clear_all();
     $form_state['redirect'] = 'admin/build/block';
-    return;
   }
 }
 
@@ -380,9 +414,18 @@ function block_add_block_form_submit($form, &$form_state) {
   }
   $query->execute();
 
+  $query = db_insert('block_node_type')->fields(array('type', 'module', 'delta'));
+  foreach (array_filter($form_state['values']['types']) as $type) {
+    $query->values(array(
+      'type' => $type,
+      'module' => $form_state['values']['module'],
+      'delta' => $delta,
+    ));
+  }
+  $query->execute();
+
   drupal_set_message(t('The block has been created.'));
   cache_clear_all();
-
   $form_state['redirect'] = 'admin/build/block';
 }
 
