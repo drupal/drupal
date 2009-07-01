@@ -77,3 +77,33 @@ class ModuleUnitTest extends DrupalWebTestCase {
     $this->assertIdentical($expected_values, module_list(FALSE, TRUE), t('@condition: module_list() returns correctly sorted results', array('@condition' => $condition)));
   }
 }
+
+/**
+ * Unit tests for module uninstallation and related hooks.
+ */
+class ModuleUninstallTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => t('Module uninstallation'),
+      'description' => t('Checks module uninstallation'),
+      'group' => t('Module'),
+    );
+  }
+
+  function setUp() {
+    parent::setUp('module_test', 'user');
+  }
+
+  /**
+   * Tests the hook_modules_uninstalled() of the user module.
+   */
+  function testUserPermsUninstalled() {
+    // Uninstalls the module_test module, so hook_modules_uninstalled()
+    // is executed.
+    drupal_uninstall_modules(array('module_test'));
+
+    // Are the perms defined by module_test removed from {role_permission}.
+    $count = db_query("SELECT COUNT(rid) FROM {role_permission} WHERE permission = :perm", array(':perm' => 'module_test perm'))->fetchField();
+    $this->assertEqual(0, $count, t('Permissions were all removed.'));
+  }
+}

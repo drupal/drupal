@@ -149,6 +149,12 @@ class EnableDisableTestCase extends ModuleTestCase {
     $this->assertModules(array('aggregator'), FALSE);
     $this->assertTableCount('aggregator', FALSE);
     $this->assertLogMessage('system', "%module module uninstalled.", array('%module' => 'aggregator'), WATCHDOG_INFO);
+
+    // Reinstall (and enable) aggregator module.
+    $edit = array();
+    $edit['modules[Core][aggregator][enable]'] = 'aggregator';
+    $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
+    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
   }
 }
 

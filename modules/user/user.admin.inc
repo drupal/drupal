@@ -945,3 +945,18 @@ function user_modules_installed($modules) {
     }
   }
 }
+
+/**
+ * Implement hook_modules_uninstalled().
+ */
+function user_modules_uninstalled($modules) {
+  $permissions = array();
+  foreach ($modules as $module) {
+    $permissions = array_merge($permissions, array_keys(module_invoke($module, 'perm')));
+  }
+  if (!empty($permissions)) {
+    db_delete('role_permission')
+      ->condition('permission', $permissions, 'IN')
+      ->execute();
+  }
+}
