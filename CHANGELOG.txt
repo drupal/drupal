@@ -1,7 +1,10 @@
 // $Id$
 
-Drupal 6.13-dev, xxxx-xx-xx (development release)
+Drupal 6.13, 2009-07-01
 ----------------------
+- Fixed security issues (Cross site scripting, Input format access bypass and
+  Password leakage in URL), see SA-CORE-2009-007.
+- Fixed a variety of small bugs.
 
 Drupal 6.12, 2009-05-13
 ----------------------
@@ -188,6 +191,11 @@ Drupal 6.0, 2008-02-13
   contributed module (http://drupal.org/project/site_network).
 - Removed old system updates. Updates from Drupal versions prior to 5.x will
   require upgrading to 5.x before upgrading to 6.x.
+
+Drupal 5.19, 2009-07-01
+-----------------------
+- Fixed security issues (Cross site scripting and Password leakage in URL), see SA-CORE-2009-007.
+- Fixed a variety of small bugs.
 
 Drupal 5.18, 2009-05-13
 ----------------------

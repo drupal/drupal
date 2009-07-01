@@ -10,6 +10,11 @@
  * Menu callback; prints a forum listing.
  */
 function forum_page($tid = 0) {
+  if (!is_numeric($tid)) {
+    return MENU_NOT_FOUND;
+  }
+  $tid = (int)$tid;
+
   $topics = '';
   $forum_per_page = variable_get('forum_per_page', 25);
   $sortby = variable_get('forum_order', 1);

@@ -136,7 +136,7 @@ function tablesort_cell($cell, $header, $ts, $i) {
  *   except for those pertaining to table sorting.
  */
 function tablesort_get_querystring() {
-  return drupal_query_string_encode($_REQUEST, array_merge(array('q', 'sort', 'order'), array_keys($_COOKIE)));
+  return drupal_query_string_encode($_REQUEST, array_merge(array('q', 'sort', 'order', 'pass'), array_keys($_COOKIE)));
 }
 
 /**

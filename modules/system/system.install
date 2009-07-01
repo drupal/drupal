@@ -2565,6 +2565,39 @@ function system_update_6050() {
 }
 
 /**
+ * Create a signature_format column.
+ */
+function system_update_6051() {
+  $ret = array();
+
+  if (!db_column_exists('users', 'signature_format')) {
+
+    // Set future input formats to FILTER_FORMAT_DEFAULT to ensure a safe default
+    // when incompatible modules insert into the users table. An actual format
+    // will be assigned when users save their signature.
+
+    $schema = array(
+      'type' => 'int',
+      'size' => 'small',
+      'not null' => TRUE,
+      'default' => FILTER_FORMAT_DEFAULT,
+      'description' => 'The {filter_formats}.format of the signature.',
+    );
+
+    db_add_field($ret, 'users', 'signature_format', $schema);
+
+    // Set the format of existing signatures to the current default input format.
+    if ($current_default_filter = variable_get('filter_default_format', 0)) {
+      $ret[] = update_sql("UPDATE {users} SET signature_format = ". $current_default_filter);
+    }
+
+    drupal_set_message("User signatures no longer inherit comment input formats. Each user's signature now has its own associated format that can be selected on the user's account page. Existing signatures have been set to your site's default input format.");
+  }
+
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-6.x-extra"
  * The next series of updates should start at 7000.
  */

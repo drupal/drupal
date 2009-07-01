@@ -70,7 +70,7 @@ function comment_reply($node, $pid = NULL) {
       // $pid indicates that this is a reply to a comment.
       if ($pid) {
         // load the comment whose cid = $pid
-        if ($comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $pid, COMMENT_PUBLISHED))) {
+        if ($comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.signature_format, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = %d', $pid, COMMENT_PUBLISHED))) {
           // If that comment exists, make sure that the current comment and the parent comment both
           // belong to the same parent node.
           if ($comment->nid != $node->nid) {

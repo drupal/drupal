@@ -532,7 +532,7 @@ function user_fields() {
     }
     else {
       // Make sure we return the default fields at least.
-      $fields = array('uid', 'name', 'pass', 'mail', 'picture', 'mode', 'sort', 'threshold', 'theme', 'signature', 'created', 'access', 'login', 'status', 'timezone', 'language', 'init', 'data');
+      $fields = array('uid', 'name', 'pass', 'mail', 'picture', 'mode', 'sort', 'threshold', 'theme', 'signature', 'signature_format', 'created', 'access', 'login', 'status', 'timezone', 'language', 'init', 'data');
     }
   }
 
@@ -1519,6 +1519,15 @@ function user_edit_form(&$form_state, $uid, $edit, $register = FALSE) {
       '#default_value' => $edit['signature'],
       '#description' => t('Your signature will be publicly displayed at the end of your comments.'),
     );
+
+    // Prevent a "validation error" message when the user attempts to save with a default value they
+    // do not have access to.
+    if (!filter_access($edit['signature_format']) && empty($_POST)) {
+      drupal_set_message(t("The signature input format has been set to a format you don't have access to. It will be changed to a format you have access to when you save this page."));
+      $edit['signature_format'] = FILTER_FORMAT_DEFAULT;
+    }
+
+    $form['signature_settings']['signature_format'] = filter_form($edit['signature_format'], NULL, array('signature_format'));
   }
 
   // Picture/avatar:
@@ -2031,7 +2040,7 @@ function user_comment(&$comment, $op) {
   // Validate signature.
   if ($op == 'view') {
     if (variable_get('user_signatures', 0) && !empty($comment->signature)) {
-      $comment->signature = check_markup($comment->signature, $comment->format);
+      $comment->signature = check_markup($comment->signature, $comment->signature_format, FALSE);
     }
     else {
       $comment->signature = '';
