@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.145 2009/06/28 03:56:43 webchick Exp $
+// $Id: module.inc,v 1.146 2009/07/01 17:34:13 webchick Exp $
 
 /**
  * @file
@@ -138,13 +138,22 @@ function module_load_install($module) {
 
 /**
  * Load a module include file.
+ * 
+ * Examples:
+ * @code
+ *   // Load node.admin.inc from the node module
+ *   module_load_include('inc', 'node', 'node.admin');
+ *   // Load node.install from the node module
+ *   module_load_include('install', 'node'); 
+ * @endcode
  *
  * @param $type
  *   The include file's type (file extension).
  * @param $module
  *   The module to which the include file belongs.
  * @param $name
- *   Optionally, specify the file name. If not set, the module's name is used.
+ *   Optionally, specify the base file name (without the $type extension). 
+ *   If not set, $module is used.
  */
 function module_load_include($type, $module, $name = NULL) {
   if (empty($name)) {
