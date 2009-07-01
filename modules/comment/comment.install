@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.39 2009/06/22 13:21:37 dries Exp $
+// $Id: comment.install,v 1.40 2009/07/01 12:06:21 dries Exp $
 
 /**
  * @file
@@ -107,6 +107,23 @@ function comment_update_7003() {
   db_add_index($ret, 'comment', 'comment_pid_status', array('pid', 'status'));
   db_add_index($ret, 'comment', 'comment_num_new', array('nid', 'timestamp', 'status'));
   return $ret;
+}
+
+/**
+ * Rename comment display setting variables.
+ */
+function comment_update_7004() {
+  $types = node_type_get_types();
+  foreach ($types as $type => $object) {
+    $setting = variable_get('comment_default_mode_' . $type, 4);
+    if ($setting == 3 || $setting == 4) {
+      variable_set('comment_default_mode_' . $type, 1);
+    }
+    else {
+      variable_set('comment_default_mode_' . $type, 0);
+    }
+  }
+  return array();
 }
 
 /**
