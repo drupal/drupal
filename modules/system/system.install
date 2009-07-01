@@ -757,7 +757,7 @@ function system_schema() {
         'default' => 0,
       ),
       'status' => array(
-        'description' => 'A bitmapped field indicating the status of the file the least sigifigant bit indicates temporary (1) or permanent (0). Temporary files older than DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during a cron run.',
+        'description' => 'A bitmapped field indicating the status of the file. The least significant bit indicates temporary (0) or permanent (1). Temporary files older than DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during a cron run.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
