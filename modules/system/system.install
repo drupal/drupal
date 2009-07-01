@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.350 2009/07/01 08:41:52 dries Exp $
+// $Id: system.install,v 1.351 2009/07/01 12:03:35 dries Exp $
 
 /**
  * @file
@@ -2220,6 +2220,44 @@ function system_update_7028() {
   db_rename_table($ret, 'vocabulary', 'taxonomy_vocabulary');
   db_rename_table($ret, 'vocabulary_node_types', 'taxonomy_vocabulary_node_type');
 
+  return $ret;
+}
+
+/**
+ * Add the block_node_type table.
+ */
+function system_update_7029() {
+  $ret = array();
+
+  $schema['block_node_type'] = array(
+    'description' => 'Sets up display criteria for blocks based on content types',
+    'fields' => array(
+      'module' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'description' => "The block's origin module, from {block}.module.",
+      ),
+      'delta' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => "The block's unique delta within module, from {block}.delta.",
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => "The machine-readable name of this type from {node_type}.type.",
+      ),
+    ),
+    'primary key' => array('module', 'delta', 'type'),
+    'indexes' => array(
+      'type' => array('type'),
+    ),
+  );
+
+  db_create_table($ret, 'block_node_type', $schema['block_node_type']);
   return $ret;
 }
 
