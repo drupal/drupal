@@ -828,33 +828,112 @@ function system_admin_menu_block_access($path, $permission) {
 }
 
 /**
- * Implementation of hook_filetransfer_backends().
+ * Implement hook_filetransfer_backends().
  */
 function system_filetransfer_backends() {
   $backends = array();
 
+  //This is the default, will be available on most systems
+  if (function_exists('ftp_connect')) {
+    $backends['ftp_extension'] = array(
+      'title' => t('FTP'),
+      'class' => 'FileTransferFTPExtension',
+      'settings_form' => 'system_filetransfer_backend_form_ftp',
+      'weight' => 0,
+    );
+  }
+  
+  if (ini_get('allow_url_fopen')) {
+    $backends['ftp_wrapper'] = array(
+      'title' => t('FTP using file streams'),
+      'class' => 'FileTransferFTPWrapper',
+      'settings_form' => 'system_filetransfer_backend_form_ftp',
+      'weight' => 10,
+    );
+  }
+  
   // SSH2 lib connection is only available if the proper PHP extension is
   // installed.
   if (function_exists('ssh2_connect')) {
     $backends['ssh'] = array(
       'title' => t('SSH'),
       'class' => 'FileTransferSSH',
-    );
-  }
-  if (function_exists('ftp_connect')) {
-    $backends['ftp_extension'] = array(
-      'title' => t('FTP Extension'),
-      'class' => 'FileTransferFTPExtension',
-    );
-  }
-
-  if (ini_get('allow_url_fopen')) {
-    $backends['ftp_wrapper'] = array(
-      'title' => t('FTP Wrapper'),
-      'class' => 'FileTransferFTPWrapper',
+      'settings_form' => 'system_filetransfer_backend_form_ssh',
+      'weight' => 20,
     );
   }
   return $backends;
+}
+
+/**
+ *  Helper function to return a form for configuring a filetransfer backend.
+ * 
+ * @param string $filetransfer_backend_name
+ *   The name of the backend to return a form for.
+ *
+ * @param string $defaults
+ *   An associative array of settings to pre-populate the form with.
+ */
+function system_get_filetransfer_settings_form($filetransfer_backend_name, $defaults) {
+  $available_backends = module_invoke_all('filetransfer_backends');
+  $form = call_user_func($available_backends[$filetransfer_backend_name]['settings_form']);
+  
+  foreach ($form as $name => &$element) {
+    if (isset($defaults[$name])) {
+      $element['#default_value'] = $defaults[$name];  
+    }
+  }
+  return $form;
+}
+
+/**
+ * Returns the form to configure the filetransfer class for FTP
+ */
+function system_filetransfer_backend_form_ftp() {
+  $form = _system_filetransfer_backend_form_common();
+  $form['port']['#default_value'] = 21;
+  return $form;
+}
+
+/**
+ * Returns the form to configure the filetransfer class for SSH
+ */
+function system_filetransfer_backend_form_ssh() {
+  $form = _system_filetransfer_backend_form_common();
+  $form['port']['#default_value'] = 22;
+  return $form;
+}
+
+/**
+ * Helper function because SSH and FTP backends share the same elements
+ */
+function _system_filetransfer_backend_form_common() {
+  $form = array();
+  
+  $form['hostname'] = array (
+    '#type' => 'textfield',
+    '#title' => t('Host'),
+    '#default_value' => 'localhost',
+  );
+  
+  $form['port'] = array (
+    '#type' => 'textfield',
+    '#title' => t('Port'),
+    '#default_value' => NULL,
+  );
+  
+  $form['username'] = array (
+    '#type' => 'textfield',
+    '#title' => t('Username'),
+  );
+  
+  $form['password'] = array (
+    '#type' => 'password',
+    '#title' => t('Password'),
+    '#description' => t('This is not saved in the database and is only used to test the connection'),
+  );
+  
+  return $form;
 }
 
 /**
@@ -2567,29 +2646,37 @@ function system_image_toolkits() {
 /**
  * Attempts to get a file using drupal_http_request and to store it locally.
  *
- * @param $path
+ * @param $url
  *   The URL of the file to grab.
+ *
+ * @param $destination
+ *   Where the file should be saved, if a directory is provided, file is saved
+ *   in that directory with its original name.  If a filename is provided,
+ *   remote fileis stored to that location.  NOTE: Relative to drupal "files" directory"
+ *
+ * @param $overwrite boolean
+ *   Defaults to TRUE, will overwrite existing files of the same name.
+ *  
  * @return
  *   On success the address the files was saved to, FALSE on failure.
  */
-function system_retrieve_file($path) {
-  // Get each of the specified files.
-  $parsed_url = parse_url($path);
-  $local = file_directory_temp() . '/update-cache/' . basename($parsed_url['path']);
-  if (!file_exists(file_directory_temp() . '/update-cache/')) {
-    mkdir(file_directory_temp() . '/update-cache/');
+function system_retrieve_file($url, $destination = NULL, $overwrite = TRUE) {
+  if (!$destination) {
+    $destination = file_directory_temp();
   }
-
-  // Check the cache and download the file if needed.
-  if (!file_exists($local)) {
-    // $result->data is the actual contents of the downloaded file. This saves
-    // it into a local file, whose path is stored in $local. $local is stored
-    // relative to the Drupal installation.
-    $result = drupal_http_request($path);
-    if ($result->code != 200 || !file_save_data($result->data, $local)) {
-      drupal_set_message(t('@remote could not be saved.', array('@remote' => $path)), 'error');
-      return FALSE;
-    }
+  $parsed_url = parse_url($url);
+  $local = is_dir(file_directory_path() . '/' . $destination) ? $destination . '/' . basename($parsed_url['path']) : $destination;
+  
+  if (!$overwrite && file_exists($local)) {
+    drupal_set_message(t('@remote could not be saved. @local already exists', array('@remote' => $url, '@local' => $local)), 'error');
+    return FALSE;
   }
+  
+  $result = drupal_http_request($url);
+  if ($result->code != 200 || !file_save_data($result->data, $local)) {
+    drupal_set_message(t('@remote could not be saved.', array('@remote' => $url)), 'error');
+    return FALSE;
+  }
+  
   return $local;
 }
