@@ -317,7 +317,8 @@ function theme_field_formatter_text_summary_or_trimmed($element) {
     return $element['#item']['safe_summary'];
   }
   else {
-    return text_summary($element['#item']['safe'], $instance['settings']['text_processing'] ? $element['#item']['format'] : NULL);
+    $size = variable_get('teaser_length_' . $element['#bundle'], 600);
+    return text_summary($element['#item']['safe'], $instance['settings']['text_processing'] ? $element['#item']['format'] : NULL, $size);
   }
 }
 

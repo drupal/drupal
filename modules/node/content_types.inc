@@ -185,9 +185,9 @@ function node_type_form(&$form_state, $type = NULL) {
   $form['display']['teaser_length'] = array(
     '#type' => 'select', 
     '#title' => t('Length of trimmed posts'),
-    '#default_value' => 600,
+    '#default_value' => variable_get('teaser_length_' . $type->type, 600),
     '#options' => drupal_map_assoc(array(0, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000), '_node_characters'),
-    '#description' => t("The maximum number of characters used in the trimmed version of a post. Drupal will use this setting to determine at which offset long posts should be trimmed. The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc. To disable teasers, set to 'Unlimited' . Note that this setting will only affect new or updated content and will not affect existing teasers.")
+    '#description' => t("The maximum number of characters used in the trimmed version of a post. Drupal will use this setting to determine at which offset long posts should be trimmed. The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc. To disable teasers, set to 'Unlimited'.")
   );
   $form['old_type'] = array(
     '#type' => 'value',
