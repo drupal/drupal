@@ -1,5 +1,5 @@
 <?php
-// $Id: session_test.module,v 1.9 2009/06/30 11:32:08 dries Exp $
+// $Id: session_test.module,v 1.10 2009/07/01 12:47:30 dries Exp $
 
 /**
  * Implement hook_menu().
@@ -34,6 +34,12 @@ function session_test_menu() {
   $items['session-test/set-message'] = array(
     'title' => t('Session value'),
     'page callback' => '_session_test_set_message',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['session-test/set-message-but-dont-save'] = array(
+    'title' => t('Session value'),
+    'page callback' => '_session_test_set_message_but_dont_save',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
@@ -106,6 +112,14 @@ function _session_test_set_message() {
   // Do not return anything, so the current request does not result in a themed
   // page with messages. The message will be displayed in the following request
   // instead.
+}
+
+/**
+ * Menu callback, sets a message but call drupal_save_session(FALSE).
+ */
+function _session_test_set_message_but_dont_save() {
+  drupal_save_session(FALSE);
+  _session_test_set_message();
 }
 
 /**

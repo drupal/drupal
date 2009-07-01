@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1004 2009/06/30 11:32:08 dries Exp $
+// $Id: user.module,v 1.1005 2009/07/01 12:47:30 dries Exp $
 
 /**
  * @file
@@ -1970,10 +1970,8 @@ function _user_cancel($edit, $account, $method) {
 
   // After cancelling account, ensure that user is logged out.
   if ($account->uid == $user->uid) {
-    // Destroy the current session.
+    // Destroy the current session, and reset $user to the anonymous user.
     session_destroy();
-    // Load the anonymous user.
-    $user = drupal_anonymous_user();
   }
   else {
     drupal_session_destroy_uid($account->uid);

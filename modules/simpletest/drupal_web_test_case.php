@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.117 2009/06/16 04:43:47 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.118 2009/07/01 12:47:30 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -948,11 +948,10 @@ class DrupalWebTestCase extends DrupalTestCase {
    * Logs a user out of the internal browser, then check the login page to confirm logout.
    */
   protected function drupalLogout() {
-    // Make a request to the logout page.
-    $this->drupalGet('user/logout');
-
-    // Load the user page, the idea being if you were properly logged out you should be seeing a login screen.
-    $this->drupalGet('user');
+    // Make a request to the logout page, and redirect to the user page, the
+    // idea being if you were properly logged out you should be seeing a login
+    // screen.
+    $this->drupalGet('user/logout', array('query' => 'destination=user'));
     $pass = $this->assertField('name', t('Username field found.'), t('Logout'));
     $pass = $pass && $this->assertField('pass', t('Password field found.'), t('Logout'));
 

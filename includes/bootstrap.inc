@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.287 2009/06/10 20:00:10 dries Exp $
+// $Id: bootstrap.inc,v 1.288 2009/07/01 12:47:30 dries Exp $
 
 /**
  * @file
@@ -436,6 +436,8 @@ function drupal_initialize_variables() {
   ini_set('session.use_trans_sid', '0');
   // Don't send HTTP headers using PHP's session handler.
   ini_set('session.cache_limiter', 'none');
+  // Use httponly session cookies.
+  ini_set('session.cookie_httponly', '1');
 }
 
 /**
