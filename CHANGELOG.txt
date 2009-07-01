@@ -1,5 +1,11 @@
 // $Id$
 
+Drupal 5.19, 2009-07-01
+-----------------------
+- Fixed security issues (Cross site scripting and Password leakage in URL), see
+  SA-CORE-2009-007.          
+- Fixed a variety of small bugs.
+
 Drupal 5.18, 2009-05-13
 -----------------------
 - Fixed security issues (Cross site scripting), see SA-CORE-2009-006.
