@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.49 2009/06/22 09:10:06 dries Exp $
+// $Id: translation.module,v 1.50 2009/07/02 04:27:23 webchick Exp $
 
 /**
  * @file
@@ -181,8 +181,9 @@ function translation_node_view($node, $build_mode) {
           'attributes' => array('title' => $translations[$langcode]->title, 'class' => 'translation-link')
         );
         $node->content['links']['translation'] = array(
-          '#type' => 'node_links',
-          '#value' => $links,
+          '#theme' => 'links',
+          '#links' => $links,
+          '#attributes' => array('class' => 'links inline'),
         );
       }
     }

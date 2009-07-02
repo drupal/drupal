@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.19 2009/05/21 21:12:23 dries Exp $
+// $Id: blog.pages.inc,v 1.20 2009/07/02 04:27:22 webchick Exp $
 
 /**
  * @file
@@ -25,7 +25,7 @@ function blog_page_user($account) {
 
   $build['blog_actions'] = array(
     '#items' => $items,
-    '#theme' => 'list',
+    '#theme' => 'item_list',
     '#weight' => -1,
   );
 
@@ -74,7 +74,7 @@ function blog_page_last() {
     $items[] = l(t('Create new blog entry.'), "node/add/blog");
     $build['blog_actions'] = array(
       '#items' => $items,
-      '#theme' => 'list',
+      '#theme' => 'item_list',
       '#weight' => -1,
     );
   }

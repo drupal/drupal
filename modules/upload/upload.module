@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.242 2009/06/22 09:10:06 dries Exp $
+// $Id: upload.module,v 1.243 2009/07/02 04:27:23 webchick Exp $
 
 /**
  * @file
@@ -60,11 +60,11 @@ function upload_perm() {
  */
 function upload_node_links($node, $build_mode) {
   $links = array();
-
+    
   // Display a link with the number of attachments
   $num_files = 0;
   foreach ($node->files as $file) {
-    if ($file->list) {
+    if ((object)$file->list) {
       $num_files++;
     }
   }
@@ -76,8 +76,9 @@ function upload_node_links($node, $build_mode) {
       'fragment' => 'attachments'
     );
     $node->content['links']['upload_attachments'] = array(
-      '#type' => 'node_links',
-      '#value' => $links,
+      '#theme' => 'links',
+      '#links' => $links,
+      '#attributes' => array('class' => 'links inline'),
     );
   }
 }

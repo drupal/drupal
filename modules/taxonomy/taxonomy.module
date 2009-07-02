@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.481 2009/06/27 19:49:07 dries Exp $
+// $Id: taxonomy.module,v 1.482 2009/07/02 04:27:23 webchick Exp $
 
 /**
  * @file
@@ -117,8 +117,9 @@ function taxonomy_node_view($node, $build_mode) {
     }
 
     $node->content['links']['terms'] = array(
-      '#type' => 'node_links',
-      '#value' => $links,
+      '#theme' => 'links',
+      '#links' => $links,
+      '#attributes' => array('class' => 'links inline'),
       '#sorted' => TRUE,
     );
   }
