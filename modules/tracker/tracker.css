@@ -1,8 +1,8 @@
 /* $Id$ */
 
-#tracker td.replies {
+.page-tracker td.replies {
   text-align: center;
 }
-#tracker table {
+.page-tracker table {
   width: 100%;
 }

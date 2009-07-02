@@ -3663,28 +3663,6 @@ function drupal_render(&$elements) {
     }
   }
 
-  // Add additional CSS and JavaScript files associated with this element.
-  foreach (array('css', 'js') as $kind) {
-    if (!empty($elements['#attached_' . $kind]) && is_array($elements['#attached_' . $kind])) {
-      foreach ($elements['#attached_' . $kind] as $data => $options) {
-        // If the value is not an array, it's a filename and passed as first
-        // (and only) argument.
-        if (!is_array($options)) {
-          $data = $options;
-          $options = NULL;
-        }
-        // When drupal_add_js with 'type' => 'setting' is called, the first
-        // parameter ($data) is an array. Arrays can't be keys in PHP, so we
-        // have to get $data from the value array.
-        if (is_numeric($data)) {
-          $data = $options['data'];
-          unset($options['data']);
-        }
-        call_user_func('drupal_add_' . $kind, $data, $options);
-      }
-    }
-  }
-
   // Get the children of the element, sorted by weight.
   $children = element_children($elements, TRUE);
 
@@ -3713,6 +3691,28 @@ function drupal_render(&$elements) {
     foreach ($elements['#post_render'] as $function) {
       if (drupal_function_exists($function)) {
         $elements['#children'] = $function($elements['#children'], $elements);
+      }
+    }
+  }
+  
+  // Add additional CSS and JavaScript files associated with this element.
+  foreach (array('css', 'js') as $kind) {
+    if (!empty($elements['#attached_' . $kind]) && is_array($elements['#attached_' . $kind])) {
+      foreach ($elements['#attached_' . $kind] as $data => $options) {
+        // If the value is not an array, it's a filename and passed as first
+        // (and only) argument.
+        if (!is_array($options)) {
+          $data = $options;
+          $options = NULL;
+        }
+        // When drupal_add_js with 'type' => 'setting' is called, the first
+        // parameter ($data) is an array. Arrays can't be keys in PHP, so we
+        // have to get $data from the value array.
+        if (is_numeric($data)) {
+          $data = $options['data'];
+          unset($options['data']);
+        }
+        call_user_func('drupal_add_' . $kind, $data, $options);
       }
     }
   }
@@ -3982,9 +3982,6 @@ function drupal_common_theme() {
     'item_list' => array(
       'arguments' => array('items' => array(), 'title' => NULL, 'type' => 'ul', 'attributes' => NULL),
     ),
-    'list' => array(
-      'arguments' => array('elements' => NULL),
-    ),
     'more_help_link' => array(
       'arguments' => array('url' => NULL),
     ),
@@ -4011,7 +4008,7 @@ function drupal_common_theme() {
     ),
     // from pager.inc
     'pager' => array(
-      'arguments' => array('tags' => array(), 'element' => 0, 'parameters' => array()),
+      'arguments' => array('tags' => array(), 'element' => 0, 'parameters' => array(), 'quantity' => 9),
     ),
     'pager_first' => array(
       'arguments' => array('text' => NULL, 'element' => 0, 'parameters' => array()),

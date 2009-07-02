@@ -99,8 +99,9 @@ function blog_node_view($node, $build_mode = 'full') {
         'attributes' => array('title' => t("Read !username's latest blog entries.", array('!username' => $node->name))),
       );
       $node->content['links']['blog'] = array(
-        '#type' => 'node_links',
-        '#value' => $links,
+        '#theme' => 'links',
+        '#links' => $links,
+        '#attributes' => array('class' => 'links inline'),
       );
     }
   }

@@ -724,6 +724,17 @@ function theme() {
   if (isset($info['function'])) {
     // The theme call is a function.
     if (drupal_function_exists($info['function'])) {
+      // If a theme function that does not expect a renderable array is called
+      // with a renderable array as the only argument (via drupal_render), then
+      // we take the arguments from the properties of the renderable array. If
+      // missing, use hook_theme() defaults.
+      if (isset($args[0]) && is_array($args[0]) && isset($args[0]['#theme']) && count($info['arguments']) > 1) {
+        $new_args = array();
+        foreach ($info['arguments'] as $name => $default) {
+          $new_args[] = isset($args[0]["#$name"]) ? $args[0]["#$name"] : $default;
+        }
+        $args = $new_args;
+      }
       $output = call_user_func_array($info['function'], $args);
     }
   }
@@ -1656,25 +1667,6 @@ function theme_item_list($items = array(), $title = NULL, $type = 'ul', $attribu
   }
   $output .= '</div>';
   return $output;
-}
-
-/**
- * Return a themed list of items from a drupal_render() style array.
- *
- * @param $elements
- *   An array consisting of the following keys:
- *   - #items: an array of items as expected by theme('item_list').
- *   - #title: a title which prints above the list.
- *   - #list_type: the type of list to return. Defaults to "ul".
- *   - #attributes: an array of attributes as expected by theme('item_list').
- * @return
- *   A string containing the list output.
- */
-function theme_list($elements) {
-  // Populate any missing array elements with their defaults.
-  $elements += element_info('list');
-
-  return theme('item_list', $elements['#items'], $elements['#title'], $elements['#list_type'], $elements['#attributes']);
 }
 
 /**

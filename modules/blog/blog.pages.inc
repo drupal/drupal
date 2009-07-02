@@ -25,7 +25,7 @@ function blog_page_user($account) {
 
   $build['blog_actions'] = array(
     '#items' => $items,
-    '#theme' => 'list',
+    '#theme' => 'item_list',
     '#weight' => -1,
   );
 
@@ -74,7 +74,7 @@ function blog_page_last() {
     $items[] = l(t('Create new blog entry.'), "node/add/blog");
     $build['blog_actions'] = array(
       '#items' => $items,
-      '#theme' => 'list',
+      '#theme' => 'item_list',
       '#weight' => -1,
     );
   }

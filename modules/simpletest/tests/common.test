@@ -587,6 +587,10 @@ class DrupalRenderUnitTestCase extends DrupalWebTestCase {
     );
   }
 
+  function setUp() {
+    parent::setUp('common_test');
+  }
+
   /**
    * Test sorting by weight.
    */
@@ -636,6 +640,24 @@ class DrupalRenderUnitTestCase extends DrupalWebTestCase {
 
     // The elements should appear in output in the same order as the array.
     $this->assertTrue(strpos($output, $second) < strpos($output, $first), t('Elements were not sorted.'));
+  }
+
+  /**
+   * Test passing arguments to the theme function.
+   */
+  function testDrupalRenderThemeArguments() {
+    $element = array(
+      '#theme' => 'common_test_foo',
+    );
+    // Test that defaults work.
+    $this->assertEqual(drupal_render($element), 'foobar', 'Defaults work');
+    dd(drupal_render($e), 'defaults'); $element = array(
+      '#theme' => 'common_test_foo',
+      '#foo' => $this->randomName(),
+      '#bar' => $this->randomName(),
+    );
+    // Test that passing arguments to the theme function works.
+    $this->assertEqual(drupal_render($element), $element['#foo'] . $element['#bar'], 'Passing arguments to theme functions works');
   }
 }
 

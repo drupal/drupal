@@ -114,8 +114,9 @@ function statistics_node_view($node, $build_mode) {
     }
 
     $node->content['links']['statistics'] = array(
-      '#type' => 'node_links',
-      '#value' => $links,
+      '#theme' => 'links',
+      '#links' => $links,
+      '#attributes' => array('class' => 'links inline'),
     );
   }
 }

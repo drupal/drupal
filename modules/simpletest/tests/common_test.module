@@ -1,0 +1,25 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Helper module for the Common tests.
+ */
+
+/**
+ * Implement hook_theme().
+ */
+function common_test_theme() {
+  return array(
+    'common_test_foo' => array(
+      'arguments' => array('foo' => 'foo', 'bar' => 'bar'),
+    ),
+  );
+}
+
+/**
+ * Theme function for testing drupal_render() theming.
+ */
+function theme_common_test_foo($foo, $bar) {
+  return $foo . $bar;
+}

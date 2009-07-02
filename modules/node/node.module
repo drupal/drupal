@@ -106,9 +106,6 @@ function node_theme() {
     'node_admin_overview' => array(
       'arguments' => array('name' => NULL, 'type' => NULL),
     ),
-    'node_links' => array(
-      'arguments' => array('element' => NULL),
-    ),
   );
 }
 

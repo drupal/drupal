@@ -181,8 +181,9 @@ function translation_node_view($node, $build_mode) {
           'attributes' => array('title' => $translations[$langcode]->title, 'class' => 'translation-link')
         );
         $node->content['links']['translation'] = array(
-          '#type' => 'node_links',
-          '#value' => $links,
+          '#theme' => 'links',
+          '#links' => $links,
+          '#attributes' => array('class' => 'links inline'),
         );
       }
     }

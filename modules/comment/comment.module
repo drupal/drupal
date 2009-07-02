@@ -528,8 +528,9 @@ function comment_node_view($node, $build_mode) {
     }
 
     $node->content['links']['comment'] = array(
-      '#type' => 'node_links',
-      '#value' => $links,
+      '#theme' => 'links',
+      '#links' => $links,
+      '#attributes' => array('class' => 'links inline'),
     );
 
     // Append the list of comments to $node->content for node detail pages.

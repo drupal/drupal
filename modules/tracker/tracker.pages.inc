@@ -11,11 +11,6 @@
  * Menu callback. Prints a listing of active nodes on the site.
  */
 function tracker_page($account = NULL, $set_title = FALSE) {
-  // Add CSS
-  drupal_add_css(drupal_get_path('module', 'tracker') . '/tracker.css', array('preprocess' => FALSE));
-
-  $header = array(t('Type'), t('Post'), t('Author'), t('Replies'), t('Last updated'));
-
   // TODO: These queries are very expensive, see http://drupal.org/node/105639
   $query = db_select('node', 'n', array('target' => 'slave'))->extend('PagerDefault');
   $query->join('users', 'u', 'n.uid = u.uid');
@@ -73,10 +68,18 @@ function tracker_page($account = NULL, $set_title = FALSE) {
     $rows[] = array(array('data' => t('No posts available.'), 'colspan' => '5'));
   }
 
-  $output = '<div id="tracker">';
-  $output .= theme('table', $header, $rows);
-  $output .= theme('pager', NULL);
-  $output .= '</div>';
+  $page['tracker'] = array(
+    '#rows' => $rows,
+    '#header' => array(t('Type'), t('Post'), t('Author'), t('Replies'), t('Last updated')),
+    '#theme' => 'table',
+    '#attached_css' => array(drupal_get_path('module', 'tracker') . '/tracker.css' => array('preprocess' => FALSE)),
+  );
+  $page['pager'] = array(
+    '#theme' => 'pager',
+    '#quantity' => 25,
+    '#weight' => 10,
+  );
+  $page['#sorted'] = TRUE;
 
-  return $output;
+  return $page;
 }
