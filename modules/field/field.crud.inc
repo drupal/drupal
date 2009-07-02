@@ -273,6 +273,9 @@ function field_create_field($field) {
   // Clear caches
   field_cache_clear(TRUE);
 
+  // Invoke external hooks after the cache is cleared for API consistency.
+  module_invoke_all('field_create_field', $field);
+  
   return $field;
 }
 
