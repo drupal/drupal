@@ -1251,10 +1251,11 @@ function taxonomy_vocabulary_load_multiple($vids = array(), $conditions = array(
     $query
       ->fields('v')
       ->orderBy('v.weight')
-      ->orderBy('v.name');
+      ->orderBy('v.name')
+      ->addTag('vocabulary_access');
 
     if (!empty($type)) {
-      $query->leftJoin('taxonomy_vocabulary_node_type', 'n', 'v.vid = n.vid AND n.type  = :type', array(':type' => $type));
+      $query->join('taxonomy_vocabulary_node_type', 'n', 'v.vid = n.vid AND n.type = :type', array(':type' => $type));
     }
     else {
       $query->leftJoin('taxonomy_vocabulary_node_type', 'n', 'v.vid = n.vid');
@@ -1358,6 +1359,13 @@ function taxonomy_terms_load($str_tids) {
 function taxonomy_term_load_multiple($tids = array(), $conditions = array()) {
   $term_cache = &drupal_static(__FUNCTION__, array());
 
+  // Node type associations are not stored in the taxonomy_term_data table, so
+  // remove this from conditions into it's own variable.
+  if (isset($conditions['type'])) {
+    $type = $conditions['type'];
+    unset($conditions['type']);
+  }
+
   $terms = array();
 
   // Create a new variable which is either a prepared version of the $tids
@@ -1402,12 +1410,18 @@ function taxonomy_term_load_multiple($tids = array(), $conditions = array()) {
     $query = db_select('taxonomy_term_data', 't');
     $query->join('taxonomy_vocabulary', 'v', 't.vid = v.vid');
     $taxonomy_term_data = drupal_schema_fields_sql('taxonomy_term_data');
-    $query->fields('t', $taxonomy_term_data);
     $query->addField('v', 'machine_name', 'vocabulary_machine_name');
+    $query
+      ->fields('t', $taxonomy_term_data)
+      ->addTag('term_access');
 
     // If the $tids array is populated, add those to the query.
     if ($tids) {
       $query->condition('t.tid', $tids, 'IN');
+    }
+
+    if (!empty($type)) {
+      $query->join('taxonomy_vocabulary_node_type', 'n', 't.vid = n.vid AND n.type = :type', array(':type' => $type));
     }
 
     // If the conditions array is populated, add those to the query.

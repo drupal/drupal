@@ -22,15 +22,14 @@ class BlogAPITestCase extends DrupalWebTestCase {
    */
   function testBlogAPI() {
     global $base_url;
+    // Create user.
+    $web_user = $this->drupalCreateUser(array('create blog content', 'delete own blog content', 'edit own blog content', 'administer content with blog api'));
     // Create admin user and taxonomy for later use.
     $admin_user = $this->drupalCreateUser(array('administer taxonomy'));
     $this->drupalLogin($admin_user);
     $vid = $this->addVocabulary('simpletest_vocab');
-    $term = $this->addTerm($vid, 'simpletest_term1');
-    $this->drupalLogout();
-
-    // Create user.
-    $web_user = $this->drupalCreateUser(array('create blog content', 'delete own blog content', 'edit own blog content', 'administer content with blog api'));
+    $term_1 = $this->addTerm($vid, 'simpletest_term1');
+    $term_2 = $this->addTerm($vid, 'simpletest_term2');
 
     // Init common variables.
     $local = url($base_url . '/xmlrpc.php', array('external' => TRUE));
@@ -60,8 +59,9 @@ class BlogAPITestCase extends DrupalWebTestCase {
     if ($result !== FALSE && array_key_exists('title', $result[0])) {
       $this->assertEqual($content, $result[0]['title'], t('Post found.'));
     }
-    else
-      $this->assertTrue(false, 'Post found.');
+    else {
+      $this->fail(t('Post found.'));
+    }
 
     // Edit post.
     $content_new = $this->randomName(10);
@@ -85,7 +85,7 @@ class BlogAPITestCase extends DrupalWebTestCase {
     $this->assertEqual($this->drupalGetContent(), $file_contents, t('Uploaded contents verified.'));
 
     // Set post categories.
-    $categories = array(array('categoryId' => $term));
+    $categories = array(array('categoryId' => $term_1));
     $result = xmlrpc($local, 'mt.setPostCategories', $nid, $web_user->name, $web_user->pass_raw, $categories);
     $this->assertTrue($result, t('Post categories set.'));
 
@@ -93,10 +93,40 @@ class BlogAPITestCase extends DrupalWebTestCase {
     $result = xmlrpc($local, 'mt.getPostCategories', $nid, $web_user->name, $web_user->pass_raw);
     $this->assertTrue($result, t('Category list successfully retrieved.'));
 
-    if ($result !== FALSE && array_key_exists('categoryId', $result[0])) {
-      $this->assertEqual($term, $result[0]['categoryId'], t('Category list verified.'));
+    if ($result !== FALSE && isset($result[0]['categoryId'])) {
+      $this->assertEqual($term_1, $result[0]['categoryId'], t('Category list verified.'));
     }
 
+    // Test validation of category assignment.
+    // Set post categories.
+    $categories[] = array('categoryId' => $term_2);
+    $result = xmlrpc($local, 'mt.setPostCategories', $nid, $web_user->name, $web_user->pass_raw, $categories);
+    $this->assertFalse($result, t('Post categories fail validation (attempt to post two when one is allowed).'));
+
+    // Change to required.
+    $this->updateVocabulary($vid, 'simpletest_vocab1', FALSE, TRUE);
+    $result = xmlrpc($local, 'mt.setPostCategories', $nid, $web_user->name, $web_user->pass_raw, array());
+    $this->assertFalse($result, t("Post categories fail validation (none posted when it's required)."));
+
+    // Change to allowing multiple, not required.
+    $this->updateVocabulary($vid, 'simpletest_vocab1', TRUE, FALSE);
+    $result = xmlrpc($local, 'mt.setPostCategories', $nid, $web_user->name, $web_user->pass_raw, $categories);
+    $this->assertTrue($result, t('Post categories pass validation (multiple allowed).'));
+    $result = xmlrpc($local, 'mt.setPostCategories', $nid, $web_user->name, $web_user->pass_raw, array());
+    $this->assertTrue($result, t('Post categories pass validation (multiple allowed, none posted).'));
+
+    // Change to multiple, but required.
+    $this->updateVocabulary($vid, 'simpletest_vocab1', TRUE, TRUE);
+    $result = xmlrpc($local, 'mt.setPostCategories', $nid, $web_user->name, $web_user->pass_raw, $categories);
+    $this->assertTrue($result, t('Post categories pass validation (multiple allowed).'));
+    $result = xmlrpc($local, 'mt.setPostCategories', $nid, $web_user->name, $web_user->pass_raw, array());
+    $this->assertFalse($result, t("Post categories fail validation (none posted when it's required)."));
+
+    // Try to add a non-existent term.
+    $categories[] = array('categoryId' => $term_2 + 1);
+    $result = xmlrpc($local, 'mt.setPostCategories', $nid, $web_user->name, $web_user->pass_raw, $categories);
+    $this->assertFalse($result, t('Post categories fail validation (unknown term).'));
+ 
     // Delete post.
     $result = xmlrpc($local, 'blogger.deletePost', $appid, $nid, $web_user->name, $web_user->pass_raw, TRUE);
     $this->assertTrue($result, t('Post successfully deleted.'));
@@ -122,6 +152,22 @@ class BlogAPITestCase extends DrupalWebTestCase {
     taxonomy_vocabulary_save($vocabulary);
 
     return $vocabulary->vid;
+  }
+  /**
+   * Update a taxonomy vocabulary.
+   *
+   * @param  $vocab
+   *   Vocabulary name.
+   * @return integer
+   *   The vocab ID.
+   */
+  function updateVocabulary($vid, $vocab, $multiple = FALSE, $required = FALSE) {
+    $vocabulary = taxonomy_vocabulary_load($vid);
+    $vocabulary->name = $vocab;
+    $vocabulary->nodes = array('blog' => 'blog');
+    $vocabulary->multiple = $multiple;
+    $vocabulary->required = $required;
+    taxonomy_vocabulary_save($vocabulary);
   }
 
   /**
