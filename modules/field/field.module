@@ -472,18 +472,19 @@ function field_format($obj_type, $object, $field, $item, $formatter_name = NULL,
  *
  * To be used by third-party code (Views, Panels...) that needs to output
  * an isolated field. Do *not* use inside node templates, use the
- * $FIELD_NAME_rendered variables instead.
+ * render($content[FIELD_NAME]) instead.
  *
- * By default, the field is displayed using the settings defined for the
- * 'full' or 'teaser' contexts (depending on the value of the $build_mode param).
+ * The field will be displayed using the display options (label display,
+ * formatter settings...) specified in the $instance structure for the given
+ * build mode: $instance['display'][$build_mode].
  *
- * Different settings can be specified by adjusting $field['display'].
- *
- * @param $field
- *   The field definition.
  * @param $object
  *   The object containing the field to display. Must at least contain the id key,
  *   revision key (if applicable), bundle key, and the field data.
+ * @param $field
+ *   The field structure.
+ * @param $instance
+ *   The instance structure for $field on $object's bundle.
  * @param $build_mode
  *   Build mode, e.g. 'full', 'teaser'...
  * @return

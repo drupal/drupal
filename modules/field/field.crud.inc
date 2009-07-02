@@ -137,24 +137,25 @@
  *         Each field widget type module defines and documents its own
  *         widget settings.
  * - display (array)
- *     A sub-array of key/value pairs identifying display contexts and the way
- *     the field should be displayed in that context.
- *     - example_context_1 (array)
+ *     A sub-array of key/value pairs identifying build modes and the way the
+ *     field values should be displayed in each build mode.
+ *     - full (array)
  *         A sub-array of key/value pairs of the display options to be used
- *         when the field is being displayed in the "example_context_1" context.
+ *         when the field is being displayed in the "full" build mode.
  *         - label (string)
  *             Position of the label. 'inline', 'above' and 'hidden' are the
  *             values recognized by the default 'field' theme implementation.
  *         - type (string)
- *             The type of the display formatter to use for the field in
- *             this context.
+ *             The type of the display formatter, or 'hidden' for no display.
  *         - settings (array)
  *             A sub-array of key/value pairs of display options specific to
- *             the display formatter used in this context.
+ *             the formatter.
  *         - module (string, read-only)
  *             The name of the module which implements the display formatter.
- *     - example_context_2
+ *     - teaser
  *         - ...
+ *     - other_build_mode
+ *        - ...
  *
  * TODO D7 : document max length for field types, widget types,
  * formatter names...
@@ -531,22 +532,22 @@ function _field_write_instance($instance, $update = FALSE) {
   $instance['widget']['module'] = $widget_module;
   $instance['widget']['active'] = $widget_active;
 
-  // Make sure there is at least display info for the 'full' context.
+  // Make sure there is at least display info for the 'full' build mode.
   $instance['display'] += array(
     'full' => array(),
   );
-  // Set default display settings for each context.
-  foreach ($instance['display'] as $context => $display) {
-    $instance['display'][$context] += array(
+  // Set default display settings for each build mode.
+  foreach ($instance['display'] as $build_mode => $display) {
+    $instance['display'][$build_mode] += array(
       'label' => 'above',
       // TODO: what if no 'default_formatter' specified ?
       'type' => $field_type['default_formatter'],
       'settings' => array(),
     );
-    $formatter_type = field_info_formatter_types($instance['display'][$context]['type']);
+    $formatter_type = field_info_formatter_types($instance['display'][$build_mode]['type']);
     // TODO : 'hidden' will raise PHP warnings.
-    $instance['display'][$context]['module'] = $formatter_type['module'];
-    $instance['display'][$context]['settings'] += field_info_formatter_settings($instance['display'][$context]['type']);
+    $instance['display'][$build_mode]['module'] = $formatter_type['module'];
+    $instance['display'][$build_mode]['settings'] += field_info_formatter_settings($instance['display'][$build_mode]['type']);
   }
 
   // The serialized 'data' column contains everything from $instance that does
