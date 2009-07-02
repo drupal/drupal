@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.16 2009/06/24 18:16:38 dries Exp $
+// $Id: field.crud.inc,v 1.17 2009/07/02 20:19:48 dries Exp $
 
 /**
  * @file
@@ -273,6 +273,9 @@ function field_create_field($field) {
   // Clear caches
   field_cache_clear(TRUE);
 
+  // Invoke external hooks after the cache is cleared for API consistency.
+  module_invoke_all('field_create_field', $field);
+  
   return $field;
 }
 

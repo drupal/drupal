@@ -1,5 +1,5 @@
 <?php
-// $Id: field.test,v 1.28 2009/06/24 18:16:38 dries Exp $
+// $Id: field.test,v 1.29 2009/07/02 20:19:48 dries Exp $
 
 /**
  * @file
@@ -1320,8 +1320,10 @@ class FieldCrudTestCase extends DrupalWebTestCase {
       'field_name' => 'field_2',
       'type' => 'test_field',
     );
+    field_test_memorize();
     $field_definition = field_create_field($field_definition);
-
+    $mem = field_test_memorize();
+    $this->assertIdentical($mem['field_test_field_create_field'][0][0], $field_definition, 'hook_field_create_field() called with correct arguments.');
     $field = field_read_field($field_definition['field_name']);
 
     // Ensure that basic properties are preserved.
