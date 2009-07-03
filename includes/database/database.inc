@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.57 2009/07/01 08:11:27 dries Exp $
+// $Id: database.inc,v 1.58 2009/07/03 04:36:50 dries Exp $
 
 /**
  * @file
@@ -2019,23 +2019,6 @@ function db_escape_table($table) {
 function update_sql($sql) {
   $result = Database::getConnection()->query($sql);
   return array('success' => $result !== FALSE, 'query' => check_plain($sql));
-}
-
-/**
- * Generate placeholders for an array of query arguments of a single type.
- *
- * Given a Schema API field type, return correct %-placeholders to
- * embed in a query
- *
- * @todo This may be possible to remove in favor of db_select().
- * @param $arguments
- *   An array with at least one element.
- * @param $type
- *   The Schema API type of a field (e.g. 'int', 'text', or 'varchar').
- */
-function db_placeholders($arguments, $type = 'int') {
-  $placeholder = db_type_placeholder($type);
-  return implode(',', array_fill(0, count($arguments), $placeholder));
 }
 
 /**
