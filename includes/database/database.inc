@@ -184,16 +184,6 @@
 abstract class DatabaseConnection extends PDO {
 
   /**
-   * Reference to the last statement that was executed.
-   *
-   * We only need this for the legacy db_affected_rows() call, which will be removed.
-   *
-   * @var DatabaseStatementInterface
-   * @todo Remove this variable.
-   */
-  public $lastStatement;
-
-  /**
    * The database target this connection is for.
    *
    * We need this information for later auditing and logging.
@@ -1681,7 +1671,6 @@ class DatabaseStatementBase extends PDOStatement implements DatabaseStatementInt
         $this->setFetchMode($options['fetch']);
       }
     }
-    $this->dbh->lastStatement = $this;
 
     $logger = $this->dbh->getLogger();
     if (!empty($logger)) {
@@ -2536,21 +2525,6 @@ function _db_query_process_args($query, $args, $options) {
 function db_last_insert_id($table, $field) {
   $sequence_name = Database::getConnection()->makeSequenceName($table, $field);
   return Database::getConnection()->lastInsertId($sequence_name);
-}
-
-/**
- * Determine the number of rows changed by the preceding query.
- *
- * This may not work, actually, without some tricky temp code.
- *
- * @todo Remove this function when all queries have been ported to db_update().
- */
-function db_affected_rows() {
-  $statement = Database::getConnection()->lastStatement;
-  if (!$statement) {
-    return 0;
-  }
-  return $statement->rowCount();
 }
 
 /**

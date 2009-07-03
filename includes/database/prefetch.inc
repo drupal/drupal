@@ -154,7 +154,6 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
         $this->setFetchMode($options['fetch']);
       }
     }
-    $this->dbh->lastStatement = $this;
 
     $logger = $this->dbh->getLogger();
     if (!empty($logger)) {
