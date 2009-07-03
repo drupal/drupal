@@ -241,6 +241,7 @@ function aggregator_form_opml(&$form_state) {
   $form['remote'] = array(
     '#type' => 'textfield',
     '#title' => t('OPML Remote URL'),
+    '#maxlength' => 1024,
     '#description' => t('Enter the URL of an OPML file. This file will be downloaded and processed only once on submission of the form.'),
   );
   $form['refresh'] = array(
