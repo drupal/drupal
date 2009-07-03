@@ -2022,23 +2022,6 @@ function update_sql($sql) {
 }
 
 /**
- * Generate placeholders for an array of query arguments of a single type.
- *
- * Given a Schema API field type, return correct %-placeholders to
- * embed in a query
- *
- * @todo This may be possible to remove in favor of db_select().
- * @param $arguments
- *   An array with at least one element.
- * @param $type
- *   The Schema API type of a field (e.g. 'int', 'text', or 'varchar').
- */
-function db_placeholders($arguments, $type = 'int') {
-  $placeholder = db_type_placeholder($type);
-  return implode(',', array_fill(0, count($arguments), $placeholder));
-}
-
-/**
  * Wraps the given table.field entry with a DISTINCT(). The wrapper is added to
  * the SELECT list entry of the given query and the resulting query is returned.
  * This function only applies the wrapper if a DISTINCT doesn't already exist in
