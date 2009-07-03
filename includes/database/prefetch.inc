@@ -1,5 +1,5 @@
 <?php
-// $Id: prefetch.inc,v 1.5 2009/04/20 20:02:30 dries Exp $
+// $Id: prefetch.inc,v 1.6 2009/07/03 10:57:46 dries Exp $
 
 /**
  * @file
@@ -154,7 +154,6 @@ class DatabaseStatementPrefetch implements Iterator, DatabaseStatementInterface 
         $this->setFetchMode($options['fetch']);
       }
     }
-    $this->dbh->lastStatement = $this;
 
     $logger = $this->dbh->getLogger();
     if (!empty($logger)) {

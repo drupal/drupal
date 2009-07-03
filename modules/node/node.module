@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1077 2009/07/02 04:27:23 webchick Exp $
+// $Id: node.module,v 1.1078 2009/07/03 10:57:46 dries Exp $
 
 /**
  * @file
@@ -522,11 +522,10 @@ function node_type_delete($type) {
  *   The number of nodes whose node type field was modified.
  */
 function node_type_update_nodes($old_type, $type) {
-  db_update('node')
+  return db_update('node')
     ->fields(array('type' => $type))
     ->condition('type', $old_type)
     ->execute();
-  return db_affected_rows();
 }
 
 /**
