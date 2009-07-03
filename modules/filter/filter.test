@@ -399,6 +399,15 @@ class FilterTestCase extends DrupalWebTestCase {
 
     $f = filter_xss("\xc0aaa");
     $this->assertEqual($f, '', t('HTML filter -- overlong UTF-8 sequences.'));
+
+    $f = filter_xss("Who&#039;s Online");
+    $this->assertNormalized($f, "who's online", t('HTML filter -- html entity number'));
+
+    $f = filter_xss("Who&amp;#039;s Online");
+    $this->assertNormalized($f, "who&#039;s online", t('HTML filter -- encoded html entity number'));
+
+    $f = filter_xss("Who&amp;amp;#039; Online");
+    $this->assertNormalized($f, "who&amp;#039; online", t('HTML filter -- double encoded html entity number'));
   }
 
   /**

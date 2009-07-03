@@ -1359,12 +1359,12 @@ function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 
   // Defuse all HTML entities
   $string = str_replace('&', '&amp;', $string);
   // Change back only well-formed entities in our whitelist
-  // Named entities
-  $string = preg_replace('/&amp;([A-Za-z][A-Za-z0-9]*;)/', '&\1', $string);
   // Decimal numeric entities
   $string = preg_replace('/&amp;#([0-9]+;)/', '&#\1', $string);
   // Hexadecimal numeric entities
   $string = preg_replace('/&amp;#[Xx]0*((?:[0-9A-Fa-f]{2})+;)/', '&#x\1', $string);
+  // Named entities
+  $string = preg_replace('/&amp;([A-Za-z][A-Za-z0-9]*;)/', '&\1', $string);
 
   return preg_replace_callback('%
     (
