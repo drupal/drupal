@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.27 2009/06/20 08:02:29 webchick Exp $
+// $Id: system.js,v 1.28 2009/07/03 19:21:55 dries Exp $
 (function ($) {
 
 /**
@@ -92,7 +92,7 @@ Drupal.behaviors.dateTime = {
     // Attach keyup handler to custom format inputs.
     $('input.custom-format:not(.date-time-processed)', context).addClass('date-time-processed').keyup(function () {
       var input = $(this);
-      var url = settings.dateTime.lookup +(settings.dateTime.lookup.match(/\?q=/) ? '&format=' : '?format=') + Drupal.encodeURIComponent(input.val());
+      var url = settings.dateTime.lookup + (settings.dateTime.lookup.match(/\?q=/) ? '&format=' : '?format=') + encodeURIComponent(input.val());
       $.getJSON(url, function (data) {
         $('div.description span', input.parent()).html(data);
       });

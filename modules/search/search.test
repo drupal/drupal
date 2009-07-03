@@ -1,5 +1,5 @@
 <?php
-// $Id: search.test,v 1.23 2009/06/12 08:39:38 dries Exp $
+// $Id: search.test,v 1.24 2009/07/03 19:21:54 dries Exp $
 
 // The search index can contain different types of content. Typically the type is 'node'.
 // Here we test with _test_ and _test2_ as the type.
@@ -266,11 +266,11 @@ class SearchAdvancedSearchForm extends DrupalWebTestCase {
     $this->assertNotEqual($dummy_title, $this->node->title, t("Dummy title doens't equal node title"));
 
     // Search for the dummy title with a GET query.
-    $this->drupalGet('search/node/' . drupal_urlencode($dummy_title));
+    $this->drupalGet('search/node/' . $dummy_title);
     $this->assertNoText($this->node->title, t('Page node is not found with dummy title.'));
 
     // Search for the title of the node with a GET query.
-    $this->drupalGet('search/node/' . drupal_urlencode($this->node->title));
+    $this->drupalGet('search/node/' . $this->node->title);
     $this->assertText($this->node->title, t('Page node is found with GET query.'));
 
     // Search for the title of the node with a POST query.
