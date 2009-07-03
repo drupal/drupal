@@ -92,7 +92,7 @@ Drupal.behaviors.dateTime = {
     // Attach keyup handler to custom format inputs.
     $('input.custom-format:not(.date-time-processed)', context).addClass('date-time-processed').keyup(function () {
       var input = $(this);
-      var url = settings.dateTime.lookup +(settings.dateTime.lookup.match(/\?q=/) ? '&format=' : '?format=') + Drupal.encodeURIComponent(input.val());
+      var url = settings.dateTime.lookup + (settings.dateTime.lookup.match(/\?q=/) ? '&format=' : '?format=') + encodeURIComponent(input.val());
       $.getJSON(url, function (data) {
         $('div.description span', input.parent()).html(data);
       });

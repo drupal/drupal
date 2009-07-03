@@ -233,7 +233,7 @@ function drupal_query_string_encode($query, $exclude = array(), $parent = '') {
   $params = array();
 
   foreach ($query as $key => $value) {
-    $key = drupal_urlencode($key);
+    $key = rawurlencode($key);
     if ($parent) {
       $key = $parent . '[' . $key . ']';
     }
@@ -246,7 +246,7 @@ function drupal_query_string_encode($query, $exclude = array(), $parent = '') {
       $params[] = drupal_query_string_encode($value, $exclude, $key);
     }
     else {
-      $params[] = $key . '=' . drupal_urlencode($value);
+      $params[] = $key . '=' . rawurlencode($value);
     }
   }
 
@@ -1958,8 +1958,8 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
  * @param $options
  *   An associative array of additional options, with the following keys:
  *   - 'query'
- *       A query string to append to the link, or an array of query key/value
- *       properties.
+ *       A URL-encoded query string to append to the link, or an array of query
+ *       key/value-pairs without any URL-encoding.
  *   - 'fragment'
  *       A fragment identifier (or named anchor) to append to the link.
  *       Do not include the '#' character.
@@ -2063,7 +2063,7 @@ function url($path = NULL, array $options = array()) {
 
   $base = $options['absolute'] ? $options['base_url'] . '/' : base_path();
   $prefix = empty($path) ? rtrim($options['prefix'], '/') : $options['prefix'];
-  $path = drupal_urlencode($prefix . $path);
+  $path = drupal_encode_path($prefix . $path);
 
   if (variable_get('clean_url', '0')) {
     // With Clean URLs.
@@ -3168,11 +3168,13 @@ function drupal_json($var = NULL) {
  *   characters are double escaped so PHP will still see the encoded version.
  * - With clean URLs, Apache changes '//' to '/', so every second slash is
  *   double escaped.
+ * - This function should only be used on paths, not on query string arguments,
+ *   otherwise unwanted double encoding will occur.
  *
  * @param $text
  *   String to encode
  */
-function drupal_urlencode($text) {
+function drupal_encode_path($text) {
   if (variable_get('clean_url', '0')) {
     return str_replace(array('%2F', '%26', '%23', '//'),
                         array('/', '%2526', '%2523', '/%252F'),

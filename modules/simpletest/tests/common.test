@@ -8,8 +8,8 @@ class CommonLUnitTest extends DrupalUnitTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Tests for the l() function'),
-      'description' => t('Confirm that url() works correctly with various input.'),
+      'name' => t('URL generation tests'),
+      'description' => t('Confirm that url(), drupal_query_string_encode(), and l() work correctly with various input.'),
       'group' => t('System'),
     );
   }
@@ -22,8 +22,18 @@ class CommonLUnitTest extends DrupalUnitTestCase {
     $path = "<SCRIPT>alert('XSS')</SCRIPT>";
     $link = l($text, $path);
     $sanitized_path = check_url(url($path));
-    $this->assertTrue(strpos($link, $sanitized_path) != FALSE, t('XSS attack @path was filtered', array('@path' => $path)));
+    $this->assertTrue(strpos($link, $sanitized_path) !== FALSE, t('XSS attack @path was filtered', array('@path' => $path)));
   }
+
+  /**
+    * Test drupal_query_string_encode().
+    */
+   function testDrupalQueryStringEncode() {
+     $this->assertEqual(drupal_query_string_encode(array('a' => ' &#//+%20@۞')), 'a=%20%26%23%2F%2F%2B%2520%40%DB%9E', t('Value was properly encoded.'));
+     $this->assertEqual(drupal_query_string_encode(array(' &#//+%20@۞' => 'a')), '%20%26%23%2F%2F%2B%2520%40%DB%9E=a', t('Key was properly encoded.'));
+     $this->assertEqual(drupal_query_string_encode(array('a' => '1', 'b' => '2', 'c' => '3'), array('b')), 'a=1&c=3', t('Value was properly excluded.'));
+     $this->assertEqual(drupal_query_string_encode(array('a' => array('b' => '2', 'c' => '3')), array('b', 'a[c]')), 'a[b]=2', t('Nested array was properly encoded.'));
+   }
 }
 
 class CommonSizeTestCase extends DrupalUnitTestCase {

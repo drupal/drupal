@@ -266,11 +266,11 @@ class SearchAdvancedSearchForm extends DrupalWebTestCase {
     $this->assertNotEqual($dummy_title, $this->node->title, t("Dummy title doens't equal node title"));
 
     // Search for the dummy title with a GET query.
-    $this->drupalGet('search/node/' . drupal_urlencode($dummy_title));
+    $this->drupalGet('search/node/' . $dummy_title);
     $this->assertNoText($this->node->title, t('Page node is not found with dummy title.'));
 
     // Search for the title of the node with a GET query.
-    $this->drupalGet('search/node/' . drupal_urlencode($this->node->title));
+    $this->drupalGet('search/node/' . $this->node->title);
     $this->assertText($this->node->title, t('Page node is found with GET query.'));
 
     // Search for the title of the node with a POST query.
