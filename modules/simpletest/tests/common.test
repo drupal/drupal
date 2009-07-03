@@ -891,6 +891,11 @@ class DrupalErrorCollectionUnitTest extends DrupalWebTestCase {
  */
 class FormatDateUnitTest extends DrupalWebTestCase {
 
+  /**
+   * Arbitrary langcode for a custom language.
+   */
+  const LANGCODE = 'xx';
+
   public static function getInfo() {
     return array(
       'name' => t('Format date'),
@@ -905,37 +910,47 @@ class FormatDateUnitTest extends DrupalWebTestCase {
     variable_set('date_format_long', 'l, j. F Y - G:i');
     variable_set('date_format_medium', 'j. F Y - G:i');
     variable_set('date_format_short', 'Y M j - g:ia');
-    variable_set('locale_custom_strings_es', array(
+    variable_set('locale_custom_strings_' . self::LANGCODE, array(
       '' => array('Sunday' => 'domingo'),
       'Long month name' => array('March' => 'marzo'),
     ));
     $this->refreshVariables();
   }
 
+  /**
+   * Tests for the format_date() function.
+   */
   function testFormatDate() {
     global $user, $language;
 
     $timestamp = strtotime('2007-03-26T00:00:00+00:00');
     $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', 'en'), 'Sunday, 25-Mar-07 17:00:00 PDT', t('Test all parameters.'));
-    $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', 'es'), 'domingo, 25-Mar-07 17:00:00 PDT', t('Test translated format.'));
-    $this->assertIdentical(format_date($timestamp, 'custom', '\\l, d-M-y H:i:s T', 'America/Los_Angeles', 'es'), 'l, 25-Mar-07 17:00:00 PDT', t('Test an escaped format string.'));
-    $this->assertIdentical(format_date($timestamp, 'custom', '\\\\l, d-M-y H:i:s T', 'America/Los_Angeles', 'es'), '\\domingo, 25-Mar-07 17:00:00 PDT', t('Test format containing backslash character.'));
+    $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'America/Los_Angeles', self::LANGCODE), 'domingo, 25-Mar-07 17:00:00 PDT', t('Test translated format.'));
+    $this->assertIdentical(format_date($timestamp, 'custom', '\\l, d-M-y H:i:s T', 'America/Los_Angeles', self::LANGCODE), 'l, 25-Mar-07 17:00:00 PDT', t('Test an escaped format string.'));
+    $this->assertIdentical(format_date($timestamp, 'custom', '\\\\l, d-M-y H:i:s T', 'America/Los_Angeles', self::LANGCODE), '\\domingo, 25-Mar-07 17:00:00 PDT', t('Test format containing backslash character.'));
+    $this->assertIdentical(format_date($timestamp, 'custom', '\\\\\\l, d-M-y H:i:s T', 'America/Los_Angeles', self::LANGCODE), '\\l, 25-Mar-07 17:00:00 PDT', t('Test format containing backslash followed by escaped format string.'));
     $this->assertIdentical(format_date($timestamp, 'custom', 'l, d-M-y H:i:s T', 'Europe/London', 'en'), 'Monday, 26-Mar-07 01:00:00 BST', t('Test a different time zone.'));
 
     // Create an admin user and add Spanish language.
     $admin_user = $this->drupalCreateUser(array('administer languages'));
     $this->drupalLogin($admin_user);
-    $this->drupalPost('admin/international/language/add', array('langcode' => 'es'), t('Add language'));
+    $edit = array(
+      'langcode' => self::LANGCODE,
+      'name' => self::LANGCODE,
+      'native' => self::LANGCODE,
+      'direction' => LANGUAGE_LTR,
+      'prefix' => self::LANGCODE,
+    );
+    $this->drupalPost('admin/international/language/add', $edit, t('Add custom language'));
 
     // Create a test user to carry out the tests.
     $test_user = $this->drupalCreateUser();
     $this->drupalLogin($test_user);
-    $edit = array('language' => 'es', 'mail' => $test_user->mail, 'timezone' => 'America/Los_Angeles');
+    $edit = array('language' => self::LANGCODE, 'mail' => $test_user->mail, 'timezone' => 'America/Los_Angeles');
     $this->drupalPost('user/' . $test_user->uid . '/edit', $edit, t('Save'));
 
     // Disable session saving as we are about to modify the global $user.
     drupal_save_session(FALSE);
-    
     // Save the original user and language and then replace it with the test user and language.
     $real_user = $user;
     $user = user_load($test_user->uid, TRUE);
