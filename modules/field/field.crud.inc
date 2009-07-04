@@ -261,7 +261,7 @@ function field_create_field($field) {
   // have its own column and is not automatically populated when the field is
   // read.
   $data = $field;
-  unset($data['columns'], $data['field_name'], $data['type'], $data['locked'], $data['module'], $data['active'], $data['deleted']);
+  unset($data['columns'], $data['field_name'], $data['type'], $data['locked'], $data['module'], $data['cardinality'], $data['active'], $data['deleted']);
   $field['data'] = $data;
 
   // Store the field and create the id.
