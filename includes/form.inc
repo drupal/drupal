@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.345 2009/07/04 14:57:22 dries Exp $
+// $Id: form.inc,v 1.346 2009/07/04 18:26:42 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2002,7 +2002,7 @@ function form_process_ahah($element) {
   // Adding the same javascript settings twice will cause a recursion error,
   // we avoid the problem by checking if the javascript has already been added.
   if ((isset($element['#ahah']['callback']) || isset($element['#ahah']['path'])) && isset($element['#ahah']['event']) && !isset($js_added[$element['#id']])) {
-    drupal_add_js('misc/jquery.form.js', array('weight' => JS_LIBRARY));
+    drupal_add_library('system', 'form');
     drupal_add_js('misc/ahah.js');
 
     $ahah_binding = array(
