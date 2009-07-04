@@ -183,6 +183,111 @@ function hook_js_alter(&$javascript) {
 }
 
 /**
+ * Registers JavaScript/CSS libraries associated with a module.
+ *
+ * Modules implementing this return an array of arrays. The key to each
+ * sub-array is the machine readable name of the library. Each library may
+ * contain the following items:
+ *
+ * - 'title': The human readable name of the library.
+ * - 'website': The URL of the library's web site.
+ * - 'version': A string specifying the version of the library; intentionally
+ *   not a float because a version like "1.2.3" is not a valid float. Use PHP's
+ *   version_compare() to compare different versions.
+ * - 'js': An array of JavaScript elements; each element's key is used as $data
+ *   argument, each element's value is used as $options array for
+ *   drupal_add_js(). To add library-specific (not module-specific) JavaScript
+ *   settings, the key may be skipped, the value must specify
+ *   'type' => 'setting', and the actual settings must be contained in a 'data'
+ *   element of the value.
+ * - 'css': Like 'js', an array of CSS elements passed to drupal_add_css().
+ * - 'dependencies': An array of libraries that are required for a library. Each
+ *   element is an array containing the module and name of the registered
+ *   library. Note that all dependencies for each dependent library will be
+ *   added when this library is added.
+ *
+ * Registered information for a library should contain re-usable data only.
+ * Module- or implementation-specific data and integration logic should be added
+ * separately.
+ *
+ * @return
+ *   An array defining libraries associated with a module.
+ *
+ * @see system_library()
+ * @see drupal_add_library()
+ * @see drupal_get_library()
+ */
+function hook_library() {
+  // Library One.
+  $libraries['library-1'] = array(
+    'title' => 'Library One',
+    'website' => 'http://example.com/library-1',
+    'version' => '1.2',
+    'js' => array(
+      drupal_get_path('module', 'my_module') . '/library-1.js' => array(),
+    ),
+    'css' => array(
+      drupal_get_path('module', 'my_module') . '/library-2.css' => array(
+        'type' => 'file',
+        'media' => 'screen',
+      ),
+    ),
+  );
+  // Library Two.
+  $libraries['library-2'] = array(
+    'title' => 'Library Two',
+    'website' => 'http://example.com/library-2',
+    'version' => '3.1-beta1',
+    'js' => array(
+      // JavaScript settings may use the 'data' key.
+      array(
+        'type' => 'setting',
+        'data' => array('library2' => TRUE),
+      ),
+    ),
+    'dependencies' => array(
+      // Require jQuery UI core by System module.
+      array('system' => 'ui'),
+      // Require our other library.
+      array('my_module', 'library-1'),
+      // Require another library.
+      array('other_module', 'library-3'),
+    ),
+  );
+  return $libraries;
+}
+
+/**
+ * Alters the JavaScript/CSS library registry.
+ *
+ * Allows certain, contributed modules to update libraries to newer versions
+ * while ensuring backwards compatibility. In general, such manipulations should
+ * only be done by designated modules, since most modules that integrate with a
+ * certain library also depend on the API of a certain library version.
+ *
+ * @param $libraries
+ *   The JavaScript/CSS libraries provided by $module. Keyed by internal library
+ *   name and passed by reference.
+ * @param $module
+ *   The name of the module that registered the libraries.
+ *
+ * @see hook_library()
+ */
+function hook_library_alter(&$libraries, $module) {
+  // Update Farbtastic to version 2.0.
+  if ($module == 'system' && isset($libraries['farbtastic'])) {
+    // Verify existing version is older than the one we are updating to.
+    if (version_compare($libraries['farbtastic']['version'], '2.0', '<')) {
+      // Update the existing Farbtastic to version 2.0.
+      $libraries['farbtastic']['version'] = '2.0';
+      $libraries['farbtastic']['js'] = array(
+        drupal_get_path('module', 'farbtastic_update') . '/farbtastic-2.0.js' => array(),
+      );
+    }
+  }
+}
+
+/**
  * Perform alterations before a page is rendered.
  *
  * Use this hook when you want to add, remove, or alter elements at the page

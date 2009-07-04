@@ -2002,7 +2002,7 @@ function form_process_ahah($element) {
   // Adding the same javascript settings twice will cause a recursion error,
   // we avoid the problem by checking if the javascript has already been added.
   if ((isset($element['#ahah']['callback']) || isset($element['#ahah']['path'])) && isset($element['#ahah']['event']) && !isset($js_added[$element['#id']])) {
-    drupal_add_js('misc/jquery.form.js', array('weight' => JS_LIBRARY));
+    drupal_add_library('system', 'form');
     drupal_add_js('misc/ahah.js');
 
     $ahah_binding = array(

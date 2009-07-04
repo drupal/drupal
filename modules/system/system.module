@@ -794,6 +794,359 @@ function system_menu() {
 }
 
 /**
+ * Implementation of hook_library().
+ */
+function system_library() {
+  // jQuery.
+  $libraries['jquery'] = array(
+    'title' => 'jQuery',
+    'website' => 'http://jquery.com',
+    'version' => '1.3.2',
+    'js' => array(
+      'misc/jquery.js' => array('weight' => JS_LIBRARY - 20),
+    ),
+  );
+
+  // jQuery Form Plugin.
+  $libraries['form'] = array(
+    'title' => 'jQuery Form Plugin',
+    'website' => 'http://malsup.com/jquery/form/',
+    'version' => '2.16',
+    'js' => array(
+      'misc/jquery.form.js' => array(),
+    ),
+  );
+
+  // Farbtastic.
+  $libraries['farbtastic'] = array(
+    'title' => 'Farbtastic',
+    'website' => 'http://code.google.com/p/farbtastic/',
+    'version' => '1.2',
+    'js' => array(
+      'misc/farbtastic/farbtastic.js' => array(),
+    ),
+    'css' => array(
+      'misc/farbtastic/farbtastic.css' => array('preprocess' => FALSE),
+    ),
+  );
+
+  // Cookie.
+  $libraries['cookie'] = array(
+    'title' => 'Cookie',
+    'website' => 'http://plugins.jquery.com/project/cookie',
+    'version' => '1.0',
+    'js' => array(
+      'misc/jquery.cookie.js' => array(),
+    ),
+  );
+
+  // jQuery UI.
+  $libraries['ui'] = array(
+    'title' => 'jQuery UI: Core',
+    'website' => 'http://jqueryui.com',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/ui.core.js' => array('weight' => JS_LIBRARY - 10),
+    ),
+    'css' => array(
+      'misc/ui/ui.core.css' => array(),
+      'misc/ui/ui.theme.css' => array(),
+    ),
+  );
+  $libraries['ui.accordion'] = array(
+    'title' => 'jQuery UI: Accordion',
+    'website' => 'http://jqueryui.com/demos/accordion/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/ui.accordion.js' => array(),
+    ),
+    'css' => array(
+      'misc/ui/ui.accordion.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'ui'),
+    ),
+  );
+  $libraries['ui.datepicker'] = array(
+    'title' => 'jQuery UI: Date Picker',
+    'website' => 'http://jqueryui.com/demos/datepicker/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/ui.datepicker.js' => array(),
+    ),
+    'css' => array(
+      'misc/ui/ui.datepicker.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'ui'),
+    ),
+  );
+  $libraries['ui.dialog'] = array(
+    'title' => 'jQuery UI: Dialog',
+    'website' => 'http://jqueryui.com/demos/dialog/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/ui.dialog.js' => array(),
+    ),
+    'css' => array(
+      'misc/ui/ui.dialog.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'ui'),
+    ),
+  );
+  $libraries['ui.draggable'] = array(
+    'title' => 'jQuery UI: Dialog',
+    'website' => 'http://jqueryui.com/demos/draggable/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/ui.draggable.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'ui'),
+    ),
+  );
+  $libraries['ui.droppable'] = array(
+    'title' => 'jQuery UI: Droppable',
+    'website' => 'http://jqueryui.com/demos/droppable/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/ui.droppable.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'ui'),
+      array('system', 'ui.draggable'),
+    ),
+  );
+  $libraries['ui.progressbar'] = array(
+    'title' => 'jQuery UI: Progress Bar',
+    'website' => 'http://jqueryui.com/demos/progressbar/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/ui.progressbar.js' => array(),
+    ),
+    'css' => array(
+      'misc/ui/ui.progressbar.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'ui'),
+    ),
+  );
+  $libraries['ui.resizable'] = array(
+    'title' => 'jQuery UI: Resizable',
+    'website' => 'http://jqueryui.com/demos/resizable/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/ui.resizable.js' => array(),
+    ),
+    'css' => array(
+      'misc/ui/ui.resizable.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'ui'),
+    ),
+  );
+  $libraries['ui.selectable'] = array(
+    'title' => 'jQuery UI: Selectable',
+    'website' => 'http://jqueryui.com/demos/selectable/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/ui.selectable.js' => array(),
+    ),
+    'css' => array(
+      'misc/ui/ui.selectable.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'ui'),
+    ),
+  );
+  $libraries['ui.slider'] = array(
+    'title' => 'jQuery UI: Slider',
+    'website' => 'http://jqueryui.com/demos/slider/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/ui.slider.js' => array(),
+    ),
+    'css' => array(
+      'misc/ui/ui.slider.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'ui'),
+    ),
+  );
+  $libraries['ui.sortable'] = array(
+    'title' => 'jQuery UI: Sortable',
+    'website' => 'http://jqueryui.com/demos/sortable/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/ui.sortable.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'ui'),
+    ),
+  );
+  $libraries['ui.tabs'] = array(
+    'title' => 'jQuery UI: Tabs',
+    'website' => 'http://jqueryui.com/demos/tabs/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/ui.tabs.js' => array(),
+    ),
+    'css' => array(
+      'misc/ui/ui.tabs.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'ui'),
+    ),
+  );
+  $libraries['effects'] = array(
+    'title' => 'jQuery UI: Effects',
+    'website' => 'http://jqueryui.com/demos/effect/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/effects.core.js' => array('weight' => JS_LIBRARY - 9),
+    ),
+    'dependencies' => array(
+      array('system', 'ui'),
+    ),
+  );
+  $libraries['effects.blind'] = array(
+    'title' => 'jQuery UI: Effects Blind',
+    'website' => 'http://jqueryui.com/demos/effect/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/effects.blind.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'effects'),
+    ),
+  );
+  $libraries['effects.bounce'] = array(
+    'title' => 'jQuery UI: Effects Bounce',
+    'website' => 'http://jqueryui.com/demos/effect/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/effects.bounce.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'effects'),
+    ),
+  );
+  $libraries['effects.clip'] = array(
+    'title' => 'jQuery UI: Effects Clip',
+    'website' => 'http://jqueryui.com/demos/effect/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/effects.clip.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'effects'),
+    ),
+  );
+  $libraries['effects.drop'] = array(
+    'title' => 'jQuery UI: Effects Drop',
+    'website' => 'http://jqueryui.com/demos/effect/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/effects.drop.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'effects'),
+    ),
+  );
+  $libraries['effects.explode'] = array(
+    'title' => 'jQuery UI: Effects Explode',
+    'website' => 'http://jqueryui.com/demos/effect/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/effects.explode.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'effects'),
+    ),
+  );
+  $libraries['effects.fold'] = array(
+    'title' => 'jQuery UI: Effects Fold',
+    'website' => 'http://jqueryui.com/demos/effect/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/effects.fold.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'effects'),
+    ),
+  );
+  $libraries['effects.highlight'] = array(
+    'title' => 'jQuery UI: Effects Fold',
+    'website' => 'http://jqueryui.com/demos/effect/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/effects.highlight.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'effects'),
+    ),
+  );
+  $libraries['effects.pulsate'] = array(
+    'title' => 'jQuery UI: Effects Pulsate',
+    'website' => 'http://jqueryui.com/demos/effect/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/effects.pulsate.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'effects'),
+    ),
+  );
+  $libraries['effects.scale'] = array(
+    'title' => 'jQuery UI: Effects Pulsate',
+    'website' => 'http://jqueryui.com/demos/effect/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/effects.scale.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'effects'),
+    ),
+  );
+  $libraries['effects.shake'] = array(
+    'title' => 'jQuery UI: Effects Shake',
+    'website' => 'http://jqueryui.com/demos/effect/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/effects.scale.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'effects'),
+    ),
+  );
+  $libraries['effects.slide'] = array(
+    'title' => 'jQuery UI: Effects Slide',
+    'website' => 'http://jqueryui.com/demos/effect/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/effects.slide.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'effects'),
+    ),
+  );
+  $libraries['effects.transfer'] = array(
+    'title' => 'jQuery UI: Effects Transfer',
+    'website' => 'http://jqueryui.com/demos/effect/',
+    'version' => '1.7.2',
+    'js' => array(
+      'misc/ui/effects.transfer.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'effects'),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
  * Retrieve a blocked IP address from the database.
  *
  * @param $iid integer

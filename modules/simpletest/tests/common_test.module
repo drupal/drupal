@@ -23,3 +23,35 @@ function common_test_theme() {
 function theme_common_test_foo($foo, $bar) {
   return $foo . $bar;
 }
+
+/**
+ * Implementation of hook_library_alter().
+ */
+function common_test_library_alter(&$libraries, $module) {
+  if ($module == 'system' && isset($libraries['farbtastic'])) {
+    // Change the title of Farbtastic to "Farbtastic: Altered Library".
+    $libraries['farbtastic']['title'] = 'Farbtastic: Altered Library';
+    // Make Farbtastic depend on jQuery Form to test library dependencies.
+    $libraries['farbtastic']['dependencies'][] = array('system', 'form');
+  }
+}
+
+/**
+ * Implementation of hook_library().
+ *
+ * Adds Farbtastic in a different version.
+ */
+function common_test_library() {
+  $libraries['farbtastic'] = array(
+    'title' => 'Custom Farbtastic Library',
+    'website' => 'http://code.google.com/p/farbtastic/',
+    'version' => '5.3',
+    'js' => array(
+      'misc/farbtastic/farbtastic.js' => array(),
+    ),
+    'css' => array(
+      'misc/farbtastic/farbtastic.css' => array(),
+    ),
+  );
+  return $libraries;
+}

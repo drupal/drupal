@@ -169,8 +169,7 @@ function color_scheme_form(&$form_state, $theme) {
   $info = color_get_info($theme);
 
   // Add Farbtastic color picker.
-  drupal_add_css('misc/farbtastic/farbtastic.css', array('preprocess' => FALSE));
-  drupal_add_js('misc/farbtastic/farbtastic.js', array('weight' => JS_LIBRARY));
+  drupal_add_library('system', 'farbtastic');
 
   // Add custom CSS and JS.
   drupal_add_css($base . '/color.css', array('preprocess' => FALSE));

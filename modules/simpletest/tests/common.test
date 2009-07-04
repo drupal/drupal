@@ -435,7 +435,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
   /**
    * Store configured value for JavaScript preprocessing.
    */
-  var $preprocess_js = NULL;
+  protected $preprocess_js = NULL;
 
   public static function getInfo() {
     return array(
@@ -447,14 +447,15 @@ class JavaScriptTestCase extends DrupalWebTestCase {
 
   function setUp() {
     // Enable Locale and SimpleTest in the test environment.
-    parent::setUp('locale', 'simpletest');
+    parent::setUp('locale', 'simpletest', 'common_test');
 
     // Disable preprocessing
     $this->preprocess_js = variable_get('preprocess_js', 0);
     variable_set('preprocess_js', 0);
 
-    // Reset drupal_add_js() before each test.
+    // Reset drupal_add_js() and drupal_add_library() statics before each test.
     drupal_static_reset('drupal_add_js');
+    drupal_static_reset('drupal_add_library');
   }
 
   function tearDown() {
@@ -562,7 +563,7 @@ class JavaScriptTestCase extends DrupalWebTestCase {
    * Test rendering the JavaScript with a file's weight above jQuery's.
    */
   function testRenderDifferentWeight() {
-    drupal_add_js('misc/collapse.js', array('weight' => JS_LIBRARY - 10));
+    drupal_add_js('misc/collapse.js', array('weight' => JS_LIBRARY - 21));
     $javascript = drupal_get_js();
     $this->assertTrue(strpos($javascript, 'misc/collapse.js') < strpos($javascript, 'misc/jquery.js'), t('Rendering a JavaScript file above jQuery.'));
   }
@@ -582,6 +583,58 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     // takes place.
     $javascript = drupal_get_js();
     $this->assertTrue(strpos($javascript, 'simpletest.js') < strpos($javascript, 'misc/tableselect.js'), t('Altering JavaScript weight through the alter hook.'));
+  }
+
+  /**
+   * Adds a library to the page and tests for both its JavaScript and its CSS.
+   */
+  function testLibraryRender() {
+    $result = drupal_add_library('system', 'farbtastic');
+    $this->assertTrue($result !== FALSE, t('Library was added without errors.'));
+    $scripts = drupal_get_js();
+    $styles = drupal_get_css();
+    $this->assertTrue(strpos($scripts, 'misc/farbtastic/farbtastic.js'), t('JavaScript of library was added to the page.'));
+    $this->assertTrue(strpos($styles, 'misc/farbtastic/farbtastic.css'), t('Stylesheet of library was added to the page.'));
+  }
+
+  /**
+   * Adds a JavaScript library to the page and alters it.
+   *
+   * @see common_test_library_alter()
+   */
+  function testLibraryAlter() {
+    // Verify that common_test altered the title of Farbtastic.
+    $library = drupal_get_library('system', 'farbtastic');
+    $this->assertEqual($library['title'], 'Farbtastic: Altered Library', t('Registered libraries were altered.'));
+
+    // common_test_library_alter() also added a dependency on jQuery Form.
+    drupal_add_library('system', 'farbtastic');
+    $scripts = drupal_get_js();
+    $this->assertTrue(strpos($scripts, 'misc/jquery.form.js'), t('Altered library dependencies are added to the page.'));
+  }
+
+  /**
+   * Tests that multiple modules can implement the same library.
+   *
+   * @see common_test_library()
+   */
+  function testLibraryNameConflicts() {
+    $farbtastic = drupal_get_library('common_test', 'farbtastic');
+    $this->assertEqual($farbtastic['title'], 'Custom Farbtastic Library', t('Alternative libraries can be added to the page.'));
+  }
+
+  /**
+   * Tests non-existing libraries.
+   */
+  function testLibraryUnknown() {
+    $result = drupal_get_library('unknown', 'unknown');
+    $this->assertFalse($result, t('Unknown library returned FALSE.'));
+    drupal_static_reset('drupal_get_library');
+
+    $result = drupal_add_library('unknown', 'unknown');
+    $this->assertFalse($result, t('Unknown library returned FALSE.'));
+    $scripts = drupal_get_js();
+    $this->assertTrue(strpos($scripts, 'unknown') === FALSE, t('Unknown library was not added to the page.'));
   }
 }
 
