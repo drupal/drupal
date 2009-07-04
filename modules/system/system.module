@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.718 2009/07/01 13:44:53 dries Exp $
+// $Id: system.module,v 1.719 2009/07/04 05:21:15 dries Exp $
 
 /**
  * @file
@@ -1464,6 +1464,7 @@ function _system_get_theme_data() {
         'footer' => 'Footer',
         'highlight' => 'Highlighted content',
         'help' => 'Help',
+        'page_top' => 'Page top',
       ),
       'description' => '',
       'features' => array(

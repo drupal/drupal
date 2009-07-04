@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.23 2009/06/18 21:19:02 webchick Exp $
+// $Id: page.tpl.php,v 1.24 2009/07/04 05:21:15 dries Exp $
 
 /**
  * @file
@@ -104,6 +104,11 @@
 </head>
 <body class="<?php print $classes; ?>">
 
+  <?php if ($page_top): ?>
+    <div id="page-top-region" class="clearfix">
+      <?php print $page_top; ?>
+    </div>
+  <?php endif; ?>
   <div id="page-wrapper"><div id="page">
 
     <div id="header"><div class="section clearfix">
