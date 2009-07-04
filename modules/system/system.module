@@ -112,6 +112,11 @@ function system_help($path, $arg) {
         return '<p>' . t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') . '</p>';
       }
       break;
+    case 'admin/settings/maintenance-mode':
+      global $user;
+      if ($user->uid == 1) {
+        return '<p>' . t('If you are upgrading to a newer version of Drupal or upgrading contributed modules or themes you may need to run !update-php.', array('!update-php' => l('update.php', 'update.php'))) . '</p>';
+      }
     case 'admin/settings/actions':
     case 'admin/settings/actions/manage':
       $output = '<p>' . t('Actions are individual tasks that the system can do, such as unpublishing a piece of content or banning a user. Modules, such as the trigger module, can fire these actions when certain system events happen; for example, when a new post is added or when a user logs in. Modules may also provide additional actions.') . '</p>';
@@ -867,7 +872,7 @@ function system_filetransfer_backends() {
 
 /**
  *  Helper function to return a form for configuring a filetransfer backend.
- * 
+ *
  * @param string $filetransfer_backend_name
  *   The name of the backend to return a form for.
  *
@@ -880,7 +885,7 @@ function system_get_filetransfer_settings_form($filetransfer_backend_name, $defa
   
   foreach ($form as $name => &$element) {
     if (isset($defaults[$name])) {
-      $element['#default_value'] = $defaults[$name];  
+      $element['#default_value'] = $defaults[$name];
     }
   }
   return $form;
@@ -963,8 +968,8 @@ function system_init() {
   // server for that user temporarily to allow the slave server to catch up.
   // That way, that user will see their changes immediately while for other
   // users we still get the benefits of having a slave server, just with slightly
-  // stale data.  Code that wants to disable the slave server should use the 
-  // db_set_ignore_slave() function to set $_SESSION['ignore_slave_server'] to 
+  // stale data.  Code that wants to disable the slave server should use the
+  // db_set_ignore_slave() function to set $_SESSION['ignore_slave_server'] to
   // the timestamp after which the slave can be re-enabled.
   if (isset($_SESSION['ignore_slave_server'])) {
     if ($_SESSION['ignore_slave_server'] >= REQUEST_TIME) {
@@ -1303,7 +1308,7 @@ function system_get_files_database(&$files, $type) {
 
 /**
  * Updates the records in the system table based on the files array.
- * 
+ *
  * @param $files
  *   An array of files.
  * @param $type
@@ -2657,7 +2662,7 @@ function system_image_toolkits() {
  *
  * @param $overwrite boolean
  *   Defaults to TRUE, will overwrite existing files of the same name.
- *  
+ *
  * @return
  *   On success the address the files was saved to, FALSE on failure.
  */
