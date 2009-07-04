@@ -194,7 +194,18 @@ $update_free_access = FALSE;
  * See drupal_initialize_variables() in includes/bootstrap.inc for required
  * runtime settings and the .htaccess file for non-runtime settings. Settings
  * defined there should not be duplicated here so as to avoid conflict issues.
- *
+ */
+
+/**
+ * Some distributions of Linux (most notably Debian) ship their PHP
+ * installations with garbage collection (gc) disabled. Since Drupal depends on
+ * PHP's garbage collection for clearing sessions, ensure that garbage
+ * collection occurs by using the most common settings.
+ */
+ini_set('session.gc_probability', 1);
+ini_set('session.gc_divisor', 100);
+
+/**
  * Set session lifetime (in seconds), i.e. the time from the user's last visit
  * to the active session may be deleted by the session garbage collector. When
  * a session is deleted, authenticated users are logged out, and the contents
