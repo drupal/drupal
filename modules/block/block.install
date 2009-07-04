@@ -235,3 +235,42 @@ function block_update_7000() {
   $ret[] = update_sql("UPDATE {system} SET weight = -5 WHERE name = 'block'");
   return $ret;
 }
+
+
+/**
+ * Add the block_node_type table.
+ */
+function block_update_7001() {
+  $ret = array();
+
+  $schema['block_node_type'] = array(
+    'description' => 'Sets up display criteria for blocks based on content types',
+    'fields' => array(
+      'module' => array(
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+        'description' => "The block's origin module, from {block}.module.",
+      ),
+      'delta' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => "The block's unique delta within module, from {block}.delta.",
+      ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => "The machine-readable name of this type from {node_type}.type.",
+      ),
+    ),
+    'primary key' => array('module', 'delta', 'type'),
+    'indexes' => array(
+      'type' => array('type'),
+    ),
+  );
+
+  db_create_table($ret, 'block_node_type', $schema['block_node_type']);
+  return $ret;
+}
