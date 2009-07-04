@@ -552,7 +552,7 @@ function drupal_http_request($url, array $options = array()) {
   // user-agent is used to ensure that multiple testing sessions running at the
   // same time won't interfere with each other as they would if the database
   // prefix were stored statically in a file or database variable.
-  if (preg_match("/simpletest\d+/", $db_prefix, $matches)) {
+  if (is_string($db_prefix) && preg_match("/^simpletest\d+/", $db_prefix, $matches)) {
     $options['headers']['User-Agent'] = $matches[0];
   }
 
@@ -809,7 +809,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
 
   // When running inside the testing framework, we relay the errors
   // to the tested site by the way of HTTP headers.
-  if (preg_match("/^simpletest\d+/", $_SERVER['HTTP_USER_AGENT']) && !headers_sent() && (!defined('SIMPLETEST_COLLECT_ERRORS') || SIMPLETEST_COLLECT_ERRORS)) {
+  if (isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/^simpletest\d+$/", $_SERVER['HTTP_USER_AGENT']) && !headers_sent() && (!defined('SIMPLETEST_COLLECT_ERRORS') || SIMPLETEST_COLLECT_ERRORS)) {
     // $number does not use drupal_static as it should not be reset
     // as it uniquely identifies each PHP error.
     static $number = 0;
