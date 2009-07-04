@@ -1,6 +1,6 @@
-/* $Id: dblog.css,v 1.5 2008/09/02 16:56:33 dries Exp $ */
+/* $Id: dblog.css,v 1.6 2009/07/04 14:57:22 dries Exp $ */
 
-#edit-type-wrapper, #edit-severity-wrapper {
+.form-item-type-wrapper, .form-item-severity-wrapper {
   float: left; /* LTR */
   padding-right: .8em; /* LTR */
   margin: 0.1em;

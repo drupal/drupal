@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.344 2009/06/29 17:27:58 dries Exp $
+// $Id: form.inc,v 1.345 2009/07/04 14:57:22 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2610,11 +2610,7 @@ function theme_form_element($element) {
     $class[] = strtr($element['#name'], array('_' => '-', '[' => '-', ']' => '')) . '-wrapper';
   }
 
-  $output = '<div class="' . implode(' ', $class) . '"';
-  if (!empty($element['#id'])) {
-    $output .= ' id="' . $element['#id'] . '-wrapper"';
-  }
-  $output .= ">\n";
+  $output = '<div class="' . implode(' ', $class) . '">' . "\n";
   $required = !empty($element['#required']) ? '<span class="form-required" title="' . $t('This field is required.') . '">*</span>' : '';
 
   if (!empty($element['#title']) && empty($element['#form_element_skip_title'])) {
