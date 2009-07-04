@@ -2078,6 +2078,8 @@ function system_update_7021() {
  * Add the queue tables.
  */
 function system_update_7022() {
+  $ret = array();
+
   $schema['queue'] = array(
     'description' => 'Stores items in queues.',
     'fields' => array(
