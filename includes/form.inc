@@ -2610,11 +2610,7 @@ function theme_form_element($element) {
     $class[] = strtr($element['#name'], array('_' => '-', '[' => '-', ']' => '')) . '-wrapper';
   }
 
-  $output = '<div class="' . implode(' ', $class) . '"';
-  if (!empty($element['#id'])) {
-    $output .= ' id="' . $element['#id'] . '-wrapper"';
-  }
-  $output .= ">\n";
+  $output = '<div class="' . implode(' ', $class) . '">' . "\n";
   $required = !empty($element['#required']) ? '<span class="form-required" title="' . $t('This field is required.') . '">*</span>' : '';
 
   if (!empty($element['#title']) && empty($element['#form_element_skip_title'])) {

@@ -1,6 +1,6 @@
 /* $Id$ */
 
-#edit-type-wrapper, #edit-severity-wrapper {
+.form-item-type-wrapper, .form-item-severity-wrapper {
   float: right;
   padding-right: 0;
   padding-left: .8em;

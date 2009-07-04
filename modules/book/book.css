@@ -38,7 +38,7 @@
 html.js #edit-book-pick-book {
   display: none;
 }
-#edit-book-bid-wrapper .description {
+.form-item-book-bid-wrapper .description {
   clear: both;
 }
 #book-admin-edit select {
