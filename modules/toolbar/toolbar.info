@@ -1,0 +1,8 @@
+; $Id$
+name = Toolbar
+description = Toolbar exposing the top level administration menu items
+core = 7.x
+package = Core
+version = VERSION
+files[] = toolbar.install
+files[] = toolbar.module

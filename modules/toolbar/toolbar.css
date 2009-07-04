@@ -1,0 +1,177 @@
+/* $Id$ */
+
+body.toolbar {
+  padding-top: 30px;
+}
+
+body.toolbar-shortcuts {
+  padding-top: 80px;
+}
+
+/**
+ * Aggressive resets so we can achieve a consistent look in hostile CSS
+ * environments.
+ */
+div#toolbar,
+div#toolbar * {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  line-height: inherit;
+  text-align: left;
+  list-style: none;
+}
+
+/**
+ * Base styles.
+ */
+div#toolbar {
+  font: normal 11px/20px "Lucida Grande", Verdana, sans-serif;
+  background: #666;
+  color: #ccc;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 100;
+}
+
+div#toolbar .collapsed {
+  display: none;
+}  
+
+div#toolbar div.shadow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -15px;
+  height: 15px;
+  background: url(toolbar.png) 0 -85px repeat-x;
+}
+
+div#toolbar a {
+  text-decoration: none;
+  color: #fff;
+}
+
+div#toolbar ul li,
+div#toolbar ul li a {
+  float: left;
+}
+
+/**
+ * Administration menu.
+ */
+div#toolbar div.toolbar-menu {
+  background: url(toolbar.png) 0 -20px repeat-x;
+  height: 25px;
+  line-height: 20px;
+  padding: 5px 10px 0;
+  overflow: hidden;
+  position: relative;
+}
+
+div#toolbar div.toolbar-menu #toolbar-user {
+  position: absolute;
+  right: 35px;
+}
+
+div#toolbar div.toolbar-menu #toolbar-menu {
+  position: absolute;
+  left: 10px;
+}
+
+div#toolbar div.toolbar-menu span.toggle {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  background: url(toolbar.png) 0 -60px no-repeat;
+  text-indent: -9999px;
+  overflow: hidden;
+  width: 25px;
+  height: 25px;
+}
+
+div#toolbar div.toolbar-menu span.toggle-active {
+  background-position:  -25px -60px;
+}
+
+div#toolbar div.toolbar-menu ul li a {
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  padding: 0 10px;
+}
+
+div#toolbar div.toolbar-menu ul li a:hover {
+  background: #444;
+}
+
+div#toolbar div.toolbar-menu ul li a.active:hover,
+div#toolbar div.toolbar-menu ul li a.active {
+  text-shadow: #333 0 1px 0;
+  background: url(toolbar.png) 0 0 repeat-x;
+}
+
+/**
+ * Administration shortcuts.
+ */
+div#toolbar div.toolbar-shortcuts {
+  position: relative;
+  padding: 0 10px;
+}
+
+div#toolbar div.toolbar-shortcuts ul {
+  padding: 5px 0;
+  height: 40px;
+  line-height: 30px;
+  overflow: hidden;
+  float: left;
+}
+
+div#toolbar div.toolbar-shortcuts ul li a {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  padding: 5px 10px 5px 5px;
+  margin-right: 5px;
+}
+
+div#toolbar div.toolbar-shortcuts ul li a:hover {
+  background: #555;
+}
+
+div#toolbar div.toolbar-shortcuts ul li a.active:hover,
+div#toolbar div.toolbar-shortcuts ul li a.active {
+  background: url(toolbar.png) 0 -20px repeat-x;
+}
+
+div#toolbar div.toolbar-shortcuts span.icon {
+  float: left;
+  background: #444;
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+/**
+ * IE 6 Fixes.
+ *
+ * Since IE 6 has severe problems interpreting fixed positioning, we downgrade
+ * the behavior of the admin toolbar entirely to static positioning.
+ */
+* html body.toolbar,
+* html body.toolbar-shortcuts {
+  padding-top: 0;
+}
+
+* html div#toolbar {
+  position: static;
+}
+
+* html div#toolbar div.shadow {
+  display: none;
+}
