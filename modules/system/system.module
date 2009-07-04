@@ -1464,6 +1464,7 @@ function _system_get_theme_data() {
         'footer' => 'Footer',
         'highlight' => 'Highlighted content',
         'help' => 'Help',
+        'page_top' => 'Page top',
       ),
       'description' => '',
       'features' => array(
