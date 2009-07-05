@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.413 2009/06/07 02:27:26 dries Exp $
+// $Id: aggregator.module,v 1.414 2009/07/05 18:00:07 dries Exp $
 
 /**
  * @file
@@ -270,9 +270,9 @@ function _aggregator_has_categories() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function aggregator_perm() {
+function aggregator_permission() {
   return array(
     'administer news feeds' => array(
       'title' => t('Administer news feeds'),

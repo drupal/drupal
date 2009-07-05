@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.243 2009/07/02 04:27:23 webchick Exp $
+// $Id: upload.module,v 1.244 2009/07/05 18:00:11 dries Exp $
 
 /**
  * @file
@@ -40,9 +40,9 @@ function upload_theme() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function upload_perm() {
+function upload_permission() {
   return array(
     'upload files' => array(
       'title' => t('Upload files'),

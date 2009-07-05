@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.498 2009/07/02 04:27:22 webchick Exp $
+// $Id: book.module,v 1.499 2009/07/05 18:00:07 dries Exp $
 
 /**
  * @file
@@ -37,9 +37,9 @@ function book_theme() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function book_perm() {
+function book_permission() {
   return array(
     'administer book outlines' => array(
       'title' => t('Administer book outlines'),

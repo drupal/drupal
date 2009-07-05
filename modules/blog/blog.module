@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.326 2009/07/02 04:27:22 webchick Exp $
+// $Id: blog.module,v 1.327 2009/07/05 18:00:07 dries Exp $
 
 /**
  * @file
@@ -20,9 +20,9 @@ function blog_node_info() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function blog_perm() {
+function blog_permission() {
   return node_list_permissions('blog');
 }
 

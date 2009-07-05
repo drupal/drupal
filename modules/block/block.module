@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.347 2009/07/01 08:04:19 dries Exp $
+// $Id: block.module,v 1.348 2009/07/05 18:00:07 dries Exp $
 
 /**
  * @file
@@ -105,9 +105,9 @@ function block_theme() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function block_perm() {
+function block_permission() {
   return array(
     'administer blocks' => array(
       'title' => t('Administer blocks'),

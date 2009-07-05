@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1078 2009/07/03 10:57:46 dries Exp $
+// $Id: node.module,v 1.1079 2009/07/05 18:00:09 dries Exp $
 
 /**
  * @file
@@ -1261,9 +1261,9 @@ function theme_node_log_message($log) {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function node_perm() {
+function node_permission() {
   $perms = array(
     'administer content types' => array(
       'title' => t('Administer content types'),

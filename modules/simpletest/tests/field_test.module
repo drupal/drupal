@@ -1,13 +1,13 @@
 <?php
-// $Id: field_test.module,v 1.10 2009/07/02 20:19:48 dries Exp $
+// $Id: field_test.module,v 1.11 2009/07/05 18:00:10 dries Exp $
 
 define('FIELD_TEST_ELEMENT_ID', 1);
 define('FIELD_TEST_BUNDLE', 'test_bundle');
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function field_test_perm() {
+function field_test_permission() {
   $perms = array(
     'access field_test content' => array(
       'title' => t('Access field_test content'),

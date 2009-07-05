@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.46 2009/07/04 18:26:42 webchick Exp $
+// $Id: system.api.php,v 1.47 2009/07/05 18:00:10 dries Exp $
 
 /**
  * @file
@@ -668,7 +668,7 @@ function hook_system_info_alter(&$info, $file) {
  *
  * For a detailed usage example, see page_example.module.
  */
-function hook_perm() {
+function hook_permission() {
   return array(
     'administer my module' =>  array(
       'title' => t('Administer my module'),

@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.306 2009/07/02 04:27:23 webchick Exp $
+// $Id: statistics.module,v 1.307 2009/07/05 18:00:10 dries Exp $
 
 /**
  * @file
@@ -81,9 +81,9 @@ function statistics_exit() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function statistics_perm() {
+function statistics_permission() {
   return array(
     'access statistics' => array(
       'title' => t('Access statistics'),

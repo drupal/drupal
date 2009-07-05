@@ -1,5 +1,5 @@
 <?php
-// $Id: php.module,v 1.14 2009/05/27 18:34:00 dries Exp $
+// $Id: php.module,v 1.15 2009/07/05 18:00:09 dries Exp $
 
 /**
  * @file
@@ -22,9 +22,9 @@ function php_help($path, $arg) {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function php_perm() {
+function php_permission() {
   return array(
     'use PHP for settings' => array(
       'title' => t('Use PHP for settings'),

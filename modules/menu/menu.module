@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.193 2009/06/28 13:08:15 dries Exp $
+// $Id: menu.module,v 1.194 2009/07/05 18:00:09 dries Exp $
 
 /**
  * @file
@@ -33,9 +33,9 @@ function menu_help($path, $arg) {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function menu_perm() {
+function menu_permission() {
   return array(
     'administer menu' => array(
       'title' => t('Administer menu'),

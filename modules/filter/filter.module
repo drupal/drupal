@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.261 2009/06/13 19:37:27 dries Exp $
+// $Id: filter.module,v 1.262 2009/07/05 18:00:08 dries Exp $
 
 /**
  * @file
@@ -145,9 +145,9 @@ function filter_admin_format_title($format) {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function filter_perm() {
+function filter_permission() {
   return array(
     'administer filters' => array(
       'title' => t('Administer filters'),

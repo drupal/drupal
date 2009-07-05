@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.160 2009/06/30 18:21:06 webchick Exp $
+// $Id: path.module,v 1.161 2009/07/05 18:00:09 dries Exp $
 
 /**
  * @file
@@ -256,9 +256,9 @@ function path_form_alter(&$form, $form_state, $form_id) {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function path_perm() {
+function path_permission() {
   return array(
     'administer url aliases' => array(
       'title' => t('Administer URL aliases'),

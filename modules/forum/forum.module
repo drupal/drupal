@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.502 2009/06/22 09:10:05 dries Exp $
+// $Id: forum.module,v 1.503 2009/07/05 18:00:09 dries Exp $
 
 /**
  * @file
@@ -419,9 +419,9 @@ function forum_access($op, $node, $account) {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function forum_perm() {
+function forum_permission() {
   $perms = array(
     'administer forums' => array(
       'title' => t('Administer forums'),

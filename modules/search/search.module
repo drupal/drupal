@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.300 2009/07/01 20:39:20 dries Exp $
+// $Id: search.module,v 1.301 2009/07/05 18:00:10 dries Exp $
 
 /**
  * @file
@@ -141,9 +141,9 @@ function search_theme() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function search_perm() {
+function search_permission() {
   return array(
     'administer search' => array(
       'title' => t('Administer search'),

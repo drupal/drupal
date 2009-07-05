@@ -1,5 +1,5 @@
 <?php
-// $Id: toolbar.module,v 1.1 2009/07/04 05:37:30 dries Exp $
+// $Id: toolbar.module,v 1.2 2009/07/05 18:00:11 dries Exp $
 
 /**
  * @file
@@ -7,9 +7,9 @@
  */
 
 /**
- * Implementation of hook_perm().
+ * Implementation of hook_permission().
  */
-function toolbar_perm() {
+function toolbar_permission() {
   return array(
     'access toolbar' => array(
       'title' => t('Access administration toolbar'),

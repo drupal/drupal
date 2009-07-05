@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.55 2009/06/13 11:29:25 dries Exp $
+// $Id: simpletest.module,v 1.56 2009/07/05 18:00:10 dries Exp $
 
 /**
  * @file
@@ -44,9 +44,9 @@ function simpletest_menu() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function simpletest_perm() {
+function simpletest_permission() {
   return array(
     'administer unit tests' => array(
       'title' => t('Administer unit tests'),

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.737 2009/07/03 19:21:54 dries Exp $
+// $Id: comment.module,v 1.738 2009/07/05 18:00:08 dries Exp $
 
 /**
  * @file
@@ -224,9 +224,9 @@ function comment_node_type($op, $info) {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function comment_perm() {
+function comment_permission() {
   return array(
     'administer comments' => array(
       'title' => t('Administer comments'),

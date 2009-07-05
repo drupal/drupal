@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.52 2009/07/04 13:39:52 webchick Exp $
+// $Id: default.profile,v 1.53 2009/07/05 18:00:11 dries Exp $
 
 /**
  * Return an array of the modules to be enabled when this profile is installed.
@@ -222,7 +222,7 @@ function default_profile_tasks(&$task, $url) {
   variable_set('user_admin_role', $rid);
 
   // Assign all available permissions to this role.
-  foreach (module_invoke_all('perm') as $key => $value) {
+  foreach (module_invoke_all('permission') as $key => $value) {
     db_insert('role_permission')
       ->fields(array(
         'rid' => $rid,
