@@ -57,7 +57,7 @@ function user_theme() {
     'user_list' => array(
       'arguments' => array('users' => NULL, 'title' => NULL),
     ),
-    'user_admin_perm' => array(
+    'user_admin_permissions' => array(
       'arguments' => array('form' => NULL),
       'file' => 'user.admin.inc',
     ),
@@ -1334,7 +1334,7 @@ function user_menu() {
     'title' => 'Permissions',
     'description' => 'Determine access to features by selecting permissions for roles.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_admin_perm'),
+    'page arguments' => array('user_admin_permissions'),
     'access arguments' => array('administer permissions'),
   );
   $items['admin/user/roles'] = array(

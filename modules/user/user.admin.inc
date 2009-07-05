@@ -585,10 +585,10 @@ function user_admin_settings() {
  * Menu callback: administer permissions.
  *
  * @ingroup forms
- * @see user_admin_perm_submit()
- * @see theme_user_admin_perm()
+ * @see user_admin_permissions_submit()
+ * @see theme_user_admin_permissions()
  */
-function user_admin_perm($form_state, $rid = NULL) {
+function user_admin_permissions($form_state, $rid = NULL) {
 
   // Retrieve role names for columns.
   $role_names = user_roles();
@@ -645,9 +645,9 @@ function user_admin_perm($form_state, $rid = NULL) {
 /**
  * Save permissions selected on the administer permissions page.
  *
- * @see user_admin_perm
+ * @see user_admin_permissions()
  */
-function user_admin_perm_submit($form, &$form_state) {
+function user_admin_permissions_submit($form, &$form_state) {
   foreach ($form_state['values']['role_names'] as $rid => $name) {
     $checked = array_filter($form_state['values'][$rid]);
     // Delete existing permissions for the role. This handles "unchecking" checkboxes.
@@ -675,7 +675,7 @@ function user_admin_perm_submit($form, &$form_state) {
  *
  * @ingroup themeable
  */
-function theme_user_admin_perm($form) {
+function theme_user_admin_permissions($form) {
   $roles = user_roles();
   foreach (element_children($form['permission']) as $key) {
     $row = array();
