@@ -33,9 +33,9 @@ function contact_help($path, $arg) {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function contact_perm() {
+function contact_permission() {
   return array(
     'administer site-wide contact form' => array(
       'title' => t('Administer site-wide contact form'),

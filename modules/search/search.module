@@ -141,9 +141,9 @@ function search_theme() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function search_perm() {
+function search_permission() {
   return array(
     'administer search' => array(
       'title' => t('Administer search'),

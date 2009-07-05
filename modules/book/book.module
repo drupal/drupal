@@ -37,9 +37,9 @@ function book_theme() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function book_perm() {
+function book_permission() {
   return array(
     'administer book outlines' => array(
       'title' => t('Administer book outlines'),

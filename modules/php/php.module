@@ -22,9 +22,9 @@ function php_help($path, $arg) {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function php_perm() {
+function php_permission() {
   return array(
     'use PHP for settings' => array(
       'title' => t('Use PHP for settings'),

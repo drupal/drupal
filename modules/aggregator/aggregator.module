@@ -270,9 +270,9 @@ function _aggregator_has_categories() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function aggregator_perm() {
+function aggregator_permission() {
   return array(
     'administer news feeds' => array(
       'title' => t('Administer news feeds'),

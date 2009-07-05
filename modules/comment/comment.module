@@ -224,9 +224,9 @@ function comment_node_type($op, $info) {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function comment_perm() {
+function comment_permission() {
   return array(
     'administer comments' => array(
       'title' => t('Administer comments'),

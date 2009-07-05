@@ -40,9 +40,9 @@ function upload_theme() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function upload_perm() {
+function upload_permission() {
   return array(
     'upload files' => array(
       'title' => t('Upload files'),

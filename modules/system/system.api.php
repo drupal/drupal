@@ -668,7 +668,7 @@ function hook_system_info_alter(&$info, $file) {
  *
  * For a detailed usage example, see page_example.module.
  */
-function hook_perm() {
+function hook_permission() {
   return array(
     'administer my module' =>  array(
       'title' => t('Administer my module'),

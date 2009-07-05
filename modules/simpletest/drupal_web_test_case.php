@@ -876,7 +876,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     static $available;
 
     if (!isset($available) || $reset) {
-      $available = array_keys(module_invoke_all('perm'));
+      $available = array_keys(module_invoke_all('permission'));
     }
 
     $valid = TRUE;

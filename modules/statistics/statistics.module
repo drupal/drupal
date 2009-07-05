@@ -81,9 +81,9 @@ function statistics_exit() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function statistics_perm() {
+function statistics_permission() {
   return array(
     'access statistics' => array(
       'title' => t('Access statistics'),

@@ -419,9 +419,9 @@ function forum_access($op, $node, $account) {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function forum_perm() {
+function forum_permission() {
   $perms = array(
     'administer forums' => array(
       'title' => t('Administer forums'),

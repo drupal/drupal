@@ -745,9 +745,9 @@ function user_is_blocked($name) {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function user_perm() {
+function user_permission() {
   return array(
     'administer permissions' =>  array(
       'title' => t('Administer permissions'),
@@ -2394,9 +2394,9 @@ function user_filters() {
   }
 
   $options = array();
-  foreach (module_implements('perm') as $module) {
-    $function = $module . '_perm';
-    if ($permissions = $function('perm')) {
+  foreach (module_implements('permission') as $module) {
+    $function = $module . '_permission';
+    if ($permissions = $function('permission')) {
       asort($permissions);
       foreach ($permissions as $permission => $description) {
         $options[t('@module module', array('@module' => $module))][$permission] = t($permission);

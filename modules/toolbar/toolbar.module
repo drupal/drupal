@@ -7,9 +7,9 @@
  */
 
 /**
- * Implementation of hook_perm().
+ * Implementation of hook_permission().
  */
-function toolbar_perm() {
+function toolbar_permission() {
   return array(
     'access toolbar' => array(
       'title' => t('Access administration toolbar'),

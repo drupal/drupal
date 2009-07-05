@@ -7,9 +7,9 @@
  */
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function taxonomy_perm() {
+function taxonomy_permission() {
   return array(
     'administer taxonomy' => array(
       'title' => t('Administer taxonomy'),

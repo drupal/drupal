@@ -44,9 +44,9 @@ function simpletest_menu() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function simpletest_perm() {
+function simpletest_permission() {
   return array(
     'administer unit tests' => array(
       'title' => t('Administer unit tests'),

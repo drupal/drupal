@@ -145,9 +145,9 @@ function filter_admin_format_title($format) {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function filter_perm() {
+function filter_permission() {
   return array(
     'administer filters' => array(
       'title' => t('Administer filters'),

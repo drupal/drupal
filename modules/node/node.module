@@ -1261,9 +1261,9 @@ function theme_node_log_message($log) {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function node_perm() {
+function node_permission() {
   $perms = array(
     'administer content types' => array(
       'title' => t('Administer content types'),

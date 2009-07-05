@@ -2,9 +2,9 @@
 // $Id$
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function module_test_perm() {
+function module_test_permission() {
   return array(
     'module_test perm' => t('example perm for module_test module'),
   );

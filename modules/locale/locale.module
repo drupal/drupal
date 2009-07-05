@@ -184,9 +184,9 @@ function locale_inc_callback() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function locale_perm() {
+function locale_permission() {
   return array(
     'administer languages' => array(
       'title' => t('Administer languages'),

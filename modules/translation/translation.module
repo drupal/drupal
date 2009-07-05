@@ -82,9 +82,9 @@ function _translation_tab_access($node) {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function translation_perm() {
+function translation_permission() {
   return array(
     'translate content' => array(
       'title' => t('Translate content'),

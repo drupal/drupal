@@ -606,8 +606,8 @@ function user_admin_perm($form_state, $rid = NULL) {
   // Render role/permission overview:
   $options = array();
   $hide_descriptions = !system_admin_compact_mode();
-  foreach (module_implements('perm') as $module) {
-    if ($permissions = module_invoke($module, 'perm')) {
+  foreach (module_implements('permission') as $module) {
+    if ($permissions = module_invoke($module, 'permission')) {
       $info = drupal_parse_info_file(drupal_get_path('module', $module) . "/$module.info");
       $form['permission'][] = array(
         '#markup' => $info['name'],
@@ -933,7 +933,7 @@ function user_modules_installed($modules) {
   $rid = variable_get('user_admin_role', 0);
   if ($rid) {
     foreach ($modules as $module) {
-      if ($permissions = module_invoke($module, 'perm')) {
+      if ($permissions = module_invoke($module, 'permission')) {
         foreach (array_keys($permissions) as $permission) {
           db_insert('role_permission')
             ->fields(array(
@@ -952,7 +952,7 @@ function user_modules_installed($modules) {
 function user_modules_uninstalled($modules) {
   $permissions = array();
   foreach ($modules as $module) {
-    $permissions = array_merge($permissions, array_keys(module_invoke($module, 'perm')));
+    $permissions = array_merge($permissions, array_keys(module_invoke($module, 'permission')));
   }
   if (!empty($permissions)) {
     db_delete('role_permission')

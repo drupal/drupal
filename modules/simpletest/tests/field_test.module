@@ -5,9 +5,9 @@ define('FIELD_TEST_ELEMENT_ID', 1);
 define('FIELD_TEST_BUNDLE', 'test_bundle');
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function field_test_perm() {
+function field_test_permission() {
   $perms = array(
     'access field_test content' => array(
       'title' => t('Access field_test content'),

@@ -51,9 +51,9 @@ function poll_theme() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function poll_perm() {
+function poll_permission() {
   $perms = node_list_permissions('poll');
   $perms += array(
     'vote on polls' => array(

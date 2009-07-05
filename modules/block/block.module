@@ -105,9 +105,9 @@ function block_theme() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function block_perm() {
+function block_permission() {
   return array(
     'administer blocks' => array(
       'title' => t('Administer blocks'),

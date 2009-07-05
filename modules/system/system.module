@@ -193,9 +193,9 @@ function system_theme() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function system_perm() {
+function system_permission() {
   return array(
     'administer site configuration' => array(
       'title' => t('Administer site configuration'),
@@ -2206,7 +2206,7 @@ function system_get_module_admin_tasks($module) {
   $admin_tasks = array();
   $admin_task_count = 0;
   // Check for permissions.
-  if (in_array($module, module_implements('perm')) && $admin_access) {
+  if (in_array($module, module_implements('permission')) && $admin_access) {
     $admin_tasks[-1] = l(t('Configure permissions'), 'admin/user/permissions', array('fragment' => 'module-' . $module));
   }
 

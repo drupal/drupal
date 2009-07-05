@@ -20,9 +20,9 @@ function blog_node_info() {
 }
 
 /**
- * Implement hook_perm().
+ * Implement hook_permission().
  */
-function blog_perm() {
+function blog_permission() {
   return node_list_permissions('blog');
 }
 

@@ -222,7 +222,7 @@ function default_profile_tasks(&$task, $url) {
   variable_set('user_admin_role', $rid);
 
   // Assign all available permissions to this role.
-  foreach (module_invoke_all('perm') as $key => $value) {
+  foreach (module_invoke_all('permission') as $key => $value) {
     db_insert('role_permission')
       ->fields(array(
         'rid' => $rid,
