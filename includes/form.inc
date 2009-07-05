@@ -2607,7 +2607,7 @@ function theme_form_element($element) {
     $class[] = 'form-item-' . strtr($element['#type'], array('_' => '-'));
   }
   if (!empty($element['#name'])) {
-    $class[] = strtr($element['#name'], array('_' => '-', '[' => '-', ']' => '')) . '-wrapper';
+    $class[] = strtr($element['#name'], array(' ' => '-', '_' => '-', '[' => '-', ']' => '')) . '-wrapper';
   }
 
   $output = '<div class="' . implode(' ', $class) . '">' . "\n";
