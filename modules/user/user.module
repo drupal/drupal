@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1007 2009/07/05 18:00:11 dries Exp $
+// $Id: user.module,v 1.1008 2009/07/05 18:07:04 dries Exp $
 
 /**
  * @file
@@ -57,7 +57,7 @@ function user_theme() {
     'user_list' => array(
       'arguments' => array('users' => NULL, 'title' => NULL),
     ),
-    'user_admin_perm' => array(
+    'user_admin_permissions' => array(
       'arguments' => array('form' => NULL),
       'file' => 'user.admin.inc',
     ),
@@ -1334,7 +1334,7 @@ function user_menu() {
     'title' => 'Permissions',
     'description' => 'Determine access to features by selecting permissions for roles.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_admin_perm'),
+    'page arguments' => array('user_admin_permissions'),
     'access arguments' => array('administer permissions'),
   );
   $items['admin/user/roles'] = array(
