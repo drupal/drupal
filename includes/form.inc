@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.346 2009/07/04 18:26:42 webchick Exp $
+// $Id: form.inc,v 1.347 2009/07/05 18:02:08 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2607,7 +2607,7 @@ function theme_form_element($element) {
     $class[] = 'form-item-' . strtr($element['#type'], array('_' => '-'));
   }
   if (!empty($element['#name'])) {
-    $class[] = strtr($element['#name'], array('_' => '-', '[' => '-', ']' => '')) . '-wrapper';
+    $class[] = strtr($element['#name'], array(' ' => '-', '_' => '-', '[' => '-', ']' => '')) . '-wrapper';
   }
 
   $output = '<div class="' . implode(' ', $class) . '">' . "\n";
