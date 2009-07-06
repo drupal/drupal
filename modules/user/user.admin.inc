@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.62 2009/07/05 18:07:04 dries Exp $
+// $Id: user.admin.inc,v 1.63 2009/07/06 19:07:21 dries Exp $
 
 /**
  * @file
@@ -952,7 +952,9 @@ function user_modules_installed($modules) {
 function user_modules_uninstalled($modules) {
   $permissions = array();
   foreach ($modules as $module) {
-    $permissions = array_merge($permissions, array_keys(module_invoke($module, 'permission')));
+    if (drupal_function_exists($module . '_permission')) {
+      $permissions = array_merge($permissions, array_keys(module_invoke($module, 'permission')));
+    }
   }
   if (!empty($permissions)) {
     db_delete('role_permission')
