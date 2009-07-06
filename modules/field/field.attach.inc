@@ -762,8 +762,8 @@ function field_attach_delete_revision($obj_type, $object) {
  *     - '=', '!=', '>', '>=', '<', '<=', 'STARTS_WITH', 'ENDS_WITH',
  *       'CONTAINS': these operators expect the value as a literal of the same
  *       type as the column,
- *     - 'IN': this operator expects the value as an array of literals of the
- *       same type as the column.
+ *     - 'IN', 'NOT IN': this operator expects the value as an array of
+ *       literals of the same type as the column.
  *     - 'BETWEEN': this operator expects the value as an array of two literals
  *       of the same type as the column.
  *     The operator can be ommitted, and will default to 'IN' if the value is
