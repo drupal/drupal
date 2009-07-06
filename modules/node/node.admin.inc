@@ -7,59 +7,11 @@
  */
 
 /**
- * Menu callback; presents general node configuration options.
- */
-function node_configure() {
-  $status = '<p>' . t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Possible causes for permission problems are disabling modules or configuration changes to permissions. Rebuilding will remove all privileges to posts, and replace them with permissions based on the current modules and settings.') . '</p>';
-  $status .= '<p>' . t('Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed posts will automatically use the new permissions.') . '</p>';
-
-  $form['access'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Node access status'),
-  );
-  $form['access']['status'] = array('#markup' => $status);
-  $form['access']['rebuild'] = array(
-    '#type' => 'submit',
-    '#value' => t('Rebuild permissions'),
-    '#submit' => array('node_configure_access_submit'),
-  );
-  $form['default_nodes_main'] = array(
-    '#type' => 'select', '#title' => t('Number of posts on main page'),
-    '#default_value' => 10,
-    '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
-    '#description' => t('The default maximum number of posts to display per page on overview pages such as the main page.')
-  );
-  $form['teaser_length'] = array(
-    '#type' => 'select', '#title' => t('Length of trimmed posts'),
-    '#default_value' => variable_get('teaser_length', 600),
-    '#options' => drupal_map_assoc(array(0, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000), '_node_characters'),
-    '#description' => t("The maximum number of characters used in the trimmed version of a post. Drupal will use this setting to determine at which offset long posts should be trimmed. The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc. To disable teasers, set to 'Unlimited'.")
-  );
-
-  $form['node_preview'] = array(
-    '#type' => 'radios',
-    '#title' => t('Preview post'),
-    '#default_value' => 0,
-    '#options' => array(t('Optional'), t('Required')),
-    '#description' => t('Must users preview posts before submitting?'),
-  );
-
-  return system_settings_form($form, TRUE);
-}
-
-/**
- * Form button submit callback.
- */
-function node_configure_access_submit($form, &$form_state) {
-  $form_state['redirect'] = 'admin/content/node-settings/rebuild';
-}
-
-/**
  * Menu callback: confirm rebuilding of permissions.
  */
 function node_configure_rebuild_confirm() {
   return confirm_form(array(), t('Are you sure you want to rebuild the permissions on site content?'),
-                  'admin/content/node-settings', t('This action rebuilds all permissions on site content, and may be a lengthy process. This action cannot be undone.'), t('Rebuild permissions'), t('Cancel'));
+                  'admin/reports/status', t('This action rebuilds all permissions on site content, and may be a lengthy process. This action cannot be undone.'), t('Rebuild permissions'), t('Cancel'));
 }
 
 /**
