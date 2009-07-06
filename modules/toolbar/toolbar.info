@@ -1,4 +1,4 @@
-; $Id: toolbar.info,v 1.1 2009/07/04 05:37:30 dries Exp $
+; $Id: toolbar.info,v 1.2 2009/07/06 13:54:21 dries Exp $
 name = Toolbar
 description = Toolbar exposing the top level administration menu items
 core = 7.x
@@ -6,3 +6,4 @@ package = Core
 version = VERSION
 files[] = toolbar.install
 files[] = toolbar.module
+dependencies[] = menu
