@@ -1,6 +1,6 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
-// $Id: drupal.sh,v 1.7 2008/12/20 18:24:41 dries Exp $
+// $Id: drupal.sh,v 1.8 2009/07/06 13:48:10 dries Exp $
 
 /**
  * Drupal shell execution script
@@ -66,6 +66,7 @@ $_SERVER['SERVER_SOFTWARE'] = 'PHP CLI';
 $_SERVER['REQUEST_METHOD']  = 'GET';
 $_SERVER['QUERY_STRING']    = '';
 $_SERVER['PHP_SELF']        = $_SERVER['REQUEST_URI'] = '/';
+$_SERVER['HTTP_USER_AGENT'] = 'console';
 
 // toggle verbose mode
 if (in_array('--verbose', $_SERVER['argv'])) {
