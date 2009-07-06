@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.58 2009/06/27 09:41:56 dries Exp $
+// $Id: database_test.test,v 1.59 2009/07/06 13:33:31 dries Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -2484,9 +2484,6 @@ class DatabaseInvalidDataTestCase extends DatabaseTestCase {
       else {
         $this->pass(t('The whole transaction is rolled back when a duplicate key insert occurs.'));
       }
-
-      // 23000 means "Integrity constraint violation" according to ANSI SQL.
-      $this->assertEqual($e->errorInfo[0], '23000', t('Exception has proper SQLSTATE.'));
 
       // Ensure the other values were not inserted.
       $record = db_select('test')
