@@ -1,4 +1,4 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 // $Id$
 
@@ -66,6 +66,7 @@ $_SERVER['SERVER_SOFTWARE'] = 'PHP CLI';
 $_SERVER['REQUEST_METHOD']  = 'GET';
 $_SERVER['QUERY_STRING']    = '';
 $_SERVER['PHP_SELF']        = $_SERVER['REQUEST_URI'] = '/';
+$_SERVER['HTTP_USER_AGENT'] = 'console';
 
 // toggle verbose mode
 if (in_array('--verbose', $_SERVER['argv'])) {
