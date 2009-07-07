@@ -1747,9 +1747,6 @@ function comment_form_validate($form, &$form_state) {
     }
   }
 
-  // Invoke other validation handlers.
-  module_invoke_all('comment_validate', $form_state['values']);
-
   if (isset($form_state['values']['date'])) {
     if (strtotime($form_state['values']['date']) === FALSE) {
       form_set_error('date', t('You have to specify a valid date.'));

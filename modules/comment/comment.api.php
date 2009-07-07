@@ -23,23 +23,6 @@ function hook_comment_insert($comment) {
 }
 
 /**
- *  The user has just finished editing the comment and is trying to
- *  preview or submit it. This hook can be used to check or
- *  even modify the comment. Errors should be set with form_set_error().
- *
- * @param $form_values
- *   Passes in an array of form values submitted by the user.
- * @return
- *   Nothing.
- */
-function hook_comment_validate(&$form_values) {
-  // if the subject is the same as the comment.
-  if ($form_values['subject'] == $form_values['comment']) {
-    form_set_error('comment', t('you should write more text than in the subject'));
-  }
-}
-
-/**
  * The comment is being updated.
  *
  * @param $comment
