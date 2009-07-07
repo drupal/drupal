@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.120 2009/07/07 07:50:53 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.121 2009/07/07 07:52:32 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -1076,7 +1076,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     variable_set('smtp_library', drupal_get_path('module', 'simpletest') . '/drupal_web_test_case.php');
 
     // Use temporary files directory with the same prefix as database.
-    variable_set('file_directory_path', $this->originalFileDirectory . '/' . $db_prefix);
+    variable_set('file_directory_path', $this->originalFileDirectory . '/simpletest/' . substr($db_prefix, 10));
     $directory = file_directory_path();
     // Create the files directory.
     file_check_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
