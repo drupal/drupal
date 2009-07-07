@@ -32,6 +32,17 @@ function simpletest_menu() {
     'description' => 'Run tests against Drupal core and your active modules. These tests help assure that your site code is working as designed.',
     'access arguments' => array('administer unit tests'),
   );
+  $items['admin/development/testing/list'] = array(
+    'title' => 'List',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/development/testing/settings'] = array(
+    'title' => 'Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('simpletest_settings_form'),
+    'access arguments' => array('administer unit tests'),
+    'type' => MENU_LOCAL_TASK,
+  );
   $items['admin/development/testing/results/%'] = array(
     'title' => 'Test result',
     'page callback' => 'drupal_get_form',

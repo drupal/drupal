@@ -404,3 +404,39 @@ function simpletest_result_status_image($status) {
   }
   return FALSE;
 }
+
+/**
+ * Provides settings form for SimpleTest variables.
+ */
+function simpletest_settings_form(&$form_state) {
+  $form = array();
+
+  $form['general'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('General'),
+  );
+  $form['general']['simpletest_clear_results'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Clear results'),
+    '#description' => t('Clear the test results after each complete test suite run. By default SimpleTest will clear the results after they have been viewed on the results page, but in some cases it may be useful to leave the results in the database. The results can then be viewed at <em>admin/development/testing/[test_id]</em>. The test ID can be found in the database, simpletest table, or kept track of when viewing the results the first time. Additionally, some modules may provide more analaysis or features that require this setting to be disabled.'),
+    '#default_value' => variable_get('simpletest_clear_results', TRUE),
+  );
+
+  $form['httpauth'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('HTTP authentication credentials'),
+    '#description' => t('HTTP auth settings to be used by the SimpleTest browser during testing. Useful when the site requires basic HTTP authentication.'),
+  );
+  $form['httpauth']['simpletest_username'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Username'),
+    '#default_value' => variable_get('simpletest_username', ''),
+  );
+  $form['httpauth']['simpletest_password'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Password'),
+    '#default_value' => variable_get('simpletest_password', ''),
+  );
+
+  return system_settings_form($form);
+}
