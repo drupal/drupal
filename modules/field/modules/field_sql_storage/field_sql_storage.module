@@ -355,8 +355,7 @@ function field_sql_storage_field_storage_delete($obj_type, $object) {
 /**
  * Implement hook_field_storage_query().
  */
-function field_sql_storage_field_storage_query($field_name, $conditions, $result_format, $age) {
-  $load_values = $result_format == FIELD_QUERY_RETURN_VALUES;
+function field_sql_storage_field_storage_query($field_name, $conditions, $count, &$cursor, $age) {
   $load_current = $age == FIELD_LOAD_CURRENT;
 
   $field = field_info_field($field_name);
@@ -367,16 +366,12 @@ function field_sql_storage_field_storage_query($field_name, $conditions, $result
   $query = db_select($table, 't');
   $query->join('field_config_entity_type', 'e', 't.etid = e.etid');
   $query
+    ->fields('t', array('bundle', 'entity_id', 'revision_id'))
     ->fields('e', array('type'))
     ->condition('deleted', 0)
-    ->orderBy('delta');
-  // Add fields, depending on the return format.
-  if ($load_values) {
-    $query->fields('t');
-  }
-  else {
-    $query->fields('t', array('entity_id', 'revision_id'));
-  }
+    ->orderBy('t.etid')
+    ->orderBy('t.entity_id');
+
   // Add conditions.
   foreach ($conditions as $condition) {
     // A condition is either a (column, value, operator) triple, or a
@@ -406,45 +401,38 @@ function field_sql_storage_field_storage_query($field_name, $conditions, $result
     $query->condition($column, $value, $operator);
   }
 
-  $results = $query->execute();
-
-  // Build results.
+  // Initialize results array
   $return = array();
-  $delta_count = array();
-  foreach ($results as $row) {
-    // If querying all revisions and the entity type has revisions, we need to
-    // key the results by revision_ids.
-    $entity_type = field_info_fieldable_types($row->type);
-    $id = ($load_current || empty($entity_type['revision key'])) ? $row->entity_id : $row->revision_id;
 
-    if ($load_values) {
-      // Populate actual field values.
-      if (!isset($delta_count[$row->type][$id])) {
-        $delta_count[$row->type][$id] = 0;
-      }
-      if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED || $delta_count[$row->type][$id] < $field['cardinality']) {
-        $item = array();
-        // For each column declared by the field, populate the item
-        // from the prefixed database column.
-        foreach ($field['columns'] as $column => $attributes) {
-          $column_name = _field_sql_storage_columnname($field_name, $column);
-          $item[$column] = $row->$column_name;
-        }
+  // Query for batches of rows until we've read $count objects or
+  // until we get no new rows.
+  $limit = $count;
+  do {
+    if ($limit != FIELD_QUERY_NO_LIMIT) {
+      $query->range($cursor, $limit);
+    }
+    $results = $query->execute();
+    
+    $found = FALSE;
+    foreach ($results as $row) {
+      $found = TRUE;
+      ++$cursor;
+      
+      // If querying all revisions and the entity type has revisions, we need to
+      // key the results by revision_ids.
+      $entity_type = field_info_fieldable_types($row->type);
+      $id = ($load_current || empty($entity_type['revision key'])) ? $row->entity_id : $row->revision_id;
 
-        // Initialize the 'pseudo object' if needed.
-        if (!isset($return[$row->type][$id])) {
-          $return[$row->type][$id] = field_attach_create_stub_object($row->type, array($row->entity_id, $row->revision_id, $row->bundle));
-        }
-        // Add the item to the field values for the entity.
-        $return[$row->type][$id]->{$field_name}[] = $item;
-        $delta_count[$row->type][$id]++;
+      // We get multiple rows if the field has multiple deltas.  Only
+      // count the first one.
+      if (isset($return[$row->type][$id])) {
+        continue;
       }
+      
+      $return[$row->type][$id] = field_attach_create_stub_object($row->type, array($row->entity_id, $row->revision_id, $row->bundle));
+      --$count;
     }
-    else {
-      // Simply return the list of selected ids.
-      $return[$row->type][$id] = $row->entity_id;
-    }
-  }
+  } while ($found && ($limit != FIELD_QUERY_NO_LIMIT || $count > 0));
 
   return $return;
 }

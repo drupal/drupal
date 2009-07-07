@@ -778,10 +778,18 @@ function field_attach_delete_revision($obj_type, $object) {
  *     array('value', 12, '>'),
  *   );
  *   @endcode
- * @param $result_format
- *   - FIELD_QUERY_RETURN_IDS (default): return the ids of the objects matching the
- *     conditions.
- *   - FIELD_QUERY_RETURN_VALUES: return the values for the field.
+ * @param $count
+ *   The number of results that is requested. This is only a
+ *   hint to the storage engine(s); callers should be prepared to
+ *   handle fewer or more results. Specify FIELD_QUERY_NO_LIMIT to retrieve
+ *   all available objects. This parameter has no default value so
+ *   callers must make an explicit choice to potentially retrieve an
+ *   enormous result set.
+ * @param &$cursor
+ *   An opaque cursor that allows a caller to iterate through multiple
+ *   result sets. On the first call, pass 0; the correct value to pass
+ *   on the next call will be written into $cursor on return. If NULL,
+ *   the first result set is returned and no next cursor is returned.
  * @param $age
  *   Internal use only. Use field_attach_query_revisions() instead of passing
  *   FIELD_LOAD_REVISION.
@@ -791,26 +799,24 @@ function field_attach_delete_revision($obj_type, $object) {
  *     object type and object revision id.
  * @return
  *   An array keyed by object type (e.g. 'node', 'user'...), then by object id
- *   or revision id (depending of the value of the $age parameter), and whose
- *   values depend on the $result_format parameter:
- *   - FIELD_QUERY_RETURN_IDS: the object id.
- *   - FIELD_QUERY_RETURN_VALUES: a pseudo-object with values for the
- *     $field_name field. This only includes values matching the conditions,
- *     and thus might not contain all actual values and actual delta sequence
- *     (although values oprder is preserved).
- *     The pseudo-objects only include properties that the Field API knows
- *     about: bundle, id, revision id, and field values (no node title, user
- *     name...).
+ *   or revision id (depending of the value of the $age parameter).
+ *   The values are pseudo-objects with the bundle, id, and revision
+ *   id fields filled in.
+ *
  *   Throws a FieldQueryException if the field's storage doesn't support the
  *   specified conditions.
  */
-function field_attach_query($field_name, $conditions, $result_format = FIELD_QUERY_RETURN_IDS, $age = FIELD_LOAD_CURRENT) {
+function field_attach_query($field_name, $conditions, $count, &$cursor = NULL, $age = FIELD_LOAD_CURRENT) {
+  if (!isset($cursor)) {
+    $cursor = 0;
+  }
+
   // Give a chance to 3rd party modules that bypass the storage engine to
   // handle the query.
   $skip_field = FALSE;
   foreach (module_implements('field_attach_pre_query') as $module) {
     $function = $module . '_field_attach_pre_query';
-    $results = $function($field_name, $conditions, $result_format, $age, $skip_field);
+    $results = $function($field_name, $conditions, $count, $cursor, $age, $skip_field);
     // Stop as soon as a module claims it handled the query.
     if ($skip_field) {
       break;
@@ -818,43 +824,7 @@ function field_attach_query($field_name, $conditions, $result_format = FIELD_QUE
   }
   // If the request hasn't been handled, let the storage engine handle it.
   if (!$skip_field) {
-    $results = module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_query', $field_name, $conditions, $result_format, $age);
-  }
-
-  if ($result_format == FIELD_QUERY_RETURN_VALUES) {
-    foreach ($results as $obj_type => $pseudo_objects) {
-      if ($age == FIELD_LOAD_CURRENT) {
-        // Invoke hook_field_load().
-        $b = NULL;
-        _field_invoke_multiple('load', $obj_type, $pseudo_objects, $age, $b, array('field_name' => $field_name));
-
-        // Invoke hook_field_attach_load().
-        foreach (module_implements('field_attach_load') as $module) {
-          $function = $module . '_field_attach_load';
-          $function($obj_type, $pseudo_objects, $age);
-        }
-      }
-      else {
-        // The 'multiple' hooks expect an array of objects keyed by object id,
-        // and thus cannot be used directly when querying revisions. The hooks
-        // are therefore called on each object separately, which might cause
-        // performance issues when large numbers of revisions are retrieved.
-        foreach ($pseudo_objects as $vid => $pseudo_object) {
-          list($id) = field_attach_extract_ids($obj_type, $pseudo_object);
-          $objects = array($id => $pseudo_object);
-
-          // Invoke hook_field_load().
-          $b = NULL;
-          _field_invoke_multiple('load', $obj_type, $objects, $age, $b, array('field_name' => $field_name));
-
-          // Invoke hook_field_attach_load().
-          foreach (module_implements('field_attach_load') as $module) {
-            $function = $module . '_field_attach_load';
-            $function($obj_type, $objects, $age);
-          }
-        }
-      }
-    }
+    $results = module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_query', $field_name, $conditions, $count, $cursor, $age);
   }
 
   return $results;
@@ -869,15 +839,22 @@ function field_attach_query($field_name, $conditions, $result_format = FIELD_QUE
  *   The name of the field to query.
  * @param $conditions
  *   See field_attach_query().
- * @param $result_format
- *   See field_attach_query().
- *   Note that the FIELD_QUERY_RETURN_VALUES option might cause performance
- *   issues with field_attach_query_revisions().
+ * @param $count
+ *   The number of results that is requested. This is only a
+ *   hint to the storage engine(s); callers should be prepared to
+ *   handle fewer or more results. Specify FIELD_QUERY_NO_LIMIT to retrieve
+ *   all available objects. This parameter has no default value so
+ *   callers must make an explicit choice to potentially retrieve an
+ *   enormous result set.
+ * @param &$cursor
+ *   An opaque cursor that allows a caller to iterate through multiple
+ *   result sets. On the first call, pass 0; the correct value to pass
+ *   on the next call will be written into $cursor on return.
  * @return
  *   See field_attach_query().
  */
-function field_attach_query_revisions($field_name, $conditions, $result_format = FIELD_QUERY_RETURN_IDS) {
-  return field_attach_query($field_name, $conditions, $result_format, FIELD_LOAD_REVISION);
+function field_attach_query_revisions($field_name, $conditions, $count, &$cursor = NULL) {
+  return field_attach_query($field_name, $conditions, $count, $cursor, FIELD_LOAD_REVISION);
 }
 
 /**

@@ -26,7 +26,8 @@ class FieldAttachTestCase extends DrupalWebTestCase {
 
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
     $this->field = array('field_name' => $this->field_name, 'type' => 'test_field', 'cardinality' => 4);
-    field_create_field($this->field);
+    $this->field = field_create_field($this->field);
+    $this->field_id = $this->field['id'];
     $this->instance = array(
       'field_name' => $this->field_name,
       'bundle' => 'test_bundle',
@@ -296,7 +297,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     // Query on the object's values.
     for ($delta = 0; $delta < $cardinality; $delta++) {
       $conditions = array(array('value', $values[$delta]));
-      $result = field_attach_query($this->field_name, $conditions);
+      $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
       $this->assertTrue(isset($result[$entity_types[1]][1]), t('Query on value %delta returns the object', array('%delta' => $delta)));
     }
 
@@ -305,74 +306,37 @@ class FieldAttachTestCase extends DrupalWebTestCase {
       $different_value = mt_rand(1, 127);
     } while (in_array($different_value, $values));
     $conditions = array(array('value', $different_value));
-    $result = field_attach_query($this->field_name, $conditions);
+    $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
     $this->assertFalse(isset($result[$entity_types[1]][1]), t("Query on a value that is not in the object doesn't return the object"));
 
     // Query on the value shared by both objects, and discriminate using
     // additional conditions.
 
     $conditions = array(array('value', $common_value));
-    $result = field_attach_query($this->field_name, $conditions);
+    $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
     $this->assertTrue(isset($result[$entity_types[1]][1]) && isset($result[$entity_types[2]][2]), t('Query on a value common to both objects returns both objects'));
 
     $conditions = array(array('type', $entity_types[1]), array('value', $common_value));
-    $result = field_attach_query($this->field_name, $conditions);
+    $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
     $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both objects and a 'type' condition only returns the relevant object"));
 
     $conditions = array(array('bundle', $entities[1]->fttype), array('value', $common_value));
-    $result = field_attach_query($this->field_name, $conditions);
+    $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
     $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both objects and a 'bundle' condition only returns the relevant object"));
 
     $conditions = array(array('entity_id', $entities[1]->ftid), array('value', $common_value));
-    $result = field_attach_query($this->field_name, $conditions);
+    $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
     $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both objects and an 'entity_id' condition only returns the relevant object"));
 
     // Test FIELD_QUERY_RETURN_IDS result format.
     $conditions = array(array('value', $values[0]));
-    $result = field_attach_query($this->field_name, $conditions);
+    $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
     $expected = array(
       $entity_types[1] => array(
-        $entities[1]->ftid => $entities[1]->ftid,
+        $entities[1]->ftid => field_test_create_stub_entity($entities[1]->ftid, $entities[1]->ftvid),
       )
     );
     $this->assertEqual($result, $expected, t('FIELD_QUERY_RETURN_IDS result format returns the expect result'));
-
-    // Test FIELD_QUERY_RETURN_VALUES result format.
-    // Configure the instances so that we test hook_field_load() (see
-    // field_test_field_load() in field_test.module).
-    $this->instance['settings']['test_hook_field_load'] = TRUE;
-    field_update_instance($this->instance);
-    $this->instance2['settings']['test_hook_field_load'] = TRUE;
-    field_update_instance($this->instance2);
-
-    // Query for one of the values in the 1st object and the value shared by
-    // both objects.
-    $conditions = array(array('value', array($values[0], $common_value)));
-    $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_RETURN_VALUES);
-    $expected = array(
-      $entity_types[1] => array(
-        $entities[1]->ftid => (object) array(
-          'ftid' => $entities[1]->ftid,
-          'ftvid' => $entities[1]->ftvid,
-          'fttype' => $entities[1]->fttype,
-          $this->field_name => array(
-            array('value' => $values[0], 'additional_key' => 'additional_value'),
-            array('value' => $common_value, 'additional_key' => 'additional_value'),
-          ),
-        ),
-      ),
-      $entity_types[2] => array(
-        $entities[2]->ftid => (object) array(
-          'ftid' => $entities[2]->ftid,
-          'ftvid' => $entities[2]->ftvid,
-          'fttype' => $entities[2]->fttype,
-          $this->field_name => array(
-            array('value' => $common_value, 'additional_key' => 'additional_value'),
-          ),
-        ),
-      ),
-    );
-    $this->assertEqual($result, $expected, t('FIELD_QUERY_RETURN_VALUES result format returns the expect result'));
   }
 
   /**
@@ -402,7 +366,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     // Query on the object's values.
     for ($delta = 0; $delta < $cardinality; $delta++) {
       $conditions = array(array('value', $values[$delta]));
-      $result = field_attach_query_revisions($this->field_name, $conditions);
+      $result = field_attach_query_revisions($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
       $this->assertTrue(isset($result[$entity_type][1]), t('Query on value %delta returns the object', array('%delta' => $delta)));
     }
 
@@ -411,62 +375,29 @@ class FieldAttachTestCase extends DrupalWebTestCase {
       $different_value = mt_rand(1, 127);
     } while (in_array($different_value, $values));
     $conditions = array(array('value', $different_value));
-    $result = field_attach_query_revisions($this->field_name, $conditions);
+    $result = field_attach_query_revisions($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
     $this->assertFalse(isset($result[$entity_type][1]), t("Query on a value that is not in the object doesn't return the object"));
 
     // Query on the value shared by both objects, and discriminate using
     // additional conditions.
 
     $conditions = array(array('value', $common_value));
-    $result = field_attach_query_revisions($this->field_name, $conditions);
+    $result = field_attach_query_revisions($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
     $this->assertTrue(isset($result[$entity_type][1]) && isset($result[$entity_type][2]), t('Query on a value common to both objects returns both objects'));
 
     $conditions = array(array('revision_id', $entities[1]->ftvid), array('value', $common_value));
-    $result = field_attach_query_revisions($this->field_name, $conditions);
+    $result = field_attach_query_revisions($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
     $this->assertTrue(isset($result[$entity_type][1]) && !isset($result[$entity_type][2]), t("Query on a value common to both objects and a 'revision_id' condition only returns the relevant object"));
 
     // Test FIELD_QUERY_RETURN_IDS result format.
     $conditions = array(array('value', $values[0]));
-    $result = field_attach_query_revisions($this->field_name, $conditions);
+    $result = field_attach_query_revisions($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
     $expected = array(
       $entity_type => array(
-        $entities[1]->ftvid => $entities[1]->ftid,
+        $entities[1]->ftid => field_test_create_stub_entity($entities[1]->ftid, $entities[1]->ftvid),
       )
     );
     $this->assertEqual($result, $expected, t('FIELD_QUERY_RETURN_IDS result format returns the expect result'));
-
-    // Test FIELD_QUERY_RETURN_VALUES result format.
-    // Configure the instance so that we test hook_field_load() (see
-    // field_test_field_load() in field_test.module).
-    $this->instance['settings']['test_hook_field_load'] = TRUE;
-    field_update_instance($this->instance);
-
-    // Query for one of the values in the 1st object and the value shared by
-    // both objects.
-    $conditions = array(array('value', array($values[0], $common_value)));
-    $result = field_attach_query_revisions($this->field_name, $conditions, FIELD_QUERY_RETURN_VALUES);
-    $expected = array(
-      $entity_type => array(
-        $entities[1]->ftvid => (object) array(
-          'ftid' => $entities[1]->ftid,
-          'ftvid' => $entities[1]->ftvid,
-          'fttype' => $entities[1]->fttype,
-          $this->field_name => array(
-            array('value' => $values[0], 'additional_key' => 'additional_value'),
-            array('value' => $common_value, 'additional_key' => 'additional_value'),
-          ),
-        ),
-        $entities[2]->ftvid => (object) array(
-          'ftid' => $entities[2]->ftid,
-          'ftvid' => $entities[2]->ftvid,
-          'fttype' => $entities[2]->fttype,
-          $this->field_name => array(
-            array('value' => $common_value, 'additional_key' => 'additional_value'),
-          ),
-        ),
-      ),
-    );
-    $this->assertEqual($result, $expected, t('FIELD_QUERY_RETURN_VALUES result format returns the expect result'));
   }
 
   function testFieldAttachViewAndPreprocess() {

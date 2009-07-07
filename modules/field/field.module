@@ -90,8 +90,14 @@ define('FIELD_LOAD_REVISION', 'FIELD_LOAD_REVISION');
 /**
  * @name Field query flags
  * @{
- * Flags for use in the $result_format parameter in field_attach_query().
+ * Flags for field_attach_query().
  */
+
+/**
+ * Limit argument for field_attach_query() to request all available
+ * objects instead of a limited number.
+ */
+define('FIELD_QUERY_NO_LIMIT', 'FIELD_QUERY_NO_LIMIT');
 
 /**
  * Result format argument for field_attach_query().
