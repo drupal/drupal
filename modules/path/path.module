@@ -23,7 +23,7 @@ function path_help($path, $arg) {
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@path">Path module</a>.', array('@path' => 'http://drupal.org/handbook/modules/path/')) . '</p>';
       return $output;
     case 'admin/settings/path':
-      return '<p>' . t("Drupal provides complete control over URLs through aliasing, which is often used to make URLs more readable or easy to remember. For example, the alias 'about' may be mapped onto the post at the system path 'node/1', creating a more meaningful URL. Each system path can have multiple aliases.") . '</p>';
+      return '<p>' . t("An alias defines a different name for an existing URL path - for example, the alias 'about' for the URL path 'node/1'. A URL path can have multiple aliases.") . '</p>';
     case 'admin/settings/path/add':
       return '<p>' . t('Enter the path you wish to create the alias for, followed by the name of the new alias.') . '</p>';
   }
