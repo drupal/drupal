@@ -1149,8 +1149,9 @@ function node_build_content($node, $build_mode = 'full') {
     );
   }
   $node->content['links']['node'] = array(
-    '#type' => 'node_links',
-    '#value' => $links
+    '#theme' => 'links',
+    '#links' => $links,
+    '#attributes' => array('class' => 'links inline'),
   );
 
   // Allow modules to make their own additions to the node.
@@ -3128,30 +3129,6 @@ function node_list_permissions($type) {
   );
 
   return $perms;
-}
-
-/**
- * Implement hook_elements().
- */
-function node_elements() {
-  $type['node_links'] = array('#theme' => 'node_links');
-
-  return $type;
-}
-
-/**
- * Format a set of node links.
- *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used:  value
- * @return
- *   A themed HTML string representing the links.
- *
- * @ingroup themeable
- */
-function theme_node_links($element) {
-  return theme('links', $element['#value'],  array('class' => 'links inline'));
 }
 
 /**

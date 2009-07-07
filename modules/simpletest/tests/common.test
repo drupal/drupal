@@ -714,7 +714,7 @@ class DrupalRenderUnitTestCase extends DrupalWebTestCase {
     );
     // Test that defaults work.
     $this->assertEqual(drupal_render($element), 'foobar', 'Defaults work');
-    dd(drupal_render($e), 'defaults'); $element = array(
+    $element = array(
       '#theme' => 'common_test_foo',
       '#foo' => $this->randomName(),
       '#bar' => $this->randomName(),
