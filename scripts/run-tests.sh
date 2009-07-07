@@ -1,5 +1,5 @@
 <?php
-// $Id: run-tests.sh,v 1.28 2009/06/10 16:17:02 dries Exp $
+// $Id: run-tests.sh,v 1.29 2009/07/07 07:50:53 dries Exp $
 /**
  * @file
  * This script runs Drupal tests from command line.
@@ -465,6 +465,8 @@ function simpletest_script_reporter_init() {
  */
 function simpletest_script_reporter_display_results() {
   global $args, $test_id, $results_map;
+
+  simpletest_log_read($test_id);
 
   echo "\n";
   $end = timer_stop('run-tests');
