@@ -2141,10 +2141,27 @@ function form_process_checkboxes($element) {
  * @param $element
  *   An associative array containing the properties and children of the
  *   tableselect element.
+ *   Each option in $element['#options'] can contain an array keyed by
+ *   '#attributes' which is added to the row's HTML attributes.
+ *   @see theme_table
  *   Properties used: header, options, empty, js_select.
  * @return
  *   A themed HTML string representing the table.
  *
+ * Example:
+ *
+ * @code
+ * $options = array();
+ * $options[0]['title'] = "A red row"
+ * $options[0]['#attributes'] = array ('class' => 'red-row');
+ * $options[1]['title'] = "A blue row"
+ * $options[1]['#attributes'] = array ('class' => 'blue-row');
+ *
+ * $form['myselector'] = array (
+ * '#type' => 'tableselect',
+ * '#title' => 'My Selector'
+ * '#options' => $options,
+ * );
  * @ingroup themeable
  */
 function theme_tableselect($element) {
@@ -2154,13 +2171,17 @@ function theme_tableselect($element) {
     foreach ($element['#options'] as $key => $value) {
       $row = array();
 
+      $row['data'] = array();
+      if (isset($value['#attributes'])) {
+        $row += $value['#attributes'];
+      }
       // Render the checkbox / radio element.
-      $row[] = drupal_render($element[$key]);
+      $row['data'][] = drupal_render($element[$key]);
 
       // As theme_table only maps header and row columns by order, create the
       // correct order by iterating over the header fields.
       foreach ($element['#header'] as $fieldname => $title) {
-        $row[] = $element['#options'][$key][$fieldname];
+        $row['data'][] = $element['#options'][$key][$fieldname];
       }
       $rows[] = $row;
     }
