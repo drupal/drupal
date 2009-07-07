@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.58 2009/07/07 07:52:32 dries Exp $
+// $Id: simpletest.module,v 1.59 2009/07/07 07:58:09 dries Exp $
 
 /**
  * @file
@@ -195,6 +195,7 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
     simpletest_log_read($operations[0][1][1]);
 
     drupal_set_message(t('The test run did not successfully finish.'), 'error');
+    drupal_set_message(t('Please use the <em>Clean environment</em> button to clean-up temporary files and tables.'), 'warning');
   }
   module_invoke_all('test_group_finished');
 }
