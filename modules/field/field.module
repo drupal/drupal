@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.16 2009/07/02 20:37:03 dries Exp $
+// $Id: field.module,v 1.17 2009/07/07 09:28:07 dries Exp $
 /**
  * @file
  * Attach custom data fields to Drupal objects.
@@ -90,8 +90,14 @@ define('FIELD_LOAD_REVISION', 'FIELD_LOAD_REVISION');
 /**
  * @name Field query flags
  * @{
- * Flags for use in the $result_format parameter in field_attach_query().
+ * Flags for field_attach_query().
  */
+
+/**
+ * Limit argument for field_attach_query() to request all available
+ * objects instead of a limited number.
+ */
+define('FIELD_QUERY_NO_LIMIT', 'FIELD_QUERY_NO_LIMIT');
 
 /**
  * Result format argument for field_attach_query().
