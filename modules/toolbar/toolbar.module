@@ -48,7 +48,7 @@ function toolbar_page_alter(&$page) {
  */
 function toolbar_preprocess_page(&$vars) {
   if (user_access('access toolbar')) {
-    $vars['classes_array'][] = 'toolbar';
+    $vars['classes_array'][] = 'toolbar toolbar-shortcuts';
   }
 }
 
