@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.121 2009/07/07 07:52:32 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.122 2009/07/07 08:07:24 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -378,7 +378,11 @@ abstract class DrupalTestCase {
   public function run() {
     // HTTP auth settings (<username>:<password>) for the simpletest browser
     // when sending requests to the test site.
-    $this->httpauth_credentials = variable_get('simpletest_httpauth_credentials', NULL);
+    $username = variable_get('simpletest_username', NULL);
+    $password = variable_get('simpletest_password', NULL);
+    if ($username && $password) {
+      $this->httpauth_credentials = $username . ':' . $password;
+    }
 
     set_error_handler(array($this, 'errorHandler'));
     $methods = array();
