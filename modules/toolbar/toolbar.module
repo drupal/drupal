@@ -1,5 +1,5 @@
 <?php
-// $Id: toolbar.module,v 1.2 2009/07/05 18:00:11 dries Exp $
+// $Id: toolbar.module,v 1.3 2009/07/07 07:54:35 dries Exp $
 
 /**
  * @file
@@ -48,7 +48,7 @@ function toolbar_page_alter(&$page) {
  */
 function toolbar_preprocess_page(&$vars) {
   if (user_access('access toolbar')) {
-    $vars['classes_array'][] = 'toolbar';
+    $vars['classes_array'][] = 'toolbar toolbar-shortcuts';
   }
 }
 
