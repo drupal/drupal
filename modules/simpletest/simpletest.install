@@ -229,6 +229,13 @@ function simpletest_schema() {
         'description' => 'Primary Key: Unique simpletest ID used to group test results together. Each time a set of tests
                             are run a new test ID is used.',
       ),
+      'last_prefix' => array(
+        'type' => 'varchar',
+        'length' => 60,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => 'The last database prefix used during testing.',
+      ),
     ),
     'primary key' => array('test_id'),
   );

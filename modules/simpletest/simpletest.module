@@ -191,9 +191,43 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
     drupal_set_message(t('The test run finished in @elapsed.', array('@elapsed' => $elapsed)));
   }
   else {
+    // Use the test_id passed as a parameter to _simpletest_batch_operation().
+    simpletest_log_read($operations[0][1][1]);
+
     drupal_set_message(t('The test run did not successfully finish.'), 'error');
   }
   module_invoke_all('test_group_finished');
+}
+
+/**
+ * Read the error log and report any errors as assertion failures.
+ *
+ * The errors in the log should only be fatal errors since any other errors
+ * will have been recorded by the error handler.
+ *
+ * @param $test_id
+ *   The test ID to read log file for.
+ */
+function simpletest_log_read($test_id) {
+  $last_prefix = db_result(db_query('SELECT last_prefix FROM {simpletest_test_id} WHERE test_id = :test_id', array(':test_id' => $test_id)));
+  $last_prefix = substr($last_prefix, 10);
+
+  $test_class = db_result(db_query('SELECT test_class FROM {simpletest} WHERE test_id = :test_id ORDER BY message_id', array(':test_id' => $test_id)));
+  $log = file_directory_path() . "/simpletest/$last_prefix/error.log";
+  if (file_exists($log)) {
+    foreach (file($log) as $line) {
+      if (preg_match('/PHP Fatal error: (.*?) in (.*) on line (\d+)/', $line, $match)) {
+        $caller = array(
+          'line' => $match[3],
+          'file' => $match[2],
+        );
+        DrupalTestCase::assertStatic($test_id, $test_class, FALSE, $match[1], 'Fatal error', $caller);
+      }
+      else {
+        DrupalTestCase::assertStatic($test_id, $test_class, FALSE, $line, 'Fatal error');
+      }
+    }
+  }
 }
 
 /**

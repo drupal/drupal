@@ -466,6 +466,8 @@ function simpletest_script_reporter_init() {
 function simpletest_script_reporter_display_results() {
   global $args, $test_id, $results_map;
 
+  simpletest_log_read($test_id);
+
   echo "\n";
   $end = timer_stop('run-tests');
   echo "Test run duration: " . format_interval($end['time'] / 1000);
