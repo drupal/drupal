@@ -208,13 +208,7 @@ function path_node_update($node) {
  * Implement hook_node_delete().
  */
 function path_node_delete($node) {
-  if (user_access('create url aliases') || user_access('administer url aliases')) {
-    $language = isset($node->language) ? $node->language : '';
-    $path = 'node/' . $node->nid;
-    if (drupal_get_path_alias($path) != $path) {
-      path_set_alias($path);
-    }
-  }
+  path_set_alias('node/' . $node->nid);
 }
 
 /**
