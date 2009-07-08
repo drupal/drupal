@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.install,v 1.22 2009/07/07 07:50:53 dries Exp $
+// $Id: simpletest.install,v 1.23 2009/07/08 07:23:23 dries Exp $
 
 /**
  * @file
@@ -109,6 +109,7 @@ function simpletest_uninstall() {
   variable_del('simpletest_httpauth_username');
   variable_del('simpletest_httpauth_pass');
   variable_del('simpletest_devel');
+  variable_del('simpletest_verbose');
 
   // Uninstall schema.
   drupal_uninstall_schema('simpletest');
