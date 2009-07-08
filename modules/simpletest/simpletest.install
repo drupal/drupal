@@ -109,6 +109,7 @@ function simpletest_uninstall() {
   variable_del('simpletest_httpauth_username');
   variable_del('simpletest_httpauth_pass');
   variable_del('simpletest_devel');
+  variable_del('simpletest_verbose');
 
   // Uninstall schema.
   drupal_uninstall_schema('simpletest');
