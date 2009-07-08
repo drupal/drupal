@@ -1894,6 +1894,12 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
     $timezones[$timezone] = timezone_open($timezone);
   }
 
+  // Use the default langcode if none is set.
+  global $language;
+  if (empty($langcode)) {
+    $langcode = isset($language->language) ? $language->language : 'en';
+  }
+
   switch ($type) {
     case 'small':
       $format = variable_get('date_format_short', 'm/d/Y - H:i');
@@ -1909,39 +1915,60 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
       $format = variable_get('date_format_medium', 'D, m/d/Y - H:i');
   }
 
-  $max = strlen($format);
-  $date = '';
   // Create a DateTime object from the timestamp.
   $date_time = date_create('@' . $timestamp);
   // Set the time zone for the DateTime object.
   date_timezone_set($date_time, $timezones[$timezone]);
 
-  for ($i = 0; $i < $max; $i++) {
-    $c = $format[$i];
-    if (strpos('AaeDlMT', $c) !== FALSE) {
-      $date .= t(date_format($date_time, $c), array(), array('langcode' => $langcode));
-    }
-    elseif ($c == 'F') {
-      // Special treatment for long month names: May is both an abbreviation
-      // and a full month name in English, but other languages have
-      // different abbreviations.
-      $date .= t(date_format($date_time, $c), array(), array('context' => 'Long month name', 'langcode' => $langcode));
-    }
-    elseif (strpos('BcdGgHhIijLmNnOoPSstUuWwYyZz', $c) !== FALSE) {
-      $date .= date_format($date_time, $c);
-    }
-    elseif ($c == 'r') {
-      $date .= format_date($timestamp, 'custom', 'D, d M Y H:i:s O', $timezone, $langcode);
-    }
-    elseif ($c == '\\') {
-      $date .= $format[++$i];
-    }
-    else {
-      $date .= $c;
-    }
+  // Encode markers that should be translated. 'A' becomes '\xEF\AA\xFF'.
+  // xEF and xFF are invalid UTF-8 sequences, and we assume they are not in the
+  // input string.
+  // Paired backslashes are isolated to prevent errors in read-ahead evaluation.
+  // The read-ahead expression ensures that A matches, but not \A.
+  $format = preg_replace(array('/\\\\\\\\/', '/(?<!\\\\)([AaeDlMTF])/'), array("\xEF\\\\\\\\\xFF", "\xEF\\\\\$1\$1\xFF"), $format);
+
+  // Call date_format().
+  $format = date_format($date_time, $format);
+
+  // Pass the langcode to _format_date_callback().
+  _format_date_callback(NULL, $langcode);
+
+  // Translate the marked sequences.
+  return preg_replace_callback('/\xEF([AaeDlMTF]?)(.*?)\xFF/', '_format_date_callback', $format);
+}
+
+/**
+ * Callback function for preg_replace_callback().
+ */
+function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
+  // We cache translations to avoid redundant and rather costly calls to t().
+  static $cache, $langcode;
+
+  if (!isset($matches)) {
+    $langcode = $new_langcode;
+    return;
   }
 
-  return $date;
+  $code = $matches[1];
+  $string = $matches[2];
+
+  if (!isset($cache[$langcode][$code][$string])) {
+    $options = array(
+      'langcode' => $langcode,
+    );
+
+    if ($code == 'F') {
+      $options['context'] = 'Long month name';
+    }
+
+    if ($code == '') {
+      $cache[$langcode][$code][$string] = $string;
+    }
+    else {
+      $cache[$langcode][$code][$string] = t($string, array(), $options);
+    }
+  }
+  return $cache[$langcode][$code][$string];
 }
 
 /**
