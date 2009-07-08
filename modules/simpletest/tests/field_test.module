@@ -366,65 +366,21 @@ function field_test_field_schema($field) {
 }
 
 /**
- * Store and retrieve keyed data for later verification by unit tests.
- *
- * This function is a simple in-memory key-value store with the
- * distinction that it stores all values for a given key instead of
- * just the most recently set value.  field_test module hooks call
- * this function to record their arguments, keyed by hook name. The
- * unit tests later call this function to verify that the correct
- * hooks were called and were passed the correct arguments.
- *
- * This function ignores all calls until the first time it is called
- * with $key of NULL. Each time it is called with $key of NULL, it
- * erases all previously stored data from its internal cache, but also
- * returns the previously stored data to the caller. A typical usage
- * scenario is:
- *
- * @code
- *   // calls to field_test_memorize() here are ignored
- *
- *   // turn on memorization
- *   field_test_memorize();
- *
- *   // call some Field API functions that invoke field_test hooks
- *   $field = field_create_field(...);
- *
- *   // retrieve and reset the memorized hook call data
- *   $mem = field_test_memorize();
- *
- *   // make sure hook_field_create_field() is invoked correctly
- *   assertEqual(count($mem['field_test_field_create_field']), 1);
- *   assertEqual($mem['field_test_field_create_field'][0], array($field));
- * @endcode
- *
- * @param $key
- *   The key under which to store to $value, or NULL as described above.
- * @param $value
- *   A value to store for $key.
- * @return
- *   An array mapping each $key to an array of each $value passed in
- *   for that key.
+ * Implement hook_field_load().
  */
-function field_test_memorize($key = NULL, $value = NULL) {
-  $memorize =& drupal_static(__FUNCTION__, NULL);
-
-  if (is_null($key)) {
-    $ret = $memorize;
-    $memorize = array();
-    return $ret;
+function field_test_field_load($obj_type, $objects, $field, $instances, &$items, $age) {
+  foreach ($items as $id => $item) {
+    // To keep the test non-intrusive, only act for instances with the
+    // test_hook_field_load setting explicitly set to TRUE.
+    if ($instances[$id]['settings']['test_hook_field_load']) {
+      foreach ($item as $delta => $value) {
+        // Don't add anything on empty values.
+        if ($value) {
+          $items[$id][$delta]['additional_key'] = 'additional_value';
+        }
+      }
+    }
   }
-  if (is_array($memorize)) {
-    $memorize[$key][] = $value;
-  }
-}
-
-/**
- * Memorize calls to hook_field_create_field().
- */
-function field_test_field_create_field($field) {
-  $args = func_get_args();
-  field_test_memorize(__FUNCTION__, $args);
 }
 
 /**
@@ -576,24 +532,6 @@ function field_test_field_formatter_info() {
 }
 
 /**
- * Implement hook_field_load().
- */
-function field_test_field_load($obj_type, $objects, $field, $instances, &$items, $age) {
-  foreach ($items as $id => $item) {
-    // To keep the test non-intrusive, only act for instances with the
-    // test_hook_field_load setting explicitly set to TRUE.
-    if ($instances[$id]['settings']['test_hook_field_load']) {
-      foreach ($item as $delta => $value) {
-        // Don't add anything on empty values.
-        if ($value) {
-          $items[$id][$delta]['additional_key'] = 'additional_value';
-        }
-      }
-    }
-  }
-}
-
-/**
  * Implement hook_theme().
  */
 function field_test_theme() {
@@ -636,4 +574,66 @@ function theme_field_formatter_field_test_multiple($element) {
  */
 function field_test_default_value($obj_type, $object, $field, $instance) {
   return array(array('value' => 99));
+}
+
+/**
+ * Store and retrieve keyed data for later verification by unit tests.
+ *
+ * This function is a simple in-memory key-value store with the
+ * distinction that it stores all values for a given key instead of
+ * just the most recently set value.  field_test module hooks call
+ * this function to record their arguments, keyed by hook name. The
+ * unit tests later call this function to verify that the correct
+ * hooks were called and were passed the correct arguments.
+ *
+ * This function ignores all calls until the first time it is called
+ * with $key of NULL. Each time it is called with $key of NULL, it
+ * erases all previously stored data from its internal cache, but also
+ * returns the previously stored data to the caller. A typical usage
+ * scenario is:
+ *
+ * @code
+ *   // calls to field_test_memorize() here are ignored
+ *
+ *   // turn on memorization
+ *   field_test_memorize();
+ *
+ *   // call some Field API functions that invoke field_test hooks
+ *   $field = field_create_field(...);
+ *
+ *   // retrieve and reset the memorized hook call data
+ *   $mem = field_test_memorize();
+ *
+ *   // make sure hook_field_create_field() is invoked correctly
+ *   assertEqual(count($mem['field_test_field_create_field']), 1);
+ *   assertEqual($mem['field_test_field_create_field'][0], array($field));
+ * @endcode
+ *
+ * @param $key
+ *   The key under which to store to $value, or NULL as described above.
+ * @param $value
+ *   A value to store for $key.
+ * @return
+ *   An array mapping each $key to an array of each $value passed in
+ *   for that key.
+ */
+function field_test_memorize($key = NULL, $value = NULL) {
+  $memorize =& drupal_static(__FUNCTION__, NULL);
+
+  if (is_null($key)) {
+    $ret = $memorize;
+    $memorize = array();
+    return $ret;
+  }
+  if (is_array($memorize)) {
+    $memorize[$key][] = $value;
+  }
+}
+
+/**
+ * Memorize calls to hook_field_create_field().
+ */
+function field_test_field_create_field($field) {
+  $args = func_get_args();
+  field_test_memorize(__FUNCTION__, $args);
 }
