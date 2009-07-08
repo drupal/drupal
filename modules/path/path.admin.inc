@@ -48,8 +48,8 @@ function path_admin_overview($keys = NULL) {
       'data' => array(
         l($data->dst, $data->src),
         l($data->src, $data->src, array('alias' => TRUE)),
-        l(t('edit'), "admin/build/path/edit/$data->pid", array('query' => $destination)),
-        l(t('delete'), "admin/build/path/delete/$data->pid", array('query' => $destination)),
+        l(t('edit'), "admin/settings/path/edit/$data->pid", array('query' => $destination)),
+        l(t('delete'), "admin/settings/path/delete/$data->pid", array('query' => $destination)),
       ),
     );
     if ($multilanguage) {
@@ -59,7 +59,7 @@ function path_admin_overview($keys = NULL) {
   }
 
   if (empty($rows)) {
-    $empty_message = $keys ? t('No URL aliases found.') : t('No URL aliases available. <a href="@link">Add alias</a>.', array('@link' => url('admin/build/path/add'))) ;
+    $empty_message = $keys ? t('No URL aliases found.') : t('No URL aliases available. <a href="@link">Add alias</a>.', array('@link' => url('admin/settings/path/add'))) ;
     $rows[] = array(array('data' => $empty_message, 'colspan' => ($multilanguage ? 5 : 4)));
   }
 
@@ -167,7 +167,7 @@ function path_admin_form_submit($form, &$form_state) {
   path_set_alias($form_state['values']['src'], $form_state['values']['dst'], isset($form_state['values']['pid']) ? $form_state['values']['pid'] : 0, isset($form_state['values']['language']) ? $form_state['values']['language'] : '');
 
   drupal_set_message(t('The alias has been saved.'));
-  $form_state['redirect'] = 'admin/build/path';
+  $form_state['redirect'] = 'admin/settings/path';
   return;
 }
 
@@ -180,7 +180,7 @@ function path_admin_delete_confirm($form_state, $pid) {
     $form['pid'] = array('#type' => 'value', '#value' => $pid);
     $output = confirm_form($form,
       t('Are you sure you want to delete path alias %title?', array('%title' => $path['dst'])),
-      isset($_GET['destination']) ? $_GET['destination'] : 'admin/build/path');
+      isset($_GET['destination']) ? $_GET['destination'] : 'admin/settings/path');
   }
   return $output;
 }
@@ -191,7 +191,7 @@ function path_admin_delete_confirm($form_state, $pid) {
 function path_admin_delete_confirm_submit($form, &$form_state) {
   if ($form_state['values']['confirm']) {
     path_admin_delete($form_state['values']['pid']);
-    $form_state['redirect'] = 'admin/build/path';
+    $form_state['redirect'] = 'admin/settings/path';
     return;
   }
 }
@@ -235,14 +235,14 @@ function path_admin_filter_form(&$form_state, $keys = '') {
  * Process filter form submission when the Filter button is pressed.
  */
 function path_admin_filter_form_submit_filter($form, &$form_state) {
-  $form_state['redirect'] = 'admin/build/path/list/' . trim($form_state['values']['filter']);
+  $form_state['redirect'] = 'admin/settings/path/list/' . trim($form_state['values']['filter']);
 }
 
 /**
  * Process filter form submission when the Reset button is pressed.
  */
 function path_admin_filter_form_submit_reset($form, &$form_state) {
-  $form_state['redirect'] = 'admin/build/path/list';
+  $form_state['redirect'] = 'admin/settings/path/list';
 }
 
 
