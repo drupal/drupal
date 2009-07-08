@@ -1255,13 +1255,8 @@ function system_site_information_settings_validate($form, &$form_state) {
     form_set_error('site_mail', $error);
   }
   // Validate front page path.
-  $item = array('link_path' => $form_state['values']['site_frontpage']);
-  $normal_path = drupal_get_normal_path($item['link_path']);
-  if ($item['link_path'] != $normal_path) {
-    drupal_set_message(t('The menu system stores system paths only, but will use the URL alias for display. %link_path has been stored as %normal_path', array('%link_path' => $item['link_path'], '%normal_path' => $normal_path)));
-    $item['link_path'] = $normal_path;
-  }
-  if (!empty($item) && !menu_valid_path($item)) {
+  $item = array('link_path' => drupal_get_normal_path($form_state['values']['site_frontpage']));
+  if (!menu_valid_path($item)) {
     form_set_error('site_frontpage', t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $item['link_path'])));
   }
 }
