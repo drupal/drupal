@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.6 2009/06/01 11:23:27 dries Exp $
+// $Id: schema.inc,v 1.7 2009/07/09 10:12:14 dries Exp $
 
 /**
  * @file
@@ -139,7 +139,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     else {
       $sql = $name . " " . $spec['sqlite_type'];
 
-      if (isset($spec['length'])) {
+      if (in_array($spec['type'], array('varchar', 'char', 'text')) && isset($spec['length'])) {
         $sql .= '(' . $spec['length'] . ')';
       }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.17 2009/06/06 18:23:21 webchick Exp $
+// $Id: schema.inc,v 1.18 2009/07/09 10:12:13 dries Exp $
 
 /**
  * @file
@@ -62,7 +62,7 @@
  *       specify '0' as the default value for a type 'int' field it
  *       will not work because '0' is a string containing the
  *       character "zero", not an integer.
- *     - 'length': The maximal length of a type 'varchar' or 'text'
+ *     - 'length': The maximal length of a type 'char', 'varchar' or 'text'
  *       field. Ignored for other field types.
  *     - 'unsigned': A boolean indicating whether a type 'int', 'float'
  *       and 'numeric' only is signed or unsigned. Defaults to

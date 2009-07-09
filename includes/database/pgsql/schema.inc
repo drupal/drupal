@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.15 2009/05/29 01:51:46 webchick Exp $
+// $Id: schema.inc,v 1.16 2009/07/09 10:12:14 dries Exp $
 
 /**
  * @file
@@ -147,7 +147,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       $sql .= " CHECK ($name >= 0)";
     }
 
-    if (!empty($spec['length'])) {
+    if (in_array($spec['type'], array('varchar', 'char', 'text')) && isset($spec['length'])) {
       $sql .= '(' . $spec['length'] . ')';
     }
     elseif (isset($spec['precision']) && isset($spec['scale'])) {
