@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.328 2009/06/10 21:52:36 dries Exp $
+// $Id: menu.inc,v 1.329 2009/07/09 07:03:57 dries Exp $
 
 /**
  * @file
@@ -210,7 +210,7 @@ define('MENU_SITE_OFFLINE', 4);
  /**
  * The maximum number of path elements for a menu callback
  */
-define('MENU_MAX_PARTS', 7);
+define('MENU_MAX_PARTS', 8);
 
 
 /**
