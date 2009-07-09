@@ -105,10 +105,9 @@ function simpletest_uninstall() {
   simpletest_clean_environment();
 
   // Remove settings variables.
-  variable_del('simpletest_httpauth');
-  variable_del('simpletest_httpauth_username');
-  variable_del('simpletest_httpauth_pass');
-  variable_del('simpletest_devel');
+  variable_del('simpletest_username');
+  variable_del('simpletest_password');
+  variable_del('simpletest_clear_results');
   variable_del('simpletest_verbose');
 
   // Uninstall schema.
