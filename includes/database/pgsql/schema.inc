@@ -147,7 +147,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       $sql .= " CHECK ($name >= 0)";
     }
 
-    if (!empty($spec['length'])) {
+    if (in_array($spec['type'], array('varchar', 'char', 'text')) && isset($spec['length'])) {
       $sql .= '(' . $spec['length'] . ')';
     }
     elseif (isset($spec['precision']) && isset($spec['scale'])) {

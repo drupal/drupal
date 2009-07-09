@@ -139,7 +139,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     else {
       $sql = $name . " " . $spec['sqlite_type'];
 
-      if (isset($spec['length'])) {
+      if (in_array($spec['type'], array('varchar', 'char', 'text')) && isset($spec['length'])) {
         $sql .= '(' . $spec['length'] . ')';
       }
 
