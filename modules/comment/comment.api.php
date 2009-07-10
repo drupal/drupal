@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.api.php,v 1.9 2009/07/07 13:53:25 dries Exp $
+// $Id: comment.api.php,v 1.10 2009/07/10 05:50:08 webchick Exp $
 
 /**
  * @file
@@ -31,6 +31,19 @@ function hook_comment_insert($comment) {
 function hook_comment_update($comment) {
   // Reindex the node when comments are updated.
   search_touch_node($comment->nid);
+}
+
+/**
+ * Comments are being loaded from the database.
+ *
+ * @param $comments
+ *  An array of comment objects indexed by cid.
+ */
+function hook_comment_load($comments) {
+  $result = db_query('SELECT cid, foo FROM {mytable} WHERE cid IN (:cids)', array(':cids' => array_keys($comments)));
+  foreach ($result as $record) {
+    $comments[$record->cid]->foo = $record->foo;
+  }
 }
 
 /**
