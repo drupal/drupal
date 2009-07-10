@@ -141,11 +141,14 @@ function module_load_install($module) {
  * 
  * Examples:
  * @code
- *   // Load node.admin.inc from the node module
+ *   // Load node.admin.inc from the node module.
  *   module_load_include('inc', 'node', 'node.admin');
- *   // Load node.install from the node module
- *   module_load_include('install', 'node'); 
+ *   // Load content_types.inc from the node module.
+ *   module_load_include('inc', 'node', 'content_types'); 
  * @endcode
+ *
+ * Do not use this function to load an install file. Use module_load_install()
+ * instead.
  *
  * @param $type
  *   The include file's type (file extension).
