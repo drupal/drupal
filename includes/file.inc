@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.173 2009/07/10 03:46:33 webchick Exp $
+// $Id: file.inc,v 1.174 2009/07/10 04:08:20 webchick Exp $
 
 /**
  * @file
@@ -1085,8 +1085,6 @@ function file_validate_name_length($file) {
  * @see hook_file_validate()
  */
 function file_validate_extensions($file, $extensions) {
-  global $user;
-
   $errors = array();
 
   $regex = '/\.(' . preg_replace('/ +/', '|', preg_quote($extensions)) . ')$/i';
