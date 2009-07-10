@@ -24,12 +24,28 @@ function taxonomy_permission() {
 function taxonomy_fieldable_info() {
   $return = array(
     'taxonomy_term' => array(
-      'name' => t('Taxonomy term'),
-      'id key' => 'tid',
-      'bundle key' => 'vocabulary_machine_name',
-      'bundles' => taxonomy_vocabulary_get_names(),
+      'label' => t('Taxonomy term'),
+      'object keys' => array(
+        'id' => 'tid',
+        'bundle' => 'vocabulary_machine_name',
+      ),
+      'bundle keys' => array(
+        'bundle' => 'machine_name',
+      ),
+      'bundles' => array(),
     ),
   );
+  foreach (taxonomy_get_vocabularies() as $vocabulary) {
+    $return['taxonomy_term']['bundles'][$vocabulary->machine_name] = array(
+      'label' => $vocabulary->name,
+      'admin' => array(
+        'path' => 'admin/content/taxonomy/%taxonomy_vocabulary',
+        'real path' => 'admin/content/taxonomy/' . $vocabulary->vid,
+        'bundle argument' => 3,
+        'access arguments' => array('administer taxonomy'),
+      ),
+    );
+  }
   return $return;
 }
 

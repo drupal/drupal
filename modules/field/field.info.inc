@@ -126,16 +126,18 @@ function _field_info_collate_types($reset = FALSE) {
         foreach ($fieldable_types as $name => $fieldable_info) {
           // Provide defaults.
           $fieldable_info += array(
-            'revision key' => '',
-            'bundle key' => '',
             'cacheable' => TRUE,
             'bundles' => array(),
+          );
+          $fieldable_info['object keys'] += array(
+            'revision' => '',
+            'bundle' => '',
           );
           // If no bundle key provided, then we assume a single bundle, named
           // after the type of the object. Make sure the bundle created
           // has the human-readable name we need for bundle messages.
-          if (empty($fieldable_info['bundle key'])) {
-            $fieldable_info['bundles'] = array($name => $fieldable_info['name']);
+          if (empty($fieldable_info['object keys']['bundle']) && empty($fieldable_info['bundles'])) {
+            $fieldable_info['bundles'] = array($name => array('label' => $fieldable_info['label']));
           }
           $info['fieldable types'][$name] = $fieldable_info;
           $info['fieldable types'][$name]['module'] = $module;
@@ -367,7 +369,7 @@ function field_info_bundles($obj_type = NULL) {
 }
 
 /**
- * Identity the type of entity that created a bundle.
+ * Identify the type of entity that created a bundle.
  * // TODO : might not be needed depending on how we solve
  * // the 'namespace bundle names' issue
  */

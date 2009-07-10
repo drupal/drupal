@@ -89,8 +89,19 @@ function user_theme() {
 function user_fieldable_info() {
   $return = array(
     'user' => array(
-      'name' => t('User'),
-      'id key' => 'uid',
+      'label' => t('User'),
+      'object keys' => array(
+        'id' => 'uid',
+      ),
+      'bundles' => array(
+        'user' => array(
+          'label' => t('User'),
+          'admin' => array(
+            'path' => 'admin/settings/user',
+            'access arguments' => array('administer users'),
+          ),
+        ),
+      ),
     ),
   );
   return $return;

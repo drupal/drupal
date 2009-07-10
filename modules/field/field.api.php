@@ -9,47 +9,81 @@
 /**
  * Inform the Field API about one or more fieldable types.
  *
- * Inform the Field API about one or more fieldable types, (object
- * types to which fields can be attached).
+ * Inform the Field API about one or more fieldable types (object types to
+ * which fields can be attached).
  *
  * @return
  *   An array whose keys are fieldable object type names and
- *   whose values identify properties of those types that the Field
- *   system needs to know about:
- *
- *   name: The human-readable name of the type.
- *   id key: The object property that contains the primary id for the
- *     object. Every object passed to the Field API must
- *     have this property and its value must be numeric.
- *   revision key: The object property that contains the revision id
- *     for the object, or NULL if the object type is not
- *     versioned. The Field API assumes that all revision ids are
- *     unique across all instances of a type; this means, for example,
- *     that every object's revision ids cannot be 0, 1, 2, ...
- *   bundle key: The object property that contains the bundle name for
- *     the object (bundle name is what nodes call "content type").
- *     The bundle name defines which fields are connected to the object.
- *   cacheable: A boolean indicating whether Field API should cache
+ *   whose values are arrays with the following key/value pairs:
+ *   - label: The human-readable name of the type.
+ *   - object keys: An array describing how the Field API can extract the
+ *     informations it needs from the objects of the type.
+ *     - id: The name of the property that contains the primary id of the
+ *       object. Every object passed to the Field API must have this property
+ *       and its value must be numeric.
+ *     - revision: The name of the property that contains the revision id of
+ *       the object. The Field API assumes that all revision ids are unique
+ *       across all objects of a type.
+ *       This element can be omitted if the objects of this type are not
+ *       versionable.
+ *     - bundle: The name of the property that contains the bundle name for the
+ *       object. The bundle name defines which set of fields are attached to
+ *       the object (e.g. what nodes call "content type").
+ *       This element can be omitted if this type has no bundles (all objects
+ *       have the same fields).
+ *   - bundle keys: An array describing how the Field API can extract the
+ *     informations it needs from the bundle objects for this type (e.g
+ *     $vocabulary objects for terms; not applicable for nodes).
+ *     This element can be omitted if this type's bundles do not exist as
+ *     standalone objects.
+ *     - bundle: The name of the property that contains the name of the bundle
+ *       object.
+ *   - cacheable: A boolean indicating whether Field API should cache
  *     loaded fields for each object, reducing the cost of
  *     field_attach_load().
- *   bundles: An array of all existing bundle names for this object
- *     type. TODO: Define format. TODO: I'm unclear why we need
- *     this.
+ *   - bundles: An array describing all bundles for this object type.
+ *     Keys are bundles machine names, as found in the objects' 'bundle'
+ *     property (defined in the 'object keys' entry above).
+ *     - label: The human-readable name of the bundle.
+ *     - admin: An array of informations that allow Field UI pages (currently
+ *       implemented in a contributed module) to attach themselves to the
+ *       existing administration pages for the bundle.
+ *       - path: the path of the bundle's main administration page, as defined
+ *         in hook_menu(). If the path includes a placeholder for the bundle,
+ *         the 'bundle argument', 'bundle helper' and 'real path' keys below
+ *         are required.
+ *       - bundle argument: The position of the placeholder in 'path', if any.
+ *       - real path: The actual path (no placeholder) of the bundle's main
+ *         administration page. This will be used to generate links.
+ *       - access callback: As in hook_menu(). 'user_access' will be assumed if
+ *         no value is provided.
+ *       - access arguments: As in hook_menu().
  */
 function hook_fieldable_info() {
   $return = array(
-    'node' => array(
-      'name' => t('Node'),
-      'id key' => 'nid',
-      'revision key' => 'vid',
-      'bundle key' => 'type',
-      // Node.module handles its own caching.
-      'cacheable' => FALSE,
-      // Bundles must provide human readable name so
-      // we can create help and error messages about them.
-      'bundles' => node_type_get_names(),
+    'taxonomy_term' => array(
+      'label' => t('Taxonomy term'),
+      'object keys' => array(
+        'id' => 'tid',
+        'bundle' => 'vocabulary_machine_name',
+      ),
+      'bundle keys' => array(
+        'bundle' => 'machine_name',
+      ),
+      'bundles' => array(),
     ),
   );
+  foreach (taxonomy_get_vocabularies() as $vocabulary) {
+    $return['taxonomy_term']['bundles'][$vocabulary->machine_name] = array(
+      'label' => $vocabulary->name,
+      'admin' => array(
+        'path' => 'admin/content/taxonomy/%taxonomy_vocabulary',
+        'real path' => 'admin/content/taxonomy/' . $vocabulary->vid,
+        'bundle argument' => 3,
+        'access arguments' => array('administer taxonomy'),
+      ),
+    );
+  }
   return $return;
 }
 

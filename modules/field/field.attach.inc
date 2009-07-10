@@ -382,8 +382,8 @@ function field_attach_form($obj_type, $object, &$form, &$form_state) {
  *   The type of $object; e.g. 'node' or 'user'.
  * @param $objects
  *   An array of objects for which to load fields, keyed by object id.
- *   Each object needs to have its 'bundle key', 'id key' and (if applicable)
- *   'revision key' filled.
+ *   Each object needs to have its 'bundle', 'id' and (if applicable)
+ *   'revision' keys filled.
  * @param $age
  *   FIELD_LOAD_CURRENT to load the most recent revision for all
  *   fields, or FIELD_LOAD_REVISION to load the version indicated by
@@ -485,8 +485,8 @@ function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT) {
  *   The type of $object; e.g. 'node' or 'user'.
  * @param $objects
  *   An array of objects for which to load fields, keyed by object id.
- *   Each object needs to have its 'bundle key', 'id key' and 'revision key'
- *   filled.
+ *   Each object needs to have its 'bundle', 'id' and (if applicable)
+ *   'revision' keys filled.
  * @returns
  *   On return, the objects in $objects are modified by having the
  *   appropriate set of fields added.
@@ -546,8 +546,8 @@ function field_attach_validate($obj_type, $object) {
  * @param $obj_type
  *   The type of $object; e.g. 'node' or 'user'.
  * @param $object
- *   The object being submitted. The 'bundle key', 'id key' and (if applicable)
- *   'revision key' should be present. The actual field values will be read
+ *   The object being submitted. The 'bundle', 'id' and (if applicable)
+ *   'revision' keys should be present. The actual field values will be read
  *   from $form_state['values'].
  * @param $form
  *   The form structure.
@@ -578,8 +578,8 @@ function field_attach_form_validate($obj_type, $object, $form, &$form_state) {
  * @param $obj_type
  *   The type of $object; e.g. 'node' or 'user'.
  * @param $object
- *   The object being submitted. The 'bundle key', 'id key' and (if applicable)
- *   'revision key' should be present. The actual field values will be read
+ *   The object being submitted. The 'bundle', 'id' and (if applicable)
+ *   'revision' keys should be present. The actual field values will be read
  *   from $form_state['values'].
  * @param $form
  *   The form structure to fill in.
@@ -993,17 +993,39 @@ function field_attach_delete_bundle($bundle) {
  *   2: bundle name of the object
  *   3: whether $obj_type's fields should be cached (TRUE/FALSE)
  */
-function field_attach_extract_ids($object_type, $object) {
+function field_attach_extract_ids($obj_type, $object) {
   // TODO D7 : prevent against broken 3rd party $node without 'type'.
-  $info = field_info_fieldable_types($object_type);
+  $info = field_info_fieldable_types($obj_type);
   // Objects being created might not have id/vid yet.
-  $id = isset($object->{$info['id key']}) ? $object->{$info['id key']} : NULL;
-  $vid = ($info['revision key'] && isset($object->{$info['revision key']})) ? $object->{$info['revision key']} : NULL;
+  $id = isset($object->{$info['object keys']['id']}) ? $object->{$info['object keys']['id']} : NULL;
+  $vid = ($info['object keys']['revision'] && isset($object->{$info['object keys']['revision']})) ? $object->{$info['object keys']['revision']} : NULL;
   // If no bundle key provided, then we assume a single bundle, named after the
   // type of the object.
-  $bundle = $info['bundle key'] ? $object->{$info['bundle key']} : $object_type;
+  $bundle = $info['object keys']['bundle'] ? $object->{$info['object keys']['bundle']} : $obj_type;
   $cacheable = $info['cacheable'];
   return array($id, $vid, $bundle, $cacheable);
+}
+
+/**
+ * Helper function to extract id, vid, and bundle name from an object.
+ *
+ * @param $obj_type
+ *   The type of $object; e.g. 'node' or 'user'.
+ * @param $bundle
+ *   The bundle object (or string if bundles for this object type do not exist
+ *   as standalone objects).
+ * @return
+ *   The bundle name.
+ */
+function field_attach_extract_bundle($obj_type, $bundle) {
+  if (is_string($bundle)) {
+    return $bundle;
+  }
+
+  $info = field_info_fieldable_types($obj_type);
+  if (is_object($bundle) && isset($info['bundle keys']['bundle']) && isset($bundle->{$info['bundle keys']['bundle']})) {
+    return $bundle->{$info['bundle keys']['bundle']};
+  }
 }
 
 /**
@@ -1025,12 +1047,12 @@ function field_attach_extract_ids($object_type, $object) {
 function field_attach_create_stub_object($obj_type, $ids) {
   $object = new stdClass();
   $info = field_info_fieldable_types($obj_type);
-  $object->{$info['id key']} = $ids[0];
-  if (isset($info['revision key']) && !is_null($ids[1])) {
-    $object->{$info['revision key']} = $ids[1];
+  $object->{$info['object keys']['id']} = $ids[0];
+  if (isset($info['object keys']['revision']) && !is_null($ids[1])) {
+    $object->{$info['object keys']['revision']} = $ids[1];
   }
-  if ($info['bundle key']) {
-    $object->{$info['bundle key']} = $ids[2];
+  if ($info['object keys']['bundle']) {
+    $object->{$info['object keys']['bundle']} = $ids[2];
   }
   return $object;
 }

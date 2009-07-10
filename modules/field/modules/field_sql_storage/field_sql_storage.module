@@ -412,23 +412,23 @@ function field_sql_storage_field_storage_query($field_name, $conditions, $count,
       $query->range($cursor, $limit);
     }
     $results = $query->execute();
-    
+
     $found = FALSE;
     foreach ($results as $row) {
       $found = TRUE;
       ++$cursor;
-      
+
       // If querying all revisions and the entity type has revisions, we need to
       // key the results by revision_ids.
       $entity_type = field_info_fieldable_types($row->type);
-      $id = ($load_current || empty($entity_type['revision key'])) ? $row->entity_id : $row->revision_id;
+      $id = ($load_current || empty($entity_type['object keys']['revision'])) ? $row->entity_id : $row->revision_id;
 
       // We get multiple rows if the field has multiple deltas.  Only
       // count the first one.
       if (isset($return[$row->type][$id])) {
         continue;
       }
-      
+
       $return[$row->type][$id] = field_attach_create_stub_object($row->type, array($row->entity_id, $row->revision_id, $row->bundle));
       --$count;
     }

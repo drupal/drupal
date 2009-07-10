@@ -124,17 +124,28 @@ function node_cron() {
 function node_fieldable_info() {
   $return = array(
     'node' => array(
-      'name' => t('Node'),
-      'id key' => 'nid',
-      'revision key' => 'vid',
-      'bundle key' => 'type',
+      'label' => t('Node'),
+      'object keys' => array(
+        'id' => 'nid',
+        'revision' => 'vid',
+        'bundle' => 'type',
+      ),
       // Node.module handles its own caching.
       // 'cacheable' => FALSE,
-      // Bundles must provide human readable name so
-      // we can create help and error messages about them.
-      'bundles' => node_type_get_names(),
+      'bundles' => array(),
     ),
   );
+  // Bundles must provide a human readable name so we can create help and error
+  // messages, and the path to attach Field admin pages to.
+  foreach (node_type_get_names() as $type => $name) {
+    $return['node']['bundles'][$type] = array(
+      'label' => $name,
+      'admin' => array(
+        'path' => 'admin/build/node-type/' . str_replace('_', '-', $type),
+        'access arguments' => array('administer content types'),
+      ),
+    );
+  }
   return $return;
 }
 

@@ -26,12 +26,12 @@ function field_test_permission() {
  */
 function field_test_menu() {
   $items = array();
-  $info = field_test_fieldable_info();
+  $bundles = field_info_bundles('test_entity');
 
-  foreach (array_keys($info['test_entity']['bundles']) as $bundle) {
-    $bundle_url_str = str_replace('_', '-', $bundle);
+  foreach ($bundles as $bundle_name => $bundle_info) {
+    $bundle_url_str = str_replace('_', '-', $bundle_name);
     $items['test-entity/add/' . $bundle_url_str] = array(
-      'title' => "Add $bundle test_entity",
+      'title' => t('Add %bundle test_entity', array('%bundle' => $bundle_info['label'])),
       'page callback' => 'field_test_entity_add',
       'page arguments' => array(2),
       'access arguments' => array('administer field_test content'),
@@ -61,23 +61,27 @@ function field_test_menu() {
  * Define a test fieldable entity.
  */
 function field_test_fieldable_info() {
-  $bundles = variable_get('field_test_bundles', array('test_bundle' => 'Test Bundle'));
+  $bundles = variable_get('field_test_bundles', array('test_bundle' => array('label' => 'Test Bundle')));
   return array(
     'test_entity' => array(
       'name' => t('Test Entity'),
-      'id key' => 'ftid',
-      'revision key' => 'ftvid',
+      'object keys' => array(
+        'id' => 'ftid',
+        'revision' => 'ftvid',
+        'bundle' => 'fttype',
+      ),
       'cacheable' => FALSE,
-      'bundle key' => 'fttype',
       'bundles' => $bundles,
     ),
     // This entity type doesn't get form handling for now...
     'test_cacheable_entity' => array(
       'name' => t('Test Entity, cacheable'),
-      'id key' => 'ftid',
-      'revision key' => 'ftvid',
+      'object keys' => array(
+        'id' => 'ftid',
+        'revision' => 'ftvid',
+        'bundle' => 'fttype',
+      ),
       'cacheable' => TRUE,
-      'bundle key' => 'fttype',
       'bundles' => $bundles,
     ),
   );
@@ -86,18 +90,18 @@ function field_test_fieldable_info() {
 /**
  * Create a new bundle for test_entity objects.
  *
- * @param $bundle
+ * @param $bundle_name
  *   The machine-readable name of the bundle.
  * @param $text
  *   The human-readable name of the bundle. If none is provided, the machine
  *   name will be used.
  */
-function field_test_create_bundle($bundle, $text = NULL) {
-  $bundles = variable_get('field_test_bundles', array('test_bundle' => 'Test Bundle'));
-  $bundles += array($bundle => $text ? $text : $bundle);
+function field_test_create_bundle($bundle_name, $text = NULL) {
+  $bundles = variable_get('field_test_bundles', array('test_bundle' => array('label' => 'Test Bundle')));
+  $bundles += array($bundle_name => array('label' => $text ? $text : $bundle_name));
   variable_set('field_test_bundles', $bundles);
 
-  field_attach_create_bundle($bundle);
+  field_attach_create_bundle($bundle_name);
 }
 
 /**
@@ -109,7 +113,7 @@ function field_test_create_bundle($bundle, $text = NULL) {
  *   The new machine-readable name of the bundle.
  */
 function field_test_rename_bundle($bundle_old, $bundle_new) {
-  $bundles = variable_get('field_test_bundles', array('test_bundle' => 'Test Bundle'));
+  $bundles = variable_get('field_test_bundles', array('test_bundle' => array('label' => 'Test Bundle')));
   $bundles[$bundle_new] = $bundles[$bundle_old];
   unset($bundles[$bundle_old]);
   variable_set('field_test_bundles', $bundles);
@@ -120,15 +124,15 @@ function field_test_rename_bundle($bundle_old, $bundle_new) {
 /**
  * Delete a bundle for test_entity objects.
  *
- * @param $bundle
+ * @param $bundle_name
  *   The machine-readable name of the bundle to delete.
  */
-function field_test_delete_bundle($bundle) {
-  $bundles = variable_get('field_test_bundles', array('test_bundle' => 'Test Bundle'));
-  unset($bundles[$bundle]);
+function field_test_delete_bundle($bundle_name) {
+  $bundles = variable_get('field_test_bundles', array('test_bundle' => array('label' => 'Test Bundle')));
+  unset($bundles[$bundle_name]);
   variable_set('field_test_bundles', $bundles);
 
-  field_attach_delete_bundle($bundle);
+  field_attach_delete_bundle($bundle_name);
 }
 
 /**
