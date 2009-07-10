@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1009 2009/07/10 05:43:15 webchick Exp $
+// $Id: user.module,v 1.1010 2009/07/10 05:58:13 webchick Exp $
 
 /**
  * @file
@@ -89,8 +89,19 @@ function user_theme() {
 function user_fieldable_info() {
   $return = array(
     'user' => array(
-      'name' => t('User'),
-      'id key' => 'uid',
+      'label' => t('User'),
+      'object keys' => array(
+        'id' => 'uid',
+      ),
+      'bundles' => array(
+        'user' => array(
+          'label' => t('User'),
+          'admin' => array(
+            'path' => 'admin/settings/user',
+            'access arguments' => array('administer users'),
+          ),
+        ),
+      ),
     ),
   );
   return $return;
