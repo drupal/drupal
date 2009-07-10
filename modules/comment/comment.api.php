@@ -34,6 +34,19 @@ function hook_comment_update($comment) {
 }
 
 /**
+ * Comments are being loaded from the database.
+ *
+ * @param $comments
+ *  An array of comment objects indexed by cid.
+ */
+function hook_comment_load($comments) {
+  $result = db_query('SELECT cid, foo FROM {mytable} WHERE cid IN (:cids)', array(':cids' => array_keys($comments)));
+  foreach ($result as $record) {
+    $comments[$record->cid]->foo = $record->foo;
+  }
+}
+
+/**
  * The comment is being viewed. This hook can be used to add additional data to the comment before theming.
  *
  * @param $comment

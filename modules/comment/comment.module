@@ -1122,22 +1122,9 @@ function comment_render($node, $cid = 0) {
     $comments_per_page = _comment_get_display_setting('comments_per_page', $node);
 
     if ($cid && is_numeric($cid)) {
+      $comment = current(comment_load_multiple(array('cid' => $cid, 'status' => COMMENT_PUBLISHED)));
       // Single comment view.
-      $query = db_select('comment', 'c');
-      $query->addField('u', 'name', 'registered_name');
-      $query->innerJoin('users', 'u', 'c.uid = u.uid');
-      $query
-        ->fields('c', array('cid', 'nid', 'pid', 'comment', 'subject', 'format', 'timestamp', 'name', 'mail', 'homepage', 'status'))
-        ->fields('u', array( 'uid', 'signature', 'picture', 'data', 'status'))
-        ->condition('c.cid', $cid);
-
-      if (!user_access('administer comments')) {
-        $query->condition('c.status', COMMENT_PUBLISHED);
-      }
-
-      $result = $query->execute();
-
-      if ($comment = $result->fetchObject()) {
+      if ($comment) {
         $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
         $links = module_invoke_all('link', 'comment', $comment, 1);
         drupal_alter('link', $links, $node);
@@ -1152,11 +1139,8 @@ function comment_render($node, $cid = 0) {
 
       // Multiple comment view.
       $query = db_select('comment', 'c')->extend('PagerDefault');
-      $query->join('users', 'u', 'c.uid = u.uid');
-      $query->addField('u', 'name', 'registered_name');
+      $query->addField('c', 'cid');
       $query
-        ->fields('c', array('cid', 'pid', 'nid', 'subject', 'comment', 'format', 'timestamp', 'name', 'mail', 'homepage', 'thread', 'status'))
-        ->fields('u', array('uid', 'signature', 'picture', 'data'))
         ->condition('c.nid', $nid)
         ->addTag('node_access')
         ->limit($comments_per_page);
@@ -1182,13 +1166,14 @@ function comment_render($node, $cid = 0) {
       }
 
       $query->setCountQuery($count_query);
-      $result = $query->execute();
+      $cids = $query->execute()->fetchCol();
 
       $divs = 0;
       $num_rows = FALSE;
-      $comments = '';
+      $render = '';
+      $comments = comment_load_multiple($cids);
       drupal_add_css(drupal_get_path('module', 'comment') . '/comment.css');
-      foreach ($result as $comment) {
+      foreach ($comments as $comment) {
         $comment = drupal_unpack($comment);
         $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
         $comment->depth = count(explode('.', $comment->thread)) - 1;
@@ -1196,28 +1181,28 @@ function comment_render($node, $cid = 0) {
         if ($mode == COMMENT_MODE_THREADED) {
           if ($comment->depth > $divs) {
             $divs++;
-            $comments .= '<div class="indented">';
+            $render .= '<div class="indented">';
           }
           else {
             while ($comment->depth < $divs) {
               $divs--;
-              $comments .= '</div>';
+              $render .= '</div>';
             }
           }
         }
 
         if ($mode == COMMENT_MODE_FLAT) {
-          $comments .= theme('comment_flat_expanded', $comment, $node);
+          $render .= theme('comment_flat_expanded', $comment, $node);
         }
         elseif ($mode == COMMENT_MODE_THREADED) {
-          $comments .= theme('comment_thread_expanded', $comment, $node);
+          $render .= theme('comment_thread_expanded', $comment, $node);
         }
         $num_rows = TRUE;
       }
       while ($divs-- > 0) {
-        $comments .= '</div>';
+        $render .= '</div>';
       }
-      $output .= $comments;
+      $output .= $render;
       $output .= theme('pager', NULL);
     }
 
@@ -1268,8 +1253,46 @@ function comment_operations($action = NULL) {
 }
 
 /**
- * Begin the misc functions: helpers, privates, history.
+ * Load comments from the database.
+ *
+ * @param $cids
+ *   An array of comment IDs.
+ * @param $conditions
+ *   An array of conditions to match against the {comments} table. These
+ *   should be supplied in the form array('field_name' => 'field_value').
+ * @return
+ *  An array of comment objects, indexed by comment ID.
  */
+function comment_load_multiple($cids = array(), $conditions = array()) {
+  $comments = array();
+  if ($cids || $conditions) {
+    $query = db_select('comment', 'c');
+    $query->innerJoin('users', 'u', 'c.uid = u.uid');
+    $query->addField('u', 'name', 'registered_name');
+    $query
+      ->fields('c', array('cid', 'nid', 'pid', 'comment', 'subject', 'format', 'timestamp', 'name', 'mail', 'homepage', 'status', 'thread'))
+      ->fields('u', array( 'uid', 'signature', 'picture', 'data', 'status'));
+
+    // If the $cids array is populated, add those to the query.
+    if ($cids) {
+      $query->condition('c.cid', $cids, 'IN');
+    }
+
+    // If the conditions array is populated, add those to the query.
+    if ($conditions) {
+      foreach ($conditions as $field => $value) {
+        $query->condition('c.' . $field, $value);
+      }
+    }
+    $comments = $query->execute()->fetchAllAssoc('cid');
+  }
+
+  // Invoke hook_comment_load().
+  if (!empty($comments)) {
+    module_invoke_all('comment_load', $comments);
+  }
+  return $comments;
+}
 
 /**
  * Load the entire comment by cid.
@@ -1280,7 +1303,7 @@ function comment_operations($action = NULL) {
  *   The comment object.
  */
 function comment_load($cid) {
-  return db_query('SELECT * FROM {comment} WHERE cid = :cid', array(':cid' => $cid))->fetchObject();
+  return current(comment_load_multiple(array($cid)));
 }
 
 /**
