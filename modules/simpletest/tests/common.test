@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.52 2009/07/07 13:51:58 dries Exp $
+// $Id: common.test,v 1.53 2009/07/10 05:45:56 webchick Exp $
 
 /**
  * Tests for the l() function.
@@ -557,6 +557,46 @@ class JavaScriptTestCase extends DrupalWebTestCase {
   function testDifferentWeight() {
     $javascript = drupal_add_js('misc/collapse.js', array('weight' => JS_THEME));
     $this->assertEqual($javascript['misc/collapse.js']['weight'], JS_THEME, t('Adding a JavaScript file with a different weight caches the given weight.'));
+  }
+
+  /**
+   * Test JavaScript ordering.
+   */
+  function testRenderOrder() {
+    // Add a bunch of JavaScript in strange ordering.
+    drupal_add_js('(function($){alert("Weight 5 #1");})(jQuery);', array('type' => 'inline', 'scope' => 'footer', 'weight' => 5));
+    drupal_add_js('(function($){alert("Weight 0 #1");})(jQuery);', array('type' => 'inline', 'scope' => 'footer'));
+    drupal_add_js('(function($){alert("Weight 0 #2");})(jQuery);', array('type' => 'inline', 'scope' => 'footer'));
+    drupal_add_js('(function($){alert("Weight -8 #1");})(jQuery);', array('type' => 'inline', 'scope' => 'footer', 'weight' => -8));
+    drupal_add_js('(function($){alert("Weight -8 #2");})(jQuery);', array('type' => 'inline', 'scope' => 'footer', 'weight' => -8));
+    drupal_add_js('(function($){alert("Weight -8 #3");})(jQuery);', array('type' => 'inline', 'scope' => 'footer', 'weight' => -8));
+    drupal_add_js('(function($){alert("Weight -8 #4");})(jQuery);', array('type' => 'inline', 'scope' => 'footer', 'weight' => -8));
+    drupal_add_js('(function($){alert("Weight 5 #2");})(jQuery);', array('type' => 'inline', 'scope' => 'footer', 'weight' => 5));
+    drupal_add_js('(function($){alert("Weight 0 #3");})(jQuery);', array('type' => 'inline', 'scope' => 'footer'));
+
+    // Construct the expected result from the regex.
+    $expected = array(
+      "-8 #1",
+      "-8 #2",
+      "-8 #3",
+      "-8 #4",
+      "0 #1",
+      "0 #2",
+      "0 #3",
+      "5 #1",
+      "5 #2",
+    );
+
+    // Retrieve the rendered JavaScript and test against the regex.
+    $js = drupal_get_js('footer');
+    $matches = array();
+    if (preg_match_all('/Weight\s([-0-9]+\s[#0-9]+)/', $js, $matches)) {
+      $result = $matches[1];
+    }
+    else {
+      $result = array();
+    }
+    $this->assertIdentical($result, $expected, t('JavaScript is added in the expected weight order.'));
   }
 
   /**

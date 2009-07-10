@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.931 2009/07/08 20:40:21 dries Exp $
+// $Id: common.inc,v 1.932 2009/07/10 05:45:56 webchick Exp $
 
 /**
  * @file
@@ -2792,6 +2792,10 @@ function drupal_add_js($data = NULL, $options = NULL) {
 
   // Preprocess can only be set if caching is enabled.
   $options['preprocess'] = $options['cache'] ? $options['preprocess'] : FALSE;
+
+  // Tweak the weight so that files of the same weight are included in the
+  // order of the calls to drupal_add_js().
+  $options['weight'] += count($javascript) / 1000;
 
   if (isset($data)) {
     // Add jquery.js and drupal.js, as well as the basePath setting, the
