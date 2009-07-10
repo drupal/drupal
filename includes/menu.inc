@@ -1055,6 +1055,10 @@ function _menu_build() {
   $temp_mid = -1;
 
   foreach ($menu_item_list as $item) {
+    // Protect against D6 style access
+    if (isset($item['access']) && is_array($item['access']) && count($item['access']) == 1 && isset($item['access'][0]) && is_string($item['access'][0])) {
+      $item['access'] = FALSE;
+    }
     if (!isset($item['path'])) {
       $item['path'] = '';
     }
@@ -1225,6 +1229,10 @@ function _menu_append_contextual_items() {
   $new_items = array();
 
   foreach ($menu_item_list as $item) {
+    // Protect against D6 style access
+    if (isset($item['access']) && is_array($item['access']) && count($item['access']) == 1 && isset($item['access'][0]) && is_string($item['access'][0])) {
+      $item['access'] = FALSE;
+    }
     if (isset($item['callback'])) {
       $_menu['callbacks'][$item['path']] = array('callback' => $item['callback']);
       if (isset($item['callback arguments'])) {
