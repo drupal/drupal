@@ -57,7 +57,6 @@ function taxonomy_link($type, $node = NULL) {
  * @return
  *   An internal Drupal path.
  */
-
 function taxonomy_term_path($term) {
   $vocabulary = taxonomy_get_vocabulary($term->vid);
   if ($vocabulary->module != 'taxonomy' && $path = module_invoke($vocabulary->module, 'term_path', $term)) {
