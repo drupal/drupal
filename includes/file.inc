@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.172 2009/07/07 08:59:07 dries Exp $
+// $Id: file.inc,v 1.173 2009/07/10 03:46:33 webchick Exp $
 
 /**
  * @file
@@ -156,7 +156,9 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
 
   // Check if directory exists.
   if (!is_dir($directory)) {
-    if (($mode & FILE_CREATE_DIRECTORY) && @mkdir($directory)) {
+    // Let mkdir() recursively create directories and use the default directory
+    // permissions.
+    if (($mode & FILE_CREATE_DIRECTORY) && @mkdir($directory, variable_get('file_chmod_directory', 0775), TRUE)) {
       drupal_chmod($directory);
     }
     else {
