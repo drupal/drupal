@@ -407,7 +407,7 @@ function system_install() {
   ));
 
   // Authenticated role permissions.
-  foreach (array('access comments', 'access content', 'post comments', 'post comments without approval') as $permission) {
+  foreach (array('access comments', 'access content', 'post comments', 'post comments without approval', 'view own unpublished content') as $permission) {
     $query->values(array(
       'rid' => DRUPAL_AUTHENTICATED_RID,
       'permission' => $permission,
@@ -2222,6 +2222,21 @@ function system_update_7028() {
   db_rename_table($ret, 'vocabulary', 'taxonomy_vocabulary');
   db_rename_table($ret, 'vocabulary_node_types', 'taxonomy_vocabulary_node_type');
 
+  return $ret;
+}
+
+/**
+ * Add new 'view own unpublished content' permission for authenticated users.
+ * Preserves legacy behavior from Drupal 6.x.
+ */
+function system_update_7029() {
+  $ret = array();
+  db_insert('role_permission')
+    ->fields(array(
+      'rid' => DRUPAL_AUTHENTICATED_RID,
+      'permission' => 'view own unpublished content',
+    ))
+    ->execute();
   return $ret;
 }
 
