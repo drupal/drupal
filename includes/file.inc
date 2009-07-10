@@ -1085,8 +1085,6 @@ function file_validate_name_length($file) {
  * @see hook_file_validate()
  */
 function file_validate_extensions($file, $extensions) {
-  global $user;
-
   $errors = array();
 
   $regex = '/\.(' . preg_replace('/ +/', '|', preg_quote($extensions)) . ')$/i';
