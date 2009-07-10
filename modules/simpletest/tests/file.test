@@ -672,7 +672,7 @@ class FileDirectoryTest extends FileTestCase {
    */
   function testFileCheckDirectory() {
     // A directory to operate on.
-    $directory = file_directory_path() . '/' . $this->randomName();
+    $directory = file_directory_path() . '/' . $this->randomName() . '/' . $this->randomName();
     $this->assertFalse(is_dir($directory), t('Directory does not exist prior to testing.'));
 
     // Non-existent directory.
