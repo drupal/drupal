@@ -313,16 +313,19 @@ function user_load_by_name($name) {
  * Save changes to a user account or add a new user.
  *
  * @param $account
- *   The $user object for the user to modify or add. If $user->uid is
- *   omitted (or $user->is_new == TRUE), a new user will be added.
- *
+ *   (optional) The user object to modify or add. If you want to modify
+ *   an existing user account, you will need to ensure that (a) $account 
+ *   is an object, and (b) you have set $account->uid to the numeric 
+ *   user ID of the user account you wish to modify. If you
+ *   want to create a new user account, you can set $account->is_new to
+ *   TRUE or omit the $account->uid field. 
  * @param $edit
  *   An array of fields and values to save. For example array('name'
  *   => 'My name'). Keys that do not belong to columns in the user-related
  *   tables are added to the a serialized array in the 'data' column
  *   and will be loaded in the $user->data array by user_load().
- *   Setting a field to NULL deletes it from the data column.
- *
+ *   Setting a field to NULL deletes it from the data column, if you are
+ *   modifying an existing user account.
  * @param $category
  *   (optional) The category for storing profile information in.
  *
