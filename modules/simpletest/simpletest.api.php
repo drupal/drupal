@@ -15,10 +15,6 @@
  * A test group has started.
  *
  * This hook is called just once at the beginning of a test group.
- *
- * @return
- *   None.
- *
  */
 function hook_test_group_started() {
 }
@@ -27,10 +23,6 @@ function hook_test_group_started() {
  * A test group has finished.
  *
  * This hook is called just once at the end of a test group.
- *
- * @return
- *   None.
- *
  */
 function hook_test_group_finished() {
 }
@@ -42,9 +34,6 @@ function hook_test_group_finished() {
  *
  * @param
  *   $results The results of the test as gathered by DrupalWebTestCase.
- *
- * @return
- *   None.
  *
  * @see DrupalWebTestCase->results
  */

@@ -105,8 +105,6 @@ function hook_menu() {
  *
  * @param $items
  *   Associative array of menu router definitions returned from hook_menu().
- * @return
- *   None.
  */
 function hook_menu_alter(&$items) {
   // Example - disable the page at node/add
@@ -118,8 +116,6 @@ function hook_menu_alter(&$items) {
  *
  * @param $item
  *   Associative array defining a menu link as passed into menu_link_save().
- * @return
- *   None.
  */
 function hook_menu_link_alter(&$item) {
   // Example 1 - make all new admin links hidden (a.k.a disabled).
@@ -144,8 +140,6 @@ function hook_menu_link_alter(&$item) {
  *   Associative array defining a menu link after _menu_link_translate()
  * @param $map
  *   Associative array containing the menu $map (path parts and/or objects).
- * @return
- *   None.
  */
 function hook_translated_menu_link_alter(&$item, $map) {
   if ($item['href'] == 'devel/cache/clear') {

@@ -266,8 +266,6 @@ function hook_node_operations() {
  *
  * @param $node
  *   The node that is being deleted.
- * @return
- *   None.
  */
 function hook_node_delete($node) {
   db_delete('mytable')
@@ -282,8 +280,6 @@ function hook_node_delete($node) {
  *
  * @param $node
  *   The node the action is being performed on.
- * @return
- *   None.
  */
 function hook_node_delete_revision($node) {
   db_delete('upload')->condition('vid', $node->vid)->execute();
@@ -302,8 +298,6 @@ function hook_node_delete_revision($node) {
  *
  * @param $node
  *   The node the action is being performed on.
- * @return
- *   None.
  */
 function hook_node_insert($node) {
   db_insert('mytable')
@@ -352,8 +346,6 @@ function hook_node_load($nodes, $types) {
  *
  * @param $node
  *   The node the action is being performed on.
- * @return
- *   None.
  */
 function hook_node_prepare($node) {
   if (!isset($node->comment)) {
@@ -369,8 +361,6 @@ function hook_node_prepare($node) {
  *
  * @param $node
  *   The node the action is being performed on.
- * @return
- *   None.
  */
 function hook_node_prepare_translation($node) {
 }
@@ -397,8 +387,6 @@ function hook_node_search_result($node) {
  *
  * @param $node
  *   The node the action is being performed on.
- * @return
- *   None.
  */
 function hook_node_presave($node) {
   if ($node->nid && $node->moderate) {
@@ -414,8 +402,6 @@ function hook_node_presave($node) {
  *
  * @param $node
  *   The node the action is being performed on.
- * @return
- *   None.
  */
 function hook_node_update($node) {
   db_update('mytable')
@@ -454,8 +440,6 @@ function hook_node_update_index($node) {
  *   The node the action is being performed on.
  * @param $form
  *   The $form parameter from node_validate().
- * @return
- *   None.
  */
 function hook_node_validate($node, $form) {
   if (isset($node->end) && isset($node->start)) {
@@ -594,8 +578,6 @@ function hook_node_info() {
  *   - "update"
  * @param $info
  *   The node type object on which $op is being performed.
- * @return
- *   None.
  */
 function hook_node_type($op, $info) {
 
@@ -670,8 +652,6 @@ function hook_access($op, $node, $account) {
  *
  * @param $node
  *   The node being deleted.
- * @return
- *   None.
  *
  * To take action when nodes of any type are deleted (not just nodes of
  * the type defined by this module), use hook_node() instead.
@@ -690,8 +670,6 @@ function hook_delete($node) {
  *
  * @param $node
  *   The node being saved.
- * @return
- *   None.
  *
  * For a usage example, see image.module.
  */
@@ -779,8 +757,6 @@ function hook_form($node, $form_state) {
  *
  * @param $node
  *   The node being inserted.
- * @return
- *   None.
  *
  * To take action when nodes of any type are inserted (not just nodes of
  * the type(s) defined by this module), use hook_node() instead.
@@ -823,8 +799,6 @@ function hook_load($nodes) {
  *
  * @param $node
  *   The node being updated.
- * @return
- *   None.
  *
  * To take action when nodes of any type are updated (not just nodes of
  * the type(s) defined by this module), use hook_node() instead.
@@ -847,8 +821,6 @@ function hook_update($node) {
  *   The node to be validated.
  * @param $form
  *   The node edit form array.
- * @return
- *   None.
  *
  * To validate nodes of all types (not just nodes of the type(s) defined by
  * this module), use hook_node() instead.

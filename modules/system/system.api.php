@@ -21,9 +21,6 @@
  * Database maintenance, recalculation of settings or parameters, and
  * automatic mailings are good candidates for cron tasks.
  *
- * @return
- *   None.
- *
  * This hook will only be called if cron.php is run (e.g. by crontab).
  */
 function hook_cron() {
@@ -137,8 +134,6 @@ function hook_elements() {
  *   Modules may use this to react appropriately; for example, nothing should
  *   be output in this case, because PHP will then throw a "headers cannot be
  *   modified" error when attempting the redirection.
- * @return
- *   None.
  */
 function hook_exit($destination = NULL) {
   db_update('counter')
@@ -387,8 +382,6 @@ function hook_form_alter(&$form, $form_state, $form_id) {
  *   Nested array of form elements that comprise the form.
  * @param $form_state
  *   A keyed array containing the current state of the form.
- * @return
- *   None.
  *
  * @see drupal_prepare_form().
  */
@@ -447,9 +440,6 @@ function hook_forms($form_id, $args) {
  * Only use this hook if your code must run even for cached page views.This hook
  * is called before modules or most include files are loaded into memory.
  * It happens while Drupal is still in bootstrap mode.
- *
- * @return
- *   None.
  */
 function hook_boot() {
   // we need user_access() in the shutdown function. make sure it gets loaded
@@ -467,9 +457,6 @@ function hook_boot() {
  * For example, this hook is a typical place for modules to add CSS or JS
  * that should be present on every page. This hook is not run on cached
  * pages - though CSS or JS added this way will be present on a cached page.
- *
- * @return
- *   None.
  */
 function hook_init() {
   drupal_add_css(drupal_get_path('module', 'book') . '/book.css');
@@ -568,8 +555,6 @@ function hook_link($type, $object, $build_mode) {
  *   Nested array of links for the node keyed by providing module.
  * @param $node
  *   A node object that contains the links.
- * @return
- *   None.
  */
 function hook_link_alter(array &$links, $node) {
   foreach ($links as $module => $link) {
@@ -586,8 +571,6 @@ function hook_link_alter(array &$links, $node) {
  * @param $account
  *   A user object whose profile is being rendered. Profile items
  *   are stored in $account->content.
- * @return
- *   None.
  */
 function hook_profile_alter(&$account) {
   foreach ($account->content AS $key => $field) {
@@ -621,7 +604,7 @@ function hook_profile_alter(&$account) {
  *     either a custom address or the site-wide default email address.
  *   - 'headers'
  *     Associative array containing mail headers, such as From, Sender,
- *     MIME-Version, Content-Type, etc. 
+ *     MIME-Version, Content-Type, etc.
  */
 function hook_mail_alter(&$message) {
   if ($message['mail_id'] == 'my_message') {
@@ -900,9 +883,6 @@ function hook_xmlrpc() {
  *     WATCHDOG_DEBUG     Debug: debug-level messages
  *   - link: an optional link provided by the module that called the watchdog() function.
  *   - message: The text of the message to be logged.
- *
- * @return
- *   None.
  */
 function hook_watchdog(array $log_entry) {
   global $base_url, $language;
@@ -977,7 +957,7 @@ function hook_watchdog(array $log_entry) {
  *     array when the hook is invoked.
  *  - 'from':
  *     The address the message will be marked as being from, which is
- *     set by drupal_mail() to either a custom address or the site-wide 
+ *     set by drupal_mail() to either a custom address or the site-wide
  *     default email address when the hook is invoked.
  *  - 'headers':
  *     Associative array containing mail headers, such as From, Sender,
@@ -1032,8 +1012,6 @@ function hook_mail($key, &$message, $params) {
  * whenever drupal_flush_all_caches is invoked.
  *
  * @see drupal_flush_all_caches()
- *
- * @param None.
  *
  * @return
  *   An array of cache table names.
@@ -1241,8 +1219,6 @@ function hook_file_validate(&$file) {
  *
  * @param $file
  *   The file that has just been created.
- * @return
- *   None.
  *
  * @see file_save()
  */
@@ -1257,8 +1233,6 @@ function hook_file_insert(&$file) {
  *
  * @param $file
  *   The file that has just been updated.
- * @return
- *   None.
  *
  * @see file_save()
  */
@@ -1273,8 +1247,6 @@ function hook_file_update(&$file) {
  *   The newly copied file object.
  * @param $source
  *   The original file before the copy.
- * @return
- *   None.
  *
  * @see file_copy()
  */
@@ -1289,8 +1261,6 @@ function hook_file_copy($file, $source) {
  *   The updated file object after the move.
  * @param $source
  *   The original file object before the move.
- * @return
- *   None.
  *
  * @see file_move()
  */
@@ -1328,8 +1298,6 @@ function hook_file_references($file) {
  *
  * @param $file
  *   The file that has just been deleted.
- * @return
- *   None.
  *
  * @see file_delete()
  * @see upload_file_delete()
@@ -1547,8 +1515,6 @@ function hook_schema() {
  *
  * @param $schema
  *   Nested array describing the schemas for all modules.
- * @return
- *   None.
  */
 function hook_schema_alter(&$schema) {
   // Add field to existing schema.
@@ -1572,8 +1538,6 @@ function hook_schema_alter(&$schema) {
  * @see SelectQueryInterface
  * @param $query
  *   A Query object describing the composite parts of a SQL query.
- * @return
- *   None.
  */
 function hook_query_alter(QueryAlterableInterface $query) {
   if ($query->hasTag('micro_limit')) {
@@ -1591,8 +1555,6 @@ function hook_query_alter(QueryAlterableInterface $query) {
  *
  * @param $query
  *   An Query object describing the composite parts of a SQL query.
- * @return
- *   None.
  */
 function hook_query_TAG_alter(QueryAlterableInterface $query) {
   // Skip the extra expensive alterations if site has no node access control modules.
