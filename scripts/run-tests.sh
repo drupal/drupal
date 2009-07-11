@@ -1,5 +1,5 @@
 <?php
-// $Id: run-tests.sh,v 1.29 2009/07/07 07:50:53 dries Exp $
+// $Id: run-tests.sh,v 1.30 2009/07/11 05:31:28 dries Exp $
 /**
  * @file
  * This script runs Drupal tests from command line.
@@ -400,7 +400,7 @@ function simpletest_script_get_test_list() {
       }
 
       // Check for valid class names.
-      foreach ($all_tests as $class_name => $info) {
+      foreach ($all_tests as $class_name) {
         $refclass = new ReflectionClass($class_name);
         $file = $refclass->getFileName();
         if (isset($files[$file])) {
