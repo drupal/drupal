@@ -102,9 +102,6 @@
  *     to other fields when used with this bundle. The weight affects
  *     ordering in both forms (see field_attach_form()) and rendered output
  *     (see field_attach_view()).
- *     TODO - this should probably become a context setting so that
- *     the weight can be different in the form and in various other
- *     contexts.
  * - required (integer)
  *     TRUE if a value for this field is required when used with this
  *     bundle, FALSE otherwise. Currently, required-ness is only enforced
@@ -276,7 +273,7 @@ function field_create_field($field) {
 
   // Invoke external hooks after the cache is cleared for API consistency.
   module_invoke_all('field_create_field', $field);
-  
+
   return $field;
 }
 

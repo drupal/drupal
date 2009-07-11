@@ -6,8 +6,6 @@
  * Field forms management.
  */
 
-// TODO : merge with field.default.inc ?
-
 /**
  * Create a separate form element for each field.
  */

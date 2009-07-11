@@ -6,12 +6,6 @@
  * Field attach API, allowing objects (nodes, users, ...) to be 'fieldable'.
  */
 
-// TODO D7 : consistency - do field_attach_functions return a value or alter in place ?
-
-// TODO D7 : consistency - some of these functions process individual fields
-// and others process the combined value of all fields.
-// Should all iteration through available fields be done here instead of in Field?
-
 /**
  * Exception thrown by field_attach_validate() on field validation errors.
  */
@@ -364,7 +358,6 @@ function _field_invoke_multiple_default($op, $obj_type, $objects, &$a = NULL, &$
  * field_attach_view().
  */
 function field_attach_form($obj_type, $object, &$form, &$form_state) {
-  // TODO : something's not right here : do we alter the form or return a value ?
   $form += (array) _field_invoke_default('form', $obj_type, $object, $form, $form_state);
 
   // Let other modules make changes to the form.
@@ -512,7 +505,6 @@ function field_attach_load_revision($obj_type, $objects) {
  */
 function field_attach_validate($obj_type, $object) {
   $errors = array();
-  _field_invoke_default('validate', $obj_type, $object, $errors);
   _field_invoke('validate', $obj_type, $object, $errors);
 
   // Let other modules validate the object.
@@ -611,8 +603,6 @@ function field_attach_submit($obj_type, $object, $form, &$form_state) {
  *   The object with fields to process.
  */
 function field_attach_presave($obj_type, $object) {
-  // TODO : to my knowledge, no field module has any use for 'presave' on D6.
-  // should we keep this ?
   _field_invoke('presave', $obj_type, $object);
 
   // Let other modules act on presaving the object.

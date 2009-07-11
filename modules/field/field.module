@@ -323,18 +323,12 @@ function _field_sort_items_value_helper($a, $b) {
 
 /**
  * Registry of available build modes.
- * TODO : move into hook_fieldable_info() ?
  */
 function field_build_modes($obj_type) {
   static $info;
 
   if (!isset($info[$obj_type])) {
-    // module_invoke_all messes numeric keys.
-    // TODO : revisit when we move away from numeric build modes.
-    $info[$obj_type] = array();
-    foreach (module_implements('field_build_modes') as $module) {
-      $info[$obj_type] += module_invoke($module, 'field_build_modes', $obj_type);
-    }
+    $info[$obj_type] = module_invoke_all('field_build_modes', $obj_type);
   }
   return $info[$obj_type];
 }

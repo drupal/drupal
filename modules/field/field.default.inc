@@ -21,14 +21,8 @@ function field_default_extract_form_values($obj_type, $object, $field, $instance
   }
 }
 
-function field_default_validate($obj_type, $object, $field, $instance, $items) {
-  // TODO: here we could validate that required fields are filled in (for programmatic save)
-}
-
 function field_default_submit($obj_type, $object, $field, $instance, &$items, $form, &$form_state) {
   $field_name = $field['field_name'];
-
-  // TODO: should me move what's below to __extract_form_values ?
 
   // Reorder items to account for drag-n-drop reordering.
   if (field_behaviors_widget('multiple values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
