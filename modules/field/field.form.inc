@@ -1,12 +1,10 @@
 <?php
-// $Id: field.form.inc,v 1.10 2009/06/02 13:47:25 dries Exp $
+// $Id: field.form.inc,v 1.11 2009/07/11 00:56:45 webchick Exp $
 
 /**
  * @file
  * Field forms management.
  */
-
-// TODO : merge with field.default.inc ?
 
 /**
  * Create a separate form element for each field.
