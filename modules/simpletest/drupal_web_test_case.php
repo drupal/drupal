@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.124 2009/07/11 02:23:09 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.125 2009/07/11 06:14:48 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -913,7 +913,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   TRUE or FALSE depending on whether the permissions are valid.
    */
   protected function checkPermissions(array $permissions, $reset = FALSE) {
-    static $available;
+    $available = &drupal_static(__FUNCTION__);
 
     if (!isset($available) || $reset) {
       $available = array_keys(module_invoke_all('permission'));

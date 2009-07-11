@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.pages.inc,v 1.7 2009/07/08 07:23:23 dries Exp $
+// $Id: simpletest.pages.inc,v 1.8 2009/07/11 06:14:48 dries Exp $
 
 /**
  * @file
@@ -390,6 +390,7 @@ function simpletest_result_get($test_id) {
  * @return HTML image or false.
  */
 function simpletest_result_status_image($status) {
+  // $map does not use drupal_static() as its value never changes.
   static $map;
 
   if (!isset($map)) {
