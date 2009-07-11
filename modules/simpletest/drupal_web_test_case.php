@@ -2425,7 +2425,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function verbose($message) {
     if ($id = simpletest_verbose($message)) {
-      $this->pass(l(t('Verbose message'), url($this->originalFileDirectory . '/simpletest/verbose.html', array('fragment' => $id))), 'Debug');
+      $this->pass(l(t('Verbose message'), $this->originalFileDirectory . '/simpletest/verbose.html', array('fragment' => $id)), 'Debug');
     }
   }
 }
@@ -2464,8 +2464,10 @@ function drupal_mail_wrapper($message) {
  */
 function simpletest_verbose($message, $original_file_directory = NULL) {
   static $file_directory = NULL, $id = 0;
+  $verbose = &drupal_static(__FUNCTION__);
 
-  if (variable_get('simpletest_verbose', FALSE) || TRUE) {
+  // Will pass first time during setup phase, and when verbose is TRUE.
+  if (!isset($original_file_directory) && !$verbose) {
     return FALSE;
   }
 
@@ -2477,10 +2479,14 @@ function simpletest_verbose($message, $original_file_directory = NULL) {
 
   if ($original_file_directory) {
     $file_directory = $original_file_directory;
+    $verbose = variable_get('simpletest_verbose', FALSE);
 
     // Clear out the previous log.
     $message = t('Starting verbose log at @time.', array('@time' => format_date(time()))) . "\n";
-    file_put_contents($file_directory . '/simpletest/verbose.html', $message);
+    $directory = $file_directory . '/simpletest';
+    if (file_check_directory($directory, FILE_CREATE_DIRECTORY)) {
+      file_put_contents($directory . '/verbose.html', $message);
+    }
   }
   return FALSE;
 }
