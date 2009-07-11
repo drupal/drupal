@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.api.php,v 1.2 2008/12/09 11:36:03 dries Exp $
+// $Id: locale.api.php,v 1.3 2009/07/11 13:56:21 dries Exp $
 
 /**
  * @file
@@ -34,8 +34,6 @@ function hook_locale($op = 'groups') {
  *   Nested array of links keyed by language code.
  * @param $path
  *   The current path.
- * @return
- *   None.
  */
 function hook_translation_link_alter(array &$links, $path) {
   global $language;
