@@ -913,7 +913,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    *   TRUE or FALSE depending on whether the permissions are valid.
    */
   protected function checkPermissions(array $permissions, $reset = FALSE) {
-    static $available;
+    $available = &drupal_static(__FUNCTION__);
 
     if (!isset($available) || $reset) {
       $available = array_keys(module_invoke_all('permission'));

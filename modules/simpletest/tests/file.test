@@ -18,26 +18,29 @@ function file_test_validator($file, $errors) {
  * Helper function for testing file_scan_directory().
  *
  * Each time the function is called the file is stored in a static variable.
- * When the function is called with $reset parameter TRUE the cache is cleared
- * and the results returned.
+ * When the function is called with no $filepath parameter, the results are
+ * returned.
  *
  * @param $filepath
  *   File path
- * @param $reset
- *   Boolean indicating that the stored files should be removed and returned.
  * @return
- *   An array of all previous $file parameters since $reset was last called.
+ *   If $filepath is NULL, an array of all previous $filepath parameters
  */
-function file_test_file_scan_callback($filepath, $reset = FALSE) {
-  static $files = array();
-
-  if ($reset) {
-    $ret = $files;
-    $files = array();
-    return $ret;
+function file_test_file_scan_callback($filepath = NULL) {
+  $files = &drupal_static(__FUNCTION__, array());
+  if (isset($filepath)) {
+    $files[] = $filepath;
+  } 
+  else {
+    return $files;
   }
+}
 
-  $files[] = $filepath;
+/**
+ * Reset static variables used by file_test_file_scan_callback().
+ */
+function file_test_file_scan_callback_reset() {
+  drupal_static_reset('file_test_file_scan_callback');
 }
 
 /**
@@ -869,14 +872,16 @@ class FileScanDirectoryTest extends FileTestCase {
     // When nothing is matched nothing should be passed to the callback.
     $all_files = file_scan_directory($this->path, '/^NONEXISTINGFILENAME/', array('callback' => 'file_test_file_scan_callback'));
     $this->assertEqual(0, count($all_files), t('No files were found.'));
-    $results = file_test_file_scan_callback(NULL, TRUE);
+    $results = file_test_file_scan_callback();
+    file_test_file_scan_callback_reset();
     $this->assertEqual(0, count($results), t('No files were passed to the callback.'));
 
     // Grab a listing of all the JavaSscript files and check that they're
     // passed to the callback.
     $all_files = file_scan_directory($this->path, '/^javascript-/', array('callback' => 'file_test_file_scan_callback'));
     $this->assertEqual(2, count($all_files), t('Found two, expected javascript files.'));
-    $results = file_test_file_scan_callback(NULL, TRUE);
+    $results = file_test_file_scan_callback();
+    file_test_file_scan_callback_reset();
     $this->assertEqual(2, count($results), t('Files were passed to the callback.'));
   }
 

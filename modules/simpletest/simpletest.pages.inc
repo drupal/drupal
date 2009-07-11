@@ -390,6 +390,7 @@ function simpletest_result_get($test_id) {
  * @return HTML image or false.
  */
 function simpletest_result_status_image($status) {
+  // $map does not use drupal_static() as its value never changes.
   static $map;
 
   if (!isset($map)) {
