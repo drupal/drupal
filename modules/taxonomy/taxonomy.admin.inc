@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.admin.inc,v 1.61 2009/06/30 17:23:12 webchick Exp $
+// $Id: taxonomy.admin.inc,v 1.62 2009/07/11 14:25:41 dries Exp $
 
 /**
  * @file
@@ -84,7 +84,7 @@ function theme_taxonomy_overview_vocabularies($form) {
   }
 
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No vocabularies available. <a href="@link">Add vocabulary</a>.', array('@link' => url('admin/content/taxonomy/add'))), 'colspan' => '5'));
+    $rows[] = array(array('data' => t('No vocabularies available. <a href="@link">Add vocabulary</a>.', array('@link' => url('admin/build/taxonomy/add'))), 'colspan' => '5'));
   }
 
   $header = array(t('Vocabulary name'), t('Content types'));

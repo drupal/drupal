@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.19 2009/07/11 00:56:45 webchick Exp $
+// $Id: field.api.php,v 1.20 2009/07/11 14:25:40 dries Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -77,8 +77,8 @@ function hook_fieldable_info() {
     $return['taxonomy_term']['bundles'][$vocabulary->machine_name] = array(
       'label' => $vocabulary->name,
       'admin' => array(
-        'path' => 'admin/content/taxonomy/%taxonomy_vocabulary',
-        'real path' => 'admin/content/taxonomy/' . $vocabulary->vid,
+        'path' => 'admin/build/taxonomy/%taxonomy_vocabulary',
+        'real path' => 'admin/build/taxonomy/' . $vocabulary->vid,
         'bundle argument' => 3,
         'access arguments' => array('administer taxonomy'),
       ),
