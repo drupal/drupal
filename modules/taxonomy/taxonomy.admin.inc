@@ -84,7 +84,7 @@ function theme_taxonomy_overview_vocabularies($form) {
   }
 
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No vocabularies available. <a href="@link">Add vocabulary</a>.', array('@link' => url('admin/content/taxonomy/add'))), 'colspan' => '5'));
+    $rows[] = array(array('data' => t('No vocabularies available. <a href="@link">Add vocabulary</a>.', array('@link' => url('admin/build/taxonomy/add'))), 'colspan' => '5'));
   }
 
   $header = array(t('Vocabulary name'), t('Content types'));

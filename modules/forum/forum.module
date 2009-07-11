@@ -28,7 +28,7 @@ function forum_help($path, $arg) {
     case 'admin/build/forum/add/forum':
       return '<p>' . t('A forum holds related or similar forum topics (a forum topic is the initial post to a threaded discussion). For example, a forum named "Fruit" may contain forum topics titled "Apples" and "Bananas", respectively.') . '</p>';
     case 'admin/build/forum/settings':
-      return '<p>' . t('These settings allow you to adjust the display of your forum topics. The content types available for use within a forum may be selected by editing the <em>Content types</em> on the <a href="@forum-vocabulary">forum vocabulary page</a>.', array('@forum-vocabulary' => url('admin/content/taxonomy/edit/vocabulary/' . variable_get('forum_nav_vocabulary', 0)))) . '</p>';
+      return '<p>' . t('These settings allow you to adjust the display of your forum topics. The content types available for use within a forum may be selected by editing the <em>Content types</em> on the <a href="@forum-vocabulary">forum vocabulary page</a>.', array('@forum-vocabulary' => url('admin/build/taxonomy/edit/vocabulary/' . variable_get('forum_nav_vocabulary', 0)))) . '</p>';
   }
 }
 
