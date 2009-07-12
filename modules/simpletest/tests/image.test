@@ -1,5 +1,5 @@
 <?php
-// $Id: image.test,v 1.4 2009/05/24 17:39:34 dries Exp $
+// $Id: image.test,v 1.5 2009/07/12 08:36:35 dries Exp $
 
 /**
  * @file
@@ -13,14 +13,6 @@ class ImageToolkitTestCase extends DrupalWebTestCase {
   protected $toolkit;
   protected $file;
   protected $image;
-
-  public static function getInfo() {
-    return array(
-      'name' => t('Image toolkit tests'),
-      'description' => t('Check image tookit functions.'),
-      'group' => t('Image API'),
-    );
-  }
 
   function setUp() {
     parent::setUp('image_test');
@@ -71,6 +63,19 @@ class ImageToolkitTestCase extends DrupalWebTestCase {
     else {
       $this->assertTrue(TRUE, t('No unexpected operations were called.'));
     }
+  }
+}
+
+/**
+ * Test that the functions in image.inc correctly pass data to the toolkit.
+ */
+class ImageToolkitUnitTest extends ImageToolkitTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => t('Image toolkit tests'),
+      'description' => t('Check image toolkit functions.'),
+      'group' => t('Image'),
+    );
   }
 
   /**
@@ -207,7 +212,7 @@ class ImageToolkitGdTestCase extends DrupalWebTestCase {
     return array(
       'name' => t('Image GD manipulation tests'),
       'description' => t('Check that core image manipulations work properly: scale, resize, rotate, crop, scale and crop, and desaturate.'),
-      'group' => t('Image API'),
+      'group' => t('Image'),
     );
   }
 
