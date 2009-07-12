@@ -1,0 +1,10 @@
+; $Id$
+name = Image
+description = Provides image manipulation tools.
+package = Core
+version = VERSION
+core = 7.x
+files[] = image.module
+files[] = image.effects.inc
+files[] = image.install
+files[] = image.test

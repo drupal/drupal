@@ -8,7 +8,7 @@
  *   An array of modules to enable.
  */
 function default_profile_modules() {
-  return array('block', 'color', 'comment', 'help', 'menu', 'path', 'taxonomy', 'dblog', 'search', 'toolbar');
+  return array('block', 'color', 'comment', 'help', 'image', 'menu', 'path', 'taxonomy', 'dblog', 'search', 'toolbar');
 }
 
 /**
@@ -195,6 +195,27 @@ function default_profile_tasks(&$task, $url) {
 
   // Don't display date and author information for page nodes by default.
   variable_set('node_submitted_page', FALSE);
+
+  // Create an image style.
+  $style = array('name' => 'thumbnail');
+  $style = image_style_save($style);
+  $effect = array(
+    'isid' => $style['isid'],
+    'name' => 'image_scale_and_crop',
+    'data' => array('width' => '85', 'height' => '85'),
+  );
+  image_effect_save($effect);
+
+  // Enable user picture support and set the default to a square thumbnail option.
+  variable_set('user_pictures', '1');
+  variable_set('user_picture_dimensions', '1024x1024');
+  variable_set('user_picture_file_size', '800');
+  variable_set('user_picture_style', 'thumbnail');
+
+  $theme_settings = theme_get_settings();
+  $theme_settings['toggle_node_user_picture'] = '1';
+  $theme_settings['toggle_comment_user_picture'] = '1';
+  variable_set('theme_settings', $theme_settings);
 
   // Create a default vocabulary named "Tags", enabled for the 'article' content type.
   $description = st('Use tags to group articles on similar topics into categories.');

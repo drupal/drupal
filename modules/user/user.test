@@ -563,7 +563,8 @@ class UserPictureTestCase extends DrupalWebTestCase {
         $text = t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', array('%dimensions' => $test_dim));
         $this->assertRaw($text, t('Image was resized.'));
         $alt = t("@user's picture", array('@user' => $this->user->name));
-        $this->assertRaw(theme('image', $pic_path, $alt, $alt, '', FALSE), t("Image is displayed in user's edit page"));
+        $style = variable_get('user_picture_style', '');
+        $this->assertRaw(image_style_url($style, $pic_path), t("Image is displayed in user's edit page"));
 
         // Check if file is located in proper directory.
         $this->assertTrue(is_file($pic_path), t("File is located in proper directory"));

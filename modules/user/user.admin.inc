@@ -360,6 +360,14 @@ function user_admin_settings() {
     '#maxlength' => 255,
     '#description' => t('URL of picture to display for users with no custom picture selected. Leave blank for none.'),
   );
+  if (module_exists('image')) {
+    $form['personalization']['pictures']['settings']['user_picture_style'] = array(
+      '#type' => 'select',
+      '#title' => t('Picture style'),
+      '#options' => image_style_options(TRUE),
+      '#default_value' => variable_get('user_picture_style', ''),
+    );
+  }
   $form['personalization']['pictures']['user_picture_dimensions'] = array(
     '#type' => 'textfield',
     '#title' => t('Picture maximum dimensions'),
@@ -456,7 +464,7 @@ function user_admin_settings() {
     '#default_value' => _user_mail_text('register_no_approval_required_body'),
     '#rows' => 15,
   );
-  
+
   $form['email_password_reset'] = array(
     '#type' => 'fieldset',
     '#title' => t('Password recovery'),

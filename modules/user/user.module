@@ -1176,7 +1176,12 @@ function template_preprocess_user_picture(&$variables) {
     }
     if (isset($filepath)) {
       $alt = t("@user's picture", array('@user' => $account->name ? $account->name : variable_get('anonymous', t('Anonymous'))));
-      $variables['picture'] = theme('image', $filepath, $alt, $alt, '', FALSE);
+      if (module_exists('image') && $style = variable_get('user_picture_style', '')) {
+        $variables['picture'] = theme('image_style', $style, $filepath, $alt, $alt, NULL, FALSE);
+      }
+      else {
+        $variables['picture'] = theme('image', $filepath, $alt, $alt, NULL, FALSE);
+      }
       if (!empty($account->uid) && user_access('access user profiles')) {
         $attributes = array('attributes' => array('title' => t('View user profile.')), 'html' => TRUE);
         $variables['picture'] = l($variables['picture'], "user/$account->uid", $attributes);
@@ -2649,6 +2654,25 @@ function user_node_load($nodes, $types) {
     $nodes[$nid]->name = $user_fields[$uid]->name;
     $nodes[$nid]->picture = $user_fields[$uid]->picture;
     $nodes[$nid]->data = $user_fields[$uid]->data;
+  }
+}
+
+/**
+ * Implement hook_image_style_delete().
+ */
+function user_image_style_delete($style) {
+  // If a style is deleted, update the variables.
+  // Administrators choose a replacement style when deleting.
+  user_image_style_save($style);
+}
+
+/**
+ * Implement hook_image_style_save().
+ */
+function user_image_style_save($style) {
+  // If a style is renamed, update the variables that use it.
+  if (isset($style['old_name']) && $style['old_name'] == variable_get('user_picture_style', '')) {
+    variable_set('user_picture_style', $style['name']);
   }
 }
 

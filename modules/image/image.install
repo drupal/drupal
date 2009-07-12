@@ -1,0 +1,110 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Install, update and uninstall functions for the image module.
+ */
+
+/**
+ * Implement hook_install().
+ */
+function image_install() {
+  drupal_install_schema('image');
+
+  // Create the styles directory and ensure it's writable.
+  $path = file_directory_path() . '/styles';
+  file_check_directory($path, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+}
+
+/**
+ * Implement hook_uninstall().
+ */
+function image_uninstall() {
+  drupal_uninstall_schema('image');
+
+  // Remove the styles directory and generated images.
+  $path = file_directory_path() . '/styles';
+  file_unmanaged_delete_recursive($path);
+}
+
+/**
+ * Implement hook_schema().
+ */
+function image_schema() {
+  $schema = array();
+
+  $schema['cache_image'] = drupal_get_schema_unprocessed('system', 'cache');
+  $schema['cache_image']['description'] = 'Cache table used to store information about image manipulations that are in-progress.';
+
+  $schema['image_styles'] = array(
+    'description' => 'Stores configuration options for image styles.',
+    'fields' => array(
+      'isid' => array(
+        'description' => 'The primary identifier for an image style.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'description' => 'The style name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('isid'),
+    'indexes' => array(
+      'name' => array('name'),
+    ),
+  );
+
+  $schema['image_effects'] = array(
+    'description' => 'Stores configuration options for image effects.',
+    'fields' => array(
+      'ieid' => array(
+        'description' => 'The primary identifier for an image effect.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'isid' => array(
+        'description' => 'The {image_styles}.isid for an image style.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'weight' => array(
+        'description' => 'The weight of the effect in the style.',
+        'type' => 'int',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'name' => array(
+        'description' => 'The unique name of the effect to be executed.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'data' => array(
+        'description' => 'The configuration data for the effect.',
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'serialize' => TRUE,
+      ),
+    ),
+    'primary key' => array('ieid'),
+    'indexes' => array(
+      'isid' => array('isid'),
+      'weight' => array('weight'),
+    ),
+    'foreign keys' => array(
+      'isid' => array('image_styles' => 'isid'),
+    ),
+  );
+
+  return $schema;
+}
