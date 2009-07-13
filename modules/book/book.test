@@ -6,9 +6,9 @@ class BookTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Book functionality'),
-      'description' => t('Create a book, add pages, and test book interface.'),
-      'group' => t('Book'),
+      'name' => 'Book functionality',
+      'description' => 'Create a book, add pages, and test book interface.',
+      'group' => 'Book',
     );
   }
 
@@ -198,9 +198,9 @@ class BookTestCase extends DrupalWebTestCase {
 class BookBlockTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Block availability'),
-      'description' => t('Check if the book navigation block is available.'),
-      'group' => t('Book'),
+      'name' => 'Block availability',
+      'description' => 'Check if the book navigation block is available.',
+      'group' => 'Book',
     );
   }
 

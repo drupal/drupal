@@ -117,8 +117,9 @@ class ProfileTestFields extends ProfileTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Test single fields',
-      'description' => t('Testing profile module with add/edit/delete textfield, textarea, list, checkbox, and url fields into profile page') ,
-      'group' => t('Profile'));
+      'description' => 'Testing profile module with add/edit/delete textfield, textarea, list, checkbox, and url fields into profile page',
+      'group' => 'Profile'
+    );
   }
 
   /**
@@ -152,8 +153,9 @@ class ProfileTestSelect extends ProfileTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Test select field',
-      'description' => t('Testing profile module with add/edit/delete a select field') ,
-      'group' => t('Profile'));
+      'description' => 'Testing profile module with add/edit/delete a select field',
+      'group' => 'Profile'
+    );
   }
 
   /**
@@ -177,8 +179,9 @@ class ProfileTestDate extends ProfileTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Test date field',
-      'description' => t('Testing profile module with add/edit/delete a date field') ,
-      'group' => t('Profile'));
+      'description' => 'Testing profile module with add/edit/delete a date field',
+      'group' => 'Profile'
+    );
   }
 
   /**
@@ -213,8 +216,9 @@ class ProfileTestWeights extends ProfileTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Test field weights',
-      'description' => t('Testing profile modules weigting of fields') ,
-      'group' => t('Profile'));
+      'description' => 'Testing profile modules weigting of fields',
+      'group' => 'Profile'
+    );
   }
 
   function testProfileFieldWeights() {
@@ -241,9 +245,9 @@ class ProfileTestWeights extends ProfileTestCase {
 class ProfileTestAutocomplete extends ProfileTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Autocompletion'),
-      'description' => t('Test profile fields with autocompletion.'),
-      'group' => t('Profile')
+      'name' => 'Autocompletion',
+      'description' => 'Test profile fields with autocompletion.',
+      'group' => 'Profile'
     );
   }
 
@@ -294,9 +298,9 @@ class ProfileTestAutocomplete extends ProfileTestCase {
 class ProfileBlockTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Block availability'),
-      'description' => t('Check if the author-information block is available.'),
-      'group' => t('Profile'),
+      'name' => 'Block availability',
+      'description' => 'Check if the author-information block is available.',
+      'group' => 'Profile',
     );
   }
 

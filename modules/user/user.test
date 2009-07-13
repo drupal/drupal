@@ -4,9 +4,9 @@
 class UserRegistrationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('User registration'),
-      'description' => t('Registers a user, fails login, resets password, successfully logs in with the one time password, fails password change, changes password, logs out, successfully logs in with the new password, visits profile page.'),
-      'group' => t('User')
+      'name' => 'User registration',
+      'description' => 'Registers a user, fails login, resets password, successfully logs in with the one time password, fails password change, changes password, logs out, successfully logs in with the new password, visits profile page.',
+      'group' => 'User'
     );
   }
 
@@ -111,9 +111,9 @@ class UserRegistrationTestCase extends DrupalWebTestCase {
 class UserValidationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Username/e-mail validation'),
-      'description' => t('Verify that username/email validity checks behave as designed.'),
-      'group' => t('User')
+      'name' => 'Username/e-mail validation',
+      'description' => 'Verify that username/email validity checks behave as designed.',
+      'group' => 'User'
     );
   }
 
@@ -162,9 +162,9 @@ class UserValidationTestCase extends DrupalWebTestCase {
 class UserCancelTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Cancel account'),
-      'description' => t('Ensure that account cancellation methods work as expected.'),
-      'group' => t('User'),
+      'name' => 'Cancel account',
+      'description' => 'Ensure that account cancellation methods work as expected.',
+      'group' => 'User',
     );
   }
 
@@ -503,9 +503,9 @@ class UserPictureTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Upload user picture'),
-      'description' => t('Assure that dimension check, extension check and image scaling work as designed.'),
-      'group' => t('User')
+      'name' => 'Upload user picture',
+      'description' => 'Assure that dimension check, extension check and image scaling work as designed.',
+      'group' => 'User'
     );
   }
 
@@ -724,9 +724,9 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Role permissions'),
-      'description' => t('Verify that role permissions can be added and removed via the permissions page.'),
-      'group' => t('User')
+      'name' => 'Role permissions',
+      'description' => 'Verify that role permissions can be added and removed via the permissions page.',
+      'group' => 'User'
     );
   }
 
@@ -791,9 +791,9 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
 class UserAdminTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('User administration'),
-      'description' => t('Test user administration page functionality.'),
-      'group' => t('User')
+      'name' => 'User administration',
+      'description' => 'Test user administration page functionality.',
+      'group' => 'User'
     );
   }
 
@@ -844,9 +844,9 @@ class UserAdminTestCase extends DrupalWebTestCase {
 class UserTimeZoneFunctionalTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('User time zones'),
-      'description' => t('Set a user time zone and verify that dates are displayed in local time.'),
-      'group' => t('User'),
+      'name' => 'User time zones',
+      'description' => 'Set a user time zone and verify that dates are displayed in local time.',
+      'group' => 'User',
     );
   }
 
@@ -904,9 +904,9 @@ class UserTimeZoneFunctionalTest extends DrupalWebTestCase {
 class UserAutocompleteTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('User autocompletion'),
-      'description' => t('Test user autocompletion functionality.'),
-      'group' => t('User')
+      'name' => 'User autocompletion',
+      'description' => 'Test user autocompletion functionality.',
+      'group' => 'User'
     );
   }
 
@@ -944,9 +944,9 @@ class UserAutocompleteTestCase extends DrupalWebTestCase {
 class UserBlocksUnitTests extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('User blocks'),
-      'description' => t('Test user blocks.'),
-      'group' => t('User')
+      'name' => 'User blocks',
+      'description' => 'Test user blocks.',
+      'group' => 'User'
     );
   }
 
@@ -1033,9 +1033,9 @@ class UserSaveTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('User save test'),
-      'description' => t('Test user_save() for arbitrary new uid.'),
-      'group' => t('User'),
+      'name' => 'User save test',
+      'description' => 'Test user_save() for arbitrary new uid.',
+      'group' => 'User',
     );
   }
 

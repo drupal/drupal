@@ -8,9 +8,9 @@ class NodeLoadMultipleUnitTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Load multiple nodes'),
-      'description' => t('Test the loading of multiple nodes.'),
-      'group' => t('Node'),
+      'name' => 'Load multiple nodes',
+      'description' => 'Test the loading of multiple nodes.',
+      'group' => 'Node',
     );
   }
 
@@ -87,9 +87,9 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Node revisions'),
-      'description' => t('Create a node with revisions and test viewing, reverting, and deleting revisions.'),
-      'group' => t('Node'),
+      'name' => 'Node revisions',
+      'description' => 'Create a node with revisions and test viewing, reverting, and deleting revisions.',
+      'group' => 'Node',
     );
   }
 
@@ -169,9 +169,9 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
 class PageEditTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Node edit'),
-      'description' => t('Create a node and test node edit functionality.'),
-      'group' => t('Node'),
+      'name' => 'Node edit',
+      'description' => 'Create a node and test node edit functionality.',
+      'group' => 'Node',
     );
   }
 
@@ -224,9 +224,9 @@ class PageEditTestCase extends DrupalWebTestCase {
 class PagePreviewTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Node preview'),
-      'description' => t('Test node preview functionality.'),
-      'group' => t('Node'),
+      'name' => 'Node preview',
+      'description' => 'Test node preview functionality.',
+      'group' => 'Node',
     );
   }
 
@@ -291,9 +291,9 @@ class PagePreviewTestCase extends DrupalWebTestCase {
 class PageCreationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Node creation'),
-      'description' => t('Create a node and test saving it.'),
-      'group' => t('Node'),
+      'name' => 'Node creation',
+      'description' => 'Create a node and test saving it.',
+      'group' => 'Node',
     );
   }
 
@@ -326,9 +326,9 @@ class PageCreationTestCase extends DrupalWebTestCase {
 class PageViewTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Node edit permissions'),
-      'description' => t('Create a node and test edit permissions.'),
-      'group' => t('Node'),
+      'name' => 'Node edit permissions',
+      'description' => 'Create a node and test edit permissions.',
+      'group' => 'Node',
     );
   }
 
@@ -365,9 +365,9 @@ class PageViewTestCase extends DrupalWebTestCase {
 class SummaryLengthTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Summary length'),
-      'description' => t('Test summary length.'),
-      'group' => t('Node'),
+      'name' => 'Summary length',
+      'description' => 'Test summary length.',
+      'group' => 'Node',
     );
   }
 
@@ -407,9 +407,9 @@ class SummaryLengthTestCase extends DrupalWebTestCase {
 class NodeTitleXSSTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Node title XSS filtering'),
-      'description' => t('Create a node with dangerous tags in its title and test that they are escaped.'),
-      'group' => t('Node'),
+      'name' => 'Node title XSS filtering',
+      'description' => 'Create a node with dangerous tags in its title and test that they are escaped.',
+      'group' => 'Node',
     );
   }
 
@@ -441,9 +441,9 @@ class NodeTitleXSSTestCase extends DrupalWebTestCase {
 class NodeBlockTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Block availability'),
-      'description' => t('Check if the syndicate block is available.'),
-      'group' => t('Node'),
+      'name' => 'Block availability',
+      'description' => 'Check if the syndicate block is available.',
+      'group' => 'Node',
     );
   }
 
@@ -474,9 +474,9 @@ class NodeBlockTestCase extends DrupalWebTestCase {
 class NodePostSettingsTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Node post information display'),
-      'description' => t('Check that the post information (submitted by Username on date) text displays appropriately.'),
-      'group' => t('Node'),
+      'name' => 'Node post information display',
+      'description' => 'Check that the post information (submitted by Username on date) text displays appropriately.',
+      'group' => 'Node',
     );
   }
 
@@ -540,9 +540,9 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
 class NodeRSSContentTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Node RSS Content'),
-      'description' => t('Ensure that data added to nodes by other modules appears in RSS feeds.'),
-      'group' => t('Node'),
+      'name' => 'Node RSS Content',
+      'description' => 'Ensure that data added to nodes by other modules appears in RSS feeds.',
+      'group' => 'Node',
     );
   }
 
@@ -594,9 +594,9 @@ class NodeRSSContentTestCase extends DrupalWebTestCase {
 class NodeAccessUnitTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Node access'),
-      'description' => t('Test node_access function'),
-      'group' => t('Node'),
+      'name' => 'Node access',
+      'description' => 'Test node_access function',
+      'group' => 'Node',
     );
   }
 
@@ -659,9 +659,9 @@ class NodeAccessUnitTest extends DrupalWebTestCase {
 class NodeAccessRecordsUnitTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Node access records'),
-      'description' => t('Test hook_node_access_records when acquiring grants.'),
-      'group' => t('Node'),
+      'name' => 'Node access records',
+      'description' => 'Test hook_node_access_records when acquiring grants.',
+      'group' => 'Node',
     );
   }
 
@@ -736,9 +736,9 @@ class NodeSaveTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Node save'),
-      'description' => t('Test node_save() for saving content.'),
-      'group' => t('Node'),
+      'name' => 'Node save',
+      'description' => 'Test node_save() for saving content.',
+      'group' => 'Node',
     );
   }
 
@@ -787,9 +787,9 @@ class NodeSaveTestCase extends DrupalWebTestCase {
 class NodeTypeTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Node types'),
-      'description' => t('Ensures that node type functions work correctly.'),
-      'group' => t('Node'),
+      'name' => 'Node types',
+      'description' => 'Ensures that node type functions work correctly.',
+      'group' => 'Node',
     );
   }
 
@@ -819,9 +819,9 @@ class NodeTypeTestCase extends DrupalWebTestCase {
 class NodeAccessRebuildTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Node access rebuild'),
-      'description' => t('Ensures that node access rebuild functions work correctly.'),
-      'group' => t('Node'),
+      'name' => 'Node access rebuild',
+      'description' => 'Ensures that node access rebuild functions work correctly.',
+      'group' => 'Node',
     );
   }
 

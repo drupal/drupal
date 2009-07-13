@@ -33,9 +33,9 @@ class PHPTestCase extends DrupalWebTestCase {
 class PHPFilterTestCase extends PHPTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('PHP filter functionality'),
-      'description' => t('Make sure that PHP filter properly evaluates PHP code when enabled.'),
-      'group' => t('PHP'),
+      'name' => 'PHP filter functionality',
+      'description' => 'Make sure that PHP filter properly evaluates PHP code when enabled.',
+      'group' => 'PHP',
     );
   }
 
@@ -76,9 +76,9 @@ class PHPFilterTestCase extends PHPTestCase {
 class PHPAccessTestCase extends PHPTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('PHP filter access check'),
-      'description' => t('Make sure that users who don\'t have access to the PHP filter can\'t see it.'),
-      'group' => t('PHP'),
+      'name' => 'PHP filter access check',
+      'description' => 'Make sure that users who don\'t have access to the PHP filter can\'t see it.',
+      'group' => 'PHP',
     );
   }
 

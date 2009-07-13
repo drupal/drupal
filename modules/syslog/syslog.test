@@ -4,9 +4,9 @@
 class SyslogTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Syslog functionality'),
-      'description' => t('Test syslog settings.'),
-      'group' => t('Syslog')
+      'name' => 'Syslog functionality',
+      'description' => 'Test syslog settings.',
+      'group' => 'Syslog'
     );
   }
 

@@ -173,9 +173,9 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Connection tests'),
-      'description' => t('Tests of the core database system.'),
-      'group' => t('Database'),
+      'name' => 'Connection tests',
+      'description' => 'Tests of the core database system.',
+      'group' => 'Database',
     );
   }
 
@@ -241,9 +241,9 @@ class DatabaseFetchTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Fetch tests'),
-      'description' => t('Test the Database system\'s various fetch capabilities.'),
-      'group' => t('Database'),
+      'name' => 'Fetch tests',
+      'description' => 'Test the Database system\'s various fetch capabilities.',
+      'group' => 'Database',
     );
   }
 
@@ -322,9 +322,9 @@ class DatabaseFetch2TestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Fetch tests, part 2'),
-      'description' => t('Test the Database system\'s various fetch capabilities.'),
-      'group' => t('Database'),
+      'name' => 'Fetch tests, part 2',
+      'description' => 'Test the Database system\'s various fetch capabilities.',
+      'group' => 'Database',
     );
   }
 
@@ -387,9 +387,9 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Insert tests'),
-      'description' => t('Test the Insert query builder.'),
-      'group' => t('Database'),
+      'name' => 'Insert tests',
+      'description' => 'Test the Insert query builder.',
+      'group' => 'Database',
     );
   }
 
@@ -537,9 +537,9 @@ class DatabaseInsertLOBTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Insert tests, LOB fields'),
-      'description' => t('Test the Insert query builder with LOB fields.'),
-      'group' => t('Database'),
+      'name' => 'Insert tests, LOB fields',
+      'description' => 'Test the Insert query builder with LOB fields.',
+      'group' => 'Database',
     );
   }
 
@@ -578,9 +578,9 @@ class DatabaseInsertDefaultsTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Insert tests, default fields'),
-      'description' => t('Test the Insert query builder with default values.'),
-      'group' => t('Database'),
+      'name' => 'Insert tests, default fields',
+      'description' => 'Test the Insert query builder with default values.',
+      'group' => 'Database',
     );
   }
 
@@ -633,9 +633,9 @@ class DatabaseUpdateTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Update tests'),
-      'description' => t('Test the Update query builder.'),
-      'group' => t('Database'),
+      'name' => 'Update tests',
+      'description' => 'Test the Update query builder.',
+      'group' => 'Database',
     );
   }
 
@@ -719,9 +719,9 @@ class DatabaseUpdateComplexTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Update tests, Complex'),
-      'description' => t('Test the Update query builder, complex queries.'),
-      'group' => t('Database'),
+      'name' => 'Update tests, Complex',
+      'description' => 'Test the Update query builder, complex queries.',
+      'group' => 'Database',
     );
   }
 
@@ -844,9 +844,9 @@ class DatabaseUpdateLOBTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Update tests, LOB'),
-      'description' => t('Test the Update query builder with LOB fields.'),
-      'group' => t('Database'),
+      'name' => 'Update tests, LOB',
+      'description' => 'Test the Update query builder with LOB fields.',
+      'group' => 'Database',
     );
   }
 
@@ -906,9 +906,9 @@ class DatabaseDeleteTruncateTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Delete/Truncate tests'),
-      'description' => t('Test the Delete and Truncate query builders.'),
-      'group' => t('Database'),
+      'name' => 'Delete/Truncate tests',
+      'description' => 'Test the Delete and Truncate query builders.',
+      'group' => 'Database',
     );
   }
 
@@ -948,9 +948,9 @@ class DatabaseMergeTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Merge tests'),
-      'description' => t('Test the Merge query builder.'),
-      'group' => t('Database'),
+      'name' => 'Merge tests',
+      'description' => 'Test the Merge query builder.',
+      'group' => 'Database',
     );
   }
 
@@ -1159,9 +1159,9 @@ class DatabaseSelectTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Select tests'),
-      'description' => t('Test the Select query builder.'),
-      'group' => t('Database'),
+      'name' => 'Select tests',
+      'description' => 'Test the Select query builder.',
+      'group' => 'Database',
     );
   }
 
@@ -1330,9 +1330,9 @@ class DatabaseSelectSubqueryTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Select tests, subqueries'),
-      'description' => t('Test the Select query builder.'),
-      'group' => t('Database'),
+      'name' => 'Select tests, subqueries',
+      'description' => 'Test the Select query builder.',
+      'group' => 'Database',
     );
   }
 
@@ -1419,9 +1419,9 @@ class DatabaseSelectOrderedTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Select tests, ordered'),
-      'description' => t('Test the Select query builder.'),
-      'group' => t('Database'),
+      'name' => 'Select tests, ordered',
+      'description' => 'Test the Select query builder.',
+      'group' => 'Database',
     );
   }
 
@@ -1506,9 +1506,9 @@ class DatabaseSelectComplexTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Select tests, complex'),
-      'description' => t('Test the Select query builder with more complex queries.'),
-      'group' => t('Database'),
+      'name' => 'Select tests, complex',
+      'description' => 'Test the Select query builder with more complex queries.',
+      'group' => 'Database',
     );
   }
 
@@ -1709,9 +1709,9 @@ class DatabaseSelectPagerDefaultTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Pager query tests'),
-      'description' => t('Test the pager query extender.'),
-      'group' => t('Database'),
+      'name' => 'Pager query tests',
+      'description' => 'Test the pager query extender.',
+      'group' => 'Database',
     );
   }
 
@@ -1830,9 +1830,9 @@ class DatabaseSelectTableSortDefaultTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Tablesort query tests'),
-      'description' => t('Test the tablesort query extender.'),
-      'group' => t('Database'),
+      'name' => 'Tablesort query tests',
+      'description' => 'Test the tablesort query extender.',
+      'group' => 'Database',
     );
   }
 
@@ -1901,9 +1901,9 @@ class DatabaseTaggingTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Query tagging tests'),
-      'description' => t('Test the tagging capabilities of the Select builder.'),
-      'group' => t('Database'),
+      'name' => 'Query tagging tests',
+      'description' => 'Test the tagging capabilities of the Select builder.',
+      'group' => 'Database',
     );
   }
 
@@ -1984,9 +1984,9 @@ class DatabaseAlterTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Query altering tests'),
-      'description' => t('Test the hook_query_alter capabilities of the Select builder.'),
-      'group' => t('Database'),
+      'name' => 'Query altering tests',
+      'description' => 'Test the hook_query_alter capabilities of the Select builder.',
+      'group' => 'Database',
     );
   }
 
@@ -2068,9 +2068,9 @@ class DatabaseAlter2TestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Query altering tests, part 2'),
-      'description' => t('Test the hook_query_alter capabilities of the Select builder.'),
-      'group' => t('Database'),
+      'name' => 'Query altering tests, part 2',
+      'description' => 'Test the hook_query_alter capabilities of the Select builder.',
+      'group' => 'Database',
     );
   }
 
@@ -2130,9 +2130,9 @@ class DatabaseRegressionTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Regression tests'),
-      'description' => t('Regression tests cases for the database layer.'),
-      'group' => t('Database'),
+      'name' => 'Regression tests',
+      'description' => 'Regression tests cases for the database layer.',
+      'group' => 'Database',
     );
   }
 
@@ -2180,9 +2180,9 @@ class DatabaseLoggingTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Query logging'),
-      'description' => t('Test the query logging facility.'),
-      'group' => t('Database'),
+      'name' => 'Query logging',
+      'description' => 'Test the query logging facility.',
+      'group' => 'Database',
     );
   }
 
@@ -2305,9 +2305,9 @@ class DatabaseLoggingTestCase extends DatabaseTestCase {
 class DatabaseRangeQueryTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Range query test'),
-      'description' => t('Test the Range query functionality.'),
-      'group' => t('Database'),
+      'name' => 'Range query test',
+      'description' => 'Test the Range query functionality.',
+      'group' => 'Database',
     );
   }
 
@@ -2336,9 +2336,9 @@ class DatabaseRangeQueryTestCase extends DrupalWebTestCase {
 class DatabaseTemporaryQueryTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Temporary query test'),
-      'description' => t('Test the temporary query functionality.'),
-      'group' => t('Database'),
+      'name' => 'Temporary query test',
+      'description' => 'Test the temporary query functionality.',
+      'group' => 'Database',
     );
   }
 
@@ -2386,9 +2386,9 @@ class DatabaseTemporaryQueryTestCase extends DrupalWebTestCase {
 class DatabaseAnsiSyntaxTestCase extends DatabaseTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('ANSI SQL syntax tests'),
-      'description' => t('Test ANSI SQL syntax interpretation.'),
-      'group' => t('Database'),
+      'name' => 'ANSI SQL syntax tests',
+      'description' => 'Test ANSI SQL syntax interpretation.',
+      'group' => 'Database',
     );
   }
 
@@ -2430,9 +2430,9 @@ class DatabaseAnsiSyntaxTestCase extends DatabaseTestCase {
 class DatabaseInvalidDataTestCase extends DatabaseTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Invalid data'),
-      'description' => t('Test handling of some invalid data.'),
-      'group' => t('Database'),
+      'name' => 'Invalid data',
+      'description' => 'Test handling of some invalid data.',
+      'group' => 'Database',
     );
   }
 
@@ -2503,9 +2503,9 @@ class DatabaseInvalidDataTestCase extends DatabaseTestCase {
 class DatabaseQueryTestCase extends DatabaseTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Custom query syntax tests'),
-      'description' => t('Test Drupal\'s extended prepared statement syntax..'),
-      'group' => t('Database'),
+      'name' => 'Custom query syntax tests',
+      'description' => 'Test Drupal\'s extended prepared statement syntax..',
+      'group' => 'Database',
     );
   }
 
@@ -2547,9 +2547,9 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Transaction tests'),
-      'description' => t('Test the transaction abstraction system.'),
-      'group' => t('Database'),
+      'name' => 'Transaction tests',
+      'description' => 'Test the transaction abstraction system.',
+      'group' => 'Database',
     );
   }
 

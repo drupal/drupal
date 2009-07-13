@@ -12,9 +12,9 @@
 class ModuleUnitTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Module API'),
-      'description' => t('Test low-level module functions.'),
-      'group' => t('Module'),
+      'name' => 'Module API',
+      'description' => 'Test low-level module functions.',
+      'group' => 'Module',
     );
   }
 
@@ -84,9 +84,9 @@ class ModuleUnitTest extends DrupalWebTestCase {
 class ModuleUninstallTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Module uninstallation'),
-      'description' => t('Checks module uninstallation'),
-      'group' => t('Module'),
+      'name' => 'Module uninstallation',
+      'description' => 'Checks module uninstallation',
+      'group' => 'Module',
     );
   }
 

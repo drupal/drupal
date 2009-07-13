@@ -9,9 +9,9 @@ define('SEARCH_TYPE_2', '_test2_');
 class SearchMatchTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Search engine queries'),
-      'description' => t('Indexes content and queries it.'),
-      'group' => t('Search'),
+      'name' => 'Search engine queries',
+      'description' => 'Indexes content and queries it.',
+      'group' => 'Search',
     );
   }
 
@@ -199,9 +199,9 @@ class SearchBikeShed extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Bike shed'),
-      'description' => t('Tests the bike shed text on the no results page.'),
-      'group' => t('Search')
+      'name' => 'Bike shed',
+      'description' => 'Tests the bike shed text on the no results page.',
+      'group' => 'Search'
     );
   }
 
@@ -229,9 +229,9 @@ class SearchAdvancedSearchForm extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Advanced search form'),
-      'description' => t('Indexes content and tests the advanced search form.'),
-      'group' => t('Search'),
+      'name' => 'Advanced search form',
+      'description' => 'Indexes content and tests the advanced search form.',
+      'group' => 'Search',
     );
   }
 
@@ -290,9 +290,9 @@ class SearchAdvancedSearchForm extends DrupalWebTestCase {
 class SearchRankingTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Search engine ranking'),
-      'description' => t('Indexes content and tests ranking factors.'),
-      'group' => t('Search'),
+      'name' => 'Search engine ranking',
+      'description' => 'Indexes content and tests ranking factors.',
+      'group' => 'Search',
     );
   }
 
@@ -373,9 +373,9 @@ class SearchRankingTestCase extends DrupalWebTestCase {
 class SearchBlockTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Block availability'),
-      'description' => t('Check if the search form block is available.'),
-      'group' => t('Search'),
+      'name' => 'Block availability',
+      'description' => 'Check if the search form block is available.',
+      'group' => 'Search',
     );
   }
 
@@ -439,9 +439,9 @@ class SearchCommentTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Comment Search tests'),
-      'description' => t('Verify text formats and filters used elsewhere.'),
-      'group' => t('Search'),
+      'name' => 'Comment Search tests',
+      'description' => 'Verify text formats and filters used elsewhere.',
+      'group' => 'Search',
     );
   }
 

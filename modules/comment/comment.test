@@ -233,9 +233,9 @@ class CommentHelperCase extends DrupalWebTestCase {
 class CommentInterfaceTest extends CommentHelperCase {
   public static function getInfo() {
     return array(
-      'name' => t('Comment interface'),
-      'description' => t('Test comment user interfaces.'),
-      'group' => t('Comment'),
+      'name' => 'Comment interface',
+      'description' => 'Test comment user interfaces.',
+      'group' => 'Comment',
     );
   }
 
@@ -364,9 +364,9 @@ class CommentInterfaceTest extends CommentHelperCase {
 class CommentAnonymous extends CommentHelperCase {
   public static function getInfo() {
     return array(
-      'name' => t('Anonymous comments'),
-      'description' => t('Test anonymous comments.'),
-      'group' => t('Comment'),
+      'name' => 'Anonymous comments',
+      'description' => 'Test anonymous comments.',
+      'group' => 'Comment',
     );
   }
 
@@ -472,9 +472,9 @@ class CommentPagerTest extends CommentHelperCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Comment paging settings'),
-      'description' => t('Test paging of comments and their settings.'),
-      'group' => t('Comment'),
+      'name' => 'Comment paging settings',
+      'description' => 'Test paging of comments and their settings.',
+      'group' => 'Comment',
     );
   }
 
@@ -555,9 +555,9 @@ class CommentPagerTest extends CommentHelperCase {
 class CommentApprovalTest extends CommentHelperCase {
   public static function getInfo() {
     return array(
-      'name' => t('Comment approval'),
-      'description' => t('Test comment approval functionality.'),
-      'group' => t('Comment'),
+      'name' => 'Comment approval',
+      'description' => 'Test comment approval functionality.',
+      'group' => 'Comment',
     );
   }
 
@@ -637,9 +637,9 @@ class CommentApprovalTest extends CommentHelperCase {
 class CommentBlockFunctionalTest extends CommentHelperCase {
   public static function getInfo() {
     return array(
-      'name' => t('Comment blocks'),
-      'description' => t('Test comment block functionality.'),
-      'group' => t('Comment'),
+      'name' => 'Comment blocks',
+      'description' => 'Test comment block functionality.',
+      'group' => 'Comment',
     );
   }
 
@@ -724,9 +724,9 @@ class CommentBlockFunctionalTest extends CommentHelperCase {
 class CommentRSSUnitTest extends CommentHelperCase {
   public static function getInfo() {
     return array(
-      'name' => t('Comment RSS'),
-      'description' => t('Test comments as part of an RSS feed.'),
-      'group' => t('Comment'),
+      'name' => 'Comment RSS',
+      'description' => 'Test comments as part of an RSS feed.',
+      'group' => 'Comment',
     );
   }
 

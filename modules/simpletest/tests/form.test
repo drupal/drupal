@@ -10,9 +10,9 @@ class FormsTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Required field validation'),
-      'description' => t('Carriage returns, tabs, and spaces are not valid content for a required field.'),
-      'group' => t('Form API'),
+      'name' => 'Required field validation',
+      'description' => 'Carriage returns, tabs, and spaces are not valid content for a required field.',
+      'group' => 'Form API',
     );
   }
 
@@ -80,9 +80,9 @@ class FormsTestCase extends DrupalWebTestCase {
 class FormsTestTypeCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Form type-specific tests'),
-      'description' => t('Test form type functions for expected behavior.'),
-      'group' => t('Form API'),
+      'name' => 'Form type-specific tests',
+      'description' => 'Test form type functions for expected behavior.',
+      'group' => 'Form API',
     );
   }
 
@@ -118,9 +118,9 @@ class FormsElementsTableSelectFunctionalTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Tableselect form element type test'),
-      'description' => t('Test the tableselect element for expected behavior'),
-      'group' => t('Form API'),
+      'name' => 'Tableselect form element type test',
+      'description' => 'Test the tableselect element for expected behavior',
+      'group' => 'Form API',
     );
   }
 
@@ -322,9 +322,9 @@ class FormsFormCleanIdFunctionalTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('form_clean_id() test'),
-      'description' => t('Test the function form_clean_id() for expected behavior'),
-      'group' => t('Form API'),
+      'name' => 'form_clean_id() test',
+      'description' => 'Test the function form_clean_id() for expected behavior',
+      'group' => 'Form API',
     );
   }
 
@@ -352,9 +352,9 @@ class FormAPITestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Drupal Execute and Batch API'),
-      'description' => t('Tests the compatibility of drupal_form_submit and the Batch API'),
-      'group' => t('Form API'),
+      'name' => 'Drupal Execute and Batch API',
+      'description' => 'Tests the compatibility of drupal_form_submit and the Batch API',
+      'group' => 'Form API',
     );
   }
 
@@ -397,9 +397,9 @@ class FormsFormStorageTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name'  => t('Multistep form using form storage'),
-      'description'  => t('Tests a multistep form using form storage and makes sure validation and caching works right.'),
-      'group' => t('Form API'),
+      'name'  => 'Multistep form using form storage',
+      'description'  => 'Tests a multistep form using form storage and makes sure validation and caching works right.',
+      'group' => 'Form API',
     );
   }
 

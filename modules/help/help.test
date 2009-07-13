@@ -7,9 +7,9 @@ class HelpTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Help functionality'),
-      'description' => t('Verify help display and user access to help based on persmissions.'),
-      'group' => t('Help'),
+      'name' => 'Help functionality',
+      'description' => 'Verify help display and user access to help based on persmissions.',
+      'group' => 'Help',
     );
   }
 

@@ -9,9 +9,9 @@
 class MenuIncTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Hook menu tests'),
-      'description' => t('Test menu hook functionality.'),
-      'group' => t('Menu'),
+      'name' => 'Hook menu tests',
+      'description' => 'Test menu hook functionality.',
+      'group' => 'Menu',
     );
   }
 
@@ -131,9 +131,9 @@ class MenuIncTestCase extends DrupalWebTestCase {
 class MenuRebuildTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Menu rebuild test'),
-      'description' => t('Test rebuilding of menu.'),
-      'group' => t('Menu'),
+      'name' => 'Menu rebuild test',
+      'description' => 'Test rebuilding of menu.',
+      'group' => 'Menu',
     );
   }
 

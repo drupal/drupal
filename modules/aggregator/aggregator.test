@@ -261,9 +261,9 @@ EOF;
 class AddFeedTestCase extends AggregatorTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Add feed functionality'),
-      'description' => t('Add feed test.'),
-      'group' => t('Aggregator')
+      'name' => 'Add feed functionality',
+      'description' => 'Add feed test.',
+      'group' => 'Aggregator'
     );
   }
 
@@ -290,9 +290,9 @@ class AddFeedTestCase extends AggregatorTestCase {
 class UpdateFeedTestCase extends AggregatorTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Update feed functionality'),
-      'description' => t('Update feed test.'),
-      'group' => t('Aggregator')
+      'name' => 'Update feed functionality',
+      'description' => 'Update feed test.',
+      'group' => 'Aggregator'
     );
   }
 
@@ -332,9 +332,9 @@ class UpdateFeedTestCase extends AggregatorTestCase {
 class RemoveFeedTestCase extends AggregatorTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Remove feed functionality'),
-      'description' => t('Remove feed test.'),
-      'group' => t('Aggregator')
+      'name' => 'Remove feed functionality',
+      'description' => 'Remove feed test.',
+      'group' => 'Aggregator'
     );
   }
 
@@ -360,9 +360,9 @@ class RemoveFeedTestCase extends AggregatorTestCase {
 class UpdateFeedItemTestCase extends AggregatorTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Update feed item functionality'),
-      'description' => t('Update feed items from a feed.'),
-      'group' => t('Aggregator')
+      'name' => 'Update feed item functionality',
+      'description' => 'Update feed items from a feed.',
+      'group' => 'Aggregator'
     );
   }
 
@@ -421,9 +421,9 @@ class UpdateFeedItemTestCase extends AggregatorTestCase {
 class RemoveFeedItemTestCase extends AggregatorTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Remove feed item functionality'),
-      'description' => t('Remove feed items from a feed.'),
-      'group' => t('Aggregator')
+      'name' => 'Remove feed item functionality',
+      'description' => 'Remove feed items from a feed.',
+      'group' => 'Aggregator'
     );
   }
 
@@ -459,9 +459,9 @@ class RemoveFeedItemTestCase extends AggregatorTestCase {
 class CategorizeFeedItemTestCase extends AggregatorTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Categorize feed item functionality'),
-      'description' => t('Test feed item categorization.'),
-      'group' => t('Aggregator')
+      'name' => 'Categorize feed item functionality',
+      'description' => 'Test feed item categorization.',
+      'group' => 'Aggregator'
     );
   }
 
@@ -516,9 +516,9 @@ class CategorizeFeedItemTestCase extends AggregatorTestCase {
 class ImportOPMLTestCase extends AggregatorTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Import feeds from OPML functionality'),
-      'description' => t('Test OPML import.'),
-      'group' => t('Aggregator'),
+      'name' => 'Import feeds from OPML functionality',
+      'description' => 'Test OPML import.',
+      'group' => 'Aggregator',
     );
   }
 

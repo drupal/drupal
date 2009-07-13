@@ -72,9 +72,9 @@ class ImageToolkitTestCase extends DrupalWebTestCase {
 class ImageToolkitUnitTest extends ImageToolkitTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Image toolkit tests'),
-      'description' => t('Check image toolkit functions.'),
-      'group' => t('Image'),
+      'name' => 'Image toolkit tests',
+      'description' => 'Check image toolkit functions.',
+      'group' => 'Image',
     );
   }
 
@@ -210,9 +210,9 @@ class ImageToolkitGdTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Image GD manipulation tests'),
-      'description' => t('Check that core image manipulations work properly: scale, resize, rotate, crop, scale and crop, and desaturate.'),
-      'group' => t('Image'),
+      'name' => 'Image GD manipulation tests',
+      'description' => 'Check that core image manipulations work properly: scale, resize, rotate, crop, scale and crop, and desaturate.',
+      'group' => 'Image',
     );
   }
 

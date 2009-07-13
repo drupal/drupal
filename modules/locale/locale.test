@@ -25,9 +25,9 @@
 class LocaleConfigurationTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Language configuration'),
-      'description' => t('Adds a new locale and tests changing its status and the default language.'),
-      'group' => t('Locale'),
+      'name' => 'Language configuration',
+      'description' => 'Adds a new locale and tests changing its status and the default language.',
+      'group' => 'Locale',
     );
   }
 
@@ -167,9 +167,9 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
 class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('String translate, search and validate'),
-      'description' => t('Adds a new locale and translates its name. Checks the validation of translation strings and search results.'),
-      'group' => t('Locale'),
+      'name' => 'String translate, search and validate',
+      'description' => 'Adds a new locale and translates its name. Checks the validation of translation strings and search results.',
+      'group' => 'Locale',
     );
   }
 
@@ -530,9 +530,9 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
 class LocaleImportFunctionalTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Translation import'),
-      'description' => t('Tests the importation of locale files.'),
-      'group' => t('Locale'),
+      'name' => 'Translation import',
+      'description' => 'Tests the importation of locale files.',
+      'group' => 'Locale',
     );
   }
 
@@ -825,9 +825,9 @@ EOF;
 class LocaleExportFunctionalTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Translation export'),
-      'description' => t('Tests the exportation of locale files.'),
-      'group' => t('Locale'),
+      'name' => 'Translation export',
+      'description' => 'Tests the exportation of locale files.',
+      'group' => 'Locale',
     );
   }
 
@@ -907,9 +907,9 @@ EOF;
 class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Locale uninstall (EN)'),
-      'description' => t('Tests the uninstall process using the built-in UI language.'),
-      'group' => t('Locale'),
+      'name' => 'Locale uninstall (EN)',
+      'description' => 'Tests the uninstall process using the built-in UI language.',
+      'group' => 'Locale',
     );
   }
 
@@ -1016,9 +1016,9 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
 class LocaleUninstallFrenchFunctionalTest extends LocaleUninstallFunctionalTest {
   public static function getInfo() {
     return array(
-      'name' => t('Locale uninstall (FR)'),
-      'description' => t('Tests the uninstall process using French as UI language.'),
-      'group' => t('Locale'),
+      'name' => 'Locale uninstall (FR)',
+      'description' => 'Tests the uninstall process using French as UI language.',
+      'group' => 'Locale',
     );
   }
 
@@ -1036,9 +1036,9 @@ class LanguageSwitchingFunctionalTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Language switching'),
-      'description' => t('Tests for the language switching feature.'),
-      'group' => t('Locale'),
+      'name' => 'Language switching',
+      'description' => 'Tests for the language switching feature.',
+      'group' => 'Locale',
     );
   }
 
@@ -1115,9 +1115,9 @@ class LanguageSwitchingFunctionalTest extends DrupalWebTestCase {
 class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('User language settings'),
-      'description' => t("Tests user's ability to change their default language."),
-      'group' => t('Locale'),
+      'name' => 'User language settings',
+      'description' => "Tests user's ability to change their default language.",
+      'group' => 'Locale',
     );
   }
 
@@ -1210,9 +1210,9 @@ class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
 class LocalePathFunctionalTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Path language settings'),
-      'description' => t('Checks you can configure a language for individual url aliases.'),
-      'group' => t('Locale'),
+      'name' => 'Path language settings',
+      'description' => 'Checks you can configure a language for individual url aliases.',
+      'group' => 'Locale',
     );
   }
 
@@ -1293,9 +1293,9 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
 class LocaleContentFunctionalTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Content language settings'),
-      'description' => t('Checks you can enable multilingual support on content types and configure a language for a node.'),
-      'group' => t('Locale'),
+      'name' => 'Content language settings',
+      'description' => 'Checks you can enable multilingual support on content types and configure a language for a node.',
+      'group' => 'Locale',
     );
   }
 

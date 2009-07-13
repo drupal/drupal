@@ -10,9 +10,9 @@
 class UploadTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Upload functionality'),
-      'description' => t('Check content uploaded to nodes.'),
-      'group' => t('Upload'),
+      'name' => 'Upload functionality',
+      'description' => 'Check content uploaded to nodes.',
+      'group' => 'Upload',
     );
   }
 

@@ -12,9 +12,9 @@
 class TemplateUnitTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Theme API'),
-      'description' => t('Test low-level theme template functions.'),
-      'group' => t('Theme'),
+      'name' => 'Theme API',
+      'description' => 'Test low-level theme template functions.',
+      'group' => 'Theme',
     );
   }
 
@@ -58,9 +58,9 @@ class TemplateUnitTest extends DrupalWebTestCase {
 class ThemeTableUnitTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Theme Table'),
-      'description' => t('Tests built-in theme functions.'),
-      'group' => t('Theme'),
+      'name' => 'Theme Table',
+      'description' => 'Tests built-in theme functions.',
+      'group' => 'Theme',
     );
   }
   

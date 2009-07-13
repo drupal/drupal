@@ -7,9 +7,9 @@
 class ContactSitewideTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Site-wide contact form'),
-      'description' => t('Tests site-wide contact form functionality.'),
-      'group' => t('Contact'),
+      'name' => 'Site-wide contact form',
+      'description' => 'Tests site-wide contact form functionality.',
+      'group' => 'Contact',
     );
   }
 
@@ -300,9 +300,9 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
 class ContactPersonalTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Personal contact form'),
-      'description' => t('Tests personal contact form functionality.'),
-      'group' => t('Contact'),
+      'name' => 'Personal contact form',
+      'description' => 'Tests personal contact form functionality.',
+      'group' => 'Contact',
     );
   }
 

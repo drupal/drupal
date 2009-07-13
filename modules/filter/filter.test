@@ -4,9 +4,9 @@
 class FilterAdminTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Filter administration functionality'),
-      'description' => t('Thoroughly test the administrative interface of the filter module.'),
-      'group' => t('Filter'),
+      'name' => 'Filter administration functionality',
+      'description' => 'Thoroughly test the administrative interface of the filter module.',
+      'group' => 'Filter',
     );
   }
 
@@ -187,9 +187,9 @@ class FilterTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Core filters'),
-      'description' => t('Filter each filter individually: Convert URLs into links, Convert line breaks, Correct broken HTML, Escape all HTML, Limit allowed HTML tags.'),
-      'group' => t('Filter'),
+      'name' => 'Core filters',
+      'description' => 'Filter each filter individually: Convert URLs into links, Convert line breaks, Correct broken HTML, Escape all HTML, Limit allowed HTML tags.',
+      'group' => 'Filter',
     );
   }
 

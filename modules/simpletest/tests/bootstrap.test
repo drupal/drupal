@@ -5,9 +5,9 @@ class BootstrapIPAddressTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('IP address and HTTP_HOST test'),
-      'description' => t('Get the IP address from the current visitor from the server variables, check hostname validation.'),
-      'group' => t('Bootstrap')
+      'name' => 'IP address and HTTP_HOST test',
+      'description' => 'Get the IP address from the current visitor from the server variables, check hostname validation.',
+      'group' => 'Bootstrap'
     );
   }
 
@@ -90,9 +90,9 @@ class BootstrapPageCacheTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Page cache test'),
-      'description' => t('Enable the page cache and test it with conditional HTTP requests.'),
-      'group' => t('Bootstrap')
+      'name' => 'Page cache test',
+      'description' => 'Enable the page cache and test it with conditional HTTP requests.',
+      'group' => 'Bootstrap'
     );
   }
 
@@ -187,9 +187,9 @@ class BootstrapVariableTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Variable test'),
-      'description' => t('Make sure the variable system functions correctly.'),
-      'group' => t('Bootstrap')
+      'name' => 'Variable test',
+      'description' => 'Make sure the variable system functions correctly.',
+      'group' => 'Bootstrap'
     );
   }
 
@@ -233,9 +233,9 @@ class HookBootExitTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Boot and exit hook invocation'),
-      'description' => t('Test that hook_boot() and hook_exit() are called correctly.'),
-      'group' => t('Bootstrap'),
+      'name' => 'Boot and exit hook invocation',
+      'description' => 'Test that hook_boot() and hook_exit() are called correctly.',
+      'group' => 'Bootstrap',
     );
   }
 

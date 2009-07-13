@@ -20,9 +20,9 @@ class UnicodeUnitTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Unicode handling'),
-      'description' => t('Tests Drupal Unicode handling.'),
-      'group' => t('System'),
+      'name' => 'Unicode handling',
+      'description' => 'Tests Drupal Unicode handling.',
+      'group' => 'System',
     );
   }
 

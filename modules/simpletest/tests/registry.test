@@ -4,9 +4,9 @@
 class RegistryParseFileTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Registry parse file test'),
-      'description' => t('Parse a simple file and check that its resources are saved to the database.'),
-      'group' => t('System')
+      'name' => 'Registry parse file test',
+      'description' => 'Parse a simple file and check that its resources are saved to the database.',
+      'group' => 'System'
     );
   }
 
@@ -53,9 +53,9 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Registry parse files test'),
-      'description' => t('Read two a simple files from disc, and check that their resources are saved to the database.'),
-      'group' => t('System')
+      'name' => 'Registry parse files test',
+      'description' => 'Read two a simple files from disc, and check that their resources are saved to the database.',
+      'group' => 'System'
     );
   }
 
@@ -149,9 +149,9 @@ CONTENTS;
 class RegistrySkipBodyTestCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Skip function body test'),
-      'description' => t('Tokenize a simple function and check that the body is skipped right'),
-      'group' => t('System'),
+      'name' => 'Skip function body test',
+      'description' => 'Tokenize a simple function and check that the body is skipped right',
+      'group' => 'System',
     );
   }
 

@@ -8,9 +8,9 @@ class TrackerTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Tracker'),
-      'description' => t('Create nodes and check for their display in the tracker listings.'),
-      'group' => t('Tracker')
+      'name' => 'Tracker',
+      'description' => 'Create nodes and check for their display in the tracker listings.',
+      'group' => 'Tracker'
     );
   }
 

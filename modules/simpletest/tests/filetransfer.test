@@ -10,9 +10,9 @@ class FileTranferTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('FileTransfer unit tests'),
-      'description' => t('Test that the jail is respected and that protocols using recursive file move operations work.'),
-      'group' => t('System')
+      'name' => 'FileTransfer unit tests',
+      'description' => 'Test that the jail is respected and that protocols using recursive file move operations work.',
+      'group' => 'System'
     );
   }
 

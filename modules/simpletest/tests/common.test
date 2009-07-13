@@ -8,9 +8,9 @@ class CommonLUnitTest extends DrupalUnitTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('URL generation tests'),
-      'description' => t('Confirm that url(), drupal_query_string_encode(), and l() work correctly with various input.'),
-      'group' => t('System'),
+      'name' => 'URL generation tests',
+      'description' => 'Confirm that url(), drupal_query_string_encode(), and l() work correctly with various input.',
+      'group' => 'System',
     );
   }
 
@@ -42,9 +42,9 @@ class CommonSizeTestCase extends DrupalUnitTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Size parsing test'),
-      'description' => t('Parse a predefined amount of bytes and compare the output with the expected value.'),
-      'group' => t('System')
+      'name' => 'Size parsing test',
+      'description' => 'Parse a predefined amount of bytes and compare the output with the expected value.',
+      'group' => 'System'
     );
   }
 
@@ -146,9 +146,9 @@ class DrupalTagsHandlingTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Drupal tags handling'),
-      'description' => t("Performs tests on Drupal's handling of tags, both explosion and implosion tactics used."),
-      'group' => t('System')
+      'name' => 'Drupal tags handling',
+      'description' => "Performs tests on Drupal's handling of tags, both explosion and implosion tactics used.",
+      'group' => 'System'
     );
   }
 
@@ -196,9 +196,9 @@ class DrupalTagsHandlingTestCase extends DrupalWebTestCase {
 class CascadingStylesheetsTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Cascading stylesheets'),
-      'description' => t('Tests adding various cascading stylesheets to the page.'),
-      'group' => t('System'),
+      'name' => 'Cascading stylesheets',
+      'description' => 'Tests adding various cascading stylesheets to the page.',
+      'group' => 'System',
     );
   }
 
@@ -288,9 +288,9 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
 class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Drupal HTTP request'),
-      'description' => t("Performs tests on Drupal's HTTP request mechanism."),
-      'group' => t('System')
+      'name' => 'Drupal HTTP request',
+      'description' => "Performs tests on Drupal's HTTP request mechanism.",
+      'group' => 'System'
     );
   }
 
@@ -388,9 +388,9 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
 class DrupalSetContentTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Drupal set/get regions'),
-      'description' => t('Performs tests on setting and retrieiving content from theme regions.'),
-      'group' => t('System')
+      'name' => 'Drupal set/get regions',
+      'description' => 'Performs tests on setting and retrieiving content from theme regions.',
+      'group' => 'System'
     );
   }
 
@@ -439,9 +439,9 @@ class JavaScriptTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('JavaScript'),
-      'description' => t('Tests the JavaScript system.'),
-      'group' => t('System')
+      'name' => 'JavaScript',
+      'description' => 'Tests the JavaScript system.',
+      'group' => 'System'
     );
   }
 
@@ -684,9 +684,9 @@ class JavaScriptTestCase extends DrupalWebTestCase {
 class DrupalRenderUnitTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Drupal render'),
-      'description' => t('Performs unit tests on drupal_render().'),
-      'group' => t('System'),
+      'name' => 'Drupal render',
+      'description' => 'Performs unit tests on drupal_render().',
+      'group' => 'System',
     );
   }
 
@@ -770,9 +770,9 @@ class DrupalRenderUnitTestCase extends DrupalWebTestCase {
 class ValidUrlTestCase extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Valid Url'),
-      'description' => t("Performs tests on Drupal's valid url function."),
-      'group' => t('System')
+      'name' => 'Valid Url',
+      'description' => "Performs tests on Drupal's valid url function.",
+      'group' => 'System'
     );
   }
 
@@ -878,9 +878,9 @@ class ValidUrlTestCase extends DrupalUnitTestCase {
 class DrupalDataApiTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Data API functions'),
-      'description' => t('Tests the performance of CRUD APIs.'),
-      'group' => t('System'),
+      'name' => 'Data API functions',
+      'description' => 'Tests the performance of CRUD APIs.',
+      'group' => 'System',
     );
   }
 
@@ -935,9 +935,9 @@ class DrupalErrorCollectionUnitTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('SimpleTest error collecter'),
-      'description' => t('Performs tests on the Simpletest error and exception collecter.'),
-      'group' => t('SimpleTest'),
+      'name' => 'SimpleTest error collecter',
+      'description' => 'Performs tests on the Simpletest error and exception collecter.',
+      'group' => 'SimpleTest',
     );
   }
 
@@ -1001,9 +1001,9 @@ class FormatDateUnitTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Format date'),
-      'description' => t('Test the format_date() function.'),
-      'group' => t('System'),
+      'name' => 'Format date',
+      'description' => 'Test the format_date() function.',
+      'group' => 'System',
     );
   }
 

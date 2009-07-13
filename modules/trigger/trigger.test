@@ -7,9 +7,9 @@ class TriggerContentTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Trigger content (node) actions'),
-      'description' => t('Perform various tests with content actions.') ,
-      'group' => t('Trigger'),
+      'name' => 'Trigger content (node) actions',
+      'description' => 'Perform various tests with content actions.' ,
+      'group' => 'Trigger',
     );
   }
 
@@ -116,9 +116,9 @@ class TriggerContentTestCase extends DrupalWebTestCase {
 class TriggerCronTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Trigger cron (system) actions'),
-      'description' => t('Perform various tests with cron trigger.') ,
-      'group' => t('Trigger'),
+      'name' => 'Trigger cron (system) actions',
+      'description' => 'Perform various tests with cron trigger.' ,
+      'group' => 'Trigger',
     );
   }
 

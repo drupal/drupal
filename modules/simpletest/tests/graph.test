@@ -12,9 +12,9 @@
 class GraphUnitTest extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Graph'),
-      'description' => t('Graph handling unit tests.'),
-      'group' => t('System'),
+      'name' => 'Graph',
+      'description' => 'Graph handling unit tests.',
+      'group' => 'System',
     );
   }
 

@@ -12,9 +12,9 @@
 class SchemaTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Schema API'),
-      'description' => t('Tests table creation and modification via the schema API.'),
-      'group' => t('Database'),
+      'name' => 'Schema API',
+      'description' => 'Tests table creation and modification via the schema API.',
+      'group' => 'Database',
     );
   }
 

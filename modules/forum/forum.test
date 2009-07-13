@@ -13,9 +13,9 @@ class ForumTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Forum functionality'),
-      'description' => t('Create, view, edit, delete, and change forum entries and verify its consistency in the database.'),
-      'group' => t('Forum'),
+      'name' => 'Forum functionality',
+      'description' => 'Create, view, edit, delete, and change forum entries and verify its consistency in the database.',
+      'group' => 'Forum',
     );
   }
 

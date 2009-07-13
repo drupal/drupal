@@ -8,9 +8,9 @@ class BlogTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Blog functionality'),
-      'description' => t('Create, view, edit, delete, and change blog entries and verify its consistency in the database.'),
-      'group' => t('Blog'),
+      'name' => 'Blog functionality',
+      'description' => 'Create, view, edit, delete, and change blog entries and verify its consistency in the database.',
+      'group' => 'Blog',
     );
   }
 

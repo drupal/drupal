@@ -4,9 +4,9 @@
 class ActionsConfigurationTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Actions configuration'),
-      'description' => t('Tests complex actions configuration by adding, editing, and deleting a complex action.'),
-      'group' => t('System'),
+      'name' => 'Actions configuration',
+      'description' => 'Tests complex actions configuration by adding, editing, and deleting a complex action.',
+      'group' => 'System',
     );
   }
 

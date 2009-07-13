@@ -4,9 +4,9 @@
 class StatisticsBlockVisitorsTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Top visitor blocking'),
-      'description' => t('Tests blocking of IP addresses via the top visitors report.'),
-      'group' => t('Statistics')
+      'name' => 'Top visitor blocking',
+      'description' => 'Tests blocking of IP addresses via the top visitors report.',
+      'group' => 'Statistics'
     );
   }
 

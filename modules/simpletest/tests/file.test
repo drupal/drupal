@@ -274,9 +274,9 @@ class FileHookTestCase extends FileTestCase {
 class FileSpaceUsedTest extends FileTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('File space used tests'),
-      'description' => t('Tests the file_space_used() function.'),
-      'group' => t('File'),
+      'name' => 'File space used tests',
+      'description' => 'Tests the file_space_used() function.',
+      'group' => 'File',
     );
   }
 
@@ -334,9 +334,9 @@ class FileSpaceUsedTest extends FileTestCase {
 class FileValidatorTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('File validator tests'),
-      'description' => t('Tests the functions used to validate uploaded files.'),
-      'group' => t('File'),
+      'name' => 'File validator tests',
+      'description' => 'Tests the functions used to validate uploaded files.',
+      'group' => 'File',
     );
   }
 
@@ -492,9 +492,9 @@ class FileValidatorTest extends DrupalWebTestCase {
 class FileUnmanagedSaveDataTest extends FileTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Unmanaged file save data'),
-      'description' => t('Tests the unmanaged file save data function.'),
-      'group' => t('File'),
+      'name' => 'Unmanaged file save data',
+      'description' => 'Tests the unmanaged file save data function.',
+      'group' => 'File',
     );
   }
 
@@ -536,9 +536,9 @@ class FileSaveUploadTest extends FileHookTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('File uploading'),
-      'description' => t('Tests the file uploading functions.'),
-      'group' => t('File'),
+      'name' => 'File uploading',
+      'description' => 'Tests the file uploading functions.',
+      'group' => 'File',
     );
   }
 
@@ -664,9 +664,9 @@ class FileSaveUploadTest extends FileHookTestCase {
 class FileDirectoryTest extends FileTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('File paths and directories'),
-      'description' => t('Tests operations dealing with directories.'),
-      'group' => t('File'),
+      'name' => 'File paths and directories',
+      'description' => 'Tests operations dealing with directories.',
+      'group' => 'File',
     );
   }
 
@@ -829,9 +829,9 @@ class FileDirectoryTest extends FileTestCase {
 class FileScanDirectoryTest extends FileTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('File scan directory'),
-      'description' => t('Tests the file_scan_directory() function.'),
-      'group' => t('File'),
+      'name' => 'File scan directory',
+      'description' => 'Tests the file_scan_directory() function.',
+      'group' => 'File',
     );
   }
 
@@ -959,9 +959,9 @@ class FileScanDirectoryTest extends FileTestCase {
 class FileUnmanagedDeleteTest extends FileTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Unmanaged file delete'),
-      'description' => t('Tests the unmanaged file delete function.'),
-      'group' => t('File'),
+      'name' => 'Unmanaged file delete',
+      'description' => 'Tests the unmanaged file delete function.',
+      'group' => 'File',
     );
   }
 
@@ -1005,9 +1005,9 @@ class FileUnmanagedDeleteTest extends FileTestCase {
 class FileUnmanagedDeleteRecursiveTest extends FileTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Unmanaged recursive file delete'),
-      'description' => t('Tests the unmanaged file delete recursive function.'),
-      'group' => t('File'),
+      'name' => 'Unmanaged recursive file delete',
+      'description' => 'Tests the unmanaged file delete recursive function.',
+      'group' => 'File',
     );
   }
 
@@ -1082,9 +1082,9 @@ class FileUnmanagedDeleteRecursiveTest extends FileTestCase {
 class FileUnmanagedMoveTest extends FileTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Unmanaged file moving'),
-      'description' => t('Tests the unmanaged file move function.'),
-      'group' => t('File'),
+      'name' => 'Unmanaged file moving',
+      'description' => 'Tests the unmanaged file move function.',
+      'group' => 'File',
     );
   }
 
@@ -1154,9 +1154,9 @@ class FileUnmanagedMoveTest extends FileTestCase {
 class FileUnmanagedCopyTest extends FileTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Unmanaged file copying'),
-      'description' => t('Tests the unmanaged file copy function.'),
-      'group' => t('File'),
+      'name' => 'Unmanaged file copying',
+      'description' => 'Tests the unmanaged file copy function.',
+      'group' => 'File',
     );
   }
 
@@ -1241,9 +1241,9 @@ class FileUnmanagedCopyTest extends FileTestCase {
 class FileDeleteTest extends FileHookTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('File delete'),
-      'description' => t('Tests the file delete function.'),
-      'group' => t('File'),
+      'name' => 'File delete',
+      'description' => 'Tests the file delete function.',
+      'group' => 'File',
     );
   }
 
@@ -1272,9 +1272,9 @@ class FileDeleteTest extends FileHookTestCase {
 class FileMoveTest extends FileHookTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('File moving'),
-      'description' => t('Tests the file move function.'),
-      'group' => t('File'),
+      'name' => 'File moving',
+      'description' => 'Tests the file move function.',
+      'group' => 'File',
     );
   }
 
@@ -1433,9 +1433,9 @@ class FileMoveTest extends FileHookTestCase {
 class FileCopyTest extends FileHookTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('File copying'),
-      'description' => t('Tests the file copy function.'),
-      'group' => t('File'),
+      'name' => 'File copying',
+      'description' => 'Tests the file copy function.',
+      'group' => 'File',
     );
   }
 
@@ -1579,9 +1579,9 @@ class FileCopyTest extends FileHookTestCase {
 class FileLoadTest extends FileHookTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('File loading'),
-      'description' => t('Tests the file_load() function.'),
-      'group' => t('File'),
+      'name' => 'File loading',
+      'description' => 'Tests the file_load() function.',
+      'group' => 'File',
     );
   }
 
@@ -1676,9 +1676,9 @@ class FileLoadTest extends FileHookTestCase {
 class FileSaveTest extends FileHookTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('File saving'),
-      'description' => t('Tests the file_save() function.'),
-      'group' => t('File'),
+      'name' => 'File saving',
+      'description' => 'Tests the file_save() function.',
+      'group' => 'File',
     );
   }
 
@@ -1732,9 +1732,9 @@ class FileSaveTest extends FileHookTestCase {
 class FileValidateTest extends FileHookTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('File validate'),
-      'description' => t('Tests the file_validate() function.'),
-      'group' => t('File'),
+      'name' => 'File validate',
+      'description' => 'Tests the file_validate() function.',
+      'group' => 'File',
     );
   }
 
@@ -1771,9 +1771,9 @@ class FileValidateTest extends FileHookTestCase {
 class FileSaveDataTest extends FileHookTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('File save data'),
-      'description' => t('Tests the file save data function.'),
-      'group' => t('File'),
+      'name' => 'File save data',
+      'description' => 'Tests the file save data function.',
+      'group' => 'File',
     );
   }
 
@@ -1902,9 +1902,9 @@ class FileSaveDataTest extends FileHookTestCase {
 class FileDownloadTest extends FileTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('File download'),
-      'description' => t('Tests for file download/transfer functions.'),
-      'group' => t('File'),
+      'name' => 'File download',
+      'description' => 'Tests for file download/transfer functions.',
+      'group' => 'File',
     );
   }
 
@@ -1948,9 +1948,9 @@ class FileDownloadTest extends FileTestCase {
 class FileNameMungingTest extends FileTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('File naming'),
-      'description' => t('Test filename munging and unmunging.'),
-      'group' => t('File'),
+      'name' => 'File naming',
+      'description' => 'Test filename munging and unmunging.',
+      'group' => 'File',
     );
   }
 
@@ -2009,9 +2009,9 @@ class FileNameMungingTest extends FileTestCase {
 class FileMimeTypeTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('File mimetypes'),
-      'description' => t('Test filename mimetype detection.'),
-      'group' => t('File'),
+      'name' => 'File mimetypes',
+      'description' => 'Test filename mimetype detection.',
+      'group' => 'File',
     );
   }
 

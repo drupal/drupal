@@ -7,9 +7,9 @@
 class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Drupal error handlers'),
-      'description' => t('Performs tests on the Drupal error and exception handler.'),
-      'group' => t('System'),
+      'name' => 'Drupal error handlers',
+      'description' => 'Performs tests on the Drupal error and exception handler.',
+      'group' => 'System',
     );
   }
 

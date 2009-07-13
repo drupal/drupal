@@ -11,9 +11,9 @@ class BlockTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Block functionality'),
-      'description' => t('Add, edit and delete custom block. Configure and move a module-defined block.'),
-      'group' => t('Block'),
+      'name' => 'Block functionality',
+      'description' => 'Add, edit and delete custom block. Configure and move a module-defined block.',
+      'group' => 'Block',
     );
   }
 
@@ -205,9 +205,9 @@ class BlockTestCase extends DrupalWebTestCase {
 class NonDefaultBlockAdmin extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Non default theme admin'),
-      'description' => t('Check the administer page for non default theme.'),
-      'group' => t('Block'),
+      'name' => 'Non default theme admin',
+      'description' => 'Check the administer page for non default theme.',
+      'group' => 'Block',
     );
   }
 
@@ -229,9 +229,9 @@ class NonDefaultBlockAdmin extends DrupalWebTestCase {
 class NewDefaultThemeBlocks extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('New default theme blocks'),
-      'description' => t('Checks that the new default theme gets blocks.'),
-      'group' => t('Block'),
+      'name' => 'New default theme blocks',
+      'description' => 'Checks that the new default theme gets blocks.',
+      'group' => 'Block',
     );
   }
   
@@ -273,9 +273,9 @@ class NewDefaultThemeBlocks extends DrupalWebTestCase {
 class BlockAdminThemeTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Admin theme block admin accessibility'),
-      'description' => t("Check whether the block administer page for a disabled theme acccessible if and only if it's the admin theme."),
-      'group' => t('Block'),
+      'name' => 'Admin theme block admin accessibility',
+      'description' => "Check whether the block administer page for a disabled theme acccessible if and only if it's the admin theme.",
+      'group' => 'Block',
     );
   }
   

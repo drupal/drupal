@@ -104,9 +104,9 @@ class CacheTestCase extends DrupalWebTestCase {
 class CacheSavingCase extends CacheTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Cache saving test'),
-      'description' => t('Check our variables are saved and restored the right way.'),
-      'group' => t('Cache')
+      'name' => 'Cache saving test',
+      'description' => 'Check our variables are saved and restored the right way.',
+      'group' => 'Cache'
     );
   }
 
@@ -169,9 +169,9 @@ class CacheGetMultipleUnitTest extends CacheTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Fetching multiple cache items'),
-      'description' => t('Confirm that multiple records are fetched correctly.'),
-      'group' => t('Cache'),
+      'name' => 'Fetching multiple cache items',
+      'description' => 'Confirm that multiple records are fetched correctly.',
+      'group' => 'Cache',
     );
   }
 
@@ -215,9 +215,9 @@ class CacheGetMultipleUnitTest extends CacheTestCase {
 class CacheClearCase extends CacheTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Cache clear test'),
-      'description' => t('Check our clearing is done the proper way.'),
-      'group' => t('Cache')
+      'name' => 'Cache clear test',
+      'description' => 'Check our clearing is done the proper way.',
+      'group' => 'Cache'
     );
   }
 

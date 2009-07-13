@@ -6,9 +6,9 @@ class TranslationTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Translation functionality'),
-      'description' => t('Create a page with translation, modify the page outdating translation, and update translation.'),
-      'group' => t('Translation')
+      'name' => 'Translation functionality',
+      'description' => 'Create a page with translation, modify the page outdating translation, and update translation.',
+      'group' => 'Translation'
     );
   }
 

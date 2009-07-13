@@ -9,9 +9,9 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('OpenID login and account registration'),
-      'description' => t("Adds an identity to a user's profile and uses it to log in, creates a user account using auto-registration."),
-      'group' => t('OpenID')
+      'name' => 'OpenID login and account registration',
+      'description' => "Adds an identity to a user's profile and uses it to log in, creates a user account using auto-registration.",
+      'group' => 'OpenID'
     );
   }
 
@@ -164,9 +164,9 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
 class OpenIDUnitTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('OpenID helper functions'),
-      'description' => t('Test OpenID helper functions.'),
-      'group' => t('OpenID')
+      'name' => 'OpenID helper functions',
+      'description' => 'Test OpenID helper functions.',
+      'group' => 'OpenID'
     );
   }
 

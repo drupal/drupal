@@ -15,9 +15,9 @@ class BatchAPIPercentagesTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Batch API percentages'),
-      'description' => t('Tests the handling of percentage rounding in the Drupal batch API. This is critical to Drupal user experience.'),
-      'group' => t('Batch API'),
+      'name' => 'Batch API percentages',
+      'description' => 'Tests the handling of percentage rounding in the Drupal batch API. This is critical to Drupal user experience.',
+      'group' => 'Batch API',
     );
   }
 

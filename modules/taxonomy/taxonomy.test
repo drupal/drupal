@@ -46,9 +46,9 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Taxonomy vocabulary interface'),
-      'description' => t('Test the taxonomy vocabulary interface.'),
-      'group' => t('Taxonomy'),
+      'name' => 'Taxonomy vocabulary interface',
+      'description' => 'Test the taxonomy vocabulary interface.',
+      'group' => 'Taxonomy',
     );
   }
 
@@ -188,9 +188,9 @@ class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Taxonomy vocabularies'),
-      'description' => t('Test loading, saving and deleting vocabularies.'),
-      'group' => t('Taxonomy'),
+      'name' => 'Taxonomy vocabularies',
+      'description' => 'Test loading, saving and deleting vocabularies.',
+      'group' => 'Taxonomy',
     );
   }
 
@@ -308,9 +308,9 @@ class TaxonomyTermUnitTest extends TaxonomyWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Taxonomy term unit tests'),
-      'description' => t('Unit tests for taxonomy term functions.'),
-      'group' => t('Taxonomy'),
+      'name' => 'Taxonomy term unit tests',
+      'description' => 'Unit tests for taxonomy term functions.',
+      'group' => 'Taxonomy',
     );
   }
 
@@ -381,9 +381,9 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Taxonomy term functions and forms.'),
-      'description' => t('Test load, save and delete for taxonomy terms.'),
-      'group' => t('Taxonomy')
+      'name' => 'Taxonomy term functions and forms.',
+      'description' => 'Test load, save and delete for taxonomy terms.',
+      'group' => 'Taxonomy'
     );
   }
 
@@ -618,9 +618,9 @@ class TaxonomyLoadMultipleUnitTest extends TaxonomyWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Taxonomy term multiple loading'),
-      'description' => t('Test the loading of multiple taxonomy terms at once'),
-      'group' => t('Taxonomy'),
+      'name' => 'Taxonomy term multiple loading',
+      'description' => 'Test the loading of multiple taxonomy terms at once',
+      'group' => 'Taxonomy',
     );
   }
 
@@ -684,9 +684,9 @@ class TaxonomyLoadMultipleUnitTest extends TaxonomyWebTestCase {
 class TaxonomyHooksTestCase extends TaxonomyWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Taxonomy term hooks'),
-      'description' => t('Hooks for taxonomy term load/save/delete.'),
-      'group' => t('Taxonomy')
+      'name' => 'Taxonomy term hooks',
+      'description' => 'Hooks for taxonomy term load/save/delete.',
+      'group' => 'Taxonomy'
     );
   }
 
