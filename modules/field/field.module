@@ -471,7 +471,7 @@ function field_format($obj_type, $object, $field, $item, $formatter_name = NULL,
  * Return a single field, fully themed with label and multiple values.
  *
  * To be used by third-party code (Views, Panels...) that needs to output
- * an isolated field. Do *not* use inside node templates, use the
+ * an isolated field. Do *not* use inside node templates, use
  * render($content[FIELD_NAME]) instead.
  *
  * The field will be displayed using the display options (label display,

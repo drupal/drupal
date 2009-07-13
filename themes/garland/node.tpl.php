@@ -13,21 +13,21 @@
   <?php endif; ?>
 
   <div class="content clearfix">
-    <?php hide($content['links']); hide($content['comments']); render($content); ?>
+    <?php hide($content['links']); hide($content['comments']); print render($content); ?>
   </div>
 
   <div class="clearfix">
     <div class="meta">
     <?php if (!empty($content['links']['terms'])): ?>
-      <div class="terms"><?php render($content['links']['terms']) ?></div>
+      <div class="terms"><?php print render($content['links']['terms']) ?></div>
     <?php endif;?>
     </div>
 
     <?php if (!empty($content['links'])): ?>
-      <div class="links"><?php render($content['links']) ?></div>
+      <div class="links"><?php print render($content['links']) ?></div>
     <?php endif; ?>
 
-    <?php render($content['comments']); ?>
+    <?php print render($content['comments']); ?>
 
   </div>
 

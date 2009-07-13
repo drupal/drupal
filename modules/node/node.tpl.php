@@ -91,12 +91,12 @@
       // We hide the comments and links now so that we can render them later.
       hide($content['comments']);
       hide($content['links']);
-      render($content);
+      print render($content);
     ?>
   </div>
 
-  <?php render($content['links']); ?>
+  <?php print render($content['links']); ?>
 
-  <?php render($content['comments']); ?>
+  <?php print render($content['comments']); ?>
 
 </div>

@@ -3838,7 +3838,7 @@ function drupal_render(&$elements) {
       }
     }
   }
-  
+
   // Add additional CSS and JavaScript files associated with this element.
   foreach (array('css', 'js') as $kind) {
     if (!empty($elements['#attached_' . $kind]) && is_array($elements['#attached_' . $kind])) {
@@ -3894,13 +3894,11 @@ function drupal_render_children(&$element, $children_keys = NULL) {
 /**
  * Render and print an element.
  *
- * This function renders an element using drupal_render() and then prints out
- * the rendered output. The top level element is always rendered and printed
- * even if hide() had been previously used on it.
+ * This function renders an element using drupal_render(). The top level
+ * element is always rendered even if hide() had been previously used on it.
  *
- * Any nested elements are only printed if they haven't been printed before or
- * if they have been re-enabled with show(). If the element is a string instead
- * of a renderable array it is also printed.
+ * Any nested elements are only rendered if they haven't been rendered before
+ * or if they have been re-enabled with show().
  *
  * @see drupal_render()
  * @see show()
@@ -3909,10 +3907,12 @@ function drupal_render_children(&$element, $children_keys = NULL) {
 function render(&$element) {
   if (is_array($element)) {
     show($element);
-    print drupal_render($element);
+    return drupal_render($element);
   }
   else {
-    print $element;
+    // Safe-guard for inappropriate use of render() on flat variables: return
+    // the variable as-is.
+    return $element;
   }
 }
 
@@ -3931,7 +3931,7 @@ function hide(&$element) {
  * Show a hidden or already printed element from later rendering.
  *
  * Alternatively, render($element) could be used which automatically shows the
- * element while rendering and printing it.
+ * element while rendering it.
  *
  * @see render()
  * @see hide()
