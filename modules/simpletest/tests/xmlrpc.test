@@ -1,12 +1,12 @@
 <?php
-// $Id: xmlrpc.test,v 1.10 2009/06/28 03:08:38 webchick Exp $
+// $Id: xmlrpc.test,v 1.11 2009/07/13 21:51:41 webchick Exp $
 
 class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name'  => t('XML-RPC validator'),
-      'description'  => t('See !validator-link.', array('!validator-link' => l('the xmlrpc validator1 specification', 'http://www.xmlrpc.com/validator1Docs'))),
-      'group' => t('XML-RPC'),
+      'name'  => 'XML-RPC validator',
+      'description'  => 'See !validator-link.', array('!validator-link' => l('the xmlrpc validator1 specification', 'http://www.xmlrpc.com/validator1Docs')),
+      'group' => 'XML-RPC',
     );
   }
 
@@ -127,9 +127,9 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
 class XMLRPCMessagesTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name'  => t('XML-RPC message'),
-      'description' => t('Test large messages.'),
-      'group' => t('XML-RPC'),
+      'name'  => 'XML-RPC message',
+      'description' => 'Test large messages.',
+      'group' => 'XML-RPC',
     );
   }
 

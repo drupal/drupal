@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.test,v 1.2 2009/05/06 19:56:21 webchick Exp $
+// $Id: openid.test,v 1.3 2009/07/13 21:51:10 webchick Exp $
 
 /**
  * Test login and account registration using OpenID.
@@ -9,9 +9,9 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('OpenID login and account registration'),
-      'description' => t("Adds an identity to a user's profile and uses it to log in, creates a user account using auto-registration."),
-      'group' => t('OpenID')
+      'name' => 'OpenID login and account registration',
+      'description' => "Adds an identity to a user's profile and uses it to log in, creates a user account using auto-registration.",
+      'group' => 'OpenID'
     );
   }
 
@@ -164,9 +164,9 @@ class OpenIDFunctionalTest extends DrupalWebTestCase {
 class OpenIDUnitTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('OpenID helper functions'),
-      'description' => t('Test OpenID helper functions.'),
-      'group' => t('OpenID')
+      'name' => 'OpenID helper functions',
+      'description' => 'Test OpenID helper functions.',
+      'group' => 'OpenID'
     );
   }
 

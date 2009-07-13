@@ -1,5 +1,5 @@
 <?php
-// $Id: path.test,v 1.14 2009/06/30 18:21:06 webchick Exp $
+// $Id: path.test,v 1.15 2009/07/13 21:51:10 webchick Exp $
 
 /**
  * @file
@@ -9,9 +9,9 @@
 class PathTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Path alias functionality'),
-      'description' => t('Add, edit, delete, and change alias and verify its consistency in the database.'),
-      'group' => t('Path'),
+      'name' => 'Path alias functionality',
+      'description' => 'Add, edit, delete, and change alias and verify its consistency in the database.',
+      'group' => 'Path',
     );
   }
 
@@ -159,9 +159,9 @@ class PathTestCase extends DrupalWebTestCase {
 class PathLanguageTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Path aliases with translated nodes'),
-      'description' => t('Confirm that paths work with translated nodes'),
-      'group' => t('Path'),
+      'name' => 'Path aliases with translated nodes',
+      'description' => 'Confirm that paths work with translated nodes',
+      'group' => 'Path',
     );
   }
 

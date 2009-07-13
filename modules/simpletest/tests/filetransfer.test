@@ -1,5 +1,5 @@
 <?php
-// $Id: filetransfer.test,v 1.1 2009/07/01 13:44:53 dries Exp $
+// $Id: filetransfer.test,v 1.2 2009/07/13 21:51:41 webchick Exp $
 
 
 class FileTranferTest extends DrupalWebTestCase {
@@ -10,9 +10,9 @@ class FileTranferTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('FileTransfer unit tests'),
-      'description' => t('Test that the jail is respected and that protocols using recursive file move operations work.'),
-      'group' => t('System')
+      'name' => 'FileTransfer unit tests',
+      'description' => 'Test that the jail is respected and that protocols using recursive file move operations work.',
+      'group' => 'System'
     );
   }
 

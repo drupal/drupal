@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.test,v 1.25 2009/06/13 20:40:07 dries Exp $
+// $Id: contact.test,v 1.26 2009/07/13 21:51:09 webchick Exp $
 
 /**
  * Test the sitewide contact form.
@@ -7,9 +7,9 @@
 class ContactSitewideTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Site-wide contact form'),
-      'description' => t('Tests site-wide contact form functionality.'),
-      'group' => t('Contact'),
+      'name' => 'Site-wide contact form',
+      'description' => 'Tests site-wide contact form functionality.',
+      'group' => 'Contact',
     );
   }
 
@@ -300,9 +300,9 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
 class ContactPersonalTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Personal contact form'),
-      'description' => t('Tests personal contact form functionality.'),
-      'group' => t('Contact'),
+      'name' => 'Personal contact form',
+      'description' => 'Tests personal contact form functionality.',
+      'group' => 'Contact',
     );
   }
 

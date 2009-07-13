@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.test,v 1.1 2009/05/06 10:41:43 dries Exp $
+// $Id: batch.test,v 1.2 2009/07/13 21:51:41 webchick Exp $
 
 /**
  * @file
@@ -15,9 +15,9 @@ class BatchAPIPercentagesTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => t('Batch API percentages'),
-      'description' => t('Tests the handling of percentage rounding in the Drupal batch API. This is critical to Drupal user experience.'),
-      'group' => t('Batch API'),
+      'name' => 'Batch API percentages',
+      'description' => 'Tests the handling of percentage rounding in the Drupal batch API. This is critical to Drupal user experience.',
+      'group' => 'Batch API',
     );
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: session.test,v 1.15 2009/07/01 12:47:30 dries Exp $
+// $Id: session.test,v 1.16 2009/07/13 21:51:41 webchick Exp $
 
 /**
  * @file
@@ -9,9 +9,9 @@
 class SessionTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Session tests'),
-      'description' => t('Drupal session handling tests.'),
-      'group' => t('Session')
+      'name' => 'Session tests',
+      'description' => 'Drupal session handling tests.',
+      'group' => 'Session'
     );
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.11 2009/05/30 11:17:32 dries Exp $
+// $Id: menu.test,v 1.12 2009/07/13 21:51:41 webchick Exp $
 
 /**
  * @file
@@ -9,9 +9,9 @@
 class MenuIncTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Hook menu tests'),
-      'description' => t('Test menu hook functionality.'),
-      'group' => t('Menu'),
+      'name' => 'Hook menu tests',
+      'description' => 'Test menu hook functionality.',
+      'group' => 'Menu',
     );
   }
 
@@ -131,9 +131,9 @@ class MenuIncTestCase extends DrupalWebTestCase {
 class MenuRebuildTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Menu rebuild test'),
-      'description' => t('Test rebuilding of menu.'),
-      'group' => t('Menu'),
+      'name' => 'Menu rebuild test',
+      'description' => 'Test rebuilding of menu.',
+      'group' => 'Menu',
     );
   }
 

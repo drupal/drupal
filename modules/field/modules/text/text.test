@@ -1,14 +1,14 @@
 <?php
-// $Id: text.test,v 1.7 2009/06/12 08:39:37 dries Exp $
+// $Id: text.test,v 1.8 2009/07/13 21:51:09 webchick Exp $
 
 class TextFieldTestCase extends DrupalWebTestCase {
   protected $instance;
 
   public static function getInfo() {
     return array(
-      'name'  => t('Text Field'),
-      'description'  => t("Test the creation of text fields."),
-      'group' => t('Field')
+      'name'  => 'Text Field',
+      'description'  => "Test the creation of text fields.",
+      'group' => 'Field'
     );
   }
 
@@ -200,9 +200,9 @@ class TextFieldTestCase extends DrupalWebTestCase {
 class TextSummaryTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Text summary'),
-      'description' => t('Test text_summary() with different strings and lengths.'),
-      'group' => t('Field'),
+      'name' => 'Text summary',
+      'description' => 'Test text_summary() with different strings and lengths.',
+      'group' => 'Field',
     );
   }
 

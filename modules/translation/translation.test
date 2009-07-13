@@ -1,14 +1,14 @@
 <?php
-// $Id: translation.test,v 1.12 2009/06/12 08:39:40 dries Exp $
+// $Id: translation.test,v 1.13 2009/07/13 21:51:42 webchick Exp $
 
 class TranslationTestCase extends DrupalWebTestCase {
   protected $book;
 
   public static function getInfo() {
     return array(
-      'name' => t('Translation functionality'),
-      'description' => t('Create a page with translation, modify the page outdating translation, and update translation.'),
-      'group' => t('Translation')
+      'name' => 'Translation functionality',
+      'description' => 'Create a page with translation, modify the page outdating translation, and update translation.',
+      'group' => 'Translation'
     );
   }
 

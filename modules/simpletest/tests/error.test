@@ -1,5 +1,5 @@
 <?php
-// $Id: error.test,v 1.3 2009/06/10 20:00:10 dries Exp $
+// $Id: error.test,v 1.4 2009/07/13 21:51:41 webchick Exp $
 
 /**
  * Tests Drupal error and exception handlers.
@@ -7,9 +7,9 @@
 class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name' => t('Drupal error handlers'),
-      'description' => t('Performs tests on the Drupal error and exception handler.'),
-      'group' => t('System'),
+      'name' => 'Drupal error handlers',
+      'description' => 'Performs tests on the Drupal error and exception handler.',
+      'group' => 'System',
     );
   }
 
