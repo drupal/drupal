@@ -1,5 +1,5 @@
 <?php
-// $Id: user-profile.tpl.php,v 1.9 2009/06/24 18:16:38 dries Exp $
+// $Id: user-profile.tpl.php,v 1.10 2009/07/13 21:09:54 webchick Exp $
 
 /**
  * @file
@@ -28,5 +28,5 @@
  */
 ?>
 <div class="profile">
-  <?php render($user_profile); ?>
+  <?php print render($user_profile); ?>
 </div>

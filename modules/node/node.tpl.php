@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.16 2009/06/30 17:18:10 webchick Exp $
+// $Id: node.tpl.php,v 1.17 2009/07/13 21:09:54 webchick Exp $
 
 /**
  * @file
@@ -91,12 +91,12 @@
       // We hide the comments and links now so that we can render them later.
       hide($content['comments']);
       hide($content['links']);
-      render($content);
+      print render($content);
     ?>
   </div>
 
-  <?php render($content['links']); ?>
+  <?php print render($content['links']); ?>
 
-  <?php render($content['comments']); ?>
+  <?php print render($content['comments']); ?>
 
 </div>

@@ -1,5 +1,5 @@
 <?php
-// $Id: field.module,v 1.18 2009/07/11 00:56:45 webchick Exp $
+// $Id: field.module,v 1.19 2009/07/13 21:09:54 webchick Exp $
 /**
  * @file
  * Attach custom data fields to Drupal objects.
@@ -471,7 +471,7 @@ function field_format($obj_type, $object, $field, $item, $formatter_name = NULL,
  * Return a single field, fully themed with label and multiple values.
  *
  * To be used by third-party code (Views, Panels...) that needs to output
- * an isolated field. Do *not* use inside node templates, use the
+ * an isolated field. Do *not* use inside node templates, use
  * render($content[FIELD_NAME]) instead.
  *
  * The field will be displayed using the display options (label display,
