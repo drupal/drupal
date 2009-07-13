@@ -2624,8 +2624,8 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
     if ($rollback) {
       // Roll back the transaction, if requested.
       // This rollback should propagate to the the outer transaction, if present.
-      $connection->rollBack();
-      $this->assertTrue($connection->willRollBack(), t('Transaction is scheduled to roll back after calling rollBack().'));
+      $txn->rollback();
+      $this->assertTrue($txn->willRollback(), t('Transaction is scheduled to roll back after calling rollback().'));
     }
   }
 
