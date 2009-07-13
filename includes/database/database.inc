@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.60 2009/07/07 08:57:48 dries Exp $
+// $Id: database.inc,v 1.61 2009/07/13 07:27:14 dries Exp $
 
 /**
  * @file
@@ -225,7 +225,7 @@ abstract class DatabaseConnection extends PDO {
    *
    * @var boolean
    */
-  protected $willRollBack;
+  protected $willRollback;
 
   /**
    * The name of the Select class for this connection.
@@ -849,12 +849,12 @@ abstract class DatabaseConnection extends PDO {
    *
    * This method throws an exception if no transaction is active.
    */
-  public function rollBack() {
+  public function rollback() {
     if ($this->transactionLayers == 0) {
       throw new NoActiveTransactionException();
     }
 
-    $this->willRollBack = TRUE;
+    $this->willRollback = TRUE;
   }
 
   /**
@@ -867,12 +867,12 @@ abstract class DatabaseConnection extends PDO {
    * @return
    *   TRUE if the transaction will roll back, FALSE otherwise.
    */
-  public function willRollBack() {
+  public function willRollback() {
     if ($this->transactionLayers == 0) {
       throw new NoActiveTransactionException();
     }
 
-    return $this->willRollBack;
+    return $this->willRollback;
   }
 
   /**
@@ -1446,6 +1446,23 @@ class DatabaseTransaction {
 
   public function __destruct() {
     $this->connection->popTransaction();
+  }
+
+  /**
+   * Roll back the current transaction.
+   *
+   * This is just a wrapper method to rollback whatever transaction stack we
+   * are currently in, which is managed by the connection object itself.
+   */
+  public function rollback() {
+    $this->connection->rollback();
+  }
+
+  /**
+   * Determine if this transaction will roll back.
+   */
+  public function willRollback() {
+    return $this->connection->willRollback();
   }
 
 }
