@@ -197,7 +197,9 @@ Drupal.ahah.prototype.success = function (response, status) {
   // Attach all javascript behaviors to the new content, if it was successfully
   // added to the page, this if statement allows #ahah[wrapper] to be optional.
   if (new_content.parents('html').length > 0) {
-    Drupal.attachBehaviors(new_content);
+    // Apply any settings from the returned JSON if available.
+    var settings = response.settings || Drupal.settings;
+    Drupal.attachBehaviors(new_content, settings);
   }
 
   Drupal.unfreezeHeight();
