@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.125 2009/07/11 06:14:48 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.126 2009/07/14 11:46:55 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -1120,7 +1120,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected function refreshVariables() {
     global $conf;
     cache_clear_all('variables', 'cache');
-    $conf = variable_init();
+    $conf = variable_initialize();
   }
 
   /**
