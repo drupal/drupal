@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.29 2009/07/13 21:51:10 webchick Exp $
+// $Id: locale.test,v 1.30 2009/07/14 10:22:17 dries Exp $
 
 /**
  * @file
@@ -934,7 +934,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     locale_add_language('fr', 'French', 'Français', LANGUAGE_LTR, '', '', TRUE, $this->ui_language == 'fr');
 
     // Check the UI language.
-    drupal_init_language();
+    drupal_language_initialize();
     global $language;
     $this->assertEqual($language->language, $this->ui_language, t('Current language: %lang', array('%lang' => $language->language)));
 
@@ -973,7 +973,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     $this->drupalGet('');
 
     // Check the init language logic.
-    drupal_init_language();
+    drupal_language_initialize();
     $this->assertEqual($language->language, 'en', t('Language after uninstall: %lang', array('%lang' => $language->language)));
 
     // Check JavaScript files deletion.

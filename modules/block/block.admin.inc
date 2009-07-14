@@ -1,5 +1,5 @@
 <?php
-// $Id: block.admin.inc,v 1.44 2009/07/01 08:04:19 dries Exp $
+// $Id: block.admin.inc,v 1.45 2009/07/14 10:22:17 dries Exp $
 
 /**
  * @file
@@ -32,7 +32,7 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
 
   // If non-default theme configuration has been selected, set the custom theme.
   $custom_theme = isset($theme) ? $theme : variable_get('theme_default', 'garland');
-  init_theme();
+  drupal_theme_initialize();
 
   $block_regions = system_region_list($theme_key) + array(BLOCK_REGION_NONE => '<' . t('none') . '>');
 

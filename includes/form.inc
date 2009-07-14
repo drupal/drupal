@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.349 2009/07/07 22:32:17 dries Exp $
+// $Id: form.inc,v 1.350 2009/07/14 10:22:15 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -201,7 +201,7 @@ function drupal_build_form($form_id, &$form_state) {
 
   // Don't override #theme if someone already set it.
   if (!isset($form['#theme'])) {
-    init_theme();
+    drupal_theme_initialize();
     $registry = theme_get_registry();
     if (isset($registry[$form_id])) {
       $form['#theme'] = $form_id;

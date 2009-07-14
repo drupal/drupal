@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.31 2009/07/10 05:06:55 webchick Exp $
+// $Id: theme.maintenance.inc,v 1.32 2009/07/14 10:22:17 dries Exp $
 
 /**
  * @file
@@ -61,7 +61,7 @@ function _drupal_maintenance_theme() {
     $base_theme[] = $new_base_theme = $themes[$themes[$ancestor]->base_theme];
     $ancestor = $themes[$ancestor]->base_theme;
   }
-  _init_theme($themes[$theme], array_reverse($base_theme), '_theme_load_offline_registry');
+  _drupal_theme_initialize($themes[$theme], array_reverse($base_theme), '_theme_load_offline_registry');
 
   // These are usually added from system_init() -except maintenance.css.
   // When the database is inactive it's not called so we add it here.

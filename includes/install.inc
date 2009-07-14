@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.94 2009/06/28 03:56:43 webchick Exp $
+// $Id: install.inc,v 1.95 2009/07/14 10:22:17 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -548,7 +548,7 @@ function _drupal_install_module($module) {
  * Because we have no registry yet, we need to manually include the
  * necessary database include files.
  */
-function drupal_install_init_database() {
+function drupal_install_initialize_database() {
   static $included = FALSE;
 
   if (!$included) {
@@ -573,7 +573,7 @@ function drupal_install_init_database() {
 function drupal_install_system() {
   $system_path = dirname(drupal_get_filename('module', 'system', NULL));
   require_once DRUPAL_ROOT . '/' . $system_path . '/system.install';
-  drupal_install_init_database();
+  drupal_install_initialize_database();
   module_invoke('system', 'install');
 
   $system_versions = drupal_get_schema_versions('system');

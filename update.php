@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.291 2009/06/23 12:06:09 dries Exp $
+// $Id: update.php,v 1.292 2009/07/14 10:22:15 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -525,7 +525,7 @@ function update_prepare_d7_bootstrap() {
   // Allow the database system to work even if the registry has not been
   // created yet.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
-  drupal_install_init_database();
+  drupal_install_initialize_database();
   spl_autoload_unregister('drupal_autoload_class');
   spl_autoload_unregister('drupal_autoload_interface');
   // The new {blocked_ips} table is used in Drupal 7 to store a list of
@@ -682,7 +682,7 @@ if (empty($op) && $update_access_allowed) {
   drupal_load('module', 'filter');
 
   // Set up $language, since the installer components require it.
-  drupal_init_language();
+  drupal_language_initialize();
 
   // Set up theme system for the maintenance page.
   drupal_maintenance_theme();

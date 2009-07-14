@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.40 2009/06/08 04:44:58 dries Exp $
+// $Id: path.inc,v 1.41 2009/07/14 10:22:17 dries Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@
 /**
  * Initialize the $_GET['q'] variable to the proper normal path.
  */
-function drupal_init_path() {
+function drupal_path_initialize() {
   if (!empty($_GET['q'])) {
     $_GET['q'] = drupal_get_normal_path(trim($_GET['q'], '/'));
   }
@@ -309,7 +309,7 @@ function drupal_is_front_page() {
   $is_front_page = &drupal_static(__FUNCTION__);
 
   if (!isset($is_front_page)) {
-    // As drupal_init_path updates $_GET['q'] with the 'site_frontpage' path,
+    // As drupal_path_initialize updates $_GET['q'] with the 'site_frontpage' path,
     // we can check it against the 'site_frontpage' variable.
     $is_front_page = ($_GET['q'] == drupal_get_normal_path(variable_get('site_frontpage', 'node')));
   }
