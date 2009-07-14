@@ -1221,6 +1221,7 @@ class FieldCrudTestCase extends DrupalWebTestCase {
   // - a full fledged $field structure, check that all the values are there
   // - a minimal $field structure, check all default values are set
   // defer actual $field comparison to a helper function, used for the two cases above
+
   /**
    * Test the creation of a field.
    */
@@ -1255,19 +1256,22 @@ class FieldCrudTestCase extends DrupalWebTestCase {
     $field_definition = field_create_field($field_definition);
     $mem = field_test_memorize();
     $this->assertIdentical($mem['field_test_field_create_field'][0][0], $field_definition, 'hook_field_create_field() called with correct arguments.');
-    $field = field_read_field($field_definition['field_name']);
+
+    // Read the raw record from the {field_config_instance} table.
+    $result = db_query('SELECT * FROM {field_config} WHERE field_name = :field_name', array(':field_name' => $field_definition['field_name']));
+    $record = $result->fetchAssoc();
+    $record['data'] = unserialize($record['data']);
 
     // Ensure that basic properties are preserved.
-    $this->assertEqual($field['field_name'], $field_definition['field_name'], t('The field name is properly saved.'));
-    $this->assertEqual($field['type'], $field_definition['type'], t('The field type is properly saved.'));
+    $this->assertEqual($record['field_name'], $field_definition['field_name'], t('The field name is properly saved.'));
+    $this->assertEqual($record['type'], $field_definition['type'], t('The field type is properly saved.'));
 
     // Ensure that cardinality defaults to 1.
-    $this->assertEqual($field['cardinality'], 1, t('Cardinality defaults to 1.'));
+    $this->assertEqual($record['cardinality'], 1, t('Cardinality defaults to 1.'));
 
     // Ensure that default settings are present.
-    $info = field_info_field_types($field['type']);
-    $settings = $info['settings'];
-    $this->assertIdentical($settings, $field['settings'] , t('Default field settings have been written.'));
+    $field_type = field_info_field_types($field_definition['type']);
+    $this->assertIdentical($record['data']['settings'], $field_type['settings'], t('Default field settings have been written.'));
 
     // Guarantee that the name is unique.
     try {
@@ -1291,6 +1295,35 @@ class FieldCrudTestCase extends DrupalWebTestCase {
       $this->pass(t('Cannot create a field with an invalid name.'));
     }
     // TODO : other failures
+  }
+
+  /**
+   * Test reading back a field definition.
+   */
+  function testReadField() {
+    $field_definition = array(
+      'field_name' => 'field_1',
+      'type' => 'test_field',
+    );
+    field_create_field($field_definition);
+
+    // Simulate a stored field definition missing a field setting (e.g. a
+    // third-party module adding a new field setting has been enabled, and
+    // existing fields do not know the setting yet).
+    $data = db_result(db_query('SELECT data FROM {field_config} WHERE field_name = :field_name', array(':field_name' => $field_definition['field_name'])));
+    $data = unserialize($data);
+    $data['settings'] = array();
+    db_update('field_config')
+      ->fields(array('data' => serialize($data)))
+      ->condition('field_name', $field_definition['field_name'])
+      ->execute();
+
+    // Read the field back.
+    $field = field_read_field($field_definition['field_name']);
+
+    // Check that all expected settings are in place.
+    $field_type = field_info_field_types($field_definition['type']);
+    $this->assertIdentical($field['settings'], $field_type['settings'], t('All expected default field settings are present.'));
   }
 
   /**
@@ -1334,10 +1367,6 @@ class FieldCrudTestCase extends DrupalWebTestCase {
     $field = field_read_field($field_definition['field_name']);
     $expected_indexes = array('value' => array('value'), 'value_2' => array('value'));
     $this->assertEqual($field['indexes'], $expected_indexes, t('Field definition indexes are merged with field type indexes'));
-  }
-
-  function testReadField() {
-
   }
 
   /**
@@ -1450,30 +1479,35 @@ class FieldInstanceCrudTestCase extends DrupalWebTestCase {
   // - a minimal $instance structure, check all default values are set
   // defer actual $instance comparison to a helper function, used for the two cases above,
   // and for testUpdateFieldInstance
+
+  /**
+   * Test the creation of a field instance.
+   */
   function testCreateFieldInstance() {
     field_create_instance($this->instance_definition);
-    $instance = field_read_instance($this->instance_definition['field_name'], $this->instance_definition['bundle']);
+
+    // Read the raw record from the {field_config_instance} table.
+    $result = db_query('SELECT * FROM {field_config_instance} WHERE field_name = :field_name AND bundle = :bundle', array(':field_name' => $this->instance_definition['field_name'], ':bundle' => $this->instance_definition['bundle']));
+    $record = $result->fetchAssoc();
+    $record['data'] = unserialize($record['data']);
+
+    //$instance = field_read_instance($this->instance_definition['field_name'], $this->instance_definition['bundle']);
     $field_type = field_info_field_types($this->field['type']);
-    $widget_type = field_info_widget_types($instance['widget']['type']);
-    $formatter_type = field_info_formatter_types($instance['display']['full']['type']);
+    $widget_type = field_info_widget_types($field_type['default_widget']);
+    $formatter_type = field_info_formatter_types($field_type['default_formatter']);
 
     // Check that default values are set.
-    $this->assertIdentical($instance['required'], FALSE, t('Required defaults to false.'));
-    $this->assertIdentical($instance['label'], $this->instance_definition['field_name'], t('Label defaults to field name.'));
-    $this->assertIdentical($instance['description'], '', t('Description defaults to empty string.'));
+    $this->assertIdentical($record['data']['required'], FALSE, t('Required defaults to false.'));
+    $this->assertIdentical($record['data']['label'], $this->instance_definition['field_name'], t('Label defaults to field name.'));
+    $this->assertIdentical($record['data']['description'], '', t('Description defaults to empty string.'));
+    $this->assertIdentical($record['widget_type'], $field_type['default_widget'], t('Default widget has been written.'));
+    $this->assertTrue(isset($record['data']['display']['full']), t('Display for "full" build_mode has been written.'));
+    $this->assertIdentical($record['data']['display']['full']['type'], $field_type['default_formatter'], t('Default formatter for "full" build_mode has been written.'));
 
-    // Check that default instance settings are set.
-    $this->assertIdentical($instance['settings'], $field_type['instance_settings'] , t('Default instance settings have been written.'));
-    // Check that the widget is the default one.
-    $this->assertIdentical($instance['widget']['type'], $field_type['default_widget'], t('Default widget has been written.'));
-    // Check that default widget settings are set.
-    $this->assertIdentical($instance['widget']['settings'], $widget_type['settings'] , t('Default widget settings have been written.'));
-    // Check that we have display info for 'full' build_mode.
-    $this->assertTrue(isset($instance['display']['full']), t('Display for "full" build_mode has been written.'));
-    // Check that the formatter is the default one.
-    $this->assertIdentical($instance['display']['full']['type'], $field_type['default_formatter'], t('Default formatter for "full" build_mode has been written.'));
-    // Check that the default formatter settings are set.
-    $this->assertIdentical($instance['display']['full']['settings'], $formatter_type['settings'], t('Default formatter settings for "full" build_mode have been written.'));
+    // Check that default settings are set.
+    $this->assertIdentical($record['data']['settings'], $field_type['instance_settings'] , t('Default instance settings have been written.'));
+    $this->assertIdentical($record['data']['widget']['settings'], $widget_type['settings'] , t('Default widget settings have been written.'));
+    $this->assertIdentical($record['data']['display']['full']['settings'], $formatter_type['settings'], t('Default formatter settings for "full" build_mode have been written.'));
 
     // Guarantee that the field/bundle combination is unique.
     try {
@@ -1497,10 +1531,41 @@ class FieldInstanceCrudTestCase extends DrupalWebTestCase {
     // TODO: test other failures.
   }
 
+  /**
+   * Test reading back an instance definition.
+   */
   function testReadFieldInstance() {
+    field_create_instance($this->instance_definition);
 
+    // Simulate a stored instance definition missing various settings (e.g. a
+    // third-party module adding instance, widget or display settings has been
+    // enabled, but existing instances do not know the new settings).
+    $data = db_result(db_query('SELECT data FROM {field_config_instance} WHERE field_name = :field_name AND bundle = :bundle', array(':field_name' => $this->instance_definition['field_name'], ':bundle' => $this->instance_definition['bundle'])));
+    $data = unserialize($data);
+    $data['settings'] = array();
+    $data['widget']['settings'] = array();
+    $data['display']['full']['settings'] = array();
+    db_update('field_config_instance')
+      ->fields(array('data' => serialize($data)))
+      ->condition('field_name', $this->instance_definition['field_name'])
+      ->condition('bundle', $this->instance_definition['bundle'])
+      ->execute();
+
+    // Read the instance back.
+    $instance = field_read_instance($this->instance_definition['field_name'], $this->instance_definition['bundle']);
+
+    // Check that all expected settings are in place.
+    $field_type = field_info_field_types($this->field['type']);
+    $widget_type = field_info_widget_types($instance['widget']['type']);
+    $formatter_type = field_info_formatter_types($instance['display']['full']['type']);
+    $this->assertIdentical($instance['settings'], $field_type['instance_settings'] , t('All expected instance settings are present.'));
+    $this->assertIdentical($instance['widget']['settings'], $widget_type['settings'] , t('All expected widget settings are present.'));
+    $this->assertIdentical($instance['display']['full']['settings'], $formatter_type['settings'] , t('All expected formatter settings are present.'));
   }
 
+  /**
+   * Test the update of a field instance.
+   */
   function testUpdateFieldInstance() {
     field_create_instance($this->instance_definition);
     $field_type = field_info_field_types($this->field['type']);
@@ -1554,6 +1619,9 @@ class FieldInstanceCrudTestCase extends DrupalWebTestCase {
     // TODO: test failures.
   }
 
+  /**
+   * Test the deletion of a field instance.
+   */
   function testDeleteFieldInstance() {
     // TODO: Test deletion of the data stored in the field also.
     // Need to check that data for a 'deleted' field / instance doesn't get loaded

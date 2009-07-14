@@ -339,6 +339,10 @@ function field_read_fields($params = array(), $include_additional = array()) {
     unset($field['data']);
     $field += $data;
 
+    // Make sure all settings expected in the current execution context are
+    // present.
+    $field['settings'] += field_info_field_settings($field['type']);
+
     module_invoke_all('field_read_field', $field);
 
     // Populate storage information.
@@ -620,7 +624,7 @@ function field_read_instances($params = array(), $include_additional = array()) 
   $query = db_select('field_config_instance', 'fci', array('fetch' => PDO::FETCH_ASSOC));
   $query->join('field_config', 'fc', 'fc.id = fci.field_id');
   $query->fields('fci');
-  #$query->fields('fc', array('type'));
+  $query->fields('fc', array('type'));
 
   // Turn the conditions into a query.
   foreach ($params as $key => $value) {
@@ -650,8 +654,13 @@ function field_read_instances($params = array(), $include_additional = array()) 
     $instance['widget']['module'] = $record['widget_module'];
     $instance['widget']['active'] = $record['widget_active'];
 
-    // TODO D7 : Set default widget settings, default instance settings, default display settings.
-    // (the modules that defined them might have changed since the instance was last saved).
+    // Make sure all settings expected in the current execution context are
+    // present.
+    $instance['settings'] += field_info_instance_settings($record['type']);
+    $instance['widget']['settings'] += field_info_widget_settings($instance['widget']['type']);
+    foreach ($instance['display'] as $build_mode => $display) {
+      $instance['display'][$build_mode]['settings'] += field_info_formatter_settings($display['type']);
+    }
 
     module_invoke_all('field_read_instance', $instance);
     $instances[] = $instance;
