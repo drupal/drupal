@@ -17,6 +17,7 @@ class FileTranferTest extends DrupalWebTestCase {
   }
 
   function setUp() {
+    parent::setUp();
     $this->testConnection = TestFileTransfer::factory(DRUPAL_ROOT, array('hostname' => $this->hostname, 'username' => $this->username, 'password' => $this->password, 'port' => $this->port));
   }
 
@@ -85,45 +86,6 @@ class FileTranferTest extends DrupalWebTestCase {
       $gotit = FALSE;
     }
     $this->assertTrue($gotit, 'Was able to copy a directory inside of the jailed area');
-  }
-
-  function testCopyDirectory() {
-    $directory = $this->_buildFakeModule();
-    $drupal_root = DRUPAL_ROOT;
-
-    $this->testConnection->shouldIsDirectoryReturnTrue = TRUE;
-    $this->testConnection->copyDirectory($directory, "{$drupal_root}/sites/all/modules");
-    $expected_commands = array(
-      "mkdir {$drupal_root}/sites/all/modules/fake",
-      "copyFile {$directory}/fake.info {$drupal_root}/sites/all/modules/fake/fake.info",
-      "copyFile {$directory}/fake.module {$drupal_root}/sites/all/modules/fake/fake.module",
-      "mkdir {$drupal_root}/sites/all/modules/fake/inc",
-      "copyFile {$directory}/inc/fake.inc {$drupal_root}/sites/all/modules/fake/inc/fake.inc",
-      "mkdir {$drupal_root}/sites/all/modules/fake/theme",
-      "copyFile {$directory}/theme/fake.tpl.php {$drupal_root}/sites/all/modules/fake/theme/fake.tpl.php",
-    );
-
-    $received_commands = $this->testConnection->connection->flushCommands();
-    $this->assertEqual($received_commands, $expected_commands, 'Expected copy files operations made to sites/all/modules');
-    
-    $this->testConnection->shouldIsDirectoryReturnTrue = FALSE;
-    $this->testConnection->copyDirectory($directory, "{$drupal_root}/sites/all/modules/fake");
-    $expected_commands = array(
-      "mkdir {$drupal_root}/sites/all/modules/fake",
-      "copyFile {$directory}/fake.info {$drupal_root}/sites/all/modules/fake/fake.info",
-      "copyFile {$directory}/fake.module {$drupal_root}/sites/all/modules/fake/fake.module",
-      "mkdir {$drupal_root}/sites/all/modules/fake/inc",
-      "copyFile {$directory}/inc/fake.inc {$drupal_root}/sites/all/modules/fake/inc/fake.inc",
-      "mkdir {$drupal_root}/sites/all/modules/fake/theme",
-      "copyFile {$directory}/theme/fake.tpl.php {$drupal_root}/sites/all/modules/fake/theme/fake.tpl.php",
-    );
-
-    $received_commands = $this->testConnection->connection->flushCommands();
-    dd($expected_commands);
-    dd($received_commands);
-    $this->assertEqual($received_commands, $expected_commands, 'Expected copy files operations made to sites/all/modules/fake');
-    
-    
   }
 }
 
