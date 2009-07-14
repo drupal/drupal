@@ -117,7 +117,7 @@ function aggregator_form_aggregator_admin_form_alter(&$form, $form_state) {
       '#title' => t('Length of trimmed description'),
       '#default_value' => 600,
       '#options' => drupal_map_assoc(array(0, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000), '_aggregator_characters'),
-      '#description' => t("The maximum number of characters used in the trimmed version of a description. Drupal will use this setting to determine at which offset long descriptions should be trimmed. Note that this setting will only affect new or updated content and will not affect existing teasers.")
+      '#description' => t("The maximum number of characters used in the trimmed version of content.")
     );
 
   }
