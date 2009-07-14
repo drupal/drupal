@@ -265,8 +265,8 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
    * Tests rendering inline stylesheets through a full page request.
    */
   function testRenderInlineFullPage() {
-    $css = 'body { padding: 0px; }';
-    $compressed_css = '<style type="text/css">' . drupal_load_stylesheet_content($css, TRUE) . '</style>';
+    $css = 'body { font-size: 254px; }';
+    $expected = 'font-size:254px;';
 
     // Create a node, using the PHP filter that tests drupal_add_css().
     $settings = array(
@@ -278,7 +278,7 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
 
     // Fetch the page.
     $this->drupalGet('node/' . $node->nid);
-    $this->assertRaw($compressed_css, t('Inline stylesheets appear in the full page rendering.'));
+    $this->assertRaw($expected, t('Inline stylesheets appear in the full page rendering.'));
   }
 }
 
