@@ -15,9 +15,9 @@
 class FieldAttachTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name'  => 'Field attach tests',
-      'description'  => "Test Field Attach API functions.",
-      'group' => 'Field'
+      'name' => 'Field attach tests',
+      'description' => 'Test Field Attach API functions.',
+      'group' => 'Field',
     );
   }
 
@@ -813,9 +813,9 @@ class FieldInfoTestCase extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name'  => 'Field info tests',
-      'description'  => "Get information about existing fields, instances and bundles.",
-      'group' => 'Field'
+      'name' => 'Field info tests',
+      'description' => 'Get information about existing fields, instances and bundles.',
+      'group' => 'Field',
     );
   }
 
@@ -918,9 +918,9 @@ class FieldInfoTestCase extends DrupalWebTestCase {
 class FieldFormTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name'  => 'Field form tests',
-      'description'  => "Test Field form handling.",
-      'group' => 'Field'
+      'name' => 'Field form tests',
+      'description' => 'Test Field form handling.',
+      'group' => 'Field',
     );
   }
 
@@ -1207,9 +1207,9 @@ class FieldFormTestCase extends DrupalWebTestCase {
 class FieldCrudTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
-      'name'  => 'Field CRUD tests',
-      'description'  => "Create / read /update a field.",
-      'group' => 'Field'
+      'name' => 'Field CRUD tests',
+      'description' => 'Create / read /update fields.',
+      'group' => 'Field',
     );
   }
 
@@ -1421,14 +1421,14 @@ class FieldCrudTestCase extends DrupalWebTestCase {
   }
 }
 
-class FieldInstanceTestCase extends DrupalWebTestCase {
+class FieldInstanceCrudTestCase extends DrupalWebTestCase {
   protected $field;
 
   public static function getInfo() {
     return array(
-      'name'  => 'Field instance tests',
-      'description'  => "Create field entities by attaching fields to entities.",
-      'group' => 'Field'
+      'name' => 'Field instance CRUD tests',
+      'description' => 'Create field entities by attaching fields to entities.',
+      'group' => 'Field',
     );
   }
 
