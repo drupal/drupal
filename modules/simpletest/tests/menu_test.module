@@ -14,7 +14,7 @@ function menu_test_menu() {
   $items['menu_name_test'] = array(
     'title' => 'Test menu_name router item',
     'page callback' => 'node_save',
-    'menu_name' => isset($_GET["hook_menu_name"]) ? $_GET["hook_menu_name"] : 'original',
+    'menu_name' => menu_test_menu_name(),
   );
   // Use FALSE as 'title callback' to bypass t().
   $items['menu_no_title_callback'] = array(
@@ -55,4 +55,21 @@ function menu_test_menu() {
  */
 function menu_test_callback() {
   return $this->randomName();
+}
+
+/**
+ * Helper function for the testMenuName() test. Used to change the menu_name
+ * parameter of a menu.
+ *
+ * @param $new_name 
+ *   If set, will change the menu_name value.
+ * @return 
+ *   The menu_name value to use.
+ */
+function menu_test_menu_name($new_name = '') {
+  static $name = 'original';
+  if ($new_name) {
+    $name = $new_name;
+  }
+  return $name;
 }
