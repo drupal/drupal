@@ -798,7 +798,7 @@ function _drupal_decode_exception($exception) {
  */
 function _drupal_log_error($error, $fatal = FALSE) {
   // Initialize a maintenance theme if the boostrap was not complete.
-  // Do it early because drupal_set_message() triggers an init_theme().
+  // Do it early because drupal_set_message() triggers a drupal_theme_initialize().
   if ($fatal && (drupal_get_bootstrap_phase() != DRUPAL_BOOTSTRAP_FULL)) {
     unset($GLOBALS['theme']);
     if (!defined('MAINTENANCE_MODE')) {
@@ -4274,7 +4274,7 @@ function drupal_common_theme() {
  */
 function drupal_install_schema($module) {
   $schema = drupal_get_schema_unprocessed($module);
-  _drupal_initialize_schema($module, $schema);
+  _drupal_schema_initialize($module, $schema);
 
   $ret = array();
   foreach ($schema as $name => $table) {
@@ -4299,7 +4299,7 @@ function drupal_install_schema($module) {
  */
 function drupal_uninstall_schema($module) {
   $schema = drupal_get_schema_unprocessed($module);
-  _drupal_initialize_schema($module, $schema);
+  _drupal_schema_initialize($module, $schema);
 
   $ret = array();
   foreach ($schema as $table) {
@@ -4356,7 +4356,7 @@ function drupal_get_schema_unprocessed($module, $table = NULL) {
  *   The schema definition array as it was returned by the module's
  *   hook_schema().
  */
-function _drupal_initialize_schema($module, &$schema) {
+function _drupal_schema_initialize($module, &$schema) {
   // Set the name and module key for all tables.
   foreach ($schema as $name => $table) {
     if (empty($table['module'])) {

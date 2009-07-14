@@ -185,7 +185,7 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     variable_set('language_negotiation', LANGUAGE_NEGOTIATION_PATH);
 
     // Force inclusion of language.inc.
-    drupal_init_language();
+    drupal_language_initialize();
   }
 
   /**

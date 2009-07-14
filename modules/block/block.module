@@ -233,7 +233,7 @@ function block_page_alter($page) {
   global $theme;
 
   // The theme system might not yet be initialized. We need $theme.
-  init_theme();
+  drupal_theme_initialize();
 
   // Populate all block regions
   $regions = system_region_list($theme);
@@ -293,7 +293,7 @@ function block_get_blocks_by_region($region) {
 function _block_rehash() {
   global $theme_key;
 
-  init_theme();
+  drupal_theme_initialize();
 
   $old_blocks = array();
   $result = db_query("SELECT * FROM {block} WHERE theme = :theme", array(':theme' => $theme_key));
@@ -509,7 +509,7 @@ function block_system_themes_form_submit(&$form, &$form_state) {
     if (is_array($form_state['values']['status'])) {
       foreach ($form_state['values']['status'] as $key => $choice) {
         if ($choice || $form_state['values']['theme_default'] == $key) {
-          block_initialize_theme_blocks($key);
+          block_theme_initialize($key);
         }
       }
     }
@@ -517,7 +517,7 @@ function block_system_themes_form_submit(&$form, &$form_state) {
       // If we're changing themes, make sure the theme has its blocks initialized.
       $has_blocks = (bool) db_query_range('SELECT 1 FROM {block} WHERE theme = :theme', array(':theme' => $form_state['values']['admin_theme']), 0, 1)->fetchField();
       if (!$has_blocks) {
-        block_initialize_theme_blocks($form_state['values']['admin_theme']);
+        block_theme_initialize($form_state['values']['admin_theme']);
       }
     }
   }
@@ -534,7 +534,7 @@ function block_system_themes_form_submit(&$form, &$form_state) {
  * @param $theme
  *   The name of a theme.
  */
-function block_initialize_theme_blocks($theme) {
+function block_theme_initialize($theme) {
   // Initialize theme's blocks if none already registered.
   $has_blocks = (bool) db_query_range('SELECT 1 FROM {block} WHERE theme = :theme', array(':theme' => $theme), 0, 1)->fetchField();
   if (!$has_blocks) {

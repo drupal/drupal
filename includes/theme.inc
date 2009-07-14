@@ -40,7 +40,7 @@ define('MARK_UPDATED', 2);
 /**
  * Initialize the theme system by loading the theme.
  */
-function init_theme() {
+function drupal_theme_initialize() {
   global $theme, $user, $custom_theme, $theme_key;
 
   // If $theme is already set, assume the others are set, too, and do nothing
@@ -69,7 +69,7 @@ function init_theme() {
     $base_theme[] = $new_base_theme = $themes[$themes[$ancestor]->base_theme];
     $ancestor = $themes[$ancestor]->base_theme;
   }
-  _init_theme($themes[$theme], array_reverse($base_theme));
+  _drupal_theme_initialize($themes[$theme], array_reverse($base_theme));
 }
 
 /**
@@ -97,7 +97,7 @@ function init_theme() {
  * @param $registry_callback
  *   The callback to invoke to set the theme registry.
  */
-function _init_theme($theme, $base_theme = array(), $registry_callback = '_theme_load_registry') {
+function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callback = '_theme_load_registry') {
   global $theme_info, $base_theme_info, $theme_engine, $theme_path;
   $theme_info = $theme;
   $base_theme_info = $base_theme;
@@ -690,7 +690,7 @@ function theme() {
 
   static $hooks = NULL;
   if (!isset($hooks)) {
-    init_theme();
+    drupal_theme_initialize();
     $hooks = theme_get_registry();
   }
 
@@ -874,7 +874,7 @@ function path_to_theme() {
   global $theme_path;
 
   if (!isset($theme_path)) {
-    init_theme();
+    drupal_theme_initialize();
   }
 
   return $theme_path;

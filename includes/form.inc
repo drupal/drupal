@@ -201,7 +201,7 @@ function drupal_build_form($form_id, &$form_state) {
 
   // Don't override #theme if someone already set it.
   if (!isset($form['#theme'])) {
-    init_theme();
+    drupal_theme_initialize();
     $registry = theme_get_registry();
     if (isset($registry[$form_id])) {
       $form['#theme'] = $form_id;

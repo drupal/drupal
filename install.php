@@ -46,7 +46,7 @@ function install_main() {
   drupal_page_header();
 
   // Set up $language, so t() caller functions will still work.
-  drupal_init_language();
+  drupal_language_initialize();
 
   // Load module basics (needed for hook invokes).
   include_once DRUPAL_ROOT . '/includes/module.inc';
@@ -622,7 +622,7 @@ function install_tasks($profile, $task) {
 
   // Bootstrap newly installed Drupal, while preserving existing messages.
   $messages = isset($_SESSION['messages']) ? $_SESSION['messages'] : '';
-  drupal_install_init_database();
+  drupal_install_initialize_database();
 
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
   $_SESSION['messages'] = $messages;

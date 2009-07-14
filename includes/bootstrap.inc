@@ -391,9 +391,9 @@ function conf_path($require_settings = TRUE, $reset = FALSE) {
 }
 
 /**
- * Initialize variables needed for the rest of the execution.
+ * Initialize PHP environment.
  */
-function drupal_initialize_variables() {
+function drupal_environment_initialize() {
   if (!isset($_SERVER['HTTP_REFERER'])) {
     $_SERVER['HTTP_REFERER'] = '';
   }
@@ -454,7 +454,7 @@ function drupal_valid_http_host($host) {
  * Loads the configuration and sets the base URL, cookie domain, and
  * session name correctly.
  */
-function conf_init() {
+function drupal_settings_initialize() {
   global $base_url, $base_path, $base_root;
 
   // Export the following settings.php variables to the global namespace
@@ -605,7 +605,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
  * with variable_set() as well as those explicitly specified in the configuration
  * file.
  */
-function variable_init($conf = array()) {
+function variable_initialize($conf = array()) {
   // NOTE: caching the variables improves performance by 20% when serving cached pages.
   if ($cached = cache_get('variables', 'cache')) {
     $variables = $cached->data;
@@ -1322,11 +1322,11 @@ function _drupal_bootstrap($phase) {
   switch ($phase) {
 
     case DRUPAL_BOOTSTRAP_CONFIGURATION:
-      drupal_initialize_variables();
+      drupal_environment_initialize();
       // Start a page timer:
       timer_start('page');
-      // Initialize the configuration
-      conf_init();
+      // Initialize the configuration, including variables from settings.php.
+      drupal_settings_initialize();
       break;
 
     case DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE:
@@ -1366,8 +1366,8 @@ function _drupal_bootstrap($phase) {
       break;
 
     case DRUPAL_BOOTSTRAP_VARIABLES:
-      // Initialize configuration variables, using values from settings.php if available.
-      $conf = variable_init(isset($conf) ? $conf : array());
+      // Load variables from the database, but do not overwrite variables set in settings.php.
+      $conf = variable_initialize(isset($conf) ? $conf : array());
       break;
 
     case DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE:
@@ -1412,13 +1412,13 @@ function _drupal_bootstrap($phase) {
       break;
 
     case DRUPAL_BOOTSTRAP_LANGUAGE:
-      drupal_init_language();
+      drupal_language_initialize();
       break;
 
     case DRUPAL_BOOTSTRAP_PATH:
       require_once DRUPAL_ROOT . '/includes/path.inc';
       // Initialize $_GET['q'] prior to loading modules and invoking hook_init().
-      drupal_init_path();
+      drupal_path_initialize();
       break;
 
     case DRUPAL_BOOTSTRAP_FULL:
@@ -1458,7 +1458,7 @@ function get_t() {
 /**
  *  Choose a language for the current page, based on site and user preferences.
  */
-function drupal_init_language() {
+function drupal_language_initialize() {
   global $language, $user;
 
   // Ensure the language is correctly returned, even without multilanguage support.
@@ -1608,8 +1608,8 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
       // Invoke hook_schema for all modules.
       foreach (module_implements('schema') as $module) {
         $current = module_invoke($module, 'schema');
-        if (drupal_function_exists('_drupal_initialize_schema')) {
-          _drupal_initialize_schema($module, $current);
+        if (drupal_function_exists('_drupal_schema_initialize')) {
+          _drupal_schema_initialize($module, $current);
         }
 
         $schema = array_merge($schema, $current);

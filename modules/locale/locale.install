@@ -81,7 +81,7 @@ function locale_uninstall() {
   // Switch back to English: with a $language->language value different from 'en'
   // successive calls of t() might result in calling locale(), which in turn might
   // try to query the unexisting {locales_source} and {locales_target} tables.
-  drupal_init_language();
+  drupal_language_initialize();
 
   // Remove tables.
   drupal_uninstall_schema('locale');
