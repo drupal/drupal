@@ -202,7 +202,7 @@ function field_sql_storage_field_storage_delete_field($field_name) {
 /**
  * Implement hook_field_storage_load().
  */
-function field_sql_storage_field_storage_load($obj_type, $objects, $age, $skip_fields = array()) {
+function field_sql_storage_field_storage_load($obj_type, $objects, $age, $skip_fields, $options) {
   $etid = _field_sql_storage_etid($obj_type);
   $load_current = $age == FIELD_LOAD_CURRENT;
 
@@ -212,7 +212,7 @@ function field_sql_storage_field_storage_load($obj_type, $objects, $age, $skip_f
   foreach ($objects as $obj) {
     list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $obj);
     foreach (field_info_instances($bundle) as $field_name => $instance) {
-      if (!isset($skip_fields[$field_name])) {
+      if (!isset($skip_fields[$field_name]) && (!isset($options['field_name']) || $options['field_name'] == $instance['field_name'])) {
         $objects[$id]->{$field_name} = array();
         $field_ids[$field_name][] = $load_current ? $id : $vid;
         $delta_count[$id][$field_name] = 0;
@@ -224,13 +224,14 @@ function field_sql_storage_field_storage_load($obj_type, $objects, $age, $skip_f
     $field = field_info_field($field_name);
     $table = $load_current ? _field_sql_storage_tablename($field) : _field_sql_storage_revision_tablename($field);
 
-    $results = db_select($table, 't')
+    $query = db_select($table, 't')
       ->fields('t')
       ->condition('etid', $etid)
       ->condition($load_current ? 'entity_id' : 'revision_id', $ids, 'IN')
       ->condition('deleted', 0)
-      ->orderBy('delta')
-      ->execute();
+      ->orderBy('delta');
+
+    $results = $query->execute();
 
     foreach ($results as $row) {
       if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$field_name] < $field['cardinality']) {
@@ -404,35 +405,39 @@ function field_sql_storage_field_storage_query($field_name, $conditions, $count,
   // Initialize results array
   $return = array();
 
-  // Query for batches of rows until we've read $count objects or
-  // until we get no new rows.
-  $limit = $count;
+  // Getting $count objects possibly requires reading more than $count rows
+  // since fields with multiple values span over several rows. We query for
+  // batches of $count rows until we've either read $count objects or received
+  // less rows than asked for.
+  $obj_count = 0;
   do {
-    if ($limit != FIELD_QUERY_NO_LIMIT) {
-      $query->range($cursor, $limit);
+    if ($count != FIELD_QUERY_NO_LIMIT) {
+      $query->range($cursor, $count);
     }
     $results = $query->execute();
 
-    $found = FALSE;
+    $row_count = 0;
     foreach ($results as $row) {
-      $found = TRUE;
-      ++$cursor;
+      $row_count++;
+      $cursor++;
 
-      // If querying all revisions and the entity type has revisions, we need to
-      // key the results by revision_ids.
+      // If querying all revisions and the entity type has revisions, we need
+      // to key the results by revision_ids.
       $entity_type = field_info_fieldable_types($row->type);
       $id = ($load_current || empty($entity_type['object keys']['revision'])) ? $row->entity_id : $row->revision_id;
 
-      // We get multiple rows if the field has multiple deltas.  Only
-      // count the first one.
-      if (isset($return[$row->type][$id])) {
-        continue;
+      if (!isset($return[$row->type][$id])) {
+        $return[$row->type][$id] = field_attach_create_stub_object($row->type, array($row->entity_id, $row->revision_id, $row->bundle));
+        $obj_count++;
       }
-
-      $return[$row->type][$id] = field_attach_create_stub_object($row->type, array($row->entity_id, $row->revision_id, $row->bundle));
-      --$count;
     }
-  } while ($found && ($limit != FIELD_QUERY_NO_LIMIT || $count > 0));
+  } while ($count != FIELD_QUERY_NO_LIMIT && $row_count == $count && $obj_count < $count);
+
+  // The query is complete when the last batch returns less rows than asked
+  // for.
+  if ($row_count < $count) {
+    $cursor = FIELD_QUERY_COMPLETE;
+  }
 
   return $return;
 }

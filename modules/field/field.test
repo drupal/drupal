@@ -173,6 +173,14 @@ class FieldAttachTestCase extends DrupalWebTestCase {
         $this->assertEqual($entity->{$field_name}[0]['additional_key'], 'additional_value', t('Entity %index: extra information was found', array('%index' => $index)));
       }
     }
+
+    // Check that the single-field load option works.
+    $entity = field_test_create_stub_entity(1, 1, $bundles[1]);
+    field_attach_load($entity_type, array(1 => $entity), FIELD_LOAD_CURRENT, array('field_name' => $field_names[1]));
+    $this->assertEqual($entity->{$field_names[1]}[0]['value'], $values[1][$field_names[1]], t('Entity %index: expected value was found.', array('%index' => 1)));
+    $this->assertEqual($entity->{$field_names[1]}[0]['additional_key'], 'additional_value', t('Entity %index: extra information was found', array('%index' => 1)));
+    $this->assert(!isset($entity->{$field_names[2]}), t('Entity %index: field %field_name is not loaded.', array('%index' => 2, '%field_name' => $field_names[2])));
+    $this->assert(!isset($entity->{$field_names[3]}), t('Entity %index: field %field_name is not loaded.', array('%index' => 3, '%field_name' => $field_names[3])));
   }
 
   /**
@@ -328,7 +336,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
     $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both objects and an 'entity_id' condition only returns the relevant object"));
 
-    // Test FIELD_QUERY_RETURN_IDS result format.
+    // Test result format.
     $conditions = array(array('value', $values[0]));
     $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
     $expected = array(
@@ -336,7 +344,47 @@ class FieldAttachTestCase extends DrupalWebTestCase {
         $entities[1]->ftid => field_test_create_stub_entity($entities[1]->ftid, $entities[1]->ftvid),
       )
     );
-    $this->assertEqual($result, $expected, t('FIELD_QUERY_RETURN_IDS result format returns the expect result'));
+    $this->assertEqual($result, $expected, t('Result format is correct.'));
+
+    // Now test the count/offset paging capability.
+
+    // Create a new bundle with an instance of the field.
+    field_test_create_bundle('offset_bundle', 'Offset Test Bundle');
+    $this->instance2 = $this->instance;
+    $this->instance2['bundle'] = 'offset_bundle';
+    field_create_instance($this->instance2);
+
+    // Create 20 test objects, using the new bundle, but with
+    // non-sequential ids so we can tell we are getting the right ones
+    // back. We do not need unique values since field_attach_query()
+    // won't return them anyway.
+    $offset_entities = array();
+    $offset_id = mt_rand(1, 3);
+    for ($i = 0; $i < 20; ++$i) {
+      $offset_id += mt_rand(2, 5);
+      $offset_entities[$offset_id] = field_test_create_stub_entity($offset_id, $offset_id, 'offset_bundle');
+      $offset_entities[$offset_id]->{$this->field_name}[0] = array('value' => $offset_id);
+      field_attach_insert('test_entity', $offset_entities[$offset_id]);
+    }
+
+    // Query for the offset entities in batches, making sure we get
+    // back the right ones.
+    $cursor = 0;
+    foreach (array(1 => 1, 3 => 3, 5 => 5, 8 => 8, 13 => 3) as $count => $expect) {
+      $found = field_attach_query($this->field_name, array(array('bundle', 'offset_bundle')), $count, $cursor);
+      if (isset($found['test_entity'])) {
+        $this->assertEqual(count($found['test_entity']), $expect, t('Requested @count, expected @expect, got @found, cursor @cursor', array('@count' => $count, '@expect' => $expect, '@found' => count($found['test_entity']), '@cursor' => $cursor)));
+        foreach ($found['test_entity'] as $id => $entity) {
+          $this->assert(isset($offset_entities[$id]), "Entity $id found");
+          unset($offset_entities[$id]);
+        }
+      }
+      else {
+        $this->assertEqual(0, $expect, t('Requested @count, expected @expect, got @found, cursor @cursor', array('@count' => $count, '@expect' => $expect, '@found' => 0, '@cursor' => $cursor)));
+      }
+    }
+    $this->assertEqual(count($offset_entities), 0, "All entities found");
+    $this->assertEqual($cursor, FIELD_QUERY_COMPLETE, "Cursor is FIELD_QUERY_COMPLETE");
   }
 
   /**

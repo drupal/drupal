@@ -100,14 +100,10 @@ define('FIELD_LOAD_REVISION', 'FIELD_LOAD_REVISION');
 define('FIELD_QUERY_NO_LIMIT', 'FIELD_QUERY_NO_LIMIT');
 
 /**
- * Result format argument for field_attach_query().
+ * Cursor return value for field_attach_query() to indicate that no
+ * more data is available.
  */
-define('FIELD_QUERY_RETURN_VALUES', 'FIELD_QUERY_RETURN_VALUES');
-
-/**
- * Result format argument for field_attach_query().
- */
-define('FIELD_QUERY_RETURN_IDS', 'FIELD_QUERY_RETURN_IDS');
+define('FIELD_QUERY_COMPLETE', 'FIELD_QUERY_COMPLETE');
 
 /**
  * @} End of "Field query flags".

@@ -701,7 +701,9 @@ function hook_field_attach_pre_update($obj_type, $object, &$skip_fields) {
  *   A storage module that doesn't support querying a given column should raise
  *   a FieldQueryException. Incompatibilities should be mentioned on the module
  *   project page.
- * @param $result_format
+ * @param $count
+ *   See field_attach_query().
+ * @param $cursor
  *   See field_attach_query().
  * @param $age
  *   - FIELD_LOAD_CURRENT: query the most recent revisions for all
@@ -715,7 +717,7 @@ function hook_field_attach_pre_update($obj_type, $object, &$skip_fields) {
  *   The $skip_field parameter should be set to TRUE if the query has been
  *   handled.
  */
-function hook_field_attach_pre_query($field_name, $conditions, $result_format, $age, &$skip_field) {
+function hook_field_attach_pre_query($field_name, $conditions, $count, &$cursor = NULL, $age, &$skip_field) {
 }
 
 /**
@@ -879,14 +881,16 @@ function hook_field_storage_delete_revision($obj_type, $object) {
  *   A storage module that doesn't support querying a given column should raise
  *   a FieldQueryException. Incompatibilities should be mentioned on the module
  *   project page.
- * @param $result_format
+ * @param $count
+ *   See field_attach_query().
+ * @param $cursor
  *   See field_attach_query().
  * @param $age
  *   See field_attach_query().
  * @return
  *   See field_attach_query().
  */
-function hook_field_storage_query($field_name, $conditions, $result_format, $age) {
+function hook_field_storage_query($field_name, $conditions, $count, &$cursor = NULL, $age) {
 }
 
 /**

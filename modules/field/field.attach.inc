@@ -19,7 +19,7 @@ class FieldValidationException extends FieldException {
   *   An array of field validation errors, keyed by field name and
   *   delta that contains two keys:
   *   - 'error': A machine-readable error code string, prefixed by
-  *     the field module name.  A field widget may use this code to decide
+  *     the field module name. A field widget may use this code to decide
   *     how to report the error.
   *   - 'message': A human-readable error message such as to be
   *     passed to form_error() for the appropriate form element.
@@ -106,11 +106,11 @@ define('FIELD_STORAGE_INSERT', 'insert');
  *
  * field_attach_load(), field_attach_insert(), and
  * field_attach_update() also define pre-operation hooks,
- * e.g. hook_field_attach_pre_load().  These hooks run before the
+ * e.g. hook_field_attach_pre_load(). These hooks run before the
  * corresponding Field Storage API and Field Type API operations.
  * They allow modules to define additional storage locations
  * (e.g. denormalizing, mirroring) for field data on a per-field
- * basis.  They also allow modules to take over field storage
+ * basis. They also allow modules to take over field storage
  * completely by instructing other implementations of the same hook
  * and the Field Storage API itself not to operate on specified
  * fields.
@@ -382,15 +382,24 @@ function field_attach_form($obj_type, $object, &$form, &$form_state) {
  *   fields, or FIELD_LOAD_REVISION to load the version indicated by
  *   each object. Defaults to FIELD_LOAD_CURRENT; use
  *   field_attach_load_revision() instead of passing FIELD_LOAD_REVISION.
+ * @param $options
+ *   An associative array of additional options, with the following keys:
+ *   - 'field_name'
+ *     The field name that should be loaded, instead of loading all fields, for
+ *     each object. Note that returned objects may contain data for other
+ *     fields, for example if they are read from a cache.
  * @returns
  *   Loaded field values are added to $objects. Fields with no values should be
  *   set as an empty array.
  */
-function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT) {
+function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT, $options = array()) {
   $load_current = $age == FIELD_LOAD_CURRENT;
 
   $info = field_info_fieldable_types($obj_type);
-  $cacheable = $load_current && $info['cacheable'];
+  // Only the most current revision of cacheable fieldable types can be cached.
+  $cache_read = $load_current && $info['cacheable'];
+  // In addition, do not write to the cache when loading a single field.
+  $cache_write = $cache_read && !isset($options['field_name']);
 
   if (empty($objects)) {
     return;
@@ -401,7 +410,7 @@ function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT) {
   $queried_objects = $objects;
 
   // Fetch available objects from cache, if applicable.
-  if ($cacheable) {
+  if ($cache_read) {
     // Build the list of cache entries to retrieve.
     $cids = array();
     foreach ($objects as $id => $object) {
@@ -434,25 +443,25 @@ function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT) {
     $skip_fields = array();
     foreach (module_implements('field_attach_pre_load') as $module) {
       $function = $module . '_field_attach_pre_load';
-      $function($obj_type, $queried_objects, $age, $skip_fields);
+      $function($obj_type, $queried_objects, $age, $skip_fields, $options);
     }
 
     // Invoke the storage engine's hook_field_storage_load(): the field storage
     // engine loads the rest.
-    module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_load', $obj_type, $queried_objects, $age, $skip_fields);
+    module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_load', $obj_type, $queried_objects, $age, $skip_fields, $options);
 
     // Invoke field-type module's hook_field_load().
-    _field_invoke_multiple('load', $obj_type, $queried_objects, $age);
+    _field_invoke_multiple('load', $obj_type, $queried_objects, $age, $options);
 
     // Invoke hook_field_attach_load(): let other modules act on loading the
     // object.
     foreach (module_implements('field_attach_load') as $module) {
       $function = $module . '_field_attach_load';
-      $function($obj_type, $queried_objects, $age);
+      $function($obj_type, $queried_objects, $age, $options);
     }
 
     // Build cache data.
-    if ($cacheable) {
+    if ($cache_write) {
       foreach ($queried_objects as $id => $object) {
         $data = array();
         list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
@@ -480,12 +489,18 @@ function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT) {
  *   An array of objects for which to load fields, keyed by object id.
  *   Each object needs to have its 'bundle', 'id' and (if applicable)
  *   'revision' keys filled.
+ * @param $options
+ *   An associative array of additional options, with the following keys:
+ *   - 'field_name'
+ *     The field name that should be loaded, instead of loading all fields, for
+ *     each object. Note that returned objects may contain data for other
+ *     fields, for example if they are read from a cache.
  * @returns
  *   On return, the objects in $objects are modified by having the
  *   appropriate set of fields added.
  */
-function field_attach_load_revision($obj_type, $objects) {
-  return field_attach_load($obj_type, $objects, FIELD_LOAD_REVISION);
+function field_attach_load_revision($obj_type, $objects, $options = array()) {
+  return field_attach_load($obj_type, $objects, FIELD_LOAD_REVISION, $options);
 }
 
 /**
@@ -778,7 +793,9 @@ function field_attach_delete_revision($obj_type, $object) {
  * @param &$cursor
  *   An opaque cursor that allows a caller to iterate through multiple
  *   result sets. On the first call, pass 0; the correct value to pass
- *   on the next call will be written into $cursor on return. If NULL,
+ *   on the next call will be written into $cursor on return. When
+ *   there is no more query data available, $cursor will be filled in
+ *   with FIELD_QUERY_COMPLETE. If $cursor is passed as NULL,
  *   the first result set is returned and no next cursor is returned.
  * @param $age
  *   Internal use only. Use field_attach_query_revisions() instead of passing
@@ -814,7 +831,8 @@ function field_attach_query($field_name, $conditions, $count, &$cursor = NULL, $
   }
   // If the request hasn't been handled, let the storage engine handle it.
   if (!$skip_field) {
-    $results = module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_query', $field_name, $conditions, $count, $cursor, $age);
+    $function = variable_get('field_storage_module', 'field_sql_storage') . '_field_storage_query';
+    $results = $function($field_name, $conditions, $count, $cursor, $age);
   }
 
   return $results;
