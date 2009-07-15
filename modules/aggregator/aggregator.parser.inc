@@ -164,6 +164,11 @@ function aggregator_parse_feed(&$data, $feed) {
       $item['timestamp'] = aggregator_parse_w3cdtf($date); // Aggregator_parse_w3cdtf() returns FALSE on failure.
     }
 
+    // Resolve dc:creator tag as the item author if author tag is not set.
+    if (empty($item['author']) && !empty($item['dc:creator'])) {
+      $item['author'] = $item['dc:creator'];
+    }
+     
     $item += array('author' => '', 'description' => '');
 
     // Store on $feed object. This is where processors will look for parsed items.
