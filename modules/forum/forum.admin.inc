@@ -193,7 +193,7 @@ function forum_admin_settings() {
     '#title' => t('Hot topic threshold'),
     '#default_value' => 15,
     '#options' => $number,
-    '#description' => t('The number of posts a topic must have to be considered "hot".'),
+    '#description' => t('The number of replies a topic must have to be considered "hot".'),
   );
   $number = drupal_map_assoc(array(10, 25, 50, 75, 100));
   $form['forum_per_page'] = array('#type' => 'select',
