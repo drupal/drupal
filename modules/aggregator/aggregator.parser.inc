@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.parser.inc,v 1.3 2009/05/27 18:33:54 dries Exp $
+// $Id: aggregator.parser.inc,v 1.4 2009/07/15 21:32:43 dries Exp $
 
 /**
  * @file
@@ -164,6 +164,11 @@ function aggregator_parse_feed(&$data, $feed) {
       $item['timestamp'] = aggregator_parse_w3cdtf($date); // Aggregator_parse_w3cdtf() returns FALSE on failure.
     }
 
+    // Resolve dc:creator tag as the item author if author tag is not set.
+    if (empty($item['author']) && !empty($item['dc:creator'])) {
+      $item['author'] = $item['dc:creator'];
+    }
+     
     $item += array('author' => '', 'description' => '');
 
     // Store on $feed object. This is where processors will look for parsed items.
