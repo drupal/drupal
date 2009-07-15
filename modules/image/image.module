@@ -1,5 +1,5 @@
 <?php
-// $Id: image.module,v 1.1 2009/07/12 08:36:34 dries Exp $
+// $Id: image.module,v 1.2 2009/07/15 17:40:17 dries Exp $
 
 /**
  * @file
@@ -29,7 +29,7 @@ function image_menu() {
 function image_theme() {
   return array(
     'image_style' => array(
-      'arguments' => array('style' => NULL, 'path' => NULL, 'alt' => '', 'title' => '', 'attributes' => NULL, 'getsize' => TRUE),
+      'arguments' => array('style' => NULL, 'path' => NULL, 'alt' => '', 'title' => '', 'attributes' => array(), 'getsize' => TRUE),
     ),
   );
 }
@@ -666,7 +666,7 @@ function image_effect_apply(&$image, $effect) {
  *   A string containing the image tag.
  * @ingroup themeable
  */
-function theme_image_style($style_name, $path, $alt = '', $title = '', $attributes = NULL, $getsize = TRUE) {
+function theme_image_style($style_name, $path, $alt = '', $title = '', $attributes = array(), $getsize = TRUE) {
   // theme_image() can only honor the $getsize parameter with local file paths.
   // The derivative image is not created until it has been requested so the file
   // may not yet exist, in this case we just fallback to the URL.

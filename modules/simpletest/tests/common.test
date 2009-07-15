@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.55 2009/07/14 10:43:21 dries Exp $
+// $Id: common.test,v 1.56 2009/07/15 17:40:18 dries Exp $
 
 /**
  * Tests for the l() function.
@@ -1072,5 +1072,45 @@ class FormatDateUnitTest extends DrupalWebTestCase {
     $user = $real_user;
     $language->language = $real_language;
     drupal_save_session(TRUE);
+  }
+}
+
+/**
+ * Tests for the format_date() function.
+ */
+class DrupalAttributesUnitTest extends DrupalUnitTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => t('HTML Attributes'),
+      'description' => t('Perform unit tests on the drupal_attributes() function.'),
+      'group' => t('System')
+    );
+  }
+
+  /**
+   * Tests that drupal_css_class() cleans the class name properly.
+   */
+  function testDrupalAttributes() {
+    // Verify that special characters are HTML encoded.
+    $this->assertIdentical(drupal_attributes(array('title' => '&"\'<>')), ' title="&amp;&quot;&#039;&lt;&gt;"', t('HTML encode attribute values.'));
+
+    // Verify multi-value attributes are concatenated with spaces.
+    $attributes = array('class' => array('first', 'last'));
+    $this->assertIdentical(drupal_attributes(array('class' => array('first', 'last'))), ' class="first last"', t('Concatenate multi-value attributes.'));
+
+    // Verify empty attribute values are rendered.
+    $this->assertIdentical(drupal_attributes(array('alt' => '')), ' alt=""', t('Empty attribute value #1.'));
+    $this->assertIdentical(drupal_attributes(array('alt' => NULL)), ' alt=""', t('Empty attribute value #2.'));
+
+    // Verify multiple attributes are rendered.
+    $attributes = array(
+      'id' => 'id-test',
+      'class' => array('first', 'last'),
+      'alt' => 'Alternate',
+    );
+    $this->assertIdentical(drupal_attributes($attributes), ' id="id-test" class="first last" alt="Alternate"', t('Multiple attributes.'));
+
+    // Verify empty attributes array is rendered.
+    $this->assertIdentical(drupal_attributes(array()), '', t('Empty attributes array.'));
   }
 }
