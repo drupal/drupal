@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.admin.inc,v 1.21 2009/06/29 14:24:56 webchick Exp $
+// $Id: forum.admin.inc,v 1.22 2009/07/15 17:45:29 dries Exp $
 
 /**
  * @file
@@ -193,7 +193,7 @@ function forum_admin_settings() {
     '#title' => t('Hot topic threshold'),
     '#default_value' => 15,
     '#options' => $number,
-    '#description' => t('The number of posts a topic must have to be considered "hot".'),
+    '#description' => t('The number of replies a topic must have to be considered "hot".'),
   );
   $number = drupal_map_assoc(array(10, 25, 50, 75, 100));
   $form['forum_per_page'] = array('#type' => 'select',
