@@ -18,10 +18,8 @@
  * The constants below the variables show the possible values and should be
  * used for comparison.
  * - $display_mode
- *   - COMMENT_MODE_FLAT_COLLAPSED
- *   - COMMENT_MODE_FLAT_EXPANDED
- *   - COMMENT_MODE_THREADED_COLLAPSED
- *   - COMMENT_MODE_THREADED_EXPANDED
+ *   - COMMENT_MODE_FLAT
+ *   - COMMENT_MODE_THREADED
  *
  * Other variables:
  * - $classes_array: Array of html class attribute values. It is flattened
