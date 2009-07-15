@@ -1,5 +1,5 @@
 <?php
-// $Id: comment-wrapper.tpl.php,v 1.5 2009/05/28 16:44:06 webchick Exp $
+// $Id: comment-wrapper.tpl.php,v 1.6 2009/07/15 21:30:14 dries Exp $
 
 /**
  * @file
@@ -18,10 +18,8 @@
  * The constants below the variables show the possible values and should be
  * used for comparison.
  * - $display_mode
- *   - COMMENT_MODE_FLAT_COLLAPSED
- *   - COMMENT_MODE_FLAT_EXPANDED
- *   - COMMENT_MODE_THREADED_COLLAPSED
- *   - COMMENT_MODE_THREADED_EXPANDED
+ *   - COMMENT_MODE_FLAT
+ *   - COMMENT_MODE_THREADED
  *
  * Other variables:
  * - $classes_array: Array of html class attribute values. It is flattened
