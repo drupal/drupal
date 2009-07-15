@@ -1,45 +1,8 @@
 <?php
-// $Id: expert.profile,v 1.9 2009/05/27 18:34:02 dries Exp $
+// $Id: expert.profile,v 1.10 2009/07/15 02:08:41 webchick Exp $
 
 /**
- * Return an array of the modules to be enabled when this profile is installed.
- *
- * @return
- *   An array of modules to enable.
- */
-function expert_profile_modules() {
-  return array('block', 'dblog');
-}
-
-/**
- * Return a description of the profile for the initial installation screen.
- *
- * @return
- *   An array with keys 'name' and 'description' describing this profile,
- *   and optional 'language' to override the language selection for
- *   language-specific profiles.
- */
-function expert_profile_details() {
-  return array(
-    'name' => 'Drupal (minimal)',
-    'description' => 'Create a Drupal site with only required modules enabled.'
-  );
-}
-
-/**
- * Return a list of tasks that this profile supports.
- *
- * @return
- *   A keyed array of tasks the profile will perform during
- *   the final stage. The keys of the array will be used internally,
- *   while the values will be displayed to the user in the installer
- *   task list.
- */
-function expert_profile_task_list() {
-}
-
-/**
- * Perform any final installation tasks for this profile.
+ * Implement hook_profile_tasks().
  */
 function expert_profile_tasks(&$task, $url) {
 

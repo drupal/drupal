@@ -1,0 +1,7 @@
+; $Id: expert.info,v 1.1 2009/07/15 02:08:41 webchick Exp $
+name = Drupal (minimal)
+description = Create a Drupal site with only required modules enabled.
+version = VERSION
+core = 7.x
+dependencies[] = block
+dependencies[] = dblog
