@@ -1177,10 +1177,10 @@ function template_preprocess_user_picture(&$variables) {
     if (isset($filepath)) {
       $alt = t("@user's picture", array('@user' => $account->name ? $account->name : variable_get('anonymous', t('Anonymous'))));
       if (module_exists('image') && $style = variable_get('user_picture_style', '')) {
-        $variables['picture'] = theme('image_style', $style, $filepath, $alt, $alt, NULL, FALSE);
+        $variables['picture'] = theme('image_style', $style, $filepath, $alt, $alt, array(), FALSE);
       }
       else {
-        $variables['picture'] = theme('image', $filepath, $alt, $alt, NULL, FALSE);
+        $variables['picture'] = theme('image', $filepath, $alt, $alt, array(), FALSE);
       }
       if (!empty($account->uid) && user_access('access user profiles')) {
         $attributes = array('attributes' => array('title' => t('View user profile.')), 'html' => TRUE);

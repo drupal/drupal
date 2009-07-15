@@ -29,7 +29,7 @@ function image_menu() {
 function image_theme() {
   return array(
     'image_style' => array(
-      'arguments' => array('style' => NULL, 'path' => NULL, 'alt' => '', 'title' => '', 'attributes' => NULL, 'getsize' => TRUE),
+      'arguments' => array('style' => NULL, 'path' => NULL, 'alt' => '', 'title' => '', 'attributes' => array(), 'getsize' => TRUE),
     ),
   );
 }
@@ -666,7 +666,7 @@ function image_effect_apply(&$image, $effect) {
  *   A string containing the image tag.
  * @ingroup themeable
  */
-function theme_image_style($style_name, $path, $alt = '', $title = '', $attributes = NULL, $getsize = TRUE) {
+function theme_image_style($style_name, $path, $alt = '', $title = '', $attributes = array(), $getsize = TRUE) {
   // theme_image() can only honor the $getsize parameter with local file paths.
   // The derivative image is not created until it has been requested so the file
   // may not yet exist, in this case we just fallback to the URL.

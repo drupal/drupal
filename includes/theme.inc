@@ -1335,7 +1335,7 @@ function theme_links($links, $attributes = array('class' => 'links')) {
  * @return
  *   A string containing the image tag.
  */
-function theme_image($path, $alt = '', $title = '', $attributes = NULL, $getsize = TRUE) {
+function theme_image($path, $alt = '', $title = '', $attributes = array(), $getsize = TRUE) {
   if (!$getsize || (is_file($path) && (list($width, $height, $type, $image_attributes) = @getimagesize($path)))) {
     $attributes = drupal_attributes($attributes);
     $url = (url($path) == $path) ? $path : (base_path() . $path);

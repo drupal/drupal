@@ -2122,19 +2122,23 @@ function url($path = NULL, array $options = array()) {
 /**
  * Format an attribute string to insert in a tag.
  *
+ * Each array key and its value will be formatted into an HTML attribute string.
+ * If a value is itself an array, then each array element is concatenated with a
+ * space between each value (e.g. a multi-value class attribute).
+ *
  * @param $attributes
  *   An associative array of HTML attributes.
  * @return
  *   An HTML string ready for insertion in a tag.
  */
 function drupal_attributes($attributes = array()) {
-  if (is_array($attributes)) {
-    $t = '';
-    foreach ($attributes as $key => $value) {
-      $t .= " $key=" . '"' . check_plain($value) . '"';
+  foreach ($attributes as $attribute => $data) {
+    if (is_array($data)) {
+      $data = implode(' ', $data);
     }
-    return $t;
+    $items[] = $attribute . '="' . check_plain($data) . '"';
   }
+  return isset($items) ? ' ' . implode(' ', $items) : '';
 }
 
 /**
@@ -4100,7 +4104,7 @@ function drupal_common_theme() {
       'arguments' => array('links' => NULL, 'attributes' => array('class' => 'links')),
     ),
     'image' => array(
-      'arguments' => array('path' => NULL, 'alt' => '', 'title' => '', 'attributes' => NULL, 'getsize' => TRUE),
+      'arguments' => array('path' => NULL, 'alt' => '', 'title' => '', 'attributes' => array(), 'getsize' => TRUE),
     ),
     'breadcrumb' => array(
       'arguments' => array('breadcrumb' => NULL),
@@ -4124,7 +4128,7 @@ function drupal_common_theme() {
       'arguments' => array('type' => MARK_NEW),
     ),
     'item_list' => array(
-      'arguments' => array('items' => array(), 'title' => NULL, 'type' => 'ul', 'attributes' => NULL),
+      'arguments' => array('items' => array(), 'title' => NULL, 'type' => 'ul', 'attributes' => array()),
     ),
     'more_help_link' => array(
       'arguments' => array('url' => NULL),
