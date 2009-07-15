@@ -1,0 +1,7 @@
+; $Id$
+name = Drupal (minimal)
+description = Create a Drupal site with only required modules enabled.
+version = VERSION
+core = 7.x
+dependencies[] = block
+dependencies[] = dblog

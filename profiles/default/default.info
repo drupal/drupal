@@ -1,0 +1,16 @@
+; $Id$
+name = Drupal
+description = Create a Drupal site with the most commonly used features pre-installed.
+version = VERSION
+core = 7.x
+dependencies[] = block
+dependencies[] = color
+dependencies[] = comment
+dependencies[] = help
+dependencies[] = image 
+dependencies[] = menu
+dependencies[] = path
+dependencies[] = taxonomy
+dependencies[] = dblog
+dependencies[] = search
+dependencies[] = toolbar

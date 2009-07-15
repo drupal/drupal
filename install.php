@@ -102,8 +102,6 @@ function install_main() {
     install_no_profile_error();
   }
 
-  // Load the profile.
-  require_once DRUPAL_ROOT . "/profiles/$profile/$profile.profile";
 
   // Locale selection
   if (!empty($_GET['locale'])) {
@@ -112,6 +110,10 @@ function install_main() {
   elseif (($install_locale = install_select_locale($profile)) !== FALSE) {
     install_goto("install.php?profile=$profile&locale=$install_locale");
   }
+
+  // Load the profile.
+  require_once DRUPAL_ROOT . "/profiles/$profile/$profile.profile";
+  $info = install_profile_info($profile, $install_locale);
 
   // Tasks come after the database is set up
   if (!$task) {
@@ -151,7 +153,7 @@ function install_main() {
     // Save the list of other modules to install for the 'profile-install'
     // task. variable_set() can be used now that system.module is installed
     // and drupal is bootstrapped.
-    $modules = drupal_get_profile_modules($profile, $install_locale);
+    $modules = $info['dependencies'];
     variable_set('install_profile_modules', array_diff($modules, array('system')));
   }
 
@@ -437,6 +439,7 @@ function install_select_profile() {
   }
 }
 
+
 /**
  * Form API array definition for the profile selection form.
  *
@@ -451,12 +454,8 @@ function install_select_profile_form(&$form_state, $profile_files) {
 
   foreach ($profile_files as $profile) {
     include_once DRUPAL_ROOT . '/' . $profile->filepath;
-
-    // Load profile details and store them for later retrieval.
-    $function = $profile->name . '_profile_details';
-    if (function_exists($function)) {
-      $details = $function();
-    }
+    
+    $details = install_profile_info($profile->name);
     $profiles[$profile->name] = $details;
 
     // Determine the name of the profile; default to file name if defined name
@@ -970,15 +969,11 @@ function install_task_list($active = NULL) {
     unset($tasks['profile-select']);
     $tasks['profile-install-batch'] = st('Install site');
   }
-
   // Add tasks defined by the profile.
   if ($profile) {
-    $function = $profile . '_profile_task_list';
-    if (function_exists($function)) {
-      $result = $function();
-      if (is_array($result)) {
-        $tasks += $result;
-      }
+    $info = install_profile_info($profile);
+    if (array_key_exists('tasks', $info)) {
+      $tasks += $info['tasks'];
     }
   }
 
