@@ -1041,8 +1041,10 @@ function file_validate(&$file, $validators = array()) {
   // Call the validation functions specified by this function's caller.
   $errors = array();
   foreach ($validators as $function => $args) {
-    array_unshift($args, $file);
-    $errors = array_merge($errors, call_user_func_array($function, $args));
+    if (drupal_function_exists($function)) {
+      array_unshift($args, $file);
+      $errors = array_merge($errors, call_user_func_array($function, $args));
+    }
   }
 
   // Let other modules perform validation on the new file.
