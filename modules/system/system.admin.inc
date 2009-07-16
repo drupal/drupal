@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.160 2009/07/14 20:53:16 webchick Exp $
+// $Id: system.admin.inc,v 1.161 2009/07/16 10:44:20 dries Exp $
 
 /**
  * @file
@@ -226,10 +226,6 @@ function system_themes_form() {
   $form['buttons']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save configuration'),
-  );
-  $form['buttons']['reset'] = array(
-    '#type' => 'submit',
-    '#value' => t('Reset to defaults'),
   );
 
   return $form;
@@ -513,16 +509,10 @@ function system_theme_settings_submit($form, &$form_state) {
   $values = $form_state['values'];
   $key = $values['var'];
 
-  if ($values['op'] == t('Reset to defaults')) {
-    variable_del($key);
-    drupal_set_message(t('The configuration options have been reset to their default values.'));
-  }
-  else {
-    // Exclude unnecessary elements before saving.
-    unset($values['var'], $values['submit'], $values['reset'], $values['form_id'], $values['op'], $values['form_build_id'], $values['form_token']);
-    variable_set($key, $values);
-    drupal_set_message(t('The configuration options have been saved.'));
-  }
+  // Exclude unnecessary elements before saving.
+  unset($values['var'], $values['submit'], $values['reset'], $values['form_id'], $values['op'], $values['form_build_id'], $values['form_token']);
+  variable_set($key, $values);
+  drupal_set_message(t('The configuration options have been saved.'));
 
   cache_clear_all();
 }
