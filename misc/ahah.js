@@ -13,6 +13,8 @@
  * to provide AHAH capabilities.
  */
 
+Drupal.ahah = Drupal.ahah || {};
+
 /**
  * Attaches the ahah behavior to each ahah form element.
  */
@@ -24,7 +26,7 @@ Drupal.behaviors.ahah = {
 
         $(element_settings.selector).each(function () {
           element_settings.element = this;
-          var ahah = new Drupal.ahah(base, element_settings);
+          Drupal.ahah[base] = new Drupal.ahah(base, element_settings);
         });
 
         $('#' + base).addClass('ahah-processed');
@@ -35,6 +37,24 @@ Drupal.behaviors.ahah = {
 
 /**
  * AHAH object.
+ *
+ * All AHAH objects on a page are accessible through the global Drupal.ahah object
+ * and are keyed by the submit button's ID. You can access them from your module's
+ * JavaScript file to override properties or functions.
+ * For example, if your AHAH enabled button has the ID 'edit-submit', you can
+ * redefine the function that is called to insert the new content like this
+ * (inside a Drupal.behaviors attach block):
+ * @code
+ *    Drupal.behaviors.myCustomAhahStuff = {
+ *      attach: function(context, settings) {
+ *        Drupal.ahah['edit-submit'].insertNewContent = function(response, status) {
+ *          new_content = $(response.data);
+ *          $('#my-wrapper').append(new_content);
+ *          alert('New content was appended to #my-wrapper');
+ *        }
+ *      }
+ *    };
+ * @endcode
  */
 Drupal.ahah = function (base, element_settings) {
   // Set the properties for this object.
@@ -149,11 +169,7 @@ Drupal.ahah.prototype.beforeSubmit = function (form_values, element, options) {
  * Handler for the form redirection completion.
  */
 Drupal.ahah.prototype.success = function (response, status) {
-  var wrapper = $(this.wrapper);
   var form = $(this.element).parents('form');
-  // Manually insert HTML into the jQuery object, using $() directly crashes
-  // Safari with long string lengths. http://dev.jquery.com/ticket/1152
-  var new_content = $('<div></div>').html(response.data);
 
   // Restore the previous action and target to the form.
   form.attr('action', this.form_action);
@@ -169,8 +185,25 @@ Drupal.ahah.prototype.success = function (response, status) {
   }
   $(this.element).removeClass('progress-disabled').attr('disabled', false);
 
-  // Add the new content to the page.
   Drupal.freezeHeight();
+
+  // Call the insertNewContent handler to insert the new content into the page.
+  this.insertNewContent(response, status);
+
+  Drupal.unfreezeHeight();
+};
+
+/**
+ * Handler to insert the new content into the page.
+ */
+Drupal.ahah.prototype.insertNewContent = function (response, status) {
+  var wrapper = $(this.wrapper);
+
+  // Manually insert HTML into the jQuery object, using $() directly crashes
+  // Safari with long string lengths. http://dev.jquery.com/ticket/1152
+  var new_content = $('<div></div>').html(response.data);
+
+  // Add the new content to the page.
   if (this.method == 'replace') {
     wrapper.empty().append(new_content);
   }
@@ -201,8 +234,6 @@ Drupal.ahah.prototype.success = function (response, status) {
     var settings = response.settings || Drupal.settings;
     Drupal.attachBehaviors(new_content, settings);
   }
-
-  Drupal.unfreezeHeight();
 };
 
 /**
