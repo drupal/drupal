@@ -229,13 +229,6 @@ function node_type_form(&$form_state, $type = NULL) {
       );
     }
   }
-  else {
-    $form['reset'] = array(
-      '#type' => 'submit',
-      '#value' => t('Reset to defaults'),
-      '#weight' => 50,
-    );
-  }
 
   return $form;
 }
@@ -310,10 +303,7 @@ function node_type_form_submit($form, &$form_state) {
   $type->modified = TRUE;
   $type->locked = $form_state['values']['locked'];
 
-  if ($op == t('Reset to defaults')) {
-    node_type_reset($type);
-  }
-  elseif ($op == t('Delete content type')) {
+  if ($op == t('Delete content type')) {
     $form_state['redirect'] = 'admin/build/node-type/' . str_replace('_', '-', $type->old_type) . '/delete';
     return;
   }
@@ -337,28 +327,18 @@ function node_type_form_submit($form, &$form_state) {
     $variable_new = $key . '_' . $type->type;
     $variable_old = $key . '_' . $type->old_type;
 
-    if ($op == t('Reset to defaults')) {
-      variable_del($variable_old);
+    if (is_array($value)) {
+      $value = array_keys(array_filter($value));
     }
-    else {
-      if (is_array($value)) {
-        $value = array_keys(array_filter($value));
-      }
-      variable_set($variable_new, $value);
+    variable_set($variable_new, $value);
 
-      if ($variable_new != $variable_old) {
-        variable_del($variable_old);
-      }
+    if ($variable_new != $variable_old) {
+      variable_del($variable_old);
     }
   }
 
   node_types_rebuild();
   $t_args = array('%name' => $type->name);
-
-  if ($op == t('Reset to defaults')) {
-    drupal_set_message(t('The content type %name has been reset to its default values.', $t_args));
-    return;
-  }
 
   if ($status == SAVED_UPDATED) {
     drupal_set_message(t('The content type %name has been updated.', $t_args));

@@ -539,7 +539,7 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
 
     // Log back in and remove the custom 403 page.
     $this->drupalLogin($this->admin_user);
-    $this->drupalPost('admin/settings/site-information', array(), t('Reset to defaults'));
+    $this->drupalPost('admin/settings/site-information', array('site_403' => ''), t('Save configuration'));
 
     // Logout and check that the user login block is shown on default 403 pages.
     $this->drupalLogout();
@@ -600,7 +600,7 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
 
     // Log back in and remove the custom 404 page.
     $this->drupalLogin($this->admin_user);
-    $this->drupalPost('admin/settings/site-information', array(), t('Reset to defaults'));
+    $this->drupalPost('admin/settings/site-information', array('site_404' => ''), t('Save configuration'));
 
     // Logout and check that the user login block is not shown on default 404 pages.
     $this->drupalLogout();
@@ -961,7 +961,12 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
     $this->assertRaw('themes/stark', t('Site default theme used on the add content page.'));
 
     // Reset to the default theme settings.
-    $this->drupalPost('admin/build/themes', array(), t('Reset to defaults'));
+    $edit = array(
+      'theme_default' => 'garland',
+      'admin_theme' => '0',
+      'node_admin_theme' => FALSE,
+    );
+    $this->drupalPost('admin/build/themes', $edit, t('Save configuration'));
 
     $this->drupalGet('admin');
     $this->assertRaw('themes/garland', t('Site default theme used on administration page.'));

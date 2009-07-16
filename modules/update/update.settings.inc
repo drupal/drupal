@@ -91,18 +91,14 @@ function update_settings_validate($form, &$form_state) {
 function update_settings_submit($form, $form_state) {
   $op = $form_state['values']['op'];
 
-  if ($op == t('Reset to defaults')) {
-    unset($form_state['notify_emails']);
+  if (empty($form_state['notify_emails'])) {
+    variable_del('update_notify_emails');
   }
   else {
-    if (empty($form_state['notify_emails'])) {
-      variable_del('update_notify_emails');
-    }
-    else {
-      variable_set('update_notify_emails', $form_state['notify_emails']);
-    }
-    unset($form_state['notify_emails']);
-    unset($form_state['values']['update_notify_emails']);
+    variable_set('update_notify_emails', $form_state['notify_emails']);
   }
+  unset($form_state['notify_emails']);
+  unset($form_state['values']['update_notify_emails']);
+
   system_settings_form_submit($form, $form_state);
 }

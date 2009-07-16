@@ -293,8 +293,7 @@ function color_scheme_form_submit($form, &$form_state) {
   }
 
   // Don't render the default colorscheme, use the standard theme instead.
-  if (implode(',', color_get_palette($theme, TRUE)) == implode(',', $palette)
-    || $form_state['values']['op'] == t('Reset to defaults')) {
+  if (implode(',', color_get_palette($theme, TRUE)) == implode(',', $palette)) {
     variable_del('color_' . $theme . '_palette');
     variable_del('color_' . $theme . '_stylesheets');
     variable_del('color_' . $theme . '_logo');
