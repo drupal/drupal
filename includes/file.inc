@@ -1,5 +1,5 @@
 <?php
-// $Id: file.inc,v 1.175 2009/07/12 08:36:34 dries Exp $
+// $Id: file.inc,v 1.176 2009/07/16 10:46:46 dries Exp $
 
 /**
  * @file
@@ -1041,8 +1041,10 @@ function file_validate(&$file, $validators = array()) {
   // Call the validation functions specified by this function's caller.
   $errors = array();
   foreach ($validators as $function => $args) {
-    array_unshift($args, $file);
-    $errors = array_merge($errors, call_user_func_array($function, $args));
+    if (drupal_function_exists($function)) {
+      array_unshift($args, $file);
+      $errors = array_merge($errors, call_user_func_array($function, $args));
+    }
   }
 
   // Let other modules perform validation on the new file.
