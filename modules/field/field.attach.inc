@@ -727,7 +727,7 @@ function field_attach_delete($obj_type, $object) {
  *   The object with fields to save.
  */
 function field_attach_delete_revision($obj_type, $object) {
-  _field_invoke('delete revision', $obj_type, $object);
+  _field_invoke('delete_revision', $obj_type, $object);
   module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_delete_revision', $obj_type, $object);
 
   // Let other modules act on deleting the revision.
@@ -904,8 +904,8 @@ function field_attach_prepare_translation($node) {
     $type = content_types($node->type);
     // Save cycles if the type has no fields.
     if (!empty($type['instances'])) {
-      $default_additions = _field_invoke_default('prepare translation', $node);
-      $additions = _field_invoke('prepare translation', $node);
+      $default_additions = _field_invoke_default('prepare_translation', $node);
+      $additions = _field_invoke('prepare_translation', $node);
       // Merge module additions after the default ones to enable overriding
       // of field values.
       $node = (object) array_merge((array) $node, $default_additions, $additions);
