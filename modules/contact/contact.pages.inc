@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.pages.inc,v 1.21 2009/05/10 05:06:50 dries Exp $
+// $Id: contact.pages.inc,v 1.22 2009/07/17 11:18:04 dries Exp $
 
 /**
  * @file
@@ -29,7 +29,7 @@ function contact_site_page() {
   return $output;
 }
 
-/*
+/**
  * Form builder; the site-wide contact form.
  */
 function contact_site_form() {
@@ -168,7 +168,7 @@ function contact_personal_page($account) {
   return $output;
 }
 
-/*
+/**
  * Form builder; the personal contact form.
  */
 function contact_personal_form(&$form_state, $recipient) {
