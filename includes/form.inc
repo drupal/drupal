@@ -2225,6 +2225,8 @@ function form_process_tableselect($element) {
       $element['#default_value'] = array();
     }
 
+    // Sort the options by their #weight if they have a #weight.
+    uasort($element['#options'], 'element_sort');
     // Create a checkbox or radio for each item in #options in such a way that
     // the value of the tableselect element behaves as if it had been of type
     // checkboxes or radios.
