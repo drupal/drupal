@@ -236,10 +236,11 @@ function block_page_alter($page) {
   drupal_theme_initialize();
 
   // Populate all block regions
-  $regions = system_region_list($theme);
+  $all_regions = system_region_list($theme);
+  $visible_regions = system_region_list($theme, REGIONS_VISIBLE);
 
   // Load all region content assigned via blocks.
-  foreach (array_keys($regions) as $region) {
+  foreach (array_keys($all_regions) as $region) {
     // Prevent left and right regions from rendering blocks when 'show_blocks' == FALSE.
     if (!empty($page['#show_blocks']) || ($region != 'left' && $region != 'right')) {
       // Assign blocks to region.
@@ -249,8 +250,8 @@ function block_page_alter($page) {
 
       // Append region description if we are rendering the block admin page.
       $item = menu_get_item();
-      if ($item['path'] == 'admin/build/block') {
-        $description = '<div class="block-region">' . $regions[$region] . '</div>';
+      if ($item['path'] == 'admin/build/block' && isset($visible_regions[$region])) {
+        $description = '<div class="block-region">' . $all_regions[$region] . '</div>';
         $page[$region]['block_description'] = array(
           '#markup' => $description,
           '#weight' => 15,

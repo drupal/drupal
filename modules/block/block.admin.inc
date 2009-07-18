@@ -34,7 +34,7 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
   $custom_theme = isset($theme) ? $theme : variable_get('theme_default', 'garland');
   drupal_theme_initialize();
 
-  $block_regions = system_region_list($theme_key) + array(BLOCK_REGION_NONE => '<' . t('none') . '>');
+  $block_regions = system_region_list($theme_key, REGIONS_VISIBLE) + array(BLOCK_REGION_NONE => '<' . t('none') . '>');
 
   // Weights range from -delta to +delta, so delta should be at least half
   // of the amount of blocks present. This makes sure all blocks in the same
@@ -469,7 +469,7 @@ function block_box_delete_submit($form, &$form_state) {
 function template_preprocess_block_admin_display_form(&$variables) {
   global $theme_key;
 
-  $block_regions = system_region_list($theme_key);
+  $block_regions = system_region_list($theme_key, REGIONS_VISIBLE);
   $variables['block_regions'] = $block_regions + array(BLOCK_REGION_NONE => t('Disabled'));
 
   foreach ($block_regions as $key => $value) {
