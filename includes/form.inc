@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.350 2009/07/14 10:22:15 dries Exp $
+// $Id: form.inc,v 1.351 2009/07/18 02:41:05 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2225,6 +2225,8 @@ function form_process_tableselect($element) {
       $element['#default_value'] = array();
     }
 
+    // Sort the options by their #weight if they have a #weight.
+    uasort($element['#options'], 'element_sort');
     // Create a checkbox or radio for each item in #options in such a way that
     // the value of the tableselect element behaves as if it had been of type
     // checkboxes or radios.
