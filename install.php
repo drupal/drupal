@@ -972,8 +972,10 @@ function install_task_list($active = NULL) {
   // Add tasks defined by the profile.
   if ($profile) {
     $info = install_profile_info($profile);
-    if (array_key_exists('tasks', $info)) {
-      $tasks += $info['tasks'];
+    if (isset($info['tasks'])) {
+      foreach ($info['tasks'] as $task => $title) {
+        $tasks[$task] = st($title);
+      }
     }
   }
 

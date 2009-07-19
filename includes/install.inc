@@ -977,23 +977,49 @@ function drupal_check_module($module) {
 
 /**
  * Retrieve info about an install profile from its .info file.
+ *
+ * Information stored in the profile.info file:
+ * - name: The real name of the install profile for display purposes.
+ * - description: A brief description of the profile.
+ * - dependencies: An array of shortnames of other modules this install profile requires.
+ * - tasks: An associative array of tasks and the page title of each task that need to be 
+ *   completed for installation.
+ *
+ * Example of .info file:
+ * @verbatim
+ *    name = Drupal (minimal)
+ *    description = Create a Drupal site with only required modules enabled.
+ *    dependencies[] = block
+ *    dependencies[] = dblog
+ * @endverbatim
+ *
+ * @param profile
+ *   Name of profile.
+ * @param locale
+ *   Name of locale used (if any).
+ * @return
+ *   The info array.
  */
 function install_profile_info($profile, $locale = 'en') {
-  $cache =& drupal_static('install_profile_info', array(), TRUE);
-  // Set defaults for module info.
-  $defaults = array(
-    'dependencies' => array(),
-    'tasks' => array(),
-    'description' => '',
-    'version' => NULL,
-    'php' => DRUPAL_MINIMUM_PHP,
-  );
-  $info = drupal_parse_info_file(sprintf('profiles/%s/%s.info', $profile, $profile)) + $defaults;
-  $info['dependencies'] = array_unique(array_merge(
-    drupal_required_modules(), 
-    $info['dependencies'], 
-    ($locale != 'en' && !empty($locale) ? array('locale') : array()))
-  );
-  return $info;
+  $cache = &drupal_static(__FUNCTION__, array());
+
+  if (!isset($cache[$profile])) {
+    // Set defaults for module info.
+    $defaults = array(
+      'dependencies' => array(),
+      'tasks' => array(),
+      'description' => '',
+      'version' => NULL,
+      'php' => DRUPAL_MINIMUM_PHP,
+    );
+    $info = drupal_parse_info_file("profiles/$profile/$profile.info") + $defaults;
+    $info['dependencies'] = array_unique(array_merge(
+      drupal_required_modules(), 
+      $info['dependencies'], 
+      ($locale != 'en' && !empty($locale) ? array('locale') : array()))
+    );
+    $cache[$profile] = $info;
+  }
+  return $cache[$profile];
 }
 
