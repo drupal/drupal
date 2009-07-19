@@ -1176,9 +1176,8 @@ function system_ip_blocking_delete_submit($form, &$form_state) {
 function system_site_information_settings() {
   $form['site_name'] = array(
     '#type' => 'textfield',
-    '#title' => t('Name'),
+    '#title' => t('Site name'),
     '#default_value' => 'Drupal',
-    '#description' => t('The name of this website.'),
     '#required' => TRUE
   );
   $form['site_mail'] = array(
@@ -1192,7 +1191,6 @@ function system_site_information_settings() {
     '#type' => 'textfield',
     '#title' => t('Slogan'),
     '#default_value' => '',
-    '#description' => t("Your site's motto, tag line, or catchphrase (often displayed alongside the title of the site).")
   );
   $form['site_frontpage'] = array(
     '#type' => 'textfield',
@@ -1207,7 +1205,7 @@ function system_site_information_settings() {
     '#type' => 'select', '#title' => t('Number of posts on front page'),
     '#default_value' => 10,
     '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
-    '#description' => t('The maximum number of posts per page to display on overview pages like the front page above.')
+    '#description' => t('The maximum number of posts displayed on overview pages like the frontpage.')
   );
   $form['site_403'] = array(
     '#type' => 'textfield',
