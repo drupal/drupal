@@ -1663,8 +1663,13 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
  */
 function drupal_function_exists($function) {
   static $checked = array();
+  static $maintenance;
 
-  if (defined('MAINTENANCE_MODE')) {
+  if (!isset($maintenance)) {
+    $maintenance = defined('MAINTENANCE_MODE');
+  }
+
+  if ($maintenance) {
     return function_exists($function);
   }
 
