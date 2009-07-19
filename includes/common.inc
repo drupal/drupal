@@ -1138,7 +1138,7 @@ function fix_gpc_magic() {
  */
 function t($string, array $args = array(), array $options = array()) {
   global $language;
-  $custom_strings = &drupal_static(__FUNCTION__);
+  static $custom_strings;
 
   // Merge in default.
   if (empty($options['langcode'])) {
@@ -1163,7 +1163,7 @@ function t($string, array $args = array(), array $options = array()) {
   // We don't use drupal_function_exists() here, because it breaks the testing
   // framework if the locale module is enabled in the parent site (we cannot
   // unload functions in PHP).
-  elseif (module_exists('locale') && $options['langcode'] != 'en') {
+  elseif (function_exists('locale') && $options['langcode'] != 'en') {
     $string = locale($string, $options['context'], $options['langcode']);
   }
   if (empty($args)) {
