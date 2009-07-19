@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.184 2009/07/15 02:08:40 webchick Exp $
+// $Id: install.php,v 1.185 2009/07/19 04:48:09 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -972,8 +972,10 @@ function install_task_list($active = NULL) {
   // Add tasks defined by the profile.
   if ($profile) {
     $info = install_profile_info($profile);
-    if (array_key_exists('tasks', $info)) {
-      $tasks += $info['tasks'];
+    if (isset($info['tasks'])) {
+      foreach ($info['tasks'] as $task => $title) {
+        $tasks[$task] = st($title);
+      }
     }
   }
 
