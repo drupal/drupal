@@ -297,7 +297,7 @@ function image_style_generate() {
   $destination = image_style_path($style['name'], $path);
 
   // Check that it's a defined style and that access was granted by
-  // image_style_generate_url().
+  // image_style_url().
   if (!$style || !cache_get('access:' . $style_name . ':' . $path_md5, 'cache_image')) {
     drupal_access_denied();
     exit();
@@ -402,32 +402,6 @@ function image_style_flush($style) {
 }
 
 /**
- * Return the complete URL to an image when using a style.
- *
- * If the image has already been created then its location will be returned. If
- * it does not then image_style_generate_url() will be called.
- *
- * @param $style_name
- *   The name of the style to be used with this image.
- * @param $path
- *   The path to the image.
- * @return
- *   The absolute URL where a style image can be downloaded, suitable for use
- *   in an <img> tag. If the site is using the default method for generating
- *   images, the image may not yet exist and will only be created when a
- *   visitor's browser requests the file.
- * @see image_style_generate_url()
- * @see image_style_path()
- */
-function image_style_url($style_name, $path) {
-  $style_path = image_style_path($style_name, $path);
-  if (file_exists($style_path)) {
-    return file_create_url($style_path);
-  }
-  return image_style_generate_url($style_name, $path);
-}
-
-/**
  * Return the URL for an image derivative given a style and image path.
  *
  * This function is the default image generation method. It returns a URL for
@@ -444,14 +418,13 @@ function image_style_url($style_name, $path) {
  *   The absolute URL where a style image can be downloaded, suitable for use
  *   in an <img> tag. Requesting the URL will cause the image to be created.
  * @see image_style_generate()
- * @see image_style_url()
  */
-function image_style_generate_url($style_name, $path) {
+function image_style_url($style_name, $path) {
   $destination = image_style_path($style_name, $path);
 
   // If the image already exists use that rather than regenerating it.
   if (file_exists($destination)) {
-    return image_style_url($style_name, $path);
+    return file_create_url($destination);
   }
 
   // Disable page cache for this request. This prevents anonymous users from
