@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.289 2009/07/14 10:22:15 dries Exp $
+// $Id: bootstrap.inc,v 1.290 2009/07/19 05:26:11 webchick Exp $
 
 /**
  * @file
@@ -1663,8 +1663,13 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
  */
 function drupal_function_exists($function) {
   static $checked = array();
+  static $maintenance;
 
-  if (defined('MAINTENANCE_MODE')) {
+  if (!isset($maintenance)) {
+    $maintenance = defined('MAINTENANCE_MODE');
+  }
+
+  if ($maintenance) {
     return function_exists($function);
   }
 
