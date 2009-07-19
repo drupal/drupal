@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.504 2009/07/11 14:25:41 dries Exp $
+// $Id: forum.module,v 1.505 2009/07/19 05:57:08 dries Exp $
 
 /**
  * @file
@@ -22,7 +22,7 @@ function forum_help($path, $arg) {
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@forum">Forum module</a>.', array('@forum' => 'http://drupal.org/handbook/modules/forum/')) . '</p>';
       return $output;
     case 'admin/build/forum':
-      return '<p>' . t('This page displays a list of existing forums and containers. Containers (optionally) hold forums, and forums hold forum topics (a forum topic is the initial post to a threaded discussion). To provide structure, both containers and forums may be placed inside other containers and forums. To rearrange forums and containers, grab a drag-and-drop handle under the <em>Name</em> column and drag the forum or container to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save</em> button at the bottom of the page.') . '</p>';
+      return '<p>' . t('This page displays a list of existing forums and containers. Containers (optionally) hold forums, and forums hold forum topics (a forum topic is the initial post to a threaded discussion). To provide structure, both containers and forums may be placed inside other containers and forums.') . '</p>';
     case 'admin/build/forum/add/container':
       return '<p>' . t('By grouping related or similar forums, containers help organize forums. For example, a container named "Food" may hold two forums named "Fruit" and "Vegetables", respectively.') . '</p>';
     case 'admin/build/forum/add/forum':
