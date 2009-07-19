@@ -29,7 +29,14 @@ function image_menu() {
 function image_theme() {
   return array(
     'image_style' => array(
-      'arguments' => array('style' => NULL, 'path' => NULL, 'alt' => '', 'title' => '', 'attributes' => array(), 'getsize' => TRUE),
+      'arguments' => array(
+        'style' => NULL,
+        'path' => NULL,
+        'alt' => '',
+        'title' => '',
+        'attributes' => array(),
+        'getsize' => TRUE,
+      ),
     ),
   );
 }
@@ -449,11 +456,11 @@ function image_style_generate_url($style_name, $path) {
 
   // Disable page cache for this request. This prevents anonymous users from
   // needlessly hitting the image generation URL when the image already exists.
-  $GLOBALS['conf']['cache'] = CACHE_DISABLED;
+  drupal_page_is_cacheable(FALSE);
 
   // Set a cache entry to grant access to this style/image path. This will be
   // checked by image_style_generate().
-  cache_set('access:' . $style_name . ':' . md5($path), 1, 'cache_image', time() + 600);
+  cache_set('access:' . $style_name . ':' . md5($path), 1, 'cache_image', REQUEST_TIME + 600);
 
   // Generate a callback path for the image.
   $url = url('image/generate/' . $style_name . '/' . $path, array('absolute' => TRUE));
@@ -636,7 +643,7 @@ function image_effect_delete($effect) {
  * @return
  *   TRUE on success. FALSE if unable to perform effect on image.
  */
-function image_effect_apply(&$image, $effect) {
+function image_effect_apply($image, $effect) {
   if (drupal_function_exists($effect['effect callback'])) {
     return call_user_func($effect['effect callback'], $image, $effect['data']);
   }

@@ -35,11 +35,11 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
   protected $image_with_generated;
   protected $image_without_generated;
 
-  function getInfo() {
+  public static function getInfo() {
     return array(
-      'name' => t('Image styles path and URL functions'),
-      'description' => t('Tests functions for generating paths and URLs to image styles.'),
-      'group' => t('Image')
+      'name' => 'Image styles path and URL functions',
+      'description' => 'Tests functions for generating paths and URLs to image styles.',
+      'group' => 'Image',
     );
   }
 
@@ -108,11 +108,11 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
  * properly passing parameters to the image toolkit.
  */
 class ImageEffectsUnitTest extends ImageToolkitTestCase {
-  function getInfo() {
+  public static function getInfo() {
     return array(
-      'name' => t('Image effects'),
-      'description' => t('Test that the image effects pass parameters to the toolkit correctly.'),
-      'group' => t('Image')
+      'name' => 'Image effects',
+      'description' => 'Test that the image effects pass parameters to the toolkit correctly.',
+      'group' => 'Image',
     );
   }
 
