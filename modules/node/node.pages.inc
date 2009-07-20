@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.70 2009/06/22 09:10:05 dries Exp $
+// $Id: node.pages.inc,v 1.71 2009/07/20 22:18:53 webchick Exp $
 
 /**
  * @file
@@ -551,6 +551,7 @@ function node_revision_delete_confirm_submit($form, &$form_state) {
     ->condition('vid', $node_revision->vid)
     ->execute();
   module_invoke_all('node_delete_revision', $node_revision);
+  field_attach_delete_revision('node', $node_revision);
   watchdog('content', '@type: deleted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->title, '%revision' => $node_revision->vid));
   drupal_set_message(t('Revision from %revision-date of @type %title has been deleted.', array('%revision-date' => format_date($node_revision->revision_timestamp), '@type' => node_type_get_name($node_revision), '%title' => $node_revision->title)));
   $form_state['redirect'] = 'node/' . $node_revision->nid;
