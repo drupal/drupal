@@ -21,11 +21,11 @@ function node_overview_types() {
       $type_url_str = str_replace('_', '-', $type->type);
       $row = array(theme('node_admin_overview', $name, $type));
       // Set the edit column.
-      $row[] = array('data' => l(t('edit'), 'admin/build/node-type/' . $type_url_str));
+      $row[] = array('data' => l(t('edit'), 'admin/structure/node-type/' . $type_url_str));
 
       // Set the delete column.
       if ($type->custom) {
-        $row[] = array('data' => l(t('delete'), 'admin/build/node-type/' . $type_url_str . '/delete'));
+        $row[] = array('data' => l(t('delete'), 'admin/structure/node-type/' . $type_url_str . '/delete'));
       }
       else {
         $row[] = array('data' => '');
@@ -35,7 +35,7 @@ function node_overview_types() {
   }
 
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No content types available. <a href="@link">Add content type</a>.', array('@link' => url('admin/build/types/add'))), 'colspan' => '5', 'class' => 'message'));
+    $rows[] = array(array('data' => t('No content types available. <a href="@link">Add content type</a>.', array('@link' => url('admin/structure/types/add'))), 'colspan' => '5', 'class' => 'message'));
   }
 
   return theme('table', $header, $rows);
@@ -304,7 +304,7 @@ function node_type_form_submit($form, &$form_state) {
   $type->locked = $form_state['values']['locked'];
 
   if ($op == t('Delete content type')) {
-    $form_state['redirect'] = 'admin/build/node-type/' . str_replace('_', '-', $type->old_type) . '/delete';
+    $form_state['redirect'] = 'admin/structure/node-type/' . str_replace('_', '-', $type->old_type) . '/delete';
     return;
   }
 
@@ -345,10 +345,10 @@ function node_type_form_submit($form, &$form_state) {
   }
   elseif ($status == SAVED_NEW) {
     drupal_set_message(t('The content type %name has been added.', $t_args));
-    watchdog('node', 'Added content type %name.', $t_args, WATCHDOG_NOTICE, l(t('view'), 'admin/build/types'));
+    watchdog('node', 'Added content type %name.', $t_args, WATCHDOG_NOTICE, l(t('view'), 'admin/structure/types'));
   }
 
-  $form_state['redirect'] = 'admin/build/types';
+  $form_state['redirect'] = 'admin/structure/types';
   return;
 }
 
@@ -403,7 +403,7 @@ function node_type_delete_confirm(&$form_state, $type) {
 
   $caption .= '<p>' . t('This action cannot be undone.') . '</p>';
 
-  return confirm_form($form, $message, 'admin/build/types', $caption, t('Delete'));
+  return confirm_form($form, $message, 'admin/structure/types', $caption, t('Delete'));
 }
 
 /**
@@ -420,6 +420,6 @@ function node_type_delete_confirm_submit($form, &$form_state) {
 
   node_types_rebuild();
 
-  $form_state['redirect'] = 'admin/build/types';
+  $form_state['redirect'] = 'admin/structure/types';
   return;
 }

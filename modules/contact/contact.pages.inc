@@ -16,7 +16,7 @@ function contact_site_page() {
   }
   elseif (!db_query("SELECT COUNT(cid) FROM {contact}")->fetchField()) {
     if (user_access('administer site-wide contact form')) {
-      $output = t('The contact form has not been configured. <a href="@add">Add one or more categories</a> to the form.', array('@add' => url('admin/build/contact/add')));
+      $output = t('The contact form has not been configured. <a href="@add">Add one or more categories</a> to the form.', array('@add' => url('admin/structure/contact/add')));
     }
     else {
       return drupal_not_found();

@@ -397,7 +397,7 @@ class SummaryLengthTestCase extends DrupalWebTestCase {
     $edit = array (
       'teaser_length' => 200,
     );
-    $this->drupalPost('admin/build/node-type/page', $edit, t('Save content type'));
+    $this->drupalPost('admin/structure/node-type/page', $edit, t('Save content type'));
     // Attempt to access the front page again and check if the summary is now only 200 characters in length.
     $this->drupalGet("node");
     $this->assertNoRaw($expected, t('Check that the summary is not longer than 200 characters'), 'Node');
@@ -457,13 +457,13 @@ class NodeBlockTestCase extends DrupalWebTestCase {
 
   function testSearchFormBlock() {
     // Set block title to confirm that the interface is availble.
-    $this->drupalPost('admin/build/block/configure/node/syndicate', array('title' => $this->randomName(8)), t('Save block'));
+    $this->drupalPost('admin/structure/block/configure/node/syndicate', array('title' => $this->randomName(8)), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
 
     // Set the block to a region to confirm block is availble.
     $edit = array();
     $edit['node_syndicate[region]'] = 'footer';
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
   }
 }
@@ -495,7 +495,7 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
     // Set page content type to display post information.
     $edit = array();
     $edit['node_submitted'] = TRUE;
-    $this->drupalPost('admin/build/node-type/page', $edit, t('Save content type'));
+    $this->drupalPost('admin/structure/node-type/page', $edit, t('Save content type'));
 
     // Create a node.
     $edit = array();
@@ -516,7 +516,7 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
     // Set page content type to display post information.
     $edit = array();
     $edit['node_submitted'] = FALSE;
-    $this->drupalPost('admin/build/node-type/page', $edit, t('Save content type'));
+    $this->drupalPost('admin/structure/node-type/page', $edit, t('Save content type'));
 
     // Create a node.
     $edit = array();

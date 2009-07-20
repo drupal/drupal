@@ -23,14 +23,14 @@ function contact_admin_categories() {
       $record->category,
       $record->recipients,
       ($record->selected ? t('Yes') : t('No')),
-      l(t('edit'), 'admin/build/contact/edit/' . $record->cid),
-      l(t('delete'), 'admin/build/contact/delete/' . $record->cid),
+      l(t('edit'), 'admin/structure/contact/edit/' . $record->cid),
+      l(t('delete'), 'admin/structure/contact/delete/' . $record->cid),
     );
   }
 
   // If no categories were found, let the user know.
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No categories available. <a href="@link">Add category</a>.', array('@link' => url('admin/build/contact/add'))), 'colspan' => 5));
+    $rows[] = array(array('data' => t('No categories available. <a href="@link">Add category</a>.', array('@link' => url('admin/structure/contact/add'))), 'colspan' => 5));
   }
 
   return theme('table', $header, $rows);
@@ -122,16 +122,16 @@ function contact_admin_edit_submit($form, &$form_state) {
   if (empty($form_state['values']['cid']) || $form_state['values']['contact_op'] == 'add') {
     drupal_write_record('contact', $form_state['values']);
     drupal_set_message(t('Category %category has been added.', array('%category' => $form_state['values']['category'])));
-    watchdog('mail', 'Contact form: category %category added.', array('%category' => $form_state['values']['category']), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
+    watchdog('mail', 'Contact form: category %category added.', array('%category' => $form_state['values']['category']), WATCHDOG_NOTICE, l(t('view'), 'admin/structure/contact'));
 
   }
   else {
     drupal_write_record('contact', $form_state['values'], 'cid');
     drupal_set_message(t('Category %category has been updated.', array('%category' => $form_state['values']['category'])));
-    watchdog('mail', 'Contact form: category %category updated.', array('%category' => $form_state['values']['category']), WATCHDOG_NOTICE, l(t('view'), 'admin/build/contact'));
+    watchdog('mail', 'Contact form: category %category updated.', array('%category' => $form_state['values']['category']), WATCHDOG_NOTICE, l(t('view'), 'admin/structure/contact'));
   }
 
-  $form_state['redirect'] = 'admin/build/contact';
+  $form_state['redirect'] = 'admin/structure/contact';
   return;
 }
 
@@ -145,7 +145,7 @@ function contact_admin_delete(&$form_state, $contact) {
     '#value' => $contact,
   );
 
-  return confirm_form($form, t('Are you sure you want to delete %category?', array('%category' => $contact['category'])), 'admin/build/contact', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to delete %category?', array('%category' => $contact['category'])), 'admin/structure/contact', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
 }
 
 /**
@@ -159,7 +159,7 @@ function contact_admin_delete_submit($form, &$form_state) {
   drupal_set_message(t('Category %category has been deleted.', array('%category' => $contact['category'])));
   watchdog('mail', 'Contact form: category %category deleted.', array('%category' => $contact['category']), WATCHDOG_NOTICE);
 
-  $form_state['redirect'] = 'admin/build/contact';
+  $form_state['redirect'] = 'admin/structure/contact';
   return;
 }
 

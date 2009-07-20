@@ -272,7 +272,7 @@ function system_requirements($phase) {
       $requirements['update status'] = array(
         'value' => $t('Not enabled'),
         'severity' => REQUIREMENT_WARNING,
-        'description' => $t('Update notifications are not enabled. It is <strong>highly recommended</strong> that you enable the update status module from the <a href="@module">module administration page</a> in order to stay up-to-date on new releases. For more information please read the <a href="@update">Update status handbook page</a>.', array('@update' => 'http://drupal.org/handbook/modules/update', '@module' => url('admin/build/modules'))),
+        'description' => $t('Update notifications are not enabled. It is <strong>highly recommended</strong> that you enable the update status module from the <a href="@module">module administration page</a> in order to stay up-to-date on new releases. For more information please read the <a href="@update">Update status handbook page</a>.', array('@update' => 'http://drupal.org/handbook/modules/update', '@module' => url('admin/structure/modules'))),
       );
     }
     else {
@@ -2024,7 +2024,7 @@ function system_update_7021() {
       // Add contact help block for themes, which had blocks.
       $ret[] = update_sql("INSERT INTO {block} (module, delta, theme, status, weight, region, visibility, pages, cache) VALUES ('block', '" . $bid . "', '" . $theme . "', 1, 5, 'help', 1, 'contact', -1)");
     }
-    drupal_set_message('The contact form information setting was migrated to <a href="' . url('admin/build/block/configure/block/' . $bid) . '">a custom block</a> and set up to only show on the site-wide contact page. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right.');
+    drupal_set_message('The contact form information setting was migrated to <a href="' . url('admin/structure/block/configure/block/' . $bid) . '">a custom block</a> and set up to only show on the site-wide contact page. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right.');
   }
 
   // Migrate user help setting.
@@ -2034,7 +2034,7 @@ function system_update_7021() {
       // Add user registration help block for themes, which had blocks.
       $ret[] = update_sql("INSERT INTO {block} (module, delta, theme, status, weight, region, visibility, pages, cache) VALUES ('block', '" . $bid . "', '" . $theme . "', 1, 5, 'help', 1, 'user/register', -1)");
     }
-    drupal_set_message('The user registration guidelines were migrated to <a href="' . url('admin/build/block/configure/block/' . $bid) . '">a custom block</a> and set up to only show on the user registration page. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right.');
+    drupal_set_message('The user registration guidelines were migrated to <a href="' . url('admin/structure/block/configure/block/' . $bid) . '">a custom block</a> and set up to only show on the user registration page. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right.');
   }
 
   // Migrate site mission setting.
@@ -2044,7 +2044,7 @@ function system_update_7021() {
       // Add mission block for themes, which had blocks.
       $ret[] = update_sql("INSERT INTO {block} (module, delta, theme, status, weight, region, visibility, pages, cache) VALUES ('block', '" . $bid . "', '" . $theme . "', 1, 0, 'highlight', 1, '<front>', -1)");
     }
-    drupal_set_message('The site mission was migrated to <a href="' . url('admin/build/block/configure/block/' . $bid) . '">a custom block</a> and set up to only show on the front page in the highlighted content region. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right. If your theme does not have a highlighted content region, you might need to <a href="' . url('admin/build/block') . '">relocate the block</a>.');
+    drupal_set_message('The site mission was migrated to <a href="' . url('admin/structure/block/configure/block/' . $bid) . '">a custom block</a> and set up to only show on the front page in the highlighted content region. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right. If your theme does not have a highlighted content region, you might need to <a href="' . url('admin/structure/block') . '">relocate the block</a>.');
     // Migrate mission to RSS site description.
     variable_set('feed_description', $mission);
   }
@@ -2058,7 +2058,7 @@ function system_update_7021() {
       // before the other blocks).
       $ret[] = update_sql("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('block', '" . $bid . "', '" . $theme . "', 1, -10, 'footer', '', -1)");
     }
-    drupal_set_message('The footer message was migrated to <a href="' . url('admin/build/block/configure/block/' . $bid) . '">a custom block</a> and set up to appear in the footer. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right. If your theme does not have a footer region, you might need to <a href="' . url('admin/build/block') . '">relocate the block</a>.');
+    drupal_set_message('The footer message was migrated to <a href="' . url('admin/structure/block/configure/block/' . $bid) . '">a custom block</a> and set up to appear in the footer. The block was set to use the default text format, which might differ from the HTML based format used before. Please check the block and ensure that the output is right. If your theme does not have a footer region, you might need to <a href="' . url('admin/structure/block') . '">relocate the block</a>.');
   }
 
   // Remove the variables (even if they were saved empty on the admin interface),

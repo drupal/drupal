@@ -77,14 +77,14 @@ class ForumTestCase extends DrupalWebTestCase {
     // Enable the active forum block.
     $edit = array();
     $edit['forum_active[region]'] = 'right';
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertResponse(200);
     $this->assertText(t('The block settings have been updated.'), t('[Active forum topics] Forum block was enabled'));
 
     // Enable the new forum block.
     $edit = array();
     $edit['forum_new[region]'] = 'right';
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertResponse(200);
     $this->assertText(t('The block settings have been updated.'), t('[New forum topics] Forum block was enabled'));
 
@@ -93,7 +93,7 @@ class ForumTestCase extends DrupalWebTestCase {
 
     // Add forum to navigation menu.
     $edit = array();
-    $this->drupalPost('admin/build/menu-customize/navigation', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/menu-customize/navigation', $edit, t('Save configuration'));
     $this->assertResponse(200);
 
     // Edit forum taxonomy.
@@ -131,7 +131,7 @@ class ForumTestCase extends DrupalWebTestCase {
     );
 
     // Edit the vocabulary.
-    $this->drupalPost('admin/build/taxonomy/' . $vid, $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/' . $vid, $edit, t('Save'));
     $this->assertResponse(200);
     $this->assertRaw(t('Updated vocabulary %name.', array('%name' => $title)), t('Vocabulary was edited'));
 
@@ -170,7 +170,7 @@ class ForumTestCase extends DrupalWebTestCase {
     );
 
     // Create forum.
-    $this->drupalPost('admin/build/forum/add/' . $type, $edit, t('Save'));
+    $this->drupalPost('admin/structure/forum/add/' . $type, $edit, t('Save'));
     $this->assertResponse(200);
     $type = ($type == 'container') ? 'forum container' : 'forum';
     $this->assertRaw(t('Created new @type %term.', array('%term' => $name, '@type' => t($type))), t(ucfirst($type) . ' was created'));
@@ -194,7 +194,7 @@ class ForumTestCase extends DrupalWebTestCase {
    */
   function deleteForum($tid) {
     // Delete the forum id.
-    $this->drupalPost('admin/build/forum/edit/forum/' . $tid, array(), t('Delete'));
+    $this->drupalPost('admin/structure/forum/edit/forum/' . $tid, array(), t('Delete'));
     $this->drupalPost(NULL, NULL, t('Delete'));
 
     // Assert that the forum no longer exists.

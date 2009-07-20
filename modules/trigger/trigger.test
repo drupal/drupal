@@ -32,7 +32,7 @@ class TriggerContentTestCase extends DrupalWebTestCase {
       $test_user = $this->drupalCreateUser(array('administer actions'));
       $this->drupalLogin($test_user);
       $edit = array('aid' => $hash);
-      $this->drupalPost('admin/build/trigger/node', $edit, t('Assign'));
+      $this->drupalPost('admin/structure/trigger/node', $edit, t('Assign'));
       // Create an unpublished node.
       $web_user = $this->drupalCreateUser(array('create page content', 'access content', 'administer nodes'));
       $this->drupalLogin($web_user);
@@ -52,13 +52,13 @@ class TriggerContentTestCase extends DrupalWebTestCase {
       $test_user = $this->drupalCreateUser(array('administer actions'));
       $this->drupalLogin($test_user);
       $edit = array('aid' => $hash);
-      $this->drupalPost('admin/build/trigger/node', $edit, t('Assign'));
+      $this->drupalPost('admin/structure/trigger/node', $edit, t('Assign'));
       $edit = array('aid' => $hash);
-      $this->drupalPost('admin/build/trigger/node', $edit, t('Assign'));
+      $this->drupalPost('admin/structure/trigger/node', $edit, t('Assign'));
       $this->assertRaw(t('The action you chose is already assigned to that trigger.'), t('Check to make sure an error occurs when assigning an action to a trigger twice.'));
 
       // Test 3: The action should be able to be unassigned from a trigger.
-      $this->drupalPost('admin/build/trigger/unassign/node/presave/' . $hash, array(), t('Unassign'));
+      $this->drupalPost('admin/structure/trigger/unassign/node/presave/' . $hash, array(), t('Unassign'));
       $this->assertRaw(t('Action %action has been unassigned.', array('%action' => ucfirst($info['name']))), t('Check to make sure the @action action can be unassigned from the trigger.', array('@action' => $info['name'])));
       $assigned = db_result(db_query("SELECT COUNT(*) FROM {trigger_assignments} WHERE aid IN ('" . implode("','", $content_actions) . "')"));
       $this->assertFalse($assigned, t('Check to make sure unassign worked properly at the database level.'));
@@ -140,7 +140,7 @@ class TriggerCronTestCase extends DrupalWebTestCase {
  
     // Assign a non-configurable action to the cron run trigger.
     $edit = array('aid' => md5('trigger_test_system_cron_action'));
-    $this->drupalPost('admin/build/trigger/cron', $edit, t('Assign'));
+    $this->drupalPost('admin/structure/trigger/cron', $edit, t('Assign'));
  
     // Assign a configurable action to the cron trigger.
     $hash = md5('trigger_test_system_cron_conf_action');
@@ -151,7 +151,7 @@ class TriggerCronTestCase extends DrupalWebTestCase {
     );
     $this->drupalPost('admin/settings/actions/configure/' . $hash, $edit, t('Save'));
     $edit = array('aid' => md5('1'));
-    $this->drupalPost('admin/build/trigger/cron', $edit, t('Assign'));
+    $this->drupalPost('admin/structure/trigger/cron', $edit, t('Assign'));
  
     // Add a second configurable action to the cron trigger.
     $action_description = $this->randomName();
@@ -161,7 +161,7 @@ class TriggerCronTestCase extends DrupalWebTestCase {
     );
     $this->drupalPost('admin/settings/actions/configure/' . $hash, $edit, t('Save'));
     $edit = array('aid' => md5('2'));
-    $this->drupalPost('admin/build/trigger/cron', $edit, t('Assign'));
+    $this->drupalPost('admin/structure/trigger/cron', $edit, t('Assign'));
  
     // Force a cron run.
     drupal_cron_run();

@@ -394,13 +394,13 @@ class SearchBlockTestCase extends DrupalWebTestCase {
 
   function testSearchFormBlock() {
     // Set block title to confirm that the interface is availble.
-    $this->drupalPost('admin/build/block/configure/search/form', array('title' => $this->randomName(8)), t('Save block'));
+    $this->drupalPost('admin/structure/block/configure/search/form', array('title' => $this->randomName(8)), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
 
     // Set the block to a region to confirm block is availble.
     $edit = array();
     $edit['search_form[region]'] = 'footer';
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
   }
 
@@ -411,7 +411,7 @@ class SearchBlockTestCase extends DrupalWebTestCase {
     // Enable the block, and place it in the 'content' region so that it isn't
     // hidden on 404 pages.
     $edit = array('search_form[region]' => 'content');
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Test a normal search via the block form, from the front page.
     $terms = array('search_block_form' => 'test');
@@ -424,7 +424,7 @@ class SearchBlockTestCase extends DrupalWebTestCase {
 
     // Test a search from the block when it doesn't appear on the search page.
     $edit = array('pages' => 'search');
-    $this->drupalPost('admin/build/block/configure/search/form', $edit, t('Save block'));
+    $this->drupalPost('admin/structure/block/configure/search/form', $edit, t('Save block'));
     $this->drupalPost('node', $terms, t('Search'));
     $this->assertText('Your search yielded no results');
   }

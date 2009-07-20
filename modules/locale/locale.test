@@ -1057,7 +1057,7 @@ class LanguageSwitchingFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       'locale_language-switcher[region]' => 'left',
     );
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Add language.
     $edit = array(
@@ -1364,12 +1364,12 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/international/language/configure', $edit, t('Save settings'));
 
     // Set page content type to use multilingual support.
-    $this->drupalGet('admin/build/node-type/page');
+    $this->drupalGet('admin/structure/node-type/page');
     $this->assertText(t('Multilingual support'), t('Multilingual support fieldset present on content type configuration form.'));
     $edit = array(
       'language_content_type' => 1,
     );
-    $this->drupalPost('admin/build/node-type/page', $edit, t('Save content type'));
+    $this->drupalPost('admin/structure/node-type/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Page')), t('Page content type has been updated.'));
     $this->drupalLogout();
 

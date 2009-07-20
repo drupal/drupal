@@ -3145,7 +3145,7 @@ function drupal_get_library($module, $name) {
  * @endcode
  *
  * In a more complex case where there are several groups in one column (such as
- * the block regions on the admin/build/block page), a separate subgroup class
+ * the block regions on the admin/structure/block page), a separate subgroup class
  * must also be added to differentiate the groups.
  * @code
  * $form['my_elements'][$region][$delta]['weight']['#attributes']['class'] = "my-elements-weight my-elements-weight-" . $region;

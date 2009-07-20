@@ -19,7 +19,7 @@ function contact_help($path, $arg) {
       $output .= '<p>' . t('Customize the <a href="@contact">contact page</a> with additional information (like physical location, mailing address, and telephone number) using the <a href="@contact-settings">contact form settings page</a>. The <a href="@contact-settings">settings page</a> also provides configuration options for the maximum number of contact form submissions a user may perform per hour, and the default status of users\' personal contact forms.', array('@contact-settings' => url('admin/settings/contact'), '@contact' => url('contact'))) . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@contact">Contact module</a>.', array('@contact' => url('http://drupal.org/handbook/modules/contact/', array('absolute' => TRUE)))) . '</p>';
       return $output;
-    case 'admin/build/contact':
+    case 'admin/structure/contact':
       $output = '<p>' . t('This page lets you set up <a href="@form">your site-wide contact form</a>. To do so, add one or more categories. You can associate different recipients with each category to route e-mails to different people. For example, you can route website feedback to the webmaster and direct product information requests to the sales department. On the <a href="@settings">settings page</a>, you can customize the information shown above the contact form. This can be useful to provide additional contact information such as your postal address and telephone number.', array('@settings' => url('admin/settings/contact'), '@form' => url('contact'))) . '</p>';
       if (!module_exists('menu')) {
         $menu_note = t('The menu item can be customized and configured only once the menu module has been <a href="@modules-page">enabled</a>.', array('@modules-page' => url('admin/settings/modules')));
@@ -27,7 +27,7 @@ function contact_help($path, $arg) {
       else {
         $menu_note = '';
       }
-      $output .= '<p>' . t('The contact module also adds a <a href="@menu-settings">menu item</a> (disabled by default) to the navigation block.', array('@menu-settings' => url('admin/build/menu'))) . ' ' . $menu_note . '</p>';
+      $output .= '<p>' . t('The contact module also adds a <a href="@menu-settings">menu item</a> (disabled by default) to the navigation block.', array('@menu-settings' => url('admin/structure/menu'))) . ' ' . $menu_note . '</p>';
       return $output;
   }
 }
@@ -52,18 +52,18 @@ function contact_permission() {
  * Implement hook_menu().
  */
 function contact_menu() {
-  $items['admin/build/contact'] = array(
+  $items['admin/structure/contact'] = array(
     'title' => 'Contact form',
     'description' => 'Create a system contact form and set up categories for the form to use.',
     'page callback' => 'contact_admin_categories',
     'access arguments' => array('administer site-wide contact form'),
   );
-  $items['admin/build/contact/list'] = array(
+  $items['admin/structure/contact/list'] = array(
     'title' => 'List',
     'page callback' => 'contact_admin_categories',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/build/contact/add'] = array(
+  $items['admin/structure/contact/add'] = array(
     'title' => 'Add category',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_admin_edit', 3),
@@ -71,14 +71,14 @@ function contact_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
   );
-  $items['admin/build/contact/edit/%contact'] = array(
+  $items['admin/structure/contact/edit/%contact'] = array(
     'title' => 'Edit contact category',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_admin_edit', 3, 4),
     'access arguments' => array('administer site-wide contact form'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/build/contact/delete/%contact'] = array(
+  $items['admin/structure/contact/delete/%contact'] = array(
     'title' => 'Delete contact',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_admin_delete', 4),

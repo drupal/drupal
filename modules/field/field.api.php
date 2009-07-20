@@ -77,8 +77,8 @@ function hook_fieldable_info() {
     $return['taxonomy_term']['bundles'][$vocabulary->machine_name] = array(
       'label' => $vocabulary->name,
       'admin' => array(
-        'path' => 'admin/build/taxonomy/%taxonomy_vocabulary',
-        'real path' => 'admin/build/taxonomy/' . $vocabulary->vid,
+        'path' => 'admin/structure/taxonomy/%taxonomy_vocabulary',
+        'real path' => 'admin/structure/taxonomy/' . $vocabulary->vid,
         'bundle argument' => 3,
         'access arguments' => array('administer taxonomy'),
       ),

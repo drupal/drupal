@@ -64,7 +64,7 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
    */
   function testVocabularyInterface() {
     // Visit the main taxonomy administration page.
-    $this->drupalGet('admin/build/taxonomy');
+    $this->drupalGet('admin/structure/taxonomy');
 
     // Create a new vocabulary.
     $this->clickLink(t('Add vocabulary'));
@@ -82,23 +82,23 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
     $this->assertRaw(t('Created new vocabulary %name.', array('%name' => $edit['name'])), t('Vocabulary created successfully'));
 
     // Edit the vocabulary.
-    $this->drupalGet('admin/build/taxonomy');
+    $this->drupalGet('admin/structure/taxonomy');
     $this->assertText($edit['name'], t('Vocabulary found in the vocabulary overview listing.'));
     $this->clickLink(t('edit vocabulary'));
     $edit = array();
     $edit['name'] = $this->randomName();
     $this->drupalPost(NULL, $edit, t('Save'));
-    $this->drupalGet('admin/build/taxonomy');
+    $this->drupalGet('admin/structure/taxonomy');
     $this->assertText($edit['name'], t('Vocabulary found in the vocabulary overview listing.'));
 
     // Try to submit a vocabulary with a duplicate machine name.
     $edit['machine_name'] = $machine_name;
-    $this->drupalPost('admin/build/taxonomy/add', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/add', $edit, t('Save'));
     $this->assertText(t('This machine-readable name is already in use by another vocabulary and must be unique.'), t('Duplicate machine name validation was successful'));
 
     // Try to submit an invalid machine name.
     $edit['machine_name'] = '!&^%';
-    $this->drupalPost('admin/build/taxonomy/add', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/add', $edit, t('Save'));
     $this->assertText(t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
   }
 
@@ -119,7 +119,7 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
       $edit[$key . '[weight]'] = $vocabulary->weight;
     }
     // Saving the new weights via the interface.
-    $this->drupalPost('admin/build/taxonomy/', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/', $edit, t('Save'));
 
     // Load the vocabularies from the database.
     $new_vocabularies = taxonomy_get_vocabularies();
@@ -141,7 +141,7 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
     }
     // Confirm that no vocabularies are found in the database.
     $this->assertFalse(taxonomy_get_vocabularies(), t('No vocabularies found in the database'));
-    $this->drupalGet('admin/build/taxonomy');
+    $this->drupalGet('admin/structure/taxonomy');
     // Check the default message for no vocabularies.
     $this->assertText(t('No vocabularies available.'), t('No vocabularies were found.'));
   }
@@ -156,7 +156,7 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
       'machine_name' => drupal_strtolower($this->randomName()),
       'nodes[article]' => 'article',
     );
-    $this->drupalPost('admin/build/taxonomy/add', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/add', $edit, t('Save'));
     $this->assertText(t('Created new vocabulary'), t('New vocabulary was created.'));
 
     // Check the created vocabulary.
@@ -168,7 +168,7 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
 
     // Delete the vocabulary.
     $edit = array();
-    $this->drupalPost('admin/build/taxonomy/' . $vid, $edit, t('Delete'));
+    $this->drupalPost('admin/structure/taxonomy/' . $vid, $edit, t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the vocabulary %name?', array('%name' => $vocabulary->name)), t('[confirm deletion] Asks for confirmation.'));
     $this->assertText(t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'), t('[confirm deletion] Inform that all terms will be deleted.'));
 
@@ -540,13 +540,13 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $edit['parent[]'] = 0;
 
     // Create the term to edit.
-    $this->drupalPost('admin/build/taxonomy/' . $this->vocabulary->vid . '/add', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->vid . '/add', $edit, t('Save'));
 
     $term = reset(taxonomy_get_term_by_name($edit['name']));
     $this->assertNotNull($term, t('Term found in database'));
 
     // Submitting a term takes us to the add page; we need the List page.
-    $this->drupalGet('admin/build/taxonomy/' . $this->vocabulary->vid . '/list');
+    $this->drupalGet('admin/structure/taxonomy/' . $this->vocabulary->vid . '/list');
 
     // Test edit link as accessed from Taxonomy administration pages.
     // Because Simpletest creates its own database when running tests, we know
@@ -707,7 +707,7 @@ class TaxonomyHooksTestCase extends TaxonomyWebTestCase {
       'name' => $this->randomName(),
       'antonyms' => 'Long',
     );
-    $this->drupalPost('admin/build/taxonomy/' . $vocabulary->vid . '/add', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/' . $vocabulary->vid . '/add', $edit, t('Save'));
     $term = reset(taxonomy_get_term_by_name($edit['name']));
     $this->assertEqual($term->antonyms[0], $edit['antonyms'], t('Antonyms were loaded into the term object'));
 

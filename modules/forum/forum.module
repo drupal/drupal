@@ -21,14 +21,14 @@ function forum_help($path, $arg) {
       $output .= '<li>' . t('selecting <em>Disabled</em> under <em>Comment settings</em> while editing a forum topic will hide all existing comments on the thread, and prevent new ones.') . '</li></ul>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@forum">Forum module</a>.', array('@forum' => 'http://drupal.org/handbook/modules/forum/')) . '</p>';
       return $output;
-    case 'admin/build/forum':
+    case 'admin/structure/forum':
       return '<p>' . t('This page displays a list of existing forums and containers. Containers (optionally) hold forums, and forums hold forum topics (a forum topic is the initial post to a threaded discussion). To provide structure, both containers and forums may be placed inside other containers and forums.') . '</p>';
-    case 'admin/build/forum/add/container':
+    case 'admin/structure/forum/add/container':
       return '<p>' . t('By grouping related or similar forums, containers help organize forums. For example, a container named "Food" may hold two forums named "Fruit" and "Vegetables", respectively.') . '</p>';
-    case 'admin/build/forum/add/forum':
+    case 'admin/structure/forum/add/forum':
       return '<p>' . t('A forum holds related or similar forum topics (a forum topic is the initial post to a threaded discussion). For example, a forum named "Fruit" may contain forum topics titled "Apples" and "Bananas", respectively.') . '</p>';
-    case 'admin/build/forum/settings':
-      return '<p>' . t('These settings allow you to adjust the display of your forum topics. The content types available for use within a forum may be selected by editing the <em>Content types</em> on the <a href="@forum-vocabulary">forum vocabulary page</a>.', array('@forum-vocabulary' => url('admin/build/taxonomy/edit/vocabulary/' . variable_get('forum_nav_vocabulary', 0)))) . '</p>';
+    case 'admin/structure/forum/settings':
+      return '<p>' . t('These settings allow you to adjust the display of your forum topics. The content types available for use within a forum may be selected by editing the <em>Content types</em> on the <a href="@forum-vocabulary">forum vocabulary page</a>.', array('@forum-vocabulary' => url('admin/structure/taxonomy/edit/vocabulary/' . variable_get('forum_nav_vocabulary', 0)))) . '</p>';
   }
 }
 
@@ -92,56 +92,56 @@ function forum_menu() {
     'page callback' => 'forum_page',
     'access arguments' => array('access content'),
   );
-  $items['admin/build/forum'] = array(
+  $items['admin/structure/forum'] = array(
     'title' => 'Forums',
     'description' => 'Control forums and their hierarchy and change forum settings.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('forum_overview'),
     'access arguments' => array('administer forums'),
   );
-  $items['admin/build/forum/list'] = array(
+  $items['admin/structure/forum/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
-  $items['admin/build/forum/add/container'] = array(
+  $items['admin/structure/forum/add/container'] = array(
     'title' => 'Add container',
     'page callback' => 'forum_form_main',
     'page arguments' => array('container'),
     'access arguments' => array('administer forums'),
     'type' => MENU_LOCAL_TASK,
-    'parent' => 'admin/build/forum',
+    'parent' => 'admin/structure/forum',
   );
-  $items['admin/build/forum/add/forum'] = array(
+  $items['admin/structure/forum/add/forum'] = array(
     'title' => 'Add forum',
     'page callback' => 'forum_form_main',
     'page arguments' => array('forum'),
     'access arguments' => array('administer forums'),
     'type' => MENU_LOCAL_TASK,
-    'parent' => 'admin/build/forum',
+    'parent' => 'admin/structure/forum',
   );
-  $items['admin/build/forum/settings'] = array(
+  $items['admin/structure/forum/settings'] = array(
     'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('forum_admin_settings'),
     'access arguments' => array('administer forums'),
     'weight' => 5,
     'type' => MENU_LOCAL_TASK,
-    'parent' => 'admin/build/forum',
+    'parent' => 'admin/structure/forum',
   );
-  $items['admin/build/forum/edit/%forum_term'] = array(
+  $items['admin/structure/forum/edit/%forum_term'] = array(
     'page callback' => 'forum_form_main',
     'access arguments' => array('administer forums'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/build/forum/edit/container/%forum_term'] = array(
+  $items['admin/structure/forum/edit/container/%forum_term'] = array(
     'title' => 'Edit container',
     'page callback' => 'forum_form_main',
     'page arguments' => array('container', 5),
     'access arguments' => array('administer forums'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/build/forum/edit/forum/%forum_term'] = array(
+  $items['admin/structure/forum/edit/forum/%forum_term'] = array(
     'title' => 'Edit forum',
     'page callback' => 'forum_form_main',
     'page arguments' => array('forum', 5),

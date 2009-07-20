@@ -7,7 +7,7 @@
  */
 
 /**
- * Menu callback for admin/build/block.
+ * Menu callback for admin/structure/block.
  */
 function block_admin_display($theme = NULL) {
   global $custom_theme;
@@ -43,7 +43,7 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
 
   // Build the form tree.
   $form = array(
-    '#action' => arg(4) ? url('admin/build/block/list/' . $theme_key) : url('admin/build/block'),
+    '#action' => arg(4) ? url('admin/structure/block/list/' . $theme_key) : url('admin/structure/block'),
     '#tree' => TRUE,
   );
 
@@ -76,12 +76,12 @@ function block_admin_display_form(&$form_state, $blocks, $theme = NULL) {
     );
     $form[$key]['configure'] = array(
       '#markup' => l(t('configure'),
-      'admin/build/block/configure/' . $block['module'] . '/' . $block['delta']),
+      'admin/structure/block/configure/' . $block['module'] . '/' . $block['delta']),
     );
     if ($block['module'] == 'block') {
       $form[$key]['delete'] = array(
         '#markup' => l(t('delete'),
-        'admin/build/block/delete/' . $block['delta']),
+        'admin/structure/block/delete/' . $block['delta']),
       );
     }
   }
@@ -119,7 +119,7 @@ function block_admin_display_form_submit($form, &$form_state) {
 }
 
 /**
- * Helper function for sorting blocks on admin/build/block.
+ * Helper function for sorting blocks on admin/structure/block.
  *
  * Active blocks are sorted by region, then by weight.
  * Disabled blocks are sorted by name.
@@ -354,7 +354,7 @@ function block_admin_configure_submit($form, &$form_state) {
     module_invoke($form_state['values']['module'], 'block_save', $form_state['values']['delta'], $form_state['values']);
     drupal_set_message(t('The block configuration has been saved.'));
     cache_clear_all();
-    $form_state['redirect'] = 'admin/build/block';
+    $form_state['redirect'] = 'admin/structure/block';
   }
 }
 
@@ -426,7 +426,7 @@ function block_add_block_form_submit($form, &$form_state) {
 
   drupal_set_message(t('The block has been created.'));
   cache_clear_all();
-  $form_state['redirect'] = 'admin/build/block';
+  $form_state['redirect'] = 'admin/structure/block';
 }
 
 /**
@@ -437,7 +437,7 @@ function block_box_delete(&$form_state, $bid = 0) {
   $form['info'] = array('#type' => 'hidden', '#value' => $box['info'] ? $box['info'] : $box['title']);
   $form['bid'] = array('#type' => 'hidden', '#value' => $bid);
 
-  return confirm_form($form, t('Are you sure you want to delete the block %name?', array('%name' => $box['info'])), 'admin/build/block', '', t('Delete'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to delete the block %name?', array('%name' => $box['info'])), 'admin/structure/block', '', t('Delete'), t('Cancel'));
 }
 
 /**
@@ -453,7 +453,7 @@ function block_box_delete_submit($form, &$form_state) {
     ->execute();
   drupal_set_message(t('The block %name has been removed.', array('%name' => $form_state['values']['info'])));
   cache_clear_all();
-  $form_state['redirect'] = 'admin/build/block';
+  $form_state['redirect'] = 'admin/structure/block';
   return;
 }
 

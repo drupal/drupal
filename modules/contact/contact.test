@@ -207,7 +207,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $edit['recipients'] = $recipients;
     $edit['reply'] = $reply;
     $edit['selected'] = ($selected ? '1' : '0');
-    $this->drupalPost('admin/build/contact/add', $edit, t('Save'));
+    $this->drupalPost('admin/structure/contact/add', $edit, t('Save'));
   }
 
   /**
@@ -225,7 +225,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $edit['recipients'] = $recipients;
     $edit['reply'] = $reply;
     $edit['selected'] = ($selected ? '1' : '0');
-    $this->drupalPost('admin/build/contact/edit/' . $category_id, $edit, t('Save'));
+    $this->drupalPost('admin/structure/contact/edit/' . $category_id, $edit, t('Save'));
     return ($category_id);
   }
 
@@ -255,7 +255,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
     $categories = $this->getCategories();
     foreach ($categories as $category) {
       $category_name = db_query("SELECT category FROM {contact} WHERE cid = :cid", array(':cid' => $category))->fetchField();
-      $this->drupalPost('admin/build/contact/delete/' . $category, array(), t('Delete'));
+      $this->drupalPost('admin/structure/contact/delete/' . $category, array(), t('Delete'));
       $this->assertRaw(t('Category %category has been deleted.', array('%category' => $category_name)), t('Category deleted sucessfully.'));
     }
   }

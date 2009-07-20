@@ -16,7 +16,7 @@ function menu_install() {
   $descriptions = array(
     'navigation' => 'The <em>Navigation</em> menu contains links such as Recent posts (if the Tracker module is enabled). Non-administrative links are added to this menu by default by modules.',
     'user-menu' => "The <em>User menu</em> contains links related to the user's account, as well as the 'Log out' link.",
-    'management' => 'The <em>Management</em> menu contains links for content creation, site building, user management, and similar site activities.',
+    'management' => 'The <em>Management</em> menu contains links for content creation, structure, user management, and similar site activities.',
     'main-menu' => 'The <em>Main menu</em> is the default source for the Main links which are often used by themes to show the major sections of a site.',
     'secondary-menu' => 'The <em>Secondary menu</em> is the default source for the Secondary links which are often used for legal notices, contact details, and other navigation items that play a lesser role than the Main links.',
   );

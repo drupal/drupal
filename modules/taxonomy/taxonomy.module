@@ -39,8 +39,8 @@ function taxonomy_fieldable_info() {
     $return['taxonomy_term']['bundles'][$vocabulary->machine_name] = array(
       'label' => $vocabulary->name,
       'admin' => array(
-        'path' => 'admin/build/taxonomy/%taxonomy_vocabulary',
-        'real path' => 'admin/build/taxonomy/' . $vocabulary->vid,
+        'path' => 'admin/structure/taxonomy/%taxonomy_vocabulary',
+        'real path' => 'admin/structure/taxonomy/' . $vocabulary->vid,
         'bundle argument' => 3,
         'access arguments' => array('administer taxonomy'),
       ),
@@ -162,7 +162,7 @@ function taxonomy_term_path($term) {
  * Implement hook_menu().
  */
 function taxonomy_menu() {
-  $items['admin/build/taxonomy'] = array(
+  $items['admin/structure/taxonomy'] = array(
     'title' => 'Taxonomy',
     'description' => 'Manage tagging, categorization, and classification of your content.',
     'page callback' => 'drupal_get_form',
@@ -170,13 +170,13 @@ function taxonomy_menu() {
     'access arguments' => array('administer taxonomy'),
   );
 
-  $items['admin/build/taxonomy/list'] = array(
+  $items['admin/structure/taxonomy/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
 
-  $items['admin/build/taxonomy/add'] = array(
+  $items['admin/structure/taxonomy/add'] = array(
     'title' => 'Add vocabulary',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_form_vocabulary'),
@@ -223,7 +223,7 @@ function taxonomy_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['admin/build/taxonomy/%taxonomy_vocabulary'] = array(
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary'] = array(
     'title' => 'Vocabulary', // this is replaced by callback
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_form_vocabulary', 3),
@@ -233,13 +233,13 @@ function taxonomy_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['admin/build/taxonomy/%taxonomy_vocabulary/edit'] = array(
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary/edit'] = array(
     'title' => 'Edit vocabulary',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -20,
   );
 
-  $items['admin/build/taxonomy/%taxonomy_vocabulary/list'] = array(
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary/list'] = array(
     'title' => 'List terms',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_overview_terms', 3),
@@ -248,7 +248,7 @@ function taxonomy_menu() {
     'weight' => -10,
   );
 
-  $items['admin/build/taxonomy/%taxonomy_vocabulary/add'] = array(
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary/add'] = array(
     'title' => 'Add term',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_form_term', 3),
@@ -1761,11 +1761,11 @@ function taxonomy_help($path, $arg) {
       $output .= '<p>' . t('The taxonomy module supports the use of both synonyms and related terms, but does not directly use this functionality. However, optional contributed or custom modules may make full use of these advanced features.') . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@taxonomy">Taxonomy module</a>.', array('@taxonomy' => 'http://drupal.org/handbook/modules/taxonomy/')) . '</p>';
       return $output;
-    case 'admin/build/taxonomy':
+    case 'admin/structure/taxonomy':
       $output = '<p>' . t("The taxonomy module allows you to categorize your content using both tags and administrator defined terms. It is a flexible tool for classifying content with many advanced features. To begin, create a 'Vocabulary' to hold one set of terms or tags. You can create one free-tagging vocabulary for everything, or separate controlled vocabularies to define the various properties of your content, for example 'Countries' or 'Colors'.") . '</p>';
       $output .= '<p>' . t('Use the list below to configure and review the vocabularies defined on your site, or to list and manage the terms (tags) they contain. A vocabulary may (optionally) be tied to specific content types as shown in the <em>Type</em> column and, if so, will be displayed when creating or editing posts of that type. Multiple vocabularies tied to the same content type will be displayed in the order shown below. To change the order of a vocabulary, grab a drag-and-drop handle under the <em>Name</em> column and drag it to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save</em> button at the bottom of the page.') . '</p>';
       return $output;
-    case 'admin/build/taxonomy/%/list':
+    case 'admin/structure/taxonomy/%/list':
       $vocabulary = taxonomy_vocabulary_load($arg[3]);
       if ($vocabulary->tags) {
         return '<p>' . t('%capital_name is a free-tagging vocabulary. To change the name or description of a term, click the <em>edit</em> link next to the term.', array('%capital_name' => drupal_ucfirst($vocabulary->name))) . '</p>';
@@ -1778,7 +1778,7 @@ function taxonomy_help($path, $arg) {
         case 2:
           return '<p>' . t('%capital_name is a multiple hierarchy vocabulary. To change the name or description of a term, click the <em>edit</em> link next to the term. Drag and drop of multiple hierarchies is not supported, but you can re-enable drag and drop support by editing each term to include only a single parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name))) . '</p>';
       }
-    case 'admin/build/taxonomy/add':
+    case 'admin/structure/taxonomy/add':
       return '<p>' . t('Define how your vocabulary will be presented to administrators and users, and which content types to categorize with it. Tags allows users to create terms when submitting posts by typing a comma separated list. Otherwise terms are chosen from a select list and can only be created by users with the "administer taxonomy" permission.') . '</p>';
   }
 }

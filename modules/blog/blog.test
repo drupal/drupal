@@ -63,7 +63,7 @@ class BlogTestCase extends DrupalWebTestCase {
     // Enable the recent blog block.
     $edit = array();
     $edit['blog_recent[region]'] = 'right';
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertResponse(200);
 
     // Do basic tests for each user.

@@ -13,15 +13,15 @@
 function trigger_help($path, $arg) {
   $explanation = '<p>' . t('Triggers are system events, such as when new content is added or when a user logs in. Trigger module combines these triggers with actions (functional tasks), such as unpublishing content or e-mailing an administrator. The <a href="@url">Actions settings page</a> contains a list of existing actions and provides the ability to create and configure additional actions.', array('@url' => url('admin/settings/actions'))) . '</p>';
   switch ($path) {
-    case 'admin/build/trigger/comment':
+    case 'admin/structure/trigger/comment':
       return $explanation . '<p>' . t('Below you can assign actions to run when certain comment-related triggers happen. For example, you could promote a post to the front page when a comment is added.') . '</p>';
-    case 'admin/build/trigger/node':
+    case 'admin/structure/trigger/node':
       return $explanation . '<p>' . t('Below you can assign actions to run when certain content-related triggers happen. For example, you could send an e-mail to an administrator when a post is created or updated.') . '</p>';
-    case 'admin/build/trigger/cron':
+    case 'admin/structure/trigger/cron':
       return $explanation . '<p>' . t('Below you can assign actions to run during each pass of a <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status'))) . '</p>';
-    case 'admin/build/trigger/taxonomy':
+    case 'admin/structure/trigger/taxonomy':
       return $explanation . '<p>' . t('Below you can assign actions to run when certain taxonomy-related triggers happen. For example, you could send an e-mail to an administrator when a term is deleted.') . '</p>';
-    case 'admin/build/trigger/user':
+    case 'admin/structure/trigger/user':
       return $explanation . '<p>' . t("Below you can assign actions to run when certain user-related triggers happen. For example, you could send an e-mail to an administrator when a user account is deleted.") . '</p>';
     case 'admin/help#trigger':
       $output = '<p>' . t('The Trigger module provides the ability to trigger <a href="@actions">actions</a> upon system events, such as when new content is added or when a user logs in.', array('@actions' => url('admin/settings/actions'))) . '</p>';
@@ -35,7 +35,7 @@ function trigger_help($path, $arg) {
  * Implement hook_menu().
  */
 function trigger_menu() {
-  $items['admin/build/trigger'] = array(
+  $items['admin/structure/trigger'] = array(
     'title' => 'Triggers',
     'description' => 'Tell Drupal when to execute actions.',
     'page callback' => 'trigger_assign',
@@ -44,7 +44,7 @@ function trigger_menu() {
   );
   // We don't use a menu wildcard here because these are tabs,
   // not invisible items.
-  $items['admin/build/trigger/node'] = array(
+  $items['admin/structure/trigger/node'] = array(
     'title' => 'Content',
     'page callback' => 'trigger_assign',
     'page arguments' => array('node'),
@@ -52,7 +52,7 @@ function trigger_menu() {
     'access arguments' => array('node'),
     'type' => MENU_LOCAL_TASK,
   );
-  $items['admin/build/trigger/user'] = array(
+  $items['admin/structure/trigger/user'] = array(
     'title' => 'Users',
     'page callback' => 'trigger_assign',
     'page arguments' => array('user'),
@@ -60,7 +60,7 @@ function trigger_menu() {
     'access arguments' => array('user'),
     'type' => MENU_LOCAL_TASK,
   );
-  $items['admin/build/trigger/comment'] = array(
+  $items['admin/structure/trigger/comment'] = array(
     'title' => 'Comments',
     'page callback' => 'trigger_assign',
     'page arguments' => array('comment'),
@@ -68,7 +68,7 @@ function trigger_menu() {
     'access arguments' => array('comment'),
     'type' => MENU_LOCAL_TASK,
   );
-  $items['admin/build/trigger/taxonomy'] = array(
+  $items['admin/structure/trigger/taxonomy'] = array(
     'title' => 'Taxonomy',
     'page callback' => 'trigger_assign',
     'page arguments' => array('taxonomy'),
@@ -76,7 +76,7 @@ function trigger_menu() {
     'access arguments' => array('taxonomy'),
     'type' => MENU_LOCAL_TASK,
   );
-  $items['admin/build/trigger/cron'] = array(
+  $items['admin/structure/trigger/cron'] = array(
     'title' => 'Cron',
     'page callback' => 'trigger_assign',
     'page arguments' => array('cron'),
@@ -98,7 +98,7 @@ function trigger_menu() {
       ->fetchField();
     $info = unserialize($info);
     $nice_name = $info['name'];
-    $items["admin/build/trigger/$module"] = array(
+    $items["admin/structure/trigger/$module"] = array(
       'title' => $nice_name,
       'page callback' => 'trigger_assign',
       'page arguments' => array($module),
@@ -106,7 +106,7 @@ function trigger_menu() {
       'type' => MENU_LOCAL_TASK,
     );
   }
-  $items['admin/build/trigger/unassign'] = array(
+  $items['admin/structure/trigger/unassign'] = array(
     'title' => 'Unassign',
     'description' => 'Unassign an action from a trigger.',
     'page callback' => 'drupal_get_form',

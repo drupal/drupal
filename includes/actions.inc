@@ -169,7 +169,7 @@ function actions_list($reset = FALSE) {
  *
  * Compare with actions_list() which gathers actions by invoking
  * hook_action_info(). The two are synchronized by visiting
- * /admin/build/actions (when actions.module is enabled) which runs
+ * /admin/structure/actions (when actions.module is enabled) which runs
  * actions_synchronize().
  *
  * @return

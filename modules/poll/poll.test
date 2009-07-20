@@ -259,13 +259,13 @@ class PollBlockTestCase extends PollTestCase {
 
   function testRecentBlock() {
     // Set block title to confirm that the interface is available.
-    $this->drupalPost('admin/build/block/configure/poll/recent', array('title' => $this->randomName(8)), t('Save block'));
+    $this->drupalPost('admin/structure/block/configure/poll/recent', array('title' => $this->randomName(8)), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
 
     // Set the block to a region to confirm block is available.
     $edit = array();
     $edit['poll_recent[region]'] = 'footer';
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
 
     // Create a poll which should appear in recent polls block.

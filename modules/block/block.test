@@ -37,12 +37,12 @@ class BlockTestCase extends DrupalWebTestCase {
    * Test creating custom block (i.e. box), moving it to a specific region and then deleting it.
    */
   function testBox() {
-    // Add a new box by filling out the input form on the admin/build/block/add page.
+    // Add a new box by filling out the input form on the admin/structure/block/add page.
     $box = array();
     $box['info'] = $this->randomName(8);
     $box['title'] = $this->randomName(8);
     $box['body'] = $this->randomName(32);
-    $this->drupalPost('admin/build/block/add', $box, t('Save block'));
+    $this->drupalPost('admin/structure/block/add', $box, t('Save block'));
 
     // Confirm that the box has been created, and then query the created bid.
     $this->assertText(t('The block has been created.'), t('Box successfully created.'));
@@ -60,7 +60,7 @@ class BlockTestCase extends DrupalWebTestCase {
 
     // Delete the created box & verify that it's been deleted and no longer appearing on the page.
     $this->clickLink(t('delete'));
-    $this->drupalPost('admin/build/block/delete/' . $bid, array(), t('Delete'));
+    $this->drupalPost('admin/structure/block/delete/' . $bid, array(), t('Delete'));
     $this->assertRaw(t('The block %title has been removed.', array('%title' => $box['info'])), t('Box successfully deleted.'));
     $this->assertNoText(t($box['title']), t('Box no longer appears on page.'));
   }
@@ -69,19 +69,19 @@ class BlockTestCase extends DrupalWebTestCase {
    * Test creating custom block (i.e. box) using Full HTML.
    */
   function testBoxFormat() {
-    // Add a new box by filling out the input form on the admin/build/block/add page.
+    // Add a new box by filling out the input form on the admin/structure/block/add page.
     $box = array();
     $box['info'] = $this->randomName(8);
     $box['title'] = $this->randomName(8);
     $box['body'] = '<h1>Full HTML</h1>';
     $box['body_format'] = 2;
-    $this->drupalPost('admin/build/block/add', $box, t('Save block'));
+    $this->drupalPost('admin/structure/block/add', $box, t('Save block'));
 
     // Set the created box to a specific region.
     $bid = db_query("SELECT bid FROM {box} WHERE info = :info", array(':info' => $box['info']))->fetchField();
     $edit = array();
     $edit['block_' . $bid . '[region]'] = 'left';
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the box is being displayed using configured text format.
     $this->assertRaw('<h1>Full HTML</h1>', t('Box successfully being displayed using Full HTML.'));
@@ -90,9 +90,9 @@ class BlockTestCase extends DrupalWebTestCase {
     // but can still submit the form without errors.
     $block_admin = $this->drupalCreateUser(array('administer blocks'));
     $this->drupalLogin($block_admin);
-    $this->drupalGet('admin/build/block/configure/block/' . $bid);
+    $this->drupalGet('admin/structure/block/configure/block/' . $bid);
     $this->assertNoText(t('Block body'));
-    $this->drupalPost('admin/build/block/configure/block/' . $bid, array(), t('Save block'));
+    $this->drupalPost('admin/structure/block/configure/block/' . $bid, array(), t('Save block'));
     $this->assertNoText(t('Please ensure that each block description is unique.'));
 
     // Confirm that the box is still being displayed using configured text format.
@@ -113,7 +113,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['pages'] = 'user*';
     $edit['roles[2]'] = TRUE;
-    $this->drupalPost('admin/build/block/configure/' . $block['module'] . '/' . $block['delta'], $edit, t('Save block'));
+    $this->drupalPost('admin/structure/block/configure/' . $block['module'] . '/' . $block['delta'], $edit, t('Save block'));
 
     // Move block to the left sidebar.
     $this->moveBlockToRegion($block, $this->regions[1]);
@@ -141,7 +141,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $block['title'] = $this->randomName(8);
 
     // Set block title to confirm that interface works and override any custom titles.
-    $this->drupalPost('admin/build/block/configure/' . $block['module'] . '/' . $block['delta'], array('title' => $block['title']), t('Save block'));
+    $this->drupalPost('admin/structure/block/configure/' . $block['module'] . '/' . $block['delta'], array('title' => $block['title']), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block title set.'));
     $bid = db_query("SELECT bid FROM {block} WHERE module = :module AND delta = :delta", array(
       ':module' => $block['module'],
@@ -159,7 +159,7 @@ class BlockTestCase extends DrupalWebTestCase {
     // Set the block to the disabled region.
     $edit = array();
     $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = '-1';
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the block was moved to the proper region.
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to disabled region.'));
@@ -172,10 +172,10 @@ class BlockTestCase extends DrupalWebTestCase {
     // For convenience of developers, put the navigation block back.
     $edit = array();
     $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = 'left';
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to left region.'));
 
-    $this->drupalPost('admin/build/block/configure/' . $block['module'] . '/' . $block['delta'], array('title' => 'Navigation'), t('Save block'));
+    $this->drupalPost('admin/structure/block/configure/' . $block['module'] . '/' . $block['delta'], array('title' => 'Navigation'), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block title set.'));
   }
 
@@ -188,7 +188,7 @@ class BlockTestCase extends DrupalWebTestCase {
     // Set the created block to a specific region.
     $edit = array();
     $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = $region['name'];
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the block was moved to the proper region.
     $this->assertText(t('The block settings have been updated.'), t('Block successfully moved to %region_name region.', array( '%region_name' => $region['name'])));
@@ -217,8 +217,8 @@ class NonDefaultBlockAdmin extends DrupalWebTestCase {
   function testNonDefaultBlockAdmin() {
     $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer site configuration'));
     $this->drupalLogin($admin_user);
-    $this->drupalPost('admin/build/themes', array('status[stark]' => 1), t('Save configuration'));
-    $this->drupalGet('admin/build/block/list/stark');
+    $this->drupalPost('admin/structure/themes', array('status[stark]' => 1), t('Save configuration'));
+    $this->drupalGet('admin/structure/block/list/stark');
     $this->assertRaw('stark/layout.css', t('Stark CSS found'));
   }
 }
@@ -258,7 +258,7 @@ class NewDefaultThemeBlocks extends DrupalWebTestCase {
 
     // Turn on the Stark theme and ensure that it contains all of the blocks
     // that Garland did.
-    $this->drupalPost('admin/build/themes', array('theme_default' => 'stark'), t('Save configuration'));
+    $this->drupalPost('admin/structure/themes', array('theme_default' => 'stark'), t('Save configuration'));
     $result = db_query("SELECT * FROM {block} WHERE theme='stark'");
     foreach ($result as $block) {
       unset($block->theme, $block->bid);
@@ -288,13 +288,13 @@ class BlockAdminThemeTestCase extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     // Ensure that access to block admin page is denied when theme is disabled.
-    $this->drupalGet('admin/build/block/list/stark');
+    $this->drupalGet('admin/structure/block/list/stark');
     $this->assertResponse(403, t('The block admin page for a disabled theme can not be accessed'));
 
     // Enable admin theme and confirm that tab is accessible.
     $edit['admin_theme'] = 'stark';
-    $this->drupalPost('admin/build/themes', $edit, t('Save configuration'));
-    $this->drupalGet('admin/build/block/list/stark');
+    $this->drupalPost('admin/structure/themes', $edit, t('Save configuration'));
+    $this->drupalGet('admin/structure/block/list/stark');
     $this->assertResponse(200, t('The block admin page for the admin theme can be accessed'));
   }
 }

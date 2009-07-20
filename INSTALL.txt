@@ -262,8 +262,8 @@ few active modules and minimal user access rights.
 Use your administration panel to enable and configure services. For example:
 
 General Settings       Administer > Site configuration > Site information
-Enable Modules         Administer > Site building > Modules
-Configure Themes       Administer > Site building > Themes
+Enable Modules         Administer > Structure > Modules
+Configure Themes       Administer > Structure > Themes
 Set User Permissions   Administer > User management > Permissions
 
 For more information on configuration options, read the instructions which

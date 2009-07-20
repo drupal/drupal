@@ -36,13 +36,13 @@ function node_help($path, $arg) {
   switch ($path) {
     case 'admin/help#node':
       $output = '<p>' . t('The node module manages content on your site, and stores all posts (regardless of type) as a "node" . In addition to basic publishing settings, including whether the post has been published, promoted to the site front page, or should remain present (or sticky) at the top of lists, the node module also records basic information about the author of a post. Optional revision control over edits is available. For additional functionality, the node module is often extended by other modules.') . '</p>';
-      $output .= '<p>' . t('Though each post on your site is a node, each post is also of a particular <a href="@content-type">content type</a>. <a href="@content-type">Content types</a> are used to define the characteristics of a post, including the title and description of the fields displayed on its add and edit pages. Each content type may have different default settings for <em>Publishing options</em> and other workflow controls. By default, the two content types in a standard Drupal installation are <em>Page</em> and <em>Story</em>. Use the <a href="@content-type">content types page</a> to add new or edit existing content types. Additional content types also become available as you enable additional core, contributed and custom modules.', array('@content-type' => url('admin/build/types'))) . '</p>';
+      $output .= '<p>' . t('Though each post on your site is a node, each post is also of a particular <a href="@content-type">content type</a>. <a href="@content-type">Content types</a> are used to define the characteristics of a post, including the title and description of the fields displayed on its add and edit pages. Each content type may have different default settings for <em>Publishing options</em> and other workflow controls. By default, the two content types in a standard Drupal installation are <em>Page</em> and <em>Story</em>. Use the <a href="@content-type">content types page</a> to add new or edit existing content types. Additional content types also become available as you enable additional core, contributed and custom modules.', array('@content-type' => url('admin/structure/types'))) . '</p>';
       $output .= '<p>' . t('The administrative <a href="@content">content page</a> allows you to review and manage your site content. The node module makes a number of permissions available for each content type, which may be set by role on the <a href="@permissions">permissions page</a>.', array('@content' => url('admin/content/node'), '@permissions' => url('admin/user/permissions'))) . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@node">Node module</a>.', array('@node' => 'http://drupal.org/handbook/modules/node/')) . '</p>';
       return $output;
     case 'admin/content/node':
       return ' '; // Return a non-null value so that the 'more help' link is shown.
-    case 'admin/build/types/add':
+    case 'admin/structure/types/add':
       return '<p>' . t('To create a new content type, enter the human-readable name, the machine-readable name, and all other relevant fields that are on this page. Once created, users of your site will be able to create posts that are instances of this content type.') . '</p>';
     case 'node/%/revisions':
       return '<p>' . t('The revisions let you track differences between multiple versions of a post.') . '</p>';
@@ -141,7 +141,7 @@ function node_fieldable_info() {
     $return['node']['bundles'][$type] = array(
       'label' => $name,
       'admin' => array(
-        'path' => 'admin/build/node-type/' . str_replace('_', '-', $type),
+        'path' => 'admin/structure/node-type/' . str_replace('_', '-', $type),
         'access arguments' => array('administer content types'),
       ),
     );
@@ -1687,18 +1687,18 @@ function node_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['admin/build/types'] = array(
+  $items['admin/structure/types'] = array(
     'title' => 'Content types',
     'description' => 'Manage posts by content type, including default status, front page promotion, comment settings, etc.',
     'page callback' => 'node_overview_types',
     'access arguments' => array('administer content types'),
   );
-  $items['admin/build/types/list'] = array(
+  $items['admin/structure/types/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
-  $items['admin/build/types/add'] = array(
+  $items['admin/structure/types/add'] = array(
     'title' => 'Add content type',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('node_type_form'),
@@ -1737,18 +1737,18 @@ function node_menu() {
       'access arguments' => array('create', $type->type),
       'description' => $type->description,
     );
-    $items['admin/build/node-type/' . $type_url_str] = array(
+    $items['admin/structure/node-type/' . $type_url_str] = array(
       'title' => $type->name,
       'page callback' => 'drupal_get_form',
       'page arguments' => array('node_type_form', $type),
       'access arguments' => array('administer content types'),
       'type' => MENU_CALLBACK,
     );
-    $items['admin/build/node-type/' . $type_url_str . '/edit'] = array(
+    $items['admin/structure/node-type/' . $type_url_str . '/edit'] = array(
       'title' => 'Edit',
       'type' => MENU_DEFAULT_LOCAL_TASK,
     );
-    $items['admin/build/node-type/' . $type_url_str . '/delete'] = array(
+    $items['admin/structure/node-type/' . $type_url_str . '/delete'] = array(
       'title' => 'Delete',
       'page arguments' => array('node_type_delete_confirm', $type),
       'access arguments' => array('administer content types'),

@@ -214,13 +214,13 @@ class BookBlockTestCase extends DrupalWebTestCase {
 
   function testBookNavigationBlock() {
     // Set block title to confirm that the interface is availble.
-    $this->drupalPost('admin/build/block/configure/book/navigation', array('title' => $this->randomName(8)), t('Save block'));
+    $this->drupalPost('admin/structure/block/configure/book/navigation', array('title' => $this->randomName(8)), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
 
     // Set the block to a region to confirm block is availble.
     $edit = array();
     $edit['book_navigation[region]'] = 'footer';
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
   }
 }

@@ -653,7 +653,7 @@ class CommentBlockFunctionalTest extends CommentHelperCase {
     $edit = array(
       'comment_recent[region]' => 'left',
     );
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block saved to left region.'));
 
     // Set block title and variables.
@@ -661,7 +661,7 @@ class CommentBlockFunctionalTest extends CommentHelperCase {
       'title' => $this->randomName(),
       'comment_block_count' => 2,
     );
-    $this->drupalPost('admin/build/block/configure/comment/recent', $block, t('Save block'));
+    $this->drupalPost('admin/structure/block/configure/comment/recent', $block, t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block saved.'));
 
     // Add some test comments, one without a subject.
@@ -690,7 +690,7 @@ class CommentBlockFunctionalTest extends CommentHelperCase {
     $block = array(
       'comment_block_count' => 10,
     );
-    $this->drupalPost('admin/build/block/configure/comment/recent', $block, t('Save block'));
+    $this->drupalPost('admin/structure/block/configure/comment/recent', $block, t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block saved.'));
 
     // Post an additional comment.

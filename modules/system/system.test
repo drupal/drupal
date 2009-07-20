@@ -114,7 +114,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     $edit = array();
     $edit['modules[Core][aggregator][enable]'] = 'aggregator';
     $edit['modules[Core][forum][enable]'] = 'forum';
-    $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
 
     // Check that hook_modules_installed and hook_modules_enabled hooks were invoked and check tables.
@@ -127,7 +127,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     // Disable aggregator, check tables, uninstall aggregator, check tables.
     $edit = array();
     $edit['modules[Core][aggregator][enable]'] = FALSE;
-    $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
 
     // Check that hook_modules_disabled hook was invoked and check tables.
@@ -139,7 +139,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     // Uninstall the module.
     $edit = array();
     $edit['uninstall[aggregator]'] = 'aggregator';
-    $this->drupalPost('admin/build/modules/uninstall', $edit, t('Uninstall'));
+    $this->drupalPost('admin/structure/modules/uninstall', $edit, t('Uninstall'));
 
     $this->drupalPost(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), t('Modules status has been updated.'));
@@ -153,7 +153,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     // Reinstall (and enable) aggregator module.
     $edit = array();
     $edit['modules[Core][aggregator][enable]'] = 'aggregator';
-    $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
   }
 }
@@ -177,7 +177,7 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     // Attempt to enable content translation without locale enabled.
     $edit = array();
     $edit['modules[Core][translation][enable]'] = 'translation';
-    $this->drupalPost('admin/build/modules', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/modules', $edit, t('Save configuration'));
     $this->assertText(t('Some required modules must be enabled'), t('Dependecy required.'));
 
     $this->assertModules(array('translation', 'locale'), FALSE);
@@ -214,7 +214,7 @@ class ModuleRequiredTestCase extends ModuleTestCase {
    */
   function testDisableRequired() {
     $required_modules = drupal_required_modules();
-    $this->drupalGet('admin/build/modules');
+    $this->drupalGet('admin/structure/modules');
     foreach ($required_modules as $module) {
       // Check to make sure the checkbox for required module is not found.
       $this->assertNoFieldByName('modules[Core][' . $module . '][enable]');
@@ -410,7 +410,7 @@ class AdminOverviewTestCase extends DrupalWebTestCase {
     $permissions = array();
     $permissions[] = 'access administration pages';
     $permissions[] = 'administer nodes'; // Content management, Comment.
-    $permissions[] = 'administer blocks'; // Site building, Block.
+    $permissions[] = 'administer blocks'; // Structure, Block.
     $permissions[] = 'administer filters'; // Site configuration, Filter.
     $permissions[] = 'administer users'; // User management, User.
     $permissions[] = 'access site reports'; // Reports, Database logging.
@@ -418,7 +418,7 @@ class AdminOverviewTestCase extends DrupalWebTestCase {
     $this->drupalLogin($admin_user2);
 
     $this->drupalGet('admin');
-    $this->checkOverview(array(t('Content management'), t('User management'), t('Reports'), t('Site building'), t('Site configuration')));
+    $this->checkOverview(array(t('Content management'), t('User management'), t('Reports'), t('Structure'), t('Site configuration')));
 
     $this->drupalGet('admin/by-module');
     $this->checkOverview(array(t('Node'), t('Block'), t('Filter'), t('User'), t('Database logging')));
@@ -457,7 +457,7 @@ class AdminOverviewTestCase extends DrupalWebTestCase {
 
     // Make sure menu items without children are hidden.
     $this->assertNoLink(t('Site configuration'));
-    $this->assertNoLink(t('Site building'));
+    $this->assertNoLink(t('Structure'));
     $this->assertNoLink(t('User management'));
     $this->assertNoLink(t('Reports'));
   }
@@ -796,13 +796,13 @@ class SystemBlockTestCase extends DrupalWebTestCase {
    */
   function testPoweredByBlock() {
     // Set block title and some settings to confirm that the interface is availble.
-    $this->drupalPost('admin/build/block/configure/system/powered-by', array('title' => $this->randomName(8), 'color' => 'powered-black', 'size' => '135x42'), t('Save block'));
+    $this->drupalPost('admin/structure/block/configure/system/powered-by', array('title' => $this->randomName(8), 'color' => 'powered-black', 'size' => '135x42'), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
 
     // Set the powered-by block to the footer region.
     $edit = array();
     $edit['system_powered-by[region]'] = 'footer';
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
 
     // Confirm that the block is being displayed.
@@ -811,7 +811,7 @@ class SystemBlockTestCase extends DrupalWebTestCase {
     // Set the block to the disabled region.
     $edit = array();
     $edit['system_powered-by[region]'] = '-1';
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the block is hidden.
     $this->assertNoRaw('id="block-system-powered-by"', t('Block no longer appears on page.'));
@@ -819,8 +819,8 @@ class SystemBlockTestCase extends DrupalWebTestCase {
     // For convenience of developers, set the block to it's default settings.
     $edit = array();
     $edit['system_powered-by[region]'] = 'footer';
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
-    $this->drupalPost('admin/build/block/configure/system/powered-by', array('title' => '', 'color' => 'powered-blue', 'size' => '80x15'), t('Save block'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block/configure/system/powered-by', array('title' => '', 'color' => 'powered-blue', 'size' => '80x15'), t('Save block'));
   }
 
 }
@@ -934,7 +934,7 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
       'admin_theme' => 'garland',
       'node_admin_theme' => TRUE,
     );
-    $this->drupalPost('admin/build/themes', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/themes', $edit, t('Save configuration'));
 
     $this->drupalGet('admin');
     $this->assertRaw('themes/garland', t('Administration theme used on an administration page.'));
@@ -952,7 +952,7 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       'node_admin_theme' => FALSE,
     );
-    $this->drupalPost('admin/build/themes', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/themes', $edit, t('Save configuration'));
 
     $this->drupalGet('admin');
     $this->assertRaw('themes/garland', t('Administration theme used on an administration page.'));
@@ -966,7 +966,7 @@ class SystemThemeFunctionalTest extends DrupalWebTestCase {
       'admin_theme' => '0',
       'node_admin_theme' => FALSE,
     );
-    $this->drupalPost('admin/build/themes', $edit, t('Save configuration'));
+    $this->drupalPost('admin/structure/themes', $edit, t('Save configuration'));
 
     $this->drupalGet('admin');
     $this->assertRaw('themes/garland', t('Site default theme used on administration page.'));

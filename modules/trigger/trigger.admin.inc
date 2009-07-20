@@ -18,7 +18,7 @@ function trigger_assign($type = NULL) {
   // If no type is specified we default to node actions, since they
   // are the most common.
   if (!isset($type)) {
-    drupal_goto('admin/build/trigger/node');
+    drupal_goto('admin/structure/trigger/node');
   }
 
   $build = array();
@@ -46,7 +46,7 @@ function trigger_assign($type = NULL) {
  */
 function trigger_unassign($form_state, $hook = NULL, $op = NULL, $aid = NULL) {
   if (!($hook && $op && $aid)) {
-    drupal_goto('admin/build/trigger/assign');
+    drupal_goto('admin/structure/trigger/assign');
   }
 
   $form['hook'] = array(
@@ -65,7 +65,7 @@ function trigger_unassign($form_state, $hook = NULL, $op = NULL, $aid = NULL) {
   $action = actions_function_lookup($aid);
   $actions = actions_get_all_actions();
 
-  $destination = 'admin/build/trigger/' . ($hook == 'node' ? 'node' : $hook);
+  $destination = 'admin/structure/trigger/' . ($hook == 'node' ? 'node' : $hook);
 
   return confirm_form($form,
     t('Are you sure you want to unassign the action %title?', array('%title' => $actions[$action]['description'])),
@@ -88,10 +88,10 @@ function trigger_unassign_submit($form, &$form_state) {
     watchdog('actions', 'Action %action has been unassigned.',  array('%action' => check_plain($actions[$aid]['description'])));
     drupal_set_message(t('Action %action has been unassigned.', array('%action' => $actions[$aid]['description'])));
     $hook = $form_values['hook'] == 'node' ? 'node' : $form_values['hook'];
-    $form_state['redirect'] = 'admin/build/trigger/' . $hook;
+    $form_state['redirect'] = 'admin/structure/trigger/' . $hook;
   }
   else {
-    drupal_goto('admin/build/trigger');
+    drupal_goto('admin/structure/trigger');
   }
 }
 
@@ -152,7 +152,7 @@ function trigger_assign_form($form_state, $hook, $op, $description) {
   foreach ($actions as $aid => $description) {
     $form[$op]['assigned']['#value'][$aid] = array(
       'description' => $description,
-      'link' => l(t('unassign'), "admin/build/trigger/unassign/$hook/$op/" . md5($aid))
+      'link' => l(t('unassign'), "admin/structure/trigger/unassign/$hook/$op/" . md5($aid))
     );
   }
 

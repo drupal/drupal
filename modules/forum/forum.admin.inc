@@ -94,7 +94,7 @@ function forum_form_submit($form, &$form_state) {
       drupal_set_message(t('The @type %term has been updated.', array('%term' => $form_state['values']['name'], '@type' => $type)));
       break;
   }
-  $form_state['redirect'] = 'admin/build/forum';
+  $form_state['redirect'] = 'admin/structure/forum';
   return;
 }
 
@@ -166,7 +166,7 @@ function forum_confirm_delete(&$form_state, $tid) {
   $form['tid'] = array('#type' => 'value', '#value' => $tid);
   $form['name'] = array('#type' => 'value', '#value' => $term->name);
 
-  return confirm_form($form, t('Are you sure you want to delete the forum %name?', array('%name' => $term->name)), 'admin/build/forum', t('Deleting a forum or container will also delete its sub-forums, if any. To delete posts in this forum, visit <a href="@content">content administration</a> first. This action cannot be undone.', array('@content' => url('admin/content/node'))), t('Delete'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to delete the forum %name?', array('%name' => $term->name)), 'admin/structure/forum', t('Deleting a forum or container will also delete its sub-forums, if any. To delete posts in this forum, visit <a href="@content">content administration</a> first. This action cannot be undone.', array('@content' => url('admin/content/node'))), t('Delete'), t('Cancel'));
 }
 
 /**
@@ -177,7 +177,7 @@ function forum_confirm_delete_submit($form, &$form_state) {
   drupal_set_message(t('The forum %term and all sub-forums have been deleted.', array('%term' => $form_state['values']['name'])));
   watchdog('content', 'forum: deleted %term and all its sub-forums.', array('%term' => $form_state['values']['name']));
 
-  $form_state['redirect'] = 'admin/build/forum';
+  $form_state['redirect'] = 'admin/structure/forum';
   return;
 }
 
@@ -227,10 +227,10 @@ function forum_overview(&$form_state) {
       $term = $form[$key]['#term'];
       $form[$key]['view']['#markup'] = l($term['name'], 'forum/' . $term['tid']);
       if (in_array($form[$key]['#term']['tid'], variable_get('forum_containers', array()))) {
-        $form[$key]['edit']['#markup'] = l(t('edit container'), 'admin/build/forum/edit/container/' . $term['tid']);
+        $form[$key]['edit']['#markup'] = l(t('edit container'), 'admin/structure/forum/edit/container/' . $term['tid']);
       }
       else {
-        $form[$key]['edit']['#markup'] = l(t('edit forum'), 'admin/build/forum/edit/forum/' . $term['tid']);
+        $form[$key]['edit']['#markup'] = l(t('edit forum'), 'admin/structure/forum/edit/forum/' . $term['tid']);
       }
     }
   }
@@ -242,7 +242,7 @@ function forum_overview(&$form_state) {
   $form['#theme'] = 'taxonomy_overview_terms';
   $form['#submit'] = array('taxonomy_overview_terms_submit'); // Use the existing taxonomy overview submit handler.
   $form['#validate'] = array('taxonomy_overview_terms_validate');
-  $form['#empty_text'] = t('No containers or forums available. <a href="@container">Add container</a> or <a href="@forum">Add forum</a>.', array('@container' => url('admin/build/forum/add/container'), '@forum' => url('admin/build/forum/add/forum')));
+  $form['#empty_text'] = t('No containers or forums available. <a href="@container">Add container</a> or <a href="@forum">Add forum</a>.', array('@container' => url('admin/structure/forum/add/container'), '@forum' => url('admin/structure/forum/add/forum')));
   return $form;
 }
 

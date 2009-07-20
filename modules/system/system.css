@@ -505,14 +505,14 @@ html.js .js-hide {
 }
 
 /*
-** Styles for the system modules page (admin/build/modules)
+** Styles for the system modules page (admin/structure/modules)
 */
 #system-modules div.incompatible {
   font-weight: bold;
 }
 
 /*
-** Styles for the system themes page (admin/build/themes)
+** Styles for the system themes page (admin/structure/themes)
 */
 #system-themes-form div.incompatible {
   font-weight: bold;
