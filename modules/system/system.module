@@ -1542,28 +1542,30 @@ function system_admin_menu_block($item) {
   if (!isset($item['mlid'])) {
     $item += db_query("SELECT mlid, menu_name FROM {menu_links} ml WHERE ml.router_path = :path AND module = 'system'", array(':path' => $item['path']))->fetchAssoc();
   }
-  else if (isset($cache[$item['mlid']])) {
+
+  if (isset($cache[$item['mlid']])) {
     return $cache[$item['mlid']];
   }
+
   $content = array();
   $result = db_query("
     SELECT m.load_functions, m.to_arg_functions, m.access_callback, m.access_arguments, m.page_callback, m.page_arguments, m.title, m.title_callback, m.title_arguments, m.type, m.description, ml.*
     FROM {menu_links} ml
     LEFT JOIN {menu_router} m ON ml.router_path = m.path
     WHERE ml.plid = :plid AND ml.menu_name = :name AND hidden = 0", array(':plid' => $item['mlid'], ':name' => $item['menu_name']), array('fetch' => PDO::FETCH_ASSOC));
-  foreach ($result as $item) {
-    _menu_link_translate($item);
-    if (!$item['access']) {
+  foreach ($result as $link) {
+    _menu_link_translate($link);
+    if (!$link['access']) {
       continue;
     }
     // The link 'description' either derived from the hook_menu 'description' or
     // entered by the user via menu module is saved as the title attribute.
-    if (!empty($item['localized_options']['attributes']['title'])) {
-      $item['description'] = $item['localized_options']['attributes']['title'];
+    if (!empty($link['localized_options']['attributes']['title'])) {
+      $link['description'] = $link['localized_options']['attributes']['title'];
     }
     // Prepare for sorting as in function _menu_tree_check_access().
     // The weight is offset so it is always positive, with a uniform 5-digits.
-    $content[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['mlid']] = $item;
+    $content[(50000 + $link['weight']) . ' ' . $link['title'] . ' ' . $link['mlid']] = $link;
   }
   ksort($content);
   $cache[$item['mlid']] = $content;
