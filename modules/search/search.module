@@ -199,10 +199,10 @@ function search_menu() {
     'access arguments' => array('administer search'),
     'type' => MENU_NORMAL_ITEM,
   );
-  $items['admin/settings/search/wipe'] = array(
+  $items['admin/settings/search/reindex'] = array(
     'title' => 'Clear index',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('search_wipe_confirm'),
+    'page arguments' => array('search_reindex_confirm'),
     'access arguments' => array('administer search'),
     'type' => MENU_CALLBACK,
   );
@@ -243,7 +243,7 @@ function _search_menu($name) {
  * @param $type
  *  (optional) The type of item to wipe.
  */
-function search_wipe($sid = NULL, $type = NULL, $reindex = FALSE) {
+function search_reindex($sid = NULL, $type = NULL, $reindex = FALSE) {
   if ($type == NULL && $sid == NULL) {
     module_invoke_all('search', 'reset');
   }
@@ -575,7 +575,7 @@ function search_index($sid, $type, $text) {
     $tag = !$tag;
   }
 
-  search_wipe($sid, $type, TRUE);
+  search_reindex($sid, $type, TRUE);
 
   // Insert cleaned up data into dataset
   db_query("INSERT INTO {search_dataset} (sid, type, data, reindex) VALUES (%d, '%s', '%s', %d)", $sid, $type, $accum, 0);

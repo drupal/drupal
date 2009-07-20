@@ -1073,7 +1073,7 @@ function node_delete_multiple($nids) {
     // because node module is implementing search module's API, not the other
     // way around.
     if (module_exists('search')) {
-      search_wipe($nid, 'node');
+      search_reindex($nid, 'node');
     }
   }
 
