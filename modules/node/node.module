@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1082 2009/07/10 05:58:13 webchick Exp $
+// $Id: node.module,v 1.1083 2009/07/20 17:19:51 dries Exp $
 
 /**
  * @file
@@ -1073,7 +1073,7 @@ function node_delete_multiple($nids) {
     // because node module is implementing search module's API, not the other
     // way around.
     if (module_exists('search')) {
-      search_wipe($nid, 'node');
+      search_reindex($nid, 'node');
     }
   }
 
