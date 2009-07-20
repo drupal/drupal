@@ -30,7 +30,7 @@ function file_test_file_scan_callback($filepath = NULL) {
   $files = &drupal_static(__FUNCTION__, array());
   if (isset($filepath)) {
     $files[] = $filepath;
-  } 
+  }
   else {
     return $files;
   }
@@ -2016,23 +2016,64 @@ class FileMimeTypeTest extends DrupalWebTestCase {
   }
 
   /**
-   * Test basic extraction of mimetypes from the filename.
+   * Test mapping of mimetypes from filenames.
    */
   public function testFileMimeTypeDetection() {
     $test_case = array(
       'test.jar' => 'application/java-archive',
       'test.jpeg' => 'image/jpeg',
+      'test.JPEG' => 'image/jpeg',
       'test.jpg' => 'image/jpeg',
       'test.jar.jpg' => 'image/jpeg',
       'test.jpg.jar' => 'application/java-archive',
       'test.pcf.Z' => 'application/x-font',
-      'pcf.Z' => 'application/octet-stream',
+      'pcf.z' => 'application/octet-stream',
       'jar' => 'application/octet-stream',
+      'some.junk' => 'application/octet-stream',
     );
 
+    // Test using default mappings (not using 'mime_extension_mapping').
+    variable_del('mime_extension_mapping');
     foreach ($test_case as $input => $expected) {
       $output = file_get_mimetype($input);
-      $this->assertIdentical($output, $expected, t('Mimetype for %input is %output (expected: %expected).', array('%input' => $input, '%output' => $output, '%expected' => $expected)));
+      $this->assertIdentical($output, $expected, t('Mimetype (using default mappings) for %input is %output (expected: %expected).', array('%input' => $input, '%output' => $output, '%expected' => $expected)));
+    }
+
+    // Now test using mappings from the mime_extension_mapping variable.
+    $mapping = array(
+      'mimetypes' => array(
+        0 => 'application/java-archive',
+        1 => 'image/jpeg',
+      ),
+      'extensions' => array(
+         'jar' => 0,
+         'jpg' => 1,
+      )
+    );
+
+    $test_case = array(
+      'test.jar' => 'application/java-archive',
+      'test.jpeg' => 'application/octet-stream',
+      'test.jpg' => 'image/jpeg',
+      'test.jar.jpg' => 'image/jpeg',
+      'test.jpg.jar' => 'application/java-archive',
+      'test.pcf.z' => 'application/octet-stream',
+      'pcf.z' => 'application/octet-stream',
+      'jar' => 'application/octet-stream',
+      'some.junk' => 'application/octet-stream',
+    );
+
+    variable_set('mime_extension_mapping', $mapping);
+    foreach ($test_case as $input => $expected) {
+      $output = file_get_mimetype($input);
+      $this->assertIdentical($output, $expected, t('Mimetype (using mappings from variable) for %input is %output (expected: %expected).', array('%input' => $input, '%output' => $output, '%expected' => $expected)));
+    }
+
+    // Now test the same when passing in the map.
+    variable_del('mime_extension_mapping');
+    foreach ($test_case as $input => $expected) {
+      $output = file_get_mimetype($input, $mapping);
+      $this->assertIdentical($output, $expected, t('Mimetype (using passed-in mappings) for %input is %output (expected: %expected).', array('%input' => $input, '%output' => $output, '%expected' => $expected)));
     }
   }
 }

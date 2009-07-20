@@ -1,7 +1,18 @@
 <?php
+// $Id$
+
+/**
+ * @file
+ * Provides mimetype mappings.
+ */
+
 
 /**
  * Default MIME extension mapping.
+ *
+ * @return
+ *   Array of mimetypes correlated to the extensions that relate to them.
+ * @see file_get_mimetype()
  */
 function file_default_mimetype_mapping() {
   return array(
@@ -355,6 +366,8 @@ function file_default_mimetype_mapping() {
       344 => 'x-epoc/x-sisx-app',
       345 => 'x-world/x-vrml',
     ),
+
+    // Extensions added to this list MUST be lower-case.
     'extensions' => array(
       'ez' => 0,
       'atom' => 1,
@@ -484,7 +497,7 @@ function file_default_mimetype_mapping() {
       'pfb' => 113,
       'pcf' => 113,
       'gsf' => 113,
-      'pcf.Z' => 113,
+      'pcf.z' => 113,
       'mm' => 114,
       'spl' => 115,
       'gnumeric' => 116,

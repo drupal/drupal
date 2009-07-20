@@ -1544,10 +1544,14 @@ function file_upload_max_size() {
  *   An optional map of extensions to their mimetypes, in the form:
  *    - 'mimetypes': a list of mimetypes, keyed by an identifier,
  *    - 'extensions': the mapping itself, an associative array in which
- *      the key is the extension and the value is the mimetype identifier.
+ *      the key is the extension (lowercase) and the value is the mimetype identifier.
+ *    If $mapping is omitted, the drupal variable mime_extension_mapping is checked
+ *    for a value and if that fails then file_default_mimetype_mapping() is called
  *
  * @return
  *   The internet media type registered for the extension or application/octet-stream for unknown extensions.
+ * @see
+ *   file_default_mimetype_mapping()
  */
 function file_get_mimetype($filename, $mapping = NULL) {
   if (!isset($mapping)) {
@@ -1571,7 +1575,7 @@ function file_get_mimetype($filename, $mapping = NULL) {
   //   - image.jpeg, and
   //   - awesome.image.jpeg
   while ($additional_part = array_pop($file_parts)) {
-    $extension = $additional_part . ($extension ? '.' . $extension : '');
+    $extension = strtolower($additional_part . ($extension ? '.' . $extension : ''));
     if (isset($mapping['extensions'][$extension])) {
       return $mapping['mimetypes'][$mapping['extensions'][$extension]];
     }
