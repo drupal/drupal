@@ -648,7 +648,7 @@ function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
  * helper function. These functions take an argument and return an object.
  * See http://drupal.org/node/109153 for more information.
  *
- * @param map
+ * @param $map
  *   An array of path arguments (ex: array('node', '5'))
  * @param $to_arg_functions
  *   An array of helper function (ex: array(2 => 'menu_tail_to_arg'))
