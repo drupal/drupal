@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.30 2009/07/14 10:22:17 dries Exp $
+// $Id: locale.test,v 1.31 2009/07/20 17:09:36 dries Exp $
 
 /**
  * @file
@@ -689,7 +689,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     ));
 
     $this->assertIdentical(t('May', array(), array('langcode' => 'hr', 'context' => 'Long month name')), 'Svibanj', t('Long month name context is working.'));
-    $this->assertIdentical(t('May', array(), array('langcode' => 'hr', 'context' => 'Short month name')), 'Svi.', t('Short month name context is working.'));
+    $this->assertIdentical(t('May', array(), array('langcode' => 'hr')), 'Svi.', t('Default context is working.'));
   }
 
   /**
@@ -810,7 +810,6 @@ msgctxt "Long month name"
 msgid "May"
 msgstr "Svibanj"
 
-msgctxt "Short month name"
 msgid "May"
 msgstr "Svi."
 EOF;
