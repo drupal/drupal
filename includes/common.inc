@@ -414,6 +414,8 @@ function drupal_access_denied() {
  *   data and redirect status.
  */
 function drupal_http_request($url, $headers = array(), $method = 'GET', $data = NULL, $retry = 3) {
+  global $db_prefix;
+
   $result = new stdClass();
 
   // Parse the URL and make sure we can handle the schema.
@@ -489,7 +491,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   // user-agent is used to ensure that multiple testing sessions running at the
   // same time won't interfere with each other as they would if the database
   // prefix were stored statically in a file or database variable.
-  if (preg_match("/simpletest\d+/", $GLOBALS['db_prefix'], $matches)) {
+  if (is_string($db_prefix) && preg_match("/^simpletest\d+$/", $db_prefix, $matches)) {
     $defaults['User-Agent'] = 'User-Agent: ' . $matches[0];
   }
 
