@@ -689,7 +689,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     ));
 
     $this->assertIdentical(t('May', array(), array('langcode' => 'hr', 'context' => 'Long month name')), 'Svibanj', t('Long month name context is working.'));
-    $this->assertIdentical(t('May', array(), array('langcode' => 'hr', 'context' => 'Short month name')), 'Svi.', t('Short month name context is working.'));
+    $this->assertIdentical(t('May', array(), array('langcode' => 'hr')), 'Svi.', t('Default context is working.'));
   }
 
   /**
@@ -810,7 +810,6 @@ msgctxt "Long month name"
 msgid "May"
 msgstr "Svibanj"
 
-msgctxt "Short month name"
 msgid "May"
 msgstr "Svi."
 EOF;

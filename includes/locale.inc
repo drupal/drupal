@@ -1298,7 +1298,7 @@ function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL, $group =
         $current = array();
       }
       elseif (!empty($current["msgctxt"])) { // Already in this context? Parse error
-        _locale_import_message('The translation file %filename contains an error: "msgctxt" is unexpected on line %line.', $file, lineno);
+        _locale_import_message('The translation file %filename contains an error: "msgctxt" is unexpected on line %line.', $file, $lineno);
         return FALSE;
       }
       $line = trim(substr($line, 7));
