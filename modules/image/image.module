@@ -69,8 +69,8 @@ function image_file_download($filepath) {
       $headers = module_invoke_all('file_download', $original_path);
       if (!in_array(-1, $headers)) {
         return array(
-          'Content-Type: ' . $info['mime_type'],
-          'Content-Length: ' . $info['file_size'],
+          'Content-Type' => $info['mime_type'],
+          'Content-Length' => $info['file_size'],
         );
       }
     }
@@ -306,13 +306,17 @@ function image_style_generate() {
   // Don't start generating the image if it is already in progress.
   $cid = 'generate:' . $style_name . ':' . $path_md5;
   if (cache_get($cid, 'cache_image')) {
+    // Tell client to retry again in 3 seconds. Currently no browsers are known
+    // to support Retry-After.
+    drupal_set_header('503 Service Unavailable');
+    drupal_set_header('Retry-After', 3);
     print t('Image generation in progress, please try again shortly.');
     exit();
   }
 
   // If the image has already been generated then send it.
   if ($image = image_load($destination)) {
-    file_transfer($image->source, array('Content-type: ' . $image->info['mime_type'], 'Content-length: ' . $image->info['file_size']));
+    file_transfer($image->source, array('Content-Type' => $image->info['mime_type'], 'Content-Length' => $image->info['file_size']));
   }
 
   // Set a cache entry designating this image as being in-process.
@@ -322,11 +326,12 @@ function image_style_generate() {
   if (image_style_create_derivative($style, $source, $destination)) {
     $image = image_load($destination);
     cache_clear_all($cid, 'cache_image');
-    file_transfer($image->source, array('Content-type: ' . $image->info['mime_type'], 'Content-length: ' . $image->info['file_size']));
+    file_transfer($image->source, array('Content-Type' => $image->info['mime_type'], 'Content-Length' => $image->info['file_size']));
   }
   else {
     cache_clear_all($cid, 'cache_image');
     watchdog('image', 'Unable to generate the derived image located at %path.', $destination);
+    drupal_set_header('500 Internal Server Error');
     print t('Error generating image.');
     exit();
   }
