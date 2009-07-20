@@ -1,5 +1,5 @@
 <?php
-// $Id: actions.inc,v 1.28 2009/06/18 10:37:37 dries Exp $
+// $Id: actions.inc,v 1.29 2009/07/20 18:51:31 dries Exp $
 
 /**
  * @file
@@ -169,7 +169,7 @@ function actions_list($reset = FALSE) {
  *
  * Compare with actions_list() which gathers actions by invoking
  * hook_action_info(). The two are synchronized by visiting
- * /admin/build/actions (when actions.module is enabled) which runs
+ * /admin/structure/actions (when actions.module is enabled) which runs
  * actions_synchronize().
  *
  * @return

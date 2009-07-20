@@ -1,5 +1,5 @@
 <?php
-// $Id: run-tests.sh,v 1.30 2009/07/11 05:31:28 dries Exp $
+// $Id: run-tests.sh,v 1.31 2009/07/20 18:51:36 dries Exp $
 /**
  * @file
  * This script runs Drupal tests from command line.
@@ -137,7 +137,7 @@ All arguments are long options.
   <test1>[,<test2>[,<test3> ...]]
 
               One or more tests to be run. By default, these are interpreted
-              as the names of test groups as shown at ?q=admin/build/testing.
+              as the names of test groups as shown at ?q=admin/development/testing.
               These group names typically correspond to module names like "User"
               or "Profile" or "System", but there is also a group "XML-RPC".
               If --class is specified then these are interpreted as the names of

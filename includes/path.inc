@@ -1,5 +1,5 @@
 <?php
-// $Id: path.inc,v 1.41 2009/07/14 10:22:17 dries Exp $
+// $Id: path.inc,v 1.42 2009/07/20 18:51:31 dries Exp $
 
 /**
  * @file
@@ -223,7 +223,7 @@ function drupal_get_normal_path($path, $path_language = '') {
 /**
  * Return a component of the current Drupal path.
  *
- * When viewing a page at the path "admin/build/types", for example, arg(0)
+ * When viewing a page at the path "admin/structure/types", for example, arg(0)
  * returns "admin", arg(1) returns "content", and arg(2) returns "types".
  *
  * Avoid use of this function where possible, as resulting code is hard to read.

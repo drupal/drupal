@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.55 2009/07/15 02:08:41 webchick Exp $
+// $Id: default.profile,v 1.56 2009/07/20 18:51:36 dries Exp $
 
 /**
  * Implement hook_profile_tasks().
@@ -169,7 +169,7 @@ function default_profile_tasks(&$task, $url) {
   menu_rebuild();
 
   // Save some default links.
-  $link = array('link_path' => 'admin/build/menu-customize/main-menu/add', 'link_title' => 'Add a main menu link', 'menu_name' => 'main-menu');
+  $link = array('link_path' => 'admin/structure/menu-customize/main-menu/add', 'link_title' => 'Add a main menu link', 'menu_name' => 'main-menu');
   menu_link_save($link);
 }
 

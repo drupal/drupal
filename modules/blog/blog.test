@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.test,v 1.14 2009/07/13 21:51:09 webchick Exp $
+// $Id: blog.test,v 1.15 2009/07/20 18:51:32 dries Exp $
 
 class BlogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -63,7 +63,7 @@ class BlogTestCase extends DrupalWebTestCase {
     // Enable the recent blog block.
     $edit = array();
     $edit['blog_recent[region]'] = 'right';
-    $this->drupalPost('admin/build/block', $edit, t('Save blocks'));
+    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertResponse(200);
 
     // Do basic tests for each user.

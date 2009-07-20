@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.936 2009/07/19 06:03:04 dries Exp $
+// $Id: common.inc,v 1.937 2009/07/20 18:51:31 dries Exp $
 
 /**
  * @file
@@ -3145,7 +3145,7 @@ function drupal_get_library($module, $name) {
  * @endcode
  *
  * In a more complex case where there are several groups in one column (such as
- * the block regions on the admin/build/block page), a separate subgroup class
+ * the block regions on the admin/structure/block page), a separate subgroup class
  * must also be added to differentiate the groups.
  * @code
  * $form['my_elements'][$region][$delta]['weight']['#attributes']['class'] = "my-elements-weight my-elements-weight-" . $region;
