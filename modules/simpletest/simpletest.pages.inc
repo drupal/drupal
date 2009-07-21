@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.pages.inc,v 1.8 2009/07/11 06:14:48 dries Exp $
+// $Id: simpletest.pages.inc,v 1.9 2009/07/21 01:48:08 webchick Exp $
 
 /**
  * @file
@@ -426,7 +426,7 @@ function simpletest_settings_form(&$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Provide verbose information when running tests'),
     '#description' => t('The verbose data will be printed along with the standard assertions. Useful for debugging.'),
-    '#default_value' => variable_get('simpletest_verbose', TRUE),
+    '#default_value' => variable_get('simpletest_verbose', FALSE),
   );
 
   $form['httpauth'] = array(
