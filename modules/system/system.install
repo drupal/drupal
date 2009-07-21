@@ -382,8 +382,8 @@ function system_install() {
     ->values(array('name' => 'authenticated user'))
     ->execute();
 
-  // Sanity check to ensure the anonymous and authenticated role IDs are the 
-  // same as the drupal defined constants. In certain situations, this will 
+  // Sanity check to ensure the anonymous and authenticated role IDs are the
+  // same as the drupal defined constants. In certain situations, this will
   // not be true.
   if ($rid_anonymous != DRUPAL_ANONYMOUS_RID) {
     db_update('role')

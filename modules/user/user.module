@@ -325,11 +325,11 @@ function user_load_by_name($name) {
  *
  * @param $account
  *   (optional) The user object to modify or add. If you want to modify
- *   an existing user account, you will need to ensure that (a) $account 
- *   is an object, and (b) you have set $account->uid to the numeric 
+ *   an existing user account, you will need to ensure that (a) $account
+ *   is an object, and (b) you have set $account->uid to the numeric
  *   user ID of the user account you wish to modify. If you
  *   want to create a new user account, you can set $account->is_new to
- *   TRUE or omit the $account->uid field. 
+ *   TRUE or omit the $account->uid field.
  * @param $edit
  *   An array of fields and values to save. For example array('name'
  *   => 'My name'). Keys that do not belong to columns in the user-related
@@ -398,7 +398,6 @@ function user_save($account, $edit = array(), $category = 'account') {
       }
     }
 
-
     // Process picture uploads.
     if (!empty($edit['picture']->fid)) {
       $picture = $edit['picture'];
@@ -416,6 +415,7 @@ function user_save($account, $edit = array(), $category = 'account') {
     $edit['picture'] = empty($edit['picture']->fid) ? 0 : $edit['picture']->fid;
 
     $edit['data'] = $data;
+    // Do not allow 'uid' to be changed.
     $edit['uid'] = $account->uid;
     // Save changes to the user table.
     $success = drupal_write_record('users', $edit, 'uid');
@@ -1594,7 +1594,7 @@ function user_login(&$form_state) {
  * authentication fails. Distributed authentication modules are welcome
  * to use hook_form_alter() to change this series in order to
  * authenticate against their user database instead of the local users
- * table. If a distributed authentication module is successful, it 
+ * table. If a distributed authentication module is successful, it
  * should set $form_state['uid'] to a user ID.
  *
  * We use three validators instead of one since external authentication
@@ -1622,7 +1622,7 @@ function user_login_name_validate($form, &$form_state) {
 
 /**
  * A validate handler on the login form. Check supplied username/password
- * against local users table. If successful, $form_state['uid'] 
+ * against local users table. If successful, $form_state['uid']
  * is set to the matching user ID.
  */
 function user_login_authenticate_validate($form, &$form_state) {
@@ -1656,10 +1656,10 @@ function user_authenticate(&$form_state) {
       // Allow alternate password hashing schemes.
       require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
       if (user_check_password($password, $account)) {
-        
+
         // Successful authentication. Set a flag for user_login_final_validate().
         $form_state['uid'] = $account->uid;
-        
+
         // Update user to new password scheme if needed.
         if (user_needs_new_hash($account)) {
           $new_hash = user_hash_password($password);
@@ -1701,15 +1701,15 @@ function user_login_finalize(&$edit = array()) {
 }
 
 /**
- * Submit handler for the login form. Load $user object and perform standard login 
- * tasks. The user is then redirected to the My Account page. Setting the 
+ * Submit handler for the login form. Load $user object and perform standard login
+ * tasks. The user is then redirected to the My Account page. Setting the
  * destination in the query string overrides the redirect.
  */
 function user_login_submit($form, &$form_state) {
   global $user;
   $user = user_load($form_state['uid']);
   user_login_finalize();
-  
+
   $form_state['redirect'] = 'user/' . $user->uid;
 }
 
@@ -1737,7 +1737,7 @@ function user_external_login_register($name, $module) {
     }
     user_set_authmaps($account, array("authname_$module" => $name));
   }
-  
+
   // Log user in.
   $form_state['uid'] = $account->uid;
   user_login_submit(array(), $form_state);
@@ -2803,7 +2803,7 @@ function user_register_submit($form, &$form_state) {
       drupal_set_message(t('</p><p> Your password is <strong>%pass</strong>. You may change your password below.</p>', array('%pass' => $pass)));
     }
 
-    $form_state['values'] += $merge_data; 
+    $form_state['values'] += $merge_data;
     user_authenticate(array_merge($form_state));
 
     $form_state['redirect'] = 'user/1/edit';
