@@ -104,38 +104,32 @@ function node_filters() {
 }
 
 /**
- * Build query for node administration filters based on session.
+ * Apply filters for node administration filters based on session.
+ *
+ * @param $query
+ *   A SelectQuery to which the filters should be applied.
  */
-function node_build_filter_query() {
+function node_build_filter_query(SelectQueryInterface $query) {
   // Build query
-  $where = $args = array();
-  $join = '';
   $filter_data = isset($_SESSION['node_overview_filter']) ? $_SESSION['node_overview_filter'] : array();
+  $counter = 0;
   foreach ($filter_data as $index => $filter) {
     list($key, $value) = $filter;
     switch ($key) {
+      case 'term':
+        $index = 'tn' . $counter++;
+        $query->join('taxonomy_term_node', $index, "n.nid = $index.nid");
+        $query->condition($index . '.tid', $value);
+        break;
       case 'status':
         // Note: no exploitable hole as $key/$value have already been checked when submitted
         list($key, $value) = explode('-', $value, 2);
-        $where[] = 'n.' . $key . ' = %d';
-        break;
-      case 'term':
-        $table = "tn$index";
-        $where[] = "$table.tid = %d";
-        $join .= "INNER JOIN {taxonomy_term_node} $table ON n.nid = $table.nid ";
-        break;
       case 'type':
-        $where[] = "n.type = '%s'";
-        break;
       case 'language':
-        $where[] = "n.language = '%s'";
+        $query->condition('n.' . $key, $value);
         break;
     }
-    $args[] = $value;
   }
-  $where = count($where) ? 'WHERE ' . implode(' AND ', $where) : '';
-
-  return array('where' => $where, 'join' => $join, 'args' => $args);
 }
 
 /**
@@ -419,11 +413,15 @@ function node_admin_nodes() {
    '#value' => $header,
   );
 
-  // Build the query and load the nodes we want to display.
-  $filter = node_build_filter_query();
+  $query = db_select('node', 'n')->extend('PagerDefault')->extend('TableSort');
+  $query->join('users', 'u', 'n.uid = u.uid');
+  node_build_filter_query($query);
 
-  $sort = tablesort_sql($header, '', 'n.changed DESC');
-  $result = pager_query(db_rewrite_sql('SELECT n.*, u.name FROM {node} n ' . $filter['join'] . ' INNER JOIN {users} u ON n.uid = u.uid ' . $filter['where'] . $sort), 50, 0, NULL, $filter['args']);
+  $result = $query
+    ->fields('n')
+    ->fields('u', array('name'))
+    ->limit(50)
+    ->execute();
 
   // Build the 'Update options' form.
   $form['options'] = array(
@@ -450,7 +448,7 @@ function node_admin_nodes() {
   $languages = language_list();
   $destination = drupal_get_destination();
   $nodes = array();
-  while ($node = db_fetch_object($result)) {
+  foreach ($result as $node) {
     $nodes[$node->nid] = '';
     $options = empty($node->language) ? array() : array('language' => $languages[$node->language]);
     $form['title'][$node->nid] = array('#markup' => l($node->title, 'node/' . $node->nid, $options) . ' ' . theme('mark', node_mark($node->nid, $node->changed)));
