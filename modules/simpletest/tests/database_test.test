@@ -518,10 +518,21 @@ class DatabaseInsertTestCase extends DatabaseTestCase {
    * Test that the INSERT INTO ... SELECT ... syntax works.
    */
   function testInsertSelect() {
-    $query = db_select('test_people', 'tp')->fields('tp', array('name', 'age', 'job'));
+    $query = db_select('test_people', 'tp');
+    // The query builder will always append expressions after fields.
+    // Add the expression first to test that the insert fields are correctly
+    // re-ordered.
+    $query->addExpression('tp.age', 'age');
+    $query
+      ->fields('tp', array('name','job'))
+      ->condition('tp.name', 'Meredith');
 
+    // The resulting query should be equivalent to:
+    // INSERT INTO test (age, name, job)
+    // SELECT tp.age AS age, tp.name AS name, tp.job AS job
+    // FROM test_people tp
+    // WHERE tp.name = 'Meredith'
     db_insert('test')
-      ->fields(array('name', 'age', 'job'))
       ->from($query)
       ->execute();
 
@@ -603,8 +614,13 @@ class DatabaseInsertDefaultsTestCase extends DatabaseTestCase {
   function testDefaultEmptyInsert() {
     $num_records_before = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
 
-    $result = db_insert('test')->execute();
-    $this->assertNull($result, t('Return NULL as no fields are specified.'));
+    try {
+      $result = db_insert('test')->execute();
+      // This is only executed if no exception has been thrown.
+      $this->fail(t('Expected exception NoFieldsException has not been thrown.'));
+    } catch (NoFieldsException $e) {
+      $this->pass(t('Expected exception NoFieldsException has been thrown.'));
+    }
 
     $num_records_after = (int) db_query('SELECT COUNT(*) FROM {test}')->fetchField();
     $this->assertIdentical($num_records_before, $num_records_after, t('Do nothing as no fields are specified.'));

@@ -15,30 +15,23 @@
 class InsertQuery_mysql extends InsertQuery {
 
   public function execute() {
-
-    // Confirm that the user did not try to specify an identical
-    //  field and default field.
-    if (array_intersect($this->insertFields, $this->defaultFields)) {
-      throw new PDOException('You may not specify the same field to have a value and a schema-default value.');
-    }
-
-    if (count($this->insertFields) + count($this->defaultFields) == 0 && empty($this->fromQuery)) {
+    if (!$this->preExecute()) {
       return NULL;
     }
 
-    // Don't execute query without values.
-    if (!isset($this->insertValues[0]) && count($this->insertFields) > 0 && empty($this->fromQuery)) {
-      return NULL;
-    }
-
-    $last_insert_id = 0;
-
-    $max_placeholder = 0;
-    $values = array();
-    foreach ($this->insertValues as $insert_values) {
-      foreach ($insert_values as $value) {
-        $values[':db_insert_placeholder_' . $max_placeholder++] = $value;
+    // If we're selecting from a SelectQuery, finish building the query and
+    // pass it back, as any remaining options are irrelevant.
+    if (empty($this->fromQuery)) {
+      $max_placeholder = 0;
+      $values = array();
+      foreach ($this->insertValues as $insert_values) {
+        foreach ($insert_values as $value) {
+          $values[':db_insert_placeholder_' . $max_placeholder++] = $value;
+        }
       }
+    }
+    else {
+      $values = $this->fromQuery->getArguments();
     }
 
     $last_insert_id = $this->connection->query((string)$this, $values, $this->queryOptions);
@@ -56,6 +49,8 @@ class InsertQuery_mysql extends InsertQuery {
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
 
+    // If we're selecting from a SelectQuery, finish building the query and
+    // pass it back, as any remaining options are irrelevant.
     if (!empty($this->fromQuery)) {
       return "INSERT $delay INTO {" . $this->table . '} (' . implode(', ', $insert_fields) . ') ' . $this->fromQuery;
     }

@@ -287,7 +287,8 @@ class InsertQuery extends Query {
 
   /**
    * A SelectQuery object to fetch the rows that should be inserted.
-   * 
+   *
+   * @var SelectQueryInterface
    */
   protected $fromQuery;
 
@@ -432,28 +433,19 @@ class InsertQuery extends Query {
    *   in multi-insert loops.
    */
   public function execute() {
+    if (!$this->preExecute()) {
+      return NULL;
+    }
+
+    // If we're selecting from a SelectQuery, finish building the query and
+    // pass it back, as any remaining options are irrelevant.
+    if (!empty($this->fromQuery)) {
+      $sql = (string)$this;
+      // The SelectQuery may contain arguments, load and pass them through.
+      return $this->connection->query($sql, $this->fromQuery->getArguments(), $this->queryOptions);
+    }
 
     $last_insert_id = 0;
-
-    // Check if a SelectQuery is passed in and use that.
-    if (!empty($this->fromQuery)) {
-      return $this->connection->query((string) $this, array(), $this->queryOptions);
-    }
-
-    // Confirm that the user did not try to specify an identical
-    //  field and default field.
-    if (array_intersect($this->insertFields, $this->defaultFields)) {
-      throw new PDOException('You may not specify the same field to have a value and a schema-default value.');
-    }
-
-    if (count($this->insertFields) + count($this->defaultFields) == 0) {
-      return NULL;
-    }
-
-    // Don't execute query without values.
-    if (!isset($this->insertValues[0]) && count($this->insertFields) > 0) {
-      return NULL;
-    }
 
     // Each insert happens in its own query in the degenerate case. However,
     // we wrap it in a transaction so that it is atomic where possible. On many
@@ -489,6 +481,42 @@ class InsertQuery extends Query {
     $placeholders = array_pad($placeholders, count($this->insertFields), '?');
 
     return 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES (' . implode(', ', $placeholders) . ')';
+  }
+
+  /**
+   * Generic preparation and validation for an INSERT query.
+   *
+   * @return
+   *   TRUE if the validation was successful, FALSE if not.
+   */
+  protected function preExecute() {
+    // Confirm that the user did not try to specify an identical
+    // field and default field.
+    if (array_intersect($this->insertFields, $this->defaultFields)) {
+      throw new FieldsOverlapException('You may not specify the same field to have a value and a schema-default value.');
+    }
+
+    if (!empty($this->fromQuery)) {
+      // We have to assume that the used aliases match the insert fields.
+      // Regular fields are added to the query before expressions, maintain the
+      // same order for the insert fields.
+      // This behavior can be overriden by calling fields() manually as only the
+      // first call to fields() does have an effect.
+      $this->fields(array_merge(array_keys($this->fromQuery->getFields()), array_keys($this->fromQuery->getExpressions())));
+    }
+
+    // Don't execute query without fields.
+    if (count($this->insertFields) + count($this->defaultFields) == 0) {
+      throw new NoFieldsException('There are no fields available to insert with.');
+    }
+
+    // If no values have been added, silently ignore this query. This can happen
+    // if values are added conditionally, so we don't want to throw an
+    // exception.
+    if (!isset($this->insertValues[0]) && count($this->insertFields) > 0 && empty($this->fromQuery)) {
+      return FALSE;
+    }
+    return TRUE;
   }
 }
 

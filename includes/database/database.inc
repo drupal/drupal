@@ -1413,6 +1413,19 @@ class ExplicitTransactionsNotSupportedException extends Exception { }
 class InvalidMergeQueryException extends Exception {}
 
 /**
+ * Exception thrown if an insert query specifies a field twice.
+ *
+ * It is not allowed to specify a field as default and insert field, this
+ * exception is thrown if that is the case.
+ */
+class FieldsOverlapException extends Exception {}
+
+/**
+ * Exception thrown if an insert query doesn't specify insert or default fields.
+ */
+class NoFieldsException extends Exception {}
+
+/**
  * A wrapper class for creating and managing database transactions.
  *
  * Not all databases or database configurations support transactions. For
