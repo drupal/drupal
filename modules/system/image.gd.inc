@@ -216,7 +216,7 @@ function image_gd_crop(stdClass $image, $x, $y, $width, $height) {
 function image_gd_desaturate(stdClass $image) {
   // PHP installations using non-bundled GD do not have imagefilter.
   if (!drupal_function_exists('imagefilter')) {
-    watchdog('image', 'The image %file could not be rotated because the imagefilter() function is not available in this PHP installation.', array('%file' => $image->source));
+    watchdog('image', 'The image %file could not be desaturated because the imagefilter() function is not available in this PHP installation.', array('%file' => $image->source));
     return FALSE;
   }
 
