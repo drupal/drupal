@@ -426,7 +426,7 @@ function simpletest_settings_form(&$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Provide verbose information when running tests'),
     '#description' => t('The verbose data will be printed along with the standard assertions. Useful for debugging.'),
-    '#default_value' => variable_get('simpletest_verbose', TRUE),
+    '#default_value' => variable_get('simpletest_verbose', FALSE),
   );
 
   $form['httpauth'] = array(
