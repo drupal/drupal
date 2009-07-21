@@ -1303,7 +1303,8 @@ function comment_load_multiple($cids = array(), $conditions = array()) {
  *   The comment object.
  */
 function comment_load($cid) {
-  return current(comment_load_multiple(array($cid)));
+  $comment = comment_load_multiple(array($cid));
+  return $comment ? $comment[$cid] : FALSE;;
 }
 
 /**
@@ -1432,13 +1433,24 @@ function comment_get_display_page($cid, $node_type) {
  */
 function comment_form(&$form_state, $edit, $title = NULL) {
   global $user;
+
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   $node = node_load($edit['nid']);
 
   if (!$user->uid && variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
     drupal_add_js(drupal_get_path('module', 'comment') . '/comment.js');
   }
+
+  // Take into account multi-step rebuilding.
+  if (isset($form_state['comment'])) {
+    $edit = $form_state['comment'] + $edit;
+  }
   $edit += array('name' => '', 'mail' => '', 'homepage' => '');
+
+  $form = array();
+  if (isset($form_state['comment_preview'])) {
+    $form += $form_state['comment_preview'];
+  }
 
   if ($user->uid) {
     if (!empty($edit['cid']) && user_access('administer comments')) {
@@ -1649,15 +1661,12 @@ function comment_form(&$form_state, $edit, $title = NULL) {
     );
   }
   $form['preview'] = array(
-    '#type' => 'button',
+    '#type' => 'submit',
     '#value' => t('Preview'),
     '#weight' => 20,
+    '#submit' => array('comment_form_build_preview'),
   );
   $form['#token'] = 'comment' . $edit['nid'] . (isset($edit['pid']) ? $edit['pid'] : '');
-
-  if ($op == t('Preview')) {
-    $form['#after_build'] = array('comment_form_add_preview');
-  }
 
   if (empty($edit['cid']) && empty($edit['pid'])) {
     $form['#action'] = url('comment/reply/' . $edit['nid']);
@@ -1683,25 +1692,24 @@ function theme_comment_form_box($edit, $title = NULL) {
 }
 
 /**
- * Form builder; Generate and validate a comment preview form.
- *
- * @ingroup forms
+ * Build a preview from submitted form values.
  */
-function comment_form_add_preview($form, &$form_state) {
-  global $user;
-  $edit = $form_state['values'];
-  drupal_set_title(t('Preview comment'), PASS_THROUGH);
-  $output = '';
-  $node = node_load($edit['nid']);
+function comment_form_build_preview($form, &$form_state) {
+  $comment = comment_form_submit_build_comment($form, $form_state);
+  $form_state['comment_preview'] = comment_preview($comment);
+}
 
-  // Invoke full validation for the form, to protect against cross site
-  // request forgeries (CSRF) and setting arbitrary values for fields such as
-  // the text format. Preview the comment only when form validation does not
-  // set any errors.
-  drupal_validate_form($form['form_id']['#value'], $form, $form_state);
+/**
+ * Generate a comment preview.
+ */
+function comment_preview($comment) {
+  global $user;
+
+  drupal_set_title(t('Preview comment'), PASS_THROUGH);
+
+  $node = node_load($comment->nid);
+
   if (!form_get_errors()) {
-    _comment_form_submit($edit);
-    $comment = (object)$edit;
     $comment->format = $comment->comment_format;
 
     // Attach the user and time information.
@@ -1721,7 +1729,10 @@ function comment_form_add_preview($form, &$form_state) {
     }
 
     $comment->timestamp = !empty($edit['timestamp']) ? $edit['timestamp'] : REQUEST_TIME;
-    $output .= theme('comment_view', $comment, $node);
+    $output = theme('comment_view', $comment, $node);
+  }
+  else {
+    $output = '';
   }
 
   $form['comment_preview'] = array(
@@ -1731,25 +1742,23 @@ function comment_form_add_preview($form, &$form_state) {
     '#suffix' => '</div>',
   );
 
-  $output = ''; // Isn't this line a duplication of the first $output above?
-
-  if ($edit['pid']) {
-    $comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comment} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid AND c.status = :status', array(
-      ':cid' => $edit['pid'],
+  if ($comment->pid) {
+    $parent_comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comment} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid AND c.status = :status', array(
+      ':cid' => $comment->pid,
       ':status' => COMMENT_PUBLISHED,
       ))->fetchObject();
-    $comment = drupal_unpack($comment);
-    $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-    $output .= theme('comment_view', $comment, $node);
+    $parent_comment = drupal_unpack($parent_comment);
+    $parent_comment->name = $parent_comment->uid ? $parent_comment->registered_name : $parent_comment->name;
+    $output_below = theme('comment_view', $parent_comment, $node);
   }
   else {
     $suffix = empty($form['#suffix']) ? '' : $form['#suffix'];
     $form['#suffix'] = $suffix . drupal_render(node_build($node));
-    $edit['pid'] = 0;
+    $output_below = '';
   }
 
   $form['comment_preview_below'] = array(
-    '#markup' => $output,
+    '#markup' => $output_below,
     '#weight' => 100,
   );
 
@@ -1820,47 +1829,57 @@ function comment_form_validate($form, &$form_state) {
 /**
  * Prepare a comment for submission.
  *
- * @param $comment_values
+ * @param $comment
  *   An associative array containing the comment data.
  */
-function _comment_form_submit(&$comment_values) {
-  $comment_values += array('subject' => '');
-  if (!isset($comment_values['date'])) {
-    $comment_values['date'] = 'now';
+function comment_submit($comment) {
+  $comment += array('subject' => '');
+  if (!isset($comment['date'])) {
+    $comment['date'] = 'now';
   }
 
-  $comment_values['timestamp'] = strtotime($comment_values['date']);
-  if (isset($comment_values['author'])) {
-    $account = user_load_by_name($comment_values['author']);
-    $comment_values['uid'] = $account->uid;
-    $comment_values['name'] = $comment_values['author'];
+  $comment['timestamp'] = strtotime($comment['date']);
+  if (isset($comment['author'])) {
+    $account = user_load_by_name($comment['author']);
+    $comment['uid'] = $account->uid;
+    $comment['name'] = $comment['author'];
   }
 
   // Validate the comment's subject. If not specified, extract from comment body.
-  if (trim($comment_values['subject']) == '') {
+  if (trim($comment['subject']) == '') {
     // The body may be in any format, so:
     // 1) Filter it into HTML
     // 2) Strip out all HTML tags
     // 3) Convert entities back to plain-text.
     // Note: format is checked by check_markup().
-    $comment_values['subject'] = truncate_utf8(trim(decode_entities(strip_tags(check_markup($comment_values['comment'], $comment_values['comment_format'])))), 29, TRUE);
+    $comment['subject'] = truncate_utf8(trim(decode_entities(strip_tags(check_markup($comment['comment'], $comment['comment_format'])))), 29, TRUE);
     // Edge cases where the comment body is populated only by HTML tags will
     // require a default subject.
-    if ($comment_values['subject'] == '') {
-      $comment_values['subject'] = t('(No subject)');
+    if ($comment['subject'] == '') {
+      $comment['subject'] = t('(No subject)');
     }
   }
+  return (object)$comment;
+}
+
+/**
+ * Build a comment by processing form values and prepare for a form rebuild.
+ */
+function comment_form_submit_build_comment($form, &$form_state) {
+  $comment = comment_submit($form_state['values']);
+
+  $form_state['comment'] = (array)$comment;
+  $form_state['rebuild'] = TRUE;
+  return $comment;
 }
 
 /**
  * Process comment form submissions; prepare the comment, store it, and set a redirection target.
  */
 function comment_form_submit($form, &$form_state) {
-  $edit = $form_state['values'];
-  $node = node_load($edit['nid']);
-  _comment_form_submit($edit);
+  $node = node_load($form_state['values']['nid']);
+  $comment = comment_form_submit_build_comment($form, $form_state);
   if (user_access('post comments') && (user_access('administer comments') || $node->comment == COMMENT_NODE_OPEN)) {
-    $comment = (object) $edit;
     comment_save($comment);
     // Explain the approval queue if necessary.
     if ($comment->status == COMMENT_NOT_PUBLISHED) {
@@ -1874,13 +1893,14 @@ function comment_form_submit($form, &$form_state) {
     $redirect = array('comment/' . $comment->cid, array(), 'comment-' . $comment->cid);
   }
   else {
-    watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $edit['subject']), WATCHDOG_WARNING);
-    drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $edit['subject'])), 'error');
+    watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject), WATCHDOG_WARNING);
+    drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject)), 'error');
     $page = comment_new_page_count($node->comment_count, 1, $node);
     $redirect = array('node/' . $node->nid, $page);
   }
 
   // Redirect the user to the node they're commenting on.
+  unset($form_state['rebuild']);
   $form_state['redirect'] = $redirect;
 }
 
