@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.355 2009/07/20 18:51:34 dries Exp $
+// $Id: system.install,v 1.356 2009/07/21 07:27:00 webchick Exp $
 
 /**
  * @file
@@ -382,8 +382,8 @@ function system_install() {
     ->values(array('name' => 'authenticated user'))
     ->execute();
 
-  // Sanity check to ensure the anonymous and authenticated role IDs are the 
-  // same as the drupal defined constants. In certain situations, this will 
+  // Sanity check to ensure the anonymous and authenticated role IDs are the
+  // same as the drupal defined constants. In certain situations, this will
   // not be true.
   if ($rid_anonymous != DRUPAL_ANONYMOUS_RID) {
     db_update('role')
