@@ -21,18 +21,24 @@
  *   An array of image effects. This array is keyed on the machine-readable
  *   effect name. Each effect is defined as an associative array containing the
  *   following items:
- *   - "name": The human-readable name of the effect.
- *   - "effect callback": The function to call to perform this effect.
+ *   - "label": The human-readable name of the effect.
+ *   - "effect callback": The function to call to perform this image effect.
  *   - "help": (optional) A brief description of the effect that will be shown
- *     when adding or configuring this effect.
+ *     when adding or configuring this image effect.
+ *   - "form callback": (optional) The name of a function that will return a
+ *     $form array providing a configuration form for this image effect.
+ *   - "summary theme": (optional) The name of a theme function that will output
+ *     a summary of this image effect's configuration.
  */
 function hook_image_effect_info() {
   $effects = array();
 
   $effects['mymodule_resize'] = array(
-    'name' => t('Resize'),
+    'label' => t('Resize'),
     'help' => t('Resize an image to an exact set of dimensions, ignoring aspect ratio.'),
     'effect callback' => 'mymodule_resize_image',
+    'form callback' => 'mymodule_resize_form',
+    'summary theme' => 'mymodule_resize_summary',
   );
 
   return $effects;

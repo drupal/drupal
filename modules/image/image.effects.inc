@@ -12,34 +12,44 @@
 function image_image_effect_info() {
   $effects = array(
     'image_resize' => array(
-      'name' => t('Resize'),
+      'label' => t('Resize'),
       'help' => t('Resizing will make images an exact set of dimensions. This may cause images to be stretched or shrunk disproportionately.'),
       'effect callback' => 'image_resize_effect',
+      'form callback' => 'image_resize_form',
+      'summary theme' => 'image_resize_summary',
     ),
     'image_scale' => array(
-      'name' => t('Scale'),
+      'label' => t('Scale'),
       'help' => t('Scaling will maintain the aspect-ratio of the original image. If only a single dimension is specified, the other dimension will be calculated.'),
       'effect callback' => 'image_scale_effect',
+      'form callback' => 'image_scale_form',
+      'summary theme' => 'image_scale_summary',
     ),
     'image_scale_and_crop' => array(
-      'name' => t('Scale and Crop'),
+      'label' => t('Scale and crop'),
       'help' => t('Scale and crop will maintain the aspect-ratio of the original image, then crop the larger dimension. This is most useful for creating perfectly square thumbnails without stretching the image.'),
       'effect callback' => 'image_scale_and_crop_effect',
+      'form callback' => 'image_resize_form',
+      'summary theme' => 'image_resize_summary',
     ),
     'image_crop' => array(
-      'name' => t('Crop'),
+      'label' => t('Crop'),
       'help' => t('Cropping will remove portions of an image to make it the specified dimensions.'),
       'effect callback' => 'image_crop_effect',
+      'form callback' => 'image_crop_form',
+      'summary theme' => 'image_crop_summary',
     ),
     'image_desaturate' => array(
-      'name' => t('Desaturate'),
+      'label' => t('Desaturate'),
       'help' => t('Desaturate converts an image to grayscale.'),
       'effect callback' => 'image_desaturate_effect',
     ),
     'image_rotate' => array(
-      'name' => t('Rotate'),
+      'label' => t('Rotate'),
       'help' => t('Rotating an image may cause the dimensions of an image to increase to fit the diagonal.'),
       'effect callback' => 'image_rotate_effect',
+      'form callback' => 'image_rotate_form',
+      'summary theme' => 'image_rotate_summary',
     ),
   );
 

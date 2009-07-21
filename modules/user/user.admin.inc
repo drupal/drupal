@@ -363,26 +363,29 @@ function user_admin_settings() {
   if (module_exists('image')) {
     $form['personalization']['pictures']['settings']['user_picture_style'] = array(
       '#type' => 'select',
-      '#title' => t('Picture style'),
+      '#title' => t('Picture display style'),
       '#options' => image_style_options(TRUE),
       '#default_value' => variable_get('user_picture_style', ''),
+      '#description' => t('The style selected will be used on display, while the original image is retained. Styles may be configured in the <a href="!url">Image styles</a> administration area.', array('!url' => url('admin/settings/image-styles'))),
     );
   }
   $form['personalization']['pictures']['user_picture_dimensions'] = array(
     '#type' => 'textfield',
-    '#title' => t('Picture maximum dimensions'),
+    '#title' => t('Picture upload dimensions'),
     '#default_value' => variable_get('user_picture_dimensions', '85x85'),
-    '#size' => 15,
+    '#size' => 10,
     '#maxlength' => 10,
-    '#description' => t('Maximum dimensions for pictures, in pixels.'),
+    '#field_suffix' => ' ' . t('pixels'),
+    '#description' => t('Maximum allowed dimensions for uploaded pictures.'),
   );
   $form['personalization']['pictures']['user_picture_file_size'] = array(
     '#type' => 'textfield',
-    '#title' => t('Picture maximum file size'),
+    '#title' => t('Picture upload file size'),
     '#default_value' => variable_get('user_picture_file_size', '30'),
-    '#size' => 15,
+    '#size' => 10,
     '#maxlength' => 10,
-    '#description' => t('Maximum file size for pictures, in kB.'),
+    '#field_suffix' => ' ' . t('KB'),
+    '#description' => t('Maximum allowed file size for uploaded pictures.'),
   );
   $form['personalization']['pictures']['user_picture_guidelines'] = array(
     '#type' => 'textarea',
