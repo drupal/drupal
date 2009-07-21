@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.316 2009/06/27 23:10:59 webchick Exp $
+// $Id: CHANGELOG.txt,v 1.317 2009/07/21 07:09:46 webchick Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -103,6 +103,11 @@ Drupal 7.0, xxxx-xx-xx (development version)
       uploading a site logo--that don't require the overhead of databases and
       hooks, the current unmanaged copy, move and delete operations have been
       preserved but renamed to file_unmanaged_*().
+- Image handling:
+    * Improved image handling, including better support for add-on image
+      libraries.
+    * Added API and interface for creating advanced image thumbnails.
+    * Inclusion of additional effects such as rotate and desaturate.
 - Added aliased multi-site support:
     * Added support for mapping domain names to sites directories.
 - Added RDF support:

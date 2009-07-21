@@ -1,0 +1,61 @@
+/* $Id: image.admin.css,v 1.1 2009/07/21 07:09:46 webchick Exp $ */
+
+/**
+ * Image style configuration pages.
+ */
+div.image-style-new,
+div.image-style-new div {
+  display: inline;
+}
+div.image-style-preview div.preview-image-wrapper {
+  float: left;
+  padding-bottom: 2em;
+  text-align: center;
+  top: 50%;
+  width: 48%;
+}
+div.image-style-preview div.preview-image {
+  margin: auto;
+  position: relative;
+}
+div.image-style-preview div.preview-image div.width {
+  border: 1px solid #666;
+  border-top: none;
+  height: 2px;
+  left: -1px;
+  bottom: -6px;
+  position: absolute;
+}
+div.image-style-preview div.preview-image div.width span {
+  position: relative;
+  top: 4px;
+}
+div.image-style-preview div.preview-image div.height {
+  border: 1px solid #666;
+  border-left: none;
+  position: absolute;
+  right: -6px;
+  top: -1px;
+  width: 2px;
+}
+div.image-style-preview div.preview-image div.height span {
+  height: 2em;
+  left: 10px;
+  margin-top: -1em;
+  position: absolute;
+  top: 50%;
+}
+
+/**
+ * Image anchor element.
+ */
+table.image-anchor {
+  width: auto;
+}
+table.image-anchor tr.even,
+table.image-anchor tr.odd {
+  background: none;
+}
+table.image-anchor td {
+  border: 1px solid #CCC;
+}
