@@ -218,8 +218,9 @@ Drupal.unfreezeHeight = function () {
 };
 
 /**
- * Wrapper to address the mod_rewrite url encoding bug
- * (equivalent of drupal_urlencode() in PHP).
+ * Wrapper around encodeURIComponent() which avoids Apache quirks (equivalent of
+ * drupal_urlencode() in PHP). This function should only be used on paths, not
+ * on query string arguments.
  */
 Drupal.encodeURIComponent = function (item, uri) {
   uri = uri || location.href;
