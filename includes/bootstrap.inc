@@ -1343,6 +1343,13 @@ function _drupal_bootstrap($phase) {
       break;
 
     case DRUPAL_BOOTSTRAP_DATABASE:
+      // The user agent header is used to pass a database prefix in the request when
+      // running tests. However, for security reasons, it is imperative that we
+      // validate we ourselves made the request.
+      if (isset($_SERVER['HTTP_USER_AGENT']) && (strpos($_SERVER['HTTP_USER_AGENT'], "simpletest") !== FALSE) && !drupal_valid_test_ua($_SERVER['HTTP_USER_AGENT'])) {
+        header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
+        exit;
+      }
       // Initialize the database system. Note that the connection
       // won't be initialized until it is actually requested.
       require_once DRUPAL_ROOT . '/includes/database/database.inc';
@@ -1426,6 +1433,45 @@ function _drupal_bootstrap($phase) {
       _drupal_bootstrap_full();
       break;
   }
+}
+
+/**
+ * Validate the HMAC and timestamp of a user agent header from simpletest.
+ */
+function drupal_valid_test_ua($user_agent) {
+  global $databases;
+
+  list($prefix, $time, $salt, $hmac) = explode(';', $user_agent);
+  $check_string =  $prefix . ';' . $time . ';' . $salt;
+  // We use the database credentials from settings.php to make the HMAC key, since
+  // the database is not yet initialized and we can't access any Drupal variables.
+  // The file properties add more entropy not easily accessible to others.
+  $filepath = DRUPAL_ROOT . '/includes/bootstrap.inc';
+  $key = sha1(serialize($databases) . filectime($filepath) . fileinode($filepath), TRUE);
+  $time_diff = REQUEST_TIME - $time;
+  // Since we are making a local request, a 2 second time window is allowed,
+  // and the HMAC must match.
+  return (($time_diff >= 0) && ($time_diff < 3) && ($hmac == base64_encode(hash_hmac('sha1', $check_string, $key, TRUE))));
+}
+
+/**
+ * Generate a user agent string with a HMAC and timestamp for simpletest.
+ */
+function drupal_generate_test_ua($prefix) {
+  global $databases;
+  static $key;
+
+  if (!isset($key)) {
+    // We use the database credentials to make the HMAC key, since we
+    // check the HMAC before the database is initialized. filectime()
+    // and fileinode() are not easily determined from remote.
+    $filepath = DRUPAL_ROOT . '/includes/bootstrap.inc';
+    $key = sha1(serialize($databases) . filectime($filepath) . fileinode($filepath), TRUE);
+  }
+   // Generate a moderately secure HMAC based on the database credentials.
+   $salt = uniqid('', TRUE);
+   $check_string = $prefix . ';' . time() . ';' . $salt;
+   return  $check_string . ';' . base64_encode(hash_hmac('sha1', $check_string, $key, TRUE));
 }
 
 /**
