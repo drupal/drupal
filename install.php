@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.185 2009/07/19 04:48:09 webchick Exp $
+// $Id: install.php,v 1.186 2009/07/22 04:45:35 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -28,7 +28,7 @@ function install_main() {
   // The user agent header is used to pass a database prefix in the request when
   // running tests. However, for security reasons, it is imperative that no
   // installation be permitted using such a prefix.
-  if (isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/^simpletest\d+$/", $_SERVER['HTTP_USER_AGENT'])) {
+  if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], "simpletest") !== FALSE) {
     header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
     exit;
   }

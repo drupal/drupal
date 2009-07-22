@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.64 2009/07/21 07:26:59 webchick Exp $
+// $Id: database.inc,v 1.65 2009/07/22 04:45:35 dries Exp $
 
 /**
  * @file
@@ -1347,9 +1347,10 @@ abstract class Database {
       }
 
       // We need to pass around the simpletest database prefix in the request
-      // and we put that in the user_agent header.
-      if (isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/^simpletest\d+$/", $_SERVER['HTTP_USER_AGENT'])) {
-        $db_prefix .= $_SERVER['HTTP_USER_AGENT'];
+      // and we put that in the user_agent header. The header HMAC was already
+      // validated in bootstrap.inc.
+      if (isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/^(simpletest\d+);/", $_SERVER['HTTP_USER_AGENT'], $matches)) {
+        $db_prefix .= $matches[1];
       }
       return $new_connection;
     }
