@@ -1562,13 +1562,14 @@ function form_get_options($element, $key) {
 }
 
 /**
- * Format a group of form items.
+ * Formats a group of items as an HTML fieldset element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
- *   Properties used: attributes, title, value, description, children, collapsible, collapsed
+ *   Properties used: #attributes, #children, #collapsed, #collapsible,
+ *   #description, #id, #title, #value.
  * @return
- *   A themed HTML string representing the form item group.
+ *   A themed HTML string representing the group of items.
  *
  * @ingroup themeable
  */
