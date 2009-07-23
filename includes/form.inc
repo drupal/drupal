@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.351 2009/07/18 02:41:05 dries Exp $
+// $Id: form.inc,v 1.352 2009/07/23 00:01:03 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1562,13 +1562,14 @@ function form_get_options($element, $key) {
 }
 
 /**
- * Format a group of form items.
+ * Formats a group of items as an HTML fieldset element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
- *   Properties used: attributes, title, value, description, children, collapsible, collapsed
+ *   Properties used: #attributes, #children, #collapsed, #collapsible,
+ *   #description, #id, #title, #value.
  * @return
- *   A themed HTML string representing the form item group.
+ *   A themed HTML string representing the group of items.
  *
  * @ingroup themeable
  */
