@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.147 2009/07/10 04:58:08 webchick Exp $
+// $Id: module.inc,v 1.148 2009/07/23 21:14:09 webchick Exp $
 
 /**
  * @file
@@ -324,12 +324,7 @@ function module_disable($module_list) {
  */
 function module_hook($module, $hook) {
   $function = $module . '_' . $hook;
-  if (defined('MAINTENANCE_MODE')) {
-    return function_exists($function);
-  }
-  else {
-    return drupal_function_exists($function);
-  }
+  return function_exists($function) || drupal_function_exists($function);
 }
 
 /**
