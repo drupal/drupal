@@ -3987,6 +3987,8 @@ function element_info($type) {
         $cache[$element_type]['#type'] = $element_type;
       }
     }
+    // Allow modules to alter the element type defaults.
+    drupal_alter('element_info', $cache);
   }
 
   return $cache[$type];
