@@ -1116,6 +1116,14 @@ function search_box(&$form_state, $form_id) {
  * Process a block search form submission.
  */
 function search_box_form_submit($form, &$form_state) {
+  // The search form relies on control of the redirect destination for its
+  // functionality, so we override any static destination set in the request,
+  // for example by drupal_access_denied() or drupal_not_found()
+  // (see http://drupal.org/node/292565).
+  if (isset($_REQUEST['destination'])) {
+    unset($_REQUEST['destination']);
+  }
+
   $form_id = $form['form_id']['#value'];
   $form_state['redirect'] = 'search/node/' . trim($form_state['values'][$form_id]);
 }

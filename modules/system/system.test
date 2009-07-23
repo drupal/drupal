@@ -510,7 +510,7 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
     parent::setUp();
 
     // Create an administrative user.
-    $this->admin_user = $this->drupalCreateUser(array('administer site configuration'));
+    $this->admin_user = $this->drupalCreateUser(array('administer site configuration', 'administer blocks'));
     $this->drupalLogin($this->admin_user);
   }
 
@@ -547,6 +547,22 @@ class AccessDeniedTestCase extends DrupalWebTestCase {
     $this->drupalGet('admin');
     $this->assertText(t('Access denied'), t('Found the default 403 page'));
     $this->assertText(t('User login'), t('Blocks are shown on the default 403 page'));
+
+    // Log back in, set the custom 403 page to /user and remove the block
+    $this->drupalLogin($this->admin_user);
+    variable_set('site_403', 'user');
+    $this->drupalPost('admin/structure/block', array('user_login[region]' => '-1'), t('Save blocks'));
+
+    // Check that we can log in from the 403 page.
+    $this->drupalLogout();
+    $edit = array(
+      'name' => $this->admin_user->name,
+      'pass' => $this->admin_user->pass_raw,
+    );
+    $this->drupalPost('admin/settings/site-information', $edit, t('Log in'));
+
+    // Check that we're still on the same page.
+    $this->assertText(t('Site information'));
   }
 }
 
