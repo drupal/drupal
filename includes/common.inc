@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.939 2009/07/23 20:58:25 webchick Exp $
+// $Id: common.inc,v 1.940 2009/07/23 21:20:16 webchick Exp $
 
 /**
  * @file
@@ -3987,6 +3987,8 @@ function element_info($type) {
         $cache[$element_type]['#type'] = $element_type;
       }
     }
+    // Allow modules to alter the element type defaults.
+    drupal_alter('element_info', $cache);
   }
 
   return $cache[$type];

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.49 2009/07/15 02:08:41 webchick Exp $
+// $Id: system.api.php,v 1.50 2009/07/23 21:20:16 webchick Exp $
 
 /**
  * @file
@@ -113,6 +113,24 @@ function hook_db_rewrite_sql($query, $primary_table, $primary_field, $args) {
 function hook_elements() {
   $type['filter_format'] = array('#input' => TRUE);
   return $type;
+}
+
+/**
+ * Alter the element type information returned from modules.
+ *
+ * A module may implement this hook in order to alter the element type defaults
+ * defined by a module.
+ *
+ * @param &$type
+ *   All element type defaults as collected by hook_elements().
+ *
+ * @see hook_elements()
+ */
+function hook_element_info_alter(&$type) {
+  // Decrease the default size of textfields.
+  if (isset($type['textfield']['#size'])) {
+    $type['textfield']['#size'] = 40;
+  }
 }
 
 /**
