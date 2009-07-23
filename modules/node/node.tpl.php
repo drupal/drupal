@@ -9,15 +9,12 @@
  * - $title: the (sanitized) title of the node.
  * - $content: An array of node items. Use render($content) to print them all, or
  *   print a subset such as render($content['field_example']). Use
- *   hide($content['field_example]) to temporarily suppress the printing of a
+ *   hide($content['field_example']) to temporarily suppress the printing of a
  *   given element.
- * - $comments: the themed list of comments (if any).
  * - $picture: The authors picture of the node output from
  *   theme_user_picture().
  * - $date: Formatted creation date (use $created to reformat with
  *   format_date()).
- * - $links: Themed links like "Read more", "Add new comment", etc. output
- *   from theme_links().
  * - $name: Themed username of node author output from theme_username().
  * - $node_url: Direct url of the current node.
  * - $terms: the themed list of taxonomy term links output from theme_links().
