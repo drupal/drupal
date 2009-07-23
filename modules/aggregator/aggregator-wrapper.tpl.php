@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator-wrapper.tpl.php,v 1.2 2008/05/15 21:27:32 dries Exp $
+// $Id: aggregator-wrapper.tpl.php,v 1.3 2009/07/23 22:14:26 webchick Exp $
 
 /**
  * @file
@@ -10,7 +10,7 @@
  * - $page: Pager links rendered through theme_pager().
  *
  * @see template_preprocess()
- * @see template_preprocess_comment_wrapper()
+ * @see template_preprocess_aggregator_wrapper()
  */
 ?>
 <div id="aggregator">
