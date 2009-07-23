@@ -324,12 +324,7 @@ function module_disable($module_list) {
  */
 function module_hook($module, $hook) {
   $function = $module . '_' . $hook;
-  if (defined('MAINTENANCE_MODE')) {
-    return function_exists($function);
-  }
-  else {
-    return drupal_function_exists($function);
-  }
+  return function_exists($function) || drupal_function_exists($function);
 }
 
 /**
