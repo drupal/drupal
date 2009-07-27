@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.11 2009/07/11 00:56:45 webchick Exp $
+// $Id: field.form.inc,v 1.12 2009/07/27 20:19:20 dries Exp $
 
 /**
  * @file
@@ -36,8 +36,6 @@ function field_default_form($obj_type, $object, $field, $instance, $items, &$for
     'field' => $field,
     'instance' => $instance,
   );
-  // TODO : why do we need this ?
-  $form['#cache'] = FALSE;
 
   // Populate widgets with default values if we're creating a new object.
   if (empty($items) && empty($id) && !empty($instance['default_value_function'])) {
@@ -183,8 +181,6 @@ function field_multiple_value_form($field, $instance, $items, &$form, &$form_sta
 
     // Add AHAH add more button, if not working with a programmed form.
     if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED && empty($form_state['programmed'])) {
-      // Make sure the form is cached so ahah can work.
-      $form['#cache'] = TRUE;
       $bundle_name_url_str = str_replace('_', '-', $instance['bundle']);
       $field_name_url_str = str_replace('_', '-', $field_name);
 
