@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.728 2009/07/27 18:38:35 dries Exp $
+// $Id: system.module,v 1.729 2009/07/27 19:53:18 dries Exp $
 
 /**
  * @file
@@ -1155,6 +1155,29 @@ function system_library() {
   );
 
   return $libraries;
+}
+
+/**
+ * Implement hook_stream_wrappers().
+ */
+function system_stream_wrappers() {
+  return array(
+    'public' => array(
+      'name' => t('Public files'),
+      'class' => 'DrupalPublicStreamWrapper',
+      'description' => t('Public local files served by the webserver.'),
+    ),
+    'private' => array(
+      'name' => t('Private files'),
+      'class' => 'DrupalPrivateStreamWrapper',
+      'description' => t('Private local files served by Drupal.'),
+    ),
+    'temporary' => array(
+      'name' => t('Temporary files'),
+      'class' => 'DrupalTemporaryStreamWrapper',
+      'description' => t('Temporary local files for upload and previews.'),
+    )
+  );
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: file_test.module,v 1.10 2009/05/27 18:34:00 dries Exp $
+// $Id: file_test.module,v 1.11 2009/07/27 19:53:18 dries Exp $
 
 /**
  * @file
@@ -21,6 +21,19 @@ function file_test_menu() {
     'type' => MENU_CALLBACK,
   );
   return $items;
+}
+
+/**
+ * Implement hook_stream_wrappers().
+ */
+function file_test_stream_wrappers() {
+  return array(
+    'dummy' => array(
+      'name' => t('Dummy files'),
+      'class' => 'DrupalDummyStreamWrapper',
+      'description' => t('Dummy wrapper for simpletest.'),
+    ),
+  );
 }
 
 /**
@@ -238,3 +251,33 @@ function file_test_file_move($file, $source) {
 function file_test_file_delete($file) {
   _file_test_log_call('delete', array($file));
 }
+
+/**
+ * Helper class for testing the stream wrapper registry.
+ *
+ * Dummy stream wrapper implementation (dummy://).
+ */
+class DrupalDummyStreamWrapper extends DrupalLocalStreamWrapper {
+  function getDirectoryPath() {
+    return variable_get('stream_public_path', 'sites/default/files');
+  }
+
+  /**
+   * Override getInternalUri().
+   *
+   * Return a dummy path for testing.
+   */
+  function getInternalUri() {
+    return '/dummy/example.txt';
+  }
+
+  /**
+   * Override getExternalUrl().
+   *
+   * Return the HTML URI of a public file.
+   */
+  function getExternalUrl() {
+    return '/dummy/example.txt';
+  }
+}
+

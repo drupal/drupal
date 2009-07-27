@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.941 2009/07/27 18:38:35 dries Exp $
+// $Id: common.inc,v 1.942 2009/07/27 19:53:17 dries Exp $
 
 /**
  * @file
@@ -3451,7 +3451,8 @@ function _drupal_bootstrap_full() {
   fix_gpc_magic();
   // Load all enabled modules
   module_load_all();
-
+  // Make sure all stream wrappers are registered.
+  file_get_stream_wrappers();
   // Let all modules take action before menu system handles the request
   // We do not want this while running update.php.
   if (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update') {
