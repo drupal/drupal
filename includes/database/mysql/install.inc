@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.2 2009/04/20 20:02:30 dries Exp $
+// $Id: install.inc,v 1.3 2009/07/27 19:42:56 dries Exp $
 
 /**
  * @file
@@ -9,7 +9,7 @@
 
 // MySQL specific install functions
 
-class DatabaseInstaller_mysql extends DatabaseInstaller {
+class DatabaseTasks_mysql extends DatabaseTasks {
   protected $pdoDriver = 'mysql';
   public function name() {
     return 'MySQL';

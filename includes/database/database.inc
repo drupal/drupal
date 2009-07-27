@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.66 2009/07/27 18:24:49 dries Exp $
+// $Id: database.inc,v 1.67 2009/07/27 19:42:55 dries Exp $
 
 /**
  * @file
@@ -2691,6 +2691,21 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
   }
 
   return $query;
+}
+
+/**
+ * Ensures the environment for a Drupal database on a predefined connection.
+ *
+ * This will run tasks that check that Drupal can perform all of the functions
+ * on a database, that Drupal needs. Tasks include simple checks like CREATE
+ * TABLE to database specfic functions like stored procedures and client 
+ * encoding.
+ */
+function db_run_tasks($driver) {
+  $task_class = 'DatabaseTasks_' . $driver;
+  $DatabaseTasks = new $task_class();
+  $DatabaseTasks->runTasks();
+  return true;
 }
 
 /**
