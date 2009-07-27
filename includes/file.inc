@@ -7,6 +7,13 @@
  */
 
 /**
+ * Stream wrapper code is included here because there are cases where
+ * File API is needed before a bootstrap, or in an alternate order (e.g.
+ * maintenance theme).
+ */
+require_once DRUPAL_ROOT . '/includes/stream_wrappers.inc';
+
+/**
  * @defgroup file File interface
  * @{
  * Common file handling functions.
@@ -75,6 +82,221 @@ define('FILE_EXISTS_ERROR', 2);
  * runs.
  */
 define('FILE_STATUS_PERMANENT', 1);
+
+/**
+ * Methods to manage a registry of stream wrappers.
+ */
+
+/**
+ * Drupal stream wrapper registry.
+ *
+ * A stream wrapper is an abstraction of a file system that allows Drupal to
+ * use the same set of methods to access both local files and remote resources.
+ *
+ * Provide a facility for managing and querying user-defined stream wrappers
+ * in PHP. PHP's internal stream_get_wrappers() doesn't return the class
+ * registered to handle a stream, which we need to be able to find the handler
+ * for class instantiation.
+ *
+ * If a module registers a scheme that is already registered with PHP, the
+ * existing scheme will be unregistered and replaced with the specified class.
+ *
+ * A stream is referenced as "scheme://target".
+ *
+ * @return
+ *   Returns the entire Drupal stream wrapper registry.
+ * @see hook_stream_wrappers()
+ * @see hook_stream_wrappers_alter()
+ */
+function file_get_stream_wrappers() {
+  $wrappers = &drupal_static(__FUNCTION__);
+
+  if (!isset($wrappers)) {
+    $wrappers = module_invoke_all('stream_wrappers');
+    drupal_alter('stream_wrappers', $wrappers);
+    $existing = stream_get_wrappers();
+    foreach ($wrappers as $scheme => $info) {
+      // We only register classes that implement our interface.
+      if (in_array('DrupalStreamWrapperInterface', class_implements($info['class']), TRUE)) {
+        // Record whether we are overriding an existing scheme.
+        if (in_array($scheme, $existing, TRUE)) {
+          $wrappers[$scheme]['override'] = TRUE;
+          stream_wrapper_unregister($scheme);
+        }
+        else {
+          $wrappers[$scheme]['override'] = FALSE;
+        }
+        stream_wrapper_register($scheme, $info['class']);
+      }
+    }
+  }
+  return $wrappers;
+}
+
+/**
+ * Returns the stream wrapper class name for a given scheme.
+ *
+ * @param $scheme
+ *   Stream scheme.
+ * @return
+ *   Return string if a scheme has a registered handler, or FALSE.
+ */
+function file_stream_wrapper_get_class($scheme) {
+  $wrappers = file_get_stream_wrappers();
+  return empty($wrappers[$scheme]) ? FALSE : $wrappers[$scheme]['class'];
+}
+
+/**
+ * Returns the scheme of a URI (e.g. a stream).
+ *
+ * @param $uri
+ *   A stream, referenced as "scheme://target".
+ * @return
+ *   A string containing the name of the scheme, or FALSE if none. For example,
+ *   the URI "public://example.txt" would return "public".
+ */
+function file_uri_scheme($uri) {
+  $data = explode('://', $uri, 2);
+
+  return count($data) == 2 ? $data[0] : FALSE;
+}
+
+/**
+ * Check that the scheme of a stream URI is valid.
+ *
+ * Confirms that there is a registered stream handler for the provided scheme
+ * and that it is callable. This is useful if you want to confirm a valid
+ * scheme without creating a new instance of the registered handler.
+ *
+ * @param $scheme
+ *   A URI scheme, a stream is referenced as "scheme://target".
+ * @return
+ *   Returns TRUE if the string is the name of a validated stream,
+ *   or FALSE if the scheme does not have a registered handler.
+ */
+function file_stream_wrapper_valid_scheme($scheme) {
+  // Does the scheme have a registered handler that is callable?
+  $class = file_stream_wrapper_get_class($scheme);
+  if (class_exists($class)) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Returns the target of a URI (e.g. a stream).
+ *
+ * @param $uri
+ *   A stream, referenced as "scheme://target".
+ * @return
+ *   A string containing the target (path), or FALSE if none.
+ *   For example, the URI "public://sample/test.txt" would return
+ *   "sample/test.txt".
+ */
+function file_uri_target($uri) {
+  $data = explode('://', $uri, 2);
+
+  if (count($data) != 2) {
+    return FALSE;
+  }
+
+  // Remove erroneous beginning forward slash.
+  $data[1] = ltrim($data[1], '\/');
+
+  return $data[1];
+}
+
+/**
+ * Normalizes a URI by making it syntactically correct.
+ *
+ * A stream is referenced as "scheme://target".
+ *
+ * The following actions are taken:
+ * - Remove all occurrences of the wrapper's directory path
+ * - Remove trailing slashes from target
+ * - Trim erroneous leading slashes from target. e.g. ":///" becomes "://".
+ *
+ * @param $uri
+ *   String reference containing the URI to normalize.
+ */
+function file_stream_wrapper_uri_normalize($uri) {
+  $scheme = file_uri_scheme($uri);
+
+  if ($scheme && file_stream_wrapper_valid_scheme($scheme)) {
+    $target = file_uri_target($uri);
+
+    // Remove all occurrences of the wrapper's directory path.
+    $directory_path = file_stream_wrapper_get_instance_by_scheme($scheme)->getDirectoryPath();
+    $target = str_replace($directory_path, '', $target);
+
+    // Trim trailing slashes from target.
+    $target = rtrim($target, '/');
+
+    // Trim erroneous leading slashes from target.
+    $uri = $scheme . '://' . ltrim($target, '/');
+  }
+  return $uri;
+}
+
+/**
+ * Returns a reference to the stream wrapper class responsible for a given URI (stream).
+ *
+ * The scheme determines the stream wrapper class that should be
+ * used by consulting the stream wrapper registry.
+ *
+ * @param $uri
+ *   A stream, referenced as "scheme://target".
+ * @return
+ *   Returns a new stream wrapper object appropriate for the given URI or FALSE
+ *   if no registered handler could be found. For example, a URI of
+ *   "private://example.txt" would return a new private stream wrapper object
+ *   (DrupalPrivateStreamWrapper).
+ */
+function file_stream_wrapper_get_instance_by_uri($uri) {
+  $scheme = file_uri_scheme($uri);
+  $class = file_stream_wrapper_get_class($scheme);
+  if (class_exists($class)) {
+    $instance = new $class;
+    $instance->setUri($uri);
+    return $instance;
+  }
+  else {
+    return FALSE;
+  }
+}
+
+/**
+ * Returns a reference to the stream wrapper class responsible for a given scheme.
+ *
+ * This helper method returns a stream instance using a scheme. That is, the
+ * passed string does not contain a "://". For example, "public" is a scheme
+ * but "public://" is a URI (stream). This is because the later contains both
+ * a scheme and target despite target being empty.
+ *
+ * Note: the instance URI will be initialized to "scheme://" so that you can
+ * make the customary method calls as if you had retrieved an instance by URI.
+ *
+ * @param $scheme
+ *   If the stream was "public://target", "public" would be the scheme.
+ * @return
+ *   Returns a new stream wrapper object appropriate for the given $scheme.
+ *   For example, for the public scheme a stream wrapper object
+ *   (DrupalPublicStreamWrapper).
+ *   FALSE is returned if no registered handler could be found.
+ */
+function file_stream_wrapper_get_instance_by_scheme($scheme) {
+  $class = file_stream_wrapper_get_class($scheme);
+  if (class_exists($class)) {
+    $instance = new $class;
+    $instance->setUri($scheme . '://');
+    return $instance;
+  }
+  else {
+    return FALSE;
+  }
+}
 
 /**
  * Create the download path to a file.

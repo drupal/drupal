@@ -2077,3 +2077,80 @@ class FileMimeTypeTest extends DrupalWebTestCase {
     }
   }
 }
+
+/**
+ * Tests stream wrapper registry.
+ */
+class StreamWrapperRegistryTest extends DrupalWebTestCase {
+
+  protected $scheme = 'dummy';
+  protected $classname = 'DrupalDummyStreamWrapper';
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Stream Wrapper Registry',
+      'description' => 'Tests stream wrapper registry.',
+      'group' => 'File',
+    );
+  }
+
+  function setUp() {
+    drupal_static_reset('file_get_stream_wrappers');
+    parent::setUp('file_test');
+  }
+
+  function tearDown() {
+    parent::tearDown();
+    stream_wrapper_unregister($this->scheme);
+  }
+
+  /**
+   * Test the getClassName() function.
+   */
+  function testGetClassName() {
+    // Check the dummy scheme.
+    $this->assertEqual($this->classname, file_stream_wrapper_get_class($this->scheme), t('Got correct class name for dummy scheme.'));
+    // Check core's scheme.
+    $this->assertEqual('DrupalPublicStreamWrapper', file_stream_wrapper_get_class('public'), t('Got correct class name for public scheme.'));
+  }
+
+  /**
+   * Test the file_stream_wrapper_get_instance_by_scheme() function.
+   */
+  function testGetInstanceByScheme() {
+    $instance = file_stream_wrapper_get_instance_by_scheme($this->scheme);
+    $this->assertEqual($this->classname, get_class($instance), t('Got correct class type for dummy scheme.'));
+
+    $instance = file_stream_wrapper_get_instance_by_scheme('public');
+    $this->assertEqual('DrupalPublicStreamWrapper', get_class($instance), t('Got correct class type for public scheme.'));
+  }
+
+  /**
+   * Test the URI and target functions.
+   */
+  function testGetInstanceByUri() {
+    $instance = file_stream_wrapper_get_instance_by_uri($this->scheme . '://foo');
+    $this->assertEqual($this->classname, get_class($instance), t('Got correct class type for dummy URI.'));
+
+    $instance = file_stream_wrapper_get_instance_by_uri('public://foo');
+    $this->assertEqual('DrupalPublicStreamWrapper', get_class($instance), t('Got correct class type for public URI.'));
+
+    // Test file_stream_wrapper_uri_normalize.
+    $uri = 'public:///' . $this->originalFileDirectory . '/foo/bar/';
+    $uri = file_stream_wrapper_uri_normalize($uri);
+    $this->assertEqual('public://foo/bar', $uri, t('Got a properly normalized URI'));
+
+    // Test file_uri_taget().
+    $this->assertEqual('foo/bar.txt', file_uri_target('public://foo/bar.txt'), t('Got a valid stream target from public://foo/bar.txt'));
+    $this->assertFalse(file_uri_target('foo/bar.txt'), t('foo/bar.txt is not a valid stream.'));
+  }
+
+  /**
+   * Test the scheme functions.
+   */
+  function testGetValidStreamScheme() {
+    $this->assertEqual('foo', file_uri_scheme('foo://pork//chops'), t('Got the correct scheme from foo://asdf'));
+    $this->assertTrue(file_stream_wrapper_valid_scheme(file_uri_scheme('public://asdf')), t('Got a valid stream scheme from public://asdf'));
+    $this->assertFalse(file_stream_wrapper_valid_scheme(file_uri_scheme('foo://asdf')), t('Did not get a valid stream scheme from foo://asdf'));
+  }
+}

@@ -103,6 +103,9 @@ Drupal 7.0, xxxx-xx-xx (development version)
       uploading a site logo--that don't require the overhead of databases and
       hooks, the current unmanaged copy, move and delete operations have been
       preserved but renamed to file_unmanaged_*().
+    * Rewrote file handling to use PHP stream wrappers to enable support for 
+      both public and private files and to support pluggable storage mechanisms
+      and access to remote resources (e.g. S3 storage or Flickr photos).
 - Image handling:
     * Improved image handling, including better support for add-on image
       libraries.

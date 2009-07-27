@@ -1160,6 +1160,60 @@ function custom_url_rewrite_inbound(&$result, $path, $path_language) {
 }
 
 /**
+ * Registers PHP stream wrapper implementations associated with a module.
+ *
+ * Provide a facility for managing and querying user-defined stream wrappers
+ * in PHP. PHP's internal stream_get_wrappers() doesn't return the class
+ * registered to handle a stream, which we need to be able to find the handler
+ * for class instantiation.
+ *
+ * If a module registers a scheme that is already registered with PHP, it will
+ * be unregistered and replaced with the specified class.
+ *
+ * @return
+ *   A nested array, keyed first by scheme name ("public" for "public://"),
+ *   then keyed by the following values:
+ *   - 'name' A short string to name the wrapper.
+ *   - 'class' A string specifying the PHP class that implements the
+ *     DrupalStreamWrapperInterface interface.
+ *   - 'description' A string with a short description of what the wrapper does.
+ *
+ * @see file_get_stream_wrappers()
+ * @see hook_stream_wrappers_alter()
+ * @see system_stream_wrappers()
+ */
+function hook_stream_wrappers() {
+  return array(
+    'public' => array(
+      'name' => t('Public files'),
+      'class' => 'DrupalPublicStreamWrapper',
+      'description' => t('Public local files served by the webserver.'),
+    ),
+    'private' => array(
+      'name' => t('Private files'),
+      'class' => 'DrupalPrivateStreamWrapper',
+      'description' => t('Private local files served by Drupal.'),
+    ),
+    'temp' => array(
+      'name' => t('Temporary files'),
+      'class' => 'DrupalTempStreamWrapper',
+      'description' => t('Temporary local files for upload and previews.'),
+    )
+  );
+}
+
+/**
+ * Alters the list of PHP stream wrapper implementations.
+ *
+ * @see file_get_stream_wrappers()
+ * @see hook_stream_wrappers()
+ */
+function hook_stream_wrappers_alter(&$wrappers) {
+  // Change the name of private files to reflect the performance.
+  $wrappers['private']['name'] = t('Slow files');
+}
+
+/**
  * Load additional information into file objects.
  *
  * file_load_multiple() calls this hook to allow modules to load

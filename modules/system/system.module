@@ -1158,6 +1158,29 @@ function system_library() {
 }
 
 /**
+ * Implement hook_stream_wrappers().
+ */
+function system_stream_wrappers() {
+  return array(
+    'public' => array(
+      'name' => t('Public files'),
+      'class' => 'DrupalPublicStreamWrapper',
+      'description' => t('Public local files served by the webserver.'),
+    ),
+    'private' => array(
+      'name' => t('Private files'),
+      'class' => 'DrupalPrivateStreamWrapper',
+      'description' => t('Private local files served by Drupal.'),
+    ),
+    'temporary' => array(
+      'name' => t('Temporary files'),
+      'class' => 'DrupalTemporaryStreamWrapper',
+      'description' => t('Temporary local files for upload and previews.'),
+    )
+  );
+}
+
+/**
  * Retrieve a blocked IP address from the database.
  *
  * @param $iid integer
