@@ -182,22 +182,18 @@ class FilterAdminTestCase extends DrupalWebTestCase {
   }
 }
 
-class FilterTestCase extends DrupalWebTestCase {
+/**
+ * Unit tests for core filters.
+ */
+class FilterUnitTest extends DrupalWebTestCase {
   protected $format;
 
   public static function getInfo() {
     return array(
       'name' => 'Core filters',
-      'description' => 'Filter each filter individually: Convert URLs into links, Convert line breaks, Correct broken HTML, Escape all HTML, Limit allowed HTML tags.',
+      'description' => 'Filter each filter individually: convert line breaks, correct broken HTML.',
       'group' => 'Filter',
     );
-  }
-
-  function setUp() {
-    parent::setUp();
-
-    $admin_user = $this->drupalCreateUser(array('administer filters', 'create page content'));
-    $this->drupalLogin($admin_user);
   }
 
   /**
@@ -594,17 +590,17 @@ class FilterTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test the HTML corrector.
+   * Test the HTML corrector filter.
    *
    * @todo This test could really use some validity checking function.
    */
-  function testHtmlCorrector() {
+  function testHtmlCorrectorFilter() {
     // Tag closing.
     $f = _filter_htmlcorrector('<p>text');
     $this->assertEqual($f, '<p>text</p>', t('HTML corrector -- tag closing at the end of input.'));
 
     $f = _filter_htmlcorrector('<p>text<p><p>text');
-    $this->assertEqual($f, '<p>text</p><p></p><p>text</p>', t('HTML corrector -- tag closing.'));
+    $this->assertEqual($f, '<p>text</p><p /><p>text</p>', t('HTML corrector -- tag closing.'));
 
     $f = _filter_htmlcorrector("<ul><li>e1<li>e2");
     $this->assertEqual($f, "<ul><li>e1</li><li>e2</li></ul>", t('HTML corrector -- unclosed list tags.'));
@@ -615,6 +611,70 @@ class FilterTestCase extends DrupalWebTestCase {
     // XHTML slash for empty elements.
     $f = _filter_htmlcorrector('<hr><br>');
     $this->assertEqual($f, '<hr /><br />', t('HTML corrector -- XHTML closing slash.'));
+
+    $f = _filter_htmlcorrector('<P>test</P>');
+    $this->assertEqual($f, '<p>test</p>', t('HTML corrector -- Convert uppercased tags to proper lowercased ones.'));
+
+    $f = _filter_htmlcorrector('<P>test</p>');
+    $this->assertEqual($f, '<p>test</p>', t('HTML corrector -- Convert uppercased tags to proper lowercased ones.'));
+
+    $f = _filter_htmlcorrector('test<hr/>');
+    $this->assertEqual($f, 'test<hr />', t('HTML corrector -- Let proper XHTML pass thru.'));
+
+    $f = _filter_htmlcorrector('test<hr />');
+    $this->assertEqual($f, 'test<hr />', t('HTML corrector -- Let proper XHTML pass thru.'));
+
+    $f = _filter_htmlcorrector('<span class="test" />');
+    $this->assertEqual($f, '<span class="test" />', t('HTML corrector -- Let proper XHTML pass thru.'));
+
+    $f = _filter_htmlcorrector('test1<br class="test">test2');
+    $this->assertEqual($f, 'test1<br class="test" />test2', t('HTML corrector -- Automatically close single tags.'));
+
+    $f = _filter_htmlcorrector('line1<hr>line2');
+    $this->assertEqual($f, 'line1<hr />line2', t('HTML corrector -- Automatically close single tags.'));
+
+    $f = _filter_htmlcorrector('line1<HR>line2');
+    $this->assertEqual($f, 'line1<hr />line2', t('HTML corrector -- Automatically close single tags.'));
+
+    $f = _filter_htmlcorrector('<img src="http://example.com/test.jpg">test</img>');
+    $this->assertEqual($f, '<img src="http://example.com/test.jpg" />test', t('HTML corrector -- Automatically close single tags.'));
+
+    $f = _filter_htmlcorrector('<p>line1<br/><hr/>line2</p>');
+    $this->assertEqual($f, '<p>line1<br /></p><hr />line2', t('HTML corrector -- Move non-inline elements outside of inline containers.'));
+
+    $f = _filter_htmlcorrector('<p>line1<div>line2</div></p>');
+    $this->assertEqual($f, '<p>line1</p><div>line2</div>', t('HTML corrector -- Move non-inline elements outside of inline containers.'));
+
+    $f = _filter_htmlcorrector('<p>test<p>test</p>\n');
+    $this->assertEqual($f, '<p>test</p><p>test</p>\n', t('HTML corrector -- Auto-close improperly nested tags.'));
+
+    $f = _filter_htmlcorrector('<p>Line1<br><STRONG>bold stuff</b>');
+    $this->assertEqual($f, '<p>Line1<br /><strong>bold stuff</strong></p>', t('HTML corrector -- Properly close unclosed tags, and remove useless closing tags.'));
+
+    $f = _filter_htmlcorrector('test <!-- this is a comment -->');
+    $this->assertEqual($f, 'test <!-- this is a comment -->', t('HTML corrector -- Do not touch HTML comments.'));
+
+    $f = _filter_htmlcorrector('test <!--this is a comment-->');
+    $this->assertEqual($f, 'test <!--this is a comment-->', t('HTML corrector -- Do not touch HTML comments.'));
+
+    $f = _filter_htmlcorrector('test <!-- comment <p>another 
+    <strong>multiple</strong> line 
+    comment</p> -->');
+    $this->assertEqual($f, 'test <!-- comment <p>another 
+    <strong>multiple</strong> line 
+    comment</p> -->', t('HTML corrector -- Do not touch HTML comments.'));
+
+    $f = _filter_htmlcorrector('test <!-- comment <p>another comment</p> -->');
+    $this->assertEqual($f, 'test <!-- comment <p>another comment</p> -->', t('HTML corrector -- Do not touch HTML comments.'));
+
+    $f = _filter_htmlcorrector('test <!--break-->');
+    $this->assertEqual($f, 'test <!--break-->', t('HTML corrector -- Do not touch HTML comments.'));
+
+    $f = _filter_htmlcorrector('<p>test\n</p>\n');
+    $this->assertEqual($f, '<p>test\n</p>\n', t('HTML corrector -- New-lines are accepted and kept as-is.'));
+
+    $f = _filter_htmlcorrector('<p>دروبال');
+    $this->assertEqual($f, '<p>دروبال</p>', t('HTML corrector -- Encoding is correctly kept.'));
   }
 
   function createFormat($filter) {

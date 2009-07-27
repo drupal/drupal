@@ -266,6 +266,17 @@ function system_requirements($phase) {
   include_once DRUPAL_ROOT . '/includes/unicode.inc';
   $requirements = array_merge($requirements, unicode_requirements());
 
+  // Verify if the DOM PHP 5 extension is available.
+  $has_dom = class_exists('DOMDocument');
+  if (!$has_dom) {
+    $requirements['php_dom'] = array(
+      'title' => $t('PHP DOM Extension'),
+      'value' => $t('Not found'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => $t("The DOM extension is part of PHP 5 core, but doesn't seem to be enabled on your system. You need to enable the DOM extension on your PHP installation."),
+    );
+  }
+
   if ($phase == 'runtime') {
     // Check for update status module.
     if (!module_exists('update')) {
