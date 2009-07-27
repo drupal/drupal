@@ -197,7 +197,7 @@
 
   </div></div> <!-- /#page, /#page-wrapper -->
 
-  <?php print $closure; ?>
+  <?php print $page_bottom; ?>
 
 </body>
 </html>

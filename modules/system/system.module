@@ -1345,7 +1345,6 @@ function system_init() {
   }
 }
 
-
 /**
  * Implement MODULE_preprocess_HOOK().
  */
@@ -1836,6 +1835,7 @@ function _system_get_theme_data() {
         'highlight' => 'Highlighted content',
         'help' => 'Help',
         'page_top' => 'Page top',
+        'page_bottom' => 'Page bottom',
       ),
       'description' => '',
       'features' => array(
@@ -2015,6 +2015,7 @@ function system_system_info_alter(&$info, $file) {
   // Remove page-top from the blocks UI since it is reserved for modules to
   // populate from outside the blocks system.
   $info['regions_hidden'][] = 'page_top';
+  $info['regions_hidden'][] = 'page_bottom';
 }
 
 /**

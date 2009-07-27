@@ -75,6 +75,6 @@
     </div> <!-- /#container -->
   </div> <!-- /#wrapper -->
 
-  <?php print $closure ?>
+  <?php print $page_bottom; ?>
   </body>
 </html>

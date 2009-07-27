@@ -4150,9 +4150,6 @@ function drupal_common_theme() {
     'more_link' => array(
       'arguments' => array('url' => NULL, 'title' => NULL)
     ),
-    'closure' => array(
-      'arguments' => array('main' => 0),
-    ),
     'blocks' => array(
       'arguments' => array('region' => NULL),
     ),

@@ -1703,20 +1703,6 @@ function theme_more_link($url, $title) {
 }
 
 /**
- * Execute hook_footer() which is run at the end of the page right before the
- * close of the body tag.
- *
- * @param $main (optional)
- *   Whether the current page is the front page of the site.
- * @return
- *   A string containing the results of the hook_footer() calls.
- */
-function theme_closure($main = 0) {
-  $footer = module_invoke_all('footer', $main);
-  return implode("\n", $footer) . drupal_get_js('footer');
-}
-
-/**
  * Format a username.
  *
  * @param $object
@@ -1950,8 +1936,6 @@ function template_preprocess_page(&$variables) {
   // using an associated GRDDL profile.
   $variables['rdf_namespaces']    = drupal_get_rdf_namespaces();
   $variables['grddl_profile']     = 'http://ns.inria.fr/grddl/rdfa/';
-  // Closure should be filled last.
-  $variables['closure']           = theme('closure');
 
   if ($node = menu_get_object()) {
     $variables['node'] = $node;
@@ -2009,6 +1993,8 @@ function template_process_page(&$variables) {
   foreach (system_region_list($GLOBALS['theme']) as $region_key => $region_name) {
     $variables[$region_key] = drupal_render($variables['page'][$region_key]);
   }
+  // Append javascript to $page_bottom
+  $variables['page_bottom'] .= drupal_get_js('footer');
 
   $variables['head']    = drupal_get_html_head();
   $variables['css']     = drupal_add_css();
