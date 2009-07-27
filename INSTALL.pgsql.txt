@@ -12,9 +12,9 @@ Note that the database must be created with UTF-8 (Unicode) encoding.
    following command creates a new user named "username" and asks for a
    password for that user:
 
-     createuser --pwprompt --encrypted --no-adduser --no-createdb username
+     createuser --pwprompt --encrypted --no-createrole --no-createdb username
 
-   If everything works correctly, you'll see a "CREATE USER" notice.
+   If there are no errors then the command was successful
 
 2. CREATE THE DRUPAL DATABASE
 
@@ -23,6 +23,6 @@ Note that the database must be created with UTF-8 (Unicode) encoding.
    The following command creates a new database named "databasename", which is
    owned by previously created "username":
 
-     createdb --encoding=UNICODE --owner=username databasename
+     createdb --encoding=UTF8 --owner=username databasename
 
-   If everything works correctly, you'll see a "CREATE DATABASE" notice.
+   If there are no errors then the command was successful

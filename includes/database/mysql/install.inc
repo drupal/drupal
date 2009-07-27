@@ -9,7 +9,7 @@
 
 // MySQL specific install functions
 
-class DatabaseInstaller_mysql extends DatabaseInstaller {
+class DatabaseTasks_mysql extends DatabaseTasks {
   protected $pdoDriver = 'mysql';
   public function name() {
     return 'MySQL';

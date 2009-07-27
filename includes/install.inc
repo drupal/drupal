@@ -222,7 +222,7 @@ function drupal_detect_database_types() {
   }
 
   foreach ($drivers as $driver => $file) {
-    $class = 'DatabaseInstaller_' . $driver;
+    $class = 'DatabaseTasks_' . $driver;
     $installer = new $class();
     if ($installer->installable()) {
       $databases[$driver] = $installer->name();
@@ -239,95 +239,166 @@ function drupal_detect_database_types() {
   return $databases;
 }
 
-abstract class DatabaseInstaller {
-  protected $success = array();
-  protected $tests = array(
-    'testCreate' => array(
-      'query' => 'CREATE TABLE drupal_install_test (id int NULL)',
-      'success' => 'CREATE',
-      'message' => 'Failed to create a test table on your %name database server with the command %query. %name reports the following message: %error.<ul><li>Are you sure the configured username has the necessary %name permissions to create tables in the database?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.',
-      'fatal' => TRUE,
+/**
+ * Database installer structure.
+ *
+ * Defines basic Drupal requirements for databases.
+ */
+abstract class DatabaseTasks {
+
+  /**
+   * Structure that describes each task to run.
+   *
+   * @var array
+   *
+   * Each value of the tasks array is an associative array defining the function
+   * to call (optional) and any arguments to be passed to the function.
+   */
+  protected $tasks = array(
+    array(
+      'arguments'   => array(
+        'CREATE TABLE drupal_install_test (id int NULL)',
+        'Drupal can use CREATE TABLE database commands.',
+        'Failed to <strong>CREATE</strong> a test table on your %name database server with the command %query. %name reports the following message: %error.<p>Are you sure the configured username has the necessary %name permissions to create tables in the database?</p>',
+        TRUE,
+      ),
     ),
-    'testInsert' => array(
-      'query' => 'INSERT INTO drupal_install_test (id) VALUES (1)',
-      'success' => 'INSERT',
-      'message' => 'Failed to insert a value into a test table on your %name database server. We tried inserting a value with the command %query and %name reported the following error: %error.',
+    array(
+      'arguments'   => array(
+        'INSERT INTO drupal_install_test (id) VALUES (1)',
+        'Drupal can use INSERT database commands.',
+        'Failed to <strong>INSERT</strong> a value into a test table on your %name database server. We tried inserting a value with the command %query and %name reported the following error: %error.',
+      ),
     ),
-    'testUpdate' => array(
-      'query' => 'UPDATE drupal_install_test SET id = 2',
-      'success' => 'UPDATE',
-      'message' => 'Failed to update a value in a test table on your %name database server. We tried updating a value with the command %query and %name reported the following error: %error.',
+    array(
+      'arguments'   => array(
+        'UPDATE drupal_install_test SET id = 2',
+        'Drupal can use UPDATE database commands.',
+        'Failed to <strong>UPDATE</strong> a value in a test table on your %name database server. We tried updating a value with the command %query and %name reported the following error: %error.',
+      ),
     ),
-    'testDelete' => array(
-      'query' => 'DELETE FROM drupal_install_test',
-      'success' => 'DELETE',
-      'message' => 'Failed to delete a value from a test table on your %name database server. We tried deleting a value with the command %query and %name reported the following error: %error.',
+    array(
+      'arguments'   => array(
+        'DELETE FROM drupal_install_test',
+        'Drupal can use DELETE database commands.',
+        'Failed to <strong>DELETE</strong> a value from a test table on your %name database server. We tried deleting a value with the command %query and %name reported the following error: %error.',
+      ),
     ),
-    'testDrop' => array(
-      'query' => 'DROP TABLE drupal_install_test',
-      'success' => 'DELETE',
-      'message' => 'Failed to drop a test table from your %name database server. We tried dropping a table with the command %query and %name reported the following error %error.',
+    array(
+      'arguments'   => array(
+        'DROP TABLE drupal_install_test',
+        'Drupal can use DROP TABLE database commands.',
+        'Failed to <strong>DROP</strong> a test table from your %name database server. We tried dropping a table with the command %query and %name reported the following error %error.',
+      ),
     ),
   );
-  public $error = FALSE;
+  /**
+   * Results from tasks.
+   *
+   * @var array
+   */
+  protected $results = array();
 
+  /**
+   * Ensure the PDO driver is supported by the version of PHP in use.
+   */
   protected function hasPdoDriver() {
     return in_array($this->pdoDriver, PDO::getAvailableDrivers());
   }
 
+  /**
+   * Assert test as failed.
+   */
+  protected function fail($message) {
+    $this->results[$message] = FALSE;
+  }
+
+  /**
+   * Assert test as a pass.
+   */
+  protected function pass($message) {
+    $this->results[$message] = TRUE;
+  }
+
+  /**
+   * Check whether Drupal is installable on the database.
+   */
   public function installable() {
-    return $this->hasPdoDriver();
+    return $this->hasPdoDriver() && empty($this->error);
   }
 
   abstract public function name();
 
-  public function test() {
-    $return = $this->testConnect();
-    if ($return === FALSE) {
-      return FALSE;
-    }
-    foreach ($this->tests as $test) {
-      $return = $this->runTestQuery($test['query'], $test['success'], $test['message'], !empty($test['fatal']));
-      if ($return === FALSE) {
-        return FALSE;
+  /**
+   * Run database tasks and tests to see if Drupal can run on the database.
+   */
+  public function runTasks() {
+    // We need to establish a connection before we can run tests.
+    if ($this->connect()) {
+      foreach ($this->tasks as $task) {
+        if (!isset($task['function'])) {
+          $task['function'] = 'runTestQuery';
+        }
+        if (method_exists($this, $task['function'])) {
+          // Returning false is fatal. No other tasks can run.
+          if (FALSE === call_user_func_array(array($this, $task['function']), $task['arguments'])) {
+            break;
+          }
+        }
+        else {
+          drupal_set_message(st('Failed to run all tasks against the database server. The task %task wasn\'t found.', array('%task' => $task['function'])), 'error');
+        }
       }
     }
-    return $this->success;
+    // Check for failed results and compile message
+    $message = '';
+    foreach ($this->results as $result => $success) {
+      if (!$success) {
+        $message .= '<p class="error">' . $result  . '</p>';
+      }
+    }
+    if (!empty($message)) {
+      $message = '<p>In order for Drupal to work, and to continue with the installation process, you must resolve all issues reported below. For more help with configuring your database server, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what any of this means you should probably contact your hosting provider.</p>' . $message;
+      throw new DatabaseTaskException($message);
+    }
   }
 
   /**
    * Check if we can connect to the database.
-   *
-   * @return
-   *  FALSE on failure.
    */
-  protected function testConnect() {
+  protected function connect() {
     try {
       // This doesn't actually test the connection.
       db_set_active();
       // Now actually do a check.
       Database::getConnection();
-      $this->success[] = 'CONNECT';
+      $this->pass('Drupal can CONNECT to the database ok.');
     }
     catch (Exception $e) {
-      drupal_set_message(st('Failed to connect to your %name database server. %name reports the following message: <strong>%error</strong>.<ul><li>Are you sure that you have typed the correct database hostname?</li><li>Are you sure that the database server is running?</li><li>Are you sure you have the correct database name?</li><li>Are you sure you have the correct username and password?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%error' => $e->getMessage(), '%name' => $this->name())), 'error');
+      $this->fail(st('Failed to connect to your %name database server. %name reports the following message: %error.<ul><li>Are you sure you have the correct username and password?</li><li>Are you sure that you have typed the correct database hostname?</li><li>Are you sure that the database server is running?</li></ul>For more help, see the <a href="http://drupal.org/node/258">Installation and upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.', array('%error' => $e->getMessage(), '%name' => $this->name())));
       return FALSE;
     }
+    return TRUE;
   }
 
-  protected function runTestQuery($query, $success, $message, $fatal = FALSE) {
+  /**
+   * Run SQL tests to ensure the database can execute commands with the current user.
+   */
+  protected function runTestQuery($query, $pass, $fail, $fatal = FALSE) {
     try {
       db_query($query);
-      $this->success[] = $success;
+      $this->pass(st($pass));
     }
     catch (Exception $e) {
-      drupal_set_message(st($message, array('%query' => $query, '%error' => $e->getMessage(), '%name' => $this->name())), 'error');
-      $this->error = TRUE;
-      if ($fatal) {
-        return FALSE;
-      }
+      $this->fail(st($fail, array('%query' => $query, '%error' => $e->getMessage(), '%name' => $this->name())));
+      return !$fatal;
     }
   }
+}
+/**
+ * @class Exception class used to throw error if the DatabaseInstaller fails.
+ */
+class DatabaseTaskException extends Exception {
 }
 
 /**
