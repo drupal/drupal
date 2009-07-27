@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.50 2009/07/23 21:20:16 webchick Exp $
+// $Id: system.api.php,v 1.51 2009/07/27 18:38:35 dries Exp $
 
 /**
  * @file
@@ -158,26 +158,6 @@ function hook_exit($destination = NULL) {
     ->expression('hits', 'hits + 1')
     ->condition('type', 1)
     ->execute();
-}
-
-/**
- * Insert closing HTML.
- *
- * This hook enables modules to insert HTML just before the \</body\> closing
- * tag of web pages. This is useful for adding JavaScript code to the footer
- * and for outputting debug information. It is not possible to add JavaScript
- * to the header at this point, and developers wishing to do so should use
- * hook_init() instead.
- *
- * @param $main
- *   Whether the current page is the front page of the site.
- * @return
- *   The HTML to be inserted.
- */
-function hook_footer($main = 0) {
-  if (variable_get('dev_query', 0)) {
-    return '<div style="clear:both;">' . devel_query_table() . '</div>';
-  }
 }
 
 /**

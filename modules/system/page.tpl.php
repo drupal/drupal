@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.24 2009/07/04 05:21:15 dries Exp $
+// $Id: page.tpl.php,v 1.25 2009/07/27 18:38:35 dries Exp $
 
 /**
  * @file
@@ -197,7 +197,7 @@
 
   </div></div> <!-- /#page, /#page-wrapper -->
 
-  <?php print $closure; ?>
+  <?php print $page_bottom; ?>
 
 </body>
 </html>
