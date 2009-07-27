@@ -26,7 +26,7 @@ function toolbar_install() {
   menu_rebuild();
   $items = array(
     'node/add' => 'Add',
-    'admin/content/node' => 'Find content',
+    'admin/content/content' => 'Find content',
     'admin' => 'Dashboard',
   );
   $weight = -20;
