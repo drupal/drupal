@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.58 2009/06/20 07:40:36 webchick Exp $ */
+/* $Id: style.css,v 1.59 2009/07/27 18:31:13 dries Exp $ */
 
 /**
  * Generic elements
@@ -367,7 +367,7 @@ table .form-button, table .form-submit {
 }
 
 #wrapper #container #header h1 img {
-  padding-top: 16px;
+  padding-top: 14px;
   padding-right: 20px; /* LTR */
   float: left; /* LTR */
 }
