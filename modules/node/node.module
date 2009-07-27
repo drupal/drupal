@@ -416,7 +416,6 @@ function node_type_save($info) {
     'body_label' => (string) $type->body_label,
     'description' => (string) $type->description,
     'help' => (string) $type->help,
-    'min_word_count' => (int) $type->min_word_count,
     'custom' => (int) $type->custom,
     'modified' => (int) $type->modified,
     'locked' => (int) $type->locked,
@@ -611,7 +610,6 @@ function node_type_set_defaults($info = array()) {
     $type->base = '';
     $type->description = '';
     $type->help = '';
-    $type->min_word_count = 0;
     $type->has_title = 1;
     $type->has_body = 1;
     $type->title_label = t('Title');
@@ -859,13 +857,6 @@ function node_validate($node, $form = array()) {
   // Convert the node to an object, if necessary.
   $node = (object)$node;
   $type = node_type_get_type($node);
-
-  // Make sure the body has the minimum number of words.
-  // TODO : use a better word counting algorithm that will work in other languages
-  if (!empty($type->min_word_count) && isset($node->body[0]['value']) && count(explode(' ', $node->body[0]['value'])) < $type->min_word_count) {
-    // TODO: Use Field API to set this error.
-    form_set_error('body', t('The body of your @type is too short. You need at least %words words.', array('%words' => $type->min_word_count, '@type' => $type->name)));
-  }
 
   if (isset($node->nid) && (node_last_changed($node->nid) > $node->changed)) {
     form_set_error('changed', t('The content on this page has either been modified by another user, or you have already submitted modifications using this form. As a result, your changes cannot be saved.'));

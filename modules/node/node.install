@@ -299,13 +299,6 @@ function node_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'min_word_count' => array(
-        'description' => 'The minimum number of words the body must contain.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'size' => 'small',
-      ),
       'custom' => array(
         'description' => 'A boolean indicating whether this type is defined by a module (FALSE) or by a user via a module like the Content Construction Kit (TRUE).',
         'type' => 'int',
@@ -520,6 +513,15 @@ function node_update_7005(&$context) {
     }
   }
 
+  return $ret;
+}
+
+/**
+ * Remove column min_word_count.
+ */
+function node_update_7006() {
+  $ret = array();
+  db_drop_field($ret, 'node_type', 'min_word_count');
   return $ret;
 }
 

@@ -129,13 +129,6 @@ function node_type_form(&$form_state, $type = NULL) {
     '#default_value' => isset($type->body_label) ? $type->body_label : '',
     '#description' => t('To omit the body field for this content type, remove any text and leave this field blank.'),
   );
-  $form['submission']['min_word_count'] = array(
-    '#type' => 'select',
-    '#title' => t('Minimum number of words'),
-    '#default_value' => $type->min_word_count,
-    '#options' => drupal_map_assoc(array(0, 1, 10, 25, 50, 75, 100, 125, 150, 175, 200)),
-    '#description' => t('The minimum number of words for the body field to be considered valid for this content type. This can be useful to rule out submissions that do not meet the site\'s standards, such as short test posts.')
-  );
   $form['submission']['node_preview'] = array(
     '#type' => 'radios',
     '#title' => t('Preview post'),
@@ -289,7 +282,6 @@ function node_type_form_submit($form, &$form_state) {
 
   $type->description = $form_state['values']['description'];
   $type->help = $form_state['values']['help'];
-  $type->min_word_count = $form_state['values']['min_word_count'];
   $type->title_label = $form_state['values']['title_label'];
   $type->body_label = $form_state['values']['body_label'];
 
