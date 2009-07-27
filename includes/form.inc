@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.352 2009/07/23 00:01:03 dries Exp $
+// $Id: form.inc,v 1.353 2009/07/27 18:40:12 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1093,7 +1093,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
       // If we have input for the current element, assign it to the #value property.
       if (!$form_state['programmed'] || isset($input)) {
         // Call #type_value to set the form value;
-        if (function_exists($value_callback)) {
+        if (drupal_function_exists($value_callback)) {
           $element['#value'] = $value_callback($element, $input, $form_state);
         }
         if (!isset($element['#value']) && isset($input)) {
@@ -1108,7 +1108,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
     // Load defaults.
     if (!isset($element['#value'])) {
       // Call #type_value without a second argument to request default_value handling.
-      if (function_exists($value_callback)) {
+      if (drupal_function_exists($value_callback)) {
         $element['#value'] = $value_callback($element);
       }
       // Final catch. If we haven't set a value yet, use the explicit default value.
