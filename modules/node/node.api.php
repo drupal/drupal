@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.27 2009/07/11 13:56:21 dries Exp $
+// $Id: node.api.php,v 1.28 2009/07/27 19:26:31 dries Exp $
 
 /**
  * @file
@@ -540,8 +540,6 @@ function hook_node_build_alter($node, $build_mode) {
  *      field. Optional (defaults to TRUE).
  *   - "body_label": the label for the body field of this content type. Optional
  *      (defaults to 'Body').
- *   - "min_word_count": the minimum number of words for the body field to be
- *      considered valid for this content type. Optional (defaults to 0).
  *   - "locked": boolean indicating whether the machine-readable name of this
  *      content type can (FALSE) or cannot (TRUE) be edited by a site
  *      administrator. Optional (defaults to TRUE).

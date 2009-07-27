@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.128 2009/07/22 04:45:35 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.129 2009/07/27 19:26:31 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -750,7 +750,6 @@ class DrupalWebTestCase extends DrupalTestCase {
       'name' => $name,
       'description' => '',
       'help' => '',
-      'min_word_count' => 0,
       'title_label' => 'Title',
       'body_label' => 'Body',
       'has_title' => 1,
