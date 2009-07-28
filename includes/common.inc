@@ -2140,14 +2140,14 @@ function url($path = NULL, array $options = array()) {
  * @return
  *   An HTML string ready for insertion in a tag.
  */
-function drupal_attributes($attributes = array()) {
-  foreach ($attributes as $attribute => $data) {
+function drupal_attributes(array $attributes = array()) {
+  foreach ($attributes as $attribute => &$data) {
     if (is_array($data)) {
       $data = implode(' ', $data);
     }
-    $items[] = $attribute . '="' . check_plain($data) . '"';
+    $data = $attribute . '="' . check_plain($data) . '"';
   }
-  return isset($items) ? ' ' . implode(' ', $items) : '';
+  return $attributes ? ' ' . implode(' ', $attributes) : '';
 }
 
 /**
