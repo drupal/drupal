@@ -691,7 +691,6 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
     NULL,
     array('data' => t('Topic'), 'field' => 'n.title'),
     array('data' => t('Replies'), 'field' => 'ncs.comment_count'),
-    array('data' => t('Created'), 'field' => 'n.created'),
     array('data' => t('Last reply'), 'field' => 'ncs.last_comment_timestamp'),
   );
 
