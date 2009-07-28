@@ -37,7 +37,7 @@ class ProfileTestCase extends DrupalWebTestCase {
     $edit['explanation'] = $this->randomName(50);
 
     $this->drupalPost('admin/user/profile/add/' . $type, $edit, t('Save field'));
-    $fid = db_result(db_query("SELECT fid FROM {profile_field} WHERE title = '%s'", $title));
+    $fid = db_query("SELECT fid FROM {profile_field} WHERE title = :title", array(':title' => $title))->fetchField();
     $this->assertTrue($fid, t('New Profile field has been entered in the database'));
 
     // Check that the new field is appearing on the user edit form.

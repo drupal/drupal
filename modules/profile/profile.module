@@ -341,7 +341,7 @@ function profile_view_profile(&$user) {
 
   // Show private fields to administrators and people viewing their own account.
   if (user_access('administer users') || $GLOBALS['user']->uid == $user->uid) {
-    $result = db_query('SELECT * FROM {profile_field} WHERE visibility <> %d ORDER BY category, weight', PROFILE_HIDDEN);
+    $result = db_query('SELECT * FROM {profile_field} WHERE visibility <> :hidden ORDER BY category, weight', array(':hidden' => PROFILE_HIDDEN));
   }
   else {
     $result = db_query('SELECT * FROM {profile_field} WHERE visibility <> :private AND visibility <> :hidden ORDER BY category, weight', array(':private' => PROFILE_PRIVATE, ':hidden' => PROFILE_HIDDEN));

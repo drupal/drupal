@@ -43,8 +43,8 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $this->assertEqual($t1+1, $t2, 'Entity type ids are sequential');
     $this->assertIdentical(variable_get('field_sql_storage_t1_etid', NULL), $t1, 'First entity type variable is correct');
     $this->assertIdentical(variable_get('field_sql_storage_t2_etid', NULL), $t2, 'Second entity type variable is correct');
-    $this->assertEqual(db_result(db_query("SELECT etid FROM {field_config_entity_type} WHERE type='t1'")), $t1, 'First entity type in database is correct');
-    $this->assertEqual(db_result(db_query("SELECT etid FROM {field_config_entity_type} WHERE type='t2'")), $t2, 'Second entity type in database is correct');
+    $this->assertEqual(db_query("SELECT etid FROM {field_config_entity_type} WHERE type='t1'")->fetchField(), $t1, 'First entity type in database is correct');
+    $this->assertEqual(db_query("SELECT etid FROM {field_config_entity_type} WHERE type='t2'")->fetchField(), $t2, 'Second entity type in database is correct');
     $this->assertEqual($t1, _field_sql_storage_etid('t1'), '_field_sql_storage_etid returns the same value for the first entity type');
     $this->assertEqual($t2, _field_sql_storage_etid('t2'), '_field_sql_storage_etid returns the same value for the second entity type');
   }
@@ -197,31 +197,46 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
 
     // Insert: Field is missing
     field_attach_insert($entity_type, $entity);
-    $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
+    $count = db_select($this->table)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
     $this->assertEqual($count, 0, 'Missing field results in no inserts');
 
     // Insert: Field is NULL
     $entity->{$this->field_name} = NULL;
     field_attach_insert($entity_type, $entity);
-    $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
+    $count = db_select($this->table)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
     $this->assertEqual($count, 0, 'NULL field results in no inserts');
 
     // Add some real data
     $entity->{$this->field_name} = array(0 => array('value' => 1));
     field_attach_insert($entity_type, $entity);
-    $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
+    $count = db_select($this->table)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
     $this->assertEqual($count, 1, 'Field data saved');
 
     // Update: Field is missing. Data should survive.
     unset($entity->{$this->field_name});
     field_attach_update($entity_type, $entity);
-    $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
+    $count = db_select($this->table)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
     $this->assertEqual($count, 1, 'Missing field leaves data in table');
 
     // Update: Field is NULL. Data should be wiped.
     $entity->{$this->field_name} = NULL;
     field_attach_update($entity_type, $entity);
-    $count = db_result(db_query("SELECT COUNT(*) FROM {{$this->table}}"));
+    $count = db_select($this->table)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
     $this->assertEqual($count, 0, 'NULL field leaves no data in table');
   }
 }

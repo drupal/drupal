@@ -221,10 +221,10 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
  *   The test ID to read log file for.
  */
 function simpletest_log_read($test_id) {
-  $last_prefix = db_result(db_query('SELECT last_prefix FROM {simpletest_test_id} WHERE test_id = :test_id', array(':test_id' => $test_id)));
+  $last_prefix = db_query('SELECT last_prefix FROM {simpletest_test_id} WHERE test_id = :test_id', array(':test_id' => $test_id))->fetchField();
   $last_prefix = substr($last_prefix, 10);
 
-  $test_class = db_result(db_query('SELECT test_class FROM {simpletest} WHERE test_id = :test_id ORDER BY message_id', array(':test_id' => $test_id)));
+  $test_class = db_query('SELECT test_class FROM {simpletest} WHERE test_id = :test_id ORDER BY message_id', array(':test_id' => $test_id))->fetchField();
   $log = file_directory_path() . "/simpletest/$last_prefix/error.log";
   if (file_exists($log)) {
     foreach (file($log) as $line) {

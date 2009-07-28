@@ -384,13 +384,11 @@ function system_install() {
 
   // Built-in roles.
   $rid_anonymous = db_insert('role')
-    ->fields(array('name'))
-    ->values(array('name' => 'anonymous user'))
+    ->fields(array('name' => 'anonymous user'))
     ->execute();
 
   $rid_authenticated = db_insert('role')
-    ->fields(array('name'))
-    ->values(array('name' => 'authenticated user'))
+    ->fields(array('name' => 'authenticated user'))
     ->execute();
 
   // Sanity check to ensure the anonymous and authenticated role IDs are the
@@ -1555,7 +1553,7 @@ function system_update_7003() {
     ':status' => 0,
     ':type' => $type,
   ));
-  while ($blocked = db_fetch_object($result)) {
+  foreach ($result as $blocked) {
     if (filter_var($blocked->mask, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) !== FALSE) {
       $ret[] = update_sql("INSERT INTO {blocked_ips} (ip) VALUES ('$blocked->mask')");
     }

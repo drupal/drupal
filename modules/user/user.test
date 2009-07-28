@@ -1044,7 +1044,7 @@ class UserSaveTestCase extends DrupalWebTestCase {
    */
   function testUserImport() {
     // User ID must be a number that is not in the database.
-    $max_uid = db_result(db_query('SELECT MAX(uid) FROM {users}'));
+    $max_uid = db_query('SELECT MAX(uid) FROM {users}')->fetchField();
     $test_uid = $max_uid + mt_rand(1000, 1000000);
     $test_name = $this->randomName();
 

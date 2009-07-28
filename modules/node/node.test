@@ -681,7 +681,7 @@ class NodeAccessRecordsUnitTest extends DrupalWebTestCase {
     $this->assertTrue(node_load($node1->nid), t('Article node created.'));
 
     // Check to see if grants added by node_test_node_access_records made it in.
-    $records = db_query('SELECT realm, gid FROM {node_access} WHERE nid = %d', $node1->nid)->fetchAll();
+    $records = db_query('SELECT realm, gid FROM {node_access} WHERE nid = :nid', array(':nid' => $node1->nid))->fetchAll();
     $this->assertEqual(count($records), 1, t('Returned the correct number of rows.'));
     $this->assertEqual($records[0]->realm, 'test_article_realm', t('Grant with article_realm acquired for node without alteration.'));
     $this->assertEqual($records[0]->gid, 1, t('Grant with gid = 1 acquired for node without alteration.'));
@@ -691,7 +691,7 @@ class NodeAccessRecordsUnitTest extends DrupalWebTestCase {
     $this->assertTrue(node_load($node1->nid), t('Unpromoted page node created.'));
 
     // Check to see if grants added by node_test_node_access_records made it in.
-    $records = db_query('SELECT realm, gid FROM {node_access} WHERE nid = %d', $node2->nid)->fetchAll();
+    $records = db_query('SELECT realm, gid FROM {node_access} WHERE nid = :nid', array(':nid' => $node2->nid))->fetchAll();
     $this->assertEqual(count($records), 1, t('Returned the correct number of rows.'));
     $this->assertEqual($records[0]->realm, 'test_page_realm', t('Grant with page_realm acquired for node without alteration.'));
     $this->assertEqual($records[0]->gid, 1, t('Grant with gid = 1 acquired for node without alteration.'));
@@ -712,7 +712,7 @@ class NodeAccessRecordsUnitTest extends DrupalWebTestCase {
 
     // Check to see if grant added by node_test_node_access_records was altered
     // by node_test_node_access_records_alter.
-    $records = db_query('SELECT realm, gid FROM {node_access} WHERE nid = %d', $node4->nid)->fetchAll();
+    $records = db_query('SELECT realm, gid FROM {node_access} WHERE nid = :nid', array(':nid' => $node4->nid))->fetchAll();
     $this->assertEqual(count($records), 1, t('Returned the correct number of rows.'));
     $this->assertEqual($records[0]->realm, 'test_alter_realm', t('Altered grant with alter_realm acquired for node.'));
     $this->assertEqual($records[0]->gid, 2, t('Altered grant with gid = 2 acquired for node.'));
@@ -759,7 +759,7 @@ class NodeSaveTestCase extends DrupalWebTestCase {
    */
   function testImport() {
     // Node ID must be a number that is not in the database.
-    $max_nid = db_result(db_query('SELECT MAX(nid) FROM {node}'));
+    $max_nid = db_query('SELECT MAX(nid) FROM {node}')->fetchField();
     $test_nid = $max_nid + mt_rand(1000, 1000000);
     $title = $this->randomName(8);
     $node = array(

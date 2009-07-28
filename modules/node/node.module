@@ -2699,7 +2699,7 @@ function _node_access_rebuild_batch_operation(&$context) {
 
   // Process the next 20 nodes.
   $limit = 20;
-  $nids = db_query_range("SELECT nid FROM {node} WHERE nid > %d ORDER BY nid ASC", $context['sandbox']['current_node'], 0, $limit)->fetchCol();
+  $nids = db_query_range("SELECT nid FROM {node} WHERE nid > :nid ORDER BY nid ASC", array(':nid' => $context['sandbox']['current_node']), 0, $limit)->fetchCol();
   $nodes = node_load_multiple($nids, array(), TRUE);
   foreach ($nodes as $node) {
     // To preserve database integrity, only acquire grants if the node
@@ -3148,7 +3148,7 @@ function node_requirements($phase) {
   // Only show rebuild button if there are either 0, or 2 or more, rows
   // in the {node_access} table, or if there are modules that
   // implement hook_node_grants().
-  $grant_count = db_result(db_query('SELECT COUNT(*) FROM {node_access}'));
+  $grant_count = db_query('SELECT COUNT(*) FROM {node_access}')->fetchField();
   if ($grant_count != 1 || count(module_implements('node_grants')) > 0) {
     $value = format_plural($grant_count, 'One permission in use', '@count permissions in use', array('@count' => $grant_count));
   } else {

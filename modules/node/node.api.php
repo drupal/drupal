@@ -762,8 +762,12 @@ function hook_form($node, $form_state) {
  * For a detailed usage example, see node_example.module.
  */
 function hook_insert($node) {
-  db_query("INSERT INTO {mytable} (nid, extra)
-    VALUES (%d, '%s')", $node->nid, $node->extra);
+  db_insert('mytable')
+    ->fields(array(
+      'nid' => $node->nid,
+      'extra' => $node->extra,
+    ))
+    ->execute();
 }
 
 /**
@@ -804,8 +808,10 @@ function hook_load($nodes) {
  * For a detailed usage example, see node_example.module.
  */
 function hook_update($node) {
-  db_query("UPDATE {mytable} SET extra = '%s' WHERE nid = %d",
-    $node->extra, $node->nid);
+  db_update('mytable')
+    ->fields(array('extra' => $node->extra))
+    ->condition('nid', $node->nid)
+    ->execute();
 }
 
 /**

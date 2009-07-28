@@ -677,7 +677,6 @@ function drupal_uninstall_modules($module_list = array()) {
         }
         $paths[$index] = implode('/', $parts);
       }
-      $placeholders = implode(', ', array_fill(0, count($paths), "'%s'"));
 
       $result = db_select('menu_links')
         ->fields('menu_links')

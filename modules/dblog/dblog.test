@@ -210,7 +210,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $this->drupalPost('user/' . $user->uid . '/cancel', array('user_cancel_method' => 'user_cancel_reassign'), t('Cancel account'));
 
     // Count rows that have uids for the user.
-    $count = db_query('SELECT COUNT(wid) FROM {watchdog} WHERE uid = %d', $user->uid)->fetchField();
+    $count = db_query('SELECT COUNT(wid) FROM {watchdog} WHERE uid = :uid', array(':uid' => $user->uid))->fetchField();
     $this->assertTrue($count == 0, t('DBLog contains @count records for @name', array('@count' => $count, '@name' => $user->name)));
 
     // Count rows in watchdog that previously related to the deleted user.

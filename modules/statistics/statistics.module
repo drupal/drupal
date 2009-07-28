@@ -394,5 +394,5 @@ function statistics_ranking() {
  * Implement hook_update_index().
  */
 function statistics_update_index() {
-  variable_set('node_cron_views_scale', 1.0 / max(1, db_result(db_query('SELECT MAX(totalcount) FROM {node_counter}'))));
+  variable_set('node_cron_views_scale', 1.0 / max(1, db_query('SELECT MAX(totalcount) FROM {node_counter}')->fetchField()));
 }

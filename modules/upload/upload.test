@@ -68,7 +68,7 @@ class UploadTestCase extends DrupalWebTestCase {
     $this->assertTrue(strpos($teaser, format_plural(2, '1 attachment', '@count attachments')), 'Attachments link found on node teaser.');
 
     // Fetch db record and use fid to rename and delete file.
-    $upload = db_fetch_object(db_query('SELECT fid, description FROM {upload} WHERE nid = %d', array($node->nid)));
+    $upload = db_query('SELECT fid, description FROM {upload} WHERE nid = :nid', array(':nid' => $node->nid))->fetchObject();
     if ($upload) {
       // Rename file.
       $edit = array();
