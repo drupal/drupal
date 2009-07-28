@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.100 2009/07/28 12:13:46 dries Exp $
+// $Id: install.inc,v 1.101 2009/07/28 19:02:38 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -346,7 +346,7 @@ abstract class DatabaseTasks {
           }
         }
         else {
-          throw new DatabaseTaskException(st("Failed to run all tasks against the database server. The task %task wasn\'t found.", array('%task' => $task['function'])));
+          throw new DatabaseTaskException(st("Failed to run all tasks against the database server. The task %task wasn't found.", array('%task' => $task['function'])));
         }
       }
     }
