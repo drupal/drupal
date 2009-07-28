@@ -892,7 +892,7 @@ function user_user_view(&$edit, &$account, $category = NULL) {
     '#weight' => 5,
     '#title' => t('History'),
   );
-  $account->content['summary']['member_for'] =  array(
+  $account->content['summary']['member_for'] = array(
     '#type' => 'user_profile_item',
     '#title' => t('Member for'),
     '#markup' => format_interval(REQUEST_TIME - $account->created),
