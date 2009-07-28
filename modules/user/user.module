@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1013 2009/07/21 07:27:00 webchick Exp $
+// $Id: user.module,v 1.1014 2009/07/28 19:32:33 dries Exp $
 
 /**
  * @file
@@ -892,7 +892,7 @@ function user_user_view(&$edit, &$account, $category = NULL) {
     '#weight' => 5,
     '#title' => t('History'),
   );
-  $account->content['summary']['member_for'] =  array(
+  $account->content['summary']['member_for'] = array(
     '#type' => 'user_profile_item',
     '#title' => t('Member for'),
     '#markup' => format_interval(REQUEST_TIME - $account->created),
