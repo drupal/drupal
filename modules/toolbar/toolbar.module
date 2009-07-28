@@ -1,5 +1,5 @@
 <?php
-// $Id: toolbar.module,v 1.3 2009/07/07 07:54:35 dries Exp $
+// $Id: toolbar.module,v 1.4 2009/07/28 10:35:56 dries Exp $
 
 /**
  * @file
@@ -19,7 +19,7 @@ function toolbar_permission() {
 }
 
 /**
- * Implementation of hook_theme().
+ * Implement hook_theme().
  */
 function toolbar_theme($existing, $type, $theme, $path) {
   $items['toolbar'] = array(
@@ -31,7 +31,7 @@ function toolbar_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implementation of hook_page_alter().
+ * Implement hook_page_alter().
  * 
  * Add admin toolbar to the page_top region automatically.
  */
@@ -42,7 +42,7 @@ function toolbar_page_alter(&$page) {
 }
 
 /**
- * Implementation of hook_preprocess_page().
+ * Implement hook_preprocess_page().
  *
  * Add some page classes, so global page theming can adjust to the toolbar.
  */
