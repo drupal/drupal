@@ -846,20 +846,20 @@ function hook_validate($node, &$form) {
  * information particular to that node type.
  *
  * @param $node
- *   The node to be displayed.
+ *   The node to be displayed, as returned by node_load().
  * @param $build_mode
- *   Build mode, e.g. 'full', 'teaser'...
+ *   Build mode, e.g. 'full', 'teaser', ...
  * @return
  *   $node. The passed $node parameter should be modified as necessary and
  *   returned so it can be properly presented. Nodes are prepared for display
- *   by assembling a structured array in $node->content, rather than directly
- *   manipulating $node->body and $node->teaser. The format of this array is
- *   the same used by the Forms API. As with FormAPI arrays, the #weight
- *   property can be used to control the relative positions of added elements.
- *   If for some reason you need to change the body or teaser returned by
- *   node_prepare(), you can modify $node->content['body']['#value']. Note
- *   that this will be the un-rendered content. To modify the rendered output,
- *   see hook_node($op = 'alter').
+ *   by assembling a structured array, formatted as in the Form API, in 
+ *   $node->content. As with Form API arrays, the #weight property can be 
+ *   used to control the relative positions of added elements. After this
+ *   hook is invoked, node_build() calls field_attach_view() to add field
+ *   views to $node->content, and then invokes hook_node_view() and 
+ *   hook_node_build_alter(), so if you want to affect the final
+ *   view of the node, you might consider implementing one of these hooks
+ *   instead.
  *
  * For a detailed usage example, see node_example.module.
  */
