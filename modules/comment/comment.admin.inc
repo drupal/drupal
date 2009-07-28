@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.26 2009/07/01 20:39:20 dries Exp $
+// $Id: comment.admin.inc,v 1.27 2009/07/28 19:18:05 dries Exp $
 
 /**
  * @file
@@ -174,7 +174,7 @@ function comment_multiple_delete_confirm(&$form_state) {
   foreach (array_filter($edit['comments']) as $cid => $value) {
     $comment = comment_load($cid);
     if (is_object($comment) && is_numeric($comment->cid)) {
-      $subject = db_result(db_query('SELECT subject FROM {comment} WHERE cid = %d', $cid));
+      $subject = db_query('SELECT subject FROM {comment} WHERE cid = :cid', array(':cid' => $cid))->fetchField();
       $form['comments'][$cid] = array('#type' => 'hidden', '#value' => $cid, '#prefix' => '<li>', '#suffix' => check_plain($subject) . '</li>');
       $comment_counter++;
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.308 2009/07/20 18:51:34 dries Exp $
+// $Id: statistics.module,v 1.309 2009/07/28 19:18:08 dries Exp $
 
 /**
  * @file
@@ -394,5 +394,5 @@ function statistics_ranking() {
  * Implement hook_update_index().
  */
 function statistics_update_index() {
-  variable_set('node_cron_views_scale', 1.0 / max(1, db_result(db_query('SELECT MAX(totalcount) FROM {node_counter}'))));
+  variable_set('node_cron_views_scale', 1.0 / max(1, db_query('SELECT MAX(totalcount) FROM {node_counter}')->fetchField()));
 }

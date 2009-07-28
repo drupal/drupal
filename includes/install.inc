@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.101 2009/07/28 19:02:38 dries Exp $
+// $Id: install.inc,v 1.102 2009/07/28 19:18:05 dries Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -677,7 +677,6 @@ function drupal_uninstall_modules($module_list = array()) {
         }
         $paths[$index] = implode('/', $parts);
       }
-      $placeholders = implode(', ', array_fill(0, count($paths), "'%s'"));
 
       $result = db_select('menu_links')
         ->fields('menu_links')
