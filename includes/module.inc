@@ -95,11 +95,52 @@ function module_list($refresh = FALSE, $sort = FALSE, $fixed_list = NULL) {
 function _module_build_dependencies($files) {
   require_once DRUPAL_ROOT . '/includes/graph.inc';
   $roots = $files;
+  // We use named subpatterns and support every op that version_compare
+  // supports. Also, op is optional and defaults to equals.
+  $p_op = '(?P<operation>!=|==|=|<|<=|>|>=|<>)?';
+  // Core version is always optional: 7.x-2.x and 2.x is treated the same.
+  $p_core = '(?:' . preg_quote(DRUPAL_CORE_COMPATIBILITY) . '-)?';
+  $p_major = '(?P<major>\d+)';
+  // By setting the minor version to x, branches can be matched.
+  $p_minor = '(?P<minor>\d+|x)';
   foreach ($files as $filename => $file) {
     $graph[$file->name]['edges'] = array();
     if (isset($file->info['dependencies']) && is_array($file->info['dependencies'])) {
       foreach ($file->info['dependencies'] as $dependency_name) {
-        $graph[$file->name]['edges'][$dependency_name] = 1;
+        $value = array();
+        $parts = explode('(', $dependency_name, 2);
+        $dependency_name = trim($parts[0]);
+        if (isset($parts[1])) {
+          $value['original_version'] = ' (' . $parts[1];
+          foreach (explode(',', $parts[1]) as $version) {
+            if (preg_match("/^\s*$p_op\s*$p_core$p_major\.$p_minor/", $version, $matches)) {
+              $op = !empty($matches['operation']) ? $matches['operation'] : '=';
+              if ($matches['minor'] == 'x') {
+                // If a module is newer than 2.x then it's at least 3.0. 
+                $matches['minor'] = 0;
+                if ($op == '>') {
+                  $matches['major']++;
+                  $op = '>=';
+                }
+                // If a module is older or equivalent than 2.x then it is older
+                // than 3.0.
+                if ($op == '<=') {
+                  $matches['major']++;
+                  $op = '<';
+                }
+                // Equivalence is checked by preg.
+                if ($op == '=' || $op == '==') {
+                  $value['versions'][] = array('preg' => '/^' . $matches['major'] . '\./');
+                  $op = '';
+                }
+              }
+              if ($op) {
+                $value['versions'][] = array('op' => $op, 'version' => $matches['major'] . '.' . $matches['minor']);
+              }
+            }
+          }
+        }
+        $graph[$file->name]['edges'][$dependency_name] = $value;
         unset($roots[$dependency_name]);
       }
     }
@@ -138,13 +179,13 @@ function module_load_install($module) {
 
 /**
  * Load a module include file.
- * 
+ *
  * Examples:
  * @code
  *   // Load node.admin.inc from the node module.
  *   module_load_include('inc', 'node', 'node.admin');
  *   // Load content_types.inc from the node module.
- *   module_load_include('inc', 'node', 'content_types'); 
+ *   module_load_include('inc', 'node', 'content_types');
  * @endcode
  *
  * Do not use this function to load an install file. Use module_load_install()
@@ -155,7 +196,7 @@ function module_load_install($module) {
  * @param $module
  *   The module to which the include file belongs.
  * @param $name
- *   Optionally, specify the base file name (without the $type extension). 
+ *   Optionally, specify the base file name (without the $type extension).
  *   If not set, $module is used.
  */
 function module_load_include($type, $module, $name = NULL) {
@@ -194,7 +235,7 @@ function module_load_all_includes($type, $name = NULL) {
  */
 function module_enable($module_list, $disable_modules_installed_hook = FALSE) {
   $invoke_modules = array();
-  
+
   // Try to install the enabled modules and collect which were installed.
   // $module_list is not changed and already installed modules are ignored.
   $modules_installed = array_filter($module_list, '_drupal_install_module');

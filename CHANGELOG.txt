@@ -145,6 +145,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Upgraded the jQuery Forms library to 2.21.
     * Added jQuery UI 1.7.2, which allows improvements to Drupal's user
       experience.
+- Better module version support.
+    * Modules now can specify which version of another module they depend on.
 
 Drupal 6.0, 2008-02-13
 ----------------------

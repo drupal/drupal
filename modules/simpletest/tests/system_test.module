@@ -165,3 +165,23 @@ function system_test_exit() {
   watchdog('system_test', 'hook_exit');
 }
 
+/**
+ * Implement hook_system_info_alter().
+ */
+function system_test_system_info_alter(&$info, $file) {
+  // We need a static otherwise the last test will fail to alter common_test.
+  static $test;
+  if (($dependencies = variable_get('dependencies', array())) || $test) {
+    if ($file->name == 'module_test') {
+      $info['hidden'] = FALSE;
+      $info['dependencies'][] = array_shift($dependencies);
+      variable_set('dependencies', $dependencies);
+      $test = TRUE;
+    }
+    if ($file->name == 'common_test') {
+      $info['hidden'] = FALSE;
+      $info['version'] = '7.x-2.4';
+    }
+  }
+}
+

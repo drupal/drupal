@@ -14,7 +14,7 @@
  *   A three dimensional associated array, with the first keys being the names
  *   of the vertices, these can be strings or numbers. The second key is
  *   'edges' and the third one are again vertices, each such key representing
- *   an edge. Values of array elements do not matter.
+ *   an edge. Values of array elements are copied over.
  *
  *   Example:
  *   @code
@@ -108,7 +108,7 @@ function _drupal_depth_first_search(&$graph, &$state, $start, &$component = NULL
   if (isset($graph[$start]['edges'])) {
     foreach ($graph[$start]['edges'] as $end => $v) {
       // Mark that $start can reach $end.
-      $graph[$start]['paths'][$end] = TRUE;
+      $graph[$start]['paths'][$end] = $v;
 
       if (isset($graph[$end]['component']) && $component != $graph[$end]['component']) {
         // This vertex already has a component, use that from now on and
@@ -136,7 +136,7 @@ function _drupal_depth_first_search(&$graph, &$state, $start, &$component = NULL
   // paths.
   foreach ($graph[$start]['paths'] as $end => $v) {
     if (isset($graph[$end])) {
-      $graph[$end]['reverse_paths'][$start] = TRUE;
+      $graph[$end]['reverse_paths'][$start] = $v;
     }
   }
 
