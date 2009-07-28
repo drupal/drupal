@@ -1,5 +1,5 @@
 <?php
-// $Id: system_test.module,v 1.12 2009/06/06 15:43:05 dries Exp $
+// $Id: system_test.module,v 1.13 2009/07/28 19:06:15 dries Exp $
 
 /**
  * Implement hook_menu().
@@ -163,5 +163,25 @@ function system_test_init() {
  */
 function system_test_exit() {
   watchdog('system_test', 'hook_exit');
+}
+
+/**
+ * Implement hook_system_info_alter().
+ */
+function system_test_system_info_alter(&$info, $file) {
+  // We need a static otherwise the last test will fail to alter common_test.
+  static $test;
+  if (($dependencies = variable_get('dependencies', array())) || $test) {
+    if ($file->name == 'module_test') {
+      $info['hidden'] = FALSE;
+      $info['dependencies'][] = array_shift($dependencies);
+      variable_set('dependencies', $dependencies);
+      $test = TRUE;
+    }
+    if ($file->name == 'common_test') {
+      $info['hidden'] = FALSE;
+      $info['version'] = '7.x-2.4';
+    }
+  }
 }
 
