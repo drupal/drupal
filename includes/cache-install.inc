@@ -1,5 +1,5 @@
 <?php
-// $Id: cache-install.inc,v 1.2 2007/08/07 08:39:35 goba Exp $
+// $Id: cache-install.inc,v 1.3 2009/07/28 12:13:46 dries Exp $
 
 /**
  * A stub cache implementation to be used during the installation
@@ -13,6 +13,10 @@
 
 function cache_get($key, $table = 'cache') {
   return FALSE;
+}
+
+function cache_get_multiple(array &$cids, $bin = 'cache') {
+  return array();
 }
 
 function cache_set($cid, $data, $table = 'cache', $expire = CACHE_PERMANENT, $headers = NULL) {

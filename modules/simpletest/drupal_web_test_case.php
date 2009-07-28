@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.129 2009/07/27 19:26:31 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.130 2009/07/28 12:13:47 dries Exp $
 
 /**
  * Base class for Drupal tests.
@@ -1056,8 +1056,8 @@ class DrupalWebTestCase extends DrupalTestCase {
     drupal_get_schema(NULL, TRUE);
 
     // Run default profile tasks.
-    $task = 'profile';
-    default_profile_tasks($task, '');
+    $install_state = array();
+    default_profile_site_setup($install_state);
 
     // Rebuild caches.
     node_types_rebuild();
@@ -1073,7 +1073,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Restore necessary variables.
     variable_set('install_profile', 'default');
-    variable_set('install_task', 'profile-finished');
+    variable_set('install_task', 'done');
     variable_set('clean_url', $clean_url_original);
     variable_set('site_mail', 'simpletest@example.com');
     // Set up English language.

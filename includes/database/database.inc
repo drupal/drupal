@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.67 2009/07/27 19:42:55 dries Exp $
+// $Id: database.inc,v 1.68 2009/07/28 12:13:46 dries Exp $
 
 /**
  * @file
@@ -2509,7 +2509,7 @@ function db_result(DatabaseStatementInterface $statement) {
  */
 function _db_check_install_needed() {
   global $databases;
-  if (empty($databases) && !function_exists('install_main')) {
+  if (empty($databases) && !drupal_installation_attempted()) {
     include_once DRUPAL_ROOT . '/includes/install.inc';
     install_goto('install.php');
   }
