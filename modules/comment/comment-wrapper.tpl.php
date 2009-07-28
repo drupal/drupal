@@ -6,8 +6,9 @@
  * Default theme implementation to wrap comments.
  *
  * Available variables:
- * - $content: All comments for a given page. Also contains comment form
- *   if enabled.
+ * - $content: The array of content-related elements for the node. Use
+ *   render($content) to print them all, or
+ *   print a subset such as render($content['comment_form']).
  * - $classes: String of classes that can be used to style contextually through
  *   CSS. It can be manipulated through the variable $classes_array from
  *   preprocess functions. The default value has the following:
@@ -30,5 +31,16 @@
  */
 ?>
 <div id="comments" class="<?php print $classes; ?>">
-  <?php print $content; ?>
+  <?php if ($node->type != 'forum'): ?>
+    <h2 class="comments"><?php print t('Comments'); ?></h2>
+  <?php endif; ?>
+
+  <?php print render($content['comments']); ?>
+
+  <?php if ($content['comment_form']): ?>
+    <h2 class="title"><?php print t('Post new comment'); ?></h2>
+    <div>
+      <?php print render($content['comment_form']); ?>
+    </div>
+  <?php endif; ?>
 </div>

@@ -104,34 +104,18 @@ function comment_theme() {
       'arguments' => array(),
     ),
     'comment_preview' => array(
-      'arguments' => array('comment' => NULL, 'node' => NULL, 'links' => array(), 'visible' => 1),
-    ),
-    'comment_view' => array(
-      'arguments' => array('comment' => NULL, 'node' => NULL, 'links' => array(), 'visible' => 1),
+      'arguments' => array('comment' => NULL),
     ),
     'comment' => array(
       'template' => 'comment',
-      'arguments' => array('comment' => NULL, 'node' => NULL, 'links' => array()),
-    ),
-    'comment_form_box' => array(
-      'arguments' => array('edit' => NULL, 'title' => NULL),
-    ),
-    'comment_folded' => array(
-      'template' => 'comment-folded',
-      'arguments' => array('comment' => NULL, 'node' => NULL),
-    ),
-    'comment_flat_expanded' => array(
-      'arguments' => array('comment' => NULL, 'node' => NULL),
-    ),
-    'comment_thread_expanded' => array(
-      'arguments' => array('comment' => NULL, 'node' => NULL),
+      'arguments' => array('elements' => NULL),
     ),
     'comment_post_forbidden' => array(
       'arguments' => array('nid' => NULL),
     ),
     'comment_wrapper' => array(
       'template' => 'comment-wrapper',
-      'arguments' => array('content' => NULL, 'node' => NULL),
+      'arguments' => array('content' => NULL),
     ),
     'comment_submitted' => array(
       'arguments' => array('comment' => NULL),
@@ -168,10 +152,12 @@ function comment_menu() {
     'access arguments' => array('administer comments'),
     'type' => MENU_CALLBACK,
   );
-  $items['comment/edit'] = array(
+  $items['comment/edit/%comment'] = array(
     'title' => 'Edit comment',
     'page callback' => 'comment_edit',
-    'access arguments' => array('post comments'),
+    'access callback' => 'comment_access',
+    'page arguments' => array(2),
+    'access arguments' => array('edit', 2),
     'type' => MENU_CALLBACK,
   );
   $items['comment/reply/%node'] = array(
@@ -532,14 +518,309 @@ function comment_node_view($node, $build_mode) {
       '#attributes' => array('class' => 'links inline'),
     );
 
-    // Append the list of comments to $node->content for node detail pages.
-    if ($node->comment && (bool)menu_get_object() && empty($node->in_preview)) {
-      $node->content['comments'] = array(
-        '#markup' => comment_render($node),
-        '#sorted' => TRUE,
-      );
+    // Only append comments when we are building a node on its own node detail
+    // page. We compare $node and $page_node to ensure that comments are not
+    // appended to other nodes shown on the page, for example a node_reference
+    // displayed in 'full' build mode within another node.
+    $page_node = menu_get_object();
+    if ($node->comment && isset($page_node->nid) && $page_node->nid == $node->nid && empty($node->in_preview) && user_access('access comments')) {
+      $node->content['comments'] = comment_node_page_additions($node);
     }
   }
+}
+
+/**
+ * Build the comment-related elements for node detail pages.
+ *
+ * @param $node
+ *  A node object.
+ */
+function comment_node_page_additions($node) {
+  $additions = array();
+
+  // Only attempt to render comments if the node has visible comments.
+  // Unpublished comments are not included in $node->comment_count, so show
+  // comments unconditionally if the user is an administrator.
+  if ($node->comment_count || user_access('administer comments')) {
+    if ($cids = comment_get_thread($node)) {
+      $comments = comment_load_multiple($cids);
+      comment_prepare_thread($comments);
+      $build = comment_build_multiple($comments);
+      $build['#attached_css'][] = drupal_get_path('module', 'comment') . '/comment.css';
+      $build['pager']['#theme'] = 'pager';
+      $additions['comments'] = $build;
+    }
+  }
+
+  // Append comment form if needed.
+  if (user_access('post comments') && $node->comment == COMMENT_NODE_OPEN && (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW) == COMMENT_FORM_BELOW)) {
+    $build = drupal_get_form('comment_form', array('nid' => $node->nid));
+    $additions['comment_form'] = $build;
+  }
+
+  if ($additions) {
+    $additions += array(
+      '#theme' => 'comment_wrapper',
+      '#node' => $node,
+      'comments' => array(),
+      'comment_form' => array(),
+    );
+  }
+
+  return $additions;
+}
+
+/**
+ * Retrieve comment(s) for a thread.
+ *
+ * @param $node
+ *   The node whose comment(s) needs rendering.
+ *
+ * To display threaded comments in the correct order we keep a 'thread' field
+ * and order by that value. This field keeps this data in
+ * a way which is easy to update and convenient to use.
+ *
+ * A "thread" value starts at "1". If we add a child (A) to this comment,
+ * we assign it a "thread" = "1.1". A child of (A) will have "1.1.1". Next
+ * brother of (A) will get "1.2". Next brother of the parent of (A) will get
+ * "2" and so on.
+ *
+ * First of all note that the thread field stores the depth of the comment:
+ * depth 0 will be "X", depth 1 "X.X", depth 2 "X.X.X", etc.
+ *
+ * Now to get the ordering right, consider this example:
+ *
+ * 1
+ * 1.1
+ * 1.1.1
+ * 1.2
+ * 2
+ *
+ * If we "ORDER BY thread ASC" we get the above result, and this is the
+ * natural order sorted by time. However, if we "ORDER BY thread DESC"
+ * we get:
+ *
+ * 2
+ * 1.2
+ * 1.1.1
+ * 1.1
+ * 1
+ *
+ * Clearly, this is not a natural way to see a thread, and users will get
+ * confused. The natural order to show a thread by time desc would be:
+ *
+ * 2
+ * 1
+ * 1.2
+ * 1.1
+ * 1.1.1
+ *
+ * which is what we already did before the standard pager patch. To achieve
+ * this we simply add a "/" at the end of each "thread" value. This way, the
+ * thread fields will look like this:
+ *
+ * 1/
+ * 1.1/
+ * 1.1.1/
+ * 1.2/
+ * 2/
+ *
+ * we add "/" since this char is, in ASCII, higher than every number, so if
+ * now we "ORDER BY thread DESC" we get the correct order. However this would
+ * spoil the reverse ordering, "ORDER BY thread ASC" -- here, we do not need
+ * to consider the trailing "/" so we use a substring only.
+ */
+ function comment_get_thread($node) {
+  $mode = _comment_get_display_setting('mode', $node);
+  $comments_per_page = _comment_get_display_setting('comments_per_page', $node);
+
+  $query = db_select('comment', 'c')->extend('PagerDefault');
+  $query->addField('c', 'cid');
+  $query
+    ->condition('c.nid', $node->nid)
+    ->addTag('node_access')
+    ->limit($comments_per_page);
+
+  $count_query = db_select('comment', 'c');
+  $count_query->addExpression('COUNT(*)');
+  $count_query
+    ->condition('c.nid', $node->nid)
+    ->addTag('node_access');
+
+  if (!user_access('administer comments')) {
+    $query->condition('c.status', COMMENT_PUBLISHED);
+    $count_query->condition('c.status', COMMENT_PUBLISHED);
+  }
+  if ($mode === COMMENT_MODE_FLAT) {
+    $query->orderBy('c.cid', 'ASC');
+  }
+  else {
+    // See comment above. Analysis reveals that this doesn't cost too
+    // much. It scales much much better than having the whole comment
+    // structure.
+    $query->orderBy('SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1))', 'ASC');
+  }
+
+  $query->setCountQuery($count_query);
+  $cids = $query->execute()->fetchCol();
+
+  return $cids;
+}
+
+/**
+ * Loop over comment thread, noting indentation level.
+ *
+ * @param array $comments
+ *   An array of comment objects, keyed by cid.
+ * @return
+ *   The $comments argument is altered by reference with indentation information.
+ */
+function comment_prepare_thread(&$comments) {
+  // A flag stating if we are still searching for first new comment on the thread.
+  $first_new = TRUE;
+
+  // A counter that helps track how indented we are.
+  $divs = 0;
+
+  foreach ($comments as $key => $comment) {
+    if ($first_new && $comment->new != MARK_READ) {
+      // Assign the anchor only for the first new comment. This avoids duplicate
+      // id attributes on a page.
+      $first_new = FALSE;
+      $comment->first_new = TRUE;
+    }
+
+    // The $divs element instructs #prefix whether to add an indent div or
+    // close existing divs (a negative value).
+    $comment->depth = count(explode('.', $comment->thread)) - 1;
+    if ($comment->depth > $divs) {
+      $comment->divs = 1;
+      $divs++;
+    }
+    else {
+      $comment->divs = $comment->depth - $divs;
+      while ($comment->depth < $divs) {
+        $divs--;
+      }
+    }
+    $comments[$key] = $comment;
+  }
+
+  // The final comment must close up some hanging divs
+  $comments[$key]->divs_final = $divs;
+}
+
+/**
+ * Generate an array for rendering the given comment.
+ *
+ * @param $comment
+ *   A comment object.
+ * @param $build_mode
+ *   Build mode, e.g. 'full', 'teaser'...
+ *
+ * @return
+ *   An array as expected by drupal_render().
+ */
+function comment_build($comment, $build_mode = 'full') {
+  $node = node_load($comment->nid);
+  $comment = comment_build_content($comment, $build_mode);
+
+  $build = $comment->content;
+
+  $build += array(
+    '#theme' => 'comment',
+    '#comment' => $comment,
+    '#build_mode' => $build_mode,
+  );
+
+  $prefix = '';
+  $is_threaded = isset($comment->divs) && _comment_get_display_setting('mode', $node) == COMMENT_MODE_THREADED;
+
+  // Add 'new' anchor if needed.
+  if (!empty($comment->first_new)) {
+    $prefix .= "<a id=\"new\"></a>\n";
+  }
+
+  // Add indentation div or close open divs as needed.
+  if ($is_threaded) {
+    $prefix .= $comment->divs <= 0 ? str_repeat('</div>', abs($comment->divs)) : "\n" . '<div class="indented">';
+  }
+
+  // Add anchor for each comment.
+  $prefix .= "<a id=\"comment-$comment->cid\"></a>\n";
+  $build['#prefix'] = $prefix;
+
+  // Close all open divs.
+  if ($is_threaded && !empty($comment->divs_final)) {
+    $build['#suffix'] = str_repeat('</div>', $comment->divs_final);
+  }
+
+  return $build;
+}
+
+/**
+ * Builds a structured array representing the comment's content.
+ *
+ * The content built for the comment (field values, comments, file attachments or
+ * other comment components) will vary depending on the $build_mode parameter.
+ *
+ * @param $comment
+ *   A comment object.
+ * @param $build_mode
+ *   Build mode, e.g. 'full', 'teaser'...
+ * @return
+ *   A structured array containing the individual elements
+ *   of the comment's content.
+ */
+function comment_build_content($comment, $build_mode = 'full') {
+  if (empty($comment->content)) {
+    $comment->content = array();
+  }
+
+  // Build comment body.
+  $comment->content['comment_body'] = array(
+    '#markup' => check_markup($comment->comment, $comment->format, '', FALSE),
+  );
+
+  if (empty($comment->in_preview)) {
+    $comment->content['links']['comment'] = array(
+      '#theme' => 'links',
+      '#links' => comment_links($comment),
+      '#attributes' => array('class' => 'links inline'),
+    );
+  }
+
+  // Allow modules to make their own additions to the comment.
+  module_invoke_all('comment_view', $comment, $build_mode);
+
+  // Allow modules to modify the structured comment.
+  drupal_alter('comment_build', $comment, $build_mode);
+
+  return $comment;
+}
+
+/**
+ * Construct a drupal_render() style array from an array of loaded comments.
+ *
+ * @param $comments
+ *   An array of comments as returned by comment_load_multiple().
+ * @param $build_mode
+ *   Build mode, e.g. 'full', 'teaser'...
+ * @param $weight
+ *   An integer representing the weight of the first comment in the list.
+ * @return
+ *   An array in the format expected by drupal_render().
+ */
+function comment_build_multiple($comments, $build_mode = 'full', $weight = 0) {
+  $build = array(
+    '#sorted' => TRUE,
+  );
+  foreach ($comments as $comment) {
+    $build[$comment->cid] = comment_build($comment, $build_mode);
+    $build[$comment->cid]['#weight'] = $weight;
+    $weight++;
+  }
+  return $build;
 }
 
 /**
@@ -878,7 +1159,7 @@ function comment_save($comment) {
   }
   else {
     // Add the comment to database. This next section builds the thread field.
-    // Also see the documentation for comment_render().
+    // Also see the documentation for comment_build().
     if ($comment->pid == 0) {
       // This is a comment with no parent comment (depth 0): we start
       // by retrieving the maximum thread level.
@@ -977,23 +1258,12 @@ function comment_link($type, $object, $build_mode) {
  *
  * @param $comment
  *   The comment to which the links will be related.
- * @param $return
- *   Not used.
  * @return
  *   An associative array containing the links.
  */
-function comment_links($comment, $return = 1) {
+function comment_links(&$comment) {
   global $user;
   $links = array();
-
-  // If viewing just this comment, link back to the in-context view.
-  if ($return) {
-    $links['comment_parent'] = array(
-      'title' => t('parent'),
-      'href' => 'comment/' . $comment->cid,
-      'fragment' => "comment-$comment->cid"
-    );
-  }
 
   $node = node_load($comment->nid);
   if ($node->comment == COMMENT_NODE_OPEN) {
@@ -1042,181 +1312,9 @@ function comment_links($comment, $return = 1) {
     }
   }
 
+
+
   return $links;
-}
-
-/**
- * Renders comment(s).
- *
- * @param $node
- *   The node which comment(s) needs rendering.
- * @param $cid
- *   Optional, if given, only one comment is rendered.
- *
- * To display threaded comments in the correct order we keep a 'thread' field
- * and order by that value. This field keeps this data in
- * a way which is easy to update and convenient to use.
- *
- * A "thread" value starts at "1". If we add a child (A) to this comment,
- * we assign it a "thread" = "1.1". A child of (A) will have "1.1.1". Next
- * brother of (A) will get "1.2". Next brother of the parent of (A) will get
- * "2" and so on.
- *
- * First of all note that the thread field stores the depth of the comment:
- * depth 0 will be "X", depth 1 "X.X", depth 2 "X.X.X", etc.
- *
- * Now to get the ordering right, consider this example:
- *
- * 1
- * 1.1
- * 1.1.1
- * 1.2
- * 2
- *
- * If we "ORDER BY thread ASC" we get the above result, and this is the
- * natural order sorted by time. However, if we "ORDER BY thread DESC"
- * we get:
- *
- * 2
- * 1.2
- * 1.1.1
- * 1.1
- * 1
- *
- * Clearly, this is not a natural way to see a thread, and users will get
- * confused. The natural order to show a thread by time desc would be:
- *
- * 2
- * 1
- * 1.2
- * 1.1
- * 1.1.1
- *
- * which is what we already did before the standard pager patch. To achieve
- * this we simply add a "/" at the end of each "thread" value. This way, the
- * thread fields will look like this:
- *
- * 1/
- * 1.1/
- * 1.1.1/
- * 1.2/
- * 2/
- *
- * we add "/" since this char is, in ASCII, higher than every number, so if
- * now we "ORDER BY thread DESC" we get the correct order. However this would
- * spoil the reverse ordering, "ORDER BY thread ASC" -- here, we do not need
- * to consider the trailing "/" so we use a substring only.
- */
-function comment_render($node, $cid = 0) {
-  global $user;
-  $output = '';
-
-  if (user_access('access comments')) {
-    // Pre-process variables.
-    $nid = $node->nid;
-    if (empty($nid)) {
-      $nid = 0;
-    }
-
-    $mode = _comment_get_display_setting('mode', $node);
-    $comments_per_page = _comment_get_display_setting('comments_per_page', $node);
-
-    if ($cid && is_numeric($cid)) {
-      $comment = current(comment_load_multiple(array('cid' => $cid, 'status' => COMMENT_PUBLISHED)));
-      // Single comment view.
-      if ($comment) {
-        $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-        $links = module_invoke_all('link', 'comment', $comment, 1);
-        drupal_alter('link', $links, $node);
-
-        $output .= theme('comment_view', $comment, $node, $links);
-      }
-    }
-    // Only attempt to render comments if the node has visible comments.
-    // Unpublished comments are not included in $node->comment_count, so show
-    // comments unconditionally if the user is an administrator.
-    elseif ($node->comment_count || user_access('administer comments')) {
-
-      // Multiple comment view.
-      $query = db_select('comment', 'c')->extend('PagerDefault');
-      $query->addField('c', 'cid');
-      $query
-        ->condition('c.nid', $nid)
-        ->addTag('node_access')
-        ->limit($comments_per_page);
-
-      $count_query = db_select('comment', 'c');
-      $count_query->addExpression('COUNT(*)');
-      $count_query
-        ->condition('c.nid', $nid)
-        ->addTag('node_access');
-
-      if (!user_access('administer comments')) {
-        $query->condition('c.status', COMMENT_PUBLISHED);
-        $count_query->condition('c.status', COMMENT_PUBLISHED);
-      }
-      if ($mode === COMMENT_MODE_FLAT) {
-        $query->orderBy('c.cid', 'ASC');
-      }
-      else {
-        // See comment above. Analysis reveals that this doesn't cost too
-        // much. It scales much much better than having the whole comment
-        // structure.
-        $query->orderBy('SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1))', 'ASC');
-      }
-
-      $query->setCountQuery($count_query);
-      $cids = $query->execute()->fetchCol();
-
-      $divs = 0;
-      $num_rows = FALSE;
-      $render = '';
-      $comments = comment_load_multiple($cids);
-      drupal_add_css(drupal_get_path('module', 'comment') . '/comment.css');
-      foreach ($comments as $comment) {
-        $comment = drupal_unpack($comment);
-        $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-        $comment->depth = count(explode('.', $comment->thread)) - 1;
-
-        if ($mode == COMMENT_MODE_THREADED) {
-          if ($comment->depth > $divs) {
-            $divs++;
-            $render .= '<div class="indented">';
-          }
-          else {
-            while ($comment->depth < $divs) {
-              $divs--;
-              $render .= '</div>';
-            }
-          }
-        }
-
-        if ($mode == COMMENT_MODE_FLAT) {
-          $render .= theme('comment_flat_expanded', $comment, $node);
-        }
-        elseif ($mode == COMMENT_MODE_THREADED) {
-          $render .= theme('comment_thread_expanded', $comment, $node);
-        }
-        $num_rows = TRUE;
-      }
-      while ($divs-- > 0) {
-        $render .= '</div>';
-      }
-      $output .= $render;
-      $output .= theme('pager', NULL);
-    }
-
-    // If enabled, show new comment form if it's not already being displayed.
-    $reply = arg(0) == 'comment' && arg(1) == 'reply';
-    if (user_access('post comments') && $node->comment == COMMENT_NODE_OPEN && (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW) == COMMENT_FORM_BELOW) && !$reply) {
-      $output .= theme('comment_form_box', array('nid' => $nid), t('Post new comment'));
-    }
-    if ($output) {
-      $output = theme('comment_wrapper', $output, $node);
-    }
-  }
-
-  return $output;
 }
 
 /**
@@ -1285,6 +1383,14 @@ function comment_load_multiple($cids = array(), $conditions = array()) {
       }
     }
     $comments = $query->execute()->fetchAllAssoc('cid');
+  }
+
+  // Setup standard comment properties.
+  foreach ($comments as $key => $comment) {
+    $comment = drupal_unpack($comment);
+    $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
+    $comment->new = node_mark($comment->nid, $comment->timestamp);
+    $comments[$key] = $comment;
   }
 
   // Invoke hook_comment_load().
@@ -1396,7 +1502,7 @@ function comment_get_display_ordinal($cid, $node_type) {
   else {
     // For threaded comments, the c.thread column is used for ordering. We can
     // use the vancode for comparison, but must remove the trailing slash.
-    // @see comment_render().
+    // @see comment_build_multiple().
     $query->where('SUBSTRING(c1.thread, 1, (LENGTH(c1.thread) -1)) < SUBSTRING(c2.thread, 1, (LENGTH(c2.thread) -1))');
   }
 
@@ -1425,20 +1531,18 @@ function comment_get_display_page($cid, $node_type) {
 /**
  * Generate the basic commenting form, for appending to a node or display on a separate page.
  *
- * @param $title
- *   Not used.
  * @ingroup forms
  * @see comment_form_validate()
  * @see comment_form_submit()
  */
-function comment_form(&$form_state, $edit, $title = NULL) {
+function comment_form(&$form_state, $edit = array()) {
   global $user;
 
   $op = isset($_POST['op']) ? $_POST['op'] : '';
   $node = node_load($edit['nid']);
 
   if (!$user->uid && variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
-    drupal_add_js(drupal_get_path('module', 'comment') . '/comment.js');
+    $form_state['#attached_js'][] = drupal_get_path('module', 'comment') . '/comment.js';
   }
 
   // Take into account multi-step rebuilding.
@@ -1676,22 +1780,6 @@ function comment_form(&$form_state, $edit, $title = NULL) {
 }
 
 /**
- * Theme the comment form box.
- *
- * @param $edit
- *   The form structure.
- * @param $title
- *   The form title.
- * @return
- *   A string containing the box output.
- */
-function theme_comment_form_box($edit, $title = NULL) {
-  $content = drupal_render(drupal_get_form('comment_form', $edit, $title));
-  $output = '<h2 class="title">' . $title . '</h2><div>' . $content . '</div>';
-  return $output;
-}
-
-/**
  * Build a preview from submitted form values.
  */
 function comment_form_build_preview($form, &$form_state) {
@@ -1729,38 +1817,31 @@ function comment_preview($comment) {
     }
 
     $comment->timestamp = !empty($edit['timestamp']) ? $edit['timestamp'] : REQUEST_TIME;
-    $output = theme('comment_view', $comment, $node);
-  }
-  else {
-    $output = '';
-  }
+    $comment->in_preview = TRUE;
+    $comment_build = comment_build($comment);
+    $comment_build += array(
+      '#weight' => -100,
+      '#prefix' => '<div class="preview">',
+      '#suffix' => '</div>',
+    );
 
-  $form['comment_preview'] = array(
-    '#markup' => $output,
-    '#weight' => -100,
-    '#prefix' => '<div class="preview">',
-    '#suffix' => '</div>',
-  );
+    $form['comment_preview'] = $comment_build;
+  }
 
   if ($comment->pid) {
     $parent_comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comment} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid AND c.status = :status', array(
       ':cid' => $comment->pid,
       ':status' => COMMENT_PUBLISHED,
       ))->fetchObject();
-    $parent_comment = drupal_unpack($parent_comment);
-    $parent_comment->name = $parent_comment->uid ? $parent_comment->registered_name : $parent_comment->name;
-    $output_below = theme('comment_view', $parent_comment, $node);
+
+    $build = comment_build($parent_comment);
   }
   else {
-    $suffix = empty($form['#suffix']) ? '' : $form['#suffix'];
-    $form['#suffix'] = $suffix . drupal_render(node_build($node));
-    $output_below = '';
+    $build = node_build($node);
   }
 
-  $form['comment_preview_below'] = array(
-    '#markup' => $output_below,
-    '#weight' => 100,
-  );
+  $form['comment_output_below'] = $build;
+  $form['comment_output_below']['#weight'] = 100;
 
   return $form;
 }
@@ -1905,67 +1986,25 @@ function comment_form_submit($form, &$form_state) {
 }
 
 /**
- * Theme a single comment block.
- *
- * @param $comment
- *   The comment object.
- * @param $node
- *   The comment node.
- * @param $links
- *   An associative array containing control links.
- * @param $visible
- *   Switches between folded/unfolded view.
- * @ingroup themeable
- */
-function theme_comment_view($comment, $node, $links = array(), $visible = TRUE) {
-  $first_new = &drupal_static(__FUNCTION__, TRUE);
-  $comment->new = node_mark($comment->nid, $comment->timestamp);
-  $output = '';
-
-  if ($first_new && $comment->new != MARK_READ) {
-    // Assign the anchor only for the first new comment. This avoids duplicate
-    // id attributes on a page.
-    $first_new = FALSE;
-    $output .= "<a id=\"new\"></a>\n";
-  }
-
-  $output .= "<a id=\"comment-$comment->cid\"></a>\n";
-
-  // Switch to folded/unfolded view of the comment.
-  if ($visible) {
-    $comment->comment = check_markup($comment->comment, $comment->format, '', FALSE);
-    // Comment API hook.
-    module_invoke_all('comment_view', $comment);
-    $output .= theme('comment', $comment, $node, $links);
-  }
-  else {
-    $output .= theme('comment_folded', $comment, $node);
-  }
-
-  return $output;
-}
-
-/**
  * Process variables for comment.tpl.php.
  *
  * @see comment.tpl.php
- * @see theme_comment()
  */
 function template_preprocess_comment(&$variables) {
-  $comment = $variables['comment'];
-  $node = $variables['node'];
+  $comment = $variables['elements']['#comment'];
+  $variables['comment']   = $comment;
+  $variables['node']      = node_load($comment->nid);
   $variables['author']    = theme('username', $comment);
-  $variables['content']   = $comment->comment;
+  $variables['content']   = $comment->content;
   $variables['date']      = format_date($comment->timestamp);
-  $variables['links']     = isset($variables['links']) ? theme('links', $variables['links']) : '';
-  $variables['new']       = $comment->new ? t('new') : '';
+  $variables['new']       = !empty($comment->new) ? t('new') : '';
   $variables['picture']   = theme_get_setting('toggle_comment_user_picture') ? theme('user_picture', $comment) : '';
   $variables['signature'] = $comment->signature;
   $variables['submitted'] = theme('comment_submitted', $comment);
   $variables['title']     = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => "comment-$comment->cid"));
-  $variables['template_files'][] = 'comment-' . $node->type;
+  $variables['template_files'][] = 'comment-' . $variables['node']->type;
   // Set status to a string representation of comment->status.
-  if (isset($comment->preview)) {
+  if (isset($comment->in_preview)) {
     $variables['status']  = 'comment-preview';
   }
   else {
@@ -1986,69 +2025,10 @@ function template_preprocess_comment(&$variables) {
     if ($comment->uid === $variables['user']->uid) {
       $variables['classes_array'][] = 'comment-by-viewer';
     }
-    if ($comment->new) {
+    if ($variables['new']) {
       $variables['classes_array'][] = 'comment-new';
     }
   }
-}
-
-/**
- * Process variables for comment-folded.tpl.php.
- *
- * @see comment-folded.tpl.php
- * @see theme_comment_folded()
- */
-function template_preprocess_comment_folded(&$variables) {
-  $comment = $variables['comment'];
-  $variables['author'] = theme('username', $comment);
-  $variables['date']   = format_date($comment->timestamp);
-  $variables['new']    = $comment->new ? t('new') : '';
-  $variables['title']  = l($comment->subject, 'comment/' . $comment->cid, array('fragment' => "comment-$comment->cid"));
-  // Gather comment classes.
-  if ($comment->uid === 0) {
-    $variables['classes_array'][] = 'comment-by-anonymous';
-  }
-  else {
-    if ($comment->status == COMMENT_NOT_PUBLISHED) {
-      $variables['classes_array'][] = 'comment-unpublished';
-    }
-    if ($comment->uid === $variables['node']->uid) {
-      $variables['classes_array'][] = 'comment-by-node-author';
-    }
-    if ($comment->uid === $variables['user']->uid) {
-      $variables['classes_array'][] = 'comment-by-viewer';
-    }
-    if ($comment->new) {
-      $variables['classes_array'][] = 'comment-new';
-    }
-  }
-
-}
-
-/**
- * Theme comment flat expanded view.
- *
- * @param $comment
- *   The comment to be themed.
- * @param $node
- *   The comment node.
- * @ingroup themeable
- */
-function theme_comment_flat_expanded($comment, $node) {
-  return theme('comment_view', $comment, $node, module_invoke_all('link', 'comment', $comment, 0));
-}
-
-/**
- * Theme comment thread expanded view.
- *
- * @param $comment
- *   The comment to be themed.
- * @param $node
- *   The comment node.
- * @ingroup themeable
- */
-function theme_comment_thread_expanded($comment, $node) {
-  return theme('comment_view', $comment, $node, module_invoke_all('link', 'comment', $comment, 0));
 }
 
 /**
@@ -2096,7 +2076,8 @@ function theme_comment_post_forbidden($node) {
  */
 function template_preprocess_comment_wrapper(&$variables) {
   // Provide contextual information.
-  $variables['display_mode']  = _comment_get_display_setting('mode', $variables['node']);
+  $variables['node'] = $variables['content']['#node'];
+  $variables['display_mode'] = _comment_get_display_setting('mode', $variables['node']);
   $variables['template_files'][] = 'comment-wrapper-' . $variables['node']->type;
 }
 

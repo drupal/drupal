@@ -8,7 +8,7 @@
     <span class="submitted"><?php print $submitted; ?></span>
   <?php endif; ?>
 
-  <?php if ($comment->new) : ?>
+  <?php if ($new) : ?>
     <span class="new"><?php print drupal_ucfirst($new) ?></span>
   <?php endif; ?>
 
@@ -17,7 +17,7 @@
     <h3><?php print $title ?></h3>
 
     <div class="content">
-      <?php print $content ?>
+      <?php hide($content['links']); print render($content); ?>
       <?php if ($signature): ?>
       <div class="clearfix">
         <div>—</div>
@@ -27,7 +27,5 @@
     </div>
   </div>
 
-  <?php if ($links): ?>
-    <div class="links"><?php print $links ?></div>
-  <?php endif; ?>
+  <?php print render($content['links']) ?>
 </div>

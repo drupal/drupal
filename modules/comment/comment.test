@@ -76,7 +76,7 @@ class CommentHelperCase extends DrupalWebTestCase {
       $regex .= '<div(.*?)'; // Begin in comment div.
       $regex .= $comment->subject . '(.*?)'; // Match subject.
       $regex .= $comment->comment . '(.*?)'; // Match comment.
-      $regex .= '<\/div>/s'; // Dot matches newlines and ensure that match doesn't bleed outside comment div.
+      $regex .= '/s';
 
       return (boolean)preg_match($regex, $this->drupalGetContent());
     }
@@ -446,7 +446,7 @@ class CommentAnonymous extends CommentHelperCase {
     // "Login or register to post comments" type link may be shown.
     $this->drupalLogout();
     $this->drupalGet('node/' . $this->node->nid);
-    $this->assertNoRaw('<div id="comments">', t('Comments were not displayed.'));
+    $this->assertNoPattern('/<div ([^>]*?)id="comments"([^>]*?)>/', t('Comments were not displayed.'));
     $this->assertNoLink('Add new comment', t('Link to add comment was found.'));
 
     // Attempt to view node-comment form while disallowed.
@@ -459,7 +459,7 @@ class CommentAnonymous extends CommentHelperCase {
     $this->setAnonymousUserComment(TRUE, FALSE, FALSE);
     $this->drupalLogout();
     $this->drupalGet('node/' . $this->node->nid);
-    $this->assertRaw('<div id="comments">', t('Comments were displayed.'));
+    $this->assertPattern('/<div ([^>]*?)id="comments"([^>]*?)>/', t('Comments were displayed.'));
     $this->assertLink('Login', 1, t('Link to login was found.'));
     $this->assertLink('register', 1, t('Link to register was found.'));
   }

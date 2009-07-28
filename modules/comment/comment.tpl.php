@@ -7,9 +7,11 @@
  *
  * Available variables:
  * - $author: Comment author. Can be link or plain text.
- * - $content: Body of the post.
+ * - $content: An array of comment items. Use render($content) to print them all, or
+ *   print a subset such as render($content['field_example']). Use
+ *   hide($content['field_example']) to temporarily suppress the printing of a
+ *   given element.
  * - $date: Date and time of posting.
- * - $links: Various operational links.
  * - $new: New comment marker.
  * - $picture: Authors picture.
  * - $signature: Authors signature.
@@ -46,7 +48,7 @@
 <div class="<?php print $classes; ?> clearfix">
   <?php print $picture ?>
 
-  <?php if ($comment->new): ?>
+  <?php if ($new): ?>
     <span class="new"><?php print $new ?></span>
   <?php endif; ?>
 
@@ -57,7 +59,11 @@
   </div>
 
   <div class="content">
-    <?php print $content ?>
+    <?php
+      // We hide the comments and links now so that we can render them later.
+      hide($content['links']);
+      print render($content);
+    ?>
     <?php if ($signature): ?>
     <div class="user-signature clearfix">
       <?php print $signature ?>
@@ -65,5 +71,5 @@
     <?php endif; ?>
   </div>
 
-  <?php print $links ?>
+  <?php print render($content['links']) ?>
 </div>
