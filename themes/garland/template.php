@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.22 2009/06/02 03:57:22 webchick Exp $
+// $Id: template.php,v 1.23 2009/07/28 10:09:25 dries Exp $
 
 /**
  * Return a themed breadcrumb trail.
@@ -11,18 +11,6 @@
 function garland_breadcrumb($breadcrumb) {
   if (!empty($breadcrumb)) {
     return '<div class="breadcrumb">' . implode(' › ', $breadcrumb) . '</div>';
-  }
-}
-
-/**
- * Allow themable wrapping of all comments.
- */
-function garland_comment_wrapper($content, $node) {
-  if (!$content || $node->type == 'forum') {
-    return '<div id="comments">' . $content . '</div>';
-  }
-  else {
-    return '<div id="comments"><h2 class="comments">' . t('Comments') . '</h2>' . $content . '</div>';
   }
 }
 
