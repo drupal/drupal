@@ -1,5 +1,5 @@
 <?php
-// $Id: forum-submitted.tpl.php,v 1.4 2008/10/13 12:31:42 dries Exp $
+// $Id: forum-submitted.tpl.php,v 1.5 2009/07/28 10:41:20 dries Exp $
 
 /**
  * @file
@@ -18,11 +18,12 @@
  */
 ?>
 <?php if ($time): ?>
-  <?php print t(
-  '@time ago<br />by !author', array(
+  <span class="submitted">
+  <?php print t('By !author @time ago', array(
     '@time' => $time,
     '!author' => $author,
     )); ?>
+  </span>
 <?php else: ?>
   <?php print t('n/a'); ?>
 <?php endif; ?>
