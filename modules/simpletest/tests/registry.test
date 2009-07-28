@@ -73,11 +73,10 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
       file_save_data($this->$fileType->contents, $this->$fileType->fileName);
 
       if ($fileType == 'existing_changed') {
-        // Insert a record with a dodgy md5.
-        $this->$fileType->fakeMD5 = md5($this->$fileType->contents . rand());
         db_insert('registry_file')
           ->fields(array(
-            'md5' => $this->$fileType->fakeMD5,
+            'filectime' => rand(1, 1000000),
+            'filemtime' => rand(1, 1000000),
             'filename' => $this->$fileType->fileName,
           ))
           ->execute();
@@ -107,9 +106,10 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
         $foundName = db_query('SELECT name FROM {registry} WHERE name = :name', array(':name' => $this->$fileType->$resource))->fetchField();
         $this->assertTrue($this->$fileType->$resource == $foundName, t('Resource "@resource" found.', array('@resource' => $this->$fileType->$resource)));
       }
-      // Test that we have the right md5.
-      $md5 = db_query('SELECT md5 FROM {registry_file} WHERE filename = :filename', array(':filename' => $this->$fileType->fileName))->fetchField();
-      $this->assertTrue(md5($this->$fileType->contents) == $md5, t('MD5 for "@filename" matched.' . $fileType . $md5, array('@filename' => $this->$fileType->fileName)));
+      // Test that we have the right file creation and modification dates.
+      $dates = db_query('SELECT filectime, filemtime FROM {registry_file} WHERE filename = :filename', array(':filename' => $this->$fileType->fileName))->fetchObject();
+      $this->assertEqual($dates->filectime, filectime($this->$fileType->fileName), t('File creation date matches for %filename.', array('%filename' => $this->$fileType->fileName)));
+      $this->assertEqual($dates->filemtime, filemtime($this->$fileType->fileName), t('File modification date matches for %filename.', array('%filename' => $this->$fileType->fileName)));
     }
   }
 
@@ -121,7 +121,8 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
     foreach ($this->fileTypes as $fileType) {
       $files[$this->$fileType->fileName] = array('module' => '', 'weight' => 0);
       if ($fileType == 'existing_changed') {
-        $files[$this->$fileType->fileName]['md5'] = $this->$fileType->fakeMD5;
+        $files[$this->$fileType->fileName]['filectime'] = rand(1, 1000000);
+        $files[$this->$fileType->fileName]['filemtime'] = rand(1, 1000000);
       }
     }
     return $files;

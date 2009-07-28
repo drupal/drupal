@@ -71,9 +71,11 @@ function _registry_rebuild() {
   // or modify attributes of a file.
   drupal_alter('registry_files', $files, $modules);
   foreach (registry_get_parsed_files() as $filename => $file) {
-    // Add the md5 to those files we've already parsed.
+    // Add the file creation and modification dates to those files we have
+    // already parsed.
     if (isset($files[$filename])) {
-      $files[$filename]['md5'] = $file['md5'];
+      $files[$filename]['filectime'] = $file['filectime'];
+      $files[$filename]['filemtime'] = $file['filemtime'];
     }
     else {
       // Flush the registry of resources in files that are no longer on disc
@@ -131,18 +133,23 @@ function registry_get_parsed_files() {
 function _registry_parse_files($files) {
   $parsed_files = array();
   foreach ($files as $filename => $file) {
-    $contents = file_get_contents($filename);
-    $md5 = md5($contents);
-    $new_file = !isset($file['md5']);
-    if ($new_file || $md5 != $file['md5']) {
+    $filectime = filectime($filename);
+    $filemtime = filemtime($filename);
+    $modified_file = !isset($file['filectime']) || !isset($file['filemtime'])
+                || $filectime != $file['filectime'] || $filemtime != $file['filemtime'];
+    if ($modified_file) {
+      $contents = file_get_contents($filename);
       $parsed_files[] = $filename;
-      // We update the md5 after we've saved the files resources rather than here, so if we
-      // don't make it through this rebuild, the next run will reparse the file.
+      // We update the filectime/filemtime after we've saved the files resources
+      // rather than here, so if we don't make it through this rebuild, the next
+      // run will reparse the file.
       _registry_parse_file($filename, $contents, $file['module'], $file['weight']);
-      $file['md5'] = $md5;
       db_merge('registry_file')
         ->key(array('filename' => $filename))
-        ->fields(array('md5' => $md5))
+        ->fields(array(
+          'filectime' => $filectime,
+          'filemtime' => $filemtime,
+        ))
         ->execute();
     }
   }

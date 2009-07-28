@@ -1289,11 +1289,17 @@ function system_schema() {
         'length' => 255,
         'not null' => TRUE,
       ),
-      'md5'  => array(
-        'description' => "Md5 hash of the file's contents when last parsed.",
-        'type' => 'varchar',
-        'length' => 32,
+      'filectime'  => array(
+        'description' => "The creation time of the file when last parsed.",
+        'type' => 'int',
         'not null' => TRUE,
+        'default' => 0,
+      ),
+      'filemtime'  => array(
+        'description' => "The modification time of the file when last parsed.",
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
       ),
     ),
     'primary key' => array('filename'),
@@ -1717,8 +1723,9 @@ function system_update_7006() {
   );
   $schema['registry_file'] = array(
     'fields' => array(
-      'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
-      'md5'   => array('type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''),
+      'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE),
+      'filectime'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
+      'filemtime'  => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
     ),
     'primary key' => array('filename'),
   );
