@@ -346,7 +346,7 @@ abstract class DatabaseTasks {
           }
         }
         else {
-          throw new DatabaseTaskException(st("Failed to run all tasks against the database server. The task %task wasn\'t found.", array('%task' => $task['function'])));
+          throw new DatabaseTaskException(st("Failed to run all tasks against the database server. The task %task wasn't found.", array('%task' => $task['function'])));
         }
       }
     }

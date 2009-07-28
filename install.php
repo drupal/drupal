@@ -1123,10 +1123,10 @@ function install_select_locale(&$install_state) {
   $locales = install_find_locales($profilename);
   $install_state['locales'] += $locales;
   if (empty($install_state['parameters']['locale'])) {
-  // If only the built-in (English) language is available, and we are using the
-  // default profile and performing an interactive installation, inform the
-  // user that the installer can be localized. Otherwise we assume the user
-  // knows what he is doing.
+    // If only the built-in (English) language is available, and we are using
+    // the default profile and performing an interactive installation, inform
+    // the user that the installer can be localized. Otherwise we assume the
+    // user knows what he is doing.
   if (count($locales) == 1) {
     if ($profilename == 'default' && $install_state['interactive']) {
       drupal_set_title(st('Choose language'));
@@ -1174,10 +1174,11 @@ function install_select_locale(&$install_state) {
       }
     }
 
-    // We still don't have a locale, so display a form for selecting one. Only
-    // do this in the case of interactive installations, since this is not a
-    // real form with submit handlers (the database isn't even set up yet),
-    // rather just a convenience method for setting parameters in the URL.
+      // We still don't have a locale, so display a form for selecting one.
+      // Only do this in the case of interactive installations, since this is
+      // not a real form with submit handlers (the database isn't even set up
+      // yet), rather just a convenience method for setting parameters in the
+      // URL.
     if ($install_state['interactive']) {
       drupal_set_title(st('Choose language'));
       include_once DRUPAL_ROOT . '/includes/form.inc';
@@ -1327,9 +1328,9 @@ function install_import_locales(&$install_state) {
  */
 function install_configure_form(&$form_state, &$install_state) {
     if (variable_get('site_name', FALSE) || variable_get('site_mail', FALSE)) {
-      // Site already configured: This should never happen, means re-running
-      // the installer, possibly by an attacker after the 'install_task' variable
-      // got accidentally blown somewhere. Stop it now.
+    // Site already configured: This should never happen, means re-running the
+    // installer, possibly by an attacker after the 'install_task' variable got
+    // accidentally blown somewhere. Stop it now.
       throw new Exception(install_already_done_error());
     }
 
@@ -1357,15 +1358,14 @@ function install_configure_form(&$form_state, &$install_state) {
       // Build menu to allow clean URL check.
       menu_rebuild();
 
-      // Cache a fully-built schema. This is necessary for any
-      // invocation of index.php because: (1) setting cache table
-      // entries requires schema information, (2) that occurs during
-      // bootstrap before any module are loaded, so (3) if there is no
-      // cached schema, drupal_get_schema() will try to generate one
-      // but with no loaded modules will return nothing.
+  // Cache a fully-built schema. This is necessary for any invocation of
+  // index.php because: (1) setting cache table entries requires schema
+  // information, (2) that occurs during bootstrap before any module are
+  // loaded, so (3) if there is no cached schema, drupal_get_schema() will
+  // try to generate one but with no loaded modules will return nothing.
       //
-      // This logically could be done during the 'install_finished' task,
-      // but the clean URL check requires it now.
+  // This logically could be done during the 'install_finished' task, but the
+  // clean URL check requires it now.
       drupal_get_schema(NULL, TRUE);
 
       // Return the form.
@@ -1382,8 +1382,8 @@ function install_configure_form(&$form_state, &$install_state) {
  */
 function install_import_locales_remaining(&$install_state) {
       include_once DRUPAL_ROOT . '/includes/locale.inc';
-      // Collect files to import for this language. Skip components
-      // already covered in the initial batch set.
+  // Collect files to import for this language. Skip components already covered
+  // in the initial batch set.
       $batch = locale_batch_by_language($install_locale, NULL, variable_get('install_locale_batch_components', array()));
       // Remove temporary variable.
       variable_del('install_locale_batch_components');
@@ -1412,8 +1412,8 @@ function install_finished(&$install_state) {
     // Register actions declared by any modules.
     actions_synchronize();
 
-    // Randomize query-strings on css/js files, to hide the fact that
-    // this is a new install, not upgraded yet.
+  // Randomize query-strings on css/js files, to hide the fact that this is a
+  // new install, not upgraded yet.
     _drupal_flush_css_js();
 
     // Remember the profile which was used.
