@@ -1877,125 +1877,170 @@ function hook_registry_files_alter(&$files, $module_cache) {
   }
 }
 
-
 /**
- * Perform any final installation tasks for an installation profile.
+ * Return an array of tasks to be performed by an installation profile.
  *
- * The installer goes through the profile-select -> locale-select
- * -> requirements -> database -> profile-install-batch
- * -> locale-initial-batch -> configure -> locale-remaining-batch
- * -> finished -> done tasks, in this order, if you don't implement
- * this function in your profile.
+ * Any tasks you define here will be run, in order, after the installer has
+ * finished the site configuration step but before it has moved on to the
+ * final import of languages and the end of the installation. You can have any
+ * number of custom tasks to perform during this phase.
  *
- * If this function is implemented, you can have any number of
- * custom tasks to perform after 'configure', implementing a state
- * machine here to walk the user through those tasks. First time,
- * this function gets called with $task set to 'profile', and you
- * can advance to further tasks by setting $task to your tasks'
- * identifiers, used as array keys in the tasks property of the
- * profilename.info file.
- * 
- * You must avoid the reserved tasks listed in install_reserved_tasks(). 
- * If you implement your custom tasks, this function will get called in
- * every HTTP request (for form processing, printing your information 
- * screens and so on) until you advance to the 'profile-finished' task,
- * with which you hand control back to the installer. Each custom page
- * you return needs to provide a way to continue, such as a form
- * submission or a link. You should also set custom page titles.
+ * Each task you define here corresponds to a callback function which you must
+ * separately define and which is called when your task is run. This function
+ * will receive the global installation state variable, $install_state, as
+ * input, and has the opportunity to access or modify any of its settings. See
+ * the install_state_defaults() function in the installer for the list of
+ * $install_state settings used by Drupal core.
  *
- * You should define the list of custom tasks you implement by
- * specifying an array of tasks in your profilename.info file, as these
- * show up in the list of tasks on the installer user interface.
+ * At the end of your task function, you can indicate that you want the
+ * installer to pause and display a page to the user by returning any themed
+ * output that should be displayed on that page (but see below for tasks that
+ * use the form API or batch API; the return values of these task functions are
+ * handled differently). You should also use drupal_set_title() within the task
+ * callback function to set a custom page title. For some tasks, however, you
+ * may want to simply do some processing and pass control to the next task
+ * without ending the page request; to indicate this, simply do not send back
+ * a return value from your task function at all. This can be used, for
+ * example, by installation profiles that need to configure certain site
+ * settings in the database without obtaining any input from the user.
  *
- * Example :
- *   task[custom_task] = My first custom task
- *   task[custom_task_2] = My second custom task
+ * The task function is treated specially if it defines a form or requires
+ * batch processing; in that case, you should return either the form API
+ * definition or batch API array, as appropriate. See below for more
+ * information on the 'type' key that you must define in the task definition
+ * to inform the installer that your task falls into one of those two
+ * categories. It is important to use these APIs directly, since the installer
+ * may be run non-interactively (for example, via a command line script), all
+ * in one page request; in that case, the installer will automatically take
+ * care of submitting forms and processing batches correctly for both types of
+ * installations. You can inspect the $install_state['interactive'] boolean to
+ * see whether or not the current installation is interactive, if you need
+ * access to this information.
  *
- * Remember that the user will be able to reload the pages multiple
- * times, so you might want to use variable_set() and variable_get()
- * to remember your data and control further processing, if $task
- * is insufficient. Should a profile want to display a form here,
- * it can; the form should set '#redirect' to FALSE, and rely on
- * an action in the submit handler, such as variable_set(), to
- * detect submission and proceed to further tasks. See the configuration
- * form handling code in install_tasks() for an example.
- *
- * Important: Any temporary variables should be removed using
- * variable_del() before advancing to the 'profile-finished' phase.
- *
- * @param $task
- *   The current $task of the install system. When hook_profile_tasks()
- *   is first called, this is 'profile'.
- * @param $url
- *   Complete URL to be used for a link or form action on a custom page,
- *   if providing any, to allow the user to proceed with the installation.
+ * Remember that a user installing Drupal interactively will be able to reload
+ * an installation page multiple times, so you should use variable_set() and
+ * variable_get() if you are collecting any data that you need to store and
+ * inspect later. It is important to remove any temporary variables using
+ * variable_del() before your last task has completed and control is handed
+ * back to the installer.
  *
  * @return
- *   An optional HTML string to display to the user. Only used if you
- *   modify the $task, otherwise discarded.
+ *   A keyed array of tasks the profile will perform during the final stage of
+ *   the installation. Each key represents the name of a function (usually a
+ *   function defined by this profile, although that is not strictly required)
+ *   that is called when that task is run. The values are associative arrays
+ *   containing the following key-value pairs (all of which are optional):
+ *     - 'display_name'
+ *       The human-readable name of the task. This will be displayed to the
+ *       user while the installer is running, along with a list of other tasks
+ *       that are being run. Leave this unset to prevent the task from
+ *       appearing in the list.
+ *     - 'display'
+ *       This is a boolean which can be used to provide finer-grained control
+ *       over whether or not the task will display. This is mostly useful for
+ *       tasks that are intended to display only under certain conditions; for
+ *       these tasks, you can set 'display_name' to the name that you want to
+ *       display, but then use this boolean to hide the task only when certain
+ *       conditions apply.
+ *     - 'type'
+ *       A string representing the type of task. This parameter has three
+ *       possible values:
+ *       - 'normal': This indicates that the task will be treated as a regular
+ *       callback function, which does its processing and optionally returns
+ *       HTML output. This is the default behavior which is used when 'type' is
+ *       not set.
+ *       - 'batch': This indicates that the task function will return a batch
+ *       API definition suitable for batch_set(). The installer will then take
+ *       care of automatically running the task via batch processing.
+ *       - 'form': This indicates that the task function will return a standard
+ *       form API definition (and separately define validation and submit
+ *       handlers, as appropriate). The installer will then take care of
+ *       automatically directing the user through the form submission process.
+ *     - 'run'
+ *       A constant representing the manner in which the task will be run. This
+ *       parameter has three possible values:
+ *       - INSTALL_TASK_RUN_IF_NOT_COMPLETED: This indicates that the task will
+ *       run once during the installation of the profile. This is the default
+ *       behavior which is used when 'run' is not set.
+ *       - INSTALL_TASK_SKIP: This indicates that the task will not run during
+ *       the current installation page request. It can be used to skip running
+ *       an installation task when certain conditions are met, even though the
+ *       task may still show on the list of installation tasks presented to the
+ *       user.
+ *       - INSTALL_TASK_RUN_IF_REACHED: This indicates that the task will run
+ *       on each installation page request that reaches it. This is rarely
+ *       necessary for an installation profile to use; it is primarily used by
+ *       the Drupal installer for bootstrap-related tasks.
+ *     - 'function'
+ *       Normally this does not need to be set, but it can be used to force the
+ *       installer to call a different function when the task is run (rather
+ *       than the function whose name is given by the array key). This could be
+ *       used, for example, to allow the same function to be called by two
+ *       different tasks.
+ *
+ * @see install_state_defaults()
+ * @see batch_set()
  */
-function hook_profile_tasks(&$task, $url) {
-
-  // Enable some standard blocks.
-  $values = array(
-    array(
-      'module' => 'system',
-      'delta' => 'main',
-      'theme' => 'garland',
-      'status' => 1,
-      'weight' => 0,
-      'region' => 'content',
-      'pages' => '',
-      'cache' => -1,
+function hook_profile_tasks() {
+  // Here, we define a variable to allow tasks to indicate that a particular,
+  // processor-intensive batch process needs to be triggered later on in the
+  // installation.
+  $myprofile_needs_batch_processing = variable_get('myprofile_needs_batch_processing', FALSE);
+  $tasks = array(
+    // This is an example of a task that defines a form which the user who is
+    // installing the site will be asked to fill out. To implement this task,
+    // your profile would define a function named myprofile_data_import_form()
+    // as a normal form API callback function, with associated validation and
+    // submit handlers. In the submit handler, in addition to saving whatever
+    // other data you have collected from the user, you might also call
+    // variable_set('myprofile_needs_batch_processing', TRUE) if the user has
+    // entered data which requires that batch processing will need to occur
+    // later on.
+    'myprofile_data_import_form' => array(
+      'display_name' => st('Data import options'),
+      'type' => 'form',
     ),
-    array(
-      'module' => 'user',
-      'delta' => 'login',
-      'theme' => 'garland',
-      'status' => 1,
-      'weight' => 0,
-      'region' => 'left',
-      'pages' => '',
-      'cache' => -1,
+    // Similarly, to implement this task, your profile would define a function
+    // named myprofile_settings_form() with associated validation and submit
+    // handlers. This form might be used to collect and save additional
+    // information from the user that your profile needs. There are no extra
+    // steps required for your profile to act as an "installation wizard"; you
+    // can simply define as many tasks of type 'form' as you wish to execute,
+    // and the forms will be presented to the user, one after another.
+    'myprofile_settings_form' => array(
+      'display_name' => st('Additional options'),
+      'type' => 'form',
     ),
-    array(
-      'module' => 'system',
-      'delta' => 'navigation',
-      'theme' => 'garland',
-      'status' => 1,
-      'weight' => 0,
-      'region' => 'left',
-      'pages' => '',
-      'cache' => -1,
+    // This is an example of a task that performs batch operations. To
+    // implement this task, your profile would define a function named
+    // myprofile_batch_processing() which returns a batch API array definition
+    // that the installer will use to execute your batch operations. Due to the
+    // 'myprofile_needs_batch_processing' variable used here, this task will be
+    // hidden and skipped unless your profile set it to TRUE in one of the
+    // previous tasks.
+    'myprofile_batch_processing' => array(
+      'display_name' => st('Import additional data'),
+      'display' => $myprofile_needs_batch_processing,
+      'type' => 'batch',
+      'run' => $myprofile_needs_batch_processing ? INSTALL_TASK_RUN_IF_NOT_COMPLETED : INSTALL_TASK_SKIP,
     ),
-    array(
-      'module' => 'system',
-      'delta' => 'management',
-      'theme' => 'garland',
-      'status' => 1,
-      'weight' => 1,
-      'region' => 'left',
-      'pages' => '',
-      'cache' => -1,
-    ),
-    array(
-      'module' => 'system',
-      'delta' => 'help',
-      'theme' => 'garland',
-      'status' => 1,
-      'weight' => 0,
-      'region' => 'help',
-      'pages' => '',
-      'cache' => -1,
+    // This is an example of a task that will not be displayed in the list that
+    // the user sees. To implement this task, your profile would define a
+    // function named myprofile_final_site_setup(), in which additional,
+    // automated site setup operations would be performed. Since this is the
+    // last task defined by your profile, you should also use this function to
+    // call variable_del('myprofile_needs_batch_processing') and clean up the
+    // variable that was used above. If you want the user to pass to the final
+    // Drupal installation tasks uninterrupted, return no output from this
+    // function. Otherwise, return themed output that the user will see (for
+    // example, a confirmation page explaining that your profile's tasks are
+    // complete, with a link to reload the current page and therefore pass on
+    // to the final Drupal installation tasks when the user is ready to do so).
+    'myprofile_final_site_setup' => array(
     ),
   );
-  $query = db_insert('block')->fields(array('module', 'delta', 'theme', 'status', 'weight', 'region', 'pages', 'cache'));
-  foreach ($values as $record) {
-    $query->values($record);
-  }
-  $query->execute();  
+  return $tasks; 
 }
-
 
 /**
  * @} End of "addtogroup hooks".

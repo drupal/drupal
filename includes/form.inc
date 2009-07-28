@@ -705,7 +705,11 @@ function drupal_redirect_form($form, $redirect = NULL) {
         call_user_func_array('drupal_goto', $goto);
       }
       else {
-        drupal_goto($goto);
+        // This function can be called from the installer, which guarantees
+        // that $redirect will always be a string, so catch that case here
+        // and use the appropriate redirect function.
+        $function = drupal_installation_attempted() ? 'install_goto' : 'drupal_goto';
+        $function($goto);
       }
     }
     drupal_goto($_GET['q']);

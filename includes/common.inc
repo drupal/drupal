@@ -3607,15 +3607,18 @@ function drupal_cron_cleanup() {
  *   An array of file objects of the specified type.
  */
 function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1) {
-  global $profile;
+  global $install_state;
   $config = conf_path();
 
   // When this function is called during Drupal's initial installation process,
   // the name of the profile that's about to be installed is stored in the global
-  // $profile variable. At all other times, the standard Drupal systems variable
+  // installation state. At all other times, the standard Drupal systems variable
   // table contains the name of the current profile, and we can call variable_get()
   // to determine what one is active.
-  if (!isset($profile)) {
+  if (isset($install_state['parameters']['profile'])) {
+    $profile = $install_state['parameters']['profile'];
+  }
+  else {
     $profile = variable_get('install_profile', 'default');
   }
   $searchdir = array($directory);

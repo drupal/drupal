@@ -15,6 +15,10 @@ function cache_get($key, $table = 'cache') {
   return FALSE;
 }
 
+function cache_get_multiple(array &$cids, $bin = 'cache') {
+  return array();
+}
+
 function cache_set($cid, $data, $table = 'cache', $expire = CACHE_PERMANENT, $headers = NULL) {
   return;
 }

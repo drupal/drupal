@@ -1056,8 +1056,8 @@ class DrupalWebTestCase extends DrupalTestCase {
     drupal_get_schema(NULL, TRUE);
 
     // Run default profile tasks.
-    $task = 'profile';
-    default_profile_tasks($task, '');
+    $install_state = array();
+    default_profile_site_setup($install_state);
 
     // Rebuild caches.
     node_types_rebuild();
@@ -1073,7 +1073,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Restore necessary variables.
     variable_set('install_profile', 'default');
-    variable_set('install_task', 'profile-finished');
+    variable_set('install_task', 'done');
     variable_set('clean_url', $clean_url_original);
     variable_set('site_mail', 'simpletest@example.com');
     // Set up English language.

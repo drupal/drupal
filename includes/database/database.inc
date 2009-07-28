@@ -2509,7 +2509,7 @@ function db_result(DatabaseStatementInterface $statement) {
  */
 function _db_check_install_needed() {
   global $databases;
-  if (empty($databases) && !function_exists('install_main')) {
+  if (empty($databases) && !drupal_installation_attempted()) {
     include_once DRUPAL_ROOT . '/includes/install.inc';
     install_goto('install.php');
   }

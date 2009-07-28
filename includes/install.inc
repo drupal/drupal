@@ -165,7 +165,8 @@ function drupal_set_installed_schema_version($module, $version) {
  *   The name defined in the profile's _profile_details() hook.
  */
 function drupal_install_profile_name() {
-  global $profile;
+  global $install_state;
+  $profile = $install_state['parameters']['profile'];
   static $name = NULL;
 
   if (!isset($name)) {
@@ -190,7 +191,6 @@ function drupal_install_profile_name() {
  *   The auto-detected $base_url that should be configured in settings.php
  */
 function drupal_detect_baseurl($file = 'install.php') {
-  global $profile;
   $proto = $_SERVER['HTTPS'] ? 'https://' : 'http://';
   $host = $_SERVER['SERVER_NAME'];
   $port = ($_SERVER['SERVER_PORT'] == 80 ? '' : ':' . $_SERVER['SERVER_PORT']);
@@ -214,7 +214,7 @@ function drupal_detect_database_types() {
   // without modifying the installer.
   // Because we have no registry yet, we need to also include the install.inc
   // file for the driver explicitly.
-
+  require_once DRUPAL_ROOT . '/includes/database/database.inc';
   foreach (file_scan_directory(DRUPAL_ROOT . '/includes/database', '/^[a-z]*$/i', array('recurse' => FALSE)) as $file) {
     include_once "{$file->filepath}/install.inc";
     include_once "{$file->filepath}/database.inc";
@@ -346,7 +346,7 @@ abstract class DatabaseTasks {
           }
         }
         else {
-          drupal_set_message(st('Failed to run all tasks against the database server. The task %task wasn\'t found.', array('%task' => $task['function'])), 'error');
+          throw new DatabaseTaskException(st("Failed to run all tasks against the database server. The task %task wasn\'t found.", array('%task' => $task['function'])));
         }
       }
     }
@@ -471,11 +471,11 @@ function drupal_rewrite_settings($settings = array(), $prefix = '') {
 
     $fp = fopen(DRUPAL_ROOT . '/' . $settings_file, 'w');
     if ($fp && fwrite($fp, $buffer) === FALSE) {
-      drupal_set_message(st('Failed to modify %settings, please verify the file permissions.', array('%settings' => $settings_file)), 'error');
+      throw new Exception(st('Failed to modify %settings, please verify the file permissions.', array('%settings' => $settings_file)));
     }
   }
   else {
-    drupal_set_message(st('Failed to open %settings, please verify the file permissions.', array('%settings' => $default_settings)), 'error');
+    throw new Exception(st('Failed to open %settings, please verify the file permissions.', array('%settings' => $default_settings)));
   }
 }
 
@@ -497,24 +497,24 @@ function drupal_get_install_files($module_list = array()) {
 /**
  * Verify an install profile for installation.
  *
- * @param $profile
- *   Name of install profile to verify.
- * @param $locale
- *   Name of locale used (if any).
+ * @param $install_state
+ *   An array of information about the current installation state.
  * @return
  *   The list of modules to install.
  */
-function drupal_verify_profile($profile, $locale) {
+function drupal_verify_profile($install_state) {
+  $profile = $install_state['parameters']['profile'];
+  $locale = $install_state['parameters']['locale'];
+
   include_once DRUPAL_ROOT . '/includes/file.inc';
   include_once DRUPAL_ROOT . '/includes/common.inc';
 
   $profile_file = DRUPAL_ROOT . "/profiles/$profile/$profile.profile";
 
   if (!isset($profile) || !file_exists($profile_file)) {
-    install_no_profile_error();
+    throw new Exception(install_no_profile_error());
   }
-  $info = install_profile_info($profile);
-
+  $info = $install_state['profile_info'];
 
   // Get a list of modules that exist in Drupal's assorted subdirectories.
   $present_modules = array();
@@ -927,16 +927,18 @@ function install_goto($path) {
  */
 function st($string, $args = array()) {
   static $locale_strings = NULL;
-  global $profile, $install_locale;
+  global $install_state;
 
   if (!isset($locale_strings)) {
     $locale_strings = array();
-    $filename = 'profiles/' . $profile . '/translations/' . $install_locale . '.po';
+    if (isset($install_state['parameters']['profile']) && isset($install_state['parameters']['locale'])) {
+    $filename = 'profiles/' . $install_state['parameters']['profile'] . '/translations/' . $install_state['parameters']['locale'] . '.po';
     if (file_exists(DRUPAL_ROOT . '/' . $filename)) {
       require_once DRUPAL_ROOT . '/includes/locale.inc';
       $file = (object) array('filepath' => $filename);
       _locale_import_read_po('mem-store', $file);
       $locale_strings = _locale_import_one_string('mem-report');
+    }
     }
   }
 
@@ -974,7 +976,7 @@ function drupal_check_profile($profile) {
   $profile_file = DRUPAL_ROOT . "/profiles/$profile/$profile.profile";
 
   if (!isset($profile) || !file_exists($profile_file)) {
-    install_no_profile_error();
+    throw new Exception(install_no_profile_error());
   }
 
   $info = install_profile_info($profile);
@@ -1053,8 +1055,6 @@ function drupal_check_module($module) {
  * - name: The real name of the install profile for display purposes.
  * - description: A brief description of the profile.
  * - dependencies: An array of shortnames of other modules this install profile requires.
- * - tasks: An associative array of tasks and the page title of each task that need to be 
- *   completed for installation.
  *
  * Example of .info file:
  * @verbatim
@@ -1078,7 +1078,6 @@ function install_profile_info($profile, $locale = 'en') {
     // Set defaults for module info.
     $defaults = array(
       'dependencies' => array(),
-      'tasks' => array(),
       'description' => '',
       'version' => NULL,
       'php' => DRUPAL_MINIMUM_PHP,

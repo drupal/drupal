@@ -126,6 +126,9 @@ Drupal 7.0, xxxx-xx-xx (development version)
       and allow custom data fields to be attached to itself.
     * Provides a subset of the features of the Content Construction
       Kit (CCK) module.
+- Installer:
+    * Refactored the installer into an API that allows Drupal to be installed
+      via a command line script.
 - Page organization
     * Made the help text area a full featured region with blocks.
     * Site mission is replaced with the highlighted content block region and 
