@@ -1107,7 +1107,11 @@ function system_ip_blocking() {
 
   $build['system_ip_blocking_form'] = drupal_get_form('system_ip_blocking_form');
 
-  $build['system_ip_blocking_table'] = array('#markup' => theme('table', $header, $rows));
+  $build['system_ip_blocking_table'] = array(
+    '#theme' => 'table', 
+    '#header' => $header, 
+    '#rows' => $rows,
+  );
 
   return $build;
 }

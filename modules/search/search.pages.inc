@@ -31,19 +31,16 @@ function search_view($type = 'node') {
       // Collect the search results:
       $results = search_data($keys, $type);
 
-      if ($results) {
-        $results = theme('search_results_listing', t('Search results'), $results);
-      }
-      else {
-        $results = theme('search_results_listing', t('Your search yielded no results'), search_help('search#noresults', drupal_help_arg()));
-      }
+      // Construct the search form.
+      $build['search_form'] = drupal_get_form('search_form', NULL, $keys, $type);
+      $build['search_results'] = array(
+        '#theme' => 'search_results_listing',
+        '#title' => empty($results) ? t('Your search yielded no results') : t('Search results'),
+        '#content' => empty($results) ? search_help('search#noresults', drupal_help_arg()) : $results,
+      );
+
+      return $build;
     }
-
-    // Construct the search form.
-    $build['search_form'] = drupal_get_form('search_form', NULL, $keys, $type);
-    $build['search_results'] = array('#markup' => $results);
-
-    return $build;
   }
 
   return drupal_get_form('search_form', NULL, empty($keys) ? '' : $keys, $type);

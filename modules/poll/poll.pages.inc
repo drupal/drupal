@@ -52,7 +52,6 @@ function poll_page() {
 function poll_votes($node) {
   $votes_per_page = 20;
   drupal_set_title($node->title);
-  $output = t('This table lists all the recorded votes for this poll. If anonymous users are allowed to vote, they will be identified by the IP address of the computer they used when they voted.');
 
   $header[] = array('data' => t('Visitor'), 'field' => 'u.name');
   $header[] = array('data' => t('Vote'), 'field' => 'pc.chtext');
@@ -78,9 +77,14 @@ function poll_votes($node) {
       format_date($vote->timestamp),
     );
   }
-  $output .= theme('table', $header, $rows);
-  $output .= theme('pager', NULL);
-  return $output;
+  $build['poll_votes_table'] = array(
+    '#theme' => 'table', 
+    '#header' => $header, 
+    '#rows' => $rows,
+    '#prefix' => t('This table lists all the recorded votes for this poll. If anonymous users are allowed to vote, they will be identified by the IP address of the computer they used when they voted.'),
+  );
+  $build['poll_votes_pager'] = array('#theme' => 'pager');
+  return $build;
 }
 
 /**

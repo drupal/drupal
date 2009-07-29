@@ -260,7 +260,9 @@ function simpletest_result_form(&$form_state, $test_id) {
       $form['result']['summary']['#' . $assertion->status]++;
     }
     $form['result']['results'][$group]['table'] = array(
-      '#markup' => theme('table', $header, $rows),
+      '#theme' => 'table', 
+      '#header' => $header, 
+      '#rows' => $rows,
     );
 
     // Set summary information.

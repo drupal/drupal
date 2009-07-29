@@ -46,7 +46,7 @@ function blog_page_user($account) {
     $nodes = node_load_multiple($nids);
     $build += node_build_multiple($nodes);
     $build['pager'] = array(
-      '#markup' => theme('pager', NULL),
+      '#theme' => 'pager',
       '#weight' => 5,
     );
   }
@@ -95,7 +95,7 @@ function blog_page_last() {
     $nodes = node_load_multiple($nids);
     $build += node_build_multiple($nodes);
     $build['pager'] = array(
-      '#markup' => theme('pager', NULL),
+      '#theme' => 'pager',
       '#weight' => 5,
     );
   }

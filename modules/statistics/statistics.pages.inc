@@ -43,9 +43,13 @@ function statistics_node_tracker() {
     }
 
     drupal_set_title($node->title);
-    $output = theme('table', $header, $rows);
-    $output .= theme('pager', NULL);
-    return $output;
+    $build['statistics_table'] = array(
+      '#theme' => 'table', 
+      '#header' => $header, 
+      '#rows' => $rows
+    );
+    $build['statistics_pager'] = array('#theme' => 'pager');
+    return $build;
   }
   else {
     drupal_not_found();
@@ -80,9 +84,13 @@ function statistics_user_tracker() {
     }
 
     drupal_set_title($account->name);
-    $output = theme('table', $header, $rows);
-    $output .= theme('pager', NULL);
-    return $output;
+    $build['statistics_table'] = array(
+      '#theme' => 'table', 
+      '#header' => $header, 
+      '#rows' => $rows
+    );
+    $build['statistics_pager'] = array('#theme' => 'pager');
+    return $build;
   }
   else {
     drupal_not_found();

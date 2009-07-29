@@ -101,9 +101,7 @@ function comment_admin_overview($type = 'new', $arg) {
     '#empty' => t('No comments available.'),
   );
 
-  $form['pager'] = array(
-    '#markup' => theme('pager', NULL)
-  );
+  $form['pager'] = array('#theme' => 'pager');
 
   return $form;
 }

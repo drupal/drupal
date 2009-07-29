@@ -1991,7 +1991,7 @@ function node_page_default() {
     $feed_url = url('rss.xml', array('absolute' => TRUE));
     drupal_add_feed($feed_url, variable_get('site_name', 'Drupal') . ' ' . t('RSS'));
     $build['pager'] = array(
-      '#markup' => theme('pager', NULL),
+      '#theme' => 'pager',
       '#weight' => 5,
     );
     drupal_set_title('');

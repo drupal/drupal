@@ -512,8 +512,14 @@ function node_revision_overview($node) {
     }
     $rows[] = array_merge($row, $operations);
   }
+  
+  $build['node_revisions_table'] = array(
+    '#theme' => 'table',
+    '#rows' => $rows,
+    '#header' => $header,
+  );
 
-  return theme('table', $header, $rows);
+  return $build;
 }
 
 /**

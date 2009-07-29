@@ -92,8 +92,13 @@ function dblog_overview() {
     $rows[] = array(array('data' => t('No log messages available.'), 'colspan' => 6));
   }
 
-  $build['dblog_table'] = array('#markup' => theme('table', $header, $rows, array('id' => 'admin-dblog')));
-  $build['dblog_pager'] = array('#markup' => theme('pager', NULL));
+  $build['dblog_table'] = array(
+    '#theme' => 'table', 
+    '#header' => $header, 
+    '#rows' => $rows, 
+    '#attributes' => array('id' => 'admin-dblog'),
+  );
+  $build['dblog_pager'] = array('#theme' => 'pager');
 
   return $build;
 }
@@ -133,10 +138,14 @@ function dblog_top($type) {
     $rows[] = array(array('data' => t('No log messages available.'), 'colspan' => 2));
   }
 
-  $output  = theme('table', $header, $rows);
-  $output .= theme('pager', NULL);
+  $build['dblog_top_table']  = array(
+    '#theme' => 'table', 
+    '#header' => $header, 
+    '#rows' => $rows,
+  );
+  $build['dblog_top_pager'] = array('#theme' => 'pager');
 
-  return $output;
+  return $build;
 }
 
 /**
@@ -144,7 +153,6 @@ function dblog_top($type) {
  */
 function dblog_event($id) {
   $severity = watchdog_severity_levels();
-  $output = '';
   $result = db_query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid WHERE w.wid = :id', array(':id' => $id))->fetchObject();
   if ($dblog = $result) {
     $rows = array(
@@ -185,10 +193,16 @@ function dblog_event($id) {
         $dblog->link,
       ),
     );
-    $attributes = array('class' => 'dblog-event');
-    $output = theme('table', array(), $rows, $attributes);
+    $build['dblog_table'] = array(
+      '#theme' => 'table', 
+      '#rows' => $rows, 
+      '#attributes' => array('class' => 'dblog-event'),
+    );
+    return $build;
   }
-  return $output;
+  else {
+    return '';
+  }
 }
 
 /**
