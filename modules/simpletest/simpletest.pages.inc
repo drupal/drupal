@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.pages.inc,v 1.9 2009/07/21 01:48:08 webchick Exp $
+// $Id: simpletest.pages.inc,v 1.10 2009/07/29 06:39:34 dries Exp $
 
 /**
  * @file
@@ -260,7 +260,9 @@ function simpletest_result_form(&$form_state, $test_id) {
       $form['result']['summary']['#' . $assertion->status]++;
     }
     $form['result']['results'][$group]['table'] = array(
-      '#markup' => theme('table', $header, $rows),
+      '#theme' => 'table', 
+      '#header' => $header, 
+      '#rows' => $rows,
     );
 
     // Set summary information.

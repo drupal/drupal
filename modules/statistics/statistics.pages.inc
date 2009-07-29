@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.pages.inc,v 1.13 2009/05/22 11:33:18 dries Exp $
+// $Id: statistics.pages.inc,v 1.14 2009/07/29 06:39:34 dries Exp $
 
 /**
  * @file
@@ -43,9 +43,13 @@ function statistics_node_tracker() {
     }
 
     drupal_set_title($node->title);
-    $output = theme('table', $header, $rows);
-    $output .= theme('pager', NULL);
-    return $output;
+    $build['statistics_table'] = array(
+      '#theme' => 'table', 
+      '#header' => $header, 
+      '#rows' => $rows
+    );
+    $build['statistics_pager'] = array('#theme' => 'pager');
+    return $build;
   }
   else {
     drupal_not_found();
@@ -80,9 +84,13 @@ function statistics_user_tracker() {
     }
 
     drupal_set_title($account->name);
-    $output = theme('table', $header, $rows);
-    $output .= theme('pager', NULL);
-    return $output;
+    $build['statistics_table'] = array(
+      '#theme' => 'table', 
+      '#header' => $header, 
+      '#rows' => $rows
+    );
+    $build['statistics_pager'] = array('#theme' => 'pager');
+    return $build;
   }
   else {
     drupal_not_found();

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.admin.inc,v 1.27 2009/07/28 19:18:05 dries Exp $
+// $Id: comment.admin.inc,v 1.28 2009/07/29 06:39:33 dries Exp $
 
 /**
  * @file
@@ -101,9 +101,7 @@ function comment_admin_overview($type = 'new', $arg) {
     '#empty' => t('No comments available.'),
   );
 
-  $form['pager'] = array(
-    '#markup' => theme('pager', NULL)
-  );
+  $form['pager'] = array('#theme' => 'pager');
 
   return $form;
 }

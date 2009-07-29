@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.admin.inc,v 1.25 2009/05/24 17:39:34 dries Exp $
+// $Id: statistics.admin.inc,v 1.26 2009/07/29 06:39:34 dries Exp $
 
 /**
  * @file
@@ -39,9 +39,13 @@ function statistics_recent_hits() {
     $rows[] = array(array('data' => t('No statistics available.'), 'colspan' => 4));
   }
 
-  $output = theme('table', $header, $rows);
-  $output .= theme('pager', NULL);
-  return $output;
+  $build['statistics_table'] = array(
+    '#theme' => 'table', 
+    '#header' => $header, 
+    '#rows' => $rows,
+  );
+  $build['statistics_pager'] = array('#theme' => 'pager');
+  return $build;
 }
 
 /**
@@ -83,9 +87,13 @@ function statistics_top_pages() {
   }
 
   drupal_set_title(t('Top pages in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))), PASS_THROUGH);
-  $output = theme('table', $header, $rows);
-  $output .= theme('pager', NULL);
-  return $output;
+  $build['statistics_top_pages_table'] = array(
+    '#theme' => 'table', 
+    '#header' => $header, 
+    '#rows' => $rows,
+  );
+  $build['statistics_top_pages_pager'] = array('#theme' => 'pager');
+  return $build;
 }
 
 /**
@@ -133,9 +141,13 @@ function statistics_top_visitors() {
   }
 
   drupal_set_title(t('Top visitors in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))), PASS_THROUGH);
-  $output = theme('table', $header, $rows);
-  $output .= theme('pager', NULL);
-  return $output;
+  $build['statistics_top_visitors_table'] = array(
+    '#theme' => 'table', 
+    '#header' => $header, 
+    '#rows' => $rows,
+  );
+  $build['statistics_top_visitors_pager'] = array('#theme' => 'pager');
+  return $build;
 }
 
 /**
@@ -178,9 +190,13 @@ function statistics_top_referrers() {
     $rows[] = array(array('data' => t('No statistics available.'), 'colspan' => 3));
   }
 
-  $output = theme('table', $header, $rows);
-  $output .= theme('pager', NULL);
-  return $output;
+  $build['statistics_top_referrers_table'] = array(
+    '#theme' => 'table', 
+    '#header' => $header, 
+    '#rows' => $rows,
+  );
+  $build['statistics_top_referrers_pager'] = array('#theme' => 'pager');
+  return $build;
 }
 
 /**
@@ -216,7 +232,11 @@ function statistics_access_log($aid) {
       check_plain($access->hostname)
     );
 
-    return theme('table', array(), $rows);
+    $build['statistics_table'] = array(
+      '#theme' => 'table', 
+      '#rows' => $rows,
+    );
+    return $build;
   }
   else {
     drupal_not_found();

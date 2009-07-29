@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.83 2009/07/27 19:26:31 dries Exp $
+// $Id: content_types.inc,v 1.84 2009/07/29 06:39:34 dries Exp $
 
 /**
  * @file
@@ -37,8 +37,14 @@ function node_overview_types() {
   if (empty($rows)) {
     $rows[] = array(array('data' => t('No content types available. <a href="@link">Add content type</a>.', array('@link' => url('admin/structure/types/add'))), 'colspan' => '5', 'class' => 'message'));
   }
+  
+  $build['node_table'] = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows
+  );
 
-  return theme('table', $header, $rows);
+  return $build;
 }
 
 function theme_node_admin_overview($name, $type) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.71 2009/07/20 22:18:53 webchick Exp $
+// $Id: node.pages.inc,v 1.72 2009/07/29 06:39:34 dries Exp $
 
 /**
  * @file
@@ -512,8 +512,14 @@ function node_revision_overview($node) {
     }
     $rows[] = array_merge($row, $operations);
   }
+  
+  $build['node_revisions_table'] = array(
+    '#theme' => 'table',
+    '#rows' => $rows,
+    '#header' => $header,
+  );
 
-  return theme('table', $header, $rows);
+  return $build;
 }
 
 /**

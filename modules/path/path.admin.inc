@@ -1,5 +1,5 @@
 <?php
-// $Id: path.admin.inc,v 1.26 2009/07/08 07:26:31 dries Exp $
+// $Id: path.admin.inc,v 1.27 2009/07/29 06:39:34 dries Exp $
 
 /**
  * @file
@@ -13,7 +13,7 @@
  */
 function path_admin_overview($keys = NULL) {
   // Add the filter form above the overview table.
-  $output = drupal_get_form('path_admin_filter_form', $keys);
+  $build['path_admin_filter_form'] = drupal_get_form('path_admin_filter_form', $keys);
   // Enable language column if locale is enabled or if we have any alias with language
   $alias_exists = (bool) db_query_range('SELECT 1 FROM {url_alias} WHERE language <> :language', array(':language' => ''), 0, 1)->fetchField();
   $multilanguage = (module_exists('locale') || $alias_exists);
@@ -63,10 +63,14 @@ function path_admin_overview($keys = NULL) {
     $rows[] = array(array('data' => $empty_message, 'colspan' => ($multilanguage ? 5 : 4)));
   }
 
-  $output .= theme('table', $header, $rows);
-  $output .= theme('pager', NULL);
+  $build['path_table'] = array(
+    '#theme' => 'table', 
+    '#header' => $header, 
+    '#rows' => $rows
+  );
+  $build['path_pager'] = array('#theme' => 'pager');
 
-  return $output;
+  return $build;
 }
 
 /**
