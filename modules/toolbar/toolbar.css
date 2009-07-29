@@ -105,7 +105,9 @@ div#toolbar div.toolbar-menu ul li a {
   padding: 0 10px;
 }
 
-div#toolbar div.toolbar-menu ul li a:hover {
+div#toolbar div.toolbar-menu ul li a:focus,
+div#toolbar div.toolbar-menu ul li a:hover,
+div#toolbar div.toolbar-menu ul li a.active:focus {
   background: #444;
 }
 
@@ -138,7 +140,9 @@ div#toolbar div.toolbar-shortcuts ul li a {
   margin-right: 5px;
 }
 
-div#toolbar div.toolbar-shortcuts ul li a:hover {
+div#toolbar div.toolbar-shortcuts ul li a:focus,
+div#toolbar div.toolbar-shortcuts ul li a:hover,
+div#toolbar div.toolbar-shortcuts ul li a.active:focus {
   background: #555;
 }
 

@@ -17,8 +17,8 @@
 <div id="toolbar" class="clearfix">
   <div class="toolbar-menu clearfix">
     <span class="toggle toggle-active"><?php print t('Show shortcuts'); ?></span>
-    <?php print render($toolbar['toolbar_user']); ?>
     <?php print render($toolbar['toolbar_menu']); ?>
+    <?php print render($toolbar['toolbar_user']); ?>
   </div>
 
   <div class="toolbar-shortcuts clearfix">
