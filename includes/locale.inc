@@ -1441,7 +1441,7 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
         $header = _locale_import_parse_header($value['msgstr']);
 
         // Get the plural formula and update in database.
-        if (isset($header["Plural-Forms"]) && $p = _locale_import_parse_plural_forms($header["Plural-Forms"], $file->filename)) {
+        if (isset($header["Plural-Forms"]) && $p = _locale_import_parse_plural_forms($header["Plural-Forms"], $file->filepath)) {
           list($nplurals, $plural) = $p;
           db_update('languages')
             ->fields(array(
@@ -1636,13 +1636,13 @@ function _locale_import_parse_header($header) {
  *
  * @param $pluralforms
  *   A string containing the Plural-Forms entry
- * @param $filename
- *   A string containing the filename
+ * @param $filepath
+ *   A string containing the filepath
  * @return
  *   An array containing the number of plurals and a
  *   formula in PHP for computing the plural form
  */
-function _locale_import_parse_plural_forms($pluralforms, $filename) {
+function _locale_import_parse_plural_forms($pluralforms, $filepath) {
   // First, delete all whitespace
   $pluralforms = strtr($pluralforms, array(" " => "", "\t" => ""));
 
@@ -1669,7 +1669,7 @@ function _locale_import_parse_plural_forms($pluralforms, $filename) {
     return array($nplurals, $plural);
   }
   else {
-    drupal_set_message(t('The translation file %filename contains an error: the plural formula could not be parsed.', array('%filename' => $filename)), 'error');
+    drupal_set_message(t('The translation file %filepath contains an error: the plural formula could not be parsed.', array('%filepath' => $filepath)), 'error');
     return FALSE;
   }
 }
