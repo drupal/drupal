@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.53 2009/07/28 12:13:47 dries Exp $
+// $Id: system.api.php,v 1.54 2009/07/30 19:57:10 dries Exp $
 
 /**
  * @file
@@ -278,6 +278,19 @@ function hook_library_alter(&$libraries, $module) {
       );
     }
   }
+}
+
+/**
+ * Alter CSS files before they are output on the page.
+ *
+ * @param $css
+ *   An array of all CSS items (files and inline CSS) being requested on the page.
+ * @see drupal_add_css()
+ * @see drupal_get_css()
+ */
+function hook_css_alter(&$css) {
+  // Remove defaults.css file.
+  unset($css[drupal_get_path('module', 'system') . '/defaults.css']);
 }
 
 /**

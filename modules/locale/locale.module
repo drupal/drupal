@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.244 2009/07/20 18:51:33 dries Exp $
+// $Id: locale.module,v 1.245 2009/07/30 19:57:10 dries Exp $
 
 /**
  * @file
@@ -580,6 +580,33 @@ function locale_js_alter(&$javascript) {
     // Add the translation JavaScript file to the page.
     $file = $dir . '/' . $language->language . '_' . $language->javascript . '.js';
     $javascript[$file] = drupal_js_defaults($file);
+  }
+}
+
+/*
+ * Implement hook_css_alter().
+ *
+ * This function checks all CSS files currently added via drupal_add_css() and
+ * and checks to see if a related right to left CSS file should be included.
+ */
+function locale_css_alter(&$css) {
+  global $language;
+
+  // If the current language is RTL, add the CSS file with the RTL overrides.
+  if ($language->direction == LANGUAGE_RTL) {
+    foreach ($css as $data => $item) {
+      // Only provide RTL overrides for files.
+      if ($item['type'] == 'file') {
+        $rtl_path = str_replace('.css', '-rtl.css', $item['data']);
+        if (file_exists($rtl_path) && !isset($css[$rtl_path])) {
+          // Replicate the same item, but with the RTL path and a little larger
+          // weight so that it appears directly after the original CSS file.
+          $item['data'] = $rtl_path;
+          $item['weight'] += 0.01;
+          $css[$rtl_path] = $item;
+        }
+      }
+    }
   }
 }
 
