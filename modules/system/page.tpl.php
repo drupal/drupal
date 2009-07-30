@@ -81,10 +81,14 @@
  * - $right: Items for the right sidebar.
  * - $highlight: Items for the highlighted content region.
  *
- * Footer/closing data:
+ * Opening and closing data:
+ * - $page_top: Initial markup from any modules that have altered the
+ *   page. This variable should always be output first, before all other dynamic
+ *   content.
  * - $footer : The footer region.
- * - $closure: Final closing markup from any modules that have altered the page.
- *   This variable should always be output last, after all other dynamic content.
+ * - $page_bottom: Final closing markup from any modules that have altered the
+ *   page. This variable should always be output last, after all other dynamic
+ *   content.
  *
  * @see template_preprocess()
  * @see template_preprocess_page()
@@ -104,11 +108,8 @@
 </head>
 <body class="<?php print $classes; ?>">
 
-  <?php if ($page_top): ?>
-    <div id="page-top-region" class="clearfix">
-      <?php print $page_top; ?>
-    </div>
-  <?php endif; ?>
+  <?php print $page_top; ?>
+
   <div id="page-wrapper"><div id="page">
 
     <div id="header"><div class="section clearfix">

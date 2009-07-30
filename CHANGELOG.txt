@@ -95,6 +95,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
       on as contributed themes (http://drupal.org/project/bluemarine,
       http://drupal.org/project/chameleon and http://drupal.org/project/pushbutton).
     * Added Stark theme to make analyzing Drupal's default HTML and CSS easier.
+    * Added Slate theme as the default administration interface theme.
 - File handling:
     * Files are now first class Drupal objects with file_load(), file_save(),
       and file_validate() functions and corresponding hooks.
