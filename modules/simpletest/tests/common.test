@@ -203,7 +203,7 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('php');
+    parent::setUp('php', 'locale');
     // Reset drupal_add_css() before each test.
     drupal_static_reset('drupal_add_css');
   }
@@ -221,7 +221,7 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
   function testAddFile() {
     $path = drupal_get_path('module', 'simpletest') . '/simpletest.css';
     $css = drupal_add_css($path);
-    $this->assertEqual($css['all']['module'][$path], TRUE, t('Adding a CSS file caches it properly.'));
+    $this->assertEqual($css[$path]['data'], $path, t('Adding a CSS file caches it properly.'));
   }
 
   /**
@@ -249,7 +249,7 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
     $css_preprocessed = '<style type="text/css">' . drupal_load_stylesheet_content($css, TRUE) . '</style>';
     drupal_add_css($css, 'inline');
     $css = drupal_get_css();
-    $this->assertEqual($css, $css_preprocessed, t('Rendering preprocessed inline CSS adds it to the page.'));
+    $this->assertEqual($css, "\n" . $css_preprocessed, t('Rendering preprocessed inline CSS adds it to the page.'));
   }
 
   /**
@@ -279,6 +279,74 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
     // Fetch the page.
     $this->drupalGet('node/' . $node->nid);
     $this->assertRaw($expected, t('Inline stylesheets appear in the full page rendering.'));
+  }
+
+  /**
+   * Test CSS ordering.
+   */
+  function testRenderOrder() {
+    // A module CSS file.
+    drupal_add_css(drupal_get_path('module', 'simpletest') . '/simpletest.css');
+    // A few system CSS files, ordered in a strange way.
+    $system_path = drupal_get_path('module', 'system');
+    drupal_add_css($system_path . '/defaults.css', array('weight' => CSS_SYSTEM));
+    drupal_add_css($system_path . '/system.css', array('weight' => CSS_SYSTEM - 10));
+    drupal_add_css($system_path . '/system-menus.css', array('weight' => CSS_SYSTEM));
+
+    $expected = array(
+      $system_path . '/system.css',
+      $system_path . '/defaults.css',
+      $system_path . '/system-menus.css',
+      drupal_get_path('module', 'simpletest') . '/simpletest.css',
+    );
+
+    $css = drupal_get_css();
+    if (preg_match_all('/href="' . preg_quote(base_path(), '/') . '([^?]+)\?/', $css, $matches)) {
+      $result = $matches[1];
+    }
+    else {
+      $result = array();
+    }
+
+    $this->assertIdentical($result, $expected, t('The CSS files are in the expected order.'));
+  }
+
+  /**
+   * Test CSS override.
+   */
+  function testRenderOverride() {
+    drupal_add_css(drupal_get_path('module', 'system') . '/system.css');
+    drupal_add_css(drupal_get_path('module', 'simpletest') . '/tests/system.css');
+
+    // The dummy stylesheet should be the only one included.
+    $css = drupal_get_css();
+    $this->assert(strpos($css, drupal_get_path('module', 'simpletest') . '/tests/system.css') !== FALSE, t('The overriding CSS file is output.'));
+    $this->assert(strpos($css, drupal_get_path('module', 'system') . '/system.css') === FALSE, t('The overriden CSS file is not output.'));
+
+    drupal_add_css(drupal_get_path('module', 'simpletest') . '/tests/system.css');
+    drupal_add_css(drupal_get_path('module', 'system') . '/system.css');
+
+    // The standard stylesheet should be the only one included.
+    $css = drupal_get_css();
+    $this->assert(strpos($css, drupal_get_path('module', 'system') . '/system.css') !== FALSE, t('The overriding CSS file is output.'));
+    $this->assert(strpos($css, drupal_get_path('module', 'simpletest') . '/tests/system.css') === FALSE, t('The overriden CSS file is not output.'));
+  }
+
+  /**
+   * Tests Locale module's CSS Alter to include RTL overrides.
+   */
+  function testAlter() {
+    // Switch the language to a right to left language and add system.css.
+    global $language;
+    $language->direction = LANGUAGE_RTL;
+    drupal_add_css(drupal_get_path('module', 'system') . '/system.css');
+
+    // Check to see if system-rtl.css was also added.
+    $css = drupal_get_css();
+    $this->assert(strpos($css, drupal_get_path('module', 'system') . '/system-rtl.css') !== FALSE, t('CSS is alterable as right to left overrides are added.'));
+
+    // Change the language back to left to right.
+    $language->direction = LANGUAGE_LTR;
   }
 }
 

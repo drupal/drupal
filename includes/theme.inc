@@ -132,7 +132,7 @@ function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callb
   // And now add the stylesheets properly
   foreach ($final_stylesheets as $media => $stylesheets) {
     foreach ($stylesheets as $stylesheet) {
-      drupal_add_css($stylesheet, array('type' => 'theme', 'media' => $media));
+      drupal_add_css($stylesheet, array('weight' => CSS_THEME, 'media' => $media));
     }
   }
 

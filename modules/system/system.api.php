@@ -281,6 +281,19 @@ function hook_library_alter(&$libraries, $module) {
 }
 
 /**
+ * Alter CSS files before they are output on the page.
+ *
+ * @param $css
+ *   An array of all CSS items (files and inline CSS) being requested on the page.
+ * @see drupal_add_css()
+ * @see drupal_get_css()
+ */
+function hook_css_alter(&$css) {
+  // Remove defaults.css file.
+  unset($css[drupal_get_path('module', 'system') . '/defaults.css']);
+}
+
+/**
  * Perform alterations before a page is rendered.
  *
  * Use this hook when you want to add, remove, or alter elements at the page

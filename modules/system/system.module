@@ -1327,13 +1327,13 @@ function system_init() {
   if (arg(0) == 'admin' || (variable_get('node_admin_theme', '0') && arg(0) == 'node' && (arg(1) == 'add' || arg(2) == 'edit'))) {
     global $custom_theme;
     $custom_theme = variable_get('admin_theme', 0);
-    drupal_add_css(drupal_get_path('module', 'system') . '/admin.css');
+    drupal_add_css(drupal_get_path('module', 'system') . '/admin.css', array('weight' => CSS_SYSTEM));
   }
 
   // Add the CSS for this module.
-  drupal_add_css(drupal_get_path('module', 'system') . '/defaults.css');
-  drupal_add_css(drupal_get_path('module', 'system') . '/system.css');
-  drupal_add_css(drupal_get_path('module', 'system') . '/system-menus.css');
+  drupal_add_css(drupal_get_path('module', 'system') . '/defaults.css', array('weight' => CSS_SYSTEM));
+  drupal_add_css(drupal_get_path('module', 'system') . '/system.css', array('weight' => CSS_SYSTEM));
+  drupal_add_css(drupal_get_path('module', 'system') . '/system-menus.css', array('weight' => CSS_SYSTEM));
 
 
   // Ignore slave database servers for this request.
