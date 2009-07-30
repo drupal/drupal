@@ -867,21 +867,27 @@ class DrupalWebTestCase extends DrupalTestCase {
    *
    * @param $permissions
    *   Array of permission names to assign to role.
+   * @param $name
+   *   (optional) String for the name of the role.  Defaults to a random string.
    * @return
    *   Role ID of newly created role, or FALSE if role creation failed.
    */
-  protected function drupalCreateRole(array $permissions) {
+  protected function drupalCreateRole(array $permissions, $name = NULL) {
+    // Generate random name if it was not passed.
+    if (!$name) {
+      $name = $this->randomName();
+    }
+
     if (!$this->checkPermissions($permissions)) {
       return FALSE;
     }
 
     // Create new role.
-    $role_name = $this->randomName();
     db_insert('role')
-      ->fields(array('name' => $role_name))
+      ->fields(array('name' => $name))
       ->execute();
-    $role = db_query('SELECT * FROM {role} WHERE name = :name', array(':name' => $role_name))->fetchObject();
-    $this->assertTrue($role, t('Created role of name: @role_name, id: @rid', array('@role_name' => $role_name, '@rid' => (isset($role->rid) ? $role->rid : t('-n/a-')))), t('Role'));
+    $role = db_query('SELECT * FROM {role} WHERE name = :name', array(':name' => $name))->fetchObject();
+    $this->assertTrue($role, t('Created role of name: @name, id: @rid', array('@name' => $name, '@rid' => (isset($role->rid) ? $role->rid : t('-n/a-')))), t('Role'));
     if ($role && !empty($role->rid)) {
       // Assign permissions to role and mark it for clean-up.
       $query = db_insert('role_permission')->fields(array('rid', 'permission'));
