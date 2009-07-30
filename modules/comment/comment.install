@@ -287,6 +287,7 @@ function comment_schema() {
     'primary key' => array('nid'),
     'indexes' => array(
       'node_comment_timestamp' => array('last_comment_timestamp'),
+      'comment_count' => array('comment_count'),
     ),
     'foreign keys' => array(
       'nid' => array('node' => 'nid'),

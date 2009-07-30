@@ -2257,6 +2257,15 @@ function system_update_7029() {
 }
 
 /**
+ * Add an index to node_comment_statistics on comment_count.
+ */
+function system_update_7030() {
+  $ret = array();
+  db_add_index($ret, 'node_comment_statistics', 'comment_count', array('comment_count'));
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */
