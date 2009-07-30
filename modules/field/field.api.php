@@ -171,7 +171,9 @@ function hook_field_info() {
 function hook_field_info_alter(&$info) {
   // Add a setting to all field types.
   foreach ($info as $field_type => $field_type_info) {
-    $info[$field_type]['settings'][] = array('mymodule_additional_setting' => 'default value');
+    $info[$field_type]['settings'] += array(
+      'mymodule_additional_setting' => 'default value',
+    );
   }
 
   // Change the default widget for fields of type 'foo'.
@@ -261,7 +263,9 @@ function hook_field_widget_info() {
  */
 function hook_field_widget_info_alter(&$info) {
   // Add a setting to a widget type.
-  $info['text_textfield']['settings'][] = array('mymodule_additional_setting' => 'default value');
+  $info['text_textfield']['settings'] += array(
+    'mymodule_additional_setting' => 'default value',
+  );
 
   // Let a new field type re-use an existing widget.
   $info['options_select']['field types'][] = 'my_field_type';
@@ -290,7 +294,9 @@ function hook_field_formatter_info() {
  */
 function hook_field_formatter_info_alter(&$info) {
   // Add a setting to a formatter type.
-  $info['text_default']['settings'][] = array('mymodule_additional_setting' => 'default value');
+  $info['text_default']['settings'] += array(
+    'mymodule_additional_setting' => 'default value',
+  );
 
   // Let a new field type re-use an existing formatter.
   $info['text_default']['field types'][] = 'my_field_type';

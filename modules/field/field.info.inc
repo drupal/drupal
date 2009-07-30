@@ -94,6 +94,11 @@ function _field_info_collate_types($reset = FALSE) {
       foreach (module_implements('field_info') as $module) {
         $field_types = (array) module_invoke($module, 'field_info');
         foreach ($field_types as $name => $field_info) {
+          // Provide defaults.
+          $field_info += array(
+            'settings' => array(),
+            'instance_settings' => array(),
+          );
           $info['field types'][$name] = $field_info;
           $info['field types'][$name]['module'] = $module;
         }
@@ -104,6 +109,10 @@ function _field_info_collate_types($reset = FALSE) {
       foreach (module_implements('field_widget_info') as $module) {
         $widget_types = (array) module_invoke($module, 'field_widget_info');
         foreach ($widget_types as $name => $widget_info) {
+          // Provide defaults.
+          $widget_info += array(
+            'settings' => array(),
+          );
           $info['widget types'][$name] = $widget_info;
           $info['widget types'][$name]['module'] = $module;
         }
@@ -114,6 +123,10 @@ function _field_info_collate_types($reset = FALSE) {
       foreach (module_implements('field_formatter_info') as $module) {
         $formatter_types = (array) module_invoke($module, 'field_formatter_info');
         foreach ($formatter_types as $name => $formatter_info) {
+          // Provide defaults.
+          $formatter_info += array(
+            'settings' => array(),
+          );
           $info['formatter types'][$name] = $formatter_info;
           $info['formatter types'][$name]['module'] = $module;
         }
