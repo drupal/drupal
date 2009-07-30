@@ -3443,6 +3443,14 @@ function _drupal_bootstrap_full() {
   set_error_handler('_drupal_error_handler');
   set_exception_handler('_drupal_exception_handler');
 
+  if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'simpletest') !== FALSE) {
+    // Valid SimpleTest user-agent, log fatal errors to test specific file
+    // directory. The user-agent is validated in DRUPAL_BOOTSTRAP_DATABASE
+    // phase so as long as it is a SimpleTest user-agent it is valid.
+    ini_set('log_errors', 1);
+    ini_set('error_log', file_directory_path() . '/error.log');
+  }
+
   // Emit the correct charset HTTP header.
   drupal_set_header('Content-Type', 'text/html; charset=utf-8');
   // Detect string handling method

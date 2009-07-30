@@ -203,12 +203,34 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
   }
   else {
     // Use the test_id passed as a parameter to _simpletest_batch_operation().
-    simpletest_log_read($operations[0][1][1]);
+    $test_id = $operations[0][1][1];
+
+    // Retrieve the last database prefix used for testing and the last test
+    // class that was run from. Use the information to read the lgo file
+    // in case any fatal errors caused the test to crash.
+    list($last_prefix, $last_test_class) = simpletest_last_test_get($test_id);
+    simpletest_log_read($test_id, $last_prefix, $last_test_class);
+
 
     drupal_set_message(t('The test run did not successfully finish.'), 'error');
     drupal_set_message(t('Please use the <em>Clean environment</em> button to clean-up temporary files and tables.'), 'warning');
   }
   module_invoke_all('test_group_finished');
+}
+
+/*
+ * Get information about the last test that ran given a test ID.
+ *
+ * @param $test_id
+ *   The test ID to get the last test from.
+ * @return
+ *   Array containing the last database prefix used and the last test class
+ *   that ran.
+ */
+function simpletest_last_test_get($test_id) {
+  $last_prefix = db_result(db_query_range('SELECT last_prefix FROM {simpletest_test_id} WHERE test_id = :test_id', array(':test_id' => $test_id), 0, 1));
+  $last_test_class = db_result(db_query_range('SELECT test_class FROM {simpletest} WHERE test_id = :test_id ORDER BY message_id DESC', array(':test_id' => $test_id), 0, 1));
+  return array($last_prefix, $last_test_class);
 }
 
 /**
@@ -218,28 +240,39 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
  * will have been recorded by the error handler.
  *
  * @param $test_id
- *   The test ID to read log file for.
+ *   The test ID to which the log relates.
+ * @param $prefix
+ *   The database prefix to which the log relates.
+ * @param $test_class
+ *   The test class to which the log relates.
+ * @param $during_test
+ *   Indicates that the current file directory path is a temporary file
+ *   file directory used during testing.
+ * @return
+ *   Found any entries in log.
  */
-function simpletest_log_read($test_id) {
-  $last_prefix = db_query('SELECT last_prefix FROM {simpletest_test_id} WHERE test_id = :test_id', array(':test_id' => $test_id))->fetchField();
-  $last_prefix = substr($last_prefix, 10);
-
-  $test_class = db_query('SELECT test_class FROM {simpletest} WHERE test_id = :test_id ORDER BY message_id', array(':test_id' => $test_id))->fetchField();
-  $log = file_directory_path() . "/simpletest/$last_prefix/error.log";
+function simpletest_log_read($test_id, $prefix, $test_class, $during_test = FALSE) {
+  $log = file_directory_path() . ($during_test ? '' : '/simpletest/' . substr($prefix, 10)) . '/error.log';
+  $found = FALSE;
   if (file_exists($log)) {
     foreach (file($log) as $line) {
-      if (preg_match('/PHP Fatal error: (.*?) in (.*) on line (\d+)/', $line, $match)) {
+      if (preg_match('/\[.*?\] (.*?): (.*?) in (.*) on line (\d+)/', $line, $match)) {
+        // Parse PHP fatal errors for example: PHP Fatal error: Call to
+        // undefined function break_me() in /path/to/file.php on line 17
         $caller = array(
-          'line' => $match[3],
-          'file' => $match[2],
+          'line' => $match[4],
+          'file' => $match[3],
         );
-        DrupalTestCase::assertStatic($test_id, $test_class, FALSE, $match[1], 'Fatal error', $caller);
+        DrupalTestCase::insertAssert($test_id, $test_class, FALSE, $match[2], $match[1], $caller);
       }
       else {
-        DrupalTestCase::assertStatic($test_id, $test_class, FALSE, $line, 'Fatal error');
+        // Unkown format, place the entire message in the log.
+        DrupalTestCase::insertAssert($test_id, $test_class, FALSE, $line, 'Fatal error');
       }
+      $found = TRUE;
     }
   }
+  return $found;
 }
 
 /**

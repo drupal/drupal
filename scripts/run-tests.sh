@@ -83,6 +83,12 @@ $test_id = db_insert('simpletest_test_id')->useDefaults(array('test_id'))->execu
 // Execute tests.
 simpletest_script_command($args['concurrency'], $test_id, implode(",", $test_list));
 
+// Retrieve the last database prefix used for testing and the last test class
+// that was run from. Use the information to read the lgo file in case any
+// fatal errors caused the test to crash.
+list($last_prefix, $last_test_class) = simpletest_last_test_get($test_id);
+simpletest_log_read($test_id, $last_prefix, $last_test_class);
+
 // Display results before database is cleared.
 simpletest_script_reporter_display_results();
 
@@ -465,8 +471,6 @@ function simpletest_script_reporter_init() {
  */
 function simpletest_script_reporter_display_results() {
   global $args, $test_id, $results_map;
-
-  simpletest_log_read($test_id);
 
   echo "\n";
   $end = timer_stop('run-tests');
