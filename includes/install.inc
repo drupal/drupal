@@ -1083,8 +1083,8 @@ function install_profile_info($profile, $locale = 'en') {
     );
     $info = drupal_parse_info_file("profiles/$profile/$profile.info") + $defaults;
     $info['dependencies'] = array_unique(array_merge(
-      drupal_required_modules(), 
-      $info['dependencies'], 
+      drupal_required_modules(),
+      $info['dependencies'],
       ($locale != 'en' && !empty($locale) ? array('locale') : array()))
     );
     $cache[$profile] = $info;
@@ -1092,3 +1092,17 @@ function install_profile_info($profile, $locale = 'en') {
   return $cache[$profile];
 }
 
+/**
+ * Ensures the environment for a Drupal database on a predefined connection.
+ *
+ * This will run tasks that check that Drupal can perform all of the functions
+ * on a database, that Drupal needs. Tasks include simple checks like CREATE
+ * TABLE to database specfic functions like stored procedures and client
+ * encoding.
+ */
+function db_run_tasks($driver) {
+  $task_class = 'DatabaseTasks_' . $driver;
+  $DatabaseTasks = new $task_class();
+  $DatabaseTasks->runTasks();
+  return true;
+}

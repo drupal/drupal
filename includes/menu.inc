@@ -1119,7 +1119,6 @@ function menu_tree_collect_node_links(&$tree, &$node_links) {
 function menu_tree_check_access(&$tree, $node_links = array()) {
 
   if ($node_links) {
-    // Use db_rewrite_sql to evaluate view access without loading each full node.
     $nids = array_keys($node_links);
     $select = db_select('node');
     $select->addField('node', 'nid');
@@ -1269,7 +1268,7 @@ function theme_menu_tree($tree) {
  * The menu item's LI element is given one of the following classes:
  * - expanded: The menu item is showing its submenu.
  * - collapsed: The menu item has a submenu which is not shown.
- * - leaf: The menu item has no submenu. 
+ * - leaf: The menu item has no submenu.
  *
  * @ingroup themeable
  *

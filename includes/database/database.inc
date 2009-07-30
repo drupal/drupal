@@ -2494,10 +2494,6 @@ function db_fetch_object(DatabaseStatementInterface $statement) {
   return $statement->fetch(PDO::FETCH_OBJ);
 }
 
-function db_fetch_array(DatabaseStatementInterface $statement) {
-  return $statement->fetch(PDO::FETCH_ASSOC);
-}
-
 function db_result(DatabaseStatementInterface $statement) {
   return $statement->fetchField();
 }
@@ -2559,21 +2555,6 @@ function _db_query_process_args($query, $args, $options) {
   }
 
   return array($query, $args, $options);
-}
-
-
-/**
- * Returns the last insert id.
- *
- * @todo Remove this function when all queries have been ported to db_insert().
- * @param $table
- *   The name of the table you inserted into.
- * @param $field
- *   The name of the autoincrement field.
- */
-function db_last_insert_id($table, $field) {
-  $sequence_name = Database::getConnection()->makeSequenceName($table, $field);
-  return Database::getConnection()->lastInsertId($sequence_name);
 }
 
 /**
@@ -2691,21 +2672,6 @@ function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $
   }
 
   return $query;
-}
-
-/**
- * Ensures the environment for a Drupal database on a predefined connection.
- *
- * This will run tasks that check that Drupal can perform all of the functions
- * on a database, that Drupal needs. Tasks include simple checks like CREATE
- * TABLE to database specfic functions like stored procedures and client 
- * encoding.
- */
-function db_run_tasks($driver) {
-  $task_class = 'DatabaseTasks_' . $driver;
-  $DatabaseTasks = new $task_class();
-  $DatabaseTasks->runTasks();
-  return true;
 }
 
 /**
