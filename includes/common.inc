@@ -289,7 +289,7 @@ function drupal_get_destination() {
  * destination in either the $_REQUEST-array (i.e. by using
  * the query string of an URI) This is used to direct the user back to
  * the proper page after completing a form. For example, after editing
- * a post on the 'admin/content/node'-page or after having logged on using the
+ * a post on the 'admin/content'-page or after having logged on using the
  * 'user login'-block in a sidebar. The function drupal_get_destination()
  * can be used to help set the destination URL.
  *
@@ -1988,7 +1988,7 @@ function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
  * Generate a URL from a Drupal menu path. Will also pass-through existing URLs.
  *
  * @param $path
- *   The Drupal path being linked to, such as "admin/content/node", or an
+ *   The Drupal path being linked to, such as "admin/content", or an
  *   existing URL like "http://drupal.org/". The special path
  *   '<front>' may also be given and will generate the site's base URL.
  * @param $options
@@ -2160,10 +2160,10 @@ function drupal_attributes(array $attributes = array()) {
  * @param $text
  *   The text to be enclosed with the anchor tag.
  * @param $path
- *   The Drupal path being linked to, such as "admin/content/node". Can be an
+ *   The Drupal path being linked to, such as "admin/content". Can be an
  *   external or internal URL.
  *     - If you provide the full URL, it will be considered an external URL.
- *     - If you provide only the path (e.g. "admin/content/node"), it is
+ *     - If you provide only the path (e.g. "admin/content"), it is
  *       considered an internal link. In this case, it must be a system URL
  *       as the url() function will generate the alias.
  *     - If you provide '<front>', it generates a link to the site's

@@ -166,7 +166,7 @@ function forum_confirm_delete(&$form_state, $tid) {
   $form['tid'] = array('#type' => 'value', '#value' => $tid);
   $form['name'] = array('#type' => 'value', '#value' => $term->name);
 
-  return confirm_form($form, t('Are you sure you want to delete the forum %name?', array('%name' => $term->name)), 'admin/structure/forum', t('Deleting a forum or container will also delete its sub-forums, if any. To delete posts in this forum, visit <a href="@content">content administration</a> first. This action cannot be undone.', array('@content' => url('admin/content/node'))), t('Delete'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to delete the forum %name?', array('%name' => $term->name)), 'admin/structure/forum', t('Deleting a forum or container will also delete its sub-forums, if any. To delete posts in this forum, visit <a href="@content">content administration</a> first. This action cannot be undone.', array('@content' => url('admin/content'))), t('Delete'), t('Cancel'));
 }
 
 /**

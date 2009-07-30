@@ -219,7 +219,7 @@ function hook_node_grants_alter(&$grants, $account, $op) {
  * Add mass node operations.
  *
  * This hook enables modules to inject custom operations into the mass operations
- * dropdown found at admin/content/node, by associating a callback function with
+ * dropdown found at admin/content, by associating a callback function with
  * the operation, which is called when the form is submitted. The callback function
  * receives one initial argument, which is an array of the checked nodes.
  *

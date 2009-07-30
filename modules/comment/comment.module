@@ -127,7 +127,7 @@ function comment_theme() {
  * Implement hook_menu().
  */
 function comment_menu() {
-  $items['admin/content/content/comment'] = array(
+  $items['admin/content/comment'] = array(
     'title' => 'Comments',
     'description' => 'List and edit site comments and the comment approval queue.',
     'page callback' => 'comment_admin',
@@ -135,12 +135,12 @@ function comment_menu() {
     'type' => MENU_LOCAL_TASK,
   );
   // Tabs begin here.
-  $items['admin/content/content/comment/new'] = array(
+  $items['admin/content/comment/new'] = array(
     'title' => 'Published comments',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
-  $items['admin/content/content/comment/approval'] = array(
+  $items['admin/content/comment/approval'] = array(
     'title' => 'Approval queue',
     'page arguments' => array('approval'),
     'access arguments' => array('administer comments'),
@@ -2351,6 +2351,6 @@ function comment_ranking() {
  * Implement hook_menu_alter().
  */
 function comment_menu_alter(&$items) {
-  // Add comments to the description for admin/content/content.
+  // Add comments to the description for admin/content.
   $items['admin/content/content']['description'] = "View, edit, and delete your site's content and comments.";
 }

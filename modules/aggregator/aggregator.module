@@ -18,18 +18,18 @@ function aggregator_help($path, $arg) {
   switch ($path) {
     case 'admin/help#aggregator':
       $output = '<p>' . t('The aggregator is a powerful on-site syndicator and news reader that gathers fresh content from RSS-, RDF-, and Atom-based feeds made available across the web. Thousands of sites (particularly news sites and blogs) publish their latest headlines and posts in feeds, using a number of standardized XML-based formats. Formats supported by the aggregator include <a href="@rss">RSS</a>, <a href="@rdf">RDF</a>, and <a href="@atom">Atom</a>.', array('@rss' => 'http://cyber.law.harvard.edu/rss/', '@rdf' => 'http://www.w3.org/RDF/', '@atom' => 'http://www.atomenabled.org')) . '</p>';
-      $output .= '<p>' . t('Feeds contain feed items, or individual posts published by the site providing the feed. Feeds may be grouped in categories, generally by topic. Users view feed items in the <a href="@aggregator">main aggregator display</a> or by <a href="@aggregator-sources">their source</a>. Administrators can <a href="@feededit">add, edit and delete feeds</a> and choose how often to check each feed for newly updated items. The most recent items in either a feed or category can be displayed as a block through the <a href="@admin-block">blocks administration page</a>. A <a href="@aggregator-opml">machine-readable OPML file</a> of all feeds is available. A correctly configured <a href="@cron">cron maintenance task</a> is required to update feeds automatically.', array('@aggregator' => url('aggregator'), '@aggregator-sources' => url('aggregator/sources'), '@feededit' => url('admin/content/aggregator'), '@admin-block' => url('admin/structure/block'), '@aggregator-opml' => url('aggregator/opml'), '@cron' => url('admin/reports/status'))) . '</p>';
+      $output .= '<p>' . t('Feeds contain feed items, or individual posts published by the site providing the feed. Feeds may be grouped in categories, generally by topic. Users view feed items in the <a href="@aggregator">main aggregator display</a> or by <a href="@aggregator-sources">their source</a>. Administrators can <a href="@feededit">add, edit and delete feeds</a> and choose how often to check each feed for newly updated items. The most recent items in either a feed or category can be displayed as a block through the <a href="@admin-block">blocks administration page</a>. A <a href="@aggregator-opml">machine-readable OPML file</a> of all feeds is available. A correctly configured <a href="@cron">cron maintenance task</a> is required to update feeds automatically.', array('@aggregator' => url('aggregator'), '@aggregator-sources' => url('aggregator/sources'), '@feededit' => url('admin/settings/aggregator'), '@admin-block' => url('admin/structure/block'), '@aggregator-opml' => url('aggregator/opml'), '@cron' => url('admin/reports/status'))) . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@aggregator">Aggregator module</a>.', array('@aggregator' => 'http://drupal.org/handbook/modules/aggregator/')) . '</p>';
       return $output;
-    case 'admin/content/aggregator':
+    case 'admin/settings/aggregator':
       $output = '<p>' . t('Thousands of sites (particularly news sites and blogs) publish their latest headlines and posts in feeds, using a number of standardized XML-based formats. Formats supported by the aggregator include <a href="@rss">RSS</a>, <a href="@rdf">RDF</a>, and <a href="@atom">Atom</a>.', array('@rss' => 'http://cyber.law.harvard.edu/rss/', '@rdf' => 'http://www.w3.org/RDF/', '@atom' => 'http://www.atomenabled.org')) . '</p>';
-      $output .= '<p>' . t('Current feeds are listed below, and <a href="@addfeed">new feeds may be added</a>. For each feed or feed category, the <em>latest items</em> block may be enabled at the <a href="@block">blocks administration page</a>.', array('@addfeed' => url('admin/content/aggregator/add/feed'), '@block' => url('admin/structure/block'))) . '</p>';
+      $output .= '<p>' . t('Current feeds are listed below, and <a href="@addfeed">new feeds may be added</a>. For each feed or feed category, the <em>latest items</em> block may be enabled at the <a href="@block">blocks administration page</a>.', array('@addfeed' => url('admin/settings/aggregator/add/feed'), '@block' => url('admin/structure/block'))) . '</p>';
       return $output;
-    case 'admin/content/aggregator/add/feed':
+    case 'admin/settings/aggregator/add/feed':
       return '<p>' . t('Add a feed in RSS, RDF or Atom format. A feed may only have one entry.') . '</p>';
-    case 'admin/content/aggregator/add/category':
+    case 'admin/settings/aggregator/add/category':
       return '<p>' . t('Categories allow feed items from different feeds to be grouped together. For example, several sport-related feeds may belong to a category named <em>Sports</em>. Feed items may be grouped automatically (by selecting a category when creating or editing a feed) or manually (via the <em>Categorize</em> page available from feed item listings). Each category provides its own feed page and block.') . '</p>';
-    case 'admin/content/aggregator/add/opml':
+    case 'admin/settings/aggregator/add/opml':
       return '<p>' . t('<acronym title="Outline Processor Markup Language">OPML</acronym> is an XML format used to exchange multiple feeds between aggregators. A single OPML document may contain a collection of many feeds. Drupal can parse such a file and import all feeds at once, saving you the effort of adding them manually. You may either upload a local file from your computer or enter a URL where Drupal can download it.') . '</p>';
   }
 }
@@ -86,51 +86,51 @@ function aggregator_theme() {
  * Implement hook_menu().
  */
 function aggregator_menu() {
-  $items['admin/content/aggregator'] = array(
+  $items['admin/settings/aggregator'] = array(
     'title' => 'Feed aggregator',
     'description' => "Configure which content your site aggregates from other sites, how often it polls them, and how they're categorized.",
     'page callback' => 'aggregator_admin_overview',
     'access arguments' => array('administer news feeds'),
   );
-  $items['admin/content/aggregator/add/feed'] = array(
+  $items['admin/settings/aggregator/add/feed'] = array(
     'title' => 'Add feed',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_feed'),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
-    'parent' => 'admin/content/aggregator',
+    'parent' => 'admin/settings/aggregator',
   );
-  $items['admin/content/aggregator/add/category'] = array(
+  $items['admin/settings/aggregator/add/category'] = array(
     'title' => 'Add category',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_category'),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
-    'parent' => 'admin/content/aggregator',
+    'parent' => 'admin/settings/aggregator',
   );
-  $items['admin/content/aggregator/add/opml'] = array(
+  $items['admin/settings/aggregator/add/opml'] = array(
     'title' => 'Import OPML',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_opml'),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
-    'parent' => 'admin/content/aggregator',
+    'parent' => 'admin/settings/aggregator',
   );
-  $items['admin/content/aggregator/remove/%aggregator_feed'] = array(
+  $items['admin/settings/aggregator/remove/%aggregator_feed'] = array(
     'title' => 'Remove items',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_admin_remove_feed', 4),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/content/aggregator/update/%aggregator_feed'] = array(
+  $items['admin/settings/aggregator/update/%aggregator_feed'] = array(
     'title' => 'Update items',
     'page callback' => 'aggregator_admin_refresh_feed',
     'page arguments' => array(4),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/content/aggregator/list'] = array(
+  $items['admin/settings/aggregator/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
@@ -224,14 +224,14 @@ function aggregator_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
   );
-  $items['admin/content/aggregator/edit/feed/%aggregator_feed'] = array(
+  $items['admin/settings/aggregator/edit/feed/%aggregator_feed'] = array(
     'title' => 'Edit feed',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_feed', 5),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/content/aggregator/edit/category/%aggregator_category'] = array(
+  $items['admin/settings/aggregator/edit/category/%aggregator_category'] = array(
     'title' => 'Edit category',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_category', 5),

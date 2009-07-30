@@ -203,7 +203,7 @@ class CommentHelperCase extends DrupalWebTestCase {
     $edit = array();
     $edit['operation'] = $operation;
     $edit['comments[' . $comment->id . ']'] = TRUE;
-    $this->drupalPost('admin/content/content/comment' . ($approval ? '/approval' : ''), $edit, t('Update'));
+    $this->drupalPost('admin/content/comment' . ($approval ? '/approval' : ''), $edit, t('Update'));
 
     if ($operation == 'delete') {
       $this->drupalPost(NULL, array(), t('Delete comments'));
@@ -223,7 +223,7 @@ class CommentHelperCase extends DrupalWebTestCase {
    *   Comment id.
    */
   function getUnapprovedComment($subject) {
-    $this->drupalGet('admin/content/content/comment/approval');
+    $this->drupalGet('admin/content/comment/approval');
     preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->drupalGetContent(), $match);
 
     return $match[2];
@@ -422,19 +422,19 @@ class CommentAnonymous extends CommentHelperCase {
     $this->drupalLogin($this->admin_user);
     $this->performCommentOperation($anonymous_comment3, 'unpublish');
 
-    $this->drupalGet('admin/content/content/comment/approval');
+    $this->drupalGet('admin/content/comment/approval');
     $this->assertRaw('comments[' . $anonymous_comment3->id . ']', t('Comment was unpublished.'));
 
     // Publish comment.
     $this->performCommentOperation($anonymous_comment3, 'publish', TRUE);
 
-    $this->drupalGet('admin/content/content/comment');
+    $this->drupalGet('admin/content/comment');
     $this->assertRaw('comments[' . $anonymous_comment3->id . ']', t('Comment was published.'));
 
     // Delete comment.
     $this->performCommentOperation($anonymous_comment3, 'delete');
 
-    $this->drupalGet('admin/content/content/comment');
+    $this->drupalGet('admin/content/comment');
     $this->assertNoRaw('comments[' . $anonymous_comment3->id . ']', t('Comment was deleted.'));
 
     // Reset.
@@ -562,7 +562,7 @@ class CommentApprovalTest extends CommentHelperCase {
   }
 
   /**
-   * Test comment approval functionality through admin/content/content/comment.
+   * Test comment approval functionality through admin/content/comment.
    */
   function testApprovalAdminInterface() {
     $this->drupalLogin($this->admin_user);

@@ -578,7 +578,7 @@ function node_multiple_delete_confirm(&$form_state, $nodes) {
                                   'Are you sure you want to delete these items?');
   return confirm_form($form,
                     $confirm_question,
-                    'admin/content/node', t('This action cannot be undone.'),
+                    'admin/content', t('This action cannot be undone.'),
                     t('Delete'), t('Cancel'));
 }
 
@@ -589,7 +589,7 @@ function node_multiple_delete_confirm_submit($form, &$form_state) {
     watchdog('content', 'Deleted @count posts.', array('@count' => $count));
     drupal_set_message(t('Deleted @count posts.', array('@count' => $count)));
   }
-  $form_state['redirect'] = 'admin/content/node';
+  $form_state['redirect'] = 'admin/content';
   return;
 }
 

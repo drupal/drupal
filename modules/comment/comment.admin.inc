@@ -114,7 +114,7 @@ function comment_admin_overview_validate($form, &$form_state) {
   // We can't execute any 'Update options' if no comments were selected.
   if (count($form_state['values']['comments']) == 0) {
     form_set_error('', t('Please select one or more comments to perform the update on.'));
-    drupal_goto('admin/content/content/comment');
+    drupal_goto('admin/content/comment');
   }
 }
 
@@ -145,7 +145,7 @@ function comment_admin_overview_submit($form, &$form_state) {
     }
     cache_clear_all();
     drupal_set_message(t('The update has been performed.'));
-    $form_state['redirect'] = 'admin/content/content/comment';
+    $form_state['redirect'] = 'admin/content/comment';
   }
 }
 
@@ -181,12 +181,12 @@ function comment_multiple_delete_confirm(&$form_state) {
 
   if (!$comment_counter) {
     drupal_set_message(t('There do not appear to be any comments to delete, or your selected comment was deleted by another administrator.'));
-    drupal_goto('admin/content/content/comment');
+    drupal_goto('admin/content/comment');
   }
   else {
     return confirm_form($form,
                         t('Are you sure you want to delete these comments and all their children?'),
-                        'admin/content/content/comment', t('This action cannot be undone.'),
+                        'admin/content/comment', t('This action cannot be undone.'),
                         t('Delete comments'), t('Cancel'));
   }
 }
@@ -205,7 +205,7 @@ function comment_multiple_delete_confirm_submit($form, &$form_state) {
     cache_clear_all();
     drupal_set_message(t('The comments have been deleted.'));
   }
-  $form_state['redirect'] = 'admin/content/content/comment';
+  $form_state['redirect'] = 'admin/content/comment';
 }
 
 /**

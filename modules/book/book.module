@@ -102,9 +102,9 @@ function book_node_view_link($node, $build_mode) {
 function book_menu() {
   $items['admin/content/book'] = array(
     'title' => 'Books',
-    'description' => "Manage your site's book outlines.",
     'page callback' => 'book_admin_overview',
     'access arguments' => array('administer book outlines'),
+    'type' => MENU_LOCAL_TASK,
   );
   $items['admin/content/book/list'] = array(
     'title' => 'List',
