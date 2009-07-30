@@ -34,7 +34,7 @@ function php_install() {
       ))
       ->execute();
 
-    drupal_set_message(t('A !php-code text format has been created.', array('!php-code' => l('PHP code', 'admin/settings/filter/' . $format))));
+    drupal_set_message(t('A !php-code text format has been created.', array('!php-code' => l('PHP code', 'admin/settings/formats/' . $format))));
   }
 }
 
