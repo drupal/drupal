@@ -85,7 +85,7 @@ function drupal_add_region_content($region = NULL, $data = NULL) {
  *   A specified region to fetch content for. If NULL, all regions will be
  *   returned.
  * @param $delimiter
- *   Content to be inserted between exploded array elements.
+ *   Content to be inserted between imploded array elements.
  */
 function drupal_get_region_content($region = NULL, $delimiter = ' ') {
   $content = drupal_add_region_content();
