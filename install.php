@@ -1355,6 +1355,8 @@ function install_configure_form(&$form_state, &$install_state) {
       // work on install time.
       drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail'))), 'setting');
       drupal_add_js('jQuery(function () { Drupal.cleanURLsInstallCheck(); });', 'inline');
+      // Add JS to show / hide the 'Email administrator about site updates' elements
+      drupal_add_js('jQuery(function () { Drupal.hideEmailAdministratorCheckbox() });', 'inline');
       // Build menu to allow clean URL check.
       menu_rebuild();
 
@@ -1591,11 +1593,18 @@ function _install_configure_form(&$form_state, &$install_state) {
     '#attributes' => array('class' => 'install'),
   );
 
-  $form['server_settings']['update_status_module'] = array(
-    '#type' => 'checkboxes',
+  $form['update_notifications'] = array(
+    '#type' => 'fieldset',
     '#title' => st('Update notifications'),
-    '#options' => array(1 => st('Check for updates automatically')),
-    '#default_value' => array(1),
+    '#collapsible' => FALSE,
+  );
+  $form['update_notifications']['update_status_module'] = array(
+    '#type' => 'checkboxes',
+    '#options' => array(
+      1 => st('Check for updates automatically'),
+      2 => st('Receive e-mail notifications'),
+    ),
+    '#default_value' => array(1, 2),
     '#description' => st('The system will notify you when updates and important security releases are available for installed components. Anonymous information about your site is sent to <a href="@drupal">Drupal.org</a>.', array('@drupal' => 'http://drupal.org')),
     '#weight' => 15,
   );
@@ -1645,6 +1654,12 @@ function install_configure_form_submit($form, &$form_state) {
   // Enable update.module if this option was selected.
   if ($form_state['values']['update_status_module'][1]) {
     drupal_install_modules(array('update'));
+ 
+    // Add the administrator's email address to the list of addresses to be
+    // notified when updates are available, if selected.
+    if ($form_state['values']['update_status_module'][2]) {
+      variable_set('update_notify_emails', array($form_state['values']['account']['mail']));
+    }
   }
 
   // Turn this off temporarily so that we can pass a password through.

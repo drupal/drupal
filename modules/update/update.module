@@ -419,6 +419,14 @@ function update_mail($key, &$message, $params) {
     $message['body'][] = _update_message_text($msg_type, $msg_reason, FALSE, $language);
   }
   $message['body'][] = t('See the available updates page for more information:', array(), array('langcode' => $langcode)) . "\n" . url('admin/reports/updates', array('absolute' => TRUE, 'language' => $language));
+
+  $settings_url = url('admin/settings/updates', array('absolute' => TRUE));
+  if (variable_get('update_notification_threshold', 'all') == 'all') {
+    $message['body'][] = t('Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, please visit !url.', array('!url' => $settings_url));
+  }
+  else {
+    $message['body'][] = t('Your site is currently configured to send these emails only when security updates are available. To get notified for any available updates, please visit !url.', array('!url' => $settings_url));
+  }
 }
 
 /**

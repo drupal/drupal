@@ -2,6 +2,25 @@
 (function ($) {
 
 /**
+ * Show/hide the 'Email site administrator when updates are available' checkbox
+ * on the install page.
+ */
+Drupal.hideEmailAdministratorCheckbox = function () {
+  // Make sure the secondary box is shown / hidden as necessary on page load.
+  if ($('#edit-update-status-module-1').is(':checked')) {
+    $('.update-status-module-2-wrapper').show();
+  }
+  else {
+    $('.update-status-module-2-wrapper').hide();
+  }
+
+  // Toggle the display as necessary when the checkbox is clicked.
+  $('#edit-update-status-module-1').change( function () {
+    $('.update-status-module-2-wrapper').toggle();
+  })
+};
+
+/**
  * Internal function to check using Ajax if clean URLs can be enabled on the
  * settings page.
  *
@@ -128,4 +147,6 @@ Drupal.behaviors.poweredByPreview = {
   }
 };
 
+
 })(jQuery);
+
