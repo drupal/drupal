@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.950 2009/07/31 07:27:59 dries Exp $
+// $Id: common.inc,v 1.951 2009/07/31 19:56:09 dries Exp $
 
 /**
  * @file
@@ -3821,6 +3821,7 @@ function drupal_render_page($page) {
  *   The rendered HTML.
  */
 function drupal_render(&$elements) {
+  static $defaults;
   // Early-return nothing if user does not have access.
   if (!isset($elements) || (isset($elements['#access']) && !$elements['#access'])) {
     return;
@@ -3837,7 +3838,10 @@ function drupal_render(&$elements) {
     $elements += element_info($elements['#type']);
   }
   else {
-    $elements += element_basic_defaults();
+    if (!isset($defaults)) {
+      $defaults = element_basic_defaults();
+    }
+    $elements += $defaults;
   }
 
   // If #markup is not empty and no theme function is set, use theme_markup.
