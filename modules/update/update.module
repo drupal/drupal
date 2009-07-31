@@ -72,7 +72,7 @@ function update_help($path, $arg) {
       $output .= '<p>' . t('To extend the functionality or to change the look of your site, a number of contributed <a href="@modules">modules</a> and <a href="@themes">themes</a> are available.', array('@modules' => 'http://drupal.org/project/modules', '@themes' => 'http://drupal.org/project/themes')) . '</p>';
       $output .= '<p>' . t('Each time Drupal core or a contributed module or theme is updated, it is important that <a href="@update-php">update.php</a> is run.', array('@update-php' => url($base_url . '/update.php', array('external' => TRUE)))) . '</p>';
       return $output;
-    case 'admin/structure/themes':
+    case 'admin/appearance':
     case 'admin/structure/modules':
       include_once DRUPAL_ROOT . '/includes/install.inc';
       $status = update_requirements('runtime');

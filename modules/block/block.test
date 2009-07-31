@@ -217,7 +217,7 @@ class NonDefaultBlockAdmin extends DrupalWebTestCase {
   function testNonDefaultBlockAdmin() {
     $admin_user = $this->drupalCreateUser(array('administer blocks', 'administer site configuration'));
     $this->drupalLogin($admin_user);
-    $this->drupalPost('admin/structure/themes', array('status[stark]' => 1), t('Save configuration'));
+    $this->drupalPost('admin/appearance', array('status[stark]' => 1), t('Save configuration'));
     $this->drupalGet('admin/structure/block/list/stark');
     $this->assertRaw('stark/layout.css', t('Stark CSS found'));
   }
@@ -258,7 +258,7 @@ class NewDefaultThemeBlocks extends DrupalWebTestCase {
 
     // Turn on the Stark theme and ensure that it contains all of the blocks
     // that Garland did.
-    $this->drupalPost('admin/structure/themes', array('theme_default' => 'stark'), t('Save configuration'));
+    $this->drupalPost('admin/appearance', array('theme_default' => 'stark'), t('Save configuration'));
     $result = db_query("SELECT * FROM {block} WHERE theme='stark'");
     foreach ($result as $block) {
       unset($block->theme, $block->bid);
@@ -293,7 +293,7 @@ class BlockAdminThemeTestCase extends DrupalWebTestCase {
 
     // Enable admin theme and confirm that tab is accessible.
     $edit['admin_theme'] = 'stark';
-    $this->drupalPost('admin/structure/themes', $edit, t('Save configuration'));
+    $this->drupalPost('admin/appearance', $edit, t('Save configuration'));
     $this->drupalGet('admin/structure/block/list/stark');
     $this->assertResponse(200, t('The block admin page for the admin theme can be accessed'));
   }
