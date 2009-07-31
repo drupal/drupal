@@ -367,7 +367,7 @@ function hook_page_alter($page) {
  *   String representing the name of the form itself. Typically this is the
  *   name of the function that generated the form.
  */
-function hook_form_alter(&$form, $form_state, $form_id) {
+function hook_form_alter(&$form, &$form_state, $form_id) {
   if (isset($form['type']) && $form['type']['#value'] . '_node_settings' == $form_id) {
     $form['workflow']['upload_' . $form['type']['#value']] = array(
       '#type' => 'radios',
