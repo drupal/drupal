@@ -1,5 +1,5 @@
 <?php
-// $Id: help.api.php,v 1.4 2009/07/20 18:51:33 dries Exp $
+// $Id: help.api.php,v 1.5 2009/07/31 19:01:01 dries Exp $
 
 /**
  * @file
@@ -46,7 +46,7 @@
  *   $output .= 'A role defines a group of users that have certain
  *     privileges as defined in %permission.';
  *   $output = t($output, array('%permission' => l(t('user permissions'),
- *     'admin/user/permission')));
+ *     'admin/settings/permission')));
  *
  * For a detailed usage example, see page_example.module.
  */

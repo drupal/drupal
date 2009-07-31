@@ -1,5 +1,5 @@
 <?php
-// $Id: user.api.php,v 1.7 2009/06/15 19:21:54 dries Exp $
+// $Id: user.api.php,v 1.8 2009/07/31 19:01:03 dries Exp $
 
 /**
  * @file
@@ -221,7 +221,7 @@ function hook_user_cancel_methods_alter(&$methods) {
  * Add mass user operations.
  *
  * This hook enables modules to inject custom operations into the mass operations
- * dropdown found at admin/user/user, by associating a callback function with
+ * dropdown found at admin/user, by associating a callback function with
  * the operation, which is called when the form is submitted. The callback function
  * receives one initial argument, which is an array of the checked users.
  *
