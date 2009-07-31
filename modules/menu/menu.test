@@ -249,7 +249,7 @@ class MenuTestCase extends DrupalWebTestCase {
    * @param string $menu_name Menu name.
    */
   function addInvalidMenuLink($menu_name = 'navigation') {
-    foreach (array('-&-', 'admin/user/permissions') as $link_path) {
+    foreach (array('-&-', 'admin/settings/permissions') as $link_path) {
       $edit = array(
         'menu[link_path]' => $link_path,
         'menu[link_title]' => 'title',

@@ -176,7 +176,7 @@ class CommentHelperCase extends DrupalWebTestCase {
     $edit['1[access comments]'] = $access_comments;
     $edit['1[post comments]'] = $post_comments;
     $edit['1[post comments without approval]'] = $without_approval;
-    $this->drupalPost('admin/user/permissions', $edit, t('Save permissions'));
+    $this->drupalPost('admin/settings/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), t('Anonymous user comments ' . ($access_comments ? 'access comments' : 'not access comments'). '.'));
   }
 

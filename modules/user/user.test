@@ -475,7 +475,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
       $edit['accounts[' . $uid . ']'] = TRUE;
     }
     $edit['accounts[' . $admin_user->uid . ']'] = TRUE;
-    $this->drupalPost('admin/user/user', $edit, t('Update'));
+    $this->drupalPost('admin/user', $edit, t('Update'));
     $this->assertText(t('Are you sure you want to cancel these user accounts?'), t('Confirmation form to cancel accounts displayed.'));
     $this->assertText(t('When cancelling these accounts'), t('Allows to select account cancellation method.'));
     $this->assertText(t('Require e-mail confirmation to cancel account.'), t('Allows to send confirmation mail.'));
@@ -753,7 +753,7 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
     $this->assertFalse(user_access('administer nodes', $account, TRUE), t('User does not have "administer nodes" permission.'));
     $edit = array();
     $edit[$rid . '[administer nodes]'] = TRUE;
-    $this->drupalPost('admin/user/permissions', $edit, t('Save permissions'));
+    $this->drupalPost('admin/settings/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), t('Successful save message displayed.'));
     $this->assertTrue(user_access('administer nodes', $account, TRUE), t('User now has "administer nodes" permission.'));
 
@@ -761,7 +761,7 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
     $this->assertTrue(user_access('access user profiles', $account, TRUE), t('User has "access user profiles" permission.'));
     $edit = array();
     $edit[$rid . '[access user profiles]'] = FALSE;
-    $this->drupalPost('admin/user/permissions', $edit, t('Save permissions'));
+    $this->drupalPost('admin/settings/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), t('Successful save message displayed.'));
     $this->assertFalse(user_access('access user profiles', $account, TRUE), t('User no longer has "access user profiles" permission.'));
   }
@@ -809,7 +809,7 @@ class UserAdminTestCase extends DrupalWebTestCase {
     // Create admin user to delete registered user.
     $admin_user = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($admin_user);
-    $this->drupalGet('admin/user/user');
+    $this->drupalGet('admin/user');
     $this->assertText($user_a->name, t('Found user A on admin users page'));
     $this->assertText($user_b->name, t('Found user B on admin users page'));
     $this->assertText($user_c->name, t('Found user C on admin users page'));
@@ -819,7 +819,7 @@ class UserAdminTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['filter'] = 'permission';
     $edit['permission'] = 'administer taxonomy';
-    $this->drupalPost('admin/user/user', $edit, t('Filter'));
+    $this->drupalPost('admin/user', $edit, t('Filter'));
 
     // Check if the correct users show up.
     $this->assertNoText($user_a->name, t('User A not on filtered by perm  admin users page'));
@@ -832,7 +832,7 @@ class UserAdminTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['operation'] = 'block';
     $edit['accounts[' . $account->uid . ']'] = TRUE;
-    $this->drupalPost('admin/user/user', $edit, t('Update'));
+    $this->drupalPost('admin/user', $edit, t('Update'));
     $account = user_load($user_b->uid, TRUE);
     $this->assertEqual($account->status, 0, 'User B blocked');
   }
@@ -961,7 +961,7 @@ class UserBlocksUnitTests extends DrupalWebTestCase {
     $edit = array();
     $edit['name'] = $user->name;
     $edit['pass'] = $user->pass_raw;
-    $this->drupalPost('admin/user/permissions', $edit, t('Log in'));
+    $this->drupalPost('admin/settings/permissions', $edit, t('Log in'));
     $this->assertText(t('Log out'), t('Logged in.'));
 
     // Check that we are still on the same page.

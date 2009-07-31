@@ -289,7 +289,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
       $edit[$rid . '[' . $name . ']'] = $value;
     }
 
-    $this->drupalPost('admin/user/permissions', $edit, t('Save permissions'));
+    $this->drupalPost('admin/settings/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), t(' [permission] Saved changes.'));
   }
 }

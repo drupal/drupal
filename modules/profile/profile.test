@@ -36,7 +36,7 @@ class ProfileTestCase extends DrupalWebTestCase {
     $edit['category'] = $category;
     $edit['explanation'] = $this->randomName(50);
 
-    $this->drupalPost('admin/user/profile/add/' . $type, $edit, t('Save field'));
+    $this->drupalPost('admin/settings/profile/add/' . $type, $edit, t('Save field'));
     $fid = db_query("SELECT fid FROM {profile_field} WHERE title = :title", array(':title' => $title))->fetchField();
     $this->assertTrue($fid, t('New Profile field has been entered in the database'));
 
@@ -107,8 +107,8 @@ class ProfileTestCase extends DrupalWebTestCase {
    *   The field to be deleted.
    */
   function deleteProfileField($field) {
-    $this->drupalPost('admin/user/profile/delete/' . $field['fid'], array(), t('Delete'));
-    $this->drupalGet('admin/user/profile');
+    $this->drupalPost('admin/settings/profile/delete/' . $field['fid'], array(), t('Delete'));
+    $this->drupalGet('admin/settings/profile');
     $this->assertNoText($field['title'], t('Checking deleted field %title', array('%title' => $field['title'])));
   }
 }

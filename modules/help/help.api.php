@@ -46,7 +46,7 @@
  *   $output .= 'A role defines a group of users that have certain
  *     privileges as defined in %permission.';
  *   $output = t($output, array('%permission' => l(t('user permissions'),
- *     'admin/user/permission')));
+ *     'admin/settings/permission')));
  *
  * For a detailed usage example, see page_example.module.
  */
