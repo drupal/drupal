@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.55 2009/07/20 18:51:34 dries Exp $ */
+/* $Id: system.css,v 1.56 2009/07/31 11:20:42 dries Exp $ */
 
 /*
 ** HTML elements
@@ -512,7 +512,7 @@ html.js .js-hide {
 }
 
 /*
-** Styles for the system themes page (admin/structure/themes)
+** Styles for the system themes page (admin/appearance)
 */
 #system-themes-form div.incompatible {
   font-weight: bold;
