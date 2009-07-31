@@ -1715,7 +1715,7 @@ function taxonomy_node_delete($node) {
  */
 function taxonomy_node_delete_revision($node) {
   db_delete('taxonomy_term_node')
-    ->condition('nid', $node->vid)
+    ->condition('vid', $node->vid)
     ->execute();
   drupal_static_reset('taxonomy_term_count_nodes');
 }
