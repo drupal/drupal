@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.949 2009/07/30 19:57:09 dries Exp $
+// $Id: common.inc,v 1.950 2009/07/31 07:27:59 dries Exp $
 
 /**
  * @file
@@ -740,8 +740,6 @@ function _drupal_error_handler($error_level, $message, $filename, $line, $contex
       E_STRICT => 'Strict warning',
       E_RECOVERABLE_ERROR => 'Recoverable fatal error'
     );
-    $backtrace = debug_backtrace();
-
     $caller = _drupal_get_last_caller(debug_backtrace());
 
     // We treat recoverable errors as fatal.
