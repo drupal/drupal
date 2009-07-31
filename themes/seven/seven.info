@@ -1,0 +1,13 @@
+; $Id$
+name = Seven
+description = A simple one-column, tableless, fluid width administration theme.
+core = 7.x
+version = VERSION
+engine = phptemplate
+stylesheets[screen][] = reset.css
+stylesheets[screen][] = style.css
+stylesheets[all][] = vertical-tabs.css
+regions[content] = Content
+regions[help] = Help
+regions[page_top] = Page top
+regions[page_bottom] = Page bottom

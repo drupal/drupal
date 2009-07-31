@@ -1,0 +1,707 @@
+/* $Id$ */
+
+/**
+ * Generic elements
+ */
+body {
+  color: #000;
+  background: #fff;
+  font-style: normal;
+  line-height: 20px;
+  font-size: 0.8em;
+  font-family: Lucida Grande, Lucida Sans Unicode, sans-serif;
+}
+
+a {
+  color: #0074BD;
+  text-decoration: none;
+}
+
+div.box, p {
+  margin: 0 0 20px;
+}
+
+hr {
+  display: none;
+}
+
+legend {
+  font-weight: bold;
+}
+
+#block-system-main h1,
+#block-system-main h2,
+#block-system-main h3,
+#block-system-main h4,
+#block-system-main h5,
+#block-system-main h6 {
+  font-size: 15px;
+  font-weight: bold;
+  margin:  10px 0;
+}
+
+#block-system-main dl {
+  margin: 0 0 20px;
+}
+
+#block-system-main dl dd,
+#block-system-main dl dl {
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+/**
+ * Branding.
+ */
+#branding {
+  overflow: hidden;
+  padding: 20px 40px 0 40px;
+  position: relative;
+  background-color: #e0e0d8;
+}
+
+#branding div.back-to-site {
+  background: url(images/arrow-prev.png) no-repeat left center;
+  padding-left: 8px;
+  font-size: 11px;
+}
+
+#branding div.breadcrumb {
+  float: left;
+  font-size: 12px;
+}
+
+#branding div.block {
+  position: relative;
+  float: right;
+  width: 240px;
+  padding-left: 10px;
+  background: #333;
+}
+
+#branding div.block form label {
+  display: none;
+}
+
+#branding div.block form div.form-item {
+  float: left;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+#branding div.block form input.form-text {
+  width: 140px;
+  margin-right: 10px;
+}
+
+#branding div.block form input.form-submit {
+  text-align: center;
+  width: 80px;
+}
+
+/**
+ * Breadcrumbs.
+ */
+div.breadcrumb a {
+  padding: 0 10px 0 0;
+  color: #fff;
+}
+
+/**
+ * Help.
+ */
+#help {
+  font-size: 0.9em;
+  margin-top: 1em;
+}
+
+#help p {
+  margin: 0 0 10px;
+}
+
+#help div.more-help-link {
+  text-align: right;
+}
+
+/**
+ * Console.
+ */
+#console div.messages {
+  padding: 9px;
+  margin: 1em 0;
+  color: #036;
+  background: #bdf;
+  border: 1px solid #ace;
+}
+
+#console div.warning {
+  color: #840;
+  background: #fe6;
+  border-color: #ed5;
+}
+
+#console div.error {
+  color: #fff;
+  background: #e63;
+  border-color: #d52;
+}
+
+#console div.status {
+  color: #360;
+  background: #cf8;
+  border-color: #be7;
+}
+
+/**
+ * Page title.
+ */
+#page-title {
+  background: #333;
+  padding-top: 20px;
+}
+
+#branding h1.page-title {
+  color: #000;
+  padding-bottom: 10px;
+  font-size: 18px;
+  font-weight: normal;
+  float: left;
+}
+
+/**
+ * Console.
+ */
+#page .console {
+  border-top: 1px solid #ccc;
+  padding: 9px 0 10px;
+}
+
+/**
+ * Tabs.
+ */
+ul.primary {
+  float: right;
+  border-bottom: none;
+  margin: 0 0 -10px 0;
+  padding: 3px 0 0 8px;
+  line-height: 30px;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+ul.primary li {
+  display: inline;
+  list-style: none;
+}
+
+ul.primary li a,
+ul.primary li a:active,
+ul.primary li a:visited,
+ul.primary li a:hover {
+  background-color: #a6a7a2;
+  -moz-border-radius: 8px 8px 0 0;
+  -webkit-border-top-left-radius: 8px;
+  -webkit-border-top-right-radius: 8px;
+  border-radius: 8px 8px 0 0;
+  color: #000;
+  font-weight: bold;
+  padding: 7px 20px 5px 20px;
+  border-width: 1px 1px 0 1px;
+  border-style: solid;
+  border-color: #a6a7a2;
+}
+
+ul.primary li.active a,
+ul.primary li.active a.active,
+ul.primary li.active a:active,
+ul.primary li.active a:visited {
+  background-color: #fff;
+  border-color: #c9cac4;
+}
+
+ul.primary li a:hover {
+  color: #fff;
+}
+
+ul.primary li.active a:hover {
+  color: #000;
+}
+
+ul.secondary {
+  float: none;
+  clear: both;
+  font-size: 12px;
+  padding: 5px 20px 4px;
+  line-height: 20px;
+  overflow: hidden;
+  border-bottom: 1px solid #ccc;
+  background: #fff;
+}
+
+ul.secondary li {
+  float: right;
+  padding-left: 10px;
+}
+
+ul.secondary li a {
+  color: #05a;
+}
+
+ul.secondary li a,
+ul.secondary li a:hover,
+ul.secondary li.active a,
+ul.secondary li.active a.active {
+  padding: 0 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 7px;
+}
+
+ul.secondary li.active a,
+ul.secondary li.active a.active {
+  color: #fff;
+  background: #666;
+}
+
+/**
+ * Page layout.
+ */
+#page {
+  padding-bottom: 40px;
+  margin-right: 40px;
+  margin-left: 40px;
+  position: relative;
+}
+
+#footer {
+  text-align: right;
+  border-top: 1px solid #ccc;
+  padding: 5px;
+  font-size: 12px;
+}
+
+#block-system-main {
+  min-height: 180px;
+  padding: 20px 0;
+  background: #fff;
+  color: #333;
+}
+
+#block-system-main ul.menu li,
+#block-system-main ul.menu li a,
+#secondary-links ul.links li,
+#secondary-links ul.links li a {
+  float: left;
+}
+
+#block-system-main ul.menu li,
+#secondary-links ul.links li {
+  padding: 0 10px 10px 0;
+}
+
+#block-system-main ul.menu li a,
+#secondary-links ul.links li a {
+  font-size: 9px;
+  line-height: 10px;
+  background: #777;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  height: 55px;
+  width: 80px;
+  overflow: hidden;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+#secondary-links ul.links li a:hover {
+  background: #999;
+}
+
+#block-system-main ul.menu li a {
+  background: #f8f8f8;
+  color: #05a;
+}
+
+#block-system-main ul.menu li a:hover {
+  background: #eee;
+}
+
+#secondary-links ul.links li.active-trail a,
+#secondary-links ul.links li a.active {
+  background: #333;
+}
+
+#block-system-main ul.node-type-list li,
+#block-system-main ul.admin-list li {
+  position: relative;
+  padding-left: 30px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid #ccc;
+  margin-left: 0;
+  margin-bottom: 10px;
+  background: url(images/list-item.png) no-repeat;
+  list-style-type: none;
+  list-style-image: none;
+}
+#block-system-main ul.admin-list.compact li {
+  border: 0;
+  background: none;
+}
+
+#block-system-main ul.admin-list li:last-child {
+  border-bottom: none;
+}
+
+#block-system-main ul.node-type-list .label {
+  font-size: 15px;
+}
+
+/**
+ * Tables.
+ */
+table {
+  width: 100%;
+  font-size: 12px;
+  margin: 0 0 10px;
+  border: 1px solid #bebfb9;
+  border-top: 0;
+}
+
+table.system-status-report th,
+table td,
+table th {
+  vertical-align: middle;
+  padding: 8px 5px 8px 10px;
+}
+
+table.system-status-report th {
+  padding-left: 30px;
+}
+
+table.system-status-report tr.ok > * {
+  background-color: #dfd;
+}
+
+table.system-status-report tr.info > * {
+  background-color: #bdf;
+}
+
+table.system-status-report tr.warning > * {
+  background-color: #ffd;
+}
+
+table.system-status-report tr.error > * {
+  background-color: #fdd;
+}
+
+tr.even, tr.odd {
+  border-width: 0 1px 0 1px;
+  border-style: solid;
+  border-color: #bebfb9;
+  background: #f3f4ee;
+}
+
+tr.odd {
+  background: #fff;
+}
+
+table th {
+  font-size: 12px;
+  text-transform: uppercase;
+  background: #e1e2dc;
+  font-weight: normal;
+  border-width: 0 1px 1px 1px;
+  border-style: solid;
+  border-color: #bebfb9;
+  padding: 3px 3px 3px 10px;
+}
+
+table th.active {
+  background: #bdbeb9;
+}
+
+table th a {
+  display: block;
+}
+
+table th.active img {
+  float: right;
+  margin-top: 3px;
+}
+
+table td.active {
+  background: #e9e9dd;
+}
+
+table tr.odd td.active {
+  background: #f3f4ee;
+}
+
+table tr.selected td.active,
+table tr.selected td {
+  background: #ffc;
+  border-color: #eeb;
+}
+
+/**
+ * Forms.
+ */
+
+/* Fieldsets & Form items */
+fieldset {
+  border: 1px solid #ccc;
+  padding: 9px;
+  margin: 0 0 10px;
+}
+
+fieldset.collapsed {
+  background: transparent;
+}
+
+fieldset fieldset {
+  background: #fff;
+}
+
+fieldset fieldset fieldset {
+  background: #f8f8f8;
+}
+
+html.js fieldset.collapsible .fieldset-wrapper {
+  overflow: visible;
+}
+
+div.form-item {
+  padding: 9px;
+  margin: 0 0 10px;
+}
+
+.filter-wrapper div.form-item,
+div.teaser-checkbox div.form-item,
+div.form-item div.form-item,
+fieldset div.form-item {
+  padding: 5px 0;
+  margin: 0;
+  border: 0;
+}
+
+.text-format-wrapper .form-item {
+  padding-bottom: 0;
+}
+
+div.form-item label {
+  margin: 0;
+  padding: 0;
+}
+
+form label,
+fieldset legend {
+  text-transform: uppercase;
+}
+
+div.form-item label.option {
+  text-transform: none;
+}
+
+div.form-item label.option {
+  font-size: 12px;
+}
+div.form-item label.option input {
+  vertical-align: middle;
+}
+
+/* Filter */
+.filter-wrapper {
+  border-top: 0;
+  width: 95%;
+  padding: 10px 2px 10px 2px;
+}
+
+.filter-wrapper > div {
+  padding-right: 6px;
+  padding-left: 6px;
+}
+
+.filter-wrapper div.form-item,
+.filter-wrapper .filter-guidelines,
+.filter-wrapper .filter-help {
+  font-size: 12px;
+  padding: 0;
+}
+
+ul.tips,
+div.description,
+div.form-item div.description {
+  margin: 5px 0;
+  line-height: 15px;
+  font-size: 12px;
+  color: #666;
+}
+
+/* Buttons */
+input.form-submit {
+  cursor: pointer;
+  padding: 4px 17px;
+  color: #5a5a5a;
+  text-align: center;
+  font-weight: normal;
+  font-family: "Lucida Grande", Verdana, sans-serif;
+  border: 1px solid #e4e4e4;
+  border-bottom: 1px solid #b4b4b4;
+  border-left-color: #D2D2D2;
+  border-right-color: #D2D2D2;
+  background: url(images/buttons.png) 0 0 repeat-x;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 15px;
+  font-size: 1.1em;
+}
+
+div.node-form input#edit-submit,
+div.node-form input#edit-submit-1 {
+  border: 1px solid #8eB7cd;
+  border-left-color: #8eB7cd;
+  border-right-color: #8eB7cd;
+  border-bottom-color: #7691a2;
+  background: url(images/buttons.png) 0px -40px repeat-x;
+  color: #133B54;
+}
+
+input.form-submit:active {
+  background: #666;
+  color: #fff;
+  border-color: #555;
+  text-shadow: #222 0px -1px 0px;
+}
+
+form input#edit-delete {
+  background: #eee;
+  border-color: #fff #ddd #ccc;
+  text-shadow: none;
+  color: #999;
+}
+
+input.form-autocomplete,
+input.form-text,
+textarea.form-textarea,
+select.form-select {
+  padding: 2px;
+  border: 1px solid #ccc;
+  border-top-color: #999;
+  background: #fff;
+  color: #333;
+}
+
+input.form-text:focus,
+textarea.form-textarea:focus,
+select.form-select:focus {
+  color: #000;
+  border-color: #ace;
+}
+
+html.js input.form-autocomplete {
+  background-position: 100% 4px;
+}
+
+html.js input.throbbing {
+  background-position: 100% -16px;
+}
+
+/* Exceptions */
+#diff-inline-form select,
+#block-system-main div.filter-options select {
+  padding: 0;
+}
+
+/**
+ * System.
+ */
+div.admin .right,
+div.admin .left {
+  width: 49%;
+  margin: 0;
+}
+
+div.admin-panel,
+div.admin-panel .body {
+  padding: 0;
+  clear: left;
+}
+
+div.admin-panel {
+  margin: 0 0 20px;
+  padding: 9px;
+  background: #f8f8f8;
+  border: 1px solid #ccc;
+}
+
+#block-system-main div.admin-panel h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+  margin: 0 0 10px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid #ccc;
+}
+
+.container-inline fieldset {
+  display: block;
+}
+
+/* admin/content/node and admin/user/user */
+#block-system-main dl.multiselect,
+#block-system-main dl.multiselect dt,
+#block-system-main dl.multiselect dd {
+  margin: 0 10px 0 0;
+}
+
+#block-system-main dl.multiselect select {
+  font-size: 12px;
+  background: #fff;
+  border: 1px solid #ccc;
+}
+
+/* Update options. */
+div.admin-options {
+  background: #f8f8f8;
+  line-height: 30px;
+  height: 30px;
+  padding: 9px;
+  border: 1px solid #ccc;
+  margin: 0 0 10px;
+}
+
+div.admin-options label {
+  text-transform: uppercase;
+  font: 12px/30px Lucida Grande, Lucida Sans Unicode, sans-serif;
+}
+
+div.admin-options label,
+div.admin-options div.form-item {
+  margin-right: 10px;
+  float: left;
+}
+
+div.admin-options div.form-item {
+  padding: 0;
+  border: 0;
+}
+
+/* Overlay theming */
+body.overlay {
+  background: #fff;
+}
+
+body.overlay #branding,
+body.overlay #page-title,
+body.overlay #page #left,
+body.overlay #page #footer {
+  display: none;
+}
+
+body.overlay #page {
+  margin: 0;
+  padding: 0;
+}
+
+body.overlay #block-system-main {
+  padding: 20px;
+}

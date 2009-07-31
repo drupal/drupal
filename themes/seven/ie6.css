@@ -1,0 +1,9 @@
+/* $Id$ */
+
+ul.menu li,
+ul.menu li a,
+ul.links li,
+ul.links li a,
+#page {
+  height: 1%;
+}
