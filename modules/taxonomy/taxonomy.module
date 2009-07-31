@@ -78,6 +78,12 @@ function taxonomy_theme() {
     'taxonomy_overview_terms' => array(
       'arguments' => array('form' => array()),
     ),
+    'field_formatter_taxonomy_term_link' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'field_formatter_taxonomy_term_plain' => array(
+      'arguments' => array('element' => NULL),
+    ),
   );
 }
 
@@ -425,6 +431,7 @@ function taxonomy_term_save($term) {
   }
   else {
     $status = drupal_write_record('taxonomy_term_data', $term);
+    _taxonomy_clean_field_cache($term);
     field_attach_insert('taxonomy_term', $term);
     module_invoke_all('taxonomy_term_update', $term);
   }
@@ -552,6 +559,7 @@ function taxonomy_term_delete($tid) {
         ->execute();
 
       field_attach_delete('taxonomy_term', $term);
+      _taxonomy_clean_field_cache($term);
       module_invoke_all('taxonomy_term_delete', $term);
     }
 
@@ -1829,6 +1837,237 @@ function taxonomy_hook_info() {
       ),
     ),
   );
+}
+
+/**
+ * Implement hook_field_info().
+ *
+ * Field settings:
+ * - allowed_values: a list array of one or more vocabulary trees:
+ *   - vid: a vocabulary ID.
+ *   - parent: a term ID of a term whose children are allowed. This should be
+ *     '0' if all terms in a vocabulary are allowed. The allowed values do not
+ *     include the parent term.
+ *
+ */
+function taxonomy_field_info() {
+  return array(
+    'taxonomy_term' => array(
+      'label' => t('Taxonomy term'),
+      'description' => t('This field stores a reference to a taxonomy term.'),
+      'default_widget' => 'options_select',
+      'default_formatter' => 'taxonomy_term_link',
+      'settings' => array(
+        'allowed_values' => array(
+          array(
+            'vid' => '0',
+            'parent' => '0',
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implement hook_field_widget_info_alter().
+ */
+function taxonomy_field_widget_info_alter(&$info) {
+  $info['options_select']['field types'][] = 'taxonomy_term';
+  $info['options_buttons']['field types'][] = 'taxonomy_term';
+}
+
+/**
+ * Implement hook_field_schema().
+ */
+function taxonomy_field_schema($field) {
+  return array(
+    'columns' => array(
+      'value' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+      ),
+    ),
+    'indexes' => array(
+      'value' => array('value'),
+    ),
+  );
+}
+
+/**
+ * Implement hook_field_validate().
+ *
+ * Possible error codes:
+ * - 'taxonomy_term_illegal_value': The value is not part of the list of allowed values.
+ */
+function taxonomy_field_validate($obj_type, $object, $field, $instance, $items, &$errors) {
+  $allowed_values = taxonomy_allowed_values($field);
+  foreach ($items as $delta => $item) {
+    if (!empty($item['value'])) {
+      if (!isset($allowed_values[$item['value']])) {
+        $errors[$field['field_name']][$delta][] = array(
+          'error' => 'taxonomy_term_illegal_value',
+          'message' => t('%name: illegal value.', array('%name' => t($instance['label']))),
+        );
+      }
+    }
+  }
+}
+
+/**
+ * Implement hook_field_is_empty().
+ */
+function taxonomy_field_is_empty($item, $field) {
+  if (empty($item['value']) && (string) $item['value'] !== '0') {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Implement hook_field_formatter_info().
+ */
+function taxonomy_field_formatter_info() {
+  return array(
+    'taxonomy_term_link' => array(
+      'label' => t('Link'),
+      'field types' => array('taxonomy_term'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+    'taxonomy_term_plain' => array(
+      'label' => t('Plain text'),
+      'field types' => array('taxonomy_term'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+  );
+}
+
+/**
+ * Theme function for 'link' term field formatter.
+ */
+function theme_field_formatter_taxonomy_term_link($element) {
+  $term = $element['#item']['taxonomy_term'];
+  return l($term->name, taxonomy_term_path($term));
+}
+
+/**
+ * Theme function for 'plain' term field formatter.
+ */
+function theme_field_formatter_taxonomy_term_plain($element) {
+  $term = $element['#item']['taxonomy_term'];
+  return $term->name;
+}
+
+/**
+ * Create an array of the allowed values for this field.
+ *
+ * Call the field's allowed_values function to retrieve the allowed
+ * values array.
+ *
+ * @see _taxonomy_term_select()
+ */
+function taxonomy_allowed_values($field) {
+  $options = array();
+  foreach ($field['settings']['allowed_values'] as $tree) {
+    $terms = taxonomy_get_tree($tree['vid'], $tree['parent']);
+    if ($terms) {
+      foreach ($terms as $term) {
+        $options[$term->tid] = str_repeat('-', $term->depth) . $term->name;
+      }
+    }
+  }
+  return $options;
+}
+
+/**
+ * Implement hook_field_load().
+ *
+ * This preloads all taxonomy terms for multiple loaded objects at once and
+ * unsets values for invalid terms that do not exist.
+ */
+function taxonomy_field_load($obj_type, $objects, $field, $instances, &$items, $age) {
+  $tids = array();
+
+  // Collect every possible term attached to any of the fieldable entities.
+  foreach ($objects as $id => $object) {
+    foreach ($items[$id] as $delta => $item) {
+      // Force the array key to prevent duplicates.
+      $tids[$item['value']] = $item['value'];
+    }
+  }
+  if ($tids) {
+    $terms = array();
+
+    // Avoid calling taxonomy_term_load_multiple because it could lead to
+    // circular references.
+    $query = db_select('taxonomy_term_data', 't');
+    $query->fields('t');
+    $query->condition('t.tid', $tids, 'IN');
+    $query->addTag('term_access');
+    $terms = $query->execute()->fetchAllAssoc('tid');
+
+    // Iterate through the fieldable entities again to attach the loaded term data.
+    foreach ($objects as $id => $object) {
+      foreach ($items[$id] as $delta => $item) {
+        // Check whether the taxonomy term field instance value could be loaded.
+        if (isset($terms[$item['value']])) {
+          // Replace the instance value with the term data.
+          $items[$id][$delta]['taxonomy_term'] = $terms[$item['value']];
+        }
+        // Otherwise, unset the instance value, since the term does not exist.
+        else {
+          unset($items[$id][$delta]);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Helper function that clears field cache when terms are updated or deleted
+ */
+function _taxonomy_clean_field_cache($term) {
+  $cids = array();
+
+  // Determine object types that are not cacheable.
+  $obj_types = array();
+  foreach (field_info_fieldable_types() as $obj_type => $info) {
+    if (!$info['cacheable']) {
+      $obj_types[] = $obj_type;
+    }
+  }
+
+  // Load info for all taxonomy term fields.
+  $fields = field_read_fields(array('type' => 'taxonomy_term'));
+  foreach ($fields as $field_name => $field) {
+
+    // Assemble an array of vocabulary IDs that are used in this field.
+    foreach ($field['settings']['allowed_values'] as $tree) {
+      $vids[$tree['vid']] = $tree['vid'];
+    }
+    
+    // Check this term's vocabulary against those used for the field's options.
+    if (in_array($term->vid, $vids)) {
+      $conditions = array(array('value', $term->tid));
+      if ($obj_types) {
+        $conditions[] = array('type', $obj_types, 'NOT IN');
+      }
+      $results = field_attach_query($field['field_name'], $conditions, FIELD_QUERY_NO_LIMIT);
+      foreach ($results as $obj_type => $objects) {
+        foreach (array_keys($objects) as $id) {
+          $cids[] = "field:$obj_type:$id";
+        }
+      }
+    }
+  }
+  if ($cids) {
+    cache_clear_all($cids, 'cache_field');
+  }
 }
 
 /**
