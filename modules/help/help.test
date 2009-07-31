@@ -1,5 +1,5 @@
 <?php
-// $Id: help.test,v 1.9 2009/07/21 02:01:08 webchick Exp $
+// $Id: help.test,v 1.10 2009/07/31 19:44:20 dries Exp $
 
 class HelpTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -64,8 +64,6 @@ class HelpTestCase extends DrupalWebTestCase {
 //            continue;
 //          }
           $this->assertTitle($name . ' | Drupal', t('[' . $module . '] Title was displayed'));
-          $this->assertRaw('<h2>' . t($name) . '</h2>', t('[' . $module . '] Heading was displayed'));
-          $this->assertText(t('Home ' . $crumb . ' Administer ' . $crumb . ' Help'), t('[' . $module . '] Breadcrumbs were displayed'));
         }
       }
     }

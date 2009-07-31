@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.pages.inc,v 1.22 2009/07/28 10:09:25 dries Exp $
+// $Id: comment.pages.inc,v 1.23 2009/07/31 19:44:09 dries Exp $
 
 /**
  * @file
@@ -73,6 +73,8 @@ function comment_reply($node, $pid = NULL) {
           }
           // Display the parent comment
           $comment = drupal_unpack($comment);
+          $comment->node_type = 'comment_node_' . $node->type;
+          field_attach_load('comment', array($comment->cid => $comment));
           $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
           $build['comment_parent'] = comment_build($comment);
         }

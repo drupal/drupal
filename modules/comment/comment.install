@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.install,v 1.42 2009/07/30 19:27:11 dries Exp $
+// $Id: comment.install,v 1.43 2009/07/31 19:44:09 dries Exp $
 
 /**
  * @file
@@ -295,4 +295,16 @@ function comment_schema() {
   );
 
   return $schema;
+}
+
+/**
+ * Create comment Field API bundles.
+ */
+function comment_update_7005() {
+  $ret = array();
+
+  foreach (node_type_get_types() as $info) {
+    field_attach_create_bundle('comment_node_' . $info->type);
+  }
+  return $ret;
 }
