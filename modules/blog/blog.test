@@ -128,7 +128,6 @@ class BlogTestCase extends DrupalWebTestCase {
     if ($response2 == 200) {
       $this->assertTitle(t('Blog | Drupal'), t('Blog help node was displayed'));
       $this->assertText(t('Blog'), t('Blog help node was displayed'));
-      $this->assertText(t('Home ' . $crumb . ' Administer ' . $crumb . ' Help'), t('Breadcrumbs were displayed'));
     }
 
     // Verify the blog block was displayed.
@@ -147,7 +146,6 @@ class BlogTestCase extends DrupalWebTestCase {
     $this->assertResponse($response);
     if ($response == 200) {
       $this->assertTitle('Edit Blog entry ' . $node->title . ' | Drupal', t('Blog edit node was displayed'));
-      $this->assertText(t('Home ' . $crumb . ' @title', array('@title' => $node->title)), t('Breadcrumbs were displayed'));
     }
 
     if ($response == 200) {

@@ -148,7 +148,7 @@ function comment_menu() {
   );
   $items['comment/delete'] = array(
     'title' => 'Delete comment',
-    'page callback' => 'comment_delete',
+    'page callback' => 'comment_delete_page',
     'access arguments' => array('administer comments'),
     'type' => MENU_CALLBACK,
   );
@@ -187,21 +187,58 @@ function comment_menu() {
 }
 
 /**
+ * Implement hook_fieldable_info().
+ */
+function comment_fieldable_info() {
+  $return = array(
+    'comment' => array(
+      'label' => t('Comment'),
+      'object keys' => array(
+        'id' => 'cid',
+        'bundle' => 'node_type',
+      ),
+      'bundle keys' => array(
+        'bundle' => 'type',
+      ),
+      'bundles' => array(),
+    ),
+  );
+  foreach (node_type_get_names() as $type => $name) {
+    $return['comment']['bundles']['comment_node_' . $type] = array(
+      'label' => $name,
+    );
+  }
+  return $return;
+}
+
+
+/**
  * Implement hook_node_type().
  */
 function comment_node_type($op, $info) {
-  $settings = array(
-    'comment',
-    'comment_default_mode',
-    'comment_default_per_page',
-    'comment_anonymous',
-    'comment_subject_field',
-    'comment_preview',
-    'comment_form_location',
-  );
-
   switch ($op) {
+    case 'insert':
+      field_attach_create_bundle('comment_node_' . $info->type);
+      break;
+
+    case 'update':
+      if (!empty($info->old_type) && $info->type != $info->old_type) {
+        field_attach_rename_bundle('comment_node_' . $info->old_type, 'comment_node_' . $info->type);
+      }
+      break;
+
     case 'delete':
+      field_attach_delete_bundle('comment_node_' . $info->type);
+
+      $settings = array(
+        'comment',
+        'comment_default_mode',
+        'comment_default_per_page',
+        'comment_anonymous',
+        'comment_subject_field',
+        'comment_preview',
+        'comment_form_location',
+      );
       foreach ($settings as $setting) {
         variable_del($setting . '_' . $info->type);
       }
@@ -782,6 +819,8 @@ function comment_build_content($comment, $build_mode = 'full') {
     '#markup' => check_markup($comment->comment, $comment->format, '', FALSE),
   );
 
+  $comment->content += field_attach_view('comment', $comment, $build_mode);
+
   if (empty($comment->in_preview)) {
     $comment->content['links']['comment'] = array(
       '#theme' => 'links',
@@ -1009,9 +1048,8 @@ function comment_node_insert($node) {
  * Implement hook_node_delete().
  */
 function comment_node_delete($node) {
-  db_delete('comment')
-    ->condition('nid', $node->nid)
-    ->execute();
+  $cids = db_query('SELECT cid FROM {comment} WHERE nid = :nid', array(':nid' => $node->nid))->fetchCol();
+  comment_delete_multiple($cids);
   db_delete('node_comment_statistics')
     ->condition('nid', $node->nid)
     ->execute();
@@ -1082,13 +1120,8 @@ function comment_user_cancel($edit, $account, $method) {
 
     case 'user_cancel_delete':
       module_load_include('inc', 'comment', 'comment.admin');
-      $result = db_query('SELECT c.cid FROM {comment} c WHERE uid = :uid', array(':uid' => $account->uid))->fetchCol();
-      foreach ($result as $cid) {
-        $comment = comment_load($cid);
-        // Delete the comment and its replies.
-        _comment_delete_thread($comment);
-        _comment_update_node_statistics($comment->nid);
-      }
+      $cids = db_query('SELECT c.cid FROM {comment} c WHERE uid = :uid', array(':uid' => $account->uid))->fetchCol();
+      comment_delete_multiple($cids);
       break;
   }
 }
@@ -1136,6 +1169,14 @@ function comment_save($comment) {
       $comment->$key = $default;
     }
   }
+  // Make sure we have a bundle name.
+  if (!isset($comment->node_type)) {
+    $node = node_load($comment->nid);
+    $comment->node_type = 'comment_node_' . $node->type;
+  }
+
+  field_attach_presave('comment', $comment);
+
   if ($comment->cid) {
     // Update the comment in the database.
     db_update('comment')
@@ -1152,6 +1193,7 @@ function comment_save($comment) {
       ))
       ->condition('cid', $comment->cid)
       ->execute();
+    field_attach_update('comment', $comment);
     // Allow modules to respond to the updating of a comment.
     module_invoke_all('comment_update', $comment);
     // Add an entry to the watchdog log.
@@ -1229,6 +1271,8 @@ function comment_save($comment) {
     // saved node to be propagated to the slave.
     db_ignore_slave();
 
+    field_attach_insert('comment', $comment);
+
     // Tell the other modules a new comment has been submitted.
     module_invoke_all('comment_insert', $comment);
     // Add an entry to the watchdog log.
@@ -1240,6 +1284,42 @@ function comment_save($comment) {
 
   if ($comment->status == COMMENT_PUBLISHED) {
     module_invoke_all('comment_publish', $comment);
+  }
+}
+
+/**
+ * Delete a comment and all its replies.
+ *
+ * @param $cid
+ *   The comment to delete.
+ */
+function comment_delete($cid) {
+  comment_delete_multiple(array($cid));
+}
+
+/**
+ * Delete comments and all their replies.
+ *
+ * @param $cids
+ *   The comment to delete.
+ */
+function comment_delete_multiple($cids) {
+  $comments = comment_load_multiple($cids);
+  if ($comments) {
+
+    // Delete the comments.
+    db_delete('comment')
+      ->condition('cid', array_keys($comments), 'IN')
+      ->execute();
+    foreach ($comments as $comment) {
+      field_attach_delete('comment', $comment);
+      module_invoke_all('comment_delete', $comment);
+
+      // Delete the comment's replies.
+      $child_cids = db_query('SELECT cid FROM {comment} WHERE pid = :cid', array(':cid' => $comment->cid))->fetchCol();
+      comment_delete_multiple($child_cids);
+      _comment_update_node_statistics($comment->nid);
+    }
   }
 }
 
@@ -1366,7 +1446,9 @@ function comment_load_multiple($cids = array(), $conditions = array()) {
   if ($cids || $conditions) {
     $query = db_select('comment', 'c');
     $query->innerJoin('users', 'u', 'c.uid = u.uid');
+    $query->innerJoin('node', 'n', 'c.nid = n.nid');
     $query->addField('u', 'name', 'registered_name');
+    $query->addField('n', 'type', 'node_type');
     $query
       ->fields('c', array('cid', 'nid', 'pid', 'comment', 'subject', 'format', 'timestamp', 'name', 'mail', 'homepage', 'status', 'thread'))
       ->fields('u', array( 'uid', 'signature', 'picture', 'data', 'status'));
@@ -1390,11 +1472,14 @@ function comment_load_multiple($cids = array(), $conditions = array()) {
     $comment = drupal_unpack($comment);
     $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
     $comment->new = node_mark($comment->nid, $comment->timestamp);
+    $comment->node_type = 'comment_node_' . $comment->node_type;
     $comments[$key] = $comment;
   }
 
-  // Invoke hook_comment_load().
   if (!empty($comments)) {
+    // Attach fields.
+    field_attach_load('comment', $comments);
+    // Invoke hook_comment_load().
     module_invoke_all('comment_load', $comments);
   }
   return $comments;
@@ -1752,6 +1837,10 @@ function comment_form(&$form_state, $edit = array()) {
     '#type' => 'value',
     '#value' => !empty($edit['uid']) ? $edit['uid'] : 0,
   );
+  $form['node_type'] = array(
+    '#type' => 'value',
+    '#value' => 'comment_node_' . $node->type,
+  );
 
   // Only show the save button if comment previews are optional or if we are
   // already previewing the submission. However, if there are form errors,
@@ -1775,6 +1864,11 @@ function comment_form(&$form_state, $edit = array()) {
   if (empty($edit['cid']) && empty($edit['pid'])) {
     $form['#action'] = url('comment/reply/' . $edit['nid']);
   }
+
+  $comment = (object) $edit;
+  $comment->node_type = 'comment_node_' . $node->type;
+  $form['#builder_function'] = 'comment_form_submit_build_comment';
+  field_attach_form('comment', $comment, $form, $form_state);
 
   return $form;
 }
@@ -1829,12 +1923,11 @@ function comment_preview($comment) {
   }
 
   if ($comment->pid) {
-    $parent_comment = db_query('SELECT c.*, u.uid, u.name AS registered_name, u.signature, u.picture, u.data FROM {comment} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = :cid AND c.status = :status', array(
-      ':cid' => $comment->pid,
-      ':status' => COMMENT_PUBLISHED,
-      ))->fetchObject();
-
-    $build = comment_build($parent_comment);
+    $build = array();
+    if ($comments = comment_load_multiple(array($comment->pid), array('status' => COMMENT_PUBLISHED))) {
+      $parent_comment = $comments[$comment->pid];
+      $build = comment_build($parent_comment);
+    }
   }
   else {
     $build = node_build($node);
@@ -1851,6 +1944,9 @@ function comment_preview($comment) {
  */
 function comment_form_validate($form, &$form_state) {
   global $user;
+  $comment = (object) $form_state['values'];
+  field_attach_form_validate('comment', $comment, $form, $form_state);
+
   if ($user->uid === 0) {
     foreach (array('name', 'homepage', 'mail') as $field) {
       // Set cookie for 365 days.
@@ -1948,6 +2044,8 @@ function comment_submit($comment) {
  */
 function comment_form_submit_build_comment($form, &$form_state) {
   $comment = comment_submit($form_state['values']);
+
+  field_attach_submit('comment', $comment, $form, $form_state);
 
   $form_state['comment'] = (array)$comment;
   $form_state['rebuild'] = TRUE;

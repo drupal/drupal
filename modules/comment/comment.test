@@ -207,7 +207,7 @@ class CommentHelperCase extends DrupalWebTestCase {
 
     if ($operation == 'delete') {
       $this->drupalPost(NULL, array(), t('Delete comments'));
-      $this->assertText(t('The comments have been deleted.'), t('Operation "' . $operation . '" was performed on comment.'));
+      $this->assertRaw(t('Deleted @count comments.', array('@count' => 1)), t('Operation "' . $operation . '" was performed on comment.'));
     }
     else {
       $this->assertText(t('The update has been performed.'), t('Operation "' . $operation . '" was performed on comment.'));

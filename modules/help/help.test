@@ -64,8 +64,6 @@ class HelpTestCase extends DrupalWebTestCase {
 //            continue;
 //          }
           $this->assertTitle($name . ' | Drupal', t('[' . $module . '] Title was displayed'));
-          $this->assertRaw('<h2>' . t($name) . '</h2>', t('[' . $module . '] Heading was displayed'));
-          $this->assertText(t('Home ' . $crumb . ' Administer ' . $crumb . ' Help'), t('[' . $module . '] Breadcrumbs were displayed'));
         }
       }
     }

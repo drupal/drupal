@@ -244,12 +244,12 @@ class NewDefaultThemeBlocks extends DrupalWebTestCase {
     $this->drupalLogin($admin_user);
 
     // Ensure no other theme's blocks are in the block table yet.
-    $count = db_query_range("SELECT 1 FROM {block} WHERE theme != 'garland'", 0, 1)->fetchField();
-    $this->assertFalse($count, t('Only Garland has blocks.'));
+    $count = db_query_range("SELECT 1 FROM {block} WHERE theme NOT IN ('garland', 'seven')", 0, 1)->fetchField();
+    $this->assertFalse($count, t('Only Garland and Seven have blocks.'));
 
     // Populate list of all blocks for matching against new theme.
     $blocks = array();
-    $result = db_query('SELECT * FROM {block}');
+    $result = db_query("SELECT * FROM {block} WHERE theme = 'garland'");
     foreach ($result as $block) {
       // $block->theme and $block->bid will not match, so remove them.
       unset($block->theme, $block->bid);

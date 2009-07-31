@@ -288,7 +288,6 @@ class ForumTestCase extends DrupalWebTestCase {
     if ($response2 == 200) {
       $this->assertTitle(t('Forum | Drupal'), t('Forum help title was displayed'));
       $this->assertText(t('Forum'), t('Forum help node was displayed'));
-      $this->assertText(t('Home ' . $crumb . ' Administer ' . $crumb . ' Help'), t('Breadcrumbs were displayed'));
     }
 
     // Verify the forum blocks were displayed.
@@ -316,7 +315,6 @@ class ForumTestCase extends DrupalWebTestCase {
     $this->assertResponse($response);
     if ($response == 200) {
       $this->assertTitle('Edit Forum topic ' . $node->title . ' | Drupal', t('Forum edit node was displayed'));
-      $this->assertText(t('Home ' . $crumb . ' @title', array('@title' => $node->title)), t('Breadcrumbs were displayed'));
     }
 
     if ($response == 200) {
