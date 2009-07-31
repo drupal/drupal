@@ -1,0 +1,9 @@
+/* $Id: ie6.css,v 1.1 2009/07/31 19:35:57 dries Exp $ */
+
+ul.menu li,
+ul.menu li a,
+ul.links li,
+ul.links li a,
+#page {
+  height: 1%;
+}
