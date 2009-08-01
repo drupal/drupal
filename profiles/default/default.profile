@@ -114,36 +114,6 @@ function default_profile_site_setup(&$install_state) {
       'pages' => '',
       'cache' => -1,
     ),
-    array(
-      'module' => 'system',
-      'delta' => 'main',
-      'theme' => 'seven',
-      'status' => 1,
-      'weight' => 0,
-      'region' => 'content',
-      'pages' => '',
-      'cache' => -1,
-    ),
-    array(
-      'module' => 'system',
-      'delta' => 'help',
-      'theme' => 'seven',
-      'status' => 1,
-      'weight' => 0,
-      'region' => 'help',
-      'pages' => '',
-      'cache' => -1,
-    ),
-    array(
-      'module' => 'user',
-      'delta' => 'login',
-      'theme' => 'seven',
-      'status' => 1,
-      'weight' => 10,
-      'region' => 'content',
-      'pages' => '',
-      'cache' => -1,
-    ),
   );
   $query = db_insert('block')->fields(array('module', 'delta', 'theme', 'status', 'weight', 'region', 'pages', 'cache'));
   foreach ($values as $record) {
