@@ -137,9 +137,6 @@ function number_field_formatter_info() {
         'scale' => 0,
         'prefix_suffix' => TRUE,
       ),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-      ),
     ),
     'number_decimal' => array(
       'label' => t('default'),
@@ -150,16 +147,10 @@ function number_field_formatter_info() {
         'scale' => 2,
         'prefix_suffix' => TRUE,
       ),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-      ),
     ),
     'number_unformatted' => array(
       'label' => t('unformatted'),
       'field types' => array('number_integer', 'number_decimal', 'number_float'),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-      ),
     ),
   );
 }
@@ -214,10 +205,6 @@ function number_field_widget_info() {
     'number' => array(
       'label' => t('Text field'),
       'field types' => array('number_integer', 'number_decimal', 'number_float'),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-        'default value' => FIELD_BEHAVIOR_DEFAULT,
-      ),
     ),
   );
 }

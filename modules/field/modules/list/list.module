@@ -135,16 +135,10 @@ function list_field_formatter_info() {
     'list_default' => array(
       'label' => t('Default'),
       'field types' => array('list', 'list_boolean', 'list_text', 'list_number'),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-      ),
     ),
     'list_key' => array(
       'label' => t('Key'),
       'field types' => array('list', 'list_boolean', 'list_text', 'list_number'),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-      ),
     ),
   );
 }

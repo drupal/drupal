@@ -47,7 +47,6 @@ function options_field_widget_info() {
       'field types' => array('list', 'list_boolean', 'list_text', 'list_number'),
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_CUSTOM,
-        'default value' => FIELD_BEHAVIOR_DEFAULT,
       ),
     ),
     'options_buttons' => array(
@@ -55,7 +54,6 @@ function options_field_widget_info() {
       'field types' => array('list', 'list_boolean', 'list_text', 'list_number'),
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_CUSTOM,
-        'default value' => FIELD_BEHAVIOR_DEFAULT,
       ),
     ),
     'options_onoff' => array(
@@ -63,7 +61,6 @@ function options_field_widget_info() {
       'field types' => array('list_boolean'),
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_CUSTOM,
-        'default value' => FIELD_BEHAVIOR_DEFAULT,
       ),
     ),
   );

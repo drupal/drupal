@@ -7,14 +7,14 @@
  */
 
 /**
- * Inform the Field API about one or more fieldable types.
+ * Expose fieldable object types.
  *
- * Inform the Field API about one or more fieldable types (object types to
- * which fields can be attached).
+ * Inform the Field API about object types to which fields can be attached.
+ * @see hook_fieldable_info_alter().
  *
  * @return
- *   An array whose keys are fieldable object type names and
- *   whose values are arrays with the following key/value pairs:
+ *   An array whose keys are fieldable object type names and whose values are
+ *   arrays with the following key/value pairs:
  *   - label: The human-readable name of the type.
  *   - object keys: An array describing how the Field API can extract the
  *     informations it needs from the objects of the type.
@@ -109,37 +109,62 @@ function hook_fieldable_info_alter(&$info) {
  * @{
  * Define field types, widget types, and display formatter types.
  *
- * The bulk of the Field Types API are related to field types. A
- * field type represents a particular data storage type (integer,
- * string, date, etc.) that can be attached to a fieldable object.
- * hook_field_info() defines the basic properties of a field type, and
- * a variety of other field hooks are called by the Field Attach API
- * to perform field-type-specific actions.
+ * The bulk of the Field Types API are related to field types. A field type
+ * represents a particular data storage type (integer, string, date, etc.) that
+ * can be attached to a fieldable object. hook_field_info() defines the basic
+ * properties of a field type, and a variety of other field hooks are called by
+ * the Field Attach API to perform field-type-specific actions.
+ * @see hook_field_info().
+ * @see hook_field_info_alter().
+ * @see hook_field_schema().
+ * @see hook_field_load().
+ * @see hook_field_validate().
+ * @see hook_field_presave().
+ * @see hook_field_insert().
+ * @see hook_field_update().
+ * @see hook_field_delete().
+ * @see hook_field_delete_revision().
+ * @see hook_field_sanitize().
  *
- * The Field Types API also defines widget types via
- * hook_field_widget_info(). Widgets are Form API elements with
- * additional processing capabilities. A field module can define
- * widgets that work with its own field types or with any other
- * module's field types. Widget hooks are typically called by the
- * Field Attach API when creating the field form elements during
- * field_attach_form().
- *
- * TODO Display formatters.
+ * The Field Types API also defines two kinds of pluggable handlers: widgets
+ * and formatters, which specify how the field appears in edit forms and in
+ * displayed objects. Widgets and formatters can be implemented by a field-type
+ * module for it's own field types, or by a third-party module to extend the
+ * behavior of existing field types.
+ * @see hook_field_widget_info().
+ * @see hook_field_formatter_info().
  */
 
 /**
  * Define Field API field types.
  *
  * @return
- *   An array whose keys are field type names and whose values are:
- *
- *   label: TODO
- *   description: TODO
- *   settings: TODO
- *   instance_settings: TODO
- *   default_widget: TODO
- *   default_formatter: TODO
- *   behaviors: TODO
+ *   An array whose keys are field type names and whose values are arrays
+ *   describing the field type, with the following key/value pairs:
+ *   - label: The human-readable name of the field type.
+ *   - description: A short description for the field type.
+ *   - settings: An array whose keys are the names of the settings available
+ *     for the field type, and whose values are the default values for those
+ *     settings.
+ *   - instance_settings: An array whose keys are the names of the settings
+ *     available for instances of the field type, and whose values are the
+ *     default values for those settings.
+ *     Instance-level settings can have different values on each field
+ *     instance, and thus allow greater flexibility than field-level settings.
+ *     It is recommended to put settings at the instance level whenever
+ *     possible. Notable exceptions: settings acting on the schema definition,
+ *     or settings that Views needs to use across field instances (e.g. list of
+ *     allowed values).
+ *   - default_widget: The machine name of the default widget to be used by
+ *     instances of this field type, when no widget is specified in the
+ *     instance definition. This widget must be available whenever the field
+ *     type is available (i.e. provided by the field type module, or by a module
+ *     the field type module depends on).
+ *   - default_formatter: The machine name of the default formatter to be used
+ *     by instances of this field type, when no formatter is specified in the
+ *     instance definition. This formatter must be available whenever the field
+ *     type is available (i.e. provided by the field type module, or by a module
+ *     the field type module depends on).
  */
 function hook_field_info() {
   return array(
@@ -151,12 +176,21 @@ function hook_field_info() {
       'default_widget' => 'text_textfield',
       'default_formatter' => 'text_default',
     ),
-    'textarea' => array(
-      'label' => t('Textarea'),
+    'text_long' => array(
+      'label' => t('Long text'),
       'description' => t('This field stores long text in the database.'),
+      'settings' => array('max_length' => ''),
       'instance_settings' => array('text_processing' => 0),
       'default_widget' => 'text_textarea',
       'default_formatter' => 'text_default',
+    ),
+    'text_with_summary' => array(
+      'label' => t('Long text and summary'),
+      'description' => t('This field stores long text in the database along with optional summary text.'),
+      'settings' => array('max_length' => ''),
+      'instance_settings' => array('text_processing' => 1, 'display_summary' => 0),
+      'default_widget' => 'text_textarea_with_summary',
+      'default_formatter' => 'text_summary_or_trimmed',
     ),
   );
 }
@@ -189,8 +223,8 @@ function hook_field_info_alter(&$info) {
  *   A field structure.
  * @return
  *   An associative array with the following keys:
- *   - 'columns': an array of Schema API column specifications, keyed by
- *     column name. This specifies what comprises a value for a given field.
+ *   - columns: An array of Schema API column specifications, keyed by column name.
+ *     This specifies what comprises a value for a given field.
  *     For example, a value for a number field is simply 'value', while a
  *     value for a formatted text field is the combination of 'value' and
  *     'format'.
@@ -198,7 +232,7 @@ function hook_field_info_alter(&$info) {
  *     field settings when possible.
  *     No assumptions should be made on how storage engines internally use the
  *     original column name to structure their storage.
- *   - 'indexes': an array of Schema API indexes definitions. Only columns that
+ *   - indexes: An array of Schema API indexes definitions. Only columns that
  *     appear in the 'columns' array are allowed.
  *     Those indexes will be used as default indexes. Callers of
  *     field_create_field() can specify additional indexes, or, at their own
@@ -240,69 +274,6 @@ function hook_field_schema($field) {
 }
 
 /**
- * Define Field API widget types.
- *
- * @return
- *   An array whose keys are field type names and whose values are:
- *
- *   label: TODO
- *   description: TODO
- *   field types: TODO
- *   settings: TODO
- *   behaviors: TODO
- */
-function hook_field_widget_info() {
-}
-
-/**
- * Perform alterations on Field API widget types.
- *
- * @param $info
- *   Array of informations on widget types exposed by hook_field_widget_info()
- *   implementations.
- */
-function hook_field_widget_info_alter(&$info) {
-  // Add a setting to a widget type.
-  $info['text_textfield']['settings'] += array(
-    'mymodule_additional_setting' => 'default value',
-  );
-
-  // Let a new field type re-use an existing widget.
-  $info['options_select']['field types'][] = 'my_field_type';
-}
-
-/*
- * Define Field API formatter types.
- *
- * @return
- *   An array whose keys are field type names and whose values are:
- *
- *   label: TODO
- *   description: TODO
- *   field types: TODO
- *   behaviors: TODO
- */
-function hook_field_formatter_info() {
-}
-
-/**
- * Perform alterations on Field API formatter types.
- *
- * @param $info
- *   Array of informations on widget types exposed by
- *   hook_field_field_formatter_info() implementations.
- */
-function hook_field_formatter_info_alter(&$info) {
-  // Add a setting to a formatter type.
-  $info['text_default']['settings'] += array(
-    'mymodule_additional_setting' => 'default value',
-  );
-
-  // Let a new field type re-use an existing formatter.
-  $info['text_default']['field types'][] = 'my_field_type';
-}
-
-/**
  * Define custom load behavior for this module's field types.
  *
  * Unlike other field hooks, this hook operates on multiple objects. The
@@ -331,6 +302,73 @@ function hook_field_formatter_info_alter(&$info) {
  *   parameter by reference.
  */
 function hook_field_load($obj_type, $objects, $field, $instances, &$items, $age) {
+  global $language;
+
+  foreach ($objects as $id => $object) {
+    foreach ($items[$id] as $delta => $item) {
+      if (!empty($instances[$id]['settings']['text_processing'])) {
+        // Only process items with a cacheable format, the rest will be
+        // handled by hook_field_sanitize().
+        $format = $item['format'];
+        if (filter_format_allowcache($format)) {
+          $lang = isset($object->language) ? $object->language : $language->language;
+          $items[$id][$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $lang, FALSE, FALSE) : '';
+          if ($field['type'] == 'text_with_summary') {
+            $items[$id][$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $lang, FALSE, FALSE) : '';
+          }
+        }
+      }
+      else {
+        $items[$id][$delta]['safe'] = check_plain($item['value']);
+        if ($field['type'] == 'text_with_summary') {
+          $items[$id][$delta]['safe_summary'] = check_plain($item['summary']);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Define custom sanitize behavior for this module's field types.
+ *
+ * This hook is invoked just before the field values are handed to formatters
+ * for display. Formatters being essentially theme functions, it is important
+ * that any data sanitization happens outside the theme layer.
+ *
+ * @param $obj_type
+ *   The type of $object.
+ * @param $object
+ *   The object for the operation.
+ * @param $field
+ *   The field structure for the operation.
+ * @param $instance
+ *   The instance structure for $field on $object's bundle.
+ * @param $items
+ *   $object->{$field['field_name']}, or an empty array if unset.
+ */
+function hook_field_sanitize($obj_type, $object, $field, $instance, $items) {
+  global $language;
+  foreach ($items as $delta => $item) {
+    // Only sanitize items which were not already processed inside
+    // hook_field_load(), i.e. items with uncacheable text formats, or coming
+    // from a form preview.
+    if (!isset($items[$delta]['safe'])) {
+      if (!empty($instance['settings']['text_processing'])) {
+        $format = $item['format'];
+        $lang = isset($object->language) ? $object->language : $language->language;
+        $items[$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $lang, FALSE) : '';
+        if ($field['type'] == 'text_with_summary') {
+          $items[$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $lang, FALSE) : '';
+        }
+      }
+      else {
+        $items[$delta]['safe'] = check_plain($item['value']);
+        if ($field['type'] == 'text_with_summary') {
+          $items[$delta]['safe_summary'] = check_plain($item['summary']);
+        }
+      }
+    }
+  }
 }
 
 /**
@@ -462,23 +500,6 @@ function hook_field_delete_revision($obj_type, $object, $field, $instance, $item
 }
 
 /**
- * Define custom sanitize behavior for this module's field types.
- *
- * @param $obj_type
- *   The type of $object.
- * @param $object
- *   The object for the operation.
- * @param $field
- *   The field structure for the operation.
- * @param $instance
- *   The instance structure for $field on $object's bundle.
- * @param $items
- *   $object->{$field['field_name']}, or an empty array if unset.
- */
-function hook_field_sanitize($obj_type, $object, $field, $instance, $items) {
-}
-
-/**
  * Define custom prepare_translation behavior for this module's field types.
  *
  * TODO: This hook may or may not survive in Field API.
@@ -495,6 +516,92 @@ function hook_field_sanitize($obj_type, $object, $field, $instance, $items) {
  *   $object->{$field['field_name']}, or an empty array if unset.
  */
 function hook_field_prepare_translation($obj_type, $object, $field, $instance, $items) {
+}
+
+/**
+ * Expose Field API widget types.
+ *
+ * Widgets are Form API elements with additional processing capabilities.
+ * Widget hooks are typically called by the Field Attach API during the
+ * creation of the field form structure with field_attach_form().
+ * @see hook_field_widget_info_alter().
+ * @see hook_field_widget().
+ * @see hook_field_widget_error().
+ *
+ * @return
+ *   An array describing the widget types implemented by the module.
+ *
+ *   The keys are widget type names. To avoid name clashes, widget type
+ *   names should be prefixed with the name of the module that exposes them.
+ *
+ *   The values are arrays describing the widget type, with the following
+ *   key/value pairs:
+ *   - label: The human-readable name of the widget type.
+ *   - description: A short description for the widget type.
+ *   - field types: An array of field types the widget supports.
+ *   - settings: An array whose keys are the names of the settings available
+ *     for the widget type, and whose values are the default values for those
+ *     settings.
+ *   - behaviors: (optional) An array describing behaviors of the formatter.
+ *     - multiple values:
+ *       FIELD_BEHAVIOR_DEFAULT (default) if the widget allows the input of one
+ *       single field value (most common case). The widget will be repeated for
+ *       each value input.
+ *       FIELD_BEHAVIOR_CUSTOM if one single copy of the widget can receive
+ *       several field values. Examples: checkboxes, multiple select,
+ *       comma-separated textfield...
+ *     - default value:
+ *       FIELD_BEHAVIOR_DEFAULT (default) if the widget accepts default values.
+ *       FIELD_BEHAVIOR_NONE if the widget does not support default values.
+ */
+function hook_field_widget_info() {
+    return array(
+    'text_textfield' => array(
+      'label' => t('Text field'),
+      'field types' => array('text'),
+      'settings' => array('size' => 60),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+        'default value' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+    'text_textarea' => array(
+      'label' => t('Text area (multiple rows)'),
+      'field types' => array('text_long'),
+      'settings' => array('rows' => 5),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+        'default value' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+    'text_textarea_with_summary' => array(
+      'label' => t('Text area with a summary'),
+      'field types' => array('text_with_summary'),
+      'settings' => array('rows' => 20, 'summary_rows' => 5),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+        'default value' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+  );
+}
+
+
+/**
+ * Perform alterations on Field API widget types.
+ *
+ * @param $info
+ *   Array of informations on widget types exposed by hook_field_widget_info()
+ *   implementations.
+ */
+function hook_field_widget_info_alter(&$info) {
+  // Add a setting to a widget type.
+  $info['text_textfield']['settings'] += array(
+    'mymodule_additional_setting' => 'default value',
+  );
+
+  // Let a new field type re-use an existing widget.
+  $info['options_select']['field types'][] = 'my_field_type';
 }
 
 /**
@@ -549,6 +656,158 @@ function hook_field_widget(&$form, &$form_state, $field, $instance, $items, $del
  */
 function hook_field_widget_error($element, $error) {
   form_error($element['value'], $error['message']);
+}
+
+/**
+ * Expose Field API formatter types.
+ *
+ * Formatters are mainly theme functions that handle the output of individual
+ * field values. These theme calls are typically triggered during the execution
+ * of drupal_render() on the render structure built by field_attach_view().
+ *
+ * The name of the theme hook invoked when displaying the values is derived
+ * from formatter type names, following the pattern:
+ * field_formatter_FORMATTER_NAME
+ * The module implementing the formatters needs to register those theme hooks
+ * using hook_theme().
+ *
+ * @see hook_field_formatter_info().
+ * @see hook_field_formatter_info_alter().
+ * @see theme_field_formatter_FORMATTER_NAME().
+ *
+ * @return
+ *   An array describing the formatter types implemented by the module.
+ *
+ *   The keys are formatter type names. To avoid name clashes, formatter type
+ *   names should be prefixed with the name of the module that exposes them.
+ *
+ *   The values are arrays describing the formatter type, with the following
+ *   key/value pairs:
+ *   - label: The human-readable name of the formatter type.
+ *   - description: A short description for the formatter type.
+ *   - field types: An array of field types the formatter supports.
+ *   - settings: An array whose keys are the names of the settings available
+ *     for the formatter type, and whose values are the default values for
+ *     those settings.
+ *   - behaviors: (optional) An array describing behaviors of the formatter.
+ *     - multiple values:
+ *       FIELD_BEHAVIOR_DEFAULT (default) if the formatter displays one single
+ *       field value (most common case). The formatter theme will be invoked
+ *       iteratively on each of the field valies.
+ *       FIELD_BEHAVIOR_CUSTOM if one single invocation of the formatter theme
+ *       takes care of displays all the field values. Examples: points on
+ *       a generated graph picture, a Google map, a single link to a popup...
+ */
+function hook_field_formatter_info() {
+  return array(
+    'text_default' => array(
+      'label' => t('Default'),
+      'field types' => array('text', 'text_long', 'text_with_summary'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+    'text_plain' => array(
+      'label' => t('Plain text'),
+      'field types' => array('text', 'text_long', 'text_with_summary'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+
+    // The text_trimmed formatter displays the trimmed version of the
+    // full element of the field. It is intended to be used with text
+    // and text_long fields. It also works with text_with_summary
+    // fields though the text_summary_or_trimmed formatter makes more
+    // sense for that field type.
+    'text_trimmed' => array(
+      'label' => t('Trimmed'),
+      'field types' => array('text', 'text_long', 'text_with_summary'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+
+    // The 'summary or trimmed' field formatter for text_with_summary
+    // fields displays returns the summary element of the field or, if
+    // the summary is empty, the trimmed version of the full element
+    // of the field.
+    'text_summary_or_trimmed' => array(
+      'label' => t('Summary or trimmed'),
+      'field types' => array('text_with_summary'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
+      ),
+    ),
+  );
+}
+
+
+/**
+ * Perform alterations on Field API formatter types.
+ *
+ * @param $info
+ *   Array of informations on formatter types exposed by
+ *   hook_field_field_formatter_info() implementations.
+ */
+function hook_field_formatter_info_alter(&$info) {
+  // Add a setting to a formatter type.
+  $info['text_default']['settings'] += array(
+    'mymodule_additional_setting' => 'default value',
+  );
+
+  // Let a new field type re-use an existing formatter.
+  $info['text_default']['field types'][] = 'my_field_type';
+}
+
+/**
+ * Theme function for a field formatter.
+ *
+ * This is an example of a 'single' formatter, displaying one single field
+ * value (the hook_field_formatter_info() entry uses
+ * 'multiple values' = FIELD_BEHAVIOR_DEFAULT).
+ *
+ * @param $element
+ *   A render structure sub-array, containing the following keys:
+ *   - #item: The field value being displayed.
+ *   - #delta: The index of the value being displayed within the object(s values
+ *     for the field.
+ *   - #field_name: The name of the field being displayed.
+ *   - #bundle: The bundle of the object being displayed.
+ *   - #object: The object being displayed.
+ *   - #object_type: The type of the object being displayed.
+ *   - #formatter: The name of the formatter being used.
+ *   - #settings: The array of formatter settings.
+ */
+function theme_field_formatter_FORMATTER_SINGLE($element) {
+  // This relies on a 'safe' element being prepared in hook_field_sanitize().
+  return $element['#item']['safe'];
+}
+
+/**
+ * Theme function for a field formatter.
+ *
+ * This is an example of a 'single' formatter, displaying all the field values
+ * (the hook_field_formatter_info() entry uses
+ * 'multiple values' = FIELD_BEHAVIOR_CUSTOM).
+ *
+ * @param $element
+ *   A render structure sub-array, containing the following keys:
+ *   - #field_name: The name of the field being displayed.
+ *   - #bundle: The bundle of the object being displayed.
+ *   - #object: The object being displayed.
+ *   - #object_type: The type of the object being displayed.
+ *   - #formatter: The name of the formatter being used.
+ *   - #settings: The array of formatter settings.
+ *   - numeric indexes: the field values being displayed.
+ */
+function theme_field_formatter_FORMATTER_MULTIPLE($element) {
+  $items = array();
+  foreach (element_children($element) as $key) {
+    $items[$key] = $key .':'. $element[$key]['#item']['value'];
+  }
+  $output = implode('|', $items);
+  return $output;
 }
 
 /**

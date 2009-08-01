@@ -103,6 +103,8 @@ function field_default_insert($obj_type, $object, $field, $instance, &$items) {
  *       '#bundle' => $bundle_name,
  *       '#formatter' => $formatter_name,
  *       '#settings' => $formatter_settings,
+ *       '#object' => $object,
+ *       '#object_type' => $obj_type,
  *     ),
  *   );
  */
