@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.55 2009/07/31 21:21:33 dries Exp $
+// $Id: system.api.php,v 1.56 2009/08/01 20:48:59 dries Exp $
 
 /**
  * @file
@@ -650,17 +650,18 @@ function hook_system_info_alter(&$info, $file) {
  * can be selected on the user permissions page and used to grant or restrict
  * access to actions the module performs.
  *
- * @return
- *   An array of permissions where the permission name is the array key and the
- *   corresponding key value is an array of key/value pairs specifying
- *   the permission's title and description
- *
- * The permissions in the array do not need to be wrapped with the function t(),
- * since the string extractor takes care of extracting permission names defined in the perm hook for translation.
- *
  * Permissions are checked using user_access().
  *
  * For a detailed usage example, see page_example.module.
+ * 
+ * @return
+ *   An array of which permission names are the keys and their corresponding
+ *   values are descriptions of each permission.
+ *   The permission names (keys of the array) must not be wrapped with
+ *   the t() function, since the string extractor takes care of
+ *   extracting permission names defined in the perm hook for
+ *   translation. The permission descriptions (values of the array)
+ *   should be wrapped in the t() function so they can be translated.
  */
 function hook_permission() {
   return array(
