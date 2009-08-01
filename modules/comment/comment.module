@@ -154,9 +154,9 @@ function comment_menu() {
   );
   $items['comment/edit/%comment'] = array(
     'title' => 'Edit comment',
-    'page callback' => 'comment_edit',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('comment_form', 2),
     'access callback' => 'comment_access',
-    'page arguments' => array(2),
     'access arguments' => array('edit', 2),
     'type' => MENU_CALLBACK,
   );
@@ -591,7 +591,7 @@ function comment_node_page_additions($node) {
 
   // Append comment form if needed.
   if (user_access('post comments') && $node->comment == COMMENT_NODE_OPEN && (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW) == COMMENT_FORM_BELOW)) {
-    $build = drupal_get_form('comment_form', array('nid' => $node->nid));
+    $build = drupal_get_form('comment_form', (object) array('nid' => $node->nid));
     $additions['comment_form'] = $build;
   }
 
@@ -1620,21 +1620,23 @@ function comment_get_display_page($cid, $node_type) {
  * @see comment_form_validate()
  * @see comment_form_submit()
  */
-function comment_form(&$form_state, $edit = array()) {
+function comment_form(&$form_state, $comment) {
   global $user;
 
   $op = isset($_POST['op']) ? $_POST['op'] : '';
-  $node = node_load($edit['nid']);
+  $node = node_load($comment->nid);
 
   if (!$user->uid && variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
     $form_state['#attached_js'][] = drupal_get_path('module', 'comment') . '/comment.js';
   }
 
+  $comment = (array) $comment;
   // Take into account multi-step rebuilding.
   if (isset($form_state['comment'])) {
-    $edit = $form_state['comment'] + $edit;
+    $comment = $form_state['comment'] + (array) $comment;
   }
-  $edit += array('name' => '', 'mail' => '', 'homepage' => '');
+  $comment += array('name' => '', 'mail' => '', 'homepage' => '');
+  $comment = (object) $comment;
 
   $form = array();
   if (isset($form_state['comment_preview'])) {
@@ -1642,29 +1644,29 @@ function comment_form(&$form_state, $edit = array()) {
   }
 
   if ($user->uid) {
-    if (!empty($edit['cid']) && user_access('administer comments')) {
-      if (!empty($edit['author'])) {
-        $author = $edit['author'];
+    if (!empty($comment->cid) && user_access('administer comments')) {
+      if (!empty($comment->author)) {
+        $author = $comment->author;
       }
-      elseif (!empty($edit['name'])) {
-        $author = $edit['name'];
+      elseif (!empty($comment->name)) {
+        $author = $comment->name;
       }
       else {
-        $author = $edit['registered_name'];
+        $author = $comment->registered_name;
       }
 
-      if (!empty($edit['status'])) {
-        $status = $edit['status'];
+      if (!empty($comment->status)) {
+        $status = $comment->status;
       }
       else {
         $status = 0;
       }
 
-      if (!empty($edit['date'])) {
-        $date = $edit['date'];
+      if (!empty($comment->date)) {
+        $date = $comment->date;
       }
       else {
-        $date = format_date($edit['timestamp'], 'custom', 'Y-m-d H:i O');
+        $date = format_date($comment->timestamp, 'custom', 'Y-m-d H:i O');
       }
 
       $form['admin'] = array(
@@ -1675,7 +1677,7 @@ function comment_form(&$form_state, $edit = array()) {
         '#weight' => -2,
       );
 
-      if ($edit['registered_name'] != '') {
+      if ($comment->registered_name != '') {
         // The comment is by a registered user.
         $form['admin']['author'] = array(
           '#type' => 'textfield',
@@ -1706,7 +1708,7 @@ function comment_form(&$form_state, $edit = array()) {
           '#title' => t('E-mail'),
           '#maxlength' => 64,
           '#size' => 30,
-          '#default_value' => $edit['mail'],
+          '#default_value' => $comment->mail,
           '#description' => t('The content of this field is kept private and will not be shown publicly.'),
         );
         $form['admin']['homepage'] = array(
@@ -1714,7 +1716,7 @@ function comment_form(&$form_state, $edit = array()) {
           '#title' => t('Homepage'),
           '#maxlength' => 255,
           '#size' => 30,
-          '#default_value' => $edit['homepage'],
+          '#default_value' => $comment->homepage,
         );
       }
       $form['admin']['date'] = array(
@@ -1753,21 +1755,21 @@ function comment_form(&$form_state, $edit = array()) {
       '#title' => t('Your name'),
       '#maxlength' => 60,
       '#size' => 30,
-      '#default_value' => $edit['name'] ? $edit['name'] : variable_get('anonymous', t('Anonymous')),
+      '#default_value' => $comment->name ? $comment->name : variable_get('anonymous', t('Anonymous')),
     );
     $form['mail'] = array(
       '#type' => 'textfield',
       '#title' => t('E-mail'),
       '#maxlength' => 64,
       '#size' => 30,
-      '#default_value' => $edit['mail'], '#description' => t('The content of this field is kept private and will not be shown publicly.'),
+      '#default_value' => $comment->mail, '#description' => t('The content of this field is kept private and will not be shown publicly.'),
     );
     $form['homepage'] = array(
       '#type' => 'textfield',
       '#title' => t('Homepage'),
       '#maxlength' => 255,
       '#size' => 30,
-      '#default_value' => $edit['homepage'],
+      '#default_value' => $comment->homepage,
     );
   }
   elseif (variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT) == COMMENT_ANONYMOUS_MUST_CONTACT) {
@@ -1776,7 +1778,7 @@ function comment_form(&$form_state, $edit = array()) {
       '#title' => t('Your name'),
       '#maxlength' => 60,
       '#size' => 30,
-      '#default_value' => $edit['name'] ? $edit['name'] : variable_get('anonymous', t('Anonymous')),
+      '#default_value' => $comment->name ? $comment->name : variable_get('anonymous', t('Anonymous')),
       '#required' => TRUE,
     );
     $form['mail'] = array(
@@ -1784,7 +1786,7 @@ function comment_form(&$form_state, $edit = array()) {
       '#title' => t('E-mail'),
       '#maxlength' => 64,
       '#size' => 30,
-      '#default_value' => $edit['mail'], '#description' => t('The content of this field is kept private and will not be shown publicly.'),
+      '#default_value' => $comment->mail, '#description' => t('The content of this field is kept private and will not be shown publicly.'),
       '#required' => TRUE,
     );
     $form['homepage'] = array(
@@ -1792,7 +1794,7 @@ function comment_form(&$form_state, $edit = array()) {
       '#title' => t('Homepage'),
       '#maxlength' => 255,
       '#size' => 30,
-      '#default_value' => $edit['homepage'],
+      '#default_value' => $comment->homepage,
     );
   }
 
@@ -1801,12 +1803,12 @@ function comment_form(&$form_state, $edit = array()) {
       '#type' => 'textfield',
       '#title' => t('Subject'),
       '#maxlength' => 64,
-      '#default_value' => !empty($edit['subject']) ? $edit['subject'] : '',
+      '#default_value' => !empty($comment->subject) ? $comment->subject : '',
     );
   }
 
-  if (!empty($edit['comment'])) {
-    $default = $edit['comment'];
+  if (!empty($comment->comment)) {
+    $default = $comment->comment;
   }
   else {
     $default = '';
@@ -1817,25 +1819,25 @@ function comment_form(&$form_state, $edit = array()) {
     '#title' => t('Comment'),
     '#rows' => 15,
     '#default_value' => $default,
-    '#text_format' => isset($edit['format']) ? $edit['format'] : FILTER_FORMAT_DEFAULT,
+    '#text_format' => isset($comment->format) ? $comment->format : FILTER_FORMAT_DEFAULT,
     '#required' => TRUE,
   );
 
   $form['cid'] = array(
     '#type' => 'value',
-    '#value' => !empty($edit['cid']) ? $edit['cid'] : NULL,
+    '#value' => !empty($comment->cid) ? $comment->cid : NULL,
   );
   $form['pid'] = array(
     '#type' => 'value',
-    '#value' => !empty($edit['pid']) ? $edit['pid'] : NULL,
+    '#value' => !empty($comment->pid) ? $comment->pid : NULL,
   );
   $form['nid'] = array(
     '#type' => 'value',
-    '#value' => $edit['nid'],
+    '#value' => $comment->nid,
   );
   $form['uid'] = array(
     '#type' => 'value',
-    '#value' => !empty($edit['uid']) ? $edit['uid'] : 0,
+    '#value' => !empty($comment->uid) ? $comment->uid : 0,
   );
   $form['node_type'] = array(
     '#type' => 'value',
@@ -1859,13 +1861,12 @@ function comment_form(&$form_state, $edit = array()) {
     '#weight' => 20,
     '#submit' => array('comment_form_build_preview'),
   );
-  $form['#token'] = 'comment' . $edit['nid'] . (isset($edit['pid']) ? $edit['pid'] : '');
+  $form['#token'] = 'comment' . $comment->nid . (isset($comment->pid) ? $comment->pid : '');
 
-  if (empty($edit['cid']) && empty($edit['pid'])) {
-    $form['#action'] = url('comment/reply/' . $edit['nid']);
+  if (empty($comment->cid) && empty($comment->pid)) {
+    $form['#action'] = url('comment/reply/' . $comment->nid);
   }
 
-  $comment = (object) $edit;
   $comment->node_type = 'comment_node_' . $node->type;
   $form['#builder_function'] = 'comment_form_submit_build_comment';
   field_attach_form('comment', $comment, $form, $form_state);
