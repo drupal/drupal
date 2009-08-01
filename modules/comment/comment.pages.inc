@@ -1,21 +1,10 @@
 <?php
-// $Id: comment.pages.inc,v 1.23 2009/07/31 19:44:09 dries Exp $
+// $Id: comment.pages.inc,v 1.24 2009/08/01 05:58:18 dries Exp $
 
 /**
  * @file
  * User page callbacks for the comment module.
  */
-
-/**
- * A menu callback; build a comment editing form.
- *
- * @param $comment
- *   The comment to be edited.
- * @ingroup forms
- */
-function comment_edit($comment) {
-  return drupal_get_form('comment_form', (array)$comment);
-}
 
 /**
  * This function is responsible for generating a comment reply form.
@@ -48,7 +37,7 @@ function comment_reply($node, $pid = NULL) {
     // The user is previewing a comment prior to submitting it.
     if ($op == t('Preview')) {
       if (user_access('post comments')) {
-        $build['comment_form'] = drupal_get_form('comment_form', array('pid' => $pid, 'nid' => $node->nid));
+        $build['comment_form'] = drupal_get_form('comment_form', (object) array('pid' => $pid, 'nid' => $node->nid));
       }
       else {
         drupal_set_message(t('You are not authorized to post comments.'), 'error');
@@ -95,7 +84,7 @@ function comment_reply($node, $pid = NULL) {
       }
       elseif (user_access('post comments')) {
         $edit = array('nid' => $node->nid, 'pid' => $pid);
-        $build['comment_form'] = drupal_get_form('comment_form', $edit);
+        $build['comment_form'] = drupal_get_form('comment_form', (object) $edit);
       }
       else {
         drupal_set_message(t('You are not authorized to post comments.'), 'error');
