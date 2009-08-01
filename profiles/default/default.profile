@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.60 2009/08/01 14:33:50 dries Exp $
+// $Id: default.profile,v 1.61 2009/08/01 18:32:01 dries Exp $
 
 /**
  * Implement hook_profile_tasks().
@@ -81,36 +81,6 @@ function default_profile_site_setup(&$install_state) {
       'status' => 1,
       'weight' => 0,
       'region' => 'help',
-      'pages' => '',
-      'cache' => -1,
-    ),
-    array(
-      'module' => 'system',
-      'delta' => 'main',
-      'theme' => 'seven',
-      'status' => 1,
-      'weight' => 0,
-      'region' => 'content',
-      'pages' => '',
-      'cache' => -1,
-    ),
-    array(
-      'module' => 'system',
-      'delta' => 'help',
-      'theme' => 'seven',
-      'status' => 1,
-      'weight' => 0,
-      'region' => 'help',
-      'pages' => '',
-      'cache' => -1,
-    ),
-    array(
-      'module' => 'user',
-      'delta' => 'login',
-      'theme' => 'seven',
-      'status' => 1,
-      'weight' => 10,
-      'region' => 'content',
       'pages' => '',
       'cache' => -1,
     ),
