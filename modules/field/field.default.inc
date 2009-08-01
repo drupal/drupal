@@ -1,5 +1,5 @@
 <?php
-// $Id: field.default.inc,v 1.10 2009/07/11 00:56:45 webchick Exp $
+// $Id: field.default.inc,v 1.11 2009/08/01 06:03:12 dries Exp $
 
 /**
  * @file
@@ -103,6 +103,8 @@ function field_default_insert($obj_type, $object, $field, $instance, &$items) {
  *       '#bundle' => $bundle_name,
  *       '#formatter' => $formatter_name,
  *       '#settings' => $formatter_settings,
+ *       '#object' => $object,
+ *       '#object_type' => $obj_type,
  *     ),
  *   );
  */

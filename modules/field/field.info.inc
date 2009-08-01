@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.9 2009/07/30 19:35:47 dries Exp $
+// $Id: field.info.inc,v 1.10 2009/08/01 06:03:12 dries Exp $
 
 /**
  * @file
@@ -213,26 +213,6 @@ function _field_info_collate_fields($reset = FALSE) {
   }
 
   return $info;
-}
-
-/**
- *  Helper function for determining the behavior of a field
- *  with respect to a given operation.
- *
- *  @param $op
- *    The name of the operation.
- *    Currently supported : none
- *    // TODO D7: no use cases (yet ?) - do we want to keep that function ?.
- *  @param $field
- *    The field array.
- *  @return
- *    FIELD_BEHAVIOR_NONE    - do nothing for this operation.
- *    FIELD_BEHAVIOR_CUSTOM  - use the field's callback function.
- *    FIELD_BEHAVIOR_DEFAULT - use field.module default behavior.
- */
-function field_behaviors_field($op, $field) {
-  $info = field_info_field_types($field['type']);
-  return isset($info['behaviors'][$op]) ? $info['behaviors'][$op] : FIELD_BEHAVIOR_DEFAULT;
 }
 
 /**

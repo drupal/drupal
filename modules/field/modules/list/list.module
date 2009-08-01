@@ -1,5 +1,5 @@
 <?php
-// $Id: list.module,v 1.6 2009/05/27 18:33:56 dries Exp $
+// $Id: list.module,v 1.7 2009/08/01 06:03:12 dries Exp $
 
 /**
  * @file
@@ -135,16 +135,10 @@ function list_field_formatter_info() {
     'list_default' => array(
       'label' => t('Default'),
       'field types' => array('list', 'list_boolean', 'list_text', 'list_number'),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-      ),
     ),
     'list_key' => array(
       'label' => t('Key'),
       'field types' => array('list', 'list_boolean', 'list_text', 'list_number'),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-      ),
     ),
   );
 }
