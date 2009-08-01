@@ -210,7 +210,7 @@ function default_profile_site_setup(&$install_state) {
 
   // Create a default vocabulary named "Tags", enabled for the 'article' content type.
   $description = st('Use tags to group articles on similar topics into categories.');
-  $help = st('Enter a comma-separated list of words.');
+  $help = st('Enter a comma-separated list of words to describe your content.');
 
   $vid = db_insert('taxonomy_vocabulary')->fields(array(
     'name' => 'Tags',
