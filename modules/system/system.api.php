@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.57 2009/08/02 11:24:21 dries Exp $
+// $Id: system.api.php,v 1.58 2009/08/02 11:25:18 dries Exp $
 
 /**
  * @file
@@ -555,6 +555,25 @@ function hook_link($type, $object, $build_mode) {
   }
 
   return $links;
+}
+
+/**
+ * Perform alterations before links on a comment are rendered. One popular use of
+ * this hook is to modify/remove links from other modules. If you want to add a link
+ * to the links section of a node, use hook_link instead.
+ *
+ * @param $links
+ *   Nested array of links for the node keyed by providing module.
+ * @param $node
+ *   A node object that contains the links.
+ */
+function hook_link_alter(array &$links, $node) {
+  foreach ($links as $module => $link) {
+    if (strpos($module, 'taxonomy_term') !== FALSE) {
+      // Link back to the forum and not the taxonomy term page
+      $links[$module]['href'] = str_replace('taxonomy/term', 'forum', $link['href']);
+    }
+  }
 }
 
 /**
