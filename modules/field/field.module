@@ -391,8 +391,8 @@ function _field_filter_xss_display_allowed_tags() {
  * @param $item
  *   The field item(s) to be formatted (such as $node->field_foo[0],
  *   or $node->field_foo if the formatter handles multiple values itself)
- * @param $formatter_name
- *   The name of the formatter to use.
+ * @param $formatter_type
+ *   The name of the formatter type to use.
  * @param $node
  *   Optionally, the containing node object for context purposes and
  *   field-instance options.
@@ -402,22 +402,25 @@ function _field_filter_xss_display_allowed_tags() {
  *   It will have been passed through the necessary check_plain() or check_markup()
  *   functions as necessary.
  */
-function field_format($obj_type, $object, $field, $item, $formatter_name = NULL, $formatter_settings = array()) {
+function field_format($obj_type, $object, $field, $item, $formatter_type = NULL, $formatter_settings = array()) {
   if (!is_array($field)) {
     $field = field_info_field($field);
   }
 
   if (field_access('view', $field)) {
-    // Basically, we need $field, $instance, $obj_type, $object to be able to display a value...
+    $field_type = field_info_field_types($field['type']);
+
+    // We need $field, $instance, $obj_type, $object to be able to display a value...
     list(, , $bundle) = field_attach_extract_ids($obj_type, $object);
     $instance = field_info_instance($field['field_name'], $bundle);
 
     $display = array(
-      'type' => $formatter_name,
+      'type' => $formatter_type ? $formatter_type : $field_type['default_formatter'],
       'settings' => $formatter_settings,
     );
-    $display = _field_get_formatter($display, $field);
-    if ($display['type'] && $display['type'] !== 'hidden') {
+    $display['settings'] += field_info_formatter_settings($display['type']);
+
+    if ($display['type'] !== 'hidden') {
       $theme = $formatter['module'] . '_formatter_' . $display['type'];
 
       $element = array(
@@ -427,6 +430,7 @@ function field_format($obj_type, $object, $field, $item, $formatter_name = NULL,
         '#formatter' => $display['type'],
         '#settings' => $display['settings'],
         '#object' => $object,
+        '#object_type' => $obj_type,
         '#delta' => isset($item['#delta']) ? $item['#delta'] : NULL,
       );
 

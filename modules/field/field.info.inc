@@ -17,29 +17,6 @@
  */
 
 /**
- * Return valid formatter type and settings.
- *
- * Backs up to default formatter and settings if the intended formatter is no
- * longer available. This might happen when the formatter has been renamed in
- * the module, or if the module has been disabled since then.
- */
-function _field_get_formatter($display, $field) {
-  if ($display['type'] != 'hidden') {
-    $formatter_type = field_info_formatter_types($display['type']);
-    if (empty($formatter_type)) {
-      $field_type = field_info_field_types($field['type']);
-      $display['type'] = $field_type['default_formatter'];
-      $formatter_type = field_info_formatter_types($display['type']);
-    }
-    $function = $formatter_type['module'] . '_field_formatter_settings';
-    if (drupal_function_exists($function)) {
-      $display['settings'] += $function($display['type']);
-    }
-  }
-  return $display;
-}
-
-/**
  * Collate all information on field types, widget types and related structures.
  *
  * @param $reset
@@ -169,18 +146,16 @@ function _field_info_collate_types($reset = FALSE) {
  * Collate all information on existing fields and instances.
  *
  * @param $reset
- *   If TRUE, clear the cache. The information will be rebuilt from the database
- *   next time it is needed. Defaults to FALSE.
+ *   If TRUE, clear the cache. The information will be rebuilt from the
+ *   database next time it is needed. Defaults to FALSE.
  * @return
  *   If $reset is TRUE, nothing.
  *   If $reset is FALSE, an array containing the following elements:
- *
- *   - fields: array of all defined Field objects, keyed by field
- *     name. Each field has an additional element, bundles, which is
- *     an array of all bundles to which the field is assigned.
- *   - instances: array whose keys are bundle names and whose values
- *     are an array, keyed by field name, of all Instance objects in
- *     that bundle.
+ *   - fields: array of all defined Field objects, keyed by field name. Each
+ *     field has an additional element, bundles, which is an array of all
+ *     bundles to which the field is assigned.
+ *   - instances: array whose keys are bundle names and whose values are an
+ *     array, keyed by field name, of all instances in that bundle.
  */
 function _field_info_collate_fields($reset = FALSE) {
   static $info;
@@ -197,13 +172,23 @@ function _field_info_collate_fields($reset = FALSE) {
     }
     else {
       $info = array(
-        'fields' => field_read_fields(),
-        'instances' => array_fill_keys(array_keys(field_info_bundles()), array()),
+        'fields' => array(),
+        'instances' => array(),
       );
 
+      // Populate fields
+      $fields = field_read_fields();
+      foreach ($fields as $field) {
+        $field = _field_info_prepare_field($field);
+        $info['fields'][$field['field_name']] = $field;
+      }
+
       // Populate instances.
+      $info['instances'] = array_fill_keys(array_keys(field_info_bundles()), array());
       $instances = field_read_instances();
       foreach ($instances as $instance) {
+        $field = $info['fields'][$instance['field_name']];
+        $instance = _field_info_prepare_instance($instance, $field);
         $info['instances'][$instance['bundle']][$instance['field_name']] = $instance;
         $info['fields'][$instance['field_name']]['bundles'][] = $instance['bundle'];
       }
@@ -213,6 +198,69 @@ function _field_info_collate_fields($reset = FALSE) {
   }
 
   return $info;
+}
+
+ /**
+ * Prepare a field definition for the current run-time context.
+ *
+ * Since the field was last saved or updated, new field settings can be
+ * expected.
+ *
+ * @param $field
+ *   The raw field structure as read from the database.
+ */
+function _field_info_prepare_field($field) {
+  // Make sure all expected field settings are present.
+  $field['settings'] += field_info_field_settings($field['type']);
+
+  return $field;
+}
+
+/**
+ * Prepare an instance definition for the current run-time context.
+ *
+ * Since the instance was last saved or updated, a number of things might have
+ * changed: widgets or formatters disabled, new settings expected, new build
+ * modes added...
+ *
+ * @param $instance
+ *   The raw instance structure as read from the database.
+ * @param $field
+ *   The field structure for the instance.
+ */
+function _field_info_prepare_instance($instance, $field) {
+  $field_type = field_info_field_types($field['type']);
+
+  // Make sure all expected instance settings are present.
+  $instance['settings'] += field_info_instance_settings($field['type']);
+
+  // Fallback to default widget if widget type is not available.
+  if (!field_info_widget_types($instance['widget']['type'])) {
+    $instance['widget']['type'] = $field_type['default_widget'];
+  }
+  // Make sure all expected widget settings are present.
+  $instance['widget']['settings'] += field_info_widget_settings($instance['widget']['type']);
+
+  foreach ($instance['display'] as $build_mode => $display) {
+    if ($display['type'] != 'hidden') {
+      // Fallback to default formatter if formatter type is not available.
+      if (!field_info_formatter_types($instance['display'][$build_mode]['type'])) {
+        $instance['display'][$build_mode]['type'] = $field_type['default_formatter'];
+      }
+      // Make sure all expected formatter settings are present.
+      $instance['display'][$build_mode]['settings'] += field_info_formatter_settings($instance['display'][$build_mode]['type']);
+    }
+  }
+
+  // Fallback to 'full' display settings for unspecified build modes.
+  $obj_type = field_info_bundle_entity($instance['bundle']);
+  foreach (field_build_modes($obj_type) as $build_mode => $label) {
+    if (!isset($instance['display'][$build_mode])) {
+      $instance['display'][$build_mode] = $instance['display']['full'];
+    }
+  }
+
+  return $instance;
 }
 
 /**

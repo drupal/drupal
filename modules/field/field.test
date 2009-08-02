@@ -871,6 +871,9 @@ class FieldInfoTestCase extends DrupalWebTestCase {
     parent::setUp('field_sql_storage', 'field', 'field_test');
   }
 
+  /**
+   * Test that field types and field definitions are correcly cached.
+   */
   function testFieldInfo() {
     // Test that field_test module's fields, widgets, and formatters show up.
     $field_test_info = field_test_field_info();
@@ -943,7 +946,93 @@ class FieldInfoTestCase extends DrupalWebTestCase {
     $this->assertTrue($instance < $instances[$instance['field_name']], t('Instance appears in info correctly'));
   }
 
-  // Test that the field_info settings convenience functions work
+  /**
+   * Test that cached field definitions are ready for current runtime context.
+   */
+  function testFieldPrepare() {
+    $field_definition = array(
+      'field_name' => 'field',
+      'type' => 'test_field',
+    );
+    field_create_field($field_definition);
+
+    // Simulate a stored field definition missing a field setting (e.g. a
+    // third-party module adding a new field setting has been enabled, and
+    // existing fields do not know the setting yet).
+    $data = db_result(db_query('SELECT data FROM {field_config} WHERE field_name = :field_name', array(':field_name' => $field_definition['field_name'])));
+    $data = unserialize($data);
+    $data['settings'] = array();
+    db_update('field_config')
+      ->fields(array('data' => serialize($data)))
+      ->condition('field_name', $field_definition['field_name'])
+      ->execute();
+
+    field_cache_clear();
+
+    // Read the field back.
+    $field = field_info_field($field_definition['field_name']);
+
+    // Check that all expected settings are in place.
+    $field_type = field_info_field_types($field_definition['type']);
+    $this->assertIdentical($field['settings'], $field_type['settings'], t('All expected default field settings are present.'));
+  }
+
+  /**
+   * Test that cached instance definitions are ready for current runtime context.
+   */
+  function testInstancePrepare() {
+    $field_definition = array(
+      'field_name' => 'field',
+      'type' => 'test_field',
+    );
+    field_create_field($field_definition);
+    $instance_definition = array(
+      'field_name' => $field_definition['field_name'],
+      'bundle' => FIELD_TEST_BUNDLE,
+    );
+    field_create_instance($instance_definition);
+
+    // Simulate a stored instance definition missing various settings (e.g. a
+    // third-party module adding instance, widget or display settings has been
+    // enabled, but existing instances do not know the new settings).
+    $data = db_result(db_query('SELECT data FROM {field_config_instance} WHERE field_name = :field_name AND bundle = :bundle', array(':field_name' => $instance_definition['field_name'], ':bundle' => $instance_definition['bundle'])));
+    $data = unserialize($data);
+    $data['settings'] = array();
+    $data['widget']['settings'] = 'unavailable_widget';
+    $data['widget']['settings'] = array();
+    $data['display']['full']['type'] = 'unavailable_formatter';
+    $data['display']['full']['settings'] = array();
+    db_update('field_config_instance')
+      ->fields(array('data' => serialize($data)))
+      ->condition('field_name', $instance_definition['field_name'])
+      ->condition('bundle', $instance_definition['bundle'])
+      ->execute();
+
+    field_cache_clear();
+
+    // Read the instance back.
+    $instance = field_info_instance($instance_definition['field_name'], $instance_definition['bundle']);
+
+    // Check that all expected instance settings are in place.
+    $field_type = field_info_field_types($field_definition['type']);
+    $this->assertIdentical($instance['settings'], $field_type['instance_settings'] , t('All expected instance settings are present.'));
+
+    // Check that the default widget is used and expected settings are in place.
+    $this->assertIdentical($instance['widget']['type'], $field_type['default_widget'], t('Unavailable widget replaced with default widget.'));
+    $widget_type = field_info_widget_types($instance['widget']['type']);
+    $this->assertIdentical($instance['widget']['settings'], $widget_type['settings'] , t('All expected widget settings are present.'));
+
+    // Check that the default formatter is used and expected settings are in place.
+    foreach (field_build_modes('test_entity') as $build_mode => $label) {
+      $this->assertIdentical($instance['display'][$build_mode]['type'], $field_type['default_formatter'], t('Unavailable formatter replaced with default formatter in build_mode %build_mode', array('%build_mode' => $build_mode)));
+      $formatter_type = field_info_formatter_types($instance['display'][$build_mode]['type']);
+      $this->assertIdentical($instance['display'][$build_mode]['settings'], $formatter_type['settings'] , t('All expected formatter settings are present in build_mode %build_mode', array('%build_mode' => $build_mode)));
+    }
+  }
+
+  /**
+   * Test that the field_info settings convenience functions work.
+   */
   function testSettingsInfo() {
     $info = field_test_field_info();
     foreach ($info as $type => $data) {
@@ -1355,23 +1444,9 @@ class FieldCrudTestCase extends DrupalWebTestCase {
     );
     field_create_field($field_definition);
 
-    // Simulate a stored field definition missing a field setting (e.g. a
-    // third-party module adding a new field setting has been enabled, and
-    // existing fields do not know the setting yet).
-    $data = db_query('SELECT data FROM {field_config} WHERE field_name = :field_name', array(':field_name' => $field_definition['field_name']))->fetchField();
-    $data = unserialize($data);
-    $data['settings'] = array();
-    db_update('field_config')
-      ->fields(array('data' => serialize($data)))
-      ->condition('field_name', $field_definition['field_name'])
-      ->execute();
-
     // Read the field back.
     $field = field_read_field($field_definition['field_name']);
-
-    // Check that all expected settings are in place.
-    $field_type = field_info_field_types($field_definition['type']);
-    $this->assertIdentical($field['settings'], $field_type['settings'], t('All expected default field settings are present.'));
+    $this->assertTrue($field_definition < $field, t('The field was properly read.'));
   }
 
   /**
@@ -1585,30 +1660,9 @@ class FieldInstanceCrudTestCase extends DrupalWebTestCase {
   function testReadFieldInstance() {
     field_create_instance($this->instance_definition);
 
-    // Simulate a stored instance definition missing various settings (e.g. a
-    // third-party module adding instance, widget or display settings has been
-    // enabled, but existing instances do not know the new settings).
-    $data = db_query('SELECT data FROM {field_config_instance} WHERE field_name = :field_name AND bundle = :bundle', array(':field_name' => $this->instance_definition['field_name'], ':bundle' => $this->instance_definition['bundle']))->fetchField();
-    $data = unserialize($data);
-    $data['settings'] = array();
-    $data['widget']['settings'] = array();
-    $data['display']['full']['settings'] = array();
-    db_update('field_config_instance')
-      ->fields(array('data' => serialize($data)))
-      ->condition('field_name', $this->instance_definition['field_name'])
-      ->condition('bundle', $this->instance_definition['bundle'])
-      ->execute();
-
     // Read the instance back.
     $instance = field_read_instance($this->instance_definition['field_name'], $this->instance_definition['bundle']);
-
-    // Check that all expected settings are in place.
-    $field_type = field_info_field_types($this->field['type']);
-    $widget_type = field_info_widget_types($instance['widget']['type']);
-    $formatter_type = field_info_formatter_types($instance['display']['full']['type']);
-    $this->assertIdentical($instance['settings'], $field_type['instance_settings'] , t('All expected instance settings are present.'));
-    $this->assertIdentical($instance['widget']['settings'], $widget_type['settings'] , t('All expected widget settings are present.'));
-    $this->assertIdentical($instance['display']['full']['settings'], $formatter_type['settings'] , t('All expected formatter settings are present.'));
+    $this->assertTrue($this->instance_definition < $instance, t('The field was properly read.'));
   }
 
   /**

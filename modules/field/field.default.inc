@@ -112,14 +112,9 @@ function field_default_view($obj_type, $object, $field, $instance, $items, $buil
   list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
 
   $addition = array();
+  $display = $instance['display'][$build_mode];
 
-  // If we don't have specific settings for the current build_mode, we use the
-  // (required) 'full' build_mode.
-  $display = isset($instance['display'][$build_mode]) ? $instance['display'][$build_mode] : $instance['display']['full'];
-  // Ensure we have a valid formatter and formatter settings.
-  $display = _field_get_formatter($display, $field);
-
-  if ($display['type'] && $display['type'] !== 'hidden') {
+  if ($display['type'] !== 'hidden') {
     $theme = 'field_formatter_' . $display['type'];
     $single = (field_behaviors_formatter('multiple values', $display) == FIELD_BEHAVIOR_DEFAULT);
 
@@ -174,6 +169,7 @@ function field_default_view($obj_type, $object, $field, $instance, $items, $buil
 
     $addition = array($field['field_name'] => $element);
   }
+
   return $addition;
 }
 

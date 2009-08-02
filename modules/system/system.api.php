@@ -558,25 +558,6 @@ function hook_link($type, $object, $build_mode) {
 }
 
 /**
- * Perform alterations before links on a comment are rendered. One popular use of
- * this hook is to modify/remove links from other modules. If you want to add a link
- * to the links section of a node, use hook_link instead.
- *
- * @param $links
- *   Nested array of links for the node keyed by providing module.
- * @param $node
- *   A node object that contains the links.
- */
-function hook_link_alter(array &$links, $node) {
-  foreach ($links as $module => $link) {
-    if (strpos($module, 'taxonomy_term') !== FALSE) {
-      // Link back to the forum and not the taxonomy term page
-      $links[$module]['href'] = str_replace('taxonomy/term', 'forum', $link['href']);
-    }
-  }
-}
-
-/**
  * Perform alterations profile items before they are rendered. You may omit/add/re-sort/re-categorize, etc.
  *
  * @param $account
