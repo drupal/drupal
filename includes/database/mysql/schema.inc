@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.21 2009/07/09 10:12:14 dries Exp $
+// $Id: schema.inc,v 1.22 2009/08/02 08:16:16 webchick Exp $
 
 /**
  * @file
@@ -349,9 +349,6 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function prepareComment($comment, $length = NULL) {
-    // Decode HTML-encoded comments.
-    $comment = decode_entities(strip_tags($comment));
-
     // Work around a bug in some versions of PDO, see http://bugs.php.net/bug.php?id=41125
     $comment = str_replace("'", '’', $comment);
 
