@@ -1101,9 +1101,11 @@ function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
  *   A string containing the directory $source should be copied to. If this is
  *   not provided or is not writable, the temporary directory will be used.
  * @param $replace
- *   A boolean indicating whether an existing file of the same name in the
- *   destination directory should overwritten. A false value will generate a
- *   new, unique filename in the destination directory.
+ *   Replace behavior when the destination file already exists:
+ *   - FILE_EXISTS_REPLACE: Replace the existing file.
+ *   - FILE_EXISTS_RENAME: Append _{incrementing number} until the filename is
+ *     unique.
+ *   - FILE_EXISTS_ERROR: Do nothing and return FALSE.
  * @return
  *   An object containing the file information if the upload succeeded, FALSE
  *   in the event of an error, or NULL if no file was uploaded.
