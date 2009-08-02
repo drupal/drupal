@@ -349,9 +349,6 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function prepareComment($comment, $length = NULL) {
-    // Decode HTML-encoded comments.
-    $comment = decode_entities(strip_tags($comment));
-
     // Work around a bug in some versions of PDO, see http://bugs.php.net/bug.php?id=41125
     $comment = str_replace("'", '’', $comment);
 

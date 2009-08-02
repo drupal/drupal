@@ -84,7 +84,7 @@ function block_schema() {
         'length' => 64,
         'not null' => TRUE,
         'default' => '',
-        'description' => 'Custom title for the block. (Empty string will use block default title, &lt;none&gt; will remove the title, text will cause block to use specified title.)',
+        'description' => 'Custom title for the block. (Empty string will use block default title, <none> will remove the title, text will cause block to use specified title.)',
       ),
       'cache' => array(
         'type' => 'int',

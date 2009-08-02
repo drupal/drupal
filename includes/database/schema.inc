@@ -25,8 +25,8 @@
  *
  * The following keys are defined:
  *
- *   - 'description': A string describing this table and its purpose.
- *     References to other tables should be enclosed in
+ *   - 'description': A string in non-markup plain text describing this table
+ *     and its purpose. References to other tables should be enclosed in
  *     curly-brackets. For example, the node_revisions table
  *     description field might contain "Stores per-revision title and
  *     body data for each {node}."
@@ -34,8 +34,8 @@
  *     that describes the table's database columns. The specification
  *     is also an array. The following specification parameters are defined:
  *
- *     - 'description': A string describing this field and its purpose.
- *       References to other tables should be enclosed in
+ *     - 'description': A string in non-markup plain text describing this field
+ *       and its purpose. References to other tables should be enclosed in
  *       curly-brackets. For example, the node table vid field
  *       description might contain "Always holds the largest (most
  *       recent) {node_revision}.vid value for this nid."
@@ -44,8 +44,8 @@
  *       just map to the according database engine specific
  *       datatypes. Use 'serial' for auto incrementing fields. This
  *       will expand to 'int auto_increment' on mysql.
- *     - 'serialize': A boolean indicating whether the field will be stored
-         as a serialized string.
+ *     - 'serialize': A boolean indicating whether the field will be stored as
+ *       a serialized string.
  *     - 'size': The data size: 'tiny', 'small', 'medium', 'normal',
  *       'big'. This is a hint about the largest value the field will
  *       store and determines which of the database engine specific
@@ -530,8 +530,6 @@ abstract class DatabaseSchema {
    *   The prepared comment.
    */
   public function prepareComment($comment, $length = NULL) {
-    // Decode HTML-encoded comments.
-    $comment = decode_entities(strip_tags($comment));
     return $this->connection->quote($comment);
   }
 }
