@@ -427,13 +427,13 @@ function taxonomy_term_save($term) {
   if (!empty($term->tid) && $term->name) {
     $status = drupal_write_record('taxonomy_term_data', $term, 'tid');
     field_attach_update('taxonomy_term', $term);
-    module_invoke_all('taxonomy_term_insert', $term);
+    module_invoke_all('taxonomy_term_update', $term);
   }
   else {
     $status = drupal_write_record('taxonomy_term_data', $term);
     _taxonomy_clean_field_cache($term);
     field_attach_insert('taxonomy_term', $term);
-    module_invoke_all('taxonomy_term_update', $term);
+    module_invoke_all('taxonomy_term_insert', $term);
   }
 
   db_delete('taxonomy_term_relation')
