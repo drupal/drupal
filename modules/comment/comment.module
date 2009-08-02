@@ -822,56 +822,9 @@ function comment_build_content($comment, $build_mode = 'full') {
   $comment->content += field_attach_view('comment', $comment, $build_mode);
 
   if (empty($comment->in_preview)) {
-    $links = array();
-    $node = node_load($comment->nid);
-    if ($node->comment == COMMENT_NODE_OPEN) {
-      if (user_access('administer comments') && user_access('post comments')) {
-        $links['comment_delete'] = array(
-          'title' => t('delete'),
-          'href' => "comment/delete/$comment->cid",
-          'html' => TRUE,
-        );
-        $links['comment_edit'] = array(
-          'title' => t('edit'),
-          'href' => "comment/edit/$comment->cid",
-          'html' => TRUE,
-        );
-        $links['comment_reply'] = array(
-          'title' => t('reply'),
-          'href' => "comment/reply/$comment->nid/$comment->cid",
-          'html' => TRUE,
-        );
-        if ($comment->status == COMMENT_NOT_PUBLISHED) {
-          $links['comment_approve'] = array(
-            'title' => t('approve'),
-            'href' => "comment/approve/$comment->cid",
-            'html' => TRUE,
-          );
-        }
-      }
-      elseif (user_access('post comments')) {
-        if (comment_access('edit', $comment)) {
-          $links['comment_edit'] = array(
-            'title' => t('edit'),
-            'href' => "comment/edit/$comment->cid",
-            'html' => TRUE,
-          );
-        }
-        $links['comment_reply'] = array(
-          'title' => t('reply'),
-          'href' => "comment/reply/$comment->nid/$comment->cid",
-          'html' => TRUE,
-        );
-      }
-      else {
-        $links['comment_forbidden']['title'] = theme('comment_post_forbidden', $node);
-        $links['comment_forbidden']['html'] = TRUE;
-      }
-    }
-
     $comment->content['links']['comment'] = array(
       '#theme' => 'links',
-      '#links' => $links,
+      '#links' => comment_links($comment),
       '#attributes' => array('class' => 'links inline'),
     );
   }
@@ -1368,6 +1321,80 @@ function comment_delete_multiple($cids) {
       _comment_update_node_statistics($comment->nid);
     }
   }
+}
+
+/**
+ * Implement hook_link().
+ */
+function comment_link($type, $object, $build_mode) {
+  if ($type == 'comment') {
+    $links = comment_links($object, FALSE);
+    return $links;
+  }
+}
+
+/**
+ * Build command links for a comment (e.g.\ edit, reply, delete) with respect to the current user's access permissions.
+ *
+ * @param $comment
+ *   The comment to which the links will be related.
+ * @return
+ *   An associative array containing the links.
+ */
+function comment_links(&$comment) {
+  global $user;
+  $links = array();
+
+  $node = node_load($comment->nid);
+  if ($node->comment == COMMENT_NODE_OPEN) {
+    if (user_access('administer comments') && user_access('post comments')) {
+      $links['comment_delete'] = array(
+        'title' => t('delete'),
+        'href' => "comment/delete/$comment->cid",
+        'html' => TRUE,
+      );
+      $links['comment_edit'] = array(
+        'title' => t('edit'),
+        'href' => "comment/edit/$comment->cid",
+        'html' => TRUE,
+      );
+      $links['comment_reply'] = array(
+        'title' => t('reply'),
+        'href' => "comment/reply/$comment->nid/$comment->cid",
+        'html' => TRUE,
+      );
+      if ($comment->status == COMMENT_NOT_PUBLISHED) {
+        $links['comment_approve'] = array(
+          'title' => t('approve'),
+          'href' => "comment/approve/$comment->cid",
+          'html' => TRUE,
+        );
+      }
+    }
+    elseif (user_access('post comments')) {
+      if (comment_access('edit', $comment)) {
+        $links['comment_edit'] = array(
+          'title' => t('edit'),
+          'href' => "comment/edit/$comment->cid",
+          'html' => TRUE,
+        );
+      }
+      $links['comment_reply'] = array(
+        'title' => t('reply'),
+        'href' => "comment/reply/$comment->nid/$comment->cid",
+        'html' => TRUE,
+      );
+    }
+    else {
+      $node = node_load($comment->nid);
+      $links['comment_forbidden']['title'] = theme('comment_post_forbidden', $node);
+      $links['comment_forbidden']['html'] = TRUE;
+    }
+  }
+
+
+
+  return $links;
 }
 
 /**
