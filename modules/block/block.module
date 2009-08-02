@@ -79,7 +79,7 @@ function block_help($path, $arg) {
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@block">Block module</a>.', array('@block' => 'http://drupal.org/handbook/modules/block/')) . '</p>';
       return $output;
     case 'admin/structure/block':
-      $output = '<p>' . t('This page provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions. To change the region or order of a block, grab a drag-and-drop handle under the <em>Block</em> column and drag the block to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Since not all themes implement the same regions, or display regions in the same way, blocks are positioned on a per-theme basis. Remember that your changes will not be saved until you click the <em>Save blocks</em> button at the bottom of the page.') . '</p>';
+      $output = '<p>' . t('This page provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions. Since not all themes implement the same regions, or display regions in the same way, blocks are positioned on a per-theme basis. Remember that your changes will not be saved until you click the <em>Save blocks</em> button at the bottom of the page.') . '</p>';
       $output .= '<p>' . t('Click the <em>configure</em> link next to each block to configure its specific title and visibility settings. Use the <a href="@add-block">add block page</a> to create a custom block.', array('@add-block' => url('admin/structure/block/add'))) . '</p>';
       return $output;
     case 'admin/structure/block/add':

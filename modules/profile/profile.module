@@ -44,7 +44,7 @@ function profile_help($path, $arg) {
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@profile">Profile module</a>.', array('@profile' => 'http://drupal.org/handbook/modules/profile/')) . '</p>';
       return $output;
     case 'admin/settings/profile':
-      return '<p>' . t("This page displays a list of the existing custom profile fields to be displayed on a user's <em>My Account</em> page. To provide structure, similar or related fields may be placed inside a category. To add a new category (or edit an existing one), edit a profile field and provide a new category name. To change the category of a field or the order of fields within a category, grab a drag-and-drop handle under the Title column and drag the field to a new location in the list. (Grab a handle by clicking and holding the mouse while hovering over a handle icon.) Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.") . '</p>';
+      return '<p>' . t("This page displays a list of the existing custom profile fields to be displayed on a user's <em>My Account</em> page. To provide structure, similar or related fields may be placed inside a category. To add a new category (or edit an existing one), edit a profile field and provide a new category name. Remember that your changes will not be saved until you click the <em>Save configuration</em> button at the bottom of the page.") . '</p>';
   }
 }
 
