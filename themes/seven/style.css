@@ -340,7 +340,7 @@ ul.secondary li.active a.active {
   border-bottom: 1px solid #ccc;
   margin-left: 0;
   margin-bottom: 10px;
-  background: url(images/list-item.png) no-repeat;
+  background: url(images/list-item.png) no-repeat 0 3px;
   list-style-type: none;
   list-style-image: none;
 }
