@@ -2361,6 +2361,36 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
+   * Assert that a checkbox field in the current page is checked.
+   *
+   * @param $id
+   *   Id of field to assert.
+   * @param $message
+   *   Message to display.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertFieldChecked($id, $message = '') {
+    $elements = $this->xpath('//input[@id="' . $id . '"]');
+    return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), $message ? $message : t('Checkbox field @id is checked.', array('@id' => $id)), t('Browser'));
+  }
+
+  /**
+   * Assert that a checkbox field in the current page is not checked.
+   *
+   * @param $id
+   *   Id of field to assert.
+   * @param $message
+   *   Message to display.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertNoFieldChecked($id, $message = '') {
+    $elements = $this->xpath('//input[@id="' . $id . '"]');
+    return $this->assertTrue(isset($elements[0]) && empty($elements[0]['checked']), $message ? $message : t('Checkbox field @id is not checked.', array('@id' => $id)), t('Browser'));
+  }
+
+  /**
    * Assert that a field exists with the given name or id.
    *
    * @param $field

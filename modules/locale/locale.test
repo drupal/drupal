@@ -79,16 +79,13 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
     // Check if we can change the default language.
     $path = 'admin/international/language';
     $this->drupalGet($path);
-    // Set up the raw HTML strings we need to search for.
-    $elements = $this->xpath('//input[@id="edit-site-default-en"]');
-    $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), t('English is the default language.'));
+    $this->assertFieldChecked('edit-site-default-en', t('English is the default language.'));
     // Change the default language.
     $edit = array(
       'site_default' => $langcode,
     );
     $this->drupalPost($path, $edit, t('Save configuration'));
-    $elements = $this->xpath('//input[@id="edit-site-default-en"]');
-    $this->assertTrue(isset($elements[0]) && empty($elements[0]['checked']), t('Default language updated.'));
+    $this->assertNoFieldChecked('edit-site-default-en', t('Default language updated.'));
     $this->assertEqual($this->getUrl(), url('admin/international/language', array('absolute' => TRUE)), t('Correct page redirection.'));
 
     // Ensure we can't delete the default language.
@@ -102,16 +99,14 @@ class LocaleConfigurationTest extends DrupalWebTestCase {
       'enabled[en]' => FALSE,
     );
     $this->drupalPost($path, $edit, t('Save configuration'));
-    $elements = $this->xpath('//input[@id="edit-enabled-en"]');
-    $this->assertTrue(isset($elements[0]) && empty($elements[0]['checked']), t('Language disabled.'));
+    $this->assertNoFieldChecked('edit-enabled-en', t('Language disabled.'));
 
     // Set disabled language to be the default and ensure it is re-enabled.
     $edit = array(
       'site_default' => 'en',
     );
     $this->drupalPost($path, $edit, t('Save configuration'));
-    $elements = $this->xpath('//input[@id="edit-enabled-en"]');
-    $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), t('Default language re-enabled.'));
+    $this->assertFieldChecked('edit-enabled-en', t('Default language re-enabled.'));
 
     // Ensure 'edit' link works.
     $this->clickLink(t('edit'));
