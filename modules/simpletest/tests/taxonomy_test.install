@@ -10,14 +10,9 @@
  * Implement hook_schema().
  */
 function taxonomy_test_schema() {
-  $schema['term_antonym'] = array(
-    'description' => 'Stores term antonyms.',
+  $schema['taxonomy_term_antonym'] = array(
+    'description' => 'Stores term antonym.',
     'fields' => array(
-      'taid' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique term antonym ID.',
-      ),
       'tid' => array(
         'type' => 'int',
         'unsigned' => TRUE,
@@ -33,11 +28,7 @@ function taxonomy_test_schema() {
         'description' => 'The name of the antonym.',
       ),
     ),
-    'indexes' => array(
-      'tid' => array('tid'),
-      'name_tid' => array('name', 'tid'),
-    ),
-    'primary key' => array('taid'),
+    'primary key' => array('tid'),
   );
 
   return $schema;

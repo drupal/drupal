@@ -705,26 +705,26 @@ class TaxonomyHooksTestCase extends TaxonomyWebTestCase {
     // Create a term with one antonym.
     $edit = array(
       'name' => $this->randomName(),
-      'antonyms' => 'Long',
+      'antonym' => 'Long',
     );
     $this->drupalPost('admin/structure/taxonomy/' . $vocabulary->vid . '/add', $edit, t('Save'));
     $term = reset(taxonomy_get_term_by_name($edit['name']));
-    $this->assertEqual($term->antonyms[0], $edit['antonyms'], t('Antonyms were loaded into the term object'));
+    $this->assertEqual($term->antonym, $edit['antonym'], t('Antonym was loaded into the term object'));
 
     // Update the term with a different antonym.
     $edit = array(
       'name' => $this->randomName(),
-      'antonyms' => 'Short',
+      'antonym' => 'Short',
     );
     $this->drupalPost('taxonomy/term/' . $term->tid . '/edit', $edit, t('Save'));
     taxonomy_terms_static_reset();
     $term = taxonomy_term_load($term->tid);
-    $this->assertTrue(in_array($edit['antonyms'], $term->antonyms), t('Antonym was successfully edited'));
+    $this->assertEqual($edit['antonym'], $term->antonym, t('Antonym was successfully edited'));
 
     // Delete the term.
     taxonomy_term_delete($term->tid);
-    $antonyms = db_query('SELECT taid FROM {term_antonym} WHERE tid = :tid', array(':tid' => $term->tid))->fetchField();
-    $this->assertFalse($antonyms, t('The antonyms were deleted from the database.'));
+    $antonym = db_query('SELECT tid FROM {taxonomy_term_antonym} WHERE tid = :tid', array(':tid' => $term->tid))->fetchField();
+    $this->assertFalse($antonym, t('The antonym were deleted from the database.'));
   }
 }
 
