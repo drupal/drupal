@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.32 2009/07/14 10:22:17 dries Exp $
+// $Id: theme.maintenance.inc,v 1.33 2009/08/03 03:04:33 webchick Exp $
 
 /**
  * @file
@@ -238,11 +238,11 @@ function template_preprocess_maintenance_page(&$variables) {
 
   // Setup layout variable.
   $variables['layout'] = 'none';
-  if (!empty($variables['left'])) {
-    $variables['layout'] = 'left';
+  if (!empty($variables['sidebar_first'])) {
+    $variables['layout'] = 'first';
   }
-  if (!empty($variables['right'])) {
-    $variables['layout'] = ($variables['layout'] == 'left') ? 'both' : 'right';
+  if (!empty($variables['sidebar_second'])) {
+    $variables['layout'] = ($variables['layout'] == 'first') ? 'both' : 'second';
   }
 
   // Construct page title

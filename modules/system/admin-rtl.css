@@ -1,7 +1,18 @@
-/* $Id: admin-rtl.css,v 1.5 2007/12/22 23:24:25 goba Exp $ */
+/* $Id: admin-rtl.css,v 1.6 2009/08/03 03:04:33 webchick Exp $ */
 
 div.admin-panel .body {
   padding: 0 8px 2px 4px;
+}
+
+div.admin .left {
+  float: right;
+  margin-left: 0;
+  margin-right: 1em;
+}
+div.admin .right {
+  float: left;
+  margin-left: 1em;
+  margin-right: 0;
 }
 
 div.admin .expert-link {

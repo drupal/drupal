@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.501 2009/07/30 19:57:09 dries Exp $
+// $Id: theme.inc,v 1.502 2009/08/03 03:04:33 webchick Exp $
 
 /**
  * @file
@@ -1898,11 +1898,11 @@ function template_preprocess_page(&$variables) {
 
   // Set up layout variable.
   $variables['layout'] = 'none';
-  if (!empty($variables['page']['left'])) {
-    $variables['layout'] = 'left';
+  if (!empty($variables['page']['sidebar_first'])) {
+    $variables['layout'] = 'first';
   }
-  if (!empty($variables['page']['right'])) {
-    $variables['layout'] = ($variables['layout'] == 'left') ? 'both' : 'right';
+  if (!empty($variables['page']['sidebar_second'])) {
+    $variables['layout'] = ($variables['layout'] == 'first') ? 'both' : 'second';
   }
 
   // Construct page title

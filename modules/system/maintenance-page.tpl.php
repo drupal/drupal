@@ -1,5 +1,5 @@
 <?php
-// $Id: maintenance-page.tpl.php,v 1.7 2009/05/28 16:44:06 webchick Exp $
+// $Id: maintenance-page.tpl.php,v 1.8 2009/08/03 03:04:33 webchick Exp $
 
 /**
  * @file
@@ -57,10 +57,10 @@
 
     <div id="container" class="clearfix">
 
-      <?php if (!empty($left)): ?>
-        <div id="sidebar-left" class="column sidebar">
-          <?php print $left; ?>
-        </div> <!-- /sidebar-left -->
+      <?php if (!empty($sidebar_first)): ?>
+        <div id="sidebar-first" class="column sidebar">
+          <?php print $sidebar_first; ?>
+        </div> <!-- /sidebar-first -->
       <?php endif; ?>
 
       <div id="main" class="column"><div id="main-squeeze">
@@ -75,10 +75,10 @@
 
       </div></div> <!-- /main-squeeze /main -->
 
-      <?php if (!empty($right)): ?>
-        <div id="sidebar-right" class="column sidebar">
-          <?php print $right; ?>
-        </div> <!-- /sidebar-right -->
+      <?php if (!empty($sidebar_second)): ?>
+        <div id="sidebar-second" class="column sidebar">
+          <?php print $sidebar_second; ?>
+        </div> <!-- /sidebar-second -->
       <?php endif; ?>
 
     </div> <!-- /container -->

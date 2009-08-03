@@ -1,5 +1,5 @@
 <?php
-// $Id: default.profile,v 1.61 2009/08/01 18:32:01 dries Exp $
+// $Id: default.profile,v 1.62 2009/08/03 03:04:34 webchick Exp $
 
 /**
  * Implement hook_profile_tasks().
@@ -40,7 +40,7 @@ function default_profile_site_setup(&$install_state) {
       'theme' => 'garland',
       'status' => 1,
       'weight' => 0,
-      'region' => 'left',
+      'region' => 'sidebar_first',
       'pages' => '',
       'cache' => -1,
     ),
@@ -50,7 +50,7 @@ function default_profile_site_setup(&$install_state) {
       'theme' => 'garland',
       'status' => 1,
       'weight' => 0,
-      'region' => 'left',
+      'region' => 'sidebar_first',
       'pages' => '',
       'cache' => -1,
     ),
@@ -60,7 +60,7 @@ function default_profile_site_setup(&$install_state) {
       'theme' => 'garland',
       'status' => 1,
       'weight' => 1,
-      'region' => 'left',
+      'region' => 'sidebar_first',
       'pages' => '',
       'cache' => -1,
     ),

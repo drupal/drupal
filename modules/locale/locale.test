@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.test,v 1.32 2009/07/20 18:51:33 dries Exp $
+// $Id: locale.test,v 1.33 2009/08/03 03:04:33 webchick Exp $
 
 /**
  * @file
@@ -1055,7 +1055,7 @@ class LanguageSwitchingFunctionalTest extends DrupalWebTestCase {
   function testLanguageBlock() {
     // Enable the language switching block.
     $edit = array(
-      'locale_language-switcher[region]' => 'left',
+      'locale_language-switcher[region]' => 'sidebar_first',
     );
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 

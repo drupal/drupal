@@ -1,4 +1,4 @@
-/* $Id: admin.css,v 1.20 2009/01/14 12:18:37 dries Exp $ */
+/* $Id: admin.css,v 1.21 2009/08/03 03:04:33 webchick Exp $ */
 
 /*
 ** Formatting for administration page
@@ -22,14 +22,14 @@ div.admin {
 }
 
 div.admin .left {
-  float: left;
+  float: left; /* LTR */
   width: 47%;
-  margin-left: 1em;
+  margin-left: 1em; /* LTR */
 }
 div.admin .right {
-  float: right;
+  float: right; /* LTR */
   width: 47%;
-  margin-right: 1em;
+  margin-right: 1em; /* LTR */
 }
 
 div.admin .expert-link {

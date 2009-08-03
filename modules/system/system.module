@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.733 2009/07/31 19:01:02 dries Exp $
+// $Id: system.module,v 1.734 2009/08/03 03:04:34 webchick Exp $
 
 /**
  * @file
@@ -1841,8 +1841,8 @@ function _system_get_theme_data() {
     // Set defaults for theme info.
     $defaults = array(
       'regions' => array(
-        'left' => 'Left sidebar',
-        'right' => 'Right sidebar',
+        'sidebar_first' => 'Left sidebar',
+        'sidebar_second' => 'Right sidebar',
         'content' => 'Content',
         'header' => 'Header',
         'footer' => 'Footer',
