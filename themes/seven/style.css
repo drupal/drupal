@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.1 2009/07/31 19:35:57 dries Exp $ */
+/* $Id: style.css,v 1.2 2009/08/03 02:35:11 webchick Exp $ */
 
 /**
  * Generic elements
@@ -340,7 +340,7 @@ ul.secondary li.active a.active {
   border-bottom: 1px solid #ccc;
   margin-left: 0;
   margin-bottom: 10px;
-  background: url(images/list-item.png) no-repeat;
+  background: url(images/list-item.png) no-repeat 0 3px;
   list-style-type: none;
   list-style-image: none;
 }
