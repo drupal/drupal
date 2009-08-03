@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.132 2009/07/30 10:46:53 dries Exp $
+// $Id: drupal_web_test_case.php,v 1.133 2009/08/03 22:18:59 webchick Exp $
 
 /**
  * Base class for Drupal tests.
@@ -2358,6 +2358,36 @@ class DrupalWebTestCase extends DrupalTestCase {
    */
   protected function assertNoFieldById($id, $value = '', $message = '') {
     return $this->assertNoFieldByXPath($this->constructFieldXpath('id', $id), $value, $message ? $message : t('Did not find field by id @id', array('@id' => $id)), t('Browser'));
+  }
+
+  /**
+   * Assert that a checkbox field in the current page is checked.
+   *
+   * @param $id
+   *   Id of field to assert.
+   * @param $message
+   *   Message to display.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertFieldChecked($id, $message = '') {
+    $elements = $this->xpath('//input[@id="' . $id . '"]');
+    return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), $message ? $message : t('Checkbox field @id is checked.', array('@id' => $id)), t('Browser'));
+  }
+
+  /**
+   * Assert that a checkbox field in the current page is not checked.
+   *
+   * @param $id
+   *   Id of field to assert.
+   * @param $message
+   *   Message to display.
+   * @return
+   *   TRUE on pass, FALSE on fail.
+   */
+  protected function assertNoFieldChecked($id, $message = '') {
+    $elements = $this->xpath('//input[@id="' . $id . '"]');
+    return $this->assertTrue(isset($elements[0]) && empty($elements[0]['checked']), $message ? $message : t('Checkbox field @id is not checked.', array('@id' => $id)), t('Browser'));
   }
 
   /**
