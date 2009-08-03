@@ -337,3 +337,83 @@ function update_do_one($module, $number, &$context) {
   $context['message'] = 'Updating ' . check_plain($module) . ' module';
 }
 
+/**
+ * Start the database update batch process.
+ *
+ * @param $start
+ *   An array of all the modules and which update to start at.
+ * @param $redirect
+ *   Path to redirect to when the batch has finished processing.
+ * @param $url
+ *   URL of the batch processing page (should only be used for separate
+ *   scripts like update.php).
+ * @param $batch
+ *   Optional parameters to pass into the batch API.
+ */
+function update_batch($start, $redirect = NULL, $url = NULL, $batch = array()) {
+  // During the update, bring the site offline so that schema changes do not
+  // affect visiting users.
+  $_SESSION['site_offline'] = variable_get('site_offline', FALSE);
+  if ($_SESSION['site_offline'] == FALSE) {
+    variable_set('site_offline', TRUE);
+  }
+
+  $operations = array();
+  // Set the installed version so updates start at the correct place.
+  foreach ($start as $module => $version) {
+    drupal_set_installed_schema_version($module, $version - 1);
+    $updates = drupal_get_schema_versions($module);
+    $max_version = max($updates);
+    if ($version <= $max_version) {
+      foreach ($updates as $update) {
+        if ($update >= $version) {
+          $operations[] = array('update_do_one', array($module, $update));
+        }
+      }
+    }
+  }
+  $batch['operations'] = $operations;
+  $batch += array(
+    'title' => 'Updating',
+    'init_message' => 'Starting updates',
+    'error_message' => 'An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference.',
+    'finished' => 'update_finished',
+    'file' => 'includes/update.inc',
+  );
+  batch_set($batch);
+  batch_process($redirect, $url);
+}
+
+/**
+ * Finish the update process and store results for eventual display.
+ *
+ * After the updates run, all caches are flushed. The update results are
+ * stored into the session (for example, to be displayed on the update results
+ * page in update.php). Additionally, if the site was off-line, now that the
+ * update process is completed, the site is set back online.
+ *
+ * @param $success
+ *   Indicate that the batch API tasks were all completed successfully.
+ * @param $results
+ *   An array of all the results that were updated in update_do_one().
+ * @param $operations
+ *   A list of all the operations that had not been completed by the batch API.
+ *
+ * @see update_batch()
+ */
+function update_finished($success, $results, $operations) {
+  // Clear the caches in case the data has been updated.
+  drupal_flush_all_caches();
+
+  $_SESSION['update_results'] = $results;
+  $_SESSION['update_success'] = $success;
+  $_SESSION['updates_remaining'] = $operations;
+
+  // Now that the update is done, we can put the site back online if it was
+  // previously turned off.
+  if (isset($_SESSION['site_offline']) && $_SESSION['site_offline'] == FALSE) {
+    variable_set('site_offline', FALSE);
+    unset($_SESSION['site_offline']);
+  }
+}
+

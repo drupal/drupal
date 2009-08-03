@@ -120,56 +120,6 @@ function update_script_selection_form() {
   return $form;
 }
 
-function update_batch() {
-  global $base_url;
-
-  // During the update, bring the site offline so that schema changes do not
-  // affect visiting users.
-  $_SESSION['site_offline'] = variable_get('site_offline', FALSE);
-  if ($_SESSION['site_offline'] == FALSE) {
-    variable_set('site_offline', TRUE);
-  }
-
-  $operations = array();
-  // Set the installed version so updates start at the correct place.
-  foreach ($_POST['start'] as $module => $version) {
-    drupal_set_installed_schema_version($module, $version - 1);
-    $updates = drupal_get_schema_versions($module);
-    $max_version = max($updates);
-    if ($version <= $max_version) {
-      foreach ($updates as $update) {
-        if ($update >= $version) {
-          $operations[] = array('update_do_one', array($module, $update));
-        }
-      }
-    }
-  }
-  $batch = array(
-    'operations' => $operations,
-    'title' => 'Updating',
-    'init_message' => 'Starting updates',
-    'error_message' => 'An unrecoverable error has occurred. You can find the error message below. It is advised to copy it to the clipboard for reference.',
-    'finished' => 'update_finished',
-  );
-  batch_set($batch);
-  batch_process($base_url . '/update.php?op=results', $base_url . '/update.php');
-}
-
-function update_finished($success, $results, $operations) {
-  // clear the caches in case the data has been updated.
-  drupal_flush_all_caches();
-
-  $_SESSION['update_results'] = $results;
-  $_SESSION['update_success'] = $success;
-  $_SESSION['updates_remaining'] = $operations;
-
-  // Now that the update is done, we can put the site back online if it was
-  // previously turned off.
-  if (isset($_SESSION['site_offline']) && $_SESSION['site_offline'] == FALSE) {
-    variable_set('site_offline', FALSE);
-    unset($_SESSION['site_offline']);
-  }
-}
 
 function update_helpful_links() {
   // NOTE: we can't use l() here because the URL would point to 'update.php?q=admin'.
@@ -399,7 +349,7 @@ if ($update_access_allowed) {
 
     case 'Apply pending updates':
       if (isset($_GET['token']) && $_GET['token'] == drupal_get_token('update')) {
-        update_batch();
+        update_batch($_POST['start'], $base_url . '/update.php?op=results', $base_url . '/update.php');
         break;
       }
 
