@@ -149,13 +149,19 @@ function system_themes_form() {
 
   foreach ($themes as $theme) {
     $screenshot = NULL;
-    $theme_key = $theme->name;
-    while ($theme_key) {
-      if (file_exists($themes[$theme_key]->info['screenshot'])) {
+    // Create a list which includes the current theme and all its base themes.
+    if (isset($themes[$theme->name]->base_themes)) {
+      $theme_keys = array_keys($themes[$theme->name]->base_themes) + array($theme->name);
+    }
+    else {
+      $theme_keys = array($theme->name);
+    }
+    // Look for a screenshot in the current theme or in its closest ancestor.
+    foreach (array_reverse($theme_keys) as $theme_key) {
+      if (isset($themes[$theme_key]) && file_exists($themes[$theme_key]->info['screenshot'])) {
         $screenshot = $themes[$theme_key]->info['screenshot'];
         break;
       }
-      $theme_key = isset($themes[$theme_key]->info['base theme']) ? $themes[$theme_key]->info['base theme'] : NULL;
     }
     $screenshot = $screenshot ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $theme->info['name'])), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
 
