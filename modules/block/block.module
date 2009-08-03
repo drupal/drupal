@@ -241,8 +241,8 @@ function block_page_alter($page) {
 
   // Load all region content assigned via blocks.
   foreach (array_keys($all_regions) as $region) {
-    // Prevent left and right regions from rendering blocks when 'show_blocks' == FALSE.
-    if (!empty($page['#show_blocks']) || ($region != 'left' && $region != 'right')) {
+    // Prevent sidebar regions from rendering blocks when 'show_blocks' == FALSE.
+    if (!empty($page['#show_blocks']) || (strpos($region, 'sidebar_') !== 0)) {
       // Assign blocks to region.
       if ($blocks = block_get_blocks_by_region($region)) {
         $page[$region] = $blocks;

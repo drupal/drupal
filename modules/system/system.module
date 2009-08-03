@@ -1841,8 +1841,8 @@ function _system_get_theme_data() {
     // Set defaults for theme info.
     $defaults = array(
       'regions' => array(
-        'left' => 'Left sidebar',
-        'right' => 'Right sidebar',
+        'sidebar_first' => 'Left sidebar',
+        'sidebar_second' => 'Right sidebar',
         'content' => 'Content',
         'header' => 'Header',
         'footer' => 'Footer',

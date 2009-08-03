@@ -1987,6 +1987,10 @@ function system_update_7021() {
     $ret[] = update_sql("INSERT INTO {block} (module, delta, theme, status, weight, region, pages, cache) VALUES ('system', 'main', '" . $theme->name . "', 1, 0, 'content', '', -1)");
   }
 
+  // Migrate blocks from left/right regions to first/second regions.
+  $ret[] = update_sql("UPDATE {block} SET region = 'sidebar_first' WHERE region = 'left'");
+  $ret[] = update_sql("UPDATE {block} SET region = 'sidebar_second' WHERE region = 'right'");
+
   // Migrate contact form information.
   if ($contact_help = variable_get('contact_form_information', '')) {
     $bid = db_insert('box')->fields(array('body' => $contact_help, 'info' => 'Contact page help', 'format' => FILTER_FORMAT_DEFAULT))->execute();

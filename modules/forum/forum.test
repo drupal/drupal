@@ -76,14 +76,14 @@ class ForumTestCase extends DrupalWebTestCase {
 
     // Enable the active forum block.
     $edit = array();
-    $edit['forum_active[region]'] = 'right';
+    $edit['forum_active[region]'] = 'sidebar_second';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertResponse(200);
     $this->assertText(t('The block settings have been updated.'), t('[Active forum topics] Forum block was enabled'));
 
     // Enable the new forum block.
     $edit = array();
-    $edit['forum_new[region]'] = 'right';
+    $edit['forum_new[region]'] = 'sidebar_second';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertResponse(200);
     $this->assertText(t('The block settings have been updated.'), t('[New forum topics] Forum block was enabled'));

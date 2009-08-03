@@ -651,10 +651,10 @@ class CommentBlockFunctionalTest extends CommentHelperCase {
 
     // Set the block to a region to confirm block is available.
     $edit = array(
-      'comment_recent[region]' => 'left',
+      'comment_recent[region]' => 'sidebar_first',
     );
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), t('Block saved to left region.'));
+    $this->assertText(t('The block settings have been updated.'), t('Block saved to first sidebar region.'));
 
     // Set block title and variables.
     $block = array(

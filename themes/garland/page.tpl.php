@@ -38,10 +38,10 @@
         <?php if ($secondary_nav): print $secondary_nav; endif; ?>
       </div> <!-- /#header -->
 
-      <?php if ($left): ?>
-        <div id="sidebar-left" class="sidebar">
+      <?php if ($sidebar_first): ?>
+        <div id="sidebar-first" class="sidebar">
           <?php if ($search_box): ?><div class="block block-theme"><?php print $search_box ?></div><?php endif; ?>
-          <?php print $left ?>
+          <?php print $sidebar_first ?>
         </div>
       <?php endif; ?>
 
@@ -61,10 +61,10 @@
           <div id="footer"><?php print $footer ?></div>
       </div></div></div></div> <!-- /.left-corner, /.right-corner, /#squeeze, /#center -->
 
-      <?php if ($right): ?>
-        <div id="sidebar-right" class="sidebar">
-          <?php if (!$left && $search_box): ?><div class="block block-theme"><?php print $search_box ?></div><?php endif; ?>
-          <?php print $right ?>
+      <?php if ($sidebar_second): ?>
+        <div id="sidebar-second" class="sidebar">
+          <?php if (!$sidebar_first && $search_box): ?><div class="block block-theme"><?php print $search_box ?></div><?php endif; ?>
+          <?php print $sidebar_second ?>
         </div>
       <?php endif; ?>
 

@@ -125,7 +125,7 @@ class MenuTestCase extends DrupalWebTestCase {
     // Enable the custom menu block.
     $menu_name = 'menu-' . $menu_name; // Drupal prepends the name with 'menu-'.
     $edit = array();
-    $edit['menu_' . $menu_name . '[region]'] = 'left';
+    $edit['menu_' . $menu_name . '[region]'] = 'sidebar_first';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
     $this->assertResponse(200);
     $this->assertText(t('The block settings have been updated.'), t('Custom menu block was enabled'));

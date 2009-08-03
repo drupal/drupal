@@ -12,12 +12,12 @@ ul.main-menu, ul.secondary-menu,
   display: none;
 }
 
-body.two-sidebars, body.sidebar-left, body.sidebar-right, body {
+body.two-sidebars, body.sidebar-first, body.sidebar-second, body {
   width: 640px;
 }
 
-body.sidebar-left #center, body.sidebar-right #center, body.two-sidebars #center,
-body.sidebar-left #squeeze, body.sidebar-right #squeeze, body.two-sidebars #squeeze {
+body.sidebar-first #center, body.sidebar-second #center, body.two-sidebars #center,
+body.sidebar-first #squeeze, body.sidebar-second #squeeze, body.two-sidebars #squeeze {
   margin: 0;
 }
 

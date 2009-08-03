@@ -22,14 +22,14 @@ div.admin {
 }
 
 div.admin .left {
-  float: left;
+  float: left; /* LTR */
   width: 47%;
-  margin-left: 1em;
+  margin-left: 1em; /* LTR */
 }
 div.admin .right {
-  float: right;
+  float: right; /* LTR */
   width: 47%;
-  margin-right: 1em;
+  margin-right: 1em; /* LTR */
 }
 
 div.admin .expert-link {

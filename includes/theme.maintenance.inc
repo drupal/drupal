@@ -238,11 +238,11 @@ function template_preprocess_maintenance_page(&$variables) {
 
   // Setup layout variable.
   $variables['layout'] = 'none';
-  if (!empty($variables['left'])) {
-    $variables['layout'] = 'left';
+  if (!empty($variables['sidebar_first'])) {
+    $variables['layout'] = 'first';
   }
-  if (!empty($variables['right'])) {
-    $variables['layout'] = ($variables['layout'] == 'left') ? 'both' : 'right';
+  if (!empty($variables['sidebar_second'])) {
+    $variables['layout'] = ($variables['layout'] == 'first') ? 'both' : 'second';
   }
 
   // Construct page title

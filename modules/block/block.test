@@ -27,9 +27,9 @@ class BlockTestCase extends DrupalWebTestCase {
     // Define the existing regions
     $this->regions = array();
     $this->regions[] = array('name' => 'header', 'id' => 'header-region');
-    $this->regions[] = array('name' => 'left', 'id' => 'sidebar-left');
+    $this->regions[] = array('name' => 'sidebar_first', 'id' => 'sidebar-first');
     $this->regions[] = array('name' => 'content', 'id' => 'center');
-    $this->regions[] = array('name' => 'right', 'id' => 'sidebar-right');
+    $this->regions[] = array('name' => 'sidebar_second', 'id' => 'sidebar-second');
     $this->regions[] = array('name' => 'footer');
   }
 
@@ -80,7 +80,7 @@ class BlockTestCase extends DrupalWebTestCase {
     // Set the created box to a specific region.
     $bid = db_query("SELECT bid FROM {box} WHERE info = :info", array(':info' => $box['info']))->fetchField();
     $edit = array();
-    $edit['block_' . $bid . '[region]'] = 'left';
+    $edit['block_' . $bid . '[region]'] = $this->regions[1]['name'];
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the box is being displayed using configured text format.
@@ -115,7 +115,7 @@ class BlockTestCase extends DrupalWebTestCase {
     $edit['roles[2]'] = TRUE;
     $this->drupalPost('admin/structure/block/configure/' . $block['module'] . '/' . $block['delta'], $edit, t('Save block'));
 
-    // Move block to the left sidebar.
+    // Move block to the first sidebar.
     $this->moveBlockToRegion($block, $this->regions[1]);
 
     $this->drupalGet('');
@@ -171,9 +171,9 @@ class BlockTestCase extends DrupalWebTestCase {
 
     // For convenience of developers, put the navigation block back.
     $edit = array();
-    $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = 'left';
+    $edit[$block['module'] . '_' . $block['delta'] . '[region]'] = $this->regions[1]['name'];
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to left region.'));
+    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to first sidebar region.'));
 
     $this->drupalPost('admin/structure/block/configure/' . $block['module'] . '/' . $block['delta'], array('title' => 'Navigation'), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), t('Block title set.'));
@@ -262,7 +262,7 @@ class NewDefaultThemeBlocks extends DrupalWebTestCase {
     $result = db_query("SELECT * FROM {block} WHERE theme='stark'");
     foreach ($result as $block) {
       unset($block->theme, $block->bid);
-      $this->assertEqual($blocks[$block->module][$block->delta], $block, t('Block matched'));
+      $this->assertEqual($blocks[$block->module][$block->delta], $block, t('Block %name matched', array('%name' => $block->module . '-' . $block->delta)));
     }
   }
 }

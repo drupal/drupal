@@ -17,8 +17,8 @@
  */
 
 #content,
-#sidebar-left,
-#sidebar-right {
+#sidebar-first,
+#sidebar-second {
   float: left;
   display: inline;
   position: relative;
@@ -27,11 +27,11 @@
 #content {
   width: 100%;
 }
-body.sidebar-left #content {
+body.sidebar-first #content {
   width: 80%;
-  left: 20%;
+  left: 20%; /* LTR */
 }
-body.sidebar-right #content {
+body.sidebar-second #content {
   width: 80%;
 }
 body.two-sidebars #content {
@@ -39,17 +39,17 @@ body.two-sidebars #content {
   left: 20%;
 }
 
-#sidebar-left {
+#sidebar-first {
   width: 20%;
-  left: -80%;
+  left: -80%; /* LTR */
 }
 
-body.two-sidebars #sidebar-left {
-  left: -60%;
+body.two-sidebars #sidebar-first {
+  left: -60%; /* LTR */
 }
 
-#sidebar-right {
-  float: right;
+#sidebar-second {
+  float: right; /* LTR */
   width: 20%;
 }
 

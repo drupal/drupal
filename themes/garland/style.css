@@ -377,33 +377,33 @@ body.two-sidebars {
   min-width: 980px;
 }
 /* With 2 columns, require a minimum width of 800px. */
-body.sidebar-left, body.sidebar-right {
+body.sidebar-first, body.sidebar-second {
   min-width: 780px;
 }
 
 /* We must define 100% width to avoid the body being too narrow for near-empty pages */
 #wrapper #container #center {
-  float: left;
+  float: left; /* LTR */
   width: 100%;
 }
 
 /* So we move the #center container over the sidebars to compensate */
-body.sidebar-left #center {
-  margin-left: -210px;
+body.sidebar-first #center {
+  margin-left: -210px; /* LTR */
 }
-body.sidebar-right #center {
-  margin-right: -210px;
+body.sidebar-second #center {
+  margin-right: -210px; /* LTR */
 }
 body.two-sidebars #center {
   margin: 0 -210px;
 }
 
 /* And add blanks left and right for the sidebars to fill */
-body.sidebar-left #squeeze {
-  margin-left: 210px;
+body.sidebar-first #squeeze {
+  margin-left: 210px; /* LTR */
 }
-body.sidebar-right #squeeze {
-  margin-right: 210px;
+body.sidebar-second #squeeze {
+  margin-right: 210px; /* LTR */
 }
 body.two-sidebars #squeeze {
   margin: 0 210px;
@@ -413,7 +413,7 @@ body.two-sidebars #squeeze {
 #wrapper #container .sidebar {
   margin: 60px 0 5em;
   width: 210px;
-  float: left;
+  float: left; /* LTR */
   z-index: 2;
   position: relative;
 }
@@ -422,23 +422,23 @@ body.two-sidebars #squeeze {
   margin: 0 0 1.5em 0;
 }
 
-#sidebar-left .block {
-  padding: 0 15px 0 0px;
+#sidebar-first .block {
+  padding: 0 15px 0 0; /* LTR */
 }
 
-#sidebar-right .block {
-  padding: 0 0px 0 15px;
+#sidebar-second .block {
+  padding: 0 0 0 15px; /* LTR */
 }
 
 .block .content {
   margin: 0.5em 0;
 }
 
-#sidebar-left .block-region {
+#sidebar-first .block-region {
   margin: 0 15px 0 0px; /* LTR */
 }
 
-#sidebar-right .block-region {
+#sidebar-second .block-region {
   margin: 0 0px 0 15px; /* LTR */
 }
 
@@ -486,11 +486,11 @@ body.two-sidebars #squeeze {
   z-index: 3;
 }
 
-body.sidebar-left #footer {
+body.sidebar-first #footer {
   margin-left: -210px;
 }
 
-body.sidebar-right #footer {
+body.sidebar-second #footer {
   margin-right: -210px;
 }
 

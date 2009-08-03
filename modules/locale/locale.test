@@ -1055,7 +1055,7 @@ class LanguageSwitchingFunctionalTest extends DrupalWebTestCase {
   function testLanguageBlock() {
     // Enable the language switching block.
     $edit = array(
-      'locale_language-switcher[region]' => 'left',
+      'locale_language-switcher[region]' => 'sidebar_first',
     );
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
 

@@ -57,10 +57,10 @@
 
     <div id="container" class="clearfix">
 
-      <?php if (!empty($left)): ?>
-        <div id="sidebar-left" class="column sidebar">
-          <?php print $left; ?>
-        </div> <!-- /sidebar-left -->
+      <?php if (!empty($sidebar_first)): ?>
+        <div id="sidebar-first" class="column sidebar">
+          <?php print $sidebar_first; ?>
+        </div> <!-- /sidebar-first -->
       <?php endif; ?>
 
       <div id="main" class="column"><div id="main-squeeze">
@@ -75,10 +75,10 @@
 
       </div></div> <!-- /main-squeeze /main -->
 
-      <?php if (!empty($right)): ?>
-        <div id="sidebar-right" class="column sidebar">
-          <?php print $right; ?>
-        </div> <!-- /sidebar-right -->
+      <?php if (!empty($sidebar_second)): ?>
+        <div id="sidebar-second" class="column sidebar">
+          <?php print $sidebar_second; ?>
+        </div> <!-- /sidebar-second -->
       <?php endif; ?>
 
     </div> <!-- /container -->

@@ -86,11 +86,48 @@ dl dd {
   float: right;
 }
 
-#sidebar-left .block-region {
+#wrapper #container #center {
+  float: right;
+}
+
+body.sidebar-first #center {
+  margin-left: 0;
+  margin-right: -210px;
+}
+body.sidebar-second #center {
+  margin-left: -210px;
+  margin-right: 0;
+}
+
+/* And add blanks left and right for the sidebars to fill */
+body.sidebar-first #squeeze {
+  margin-left: 0;
+  margin-right: 210px;
+}
+body.sidebar-second #squeeze {
+  margin-left: 210px;
+  margin-right: 0;
+}
+
+#wrapper #container .sidebar {
+  float: right;
+}
+
+#sidebar-first .block {
+  padding: 0 0 0 15px;
+}
+
+#sidebar-second .block {
+  padding: 0 15px 0 0;
+}
+
+
+
+#sidebar-first .block-region {
   margin: 0 0 0 15px;
 }
 
-#sidebar-right .block-region {
+#sidebar-second .block-region {
   margin: 0 15px 0px 0;
 }
 
@@ -270,7 +307,7 @@ ul.secondary li a, ul.secondary li.active a, ul.secondary li a:hover, ul.seconda
   position: relative;
 }
 
-#sidebar-right{
+#sidebar-second {
   position: absolute;
   right: 0;
 }
