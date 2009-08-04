@@ -43,6 +43,9 @@ function theme_node_add_list($content) {
     }
     $output .= '</dl>';
   }
+  else {
+    $output = '<p>' . t('You have not created any content types yet. Please go to the <a href="@create-content">content type creation page</a> to add a new content type.', array('@create-content' => url('admin/structure/types/add'))) . '</p>';
+  }
   return $output;
 }
 

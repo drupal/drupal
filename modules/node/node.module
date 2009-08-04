@@ -1649,6 +1649,12 @@ function _node_add_access() {
       return TRUE;
     }
   }
+  if (user_access('administer content types')) {
+    // There are no content types defined that the user has permission to create,
+    // but the user does have the permission to administer the content types, so
+    // grant them access to the page anyway.
+    return TRUE;
+  }
   return FALSE;
 }
 
