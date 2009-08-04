@@ -423,11 +423,11 @@ function comment_new_page_count($num_comments, $new_replies, $node) {
   else {
     // Threaded comments.
     // Find the first thread with a new comment.
-    $result = db_query_range('(SELECT thread
+    $result = db_query_range('SELECT thread FROM (SELECT thread
       FROM {comment}
       WHERE nid = :nid
         AND status = 0
-      ORDER BY timestamp DESC)
+      ORDER BY timestamp DESC) AS thread
       ORDER BY SUBSTRING(thread, 1, (LENGTH(thread) - 1))', array(':nid' => $node->nid), 0, $new_replies)->fetchField();
     $thread = substr($result, 0, -1);
     $count = db_query('SELECT COUNT(*) FROM {comment} WHERE nid = :nid AND status = 0 AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < :thread', array(
