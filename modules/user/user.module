@@ -723,7 +723,7 @@ function user_access($string, $account = NULL, $reset = FALSE) {
     $perm = array();
   }
 
-  if (is_null($account)) {
+  if (!isset($account)) {
     $account = $user;
   }
 
