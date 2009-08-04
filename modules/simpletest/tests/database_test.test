@@ -1,5 +1,5 @@
 <?php
-// $Id: database_test.test,v 1.62 2009/07/21 01:56:36 webchick Exp $
+// $Id: database_test.test,v 1.63 2009/08/04 05:36:57 webchick Exp $
 
 /**
  * Dummy class for fetching into a class.
@@ -229,6 +229,21 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
     $db2 = Database::getConnection('slave', 'default');
 
     $this->assertIdentical($db1, $db2, t('Both targets refer to the same connection.'));
+  }
+
+  /**
+   * Tests the closing of a database connection.
+   */
+  function testConnectionClosing() {
+    // Open the default target so we have an object to compare.
+    $db1 = Database::getConnection('default', 'default');
+
+    // Try to close the the default connection, then open a new one.
+    Database::closeConnection('default', 'default');
+    $db2 = Database::getConnection('default', 'default');
+
+    // Opening a connection after closing it should yield an object different than the original.
+    $this->assertNotIdentical($db1, $db2, t('Opening the default connection after it is closed returns a new object.'));
   }
 }
 
