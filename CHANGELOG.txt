@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.323 2009/07/31 19:44:20 dries Exp $
+// $Id: CHANGELOG.txt,v 1.324 2009/08/04 06:50:07 webchick Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -27,6 +27,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Removed comment controls for users.
     * Removed display order settings for comment module. Comment display
       order can now be customised using the Views module.
+    * Removed the 'related terms' feature from taxonomy module since this can
+      now be achieved with Field API.
     * Added additional features to the default install profile, and implemented
       a "slimmed down" install profile designed for developers.
     * Added an administrator role which is assigned all permisions for
