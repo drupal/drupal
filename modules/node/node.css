@@ -1,4 +1,4 @@
-/* $Id: node.css,v 1.7 2009/03/30 03:15:40 webchick Exp $ */
+/* $Id: node.css,v 1.8 2009/08/04 03:27:11 webchick Exp $ */
 
 .node-unpublished {
   background-color: #fff4f4;
@@ -8,6 +8,7 @@
 }
 #node-admin-filter ul {
   list-style-type: none;
+  list-style-image: none;
   padding: 0;
   margin: 0;
   width: 100%;
