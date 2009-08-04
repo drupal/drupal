@@ -284,6 +284,7 @@ ul.secondary a.active {
   margin: 0;
   padding: 0;
   list-style: none;
+  list-style-image: none;
 }
 #autocomplete li {
   background: #fff;

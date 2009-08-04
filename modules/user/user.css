@@ -14,6 +14,7 @@
 }
 #user-admin-filter ul {
   list-style-type: none;
+  list-style-image: none;
   padding: 0;
   margin: 0;
   width: 100%;
