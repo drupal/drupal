@@ -1364,6 +1364,29 @@ abstract class Database {
   }
 
   /**
+   * Closes a connection to the server specified by the given key and target.
+   *
+   * @param $target
+   *   The database target name.  Defaults to NULL meaning that all target
+   *   connections will be closed.
+   * @param $key
+   *   The database connection key. Defaults to NULL which means the active key.
+   */
+  public static function closeConnection($target = NULL, $key = NULL) {
+    // Gets the active conection by default.
+    if (!isset($key)) {
+      $key = self::$activeKey;
+    }
+    // To close the connection, we need to unset the static variable.
+    if (isset($target)) {
+      unset(self::$connections[$key][$target]);
+    }
+    else {
+      unset(self::$connections[$key]);
+    }
+  }
+
+  /**
    * Instruct the system to temporarily ignore a given key/target.
    *
    * At times we need to temporarily disable slave queries. To do so,
@@ -2069,6 +2092,20 @@ function db_distinct_field($table, $field, $query) {
  */
 function db_driver() {
   return Database::getConnection()->driver();
+}
+
+/**
+ * Closes the active database connection.
+ *
+ * @param $options
+ *   An array of options to control which connection is closed.  Only the
+ *   target key has any meaning in this case.
+ */
+function db_close(array $options = array()) {
+  if (empty($options['target'])) {
+    $options['target'] = NULL;
+  }
+  Database::closeConnection($options['target']);
 }
 
 /**

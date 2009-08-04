@@ -230,6 +230,21 @@ class DatabaseConnectionTestCase extends DatabaseTestCase {
 
     $this->assertIdentical($db1, $db2, t('Both targets refer to the same connection.'));
   }
+
+  /**
+   * Tests the closing of a database connection.
+   */
+  function testConnectionClosing() {
+    // Open the default target so we have an object to compare.
+    $db1 = Database::getConnection('default', 'default');
+
+    // Try to close the the default connection, then open a new one.
+    Database::closeConnection('default', 'default');
+    $db2 = Database::getConnection('default', 'default');
+
+    // Opening a connection after closing it should yield an object different than the original.
+    $this->assertNotIdentical($db1, $db2, t('Opening the default connection after it is closed returns a new object.'));
+  }
 }
 
 /**
