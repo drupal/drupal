@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.167 2009/08/03 06:06:23 webchick Exp $
+// $Id: system.admin.inc,v 1.168 2009/08/04 07:04:21 webchick Exp $
 
 /**
  * @file
@@ -513,6 +513,13 @@ function system_theme_settings(&$form_state, $key = '') {
  */
 function system_theme_settings_submit($form, &$form_state) {
   $values = $form_state['values'];
+  if (empty($values['default_favicon']) && !empty($values['favicon_path'])) {
+    $mimetype = file_get_mimetype($values['favicon_path']);
+    // Use the default MIME type for favicons if no other was found.
+    if ($mimetype != 'application/octet-stream') {
+      $values['favicon_mimetype'] = $mimetype;
+    }
+  }
   $key = $values['var'];
 
   // Exclude unnecessary elements before saving.
