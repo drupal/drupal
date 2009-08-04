@@ -59,6 +59,14 @@ tr.simpletest-exception.even {
   background: #f5e742;
 }
 
+tr.simpletest-debug.odd {
+  background: #eeeeee;
+}
+
+tr.simpletest-debug.even {
+  background: #ffffff;
+}
+
 div.simpletest-image {
   display: inline;
   cursor: pointer;

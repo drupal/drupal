@@ -254,7 +254,11 @@ function simpletest_result_form(&$form_state, $test_id) {
       $row[] = $assertion->function;
       $row[] = simpletest_result_status_image($assertion->status);
 
-      $rows[] = array('data' => $row, 'class' => 'simpletest-' . $assertion->status);
+      $class = 'simpletest-' . $assertion->status;
+      if ($assertion->message_group == 'Debug') {
+        $class = 'simpletest-debug';
+      }
+      $rows[] = array('data' => $row, 'class' => $class);
 
       $group_summary['#' . $assertion->status]++;
       $form['result']['summary']['#' . $assertion->status]++;
