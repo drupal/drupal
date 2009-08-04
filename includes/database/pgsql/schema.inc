@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.16 2009/07/09 10:12:14 dries Exp $
+// $Id: schema.inc,v 1.17 2009/08/04 06:32:17 webchick Exp $
 
 /**
  * @file
@@ -547,7 +547,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    *   table specification but without the 'fields' element.
    */
   public function changeField(&$ret, $table, $field, $field_new, $spec, $new_keys = array()) {
-    $ret[] = update_sql("ALTER TABLE {" . $table . "} RENAME $field TO " . $field . "_old");
+    $ret[] = update_sql('ALTER TABLE {' . $table . '} RENAME "' . $field . '" TO "' . $field . '_old"');
     $not_null = isset($spec['not null']) ? $spec['not null'] : FALSE;
     unset($spec['not null']);
 
