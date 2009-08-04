@@ -227,7 +227,7 @@ class BootstrapVariableTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Test hook_boot and hook_exit.
+ * Test hook_boot() and hook_exit().
  */
 class HookBootExitTestCase extends DrupalWebTestCase {
 
@@ -279,3 +279,37 @@ class HookBootExitTestCase extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Test drupal_get_filename()'s availability.
+ */
+class BootstrapGetFilenameTestCase extends DrupalUnitTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => t('Get Filename Test'),
+      'description' => t('Test that drupal_get_filename() works correctly when the file is not found in the database.'),
+      'group' => t('Bootstrap'),
+    );
+  }
+
+  /**
+   * Test that drupal_get_filename() works correctly when the file is not found in the database.
+   */
+  function testDrupalGetFilename() {
+    // Reset the static cache so we can test the "db is not active" code of
+    // drupal_get_filename().
+    drupal_static_reset('drupal_get_filename');
+
+    // Retrieving the location of a module.
+    $this->assertIdentical(drupal_get_filename('module', 'php'), 'modules/php/php.module', t('Retrieve module location.'));
+
+    // Retrieving the location of a theme.
+    $this->assertIdentical(drupal_get_filename('theme', 'stark'), 'themes/stark/stark.info', t('Retrieve theme location.'));
+
+    // Retrieving the location of a theme engine.
+    $this->assertIdentical(drupal_get_filename('theme_engine', 'phptemplate'), 'themes/engines/phptemplate/phptemplate.engine', t('Retrieve theme engine location.'));
+
+    // Retrieving a file that is definitely not stored in the database.
+    $this->assertIdentical(drupal_get_filename('profile', 'default'), 'profiles/default/default.profile', t('Retrieve install profile location.'));
+  }
+}

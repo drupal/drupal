@@ -635,20 +635,39 @@ function drupal_get_filename($type, $name, $filename = NULL) {
   // the database. This is required because this function is called both
   // before we have a database connection (i.e. during installation) and
   // when a database connection fails.
-  elseif (db_is_active() && (($file = db_query("SELECT filename FROM {system} WHERE name = :name AND type = :type", array(':name' => $name, ':type' => $type))->fetchField()) && file_exists($file))) {
-    $files[$type][$name] = $file;
-  }
   else {
-    // Fallback to searching the filesystem if the database connection is
-    // not established or the requested file is not found.
-    $config = conf_path();
-    $dir = (($type == 'theme_engine') ? 'themes/engines' : "${type}s");
-    $file = (($type == 'theme_engine') ? "$name.engine" : "$name.$type");
-
-    foreach (array("$config/$dir/$file", "$config/$dir/$name/$file", "$dir/$file", "$dir/$name/$file") as $file) {
+    try {
+      $file = db_query("SELECT filename FROM {system} WHERE name = :name AND type = :type", array(':name' => $name, ':type' => $type))->fetchField();
       if (file_exists($file)) {
         $files[$type][$name] = $file;
-        break;
+      }
+    }
+    catch (PDOException $e) {
+      // The database table may not exist because Drupal is not yet installed,
+      // or the database might be down. We have a fallback for this case so we
+      // hide the error completely.
+    }
+    // Fallback to searching the filesystem if the database could not find the
+    // file or the file returned by the database is not found.
+    if (!isset($files[$type][$name])) {
+      // We have a consistent directory naming: modules, themes...
+      $dir = $type . 's';
+      if ($type == 'theme_engine') {
+        $dir = 'themes/engines';
+        $mask = "/$name\.engine$/";
+      }
+      elseif ($type == 'theme') {
+        $mask = "/$name\.info$/";
+      }
+      else {
+        $mask = "/$name\.$type$/";
+      }
+
+      if (drupal_function_exists('drupal_system_listing')) {
+        $matches = drupal_system_listing($mask, $dir, 'name', 0);
+        if (!empty($matches[$name]->filepath)) {
+          $files[$type][$name] = $matches[$name]->filepath;
+        }
       }
     }
   }
