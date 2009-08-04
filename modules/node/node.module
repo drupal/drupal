@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1090 2009/07/31 19:01:02 dries Exp $
+// $Id: node.module,v 1.1091 2009/08/04 06:44:48 webchick Exp $
 
 /**
  * @file
@@ -1648,6 +1648,12 @@ function _node_add_access() {
     if (node_hook($type->type, 'form') && node_access('create', $type->type)) {
       return TRUE;
     }
+  }
+  if (user_access('administer content types')) {
+    // There are no content types defined that the user has permission to create,
+    // but the user does have the permission to administer the content types, so
+    // grant them access to the page anyway.
+    return TRUE;
   }
   return FALSE;
 }

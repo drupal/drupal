@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.72 2009/07/29 06:39:34 dries Exp $
+// $Id: node.pages.inc,v 1.73 2009/08/04 06:44:48 webchick Exp $
 
 /**
  * @file
@@ -42,6 +42,9 @@ function theme_node_add_list($content) {
       $output .= '<dd>' . filter_xss_admin($item['description']) . '</dd>';
     }
     $output .= '</dl>';
+  }
+  else {
+    $output = '<p>' . t('You have not created any content types yet. Please go to the <a href="@create-content">content type creation page</a> to add a new content type.', array('@create-content' => url('admin/structure/types/add'))) . '</p>';
   }
   return $output;
 }
