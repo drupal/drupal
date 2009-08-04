@@ -395,30 +395,6 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
   }
 
   /**
-   * Test related terms.
-   */
-  function testTaxonomyTermRelations() {
-    // Create two taxonomy terms.
-    $term1 = $this->createTerm($this->vocabulary);
-    $term2 = $this->createTerm($this->vocabulary);
-
-    // Edit $term1 and add $term2 as a relationship.
-    $edit = array();
-    $edit['relations[]'] = $term2->tid;
-    $this->drupalPost('taxonomy/term/' . $term1->tid . '/edit', $edit, t('Save'));
-    $related = taxonomy_get_related($term1->tid);
-    $this->assertTrue(isset($related[$term2->tid]), t('Related term was found'));
-    // Create a third term.
-    $term3 = $this->createTerm($this->vocabulary);
-    $edit['relations[]'] = $term3->tid;
-    $this->drupalPost('taxonomy/term/' . $term1->tid . '/edit', $edit, t('Save'));
-
-    $related = taxonomy_get_related($term1->tid);
-    $this->assertTrue(isset($related[$term3->tid]), t('Related term was found'));
-    $this->assertFalse(isset($related[$term2->tid]), t('Term relationship no longer exists'));
-  }
-
-  /**
    * Test synonyms.
    */
   function testTaxonomySynonyms() {

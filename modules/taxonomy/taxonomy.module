@@ -436,25 +436,6 @@ function taxonomy_term_save($term) {
     module_invoke_all('taxonomy_term_insert', $term);
   }
 
-  db_delete('taxonomy_term_relation')
-    ->condition(db_or()
-      ->condition('tid1', $term->tid)
-      ->condition('tid2', $term->tid)
-    )
-    ->execute();
-
-  if (!empty($term->relations)) {
-    foreach ($term->relations as $related_id) {
-      if ($related_id != 0) {
-        db_insert('taxonomy_term_relation')
-          ->fields(array(
-            'tid1' => $term->tid,
-            'tid2' => $related_id
-          ))
-          ->execute();
-      }
-    }
-  }
   db_delete('taxonomy_term_hierarchy')
     ->condition('tid', $term->tid)
     ->execute();
@@ -544,12 +525,6 @@ function taxonomy_term_delete($tid) {
         ->execute();
       db_delete('taxonomy_term_hierarchy')
         ->condition('tid', $tid)
-        ->execute();
-      db_delete('taxonomy_term_relation')
-        ->condition(db_or()
-          ->condition('tid1', $tid)
-          ->condition('tid2', $tid)
-        )
         ->execute();
       db_delete('taxonomy_term_synonym')
         ->condition('tid', $tid)
@@ -971,23 +946,6 @@ function taxonomy_node_type($op, $info) {
       ->execute();
   }
   drupal_static_reset('taxonomy_term_count_nodes');
-}
-
-/**
- * Find all term objects related to a given term ID.
- */
-function taxonomy_get_related($tid, $key = 'tid') {
-  if ($tid) {
-    $result = db_query('SELECT t.*, tid1, tid2 FROM {taxonomy_term_relation}, {taxonomy_term_data} t WHERE (t.tid = tid1 OR t.tid = tid2) AND (tid1 = :tid1 OR tid2 = :tid2) AND t.tid != :tid ORDER BY weight, name', array(':tid' => $tid, ':tid1' => $tid, ':tid2' => $tid));
-    $related = array();
-    foreach ($result as $term) {
-      $related[$term->$key] = $term;
-    }
-    return $related;
-  }
-  else {
-    return array();
-  }
 }
 
 /**

@@ -27,6 +27,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Removed comment controls for users.
     * Removed display order settings for comment module. Comment display
       order can now be customised using the Views module.
+    * Removed the 'related terms' feature from taxonomy module since this can
+      now be achieved with Field API.
     * Added additional features to the default install profile, and implemented
       a "slimmed down" install profile designed for developers.
     * Added an administrator role which is assigned all permisions for

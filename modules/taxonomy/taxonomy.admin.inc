@@ -114,7 +114,6 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
     'help' => '',
     'nodes' => array(),
     'hierarchy' => 0,
-    'relations' => 0,
     'tags' => 0,
     'multiple' => 0,
     'required' => 0,
@@ -187,11 +186,6 @@ function taxonomy_form_vocabulary(&$form_state, $edit = array()) {
   $form['hierarchy'] = array(
     '#type' => 'value',
     '#value' => '0',
-  );
-  // Enable "related terms" by default.
-  $form['relations'] = array(
-    '#type' => 'value',
-    '#value' => '1',
   );
 
   $form['submit'] = array('#type' => 'submit', '#value' => t('Save'));
@@ -745,7 +739,6 @@ function taxonomy_form_term(&$form_state, $vocabulary, $edit = array()) {
     $exclude[] = $edit['tid'];
 
     $form['advanced']['parent'] = _taxonomy_term_select(t('Parents'), $parent, $vocabulary->vid, t('Parent terms') . '.', 1, '<' . t('root') . '>', $exclude);
-    $form['advanced']['relations'] = _taxonomy_term_select(t('Related terms'), array_keys(taxonomy_get_related($edit['tid'])), $vocabulary->vid, NULL, 1, '<' . t('none') . '>', array($edit['tid']));
   }
   $form['advanced']['synonyms'] = array(
     '#type' => 'textarea',

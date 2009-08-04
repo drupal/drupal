@@ -140,43 +140,6 @@ function taxonomy_schema() {
     ),
     'primary key' => array('tid', 'vid'),
   );
-
-  $schema['taxonomy_term_relation'] = array(
-    'description' => 'Stores non-hierarchical relationships between terms.',
-    'fields' => array(
-      'trid' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique term relation ID.',
-      ),
-      'tid1' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The {taxonomy_term_data}.tid of the first term in a relationship.',
-      ),
-      'tid2' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The {taxonomy_term_data}.tid of the second term in a relationship.',
-      ),
-    ),
-    'unique keys' => array(
-      'tid1_tid2' => array('tid1', 'tid2'),
-    ),
-    'indexes' => array(
-      'tid2' => array('tid2'),
-    ),
-    'foreign keys' => array(
-      'tid1' => array('taxonomy_term_data' => 'tid'),
-      'tid2' => array('taxonomy_term_data' => 'tid'),
-    ),
-    'primary key' => array('trid'),
-  );
-
   $schema['taxonomy_term_synonym'] = array(
     'description' => 'Stores term synonyms.',
     'fields' => array(
@@ -360,5 +323,18 @@ function taxonomy_update_7002() {
       ->execute();
     field_attach_create_bundle($machine_name);
   }
+  return $ret;
+}
+
+/**
+ * Remove the related terms setting from vocabularies.
+ *
+ * This setting has not been used since Drupal 6. The {taxonomy_relations} table
+ * itself is retained to allow for data to be upgraded.
+ */
+function taxonomy_update_7003() {
+  $ret = array();
+  db_drop_field($ret, 'taxonomy_vocabulary', 'relations');
+
   return $ret;
 }
