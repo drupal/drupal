@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.951 2009/07/31 19:56:09 dries Exp $
+// $Id: common.inc,v 1.952 2009/08/04 04:02:25 webchick Exp $
 
 /**
  * @file
@@ -3670,6 +3670,12 @@ function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1)
 
   if (file_exists("$config/$directory")) {
     $searchdir[] = "$config/$directory";
+  }
+
+  // If the database is not available, we can't use drupal_function_exists(), so
+  // we load the file_scan_directory function definition manually.
+  if (!function_exists('file_scan_directory')) {
+    require_once DRUPAL_ROOT . '/includes/file.inc';
   }
 
   // Get current list of items
