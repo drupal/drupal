@@ -216,11 +216,7 @@ function template_preprocess_maintenance_page(&$variables) {
   // Add favicon
   if (theme_get_setting('toggle_favicon')) {
     $favicon = theme_get_setting('favicon');
-    $type = file_get_mimetype($favicon);
-    // Use the genereic MIME type for favicons if no other was found.
-    if ($type == 'application/octet-stream') {
-      $type = 'image/x-icon';
-    }
+    $type = theme_get_setting('favicon_mimetype');
     drupal_add_html_head('<link rel="shortcut icon" href="' . check_url($favicon) . '" type="' . check_plain($type) . '" />');
   }
 

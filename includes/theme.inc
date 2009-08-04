@@ -1041,6 +1041,8 @@ function theme_get_settings($key = NULL) {
     'logo_path'                        =>  '',
     'default_favicon'                  =>  1,
     'favicon_path'                     =>  '',
+    // Use the IANA-registered MIME type for ICO files as default.
+    'favicon_mimetype'                 =>  'image/vnd.microsoft.icon',
     'main_menu'                        =>  1,
     'secondary_menu'                   =>  1,
     'toggle_logo'                      =>  1,
@@ -1888,11 +1890,7 @@ function template_preprocess_page(&$variables) {
   // Add favicon.
   if (theme_get_setting('toggle_favicon')) {
     $favicon = theme_get_setting('favicon');
-    $type = file_get_mimetype($favicon);
-    // Use the genereic MIME type for favicons if no other was found.
-    if ($type == 'application/octet-stream') {
-      $type = 'image/x-icon';
-    }
+    $type = theme_get_setting('favicon_mimetype');
     drupal_add_html_head('<link rel="shortcut icon" href="' . check_url($favicon) . '" type="' . check_plain($type) . '" />');
   }
 
