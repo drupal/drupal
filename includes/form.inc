@@ -1935,7 +1935,7 @@ function form_process_text_format($element) {
     unset($element['value']['#description']);
     $element['#type'] = 'markup';
     $element['#theme'] = NULL;
-    $element['#theme_wrapper'] = 'text_format_wrapper';
+    $element['#theme_wrappers'] = array('text_format_wrapper');
     $element['format'] = filter_form($element['#text_format'], 1, $element_parents);
 
     // We need to clear the #text_format from the new child otherwise we
@@ -2104,14 +2104,14 @@ function theme_checkboxes($element) {
 }
 
 /**
- * Add form_element theming to an element if title or desription is set.
+ * Add form_element theming to an element if title or description is set.
  *
  * This is used as a pre render function for checkboxes and radios.
  */
 function form_pre_render_conditional_form_element($element) {
   if ($element['#title'] || $element['#description']) {
     unset($element['#id']);
-    $element['#theme_wrapper'] = 'form_element';
+    $element['#theme_wrappers'][] = 'form_element';
   }
   return $element;
 }
@@ -2372,7 +2372,7 @@ function form_process_vertical_tabs($element, &$form_state) {
   // that manually.
   $element['group'] = array(
     '#type' => 'fieldset',
-    '#theme_wrapper' => '',
+    '#theme_wrappers' => array(),
     '#parents' => $element['#parents'],
   );
 

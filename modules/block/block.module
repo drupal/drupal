@@ -275,7 +275,7 @@ function block_get_blocks_by_region($region) {
       $build[$key] = $block->content;
       unset($block->content);
       $build[$key] += array(
-        '#theme_wrapper' => 'block',
+        '#theme_wrappers' => array('block'),
         '#block' => $block,
         '#weight' => ++$weight,
       );
