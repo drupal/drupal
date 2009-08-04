@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1016 2009/08/04 06:19:44 webchick Exp $
+// $Id: user.module,v 1.1017 2009/08/04 06:38:57 webchick Exp $
 
 /**
  * @file
@@ -867,7 +867,7 @@ function user_search($op = 'search', $keys = NULL, $skip_access_check = FALSE) {
 function user_elements() {
   return array(
     'user_profile_category' => array(
-      '#theme_wrapper' => 'user_profile_category'
+      '#theme_wrappers' => array('user_profile_category')
     ),
     'user_profile_item' => array(
       '#theme' => 'user_profile_item'
