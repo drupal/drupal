@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.inc,v 1.19 2009/07/28 12:37:54 dries Exp $
+// $Id: registry.inc,v 1.20 2009/08/04 05:09:40 webchick Exp $
 
 /**
  * @file
@@ -38,8 +38,7 @@ function _registry_rebuild() {
   _registry_get_resource_name();
 
   // Get current list of modules and their files.
-  $modules = drupal_system_listing('/\.module$/', 'modules', 'name', 0);
-  system_get_files_database($modules, 'module');
+  $modules = system_get_module_data();
   // Get the list of files we are going to parse.
   $files = array();
   foreach ($modules as &$module) {
@@ -47,11 +46,6 @@ function _registry_rebuild() {
 
     // Store the module directory for use in hook_registry_files_alter().
     $module->dir = $dir;
-
-    // Parse the .info file for all modules, reguardless of their status so the
-    // list of files can then be used in hook_registry_files_alter()
-    // implementations.
-    $module->info = drupal_parse_info_file($dir . '/' . $module->name . '.info');
 
     if ($module->status) {
       // Add files for enabled modules to the registry.
