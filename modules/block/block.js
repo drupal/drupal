@@ -1,4 +1,4 @@
-// $Id: block.js,v 1.9 2009/05/21 21:12:22 dries Exp $
+// $Id: block.js,v 1.10 2009/08/04 06:26:52 webchick Exp $
 (function ($) {
 
 /**
@@ -25,7 +25,9 @@ Drupal.behaviors.blockDrag = {
     // Add a handler so when a row is dropped, update fields dropped into new regions.
     tableDrag.onDrop = function () {
       dragObject = this;
-      var regionRow = $(dragObject.rowObject.element).prev('tr').get(0);
+      // Use "region-message" row instead of "region" row because
+      // "region-{region_name}-message" is less prone to regexp match errors.
+      var regionRow = $(dragObject.rowObject.element).prevAll('tr.region-message').get(0);
       var regionName = regionRow.className.replace(/([^ ]+[ ]+)*region-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
       var regionField = $('select.block-region-select', dragObject.rowObject.element);
       // Check whether the newly picked region is available for this block.
