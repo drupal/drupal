@@ -1,4 +1,4 @@
-/* $Id: simpletest.css,v 1.5 2009/05/01 11:01:53 dries Exp $ */
+/* $Id: simpletest.css,v 1.6 2009/08/04 06:47:00 webchick Exp $ */
 
 /* Addon for the simpletest module */
 #simpletest {
@@ -57,6 +57,14 @@ tr.simpletest-exception.odd {
 
 tr.simpletest-exception.even {
   background: #f5e742;
+}
+
+tr.simpletest-debug.odd {
+  background: #eeeeee;
+}
+
+tr.simpletest-debug.even {
+  background: #ffffff;
 }
 
 div.simpletest-image {
