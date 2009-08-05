@@ -150,10 +150,6 @@ function system_help($path, $arg) {
  */
 function system_theme() {
   return array_merge(drupal_common_theme(), array(
-    'system_theme_select_form' => array(
-      'arguments' => array('form' => NULL),
-      'file' => 'system.admin.inc',
-    ),
     'system_themes_form' => array(
       'arguments' => array('form' => NULL),
       'file' => 'system.admin.inc',
@@ -1380,7 +1376,6 @@ function system_preprocess_page(&$variables) {
  */
 function system_user_form(&$edit, &$user, $category = NULL) {
   if ($category == 'account') {
-    $form['theme_select'] = system_theme_select_form(t('Selecting a different theme will change the look and feel of the site.'), isset($edit['theme']) ? $edit['theme'] : NULL, 2);
     if (variable_get('configurable_timezones', 1)) {
       system_user_timezone($edit, $form);
     }
@@ -1583,68 +1578,6 @@ function system_admin_menu_block($item) {
   ksort($content);
   $cache[$item['mlid']] = $content;
   return $content;
-}
-
-/**
- * Returns a fieldset containing the theme select form.
- *
- * @param $description
- *    description of the fieldset
- * @param $default_value
- *    default value of theme radios
- * @param $weight
- *    weight of the fieldset
- * @return
- *    a form array
- */
-function system_theme_select_form($description = '', $default_value = '', $weight = 0) {
-  if (user_access('select different theme')) {
-    $enabled = array();
-    $themes = list_themes();
-
-    foreach ($themes as $theme) {
-      if ($theme->status) {
-        $enabled[] = $theme;
-      }
-    }
-
-    if (count($enabled) > 1) {
-      ksort($enabled);
-
-      $form['themes'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Theme configuration'),
-        '#description' => $description,
-        '#collapsible' => TRUE,
-        '#theme' => 'system_theme_select_form'
-      );
-
-      foreach ($enabled as $info) {
-        // For the default theme, revert to an empty string so the user's theme updates when the site theme is changed.
-        $info->key = $info->name == variable_get('theme_default', 'garland') ? '' : $info->name;
-
-        $screenshot = NULL;
-        $theme_key = $info->name;
-        while ($theme_key) {
-          if (file_exists($themes[$theme_key]->info['screenshot'])) {
-            $screenshot = $themes[$theme_key]->info['screenshot'];
-            break;
-          }
-          $theme_key = isset($themes[$theme_key]->info['base theme']) ? $themes[$theme_key]->info['base theme'] : NULL;
-        }
-
-        $screenshot = $screenshot ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
-
-        $form['themes'][$info->key]['screenshot'] = array('#markup' => $screenshot);
-        $form['themes'][$info->key]['description'] = array('#type' => 'item', '#title' => $info->name, '#markup' => dirname($info->filename) . ($info->name == variable_get('theme_default', 'garland') ? '<br /> <em>' . t('(site default theme)') . '</em>' : ''));
-        $options[$info->key] = '';
-      }
-
-      $form['themes']['theme'] = array('#type' => 'radios', '#options' => $options, '#default_value' => $default_value ? $default_value : '');
-      $form['#weight'] = $weight;
-      return $form;
-    }
-  }
 }
 
 /**

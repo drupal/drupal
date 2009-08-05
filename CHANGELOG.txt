@@ -79,6 +79,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
     * Refactored the HTML corrector to take advantage of PHP 5 features.
 - Removed ping module:
     * Contributed modules with similar functionality are available.
+- Removed per-user themes:
+    * Contributed modules with similar functionality are available.
 - Refactored the "access rules" component of user module:
     * The user module now provides a simple interface for blocking single
       IP addresses. The previous functionality in the user module for restricting

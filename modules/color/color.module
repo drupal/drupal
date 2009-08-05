@@ -59,13 +59,6 @@ function color_form_system_themes_alter(&$form, &$form_state) {
 }
 
 /**
- * Implement hook_form_FORM_ID_alter().
- */
-function color_form_system_theme_select_form_alter(&$form, &$form_state) {
-  _color_theme_select_form_alter($form, $form_state);
-}
-
-/**
  * Helper for hook_form_FORM_ID_alter() implementations.
  */
 function _color_theme_select_form_alter(&$form, &$form_state) {
