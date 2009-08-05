@@ -102,7 +102,7 @@ function _module_build_dependencies($files) {
   $p_core = '(?:' . preg_quote(DRUPAL_CORE_COMPATIBILITY) . '-)?';
   $p_major = '(?P<major>\d+)';
   // By setting the minor version to x, branches can be matched.
-  $p_minor = '(?P<minor>\d+|x)';
+  $p_minor = '(?P<minor>(?:\d+|x)(?:-[A-Za-z]+\d+)?)';
   foreach ($files as $filename => $file) {
     $graph[$file->name]['edges'] = array();
     if (isset($file->info['dependencies']) && is_array($file->info['dependencies'])) {
@@ -116,17 +116,14 @@ function _module_build_dependencies($files) {
             if (preg_match("/^\s*$p_op\s*$p_core$p_major\.$p_minor/", $version, $matches)) {
               $op = !empty($matches['operation']) ? $matches['operation'] : '=';
               if ($matches['minor'] == 'x') {
-                // If a module is newer than 2.x then it's at least 3.0. 
-                $matches['minor'] = 0;
-                if ($op == '>') {
+                // Drupal considers "2.x" to mean any version that begins with
+                // "2" (e.g. 2.0, 2.9 are all "2.x"). PHP's version_compare(),
+                // on the other hand, treats "x" as a string; so to
+                // version_compare(), "2.x" is considered less than 2.0. This
+                // means that >=2.x and <2.x are handled by version_compare()
+                // as we need, but > and <= are not.
+                if ($op == '>' || $op == '<=') {
                   $matches['major']++;
-                  $op = '>=';
-                }
-                // If a module is older or equivalent than 2.x then it is older
-                // than 3.0.
-                if ($op == '<=') {
-                  $matches['major']++;
-                  $op = '<';
                 }
                 // Equivalence is checked by preg.
                 if ($op == '=' || $op == '==') {

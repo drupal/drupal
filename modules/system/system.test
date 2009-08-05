@@ -208,7 +208,7 @@ class ModuleVersionTestCase extends ModuleTestCase {
       'group' => 'Module',
     );
   }
-  
+
   function setup() {
     parent::setUp('module_test');
   }
@@ -218,7 +218,7 @@ class ModuleVersionTestCase extends ModuleTestCase {
    */
   function testModuleVersions() {
     $dependencies = array(
-      // Alternating between being compatible and incompatible with 7.x-2.4.
+      // Alternating between being compatible and incompatible with 7.x-2.4-beta3.
       // The first is always a compatible.
       'common_test',
       // Branch incompatibility.
@@ -236,11 +236,17 @@ class ModuleVersionTestCase extends ModuleTestCase {
       // Nonsense, misses a dash. Incompatible with everything.
       'common_test (=7.x2.x, >=2.4)',
       // Core version is optional. Compatible.
-      'common_test (=7.x-2.x, >=2.4)',
+      'common_test (=7.x-2.x, >=2.4-alpha2)',
       // Test !=, explicitly incompatible.
-      'common_test (=2.x, !=2.4)',
+      'common_test (=2.x, !=2.4-beta3)',
       // Three operations. Compatible.
       'common_test (=2.x, !=2.3, <2.5)',
+      // Testing extra version. Incompatible.
+      'common_test (<=2.4-beta2)',
+      // Testing extra version. Compatible.
+      'common_test (>2.4-beta2)',
+      // Testing extra version. Incompatible.
+      'common_test (>2.4-rc0)',
     );
     variable_set('dependencies', $dependencies);
     $n = count($dependencies);
