@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.168 2009/08/04 07:04:21 webchick Exp $
+// $Id: system.admin.inc,v 1.169 2009/08/05 19:40:55 webchick Exp $
 
 /**
  * @file
@@ -2156,28 +2156,6 @@ function theme_system_modules_uninstall($form) {
   $output  = theme('table', $header, $rows);
   $output .= drupal_render_children($form);
 
-  return $output;
-}
-
-/**
- * Theme the theme select form.
- * @param $form
- *   An associative array containing the structure of the form.
- * @ingroup themeable
- */
-function theme_system_theme_select_form($form) {
-  foreach (element_children($form) as $key) {
-    $row = array();
-    if (isset($form[$key]['description']) && is_array($form[$key]['description'])) {
-      $row[] = drupal_render($form[$key]['screenshot']);
-      $row[] = drupal_render($form[$key]['description']);
-      $row[] = drupal_render($form['theme'][$key]);
-    }
-    $rows[] = $row;
-  }
-
-  $header = array(t('Screenshot'), t('Name'), t('Selected'));
-  $output = theme('table', $header, $rows);
   return $output;
 }
 

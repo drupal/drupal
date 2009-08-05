@@ -1,5 +1,5 @@
 <?php
-// $Id: color.module,v 1.63 2009/07/31 11:20:42 dries Exp $
+// $Id: color.module,v 1.64 2009/08/05 19:40:55 webchick Exp $
 
 /**
  * Implement hook_help().
@@ -55,13 +55,6 @@ function color_form_system_theme_settings_alter(&$form, &$form_state) {
  * Implement hook_form_FORM_ID_alter().
  */
 function color_form_system_themes_alter(&$form, &$form_state) {
-  _color_theme_select_form_alter($form, $form_state);
-}
-
-/**
- * Implement hook_form_FORM_ID_alter().
- */
-function color_form_system_theme_select_form_alter(&$form, &$form_state) {
   _color_theme_select_form_alter($form, $form_state);
 }
 
