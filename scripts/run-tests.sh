@@ -1,5 +1,5 @@
 <?php
-// $Id: run-tests.sh,v 1.32 2009/07/30 10:46:53 dries Exp $
+// $Id: run-tests.sh,v 1.33 2009/08/05 15:58:35 webchick Exp $
 /**
  * @file
  * This script runs Drupal tests from command line.
@@ -70,10 +70,8 @@ if ($args['list']) {
 
 $test_list = simpletest_script_get_test_list();
 
-// If not in 'safe mode', increase the maximum execution time.
-if (!ini_get('safe_mode')) {
-  set_time_limit(0);
-}
+// Try to allocate unlimited time to run the tests.
+drupal_set_time_limit(0);
 
 simpletest_script_reporter_init();
 
