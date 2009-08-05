@@ -2652,10 +2652,9 @@ function node_access_rebuild($batch_mode = FALSE) {
       batch_set($batch);
     }
     else {
-      // If not in 'safe mode', increase the maximum execution time.
-      if (!ini_get('safe_mode')) {
-        set_time_limit(240);
-      }
+      // Try to allocate enough time to rebuild node grants
+      drupal_set_time_limit(240);
+
       $nids = db_query("SELECT nid FROM {node}")->fetchCol();
       foreach ($nids as $nid) {
         $node = node_load($nid, NULL, TRUE);

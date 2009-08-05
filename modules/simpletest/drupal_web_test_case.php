@@ -1110,7 +1110,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     // directory will have been created already.
     variable_set('file_directory_path', $directory);
 
-    set_time_limit($this->timeLimit);
+    drupal_set_time_limit($this->timeLimit);
   }
 
   /**

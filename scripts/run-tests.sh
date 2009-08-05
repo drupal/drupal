@@ -70,10 +70,8 @@ if ($args['list']) {
 
 $test_list = simpletest_script_get_test_list();
 
-// If not in 'safe mode', increase the maximum execution time.
-if (!ini_get('safe_mode')) {
-  set_time_limit(0);
-}
+// Try to allocate unlimited time to run the tests.
+drupal_set_time_limit(0);
 
 simpletest_script_reporter_init();
 

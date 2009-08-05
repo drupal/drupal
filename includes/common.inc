@@ -2295,6 +2295,38 @@ function drupal_map_assoc($array, $function = NULL) {
 }
 
 /**
+ * Attempts to set the PHP maximum execution time.
+ *
+ * This function is a wrapper around the PHP function set_time_limit().
+ * When called, set_time_limit() restarts the timeout counter from zero.
+ * In other words, if the timeout is the default 30 seconds, and 25 seconds
+ * into script execution a call such as set_time_limit(20) is made, the
+ * script will run for a total of 45 seconds before timing out.
+ * 
+ * It also means that it is possible to decrease the total time limit if
+ * the sum of the new time limit and the current time spent running the
+ * script is inferior to the original time limit. It is inherent to the way
+ * set_time_limit() works, it should rather be called with an appropriate
+ * value every time you need to allocate a certain amount of time
+ * to execute a task than only once at the beginning of the script.
+ * 
+ * Before calling set_time_limit(), we check if this function is available
+ * because it could be disabled by the server administrator. We also hide all
+ * the errors that could occur when calling set_time_limit(), because it is
+ * not possible to reliably ensure that PHP or a security extension will
+ * not issue a warning/error if they prevent the use of this function.
+ *
+ * @param $time_limit
+ *   An integer specifying the new time limit, in seconds. A value of 0
+ *   indicates unlimited execution time.
+ */
+function drupal_set_time_limit($time_limit) {
+  if (function_exists('set_time_limit')) {
+    @set_time_limit($time_limit);
+  }
+}
+
+/**
  * Returns the path to a system item (module, theme, etc.).
  *
  * @param $type
@@ -3555,10 +3587,8 @@ function drupal_cron_run() {
   // Allow execution to continue even if the request gets canceled.
   @ignore_user_abort(TRUE);
 
-  // Try to increase the maximum execution time if it is too low.
-  if (ini_get('max_execution_time') < 240) {
-    @set_time_limit(240);
-  }
+  // Try to allocate enough time to run all the hook_cron implementations.
+  drupal_set_time_limit(240);
 
   // Fetch the cron semaphore
   $semaphore = variable_get('cron_semaphore', FALSE);
