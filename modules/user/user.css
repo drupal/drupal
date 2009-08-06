@@ -34,7 +34,7 @@
   clear: both;
   margin: 1em 0;
 }
-.profile .picture {
+.profile .user-picture {
   float: right; /* LTR */
   margin: 0 1em 1em 0; /* LTR */
 }

@@ -1153,7 +1153,7 @@ function user_block_view($delta = '') {
  * @see user-picture.tpl.php
  */
 function template_preprocess_user_picture(&$variables) {
-  $variables['picture'] = '';
+  $variables['user_picture'] = '';
   if (variable_get('user_pictures', 0)) {
     $account = $variables['account'];
     if (!empty($account->picture)) {
@@ -1177,14 +1177,14 @@ function template_preprocess_user_picture(&$variables) {
     if (isset($filepath)) {
       $alt = t("@user's picture", array('@user' => $account->name ? $account->name : variable_get('anonymous', t('Anonymous'))));
       if (module_exists('image') && $style = variable_get('user_picture_style', '')) {
-        $variables['picture'] = theme('image_style', $style, $filepath, $alt, $alt, array(), FALSE);
+        $variables['user_picture'] = theme('image_style', $style, $filepath, $alt, $alt, array(), FALSE);
       }
       else {
-        $variables['picture'] = theme('image', $filepath, $alt, $alt, array(), FALSE);
+        $variables['user_picture'] = theme('image', $filepath, $alt, $alt, array(), FALSE);
       }
       if (!empty($account->uid) && user_access('access user profiles')) {
         $attributes = array('attributes' => array('title' => t('View user profile.')), 'html' => TRUE);
-        $variables['picture'] = l($variables['picture'], "user/$account->uid", $attributes);
+        $variables['user_picture'] = l($variables['user_picture'], "user/$account->uid", $attributes);
       }
     }
   }

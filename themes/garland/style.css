@@ -674,7 +674,8 @@ ul.links li, ul.inline li {
   padding-left: 1em;
 }
 
-.picture, .comment .submitted {
+.user-picture,
+.comment .submitted {
   float: right; /* LTR */
   clear: right; /* LTR */
   padding-left: 1em; /* LTR */

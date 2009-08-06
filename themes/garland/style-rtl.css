@@ -206,7 +206,8 @@ ul.links li, ul.inline li {
   padding-left: 0;
 }
 
-.picture, .comment .submitted {
+.user-picture,
+.comment .submitted {
   padding-left: 0;
   float: left;
   clear: left;

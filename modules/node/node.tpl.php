@@ -11,8 +11,7 @@
  *   print a subset such as render($content['field_example']). Use
  *   hide($content['field_example']) to temporarily suppress the printing of a
  *   given element.
- * - $picture: The authors picture of the node output from
- *   theme_user_picture().
+ * - $user_picture: The node author's picture from user-picture.tpl.php.
  * - $date: Formatted creation date (use $created to reformat with
  *   format_date()).
  * - $name: Themed username of node author output from theme_username().
@@ -65,23 +64,25 @@
  * @see template_process()
  */
 ?>
-<div id="node-<?php print $node->nid; ?>" class="<?php print $classes ?> clearfix">
+<div id="node-<?php print $node->nid; ?>" class="<?php print $classes; ?> clearfix">
 
-<?php print $picture ?>
+  <?php print $user_picture; ?>
 
-<?php if (!$page): ?>
-  <h2><a href="<?php print $node_url ?>"><?php print $title ?></a></h2>
-<?php endif; ?>
-
-  <div class="meta">
-  <?php if ($submitted): ?>
-    <span class="submitted"><?php print $submitted ?></span>
+  <?php if (!$page): ?>
+    <h2><a href="<?php print $node_url; ?>"><?php print $title; ?></a></h2>
   <?php endif; ?>
 
-  <?php if (!empty($content['links']['terms'])): ?>
-    <div class="terms terms-inline"><?php render($content['links']['terms']) ?></div>
-  <?php endif;?>
-  </div>
+  <?php if ($submitted || !empty($content['links']['terms'])): ?>
+    <div class="meta">
+      <?php if ($submitted): ?>
+        <span class="submitted"><?php print $submitted; ?></span>
+      <?php endif; ?>
+
+      <?php if (!empty($content['links']['terms'])): ?>
+        <div class="terms terms-inline"><?php print render($content['links']['terms']); ?></div>
+      <?php endif; ?>
+    </div>
+  <?php endif; ?>
 
   <div class="content">
     <?php

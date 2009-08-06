@@ -11,7 +11,7 @@
  *
  * Available variables:
  * - $account: User's account object.
- * - $picture: Image configured for the account linking to the users page.
+ * - $user_picture: Image configured for the account linking to the users page.
  * - $name: User's account name linking to the users page.
  * - $profile: Keyed array of all profile fields that are set as visible
  *   in member list pages (configured by site administrators). It also needs
@@ -38,7 +38,7 @@
  */
 ?>
 <div class="profile clearfix">
-  <?php print $picture; ?>
+  <?php print $user_picture; ?>
 
   <div class="name">
     <?php print $name; ?>
