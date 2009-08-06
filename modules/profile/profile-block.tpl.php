@@ -1,5 +1,5 @@
 <?php
-// $Id: profile-block.tpl.php,v 1.3 2008/10/13 12:31:42 dries Exp $
+// $Id: profile-block.tpl.php,v 1.4 2009/08/06 05:05:59 webchick Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  * block. It only shows in relation to a node displayed as a full page.
  *
  * Available variables:
- * - $picture: Image configured for the account linking to the users page.
+ * - $user_picture: Image configured for the account linking to the users page.
  * - $profile: Keyed array of all profile fields that have a value.
  *
  * Each $field in $profile contains:
@@ -30,7 +30,7 @@
  * @see template_preprocess_profile_block()
  */
 ?>
-<?php print $picture; ?>
+<?php print $user_picture; ?>
 
 <?php foreach ($profile as $field) : ?>
   <p>

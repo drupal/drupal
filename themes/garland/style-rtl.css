@@ -1,4 +1,4 @@
-/* $Id: style-rtl.css,v 1.14 2009/08/03 03:04:34 webchick Exp $ */
+/* $Id: style-rtl.css,v 1.15 2009/08/06 05:06:00 webchick Exp $ */
 
 html {
   direction: rtl;
@@ -206,7 +206,8 @@ ul.links li, ul.inline li {
   padding-left: 0;
 }
 
-.picture, .comment .submitted {
+.user-picture,
+.comment .submitted {
   padding-left: 0;
   float: left;
   clear: left;

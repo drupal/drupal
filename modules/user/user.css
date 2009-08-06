@@ -1,4 +1,4 @@
-/* $Id: user.css,v 1.12 2009/08/04 03:27:11 webchick Exp $ */
+/* $Id: user.css,v 1.13 2009/08/06 05:06:00 webchick Exp $ */
 
 #permissions td.module {
   font-weight: bold;
@@ -34,7 +34,7 @@
   clear: both;
   margin: 1em 0;
 }
-.profile .picture {
+.profile .user-picture {
   float: right; /* LTR */
   margin: 0 1em 1em 0; /* LTR */
 }

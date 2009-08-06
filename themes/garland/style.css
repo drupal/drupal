@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.61 2009/08/04 06:56:30 webchick Exp $ */
+/* $Id: style.css,v 1.62 2009/08/06 05:06:00 webchick Exp $ */
 
 /**
  * Generic elements
@@ -674,7 +674,8 @@ ul.links li, ul.inline li {
   padding-left: 1em;
 }
 
-.picture, .comment .submitted {
+.user-picture,
+.comment .submitted {
   float: right; /* LTR */
   clear: right; /* LTR */
   padding-left: 1em; /* LTR */

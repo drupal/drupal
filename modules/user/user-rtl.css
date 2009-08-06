@@ -1,4 +1,4 @@
-/* $Id: user-rtl.css,v 1.4 2008/04/08 22:50:55 dries Exp $ */
+/* $Id: user-rtl.css,v 1.5 2009/08/06 05:06:00 webchick Exp $ */
 
 #permissions td.permission {
   padding-left: 0;
@@ -11,7 +11,7 @@
   clear: left;
 }
 
-.profile .picture {
+.profile .user-picture {
   float: left;
   margin: 0 0 1em 1em;
 }
