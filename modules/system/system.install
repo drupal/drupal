@@ -933,6 +933,7 @@ function system_schema() {
     'indexes' => array(
       'fit' => array('fit'),
       'tab_parent' => array('tab_parent'),
+      'tab_root_weight_title' => array(array('tab_root', 64), 'weight', 'title'),
     ),
     'primary key' => array('path'),
   );
@@ -2220,6 +2221,15 @@ function system_update_7029() {
 function system_update_7030() {
   $ret = array();
   db_add_index($ret, 'node_comment_statistics', 'comment_count', array('comment_count'));
+  return $ret;
+}
+
+/**
+ * Add a missing index on the {menu_router} table.
+ */
+function system_update_7031() {
+  $ret = array();
+  db_add_index($ret, 'menu_router', 'tab_root_weight_title', array(array('tab_root', 64), 'weight', 'title'));
   return $ret;
 }
 
