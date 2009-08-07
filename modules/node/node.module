@@ -43,7 +43,7 @@ function node_help($path, $arg) {
     case 'admin/content':
       return ' '; // Return a non-null value so that the 'more help' link is shown.
     case 'admin/structure/types/add':
-      return '<p>' . t('To create a new content type, enter the human-readable name, the machine-readable name, and all other relevant fields that are on this page. Once created, users of your site will be able to create posts that are instances of this content type.') . '</p>';
+      return '<p>' . t('Each piece of content is of a specific content type. Each <em>content type</em> can have different fields, behaviors, and permissions assigned to it.') . '</p>';
     case 'node/%/revisions':
       return '<p>' . t('The revisions let you track differences between multiple versions of a post.') . '</p>';
     case 'node/%/edit':
