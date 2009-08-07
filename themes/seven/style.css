@@ -684,6 +684,12 @@ div.admin-options div.form-item {
   border: 0;
 }
 
+a.node-admin-add-content {
+  padding-left: 15px;
+  background: url(images/add.png) no-repeat 0 center;
+  line-height: 30px;
+}
+
 /* Overlay theming */
 body.overlay {
   background: #fff;
