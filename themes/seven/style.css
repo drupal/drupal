@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.5 2009/08/08 15:33:15 webchick Exp $ */
+/* $Id: style.css,v 1.6 2009/08/08 19:19:21 webchick Exp $ */
 
 /**
  * Generic elements
@@ -680,6 +680,11 @@ a.node-admin-add-content {
   padding-left: 15px;
   background: url(images/add.png) no-repeat 0 center;
   line-height: 30px;
+}
+
+/* Update status */
+.versions table.version {
+  border: none;
 }
 
 /* Overlay theming */
