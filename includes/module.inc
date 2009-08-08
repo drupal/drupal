@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.150 2009/08/05 16:16:41 webchick Exp $
+// $Id: module.inc,v 1.151 2009/08/08 15:03:29 webchick Exp $
 
 /**
  * @file
@@ -384,9 +384,15 @@ function module_hook($module, $hook) {
  *   the implementations are loaded as necessary.
  */
 function module_implements($hook, $sort = FALSE) {
-  static $implementations = array(), $sorted_implementations = array(), $loaded = array(), $cached_hooks = 0;
+  static $implementations = array(), $sorted_implementations = array(), $loaded = array(), $cached_hooks = 0, $maintenance;
 
-  if (defined('MAINTENANCE_MODE')) {
+  // Use a static variable for maintenance mode to avoid the overhead of
+  // calling defined() each time the function is called.
+  if (!isset($maintenance)) {
+    $maintenance = defined('MAINTENANCE_MODE');
+  }
+
+  if ($maintenance) {
     return _module_implements_maintenance($hook, $sort);
   }
   if ($hook === MODULE_IMPLEMENTS_CLEAR_CACHE) {
