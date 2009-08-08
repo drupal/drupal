@@ -1594,27 +1594,6 @@ function theme_node_search_admin($form) {
   return $output;
 }
 
-/**
- * Implement hook_link().
- */
-function node_link($type, $node, $build_mode) {
-  $links = array();
-
-  if ($type == 'node') {
-    if ($build_mode == 'teaser') {
-      $links['node_read_more'] = array(
-        'title' => t('Read more'),
-        'href' => "node/$node->nid",
-        // The title attribute gets escaped when the links are processed, so
-        // there is no need to escape here.
-        'attributes' => array('title' => t('Read the rest of !title.', array('!title' => $node->title)))
-      );
-    }
-  }
-
-  return $links;
-}
-
 function _node_revision_access($node, $op = 'view') {
   static $access = array();
   if (!isset($access[$node->vid])) {
