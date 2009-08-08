@@ -682,6 +682,11 @@ a.node-admin-add-content {
   line-height: 30px;
 }
 
+/* Update status */
+.versions table.version {
+  border: none;
+}
+
 /* Overlay theming */
 body.overlay {
   background: #fff;
