@@ -790,7 +790,7 @@ function _drupal_decode_exception($exception) {
     // or in one of its global functions.
     $db_functions = array('db_query', 'pager_query', 'db_query_range', 'db_query_temporary', 'update_sql');
     while (!empty($backtrace[1]) && ($caller = $backtrace[1]) &&
-        ((isset($caller['class']) && (strpos($caller['class'], 'Query') !== FALSE || strpos($caller['class'], 'Database') !== FALSE || $caller['class'] == 'PDOStatement')) ||
+        ((isset($caller['class']) && (strpos($caller['class'], 'Query') !== FALSE || strpos($caller['class'], 'Database') !== FALSE || strpos($caller['class'], 'PDO') !== FALSE)) ||
         in_array($caller['function'], $db_functions))) {
       // We remove that call.
       array_shift($backtrace);
