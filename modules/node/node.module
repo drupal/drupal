@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1094 2009/08/07 21:38:51 webchick Exp $
+// $Id: node.module,v 1.1095 2009/08/08 22:52:59 webchick Exp $
 
 /**
  * @file
@@ -1592,27 +1592,6 @@ function theme_node_search_admin($form) {
 
   $output .= drupal_render_children($form);
   return $output;
-}
-
-/**
- * Implement hook_link().
- */
-function node_link($type, $node, $build_mode) {
-  $links = array();
-
-  if ($type == 'node') {
-    if ($build_mode == 'teaser') {
-      $links['node_read_more'] = array(
-        'title' => t('Read more'),
-        'href' => "node/$node->nid",
-        // The title attribute gets escaped when the links are processed, so
-        // there is no need to escape here.
-        'attributes' => array('title' => t('Read the rest of !title.', array('!title' => $node->title)))
-      );
-    }
-  }
-
-  return $links;
 }
 
 function _node_revision_access($node, $op = 'view') {
