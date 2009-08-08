@@ -13,10 +13,11 @@ Drupal 7.0, xxxx-xx-xx (development version)
       This offers increased scalability and data integrity.
 - Security:
     * Protected cron.php -- cron will only run if the proper key is provided.
-    * Implemented much stronger password hashes that are also compatible with the
-      Portable PHP password hashing framework.
-    * Implemented a pluggable password hashing API supporting alternative
-      hashing and authentication schemes.
+    * Implemented a pluggable password system and much stronger password hashes
+      that are compatible with the Portable PHP password hashing framework.
+    * Rate limited login attempts to prevent brute-force password guessing, and
+      improved the flood control API to allow variable time windows and
+      identifiers for limiting user access to resources.
 - Usability:
     * Improved installer requirements check.
     * Improved support for integration of WYSIWYG editors.

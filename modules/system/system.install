@@ -759,8 +759,8 @@ function system_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'hostname' => array(
-        'description' => 'Hostname of the visitor.',
+      'identifier' => array(
+        'description' => 'Identifier of the visitor, such as an IP address or hostname.',
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
@@ -775,7 +775,7 @@ function system_schema() {
     ),
     'primary key' => array('fid'),
     'indexes' => array(
-      'allow' => array('event', 'hostname', 'timestamp'),
+      'allow' => array('event', 'identifier', 'timestamp'),
     ),
   );
 
@@ -2230,6 +2230,17 @@ function system_update_7030() {
 function system_update_7031() {
   $ret = array();
   db_add_index($ret, 'menu_router', 'tab_root_weight_title', array(array('tab_root', 64), 'weight', 'title'));
+  return $ret;
+}
+
+/**
+* Alter field hostname to identifier in the {flood} table.
+ */
+function system_update_7032() {
+  $ret = array();
+  db_drop_index($ret, 'flood', 'allow');
+  db_change_field($ret, 'flood', 'hostname', 'identifier', array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''));
+  db_add_index($ret, 'flood', 'allow', array('event', 'identifier', 'timestamp'));
   return $ret;
 }
 

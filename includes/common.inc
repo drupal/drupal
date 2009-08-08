@@ -1276,39 +1276,70 @@ function valid_url($url, $absolute = FALSE) {
  */
 
 /**
- * Register an event for the current visitor (hostname/IP) to the flood control mechanism.
+ * Register an event for the current visitor to the flood control mechanism.
  *
  * @param $name
  *   The name of an event.
+ * @param $identifier
+ *   Optional identifier (defaults to the current user's IP address).
  */
-function flood_register_event($name) {
+function flood_register_event($name, $identifier = NULL) {
+  if (!isset($identifier)) {
+    $identifier = ip_address();
+  }
   db_insert('flood')
     ->fields(array(
       'event' => $name,
-      'hostname' => ip_address(),
+      'identifier' => $identifier,
       'timestamp' => REQUEST_TIME,
     ))
     ->execute();
 }
 
 /**
- * Check if the current visitor (hostname/IP) is allowed to proceed with the specified event.
+ * Make the flood control mechanism forget about an event for the current visitor.
+ *
+ * @param $name
+ *   The name of an event.
+ * @param $identifier
+ *   Optional identifier (defaults to the current user's IP address).
+ */
+function flood_clear_event($name, $identifier = NULL) {
+  if (!isset($identifier)) {
+    $identifier = ip_address();
+  }
+  db_delete('flood')
+    ->condition('event', $name)
+    ->condition('identifier', $identifier)
+    ->execute();
+}
+
+/**
+ * Check if the current visitor is allowed to proceed with the specified event.
  *
  * The user is allowed to proceed if he did not trigger the specified event more
- * than $threshold times per hour.
+ * than $threshold times in the specified time window.
  *
  * @param $name
  *   The name of the event.
  * @param $threshold
- *   The maximum number of the specified event per hour (per visitor).
+ *   The maximum number of the specified event allowed per time window.
+ * @param $window
+ *   Optional number of seconds over which to look for events.  Defaults to
+ *   3600 (1 hour).
+ * @param $identifier
+ *   Optional identifier (defaults to the current user's IP address).
  * @return
  *   True if the user did not exceed the hourly threshold. False otherwise.
  */
-function flood_is_allowed($name, $threshold) {
-  $number = db_query("SELECT COUNT(*) FROM {flood} WHERE event = :event AND hostname = :hostname AND timestamp > :timestamp", array(
+function flood_is_allowed($name, $threshold, $window = 3600, $identifier = NULL) {
+  if (!isset($identifier)) {
+    $identifier = ip_address();
+  }
+  $number = db_query("SELECT COUNT(*) FROM {flood} WHERE event = :event AND identifier = :identifier AND timestamp > :timestamp", array(
     ':event' => $name,
-    ':hostname' => ip_address(),
-    ':timestamp' => REQUEST_TIME - 3600))
+    ':identifier' => $identifier,
+    ':timestamp' => REQUEST_TIME - $window))
     ->fetchField();
   return ($number < $threshold);
 }
