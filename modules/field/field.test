@@ -868,7 +868,7 @@ class FieldInfoTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('field_sql_storage', 'field', 'field_test');
+    parent::setUp('field_test');
   }
 
   /**
@@ -1062,7 +1062,7 @@ class FieldFormTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('field_sql_storage', 'field', 'field_test');
+    parent::setUp('field_test');
 
     $web_user = $this->drupalCreateUser(array('access field_test content', 'administer field_test content'));
     $this->drupalLogin($web_user);
@@ -1351,7 +1351,7 @@ class FieldCrudTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('field_sql_storage', 'field', 'field_test');
+    parent::setUp('field_test');
   }
 
   // TODO : test creation with
@@ -1585,7 +1585,7 @@ class FieldInstanceCrudTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('field_sql_storage', 'field', 'field_test');
+    parent::setUp('field_test');
     $this->field = array(
       'field_name' => drupal_strtolower($this->randomName()),
       'type' => 'test_field',
