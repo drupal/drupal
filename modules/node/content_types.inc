@@ -108,7 +108,6 @@ function node_type_form(&$form_state, $type = NULL) {
     '#title' => t('Description'),
     '#type' => 'textarea',
     '#default_value' => $type->description,
-    '#description' => t('A brief description of this content type. This text will be displayed as part of the list on the <em>add new content</em> page.'),
     );
 
   $form['submission'] = array(
@@ -133,24 +132,23 @@ function node_type_form(&$form_state, $type = NULL) {
     '#title' => t('Body field label'),
     '#type' => 'textfield',
     '#default_value' => isset($type->body_label) ? $type->body_label : '',
-    '#description' => t('To omit the body field for this content type, remove any text and leave this field blank.'),
+    '#description' => t('To remove the body field, remove text and leave blank.'),
   );
   $form['submission']['node_preview'] = array(
     '#type' => 'radios',
-    '#title' => t('Preview post'),
+    '#title' => t('Preview before submitting'),
     '#default_value' => variable_get('node_preview_' . $type->type, DRUPAL_OPTIONAL),
     '#options' => array(
       DRUPAL_DISABLED => t('Disabled'),
       DRUPAL_OPTIONAL => t('Optional'),
       DRUPAL_REQUIRED => t('Required'),
     ),
-    '#description' => t('Should users preview posts before submitting?'),
     );
   $form['submission']['help']  = array(
     '#type' => 'textarea',
     '#title' => t('Explanation or submission guidelines'),
     '#default_value' => $type->help,
-    '#description' => t('This text will be displayed at the top of the submission form for this content type. It is useful for helping or instructing your users.')
+    '#description' => t('This text will be displayed at the top of the submission form for this content type.')
   );
   $form['workflow'] = array(
     '#type' => 'fieldset',
@@ -396,7 +394,7 @@ function node_type_delete_confirm(&$form_state, $type) {
 
   $num_nodes = db_query("SELECT COUNT(*) FROM {node} WHERE type = :type", array(':type' => $type->type))->fetchField();
   if ($num_nodes) {
-    $caption .= '<p>' . format_plural($num_nodes, '<strong>Warning:</strong> there is currently 1 %type post on your site. It may not be able to be displayed or edited correctly, once you have removed this content type.', '<strong>Warning:</strong> there are currently @count %type posts on your site. They may not be able to be displayed or edited correctly, once you have removed this content type.', array('%type' => $type->name)) . '</p>';
+    $caption .= '<p>' . format_plural($num_nodes, '<strong>Warning:</strong> there is currently 1 %type post on your site. It may not be able to be displayed or edited correctly once you have removed this content type.', '<strong>Warning:</strong> there are currently @count %type posts on your site. They may not be able to be displayed or edited correctly once you have removed this content type.', array('%type' => $type->name)) . '</p>';
   }
 
   $caption .= '<p>' . t('This action cannot be undone.') . '</p>';
