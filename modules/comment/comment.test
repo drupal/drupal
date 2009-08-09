@@ -361,6 +361,83 @@ class CommentInterfaceTest extends CommentHelperCase {
   }
 }
 
+/**
+ * Test previewing comments.
+ */
+class CommentPreviewTest extends CommentHelperCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Comment preview',
+      'description' => 'Test comment preview.',
+      'group' => 'Comment',
+    );
+  }
+
+  /**
+   * Test comment preview.
+   */
+  function testCommentPreview() {
+    // As admin user, configure comment settings.
+    $this->drupalLogin($this->admin_user);
+    $this->setCommentPreview(TRUE);
+    $this->setCommentForm(TRUE);
+    $this->setCommentSubject(TRUE);
+    $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, t('Comment paging changed.'));
+    $this->drupalLogout();
+
+    // As web user, fill in node creation form and preview node.
+    $this->drupalLogin($this->web_user);
+    $edit = array();
+    $edit['subject'] = $this->randomName(8);
+    $edit['comment'] = $this->randomName(16);
+    $this->drupalPost('node/' . $this->node->nid, $edit, t('Preview'));
+
+    // Check that the preview is displaying the title and body.
+    $this->assertTitle(t('Preview comment | Drupal'), t('Page title is "Preview comment".'));
+    $this->assertText($edit['subject'], t('Subject displayed.'));
+    $this->assertText($edit['comment'], t('Comment displayed.'));
+
+    // Check that the title and body fields are displayed with the correct values.
+    $this->assertFieldByName('subject', $edit['subject'], t('Subject field displayed.'));
+    $this->assertFieldByName('comment', $edit['comment'], t('Comment field displayed.'));
+  }
+  
+  /**
+   * Test comment edit and preview.
+   */
+  function testCommentEditPreview() {
+    $web_user = $this->drupalCreateUser(array('access comments', 'post comments', 'post comments without approval'));
+    $this->drupalLogin($this->admin_user);
+    $this->setCommentPreview(TRUE);
+    $this->setCommentForm(TRUE);
+    $this->setCommentSubject(TRUE);
+    $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, t('Comment paging changed.'));
+    
+    $edit = array();
+    $edit['subject'] = $this->randomName(8);
+    $edit['comment'] = $this->randomName(16);
+    $edit['author'] = $web_user->name;
+    $edit['date'] = '2008-03-02 17:23 +0300';
+    $expected_date = format_date(strtotime($edit['date']));
+    $comment = $this->postComment($this->node, $edit['subject'], $edit['comment'], TRUE);
+    $this->drupalPost('comment/edit/' . $comment->id, $edit, t('Preview'));
+    
+    // Check that the preview is displaying the subject, comment, author and date correctly.
+    $this->assertTitle(t('Preview comment | Drupal'), t('Page title is "Preview comment".'));
+    $this->assertText($edit['subject'], t('Subject displayed.'));
+    $this->assertText($edit['comment'], t('Comment displayed.'));
+    $this->assertText($edit['author'], t('Author displayed.'));
+    $this->assertText($expected_date, t('Date displayed.'));
+
+    // Check that the title and body fields are displayed with the correct values.
+    $this->assertFieldByName('subject', $edit['subject'], t('Subject field displayed.'));
+    $this->assertFieldByName('comment', $edit['comment'], t('Comment field displayed.'));
+    $this->assertFieldByName('author', $edit['author'], t('Author field displayed.'));
+    $this->assertFieldByName('date', $edit['date'], t('Date field displayed.'));
+  }
+
+}
+
 class CommentAnonymous extends CommentHelperCase {
   public static function getInfo() {
     return array(

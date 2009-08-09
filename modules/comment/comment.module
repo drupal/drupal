@@ -1882,10 +1882,10 @@ function comment_preview($comment) {
     $comment->format = $comment->comment_format;
 
     // Attach the user and time information.
-    if (!empty($edit['author'])) {
-      $account = user_load_by_name($edit['author']);
+    if (!empty($comment->author)) {
+      $account = user_load_by_name($comment->author);
     }
-    elseif ($user->uid && !isset($edit['is_anonymous'])) {
+    elseif ($user->uid && !isset($comment->is_anonymous)) {
       $account = $user;
     }
 
@@ -1897,7 +1897,7 @@ function comment_preview($comment) {
       $comment->name = variable_get('anonymous', t('Anonymous'));
     }
 
-    $comment->timestamp = !empty($edit['timestamp']) ? $edit['timestamp'] : REQUEST_TIME;
+    $comment->timestamp = !empty($comment->timestamp) ? $comment->timestamp : REQUEST_TIME;
     $comment->in_preview = TRUE;
     $comment_build = comment_build($comment);
     $comment_build += array(
