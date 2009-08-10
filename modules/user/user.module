@@ -618,7 +618,7 @@ function user_user($type, &$edit, &$account, $category = NULL) {
       '#weight' => 5,
       '#title' => t('History'),
     );
-    $account->content['summary']['member_for'] =  array(
+    $account->content['summary']['member_for'] = array(
       '#type' => 'user_profile_item',
       '#title' => t('Member for'),
       '#value' => format_interval(time() - $account->created),
