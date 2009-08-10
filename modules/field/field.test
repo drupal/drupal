@@ -1363,28 +1363,6 @@ class FieldCrudTestCase extends DrupalWebTestCase {
    * Test the creation of a field.
    */
   function testCreateField() {
-    // Check that field type is required.
-    try {
-      $field_definition = array(
-        'field_name' => 'field_1',
-      );
-      field_create_field($field_definition);
-      $this->fail(t('Cannot create a field with no type.'));
-    }
-    catch (FieldException $e) {
-      $this->pass(t('Cannot create a field with no type.'));
-    }
-
-    // Check that field name is required.
-    try {
-      $field_definition = array('type' => 'test_field');
-      field_create_field($field_definition);
-      $this->fail(t('Cannot create an unnamed field.'));
-    }
-    catch (FieldException $e) {
-      $this->pass(t('Cannot create an unnamed field.'));
-    }
-
     $field_definition = array(
       'field_name' => 'field_2',
       'type' => 'test_field',
@@ -1419,19 +1397,68 @@ class FieldCrudTestCase extends DrupalWebTestCase {
       $this->pass(t('Cannot create two fields with the same name.'));
     }
 
-    // Check that invalid field names are rejected.
-    $field_definition = array(
-      'field_name' => 'field_#',
-      'type' => 'test_field',
-    );
+    // Check that field type is required.
     try {
+      $field_definition = array(
+        'field_name' => 'field_1',
+      );
       field_create_field($field_definition);
-      $this->fail(t('Cannot create a field with an invalid name.'));
+      $this->fail(t('Cannot create a field with no type.'));
     }
     catch (FieldException $e) {
-      $this->pass(t('Cannot create a field with an invalid name.'));
+      $this->pass(t('Cannot create a field with no type.'));
     }
-    // TODO : other failures
+
+    // Check that field name is required.
+    try {
+      $field_definition = array(
+        'type' => 'test_field'
+      );
+      field_create_field($field_definition);
+      $this->fail(t('Cannot create an unnamed field.'));
+    }
+    catch (FieldException $e) {
+      $this->pass(t('Cannot create an unnamed field.'));
+    }
+
+    // Check that field name must start with a letter or _.
+    try {
+      $field_definition = array(
+        'field_name' => '2field_2',
+        'type' => 'test_field',
+      );
+      field_create_field($field_definition);
+      $this->fail(t('Cannot create a field with a name starting with a digit.'));
+    }
+    catch (FieldException $e) {
+      $this->pass(t('Cannot create a field with a name starting with a digit.'));
+    }
+
+    // Check that field name must only contain lowercase alphanumeric or _.
+    try {
+      $field_definition = array(
+        'field_name' => 'field#_3',
+        'type' => 'test_field',
+      );
+      field_create_field($field_definition);
+      $this->fail(t('Cannot create a field with a name containing an illegal character.'));
+    }
+    catch (FieldException $e) {
+      $this->pass(t('Cannot create a field with a name containing an illegal character.'));
+    }
+
+    // Check that field name cannot be longer than 32 characters long.
+    try {
+      $field_definition = array(
+        'field_name' => '_12345678901234567890123456789012',
+        'type' => 'test_field',
+      );
+      field_create_field($field_definition);
+      $this->fail(t('Cannot create a field with a name longer than 32 characters.'));
+    }
+    catch (FieldException $e) {
+      $this->pass(t('Cannot create a field with a name longer than 32 characters.'));
+    }
   }
 
   /**

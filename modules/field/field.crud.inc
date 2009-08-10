@@ -208,11 +208,17 @@ function field_create_field($field) {
     throw new FieldException('Attempt to create a field with no type.');
   }
   // Field name cannot contain invalid characters.
-  if (preg_match('/[^a-z0-9_]/', $field['field_name'])) {
-    throw new FieldException('Attempt to create a field with invalid characters. Only alphanumeric characters and underscores are allowed.');
+  if (!preg_match('/^[_a-z]+[_a-z0-9]*$/', $field['field_name'])) {
+    throw new FieldException('Attempt to create a field with invalid characters. Only lowercase alphanumeric characters and underscores are allowed, and only lowercase letters and underscore are allowed as the first character');
   }
 
-  // TODO: check that field_name < 32 chars.
+  // Field name cannot be longer than 32 characters. We use drupal_strlen()
+  // because the DB layer assumes that column widths are given in characters,
+  // not bytes.
+  if (drupal_strlen($field['field_name']) > 32) {
+    throw new FieldException(t('Attempt to create a field with a name longer than 32 characters: %name',
+      array('%name' => $field['field_name'])));
+  }
 
   // Check that the field type is known.
   $field_type = field_info_field_types($field['type']);
@@ -233,6 +239,7 @@ function field_create_field($field) {
     'locked' => FALSE,
     'settings' => array(),
   );
+
   // Create all per-field-type properties (needed here as long as we have
   // settings that impact column definitions).
   $field['settings'] += field_info_field_settings($field['type']);
