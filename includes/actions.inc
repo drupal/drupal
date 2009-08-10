@@ -112,6 +112,7 @@ function actions_do($action_ids, &$object, $context = NULL, $a1 = NULL, $a2 = NU
 /**
  * Discover all action functions by invoking hook_action_info().
  *
+ * @code
  * mymodule_action_info() {
  *   return array(
  *     'mymodule_functiondescription_action' => array(
@@ -125,6 +126,7 @@ function actions_do($action_ids, &$object, $context = NULL, $a1 = NULL, $a2 = NU
  *     )
  *   );
  * }
+ * @endcode
  *
  * The description is used in presenting possible actions to the user for
  * configuration. The type is used to present these actions in a logical

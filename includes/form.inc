@@ -272,6 +272,7 @@ function form_get_cache($form_build_id, &$form_state) {
  *   in here when it is called.
  * For example:
  *
+ * @code
  * // register a new user
  * $form_state = array();
  * $form_state['values']['name'] = 'robo-user';
@@ -289,6 +290,7 @@ function form_get_cache($form_build_id, &$form_state) {
  * $form_state['values']['name'] = 'robo-user';
  * $form_state['values']['op'] = t('Save');
  * drupal_execute('story_node_form', $form_state, (object)$node);
+ * @endcode
  */
 function drupal_execute($form_id, &$form_state) {
   $args = func_get_args();
