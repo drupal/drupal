@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.22 2009/08/02 08:16:16 webchick Exp $
+// $Id: schema.inc,v 1.23 2009/08/10 21:00:31 dries Exp $
 
 /**
  * @file
@@ -286,8 +286,8 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     $ret[] = update_sql($query);
     if (isset($spec['initial'])) {
       // All this because update_sql does not support %-placeholders.
-      $sql = 'UPDATE {' . $table . '} SET ' . $field . ' = ' . db_type_placeholder($spec['type']);
-      $result = db_query($sql, $spec['initial']);
+      $sql = 'UPDATE {' . $table . '} SET ' . $field . ' = :value';
+      $result = db_query($sql, array(':value' => $spec['initial']));
       $ret[] = array('success' => $result !== FALSE, 'query' => check_plain($sql . ' (' . $spec['initial'] . ')'));
     }
     if ($fixnull) {
