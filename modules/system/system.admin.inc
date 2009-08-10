@@ -187,7 +187,6 @@ function system_admin_theme_settings() {
  */
 function system_themes_form() {
 
-  drupal_clear_css_cache();
   $themes = system_theme_data();
 
   uasort($themes, 'system_sort_modules_by_info_name');
@@ -263,6 +262,7 @@ function system_themes_form() {
  * Process system_themes_form form submissions.
  */
 function system_themes_form_submit($form, &$form_state) {
+  drupal_clear_css_cache();
 
   // Store list of previously enabled themes and disable all themes
   $old_theme_list = $new_theme_list = array();
