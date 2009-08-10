@@ -208,7 +208,19 @@ function _db_query_callback($match, $init = FALSE) {
 
   switch ($match[1]) {
     case '%d': // We must use type casting to int to convert FALSE/NULL/(TRUE?)
-      return (int) array_shift($args); // We don't need db_escape_string as numbers are db-safe
+      $value = array_shift($args);
+      // Do we need special bigint handling?
+      if ($value > PHP_INT_MAX) {
+        $precision = ini_get('precision');
+        @ini_set('precision', 16);
+        $value = sprintf('%.0f', $value);
+        @ini_set('precision', $precision);
+      }
+      else {
+        $value = (int) $value;
+      }
+      // We don't need db_escape_string as numbers are db-safe.
+      return $value;
     case '%s':
       return db_escape_string(array_shift($args));
     case '%n':
