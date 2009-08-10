@@ -38,18 +38,6 @@ function phptemplate_breadcrumb($breadcrumb) {
 }
 
 /**
- * Allow themable wrapping of all comments.
- */
-function phptemplate_comment_wrapper($content, $node) {
-  if (!$content || $node->type == 'forum') {
-    return '<div id="comments">'. $content .'</div>';
-  }
-  else {
-    return '<div id="comments"><h2 class="comments">'. t('Comments') .'</h2>'. $content .'</div>';
-  }
-}
-
-/**
  * Override or insert PHPTemplate variables into the templates.
  */
 function phptemplate_preprocess_page(&$vars) {
@@ -58,6 +46,15 @@ function phptemplate_preprocess_page(&$vars) {
   // Hook into color.module
   if (module_exists('color')) {
     _color_page_alter($vars);
+  }
+}
+
+/**
+ * Add a "Comments" heading above comments except on forum pages.
+ */
+function garland_preprocess_comment_wrapper(&$vars) {
+  if ($vars['content'] && $vars['node']->type != 'forum') {
+    $vars['content'] = '<h2 class="comments">'. t('Comments') .'</h2>'.  $vars['content'];
   }
 }
 
