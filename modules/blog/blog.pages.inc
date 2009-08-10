@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.pages.inc,v 1.21 2009/07/29 06:39:33 dries Exp $
+// $Id: blog.pages.inc,v 1.22 2009/08/10 22:39:24 webchick Exp $
 
 /**
  * @file
@@ -123,7 +123,7 @@ function blog_feed_user($account) {
     ->execute()
     ->fetchCol();
 
-  $channel['title'] = $account->name . "'s blog";
+  $channel['title'] = t("!name's blog", array('!name' => $account->name));
   $channel['link'] = url('blog/' . $account->uid, array('absolute' => TRUE));
 
   node_feed($nids, $channel);
@@ -143,7 +143,7 @@ function blog_feed_last() {
     ->execute()
     ->fetchCol();
 
-  $channel['title'] = variable_get('site_name', 'Drupal') . ' blogs';
+  $channel['title'] = t('!site_name blogs', array('!site_name' => variable_get('site_name', 'Drupal')));
   $channel['link'] = url('blog', array('absolute' => TRUE));
 
   node_feed($nids, $channel);
