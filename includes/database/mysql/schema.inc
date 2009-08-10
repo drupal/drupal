@@ -286,8 +286,8 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     $ret[] = update_sql($query);
     if (isset($spec['initial'])) {
       // All this because update_sql does not support %-placeholders.
-      $sql = 'UPDATE {' . $table . '} SET ' . $field . ' = ' . db_type_placeholder($spec['type']);
-      $result = db_query($sql, $spec['initial']);
+      $sql = 'UPDATE {' . $table . '} SET ' . $field . ' = :value';
+      $result = db_query($sql, array(':value' => $spec['initial']));
       $ret[] = array('success' => $result !== FALSE, 'query' => check_plain($sql . ' (' . $spec['initial'] . ')'));
     }
     if ($fixnull) {

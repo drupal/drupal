@@ -2175,50 +2175,6 @@ function db_find_tables($table_expression) {
   return Database::getConnection()->schema()->findTables($table_expression);
 }
 
-/**
- * Given a Schema API field type, return the correct %-placeholder.
- *
- * Embed the placeholder in a query to be passed to db_query and and pass as an
- * argument to db_query a value of the specified type.
- *
- * @todo Remove this after all queries are converted to type-agnostic form.
- * @param $type
- *   The Schema API type of a field.
- * @return
- *   The placeholder string to embed in a query for that type.
- */
-function db_type_placeholder($type) {
-  switch ($type) {
-    case 'varchar':
-    case 'char':
-    case 'text':
-    case 'datetime':
-      return '\'%s\'';
-
-    case 'numeric':
-      // Numeric values are arbitrary precision numbers. Syntactically, numerics
-      // should be specified directly in SQL. However, without single quotes
-      // the %s placeholder does not protect against non-numeric characters such
-      // as spaces which would expose us to SQL injection.
-      return '%n';
-
-    case 'serial':
-    case 'int':
-      return '%d';
-
-    case 'float':
-      return '%f';
-
-    case 'blob':
-      return '%b';
-  }
-
-  // There is no safe value to return here, so return something that
-  // will cause the query to fail.
-  return 'unsupported type ' . $type . 'for db_type_placeholder';
-}
-
-
 function _db_create_keys_sql($spec) {
   return Database::getConnection()->schema()->createKeysSql($spec);
 }
