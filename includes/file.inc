@@ -692,7 +692,7 @@ function file_unmanaged_copy($source, $destination = NULL, $replace = FILE_EXIST
   $destination = file_destination($directory . '/' . $basename, $replace);
 
   if ($destination === FALSE) {
-    drupal_set_message(t('The specified file %file could not be copied because a file by that name already exists in the destination %directory.', array('%file' => $source, '%directory' => $proposed_destination)), 'error');
+    drupal_set_message(t('The file %file could not be copied because a file by that name already exists in the destination directory (%directory)', array('%file' => $source, '%directory' => $proposed_destination)), 'error');
     return FALSE;
   }
   // Make sure source and destination filenames are not the same, makes no
@@ -743,7 +743,7 @@ function file_destination($destination, $replace) {
         break;
 
       case FILE_EXISTS_ERROR:
-        drupal_set_message(t('The specified file %file could not be copied, because a file by that name already exists in the destination.', array('%file' => $destination)), 'error');
+        // Error reporting handled by calling function.
         return FALSE;
     }
   }
@@ -1187,6 +1187,7 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
   // If file_destination() returns FALSE then $replace == FILE_EXISTS_ERROR and
   // there's an existing file so we need to bail.
   if ($file->destination === FALSE) {
+    drupal_set_message(t('The file %source could not be uploaded because a file by that name already exists in the destination %directory.', array('%source' => $source, '%directory' => $destination)), 'error');
     return FALSE;
   }
 
