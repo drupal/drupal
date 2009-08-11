@@ -641,3 +641,27 @@ function field_test_field_create_field($field) {
   $args = func_get_args();
   field_test_memorize(__FUNCTION__, $args);
 }
+
+/**
+ * Memorize calls to hook_field_insert().
+ */
+function field_test_field_insert($obj_type, $object, $field, $instance, $items) {
+  $args = func_get_args();
+  field_test_memorize(__FUNCTION__, $args);
+}
+
+/**
+ * Memorize calls to hook_field_update().
+ */
+function field_test_field_update($obj_type, $object, $field, $instance, $items) {
+  $args = func_get_args();
+  field_test_memorize(__FUNCTION__, $args);
+}
+
+/**
+ * Memorize calls to hook_field_delete().
+ */
+function field_test_field_delete($obj_type, $object, $field, $instance, $items) {
+  $args = func_get_args();
+  field_test_memorize(__FUNCTION__, $args);
+}

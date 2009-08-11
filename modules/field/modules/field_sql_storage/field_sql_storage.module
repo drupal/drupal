@@ -211,25 +211,38 @@ function field_sql_storage_field_storage_load($obj_type, $objects, $age, $skip_f
   $delta_count = array();
   foreach ($objects as $obj) {
     list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $obj);
-    foreach (field_info_instances($bundle) as $field_name => $instance) {
-      if (!isset($skip_fields[$field_name]) && (!isset($options['field_name']) || $options['field_name'] == $instance['field_name'])) {
+
+    if ($options['deleted']) {
+      $instances = field_read_instances(array('bundle' => $bundle), array('include_deleted' => $options['deleted']));
+    }
+    else {
+      $instances = field_info_instances($bundle);
+    }
+
+    foreach ($instances as $instance) {
+      $field_name = $instance['field_name'];
+      if (!isset($skip_fields[$instance['field_id']]) && (!isset($options['field_id']) || $options['field_id'] == $instance['field_id'])) {
         $objects[$id]->{$field_name} = array();
-        $field_ids[$field_name][] = $load_current ? $id : $vid;
+        $field_ids[$instance['field_id']][] = $load_current ? $id : $vid;
         $delta_count[$id][$field_name] = 0;
       }
     }
   }
 
-  foreach ($field_ids as $field_name => $ids) {
-    $field = field_info_field($field_name);
+  foreach ($field_ids as $field_id => $ids) {
+    $field = field_info_field_by_id($field_id);
+    $field_name = $field['field_name'];
     $table = $load_current ? _field_sql_storage_tablename($field) : _field_sql_storage_revision_tablename($field);
 
     $query = db_select($table, 't')
       ->fields('t')
       ->condition('etid', $etid)
       ->condition($load_current ? 'entity_id' : 'revision_id', $ids, 'IN')
-      ->condition('deleted', 0)
       ->orderBy('delta');
+
+    if (empty($options['deleted'])) {
+      $query->condition('deleted', 0);
+    }
 
     $results = $query->execute();
 
@@ -261,7 +274,7 @@ function field_sql_storage_field_storage_write($obj_type, $object, $op, $skip_fi
   $instances = field_info_instances($bundle);
   foreach ($instances as $instance) {
     $field_name = $instance['field_name'];
-    if (isset($skip_fields[$field_name])) {
+    if (isset($skip_fields[$instance['field_id']])) {
       continue;
     }
 
@@ -329,7 +342,7 @@ function field_sql_storage_field_storage_write($obj_type, $object, $op, $skip_fi
 /**
  * Implement hook_field_storage_delete().
  *
- * This function actually deletes the data from the database.
+ * This function deletes data for all fields for an object from the database.
  */
 function field_sql_storage_field_storage_delete($obj_type, $object) {
   list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
@@ -337,39 +350,54 @@ function field_sql_storage_field_storage_delete($obj_type, $object) {
 
   $instances = field_info_instances($bundle);
   foreach ($instances as $instance) {
-    $field_name = $instance['field_name'];
-    $field = field_read_field($field_name);
-    $table_name = _field_sql_storage_tablename($field);
-    $revision_name = _field_sql_storage_revision_tablename($field);
-    db_delete($table_name)
-      ->condition('etid', $etid)
-      ->condition('entity_id', $id)
-      ->execute();
-    db_delete($revision_name)
-      ->condition('etid', $etid)
-      ->condition('entity_id', $id)
-      ->execute();
+    $field = field_info_field($instance['field_name']);
+    field_sql_storage_field_storage_purge($obj_type, $object, $field, $instance);
   }
 }
 
+/**
+ * Implement hook_field_storage_purge().
+ *
+ * This function deletes data from the database for a single field on
+ * an object.
+ */
+function field_sql_storage_field_storage_purge($obj_type, $object, $field, $instance) {
+  list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
+  $etid = _field_sql_storage_etid($obj_type);
+
+  $field = field_info_field_by_id($field['id']);
+  $table_name = _field_sql_storage_tablename($field);
+  $revision_name = _field_sql_storage_revision_tablename($field);
+  db_delete($table_name)
+    ->condition('etid', $etid)
+    ->condition('entity_id', $id)
+    ->execute();
+  db_delete($revision_name)
+    ->condition('etid', $etid)
+    ->condition('entity_id', $id)
+    ->execute();
+}
 
 /**
  * Implement hook_field_storage_query().
  */
-function field_sql_storage_field_storage_query($field_name, $conditions, $count, &$cursor, $age) {
+function field_sql_storage_field_storage_query($field_id, $conditions, $count, &$cursor, $age) {
   $load_current = $age == FIELD_LOAD_CURRENT;
 
-  $field = field_info_field($field_name);
+  $field = field_info_field_by_id($field_id);
+  $field_name = $field['field_name'];
   $table = $load_current ? _field_sql_storage_tablename($field) : _field_sql_storage_revision_tablename($field);
   $field_columns = array_keys($field['columns']);
 
   // Build the query.
   $query = db_select($table, 't');
   $query->join('field_config_entity_type', 'e', 't.etid = e.etid');
+
   $query
     ->fields('t', array('bundle', 'entity_id', 'revision_id'))
     ->fields('e', array('type'))
-    ->condition('deleted', 0)
+    // We need to ensure objects arrive in a consistent order for the
+    // range() operation to work.
     ->orderBy('t.etid')
     ->orderBy('t.entity_id');
 
@@ -400,6 +428,15 @@ function field_sql_storage_field_storage_query($field_name, $conditions, $count,
       $column = _field_sql_storage_columnname($field_name, $column);
     }
     $query->condition($column, $value, $operator);
+
+    if ($column == 'deleted') {
+      $deleted = $value;
+    }
+  }
+
+  // Exclude deleted data unless we have a condition on it.
+  if (!isset($deleted)) {
+    $query->condition('deleted', 0);
   }
 
   // Initialize results array
@@ -420,7 +457,6 @@ function field_sql_storage_field_storage_query($field_name, $conditions, $count,
     foreach ($results as $row) {
       $row_count++;
       $cursor++;
-
       // If querying all revisions and the entity type has revisions, we need
       // to key the results by revision_ids.
       $entity_type = field_info_fieldable_types($row->type);
@@ -504,3 +540,18 @@ function field_sql_storage_field_storage_rename_bundle($bundle_old, $bundle_new)
       ->execute();
   }
 }
+
+/**
+ * Implement hook_field_storage_purge_field().
+ *
+ * All field data items and instances have already been purged, so all
+ * that is left is to delete the table.
+ */
+function field_sql_storage_field_storage_purge_field($field) {
+  $ret = array();
+  $table_name = _field_sql_storage_tablename($field);
+  $revision_name = _field_sql_storage_revision_tablename($field);
+  db_drop_table($ret, $table_name);
+  db_drop_table($ret, $revision_name);
+}
+

@@ -847,13 +847,13 @@ function hook_field_attach_form($obj_type, $object, &$form, &$form_state) {
  *   FIELD_LOAD_CURRENT to load the most recent revision for all fields, or
  *   FIELD_LOAD_REVISION to load the version indicated by each object.
  * @param $skip_fields
- *   An array keyed by names of fields whose data has already been loaded and
+ *   An array keyed by field ids whose data has already been loaded and
  *   therefore should not be loaded again. The values associated to these keys
  *   are not specified.
  * @return
  *   - Loaded field values are added to $objects. Fields with no values should be
  *   set as an empty array.
- *   - Loaded field names are set as keys in $skip_fields.
+ *   - Loaded field ids are set as keys in $skip_fields.
  */
 function hook_field_attach_pre_load($obj_type, $objects, $age, &$skip_fields) {
 }
@@ -922,11 +922,11 @@ function hook_field_attach_presave($obj_type, $object) {
  * @param $object
  *   The object with fields to save.
  * @param $skip_fields
- *   An array keyed by names of fields whose data has already been written and
+ *   An array keyed by field ids whose data has already been written and
  *   therefore should not be written again. The values associated to these keys
  *   are not specified.
  * @return
- *   Saved field names are set set as keys in $skip_fields.
+ *   Saved field ids are set set as keys in $skip_fields.
  */
 function hook_field_attach_pre_insert($obj_type, $object, &$skip_fields) {
 }
@@ -942,11 +942,11 @@ function hook_field_attach_pre_insert($obj_type, $object, &$skip_fields) {
  * @param $object
  *   The object with fields to save.
  * @param $skip_fields
- *   An array keyed by names of fields whose data has already been written and
+ *   An array keyed by field ids whose data has already been written and
  *   therefore should not be written again. The values associated to these keys
  *   are not specified.
  * @return
- *   Saved field names are set set as keys in $skip_fields.
+ *   Saved field ids are set set as keys in $skip_fields.
  */
 function hook_field_attach_pre_update($obj_type, $object, &$skip_fields) {
 }
@@ -1081,7 +1081,7 @@ function hook_field_attach_delete_bundle($bundle, $instances) {
  *   fields, or FIELD_LOAD_REVISION to load the version indicated by
  *   each object.
  * @param $skip_fields
- *   An array keyed by names of fields whose data has already been loaded and
+ *   An array keyed by field ids whose data has already been loaded and
  *   therefore should not be loaded again. The values associated to these keys
  *   are not specified.
  * @return
@@ -1102,7 +1102,7 @@ function hook_field_storage_load($obj_type, $objects, $age, $skip_fields) {
  *   FIELD_STORAGE_UPDATE when updating an existing object,
  *   FIELD_STORAGE_INSERT when inserting a new object.
  * @param $skip_fields
- *   An array keyed by names of fields whose data has already been written and
+ *   An array keyed by field ids whose data has already been written and
  *   therefore should not be written again. The values associated to these keys
  *   are not specified.
  */

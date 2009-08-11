@@ -135,7 +135,8 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     for ($i = 1; $i <= 3; $i++) {
       $field_names[$i] = 'field_' . $i;
       $field = array('field_name' => $field_names[$i], 'type' => 'test_field');
-      field_create_field($field);
+      $field = field_create_field($field);
+      $field_ids[$i] = $field['id'];
       foreach ($field_bundles_map[$i] as $bundle) {
         $instance = array(
           'field_name' => $field_names[$i],
@@ -176,7 +177,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
 
     // Check that the single-field load option works.
     $entity = field_test_create_stub_entity(1, 1, $bundles[1]);
-    field_attach_load($entity_type, array(1 => $entity), FIELD_LOAD_CURRENT, array('field_name' => $field_names[1]));
+    field_attach_load($entity_type, array(1 => $entity), FIELD_LOAD_CURRENT, array('field_id' => $field_ids[1]));
     $this->assertEqual($entity->{$field_names[1]}[0]['value'], $values[1][$field_names[1]], t('Entity %index: expected value was found.', array('%index' => 1)));
     $this->assertEqual($entity->{$field_names[1]}[0]['additional_key'], 'additional_value', t('Entity %index: extra information was found', array('%index' => 1)));
     $this->assert(!isset($entity->{$field_names[2]}), t('Entity %index: field %field_name is not loaded.', array('%index' => 2, '%field_name' => $field_names[2])));
@@ -305,7 +306,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     // Query on the object's values.
     for ($delta = 0; $delta < $cardinality; $delta++) {
       $conditions = array(array('value', $values[$delta]));
-      $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
+      $result = field_attach_query($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
       $this->assertTrue(isset($result[$entity_types[1]][1]), t('Query on value %delta returns the object', array('%delta' => $delta)));
     }
 
@@ -314,31 +315,31 @@ class FieldAttachTestCase extends DrupalWebTestCase {
       $different_value = mt_rand(1, 127);
     } while (in_array($different_value, $values));
     $conditions = array(array('value', $different_value));
-    $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
     $this->assertFalse(isset($result[$entity_types[1]][1]), t("Query on a value that is not in the object doesn't return the object"));
 
     // Query on the value shared by both objects, and discriminate using
     // additional conditions.
 
     $conditions = array(array('value', $common_value));
-    $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
     $this->assertTrue(isset($result[$entity_types[1]][1]) && isset($result[$entity_types[2]][2]), t('Query on a value common to both objects returns both objects'));
 
     $conditions = array(array('type', $entity_types[1]), array('value', $common_value));
-    $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
     $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both objects and a 'type' condition only returns the relevant object"));
 
     $conditions = array(array('bundle', $entities[1]->fttype), array('value', $common_value));
-    $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
     $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both objects and a 'bundle' condition only returns the relevant object"));
 
     $conditions = array(array('entity_id', $entities[1]->ftid), array('value', $common_value));
-    $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
     $this->assertTrue(isset($result[$entity_types[1]][1]) && !isset($result[$entity_types[2]][2]), t("Query on a value common to both objects and an 'entity_id' condition only returns the relevant object"));
 
     // Test result format.
     $conditions = array(array('value', $values[0]));
-    $result = field_attach_query($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
     $expected = array(
       $entity_types[1] => array(
         $entities[1]->ftid => field_test_create_stub_entity($entities[1]->ftid, $entities[1]->ftvid),
@@ -371,7 +372,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     // back the right ones.
     $cursor = 0;
     foreach (array(1 => 1, 3 => 3, 5 => 5, 8 => 8, 13 => 3) as $count => $expect) {
-      $found = field_attach_query($this->field_name, array(array('bundle', 'offset_bundle')), $count, $cursor);
+      $found = field_attach_query($this->field_id, array(array('bundle', 'offset_bundle')), $count, $cursor);
       if (isset($found['test_entity'])) {
         $this->assertEqual(count($found['test_entity']), $expect, t('Requested @count, expected @expect, got @found, cursor @cursor', array('@count' => $count, '@expect' => $expect, '@found' => count($found['test_entity']), '@cursor' => $cursor)));
         foreach ($found['test_entity'] as $id => $entity) {
@@ -414,7 +415,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     // Query on the object's values.
     for ($delta = 0; $delta < $cardinality; $delta++) {
       $conditions = array(array('value', $values[$delta]));
-      $result = field_attach_query_revisions($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
+      $result = field_attach_query_revisions($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
       $this->assertTrue(isset($result[$entity_type][1]), t('Query on value %delta returns the object', array('%delta' => $delta)));
     }
 
@@ -423,23 +424,23 @@ class FieldAttachTestCase extends DrupalWebTestCase {
       $different_value = mt_rand(1, 127);
     } while (in_array($different_value, $values));
     $conditions = array(array('value', $different_value));
-    $result = field_attach_query_revisions($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query_revisions($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
     $this->assertFalse(isset($result[$entity_type][1]), t("Query on a value that is not in the object doesn't return the object"));
 
     // Query on the value shared by both objects, and discriminate using
     // additional conditions.
 
     $conditions = array(array('value', $common_value));
-    $result = field_attach_query_revisions($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query_revisions($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
     $this->assertTrue(isset($result[$entity_type][1]) && isset($result[$entity_type][2]), t('Query on a value common to both objects returns both objects'));
 
     $conditions = array(array('revision_id', $entities[1]->ftvid), array('value', $common_value));
-    $result = field_attach_query_revisions($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query_revisions($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
     $this->assertTrue(isset($result[$entity_type][1]) && !isset($result[$entity_type][2]), t("Query on a value common to both objects and a 'revision_id' condition only returns the relevant object"));
 
     // Test FIELD_QUERY_RETURN_IDS result format.
     $conditions = array(array('value', $values[0]));
-    $result = field_attach_query_revisions($this->field_name, $conditions, FIELD_QUERY_NO_LIMIT);
+    $result = field_attach_query_revisions($this->field_id, $conditions, FIELD_QUERY_NO_LIMIT);
     $expected = array(
       $entity_type => array(
         $entities[1]->ftid => field_test_create_stub_entity($entities[1]->ftid, $entities[1]->ftvid),
@@ -711,6 +712,12 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $entity->{$this->field_name} = $values;
     field_attach_insert($cached_type, $entity);
     $this->assertFalse(cache_get($cid, 'cache_field'), t('Cached: no cache entry on insert'));
+
+    // Load a single field, and check that no cache entry is present.
+    $entity = clone($entity_init);
+    field_attach_load($cached_type, array($entity->ftid => $entity), FIELD_LOAD_CURRENT, array('field_id' => $this->field_id));
+    $cache = cache_get($cid, 'cache_field');
+    $this->assertFalse(cache_get($cid, 'cache_field'), t('Cached: no cache entry on loading a single field'));
 
     // Load, and check that a cache entry is present with the expected values.
     $entity = clone($entity_init);
@@ -1780,5 +1787,247 @@ class FieldInstanceCrudTestCase extends DrupalWebTestCase {
     // Make sure the other field instance is not deleted.
     $another_instance = field_read_instance($this->another_instance_definition['field_name'], $this->another_instance_definition['bundle']);
     $this->assertTrue(!empty($another_instance) && empty($another_instance['deleted']), t('A non-deleted field instance is not marked for deletion.'));
+  }
+}
+
+/**
+ * Unit test class for field bulk delete and batch purge functionality.
+ */
+class FieldBulkDeleteTestCase extends DrupalWebTestCase {
+  protected $field;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Field bulk delete tests',
+      'description'=> 'Bulk delete fields and instances, and clean up afterwards.',
+      'group' => 'Field',
+    );
+  }
+
+  /**
+   * Generate random values for a field_test field.
+   *
+   * @param $cardinality
+   *   Number of values to generate.
+   * @return
+   *  An array of random values, in the format expected for field values.
+   */
+  function _generateTestFieldValues($cardinality) {
+    $values = array();
+    for ($i = 0; $i < $cardinality; $i++) {
+      // field_test fields treat 0 as 'empty value'.
+      $values[$i]['value'] = mt_rand(1, 127);
+    }
+    return $values;
+  }
+
+  /**
+   * Convenience function for Field API tests.
+   *
+   * Given an array of potentially fully-populated objects and an
+   * optional field name, generate an array of stub objects of the
+   * same fieldable type which contains the data for the field name
+   * (if given).
+   *
+   * @param $obj_type
+   *   The entity type of $objects.
+   * @param $objects
+   *   An array of objects of type $obj_type.
+   * @param $field_name
+   *   Optional; a field name whose data should be copied from
+   *   $objects into the returned stub objects.
+   * @return
+   *   An array of stub objects corresponding to $objects.
+   */
+  function _generateStubObjects($obj_type, $objects, $field_name = NULL) {
+    $stubs = array();
+    foreach ($objects as $obj) {
+      $stub = field_attach_create_stub_object($obj_type, field_attach_extract_ids($obj_type, $obj));
+      if (isset($field_name)) {
+        $stub->{$field_name} = $obj->{$field_name};
+      }
+      $stubs[] = $stub;
+    }
+    return $stubs;
+  }
+
+  function setUp() {
+    parent::setUp('field_test');
+
+    // Clean up data from previous test cases.
+    $this->fields = array();
+    $this->instances = array();
+
+    // Create two bundles.
+    $this->bundles = array('bb_1' => 'bb_1', 'bb_2' => 'bb_2');
+    foreach ($this->bundles as $name => $desc) {
+      field_test_create_bundle($name, $desc);
+    }
+
+    // Create two fields.
+    $field = array('field_name' => 'bf_1', 'type' => 'test_field', 'cardinality' => 1);
+    $this->fields[] = field_create_field($field);
+    $field = array('field_name' => 'bf_2', 'type' => 'test_field', 'cardinality' => 4);
+    $this->fields[] = field_create_field($field);
+
+    // For each bundle, create an instance of each field, and 10
+    // objects with values for each field.
+    $id = 0;
+    $this->entity_type = 'test_entity';
+    foreach ($this->bundles as $bundle) {
+      foreach ($this->fields as $field) {
+        $instance = array(
+          'field_name' => $field['field_name'],
+          'bundle' => $bundle,
+          'widget' => array(
+            'type' => 'test_field_widget',
+          )
+        );
+        $this->instances[] = field_create_instance($instance);
+      }
+
+      for ($i = 0; $i < 10; $i++) {
+        $entity = field_test_create_stub_entity($id, $id, $bundle);
+        foreach ($this->fields as $field) {
+          $entity->{$field['field_name']} = $this->_generateTestFieldValues($field['cardinality']);
+        }
+        $this->entities[$id] = $entity;
+        field_attach_insert($this->entity_type, $entity);
+        $id++;
+      }
+    }
+  }
+
+  /**
+   * Verify that deleting an instance leaves the field data items in
+   * the database and that the appropriate Field API functions can
+   * operate on the deleted data and instance.
+   *
+   * This tests how field_attach_query() interacts with
+   * field_delete_instance() and could be moved to FieldCrudTestCase,
+   * but depends on this class's setUp().
+   */
+  function testDeleteFieldInstance() {
+    $bundle = reset($this->bundles);
+    $field = reset($this->fields);
+
+    // There are 10 objects of this bundle.
+    $found = field_attach_query($field['id'], array(array('bundle', $bundle)), FIELD_QUERY_NO_LIMIT);
+    $this->assertEqual(count($found['test_entity']), 10, 'Correct number of objects found before deleting');
+
+    // Delete the instance.
+    field_delete_instance($field['field_name'], $bundle);
+
+    // The instance still exists, deleted.
+    $instances = field_read_instances(array('field_id' => $field['id'], 'deleted' => 1), array('include_deleted' => 1, 'include_inactive' => 1));
+    $this->assertEqual(count($instances), 1, 'There is one deleted instance');
+    $this->assertEqual($instances[0]['bundle'], $bundle, 'The deleted instance is for the correct bundle');
+
+    // There are 0 objects of this bundle with non-deleted data.
+    $found = field_attach_query($field['id'], array(array('bundle', $bundle)), FIELD_QUERY_NO_LIMIT);
+    $this->assertTrue(!isset($found['test_entity']), 'No objects found after deleting');
+
+    // There are 10 objects of this bundle when deleted fields are allowed, and
+    // their values are correct.
+    $found = field_attach_query($field['id'], array(array('bundle', $bundle), array('deleted', 1)), FIELD_QUERY_NO_LIMIT);
+    field_attach_load($this->entity_type, $found[$this->entity_type], FIELD_LOAD_CURRENT, array('field_id' => $field['id'], 'deleted' => 1));
+    $this->assertEqual(count($found['test_entity']), 10, 'Correct number of objects found after deleting');
+    foreach ($found['test_entity'] as $id => $obj) {
+      $this->assertEqual($this->entities[$id]->{$field['field_name']}, $obj->{$field['field_name']}, "Object $id with deleted data loaded correctly");
+    }
+  }
+
+  /**
+   * Verify that field data items and instances are purged when an
+   * instance is deleted.
+   */
+  function testPurgeInstance() {
+    field_test_memorize();
+
+    $bundle = reset($this->bundles);
+    $field = reset($this->fields);
+
+    // Delete the instance.
+    field_delete_instance($field['field_name'], $bundle);
+
+    // No field hooks were called.
+    $mem = field_test_memorize();
+    $this->assertEqual(count($mem), 0, 'No field hooks were called');
+
+    $batch_size = 2;
+    for ($count = 8; $count >= 0; $count -= 2) {
+      // Purge two objects.
+      field_purge_batch($batch_size);
+
+      // There are $count deleted objects left.
+      $found = field_attach_query($field['id'], array(array('bundle', $bundle), array('deleted', 1)), FIELD_QUERY_NO_LIMIT);
+      $this->assertEqual($count ? count($found['test_entity']) : count($found), $count, 'Correct number of objects found after purging 2');
+    }
+
+    // hook_field_delete() was called on a pseudo-object for each object. Each
+    // pseudo object has a $field property that matches the original object,
+    // but no others.
+    $mem = field_test_memorize();
+    $this->assertEqual(count($mem['field_test_field_delete']), 10, 'hook_field_delete was called for the right number of objects');
+    $stubs = $this->_generateStubObjects($this->entity_type, $this->entities, $field['field_name']);
+    $count = count($stubs);
+    foreach ($mem['field_test_field_delete'] as $args) {
+      $obj = $args[1];
+      $this->assertEqual($stubs[$obj->ftid], $obj, 'hook_field_delete() called with the correct stub');
+      unset($stubs[$obj->ftid]);
+    }
+    $this->assertEqual(count($stubs), $count-10, 'hook_field_delete was called with each object once');
+
+    // The instance still exists, deleted.
+    $instances = field_read_instances(array('field_id' => $field['id'], 'deleted' => 1), array('include_deleted' => 1, 'include_inactive' => 1));
+    $this->assertEqual(count($instances), 1, 'There is one deleted instance');
+
+    // Purge the instance.
+    field_purge_batch($batch_size);
+
+    // The instance is gone.
+    $instances = field_read_instances(array('field_id' => $field['id'], 'deleted' => 1), array('include_deleted' => 1, 'include_inactive' => 1));
+    $this->assertEqual(count($instances), 0, 'The instance is gone');
+
+    // The field still exists, not deleted, because it has a second instance.
+    $fields = field_read_fields(array('id' => $field['id']), array('include_deleted' => 1, 'include_inactive' => 1));
+    $this->assertEqual($field, $fields[$field['id']], 'The field exists and is not deleted');
+  }
+
+  /**
+   * Verify that fields are preserved and purged correctly as multiple
+   * instances are deleted and purged.
+   */
+  function testPurgeField() {
+    $field = reset($this->fields);
+
+    foreach ($this->bundles as $bundle) {
+      // Delete the instance.
+      field_delete_instance($field['field_name'], $bundle);
+
+      // Purge the data.
+      field_purge_batch(10);
+
+      // Purge again to purge the instance.
+      field_purge_batch(0);
+
+      // The field still exists, not deleted, because it was never deleted.
+      $fields = field_read_fields(array('id' => $field['id']), array('include_deleted' => 1, 'include_inactive' => 1));
+      $this->assertEqual($field, $fields[$field['id']], 'The field exists and is not deleted');
+    }
+
+    // Delete the field.
+    field_delete_field($field['field_name']);
+
+    // The field still exists, deleted.
+    $fields = field_read_fields(array('id' => $field['id']), array('include_deleted' => 1, 'include_inactive' => 1));
+    $this->assertEqual($fields[$field['id']]['deleted'], 1, 'The field exists and is deleted');
+
+    // Purge the field.
+    field_purge_batch(0);
+
+    // The field is gone.
+    $fields = field_read_fields(array('id' => $field['id']), array('include_deleted' => 1, 'include_inactive' => 1));
+    $this->assertEqual(count($fields), 0, 'The field is purged.');
   }
 }

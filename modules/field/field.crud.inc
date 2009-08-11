@@ -271,6 +271,9 @@ function field_create_field($field) {
   // Store the field and create the id.
   drupal_write_record('field_config', $field);
 
+  // The 'data' property is not part of the public field record.
+  unset($field['data']);
+
   // Invoke hook_field_storage_create_field after the field is
   // complete (e.g. it has its id).
   module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_create_field', $field);
@@ -443,7 +446,7 @@ function field_create_instance($instance) {
   // TODO : do we want specific messages when clashing with a disabled or inactive instance ?
   $prior_instance = field_read_instance($instance['field_name'], $instance['bundle'], array('include_inactive' => TRUE));
   if (!empty($prior_instance)) {
-    throw new FieldException('Attempt to create a field instance which already exists.');
+    throw new FieldException(t('Attempt to create a field instance %field_name,%bundle which already exists.', array('%field_name' => $instance['field_name'], '%bundle' => $instance['bundle'])));
   }
 
   _field_write_instance($instance);
@@ -688,3 +691,217 @@ function field_delete_instance($field_name, $bundle) {
 /**
  * @} End of "defgroup field_crud".
  */
+
+/*
+ * @defgroup field_purge Field API bulk data deletion
+ * @{
+ * Clean up after Field API bulk deletion operations.
+ *
+ * Field API provides functions for deleting data attached to individual
+ * objects as well as deleting entire fields or field instances in a single
+ * operation.
+ *
+ * Deleting field data items for an object with field_attach_delete() involves
+ * three separate operations:
+ * - Invoking the Field Type API hook_field_delete() for each field on the
+ * object. The hook for each field type receives the object and the specific
+ * field being deleted. A file field module might use this hook to delete
+ * uploaded files from the filesystem.
+ * - Invoking the Field Storage API hook_field_storage_delete() to remove
+ * data from the primary field storage. The hook implementation receives the
+ * object being deleted and deletes data for all of the object's bundle's
+ * fields.
+ * - Invoking the global Field Attach API hook_field_attach_delete() for all
+ * modules that implement it. Each hook implementation receives the object
+ * being deleted and can operate on whichever subset of the object's bundle's
+ * fields it chooses to.
+ *
+ * These hooks are invoked immediately when field_attach_delete() is
+ * called. Similar operations are performed for field_attach_delete_revision().
+ *
+ * When a field, bundle, or field instance is deleted, it is not practical to
+ * invoke these hooks immediately on every affected object in a single page
+ * request; there could be thousands or millions of them. Instead, the
+ * appropriate field data items, instances, and/or fields are marked as deleted
+ * so that subsequent load or query operations will not return them. Later, a
+ * separate process cleans up, or "purges", the marked-as-deleted data by going
+ * through the three-step process described above and, finally, removing
+ * deleted field and instance records.
+ *
+ * Purging field data is made somewhat tricky by the fact that, while
+ * field_attach_delete() has a complete object to pass to the various deletion
+ * hooks, the Field API purge process only has the field data it has previously
+ * stored. It cannot reconstruct complete original objects to pass to the
+ * deletion hooks. It is even possible that the original object to which some
+ * Field API data was attached has been itself deleted before the field purge
+ * operation takes place.
+ *
+ * Field API resolves this problem by using "pseudo-objects" during purge
+ * operations. A pseudo-object contains only the information from the original
+ * object that Field API knows about: entity type, id, revision id, and
+ * bundle. It also contains the field data for whichever field instance is
+ * currently being purged. For example, suppose that the node type 'story' used
+ * to contain a field called 'subtitle' but the field was deleted. If node 37
+ * was a story with a subtitle, the pseudo-object passed to the purge hooks
+ * would look something like this:
+ *
+ * @code
+ *   $obj = stdClass Object(
+ *     [nid] => 37,
+ *     [vid] => 37,
+ *     [type] => 'story',
+ *     [subtitle] => array(
+ *       [0] => array(
+ *         'value' => 'subtitle text',
+ *       ),
+ *     ),
+ *   );
+ * @endcode
+ */
+
+/**
+ * Purge some deleted Field API data, instances, or fields.
+ *
+ * This function will purge deleted field data on up to a specified maximum
+ * number of objects and then return. If a deleted field instance with no
+ * remaining data records is found, the instance itself will be purged.
+ * If a deleted field with no remaining field instances is found, the field
+ * itself will be purged.
+ *
+ * @param $batch_size
+ *   The maximum number of field data records to purge before returning.
+ */
+function field_purge_batch($batch_size) {
+  // Retrieve all deleted field instances. We cannot use field_info_instances()
+  // because that function does not return deleted instances.
+  $instances = field_read_instances(array('deleted' => 1), array('include_deleted' => 1));
+
+  foreach ($instances as $instance) {
+    $field = field_info_field_by_id($instance['field_id']);
+
+    // Retrieve some pseudo-objects.
+    $obj_types = field_attach_query($instance['field_id'], array(array('bundle', $instance['bundle']), array('deleted', 1)), $batch_size);
+
+    if (count($obj_types) > 0) {
+      // Field data for the instance still exists.
+      foreach ($obj_types as $obj_type => $objects) {
+        field_attach_load($obj_type, $objects, FIELD_LOAD_CURRENT, array('field_id' => $field['id'], 'deleted' => 1));
+
+        foreach ($objects as $id => $object) {
+          // field_attach_query() may return more results than we asked for.
+          // Stop when he have done our batch size.
+          if ($batch_size-- <= 0) {
+            return;
+          }
+
+          // Purge the data for the object.
+          field_purge_data($obj_type, $object, $field, $instance);
+        }
+      }
+    }
+    else {
+      // No field data remains for the instance, so we can remove it.
+      field_purge_instance($instance);
+    }
+  }
+
+  // Retrieve all deleted fields. Any that have no bundles can be purged.
+  $fields = field_read_fields(array('deleted' => 1), array('include_deleted' => 1));
+  foreach ($fields as $field) {
+    // field_read_fields() does not return $field['bundles'] which we need.
+    $field = field_info_field_by_id($field['id']);
+    if (!isset($field['bundles']) || count($field['bundles']) == 0) {
+      field_purge_field($field);
+    }
+  }
+}
+
+/**
+ * Purge the field data for a single field on a single pseudo-object.
+ *
+ * This is basically the same as field_attach_delete() except it only applies
+ * to a single field. The object itself is not being deleted, and it is quite
+ * possible that other field data will remain attached to it.
+ *
+ * @param $obj_type
+ *   The type of $object; e.g. 'node' or 'user'.
+ * @param $object
+ *   The pseudo-object whose field data to delete.
+ * @param $field
+ *   The (possibly deleted) field whose data is being purged.
+ * @param $instance
+ *   The deleted field instance whose data is being purged.
+ */
+function field_purge_data($obj_type, $object, $field, $instance) {
+  // Each field type's hook_field_delete() only expects to operate on a single
+  // field at a time, so we can use it as-is for purging.
+  $options = array('field_id' => $instance['field_id'], 'deleted' => TRUE);
+  _field_invoke('delete', $obj_type, $object, $dummy, $dummy, $options);
+
+  // Tell the field storage system to purge the data.
+  module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_purge', $obj_type, $object, $field, $instance);
+
+  // Let other modules act on purging the data.
+  foreach (module_implements('field_attach_purge') as $module) {
+    $function = $module . '_field_attach_purge';
+    $function($obj_type, $object, $field, $instance);
+  }
+}
+
+/**
+ * Purge a field instance record from the database.
+ *
+ * This function assumes all data for the instance has already been purged, and
+ * should only be called by field_purge_batch().
+ *
+ * @param $instance
+ *   The instance record to purge.
+ */
+function field_purge_instance($instance) {
+  db_delete('field_config_instance')
+    ->condition('id', $instance['id'])
+    ->execute();
+
+  // Notify the storage engine.
+  module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_purge_instance', $instance);
+
+  // Clear the cache.
+  _field_info_cache_clear();
+
+  // Invoke external hooks after the cache is cleared for API consistency.
+  module_invoke_all('field_purge_instance', $instance);
+}
+
+/**
+ * Purge a field record from the database.
+ *
+ * This function assumes all instances for the field has already been purged,
+ * and should only be called by field_purge_batch().
+ *
+ * @param $field
+ *   The field record to purge.
+ */
+function field_purge_field($field) {
+  $instances = field_read_instances(array('field_id' => $field['id']), array('include_deleted' => 1));
+  if (count($instances) > 0) {
+    throw new FieldException("Attempt to purge a field that still has instances.");
+  }
+
+  db_delete('field_config')
+    ->condition('id', $field['id'])
+    ->execute();
+
+  // Notify the storage engine.
+  module_invoke(variable_get('field_storage_module', 'field_sql_storage'), 'field_storage_purge_field', $field);
+
+  // Clear the cache.
+  _field_info_cache_clear();
+
+  // Invoke external hooks after the cache is cleared for API consistency.
+  module_invoke_all('field_purge_field', $field);
+}
+
+/**
+ * @} End of "defgroup field_purge".
+ */
+

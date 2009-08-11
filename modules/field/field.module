@@ -55,6 +55,10 @@ require(DRUPAL_ROOT . '/modules/field/field.attach.inc');
  *   pluggable back-end storage system for actual field data. The
  *   default implementation, field_sql_storage.module, stores field data
  *   in the local SQL database.
+
+ * - @link field_purge Field API bulk data deletion @endlink. Cleans
+ *   up after bulk deletion operations such as field_delete_field()
+ *   and field_delete_instance().
  */
 
 /**
@@ -175,6 +179,16 @@ function field_theme() {
       'arguments' => array('element' => NULL),
     ),
   );
+}
+
+/**
+ * Implement hook_cron().
+ *
+ * Purges some deleted Field API data, if any exists.
+ */
+function field_cron() {
+  $limit = variable_get('field_purge_batch_size', 10);
+  field_purge_batch($limit);
 }
 
 /**
@@ -337,8 +351,7 @@ function field_cache_clear($rebuild_schema = FALSE) {
   cache_clear_all('*', 'cache_field', TRUE);
 
   module_load_include('inc', 'field', 'field.info');
-  _field_info_collate_types(TRUE);
-  _field_info_collate_fields(TRUE);
+  _field_info_cache_clear();
 
   // Refresh the schema to pick up new information.
   // TODO : if db storage gets abstracted out, we'll need to revisit how and when

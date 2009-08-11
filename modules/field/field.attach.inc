@@ -151,34 +151,50 @@ define('FIELD_STORAGE_INSERT', 'insert');
  *   - Otherwise NULL.
  * @param $options
  *   An associative array of additional options, with the following keys:
- *  - 'field_name'
- *    The name of the field whose operation should be invoked. By default, the
- *    operation is invoked on all the fields in the object's bundle.
- *  - 'default'
- *    A boolean value, specifying which implementation of the operation should
- *    be invoked.
+ *  - 'field_name': The name of the field whose operation should be
+ *    invoked. By default, the operation is invoked on all the fields
+ *    in the object's bundle.  NOTE: This option is not compatible with
+ *    the 'deleted' option; the 'field_id' option should be used
+ *    instead. 
+ *  - 'field_id': The id of the field whose operation should be
+ *    invoked. By default, the operation is invoked on all the fields
+ *    in the objects' bundles. 
+ *  - 'default': A boolean value, specifying which implementation of
+ *    the operation should be invoked.
  *    - if FALSE (default), the field types implementation of the operation
  *      will be invoked (hook_field_[op])
  *    - If TRUE, the default field implementation of the field operation
  *      will be invoked (field_default_[op])
  *    Internal use only. Do not explicitely set to TRUE, but use
  *    _field_invoke_default() instead.
+ *  - 'deleted': If TRUE, the function will operate on deleted fields
+ *    as well as non-deleted fields. If unset or FALSE, only
+ *    non-deleted fields are operated on.
  */
 function _field_invoke($op, $obj_type, $object, &$a = NULL, &$b = NULL, $options = array()) {
   // Merge default options.
   $default_options = array(
     'default' => FALSE,
+    'deleted' => FALSE,
   );
   $options += $default_options;
 
   // Iterate through the object's field instances.
   $return = array();
   list(, , $bundle) = field_attach_extract_ids($obj_type, $object);
-  foreach (field_info_instances($bundle) as $instance) {
+
+  if ($options['deleted']) {
+    $instances = field_read_instances(array('bundle' => $bundle), array('include_deleted' => $options['deleted']));
+  }
+  else {
+    $instances = field_info_instances($bundle);
+  }
+
+  foreach ($instances as $instance) {
     $field_name = $instance['field_name'];
 
     // When in 'single field' mode, only act on the specified field.
-    if (empty($options['field_name']) || $options['field_name'] == $field_name) {
+    if ((!isset($options['field_id']) || $options['field_id'] == $instance['field_id']) && (!isset($options['field_name']) || $options['field_name'] == $field_name)) {
       $field = field_info_field($field_name);
 
       // Extract the field values into a separate variable, easily accessed by
@@ -231,18 +247,24 @@ function _field_invoke($op, $obj_type, $object, &$a = NULL, &$b = NULL, $options
  *   Currently always NULL.
  * @param $options
  *   An associative array of additional options, with the following keys:
- *  - 'field_name'
- *    The name of the field whose operation should be invoked. By default, the
- *    operation is invoked on all the fields in the objects' bundles.
- *  - 'default'
- *    A boolean value, specifying which implementation of the operation should
- *    be invoked.
+ *  - 'field_name': The name of the field whose operation should be
+ *    invoked. By default, the operation is invoked on all the fields
+ *    in the object's bundle. NOTE: This option is not compatible with
+ *    the 'deleted' option; the 'field_id' option should be used instead.
+ *  - 'field_id': The id of the field whose operation should be
+ *    invoked. By default, the operation is invoked on all the fields
+ *    in the objects' bundles.
+ *  - 'default': A boolean value, specifying which implementation of
+ *    the operation should be invoked.
  *    - if FALSE (default), the field types implementation of the operation
  *      will be invoked (hook_field_[op])
  *    - If TRUE, the default field implementation of the field operation
  *      will be invoked (field_default_[op])
  *    Internal use only. Do not explicitely set to TRUE, but use
  *    _field_invoke_multiple_default() instead.
+ *  - 'deleted': If TRUE, the function will operate on deleted fields
+ *    as well as non-deleted fields. If unset or FALSE, only
+ *    non-deleted fields are operated on.
  * @return
  *   An array of returned values keyed by object id.
  */
@@ -250,6 +272,7 @@ function _field_invoke_multiple($op, $obj_type, $objects, &$a = NULL, &$b = NULL
   // Merge default options.
   $default_options = array(
     'default' => FALSE,
+    'deleted' => FALSE,
   );
   $options += $default_options;
 
@@ -261,22 +284,37 @@ function _field_invoke_multiple($op, $obj_type, $objects, &$a = NULL, &$b = NULL
 
   // Go through the objects and collect the fields on which the hook should be
   // invoked.
+  //
+  // We group fields by id, not by name, because this function can operate on
+  // deleted fields which may have non-unique names. However, objects can only
+  // contain data for a single field for each name, even if that field
+  // is deleted, so we reference field data via the
+  // $object->$field_name property.
   foreach ($objects as $object) {
     list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
-    foreach (field_info_instances($bundle) as $instance) {
+
+    if ($options['deleted']) {
+      $instances = field_read_field(array('bundle' => $bundle, array('include_deleted' => $options['deleted'])));
+    }
+    else {
+      $instances = field_info_instances($bundle);
+    }
+
+    foreach ($instances as $instance) {
+      $field_id = $instance['field_id'];
       $field_name = $instance['field_name'];
       // When in 'single field' mode, only act on the specified field.
-      if (empty($options['field_name']) || $options['field_name'] == $field_name) {
+      if ((empty($options['field_id']) || $options['field_id'] == $field_id) && (empty($options['field_name']) || $options['field_name'] == $field_name)) {
         // Add the field to the list of fields to invoke the hook on.
-        if (!isset($fields[$field_name])) {
-          $fields[$field_name] = field_info_field($field_name);
+        if (!isset($fields[$field_id])) {
+          $fields[$field_id] = field_info_field_by_id($field_id);
         }
         // Group the corresponding instances and objects.
-        $grouped_instances[$field_name][$id] = $instance;
-        $grouped_objects[$field_name][$id] = $objects[$id];
+        $grouped_instances[$field_id][$id] = $instance;
+        $grouped_objects[$field_id][$id] = $objects[$id];
         // Extract the field values into a separate variable, easily accessed
         // by hook implementations.
-        $grouped_items[$field_name][$id] = isset($object->$field_name) ? $object->$field_name : array();
+        $grouped_items[$field_id][$id] = isset($object->$field_name) ? $object->$field_name : array();
       }
     }
     // Initialize the return value for each object.
@@ -284,10 +322,11 @@ function _field_invoke_multiple($op, $obj_type, $objects, &$a = NULL, &$b = NULL
   }
 
   // For each field, invoke the field hook and collect results.
-  foreach ($fields as $field_name => $field) {
+  foreach ($fields as $field_id => $field) {
+    $field_name = $field['field_name'];
     $function = $options['default'] ? 'field_default_' . $op : $field['module'] . '_field_' . $op;
     if (drupal_function_exists($function)) {
-      $results = $function($obj_type, $grouped_objects[$field_name], $field, $grouped_instances[$field_name], $grouped_items[$field_name], $a, $b);
+      $results = $function($obj_type, $grouped_objects[$field_id], $field, $grouped_instances[$field_id], $grouped_items[$field_id], $options, $a, $b);
       if (isset($results)) {
         // Collect results by object.
         // For hooks with array results, we merge results together.
@@ -305,9 +344,9 @@ function _field_invoke_multiple($op, $obj_type, $objects, &$a = NULL, &$b = NULL
 
     // Populate field values back in the objects, but avoid replacing missing
     // fields with an empty array (those are not equivalent on update).
-    foreach ($grouped_objects[$field_name] as $id => $object) {
-      if ($grouped_items[$field_name][$id] !== array() || property_exists($object, $field_name)) {
-        $object->$field_name = $grouped_items[$field_name][$id];
+    foreach ($grouped_objects[$field_id] as $id => $object) {
+      if ($grouped_items[$field_id][$id] !== array() || property_exists($object, $field_name)) {
+        $object->$field_name = $grouped_items[$field_id][$id];
       }
     }
   }
@@ -442,10 +481,13 @@ function field_attach_form($obj_type, $object, &$form, &$form_state) {
  *   field_attach_load_revision() instead of passing FIELD_LOAD_REVISION.
  * @param $options
  *   An associative array of additional options, with the following keys:
- *   - 'field_name'
- *     The field name that should be loaded, instead of loading all fields, for
- *     each object. Note that returned objects may contain data for other
- *     fields, for example if they are read from a cache.
+ *  - 'field_id': The field id that should be loaded, instead of
+ *    loading all fields, for each object. Note that returned objects
+ *    may contain data for other fields, for example if they are read
+ *    from a cache. 
+ *  - 'deleted': If TRUE, the function will operate on deleted fields
+ *    as well as non-deleted fields. If unset or FALSE, only
+ *    non-deleted fields are operated on. 
  * @returns
  *   Loaded field values are added to $objects. Fields with no values should be
  *   set as an empty array.
@@ -453,11 +495,18 @@ function field_attach_form($obj_type, $object, &$form, &$form_state) {
 function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT, $options = array()) {
   $load_current = $age == FIELD_LOAD_CURRENT;
 
+  // Merge default options.
+  $default_options = array(
+    'deleted' => FALSE,
+  );
+  $options += $default_options;
+
   $info = field_info_fieldable_types($obj_type);
-  // Only the most current revision of cacheable fieldable types can be cached.
-  $cache_read = $load_current && $info['cacheable'];
+  // Only the most current revision of non-deleted fields for
+  // cacheable fieldable types can be cached.
+  $cache_read = $load_current && $info['cacheable'] && empty($options['deleted']);
   // In addition, do not write to the cache when loading a single field.
-  $cache_write = $cache_read && !isset($options['field_name']);
+  $cache_write = $cache_read && !isset($options['field_id']);
 
   if (empty($objects)) {
     return;
@@ -549,10 +598,10 @@ function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT, $opti
  *   'revision' keys filled.
  * @param $options
  *   An associative array of additional options, with the following keys:
- *   - 'field_name'
- *     The field name that should be loaded, instead of loading all fields, for
- *     each object. Note that returned objects may contain data for other
- *     fields, for example if they are read from a cache.
+ *   - 'field_name':  The field name that should be loaded, instead of
+ *     loading all fields, for each object. Note that returned objects
+ *     may contain data for other fields, for example if they are read
+ *     from a cache. 
  * @returns
  *   On return, the objects in $objects are modified by having the
  *   appropriate set of fields added.
@@ -805,8 +854,8 @@ function field_attach_delete_revision($obj_type, $object) {
  * might therefore differ from what could be expected by looking at a regular,
  * fully loaded object.
  *
- * @param $field_name
- *   The name of the field to query.
+ * @param $field_id
+ *   The id of the field to query.
  * @param $conditions
  *   An array of query conditions. Each condition is a numerically indexed
  *   array, in the form: array(column, value, operator).
@@ -819,6 +868,8 @@ function field_attach_delete_revision($obj_type, $object) {
  *     - 'type': condition on object type (e.g. 'node', 'user'...),
  *     - 'bundle': condition on object bundle (e.g. node type),
  *     - 'entity_id': condition on object id (e.g node nid, user uid...),
+ *     - 'deleted': condition on whether the field's data is
+ *        marked deleted for the object (defaults to FALSE if not specified)
  *     The field_attach_query_revisions() function additionally supports:
  *     - 'revision_id': condition on object revision id (e.g node vid).
  *   Supported operators:
@@ -871,7 +922,7 @@ function field_attach_delete_revision($obj_type, $object) {
  *   Throws a FieldQueryException if the field's storage doesn't support the
  *   specified conditions.
  */
-function field_attach_query($field_name, $conditions, $count, &$cursor = NULL, $age = FIELD_LOAD_CURRENT) {
+function field_attach_query($field_id, $conditions, $count, &$cursor = NULL, $age = FIELD_LOAD_CURRENT) {
   if (!isset($cursor)) {
     $cursor = 0;
   }
@@ -881,7 +932,7 @@ function field_attach_query($field_name, $conditions, $count, &$cursor = NULL, $
   $skip_field = FALSE;
   foreach (module_implements('field_attach_pre_query') as $module) {
     $function = $module . '_field_attach_pre_query';
-    $results = $function($field_name, $conditions, $count, $cursor, $age, $skip_field);
+    $results = $function($field_id, $conditions, $count, $cursor, $age, $skip_field);
     // Stop as soon as a module claims it handled the query.
     if ($skip_field) {
       break;
@@ -890,7 +941,7 @@ function field_attach_query($field_name, $conditions, $count, &$cursor = NULL, $
   // If the request hasn't been handled, let the storage engine handle it.
   if (!$skip_field) {
     $function = variable_get('field_storage_module', 'field_sql_storage') . '_field_storage_query';
-    $results = $function($field_name, $conditions, $count, $cursor, $age);
+    $results = $function($field_id, $conditions, $count, $cursor, $age);
   }
 
   return $results;
@@ -901,8 +952,8 @@ function field_attach_query($field_name, $conditions, $count, &$cursor = NULL, $
  *
  * See field_attach_query() for more informations.
  *
- * @param $field_name
- *   The name of the field to query.
+ * @param $field_id
+ *   The id of the field to query.
  * @param $conditions
  *   See field_attach_query().
  * @param $count
@@ -919,8 +970,8 @@ function field_attach_query($field_name, $conditions, $count, &$cursor = NULL, $
  * @return
  *   See field_attach_query().
  */
-function field_attach_query_revisions($field_name, $conditions, $count, &$cursor = NULL) {
-  return field_attach_query($field_name, $conditions, $count, $cursor, FIELD_LOAD_REVISION);
+function field_attach_query_revisions($field_id, $conditions, $count, &$cursor = NULL) {
+  return field_attach_query($field_id, $conditions, $count, $cursor, FIELD_LOAD_REVISION);
 }
 
 /**
