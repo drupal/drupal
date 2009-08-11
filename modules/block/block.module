@@ -237,7 +237,6 @@ function block_page_alter($page) {
 
   // Populate all block regions
   $all_regions = system_region_list($theme);
-  $visible_regions = system_region_list($theme, REGIONS_VISIBLE);
 
   // Load all region content assigned via blocks.
   foreach (array_keys($all_regions) as $region) {
@@ -250,12 +249,15 @@ function block_page_alter($page) {
 
       // Append region description if we are rendering the block admin page.
       $item = menu_get_item();
-      if ($item['path'] == 'admin/structure/block' && isset($visible_regions[$region])) {
-        $description = '<div class="block-region">' . $all_regions[$region] . '</div>';
-        $page[$region]['block_description'] = array(
-          '#markup' => $description,
-          '#weight' => 15,
-        );
+      if ($item['path'] == 'admin/structure/block') {
+        $visible_regions = system_region_list($theme, REGIONS_VISIBLE);
+        if (isset($visible_regions[$region])) {
+          $description = '<div class="block-region">' . $all_regions[$region] . '</div>';
+          $page[$region]['block_description'] = array(
+            '#markup' => $description,
+            '#weight' => 15,
+          );
+        }
       }
     }
   }
