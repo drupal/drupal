@@ -50,7 +50,7 @@ class PagerDefault extends SelectQueryExtender {
    * to it.
    */
   public function execute() {
-    global $pager_page_array, $pager_total, $pager_total_items;
+    global $pager_page_array, $pager_total, $pager_total_items, $pager_limits;
 
     // A NULL limit is the "kill switch" for pager queries.
     if (empty($this->limit)) {
@@ -71,6 +71,7 @@ class PagerDefault extends SelectQueryExtender {
     $pager_total_items[$this->element] = $this->getCountQuery()->execute()->fetchField();
     $pager_total[$this->element] = ceil($pager_total_items[$this->element] / $this->limit);
     $pager_page_array[$this->element] = max(0, min((int)$pager_page_array[$this->element], ((int)$pager_total[$this->element]) - 1));
+    $pager_limits[$this->element] = $this->limit;
     $this->range($pager_page_array[$this->element] * $this->limit, $this->limit);
 
     // Now that we've added our pager-based range instructions, run the query normally.
@@ -197,7 +198,7 @@ class PagerDefault extends SelectQueryExtender {
  * @ingroup database
  */
 function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
-  global $pager_page_array, $pager_total, $pager_total_items;
+  global $pager_page_array, $pager_total, $pager_total_items, $pager_limits;
   $page = isset($_GET['page']) ? $_GET['page'] : '';
 
   // Substitute in query arguments.
@@ -220,6 +221,7 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
   $pager_total_items[$element] = db_query($count_query, $args)->fetchField();
   $pager_total[$element] = ceil($pager_total_items[$element] / $limit);
   $pager_page_array[$element] = max(0, min((int)$pager_page_array[$element], ((int)$pager_total[$element]) - 1));
+  $pager_limits[$element] = $limit;
   return db_query_range($query, $args, $pager_page_array[$element] * $limit, $limit);
 }
 
