@@ -185,7 +185,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     $edit['pass[pass1]'] = $pass;
     $edit['pass[pass2]'] = $pass;
     $edit['status'] = 1;
-    $this->drupalPost('admin/user/create', $edit, t('Create new account'));
+    $this->drupalPost('admin/people/create', $edit, t('Create new account'));
     $this->assertResponse(200);
     // Retrieve user object.
     $user = user_load_by_name($name);

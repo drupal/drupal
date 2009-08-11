@@ -411,7 +411,7 @@ function user_cancel_confirm_form_submit($form, &$form_state) {
     user_cancel($form_state['values'], $account->uid, $form_state['values']['user_cancel_method']);
 
     if (!isset($_REQUEST['destination'])) {
-      $form_state['redirect'] = 'admin/user';
+      $form_state['redirect'] = 'admin/people';
     }
   }
   else {

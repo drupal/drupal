@@ -221,7 +221,7 @@ function hook_user_cancel_methods_alter(&$methods) {
  * Add mass user operations.
  *
  * This hook enables modules to inject custom operations into the mass operations
- * dropdown found at admin/user, by associating a callback function with
+ * dropdown found at admin/people, by associating a callback function with
  * the operation, which is called when the form is submitted. The callback function
  * receives one initial argument, which is an array of the checked users.
  *

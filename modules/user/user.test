@@ -592,7 +592,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
       $edit['accounts[' . $uid . ']'] = TRUE;
     }
     $edit['accounts[' . $admin_user->uid . ']'] = TRUE;
-    $this->drupalPost('admin/user', $edit, t('Update'));
+    $this->drupalPost('admin/people', $edit, t('Update'));
     $this->assertText(t('Are you sure you want to cancel these user accounts?'), t('Confirmation form to cancel accounts displayed.'));
     $this->assertText(t('When cancelling these accounts'), t('Allows to select account cancellation method.'));
     $this->assertText(t('Require e-mail confirmation to cancel account.'), t('Allows to send confirmation mail.'));
@@ -926,7 +926,7 @@ class UserAdminTestCase extends DrupalWebTestCase {
     // Create admin user to delete registered user.
     $admin_user = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($admin_user);
-    $this->drupalGet('admin/user');
+    $this->drupalGet('admin/people');
     $this->assertText($user_a->name, t('Found user A on admin users page'));
     $this->assertText($user_b->name, t('Found user B on admin users page'));
     $this->assertText($user_c->name, t('Found user C on admin users page'));
@@ -936,7 +936,7 @@ class UserAdminTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['filter'] = 'permission';
     $edit['permission'] = 'administer taxonomy';
-    $this->drupalPost('admin/user', $edit, t('Filter'));
+    $this->drupalPost('admin/people', $edit, t('Filter'));
 
     // Check if the correct users show up.
     $this->assertNoText($user_a->name, t('User A not on filtered by perm  admin users page'));
@@ -949,7 +949,7 @@ class UserAdminTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['operation'] = 'block';
     $edit['accounts[' . $account->uid . ']'] = TRUE;
-    $this->drupalPost('admin/user', $edit, t('Update'));
+    $this->drupalPost('admin/people', $edit, t('Update'));
     $account = user_load($user_b->uid, TRUE);
     $this->assertEqual($account->status, 0, 'User B blocked');
   }

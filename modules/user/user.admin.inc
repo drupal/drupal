@@ -114,7 +114,7 @@ function user_filter_form_submit($form, &$form_state) {
       return;
   }
 
-  $form_state['redirect'] = 'admin/user';
+  $form_state['redirect'] = 'admin/people';
   return;
 }
 

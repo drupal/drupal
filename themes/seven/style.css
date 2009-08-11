@@ -637,7 +637,7 @@ div.admin-panel {
   display: block;
 }
 
-/* admin/content/node and admin/user/user */
+/* admin/content and admin/people */
 #block-system-main dl.multiselect,
 #block-system-main dl.multiselect dt,
 #block-system-main dl.multiselect dd {
