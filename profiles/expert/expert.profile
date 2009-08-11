@@ -1,5 +1,5 @@
 <?php
-// $Id: expert.profile,v 1.11 2009/07/28 12:13:47 dries Exp $
+// $Id: expert.profile,v 1.12 2009/08/11 12:20:26 dries Exp $
 
 /**
  * Implement hook_profile_tasks().
@@ -40,7 +40,7 @@ function expert_profile_site_setup(&$install_state) {
       'theme' => 'garland',
       'status' => 1,
       'weight' => 0,
-      'region' => 'left',
+      'region' => 'sidebar_first',
       'pages' => '',
       'cache' => -1,
     ),
@@ -50,7 +50,7 @@ function expert_profile_site_setup(&$install_state) {
       'theme' => 'garland',
       'status' => 1,
       'weight' => 0,
-      'region' => 'left',
+      'region' => 'sidebar_first',
       'pages' => '',
       'cache' => -1,
     ),
@@ -60,7 +60,7 @@ function expert_profile_site_setup(&$install_state) {
       'theme' => 'garland',
       'status' => 1,
       'weight' => 1,
-      'region' => 'left',
+      'region' => 'sidebar_first',
       'pages' => '',
       'cache' => -1,
     ),

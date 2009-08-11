@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.59 2009/08/08 22:52:59 webchick Exp $
+// $Id: system.api.php,v 1.60 2009/08/11 12:20:26 dries Exp $
 
 /**
  * @file
@@ -304,9 +304,9 @@ function hook_css_alter(&$css) {
  * The $page array contains top level elements for each block region:
  * @code
  *   $page['header']
- *   $page['left']
+ *   $page['sidebar_first']
  *   $page['content']
- *   $page['right']
+ *   $page['sidebar_second']
  *   $page['footer']
  * @endcode
  *
@@ -330,8 +330,8 @@ function hook_css_alter(&$css) {
  *
  * Blocks may be referenced by their module/delta pair within a region:
  * @code
- *   // The login block in the left sidebar region.
- *   $page['left']['user-login']['#block'];
+ *   // The login block in the first sidebar region.
+ *   $page['sidebar_first']['user-login']['#block'];
  * @endcode
  *
  * @param $page

@@ -1,5 +1,5 @@
 <?php
-// $Id: block.api.php,v 1.4 2009/06/08 09:23:50 dries Exp $
+// $Id: block.api.php,v 1.5 2009/08/11 12:20:26 dries Exp $
 
 /**
  * @file
@@ -57,7 +57,7 @@ function hook_block_list() {
     'info' => t('An exciting block provided by Mymodule.'),
     'weight' => 0,
     'status' => 1,
-    'region' => 'left',
+    'region' => 'sidebar_first',
     // BLOCK_CACHE_PER_ROLE will be assumed for block 0.
   );
 
