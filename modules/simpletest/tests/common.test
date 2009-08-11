@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.57 2009/07/30 19:57:10 dries Exp $
+// $Id: common.test,v 1.58 2009/08/11 11:52:46 dries Exp $
 
 /**
  * Tests for the l() function.
@@ -1112,7 +1112,7 @@ class FormatDateUnitTest extends DrupalWebTestCase {
       'direction' => LANGUAGE_LTR,
       'prefix' => self::LANGCODE,
     );
-    $this->drupalPost('admin/international/language/add', $edit, t('Add custom language'));
+    $this->drupalPost('admin/config/international/language/add', $edit, t('Add custom language'));
 
     // Create a test user to carry out the tests.
     $test_user = $this->drupalCreateUser();
