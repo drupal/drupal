@@ -674,7 +674,7 @@ function install_display_output($output, $install_state) {
     // Let the theming function know when every step of the installation has
     // been completed.
     $active_task = $install_state['installation_finished'] ? NULL : $install_state['active_task'];
-    drupal_add_region_content('left', theme_task_list(install_tasks_to_display($install_state), $active_task));
+    drupal_add_region_content('sidebar_first', theme_task_list(install_tasks_to_display($install_state), $active_task));
   }
   print theme($install_state['database_tables_exist'] ? 'maintenance_page' : 'install_page', $output);
   exit;

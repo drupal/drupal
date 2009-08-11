@@ -57,7 +57,7 @@ function hook_block_list() {
     'info' => t('An exciting block provided by Mymodule.'),
     'weight' => 0,
     'status' => 1,
-    'region' => 'left',
+    'region' => 'sidebar_first',
     // BLOCK_CACHE_PER_ROLE will be assumed for block 0.
   );
 

@@ -3826,7 +3826,7 @@ function drupal_set_page_content($content = NULL) {
  *   A string or array representing the content of a page. The array consists of
  *   the following keys:
  *   - #type: Value is always 'page'. This pushes the theming through page.tpl.php (required).
- *   - #show_blocks: A marker which suppresses left/right regions if FALSE (optional).
+ *   - #show_blocks: A marker which suppresses sidebar regions if FALSE (optional).
  *   - #show_messages: Suppress drupal_get_message() items. Used by Batch API (optional).
  *
  * @see hook_page_alter()
@@ -3841,7 +3841,7 @@ function drupal_render_page($page) {
     $page = element_info('page');
   }
   // Modules alter the $page as needed. Blocks are populated into regions like
-  // 'left', 'footer', etc.
+  // 'sidebar_first', 'footer', etc.
   drupal_alter('page', $page);
 
   return drupal_render($page);
