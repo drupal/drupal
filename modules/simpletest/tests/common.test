@@ -1112,7 +1112,7 @@ class FormatDateUnitTest extends DrupalWebTestCase {
       'direction' => LANGUAGE_LTR,
       'prefix' => self::LANGCODE,
     );
-    $this->drupalPost('admin/international/language/add', $edit, t('Add custom language'));
+    $this->drupalPost('admin/config/international/language/add', $edit, t('Add custom language'));
 
     // Create a test user to carry out the tests.
     $test_user = $this->drupalCreateUser();

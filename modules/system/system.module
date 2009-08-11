@@ -525,6 +525,13 @@ function system_menu() {
     'access callback' => 'system_admin_menu_block_access',
     'access arguments' => array('admin/settings', 'access administration pages'),
   );
+  $items['admin/config'] = array(
+    'title' => 'Configuration and modules',
+    'page callback' => 'system_admin_config_page',
+    'position' => 'right',
+    'access callback' => array('system_admin_menu_block_access'),
+    'access arguments' => array('admin/config', 'access administration pages'),
+  );
   $items['admin/structure'] = array(
     'title' => 'Structure',
     'description' => 'Control how your site looks and feels.',
