@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.85 2009/08/09 01:15:33 webchick Exp $
+// $Id: content_types.inc,v 1.86 2009/08/11 15:50:56 webchick Exp $
 
 /**
  * @file
@@ -349,10 +349,23 @@ function node_type_form_submit($form, &$form_state) {
 }
 
 /**
- * Implement hook_node_type().
+ * Implement hook_node_type_insert().
  */
-function node_node_type($op, $info) {
-  if ($op != 'delete' && !empty($info->old_type) && $info->old_type != $info->type) {
+function node_node_type_insert($info) {
+  if (!empty($info->old_type) && $info->old_type != $info->type) {
+    $update_count = node_type_update_nodes($info->old_type, $info->type);
+
+    if ($update_count) {
+      drupal_set_message(format_plural($update_count, 'Changed the content type of 1 post from %old-type to %type.', 'Changed the content type of @count posts from %old-type to %type.', array('%old-type' => $info->old_type, '%type' => $info->type)));
+    }
+  }
+}
+
+/**
+ * Implement hook_node_type_update().
+ */
+function node_node_type_update($info) {
+  if (!empty($info->old_type) && $info->old_type != $info->type) {
     $update_count = node_type_update_nodes($info->old_type, $info->type);
 
     if ($update_count) {
