@@ -211,38 +211,38 @@ function comment_fieldable_info() {
   return $return;
 }
 
+/**
+ * Implement hook_node_type_insert().
+ */
+function comment_node_type_insert($info) {
+  field_attach_create_bundle('comment_node_' . $info->type);
+}
 
 /**
- * Implement hook_node_type().
+ * Implement hook_node_type_update().
  */
-function comment_node_type($op, $info) {
-  switch ($op) {
-    case 'insert':
-      field_attach_create_bundle('comment_node_' . $info->type);
-      break;
+function comment_node_type_update($info) {
+  if (!empty($info->old_type) && $info->type != $info->old_type) {
+    field_attach_rename_bundle('comment_node_' . $info->old_type, 'comment_node_' . $info->type);
+  }
+}
 
-    case 'update':
-      if (!empty($info->old_type) && $info->type != $info->old_type) {
-        field_attach_rename_bundle('comment_node_' . $info->old_type, 'comment_node_' . $info->type);
-      }
-      break;
-
-    case 'delete':
-      field_attach_delete_bundle('comment_node_' . $info->type);
-
-      $settings = array(
-        'comment',
-        'comment_default_mode',
-        'comment_default_per_page',
-        'comment_anonymous',
-        'comment_subject_field',
-        'comment_preview',
-        'comment_form_location',
-      );
-      foreach ($settings as $setting) {
-        variable_del($setting . '_' . $info->type);
-      }
-      break;
+/**
+ * Implement hook_node_type_delete().
+ */
+function comment_node_type_delete($info) {
+  field_attach_delete_bundle('comment_node_' . $info->type);
+  $settings = array(
+    'comment',
+    'comment_default_mode',
+    'comment_default_per_page',
+    'comment_anonymous',
+    'comment_subject_field',
+    'comment_preview',
+    'comment_form_location',
+  );
+  foreach ($settings as $setting) {
+    variable_del($setting . '_' . $info->type);
   }
 }
 

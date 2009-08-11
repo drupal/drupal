@@ -626,32 +626,42 @@ function hook_ranking() {
 
 
 /**
+ * Act on node type creation.
+ *
+ * This hook allows modules to take action when a node type is created.
+ *
+ * @param $info
+ *   The node type object which is being created.
+ */
+function hook_node_type_insert($info) {
+}
+
+/**
  * Act on node type changes.
  *
  * This hook allows modules to take action when a node type is modified.
  *
- * @param $op
- *   What is being done to $info. Possible values:
- *   - "delete"
- *   - "insert"
- *   - "update"
  * @param $info
- *   The node type object on which $op is being performed.
+ *   The node type object which is being modified.
  */
-function hook_node_type($op, $info) {
-
-  switch ($op) {
-    case 'delete':
-      variable_del('comment_' . $info->type);
-      break;
-    case 'update':
-      if (!empty($info->old_type) && $info->old_type != $info->type) {
-        $setting = variable_get('comment_' . $info->old_type, COMMENT_NODE_OPEN);
-        variable_del('comment_' . $info->old_type);
-        variable_set('comment_' . $info->type, $setting);
-      }
-      break;
+function hook_node_type_update($info) {
+  if (!empty($info->old_type) && $info->old_type != $info->type) {
+    $setting = variable_get('comment_' . $info->old_type, COMMENT_NODE_OPEN);
+    variable_del('comment_' . $info->old_type);
+    variable_set('comment_' . $info->type, $setting);
   }
+}
+
+/**
+ * Act on node type deletion.
+ *
+ * This hook allows modules to take action when a node type is deleted.
+ *
+ * @param $info
+ *   The node type object which is being deleted.
+ */
+function hook_node_type_delete($info) {
+  variable_del('comment_' . $info->type);
 }
 
 /**

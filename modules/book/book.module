@@ -1078,31 +1078,27 @@ function book_type_is_allowed($type) {
 }
 
 /**
- * Implement hook_node_type().
+ * Implement hook_node_type_update().
  *
  * Update book module's persistent variables if the machine-readable name of a
  * node type is changed.
  */
-function book_node_type($op, $type) {
-  switch ($op) {
-    case 'update':
-      if (!empty($type->old_type) && $type->old_type != $type->type) {
-        // Update the list of node types that are allowed to be added to books.
-        $allowed_types = variable_get('book_allowed_types', array('book'));
-        $key = array_search($type->old_type, $allowed_types);
+function book_node_type_update($type) {
+  if (!empty($type->old_type) && $type->old_type != $type->type) {
+    // Update the list of node types that are allowed to be added to books.
+    $allowed_types = variable_get('book_allowed_types', array('book'));
+    $key = array_search($type->old_type, $allowed_types);
 
-        if ($key !== FALSE) {
-          $allowed_types[$type->type] = $allowed_types[$key] ? $type->type : 0;
-          unset($allowed_types[$key]);
-          variable_set('book_allowed_types', $allowed_types);
-        }
+    if ($key !== FALSE) {
+      $allowed_types[$type->type] = $allowed_types[$key] ? $type->type : 0;
+      unset($allowed_types[$key]);
+      variable_set('book_allowed_types', $allowed_types);
+    }
 
-        // Update the setting for the "Add child page" link.
-        if (variable_get('book_child_type', 'book') == $type->old_type) {
-          variable_set('book_child_type', $type->type);
-        }
-      }
-      break;
+    // Update the setting for the "Add child page" link.
+    if (variable_get('book_child_type', 'book') == $type->old_type) {
+      variable_set('book_child_type', $type->type);
+    }
   }
 }
 

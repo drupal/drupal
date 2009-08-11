@@ -929,10 +929,17 @@ function taxonomy_node_save($node, $terms) {
 }
 
 /**
- * Implement hook_node_type().
+ * Implement hook_node_type_insert().
  */
-function taxonomy_node_type($op, $info) {
-  if ($op == 'update' && !empty($info->old_type) && $info->type != $info->old_type) {
+function taxonomy_node_type_insert($info) {
+  drupal_static_reset('taxonomy_term_count_nodes');
+}
+
+/**
+ * Implement hook_node_type_update().
+ */
+function taxonomy_node_type_update($info) {
+  if (!empty($info->old_type) && $info->type != $info->old_type) {
     db_update('taxonomy_vocabulary_node_type')
       ->fields(array(
         'type' => $info->type,
@@ -940,11 +947,17 @@ function taxonomy_node_type($op, $info) {
       ->condition('type', $info->old_type)
       ->execute();
   }
-  elseif ($op == 'delete') {
-    db_delete('taxonomy_vocabulary_node_type')
-      ->condition('type', $info->type)
-      ->execute();
-  }
+  drupal_static_reset('taxonomy_term_count_nodes');
+}
+
+/**
+ * Implement hook_node_type_delete().
+ */
+function taxonomy_node_type_delete($info) {
+  db_delete('taxonomy_vocabulary_node_type')
+    ->condition('type', $info->type)
+    ->execute();
+
   drupal_static_reset('taxonomy_term_count_nodes');
 }
 
