@@ -1177,7 +1177,7 @@ function book_menu_subtree_data($item) {
 
     // If the subtree data was not in the cache, $data will be NULL.
     if (!isset($data)) {
-      $query = db_select('menu_links', 'ml');
+      $query = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC));
       $menu_router_alias = $query->join('menu_router', 'm', 'm.path = ml.router_path');
       $book_alias = $query->join('book', 'b', 'ml.mlid = b.mlid');
       $query->fields($book_alias);

@@ -865,7 +865,7 @@ function menu_tree_all_data($menu_name, $item = NULL) {
     // If the tree data was not in the cache, $data will be NULL.
     if (!isset($data)) {
       // Build and run the query, and build the tree.
-      $query = db_select('menu_links', 'ml');
+      $query = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC));
       $query->leftJoin('menu_router', 'm', 'm.path = ml.router_path');
       $query->fields('ml');
       $query->fields('m', array(
@@ -1035,7 +1035,7 @@ function menu_tree_page_data($menu_name) {
         // Select the links from the table, and recursively build the tree. We
         // LEFT JOIN since there is no match in {menu_router} for an external
         // link.
-        $query = db_select('menu_links', 'ml');
+        $query = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC));
         $query->leftJoin('menu_router', 'm', 'm.path = ml.router_path');
         $query->fields('ml');
         $query->fields('m', array(
@@ -1188,7 +1188,6 @@ function _menu_tree_data($result, $parents, $depth, $previous_element = '') {
   $remnant = NULL;
   $tree = array();
   foreach ($result as $item) {
-    $item = is_object($item) ? get_object_vars($item) : $item;
     // We need to determine if we're on the path to root so we can later build
     // the correct active trail and breadcrumb.
     $item['in_active_trail'] = in_array($item['mlid'], $parents);
