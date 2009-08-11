@@ -43,7 +43,7 @@ Let's begin!
 
 3.  Place the site in "Offline" mode, to let the database updates run without
     interruption and avoid displaying errors to end users of the site. This
-    option is at http://www.example.com/?q=admin/settings/maintenance-mode
+    option is at http://www.example.com/?q=admin/config/development/maintenance
     (replace www.example.com with your installation's domain name and path).
 
 4.  If using a custom or contributed theme, switch
@@ -103,7 +103,7 @@ Let's begin!
 
 14. Finally, return your site to "Online" mode so your visitors may resume
     browsing. As in step #3, this option is available in your administration
-    screens at http://www.example.com/?q=admin/settings/maintenance-mode
+    screens at http://www.example.com/?q=admin/config/development/maintenance
     (replace www.example.com with your installation's domain name and path).
 
 For more information on upgrading visit

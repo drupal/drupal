@@ -2745,8 +2745,8 @@ function _menu_site_is_offline() {
       // Ensure that the offline message is displayed only once [allowing for
       // page redirects], and specifically suppress its display on the site
       // maintenance page.
-      if (drupal_get_normal_path($_GET['q']) != 'admin/settings/maintenance-mode') {
-        drupal_set_message(t('Operating in maintenance mode. <a href="@url">Go online.</a>', array('@url' => url('admin/settings/maintenance-mode'))), 'status', FALSE);
+      if (drupal_get_normal_path($_GET['q']) != 'admin/config/development/maintenance') {
+        drupal_set_message(t('Operating in maintenance mode. <a href="@url">Go online.</a>', array('@url' => url('admin/config/development/maintenance'))), 'status', FALSE);
       }
     }
     else {

@@ -96,7 +96,7 @@ function system_help($path, $arg) {
       $output .= '<li>' . t('support for enabling and disabling <a href="@themes">themes</a>, which determine the design and presentation of your site. Drupal comes packaged with several core themes and additional contributed themes are available at the <a href="@drupal-themes">Drupal.org theme page</a>.', array('@themes' => url('admin/appearance'), '@drupal-themes' => 'http://drupal.org/project/themes')) . '</li>';
       $output .= '<li>' . t('a robust <a href="@cache-settings">caching system</a> that allows the efficient re-use of previously-constructed web pages and web page components. Drupal stores the pages requested by anonymous users in a compressed format; depending on your site configuration and the amount of your web traffic tied to anonymous visitors, Drupal\'s caching system may significantly increase the speed of your site.', array('@cache-settings' => url('admin/settings/performance'))) . '</li>';
       $output .= '<li>' . t('a set of routine administrative operations that rely on a correctly-configured <a href="@cron">cron maintenance task</a> to run automatically. A number of other modules, including the feed aggregator, and search also rely on <a href="@cron">cron maintenance tasks</a>. For more information, see the online handbook entry for <a href="@handbook">configuring cron jobs</a>.', array('@cron' => url('admin/reports/status'), '@handbook' => 'http://drupal.org/cron')) . '</li>';
-      $output .= '<li>' . t('basic configuration options for your site, including <a href="@regional-settings">date and time settings</a>, <a href="@file-system">file system settings</a>, <a href="@clean-url">clean URL support</a>, <a href="@site-info">site name and other information</a>, and a <a href="@maintenance-mode">maintenance mode</a> for taking your site temporarily offline.', array('@regional-settings' => url('admin/settings/regional-settings'), '@file-system' => url('admin/settings/file-system'), '@clean-url' => url('admin/settings/clean-urls'), '@site-info' => url('admin/settings/site-information'), '@maintenance-mode' => url('admin/settings/maintenance-mode'))) . '</li></ul>';
+      $output .= '<li>' . t('basic configuration options for your site, including <a href="@regional-settings">date and time settings</a>, <a href="@file-system">file system settings</a>, <a href="@clean-url">clean URL support</a>, <a href="@site-info">site name and other information</a>, and a <a href="@maintenance-mode">maintenance mode</a> for taking your site temporarily offline.', array('@regional-settings' => url('admin/settings/regional-settings'), '@file-system' => url('admin/settings/file-system'), '@clean-url' => url('admin/settings/clean-urls'), '@site-info' => url('admin/settings/site-information'), '@maintenance-mode' => url('admin/config/development/maintenance'))) . '</li></ul>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@system">System module</a>.', array('@system' => 'http://drupal.org/handbook/modules/system/')) . '</p>';
       return $output;
     case 'admin/by-module':
@@ -123,7 +123,7 @@ function system_help($path, $arg) {
         return '<p>' . t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') . '</p>';
       }
       break;
-    case 'admin/settings/maintenance-mode':
+    case 'admin/config/development/maintenance':
       global $user;
       if ($user->uid == 1) {
         return '<p>' . t('If you are upgrading to a newer version of Drupal or upgrading contributed modules or themes you may need to run !update-php.', array('!update-php' => l('update.php', 'update.php'))) . '</p>';
@@ -676,6 +676,24 @@ function system_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  // Configuration.
+  $items['admin/config/development'] = array(
+   'title' => 'Development',
+   'description' => 'Development tools.',
+   'position' => 'left',
+   'weight' => 10,
+   'page callback' => 'system_admin_menu_block_page',
+   'access callback' => 'system_admin_menu_block_access',
+   'access arguments' => array('admin/config/development', 'access administration pages'),
+  );
+  $items['admin/config/development/maintenance'] = array(
+    'title' => 'Maintenance mode',
+    'description' => 'Take the site offline for maintenance or bring it back online.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_site_maintenance_mode'),
+    'access arguments' => array('administer site configuration'),
+  );
+
   // Settings.
   $items['admin/settings/site-information'] = array(
     'title' => 'Site information',
@@ -736,13 +754,6 @@ function system_menu() {
     'title' => 'Date and time lookup',
     'type' => MENU_CALLBACK,
     'page callback' => 'system_date_time_lookup',
-    'access arguments' => array('administer site configuration'),
-  );
-  $items['admin/settings/maintenance-mode'] = array(
-    'title' => 'Maintenance mode',
-    'description' => 'Take the site offline for maintenance or bring it back online.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_site_maintenance_mode'),
     'access arguments' => array('administer site configuration'),
   );
   $items['admin/settings/clean-urls'] = array(

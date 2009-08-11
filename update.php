@@ -207,7 +207,7 @@ function update_info_page() {
   $output .= "<ol>\n";
   $output .= "<li><strong>Back up your database</strong>. This process will change your database values and in case of emergency you may need to revert to a backup.</li>\n";
   $output .= "<li><strong>Back up your code</strong>. Hint: when backing up module code, do not leave that backup in the 'modules' or 'sites/*/modules' directories as this may confuse Drupal's auto-discovery mechanism.</li>\n";
-  $output .= '<li>Put your site into <a href="' . base_path() . '?q=admin/settings/maintenance-mode">maintenance mode</a>.</li>' . "\n";
+  $output .= '<li>Put your site into <a href="' . base_path() . '?q=admin/config/development/maintenance">maintenance mode</a>.</li>' . "\n";
   $output .= "<li>Install your new files in the appropriate location, as described in the handbook.</li>\n";
   $output .= "</ol>\n";
   $output .= "<p>When you have performed the steps above, you may proceed.</p>\n";
