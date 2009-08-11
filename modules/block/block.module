@@ -514,7 +514,7 @@ function block_system_themes_form_submit(&$form, &$form_state) {
         }
       }
     }
-    if ($form_state['values']['admin_theme'] && $form_state['values']['admin_theme'] != variable_get('admin_theme', 0)) {
+    if ($form_state['values']['admin_theme'] && $form_state['values']['admin_theme'] !== variable_get('admin_theme', 0)) {
       // If we're changing themes, make sure the theme has its blocks initialized.
       $has_blocks = (bool) db_query_range('SELECT 1 FROM {block} WHERE theme = :theme', array(':theme' => $form_state['values']['admin_theme']), 0, 1)->fetchField();
       if (!$has_blocks) {
