@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.66 2009/07/31 19:01:03 dries Exp $
+// $Id: user.admin.inc,v 1.67 2009/08/11 11:47:58 dries Exp $
 
 /**
  * @file
@@ -114,7 +114,7 @@ function user_filter_form_submit($form, &$form_state) {
       return;
   }
 
-  $form_state['redirect'] = 'admin/user';
+  $form_state['redirect'] = 'admin/people';
   return;
 }
 

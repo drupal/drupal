@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.46 2009/07/31 19:01:03 dries Exp $
+// $Id: user.pages.inc,v 1.47 2009/08/11 11:47:58 dries Exp $
 
 /**
  * @file
@@ -411,7 +411,7 @@ function user_cancel_confirm_form_submit($form, &$form_state) {
     user_cancel($form_state['values'], $account->uid, $form_state['values']['user_cancel_method']);
 
     if (!isset($_REQUEST['destination'])) {
-      $form_state['redirect'] = 'admin/user';
+      $form_state['redirect'] = 'admin/people';
     }
   }
   else {
