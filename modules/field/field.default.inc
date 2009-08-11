@@ -50,63 +50,10 @@ function field_default_insert($obj_type, $object, $field, $instance, &$items) {
     }
   }
 }
-
 /**
- * The 'view' operation constructs the $object in a way that you can use
- * drupal_render() to display the formatted output for an individual field.
- * i.e. print drupal_render($object->content['field_foo']);
+ * Default field 'view' operation.
  *
- * The code supports both single value formatters, which theme an individual
- * item value, and multiple value formatters, which theme all values for the
- * field in a single theme. The multiple value formatters could be used, for
- * instance, to plot field values on a single map or display them in a graph.
- * Single value formatters are the default, multiple value formatters can be
- * designated as such in formatter_info().
- *
- * The $object array will look like:
- *   $object->content['field_foo'] = array(
- *     '#theme' => 'field',
- *     '#title' => 'label'
- *     '#field_name' => 'field_name',
- *     '#object' => $object,
- *     '#object_type' => $obj_type,
- *     // Value of the $build_mode param of hook_node('view').
- *     '#build_mode' => $build_mode,
- *     'items' =>
- *       0 => array(
- *         '#item' => $items[0],
- *         // Only for 'single-value' formatters
- *         '#theme' => $theme,
- *         '#field_name' => 'field_name',
- *         '#bundle' => $bundle,
- *         '#formatter' => $formatter_name,
- *         '#settings' => $formatter_settings,
- *         '#object' => $object,
- *         '#object_type' => $obj_type,
- *         '#delta' => 0,
- *       ),
- *       1 => array(
- *         '#item' => $items[1],
- *         // Only for 'single-value' formatters
- *         '#theme' => $theme,
- *         '#field_name' => 'field_name',
- *         '#bundle' => $bundle_name,
- *         '#formatter' => $formatter_name,
- *         '#settings' => $formatter_settings,
- *         '#object' => $object,
- *         '#object_type' => $obj_type,
- *         '#delta' => 1,
- *       ),
- *       // Only for 'multiple-value' formatters
- *       '#theme' => $theme,
- *       '#field_name' => 'field_name',
- *       '#bundle' => $bundle_name,
- *       '#formatter' => $formatter_name,
- *       '#settings' => $formatter_settings,
- *       '#object' => $object,
- *       '#object_type' => $obj_type,
- *     ),
- *   );
+ * @see field_attach_view()
  */
 function field_default_view($obj_type, $object, $field, $instance, $items, $build_mode) {
   list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);

@@ -58,14 +58,16 @@ class FieldQueryException extends FieldException {}
  */
 
 /**
- * Argument for an insert operation.
+ * Argument for an update operation.
+ *
  * This is used in hook_field_storage_write when updating an
  * existing object.
  */
 define('FIELD_STORAGE_UPDATE', 'update');
 
 /**
- * Argument for an update operation.
+ * Argument for an insert operation.
+ *
  * This is used in hook_field_storage_write when inserting a new object.
  */
 define('FIELD_STORAGE_INSERT', 'insert');
@@ -353,9 +355,65 @@ function _field_invoke_multiple_default($op, $obj_type, $objects, &$a = NULL, &$
  *   The form structure to fill in.
  * @param $form_state
  *   An associative array containing the current state of the form.
+ * @return
+ *   The form elements are added by reference at the top level of the $form
+ *   parameter. Sample structure:
+ *   @code
+ *   array(
+ *     '#fields' => array(
+ *       // One sub-array per field appearing in the form, keyed by field name.
+ *       'field_foo' => array (
+ *         'field' => the field definition structure,
+ *         'instance' => the field instance definition structure,
+ *         'form_path' => an array of keys indicating the path to the field
+ *           element within the full $form structure, used by the 'add more
+ *           values' AHAH button. Any 3rd party module using form_alter() to
+ *           modify the structure of the form should update this entry as well.
+ *       ),
+ *     ),
  *
- * TODO : document the resulting $form structure, like we do for
- * field_attach_view().
+ *     // One sub-array per field appearing in the form, keyed by field name.
+ *     // The structure of the array differs slightly depending on whether the
+ *     // widget is 'single-value' (provides the input for one field value,
+ *     // most common case), and will therefore be repeated as many times as
+ *     // needed, or 'multiple-values' (one single widget allows the input of
+ *     // several values, e.g checkboxes, select box...).
+ *     'field_foo' => array(
+ *       '#field_name' => the name of the field,
+ *       '#tree' => TRUE,
+ *       '#required' => whether or not the field is required,
+ *       '#title' => the label of the field instance,
+ *       '#description' => the description text for the field instance,
+ *
+ *       // Only for 'single' widgets:
+ *       '#theme' => 'field_multiple_value_form',
+ *       '#multiple' => the field cardinality,
+ *       // One sub-array per copy of the widget, keyed by delta.
+ *       0 => array(
+ *         '#title' => the title to be displayed by the widget,
+ *         '#default_value' => the field value for delta 0,
+ *         '#required' => whether the widget should be marked required,
+ *         '#delta' => 0,
+ *         '#field_name' => the name of the field,
+ *         '#bundle' => the name of the bundle,
+ *         '#columns' => the array of field columns,
+ *         // The remaining elements in the sub-array depend on the widget.
+ *         '#type' => the type of the widget,
+ *         ...
+ *       ),
+ *       1 => array(
+ *         ...
+ *       ),
+ *
+ *       // Only for multiple widgets:
+ *       '#bundle' => $instance['bundle'],
+ *       '#columns'  => array_keys($field['columns']),
+ *       // The remaining elements in the sub-array depend on the widget.
+ *       '#type' => the type of the widget,
+ *       ...
+ *     ),
+ *   )
+ *   @endcode
  */
 function field_attach_form($obj_type, $object, &$form, &$form_state) {
   $form += (array) _field_invoke_default('form', $obj_type, $object, $form, $form_state);
@@ -879,6 +937,54 @@ function field_attach_query_revisions($field_name, $conditions, $count, &$cursor
  *   Build mode, e.g. 'full', 'teaser'...
  * @return
  *   A structured content array tree for drupal_render().
+ *   Sample structure:
+ *   @code
+ *   array(
+ *     'field_foo' => array(
+ *       // The structure of the array differs slightly depending on whether
+ *       // the formatter is 'single-value' (displays one single field value,
+ *       // most common case) or 'multiple-values' (displays all the field's
+ *       // values, e.g. points on a graph or a map).
+ *       '#theme' => 'field',
+ *       '#title' => the label of the field instance,
+ *       '#label_display' => the label display mode,
+ *       '#object' => the fieldable object being displayed,
+ *       '#object_type' => the type of the object being displayed,
+ *       '#build_mode' => the build mode,
+ *       '#field_name' => the name of the field,
+ *       '#single' => boolean indicating whether the formatter is single or
+ *         multiple,
+ *       'items' => array(
+ *         // One sub-array per field value, keyed by delta.
+ *         0 => array(
+ *           '#item' => the field value for delta 0,
+ *
+ *           // Only for 'single-value' formatters:
+ *           '#theme' => the formatter's theme function,
+ *           '#formatter' => name of the formatter,
+ *           '#settings' => array of formatter settings,
+ *           '#object' => the fieldable object being displayed,
+ *           '#object_type' => the type of the object being displayed,
+ *           '#field_name' => the name of the field,
+ *           '#bundle' => the object's bundle,
+ *           '#delta' => 0,
+ *         ),
+ *         1 => array(
+ *           ...
+ *         ),
+ *
+ *         // Only for 'multiple-values' formatters:
+ *         '#theme' => the formatter's theme function,
+ *         '#formatter' => name of the formatter,
+ *         '#settings' => array of formatter settings,
+ *         '#object' => the fieldable object being displayed,
+ *         '#object_type' => the type of the object being displayed,
+ *         '#field_name' => the name of the field,
+ *         '#bundle' => the object's bundle,
+ *       ),
+ *     ),
+ *   );
+ *   @endcode
  */
 function field_attach_view($obj_type, $object, $build_mode = 'full') {
   // Let field modules sanitize their data for output.
