@@ -571,6 +571,50 @@ function _filter_tips($format, $long = FALSE) {
   return $tips;
 }
 
+/**
+ * Parses an HTML snippet and returns it as a DOM object.
+ *
+ * This function loads the body part of a partial (X)HTML document
+ * and returns a full DOMDocument object that represents this document.
+ * You can use filter_dom_serialize() to serialize this DOMDocument
+ * back to a XHTML snippet.
+ * 
+ * @param $text
+ *   The partial (X)HTML snippet to load. Invalid mark-up
+ *   will be corrected on import.
+ * @return
+ *   A DOMDocument that represents the loaded (X)HTML snippet.
+ */
+function filter_dom_load($text) {
+  // Ignore warnings during HTML soup loading.
+  $dom_document = @DOMDocument::loadHTML('<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body>' . $text . '</body></html>');
+
+  return $dom_document;
+}
+
+/**
+ * Converts a DOM object back to an HTML snippet.
+ *
+ * The function serializes the body part of a DOMDocument
+ * back to an XHTML snippet.
+ *
+ * The resulting XHTML snippet will be properly formatted
+ * to be compatible with HTML user agents.
+ * 
+ * @param $dom_document
+ *   A DOMDocument object to serialize, only the tags below
+ *   the first <body> node will be converted.
+ * @return
+ *   A valid (X)HTML snippet, as a string.
+ */
+function filter_dom_serialize($dom_document) {
+  $body_node = $dom_document->getElementsByTagName('body')->item(0);
+  $body_content = '';
+  foreach ($body_node->childNodes as $child_node) {
+    $body_content .= $dom_document->saveXML($child_node);
+  }
+  return preg_replace('|<([^>]*)/>|i', '<$1 />', $body_content);
+}
 
 /**
  * Format a link to the more extensive filter tips.
@@ -757,21 +801,7 @@ function _filter_url($text, $format) {
  * Scan input and make sure that all HTML tags are properly closed and nested.
  */
 function _filter_htmlcorrector($text) {
-  // Ignore warnings during HTML soup loading.
-  $htmlDom = @DOMDocument::loadHTML('<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head><body>' . $text . '</body></html>');
-
-  // The result of DOMDocument->saveXML($bodyNode) is a partial (X)HTML document.
-  // We only need what is inside the body tag.
-  $bodyNode = $htmlDom->getElementsByTagName('body')->item(0);
-  if (preg_match("|^<body[^>]*>(.*)</body>$|s", $htmlDom->saveXML($bodyNode), $matches)) {
-    $body_content = $matches[1];
-    // The XHTML guidelines recommend to include a space before the trailing /
-    // and > of empty elements for better rendering on HTML user agents.
-    return preg_replace('|<([^>]*)/>|i', '<$1 />', $body_content);
-  }
-  else {
-    return '';
-  }
+  return filter_dom_serialize(filter_dom_load($text));
 }
 
 /**
