@@ -1,5 +1,5 @@
 <?php
-// $Id: user.pages.inc,v 1.47 2009/08/11 11:47:58 dries Exp $
+// $Id: user.pages.inc,v 1.48 2009/08/12 12:36:05 dries Exp $
 
 /**
  * @file
@@ -136,7 +136,7 @@ function user_logout() {
 
   watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
 
-  module_invoke_all('user_logout', NULL, $user);
+  module_invoke_all('user_logout', $user);
 
   // Destroy the current session, and reset $user to the anonymous user.
   session_destroy();

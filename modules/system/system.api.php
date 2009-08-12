@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.60 2009/08/11 12:20:26 dries Exp $
+// $Id: system.api.php,v 1.61 2009/08/12 12:36:04 dries Exp $
 
 /**
  * @file
@@ -509,19 +509,6 @@ function hook_image_toolkits() {
       'available' => FALSE,
     ),
   );
-}
-
-/**
- * Perform alterations profile items before they are rendered. You may omit/add/re-sort/re-categorize, etc.
- *
- * @param $account
- *   A user object whose profile is being rendered. Profile items
- *   are stored in $account->content.
- */
-function hook_profile_alter(&$account) {
-  foreach ($account->content AS $key => $field) {
-    // do something
-  }
 }
 
 /**

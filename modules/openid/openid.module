@@ -1,5 +1,5 @@
 <?php
-// $Id: openid.module,v 1.51 2009/06/30 11:32:08 dries Exp $
+// $Id: openid.module,v 1.52 2009/08/12 12:36:04 dries Exp $
 
 /**
  * @file
@@ -59,7 +59,7 @@ function openid_help($path, $arg) {
 /**
  * Implement hook_user_insert().
  */
-function openid_user_insert(&$edit, &$account, $category = NULL) {
+function openid_user_insert(&$edit, $account, $category) {
   if (isset($_SESSION['openid']['values'])) {
     // The user has registered after trying to login via OpenID.
     if (variable_get('user_email_verification', TRUE)) {
