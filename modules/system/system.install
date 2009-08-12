@@ -473,8 +473,6 @@ function system_install() {
   // Set the default input format to Filtered HTML.
   variable_set('filter_default_format', $filtered_html_format);
 
-  variable_set('node_options_forum', array(0 => 'status'));
-
   $cron_key = md5(mt_rand());
 
   variable_set('cron_key', $cron_key);
