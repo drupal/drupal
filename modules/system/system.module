@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.741 2009/08/12 12:36:04 dries Exp $
+// $Id: system.module,v 1.742 2009/08/12 23:23:00 webchick Exp $
 
 /**
  * @file
@@ -529,8 +529,7 @@ function system_menu() {
     'title' => 'Configuration and modules',
     'page callback' => 'system_admin_config_page',
     'position' => 'right',
-    'access callback' => array('system_admin_menu_block_access'),
-    'access arguments' => array('admin/config', 'access administration pages'),
+    'access arguments' => array('access administration pages'),
   );
   $items['admin/structure'] = array(
     'title' => 'Structure',
