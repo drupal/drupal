@@ -1,5 +1,5 @@
 <?php
-// $Id: install.inc,v 1.103 2009/07/30 10:16:48 dries Exp $
+// $Id: install.inc,v 1.104 2009/08/12 23:51:19 webchick Exp $
 
 /**
  * Indicates that a module has not been installed yet.
@@ -577,7 +577,7 @@ function drupal_install_modules($module_list = array(), $disable_modules_install
  *
  * Used during installation to install modules one at a time and then
  * enable them, or to install a number of modules at one time
- * from admin/structure/modules.
+ * from admin/config/modules.
  *
  * @param $module
  *   The machine name of the module to install.
