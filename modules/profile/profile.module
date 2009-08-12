@@ -205,49 +205,35 @@ function profile_block_view($delta = '') {
 /**
  * Implement hook_user_register().
  */
-function profile_user_register(&$edit, &$user, $category = NULL) {
-  return profile_form_profile($edit, $user, $category, TRUE);
+function profile_user_register(&$edit, $account, $category) {
+  return profile_form_profile($edit, $account, $category, TRUE);
 }
 
 /**
  * Implement hook_user_update().
  */
-function profile_user_update(&$edit, &$user, $category = NULL) {
-  return profile_save_profile($edit, $user, $category);
+function profile_user_update(&$edit, $account, $category) {
+  return profile_save_profile($edit, $account, $category);
 }
 
 /**
  * Implement hook_user_insert().
  */
-function profile_user_insert(&$edit, &$user, $category = NULL) {
-  return profile_save_profile($edit, $user, $category, TRUE);
-}
-
-/**
- * Implement hook_user_view().
- */
-function profile_user_view(&$edit, &$user, $category = NULL) {
-  return profile_view_profile($user);
+function profile_user_insert(&$edit, $account, $category) {
+  return profile_save_profile($edit, $account, $category, TRUE);
 }
 
 /**
  * Implement hook_user_form().
  */
-function profile_user_form(&$edit, &$user, $category = NULL) {
-  return profile_form_profile($edit, $user, $category);
-}
-
-/**
- * Implement hook_user_validate().
- */
-function profile_user_validate(&$edit, &$user, $category = NULL) {
-  return profile_validate_profile($edit, $category);
+function profile_user_form(&$edit, $account, $category) {
+  return profile_form_profile($edit, $account, $category);
 }
 
 /**
  * Implement hook_user_cancel().
  */
-function profile_user_cancel(&$edit, &$account, $method) {
+function profile_user_cancel(&$edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
     case 'user_cancel_delete':
@@ -270,7 +256,7 @@ function profile_user_load($users) {
   }
 }
 
-function profile_save_profile(&$edit, &$user, $category, $register = FALSE) {
+function profile_save_profile(&$edit, $account, $category, $register = FALSE) {
   $result = _profile_get_fields($category, $register);
   foreach ($result as $field) {
     if (_profile_field_serialize($field->type)) {
@@ -279,7 +265,7 @@ function profile_save_profile(&$edit, &$user, $category, $register = FALSE) {
     db_merge('profile_value')
       ->key(array(
         'fid' => $field->fid,
-        'uid' => $user->uid,
+        'uid' => $account->uid,
       ))
       ->fields(array('value' => $edit[$field->name]))
       ->execute();
@@ -288,7 +274,7 @@ function profile_save_profile(&$edit, &$user, $category, $register = FALSE) {
   }
 }
 
-function profile_view_field($user, $field) {
+function profile_view_field($account, $field) {
   // Only allow browsing of private fields for admins, if browsing is enabled,
   // and if a user has permission to view profiles. Note that this check is
   // necessary because a user may always see their own profile.
@@ -296,7 +282,7 @@ function profile_view_field($user, $field) {
         && (user_access('administer users') || $field->visibility != PROFILE_PRIVATE)
         && !empty($field->page);
 
-  if (isset($user->{$field->name}) && $value = $user->{$field->name}) {
+  if (isset($account->{$field->name}) && $value = $account->{$field->name}) {
     switch ($field->type) {
       case 'textarea':
         return check_markup($value);
@@ -335,12 +321,12 @@ function profile_view_field($user, $field) {
   }
 }
 
-function profile_view_profile(&$user) {
-
-  $user = user_load($user->uid);
-
+/**
+ * Implement hook_user_view().
+ */
+function profile_user_view($account) {
   // Show private fields to administrators and people viewing their own account.
-  if (user_access('administer users') || $GLOBALS['user']->uid == $user->uid) {
+  if (user_access('administer users') || $GLOBALS['user']->uid == $account->uid) {
     $result = db_query('SELECT * FROM {profile_field} WHERE visibility <> :hidden ORDER BY category, weight', array(':hidden' => PROFILE_HIDDEN));
   }
   else {
@@ -349,18 +335,18 @@ function profile_view_profile(&$user) {
 
   $fields = array();
   foreach ($result as $field) {
-    if ($value = profile_view_field($user, $field)) {
+    if ($value = profile_view_field($account, $field)) {
       $title = ($field->type != 'checkbox') ? check_plain($field->title) : NULL;
 
       // Create a single fieldset for each category.
-      if (!isset($user->content[$field->category])) {
-        $user->content[$field->category] = array(
+      if (!isset($account->content[$field->category])) {
+        $account->content[$field->category] = array(
           '#type' => 'user_profile_category',
           '#title' => $field->category,
         );
       }
 
-      $user->content[$field->category][$field->name] = array(
+      $account->content[$field->category][$field->name] = array(
         '#type' => 'user_profile_item',
         '#title' => $title,
         '#markup' => $value,
@@ -385,7 +371,7 @@ function _profile_form_explanation($field) {
   return $output;
 }
 
-function profile_form_profile($edit, $user, $category, $register = FALSE) {
+function profile_form_profile($edit, $account, $category, $register = FALSE) {
   $result = _profile_get_fields($category, $register);
   $weight = 1;
   $fields = array();
@@ -471,7 +457,10 @@ function _profile_update_user_fields($fields, $account) {
   return $fields;
 }
 
-function profile_validate_profile($edit, $category) {
+/**
+ * Implement hook_user_validate().
+ */
+function profile_user_validate(&$edit, $account, $category) {
   $result = _profile_get_fields($category);
   foreach ($result as $field) {
     if ($edit[$field->name]) {

@@ -23,10 +23,10 @@ define('EMAIL_MAX_LENGTH', 64);
  * We cannot use module_invoke() for this, because the arguments need to
  * be passed by reference.
  */
-function user_module_invoke($type, &$array, &$user, $category = NULL) {
+function user_module_invoke($type, &$edit, $account, $category = NULL) {
   foreach (module_implements('user_' . $type) as $module) {
     $function = $module . '_user_' . $type;
-    $function($array, $user, $category);
+    $function($edit, $account, $category);
   }
 }
 
@@ -878,7 +878,7 @@ function user_elements() {
 /**
  * Implement hook_user_view().
  */
-function user_user_view(&$edit, &$account, $category = NULL) {
+function user_user_view($account) {
   $account->content['user_picture'] = array(
     '#markup' => theme('user_picture', $account),
     '#weight' => -10,
@@ -902,7 +902,7 @@ function user_user_view(&$edit, &$account, $category = NULL) {
 /**
  * Implement hook_user_form.
  */
-function user_user_form(&$edit, &$account, $category = NULL) {
+function user_user_form(&$edit, $account, $category) {
   if ($category == 'account') {
     $form_state = array();
     return user_edit_form($form_state, (isset($account->uid) ? $account->uid : FALSE), $edit);
@@ -912,7 +912,7 @@ function user_user_form(&$edit, &$account, $category = NULL) {
 /**
  * Implement hook_user_validate().
  */
-function user_user_validate(&$edit, &$account, $category = NULL) {
+function user_user_validate(&$edit, $account, $category) {
   if ($category == 'account') {
     $uid = isset($account->uid) ? $account->uid : FALSE;
     // Validate the username when: new user account; or user is editing own account and can change username; or an admin user.
@@ -953,7 +953,7 @@ function user_user_validate(&$edit, &$account, $category = NULL) {
 /**
  * Implement hook_user_submit().
  */
-function user_user_submit(&$edit, &$account, $category = NULL) {
+function user_user_submit(&$edit, $account, $category) {
   if ($category == 'account') {
     if (!empty($edit['picture_upload'])) {
       $edit['picture'] = $edit['picture_upload'];
@@ -2065,19 +2065,14 @@ function _user_cancel($edit, $account, $method) {
  * @return
  *   A structured array containing the individual elements of the profile.
  */
-function user_build_content(&$account) {
-  $edit = NULL;
+function user_build_content($account) {
   $account->content = array();
 
   // Build fields content.
   // TODO D7 : figure out where exactly this needs to go
   $account->content += field_attach_view('user', $account);
 
-  user_module_invoke('view', $edit, $account);
-
-  // Allow modules to modify the fully-built profile.
-  drupal_alter('profile', $account);
-
+  module_invoke_all('user_view', $account);
   return $account->content;
 }
 

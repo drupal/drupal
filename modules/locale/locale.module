@@ -212,22 +212,22 @@ function locale_locale($op = 'groups') {
 /**
  * Implement hook_user_register().
  */
-function locale_user_register(&$edit, &$user, $category = NULL) {
+function locale_user_register(&$edit, $account, $category) {
   // If we have more then one language and either creating a user on the
   // admin interface or edit the user, show the language selector.
   if (variable_get('language_count', 1) > 1 && user_access('administer users')) {
-    return locale_language_selector_form($user);
+    return locale_language_selector_form($account);
   }
 }
 
 /**
  * Implement hook_user_form().
  */
-function locale_user_form(&$edit, &$user, $category = NULL) {
+function locale_user_form(&$edit, $account, $category) {
   // If we have more then one language and either creating a user on the
   // admin interface or edit the user, show the language selector.
   if (variable_get('language_count', 1) > 1 && $category == 'account') {
-    return locale_language_selector_form($user);
+    return locale_language_selector_form($account);
   }
 }
 

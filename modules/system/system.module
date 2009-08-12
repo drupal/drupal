@@ -1392,7 +1392,7 @@ function system_preprocess_page(&$variables) {
 /**
  * Implement hook_user_form().
  */
-function system_user_form(&$edit, &$user, $category = NULL) {
+function system_user_form(&$edit, $account, $category) {
   if ($category == 'account') {
     if (variable_get('configurable_timezones', 1)) {
       system_user_timezone($edit, $form);
@@ -1404,7 +1404,7 @@ function system_user_form(&$edit, &$user, $category = NULL) {
 /**
  * Implement hook_user_register().
  */
-function system_user_register(&$edit, &$user, $category = NULL) {
+function system_user_register(&$edit, $account, $category) {
   if (variable_get('configurable_timezones', 1)) {
     $form = array();
     if (variable_get('user_default_timezone', DRUPAL_USER_TIMEZONE_DEFAULT) == DRUPAL_USER_TIMEZONE_SELECT) {
@@ -1423,10 +1423,10 @@ function system_user_register(&$edit, &$user, $category = NULL) {
 /**
  * Implement hook_user_login().
  */
-function system_user_login(&$edit, &$user, $category = NULL) {
+function system_user_login(&$edit, $account) {
   // If the user has a NULL time zone, notify them to set a time zone.
-  if (!$user->timezone && variable_get('configurable_timezones', 1) && variable_get('empty_timezone_message', 0)) {
-    drupal_set_message(t('Please configure your <a href="@user-edit">account time zone setting</a>.', array('@user-edit' => url("user/$user->uid/edit", array('query' => drupal_get_destination(), 'fragment' => 'edit-timezone')))));
+  if (!$account->timezone && variable_get('configurable_timezones', 1) && variable_get('empty_timezone_message', 0)) {
+    drupal_set_message(t('Please configure your <a href="@user-edit">account time zone setting</a>.', array('@user-edit' => url("user/$account->uid/edit", array('query' => drupal_get_destination(), 'fragment' => 'edit-timezone')))));
   }
 }
 

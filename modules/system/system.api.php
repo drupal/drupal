@@ -512,19 +512,6 @@ function hook_image_toolkits() {
 }
 
 /**
- * Perform alterations profile items before they are rendered. You may omit/add/re-sort/re-categorize, etc.
- *
- * @param $account
- *   A user object whose profile is being rendered. Profile items
- *   are stored in $account->content.
- */
-function hook_profile_alter(&$account) {
-  foreach ($account->content AS $key => $field) {
-    // do something
-  }
-}
-
-/**
  * Alter any aspect of email sent by Drupal. You can use this hook
  * to add a common site footer to all outgoing email, add extra header
  * fields, and/or modify the email in any way. HTML-izing the

@@ -421,7 +421,7 @@ function block_box_save($edit, $delta) {
 /**
  * Implement hook_user_form().
  */
-function block_user_form(&$edit, &$account, $category = NULL) {
+function block_user_form(&$edit, $account, $category) {
   if ($category == 'account') {
     $rids = array_keys($account->roles);
     $result = db_query("SELECT DISTINCT b.* FROM {block} b LEFT JOIN {block_role} r ON b.module = r.module AND b.delta = r.delta WHERE b.status = 1 AND b.custom <> 0 AND (r.rid IN (:rids) OR r.rid IS NULL) ORDER BY b.weight, b.module", array(':rids' => $rids));
@@ -454,7 +454,7 @@ function block_user_form(&$edit, &$account, $category = NULL) {
 /**
  * Implement hook_user_validate().
  */
-function block_user_validate(&$edit, &$account, $category = NULL) {
+function block_user_validate(&$edit, $account, $category) {
   if (empty($edit['block'])) {
     $edit['block'] = array();
   }

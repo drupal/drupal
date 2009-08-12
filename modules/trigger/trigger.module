@@ -416,28 +416,28 @@ function _trigger_normalize_user_context($type, $account) {
 /**
  * trigger_user_login
  */
-function trigger_user_login(&$edit, &$account, $category) {
+function trigger_user_login(&$edit, $account, $category) {
   _trigger_user('login', $edit, $account, $category);
 }
 
 /**
  * Implement hook_user_logout().
  */
-function trigger_user_logout($edit, $account) {
-  _trigger_user('logout', $edit, $account);
+function trigger_user_logout($account) {
+  _trigger_user('logout', $edit = NULL, $account);
 }
 
 /**
  * Implement hook_user_insert().
  */
-function trigger_user_insert(&$edit, &$account, $category) {
+function trigger_user_insert(&$edit, $account, $category) {
   _trigger_user('insert', $edit, $account, $category);
 }
 
 /**
  * Implement hook_user_update().
  */
-function trigger_user_update(&$edit, &$account, $category) {
+function trigger_user_update(&$edit, $account, $category) {
   _trigger_user('update', $edit, $account, $category);
 }
 
@@ -456,8 +456,8 @@ function trigger_user_cancel($edit, $account, $method) {
 /**
  * Implement hook_user_view().
  */
-function trigger_user_view(&$edit, &$account, $category) {
-  _trigger_user('view', $edit, $account, $category);
+function trigger_user_view($account) {
+  _trigger_user('view', $edit = NULL, $account, NULL);
 }
 
 /**
@@ -465,7 +465,7 @@ function trigger_user_view(&$edit, &$account, $category) {
  *
  * @TODO: Take advantage of the new API and reorganise/remove this function.
  */
-function _trigger_user($op, &$edit, &$account, $category = NULL) {
+function _trigger_user($op, &$edit, $account, $category = NULL) {
   // Keep objects for reuse so that changes actions make to objects can persist.
   static $objects;
   $aids = _trigger_get_hook_aids('user', $op);
