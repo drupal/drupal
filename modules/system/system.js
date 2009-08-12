@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.29 2009/07/30 19:32:19 dries Exp $
+// $Id: system.js,v 1.30 2009/08/12 11:43:10 dries Exp $
 (function ($) {
 
 /**
@@ -147,6 +147,27 @@ Drupal.behaviors.poweredByPreview = {
   }
 };
 
+
+ /**
+ * Show/hide settings for page caching depending on whether page caching is
+ * enabled or not.
+ */
+Drupal.behaviors.pageCache = {
+  attach: function (context, settings) {
+    $('#edit-cache-0', context).change(function () {
+      $('#page-compression-wrapper').hide();
+      $('#cache-error').hide();
+    });
+    $('#edit-cache-1', context).change(function () {
+      $('#page-compression-wrapper').show();
+      $('#cache-error').hide();
+    });
+    $('#edit-cache-2', context).change(function () {
+      $('#page-compression-wrapper').show();
+      $('#cache-error').show();
+    });
+  },
+};
 
 })(jQuery);
 

@@ -1,10 +1,34 @@
 <?php
-// $Id: block.admin.inc,v 1.47 2009/07/20 18:51:32 dries Exp $
+// $Id: block.admin.inc,v 1.48 2009/08/12 11:43:09 dries Exp $
 
 /**
  * @file
  * Admin page callbacks for the block module.
  */
+
+/**
+ * Implement hook_form_FORM_ID_alter().
+ */
+function block_form_system_performance_settings_alter(&$form, &$form_state) {
+  $disabled = count(module_implements('node_grants'));
+  $form['caching']['block_cache'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Cache blocks'),
+    '#default_value' => variable_get('block_cache', FALSE),
+    '#disabled' => $disabled,
+    '#description' => $disabled ? t('Block caching is inactive because you have enabled modules defining content access restrictions.') : NULL,
+    '#weight' => -1,
+  );
+
+  // Check if the "Who's online" block is enabled.
+  $online_block_enabled = db_query_range("SELECT 1 FROM {block} b WHERE module = 'user' AND delta = 'online' AND status = 1", array(), 0, 1)->fetchField();
+
+  // If the "Who's online" block is enabled, append some descriptive text to
+  // the end of the form description.
+  if ($online_block_enabled) {
+    $form['page_cache']['cache']['#description'] .=  '<p>' . t('When caching is enabled, anonymous user sessions are only saved to the database when needed, so the "Who\'s online" block does not display the number of anonymous users.') . '</p>';
+  }
+}
 
 /**
  * Menu callback for admin/structure/block.
