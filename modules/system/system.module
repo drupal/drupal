@@ -529,8 +529,7 @@ function system_menu() {
     'title' => 'Configuration and modules',
     'page callback' => 'system_admin_config_page',
     'position' => 'right',
-    'access callback' => array('system_admin_menu_block_access'),
-    'access arguments' => array('admin/config', 'access administration pages'),
+    'access arguments' => array('access administration pages'),
   );
   $items['admin/structure'] = array(
     'title' => 'Structure',
