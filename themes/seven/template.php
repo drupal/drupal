@@ -65,3 +65,26 @@ function seven_tablesort_indicator($style) {
     return theme('image', $theme_path . '/images/arrow-desc.png', t('sort icon'), t('sort descending'));
   }
 }
+
+/**
+ * Override of theme_fieldset().
+ *
+ * Add span to legend tag, so we can style it to be inside the fieldset.
+ */
+function seven_fieldset($element) {
+  if (!empty($element['#collapsible'])) {
+    drupal_add_js('misc/collapse.js');
+
+    if (!isset($element['#attributes']['class'])) {
+      $element['#attributes']['class'] = '';
+    }
+
+    $element['#attributes']['class'] .= ' collapsible';
+    if (!empty($element['#collapsed'])) {
+      $element['#attributes']['class'] .= ' collapsed';
+    }
+  }
+  $element['#attributes']['id'] = $element['#id'];
+
+  return '<fieldset' . drupal_attributes($element['#attributes']) . '>' . ($element['#title'] ? '<legend><span>' . $element['#title'] . '</span></legend>' : '') . (isset($element['#description']) && $element['#description'] ? '<div class="fieldset-description">' . $element['#description'] . '</div>' : '') . (!empty($element['#children']) ? $element['#children'] : '') . (isset($element['#value']) ? $element['#value'] : '') . "</fieldset>\n";
+}

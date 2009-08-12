@@ -232,7 +232,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
     $fieldsets = $this->xpath('//fieldset');
     $info = $this->getInfo();
     foreach ($fieldsets as $fieldset) {
-      if ($fieldset->legend == $info['name']) {
+      if ($this->asText($fieldset->legend) == $info['name']) {
         return $fieldset;
       }
     }

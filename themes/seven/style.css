@@ -443,12 +443,33 @@ table tr.selected td {
 /* Fieldsets & Form items */
 fieldset {
   border: 1px solid #ccc;
-  padding: 9px;
+  padding: 30px 13px 13px 14px;
   margin: 0 0 10px;
+}
+
+fieldset legend span,
+fieldset legend a {
+  position: absolute;
+  margin-top: 9px;
+}
+
+fieldset legend a span {
+  position: relative;
+  margin-top: 0;
 }
 
 fieldset.collapsed {
   background: transparent;
+}
+
+html.js fieldset.collapsed legend,
+html.js fieldset.collapsed legend * {
+  display: block;
+}
+html.js fieldset.collapsed {
+  border-width: 1px;
+  margin-bottom: 10px;
+  padding: 13px;
 }
 
 fieldset fieldset {
