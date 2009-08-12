@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.355 2009/08/04 06:38:56 webchick Exp $
+// $Id: form.inc,v 1.356 2009/08/12 11:45:14 dries Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -1113,7 +1113,7 @@ function _form_builder_handle_input_element($form_id, &$element, &$form_state) {
     if (!isset($element['#value'])) {
       // Call #type_value without a second argument to request default_value handling.
       if (drupal_function_exists($value_callback)) {
-        $element['#value'] = $value_callback($element);
+        $element['#value'] = $value_callback($element, FALSE, $form_state);
       }
       // Final catch. If we haven't set a value yet, use the explicit default value.
       // Avoid image buttons (which come with garbage value), so we only get value
