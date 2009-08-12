@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.191 2009/08/11 12:20:25 dries Exp $
+// $Id: install.php,v 1.192 2009/08/12 12:39:18 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -1405,7 +1405,9 @@ function install_finished(&$install_state) {
     $messages = drupal_set_message();
     $output = '<p>' . st('Congratulations, @drupal has been successfully installed.', array('@drupal' => drupal_install_profile_name())) . '</p>';
     $output .= '<p>' . (isset($messages['error']) ? st('Please review the messages above before continuing on to <a href="@url">your new site</a>.', array('@url' => url(''))) : st('You may now visit <a href="@url">your new site</a>.', array('@url' => url('')))) . '</p>';
-    $output .= '<p>' . st('For more information on configuring Drupal, please refer to the <a href="@help">help section</a>.', array('@help' => url('admin/help'))) . '</p>';
+    if (module_exists('help')) {
+      $output .= '<p>' . st('For more information on configuring Drupal, please refer to the <a href="@help">help section</a>.', array('@help' => url('admin/help'))) . '</p>';
+    }
 
     // Rebuild menu and registry to get content type links registered by the
     // profile, and possibly any other menu items created through the tasks.

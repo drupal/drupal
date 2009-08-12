@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1096 2009/08/11 15:50:56 webchick Exp $
+// $Id: node.module,v 1.1097 2009/08/12 12:39:18 dries Exp $
 
 /**
  * @file
@@ -1986,11 +1986,14 @@ function node_page_default() {
 
     $default_message = '<p>' . t('No front page content has been created yet.') . '</p>';
 
-    if (user_access('access administration pages')) {
-      $default_links = array (
-        l(t('Create content'), 'node/add'),
-        l(t('Change the default front page'), 'admin/settings/site-information'),
-      );
+    $default_links = array();
+    if (_node_add_access()) {
+      $default_links[] = l(t('Create content'), 'node/add');
+    }
+    if (user_access('administer site configuration')) {
+      $default_links[] = l(t('Change the default front page'), 'admin/settings/site-information');
+    }
+    if (!empty($default_links)) {
       $default_message .= theme('item_list', $default_links);
     }
 
