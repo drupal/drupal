@@ -114,7 +114,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     $edit = array();
     $edit['modules[Core][aggregator][enable]'] = 'aggregator';
     $edit['modules[Core][forum][enable]'] = 'forum';
-    $this->drupalPost('admin/structure/modules', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
 
     // Check that hook_modules_installed and hook_modules_enabled hooks were invoked and check tables.
@@ -127,7 +127,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     // Disable aggregator, check tables, uninstall aggregator, check tables.
     $edit = array();
     $edit['modules[Core][aggregator][enable]'] = FALSE;
-    $this->drupalPost('admin/structure/modules', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
 
     // Check that hook_modules_disabled hook was invoked and check tables.
@@ -139,7 +139,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     // Uninstall the module.
     $edit = array();
     $edit['uninstall[aggregator]'] = 'aggregator';
-    $this->drupalPost('admin/structure/modules/uninstall', $edit, t('Uninstall'));
+    $this->drupalPost('admin/config/modules/uninstall', $edit, t('Uninstall'));
 
     $this->drupalPost(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), t('Modules status has been updated.'));
@@ -153,7 +153,7 @@ class EnableDisableTestCase extends ModuleTestCase {
     // Reinstall (and enable) aggregator module.
     $edit = array();
     $edit['modules[Core][aggregator][enable]'] = 'aggregator';
-    $this->drupalPost('admin/structure/modules', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
   }
 }
@@ -177,7 +177,7 @@ class ModuleDependencyTestCase extends ModuleTestCase {
     // Attempt to enable content translation without locale enabled.
     $edit = array();
     $edit['modules[Core][translation][enable]'] = 'translation';
-    $this->drupalPost('admin/structure/modules', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/modules', $edit, t('Save configuration'));
     $this->assertText(t('Some required modules must be enabled'), t('Dependecy required.'));
 
     $this->assertModules(array('translation', 'locale'), FALSE);
@@ -251,7 +251,7 @@ class ModuleVersionTestCase extends ModuleTestCase {
     variable_set('dependencies', $dependencies);
     $n = count($dependencies);
     for ($i = 0; $i < $n; $i++) {
-      $this->drupalGet('admin/structure/modules');
+      $this->drupalGet('admin/config/modules');
       $checkbox = $this->xpath('//input[@id="edit-modules-Testing-module-test-enable"]');
       $this->assertEqual(!empty($checkbox[0]['disabled']), $i % 2, $dependencies[$i]);
     }
@@ -275,7 +275,7 @@ class ModuleRequiredTestCase extends ModuleTestCase {
    */
   function testDisableRequired() {
     $required_modules = drupal_required_modules();
-    $this->drupalGet('admin/structure/modules');
+    $this->drupalGet('admin/config/modules');
     foreach ($required_modules as $module) {
       // Check to make sure the checkbox for required module is not found.
       $this->assertNoFieldByName('modules[Core][' . $module . '][enable]');

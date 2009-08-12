@@ -73,7 +73,7 @@ function update_help($path, $arg) {
       $output .= '<p>' . t('Each time Drupal core or a contributed module or theme is updated, it is important that <a href="@update-php">update.php</a> is run.', array('@update-php' => url($base_url . '/update.php', array('external' => TRUE)))) . '</p>';
       return $output;
     case 'admin/appearance':
-    case 'admin/structure/modules':
+    case 'admin/config/modules':
       include_once DRUPAL_ROOT . '/includes/install.inc';
       $status = update_requirements('runtime');
       foreach (array('core', 'contrib') as $report_type) {
@@ -96,7 +96,7 @@ function update_help($path, $arg) {
     case 'admin/help#update':
       $output = '<p>' . t("The Update status module periodically checks for new versions of your site's software (including contributed modules and themes), and alerts you to available updates.") . '</p>';
       $output .= '<p>' . t('The <a href="@update-report">report of available updates</a> will alert you when new releases are available for download. You may configure options for update checking frequency and notifications at the <a href="@update-settings">Update status module settings page</a>.', array('@update-report' => url('admin/reports/updates'), '@update-settings' => url('admin/settings/updates'))) . '</p>';
-      $output .= '<p>' . t('Please note that in order to provide this information, anonymous usage statistics are sent to drupal.org. If desired, you may disable the Update status module from the <a href="@modules">module administration page</a>.', array('@modules' => url('admin/structure/modules'))) . '</p>';
+      $output .= '<p>' . t('Please note that in order to provide this information, anonymous usage statistics are sent to drupal.org. If desired, you may disable the Update status module from the <a href="@modules">module administration page</a>.', array('@modules' => url('admin/config/modules'))) . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@update">Update status module</a>.', array('@update' => 'http://drupal.org/handbook/modules/update')) . '</p>';
       return $output;
 

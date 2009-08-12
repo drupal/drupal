@@ -506,7 +506,7 @@ html.js .js-hide {
 }
 
 /*
-** Styles for the system modules page (admin/structure/modules)
+** Styles for the system modules page (admin/config/modules)
 */
 #system-modules div.incompatible {
   font-weight: bold;

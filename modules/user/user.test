@@ -899,7 +899,7 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
     // permission is assigned by default.
     $edit = array();
     $edit['modules[Core][aggregator][enable]'] = TRUE;
-    $this->drupalPost('admin/structure/modules', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/modules', $edit, t('Save configuration'));
 
     $this->assertTrue(user_access('administer news feeds', $this->admin_user, TRUE), t('The permission was automatically assigned to the administrator role'));
   }

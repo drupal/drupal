@@ -232,7 +232,8 @@ ul.secondary {
   float: none;
   clear: both;
   font-size: 12px;
-  padding: 5px 20px 4px;
+  text-align: right;
+  padding: 5px 10px 4px;
   line-height: 20px;
   overflow: hidden;
   border-bottom: 1px solid #ccc;
@@ -240,7 +241,6 @@ ul.secondary {
 }
 
 ul.secondary li {
-  float: right;
   padding-left: 10px;
 }
 
