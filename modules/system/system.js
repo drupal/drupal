@@ -148,5 +148,26 @@ Drupal.behaviors.poweredByPreview = {
 };
 
 
+ /**
+ * Show/hide settings for page caching depending on whether page caching is
+ * enabled or not.
+ */
+Drupal.behaviors.pageCache = {
+  attach: function (context, settings) {
+    $('#edit-cache-0', context).change(function () {
+      $('#page-compression-wrapper').hide();
+      $('#cache-error').hide();
+    });
+    $('#edit-cache-1', context).change(function () {
+      $('#page-compression-wrapper').show();
+      $('#cache-error').hide();
+    });
+    $('#edit-cache-2', context).change(function () {
+      $('#page-compression-wrapper').show();
+      $('#cache-error').show();
+    });
+  },
+};
+
 })(jQuery);
 

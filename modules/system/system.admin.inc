@@ -1358,85 +1358,99 @@ function system_logging_settings() {
  * @see system_settings_form()
  */
 function system_performance_settings() {
-
-  $description = '<p>' . t("The normal page cache mode is suitable for most sites and does not cause any side effects. The aggressive page cache mode causes Drupal to skip the loading (boot) and unloading (exit) of enabled modules when serving a cached page. This results in an additional performance boost but can cause unwanted side effects.") . '</p>';
-
-  $problem_modules = array_unique(array_merge(module_implements('boot'), module_implements('exit')));
-  sort($problem_modules);
-
-  if (count($problem_modules) > 0) {
-    $description .= '<p>' . t('<strong class="error">The following enabled modules are incompatible with aggressive page caching mode and will not function properly: %modules</strong>', array('%modules' => implode(', ', $problem_modules))) . '.</p>';
-  }
-  else {
-    $description .= '<p>' . t('<strong class="ok">Currently, all enabled modules are compatible with the aggressive page caching policy.</strong> Please note, if you use aggressive page caching and enable new modules, you will need to check this setting again to ensure compatibility.') . '</p>';
-  }
-  $form['page_cache'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Page cache'),
-    '#description' => t('Enabling the page cache will offer a significant performance boost. Drupal can store and send compressed cached pages requested by <em>anonymous</em> users. By caching a web page, Drupal does not have to construct the page each time it is viewed.'),
-    '#weight' => -1,
-  );
-
-  $form['page_cache']['cache'] = array(
-    '#type' => 'radios',
-    '#title' => t('Page caching mode'),
-    '#default_value' => variable_get('cache', CACHE_DISABLED),
-    '#options' => array(CACHE_DISABLED => t('Disabled'), CACHE_NORMAL => t('Normal (recommended for production sites, no side effects)'), CACHE_AGGRESSIVE => t('Aggressive (experts only, possible side effects)')),
-    '#description' => $description
-  );
-
-  $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
-  $period[0] = '<' . t('none') . '>';
-  $form['page_cache']['cache_lifetime'] = array(
-    '#type' => 'select',
-    '#title' => t('Minimum cache lifetime'),
-    '#default_value' => variable_get('cache_lifetime', 0),
-    '#options' => $period,
-    '#description' => t('On high-traffic sites, it may be necessary to enforce a minimum cache lifetime. The minimum cache lifetime is the minimum amount of time that will elapse before the cache is emptied and recreated, and is applied to both page and block caches. A larger minimum cache lifetime offers better performance, but users will not see new content for a longer period of time.')
-  );
-  $form['page_cache']['page_compression'] = array(
-    '#type' => 'radios',
-    '#title' => t('Page compression'),
-    '#default_value' => variable_get('page_compression', TRUE),
-    '#options' => array(t('Disabled'), t('Enabled')),
-    '#description' => t("By default, Drupal compresses the pages it caches in order to save bandwidth and improve download times. This option should be disabled when using a webserver that performs compression."),
-  );
-
-  $form['bandwidth_optimizations'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Bandwidth optimizations'),
-    '#description' => '<p>' . t('Drupal can automatically optimize external resources like CSS and JavaScript, which can reduce both the size and number of requests made to your website. CSS files can be aggregated and compressed into a single file, while JavaScript files are aggregated (but not compressed). These optional optimizations may reduce server load, bandwidth requirements, and page loading times.') . '</p><p>' . t('These options are disabled if you have not set up your files directory, or if your download method is set to private.') . '</p>'
-  );
-
-  $directory = file_directory_path();
-  $is_writable = is_dir($directory) && is_writable($directory) && (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC);
-  $form['bandwidth_optimizations']['preprocess_css'] = array(
-    '#type' => 'radios',
-    '#title' => t('Optimize CSS files'),
-    '#default_value' => intval(variable_get('preprocess_css', 0) && $is_writable),
-    '#disabled' => !$is_writable,
-    '#options' => array(t('Disabled'), t('Enabled')),
-    '#description' => t('This option can interfere with theme development and should only be enabled in a production environment.'),
-  );
-  $form['bandwidth_optimizations']['preprocess_js'] = array(
-    '#type' => 'radios',
-    '#title' => t('Optimize JavaScript files'),
-    '#default_value' => intval(variable_get('preprocess_js', 0) && $is_writable),
-    '#disabled' => !$is_writable,
-    '#options' => array(t('Disabled'), t('Enabled')),
-    '#description' => t('This option can interfere with module development and should only be enabled in a production environment.'),
-  );
+  drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
 
   $form['clear_cache'] = array(
     '#type' => 'fieldset',
-    '#title' => t('Clear cached data'),
-    '#description' => t('Caching data improves performance, but may cause problems while troubleshooting new modules, themes, or translations, if outdated information has been cached. To refresh all cached data on your site, click the button below. <em>Warning: high-traffic sites will experience performance slowdowns while cached data is rebuilt.</em>'),
+    '#title' => t('Clear cache'),
   );
 
   $form['clear_cache']['clear'] = array(
     '#type' => 'submit',
-    '#value' => t('Clear cached data'),
+    '#value' => t('Clear all caches'),
     '#submit' => array('system_clear_cache_submit'),
+  );
+
+  $form['caching'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Caching'),
+  );
+
+  $cache = variable_get('cache', CACHE_DISABLED);
+  $js_hide = $cache != CACHE_AGGRESSIVE ? 'js-hide' : '';
+  $problem_modules = array_unique(array_merge(module_implements('boot'), module_implements('exit')));
+  if (count($problem_modules) > 0) {
+    $module_names = array();
+    foreach ($problem_modules as $module) {
+      $info = drupal_parse_info_file(drupal_get_path('module', $module) . "/$module.info");
+      $module_names[] = $info['name'];
+    }
+    sort($module_names);
+    $message = format_plural(count($module_names), '%module may cause issues when using aggressive caching.', '%modules may cause issues when using aggressive caching.', array('%module' => $module_names[0], '%modules' => implode(', ', $module_names)));
+    $description = ' <strong id="cache-error" class="error ' . $js_hide . '">' . $message . '</strong>';
+  }
+  else {
+    $description = ' <strong class="' . $js_hide . '">' . t('Note: if you use aggressive page caching and enable new modules, you will need to check this setting again to ensure compatibility.') . '</strong>';
+  }
+  $form['caching']['cache'] = array(
+    '#type' => 'radios',
+    '#title' => t('Page cache for anonymous users'),
+    '#default_value' => $cache,
+    '#options' => array(CACHE_DISABLED => t('Disabled'), CACHE_NORMAL => t('Normal (recommended)'), CACHE_AGGRESSIVE => t('Aggressive (possible issues)')),
+    '#description' => t('Aggressive caching prevents modules from being loaded if the requested page can be retrieved from the cache. This may cause issues if you use modules that need to be loaded every request i.e. for writing data like statistics.') . $description,
+  );
+  $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
+  $period[0] = '<' . t('none') . '>';
+  $form['caching']['cache_lifetime'] = array(
+    '#type' => 'select',
+    '#title' => t('Minimum cache lifetime'),
+    '#default_value' => variable_get('cache_lifetime', 0),
+    '#options' => $period,
+    '#description' => t('The minimum amount of time that will elapse before the caches are recreated.')
+  );
+
+  $directory = file_directory_path();
+  $is_writable = is_dir($directory) && is_writable($directory);
+  $public_downloads = (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC);
+  $disabled = !$is_writable && !$public_downloads;
+  $disabled_message = '';
+  if(!$is_writable && !$public_downloads) {
+    $disabled_message = ' ' . t('<strong class="error">Please <a href="!file-system">set up</a> the files directory and set the download method to public to make these optimizations available.</strong>', array('!file-system' => url('admin/settings/file-system')));
+  }
+  elseif(!$is_writable) {
+    $disabled_message = ' ' . t('<strong class="error">Please set up the <a href="!file-system">files directory</a> to make these optimizations available.</strong>', array('!file-system' => url('admin/settings/file-system')));
+  }
+  elseif(!$public_downloads) {
+    $disabled_message = ' ' . t('<strong class="error">Please set the <a href="!file-system">download method</a> to public to make these optimizations available.</strong>', array('!file-system' => url('admin/settings/file-system')));
+  }
+  $form['bandwidth_optimization'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Bandwidth optimization'),
+    '#description' => t('External resources  can be optimized automatically, which can reduce both the size and number of requests made to your website.') . $disabled_message,
+  );
+
+  // Do not allow Drupal to gzip pages if the server alredy does that.
+  if (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === FALSE) {
+    $js_hide = $cache == CACHE_DISABLED ? ' class="js-hide"' : '';
+    $form['bandwidth_optimization']['page_compression'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Compress cached pages.'),
+      '#default_value' => variable_get('page_compression', TRUE),
+      '#prefix' => '<div id="page-compression-wrapper"' . $js_hide . '>',
+      '#suffix' => '</div>',
+    );
+  }
+  $form['bandwidth_optimization']['preprocess_css'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Aggregate and compress CSS files into one file.'),
+    '#default_value' => intval(variable_get('preprocess_css', 0) && $is_writable),
+    '#disabled' => $disabled,
+  );
+  $form['bandwidth_optimization']['preprocess_js'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Aggregate JavaScript files into one file.'),
+    '#default_value' => intval(variable_get('preprocess_js', 0) && $is_writable),
+    '#disabled' => $disabled,
   );
 
   $form['#submit'][] = 'drupal_clear_css_cache';

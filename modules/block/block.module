@@ -464,39 +464,6 @@ function block_user_validate(&$edit, &$account, $category = NULL) {
 /**
  * Implement hook_form_FORM_ID_alter().
  */
-function block_form_system_performance_settings_alter(&$form, &$form_state) {
-
-  // Add the block cache fieldset on the performance settings page.
-  $form['block_cache'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Block cache'),
-    '#description' => t('Enabling the block cache can offer a performance increase for all users by preventing blocks from being reconstructed on each page load. If the page cache is also enabled, performance increases from enabling the block cache will mainly benefit authenticated users.'),
-    '#weight' => 0,
-  );
-
-  $form['block_cache']['block_cache'] = array(
-    '#type' => 'radios',
-    '#title' => t('Block cache'),
-    '#default_value' => variable_get('block_cache', CACHE_DISABLED),
-    '#options' => array(CACHE_DISABLED => t('Disabled'), CACHE_NORMAL => t('Enabled (recommended)')),
-    '#disabled' => count(module_implements('node_grants')),
-    '#description' => t('Note that block caching is inactive when modules defining content access restrictions are enabled.'),
-  );
-
-  // Check if the "Who's online" block is enabled.
-  $online_block_enabled = db_query_range("SELECT 1 FROM {block} b WHERE module = 'user' AND delta = 'online' AND status = 1", array(), 0, 1)->fetchField();
-
-  // If the "Who's online" block is enabled, append some descriptive text to
-  // the end of the form description.
-  if ($online_block_enabled) {
-    $form['page_cache']['cache']['#description'] .=  '<p>' . t('When caching is enabled, anonymous user sessions are only saved to the database when needed, so the "Who\'s online" block does not display the number of anonymous users.') . '</p>';
-  }
-
-}
-
-/**
- * Implement hook_form_FORM_ID_alter().
- */
 function block_form_system_themes_form_alter(&$form, &$form_state) {
   // This function needs to fire before the theme changes are recorded in the
   // database, otherwise it will populate the default list of blocks from the
