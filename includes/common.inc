@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.957 2009/08/11 12:20:26 dries Exp $
+// $Id: common.inc,v 1.958 2009/08/12 11:33:43 dries Exp $
 
 /**
  * @file
@@ -2871,8 +2871,8 @@ function drupal_clear_css_cache() {
  *       a JavaScript file. Defaults to TRUE.
  *   - preprocess
  *       Aggregate the JavaScript if the JavaScript optimization setting has
- *       been toggled in admin/settings/performance. Note that JavaScript of
- *       type 'external' is not aggregated. Defaults to TRUE.
+ *       been toggled in admin/config/development/performance. Note that
+ *       JavaScript of type 'external' is not aggregated. Defaults to TRUE.
  * @return
  *   The contructed array of JavaScript files.
  * @see drupal_get_js()
