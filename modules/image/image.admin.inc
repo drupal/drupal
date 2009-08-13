@@ -1,5 +1,5 @@
 <?php
-// $Id: image.admin.inc,v 1.1 2009/07/21 07:09:46 webchick Exp $
+// $Id: image.admin.inc,v 1.2 2009/08/13 02:03:29 webchick Exp $
 
 /**
  * @file
@@ -55,6 +55,7 @@ function image_style_form(&$form_state, $style) {
     '#default_value' => $style['name'],
     '#description' => t('The name is used in URLs for generated images. Use only lowercase alphanumeric characters, underscores (_), and hyphens (-).'),
     '#element_validate' => array('image_style_name_validate'),
+    '#required' => TRUE,
   );
 
   // Build the list of existing image effects for this image style.
@@ -196,6 +197,7 @@ function image_style_add_form(&$form_state) {
     '#default_value' => '',
     '#description' => t('The name is used in URLs for generated images. Use only lowercase alphanumeric characters, underscores (_), and hyphens (-).'),
     '#element_validate' => array('image_style_name_validate'),
+    '#required' => TRUE,
   );
 
   $form['submit'] = array(
