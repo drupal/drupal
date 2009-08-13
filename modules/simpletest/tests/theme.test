@@ -27,17 +27,17 @@ class TemplateUnitTest extends DrupalWebTestCase {
     variable_set('site_frontpage', 'nobody-home');
     $args = array('node', '1', 'edit');
     $suggestions = template_page_suggestions($args);
-    $this->assertEqual($suggestions, array('page-node', 'page-node-1', 'page-node-edit'), t('Found expected node edit page template suggestions'));
+    $this->assertEqual($suggestions, array('page-node', 'page-node-%', 'page-node-1', 'page-node-edit'), t('Found expected node edit page template suggestions'));
     // Check attack vectors.
     $args = array('node', '\\1');
     $suggestions = template_page_suggestions($args);
-    $this->assertEqual($suggestions, array('page-node', 'page-node-1'), t('Removed invalid \\ from template suggestions'));
+    $this->assertEqual($suggestions, array('page-node', 'page-node-%', 'page-node-1'), t('Removed invalid \\ from template suggestions'));
     $args = array('node', '1/');
     $suggestions = template_page_suggestions($args);
-    $this->assertEqual($suggestions, array('page-node', 'page-node-1'), t('Removed invalid / from template suggestions'));
+    $this->assertEqual($suggestions, array('page-node', 'page-node-%', 'page-node-1'), t('Removed invalid / from template suggestions'));
     $args = array('node', "1\0");
     $suggestions = template_page_suggestions($args);
-    $this->assertEqual($suggestions, array('page-node', 'page-node-1'), t('Removed invalid \\0 from template suggestions'));
+    $this->assertEqual($suggestions, array('page-node', 'page-node-%', 'page-node-1'), t('Removed invalid \\0 from template suggestions'));
     // Tests for drupal_discover_template()
     $suggestions = array('page');
     $this->assertEqual(drupal_discover_template(array('themes/garland'), $suggestions), 'themes/garland/page.tpl.php', t('Safe template discovered'));
