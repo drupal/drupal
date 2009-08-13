@@ -17,6 +17,9 @@ function forum_install() {
     ->fields(array('weight' => 1))
     ->condition('name', 'forum')
     ->execute();
+  // Forum topics are published by default, but do not have any other default
+  // options set (for example, they are not promoted to the front page).
+  variable_set('node_options_forum', array('status'));
 }
 
 function forum_enable() {
@@ -66,6 +69,7 @@ function forum_uninstall() {
   variable_del('forum_order');
   variable_del('forum_block_num_active');
   variable_del('forum_block_num_new');
+  variable_del('node_options_forum');
 }
 
 /**
