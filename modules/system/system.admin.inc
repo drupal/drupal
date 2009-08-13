@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.172 2009/08/12 23:51:19 webchick Exp $
+// $Id: system.admin.inc,v 1.173 2009/08/13 01:55:03 webchick Exp $
 
 /**
  * @file
@@ -1166,8 +1166,8 @@ function system_ip_blocking() {
   $build['system_ip_blocking_form'] = drupal_get_form('system_ip_blocking_form');
 
   $build['system_ip_blocking_table'] = array(
-    '#theme' => 'table', 
-    '#header' => $header, 
+    '#theme' => 'table',
+    '#header' => $header,
     '#rows' => $rows,
   );
 
