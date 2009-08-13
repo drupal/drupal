@@ -97,11 +97,6 @@
  *     A human-readable description for the field when used with this
  *     bundle. For example, the description will be the help text of
  *     Form API elements for this instance.
- * - weight (float)
- *     The order in which the field should be sorted relative
- *     to other fields when used with this bundle. The weight affects
- *     ordering in both forms (see field_attach_form()) and rendered output
- *     (see field_attach_view()).
  * - required (integer)
  *     TRUE if a value for this field is required when used with this
  *     bundle, FALSE otherwise. Currently, required-ness is only enforced
@@ -124,15 +119,18 @@
  *     - type (string)
  *         The type of the widget, such as text_textfield. Widget types
  *         are defined by modules that implement hook_field_widget_info().
+ *     - settings (array)
+ *         A sub-array of key/value pairs of widget-type-specific settings.
+ *         Each field widget type module defines and documents its own
+ *         widget settings.
+ *     - weight (float)
+ *         The weight of the widget relative to the other elements in object
+ *         edit forms.
  *     - module (string, read-only)
  *         The name of the module that implements the widget type.
  *     - active (integer, read-only)
  *         TRUE if the module that implements the widget type is currently
  *         enabled, FALSE otherwise.
- *     - settings (array)
- *         A sub-array of key/value pairs of widget-type-specific settings.
- *         Each field widget type module defines and documents its own
- *         widget settings.
  * - display (array)
  *     A sub-array of key/value pairs identifying build modes and the way the
  *     field values should be displayed in each build mode.
@@ -147,6 +145,9 @@
  *         - settings (array)
  *             A sub-array of key/value pairs of display options specific to
  *             the formatter.
+ *        - weight (float)
+ *            The weight of the field relative to the other object components
+ *            displayed in this build mode.
  *         - module (string, read-only)
  *             The name of the module which implements the display formatter.
  *     - teaser
@@ -530,6 +531,7 @@ function _field_write_instance($instance, $update = FALSE) {
     // TODO: what if no 'default_widget' specified ?
     'type' => $field_type['default_widget'],
     'settings' => array(),
+    'weight' => 0,
   );
   // Check widget module.
   $widget_type = field_info_widget_types($instance['widget']['type']);
@@ -550,6 +552,7 @@ function _field_write_instance($instance, $update = FALSE) {
       // TODO: what if no 'default_formatter' specified ?
       'type' => $field_type['default_formatter'],
       'settings' => array(),
+      'weight' => 0,
     );
     $formatter_type = field_info_formatter_types($instance['display'][$build_mode]['type']);
     // TODO : 'hidden' will raise PHP warnings.
@@ -561,7 +564,7 @@ function _field_write_instance($instance, $update = FALSE) {
   // not have its own column and is not automatically populated when the
   // instance is read.
   $data = $instance;
-  unset($data['id'], $data['field_id'], $data['field_name'], $data['bundle'], $data['widget']['type'], $data['weight'], $data['deleted']);
+  unset($data['id'], $data['field_id'], $data['field_name'], $data['bundle'], $data['widget']['type'], $data['deleted']);
 
   $record = array(
     'field_id' => $instance['field_id'],
@@ -570,7 +573,6 @@ function _field_write_instance($instance, $update = FALSE) {
     'widget_type' => $instance['widget']['type'],
     'widget_module' => $widget_module,
     'widget_active' => $widget_active,
-    'weight' => $instance['weight'],
     'data' => $data,
     'deleted' => $instance['deleted'],
   );
@@ -653,7 +655,6 @@ function field_read_instances($params = array(), $include_additional = array()) 
     $instance['field_id'] = $record['field_id'];
     $instance['field_name'] = $record['field_name'];
     $instance['bundle'] = $record['bundle'];
-    $instance['weight'] = $record['weight'];
     $instance['deleted'] = $record['deleted'];
     $instance['widget']['type'] = $record['widget_type'];
     $instance['widget']['module'] = $record['widget_module'];

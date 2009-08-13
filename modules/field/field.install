@@ -116,11 +116,6 @@ function field_schema() {
         'not null' => TRUE,
         'serialize' => TRUE,
       ),
-      'weight' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
       'deleted' => array(
         'type' => 'int',
         'size' => 'tiny',

@@ -79,7 +79,7 @@ function field_default_view($obj_type, $object, $field, $instance, $items, $buil
 
     $element = $info + array(
       '#theme' => 'field',
-      '#weight' => $instance['weight'],
+      '#weight' => $display['weight'],
       '#title' => check_plain(t($instance['label'])),
       '#access' => field_access('view', $field),
       '#label_display' => $label_display,
