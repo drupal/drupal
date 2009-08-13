@@ -421,35 +421,35 @@ class FilterUnitTest extends DrupalWebTestCase {
    *   or better a whitelist approach should be used for that too.
    */
   function testFilter() {
-    // Check that access restriction really works.
+    $format = "fake format";
 
     // HTML filter is not able to secure some tags, these should never be
     // allowed.
-    $f = filter_filter('process', 0, 'no_such_format', '<script />');
+    $f = _filter_html('<script />', $format);
     $this->assertNoNormalized($f, 'script', t('HTML filter should always remove script tags.'));
 
-    $f = filter_filter('process', 0, 'no_such_format', '<iframe />');
+    $f = _filter_html('<iframe />', $format);
     $this->assertNoNormalized($f, 'iframe', t('HTML filter should always remove iframe tags.'));
 
-    $f = filter_filter('process', 0, 'no_such_format', '<object />');
+    $f = _filter_html('<object />', $format);
     $this->assertNoNormalized($f, 'object', t('HTML filter should always remove object tags.'));
 
-    $f = filter_filter('process', 0, 'no_such_format', '<style />');
+    $f = _filter_html('<style />', $format);
     $this->assertNoNormalized($f, 'style', t('HTML filter should always remove style tags.'));
 
     // Some tags make CSRF attacks easier, let the user take the risk herself.
-    $f = filter_filter('process', 0, 'no_such_format', '<img />');
+    $f = _filter_html('<img />', $format);
     $this->assertNoNormalized($f, 'img', t('HTML filter should remove img tags on default.'));
 
-    $f = filter_filter('process', 0, 'no_such_format', '<input />');
+    $f = _filter_html('<input />', $format);
     $this->assertNoNormalized($f, 'img', t('HTML filter should remove input tags on default.'));
 
     // Filtering content of some attributes is infeasible, these shouldn't be
     // allowed too.
-    $f = filter_filter('process', 0, 'no_such_format', '<p style="display: none;" />');
+    $f = _filter_html('<p style="display: none;" />', $format);
     $this->assertNoNormalized($f, 'style', t('HTML filter should remove style attribute on default.'));
 
-    $f = filter_filter('process', 0, 'no_such_format', '<p onerror="alert(0);" />');
+    $f = _filter_html('<p onerror="alert(0);" />', $format);
     $this->assertNoNormalized($f, 'onerror', t('HTML filter should remove on* attributes on default.'));
   }
 

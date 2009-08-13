@@ -13,36 +13,32 @@
 
 /**
  * Define content filters.
- *
+ * 
  * Content in Drupal is passed through all enabled filters before it is
  * output. This lets a module modify content to the site administrator's
  * liking.
  *
- * This hook contains all that is needed for having a module provide filtering
- * functionality.
- *
- * Depending on $op, different tasks are performed.
+ * This hook allows modules to declare input filters they provide.
  *
  * A module can contain as many filters as it wants. The 'list' operation tells
- * the filter system which filters are available. Every filter has a numerical
- * 'delta' which is used to refer to it in every operation.
+ * the filter system which filters are available.
  *
  * Filtering is a two-step process. First, the content is 'prepared' by calling
- * the 'prepare' operation for every filter. The purpose of 'prepare' is to
- * escape HTML-like structures. For example, imagine a filter which allows the
+ * the 'prepare callback' function for every filter. The purpose of the 'prepare callback'
+ * is to escape HTML-like structures. For example, imagine a filter which allows the
  * user to paste entire chunks of programming code without requiring manual
  * escaping of special HTML characters like @< or @&. If the programming code
  * were left untouched, then other filters could think it was HTML and change
  * it. For most filters however, the prepare-step is not necessary, and they can
  * just return the input without changes.
  *
- * Filters should not use the 'prepare' step for anything other than escaping,
+ * Filters should not use the 'prepare callback' step for anything other than escaping,
  * because that would short-circuits the control the user has over the order
  * in which filters are applied.
  *
  * The second step is the actual processing step. The result from the
  * prepare-step gets passed to all the filters again, this time with the
- * 'process' operation. It's here that filters should perform actual changing of
+ * 'process callback' function. It's here that filters should perform actual changing of
  * the content: transforming URLs into hyperlinks, converting smileys into
  * images, etc.
  *
@@ -69,93 +65,42 @@
  * if it's not needed. You can clear the cache by running the SQL query 'DELETE
  * FROM cache_filter';
  *
- * @param $op
- *  Which filtering operation to perform. Possible values:
- *   - list: provide a list of available filters.
- *     Returns an associative array of filter names with numerical keys.
- *     These keys are used for subsequent operations and passed back through
- *     the $delta parameter.
- *   - no cache: Return true if caching should be disabled for this filter.
- *   - description: Return a short description of what this filter does.
- *   - prepare: Return the prepared version of the content in $text.
- *   - process: Return the processed version of the content in $text.
- *   - settings: Return HTML form controls for the filter's settings. These
- *     settings are stored with variable_set() when the form is submitted.
- *     Remember to use the $format identifier in the variable and control names
- *     to store settings per text format (e.g. "mymodule_setting_$format").
- * @param $delta
- *   Which of the module's filters to use (applies to every operation except
- *   'list'). Modules that only contain one filter can ignore this parameter.
- * @param $format
- *   Which text format the filter is being used in (applies to 'prepare',
- *   'process' and 'settings').
- * @param $text
- *   The content to filter (applies to 'prepare' and 'process').
- * @param $langcode
- *   The language code associated with the content, e.g. 'en' for English. This
- *   enables filters to be language aware and can be used to implement language
- *   specific text replacements.
- * @param $cache_id
- *   The cache id of the content.
- * @return
- *   The return value depends on $op. The filter hook is designed so that a
- *   module can return $text for operations it does not use/need.
+ * @return 
+ *  An array of filter items. Each filter item has a numeric key corresponding to the
+ *  filter delta in the module. The item is an associative array that may
+ *  contain the following key-value pairs:
+ *   - "name": Required. The name of the filter.
+ *   - "description": Short description of what this filter does.
+ *   - "prepare callback": The callback function to call in the 'prepare' step of 
+ *     the filtering.
+ *   - "process callback": Required. The callback function to call in the 'process' step of 
+ *     the filtering.
+ *   - "settings callback": The callback function that provides form controls for 
+ *     the filter's settings. These settings are stored with variable_set() when
+ *     the form is submitted. Remember to use the $format identifier in the variable
+ *     and control names  to store settings per text format (e.g. "mymodule_setting_$format").
+ *   - "tips callback": The callback function that provide tips for using filters.
+ *     A module's tips should be informative and to the point. Short tips are
+ *     preferably one-liners.
+ *   - "cache": Specify if the filter result can be cached. TRUE by default.
  *
  * For a detailed usage example, see filter_example.module. For an example of
- * using multiple filters in one module, see filter_filter() and
- * filter_filter_tips().
+ * using multiple filters in one module, see filter_filter_info().
  */
-function hook_filter($op, $delta = 0, $format = -1, $text = '', $langcode = '', $cache_id = 0) {
-  switch ($op) {
-    case 'list':
-      return array(0 => t('Code filter'));
-
-    case 'description':
-      return t('Allows users to post code verbatim using &lt;code&gt; and &lt;?php ?&gt; tags.');
-
-    case 'prepare':
-      // Note: we use [ and ] to replace < > during the filtering process.
-      // For more information, see "Temporary placeholders and
-      // delimiters" at http://drupal.org/node/209715.
-      $text = preg_replace('@<code>(.+?)</code>@se', "'[codefilter-code]' . codefilter_escape('\\1') . '[/codefilter-code]'", $text);
-      $text = preg_replace('@<(\?(php)?|%)(.+?)(\?|%)>@se', "'[codefilter-php]' . codefilter_escape('\\3') . '[/codefilter-php]'", $text);
-      return $text;
-
-    case "process":
-      $text = preg_replace('@[codefilter-code](.+?)[/codefilter-code]@se', "codefilter_process_code('$1')", $text);
-      $text = preg_replace('@[codefilter-php](.+?)[/codefilter-php]@se', "codefilter_process_php('$1')", $text);
-      return $text;
-
-    default:
-      return $text;
-  }
-}
-
-/**
- * Provide tips for using filters.
- *
- * A module's tips should be informative and to the point. Short tips are
- * preferably one-liners.
- *
- * @param $delta
- *   Which of this module's filters to use. Modules which only implement one
- *   filter can ignore this parameter.
- * @param $format
- *   Which format we are providing tips for.
- * @param $long
- *   If set to true, long tips are requested, otherwise short tips are needed.
- * @return
- *   The text of the filter tip.
- *
- *
- */
-function hook_filter_tips($delta, $format, $long = FALSE) {
-  if ($long) {
-    return t('To post pieces of code, surround them with &lt;code&gt;...&lt;/code&gt; tags. For PHP code, you can use &lt;?php ... ?&gt;, which will also colour it based on syntax.');
-  }
-  else {
-    return t('You may post code using &lt;code&gt;...&lt;/code&gt; (generic) or &lt;?php ... ?&gt; (highlighted PHP) tags.');
-  }
+function hook_filter_info() {
+  $filters[0] = array(
+    'name' => t('Limit allowed HTML tags'),
+    'description' => t('Allows you to restrict the HTML tags the user can use. It will also remove harmful content such as JavaScript events, JavaScript URLs and CSS styles from those tags that are not removed.'),
+    'process callback' => '_filter_html',
+    'settings callback' => '_filter_html_settings',
+    'tips callback'  => '_filter_html_tips'
+  );
+  $filters[1] = array(
+    'name' => t('Convert line breaks'),
+    'description' => t('Converts line breaks into HTML (i.e. &lt;br&gt; and &lt;p&gt;) tags.'),
+    'process callback' => '_filter_autop',
+    'tips callback' => '_filter_autop_tips'
+  );
 }
 
 /**

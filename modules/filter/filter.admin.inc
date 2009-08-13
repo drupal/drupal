@@ -151,10 +151,11 @@ function filter_admin_format_form(&$form_state, $format) {
     '#tree' => TRUE,
   );
   foreach ($all as $id => $filter) {
+    $filter_info = module_invoke($filter->module, 'filter_info');
     $form['filters'][$id] = array('#type' => 'checkbox',
       '#title' => $filter->name,
       '#default_value' => isset($enabled[$id]),
-      '#description' => module_invoke($filter->module, 'filter', 'description', $filter->delta),
+      '#description' => $filter_info[$filter->delta]['description'],
     );
   }
   if (!empty($format->format)) {
@@ -349,7 +350,10 @@ function filter_admin_configure(&$form_state, $format) {
   $list = filter_list_format($format->format);
   $form = array();
   foreach ($list as $filter) {
-    $form_module = module_invoke($filter->module, 'filter', 'settings', $filter->delta, $format->format);
+    $filter_info = module_invoke($filter->module, 'filter_info');
+    if (isset($filter_info[$filter->delta]['settings callback']) && drupal_function_exists($filter_info[$filter->delta]['settings callback'])) {
+      $form_module = call_user_func($filter_info[$filter->delta]['settings callback'], $format->format);
+    }
     if (isset($form_module) && is_array($form_module)) {
       $form = array_merge($form, $form_module);
     }

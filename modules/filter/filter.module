@@ -329,12 +329,15 @@ function filter_formats($index = NULL) {
 function filter_list_all() {
   $filters = array();
 
-  foreach (module_implements('filter') as $module) {
-    $function = $module . '_filter';
-    $list = $function('list');
-    if (isset($list) && is_array($list)) {
-      foreach ($list as $delta => $name) {
-        $filters[$module . '/' . $delta] = (object)array('module' => $module, 'delta' => $delta, 'name' => $name);
+  foreach (module_implements('filter_info') as $module) {
+    $function = $module . '_filter_info';
+    $info = $function('list');
+    if (isset($info) && is_array($info)) {
+      foreach ($info as $delta => $filter) {
+        $filters[$module . '/' . $delta] = (object)($filter + array(
+          'module' => $module,
+          'delta' => $delta,
+        ));
       }
     }
   }
@@ -379,9 +382,9 @@ function filter_list_format($format) {
     $filters[$format] = array();
     $result = db_query("SELECT * FROM {filter} WHERE format = :format ORDER BY weight, module, delta", array(':format' => (int) $format));
     foreach ($result as $filter) {
-      $list = module_invoke($filter->module, 'filter', 'list');
-      if (isset($list) && is_array($list) && isset($list[$filter->delta])) {
-        $filter->name = $list[$filter->delta];
+      $info = module_invoke($filter->module, 'filter_info');
+      if (isset($info) && is_array($info) && isset($info[$filter->delta])) {
+        $filter->name = $info[$filter->delta]['name'];
         $filters[$format][$filter->module . '/' . $filter->delta] = $filter;
       }
     }
@@ -448,12 +451,18 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $c
 
     // Give filters the chance to escape HTML-like data such as code or formulas.
     foreach ($filters as $filter) {
-      $text = module_invoke($filter->module, 'filter', 'prepare', $filter->delta, $format, $text, $langcode, $cache_id);
+      $filter_info = module_invoke($filter->module, 'filter_info');
+      if (isset($filter_info[$filter->delta]['prepare callback']) && drupal_function_exists($filter_info[$filter->delta]['prepare callback'])) {
+        $text = call_user_func($filter_info[$filter->delta]['prepare callback'], $text, $format, $langcode, $cache_id);
+      }
     }
 
     // Perform filtering.
     foreach ($filters as $filter) {
-      $text = module_invoke($filter->module, 'filter', 'process', $filter->delta, $format, $text, $langcode, $cache_id);
+      $filter_info = module_invoke($filter->module, 'filter_info');
+      if (isset($filter_info[$filter->delta]['process callback']) && drupal_function_exists($filter_info[$filter->delta]['process callback'])) {
+        $text = call_user_func($filter_info[$filter->delta]['process callback'], $text, $format, $langcode, $cache_id);
+      }
     }
 
     // Store in cache with a minimum expiration time of 1 day.
@@ -578,7 +587,7 @@ function _filter_tips($format, $long = FALSE) {
  * and returns a full DOMDocument object that represents this document.
  * You can use filter_dom_serialize() to serialize this DOMDocument
  * back to a XHTML snippet.
- * 
+ *
  * @param $text
  *   The partial (X)HTML snippet to load. Invalid mark-up
  *   will be corrected on import.
@@ -600,7 +609,7 @@ function filter_dom_load($text) {
  *
  * The resulting XHTML snippet will be properly formatted
  * to be compatible with HTML user agents.
- * 
+ *
  * @param $dom_document
  *   A DOMDocument object to serialize, only the tags below
  *   the first <body> node will be converted.
@@ -641,72 +650,39 @@ function theme_filter_guidelines($format) {
  * Filters implemented by the filter.module.
  */
 
-/**
- * Implement hook_filter().
- *  
- * Set up a basic set of essential filters:
- * - Limit allowed HTML tags:
- *     Restricts user-supplied HTML to certain tags, and removes dangerous
- *     components in allowed tags.
- * - Convert line breaks:
- *     Converts newlines into paragraph and break tags.
- * - Convert URLs into links:
- *     Converts URLs and e-mail addresses into links.
- * - Correct broken HTML:
- *     Fixes faulty HTML.
- * - Escape all HTML:
- *     Converts all HTML tags into visible text.
- */
-function filter_filter($op, $delta = 0, $format = -1, $text = '') {
-  switch ($op) {
-    case 'list':
-      return array(0 => t('Limit allowed HTML tags'), 1 => t('Convert line breaks'), 2 => t('Convert URLs into links'), 3 => t('Correct broken HTML'), 4 => t('Escape all HTML'));
-
-    case 'description':
-      switch ($delta) {
-        case 0:
-          return t('Allows you to restrict the HTML tags the user can use. It will also remove harmful content such as JavaScript events, JavaScript URLs and CSS styles from those tags that are not removed.');
-        case 1:
-          return t('Converts line breaks into HTML (i.e. &lt;br&gt; and &lt;p&gt;) tags.');
-        case 2:
-          return t('Turns web and e-mail addresses into clickable links.');
-        case 3:
-          return t('Corrects faulty and chopped off HTML in postings.');
-        case 4:
-          return t('Escapes all HTML tags, so they will be visible instead of being effective.');
-        default:
-          return;
-      }
-
-    case 'process':
-      switch ($delta) {
-        case 0:
-          return _filter_html($text, $format);
-        case 1:
-          return _filter_autop($text);
-        case 2:
-          return _filter_url($text, $format);
-        case 3:
-          return _filter_htmlcorrector($text);
-        case 4:
-          return trim(check_plain($text));
-        default:
-          return $text;
-      }
-
-    case 'settings':
-      switch ($delta) {
-        case 0:
-          return _filter_html_settings($format);
-        case 2:
-          return _filter_url_settings($format);
-        default:
-          return;
-      }
-
-    default:
-      return $text;
-  }
+function filter_filter_info() {
+  $filters[0] = array(
+    'name' => t('Limit allowed HTML tags'),
+    'description' => t('Allows you to restrict the HTML tags the user can use. It will also remove harmful content such as JavaScript events, JavaScript URLs and CSS styles from those tags that are not removed.'),
+    'process callback' => '_filter_html',
+    'settings callback' => '_filter_html_settings',
+    'tips callback'  => '_filter_html_tips'
+  );
+  $filters[1] = array(
+    'name' => t('Convert line breaks'),
+    'description' => t('Converts line breaks into HTML (i.e. &lt;br&gt; and &lt;p&gt;) tags.'),
+    'process callback' => '_filter_autop',
+    'tips callback' => '_filter_autop_tips'
+  );
+  $filters[2] = array(
+    'name' => t('Convert URLs into links'),
+    'description' => t('Turns web and e-mail addresses into clickable links.'),
+    'process callback' => '_filter_url',
+    'settings callback' => '_filter_url_settings',
+    'tips callback' => '_filter_url_tips'
+  );
+  $filters[3] = array(
+    'name' =>  t('Correct broken HTML'),
+    'description' => t('Corrects faulty and chopped off HTML in postings.'),
+    'process callback' => '_filter_htmlcorrector',
+  );
+  $filters[4] = array(
+    'name' => t('Escape all HTML'),
+    'description' => t('Escapes all HTML tags, so they will be visible instead of being effective.'),
+    'process callback' => '_filter_html_escape',
+    'tips callback' => '_filter_html_escape_tips'
+  );
+  return $filters;
 }
 
 /**

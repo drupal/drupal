@@ -121,24 +121,21 @@ else {
 }
 
 /**
- * Implement hook_filter(). Contains a basic PHP evaluator.
+ * Implement hook_filter_info().
+ * 
+ * Contains a basic PHP evaluator.
  *
  * Executes PHP code. Use with care.
  */
-function php_filter($op, $delta = 0, $format = -1, $text = '') {
-  switch ($op) {
-    case 'list':
-      return array(0 => t('PHP evaluator'));
-    case 'no cache':
-      // No caching for the PHP evaluator.
-      return $delta == 0;
-    case 'description':
-      return t('Executes a piece of PHP code. The usage of this filter should be restricted to administrators only!');
-    case 'process':
-      return php_eval($text);
-    default:
-      return $text;
-  }
+function php_filter_info() {
+  return array(
+    array(
+      'name' => t('PHP evaluator'),
+      'description' => t('Executes a piece of PHP code. The usage of this filter should be restricted to administrators only!'), 
+      'cache' => FALSE,
+      'process callback' => 'php_eval'
+    )
+  );
 }
 
 
