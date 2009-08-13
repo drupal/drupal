@@ -660,27 +660,18 @@ function system_modules($form_state = array()) {
       }
       else {
         $requires_name = $files[$requires]->info['name'];
-        if ($v) {
-          $requires_name .= $v['original_version'];
-          $current_version = str_replace(DRUPAL_CORE_COMPATIBILITY . '-', '', $files[$requires]->info['version']);
-          foreach ($v['versions'] as $required_version) {
-            if ((isset($required_version['op']) && !version_compare($current_version, $required_version['version'], $required_version['op'])) ||
-                (isset($required_version['preg']) && !preg_match($required_version['preg'], $current_version))) {
-              $extra['requires'][$requires] = t('@module (<span class="admin-missing">incompatible with</span> version @version)', array(
-                '@module' => $requires_name,
-                '@version' => $files[$requires]->info['version'],
-              ));
-              $extra['disabled'] = TRUE;
-            }
-          }
+        if ($incompatible_version = drupal_check_incompatibility($v, str_replace(DRUPAL_CORE_COMPATIBILITY . '-', '', $files[$requires]->info['version']))) {
+          $extra['requires'][$requires] = t('@module (<span class="admin-missing">incompatible with</span> version @version)', array(
+            '@module' => $requires_name . $incompatible_version,
+            '@version' => $files[$requires]->info['version'],
+          ));
+          $extra['disabled'] = TRUE;
         }
-        if (!isset($extra['requires'][$requires])) {
-          if ($files[$requires]->status) {
-            $extra['requires'][$requires] = t('@module (<span class="admin-enabled">enabled</span>)', array('@module' => $requires_name));
-          }
-          else {
-            $extra['requires'][$requires] = t('@module (<span class="admin-disabled">disabled</span>)', array('@module' => $requires_name));
-          }
+        elseif ($files[$requires]->status) {
+          $extra['requires'][$requires] = t('@module (<span class="admin-enabled">enabled</span>)', array('@module' => $requires_name));
+        }
+        else {
+          $extra['requires'][$requires] = t('@module (<span class="admin-disabled">disabled</span>)', array('@module' => $requires_name));
         }
       }
     }

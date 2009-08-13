@@ -95,50 +95,13 @@ function module_list($refresh = FALSE, $sort = FALSE, $fixed_list = NULL) {
 function _module_build_dependencies($files) {
   require_once DRUPAL_ROOT . '/includes/graph.inc';
   $roots = $files;
-  // We use named subpatterns and support every op that version_compare
-  // supports. Also, op is optional and defaults to equals.
-  $p_op = '(?P<operation>!=|==|=|<|<=|>|>=|<>)?';
-  // Core version is always optional: 7.x-2.x and 2.x is treated the same.
-  $p_core = '(?:' . preg_quote(DRUPAL_CORE_COMPATIBILITY) . '-)?';
-  $p_major = '(?P<major>\d+)';
-  // By setting the minor version to x, branches can be matched.
-  $p_minor = '(?P<minor>(?:\d+|x)(?:-[A-Za-z]+\d+)?)';
   foreach ($files as $filename => $file) {
     $graph[$file->name]['edges'] = array();
     if (isset($file->info['dependencies']) && is_array($file->info['dependencies'])) {
-      foreach ($file->info['dependencies'] as $dependency_name) {
-        $value = array();
-        $parts = explode('(', $dependency_name, 2);
-        $dependency_name = trim($parts[0]);
-        if (isset($parts[1])) {
-          $value['original_version'] = ' (' . $parts[1];
-          foreach (explode(',', $parts[1]) as $version) {
-            if (preg_match("/^\s*$p_op\s*$p_core$p_major\.$p_minor/", $version, $matches)) {
-              $op = !empty($matches['operation']) ? $matches['operation'] : '=';
-              if ($matches['minor'] == 'x') {
-                // Drupal considers "2.x" to mean any version that begins with
-                // "2" (e.g. 2.0, 2.9 are all "2.x"). PHP's version_compare(),
-                // on the other hand, treats "x" as a string; so to
-                // version_compare(), "2.x" is considered less than 2.0. This
-                // means that >=2.x and <2.x are handled by version_compare()
-                // as we need, but > and <= are not.
-                if ($op == '>' || $op == '<=') {
-                  $matches['major']++;
-                }
-                // Equivalence is checked by preg.
-                if ($op == '=' || $op == '==') {
-                  $value['versions'][] = array('preg' => '/^' . $matches['major'] . '\./');
-                  $op = '';
-                }
-              }
-              if ($op) {
-                $value['versions'][] = array('op' => $op, 'version' => $matches['major'] . '.' . $matches['minor']);
-              }
-            }
-          }
-        }
-        $graph[$file->name]['edges'][$dependency_name] = $value;
-        unset($roots[$dependency_name]);
+      foreach ($file->info['dependencies'] as $dependency) {
+        $dependency_data = drupal_parse_dependency($dependency);
+        $graph[$file->name]['edges'][$dependency_data['name']] = $dependency_data;
+        unset($roots[$dependency_data['name']]);
       }
     }
   }
