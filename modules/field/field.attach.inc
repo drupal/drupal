@@ -155,10 +155,10 @@ define('FIELD_STORAGE_INSERT', 'insert');
  *    invoked. By default, the operation is invoked on all the fields
  *    in the object's bundle.  NOTE: This option is not compatible with
  *    the 'deleted' option; the 'field_id' option should be used
- *    instead. 
+ *    instead.
  *  - 'field_id': The id of the field whose operation should be
  *    invoked. By default, the operation is invoked on all the fields
- *    in the objects' bundles. 
+ *    in the objects' bundles.
  *  - 'default': A boolean value, specifying which implementation of
  *    the operation should be invoked.
  *    - if FALSE (default), the field types implementation of the operation
@@ -484,10 +484,10 @@ function field_attach_form($obj_type, $object, &$form, &$form_state) {
  *  - 'field_id': The field id that should be loaded, instead of
  *    loading all fields, for each object. Note that returned objects
  *    may contain data for other fields, for example if they are read
- *    from a cache. 
+ *    from a cache.
  *  - 'deleted': If TRUE, the function will operate on deleted fields
  *    as well as non-deleted fields. If unset or FALSE, only
- *    non-deleted fields are operated on. 
+ *    non-deleted fields are operated on.
  * @returns
  *   Loaded field values are added to $objects. Fields with no values should be
  *   set as an empty array.
@@ -601,7 +601,7 @@ function field_attach_load($obj_type, $objects, $age = FIELD_LOAD_CURRENT, $opti
  *   - 'field_name':  The field name that should be loaded, instead of
  *     loading all fields, for each object. Note that returned objects
  *     may contain data for other fields, for example if they are read
- *     from a cache. 
+ *     from a cache.
  * @returns
  *   On return, the objects in $objects are modified by having the
  *   appropriate set of fields added.
