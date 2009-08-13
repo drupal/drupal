@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.503 2009/08/04 07:04:21 webchick Exp $
+// $Id: theme.inc,v 1.504 2009/08/13 03:05:54 webchick Exp $
 
 /**
  * @file
@@ -2027,6 +2027,11 @@ function template_page_suggestions($args) {
   foreach ($args as $arg) {
     // Remove slashes or null per SA-CORE-2009-003.
     $arg = str_replace(array("/", "\\", "\0"), '', $arg);
+    // The percent acts as a wildcard for numeric arguments since
+    // asterisks are not valid filename characters on many filesystems.
+    if (is_numeric($arg)) {
+      $suggestions[] = $suggestion . '-%';
+    }
     $suggestions[] = $suggestion . '-' . $arg;
     if (!is_numeric($arg)) {
       $suggestion .= '-' . $arg;
