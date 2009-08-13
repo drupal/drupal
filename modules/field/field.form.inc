@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.12 2009/07/27 20:19:20 dries Exp $
+// $Id: field.form.inc,v 1.13 2009/08/13 01:50:00 webchick Exp $
 
 /**
  * @file
@@ -90,7 +90,7 @@ function field_default_form($obj_type, $object, $field, $instance, $items, &$for
     $defaults = array(
       '#field_name' => $field['field_name'],
       '#tree' => TRUE,
-      '#weight' => $instance['weight'],
+      '#weight' => $instance['widget']['weight'],
     );
 
     $addition[$field['field_name']] = array_merge($form_element, $defaults);
@@ -188,7 +188,6 @@ function field_multiple_value_form($field, $instance, $items, &$form, &$form_sta
         '#type' => 'submit',
         '#name' => $field_name . '_add_more',
         '#value' => t('Add another item'),
-        '#weight' => $instance['weight'] + $max + 1,
         // Submit callback for disabled JavaScript.
         '#submit' => array('field_add_more_submit'),
         '#ahah' => array(

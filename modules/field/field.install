@@ -1,5 +1,5 @@
 <?php
-// $Id: field.install,v 1.10 2009/08/12 11:35:59 dries Exp $
+// $Id: field.install,v 1.11 2009/08/13 01:50:00 webchick Exp $
 
 /**
  * @file
@@ -115,11 +115,6 @@ function field_schema() {
         'size' => 'medium',
         'not null' => TRUE,
         'serialize' => TRUE,
-      ),
-      'weight' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
       ),
       'deleted' => array(
         'type' => 'int',
