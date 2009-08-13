@@ -84,7 +84,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
       // Run twice so test_ids can be accumulated.
       for ($i = 0; $i < 2; $i++) {
         // Run this test from web interface.
-        $this->drupalGet('admin/development/testing');
+        $this->drupalGet('admin/config/development/testing');
 
         $edit = array();
         $edit['SimpleTestFunctionalTest'] = TRUE;

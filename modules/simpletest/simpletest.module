@@ -13,7 +13,7 @@ function simpletest_help($path, $arg) {
   switch ($path) {
     case 'admin/help#simpletest':
       $output  = '<p>' . t('The SimpleTest module is a framework for running automated unit tests in Drupal. It can be used to verify a working state of Drupal before and after any code changes, or as a means for developers to write and execute tests for their modules.') . '</p>';
-      $output .= '<p>' . t('Visit <a href="@admin-simpletest">Administer >> Structure >> SimpleTest</a> to display a list of available tests. For comprehensive testing, select <em>all</em> tests, or individually select tests for more targeted testing. Note that it might take several minutes for all tests to complete.)', array('@admin-simpletest' => url('admin/development/testing'))) . '</p>';
+      $output .= '<p>' . t('Visit <a href="@admin-simpletest">Administer >> Structure >> SimpleTest</a> to display a list of available tests. For comprehensive testing, select <em>all</em> tests, or individually select tests for more targeted testing. Note that it might take several minutes for all tests to complete.)', array('@admin-simpletest' => url('admin/config/development/testing'))) . '</p>';
       $output .= '<p>' . t('After the tests have run, a message will be displayed next to each test group indicating whether tests within it passed, failed, or had exceptions. A pass means that a test returned the expected results, while fail means that it did not. An exception normally indicates an error outside of the test, such as a PHP warning or notice. If there were fails or exceptions, the results are expanded, and the tests that had issues will be indicated in red or pink rows. Use these results to refine your code and tests until all tests return a pass.') . '</p>';
       $output .= '<p>' . t('For more information on creating and modifying your own tests, see the <a href="@simpletest-api">SimpleTest API Documentation</a> in the Drupal handbook.', array('@simpletest-api' => 'http://drupal.org/simpletest')) . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@simpletest">SimpleTest module</a>.', array('@simpletest' => 'http://drupal.org/handbook/modules/simpletest')) . '</p>';
@@ -25,28 +25,28 @@ function simpletest_help($path, $arg) {
  * Implement hook_menu().
  */
 function simpletest_menu() {
-  $items['admin/development/testing'] = array(
+  $items['admin/config/development/testing'] = array(
     'title' => 'Testing',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('simpletest_test_form'),
     'description' => 'Run tests against Drupal core and your active modules. These tests help assure that your site code is working as designed.',
     'access arguments' => array('administer unit tests'),
   );
-  $items['admin/development/testing/list'] = array(
+  $items['admin/config/development/testing/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/development/testing/settings'] = array(
+  $items['admin/config/development/testing/settings'] = array(
     'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('simpletest_settings_form'),
     'access arguments' => array('administer unit tests'),
     'type' => MENU_LOCAL_TASK,
   );
-  $items['admin/development/testing/results/%'] = array(
+  $items['admin/config/development/testing/results/%'] = array(
     'title' => 'Test result',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('simpletest_result_form', 4),
+    'page arguments' => array('simpletest_result_form', 5),
     'description' => 'View result of tests.',
     'access arguments' => array('administer unit tests'),
     'type' => MENU_CALLBACK,
@@ -143,7 +143,7 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
   // By calling batch_process() directly, we skip that behavior and ensure
   // that we don't exceed the size of data that can be sent to the database
   // (max_allowed_packet on MySQL).
-  batch_process('admin/development/testing/results/' . $test_id);
+  batch_process('admin/config/development/testing/results/' . $test_id);
 }
 
 /**

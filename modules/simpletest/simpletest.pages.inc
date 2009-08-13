@@ -203,7 +203,7 @@ function simpletest_result_form(&$form_state, $test_id) {
   $results = array();
   if (is_numeric($test_id) && !$results = simpletest_result_get($test_id)) {
     drupal_set_message(t('No test results to display.'), 'error');
-    drupal_goto('admin/development/testing');
+    drupal_goto('admin/config/development/testing');
     return $form;
   }
 
@@ -281,7 +281,7 @@ function simpletest_result_form(&$form_state, $test_id) {
   $form['result']['summary']['#ok'] = $form['result']['summary']['#fail'] + $form['result']['summary']['#exception'] == 0;
 
   // Actions.
-  $form['#action'] = url('admin/development/testing/results/re-run');
+  $form['#action'] = url('admin/config/development/testing/results/re-run');
   $form['action'] = array(
     '#type' => 'fieldset',
     '#title' => t('Actions'),
@@ -316,7 +316,7 @@ function simpletest_result_form(&$form_state, $test_id) {
   );
 
   $form['action']['return'] = array(
-    '#markup' => l(t('Return to list'), 'admin/development/testing'),
+    '#markup' => l(t('Return to list'), 'admin/config/development/testing'),
   );
 
   if (is_numeric($test_id)) {
@@ -344,7 +344,7 @@ function simpletest_result_form_submit($form, &$form_state) {
   }
 
   if (!$classes) {
-    $form_state['redirect'] = 'admin/development/testing';
+    $form_state['redirect'] = 'admin/config/development/testing';
     return;
   }
 
@@ -425,7 +425,7 @@ function simpletest_settings_form(&$form_state) {
   $form['general']['simpletest_clear_results'] = array(
     '#type' => 'checkbox',
     '#title' => t('Clear results after each complete test suite run'),
-    '#description' => t('By default SimpleTest will clear the results after they have been viewed on the results page, but in some cases it may be useful to leave the results in the database. The results can then be viewed at <em>admin/development/testing/[test_id]</em>. The test ID can be found in the database, simpletest table, or kept track of when viewing the results the first time. Additionally, some modules may provide more analaysis or features that require this setting to be disabled.'),
+    '#description' => t('By default SimpleTest will clear the results after they have been viewed on the results page, but in some cases it may be useful to leave the results in the database. The results can then be viewed at <em>admin/config/development/testing/[test_id]</em>. The test ID can be found in the database, simpletest table, or kept track of when viewing the results the first time. Additionally, some modules may provide more analaysis or features that require this setting to be disabled.'),
     '#default_value' => variable_get('simpletest_clear_results', TRUE),
   );
   $form['general']['simpletest_verbose'] = array(
