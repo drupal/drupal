@@ -1982,7 +1982,7 @@ function node_page_default() {
     drupal_set_title('');
   }
   else {
-    drupal_set_title(t('Welcome to @site-name', array('@site-name' => variable_get('site_name', 'Drupal'))));
+    drupal_set_title(t('Welcome to @site-name', array('@site-name' => variable_get('site_name', 'Drupal'))), PASS_THROUGH);
 
     $default_message = '<p>' . t('No front page content has been created yet.') . '</p>';
 
