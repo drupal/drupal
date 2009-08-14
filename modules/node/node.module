@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1098 2009/08/13 02:16:35 webchick Exp $
+// $Id: node.module,v 1.1099 2009/08/14 13:53:01 webchick Exp $
 
 /**
  * @file
@@ -1595,7 +1595,7 @@ function theme_node_search_admin($form) {
 }
 
 function _node_revision_access($node, $op = 'view') {
-  static $access = array();
+  $access = &drupal_static(__FUNCTION__, array());
   if (!isset($access[$node->vid])) {
     $node_current_revision = node_load($node->nid);
     $is_current_revision = $node_current_revision->vid == $node->vid;
