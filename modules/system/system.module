@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.744 2009/08/13 11:31:26 dries Exp $
+// $Id: system.module,v 1.745 2009/08/14 14:00:14 webchick Exp $
 
 /**
  * @file
@@ -706,18 +706,12 @@ function system_menu() {
     'page arguments' => array('system_site_information_settings'),
     'access arguments' => array('administer site configuration'),
   );
-  $items['admin/settings/logging'] = array(
+  $items['admin/config/development/logging'] = array(
     'title' => 'Logging and errors',
     'description' => "Settings for logging and alerts modules. Various modules can route Drupal's system events to different destinations, such as syslog, database, email, etc.",
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_logging_settings'),
     'access arguments' => array('administer site configuration'),
-  );
-  $items['admin/settings/logging/settings'] = array(
-    'title' => 'Settings',
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -1,
   );
   $items['admin/settings/file-system'] = array(
     'title' => 'File system',

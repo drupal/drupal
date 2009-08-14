@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.test,v 1.25 2009/08/11 11:47:58 dries Exp $
+// $Id: dblog.test,v 1.26 2009/08/14 14:00:14 webchick Exp $
 
 class DBLogTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -50,7 +50,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     // Change the dblog row limit.
     $edit = array();
     $edit['dblog_row_limit'] = $row_limit;
-    $this->drupalPost('admin/settings/logging', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/development/logging', $edit, t('Save configuration'));
     $this->assertResponse(200);
 
     // Check row limit variable.
