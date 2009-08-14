@@ -50,7 +50,7 @@ class DBLogTestCase extends DrupalWebTestCase {
     // Change the dblog row limit.
     $edit = array();
     $edit['dblog_row_limit'] = $row_limit;
-    $this->drupalPost('admin/settings/logging', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/development/logging', $edit, t('Save configuration'));
     $this->assertResponse(200);
 
     // Check row limit variable.
