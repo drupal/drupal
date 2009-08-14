@@ -1595,7 +1595,7 @@ function theme_node_search_admin($form) {
 }
 
 function _node_revision_access($node, $op = 'view') {
-  static $access = array();
+  $access = &drupal_static(__FUNCTION__, array());
   if (!isset($access[$node->vid])) {
     $node_current_revision = node_load($node->nid);
     $is_current_revision = $node_current_revision->vid == $node->vid;
