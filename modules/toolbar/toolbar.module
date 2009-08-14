@@ -111,18 +111,17 @@ function toolbar_build() {
  * Get only the top level items below the 'admin' path.
  */
 function toolbar_get_menu_tree() {
-  $tree = menu_tree_all_data('management');
-  foreach ($tree as $item) {
-    if ($item['link']['link_path'] == 'admin' && !empty($item['below'])) {
-      // Only take items right below the 'admin' path. All other management 
-      // items are discarded.
-      $tree = $item['below'];
-      break;
+  $tree = array();
+  $admin_link = db_query("SELECT * FROM {menu_links} WHERE menu_name = 'management' AND module = 'system' AND link_path = 'admin'")->fetchAssoc();
+  if ($admin_link) {
+    $tree = menu_tree_all_data('management', $admin_link);
+    // The tree will be a sub-tree with the admin link as a single root item.
+    $admin_link = array_pop($tree);
+    $tree = $admin_link['below'] ? $admin_link['below'] : array();
+    foreach ($tree as $key => $item) {
+      // Get rid of subitems to have a leaner data structure.
+      unset($tree[$key]['below']);
     }
-  }
-  foreach ($tree as $key => $item) {
-    // Get rid of subitems to have a leaner data structure.
-    unset($tree[$key]['below']);
   }
   return $tree;
 }
