@@ -8,7 +8,7 @@ function seven_preprocess_page(&$vars) {
   $vars['primary_local_tasks'] = menu_primary_local_tasks();
   $vars['secondary_local_tasks'] = menu_secondary_local_tasks();
   $vars['ie_styles'] = '<!--[if lt IE 7]><style type="text/css" media="screen">@import ' . path_to_theme() . '/ie6.css";</style><![endif]-->';
-  $vars['back_to_site'] = l(t('Back to the live site'), '');
+  $vars['back_to_site'] = l(t('Back to the front page'), '');
 }
 
 /**
