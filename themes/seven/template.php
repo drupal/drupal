@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.2 2009/08/12 11:32:07 dries Exp $
+// $Id: template.php,v 1.3 2009/08/14 07:57:30 dries Exp $
 
 /**
  * Override or insert variables into the page template.
@@ -8,7 +8,7 @@ function seven_preprocess_page(&$vars) {
   $vars['primary_local_tasks'] = menu_primary_local_tasks();
   $vars['secondary_local_tasks'] = menu_secondary_local_tasks();
   $vars['ie_styles'] = '<!--[if lt IE 7]><style type="text/css" media="screen">@import ' . path_to_theme() . '/ie6.css";</style><![endif]-->';
-  $vars['back_to_site'] = l(t('Back to the live site'), '');
+  $vars['back_to_site'] = l(t('Back to the front page'), '');
 }
 
 /**
