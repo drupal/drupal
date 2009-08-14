@@ -1582,7 +1582,7 @@ function system_admin_menu_block($item) {
     }
     // Prepare for sorting as in function _menu_tree_check_access().
     // The weight is offset so it is always positive, with a uniform 5-digits.
-    $content[(50000 + $link['weight']) . ' ' . $link['title'] . ' ' . $link['mlid']] = $link;
+    $content[(50000 + $link['weight']) . ' ' . drupal_strtolower($link['title']) . ' ' . $link['mlid']] = $link;
   }
   ksort($content);
   $cache[$item['mlid']] = $content;
