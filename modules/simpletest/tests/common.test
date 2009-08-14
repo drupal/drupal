@@ -225,6 +225,15 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests adding an external stylesheet.
+   */
+  function testAddExternal() {
+    $path = 'http://example.com/style.css';
+    $css = drupal_add_css($path, 'external');
+    $this->assertEqual($css[$path]['type'], 'external', t('Adding an external CSS file caches it properly.'));
+  }
+
+  /**
    * Makes sure that reseting the CSS empties the cache.
    */
   function testReset() {
@@ -238,7 +247,18 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
   function testRenderFile() {
     $css = drupal_get_path('module', 'simpletest') . '/simpletest.css';
     drupal_add_css($css);
-    $this->assertTrue(strpos(drupal_get_css(), $css) > 0, t('Rendered CSS includes the added stylesheet.'));
+    $styles = drupal_get_css();
+    $this->assertTrue(strpos($styles, $css) > 0, t('Rendered CSS includes the added stylesheet.'));
+  }
+
+  /**
+   * Tests rendering an external stylesheet.
+   */
+  function testRenderExternal() {
+    $css = 'http://example.com/style.css';
+    drupal_add_css($css, 'external');
+    $styles = drupal_get_css();
+    $this->assertTrue(strpos($styles, 'href="' . $css) > 0, t('Rendering an external CSS file.'));
   }
 
   /**
@@ -248,8 +268,8 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
     $css = 'body { padding: 0px; }';
     $css_preprocessed = '<style type="text/css">' . drupal_load_stylesheet_content($css, TRUE) . '</style>';
     drupal_add_css($css, 'inline');
-    $css = drupal_get_css();
-    $this->assertEqual($css, "\n" . $css_preprocessed, t('Rendering preprocessed inline CSS adds it to the page.'));
+    $styles = drupal_get_css();
+    $this->assertEqual($styles, "\n" . $css_preprocessed, t('Rendering preprocessed inline CSS adds it to the page.'));
   }
 
   /**
@@ -258,7 +278,8 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
   function testRenderInlineNoPreprocess() {
     $css = 'body { padding: 0px; }';
     drupal_add_css($css, array('type' => 'inline', 'preprocess' => FALSE));
-    $this->assertTrue(strpos(drupal_get_css(), $css) > 0, t('Rendering non-preprocessed inline CSS adds it to the page.'));
+    $styles = drupal_get_css();
+    $this->assertTrue(strpos($styles, $css) > 0, t('Rendering non-preprocessed inline CSS adds it to the page.'));
   }
 
   /**
@@ -300,8 +321,8 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
       drupal_get_path('module', 'simpletest') . '/simpletest.css',
     );
 
-    $css = drupal_get_css();
-    if (preg_match_all('/href="' . preg_quote(base_path(), '/') . '([^?]+)\?/', $css, $matches)) {
+    $styles = drupal_get_css();
+    if (preg_match_all('/href="' . preg_quote(base_path(), '/') . '([^?]+)\?/', $styles, $matches)) {
       $result = $matches[1];
     }
     else {
@@ -319,17 +340,17 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
     drupal_add_css(drupal_get_path('module', 'simpletest') . '/tests/system.css');
 
     // The dummy stylesheet should be the only one included.
-    $css = drupal_get_css();
-    $this->assert(strpos($css, drupal_get_path('module', 'simpletest') . '/tests/system.css') !== FALSE, t('The overriding CSS file is output.'));
-    $this->assert(strpos($css, drupal_get_path('module', 'system') . '/system.css') === FALSE, t('The overriden CSS file is not output.'));
+    $styles = drupal_get_css();
+    $this->assert(strpos($styles, drupal_get_path('module', 'simpletest') . '/tests/system.css') !== FALSE, t('The overriding CSS file is output.'));
+    $this->assert(strpos($styles, drupal_get_path('module', 'system') . '/system.css') === FALSE, t('The overriden CSS file is not output.'));
 
     drupal_add_css(drupal_get_path('module', 'simpletest') . '/tests/system.css');
     drupal_add_css(drupal_get_path('module', 'system') . '/system.css');
 
     // The standard stylesheet should be the only one included.
-    $css = drupal_get_css();
-    $this->assert(strpos($css, drupal_get_path('module', 'system') . '/system.css') !== FALSE, t('The overriding CSS file is output.'));
-    $this->assert(strpos($css, drupal_get_path('module', 'simpletest') . '/tests/system.css') === FALSE, t('The overriden CSS file is not output.'));
+    $styles = drupal_get_css();
+    $this->assert(strpos($styles, drupal_get_path('module', 'system') . '/system.css') !== FALSE, t('The overriding CSS file is output.'));
+    $this->assert(strpos($styles, drupal_get_path('module', 'simpletest') . '/tests/system.css') === FALSE, t('The overriden CSS file is not output.'));
   }
 
   /**
@@ -342,8 +363,8 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
     drupal_add_css(drupal_get_path('module', 'system') . '/system.css');
 
     // Check to see if system-rtl.css was also added.
-    $css = drupal_get_css();
-    $this->assert(strpos($css, drupal_get_path('module', 'system') . '/system-rtl.css') !== FALSE, t('CSS is alterable as right to left overrides are added.'));
+    $styles = drupal_get_css();
+    $this->assert(strpos($styles, drupal_get_path('module', 'system') . '/system-rtl.css') !== FALSE, t('CSS is alterable as right to left overrides are added.'));
 
     // Change the language back to left to right.
     $language->direction = LANGUAGE_LTR;
@@ -557,6 +578,15 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $javascript = drupal_add_js(array('drupal' => 'rocks', 'dries' => 280342800), 'setting');
     $this->assertEqual(280342800, $javascript['settings']['data'][1]['dries'], t('JavaScript setting is set correctly.'));
     $this->assertEqual('rocks', $javascript['settings']['data'][1]['drupal'], t('The other JavaScript setting is set correctly.'));
+  }
+
+  /**
+   * Tests adding an external JavaScript File.
+   */
+  function testAddExternal() {
+    $path = 'http://example.com/script.js';
+    $javascript = drupal_add_js($path, 'external');
+    $this->assertTrue(array_key_exists('http://example.com/script.js', $javascript), t('Added an external JavaScript file.'));
   }
 
   /**

@@ -2423,13 +2423,16 @@ function drupal_add_link($attributes) {
  *   - 'inline': A string of CSS that should be placed in the given scope. Note
  *     that it is better practice to use 'file' stylesheets, rather than 'inline'
  *     as the CSS would then be aggregated and cached.
+ *   - 'external': The absolute path to an external CSS file that is not hosted
+ *     on the local server. These files will not be aggregated if CSS aggregation
+ *     is enabled.
  *
  * @param $options
  *   (optional) A string defining the 'type' of CSS that is being added in the
  *   $data parameter ('file'/'inline'), or an array which can have any or all of
  *   the following keys:
- *   - 'type': The type of stylesheet being added. Available options are 'file'
- *     or 'inline'. Defaults to 'file'.
+ *   - 'type': The type of stylesheet being added. Available options are 'file',
+ *     'inline' or 'external'. Defaults to 'file'.
  *   - 'weight': The weight of the stylesheet specifies the order in which the
  *     CSS will appear when presented on the page.
  *
@@ -2454,7 +2457,8 @@ function drupal_add_link($attributes) {
  *     files into one file that is then compressed by removing all extraneous
  *     white space. Note that preprocessed inline stylesheets will not be
  *     aggregated into this single file, instead it will just be compressed
- *     when being output on the page.
+ *     when being output on the page. External stylesheets will not be
+ *     aggregated.
  *
  *     The reason for merging the CSS files is outlined quite thoroughly here:
  *     http://www.die.net/musings/page_load_time/
@@ -2501,14 +2505,15 @@ function drupal_add_css($data = NULL, $options = NULL) {
 
     // Add the data to the CSS array depending on the type.
     switch ($options['type']) {
-      case 'file':
-        $css[$data] = $options;
-        break;
       case 'inline':
         // For inline stylesheets, we don't want to use the $data as the array
         // key as $data could be a very long string of CSS.
         $css[] = $options;
         break;
+      default:
+        // Local and external files must keep their name as the associative key
+        // so the same CSS file is not be added twice.
+        $css[$data] = $options;
     }
   }
 
@@ -2576,6 +2581,7 @@ function drupal_get_css($css = NULL) {
   // Additionally, go through any remaining styles if CSS preprocessing is on and output the non-cached ones.
   $rendered_css = array();
   $inline_css = '';
+  $external_css = '';
   $preprocess_items = array();
   foreach ($css as $data => $item) {
     // Loop through each of the stylesheets, including them appropriately based
@@ -2597,6 +2603,10 @@ function drupal_get_css($css = NULL) {
         // Include inline stylesheets.
         $inline_css .= drupal_load_stylesheet_content($item['data'], $item['preprocess']);
         break;
+      case 'external':
+        // Preprocessing for external CSS files is ignored.
+        $external_css .= '<link type="text/css" rel="stylesheet" media="' . $item['media'] . '" href="' . $item['data'] . '" />' . "\n";
+        break;
     }
   }
 
@@ -2615,7 +2625,7 @@ function drupal_get_css($css = NULL) {
   }
 
   // Output all the CSS files with the inline stylesheets showing up last.
-  return implode("\n", $rendered_css) . $inline_css;
+  return implode("\n", $rendered_css) . $external_css . $inline_css;
 }
 
 /**
@@ -2826,7 +2836,9 @@ function drupal_clear_css_cache() {
  *   (optional) If given, the value depends on the $options parameter:
  *   - 'file': Path to the file relative to base_path().
  *   - 'inline': The JavaScript code that should be placed in the given scope.
- *   - 'external': The absolute path to a JavaScript file hosted externally.
+ *   - 'external': The absolute path to an external JavaScript file that is not
+ *     hosted on the local server. These files will not be aggregated if 
+ *     JavaScript aggregation is enabled.
  *   - 'setting': An array with configuration options as associative array. The
  *       array is directly placed in Drupal.settings. All modules should wrap
  *       their actual configuration settings in another variable to prevent
@@ -2940,7 +2952,6 @@ function drupal_add_js($data = NULL, $options = NULL) {
         // Local and external files must keep their name as the associative key
         // so the same JavaScript file is not be added twice.
         $javascript[$options['data']] = $options;
-        break;
     }
   }
   return $javascript;
