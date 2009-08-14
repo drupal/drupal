@@ -125,6 +125,7 @@ function hook_fieldable_info_alter(&$info) {
  * @see hook_field_delete().
  * @see hook_field_delete_revision().
  * @see hook_field_sanitize().
+ * @see hook_field_is_empty().
  *
  * The Field Types API also defines two kinds of pluggable handlers: widgets
  * and formatters, which specify how the field appears in edit forms and in
@@ -516,6 +517,24 @@ function hook_field_delete_revision($obj_type, $object, $field, $instance, $item
  *   $object->{$field['field_name']}, or an empty array if unset.
  */
 function hook_field_prepare_translation($obj_type, $object, $field, $instance, $items) {
+}
+
+/**
+ * Define what constitutes an empty item for a field type.
+ *
+ * @param $item
+ *   An item that may or may not be empty.
+ * @param $field
+ *   The field to which $item belongs.
+ * @return
+ *   TRUE if $field's type considers $item not to contain any data;
+ *   FALSE otherwise.
+ */
+function hook_field_is_empty($item, $field) {
+  if (empty($item['value']) && (string)$item['value'] !== '0') {
+    return TRUE;
+  }
+  return FALSE;
 }
 
 /**
