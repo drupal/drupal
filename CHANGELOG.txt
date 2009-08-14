@@ -133,6 +133,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
       and allow custom data fields to be attached to itself.
     * Provides a subset of the features of the Content Construction
       Kit (CCK) module.
+    * Taxonomy terms are now Field API fields that can be added to any fieldable
+      object.
 - Installer:
     * Refactored the installer into an API that allows Drupal to be installed
       via a command line script.
