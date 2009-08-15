@@ -277,10 +277,10 @@ function block_get_blocks_by_region($region) {
       $build[$key] = $block->content;
       unset($block->content);
       $build[$key] += array(
-        '#theme_wrappers' => array('block'),
         '#block' => $block,
         '#weight' => ++$weight,
       );
+      $build[$key]['#theme_wrappers'][] ='block';
     }
     $build['#sorted'] = TRUE;
   }
@@ -735,7 +735,9 @@ function _block_render_blocks($region_blocks) {
       }
       if (isset($block->content) && $block->content) {
         // Normalize to the drupal_render() structure.
-        $block->content = array('content' => is_string($block->content) ? array('#markup' => $block->content) : $block->content);
+        if (is_string($block->content)) {
+          $block->content = array('#markup' => $block->content);
+        }
         // Override default block title if a custom display title is present.
         if ($block->title) {
           // Check plain here to allow module generated titles to keep any
