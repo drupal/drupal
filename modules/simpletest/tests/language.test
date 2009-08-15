@@ -1,0 +1,25 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Tests for language handling functionality.
+ */
+
+/**
+ * Language test case.
+ */
+class LanguageTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Language',
+      'description' => 'Checks language handling functionality.',
+      'group' => 'Locale',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('locale');
+  }
+}

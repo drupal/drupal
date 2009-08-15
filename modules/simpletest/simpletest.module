@@ -121,6 +121,9 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
   $test_id = db_insert('simpletest_test_id')
     ->useDefaults(array('test_id'))
     ->execute();
+    
+  // Clear out the previous verbose files.
+  file_unmanaged_delete_recursive(file_directory_path() . '/simpletest/verbose');
 
   // Get the info for the first test being run.
   $first_test = array_shift($test_list);
