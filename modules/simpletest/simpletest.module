@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.65 2009/08/15 06:20:20 webchick Exp $
+// $Id: simpletest.module,v 1.66 2009/08/15 17:52:53 webchick Exp $
 
 /**
  * @file
@@ -121,6 +121,9 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
   $test_id = db_insert('simpletest_test_id')
     ->useDefaults(array('test_id'))
     ->execute();
+    
+  // Clear out the previous verbose files.
+  file_unmanaged_delete_recursive(file_directory_path() . '/simpletest/verbose');
 
   // Get the info for the first test being run.
   $first_test = array_shift($test_list);

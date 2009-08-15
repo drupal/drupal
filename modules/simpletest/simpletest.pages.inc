@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.pages.inc,v 1.13 2009/08/15 06:20:20 webchick Exp $
+// $Id: simpletest.pages.inc,v 1.14 2009/08/15 17:52:53 webchick Exp $
 
 /**
  * @file
@@ -433,7 +433,7 @@ function simpletest_settings_form(&$form_state) {
   $form['general']['simpletest_verbose'] = array(
     '#type' => 'checkbox',
     '#title' => t('Provide verbose information when running tests'),
-    '#description' => t('The verbose data will be printed along with the standard assertions. Useful for debugging.'),
+    '#description' => t('The verbose data will be printed along with the standard assertions and is useful for debugging. The verbose data will be erased between each test suite run. The verbose data output is very detailed and should only be used when debugging.'),
     '#default_value' => variable_get('simpletest_verbose', FALSE),
   );
 
