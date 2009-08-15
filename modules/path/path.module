@@ -210,6 +210,13 @@ function path_node_update($node) {
 function path_node_delete($node) {
   path_set_alias('node/' . $node->nid);
 }
+ 
+/**
+ * Implement hook_taxonomy_term_delete().
+ */
+function path_taxonomy_term_delete($term) {
+  path_set_alias('taxonomy/term/' . $term->tid);
+}
 
 /**
  * Implement hook_form_alter().
@@ -246,6 +253,77 @@ function path_form_alter(&$form, $form_state, $form_id) {
         ->fetchField(),
       );
     }
+  }
+}
+
+/**
+ * Implement hook_form_FORM_ID_alter().
+ */
+function path_form_taxonomy_form_term_alter(&$form, $form_state) {
+  // Make sure this does not show up on the delete confirmation form.
+  if (empty($form_state['confirm_delete'])) {
+    // After a new term is added, populate the path field if it was set.
+    if (!empty($form['#term']['path'])) {
+      $path = $form['#term']['path'];
+    }
+    else {
+      $url = 'taxonomy/term/' . $form['#term']['tid'];
+      $alias = drupal_get_path_alias($url);
+	  
+      // Since drupal_get_path_alias() can return the default path, check if we really have an alias.
+      if ($alias != $url) {
+        $path = $alias;
+      }
+      else {
+        $path = NULL;
+      }
+    }
+    $form['#validate'][] = 'path_taxonomy_term_validate';
+    $form['#submit'][] = 'path_taxonomy_term_submit';
+    $form['identification']['path'] = array(
+      '#type' => 'textfield',
+      '#title' => t('URL alias'),
+      '#default_value' => $path,
+      '#maxlength' => 255,
+      '#weight' => 0,
+      '#access' => (user_access('create url aliases') || user_access('administer url aliases')),
+      '#description' => t("Optionally specify an alternative URL by which this term can be accessed. Use a relative path and don't add a trailing slash or the URL alias won't work."),
+    );
+    if ($path) {
+      // Populate with pid so we can update existing path entry instead of creating a new one.
+      $form['identification']['path']['pid'] = array(
+        '#type' => 'value',
+        '#access' => (user_access('create url aliases') || user_access('administer url aliases')),
+        '#value' => db_query("SELECT pid FROM {url_alias} WHERE dst = :dst", array(':dst' => $path))->fetchField(),
+      );
+    }
+  }
+}
+
+/**
+ * Path validation callback for taxonomy_form_term.
+ */
+function path_taxonomy_term_validate($form, &$form_state) {
+  $pid = db_query("SELECT pid FROM {url_alias} WHERE dst = :dst", array(':dst' => $form_state['values']['path']))->fetchField();
+  if ($pid) {
+    // If the pid matches the one in use for this term then we are fine.
+    if (isset($form_state['values']['pid']) && $pid == $form_state['values']['pid']) {
+      return;
+    }
+    form_set_error('path', 'The URL alias is already in use.');
+  }
+}
+
+/**
+ * Path submission callback for taxonomy_form_term.
+ */
+function path_taxonomy_term_submit($form, &$form_state) {
+  // Make sure this is not triggered on the delete confirmation form.
+  if (empty($form_state['confirm_delete'])) {
+    $url = 'taxonomy/term/' . $form_state['tid'];
+    $alias = isset($form_state['values']['path']) ? $form_state['values']['path'] : NULL;
+    $pid = isset($form_state['values']['pid']) ? $form_state['values']['pid'] : NULL;
+    path_set_alias($url, $alias, $pid);
   }
 }
 
