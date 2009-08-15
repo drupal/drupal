@@ -1,5 +1,5 @@
 <?php
-// $Id: error_test.module,v 1.3 2009/05/30 11:17:32 dries Exp $
+// $Id: error_test.module,v 1.4 2009/08/15 06:20:20 webchick Exp $
 
 /**
  * Implement hook_menu().
@@ -45,7 +45,7 @@ function error_test_generate_warnings($collect_errors = FALSE) {
   // This will generate a warning.
   $awesomely_big = 1/0;
   // This will generate a user error.
-  trigger_error("Drupal is awesome", E_USER_NOTICE);
+  trigger_error("Drupal is awesome", E_USER_WARNING);
   return "";
 }
 
