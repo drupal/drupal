@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.175 2009/08/14 08:09:48 dries Exp $
+// $Id: system.admin.inc,v 1.176 2009/08/15 06:27:49 webchick Exp $
 
 /**
  * @file
@@ -264,13 +264,12 @@ function system_themes_form() {
     '#type' => 'select',
     '#options' => array(0 => t('Default theme')) + $options,
     '#title' => t('Administration theme'),
-    '#description' => t('Choose which theme the administration pages should display in. If you choose "Default theme" the administration pages will use the same theme as the rest of the site.'),
+    '#description' => t('Choose "Default theme" to always use the same theme as the rest of the site.'),
     '#default_value' => variable_get('admin_theme', 0),
   );
   $form['admin_theme']['node_admin_theme'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Use administration theme for content editing'),
-    '#description' => t('Use the administration theme when editing existing posts or creating new ones.'),
+    '#title' => t('Use the administration theme when editing or creating content'),
     '#default_value' => variable_get('node_admin_theme', '0'),
   );
 
