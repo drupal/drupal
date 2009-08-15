@@ -2050,8 +2050,6 @@ function system_settings_form($form, $automatic_defaults = TRUE) {
  * add an array_filter value to your form.
  */
 function system_settings_form_submit($form, &$form_state) {
-  $op = isset($form_state['values']['op']) ? $form_state['values']['op'] : '';
-
   // Exclude unnecessary elements.
   unset($form_state['values']['submit'], $form_state['values']['reset'], $form_state['values']['form_id'], $form_state['values']['op'], $form_state['values']['form_token'], $form_state['values']['form_build_id']);
 
