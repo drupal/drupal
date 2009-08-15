@@ -873,7 +873,16 @@ function _drupal_log_error($error, $fatal = FALSE) {
     $error_level = variable_get('error_level', ERROR_REPORTING_DISPLAY_ALL);
     $display_error = $error_level == ERROR_REPORTING_DISPLAY_ALL || ($error_level == ERROR_REPORTING_DISPLAY_SOME && $error['%type'] != 'Notice');
     if ($display_error || (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update')) {
-      drupal_set_message(t('%type: %message in %function (line %line of %file).', $error), 'error');
+      $class = 'error';
+
+      // If error type is 'User notice' then treat it as debug information
+      // instead of an error message, see dd().
+      if ($error['%type'] == 'User notice') {
+        $error['%type'] = 'Debug';
+        $class = 'status';
+      }
+
+      drupal_set_message(t('%type: %message in %function (line %line of %file).', $error), $class);
     }
 
     if ($fatal) {
@@ -895,9 +904,11 @@ function _drupal_log_error($error, $fatal = FALSE) {
  *   An associative array with keys 'file', 'line' and 'function'.
  */
 function _drupal_get_last_caller($backtrace) {
-  // Errors that occur inside PHP internal functions
-  // do not generate information about file and line.
-  while ($backtrace && !isset($backtrace[0]['line'])) {
+  // Errors that occur inside PHP internal functions do not generate
+  // information about file and line. Ignore black listed functions.
+  $blacklist = array('debug');
+  while (($backtrace && !isset($backtrace[0]['line'])) ||
+         (isset($backtrace[1]['function']) && in_array($backtrace[1]['function'], $blacklist))) {
     array_shift($backtrace);
   }
 
@@ -2333,14 +2344,14 @@ function drupal_map_assoc($array, $function = NULL) {
  * In other words, if the timeout is the default 30 seconds, and 25 seconds
  * into script execution a call such as set_time_limit(20) is made, the
  * script will run for a total of 45 seconds before timing out.
- * 
+ *
  * It also means that it is possible to decrease the total time limit if
  * the sum of the new time limit and the current time spent running the
  * script is inferior to the original time limit. It is inherent to the way
  * set_time_limit() works, it should rather be called with an appropriate
  * value every time you need to allocate a certain amount of time
  * to execute a task than only once at the beginning of the script.
- * 
+ *
  * Before calling set_time_limit(), we check if this function is available
  * because it could be disabled by the server administrator. We also hide all
  * the errors that could occur when calling set_time_limit(), because it is
@@ -4927,6 +4938,27 @@ function _drupal_flush_css_js() {
     $new_character = $characters[mt_rand(0, strlen($characters) - 1)];
   }
   variable_set('css_js_query_string', $new_character . substr($string_history, 0, 19));
+}
+
+/**
+ * Debug function used for outputting debug information.
+ *
+ * The debug information is passed on to trigger_error() after being converted
+ * to a string using _drupal_debug_message().
+ *
+ * @param $data
+ *   Data to be output.
+ * @param $label
+ *   Label to prefix the data.
+ * @param $print_r
+ *   Flag to switch between print_r() and var_export() for data conversion to
+ *   string. Set $print_r to TRUE when dealing with a recursive data structure
+ *   as var_export() will generate an error.
+ */
+function debug($data, $label = NULL, $print_r = FALSE) {
+  // Print $data contents to string.
+  $string = $print_r ? print_r($data, TRUE) : var_export($data, TRUE);
+  trigger_error(trim($label ? "$label: $string" : $string));
 }
 
 /**

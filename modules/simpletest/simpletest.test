@@ -121,6 +121,8 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
 
     // Generates a warning inside a PHP function.
     array_key_exists(NULL, NULL);
+
+    debug('Foo', 'Debug');
   }
 
   /**
@@ -150,6 +152,10 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
     // The exact error message differs between PHP versions so we check only
     // the function name 'array_key_exists'.
     $this->assertAssertion('array_key_exists', 'Warning', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
+
+    $this->assertAssertion("Debug: 'Foo'", 'Debug', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
+
+    $this->assertEqual('6 passes, 2 fails, 2 exceptions, and 1 debug message', $this->childTestResults['summary'], 'Stub test summary is correct');
 
     $this->test_ids[] = $test_id = $this->getTestIdFromResults();
     $this->assertTrue($test_id, t('Found test ID in results.'));
@@ -202,7 +208,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
     if ($this->parse()) {
       if ($fieldset = $this->getResultFieldSet()) {
         // Code assumes this is the only test in group.
-        $results['summary'] = $this->asText($fieldset->div);
+        $results['summary'] = $this->asText($fieldset->div[1]);
         $results['name'] = $this->asText($fieldset->legend);
 
         $results['assertions'] = array();

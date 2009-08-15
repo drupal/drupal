@@ -36,7 +36,7 @@ class DrupalErrorHandlerUnitTest extends DrupalWebTestCase {
       '%file' => realpath('modules/simpletest/tests/error_test.module'),
     );
     $error_user_notice = array(
-      '%type' => 'User notice',
+      '%type' => 'User warning',
       '%message' => 'Drupal is awesome',
       '%function' => 'error_test_generate_warnings()',
       '%line' => 48,

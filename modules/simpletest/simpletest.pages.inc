@@ -226,6 +226,7 @@ function simpletest_result_form(&$form_state, $test_id) {
     '#pass' => 0,
     '#fail' => 0,
     '#exception' => 0,
+    '#debug' => 0,
   );
 
   // Cycle through each test group.
@@ -264,14 +265,14 @@ function simpletest_result_form(&$form_state, $test_id) {
       $form['result']['summary']['#' . $assertion->status]++;
     }
     $form['result']['results'][$group]['table'] = array(
-      '#theme' => 'table', 
-      '#header' => $header, 
+      '#theme' => 'table',
+      '#header' => $header,
       '#rows' => $rows,
     );
 
     // Set summary information.
     $group_summary['#ok'] = $group_summary['#fail'] + $group_summary['#exception'] == 0;
-    $form['result']['results'][$group]['#collapsed'] = $group_summary['#ok'];
+    $form['result']['results'][$group]['#collapsed'] = $group_summary['#ok'] && !$group_summary['#debug'];
 
     // Store test group (class) as for use in filter.
     $filter[$group_summary['#ok'] ? 'pass' : 'fail'][] = $group;
@@ -404,6 +405,7 @@ function simpletest_result_status_image($status) {
       'pass' => theme('image', 'misc/watchdog-ok.png'),
       'fail' => theme('image', 'misc/watchdog-error.png'),
       'exception' => theme('image', 'misc/watchdog-warning.png'),
+      'debug' => theme('image', 'misc/watchdog-warning.png'),
     );
   }
   if (isset($map[$status])) {

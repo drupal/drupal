@@ -42,6 +42,7 @@ abstract class DrupalTestCase {
     '#pass' => 0,
     '#fail' => 0,
     '#exception' => 0,
+    '#debug' => 0,
   );
 
   /**
@@ -376,6 +377,12 @@ abstract class DrupalTestCase {
    *   FALSE.
    */
   protected function error($message = '', $group = 'Other', array $caller = NULL) {
+    if ($group == 'User notice') {
+      // Since 'User notice' is set by trigger_error() which is used for debug
+      // set the message to a status of 'debug'.
+      return $this->assert('debug', $message, 'Debug', $caller);
+    }
+
     return $this->assert('exception', $message, $group, $caller);
   }
 

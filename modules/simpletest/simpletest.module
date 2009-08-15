@@ -95,11 +95,16 @@ function simpletest_js_alter(&$javascript) {
 }
 
 function _simpletest_format_summary_line($summary) {
-  return t('@pass, @fail, and @exception', array(
+  $args = array(
     '@pass' => format_plural(isset($summary['#pass']) ? $summary['#pass'] : 0, '1 pass', '@count passes'),
     '@fail' => format_plural(isset($summary['#fail']) ? $summary['#fail'] : 0, '1 fail', '@count fails'),
     '@exception' => format_plural(isset($summary['#exception']) ? $summary['#exception'] : 0, '1 exception', '@count exceptions'),
-  ));
+  );
+  if (!$summary['#debug']) {
+    return t('@pass, @fail, and @exception', $args);
+  }
+  $args['@debug'] = format_plural(isset($summary['#debug']) ? $summary['#debug'] : 0, '1 debug message', '@count debug messages');
+  return t('@pass, @fail, @exception, and @debug', $args);
 }
 
 /**
@@ -155,7 +160,7 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
     // First iteration: initialize working values.
     $test_list = $test_list_init;
     $context['sandbox']['max'] = count($test_list);
-    $test_results = array('#pass' => 0, '#fail' => 0, '#exception' => 0);
+    $test_results = array('#pass' => 0, '#fail' => 0, '#exception' => 0, '#debug' => 0);
   }
   else {
     // Nth iteration: get the current values where we last stored them.
