@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.admin.inc,v 1.31 2009/08/13 19:53:19 dries Exp $
+// $Id: filter.admin.inc,v 1.32 2009/08/15 06:50:29 webchick Exp $
 
 /**
  * @file
@@ -66,7 +66,8 @@ function filter_admin_overview_submit($form, &$form_state) {
  */
 function theme_filter_admin_overview($form) {
   $rows = array();
-  foreach ($form as $id => $element) {
+  foreach (element_children($form) as $id) {
+    $element = $form[$id];
     if (isset($element['roles']) && is_array($element['roles'])) {
       $element['weight']['#attributes']['class'] = 'text-format-order-weight';
       $rows[] = array(
