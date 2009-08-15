@@ -191,6 +191,54 @@ class DrupalTagsHandlingTestCase extends DrupalWebTestCase {
 }
 
 /**
+ * Tests url().
+ */
+class UrlTestCase extends DrupalWebtestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Tests for the url() function',
+      'description' => 'Performs tests on the url() function.',
+      'group' => 'System',
+    );
+  }
+
+  /**
+   * Test the url() function's $options array.
+   *
+   * Assert that calling url() with an external URL
+   *   1. containing a fragment works with and without a fragment in $options.
+   *   2. containing or not containing a query works with a query in $options.
+   */
+  function testUrlOptions() {
+    // Testing the fragment handling.
+    $fragment = $this->randomName(10);
+    $test_url = 'http://www.drupal.org/#' . $fragment;
+
+    $result_url = url($test_url);
+    $this->assertEqual($test_url, $result_url, t("External URL containing a fragment works without a fragment in options. url('http://drupal.org/#frag1');"));
+
+    $result_url = url($test_url, array('fragment' => $fragment));
+    $this->assertEqual($test_url, $result_url, t("External URL containing a fragment works with a fragment in options. url('http://drupal.org/#frag1', array('fragment' => 'frag1'));"));
+
+    // Testing the query handling.
+    $query = $this->randomName(10);
+    $query2 = $this->randomName(10);
+    $test_url = 'http://www.drupal.org/?' . $query;
+
+    // The external URL contains a query.
+    $result_url = url($test_url, array('query' => $query2));
+    $this->assertEqual($test_url . '&' . $query2, $result_url, t("External URL with a query passed in the path paramater. url('http://drupal.org/?param1', array('query' => 'param2'));"));
+
+    // The external URL does not contain a query.
+    $test_url = 'http://www.drupal.org';
+    $result_url = url($test_url, array('query' => $query2));
+    $this->assertEqual($test_url . '?' . $query2, $result_url, t("External URL without a query passed in the path paramater. url('http://drupal.org', array('query' => 'param2'));"));
+  }
+
+}
+
+/**
  * Test the Drupal CSS system.
  */
 class CascadingStylesheetsTestCase extends DrupalWebTestCase {
