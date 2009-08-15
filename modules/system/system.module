@@ -579,7 +579,6 @@ function system_menu() {
   );
   $items['admin/config/config'] = array(
     'title' => 'Configuration',
-    'access callback' => array('user_access'),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
@@ -589,7 +588,6 @@ function system_menu() {
     'description' => 'Enable or disable add-on modules for your site.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_modules'),
-    'access callback' => array('user_access'),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
