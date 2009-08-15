@@ -728,7 +728,12 @@ function _filter_html($text, $format) {
   $text = filter_xss($text, $allowed_tags);
 
   if (variable_get("filter_html_nofollow_$format", FALSE)) {
-    $text = preg_replace('/<a([^>]+)>/i', '<a\\1 rel="nofollow">', $text);
+    $html_dom = filter_dom_load($text);
+    $links = $html_dom->getElementsByTagName('a');
+    foreach($links as $link) {
+      $link->setAttribute('rel', 'nofollow');
+    }
+    $text = filter_dom_serialize($html_dom);
   }
 
   return trim($text);

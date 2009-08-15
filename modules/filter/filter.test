@@ -475,6 +475,10 @@ class FilterUnitTest extends DrupalWebTestCase {
 
     $f = _filter_html('<!--[if true]><a href="http://www.example.com/">text</a><![endif]-->', 'f');
     $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- link within a comment.'));
+
+    $f = _filter_html('<a href="http://www.example.com/" rel="follow">text</a>', 'f');
+    $this->assertNoNormalized($f, 'rel="follow"', t('Spam deterrent evasion -- with rel set - rel="follow" removed.'));
+    $this->assertNormalized($f, 'rel="nofollow"', t('Spam deterrent evasion -- with rel set - rel="nofollow" added.'));
   }
 
   /**
