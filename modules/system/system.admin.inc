@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.176 2009/08/15 06:27:49 webchick Exp $
+// $Id: system.admin.inc,v 1.177 2009/08/16 11:31:27 dries Exp $
 
 /**
  * @file
@@ -1940,9 +1940,6 @@ function theme_admin_block($block) {
       $block[title]
     </h3>
     <div class="body">
-      <p class="description">
-        $block[description]
-      </p>
       $block[content]
     </div>
   </div>
