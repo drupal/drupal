@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.23 2009/07/29 06:39:34 dries Exp $
+// $Id: dblog.admin.inc,v 1.24 2009/08/16 17:57:44 webchick Exp $
 
 /**
  * @file
@@ -249,14 +249,14 @@ function dblog_filters() {
   if (!empty($types)) {
     $filters['type'] = array(
       'title' => t('Type'),
-      'where' => "w.type = ':s'",
+      'where' => "w.type = ?",
       'options' => $types,
     );
   }
 
   $filters['severity'] = array(
     'title' => t('Severity'),
-    'where' => 'w.severity = :d',
+    'where' => 'w.severity = ?',
     'options' => watchdog_severity_levels(),
   );
 
