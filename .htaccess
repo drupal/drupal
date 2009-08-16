@@ -48,10 +48,14 @@ DirectoryIndex index.php index.html index.htm
   # Cache all files for 2 weeks after access (A).
   ExpiresDefault A1209600
 
-  <Files index.php>
-    # Caching headers for dynamically generated pages are set from PHP.
+  <FilesMatch \.php$>
+    # Do not allow PHP scripts to be cached unless they explicitly send cache
+    # headers themselves. Otherwise all scripts would have to overwrite the
+    # headers set by mod_expires if they want another caching behavior. This may
+    # fail if an error occurs early in the bootstrap process, and it may cause
+    # problems if a non-Drupal PHP file is installed in a subdirectory.
     ExpiresActive Off
-  </Files>
+  </FilesMatch>
 </IfModule>
 
 # Various rewrite rules.
