@@ -28,13 +28,6 @@ define('CACHE_DISABLED', 0);
 define('CACHE_NORMAL', 1);
 
 /**
- * Indicates that page caching is using "aggressive" mode. This bypasses
- * loading any modules for additional speed, which may break functionality in
- * modules that expect to be run on each page load.
- */
-define('CACHE_AGGRESSIVE', 2);
-
-/**
  * Log message severity -- Emergency: system is unusable.
  *
  * @see watchdog()
@@ -104,10 +97,9 @@ define('WATCHDOG_DEBUG', 7);
 define('DRUPAL_BOOTSTRAP_CONFIGURATION', 0);
 
 /**
- * Second bootstrap phase: try to call a non-database cache
- * fetch routine.
+ * Second bootstrap phase: try to serve a cached page.
  */
-define('DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE', 1);
+define('DRUPAL_BOOTSTRAP_PAGE_CACHE', 1);
 
 /**
  * Third bootstrap phase: initialize database layer.
@@ -120,20 +112,19 @@ define('DRUPAL_BOOTSTRAP_DATABASE', 2);
 define('DRUPAL_BOOTSTRAP_ACCESS', 3);
 
 /**
- * Fifth bootstrap phase: initialize session handling.
+ * Fifth bootstrap phase: initialize the variable system.
  */
-define('DRUPAL_BOOTSTRAP_SESSION', 4);
+define('DRUPAL_BOOTSTRAP_VARIABLES', 4);
 
 /**
- * Sixth bootstrap phase: initialize the variable system.
+ * Sixth bootstrap phase: initialize session handling.
  */
-define('DRUPAL_BOOTSTRAP_VARIABLES', 5);
+define('DRUPAL_BOOTSTRAP_SESSION', 5);
 
 /**
- * Seventh bootstrap phase: load bootstrap.inc and module.inc, start
- * the variable system and try to serve a page from the cache.
+ * Seventh bootstrap phase: set up the page header.
  */
-define('DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE', 6);
+define('DRUPAL_BOOTSTRAP_PAGE_HEADER', 6);
 
 /**
  * Eighth bootstrap phase: find out language of the page.
@@ -141,7 +132,7 @@ define('DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE', 6);
 define('DRUPAL_BOOTSTRAP_LANGUAGE', 7);
 
 /**
- * Nineth bootstrap phase: set $_GET['q'] to Drupal path of request.
+ * Ninth bootstrap phase: set $_GET['q'] to Drupal path of request.
  */
 define('DRUPAL_BOOTSTRAP_PATH', 8);
 
@@ -1017,11 +1008,11 @@ function drupal_serve_page_from_cache(stdClass $cache) {
 
   // If a cache is served from a HTTP proxy without hitting the web server,
   // the boot and exit hooks cannot be fired, so only allow caching in
-  // proxies with aggressive caching. If the client send a session cookie, do
-  // not bother caching the page in a public proxy, because the cached copy
+  // proxies if boot hooks are disabled. If the client send a session cookie,
+  // do not bother caching the page in a public proxy, because the cached copy
   // will only be served to that particular user due to Vary: Cookie, unless
   // the Vary header has been replaced or unset in hook_boot() (see below).
-  $max_age = variable_get('cache') == CACHE_AGGRESSIVE && (!isset($_COOKIE[session_name()]) || isset($hook_boot_headers['vary'])) ? variable_get('cache_lifetime', 0) : 0;
+  $max_age = !variable_get('page_cache_invoke_hooks', TRUE) && (!isset($_COOKIE[session_name()]) || isset($hook_boot_headers['vary'])) ? variable_get('cache_lifetime', 0) : 0;
   $default_headers['Cache-Control'] = 'public, max-age=' . $max_age;
 
   // Entity tag should change if the output changes.
@@ -1304,7 +1295,7 @@ function drupal_get_messages($type = NULL, $clear_queue = TRUE) {
  * to avoid querying the database at this critical stage of the bootstrap if
  * an administrative interface for IP address blocking is not required.
  *
- * @param $ip string
+ * @param $ip
  *   IP address to check.
  * @return bool
  *   TRUE if access is denied, FALSE if access is allowed.
@@ -1314,11 +1305,29 @@ function drupal_is_denied($ip) {
   // for an array of IP addresses in settings.php before querying the
   // database.
   $blocked_ips = variable_get('blocked_ips');
+  $denied = FALSE;
   if (isset($blocked_ips) && is_array($blocked_ips)) {
-    return in_array($ip, $blocked_ips);
+    $denied = in_array($ip, $blocked_ips);
   }
-  else {
-    return (bool)db_query("SELECT 1 FROM {blocked_ips} WHERE ip = :ip", array(':ip' => $ip))->fetchField();
+  // Only check if database.inc is loaded already.
+  elseif (function_exists('db_is_active')) {
+    $denied = (bool)db_query("SELECT 1 FROM {blocked_ips} WHERE ip = :ip", array(':ip' => $ip))->fetchField();
+  }
+  return $denied;
+}
+
+/**
+ * Handle denied users.
+ *
+ * @param $ip
+ *   IP address to check. Prints a message and exits if access is denied.
+ */
+function drupal_handle_denied($ip) {
+  // Deny access to blocked IP addresses - t() is not yet available.
+  if (drupal_is_denied($ip)) {
+    header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
+    print 'Sorry, ' . check_plain(ip_address()) . ' has been banned.';
+    exit();
   }
 }
 
@@ -1358,16 +1367,22 @@ function drupal_anonymous_user($session = '') {
  *     DRUPAL_BOOTSTRAP_LANGUAGE: identify the language used on the page.
  *     DRUPAL_BOOTSTRAP_PATH: set $_GET['q'] to Drupal path of request.
  *     DRUPAL_BOOTSTRAP_FULL: Drupal is fully loaded, validate and fix input data.
+ * @param $new_phase
+ *   A boolean, set to FALSE if calling drupal_bootstrap from inside a
+ *   function called from drupal_bootstrap (recursion).
  */
-function drupal_bootstrap($phase = NULL) {
+function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
+  $final_phase = &drupal_static(__FUNCTION__ . '_final_phase');
+  if ($new_phase) {
+    $final_phase = $phase;
+  }
   $phases = &drupal_static(__FUNCTION__ . '_phases', array(
     DRUPAL_BOOTSTRAP_CONFIGURATION,
-    DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE,
+    DRUPAL_BOOTSTRAP_PAGE_CACHE,
     DRUPAL_BOOTSTRAP_DATABASE,
-    DRUPAL_BOOTSTRAP_ACCESS,
-    DRUPAL_BOOTSTRAP_SESSION,
     DRUPAL_BOOTSTRAP_VARIABLES,
-    DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE,
+    DRUPAL_BOOTSTRAP_SESSION,
+    DRUPAL_BOOTSTRAP_PAGE_HEADER,
     DRUPAL_BOOTSTRAP_LANGUAGE,
     DRUPAL_BOOTSTRAP_PATH,
     DRUPAL_BOOTSTRAP_FULL,
@@ -1375,10 +1390,14 @@ function drupal_bootstrap($phase = NULL) {
   $completed_phase = &drupal_static(__FUNCTION__ . '_completed_phase', -1);
 
   if (isset($phase)) {
-    while ($phases && $phase > $completed_phase) {
+    while ($phases && $phase > $completed_phase && $final_phase > $completed_phase) {
       $current_phase = array_shift($phases);
       _drupal_bootstrap($current_phase);
-      $completed_phase = $current_phase;
+      // This function is reentrant. Only update the completed phase when the
+      // current call actually resulted in a progress in the bootstrap process.
+      if ($current_phase > $completed_phase) {
+        $completed_phase = $current_phase;
+      }
     }
   }
   return $completed_phase;
@@ -1397,6 +1416,7 @@ function drupal_get_bootstrap_phase() {
 
 function _drupal_bootstrap($phase) {
   global $conf, $user;
+  static $cache;
 
   switch ($phase) {
 
@@ -1408,16 +1428,34 @@ function _drupal_bootstrap($phase) {
       drupal_settings_initialize();
       break;
 
-    case DRUPAL_BOOTSTRAP_EARLY_PAGE_CACHE:
+    case DRUPAL_BOOTSTRAP_PAGE_CACHE:
       // Allow specifying special cache handlers in settings.php, like
       // using memcached or files for storing cache information.
       require_once DRUPAL_ROOT . '/' . variable_get('cache_inc', 'includes/cache.inc');
-      // If the page_cache_fastpath is set to TRUE in settings.php and
-      // page_cache_fastpath (implemented in the special implementation of
-      // cache.inc) printed the page and indicated this with a returned TRUE
-      // then we are done.
-      if (variable_get('page_cache_fastpath', FALSE) && page_cache_fastpath()) {
-        exit;
+      // Check for a cache mode force from settings.php.
+      if (variable_get('page_cache_without_database')) {
+        $cache_mode = CACHE_NORMAL;
+      }
+      else {
+        drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES, FALSE);
+        $cache_mode = variable_get('cache');
+      }
+      drupal_handle_denied(ip_address());
+      if (!isset($_COOKIE[session_name()]) && $cache_mode == CACHE_NORMAL) {
+        $user = drupal_anonymous_user();
+        $cache = drupal_page_get_cache();
+        if (is_object($cache)) {
+          if (variable_get('page_cache_invoke_hooks', TRUE)) {
+            require_once DRUPAL_ROOT . '/includes/module.inc';
+            module_invoke_all('boot');
+          }
+          header('X-Drupal-Cache: HIT');
+          drupal_serve_page_from_cache($cache);
+          if (variable_get('page_cache_invoke_hooks', TRUE)) {
+            module_invoke_all('exit');
+          }
+          exit;
+        }
       }
       break;
 
@@ -1437,13 +1475,9 @@ function _drupal_bootstrap($phase) {
       spl_autoload_register('drupal_autoload_interface');
       break;
 
-    case DRUPAL_BOOTSTRAP_ACCESS:
-      // Deny access to blocked IP addresses - t() is not yet available.
-      if (drupal_is_denied(ip_address())) {
-        header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
-        print 'Sorry, ' . check_plain(ip_address()) . ' has been banned.';
-        exit();
-      }
+    case DRUPAL_BOOTSTRAP_VARIABLES:
+      // Load variables from the database, but do not overwrite variables set in settings.php.
+      $conf = variable_initialize(isset($conf) ? $conf : array());
       break;
 
     case DRUPAL_BOOTSTRAP_SESSION:
@@ -1451,41 +1485,9 @@ function _drupal_bootstrap($phase) {
       drupal_session_initialize();
       break;
 
-    case DRUPAL_BOOTSTRAP_VARIABLES:
-      // Load variables from the database, but do not overwrite variables set in settings.php.
-      $conf = variable_initialize(isset($conf) ? $conf : array());
-      break;
-
-    case DRUPAL_BOOTSTRAP_LATE_PAGE_CACHE:
-      $cache_mode = variable_get('cache', CACHE_DISABLED);
-
-      // Get the page from the cache.
-      if ($cache_mode != CACHE_DISABLED) {
-        $cache = drupal_page_get_cache();
-      }
-      else {
-        $cache = FALSE;
-      }
-
-      // If the skipping of the bootstrap hooks is not enforced, call hook_boot.
-      if (!$cache || $cache_mode != CACHE_AGGRESSIVE) {
-        // Load module handling.
-        require_once DRUPAL_ROOT . '/includes/module.inc';
-        module_invoke_all('boot');
-      }
-
-      // If there is a cached page, display it.
-      if ($cache) {
-        header('X-Drupal-Cache: HIT');
-        drupal_serve_page_from_cache($cache);
-        // If the skipping of the bootstrap hooks is not enforced, call hook_exit.
-        if ($cache_mode != CACHE_AGGRESSIVE) {
-          module_invoke_all('exit');
-        }
-        // We are done.
-        exit;
-      }
-
+    case DRUPAL_BOOTSTRAP_PAGE_HEADER:
+      require_once DRUPAL_ROOT . '/includes/module.inc';
+      module_invoke_all('boot');
       if (!$cache && drupal_page_is_cacheable()) {
         header('X-Drupal-Cache: MISS');
       }

@@ -1363,21 +1363,6 @@ function system_performance_settings() {
   );
 
   $cache = variable_get('cache', CACHE_DISABLED);
-  $js_hide = $cache != CACHE_AGGRESSIVE ? 'js-hide' : '';
-  $problem_modules = array_unique(array_merge(module_implements('boot'), module_implements('exit')));
-  if (count($problem_modules) > 0) {
-    $module_names = array();
-    foreach ($problem_modules as $module) {
-      $info = drupal_parse_info_file(drupal_get_path('module', $module) . "/$module.info");
-      $module_names[] = $info['name'];
-    }
-    sort($module_names);
-    $message = format_plural(count($module_names), '%module may cause issues when using aggressive caching.', '%modules may cause issues when using aggressive caching.', array('%module' => $module_names[0], '%modules' => implode(', ', $module_names)));
-    $description = ' <strong id="cache-error" class="error ' . $js_hide . '">' . $message . '</strong>';
-  }
-  else {
-    $description = ' <strong class="' . $js_hide . '">' . t('Note: if you use aggressive page caching and enable new modules, you will need to check this setting again to ensure compatibility.') . '</strong>';
-  }
   $form['caching']['cache'] = array(
     '#type' => 'radios',
     '#title' => t('Page cache for anonymous users'),
