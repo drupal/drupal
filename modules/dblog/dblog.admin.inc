@@ -249,14 +249,14 @@ function dblog_filters() {
   if (!empty($types)) {
     $filters['type'] = array(
       'title' => t('Type'),
-      'where' => "w.type = ':s'",
+      'where' => "w.type = ?",
       'options' => $types,
     );
   }
 
   $filters['severity'] = array(
     'title' => t('Severity'),
-    'where' => 'w.severity = :d',
+    'where' => 'w.severity = ?',
     'options' => watchdog_severity_levels(),
   );
 

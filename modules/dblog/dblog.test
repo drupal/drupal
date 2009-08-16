@@ -85,17 +85,22 @@ class DBLogTestCase extends DrupalWebTestCase {
   /**
    * Generate dblog entries.
    *
-   * @param integer $count Log row limit.
+   * @param integer $count
+   *   Number of log entries to generate.
+   * @param $type
+   *   The type of watchdog entry.
+   * @param $severity
+   *   The severity of the watchdog entry.
    */
-  private function generateLogEntries($count) {
+  private function generateLogEntries($count, $type = 'custom', $severity = WATCHDOG_NOTICE) {
     global $base_root;
 
     // Prepare the fields to be logged
     $log = array(
-      'type'        => 'custom',
+      'type'        => $type,
       'message'     => 'Log entry added to test the dblog row limit.',
       'variables'   => array(),
-      'severity'    => WATCHDOG_NOTICE,
+      'severity'    => $severity,
       'link'        => NULL,
       'user'        => $this->big_user,
       'request_uri' => $base_root . request_uri(),
@@ -105,7 +110,7 @@ class DBLogTestCase extends DrupalWebTestCase {
       );
     $message = 'Log entry added to test the dblog row limit.';
     for ($i = 0; $i < $count; $i++) {
-      $log['message'] = $i . ' => ' . $message;
+      $log['message'] = $this->randomString();
       dblog_watchdog($log);
     }
   }
@@ -388,5 +393,163 @@ class DBLogTestCase extends DrupalWebTestCase {
     // Count rows in watchdog that previously related to the deleted user.
     $count = db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField();
     $this->assertEqual($count, 0, t('DBLog contains :count records after a clear.', array(':count' => $count)));
+  }
+
+  /**
+   * Test the dblog filter on admin/reports/dblog.
+   */
+  protected function testFilter() {
+    $this->drupalLogin($this->big_user);
+
+    // Clear log to ensure that only generated entries are found.
+    db_delete('watchdog')->execute();
+
+    // Generate watchdog entries.
+    $type_names = array();
+    $types = array();
+    for ($i = 0; $i < 3; $i++) {
+      $type_names[] = $type_name = $this->randomName();
+      $severity = WATCHDOG_EMERG;
+      for ($j = 0; $j < 3; $j++) {
+        $types[] = $type = array(
+          'count' => mt_rand(1, 5),
+          'type' => $type_name,
+          'severity' => $severity++,
+        );
+        $this->generateLogEntries($type['count'], $type['type'], $type['severity']);
+      }
+    }
+
+    // View the dblog.
+    $this->drupalGet('admin/reports/dblog');
+
+    // Confirm all the entries are displayed.
+    $count = $this->getTypeCount($types);
+    foreach ($types as $key => $type) {
+      $this->assertEqual($count[$key], $type['count'], 'Count matched');
+    }
+
+    // Filter by each type and confirm that entries with various severities are
+    // displayed.
+    foreach ($type_names as $type_name) {
+      $edit = array(
+        'type[]' => array($type_name),
+      );
+      $this->drupalPost(NULL, $edit, t('Filter'));
+
+      // Count the number of entries of this type.
+      $type_count = 0;
+      foreach ($types as $type) {
+        if ($type['type'] == $type_name) {
+          $type_count += $type['count'];
+        }
+      }
+
+      $count = $this->getTypeCount($types);
+      $this->assertEqual(array_sum($count), $type_count, 'Count matched');
+    }
+
+    // Set filter to match each of the three type attributes and confirm the
+    // number of entries displayed.
+    foreach ($types as $key => $type) {
+      $edit = array(
+        'type[]' => array($type['type']),
+        'severity[]' => array($type['severity']),
+      );
+      $this->drupalPost(NULL, $edit, t('Filter'));
+
+      $count = $this->getTypeCount($types);
+      $this->assertEqual(array_sum($count), $type['count'], 'Count matched');
+    }
+  }
+
+  /**
+   * Get the log entry information form the page.
+   *
+   * @return
+   *   List of entries and their information.
+   */
+  protected function getLogEntries() {
+    $entries = array();
+    if ($table = $this->xpath('.//table[@id="admin-dblog"]')) {
+      $table = array_shift($table);
+      foreach ($table->tbody->tr as $row) {
+        $entries[] = array(
+          'severity' => $this->getSeverityConstant($row['class']),
+          'type' => $this->asText($row->td[1]),
+          'message' => $this->asText($row->td[3]),
+          'user' => $this->asText($row->td[4]),
+        );
+      }
+    }
+    return $entries;
+  }
+
+  /**
+   * Get the count of entries per type.
+   *
+   * @param $types
+   *   The type information to compare against.
+   * @return
+   *   The count of each type keyed by the key of the $types array.
+   */
+  protected function getTypeCount(array $types) {
+    $entries = $this->getLogEntries();
+    $count = array_fill(0, count($types), 0);
+    foreach ($entries as $entry) {
+      foreach ($types as $key => $type) {
+        if ($entry['type'] == $type['type'] && $entry['severity'] == $type['severity']) {
+          $count[$key]++;
+          break;
+        }
+      }
+    }
+    return $count;
+  }
+
+  /**
+   * Get the watchdog severity constant corresponding to the CSS class.
+   *
+   * @param $class
+   *   CSS class attribute.
+   * @return
+   *   The watchdog severity constant or NULL if not found.
+   */
+  protected function getSeverityConstant($class) {
+    // Reversed array from dblog_overview().
+    $map = array(
+      'dblog-debug' => WATCHDOG_DEBUG,
+      'dblog-info' => WATCHDOG_INFO,
+      'dblog-notice' => WATCHDOG_NOTICE,
+      'dblog-warning' => WATCHDOG_WARNING,
+      'dblog-error' => WATCHDOG_ERROR,
+      'dblog-critical' => WATCHDOG_CRITICAL,
+      'dblog-alert' => WATCHDOG_ALERT,
+      'dblog-emerg' => WATCHDOG_EMERG,
+    );
+
+    // Find the class that contains the severity.
+    $classes = explode(' ', $class);
+    foreach ($classes as $class) {
+      if (isset($map[$class])) {
+        return $map[$class];
+      }
+    }
+    return NULL;
+  }
+
+  /**
+   * Extract the text contained by the element.
+   *
+   * @param $element
+   *   Element to extract text from.
+   * @return
+   *   Extracted text.
+   */
+  protected function asText(SimpleXMLElement $element) {
+    if (!is_object($element)) {
+      return $this->fail('The element is not an element.');
+    }
+    return trim(html_entity_decode(strip_tags($element->asXML())));
   }
 }
