@@ -352,3 +352,16 @@ $conf = array(
 # $conf['blocked_ips'] = array(
 #   'a.b.c.d',
 # );
+
+/**
+ * Page caching:
+ *
+ * To use a caching backend that does not use the database for page cache,
+ * set cache_inc to the file which provides this backend and set
+ * page_cache_without_database to TRUE. For additional speedup,
+ * page_cache_invoke_hooks can be set to FALSE to skip calling hook_boot and
+ * hook_exit which are the only hooks fired during serving a cached page.
+ */
+# $conf['cache_inc'] = DRUPAL_ROOT . '/sites/all/modules/memcache/memcache.inc';
+# $conf['page_cache_without_database'] = TRUE;
+# $conf['page_cache_invoke_hooks'] = FALSE;

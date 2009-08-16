@@ -1309,7 +1309,12 @@ function drupal_is_denied($ip) {
   if (isset($blocked_ips) && is_array($blocked_ips)) {
     $denied = in_array($ip, $blocked_ips);
   }
-  // Only check if database.inc is loaded already.
+  // Only check if database.inc is loaded already. If
+  // $conf['page_cache_without_database'] = TRUE; is set in settings.php,
+  // then the database won't be loaded here so the IPs in the database
+  // won't be denied. However the user asked explicitly not to use the
+  // database and also in this case it's quite likely that the user relies
+  // on higher performance solutions like a firewall.
   elseif (function_exists('db_is_active')) {
     $denied = (bool)db_query("SELECT 1 FROM {blocked_ips} WHERE ip = :ip", array(':ip' => $ip))->fetchField();
   }
@@ -1322,7 +1327,7 @@ function drupal_is_denied($ip) {
  * @param $ip
  *   IP address to check. Prints a message and exits if access is denied.
  */
-function drupal_handle_denied($ip) {
+function drupal_block_denied($ip) {
   // Deny access to blocked IP addresses - t() is not yet available.
   if (drupal_is_denied($ip)) {
     header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
@@ -1373,6 +1378,8 @@ function drupal_anonymous_user($session = '') {
  */
 function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
   $final_phase = &drupal_static(__FUNCTION__ . '_final_phase');
+  // When not recursing, store the phase name so it's not forgotten while
+  // recursing.
   if ($new_phase) {
     $final_phase = $phase;
   }
@@ -1390,6 +1397,8 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
   $completed_phase = &drupal_static(__FUNCTION__ . '_completed_phase', -1);
 
   if (isset($phase)) {
+    // Call a phase if it has not been called before and is below the requested
+    // phase.
     while ($phases && $phase > $completed_phase && $final_phase > $completed_phase) {
       $current_phase = array_shift($phases);
       _drupal_bootstrap($current_phase);
@@ -1440,20 +1449,31 @@ function _drupal_bootstrap($phase) {
         drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES, FALSE);
         $cache_mode = variable_get('cache');
       }
-      drupal_handle_denied(ip_address());
+      drupal_block_denied(ip_address());
+      // If there is no session cookie and cache is enabled (or forced), try
+      // to serve a cached page.
       if (!isset($_COOKIE[session_name()]) && $cache_mode == CACHE_NORMAL) {
+        // Make sure there is a user object because it's timestamp will be
+        // checked, hook_boot might check for anonymous user etc.
         $user = drupal_anonymous_user();
+        // Get the page from the cache.
         $cache = drupal_page_get_cache();
+        // If there is a cached page, display it.
         if (is_object($cache)) {
+          // If the skipping of the bootstrap hooks is not enforced, call
+          // hook_boot.
           if (variable_get('page_cache_invoke_hooks', TRUE)) {
             require_once DRUPAL_ROOT . '/includes/module.inc';
             module_invoke_all('boot');
           }
           header('X-Drupal-Cache: HIT');
           drupal_serve_page_from_cache($cache);
+          // If the skipping of the bootstrap hooks is not enforced, call
+          // hook_exit.
           if (variable_get('page_cache_invoke_hooks', TRUE)) {
             module_invoke_all('exit');
           }
+          // We are done.
           exit;
         }
       }

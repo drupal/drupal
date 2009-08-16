@@ -1367,8 +1367,7 @@ function system_performance_settings() {
     '#type' => 'radios',
     '#title' => t('Page cache for anonymous users'),
     '#default_value' => $cache,
-    '#options' => array(CACHE_DISABLED => t('Disabled'), CACHE_NORMAL => t('Normal (recommended)'), CACHE_AGGRESSIVE => t('Aggressive (possible issues)')),
-    '#description' => t('Aggressive caching prevents modules from being loaded if the requested page can be retrieved from the cache. This may cause issues if you use modules that need to be loaded every request i.e. for writing data like statistics.') . $description,
+    '#options' => array(CACHE_DISABLED => t('Disabled'), CACHE_NORMAL => t('Normal (recommended)')),
   );
   $period = drupal_map_assoc(array(0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400), 'format_interval');
   $period[0] = '<' . t('none') . '>';
