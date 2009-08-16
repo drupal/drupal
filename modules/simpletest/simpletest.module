@@ -121,7 +121,7 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
   $test_id = db_insert('simpletest_test_id')
     ->useDefaults(array('test_id'))
     ->execute();
-    
+
   // Clear out the previous verbose files.
   file_unmanaged_delete_recursive(file_directory_path() . '/simpletest/verbose');
 
@@ -382,8 +382,13 @@ function simpletest_registry_files_alter(&$files, $modules) {
 function simpletest_clean_environment() {
   simpletest_clean_database();
   simpletest_clean_temporary_directories();
-  $count = simpletest_clean_results_table();
-  drupal_set_message(format_plural($count, 'Removed 1 test result.', 'Removed @count test results.'));
+  if (variable_get('simpletest_clear_results', TRUE)) {
+    $count = simpletest_clean_results_table();
+    drupal_set_message(format_plural($count, 'Removed 1 test result.', 'Removed @count test results.'));
+  }
+  else {
+    drupal_set_message(t('Clear results is disabled and the test results table will not be cleared.'), 'warning');
+  }
 }
 
 /**
@@ -438,17 +443,17 @@ function simpletest_clean_temporary_directories() {
  * @param $test_id
  *   Test ID to remove results for, or NULL to remove all results.
  * @return
- *   The number of results removed or FALSE.
+ *   The number of results removed.
  */
 function simpletest_clean_results_table($test_id = NULL) {
   if (variable_get('simpletest_clear_results', TRUE)) {
     if ($test_id) {
       $count = db_query('SELECT COUNT(test_id) FROM {simpletest_test_id} WHERE test_id = :test_id', array(':test_id' => $test_id))->fetchField();
 
-      db_delete("simpletest")
+      db_delete('simpletest')
         ->condition('test_id', $test_id)
         ->execute();
-      db_delete("simpletest_test_id")
+      db_delete('simpletest_test_id')
         ->condition('test_id', $test_id)
         ->execute();
     }
@@ -456,11 +461,11 @@ function simpletest_clean_results_table($test_id = NULL) {
       $count = db_query('SELECT COUNT(test_id) FROM {simpletest_test_id}')->fetchField();
 
       // Clear test results.
-      db_delete("simpletest")->execute();
-      db_delete("simpletest_test_id")->execute();
+      db_delete('simpletest')->execute();
+      db_delete('simpletest_test_id')->execute();
     }
 
     return $count;
   }
-  return FALSE;
+  return 0;
 }
