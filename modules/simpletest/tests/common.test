@@ -36,7 +36,8 @@ class CommonLUnitTest extends DrupalUnitTestCase {
    }
    
   /**
-   * Test url() with/without query, with/without fragment, absolute on/off and assert all that works when clean URLs are on and off.
+   * Test url() with/without query, with/without fragment, absolute on/off and
+   * assert all that works when clean URLs are on and off.
    */
   function testUrl() {
     global $base_url;
