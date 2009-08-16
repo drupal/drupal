@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.62 2009/08/16 03:16:19 webchick Exp $
+// $Id: common.test,v 1.63 2009/08/16 17:37:06 webchick Exp $
 
 /**
  * Tests for the l() function.
@@ -36,7 +36,8 @@ class CommonLUnitTest extends DrupalUnitTestCase {
    }
    
   /**
-   * Test url() with/without query, with/without fragment, absolute on/off and assert all that works when clean URLs are on and off.
+   * Test url() with/without query, with/without fragment, absolute on/off and
+   * assert all that works when clean URLs are on and off.
    */
   function testUrl() {
     global $base_url;
