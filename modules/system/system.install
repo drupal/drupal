@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.367 2009/08/12 23:51:19 webchick Exp $
+// $Id: system.install,v 1.368 2009/08/16 18:39:45 dries Exp $
 
 /**
  * @file
@@ -2240,6 +2240,17 @@ function system_update_7032() {
   db_change_field($ret, 'flood', 'hostname', 'identifier', array('type' => 'varchar', 'length' => 128, 'not null' => TRUE, 'default' => ''));
   db_add_index($ret, 'flood', 'allow', array('event', 'identifier', 'timestamp'));
   return $ret;
+}
+
+/**
+ * Move CACHE_AGGRESSIVE to CACHE_NORMAL.
+ */
+function system_update_7033() {
+  if (variable_get('cache') == 2) {
+    variable_set('cache', CACHE_NORMAL);
+    $ret[] = array('success' => TRUE, 'query' => "Aggressive caching was disabled and replaced with normal caching, please read the page caching section in default.settings.php for more information on how to enable similar functionality.");
+  }
+  return array();
 }
 
 /**
