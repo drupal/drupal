@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.62 2009/08/06 05:06:00 webchick Exp $ */
+/* $Id: style.css,v 1.63 2009/08/17 19:05:26 dries Exp $ */
 
 /**
  * Generic elements
@@ -55,6 +55,10 @@ h6 {
 
 quote, code, fieldset {
   margin: .5em 0;
+}
+
+code, pre, kbd {
+  font-size: 115%;
 }
 
 p {
