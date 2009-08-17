@@ -1,5 +1,5 @@
 <?php
-// $Id: schema.inc,v 1.7 2009/07/09 10:12:14 dries Exp $
+// $Id: schema.inc,v 1.8 2009/08/17 06:52:02 dries Exp $
 
 /**
  * @file
@@ -47,12 +47,12 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     $sql = array();
     if (!empty($schema['unique keys'])) {
       foreach ($schema['unique keys'] as $key => $fields) {
-        $sql[] = 'CREATE UNIQUE INDEX {' . $tablename . '}_' . $key . ' ON {' . $tablename . '} (' . $this->createKeySql($fields) . "); \n";
+        $sql[] = 'CREATE UNIQUE INDEX "{' . $tablename . '}_' . $key . '" ON {' . $tablename . '} (' . $this->createKeySql($fields) . "); \n";
       }
     }
     if (!empty($schema['indexes'])) {
       foreach ($schema['indexes'] as $index => $fields) {
-        $sql[] = 'CREATE INDEX {' . $tablename . '}_' . $index . ' ON {' . $tablename . '} (' . $this->createKeySql($fields) . "); \n";
+        $sql[] = 'CREATE INDEX "{' . $tablename . '}_' . $index . '" ON {' . $tablename . '} (' . $this->createKeySql($fields) . "); \n";
       }
     }
     return $sql;
