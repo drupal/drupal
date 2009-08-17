@@ -260,7 +260,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
         $ret[] = 'substr(' . $field[0] . ', 1, ' . $field[1] . ')';
       }
       else {
-        $ret[] = $field;
+        $ret[] = '"' . $field . '"';
       }
     }
     return implode(', ', $ret);
@@ -355,7 +355,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    *   The field to be dropped.
    */
   public function dropField(&$ret, $table, $field) {
-    $ret[] = update_sql('ALTER TABLE {' . $table . '} DROP COLUMN ' . $field);
+    $ret[] = update_sql('ALTER TABLE {' . $table . '} DROP COLUMN "' . $field . '"');
   }
 
   /**
@@ -378,7 +378,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       $default = is_string($default) ? "'$default'" : $default;
     }
 
-    $ret[] = update_sql('ALTER TABLE {' . $table . '} ALTER COLUMN ' . $field . ' SET DEFAULT ' . $default);
+    $ret[] = update_sql('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" SET DEFAULT ' . $default);
   }
 
   /**
@@ -392,7 +392,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    *   The field to be altered.
    */
   public function fieldSetNoDefault(&$ret, $table, $field) {
-    $ret[] = update_sql('ALTER TABLE {' . $table . '} ALTER COLUMN ' . $field . ' DROP DEFAULT');
+    $ret[] = update_sql('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" DROP DEFAULT');
   }
 
   /**
@@ -435,7 +435,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    */
   function addUniqueKey(&$ret, $table, $name, $fields) {
     $name = '{' . $table . '}_' . $name . '_key';
-    $ret[] = update_sql('ALTER TABLE {' . $table . '} ADD CONSTRAINT ' . $name . ' UNIQUE (' . implode(',', $fields) . ')');
+    $ret[] = update_sql('ALTER TABLE {' . $table . '} ADD CONSTRAINT "' . $name . '" UNIQUE (' . implode(',', $fields) . ')');
   }
 
   /**
@@ -450,7 +450,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    */
   public function dropUniqueKey(&$ret, $table, $name) {
     $name = '{' . $table . '}_' . $name . '_key';
-    $ret[] = update_sql('ALTER TABLE {' . $table . '} DROP CONSTRAINT ' . $name);
+    $ret[] = update_sql('ALTER TABLE {' . $table . '} DROP CONSTRAINT "' . $name . '"');
   }
 
   /**
@@ -578,7 +578,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
   }
 
   protected function _createIndexSql($table, $name, $fields) {
-    $query = 'CREATE INDEX {' . $table . '}_' . $name . '_idx ON {' . $table . '} (';
+    $query = 'CREATE INDEX "{' . $table . '}_' . $name . '_idx" ON {' . $table . '} (';
     $query .= $this->_createKeySql($fields) . ')';
     return $query;
   }

@@ -226,12 +226,12 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     }
     if (!empty($spec['unique keys'])) {
       foreach ($spec['unique keys'] as $key => $fields) {
-        $keys[] = 'UNIQUE KEY ' . $key . ' (' . $this->createKeysSqlHelper($fields) . ')';
+        $keys[] = 'UNIQUE KEY `' . $key . '` (' . $this->createKeysSqlHelper($fields) . ')';
       }
     }
     if (!empty($spec['indexes'])) {
       foreach ($spec['indexes'] as $index => $fields) {
-        $keys[] = 'INDEX ' . $index . ' (' . $this->createKeysSqlHelper($fields) . ')';
+        $keys[] = 'INDEX `' . $index . '` (' . $this->createKeysSqlHelper($fields) . ')';
       }
     }
 
@@ -242,10 +242,10 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     $ret = array();
     foreach ($fields as $field) {
       if (is_array($field)) {
-        $ret[] = $field[0] . '(' . $field[1] . ')';
+        $ret[] = '`' . $field[0] . '`(' . $field[1] . ')';
       }
       else {
-        $ret[] = $field;
+        $ret[] = '`' . $field . '`';
       }
     }
     return implode(', ', $ret);
@@ -255,10 +255,10 @@ class DatabaseSchema_mysql extends DatabaseSchema {
     $ret = array();
     foreach ($fields as $field) {
       if (is_array($field)) {
-        $ret[] = $field[0] . '(' . $field[1] . ')';
+        $ret[] = '`' . $field[0] . '`(' . $field[1] . ')';
       }
       else {
-        $ret[] = $field;
+        $ret[] = '`' . $field . '`';
       }
     }
     return implode(', ', $ret);
@@ -297,7 +297,7 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function dropField(&$ret, $table, $field) {
-    $ret[] = update_sql('ALTER TABLE {' . $table . '} DROP ' . $field);
+    $ret[] = update_sql('ALTER TABLE {' . $table . '} DROP `' . $field . '`');
   }
 
   public function fieldSetDefault(&$ret, $table, $field, $default) {
@@ -308,11 +308,11 @@ class DatabaseSchema_mysql extends DatabaseSchema {
       $default = is_string($default) ? "'$default'" : $default;
     }
 
-    $ret[] = update_sql('ALTER TABLE {' . $table . '} ALTER COLUMN ' . $field . ' SET DEFAULT ' . $default);
+    $ret[] = update_sql('ALTER TABLE {' . $table . '} ALTER COLUMN `' . $field . '` SET DEFAULT ' . $default);
   }
 
   public function fieldSetNoDefault(&$ret, $table, $field) {
-    $ret[] = update_sql('ALTER TABLE {' . $table . '} ALTER COLUMN ' . $field . ' DROP DEFAULT');
+    $ret[] = update_sql('ALTER TABLE {' . $table . '} ALTER COLUMN `' . $field . '` DROP DEFAULT');
   }
 
   public function addPrimaryKey(&$ret, $table, $fields) {
@@ -324,20 +324,20 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   }
 
   public function addUniqueKey(&$ret, $table, $name, $fields) {
-    $ret[] = update_sql('ALTER TABLE {' . $table . '} ADD UNIQUE KEY ' . $name . ' (' . $this->createKeySql($fields) . ')');
+    $ret[] = update_sql('ALTER TABLE {' . $table . '} ADD UNIQUE KEY `' . $name . '` (' . $this->createKeySql($fields) . ')');
   }
 
   public function dropUniqueKey(&$ret, $table, $name) {
-    $ret[] = update_sql('ALTER TABLE {' . $table . '} DROP KEY ' . $name);
+    $ret[] = update_sql('ALTER TABLE {' . $table . '} DROP KEY `' . $name . '`');
   }
 
   public function addIndex(&$ret, $table, $name, $fields) {
-    $query = 'ALTER TABLE {' . $table . '} ADD INDEX ' . $name . ' (' . $this->createKeySql($fields) . ')';
+    $query = 'ALTER TABLE {' . $table . '} ADD INDEX `' . $name . '` (' . $this->createKeySql($fields) . ')';
     $ret[] = update_sql($query);
   }
 
   public function dropIndex(&$ret, $table, $name) {
-    $ret[] = update_sql('ALTER TABLE {' . $table . '} DROP INDEX ' . $name);
+    $ret[] = update_sql('ALTER TABLE {' . $table . '} DROP INDEX `' . $name . '`');
   }
 
   public function changeField(&$ret, $table, $field, $field_new, $spec, $keys_new = array()) {
