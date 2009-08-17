@@ -1835,18 +1835,35 @@ function menu_cache_clear_all() {
  * schedule a call to itself on the first real page load from
  * menu_execute_active_handler(), because the maintenance page environment
  * is different and leaves stale data in the menu tables.
+ *
+ * @return
+ *   TRUE if the menu was rebuilt, FALSE if another thread was rebuilding
+ *   in parallel and the current thread just waited for completion.
  */
 function menu_rebuild() {
-  variable_del('menu_rebuild_needed');
+  if (!lock_acquire('menu_rebuild')) {
+    // Wait for another request that is already doing this work.
+    // We choose to block here since otherwise the router item may not 
+    // be available in menu_execute_active_handler() resulting in a 404.
+    lock_wait('menu_rebuild');
+    return FALSE;
+  }
+
   list($menu, $masks) = menu_router_build();
   _menu_router_save($menu, $masks);
   _menu_navigation_links_rebuild($menu);
+  // Clear the menu, page and block caches.
   menu_cache_clear_all();
-  // Clear the page and block caches.
   _menu_clear_page_cache();
+
   if (defined('MAINTENANCE_MODE')) {
     variable_set('menu_rebuild_needed', TRUE);
   }
+  else {
+    variable_del('menu_rebuild_needed');
+  }
+  lock_release('menu_rebuild');
+  return TRUE;
 }
 
 /**

@@ -375,7 +375,7 @@ function locale($string = NULL, $context = NULL, $langcode = NULL, $reset = FALS
       if ($cache = cache_get('locale:' . $langcode, 'cache')) {
         $locale_t[$langcode] = $cache->data;
       }
-      else {
+      elseif (lock_acquire('locale_cache_' . $langcode)) {
         // Refresh database stored cache of translations for given language.
         // We only store short strings used in current version, to improve
         // performance and consume less memory.
@@ -384,6 +384,7 @@ function locale($string = NULL, $context = NULL, $langcode = NULL, $reset = FALS
           $locale_t[$langcode][$data->context][$data->source] = (empty($data->translation) ? TRUE : $data->translation);
         }
         cache_set('locale:' . $langcode, $locale_t[$langcode]);
+        lock_release('locale_cache_' . $langcode);
       }
     }
   }

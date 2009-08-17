@@ -1513,6 +1513,9 @@ function _drupal_bootstrap($phase) {
       }
 
       // Prepare for non-cached page workflow.
+      require_once DRUPAL_ROOT . '/' . variable_get('lock_inc', 'includes/lock.inc');
+      lock_initialize();
+
       if ($_SERVER['SERVER_SOFTWARE'] !== 'PHP CLI') {
         ob_start();
         drupal_page_header();
