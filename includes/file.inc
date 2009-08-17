@@ -494,6 +494,11 @@ function file_check_location($source, $directory = '') {
  * @see file_load()
  */
 function file_load_multiple($fids = array(), $conditions = array()) {
+  // If they don't provide any criteria return nothing rather than all files.
+  if (!$fids && !$conditions) {
+    return array();
+  }
+
   $query = db_select('files', 'f')->fields('f');
 
   // If the $fids array is populated, add those to the query.

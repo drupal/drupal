@@ -598,6 +598,9 @@ class FileSaveUploadTest extends FileHookTestCase {
     $files = file_load_multiple(array($file1->fid, $file2->fid));
     $this->assertTrue(isset($files[$file1->fid]), t('File was loaded successfully'));
     $this->assertTrue(isset($files[$file2->fid]), t('File was loaded successfully'));
+
+    // Check that file_load_multiple() with no arguments returns FALSE.
+    $this->assertFalse(file_load_multiple(), t('No files were loaded.'));
   }
 
 
