@@ -2560,8 +2560,8 @@ function drupal_get_css($css = NULL) {
   }
 
   $preprocess_css = (variable_get('preprocess_css', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
-  $directory = file_directory_path();
-  $is_writable = is_dir($directory) && is_writable($directory) && (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC);
+  $directory = file_directory_path('public');
+  $is_writable = is_dir($directory) && is_writable($directory);
 
   // A dummy query-string is added to filenames, to gain control over
   // browser-caching. The string changes on every update or full cache
@@ -2601,7 +2601,7 @@ function drupal_get_css($css = NULL) {
       case 'file':
         // Depending on whether aggregation is desired, include the file.
         if (!$item['preprocess'] || !($is_writable && $preprocess_css)) {
-          $rendered_css[] = '<link type="text/css" rel="stylesheet" media="' . $item['media'] . '" href="' . base_path() . $item['data'] . $query_string . '" />';
+          $rendered_css[] = '<link type="text/css" rel="stylesheet" media="' . $item['media'] . '" href="' . file_create_url($item['data']) . $query_string . '" />';
         }
         else {
           $preprocess_items[$item['media']][] = $item;
@@ -2626,8 +2626,8 @@ function drupal_get_css($css = NULL) {
       // Prefix filename to prevent blocking by firewalls which reject files
       // starting with "ad*".
       $filename = 'css_' . md5(serialize($items) . $query_string) . '.css';
-      $preprocess_file = drupal_build_css_cache($items, $filename);
-      $rendered_css['preprocess'] .= '<link type="text/css" rel="stylesheet" media="' . $media . '" href="' . base_path() . $preprocess_file . '" />' . "\n";
+      $preprocess_file = file_create_url(drupal_build_css_cache($items, $filename));
+      $rendered_css['preprocess'] .= '<link type="text/css" rel="stylesheet" media="' . $media . '" href="' . $preprocess_file . '" />' . "\n";
     }
   }
   // Enclose the inline CSS with the style tag if required.
@@ -2653,9 +2653,8 @@ function drupal_build_css_cache($css, $filename) {
   $data = '';
 
   // Create the css/ within the files folder.
-  $csspath = file_create_path('css');
-  file_check_directory($csspath, FILE_CREATE_DIRECTORY);
-
+  $csspath = 'public://css';
+  file_prepare_directory($csspath, FILE_CREATE_DIRECTORY);
   if (!file_exists($csspath . '/' . $filename)) {
     // Build aggregate CSS file.
     foreach ($css as $stylesheet) {
@@ -2797,7 +2796,7 @@ function _drupal_load_stylesheet($matches) {
  * Delete all cached CSS files.
  */
 function drupal_clear_css_cache() {
-  file_scan_directory(file_create_path('css'), '/.*/', array('callback' => 'file_unmanaged_delete'));
+  file_scan_directory('public://css', '/.*/', array('callback' => 'file_unmanaged_delete'));
 }
 
 /**
@@ -3039,8 +3038,8 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
   $no_preprocess = '';
   $files = array();
   $preprocess_js = (variable_get('preprocess_js', FALSE) && (!defined('MAINTENANCE_MODE') || MAINTENANCE_MODE != 'update'));
-  $directory = file_directory_path();
-  $is_writable = is_dir($directory) && is_writable($directory) && (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC);
+  $directory = file_directory_path('public');
+  $is_writable = is_dir($directory) && is_writable($directory);
 
   // A dummy query-string is added to filenames, to gain control over
   // browser-caching. The string changes on every update or full cache
@@ -3072,7 +3071,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
 
       case 'file':
         if (!$item['preprocess'] || !$is_writable || !$preprocess_js) {
-          $no_preprocess .= '<script type="text/javascript"' . ($item['defer'] ? ' defer="defer"' : '') . ' src="' . base_path() . $item['data'] . ($item['cache'] ? $query_string : '?' . REQUEST_TIME) . "\"></script>\n";
+          $no_preprocess .= '<script type="text/javascript"' . ($item['defer'] ? ' defer="defer"' : '') . ' src="' . file_create_url($item['data']) . ($item['cache'] ? $query_string : '?' . REQUEST_TIME) . "\"></script>\n";
         }
         else {
           $files[$item['data']] = $item;
@@ -3091,8 +3090,8 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
     // Prefix filename to prevent blocking by firewalls which reject files
     // starting with "ad*".
     $filename = 'js_' . md5(serialize($files) . $query_string) . '.js';
-    $preprocess_file = drupal_build_js_cache($files, $filename);
-    $preprocessed .= '<script type="text/javascript" src="' . base_path() . $preprocess_file . '"></script>' . "\n";
+    $preprocess_file = file_create_url(drupal_build_js_cache($files, $filename));
+    $preprocessed .= '<script type="text/javascript" src="' . $preprocess_file . '"></script>' . "\n";
   }
 
   // Keep the order of JS files consistent as some are preprocessed and others are not.
@@ -3363,8 +3362,8 @@ function drupal_build_js_cache($files, $filename) {
   $contents = '';
 
   // Create the js/ within the files folder.
-  $jspath = file_create_path('js');
-  file_check_directory($jspath, FILE_CREATE_DIRECTORY);
+  $jspath = 'public://js';
+  file_prepare_directory($jspath, FILE_CREATE_DIRECTORY);
 
   if (!file_exists($jspath . '/' . $filename)) {
     // Build aggregate JS file.
@@ -3386,7 +3385,7 @@ function drupal_build_js_cache($files, $filename) {
  * Delete all cached JS files.
  */
 function drupal_clear_js_cache() {
-  file_scan_directory(file_create_path('js'), '/.*/', array('callback' => 'file_unmanaged_delete'));
+  file_scan_directory('public://js', '/.*/', array('callback' => 'file_unmanaged_delete'));
   variable_set('javascript_parsed', array());
 }
 

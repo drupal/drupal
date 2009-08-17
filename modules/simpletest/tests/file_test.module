@@ -70,7 +70,7 @@ function _file_test_form_submit(&$form, &$form_state) {
   $file = file_save_upload('file_test_upload', array('file_validate_is_image' => array()), FALSE, $form_state['values']['file_test_replace']);
   if ($file) {
     $form_state['values']['file_test_upload'] = $file;
-    drupal_set_message(t('File @filepath was uploaded.', array('@filepath' => $file->filepath)));
+    drupal_set_message(t('File @filepath was uploaded.', array('@filepath' => $file->uri)));
     drupal_set_message(t('You WIN!'));
   }
   elseif ($file === FALSE) {

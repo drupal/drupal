@@ -226,14 +226,14 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * Base implementation of chmod().
    */
   function chmod($mode) {
-    return @chmod($this->realpath(), $mode);
+    return @chmod($this->getLocalPath(), $mode);
   }
 
   /**
-   * Base implementaiton of realpath().
+   * Base implementation of realpath().
    */
   function realpath() {
-    return @realpath($this->getDirectoryPath() . '/' . file_uri_target($this->uri));
+    return $this->getLocalPath();
   }
 
   /**
@@ -246,14 +246,24 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
     if (!isset($uri)) {
       $uri = $this->uri;
     }
-    return $this->getDirectoryPath() . '/' . file_uri_target($uri);
+    $path = $this->getDirectoryPath() . '/' . file_uri_target($uri);
+    $realpath = realpath($path);
+    if (!$realpath) {
+      // This file does not yet exist.
+      $realpath = realpath(dirname($path)) . '/' . basename($path);
+    }
+    $directory = realpath($this->getDirectoryPath());
+    if (!$realpath || !$directory || strpos($realpath, $directory) !== 0) {
+      return FALSE;
+    }
+    return $realpath;
   }
 
   /**
    * Support for fopen(), file_get_contents(), file_put_contents() etc.
    *
    * @param $uri
-   *   A string containing the path to the file to open.
+   *   A string containing the URI to the file to open.
    * @param $mode
    *   The file mode ("r", "wb" etc.).
    * @param $options
@@ -428,7 +438,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * Support for mkdir().
    *
    * @param $uri
-   *   A string containing the url to the directory to create.
+   *   A string containing the URI to the directory to create.
    * @param $mode
    *   Permission flags - see mkdir().
    * @param $options
@@ -440,11 +450,19 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
   public function mkdir($uri, $mode, $options) {
     $this->uri = $uri;
     $recursive = (bool)($options & STREAM_MKDIR_RECURSIVE);
-    if ($options & STREAM_REPORT_ERRORS) {
-      return mkdir($this->getLocalPath(), $mode, $recursive);
+    if ($recursive) {
+      // $this->getLocalPath() fails if $uri has multiple levels of directories
+      // that do not yet exist.
+      $localpath = $this->getDirectoryPath() . '/' . file_uri_target($uri);
     }
     else {
-      return @mkdir($this->getLocalPath(), $mode, $recursive);
+      $localpath = $this->getLocalPath($uri);
+    }
+    if ($options & STREAM_REPORT_ERRORS) {
+      return mkdir($localpath, $mode, $recursive);
+    }
+    else {
+      return @mkdir($localpath, $mode, $recursive);
     }
   }
 
@@ -452,7 +470,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * Support for rmdir().
    *
    * @param $uri
-   *   A string containing the url to the directory to delete.
+   *   A string containing the URI to the directory to delete.
    * @param $options
    *   A bit mask of STREAM_REPORT_ERRORS.
    * @return
@@ -473,7 +491,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * Support for stat().
    *
    * @param $uri
-   *   A string containing the url to get information about.
+   *   A string containing the URI to get information about.
    * @param $flags
    *   A bit mask of STREAM_URL_STAT_LINK and STREAM_URL_STAT_QUIET.
    * @return
@@ -495,7 +513,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * Support for opendir().
    *
    * @param $uri
-   *   A string containing the url to the directory to open.
+   *   A string containing the URI to the directory to open.
    * @param $options
    *   Unknown (parameter is not documented in PHP Manual).
    * @return
@@ -554,7 +572,7 @@ class DrupalPublicStreamWrapper extends DrupalLocalStreamWrapper {
    * Implements abstract public function getDirectoryPath()
    */
   public function getDirectoryPath() {
-    return variable_get('file_public_path', 'sites/default/files');
+    return variable_get('file_public_path', conf_path() . '/files');
   }
 
   /**
@@ -582,7 +600,7 @@ class DrupalPrivateStreamWrapper extends DrupalLocalStreamWrapper {
    * Implements abstract public function getDirectoryPath()
    */
   public function getDirectoryPath() {
-    return variable_get('file_private_path', 'sites/default/files-private');
+    return variable_get('file_private_path', conf_path() . '/private/files');
   }
 
   /**
@@ -609,13 +627,14 @@ class DrupalTemporaryStreamWrapper extends DrupalLocalStreamWrapper {
    * Implements abstract public function getDirectoryPath()
    */
   public function getDirectoryPath() {
-    return variable_get('file_temporary_path', '/tmp');
+    return variable_get('file_temporary_path', conf_path() . '/private/temp');
   }
 
   /**
    * Overrides getExternalUrl().
    */
   public function getExternalUrl() {
-    return '';
+    $path = str_replace('\\', '/', file_uri_target($this->uri));
+    return url('system/temporary/' . $path, array('absolute' => TRUE));
   }
 }

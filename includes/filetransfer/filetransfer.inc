@@ -114,7 +114,7 @@ abstract class FileTransfer {
    *   A path to check against the jail.
    */
   protected final function checkPath($path) {
-    if (realpath(substr($path, 0, strlen($this->jail))) !== $this->jail) {
+    if (drupal_realpath(substr($path, 0, strlen($this->jail))) !== $this->jail) {
       throw new FileTransferException('@directory is outside of the @jail', NULL, array('@directory' => $path, '@jail' => $this->jail));
     }
   }

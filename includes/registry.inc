@@ -42,7 +42,7 @@ function _registry_rebuild() {
   // Get the list of files we are going to parse.
   $files = array();
   foreach ($modules as &$module) {
-    $dir = dirname($module->filepath);
+    $dir = dirname($module->uri);
 
     // Store the module directory for use in hook_registry_files_alter().
     $module->dir = $dir;

@@ -54,11 +54,11 @@ function locale_update_7000() {
  */
 function locale_uninstall() {
   // Delete all JavaScript translation files.
-  $locale_js_directory = file_create_path(variable_get('locale_js_directory', 'languages'));
+  $locale_js_directory = 'public://' . variable_get('locale_js_directory', 'languages');
   $files = db_query('SELECT language, javascript FROM {languages}');
   foreach ($files as $file) {
     if (!empty($file->javascript)) {
-      file_unmanaged_delete(file_create_path($locale_js_directory . '/' . $file->language . '_' . $file->javascript . '.js'));
+      file_unmanaged_delete($locale_js_directory . '/' . $file->language . '_' . $file->javascript . '.js');
     }
   }
   // Delete the JavaScript translations directory if empty.

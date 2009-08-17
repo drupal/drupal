@@ -401,7 +401,7 @@ function simpletest_script_get_test_list() {
     elseif ($args['file']) {
       $files = array();
       foreach ($args['test_names'] as $file) {
-        $files[realpath($file)] = 1;
+        $files[drupal_realpath($file)] = 1;
       }
 
       // Check for valid class names.

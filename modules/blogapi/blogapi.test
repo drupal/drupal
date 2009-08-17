@@ -70,7 +70,7 @@ class BlogAPITestCase extends DrupalWebTestCase {
 
     // Upload file.
     $file = current($this->drupalGetTestFiles('text'));
-    $file_contents = file_get_contents($file->filepath);
+    $file_contents = file_get_contents($file->uri);
     $file = array();
     $file['name'] = $this->randomName() . '.txt';
     $file['type'] = 'text';

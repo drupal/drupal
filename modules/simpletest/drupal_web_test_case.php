@@ -541,7 +541,7 @@ class DrupalUnitTestCase extends DrupalTestCase {
 
     // Generate temporary prefixed database to ensure that tests have a clean starting point.
     $db_prefix = Database::getConnection()->prefixTables('{simpletest' . mt_rand(1000, 1000000) . '}');
-    $conf['file_directory_path'] = $this->originalFileDirectory . '/' . $db_prefix;
+    $conf['file_public_path'] = $this->originalFileDirectory . '/' . $db_prefix;
 
     // If locale is enabled then t() will try to access the database and
     // subsequently will fail as the database is not accessible.
@@ -556,7 +556,7 @@ class DrupalUnitTestCase extends DrupalTestCase {
   function tearDown() {
     global $db_prefix, $conf;
     if (preg_match('/simpletest\d+/', $db_prefix)) {
-      $conf['file_directory_path'] = $this->originalFileDirectory;
+      $conf['file_public_path'] = $this->originalFileDirectory;
       // Return the database prefix to the original.
       $db_prefix = $this->originalPrefix;
       // Restore modules if necessary.
@@ -814,9 +814,9 @@ class DrupalWebTestCase extends DrupalTestCase {
       // If size is set then remove any files that are not of that size.
       if ($size !== NULL) {
         foreach ($files as $file) {
-          $stats = stat($file->filepath);
+          $stats = stat($file->uri);
           if ($stats['size'] != $size) {
-            unset($files[$file->filepath]);
+            unset($files[$file->uri]);
           }
         }
       }
@@ -829,7 +829,7 @@ class DrupalWebTestCase extends DrupalTestCase {
    * Compare two files based on size and file name.
    */
   protected function drupalCompareFiles($file1, $file2) {
-    $compare_size = filesize($file1->filepath) - filesize($file2->filepath);
+    $compare_size = filesize($file1->uri) - filesize($file2->uri);
     if ($compare_size) {
       // Sort by file size.
       return $compare_size;
@@ -1050,7 +1050,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     // Create test directory ahead of installation so fatal errors and debug
     // information can be logged during installation process.
     $directory = $this->originalFileDirectory . '/simpletest/' . substr($db_prefix, 10);
-    file_check_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
 
     // Log fatal errors.
     ini_set('log_errors', 1);
@@ -1113,9 +1113,18 @@ class DrupalWebTestCase extends DrupalTestCase {
     // default mail handler.
     variable_set('smtp_library', drupal_get_path('module', 'simpletest') . '/drupal_web_test_case.php');
 
-    // Use temporary files directory with the same prefix as database. The
-    // directory will have been created already.
-    variable_set('file_directory_path', $directory);
+    // Use temporary files directory with the same prefix as the database.
+    $public_files_directory  = $this->originalFileDirectory . '/' . $db_prefix;
+    $private_files_directory = $public_files_directory . '/private';
+
+    // Set path variables
+    variable_set('file_public_path', $public_files_directory);
+    variable_set('file_private_path', $private_files_directory);
+
+    // Create the directories
+    $directory = file_directory_path('public');
+    file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+    file_prepare_directory($private_files_directory, FILE_CREATE_DIRECTORY);
 
     drupal_set_time_limit($this->timeLimit);
   }
@@ -1169,9 +1178,8 @@ class DrupalWebTestCase extends DrupalTestCase {
     }
 
     if (preg_match('/simpletest\d+/', $db_prefix)) {
-      // Delete temporary files directory and reset files directory path.
+      // Delete temporary files directory.
       file_unmanaged_delete_recursive(file_directory_path());
-      variable_set('file_directory_path', $this->originalFileDirectory);
 
       // Remove all prefixed tables (all the tables in the schema).
       $schema = drupal_get_schema(NULL, TRUE);
@@ -1451,7 +1459,7 @@ class DrupalWebTestCase extends DrupalTestCase {
             // is broken. This is a less than elegant workaround. Alternatives
             // are being explored at #253506.
             foreach ($upload as $key => $file) {
-              $file = realpath($file);
+              $file = drupal_realpath($file);
               if ($file && is_file($file)) {
                 $post[$key] = '@' . $file;
               }
@@ -2548,9 +2556,8 @@ function simpletest_verbose($message, $original_file_directory = NULL, $test_cla
     $file_directory = $original_file_directory;
     $class = $test_class;
     $verbose = variable_get('simpletest_verbose', FALSE);
-
     $directory = $file_directory . '/simpletest/verbose';
-    return file_check_directory($directory, FILE_CREATE_DIRECTORY);
+    return file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
   }
   return FALSE;
 }

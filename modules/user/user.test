@@ -634,13 +634,14 @@ class UserPictureTestCase extends DrupalWebTestCase {
     $this->user = $this->drupalCreateUser();
 
     // Test if directories specified in settings exist in filesystem.
-    $file_dir = file_directory_path();
-    $file_check = file_check_directory($file_dir, FILE_CREATE_DIRECTORY, 'file_directory_path');
+    $file_dir = 'public://';
+    $file_check = file_prepare_directory($file_dir, FILE_CREATE_DIRECTORY);
+    // TODO: Test public and private methods?
 
     $picture_dir = variable_get('user_picture_path', 'pictures');
-    $picture_path = $file_dir . '/' . $picture_dir;
+    $picture_path = $file_dir . $picture_dir;
 
-    $pic_check = file_check_directory($picture_path, FILE_CREATE_DIRECTORY, 'user_picture_path');
+    $pic_check = file_prepare_directory($picture_path, FILE_CREATE_DIRECTORY);
     $this->_directory_test = is_writable($picture_path);
     $this->assertTrue($this->_directory_test, "The directory $picture_path doesn't exist or is not writable. Further tests won't be made.");
   }
@@ -667,7 +668,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
         $this->drupalLogin($this->user);
 
         $image = current($this->drupalGetTestFiles('image'));
-        $info = image_get_info($image->filepath);
+        $info = image_get_info($image->uri);
 
         // Set new variables: invalid dimensions, valid filesize (0 = no limit).
         $test_dim = ($info['width'] - 10) . 'x' . ($info['height'] - 10);
@@ -704,7 +705,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
         // Images are sorted first by size then by name. We need an image
         // bigger than 1 KB so we'll grab the last one.
         $image = end($this->drupalGetTestFiles('image'));
-        $info = image_get_info($image->filepath);
+        $info = image_get_info($image->uri);
 
         // Set new variables: valid dimensions, invalid filesize.
         $test_dim = ($info['width'] + 10) . 'x' . ($info['height'] + 10);
@@ -717,7 +718,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
         // Test that the upload failed and that the correct reason was cited.
         $text = t('The specified file %filename could not be uploaded.', array('%filename' => $image->filename));
         $this->assertRaw($text, t('Upload failed.'));
-        $text = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size(filesize($image->filepath)), '%maxsize' => format_size($test_size * 1024)));
+        $text = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size(filesize($image->uri)), '%maxsize' => format_size($test_size * 1024)));
         $this->assertRaw($text, t('File size cited as reason for failure.'));
 
         // Check if file is not uploaded.
@@ -739,7 +740,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
         $this->drupalLogin($this->user);
 
         $image = current($this->drupalGetTestFiles('image'));
-        $info = image_get_info($image->filepath);
+        $info = image_get_info($image->uri);
 
         // Set new variables: invalid dimensions, valid filesize (0 = no limit).
         $test_dim = ($info['width'] - 10) . 'x' . ($info['height'] - 10);
@@ -772,7 +773,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
         $this->drupalLogin($this->user);
 
         $image = current($this->drupalGetTestFiles('image'));
-        $info = image_get_info($image->filepath);
+        $info = image_get_info($image->uri);
 
         // Set new variables: valid dimensions, invalid filesize.
         $test_dim = ($info['width'] + 10) . 'x' . ($info['height'] + 10);
@@ -785,7 +786,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
         // Test that the upload failed and that the correct reason was cited.
         $text = t('The specified file %filename could not be uploaded.', array('%filename' => $image->filename));
         $this->assertRaw($text, t('Upload failed.'));
-        $text = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size(filesize($image->filepath)), '%maxsize' => format_size($test_size * 1024)));
+        $text = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size(filesize($image->uri)), '%maxsize' => format_size($test_size * 1024)));
         $this->assertRaw($text, t('File size cited as reason for failure.'));
 
         // Check if file is not uploaded.
@@ -804,7 +805,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
       $this->drupalLogin($this->user);
 
       $image = current($this->drupalGetTestFiles('image'));
-      $info = image_get_info($image->filepath);
+      $info = image_get_info($image->uri);
 
       // Set new variables: valid dimensions, valid filesize (0 = no limit).
       $test_dim = ($info['width'] + 10) . 'x' . ($info['height'] + 10);
@@ -815,7 +816,7 @@ class UserPictureTestCase extends DrupalWebTestCase {
 
       // Check if image is displayed in user's profile page.
       $this->drupalGet('user');
-      $this->assertRaw($pic_path, t("Image is displayed in user's profile page"));
+      $this->assertRaw(file_uri_target($pic_path), t("Image is displayed in user's profile page"));
 
       // Check if file is located in proper directory.
       $this->assertTrue(is_file($pic_path), t('File is located in proper directory'));
@@ -823,12 +824,12 @@ class UserPictureTestCase extends DrupalWebTestCase {
   }
 
   function saveUserPicture($image) {
-    $edit = array('files[picture_upload]' => realpath($image->filepath));
+    $edit = array('files[picture_upload]' => drupal_realpath($image->uri));
     $this->drupalPost('user/' . $this->user->uid . '/edit', $edit, t('Save'));
 
-    $img_info = image_get_info($image->filepath);
+    $img_info    = image_get_info($image->uri);
     $picture_dir = variable_get('user_picture_path', 'pictures');
-    $pic_path = file_directory_path() . '/' . $picture_dir . '/picture-' . $this->user->uid . '.' . $img_info['extension'];
+    $pic_path    = 'public://' . $picture_dir . '/picture-' . $this->user->uid . '.' . $img_info['extension'];
 
     return $pic_path;
   }

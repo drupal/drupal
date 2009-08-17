@@ -150,8 +150,7 @@ function _upload_file_limits($user) {
  * Implement hook_file_download().
  */
 function upload_file_download($filepath) {
-  $filepath = file_create_path($filepath);
-  $file = db_query("SELECT f.*, u.nid FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid WHERE filepath = :path", array(':path' => $filepath))->fetchObject();
+  $file = db_query("SELECT f.*, u.nid FROM {file} f INNER JOIN {upload} u ON f.fid = u.fid WHERE uri = :path", array(':path' => $filepath))->fetchObject();
 
   if ($file && user_access('view uploaded files') && ($node = node_load($file->nid)) && node_access('view', $node)) {
     return array(
@@ -182,7 +181,7 @@ function upload_node_form_submit(&$form, &$form_state) {
   );
 
   // Save new file uploads.
-  if (user_access('upload files') && ($file = file_save_upload('upload', $validators, file_directory_path()))) {
+  if (user_access('upload files') && ($file = file_save_upload('upload', $validators, 'public://'))) {
     $file->list = variable_get('upload_list_default', 1);
     $file->description = $file->filename;
     $file->weight = 0;
@@ -245,9 +244,9 @@ function upload_form_alter(&$form, $form_state, $form_id) {
       // Make sure necessary directories for upload.module exist and are
       // writable before displaying the attachment form.
       $path = file_directory_path();
-      $temp = file_directory_temp();
+      $temp = file_directory_path('temporary');
       // Note: pass by reference
-      if (!file_check_directory($path, FILE_CREATE_DIRECTORY) || !file_check_directory($temp, FILE_CREATE_DIRECTORY)) {
+      if (!file_prepare_directory($path, FILE_CREATE_DIRECTORY) || !file_prepare_directory($temp, FILE_CREATE_DIRECTORY)) {
         $form['attachments']['#description'] =  t('File attachments are disabled. The file directories have not been properly configured.');
         if (user_access('administer site configuration')) {
           $form['attachments']['#description'] .= ' ' . t('Please visit the <a href="@admin-file-system">file system configuration page</a>.', array('@admin-file-system' => url('admin/settings/file-system')));
@@ -372,7 +371,7 @@ function upload_node_view($node, $build_mode) {
       $node->rss_elements[] = array(
         'key' => 'enclosure',
         'attributes' => array(
-          'url' => file_create_url($file->filepath),
+          'url' => file_create_url($file->uri),
           'length' => $file->filesize,
           'type' => $file->filemime
         )
@@ -443,7 +442,7 @@ function theme_upload_attachments($elements) {
   foreach ($elements['#files'] as $file) {
     $file = (object)$file;
     if ($file->list && empty($file->remove)) {
-      $href = file_create_url($file->filepath);
+      $href = file_create_url($file->uri);
       $text = $file->description ? $file->description : $file->filename;
       $rows[] = array(l($text, $href), format_size($file->filesize));
     }
@@ -472,7 +471,7 @@ function upload_space_used($uid) {
  *   The amount of disk space used by uploaded files in bytes.
  */
 function upload_total_space_used() {
-  return db_query('SELECT SUM(f.filesize) FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid')->fetchField();
+  return db_query('SELECT SUM(f.filesize) FROM {file} f INNER JOIN {upload} u ON f.fid = u.fid')->fetchField();
 }
 
 function upload_save($node) {
@@ -543,13 +542,13 @@ function _upload_form($node) {
       $file = (object)$file;
       $key = $file->fid;
 
-      $form['files'][$key]['description'] = array('#type' => 'textfield', '#default_value' => !empty($file->description) ? $file->description : $file->filename, '#maxlength' => 256, '#description' => '<small>' . file_create_url($file->filepath) . '</small>');
+      $form['files'][$key]['description'] = array('#type' => 'textfield', '#default_value' => !empty($file->description) ? $file->description : $file->filename, '#maxlength' => 256, '#description' => '<small>' . file_create_url($file->uri) . '</small>');
       $form['files'][$key]['size'] = array('#markup' => format_size($file->filesize));
       $form['files'][$key]['remove'] = array('#type' => 'checkbox', '#default_value' => !empty($file->remove));
       $form['files'][$key]['list'] = array('#type' => 'checkbox',  '#default_value' => $file->list);
       $form['files'][$key]['weight'] = array('#type' => 'weight', '#delta' => count($node->files), '#default_value' => $file->weight);
       $form['files'][$key]['filename'] = array('#type' => 'value',  '#value' => $file->filename);
-      $form['files'][$key]['filepath'] = array('#type' => 'value',  '#value' => $file->filepath);
+      $form['files'][$key]['uri'] = array('#type' => 'value',  '#value' => $file->uri);
       $form['files'][$key]['filemime'] = array('#type' => 'value',  '#value' => $file->filemime);
       $form['files'][$key]['filesize'] = array('#type' => 'value',  '#value' => $file->filesize);
       $form['files'][$key]['fid'] = array('#type' => 'value',  '#value' => $file->fid);

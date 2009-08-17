@@ -127,10 +127,13 @@ INSTALLATION
    files directory may be changed after Drupal is installed). In some
    cases, you may need to create the directory and modify its permissions
    manually. Use the following commands (from the installation directory)
-   to create the files directory and grant the web server write privileges to it:
+   to create the public and private files directories and grant the web server
+   write privileges to them:
 
      mkdir sites/default/files
      chmod o+w sites/default/files
+     mkdir sites/default/private
+     chmod o+w sites/default/private
 
    The install script will attempt to write-protect the settings.php file and
    the sites/default directory after saving your configuration. However, you

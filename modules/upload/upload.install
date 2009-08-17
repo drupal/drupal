@@ -43,7 +43,7 @@ function upload_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'Primary Key: The {files}.fid.',
+        'description' => 'Primary Key: The {file}.fid.',
       ),
       'nid' => array(
         'type' => 'int',
@@ -97,4 +97,59 @@ function upload_schema() {
   return $schema;
 }
 
+
+/**
+ * Migrate upload module files from {files} to {file}.
+ */
+function upload_update_7000(&$sandbox) {
+  $ret = array();
+
+  /*
+    TODO: Fix the updates. This is broken. See http://drupal.org/node/329301#comment-1404336
+    Also note new DB structure http://drupal.org/node/227232#comment-1683976
+  */
+
+  if (!isset($sandbox['progress'])) {
+    // Initialize batch update information.
+    $sandbox['progress'] = 0;
+    $sandbox['last_fid_processed'] = -1;
+    $sandbox['max'] = db_query("SELECT COUNT(DISTINCT u.fid) FROM {upload} u")->fetchField();
+  }
+
+  // As a batch operation move records from {files} into the {file} table.
+  $limit = 500;
+  $result = db_query_range("SELECT DISTINCT u.fid FROM {upload} u ORDER BY u.vid", array(), 0, $limit);
+  foreach ($result as $record) {
+    $old_file = db_query('SELECT f.* FROM {files} f WHERE f.fid = :fid', array(':fid' => $record->fid))->fetch(PDO::FETCH_OBJ);
+    if (!$old_file) {
+      continue;
+    }
+
+    $new_file = db_query('SELECT f.* FROM {files} f WHERE f.filepath = :filepath', array(':filepath' => $old_file->uri))->fetch(PDO::FETCH_OBJ);
+    if (!$new_file) {
+      // Re-save the file into the new {file} table.
+      $new_file = clone $old_file;
+      drupal_write_record('file', $new_file);
+    }
+
+    // If the fid has changed we need to update the {upload} record to use the
+    // new id.
+    if (!empty($new_file->fid) && ($new_file->fid != $old_file->fid)) {
+      db_update('upload')
+        ->fields(array('fid' => $new_file->fid))
+        ->condition('fid', $old_file->fid)
+        ->execute();
+    }
+
+    // Update our progress information for the batch update.
+    $sandbox['progress']++;
+    $sandbox['last_fid_processed'] = $old_file->fid;
+  }
+
+  // Indicate our current progress to the batch update system. If there's no
+  // max value then there's nothing to update and we're finished.
+  $ret['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+
+  return $ret;
+}
 

@@ -19,7 +19,7 @@ class FileTransferFTPWrapper extends FileTransfer {
   }
 
   function createDirectoryJailed($directory) {
-    if (!@mkdir($directory)) {
+    if (!@drupal_mkdir($directory)) {
       $exception = new FileTransferException('Cannot create directory @directory.', NULL, array('@directory' => $directory));
       throw $exception;
     }

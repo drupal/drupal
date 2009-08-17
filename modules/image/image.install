@@ -14,7 +14,7 @@ function image_install() {
 
   // Create the styles directory and ensure it's writable.
   $path = file_directory_path() . '/styles';
-  file_check_directory($path, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+  file_prepare_directory($path, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
 }
 
 /**

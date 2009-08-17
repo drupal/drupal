@@ -36,7 +36,7 @@ class FileTranferTest extends DrupalWebTestCase {
   }
 
   function _buildFakeModule() {
-    $location = file_directory_temp() . '/fake';
+    $location = file_directory_path('temporary') . '/fake';
     if (is_dir($location)) {
       $ret = 0;
       $output = array();

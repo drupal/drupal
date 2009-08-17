@@ -45,7 +45,7 @@ class UploadTestCase extends DrupalWebTestCase {
     // Create a node and attempt to attach files.
     $node = $this->drupalCreateNode();
     $text_files = $this->drupalGetTestFiles('text');
-    $files = array(current($text_files)->filepath, next($text_files)->filepath);
+    $files = array(current($text_files)->uri, next($text_files)->uri);
 
     $this->uploadFile($node, $files[0]);
     $this->uploadFile($node, $files[1]);
@@ -58,7 +58,7 @@ class UploadTestCase extends DrupalWebTestCase {
     $this->checkUploadedFile(basename($files[1]));
 
     // Check that files are also accessible when using private files.
-    variable_set('file_downloads', FILE_DOWNLOADS_PRIVATE);
+    variable_set('file_default_scheme', 'private');
     $this->checkUploadedFile(basename($files[0]));
     $this->checkUploadedFile(basename($files[1]));
 
@@ -86,7 +86,9 @@ class UploadTestCase extends DrupalWebTestCase {
       $this->assertRaw(t('Page %title has been updated.', array('%title' => $node->title)), 'File deleted successfully.');
 
       $this->assertNoText($new_name, $new_name . ' not found on node.');
-      $this->drupalGet($base_url . '/' . file_directory_path() . '/' . $upload->description, array('external' => TRUE));
+      $uri = 'public://' . $upload->description;
+      $external_uri = file_stream_wrapper_get_instance_by_uri($uri)->getExternalUrl();
+      $this->drupalGet($external_uri, array('external' => TRUE));
       $this->assertResponse(array(404), 'Uploaded ' . $upload->description . ' is not accessible.');
     }
     else {
@@ -119,17 +121,17 @@ class UploadTestCase extends DrupalWebTestCase {
     $text_file = current($this->drupalGetTestFiles('text'));
     // Select a file that's less than the 1MB upload limit so we only test one
     // limit at a time.
-    $this->uploadFile($node, $text_file->filepath, FALSE);
+    $this->uploadFile($node, $text_file->uri, FALSE);
     // Test the error message in two steps in case there are additional errors
     // that change the error message's format.
-    $this->assertRaw(t('The specified file %name could not be uploaded.', array('%name' => $text_file->filename)), t('File %filepath was not allowed to be uploaded', array('%filepath' => $text_file->filepath)));
+    $this->assertRaw(t('The specified file %name could not be uploaded.', array('%name' => $text_file->filename)), t('File %filepath was not allowed to be uploaded', array('%filepath' => $text_file->uri)));
     $this->assertRaw(t('Only files with the following extensions are allowed: %files-allowed.', array('%files-allowed' => $settings['upload_extensions'])), t('File extension cited as reason for failure'));
 
     // Attempt to upload .html file when .html is only extension allowed.
     $html_files = array_values($this->drupalGetTestFiles('html'));
     // Use the HTML file with the .html extension, $html_files[0] has a .txt
     // extension.
-    $html_file = $html_files[1]->filepath;
+    $html_file = $html_files[1]->uri;
     $this->uploadFile($node, $html_file);
     $this->assertNoRaw(t('The specified file %name could not be uploaded.', array('%name' => basename($html_file))), t('File ' . $html_file . ' was allowed to be uploaded'));
   }
@@ -139,7 +141,7 @@ class UploadTestCase extends DrupalWebTestCase {
    */
   function testLimit() {
     $files = $this->drupalGetTestFiles('text', 1310720); // 1 MB.
-    $file = current($files)->filepath;
+    $file = current($files)->uri;
 
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
     $web_user = $this->drupalCreateUser(array('access content', 'edit own page content', 'upload files', 'view uploaded files'));
@@ -206,7 +208,7 @@ class UploadTestCase extends DrupalWebTestCase {
    */
   function checkUploadedFile($filename) {
     global $base_url;
-    $file = file_directory_path() . '/' . $filename;
+    $file = 'public://' . $filename;
     $this->drupalGet(file_create_url($file), array('external' => TRUE));
     $this->assertResponse(array(200), 'Uploaded ' . $filename . ' is accessible.');
     $this->assertTrue(strpos($this->drupalGetHeader('Content-Type'), 'text/plain') === 0, t('MIME type is text/plain.'));

@@ -679,11 +679,10 @@ function theme_image_style_preview($style) {
 
   // Set up preview file information.
   $preview_file = image_style_path($style['name'], $original_path);
-  $preview_path = file_create_path($preview_file);
-  if (!file_exists($preview_path) && image_style_create_derivative($style, $original_path, $preview_file)) {
-    $preview_path = file_create_path($preview_file);
+  if (!file_exists($preview_file)) {
+    image_style_create_derivative($style, $original_path, $preview_file);
   }
-  $preview_image = image_get_info($preview_path);
+  $preview_image = image_get_info($preview_file);
   if ($preview_image['width'] > $preview_image['height']) {
     $preview_width = min($preview_image['width'], $sample_width);
     $preview_height = round($preview_width / $preview_image['width'] * $preview_image['height']);

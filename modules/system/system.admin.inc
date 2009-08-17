@@ -365,7 +365,9 @@ function system_themes_form_submit($form, &$form_state) {
  */
 function system_theme_settings(&$form_state, $key = '') {
   $directory_path = file_directory_path();
-  file_check_directory($directory_path, FILE_CREATE_DIRECTORY, 'file_directory_path');
+  if (!file_prepare_directory($directory_path, FILE_CREATE_DIRECTORY)) {
+    drupal_set_message(t('The directory %directory does not exist or is not writable.', array('%directory' => $directory_path)), 'warning');
+  }
 
   // Default settings are defined in theme_get_settings() in includes/theme.inc
   if ($key) {
@@ -389,7 +391,7 @@ function system_theme_settings(&$form_state, $key = '') {
     // The image was saved using file_save_upload() and was added to the
     // files table as a temporary file. We'll make a copy and let the garbage
     // collector delete the original upload.
-    if ($filepath = file_unmanaged_copy($file->filepath, $filename, FILE_EXISTS_REPLACE)) {
+    if ($filepath = file_unmanaged_copy($file->uri, $filename, FILE_EXISTS_REPLACE)) {
       $_POST['default_logo'] = 0;
       $_POST['logo_path'] = $filepath;
       $_POST['toggle_logo'] = 1;
@@ -404,7 +406,7 @@ function system_theme_settings(&$form_state, $key = '') {
     // The image was saved using file_save_upload() and was added to the
     // files table as a temporary file. We'll make a copy and let the garbage
     // collector delete the original upload.
-    if ($filepath = file_unmanaged_copy($file->filepath, $filename, FILE_EXISTS_REPLACE)) {
+    if ($filepath = file_unmanaged_copy($file->uri, $filename, FILE_EXISTS_REPLACE)) {
       $_POST['default_favicon'] = 0;
       $_POST['favicon_path'] = $filepath;
       $_POST['toggle_favicon'] = 1;
@@ -1379,20 +1381,14 @@ function system_performance_settings() {
     '#description' => t('The minimum amount of time that will elapse before the caches are recreated.')
   );
 
-  $directory = file_directory_path();
+  $directory = 'public://';
   $is_writable = is_dir($directory) && is_writable($directory);
-  $public_downloads = (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC);
-  $disabled = !$is_writable && !$public_downloads;
+  $disabled = !$is_writable;
   $disabled_message = '';
-  if(!$is_writable && !$public_downloads) {
-    $disabled_message = ' ' . t('<strong class="error">Please <a href="!file-system">set up</a> the files directory and set the download method to public to make these optimizations available.</strong>', array('!file-system' => url('admin/settings/file-system')));
+  if(!$is_writable) {
+    $disabled_message = ' ' . t('<strong class="error">Please set up the <a href="!file-system">public files directory</a> to make these optimizations available.</strong>', array('!file-system' => url('admin/settings/file-system')));
   }
-  elseif(!$is_writable) {
-    $disabled_message = ' ' . t('<strong class="error">Please set up the <a href="!file-system">files directory</a> to make these optimizations available.</strong>', array('!file-system' => url('admin/settings/file-system')));
-  }
-  elseif(!$public_downloads) {
-    $disabled_message = ' ' . t('<strong class="error">Please set the <a href="!file-system">download method</a> to public to make these optimizations available.</strong>', array('!file-system' => url('admin/settings/file-system')));
-  }
+
   $form['bandwidth_optimization'] = array(
     '#type' => 'fieldset',
     '#title' => t('Bandwidth optimization'),
@@ -1447,30 +1443,43 @@ function system_clear_cache_submit($form, &$form_state) {
  */
 function system_file_system_settings() {
 
-  $form['file_directory_path'] = array(
+  $form['file_public_path'] = array(
     '#type' => 'textfield',
-    '#title' => t('File system path'),
+    '#title' => t('Public file system path'),
     '#default_value' => file_directory_path(),
     '#maxlength' => 255,
-    '#description' => t('A file system path where the files will be stored. This directory must exist and be writable by Drupal. If the download method is set to public, this directory must be relative to the Drupal installation directory and be accessible over the web. If the download method is set to private, this directory should not be accessible over the web. Changing this location will modify all download paths and may cause unexpected problems on an existing site.'),
+    '#description' => t('A local file system path where public files will be stored. This directory must exist and be writable by Drupal. This directory must be relative to the Drupal installation directory and be accessible over the web.'),
     '#after_build' => array('system_check_directory'),
   );
 
-  $form['file_directory_temp'] = array(
+  $form['file_private_path'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Private file system path'),
+    '#default_value' => file_directory_path('private'),
+    '#maxlength' => 255,
+    '#description' => t('A local file system path where private files will be stored. This directory must exist and be writable by Drupal. This directory should not be accessible over the web.'),
+    '#after_build' => array('system_check_directory'),
+  );
+
+  $form['file_temporary_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Temporary directory'),
-    '#default_value' => file_directory_temp(),
+    '#default_value' => file_directory_path('temporary'),
     '#maxlength' => 255,
-    '#description' => t('A file system path where uploaded files will be stored during previews.'),
+    '#description' => t('A local file system path where temporary files will be stored. This directory should not be accessible over the web.'),
     '#after_build' => array('system_check_directory'),
   );
-
-  $form['file_downloads'] = array(
+  $wrappers = file_get_stream_wrappers();
+  $options = array(
+    'public' => $wrappers['public']['description'],
+    'private' => $wrappers['private']['description']
+  );
+  $form['file_default_scheme'] = array(
     '#type' => 'radios',
-    '#title' => t('Download method'),
-    '#default_value' => FILE_DOWNLOADS_PUBLIC,
-    '#options' => array(FILE_DOWNLOADS_PUBLIC => t('Public - files are available using HTTP directly.'), FILE_DOWNLOADS_PRIVATE => t('Private - files are transferred by Drupal.')),
-    '#description' => t('Choose the <em>Public download</em> method unless you wish to enforce fine-grained access controls over file downloads. Changing the download method will modify all download paths and may cause unexpected problems on an existing site.')
+    '#title' => t('Default download method'),
+    '#default_value' => 'public',
+    '#options' => $options,
+    '#description' => t('This setting is used as the preferred download method. The use of public files is more efficient, but does not provide any access control.'),
   );
 
   return system_settings_form($form, TRUE);

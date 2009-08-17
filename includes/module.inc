@@ -503,7 +503,7 @@ function drupal_required_modules() {
   $files = drupal_system_listing('/\.info$/', 'modules', 'name', 0);
   $required = array();
   foreach ($files as $name => $file) {
-    $info = drupal_parse_info_file($file->filepath);
+    $info = drupal_parse_info_file($file->uri);
     if (!empty($info) && !empty($info['required']) && $info['required']) {
       $required[] = $name;
     }

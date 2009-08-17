@@ -1582,7 +1582,7 @@ class Archive_Tar
         if ($v_extract_file) {
           if ($v_header['typeflag'] == "5") {
             if (!@file_exists($v_header['filename'])) {
-                if (!@mkdir($v_header['filename'], 0777)) {
+                if (!@drupal_mkdir($v_header['filename'], 0777)) {
                     $this->_error('Unable to create directory {'
 					              .$v_header['filename'].'}');
                     return false;
@@ -1795,7 +1795,7 @@ class Archive_Tar
             (!$this->_dirCheck($p_parent_dir)))
              return false;
 
-        if (!@mkdir($p_dir, 0777)) {
+        if (!@drupal_mkdir($p_dir, 0777)) {
             $this->_error("Unable to create directory '$p_dir'");
             return false;
         }

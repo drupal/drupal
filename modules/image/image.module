@@ -200,7 +200,7 @@ function image_file_download($filepath) {
     $original_path = implode('/', $args);
 
     // Check that the file exists and is an image.
-    if ($info = image_get_info(file_create_path($filepath))) {
+    if ($info = image_get_info($filepath)) {
       // Check the permissions of the original to grant access to this image.
       $headers = module_invoke_all('file_download', $original_path);
       if (!in_array(-1, $headers)) {
@@ -219,7 +219,7 @@ function image_file_download($filepath) {
  */
 function image_file_move($file, $source) {
   // Delete any image derivatives at the original image path.
-  image_path_flush($file->filepath);
+  image_path_flush($file->uri);
 }
 
 /**
@@ -227,7 +227,7 @@ function image_file_move($file, $source) {
  */
 function image_file_delete($file) {
   // Delete any image derivatives of this image.
-  image_path_flush($file->filepath);
+  image_path_flush($file->uri);
 }
 
 /**
@@ -237,10 +237,10 @@ function image_file_delete($file) {
  *   The Drupal file path to the original image.
  */
 function image_path_flush($path) {
-  $path = file_directory_strip($path);
   $styles = image_styles();
   foreach ($styles as $style) {
-    if ($path = file_create_path('styles/' . $style['name'] . '/' . $path)) {
+    $path = image_style_path($style['name'], $path);
+    if (file_exists($path)) {
       file_unmanaged_delete($path);
     }
   }
@@ -426,9 +426,10 @@ function image_style_generate() {
   $args = func_get_args();
   $style = array_shift($args);
   $style_name = $style['name'];
+  $scheme = array_shift($args);
   $path = implode('/', $args);
 
-  $source = file_create_path($path);
+  $path = $scheme . '://' . $path;
   $path_md5 = md5($path);
   $destination = image_style_path($style['name'], $path);
 
@@ -459,7 +460,7 @@ function image_style_generate() {
   cache_set($cid, $destination, 'cache_image');
 
   // Try to generate the image.
-  if (image_style_create_derivative($style, $source, $destination)) {
+  if (image_style_create_derivative($style, $path, $destination)) {
     $image = image_load($destination);
     cache_clear_all($cid, 'cache_image');
     file_transfer($image->source, array('Content-Type' => $image->info['mime_type'], 'Content-Length' => $image->info['file_size']));
@@ -481,17 +482,17 @@ function image_style_generate() {
  * @param $source
  *   Path of the source file.
  * @param $destination
- *   Path of the destination file.
+ *   Path or URI of the destination file.
  * @return
  *   TRUE if an image derivative is generated, FALSE if no image derivative
  *   is generated. NULL if the derivative is being generated.
  */
 function image_style_create_derivative($style, $source, $destination) {
   // Get the folder for the final location of this style.
-  $directory = dirname($destination);
+  $directory = drupal_dirname($destination);
 
   // Build the destination folder tree if it doesn't already exist.
-  if (!file_check_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
+  if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
     watchdog('image', 'Failed to create style directory: %directory', array('%directory' => $directory), WATCHDOG_ERROR);
     return FALSE;
   }
@@ -521,7 +522,7 @@ function image_style_create_derivative($style, $source, $destination) {
  *   An image style array.
  */
 function image_style_flush($style) {
-  $style_directory = realpath(file_directory_path() . '/styles/' . $style['name']);
+  $style_directory = drupal_realpath(variable_get('file_default_scheme', 'public') . '://styles/' . $style['name']);
   if (is_dir($style_directory)) {
     file_unmanaged_delete_recursive($style_directory);
   }
@@ -547,9 +548,10 @@ function image_style_flush($style) {
  *
  * This function is the default image generation method. It returns a URL for
  * an image that can be used in an <img> tag. When the browser requests the
- * image at image/generate/[style_name]/[path] the image is generated if it does
- * not already exist and then served to the browser. This allows each image to
- * have its own PHP instance (and memory limit) for generation of the new image.
+ * image at image/generate/[style_name]/[scheme]/[path] the image is generated
+ * if it does not already exist and then served to the browser. This allows
+ * each image to have its own PHP instance (and memory limit) for generation of
+ * the new image.
  *
  * @param $style_name
  *   The name of the style to be used with this image.
@@ -575,9 +577,12 @@ function image_style_url($style_name, $path) {
   // Set a cache entry to grant access to this style/image path. This will be
   // checked by image_style_generate().
   cache_set('access:' . $style_name . ':' . md5($path), 1, 'cache_image', REQUEST_TIME + 600);
+  
+  $scheme = file_uri_scheme($path);
+  $target = file_uri_target($path);
 
   // Generate a callback path for the image.
-  $url = url('image/generate/' . $style_name . '/' . $path, array('absolute' => TRUE));
+  $url = url('image/generate/' . $style_name . '/' . $scheme . '/' . $target, array('absolute' => TRUE));
   return $url;
 }
 
@@ -596,7 +601,10 @@ function image_style_url($style_name, $path) {
  * @see image_style_url()
  */
 function image_style_path($style_name, $path) {
-  return file_directory_path() . '/styles/' . $style_name . '/' . file_directory_strip($path);
+  if ($target = file_uri_target($path)) {
+    $path = $target;
+  }
+  return variable_get('file_default_scheme', 'public') . '://styles/' . $style_name . '/' . $path;
 }
 
 /**
@@ -795,7 +803,7 @@ function theme_image_style($style_name, $path, $alt = '', $title = '', $attribut
   if (!file_exists($style_path)) {
     $style_path = image_style_url($style_name, $path);
   }
-  return theme('image', $style_path, $alt, $title, $attributes, $getsize);
+  return theme('image', file_create_url($style_path), $alt, $title, $attributes, $getsize);
 }
 
 /**

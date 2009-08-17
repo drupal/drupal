@@ -1223,7 +1223,7 @@ function _locale_import_po($file, $langcode, $mode, $group = NULL) {
  */
 function _locale_import_read_po($op, $file, $mode = NULL, $lang = NULL, $group = 'default') {
 
-  $fd = fopen($file->filepath, "rb"); // File will get closed by PHP on return
+  $fd = fopen($file->uri, "rb"); // File will get closed by PHP on return
   if (!$fd) {
     _locale_import_message('The translation import failed, because the file %filename could not be read.', $file);
     return FALSE;
@@ -1439,7 +1439,7 @@ function _locale_import_one_string($op, $value = NULL, $mode = NULL, $lang = NUL
         $header = _locale_import_parse_header($value['msgstr']);
 
         // Get the plural formula and update in database.
-        if (isset($header["Plural-Forms"]) && $p = _locale_import_parse_plural_forms($header["Plural-Forms"], $file->filepath)) {
+        if (isset($header["Plural-Forms"]) && $p = _locale_import_parse_plural_forms($header["Plural-Forms"], $file->uri)) {
           list($nplurals, $plural) = $p;
           db_update('languages')
             ->fields(array(
@@ -2435,11 +2435,11 @@ function _locale_rebuild_js($langcode = NULL) {
 
   // Construct the filepath where JS translation files are stored.
   // There is (on purpose) no front end to edit that variable.
-  $dir = file_create_path(variable_get('locale_js_directory', 'languages'));
+  $dir = 'public://' . variable_get('locale_js_directory', 'languages');
 
   // Delete old file, if we have no translations anymore, or a different file to be saved.
   if (!empty($language->javascript) && (!$data || $language->javascript != $data_hash)) {
-    file_unmanaged_delete(file_create_path($dir . '/' . $language->language . '_' . $language->javascript . '.js'));
+    file_unmanaged_delete($dir . '/' . $language->language . '_' . $language->javascript . '.js');
     $language->javascript = '';
     $status = 'deleted';
   }
@@ -2447,7 +2447,7 @@ function _locale_rebuild_js($langcode = NULL) {
   // Only create a new file if the content has changed.
   if ($data && $language->javascript != $data_hash) {
     // Ensure that the directory exists and is writable, if possible.
-    file_check_directory($dir, TRUE);
+    file_prepare_directory($dir, FILE_CREATE_DIRECTORY);
 
     // Save the file.
     $dest = $dir . '/' . $language->language . '_' . $data_hash . '.js';
@@ -2650,7 +2650,7 @@ function _locale_batch_build($files, $finished = NULL, $components = array()) {
     $operations = array();
     foreach ($files as $file) {
       // We call _locale_batch_import for every batch operation.
-      $operations[] = array('_locale_batch_import', array($file->filepath));
+      $operations[] = array('_locale_batch_import', array($file->uri));
     }
     $batch = array(
       'operations'    => $operations,
@@ -2682,7 +2682,7 @@ function _locale_batch_import($filepath, &$context) {
   // The filename is either {langcode}.po or {prefix}.{langcode}.po, so
   // we can extract the language code to use for the import from the end.
   if (preg_match('!(/|\.)([^\./]+)\.po$!', $filepath, $langcode)) {
-    $file = (object) array('filename' => basename($filepath), 'filepath' => $filepath);
+    $file = (object) array('filename' => basename($filepath), 'uri' => $filepath);
     _locale_import_read_po('db-store', $file, LOCALE_IMPORT_KEEP, $langcode[2]);
     $context['results'][] = $filepath;
   }

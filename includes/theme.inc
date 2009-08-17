@@ -967,7 +967,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
   $files = drupal_system_listing($regex, $path, 'name', 0);
   foreach ($files as $template => $file) {
     // Ignore sub-theme templates for the current theme.
-    if (strpos($file->filepath, str_replace($subtheme_paths, '', $file->filepath)) !== 0) {
+    if (strpos($file->uri, str_replace($subtheme_paths, '', $file->uri)) !== 0) {
       continue;
     }
     // Chop off the remaining extensions if there are any. $template already
@@ -982,7 +982,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
     if (isset($cache[$hook])) {
       $templates[$hook] = array(
         'template' => $template,
-        'path' => dirname($file->filepath),
+        'path' => dirname($file->uri),
       );
     }
     // Ensure that the pattern is maintained from base themes to its sub-themes.
@@ -1008,7 +1008,7 @@ function drupal_find_theme_templates($cache, $extension, $path) {
           // Put the underscores back in for the hook name and register this pattern.
           $templates[strtr($file, '-', '_')] = array(
             'template' => $file,
-            'path' => dirname($files[$match]->filepath),
+            'path' => dirname($files[$match]->uri),
             'arguments' => $info['arguments'],
           );
         }
@@ -1099,24 +1099,24 @@ function theme_get_setting($setting_name, $refresh = FALSE) {
 
     if ($settings['toggle_logo']) {
       if ($settings['default_logo']) {
-        $settings['logo'] = base_path() . dirname($theme_object->filename) . '/logo.png';
+        $settings['logo'] = file_create_url(dirname($theme_object->filename) . '/logo.png');
       }
       elseif ($settings['logo_path']) {
-        $settings['logo'] = base_path() . $settings['logo_path'];
+        $settings['logo'] = file_create_url($settings['logo_path']);
       }
     }
 
     if ($settings['toggle_favicon']) {
       if ($settings['default_favicon']) {
         if (file_exists($favicon = dirname($theme_object->filename) . '/favicon.ico')) {
-          $settings['favicon'] = base_path() . $favicon;
+          $settings['favicon'] = file_create_url($favicon);
         }
         else {
-          $settings['favicon'] = base_path() . 'misc/favicon.ico';
+          $settings['favicon'] = file_create_url('misc/favicon.ico');
         }
       }
       elseif ($settings['favicon_path']) {
-        $settings['favicon'] = base_path() . $settings['favicon_path'];
+        $settings['favicon'] = file_create_url($settings['favicon_path']);
       }
       else {
         $settings['toggle_favicon'] = FALSE;
@@ -1340,7 +1340,7 @@ function theme_links($links, $attributes = array('class' => 'links')) {
 function theme_image($path, $alt = '', $title = '', $attributes = array(), $getsize = TRUE) {
   if (!$getsize || (is_file($path) && (list($width, $height, $type, $image_attributes) = @getimagesize($path)))) {
     $attributes = drupal_attributes($attributes);
-    $url = (url($path) == $path) ? $path : (base_path() . $path);
+    $url = file_create_url($path);
     return '<img src="' . check_url($url) . '" alt="' . check_plain($alt) . '" title="' . check_plain($title) . '" ' . (isset($image_attributes) ? $image_attributes : '') . $attributes . ' />';
   }
 }

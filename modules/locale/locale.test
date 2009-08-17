@@ -696,7 +696,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
    *   Additional options to pass to the translation import form.
    */
   function importPoFile($contents, array $options = array()) {
-    $name = tempnam(file_directory_temp(), "po_");
+    $name = tempnam(file_directory_path('temporary'), "po_");
     file_put_contents($name, $contents);
     $options['files[file]'] = $name;
     $this->drupalPost('admin/config/international/translate/import', $options, t('Import'));
@@ -843,7 +843,7 @@ class LocaleExportFunctionalTest extends DrupalWebTestCase {
   function testExportTranslation() {
     // First import some known translations.
     // This will also automatically enable the 'fr' language.
-    $name = tempnam(file_directory_temp(), "po_");
+    $name = tempnam(file_directory_path('temporary'), "po_");
     file_put_contents($name, $this->getPoFile());
     $this->drupalPost('admin/config/international/translate/import', array(
       'langcode' => 'fr',
@@ -953,7 +953,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/international/translate/edit/' . $string->lid, $edit, t('Save translations'));
     _locale_rebuild_js('fr');
     $file = db_query('SELECT javascript FROM {languages} WHERE language = :language', array(':language' => 'fr'))->fetchObject();
-    $js_file = file_create_path(variable_get('locale_js_directory', 'languages')) . '/fr_' . $file->javascript . '.js';
+    $js_file = 'public://' . variable_get('locale_js_directory', 'languages') . '/fr_' . $file->javascript . '.js';
     $this->assertTrue($result = file_exists($js_file), t('JavaScript file created: %file', array('%file' => $result ? $js_file : t('none'))));
 
     // Disable string caching.

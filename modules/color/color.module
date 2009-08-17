@@ -7,7 +7,7 @@
 function color_help($path, $arg) {
   switch ($path) {
     case 'admin/help#color':
-      $output = '<p>' . t('The color module allows a site administrator to quickly and easily change the color scheme of certain themes. Although not all themes support color module, both Garland (the default theme) and Minnelli were designed to take advantage of its features. By using color module with a compatible theme, you can easily change the color of links, backgrounds, text, and other theme elements. Color module requires that your <a href="@url">file download method</a> be set to public.', array('@url' => url('admin/settings/file-system'))) . '</p>';
+      $output = '<p>' . t('The color module allows a site administrator to quickly and easily change the color scheme of certain themes. Although not all themes support color module, both Garland (the default theme) and Minnelli were designed to take advantage of its features. By using color module with a compatible theme, you can easily change the color of links, backgrounds, text, and other theme elements.', array('@url' => url('admin/settings/file-system'))) . '</p>';
       $output .= '<p>' . t("It is important to remember that color module saves a modified copy of the theme's specified stylesheets in the files directory. This means that if you make any manual changes to your theme's stylesheet, you must save your color settings again, even if they haven't changed. This causes the color module generated version of the stylesheets in the files directory to be recreated using the new version of the original file.") . '</p>';
       $output .= '<p>' . t('To change the color settings for a compatible theme, select the "configure" link for the theme on the <a href="@themes">themes administration page</a>.', array('@themes' => url('admin/appearance'))) . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@color">Color module</a>.', array('@color' => 'http://drupal.org/handbook/modules/color/')) . '</p>';
@@ -32,22 +32,15 @@ function color_theme() {
  */
 function color_form_system_theme_settings_alter(&$form, &$form_state) {
   if (color_get_info(arg(4)) && function_exists('gd_info')) {
-    if (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) != FILE_DOWNLOADS_PUBLIC) {
-      // Disables the color changer when the private download method is used.
-      // TODO: This should be solved in a different way. See issue #181003.
-      drupal_set_message(t('The color picker only works if the <a href="@url">download method</a> is set to public.', array('@url' => url('admin/settings/file-system'))), 'warning');
-    }
-    else {
-      $form['color'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Color scheme'),
-        '#weight' => -1,
-        '#attributes' => array('id' => 'color_scheme_form'),
-        '#theme' => 'color_scheme_form',
-      );
-      $form['color'] += color_scheme_form($form_state, arg(4));
-      $form['#submit'][] = 'color_scheme_form_submit';
-    }
+    $form['color'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Color scheme'),
+      '#weight' => -1,
+      '#attributes' => array('id' => 'color_scheme_form'),
+      '#theme' => 'color_scheme_form',
+    );
+    $form['color'] += color_scheme_form($form_state, arg(4));
+    $form['#submit'][] = 'color_scheme_form_submit';
   }
 }
 
@@ -300,7 +293,7 @@ function color_scheme_form_submit($form, &$form_state) {
   $paths['color'] = file_directory_path() . '/color';
   $paths['target'] = $paths['color'] . '/' . $id;
   foreach ($paths as $path) {
-    file_check_directory($path, FILE_CREATE_DIRECTORY);
+    file_prepare_directory($path, FILE_CREATE_DIRECTORY);
   }
   $paths['target'] = $paths['target'] . '/';
   $paths['id'] = $id;

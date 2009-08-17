@@ -12,8 +12,8 @@
 function simpletest_install() {
   drupal_install_schema('simpletest');
   // Check for files directory.
-  $path = file_directory_path() . '/simpletest';
-  if (file_check_directory($path, FILE_CREATE_DIRECTORY)) {
+  $path = 'public://simpletest';
+  if (file_prepare_directory($path, FILE_CREATE_DIRECTORY)) {
     // Generate binary and text test files.
     $generated = FALSE;
     if (simpletest_get_file_count($path, 'binary') == 0) {
@@ -43,7 +43,7 @@ function simpletest_install() {
     // the test files back easily.
     if (count($files) > count(file_scan_directory($path, '/(html|image|javascript|php|sql)-.*/'))) {
       foreach ($files as $file) {
-        file_unmanaged_copy($file->filepath, $path, FILE_EXISTS_REPLACE);
+        file_unmanaged_copy($file->uri, $path, FILE_EXISTS_REPLACE);
       }
       $generated = TRUE;
     }
@@ -117,7 +117,7 @@ function simpletest_uninstall() {
   $path = file_directory_path() . '/simpletest';
   $files = file_scan_directory($path, '/.*/');
   foreach ($files as $file) {
-    file_unmanaged_delete($file->filepath);
+    file_unmanaged_delete($file->uri);
   }
   rmdir($path);
 }

@@ -404,8 +404,13 @@ function user_save($account, $edit = array(), $category = 'account') {
       // If the picture is a temporary file move it to its final location and
       // make it permanent.
       if (($picture->status & FILE_STATUS_PERMANENT) == 0) {
-        $info = image_get_info($picture->filepath);
-        $destination = file_create_path(variable_get('user_picture_path', 'pictures') . '/picture-' . $account->uid . '.' . $info['extension']);
+        $info = image_get_info($picture->uri);
+        $picture_directory =  variable_get('file_default_scheme', 'public') . '://' . variable_get('user_picture_path', 'pictures');
+        
+        // Prepare the pictures directory.
+        file_prepare_directory($picture_directory, FILE_CREATE_DIRECTORY);
+        $destination = file_stream_wrapper_uri_normalize($picture_directory . '/picture-' . $account->uid . '.' . $info['extension']);
+
         if ($picture = file_move($picture, $destination, FILE_EXISTS_REPLACE)) {
           $picture->status |= FILE_STATUS_PERMANENT;
           $edit['picture'] = file_save($picture);
@@ -796,8 +801,8 @@ function user_permission() {
  * Ensure that user pictures (avatars) are always downloadable.
  */
 function user_file_download($filepath) {
-  if (strpos($filepath, variable_get('user_picture_path', 'pictures') . '/picture-') === 0) {
-    $info = image_get_info(file_create_path($filepath));
+  if (strpos(file_uri_target($filepath), variable_get('user_picture_path', 'pictures') . '/picture-') === 0) {
+    $info = image_get_info($filepath);
     return array('Content-Type' => $info['mime_type']);
   }
 }
@@ -1167,8 +1172,8 @@ function template_preprocess_user_picture(&$variables) {
       if (is_numeric($account->picture)) {
         $account->picture = file_load($account->picture);
       }
-      if (!empty($account->picture->filepath)) {
-        $filepath = $account->picture->filepath;
+      if (!empty($account->picture->uri)) {
+        $filepath = $account->picture->uri;
       }
     }
     elseif (variable_get('user_picture_default', '')) {

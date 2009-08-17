@@ -220,7 +220,7 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
           $assertion['file'] = $this->asText($row->td[2]);
           $assertion['line'] = $this->asText($row->td[3]);
           $assertion['function'] = $this->asText($row->td[4]);
-          $ok_url = (url('misc/watchdog-ok.png') == 'misc/watchdog-ok.png') ? 'misc/watchdog-ok.png' : (base_path() . 'misc/watchdog-ok.png');
+          $ok_url = file_create_url('misc/watchdog-ok.png');
           $assertion['status'] = ($row->td[5]->img['src'] == $ok_url) ? 'Pass' : 'Fail';
           $results['assertions'][] = $assertion;
         }

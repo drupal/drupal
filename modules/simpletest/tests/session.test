@@ -219,7 +219,7 @@ class SessionTestCase extends DrupalWebTestCase {
     $this->loggedInUser = FALSE;
 
     // Change cookie file for user.
-    $this->cookieFile = file_directory_temp() . '/cookie.' . $uid . '.txt';
+    $this->cookieFile = file_directory_path('temporary') . '/cookie.' . $uid . '.txt';
     $this->additionalCurlOptions[CURLOPT_COOKIEFILE] = $this->cookieFile;
     $this->additionalCurlOptions[CURLOPT_COOKIESESSION] = TRUE;
     $this->drupalGet('session-test/get');

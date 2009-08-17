@@ -656,8 +656,8 @@ function drupal_get_filename($type, $name, $filename = NULL) {
 
       if (drupal_function_exists('drupal_system_listing')) {
         $matches = drupal_system_listing($mask, $dir, 'name', 0);
-        if (!empty($matches[$name]->filepath)) {
-          $files[$type][$name] = $matches[$name]->filepath;
+        if (!empty($matches[$name]->uri)) {
+          $files[$type][$name] = $matches[$name]->uri;
         }
       }
     }

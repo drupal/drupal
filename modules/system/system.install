@@ -176,49 +176,55 @@ function system_requirements($phase) {
     );
   }
 
-  // Test files directory
-  $directory = file_directory_path();
+  // Test files directories.
+  $directories = array(
+    variable_get('file_public_path', conf_path() . '/files'),
+    variable_get('file_private_path', conf_path() . '/private/files'),
+    variable_get('file_temporary_path', conf_path() . '/private/temp'),
+  );
   $requirements['file system'] = array(
     'title' => $t('File system'),
   );
 
-  // For installer, create the directory if possible.
-  if ($phase == 'install' && !is_dir($directory) && @mkdir($directory)) {
-    @chmod($directory, 0775); // Necessary for non-webserver users.
-  }
-
-  $is_writable = is_writable($directory);
-  $is_directory = is_dir($directory);
-  if (!$is_writable || !$is_directory) {
-    $description = '';
-    $requirements['file system']['value'] = $t('Not writable');
-    if (!$is_directory) {
-      $error = $t('The directory %directory does not exist.', array('%directory' => $directory));
+  $error = '';
+  // For installer, create the directories if possible.
+  foreach ($directories as $directory) {
+    if ($phase == 'install') {
+      file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
+    }
+    $is_writable = is_writable($directory);
+    $is_directory = is_dir($directory);
+    if (!$is_writable || !$is_directory) {
+      $description = '';
+      $requirements['file system']['value'] = $t('Not writable');
+      if (!$is_directory) {
+        $error .= $t('The directory %directory does not exist.', array('%directory' => $directory)) . ' ';
+      }
+      else {
+        $error .= $t('The directory %directory is not writable.', array('%directory' => $directory)) . ' ';
+      }
+      // The files directory requirement check is done only during install and runtime.
+      if ($phase == 'runtime') {
+        $description = $error . $t('You may need to set the correct directory at the <a href="@admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', array('@admin-file-system' => url('admin/settings/file-system')));
+      }
+      elseif ($phase == 'install') {
+        // For the installer UI, we need different wording. 'value' will
+        // be treated as version, so provide none there.
+        $description = $error . $t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually, or ensure that the installer has the permissions to create it automatically. For more information, please see INSTALL.txt or the <a href="@handbook_url">online handbook</a>.', array('@handbook_url' => 'http://drupal.org/server-permissions'));
+        $requirements['file system']['value'] = '';
+      }
+      if (!empty($description)) {
+        $requirements['file system']['description'] = $description;
+        $requirements['file system']['severity'] = REQUIREMENT_ERROR;
+      }
     }
     else {
-      $error = $t('The directory %directory is not writable.', array('%directory' => $directory));
-    }
-    // The files directory requirement check is done only during install and runtime.
-    if ($phase == 'runtime') {
-      $description = $error . ' ' . $t('You may need to set the correct directory at the <a href="@admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', array('@admin-file-system' => url('admin/settings/file-system')));
-    }
-    elseif ($phase == 'install') {
-      // For the installer UI, we need different wording. 'value' will
-      // be treated as version, so provide none there.
-      $description = $error . ' ' . $t('An automated attempt to create this directory failed, possibly due to a permissions problem. To proceed with the installation, either create the directory and modify its permissions manually, or ensure that the installer has the permissions to create it automatically. For more information, please see INSTALL.txt or the <a href="@handbook_url">online handbook</a>.', array('@handbook_url' => 'http://drupal.org/server-permissions'));
-      $requirements['file system']['value'] = '';
-    }
-    if (!empty($description)) {
-      $requirements['file system']['description'] = $description;
-      $requirements['file system']['severity'] = REQUIREMENT_ERROR;
-    }
-  }
-  else {
-    if (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PUBLIC) {
-      $requirements['file system']['value'] = $t('Writable (<em>public</em> download method)');
-    }
-    else {
-      $requirements['file system']['value'] = $t('Writable (<em>private</em> download method)');
+      if (variable_get('file_default_scheme', 'public') == 'public') {
+        $requirements['file system']['value'] = $t('Writable (<em>public</em> download method)');
+      }
+      else {
+        $requirements['file system']['value'] = $t('Writable (<em>private</em> download method)');
+      }
     }
   }
 
@@ -673,7 +679,7 @@ function system_schema() {
   $schema['cache_registry'] = $schema['cache'];
   $schema['cache_registry']['description'] = 'Cache table for the code registry system to remember what code files need to be loaded on any given page.';
 
-  $schema['files'] = array(
+  $schema['file'] = array(
     'description' => 'Stores information for uploaded files.',
     'fields' => array(
       'fid' => array(
@@ -696,7 +702,7 @@ function system_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'filepath' => array(
+      'uri' => array(
         'description' => 'Path of the file relative to Drupal root.',
         'type' => 'varchar',
         'length' => 255,
@@ -735,6 +741,9 @@ function system_schema() {
       'uid' => array('uid'),
       'status' => array('status'),
       'timestamp' => array('timestamp'),
+    ),
+    'unique keys' => array(
+      'uri' => array('uri'),
     ),
     'primary key' => array('fid'),
     'foreign keys' => array(
@@ -2251,6 +2260,126 @@ function system_update_7033() {
     $ret[] = array('success' => TRUE, 'query' => "Aggressive caching was disabled and replaced with normal caching, please read the page caching section in default.settings.php for more information on how to enable similar functionality.");
   }
   return array();
+}
+
+/**
+ * Migrate the file_downloads setting and create the new {file} table.
+ */
+function system_update_7034() {
+  $ret = array();
+  $files_directory = variable_get('file_directory_path', NULL);
+  if (variable_get('file_downloads', 1) == 1) {
+    // Our default is public, so we don't need to set anything.
+    if (!empty($files_directory)) {
+      variable_set('file_public_path', $files_directory);
+    }
+  }
+  elseif (variable_get('file_downloads', 1) == 2) {
+    variable_set('file_default_scheme', 'private');
+    if (!empty($files_directory)) {
+      variable_set('file_private_path', $files_directory);
+    }
+  }
+  variable_del('file_downloads');
+
+  $schema['file'] = array(
+    'description' => 'Stores information for uploaded files.',
+    'fields' => array(
+      'fid' => array(
+        'description' => 'File ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'The {user}.uid of the user who is associated with the file.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'filename' => array(
+        'description' => 'Name of the file with no path components. This may differ from the basename of the filepath if the file is renamed to avoid overwriting an existing file.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'uri' => array(
+        'description' => 'URI of file.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'filemime' => array(
+        'description' => "The file's MIME type.",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'filesize' => array(
+        'description' => 'The size of the file in bytes.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'status' => array(
+        'description' => 'A bitmapped field indicating the status of the file the least sigifigant bit indicates temporary (1) or permanent (0). Temporary files older than DRUPAL_MAXIMUM_TEMP_FILE_AGE will be removed during a cron run.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'timestamp' => array(
+        'description' => 'UNIX timestamp for when the file was added.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'uid' => array('uid'),
+      'status' => array('status'),
+      'timestamp' => array('timestamp'),
+    ),
+    'unique keys' => array(
+      'uri' => array('uri'),
+    ),
+    'primary key' => array('fid'),
+  );
+  db_create_table($ret, 'file', $schema['file']);
+  return $ret;
+}
+
+/**
+ * Migrate upload module files to the new {file} table.
+ */
+function system_update_7035() {
+  $ret = array();
+  if (!db_table_exists('upload')) {
+    return $ret;
+  }
+  // The old {files} tables still exists.  We migrate core data from upload
+  // module, but any contrib module using it will need to do its own update.
+  $result = db_query('SELECT fid, uid, filename, filepath AS uri, filemime, filesize, status, timestamp FROM {files} f INNER JOIN {upload} u ON u.fid = f.fid', array(), array('fetch' => PDO::FETCH_ASSOC));
+
+  // We will convert filepaths to uri using the default schmeme
+  // and stripping off the existing file directory path.
+  $basename = variable_get('file_directory_path', conf_path() . '/files');
+  $scheme = variable_get('file_default_scheme', 'public') . '://';
+  $fids = array();
+  // TODO: does this function need to run in batch mode?
+  foreach ($result as $file) {
+    $file['uri'] = $scheme . str_replace($basename, '', $file['uri']);
+    $file['uri'] = file_stream_wrapper_uri_normalize($file['uri']);
+    db_insert('file')->fields($file)->execute();
+    $fids[] = $file['fid'];
+  }
+  // TODO: delete the found fids from {files}?
+  return $ret;
 }
 
 /**

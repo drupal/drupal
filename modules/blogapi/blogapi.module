@@ -460,19 +460,23 @@ function blogapi_metaweblog_new_media_object($blogid, $username, $password, $fil
     $filename .= '.' . $final_extension;
   }
 
+  else {
+    $filename = $name;
+  }
+  $uri = file_build_uri($filename);
   $data = $file['bits'];
 
   if (!$data) {
     return blogapi_error(t('No file sent.'));
   }
 
-  if (!$file = file_unmanaged_save_data($data, $filename)) {
+  if (!$file = file_unmanaged_save_data($data, $uri)) {
     return blogapi_error(t('Error storing file.'));
   }
 
   $row = new stdClass();
   $row->uid = $user->uid;
-  $row->filepath = $file;
+  $row->uri = $file;
   $row->filesize = $filesize;
 
   drupal_write_record('blogapi_files', $row);

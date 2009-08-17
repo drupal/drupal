@@ -444,7 +444,7 @@ class ImageToolkitGdTestCase extends DrupalWebTestCase {
         }
 
         $directory = file_directory_path() . '/imagetests';
-        file_check_directory($directory, FILE_CREATE_DIRECTORY);
+        file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
         image_save($image, $directory . '/' . $op . '.' . $image->info['extension']);
 
         $this->assertTrue($correct_dimensions_real, t('Image %file after %action action has proper dimensions.', array('%file' => $file, '%action' => $op)));

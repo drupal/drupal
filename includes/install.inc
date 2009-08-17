@@ -216,9 +216,9 @@ function drupal_detect_database_types() {
   // file for the driver explicitly.
   require_once DRUPAL_ROOT . '/includes/database/database.inc';
   foreach (file_scan_directory(DRUPAL_ROOT . '/includes/database', '/^[a-z]*$/i', array('recurse' => FALSE)) as $file) {
-    include_once "{$file->filepath}/install.inc";
-    include_once "{$file->filepath}/database.inc";
-    $drivers[$file->filename] = $file->filepath;
+    include_once "{$file->uri}/install.inc";
+    include_once "{$file->uri}/database.inc";
+    $drivers[$file->filename] = $file->uri;
   }
 
   foreach ($drivers as $driver => $file) {
@@ -810,7 +810,7 @@ function drupal_install_mkdir($file, $mask, $message = TRUE) {
     }
   }
 
-  if (@mkdir($file, intval("0$mod", 8))) {
+  if (@drupal_mkdir($file, intval("0$mod", 8))) {
     return TRUE;
   }
   else {
@@ -934,7 +934,7 @@ function st($string, $args = array()) {
     $filename = 'profiles/' . $install_state['parameters']['profile'] . '/translations/' . $install_state['parameters']['locale'] . '.po';
     if (file_exists(DRUPAL_ROOT . '/' . $filename)) {
       require_once DRUPAL_ROOT . '/includes/locale.inc';
-      $file = (object) array('filepath' => $filename);
+      $file = (object) array('uri' => $filename);
       _locale_import_read_po('mem-store', $file);
       $locale_strings = _locale_import_one_string('mem-report');
     }
@@ -986,7 +986,7 @@ function drupal_check_profile($profile) {
   // Collect requirement testing results
   $requirements = array();
   foreach ($installs as $install) {
-    require_once DRUPAL_ROOT . '/' . $install->filepath;
+    require_once DRUPAL_ROOT . '/' . $install->uri;
     $function = $install->name . '_requirements';
     if (function_exists($function)) {
       $requirements = array_merge($requirements, $function('install'));
@@ -1026,7 +1026,7 @@ function drupal_check_module($module) {
   // Include install file
   $install = drupal_get_install_files(array($module));
   if (isset($install[$module])) {
-    require_once DRUPAL_ROOT . '/' . $install[$module]->filepath;
+    require_once DRUPAL_ROOT . '/' . $install[$module]->uri;
 
     // Check requirements
     $requirements = module_invoke($module, 'requirements', 'install');

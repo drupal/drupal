@@ -297,7 +297,7 @@ function aggregator_form_opml_validate($form, &$form_state) {
 function aggregator_form_opml_submit($form, &$form_state) {
   $data = '';
   if ($file = file_save_upload('upload')) {
-    $data = file_get_contents($file->filepath);
+    $data = file_get_contents($file->uri);
   }
   else {
     $response = drupal_http_request($form_state['values']['remote']);

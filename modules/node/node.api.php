@@ -746,7 +746,7 @@ function hook_prepare($node) {
   if ($file = file_check_upload($field_name)) {
     $file = file_save_upload($field_name, _image_filename($file->filename, NULL, TRUE));
     if ($file) {
-      if (!image_get_info($file->filepath)) {
+      if (!image_get_info($file->uri)) {
         form_set_error($field_name, t('Uploaded file is not a valid image'));
         return;
       }
@@ -754,7 +754,7 @@ function hook_prepare($node) {
     else {
       return;
     }
-    $node->images['_original'] = $file->filepath;
+    $node->images['_original'] = $file->uri;
     _image_build_derivatives($node, TRUE);
     $node->new_file = TRUE;
   }

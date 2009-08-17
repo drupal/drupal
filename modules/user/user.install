@@ -184,7 +184,7 @@ function user_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-        'description' => "Foreign key: {files}.fid of user's picture.",
+        'description' => "Foreign key: {file}.fid of user's picture.",
       ),
       'init' => array(
         'type' => 'varchar',
@@ -405,7 +405,7 @@ function user_update_7003() {
 }
 
 /**
- * Add the user's pictures to the {files} table and make them managed files.
+ * Add the user's pictures to the {file} table and make them managed files.
  */
 function user_update_7004(&$sandbox) {
   $ret = array();
@@ -414,7 +414,7 @@ function user_update_7004(&$sandbox) {
     'type' => 'int',
     'not null' => TRUE,
     'default' => 0,
-    'description' => t("Foriegn key: {files}.fid of user's picture."),
+    'description' => t("Foriegn key: {file}.fid of user's picture."),
   );
 
   if (!isset($sandbox['progress'])) {
@@ -428,13 +428,13 @@ function user_update_7004(&$sandbox) {
     // Initialize batch update information.
     $sandbox['progress'] = 0;
     $sandbox['last_user_processed'] = -1;
-    $sandbox['max'] = db_query("SELECT COUNT(*) FROM {users} WHERE picture <> ''")->fetchField();
+    $sandbox['max'] = db_query("SELECT COUNT(*) FROM {user} WHERE picture <> ''")->fetchField();
   }
 
-  // As a batch operation move the photos into the {files} table and update the
+  // As a batch operation move the photos into the {file} table and update the
   // {users} records.
   $limit = 500;
-  $result = db_query_range("SELECT uid, picture FROM {users} WHERE picture <> '' AND uid > :uid ORDER BY uid", array(':uid' => $sandbox['last_user_processed']), 0, $limit);
+  $result = db_query_range("SELECT uid, picture FROM {user} WHERE picture <> '' AND uid > :uid ORDER BY uid", array(':uid' => $sandbox['last_user_processed']), 0, $limit);
   foreach ($result as $user) {
     // Don't bother adding files that don't exist.
     if (!file_exists($user->picture)) {
@@ -442,16 +442,16 @@ function user_update_7004(&$sandbox) {
     }
 
     // Check if the file already exists.
-    $files = file_load_multiple(array(), array('filepath' => $user->picture));
+    $files = file_load_multiple(array(), array('uri' => $user->picture));
     if (count($files)) {
       $file = reset($files);
     }
     else {
       // Create a file object.
       $file = new stdClass();
-      $file->filepath = $user->picture;
-      $file->filename = basename($file->filepath);
-      $file->filemime = file_get_mimetype($file->filepath);
+      $file->uri      = $user->picture;
+      $file->filename = basename($file->uri);
+      $file->filemime = file_get_mimetype($file->uri);
       $file->uid      = $user->uid;
       $file->status   = FILE_STATUS_PERMANENT;
       $file = file_save($file);
@@ -474,8 +474,8 @@ function user_update_7004(&$sandbox) {
   // When we're finished, drop the old picture field and rename the new one to
   // replace it.
   if (isset($ret['#finished']) && $ret['#finished'] == 1) {
-    db_drop_field($ret, 'users', 'picture');
-    db_change_field($ret, 'users', 'picture_fid', 'picture', $picture_field);
+    db_drop_field($ret, 'user', 'picture');
+    db_change_field($ret, 'user', 'picture_fid', 'picture', $picture_field);
   }
 
   return $ret;

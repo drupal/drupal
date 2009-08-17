@@ -47,16 +47,17 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
     parent::setUp();
 
     $this->style_name = 'style_foo';
+    $this->scheme = 'public';
     image_style_save(array('name' => $this->style_name));
 
     // Create the directories for the styles.
-    $status = file_check_directory($d = file_directory_path() . '/styles/' . $this->style_name, FILE_CREATE_DIRECTORY);
+    $status = file_prepare_directory($d = file_directory_path() . '/styles/' . $this->style_name, FILE_CREATE_DIRECTORY);
     $this->assertNotIdentical(FALSE, $status, t('Created the directory for the generated images for the test style.' ));
 
     // Create a working copy of the file.
     $file = reset($this->drupalGetTestFiles('image'));
-    $this->image_info = image_get_info($file->filepath);
-    $this->image_filepath = file_unmanaged_copy($file->filepath, NULL, FILE_EXISTS_RENAME);
+    $this->image_info = image_get_info($file->uri);
+    $this->image_filepath = file_unmanaged_copy($file->uri, NULL, FILE_EXISTS_RENAME);
     $this->assertNotIdentical(FALSE, $this->image_filepath, t('Created the without generated image file.'));
   }
 
@@ -65,7 +66,7 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
    */
   function testImageStylePath() {
     $actual = image_style_path($this->style_name, $this->image_filepath);
-    $expected = file_directory_path() . '/styles/' . $this->style_name . '/' . basename($this->image_filepath);
+    $expected = $this->scheme . '://styles/' . $this->style_name . '/' . basename($this->image_filepath);
     $this->assertEqual($actual, $expected, t('Got the path for a file.'));
   }
 
@@ -75,9 +76,9 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
   function testImageStyleUrl() {
     // Get the URL of a file that has not been generated yet and try to access
     // it before image_style_url has been called.
-    $generated_path = file_directory_path() . '/styles/' . $this->style_name . '/' . basename($this->image_filepath);
+    $generated_path = $this->scheme . '://styles/' . $this->style_name . '/' . basename($this->image_filepath);
     $this->assertFalse(file_exists($generated_path), t('Generated file does not exist.'));
-    $expected_generate_url = url('image/generate/' . $this->style_name . '/' . $this->image_filepath, array('absolute' => TRUE));
+    $expected_generate_url = url('image/generate/' . $this->style_name . '/' . $this->scheme . '/' . basename($this->image_filepath), array('absolute' => TRUE));
     $this->drupalGet($expected_generate_url);
     $this->assertResponse(403, t('Access to generate URL was denied.'));
 
@@ -261,7 +262,7 @@ class ImageAdminStylesUnitTest extends DrupalWebTestCase {
     // file directory. Copy over an image on the first run.
     if (!isset($file_path)) {
       $file = reset($this->drupalGetTestFiles('image'));
-      $file_path = file_unmanaged_copy($file->filename);
+      $file_path = file_unmanaged_copy($file->uri);
     }
 
     return image_style_url($style['name'], $file_path) ? $file_path : FALSE;

@@ -403,8 +403,9 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
       drupal_get_path('module', 'simpletest') . '/simpletest.css',
     );
 
+
     $styles = drupal_get_css();
-    if (preg_match_all('/href="' . preg_quote(base_path(), '/') . '([^?]+)\?/', $styles, $matches)) {
+    if (preg_match_all('/href="' . preg_quote($GLOBALS['base_url'] . '/', '/') . '([^?]+)\?/', $styles, $matches)) {
       $result = $matches[1];
     }
     else {

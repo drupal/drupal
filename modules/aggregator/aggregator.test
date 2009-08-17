@@ -200,7 +200,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
 </opml>
 EOF;
 
-    $path = file_directory_path() . '/valid-opml.xml';
+    $path = 'public://valid-opml.xml';
     return file_unmanaged_save_data($opml, $path);
   }
 
@@ -217,7 +217,7 @@ EOF;
 </opml>
 EOF;
 
-    $path = file_directory_path() . '/invalid-opml.xml';
+    $path = 'public://invalid-opml.xml';
     return file_unmanaged_save_data($opml, $path);
   }
 
@@ -239,7 +239,7 @@ EOF;
 </opml>
 EOF;
 
-    $path = file_directory_path() . '/empty-opml.xml';
+    $path = 'public://empty-opml.xml';
     return file_unmanaged_save_data($opml, $path);
   }
 
