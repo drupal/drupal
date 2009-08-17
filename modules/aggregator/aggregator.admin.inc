@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.admin.inc,v 1.36 2009/07/30 19:24:20 dries Exp $
+// $Id: aggregator.admin.inc,v 1.37 2009/08/17 19:14:40 webchick Exp $
 
 /**
  * @file
@@ -297,7 +297,7 @@ function aggregator_form_opml_validate($form, &$form_state) {
 function aggregator_form_opml_submit($form, &$form_state) {
   $data = '';
   if ($file = file_save_upload('upload')) {
-    $data = file_get_contents($file->filepath);
+    $data = file_get_contents($file->uri);
   }
   else {
     $response = drupal_http_request($form_state['values']['remote']);

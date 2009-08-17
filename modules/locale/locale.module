@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.248 2009/08/12 12:36:04 dries Exp $
+// $Id: locale.module,v 1.249 2009/08/17 19:14:40 webchick Exp $
 
 /**
  * @file
@@ -532,7 +532,7 @@ function locale_system_update($components) {
 function locale_js_alter(&$javascript) {
   global $language;
 
-  $dir = file_create_path(variable_get('locale_js_directory', 'languages'));
+  $dir = 'public://' . variable_get('locale_js_directory', 'languages');
   $parsed = variable_get('javascript_parsed', array());
   $files = $new_files = FALSE;
 

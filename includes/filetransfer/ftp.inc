@@ -1,5 +1,5 @@
 <?php
-// $Id: ftp.inc,v 1.4 2009/07/01 13:44:53 dries Exp $
+// $Id: ftp.inc,v 1.5 2009/08/17 19:14:40 webchick Exp $
 
 /**
  * Connection class using the FTP URL wrapper.
@@ -19,7 +19,7 @@ class FileTransferFTPWrapper extends FileTransfer {
   }
 
   function createDirectoryJailed($directory) {
-    if (!@mkdir($directory)) {
+    if (!@drupal_mkdir($directory)) {
       $exception = new FileTransferException('Cannot create directory @directory.', NULL, array('@directory' => $directory));
       throw $exception;
     }

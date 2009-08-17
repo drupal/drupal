@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.67 2009/08/11 11:47:58 dries Exp $
+// $Id: user.admin.inc,v 1.68 2009/08/17 19:14:41 webchick Exp $
 
 /**
  * @file
@@ -324,8 +324,11 @@ function user_admin_settings() {
   );
   // If picture support is enabled, check whether the picture directory exists.
   if (variable_get('user_pictures', 0)) {
-    $picture_path = file_create_path(variable_get('user_picture_path', 'pictures'));
-    file_check_directory($picture_path, FILE_CREATE_DIRECTORY, 'user_picture_path');
+    $picture_path =  variable_get('file_default_scheme', 'public') . '://' . variable_get('user_picture_path', 'pictures');
+    if (!file_prepare_directory($picture_path, FILE_CREATE_DIRECTORY)) {
+      form_set_error('user_picture_path', t('The directory %directory does not exist or is not writable.', array('%directory' => $picture_path)));
+      watchdog('file system', 'The directory %directory does not exist or is not writable.', array('%directory' => $picture_path), WATCHDOG_ERROR);
+    }
   }
   $picture_support = variable_get('user_pictures', 0);
   $form['personalization']['user_pictures'] = array(

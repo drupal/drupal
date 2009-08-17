@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.192 2009/08/12 12:39:18 dries Exp $
+// $Id: install.php,v 1.193 2009/08/17 19:14:39 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -1039,6 +1039,8 @@ function _install_select_profile($profiles) {
   // Don't need to choose profile if only one available.
   if (sizeof($profiles) == 1) {
     $profile = array_pop($profiles);
+    // TODO: is this right?
+    require_once $profile->uri;
     return $profile->name;
   }
   else {
@@ -1063,7 +1065,8 @@ function install_select_profile_form(&$form_state, $profile_files) {
   $names = array();
 
   foreach ($profile_files as $profile) {
-    include_once DRUPAL_ROOT . '/' . $profile->filepath;
+    // TODO: is this right?
+    include_once DRUPAL_ROOT . '/' . $profile->uri;
     
     $details = install_profile_info($profile->name);
     $profiles[$profile->name] = $details;

@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.295 2009/08/16 23:20:43 webchick Exp $
+// $Id: bootstrap.inc,v 1.296 2009/08/17 19:14:39 webchick Exp $
 
 /**
  * @file
@@ -656,8 +656,8 @@ function drupal_get_filename($type, $name, $filename = NULL) {
 
       if (drupal_function_exists('drupal_system_listing')) {
         $matches = drupal_system_listing($mask, $dir, 'name', 0);
-        if (!empty($matches[$name]->filepath)) {
-          $files[$type][$name] = $matches[$name]->filepath;
+        if (!empty($matches[$name]->uri)) {
+          $files[$type][$name] = $matches[$name]->uri;
         }
       }
     }

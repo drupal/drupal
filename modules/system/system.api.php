@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.61 2009/08/12 12:36:04 dries Exp $
+// $Id: system.api.php,v 1.62 2009/08/17 19:14:41 webchick Exp $
 
 /**
  * @file
@@ -1315,8 +1315,10 @@ function hook_file_delete($file) {
  */
 function hook_file_download($filepath) {
   // Check if the file is controlled by the current module.
-  $filepath = file_create_path($filepath);
-  $result = db_query("SELECT f.* FROM {files} f INNER JOIN {upload} u ON f.fid = u.fid WHERE filepath = :filepath", array('filepath' => $filepath));
+  if (!file_prepare_directory($filepath)) {
+    $filepath = FALSE;
+  }
+  $result = db_query("SELECT f.* FROM {file} f INNER JOIN {upload} u ON f.fid = u.fid WHERE uri = :filepath", array('filepath' => $filepath));
   foreach ($result as $file) {
     if (!user_access('view uploaded files')) {
       return -1;

@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.test,v 1.28 2009/07/30 19:24:20 dries Exp $
+// $Id: aggregator.test,v 1.29 2009/08/17 19:14:40 webchick Exp $
 
 /**
  * @file
@@ -200,7 +200,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
 </opml>
 EOF;
 
-    $path = file_directory_path() . '/valid-opml.xml';
+    $path = 'public://valid-opml.xml';
     return file_unmanaged_save_data($opml, $path);
   }
 
@@ -217,7 +217,7 @@ EOF;
 </opml>
 EOF;
 
-    $path = file_directory_path() . '/invalid-opml.xml';
+    $path = 'public://invalid-opml.xml';
     return file_unmanaged_save_data($opml, $path);
   }
 
@@ -239,7 +239,7 @@ EOF;
 </opml>
 EOF;
 
-    $path = file_directory_path() . '/empty-opml.xml';
+    $path = 'public://empty-opml.xml';
     return file_unmanaged_save_data($opml, $path);
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: form.inc,v 1.357 2009/08/17 07:12:15 webchick Exp $
+// $Id: form.inc,v 1.358 2009/08/17 19:14:39 webchick Exp $
 
 /**
  * @defgroup forms Form builder functions
@@ -2325,7 +2325,7 @@ function theme_image_button($element) {
     (!empty($element['#value']) ? ('value="' . check_plain($element['#value']) . '" ') : '') .
     'id="' . $element['#id'] . '" ' .
     drupal_attributes($element['#attributes']) .
-    ' src="' . base_path() . $element['#src'] . '" ' .
+    ' src="' . file_create_url($element['#src']) . '" ' .
     (!empty($element['#title']) ? 'alt="' . check_plain($element['#title']) . '" title="' . check_plain($element['#title']) . '" ' : '' ) .
     "/>\n";
 }

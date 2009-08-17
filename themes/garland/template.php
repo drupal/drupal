@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.23 2009/07/28 10:09:25 dries Exp $
+// $Id: template.php,v 1.24 2009/08/17 19:14:42 webchick Exp $
 
 /**
  * Return a themed breadcrumb trail.
@@ -79,9 +79,9 @@ function garland_node_submitted($node) {
 function garland_get_ie_styles() {
   global $language;
 
-  $ie_styles = '<link type="text/css" rel="stylesheet" media="all" href="' . base_path() . path_to_theme() . '/fix-ie.css" />' . "\n";
+  $ie_styles = '<link type="text/css" rel="stylesheet" media="all" href="' . file_create_url(path_to_theme() . '/fix-ie.css') . '" />' . "\n";
   if ($language->direction == LANGUAGE_RTL) {
-    $ie_styles .= '      <style type="text/css" media="all">@import "' . base_path() . path_to_theme() . '/fix-ie-rtl.css";</style>' . "\n";
+    $ie_styles .= '      <style type="text/css" media="all">@import "' . file_create_url(path_to_theme() . '/fix-ie-rtl.css') . '";</style>' . "\n";
   }
 
   return $ie_styles;

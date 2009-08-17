@@ -1,5 +1,5 @@
 <?php
-// $Id: image.gd.inc,v 1.7 2009/07/21 00:07:41 webchick Exp $
+// $Id: image.gd.inc,v 1.8 2009/08/17 19:14:41 webchick Exp $
 
 /**
  * @file
@@ -254,6 +254,11 @@ function image_gd_load(stdClass $image) {
  * @see image_save()
  */
 function image_gd_save(stdClass $image, $destination) {
+  // Convert URI to a normal path because PHP apparently has some gaps in stream wrapper support.
+  if ($wrapper = file_stream_wrapper_get_instance_by_uri($destination)) {
+    $destination = $wrapper->realpath();
+  }
+  
   $extension = str_replace('jpg', 'jpeg', $image->info['extension']);
   $function = 'image' . $extension;
   if (!function_exists($function)) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: registry.inc,v 1.20 2009/08/04 05:09:40 webchick Exp $
+// $Id: registry.inc,v 1.21 2009/08/17 19:14:39 webchick Exp $
 
 /**
  * @file
@@ -42,7 +42,7 @@ function _registry_rebuild() {
   // Get the list of files we are going to parse.
   $files = array();
   foreach ($modules as &$module) {
-    $dir = dirname($module->filepath);
+    $dir = dirname($module->uri);
 
     // Store the module directory for use in hook_registry_files_alter().
     $module->dir = $dir;

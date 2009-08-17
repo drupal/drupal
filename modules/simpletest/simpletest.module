@@ -1,5 +1,5 @@
 <?php
-// $Id: simpletest.module,v 1.67 2009/08/16 19:33:54 dries Exp $
+// $Id: simpletest.module,v 1.68 2009/08/17 19:14:41 webchick Exp $
 
 /**
  * @file
@@ -78,6 +78,19 @@ function simpletest_theme() {
     'simpletest_result_summary' => array(
       'arguments' => array('form' => NULL),
       'file' => 'simpletest.pages.inc',
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_stream_wrappers().
+ */
+function simpletest_test_stream_wrappers() {
+  return array(
+    'simpletest' => array(
+      'name' => t('Simpletest files'),
+      'class' => 'DrupalSimpleTestStreamWrapper',
+      'description' => t('Stream Wrapper for Simpletest files.'),
     ),
   );
 }
@@ -260,7 +273,7 @@ function simpletest_last_test_get($test_id) {
  *   Found any entries in log.
  */
 function simpletest_log_read($test_id, $prefix, $test_class, $during_test = FALSE) {
-  $log = file_directory_path() . ($during_test ? '' : '/simpletest/' . substr($prefix, 10)) . '/error.log';
+  $log = 'public://' . ($during_test ? '' : '/simpletest/' . substr($prefix, 10)) . '/error.log';
   $found = FALSE;
   if (file_exists($log)) {
     foreach (file($log) as $line) {
@@ -418,12 +431,11 @@ function simpletest_clean_database() {
  * Find all leftover temporary directories and remove them.
  */
 function simpletest_clean_temporary_directories() {
-  $directory = file_directory_path() . '/simpletest';
-  $files = scandir($directory);
+  $files = scandir('public://');
   $count = 0;
   foreach ($files as $file) {
-    $path = "$directory/$file";
-    if (is_dir($path) && is_numeric($file)) {
+    $path = 'public://' . $file;
+    if (is_dir($path) && preg_match('/^simpletest\d+/', $file)) {
       file_unmanaged_delete_recursive($path);
       $count++;
     }

@@ -36,7 +36,7 @@
  * @author      Vincent Blavet <vincent@phpconcept.net>
  * @copyright   1997-2008 The Authors
  * @license     http://www.opensource.org/licenses/bsd-license.php New BSD License
- * @version     CVS: $Id: system.tar.inc,v 1.1 2009/06/17 10:46:49 dries Exp $
+ * @version     CVS: $Id: system.tar.inc,v 1.2 2009/08/17 19:14:41 webchick Exp $
  * @link        http://pear.php.net/package/Archive_Tar
  */
 
@@ -47,7 +47,7 @@ define ('ARCHIVE_TAR_END_BLOCK', pack("a512", ''));
 * Creates a (compressed) Tar archive
 *
 * @author   Vincent Blavet <vincent@phpconcept.net>
-* @version  $Revision: 1.1 $
+* @version  $Revision: 1.2 $
 * @license  http://www.opensource.org/licenses/bsd-license.php New BSD License
 * @package  Archive_Tar
 */
@@ -1582,7 +1582,7 @@ class Archive_Tar
         if ($v_extract_file) {
           if ($v_header['typeflag'] == "5") {
             if (!@file_exists($v_header['filename'])) {
-                if (!@mkdir($v_header['filename'], 0777)) {
+                if (!@drupal_mkdir($v_header['filename'], 0777)) {
                     $this->_error('Unable to create directory {'
 					              .$v_header['filename'].'}');
                     return false;
@@ -1795,7 +1795,7 @@ class Archive_Tar
             (!$this->_dirCheck($p_parent_dir)))
              return false;
 
-        if (!@mkdir($p_dir, 0777)) {
+        if (!@drupal_mkdir($p_dir, 0777)) {
             $this->_error("Unable to create directory '$p_dir'");
             return false;
         }

@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.63 2009/08/16 17:37:06 webchick Exp $
+// $Id: common.test,v 1.64 2009/08/17 19:14:41 webchick Exp $
 
 /**
  * Tests for the l() function.
@@ -403,8 +403,9 @@ class CascadingStylesheetsTestCase extends DrupalWebTestCase {
       drupal_get_path('module', 'simpletest') . '/simpletest.css',
     );
 
+
     $styles = drupal_get_css();
-    if (preg_match_all('/href="' . preg_quote(base_path(), '/') . '([^?]+)\?/', $styles, $matches)) {
+    if (preg_match_all('/href="' . preg_quote($GLOBALS['base_url'] . '/', '/') . '([^?]+)\?/', $styles, $matches)) {
       $result = $matches[1];
     }
     else {
