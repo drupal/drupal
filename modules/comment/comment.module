@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.752 2009/08/11 15:50:55 webchick Exp $
+// $Id: comment.module,v 1.753 2009/08/17 13:10:45 webchick Exp $
 
 /**
  * @file
@@ -1236,6 +1236,9 @@ function comment_save($comment) {
   }
 
   field_attach_presave('comment', $comment);
+
+  // Allow modules to alter the comment before saving.
+  module_invoke_all('comment_presave', $comment);
 
   if ($comment->cid) {
     // Update the comment in the database.
