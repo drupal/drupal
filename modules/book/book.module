@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.503 2009/08/11 15:50:55 webchick Exp $
+// $Id: book.module,v 1.504 2009/08/17 07:12:15 webchick Exp $
 
 /**
  * @file
@@ -490,10 +490,11 @@ function _book_add_form_elements(&$form, $node) {
     '#description' => t('Your page will be a part of the selected book.'),
     '#weight' => -5,
     '#attributes' => array('class' => 'book-title-select'),
-    '#ahah' => array(
+    '#ajax' => array(
       'path' => 'book/js/form',
       'wrapper' => 'edit-book-plid-wrapper',
-      'effect' => 'slide',
+      'effect' => 'fade',
+      'speed' => 'fast',
     ),
   );
 }

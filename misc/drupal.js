@@ -1,4 +1,4 @@
-// $Id: drupal.js,v 1.56 2009/07/03 19:21:54 dries Exp $
+// $Id: drupal.js,v 1.57 2009/08/17 07:12:15 webchick Exp $
 
 var Drupal = Drupal || { 'settings': {}, 'behaviors': {}, 'locale': {} };
 
@@ -294,9 +294,9 @@ Drupal.getSelection = function (element) {
 };
 
 /**
- * Build an error message from ahah response.
+ * Build an error message from an AJAX response.
  */
-Drupal.ahahError = function (xmlhttp, uri) {
+Drupal.ajaxError = function (xmlhttp, uri) {
   if (xmlhttp.status == 200 || (xmlhttp.status == 500 && xmlhttp.statusText == 'Service unavailable (with message)')) {
     if ($.trim(xmlhttp.responseText)) {
       var message = Drupal.t("An error occurred. \nPath: @uri\nMessage: !text", { '@uri': uri, '!text': xmlhttp.responseText });

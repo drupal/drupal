@@ -1,4 +1,4 @@
-// $Id: autocomplete.js,v 1.31 2009/07/03 19:21:54 dries Exp $
+// $Id: autocomplete.js,v 1.32 2009/08/17 07:12:15 webchick Exp $
 (function ($) {
 
 /**
@@ -289,7 +289,7 @@ Drupal.ACDB.prototype.search = function (searchString) {
         }
       },
       error: function (xmlhttp) {
-        alert(Drupal.ahahError(xmlhttp, db.uri));
+        alert(Drupal.ajaxError(xmlhttp, db.uri));
       }
     });
   }, this.delay);
