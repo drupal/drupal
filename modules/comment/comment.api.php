@@ -12,6 +12,19 @@
  */
 
 /**
+ * The comment passed validation and is about to be saved.
+ *
+ * Modules may make changes to the comment before it is saved to the database.
+ *
+ * @param $comment
+ *   The comment object.
+ */
+function hook_comment_presave($comment) {
+  // Remove leading & trailing spaces from the comment subject.
+  $comment->subject = trim($comment->subject);
+}
+
+/**
  * The comment is being inserted.
  *
  * @param $comment

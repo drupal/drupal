@@ -1237,6 +1237,9 @@ function comment_save($comment) {
 
   field_attach_presave('comment', $comment);
 
+  // Allow modules to alter the comment before saving.
+  module_invoke_all('comment_presave', $comment);
+
   if ($comment->cid) {
     // Update the comment in the database.
     db_update('comment')
