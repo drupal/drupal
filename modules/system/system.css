@@ -450,20 +450,20 @@ html.js .no-js {
 .progress-disabled {
   float: left; /* LTR */
 }
-.ahah-progress {
+.ajax-progress {
   float: left; /* LTR */
 }
-.ahah-progress .throbber {
+.ajax-progress .throbber {
   width: 15px;
   height: 15px;
   margin: 2px;
   background: transparent url(../../misc/throbber.gif) no-repeat 0px -18px;
   float: left; /* LTR */
 }
-tr .ahah-progress .throbber {
+tr .ajax-progress .throbber {
   margin: 0 2px;
 }
-.ahah-progress-bar {
+.ajax-progress-bar {
   width: 16em;
 }
 

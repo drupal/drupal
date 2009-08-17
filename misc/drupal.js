@@ -294,9 +294,9 @@ Drupal.getSelection = function (element) {
 };
 
 /**
- * Build an error message from ahah response.
+ * Build an error message from an AJAX response.
  */
-Drupal.ahahError = function (xmlhttp, uri) {
+Drupal.ajaxError = function (xmlhttp, uri) {
   if (xmlhttp.status == 200 || (xmlhttp.status == 500 && xmlhttp.statusText == 'Service unavailable (with message)')) {
     if ($.trim(xmlhttp.responseText)) {
       var message = Drupal.t("An error occurred. \nPath: @uri\nMessage: !text", { '@uri': uri, '!text': xmlhttp.responseText });

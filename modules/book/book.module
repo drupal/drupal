@@ -490,10 +490,11 @@ function _book_add_form_elements(&$form, $node) {
     '#description' => t('Your page will be a part of the selected book.'),
     '#weight' => -5,
     '#attributes' => array('class' => 'book-title-select'),
-    '#ahah' => array(
+    '#ajax' => array(
       'path' => 'book/js/form',
       'wrapper' => 'edit-book-plid-wrapper',
-      'effect' => 'slide',
+      'effect' => 'fade',
+      'speed' => 'fast',
     ),
   );
 }

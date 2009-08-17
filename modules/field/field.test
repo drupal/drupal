@@ -1336,12 +1336,19 @@ class FieldFormTestCase extends DrupalWebTestCase {
     unset($this->additionalCurlOptions[CURLOPT_URL]);
 
     // The response is drupal_json, so we need to undo some escaping.
-    $response = json_decode(str_replace(array('\x3c', '\x3e', '\x26'), array("<", ">", "&"), $this->drupalGetContent()));
-    $this->assertTrue(is_object($response), t('The response is an object'));
-    $this->assertIdentical($response->status, TRUE, t('Response status is true'));
+    $commands = json_decode(str_replace(array('\x3c', '\x3e', '\x26'), array("<", ">", "&"), $this->drupalGetContent()));
+
+    // The JSON response will be two AJAX commands. The first is a settings
+    // command and the second is the replace command.
+    $settings = reset($commands);
+    $replace = next($commands);
+
+    $this->assertTrue(is_object($settings), t('The response settings command is an object'));
+    $this->assertTrue(is_object($replace), t('The response replace command is an object'));
+
     // This response data is valid HTML so we will can reuse everything we have
     // for HTML pages.
-    $this->content = $response->data;
+    $this->content = $replace->data;
 
     // Needs to be emptied out so the new content will be parsed.
     $this->elements = '';

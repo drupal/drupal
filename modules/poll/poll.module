@@ -263,14 +263,14 @@ function poll_form($node, $form_state) {
   }
 
   // We name our button 'poll_more' to avoid conflicts with other modules using
-  // AHAH-enabled buttons with the id 'more'.
+  // AJAX-enabled buttons with the id 'more'.
   $form['choice_wrapper']['poll_more'] = array(
     '#type' => 'submit',
     '#value' => t('More choices'),
     '#description' => t("If the amount of boxes above isn't enough, click here to add more choices."),
     '#weight' => 1,
     '#submit' => array('poll_more_choices_submit'), // If no javascript action.
-    '#ahah' => array(
+    '#ajax' => array(
       'callback' => 'poll_choice_js',
       'wrapper' => 'poll-choices',
       'method' => 'replace',
@@ -320,7 +320,7 @@ function poll_more_choices_submit($form, &$form_state) {
 
   // Make the changes we want to the form state.
   if ($form_state['values']['poll_more']) {
-    $n = $_GET['q'] == 'system/ahah' ? 1 : 5;
+    $n = $_GET['q'] == 'system/ajax' ? 1 : 5;
     $form_state['choice_count'] = count($form_state['values']['choice']) + $n;
   }
 }
@@ -373,9 +373,7 @@ function poll_choice_js($form, $form_state) {
 
   // Prevent duplicate wrappers.
   unset($choice_form['#prefix'], $choice_form['#suffix']);
-  $output = theme('status_messages') . drupal_render($choice_form);
-
-  drupal_json(array('status' => TRUE, 'data' => $output));
+  return theme('status_messages') . drupal_render($choice_form);
 }
 
 /**

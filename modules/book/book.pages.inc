@@ -234,28 +234,26 @@ function book_remove_form_submit($form, &$form_state) {
  *   Prints the replacement HTML in JSON format.
  */
 function book_form_update() {
-  $cached_form_state = array();
+  // Load the form based upon the $_POST data sent via the ajax call.
+  list($form, $form_state) = ajax_get_form();
+
+  $commands = array();
   $bid = $_POST['book']['bid'];
-  if ($form = form_get_cache($_POST['form_build_id'], $cached_form_state)) {
-    // Validate the bid.
-    if (isset($form['book']['bid']['#options'][$bid])) {
-      $book_link = $form['#node']->book;
-      $book_link['bid'] = $bid;
-      // Get the new options and update the cache.
-      $form['book']['plid'] = _book_parent_select($book_link);
-      form_set_cache($_POST['form_build_id'], $form, $cached_form_state);
-      // Build and render the new select element, then return it in JSON format.
-      $form_state = array();
-      $form = form_builder($form['form_id']['#value'] , $form, $form_state);
-      $output = drupal_render($form['book']['plid']);
-      drupal_json(array('status' => TRUE, 'data' => $output));
-    }
-    else {
-      drupal_json(array('status' => FALSE, 'data' => ''));
-    }
+
+  // Validate the bid.
+  if (isset($form['book']['bid']['#options'][$bid])) {
+    $book_link = $form['#node']->book;
+    $book_link['bid'] = $bid;
+    // Get the new options and update the cache.
+    $form['book']['plid'] = _book_parent_select($book_link);
+    form_set_cache($form['values']['form_build_id'], $form, $form_state);
+
+    // Build and render the new select element, then return it in JSON format.
+    $form_state = array();
+    $form = form_builder($form['form_id']['#value'], $form, $form_state);
+
+    $commands[] = ajax_command_replace(NULL, drupal_render($form['book']['plid']));
   }
-  else {
-    drupal_json(array('status' => FALSE, 'data' => ''));
-  }
-  exit();
+
+  ajax_render($commands);
 }

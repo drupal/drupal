@@ -286,7 +286,7 @@ function system_elements() {
     '#name' => 'op',
     '#button_type' => 'submit',
     '#executes_submit_callback' => TRUE,
-    '#process' => array('form_process_ahah'),
+    '#process' => array('ajax_process_form'),
     '#theme_wrappers' => array('button'),
   );
 
@@ -295,7 +295,7 @@ function system_elements() {
     '#name' => 'op',
     '#button_type' => 'submit',
     '#executes_submit_callback' => FALSE,
-    '#process' => array('form_process_ahah'),
+    '#process' => array('ajax_process_form'),
     '#theme_wrappers' => array('button'),
   );
 
@@ -303,7 +303,7 @@ function system_elements() {
     '#input' => TRUE,
     '#button_type' => 'submit',
     '#executes_submit_callback' => TRUE,
-    '#process' => array('form_process_ahah'),
+    '#process' => array('ajax_process_form'),
     '#return_value' => TRUE,
     '#has_garbage_value' => TRUE,
     '#src' => NULL,
@@ -315,7 +315,7 @@ function system_elements() {
     '#size' => 60,
     '#maxlength' => 128,
     '#autocomplete_path' => FALSE,
-    '#process' => array('form_process_text_format', 'form_process_ahah'),
+    '#process' => array('form_process_text_format', 'ajax_process_form'),
     '#theme' => 'textfield',
     '#theme_wrappers' => array('form_element'),
   );
@@ -324,7 +324,7 @@ function system_elements() {
     '#input' => TRUE,
     '#size' => 60,
     '#maxlength' => 128,
-    '#process' => array('form_process_ahah'),
+    '#process' => array('ajax_process_form'),
     '#theme' => 'password',
     '#theme_wrappers' => array('form_element'),
   );
@@ -340,7 +340,7 @@ function system_elements() {
     '#cols' => 60,
     '#rows' => 5,
     '#resizable' => TRUE,
-    '#process' => array('form_process_text_format', 'form_process_ahah'),
+    '#process' => array('form_process_text_format', 'ajax_process_form'),
     '#theme' => 'textarea',
     '#theme_wrappers' => array('form_element'),
   );
@@ -355,7 +355,7 @@ function system_elements() {
   $type['radio'] = array(
     '#input' => TRUE,
     '#default_value' => NULL,
-    '#process' => array('form_process_ahah'),
+    '#process' => array('ajax_process_form'),
     '#theme' => 'radio',
     '#theme_wrappers' => array('form_element'),
     '#form_element_skip_title' => TRUE,
@@ -372,7 +372,7 @@ function system_elements() {
   $type['checkbox'] = array(
     '#input' => TRUE,
     '#return_value' => 1,
-    '#process' => array('form_process_ahah'),
+    '#process' => array('ajax_process_form'),
     '#theme' => 'checkbox',
     '#theme_wrappers' => array('form_element'),
     '#form_element_skip_title' => TRUE,
@@ -382,7 +382,7 @@ function system_elements() {
     '#input' => TRUE,
     '#size' => 0,
     '#multiple' => FALSE,
-    '#process' => array('form_process_ahah'),
+    '#process' => array('ajax_process_form'),
     '#theme' => 'select',
     '#theme_wrappers' => array('form_element'),
   );
@@ -391,7 +391,7 @@ function system_elements() {
     '#input' => TRUE,
     '#delta' => 10,
     '#default_value' => 0,
-    '#process' => array('form_process_weight', 'form_process_ahah'),
+    '#process' => array('form_process_weight', 'ajax_process_form'),
   );
 
   $type['date'] = array(
@@ -430,7 +430,7 @@ function system_elements() {
 
   $type['hidden'] = array(
     '#input' => TRUE,
-    '#process' => array('form_process_ahah'),
+    '#process' => array('ajax_process_form'),
     '#theme' => 'hidden',
   );
 
@@ -447,7 +447,7 @@ function system_elements() {
     '#collapsible' => FALSE,
     '#collapsed' => FALSE,
     '#value' => NULL,
-    '#process' => array('form_process_fieldset', 'form_process_ahah'),
+    '#process' => array('form_process_fieldset', 'ajax_process_form'),
     '#pre_render' => array('form_pre_render_fieldset'),
     '#theme_wrappers' => array('fieldset'),
   );
@@ -476,9 +476,9 @@ function system_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
-  $items['system/ahah'] = array(
+  $items['system/ajax'] = array(
     'title' => 'AHAH callback',
-    'page callback' => 'form_ahah_callback',
+    'page callback' => 'ajax_form_callback',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );

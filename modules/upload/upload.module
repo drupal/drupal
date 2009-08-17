@@ -60,7 +60,7 @@ function upload_permission() {
  */
 function upload_node_links($node, $build_mode) {
   $links = array();
-    
+
   // Display a link with the number of attachments
   $num_files = 0;
   foreach ($node->files as $file) {
@@ -236,7 +236,7 @@ function upload_form_alter(&$form, $form_state, $form_id) {
         '#weight' => 30,
       );
 
-      // Wrapper for fieldset contents (used by ahah.js).
+      // Wrapper for fieldset contents (used by ajax.js).
       $form['attachments']['wrapper'] = array(
         '#prefix' => '<div id="attach-wrapper">',
         '#suffix' => '</div>',
@@ -582,7 +582,7 @@ function _upload_form($node) {
       '#type' => 'submit',
       '#value' => t('Attach'),
       '#name' => 'attach',
-      '#ahah' => array(
+      '#ajax' => array(
         'path' => 'upload/js',
         'wrapper' => 'attach-wrapper',
         'progress' => array('type' => 'bar', 'message' => t('Please wait...')),
@@ -692,9 +692,11 @@ function upload_js() {
   $form = form_builder('upload_js', $form, $form_state);
   $output = theme('status_messages') . drupal_render($form);
 
-  // We send the updated file attachments form.
-  // Don't call drupal_json(). ahah.js uses an iframe and
-  // the header output by drupal_json() causes problems in some browsers.
-  print drupal_to_js(array('status' => TRUE, 'data' => $output));
-  exit;
+  $commands = array();
+  $commands[] = ajax_command_replace(NULL, $output);
+
+  // AJAX uploads use an <iframe> and some browsers have problems with the
+  // 'text/javascript' Content-Type header with iframes. Passing FALSE to
+  // ajax_render() prevents the header from being sent.
+  ajax_render($commands, FALSE);
 }

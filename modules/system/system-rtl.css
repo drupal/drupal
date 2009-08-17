@@ -81,10 +81,10 @@ div.teaser-button-wrapper {
 .progress-disabled {
   float: right;
 }
-.ahah-progress {
+.ajax-progress {
   float: right;
 }
-.ahah-progress .throbber {
+.ajax-progress .throbber {
   float: right;
 }
 input.password-field {

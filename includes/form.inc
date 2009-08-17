@@ -1801,48 +1801,6 @@ function weight_value(&$form) {
 }
 
 /**
- * Menu callback for AHAH callbacks through the #ahah['callback'] FAPI property.
- */
-function form_ahah_callback() {
-  $form_state = form_state_defaults();
-
-  $form_build_id = $_POST['form_build_id'];
-
-  // Get the form from the cache.
-  $form = form_get_cache($form_build_id, $form_state);
-  if (!$form) {
-    // If $form cannot be loaded from the cache, the form_build_id in $_POST must
-    // be invalid, which means that someone performed a POST request onto
-    // system/ahah without actually viewing the concerned form in the browser.
-    // This is likely a hacking attempt as it never happens under normal
-    // circumstances, so we just do nothing.
-    exit;
-  }
-
-  // We will run some of the submit handlers so we need to disable redirecting.
-  $form['#redirect'] = FALSE;
-
-  // We need to process the form, prepare for that by setting a few internals
-  // variables.
-  $form_state['input'] = $_POST;
-  $form_state['args'] = $form['#args'];
-  $form_id = $form['#form_id'];
-
-  // Build, validate and if possible, submit the form.
-  drupal_process_form($form_id, $form, $form_state);
-
-  // This call recreates the form relying solely on the form_state that the
-  // drupal_process_form set up.
-  $form = drupal_rebuild_form($form_id, $form_state, $form_build_id);
-
-  // Get the callback function from the clicked button.
-  $callback = $form_state['clicked_button']['#ahah']['callback'];
-  if (drupal_function_exists($callback)) {
-    $callback($form, $form_state);
-  }
-}
-
-/**
  * Roll out a single radios element to a list of radios,
  * using the options array as index.
  */
@@ -1861,7 +1819,7 @@ function form_process_radios($element) {
           '#attributes' => $element['#attributes'],
           '#parents' => $element['#parents'],
           '#id' => form_clean_id('edit-' . implode('-', $parents_for_id)),
-          '#ahah' => isset($element['#ahah']) ? $element['#ahah'] : NULL,
+          '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
         );
       }
     }
@@ -1971,91 +1929,6 @@ function theme_text_format_wrapper($element) {
 }
 
 /**
- * Add AHAH information about a form element to the page to communicate with
- * javascript. If #ahah[path] is set on an element, this additional javascript is
- * added to the page header to attach the AHAH behaviors. See ahah.js for more
- * information.
- *
- * @param $element
- *   An associative array containing the properties of the element.
- *   Properties used: ahah_event, ahah_path, ahah_wrapper, ahah_parameters,
- *   ahah_effect.
- * @return
- *   None. Additional code is added to the header of the page using
- *   drupal_add_js.
- */
-function form_process_ahah($element) {
-  $js_added = &drupal_static(__FUNCTION__, array());
-  // Add a reasonable default event handler if none specified.
-  if (isset($element['#ahah']) && !isset($element['#ahah']['event'])) {
-    switch ($element['#type']) {
-      case 'submit':
-      case 'button':
-      case 'image_button':
-        // Use the mousedown instead of the click event because form
-        // submission via pressing the enter key triggers a click event on
-        // submit inputs, inappropriately triggering AHAH behaviors.
-        $element['#ahah']['event'] = 'mousedown';
-        // Attach an additional event handler so that AHAH behaviors
-        // can be triggered still via keyboard input.
-        $element['#ahah']['keypress'] = TRUE;
-        break;
-      case 'password':
-      case 'textfield':
-      case 'textarea':
-        $element['#ahah']['event'] = 'blur';
-        break;
-      case 'radio':
-      case 'checkbox':
-      case 'select':
-        $element['#ahah']['event'] = 'change';
-        break;
-      default:
-        return $element;
-    }
-  }
-
-  // Adding the same javascript settings twice will cause a recursion error,
-  // we avoid the problem by checking if the javascript has already been added.
-  if ((isset($element['#ahah']['callback']) || isset($element['#ahah']['path'])) && isset($element['#ahah']['event']) && !isset($js_added[$element['#id']])) {
-    drupal_add_library('system', 'form');
-    drupal_add_js('misc/ahah.js');
-
-    $ahah_binding = array(
-      'url'      => isset($element['#ahah']['callback']) ? url('system/ahah') : url($element['#ahah']['path']),
-      'event'    => $element['#ahah']['event'],
-      'keypress' => empty($element['#ahah']['keypress']) ? NULL : $element['#ahah']['keypress'],
-      'wrapper'  => empty($element['#ahah']['wrapper']) ? NULL : $element['#ahah']['wrapper'],
-      'selector' => empty($element['#ahah']['selector']) ? '#' . $element['#id'] : $element['#ahah']['selector'],
-      'effect'   => empty($element['#ahah']['effect']) ? 'none' : $element['#ahah']['effect'],
-      'method'   => empty($element['#ahah']['method']) ? 'replace' : $element['#ahah']['method'],
-      'progress' => empty($element['#ahah']['progress']) ? array('type' => 'throbber') : $element['#ahah']['progress'],
-      'button'   => isset($element['#executes_submit_callback']) ? array($element['#name'] => $element['#value']) : FALSE,
-    );
-
-    // Convert a simple #ahah[progress] type string into an array.
-    if (is_string($ahah_binding['progress'])) {
-      $ahah_binding['progress'] = array('type' => $ahah_binding['progress']);
-    }
-    // Change progress path to a full url.
-    if (isset($ahah_binding['progress']['path'])) {
-      $ahah_binding['progress']['url'] = url($ahah_binding['progress']['path']);
-    }
-
-    // Add progress.js if we're doing a bar display.
-    if ($ahah_binding['progress']['type'] == 'bar') {
-      drupal_add_js('misc/progress.js', array('cache' => FALSE));
-    }
-
-    drupal_add_js(array('ahah' => array($element['#id'] => $ahah_binding)), 'setting');
-
-    $js_added[$element['#id']] = TRUE;
-    $element['#cache'] = TRUE;
-  }
-  return $element;
-}
-
-/**
  * Format a checkbox.
  *
  * @param $element
@@ -2132,7 +2005,7 @@ function form_process_checkboxes($element) {
           '#return_value' => $key,
           '#default_value' => isset($value[$key]),
           '#attributes' => $element['#attributes'],
-          '#ahah' => isset($element['#ahah']) ? $element['#ahah'] : NULL,
+          '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
         );
       }
     }
@@ -2245,7 +2118,7 @@ function form_process_tableselect($element) {
             '#return_value' => $key,
             '#default_value' => isset($value[$key]),
             '#attributes' => $element['#attributes'],
-            '#ahah' => isset($element['#ahah']) ? $element['#ahah'] : NULL,
+            '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
           );
         }
         else {
@@ -2260,7 +2133,7 @@ function form_process_tableselect($element) {
             '#attributes' => $element['#attributes'],
             '#parents' => $element['#parents'],
             '#id' => form_clean_id('edit-' . implode('-', $parents_for_id)),
-            '#ahah' => isset($element['#ahah']) ? $element['#ahah'] : NULL,
+            '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
           );
         }
       }

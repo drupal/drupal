@@ -190,7 +190,7 @@ function field_multiple_value_form($field, $instance, $items, &$form, &$form_sta
         '#value' => t('Add another item'),
         // Submit callback for disabled JavaScript.
         '#submit' => array('field_add_more_submit'),
-        '#ahah' => array(
+        '#ajax' => array(
           'path' => 'field/js_add_more/' . $bundle_name_url_css . '/' . $field_name_url_css,
           'wrapper' => $field_name_url_css . '-wrapper',
           'method' => 'replace',
@@ -362,13 +362,13 @@ function field_add_more_js($bundle_name, $field_name) {
   }
 
   if ($invalid) {
-    drupal_json(array('data' => ''));
-    exit;
+    ajax_render(array());
   }
 
   // We don't simply return a new empty widget row to append to existing ones,
   // because:
   // - ahah.js won't simply let us add a new row to a table
+  //   @todo ajax.js lets you. :)
   // - attaching the 'draggable' behavior won't be easy
   // So we resort to rebuilding the whole table of widgets including the
   // existing ones, which makes us jump through a few hoops.
@@ -428,21 +428,15 @@ function field_add_more_js($bundle_name, $field_name) {
   foreach ($form_path as $key) {
     $field_form = $field_form[$key];
   }
-  // Add a div around the new field to receive the ahah effect.
-  $field_form[$delta]['#prefix'] = '<div class="ahah-new-content">' . (isset($field_form[$delta]['#prefix']) ? $field_form[$delta]['#prefix'] : '');
+  // Add a DIV around the new field to receive the AJAX effect.
+  $field_form[$delta]['#prefix'] = '<div class="ajax-new-content">' . (isset($field_form[$delta]['#prefix']) ? $field_form[$delta]['#prefix'] : '');
   $field_form[$delta]['#suffix'] = (isset($field_form[$delta]['#suffix']) ? $field_form[$delta]['#suffix'] : '') . '</div>';
   // Prevent duplicate wrapper.
   unset($field_form['#prefix'], $field_form['#suffix']);
 
-  // If a newly inserted widget contains AHAH behaviors, they normally won't
-  // work because AHAH doesn't know about those - it just attaches to the exact
-  // form elements that were initially specified in the Drupal.settings object.
-  // The new ones didn't exist then, so we need to update Drupal.settings
-  // by ourselves in order to let AHAH know about those new form elements.
-  $javascript = drupal_add_js(NULL, NULL);
-  $output_js = isset($javascript['setting']) ? '<script type="text/javascript">jQuery.extend(Drupal.settings, ' . drupal_to_js(call_user_func_array('array_merge_recursive', $javascript['setting'])) . ');</script>' : '';
+  $output = theme('status_messages') . drupal_render($field_form);
 
-  $output = theme('status_messages') . drupal_render($field_form) . $output_js;
-  drupal_json(array('status' => TRUE, 'data' => $output));
-  exit;
+  $commands = array();
+  $commands[] = ajax_command_replace(NULL, $output);
+  ajax_render($commands);
 }

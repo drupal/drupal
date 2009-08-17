@@ -47,7 +47,7 @@ html.js #edit-book-pick-book {
 #book-admin-edit select.progress-disabled {
   margin-right: 0;
 }
-#book-admin-edit tr.ahah-new-content {
+#book-admin-edit tr.ajax-new-content {
   background-color: #ffd;
 }
 #book-admin-edit .form-item {
