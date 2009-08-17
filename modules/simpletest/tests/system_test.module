@@ -1,5 +1,5 @@
 <?php
-// $Id: system_test.module,v 1.14 2009/08/05 16:16:41 webchick Exp $
+// $Id: system_test.module,v 1.15 2009/08/17 20:32:30 dries Exp $
 
 /**
  * Implement hook_menu().
@@ -56,6 +56,20 @@ function system_test_menu() {
     'page callback' => 'variable_get',
     'page arguments' => array('simpletest_bootstrap_variable_test', NULL),
     'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/lock-acquire'] = array(
+    'title' => 'Lock acquire',
+    'page callback' => 'system_test_lock_acquire',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  $items['system-test/lock-exit'] = array(
+    'title' => 'Lock acquire then exit',
+    'page callback' => 'system_test_lock_exit',
+    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
 
@@ -185,3 +199,29 @@ function system_test_system_info_alter(&$info, $file) {
   }
 }
 
+/**
+ * Try to acquire a named lock and report the outcome.
+ */
+function system_test_lock_acquire() {
+  if (lock_acquire('system_test_lock_acquire')) {
+    lock_release('system_test_lock_acquire');
+    return 'TRUE: Lock successfully acquired in system_test_lock_acquire()';
+  }
+  else {
+    return 'FALSE: Lock not acquired in system_test_lock_acquire()';
+  }
+}
+
+/**
+ * Try to acquire a specific lock, and then exit.
+ */
+function system_test_lock_exit() {
+  if (lock_acquire('system_test_lock_exit', 900)) {
+    echo 'TRUE: Lock successfully acquired in system_test_lock_exit()';
+    // The shut-down function should release the lock.
+    exit();
+  }
+  else {
+    return 'FALSE: Lock not acquired in system_test_lock_exit()';
+  }
+}

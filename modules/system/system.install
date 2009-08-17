@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.369 2009/08/17 19:14:41 webchick Exp $
+// $Id: system.install,v 1.370 2009/08/17 20:32:30 dries Exp $
 
 /**
  * @file
@@ -1263,6 +1263,34 @@ function system_schema() {
       ),
     ),
     'primary key' => array('filename'),
+  );
+
+  $schema['semaphore'] = array(
+    'description' => 'Table for holding semaphores, locks, flags, etc. that cannot be stored as Drupal variables since they must not be cached.',
+    'fields' => array(
+      'name' => array(
+        'description' => 'Primary Key: Unique name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''
+      ),
+      'value' => array(
+        'description' => 'A value for the semaphore.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''
+      ),
+      'expire' => array(
+        'description' => 'A Unix timestamp with microseconds indicating when the semaphore should expire.',
+        'type' => 'float',
+        'size' => 'big',
+        'not null' => TRUE
+      ),
+    ),
+    'indexes' => array('value' => array('value')),
+    'primary key' => array('name'),
   );
 
   $schema['sessions'] = array(
