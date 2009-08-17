@@ -1,0 +1,79 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Provide various pages for testing the internal browser.
+ */
+
+/**
+ * Implement hook_menu().
+ */
+function browser_test_menu() {
+  $items = array();
+
+  $items['browser_test/print/get'] = array(
+    'page callback' => 'browser_test_print_get',
+    'access arguments' => array('access content'),
+  );
+  $items['browser_test/print/post'] = array(
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('browser_test_print_post_form'),
+    'access arguments' => array('access content'),
+  );
+
+  $items['browser_test/refresh/meta'] = array(
+    'page callback' => 'browser_test_refresh_meta',
+    'access arguments' => array('access content'),
+  );
+  $items['browser_test/refresh/header'] = array(
+    'page callback' => 'browser_test_refresh_header',
+    'access arguments' => array('access content'),
+  );
+
+  return $items;
+}
+
+function browser_test_print_get() {
+  echo $_GET['foo'];
+  exit;
+}
+
+function browser_test_print_post_form(&$form_state) {
+  $form = array();
+
+  $form['foo'] = array(
+    '#type' => 'textfield',
+  );
+  $form['op'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit'),
+  );
+
+  return $form;
+}
+
+function browser_test_print_post_form_submit($form, &$form_state) {
+  echo $form_state['values']['foo'];
+  exit;
+}
+
+function browser_test_refresh_meta() {
+  if (!isset($_GET['refresh'])) {
+    $url = url('browser_test/refresh/meta', array('absolute' => TRUE, 'query' => 'refresh=true'));
+    drupal_add_html_head('<meta http-equiv="Refresh" content="0; URL=' . $url . '">');
+    return '';
+  }
+  echo 'Refresh successful';
+  exit;
+}
+
+function browser_test_refresh_header() {
+  if (!isset($_GET['refresh'])) {
+    $url = url('browser_test/refresh/header', array('absolute' => TRUE, 'query' => 'refresh=true'));
+    drupal_set_header('Location', $url);
+    return '';
+  }
+  echo 'Refresh successful';
+  exit;
+}

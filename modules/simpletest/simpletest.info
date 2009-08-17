@@ -14,6 +14,7 @@ files[] = drupal_web_test_case.php
 files[] = tests/actions.test
 files[] = tests/batch.test
 files[] = tests/bootstrap.test
+files[] = tests/browser.test
 files[] = tests/cache.test
 files[] = tests/common.test
 files[] = tests/database_test.test
