@@ -15,3 +15,13 @@ function locale_test_locale($op = 'groups') {
       return array('custom' => t('Custom'));
   }
 }
+
+/**
+ * For testing domain language negotiation, we fake it by setting
+ * the HTTP_HOST here
+ */
+function locale_test_boot() {
+  if (variable_get('locale_test_domain')) {
+    $_SERVER['HTTP_HOST'] = variable_get('locale_test_domain');
+  }
+}
