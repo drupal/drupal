@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.73 2009/08/04 06:44:48 webchick Exp $
+// $Id: node.pages.inc,v 1.74 2009/08/18 06:01:07 webchick Exp $
 
 /**
  * @file
@@ -330,6 +330,7 @@ function theme_node_form($form) {
  */
 function node_preview($node) {
   if (node_access('create', $node) || node_access('update', $node)) {
+    _field_invoke_multiple('load', 'node', array($node->nid => $node));
     // Load the user's name when needed.
     if (isset($node->name)) {
       // The use of isset() is mandatory in the context of user IDs, because
