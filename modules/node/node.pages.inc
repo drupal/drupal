@@ -330,6 +330,7 @@ function theme_node_form($form) {
  */
 function node_preview($node) {
   if (node_access('create', $node) || node_access('update', $node)) {
+    _field_invoke_multiple('load', 'node', array($node->nid => $node));
     // Load the user's name when needed.
     if (isset($node->name)) {
       // The use of isset() is mandatory in the context of user IDs, because

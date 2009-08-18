@@ -90,7 +90,7 @@ function taxonomy_term_edit($term) {
 /**
  * Helper function for autocompletion
  */
-function taxonomy_autocomplete($vid = 0, $tags_typed = '') {
+function taxonomy_autocomplete_legacy($vid = 0, $tags_typed = '') {
   // The user enters a comma-separated list of tags. We only autocomplete the last tag.
   $tags_typed = drupal_explode_tags($tags_typed);
   $tag_last = drupal_strtolower(array_pop($tags_typed));
@@ -131,11 +131,64 @@ function taxonomy_autocomplete($vid = 0, $tags_typed = '') {
         $name = t('Did you mean %suggestion', array('%suggestion' => $name));
         $synonym_matches[$prefix . $n] = filter_xss($name);
       }
+    }
+  }
+
+  drupal_json(array_merge($term_matches, $synonym_matches));
+}
+
+/**
+ * Helper function for autocompletion
+ */
+function taxonomy_autocomplete($field_name, $bundle, $tags_typed = '') {
+  $instance = field_info_instance($field_name, $bundle);
+  $field = field_info_field($field_name);
+
+  // The user enters a comma-separated list of tags. We only autocomplete the last tag.
+  $tags_typed = drupal_explode_tags($tags_typed);
+  $tag_last = drupal_strtolower(array_pop($tags_typed));
+
+  $matches = array();
+  if ($tag_last != '') {
+
+    // Part of the criteria for the query come from the field's own settings.
+    $vids = array();
+    foreach ($field['settings']['allowed_values'] as $tree) {
+      $vids[] = $tree['vid'];
+    }
+
+    $query = db_select('taxonomy_term_data', 't');
+    $query->addTag('term_access');
+
+    // Do not select already entered terms.
+    if (!empty($tags_typed)) {
+      $query->condition('t.name', $tags_typed, 'NOT IN');
+    }
+    $tags_return = $query
+      ->fields('t', array('tid', 'name'))
+      ->condition('t.vid', $vids)
+      // Select rows that match by term name.
+      ->condition(db_or()
+      ->where("t.name LIKE :last_string", array(':last_string' => '%' . $tag_last . '%'))
+      )
+      ->range(0, 10)
+      ->execute()
+      ->fetchAllKeyed();
+
+    $prefix = count($tags_typed) ? implode(', ', $tags_typed) . ', ' : '';
+
+    $term_matches = array();
+    foreach ($tags_return as $tid => $name) {
+      $n = $name;
+      // Term names containing commas or quotes must be wrapped in quotes.
+      if (strpos($name, ',') !== FALSE || strpos($name, '"') !== FALSE) {
+        $n = '"' . str_replace('"', '""', $name) . '"';
+      }
       else {
         $term_matches[$prefix . $n] = filter_xss($name);
       }
     }
   }
 
-  drupal_json(array_merge($term_matches, $synonym_matches));
+  drupal_json($term_matches);
 }
