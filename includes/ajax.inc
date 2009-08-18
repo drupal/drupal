@@ -24,7 +24,7 @@
  * a different callback function to invoke, which can return updated HTML or can
  * also return a richer set of AJAX framework commands.
  *
- * @see ajax_commands
+ * @see @link ajax_commands AJAX framework commands @endlink
  *
  * To implement AJAX handling in a normal form, just add '#ajax' to the form
  * definition of a field. That field will trigger an AJAX event when it is
@@ -74,7 +74,7 @@
  * be converted to a JSON object and returned to the client, which will then
  * iterate over the array and process it like a macro language.
  *
- * @see ajax_commands
+ * @see @link ajax_commands AJAX framework commands @endlink
  *
  * Each command is an object. $object->command is the type of command and will
  * be used to find the method (it will correlate directly to a method in
@@ -179,6 +179,7 @@ function ajax_get_form() {
     // system/ajax without actually viewing the concerned form in the browser.
     // This is likely a hacking attempt as it never happens under normal
     // circumstances, so we just do nothing.
+    watchdog('ajax', 'Invalid form POST data.', array(), WATCHDOG_WARNING);
     exit;
   }
 
@@ -216,7 +217,8 @@ function ajax_form_callback() {
     // If the returned value is a string, assume it is HTML and create
     // a command object to return automatically.
     if (is_string($html)) {
-      $commands = array(ajax_command_replace(NULL, $html));
+      $commands = array();
+      $commands[] = ajax_command_replace(NULL, $html);
     }
     // Otherwise, $html is supposed to be an array of commands, suitable for
     // Drupal.ajax, so we pass it on as is.
@@ -333,6 +335,7 @@ function ajax_process_form($element) {
 /**
  * @defgroup ajax_commands AJAX framework commands
  * @{
+ * @ingroup ajax
  */
 
 /**
