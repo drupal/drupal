@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.193 2009/08/17 19:14:39 webchick Exp $
+// $Id: install.php,v 1.194 2009/08/18 11:03:12 dries Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -1696,7 +1696,7 @@ function install_configure_form_submit($form, &$form_state) {
 // file to be included by command line scripts so that it can be used as an
 // API. It should be removed after the API functions in this file have been
 // moved out to a separate, reusable location.
-if (realpath($_SERVER['SCRIPT_FILENAME']) == __FILE__) {
+if (php_sapi_name() != 'cli' && !empty($_SERVER['REMOTE_ADDR'])) {
   // Start the installer.
   install_drupal();
 }
