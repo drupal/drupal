@@ -1,5 +1,5 @@
 <?php
-// $Id: locale_test.module,v 1.3 2009/05/27 18:33:58 dries Exp $
+// $Id: locale_test.module,v 1.4 2009/08/18 11:22:36 dries Exp $
 
 /**
  * @file
@@ -13,5 +13,15 @@ function locale_test_locale($op = 'groups') {
   switch ($op) {
     case 'groups':
       return array('custom' => t('Custom'));
+  }
+}
+
+/**
+ * For testing domain language negotiation, we fake it by setting
+ * the HTTP_HOST here
+ */
+function locale_test_boot() {
+  if (variable_get('locale_test_domain')) {
+    $_SERVER['HTTP_HOST'] = variable_get('locale_test_domain');
   }
 }
