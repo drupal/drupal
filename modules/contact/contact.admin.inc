@@ -172,9 +172,8 @@ function contact_admin_settings() {
   );
   $form['contact_default_status'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Enable personal contact form by default'),
+    '#title' => t('Enable the personal contact form by default for new users'),
     '#default_value' => 1,
-    '#description' => t('Default status of the personal contact form for new users.'),
   );
   return system_settings_form($form, TRUE);
 }
