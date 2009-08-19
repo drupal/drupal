@@ -17,6 +17,10 @@ a {
   text-decoration: none;
 }
 
+a:hover {
+  text-decoration: underline;
+}
+
 div.box, p {
   margin: 0 0 20px;
 }
