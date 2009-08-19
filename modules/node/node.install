@@ -1,5 +1,5 @@
 <?php
-// $Id: node.install,v 1.26 2009/08/19 12:37:58 dries Exp $
+// $Id: node.install,v 1.27 2009/08/19 22:46:05 webchick Exp $
 
 /**
  * @file
@@ -330,7 +330,7 @@ function node_schema() {
         'default' => '',
       ),
       'custom' => array(
-        'description' => 'A boolean indicating whether this type is defined by a module (FALSE) or by a user via a module like the Content Construction Kit (TRUE).',
+        'description' => 'A boolean indicating whether this type is defined by a module (FALSE) or by a user via Add content type (TRUE).',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
