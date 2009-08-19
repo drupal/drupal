@@ -603,10 +603,22 @@ class FileSaveUploadTest extends FileHookTestCase {
     $this->assertTrue(isset($files[$file1->fid]), t('File was loaded successfully'));
     $this->assertTrue(isset($files[$file2->fid]), t('File was loaded successfully'));
 
+    // Upload a third file to a subdirectory.
+    $image3 = current($this->drupalGetTestFiles('image'));
+    $image3_realpath = drupal_realpath($image3->uri);
+    $dir = $this->randomName();
+    $edit = array(
+      'files[file_test_upload]' => $image3_realpath,
+      'file_subdir' => $dir,
+    );
+    $this->drupalPost('file-test/upload', $edit, t('Submit'));
+    $this->assertResponse(200, t('Received a 200 response for posted test file.'));
+    $this->assertRaw(t('You WIN!'));
+    $this->assertTrue(is_file('temporary://' . $dir . '/' . trim(basename($image3_realpath))));
+
     // Check that file_load_multiple() with no arguments returns FALSE.
     $this->assertFalse(file_load_multiple(), t('No files were loaded.'));
   }
-
 
   /**
    * Test renaming when uploading over a file that already exists.

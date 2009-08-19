@@ -1067,7 +1067,7 @@ function file_space_used($uid = NULL, $status = FILE_STATUS_PERMANENT) {
  * the status and use file_save() to save the changes.
  *
  * @param $source
- *   A string specifying the filepath or URI of the upload field to save.
+ *   A string specifying the filepath or URI of the uploaded file to save.
  * @param $validators
  *   An optional, associative array of callback functions used to validate the
  *   file. See file_validate() for a full discussion of the array format.
@@ -1163,6 +1163,10 @@ function file_save_upload($source, $validators = array(), $destination = FALSE, 
   }
 
   $file->source = $source;
+  // A URI may already have a trailing slash or look like "public://".
+  if (substr($destination, -1) != '/') {
+    $destination .= '/';
+  }
   $file->destination = file_destination($destination . $file->filename, $replace);
   // If file_destination() returns FALSE then $replace == FILE_EXISTS_ERROR and
   // there's an existing file so we need to bail.

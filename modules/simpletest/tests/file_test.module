@@ -54,6 +54,11 @@ function _file_test_form(&$form_state) {
     ),
     '#default_value' => FILE_EXISTS_RENAME,
   );
+  $form['file_subdir'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Subdirectory for test image',
+    '#default_value' => '',
+  );
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Submit'),
@@ -67,7 +72,14 @@ function _file_test_form(&$form_state) {
 function _file_test_form_submit(&$form, &$form_state) {
   // Process the upload and validate that it is an image. Note: we're using the
   // form value for the $replace parameter.
-  $file = file_save_upload('file_test_upload', array('file_validate_is_image' => array()), FALSE, $form_state['values']['file_test_replace']);
+  if (!empty($form_state['values']['file_subdir'])) {
+    $destination = 'temporary://' . $form_state['values']['file_subdir'];
+    file_prepare_directory($destination, FILE_CREATE_DIRECTORY);
+  }
+  else {
+    $destination = FALSE;
+  }
+  $file = file_save_upload('file_test_upload', array('file_validate_is_image' => array()), $destination, $form_state['values']['file_test_replace']);
   if ($file) {
     $form_state['values']['file_test_upload'] = $file;
     drupal_set_message(t('File @filepath was uploaded.', array('@filepath' => $file->uri)));
