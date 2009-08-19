@@ -1461,11 +1461,12 @@ function form_options_flatten($array, $reset = TRUE) {
 }
 
 /**
- * Format a dropdown menu or scrolling selection box.
+ * Theme select form element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
- *   Properties used: title, value, options, description, extra, multiple, required
+ *   Properties used: #title, #value, #options, #description, #extra, #multiple,
+ *   #required, #name, #attributes, #size.
  * @return
  *   A themed HTML string representing the form element.
  *
@@ -1483,6 +1484,18 @@ function theme_select($element) {
   return '<select name="' . $element['#name'] . '' . ($multiple ? '[]' : '') . '"' . ($multiple ? ' multiple="multiple" ' : '') . drupal_attributes($element['#attributes']) . ' id="' . $element['#id'] . '" ' . $size . '>' . form_select_options($element) . '</select>';
 }
 
+/**
+ * Convert a select form element's options array into an HTML.
+ *
+ * @param $element
+ *   An associative array containing the properties of the element.
+ * @param $choices
+ *   Mixed: Either an associative array of items to list as choices, or an
+ *   object with an 'option' member that is an associative array. This
+ *   parameter is only used internally and should not be passed.
+ * @return
+ *   An HTML string of options for the select form element.
+ */
 function form_select_options($element, $choices = NULL) {
   if (!isset($choices)) {
     $choices = $element['#options'];
@@ -1566,7 +1579,7 @@ function form_get_options($element, $key) {
 }
 
 /**
- * Formats a group of items as an HTML fieldset element.
+ * Theme a fieldset form element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
@@ -1596,11 +1609,12 @@ function theme_fieldset($element) {
 }
 
 /**
- * Format a radio button.
+ * Theme a radio button form element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
- *   Properties used: required, return_value, value, attributes, title, description
+ *   Properties used: #required, #return_value, #value, #attributes, #title,
+ *   #description
  * @return
  *   A themed HTML string representing the form item group.
  *
@@ -1622,11 +1636,12 @@ function theme_radio($element) {
 }
 
 /**
- * Format a set of radio buttons.
+ * Theme a set of radio button form elements.
  *
  * @param $element
  *   An associative array containing the properties of the element.
- *   Properties used: title, value, options, description, required and attributes.
+ *   Properties used: #title, #value, #options, #description, #required,
+ *   #attributes, #children.
  * @return
  *   A themed HTML string representing the radio button set.
  *
@@ -1696,11 +1711,12 @@ function password_confirm_validate($element, &$element_state) {
 }
 
 /**
- * Format a date selection element.
+ * Theme a date selection form element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
- *   Properties used: title, value, options, description, required and attributes.
+ *   Properties used: #title, #value, #options, #description, #required,
+ *   #attributes.
  * @return
  *   A themed HTML string representing the date selection boxes.
  *
@@ -1904,11 +1920,11 @@ function form_process_text_format($element) {
 }
 
 /**
- * Return a themed text format form element.
+ * Theme a text format form element.
  *
  * @param element
  *   An associative array containing the properties of the element.
- *   Properties used: children, description
+ *   Properties used: #children, #description
  * @return
  *   A string representing the form element.
  *
@@ -1929,11 +1945,12 @@ function theme_text_format_wrapper($element) {
 }
 
 /**
- * Format a checkbox.
+ * Theme a checkbox form element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
- *   Properties used:  title, value, return_value, description, required
+ *   Properties used: #title, #value, #return_value, #description, #required,
+ *   #attributes.
  * @return
  *   A themed HTML string representing the checkbox.
  *
@@ -1957,10 +1974,11 @@ function theme_checkbox($element) {
 }
 
 /**
- * Format a set of checkboxes.
+ * Theme a set of checkbox form elements.
  *
  * @param $element
  *   An associative array containing the properties of the element.
+ *   Properties used: #children, #attributes.
  * @return
  *   A themed HTML string representing the checkbox set.
  *
@@ -2272,6 +2290,11 @@ function form_process_vertical_tabs($element, &$form_state) {
  * @param $element
  *   An associative array containing the properties and children of the
  *   fieldset.
+ *   Properties used: #children.
+ * @return
+ *   A themed HTML string representing the form element.
+ *
+ * @ingroup themeable
  */
 function theme_vertical_tabs($element) {
   // Add required JavaScript and Stylesheet.
@@ -2282,7 +2305,13 @@ function theme_vertical_tabs($element) {
 }
 
 /**
- * Theme a form submit button.
+ * Theme a submit button form element.
+ *
+ * @param $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #attributes, #button_type, #name, #value.
+ * @return
+ *   A themed HTML string representing the form element.
  *
  * @ingroup themeable
  */
@@ -2291,7 +2320,13 @@ function theme_submit($element) {
 }
 
 /**
- * Theme a form button.
+ * Theme a button form element.
+ *
+ * @param $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #attributes, #button_type, #name, #value.
+ * @return
+ *   A themed HTML string representing the form element.
  *
  * @ingroup themeable
  */
@@ -2308,8 +2343,13 @@ function theme_button($element) {
 }
 
 /**
- * Theme a form image button.
+ * Theme a image button form element.
  *
+ * @param $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #attributes, #button_type, #name, #value, #title, #src.
+ * @return
+ *   A themed HTML string representing the form element.
  * @ingroup themeable
  */
 function theme_image_button($element) {
@@ -2331,12 +2371,13 @@ function theme_image_button($element) {
 }
 
 /**
- * Format a hidden form field.
+ * Theme a hidden form element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
+ *   Properties used: #name, #value, #attributes.
  * @return
- *   A themed HTML string representing the hidden form field.
+ *   A themed HTML string representing the form element.
  *
  * @ingroup themeable
  */
@@ -2345,11 +2386,12 @@ function theme_hidden($element) {
 }
 
 /**
- * Format a textfield.
+ * Theme a textfield form element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
- *   Properties used:  title, value, description, size, maxlength, required, attributes autocomplete_path
+ *   Properties used: #title, #value, #description, #size, #maxlength,
+ *   #required, #attributes, #autocomplete_path.
  * @return
  *   A themed HTML string representing the textfield.
  *
@@ -2382,11 +2424,11 @@ function theme_textfield($element) {
 }
 
 /**
- * Format a form.
+ * Theme a form.
  *
  * @param $element
  *   An associative array containing the properties of the element.
- *   Properties used: action, method, attributes, children
+ *   Properties used: #action, #method, #attributes, #children
  * @return
  *   A themed HTML string representing the form.
  *
@@ -2399,11 +2441,12 @@ function theme_form($element) {
 }
 
 /**
- * Format a textarea.
+ * Theme a textarea form element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
- *   Properties used: title, value, description, rows, cols, required, attributes
+ *   Properties used: #title, #value, #description, #rows, #cols, #required,
+ *   #attributes
  * @return
  *   A themed HTML string representing the textarea.
  *
@@ -2423,11 +2466,11 @@ function theme_textarea($element) {
 }
 
 /**
- * Format HTML markup for use in forms.
+ * Theme HTML markup for use in forms.
  *
  * @param $element
  *   An associative array containing the properties of the element.
- *   Properties used: markup, children.
+ *   Properties used: #markup, #children.
  * @return
  *   A themed HTML string representing the HTML markup.
  *
@@ -2439,11 +2482,12 @@ function theme_markup($element) {
 }
 
 /**
- * Format a password field.
+ * Theme a password form element.
  *
  * @param $element
  *   An associative array containing the properties of the element.
- *   Properties used:  title, value, description, size, maxlength, required, attributes
+ *   Properties used: #title, #value, #description, #size, #maxlength,
+ *   #required, #attributes.
  * @return
  *   A themed HTML string representing the form.
  *
@@ -2473,18 +2517,11 @@ function form_process_weight($element) {
 }
 
 /**
- * Format a file upload field.
+ * Theme a file upload form element.
  *
- * @param $title
- *   The label for the file upload field.
- * @param $name
- *   The internal name used to refer to the field.
- * @param $size
- *   A measure of the visible size of the field (passed directly to HTML).
- * @param $description
- *   Explanatory text to display after the form item.
- * @param $required
- *   Whether the user must upload a file to the field.
+ * @param $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #title, #name, #size, #description, #required, $attributes.
  * @return
  *   A themed HTML string representing the field.
  *
@@ -2499,11 +2536,11 @@ function theme_file($element) {
 }
 
 /**
- * Return a themed form element.
+ * Theme a form element.
  *
  * @param element
  *   An associative array containing the properties of the element.
- *   Properties used: title, description, id, required, children
+ *   Properties used: #title, #description, #id, #required, #children
  * @return
  *   A string representing the form element.
  *
