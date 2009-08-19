@@ -88,6 +88,82 @@ function number_field_schema($field) {
 }
 
 /**
+ * Implement hook_field_settings_form().
+ */
+function number_field_settings_form($field, $instance) {
+  $settings = $field['settings'];
+  $form = array();
+
+  if ($field['type'] == 'number_decimal') {
+    $form['precision'] = array(
+      '#type' => 'select',
+      '#title' => t('Precision'),
+      '#options' => drupal_map_assoc(range(10, 32)),
+      '#default_value' => $settings['precision'],
+      '#description' => t('The total number of digits to store in the database, including those to the right of the decimal.'),
+    );
+    $form['scale'] = array(
+      '#type' => 'select',
+      '#title' => t('Scale'),
+      '#options' => drupal_map_assoc(range(0, 10)),
+      '#default_value' => $settings['scale'],
+      '#description' => t('The number of digits to the right of the decimal.'),
+    );
+    $form['decimal'] = array(
+      '#type' => 'select',
+      '#title' => t('Decimal marker'),
+      '#options' => array(
+        '.' => 'decimal point',
+        ',' => 'comma',
+        ' ' => 'space',
+      ),
+      '#default_value' => $settings['decimal'],
+      '#description' => t('The character users will input to mark the decimal point in forms.'),
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * Implement hook_field_instance_settings_form().
+ */
+function number_field_instance_settings_form($field, $instance) {
+  $settings = $instance['settings'];
+
+  $form['min'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Minimum'),
+    '#default_value' => $settings['min'],
+    '#description' => t('The minimum value that should be allowed in this field. Leave blank for no minimum.'),
+    '#element_validate' => array('_element_validate_number'),
+  );
+  $form['max'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Maximum'),
+    '#default_value' => $settings['max'],
+    '#description' => t('The maximum value that should be allowed in this field. Leave blank for no maximum.'),
+    '#element_validate' => array('_element_validate_number'),
+  );
+  $form['prefix'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Prefix'),
+    '#default_value' => $settings['prefix'],
+    '#size' => 60,
+    '#description' => t("Define a string that should be prefixed to the value, like '$ ' or '&euro; '. Leave blank for none. Separate singular and plural values with a pipe ('pound|pounds')."),
+  );
+  $form['suffix'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Suffix'),
+    '#default_value' => $settings['suffix'],
+    '#size' => 60,
+    '#description' => t("Define a string that should suffixed to the value, like ' m', ' kb/s'. Leave blank for none. Separate singular and plural values with a pipe ('pound|pounds')."),
+  );
+
+  return $form;
+}
+
+/**
  * Implement hook_field_validate().
  *
  * Possible error codes:

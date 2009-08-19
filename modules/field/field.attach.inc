@@ -457,6 +457,11 @@ function _field_invoke_multiple_default($op, $obj_type, $objects, &$a = NULL, &$
 function field_attach_form($obj_type, $object, &$form, &$form_state) {
   $form += (array) _field_invoke_default('form', $obj_type, $object, $form, $form_state);
 
+  // Add custom weight handling.
+  list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
+  $form['#pre_render'][] = '_field_extra_weights_pre_render';
+  $form['#extra_fields'] = field_extra_fields($bundle);
+
   // Let other modules make changes to the form.
   foreach (module_implements('field_attach_form') as $module) {
     $function = $module . '_field_attach_form';
@@ -1043,11 +1048,34 @@ function field_attach_view($obj_type, $object, $build_mode = 'full') {
 
   $output = _field_invoke_default('view', $obj_type, $object, $build_mode);
 
+  // Add custom weight handling.
+  list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
+  $output['#pre_render'][] = '_field_extra_weights_pre_render';
+  $output['#extra_fields'] = field_extra_fields($bundle);
+
   // Let other modules make changes after rendering the view.
   drupal_alter('field_attach_view', $output, $obj_type, $object, $build_mode);
 
   return $output;
 
+}
+
+/**
+ * Retrieve the user-defined weight for a 'pseudo-field' component.
+ *
+ * @param $bundle
+ *   The bundle name.
+ * @param $pseudo_field
+ *   The name of the 'pseudo-field'.
+ * @return
+ *   The weight for the 'pseudo-field', respecting the user settings stored by
+ *   field.module.
+ */
+function field_attach_extra_weight($bundle, $pseudo_field) {
+  $extra = field_extra_fields($bundle);
+  if (isset($extra[$pseudo_field])) {
+    return $extra[$pseudo_field]['weight'];
+  }
 }
 
 /**
@@ -1084,7 +1112,7 @@ function field_attach_create_bundle($bundle) {
 
   // Clear the cache.
   field_cache_clear();
-
+  menu_rebuild();
   foreach (module_implements('field_attach_create_bundle') as $module) {
     $function = $module . '_field_attach_create_bundle';
     $function($bundle);

@@ -25,6 +25,7 @@
  */
 function _field_info_cache_clear() {
   _field_info_collate_types(TRUE);
+  drupal_static_reset('field_build_modes');
   _field_info_collate_fields(TRUE);
 }
 
@@ -262,6 +263,11 @@ function _field_info_prepare_instance($instance, $field) {
 
   // Make sure all expected instance settings are present.
   $instance['settings'] += field_info_instance_settings($field['type']);
+
+  // Set a default value for the instance.
+  if (field_behaviors_widget('default value', $instance) == FIELD_BEHAVIOR_DEFAULT && !isset($instance['default_value'])) {
+    $instance['default_value'] = NULL;
+  }
 
   // Fallback to default widget if widget type is not available.
   if (!field_info_widget_types($instance['widget']['type'])) {

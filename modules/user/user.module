@@ -120,6 +120,33 @@ function user_field_build_modes($obj_type) {
   return $modes;
 }
 
+/**
+ * Implement hook_field_extra_fields().
+ */
+function user_field_extra_fields($bundle) {
+  $extra = array();
+
+  if ($bundle == 'user') {
+    $extra['account'] = array(
+      'label' => 'User name and password',
+      'description' => t('User module account form elements'),
+      'weight' => -10,
+    );
+    $extra['timezone'] = array(
+      'label' => 'Timezone',
+      'description' => t('User module timezone form element.'),
+      'weight' => 6,
+    );
+    $extra['summary'] = array(
+      'label' => 'History',
+      'description' => t('User module history view element.'),
+      'weight' => 5,
+    );
+  }
+
+  return $extra;
+}
+
 function user_external_load($authname) {
   $uid = db_query("SELECT uid FROM {authmap} WHERE authname = :authname", array(':authname' => $authname))->fetchField();
 
@@ -1344,6 +1371,11 @@ function user_menu() {
     'page arguments' => array('user_admin_settings'),
     'access arguments' => array('administer users'),
   );
+  $items['admin/settings/user/settings'] = array(
+    'title' => 'Settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
 
   // Permission administration pages.
   $items['admin/settings/permissions'] = array(
@@ -2430,6 +2462,10 @@ function user_help($path, $arg) {
       <li>Anonymous user: this role is used for users that don\'t have a user account or that are not authenticated.</li>
       <li>Authenticated user: this role is automatically granted to all logged in users.</li>
       </ul>', array('@permissions' => url('admin/settings/permissions')));
+    case 'admin/settings/user/fields':
+      return '<p>' . t('This form lets administrators add, edit, and arrange fields for storing user data.') . '</p>';
+    case 'admin/settings/user/display':
+      return '<p>' . t('This form lets administrators configure how fields should be displayed when rendering a user profile page.') . '</p>';
     case 'admin/people/search':
       return '<p>' . t('Enter a simple pattern ("*" may be used as a wildcard match) to search for a username or e-mail address. For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda@example.com".') . '</p>';
   }

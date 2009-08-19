@@ -1,0 +1,8 @@
+; $Id$
+name = Field UI
+description = User Interface for the Field API.
+package = Core
+version = VERSION
+core = 7.x
+files[] = field_ui.module
+files[] = field_ui.admin.inc

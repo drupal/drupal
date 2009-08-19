@@ -40,12 +40,25 @@ function node_help($path, $arg) {
       $output .= '<p>' . t('The administrative <a href="@content">content page</a> allows you to review and manage your site content. The node module makes a number of permissions available for each content type, which may be set by role on the <a href="@permissions">permissions page</a>.', array('@content' => url('admin/content'), '@permissions' => url('admin/settings/permissions'))) . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@node">Node module</a>.', array('@node' => 'http://drupal.org/handbook/modules/node/')) . '</p>';
       return $output;
+
     case 'admin/content':
       return ' '; // Return a non-null value so that the 'more help' link is shown.
+
     case 'admin/structure/types/add':
       return '<p>' . t('Each piece of content is of a specific content type. Each <em>content type</em> can have different fields, behaviors, and permissions assigned to it.') . '</p>';
+
+    case 'admin/structure/node-type/' . $arg[3] . '/fields':
+      return '<p>' . t('This form lets you add, edit, and arrange fields within the %type content type.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
+
+    case 'admin/structure/node-type/' . $arg[3] . '/display':
+      return '<p>' . t('This form lets you configure how fields and labels are displayed when %type content is viewed in teaser and full-page mode.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
+
+    case 'admin/structure/node-type/' . $arg[3] . '/display/' . $arg[5]:
+      return '<p>' . t('This form lets you configure how fields should be displayed when rendered %type content in the following contexts.', array('%type' => node_type_get_name($arg[3]))) . '</p>';
+
     case 'node/%/revisions':
       return '<p>' . t('The revisions let you track differences between multiple versions of a post.') . '</p>';
+
     case 'node/%/edit':
       $node = node_load($arg[1]);
       $type = node_type_get_type($node);
@@ -171,6 +184,25 @@ function node_field_build_modes($obj_type) {
     }
   }
   return $modes;
+}
+
+/**
+ * Implement hook_field_extra_fields().
+ */
+function node_field_extra_fields($bundle) {
+  $extra = array();
+
+  if ($type = node_type_get_type($bundle)) {
+    if ($type->has_title) {
+      $extra['title'] = array(
+        'label' => $type->title_label,
+        'description' => t('Node module element.'),
+        'weight' => -5,
+      );
+    }
+  }
+
+  return $extra;
 }
 
 /**

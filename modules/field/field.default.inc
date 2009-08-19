@@ -43,11 +43,8 @@ function field_default_submit($obj_type, $object, $field, $instance, &$items, $f
 function field_default_insert($obj_type, $object, $field, $instance, &$items) {
   // _field_invoke() populates $items with an empty array if the $object has no
   // entry for the field, so we check on the $object itself.
-  if (!property_exists($object, $field['field_name']) && !empty($instance['default_value_function'])) {
-    $function = $instance['default_value_function'];
-    if (drupal_function_exists($function)) {
-      $items = $function($obj_type, $object, $field, $instance);
-    }
+  if (empty($object) || !property_exists($object, $field['field_name'])) {
+    $items = field_get_default_value($obj_type, $object, $field, $instance);
   }
 }
 /**

@@ -266,6 +266,32 @@ function field_associate_fields($module) {
 }
 
 /**
+ * Helper function to get the default value for a field on an object.
+ *
+ * @param $obj_type
+ *   The type of $object; e.g. 'node' or 'user'.
+ * @param $object
+ *   The object for the operation.
+ * @param $field
+ *   The field structure.
+ * @param $instance
+ *   The instance structure.
+ */
+function field_get_default_value($obj_type, $object, $field, $instance) {
+  $items = array();
+  if (!empty($instance['default_value_function'])) {
+    $function = $instance['default_value_function'];
+    if (drupal_function_exists($function)) {
+      $items = $function($obj_type, $object, $field, $instance);
+    }
+  }
+  elseif (!empty($instance['default_value'])) {
+    $items = $instance['default_value'];
+  }
+  return $items;
+}
+
+/**
  * Helper function to filter out empty values.
  *
  * On order to keep marker rows in the database, the function ensures
@@ -279,15 +305,15 @@ function field_associate_fields($module) {
  * TODO D7: poorly named...
  */
 function field_set_empty($field, $items) {
-  // Filter out empty values.
-  $filtered = array();
   $function = $field['module'] . '_field_is_empty';
+  // We ensure the function is loaded, but explicitly break if it is missing.
+  drupal_function_exists($function);
   foreach ((array) $items as $delta => $item) {
-    if (!$function($item, $field)) {
-      $filtered[] = $item;
+    if ($function($item, $field)) {
+      unset($items[$delta]);
     }
   }
-  return $filtered;
+  return array_values($items);
 }
 
 /**
@@ -335,12 +361,69 @@ function _field_sort_items_value_helper($a, $b) {
  * Registry of available build modes.
  */
 function field_build_modes($obj_type) {
-  static $info;
+  $info = &drupal_static(__FUNCTION__, array());
 
   if (!isset($info[$obj_type])) {
     $info[$obj_type] = module_invoke_all('field_build_modes', $obj_type);
   }
   return $info[$obj_type];
+}
+
+/**
+ * Registry of pseudo-field components in a given bundle.
+ *
+ * @param $bundle_name
+ *   The bundle name.
+ * @return
+ *   The array of pseudo-field elements in the bundle.
+ */
+function field_extra_fields($bundle_name) {
+  $info = &drupal_static(__FUNCTION__, array());
+
+  if (empty($info)) {
+    $info = array();
+    $bundles = field_info_bundles();
+    foreach ($bundles as $bundle => $bundle_label) {
+      // Gather information about non-field object additions.
+      $extra = module_invoke_all('field_extra_fields', $bundle);
+      drupal_alter('field_extra_fields', $extra, $bundle);
+
+      // Add saved weights.
+      foreach (variable_get("field_extra_weights_$bundle", array()) as $key => $value) {
+        // Some stored entries might not exist anymore, for instance if uploads
+        // have been disabled or vocabularies were deleted.
+        if (isset($extra[$key])) {
+          $extra[$key]['weight'] = $value;
+        }
+      }
+      $info[$bundle] = $extra;
+    }
+  }
+  if (array_key_exists($bundle_name, $info)) {
+    return $info[$bundle_name];
+  }
+  else {
+    return array();
+  }
+}
+
+/**
+ * Pre-render callback to adjust weights of non-field elements on objects.
+ */
+function _field_extra_weights_pre_render($elements) {
+  if (isset($elements['#extra_fields'])) {
+    foreach ($elements['#extra_fields'] as $key => $value) {
+      // Some core 'fields' use a different key in node forms and in 'view'
+      // render arrays. Ensure that we are not on a form first.
+      if (!isset($elements['#build_id']) && isset($value['view']) && isset($elements[$value['view']])) {
+        $elements[$value['view']]['#weight'] = $value['weight'];
+      }
+      elseif (isset($elements[$key])) {
+        $elements[$key]['#weight'] = $value['weight'];
+      }
+    }
+  }
+  return $elements;
 }
 
 /**

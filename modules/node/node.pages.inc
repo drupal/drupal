@@ -159,6 +159,7 @@ function node_form(&$form_state, $node) {
 
   $form['additional_settings'] = array(
     '#type' => 'vertical_tabs',
+    '#weight' => 99,
   );
 
   // Add a log field if the "Create new revision" option is checked, or if the
