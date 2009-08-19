@@ -2641,7 +2641,7 @@ function system_send_email_action_form($context) {
     '#title' => t('Recipient'),
     '#default_value' => $context['recipient'],
     '#maxlength' => '254',
-    '#description' => t('The email address to which the message should be sent OR enter %author if you would like to send an e-mail to the author of the original post.', array('%author' => '%author')),
+    '#description' => t('The email address to which the message should be sent OR enter [node:author:mail], [comment:author:mail], etc. if you would like to send an e-mail to the author of the original post.'),
   );
   $form['subject'] = array(
     '#type' => 'textfield',
@@ -2656,7 +2656,7 @@ function system_send_email_action_form($context) {
     '#default_value' => $context['message'],
     '#cols' => '80',
     '#rows' => '20',
-    '#description' => t('The message that should be sent. You may include the following variables: %site_name, %username, %node_url, %node_type, %title, %teaser, %body, %term_name, %term_description, %term_id, %vocabulary_name, %vocabulary_description, %vocabulary_id. Not all variables will be available in all contexts.'),
+    '#description' => t('The message that should be sent. You may include placeholders like [node:title], [user:name], and [comment:body] to represent data that will be different each time message is sent. Not all placeholders will be available in all contexts.'),
   );
   return $form;
 }
@@ -2692,59 +2692,14 @@ function system_send_email_action_submit($form, $form_state) {
  * Implement a configurable Drupal action. Sends an email.
  */
 function system_send_email_action($object, $context) {
-  global $user;
-
-  switch ($context['hook']) {
-    case 'node':
-      // Because this is not an action of type 'node' the node
-      // will not be passed as $object, but it will still be available
-      // in $context.
-      $node = $context['node'];
-      break;
-    // The comment hook provides nid, in $context.
-    case 'comment':
-      $comment = $context['comment'];
-      $node = node_load($comment->nid);
-      break;
-    case 'user':
-      // Because this is not an action of type 'user' the user
-      // object is not passed as $object, but it will still be available
-      // in $context.
-      $account = $context['account'];
-      if (isset($context['node'])) {
-        $node = $context['node'];
-      }
-      elseif ($context['recipient'] == '%author') {
-        // If we don't have a node, we don't have a node author.
-        watchdog('error', 'Cannot use %author token in this context.');
-        return;
-      }
-      break;
-    default:
-      // We are being called directly.
-      $node = $object;
+  if (empty($context['node'])) {
+    $context['node'] = $object;
   }
 
-  $recipient = $context['recipient'];
-
-  if (isset($node)) {
-    if (!isset($account)) {
-      $account = user_load($node->uid);
-    }
-    if ($recipient == '%author') {
-      $recipient = $account->mail;
-    }
-  }
-
-  if (!isset($account)) {
-    $account = $user;
-
-  }
+  $recipient = token_replace($context['recipient'], $context);
+  
   $language = user_preferred_language($account);
-  $params = array('account' => $account, 'object' => $object, 'context' => $context);
-  if (isset($node)) {
-    $params['node'] = $node;
-  }
+  $params = array('context' => $context);
 
   if (drupal_mail('system', 'action_send_email', $recipient, $language, $params)) {
     watchdog('action', 'Sent email to %recipient', array('%recipient' => $recipient));
@@ -2758,39 +2713,11 @@ function system_send_email_action($object, $context) {
  * Implement hook_mail().
  */
 function system_mail($key, &$message, $params) {
-  $account = $params['account'];
   $context = $params['context'];
-  $variables = array(
-    '%site_name' => variable_get('site_name', 'Drupal'),
-    '%username' => $account->name,
-  );
-  if ($context['hook'] == 'taxonomy') {
-    $object = $params['object'];
-    $vocabulary = taxonomy_vocabulary_load($object->vid);
-    $variables += array(
-      '%term_name' => $object->name,
-      '%term_description' => $object->description,
-      '%term_id' => $object->tid,
-      '%vocabulary_name' => $vocabulary->name,
-      '%vocabulary_description' => $vocabulary->description,
-      '%vocabulary_id' => $vocabulary->vid,
-    );
-  }
 
-  // Node-based variable translation is only available if we have a node.
-  if (isset($params['node'])) {
-    $node = $params['node'];
-    $variables += array(
-      '%uid' => $node->uid,
-      '%node_url' => url('node/' . $node->nid, array('absolute' => TRUE)),
-      '%node_type' => node_type_get_name($node),
-      '%title' => $node->title,
-      '%teaser' => $node->teaser,
-      '%body' => $node->body,
-    );
-  }
-  $subject = strtr($context['subject'], $variables);
-  $body = strtr($context['message'], $variables);
+  $subject = token_replace($context['subject'], $context);
+  $body = token_replace($context['message'], $context);
+
   $message['subject'] .= str_replace(array("\r", "\n"), '', $subject);
   $message['body'][] = drupal_html_to_text($body);
 }
@@ -2802,7 +2729,7 @@ function system_message_action_form($context) {
     '#default_value' => isset($context['message']) ? $context['message'] : '',
     '#required' => TRUE,
     '#rows' => '8',
-    '#description' => t('The message to be displayed to the current user. You may include the following variables: %site_name, %username, %node_url, %node_type, %title, %teaser, %body, %term_name, %term_description, %term_id, %vocabulary_name, %vocabulary_description, %vocabulary_id. Not all variables will be available in all contexts.'),
+    '#description' => t('The message to be displayed to the current user. You may include placeholders like [node:title], [user:name], and [comment:body] to represent data that will be different each time message is sent. Not all placeholders will be available in all contexts.'),
   );
   return $form;
 }
@@ -2815,56 +2742,11 @@ function system_message_action_submit($form, $form_state) {
  * A configurable Drupal action. Sends a message to the current user's screen.
  */
 function system_message_action(&$object, $context = array()) {
-  global $user;
-  $variables = array(
-    '%site_name' => variable_get('site_name', 'Drupal'),
-    '%username' => $user->name ? $user->name : variable_get('anonymous', t('Anonymous')),
-  );
-
-  // This action can be called in any context, but if placeholders
-  // are used a node object must be present to be the source
-  // of substituted text.
-  switch ($context['hook']) {
-    case 'node':
-      // Because this is not an action of type 'node' the node
-      // will not be passed as $object, but it will still be available
-      // in $context.
-      $node = $context['node'];
-      break;
-    // The comment hook also provides the node, in context.
-    case 'comment':
-      $comment = $context['comment'];
-      $node = node_load($comment->nid);
-      break;
-    case 'taxonomy':
-      $vocabulary = taxonomy_vocabulary_load($object->vid);
-      $variables = array_merge($variables, array(
-        '%term_name' => $object->name,
-        '%term_description' => $object->description,
-        '%term_id' => $object->tid,
-        '%vocabulary_name' => $vocabulary->name,
-        '%vocabulary_description' => $vocabulary->description,
-        '%vocabulary_id' => $vocabulary->vid,
-        )
-      );
-      break;
-    default:
-      // We are being called directly.
-      $node = $object;
+  if (empty($context['node'])) {
+    $context['node'] = $object;
   }
 
-  if (isset($node) && is_object($node)) {
-    $variables = array_merge($variables, array(
-      '%uid' => $node->uid,
-      '%node_url' => url('node/' . $node->nid, array('absolute' => TRUE)),
-      '%node_type' => check_plain(node_type_get_name($node)),
-      '%title' => filter_xss($node->title),
-      '%teaser' => filter_xss($node->teaser),
-      '%body' => filter_xss($node->body),
-      )
-    );
-  }
-  $context['message'] = strtr($context['message'], $variables);
+  $context['message'] = token_replace($context['message'], $context);
   drupal_set_message($context['message']);
 }
 
@@ -2889,7 +2771,7 @@ function system_goto_action_submit($form, $form_state) {
 }
 
 function system_goto_action($object, $context) {
-  drupal_goto($context['url']);
+  drupal_goto(token_replace($context['url'], $context));
 }
 
 /**

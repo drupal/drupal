@@ -9,4 +9,5 @@ files[] = user.admin.inc
 files[] = user.pages.inc
 files[] = user.install
 files[] = user.test
+files[] = user.tokens.inc
 required = TRUE

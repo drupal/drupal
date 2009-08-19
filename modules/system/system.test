@@ -1058,3 +1058,60 @@ class QueueTestCase extends DrupalWebTestCase {
     return $score;
   }
 }
+
+/**
+ * Test token replacement in strings.
+ */
+class TokenReplaceTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Token replacement',
+      'description' => 'Generates text using placeholders for dummy content to check token replacement.',
+      'group' => 'System',
+    );
+  }
+
+  /**
+   * Creates a user and a node, then tests the tokens generated from them.
+   */
+  function testTokenReplacement() {
+    // Create the initial objects.
+    $account = $this->drupalCreateUser();
+    $node = $this->drupalCreateNode(array('uid' => $account->uid));
+    $node->title = '<blink>Blinking Text</blink>';
+    global $user;
+
+    $source  = '[node:title]';         // Title of the node we passed in
+    $source .= '[node:author:name]';   // Node author's name
+    $source .= '[node:created:since]'; // Time since the node was created
+    $source .= '[current-user:name]';  // Current user's name
+    $source .= '[user:name]';          // No user passed in, should be untouched
+    $source .= '[date:small]';         // Small date format of REQUEST_TIME
+    $source .= '[bogus:token]';        // Nonexistent token, should be untouched
+
+    $target  = check_plain($node->title);
+    $target .= check_plain($account->name);
+    $target .= format_interval(REQUEST_TIME - $node->created, 2);
+    $target .= check_plain($user->name);
+    $target .= '[user:name]';
+    $target .= format_date(REQUEST_TIME, 'small');
+    $target .= '[bogus:token]';
+
+    $result = token_replace($source, array('node' => $node));
+
+    // Check that the results of token_generate are sanitized properly. This does NOT
+    // test the cleanliness of every token -- just that the $sanitize flag is being
+    // passed properly through the call stack and being handled correctly by a 'known'
+    // token, [node:title].
+    $this->assertFalse(strcmp($target, $result), t('Basic placeholder tokens replaced.'));
+    
+    $raw_tokens = array(
+      'node' => array('title' => '[node:title]'),
+    );
+    $generated = token_generate($raw_tokens, array('node' => $node));
+    $this->assertFalse(strcmp($generated['[node:title]'], check_plain($node->title)), t('Token sanitized.'));
+
+    $generated = token_generate($raw_tokens, array('node' => $node), array('sanitize' => FALSE));
+    $this->assertFalse(strcmp($generated['[node:title]'], $node->title), t('Unsanitized token generated properly.'));
+  }
+}

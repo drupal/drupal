@@ -11,4 +11,5 @@ files[] = image.gd.inc
 files[] = system.install
 files[] = system.test
 files[] = system.tar.inc
+files[] = system.tokens.inc
 required = TRUE

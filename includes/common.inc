@@ -3549,6 +3549,7 @@ function _drupal_bootstrap_full() {
   require_once DRUPAL_ROOT . '/includes/mail.inc';
   require_once DRUPAL_ROOT . '/includes/actions.inc';
   require_once DRUPAL_ROOT . '/includes/ajax.inc';
+  require_once DRUPAL_ROOT . '/includes/token.inc';
   // Set the Drupal custom error handler.
   set_error_handler('_drupal_error_handler');
   set_exception_handler('_drupal_exception_handler');

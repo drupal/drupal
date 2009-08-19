@@ -8,3 +8,4 @@ files[] = upload.module
 files[] = upload.admin.inc
 files[] = upload.install
 files[] = upload.test
+files[] = upload.tokens.inc
