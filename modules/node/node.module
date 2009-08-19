@@ -750,9 +750,11 @@ function node_load_multiple($nids = array(), $conditions = array(), $reset = FAL
     // Add fields from the {node} table.
     $node_fields = drupal_schema_fields_sql('node');
 
-    // vid and title are provided by node_revision, so remove them.
-    unset($node_fields['vid']);
-    unset($node_fields['title']);
+    // The columns vid, title, status, comment, promote, moderate, and sticky
+    // are all provided by node_revision, so remove them.
+    foreach (array('vid', 'title', 'status', 'comment', 'promote', 'moderate', 'sticky') as $column) {
+      unset($node_fields[$column]);
+    }
     $query->fields('n', $node_fields);
 
     // Add all fields from the {node_revision} table.

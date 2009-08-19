@@ -225,6 +225,36 @@ function node_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
+      'status' => array(
+        'description' => 'Boolean indicating whether the node (at the time of this revision) is published (visible to non-administrators).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+      'comment' => array(
+        'description' => 'Whether comments are allowed on this node (at the time of this revision): 0 = no, 1 = closed (read only), 2 = open (read/write).',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'promote' => array(
+        'description' => 'Boolean indicating whether the node (at the time of this revision) should be displayed on the front page.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'moderate' => array(
+        'description' => 'Previously, a boolean indicating whether the node (at the time of this revision) was "in moderation"; mostly no longer used.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'sticky' => array(
+        'description' => 'Boolean indicating whether the node (at the time of this revision) should be displayed at the top of lists in which it appears.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
     ),
     'indexes' => array(
       'nid' => array('nid'),
@@ -406,20 +436,29 @@ function node_update_7004() {
 }
 
 /**
- * Convert body and teaser from node properties to fields.
+ * Add status/comment/promote/moderate and sticky columns to the {node_revision} table.
  */
-function node_update_7005(&$context) {
+function node_update_7005() {
+  $ret = array();
+  foreach(array('status', 'comment', 'promote', 'moderate', 'sticky') as $column) {
+    db_add_field($ret, 'node_revision', $column, array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    ));
+  }
+  return $ret;
+}
+
+/**
+ * Convert body and teaser from node properties to fields, and migrate status/comment/promote/moderate and sticky columns to the {node_revision} table.
+ */
+function node_update_7006(&$context) {
   $ret = array('#finished' => 0);
 
   // Get node type info for every invocation.
   node_type_clear();
   $node_types = node_type_get_types();
-  $body_types = array();
-  foreach ($node_types as $type => $info) {
-    if ($info->has_body) {
-      $body_types[] = $type;
-    }
-  }
 
   if (!isset($context['total'])) {
     // Initial invocation.
@@ -437,7 +476,6 @@ function node_update_7005(&$context) {
 
     $query = db_select('node', 'n');
     $query->join('node_revision', 'nr', 'n.vid = nr.vid');
-    $query->condition('n.type', $body_types, 'IN');
     $context['total'] = $query->countQuery()->execute()->fetchField();
   }
   else {
@@ -450,10 +488,9 @@ function node_update_7005(&$context) {
       $query = db_select('node', 'n');
       $nr = $query->innerJoin('node_revision', 'nr', 'n.vid = nr.vid');
       $revisions = $query
-        ->fields('n', array('type'))
+        ->fields('n', array('type', 'status', 'comment', 'promote', 'moderate', 'sticky'))
         ->fields($nr)
         ->condition('nr.vid', $context['last'], '>')
-        ->condition('n.type', $body_types, 'IN')
         ->orderBy('nr.vid', 'ASC')
         ->execute();
 
@@ -488,6 +525,19 @@ function node_update_7005(&$context) {
           field_sql_storage_field_storage_write('node', $node, FIELD_STORAGE_INSERT, array());
         }
 
+        // Migrate the status columns to the {node_revision} table.
+        db_update('node_revision')
+          ->fields(array(
+            'vid' => $revision->vid,
+            'status' => $revision->status,
+            'comment' => $revision->comment,
+            'promote' => $revision->promote,
+            'moderate' => $revision->moderate,
+            'sticky' => $revision->sticky,
+          ))
+          ->condition('vid', $revision->vid)
+          ->execute();
+
         $context['last'] = $revision->vid;
         $context['count'] += 1;
 
@@ -519,13 +569,11 @@ function node_update_7005(&$context) {
 /**
  * Remove column min_word_count.
  */
-function node_update_7006() {
+function node_update_7007() {
   $ret = array();
   db_drop_field($ret, 'node_type', 'min_word_count');
   return $ret;
 }
-
-
 
 /**
  * @} End of "defgroup updates-6.x-to-7.x"
