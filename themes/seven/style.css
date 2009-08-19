@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.9 2009/08/12 23:51:19 webchick Exp $ */
+/* $Id: style.css,v 1.10 2009/08/19 08:17:38 webchick Exp $ */
 
 /**
  * Generic elements
@@ -15,6 +15,10 @@ body {
 a {
   color: #0074BD;
   text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 div.box, p {
