@@ -1,4 +1,4 @@
-; $Id: system.info,v 1.14 2009/06/17 10:46:49 dries Exp $
+; $Id: system.info,v 1.15 2009/08/19 20:19:37 dries Exp $
 name = System
 description = Handles general site configuration for administrators.
 package = Core
@@ -11,4 +11,5 @@ files[] = image.gd.inc
 files[] = system.install
 files[] = system.test
 files[] = system.tar.inc
+files[] = system.tokens.inc
 required = TRUE

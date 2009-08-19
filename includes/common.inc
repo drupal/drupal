@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.963 2009/08/17 19:14:39 webchick Exp $
+// $Id: common.inc,v 1.964 2009/08/19 20:19:36 dries Exp $
 
 /**
  * @file
@@ -3549,6 +3549,7 @@ function _drupal_bootstrap_full() {
   require_once DRUPAL_ROOT . '/includes/mail.inc';
   require_once DRUPAL_ROOT . '/includes/actions.inc';
   require_once DRUPAL_ROOT . '/includes/ajax.inc';
+  require_once DRUPAL_ROOT . '/includes/token.inc';
   // Set the Drupal custom error handler.
   set_error_handler('_drupal_error_handler');
   set_exception_handler('_drupal_exception_handler');

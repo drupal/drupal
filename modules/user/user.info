@@ -1,4 +1,4 @@
-; $Id: user.info,v 1.11 2009/06/08 09:23:55 dries Exp $
+; $Id: user.info,v 1.12 2009/08/19 20:19:37 dries Exp $
 name = User
 description = Manages the user registration and login system.
 package = Core
@@ -9,4 +9,5 @@ files[] = user.admin.inc
 files[] = user.pages.inc
 files[] = user.install
 files[] = user.test
+files[] = user.tokens.inc
 required = TRUE
