@@ -1,0 +1,8 @@
+/* $Id: field_ui-rtl.css,v 1.1 2009/08/19 13:31:13 webchick Exp $ */
+
+/* 'Manage fields' overview */
+#field-overview .label-add-new-field,
+#field-overview .label-add-existing-field {
+  float: right;
+}
+

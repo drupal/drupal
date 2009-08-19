@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.25 2009/08/13 01:50:00 webchick Exp $
+// $Id: field.crud.inc,v 1.26 2009/08/19 13:31:12 webchick Exp $
 
 /**
  * @file
@@ -637,8 +637,8 @@ function field_read_instances($params = array(), $include_additional = array()) 
   foreach ($params as $key => $value) {
     $query->condition('fci.' . $key, $value);
   }
-  $query->condition('fc.active', 1);
   if (!isset($include_additional['include_inactive']) || !$include_additional['include_inactive']) {
+    $query->condition('fc.active', 1);
     $query->condition('fci.widget_active', 1);
   }
   if (!isset($include_additional['include_deleted']) || !$include_additional['include_deleted']) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.74 2009/08/18 06:01:07 webchick Exp $
+// $Id: node.pages.inc,v 1.75 2009/08/19 13:31:13 webchick Exp $
 
 /**
  * @file
@@ -159,6 +159,7 @@ function node_form(&$form_state, $node) {
 
   $form['additional_settings'] = array(
     '#type' => 'vertical_tabs',
+    '#weight' => 99,
   );
 
   // Add a log field if the "Create new revision" option is checked, or if the

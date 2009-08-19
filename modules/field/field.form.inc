@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.14 2009/08/17 07:12:16 webchick Exp $
+// $Id: field.form.inc,v 1.15 2009/08/19 13:31:12 webchick Exp $
 
 /**
  * @file
@@ -37,13 +37,9 @@ function field_default_form($obj_type, $object, $field, $instance, $items, &$for
     'instance' => $instance,
   );
 
-  // Populate widgets with default values if we're creating a new object.
-  if (empty($items) && empty($id) && !empty($instance['default_value_function'])) {
-    $items = array();
-    $function = $instance['default_value_function'];
-    if (drupal_function_exists($function)) {
-      $items = $function($obj_type, $object, $field, $instance);
-    }
+  // Populate widgets with default values when creating a new object.
+  if (empty($items) && empty($id)) {
+    $items = field_get_default_value($obj_type, $object, $field, $instance);
   }
 
   $form_element = array();
