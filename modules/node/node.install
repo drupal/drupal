@@ -330,7 +330,7 @@ function node_schema() {
         'default' => '',
       ),
       'custom' => array(
-        'description' => 'A boolean indicating whether this type is defined by a module (FALSE) or by a user via a module like the Content Construction Kit (TRUE).',
+        'description' => 'A boolean indicating whether this type is defined by a module (FALSE) or by a user via Add content type (TRUE).',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,

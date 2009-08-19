@@ -137,7 +137,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
       being a hard-coded property of node objects.
     * In addition, any other object type may register with Field API
       and allow custom data fields to be attached to itself.
-    * Provides a subset of the features of the Content Construction
+    * Provides most of the features of the former Content Construction
       Kit (CCK) module.
     * Taxonomy terms are now Field API fields that can be added to any fieldable
       object.

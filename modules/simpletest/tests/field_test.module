@@ -424,7 +424,7 @@ function field_test_field_is_empty($item, $field) {
 /**
  * Implement hook_field_widget_info().
  *
- * Here we indicate that the content module will handle
+ * Here we indicate that the field module will handle
  * the default value and multiple values for these widgets.
  *
  * Callbacks can be omitted if default handing is used.
@@ -464,11 +464,7 @@ function field_test_field_widget_info() {
  * plugged into any module that can provide it with valid
  * $field information.
  *
- * Content module will set the weight, field name and delta values
- * for each form element. This is a change from earlier CCK versions
- * where the widget managed its own multiple values.
- *
- * If there are multiple values for this field, the content module will
+ * If there are multiple values for this field, the field module will
  * call this function as many times as needed.
  *
  * @param $form

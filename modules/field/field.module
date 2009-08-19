@@ -37,8 +37,7 @@ require(DRUPAL_ROOT . '/modules/field/field.attach.inc');
  * - @link field_crud Field CRUD API @endlink. Create, updates, and
  *   deletes fields, bundles (a.k.a. "content types"), and instances.
  *   Modules use this API, often in hook_install(), to create
- *   custom data structures. The Content Construction Kit
- *   user-interface module uses this API for its major functionality.
+ *   custom data structures.
  *
  * - @link field_attach Field Attach API @endlink. Connects object
  *   types to the Field API. Field Attach API functions load, store,
@@ -135,7 +134,6 @@ function field_help($path, $arg) {
   switch ($path) {
     case 'admin/help#field':
       $output = '<p>' . t('The Field API allows custom data fields to be attached to Drupal objects and takes care of storing, loading, editing, and rendering field data. Any object type (node, user, etc.) can use the Field API to make itself "fieldable" and thus allow fields to be attached to it.') . '</p>';
-      $output .= '<p>' . t('The Field API provides no user interface on its own. Use the Content Construction Kit (CCK) contrib module to manage custom fields via a web browser.') . '</p>';
       return $output;
   }
 }
@@ -474,7 +472,7 @@ function _field_filter_xss_display_allowed_tags() {
  *
  * TODO D7 : do we still need field_format ?
  * - backwards compatibility of templates - check what fallbacks we can propose...
- * - used by Views integration in CCK D6
+ * - was used by Views integration in CCK in D6 - do we need now?
  * At least needs a little rehaul/update...
  *
  * Used to display a field's values outside the context of the $node, as
