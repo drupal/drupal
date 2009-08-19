@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.admin.inc,v 1.13 2009/07/20 18:51:33 dries Exp $
+// $Id: contact.admin.inc,v 1.14 2009/08/19 12:56:47 dries Exp $
 
 /**
  * @file
@@ -172,9 +172,8 @@ function contact_admin_settings() {
   );
   $form['contact_default_status'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Enable personal contact form by default'),
+    '#title' => t('Enable the personal contact form by default for new users'),
     '#default_value' => 1,
-    '#description' => t('Default status of the personal contact form for new users.'),
   );
   return system_settings_form($form, TRUE);
 }
