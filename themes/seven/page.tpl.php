@@ -16,7 +16,7 @@
   <?php print $page_top; ?>
 
   <div id="branding" class="clearfix">
-    <div class="back-to-site"><?php print $back_to_site; ?></div>
+    <?php print $breadcrumb; ?>
     <?php if ($title): ?><h1 class="page-title"><?php print $title; ?></h1><?php endif; ?>
     <?php if ($primary_local_tasks): ?><ul class="tabs primary"><?php print $primary_local_tasks; ?></ul><?php endif; ?>
   </div>

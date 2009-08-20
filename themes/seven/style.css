@@ -64,15 +64,9 @@ legend {
   background-color: #e0e0d8;
 }
 
-#branding div.back-to-site {
-  background: url(images/arrow-prev.png) no-repeat left center;
-  padding-left: 8px;
-  font-size: 11px;
-}
-
 #branding div.breadcrumb {
-  float: left;
-  font-size: 12px;
+  font-size: 11px;
+  padding-bottom: 5px;
 }
 
 #branding div.block {
@@ -102,14 +96,6 @@ legend {
 #branding div.block form input.form-submit {
   text-align: center;
   width: 80px;
-}
-
-/**
- * Breadcrumbs.
- */
-div.breadcrumb a {
-  padding: 0 10px 0 0;
-  color: #fff;
 }
 
 /**
