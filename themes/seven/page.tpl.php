@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.1 2009/07/31 19:35:57 dries Exp $
+// $Id: page.tpl.php,v 1.2 2009/08/20 15:59:58 webchick Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
   "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language; ?>" dir="<?php print $language->dir; ?>"
@@ -16,7 +16,7 @@
   <?php print $page_top; ?>
 
   <div id="branding" class="clearfix">
-    <div class="back-to-site"><?php print $back_to_site; ?></div>
+    <?php print $breadcrumb; ?>
     <?php if ($title): ?><h1 class="page-title"><?php print $title; ?></h1><?php endif; ?>
     <?php if ($primary_local_tasks): ?><ul class="tabs primary"><?php print $primary_local_tasks; ?></ul><?php endif; ?>
   </div>
