@@ -1338,6 +1338,9 @@ function theme_placeholder($text) {
  * Return a themed set of status and/or error messages. The messages are grouped
  * by type.
  *
+ * An invisible heading identifies the messages for assistive technology. Sighted
+ * users see a colored box. See http://www.w3.org/TR/WCAG-TECHS/H69.html for info.
+ *
  * @param $display
  *   (optional) Set to 'status' or 'error' to display only messages of that type.
  *
@@ -1346,8 +1349,16 @@ function theme_placeholder($text) {
  */
 function theme_status_messages($display = NULL) {
   $output = '';
+  $status_heading = array(
+    'status' => t('Status message'),
+    'error' => t('Error message'),
+    'warning' => t('Warning message'),
+  );
   foreach (drupal_get_messages($display) as $type => $messages) {
     $output .= "<div class=\"messages $type\">\n";
+    if (!empty($status_heading[$type])) {
+      $output .= '<h2 class="element-invisible">' . $status_heading[$type] . "</h2>\n";
+    }
     if (count($messages) > 1) {
       $output .= " <ul>\n";
       foreach ($messages as $message) {
