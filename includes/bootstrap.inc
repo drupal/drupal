@@ -1552,10 +1552,8 @@ function drupal_valid_test_ua($user_agent) {
   // The file properties add more entropy not easily accessible to others.
   $filepath = DRUPAL_ROOT . '/includes/bootstrap.inc';
   $key = sha1(serialize($databases) . filectime($filepath) . fileinode($filepath), TRUE);
-  $time_diff = REQUEST_TIME - $time;
-  // Since we are making a local request, a 2 second time window is allowed,
-  // and the HMAC must match.
-  return (($time_diff >= 0) && ($time_diff < 3) && ($hmac == base64_encode(hash_hmac('sha1', $check_string, $key, TRUE))));
+  // The HMAC must match.
+  return $hmac == base64_encode(hash_hmac('sha1', $check_string, $key, TRUE));
 }
 
 /**
