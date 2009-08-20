@@ -342,6 +342,67 @@ function hook_node_load($nodes, $types) {
 }
 
 /**
+ * Control access to a node.
+ *
+ * Modules may implement this hook if they want to have a say in whether or not
+ * a given user has access to perform a given operation on a node.
+ *
+ * The administrative account (user ID #1) always passes any access check,
+ * so this hook is not called in that case. Users with the "bypass node access"
+ * permission may always view and edit content through the administrative
+ * interface.
+ *
+ * Note that not all modules will want to influence access on all
+ * node types. If your module does not want to actively grant or
+ * block access, return NODE_ACCESS_IGNORE or simply return nothing.
+ * Blindly returning FALSE will break other node access modules.
+ *
+ * @link http://api.drupal.org/api/group/node_access/7 More on the node access system @endlink
+ * @ingroup node_access
+ * @param $node
+ *   The node on which the operation is to be performed, or, if it does
+ *   not yet exist, the type of node to be created.
+ * @param $op
+ *   The operation to be performed. Possible values:
+ *   - "create"
+ *   - "delete"
+ *   - "update"
+ *   - "view"
+ * @param $account
+ *   A user object representing the user for whom the operation is to be
+ *   performed.
+ * @return
+ *   NODE_ACCESS_ALLOW if the operation is to be allowed;
+ *   NODE_ACCESS_DENY if the operation is to be denied;
+ *   NODE_ACCESSS_IGNORE to not affect this operation at all.
+ */
+function hook_node_access($node, $op, $account) {
+  $type = is_string($node) ? $node : (is_array($node) ? $node['type'] : $node->type);
+
+  if (in_array($type, nodeperms_get_configured_types())) {
+    if ($op == 'create' && user_access('create ' . $type . ' content', $account)) {
+      return NODE_ACCESS_ALLOW;
+    }
+
+    if ($op == 'update') {
+      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->uid == $node->uid))) {
+        return NODE_ACCESS_ALLOW;
+      }
+    }
+
+    if ($op == 'delete') {
+      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->uid == $node->uid))) {
+        return NODE_ACCESS_ALLOW;
+      }
+    }
+  }
+
+  // Returning nothing from this function would have the same effect.
+  return NODE_ACCESS_IGNORE;
+}
+
+
+/**
  * The node is about to be shown on the add/edit form.
  *
  * @param $node
@@ -665,54 +726,6 @@ function hook_node_type_delete($info) {
 }
 
 /**
- * Define access restrictions.
- *
- * This hook allows node modules to limit access to the node types they
- * define.
- *
- * @param $op
- *   The operation to be performed. Possible values:
- *   - "create"
- *   - "delete"
- *   - "update"
- *   - "view"
- * @param $node
- *   The node on which the operation is to be performed, or, if it does
- *   not yet exist, the type of node to be created.
- * @param $account
- *   A user object representing the user for whom the operation is to be
- *   performed.
- * @return
- *   TRUE if the operation is  to be allowed;
- *   FALSE if the operation is to be denied;
- *   NULL to not override the settings in the node_access table, or access
- *     control modules.
- *
- * The administrative account (user ID #1) always passes any access check,
- * so this hook is not called in that case. If this hook is not defined for
- * a node type, all access checks will fail, so only the administrator will
- * be able to see content of that type. However, users with the "administer
- * nodes" permission may always view and edit content through the
- * administrative interface.
- * @see http://api.drupal.org/api/group/node_access/7
- *
- * For a detailed usage example, see node_example.module.
- *
- * @ingroup node_access
- */
-function hook_access($op, $node, $account) {
-  if ($op == 'create') {
-    return user_access('create stories', $account);
-  }
-
-  if ($op == 'update' || $op == 'delete') {
-    if (user_access('edit own stories', $account) && ($account->uid == $node->uid)) {
-      return TRUE;
-    }
-  }
-}
-
-/**
  * Respond to node deletion.
  *
  * This is a hook used by node modules. It is called to allow the module
@@ -929,11 +942,11 @@ function hook_validate($node, &$form) {
  * @return
  *   $node. The passed $node parameter should be modified as necessary and
  *   returned so it can be properly presented. Nodes are prepared for display
- *   by assembling a structured array, formatted as in the Form API, in 
- *   $node->content. As with Form API arrays, the #weight property can be 
+ *   by assembling a structured array, formatted as in the Form API, in
+ *   $node->content. As with Form API arrays, the #weight property can be
  *   used to control the relative positions of added elements. After this
  *   hook is invoked, node_build() calls field_attach_view() to add field
- *   views to $node->content, and then invokes hook_node_view() and 
+ *   views to $node->content, and then invokes hook_node_view() and
  *   hook_node_build_alter(), so if you want to affect the final
  *   view of the node, you might consider implementing one of these hooks
  *   instead.

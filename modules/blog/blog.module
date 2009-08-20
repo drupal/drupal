@@ -20,28 +20,6 @@ function blog_node_info() {
 }
 
 /**
- * Implement hook_permission().
- */
-function blog_permission() {
-  return node_list_permissions('blog');
-}
-
-/**
- * Implement hook_access().
- */
-function blog_access($op, $node, $account) {
-  switch ($op) {
-    case 'create':
-      // Anonymous users cannot post even if they have the permission.
-      return user_access('create blog content', $account) && $account->uid;
-    case 'update':
-      return user_access('edit any blog content', $account) || (user_access('edit own blog content', $account) && ($node->uid == $account->uid));
-    case 'delete':
-      return user_access('delete any blog content', $account) || (user_access('delete own blog content', $account) && ($node->uid == $account->uid));
-  }
-}
-
-/**
  * Implement hook_user_view().
  */
 function blog_user_view($account) {

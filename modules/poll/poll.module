@@ -54,8 +54,7 @@ function poll_theme() {
  * Implement hook_permission().
  */
 function poll_permission() {
-  $perms = node_list_permissions('poll');
-  $perms += array(
+  $perms = array(
     'vote on polls' => array(
       'title' => t('Vote on polls'),
       'description' => t('Cast votes on polls.'),
@@ -71,20 +70,6 @@ function poll_permission() {
   );
 
   return $perms;
-}
-
-/**
- * Implement hook_access().
- */
-function poll_access($op, $node, $account) {
-  switch ($op) {
-    case 'create':
-      return user_access('create poll content', $account);
-    case 'update':
-      return user_access('edit any poll content', $account) || (user_access('edit own poll content', $account) && ($node->uid == $account->uid));
-    case 'delete':
-      return user_access('delete any poll content', $account) || (user_access('delete own poll content', $account) && ($node->uid == $account->uid));
-  }
 }
 
 /**

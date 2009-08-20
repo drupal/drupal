@@ -16,6 +16,21 @@
 define('NODE_NEW_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
 
 /**
+ * Modules should return this value from hook_node_access() to allow access to a node.
+ */
+define('NODE_ACCESS_ALLOW', 'allow');
+
+/**
+ * Modules should return this value from hook_node_access() to deny access to a node.
+ */
+define('NODE_ACCESS_DENY', 'deny');
+
+/**
+ * Modules should return this value from hook_node_access() to not affect node access.
+ */
+define('NODE_ACCESS_IGNORE', NULL);
+
+/**
  * Implement hook_help().
  */
 function node_help($path, $arg) {
@@ -1337,10 +1352,9 @@ function node_permission() {
     ),
   );
 
-  foreach (node_type_get_types() as $type) {
-    if ($type->base == 'node_content') {
-      $perms += node_list_permissions($type);
-    }
+  // Generate standard node permissions for all applicable node types.
+  foreach (node_permissions_get_configured_types() as $type) {
+    $perms += node_list_permissions($type);
   }
 
   return $perms;
@@ -2222,27 +2236,35 @@ function node_search_validate($form, &$form_state) {
  *
  * In determining access rights for a node, node_access() first checks
  * whether the user has the "bypass node access" permission. Such users have
- * unrestricted access to all nodes. Then the node module's hook_access()
- * is called, and a TRUE or FALSE return value will grant or deny access.
- * This allows, for example, the blog module to always grant access to the
- * blog author, and for the book module to always deny editing access to
- * PHP pages.
+ * unrestricted access to all nodes. user 1 will always pass this check.
  *
- * If node module does not intervene (returns NULL), then the
- * node_access table is used to determine access. All node access
- * modules are queried using hook_node_grants() to assemble a list of
- * "grant IDs" for the user. This list is compared against the table.
- * If any row contains the node ID in question (or 0, which stands for "all
- * nodes"), one of the grant IDs returned, and a value of TRUE for the
- * operation in question, then access is granted. Note that this table is a
- * list of grants; any matching row is sufficient to grant access to the
- * node.
+ * Next, all implementations of hook_node_access() will be called. Each
+ * implementation may explicitly allow, explicitly deny, or ignore the access
+ * request. If at least one module says to deny the request, it will be rejected.
+ * If no modules deny the request and at least one says to allow it, the request
+ * will be permitted.
+ *
+ * If all modules ignore the access request, then the node_access table is used
+ * to determine access. All node access modules are queried using
+ * hook_node_grants() to assemble a list of "grant IDs" for the user. This list
+ * is compared against the table. If any row contains the node ID in question
+ * (or 0, which stands for "all nodes"), one of the grant IDs returned, and a
+ * value of TRUE for the operation in question, then access is granted. Note
+ * that this table is a list of grants; any matching row is sufficient to
+ * grant access to the node.
  *
  * In node listings, the process above is followed except that
- * hook_access() is not called on each node for performance reasons and for
+ * hook_node_access() is not called on each node for performance reasons and for
  * proper functioning of the pager system. When adding a node listing to your
- * module, be sure to use db_rewrite_sql() to add
- * the appropriate clauses to your query for access checks.
+ * module, be sure to use a dynamic query created by db_select() and add a tag
+ * of "node_access" to ensure that only nodes to which the user has access
+ * are retrieved.
+ *
+ * Note: Even a single module returning NODE_ACCESS_DENY from hook_node_access()
+ * will block access to the node. Therefore, implementers should take care to
+ * not deny access unless they really intend to. Unless a module wishes to
+ * actively deny access it should return NODE_ACCESS_IGNORE (or simply return
+ * nothing) to allow other modules or the node_access table to control access.
  *
  * To see how to write a node access module of your own, see
  * node_access_example.module.
@@ -2292,12 +2314,17 @@ function node_access($op, $node, $account = NULL) {
     return FALSE;
   }
 
-  // Can't use node_invoke('access', $node), because the access hook takes the
-  // $op parameter before the $node parameter.
-  $base = node_type_get_base($node);
-  $access = module_invoke($base, 'access', $op, $node, $account);
-  if (!is_null($access)) {
-    return $access;
+  // We grant access to the node if both of the following conditions are met:
+  // - No modules say to deny access.
+  // - At least one module says to grant access.
+  // If no module specified either allow or deny, we fall back to the
+  // node_access table.
+  $access = module_invoke_all('node_access', $node, $op, $account);
+  if (in_array(NODE_ACCESS_DENY, $access, TRUE)) {
+    return FALSE;
+  }
+  elseif (in_array(NODE_ACCESS_ALLOW, $access, TRUE)) {
+    return TRUE;
   }
 
   // Check if authors can view their own unpublished nodes.
@@ -2335,6 +2362,99 @@ function node_access($op, $node, $account = NULL) {
   }
 
   return FALSE;
+}
+
+/**
+ * Implement hook_node_access().
+ */
+function node_node_access($node, $op, $account) {
+  $type = is_string($node) ? $node : (is_array($node) ? $node['type'] : $node->type);
+
+  if (in_array($type, node_permissions_get_configured_types())) {
+    if ($op == 'create' && user_access('create ' . $type . ' content', $account)) {
+      return NODE_ACCESS_ALLOW;
+    }
+
+    if ($op == 'update') {
+      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->uid == $node->uid))) {
+        return NODE_ACCESS_ALLOW;
+      }
+    }
+
+    if ($op == 'delete') {
+      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->uid == $node->uid))) {
+        return NODE_ACCESS_ALLOW;
+      }
+    }
+  }
+
+  return NODE_ACCESS_IGNORE;
+}
+
+/**
+ * Helper function to generate standard node permission list for a given type.
+ *
+ * @param $type
+ *   The machine-readable name of the node type.
+ * @return array
+ *   An array of permission names and descriptions.
+ */
+function node_list_permissions($type) {
+  $info = node_type_get_type($type);
+  $type = check_plain($info->type);
+
+  // Build standard list of node permissions for this type.
+  $perms = array(
+    "create $type content" => array(
+      'title' => t('Create %type_name content', array('%type_name' => $info->name)),
+      'description' => t('Create new %type_name content.', array('%type_name' => $info->name)),
+    ),
+    "edit own $type content" => array(
+      'title' => t('Edit own %type_name content', array('%type_name' => $info->name)),
+      'description' => t('Edit %type_name content created by the user.', array('%type_name' => $info->name)),
+    ),
+    "edit any $type content" => array(
+      'title' => t('Edit any %type_name content', array('%type_name' => $info->name)),
+      'description' => t('Edit any %type_name content, regardless of its author.', array('%type_name' => $info->name)),
+    ),
+    "delete own $type content" => array(
+      'title' => t('Delete own %type_name content', array('%type_name' => $info->name)),
+      'description' => t('Delete %type_name content created by the user.', array('%type_name' => $info->name)),
+    ),
+    "delete any $type content" => array(
+      'title' => t('Delete any %type_name content', array('%type_name' => $info->name)),
+      'description' => t('Delete any %type_name content, regardless of its author.', array('%type_name' => $info->name)),
+    ),
+  );
+
+  return $perms;
+}
+
+/**
+ * Returns an array of node types that should be managed by permissions.
+ *
+ * By default, this will include all node types in the system. To exclude a
+ * specific node from getting permissions defined for it, set the
+ * node_permissions_$type variable to 0. Core does not provide an interface
+ * for doing so, however, contrib modules may exclude their own nodes in
+ * hook_install(). Alternatively, contrib modules may configure all node types
+ * at once, or decide to apply some other hook_node_access() implementation
+ * to some or all node types.
+ *
+ * @return
+ *   An array of node types managed by this module.
+ */
+function node_permissions_get_configured_types() {
+
+  $configured_types = array();
+
+  foreach (node_type_get_types() as $type => $info) {
+    if (variable_get('node_permissions_' . $type, 1)) {
+      $configured_types[] = $type;
+    }
+  }
+
+  return $configured_types;
 }
 
 /**
@@ -2763,31 +2883,6 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
  */
 
 /**
- * Implement hook_access().
- *
- * Named so as not to conflict with node_access()
- */
-function node_content_access($op, $node, $account) {
-  $type = is_string($node) ? $node : (is_array($node) ? $node['type'] : $node->type);
-
-  if ($op == 'create') {
-    return user_access('create ' . $type . ' content', $account);
-  }
-
-  if ($op == 'update') {
-    if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->uid == $node->uid))) {
-      return TRUE;
-    }
-  }
-
-  if ($op == 'delete') {
-    if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->uid == $node->uid))) {
-      return TRUE;
-    }
-  }
-}
-
-/**
  * Implement hook_form().
  */
 function node_content_form($node, $form_state) {
@@ -3118,45 +3213,6 @@ function node_unpublish_by_keyword_action($node, $context) {
       break;
     }
   }
-}
-
-/**
- * Helper function to generate standard node permission list for a given type.
- *
- * @param $type
- *   The machine-readable name of the node type.
- * @return array
- *   An array of permission names and descriptions.
- */
-function node_list_permissions($type) {
-  $info = node_type_get_type($type);
-  $type = check_plain($info->type);
-
-  // Build standard list of node permissions for this type.
-  $perms = array(
-    "create $type content" => array(
-      'title' => t('Create %type_name content', array('%type_name' => $info->name)),
-      'description' => t('Create new %type_name content.', array('%type_name' => $info->name)),
-    ),
-    "edit own $type content" => array(
-      'title' => t('Edit own %type_name content', array('%type_name' => $info->name)),
-      'description' => t('Edit %type_name content created by the user.', array('%type_name' => $info->name)),
-    ),
-    "edit any $type content" => array(
-      'title' => t('Edit any %type_name content', array('%type_name' => $info->name)),
-      'description' => t('Edit any %type_name content, regardless of its author.', array('%type_name' => $info->name)),
-    ),
-    "delete own $type content" => array(
-      'title' => t('Delete own %type_name content', array('%type_name' => $info->name)),
-      'description' => t('Delete %type_name content created by the user.', array('%type_name' => $info->name)),
-    ),
-    "delete any $type content" => array(
-      'title' => t('Delete any %type_name content', array('%type_name' => $info->name)),
-      'description' => t('Delete any %type_name content, regardless of its author.', array('%type_name' => $info->name)),
-    ),
-  );
-
-  return $perms;
 }
 
 /**

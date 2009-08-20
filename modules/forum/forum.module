@@ -405,20 +405,6 @@ function forum_node_info() {
 }
 
 /**
- * Implement hook_access().
- */
-function forum_access($op, $node, $account) {
-  switch ($op) {
-    case 'create':
-      return user_access('create forum content', $account);
-    case 'update':
-      return user_access('edit any forum content', $account) || (user_access('edit own forum content', $account) && ($account->uid == $node->uid));
-    case 'delete':
-      return user_access('delete any forum content', $account) || (user_access('delete own forum content', $account) && ($account->uid == $node->uid));
-  }
-}
-
-/**
  * Implement hook_permission().
  */
 function forum_permission() {
@@ -428,7 +414,6 @@ function forum_permission() {
       'description' => t('Manage forums and configure forum administration settings.'),
     ),
   );
-  $perms += node_list_permissions('forum');
   return $perms;
 }
 
