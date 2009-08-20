@@ -289,7 +289,7 @@ function forum_node_presave($node) {
           $node->tid = $term_id;
         }
       }
-      $old_tid = db_query_range("SELECT t.tid FROM {taxonomy_term_node} t INNER JOIN {node} n ON t.vid = n.vid WHERE n.nid = :nid ORDER BY t.vid DESC", array(':nid' => $node->nid), 0, 1)->fetchField();
+      $old_tid = db_query_range("SELECT f.tid FROM {forum} f INNER JOIN {node} n ON f.vid = n.vid WHERE n.nid = :nid ORDER BY f.vid DESC", array(':nid' => $node->nid), 0, 1)->fetchField();
       if ($old_tid && isset($node->tid) && ($node->tid != $old_tid) && !empty($node->shadow)) {
         // A shadow copy needs to be created. Retain new term and add old term.
         $node->taxonomy[] = $old_tid;
@@ -424,7 +424,7 @@ function forum_taxonomy($op, $type, $term = NULL) {
   if ($op == 'delete' && $term['vid'] == variable_get('forum_nav_vocabulary', 0)) {
     switch ($type) {
       case 'term':
-        $result = db_query('SELECT tn.nid FROM {taxonomy_term_node} tn WHERE tn.tid = :tid', array(':tid' => $term['tid']));
+        $result = db_query('SELECT f.nid FROM {forum} f WHERE f.tid = :tid', array(':tid' => $term['tid']));
         foreach ($result as $node) {
           // node_delete will also remove any association with non-forum vocabularies.
           node_delete($node->nid);
@@ -510,8 +510,8 @@ function forum_block_save($delta = '', $edit = array()) {
 function forum_block_view($delta = '') {
   if (user_access('access content')) {
     $query = db_select('node', 'n');
-    $query->join('taxonomy_term_node', 'tn', 'tn.vid = n.vid');
-    $query->join('taxonomy_term_data', 'td', 'td.tid = tn.tid');
+    $query->join('forum', 'f', 'f.vid = n.vid');
+    $query->join('taxonomy_term_data', 'td', 'td.tid = f.tid');
     $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
     $query
       ->fields('n', array('nid', 'title'))
@@ -595,11 +595,11 @@ function forum_get_forums($tid = 0) {
   if (count($_forums)) {
     $query = db_select('node', 'n');
     $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
-    $query->join('taxonomy_term_node', 'r', 'n.vid = r.vid');
+    $query->join('forum', 'f', 'f.vid = f.vid');
     $query->addExpression('COUNT(n.nid)', 'topic_count');
     $query->addExpression('SUM(ncs.comment_count)', 'comment_count');
     $counts = $query
-      ->fields('r', array('tid'))
+      ->fields('f', array('tid'))
       ->condition('status', 1)
       ->groupBy('tid')
       ->addTag('node_access')
@@ -623,7 +623,7 @@ function forum_get_forums($tid = 0) {
 
     $query = db_select('node', 'n');
     $query->join('users', 'u1', 'n.uid = u1.uid');
-    $query->join('taxonomy_term_node', 'tn', 'n.vid = tn.vid AND tn.tid = :tid', array(':tid' => $forum->tid));
+    $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => $forum->tid));
     $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
     $query->join('users', 'u2', 'ncs.last_comment_uid = u2.uid');
     $query->addExpression('IF (ncs.last_comment_uid != 0, u2.name, ncs.last_comment_name)', 'last_comment_name');
@@ -657,7 +657,7 @@ function forum_get_forums($tid = 0) {
  */
 function _forum_topics_unread($term, $uid) {
   $query = db_select('node', 'n');
-  $query->join('taxonomy_term_node', 'tn', 'n.vid = tn.vid AND tn.tid = :tid', array(':tid' => $term));
+  $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => $term));
   $query->join('history', 'h', 'n.nid = h.nid AND h.uid = :uid', array(':uid' => $uid));
   $query->addExpression('COUNT(n.nid)', 'count');
   return $query
@@ -689,9 +689,8 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   $query = db_select('node_comment_statistics', 'ncs')->extend('PagerDefault')->extend('TableSort');
   $query->join('node', 'n', 'n.nid = ncs.nid');
   $query->join('users', 'cu', 'ncs.last_comment_uid = cu.uid');
-  $query->join('taxonomy_term_node', 'r', 'n.vid = r.vid AND r.tid = :tid', array(':tid' => $tid));
+  $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => $tid));
   $query->join('users', 'u', 'n.uid = u.uid');
-  $query->join('forum', 'f', 'n.vid = f.vid');
   $query->addExpression('IF(ncs.last_comment_uid != 0, cu.name, ncs.last_comment_name)', 'last_comment_name');
   $query->addField('n', 'created', 'timestamp');
   $query->addField('n', 'comment', 'comment_mode');
@@ -700,7 +699,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   $query
     ->addTag('node_access')
     ->fields('n', array('nid', 'title', 'type', 'sticky'))
-    ->fields('r', array('tid'))
+    ->fields('f', array('tid'))
     ->fields('u', array('name', 'uid'))
     ->fields('ncs', array('last_comment_timestamp', 'last_comment_uid'))
     ->condition('n.status', 1)
@@ -710,7 +709,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
     ->limit($forum_per_page);
 
   $count_query = db_select('node', 'n');
-  $count_query->join('taxonomy_term_node', 'r', 'n.vid = r.vid AND r.tid = :tid', array(':tid' => $tid));
+  $count_query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => $tid));
   $count_query->addExpression('COUNT(*)');
   $count_query
     ->condition('n.status', 1)
@@ -1008,7 +1007,7 @@ function template_preprocess_forum_topic_navigation(&$variables) {
   // Get previous and next topic.
   $query = db_select('node', 'n');
   $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
-  $query->join('taxonomy_term_node', 'r', 'n.vid = r.vid AND r.tid = :tid', array(':tid' => isset($variables['node']->tid) ? $variables['node']->tid : 0));
+  $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => isset($variables['node']->tid) ? $variables['node']->tid : 0));
 
   $order = _forum_get_topic_order(variable_get('forum_order', 1));
   $result = $query
