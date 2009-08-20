@@ -249,7 +249,7 @@ function upload_form_alter(&$form, $form_state, $form_id) {
       if (!file_prepare_directory($path, FILE_CREATE_DIRECTORY) || !file_prepare_directory($temp, FILE_CREATE_DIRECTORY)) {
         $form['attachments']['#description'] =  t('File attachments are disabled. The file directories have not been properly configured.');
         if (user_access('administer site configuration')) {
-          $form['attachments']['#description'] .= ' ' . t('Please visit the <a href="@admin-file-system">file system configuration page</a>.', array('@admin-file-system' => url('admin/settings/file-system')));
+          $form['attachments']['#description'] .= ' ' . t('Please visit the <a href="@admin-file-system">file system configuration page</a>.', array('@admin-file-system' => url('admin/config/media/file-system')));
         }
         else {
           $form['attachments']['#description'] .= ' ' . t('Please contact the site administrator.');

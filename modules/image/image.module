@@ -16,7 +16,7 @@ function image_help($path, $arg) {
       $naming_approaches[] =  t('Based on where it will be used: !name', array('!name' => '<code>profile-picture</code>'));
       $naming_approaches[] =  t('Describing its appearance: !name', array('!name' => '<code>square-85x85</code>'));
       $output = '';
-      $output .= '<p>' . t('The Image module provides functionality for displaying images on your site though <a href="!url">image styles</a>.', array('!url' => url('admin/settings/image-styles'))) .'</p>';
+      $output .= '<p>' . t('The Image module provides functionality for displaying images on your site though <a href="!url">image styles</a>.', array('!url' => url('admin/config/media/image-styles'))) .'</p>';
       $output .= '<h3>' . t('Image styles') . '</h3>';
       $output .= '<p>' . t('Image <em>styles</em> allow your site to output an image in several different ways without affecting the original image. Any created images will automatically be refreshed if any changes are made to the image style.') .'</p>';
       $output .= '<p>' . t('Every image style must have a name, which will be used in the URL of generated images. There are two common approaches to naming image styles:') . '</p>';
@@ -24,10 +24,10 @@ function image_help($path, $arg) {
       $output .= '<p>' . t('Both approaches are common and which you choose depends on how you use the image style.') . '</p>';
       $output .= '<p>' . t('After creating an image style, <em>effects</em> may be added to the style. Image module comes with some basic effects such as <em>crop</em>, <em>scale</em>, <em>desaturate</em>, and <em>rotate</em>. In addition to the effects included with Image, other modules may provide additional effects. Multiple effects may be combined together, such as using the <em>crop and scale</em> effect and the <em>desaturate</em> effect, you could create square, grayscale thumbnails.');
       return $output;
-    case 'admin/settings/image-styles':
+    case 'admin/config/media/image-styles':
       return '<p>' . t('Image styles commonly provide thumbnail sizes by scaling and cropping images, but can also add various effects before an image is displayed. When an image is displayed with a style, a new file is created and the original image is left unchanged.') . '</p>';
-    case 'admin/settings/image-styles/edit/%/add/%':
-    case 'admin/settings/image-styles/edit/%/effects/%':
+    case 'admin/config/media/image-styles/edit/%/add/%':
+    case 'admin/config/media/image-styles/edit/%/effects/%':
       $effect = ($arg[5] == 'add') ? image_effect_definition_load($arg[6]) : image_effect_load($arg[6]);
       return isset($effect['help']) ? ('<p>' . $effect['help'] . '</p>') : NULL;
   }
@@ -46,13 +46,13 @@ function image_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
-  $items['admin/settings/image-styles'] = array(
+  $items['admin/config/media/image-styles'] = array(
     'title' => 'Image styles',
     'description' => 'Configure styles that can be used for resizing or adjusting images on display.',
     'page callback' => 'image_style_list',
     'access arguments' => array('administer image styles'),
   );
-  $items['admin/settings/image-styles/list'] = array(
+  $items['admin/config/media/image-styles/list'] = array(
     'title' => 'List',
     'description' => 'List the current image styles on the site.',
     'page callback' => 'image_style_list',
@@ -60,7 +60,7 @@ function image_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => 1,
   );
-  $items['admin/settings/image-styles/add'] = array(
+  $items['admin/config/media/image-styles/add'] = array(
     'title' => 'Add style',
     'description' => 'Add a new image style.',
     'page callback' => 'drupal_get_form',
@@ -69,53 +69,53 @@ function image_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
   );
-  $items['admin/settings/image-styles/edit/%image_style'] = array(
+  $items['admin/config/media/image-styles/edit/%image_style'] = array(
     'title' => 'Edit style',
     'title callback' => 'image_style_title',
     'title arguments' => array('!name', 4),
     'description' => 'Configure an image style.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('image_style_form', 4),
+    'page arguments' => array('image_style_form', 5),
     'access arguments' => array('administer image styles'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/settings/image-styles/delete/%image_style'] = array(
+  $items['admin/config/media/image-styles/delete/%image_style'] = array(
     'title' => 'Delete style',
     'title callback' => 'image_style_title',
     'title arguments' => array('Delete !name', 4),
     'description' => 'Delete an image style.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('image_style_delete_form', 4, TRUE),
+    'page arguments' => array('image_style_delete_form', 5, TRUE),
     'access arguments' => array('administer image styles'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/settings/image-styles/edit/%image_style/effects/%image_effect'] = array(
+  $items['admin/config/media/image-styles/edit/%image_style/effects/%image_effect'] = array(
     'title' => 'Edit image effect',
     'title callback' => 'image_effect_title',
     'title arguments' => array('!label effect', 6),
     'description' => 'Edit an exiting effect within a style.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('image_effect_form', 4, 6),
+    'page arguments' => array('image_effect_form', 5, 7),
     'access arguments' => array('administer image styles'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/settings/image-styles/edit/%image_style/effects/%image_effect/delete'] = array(
+  $items['admin/config/media/image-styles/edit/%image_style/effects/%image_effect/delete'] = array(
     'title' => 'Delete image effect',
     'title callback' => 'image_effect_title',
     'title arguments' => array('Delete !label', 6),
     'description' => 'Delete an exiting effect from a style.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('image_effect_delete_form', 4, 6),
+    'page arguments' => array('image_effect_delete_form', 5, 7),
     'access arguments' => array('administer image styles'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/settings/image-styles/edit/%image_style/add/%image_effect_definition'] = array(
+  $items['admin/config/media/image-styles/edit/%image_style/add/%image_effect_definition'] = array(
     'title' => 'Add image effect',
     'title callback' => 'image_effect_title',
     'title arguments' => array('Add !label effect', 6),
     'description' => 'Add a new effect to a style.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('image_effect_form', 4, 6),
+    'page arguments' => array('image_effect_form', 5, 7),
     'access arguments' => array('administer image styles'),
     'type' => MENU_CALLBACK,
   );

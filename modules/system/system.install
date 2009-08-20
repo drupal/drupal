@@ -205,7 +205,7 @@ function system_requirements($phase) {
       }
       // The files directory requirement check is done only during install and runtime.
       if ($phase == 'runtime') {
-        $description = $error . $t('You may need to set the correct directory at the <a href="@admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', array('@admin-file-system' => url('admin/settings/file-system')));
+        $description = $error . $t('You may need to set the correct directory at the <a href="@admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', array('@admin-file-system' => url('admin/config/media/file-system')));
       }
       elseif ($phase == 'install') {
         // For the installer UI, we need different wording. 'value' will

@@ -282,7 +282,7 @@ class ImageAdminStylesUnitTest extends DrupalWebTestCase {
   function testStyle() {
     // Setup a style to be created and effects to add to it.
     $style_name = strtolower($this->randomName(10));
-    $style_path = 'admin/settings/image-styles/edit/' . $style_name;
+    $style_path = 'admin/config/media/image-styles/edit/' . $style_name;
     $effect_edits = array(
       'image_resize' => array(
         'data[width]' => 100,
@@ -317,7 +317,7 @@ class ImageAdminStylesUnitTest extends DrupalWebTestCase {
     $edit = array(
       'name' => $style_name,
     );
-    $this->drupalPost('admin/settings/image-styles/add', $edit, t('Create new style'));
+    $this->drupalPost('admin/config/media/image-styles/add', $edit, t('Create new style'));
     $this->assertRaw(t('Style %name was created.', array('%name' => $style_name)), t('Image style successfully created.'));
 
     // Add effect form.
@@ -376,7 +376,7 @@ class ImageAdminStylesUnitTest extends DrupalWebTestCase {
     $this->drupalPost($style_path, $edit, t('Update style'));
 
     // Note that after changing the style name, the style path is changed.
-    $style_path = 'admin/settings/image-styles/edit/' . $style_name;
+    $style_path = 'admin/config/media/image-styles/edit/' . $style_name;
 
     // Check that the URL was updated.
     $this->drupalGet($style_path);
@@ -416,7 +416,7 @@ class ImageAdminStylesUnitTest extends DrupalWebTestCase {
     // Style deletion form.
 
     // Delete the style.
-    $this->drupalPost('admin/settings/image-styles/delete/' . $style_name, array(), t('Delete'));
+    $this->drupalPost('admin/config/media/image-styles/delete/' . $style_name, array(), t('Delete'));
 
     // Confirm the style directory has been removed.
     $directory = file_directory_path() . '/styles/' . $style_name;

@@ -75,7 +75,7 @@ function upload_admin_settings() {
     '#default_value' => variable_get('upload_max_resolution', 0),
     '#size' => 15,
     '#maxlength' => 10,
-    '#description' => t('The maximum allowed image size (e.g. 640x480). Set to 0 for no restriction. If an <a href="!image-toolkit-link">image toolkit</a> is installed, files exceeding this value will be scaled down to fit.', array('!image-toolkit-link' => url('admin/settings/image-toolkit'))),
+    '#description' => t('The maximum allowed image size (e.g. 640x480). Set to 0 for no restriction. If an <a href="!image-toolkit-link">image toolkit</a> is installed, files exceeding this value will be scaled down to fit.', array('!image-toolkit-link' => url('admin/config/media/image-toolkit'))),
     '#field_suffix' => '<kbd>' . t('WIDTHxHEIGHT') . '</kbd>'
   );
   $form['settings_general']['upload_list_default'] = array(

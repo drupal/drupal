@@ -96,7 +96,7 @@ function system_help($path, $arg) {
       $output .= '<li>' . t('support for enabling and disabling <a href="@themes">themes</a>, which determine the design and presentation of your site. Drupal comes packaged with several core themes and additional contributed themes are available at the <a href="@drupal-themes">Drupal.org theme page</a>.', array('@themes' => url('admin/appearance'), '@drupal-themes' => 'http://drupal.org/project/themes')) . '</li>';
       $output .= '<li>' . t('a robust <a href="@cache-settings">caching system</a> that allows the efficient re-use of previously-constructed web pages and web page components. Drupal stores the pages requested by anonymous users in a compressed format; depending on your site configuration and the amount of your web traffic tied to anonymous visitors, Drupal\'s caching system may significantly increase the speed of your site.', array('@cache-settings' => url('admin/config/development/performance'))) . '</li>';
       $output .= '<li>' . t('a set of routine administrative operations that rely on a correctly-configured <a href="@cron">cron maintenance task</a> to run automatically. A number of other modules, including the feed aggregator, and search also rely on <a href="@cron">cron maintenance tasks</a>. For more information, see the online handbook entry for <a href="@handbook">configuring cron jobs</a>.', array('@cron' => url('admin/reports/status'), '@handbook' => 'http://drupal.org/cron')) . '</li>';
-      $output .= '<li>' . t('basic configuration options for your site, including <a href="@regional-settings">date and time settings</a>, <a href="@file-system">file system settings</a>, <a href="@clean-url">clean URL support</a>, <a href="@site-info">site name and other information</a>, and a <a href="@maintenance-mode">maintenance mode</a> for taking your site temporarily offline.', array('@regional-settings' => url('admin/settings/regional-settings'), '@file-system' => url('admin/settings/file-system'), '@clean-url' => url('admin/settings/clean-urls'), '@site-info' => url('admin/settings/site-information'), '@maintenance-mode' => url('admin/config/development/maintenance'))) . '</li></ul>';
+      $output .= '<li>' . t('basic configuration options for your site, including <a href="@regional-settings">date and time settings</a>, <a href="@file-system">file system settings</a>, <a href="@clean-url">clean URL support</a>, <a href="@site-info">site name and other information</a>, and a <a href="@maintenance-mode">maintenance mode</a> for taking your site temporarily offline.', array('@regional-settings' => url('admin/settings/regional-settings'), '@file-system' => url('admin/config/media/file-system'), '@clean-url' => url('admin/settings/clean-urls'), '@site-info' => url('admin/settings/site-information'), '@maintenance-mode' => url('admin/config/development/maintenance'))) . '</li></ul>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@system">System module</a>.', array('@system' => 'http://drupal.org/handbook/modules/system/')) . '</p>';
       return $output;
     case 'admin/by-module':
@@ -703,34 +703,43 @@ function system_menu() {
     'page arguments' => array('system_performance_settings'),
     'access arguments' => array('administer site configuration'),
   );
-
-  // Settings.
-  $items['admin/settings/site-information'] = array(
-    'title' => 'Site information',
-    'description' => 'Change basic site information, such as the site name, slogan, e-mail address, mission, front page and more.',
+  $items['admin/config/media'] = array(
+   'title' => 'Media',
+   'description' => 'Media tools.',
+   'position' => 'left',
+   'weight' => 10,
+   'page callback' => 'system_admin_menu_block_page',
+   'access callback' => 'system_admin_menu_block_access',
+   'access arguments' => array('admin/config/media', 'access administration pages'),
+  );
+  $items['admin/config/media/file-system'] = array(
+    'title' => 'File-system',
+    'description' => 'Tell Drupal where to store uploaded files and how they are accessed.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_site_information_settings'),
+    'page arguments' => array('system_performance_settings'),
     'access arguments' => array('administer site configuration'),
   );
-  $items['admin/config/development/logging'] = array(
+    $items['admin/config/media/image-toolkit'] = array(
+    'title' => 'Image toolkit',
+    'description' => 'Choose which image toolkit to use if you have installed optional toolkits.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_image_toolkit_settings'),
+    'access arguments' => array('administer site configuration'),
+  );
+    $items['admin/config/development/logging'] = array(
     'title' => 'Logging and errors',
     'description' => "Settings for logging and alerts modules. Various modules can route Drupal's system events to different destinations, such as syslog, database, email, etc.",
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_logging_settings'),
     'access arguments' => array('administer site configuration'),
   );
-  $items['admin/settings/file-system'] = array(
-    'title' => 'File system',
-    'description' => 'Tell Drupal where to store uploaded files and how they are accessed.',
+  
+  // Settings.
+  $items['admin/settings/site-information'] = array(
+    'title' => 'Site information',
+    'description' => 'Change basic site information, such as the site name, slogan, e-mail address, mission, front page and more.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_file_system_settings'),
-    'access arguments' => array('administer site configuration'),
-  );
-  $items['admin/settings/image-toolkit'] = array(
-    'title' => 'Image toolkit',
-    'description' => 'Choose which image toolkit to use if you have installed optional toolkits.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_image_toolkit_settings'),
+    'page arguments' => array('system_site_information_settings'),
     'access arguments' => array('administer site configuration'),
   );
   $items['admin/settings/rss-publishing'] = array(
