@@ -1237,8 +1237,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       $curl_options = $this->additionalCurlOptions + array(
         CURLOPT_COOKIEJAR => $this->cookieFile,
         CURLOPT_URL => $base_url,
-        CURLOPT_FOLLOWLOCATION => TRUE,
-        CURLOPT_MAXREDIRS => 5,
+        CURLOPT_FOLLOWLOCATION => FALSE,
         CURLOPT_RETURNTRANSFER => TRUE,
         CURLOPT_SSL_VERIFYPEER => FALSE, // Required to make the tests run on https.
         CURLOPT_SSL_VERIFYHOST => FALSE, // Required to make the tests run on https.
@@ -1389,7 +1388,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $this->refreshVariables(); // Ensure that any changes to variables in the other thread are picked up.
 
     // Replace original page output with new output from redirected page(s).
-    if (($new = $this->checkForMetaRefresh())) {
+    if (($new = $this->checkForRedirect())) {
       $out = $new;
     }
     $this->verbose('GET request to: ' . $path .
@@ -1479,7 +1478,7 @@ class DrupalWebTestCase extends DrupalTestCase {
           $this->refreshVariables();
 
           // Replace original page output with new output from redirected page(s).
-          if (($new = $this->checkForMetaRefresh())) {
+          if (($new = $this->checkForRedirect())) {
             $out = $new;
           }
           $this->verbose('POST request to: ' . $path .
@@ -1499,14 +1498,22 @@ class DrupalWebTestCase extends DrupalTestCase {
   }
 
   /**
-   * Check for meta refresh tag and if found call drupalGet() recursively. This
+   * Check for meta refresh tag or HTTP location header.
+   *
+   * If either redirect indicators are found call drupalGet() recursively. This
    * function looks for the http-equiv attribute to be set to "Refresh"
    * and is case-sensitive.
    *
    * @return
    *   Either the new page content or FALSE.
    */
-  protected function checkForMetaRefresh() {
+  protected function checkForRedirect() {
+    foreach ($this->headers as $header) {
+      if (strpos($header, 'Location') !== FALSE) {
+        return $this->drupalGet(trim(str_replace('Location:', '', $header)));
+      }
+    }
+
     if ($this->drupalGetContent() != '' && $this->parse()) {
       $refresh = $this->xpath('//meta[@http-equiv="Refresh"]');
       if (!empty($refresh)) {
