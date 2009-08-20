@@ -1,5 +1,5 @@
 <?php
-// $Id: image.inc,v 1.33 2009/04/20 20:02:30 dries Exp $
+// $Id: image.inc,v 1.34 2009/08/20 10:48:02 dries Exp $
 
 /**
  * @file
@@ -24,7 +24,7 @@
  * Image toolkits are discovered based on the associated module's
  * hook_image_toolkits. Additionally the image toolkit include file
  * must be identified in the files array in the module.info file. The
- * toolkit must then be enabled using the admin/settings/image-toolkit
+ * toolkit must then be enabled using the admin/config/media/image-toolkit
  * form.
  *
  * Only one toolkit may be selected at a time. If a module author wishes to call

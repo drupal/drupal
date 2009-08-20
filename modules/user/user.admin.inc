@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.68 2009/08/17 19:14:41 webchick Exp $
+// $Id: user.admin.inc,v 1.69 2009/08/20 10:48:03 dries Exp $
 
 /**
  * @file
@@ -369,7 +369,7 @@ function user_admin_settings() {
       '#title' => t('Picture display style'),
       '#options' => image_style_options(TRUE),
       '#default_value' => variable_get('user_picture_style', ''),
-      '#description' => t('The style selected will be used on display, while the original image is retained. Styles may be configured in the <a href="!url">Image styles</a> administration area.', array('!url' => url('admin/settings/image-styles'))),
+      '#description' => t('The style selected will be used on display, while the original image is retained. Styles may be configured in the <a href="!url">Image styles</a> administration area.', array('!url' => url('admin/config/media/image-styles'))),
     );
   }
   $form['personalization']['pictures']['user_picture_dimensions'] = array(
