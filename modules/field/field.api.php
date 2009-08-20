@@ -1,5 +1,5 @@
 <?php
-// $Id: field.api.php,v 1.27 2009/08/19 13:31:12 webchick Exp $
+// $Id: field.api.php,v 1.28 2009/08/20 10:56:33 dries Exp $
 
 /**
  * @ingroup field_fieldable_type
@@ -370,9 +370,9 @@ function hook_field_load($obj_type, $objects, $field, $instances, &$items, $age)
         $format = $item['format'];
         if (filter_format_allowcache($format)) {
           $lang = isset($object->language) ? $object->language : $language->language;
-          $items[$id][$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $lang, FALSE, FALSE) : '';
+          $items[$id][$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $lang, FALSE) : '';
           if ($field['type'] == 'text_with_summary') {
-            $items[$id][$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $lang, FALSE, FALSE) : '';
+            $items[$id][$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $lang, FALSE) : '';
           }
         }
       }
@@ -414,9 +414,9 @@ function hook_field_sanitize($obj_type, $object, $field, $instance, $items) {
       if (!empty($instance['settings']['text_processing'])) {
         $format = $item['format'];
         $lang = isset($object->language) ? $object->language : $language->language;
-        $items[$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $lang, FALSE) : '';
+        $items[$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $lang) : '';
         if ($field['type'] == 'text_with_summary') {
-          $items[$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $lang, FALSE) : '';
+          $items[$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $lang) : '';
         }
       }
       else {

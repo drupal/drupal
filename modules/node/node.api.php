@@ -1,5 +1,5 @@
 <?php
-// $Id: node.api.php,v 1.35 2009/08/20 09:47:04 dries Exp $
+// $Id: node.api.php,v 1.36 2009/08/20 10:56:33 dries Exp $
 
 /**
  * @file
@@ -486,7 +486,7 @@ function hook_node_update_index($node) {
   $text = '';
   $comments = db_query('SELECT subject, comment, format FROM {comment} WHERE nid = :nid AND status = :status', array(':nid' => $node->nid, ':status' => COMMENT_PUBLISHED));
   foreach ($comments as $comment) {
-    $text .= '<h2>' . check_plain($comment->subject) . '</h2>' . check_markup($comment->comment, $comment->format, '', FALSE);
+    $text .= '<h2>' . check_plain($comment->subject) . '</h2>' . check_markup($comment->comment, $comment->format);
   }
   return $text;
 }

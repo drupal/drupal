@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.359 2009/08/15 06:50:29 webchick Exp $
+// $Id: block.module,v 1.360 2009/08/20 10:56:33 dries Exp $
 
 /**
  * @file
@@ -220,7 +220,7 @@ function block_block_save($delta = 0, $edit = array()) {
  */
 function block_block_view($delta = 0, $edit = array()) {
   $block = db_query('SELECT body, format FROM {box} WHERE bid = :bid', array(':bid' => $delta))->fetchObject();
-  $data['content'] = check_markup($block->body, $block->format, '', FALSE);
+  $data['content'] = check_markup($block->body, $block->format);
   return $data;
 }
 
