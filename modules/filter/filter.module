@@ -421,20 +421,13 @@ function filter_list_format($format) {
  *   Optional: the language code of the text to be filtered, e.g. 'en' for
  *   English. This allows filters to be language aware so language specific
  *   text replacement can be implemented.
- * @param $check
- *   Whether to check the $format with filter_access() first. Defaults to TRUE.
- *   Note that this will check the permissions of the current user, so you
- *   should specify $check = FALSE when viewing other people's content. When
- *   showing content that is not (yet) stored in the database (eg. upon preview),
- *   set to TRUE so the user's permissions are checked.
  * @param $cache
  *   Boolean whether to cache the filtered output in the {cache_filter} table.
  *   The caller may set this to FALSE when the output is already cached
  *   elsewhere to avoid duplicate cache lookups and storage.
  */
-function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $check = TRUE, $cache = TRUE) {
-  // When $check = TRUE, do an access check on $format.
-  if (isset($text) && (!$check || filter_access($format))) {
+function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $cache = TRUE) {
+  if (isset($text)) {
     $format = filter_resolve_format($format);
 
     // Check for a cached version of this piece of text.

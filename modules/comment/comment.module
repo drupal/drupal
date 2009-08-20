@@ -816,7 +816,7 @@ function comment_build_content($comment, $build_mode = 'full') {
 
   // Build comment body.
   $comment->content['comment_body'] = array(
-    '#markup' => check_markup($comment->comment, $comment->format, '', FALSE),
+    '#markup' => check_markup($comment->comment, $comment->format),
   );
 
   $comment->content += field_attach_view('comment', $comment, $build_mode);
@@ -1126,7 +1126,7 @@ function comment_node_update_index($node) {
       ':status' => COMMENT_PUBLISHED
     ));
     foreach ($comments as $comment) {
-      $text .= '<h2>' . check_plain($comment->subject) . '</h2>' . check_markup($comment->comment, $comment->format, '', FALSE);
+      $text .= '<h2>' . check_plain($comment->subject) . '</h2>' . check_markup($comment->comment, $comment->format);
     }
   }
   return $text;
@@ -2018,7 +2018,6 @@ function comment_submit($comment) {
     // 1) Filter it into HTML
     // 2) Strip out all HTML tags
     // 3) Convert entities back to plain-text.
-    // Note: format is checked by check_markup().
     $comment['subject'] = truncate_utf8(trim(decode_entities(strip_tags(check_markup($comment['comment'], $comment['comment_format'])))), 29, TRUE);
     // Edge cases where the comment body is populated only by HTML tags will
     // require a default subject.
