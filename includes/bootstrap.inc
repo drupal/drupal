@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.298 2009/08/20 07:24:40 webchick Exp $
+// $Id: bootstrap.inc,v 1.299 2009/08/21 00:00:43 webchick Exp $
 
 /**
  * @file
@@ -701,6 +701,8 @@ function variable_initialize($conf = array()) {
  *   The default value to use if this variable has never been set.
  * @return
  *   The value of the variable.
+ *
+ * @see variable_del(), variable_set()
  */
 function variable_get($name, $default = NULL) {
   global $conf;
@@ -716,6 +718,8 @@ function variable_get($name, $default = NULL) {
  * @param $value
  *   The value to set. This can be any PHP data type; these functions take care
  *   of serialization as necessary.
+ *
+ * @see variable_del(), variable_get()
  */
 function variable_set($name, $value) {
   global $conf;
@@ -732,6 +736,8 @@ function variable_set($name, $value) {
  *
  * @param $name
  *   The name of the variable to undefine.
+ *
+ * @see variable_get(), variable_set()
  */
 function variable_del($name) {
   global $conf;
