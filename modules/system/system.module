@@ -112,8 +112,8 @@ function system_help($path, $arg) {
     case 'admin/appearance/settings':
       return '<p>' . t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.') . '</p>';
     case 'admin/config/modules':
-      $output = '<p>' . t('Modules are plugins that extend Drupal\'s core functionality. To further extend your site\'s functionality, a number of <a href="@modules">contributed modules</a> are available for download.', array('@permissions' => url('admin/settings/permissions'), '@modules' => 'http://drupal.org/project/modules')) . '</p>';
-      $output .= '<p>' . t('Module-related tasks can be located on the <a href="@by-module">administration by module page</a>. New <a href="@permissions">module-related permissions</a> may also become available as new modules are enabled.', array('@by-module' => url('admin/by-module'), '@permissions' => url('admin/settings/permissions'))) . '</p>';
+      $output = '<p>' . t('Modules are plugins that extend Drupal\'s core functionality. To further extend your site\'s functionality, a number of <a href="@modules">contributed modules</a> are available for download.', array('@permissions' => url('admin/config/people/permissions'), '@modules' => 'http://drupal.org/project/modules')) . '</p>';
+      $output .= '<p>' . t('Module-related tasks can be located on the <a href="@by-module">administration by module page</a>. New <a href="@permissions">module-related permissions</a> may also become available as new modules are enabled.', array('@by-module' => url('admin/by-module'), '@permissions' => url('admin/config/people/permissions'))) . '</p>';
       $output .= '<p>' . t('Each time a module is updated, it is important that <a href="@update-php">update.php</a> is run. To help manage the update process, the <em>Update status</em> module, if enabled, provides <a href="@updates">information on new versions of modules (and themes)</a> as they are released. Regular review of the <a href="@updates">available updates page</a> is essential to maintaining a secure and current site.', array('@update-php' => $base_url . '/update.php', '@updates' => url('admin/reports/updates'))) . '</p>';
       return $output;
     case 'admin/config/modules/uninstall':
@@ -2244,7 +2244,7 @@ function system_get_module_admin_tasks($module) {
   $admin_task_count = 0;
   // Check for permissions.
   if (in_array($module, module_implements('permission')) && $admin_access) {
-    $admin_tasks[-1] = l(t('Configure permissions'), 'admin/settings/permissions', array('fragment' => 'module-' . $module));
+    $admin_tasks[-1] = l(t('Configure permissions'), 'admin/config/people/permissions', array('fragment' => 'module-' . $module));
   }
 
   // Check for menu items that are admin links.

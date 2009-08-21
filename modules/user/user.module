@@ -97,7 +97,7 @@ function user_fieldable_info() {
         'user' => array(
           'label' => t('User'),
           'admin' => array(
-            'path' => 'admin/settings/user',
+            'path' => 'admin/config/people/accounts',
             'access arguments' => array('administer users'),
           ),
         ),
@@ -813,7 +813,7 @@ function user_permission() {
     ),
     'cancel account' => array(
       'title' => t('Cancel account'),
-      'description' => t('Remove or disable own user account and unpublish, anonymize, or remove own submissions depending on the configured <a href="@user-settings-url">user settings</a>.', array('@user-settings-url' => url('admin/settings/user'))),
+      'description' => t('Remove or disable own user account and unpublish, anonymize, or remove own submissions depending on the configured <a href="@user-settings-url">user settings</a>.', array('@user-settings-url' => url('admin/config/people/accounts'))),
     ),
     'select account cancellation method' => array(
       'title' => t('Select method for cancelling own account'),
@@ -1345,7 +1345,7 @@ function user_menu() {
     'menu_name' => 'user-menu',
   );
 
-  // User administration pages.
+  // User listing pages.
   $items['admin/people'] = array(
     'title' => 'People',
     'description' => 'Find and manage people interacting with your site.',
@@ -1366,39 +1366,52 @@ function user_menu() {
     'access arguments' => array('administer users'),
     'type' => MENU_LOCAL_TASK,
   );
-  $items['admin/settings/user'] = array(
-    'title' => 'Users',
+
+  // Administration pages.
+  $items['admin/config/people'] = array(
+   'title' => 'People and permissions',
+   'description' => 'Configure user accounts, roles and permissions.',
+   'position' => 'right',
+   'page callback' => 'system_admin_menu_block_page',
+   'access callback' => 'system_admin_menu_block_access',
+   'access arguments' => array('admin/config/people', 'access administration pages'),
+  );
+  $items['admin/config/people/accounts'] = array(
+    'title' => 'Account settings',
     'description' => 'Configure default behavior of users, including registration requirements, e-mails, and user pictures.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_settings'),
     'access arguments' => array('administer users'),
+    'weight' => -10,
   );
-  $items['admin/settings/user/settings'] = array(
+  $items['admin/config/people/accounts/settings'] = array(
     'title' => 'Settings',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
 
   // Permission administration pages.
-  $items['admin/settings/permissions'] = array(
-    'title' => 'Permissions',
-    'description' => 'Determine access to features by selecting permissions for roles.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_admin_permissions'),
-    'access arguments' => array('administer permissions'),
-  );
-  $items['admin/settings/roles'] = array(
+  $items['admin/config/people/roles'] = array(
     'title' => 'Roles',
     'description' => 'List, edit, or add user roles.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_new_role'),
     'access arguments' => array('administer permissions'),
+    'weight' => -9,
   );
-  $items['admin/settings/roles/edit'] = array(
+  $items['admin/config/people/roles/edit'] = array(
     'title' => 'Edit role',
     'page arguments' => array('user_admin_role'),
     'access arguments' => array('administer permissions'),
     'type' => MENU_CALLBACK,
+  );
+  $items['admin/config/people/permissions'] = array(
+    'title' => 'Permissions',
+    'description' => 'Determine access to features by selecting permissions for roles.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('user_admin_permissions'),
+    'access arguments' => array('administer permissions'),
+    'weight' => -8,
   );
 
   $items['user/%user_uid_optional'] = array(
@@ -2456,17 +2469,17 @@ function user_help($path, $arg) {
       return $output;
     case 'admin/people/create':
       return '<p>' . t("This web page allows administrators to register new users. Users' e-mail addresses and usernames must be unique.") . '</p>';
-    case 'admin/settings/permissions':
-      return '<p>' . t('Permissions let you control what users can do and see on your site. You can define a specific set of permissions for each role. (See the <a href="@role">Roles</a> page to create a role). Two important roles to consider are Authenticated Users and Administrators. Any permissions granted to the Authenticated Users role will be given to any user who can log into your site.  You can make any role the Administrator role for the site, meaning this will be granted all new permissions automatically. You can do this on the <a href="@settings">User Settings</a> page. You should be careful to ensure that only trusted users are given this access and level of control of your site.', array('@role' => url('admin/settings/roles'), '@settings' => url('admin/settings/user'))) . '</p>';
-    case 'admin/settings/roles':
+    case 'admin/config/people/permissions':
+      return '<p>' . t('Permissions let you control what users can do and see on your site. You can define a specific set of permissions for each role. (See the <a href="@role">Roles</a> page to create a role). Two important roles to consider are Authenticated Users and Administrators. Any permissions granted to the Authenticated Users role will be given to any user who can log into your site.  You can make any role the Administrator role for the site, meaning this will be granted all new permissions automatically. You can do this on the <a href="@settings">User Settings</a> page. You should be careful to ensure that only trusted users are given this access and level of control of your site.', array('@role' => url('admin/config/people/roles'), '@settings' => url('admin/config/people/accounts'))) . '</p>';
+    case 'admin/config/people/roles':
       return t('<p>Roles allow you to fine tune the security and administration of Drupal. A role defines a group of users that have certain privileges as defined in <a href="@permissions">user permissions</a>. Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <em>role names</em> of the various roles. To delete a role choose "edit".</p><p>By default, Drupal comes with two user roles:</p>
       <ul>
       <li>Anonymous user: this role is used for users that don\'t have a user account or that are not authenticated.</li>
       <li>Authenticated user: this role is automatically granted to all logged in users.</li>
-      </ul>', array('@permissions' => url('admin/settings/permissions')));
-    case 'admin/settings/user/fields':
+      </ul>', array('@permissions' => url('admin/config/people/permissions')));
+    case 'admin/config/people/accounts/fields':
       return '<p>' . t('This form lets administrators add, edit, and arrange fields for storing user data.') . '</p>';
-    case 'admin/settings/user/display':
+    case 'admin/config/people/accounts/display':
       return '<p>' . t('This form lets administrators configure how fields should be displayed when rendering a user profile page.') . '</p>';
     case 'admin/people/search':
       return '<p>' . t('Enter a simple pattern ("*" may be used as a wildcard match) to search for a username or e-mail address. For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda@example.com".') . '</p>';

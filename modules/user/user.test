@@ -871,7 +871,7 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
     $this->assertFalse(user_access('administer nodes', $account, TRUE), t('User does not have "administer nodes" permission.'));
     $edit = array();
     $edit[$rid . '[administer nodes]'] = TRUE;
-    $this->drupalPost('admin/settings/permissions', $edit, t('Save permissions'));
+    $this->drupalPost('admin/config/people/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), t('Successful save message displayed.'));
     $this->assertTrue(user_access('administer nodes', $account, TRUE), t('User now has "administer nodes" permission.'));
 
@@ -879,7 +879,7 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
     $this->assertTrue(user_access('access user profiles', $account, TRUE), t('User has "access user profiles" permission.'));
     $edit = array();
     $edit[$rid . '[access user profiles]'] = FALSE;
-    $this->drupalPost('admin/settings/permissions', $edit, t('Save permissions'));
+    $this->drupalPost('admin/config/people/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), t('Successful save message displayed.'));
     $this->assertFalse(user_access('access user profiles', $account, TRUE), t('User no longer has "access user profiles" permission.'));
   }
@@ -889,12 +889,12 @@ class UserPermissionsTestCase extends DrupalWebTestCase {
    */
   function testAdministratorRole() {
     $this->drupalLogin($this->admin_user);
-    $this->drupalGet('admin/settings/user');
+    $this->drupalGet('admin/config/people/accounts');
 
     // Set the user's role to be the administrator role.
     $edit = array();
     $edit['user_admin_role'] = $this->rid;
-    $this->drupalPost('admin/settings/user', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/people/accounts', $edit, t('Save configuration'));
 
     // Enable aggregator module and ensure the 'administer news feeds'
     // permission is assigned by default.
@@ -1079,7 +1079,7 @@ class UserBlocksUnitTests extends DrupalWebTestCase {
     $edit = array();
     $edit['name'] = $user->name;
     $edit['pass'] = $user->pass_raw;
-    $this->drupalPost('admin/settings/permissions', $edit, t('Log in'));
+    $this->drupalPost('admin/config/people/permissions', $edit, t('Log in'));
     $this->assertNoText(t('User login'), t('Logged in.'));
 
     // Check that we are still on the same page.

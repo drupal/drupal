@@ -27,8 +27,8 @@ function profile_admin_overview() {
     $form[$field->fid]['type'] = array('#markup' => $field->type);
     $form[$field->fid]['category'] = array('#type' => 'select', '#default_value' => $field->category, '#options' => array());
     $form[$field->fid]['weight'] = array('#type' => 'weight', '#default_value' => $field->weight);
-    $form[$field->fid]['edit'] = array('#markup' => l(t('edit'), "admin/settings/profile/edit/$field->fid"));
-    $form[$field->fid]['delete'] = array('#markup' => l(t('delete'), "admin/settings/profile/delete/$field->fid"));
+    $form[$field->fid]['edit'] = array('#markup' => l(t('edit'), "admin/config/people/profile/edit/$field->fid"));
+    $form[$field->fid]['delete'] = array('#markup' => l(t('delete'), "admin/config/people/profile/delete/$field->fid"));
   }
 
   // Add the category combo boxes
@@ -55,7 +55,7 @@ function profile_admin_overview() {
   $addnewfields = '<h2>' . t('Add new field') . '</h2>';
   $addnewfields .= '<ul>';
   foreach (_profile_field_types() as $key => $value) {
-    $addnewfields .= '<li>' . l($value, "admin/settings/profile/add/$key") . '</li>';
+    $addnewfields .= '<li>' . l($value, "admin/config/people/profile/add/$key") . '</li>';
   }
   $addnewfields .= '</ul>';
   $form['addnewfields'] = array('#markup' => $addnewfields);
@@ -219,7 +219,7 @@ function profile_field_form(&$form_state, $arg = NULL) {
   $form['fields']['category'] = array('#type' => 'textfield',
     '#title' => t('Category'),
     '#default_value' => $edit['category'],
-    '#autocomplete_path' => 'admin/settings/profile/autocomplete',
+    '#autocomplete_path' => 'admin/config/people/profile/autocomplete',
     '#description' => t('The category the new field should be part of. Categories are used to group fields logically. An example category is "Personal information".'),
     '#required' => TRUE,
   );
@@ -361,7 +361,7 @@ function profile_field_form_submit($form, &$form_state) {
       ->fields($values)
       ->execute();
     drupal_set_message(t('The field has been created.'));
-    watchdog('profile', 'Profile field %field added under category %category.', array('%field' => $form_state['values']['title'], '%category' => $form_state['values']['category']), WATCHDOG_NOTICE, l(t('view'), 'admin/settings/profile'));
+    watchdog('profile', 'Profile field %field added under category %category.', array('%field' => $form_state['values']['title'], '%category' => $form_state['values']['category']), WATCHDOG_NOTICE, l(t('view'), 'admin/config/people/profile'));
   }
   else {
     db_update('profile_field')
@@ -373,7 +373,7 @@ function profile_field_form_submit($form, &$form_state) {
   cache_clear_all();
   menu_rebuild();
 
-  $form_state['redirect'] = 'admin/settings/profile';
+  $form_state['redirect'] = 'admin/config/people/profile';
   return;
 }
 
@@ -390,8 +390,8 @@ function profile_field_delete(&$form_state, $fid) {
   $form['title'] = array('#type' => 'value', '#value' => $field->title);
 
   return confirm_form($form,
-    t('Are you sure you want to delete the field %field?', array('%field' => $field->title)), 'admin/settings/profile',
-    t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="@edit-field">edit this field</a> and change it to a hidden profile field so that it may only be accessed by administrators.', array('@edit-field' => url('admin/settings/profile/edit/' . $fid))),
+    t('Are you sure you want to delete the field %field?', array('%field' => $field->title)), 'admin/config/people/profile',
+    t('This action cannot be undone. If users have entered values into this field in their profile, these entries will also be deleted. If you want to keep the user-entered data, instead of deleting the field you may wish to <a href="@edit-field">edit this field</a> and change it to a hidden profile field so that it may only be accessed by administrators.', array('@edit-field' => url('admin/config/people/profile/edit/' . $fid))),
     t('Delete'), t('Cancel'));
 }
 
@@ -409,9 +409,9 @@ function profile_field_delete_submit($form, &$form_state) {
   cache_clear_all();
 
   drupal_set_message(t('The field %field has been deleted.', array('%field' => $form_state['values']['title'])));
-  watchdog('profile', 'Profile field %field deleted.', array('%field' => $form_state['values']['title']), WATCHDOG_NOTICE, l(t('view'), 'admin/settings/profile'));
+  watchdog('profile', 'Profile field %field deleted.', array('%field' => $form_state['values']['title']), WATCHDOG_NOTICE, l(t('view'), 'admin/config/people/profile'));
 
-  $form_state['redirect'] = 'admin/settings/profile';
+  $form_state['redirect'] = 'admin/config/people/profile';
   return;
 }
 
