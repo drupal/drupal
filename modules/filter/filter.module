@@ -551,14 +551,14 @@ function filter_access($format) {
  * Helper function for fetching filter tips.
  */
 function _filter_tips($format, $long = FALSE) {
-  if ($format == -1) {
-    $formats = filter_formats();
-  }
-  else {
-    $formats = array(db_query("SELECT * FROM {filter_format} WHERE format = :format", array(':format' => $format))->fetchObject());
-  }
+  $formats = filter_formats();
 
   $tips = array();
+
+  // If only listing one format, extract it from the $formats array.
+  if ($format != -1) {
+    $formats = array($formats[$format]);
+  }
 
   foreach ($formats as $format) {
     $filters = filter_list_format($format->format);
