@@ -932,6 +932,8 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
       '#title' => t('Comment settings'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
+      '#group' => 'additional_settings',
+      '#attached_js' => array(drupal_get_path('module', 'comment') . '/comment-node-form.js'),
     );
     $form['comment']['comment_default_mode'] = array(
       '#type' => 'checkbox',
