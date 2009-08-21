@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.71 2009/08/10 21:00:31 dries Exp $
+// $Id: database.inc,v 1.72 2009/08/21 16:36:35 dries Exp $
 
 /**
  * @file
@@ -2526,25 +2526,6 @@ function _db_query_process_args($query, $args, $options) {
   $query = str_replace(array('%n', '%d', '%f', '%b', "'%s'", '%s'), '?', $old_query);
   if ($old_query !== $query) {
     $args = array_values($args);  // The old system allowed named arrays, but PDO doesn't if you use ?.
-  }
-
-  // A large number of queries pass FALSE or empty-string for
-  // int/float fields because the previous version of db_query()
-  // casted them to int/float, resulting in 0. MySQL PDO happily
-  // accepts these values as zero but PostgreSQL PDO does not, and I
-  // do not feel like tracking down and fixing every such query at
-  // this time.
-  if (preg_match_all('/%([dsfb])/', $old_query, $m) > 0) {
-    foreach ($m[1] as $idx => $char) {
-      switch ($char) {
-        case 'd':
-          $args[$idx] = (int) $args[$idx];
-          break;
-        case 'f':
-          $args[$idx] = (float) $args[$idx];
-          break;
-      }
-    }
   }
 
   return array($query, $args, $options);
