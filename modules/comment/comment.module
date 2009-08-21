@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.754 2009/08/20 10:56:33 dries Exp $
+// $Id: comment.module,v 1.755 2009/08/21 00:21:48 webchick Exp $
 
 /**
  * @file
@@ -932,6 +932,8 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
       '#title' => t('Comment settings'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
+      '#group' => 'additional_settings',
+      '#attached_js' => array(drupal_get_path('module', 'comment') . '/comment-node-form.js'),
     );
     $form['comment']['comment_default_mode'] = array(
       '#type' => 'checkbox',

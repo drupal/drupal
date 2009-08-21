@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.87 2009/08/14 00:12:57 webchick Exp $
+// $Id: content_types.inc,v 1.88 2009/08/21 00:21:48 webchick Exp $
 
 /**
  * @file
@@ -108,12 +108,17 @@ function node_type_form(&$form_state, $type = NULL) {
     '#title' => t('Description'),
     '#type' => 'textarea',
     '#default_value' => $type->description,
-    );
+  );
+
+  $form['additional_settings'] = array(
+    '#type' => 'vertical_tabs',
+  );
 
   $form['submission'] = array(
     '#type' => 'fieldset',
     '#title' => t('Submission form settings'),
     '#collapsible' => TRUE,
+    '#group' => 'additional_settings',
   );
   $form['submission']['title_label'] = array(
     '#title' => t('Title field label'),
@@ -155,6 +160,7 @@ function node_type_form(&$form_state, $type = NULL) {
     '#title' => t('Publishing options'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
+    '#group' => 'additional_settings',
   );
   $form['workflow']['node_options'] = array('#type' => 'checkboxes',
     '#title' => t('Default options'),
@@ -172,6 +178,7 @@ function node_type_form(&$form_state, $type = NULL) {
     '#title' => t('Display settings'),
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
+    '#group' => 'additional_settings',
   );
   $form['display']['node_submitted'] = array(
     '#type' => 'checkbox',
