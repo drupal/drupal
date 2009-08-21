@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1023 2009/08/19 13:31:14 webchick Exp $
+// $Id: user.module,v 1.1024 2009/08/21 07:59:47 webchick Exp $
 
 /**
  * @file
@@ -1348,9 +1348,11 @@ function user_menu() {
   // User administration pages.
   $items['admin/people'] = array(
     'title' => 'People',
+    'description' => 'Find and manage people interacting with your site.',
     'page callback' => 'user_admin',
     'page arguments' => array('list'),
     'access arguments' => array('administer users'),
+    'position' => 'left',
     'weight' => -4,
   );
   $items['admin/people/list'] = array(
