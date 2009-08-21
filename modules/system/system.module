@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.754 2009/08/21 07:59:47 webchick Exp $
+// $Id: system.module,v 1.755 2009/08/21 14:03:46 dries Exp $
 
 /**
  * @file
@@ -718,7 +718,7 @@ function system_menu() {
     'title' => 'File-system',
     'description' => 'Tell Drupal where to store uploaded files and how they are accessed.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_performance_settings'),
+    'page arguments' => array('system_file_system_settings'),
     'access arguments' => array('administer site configuration'),
   );
     $items['admin/config/media/image-toolkit'] = array(
