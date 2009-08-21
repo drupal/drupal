@@ -1,5 +1,5 @@
 <?php
-// $Id: module.test,v 1.9 2009/07/19 04:48:10 webchick Exp $
+// $Id: module.test,v 1.10 2009/08/21 07:50:07 webchick Exp $
 
 /**
  * @file
@@ -25,6 +25,10 @@ class ModuleUnitTest extends DrupalWebTestCase {
     // Build a list of modules, sorted alphabetically.
     $profile_info = install_profile_info('default', 'en');
     $module_list = $profile_info['dependencies'];
+
+    // Install profile is a module that is expected to be loaded.
+    $module_list[] = 'default';
+
     sort($module_list);
     // Compare this list to the one returned by module_list(). We expect them
     // to match, since all default profile modules have a weight equal to 0

@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.153 2009/08/17 19:14:39 webchick Exp $
+// $Id: module.inc,v 1.154 2009/08/21 07:50:07 webchick Exp $
 
 /**
  * @file
@@ -502,11 +502,16 @@ function module_invoke_all() {
 function drupal_required_modules() {
   $files = drupal_system_listing('/\.info$/', 'modules', 'name', 0);
   $required = array();
+
+  // An install profile is required and one must always be loaded.
+  $required[] = drupal_get_profile();
+
   foreach ($files as $name => $file) {
     $info = drupal_parse_info_file($file->uri);
     if (!empty($info) && !empty($info['required']) && $info['required']) {
       $required[] = $name;
     }
   }
+
   return $required;
 }
