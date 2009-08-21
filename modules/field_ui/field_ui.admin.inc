@@ -496,7 +496,6 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
       field_create_field($field);
       field_create_instance($instance);
 
-      $destinations[] = $admin_path . '/fields/refresh';
       $destinations[] = $admin_path . '/fields/' . $field['field_name'] . '/field-settings';
       $destinations[] = $admin_path . '/fields/' . $field['field_name'] . '/edit';
 
@@ -528,7 +527,6 @@ function field_ui_field_overview_form_submit($form, &$form_state) {
 
       try {
         field_create_instance($instance);
-        $destinations[] = $admin_path . '/fields/refresh';
         $destinations[] = $admin_path . '/fields/' . $instance['field_name'] . '/edit';
         // Store new field information for any additional submit handlers.
         $form_state['fields_added']['_add_existing_field'] = $instance['field_name'];
@@ -999,11 +997,7 @@ function field_ui_field_delete_form_submit($form, &$form_state) {
   }
 
   $admin_path = _field_ui_bundle_admin_path($bundle);
-  $destinations = array(
-    $admin_path . '/fields/refresh',
-    $admin_path . '/fields',
-  );
-  $form_state['redirect'] = field_ui_get_destinations($destinations);
+  $form_state['redirect'] = field_ui_get_destinations(array($admin_path . '/fields'));
 }
 
 /**
@@ -1329,24 +1323,6 @@ function field_ui_next_destination($bundle) {
   }
   $admin_path = _field_ui_bundle_admin_path($bundle);
   return $admin_path . '/fields';
-}
-
-/**
- * Menu callback; rebuild the menu after adding new fields.
- *
- * Dummy function to force a page refresh so menu_rebuild() will work right
- * when creating a new field that creates a new menu item.
- */
-function field_ui_field_menu_refresh($obj_type, $bundle) {
-  $bundle = field_attach_extract_bundle($obj_type, $bundle);
-
-  menu_rebuild();
-  $destinations = field_ui_next_destination($bundle);
-  if (is_array($destinations)) {
-    $path = array_shift($destinations);
-    drupal_goto($path, $destinations);
-  }
-  drupal_goto($destinations);
 }
 
 /**

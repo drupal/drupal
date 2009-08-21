@@ -61,34 +61,6 @@ function field_ui_menu() {
           'type' => MENU_LOCAL_TASK,
           'weight' => 1,
         ) + $access;
-        // A dummy function to trigger a page refresh so that field menus get
-        // rebuilt correctly when new fields are added.
-        $items["$path/fields/refresh"] = array(
-          'title' => 'Refresh menu',
-          'page callback' => 'field_ui_field_menu_refresh',
-          'page arguments' => array($obj_type, $bundle_arg),
-          'type' => MENU_CALLBACK,
-          'weight' => 1,
-        ) + $access;
-        $items["$path/display"] = array(
-          'title' => 'Display fields',
-          'page callback' => 'drupal_get_form',
-          'page arguments' => array('field_ui_display_overview_form', $obj_type, $bundle_arg),
-          'type' => MENU_LOCAL_TASK,
-          'weight' => 2,
-        ) + $access;
-
-        // 'Display fields' tab and context secondary tabs.
-        $tabs = field_ui_build_modes_tabs($obj_type);
-        foreach ($tabs as $key => $tab) {
-          $items["$path/display/$key"] = array(
-            'title' => $tab['title'],
-            'page arguments' => array('field_ui_display_overview_form', $obj_type, $bundle_arg, $key),
-            'type' => $key == 'basic' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
-            'weight' => $key == 'basic' ? 0 : 1,
-          ) + $access;
-        }
-
         $instance_position = count(explode('/', $path)) + 1;
         $items["$path/fields/%field_ui_menu"] = array(
           'title callback' => 'field_ui_menu_label',
@@ -126,6 +98,24 @@ function field_ui_menu() {
           'page arguments' => array('field_ui_field_delete_form', $obj_type, $bundle_arg, $instance_position),
           'type' => MENU_LOCAL_TASK,
         ) + $access;
+
+        // 'Display fields' tab and context secondary tabs.
+        $items["$path/display"] = array(
+          'title' => 'Display fields',
+          'page callback' => 'drupal_get_form',
+          'page arguments' => array('field_ui_display_overview_form', $obj_type, $bundle_arg),
+          'type' => MENU_LOCAL_TASK,
+          'weight' => 2,
+        ) + $access;
+        $tabs = field_ui_build_modes_tabs($obj_type);
+        foreach ($tabs as $key => $tab) {
+          $items["$path/display/$key"] = array(
+            'title' => $tab['title'],
+            'page arguments' => array('field_ui_display_overview_form', $obj_type, $bundle_arg, $key),
+            'type' => $key == 'basic' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
+            'weight' => $key == 'basic' ? 0 : 1,
+          ) + $access;
+        }
       }
     }
   }
