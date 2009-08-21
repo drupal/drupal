@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.305 2009/08/20 09:47:04 dries Exp $
+// $Id: poll.module,v 1.306 2009/08/21 00:35:31 webchick Exp $
 
 /**
  * @file
@@ -378,8 +378,6 @@ function _poll_choice_form($key, $chid = NULL, $value = '', $votes = 0, $weight 
 function poll_choice_js($form, $form_state) {
   $choice_form = $form['choice_wrapper']['choice'];
 
-  // Prevent duplicate wrappers.
-  unset($choice_form['#prefix'], $choice_form['#suffix']);
   return theme('status_messages') . drupal_render($choice_form);
 }
 

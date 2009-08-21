@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.inc,v 1.2 2009/08/18 11:26:04 dries Exp $
+// $Id: ajax.inc,v 1.3 2009/08/21 00:35:30 webchick Exp $
 
 /**
  * @file
@@ -363,7 +363,7 @@ function ajax_command_alert($text) {
 /**
  * Creates a Drupal AJAX 'insert/replaceWith' command.
  *
- * The 'insert/replace' command instructs the client to use jQuery's
+ * The 'insert/replaceWith' command instructs the client to use jQuery's
  * replaceWith() method to replace each element matched matched by the given
  * selector with the given HTML.
  *
