@@ -363,7 +363,7 @@ function ajax_command_alert($text) {
 /**
  * Creates a Drupal AJAX 'insert/replaceWith' command.
  *
- * The 'insert/replace' command instructs the client to use jQuery's
+ * The 'insert/replaceWith' command instructs the client to use jQuery's
  * replaceWith() method to replace each element matched matched by the given
  * selector with the given HTML.
  *

@@ -236,10 +236,7 @@ function upload_form_alter(&$form, $form_state, $form_id) {
       );
 
       // Wrapper for fieldset contents (used by ajax.js).
-      $form['attachments']['wrapper'] = array(
-        '#prefix' => '<div id="attach-wrapper">',
-        '#suffix' => '</div>',
-      );
+      $form['attachments']['wrapper'] = array();
 
       // Make sure necessary directories for upload.module exist and are
       // writable before displaying the attachment form.
@@ -533,6 +530,8 @@ function _upload_form($node) {
   $form = array(
     '#theme' => 'upload_form_new',
     '#cache' => TRUE,
+    '#prefix' => '<div id="attach-wrapper">',
+    '#suffix' => '</div>',
   );
 
   if (!empty($node->files) && is_array($node->files)) {
