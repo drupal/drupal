@@ -1,5 +1,5 @@
 <?php
-// $Id: contact.test,v 1.28 2009/07/31 19:01:01 dries Exp $
+// $Id: contact.test,v 1.29 2009/08/21 14:27:44 dries Exp $
 
 /**
  * Test the sitewide contact form.
@@ -289,7 +289,7 @@ class ContactSitewideTestCase extends DrupalWebTestCase {
       $edit[$rid . '[' . $name . ']'] = $value;
     }
 
-    $this->drupalPost('admin/settings/permissions', $edit, t('Save permissions'));
+    $this->drupalPost('admin/config/people/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), t(' [permission] Saved changes.'));
   }
 }

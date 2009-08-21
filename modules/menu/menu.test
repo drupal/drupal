@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.test,v 1.19 2009/08/03 03:04:33 webchick Exp $
+// $Id: menu.test,v 1.20 2009/08/21 14:27:44 dries Exp $
 
 class MenuTestCase extends DrupalWebTestCase {
   protected $big_user;
@@ -249,7 +249,7 @@ class MenuTestCase extends DrupalWebTestCase {
    * @param string $menu_name Menu name.
    */
   function addInvalidMenuLink($menu_name = 'navigation') {
-    foreach (array('-&-', 'admin/settings/permissions') as $link_path) {
+    foreach (array('-&-', 'admin/config/people/permissions') as $link_path) {
       $edit = array(
         'menu[link_path]' => $link_path,
         'menu[link_title]' => 'title',

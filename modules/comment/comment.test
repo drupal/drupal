@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.test,v 1.43 2009/08/09 00:55:50 webchick Exp $
+// $Id: comment.test,v 1.44 2009/08/21 14:27:44 dries Exp $
 
 class CommentHelperCase extends DrupalWebTestCase {
   protected $admin_user;
@@ -176,7 +176,7 @@ class CommentHelperCase extends DrupalWebTestCase {
     $edit['1[access comments]'] = $access_comments;
     $edit['1[post comments]'] = $post_comments;
     $edit['1[post comments without approval]'] = $without_approval;
-    $this->drupalPost('admin/settings/permissions', $edit, t('Save permissions'));
+    $this->drupalPost('admin/config/people/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), t('Anonymous user comments ' . ($access_comments ? 'access comments' : 'not access comments'). '.'));
   }
 

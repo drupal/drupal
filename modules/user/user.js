@@ -1,4 +1,4 @@
-// $Id: user.js,v 1.15 2009/06/13 20:40:09 dries Exp $
+// $Id: user.js,v 1.16 2009/08/21 14:27:47 dries Exp $
 (function ($) {
 
 /**
@@ -161,7 +161,7 @@ Drupal.evaluatePasswordStrength = function (password, translate) {
 };
 
 /**
- * Show all of the picture-related form elements at admin/settings/user
+ * Show all of the picture-related form elements at admin/config/people/accounts
  * depending on whether user pictures are enabled or not.
  */
 Drupal.behaviors.userSettings = {
