@@ -1037,6 +1037,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $this->originalLanguageDefault = variable_get('language_default');
     $this->originalPrefix = $db_prefix;
     $this->originalFileDirectory = file_directory_path();
+    $this->originalProfile = drupal_get_profile();
     $clean_url_original = variable_get('clean_url', 0);
 
     // Generate temporary prefixed database to ensure that tests have a clean starting point.
@@ -1062,7 +1063,7 @@ class DrupalWebTestCase extends DrupalTestCase {
     $this->preloadRegistry();
 
     // Include the default profile
-    require_once('./profiles/default/default.profile');
+    variable_set('install_profile', 'default');
     $profile_details = install_profile_info('default', 'en');
 
     // Add the specified modules to the list of modules in the default profile.
@@ -1086,7 +1087,7 @@ class DrupalWebTestCase extends DrupalTestCase {
 
     // Run default profile tasks.
     $install_state = array();
-    default_profile_site_setup($install_state);
+    drupal_install_modules(array('default'), TRUE);
 
     // Rebuild caches.
     node_types_rebuild();

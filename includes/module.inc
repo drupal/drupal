@@ -502,11 +502,16 @@ function module_invoke_all() {
 function drupal_required_modules() {
   $files = drupal_system_listing('/\.info$/', 'modules', 'name', 0);
   $required = array();
+
+  // An install profile is required and one must always be loaded.
+  $required[] = drupal_get_profile();
+
   foreach ($files as $name => $file) {
     $info = drupal_parse_info_file($file->uri);
     if (!empty($info) && !empty($info['required']) && $info['required']) {
       $required[] = $name;
     }
   }
+
   return $required;
 }

@@ -733,6 +733,11 @@ function install_system_module(&$install_state) {
     // variable_set() can be used now that system.module is installed and
     // Drupal is bootstrapped.
     $modules = $install_state['profile_info']['dependencies'];
+
+    // The install profile is also a module, which needs to be installed
+    // after all the dependencies have been installed.
+    $modules[] = drupal_get_profile();
+
     variable_set('install_profile_modules', array_diff($modules, array('system')));
     $install_state['database_tables_exist'] = TRUE;
 }
@@ -1424,7 +1429,14 @@ function install_finished(&$install_state) {
     _drupal_flush_css_js();
 
     // Remember the profile which was used.
-    variable_set('install_profile', $install_state['parameters']['profile']);
+    variable_set('install_profile', drupal_get_profile());
+
+    // Install profiles are always loaded last
+    db_update('system')
+      ->fields(array('weight' => 1000))
+      ->condition('type', 'module')
+      ->condition('name', drupal_get_profile())
+      ->execute();
 
     // Cache a fully-built schema.
     drupal_get_schema(NULL, TRUE);

@@ -120,6 +120,32 @@ function drupal_get_region_content($region = NULL, $delimiter = ' ') {
 }
 
 /**
+ * Get the name of the currently active install profile.
+ *
+ * When this function is called during Drupal's initial installation process,
+ * the name of the profile that's about to be installed is stored in the global
+ * installation state. At all other times, the standard Drupal systems variable
+ * table contains the name of the current profile, and we can call variable_get()
+ * to determine what one is active.
+ *
+ * @return $profile
+ *   The name of the install profile.
+ */
+function drupal_get_profile() {
+  global $install_state;
+
+  if (isset($install_state['parameters']['profile'])) {
+    $profile = $install_state['parameters']['profile'];
+  }
+  else {
+    $profile = variable_get('install_profile', 'default');
+  }
+
+  return $profile;
+}
+
+
+/**
  * Set the breadcrumb trail for the current page.
  *
  * @param $breadcrumb
@@ -3724,20 +3750,10 @@ function drupal_cron_cleanup() {
  *   An array of file objects of the specified type.
  */
 function drupal_system_listing($mask, $directory, $key = 'name', $min_depth = 1) {
-  global $install_state;
   $config = conf_path();
 
-  // When this function is called during Drupal's initial installation process,
-  // the name of the profile that's about to be installed is stored in the global
-  // installation state. At all other times, the standard Drupal systems variable
-  // table contains the name of the current profile, and we can call variable_get()
-  // to determine what one is active.
-  if (isset($install_state['parameters']['profile'])) {
-    $profile = $install_state['parameters']['profile'];
-  }
-  else {
-    $profile = variable_get('install_profile', 'default');
-  }
+  $profile = drupal_get_profile();
+
   $searchdir = array($directory);
   $files = array();
 

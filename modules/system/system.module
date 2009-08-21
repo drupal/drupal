@@ -1753,6 +1753,15 @@ function _system_get_module_data() {
   // Find modules
   $modules = drupal_system_listing('/\.module$/', 'modules', 'name', 0);
 
+  // Include the install profile in modules that are loaded.
+  $profile = drupal_get_profile();
+  $modules[$profile]->name = $profile;
+  $modules[$profile]->uri = 'profiles/' . $profile . '/' . $profile . '.profile';
+  $modules[$profile]->filename = $profile . '.profile';
+
+  // Install profile hooks are always executed last.
+  $modules[$profile]->weight = 1000;
+
   // Set defaults for module info.
   $defaults = array(
     'dependencies' => array(),
@@ -1782,6 +1791,9 @@ function _system_get_module_data() {
     // modify the data in the .info files if necessary.
     drupal_alter('system_info', $modules[$key]->info, $modules[$key]);
   }
+
+  // The install profile is required.
+  $modules[$profile]->info['required'] = TRUE;
 
   return $modules;
 }

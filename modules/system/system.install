@@ -28,6 +28,23 @@ function system_requirements($phase) {
       'severity' => REQUIREMENT_INFO,
       'weight' => -10,
     );
+
+    // Display the currently active install profile, if the site
+    // is not running the default install profile.
+    $profile = drupal_get_profile();
+    if ($profile != 'default') {
+      $info = install_profile_info($profile);
+      $requirements['install_profile'] = array(
+        'title' => $t('Install profile'),
+        'value' => $t('%profile_name (%profile-%version)', array(
+          '%profile_name' => $info['name'],
+          '%profile' => $profile,
+          '%version' => $info['version']
+        )),
+        'severity' => REQUIREMENT_INFO,
+        'weight' => -9
+      );
+    } 
   }
 
   // Web server information.

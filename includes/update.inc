@@ -255,7 +255,77 @@ function update_fix_d7_requirements() {
     }
   }
 
+  update_fix_d7_install_profile();
+
   return $ret;
+}
+
+/**
+ * Register the currently installed profile in the system table.
+ *
+ * Install profiles are now treated as modules by Drupal, and have an upgrade path
+ * based on their schema version in the system table.
+ * 
+ * The install profile will be set to schema_version 0, as it has already been
+ * installed. Any other hook_update_N functions provided by the install profile
+ * will be run by update.php.
+ */
+function update_fix_d7_install_profile() {
+  $profile = drupal_get_profile();
+
+
+  $results = db_select('system', 's')
+    ->fields('s', array('name', 'schema_version'))
+    ->condition('name', $profile)
+    ->condition('type', 'module')
+    ->execute()
+    ->fetchAll();
+
+  if (empty($results)) {
+    $filename = 'profiles/' . $profile . '/' . $profile . '.profile';
+
+    // Read profile info file
+    $info = drupal_parse_info_file(dirname($filename) . '/' . $profile . '.info');
+
+    // Merge in defaults.
+    $info = $info + array(
+      'dependencies' => array(),
+      'dependents' => array(),
+      'description' => '',
+      'package' => 'Other',
+      'version' => NULL,
+      'php' => DRUPAL_MINIMUM_PHP,
+      'files' => array(),
+    );
+
+    // The install profile is always required.
+    $file->info['required'] = TRUE;
+
+    $values = array(
+      'filename' => $filename,
+      'name' => $profile,
+      'info' => serialize($info),
+      'schema_version' => 0,
+      'type' => 'module',
+      'status' => 1,
+      'owner' => '',
+    );
+
+    // Install profile hooks are always executed last by the module system
+    $values['weight'] = 1000;
+
+    // Initializing the system table entry for the install profile
+    db_insert('system')
+      ->fields(array_keys($values))
+      ->values($values)
+      ->execute();
+
+    // Reset the cached schema version.
+    drupal_get_installed_schema_version($profile, TRUE);
+
+    // Load the updates again to make sure the install profile updates are loaded
+    drupal_load_updates();
+  }
 }
 
 /**

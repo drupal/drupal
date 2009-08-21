@@ -166,16 +166,12 @@ function drupal_set_installed_schema_version($module, $version) {
  */
 function drupal_install_profile_name() {
   global $install_state;
-  $profile = $install_state['parameters']['profile'];
-  static $name = NULL;
 
-  if (!isset($name)) {
-    // Load profile details.
-    $function = $profile . '_profile_details';
-    if (function_exists($function)) {
-      $details = $function();
-    }
-    $name = isset($details['name']) ? $details['name'] : 'Drupal';
+  if (isset($install_state['profile_info']['name'])) {
+    $name = $install_state['profile_info']['name'];
+  }
+  else {
+    $name = 'Drupal';
   }
 
   return $name;
@@ -521,6 +517,10 @@ function drupal_verify_profile($install_state) {
   foreach (drupal_system_listing('/\.module$/', 'modules', 'name', 0) as $present_module) {
     $present_modules[] = $present_module->name;
   }
+
+  // The install profile is also a module, which needs to be installed after all the other dependencies
+  // have been installed.
+  $present_modules[] = drupal_get_profile();
 
   // Verify that all of the profile's required modules are present.
   $missing_modules = array_diff($info['dependencies'], $present_modules);
@@ -1087,6 +1087,11 @@ function install_profile_info($profile, $locale = 'en') {
       $info['dependencies'],
       ($locale != 'en' && !empty($locale) ? array('locale') : array()))
     );
+
+    // drupal_required_modules() includes the current profile as a dependency.
+    // Since a module can't depend on itself we remove that element of the array.
+    array_shift($info['dependencies']);
+
     $cache[$profile] = $info;
   }
   return $cache[$profile];
