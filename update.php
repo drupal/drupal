@@ -48,51 +48,29 @@ function update_script_selection_form() {
   // Ensure system.module's updates appear first
   $form['start']['system'] = array();
 
-  $modules = drupal_get_installed_schema_version(NULL, FALSE, TRUE);
-  foreach ($modules as $module => $schema_version) {
-    $pending = array();
-    $updates = drupal_get_schema_versions($module);
-    // Skip incompatible module updates completely, otherwise test schema versions.
-    if (!update_check_incompatibility($module) && $updates !== FALSE && $schema_version >= 0) {
-      // module_invoke returns NULL for nonexisting hooks, so if no updates
-      // are removed, it will == 0.
-      $last_removed = module_invoke($module, 'update_last_removed');
-      if ($schema_version < $last_removed) {
-        $form['start'][$module] = array(
-          '#title' => $module,
-          '#item'  => '<em>' . $module . '</em> module can not be updated. Its schema version is ' . $schema_version . '. Updates up to and including ' . $last_removed . ' have been removed in this release. In order to update <em>' . $module . '</em> module, you will first <a href="http://drupal.org/upgrade">need to upgrade</a> to the last version in which these updates were available.',
-          '#prefix' => '<div class="warning">',
-          '#suffix' => '</div>',
-        );
-        continue;
-      }
-      $updates = drupal_map_assoc($updates);
-      foreach (array_keys($updates) as $update) {
-        if ($update > $schema_version) {
-          // The description for an update comes from its Doxygen.
-          $func = new ReflectionFunction($module . '_update_' . $update);
-          $description = str_replace(array("\n", '*', '/'), '', $func->getDocComment());
-          $pending[] = "$update - $description";
-          if (!isset($default)) {
-            $default = $update;
-          }
-        }
-      }
-      if (!empty($pending)) {
-        if (!isset($default)) {
-          $default = $schema_version;
-        }
-        $form['start'][$module] = array(
-          '#type' => 'hidden',
-          '#value' => $default,
-        );
-        $form['start'][$module . '_updates'] = array(
-          '#markup' => theme('item_list', $pending, $module . ' module'),
-        );
-      }
+  $updates = update_get_update_list();
+  foreach ($updates as $module => $update) {
+    if (!isset($update['start'])) {
+      $form['start'][$module] = array(
+        '#title' => $module,
+        '#item'  => $update['warning'],
+        '#prefix' => '<div class="warning">',
+        '#suffix' => '</div>',
+      );
+      continue;
     }
-    unset($default);
-    $count = $count + count($pending);
+    if (!empty($update['pending'])) {
+      $form['start'][$module] = array(
+        '#type' => 'hidden',
+        '#value' => $update['start'],
+      );
+      $form['start'][$module . '_updates'] = array(
+        '#markup' => theme('item_list', $update['pending'], $module . ' module'),
+      );
+    }
+    if (isset($update['pending'])) {
+      $count = $count + count($update['pending']);
+    }
   }
 
   if (empty($count)) {
