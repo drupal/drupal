@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.181 2009/08/21 07:59:47 webchick Exp $
+// $Id: system.admin.inc,v 1.182 2009/08/21 14:28:52 dries Exp $
 
 /**
  * @file
@@ -1580,7 +1580,7 @@ function system_rss_feeds_settings() {
  */
 function system_regional_settings() {
   drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
-  drupal_add_js(array('dateTime' => array('lookup' => url('admin/settings/regional-settings/lookup'))), 'setting');
+  drupal_add_js(array('dateTime' => array('lookup' => url('admin/config/regional/settings/lookup'))), 'setting');
 
   include_once DRUPAL_ROOT . '/includes/locale.inc';
   $countries = country_get_list();
