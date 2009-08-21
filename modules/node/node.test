@@ -701,7 +701,7 @@ class NodeAccessRecordsUnitTest extends DrupalWebTestCase {
     $this->assertTrue(node_load($node3->nid), t('Unpromoted, unpublished page node created.'));
 
     // Check to see if grants added by node_test_node_access_records made it in.
-    $records = db_query('SELECT realm, gid FROM {node_access} WHERE nid = %d', $node3->nid)->fetchAll();
+    $records = db_query('SELECT realm, gid FROM {node_access} WHERE nid = :nid', array(':nid' => $node3->nid))->fetchAll();
     $this->assertEqual(count($records), 1, t('Returned the correct number of rows.'));
     $this->assertEqual($records[0]->realm, 'test_page_realm', t('Grant with page_realm acquired for node without alteration.'));
     $this->assertEqual($records[0]->gid, 1, t('Grant with gid = 1 acquired for node without alteration.'));
