@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.test,v 1.23 2009/08/17 19:14:41 webchick Exp $
+// $Id: upload.test,v 1.24 2009/08/21 16:51:52 dries Exp $
 
 /**
  * @file
@@ -177,7 +177,7 @@ class UploadTestCase extends DrupalWebTestCase {
     $edit = array();
     foreach ($settings as $key => $value) {
       $edit[$key . '_default'] = $value;
-      if ($rid !== NULL && $key != 'upload_list' && $key != 'upload_max_resolution') {
+      if ($rid !== NULL && $key != 'upload_list' && $key != 'upload_max_resolution_x' && $key != 'upload_max_resolution_y') {
         $edit[$key . '_' . $rid] = $value;
       }
     }
