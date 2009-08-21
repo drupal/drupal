@@ -10,10 +10,11 @@
  * Form API callback to validate the upload settings form.
  */
 function upload_admin_settings_validate($form, &$form_state) {
-  if (($form_state['values']['upload_max_resolution'] != '0')) {
-    if (!preg_match('/^[0-9]+x[0-9]+$/', $form_state['values']['upload_max_resolution'])) {
-      form_set_error('upload_max_resolution', t('The maximum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Set to 0 for no restriction.'));
-    }
+  if (!is_numeric($form_state['values']['upload_max_resolution_x'])) {
+    form_set_error('upload_max_resolution_x', t('The maximum allowed image width should be entered as a numeric value. Set to 0 for no restriction.'));
+  }
+  if (!is_numeric($form_state['values']['upload_max_resolution_y'])) {
+    form_set_error('upload_max_resolution_y', t('The maximum allowed image height should be entered as a numeric value. Set to 0 for no restriction.'));
   }
 
   $default_uploadsize = $form_state['values']['upload_uploadsize_default'];
@@ -68,15 +69,32 @@ function upload_admin_settings() {
     '#type' => 'fieldset',
     '#title' => t('General settings'),
     '#collapsible' => TRUE,
+    '#attached_css' => array(
+      drupal_get_path('module', 'upload') . '/upload.admin.css',
+    ),
   );
   $form['settings_general']['upload_max_resolution'] = array(
-    '#type' => 'textfield',
+    '#type' => 'item',
     '#title' => t('Maximum resolution for uploaded images'),
-    '#default_value' => variable_get('upload_max_resolution', 0),
-    '#size' => 15,
-    '#maxlength' => 10,
-    '#description' => t('The maximum allowed image size (e.g. 640x480). Set to 0 for no restriction. If an <a href="!image-toolkit-link">image toolkit</a> is installed, files exceeding this value will be scaled down to fit.', array('!image-toolkit-link' => url('admin/config/media/image-toolkit'))),
-    '#field_suffix' => '<kbd>' . t('WIDTHxHEIGHT') . '</kbd>'
+    '#description' => t('The maximum allowed image size (e.g. 640x480). Set to 0x0 for no restriction. If an <a href="!image-toolkit-link">image toolkit</a> is installed, files exceeding this value will be scaled down to fit.', array('!image-toolkit-link' => url('admin/settings/image-toolkit'))),
+    '#prefix' => '<div class="form-item-wrapper form-item-resolution">',
+    '#suffix' => '</div>',
+  );
+  $form['settings_general']['upload_max_resolution']['upload_max_resolution_x'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Width'),
+    '#default_value' => variable_get('upload_max_resolution_x', 0),
+    '#size' => 5,
+    '#maxlength' => 5,
+    '#field_suffix' => t('x'),
+  );
+  $form['settings_general']['upload_max_resolution']['upload_max_resolution_y'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Height'),
+    '#default_value' => variable_get('upload_max_resolution_y', 0),
+    '#size' => 5,
+    '#maxlength' => 5,
+    '#field_suffix' => t('px'),
   );
   $form['settings_general']['upload_list_default'] = array(
     '#type' => 'select',

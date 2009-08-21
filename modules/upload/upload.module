@@ -142,7 +142,7 @@ function _upload_file_limits($user) {
     'extensions' => $all_extensions,
     'file_size' => $file_limit,
     'user_size' => $user_limit,
-    'resolution' => variable_get('upload_max_resolution', 0),
+    'resolution' => variable_get('upload_max_resolution_x', 0) . 'x' . variable_get('upload_max_resolution_y', 0),
   );
 }
 
