@@ -545,9 +545,11 @@ function system_menu() {
   // Appearance.
   $items['admin/appearance'] = array(
     'title' => 'Appearance',
+    'description' => 'Select and configure your site theme.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_themes_form'),
     'access arguments' => array('administer site configuration'),
+    'position' => 'left',
     'weight' => -6,
   );
   $items['admin/appearance/select'] = array(

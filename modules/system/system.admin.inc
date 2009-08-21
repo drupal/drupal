@@ -40,11 +40,25 @@ function system_main_admin_page($arg = NULL) {
       }
       $block = $item;
       $block['content'] = '';
+      $block['show'] = FALSE;
       if ($item['block_callback'] && function_exists($item['block_callback'])) {
         $function = $item['block_callback'];
         $block['content'] .= $function();
       }
-      $block['content'] .= theme('admin_block_content', system_admin_menu_block($item));
+      $content = system_admin_menu_block($item);
+      if ((isset($item['page_callback']) && !in_array($item['page_callback'], array('system_admin_menu_block_page', 'system_admin_config_page', 'system_settings_overview'))) || count($content)) {
+        // Only show blocks for items which are not containers, or those which
+        // are containers and do have items we can show.
+        $block['show'] = TRUE;
+        if (empty($content)) {
+          // If no items found below, but access checks did not fail, show.
+          $block['title'] = l($item['title'], $item['href'], $item['localized_options']); 
+        }
+        else {
+          // Theme items below.
+          $block['content'] .= theme('admin_block_content', $content);
+        }
+      }
       // Prepare for sorting as in function _menu_tree_check_access().
       // The weight is offset so it is always positive, with a uniform 5-digits.
       $blocks[(50000 + $item['weight']) . ' ' . $item['title'] . ' ' . $item['mlid']] = $block;
@@ -86,6 +100,7 @@ function system_admin_config_page() {
       }
       $block = $item;
       $block['content'] = '';
+      $block['show'] = TRUE;
       if ($item['block_callback'] && function_exists($item['block_callback'])) {
         $function = $item['block_callback'];
         $block['content'] .= $function();
@@ -1923,20 +1938,34 @@ function system_batch_page() {
  */
 function theme_admin_block($block) {
   // Don't display the block if it has no content to display.
-  if (empty($block['content'])) {
+  if (!$block['show']) {
     return '';
   }
 
-  $output = <<< EOT
-  <div class="admin-panel">
-    <h3>
-      $block[title]
-    </h3>
-    <div class="body">
-      $block[content]
+  if (empty($block['content'])) {
+    $output = <<< EOT
+    <div class="admin-panel">
+      <h3>
+        $block[title]
+      </h3>
+      <div class="description">
+        $block[description]
+      </div>
     </div>
-  </div>
 EOT;
+  }
+  else {
+    $output = <<< EOT
+    <div class="admin-panel">
+      <h3>
+        $block[title]
+      </h3>
+     <div class="body">
+       $block[content]
+      </div>
+    </div>
+EOT;
+  }
   return $output;
 }
 
