@@ -127,8 +127,8 @@ else {
  */
 function php_filter_info() {
   return array(
-    array(
-      'name' => t('PHP evaluator'),
+    'php_code' => array(
+      'title' => t('PHP evaluator'),
       'description' => t('Executes a piece of PHP code. The usage of this filter should be restricted to administrators only!'), 
       'cache' => FALSE,
       'process callback' => 'php_eval',

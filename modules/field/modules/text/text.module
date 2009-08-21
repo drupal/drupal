@@ -406,7 +406,7 @@ function text_summary($text, $format = NULL, $size = NULL) {
   // parse errors.
   if (isset($format)) {
     $filters = filter_list_format($format);
-    if (isset($filters['php/0']) && strpos($text, '<?') !== FALSE) {
+    if (isset($filters['php/php_code']) && strpos($text, '<?') !== FALSE) {
       return $text;
     }
   }
@@ -445,7 +445,7 @@ function text_summary($text, $format = NULL, $size = NULL) {
   $line_breaks = array('<br />' => 6, '<br>' => 4);
   // Newline only indicates a line break if line break converter
   // filter is present.
-  if (isset($filters['filter/1'])) {
+  if (isset($filters['filter/filter_autop'])) {
     $line_breaks["\n"] = 1;
   }
   $break_points[] = $line_breaks;
@@ -473,7 +473,7 @@ function text_summary($text, $format = NULL, $size = NULL) {
   }
 
   // If the htmlcorrector filter is present, apply it to the generated summary.
-  if (isset($filters['filter/3'])) {
+  if (isset($filters['filter/filter_htmlcorrector'])) {
     $summary = _filter_htmlcorrector($summary);
   }
 

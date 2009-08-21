@@ -29,7 +29,7 @@ function php_install() {
       ->fields(array(
         'format' => $format,
         'module' => 'php',
-        'delta' => 0,
+        'name' => 'php_code',
         'weight' => 0,
       ))
       ->execute();

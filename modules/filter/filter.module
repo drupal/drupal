@@ -334,10 +334,10 @@ function filter_list_all() {
     $function = $module . '_filter_info';
     $info = $function('list');
     if (isset($info) && is_array($info)) {
-      foreach ($info as $delta => $filter) {
-        $filters[$module . '/' . $delta] = (object)($filter + array(
+      foreach ($info as $name => $filter) {
+        $filters[$module . '/' . $name] = (object)($filter + array(
           'module' => $module,
-          'delta' => $delta,
+          'name' => $name,
         ));
       }
     }
@@ -381,12 +381,12 @@ function filter_list_format($format) {
 
   if (!isset($filters[$format])) {
     $filters[$format] = array();
-    $result = db_query("SELECT * FROM {filter} WHERE format = :format ORDER BY weight, module, delta", array(':format' => (int) $format));
+    $result = db_query("SELECT * FROM {filter} WHERE format = :format ORDER BY weight, module, name", array(':format' => (int) $format));
     foreach ($result as $filter) {
       $info = module_invoke($filter->module, 'filter_info');
-      if (isset($info) && is_array($info) && isset($info[$filter->delta])) {
-        $filter->name = $info[$filter->delta]['name'];
-        $filters[$format][$filter->module . '/' . $filter->delta] = $filter;
+      if (isset($info) && is_array($info) && isset($info[$filter->name])) {
+        $filter->title = $info[$filter->name]['title'];
+        $filters[$format][$filter->module . '/' . $filter->name] = $filter;
       }
     }
   }
@@ -446,16 +446,16 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $c
     // Give filters the chance to escape HTML-like data such as code or formulas.
     foreach ($filters as $filter) {
       $filter_info = module_invoke($filter->module, 'filter_info');
-      if (isset($filter_info[$filter->delta]['prepare callback']) && drupal_function_exists($filter_info[$filter->delta]['prepare callback'])) {
-        $text = call_user_func($filter_info[$filter->delta]['prepare callback'], $text, $format, $langcode, $cache_id);
+      if (isset($filter_info[$filter->name]['prepare callback']) && drupal_function_exists($filter_info[$filter->name]['prepare callback'])) {
+        $text = call_user_func($filter_info[$filter->name]['prepare callback'], $text, $format, $langcode, $cache_id);
       }
     }
 
     // Perform filtering.
     foreach ($filters as $filter) {
       $filter_info = module_invoke($filter->module, 'filter_info');
-      if (isset($filter_info[$filter->delta]['process callback']) && drupal_function_exists($filter_info[$filter->delta]['process callback'])) {
-        $text = call_user_func($filter_info[$filter->delta]['process callback'], $text, $format, $langcode, $cache_id);
+      if (isset($filter_info[$filter->name]['process callback']) && drupal_function_exists($filter_info[$filter->name]['process callback'])) {
+        $text = call_user_func($filter_info[$filter->name]['process callback'], $text, $format, $langcode, $cache_id);
       }
     }
 
@@ -566,8 +566,8 @@ function _filter_tips($format, $long = FALSE) {
     $tips[$format->name] = array();
     foreach ($filters as $id => $filter) {
       $filter_info = module_invoke($filter->module, 'filter_info');
-      if (isset($filter_info[$filter->delta]['tips callback']) && drupal_function_exists($filter_info[$filter->delta]['tips callback'])) {
-        $tip = call_user_func($filter_info[$filter->delta]['tips callback'],$format->format, $long);
+      if (isset($filter_info[$filter->name]['tips callback']) && drupal_function_exists($filter_info[$filter->name]['tips callback'])) {
+        $tip = call_user_func($filter_info[$filter->name]['tips callback'],$format->format, $long);
         $tips[$format->name][] = array('tip' => $tip, 'id' => $id);
       }
     }
@@ -647,33 +647,33 @@ function theme_filter_guidelines($format) {
  */
 
 function filter_filter_info() {
-  $filters[0] = array(
-    'name' => t('Limit allowed HTML tags'),
+  $filters['filter_html'] = array(
+    'title' => t('Limit allowed HTML tags'),
     'description' => t('Allows you to restrict the HTML tags the user can use. It will also remove harmful content such as JavaScript events, JavaScript URLs and CSS styles from those tags that are not removed.'),
     'process callback' => '_filter_html',
     'settings callback' => '_filter_html_settings',
     'tips callback'  => '_filter_html_tips'
   );
-  $filters[1] = array(
-    'name' => t('Convert line breaks'),
+  $filters['filter_autop'] = array(
+    'title' => t('Convert line breaks'),
     'description' => t('Converts line breaks into HTML (i.e. &lt;br&gt; and &lt;p&gt;) tags.'),
     'process callback' => '_filter_autop',
     'tips callback' => '_filter_autop_tips'
   );
-  $filters[2] = array(
-    'name' => t('Convert URLs into links'),
+  $filters['filter_url'] = array(
+    'title' => t('Convert URLs into links'),
     'description' => t('Turns web and e-mail addresses into clickable links.'),
     'process callback' => '_filter_url',
     'settings callback' => '_filter_url_settings',
     'tips callback' => '_filter_url_tips'
   );
-  $filters[3] = array(
-    'name' =>  t('Correct broken HTML'),
+  $filters['filter_htmlcorrector'] = array(
+    'title' =>  t('Correct broken HTML'),
     'description' => t('Corrects faulty and chopped off HTML in postings.'),
     'process callback' => '_filter_htmlcorrector',
   );
-  $filters[4] = array(
-    'name' => t('Escape all HTML'),
+  $filters['filter_html_escape'] = array(
+    'title' => t('Escape all HTML'),
     'description' => t('Escapes all HTML tags, so they will be visible instead of being effective.'),
     'process callback' => '_filter_html_escape',
     'tips callback' => '_filter_html_escape_tips'

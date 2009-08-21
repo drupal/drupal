@@ -461,7 +461,7 @@ class SearchCommentTestCase extends DrupalWebTestCase {
     variable_set('comment_preview_article', COMMENT_PREVIEW_OPTIONAL);
     // Enable check_plain() for 'Filtered HTML' text format.
     $edit = array(
-      'filters[filter/4]' => 1,
+      'filters[filter/filter_html_escape]' => 1,
     );
     $this->drupalPost('admin/settings/formats/1', $edit, t('Save configuration'));
     // Allow anonymous users to search content.

@@ -15,9 +15,9 @@ class FilterAdminTestCase extends DrupalWebTestCase {
    */
   function testFilterAdmin() {
     // URL filter.
-    $first_filter = 2;
+    $first_filter = 'filter_url';
     // Line filter.
-    $second_filter = 1;
+    $second_filter =  'filter_autop';
 
     // Create users.
     $admin_user = $this->drupalCreateUser(array('administer filters'));
@@ -55,11 +55,11 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $result = db_query('SELECT * FROM {filter} WHERE format = :format ORDER BY weight ASC', array(':format' => $filtered));
     $filters = array();
     foreach ($result as $filter) {
-      if ($filter->delta == $second_filter || $filter->delta == $first_filter) {
+      if ($filter->name == $second_filter || $filter->name == $first_filter) {
         $filters[] = $filter;
       }
     }
-    $this->assertTrue(($filters[0]->delta == $second_filter && $filters[1]->delta == $first_filter), t('Order confirmed.'));
+    $this->assertTrue(($filters[0]->name == $second_filter && $filters[1]->name == $first_filter), t('Order confirmed.'));
 
     // Add filter.
     $edit = array();
@@ -74,6 +74,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->assertNotNull($format, t('Format found in database.'));
 
     if ($format !== NULL) {
+    	debug($format);
       $this->assertFieldByName('roles[2]', '', t('Role found.'));
       $this->assertFieldByName('filters[filter/' . $second_filter . ']', '', t('Line break filter found.'));
       $this->assertFieldByName('filters[filter/' . $first_filter . ']', '', t('Url filter found.'));

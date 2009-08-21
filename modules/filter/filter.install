@@ -31,12 +31,12 @@ function filter_schema() {
         'default' => '',
         'description' => 'The origin module of the filter.',
       ),
-      'delta' => array(
-        'type' => 'int',
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 32,
         'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => 'ID to identify which filter within module is being referenced.',
+        'default' => '',
+        'description' => 'Name of the filter being referenced.',
       ),
       'weight' => array(
         'type' => 'int',
@@ -48,10 +48,10 @@ function filter_schema() {
     ),
     'primary key' => array('fid'),
     'unique keys' => array(
-      'fmd' => array('format', 'module', 'delta'),
+      'fmn' => array('format', 'module', 'name'),
     ),
     'indexes' => array(
-      'list' => array('format', 'weight', 'module', 'delta'),
+      'list' => array('format', 'weight', 'module', 'name'),
     ),
   );
   $schema['filter_format'] = array(
@@ -137,3 +137,53 @@ function filter_update_7002() {
   db_rename_table($ret, 'filter_formats', 'filter_format');
   return $ret;
 }
+
+/**
+ * Remove hardcoded numeric deltas from all filters in core.
+ */
+function filter_update_7003() {
+  $ret = array();
+  // Get an array of the renamed filter deltas, organized by module.
+  $renamed_deltas = array(
+    'filter' => array(
+      '0' => 'filter_html',
+      '1' => 'filter_autop',
+      '2' => 'filter_url',
+      '3' => 'filter_htmlcorrector',
+      '4' => 'filter_html_escape',
+    ),
+    'php' => array(
+      '0' => 'php_code'
+    )
+  );
+  
+  // Rename field 'delta' to 'name'.
+  db_drop_unique_key($ret, 'filter', 'fmd');
+  db_drop_index($ret, 'filter', 'list');
+  db_change_field($ret, 'filter', 'delta', 'name',
+    array(
+      'type' => 'varchar',
+      'length' => 32,
+      'not null' => TRUE,
+      'default' => '',
+      'description' => 'Name of the filter being referenced.',
+    ),
+    array(
+      'unique keys' => array(
+        'fmn' => array('format', 'module', 'name'),
+      ),
+      'indexes' => array(
+        'list' => array('format', 'weight', 'module', 'name'),
+      )      
+    )
+  );
+    
+  // Loop through each filter and make changes to the core filter table.
+  foreach ($renamed_deltas as $module => $deltas) {
+    foreach ($deltas as $old_delta => $new_delta) {
+      $ret[] = update_sql("UPDATE {filter} SET name = '" . $new_delta . "' WHERE module = '" . $module . "' AND name = '" . $old_delta . "'");
+    }
+  }
+  return $ret;
+}
+

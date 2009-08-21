@@ -154,9 +154,9 @@ function filter_admin_format_form(&$form_state, $format) {
   foreach ($all as $id => $filter) {
     $filter_info = module_invoke($filter->module, 'filter_info');
     $form['filters'][$id] = array('#type' => 'checkbox',
-      '#title' => $filter->name,
+      '#title' => $filter->title,
       '#default_value' => isset($enabled[$id]),
-      '#description' => $filter_info[$filter->delta]['description'],
+      '#description' => $filter_info[$filter->name]['description'],
     );
   }
   if (!empty($format->format)) {
@@ -188,7 +188,7 @@ function filter_admin_format_form_validate($form, &$form_state) {
     $name = trim($form_state['values']['name']);
     $result = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $name))->fetchField();
     if ($result) {
-      form_set_error('name', t('Text format names must be unique. A format named %name already exists.', array('%name' => $name)));
+      form_set_error('name', t('Text format names must be unique. A format named %name already exists.', array('%name' => $format_name)));
     }
   }
 }
@@ -217,20 +217,20 @@ function filter_admin_format_form_submit($form, &$form_state) {
   db_delete('filter')
     ->condition('format', $format)
     ->execute();
-  $query = db_insert('filter')->fields(array('format', 'module', 'delta', 'weight'));
+  $query = db_insert('filter')->fields(array('format', 'module', 'name', 'weight'));
   foreach ($form_state['values']['filters'] as $id => $checked) {
     if ($checked) {
-      list($module, $delta) = explode('/', $id);
+      list($module, $filter_name) = explode('/', $id);
       // Add new filters to the bottom.
       $weight = isset($current[$id]->weight) ? $current[$id]->weight : 10;
       $query->values(array(
         'format' => $format,
         'module' => $module,
-        'delta'  => $delta,
+        'name'  => $filter_name,
         'weight' => $weight,
       ));
       // Check if there are any 'no cache' filters.
-      $cache &= !module_invoke($module, 'filter', 'no cache', $delta);
+      $cache &= !module_invoke($module, 'filter', 'no cache', $filter_name);
     }
     $query->execute();
   }
@@ -352,8 +352,8 @@ function filter_admin_configure(&$form_state, $format) {
   $form = array();
   foreach ($list as $filter) {
     $filter_info = module_invoke($filter->module, 'filter_info');
-    if (isset($filter_info[$filter->delta]['settings callback']) && drupal_function_exists($filter_info[$filter->delta]['settings callback'])) {
-      $form_module = call_user_func($filter_info[$filter->delta]['settings callback'], $format->format);
+    if (isset($filter_info[$filter->name]['settings callback']) && drupal_function_exists($filter_info[$filter->name]['settings callback'])) {
+      $form_module = call_user_func($filter_info[$filter->name]['settings callback'], $format->format);
     }
     if (isset($form_module) && is_array($form_module)) {
       $form = array_merge($form, $form_module);
@@ -440,12 +440,12 @@ function theme_filter_admin_order($form) {
  */
 function filter_admin_order_submit($form, &$form_state) {
   foreach ($form_state['values']['weights'] as $id => $weight) {
-    list($module, $delta) = explode('/', $id);
+    list($module, $name) = explode('/', $id);
     db_update('filter')
       ->fields(array('weight' => $weight))
       ->condition('format', $form_state['values']['format'])
       ->condition('module', $module)
-      ->condition('delta', $delta)
+      ->condition('name', $name)
       ->execute();
   }
   drupal_set_message(t('The filter ordering has been saved.'));
