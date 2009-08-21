@@ -1580,7 +1580,7 @@ function system_rss_feeds_settings() {
  */
 function system_regional_settings() {
   drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
-  drupal_add_js(array('dateTime' => array('lookup' => url('admin/settings/regional-settings/lookup'))), 'setting');
+  drupal_add_js(array('dateTime' => array('lookup' => url('admin/config/regional/settings/lookup'))), 'setting');
 
   include_once DRUPAL_ROOT . '/includes/locale.inc';
   $countries = country_get_list();

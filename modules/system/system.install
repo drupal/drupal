@@ -1914,7 +1914,7 @@ function system_update_7013() {
     $timezone = 'UTC';
   }
   variable_set('date_default_timezone', $timezone);
-  drupal_set_message('The default time zone has been set to <em>' . check_plain($timezone) . '</em>. Please check the ' . l('date and time configuration page', 'admin/settings/regional-settings') . ' to configure it correctly.', 'warning');
+  drupal_set_message('The default time zone has been set to <em>' . check_plain($timezone) . '</em>. Please check the ' . l('date and time configuration page', 'admin/config/regional/settings') . ' to configure it correctly.', 'warning');
   return $ret;
 }
 

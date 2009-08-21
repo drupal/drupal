@@ -92,13 +92,13 @@ class TranslationTestCase extends DrupalWebTestCase {
    */
   function addLanguage($language_code) {
     // Check to make sure that language has not already been installed.
-    $this->drupalGet('admin/config/international/language');
+    $this->drupalGet('admin/config/regional/language');
 
     if (strpos($this->drupalGetContent(), 'enabled[' . $language_code . ']') === FALSE) {
       // Doesn't have language installed so add it.
       $edit = array();
       $edit['langcode'] = $language_code;
-      $this->drupalPost('admin/config/international/language/add', $edit, t('Add language'));
+      $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
 
       // Make sure we're not using a stale list.
       drupal_static_reset('language_list');
