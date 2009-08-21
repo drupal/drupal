@@ -1,5 +1,5 @@
 <?php
-// $Id: php.module,v 1.17 2009/08/14 08:06:23 dries Exp $
+// $Id: php.module,v 1.18 2009/08/21 17:28:27 dries Exp $
 
 /**
  * @file
@@ -127,8 +127,8 @@ else {
  */
 function php_filter_info() {
   return array(
-    array(
-      'name' => t('PHP evaluator'),
+    'php_code' => array(
+      'title' => t('PHP evaluator'),
       'description' => t('Executes a piece of PHP code. The usage of this filter should be restricted to administrators only!'), 
       'cache' => FALSE,
       'process callback' => 'php_eval',
