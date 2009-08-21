@@ -718,7 +718,7 @@ function system_menu() {
     'title' => 'File-system',
     'description' => 'Tell Drupal where to store uploaded files and how they are accessed.',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_performance_settings'),
+    'page arguments' => array('system_file_system_settings'),
     'access arguments' => array('administer site configuration'),
   );
     $items['admin/config/media/image-toolkit'] = array(
