@@ -1,5 +1,5 @@
 <?php
-// $Id: browser.inc,v 1.1 2009/08/17 06:08:46 dries Exp $
+// $Id: browser.inc,v 1.2 2009/08/21 17:07:17 dries Exp $
 
 /**
  * @file
@@ -288,7 +288,7 @@ class Browser {
     // Clear the page variable since the content has change.
     unset($this->page);
 
-    $this->checkForRefresh();
+    $this->refreshCheck();
   }
 
   /**
@@ -781,29 +781,7 @@ class Browser {
    * A refresh signifier can either be the 'Location' HTTP header or the meta
    * tag 'http-equiv="Refresh"'.
    */
-  function refreshCheck() {
-    // If not handled by backend wrapper then go ahead and handle.
-    if (isset($this->headers['Location'])) {
-      // Expect absolute URL.
-      $this->get($this->headers['Location']);
-    }
-
-    if (($page = $this->getPage()) !== FALSE && ($tag = $page->getMetaTag('Refresh', 'http-equiv'))) {
-      // Parse the content attribute of the meta tag for the format:
-      // "[delay]: URL=[path_to_redirect_to]".
-      if (preg_match('/\d+;\s*URL=(?P<url>.*)/i', $tag['content'], $match)) {
-        $this->get($page->getAbsoluteUrl(decode_entities($match['url'])));
-      }
-    }
-  }
-
-  /**
-   * Check for a refresh signifier.
-   *
-   * A refresh signifier can either be the 'Location' HTTP header or the meta
-   * tag 'http-equiv="Refresh"'.
-   */
-  protected function checkForRefresh() {
+  protected function refreshCheck() {
     // If not handled by backend wrapper then go ahead and handle.
     if (isset($this->headers['Location'])) {
       // Expect absolute URL.
