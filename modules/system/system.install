@@ -2429,6 +2429,33 @@ function system_update_7035() {
 }
 
 /**
+ * Split the 'access site in maintenance mode' permission from 'administer site configuration'.
+ */
+function system_update_7036() {
+  $ret = array();
+  // Get existing roles that can 'administer site configuration'.
+  $rids = db_query("SELECT rid FROM {role_permission} WHERE permission = :perm", array(':perm' => 'administer site configuration'))->fetchCol();
+  // None found.
+  if (empty($rids)) {
+    return $ret;
+  }
+  $insert = db_insert('role_permission')->fields(array('rid', 'permission'));
+  foreach ($rids as $rid) {
+    $insert->values(array(
+      'rid' => $rid,
+      'permission' => 'access site in maintenance mode',
+    ));
+  }
+  $insert->execute();
+
+  // Remove obsolete variable 'site_offline_message'.
+  // @see update_fix_d7_requirements().
+  variable_del('site_offline_message');
+
+  return $ret;
+}
+
+/**
  * @} End of "defgroup updates-6.x-to-7.x"
  * The next series of updates should start at 8000.
  */

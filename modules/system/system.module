@@ -228,6 +228,10 @@ function system_permission() {
       'title' => t('Access administration pages'),
       'description' => t('View the administration panel and browse the help system.'),
     ),
+    'access site in maintenance mode' => array(
+      'title' => t('Access site in maintenance mode'),
+      'description' => t('Log in when the site is in maintenance mode.'),
+    ),
     'access site reports' => array(
       'title' => t('Access site reports'),
       'description' => t('View reports from system logs and other status information.'),

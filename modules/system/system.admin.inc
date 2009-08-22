@@ -1808,18 +1808,15 @@ function system_date_time_lookup() {
  * @see system_settings_form()
  */
 function system_site_maintenance_mode() {
-
-  $form['site_offline'] = array(
-    '#type' => 'radios',
-    '#title' => t('Site status'),
+  $form['maintenance_mode'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Put site into maintenance mode'),
     '#default_value' => 0,
-    '#options' => array(t('Online'), t('Offline')),
-    '#description' => t('When set to "Online", all visitors will be able to browse your site normally. When set to "Offline", only users with the "administer site configuration" permission will be able to access your site to perform maintenance; all other visitors will see the site offline message configured below. Authorized users can log in during "Offline" mode directly via the <a href="@user-login">user login</a> page.', array('@user-login' => url('user'))),
+    '#description' => t('When enabled, only users with the "Access site in maintenance mode" <a href="@permissions-url">permission</a> are able to access your site to perform maintenance; all other visitors see the maintenance mode message configured below. Authorized users can log in directly via the <a href="@user-login">user login</a> page.', array('@permissions-url' => url('admin/config/people/permissions'), '@user-login' => url('user'))),
   );
-
-  $form['site_offline_message'] = array(
+  $form['maintenance_mode_message'] = array(
     '#type' => 'textarea',
-    '#title' => t('Site offline message'),
+    '#title' => t('Maintenance mode message'),
     '#default_value' => t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal'))),
     '#description' => t('Message to show visitors when the site is in maintenance mode.')
   );

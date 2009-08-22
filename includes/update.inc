@@ -232,6 +232,7 @@ function update_prepare_d7_bootstrap() {
  * made which make it impossible to continue using the prior version.
  */
 function update_fix_d7_requirements() {
+  global $conf;
   $ret = array();
 
   // Rewrite the settings.php file if necessary.
@@ -242,17 +243,24 @@ function update_fix_d7_requirements() {
     file_put_contents(conf_path() . '/settings.php', "\n" . '$databases = ' . var_export($databases, TRUE) . ';', FILE_APPEND);
   }
   if (drupal_get_installed_schema_version('system') < 7000 && !variable_get('update_d7_requirements', FALSE)) {
-
     // Add the cache_path table.
     $schema['cache_path'] = drupal_get_schema_unprocessed('system', 'cache');
     $schema['cache_path']['description'] = 'Cache table used for path alias lookups.';
     db_create_table($ret, 'cache_path', $schema['cache_path']);
-    variable_set('update_d7_requirements', TRUE);
 
     // Add column for locale context.
     if (db_table_exists('locales_source')) {
       db_add_field($ret, 'locales_source', 'context', array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => '', 'description' => 'The context this string applies to.'));
     }
+
+    // Rename 'site_offline_message' variable to 'maintenance_mode_message'.
+    // Old variable is removed in update for system.module.
+    // @see system_update_7036().
+    if ($message = variable_get('site_offline_message', NULL)) {
+      variable_set('maintenance_mode_message', $message);
+    }
+
+    variable_set('update_d7_requirements', TRUE);
   }
 
   update_fix_d7_install_profile();
@@ -423,9 +431,9 @@ function update_do_one($module, $number, &$context) {
 function update_batch($start, $redirect = NULL, $url = NULL, $batch = array()) {
   // During the update, bring the site offline so that schema changes do not
   // affect visiting users.
-  $_SESSION['site_offline'] = variable_get('site_offline', FALSE);
-  if ($_SESSION['site_offline'] == FALSE) {
-    variable_set('site_offline', TRUE);
+  $_SESSION['maintenance_mode'] = variable_get('maintenance_mode', FALSE);
+  if ($_SESSION['maintenance_mode'] == FALSE) {
+    variable_set('maintenance_mode', TRUE);
   }
 
   $operations = array();
@@ -480,10 +488,10 @@ function update_finished($success, $results, $operations) {
   $_SESSION['updates_remaining'] = $operations;
 
   // Now that the update is done, we can put the site back online if it was
-  // previously turned off.
-  if (isset($_SESSION['site_offline']) && $_SESSION['site_offline'] == FALSE) {
-    variable_set('site_offline', FALSE);
-    unset($_SESSION['site_offline']);
+  // previously in maintenance mode.
+  if (isset($_SESSION['maintenance_mode']) && $_SESSION['maintenance_mode'] == FALSE) {
+    variable_set('maintenance_mode', FALSE);
+    unset($_SESSION['maintenance_mode']);
   }
 }
 
