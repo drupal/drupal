@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.62 2009/08/17 19:14:41 webchick Exp $
+// $Id: system.api.php,v 1.63 2009/08/22 15:26:04 dries Exp $
 
 /**
  * @file
@@ -691,9 +691,6 @@ function hook_theme($existing, $type, $theme, $path) {
     ),
     'forum_icon' => array(
       'arguments' => array('new_posts' => NULL, 'num_posts' => 0, 'comment_mode' => 0, 'sticky' => 0),
-    ),
-    'forum_topic_navigation' => array(
-      'arguments' => array('node' => NULL),
     ),
   );
 }
