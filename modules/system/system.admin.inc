@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.187 2009/08/22 18:24:14 webchick Exp $
+// $Id: system.admin.inc,v 1.188 2009/08/22 20:01:10 webchick Exp $
 
 /**
  * @file
@@ -329,8 +329,7 @@ function system_themes_form_submit($form, &$form_state) {
       }
     }
     if ($form_state['values']['admin_theme'] && $form_state['values']['admin_theme'] != $form_state['values']['theme_default']) {
-      drupal_set_message(t('Please note that the <a href="!admin_theme_page">administration theme</a> is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', array(
-        '!admin_theme_page' => url('admin/settings/admin'),
+      drupal_set_message(t('Please note that the administration theme is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', array(
         '%admin_theme' => $form_state['values']['admin_theme'],
         '%selected_theme' => $form_state['values']['theme_default'],
       )));
