@@ -1,5 +1,5 @@
 <?php
-// $Id: user.admin.inc,v 1.70 2009/08/21 14:27:47 dries Exp $
+// $Id: user.admin.inc,v 1.71 2009/08/22 10:09:28 dries Exp $
 
 /**
  * @file
@@ -728,7 +728,7 @@ function theme_user_admin_permissions($form) {
  * @see theme_user_admin_new_role()
  */
 function user_admin_role() {
-  $rid = arg(4);
+  $rid = arg(5);
   if ($rid) {
     if ($rid == DRUPAL_ANONYMOUS_RID || $rid == DRUPAL_AUTHENTICATED_RID) {
       drupal_goto('admin/config/people/roles');
