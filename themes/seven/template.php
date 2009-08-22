@@ -75,12 +75,12 @@ function seven_fieldset($element) {
     drupal_add_js('misc/collapse.js');
 
     if (!isset($element['#attributes']['class'])) {
-      $element['#attributes']['class'] = '';
+      $element['#attributes']['class'] = array();
     }
 
-    $element['#attributes']['class'] .= ' collapsible';
+    $element['#attributes']['class'][] = 'collapsible';
     if (!empty($element['#collapsed'])) {
-      $element['#attributes']['class'] .= ' collapsed';
+      $element['#attributes']['class'][] = 'collapsed';
     }
   }
   $element['#attributes']['id'] = $element['#id'];

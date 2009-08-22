@@ -580,7 +580,7 @@ function theme_image_style_list($styles) {
     $row[] = l($style['name'], 'admin/config/media/image-styles/edit/' . $style['name']);
     $link_attributes = array(
       'attributes' => array(
-        'class' => 'image-style-link',
+        'class' => array('image-style-link'),
       ),
     );
     $row[] = l(t('edit'), 'admin/config/media/image-styles/edit/' . $style['name'], $link_attributes);
@@ -610,7 +610,7 @@ function theme_image_style_effects($form) {
 
   foreach (element_children($form) as $key) {
     if (is_numeric($key)) {
-      $form[$key]['weight']['#attributes']['class'] = 'image-effect-order-weight';
+      $form[$key]['weight']['#attributes']['class'] = array('image-effect-order-weight');
       $summary = drupal_render($form[$key]['summary']);
       $row = array();
       $row[] = drupal_render($form[$key]['label']) . (empty($summary) ? '' : ' ' . $summary);
@@ -620,7 +620,7 @@ function theme_image_style_effects($form) {
     }
     else {
       // Add the row for adding a new image effect.
-      $form['new']['weight']['#attributes']['class'] = 'image-effect-order-weight';
+      $form['new']['weight']['#attributes']['class'] = array('image-effect-order-weight');
       $row = array();
       $row[] = '<div class="image-style-new">' . drupal_render($form['new']['new']) . drupal_render($form['new']['add']) . '</div>';
       $row[] = drupal_render($form['new']['weight']);
@@ -629,7 +629,7 @@ function theme_image_style_effects($form) {
 
     $rows[] = array(
       'data' => $row,
-      'class' => 'draggable',
+      'class' => array('draggable'),
     );
   }
 
@@ -743,7 +743,7 @@ function theme_image_anchor($element) {
     }
   }
 
-  return theme('table', array(), $rows, array('class' => 'image-anchor'));
+  return theme('table', array(), $rows, array('class' => array('image-anchor')));
 }
 
 /**

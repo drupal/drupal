@@ -242,7 +242,7 @@ function theme_aggregator_categorize_items($form) {
     foreach (element_children($form['items']) as $key) {
       $rows[] = array(
         drupal_render($form['items'][$key]),
-        array('data' => drupal_render($form['categories'][$key]), 'class' => 'categorize-item'),
+        array('data' => drupal_render($form['categories'][$key]), 'class' => array('categorize-item')),
       );
     }
   }

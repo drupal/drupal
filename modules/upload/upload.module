@@ -78,7 +78,7 @@ function upload_node_links($node, $build_mode) {
     $node->content['links']['upload_attachments'] = array(
       '#theme' => 'links',
       '#links' => $links,
-      '#attributes' => array('class' => 'links inline'),
+      '#attributes' => array('class' => array('links', 'inline')),
     );
   }
 }
@@ -445,7 +445,7 @@ function theme_upload_attachments($elements) {
     }
   }
   if (count($rows)) {
-    return theme('table', $header, $rows, array('class' => 'attachments'));
+    return theme('table', $header, $rows, array('class' => array('attachments')));
   }
 }
 
@@ -603,7 +603,7 @@ function theme_upload_form_current($form) {
 
   foreach (element_children($form) as $key) {
     // Add class to group weight fields for drag and drop.
-    $form[$key]['weight']['#attributes']['class'] = 'upload-weight';
+    $form[$key]['weight']['#attributes']['class'] = array('upload-weight');
 
     $row = array('');
     $row[] = drupal_render($form[$key]['remove']);
@@ -611,7 +611,7 @@ function theme_upload_form_current($form) {
     $row[] = drupal_render($form[$key]['description']);
     $row[] = drupal_render($form[$key]['weight']);
     $row[] = drupal_render($form[$key]['size']);
-    $rows[] = array('data' => $row, 'class' => 'draggable');
+    $rows[] = array('data' => $row, 'class' => array('draggable'));
   }
   $output = theme('table', $header, $rows, array('id' => 'upload-attachments'));
   $output .= drupal_render_children($form);

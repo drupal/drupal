@@ -96,11 +96,11 @@ function _openid_user_login_form_alter(&$form, &$form_state) {
   $items = array();
   $items[] = array(
     'data' => l(t('Log in using OpenID'), '#'),
-    'class' => 'openid-link',
+    'class' => array('openid-link'),
   );
   $items[] = array(
     'data' => l(t('Cancel OpenID login'), '#'),
-    'class' => 'user-link',
+    'class' => array('user-link'),
   );
 
   $form['openid_links'] = array(

@@ -377,7 +377,7 @@ function number_elements_process($element, $form_state, $form) {
     // for some configurations where all characters won't fit in input field.
     '#size' => $field['type'] == 'number_decimal' ? $field['settings']['precision'] + 2 : 12,
     '#maxlength' => $field['type'] == 'number_decimal' ? $field['settings']['precision'] : 10,
-    '#attributes' => array('class' => 'number'),
+    '#attributes' => array('class' => array('number')),
     // The following values were set by the Field module and need
     // to be passed down to the nested element.
     '#title' => $element['#title'],

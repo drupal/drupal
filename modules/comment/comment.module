@@ -552,7 +552,7 @@ function comment_node_view($node, $build_mode) {
     $node->content['links']['comment'] = array(
       '#theme' => 'links',
       '#links' => $links,
-      '#attributes' => array('class' => 'links inline'),
+      '#attributes' => array('class' => array('links', 'inline')),
     );
 
     // Only append comments when we are building a node on its own node detail
@@ -825,7 +825,7 @@ function comment_build_content($comment, $build_mode = 'full') {
     $comment->content['links']['comment'] = array(
       '#theme' => 'links',
       '#links' => comment_links($comment),
-      '#attributes' => array('class' => 'links inline'),
+      '#attributes' => array('class' => array('links', 'inline')),
     );
   }
 

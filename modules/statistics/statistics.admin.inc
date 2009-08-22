@@ -29,7 +29,7 @@ function statistics_recent_hits() {
   $rows = array();
   foreach ($result as $log) {
     $rows[] = array(
-      array('data' => format_date($log->timestamp, 'small'), 'class' => 'nowrap'),
+      array('data' => format_date($log->timestamp, 'small'), 'class' => array('nowrap')),
       _statistics_format_item($log->title, $log->path),
       theme('username', $log),
       l(t('details'), "admin/reports/access/$log->aid"));

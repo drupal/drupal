@@ -758,21 +758,23 @@ function theme_poll_choices($form) {
   foreach (element_children($form) as $key) {
     $delta++;
     // Set special classes for drag and drop updating.
-    $form[$key]['weight']['#attributes']['class'] = 'poll-weight';
+    $form[$key]['weight']['#attributes']['class'] = array('poll-weight');
 
     // Build the table row.
     $row = array(
       'data' => array(
-        array('class' => 'choice-flag'),
+        array('class' => array('choice-flag')),
         drupal_render($form[$key]['chtext']),
         drupal_render($form[$key]['chvotes']),
         drupal_render($form[$key]['weight']),
       ),
-      'class' => 'draggable',
+      'class' => array('draggable'),
     );
 
     // Add any additional classes set on the row.
-    $row['class'] .= isset($form[$key]['#attributes']['class']) ? ' ' . $form[$key]['#attributes']['class'] : '';
+    if (!empty($form[$key]['#attributes']['class'])) {
+      $row['class'] = array_merge($row['class'], $form[$key]['#attributes']['class']);
+    }
 
     $rows[] = $row;
   }

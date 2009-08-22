@@ -162,7 +162,7 @@ function update_theme() {
       'arguments' => array('data' => NULL),
     ),
     'update_version' => array(
-      'arguments' => array('version' => NULL, 'tag' => NULL, 'class' => NULL),
+      'arguments' => array('version' => NULL, 'tag' => NULL, 'class' => array()),
     ),
   );
 }

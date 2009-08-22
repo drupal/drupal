@@ -30,7 +30,7 @@ function aggregator_view() {
     $rows[] = array(l($feed->title, "aggregator/sources/$feed->fid"), format_plural($feed->items, '1 item', '@count items'), ($feed->checked ? t('@time ago', array('@time' => format_interval(REQUEST_TIME - $feed->checked))) : t('never')), ($feed->checked && $feed->refresh ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - REQUEST_TIME))) : t('never')), l(t('edit'), "admin/settings/aggregator/edit/feed/$feed->fid"), l(t('remove items'), "admin/settings/aggregator/remove/$feed->fid"), l(t('update items'), "admin/settings/aggregator/update/$feed->fid"));
   }
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No feeds available. <a href="@link">Add feed</a>.', array('@link' => url('admin/settings/aggregator/add/feed'))), 'colspan' => '5', 'class' => 'message'));
+    $rows[] = array(array('data' => t('No feeds available. <a href="@link">Add feed</a>.', array('@link' => url('admin/content/aggregator/add/feed'))), 'colspan' => '5', 'class' => array('message')));
   }
   $output .= theme('table', $header, $rows);
 
@@ -44,7 +44,7 @@ function aggregator_view() {
     $rows[] = array(l($category->title, "aggregator/categories/$category->cid"), format_plural($category->items, '1 item', '@count items'), l(t('edit'), "admin/settings/aggregator/edit/category/$category->cid"));
   }
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No categories available. <a href="@link">Add category</a>.', array('@link' => url('admin/settings/aggregator/add/category'))), 'colspan' => '5', 'class' => 'message'));
+    $rows[] = array(array('data' => t('No categories available. <a href="@link">Add category</a>.', array('@link' => url('admin/content/aggregator/add/category'))), 'colspan' => '5', 'class' => array('message')));
   }
   $output .= theme('table', $header, $rows);
 

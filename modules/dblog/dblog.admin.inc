@@ -84,7 +84,7 @@ function dblog_overview() {
         $dblog->link,
       ),
       // Attributes for tr
-      'class' => "dblog-" . preg_replace('/[^a-z]/i', '-', $dblog->type) . ' ' . $classes[$dblog->severity]
+      'class' => array('dblog-' . preg_replace('/[^a-z]/i', '-', $dblog->type), $classes[$dblog->severity]),
     );
   }
 
@@ -196,7 +196,7 @@ function dblog_event($id) {
     $build['dblog_table'] = array(
       '#theme' => 'table', 
       '#rows' => $rows, 
-      '#attributes' => array('class' => 'dblog-event'),
+      '#attributes' => array('class' => array('dblog-event')),
     );
     return $build;
   }

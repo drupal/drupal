@@ -209,7 +209,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
         // the relevant field using these entries.
         '#field_name' => $field_name,
         '#bundle' => $instance['bundle'],
-        '#attributes' => array('class' => 'field-add-more-submit'),
+        '#attributes' => array('class' => array('field-add-more-submit')),
         '#language' => $langcode,
       );
     }
@@ -236,7 +236,7 @@ function theme_field_multiple_value_form($element) {
       array(
         'data' => '<label>' . t('!title: !required', array('!title' => $element['#title'], '!required' => $required)) . "</label>",
         'colspan' => 2,
-        'class' => 'field-label',
+        'class' => array('field-label'),
       ),
       t('Order'),
     );
@@ -257,21 +257,21 @@ function theme_field_multiple_value_form($element) {
 
     // Add the items as table rows.
     foreach ($items as $key => $item) {
-      $item['_weight']['#attributes']['class'] = $order_class;
+      $item['_weight']['#attributes']['class'] = array($order_class);
       $delta_element = drupal_render($item['_weight']);
       $cells = array(
-        array('data' => '', 'class' => 'field-multiple-drag'),
+        array('data' => '', 'class' => array('field-multiple-drag')),
         drupal_render($item),
-        array('data' => $delta_element, 'class' => 'delta-order'),
+        array('data' => $delta_element, 'class' => array('delta-order')),
       );
       $rows[] = array(
         'data' => $cells,
-        'class' => 'draggable',
+        'class' => array('draggable'),
       );
     }
 
     $output = '<div class="form-item">';
-    $output .= theme('table', $header, $rows, array('id' => $table_id, 'class' => 'field-multiple-table'));
+    $output .= theme('table', $header, $rows, array('id' => $table_id, 'class' => array('field-multiple-table')));
     $output .= $element['#description'] ? '<div class="description">' . $element['#description'] . '</div>' : '';
     $output .= '<div class="clearfix">' . drupal_render($add_more_button) . '</div>';
     $output .= '</div>';

@@ -658,7 +658,7 @@ function text_textfield_elements_process($element, $form_state, $form) {
     '#default_value' => isset($element['#value'][$field_key]) ? $element['#value'][$field_key] : NULL,
     '#autocomplete_path' => $element['#autocomplete_path'],
     '#size' => $instance['widget']['settings']['size'],
-    '#attributes' => array('class' => 'text'),
+    '#attributes' => array('class' => array('text')),
     '#title' => $element['#title'],
     '#description' => $element['#description'],
     '#required' => $element['#required'],
@@ -803,7 +803,7 @@ function theme_text_textarea_with_summary($element) {
     $fieldset = array(
       '#title' => $element['#title'],
       '#value' => $element['#children'],
-      '#attributes' => array('class' => 'text-textarea'),
+      '#attributes' => array('class' => array('text-textarea')),
       '#id' => str_replace('_', '-', $element['#field_name']) . '-summary-wrapper',
     );
     return theme('fieldset', $fieldset);

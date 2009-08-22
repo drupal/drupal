@@ -405,7 +405,7 @@ function menu_form_alter(&$form, $form_state, $form_id) {
       '#attached_js' => array(drupal_get_path('module', 'menu') . '/menu.js'),
       '#tree' => TRUE,
       '#weight' => -2,
-      '#attributes' => array('class' => 'menu-item-form'),
+      '#attributes' => array('class' => array('menu-item-form')),
     );
     $item = $form['#node']->menu;
 
@@ -443,7 +443,7 @@ function menu_form_alter(&$form, $form_state, $form_id) {
       '#default_value' => $default,
       '#options' => $options,
       '#description' => t('The maximum depth for an item and all its children is fixed at !maxdepth. Some menu items may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => MENU_MAX_DEPTH)),
-      '#attributes' => array('class' => 'menu-title-select'),
+      '#attributes' => array('class' => array('menu-title-select')),
     );
     $form['#submit'][] = 'menu_node_form_submit';
 

@@ -46,7 +46,7 @@ function locale_languages_overview_form() {
     $form['weight'][$langcode] = array(
       '#type' => 'weight',
       '#default_value' => $language->weight,
-      '#attributes' => array('class' => 'language-order-weight'),
+      '#attributes' => array('class' => array('language-order-weight')),
     );
     $form['name'][$langcode] = array('#markup' => check_plain($language->name));
     $form['native'][$langcode] = array('#markup' => check_plain($language->native));
@@ -91,7 +91,7 @@ function theme_locale_languages_overview_form($form) {
           drupal_render($form['weight'][$key]),
           l(t('edit'), 'admin/config/regional/language/edit/' . $key) . (($key != 'en' && $key != $default->language) ? ' ' . l(t('delete'), 'admin/config/regional/language/delete/' . $key) : '')
         ),
-        'class' => 'draggable'
+        'class' => array('draggable'),
       );
     }
   }
@@ -2303,8 +2303,8 @@ function _locale_translate_seek() {
       array('data' => check_plain(truncate_utf8($string['source'], 150, FALSE, TRUE)) . '<br /><small>' . $string['location'] . '</small>'),
       $string['context'],
       array('data' => _locale_translate_language_list($string['languages'], $limit_language), 'align' => 'center'),
-      array('data' => l(t('edit'), "admin/config/regional/translate/edit/$lid", array('query' => drupal_get_destination())), 'class' => 'nowrap'),
-      array('data' => l(t('delete'), "admin/config/regional/translate/delete/$lid", array('query' => drupal_get_destination())), 'class' => 'nowrap'),
+      array('data' => l(t('edit'), "admin/config/regional/translate/edit/$lid", array('query' => drupal_get_destination())), 'class' => array('nowrap')),
+      array('data' => l(t('delete'), "admin/config/regional/translate/delete/$lid", array('query' => drupal_get_destination())), 'class' => array('nowrap')),
     );
   }
 

@@ -72,8 +72,8 @@ function theme_simpletest_test_table($table) {
   // Create header for test selection table.
   $header = array(
     theme('table_select_header_cell'),
-    array('data' => t('Test'), 'class' => 'simpletest_test'),
-    array('data' => t('Description'), 'class' => 'simpletest_description'),
+    array('data' => t('Test'), 'class' => array('simpletest_test')),
+    array('data' => t('Description'), 'class' => array('simpletest_description')),
   );
 
   // Define the images used to expand/collapse the test groups.
@@ -100,7 +100,7 @@ function theme_simpletest_test_table($table) {
     $image_index = $collapsed ? 0 : 1;
 
     // Place-holder for checkboxes to select group of tests.
-    $row[] = array('id' => $test_class, 'class' => 'simpletest-select-all');
+    $row[] = array('id' => $test_class, 'class' => array('simpletest-select-all'));
 
     // Expand/collapse image and group title.
     $row[] = array(
@@ -111,7 +111,7 @@ function theme_simpletest_test_table($table) {
 
     $row[] = '&nbsp;';
 
-    $rows[] = array('data' => $row, 'class' => 'simpletest-group');
+    $rows[] = array('data' => $row, 'class' => array('simpletest-group'));
 
     // Add individual tests to group.
     $current_js = array(
@@ -145,7 +145,7 @@ function theme_simpletest_test_table($table) {
       $row[] = theme('indentation', 1) . '<label for="edit-' . $test_name . '">' . $title . '</label>';
       $row[] = '<div class="description">' . $description . '</div>';
 
-      $rows[] = array('data' => $row, 'class' => $test_class . '-test' . ($collapsed ? ' js-hide' : ''));
+      $rows[] = array('data' => $row, 'class' => array($test_class . '-test', ($collapsed ? 'js-hide' : '')));
     }
     $js['simpletest-test-group-' . $test_class] = $current_js;
     unset($table[$key]);
@@ -259,7 +259,7 @@ function simpletest_result_form(&$form_state, $test_id) {
       if ($assertion->message_group == 'Debug') {
         $class = 'simpletest-debug';
       }
-      $rows[] = array('data' => $row, 'class' => $class);
+      $rows[] = array('data' => $row, 'class' => array($class));
 
       $group_summary['#' . $assertion->status]++;
       $form['result']['summary']['#' . $assertion->status]++;
@@ -286,7 +286,7 @@ function simpletest_result_form(&$form_state, $test_id) {
   $form['action'] = array(
     '#type' => 'fieldset',
     '#title' => t('Actions'),
-    '#attributes' => array('class' => 'container-inline'),
+    '#attributes' => array('class' => array('container-inline')),
     '#weight' => -11,
   );
 

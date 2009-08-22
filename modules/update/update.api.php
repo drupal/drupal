@@ -95,7 +95,7 @@ function hook_update_status_alter(&$projects) {
       $projects[$project]['reason'] = t('Ignored from settings');
       if (!empty($settings[$project]['notes'])) {
         $projects[$project]['extra'][] = array(
-          'class' => 'admin-note',
+          'class' => array('admin-note'),
           'label' => t('Administrator note'),
           'data' => $settings[$project]['notes'],
         );

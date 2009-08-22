@@ -298,13 +298,13 @@ function theme_pager($tags = array(), $element = 0, $parameters = array(), $quan
   if ($pager_total[$element] > 1) {
     if ($li_first) {
       $items[] = array(
-        'class' => 'pager-first',
+        'class' => array('pager-first'),
         'data' => $li_first,
       );
     }
     if ($li_previous) {
       $items[] = array(
-        'class' => 'pager-previous',
+        'class' => array('pager-previous'),
         'data' => $li_previous,
       );
     }
@@ -313,7 +313,7 @@ function theme_pager($tags = array(), $element = 0, $parameters = array(), $quan
     if ($i != $pager_max) {
       if ($i > 1) {
         $items[] = array(
-          'class' => 'pager-ellipsis',
+          'class' => array('pager-ellipsis'),
           'data' => '…',
         );
       }
@@ -321,26 +321,26 @@ function theme_pager($tags = array(), $element = 0, $parameters = array(), $quan
       for (; $i <= $pager_last && $i <= $pager_max; $i++) {
         if ($i < $pager_current) {
           $items[] = array(
-            'class' => 'pager-item',
+            'class' => array('pager-item'),
             'data' => theme('pager_previous', $i, $element, ($pager_current - $i), $parameters),
           );
         }
         if ($i == $pager_current) {
           $items[] = array(
-            'class' => 'pager-current',
+            'class' => array('pager-current'),
             'data' => $i,
           );
         }
         if ($i > $pager_current) {
           $items[] = array(
-            'class' => 'pager-item',
+            'class' => array('pager-item'),
             'data' => theme('pager_next', $i, $element, ($i - $pager_current), $parameters),
           );
         }
       }
       if ($i < $pager_max) {
         $items[] = array(
-          'class' => 'pager-ellipsis',
+          'class' => array('pager-ellipsis'),
           'data' => '…',
         );
       }
@@ -348,17 +348,17 @@ function theme_pager($tags = array(), $element = 0, $parameters = array(), $quan
     // End generation.
     if ($li_next) {
       $items[] = array(
-        'class' => 'pager-next',
+        'class' => array('pager-next'),
         'data' => $li_next,
       );
     }
     if ($li_last) {
       $items[] = array(
-        'class' => 'pager-last',
+        'class' => array('pager-last'),
         'data' => $li_last,
       );
     }
-    return theme('item_list', $items, NULL, 'ul', array('class' => 'pager'));
+    return theme('item_list', $items, NULL, 'ul', array('class' => array('pager')));
   }
 }
 

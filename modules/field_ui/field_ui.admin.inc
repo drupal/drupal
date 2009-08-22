@@ -22,7 +22,7 @@ function field_ui_fields_list() {
       $rows[$field_name]['data'][0] = $field['locked'] ? t('@field_name (Locked)', array('@field_name' => $field_name)) : $field_name;
       $rows[$field_name]['data'][1] = t($field_types[$field['type']]['label']);
       $rows[$field_name]['data'][2][] = l($bundles[$bundle]['label'], $admin_path . '/fields');
-      $rows[$field_name]['class'] = $field['locked'] ? 'menu-disabled' : '';
+      $rows[$field_name]['class'] = $field['locked'] ? array('menu-disabled') : array('');
     }
   }
   foreach ($rows as $field_name => $cell) {
@@ -298,19 +298,19 @@ function template_preprocess_field_ui_field_overview_form(&$vars) {
     $row = new stdClass();
 
     // Add target classes for the tabledrag behavior.
-    $element['weight']['#attributes']['class'] = 'field-weight';
-    $element['hidden_name']['#attributes']['class'] = 'field-name';
+    $element['weight']['#attributes']['class'][] = 'field-weight';
+    $element['hidden_name']['#attributes']['class'][] = 'field-name';
     // Add target classes for the update selects behavior.
     switch ($element['#row_type']) {
       case 'add_new_field':
-        $element['type']['#attributes']['class'] = 'field-type-select';
-        $element['widget_type']['#attributes']['class'] = 'widget-type-select';
+        $element['type']['#attributes']['class'][] = 'field-type-select';
+        $element['widget_type']['#attributes']['class'][] = 'widget-type-select';
         break;
 
       case 'add_existing_field':
-        $element['field_name']['#attributes']['class'] = 'field-select';
-        $element['widget_type']['#attributes']['class'] = 'widget-type-select';
-        $element['label']['#attributes']['class'] = 'label-textfield';
+        $element['field_name']['#attributes']['class'][] = 'field-select';
+        $element['widget_type']['#attributes']['class'][] = 'widget-type-select';
+        $element['label']['#attributes']['class'][] = 'label-textfield';
         break;
     }
     foreach (element_children($element) as $child) {

@@ -1595,12 +1595,12 @@ function theme_fieldset($element) {
     drupal_add_js('misc/collapse.js');
 
     if (!isset($element['#attributes']['class'])) {
-      $element['#attributes']['class'] = '';
+      $element['#attributes']['class'] = array();
     }
 
-    $element['#attributes']['class'] .= ' collapsible';
+    $element['#attributes']['class'][] = 'collapsible';
     if (!empty($element['#collapsed'])) {
-      $element['#attributes']['class'] .= ' collapsed';
+      $element['#attributes']['class'][] = 'collapsed';
     }
   }
   $element['#attributes']['id'] = $element['#id'];
@@ -1649,8 +1649,8 @@ function theme_radio($element) {
  */
 function theme_radios($element) {
   $class = 'form-radios';
-  if (isset($element['#attributes']['class'])) {
-    $class .= ' ' . $element['#attributes']['class'];
+  if (!empty($element['#attributes']['class'])) {
+    $class .= ' ' . implode(' ', $element['#attributes']['class']);
   }
   $element['#children'] = '<div class="' . $class . '">' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
 
@@ -1666,14 +1666,14 @@ function form_process_password_confirm($element) {
     '#title' => t('Password'),
     '#value' => empty($element['#value']) ? NULL : $element['#value']['pass1'],
     '#required' => $element['#required'],
-    '#attributes' => array('class' => 'password-field'),
+    '#attributes' => array('class' => array('password-field')),
   );
   $element['pass2'] =  array(
     '#type' => 'password',
     '#title' => t('Confirm password'),
     '#value' => empty($element['#value']) ? NULL : $element['#value']['pass2'],
     '#required' => $element['#required'],
-    '#attributes' => array('class' => 'password-confirm'),
+    '#attributes' => array('class' => array('password-confirm')),
   );
   $element['#element_validate'] = array('password_confirm_validate');
   $element['#tree'] = TRUE;
@@ -1986,8 +1986,8 @@ function theme_checkbox($element) {
  */
 function theme_checkboxes($element) {
   $class = 'form-checkboxes';
-  if (isset($element['#attributes']['class'])) {
-    $class .= ' ' . $element['#attributes']['class'];
+  if (!empty($element['#attributes']['class'])) {
+    $class .= ' ' . implode(' ', $element['#attributes']['class']);
   }
   $element['#children'] = '<div class="' . $class . '">' . (!empty($element['#children']) ? $element['#children'] : '') . '</div>';
 
@@ -2049,9 +2049,9 @@ function form_process_checkboxes($element) {
  * @code
  * $options = array();
  * $options[0]['title'] = "A red row"
- * $options[0]['#attributes'] = array ('class' => 'red-row');
+ * $options[0]['#attributes'] = array ('class' => array('red-row'));
  * $options[1]['title'] = "A blue row"
- * $options[1]['#attributes'] = array ('class' => 'blue-row');
+ * $options[1]['#attributes'] = array ('class' => array('blue-row'));
  *
  * $form['myselector'] = array (
  * '#type' => 'tableselect',
@@ -2278,7 +2278,7 @@ function form_process_vertical_tabs($element, &$form_state) {
   $element[$name . '__active_tab'] = array(
     '#type' => 'hidden',
     '#default_value' => $element['#default_tab'],
-    '#attributes' => array('class' => 'vertical-tabs-active-tab'),
+    '#attributes' => array('class' => array('vertical-tabs-active-tab')),
   );
 
   return $element;
@@ -2331,13 +2331,7 @@ function theme_submit($element) {
  * @ingroup themeable
  */
 function theme_button($element) {
-  // Make sure not to overwrite classes.
-  if (isset($element['#attributes']['class'])) {
-    $element['#attributes']['class'] = 'form-' . $element['#button_type'] . ' ' . $element['#attributes']['class'];
-  }
-  else {
-    $element['#attributes']['class'] = 'form-' . $element['#button_type'];
-  }
+  $element['#attributes']['class'][] = 'form-' . $element['#button_type'];
 
   return '<input type="submit" ' . (empty($element['#name']) ? '' : 'name="' . $element['#name'] . '" ') . 'id="' . $element['#id'] . '" value="' . check_plain($element['#value']) . '" ' . drupal_attributes($element['#attributes']) . " />\n";
 }
@@ -2353,13 +2347,7 @@ function theme_button($element) {
  * @ingroup themeable
  */
 function theme_image_button($element) {
-  // Make sure not to overwrite classes.
-  if (isset($element['#attributes']['class'])) {
-    $element['#attributes']['class'] = 'form-' . $element['#button_type'] . ' ' . $element['#attributes']['class'];
-  }
-  else {
-    $element['#attributes']['class'] = 'form-' . $element['#button_type'];
-  }
+  $element['#attributes']['class'][] = 'form-' . $element['#button_type'];
 
   return '<input type="image" name="' . $element['#name'] . '" ' .
     (!empty($element['#value']) ? ('value="' . check_plain($element['#value']) . '" ') : '') .
@@ -2594,16 +2582,18 @@ function theme_form_element($element) {
  *   Array of new class names to be added.
  */
 function _form_set_class(&$element, $class = array()) {
+  if (!empty($class)) {
+    if (!isset($element['#attributes']['class'])) {
+      $element['#attributes']['class'] = array();
+    }
+    $element['#attributes']['class'] = array_merge($element['#attributes']['class'], $class);
+  }
   if ($element['#required']) {
-    $class[] = 'required';
+    $element['#attributes']['class'][] = 'required';
   }
   if (form_get_error($element)) {
-    $class[] = 'error';
+    $element['#attributes']['class'][] = 'error';
   }
-  if (isset($element['#attributes']['class'])) {
-    $class[] = $element['#attributes']['class'];
-  }
-  $element['#attributes']['class'] = implode(' ', $class);
 }
 
 /**

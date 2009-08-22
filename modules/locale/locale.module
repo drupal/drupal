@@ -632,7 +632,7 @@ function locale_block_view($delta = '') {
         'href'       => $path,
         'title'      => $language->native,
         'language'   => $language,
-        'attributes' => array('class' => 'language-link'),
+        'attributes' => array('class' => array('language-link')),
       );
     }
 

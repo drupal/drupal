@@ -69,7 +69,7 @@ function theme_filter_admin_overview($form) {
   foreach (element_children($form) as $id) {
     $element = $form[$id];
     if (isset($element['roles']) && is_array($element['roles'])) {
-      $element['weight']['#attributes']['class'] = 'text-format-order-weight';
+      $element['weight']['#attributes']['class'] = array('text-format-order-weight');
       $rows[] = array(
         'data' => array(
           check_plain($element['name']['#markup']),
@@ -79,7 +79,7 @@ function theme_filter_admin_overview($form) {
           drupal_render($element['configure']),
           drupal_render($element['delete']),
         ),
-        'class' => 'draggable',
+        'class' => array('draggable'),
       );
       unset($form[$id]);
     }
@@ -419,10 +419,10 @@ function theme_filter_admin_order($form) {
   foreach (element_children($form['names']) as $id) {
     // Don't take form control structures.
     if (is_array($form['names'][$id])) {
-      $form['weights'][$id]['#attributes']['class'] = 'filter-order-weight';
+      $form['weights'][$id]['#attributes']['class'] = array('filter-order-weight');
       $rows[] = array(
         'data' => array(drupal_render($form['names'][$id]), drupal_render($form['weights'][$id])),
-        'class' => 'draggable',
+        'class' => array('draggable'),
       );
     }
   }

@@ -82,7 +82,7 @@ function _menu_overview_tree_form($tree) {
     if ($item && $item['hidden'] >= 0) {
       $mlid = 'mlid:' . $item['mlid'];
       $form[$mlid]['#item'] = $item;
-      $form[$mlid]['#attributes'] = $item['hidden'] ? array('class' => 'menu-disabled') : array('class' => 'menu-enabled');
+      $form[$mlid]['#attributes'] = $item['hidden'] ? array('class' => array('menu-disabled')) : array('class' => array('menu-enabled'));
       $form[$mlid]['title']['#markup'] = l($item['title'], $item['href'], $item['localized_options']) . ($item['hidden'] ? ' (' . t('disabled') . ')' : '');
       $form[$mlid]['hidden'] = array(
         '#type' => 'checkbox',
@@ -188,8 +188,8 @@ function theme_menu_overview_form($form) {
 
   $header = array(
     t('Menu link'),
-    array('data' => t('Enabled'), 'class' => 'checkbox'),
-    array('data' => t('Show as expanded'), 'class' => 'checkbox'),
+    array('data' => t('Enabled'), 'class' => array('checkbox')),
+    array('data' => t('Show as expanded'), 'class' => array('checkbox')),
     t('Weight'),
     array('data' => t('Operations'), 'colspan' => '3'),
   );
@@ -208,22 +208,22 @@ function theme_menu_overview_form($form) {
       }
 
       // Add special classes to be used for tabledrag.js.
-      $element['plid']['#attributes']['class'] = 'menu-plid';
-      $element['mlid']['#attributes']['class'] = 'menu-mlid';
-      $element['weight']['#attributes']['class'] = 'menu-weight';
+      $element['plid']['#attributes']['class'] = array('menu-plid');
+      $element['mlid']['#attributes']['class'] = array('menu-mlid');
+      $element['weight']['#attributes']['class'] = array('menu-weight');
 
       // Change the parent field to a hidden. This allows any value but hides the field.
       $element['plid']['#type'] = 'hidden';
 
       $row = array();
       $row[] = theme('indentation', $element['#item']['depth'] - 1) . drupal_render($element['title']);
-      $row[] = array('data' => drupal_render($element['hidden']), 'class' => 'checkbox');
-      $row[] = array('data' => drupal_render($element['expanded']), 'class' => 'checkbox');
+      $row[] = array('data' => drupal_render($element['hidden']), 'class' => array('checkbox'));
+      $row[] = array('data' => drupal_render($element['expanded']), 'class' => array('checkbox'));
       $row[] = drupal_render($element['weight']) . drupal_render($element['plid']) . drupal_render($element['mlid']);
       $row = array_merge($row, $operations);
 
       $row = array_merge(array('data' => $row), $element['#attributes']);
-      $row['class'] = !empty($row['class']) ? $row['class'] . ' draggable' : 'draggable';
+      $row['class'][] = 'draggable';
       $rows[] = $row;
     }
   }
@@ -247,7 +247,7 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
     '#collapsible' => FALSE,
     '#tree' => TRUE,
     '#weight' => -2,
-    '#attributes' => array('class' => 'menu-item-form'),
+    '#attributes' => array('class' => array('menu-item-form')),
     '#item' => $item,
   );
   if ($type == 'add' || empty($item)) {
@@ -329,7 +329,7 @@ function menu_edit_item(&$form_state, $type, $item, $menu) {
     '#default_value' => $default,
     '#options' => $options,
     '#description' => t('The maximum depth for a link and all its children is fixed at !maxdepth. Some menu links may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => MENU_MAX_DEPTH)),
-    '#attributes' => array('class' => 'menu-title-select'),
+    '#attributes' => array('class' => array('menu-title-select')),
   );
   $form['menu']['weight'] = array(
     '#type' => 'weight',

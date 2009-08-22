@@ -1468,7 +1468,7 @@ function system_user_timezone(&$edit, &$form) {
   );
   if (!$edit['timezone'] && $edit['uid'] == $user->uid) {
     $form['timezone']['#description'] = t('Your time zone setting will be automatically detected if possible. Please confirm the selection and click save.');
-    $form['timezone']['timezone']['#attributes'] = array('class' => 'timezone-detect');
+    $form['timezone']['timezone']['#attributes'] = array('class' => array('timezone-detect'));
     drupal_add_js('misc/timezone.js');
   }
 }
@@ -1524,7 +1524,7 @@ function system_block_configure($delta = '') {
     $form['wrapper']['preview'] = array(
       '#type' => 'item',
       '#title' => 'Preview',
-      '#markup' => theme('image', $image_path, t('Powered by Drupal, an open source content management system'), t('Powered by Drupal, an open source content management system'), array('class' => 'powered-by-preview'), FALSE),
+      '#markup' => theme('image', $image_path, t('Powered by Drupal, an open source content management system'), t('Powered by Drupal, an open source content management system'), array('class' => array('powered-by-preview')), FALSE),
     );
     return $form;
   }
@@ -2195,7 +2195,7 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
   // Confirm form fails duplication check, as the form values rarely change -- so skip it.
   $form['#skip_duplicate_check'] = TRUE;
 
-  $form['#attributes'] = array('class' => 'confirmation');
+  $form['#attributes'] = array('class' => array('confirmation'));
   $form['description'] = array('#markup' => $description);
   $form[$name] = array('#type' => 'hidden', '#value' => 1);
 

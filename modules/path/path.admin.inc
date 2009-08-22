@@ -42,9 +42,6 @@ function path_admin_overview($keys = NULL) {
   $destination = drupal_get_destination();
   foreach ($result as $data) {
     $row = array(
-      // If the system path maps to a different URL alias, highlight this table
-      // row to let the user know of old aliases.
-      'class' => ($data->dst != drupal_get_path_alias($data->src, $data->language) ? 'warning' : NULL),
       'data' => array(
         l($data->dst, $data->src),
         l($data->src, $data->src, array('alias' => TRUE)),
@@ -52,6 +49,11 @@ function path_admin_overview($keys = NULL) {
         l(t('delete'), "admin/settings/path/delete/$data->pid", array('query' => $destination)),
       ),
     );
+    // If the system path maps to a different URL alias, highlight this table
+    // row to let the user know of old aliases.
+    if ($data->dst != drupal_get_path_alias($data->src, $data->language)) {
+      $row['class'] = array('warning');
+    }
     if ($multilanguage) {
       array_splice($row['data'], 2, 0, module_invoke('locale', 'language_name', $data->language));
     }
@@ -208,7 +210,7 @@ function path_admin_delete_confirm_submit($form, &$form_state) {
  * @see path_admin_filter_form_submit()
  */
 function path_admin_filter_form(&$form_state, $keys = '') {
-  $form['#attributes'] = array('class' => 'search-form');
+  $form['#attributes'] = array('class' => array('search-form'));
   $form['basic'] = array('#type' => 'fieldset',
     '#title' => t('Filter aliases')
   );

@@ -224,15 +224,15 @@ function _filter_html_tips($format, $long = FALSE) {
         if (array_key_exists($tag, $tips)) {
           if ($tips[$tag]) {
             $rows[] = array(
-              array('data' => $tips[$tag][0], 'class' => 'description'),
-              array('data' => '<code>' . check_plain($tips[$tag][1]) . '</code>', 'class' => 'type'),
-              array('data' => $tips[$tag][1], 'class' => 'get')
+              array('data' => $tips[$tag][0], 'class' => array('description')),
+              array('data' => '<code>' . check_plain($tips[$tag][1]) . '</code>', 'class' => array('type')),
+              array('data' => $tips[$tag][1], 'class' => array('get'))
             );
           }
         }
         else {
           $rows[] = array(
-            array('data' => t('No help provided for tag %tag.', array('%tag' => $tag)), 'class' => 'description', 'colspan' => 3),
+            array('data' => t('No help provided for tag %tag.', array('%tag' => $tag)), 'class' => array('description'), 'colspan' => 3),
           );
         }
       }
@@ -251,9 +251,9 @@ function _filter_html_tips($format, $long = FALSE) {
       unset($rows);
       foreach ($entities as $entity) {
         $rows[] = array(
-          array('data' => $entity[0], 'class' => 'description'),
-          array('data' => '<code>' . check_plain($entity[1]) . '</code>', 'class' => 'type'),
-          array('data' => $entity[1], 'class' => 'get')
+          array('data' => $entity[0], 'class' => array('description')),
+          array('data' => '<code>' . check_plain($entity[1]) . '</code>', 'class' => array('type')),
+          array('data' => $entity[1], 'class' => array('get'))
         );
       }
       $output .= theme('table', $header, $rows);
@@ -495,7 +495,7 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
   $form = array(
     '#type' => 'fieldset',
     '#weight' => $weight,
-    '#attributes' => array('class' => 'filter-wrapper'),
+    '#attributes' => array('class' => array('filter-wrapper')),
   );
   $form['format_guidelines'] = array(
     '#prefix' => '<div id="' . $element_id . '-guidelines" class="filter-guidelines">',
@@ -516,7 +516,7 @@ function filter_form($value = FILTER_FORMAT_DEFAULT, $weight = NULL, $parents = 
     '#parents' => $parents,
     '#access' => count($formats) > 1,
     '#id' => $element_id,
-    '#attributes' => array('class' => 'filter-list'),
+    '#attributes' => array('class' => array('filter-list')),
   );
   $form['format_help'] = array(
     '#prefix' => '<div id="' . $element_id . '-help" class="filter-help">',

@@ -515,12 +515,12 @@ function template_preprocess_block_admin_display_form(&$variables) {
       $region = $block['region']['#default_value'];
 
       // Set special classes needed for table drag and drop.
-      $variables['form'][$i]['region']['#attributes']['class'] = 'block-region-select block-region-' . $region;
-      $variables['form'][$i]['weight']['#attributes']['class'] = 'block-weight block-weight-' . $region;
+      $variables['form'][$i]['region']['#attributes']['class'] = array('block-region-select', 'block-region-' . $region);
+      $variables['form'][$i]['weight']['#attributes']['class'] = array('block-weight', 'block-weight-' . $region);
 
       $variables['block_listing'][$region][$i] = new stdClass();
-      $variables['block_listing'][$region][$i]->row_class = isset($block['#attributes']['class']) ? $block['#attributes']['class'] : '';
-      $variables['block_listing'][$region][$i]->block_modified = isset($block['#attributes']['class']) && strpos($block['#attributes']['class'], 'block-modified') !== FALSE;
+      $variables['block_listing'][$region][$i]->row_class = !empty($block['#attributes']['class']) ? implode(' ', $block['#attributes']['class']) : '';
+      $variables['block_listing'][$region][$i]->block_modified = !empty($block['#attributes']['class']) && in_array('block-modified', $block['#attributes']['class']);
       $variables['block_listing'][$region][$i]->block_title =  drupal_render($block['info']);
       $variables['block_listing'][$region][$i]->region_select = drupal_render($block['region']) . drupal_render($block['theme']);
       $variables['block_listing'][$region][$i]->weight_select = drupal_render($block['weight']);

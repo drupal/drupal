@@ -91,7 +91,7 @@ function book_node_view_link($node, $build_mode) {
     $node->content['links']['book'] = array(
       '#theme' => 'links',
       '#links' => $links,
-      '#attributes' => array('class' => 'links inline'),
+      '#attributes' => array('class' => array('links', 'inline')),
     );
   }
 }
@@ -296,7 +296,7 @@ function book_block_save($delta = '', $edit = array()) {
  * @ingroup themeable
  */
 function theme_book_title_link($link) {
-  $link['options']['attributes']['class'] =  'book-title';
+  $link['options']['attributes']['class'] = array('book-title');
 
   return l($link['title'], $link['href'], $link['options']);
 }
@@ -416,7 +416,7 @@ function _book_parent_select($book_link) {
       '#default_value' => $book_link['plid'],
       '#description' => t('The parent page in the book. The maximum depth for a book and all child pages is !maxdepth. Some pages in the selected book may not be available as parents if selecting them would exceed this limit.', array('!maxdepth' => MENU_MAX_DEPTH)),
       '#options' => book_toc($book_link['bid'], $book_link['parent_depth_limit'], array($book_link['mlid'])),
-      '#attributes' => array('class' => 'book-title-select'),
+      '#attributes' => array('class' => array('book-title-select')),
     );
   }
 
@@ -439,7 +439,7 @@ function _book_add_form_elements(&$form, $node) {
     '#group' => 'additional_settings',
     '#attached_js' => array(drupal_get_path('module', 'book') . '/book.js'),
     '#tree' => TRUE,
-    '#attributes' => array('class' => 'book-outline-form'),
+    '#attributes' => array('class' => array('book-outline-form')),
   );
   foreach (array('menu_name', 'mlid', 'nid', 'router_path', 'has_children', 'options', 'module', 'original_bid', 'parent_depth_limit') as $key) {
     $form['book'][$key] = array(
@@ -489,7 +489,7 @@ function _book_add_form_elements(&$form, $node) {
     '#access' => (bool)$options,
     '#description' => t('Your page will be a part of the selected book.'),
     '#weight' => -5,
-    '#attributes' => array('class' => 'book-title-select'),
+    '#attributes' => array('class' => array('book-title-select')),
     '#ajax' => array(
       'path' => 'book/js/form',
       'wrapper' => 'edit-book-plid-wrapper',

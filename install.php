@@ -1561,7 +1561,7 @@ function _install_configure_form(&$form_state, &$install_state) {
     '#description' => st('Spaces are allowed; punctuation is not allowed except for periods, hyphens, and underscores.'),
     '#required' => TRUE,
     '#weight' => -10,
-    '#attributes' => array('class' => 'username'),
+    '#attributes' => array('class' => array('username')),
   );
 
   $form['admin_account']['account']['mail'] = array('#type' => 'textfield',
@@ -1601,13 +1601,13 @@ function _install_configure_form(&$form_state, &$install_state) {
     '#options' => system_time_zones(),
     '#description' => st('By default, dates in this site will be displayed in the chosen time zone.'),
     '#weight' => 5,
-    '#attributes' => array('class' => 'timezone-detect'),
+    '#attributes' => array('class' => array('timezone-detect')),
   );
 
   $form['server_settings']['clean_url'] = array(
     '#type' => 'hidden',
     '#default_value' => 0,
-    '#attributes' => array('class' => 'install'),
+    '#attributes' => array('class' => array('install')),
   );
 
   $form['update_notifications'] = array(

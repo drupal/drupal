@@ -275,7 +275,7 @@ function update_calculate_project_data($available) {
               $projects[$project]['extra'] = array();
             }
             $projects[$project]['extra'][] = array(
-              'class' => 'project-not-secure',
+              'class' => array('project-not-secure'),
               'label' => t('Project not secure'),
               'data' => t('This project has been labeled insecure by the Drupal security team, and is no longer available for download. Immediately disabling everything included by this project is strongly recommended!'),
             );
@@ -287,7 +287,7 @@ function update_calculate_project_data($available) {
               $projects[$project]['extra'] = array();
             }
             $projects[$project]['extra'][] = array(
-              'class' => 'project-revoked',
+              'class' => array('project-revoked'),
               'label' => t('Project revoked'),
               'data' => t('This project has been revoked, and is no longer available for download. Disabling everything included by this project is strongly recommended!'),
             );
@@ -298,7 +298,7 @@ function update_calculate_project_data($available) {
               $projects[$project]['extra'] = array();
             }
             $projects[$project]['extra'][] = array(
-              'class' => 'project-not-supported',
+              'class' => array('project-not-supported'),
               'label' => t('Project not supported'),
               'data' => t('This project is no longer supported, and is no longer available for download. Disabling everything included by this project is strongly recommended!'),
             );
@@ -387,7 +387,7 @@ function update_calculate_project_data($available) {
               $projects[$project]['extra'] = array();
             }
             $projects[$project]['extra'][] = array(
-              'class' => 'release-revoked',
+              'class' => array('release-revoked'),
               'label' => t('Release revoked'),
               'data' => t('Your currently installed release has been revoked, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
             );
@@ -399,7 +399,7 @@ function update_calculate_project_data($available) {
               $projects[$project]['extra'] = array();
             }
             $projects[$project]['extra'][] = array(
-              'class' => 'release-not-supported',
+              'class' => array('release-not-supported'),
               'label' => t('Release not supported'),
               'data' => t('Your currently installed release is now unsupported, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
             );

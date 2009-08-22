@@ -116,9 +116,9 @@ function theme_profile_admin_overview($form) {
         // Category classes are given numeric IDs because there's no guarantee
         // class names won't contain invalid characters.
         $categories[$category] = $category_number;
-        $category_field['#attributes']['class'] = 'profile-category profile-category-' . $category_number;
-        $rows[] = array(array('data' => $category, 'colspan' => 7, 'class' => 'category'));
-        $rows[] = array('data' => array(array('data' => '<em>' . t('No fields in this category. If this category remains empty when saved, it will be removed.') . '</em>', 'colspan' => 7)), 'class' => 'category-' . $category_number . '-message category-message category-populated');
+        $category_field['#attributes']['class'] = array('profile-category', 'profile-category-' . $category_number);
+        $rows[] = array(array('data' => $category, 'colspan' => 7, 'class' => array('category')));
+        $rows[] = array('data' => array(array('data' => '<em>' . t('No fields in this category. If this category remains empty when saved, it will be removed.') . '</em>', 'colspan' => 7)), 'class' => array('category-' . $category_number . '-message', 'category-message', 'category-populated'));
 
         // Make it draggable only if there is more than one field
         if (isset($form['submit'])) {
@@ -129,8 +129,8 @@ function theme_profile_admin_overview($form) {
       }
 
       // Add special drag and drop classes that group fields together.
-      $field['weight']['#attributes']['class'] = 'profile-weight profile-weight-' . $categories[$category];
-      $field['category']['#attributes']['class'] = 'profile-category profile-category-' . $categories[$category];
+      $field['weight']['#attributes']['class'] = array('profile-weight', 'profile-weight-' . $categories[$category]);
+      $field['category']['#attributes']['class'] = array('profile-category', 'profile-category-' . $categories[$category]);
 
       // Add the row
       $row = array();
@@ -143,7 +143,7 @@ function theme_profile_admin_overview($form) {
       }
       $row[] = drupal_render($field['edit']);
       $row[] = drupal_render($field['delete']);
-      $rows[] = array('data' => $row, 'class' => 'draggable');
+      $rows[] = array('data' => $row, 'class' => array('draggable'));
     }
   }
   if (empty($rows)) {

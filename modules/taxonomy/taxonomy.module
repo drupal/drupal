@@ -163,7 +163,7 @@ function taxonomy_node_view($node, $build_mode) {
     $node->content['links']['terms'] = array(
       '#theme' => 'links',
       '#links' => $links,
-      '#attributes' => array('class' => 'links inline'),
+      '#attributes' => array('class' => array('links', 'inline')),
       '#sorted' => TRUE,
     );
   }
@@ -2178,7 +2178,7 @@ function taxonomy_autocomplete_elements_process($element, &$form_state, $form) {
     '#default_value' => $typed_string,
     '#autocomplete_path' => 'taxonomy/autocomplete/'. $element['#field_name'] .'/'. $element['#bundle'],
     '#size' => $instance['widget']['settings']['size'],
-    '#attributes' => array('class' => 'text'),
+    '#attributes' => array('class' => array('text')),
     '#title' => $element['#title'],
     '#description' => $element['#description'],
     '#required' => $element['#required'],

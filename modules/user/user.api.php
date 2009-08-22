@@ -417,7 +417,7 @@ function hook_user_view($account) {
       '#type' => 'user_profile_item',
       '#title' => t('Blog'),
       '#markup' => l(t('View recent blog entries'), "blog/$account->uid", array('attributes' => array('title' => t("Read !username's latest blog entries.", array('!username' => $account->name))))),
-      '#attributes' => array('class' => 'blog'),
+      '#attributes' => array('class' => array('blog')),
     );
   }
 }

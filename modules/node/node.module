@@ -1203,7 +1203,7 @@ function node_build_content($node, $build_mode = 'full') {
   $node->content['links']['node'] = array(
     '#theme' => 'links',
     '#links' => $links,
-    '#attributes' => array('class' => 'links inline'),
+    '#attributes' => array('class' => array('links', 'inline')),
   );
 
   // Allow modules to make their own additions to the node.
@@ -2116,7 +2116,7 @@ function node_form_search_form_alter(&$form, $form_state) {
       '#title' => t('Advanced search'),
       '#collapsible' => TRUE,
       '#collapsed' => TRUE,
-      '#attributes' => array('class' => 'search-advanced'),
+      '#attributes' => array('class' => array('search-advanced')),
     );
     $form['advanced']['keywords'] = array(
       '#prefix' => '<div class="criterion">',

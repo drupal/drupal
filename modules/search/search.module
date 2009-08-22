@@ -1070,7 +1070,7 @@ function search_form(&$form_state, $action = '', $keys = '', $type = NULL, $prom
 
   $form = array(
     '#action' => $action,
-    '#attributes' => array('class' => 'search-form'),
+    '#attributes' => array('class' => array('search-form')),
   );
   $form['module'] = array('#type' => 'value', '#value' => $type);
   $form['basic'] = array('#type' => 'item', '#title' => $prompt, '#id' => 'edit-keys');

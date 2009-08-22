@@ -40,7 +40,7 @@ function hook_translation_link_alter(array &$links, $path) {
 
   if (isset($links[$language])) {
     foreach ($links[$language] as $link) {
-      $link['attributes']['class'] .= ' active-language';
+      $link['attributes']['class'][] = 'active-language';
     }
   }
 }

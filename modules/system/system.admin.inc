@@ -223,7 +223,7 @@ function system_themes_form() {
         break;
       }
     }
-    $screenshot = $screenshot ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $theme->info['name'])), '', array('class' => 'screenshot'), FALSE) : t('no screenshot');
+    $screenshot = $screenshot ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $theme->info['name'])), '', array('class' => array('screenshot')), FALSE) : t('no screenshot');
 
     $form[$theme->name]['screenshot'] = array('#markup' => $screenshot);
     $form[$theme->name]['info'] = array(
@@ -479,7 +479,7 @@ function system_theme_settings(&$form_state, $key = '') {
       '#type' => 'fieldset',
       '#title' => t('Logo image settings'),
       '#description' => t('If toggled on, the following logo will be displayed.'),
-      '#attributes' => array('class' => 'theme-settings-bottom'),
+      '#attributes' => array('class' => array('theme-settings-bottom')),
     );
     $form['logo']['default_logo'] = array(
       '#type' => 'checkbox',
@@ -720,7 +720,7 @@ function system_modules($form_state = array()) {
       '#collapsible' => TRUE,
       '#theme' => 'system_modules_fieldset',
       '#header' => array(
-        array('data' => t('Enabled'), 'class' => 'checkbox'),
+        array('data' => t('Enabled'), 'class' => array('checkbox')),
         t('Name'),
         t('Version'),
         t('Description'),
@@ -1625,7 +1625,7 @@ function system_regional_settings() {
     '#title' => t('Default country'),
     '#default_value' => variable_get('site_default_country', ''),
     '#options' => $countries,
-    '#attributes' => array('class' => 'country-detect'),
+    '#attributes' => array('class' => array('country-detect')),
   );
 
   $form['locale']['date_first_day'] = array(
@@ -1690,7 +1690,7 @@ function system_regional_settings() {
     '#suffix' => '</div>',
     '#type' => 'select',
     '#title' => t('Short date format'),
-    '#attributes' => array('class' => 'date-format'),
+    '#attributes' => array('class' => array('date-format')),
     '#default_value' => (isset($date_short_choices[$date_format_short]) ? $date_format_short : 'custom'),
     '#options' => $date_short_choices,
   );
@@ -1701,7 +1701,7 @@ function system_regional_settings() {
     '#suffix' => '</div></div>',
     '#type' => 'textfield',
     '#title' => t('Custom short date format'),
-    '#attributes' => array('class' => 'custom-format'),
+    '#attributes' => array('class' => array('custom-format')),
     '#default_value' => $default_short_custom,
     '#description' => t('A user-defined short date format. See the <a href="@url">PHP manual</a> for available options. This format is currently set to display as <span>%date</span>.', array('@url' => 'http://php.net/manual/function.date.php', '%date' => format_date(REQUEST_TIME, 'custom', $default_short_custom))),
   );
@@ -1712,7 +1712,7 @@ function system_regional_settings() {
     '#suffix' => '</div>',
     '#type' => 'select',
     '#title' => t('Medium date format'),
-    '#attributes' => array('class' => 'date-format'),
+    '#attributes' => array('class' => array('date-format')),
     '#default_value' => (isset($date_medium_choices[$date_format_medium]) ? $date_format_medium : 'custom'),
     '#options' => $date_medium_choices,
   );
@@ -1723,7 +1723,7 @@ function system_regional_settings() {
     '#suffix' => '</div></div>',
     '#type' => 'textfield',
     '#title' => t('Custom medium date format'),
-    '#attributes' => array('class' => 'custom-format'),
+    '#attributes' => array('class' => array('custom-format')),
     '#default_value' => $default_medium_custom,
     '#description' => t('A user-defined medium date format. See the <a href="@url">PHP manual</a> for available options. This format is currently set to display as <span>%date</span>.', array('@url' => 'http://php.net/manual/function.date.php', '%date' => format_date(REQUEST_TIME, 'custom', $default_medium_custom))),
   );
@@ -1734,7 +1734,7 @@ function system_regional_settings() {
     '#suffix' => '</div>',
     '#type' => 'select',
     '#title' => t('Long date format'),
-    '#attributes' => array('class' => 'date-format'),
+    '#attributes' => array('class' => array('date-format')),
     '#default_value' => (isset($date_long_choices[$date_format_long]) ? $date_format_long : 'custom'),
     '#options' => $date_long_choices,
   );
@@ -1745,7 +1745,7 @@ function system_regional_settings() {
     '#suffix' => '</div></div>',
     '#type' => 'textfield',
     '#title' => t('Custom long date format'),
-    '#attributes' => array('class' => 'custom-format'),
+    '#attributes' => array('class' => array('custom-format')),
     '#default_value' => $default_long_custom,
     '#description' => t('A user-defined long date format. See the <a href="@url">PHP manual</a> for available options. This format is currently set to display as <span>%date</span>.', array('@url' => 'http://php.net/manual/function.date.php', '%date' => format_date(REQUEST_TIME, 'custom', $default_long_custom))),
   );
@@ -2140,7 +2140,7 @@ function theme_system_modules_fieldset($form) {
     $module = $form[$key];
     $row = array();
     unset($module['enable']['#title']);
-    $row[] = array('class' => 'checkbox', 'data' => drupal_render($module['enable']));
+    $row[] = array('class' => array('checkbox'), 'data' => drupal_render($module['enable']));
     $label = '<label';
     if (isset($module['enable']['#id'])) {
       $label .= ' for="' . $module['enable']['#id'] . '"';
@@ -2161,7 +2161,7 @@ function theme_system_modules_fieldset($form) {
     if ($module['#required_by']) {
       $description .= '<div class="admin-requirements">' . t('Required by: !module-list', array('!module-list' => implode(', ', $module['#required_by']))) . '</div>';
     }
-    $row[] = array('data' => $description, 'class' => 'description');
+    $row[] = array('data' => $description, 'class' => array('description'));
     $rows[] = $row;
   }
 
@@ -2208,13 +2208,13 @@ function theme_system_modules_uninstall($form) {
     $rows[] = array(
       array('data' => drupal_render($form['uninstall'][$module]), 'align' => 'center'),
       '<strong><label for="' . $form['uninstall'][$module]['#id'] . '">' . drupal_render($form['modules'][$module]['name']) . '</label></strong>',
-      array('data' => drupal_render($form['modules'][$module]['description']), 'class' => 'description'),
+      array('data' => drupal_render($form['modules'][$module]['description']), 'class' => array('description')),
     );
   }
 
   // Only display table if there are modules that can be uninstalled.
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No modules are available to uninstall.'), 'colspan' => '3', 'align' => 'center', 'class' => 'message'));
+    $rows[] = array(array('data' => t('No modules are available to uninstall.'), 'colspan' => '3', 'align' => 'center', 'class' => array('message')));
   }
 
   $output  = theme('table', $header, $rows);

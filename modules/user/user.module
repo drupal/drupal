@@ -920,7 +920,7 @@ function user_user_view($account) {
   }
   $account->content['summary'] += array(
     '#type' => 'user_profile_category',
-    '#attributes' => array('class' => 'user-member'),
+    '#attributes' => array('class' => array('user-member')),
     '#weight' => 5,
     '#title' => t('History'),
   );
@@ -1890,7 +1890,7 @@ function user_edit_form(&$form_state, $uid, $edit, $register = FALSE) {
       '#maxlength' => USERNAME_MAX_LENGTH,
       '#description' => t('Spaces are allowed; punctuation is not allowed except for periods, hyphens, apostrophes, and underscores.'),
       '#required' => TRUE,
-      '#attributes' => array('class' => 'username'),
+      '#attributes' => array('class' => array('username')),
     );
   }
   $form['account']['mail'] = array('#type' => 'textfield',

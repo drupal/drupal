@@ -178,12 +178,12 @@ function translation_node_view($node, $build_mode) {
           'title' => $language->native,
           'href' => 'node/' . $translations[$langcode]->nid,
           'language' => $language,
-          'attributes' => array('title' => $translations[$langcode]->title, 'class' => 'translation-link')
+          'attributes' => array('title' => $translations[$langcode]->title, 'class' => array('translation-link')),
         );
         $node->content['links']['translation'] = array(
           '#theme' => 'links',
           '#links' => $links,
-          '#attributes' => array('class' => 'links inline'),
+          '#attributes' => array('class' => array('links', 'inline')),
         );
       }
     }

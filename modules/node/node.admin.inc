@@ -376,7 +376,7 @@ function node_admin_content($form_state) {
   if (_node_add_access()) {
     $form['add_content'] = array(
       '#type' => 'markup',
-      '#markup' => l(t('Add new content'), 'node/add', array('attributes' => array('class' => 'node-admin-add-content'))),
+      '#markup' => l(t('Add new content'), 'node/add', array('attributes' => array('class' => array('node-admin-add-content')))),
     );
   }
   $form[] = node_filter_form();

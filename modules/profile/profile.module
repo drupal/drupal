@@ -351,7 +351,7 @@ function profile_user_view($account) {
         '#title' => $title,
         '#markup' => $value,
         '#weight' => $field->weight,
-        '#attributes' => array('class' => 'profile-' . $field->name),
+        '#attributes' => array('class' => array('profile-' . $field->name)),
       );
     }
   }
