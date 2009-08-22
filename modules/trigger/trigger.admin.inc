@@ -1,5 +1,5 @@
 <?php
-// $Id: trigger.admin.inc,v 1.14 2009/07/20 18:51:35 dries Exp $
+// $Id: trigger.admin.inc,v 1.15 2009/08/22 15:35:36 webchick Exp $
 
 /**
  * @file
@@ -23,11 +23,13 @@ function trigger_assign($type = NULL) {
 
   $build = array();
   $hooks = module_invoke_all('hook_info');
-  foreach ($hooks as $module => $hook) {
-    if (isset($hook[$type])) {
-      foreach ($hook[$type] as $op => $description) {
-        $form_id = 'trigger_' . $type . '_' . $op . '_assign_form';
-        $build[$form_id] = drupal_get_form($form_id, $type, $op, $description['runs when']);
+  foreach ($hooks as $module => $module_hooks) {
+    if ($module == $type) {
+      foreach ($module_hooks as $hook => $data) {
+        foreach ($data as $op => $description) {
+          $form_id = 'trigger_' . $hook . '_' . $op . '_assign_form';
+          $build[$form_id] = drupal_get_form($form_id, $hook, $op, $description['runs when']);
+        }
       }
     }
   }
