@@ -402,34 +402,11 @@ function menu_edit_item_submit($form, &$form_state) {
  */
 function menu_edit_menu(&$form_state, $type, $menu = array()) {
   $system_menus = menu_list_system_menus();
-  if ($type == 'edit') {
-    $form['menu_name'] = array('#type' => 'value', '#value' => $menu['menu_name']);
-    $form['#insert'] = FALSE;
-    $form['delete'] = array(
-      '#type' => 'submit',
-      '#value' => t('Delete'),
-      '#access' => !isset($system_menus[$menu['menu_name']]),
-      '#submit' => array('menu_custom_delete_submit'),
-      '#weight' => 10,
-    );
-  }
-  else {
-    $menu = array('menu_name' => '', 'title' => '', 'description' => '');
-    $form['menu_name'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Menu name'),
-      '#maxsize' => MENU_MAX_MENU_NAME_LENGTH_UI,
-      '#description' => t('The machine-readable name of this menu. This text will be used for constructing the URL of the <em>menu overview</em> page for this menu. This name must contain only lowercase letters, numbers, and hyphens, and must be unique.'),
-      '#required' => TRUE,
-    );
-    $form['#insert'] = TRUE;
-  }
-  $form['#title'] = $menu['title'];
+  $menu += array('menu_name' => '', 'title' => '', 'description' => '');
+
+  // The title of a system menu cannot be altered.
   if (isset($system_menus[$menu['menu_name']])) {
-    $form['title'] = array(
-      '#type' => 'value',
-      '#value' => $menu['title'],
-    );
+    $form['title'] = array('#type' => 'value', '#value' => $menu['title']);
   }
   else {
     $form['title'] = array(
@@ -437,8 +414,40 @@ function menu_edit_menu(&$form_state, $type, $menu = array()) {
       '#title' => t('Title'),
       '#default_value' => $menu['title'],
       '#required' => TRUE,
+      '#field_suffix' => ' <small id="edit-title-suffix">&nbsp;</small>',
     );
   }
+
+  // The internal menu name can only be defined during initial menu creation.
+  if ($type == 'edit') {
+    $form['#insert'] = FALSE;
+    $form['menu_name'] = array('#type' => 'value', '#value' => $menu['menu_name']);
+  }
+  else {
+    $form['#insert'] = TRUE;
+    $js_settings = array(
+      'type' => 'setting',
+      'data' => array(
+        'machineReadableValue' => array(
+          'title' => array(
+            'text' => t('URL path'),
+            'target' => 'menu-name',
+            'searchPattern' => '[^a-z0-9]+',
+            'replaceToken' => '-',
+          ),
+        ),
+      ),
+    );
+    $form['menu_name'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Menu name'),
+      '#maxsize' => MENU_MAX_MENU_NAME_LENGTH_UI,
+      '#description' => t('This text will be used to construct the URL for the menu. The name must contain only lowercase letters, numbers and hyphens, and must be unique.'),
+      '#required' => TRUE,
+      '#attached_js' => array(drupal_get_path('module', 'system') . '/system.js', $js_settings),
+    );
+  }
+
   $form['description'] = array(
     '#type' => 'textarea',
     '#title' => t('Description'),
@@ -447,6 +456,13 @@ function menu_edit_menu(&$form_state, $type, $menu = array()) {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
+  );
+  // Only custom menus may be deleted.
+  $form['delete'] = array(
+    '#type' => 'submit',
+    '#value' => t('Delete'),
+    '#access' => $type == 'edit' && !isset($system_menus[$menu['menu_name']]),
+    '#submit' => array('menu_custom_delete_submit'),
   );
 
   return $form;
