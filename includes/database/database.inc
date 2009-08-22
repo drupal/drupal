@@ -316,6 +316,13 @@ abstract class DatabaseConnection extends PDO {
    */
   protected $schema = NULL;
 
+  /**
+   * A unique number used for dynamic placeholders.
+   *
+   * It gets reset after every executed query.
+   */
+  protected $nextPlaceholder = 1;
+
   function __construct($dsn, $username, $password, $driver_options = array()) {
     // Because the other methods don't seem to work right.
     $driver_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
@@ -327,6 +334,20 @@ abstract class DatabaseConnection extends PDO {
     if (!empty($this->statementClass)) {
       $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array($this->statementClass, array($this)));
     }
+  }
+
+  /**
+   * Reset the next placeholder number back to 1.
+   */
+  public function resetPlaceholder() {
+    $this->nextPlaceholder = 1;
+  }
+
+  /**
+   * Get the current unique placeholder number and increment it.
+   */
+  public function getNextPlaceholder() {
+    return $this->nextPlaceholder++;
   }
 
   /**
@@ -566,6 +587,9 @@ abstract class DatabaseConnection extends PDO {
         $stmt = $this->prepareQuery($query, !$modified);
         $stmt->execute($args, $options);
       }
+
+      // Reset the placeholder numbering.
+      $this->resetPlaceholder();
 
       // Depending on the type of query we may need to return a different value.
       // See DatabaseConnection::defaultOptions() for a description of each value.

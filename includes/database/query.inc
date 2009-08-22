@@ -1161,13 +1161,6 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
   }
 
   public function compile(DatabaseConnection $connection) {
-    // This value is static, so it will increment across the entire request
-    // rather than just this query. That is OK, because we only need definitive
-    // placeholder names if we're going to use them for _alter hooks, which we
-    // are not. The alter hook would intervene before compilation.
-    // $next_placeholder does not use drupal_static as it increments and should
-    // never be reset during a request.
-    static $next_placeholder = 1;
 
     if ($this->changed) {
 
@@ -1220,7 +1213,7 @@ class DatabaseCondition implements QueryConditionInterface, Countable {
             }
             if ($operator['use_value']) {
               foreach ($condition['value'] as $value) {
-                $placeholder = ':db_condition_placeholder_' . $next_placeholder++;
+                $placeholder = ':db_condition_placeholder_' . $connection->getNextPlaceholder();
                 $arguments[$placeholder] = $value;
                 $placeholders[] = $placeholder;
               }
