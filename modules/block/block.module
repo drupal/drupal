@@ -511,16 +511,15 @@ function block_theme_initialize($theme) {
     $default_theme = variable_get('theme_default', 'garland');
     $regions = system_region_list($theme);
     $result = db_query("SELECT * FROM {block} WHERE theme = :theme", array(':theme' => $default_theme), array('fetch' => PDO::FETCH_ASSOC));
-    $query = db_insert('block')->fields(array('module', 'delta', 'theme', 'status', 'weight', 'region', 'visibility', 'pages', 'custom', 'cache'));
     foreach ($result as $block) {
       // If the region isn't supported by the theme, assign the block to the theme's default region.
       if (!array_key_exists($block['region'], $regions)) {
         $block['region'] = system_default_region($theme);
       }
       $block['theme'] = $theme;
-      $query->values($block);
+      unset($block['bid']);
+      drupal_write_record('block', $block);
     }
-    $query->execute();
   }
 }
 
