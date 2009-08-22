@@ -692,9 +692,6 @@ function hook_theme($existing, $type, $theme, $path) {
     'forum_icon' => array(
       'arguments' => array('new_posts' => NULL, 'num_posts' => 0, 'comment_mode' => 0, 'sticky' => 0),
     ),
-    'forum_topic_navigation' => array(
-      'arguments' => array('node' => NULL),
-    ),
   );
 }
 

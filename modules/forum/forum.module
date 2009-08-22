@@ -53,10 +53,6 @@ function forum_theme() {
       'template' => 'forum-icon',
       'arguments' => array('new_posts' => NULL, 'num_posts' => 0, 'comment_mode' => 0, 'sticky' => 0),
     ),
-    'forum_topic_navigation' => array(
-      'template' => 'forum-topic-navigation',
-      'arguments' => array('node' => NULL),
-    ),
     'forum_submitted' => array(
       'template' => 'forum-submitted',
       'arguments' => array('topic' => NULL),
@@ -212,12 +208,6 @@ function forum_node_view($node, $build_mode) {
       }
       drupal_set_breadcrumb($breadcrumb);
 
-      if ($build_mode == 'full') {
-        $node->content['forum_navigation'] = array(
-          '#markup' => theme('forum_topic_navigation', $node),
-          '#weight' => 100,
-        );
-      }
     }
   }
 }
@@ -990,52 +980,6 @@ function template_preprocess_forum_icon(&$variables) {
 
   if ($variables['sticky'] == 1) {
     $variables['icon'] = 'sticky';
-  }
-}
-
-/**
- * Preprocess variables to format the next/previous forum topic navigation links.
- *
- * $variables contains $node.
- *
- * @see forum-topic-navigation.tpl.php
- * @see theme_forum_topic_navigation()
- */
-function template_preprocess_forum_topic_navigation(&$variables) {
-  $output = '';
-
-  // Get previous and next topic.
-  $query = db_select('node', 'n');
-  $query->join('node_comment_statistics', 'ncs', 'n.nid = ncs.nid');
-  $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => isset($variables['node']->tid) ? $variables['node']->tid : 0));
-
-  $order = _forum_get_topic_order(variable_get('forum_order', 1));
-  $result = $query
-    ->fields('n', array('nid', 'title', 'sticky'))
-    ->fields('ncs', array('comment_count', 'last_comment_timestamp'))
-    ->condition('n.status', 1)
-    ->addTag('node_access')
-    ->orderBy('n.sticky', 'DESC')
-    ->orderBy($order['field'], strtoupper($order['sort']))
-    ->execute();
-
-  $stop = $variables['prev'] = $variables['next'] = 0;
-
-  foreach ($result as $topic) {
-    if ($stop == 1) {
-      $variables['next'] = $topic->nid;
-      $variables['next_title'] = check_plain($topic->title);
-      $variables['next_url'] = url("node/$topic->nid");
-      break;
-    }
-    if ($topic->nid == $variables['node']->nid) {
-      $stop = 1;
-    }
-    else {
-      $variables['prev'] = $topic->nid;
-      $variables['prev_title'] = check_plain($topic->title);
-      $variables['prev_url'] = url("node/$topic->nid");
-    }
   }
 }
 
