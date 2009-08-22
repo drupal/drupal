@@ -2300,11 +2300,12 @@ function system_update_7032() {
  * Move CACHE_AGGRESSIVE to CACHE_NORMAL.
  */
 function system_update_7033() {
+  $ret = array();
   if (variable_get('cache') == 2) {
     variable_set('cache', CACHE_NORMAL);
     $ret[] = array('success' => TRUE, 'query' => "Aggressive caching was disabled and replaced with normal caching, please read the page caching section in default.settings.php for more information on how to enable similar functionality.");
   }
-  return array();
+  return $ret;
 }
 
 /**
