@@ -65,7 +65,7 @@ function menu_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_edit_menu', 'add'),
     'access arguments' => array('administer menu'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
   );
   $items['admin/structure/menu/settings'] = array(
     'title' => 'Settings',
@@ -94,7 +94,7 @@ function menu_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('menu_edit_item', 'add', NULL, 3),
     'access arguments' => array('administer menu'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
   );
   $items['admin/structure/menu-customize/%menu/edit'] = array(
     'title' => 'Edit menu',

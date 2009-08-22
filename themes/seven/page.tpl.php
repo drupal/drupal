@@ -33,6 +33,7 @@
           <?php print $help; ?>
         </div>
       <?php endif; ?>
+      <?php if ($action_links): ?><ul class="action-links"><?php print $action_links; ?></ul><?php endif; ?>
       <?php print $content; ?>
     </div>
 

@@ -4343,6 +4343,9 @@ function drupal_common_theme() {
     'menu_local_task' => array(
       'arguments' => array('link' => NULL, 'active' => FALSE),
     ),
+    'menu_local_action' => array(
+      'arguments' => array('link' => NULL),
+    ),
     'menu_local_tasks' => array(
       'arguments' => array(),
     ),

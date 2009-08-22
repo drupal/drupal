@@ -54,6 +54,7 @@
           <?php if ($tabs2): ?><ul class="tabs secondary"><?php print $tabs2 ?></ul><?php endif; ?>
           <?php if ($show_messages && $messages): print $messages; endif; ?>
           <?php print $help; ?>
+          <?php if ($action_links): ?><ul class="action-links"><?php print $action_links; ?></ul><?php endif; ?>
           <div class="clearfix">
             <?php print $content ?>
           </div>
