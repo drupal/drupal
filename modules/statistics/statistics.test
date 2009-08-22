@@ -53,7 +53,7 @@ class StatisticsBlockVisitorsTestCase extends DrupalWebTestCase {
     $this->assertText(t('IP address blocking'), t('IP blocking page displayed.'));
     $edit = array();
     $edit['ip'] = $test_ip_address;
-    $this->drupalPost('admin/config/people/ip-blocking', $edit, t('Save'));
+    $this->drupalPost('admin/settings/ip-blocking', $edit, t('Save'));
     $ip = db_query("SELECT iid from {blocked_ips} WHERE ip = :ip", array(':ip' => $edit['ip']))->fetchField();
     $this->assertNotEqual($ip, FALSE, t('IP address found in database'));
     $this->assertRaw(t('The IP address %ip has been blocked.', array('%ip' => $edit['ip'])), t('IP address was blocked.'));
@@ -66,7 +66,7 @@ class StatisticsBlockVisitorsTestCase extends DrupalWebTestCase {
     $this->clickLink('unblock IP address');
     $this->assertRaw(t('Are you sure you want to delete %ip?', array('%ip' => $test_ip_address)), t('IP address deletion confirmation found.'));
     $edit = array();
-    $this->drupalPost('admin/config/people/ip-blocking/delete/1', NULL, t('Delete'));
+    $this->drupalPost('admin/settings/ip-blocking/delete/1', NULL, t('Delete'));
     $this->assertRaw(t('The IP address %ip was deleted.', array('%ip' => $test_ip_address)), t('IP address deleted.'));
   }
 }

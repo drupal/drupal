@@ -1162,7 +1162,7 @@ function system_ip_blocking() {
   foreach ($result as $ip) {
     $rows[] = array(
       $ip->ip,
-      l(t('delete'), "admin/config/people/ip-blocking/delete/$ip->iid"),
+      l(t('delete'), "admin/settings/ip-blocking/delete/$ip->iid"),
     );
   }
 
@@ -1221,7 +1221,7 @@ function system_ip_blocking_form_submit($form, &$form_state) {
     ->fields(array('ip' => $ip))
     ->execute();
   drupal_set_message(t('The IP address %ip has been blocked.', array('%ip' => $ip)));
-  $form_state['redirect'] = 'admin/config/people/ip-blocking';
+  $form_state['redirect'] = 'admin/settings/ip-blocking';
   return;
 }
 
@@ -1235,7 +1235,7 @@ function system_ip_blocking_delete(&$form_state, $iid) {
     '#type' => 'value',
     '#value' => $iid,
   );
-  return confirm_form($form, t('Are you sure you want to delete %ip?', array('%ip' => $iid['ip'])), 'admin/config/people/ip-blocking', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
+  return confirm_form($form, t('Are you sure you want to delete %ip?', array('%ip' => $iid['ip'])), 'admin/settings/ip-blocking', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
 }
 
 /**
@@ -1248,7 +1248,7 @@ function system_ip_blocking_delete_submit($form, &$form_state) {
     ->execute();
   watchdog('user', 'Deleted %ip', array('%ip' => $blocked_ip['ip']));
   drupal_set_message(t('The IP address %ip was deleted.', array('%ip' => $blocked_ip['ip'])));
-  $form_state['redirect'] = 'admin/config/people/ip-blocking';
+  $form_state['redirect'] = 'admin/settings/ip-blocking';
 }
 
 /**
