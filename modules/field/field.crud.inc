@@ -1,5 +1,5 @@
 <?php
-// $Id: field.crud.inc,v 1.26 2009/08/19 13:31:12 webchick Exp $
+// $Id: field.crud.inc,v 1.27 2009/08/22 00:58:52 webchick Exp $
 
 /**
  * @file
@@ -46,6 +46,8 @@
  * - cardinality (integer)
  *     The number of values the field can hold. Legal values are any
  *     positive integer or FIELD_CARDINALITY_UNLIMITED.
+ * - translatable (integer)
+ *     Whether the field is translatable.
  * - locked (integer)
  *     TODO: undefined.
  * - module (string, read-only)
@@ -237,6 +239,7 @@ function field_create_field($field) {
 
   $field += array(
     'cardinality' => 1,
+    'translatable' => FALSE,
     'locked' => FALSE,
     'settings' => array(),
   );

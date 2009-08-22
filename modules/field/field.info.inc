@@ -1,5 +1,5 @@
 <?php
-// $Id: field.info.inc,v 1.13 2009/08/19 13:31:12 webchick Exp $
+// $Id: field.info.inc,v 1.14 2009/08/22 00:58:52 webchick Exp $
 
 /**
  * @file
@@ -130,6 +130,7 @@ function _field_info_collate_types($reset = FALSE) {
           // Provide defaults.
           $fieldable_info += array(
             'cacheable' => TRUE,
+            'translation_handlers' => array(),
             'bundles' => array(),
           );
           $fieldable_info['object keys'] += array(

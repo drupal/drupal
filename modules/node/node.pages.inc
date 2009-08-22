@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.75 2009/08/19 13:31:13 webchick Exp $
+// $Id: node.pages.inc,v 1.76 2009/08/22 00:58:54 webchick Exp $
 
 /**
  * @file
@@ -285,7 +285,7 @@ function node_form(&$form_state, $node) {
   $form['#theme'] = array($node->type . '_node_form', 'node_form');
 
   $form['#builder_function'] = 'node_form_submit_build_node';
-  field_attach_form('node', $node, $form, $form_state);
+  field_attach_form('node', $node, $form, $form_state, $node->language);
 
   return $form;
 }

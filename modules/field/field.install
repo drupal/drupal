@@ -1,5 +1,5 @@
 <?php
-// $Id: field.install,v 1.11 2009/08/13 01:50:00 webchick Exp $
+// $Id: field.install,v 1.12 2009/08/22 00:58:52 webchick Exp $
 
 /**
  * @file
@@ -58,6 +58,12 @@ function field_schema() {
         'default' => '',
       ),
       'cardinality' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'translatable' => array(
         'type' => 'int',
         'size' => 'tiny',
         'not null' => TRUE,

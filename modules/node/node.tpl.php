@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tpl.php,v 1.19 2009/08/06 05:05:59 webchick Exp $
+// $Id: node.tpl.php,v 1.20 2009/08/22 00:58:54 webchick Exp $
 
 /**
  * @file
@@ -58,6 +58,13 @@
  * - $is_front: Flags true when presented in the front page.
  * - $logged_in: Flags true when the current user is a logged-in member.
  * - $is_admin: Flags true when the current user is an administrator.
+ *
+ * Field variables: for each field instance attached to the node a corresponding
+ * variable is defined, e.g. $node->body becomes $body. When needing to access
+ * a field's raw values, developers/themers are strongly encouraged to use these
+ * variables. Otherwise they will have to explicitly specify the desired field
+ * language, e.g. $node->body['en'], thus overriding any language negotiation
+ * rule that was previously applied.
  *
  * @see template_preprocess()
  * @see template_preprocess_node()

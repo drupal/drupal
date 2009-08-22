@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.test,v 1.29 2009/08/17 19:14:40 webchick Exp $
+// $Id: aggregator.test,v 1.30 2009/08/22 00:58:52 webchick Exp $
 
 /**
  * @file
@@ -248,11 +248,12 @@ EOF;
   }
 
   function createSampleNodes() {
+    $langcode = FIELD_LANGUAGE_NONE;
     // Post 5 articles.
     for ($i = 0; $i < 5; $i++) {
       $edit = array();
       $edit['title'] = $this->randomName();
-      $edit['body[0][value]'] = $this->randomName();
+      $edit["body[$langcode][0][value]"] = $this->randomName();
       $this->drupalPost('node/add/article', $edit, t('Save'));
     }
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: field.tpl.php,v 1.3 2009/06/22 09:10:04 dries Exp $
+// $Id: field.tpl.php,v 1.4 2009/08/22 00:58:53 webchick Exp $
 
 /**
  * @file field-field.tpl.php
@@ -18,6 +18,8 @@
  * - $label: The item label.
  * - $label_display: Position of label display, inline, above, or hidden.
  * - $field_empty: Whether the field has any valid value.
+ * - $field_language: The field language.
+ * - $field_translatable: Whether the field is translatable or not.
  *
  * Each $item in $items contains:
  * - 'view' - the themed view for that item

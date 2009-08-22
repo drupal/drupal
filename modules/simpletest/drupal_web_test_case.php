@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal_web_test_case.php,v 1.140 2009/08/21 07:50:07 webchick Exp $
+// $Id: drupal_web_test_case.php,v 1.141 2009/08/22 00:58:54 webchick Exp $
 
 /**
  * Base class for Drupal tests.
@@ -693,7 +693,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected function drupalCreateNode($settings = array()) {
     // Populate defaults array.
     $settings += array(
-      'body'      => array(array()),
+      'body'      => array(FIELD_LANGUAGE_NONE => array(array())),
       'title'     => $this->randomName(8),
       'comment'   => 2,
       'changed'   => REQUEST_TIME,
@@ -730,7 +730,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       'value' => $this->randomName(32),
       'format' => FILTER_FORMAT_DEFAULT
     );
-    $settings['body'][0] += $body;
+    $settings['body'][FIELD_LANGUAGE_NONE][0] += $body;
 
     $node = (object) $settings;
     node_save($node);
