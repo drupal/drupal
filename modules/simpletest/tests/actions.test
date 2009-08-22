@@ -6,7 +6,7 @@ class ActionsConfigurationTestCase extends DrupalWebTestCase {
     return array(
       'name' => 'Actions configuration',
       'description' => 'Tests complex actions configuration by adding, editing, and deleting a complex action.',
-      'group' => 'System',
+      'group' => 'Actions',
     );
   }
 
@@ -59,5 +59,67 @@ class ActionsConfigurationTestCase extends DrupalWebTestCase {
     $this->assertNoText($new_action_description, t("Make sure the action description does not appear on the overview page after we've deleted the action."));
     $exists = db_query('SELECT aid FROM {actions} WHERE callback = :callback', array(':callback' => 'drupal_goto_action'))->fetchField();
     $this->assertFalse($exists, t('Make sure the action is gone from the database after being deleted.'));
+  }
+}
+
+/**
+ * Test actions executing in a potential loop, and make sure they abort properly.
+ */
+class ActionLoopTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Actions executing in a potentially infinite loop',
+      'description' => 'Tests actions executing in a loop, and makes sure they abort properly.',
+      'group' => 'Actions',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('dblog', 'trigger', 'actions_loop_test');
+  }
+
+  /**
+   * Set up a loop with 10-50 recursions, and see if it aborts properly.
+   */
+  function testActionLoop() {
+    $user = $this->drupalCreateUser(array('administer actions'));
+    $this->drupalLogin($user);
+
+    $hash = md5('actions_loop_test_log');
+    $edit = array('aid' => $hash);
+    $this->drupalPost('admin/structure/trigger/actions_loop_test', $edit, t('Assign'));
+
+    // Delete any existing watchdog messages to clear the plethora of
+    // "Action added" messages from when Drupal was installed.
+    db_delete('watchdog')->execute();
+    $this->triggerActions();
+
+    // Clear the log again for another test, this time with a random maximum.
+    db_delete('watchdog')->execute();
+    variable_set('actions_max_stack', mt_rand(10, 50));
+    $this->triggerActions();
+  }
+
+  /**
+   * Create an infinite loop by causing a watchdog message to be set,
+   * which causes the actions to be triggered again, up to default of 35 times.
+   */
+  protected function triggerActions() {
+    $this->drupalGet('<front>', array('query' => array('trigger_actions_on_watchdog' => TRUE)));
+    $expected = array();
+    $expected[] = 'Triggering action loop';
+    for ($i = 1; $i <= variable_get('actions_max_stack', 35); $i++) {
+      $expected[] = "Test log #$i";
+    }
+    $expected[] = 'Stack overflow: too many calls to actions_do(). Aborting to prevent infinite recursion.';
+
+    $result = db_query("SELECT * FROM {watchdog} WHERE type = 'actions_loop_test' OR type = 'actions' ORDER BY timestamp");
+    $loop_started = FALSE;
+    while ($row = db_fetch_object($result)) {
+      
+      $expected_message = array_shift($expected);
+      $this->assertEqual($row->message, $expected_message, t('Expected message %expected, got %message.', array('%expected' => $expected_message, '%message' => $row->message)));
+    }
+    $this->assertTrue(empty($expected), t('All expected messages found.'));
   }
 }

@@ -39,47 +39,15 @@ function trigger_menu() {
     'title' => 'Triggers',
     'description' => 'Tell Drupal when to execute actions.',
     'page callback' => 'trigger_assign',
-    'access callback' => 'trigger_access_check',
-    'access arguments' => array('node'),
+    'access arguments' => array('administer actions'),
   );
-  // We don't use a menu wildcard here because these are tabs,
-  // not invisible items.
-  $items['admin/structure/trigger/node'] = array(
-    'title' => 'Content',
-    'page callback' => 'trigger_assign',
-    'page arguments' => array('node'),
-    'access callback' => 'trigger_access_check',
-    'access arguments' => array('node'),
-    'type' => MENU_LOCAL_TASK,
-  );
-  $items['admin/structure/trigger/user'] = array(
-    'title' => 'Users',
-    'page callback' => 'trigger_assign',
-    'page arguments' => array('user'),
-    'access callback' => 'trigger_access_check',
-    'access arguments' => array('user'),
-    'type' => MENU_LOCAL_TASK,
-  );
-  $items['admin/structure/trigger/comment'] = array(
-    'title' => 'Comments',
-    'page callback' => 'trigger_assign',
-    'page arguments' => array('comment'),
-    'access callback' => 'trigger_access_check',
-    'access arguments' => array('comment'),
-    'type' => MENU_LOCAL_TASK,
-  );
-  $items['admin/structure/trigger/taxonomy'] = array(
-    'title' => 'Taxonomy',
-    'page callback' => 'trigger_assign',
-    'page arguments' => array('taxonomy'),
-    'access callback' => 'trigger_access_check',
-    'access arguments' => array('taxonomy'),
-    'type' => MENU_LOCAL_TASK,
-  );
+
+  // Explicitly define the system menu item so we can label it "cron" rather
+  // than "system".
   $items['admin/structure/trigger/cron'] = array(
     'title' => 'Cron',
     'page callback' => 'trigger_assign',
-    'page arguments' => array('cron'),
+    'page arguments' => array('system'),
     'access arguments' => array('administer actions'),
     'type' => MENU_LOCAL_TASK,
   );
@@ -88,11 +56,12 @@ function trigger_menu() {
   // their hooks and have actions assignable to them.
   $hooks = module_invoke_all('hook_info');
   foreach ($hooks as $module => $hook) {
-    // We've already done these.
-    if (in_array($module, array('node', 'comment', 'user', 'system', 'taxonomy'))) {
+    // We've already done system.module.
+    if ($module == 'system') {
       continue;
     }
     $info = db_select('system')
+      ->fields('system', array('info'))
       ->condition('name', $module)
       ->execute()
       ->fetchField();
@@ -102,7 +71,7 @@ function trigger_menu() {
       'title' => $nice_name,
       'page callback' => 'trigger_assign',
       'page arguments' => array($module),
-      'access arguments' => array($module),
+      'access arguments' => array('administer actions'),
       'type' => MENU_LOCAL_TASK,
     );
   }
@@ -116,13 +85,6 @@ function trigger_menu() {
   );
 
   return $items;
-}
-
-/**
- * Access callback for menu system.
- */
-function trigger_access_check($module) {
-  return (module_exists($module) && user_access('administer actions'));
 }
 
 /**
