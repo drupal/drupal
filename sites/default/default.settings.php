@@ -221,17 +221,6 @@ ini_set('session.gc_maxlifetime', 200000);
 ini_set('session.cookie_lifetime', 2000000);
 
 /**
- * If you encounter a situation where users post a large amount of text, and
- * the result is stripped out upon viewing but can still be edited, Drupal's
- * output filter may not have sufficient memory to process it. If you
- * experience this issue, you may wish to uncomment the following two lines
- * and increase the limits of these variables. For more information, see
- * http://php.net/manual/en/pcre.configuration.php.
- */
-# ini_set('pcre.backtrack_limit', 200000);
-# ini_set('pcre.recursion_limit', 200000);
-
-/**
  * Drupal automatically generates a unique session cookie name for each site
  * based on on its full domain name. If you have multiple domains pointing at
  * the same Drupal site, you can either redirect them all to a single domain
@@ -352,16 +341,3 @@ $conf = array(
 # $conf['blocked_ips'] = array(
 #   'a.b.c.d',
 # );
-
-/**
- * Page caching:
- *
- * To use a caching backend that does not use the database for page cache,
- * set cache_inc to the file which provides this backend and set
- * page_cache_without_database to TRUE. For additional speedup,
- * page_cache_invoke_hooks can be set to FALSE to skip calling hook_boot and
- * hook_exit which are the only hooks fired during serving a cached page.
- */
-# $conf['cache_inc'] = DRUPAL_ROOT . '/sites/all/modules/memcache/memcache.inc';
-# $conf['page_cache_without_database'] = TRUE;
-# $conf['page_cache_invoke_hooks'] = FALSE;

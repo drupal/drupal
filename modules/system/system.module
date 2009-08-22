@@ -733,7 +733,7 @@ function system_menu() {
    'access arguments' => array('admin/config/media', 'access administration pages'),
   );
   $items['admin/config/media/file-system'] = array(
-    'title' => 'File-system',
+    'title' => 'File system',
     'description' => 'Tell Drupal where to store uploaded files and how they are accessed.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_file_system_settings'),
