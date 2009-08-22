@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.508 2009/08/22 14:34:18 webchick Exp $
+// $Id: theme.inc,v 1.509 2009/08/22 15:55:37 dries Exp $
 
 /**
  * @file
@@ -1802,7 +1802,7 @@ function theme_more_help_link($url) {
  *   A descriptive title of the feed.
   */
 function theme_feed_icon($url, $title) {
-  if ($image = theme('image', 'misc/feed.png', t('Syndicate content'), $title)) {
+  if ($image = theme('image', 'misc/feed.png', t('Subscribe to %feed-title', array('%feed-title' => $title)))) {
     return '<a href="' . check_url($url) . '" class="feed-icon">' . $image . '</a>';
   }
 }
