@@ -171,7 +171,7 @@ function theme_profile_admin_overview($form) {
  * @see profile_field_form_submit()
  */
 function profile_field_form(&$form_state, $arg = NULL) {
-  if (arg(3) == 'edit') {
+  if (arg(4) == 'edit') {
     if (is_numeric($arg)) {
       $fid = $arg;
 
