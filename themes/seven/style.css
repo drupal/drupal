@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.12 2009/08/21 07:59:47 webchick Exp $ */
+/* $Id: style.css,v 1.13 2009/08/22 19:58:28 webchick Exp $ */
 
 /**
  * Generic elements
@@ -606,6 +606,16 @@ html.js input.form-autocomplete {
 
 html.js input.throbbing {
   background-position: 100% -16px;
+}
+
+ul.action-links {
+  margin: 1em 0;
+  overflow: hidden;
+}
+
+ul.action-links li {
+  float: left;
+  margin: 0 1em 0 0;
 }
 
 /* Exceptions */

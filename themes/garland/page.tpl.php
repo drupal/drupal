@@ -1,5 +1,5 @@
 <?php
-// $Id: page.tpl.php,v 1.31 2009/08/03 03:04:34 webchick Exp $
+// $Id: page.tpl.php,v 1.32 2009/08/22 19:58:28 webchick Exp $
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
   "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php print $language->language ?>" dir="<?php print $language->dir ?>"
@@ -54,6 +54,7 @@
           <?php if ($tabs2): ?><ul class="tabs secondary"><?php print $tabs2 ?></ul><?php endif; ?>
           <?php if ($show_messages && $messages): print $messages; endif; ?>
           <?php print $help; ?>
+          <?php if ($action_links): ?><ul class="action-links"><?php print $action_links; ?></ul><?php endif; ?>
           <div class="clearfix">
             <?php print $content ?>
           </div>
