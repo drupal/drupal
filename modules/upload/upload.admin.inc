@@ -76,7 +76,7 @@ function upload_admin_settings() {
   $form['settings_general']['upload_max_resolution'] = array(
     '#type' => 'item',
     '#title' => t('Maximum resolution for uploaded images'),
-    '#description' => t('The maximum allowed image size (e.g. 640x480). Set to 0x0 for no restriction. If an <a href="!image-toolkit-link">image toolkit</a> is installed, files exceeding this value will be scaled down to fit.', array('!image-toolkit-link' => url('admin/settings/image-toolkit'))),
+    '#description' => t('The maximum allowed image size (e.g. 640x480). Set to 0x0 for no restriction. If an <a href="!image-toolkit-link">image toolkit</a> is installed, files exceeding this value will be scaled down to fit.', array('!image-toolkit-link' => url('admin/config/media/image-toolkit'))),
     '#prefix' => '<div class="form-item-wrapper form-item-resolution">',
     '#suffix' => '</div>',
   );
