@@ -50,8 +50,9 @@ class TextFieldTestCase extends DrupalWebTestCase {
     field_create_instance($this->instance);
     // Test valid and invalid values with field_attach_validate().
     $entity = field_test_create_stub_entity(0, 0, FIELD_TEST_BUNDLE);
+    $langcode = FIELD_LANGUAGE_NONE;
     for ($i = 0; $i <= $max_length + 2; $i++) {
-      $entity->{$this->field['field_name']}[0]['value'] = str_repeat('x', $i);
+      $entity->{$this->field['field_name']}[$langcode][0]['value'] = str_repeat('x', $i);
       try {
         field_attach_validate('test_entity', $entity);
         $this->assertTrue($i <= $max_length, "Length $i does not cause validation error when max_length is $max_length");
@@ -91,16 +92,17 @@ class TextFieldTestCase extends DrupalWebTestCase {
       )
     );
     field_create_instance($this->instance);
+    $langcode = FIELD_LANGUAGE_NONE;
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test-bundle');
-    $this->assertFieldByName($this->field_name . '[0][value]', '', t('Widget is displayed'));
-    $this->assertNoFieldByName($this->field_name . '[0][format]', '1', t('Format selector is not displayed'));
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', t('Widget is displayed'));
+    $this->assertNoFieldByName("{$this->field_name}[$langcode][0][format]", '1', t('Format selector is not displayed'));
 
     // Submit with some value.
     $value = $this->randomName();
     $edit = array(
-      $this->field_name . '[0][value]' => $value,
+      "{$this->field_name}[$langcode][0][value]" => $value,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
@@ -143,18 +145,19 @@ class TextFieldTestCase extends DrupalWebTestCase {
       )
     );
     field_create_instance($this->instance);
+    $langcode = FIELD_LANGUAGE_NONE;
 
     // Display creation form.
     // By default, the user only has access to 'Filtered HTML', and no format
     // selector is displayed
     $this->drupalGet('test-entity/add/test-bundle');
-    $this->assertFieldByName($this->field_name . '[0][value]', '', t('Widget is displayed'));
-    $this->assertNoFieldByName($this->field_name . '[0][value_format]', '1', t('Format selector is not displayed'));
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', t('Widget is displayed'));
+    $this->assertNoFieldByName("{$this->field_name}[$langcode][0][value_format]", '1', t('Format selector is not displayed'));
 
     // Submit with data that should be filtered.
     $value = $this->randomName() . '<br />' . $this->randomName();
     $edit = array(
-      $this->field_name . '[0][value]' => $value,
+      "{$this->field_name}[$langcode][0][value]" => $value,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
@@ -174,12 +177,12 @@ class TextFieldTestCase extends DrupalWebTestCase {
     // Display edition form.
     // We should now have a 'text format' selector.
     $this->drupalGet('test-entity/' . $id . '/edit');
-    $this->assertFieldByName($this->field_name . '[0][value]', '', t('Widget is displayed'));
-    $this->assertFieldByName($this->field_name . '[0][value_format]', '1', t('Format selector is displayed'));
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', t('Widget is displayed'));
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][value_format]", '1', t('Format selector is displayed'));
 
     // Edit and change the format to 'Full HTML'.
     $edit = array(
-      $this->field_name . '[0][value_format]' => 2,
+      "{$this->field_name}[$langcode][0][value_format]" => 2,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), t('Entity was updated'));

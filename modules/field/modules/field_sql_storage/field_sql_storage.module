@@ -144,8 +144,16 @@ function _field_sql_storage_schema($field) {
         'not null' => TRUE,
         'description' => 'The sequence number for this data item, used for multi-value fields',
       ),
+      // @todo Consider storing language as integer.
+      'language' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The language for this data item.',
+      ),
     ),
-    'primary key' => array('etid', 'entity_id', 'deleted', 'delta'),
+    'primary key' => array('etid', 'entity_id', 'deleted', 'delta', 'language'),
     // TODO : index on 'bundle'
   );
 
@@ -169,7 +177,7 @@ function _field_sql_storage_schema($field) {
   $revision = $current;
   $revision['description'] = "Revision archive storage for {$deleted}field {$field['id']} ({$field['field_name']})";
   $revision['revision_id']['description'] = 'The entity revision id this data is attached to';
-  $revision['primary key'] = array('etid', 'revision_id', 'deleted', 'delta');
+  $revision['primary key'] = array('etid', 'revision_id', 'deleted', 'delta', 'language');
 
   return array(
     _field_sql_storage_tablename($field) => $current,
@@ -224,7 +232,7 @@ function field_sql_storage_field_storage_load($obj_type, $objects, $age, $skip_f
       if (!isset($skip_fields[$instance['field_id']]) && (!isset($options['field_id']) || $options['field_id'] == $instance['field_id'])) {
         $objects[$id]->{$field_name} = array();
         $field_ids[$instance['field_id']][] = $load_current ? $id : $vid;
-        $delta_count[$id][$field_name] = 0;
+        $delta_count[$id][$field_name] = array();
       }
     }
   }
@@ -238,6 +246,7 @@ function field_sql_storage_field_storage_load($obj_type, $objects, $age, $skip_f
       ->fields('t')
       ->condition('etid', $etid)
       ->condition($load_current ? 'entity_id' : 'revision_id', $ids, 'IN')
+      ->condition('language', field_multilingual_available_languages($obj_type, $field), 'IN')
       ->orderBy('delta');
 
     if (empty($options['deleted'])) {
@@ -247,7 +256,11 @@ function field_sql_storage_field_storage_load($obj_type, $objects, $age, $skip_f
     $results = $query->execute();
 
     foreach ($results as $row) {
-      if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$field_name] < $field['cardinality']) {
+      if (!isset($delta_count[$row->entity_id][$field_name][$row->language])) {
+        $delta_count[$row->entity_id][$field_name][$row->language] = 0;
+      }
+
+      if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$field_name][$row->language] < $field['cardinality']) {
         $item = array();
         // For each column declared by the field, populate the item
         // from the prefixed database column.
@@ -257,8 +270,8 @@ function field_sql_storage_field_storage_load($obj_type, $objects, $age, $skip_f
         }
 
         // Add the item to the field values for the entity.
-        $objects[$row->entity_id]->{$field_name}[] = $item;
-        $delta_count[$row->entity_id][$field_name]++;
+        $objects[$row->entity_id]->{$field_name}[$row->language][] = $item;
+        $delta_count[$row->entity_id][$field_name][$row->language]++;
       }
     }
   }
@@ -288,17 +301,33 @@ function field_sql_storage_field_storage_write($obj_type, $object, $op, $skip_fi
     // Function property_exists() is slower, so we catch the more frequent cases
     // where it's an empty array with the faster isset().
     if (isset($object->$field_name) || property_exists($object, $field_name)) {
+      $available_languages = field_multilingual_available_languages($obj_type, $field);
+      $available_translations = is_array($object->$field_name) ? array_intersect($available_languages, array_keys($object->$field_name)) : FALSE;
+
       // Delete and insert, rather than update, in case a value was added.
-      if ($op == FIELD_STORAGE_UPDATE) {
-        db_delete($table_name)->condition('etid', $etid)->condition('entity_id', $id)->execute();
+      // If no translation is available, empty the field for all the available languages.
+      if ($op == FIELD_STORAGE_UPDATE && count($available_translations)) {
+        $languages = empty($object->$field_name) ? $available_languages : $available_translations;
+
+        db_delete($table_name)
+          ->condition('etid', $etid)
+          ->condition('entity_id', $id)
+          ->condition('language', $languages, 'IN')
+          ->execute();
+
         if (isset($vid)) {
-          db_delete($revision_name)->condition('etid', $etid)->condition('entity_id', $id)->condition('revision_id', $vid)->execute();
+          db_delete($revision_name)
+            ->condition('etid', $etid)
+            ->condition('entity_id', $id)
+            ->condition('revision_id', $vid)
+            ->condition('language', $languages, 'IN')
+            ->execute();
         }
       }
 
-      if ($object->$field_name) {
+      if (!empty($available_translations)) {
         // Prepare the multi-insert query.
-        $columns = array('etid', 'entity_id', 'revision_id', 'bundle', 'delta');
+        $columns = array('etid', 'entity_id', 'revision_id', 'bundle', 'delta', 'language');
         foreach ($field['columns'] as $column => $attributes) {
           $columns[] = _field_sql_storage_columnname($field_name, $column);
         }
@@ -307,25 +336,30 @@ function field_sql_storage_field_storage_write($obj_type, $object, $op, $skip_fi
           $revision_query = db_insert($revision_name)->fields($columns);
         }
 
-        $delta_count = 0;
-        foreach ($object->$field_name as $delta => $item) {
-          $record = array(
-            'etid' => $etid,
-            'entity_id' => $id,
-            'revision_id' => $vid,
-            'bundle' => $bundle,
-            'delta' => $delta,
-          );
-          foreach ($field['columns'] as $column => $attributes) {
-            $record[_field_sql_storage_columnname($field_name, $column)] = isset($item[$column]) ? $item[$column] : NULL;
-          }
-          $query->values($record);
-          if (isset($vid)) {
-            $revision_query->values($record);
-          }
+        foreach ($available_translations as $langcode) {
+          if ($items = $object->{$field_name}[$langcode]) {
+            $delta_count = 0;
+            foreach ($items as $delta => $item) {
+              $record = array(
+                'etid' => $etid,
+                'entity_id' => $id,
+                'revision_id' => $vid,
+                'bundle' => $bundle,
+                'delta' => $delta,
+                'language' => $langcode,
+              );
+              foreach ($field['columns'] as $column => $attributes) {
+                $record[_field_sql_storage_columnname($field_name, $column)] = isset($item[$column]) ? $item[$column] : NULL;
+              }
+              $query->values($record);
+              if (isset($vid)) {
+                $revision_query->values($record);
+              }
 
-          if ($field['cardinality'] != FIELD_CARDINALITY_UNLIMITED && ++$delta_count == $field['cardinality']) {
-            break;
+              if ($field['cardinality'] != FIELD_CARDINALITY_UNLIMITED && ++$delta_count == $field['cardinality']) {
+                break;
+              }
+            }
           }
         }
 

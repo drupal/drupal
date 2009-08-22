@@ -16,6 +16,13 @@
  * included by modules. $user_profile['user_picture'] is available
  * for showing the account picture.
  *
+ * Field variables: for each field instance attached to the user a corresponding
+ * variable is defined, e.g. $user->field_example becomes $field_example. When
+ * needing to access a field's raw values, developers/themers are strongly
+ * encouraged to use these variables. Otherwise they will have to explicitly
+ * specify the desired field language, e.g. $user->field_example['en'], thus
+ * overriding any language negotiation rule that was previously applied.
+ *
  * @see user-profile-category.tpl.php
  *   Where the html is handled for the group.
  * @see user-profile-field.tpl.php

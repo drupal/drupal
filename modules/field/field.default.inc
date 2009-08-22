@@ -11,17 +11,17 @@
  * the corresponding field_attach_[operation]() function.
  */
 
-function field_default_extract_form_values($obj_type, $object, $field, $instance, &$items, $form, &$form_state) {
+function field_default_extract_form_values($obj_type, $object, $field, $instance, $langcode, &$items, $form, &$form_state) {
   $field_name = $field['field_name'];
 
-  if (isset($form_state['values'][$field_name])) {
-    $items = $form_state['values'][$field_name];
+  if (isset($form_state['values'][$field_name][$langcode])) {
+    $items = $form_state['values'][$field_name][$langcode];
     // Remove the 'value' of the 'add more' button.
     unset($items[$field_name . '_add_more']);
   }
 }
 
-function field_default_submit($obj_type, $object, $field, $instance, &$items, $form, &$form_state) {
+function field_default_submit($obj_type, $object, $field, $instance, $langcode, &$items, $form, &$form_state) {
   $field_name = $field['field_name'];
 
   // Reorder items to account for drag-n-drop reordering.
@@ -40,19 +40,25 @@ function field_default_submit($obj_type, $object, $field, $instance, &$items, $f
  * This can happen with programmatic saves, or on form-based creation where
  * the current user doesn't have 'edit' permission for the field.
  */
-function field_default_insert($obj_type, $object, $field, $instance, &$items) {
+function field_default_insert($obj_type, $object, $field, $instance, $langcode, &$items) {
   // _field_invoke() populates $items with an empty array if the $object has no
   // entry for the field, so we check on the $object itself.
-  if (empty($object) || !property_exists($object, $field['field_name'])) {
-    $items = field_get_default_value($obj_type, $object, $field, $instance);
+  // We also check that the current field translation is actually defined before
+  // assigning it a default value. This way we ensure that only the intended
+  // languages get a default value. Otherwise we could have default values for
+  // not yet open languages.
+  if (empty($object) || !property_exists($object, $field['field_name']) || 
+    (isset($object->{$field['field_name']}[$langcode]) && count($object->{$field['field_name']}[$langcode]) == 0)) {
+    $items = field_get_default_value($obj_type, $object, $field, $instance, $langcode);
   }
 }
+
 /**
  * Default field 'view' operation.
  *
  * @see field_attach_view()
  */
-function field_default_view($obj_type, $object, $field, $instance, $items, $build_mode) {
+function field_default_view($obj_type, $object, $field, $instance, $langcode, $items, $build_mode) {
   list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
 
   $addition = array();
@@ -82,6 +88,7 @@ function field_default_view($obj_type, $object, $field, $instance, $items, $buil
       '#label_display' => $label_display,
       '#build_mode' => $build_mode,
       '#single' => $single,
+      '#language' => $langcode,
       'items' => array(),
     );
 
@@ -117,7 +124,7 @@ function field_default_view($obj_type, $object, $field, $instance, $items, $buil
   return $addition;
 }
 
-function field_default_prepare_translation($obj_type, $object, $field, $instance, &$items) {
+function field_default_prepare_translation($obj_type, $object, $field, $instance, $langcode, &$items) {
   $addition = array();
   if (isset($object->translation_source->$field['field_name'])) {
     $addition[$field['field_name']] = $object->translation_source->$field['field_name'];

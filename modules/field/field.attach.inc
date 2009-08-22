@@ -176,6 +176,7 @@ function _field_invoke($op, $obj_type, $object, &$a = NULL, &$b = NULL, $options
   $default_options = array(
     'default' => FALSE,
     'deleted' => FALSE,
+    'language' => NULL,
   );
   $options += $default_options;
 
@@ -196,31 +197,37 @@ function _field_invoke($op, $obj_type, $object, &$a = NULL, &$b = NULL, $options
     // When in 'single field' mode, only act on the specified field.
     if ((!isset($options['field_id']) || $options['field_id'] == $instance['field_id']) && (!isset($options['field_name']) || $options['field_name'] == $field_name)) {
       $field = field_info_field($field_name);
+      $field_translations = array();
+      $suggested_languages = empty($options['language']) ? NULL : array($options['language']);
 
-      // Extract the field values into a separate variable, easily accessed by
-      // hook implementations.
-      $items = isset($object->$field_name) ? $object->$field_name : array();
+      // Initialize field translations according to the available languages.
+      foreach (field_multilingual_available_languages($obj_type, $field, $suggested_languages) as $langcode) {
+        $field_translations[$langcode] = isset($object->{$field_name}[$langcode]) ? $object->{$field_name}[$langcode] : array();
+      }
 
       // Invoke the field hook and collect results.
       $function = $options['default'] ? 'field_default_' . $op : $field['module'] . '_field_' . $op;
       if (drupal_function_exists($function)) {
-        $result = $function($obj_type, $object, $field, $instance, $items, $a, $b);
-        if (isset($result)) {
-          // For hooks with array results, we merge results together.
-          // For hooks with scalar results, we collect results in an array.
-          if (is_array($result)) {
-            $return = array_merge($return, $result);
+        // Iterate over all the field translations.
+        foreach ($field_translations as $langcode => $items) {
+          $result = $function($obj_type, $object, $field, $instance, $langcode, $items, $a, $b);
+          if (isset($result)) {
+            // For hooks with array results, we merge results together.
+            // For hooks with scalar results, we collect results in an array.
+            if (is_array($result)) {
+              $return = array_merge($return, $result);
+            }
+            else {
+              $return[] = $result;
+            }
           }
-          else {
-            $return[] = $result;
+
+          // Populate $items back in the field values, but avoid replacing missing
+          // fields with an empty array (those are not equivalent on update).
+          if ($items !== array() || isset($object->{$field_name}[$langcode])) {
+            $object->{$field_name}[$langcode] = $items;
           }
         }
-      }
-
-      // Populate field values back in the object, but avoid replacing missing
-      // fields with an empty array (those are not equivalent on update).
-      if ($items !== array() || property_exists($object, $field_name)) {
-        $object->$field_name = $items;
       }
     }
   }
@@ -273,6 +280,7 @@ function _field_invoke_multiple($op, $obj_type, $objects, &$a = NULL, &$b = NULL
   $default_options = array(
     'default' => FALSE,
     'deleted' => FALSE,
+    'language' => NULL,
   );
   $options += $default_options;
 
@@ -314,7 +322,10 @@ function _field_invoke_multiple($op, $obj_type, $objects, &$a = NULL, &$b = NULL
         $grouped_objects[$field_id][$id] = $objects[$id];
         // Extract the field values into a separate variable, easily accessed
         // by hook implementations.
-        $grouped_items[$field_id][$id] = isset($object->$field_name) ? $object->$field_name : array();
+        $suggested_languages = empty($options['language']) ? NULL : array($options['language']);
+        foreach (field_multilingual_available_languages($obj_type, $fields[$field_id], $suggested_languages) as $langcode) {
+          $grouped_items[$field_id][$langcode][$id] = isset($object->{$field_name}[$langcode]) ? $object->{$field_name}[$langcode] : array();
+        }
       }
     }
     // Initialize the return value for each object.
@@ -326,17 +337,20 @@ function _field_invoke_multiple($op, $obj_type, $objects, &$a = NULL, &$b = NULL
     $field_name = $field['field_name'];
     $function = $options['default'] ? 'field_default_' . $op : $field['module'] . '_field_' . $op;
     if (drupal_function_exists($function)) {
-      $results = $function($obj_type, $grouped_objects[$field_id], $field, $grouped_instances[$field_id], $grouped_items[$field_id], $options, $a, $b);
-      if (isset($results)) {
-        // Collect results by object.
-        // For hooks with array results, we merge results together.
-        // For hooks with scalar results, we collect results in an array.
-        foreach ($results as $id => $result) {
-          if (is_array($result)) {
-            $return[$id] = array_merge($return[$id], $result);
-          }
-          else {
-            $return[$id][] = $result;
+      // Iterate over all the field translations.
+      foreach ($grouped_items[$field_id] as $langcode => $items) {
+        $results = $function($obj_type, $grouped_objects[$field_id], $field, $grouped_instances[$field_id], $langcode, $grouped_items[$field_id][$langcode], $options, $a, $b);
+        if (isset($results)) {
+          // Collect results by object.
+          // For hooks with array results, we merge results together.
+          // For hooks with scalar results, we collect results in an array.
+          foreach ($results as $id => $result) {
+            if (is_array($result)) {
+              $return[$id] = array_merge($return[$id], $result);
+            }
+            else {
+              $return[$id][] = $result;
+            }
           }
         }
       }
@@ -345,8 +359,10 @@ function _field_invoke_multiple($op, $obj_type, $objects, &$a = NULL, &$b = NULL
     // Populate field values back in the objects, but avoid replacing missing
     // fields with an empty array (those are not equivalent on update).
     foreach ($grouped_objects[$field_id] as $id => $object) {
-      if ($grouped_items[$field_id][$id] !== array() || property_exists($object, $field_name)) {
-        $object->$field_name = $grouped_items[$field_id][$id];
+      foreach ($grouped_items[$field_id] as $langcode => $items) {
+        if ($grouped_items[$field_id][$langcode][$id] !== array() || isset($object->{$field_name}[$langcode])) {
+          $object->{$field_name}[$langcode] = $grouped_items[$field_id][$langcode][$id];
+        }
       }
     }
   }
@@ -394,6 +410,9 @@ function _field_invoke_multiple_default($op, $obj_type, $objects, &$a = NULL, &$
  *   The form structure to fill in.
  * @param $form_state
  *   An associative array containing the current state of the form.
+ * @param $langcode
+ *   The language the field values are going to be entered, if no language
+ *   is provided the default site language will be used.
  * @return
  *   The form elements are added by reference at the top level of the $form
  *   parameter. Sample structure:
@@ -417,45 +436,57 @@ function _field_invoke_multiple_default($op, $obj_type, $objects, &$a = NULL, &$
  *     // most common case), and will therefore be repeated as many times as
  *     // needed, or 'multiple-values' (one single widget allows the input of
  *     // several values, e.g checkboxes, select box...).
+ *     // The sub-array is nested into a $langcode key where $langcode has the
+ *     // same value of the $langcode parameter above. This allow us to match
+ *     // the field data structure ($field_name[$langcode][$delta][$column]).
+ *     // The '#language' key holds the same value of $langcode and it is used
+ *     // to access the field sub-array when $langcode is unknown.
  *     'field_foo' => array(
- *       '#field_name' => the name of the field,
  *       '#tree' => TRUE,
- *       '#required' => whether or not the field is required,
- *       '#title' => the label of the field instance,
- *       '#description' => the description text for the field instance,
- *
- *       // Only for 'single' widgets:
- *       '#theme' => 'field_multiple_value_form',
- *       '#multiple' => the field cardinality,
- *       // One sub-array per copy of the widget, keyed by delta.
- *       0 => array(
- *         '#title' => the title to be displayed by the widget,
- *         '#default_value' => the field value for delta 0,
- *         '#required' => whether the widget should be marked required,
- *         '#delta' => 0,
+ *       '#language' => $langcode,
+ *       $langcode => array(
  *         '#field_name' => the name of the field,
- *         '#bundle' => the name of the bundle,
- *         '#columns' => the array of field columns,
+ *         '#tree' => TRUE,
+ *         '#required' => whether or not the field is required,
+ *         '#title' => the label of the field instance,
+ *         '#description' => the description text for the field instance,
+ *
+ *         // Only for 'single' widgets:
+ *         '#theme' => 'field_multiple_value_form',
+ *         '#multiple' => the field cardinality,
+ *         // One sub-array per copy of the widget, keyed by delta.
+ *         0 => array(
+ *           '#title' => the title to be displayed by the widget,
+ *           '#default_value' => the field value for delta 0,
+ *           '#required' => whether the widget should be marked required,
+ *           '#delta' => 0,
+ *           '#field_name' => the name of the field,
+ *           '#bundle' => the name of the bundle,
+ *           '#columns' => the array of field columns,
+ *           // The remaining elements in the sub-array depend on the widget.
+ *           '#type' => the type of the widget,
+ *           ...
+ *         ),
+ *         1 => array(
+ *           ...
+ *         ),
+ *
+ *         // Only for multiple widgets:
+ *         '#bundle' => $instance['bundle'],
+ *         '#columns'  => array_keys($field['columns']),
  *         // The remaining elements in the sub-array depend on the widget.
  *         '#type' => the type of the widget,
  *         ...
  *       ),
- *       1 => array(
- *         ...
- *       ),
- *
- *       // Only for multiple widgets:
- *       '#bundle' => $instance['bundle'],
- *       '#columns'  => array_keys($field['columns']),
- *       // The remaining elements in the sub-array depend on the widget.
- *       '#type' => the type of the widget,
  *       ...
  *     ),
  *   )
  *   @endcode
  */
-function field_attach_form($obj_type, $object, &$form, &$form_state) {
-  $form += (array) _field_invoke_default('form', $obj_type, $object, $form, $form_state);
+function field_attach_form($obj_type, $object, &$form, &$form_state, $langcode = NULL) {
+  // If no language is provided use the default site language.
+  $options = array('language' => field_multilingual_valid_language($langcode));
+  $form += (array) _field_invoke_default('form', $obj_type, $object, $form, $form_state, $options);
 
   // Add custom weight handling.
   list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
@@ -991,6 +1022,9 @@ function field_attach_query_revisions($field_id, $conditions, $count, &$cursor =
  *   The object with fields to render.
  * @param $build_mode
  *   Build mode, e.g. 'full', 'teaser'...
+ * @param $langcode
+ *   The language the field values are to be shown in. If no language is
+ *   provided the current language is used.
  * @return
  *   A structured content array tree for drupal_render().
  *   Sample structure:
@@ -1042,11 +1076,15 @@ function field_attach_query_revisions($field_id, $conditions, $count, &$cursor =
  *   );
  *   @endcode
  */
-function field_attach_view($obj_type, $object, $build_mode = 'full') {
-  // Let field modules sanitize their data for output.
-  _field_invoke('sanitize', $obj_type, $object);
+function field_attach_view($obj_type, $object, $build_mode = 'full', $langcode = NULL) {
+  // If no language is provided use the current UI language.
+  $options = array('language' => field_multilingual_valid_language($langcode, FALSE));
 
-  $output = _field_invoke_default('view', $obj_type, $object, $build_mode);
+  // Let field modules sanitize their data for output.
+  $null = NULL;
+  _field_invoke('sanitize', $obj_type, $object, $null, $null, $options);
+
+  $output = _field_invoke_default('view', $obj_type, $object, $build_mode, $null, $options);
 
   // Add custom weight handling.
   list($id, $vid, $bundle) = field_attach_extract_ids($obj_type, $object);
@@ -1057,7 +1095,39 @@ function field_attach_view($obj_type, $object, $build_mode = 'full') {
   drupal_alter('field_attach_view', $output, $obj_type, $object, $build_mode);
 
   return $output;
+}
 
+/**
+ * Populate the template variables with the field values available for rendering.
+ *
+ * The $variables array will be populated with all the field instance values
+ * associated with the given entity type, keyed by field name; in case of
+ * translatable fields the language currently chosen for display will be
+ * selected.
+ *
+ * @param $obj_type
+ *   The type of $object; e.g. 'node' or 'user'.
+ * @param $object
+ *   The object with fields to render.
+ * @param $element
+ *   The structured array containing the values ready for rendering.
+ * @param $variables
+ *   The variables array is passed by reference and will be populated with field
+ *   values.
+ */
+function field_attach_preprocess($obj_type, $object, $element, &$variables) {
+  list(, , $bundle) = field_attach_extract_ids($obj_type, $object);
+
+  foreach (field_info_instances($bundle) as $instance) {
+    $field_name = $instance['field_name'];
+    if (isset($element[$field_name]['#language'])) {
+      $langcode = $element[$field_name]['#language'];
+      $variables[$field_name] = isset($object->{$field_name}[$langcode]) ? $object->{$field_name}[$langcode] : NULL;
+    }
+  }
+
+  // Let other modules make changes to the $variables array.
+  drupal_alter('field_attach_preprocess', $variables, $obj_type, $object, $element);
 }
 
 /**

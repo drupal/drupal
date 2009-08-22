@@ -312,7 +312,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
 
     // Create nodes for testing.
     foreach ($node_ranks as $node_rank) {
-      $settings = array('type' => 'page', 'title' => 'Drupal rocks', 'body' => array(array('value' => "Drupal's search rocks")));
+      $settings = array('type' => 'page', 'title' => 'Drupal rocks', 'body' => array(FIELD_LANGUAGE_NONE => array(array('value' => "Drupal's search rocks"))));
       foreach (array(0, 1) as $num) {
         if ($num == 1) {
           switch ($node_rank) {
@@ -321,7 +321,7 @@ class SearchRankingTestCase extends DrupalWebTestCase {
               $settings[$node_rank] = 1;
               break;
             case 'relevance':
-              $settings['body'][0]['value'] .= " really rocks";
+              $settings['body'][FIELD_LANGUAGE_NONE][0]['value'] .= " really rocks";
               break;
             case 'recent':
               $settings['created'] = REQUEST_TIME + 3600;

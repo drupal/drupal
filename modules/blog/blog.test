@@ -152,7 +152,8 @@ class BlogTestCase extends DrupalWebTestCase {
       // Edit blog node.
       $edit = array();
       $edit['title'] = 'node/' . $node->nid;
-      $edit['body[0][value]'] = $this->randomName(256);
+      $langcode = FIELD_LANGUAGE_NONE;
+      $edit["body[$langcode][0][value]"] = $this->randomName(256);
       $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
       $this->assertRaw(t('Blog entry %title has been updated.', array('%title' => $edit['title'])), t('Blog node was edited'));
 

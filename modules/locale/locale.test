@@ -1389,7 +1389,7 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       'type' => 'page',
       'title' => $node_title,
-      'body' => array(array('value' => $node_body)),
+      'body' => array(FIELD_LANGUAGE_NONE => array(array('value' => $node_body))),
       'language' => $langcode,
     );
     $node = $this->drupalCreateNode($edit);
@@ -1483,6 +1483,7 @@ class UILanguageNegotiationTest extends DrupalWebTestCase {
     // into database when seen by t(). Without doing this, our target string
     // is for some reason not found when doing translate search. This might
     // be some bug.
+    drupal_static_reset('language_list');
     $languages = language_list('enabled');
     variable_set('language_default', $languages[1]['vi']);
     // First visit this page to make sure our target string is searchable.

@@ -9,6 +9,7 @@ files[] = field.install
 files[] = field.crud.inc
 files[] = field.info.inc
 files[] = field.default.inc
+files[] = field.multilingual.inc
 files[] = field.attach.inc
 files[] = field.form.inc
 files[] = field.test

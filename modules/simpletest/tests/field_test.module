@@ -88,6 +88,15 @@ function field_test_fieldable_info() {
 }
 
 /**
+ * Implement hook_fieldable_info_alter().
+ */
+function field_test_fieldable_info_alter(&$info) {
+  foreach (field_test_fieldable_info_translatable() as $obj_type => $translatable) {
+    $info[$obj_type]['translation_handlers']['field_test'] = TRUE;
+  }
+}
+
+/**
  * Create a new bundle for test_entity objects.
  *
  * @param $bundle_name
@@ -372,7 +381,7 @@ function field_test_field_schema($field) {
 /**
  * Implement hook_field_load().
  */
-function field_test_field_load($obj_type, $objects, $field, $instances, &$items, $age) {
+function field_test_field_load($obj_type, $objects, $field, $instances, $langcode, &$items, $age) {
   foreach ($items as $id => $item) {
     // To keep the test non-intrusive, only act for instances with the
     // test_hook_field_load setting explicitly set to TRUE.
@@ -393,10 +402,10 @@ function field_test_field_load($obj_type, $objects, $field, $instances, &$items,
  * Possible error codes:
  * - 'field_test_invalid': The value is invalid.
  */
-function field_test_field_validate($obj_type, $object, $field, $instance, $items, &$errors) {
+function field_test_field_validate($obj_type, $object, $field, $instance, $langcode, $items, &$errors) {
   foreach ($items as $delta => $item) {
     if ($item['value'] == -1) {
-      $errors[$field['field_name']][$delta][] = array(
+      $errors[$field['field_name']][$langcode][$delta][] = array(
         'error' => 'field_test_invalid',
         'message' => t('%name does not accept the value -1.', array('%name' => $instance['label'])),
       );
@@ -407,7 +416,7 @@ function field_test_field_validate($obj_type, $object, $field, $instance, $items
 /**
  * Implement hook_field_sanitize().
  */
-function field_test_field_sanitize($obj_type, $object, $field, $instance, &$items) {
+function field_test_field_sanitize($obj_type, $object, $field, $instance, $langcode, &$items) {
   foreach ($items as $delta => $item) {
     $value = check_plain($item['value']);
     $items[$delta]['safe'] = $value;
@@ -474,8 +483,8 @@ function field_test_field_widget_info() {
  *   holds the field's form values.
  * @param $field
  *   The field structure.
- * @param $insatnce
- *   the insatnce array
+ * @param $instance
+ *   the instance array
  * @param $items
  *   array of default values for this field
  * @param $delta
@@ -574,6 +583,48 @@ function theme_field_formatter_field_test_multiple($element) {
  */
 function field_test_default_value($obj_type, $object, $field, $instance) {
   return array(array('value' => 99));
+}
+
+/**
+ * Generic op to test _field_invoke behavior.
+ */
+function field_test_field_test_op($obj_type, $object, $field, $instance, $langcode, &$items) {
+  return array($langcode => md5(serialize(array($obj_type, $object, $field['field_name'], $langcode, $items))));
+}
+
+/**
+ * Generic op to test _field_invoke_multiple behavior.
+ */
+function field_test_field_test_op_multiple($obj_type, $objects, $field, $instances, $langcode, &$items) {
+  $result = array();
+  foreach ($objects as $id => $object) {
+    $result[$id] = array($langcode => md5(serialize(array($obj_type, $object, $field['field_name'], $langcode, $items[$id]))));
+  }
+  return $result;
+}
+
+/**
+ * Implement hook_field_languages().
+ */
+function field_test_field_languages($obj_type, $field, &$languages) {
+  if ($field['settings']['test_hook_in']) {
+    // Add an unavailable language.
+    $languages[] = 'xx';
+    // Remove an available language.
+    unset($languages[0]);
+  }
+}
+
+/**
+ * Helper function to enable entity translations.
+ */
+function field_test_fieldable_info_translatable($obj_type = NULL, $translatable = NULL) {
+  $stored_value = &drupal_static(__FUNCTION__, array());
+  if (isset($obj_type) && isset($translatable)) {
+    $stored_value[$obj_type] = $translatable;
+    _field_info_collate_types(TRUE);
+  }
+  return $stored_value;
 }
 
 /**

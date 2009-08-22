@@ -12,6 +12,7 @@
  */
 require(DRUPAL_ROOT . '/modules/field/field.crud.inc');
 require(DRUPAL_ROOT . '/modules/field/field.info.inc');
+require(DRUPAL_ROOT . '/modules/field/field.multilingual.inc');
 require(DRUPAL_ROOT . '/modules/field/field.attach.inc');
 
 /**
@@ -65,6 +66,13 @@ require(DRUPAL_ROOT . '/modules/field/field.attach.inc');
  * unlimited number of values.
  */
 define('FIELD_CARDINALITY_UNLIMITED', -1);
+
+/**
+ * The language code assigned to untranslatable fields.
+ *
+ * Defined by ISO639-2 for "No linguistic content / Not applicable".
+ */
+define('FIELD_LANGUAGE_NONE', 'zxx');
 
 /**
  * TODO
@@ -274,13 +282,15 @@ function field_associate_fields($module) {
  *   The field structure.
  * @param $instance
  *   The instance structure.
+ * @param $langcode
+ *   The field language to fill-in with the default value.
  */
-function field_get_default_value($obj_type, $object, $field, $instance) {
+function field_get_default_value($obj_type, $object, $field, $instance, $langcode = NULL) {
   $items = array();
   if (!empty($instance['default_value_function'])) {
     $function = $instance['default_value_function'];
     if (drupal_function_exists($function)) {
-      $items = $function($obj_type, $object, $field, $instance);
+      $items = $function($obj_type, $object, $field, $instance, $langcode);
     }
   }
   elseif (!empty($instance['default_value'])) {
@@ -699,6 +709,8 @@ function template_preprocess_field(&$variables) {
     'label' => check_plain(t($instance['label'])),
     'label_display' => $element['#label_display'],
     'field_empty' => $field_empty,
+    'field_language' => $element['#language'],
+    'field_translatable' => $field['translatable'],
     'template_files' => array(
       'field',
       'field-' . $element['#field_name'],

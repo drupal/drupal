@@ -59,6 +59,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     // field_test_field_load() in field_test.module).
     $this->instance['settings']['test_hook_field_load'] = TRUE;
     field_update_instance($this->instance);
+    $langcode = FIELD_LANGUAGE_NONE;
 
     $entity_type = 'test_entity';
     $values = array();
@@ -73,12 +74,12 @@ class FieldAttachTestCase extends DrupalWebTestCase {
       $current_revision = $revision_id;
       // If this is the first revision do an insert.
       if (!$revision_id) {
-        $revision[$revision_id]->{$this->field_name} = $values[$revision_id];
+        $revision[$revision_id]->{$this->field_name}[$langcode] = $values[$revision_id];
         field_attach_insert($entity_type, $revision[$revision_id]);
       }
       else {
         // Otherwise do an update.
-        $revision[$revision_id]->{$this->field_name} = $values[$revision_id];
+        $revision[$revision_id]->{$this->field_name}[$langcode] = $values[$revision_id];
         field_attach_update($entity_type, $revision[$revision_id]);
       }
     }
@@ -87,12 +88,12 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
     field_attach_load($entity_type, array(0 => $entity));
     // Number of values per field loaded equals the field cardinality.
-    $this->assertEqual(count($entity->{$this->field_name}), $this->field['cardinality'], t('Currrent revision: expected number of values'));
+    $this->assertEqual(count($entity->{$this->field_name}[$langcode]), $this->field['cardinality'], t('Current revision: expected number of values'));
     for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
       // The field value loaded matches the one inserted or updated.
-      $this->assertEqual($entity->{$this->field_name}[$delta]['value'] , $values[$current_revision][$delta]['value'], t('Currrent revision: expected value %delta was found.', array('%delta' => $delta)));
+      $this->assertEqual($entity->{$this->field_name}[$langcode][$delta]['value'] , $values[$current_revision][$delta]['value'], t('Current revision: expected value %delta was found.', array('%delta' => $delta)));
       // The value added in hook_field_load() is found.
-      $this->assertEqual($entity->{$this->field_name}[$delta]['additional_key'], 'additional_value', t('Currrent revision: extra information for value %delta was found', array('%delta' => $delta)));
+      $this->assertEqual($entity->{$this->field_name}[$langcode][$delta]['additional_key'], 'additional_value', t('Current revision: extra information for value %delta was found', array('%delta' => $delta)));
     }
 
     // Confirm each revision loads the correct data.
@@ -100,12 +101,12 @@ class FieldAttachTestCase extends DrupalWebTestCase {
       $entity = field_test_create_stub_entity(0, $revision_id, $this->instance['bundle']);
       field_attach_load_revision($entity_type, array(0 => $entity));
       // Number of values per field loaded equals the field cardinality.
-      $this->assertEqual(count($entity->{$this->field_name}), $this->field['cardinality'], t('Revision %revision_id: expected number of values.', array('%revision_id' => $revision_id)));
+      $this->assertEqual(count($entity->{$this->field_name}[$langcode]), $this->field['cardinality'], t('Revision %revision_id: expected number of values.', array('%revision_id' => $revision_id)));
       for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
         // The field value loaded matches the one inserted or updated.
-        $this->assertEqual($entity->{$this->field_name}[$delta]['value'], $values[$revision_id][$delta]['value'], t('Revision %revision_id: expected value %delta was found.', array('%revision_id' => $revision_id, '%delta' => $delta)));
+        $this->assertEqual($entity->{$this->field_name}[$langcode][$delta]['value'], $values[$revision_id][$delta]['value'], t('Revision %revision_id: expected value %delta was found.', array('%revision_id' => $revision_id, '%delta' => $delta)));
         // The value added in hook_field_load() is found.
-        $this->assertEqual($entity->{$this->field_name}[$delta]['additional_key'], 'additional_value', t('Revision %revision_id: extra information for value %delta was found', array('%revision_id' => $revision_id, '%delta' => $delta)));
+        $this->assertEqual($entity->{$this->field_name}[$langcode][$delta]['additional_key'], 'additional_value', t('Revision %revision_id: extra information for value %delta was found', array('%revision_id' => $revision_id, '%delta' => $delta)));
       }
     }
   }
@@ -115,6 +116,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
    */
   function testFieldAttachLoadMultiple() {
     $entity_type = 'test_entity';
+    $langcode = FIELD_LANGUAGE_NONE;
 
     // Define 2 bundles.
     $bundles = array(
@@ -158,7 +160,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
       $instances = field_info_instances($bundle);
       foreach ($instances as $field_name => $instance) {
         $values[$index][$field_name] = mt_rand(1, 127);
-        $entity->$field_name = array(array('value' => $values[$index][$field_name]));
+        $entity->$field_name = array($langcode => array(array('value' => $values[$index][$field_name])));
       }
       field_attach_insert($entity_type, $entity);
     }
@@ -169,17 +171,17 @@ class FieldAttachTestCase extends DrupalWebTestCase {
       $instances = field_info_instances($bundles[$index]);
       foreach ($instances as $field_name => $instance) {
         // The field value loaded matches the one inserted.
-        $this->assertEqual($entity->{$field_name}[0]['value'], $values[$index][$field_name], t('Entity %index: expected value was found.', array('%index' => $index)));
+        $this->assertEqual($entity->{$field_name}[$langcode][0]['value'], $values[$index][$field_name], t('Entity %index: expected value was found.', array('%index' => $index)));
         // The value added in hook_field_load() is found.
-        $this->assertEqual($entity->{$field_name}[0]['additional_key'], 'additional_value', t('Entity %index: extra information was found', array('%index' => $index)));
+        $this->assertEqual($entity->{$field_name}[$langcode][0]['additional_key'], 'additional_value', t('Entity %index: extra information was found', array('%index' => $index)));
       }
     }
 
     // Check that the single-field load option works.
     $entity = field_test_create_stub_entity(1, 1, $bundles[1]);
     field_attach_load($entity_type, array(1 => $entity), FIELD_LOAD_CURRENT, array('field_id' => $field_ids[1]));
-    $this->assertEqual($entity->{$field_names[1]}[0]['value'], $values[1][$field_names[1]], t('Entity %index: expected value was found.', array('%index' => 1)));
-    $this->assertEqual($entity->{$field_names[1]}[0]['additional_key'], 'additional_value', t('Entity %index: extra information was found', array('%index' => 1)));
+    $this->assertEqual($entity->{$field_names[1]}[$langcode][0]['value'], $values[1][$field_names[1]], t('Entity %index: expected value was found.', array('%index' => 1)));
+    $this->assertEqual($entity->{$field_names[1]}[$langcode][0]['additional_key'], 'additional_value', t('Entity %index: extra information was found', array('%index' => 1)));
     $this->assert(!isset($entity->{$field_names[2]}), t('Entity %index: field %field_name is not loaded.', array('%index' => 2, '%field_name' => $field_names[2])));
     $this->assert(!isset($entity->{$field_names[3]}), t('Entity %index: field %field_name is not loaded.', array('%index' => 3, '%field_name' => $field_names[3])));
   }
@@ -190,6 +192,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
   function testFieldAttachSaveMissingData() {
     $entity_type = 'test_entity';
     $entity_init = field_test_create_stub_entity();
+    $langcode = FIELD_LANGUAGE_NONE;
 
     // Insert: Field is missing.
     $entity = clone($entity_init);
@@ -197,28 +200,28 @@ class FieldAttachTestCase extends DrupalWebTestCase {
 
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertTrue(empty($entity->{$this->field_name}), t('Insert: missing field results in no value saved'));
+    $this->assertTrue(empty($entity->{$this->field_name}[$langcode]), t('Insert: missing field results in no value saved'));
 
     // Insert: Field is NULL.
     field_cache_clear();
     $entity = clone($entity_init);
-    $entity->{$this->field_name} = NULL;
+    $entity->{$this->field_name}[$langcode] = NULL;
     field_attach_insert($entity_type, $entity);
 
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertTrue(empty($entity->{$this->field_name}), t('Insert: NULL field results in no value saved'));
+    $this->assertTrue(empty($entity->{$this->field_name}[$langcode]), t('Insert: NULL field results in no value saved'));
 
     // Add some real data.
     field_cache_clear();
     $entity = clone($entity_init);
     $values = $this->_generateTestFieldValues(1);
-    $entity->{$this->field_name} = $values;
+    $entity->{$this->field_name}[$langcode] = $values;
     field_attach_insert($entity_type, $entity);
 
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertEqual($entity->{$this->field_name}, $values, t('Field data saved'));
+    $this->assertEqual($entity->{$this->field_name}[$langcode], $values, t('Field data saved'));
 
     // Update: Field is missing. Data should survive.
     field_cache_clear();
@@ -227,17 +230,17 @@ class FieldAttachTestCase extends DrupalWebTestCase {
 
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertEqual($entity->{$this->field_name}, $values, t('Update: missing field leaves existing values in place'));
+    $this->assertEqual($entity->{$this->field_name}[$langcode], $values, t('Update: missing field leaves existing values in place'));
 
     // Update: Field is NULL. Data should be wiped.
     field_cache_clear();
     $entity = clone($entity_init);
-    $entity->{$this->field_name} = NULL;
+    $entity->{$this->field_name}[$langcode] = NULL;
     field_attach_update($entity_type, $entity);
 
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertTrue(empty($entity->{$this->field_name}), t('Update: NULL field removes existing values'));
+    $this->assertTrue(empty($entity->{$this->field_name}[$langcode]), t('Update: NULL field removes existing values'));
   }
 
   /**
@@ -250,15 +253,16 @@ class FieldAttachTestCase extends DrupalWebTestCase {
 
     $entity_type = 'test_entity';
     $entity_init = field_test_create_stub_entity();
+    $langcode = FIELD_LANGUAGE_NONE;
 
     // Insert: Field is NULL.
     $entity = clone($entity_init);
-    $entity->{$this->field_name} = NULL;
+    $entity->{$this->field_name}[$langcode] = NULL;
     field_attach_insert($entity_type, $entity);
 
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
-    $this->assertTrue(empty($entity->{$this->field_name}), t('Insert: NULL field results in no value saved'));
+    $this->assertTrue(empty($entity->{$this->field_name}[$langcode]), t('Insert: NULL field results in no value saved'));
 
     // Insert: Field is missing.
     field_cache_clear();
@@ -268,7 +272,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $entity = clone($entity_init);
     field_attach_load($entity_type, array($entity->ftid => $entity));
     $values = field_test_default_value($entity_type, $entity, $this->field, $this->instance);
-    $this->assertEqual($entity->{$this->field_name}, $values, t('Insert: missing field results in default value saved'));
+    $this->assertEqual($entity->{$this->field_name}[$langcode], $values, t('Insert: missing field results in default value saved'));
   }
 
   /**
@@ -276,6 +280,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
    */
   function testFieldAttachQuery() {
     $cardinality = $this->field['cardinality'];
+    $langcode = FIELD_LANGUAGE_NONE;
 
     // Create an additional bundle with an instance of the field.
     field_test_create_bundle('test_bundle_1', 'Test Bundle 1');
@@ -294,13 +299,13 @@ class FieldAttachTestCase extends DrupalWebTestCase {
         $value = mt_rand(1, 127);
       } while (in_array($value, $values));
       $values[$delta] = $value;
-      $entities[1]->{$this->field_name}[$delta] = array('value' => $values[$delta]);
+      $entities[1]->{$this->field_name}[$langcode][$delta] = array('value' => $values[$delta]);
     }
     field_attach_insert($entity_types[1], $entities[1]);
 
     // Create second test object, sharing a value with the first one.
     $common_value = $values[$cardinality - 1];
-    $entities[2]->{$this->field_name} = array(array('value' => $common_value));
+    $entities[2]->{$this->field_name} = array($langcode => array(array('value' => $common_value)));
     field_attach_insert($entity_types[2], $entities[2]);
 
     // Query on the object's values.
@@ -364,7 +369,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     for ($i = 0; $i < 20; ++$i) {
       $offset_id += mt_rand(2, 5);
       $offset_entities[$offset_id] = field_test_create_stub_entity($offset_id, $offset_id, 'offset_bundle');
-      $offset_entities[$offset_id]->{$this->field_name}[0] = array('value' => $offset_id);
+      $offset_entities[$offset_id]->{$this->field_name}[$langcode][0] = array('value' => $offset_id);
       field_attach_insert('test_entity', $offset_entities[$offset_id]);
     }
 
@@ -397,19 +402,20 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     // Create first object revision with random (distinct) values.
     $entity_type = 'test_entity';
     $entities = array(1 => field_test_create_stub_entity(1, 1), 2 => field_test_create_stub_entity(1, 2));
+    $langcode = FIELD_LANGUAGE_NONE;
     $values = array();
     for ($delta = 0; $delta < $cardinality; $delta++) {
       do {
         $value = mt_rand(1, 127);
       } while (in_array($value, $values));
       $values[$delta] = $value;
-      $entities[1]->{$this->field_name}[$delta] = array('value' => $values[$delta]);
+      $entities[1]->{$this->field_name}[$langcode][$delta] = array('value' => $values[$delta]);
     }
     field_attach_insert($entity_type, $entities[1]);
 
     // Create second object revision, sharing a value with the first one.
     $common_value = $values[$cardinality - 1];
-    $entities[2]->{$this->field_name}[0] = array('value' => $common_value);
+    $entities[2]->{$this->field_name}[$langcode][0] = array('value' => $common_value);
     field_attach_update($entity_type, $entities[2]);
 
     // Query on the object's values.
@@ -452,10 +458,11 @@ class FieldAttachTestCase extends DrupalWebTestCase {
   function testFieldAttachViewAndPreprocess() {
     $entity_type = 'test_entity';
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $langcode = FIELD_LANGUAGE_NONE;
 
     // Populate values to be displayed.
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
-    $entity->{$this->field_name} = $values;
+    $entity->{$this->field_name}[$langcode] = $values;
 
     // Simple formatter, label displayed.
     $formatter_setting = $this->randomName();
@@ -525,32 +532,45 @@ class FieldAttachTestCase extends DrupalWebTestCase {
 
     // TODO:
     // - check display order with several fields
+
+    // Preprocess template.
+    $variables = array();
+    field_attach_preprocess($entity_type, $entity, $entity->content, $variables);
+    $result = TRUE;
+    foreach ($values as $delta => $item) {
+      if ($variables[$this->field_name][$delta]['value'] !== $item['value']) {
+        $result = FALSE;
+        break;
+      }
+    }
+    $this->assertTrue($result, t('Variable $@field_name correctly populated.', array('@field_name' => $this->field_name)));
   }
 
   function testFieldAttachDelete() {
     $entity_type = 'test_entity';
+    $langcode = FIELD_LANGUAGE_NONE;
     $rev[0] = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
 
     // Create revision 0
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
-    $rev[0]->{$this->field_name} = $values;
+    $rev[0]->{$this->field_name}[$langcode] = $values;
     field_attach_insert($entity_type, $rev[0]);
 
     // Create revision 1
     $rev[1] = field_test_create_stub_entity(0, 1, $this->instance['bundle']);
-    $rev[1]->{$this->field_name} = $values;
+    $rev[1]->{$this->field_name}[$langcode] = $values;
     field_attach_update($entity_type, $rev[1]);
 
     // Create revision 2
     $rev[2] = field_test_create_stub_entity(0, 2, $this->instance['bundle']);
-    $rev[2]->{$this->field_name} = $values;
+    $rev[2]->{$this->field_name}[$langcode] = $values;
     field_attach_update($entity_type, $rev[2]);
 
     // Confirm each revision loads
     foreach (array_keys($rev) as $vid) {
       $read = field_test_create_stub_entity(0, $vid, $this->instance['bundle']);
       field_attach_load_revision($entity_type, array(0 => $read));
-      $this->assertEqual(count($read->{$this->field_name}), $this->field['cardinality'], "The test object revision $vid has {$this->field['cardinality']} values.");
+      $this->assertEqual(count($read->{$this->field_name}[$langcode]), $this->field['cardinality'], "The test object revision $vid has {$this->field['cardinality']} values.");
     }
 
     // Delete revision 1, confirm the other two still load.
@@ -558,13 +578,13 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     foreach (array(0, 2) as $vid) {
       $read = field_test_create_stub_entity(0, $vid, $this->instance['bundle']);
       field_attach_load_revision($entity_type, array(0 => $read));
-      $this->assertEqual(count($read->{$this->field_name}), $this->field['cardinality'], "The test object revision $vid has {$this->field['cardinality']} values.");
+      $this->assertEqual(count($read->{$this->field_name}[$langcode]), $this->field['cardinality'], "The test object revision $vid has {$this->field['cardinality']} values.");
     }
 
     // Confirm the current revision still loads
     $read = field_test_create_stub_entity(0, 2, $this->instance['bundle']);
     field_attach_load($entity_type, array(0 => $read));
-    $this->assertEqual(count($read->{$this->field_name}), $this->field['cardinality'], "The test object current revision has {$this->field['cardinality']} values.");
+    $this->assertEqual(count($read->{$this->field_name}[$langcode]), $this->field['cardinality'], "The test object current revision has {$this->field['cardinality']} values.");
 
     // Delete all field data, confirm nothing loads
     field_attach_delete($entity_type, $rev[2]);
@@ -590,15 +610,16 @@ class FieldAttachTestCase extends DrupalWebTestCase {
 
     // Save an object with data in the field.
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $langcode = FIELD_LANGUAGE_NONE;
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
-    $entity->{$this->field_name} = $values;
+    $entity->{$this->field_name}[$langcode] = $values;
     $entity_type = 'test_entity';
     field_attach_insert($entity_type, $entity);
 
     // Verify the field data is present on load.
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
     field_attach_load($entity_type, array(0 => $entity));
-    $this->assertEqual(count($entity->{$this->field_name}), $this->field['cardinality'], "Data are retrieved for the new bundle");
+    $this->assertEqual(count($entity->{$this->field_name}[$langcode]), $this->field['cardinality'], "Data is retrieved for the new bundle");
 
     // Rename the bundle. This has to be initiated by the module so that its
     // hook_fieldable_info() is consistent.
@@ -612,7 +633,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     // Verify the field data is present on load.
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
     field_attach_load($entity_type, array(0 => $entity));
-    $this->assertEqual(count($entity->{$this->field_name}), $this->field['cardinality'], "Bundle name has been updated in the field storage");
+    $this->assertEqual(count($entity->{$this->field_name}[$langcode]), $this->field['cardinality'], "Bundle name has been updated in the field storage");
   }
 
   function testFieldAttachDeleteBundle() {
@@ -644,17 +665,18 @@ class FieldAttachTestCase extends DrupalWebTestCase {
 
     // Save an object with data for both fields
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $langcode = FIELD_LANGUAGE_NONE;
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
-    $entity->{$this->field_name} = $values;
-    $entity->{$field_name} = $this->_generateTestFieldValues(1);
+    $entity->{$this->field_name}[$langcode] = $values;
+    $entity->{$field_name}[$langcode] = $this->_generateTestFieldValues(1);
     $entity_type = 'test_entity';
     field_attach_insert($entity_type, $entity);
 
     // Verify the fields are present on load
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
     field_attach_load($entity_type, array(0 => $entity));
-    $this->assertEqual(count($entity->{$this->field_name}), 4, "First field got loaded");
-    $this->assertEqual(count($entity->{$field_name}), 1, "Second field got loaded");
+    $this->assertEqual(count($entity->{$this->field_name}[$langcode]), 4, 'First field got loaded');
+    $this->assertEqual(count($entity->{$field_name}[$langcode]), 1, 'Second field got loaded');
 
     // Delete the bundle. This has to be initiated by the module so that its
     // hook_fieldable_info() is consistent.
@@ -663,8 +685,8 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     // Verify no data gets loaded
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
     field_attach_load($entity_type, array(0 => $entity));
-    $this->assertFalse(isset($entity->{$this->field_name}), "No data for first field");
-    $this->assertFalse(isset($entity->{$field_name}), "No data for second field");
+    $this->assertFalse(isset($entity->{$this->field_name}[$langcode]), 'No data for first field');
+    $this->assertFalse(isset($entity->{$field_name}[$langcode]), 'No data for second field');
 
     // Verify that the instances are gone
     $this->assertFalse(field_read_instance($this->field_name, $this->instance['bundle']), "First field is deleted");
@@ -677,6 +699,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
   function testFieldAttachCache() {
     // Initialize random values and a test entity.
     $entity_init = field_test_create_stub_entity(1, 1, $this->instance['bundle']);
+    $langcode = FIELD_LANGUAGE_NONE;
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
 
     $noncached_type = 'test_entity';
@@ -691,7 +714,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
 
     // Save, and check that no cache entry is present.
     $entity = clone($entity_init);
-    $entity->{$this->field_name} = $values;
+    $entity->{$this->field_name}[$langcode] = $values;
     field_attach_insert($noncached_type, $entity);
     $this->assertFalse(cache_get($cid, 'cache_field'), t('Non-cached: no cache entry on insert'));
 
@@ -709,7 +732,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
 
     // Save, and check that no cache entry is present.
     $entity = clone($entity_init);
-    $entity->{$this->field_name} = $values;
+    $entity->{$this->field_name}[$langcode] = $values;
     field_attach_insert($cached_type, $entity);
     $this->assertFalse(cache_get($cid, 'cache_field'), t('Cached: no cache entry on insert'));
 
@@ -723,12 +746,12 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $entity = clone($entity_init);
     field_attach_load($cached_type, array($entity->ftid => $entity));
     $cache = cache_get($cid, 'cache_field');
-    $this->assertEqual($cache->data[$this->field_name], $values, t('Cached: correct cache entry on load'));
+    $this->assertEqual($cache->data[$this->field_name][$langcode], $values, t('Cached: correct cache entry on load'));
 
     // Update with different values, and check that the cache entry is wiped.
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
     $entity = clone($entity_init);
-    $entity->{$this->field_name} = $values;
+    $entity->{$this->field_name}[$langcode] = $values;
     field_attach_update($cached_type, $entity);
     $this->assertFalse(cache_get($cid, 'cache_field'), t('Cached: no cache entry on update'));
 
@@ -736,13 +759,13 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $entity = clone($entity_init);
     field_attach_load($cached_type, array($entity->ftid => $entity));
     $cache = cache_get($cid, 'cache_field');
-    $this->assertEqual($cache->data[$this->field_name], $values, t('Cached: correct cache entry on load'));
+    $this->assertEqual($cache->data[$this->field_name][$langcode], $values, t('Cached: correct cache entry on load'));
 
     // Create a new revision, and check that the cache entry is wiped.
     $entity_init = field_test_create_stub_entity(1, 2, $this->instance['bundle']);
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
     $entity = clone($entity_init);
-    $entity->{$this->field_name} = $values;
+    $entity->{$this->field_name}[$langcode] = $values;
     field_attach_update($cached_type, $entity);
     $cache = cache_get($cid, 'cache_field');
     $this->assertFalse(cache_get($cid, 'cache_field'), t('Cached: no cache entry on new revision creation'));
@@ -751,7 +774,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $entity = clone($entity_init);
     field_attach_load($cached_type, array($entity->ftid => $entity));
     $cache = cache_get($cid, 'cache_field');
-    $this->assertEqual($cache->data[$this->field_name], $values, t('Cached: correct cache entry on load'));
+    $this->assertEqual($cache->data[$this->field_name][$langcode], $values, t('Cached: correct cache entry on load'));
 
     // Delete, and check that the cache entry is wiped.
     field_attach_delete($cached_type, $entity);
@@ -763,6 +786,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
   function testFieldAttachValidate() {
     $entity_type = 'test_entity';
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $langcode = FIELD_LANGUAGE_NONE;
 
     // Set up values to generate errors
     $values = array();
@@ -772,7 +796,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     }
     // Arrange for item 1 not to generate an error
     $values[1]['value'] = 1;
-    $entity->{$this->field_name} = $values;
+    $entity->{$this->field_name}[$langcode] = $values;
 
     try {
       field_attach_validate($entity_type, $entity);
@@ -783,15 +807,15 @@ class FieldAttachTestCase extends DrupalWebTestCase {
 
     foreach ($values as $delta => $value) {
       if ($value['value'] != 1) {
-        $this->assertIdentical($errors[$this->field_name][$delta][0]['error'], 'field_test_invalid', "Error set on value $delta");
-        $this->assertEqual(count($errors[$this->field_name][$delta]), 1, "Only one error set on value $delta");
-        unset($errors[$this->field_name][$delta]);
+        $this->assertIdentical($errors[$this->field_name][$langcode][$delta][0]['error'], 'field_test_invalid', "Error set on value $delta");
+        $this->assertEqual(count($errors[$this->field_name][$langcode][$delta]), 1, "Only one error set on value $delta");
+        unset($errors[$this->field_name][$langcode][$delta]);
       }
       else {
-        $this->assertFalse(isset($errors[$this->field_name][$delta]), "No error set on value $delta");
+        $this->assertFalse(isset($errors[$this->field_name][$langcode][$delta]), "No error set on value $delta");
       }
     }
-    $this->assertEqual(count($errors[$this->field_name]), 0, 'No extraneous errors set');
+    $this->assertEqual(count($errors[$this->field_name][$langcode]), 0, 'No extraneous errors set');
   }
 
   // Validate that FAPI elements are generated. This could be much
@@ -803,10 +827,11 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $form = $form_state = array();
     field_attach_form($entity_type, $entity, $form, $form_state);
 
-    $this->assertEqual($form[$this->field_name]['#title'], $this->instance['label'], "Form title is {$this->instance['label']}");
+    $langcode = FIELD_LANGUAGE_NONE;
+    $this->assertEqual($form[$this->field_name][$langcode]['#title'], $this->instance['label'], "Form title is {$this->instance['label']}");
     for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
       // field_test_widget uses 'textfield'
-      $this->assertEqual($form[$this->field_name][$delta]['value']['#type'], 'textfield', "Form delta $delta widget is textfield");
+      $this->assertEqual($form[$this->field_name][$langcode][$delta]['value']['#type'], 'textfield', "Form delta $delta widget is textfield");
     }
   }
 
@@ -833,7 +858,8 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     // Leave an empty value. 'field_test' fields are empty if empty().
     $values[1]['value'] = 0;
 
-    $form_state['values'] = array($this->field_name => $values);
+    $langcode = FIELD_LANGUAGE_NONE;
+    $form_state['values'] = array($this->field_name => array($langcode => $values));
     field_attach_submit($entity_type, $entity, $form, $form_state);
 
     asort($weights);
@@ -843,7 +869,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
         $expected_values[] = array('value' => $values[$key]['value']);
       }
     }
-    $this->assertIdentical($entity->{$this->field_name}, $expected_values, 'Submit filters empty values');
+    $this->assertIdentical($entity->{$this->field_name}[$langcode], $expected_values, 'Submit filters empty values');
   }
 
   /**
@@ -1102,45 +1128,46 @@ class FieldFormTestCase extends DrupalWebTestCase {
     $this->instance['field_name'] = $this->field_name;
     field_create_field($this->field);
     field_create_instance($this->instance);
+    $langcode = FIELD_LANGUAGE_NONE;
 
     // Display creation form.
     $this->drupalGet('test-entity/add/test-bundle');
-    $this->assertFieldByName($this->field_name . '[0][value]', '', 'Widget is displayed');
-    $this->assertNoField($this->field_name . '[1][value]', 'No extraneous widget is displayed');
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', 'Widget is displayed');
+    $this->assertNoField("{$this->field_name}[$langcode][1][value]", 'No extraneous widget is displayed');
     // TODO : check that the widget is populated with default value ?
 
     // Submit with invalid value (field-level validation).
-    $edit = array($this->field_name . '[0][value]' => -1);
+    $edit = array("{$this->field_name}[$langcode][0][value]" => -1);
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertRaw(t('%name does not accept the value -1.', array('%name' => $this->instance['label'])), 'Field validation fails with invalid input.');
     // TODO : check that the correct field is flagged for error.
 
     // Create an entity
     $value = mt_rand(1, 127);
-    $edit = array($this->field_name . '[0][value]' => $value);
+    $edit = array("{$this->field_name}[$langcode][0][value]" => $value);
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created');
     $entity = field_test_entity_load($id);
-    $this->assertEqual($entity->{$this->field_name}[0]['value'], $value, 'Field value was saved');
+    $this->assertEqual($entity->{$this->field_name}[$langcode][0]['value'], $value, 'Field value was saved');
 
     // Display edit form.
     $this->drupalGet('test-entity/' . $id . '/edit');
-    $this->assertFieldByName($this->field_name . '[0][value]', $value, 'Widget is displayed with the correct default value');
-    $this->assertNoField($this->field_name . '[1][value]', 'No extraneous widget is displayed');
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", $value, 'Widget is displayed with the correct default value');
+    $this->assertNoField("{$this->field_name}[$langcode][1][value]", 'No extraneous widget is displayed');
 
     // Update the entity.
     $value = mt_rand(1, 127);
-    $edit = array($this->field_name . '[0][value]' => $value);
+    $edit = array("{$this->field_name}[$langcode][0][value]" => $value);
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), 'Entity was updated');
     $entity = field_test_entity_load($id);
-    $this->assertEqual($entity->{$this->field_name}[0]['value'], $value, 'Field value was updated');
+    $this->assertEqual($entity->{$this->field_name}[$langcode][0]['value'], $value, 'Field value was updated');
 
     // Empty the field.
     $value = '';
-    $edit = array($this->field_name . '[0][value]' => $value);
+    $edit = array("{$this->field_name}[$langcode][0][value]" => $value);
     $this->drupalPost('test-entity/' . $id . '/edit', $edit, t('Save'));
     $this->assertRaw(t('test_entity @id has been updated.', array('@id' => $id)), 'Entity was updated');
     $entity = field_test_entity_load($id);
@@ -1155,6 +1182,7 @@ class FieldFormTestCase extends DrupalWebTestCase {
     $this->instance['required'] = TRUE;
     field_create_field($this->field);
     field_create_instance($this->instance);
+    $langcode = FIELD_LANGUAGE_NONE;
 
     // Submit with missing required value.
     $edit = array();
@@ -1163,17 +1191,17 @@ class FieldFormTestCase extends DrupalWebTestCase {
 
     // Create an entity
     $value = mt_rand(1, 127);
-    $edit = array($this->field_name . '[0][value]' => $value);
+    $edit = array("{$this->field_name}[$langcode][0][value]" => $value);
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|test-entity/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertRaw(t('test_entity @id has been created.', array('@id' => $id)), 'Entity was created');
     $entity = field_test_entity_load($id);
-    $this->assertEqual($entity->{$this->field_name}[0]['value'], $value, 'Field value was saved');
+    $this->assertEqual($entity->{$this->field_name}[$langcode][0]['value'], $value, 'Field value was saved');
 
     // Edit with missing required value.
     $value = '';
-    $edit = array($this->field_name . '[0][value]' => $value);
+    $edit = array("{$this->field_name}[$langcode][0][value]" => $value);
     $this->drupalPost('test-entity/' . $id . '/edit', $edit, t('Save'));
     $this->assertRaw(t('!name field is required.', array('!name' => $this->instance['label'])), 'Required field with no value fails validation');
   }
@@ -1192,17 +1220,18 @@ class FieldFormTestCase extends DrupalWebTestCase {
     $this->instance['field_name'] = $this->field_name;
     field_create_field($this->field);
     field_create_instance($this->instance);
+    $langcode = FIELD_LANGUAGE_NONE;
 
     // Display creation form -> 1 widget.
     $this->drupalGet('test-entity/add/test-bundle');
-    $this->assertFieldByName($this->field_name . '[0][value]', '', 'Widget 1 is displayed');
-    $this->assertNoField($this->field_name . '[1][value]', 'No extraneous widget is displayed');
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', 'Widget 1 is displayed');
+    $this->assertNoField("{$this->field_name}[$langcode][1][value]", 'No extraneous widget is displayed');
 
     // Press 'add more' button -> 2 widgets.
     $this->drupalPost(NULL, array(), t('Add another item'));
-    $this->assertFieldByName($this->field_name . '[0][value]', '', 'Widget 1 is displayed');
-    $this->assertFieldByName($this->field_name . '[1][value]', '', 'New widget is displayed');
-    $this->assertNoField($this->field_name . '[2][value]', 'No extraneous widget is displayed');
+    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', 'Widget 1 is displayed');
+    $this->assertFieldByName("{$this->field_name}[$langcode][1][value]", '', 'New widget is displayed');
+    $this->assertNoField("{$this->field_name}[$langcode][2][value]", 'No extraneous widget is displayed');
     // TODO : check that non-field inpurs are preserved ('title')...
 
     // Yet another time so that we can play with more values -> 3 widgets.
@@ -1219,8 +1248,8 @@ class FieldFormTestCase extends DrupalWebTestCase {
       } while (in_array($weight, $weights));
       $weights[] = $weight;
       $value = mt_rand(1, 127);
-      $edit["$this->field_name[$delta][value]"] = $value;
-      $edit["$this->field_name[$delta][_weight]"] = $weight;
+      $edit["$this->field_name[$langcode][$delta][value]"] = $value;
+      $edit["$this->field_name[$langcode][$delta][_weight]"] = $weight;
       // We'll need three slightly different formats to check the values.
       $values[$weight] = $value;
       $field_values[$weight]['value'] = (string)$value;
@@ -1232,15 +1261,15 @@ class FieldFormTestCase extends DrupalWebTestCase {
     ksort($values);
     $values = array_values($values);
     for ($delta = 0; $delta <= $delta_range; $delta++) {
-      $this->assertFieldByName("$this->field_name[$delta][value]", $values[$delta], "Widget $delta is displayed and has the right value");
-      $this->assertFieldByName("$this->field_name[$delta][_weight]", $delta, "Widget $delta has the right weight");
+      $this->assertFieldByName("$this->field_name[$langcode][$delta][value]", $values[$delta], "Widget $delta is displayed and has the right value");
+      $this->assertFieldByName("$this->field_name[$langcode][$delta][_weight]", $delta, "Widget $delta has the right weight");
     }
     ksort($pattern);
     $pattern = implode('.*', array_values($pattern));
     $this->assertPattern("|$pattern|s", 'Widgets are displayed in the correct order');
-    $this->assertFieldByName("$this->field_name[$delta][value]", '', "New widget is displayed");
-    $this->assertFieldByName("$this->field_name[$delta][_weight]", $delta, "New widget has the right weight");
-    $this->assertNoField("$this->field_name[" . ($delta + 1) . '][value]', 'No extraneous widget is displayed');
+    $this->assertFieldByName("$this->field_name[$langcode][$delta][value]", '', "New widget is displayed");
+    $this->assertFieldByName("$this->field_name[$langcode][$delta][_weight]", $delta, "New widget has the right weight");
+    $this->assertNoField("$this->field_name[$langcode][" . ($delta + 1) . '][value]', 'No extraneous widget is displayed');
 
     // Submit the form and create the entity.
     $this->drupalPost(NULL, $edit, t('Save'));
@@ -1250,7 +1279,7 @@ class FieldFormTestCase extends DrupalWebTestCase {
     $entity = field_test_entity_load($id);
     ksort($field_values);
     $field_values = array_values($field_values);
-    $this->assertIdentical($entity->{$this->field_name}, $field_values, 'Field values were saved in the correct order');
+    $this->assertIdentical($entity->{$this->field_name}[$langcode], $field_values, 'Field values were saved in the correct order');
 
     // Display edit form: check that the expected number of widgets is
     // displayed, with correct values change values, reorder, leave an empty
@@ -1272,6 +1301,7 @@ class FieldFormTestCase extends DrupalWebTestCase {
     $this->instance['field_name'] = $this->field_name;
     field_create_field($this->field);
     field_create_instance($this->instance);
+    $langcode = FIELD_LANGUAGE_NONE;
 
     // Display creation form -> 1 widget.
     $this->drupalGet('test-entity/add/test-bundle');
@@ -1293,8 +1323,8 @@ class FieldFormTestCase extends DrupalWebTestCase {
       } while (in_array($weight, $weights));
       $weights[] = $weight;
       $value = mt_rand(1, 127);
-      $edit["$this->field_name[$delta][value]"] = $value;
-      $edit["$this->field_name[$delta][_weight]"] = $weight;
+      $edit["$this->field_name[$langcode][$delta][value]"] = $value;
+      $edit["$this->field_name[$langcode][$delta][_weight]"] = $weight;
       // We'll need three slightly different formats to check the values.
       $values[$weight] = $value;
       $field_values[$weight]['value'] = (string)$value;
@@ -1307,15 +1337,15 @@ class FieldFormTestCase extends DrupalWebTestCase {
     ksort($values);
     $values = array_values($values);
     for ($delta = 0; $delta <= $delta_range; $delta++) {
-      $this->assertFieldByName("$this->field_name[$delta][value]", $values[$delta], "Widget $delta is displayed and has the right value");
-      $this->assertFieldByName("$this->field_name[$delta][_weight]", $delta, "Widget $delta has the right weight");
+      $this->assertFieldByName("$this->field_name[$langcode][$delta][value]", $values[$delta], "Widget $delta is displayed and has the right value");
+      $this->assertFieldByName("$this->field_name[$langcode][$delta][_weight]", $delta, "Widget $delta has the right weight");
     }
     ksort($pattern);
     $pattern = implode('.*', array_values($pattern));
     $this->assertPattern("|$pattern|s", 'Widgets are displayed in the correct order');
-    $this->assertFieldByName("$this->field_name[$delta][value]", '', "New widget is displayed");
-    $this->assertFieldByName("$this->field_name[$delta][_weight]", $delta, "New widget has the right weight");
-    $this->assertNoField("$this->field_name[" . ($delta + 1) . '][value]', 'No extraneous widget is displayed');
+    $this->assertFieldByName("$this->field_name[$langcode][$delta][value]", '', "New widget is displayed");
+    $this->assertFieldByName("$this->field_name[$langcode][$delta][_weight]", $delta, "New widget has the right weight");
+    $this->assertNoField("$this->field_name[$langcode][" . ($delta + 1) . '][value]', 'No extraneous widget is displayed');
   }
 
   /**
@@ -1599,17 +1629,18 @@ class FieldCrudTestCase extends DrupalWebTestCase {
 
     // Save an object with data for the field
     $entity = field_test_create_stub_entity(0, 0, $instance['bundle']);
+    $langcode = FIELD_LANGUAGE_NONE;
     $values[0]['value'] = mt_rand(1, 127);
-    $entity->{$field['field_name']} = $values;
+    $entity->{$field['field_name']}[$langcode] = $values;
     $entity_type = 'test_entity';
     field_attach_insert($entity_type, $entity);
 
     // Verify the field is present on load
     $entity = field_test_create_stub_entity(0, 0, $this->instance_definition['bundle']);
     field_attach_load($entity_type, array(0 => $entity));
-    $this->assertIdentical(count($entity->{$field['field_name']}), count($values), "Data in previously deleted field saves and loads correctly");
+    $this->assertIdentical(count($entity->{$field['field_name']}[$langcode]), count($values), "Data in previously deleted field saves and loads correctly");
     foreach ($values as $delta => $value) {
-      $this->assertEqual($entity->{$field['field_name']}[$delta]['value'], $values[$delta]['value'], "Data in previously deleted field saves and loads correctly");
+      $this->assertEqual($entity->{$field['field_name']}[$langcode][$delta]['value'], $values[$delta]['value'], "Data in previously deleted field saves and loads correctly");
     }
   }
 }
@@ -1800,6 +1831,236 @@ class FieldInstanceCrudTestCase extends DrupalWebTestCase {
 }
 
 /**
+ * Unit test class for the multilanguage fields logic.
+ *
+ * The following tests will check the multilanguage logic of _field_invoke() and
+ * that only the correct values are returned by
+ * field_multilingual_available_languages().
+ */
+class FieldTranslationsTestCase extends DrupalWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Field translations tests',
+      'description' => 'Test multilanguage fields logic.',
+      'group' => 'Field',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('locale', 'field_test');
+
+    $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
+
+    $this->obj_type = 'test_entity';
+
+    $this->field = array(
+      'field_name' => $this->field_name,
+      'type' => 'test_field',
+      'cardinality' => 4,
+      'translatable' => TRUE,
+      'settings' => array(
+        'test_hook_in' => FALSE,
+      ),
+    );
+    field_create_field($this->field);
+
+    $this->instance = array(
+      'field_name' => $this->field_name,
+      'bundle' => 'test_bundle',
+      'label' => $this->randomName() . '_label',
+      'description' => $this->randomName() . '_description',
+      'weight' => mt_rand(0, 127),
+      'settings' => array(
+        'test_instance_setting' => $this->randomName(),
+      ),
+      'widget' => array(
+        'type' => 'test_field_widget',
+        'label' => 'Test Field',
+        'settings' => array(
+          'test_widget_setting' => $this->randomName(),
+        ),
+      ),
+    );
+    field_create_instance($this->instance);
+
+    for ($i = 0; $i < 3; ++$i) {
+      locale_inc_callback('locale_add_language', 'l' . $i, $this->randomString(), $this->randomString());
+    }
+  }
+
+  /**
+   * Ensure that only valid values are returned by field_multilingual_available_languages().
+   */
+  function testFieldAvailableLanguages() {
+    // Test 'translatable' fieldable info.
+    $field = $this->field;
+    $field['field_name'] .= '_untranslatable';
+    $langcode = language_default();
+    $suggested_languages = array($langcode->language);
+    $available_languages = field_multilingual_available_languages($this->obj_type, $field);
+    $this->assertTrue(count($available_languages) == 1 && $available_languages[0] === FIELD_LANGUAGE_NONE, t('Untranslatable entity: suggested language ignored.'));
+
+    // Enable field translations for the entity.
+    field_test_fieldable_info_translatable('test_entity', TRUE);
+
+    // Test hook_field_languages() invocation on a translatable field.
+    $this->field['settings']['test_hook_in'] = TRUE;
+    $enabled_languages = array_keys(language_list());
+    $available_languages = field_multilingual_available_languages($this->obj_type, $this->field);
+    $this->assertTrue(in_array(FIELD_LANGUAGE_NONE, $available_languages), t('%language is an available language.', array('%language' => FIELD_LANGUAGE_NONE)));
+    foreach ($available_languages as $delta => $langcode) {
+      if ($langcode != FIELD_LANGUAGE_NONE) {
+        $this->assertTrue(in_array($langcode, $enabled_languages), t('%language is an enabled language.', array('%language' => $langcode)));
+      }
+    }
+    $this->assertFalse(in_array('xx', $available_languages), t('No invalid language was made available.'));
+    $this->assertTrue(count($available_languages) == count($enabled_languages), t('An enabled language was successfully made unavailable.'));
+
+    // Test field_multilingual_available_languages() behavior for untranslatable fields.
+    $this->field['translatable'] = FALSE;
+    $this->field_name = $this->field['field_name'] = $this->instance['field_name'] = drupal_strtolower($this->randomName() . '_field_name');
+    $available_languages = field_multilingual_available_languages($this->obj_type, $this->field);
+    $this->assertTrue(count($available_languages) == 1 && $available_languages[0] === FIELD_LANGUAGE_NONE, t('For untranslatable fields only neutral language is available.'));
+
+    // Test language suggestions.
+    $this->field['settings']['test_hook_in'] = FALSE;
+    $this->field['translatable'] = TRUE;
+    $this->field_name = $this->field['field_name'] = $this->instance['field_name'] = drupal_strtolower($this->randomName() . '_field_name');
+    $suggested_languages = array();
+    $lang_count = mt_rand(1, count($enabled_languages) - 1);
+    for ($i = 0; $i < $lang_count; ++$i) {
+      do {
+        $langcode = $enabled_languages[mt_rand(0, $lang_count)];
+      }
+      while (in_array($langcode, $suggested_languages));
+      $suggested_languages[] = $langcode;
+    }
+
+    $available_languages = field_multilingual_available_languages($this->obj_type, $this->field, $suggested_languages);
+    $this->assertEqual(count($available_languages), count($suggested_languages), t('Suggested languages were successfully made available.'));
+    foreach ($available_languages as $langcode) {
+      $this->assertTrue(in_array($langcode, $available_languages), t('Suggested language %language is available.', array('%language' => $langcode)));
+    }
+
+    $this->field_name = $this->field['field_name'] = $this->instance['field_name'] = drupal_strtolower($this->randomName() . '_field_name');
+    $suggested_languages = array('xx');
+    $available_languages = field_multilingual_available_languages($this->obj_type, $this->field, $suggested_languages);
+    $this->assertTrue(empty($available_languages), t('An invalid suggested language was not made available.'));
+  }
+
+  /**
+   * Test the multilanguage logic of _field_invoke().
+   */
+  function testFieldInvoke() {
+    $entity_type = 'test_entity';
+    $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+
+    // Populate some extra languages to check if _field_invoke() correctly uses
+    // the result of field_multilingual_available_languages().
+    $values = array();
+    $extra_languages = mt_rand(1, 4);
+    $languages = $available_languages = field_multilingual_available_languages($this->obj_type, $this->field);
+    for ($i = 0; $i < $extra_languages; ++$i) {
+      $languages[] = $this->randomString(2);
+    }
+
+    // For each given language provide some random values.
+    foreach ($languages as $langcode) {
+      for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
+        $values[$langcode][$delta]['value'] = mt_rand(1, 127);
+      }
+    }
+    $entity->{$this->field_name} = $values;
+
+    $results = _field_invoke('test_op', $entity_type, $entity);
+    foreach ($results as $langcode => $result) {
+      $hash = md5(serialize(array($entity_type, $entity, $this->field_name, $langcode, $values[$langcode])));
+      // Check whether the parameters passed to _field_invoke() were correctly
+      // forwarded to the callback function.
+      $this->assertEqual($hash, $result, t('The result for %language is correctly stored.', array('%language' => $langcode)));
+    }
+    $this->assertEqual(count($results), count($available_languages), t('No unavailable language has been processed.'));
+  }
+
+  /**
+   * Test the multilanguage logic of _field_invoke_multiple().
+   */
+  function testFieldInvokeMultiple() {
+    $values = array();
+    $entities = array();
+    $entity_type = 'test_entity';
+    $entity_count = mt_rand(1, 5);
+    $available_languages = field_multilingual_available_languages($this->obj_type, $this->field);
+
+    for ($id = 1; $id <= $entity_count; ++$id) {
+      $entity = field_test_create_stub_entity($id, $id, $this->instance['bundle']);
+      $languages = $available_languages;
+
+      // Populate some extra languages to check whether _field_invoke()
+      // correctly uses the result of field_multilingual_available_languages().
+      $extra_languages = mt_rand(1, 4);
+      for ($i = 0; $i < $extra_languages; ++$i) {
+        $languages[] = $this->randomString(2);
+      }
+
+      // For each given language provide some random values.
+      foreach ($languages as $langcode) {
+        for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
+          $values[$id][$langcode][$delta]['value'] = mt_rand(1, 127);
+        }
+      }
+      $entity->{$this->field_name} = $values[$id];
+      $entities[$id] = $entity;
+    }
+
+    $grouped_results = _field_invoke_multiple('test_op_multiple', $entity_type, $entities);
+    foreach ($grouped_results as $id => $results) {
+      foreach ($results as $langcode => $result) {
+        $hash = md5(serialize(array($entity_type, $entities[$id], $this->field_name, $langcode, $values[$id][$langcode])));
+        // Check whether the parameters passed to _field_invoke() were correctly
+        // forwarded to the callback function.
+        $this->assertEqual($hash, $result, t('The result for object %id/%language is correctly stored.', array('%id' => $id, '%language' => $langcode)));
+      }
+      $this->assertEqual(count($results), count($available_languages), t('No unavailable language has been processed for object %id.', array('%id' => $id)));
+    }
+  }
+
+  /**
+   * Test translatable fields storage/retrieval.
+   */
+  function testTranslatableFieldSaveLoad() {
+    // Enable field translations for nodes.
+    field_test_fieldable_info_translatable('node', TRUE);
+    $obj_info = field_info_fieldable_types('node');
+    $this->assertTrue(count($obj_info['translation_handlers']), t('Nodes are translatable.'));
+
+    // Prepare the field translations.
+    $eid = $evid = 1;
+    $obj_type = 'test_entity';
+    $object = field_test_create_stub_entity($eid, $evid, $this->instance['bundle']);
+    $field_translations = array();
+    foreach (field_multilingual_available_languages($obj_type, $this->field) as $langcode) {
+      $field_translations[$langcode] = FieldAttachTestCase::_generateTestFieldValues($this->field['cardinality']);
+    }
+
+    // Save and reload the field translations.
+    $object->{$this->field_name} = $field_translations;
+    field_attach_insert($obj_type, $object);
+    unset($object->{$this->field_name});
+    field_attach_load($obj_type, array($eid => $object));
+
+    // Check if the correct values were saved/loaded.
+    foreach ($field_translations as $langcode => $items) {
+      $result = TRUE;
+      foreach ($items as $delta => $item) {
+        $result = $result && $item['value'] == $object->{$this->field_name}[$langcode][$delta]['value'];
+      }
+      $this->assertTrue($result, t('%language translation correctly handled.', array('%language' => $langcode)));
+    }
+  }
+}
+
+/**
  * Unit test class for field bulk delete and batch purge functionality.
  */
 class FieldBulkDeleteTestCase extends DrupalWebTestCase {
@@ -1898,7 +2159,7 @@ class FieldBulkDeleteTestCase extends DrupalWebTestCase {
       for ($i = 0; $i < 10; $i++) {
         $entity = field_test_create_stub_entity($id, $id, $bundle);
         foreach ($this->fields as $field) {
-          $entity->{$field['field_name']} = $this->_generateTestFieldValues($field['cardinality']);
+          $entity->{$field['field_name']}[FIELD_LANGUAGE_NONE] = $this->_generateTestFieldValues($field['cardinality']);
         }
         $this->entities[$id] = $entity;
         field_attach_insert($this->entity_type, $entity);

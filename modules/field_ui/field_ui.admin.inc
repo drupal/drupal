@@ -1207,7 +1207,7 @@ function field_ui_default_value_widget($field, $instance, &$form, &$form_state) 
   );
   drupal_function_exists('field_default_form');
   // @todo Allow multiple values (requires more work on 'add more' JS handler).
-  $widget_form = field_default_form(NULL, NULL, $field, $instance, $items, $form, $form_state, 0);
+  $widget_form = field_default_form(NULL, NULL, $field, $instance, FIELD_LANGUAGE_NONE, $items, $form, $form_state, 0);
   $form['instance']['default_value_widget'] += $widget_form;
   $form['#fields'][$field['field_name']]['form_path'] = array(
     'instance',

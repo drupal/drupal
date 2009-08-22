@@ -56,9 +56,10 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
   function testFieldAttachLoad() {
     $entity_type = 'test_entity';
     $eid = 0;
+    $langcode = FIELD_LANGUAGE_NONE;
 
     $etid = _field_sql_storage_etid($entity_type);
-    $columns = array('etid', 'entity_id', 'revision_id', 'delta', $this->field_name . '_value');
+    $columns = array('etid', 'entity_id', 'revision_id', 'delta', 'language', $this->field_name . '_value');
 
     // Insert data for four revisions to the field revisions table
     $query = db_insert($this->revision_table)->fields($columns);
@@ -68,7 +69,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
       for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
         $value = mt_rand(1, 127);
         $values[$evid][] = $value;
-        $query->values(array($etid, $eid, $evid, $delta, $value));
+        $query->values(array($etid, $eid, $evid, $delta, $langcode, $value));
       }
     }
     $query->execute();
@@ -76,7 +77,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     // Insert data for the "most current revision" into the field table
     $query = db_insert($this->table)->fields($columns);
     foreach ($values[0] as $delta => $value) {
-      $query->values(array($etid, $eid, 0, $delta, $value));
+      $query->values(array($etid, $eid, 0, $delta, $langcode, $value));
     }
     $query->execute();
 
@@ -85,10 +86,10 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     field_attach_load($entity_type, array($eid => $entity));
     foreach ($values[0] as $delta => $value) {
       if ($delta < $this->field['cardinality']) {
-        $this->assertEqual($entity->{$this->field_name}[$delta]['value'], $value, "Value $delta is loaded correctly for current revision");
+        $this->assertEqual($entity->{$this->field_name}[$langcode][$delta]['value'], $value, "Value $delta is loaded correctly for current revision");
       }
       else {
-        $this->assertFalse(array_key_exists($delta, $entity->{$this->field_name}), "No extraneous value gets loaded for current revision.");
+        $this->assertFalse(array_key_exists($delta, $entity->{$this->field_name}[$langcode]), "No extraneous value gets loaded for current revision.");
       }
     }
 
@@ -98,13 +99,23 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
       field_attach_load_revision($entity_type, array($eid => $entity));
       foreach ($values[$evid] as $delta => $value) {
         if ($delta < $this->field['cardinality']) {
-          $this->assertEqual($entity->{$this->field_name}[$delta]['value'], $value, "Value $delta for revision $evid is loaded correctly");
+          $this->assertEqual($entity->{$this->field_name}[$langcode][$delta]['value'], $value, "Value $delta for revision $evid is loaded correctly");
         }
         else {
-          $this->assertFalse(array_key_exists($delta, $entity->{$this->field_name}), "No extraneous value gets loaded for revision $evid.");
+          $this->assertFalse(array_key_exists($delta, $entity->{$this->field_name}[$langcode]), "No extraneous value gets loaded for revision $evid.");
         }
       }
     }
+
+    // Add a translation in an unavailable language and verify it is not loaded.
+    $eid = $evid = 1;
+    $unavailable_language = 'xx';
+    $entity = field_test_create_stub_entity($eid, $evid, $this->instance['bundle']);
+    $values = array($etid, $eid, $evid, 0, $unavailable_language, mt_rand(1, 127));
+    db_insert($this->table)->fields($columns)->values($values)->execute();
+    db_insert($this->revision_table)->fields($columns)->values($values)->execute();
+    field_attach_load($entity_type, array($eid => $entity));
+    $this->assertFalse(array_key_exists($unavailable_language, $entity->{$this->field_name}), 'Field translation in an unavailable language ignored');
   }
 
   /**
@@ -114,6 +125,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
   function testFieldAttachInsertAndUpdate() {
     $entity_type = 'test_entity';
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $langcode = FIELD_LANGUAGE_NONE;
 
     // Test insert.
     $values = array();
@@ -122,7 +134,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
       $values[$delta]['value'] = mt_rand(1, 127);
     }
-    $entity->{$this->field_name} = $rev_values[0] = $values;
+    $entity->{$this->field_name}[$langcode] = $rev_values[0] = $values;
     field_attach_insert($entity_type, $entity);
 
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
@@ -142,7 +154,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
       $values[$delta]['value'] = mt_rand(1, 127);
     }
-    $entity->{$this->field_name} = $rev_values[1] = $values;
+    $entity->{$this->field_name}[$langcode] = $rev_values[1] = $values;
     field_attach_update($entity_type, $entity);
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
     foreach ($values as $delta => $value) {
@@ -170,9 +182,9 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     }
     $this->assertTrue(empty($rev_values), "All values for all revisions are stored in revision table {$this->revision_table}");
 
-    // Check that update leaves the field data untouched if $object has no
-    // $field_name key.
-    unset($entity->{$this->field_name});
+    // Check that update leaves the field data untouched if
+    // $object->{$field_name} has no language key.
+    unset($entity->{$this->field_name}[$langcode]);
     field_attach_update($entity_type, $entity);
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
     foreach ($values as $delta => $value) {
@@ -182,7 +194,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     }
 
     // Check that update with an empty $object->$field_name empties the field.
-    $entity->{$this->field_name} = NULL;
+    $entity->{$this->field_name}[$langcode] = NULL;
     field_attach_update($entity_type, $entity);
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
     $this->assertEqual(count($rows), 0, t("Update with an empty field_name entry empties the field."));
@@ -194,6 +206,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
   function testFieldAttachSaveMissingData() {
     $entity_type = 'test_entity';
     $entity = field_test_create_stub_entity(0, 0, $this->instance['bundle']);
+    $langcode = FIELD_LANGUAGE_NONE;
 
     // Insert: Field is missing
     field_attach_insert($entity_type, $entity);
@@ -204,7 +217,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $this->assertEqual($count, 0, 'Missing field results in no inserts');
 
     // Insert: Field is NULL
-    $entity->{$this->field_name} = NULL;
+    $entity->{$this->field_name}[$langcode] = NULL;
     field_attach_insert($entity_type, $entity);
     $count = db_select($this->table)
       ->countQuery()
@@ -213,7 +226,7 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $this->assertEqual($count, 0, 'NULL field results in no inserts');
 
     // Add some real data
-    $entity->{$this->field_name} = array(0 => array('value' => 1));
+    $entity->{$this->field_name}[$langcode] = array(0 => array('value' => 1));
     field_attach_insert($entity_type, $entity);
     $count = db_select($this->table)
       ->countQuery()
@@ -238,5 +251,47 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
       ->execute()
       ->fetchField();
     $this->assertEqual($count, 0, 'NULL field leaves no data in table');
+
+    // Add a translation in an unavailable language.
+    $unavailable_language = 'xx';
+    db_insert($this->table)
+      ->fields(array('etid', 'bundle', 'deleted', 'entity_id', 'revision_id', 'delta', 'language'))
+      ->values(array(_field_sql_storage_etid($entity_type), $this->instance['bundle'], 0, 0, 0, 0, $unavailable_language))
+      ->execute();
+    $count = db_select($this->table)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertEqual($count, 1, 'Field translation in an unavailable language saved.');
+
+    // Again add some real data.
+    $entity->{$this->field_name}[$langcode] = array(0 => array('value' => 1));
+    field_attach_insert($entity_type, $entity);
+    $count = db_select($this->table)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertEqual($count, 2, 'Field data saved.');
+
+    // Update: Field translation is missing but field is not empty. Translation
+    // data should survive.
+    $entity->{$this->field_name}[$unavailable_language] = array(mt_rand(1, 127));
+    unset($entity->{$this->field_name}[$langcode]);
+    field_attach_update($entity_type, $entity);
+    $count = db_select($this->table)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertEqual($count, 2, 'Missing field translation leaves data in table.');
+
+    // Update: Field translation is NULL but field is not empty. Translation
+    // data should be wiped.
+    $entity->{$this->field_name}[$langcode] = NULL;
+    field_attach_update($entity_type, $entity);
+    $count = db_select($this->table)
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertEqual($count, 1, 'NULL field translation is wiped.');
   }
 }

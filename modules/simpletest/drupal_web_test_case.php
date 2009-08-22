@@ -693,7 +693,7 @@ class DrupalWebTestCase extends DrupalTestCase {
   protected function drupalCreateNode($settings = array()) {
     // Populate defaults array.
     $settings += array(
-      'body'      => array(array()),
+      'body'      => array(FIELD_LANGUAGE_NONE => array(array())),
       'title'     => $this->randomName(8),
       'comment'   => 2,
       'changed'   => REQUEST_TIME,
@@ -730,7 +730,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       'value' => $this->randomName(32),
       'format' => FILTER_FORMAT_DEFAULT
     );
-    $settings['body'][0] += $body;
+    $settings['body'][FIELD_LANGUAGE_NONE][0] += $body;
 
     $node = (object) $settings;
     node_save($node);

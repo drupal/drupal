@@ -511,15 +511,15 @@ function node_update_7006(&$context) {
             'type' => $revision->type,
           );
           if (!empty($revision->teaser) && $revision->teaser != text_summary($revision->body)) {
-            $node->body[0]['summary'] = $revision->teaser;
+            $node->body[FIELD_LANGUAGE_NONE][0]['summary'] = $revision->teaser;
           }
           // Do this after text_summary() above.
           $break = '<!--break-->';
           if (substr($revision->body, 0, strlen($break)) == $break) {
             $revision->body = substr($revision->body, strlen($break));
           }
-          $node->body[0]['value'] = $revision->body;
-          $node->body[0]['format'] = $revision->format;
+          $node->body[FIELD_LANGUAGE_NONE][0]['value'] = $revision->body;
+          $node->body[FIELD_LANGUAGE_NONE][0]['format'] = $revision->format;
           // This is a core update and no contrib modules are enabled yet, so
           // we can assume default field storage for a faster update.
           field_sql_storage_field_storage_write('node', $node, FIELD_STORAGE_INSERT, array());

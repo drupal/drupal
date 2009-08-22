@@ -213,7 +213,7 @@ function blogapi_blogger_new_post($appkey, $blogid, $username, $password, $conte
   }
   else {
     $edit['title'] = blogapi_blogger_title($content);
-    $edit['body'][0]['value'] = $content;
+    $edit['body'][FIELD_LANGUAGE_NONE][0]['value'] = $content;
   }
 
   if (!node_access('create', $edit['type'])) {
@@ -274,12 +274,12 @@ function blogapi_blogger_edit_post($appkey, $postid, $username, $password, $cont
   // Check for bloggerAPI vs. metaWeblogAPI.
   if (is_array($content)) {
     $node->title = $content['title'];
-    $node->body[0]['value'] = $content['description'];
+    $node->body[FIELD_LANGUAGE_NONE][0]['value'] = $content['description'];
     _blogapi_mt_extra($node, $content);
   }
   else {
     $node->title = blogapi_blogger_title($content);
-    $node->body[0]['value'] = $content;
+    $node->body[FIELD_LANGUAGE_NONE][0]['value'] = $content;
   }
 
   module_invoke_all('node_blogapi_edit', $node);
@@ -895,14 +895,14 @@ function _blogapi_mt_extra($node, $struct) {
 
   // Merge the 3 body sections (description, mt_excerpt, mt_text_more) into one body.
   if ($struct['mt_excerpt']) {
-    $node->body[0]['value'] = $struct['mt_excerpt'] . '<!--break-->' . $node->body[0]['value'];
+    $node->body[FIELD_LANGUAGE_NONE][0]['value'] = $struct['mt_excerpt'] . '<!--break-->' . $node->body[FIELD_LANGUAGE_NONE][0]['value'];
   }
   if ($struct['mt_text_more']) {
-    $node->body[0]['value'] = $node->body[0]['value'] . '<!--extended-->' . $struct['mt_text_more'];
+    $node->body[FIELD_LANGUAGE_NONE][0]['value'] = $node->body[FIELD_LANGUAGE_NONE][0]['value'] . '<!--extended-->' . $struct['mt_text_more'];
   }
 
   if ($struct['mt_convert_breaks']) {
-    $node->body[0]['format'] = $struct['mt_convert_breaks'];
+    $node->body[FIELD_LANGUAGE_NONE][0]['format'] = $struct['mt_convert_breaks'];
   }
 
   if ($struct['dateCreated']) {
@@ -925,8 +925,8 @@ function _blogapi_get_post($node, $bodies = TRUE) {
   );
 
   if ($bodies) {
-    $body = $node->body[0]['value'];
-    $format = $node->body[0]['format'];
+    $body = $node->body[FIELD_LANGUAGE_NONE][0]['value'];
+    $format = $node->body[FIELD_LANGUAGE_NONE][0]['format'];
     if ($node->comment == 1) {
       $comment = 2;
     }

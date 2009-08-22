@@ -60,14 +60,15 @@ class TranslationTestCase extends DrupalWebTestCase {
     // to return to the page then resubmitting the form without a refresh.
     $edit = array();
     $edit['title'] = $this->randomName();
-    $edit['body[0][value]'] = $this->randomName();
+    $langcode = FIELD_LANGUAGE_NONE;
+    $edit["body[$langcode][0][value]"] = $this->randomName();
     $this->drupalPost('node/add/page', $edit, t('Save'), array('query' => array('translation' => $node->nid, 'language' => 'es')));
     $duplicate = $this->drupalGetNodeByTitle($edit['title']);
     $this->assertEqual($duplicate->tnid, 0, t('The node does not have a tnid.'));
 
     // Update original and mark translation as outdated.
     $edit = array();
-    $edit['body[0][value]'] = $this->randomName();
+    $edit["body[$langcode][0][value]"] = $this->randomName();
     $edit['translation[retranslate]'] = TRUE;
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Page %title has been updated.', array('%title' => $node_title)), t('Original node updated.'));
@@ -78,7 +79,7 @@ class TranslationTestCase extends DrupalWebTestCase {
 
     // Update translation and mark as updated.
     $edit = array();
-    $edit['body[0][value]'] = $this->randomName();
+    $edit["body[$langcode][0][value]"] = $this->randomName();
     $edit['translation[status]'] = FALSE;
     $this->drupalPost('node/' . $node_translation->nid . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Page %title has been updated.', array('%title' => $node_translation_title)), t('Translated node updated.'));
@@ -128,7 +129,8 @@ class TranslationTestCase extends DrupalWebTestCase {
   function createPage($title, $body, $language) {
     $edit = array();
     $edit['title'] = $title;
-    $edit['body[0][value]'] = $body;
+    $langcode = FIELD_LANGUAGE_NONE;
+    $edit["body[$langcode][0][value]"] = $body;
     $edit['language'] = $language;
     $this->drupalPost('node/add/page', $edit, t('Save'));
     $this->assertRaw(t('Page %title has been created.', array('%title' => $edit['title'])), t('Page created.'));
@@ -153,7 +155,8 @@ class TranslationTestCase extends DrupalWebTestCase {
 
     $edit = array();
     $edit['title'] = $title;
-    $edit['body[0][value]'] = $body;
+    $langcode = FIELD_LANGUAGE_NONE;
+    $edit["body[$langcode][0][value]"] = $body;
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertRaw(t('Page %title has been created.', array('%title' => $edit['title'])), t('Translation created.'));
 

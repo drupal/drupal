@@ -350,6 +350,8 @@ function hook_field_schema($field) {
  *   The field structure for the operation.
  * @param $instances
  *   Array of instance structures for $field for each object, keyed by object id.
+ * @param $langcode
+ *   The language associated to $items.
  * @param $items
  *   Array of field values already loaded for the objects, keyed by object id.
  * @param $age
@@ -359,9 +361,7 @@ function hook_field_schema($field) {
  *   Changes or additions to field values are done by altering the $items
  *   parameter by reference.
  */
-function hook_field_load($obj_type, $objects, $field, $instances, &$items, $age) {
-  global $language;
-
+function hook_field_load($obj_type, $objects, $field, $instances, $langcode, &$items, $age) {
   foreach ($objects as $id => $object) {
     foreach ($items[$id] as $delta => $item) {
       if (!empty($instances[$id]['settings']['text_processing'])) {
@@ -369,10 +369,9 @@ function hook_field_load($obj_type, $objects, $field, $instances, &$items, $age)
         // handled by hook_field_sanitize().
         $format = $item['format'];
         if (filter_format_allowcache($format)) {
-          $lang = isset($object->language) ? $object->language : $language->language;
-          $items[$id][$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $lang, FALSE) : '';
+          $items[$id][$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $langcode, FALSE) : '';
           if ($field['type'] == 'text_with_summary') {
-            $items[$id][$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $lang, FALSE) : '';
+            $items[$id][$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $langcode, FALSE) : '';
           }
         }
       }
@@ -401,11 +400,12 @@ function hook_field_load($obj_type, $objects, $field, $instances, &$items, $age)
  *   The field structure for the operation.
  * @param $instance
  *   The instance structure for $field on $object's bundle.
+ * @param $langcode
+ *   The language associated to $items.
  * @param $items
  *   $object->{$field['field_name']}, or an empty array if unset.
  */
-function hook_field_sanitize($obj_type, $object, $field, $instance, $items) {
-  global $language;
+function hook_field_sanitize($obj_type, $object, $field, $instance, $langcode, &$items) {
   foreach ($items as $delta => $item) {
     // Only sanitize items which were not already processed inside
     // hook_field_load(), i.e. items with uncacheable text formats, or coming
@@ -413,10 +413,9 @@ function hook_field_sanitize($obj_type, $object, $field, $instance, $items) {
     if (!isset($items[$delta]['safe'])) {
       if (!empty($instance['settings']['text_processing'])) {
         $format = $item['format'];
-        $lang = isset($object->language) ? $object->language : $language->language;
-        $items[$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $lang) : '';
+        $items[$delta]['safe'] = isset($item['value']) ? check_markup($item['value'], $format, $langcode) : '';
         if ($field['type'] == 'text_with_summary') {
-          $items[$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $lang) : '';
+          $items[$delta]['safe_summary'] = isset($item['summary']) ? check_markup($item['summary'], $format, $langcode) : '';
         }
       }
       else {
@@ -444,8 +443,10 @@ function hook_field_sanitize($obj_type, $object, $field, $instance, $items) {
  *   The field structure for the operation.
  * @param $instance
  *   The instance structure for $field on $object's bundle.
+ * @param $langcode
+ *   The language associated to $items.
  * @param $items
- *   $object->{$field['field_name']}, or an empty array if unset.
+ *   $object->{$field['field_name']}[$langcode], or an empty array if unset.
  * @param $errors
  *   The array of errors, keyed by field name and by value delta, that have
  *   already been reported for the object. The function should add its errors
@@ -454,7 +455,7 @@ function hook_field_sanitize($obj_type, $object, $field, $instance, $items) {
  *   - 'error': an error code (should be a string, prefixed with the module name)
  *   - 'message': the human readable message to be displayed.
  */
-function hook_field_validate($obj_type, $object, $field, $instance, $items, &$errors) {
+function hook_field_validate($obj_type, $object, $field, $instance, $langcode, &$items, &$errors) {
   foreach ($items as $delta => $item) {
     if (!empty($item['value'])) {
       if (!empty($field['settings']['max_length']) && drupal_strlen($item['value']) > $field['settings']['max_length']) {
@@ -478,10 +479,12 @@ function hook_field_validate($obj_type, $object, $field, $instance, $items, &$er
  *   The field structure for the operation.
  * @param $instance
  *   The instance structure for $field on $object's bundle.
+ * @param $langcode
+ *   The language associated to $items.
  * @param $items
- *   $object->{$field['field_name']}, or an empty array if unset.
+ *   $object->{$field['field_name']}[$langcode], or an empty array if unset.
  */
-function hook_field_presave($obj_type, $object, $field, $instance, $items) {
+function hook_field_presave($obj_type, $object, $field, $instance, $langcode, &$items) {
 }
 
 /**
@@ -495,10 +498,12 @@ function hook_field_presave($obj_type, $object, $field, $instance, $items) {
  *   The field structure for the operation.
  * @param $instance
  *   The instance structure for $field on $object's bundle.
+ * @param $langcode
+ *   The language associated to $items.
  * @param $items
- *   $object->{$field['field_name']}, or an empty array if unset.
+ *   $object->{$field['field_name']}[$langcode], or an empty array if unset.
  */
-function hook_field_insert($obj_type, $object, $field, $instance, $items) {
+function hook_field_insert($obj_type, $object, $field, $instance, $langcode, &$items) {
 }
 
 /**
@@ -512,10 +517,12 @@ function hook_field_insert($obj_type, $object, $field, $instance, $items) {
  *   The field structure for the operation.
  * @param $instance
  *   The instance structure for $field on $object's bundle.
+ * @param $langcode
+ *   The language associated to $items.
  * @param $items
- *   $object->{$field['field_name']}, or an empty array if unset.
+ *   $object->{$field['field_name']}[$langcode], or an empty array if unset.
  */
-function hook_field_update($obj_type, $object, $field, $instance, $items) {
+function hook_field_update($obj_type, $object, $field, $instance, $langcode, &$items) {
 }
 
 /**
@@ -531,10 +538,12 @@ function hook_field_update($obj_type, $object, $field, $instance, $items) {
  *   The field structure for the operation.
  * @param $instance
  *   The instance structure for $field on $object's bundle.
+ * @param $langcode
+ *   The language associated to $items.
  * @param $items
- *   $object->{$field['field_name']}, or an empty array if unset.
+ *   $object->{$field['field_name']}[$langcode], or an empty array if unset.
  */
-function hook_field_delete($obj_type, $object, $field, $instance, $items) {
+function hook_field_delete($obj_type, $object, $field, $instance, $langcode, &$items) {
 }
 
 /**
@@ -551,10 +560,12 @@ function hook_field_delete($obj_type, $object, $field, $instance, $items) {
  *   The field structure for the operation.
  * @param $instance
  *   The instance structure for $field on $object's bundle.
+ * @param $langcode
+ *   The language associated to $items.
  * @param $items
- *   $object->{$field['field_name']}, or an empty array if unset.
+ *   $object->{$field['field_name']}[$langcode], or an empty array if unset.
  */
-function hook_field_delete_revision($obj_type, $object, $field, $instance, $items) {
+function hook_field_delete_revision($obj_type, $object, $field, $instance, $langcode, &$items) {
 }
 
 /**
@@ -570,10 +581,12 @@ function hook_field_delete_revision($obj_type, $object, $field, $instance, $item
  *   The field structure for the operation.
  * @param $instance
  *   The instance structure for $field on $object's bundle.
+ * @param $langcode
+ *   The language associated to $items.
  * @param $items
- *   $object->{$field['field_name']}, or an empty array if unset.
+ *   $object->{$field['field_name']}[$langcode], or an empty array if unset.
  */
-function hook_field_prepare_translation($obj_type, $object, $field, $instance, $items) {
+function hook_field_prepare_translation($obj_type, $object, $field, $instance, $langcode, &$items) {
 }
 
 /**
@@ -902,7 +915,7 @@ function theme_field_formatter_FORMATTER_MULTIPLE($element) {
  *
  * See field_attach_form() for details and arguments.
  */
-function hook_field_attach_form($obj_type, $object, &$form, &$form_state) {
+function hook_field_attach_form($obj_type, $object, &$form, &$form_state, $langcode) {
 }
 
 /**
@@ -985,6 +998,23 @@ function hook_field_attach_submit($obj_type, $object, $form, &$form_state) {
  * See field_attach_presave() for details and arguments.
  */
 function hook_field_attach_presave($obj_type, $object) {
+}
+
+/**
+ * Act on field_attach_preprocess.
+ *
+ * This hook is invoked while preprocessing the field.tpl.php template file.
+ *
+ * @param $variables
+ *   The variables array is passed by reference and will be populated with field values.
+ * @param $obj_type
+ *   The type of $object; e.g. 'node' or 'user'.
+ * @param $object
+ *   The object with fields to render.
+ * @param $element
+ *   The structured array containing the values ready for rendering.
+ */
+function hook_field_attach_preprocess_alter(&$variables, $obj_type, $object, $element) {
 }
 
 /**
@@ -1094,8 +1124,10 @@ function hook_field_attach_delete_revision($obj_type, $object) {
  *   The object with fields to render.
  * @param $build_mode
  *   Build mode, e.g. 'full', 'teaser'...
+ * @param $langcode
+ *   The language in which the field values will be displayed.
  */
-function hook_field_attach_view_alter($output, $obj_type, $object, $build_mode) {
+function hook_field_attach_view_alter($output, $obj_type, $object, $build_mode, $langcode) {
 }
 
 /**

@@ -111,8 +111,9 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 
     $edit = array();
     $edit['title'] = $this->randomName();
-    $edit['body[0][value]'] = $body . '<random>' . $extra_text . '</random>';
-    $edit['body[0][value_format]'] = $filtered;
+    $langcode = FIELD_LANGUAGE_NONE;
+    $edit["body[$langcode][0][value]"] = $body . '<random>' . $extra_text . '</random>';
+    $edit["body[$langcode][0][value_format]"] = $filtered;
     $this->drupalPost('node/add/page', $edit, t('Save'));
     $this->assertRaw(t('Page %title has been created.', array('%title' => $edit['title'])), t('Filtered node created.'));
 

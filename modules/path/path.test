@@ -180,6 +180,7 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     $edit['langcode'] = 'fr';
 
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    drupal_static_reset('language_list');
 
     // Set language negotiation to "Path prefix with fallback".
     variable_set('language_negotiation', LANGUAGE_NEGOTIATION_PATH);
@@ -212,7 +213,8 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     $this->clickLink(t('add translation'));
     $edit = array();
     $edit['title'] = $this->randomName();
-    $edit['body[0][value]'] = $this->randomName();
+    $langcode = FIELD_LANGUAGE_NONE;
+    $edit["body[$langcode][0][value]"] = $this->randomName();
     $edit['path'] = $this->randomName();
     $this->drupalPost(NULL, $edit, t('Save'));
 

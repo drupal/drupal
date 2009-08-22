@@ -330,9 +330,10 @@ class DBLogTestCase extends DrupalWebTestCase {
       break;
 
       default:
+        $langcode = FIELD_LANGUAGE_NONE;
         $content = array(
           'title' => $this->randomName(8),
-          'body[0][value]' => $this->randomName(32),
+          "body[$langcode][0][value]" => $this->randomName(32),
         );
       break;
     }
@@ -355,8 +356,9 @@ class DBLogTestCase extends DrupalWebTestCase {
       break;
 
       default:
+        $langcode = FIELD_LANGUAGE_NONE;
         $content = array(
-          'body[0][value]' => $this->randomName(32),
+          "body[$langcode][0][value]" => $this->randomName(32),
         );
       break;
     }

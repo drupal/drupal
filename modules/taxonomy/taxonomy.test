@@ -453,7 +453,8 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     // Post an article.
     $edit = array();
     $edit['title'] = $this->randomName();
-    $edit['body[0][value]'] = $this->randomName();
+    $langcode = FIELD_LANGUAGE_NONE;
+    $edit["body[$langcode][0][value]"] = $this->randomName();
     $edit['taxonomy[' . $this->vocabulary->vid . ']'] = $term1->tid;
     $this->drupalPost('node/add/article', $edit, t('Save'));
 
@@ -495,7 +496,8 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     // Insert the terms in a comma separated list. Vocabulary 1 is a
     // free-tagging field created by the default profile.
     $edit['taxonomy[tags][' . $this->vocabulary->vid . ']'] =  implode(', ', $terms);
-    $edit['body[0][value]'] = $this->randomName();
+    $langcode = FIELD_LANGUAGE_NONE;
+    $edit["body[$langcode][0][value]"] = $this->randomName();
     $this->drupalPost('node/add/article', $edit, t('Save'));
     $this->assertRaw(t('@type %title has been created.', array('@type' => t('Article'), '%title' => $edit['title'])), t('The node was created successfully'));
     foreach ($terms as $term) {
@@ -763,20 +765,21 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     field_create_instance($this->instance);
 
     // Test valid and invalid values with field_attach_validate().
+    $langcode = FIELD_LANGUAGE_NONE;
     $entity = field_test_create_stub_entity(0, 0, FIELD_TEST_BUNDLE);
     $term = $this->createTerm($this->vocabulary);
-    $entity->{$this->field_name}[0]['value'] = $term->tid;
+    $entity->{$this->field_name}[$langcode][0]['value'] = $term->tid;
     field_attach_validate('test_entity', $entity);
     try {
-      $this->assertTrue($entity->{$this->field_name}[0]['value'] == $term->tid, t('Correct term does not cause validation error'));
+      $this->assertTrue($entity->{$this->field_name}[$langcode][0]['value'] == $term->tid, t('Correct term does not cause validation error'));
     }
     catch (FieldValidationException $e) {
-      $this->assertTrue($entity->{$this->field_name}[0]['value'] != $term->tid, t('Term from wrong vocabulary does not cause validation error'));
+      $this->assertTrue($entity->{$this->field_name}[$langcode][0]['value'] != $term->tid, t('Term from wrong vocabulary does not cause validation error'));
     }
 
     $entity = field_test_create_stub_entity(0, 0, FIELD_TEST_BUNDLE);
     $bad_term = $this->createTerm($this->createVocabulary());
-    $entity->{$this->field_name}[0]['value'] = $bad_term->tid;
+    $entity->{$this->field_name}[$langcode][0]['value'] = $bad_term->tid;
     try {
       field_attach_validate('test_entity', $entity);
     }
@@ -819,12 +822,13 @@ class TaxonomyTermFieldTestCase extends TaxonomyWebTestCase {
     $term = $this->createTerm($this->vocabulary);
 
     // Display creation form.
+    $langcode = FIELD_LANGUAGE_NONE;
     $this->drupalGet('test-entity/add/test-bundle');
-    $this->assertFieldByName($this->field_name . '[value]', '', t('Widget is displayed'));
+    $this->assertFieldByName("{$this->field_name}[$langcode][value]", '', t('Widget is displayed'));
 
     // Submit with some value.
     $edit = array(
-      $this->field_name . '[value]' => array($term->tid),
+      "{$this->field_name}[$langcode][value]" => array($term->tid),
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     preg_match('|test-entity/(\d+)/edit|', $this->url, $match);

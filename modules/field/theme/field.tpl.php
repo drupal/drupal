@@ -18,6 +18,8 @@
  * - $label: The item label.
  * - $label_display: Position of label display, inline, above, or hidden.
  * - $field_empty: Whether the field has any valid value.
+ * - $field_language: The field language.
+ * - $field_translatable: Whether the field is translatable or not.
  *
  * Each $item in $items contains:
  * - 'view' - the themed view for that item

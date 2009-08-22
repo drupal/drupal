@@ -1930,7 +1930,7 @@ function taxonomy_field_schema($field) {
  * Possible error codes:
  * - 'taxonomy_term_illegal_value': The value is not part of the list of allowed values.
  */
-function taxonomy_field_validate($obj_type, $object, $field, $instance, $items, &$errors) {
+function taxonomy_field_validate($obj_type, $object, $field, $instance, $langcode, $items, &$errors) {
   $allowed_values = taxonomy_allowed_values($field);
   $widget = field_info_widget_types($instance['widget']['type']);
   
@@ -2032,7 +2032,7 @@ function taxonomy_allowed_values($field) {
  * This preloads all taxonomy terms for multiple loaded objects at once and
  * unsets values for invalid terms that do not exist.
  */
-function taxonomy_field_load($obj_type, $objects, $field, $instances, &$items, $age) {
+function taxonomy_field_load($obj_type, $objects, $field, $instances, $langcode, &$items, $age) {
   $tids = array();
 
   // Collect every possible term attached to any of the fieldable entities.

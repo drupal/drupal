@@ -38,7 +38,8 @@ class TriggerContentTestCase extends DrupalWebTestCase {
       $this->drupalLogin($web_user);
       $edit = array();
       $edit['title'] = '!SimpleTest test node! ' . $this->randomName(10);
-      $edit['body[0][value]'] = '!SimpleTest test body! ' . $this->randomName(32) . ' ' . $this->randomName(32);
+      $langcode = FIELD_LANGUAGE_NONE;
+      $edit["body[$langcode][0][value]"] = '!SimpleTest test body! ' . $this->randomName(32) . ' ' . $this->randomName(32);
       $edit[$info['property']] = !$info['expected'];
       $this->drupalPost('node/add/page', $edit, t('Save'));
       // Make sure the text we want appears.

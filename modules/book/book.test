@@ -141,7 +141,7 @@ class BookTestCase extends DrupalWebTestCase {
     // Check printer friendly version.
     $this->drupalGet('book/export/html/' . $node->nid);
     $this->assertText($node->title, t('Printer friendly title found.'));
-    $this->assertRaw(check_markup($node->body[0]['value'], $node->body[0]['format']), t('Printer friendly body found.'));
+    $this->assertRaw(check_markup($node->body[FIELD_LANGUAGE_NONE][0]['value'], $node->body[FIELD_LANGUAGE_NONE][0]['format']), t('Printer friendly body found.'));
 
     $number++;
   }
@@ -173,7 +173,8 @@ class BookTestCase extends DrupalWebTestCase {
 
     $edit = array();
     $edit['title'] = $number . ' - SimpleTest test node ' . $this->randomName(10);
-    $edit['body[0][value]'] = 'SimpleTest test body ' . $this->randomName(32) . ' ' . $this->randomName(32);
+    $langcode = FIELD_LANGUAGE_NONE;
+    $edit["body[$langcode][0][value]"] = 'SimpleTest test body ' . $this->randomName(32) . ' ' . $this->randomName(32);
     $edit['book[bid]'] = $book_nid;
 
     if ($parent !== NULL) {

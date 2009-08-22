@@ -46,6 +46,8 @@
  * - cardinality (integer)
  *     The number of values the field can hold. Legal values are any
  *     positive integer or FIELD_CARDINALITY_UNLIMITED.
+ * - translatable (integer)
+ *     Whether the field is translatable.
  * - locked (integer)
  *     TODO: undefined.
  * - module (string, read-only)
@@ -237,6 +239,7 @@ function field_create_field($field) {
 
   $field += array(
     'cardinality' => 1,
+    'translatable' => FALSE,
     'locked' => FALSE,
     'settings' => array(),
   );

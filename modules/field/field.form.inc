@@ -9,7 +9,7 @@
 /**
  * Create a separate form element for each field.
  */
-function field_default_form($obj_type, $object, $field, $instance, $items, &$form, &$form_state, $get_delta = NULL) {
+function field_default_form($obj_type, $object, $field, $instance, $langcode, $items, &$form, &$form_state, $get_delta = NULL) {
   // This could be called with no object, as when a UI module creates a
   // dummy form to set default values.
   if ($object) {
@@ -48,7 +48,7 @@ function field_default_form($obj_type, $object, $field, $instance, $items, &$for
   // and we are displaying an individual element, process the multiple value
   // form.
   if (!isset($get_delta) && field_behaviors_widget('multiple values', $instance) == FIELD_BEHAVIOR_DEFAULT) {
-    $form_element = field_multiple_value_form($field, $instance, $items, $form, $form_state);
+    $form_element = field_multiple_value_form($field, $instance, $langcode, $items, $form, $form_state);
   }
   // If the widget is handling multiple values (e.g Options),
   // or if we are displaying an individual element, just get a single form
@@ -89,7 +89,20 @@ function field_default_form($obj_type, $object, $field, $instance, $items, &$for
       '#weight' => $instance['widget']['weight'],
     );
 
-    $addition[$field['field_name']] = array_merge($form_element, $defaults);
+    $form_element = array_merge($form_element, $defaults);
+
+    // Add the field form element as a child keyed by language code to match the
+    // field data structure: $object->{$field_name}[$langcode][$delta][$column].
+    // The '#language' key can be used to access the field's form element when
+    // $langcode is unknown. The #weight property is inherited from the field's
+    // form element.
+    $addition[$field['field_name']] = array(
+      '#tree' => TRUE,
+      '#weight' => $form_element['#weight'],
+      '#language' => $langcode,
+      $langcode => $form_element,
+    );
+
     $form['#fields'][$field['field_name']]['form_path'] = array($field['field_name']);
   }
 
@@ -104,7 +117,7 @@ function field_default_form($obj_type, $object, $field, $instance, $items, &$for
  * - AHAH-'add more' button
  * - drag-n-drop value reordering
  */
-function field_multiple_value_form($field, $instance, $items, &$form, &$form_state) {
+function field_multiple_value_form($field, $instance, $langcode, $items, &$form, &$form_state) {
   $field = field_info_field($instance['field_name']);
   $field_name = $field['field_name'];
 
@@ -197,9 +210,11 @@ function field_multiple_value_form($field, $instance, $items, &$form, &$form_sta
         '#field_name' => $field_name,
         '#bundle' => $instance['bundle'],
         '#attributes' => array('class' => 'field-add-more-submit'),
+        '#language' => $langcode,
       );
     }
   }
+
   return $form_element;
 }
 
@@ -276,9 +291,9 @@ function theme_field_multiple_value_form($element) {
 /**
  * Transfer field-level validation errors to widgets.
  */
-function field_default_form_errors($obj_type, $object, $field, $instance, $items, $form, $errors) {
+function field_default_form_errors($obj_type, $object, $field, $instance, $langcode, $items, $form, $errors) {
   $field_name = $field['field_name'];
-  if (!empty($errors[$field_name])) {
+  if (!empty($errors[$field_name][$langcode])) {
     $function = $instance['widget']['module'] . '_field_widget_error';
     $function_exists = drupal_function_exists($function);
 
@@ -290,10 +305,10 @@ function field_default_form_errors($obj_type, $object, $field, $instance, $items
     }
 
     $multiple_widget = field_behaviors_widget('multiple values', $instance) != FIELD_BEHAVIOR_DEFAULT;
-    foreach ($errors[$field_name] as $delta => $delta_errors) {
+    foreach ($errors[$field_name][$langcode] as $delta => $delta_errors) {
       // For multiple single-value widgets, pass errors by delta.
       // For a multiple-value widget, all errors are passed to the main widget.
-      $error_element = $multiple_widget ? $element : $element[$delta];
+      $error_element = $multiple_widget ? $element[$langcode] : $element[$langcode][$delta];
       foreach ($delta_errors as $error) {
         if ($function_exists) {
           $function($error_element, $error);
@@ -320,8 +335,9 @@ function field_add_more_submit($form, &$form_state) {
 
     // Make the changes we want to the form state.
     $field_name = $form_state['clicked_button']['#field_name'];
+    $langcode = $form_state['clicked_button']['#language'];
     if ($form_state['values'][$field_name . '_add_more']) {
-      $form_state['field_item_count'][$field_name] = count($form_state['values'][$field_name]);
+      $form_state['field_item_count'][$field_name] = count($form_state['values'][$field_name][$langcode]);
     }
   }
 }
@@ -383,19 +399,25 @@ function field_add_more_js($bundle_name, $field_name) {
   // Reset cached ids, so that they don't affect the actual form we output.
   drupal_static_reset('form_clean_id');
 
+  // Ensure that a valid language is provided.
+  $langcode = key($_POST[$field_name]);
+  if ($langcode != FIELD_LANGUAGE_NONE) { 
+    $langcode = field_multilingual_valid_language($langcode);
+  }
+
   // Sort the $form_state['values'] we just built *and* the incoming $_POST data
   // according to d-n-d reordering.
-  unset($form_state['values'][$field_name][$field['field_name'] . '_add_more']);
-  foreach ($_POST[$field_name] as $delta => $item) {
-    $form_state['values'][$field_name][$delta]['_weight'] = $item['_weight'];
+  unset($form_state['values'][$field_name][$langcode][$field['field_name'] . '_add_more']);
+  foreach ($_POST[$field_name][$langcode] as $delta => $item) {
+    $form_state['values'][$field_name][$langcode][$delta]['_weight'] = $item['_weight'];
   }
-  $form_state['values'][$field_name] = _field_sort_items($field, $form_state['values'][$field_name]);
-  $_POST[$field_name]                = _field_sort_items($field, $_POST[$field_name]);
+  $form_state['values'][$field_name][$langcode] = _field_sort_items($field, $form_state['values'][$field_name][$langcode]);
+  $_POST[$field_name][$langcode] = _field_sort_items($field, $_POST[$field_name][$langcode]);
 
   // Build our new form element for the whole field, asking for one more element.
-  $form_state['field_item_count'] = array($field_name => count($_POST[$field_name]) + 1);
-  $items = $form_state['values'][$field_name];
-  $form_element = field_default_form(NULL, NULL, $field, $instance, $items, $form, $form_state);
+  $form_state['field_item_count'] = array($field_name => count($_POST[$field_name][$langcode]) + 1);
+  $items = $form_state['values'][$field_name][$langcode];
+  $form_element = field_default_form(NULL, NULL, $field, $instance, $langcode, $items, $form, $form_state);
   // Let other modules alter it.
   drupal_alter('form', $form_element, array(), 'field_add_more_js');
 
@@ -412,8 +434,8 @@ function field_add_more_js($bundle_name, $field_name) {
 
   // Build the new form against the incoming $_POST values so that we can
   // render the new element.
-  $delta = max(array_keys($_POST[$field_name])) + 1;
-  $_POST[$field_name][$delta]['_weight'] = $delta;
+  $delta = max(array_keys($_POST[$field_name][$langcode])) + 1;
+  $_POST[$field_name][$langcode][$delta]['_weight'] = $delta;
   $form_state = form_state_defaults();
   $form_state['input'] = $_POST;
   $form = form_builder($_POST['form_id'], $form, $form_state);

@@ -232,9 +232,10 @@ class ForumTestCase extends DrupalWebTestCase {
     $body = $this->randomName(200);
     $tid = $forum['tid']; // Without this being set, post variable equals the first non-blank in select items list.
 
+    $langcode = FIELD_LANGUAGE_NONE;
     $edit = array(
       'title' => $title,
-      'body[0][value]' => $body,
+      "body[$langcode][0][value]" => $body,
       'taxonomy[1]' => $tid
     );
 
@@ -321,7 +322,8 @@ class ForumTestCase extends DrupalWebTestCase {
       // Edit forum node (including moving it to another forum).
       $edit = array();
       $edit['title'] = 'node/' . $node->nid;
-      $edit['body[0][value]'] = $this->randomName(256);
+      $langcode = FIELD_LANGUAGE_NONE;
+      $edit["body[$langcode][0][value]"] = $this->randomName(256);
       $edit['taxonomy[1]'] = $this->root_forum['tid']; // Assumes the topic is initially associated with $forum.
       $edit['shadow'] = TRUE;
       $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));

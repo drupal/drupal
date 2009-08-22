@@ -228,12 +228,12 @@ function list_allowed_values_validate($element, &$form_state) {
  * Possible error codes:
  * - 'list_illegal_value': The value is not part of the list of allowed values.
  */
-function list_field_validate($obj_type, $object, $field, $instance, $items, &$errors) {
+function list_field_validate($obj_type, $object, $field, $instance, $langcode, $items, &$errors) {
   $allowed_values = list_allowed_values($field);
   foreach ($items as $delta => $item) {
     if (!empty($item['value'])) {
       if (count($allowed_values) && !array_key_exists($item['value'], $allowed_values)) {
-        $errors[$field['field_name']][$delta][] = array(
+        $errors[$field['field_name']][$langcode][$delta][] = array(
           'error' => 'list_illegal_value',
           'message' => t('%name: illegal value.', array('%name' => t($instance['label']))),
         );

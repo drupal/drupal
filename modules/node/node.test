@@ -141,7 +141,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
 
     // Confirm the correct revision text appears on "view revisions" page.
     $this->drupalGet("node/$node->nid/revisions/$node->vid/view");
-    $this->assertText($node->body[0]['value'], t('Correct text displays for version.'));
+    $this->assertText($node->body[FIELD_LANGUAGE_NONE][0]['value'], t('Correct text displays for version.'));
 
     // Confirm the correct log message appears on "revisions overview" page.
     $this->drupalGet("node/$node->nid/revisions");
@@ -155,7 +155,7 @@ class NodeRevisionsTestCase extends DrupalWebTestCase {
                         array('@type' => 'Page', '%title' => $nodes[1]->title,
                               '%revision-date' => format_date($nodes[1]->revision_timestamp))), t('Revision reverted.'));
     $reverted_node = node_load($node->nid);
-    $this->assertTrue(($nodes[1]->body[0]['value'] == $reverted_node->body[0]['value']), t('Node reverted correctly.'));
+    $this->assertTrue(($nodes[1]->body[FIELD_LANGUAGE_NONE][0]['value'] == $reverted_node->body[FIELD_LANGUAGE_NONE][0]['value']), t('Node reverted correctly.'));
 
     // Confirm revisions delete properly.
     $this->drupalPost("node/$node->nid/revisions/{$nodes[1]->vid}/delete", array(), t('Delete'));
@@ -186,7 +186,8 @@ class PageEditTestCase extends DrupalWebTestCase {
    * Check node edit functionality.
    */
   function testPageEdit() {
-    $body_key = 'body[0][value]';
+    $langcode = FIELD_LANGUAGE_NONE;
+    $body_key = "body[$langcode][0][value]";
     // Create node to edit.
     $edit = array();
     $edit['title'] = $this->randomName(8);
@@ -241,7 +242,8 @@ class PagePreviewTestCase extends DrupalWebTestCase {
    * Check the node preview functionality.
    */
   function testPagePreview() {
-    $body_key = 'body[0][value]';
+    $langcode = FIELD_LANGUAGE_NONE;
+    $body_key = "body[$langcode][0][value]";
 
     // Fill in node creation form and preview node.
     $edit = array();
@@ -263,7 +265,8 @@ class PagePreviewTestCase extends DrupalWebTestCase {
    * Check the node preview functionality, when using revisions.
    */
   function testPagePreviewWithRevisions() {
-    $body_key = 'body[0][value]';
+    $langcode = FIELD_LANGUAGE_NONE;
+    $body_key = "body[$langcode][0][value]";
     // Force revision on page content.
     variable_set('node_options_page', array('status', 'revision'));
 
@@ -311,7 +314,8 @@ class PageCreationTestCase extends DrupalWebTestCase {
     // Create a node.
     $edit = array();
     $edit['title'] = $this->randomName(8);
-    $edit['body[0][value]'] = $this->randomName(16);
+    $langcode = FIELD_LANGUAGE_NONE;
+    $edit["body[$langcode][0][value]"] = $this->randomName(16);
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check that the page has been created.
@@ -377,7 +381,7 @@ class SummaryLengthTestCase extends DrupalWebTestCase {
   function testSummaryLength() {
     // Create a node to view.
     $settings = array(
-      'body' => array(array('value' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vitae arcu at leo cursus laoreet. Curabitur dui tortor, adipiscing malesuada tempor in, bibendum ac diam. Cras non tellus a libero pellentesque condimentum. What is a Drupalism? Suspendisse ac lacus libero. Ut non est vel nisl faucibus interdum nec sed leo. Pellentesque sem risus, vulputate eu semper eget, auctor in libero. Ut fermentum est vitae metus convallis scelerisque. Phasellus pellentesque rhoncus tellus, eu dignissim purus posuere id. Quisque eu fringilla ligula. Morbi ullamcorper, lorem et mattis egestas, tortor neque pretium velit, eget eleifend odio turpis eu purus. Donec vitae metus quis leo pretium tincidunt a pulvinar sem. Morbi adipiscing laoreet mauris vel placerat. Nullam elementum, nisl sit amet scelerisque malesuada, dolor nunc hendrerit quam, eu ultrices erat est in orci. Curabitur feugiat egestas nisl sed accumsan.')),
+      'body' => array(FIELD_LANGUAGE_NONE => array(array('value' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vitae arcu at leo cursus laoreet. Curabitur dui tortor, adipiscing malesuada tempor in, bibendum ac diam. Cras non tellus a libero pellentesque condimentum. What is a Drupalism? Suspendisse ac lacus libero. Ut non est vel nisl faucibus interdum nec sed leo. Pellentesque sem risus, vulputate eu semper eget, auctor in libero. Ut fermentum est vitae metus convallis scelerisque. Phasellus pellentesque rhoncus tellus, eu dignissim purus posuere id. Quisque eu fringilla ligula. Morbi ullamcorper, lorem et mattis egestas, tortor neque pretium velit, eget eleifend odio turpis eu purus. Donec vitae metus quis leo pretium tincidunt a pulvinar sem. Morbi adipiscing laoreet mauris vel placerat. Nullam elementum, nisl sit amet scelerisque malesuada, dolor nunc hendrerit quam, eu ultrices erat est in orci. Curabitur feugiat egestas nisl sed accumsan.'))),
       'promote' => 1,
     );
     $node = $this->drupalCreateNode($settings);
@@ -500,7 +504,8 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
     // Create a node.
     $edit = array();
     $edit['title'] = $this->randomName(8);
-    $edit['body[0][value]'] = $this->randomName(16);
+    $langcode = FIELD_LANGUAGE_NONE;
+    $edit["body[$langcode][0][value]"] = $this->randomName(16);
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check that the post information is displayed.
@@ -521,7 +526,8 @@ class NodePostSettingsTestCase extends DrupalWebTestCase {
     // Create a node.
     $edit = array();
     $edit['title'] = $this->randomName(8);
-    $edit['body[0][value]'] = $this->randomName(16);
+    $langcode = FIELD_LANGUAGE_NONE;
+    $edit["body[$langcode][0][value]"] = $this->randomName(16);
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check that the post information is displayed.
@@ -764,7 +770,7 @@ class NodeSaveTestCase extends DrupalWebTestCase {
     $title = $this->randomName(8);
     $node = array(
       'title' => $title,
-      'body' => array(array('value' => $this->randomName(32))),
+      'body' => array(FIELD_LANGUAGE_NONE => array(array('value' => $this->randomName(32)))),
       'uid' => $this->web_user->uid,
       'type' => 'article',
       'nid' => $test_nid,

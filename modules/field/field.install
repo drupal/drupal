@@ -63,6 +63,12 @@ function field_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
+      'translatable' => array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
       'active' => array(
         'type' => 'int',
         'size' => 'tiny',
