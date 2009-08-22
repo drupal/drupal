@@ -1,5 +1,5 @@
 <?php
-// $Id: system.install,v 1.375 2009/08/22 16:55:46 webchick Exp $
+// $Id: system.install,v 1.376 2009/08/22 18:24:14 webchick Exp $
 
 /**
  * @file
@@ -2425,6 +2425,33 @@ function system_update_7035() {
     $fids[] = $file['fid'];
   }
   // TODO: delete the found fids from {files}?
+  return $ret;
+}
+
+/**
+ * Split the 'access site in maintenance mode' permission from 'administer site configuration'.
+ */
+function system_update_7036() {
+  $ret = array();
+  // Get existing roles that can 'administer site configuration'.
+  $rids = db_query("SELECT rid FROM {role_permission} WHERE permission = :perm", array(':perm' => 'administer site configuration'))->fetchCol();
+  // None found.
+  if (empty($rids)) {
+    return $ret;
+  }
+  $insert = db_insert('role_permission')->fields(array('rid', 'permission'));
+  foreach ($rids as $rid) {
+    $insert->values(array(
+      'rid' => $rid,
+      'permission' => 'access site in maintenance mode',
+    ));
+  }
+  $insert->execute();
+
+  // Remove obsolete variable 'site_offline_message'.
+  // @see update_fix_d7_requirements().
+  variable_del('site_offline_message');
+
   return $ret;
 }
 

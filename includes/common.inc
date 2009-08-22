@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.966 2009/08/22 14:34:17 webchick Exp $
+// $Id: common.inc,v 1.967 2009/08/22 18:24:14 webchick Exp $
 
 /**
  * @file
@@ -390,8 +390,8 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL, $http_response
 function drupal_site_offline() {
   drupal_maintenance_theme();
   drupal_set_header('503 Service unavailable');
-  drupal_set_title(t('Site offline'));
-  print theme('maintenance_page', filter_xss_admin(variable_get('site_offline_message',
+  drupal_set_title(t('Site under maintenance'));
+  print theme('maintenance_page', filter_xss_admin(variable_get('maintenance_mode_message',
     t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => variable_get('site_name', 'Drupal'))))));
 }
 
