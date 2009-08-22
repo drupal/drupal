@@ -36,7 +36,7 @@ class UploadTestCase extends DrupalWebTestCase {
     $edit['upload_extensions_default'] = 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp';
     $edit['upload_uploadsize_default'] = '1.5';
     $edit['upload_usersize_default'] = '1.5';
-    $this->drupalPost('admin/settings/uploads', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/media/uploads', $edit, t('Save configuration'));
     $this->assertText('The configuration options have been saved.', 'Upload setting saved.');
 
     $this->drupalLogout();
@@ -181,7 +181,7 @@ class UploadTestCase extends DrupalWebTestCase {
         $edit[$key . '_' . $rid] = $value;
       }
     }
-    $this->drupalPost('admin/settings/uploads', $edit, 'Save configuration');
+    $this->drupalPost('admin/config/media/uploads', $edit, 'Save configuration');
     $this->assertText('The configuration options have been saved.', 'Upload setting saved.');
   }
 

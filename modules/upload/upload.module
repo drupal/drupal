@@ -17,7 +17,7 @@ function upload_help($path, $arg) {
       $output .= '<p>' . t('Users with the upload files permission can upload attachments to posts. Uploads may be enabled for specific content types on the content types settings page. Each user role can be customized to limit or control the file size of uploads, or the maximum dimension of image files.') . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@upload">Upload module</a>.', array('@upload' => 'http://drupal.org/handbook/modules/upload/')) . '</p>';
       return $output;
-    case 'admin/settings/upload':
+    case 'admin/config/media/uploads':
       return '<p>' . t('Users with the <a href="@permissions">upload files permission</a> can upload attachments. Users with the <a href="@permissions">view uploaded files permission</a> can view uploaded attachments. You can choose which post types can take attachments on the <a href="@types">content types settings</a> page.', array('@permissions' => url('admin/config/people/permissions'), '@types' => url('admin/settings/types'))) . '</p>';
   }
 }
@@ -92,7 +92,7 @@ function upload_menu() {
     'access arguments' => array('upload files'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/settings/uploads'] = array(
+  $items['admin/config/media/uploads'] = array(
     'title' => 'File uploads',
     'description' => 'Control how files may be attached to content.',
     'page callback' => 'drupal_get_form',
