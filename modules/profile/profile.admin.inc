@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.admin.inc,v 1.27 2009/08/21 14:27:45 dries Exp $
+// $Id: profile.admin.inc,v 1.28 2009/08/22 09:22:01 dries Exp $
 
 /**
  * @file
@@ -171,7 +171,7 @@ function theme_profile_admin_overview($form) {
  * @see profile_field_form_submit()
  */
 function profile_field_form(&$form_state, $arg = NULL) {
-  if (arg(3) == 'edit') {
+  if (arg(4) == 'edit') {
     if (is_numeric($arg)) {
       $fid = $arg;
 
