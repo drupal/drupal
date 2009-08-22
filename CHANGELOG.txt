@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.329 2009/08/19 22:46:05 webchick Exp $
+// $Id: CHANGELOG.txt,v 1.330 2009/08/22 16:01:09 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -32,6 +32,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
       now be achieved with Field API.
     * Added additional features to the default install profile, and implemented
       a "slimmed down" install profile designed for developers.
+    * Added a built-in, automated cron run feature, which is triggered by site
+      visitors.
     * Added an administrator role which is assigned all permisions for
       installed modules automatically.
     * Image toolkits are now provided by modules (rather than requiring a manual
