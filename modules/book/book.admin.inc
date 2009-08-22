@@ -1,5 +1,5 @@
 <?php
-// $Id: book.admin.inc,v 1.20 2009/06/04 03:33:27 webchick Exp $
+// $Id: book.admin.inc,v 1.21 2009/08/22 14:34:18 webchick Exp $
 
 /**
  * @file
@@ -236,9 +236,9 @@ function theme_book_admin_table($form) {
     $href = $form[$key]['href']['#value'];
 
     // Add special classes to be used with tabledrag.js.
-    $form[$key]['plid']['#attributes']['class'] = 'book-plid';
-    $form[$key]['mlid']['#attributes']['class'] = 'book-mlid';
-    $form[$key]['weight']['#attributes']['class'] = 'book-weight';
+    $form[$key]['plid']['#attributes']['class'] = array('book-plid');
+    $form[$key]['mlid']['#attributes']['class'] = array('book-mlid');
+    $form[$key]['weight']['#attributes']['class'] = array('book-weight');
 
     $data = array(
       theme('indentation', $form[$key]['depth']['#value'] - 2) . drupal_render($form[$key]['title']),
@@ -252,7 +252,7 @@ function theme_book_admin_table($form) {
     if (isset($form[$key]['#attributes'])) {
       $row = array_merge($row, $form[$key]['#attributes']);
     }
-    $row['class'] = empty($row['class']) ? 'draggable' : $row['class'] . ' draggable';
+    $row['class'][] = 'draggable';
     $rows[] = $row;
   }
 

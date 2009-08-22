@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.267 2009/08/21 14:27:45 dries Exp $
+// $Id: profile.module,v 1.268 2009/08/22 14:34:21 webchick Exp $
 
 /**
  * @file
@@ -351,7 +351,7 @@ function profile_user_view($account) {
         '#title' => $title,
         '#markup' => $value,
         '#weight' => $field->weight,
-        '#attributes' => array('class' => 'profile-' . $field->name),
+        '#attributes' => array('class' => array('profile-' . $field->name)),
       );
     }
   }

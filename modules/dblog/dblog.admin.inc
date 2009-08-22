@@ -1,5 +1,5 @@
 <?php
-// $Id: dblog.admin.inc,v 1.24 2009/08/16 17:57:44 webchick Exp $
+// $Id: dblog.admin.inc,v 1.25 2009/08/22 14:34:19 webchick Exp $
 
 /**
  * @file
@@ -84,7 +84,7 @@ function dblog_overview() {
         $dblog->link,
       ),
       // Attributes for tr
-      'class' => "dblog-" . preg_replace('/[^a-z]/i', '-', $dblog->type) . ' ' . $classes[$dblog->severity]
+      'class' => array('dblog-' . preg_replace('/[^a-z]/i', '-', $dblog->type), $classes[$dblog->severity]),
     );
   }
 
@@ -196,7 +196,7 @@ function dblog_event($id) {
     $build['dblog_table'] = array(
       '#theme' => 'table', 
       '#rows' => $rows, 
-      '#attributes' => array('class' => 'dblog-event'),
+      '#attributes' => array('class' => array('dblog-event')),
     );
     return $build;
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.303 2009/07/23 20:58:26 webchick Exp $
+// $Id: search.module,v 1.304 2009/08/22 14:34:21 webchick Exp $
 
 /**
  * @file
@@ -1070,7 +1070,7 @@ function search_form(&$form_state, $action = '', $keys = '', $type = NULL, $prom
 
   $form = array(
     '#action' => $action,
-    '#attributes' => array('class' => 'search-form'),
+    '#attributes' => array('class' => array('search-form')),
   );
   $form['module'] = array('#type' => 'value', '#value' => $type);
   $form['basic'] = array('#type' => 'item', '#title' => $prompt, '#id' => 'edit-keys');

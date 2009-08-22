@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.30 2009/07/30 19:24:20 dries Exp $
+// $Id: aggregator.pages.inc,v 1.31 2009/08/22 14:34:18 webchick Exp $
 
 /**
  * @file
@@ -242,7 +242,7 @@ function theme_aggregator_categorize_items($form) {
     foreach (element_children($form['items']) as $key) {
       $rows[] = array(
         drupal_render($form['items'][$key]),
-        array('data' => drupal_render($form['categories'][$key]), 'class' => 'categorize-item'),
+        array('data' => drupal_render($form['categories'][$key]), 'class' => array('categorize-item')),
       );
     }
   }

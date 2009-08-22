@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.api.php,v 1.3 2009/07/11 13:56:21 dries Exp $
+// $Id: locale.api.php,v 1.4 2009/08/22 14:34:20 webchick Exp $
 
 /**
  * @file
@@ -40,7 +40,7 @@ function hook_translation_link_alter(array &$links, $path) {
 
   if (isset($links[$language])) {
     foreach ($links[$language] as $link) {
-      $link['attributes']['class'] .= ' active-language';
+      $link['attributes']['class'][] = 'active-language';
     }
   }
 }

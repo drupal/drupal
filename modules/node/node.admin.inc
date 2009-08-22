@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.60 2009/07/30 19:24:21 dries Exp $
+// $Id: node.admin.inc,v 1.61 2009/08/22 14:34:20 webchick Exp $
 
 /**
  * @file
@@ -376,7 +376,7 @@ function node_admin_content($form_state) {
   if (_node_add_access()) {
     $form['add_content'] = array(
       '#type' => 'markup',
-      '#markup' => l(t('Add new content'), 'node/add', array('attributes' => array('class' => 'node-admin-add-content'))),
+      '#markup' => l(t('Add new content'), 'node/add', array('attributes' => array('class' => array('node-admin-add-content')))),
     );
   }
   $form[] = node_filter_form();

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.pages.inc,v 1.76 2009/08/22 00:58:54 webchick Exp $
+// $Id: node.pages.inc,v 1.77 2009/08/22 14:34:20 webchick Exp $
 
 /**
  * @file
@@ -502,8 +502,8 @@ function node_revision_overview($node) {
     if ($revision->current_vid > 0) {
       $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'small'), "node/$node->nid"), '!username' => theme('username', $revision)))
                                . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : ''),
-                     'class' => 'revision-current');
-      $operations[] = array('data' => theme('placeholder', t('current revision')), 'class' => 'revision-current', 'colspan' => 2);
+                     'class' => array('revision-current'));
+      $operations[] = array('data' => theme('placeholder', t('current revision')), 'class' => array('revision-current'), 'colspan' => 2);
     }
     else {
       $row[] = t('!date by !username', array('!date' => l(format_date($revision->timestamp, 'small'), "node/$node->nid/revisions/$revision->vid/view"), '!username' => theme('username', $revision)))

@@ -1,5 +1,5 @@
 <?php
-// $Id: update.module,v 1.41 2009/08/12 23:51:19 webchick Exp $
+// $Id: update.module,v 1.42 2009/08/22 14:34:23 webchick Exp $
 
 /**
  * @file
@@ -162,7 +162,7 @@ function update_theme() {
       'arguments' => array('data' => NULL),
     ),
     'update_version' => array(
-      'arguments' => array('version' => NULL, 'tag' => NULL, 'class' => NULL),
+      'arguments' => array('version' => NULL, 'tag' => NULL, 'class' => array()),
     ),
   );
 }

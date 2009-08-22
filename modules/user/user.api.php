@@ -1,5 +1,5 @@
 <?php
-// $Id: user.api.php,v 1.10 2009/08/12 12:36:05 dries Exp $
+// $Id: user.api.php,v 1.11 2009/08/22 14:34:23 webchick Exp $
 
 /**
  * @file
@@ -417,7 +417,7 @@ function hook_user_view($account) {
       '#type' => 'user_profile_item',
       '#title' => t('Blog'),
       '#markup' => l(t('View recent blog entries'), "blog/$account->uid", array('attributes' => array('title' => t("Read !username's latest blog entries.", array('!username' => $account->name))))),
-      '#attributes' => array('class' => 'blog'),
+      '#attributes' => array('class' => array('blog')),
     );
   }
 }

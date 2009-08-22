@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.4 2009/08/20 15:59:58 webchick Exp $
+// $Id: template.php,v 1.5 2009/08/22 14:34:23 webchick Exp $
 
 /**
  * Override or insert variables into the page template.
@@ -75,12 +75,12 @@ function seven_fieldset($element) {
     drupal_add_js('misc/collapse.js');
 
     if (!isset($element['#attributes']['class'])) {
-      $element['#attributes']['class'] = '';
+      $element['#attributes']['class'] = array();
     }
 
-    $element['#attributes']['class'] .= ' collapsible';
+    $element['#attributes']['class'][] = 'collapsible';
     if (!empty($element['#collapsed'])) {
-      $element['#attributes']['class'] .= ' collapsed';
+      $element['#attributes']['class'][] = 'collapsed';
     }
   }
   $element['#attributes']['id'] = $element['#id'];

@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.311 2009/08/21 14:27:46 dries Exp $
+// $Id: statistics.module,v 1.312 2009/08/22 14:34:21 webchick Exp $
 
 /**
  * @file
@@ -116,7 +116,7 @@ function statistics_node_view($node, $build_mode) {
     $node->content['links']['statistics'] = array(
       '#theme' => 'links',
       '#links' => $links,
-      '#attributes' => array('class' => 'links inline'),
+      '#attributes' => array('class' => array('links', 'inline')),
     );
   }
 }

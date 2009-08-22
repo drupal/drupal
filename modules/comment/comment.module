@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.755 2009/08/21 00:21:48 webchick Exp $
+// $Id: comment.module,v 1.756 2009/08/22 14:34:18 webchick Exp $
 
 /**
  * @file
@@ -552,7 +552,7 @@ function comment_node_view($node, $build_mode) {
     $node->content['links']['comment'] = array(
       '#theme' => 'links',
       '#links' => $links,
-      '#attributes' => array('class' => 'links inline'),
+      '#attributes' => array('class' => array('links', 'inline')),
     );
 
     // Only append comments when we are building a node on its own node detail
@@ -825,7 +825,7 @@ function comment_build_content($comment, $build_mode = 'full') {
     $comment->content['links']['comment'] = array(
       '#theme' => 'links',
       '#links' => comment_links($comment),
-      '#attributes' => array('class' => 'links inline'),
+      '#attributes' => array('class' => array('links', 'inline')),
     );
   }
 

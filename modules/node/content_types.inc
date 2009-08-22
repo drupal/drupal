@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.88 2009/08/21 00:21:48 webchick Exp $
+// $Id: content_types.inc,v 1.89 2009/08/22 14:34:20 webchick Exp $
 
 /**
  * @file
@@ -35,7 +35,7 @@ function node_overview_types() {
   }
 
   if (empty($rows)) {
-    $rows[] = array(array('data' => t('No content types available. <a href="@link">Add content type</a>.', array('@link' => url('admin/structure/types/add'))), 'colspan' => '5', 'class' => 'message'));
+    $rows[] = array(array('data' => t('No content types available. <a href="@link">Add content type</a>.', array('@link' => url('admin/structure/types/add'))), 'colspan' => '5', 'class' => array('message')));
   }
   
   $build['node_table'] = array(

@@ -1,5 +1,5 @@
 <?php
-// $Id: template.php,v 1.25 2009/08/22 13:45:37 dries Exp $
+// $Id: template.php,v 1.26 2009/08/22 14:34:23 webchick Exp $
 
 /**
  * Return a themed breadcrumb trail.
@@ -20,11 +20,11 @@ function garland_breadcrumb($breadcrumb) {
 function garland_preprocess_page(&$vars) {
   $vars['tabs2'] = menu_secondary_local_tasks();
   $vars['primary_nav'] = isset($vars['main_menu']) ? theme('links', $vars['main_menu'], array(
-    'text' => t('Main menu'), 'level' => 'h2', 'class' => 'element-invisible',
-  ), array('class' => 'links main-menu')) : FALSE;
+    'text' => t('Main menu'), 'level' => 'h2', 'class' => array('element-invisible'),
+  ), array('class' => array('links', 'main-menu'))) : FALSE;
   $vars['secondary_nav'] = isset($vars['secondary_menu']) ? theme('links', $vars['secondary_menu'], array(
-    'text' => t('Secondary menu'), 'level' => 'h2', 'class' => 'element-invisible',
-  ), array('class' => 'links secondary-menu')) : FALSE;
+    'text' => t('Secondary menu'), 'level' => 'h2', 'class' => array('element-invisible'),
+  ), array('class' => array('links', 'secondary-menu'))) : FALSE;
   $vars['ie_styles'] = garland_get_ie_styles();
 
   // Prepare header
