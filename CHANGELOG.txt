@@ -32,6 +32,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
       now be achieved with Field API.
     * Added additional features to the default install profile, and implemented
       a "slimmed down" install profile designed for developers.
+    * Added a built-in, automated cron run feature, which is triggered by site
+      visitors.
     * Added an administrator role which is assigned all permisions for
       installed modules automatically.
     * Image toolkits are now provided by modules (rather than requiring a manual

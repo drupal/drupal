@@ -1313,7 +1313,16 @@ function system_site_information_settings() {
     '#description' => t('Render all blocks on the default 404 (not found) page. Disabling blocks can help with performance but might leave users with a less functional site.'),
     '#default_value' => variable_get('site_404_blocks', 0)
   );
+  $form['cron_safe_threshold'] = array(
+    '#type' => 'select',
+    '#title' => t('Automatically run cron'),
+    '#default_value' => variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD),
+    '#options' => array(0 => t('Never')) + drupal_map_assoc(array(3600, 10800, 21600, 43200, 86400, 604800), 'format_interval'),
+    '#description' => t('When enabled, the site will check whether cron has been run in the configured interval and automatically run it upon the next page request. For more information visit the <a href="@status-report-url">status report page</a>.', array('@status-report-url' => url('admin/reports/status'))),
+  );
+
   $form['#validate'][] = 'system_site_information_settings_validate';
+  $form['#submit'][] = 'system_site_information_settings_submit';
 
   return system_settings_form($form);
 }
@@ -1330,6 +1339,18 @@ function system_site_information_settings_validate($form, &$form_state) {
   $item = array('link_path' => drupal_get_normal_path($form_state['values']['site_frontpage']));
   if (!menu_valid_path($item)) {
     form_set_error('site_frontpage', t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $item['link_path'])));
+  }
+}
+
+/**
+ * Form submit handler for the site-information form.
+ */
+function system_site_information_settings_submit($form, &$form_state) {
+  // Clear caches when the cron threshold is changed to ensure that the cron
+  // image is not contained in cached pages.
+  $cron_threshold = variable_get('cron_safe_threshold', DRUPAL_CRON_DEFAULT_THRESHOLD);
+  if (($cron_threshold > 0 && $form_state['input']['cron_safe_threshold'] == 0) || ($cron_threshold == 0 && $form_state['input']['cron_safe_threshold'] > 0)) {
+    cache_clear_all();
   }
 }
 

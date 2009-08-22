@@ -231,9 +231,18 @@ INSTALLATION
    maintenance task, including search module (to build and update the index
    used for keyword searching), aggregator module (to retrieve feeds from other
    sites), and system module (to perform routine maintenance and pruning on
-   system tables). To activate these tasks, visit the page "cron.php", which
-   executes maintenance tasks on behalf of installed modules. The URL of the
-   cron.php page requires a "cron key" to protect against unauthorized access.
+   system tables).
+
+   For most sites, the built-in, automated cron feature should be sufficient.
+   Note, however, that cron tasks will only be executed when there are site
+   visitors. You can enable the built-in cron feature at:
+
+          Administer > Configuration and modules > Development > Maintenance mode
+
+   Advanced users may want to ensure that cron tasks are executed periodically.
+   To do this, visit the page "cron.php", which executes maintenance tasks on
+   behalf of installed modules. The URL of the cron.php page requires a "cron
+   key" to protect against unauthorized access.
    Each cron key is automatically generated during installation and is specific
    to your site. The full URL of the page, with cron key, is available in the
    "Cron maintenance tasks" section of the "Status report page" at:
