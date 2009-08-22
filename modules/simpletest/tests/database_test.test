@@ -2777,3 +2777,109 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
     }
   }
 }
+
+
+/**
+ * Test proposed new data types for the schema API.
+ */
+class DatabaseExtraTypesTestCase extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Extra Types tests',
+      'description' => 'Test the Extra Types.',
+      'group' => 'Database',
+    );
+  }
+
+
+  /**
+   * Test the date data type.
+   */
+   function testDateField() {
+     try {
+       $date_table = array(
+         'fields' => array(
+           'date_field' => array(
+             'description' => t('Test Date field'),
+             'type' => 'date',
+             'not null' => FALSE,
+           ),
+         ),
+       );
+       $ret = array();
+       db_create_table($ret, 'date_table', $date_table);
+       $this->assertEqual($ret[0]['success'], 1, t('Created table with date field'));
+
+       db_insert('date_table')->fields(array('date_field'))
+         ->values(array('date_field' => '2001-01-01'))
+         ->values(array('date_field' => '1856-12-31'))
+         ->values(array('date_field' => '2100-06-30'))
+         ->execute();
+
+       $num_records = (int) db_query('SELECT COUNT(*) FROM {date_table}')->fetchField();
+       $this->assertEqual($num_records, 3, t('Inserted 3 records, and counted 3 records'));
+       $res = db_query('SELECT date_field from {date_table} ORDER BY date_field');
+
+       $date = $res->fetch()->date_field;
+       $this->assertEqual($date, '1856-12-31', t('Date retrieved in order @date', array('@date' => $date)));
+       $date = $res->fetch()->date_field;
+       $this->assertEqual($date, '2001-01-01', t('Date retrieved in order @date', array('@date' => $date)));
+       $date = $res->fetch()->date_field;
+       $this->assertEqual($date, '2100-06-30', t('Date retrieved in order @date', array('@date' => $date)));
+
+
+       db_drop_table($ret, 'date_table');
+       $this->assertEqual($ret[1]['success'], 1, t('Dropped table with date field'));
+
+     } catch (Exception $e) {
+       $this->fail($e->getMessage());
+     }
+
+   }
+
+  /**
+   * Test the time data type.
+   */
+   function testTimeField() {
+     try {
+       $time_table = array(
+         'fields' => array(
+           'time_field' => array(
+             'description' => t('Test Time field'),
+             'type' => 'time',
+             'not null' => FALSE,
+	       ),
+         ),
+       );
+       $ret = array();
+       db_create_table($ret, 'time_table', $time_table);
+       $this->assertEqual($ret[0]['success'], 1, t('Created table with time field'));
+
+       db_insert('time_table')->fields(array('time_field'))
+         ->values(array('time_field' => '12:59:00'))
+         ->values(array('time_field' => '00:01:00'))
+         ->values(array('time_field' => '23:17:00'))
+         ->execute();
+
+       $num_records = (int) db_query('SELECT COUNT(*) FROM {time_table}')->fetchField();
+       $this->assertEqual($num_records, 3, t('Inserted 3 records, and counted 3 records'));
+       $res = db_query('SELECT time_field from {time_table} ORDER BY time_field');
+
+       $time = $res->fetch()->time_field;
+       $this->assertEqual($time, '00:01:00', t('Time retrieved in order @time', array('@time' => $time)));
+       $time = $res->fetch()->time_field;
+       $this->assertEqual($time, '12:59:00', t('Time retrieved in order @time', array('@time' => $time)));
+       $time = $res->fetch()->time_field;
+       $this->assertEqual($time, '23:17:00', t('Time retrieved in order @time', array('@time' => $time)));
+
+       db_drop_table($ret, 'time_table');
+       $this->assertEqual($ret[1]['success'], 1, t('Dropped table with time field'));
+     } catch (Exception $e) {
+       $this->fail($e->getMessage());
+     }
+
+  }
+
+}
+
