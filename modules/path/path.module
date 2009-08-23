@@ -1,5 +1,5 @@
 <?php
-// $Id: path.module,v 1.164 2009/08/15 15:45:07 dries Exp $
+// $Id: path.module,v 1.165 2009/08/23 01:05:12 webchick Exp $
 
 /**
  * @file
@@ -61,7 +61,7 @@ function path_menu() {
     'title' => 'Add alias',
     'page callback' => 'path_admin_edit',
     'access arguments' => array('administer url aliases'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
   );
 
   return $items;

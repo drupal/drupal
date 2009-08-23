@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.273 2009/08/22 14:34:20 webchick Exp $
+// $Id: filter.module,v 1.274 2009/08/23 01:05:10 webchick Exp $
 
 /**
  * @file
@@ -85,7 +85,7 @@ function filter_menu() {
     'title' => 'Add text format',
     'page callback' => 'filter_admin_format_page',
     'access arguments' => array('administer filters'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
     'weight' => 1,
   );
   $items['admin/settings/formats/delete'] = array(

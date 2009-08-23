@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.416 2009/07/30 19:24:20 dries Exp $
+// $Id: aggregator.module,v 1.417 2009/08/23 01:05:10 webchick Exp $
 
 /**
  * @file
@@ -97,7 +97,7 @@ function aggregator_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_feed'),
     'access arguments' => array('administer news feeds'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
     'parent' => 'admin/settings/aggregator',
   );
   $items['admin/settings/aggregator/add/category'] = array(
@@ -105,7 +105,7 @@ function aggregator_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_category'),
     'access arguments' => array('administer news feeds'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
     'parent' => 'admin/settings/aggregator',
   );
   $items['admin/settings/aggregator/add/opml'] = array(
@@ -113,7 +113,7 @@ function aggregator_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_form_opml'),
     'access arguments' => array('administer news feeds'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
     'parent' => 'admin/settings/aggregator',
   );
   $items['admin/settings/aggregator/remove/%aggregator_feed'] = array(

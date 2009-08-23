@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.252 2009/08/22 14:34:20 webchick Exp $
+// $Id: locale.module,v 1.253 2009/08/23 01:05:11 webchick Exp $
 
 /**
  * @file
@@ -87,7 +87,7 @@ function locale_menu() {
     'page callback' => 'locale_languages_add_screen', // two forms concatenated
     'access arguments' => array('administer languages'),
     'weight' => 5,
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
   );
   $items['admin/config/regional/language/configure'] = array(
     'title' => 'Configure',

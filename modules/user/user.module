@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.1026 2009/08/22 14:34:23 webchick Exp $
+// $Id: user.module,v 1.1027 2009/08/23 01:05:12 webchick Exp $
 
 /**
  * @file
@@ -1364,7 +1364,7 @@ function user_menu() {
     'title' => 'Add user',
     'page arguments' => array('create'),
     'access arguments' => array('administer users'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
   );
 
   // Administration pages.

@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.361 2009/08/22 13:25:37 dries Exp $
+// $Id: block.module,v 1.362 2009/08/23 01:05:10 webchick Exp $
 
 /**
  * @file
@@ -156,7 +156,7 @@ function block_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('block_add_block_form'),
     'access arguments' => array('administer blocks'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
   );
   $default = variable_get('theme_default', 'garland');
   foreach (list_themes() as $key => $theme) {
