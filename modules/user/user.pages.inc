@@ -78,9 +78,24 @@ function user_pass_submit($form, &$form_state) {
 function user_pass_reset(&$form_state, $uid, $timestamp, $hashed_pass, $action = NULL) {
   global $user;
 
-  // Check if the user is already logged in. The back button is often the culprit here.
+  // When processing the one-time login link, we have to make sure that a user
+  // isn't already logged in.
   if ($user->uid) {
-    drupal_set_message(t('You have already used this one-time login link. It is not necessary to use this link to login anymore. You are already logged in.'));
+    // The existing user is already logged in.
+    if ($user->uid == $uid) {
+      drupal_set_message(t('You are logged in as %user. <a href="!user_edit">Change your password.</a>', array('%user' => $user->name, '!user_edit' => url("user/$user->uid/edit"))));
+    }
+    // A different user is already logged in on the computer.
+    else {
+      $reset_link_account = user_load($uid);
+      if (!empty($reset_link_account)) {
+        drupal_set_message(t('Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. Please <a href="!logout">logout</a> and try using the link again.',
+          array('%other_user' => $user->name, '%resetting_user' => $reset_link_account->name, '!logout' => url('user/logout'))));
+      } else {
+        // Invalid one-time link specifies an unknown user.
+        drupal_set_message(t('The one-time login link you clicked is invalid.'));
+      }
+    }
     drupal_goto();
   }
   else {
