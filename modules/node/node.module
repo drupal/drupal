@@ -1271,6 +1271,9 @@ function template_preprocess_node(&$variables) {
   // Flatten the node object's member fields.
   $variables = array_merge((array)$node, $variables);
 
+  // Make the field variables available with the appropriate language.
+  field_attach_preprocess('node', $node, $node->content, $variables);
+
   // Display post information only on certain node types.
   if (variable_get('node_submitted_' . $node->type, TRUE)) {
     $variables['submitted'] = theme('node_submitted', $node);
