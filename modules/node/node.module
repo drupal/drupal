@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.1106 2009/08/23 01:05:11 webchick Exp $
+// $Id: node.module,v 1.1107 2009/08/23 18:41:02 webchick Exp $
 
 /**
  * @file
@@ -1270,6 +1270,9 @@ function template_preprocess_node(&$variables) {
 
   // Flatten the node object's member fields.
   $variables = array_merge((array)$node, $variables);
+
+  // Make the field variables available with the appropriate language.
+  field_attach_preprocess('node', $node, $node->content, $variables);
 
   // Display post information only on certain node types.
   if (variable_get('node_submitted_' . $node->type, TRUE)) {
