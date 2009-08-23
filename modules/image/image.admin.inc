@@ -23,13 +23,6 @@ function image_style_list() {
 }
 
 /**
- * Menu title callback; Title for editing and deleting image styles.
- */
-function image_style_title($string, $style) {
-  return t($string, array('!name' => $style['name']));
-}
-
-/**
  * Form builder; Edit an image style name and effects order.
  *
  * @param $form_state
@@ -41,6 +34,9 @@ function image_style_title($string, $style) {
  * @see image_style_name_validate()
  */
 function image_style_form(&$form_state, $style) {
+  $title = t('Edit %name style', array('%name' => $style['name']));
+  drupal_set_title($title, PASS_THROUGH);
+
   $form_state['image_style'] = $style;
   $form = array(
     '#tree' => TRUE,
@@ -75,7 +71,7 @@ function image_style_form(&$form_state, $style) {
       '#default_value' => $effect['weight'],
     );
     $form['effects'][$ieid]['configure'] = array(
-      '#markup' => isset($effect['form callback']) ? l(t('configure'), 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'] ) : '',
+      '#markup' => isset($effect['form callback']) ? l(t('edit'), 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'] ) : '',
     );
     $form['effects'][$ieid]['remove'] = array(
       '#markup' => l(t('delete'), 'admin/config/media/image-styles/edit/' . $style['name'] . '/effects/' . $effect['ieid'] . '/delete'),
@@ -276,16 +272,6 @@ function image_style_delete_form_submit($form, &$form_state) {
 }
 
 /**
- * Menu title callback; Title for editing, deleting, and adding image effects.
- *
- * @param $effect
- *   An image effect array.
- */
-function image_effect_title($string, $effect) {
-  return t($string, array('!label' => $effect['label']));
-}
-
-/**
  * Form builder; Form for adding and editing image effects.
  *
  * This form is used universally for editing all image effects. Each effect adds
@@ -309,6 +295,14 @@ function image_effect_title($string, $effect) {
  * @see image_effect_form_submit()
  */
 function image_effect_form(&$form_state, $style, $effect) {
+  if (!empty($effect['data'])) {
+    $title = t('Edit %label effect', array('%label' => $effect['label']));
+  }
+  else{
+    $title = t('Add %label effect', array('%label' => $effect['label']));
+  }
+  drupal_set_title($title, PASS_THROUGH);
+
   $form_state['image_style'] = $style;
   $form_state['image_effect'] = $effect;
 

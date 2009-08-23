@@ -71,8 +71,6 @@ function image_menu() {
   );
   $items['admin/config/media/image-styles/edit/%image_style'] = array(
     'title' => 'Edit style',
-    'title callback' => 'image_style_title',
-    'title arguments' => array('!name', 4),
     'description' => 'Configure an image style.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('image_style_form', 5),
@@ -81,8 +79,6 @@ function image_menu() {
   );
   $items['admin/config/media/image-styles/delete/%image_style'] = array(
     'title' => 'Delete style',
-    'title callback' => 'image_style_title',
-    'title arguments' => array('Delete !name', 4),
     'description' => 'Delete an image style.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('image_style_delete_form', 5, TRUE),
@@ -91,8 +87,6 @@ function image_menu() {
   );
   $items['admin/config/media/image-styles/edit/%image_style/effects/%image_effect'] = array(
     'title' => 'Edit image effect',
-    'title callback' => 'image_effect_title',
-    'title arguments' => array('!label effect', 6),
     'description' => 'Edit an exiting effect within a style.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('image_effect_form', 5, 7),
@@ -101,8 +95,6 @@ function image_menu() {
   );
   $items['admin/config/media/image-styles/edit/%image_style/effects/%image_effect/delete'] = array(
     'title' => 'Delete image effect',
-    'title callback' => 'image_effect_title',
-    'title arguments' => array('Delete !label', 6),
     'description' => 'Delete an exiting effect from a style.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('image_effect_delete_form', 5, 7),
@@ -111,8 +103,6 @@ function image_menu() {
   );
   $items['admin/config/media/image-styles/edit/%image_style/add/%image_effect_definition'] = array(
     'title' => 'Add image effect',
-    'title callback' => 'image_effect_title',
-    'title arguments' => array('Add !label effect', 6),
     'description' => 'Add a new effect to a style.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('image_effect_form', 5, 7),
