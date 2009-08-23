@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.362 2009/08/23 01:05:10 webchick Exp $
+// $Id: block.module,v 1.363 2009/08/23 09:45:07 dries Exp $
 
 /**
  * @file
@@ -198,7 +198,7 @@ function block_block_list() {
 /**
  * Implement hook_block_configure().
  */
-function block_block_configure($delta = 0, $edit = array()) {
+function block_block_configure($delta = 0) {
   $box = array('format' => FILTER_FORMAT_DEFAULT);
   if ($delta) {
     $box = block_box_get($delta);
