@@ -846,3 +846,57 @@ class NodeAccessRebuildTestCase extends DrupalWebTestCase {
     $this->assertText(t('Content permissions have been rebuilt.'));
   }
 }
+
+/**
+ * Test node administration page functionality.
+ */
+class NodeAdminTestCase extends DrupalWebTestCase {
+  protected $admin_user;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Node administration',
+      'description' => 'Test node administration page functionality.',
+      'group' => 'Node'
+    );
+  }
+
+  function setUp() {
+    parent::setUp();
+    $this->admin_user = $this->drupalCreateUser(array('administer nodes', 'create article content', 'create page content'));
+    $this->drupalLogin($this->admin_user);
+  }
+
+  /**
+   * Create 3 nodes and test if they are listed on the node admistration page.
+   */
+  function testNodeAdmin() {
+    $node1 = $this->drupalCreateNode(array('type' => 'article', 'status' => 1));
+    $node2 = $this->drupalCreateNode(array('type' => 'article', 'status' => 0));
+    $node3 = $this->drupalCreateNode(array('type' => 'page'));
+
+    $this->drupalGet('admin/content');
+    $this->assertText($node1->title, t('Node appears on the node administration listing.'));
+
+    // Filter the node listing by status.
+    $edit = array(
+      'filter' => 'status',
+      'status' => 'status-1',
+    );
+    $this->drupalPost('admin/content', $edit, t('Filter'));
+    $this->assertRaw(t('<strong>%type</strong> is <strong>%value</strong>', array('%type' => t('status'), '%value' => t('published'))), t('The node administration listing is filtered by status.'));
+    $this->assertText($node1->title, t('Published node appears on the node administration listing.'));
+    $this->assertNoText($node2->title, t('Unpublished node does not appear on the node administration listing.'));
+
+    // Filter the node listing by content type.
+    $edit = array(
+      'filter' => 'type',
+      'type' => 'article',
+    );
+    $this->drupalPost('admin/content', $edit, t('Refine'));
+    $this->assertRaw(t('<strong>%type</strong> is <strong>%value</strong>', array('%type' => t('status'), '%value' => t('published'))), t('The node administration listing is filtered by status.'));
+    $this->assertRaw(t('<strong>%type</strong> is <strong>%value</strong>', array('%type' => t('type'), '%value' => 'Article')), t('The node administration listing is filtered by content type.'));
+    $this->assertText($node1->title, t('Article node appears on the node administration listing.'));
+    $this->assertNoText($node3->title, t('Page node does not appear on the node administration listing.'));
+  }
+}

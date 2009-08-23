@@ -145,7 +145,6 @@ function node_filter_form() {
     '#title' => t('Show only items where'),
     '#theme' => 'node_filters',
   );
-  $form['#submit'][] = 'node_filter_form_submit';
   foreach ($session as $filter) {
     list($type, $value) = $filter;
     if ($type == 'term') {
@@ -160,10 +159,10 @@ function node_filter_form() {
       $value = $filters[$type]['options'][$value];
     }
     if ($i++) {
-      $form['filters']['current'][] = array('#markup' => t('<em>and</em> where <strong>%a</strong> is <strong>%b</strong>', array('%a' => $filters[$type]['title'], '%b' => $value)));
+      $form['filters']['current'][] = array('#markup' => t('<em>and</em> where <strong>%type</strong> is <strong>%value</strong>', array('%type' => $filters[$type]['title'], '%value' => $value)));
     }
     else {
-      $form['filters']['current'][] = array('#markup' => t('<strong>%a</strong> is <strong>%b</strong>', array('%a' => $filters[$type]['title'], '%b' => $value)));
+      $form['filters']['current'][] = array('#markup' => t('<strong>%type</strong> is <strong>%value</strong>', array('%type' => $filters[$type]['title'], '%value' => $value)));
     }
     if (in_array($type, array('type', 'language'))) {
       // Remove the option if it is already being filtered on.
@@ -377,7 +376,7 @@ function node_admin_content($form_state) {
     '#markup' => theme('links', array(array('title' => t('Add new content'), 'href' => 'node/add')), array('class' => array('action-links'))),
   );
   $form[] = node_filter_form();
-
+  $form['#submit'][] = 'node_filter_form_submit';
   $form['#theme'] = 'node_filter_form';
   $form['admin'] = node_admin_nodes();
 
