@@ -1,5 +1,5 @@
 <?php
-// $Id: field.attach.inc,v 1.38 2009/08/22 00:58:52 webchick Exp $
+// $Id: field.attach.inc,v 1.39 2009/08/23 03:54:47 webchick Exp $
 
 /**
  * @file
@@ -1182,7 +1182,7 @@ function field_attach_create_bundle($bundle) {
 
   // Clear the cache.
   field_cache_clear();
-  menu_rebuild();
+
   foreach (module_implements('field_attach_create_bundle') as $module) {
     $function = $module . '_field_attach_create_bundle';
     $function($bundle);
