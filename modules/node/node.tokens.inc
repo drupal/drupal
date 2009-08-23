@@ -1,5 +1,5 @@
 <?php
-// $Id: node.tokens.inc,v 1.1 2009/08/19 20:19:36 dries Exp $
+// $Id: node.tokens.inc,v 1.2 2009/08/23 13:02:38 dries Exp $
 
 /**
  * @file
@@ -184,7 +184,6 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           $replacements[$original] = format_date($node->changed, 'medium', '', NULL, $language_code);
           break;
       }
-    dsm('node');
     }
 
     if ($author_tokens = token_find_with_prefix($tokens, 'author')) {
