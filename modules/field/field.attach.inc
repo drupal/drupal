@@ -1182,7 +1182,7 @@ function field_attach_create_bundle($bundle) {
 
   // Clear the cache.
   field_cache_clear();
-  menu_rebuild();
+
   foreach (module_implements('field_attach_create_bundle') as $module) {
     $function = $module . '_field_attach_create_bundle';
     $function($bundle);
