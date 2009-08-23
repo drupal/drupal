@@ -164,6 +164,13 @@ Drupal 7.0, xxxx-xx-xx (development version)
       experience.
 - Better module version support.
     * Modules now can specify which version of another module they depend on.
+- Improved node access control system.
+    * All modules may now influence the access to a node at runtime, not just
+      the module that defined a node.
+    * Users may now be allowed to bypass node access restrictions without giving
+      them complete access to the site.
+    * Access control affects both published and unpublished nodes.
+    * Numerous other improvements to the node access system.
 
 Drupal 6.0, 2008-02-13
 ----------------------
