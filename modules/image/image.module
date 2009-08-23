@@ -66,7 +66,7 @@ function image_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('image_style_add_form'),
     'access arguments' => array('administer image styles'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
     'weight' => 2,
   );
   $items['admin/config/media/image-styles/edit/%image_style'] = array(

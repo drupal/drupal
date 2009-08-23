@@ -618,6 +618,12 @@ ul.action-links li {
   margin: 0 1em 0 0;
 }
 
+ul.action-links a {
+  padding-left: 15px;
+  background: transparent url(images/add.png) no-repeat 0 center;
+  line-height: 30px;
+}
+
 /* Exceptions */
 #diff-inline-form select,
 #block-system-main div.filter-options select {
@@ -694,12 +700,6 @@ div.admin-options div.form-item {
 div.admin-options div.form-item {
   padding: 0;
   border: 0;
-}
-
-a.node-admin-add-content {
-  padding-left: 15px;
-  background: url(images/add.png) no-repeat 0 center;
-  line-height: 30px;
 }
 
 /* Update status */

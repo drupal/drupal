@@ -1729,7 +1729,7 @@ function node_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('node_type_form'),
     'access arguments' => array('administer content types'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
   );
   $items['node'] = array(
     'title' => 'Content',

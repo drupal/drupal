@@ -518,7 +518,7 @@ class TaxonomyTermTestCase extends TaxonomyWebTestCase {
     $edit['parent[]'] = 0;
 
     // Create the term to edit.
-    $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->vid . '/add', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/' . $this->vocabulary->vid . '/list/add', $edit, t('Save'));
 
     $term = reset(taxonomy_get_term_by_name($edit['name']));
     $this->assertNotNull($term, t('Term found in database'));
@@ -685,7 +685,7 @@ class TaxonomyHooksTestCase extends TaxonomyWebTestCase {
       'name' => $this->randomName(),
       'antonym' => 'Long',
     );
-    $this->drupalPost('admin/structure/taxonomy/' . $vocabulary->vid . '/add', $edit, t('Save'));
+    $this->drupalPost('admin/structure/taxonomy/' . $vocabulary->vid . '/list/add', $edit, t('Save'));
     $term = reset(taxonomy_get_term_by_name($edit['name']));
     $this->assertEqual($term->antonym, $edit['antonym'], t('Antonym was loaded into the term object'));
 

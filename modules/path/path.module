@@ -61,7 +61,7 @@ function path_menu() {
     'title' => 'Add alias',
     'page callback' => 'path_admin_edit',
     'access arguments' => array('administer url aliases'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
   );
 
   return $items;

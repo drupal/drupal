@@ -105,7 +105,7 @@ function forum_menu() {
     'page callback' => 'forum_form_main',
     'page arguments' => array('container'),
     'access arguments' => array('administer forums'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
     'parent' => 'admin/structure/forum',
   );
   $items['admin/structure/forum/add/forum'] = array(
@@ -113,7 +113,7 @@ function forum_menu() {
     'page callback' => 'forum_form_main',
     'page arguments' => array('forum'),
     'access arguments' => array('administer forums'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
     'parent' => 'admin/structure/forum',
   );
   $items['admin/structure/forum/settings'] = array(

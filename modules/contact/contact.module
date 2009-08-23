@@ -68,7 +68,7 @@ function contact_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_admin_edit', 3),
     'access arguments' => array('administer site-wide contact form'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
     'weight' => 1,
   );
   $items['admin/structure/contact/edit/%contact'] = array(

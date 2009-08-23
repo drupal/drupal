@@ -85,7 +85,7 @@ function filter_menu() {
     'title' => 'Add text format',
     'page callback' => 'filter_admin_format_page',
     'access arguments' => array('administer filters'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
     'weight' => 1,
   );
   $items['admin/settings/formats/delete'] = array(

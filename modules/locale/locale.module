@@ -87,7 +87,7 @@ function locale_menu() {
     'page callback' => 'locale_languages_add_screen', // two forms concatenated
     'access arguments' => array('administer languages'),
     'weight' => 5,
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
   );
   $items['admin/config/regional/language/configure'] = array(
     'title' => 'Configure',

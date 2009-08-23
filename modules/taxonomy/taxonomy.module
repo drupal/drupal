@@ -209,7 +209,7 @@ function taxonomy_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_form_vocabulary'),
     'access arguments' => array('administer taxonomy'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
   );
 
   $items['taxonomy/term/%taxonomy_term'] = array(
@@ -283,12 +283,12 @@ function taxonomy_menu() {
     'weight' => -10,
   );
 
-  $items['admin/structure/taxonomy/%taxonomy_vocabulary/add'] = array(
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary/list/add'] = array(
     'title' => 'Add term',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_form_term', 3),
     'access arguments' => array('administer taxonomy'),
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_LOCAL_ACTION,
   );
 
   return $items;

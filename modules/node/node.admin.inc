@@ -371,14 +371,11 @@ function node_admin_content($form_state) {
   if (isset($form_state['values']['operation']) && $form_state['values']['operation'] == 'delete') {
     return node_multiple_delete_confirm($form_state, array_filter($form_state['values']['nodes']));
   }
-  $form = array();
   // Show the 'add new content' link.
-  if (_node_add_access()) {
-    $form['add_content'] = array(
-      '#type' => 'markup',
-      '#markup' => l(t('Add new content'), 'node/add', array('attributes' => array('class' => array('node-admin-add-content')))),
-    );
-  }
+  $form['add_content'] = array(
+    '#access' => _node_add_access(),
+    '#markup' => theme('links', array(array('title' => t('Add new content'), 'href' => 'node/add')), array('class' => array('action-links'))),
+  );
   $form[] = node_filter_form();
 
   $form['#theme'] = 'node_filter_form';
