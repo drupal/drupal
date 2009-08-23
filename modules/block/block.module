@@ -198,7 +198,7 @@ function block_block_list() {
 /**
  * Implement hook_block_configure().
  */
-function block_block_configure($delta = 0, $edit = array()) {
+function block_block_configure($delta = 0) {
   $box = array('format' => FILTER_FORMAT_DEFAULT);
   if ($delta) {
     $box = block_box_get($delta);
