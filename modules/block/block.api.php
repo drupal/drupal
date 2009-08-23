@@ -72,10 +72,6 @@ function hook_block_list() {
 /**
  * Configuration form for the block.
  *
- * Any module can export a block (or blocks) to be displayed by defining
- * the _block hook. This hook is called by theme.inc to display a block,
- * and also by block.module to procure the list of available blocks.
- *
  * @param $delta
  *   Which block to return. This is a descriptive string used to identify
  *   blocks within each module and also within the theme system.
@@ -83,9 +79,6 @@ function hook_block_list() {
  *   returns when the hook_block_list() implementation is called.
  * @return
  *   Optionally return the configuration form.
- *
- * After completing your blocks, do not forget to enable them in the
- * block admin menu.
  *
  * For a detailed usage example, see block_example.module.
  */
@@ -104,10 +97,6 @@ function hook_block_configure($delta = '') {
 /**
  * Save the configuration options.
  *
- * Any module can export a block (or blocks) to be displayed by defining
- * the _block hook. This hook is called by theme.inc to display a block,
- * and also by block.module to procure the list of available blocks.
- *
  * @param $delta
  *   Which block to save the settings for. This is a descriptive string used
  *   to identify blocks within each module and also within the theme system.
@@ -115,9 +104,6 @@ function hook_block_configure($delta = '') {
  *   returns when the hook_block_list() implementation is called.
  * @param $edit
  *   The submitted form data from the configuration form.
- *
- * After completing your blocks, do not forget to enable them in the
- * block admin menu.
  *
  * For a detailed usage example, see block_example.module.
  */
@@ -129,10 +115,6 @@ function hook_block_save($delta = '', $edit = array()) {
 
 /**
  * Process the block when enabled in a region in order to view its contents.
- *
- * Any module can export a block (or blocks) to be displayed by defining
- * the _block hook. This hook is called by theme.inc to display a block,
- * and also by block.module to procure the list of available blocks.
  *
  * @param $delta
  *   Which block to return. This is a descriptive string used to identify
@@ -147,9 +129,6 @@ function hook_block_save($delta = '', $edit = array()) {
  * example, should of course be defined somewhere in your module and return the
  * content you want to display to your users. If the "content" element is empty,
  * no block will be displayed even if "subject" is present.
- *
- * After completing your blocks, do not forget to enable them in the
- * block admin menu.
  *
  * For a detailed usage example, see block_example.module.
  */

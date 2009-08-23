@@ -1237,13 +1237,11 @@ class TokenReplaceTestCase extends DrupalWebTestCase {
     // token, [node:title].
     $this->assertFalse(strcmp($target, $result), t('Basic placeholder tokens replaced.'));
     
-    $raw_tokens = array(
-      'node' => array('title' => '[node:title]'),
-    );
-    $generated = token_generate($raw_tokens, array('node' => $node));
+    $raw_tokens = array('title' => '[node:title]');
+    $generated = token_generate('node', $raw_tokens, array('node' => $node));
     $this->assertFalse(strcmp($generated['[node:title]'], check_plain($node->title)), t('Token sanitized.'));
 
-    $generated = token_generate($raw_tokens, array('node' => $node), array('sanitize' => FALSE));
+    $generated = token_generate('node', $raw_tokens, array('node' => $node), array('sanitize' => FALSE));
     $this->assertFalse(strcmp($generated['[node:title]'], $node->title), t('Unsanitized token generated properly.'));
   }
 }

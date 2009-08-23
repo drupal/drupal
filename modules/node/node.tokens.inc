@@ -184,7 +184,6 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           $replacements[$original] = format_date($node->changed, 'medium', '', NULL, $language_code);
           break;
       }
-    dsm('node');
     }
 
     if ($author_tokens = token_find_with_prefix($tokens, 'author')) {
