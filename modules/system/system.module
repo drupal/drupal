@@ -791,6 +791,14 @@ function system_menu() {
     'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
+  $items['admin/config/services'] = array(
+    'title' => 'Web services',
+    'description' => 'Tools related to web services.',
+    'page callback' => 'system_admin_menu_block_page',
+    'access callback' => 'system_admin_menu_block_access',
+    'access arguments' => array('admin/config/services', 'access administration pages'),
+    'file' => 'system.admin.inc',
+  );
   $items['admin/settings/performance'] = array(
     'title' => 'Performance',
     'description' => 'Enable or disable page caching for anonymous users and set CSS and JS bandwidth optimization options.',

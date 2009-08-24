@@ -14,7 +14,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Create an aggregator feed (simulate form submission on admin/settings/aggregator/add/feed).
+   * Create an aggregator feed (simulate form submission on admin/config/services/aggregator/add/feed).
    *
    * @param $feed_url
    *   If given, feed will be created with this URL, otherwise /rss.xml will be used.
@@ -25,7 +25,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
    */
   function createFeed($feed_url = NULL) {
     $edit = $this->getFeedEditArray($feed_url);
-    $this->drupalPost('admin/settings/aggregator/add/feed', $edit, t('Save'));
+    $this->drupalPost('admin/config/services/aggregator/add/feed', $edit, t('Save'));
     $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), t('The feed !name has been added.', array('!name' => $edit['title'])));
 
     $feed = db_query("SELECT *  FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $edit['title'], ':url' => $edit['url']))->fetch();
@@ -40,7 +40,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
    *   Feed object representing the feed.
    */
   function deleteFeed($feed) {
-    $this->drupalPost('admin/settings/aggregator/edit/feed/' . $feed->fid, array(), t('Delete'));
+    $this->drupalPost('admin/config/services/aggregator/edit/feed/' . $feed->fid, array(), t('Delete'));
     $this->assertRaw(t('The feed %title has been deleted.', array('%title' => $feed->title)), t('Feed deleted successfully.'));
   }
 
@@ -81,7 +81,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Update feed items (simulate click to admin/settings/aggregator/update/$fid).
+   * Update feed items (simulate click to admin/config/services/aggregator/update/$fid).
    *
    * @param $feed
    *   Feed object representing the feed.
@@ -94,7 +94,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
     $this->assertResponse(200, t('!url is reachable.', array('!url' => $feed->url)));
 
     // Refresh the feed (simulated link click).
-    $this->drupalGet('admin/settings/aggregator/update/' . $feed->fid);
+    $this->drupalGet('admin/config/services/aggregator/update/' . $feed->fid);
 
     // Ensure we have the right number of items.
     $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid));
@@ -114,7 +114,7 @@ class AggregatorTestCase extends DrupalWebTestCase {
    *   Feed object representing the feed.
    */
   function removeFeedItems($feed) {
-    $this->drupalPost('admin/settings/aggregator/remove/' . $feed->fid, array(), t('Remove items'));
+    $this->drupalPost('admin/config/services/aggregator/remove/' . $feed->fid, array(), t('Remove items'));
     $this->assertRaw(t('The news items from %title have been removed.', array('%title' => $feed->title)), t('Feed items removed.'));
   }
 
@@ -275,7 +275,7 @@ class AddFeedTestCase extends AggregatorTestCase {
     $feed = $this->createFeed();
 
     // Check feed data.
-    $this->assertEqual($this->getUrl(), url('admin/settings/aggregator/add/feed', array('absolute' => TRUE)), t('Directed to correct url.'));
+    $this->assertEqual($this->getUrl(), url('admin/config/services/aggregator/add/feed', array('absolute' => TRUE)), t('Directed to correct url.'));
     $this->assertTrue($this->uniqueFeed($feed->title, $feed->url), t('The feed is unique.'));
 
     // Check feed source.
@@ -311,11 +311,11 @@ class UpdateFeedTestCase extends AggregatorTestCase {
       if (isset($feed->{$same_field})) {
         $edit[$same_field] = $feed->{$same_field};
       }
-      $this->drupalPost('admin/settings/aggregator/edit/feed/' . $feed->fid, $edit, t('Save'));
+      $this->drupalPost('admin/config/services/aggregator/edit/feed/' . $feed->fid, $edit, t('Save'));
       $this->assertRaw(t('The feed %name has been updated.', array('%name' => $edit['title'])), t('The feed %name has been updated.', array('%name' => $edit['title'])));
 
       // Check feed data.
-      $this->assertEqual($this->getUrl(), url('admin/settings/aggregator/', array('absolute' => TRUE)));
+      $this->assertEqual($this->getUrl(), url('admin/config/services/aggregator/', array('absolute' => TRUE)));
       $this->assertTrue($this->uniqueFeed($edit['title'], $edit['url']), t('The feed is unique.'));
 
       // Check feed source.
@@ -368,7 +368,7 @@ class UpdateFeedItemTestCase extends AggregatorTestCase {
   }
 
   /**
-   * Test running "update items" from the 'admin/settings/aggregator' page.
+   * Test running "update items" from the 'admin/config/services/aggregator' page.
    */
   function testUpdateFeedItem() {
     $this->createSampleNodes();
@@ -392,11 +392,11 @@ class UpdateFeedItemTestCase extends AggregatorTestCase {
     $this->drupalGet($edit['url']);
     $this->assertResponse(array(200), t('URL !url is accessible', array('!url' => $edit['url'])));
 
-    $this->drupalPost('admin/settings/aggregator/add/feed', $edit, t('Save'));
+    $this->drupalPost('admin/config/services/aggregator/add/feed', $edit, t('Save'));
     $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), t('The feed !name has been added.', array('!name' => $edit['title'])));
 
     $feed = db_query("SELECT * FROM {aggregator_feed} WHERE url = :url", array(':url' => $edit['url']))->fetchObject();
-    $this->drupalGet('admin/settings/aggregator/update/' . $feed->fid);
+    $this->drupalGet('admin/config/services/aggregator/update/' . $feed->fid);
 
     $before = db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
 
@@ -411,7 +411,7 @@ class UpdateFeedItemTestCase extends AggregatorTestCase {
         'modified' => 0,
       ))
       ->execute();
-    $this->drupalGet('admin/settings/aggregator/update/' . $feed->fid);
+    $this->drupalGet('admin/config/services/aggregator/update/' . $feed->fid);
 
     $after = db_query('SELECT timestamp FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->fid))->fetchField();
 
@@ -429,7 +429,7 @@ class RemoveFeedItemTestCase extends AggregatorTestCase {
   }
 
   /**
-   * Test running "remove items" from the 'admin/settings/aggregator' page.
+   * Test running "remove items" from the 'admin/config/services/aggregator' page.
    */
   function testRemoveFeedItem() {
     // Create a bunch of test feeds.
@@ -473,9 +473,9 @@ class CategorizeFeedItemTestCase extends AggregatorTestCase {
   function testCategorizeFeedItem() {
     $this->createSampleNodes();
 
-    // Simulate form submission on "admin/settings/aggregator/add/category".
+    // Simulate form submission on "admin/config/services/aggregator/add/category".
     $edit = array('title' => $this->randomName(10), 'description' => '');
-    $this->drupalPost('admin/settings/aggregator/add/category', $edit, t('Save'));
+    $this->drupalPost('admin/config/services/aggregator/add/category', $edit, t('Save'));
     $this->assertRaw(t('The category %title has been added.', array('%title' => $edit['title'])), t('The category %title has been added.', array('%title' => $edit['title'])));
 
     $category = db_query("SELECT * FROM {aggregator_category} WHERE title = :title", array(':title' => $edit['title']))->fetch();
@@ -537,7 +537,7 @@ class ImportOPMLTestCase extends AggregatorTestCase {
       ))
       ->execute();
 
-    $this->drupalGet('admin/settings/aggregator/add/opml');
+    $this->drupalGet('admin/config/services/aggregator/add/opml');
     $this->assertText('A single OPML document may contain a collection of many feeds.', t('Looking for help text.'));
     $this->assertFieldByName('files[upload]', '', t('Looking for file upload field.'));
     $this->assertFieldByName('remote', '', t('Looking for remote URL field.'));
@@ -552,7 +552,7 @@ class ImportOPMLTestCase extends AggregatorTestCase {
     $before = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
 
     $form = array();
-    $this->drupalPost('admin/settings/aggregator/add/opml', $form, t('Import'));
+    $this->drupalPost('admin/config/services/aggregator/add/opml', $form, t('Import'));
     $this->assertRaw(t('You must <em>either</em> upload a file or enter a URL.'), t('Error if no fields are filled.'));
 
     $path = $this->getEmptyOpml();
@@ -560,11 +560,11 @@ class ImportOPMLTestCase extends AggregatorTestCase {
       'files[upload]' => $path,
       'remote' => file_create_url($path),
     );
-    $this->drupalPost('admin/settings/aggregator/add/opml', $form, t('Import'));
+    $this->drupalPost('admin/config/services/aggregator/add/opml', $form, t('Import'));
     $this->assertRaw(t('You must <em>either</em> upload a file or enter a URL.'), t('Error if both fields are filled.'));
 
     $form = array('remote' => 'invalidUrl://empty');
-    $this->drupalPost('admin/settings/aggregator/add/opml', $form, t('Import'));
+    $this->drupalPost('admin/config/services/aggregator/add/opml', $form, t('Import'));
     $this->assertText(t('This URL is not valid.'), t('Error if the URL is invalid.'));
 
     $after = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
@@ -578,11 +578,11 @@ class ImportOPMLTestCase extends AggregatorTestCase {
     $before = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
 
     $form['files[upload]'] = $this->getInvalidOpml();
-    $this->drupalPost('admin/settings/aggregator/add/opml', $form, t('Import'));
+    $this->drupalPost('admin/config/services/aggregator/add/opml', $form, t('Import'));
     $this->assertText(t('No new feed has been added.'), t('Attempting to upload invalid XML.'));
 
     $form = array('remote' => file_create_url($this->getEmptyOpml()));
-    $this->drupalPost('admin/settings/aggregator/add/opml', $form, t('Import'));
+    $this->drupalPost('admin/config/services/aggregator/add/opml', $form, t('Import'));
     $this->assertText(t('No new feed has been added.'), t('Attempting to load empty OPML from remote URL.'));
 
     $after = db_query('SELECT COUNT(*) FROM {aggregator_feed}')->fetchField();
@@ -609,7 +609,7 @@ class ImportOPMLTestCase extends AggregatorTestCase {
       'refresh'       => '900',
       'category[1]'   => $category,
     );
-    $this->drupalPost('admin/settings/aggregator/add/opml', $form, t('Import'));
+    $this->drupalPost('admin/config/services/aggregator/add/opml', $form, t('Import'));
     $this->assertRaw(t('A feed with the URL %url already exists.', array('%url' => $feeds[0]['url'])), t('Verifying that a duplicate URL was identified'));
     $this->assertRaw(t('A feed named %title already exists.', array('%title' => $feeds[1]['title'])), t('Verifying that a duplicate title was identified'));
 

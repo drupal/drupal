@@ -499,6 +499,6 @@ function template_preprocess_aggregator_feed_source(&$variables) {
   }
 
   if (user_access('administer news feeds')) {
-    $variables['last_checked'] = l($variables['last_checked'], 'admin/settings/aggregator');
+    $variables['last_checked'] = l($variables['last_checked'], 'admin/config/services/aggregator');
   }
 }
