@@ -1,4 +1,4 @@
-// $Id: system.js,v 1.31 2009/08/22 23:18:29 webchick Exp $
+// $Id: system.js,v 1.32 2009/08/24 03:11:34 webchick Exp $
 (function ($) {
 
 /**
@@ -8,15 +8,15 @@
 Drupal.hideEmailAdministratorCheckbox = function () {
   // Make sure the secondary box is shown / hidden as necessary on page load.
   if ($('#edit-update-status-module-1').is(':checked')) {
-    $('.update-status-module-2-wrapper').show();
+    $('.form-item-update-status-module-2').show();
   }
   else {
-    $('.update-status-module-2-wrapper').hide();
+    $('.form-item-update-status-module-2').hide();
   }
 
   // Toggle the display as necessary when the checkbox is clicked.
   $('#edit-update-status-module-1').change( function () {
-    $('.update-status-module-2-wrapper').toggle();
+    $('.form-item-update-status-module-2').toggle();
   })
 };
 
@@ -196,7 +196,7 @@ Drupal.behaviors.machineReadableValue = {
       // Build selector for the machine readable name.
       var target = '#edit-' + settings.target;
       // Build selector for the wrapper element around the target field.
-      var wrapper = '.' + settings.target + '-wrapper';
+      var wrapper = '.form-item-' + settings.target;
 
       // Do not process the element if we got an error or the given name and the
       // machine readable name are identical or the machine readable name is

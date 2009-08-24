@@ -1,6 +1,6 @@
-/* $Id: dblog-rtl.css,v 1.4 2009/07/04 14:57:22 dries Exp $ */
+/* $Id: dblog-rtl.css,v 1.5 2009/08/24 03:11:34 webchick Exp $ */
 
-.form-item-type-wrapper, .form-item-severity-wrapper {
+.form-item-type, .form-item-severity {
   float: right;
   padding-right: 0;
   padding-left: .8em;

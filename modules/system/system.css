@@ -1,4 +1,4 @@
-/* $Id: system.css,v 1.60 2009/08/17 07:12:16 webchick Exp $ */
+/* $Id: system.css,v 1.61 2009/08/24 03:11:34 webchick Exp $ */
 
 /*
 ** HTML elements
@@ -408,11 +408,6 @@ a.tabledrag-handle-hover .handle {
 /* Keeps inner content contained in Opera 9. */
 .teaser-checkbox {
   padding-top: 1px;
-}
-div.teaser-button-wrapper {
-  float: right; /* LTR */
-  padding-right: 5%; /* LTR */
-  margin: 0;
 }
 .teaser-checkbox div.form-item {
   float: right; /* LTR */

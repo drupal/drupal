@@ -1,10 +1,10 @@
-// $Id: openid.js,v 1.11 2009/07/04 14:57:23 dries Exp $
+// $Id: openid.js,v 1.12 2009/08/24 03:11:34 webchick Exp $
 (function ($) {
 
 Drupal.behaviors.openid = {
   attach: function (context) {
-    var loginElements = $('.form-item-name-wrapper, .form-item-pass-wrapper, li.openid-link');
-    var openidElements = $('.form-item-openid-identifier-wrapper, li.user-link');
+    var loginElements = $('.form-item-name, .form-item-pass, li.openid-link');
+    var openidElements = $('.form-item-openid-identifier, li.user-link');
 
     // This behavior attaches by ID, so is only valid once on a page.
     if (!$('#edit-openid-identifier.openid-processed').size() && $('#edit-openid-identifier').val()) {
