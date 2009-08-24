@@ -68,8 +68,6 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
         $stmt = $this->prepareQuery($query, !$modified);
         $stmt->execute($args, $options);
       }
-      // Reset the placeholder numbering.
-      $this->resetPlaceholder();
 
       switch ($options['return']) {
         case Database::RETURN_STATEMENT:
