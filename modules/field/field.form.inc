@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.20 2009/08/24 00:14:20 webchick Exp $
+// $Id: field.form.inc,v 1.21 2009/08/24 21:00:23 webchick Exp $
 
 /**
  * @file
@@ -39,7 +39,7 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
 
   // Populate widgets with default values when creating a new object.
   if (empty($items) && empty($id)) {
-    $items = field_get_default_value($obj_type, $object, $field, $instance);
+    $items = field_get_default_value($obj_type, $object, $field, $instance, $langcode);
   }
 
   $form_element = array();
