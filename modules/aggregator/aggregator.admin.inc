@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.admin.inc,v 1.38 2009/08/22 14:34:18 webchick Exp $
+// $Id: aggregator.admin.inc,v 1.39 2009/08/24 00:01:59 webchick Exp $
 
 /**
  * @file
@@ -391,7 +391,6 @@ function aggregator_admin_refresh_feed($feed) {
  * @ingroup forms
  */
 function aggregator_admin_form($form_state) {
-
   // Make sure configuration is sane.
   aggregator_sanitize_configuration();
 

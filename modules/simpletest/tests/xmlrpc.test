@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.test,v 1.11 2009/07/13 21:51:41 webchick Exp $
+// $Id: xmlrpc.test,v 1.12 2009/08/24 00:02:03 webchick Exp $
 
 class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -12,9 +12,6 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('xmlrpc_test');
-
-    // Force loading the xmlrpc.inc to have the xmlrpc() function.
-    drupal_function_exists('xmlrpc');
   }
 
   /**
@@ -135,9 +132,6 @@ class XMLRPCMessagesTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('xmlrpc_test');
-
-    // Force loading the xmlrpc.inc to have the xmlrpc() function.
-    drupal_function_exists('xmlrpc');
   }
 
   /**

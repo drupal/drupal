@@ -1,5 +1,5 @@
 <?php
-// $Id: xmlrpc.inc,v 1.58 2009/06/15 10:10:46 dries Exp $
+// $Id: xmlrpc.inc,v 1.59 2009/08/24 00:01:59 webchick Exp $
 
 /**
  * @file
@@ -438,7 +438,7 @@ function xmlrpc_base64_get_xml($xmlrpc_base64) {
  *     returned by the method called, or an xmlrpc_error object if the call
  *     failed. See xmlrpc_error().
  */
-function xmlrpc() {
+function _xmlrpc() {
   $args = func_get_args();
   $url = array_shift($args);
   if (is_array($args[0])) {

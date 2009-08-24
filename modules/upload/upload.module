@@ -1,5 +1,5 @@
 <?php
-// $Id: upload.module,v 1.253 2009/08/22 19:30:41 webchick Exp $
+// $Id: upload.module,v 1.254 2009/08/24 00:02:05 webchick Exp $
 
 /**
  * @file
@@ -99,6 +99,7 @@ function upload_menu() {
     'page arguments' => array('upload_admin_settings'),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_NORMAL_ITEM,
+    'file' => 'upload.admin.inc',
   );
   return $items;
 }
