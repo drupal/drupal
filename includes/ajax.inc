@@ -1,5 +1,5 @@
 <?php
-// $Id: ajax.inc,v 1.4 2009/08/24 00:01:59 webchick Exp $
+// $Id: ajax.inc,v 1.5 2009/08/24 00:10:42 webchick Exp $
 
 /**
  * @file
@@ -211,7 +211,7 @@ function ajax_form_callback() {
   // Get the callback function from the clicked button.
   $ajax = $form_state['clicked_button']['#ajax'];
   $callback = $ajax['callback'];
-  if (function_exists($callback)) {
+  if (drupal_function_exists($callback)) {
     $html = $callback($form, $form_state);
 
     // If the returned value is a string, assume it is HTML and create

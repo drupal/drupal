@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.332 2009/08/23 04:43:14 webchick Exp $
+// $Id: CHANGELOG.txt,v 1.333 2009/08/24 00:10:42 webchick Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -95,8 +95,7 @@ Drupal 7.0, xxxx-xx-xx (development version)
       contributed modules.
 - Added code registry:
     * Using the registry, modules declare their includable files via their .info file,
-      allowing Drupal to lazy-load code as needed, resulting in significant performance
-      and memory improvements.
+      allowing Drupal to lazy-load classes and interfaces as needed.
 - Theme system:
     * Removed the Bluemarine, Chameleon and Pushbutton themes. These themes live
       on as contributed themes (http://drupal.org/project/bluemarine,

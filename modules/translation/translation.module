@@ -1,5 +1,5 @@
 <?php
-// $Id: translation.module,v 1.57 2009/08/24 00:02:04 webchick Exp $
+// $Id: translation.module,v 1.58 2009/08/24 00:10:45 webchick Exp $
 
 /**
  * @file
@@ -63,7 +63,6 @@ function translation_menu() {
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
-    'file' => 'translation.pages.inc',
   );
   return $items;
 }

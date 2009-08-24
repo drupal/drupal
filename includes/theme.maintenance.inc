@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.35 2009/08/24 00:01:59 webchick Exp $
+// $Id: theme.maintenance.inc,v 1.36 2009/08/24 00:10:42 webchick Exp $
 
 /**
  * @file
@@ -41,7 +41,7 @@ function _drupal_maintenance_theme() {
       // bootstrap just enough to allow hook invocations to work.
       $module_list['system']['filename'] = 'modules/system/system.module';
       $module_list['filter']['filename'] = 'modules/filter/filter.module';
-      module_list(TRUE, FALSE, FALSE, $module_list);
+      module_list(TRUE, FALSE, $module_list);
       drupal_load('module', 'system');
       drupal_load('module', 'filter');
     }

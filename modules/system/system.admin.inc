@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.189 2009/08/24 00:02:03 webchick Exp $
+// $Id: system.admin.inc,v 1.190 2009/08/24 00:10:45 webchick Exp $
 
 /**
  * @file
@@ -52,7 +52,7 @@ function system_main_admin_page($arg = NULL) {
         $block['show'] = TRUE;
         if (empty($content)) {
           // If no items found below, but access checks did not fail, show.
-          $block['title'] = l($item['title'], $item['href'], $item['localized_options']);
+          $block['title'] = l($item['title'], $item['href'], $item['localized_options']); 
         }
         else {
           // Theme items below.
@@ -1552,7 +1552,7 @@ function system_image_toolkit_settings() {
 
   // Get the toolkit's settings form.
   $function = 'image_' . $current_toolkit . '_settings';
-  if (function_exists($function)) {
+  if (drupal_function_exists($function)) {
     $form['image_toolkit_settings'] = $function();
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: stream_wrappers.inc,v 1.3 2009/08/24 00:01:59 webchick Exp $
+// $Id: stream_wrappers.inc,v 1.4 2009/08/24 00:10:42 webchick Exp $
 
 /**
  * @file
@@ -194,8 +194,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
   static function getMimeType($uri, $mapping = NULL) {
     if (!isset($mapping)) {
       $mapping = variable_get('mime_extension_mapping', NULL);
-      if (!isset($mapping)) {
-        include_once DRUPAL_ROOT . '/includes/file.mimetypes.inc';
+      if (!isset($mapping) && drupal_function_exists('file_default_mimetype_mapping')) {
         // The default file map, defined in file.mimetypes.inc is quite big.
         // We only load it when necessary.
         $mapping = file_default_mimetype_mapping();
