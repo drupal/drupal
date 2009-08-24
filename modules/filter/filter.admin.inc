@@ -352,7 +352,7 @@ function filter_admin_configure(&$form_state, $format) {
   $form = array();
   foreach ($list as $filter) {
     $filter_info = module_invoke($filter->module, 'filter_info');
-    if (isset($filter_info[$filter->name]['settings callback']) && function_exists($filter_info[$filter->name]['settings callback'])) {
+    if (isset($filter_info[$filter->name]['settings callback']) && drupal_function_exists($filter_info[$filter->name]['settings callback'])) {
       $form_module = call_user_func($filter_info[$filter->name]['settings callback'], $format->format);
     }
     if (isset($form_module) && is_array($form_module)) {

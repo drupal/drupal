@@ -632,16 +632,15 @@ function drupal_install_system() {
   $system_versions = drupal_get_schema_versions('system');
   $system_version = $system_versions ? max($system_versions) : SCHEMA_INSTALLED;
   db_insert('system')
-    ->fields(array('filename', 'name', 'type', 'owner', 'status', 'schema_version', 'bootstrap'))
+    ->fields(array('filename', 'name', 'type', 'owner', 'status', 'schema_version'))
     ->values(array(
         'filename' => $system_path . '/system.module',
         'name' => 'system',
         'type' => 'module',
         'owner' => '',
         'status' => 1,
-        'schema_version' => $system_version,
-        'bootstrap' => 0,
-      ))
+        'schema_version' => $system_version
+        ))
     ->execute();
   // Now that we've installed things properly, bootstrap the full Drupal environment
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);

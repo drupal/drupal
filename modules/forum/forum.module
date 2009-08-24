@@ -87,7 +87,6 @@ function forum_menu() {
     'title' => 'Forums',
     'page callback' => 'forum_page',
     'access arguments' => array('access content'),
-    'file' => 'forum.pages.inc',
   );
   $items['admin/structure/forum'] = array(
     'title' => 'Forums',
@@ -95,7 +94,6 @@ function forum_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('forum_overview'),
     'access arguments' => array('administer forums'),
-    'file' => 'forum.admin.inc',
   );
   $items['admin/structure/forum/list'] = array(
     'title' => 'List',
@@ -109,7 +107,6 @@ function forum_menu() {
     'access arguments' => array('administer forums'),
     'type' => MENU_LOCAL_ACTION,
     'parent' => 'admin/structure/forum',
-    'file' => 'forum.admin.inc',
   );
   $items['admin/structure/forum/add/forum'] = array(
     'title' => 'Add forum',
@@ -118,7 +115,6 @@ function forum_menu() {
     'access arguments' => array('administer forums'),
     'type' => MENU_LOCAL_ACTION,
     'parent' => 'admin/structure/forum',
-    'file' => 'forum.admin.inc',
   );
   $items['admin/structure/forum/settings'] = array(
     'title' => 'Settings',
@@ -128,13 +124,11 @@ function forum_menu() {
     'weight' => 5,
     'type' => MENU_LOCAL_TASK,
     'parent' => 'admin/structure/forum',
-    'file' => 'forum.admin.inc',
   );
   $items['admin/structure/forum/edit/%forum_term'] = array(
     'page callback' => 'forum_form_main',
     'access arguments' => array('administer forums'),
     'type' => MENU_CALLBACK,
-    'file' => 'forum.admin.inc',
   );
   $items['admin/structure/forum/edit/container/%forum_term'] = array(
     'title' => 'Edit container',
@@ -142,7 +136,6 @@ function forum_menu() {
     'page arguments' => array('container', 5),
     'access arguments' => array('administer forums'),
     'type' => MENU_CALLBACK,
-    'file' => 'forum.admin.inc',
   );
   $items['admin/structure/forum/edit/forum/%forum_term'] = array(
     'title' => 'Edit forum',
@@ -150,7 +143,6 @@ function forum_menu() {
     'page arguments' => array('forum', 5),
     'access arguments' => array('administer forums'),
     'type' => MENU_CALLBACK,
-    'file' => 'forum.admin.inc',
   );
   return $items;
 }

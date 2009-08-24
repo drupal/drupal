@@ -81,7 +81,6 @@ function poll_menu() {
     'page callback' => 'poll_page',
     'access arguments' => array('access content'),
     'type' => MENU_SUGGESTED_ITEM,
-    'file' => 'poll.pages.inc',
   );
 
   $items['node/%node/votes'] = array(
@@ -92,7 +91,6 @@ function poll_menu() {
     'access arguments' => array(1, 'inspect all votes', FALSE),
     'weight' => 3,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'poll.pages.inc',
   );
 
   $items['node/%node/results'] = array(
@@ -103,7 +101,6 @@ function poll_menu() {
     'access arguments' => array(1, 'access content', TRUE),
     'weight' => 3,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'poll.pages.inc',
   );
 
   return $items;
@@ -325,7 +322,6 @@ function poll_form($node, $form_state) {
  * entire form is rebuilt during the page reload.
  */
 function poll_more_choices_submit($form, &$form_state) {
-  include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'node') . '/node.pages.inc';
   // Set the form to rebuild and run submit handlers.
   node_form_submit_build_node($form, $form_state);
 

@@ -91,7 +91,6 @@ function aggregator_menu() {
     'description' => "Configure which content your site aggregates from other sites, how often it polls them, and how they're categorized.",
     'page callback' => 'aggregator_admin_overview',
     'access arguments' => array('administer news feeds'),
-    'file' => 'aggregator.admin.inc',
   );
   $items['admin/settings/aggregator/add/feed'] = array(
     'title' => 'Add feed',
@@ -100,7 +99,6 @@ function aggregator_menu() {
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_ACTION,
     'parent' => 'admin/settings/aggregator',
-    'file' => 'aggregator.admin.inc',
   );
   $items['admin/settings/aggregator/add/category'] = array(
     'title' => 'Add category',
@@ -109,7 +107,6 @@ function aggregator_menu() {
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_ACTION,
     'parent' => 'admin/settings/aggregator',
-    'file' => 'aggregator.admin.inc',
   );
   $items['admin/settings/aggregator/add/opml'] = array(
     'title' => 'Import OPML',
@@ -118,7 +115,6 @@ function aggregator_menu() {
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_ACTION,
     'parent' => 'admin/settings/aggregator',
-    'file' => 'aggregator.admin.inc',
   );
   $items['admin/settings/aggregator/remove/%aggregator_feed'] = array(
     'title' => 'Remove items',
@@ -126,7 +122,6 @@ function aggregator_menu() {
     'page arguments' => array('aggregator_admin_remove_feed', 4),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_CALLBACK,
-    'file' => 'aggregator.admin.inc',
   );
   $items['admin/settings/aggregator/update/%aggregator_feed'] = array(
     'title' => 'Update items',
@@ -134,7 +129,6 @@ function aggregator_menu() {
     'page arguments' => array(4),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_CALLBACK,
-    'file' => 'aggregator.admin.inc',
   );
   $items['admin/settings/aggregator/list'] = array(
     'title' => 'List',
@@ -147,40 +141,34 @@ function aggregator_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('aggregator_admin_form'),
     'access arguments' => array('administer news feeds'),
-    'file' => 'aggregator.admin.inc',
   );
   $items['aggregator'] = array(
     'title' => 'Feed aggregator',
     'page callback' => 'aggregator_page_last',
     'access arguments' => array('access news feeds'),
     'weight' => 5,
-    'file' => 'aggregator.pages.inc',
   );
   $items['aggregator/sources'] = array(
     'title' => 'Sources',
     'page callback' => 'aggregator_page_sources',
     'access arguments' => array('access news feeds'),
-    'file' => 'aggregator.pages.inc',
   );
   $items['aggregator/categories'] = array(
     'title' => 'Categories',
     'page callback' => 'aggregator_page_categories',
     'access callback' => '_aggregator_has_categories',
-    'file' => 'aggregator.pages.inc',
   );
   $items['aggregator/rss'] = array(
     'title' => 'RSS feed',
     'page callback' => 'aggregator_page_rss',
     'access arguments' => array('access news feeds'),
     'type' => MENU_CALLBACK,
-    'file' => 'aggregator.pages.inc',
   );
   $items['aggregator/opml'] = array(
     'title' => 'OPML feed',
     'page callback' => 'aggregator_page_opml',
     'access arguments' => array('access news feeds'),
     'type' => MENU_CALLBACK,
-    'file' => 'aggregator.pages.inc',
   );
   $items['aggregator/categories/%aggregator_category'] = array(
     'title callback' => '_aggregator_category_title',
@@ -189,7 +177,6 @@ function aggregator_menu() {
     'page arguments' => array(2),
     'access callback' => 'user_access',
     'access arguments' => array('access news feeds'),
-    'file' => 'aggregator.pages.inc',
   );
   $items['aggregator/categories/%aggregator_category/view'] = array(
     'title' => 'View',
@@ -202,7 +189,6 @@ function aggregator_menu() {
     'page arguments' => array('aggregator_page_category', 2),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'aggregator.pages.inc',
   );
   $items['aggregator/categories/%aggregator_category/configure'] = array(
     'title' => 'Configure',
@@ -211,14 +197,12 @@ function aggregator_menu() {
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
-    'file' => 'aggregator.admin.inc',
   );
   $items['aggregator/sources/%aggregator_feed'] = array(
     'page callback' => 'aggregator_page_source',
     'page arguments' => array(2),
     'access arguments' => array('access news feeds'),
     'type' => MENU_CALLBACK,
-    'file' => 'aggregator.pages.inc',
   );
   $items['aggregator/sources/%aggregator_feed/view'] = array(
     'title' => 'View',
@@ -231,7 +215,6 @@ function aggregator_menu() {
     'page arguments' => array('aggregator_page_source', 2),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'aggregator.pages.inc',
   );
   $items['aggregator/sources/%aggregator_feed/configure'] = array(
     'title' => 'Configure',
@@ -240,7 +223,6 @@ function aggregator_menu() {
     'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
-    'file' => 'aggregator.admin.inc',
   );
   $items['admin/settings/aggregator/edit/feed/%aggregator_feed'] = array(
     'title' => 'Edit feed',
@@ -248,7 +230,6 @@ function aggregator_menu() {
     'page arguments' => array('aggregator_form_feed', 5),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_CALLBACK,
-    'file' => 'aggregator.admin.inc',
   );
   $items['admin/settings/aggregator/edit/category/%aggregator_category'] = array(
     'title' => 'Edit category',
@@ -256,7 +237,6 @@ function aggregator_menu() {
     'page arguments' => array('aggregator_form_category', 5),
     'access arguments' => array('administer news feeds'),
     'type' => MENU_CALLBACK,
-    'file' => 'aggregator.admin.inc',
   );
 
   return $items;
@@ -534,7 +514,6 @@ function aggregator_save_feed($edit) {
  *   An object describing the feed to be cleared.
  */
 function aggregator_remove($feed) {
-  _aggregator_get_variables();
   // Call hook_aggregator_remove() on all modules.
   module_invoke_all('aggregator_remove', $feed);
   // Reset feed.
@@ -551,23 +530,6 @@ function aggregator_remove($feed) {
     ->execute();
 }
 
-function _aggregator_get_variables() {
-  // Fetch the feed.
-  $fetcher = variable_get('aggregator_fetcher', 'aggregator');
-  if ($fetcher == 'aggregator') {
-    include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'aggregator') . '/aggregator.fetcher.inc';
-  }
-  $parser = variable_get('aggregator_parser', 'aggregator');
-  if ($parser == 'aggregator') {
-    include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'aggregator') . '/aggregator.parser.inc';
-  }
-  $processors = variable_get('aggregator_processors', array('aggregator'));
-  if (in_array('aggregator', $processors)) {
-    include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'aggregator') . '/aggregator.processor.inc';
-  }
-  return array($fetcher, $parser, $processors);
-}
-
 /**
  * Checks a news feed for new items.
  *
@@ -575,22 +537,25 @@ function _aggregator_get_variables() {
  *   An object describing the feed to be refreshed.
  */
 function aggregator_refresh($feed) {
-  list($fetcher, $parser, $processors) = _aggregator_get_variables();
+  // Fetch the feed.
+  $fetcher = variable_get('aggregator_fetcher', 'aggregator');
   module_invoke($fetcher, 'aggregator_fetch', $feed);
 
   if ($feed->source_string !== FALSE) {
     // Parse the feed.
+    $parser = variable_get('aggregator_parser', 'aggregator');
     module_invoke($parser, 'aggregator_parse', $feed);
 
     // If there are items on the feed, let all enabled processors do their work on it.
     if (@count($feed->items)) {
+      $processors = variable_get('aggregator_processors', array('aggregator'));
       foreach ($processors as $processor) {
         module_invoke($processor, 'aggregator_process', $feed);
       }
     }
   }
   // Expire old feed items.
-  if (function_exists('aggregator_expire')) {
+  if (drupal_function_exists('aggregator_expire')) {
     aggregator_expire($feed);
   }
 }
@@ -670,13 +635,15 @@ function aggregator_filter_xss($value) {
  */
 function aggregator_sanitize_configuration() {
   $reset = FALSE;
-  list($fetcher, $parser, $processors) = _aggregator_get_variables();
+  $fetcher = variable_get('aggregator_fetcher', 'aggregator');
   if (!module_exists($fetcher)) {
     $reset = TRUE;
   }
+  $parser = variable_get('aggregator_parser', 'aggregator');
   if (!module_exists($parser)) {
     $reset = TRUE;
   }
+  $processors = variable_get('aggregator_processors', array('aggregator'));
   foreach ($processors as $processor) {
     if (!module_exists($processor)) {
       $reset = TRUE;

@@ -211,7 +211,7 @@ function ajax_form_callback() {
   // Get the callback function from the clicked button.
   $ajax = $form_state['clicked_button']['#ajax'];
   $callback = $ajax['callback'];
-  if (function_exists($callback)) {
+  if (drupal_function_exists($callback)) {
     $html = $callback($form, $form_state);
 
     // If the returned value is a string, assume it is HTML and create

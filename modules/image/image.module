@@ -51,7 +51,6 @@ function image_menu() {
     'description' => 'Configure styles that can be used for resizing or adjusting images on display.',
     'page callback' => 'image_style_list',
     'access arguments' => array('administer image styles'),
-    'file' => 'image.admin.inc',
   );
   $items['admin/config/media/image-styles/list'] = array(
     'title' => 'List',
@@ -60,7 +59,6 @@ function image_menu() {
     'access arguments' => array('administer image styles'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => 1,
-    'file' => 'image.admin.inc',
   );
   $items['admin/config/media/image-styles/add'] = array(
     'title' => 'Add style',
@@ -70,7 +68,6 @@ function image_menu() {
     'access arguments' => array('administer image styles'),
     'type' => MENU_LOCAL_ACTION,
     'weight' => 2,
-    'file' => 'image.admin.inc',
   );
   $items['admin/config/media/image-styles/edit/%image_style'] = array(
     'title' => 'Edit style',
@@ -79,7 +76,6 @@ function image_menu() {
     'page arguments' => array('image_style_form', 5),
     'access arguments' => array('administer image styles'),
     'type' => MENU_CALLBACK,
-    'file' => 'image.admin.inc',
   );
   $items['admin/config/media/image-styles/delete/%image_style'] = array(
     'title' => 'Delete style',
@@ -88,7 +84,6 @@ function image_menu() {
     'page arguments' => array('image_style_delete_form', 5, TRUE),
     'access arguments' => array('administer image styles'),
     'type' => MENU_CALLBACK,
-    'file' => 'image.admin.inc',
   );
   $items['admin/config/media/image-styles/edit/%image_style/effects/%image_effect'] = array(
     'title' => 'Edit image effect',
@@ -97,7 +92,6 @@ function image_menu() {
     'page arguments' => array('image_effect_form', 5, 7),
     'access arguments' => array('administer image styles'),
     'type' => MENU_CALLBACK,
-    'file' => 'image.admin.inc',
   );
   $items['admin/config/media/image-styles/edit/%image_style/effects/%image_effect/delete'] = array(
     'title' => 'Delete image effect',
@@ -106,7 +100,6 @@ function image_menu() {
     'page arguments' => array('image_effect_delete_form', 5, 7),
     'access arguments' => array('administer image styles'),
     'type' => MENU_CALLBACK,
-    'file' => 'image.admin.inc',
   );
   $items['admin/config/media/image-styles/edit/%image_style/add/%image_effect_definition'] = array(
     'title' => 'Add image effect',
@@ -115,7 +108,6 @@ function image_menu() {
     'page arguments' => array('image_effect_form', 5, 7),
     'access arguments' => array('administer image styles'),
     'type' => MENU_CALLBACK,
-    'file' => 'image.admin.inc',
   );
 
   return $items;
@@ -575,7 +567,7 @@ function image_style_url($style_name, $path) {
   // Set a cache entry to grant access to this style/image path. This will be
   // checked by image_style_generate().
   cache_set('access:' . $style_name . ':' . md5($path), 1, 'cache_image', REQUEST_TIME + 600);
-
+  
   $scheme = file_uri_scheme($path);
   $target = file_uri_target($path);
 
@@ -622,7 +614,6 @@ function image_effect_definitions() {
     }
     else {
       $effects = array();
-      include_once DRUPAL_ROOT . '/modules/image/image.effects.inc';
       foreach (module_implements('image_effect_info') as $module) {
         foreach (module_invoke($module, 'image_effect_info') as $name => $effect) {
           // Ensure the current toolkit supports the effect.
@@ -765,7 +756,7 @@ function image_effect_delete($effect) {
  *   TRUE on success. FALSE if unable to perform the image effect on the image.
  */
 function image_effect_apply($image, $effect) {
-  if (function_exists($effect['effect callback'])) {
+  if (drupal_function_exists($effect['effect callback'])) {
     return call_user_func($effect['effect callback'], $image, $effect['data']);
   }
   return FALSE;

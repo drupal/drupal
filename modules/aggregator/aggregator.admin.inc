@@ -391,6 +391,7 @@ function aggregator_admin_refresh_feed($feed) {
  * @ingroup forms
  */
 function aggregator_admin_form($form_state) {
+
   // Make sure configuration is sane.
   aggregator_sanitize_configuration();
 

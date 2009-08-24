@@ -76,8 +76,6 @@ function locale_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_languages_overview_form'),
     'access arguments' => array('administer languages'),
-    'file' => 'locale.inc',
-    'file path' => 'includes',
   );
   $items['admin/config/regional/language/overview'] = array(
     'title' => 'List',
@@ -90,8 +88,6 @@ function locale_menu() {
     'access arguments' => array('administer languages'),
     'weight' => 5,
     'type' => MENU_LOCAL_ACTION,
-    'file' => 'locale.inc',
-    'file path' => 'includes',
   );
   $items['admin/config/regional/language/configure'] = array(
     'title' => 'Configure',
@@ -99,8 +95,6 @@ function locale_menu() {
     'page arguments' => array('locale_languages_configure_form'),
     'access arguments' => array('administer languages'),
     'weight' => 10,
-    'file' => 'locale.inc',
-    'file path' => 'includes',
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/config/regional/language/edit/%'] = array(
@@ -108,8 +102,6 @@ function locale_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_languages_edit_form', 5),
     'access arguments' => array('administer languages'),
-    'file' => 'locale.inc',
-    'file path' => 'includes',
     'type' => MENU_CALLBACK,
   );
   $items['admin/config/regional/language/delete/%'] = array(
@@ -117,8 +109,6 @@ function locale_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('locale_languages_delete_form', 5),
     'access arguments' => array('administer languages'),
-    'file' => 'locale.inc',
-    'file path' => 'includes',
     'type' => MENU_CALLBACK,
   );
 
@@ -126,11 +116,8 @@ function locale_menu() {
   $items['admin/config/regional/translate'] = array(
     'title' => 'Translate interface',
     'description' => 'Translate the built in interface and optionally other text.',
-    'page callback' => 'locale_inc_callback',
-    'page arguments' => array('locale_translate_overview_screen'), // not a form, just a table
+    'page callback' => 'locale_translate_overview_screen', // not a form, just a table
     'access arguments' => array('translate interface'),
-    'file' => 'locale.inc',
-    'file path' => 'includes',
   );
   $items['admin/config/regional/translate/overview'] = array(
     'title' => 'Overview',
@@ -143,8 +130,6 @@ function locale_menu() {
     'type' => MENU_LOCAL_TASK,
     'page callback' => 'locale_translate_seek_screen', // search results and form concatenated
     'access arguments' => array('translate interface'),
-    'file' => 'locale.inc',
-    'file path' => 'includes',
   );
   $items['admin/config/regional/translate/import'] = array(
     'title' => 'Import',
@@ -153,8 +138,6 @@ function locale_menu() {
     'access arguments' => array('translate interface'),
     'weight' => 20,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'locale.inc',
-    'file path' => 'includes',
   );
   $items['admin/config/regional/translate/export'] = array(
     'title' => 'Export',
@@ -162,8 +145,6 @@ function locale_menu() {
     'access arguments' => array('translate interface'),
     'weight' => 30,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'locale.inc',
-    'file path' => 'includes',
   );
   $items['admin/config/regional/translate/edit/%'] = array(
     'title' => 'Edit string',
@@ -171,8 +152,6 @@ function locale_menu() {
     'page arguments' => array('locale_translate_edit_form', 5),
     'access arguments' => array('translate interface'),
     'type' => MENU_CALLBACK,
-    'file' => 'locale.inc',
-    'file path' => 'includes',
   );
   $items['admin/config/regional/translate/delete/%'] = array(
     'title' => 'Delete string',
@@ -180,8 +159,6 @@ function locale_menu() {
     'page arguments' => array(5),
     'access arguments' => array('translate interface'),
     'type' => MENU_CALLBACK,
-    'file' => 'locale.inc',
-    'file path' => 'includes',
   );
 
   return $items;

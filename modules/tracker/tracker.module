@@ -28,7 +28,6 @@ function tracker_menu() {
     'page callback' => 'tracker_page',
     'access arguments' => array('access content'),
     'weight' => 1,
-    'file' => 'tracker.pages.inc',
   );
   $items['tracker/all'] = array(
     'title' => 'All recent posts',
@@ -49,7 +48,6 @@ function tracker_menu() {
     'access callback' => '_tracker_user_access',
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'tracker.pages.inc',
   );
   $items['user/%user/track/posts'] = array(
     'title' => 'Track posts',

@@ -133,7 +133,6 @@ function comment_menu() {
     'page callback' => 'comment_admin',
     'access arguments' => array('administer comments'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'comment.admin.inc',
   );
   // Tabs begin here.
   $items['admin/content/comment/new'] = array(
@@ -152,7 +151,6 @@ function comment_menu() {
     'page callback' => 'comment_delete_page',
     'access arguments' => array('administer comments'),
     'type' => MENU_CALLBACK,
-    'file' => 'comment.admin.inc',
   );
   $items['comment/edit/%comment'] = array(
     'title' => 'Edit comment',
@@ -169,7 +167,6 @@ function comment_menu() {
     'access callback' => 'node_access',
     'access arguments' => array('view', 2),
     'type' => MENU_CALLBACK,
-    'file' => 'comment.pages.inc',
   );
   $items['comment/approve'] = array(
     'title' => 'Approve a comment',
@@ -177,7 +174,6 @@ function comment_menu() {
     'page arguments' => array(2),
     'access arguments' => array('administer comments'),
     'type' => MENU_CALLBACK,
-    'file' => 'comment.pages.inc',
   );
   $items['comment/%comment'] = array(
     'title' => 'Comment permalink',

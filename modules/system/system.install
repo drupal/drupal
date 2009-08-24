@@ -44,7 +44,7 @@ function system_requirements($phase) {
         'severity' => REQUIREMENT_INFO,
         'weight' => -9
       );
-    }
+    } 
   }
 
   // Web server information.
@@ -953,11 +953,6 @@ function system_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'file' => array(
-        'description' => 'The file to include for this element, usually the page callback function lives in this file.',
-        'type' => 'text',
-        'size' => 'medium'
-      ),
     ),
     'indexes' => array(
       'fit' => array('fit'),
@@ -1242,6 +1237,13 @@ function system_schema() {
         'not null' => TRUE,
         'default' => ''
       ),
+      'suffix' => array(
+        'description' => "The part of the function name after the module, which is the hook this function implements, if any.",
+        'type' => 'varchar',
+        'length' => 68,
+        'not null' => TRUE,
+        'default' => ''
+      ),
       'weight' => array(
         'description' => "The order in which this module's hooks should be invoked relative to other modules. Equal-weighted modules are ordered by name.",
         'type' => 'int',
@@ -1251,7 +1253,7 @@ function system_schema() {
     ),
     'primary key' => array('name', 'type'),
     'indexes' => array(
-      'hook' => array('type', 'weight', 'module'),
+      'hook' => array('type', 'suffix', 'weight', 'module'),
     ),
   );
 
@@ -1397,12 +1399,6 @@ function system_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'bootstrap' => array(
-        'description' => "Boolean indicating whether this module is loaded during Drupal's early bootstrapping phase (e.g. even before the page cache is consulted).",
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
       'schema_version' => array(
         'description' => "The module's database schema version number. -1 if the module is not installed (its tables do not exist); 0 or the largest N of the module's hook_update_N() function that has either been run or existed when the module was first installed.",
         'type' => 'int',
@@ -1425,7 +1421,6 @@ function system_schema() {
     'primary key' => array('filename'),
     'indexes' => array(
       'modules' => array('type', 'status', 'weight', 'name'),
-      'bootstrap' => array('type', 'status', 'bootstrap', 'weight', 'name'),
       'type_name' => array('type', 'name'),
     ),
   );
@@ -1716,17 +1711,19 @@ function system_update_7005() {
  */
 function system_update_7006() {
   $ret = array();
+  db_drop_field($ret, 'menu_router', 'file');
   $schema['registry'] = array(
     'fields' => array(
       'name'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       'type'   => array('type' => 'varchar', 'length' => 9, 'not null' => TRUE, 'default' => ''),
       'filename'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
       'module'   => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'suffix'   => array('type' => 'varchar', 'length' => 68, 'not null' => TRUE, 'default' => ''),
       'weight'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
     ),
     'primary key' => array('name', 'type'),
     'indexes' => array(
-      'hook' => array('type', 'weight', 'module'),
+      'hook' => array('type', 'suffix', 'weight', 'module'),
     ),
   );
   $schema['registry_file'] = array(
@@ -1922,10 +1919,11 @@ function system_update_7013() {
 }
 
 /**
- * Drop the bootstrap column from the {system} table. This was reverted.
+ * Drop the bootstrap column from the {system} table.
  */
 function system_update_7014() {
   $ret = array();
+  db_drop_field($ret, 'system', 'bootstrap');
   return $ret;
 }
 

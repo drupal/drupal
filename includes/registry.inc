@@ -13,7 +13,7 @@
  *
  * Drupal maintains an internal registry of all functions or classes in the
  * system, allowing it to lazy-load code files as needed (reducing the amount
- * of code that must be parsed on each request).
+ * of code that must be parsed on each request). 
  */
 
 /**
@@ -33,6 +33,9 @@ function _registry_rebuild() {
   require_once DRUPAL_ROOT . '/includes/database/query.inc';
   require_once DRUPAL_ROOT . '/includes/database/select.inc';
   require_once DRUPAL_ROOT . '/includes/database/' . $driver . '/query.inc';
+
+  // Reset the resources cache.
+  _registry_get_resource_name();
 
   // Get current list of modules and their files.
   $modules = system_get_module_data();
@@ -93,9 +96,9 @@ function _registry_rebuild() {
       $unchanged_resources[$key] = $file;
     }
   }
-  module_implements('', FALSE, TRUE);
   _registry_check_code(REGISTRY_RESET_LOOKUP_CACHE);
 
+  module_implements(MODULE_IMPLEMENTS_CLEAR_CACHE);
   cache_clear_all('*', 'cache_registry', TRUE);
 
   // We have some unchanged resources, warm up the cache - no need to pay
@@ -160,23 +163,123 @@ function _registry_parse_files($files) {
  *   (optional) Weight of the module.
  */
 function _registry_parse_file($filename, $contents, $module = '', $weight = 0) {
-  static $map = array(T_CLASS => 'class', T_INTERFACE => 'interface');
+  $map = &drupal_static(__FUNCTION__, array(T_FUNCTION => 'function', T_CLASS => 'class', T_INTERFACE => 'interface'));
   // Delete registry entries for this file, so we can insert the new resources.
   db_delete('registry')
     ->condition('filename', $filename)
     ->execute();
-  if (preg_match_all('/^\s*(?:abstract)?\s*(class|interface)\s+([a-zA-Z0-9_]+)/m', $contents, $matches)) {
-    $query = db_insert('registry')->fields(array('name', 'type', 'filename', 'module', 'weight'));
-    foreach ($matches[2] as $key => $name) {
-      $query->values(array(
-        'name' => $name,
-        'type' => $matches[1][$key],
-        'filename' => $filename,
-        'module' => $module,
-        'weight' => $weight,
-      ));
+  $tokens = token_get_all($contents);
+  while ($token = next($tokens)) {
+    // Ignore all tokens except for those we are specifically saving.
+    if (is_array($token) && isset($map[$token[0]])) {
+      $type = $map[$token[0]];
+      if ($resource_name = _registry_get_resource_name($tokens, $type)) {
+        $suffix = '';
+        // Collect the part of the function name after the module name,
+        // so that we can query the registry for possible hook implementations.
+        if ($type == 'function' && !empty($module)) {
+          $n = strlen($module);
+          if (substr($resource_name, 0, $n) == $module) {
+            $suffix = substr($resource_name, $n + 1);
+          }
+        }
+        $fields = array(
+          'filename' => $filename,
+          'module' => $module,
+          'suffix' => $suffix,
+          'weight' => $weight,
+        );
+        // Because some systems, such as cache, currently use duplicate function
+        // names in separate files an insert query cannot be used here as it
+        // would cause a key constraint violation. Instead we use a merge query.
+        // In practice this should not be an issue as those systems all initialize
+        // pre-registry and therefore are never loaded by the registry so it
+        // doesn't matter if those records in the registry table point to one
+        // filename instead of another.
+        // TODO: Convert this back to an insert query after all duplicate
+        // function names have been purged from Drupal.
+        db_merge('registry')
+          ->key(array('name' => $resource_name, 'type' => $type))
+          ->fields($fields)
+          ->execute();
+
+        // We skip the body because classes may contain functions.
+        _registry_skip_body($tokens);
+      }
     }
-    $query->execute();
+  }
+}
+
+/**
+ * Derive the name of the next resource in the token stream.
+ *
+ * When called without arguments, it resets its static cache.
+ *
+ * @param $tokens
+ *  The collection of tokens for the current file being parsed.
+ * @param $type
+ *  The human-readable token name, either: "function", "class", or "interface".
+ * @return
+ *  The name of the resource, or FALSE if the resource has already been processed.
+ */
+function _registry_get_resource_name(&$tokens = NULL, $type = NULL) {
+  // Keep a running list of all resources we've saved so far, so that we never
+  // save one more than once.
+  $resources = &drupal_static(__FUNCTION__);
+
+  if (!isset($tokens)) {
+    $resources = array();
+    return;
+  }
+  // Determine the name of the resource.
+  next($tokens); // Eat a space.
+  $token = next($tokens);
+  if ($token == '&') {
+    $token = next($tokens);
+  }
+  $resource_name = $token[1];
+
+  // Ensure that we never save it more than once.
+  if (isset($resources[$type][$resource_name])) {
+    return FALSE;
+  }
+  $resources[$type][$resource_name] = TRUE;
+
+  return $resource_name;
+}
+
+/**
+ * Skip the body of a code block, as defined by { and }.
+ *
+ * This function assumes that the body starts at the next instance
+ * of { from the current position.
+ *
+ * @param $tokens
+ */
+function _registry_skip_body(&$tokens) {
+  $num_braces = 1;
+
+  $token = '';
+  // Get to the first open brace.
+  while ($token != '{' && ($token = next($tokens)));
+
+  // Scan through the rest of the tokens until we reach the matching
+  // end brace.
+  while ($num_braces && ($token = next($tokens))) {
+    // PHP is really logical to have three different tokens for { with
+    // inconsistent names and only one for a closing brace.
+    if ($token == '{' || (is_array($token) && ($token[0] == T_DOLLAR_OPEN_CURLY_BRACES || $token[0] == T_CURLY_OPEN))) {
+      ++$num_braces;
+    }
+    elseif ($token == '}') {
+      --$num_braces;
+    }
+    // Consume strings manually as workaround for a bug in PHP < 5.2.3 (see
+    // http://drupal.org/node/368116).
+    elseif ($token == '"' || $token == '`' || (is_array($token) && $token[0] == T_START_HEREDOC)) {
+      $stop = is_array($token) ? T_END_HEREDOC : $token;
+      while (($token = next($tokens)) && (is_array($token) ? $token[0] : $token) != $stop);
+    }
   }
 }
 

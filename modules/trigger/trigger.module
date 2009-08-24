@@ -40,7 +40,6 @@ function trigger_menu() {
     'description' => 'Tell Drupal when to execute actions.',
     'page callback' => 'trigger_assign',
     'access arguments' => array('administer actions'),
-    'file' => 'trigger.admin.inc',
   );
 
   // Explicitly define the system menu item so we can label it "cron" rather
@@ -51,7 +50,6 @@ function trigger_menu() {
     'page arguments' => array('system'),
     'access arguments' => array('administer actions'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'trigger.admin.inc',
   );
 
   // We want contributed modules to be able to describe
@@ -75,7 +73,6 @@ function trigger_menu() {
       'page arguments' => array($module),
       'access arguments' => array('administer actions'),
       'type' => MENU_LOCAL_TASK,
-      'file' => 'trigger.admin.inc',
     );
   }
   $items['admin/structure/trigger/unassign'] = array(
@@ -85,7 +82,6 @@ function trigger_menu() {
     'page arguments' => array('trigger_unassign'),
     'access arguments' => array('administer actions'),
     'type' => MENU_CALLBACK,
-    'file' => 'trigger.admin.inc',
   );
 
   return $items;

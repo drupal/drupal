@@ -207,7 +207,7 @@ function _field_invoke($op, $obj_type, $object, &$a = NULL, &$b = NULL, $options
 
       // Invoke the field hook and collect results.
       $function = $options['default'] ? 'field_default_' . $op : $field['module'] . '_field_' . $op;
-      if (function_exists($function)) {
+      if (drupal_function_exists($function)) {
         // Iterate over all the field translations.
         foreach ($field_translations as $langcode => $items) {
           $result = $function($obj_type, $object, $field, $instance, $langcode, $items, $a, $b);
@@ -336,7 +336,7 @@ function _field_invoke_multiple($op, $obj_type, $objects, &$a = NULL, &$b = NULL
   foreach ($fields as $field_id => $field) {
     $field_name = $field['field_name'];
     $function = $options['default'] ? 'field_default_' . $op : $field['module'] . '_field_' . $op;
-    if (function_exists($function)) {
+    if (drupal_function_exists($function)) {
       // Iterate over all the field translations.
       foreach ($grouped_items[$field_id] as $langcode => $items) {
         $results = $function($obj_type, $grouped_objects[$field_id], $field, $grouped_instances[$field_id], $langcode, $grouped_items[$field_id][$langcode], $options, $a, $b);

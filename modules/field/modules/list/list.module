@@ -151,7 +151,7 @@ function list_allowed_values($field) {
   $allowed_values[$field['field_name']] = array();
 
   $function = $field['settings']['allowed_values_function'];
-  if (!empty($function) && function_exists($function)) {
+  if (!empty($function) && drupal_function_exists($function)) {
     $allowed_values[$field['field_name']] = $function($field);
   }
   elseif (!empty($field['settings']['allowed_values'])) {

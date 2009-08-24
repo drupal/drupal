@@ -433,7 +433,7 @@ function user_save($account, $edit = array(), $category = 'account') {
       if (($picture->status & FILE_STATUS_PERMANENT) == 0) {
         $info = image_get_info($picture->uri);
         $picture_directory =  variable_get('file_default_scheme', 'public') . '://' . variable_get('user_picture_path', 'pictures');
-
+        
         // Prepare the pictures directory.
         file_prepare_directory($picture_directory, FILE_CREATE_DIRECTORY);
         $destination = file_stream_wrapper_uri_normalize($picture_directory . '/picture-' . $account->uid . '.' . $info['extension']);
@@ -1298,7 +1298,6 @@ function user_menu() {
     'access callback' => 'user_access',
     'access arguments' => array('access user profiles'),
     'type' => MENU_CALLBACK,
-    'file' => 'user.pages.inc',
   );
 
   // Registration and login pages.
@@ -1307,7 +1306,6 @@ function user_menu() {
     'page callback' => 'user_page',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
-    'file' => 'user.pages.inc',
   );
 
   $items['user/login'] = array(
@@ -1330,7 +1328,6 @@ function user_menu() {
     'page arguments' => array('user_pass'),
     'access callback' => 'user_is_anonymous',
     'type' => MENU_LOCAL_TASK,
-    'file' => 'user.pages.inc',
   );
   $items['user/reset/%/%/%'] = array(
     'title' => 'Reset password',
@@ -1338,7 +1335,6 @@ function user_menu() {
     'page arguments' => array('user_pass_reset', 2, 3, 4),
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
-    'file' => 'user.pages.inc',
   );
 
   $items['user/logout'] = array(
@@ -1347,7 +1343,6 @@ function user_menu() {
     'page callback' => 'user_logout',
     'weight' => 10,
     'menu_name' => 'user-menu',
-    'file' => 'user.pages.inc',
   );
 
   // User listing pages.
@@ -1359,7 +1354,6 @@ function user_menu() {
     'access arguments' => array('administer users'),
     'position' => 'left',
     'weight' => -4,
-    'file' => 'user.admin.inc',
   );
   $items['admin/people/list'] = array(
     'title' => 'List',
@@ -1388,7 +1382,6 @@ function user_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_settings'),
     'access arguments' => array('administer users'),
-    'file' => 'user.admin.inc',
     'weight' => -10,
   );
   $items['admin/config/people/accounts/settings'] = array(
@@ -1404,7 +1397,6 @@ function user_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_new_role'),
     'access arguments' => array('administer permissions'),
-    'file' => 'user.admin.inc',
     'weight' => -9,
   );
   $items['admin/config/people/roles/edit'] = array(
@@ -1419,7 +1411,6 @@ function user_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('user_admin_permissions'),
     'access arguments' => array('administer permissions'),
-    'file' => 'user.admin.inc',
     'weight' => -8,
   );
 
@@ -1433,7 +1424,6 @@ function user_menu() {
     'access arguments' => array(1),
     'weight' => -10,
     'menu_name' => 'user-menu',
-    'file' => 'user.pages.inc',
   );
 
   $items['user/%user/view'] = array(
@@ -1449,7 +1439,6 @@ function user_menu() {
     'access callback' => 'user_cancel_access',
     'access arguments' => array(1),
     'type' => MENU_CALLBACK,
-    'file' => 'user.pages.inc',
   );
 
   $items['user/%user/cancel/confirm/%/%'] = array(
@@ -1459,7 +1448,6 @@ function user_menu() {
     'access callback' => 'user_cancel_access',
     'access arguments' => array(1),
     'type' => MENU_CALLBACK,
-    'file' => 'user.pages.inc',
   );
 
   $items['user/%user/edit'] = array(
@@ -1469,7 +1457,6 @@ function user_menu() {
     'access callback' => 'user_edit_access',
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'user.pages.inc',
   );
 
   $items['user/%user_category/edit/account'] = array(
@@ -1493,7 +1480,6 @@ function user_menu() {
           'weight' => $category['weight'],
           'load arguments' => array('%map', '%index'),
           'tab_parent' => 'user/%/edit',
-          'file' => 'user.pages.inc',
         );
       }
     }
@@ -1725,7 +1711,7 @@ function user_login_authenticate_validate($form, &$form_state) {
 
 /**
  * The final validation handler on the login form.
- *
+ * 
  * Sets a form error if user has not been authenticated, or if too many
  * logins have been attempted. This validation function should always
  * be the last one.
@@ -3039,41 +3025,3 @@ function _user_forms(&$edit, $account, $category, $hook = 'form') {
   return empty($groups) ? FALSE : $groups;
 }
 
-
-/**
- * Implementation of hook_modules_installed().
- */
-function user_modules_installed($modules) {
-  // Assign all available permissions to the administrator role.
-  $rid = variable_get('user_admin_role', 0);
-  if ($rid) {
-    foreach ($modules as $module) {
-      if ($permissions = module_invoke($module, 'permission')) {
-        foreach (array_keys($permissions) as $permission) {
-          db_insert('role_permission')
-            ->fields(array(
-              'rid' => $rid,
-              'permission' => $permission,
-            ))->execute();
-        }
-      }
-    }
-  }
-}
-
-/**
- * Implement hook_modules_uninstalled().
- */
-function user_modules_uninstalled($modules) {
-  $permissions = array();
-  foreach ($modules as $module) {
-    if (function_exists($module . '_permission')) {
-      $permissions = array_merge($permissions, array_keys(module_invoke($module, 'permission')));
-    }
-  }
-  if (!empty($permissions)) {
-    db_delete('role_permission')
-      ->condition('permission', $permissions, 'IN')
-      ->execute();
-  }
-}

@@ -57,13 +57,11 @@ function contact_menu() {
     'description' => 'Create a system contact form and set up categories for the form to use.',
     'page callback' => 'contact_admin_categories',
     'access arguments' => array('administer site-wide contact form'),
-    'file' => 'contact.admin.inc',
   );
   $items['admin/structure/contact/list'] = array(
     'title' => 'List',
     'page callback' => 'contact_admin_categories',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'file' => 'contact.admin.inc',
   );
   $items['admin/structure/contact/add'] = array(
     'title' => 'Add category',
@@ -72,7 +70,6 @@ function contact_menu() {
     'access arguments' => array('administer site-wide contact form'),
     'type' => MENU_LOCAL_ACTION,
     'weight' => 1,
-    'file' => 'contact.admin.inc',
   );
   $items['admin/structure/contact/edit/%contact'] = array(
     'title' => 'Edit contact category',
@@ -80,7 +77,6 @@ function contact_menu() {
     'page arguments' => array('contact_admin_edit', 3, 4),
     'access arguments' => array('administer site-wide contact form'),
     'type' => MENU_CALLBACK,
-    'file' => 'contact.admin.inc',
   );
   $items['admin/structure/contact/delete/%contact'] = array(
     'title' => 'Delete contact',
@@ -88,7 +84,6 @@ function contact_menu() {
     'page arguments' => array('contact_admin_delete', 4),
     'access arguments' => array('administer site-wide contact form'),
     'type' => MENU_CALLBACK,
-    'file' => 'contact.admin.inc',
   );
   $items['admin/settings/contact'] = array(
     'title' => 'Contact form',
@@ -96,14 +91,12 @@ function contact_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('contact_admin_settings'),
     'access arguments' => array('administer site-wide contact form'),
-    'file' => 'contact.admin.inc',
   );
   $items['contact'] = array(
     'title' => 'Contact',
     'page callback' => 'contact_site_page',
     'access arguments' => array('access site-wide contact form'),
     'type' => MENU_SUGGESTED_ITEM,
-    'file' => 'contact.pages.inc',
   );
   $items['user/%user/contact'] = array(
     'title' => 'Contact',
@@ -113,7 +106,6 @@ function contact_menu() {
     'access callback' => '_contact_personal_tab_access',
     'access arguments' => array(1),
     'weight' => 2,
-    'file' => 'contact.pages.inc',
   );
   return $items;
 }

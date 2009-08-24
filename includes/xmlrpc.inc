@@ -438,7 +438,7 @@ function xmlrpc_base64_get_xml($xmlrpc_base64) {
  *     returned by the method called, or an xmlrpc_error object if the call
  *     failed. See xmlrpc_error().
  */
-function _xmlrpc() {
+function xmlrpc() {
   $args = func_get_args();
   $url = array_shift($args);
   if (is_array($args[0])) {

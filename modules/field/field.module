@@ -11,11 +11,9 @@
  * every page request.
  */
 require(DRUPAL_ROOT . '/modules/field/field.crud.inc');
-require(DRUPAL_ROOT . '/modules/field/field.default.inc');
 require(DRUPAL_ROOT . '/modules/field/field.info.inc');
 require(DRUPAL_ROOT . '/modules/field/field.multilingual.inc');
 require(DRUPAL_ROOT . '/modules/field/field.attach.inc');
-require(DRUPAL_ROOT . '/modules/field/field.form.inc');
 
 /**
  * @defgroup field Field API
@@ -166,7 +164,6 @@ function field_menu() {
     'page callback' => 'field_add_more_js',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
-    'file' => 'field.form.inc',
   );
 
   return $items;
@@ -292,7 +289,7 @@ function field_get_default_value($obj_type, $object, $field, $instance, $langcod
   $items = array();
   if (!empty($instance['default_value_function'])) {
     $function = $instance['default_value_function'];
-    if (function_exists($function)) {
+    if (drupal_function_exists($function)) {
       $items = $function($obj_type, $object, $field, $instance, $langcode);
     }
   }
@@ -318,7 +315,7 @@ function field_get_default_value($obj_type, $object, $field, $instance, $langcod
 function field_set_empty($field, $items) {
   $function = $field['module'] . '_field_is_empty';
   // We ensure the function is loaded, but explicitly break if it is missing.
-  function_exists($function);
+  drupal_function_exists($function);
   foreach ((array) $items as $delta => $item) {
     if ($function($item, $field)) {
       unset($items[$delta]);
@@ -604,7 +601,7 @@ function field_view_field($obj_type, $object, $field, $instance, $build_mode = '
 
     // One-field equivalent to _field_invoke('sanitize').
     $function = $field['module'] . '_field_sanitize';
-    if (function_exists($function)) {
+    if (drupal_function_exists($function)) {
       $function($obj_type, $object, $field, $instance, $items);
       $object->$field['field_name'] = $items;
     }
