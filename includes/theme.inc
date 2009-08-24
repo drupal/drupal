@@ -1383,17 +1383,37 @@ function theme_status_messages($display = NULL) {
  *    - href: the link URL. If omitted, the 'title' is shown as a plain text item in the links list.
  *    - html: (optional) set this to TRUE if 'title' is HTML so it will be escaped.
  *   Array items are passed on to the l() function's $options parameter when creating the link.
+ * @param $heading
+ *   An optional keyed array for a heading to precede the links:
+ *    - text: the heading text
+ *    - level: the heading level (e.g. 'h2', 'h3')
+ *    - class: (optional) space-separated classes for the heading
+ *   Headings should be used on navigation menus and any list of links that
+ *   consistently appears on multiple pages. To make the heading invisible
+ *   use class => 'element-invisible'. Do not use 'display:none', which
+ *   removes it from screen-readers and assistive technology. Headings allow
+ *   screen-reader and keyboard only users to navigate to or skip the links.
+ *   See http://juicystudio.com/article/screen-readers-display-none.php
+ *   and http://www.w3.org/TR/WCAG-TECHS/H42.html for more information.
  * @param $attributes
  *   A keyed array of attributes.
  * @return
  *   A string containing an unordered list of links.
  */
-function theme_links($links, $attributes = array('class' => array('links'))) {
+function theme_links($links, $heading = array(), $attributes = array('class' => array('links'))) {
   global $language;
   $output = '';
 
   if (count($links) > 0) {
-    $output = '<ul' . drupal_attributes($attributes) . '>';
+    $output = '';
+    if (!empty($heading['text']) && !empty($heading['level'])) {
+      $output .= '<' . $heading['level'] . (!empty($heading['class']) ?
+        drupal_attributes(array('class' => $heading['class'])) : '') . '>';
+      $output .= check_plain($heading['text']);
+      $output .= '</' . $heading['level'] . '>';
+    }
+
+    $output .= '<ul' . drupal_attributes($attributes) . '>';
 
     $num_links = count($links);
     $i = 1;
