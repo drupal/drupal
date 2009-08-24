@@ -143,7 +143,7 @@ function system_help($path, $arg) {
       return $output;
     case 'admin/settings/actions/configure':
       return t('An advanced action offers additional configuration options which may be filled out below. Changing the <em>Description</em> field is recommended, in order to better identify the precise action taking place. This description will be displayed in modules such as the trigger module when assigning actions to system events, so it is best if it is as descriptive as possible (for example, "Send e-mail to Moderation Team" rather than simply "Send e-mail").');
-    case 'admin/settings/ip-blocking':
+    case 'admin/config/people/ip-blocking':
       return '<p>' . t('IP addresses listed here are blocked from your site before any modules are loaded. You may add IP addresses to the list, or delete existing entries.') . '</p>';
     case 'admin/reports/status':
       return '<p>' . t("Here you can find a short overview of your site's parameters as well as any problems detected with your installation. It may be useful to copy and paste this information into support requests filed on drupal.org's support forums and project issue queues.") . '</p>';
@@ -714,14 +714,14 @@ function system_menu() {
   );
 
   // IP address blocking.
-  $items['admin/settings/ip-blocking'] = array(
+  $items['admin/config/people/ip-blocking'] = array(
     'title' => 'IP address blocking',
     'description' => 'Manage blocked IP addresses.',
     'page callback' => 'system_ip_blocking',
     'access arguments' => array('block IP addresses'),
     'file' => 'system.admin.inc',
   );
-  $items['admin/settings/ip-blocking/%'] = array(
+  $items['admin/config/people/ip-blocking/%'] = array(
     'title' => 'IP address blocking',
     'description' => 'Manage blocked IP addresses.',
     'page callback' => 'system_ip_blocking',
@@ -729,10 +729,10 @@ function system_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
-  $items['admin/settings/ip-blocking/delete/%blocked_ip'] = array(
+  $items['admin/config/people/ip-blocking/delete/%blocked_ip'] = array(
     'title' => 'Delete IP address',
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_ip_blocking_delete', 4),
+    'page arguments' => array('system_ip_blocking_delete', 5),
     'access arguments' => array('block IP addresses'),
     'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',

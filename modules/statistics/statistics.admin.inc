@@ -132,7 +132,7 @@ function statistics_top_visitors() {
   $rows = array();
   foreach ($result as $account) {
     $qs = drupal_get_destination();
-    $ban_link =  $account->iid ? l(t('unblock IP address'), "admin/settings/ip-blocking/delete/$account->iid", array('query' => $qs)) : l(t('block IP address'), "admin/settings/ip-blocking/$account->hostname", array('query' => $qs));
+    $ban_link =  $account->iid ? l(t('unblock IP address'), "admin/config/people/ip-blocking/delete/$account->iid", array('query' => $qs)) : l(t('block IP address'), "admin/config/people/ip-blocking/$account->hostname", array('query' => $qs));
     $rows[] = array($account->hits, ($account->uid ? theme('username', $account) : $account->hostname), format_interval(round($account->total / 1000)), (user_access('block IP addresses') && !$account->uid) ? $ban_link : '');
   }
 
