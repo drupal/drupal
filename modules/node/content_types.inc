@@ -1,5 +1,5 @@
 <?php
-// $Id: content_types.inc,v 1.90 2009/08/22 23:18:28 webchick Exp $
+// $Id: content_types.inc,v 1.91 2009/08/24 19:26:46 dries Exp $
 
 /**
  * @file
@@ -330,7 +330,7 @@ function node_type_form_submit($form, &$form_state) {
     }
   }
 
-  unset($variables['form_token'], $variables['op'], $variables['submit'], $variables['delete'], $variables['reset'], $variables['form_id']);
+  unset($variables['form_token'], $variables['op'], $variables['submit'], $variables['delete'], $variables['reset'], $variables['form_id'], $variables['form_build_id']);
 
   // Save or reset persistent variable values.
   foreach ($variables as $key => $value) {
