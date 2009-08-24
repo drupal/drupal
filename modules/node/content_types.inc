@@ -330,7 +330,7 @@ function node_type_form_submit($form, &$form_state) {
     }
   }
 
-  unset($variables['form_token'], $variables['op'], $variables['submit'], $variables['delete'], $variables['reset'], $variables['form_id']);
+  unset($variables['form_token'], $variables['op'], $variables['submit'], $variables['delete'], $variables['reset'], $variables['form_id'], $variables['form_build_id']);
 
   // Save or reset persistent variable values.
   foreach ($variables as $key => $value) {
