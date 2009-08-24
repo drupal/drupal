@@ -38,12 +38,14 @@ function path_menu() {
     'description' => "Change your site's URL paths by aliasing them.",
     'page callback' => 'path_admin_overview',
     'access arguments' => array('administer url aliases'),
+    'file' => 'path.admin.inc',
   );
   $items['admin/settings/path/edit'] = array(
     'title' => 'Edit alias',
     'page callback' => 'path_admin_edit',
     'access arguments' => array('administer url aliases'),
     'type' => MENU_CALLBACK,
+    'file' => 'path.admin.inc',
   );
   $items['admin/settings/path/delete'] = array(
     'title' => 'Delete alias',
@@ -51,6 +53,7 @@ function path_menu() {
     'page arguments' => array('path_admin_delete_confirm'),
     'access arguments' => array('administer url aliases'),
     'type' => MENU_CALLBACK,
+    'file' => 'path.admin.inc',
   );
   $items['admin/settings/path/list'] = array(
     'title' => 'List',
@@ -62,6 +65,7 @@ function path_menu() {
     'page callback' => 'path_admin_edit',
     'access arguments' => array('administer url aliases'),
     'type' => MENU_LOCAL_ACTION,
+    'file' => 'path.admin.inc',
   );
 
   return $items;
@@ -210,7 +214,7 @@ function path_node_update($node) {
 function path_node_delete($node) {
   path_set_alias('node/' . $node->nid);
 }
- 
+
 /**
  * Implement hook_taxonomy_term_delete().
  */
@@ -269,7 +273,7 @@ function path_form_taxonomy_form_term_alter(&$form, $form_state) {
     else {
       $url = 'taxonomy/term/' . $form['#term']['tid'];
       $alias = drupal_get_path_alias($url);
-	  
+
       // Since drupal_get_path_alias() can return the default path, check if we really have an alias.
       if ($alias != $url) {
         $path = $alias;

@@ -34,7 +34,6 @@ function aggregator_aggregator_fetch($feed) {
   // Request feed.
   $result = drupal_http_request($feed->url, array('headers' => $headers));
 
-
   // Process HTTP response code.
   switch ($result->code) {
     case 304:

@@ -130,6 +130,7 @@ function statistics_menu() {
     'description' => 'View pages that have recently been visited.',
     'page callback' => 'statistics_recent_hits',
     'access arguments' => array('access statistics'),
+    'file' => 'statistics.admin.inc',
   );
   $items['admin/reports/pages'] = array(
     'title' => 'Top pages',
@@ -137,6 +138,7 @@ function statistics_menu() {
     'page callback' => 'statistics_top_pages',
     'access arguments' => array('access statistics'),
     'weight' => 1,
+    'file' => 'statistics.admin.inc',
   );
   $items['admin/reports/visitors'] = array(
     'title' => 'Top visitors',
@@ -144,12 +146,14 @@ function statistics_menu() {
     'page callback' => 'statistics_top_visitors',
     'access arguments' => array('access statistics'),
     'weight' => 2,
+    'file' => 'statistics.admin.inc',
   );
   $items['admin/reports/referrers'] = array(
     'title' => 'Top referrers',
     'description' => 'View top referrers.',
     'page callback' => 'statistics_top_referrers',
     'access arguments' => array('access statistics'),
+    'file' => 'statistics.admin.inc',
   );
   $items['admin/reports/access/%'] = array(
     'title' => 'Details',
@@ -158,6 +162,7 @@ function statistics_menu() {
     'page arguments' => array(3),
     'access arguments' => array('access statistics'),
     'type' => MENU_CALLBACK,
+    'file' => 'statistics.admin.inc',
   );
   $items['admin/settings/statistics'] = array(
     'title' => 'Statistics',
@@ -165,6 +170,7 @@ function statistics_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('statistics_settings_form'),
     'access arguments' => array('administer statistics'),
+    'file' => 'statistics.admin.inc',
   );
   $items['user/%user/track/navigation'] = array(
     'title' => 'Track page visits',
@@ -173,6 +179,7 @@ function statistics_menu() {
     'access arguments' => array('access statistics'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
+    'file' => 'statistics.pages.inc',
   );
   $items['node/%node/track'] = array(
     'title' => 'Track',
@@ -181,6 +188,7 @@ function statistics_menu() {
     'access arguments' => array('access statistics'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
+    'file' => 'statistics.pages.inc',
   );
 
   return $items;

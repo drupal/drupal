@@ -76,6 +76,7 @@ function filter_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('filter_admin_overview'),
     'access arguments' => array('administer filters'),
+    'file' => 'filter.admin.inc',
   );
   $items['admin/settings/formats/list'] = array(
     'title' => 'List',
@@ -87,6 +88,7 @@ function filter_menu() {
     'access arguments' => array('administer filters'),
     'type' => MENU_LOCAL_ACTION,
     'weight' => 1,
+    'file' => 'filter.admin.inc',
   );
   $items['admin/settings/formats/delete'] = array(
     'title' => 'Delete text format',
@@ -94,12 +96,14 @@ function filter_menu() {
     'page arguments' => array('filter_admin_delete'),
     'access arguments' => array('administer filters'),
     'type' => MENU_CALLBACK,
+    'file' => 'filter.admin.inc',
   );
   $items['filter/tips'] = array(
     'title' => 'Compose tips',
     'page callback' => 'filter_tips_long',
     'access callback' => TRUE,
     'type' => MENU_SUGGESTED_ITEM,
+    'file' => 'filter.pages.inc',
   );
   $items['admin/settings/formats/%filter_format'] = array(
     'type' => MENU_CALLBACK,
@@ -108,6 +112,7 @@ function filter_menu() {
     'page callback' => 'filter_admin_format_page',
     'page arguments' => array(3),
     'access arguments' => array('administer filters'),
+    'file' => 'filter.admin.inc',
   );
   $items['admin/settings/formats/%filter_format/edit'] = array(
     'title' => 'Edit',
@@ -121,6 +126,7 @@ function filter_menu() {
     'access arguments' => array('administer filters'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
+    'file' => 'filter.admin.inc',
   );
   $items['admin/settings/formats/%filter_format/order'] = array(
     'title' => 'Rearrange',
@@ -129,6 +135,7 @@ function filter_menu() {
     'access arguments' => array('administer filters'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
+    'file' => 'filter.admin.inc',
   );
   return $items;
 }
@@ -259,7 +266,7 @@ function _filter_html_tips($format, $long = FALSE) {
       $output .= theme('table', $header, $rows);
       return $output;
     }
-    
+
     else {
       return t('Allowed HTML tags: @tags', array('@tags' => $allowed_html));
     }
@@ -270,7 +277,7 @@ function _filter_autop_tips($format, $long = FALSE) {
   if ($long) {
     return t('Lines and paragraphs are automatically recognized. The &lt;br /&gt; line break, &lt;p&gt; paragraph and &lt;/p&gt; close paragraph tags are inserted automatically. If paragraphs are not recognized simply add a couple blank lines.');
   }
-  else {   
+  else {
     return t('Lines and paragraphs break automatically.');
   }
 }
@@ -446,7 +453,7 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $c
     // Give filters the chance to escape HTML-like data such as code or formulas.
     foreach ($filters as $filter) {
       $filter_info = module_invoke($filter->module, 'filter_info');
-      if (isset($filter_info[$filter->name]['prepare callback']) && drupal_function_exists($filter_info[$filter->name]['prepare callback'])) {
+      if (isset($filter_info[$filter->name]['prepare callback']) && function_exists($filter_info[$filter->name]['prepare callback'])) {
         $text = call_user_func($filter_info[$filter->name]['prepare callback'], $text, $format, $langcode, $cache_id);
       }
     }
@@ -454,7 +461,7 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $c
     // Perform filtering.
     foreach ($filters as $filter) {
       $filter_info = module_invoke($filter->module, 'filter_info');
-      if (isset($filter_info[$filter->name]['process callback']) && drupal_function_exists($filter_info[$filter->name]['process callback'])) {
+      if (isset($filter_info[$filter->name]['process callback']) && function_exists($filter_info[$filter->name]['process callback'])) {
         $text = call_user_func($filter_info[$filter->name]['process callback'], $text, $format, $langcode, $cache_id);
       }
     }
@@ -566,7 +573,7 @@ function _filter_tips($format, $long = FALSE) {
     $tips[$format->name] = array();
     foreach ($filters as $id => $filter) {
       $filter_info = module_invoke($filter->module, 'filter_info');
-      if (isset($filter_info[$filter->name]['tips callback']) && drupal_function_exists($filter_info[$filter->name]['tips callback'])) {
+      if (isset($filter_info[$filter->name]['tips callback']) && function_exists($filter_info[$filter->name]['tips callback'])) {
         $tip = call_user_func($filter_info[$filter->name]['tips callback'],$format->format, $long);
         $tips[$format->name][] = array('tip' => $tip, 'id' => $id);
       }

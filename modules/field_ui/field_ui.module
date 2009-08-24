@@ -38,6 +38,7 @@ function field_ui_menu() {
     'page callback' => 'field_ui_fields_list',
     'access arguments' => array('administer content types'),
     'type' => MENU_NORMAL_ITEM,
+    'file' => 'field_ui.admin.inc',
   );
 
   // Ensure the following is not executed until field_bundles is working and
@@ -60,6 +61,7 @@ function field_ui_menu() {
           'page arguments' => array('field_ui_field_overview_form', $obj_type, $bundle_arg),
           'type' => MENU_LOCAL_TASK,
           'weight' => 1,
+          'file' => 'field_ui.admin.inc',
         ) + $access;
         $instance_position = count(explode('/', $path)) + 1;
         $items["$path/fields/%field_ui_menu"] = array(
@@ -69,6 +71,7 @@ function field_ui_menu() {
           'page callback' => 'drupal_get_form',
           'page arguments' => array('field_ui_field_edit_form', $obj_type, $bundle_arg, $instance_position),
           'type' => MENU_LOCAL_TASK,
+          'file' => 'field_ui.admin.inc',
         ) + $access;
         $items["$path/fields/%field_ui_menu/edit"] = array(
           'title' => 'Edit instance settings',
@@ -76,6 +79,7 @@ function field_ui_menu() {
           'page callback' => 'drupal_get_form',
           'page arguments' => array('field_ui_field_edit_form', $obj_type, $bundle_arg, $instance_position),
           'type' => MENU_DEFAULT_LOCAL_TASK,
+          'file' => 'field_ui.admin.inc',
         ) + $access;
         $items["$path/fields/%field_ui_menu/field-settings"] = array(
           'title' => 'Edit field settings',
@@ -83,6 +87,7 @@ function field_ui_menu() {
           'page callback' => 'drupal_get_form',
           'page arguments' => array('field_ui_field_settings_form', $obj_type, $bundle_arg, $instance_position),
           'type' => MENU_LOCAL_TASK,
+          'file' => 'field_ui.admin.inc',
         ) + $access;
         $items["$path/fields/%field_ui_menu/widget-type"] = array(
           'title' => 'Change widget type',
@@ -90,6 +95,7 @@ function field_ui_menu() {
           'page callback' => 'drupal_get_form',
           'page arguments' => array('field_ui_widget_type_form', $obj_type, $bundle_arg, $instance_position),
           'type' => MENU_LOCAL_TASK,
+          'file' => 'field_ui.admin.inc',
         ) + $access;
         $items["$path/fields/%field_ui_menu/delete"] = array(
           'title' => 'Delete instance',
@@ -97,6 +103,7 @@ function field_ui_menu() {
           'page callback' => 'drupal_get_form',
           'page arguments' => array('field_ui_field_delete_form', $obj_type, $bundle_arg, $instance_position),
           'type' => MENU_LOCAL_TASK,
+          'file' => 'field_ui.admin.inc',
         ) + $access;
 
         // 'Display fields' tab and context secondary tabs.
@@ -106,6 +113,7 @@ function field_ui_menu() {
           'page arguments' => array('field_ui_display_overview_form', $obj_type, $bundle_arg),
           'type' => MENU_LOCAL_TASK,
           'weight' => 2,
+          'file' => 'field_ui.admin.inc',
         ) + $access;
         $tabs = field_ui_build_modes_tabs($obj_type);
         foreach ($tabs as $key => $tab) {
@@ -114,6 +122,7 @@ function field_ui_menu() {
             'page arguments' => array('field_ui_display_overview_form', $obj_type, $bundle_arg, $key),
             'type' => $key == 'basic' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
             'weight' => $key == 'basic' ? 0 : 1,
+            'file' => 'field_ui.admin.inc',
           ) + $access;
         }
       }

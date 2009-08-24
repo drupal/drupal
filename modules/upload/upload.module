@@ -99,6 +99,7 @@ function upload_menu() {
     'page arguments' => array('upload_admin_settings'),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_NORMAL_ITEM,
+    'file' => 'upload.admin.inc',
   );
   return $items;
 }

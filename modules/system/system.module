@@ -501,18 +501,22 @@ function system_menu() {
     'page callback' => 'ajax_form_callback',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
+    'file path' => 'includes',
+    'file' => 'form.inc',
   );
   $items['system/timezone'] = array(
     'title' => 'Time zone',
     'page callback' => 'system_timezone',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
   );
   $items['system/run-cron-image'] = array(
     'title' => 'Execute cron',
     'page callback' => 'system_run_cron_image',
     'access callback' => 'system_run_cron_image_access',
     'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
   );
   $items['admin'] = array(
     'title' => 'Administer',
@@ -520,18 +524,21 @@ function system_menu() {
     'page callback' => 'system_main_admin_page',
     'weight' => 9,
     'menu_name' => 'management',
+    'file' => 'system.admin.inc',
   );
   $items['admin/compact'] = array(
     'title' => 'Compact mode',
     'page callback' => 'system_admin_compact_page',
     'access arguments' => array('access administration pages'),
     'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
   );
   $items['admin/by-task'] = array(
     'title' => 'By task',
     'page callback' => 'system_main_admin_page',
     'access arguments' => array('access administration pages'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
+    'file' => 'system.admin.inc',
   );
   $items['admin/by-module'] = array(
     'title' => 'By module',
@@ -539,6 +546,7 @@ function system_menu() {
     'access arguments' => array('access administration pages'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
+    'file' => 'system.admin.inc',
   );
 
   // Menu items that are basically just menu blocks.
@@ -550,6 +558,7 @@ function system_menu() {
     'page callback' => 'system_settings_overview',
     'access callback' => 'system_admin_menu_block_access',
     'access arguments' => array('admin/settings', 'access administration pages'),
+    'file' => 'system.admin.inc',
   );
   $items['admin/structure'] = array(
     'title' => 'Structure',
@@ -559,6 +568,7 @@ function system_menu() {
     'page callback' => 'system_admin_menu_block_page',
     'access callback' => 'system_admin_menu_block_access',
     'access arguments' => array('admin/structure', 'access administration pages'),
+    'file' => 'system.admin.inc',
   );
   // Appearance.
   $items['admin/appearance'] = array(
@@ -569,18 +579,21 @@ function system_menu() {
     'access arguments' => array('administer site configuration'),
     'position' => 'left',
     'weight' => -6,
+    'file' => 'system.admin.inc',
   );
   $items['admin/appearance/select'] = array(
     'title' => 'List',
     'description' => 'Select the default theme for your site.',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -1,
+    'file' => 'system.admin.inc',
   );
   $items['admin/appearance/settings'] = array(
     'title' => 'Configure',
     'page arguments' => array('system_theme_settings'),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
+    'file' => 'system.admin.inc',
   );
   // Theme configuration subtabs.
   $items['admin/appearance/settings/global'] = array(
@@ -596,6 +609,7 @@ function system_menu() {
       'type' => MENU_LOCAL_TASK,
       'access callback' => '_system_themes_access',
       'access arguments' => array($theme),
+      'file' => 'system.admin.inc',
     );
   }
 
@@ -604,12 +618,14 @@ function system_menu() {
     'title' => 'Configuration and modules',
     'page callback' => 'system_admin_config_page',
     'access arguments' => array('access administration pages'),
+    'file' => 'system.admin.inc',
   );
   $items['admin/config/config'] = array(
     'title' => 'Configuration',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
+    'file' => 'system.admin.inc',
   );
   $items['admin/config/modules'] = array(
     'title' => 'Modules',
@@ -617,6 +633,7 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_modules'),
     'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
   );
@@ -634,11 +651,25 @@ function system_menu() {
     'page arguments' => array('system_modules_uninstall'),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
+    'file' => 'system.admin.inc',
   );
   $items['admin/config/modules/uninstall/confirm'] = array(
     'title' => 'Uninstall',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
+  );
+
+  // Development menu category.
+  $items['admin/development'] = array(
+    'title' => 'Development',
+    'description' => 'Development tools.',
+    'position' => 'right',
+    'weight' => -7,
+    'page callback' => 'system_admin_menu_block_page',
+    'access callback' => 'system_admin_menu_block_access',
+    'access arguments' => array('admin/development', 'access administration pages'),
+    'file' => 'system.admin.inc',
   );
 
   // Actions.
@@ -646,7 +677,8 @@ function system_menu() {
     'title' => 'Actions',
     'description' => 'Manage the actions defined for your site.',
     'access arguments' => array('administer actions'),
-    'page callback' => 'system_actions_manage'
+    'page callback' => 'system_actions_manage',
+    'file' => 'system.admin.inc',
   );
   $items['admin/settings/actions/manage'] = array(
     'title' => 'Manage actions',
@@ -654,6 +686,7 @@ function system_menu() {
     'page callback' => 'system_actions_manage',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -2,
+    'file' => 'system.admin.inc',
   );
   $items['admin/settings/actions/configure'] = array(
     'title' => 'Configure an advanced action',
@@ -661,6 +694,7 @@ function system_menu() {
     'page arguments' => array('system_actions_configure'),
     'access arguments' => array('administer actions'),
     'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
   );
   $items['admin/settings/actions/delete/%actions'] = array(
     'title' => 'Delete action',
@@ -669,12 +703,14 @@ function system_menu() {
     'page arguments' => array('system_actions_delete_form', 4),
     'access arguments' => array('administer actions'),
     'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
   );
   $items['admin/settings/actions/orphan'] = array(
     'title' => 'Remove orphans',
     'page callback' => 'system_actions_remove_orphans',
     'access arguments' => array('administer actions'),
     'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
   );
 
   // IP address blocking.
@@ -683,6 +719,7 @@ function system_menu() {
     'description' => 'Manage blocked IP addresses.',
     'page callback' => 'system_ip_blocking',
     'access arguments' => array('block IP addresses'),
+    'file' => 'system.admin.inc',
   );
   $items['admin/settings/ip-blocking/%'] = array(
     'title' => 'IP address blocking',
@@ -690,6 +727,7 @@ function system_menu() {
     'page callback' => 'system_ip_blocking',
     'access arguments' => array('block IP addresses'),
     'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
   );
   $items['admin/settings/ip-blocking/delete/%blocked_ip'] = array(
     'title' => 'Delete IP address',
@@ -697,17 +735,19 @@ function system_menu() {
     'page arguments' => array('system_ip_blocking_delete', 4),
     'access arguments' => array('block IP addresses'),
     'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
   );
 
   // Configuration.
   $items['admin/config/development'] = array(
-   'title' => 'Development',
-   'description' => 'Development tools.',
-   'position' => 'left',
-   'weight' => 10,
-   'page callback' => 'system_admin_menu_block_page',
-   'access callback' => 'system_admin_menu_block_access',
-   'access arguments' => array('admin/config/development', 'access administration pages'),
+    'title' => 'Development',
+    'description' => 'Development tools.',
+    'position' => 'left',
+    'weight' => 10,
+    'page callback' => 'system_admin_menu_block_page',
+    'access callback' => 'system_admin_menu_block_access',
+    'access arguments' => array('admin/config/development', 'access administration pages'),
+    'file' => 'system.admin.inc',
   );
   $items['admin/config/development/maintenance'] = array(
     'title' => 'Maintenance mode',
@@ -715,6 +755,7 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_site_maintenance_mode'),
     'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
   );
   $items['admin/config/development/performance'] = array(
     'title' => 'Performance',
@@ -722,15 +763,17 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_performance_settings'),
     'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
   );
   $items['admin/config/media'] = array(
-   'title' => 'Media',
-   'description' => 'Media tools.',
-   'position' => 'left',
-   'weight' => 10,
-   'page callback' => 'system_admin_menu_block_page',
-   'access callback' => 'system_admin_menu_block_access',
-   'access arguments' => array('admin/config/media', 'access administration pages'),
+    'title' => 'Media',
+    'description' => 'Media tools.',
+    'position' => 'left',
+    'weight' => 10,
+    'page callback' => 'system_admin_menu_block_page',
+    'access callback' => 'system_admin_menu_block_access',
+    'access arguments' => array('admin/config/media', 'access administration pages'),
+    'file' => 'system.admin.inc',
   );
   $items['admin/config/media/file-system'] = array(
     'title' => 'File system',
@@ -738,6 +781,7 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_file_system_settings'),
     'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
   );
     $items['admin/config/media/image-toolkit'] = array(
     'title' => 'Image toolkit',
@@ -745,6 +789,15 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_image_toolkit_settings'),
     'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/settings/performance'] = array(
+    'title' => 'Performance',
+    'description' => 'Enable or disable page caching for anonymous users and set CSS and JS bandwidth optimization options.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('system_performance_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
   );
     $items['admin/config/development/logging'] = array(
     'title' => 'Logging and errors',
@@ -752,15 +805,17 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_logging_settings'),
     'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
   );
   $items['admin/config/regional'] = array(
-   'title' => 'Regional and language',
-   'description' => 'Regional settings, localization and translation.',
-   'position' => 'left',
-   'weight' => -7,
-   'page callback' => 'system_admin_menu_block_page',
-   'access callback' => 'system_admin_menu_block_access',
-   'access arguments' => array('admin/config/regional', 'access administration pages'),
+    'title' => 'Regional and language',
+    'description' => 'Regional settings, localization and translation.',
+    'position' => 'left',
+    'weight' => -7,
+    'page callback' => 'system_admin_menu_block_page',
+    'access callback' => 'system_admin_menu_block_access',
+    'access arguments' => array('admin/config/regional', 'access administration pages'),
+    'file' => 'system.admin.inc',
   );
   $items['admin/config/regional/settings'] = array(
     'title' => 'Regional settings',
@@ -769,14 +824,16 @@ function system_menu() {
     'page arguments' => array('system_regional_settings'),
     'access arguments' => array('administer site configuration'),
     'weight' => -10,
+    'file' => 'system.admin.inc',
   );
   $items['admin/config/regional/settings/lookup'] = array(
     'title' => 'Date and time lookup',
     'type' => MENU_CALLBACK,
     'page callback' => 'system_date_time_lookup',
     'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
   );
-  
+
   // Settings.
   $items['admin/settings/site-information'] = array(
     'title' => 'Site information',
@@ -784,6 +841,7 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_site_information_settings'),
     'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
   );
   $items['admin/settings/rss-publishing'] = array(
     'title' => 'RSS publishing',
@@ -791,6 +849,7 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_rss_feeds_settings'),
     'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
   );
   $items['admin/settings/clean-urls'] = array(
     'title' => 'Clean URLs',
@@ -798,6 +857,7 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_clean_url_settings'),
     'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
   );
   $items['admin/settings/clean-urls/check'] = array(
     'title' => 'Clean URL check',
@@ -805,6 +865,7 @@ function system_menu() {
     'page arguments' => array(array('status' => TRUE)),
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
   );
 
   // Reports.
@@ -816,6 +877,7 @@ function system_menu() {
     'access arguments' => array('admin/reports', 'access site reports'),
     'weight' => 5,
     'position' => 'left',
+    'file' => 'system.admin.inc',
   );
   $items['admin/reports/status'] = array(
     'title' => 'Status report',
@@ -823,24 +885,28 @@ function system_menu() {
     'page callback' => 'system_status',
     'weight' => 10,
     'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
   );
   $items['admin/reports/status/run-cron'] = array(
     'title' => 'Run cron',
     'page callback' => 'system_run_cron',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
   );
   $items['admin/reports/status/php'] = array(
     'title' => 'PHP',
     'page callback' => 'system_php',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
   );
   // Default page for batch operations.
   $items['batch'] = array(
     'page callback' => 'system_batch_page',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
+    'file' => 'system.admin.inc',
   );
   return $items;
 }
@@ -1275,7 +1341,7 @@ function system_filetransfer_backends() {
       'weight' => 0,
     );
   }
-  
+
   if (ini_get('allow_url_fopen')) {
     $backends['ftp_wrapper'] = array(
       'title' => t('FTP using file streams'),
@@ -1284,7 +1350,7 @@ function system_filetransfer_backends() {
       'weight' => 10,
     );
   }
-  
+
   // SSH2 lib connection is only available if the proper PHP extension is
   // installed.
   if (function_exists('ssh2_connect')) {
@@ -1310,7 +1376,7 @@ function system_filetransfer_backends() {
 function system_get_filetransfer_settings_form($filetransfer_backend_name, $defaults) {
   $available_backends = module_invoke_all('filetransfer_backends');
   $form = call_user_func($available_backends[$filetransfer_backend_name]['settings_form']);
-  
+
   foreach ($form as $name => &$element) {
     if (isset($defaults[$name])) {
       $element['#default_value'] = $defaults[$name];
@@ -1342,30 +1408,30 @@ function system_filetransfer_backend_form_ssh() {
  */
 function _system_filetransfer_backend_form_common() {
   $form = array();
-  
+
   $form['hostname'] = array (
     '#type' => 'textfield',
     '#title' => t('Host'),
     '#default_value' => 'localhost',
   );
-  
+
   $form['port'] = array (
     '#type' => 'textfield',
     '#title' => t('Port'),
     '#default_value' => NULL,
   );
-  
+
   $form['username'] = array (
     '#type' => 'textfield',
     '#title' => t('Username'),
   );
-  
+
   $form['password'] = array (
     '#type' => 'password',
     '#title' => t('Password'),
     '#description' => t('This is not saved in the database and is only used to test the connection'),
   );
-  
+
   return $form;
 }
 
@@ -1644,7 +1710,7 @@ function system_admin_menu_block($item) {
  */
 function system_check_directory($form_element) {
   $directory = $form_element['#value'];
-  
+
   if (!is_dir($directory) && !drupal_mkdir($directory, NULL, TRUE)) {
     // If the directory does not exists and cannot be created.
     form_set_error($form_element['#parents'][0], t('The directory %directory does not exist and could not be created.', array('%directory' => $directory)));
@@ -1801,6 +1867,7 @@ function _system_get_module_data() {
     'version' => NULL,
     'php' => DRUPAL_MINIMUM_PHP,
     'files' => array(),
+    'bootstrap' => 0,
   );
 
   // Read info files for each module.
@@ -1839,6 +1906,22 @@ function system_get_module_data() {
   ksort($modules);
   system_get_files_database($modules, 'module');
   system_update_files_database($modules, 'module');
+  // Refresh bootstrap status.
+  $bootstrap_modules = array();
+  foreach (bootstrap_hooks() as $hook) {
+    foreach (module_implements($hook) as $module) {
+      $bootstrap_modules[] = $module;
+    }
+  }
+  $query = db_update('system')->fields(array('bootstrap' => 0));
+  if ($bootstrap_modules) {
+    db_update('system')
+      ->fields(array('bootstrap' => 1))
+      ->condition('name', $bootstrap_modules, 'IN')
+      ->execute();
+    $query->condition('name', $bootstrap_modules, 'NOT IN');
+  }
+  $query->execute();
   $modules = _module_build_dependencies($modules);
   return $modules;
 }
@@ -2588,7 +2671,7 @@ function system_actions_configure($form_state, $action = NULL) {
 function system_actions_configure_validate($form, $form_state) {
   $function = actions_function_lookup($form_state['values']['actions_action']) . '_validate';
   // Hand off validation to the action.
-  if (drupal_function_exists($function)) {
+  if (function_exists($function)) {
     $function($form, $form_state);
   }
 }
@@ -2748,7 +2831,7 @@ function system_send_email_action($object, $context) {
   }
 
   $recipient = token_replace($context['recipient'], $context);
-  
+
   $language = user_preferred_language($account);
   $params = array('context' => $context);
 
@@ -2941,10 +3024,11 @@ function theme_meta_generator_header($version = VERSION) {
  * Implement hook_image_toolkits().
  */
 function system_image_toolkits() {
+  include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'system') . '/' . 'image.gd.inc';
   return array(
     'gd' => array(
       'title' => t('GD2 image manipulation toolkit'),
-      'available' => drupal_function_exists('image_gd_check_settings') && image_gd_check_settings(),
+      'available' => function_exists('image_gd_check_settings') && image_gd_check_settings(),
     ),
   );
 }
@@ -2972,18 +3056,18 @@ function system_retrieve_file($url, $destination = NULL, $overwrite = TRUE) {
   }
   $parsed_url = parse_url($url);
   $local = is_dir(file_directory_path() . '/' . $destination) ? $destination . '/' . basename($parsed_url['path']) : $destination;
-  
+
   if (!$overwrite && file_exists($local)) {
     drupal_set_message(t('@remote could not be saved. @local already exists', array('@remote' => $url, '@local' => $local)), 'error');
     return FALSE;
   }
-  
+
   $result = drupal_http_request($url);
   if ($result->code != 200 || !file_save_data($result->data, $local)) {
     drupal_set_message(t('@remote could not be saved.', array('@remote' => $url)), 'error');
     return FALSE;
   }
-  
+
   return $local;
 }
 

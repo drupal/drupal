@@ -255,7 +255,7 @@ class ImageToolkitGdTestCase extends DrupalWebTestCase {
    */
   function testManipulations() {
     // If GD isn't available don't bother testing this.
-    if (!drupal_function_exists('image_gd_check_settings') || !image_gd_check_settings()) {
+    if (!function_exists('image_gd_check_settings') || !image_gd_check_settings()) {
       $this->pass(t('Image manipulations for the GD toolkit were skipped because the GD toolkit is not available.'));
       return;
     }
@@ -325,7 +325,7 @@ class ImageToolkitGdTestCase extends DrupalWebTestCase {
     );
 
     // Systems using non-bundled GD2 don't have imagerotate. Test if available.
-    if (drupal_function_exists('imagerotate')) {
+    if (function_exists('imagerotate')) {
       $operations += array(
         'rotate_5' => array(
           'function' => 'rotate',
@@ -359,7 +359,7 @@ class ImageToolkitGdTestCase extends DrupalWebTestCase {
     }
 
     // Systems using non-bundled GD2 don't have imagefilter. Test if available.
-    if (drupal_function_exists('imagefilter')) {
+    if (function_exists('imagefilter')) {
       $operations += array(
         'desaturate' => array(
           'function' => 'desaturate',

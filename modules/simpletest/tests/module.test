@@ -60,7 +60,7 @@ class ModuleUnitTest extends DrupalWebTestCase {
       'system' => array('filename' => drupal_get_path('module', 'system')),
       'menu' => array('filename' => drupal_get_path('module', 'menu')),
     );
-    module_list(FALSE, FALSE, $fixed_list);
+    module_list(FALSE, FALSE, FALSE, $fixed_list);
     $new_module_list = array_combine(array_keys($fixed_list), array_keys($fixed_list));
     $this->assertModuleList($new_module_list, t('When using a fixed list'));
 
@@ -79,7 +79,7 @@ class ModuleUnitTest extends DrupalWebTestCase {
     $expected_values = array_combine($expected_values, $expected_values);
     $this->assertIdentical($expected_values, module_list(), t('@condition: module_list() returns correct results', array('@condition' => $condition)));
     ksort($expected_values);
-    $this->assertIdentical($expected_values, module_list(FALSE, TRUE), t('@condition: module_list() returns correctly sorted results', array('@condition' => $condition)));
+    $this->assertIdentical($expected_values, module_list(FALSE, FALSE, TRUE), t('@condition: module_list() returns correctly sorted results', array('@condition' => $condition)));
   }
 }
 

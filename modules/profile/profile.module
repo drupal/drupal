@@ -80,6 +80,7 @@ function profile_menu() {
     'title' => 'User list',
     'page callback' => 'profile_browse',
     'access arguments' => array('access user profiles'),
+    'file' => 'profile.pages.inc',
     'type' => MENU_SUGGESTED_ITEM,
   );
   $items['admin/config/people/profile'] = array(
@@ -88,18 +89,21 @@ function profile_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('profile_admin_overview'),
     'access arguments' => array('administer users'),
+    'file' => 'profile.admin.inc',
   );
   $items['admin/config/people/profile/add'] = array(
     'title' => 'Add field',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('profile_field_form'),
     'access arguments' => array('administer users'),
+    'file' => 'profile.admin.inc',
     'type' => MENU_CALLBACK,
   );
   $items['admin/config/people/profile/autocomplete'] = array(
     'title' => 'Profile category autocomplete',
     'page callback' => 'profile_admin_settings_autocomplete',
     'access arguments' => array('administer users'),
+    'file' => 'profile.admin.inc',
     'type' => MENU_CALLBACK,
   );
   $items['admin/config/people/profile/edit'] = array(
@@ -107,6 +111,7 @@ function profile_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('profile_field_form'),
     'access arguments' => array('administer users'),
+    'file' => 'profile.admin.inc',
     'type' => MENU_CALLBACK,
   );
   $items['admin/config/people/profile/delete'] = array(
@@ -114,12 +119,14 @@ function profile_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('profile_field_delete'),
     'access arguments' => array('administer users'),
+    'file' => 'profile.admin.inc',
     'type' => MENU_CALLBACK,
   );
   $items['profile/autocomplete'] = array(
     'title' => 'Profile autocomplete',
     'page callback' => 'profile_autocomplete',
     'access arguments' => array('access user profiles'),
+    'file' => 'profile.pages.inc',
     'type' => MENU_CALLBACK,
   );
   return $items;
@@ -128,7 +135,7 @@ function profile_menu() {
 /**
  * Implement hook_block_list().
  */
-function profile_block_list() {
+ function profile_block_list() {
   $blocks['author-information']['info'] = t('Author information');
   $blocks['author-information']['cache'] = BLOCK_CACHE_PER_PAGE | BLOCK_CACHE_PER_ROLE;
   return $blocks;

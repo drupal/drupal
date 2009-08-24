@@ -519,7 +519,7 @@ abstract class DrupalTestCase {
  *
  * These tests can not access the database nor files. Calling any Drupal
  * function that needs the database will throw exceptions. These include
- * watchdog(), drupal_function_exists(), module_implements(),
+ * watchdog(), function_exists(), module_implements(),
  * module_invoke_all() etc.
  */
 class DrupalUnitTestCase extends DrupalTestCase {
@@ -549,7 +549,7 @@ class DrupalUnitTestCase extends DrupalTestCase {
     if (isset($module_list['locale'])) {
       $this->originalModuleList = $module_list;
       unset($module_list['locale']);
-      module_list(TRUE, FALSE, $module_list);
+      module_list(TRUE, FALSE, FALSE, $module_list);
     }
   }
 
@@ -561,7 +561,7 @@ class DrupalUnitTestCase extends DrupalTestCase {
       $db_prefix = $this->originalPrefix;
       // Restore modules if necessary.
       if (isset($this->originalModuleList)) {
-        module_list(TRUE, FALSE, $this->originalModuleList);
+        module_list(TRUE, FALSE, FALSE, $this->originalModuleList);
       }
     }
   }
@@ -1203,7 +1203,7 @@ class DrupalWebTestCase extends DrupalTestCase {
       // Reload module list and implementations to ensure that test module hooks
       // aren't called after tests.
       module_list(TRUE);
-      module_implements(MODULE_IMPLEMENTS_CLEAR_CACHE);
+      module_implements('', FALSE, TRUE);
 
       // Reset the Field API.
       field_cache_clear();

@@ -411,9 +411,10 @@ function menu_execute_active_handler($path = NULL) {
   }
   if ($router_item = menu_get_item($path)) {
     if ($router_item['access']) {
-      if (drupal_function_exists($router_item['page_callback'])) {
-        return call_user_func_array($router_item['page_callback'], $router_item['page_arguments']);
+      if ($router_item['file']) {
+        require_once($router_item['file']);
       }
+      return call_user_func_array($router_item['page_callback'], $router_item['page_arguments']);
     }
     else {
       return MENU_ACCESS_DENIED;
@@ -516,7 +517,7 @@ function _menu_check_access(&$item, $map) {
     if ($callback == 'user_access') {
       $item['access'] = (count($arguments) == 1) ? user_access($arguments[0]) : user_access($arguments[0], $arguments[1]);
     }
-    elseif (drupal_function_exists($callback)) {
+    elseif (function_exists($callback)) {
       $item['access'] = call_user_func_array($callback, $arguments);
     }
   }
@@ -567,7 +568,7 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
         $item['title'] = t($item['title'], menu_unserialize($item['title_arguments'], $map));
       }
     }
-    elseif ($callback && drupal_function_exists($callback)) {
+    elseif ($callback && function_exists($callback)) {
       if (empty($item['title_arguments'])) {
         $item['title'] = $callback($item['title']);
       }
@@ -1905,7 +1906,7 @@ function menu_cache_clear_all() {
 function menu_rebuild() {
   if (!lock_acquire('menu_rebuild')) {
     // Wait for another request that is already doing this work.
-    // We choose to block here since otherwise the router item may not 
+    // We choose to block here since otherwise the router item may not
     // be available in menu_execute_active_handler() resulting in a 404.
     lock_wait('menu_rebuild');
     return FALSE;
@@ -2606,12 +2607,12 @@ function _menu_router_build($callbacks) {
           $load_functions[$k] = NULL;
         }
         else {
-          if (drupal_function_exists($matches[1] . '_to_arg')) {
+          if (function_exists($matches[1] . '_to_arg')) {
             $to_arg_functions[$k] = $matches[1] . '_to_arg';
             $load_functions[$k] = NULL;
             $match = TRUE;
           }
-          if (drupal_function_exists($matches[1] . '_load')) {
+          if (function_exists($matches[1] . '_load')) {
             $function = $matches[1] . '_load';
             // Create an array of arguments that will be passed to the _load
             // function when this menu path is checked, if 'load arguments'
@@ -2697,6 +2698,12 @@ function _menu_router_build($callbacks) {
           if (!isset($item['page arguments']) && isset($parent['page arguments'])) {
             $item['page arguments'] = $parent['page arguments'];
           }
+          if (!isset($item['file']) && isset($parent['file'])) {
+            $item['file'] = $parent['file'];
+          }
+          if (!isset($item['file path']) && isset($parent['file path'])) {
+            $item['file path'] = $parent['file path'];
+          }
         }
       }
     }
@@ -2724,7 +2731,17 @@ function _menu_router_build($callbacks) {
       'tab_parent' => '',
       'tab_root' => $path,
       'path' => $path,
+      'file' => '',
+      'file path' => '',
+      'include file' => '',
+      'module' => '',
     );
+
+    // Calculate out the file to be included for each callback, if any.
+    if ($item['file']) {
+      $file_path = $item['file path'] ? $item['file path'] : drupal_get_path('module', $item['module']);
+      $item['include file'] = $file_path . '/' . $item['file'];
+    }
   }
 
   // Sort the masks so they are in order of descending fit.
@@ -2763,6 +2780,7 @@ function _menu_router_save($menu, $masks) {
       'description',
       'position',
       'weight',
+      'file',
     ));
 
   foreach ($menu as $path => $item) {
@@ -2787,6 +2805,7 @@ function _menu_router_save($menu, $masks) {
       'description' => $item['description'],
       'position' => $item['position'],
       'weight' => $item['weight'],
+      'file' => $item['include file'],
     ));
   }
   // Execute insert object.

@@ -31,6 +31,7 @@ function simpletest_menu() {
     'page arguments' => array('simpletest_test_form'),
     'description' => 'Run tests against Drupal core and your active modules. These tests help assure that your site code is working as designed.',
     'access arguments' => array('administer unit tests'),
+    'file' => 'simpletest.pages.inc',
   );
   $items['admin/config/development/testing/list'] = array(
     'title' => 'List',
@@ -42,6 +43,7 @@ function simpletest_menu() {
     'page arguments' => array('simpletest_settings_form'),
     'access arguments' => array('administer unit tests'),
     'type' => MENU_LOCAL_TASK,
+    'file' => 'simpletest.pages.inc',
   );
   $items['admin/config/development/testing/results/%'] = array(
     'title' => 'Test result',
@@ -50,6 +52,7 @@ function simpletest_menu() {
     'description' => 'View result of tests.',
     'access arguments' => array('administer unit tests'),
     'type' => MENU_CALLBACK,
+    'file' => 'simpletest.pages.inc',
   );
   return $items;
 }

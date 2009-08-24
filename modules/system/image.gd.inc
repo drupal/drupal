@@ -118,7 +118,7 @@ function image_gd_resize(stdClass $image, $width, $height) {
  */
 function image_gd_rotate(stdClass $image, $degrees, $background = NULL) {
   // PHP installations using non-bundled GD do not have imagerotate.
-  if (!drupal_function_exists('imagerotate')) {
+  if (!function_exists('imagerotate')) {
     watchdog('image', 'The image %file could not be rotated because the imagerotate() function is not available in this PHP installation.', array('%file' => $image->source));
     return FALSE;
   }
@@ -215,7 +215,7 @@ function image_gd_crop(stdClass $image, $x, $y, $width, $height) {
  */
 function image_gd_desaturate(stdClass $image) {
   // PHP installations using non-bundled GD do not have imagefilter.
-  if (!drupal_function_exists('imagefilter')) {
+  if (!function_exists('imagefilter')) {
     watchdog('image', 'The image %file could not be desaturated because the imagefilter() function is not available in this PHP installation.', array('%file' => $image->source));
     return FALSE;
   }

@@ -65,7 +65,7 @@ function image_get_toolkit() {
   if (!isset($toolkit)) {
     $toolkits = image_get_available_toolkits();
     $toolkit = variable_get('image_toolkit', 'gd');
-    if (!isset($toolkits[$toolkit]) || !drupal_function_exists('image_' . $toolkit . '_load')) {
+    if (!isset($toolkits[$toolkit]) || !function_exists('image_' . $toolkit . '_load')) {
       // The selected toolkit isn't available so return the first one found. If
       // none are available this will return FALSE.
       reset($toolkits);
@@ -90,7 +90,7 @@ function image_get_toolkit() {
  */
 function image_toolkit_invoke($method, stdClass $image, array $params = array()) {
   $function = 'image_' . $image->toolkit . '_' . $method;
-  if (drupal_function_exists($function)) {
+  if (function_exists($function)) {
     array_unshift($params, $image);
     return call_user_func_array($function, $params);
   }

@@ -56,7 +56,7 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
   else {
     $delta = isset($get_delta) ? $get_delta : 0;
     $function = $instance['widget']['module'] . '_field_widget';
-    if (drupal_function_exists($function)) {
+    if (function_exists($function)) {
       if ($element = $function($form, $form_state, $field, $instance, $items, $delta)) {
         $defaults = array(
           '#required' => $get_delta > 0 ? FALSE : $instance['required'],
@@ -155,7 +155,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
   );
 
   $function = $instance['widget']['module'] . '_field_widget';
-  if (drupal_function_exists($function)) {
+  if (function_exists($function)) {
     for ($delta = 0; $delta <= $max; $delta++) {
       if ($element = $function($form, $form_state, $field, $instance, $items, $delta)) {
         $multiple = $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
@@ -295,7 +295,7 @@ function field_default_form_errors($obj_type, $object, $field, $instance, $langc
   $field_name = $field['field_name'];
   if (!empty($errors[$field_name][$langcode])) {
     $function = $instance['widget']['module'] . '_field_widget_error';
-    $function_exists = drupal_function_exists($function);
+    $function_exists = function_exists($function);
 
     // Walk the form down to where the widget lives.
     $form_path = $form['#fields'][$field_name]['form_path'];
@@ -330,7 +330,7 @@ function field_default_form_errors($obj_type, $object, $field, $instance, $langc
  */
 function field_add_more_submit($form, &$form_state) {
   // Set the form to rebuild and run submit handlers.
-  if (isset($form['#builder_function']) && drupal_function_exists($form['#builder_function'])) {
+  if (isset($form['#builder_function']) && function_exists($form['#builder_function'])) {
     $entity = $form['#builder_function']($form, $form_state);
 
     // Make the changes we want to the form state.

@@ -12,9 +12,6 @@ class XMLRPCValidator1IncTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('xmlrpc_test');
-
-    // Force loading the xmlrpc.inc to have the xmlrpc() function.
-    drupal_function_exists('xmlrpc');
   }
 
   /**
@@ -135,9 +132,6 @@ class XMLRPCMessagesTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('xmlrpc_test');
-
-    // Force loading the xmlrpc.inc to have the xmlrpc() function.
-    drupal_function_exists('xmlrpc');
   }
 
   /**

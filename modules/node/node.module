@@ -1699,6 +1699,7 @@ function node_menu() {
     'page arguments' => array('node_admin_content'),
     'access arguments' => array('administer nodes'),
     'weight' => -10,
+    'file' => 'node.admin.inc',
   );
   $items['admin/content/node'] = array(
     'title' => 'Content',
@@ -1714,6 +1715,7 @@ function node_menu() {
     // has to be allowed access to the 'node access rebuild' confirm form.
     'access arguments' => array('access administration pages'),
     'type' => MENU_CALLBACK,
+    'file' => 'node.admin.inc',
   );
 
   $items['admin/structure/types'] = array(
@@ -1721,6 +1723,7 @@ function node_menu() {
     'description' => 'Manage posts by content type, including default status, front page promotion, comment settings, etc.',
     'page callback' => 'node_overview_types',
     'access arguments' => array('administer content types'),
+    'file' => 'content_types.inc',
   );
   $items['admin/structure/types/list'] = array(
     'title' => 'List',
@@ -1733,6 +1736,7 @@ function node_menu() {
     'page arguments' => array('node_type_form'),
     'access arguments' => array('administer content types'),
     'type' => MENU_LOCAL_ACTION,
+    'file' => 'content_types.inc',
   );
   $items['node'] = array(
     'title' => 'Content',
@@ -1746,6 +1750,7 @@ function node_menu() {
     'access callback' => '_node_add_access',
     'weight' => 1,
     'menu_name' => 'management',
+    'file' => 'node.pages.inc',
   );
   $items['rss.xml'] = array(
     'title' => 'RSS feed',
@@ -1765,6 +1770,7 @@ function node_menu() {
       'access callback' => 'node_access',
       'access arguments' => array('create', $type->type),
       'description' => $type->description,
+      'file' => 'node.pages.inc',
     );
     $items['admin/structure/node-type/' . $type_url_str] = array(
       'title' => $type->name,
@@ -1772,6 +1778,7 @@ function node_menu() {
       'page arguments' => array('node_type_form', $type),
       'access arguments' => array('administer content types'),
       'type' => MENU_CALLBACK,
+      'file' => 'content_types.inc',
     );
     $items['admin/structure/node-type/' . $type_url_str . '/edit'] = array(
       'title' => 'Edit',
@@ -1782,6 +1789,7 @@ function node_menu() {
       'page arguments' => array('node_type_delete_confirm', $type),
       'access arguments' => array('administer content types'),
       'type' => MENU_CALLBACK,
+      'file' => 'content_types.inc',
     );
   }
   $items['node/%node'] = array(
@@ -1804,6 +1812,7 @@ function node_menu() {
     'access arguments' => array('update', 1),
     'weight' => 1,
     'type' => MENU_LOCAL_TASK,
+    'file' => 'node.pages.inc',
   );
   $items['node/%node/delete'] = array(
     'title' => 'Delete',
@@ -1812,7 +1821,9 @@ function node_menu() {
     'access callback' => 'node_access',
     'access arguments' => array('delete', 1),
     'weight' => 1,
-    'type' => MENU_CALLBACK);
+    'type' => MENU_CALLBACK,
+    'file' => 'node.pages.inc',
+  );
   $items['node/%node/revisions'] = array(
     'title' => 'Revisions',
     'page callback' => 'node_revision_overview',
@@ -1821,6 +1832,7 @@ function node_menu() {
     'access arguments' => array(1),
     'weight' => 2,
     'type' => MENU_LOCAL_TASK,
+    'file' => 'node.pages.inc',
   );
   $items['node/%node/revisions/%/view'] = array(
     'title' => 'Revisions',
@@ -1839,6 +1851,7 @@ function node_menu() {
     'access callback' => '_node_revision_access',
     'access arguments' => array(1, 'update'),
     'type' => MENU_CALLBACK,
+    'file' => 'node.pages.inc',
   );
   $items['node/%node/revisions/%/delete'] = array(
     'title' => 'Delete earlier revision',
@@ -1848,6 +1861,7 @@ function node_menu() {
     'access callback' => '_node_revision_access',
     'access arguments' => array(1, 'delete'),
     'type' => MENU_CALLBACK,
+    'file' => 'node.pages.inc',
   );
   return $items;
 }
