@@ -203,8 +203,15 @@ function image_file_download($filepath) {
       $headers = module_invoke_all('file_download', $original_path);
       if (!in_array(-1, $headers)) {
         return array(
+          // Send headers describing the image's size, and MIME-type...
           'Content-Type' => $info['mime_type'],
           'Content-Length' => $info['file_size'],
+          // ...and allow the file to be cached for two weeks (matching the
+          // value we use for the mod_expires settings in .htaccess) and
+          // ensure that caching proxies do not share the image with other
+          // users.
+          'Expires' => gmdate(DATE_RFC1123, time() + 1209600),
+          'Cache-Control' => 'max-age=1209600, private, must-revalidate',
         );
       }
     }
