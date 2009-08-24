@@ -14,9 +14,6 @@ function text_theme() {
     'text_textarea' => array(
       'arguments' => array('element' => NULL),
     ),
-    'text_textarea_with_summary' => array(
-      'arguments' => array('element' => NULL),
-    ),
     'text_textfield' => array(
       'arguments' => array('element' => NULL),
     ),
@@ -567,7 +564,7 @@ function text_elements() {
       '#input' => TRUE,
       '#columns' => array('value', 'format', 'summary'), '#delta' => 0,
       '#process' => array('text_textarea_with_summary_process'),
-      '#theme_wrappers' => array('text_textarea_with_summary'),
+      '#theme_wrappers' => array('text_textarea'),
       '#filter_value' => FILTER_FORMAT_DEFAULT,
     ),
   );
@@ -794,22 +791,3 @@ function theme_text_textfield($element) {
 function theme_text_textarea($element) {
   return $element['#children'];
 }
-
-function theme_text_textarea_with_summary($element) {
-  // If displaying both a textarea and a summary field, wrap them
-  // in a fieldset to make it clear they belong together.
-  $field_key = $element['#columns'][1];
-  if (!empty($element[$field_key]['#display'])) {
-    $fieldset = array(
-      '#title' => $element['#title'],
-      '#value' => $element['#children'],
-      '#attributes' => array('class' => array('text-textarea')),
-      '#id' => str_replace('_', '-', $element['#field_name']) . '-summary-wrapper',
-    );
-    return theme('fieldset', $fieldset);
-  }
-  else {
-    return $element['#children'];
-  }
-}
-
