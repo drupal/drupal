@@ -35,7 +35,8 @@
  * @param $op
  *   A string defining which operation to perform:
  *   - 'admin': The hook should return a form array containing any fieldsets the
- *     module wants to add to the Search settings page at admin/settings/search.
+ *     module wants to add to the Search settings page at 
+ *     admin/config/search/settings.
  *   - 'name': The hook should return a translated name defining the type of
  *     items that are searched for with this module ('content', 'users', ...).
  *   - 'reset': The search index is going to be rebuilt. Modules which use
@@ -51,7 +52,7 @@
  * @return
  *   This varies depending on the operation.
  *   - 'admin': The form array for the Search settings page at
- *     admin/settings/search.
+ *     admin/config/search/settings.
  *   - 'name': The translated string of 'Content'.
  *   - 'reset': None.
  *   - 'search': An array of search results. To use the default search result

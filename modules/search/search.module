@@ -97,10 +97,10 @@ function search_help($path, $arg) {
   switch ($path) {
     case 'admin/help#search':
       $output = '<p>' . t('The search module adds the ability to search for content by keywords. Search is often the only practical way to find content on a large site, and is useful for finding both users and posts.') . '</p>';
-      $output .= '<p>' . t('To provide keyword searching, the search engine maintains an index of words found in your site\'s content. To build and maintain this index, a correctly configured <a href="@cron">cron maintenance task</a> is required. Indexing behavior can be adjusted using the <a href="@searchsettings">search settings page</a>; for example, the <em>Number of items to index per cron run</em> sets the maximum number of items indexed in each pass of a <a href="@cron">cron maintenance task</a>. If necessary, reduce this number to prevent timeouts and memory errors when indexing.', array('@cron' => url('admin/reports/status'), '@searchsettings' => url('admin/settings/search'))) . '</p>';
+      $output .= '<p>' . t('To provide keyword searching, the search engine maintains an index of words found in your site\'s content. To build and maintain this index, a correctly configured <a href="@cron">cron maintenance task</a> is required. Indexing behavior can be adjusted using the <a href="@searchsettings">search settings page</a>; for example, the <em>Number of items to index per cron run</em> sets the maximum number of items indexed in each pass of a <a href="@cron">cron maintenance task</a>. If necessary, reduce this number to prevent timeouts and memory errors when indexing.', array('@cron' => url('admin/reports/status'), '@searchsettings' => url('admin/config/search/settings'))) . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@search">Search module</a>.', array('@search' => 'http://drupal.org/handbook/modules/search/')) . '</p>';
       return $output;
-    case 'admin/settings/search':
+    case 'admin/config/search/settings':
       return '<p>' . t('The search engine maintains an index of words found in your site\'s content. To build and maintain this index, a correctly configured <a href="@cron">cron maintenance task</a> is required. Indexing behavior can be adjusted using the settings below.', array('@cron' => url('admin/reports/status'))) . '</p>';
     case 'search#noresults':
       return t('<ul>
@@ -192,7 +192,7 @@ function search_menu() {
     'type' => MENU_SUGGESTED_ITEM,
     'file' => 'search.pages.inc',
   );
-  $items['admin/settings/search'] = array(
+  $items['admin/config/search/settings'] = array(
     'title' => 'Search settings',
     'description' => 'Configure relevance settings for search and other indexing options',
     'page callback' => 'drupal_get_form',
@@ -201,7 +201,7 @@ function search_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'search.admin.inc',
   );
-  $items['admin/settings/search/reindex'] = array(
+  $items['admin/config/search/settings/reindex'] = array(
     'title' => 'Clear index',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('search_reindex_confirm'),

@@ -35,13 +35,13 @@ Drupal.behaviors.cleanURLsSettingsCheck = {
     if (!($('#edit-clean-url').size()) || $('.clean-url-processed, #edit-clean-url.install').size()) {
       return;
     }
-    var url = settings.basePath + 'admin/settings/clean-urls/check';
+    var url = settings.basePath + 'admin/config/search/clean-urls/check';
     $.ajax({
       url: location.protocol + '//' + location.host + url,
       dataType: 'json',
       success: function () {
         // Check was successful. Redirect using a "clean URL". This will force the form that allows enabling clean URLs.
-        location = settings.basePath +"admin/settings/clean-urls";
+        location = settings.basePath +"admin/config/search/clean-urls";
       }
     });
     $('#clean-url').addClass('clean-url-processed');
@@ -56,7 +56,7 @@ Drupal.behaviors.cleanURLsSettingsCheck = {
  * are currently enabled.
  */
 Drupal.cleanURLsInstallCheck = function () {
-  var url = location.protocol + '//' + location.host + Drupal.settings.basePath + 'admin/settings/clean-urls/check';
+  var url = location.protocol + '//' + location.host + Drupal.settings.basePath + 'admin/config/search/clean-urls/check';
   // Submit a synchronous request to avoid database errors associated with
   // concurrent requests during install.
   $.ajax({

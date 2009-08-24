@@ -11,7 +11,7 @@
  */
 function search_reindex_confirm() {
   return confirm_form(array(), t('Are you sure you want to re-index the site?'),
-                  'admin/settings/search', t(' The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed. This action cannot be undone.'), t('Re-index site'), t('Cancel'));
+                  'admin/config/search/settings', t(' The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed. This action cannot be undone.'), t('Re-index site'), t('Cancel'));
 }
 
 /**
@@ -21,7 +21,7 @@ function search_reindex_confirm_submit(&$form, &$form_state) {
   if ($form['confirm']) {
     search_reindex();
     drupal_set_message(t('The index will be rebuilt.'));
-    $form_state['redirect'] = 'admin/settings/search';
+    $form_state['redirect'] = 'admin/config/search/settings';
     return;
   }
 }
@@ -112,5 +112,5 @@ function search_admin_settings_submit($form, &$form_state) {
  */
 function search_admin_reindex_submit($form, &$form_state) {
   // send the user to the confirmation page
-  $form_state['redirect'] = 'admin/settings/search/reindex';
+  $form_state['redirect'] = 'admin/config/search/settings/reindex';
 }
