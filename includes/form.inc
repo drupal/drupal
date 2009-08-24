@@ -442,6 +442,9 @@ function drupal_retrieve_form($form_id, &$form_state) {
     }
   }
 
+ // We need to pass $form_state by reference in order for forms to modify it,
+ // since call_user_func_array() requires that referenced variables be passed
+ // explicitly.
   $args = array_merge(array(&$form_state), $args);
 
   // If $callback was returned by a hook_forms() implementation, call it.
