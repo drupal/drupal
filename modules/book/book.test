@@ -110,7 +110,7 @@ class BookTestCase extends DrupalWebTestCase {
 
     // Check previous, up, and next links.
     if ($previous) {
-      $this->assertRaw(l('‹ ' . $previous->title, 'node/' . $previous->nid, array('attributes' => array('class' => array('page-previous'), 'title' => t('Go to previous page')))), t('Prevoius page link found.'));
+      $this->assertRaw(l('‹ ' . $previous->title, 'node/' . $previous->nid, array('attributes' => array('class' => array('page-previous'), 'title' => t('Go to previous page')))), t('Previous page link found.'));
     }
 
     if ($up) {

@@ -600,14 +600,15 @@ function book_update_bid($book_link) {
  *   A linear array of menu links in the order that the links are shown in the
  *   menu, so the previous and next pages are the elements before and after the
  *   element corresponding to $node. The children of $node (if any) will come
- *   immediately after it in the array.
+ *   immediately after it in the array, and links will only be fetched as deep
+ *   as one level deeper than $book_link.
  */
 function book_get_flat_menu($book_link) {
   $flat = &drupal_static(__FUNCTION__, array());
 
   if (!isset($flat[$book_link['mlid']])) {
     // Call menu_tree_all_data() to take advantage of the menu system's caching.
-    $tree = menu_tree_all_data($book_link['menu_name'], $book_link);
+    $tree = menu_tree_all_data($book_link['menu_name'], $book_link, $book_link['depth'] + 1);
     $flat[$book_link['mlid']] = array();
     _book_flatten_menu($tree, $flat[$book_link['mlid']]);
   }
@@ -1156,16 +1157,16 @@ function book_link_load($mlid) {
  * The root of the subtree will be the link passed as a parameter, so the
  * returned tree will contain this item and all its descendents in the menu tree.
  *
- * @param $item
+ * @param $link
  *   A fully loaded menu link.
  * @return
  *   An subtree of menu links in an array, in the order they should be rendered.
  */
-function book_menu_subtree_data($item) {
+function book_menu_subtree_data($link) {
   $tree = &drupal_static(__FUNCTION__, array());
 
-  // Generate a cache ID (cid) specific for this $menu_name and $item.
-  $cid = 'links:' . $item['menu_name'] . ':subtree-cid:' . $item['mlid'];
+  // Generate a cache ID (cid) specific for this $menu_name and $link.
+  $cid = 'links:' . $link['menu_name'] . ':subtree-cid:' . $link['mlid'];
 
   if (!isset($tree[$cid])) {
     $cache = cache_get($cid, 'cache_menu');
@@ -1188,15 +1189,18 @@ function book_menu_subtree_data($item) {
       $query->fields($book_alias);
       $query->fields($menu_router_alias, array('load_functions', 'to_arg_functions', 'access_callback', 'access_arguments', 'page_callback', 'page_arguments', 'title', 'title_callback', 'title_arguments', 'type'));
       $query->fields('ml');
-      $query->condition('menu_name', $item['menu_name']);
-      for ($i = 1; $i <= MENU_MAX_DEPTH && $item["p$i"]; ++$i) {
-        $query->condition("p$i", $item["p$i"]);
+      $query->condition('menu_name', $link['menu_name']);
+      for ($i = 1; $i <= MENU_MAX_DEPTH && $link["p$i"]; ++$i) {
+        $query->condition("p$i", $link["p$i"]);
       }
       for ($i = 1; $i <= MENU_MAX_DEPTH; ++$i) {
         $query->orderBy("p$i");
       }
-
-      $data['tree'] = menu_tree_data($query->execute(), array(), $item['depth']);
+      $links = array();
+      foreach ($query->execute() as $item) {
+        $links[] = $item;
+      }
+      $data['tree'] = menu_tree_data($links, array(), $link['depth']);
       $data['node_links'] = array();
       menu_tree_collect_node_links($data['tree'], $data['node_links']);
       // Compute the real cid for book subtree data.

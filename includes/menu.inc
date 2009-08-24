@@ -383,6 +383,7 @@ function menu_get_item($path = NULL, $router_item = NULL) {
       ->execute()->fetchAssoc();
     if ($router_item) {
       $map = _menu_translate($router_item, $original_map);
+      $router_item['original_map'] = $original_map;
       if ($map === FALSE) {
         $router_items[$path] = FALSE;
         return FALSE;
@@ -850,20 +851,25 @@ function menu_tree_output($tree) {
  *
  * @param $menu_name
  *   The named menu links to return
- * @param $item
+ * @param $link
  *   A fully loaded menu link, or NULL. If a link is supplied, only the
- *   path to root will be included in the returned tree- as if this link
+ *   path to root will be included in the returned tree - as if this link
  *   represented the current page in a visible menu.
+ * @param $max_depth
+ *   Optional maximum depth of links to retrieve. Typically useful if only one
+ *   or two levels of a sub tree are needed in conjunction with a non-NULL
+ *   $link, in which case $max_depth should be greater than $link['depth'].
+ *
  * @return
  *   An tree of menu links in an array, in the order they should be rendered.
  */
-function menu_tree_all_data($menu_name, $item = NULL) {
+function menu_tree_all_data($menu_name, $link = NULL, $max_depth = NULL) {
   $tree = &drupal_static(__FUNCTION__, array());
 
   // Use $mlid as a flag for whether the data being loaded is for the whole tree.
-  $mlid = isset($item['mlid']) ? $item['mlid'] : 0;
-  // Generate a cache ID (cid) specific for this $menu_name and $item.
-  $cid = 'links:' . $menu_name . ':all-cid:' . $mlid;
+  $mlid = isset($link['mlid']) ? $link['mlid'] : 0;
+  // Generate a cache ID (cid) specific for this $menu_name, $item, and depth.
+  $cid = 'links:' . $menu_name . ':all-cid:' . $mlid . ':' . (int)$max_depth;
 
   if (!isset($tree[$cid])) {
     // If the static variable doesn't have the data, check {cache_menu}.
@@ -878,7 +884,8 @@ function menu_tree_all_data($menu_name, $item = NULL) {
     }
     // If the tree data was not in the cache, $data will be NULL.
     if (!isset($data)) {
-      // Build and run the query, and build the tree.
+      // Build the query using a LEFT JOIN since there is no match in
+      // {menu_router} for an external link.
       $query = db_select('menu_links', 'ml', array('fetch' => PDO::FETCH_ASSOC));
       $query->leftJoin('menu_router', 'm', 'm.path = ml.router_path');
       $query->fields('ml');
@@ -899,27 +906,32 @@ function menu_tree_all_data($menu_name, $item = NULL) {
         $query->orderBy('p' . $i, 'ASC');
       }
       $query->condition('ml.menu_name', $menu_name);
-
+      if (isset($max_depth)) {
+        $query->condition('ml.depth', $max_depth, '<=');
+      }
       if ($mlid) {
         // The tree is for a single item, so we need to match the values in its
         // p columns and 0 (the top level) with the plid values of other links.
         $args = array(0);
         for ($i = 1; $i < MENU_MAX_DEPTH; $i++) {
-          $args[] = $item["p$i"];
+          $args[] = $link["p$i"];
         }
         $args = array_unique($args);
         $query->condition('ml.plid', $args, 'IN');
         $parents = $args;
-        $parents[] = $item['mlid'];
+        $parents[] = $link['mlid'];
       }
       else {
         // Get all links in this menu.
         $parents = array();
       }
-      // Select the links from the table, and recursively build the tree. We
-      // LEFT JOIN since there is no match in {menu_router} for an external
-      // link.
-      $data['tree'] = menu_tree_data($query->execute(), $parents);
+      // Select the links from the table, and build an ordered array of links
+      // using the query result object.
+      $links = array();
+      foreach ($query->execute() as $item) {
+        $links[] = $item;
+      }
+      $data['tree'] = menu_tree_data($links, $parents);
       $data['node_links'] = array();
       menu_tree_collect_node_links($data['tree'], $data['node_links']);
       // Cache the data, if it is not already in the cache.
@@ -946,6 +958,9 @@ function menu_tree_all_data($menu_name, $item = NULL) {
  *
  * @param $menu_name
  *   The named menu links to return
+ * @param $max_depth
+ *   Optional maximum depth of links to retrieve.
+ *
  * @return
  *   An array of menu links, in the order they should be rendered. The array
  *   is a list of associative arrays -- these have two keys, link and below.
@@ -953,13 +968,16 @@ function menu_tree_all_data($menu_name, $item = NULL) {
  *   submenu below the link if there is one, and it is a subtree that has the
  *   same structure described for the top-level array.
  */
-function menu_tree_page_data($menu_name) {
+function menu_tree_page_data($menu_name, $max_depth = NULL) {
   $tree = &drupal_static(__FUNCTION__, array());
 
   // Load the menu item corresponding to the current page.
   if ($item = menu_get_item()) {
+    if (isset($max_depth)) {
+      $max_depth = min($max_depth, MENU_MAX_DEPTH);
+    }
     // Generate a cache ID (cid) specific for this page.
-    $cid = 'links:' . $menu_name . ':page-cid:' . $item['href'] . ':' . (int)$item['access'];
+    $cid = 'links:' . $menu_name . ':page-cid:' . $item['href'] . ':' . (int)$item['access'] . ':' . (int)$max_depth;
 
     if (!isset($tree[$cid])) {
       // If the static variable doesn't have the data, check {cache_menu}.
@@ -1070,7 +1088,15 @@ function menu_tree_page_data($menu_name) {
         }
         $query->condition('ml.menu_name', $menu_name);
         $query->condition('ml.plid', $args, 'IN');
-        $data['tree'] = menu_tree_data($query->execute(), $parents);
+        if (isset($max_depth)) {
+          $query->condition('ml.depth', $max_depth, '<=');
+        }
+        // Build an ordered array of links using the query result object.
+        $links = array();
+        foreach ($query->execute() as $item) {
+          $links[] = $item;
+        }
+        $data['tree'] = menu_tree_data($links, $parents);
         $data['node_links'] = array();
         menu_tree_collect_node_links($data['tree'], $data['node_links']);
         // Cache the data, if it is not already in the cache.
@@ -1176,81 +1202,54 @@ function _menu_tree_check_access(&$tree) {
 /**
  * Build the data representing a menu tree.
  *
- * @param $result
- *   The database result.
+ * @param $links
+ *   An array of links (associative arrays) ordered by p1..p9.
  * @param $parents
  *   An array of the plid values that represent the path from the current page
  *   to the root of the menu tree.
  * @param $depth
- *   The depth of the current menu tree.
+ *   The minimum depth of any link in the $links array.
  * @return
  *   See menu_tree_page_data for a description of the data structure.
  */
-function menu_tree_data($result = NULL, $parents = array(), $depth = 1) {
-  list(, $tree) = _menu_tree_data($result, $parents, $depth);
-  return $tree;
+function menu_tree_data(array $links, array $parents = array(), $depth = 1) {
+  // Reverse the array so we can use the more efficient array_pop() function.
+  $links = array_reverse($links);
+  return _menu_tree_data($links, $parents, $depth);
 }
 
 /**
  * Recursive helper function to build the data representing a menu tree.
  *
- * The function is a bit complex because the rendering of an item depends on
- * the next menu item. So we are always rendering the element previously
- * processed not the current one.
+ * The function is a bit complex because the rendering of a link depends on
+ * the next menu link.
  */
-function _menu_tree_data($result, $parents, $depth, $previous_element = '') {
-  $remnant = NULL;
+function _menu_tree_data(&$links, $parents, $depth) {
+  $done = FALSE;
   $tree = array();
-  foreach ($result as $item) {
+  while (!$done && $item = array_pop($links)) {
     // We need to determine if we're on the path to root so we can later build
     // the correct active trail and breadcrumb.
     $item['in_active_trail'] = in_array($item['mlid'], $parents);
-    // The current item is the first in a new submenu.
-    if ($item['depth'] > $depth) {
-      // _menu_tree returns an item and the menu tree structure.
-      list($item, $below) = _menu_tree_data($result, $parents, $item['depth'], $item);
-      if ($previous_element) {
-        $tree[$previous_element['mlid']] = array(
-          'link' => $previous_element,
-          'below' => $below,
-        );
-      }
-      else {
-        $tree = $below;
-      }
-      // We need to fall back one level.
-      if (!isset($item) || $item['depth'] < $depth) {
-        return array($item, $tree);
-      }
-      // This will be the link to be output in the next iteration.
-      $previous_element = $item;
-    }
-    // We are at the same depth, so we use the previous element.
-    elseif ($item['depth'] == $depth) {
-      if ($previous_element) {
-        // Only the first time.
-        $tree[$previous_element['mlid']] = array(
-          'link' => $previous_element,
-          'below' => FALSE,
-        );
-      }
-      // This will be the link to be output in the next iteration.
-      $previous_element = $item;
-    }
-    // The submenu ended with the previous item, so pass back the current item.
-    else {
-      $remnant = $item;
-      break;
-    }
-  }
-  if ($previous_element) {
-    // We have one more link dangling.
-    $tree[$previous_element['mlid']] = array(
-      'link' => $previous_element,
-      'below' => FALSE,
+    // Look ahead to the next link, but leave it on the array so it's available
+    // to other recursive function calls if we return or build a sub-tree.
+    $next = end($links);
+    // Add the current link to the tree.
+    $tree[$item['mlid']] = array(
+      'link' => $item,
+      'below' => array(),
     );
+    // Check whether the next link is the first in a new sub-tree.
+    if ($next && $next['depth'] > $depth) {
+      // Recursively call _menu_tree_data to build the sub-tree.
+      $tree[$item['mlid']]['below'] = _menu_tree_data($links, $parents, $next['depth']);
+    }
+    else {
+      // Determine if we should exit the loop and return.
+      $done = (!$next || $next['depth'] < $depth);
+    }
   }
-  return array($remnant, $tree);
+  return $tree;
 }
 
 /**
@@ -1427,7 +1426,7 @@ function menu_navigation_links($menu_name, $level = 0) {
   }
 
   // Get the menu hierarchy for the current page.
-  $tree = menu_tree_page_data($menu_name);
+  $tree = menu_tree_page_data($menu_name, $level + 1);
 
   // Go down the active trail until the right level is reached.
   while ($level-- > 0 && $tree) {

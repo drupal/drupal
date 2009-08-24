@@ -48,7 +48,11 @@ function menu_overview_form(&$form_state, $menu) {
     WHERE ml.menu_name = :menu
     ORDER BY p1 ASC, p2 ASC, p3 ASC, p4 ASC, p5 ASC, p6 ASC, p7 ASC, p8 ASC, p9 ASC";
   $result = db_query($sql, array(':menu' => $menu['menu_name']), array('fetch' => PDO::FETCH_ASSOC));
-  $tree = menu_tree_data($result);
+  $links = array();
+  foreach ($result as $item) {
+    $links[] = $item;
+  }
+  $tree = menu_tree_data($links);
   $node_links = array();
   menu_tree_collect_node_links($tree, $node_links);
   // We indicate that a menu administrator is running the menu access check.
