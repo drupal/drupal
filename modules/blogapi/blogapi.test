@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.test,v 1.18 2009/08/24 00:10:42 webchick Exp $
+// $Id: blogapi.test,v 1.19 2009/08/24 00:14:19 webchick Exp $
 
 class BlogAPITestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -12,9 +12,6 @@ class BlogAPITestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('blog', 'blogapi', 'taxonomy');
-
-    // Force loading the xmlrpc.inc to have the xmlrpc() function.
-    drupal_function_exists('xmlrpc');
   }
 
   /**

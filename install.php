@@ -1,5 +1,5 @@
 <?php
-// $Id: install.php,v 1.198 2009/08/24 00:10:42 webchick Exp $
+// $Id: install.php,v 1.199 2009/08/24 00:14:18 webchick Exp $
 
 /**
  * Root directory of Drupal installation.
@@ -250,7 +250,7 @@ function install_begin_request(&$install_state) {
   include_once DRUPAL_ROOT . '/includes/session.inc';
   $module_list['system']['filename'] = 'modules/system/system.module';
   $module_list['filter']['filename'] = 'modules/filter/filter.module';
-  module_list(TRUE, FALSE, $module_list);
+  module_list(TRUE, FALSE, FALSE, $module_list);
   drupal_load('module', 'system');
   drupal_load('module', 'filter');
 
