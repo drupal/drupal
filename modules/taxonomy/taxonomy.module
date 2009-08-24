@@ -2172,14 +2172,21 @@ function taxonomy_autocomplete_elements_process($element, &$form_state, $form) {
 
   // See if this element is in the database format or the transformed format,
   // and transform it if necessary.
-  if (is_array($element['#value']) && !array_key_exists($field_key, $element['#value'])) {
-    $tags = array();
-    foreach ($element['#default_value'] as $item) {
-      $tags[$item['value']] = isset($item['taxonomy_term']) ? $item['taxonomy_term'] : taxonomy_term_load($item['value']);
+  if (is_array($element['#value'])) {
+    if (!array_key_exists($field_key, $element['#value'])) {
+      $tags = array();
+      foreach ($element['#default_value'] as $item) {
+        $tags[$item['value']] = isset($item['taxonomy_term']) ? $item['taxonomy_term'] : taxonomy_term_load($item['value']);
+      }
+      $typed_string = taxonomy_implode_tags($tags);
     }
-    $element['#value'] = taxonomy_implode_tags($tags);
+    else {
+      $typed_string = $element['#value'][$field_key];
+    }
   }
-  $typed_string = $element['#value'];
+  else {
+    $typed_string = $element['#value'];
+  }
 
   $value = array();
   $element[$field_key] = array(
@@ -2211,10 +2218,15 @@ function taxonomy_autocomplete_elements_process($element, &$form_state, $form) {
  * FAPI function to validate taxonomy term autocomplete element.
  */
 function taxonomy_autocomplete_validate($element, &$form_state) {
+  $field_name = $element['#field_name'];
+  if (!isset($form_state['values'][$field_name])) {
+    return;
+  }
+
   // Autocomplete widgets do not send their tids in the form, so we must detect
   // them here and process them independently.
-  if ($form_state['values'][$element['#field_name']]['value']) {
-
+  $langcode = $form_state['complete form'][$field_name]['#language'];
+  if ($tags = $form_state['values'][$field_name][$langcode]['value']) {
     // @see taxonomy_node_save
     $field = $form_state['#fields'][$element['#field_name']]['field'];
     $field_key = $element['#columns'][0];
@@ -2222,7 +2234,7 @@ function taxonomy_autocomplete_validate($element, &$form_state) {
     foreach ($field['settings']['allowed_values'] as $tree) {
       $vids[] = $tree['vid'];
     }
-    $typed_terms = drupal_explode_tags($form_state['values'][$element['#field_name']]['value']);
+    $typed_terms = drupal_explode_tags($tags);
     $values = array();
 
     foreach ($typed_terms as $typed_term) {

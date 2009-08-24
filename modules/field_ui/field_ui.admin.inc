@@ -1276,9 +1276,10 @@ function field_ui_field_edit_form_validate($form, &$form_state) {
 function field_ui_field_edit_form_submit($form, &$form_state) {
   $form_values = $form_state['values'];
   $instance = $form_values['instance'];
+  $field_name = $instance['field_name'];
 
   // Update any field settings that have changed.
-  $field = field_info_field($instance['field_name']);
+  $field = field_info_field($field_name);
   // Remove the 'bundles' element added by field_info_field.
   // @todo This is ugly, there must be a better way.
   unset($field['bundles']);
@@ -1287,7 +1288,8 @@ function field_ui_field_edit_form_submit($form, &$form_state) {
 
   // Move the default value from the sample widget to the default value field.
   if (isset($instance['default_value_widget'])) {
-    $instance['default_value'] = $instance['default_value_widget'][$instance['field_name']];
+    $langcode = $form['instance']['default_value_widget'][$field_name]['#language'];
+    $instance['default_value'] = $instance['default_value_widget'][$field_name][$langcode];
     unset($instance['default_value_widget']);
   }
 

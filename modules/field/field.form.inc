@@ -39,7 +39,7 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
 
   // Populate widgets with default values when creating a new object.
   if (empty($items) && empty($id)) {
-    $items = field_get_default_value($obj_type, $object, $field, $instance);
+    $items = field_get_default_value($obj_type, $object, $field, $instance, $langcode);
   }
 
   $form_element = array();
