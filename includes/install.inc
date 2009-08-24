@@ -932,13 +932,13 @@ function st($string, $args = array()) {
   if (!isset($locale_strings)) {
     $locale_strings = array();
     if (isset($install_state['parameters']['profile']) && isset($install_state['parameters']['locale'])) {
-    $filename = 'profiles/' . $install_state['parameters']['profile'] . '/translations/' . $install_state['parameters']['locale'] . '.po';
-    if (file_exists(DRUPAL_ROOT . '/' . $filename)) {
-      require_once DRUPAL_ROOT . '/includes/locale.inc';
-      $file = (object) array('uri' => $filename);
-      _locale_import_read_po('mem-store', $file);
-      $locale_strings = _locale_import_one_string('mem-report');
-    }
+      $filename = 'profiles/' . $install_state['parameters']['profile'] . '/translations/' . $install_state['parameters']['locale'] . '.po';
+      if (file_exists(DRUPAL_ROOT . '/' . $filename)) {
+        require_once DRUPAL_ROOT . '/includes/locale.inc';
+        $file = (object) array('uri' => $filename);
+        _locale_import_read_po('mem-store', $file);
+        $locale_strings = _locale_import_one_string('mem-report');
+      }
     }
   }
 

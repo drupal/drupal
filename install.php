@@ -691,33 +691,33 @@ function install_display_output($output, $install_state) {
  *   in the same page request.
  */
 function install_verify_requirements(&$install_state) {
-    // Check the installation requirements for Drupal and this profile.
-    $requirements = install_check_requirements($install_state);
+  // Check the installation requirements for Drupal and this profile.
+  $requirements = install_check_requirements($install_state);
 
-    // Verify existence of all required modules.
-    $requirements += drupal_verify_profile($install_state);
+  // Verify existence of all required modules.
+  $requirements += drupal_verify_profile($install_state);
 
-    // Check the severity of the requirements reported.
-    $severity = drupal_requirements_severity($requirements);
+  // Check the severity of the requirements reported.
+  $severity = drupal_requirements_severity($requirements);
 
-    if ($severity == REQUIREMENT_ERROR) {
-      if ($install_state['interactive']) {
-        drupal_set_title(st('Requirements problem'));
-        $status_report = theme('status_report', $requirements);
-        $status_report .= st('Please check the error messages and <a href="!url">try again</a>.', array('!url' => request_uri()));
-        return $status_report;
-      }
-      else {
-        // Throw an exception showing all unmet requirements.
-        $failures = array();
-        foreach ($requirements as $requirement) {
-          if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
-            $failures[] = $requirement['title'] . ': ' . $requirement['value'] . "\n\n" . $requirement['description'];
-          }
-        }
-        throw new Exception(implode("\n\n", $failures));
-      }
+  if ($severity == REQUIREMENT_ERROR) {
+    if ($install_state['interactive']) {
+      drupal_set_title(st('Requirements problem'));
+      $status_report = theme('status_report', $requirements);
+      $status_report .= st('Please check the error messages and <a href="!url">try again</a>.', array('!url' => request_uri()));
+      return $status_report;
     }
+    else {
+      // Throw an exception showing all unmet requirements.
+      $failures = array();
+      foreach ($requirements as $requirement) {
+        if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
+          $failures[] = $requirement['title'] . ': ' . $requirement['value'] . "\n\n" . $requirement['description'];
+        }
+      }
+      throw new Exception(implode("\n\n", $failures));
+    }
+  }
 }
 
 /**
@@ -727,19 +727,19 @@ function install_verify_requirements(&$install_state) {
  *   An array of information about the current installation state.
  */
 function install_system_module(&$install_state) {
-    // Install system.module.
-    drupal_install_system();
-    // Save the list of other modules to install for the upcoming tasks.
-    // variable_set() can be used now that system.module is installed and
-    // Drupal is bootstrapped.
-    $modules = $install_state['profile_info']['dependencies'];
+  // Install system.module.
+  drupal_install_system();
+  // Save the list of other modules to install for the upcoming tasks.
+  // variable_set() can be used now that system.module is installed and
+  // Drupal is bootstrapped.
+  $modules = $install_state['profile_info']['dependencies'];
 
-    // The install profile is also a module, which needs to be installed
-    // after all the dependencies have been installed.
-    $modules[] = drupal_get_profile();
+  // The install profile is also a module, which needs to be installed
+  // after all the dependencies have been installed.
+  $modules[] = drupal_get_profile();
 
-    variable_set('install_profile_modules', array_diff($modules, array('system')));
-    $install_state['database_tables_exist'] = TRUE;
+  variable_set('install_profile_modules', array_diff($modules, array('system')));
+  $install_state['database_tables_exist'] = TRUE;
 }
 
 /**
@@ -1135,67 +1135,67 @@ function install_select_locale(&$install_state) {
     // the default profile and performing an interactive installation, inform
     // the user that the installer can be localized. Otherwise we assume the
     // user knows what he is doing.
-  if (count($locales) == 1) {
-    if ($profilename == 'default' && $install_state['interactive']) {
-      drupal_set_title(st('Choose language'));
-      if (!empty($install_state['parameters']['localize'])) {
-        $output = '<p>' . st('With the addition of an appropriate translation package, this installer is capable of proceeding in another language of your choice. To install and use Drupal in a language other than English:') . '</p>';
-        $output .= '<ul><li>' . st('Determine if <a href="@translations" target="_blank">a translation of this Drupal version</a> is available in your language of choice. A translation is provided via a translation package; each translation package enables the display of a specific version of Drupal in a specific language. Not all languages are available for every version of Drupal.', array('@translations' => 'http://drupal.org/project/translations')) . '</li>';
-        $output .= '<li>' . st('If an alternative translation package of your choice is available, download and extract its contents to your Drupal root directory.') . '</li>';
-        $output .= '<li>' . st('Return to choose language using the second link below and select your desired language from the displayed list. Reloading the page allows the list to automatically adjust to the presence of new translation packages.') . '</li>';
-        $output .= '</ul><p>' . st('Alternatively, to install and use Drupal in English, or to defer the selection of an alternative language until after installation, select the first link below.') . '</p>';
-        $output .= '<p>' . st('How should the installation continue?') . '</p>';
-        $output .= '<ul><li><a href="install.php?profile=' . $profilename . '&amp;locale=en">' . st('Continue installation in English') . '</a></li><li><a href="install.php?profile=' . $profilename . '">' . st('Return to choose a language') . '</a></li></ul>';
+    if (count($locales) == 1) {
+      if ($profilename == 'default' && $install_state['interactive']) {
+        drupal_set_title(st('Choose language'));
+        if (!empty($install_state['parameters']['localize'])) {
+          $output = '<p>' . st('With the addition of an appropriate translation package, this installer is capable of proceeding in another language of your choice. To install and use Drupal in a language other than English:') . '</p>';
+          $output .= '<ul><li>' . st('Determine if <a href="@translations" target="_blank">a translation of this Drupal version</a> is available in your language of choice. A translation is provided via a translation package; each translation package enables the display of a specific version of Drupal in a specific language. Not all languages are available for every version of Drupal.', array('@translations' => 'http://drupal.org/project/translations')) . '</li>';
+          $output .= '<li>' . st('If an alternative translation package of your choice is available, download and extract its contents to your Drupal root directory.') . '</li>';
+          $output .= '<li>' . st('Return to choose language using the second link below and select your desired language from the displayed list. Reloading the page allows the list to automatically adjust to the presence of new translation packages.') . '</li>';
+          $output .= '</ul><p>' . st('Alternatively, to install and use Drupal in English, or to defer the selection of an alternative language until after installation, select the first link below.') . '</p>';
+          $output .= '<p>' . st('How should the installation continue?') . '</p>';
+          $output .= '<ul><li><a href="install.php?profile=' . $profilename . '&amp;locale=en">' . st('Continue installation in English') . '</a></li><li><a href="install.php?profile=' . $profilename . '">' . st('Return to choose a language') . '</a></li></ul>';
+        }
+        else {
+          $output = '<ul><li><a href="install.php?profile=' . $profilename . '&amp;locale=en">' . st('Install Drupal in English') . '</a></li><li><a href="install.php?profile=' . $profilename . '&amp;localize=true">' . st('Learn how to install Drupal in other languages') . '</a></li></ul>';
+        }
+        return $output;
       }
-      else {
-        $output = '<ul><li><a href="install.php?profile=' . $profilename . '&amp;locale=en">' . st('Install Drupal in English') . '</a></li><li><a href="install.php?profile=' . $profilename . '&amp;localize=true">' . st('Learn how to install Drupal in other languages') . '</a></li></ul>';
-      }
-      return $output;
+      // One language, but not the default profile or not an interactive
+      // installation. Assume the user knows what he is doing.
+      $locale = current($locales);
+      $install_state['parameters']['locale'] = $locale->name;
+      return;
     }
-    // One language, but not the default profile or not an interactive
-    // installation. Assume the user knows what he is doing.
-    $locale = current($locales);
-    $install_state['parameters']['locale'] = $locale->name;
-    return;
-  }
-  else {
-    // Allow profile to pre-select the language, skipping the selection.
-    $function = $profilename . '_profile_details';
-    if (function_exists($function)) {
-      $details = $function();
-      if (isset($details['language'])) {
+    else {
+      // Allow profile to pre-select the language, skipping the selection.
+      $function = $profilename . '_profile_details';
+      if (function_exists($function)) {
+        $details = $function();
+        if (isset($details['language'])) {
+          foreach ($locales as $locale) {
+            if ($details['language'] == $locale->name) {
+              $install_state['parameters']['locale'] = $locale->name;
+              return;
+            }
+          }
+        }
+      }
+
+      if (!empty($_POST['locale'])) {
         foreach ($locales as $locale) {
-          if ($details['language'] == $locale->name) {
+          if ($_POST['locale'] == $locale->name) {
             $install_state['parameters']['locale'] = $locale->name;
             return;
           }
         }
       }
-    }
-
-    if (!empty($_POST['locale'])) {
-      foreach ($locales as $locale) {
-        if ($_POST['locale'] == $locale->name) {
-          $install_state['parameters']['locale'] = $locale->name;
-          return;
-        }
-      }
-    }
 
       // We still don't have a locale, so display a form for selecting one.
       // Only do this in the case of interactive installations, since this is
       // not a real form with submit handlers (the database isn't even set up
       // yet), rather just a convenience method for setting parameters in the
       // URL.
-    if ($install_state['interactive']) {
-      drupal_set_title(st('Choose language'));
-      include_once DRUPAL_ROOT . '/includes/form.inc';
-      return drupal_render(drupal_get_form('install_select_locale_form', $locales));
+      if ($install_state['interactive']) {
+        drupal_set_title(st('Choose language'));
+        include_once DRUPAL_ROOT . '/includes/form.inc';
+        return drupal_render(drupal_get_form('install_select_locale_form', $locales));
+      }
+      else {
+        throw new Exception(st('Sorry, you must select a language to continue the installation.'));
+      }
     }
-    else {
-      throw new Exception(st('Sorry, you must select a language to continue the installation.'));
-    }
-  }
   }
 }
 
@@ -1287,19 +1287,19 @@ function install_bootstrap_full(&$install_state) {
  *   The batch definition.
  */
 function install_profile_modules(&$install_state) {
-    $modules = variable_get('install_profile_modules', array());
-    $files = system_get_module_data();
-    variable_del('install_profile_modules');
-    $operations = array();
-    foreach ($modules as $module) {
-      $operations[] = array('_install_module_batch', array($module, $files[$module]->info['name']));
-    }
-    $batch = array(
-      'operations' => $operations,
-      'title' => st('Installing @drupal', array('@drupal' => drupal_install_profile_name())),
-      'error_message' => st('The installation has encountered an error.'),
-    );
-    return $batch;
+  $modules = variable_get('install_profile_modules', array());
+  $files = system_get_module_data();
+  variable_del('install_profile_modules');
+  $operations = array();
+  foreach ($modules as $module) {
+    $operations[] = array('_install_module_batch', array($module, $files[$module]->info['name']));
+  }
+  $batch = array(
+    'operations' => $operations,
+    'title' => st('Installing @drupal', array('@drupal' => drupal_install_profile_name())),
+    'error_message' => st('The installation has encountered an error.'),
+  );
+  return $batch;
 }
 
 /**
@@ -1311,17 +1311,17 @@ function install_profile_modules(&$install_state) {
  *   The batch definition, if there are language files to import.
  */
 function install_import_locales(&$install_state) {
-      include_once DRUPAL_ROOT . '/includes/locale.inc';
-      $install_locale = $install_state['parameters']['locale'];
-      // Enable installation language as default site language.
-      locale_add_language($install_locale, NULL, NULL, NULL, '', NULL, 1, TRUE);
-      // Collect files to import for this language.
-      $batch = locale_batch_by_language($install_locale, NULL);
-      if (!empty($batch)) {
-        // Remember components we cover in this batch set.
-        variable_set('install_locale_batch_components', $batch['#components']);
-        return $batch;
-      }
+  include_once DRUPAL_ROOT . '/includes/locale.inc';
+  $install_locale = $install_state['parameters']['locale'];
+  // Enable installation language as default site language.
+  locale_add_language($install_locale, NULL, NULL, NULL, '', NULL, 1, TRUE);
+  // Collect files to import for this language.
+  $batch = locale_batch_by_language($install_locale, NULL);
+  if (!empty($batch)) {
+    // Remember components we cover in this batch set.
+    variable_set('install_locale_batch_components', $batch['#components']);
+    return $batch;
+  }
 }
 
 /**
@@ -1335,51 +1335,51 @@ function install_import_locales(&$install_state) {
  *   The form API definition for the site configuration form.
  */
 function install_configure_form(&$form_state, &$install_state) {
-    if (variable_get('site_name', FALSE) || variable_get('site_mail', FALSE)) {
+  if (variable_get('site_name', FALSE) || variable_get('site_mail', FALSE)) {
     // Site already configured: This should never happen, means re-running the
     // installer, possibly by an attacker after the 'install_task' variable got
     // accidentally blown somewhere. Stop it now.
-      throw new Exception(install_already_done_error());
-    }
+    throw new Exception(install_already_done_error());
+  }
 
-      drupal_set_title(st('Configure site'));
+  drupal_set_title(st('Configure site'));
 
-      // Warn about settings.php permissions risk
-      $settings_dir = './' . conf_path();
-      $settings_file = $settings_dir . '/settings.php';
-      if (!drupal_verify_install_file($settings_file, FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE) || !drupal_verify_install_file($settings_dir, FILE_NOT_WRITABLE, 'dir')) {
-        drupal_set_message(st('All necessary changes to %dir and %file have been made, so you should remove write permissions to them now in order to avoid security risks. If you are unsure how to do so, please consult the <a href="@handbook_url">online handbook</a>.', array('%dir' => $settings_dir, '%file' => $settings_file, '@handbook_url' => 'http://drupal.org/server-permissions')), 'error');
-      }
-      else {
-        drupal_set_message(st('All necessary changes to %dir and %file have been made. They have been set to read-only for security.', array('%dir' => $settings_dir, '%file' => $settings_file)));
-      }
+  // Warn about settings.php permissions risk
+  $settings_dir = './' . conf_path();
+  $settings_file = $settings_dir . '/settings.php';
+  if (!drupal_verify_install_file($settings_file, FILE_EXIST|FILE_READABLE|FILE_NOT_WRITABLE) || !drupal_verify_install_file($settings_dir, FILE_NOT_WRITABLE, 'dir')) {
+    drupal_set_message(st('All necessary changes to %dir and %file have been made, so you should remove write permissions to them now in order to avoid security risks. If you are unsure how to do so, please consult the <a href="@handbook_url">online handbook</a>.', array('%dir' => $settings_dir, '%file' => $settings_file, '@handbook_url' => 'http://drupal.org/server-permissions')), 'error');
+  }
+  else {
+    drupal_set_message(st('All necessary changes to %dir and %file have been made. They have been set to read-only for security.', array('%dir' => $settings_dir, '%file' => $settings_file)));
+  }
 
-      // Add JavaScript validation.
-      _user_password_dynamic_validation();
-      drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
-      // Add JavaScript time zone detection.
-      drupal_add_js('misc/timezone.js');
-      // We add these strings as settings because JavaScript translation does not
-      // work on install time.
-      drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail'))), 'setting');
-      drupal_add_js('jQuery(function () { Drupal.cleanURLsInstallCheck(); });', 'inline');
-      // Add JS to show / hide the 'Email administrator about site updates' elements
-      drupal_add_js('jQuery(function () { Drupal.hideEmailAdministratorCheckbox() });', 'inline');
-      // Build menu to allow clean URL check.
-      menu_rebuild();
+  // Add JavaScript validation.
+  _user_password_dynamic_validation();
+  drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
+  // Add JavaScript time zone detection.
+  drupal_add_js('misc/timezone.js');
+  // We add these strings as settings because JavaScript translation does not
+  // work on install time.
+  drupal_add_js(array('copyFieldValue' => array('edit-site-mail' => array('edit-account-mail'))), 'setting');
+  drupal_add_js('jQuery(function () { Drupal.cleanURLsInstallCheck(); });', 'inline');
+  // Add JS to show / hide the 'Email administrator about site updates' elements
+  drupal_add_js('jQuery(function () { Drupal.hideEmailAdministratorCheckbox() });', 'inline');
+  // Build menu to allow clean URL check.
+  menu_rebuild();
 
   // Cache a fully-built schema. This is necessary for any invocation of
   // index.php because: (1) setting cache table entries requires schema
   // information, (2) that occurs during bootstrap before any module are
   // loaded, so (3) if there is no cached schema, drupal_get_schema() will
   // try to generate one but with no loaded modules will return nothing.
-      //
+  //
   // This logically could be done during the 'install_finished' task, but the
   // clean URL check requires it now.
-      drupal_get_schema(NULL, TRUE);
+  drupal_get_schema(NULL, TRUE);
 
-      // Return the form.
-      return _install_configure_form($form_state, $install_state);
+  // Return the form.
+  return _install_configure_form($form_state, $install_state);
 }
 
 /**
@@ -1391,13 +1391,13 @@ function install_configure_form(&$form_state, &$install_state) {
  *   The batch definition, if there are language files to import.
  */
 function install_import_locales_remaining(&$install_state) {
-      include_once DRUPAL_ROOT . '/includes/locale.inc';
+  include_once DRUPAL_ROOT . '/includes/locale.inc';
   // Collect files to import for this language. Skip components already covered
   // in the initial batch set.
-      $batch = locale_batch_by_language($install_locale, NULL, variable_get('install_locale_batch_components', array()));
-      // Remove temporary variable.
-      variable_del('install_locale_batch_components');
-      return $batch;
+  $batch = locale_batch_by_language($install_locale, NULL, variable_get('install_locale_batch_components', array()));
+  // Remove temporary variable.
+  variable_del('install_locale_batch_components');
+  return $batch;
 }
 
 /**
@@ -1409,37 +1409,37 @@ function install_import_locales_remaining(&$install_state) {
  *   A message informing the user that the installation is complete.
  */
 function install_finished(&$install_state) {
-    drupal_set_title(st('@drupal installation complete', array('@drupal' => drupal_install_profile_name())));
-    $messages = drupal_set_message();
-    $output = '<p>' . st('Congratulations, @drupal has been successfully installed.', array('@drupal' => drupal_install_profile_name())) . '</p>';
-    $output .= '<p>' . (isset($messages['error']) ? st('Please review the messages above before continuing on to <a href="@url">your new site</a>.', array('@url' => url(''))) : st('You may now visit <a href="@url">your new site</a>.', array('@url' => url('')))) . '</p>';
-    if (module_exists('help')) {
-      $output .= '<p>' . st('For more information on configuring Drupal, please refer to the <a href="@help">help section</a>.', array('@help' => url('admin/help'))) . '</p>';
-    }
+  drupal_set_title(st('@drupal installation complete', array('@drupal' => drupal_install_profile_name())));
+  $messages = drupal_set_message();
+  $output = '<p>' . st('Congratulations, @drupal has been successfully installed.', array('@drupal' => drupal_install_profile_name())) . '</p>';
+  $output .= '<p>' . (isset($messages['error']) ? st('Please review the messages above before continuing on to <a href="@url">your new site</a>.', array('@url' => url(''))) : st('You may now visit <a href="@url">your new site</a>.', array('@url' => url('')))) . '</p>';
+  if (module_exists('help')) {
+    $output .= '<p>' . st('For more information on configuring Drupal, please refer to the <a href="@help">help section</a>.', array('@help' => url('admin/help'))) . '</p>';
+  }
 
-    // Rebuild menu and registry to get content type links registered by the
-    // profile, and possibly any other menu items created through the tasks.
-    menu_rebuild();
+  // Rebuild menu and registry to get content type links registered by the
+  // profile, and possibly any other menu items created through the tasks.
+  menu_rebuild();
 
-    // Register actions declared by any modules.
-    actions_synchronize();
+  // Register actions declared by any modules.
+  actions_synchronize();
 
   // Randomize query-strings on css/js files, to hide the fact that this is a
   // new install, not upgraded yet.
-    _drupal_flush_css_js();
+  _drupal_flush_css_js();
 
-    // Remember the profile which was used.
-    variable_set('install_profile', drupal_get_profile());
+  // Remember the profile which was used.
+  variable_set('install_profile', drupal_get_profile());
 
-    // Install profiles are always loaded last
-    db_update('system')
-      ->fields(array('weight' => 1000))
-      ->condition('type', 'module')
-      ->condition('name', drupal_get_profile())
-      ->execute();
+  // Install profiles are always loaded last
+  db_update('system')
+    ->fields(array('weight' => 1000))
+    ->condition('type', 'module')
+    ->condition('name', drupal_get_profile())
+    ->execute();
 
-    // Cache a fully-built schema.
-    drupal_get_schema(NULL, TRUE);
+  // Cache a fully-built schema.
+  drupal_get_schema(NULL, TRUE);
 
   // Run cron to populate update status tables (if available) so that users
   // will be warned if they've installed an out of date Drupal version.
