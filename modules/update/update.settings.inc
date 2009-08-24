@@ -43,6 +43,12 @@ function update_settings() {
     '#description' => t('You can choose to send e-mail only if a security update is available, or to be notified about all newer versions. If there are updates available of Drupal core or any of your installed modules and themes, your site will always print a message on the <a href="@status_report">status report</a> page, and will also display an error message on administration pages if there is a security update.', array('@status_report' => url('admin/reports/status')))
   );
 
+  $form['update_check_disabled'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Check for updates of disabled modules and themes'),
+    '#default_value' => variable_get('update_check_disabled', FALSE),
+  );
+
   $form = system_settings_form($form, FALSE);
   // Custom validation callback for the email notification setting.
   $form['#validate'][] = 'update_settings_validate';
@@ -87,6 +93,12 @@ function update_settings_validate($form, &$form_state) {
 
 /**
  * Submit handler for the settings tab.
+ *
+ * Also invalidates the cache of available updates if the "Check for updates
+ * of disabled modules and themes" setting is being changed. The available
+ * updates report need to refetch available update data after this setting
+ * changes or it would show misleading things (e.g. listing the disabled
+ * projects on the site with the "No available releases found" warning).
  */
 function update_settings_submit($form, $form_state) {
   $op = $form_state['values']['op'];
@@ -99,6 +111,13 @@ function update_settings_submit($form, $form_state) {
   }
   unset($form_state['notify_emails']);
   unset($form_state['values']['update_notify_emails']);
+
+  // See if the update_check_disabled setting is being changed, and if so,
+  // invalidate all cached update status data.
+  $check_disabled = variable_get('update_check_disabled', FALSE);
+  if ($form_state['values']['update_check_disabled'] != $check_disabled) {
+    _update_cache_clear();
+  }
 
   system_settings_form_submit($form, $form_state);
 }

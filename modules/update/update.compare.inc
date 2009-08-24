@@ -36,8 +36,14 @@ function update_get_projects() {
     $projects = update_project_cache('update_project_projects');
     if (empty($projects)) {
       // Still empty, so we have to rebuild the cache.
-      _update_process_info_list($projects, system_get_module_data(), 'module');
-      _update_process_info_list($projects, system_get_theme_data(), 'theme');
+      $module_data = system_get_module_data();
+      $theme_data = system_get_theme_data();
+      _update_process_info_list($projects, $module_data, 'module', TRUE);
+      _update_process_info_list($projects, $theme_data, 'theme', TRUE);
+      if (variable_get('update_check_disabled', FALSE)) {
+        _update_process_info_list($projects, $module_data, 'module', FALSE);
+        _update_process_info_list($projects, $theme_data, 'theme', FALSE);
+      }
       // Allow other modules to alter projects before fetching and comparing.
       drupal_alter('update_projects', $projects);
       // Cache the site's project data for at most 1 hour.
@@ -49,16 +55,43 @@ function update_get_projects() {
 
 /**
  * Populate an array of project data.
+ *
+ * This iterates over a list of the installed modules or themes and groups
+ * them by project and status. A few parts of this function assume that
+ * enabled modules and themes are always processed first, and if disabled
+ * modules or themes are being processed (there is a setting to control if
+ * disabled code should be included in the Available updates report or not),
+ * those are only processed after $projects has been populated with
+ * information about the enabled code. 'Hidden' modules are always
+ * ignored. This function also records the latest change time on the .info
+ * files for each module or theme, which is important data which is used when
+ * deciding if the cached available update data should be invalidated.
+ *
+ * @param $projects
+ *   Reference to the array of project data of what's installed on this site.
+ * @param $list
+ *   Array of data to process to add the relevant info to the $projects array.
+ * @param $project_type
+ *   The kind of data in the list (can be 'module' or 'theme').
+ * @param $status
+ *   Boolean that controls what status (enabled or disabled) to process out of
+ *   the $list and add to the $projects array.
+ *
+ * @see update_get_projects()
  */
-function _update_process_info_list(&$projects, $list, $project_type) {
+function _update_process_info_list(&$projects, $list, $project_type, $status) {
   foreach ($list as $file) {
-    if (empty($file->status)) {
-      // Skip disabled modules or themes.
+    if ($file->status != $status) {
       continue;
     }
 
     // Skip if the .info file is broken.
     if (empty($file->info)) {
+      continue;
+    }
+
+    // Skip if it's a hidden module.
+    if (!empty($file->info['hidden'])) {
       continue;
     }
 
@@ -85,6 +118,21 @@ function _update_process_info_list(&$projects, $list, $project_type) {
     }
 
     $project_name = $file->info['project'];
+
+    // Figure out what project type we're going to use to display this module
+    // or theme. If the project name is 'drupal', we don't want it to show up
+    // under the usual "Modules" section, we put it at a special "Drupal Core"
+    // section at the top of the report.
+    if ($project_name == 'drupal') {
+      $project_display_type = 'core';
+    }
+    else {
+      $project_display_type = $project_type;
+    }
+    if (empty($status)) {
+      // If we're processing disabled modules or themes, append a suffix.
+      $project_display_type .= '-disabled';
+    }
     if (!isset($projects[$project_name])) {
       // Only process this if we haven't done this project, since a single
       // project can have multiple modules or themes.
@@ -93,12 +141,25 @@ function _update_process_info_list(&$projects, $list, $project_type) {
         'info' => $file->info,
         'datestamp' => isset($file->info['datestamp']) ? $file->info['datestamp'] : 0,
         'includes' => array($file->name => $file->info['name']),
-        'project_type' => $project_name == 'drupal' ? 'core' : $project_type,
+        'project_type' => $project_display_type,
+        'project_status' => $status,
       );
     }
-    else {
+    elseif ($projects[$project_name]['project_type'] == $project_display_type) {
+      // Only add the file we're processing to the 'includes' array for this
+      // project if it is of the same type and status (which is encoded in the
+      // $project_display_type). This prevents listing all the disabled
+      // modules included with an enabled project if we happen to be checking
+      // for disabled modules, too.
       $projects[$project_name]['includes'][$file->name] = $file->info['name'];
       $projects[$project_name]['info']['_info_file_ctime'] = max($projects[$project_name]['info']['_info_file_ctime'], $file->info['_info_file_ctime']);
+    }
+    elseif (empty($status)) {
+      // If we have a project_name that matches, but the project_display_type
+      // does not, it means we're processing a disabled module or theme that
+      // belongs to a project that has some enabled code. In this case, we add
+      // the disabled thing into a separate array for separate display.
+      $projects[$project_name]['disabled'][$file->name] = $file->info['name'];
     }
   }
 }
