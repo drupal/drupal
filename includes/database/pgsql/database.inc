@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.28 2009/08/22 19:10:34 dries Exp $
+// $Id: database.inc,v 1.29 2009/08/24 18:22:54 dries Exp $
 
 /**
  * @file
@@ -68,8 +68,6 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
         $stmt = $this->prepareQuery($query, !$modified);
         $stmt->execute($args, $options);
       }
-      // Reset the placeholder numbering.
-      $this->resetPlaceholder();
 
       switch ($options['return']) {
         case Database::RETURN_STATEMENT:
