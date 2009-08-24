@@ -1,5 +1,5 @@
 <?php
-// $Id: system.admin.inc,v 1.192 2009/08/24 12:32:10 dries Exp $
+// $Id: system.admin.inc,v 1.193 2009/08/24 22:03:01 webchick Exp $
 
 /**
  * @file
@@ -1839,7 +1839,7 @@ function system_clean_url_settings() {
     $available = TRUE;
   }
   else {
-    $request = drupal_http_request($base_url . '/admin/settings/clean-urls/check');
+    $request = drupal_http_request($base_url . '/admin/config/search/clean-urls/check');
     if (isset($request->code) && $request->code == 200) {
       $available = TRUE;
     }
@@ -1859,7 +1859,7 @@ function system_clean_url_settings() {
   else {
     drupal_add_js(drupal_get_path('module', 'system') . '/system.js');
 
-    $form['#redirect'] = $base_url . '/admin/settings/clean-urls';
+    $form['#redirect'] = $base_url . '/admin/config/search/clean-urls';
     $form['clean_url_description'] = array(
       '#type' => 'markup',
       '#markup' => '<p>' . t('Use URLs like <code>example.com/user</code> instead of <code>example.com/?q=user</code>.') . ' ' . t('If you are directed to a <em>Page not found (404)</em> error after testing for clean URLs, see the <a href="@handbook">online handbook</a>.', array('@handbook' => 'http://drupal.org/node/15365')) . '</p>',
