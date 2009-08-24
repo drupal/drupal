@@ -1,5 +1,5 @@
 <?php
-// $Id: update.report.inc,v 1.19 2009/08/22 14:34:23 webchick Exp $
+// $Id: update.report.inc,v 1.20 2009/08/24 00:42:34 webchick Exp $
 
 /**
  * @file
@@ -180,7 +180,18 @@ function theme_update_report($data) {
 
     $row .= '<div class="includes">';
     sort($project['includes']);
-    $row .= t('Includes: %includes', array('%includes' => implode(', ', $project['includes'])));
+    if (!empty($project['disabled'])) {
+      sort($project['disabled']);
+      // Make sure we start with a clean slate for each project in the report.
+      $includes_items = array();
+      $row .= t('Includes:');
+      $includes_items[] = t('Enabled: %includes', array('%includes' => implode(', ', $project['includes'])));
+      $includes_items[] = t('Disabled: %disabled', array('%disabled' => implode(', ', $project['disabled'])));
+      $row .= theme('item_list', $includes_items);
+    }
+    else {
+      $row .= t('Includes: %includes', array('%includes' => implode(', ', $project['includes'])));
+    }
     $row .= "</div>\n";
 
     $row .= "</div>\n"; // info div.
@@ -198,8 +209,8 @@ function theme_update_report($data) {
     'core' => t('Drupal core'),
     'module' => t('Modules'),
     'theme' => t('Themes'),
-    'disabled-module' => t('Disabled modules'),
-    'disabled-theme' => t('Disabled themes'),
+    'module-disabled' => t('Disabled modules'),
+    'theme-disabled' => t('Disabled themes'),
   );
   foreach ($project_types as $type_name => $type_label) {
     if (!empty($rows[$type_name])) {
