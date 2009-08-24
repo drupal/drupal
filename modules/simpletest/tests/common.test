@@ -1100,7 +1100,7 @@ class DrupalDataApiTest extends DrupalWebTestCase {
 }
 
 /**
- * Tests Simpletest error and exception collecter.
+ * Tests Simpletest error and exception collector.
  */
 class DrupalErrorCollectionUnitTest extends DrupalWebTestCase {
 
@@ -1116,8 +1116,8 @@ class DrupalErrorCollectionUnitTest extends DrupalWebTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => 'SimpleTest error collecter',
-      'description' => 'Performs tests on the Simpletest error and exception collecter.',
+      'name' => 'SimpleTest error collector',
+      'description' => 'Performs tests on the Simpletest error and exception collector.',
       'group' => 'SimpleTest',
     );
   }
