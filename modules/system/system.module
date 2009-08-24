@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.767 2009/08/24 12:32:10 dries Exp $
+// $Id: system.module,v 1.768 2009/08/24 17:11:42 webchick Exp $
 
 /**
  * @file
@@ -789,6 +789,14 @@ function system_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('system_image_toolkit_settings'),
     'access arguments' => array('administer site configuration'),
+    'file' => 'system.admin.inc',
+  );
+  $items['admin/config/services'] = array(
+    'title' => 'Web services',
+    'description' => 'Tools related to web services.',
+    'page callback' => 'system_admin_menu_block_page',
+    'access callback' => 'system_admin_menu_block_access',
+    'access arguments' => array('admin/config/services', 'access administration pages'),
     'file' => 'system.admin.inc',
   );
   $items['admin/settings/performance'] = array(

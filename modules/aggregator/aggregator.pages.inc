@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.pages.inc,v 1.31 2009/08/22 14:34:18 webchick Exp $
+// $Id: aggregator.pages.inc,v 1.32 2009/08/24 17:11:42 webchick Exp $
 
 /**
  * @file
@@ -499,6 +499,6 @@ function template_preprocess_aggregator_feed_source(&$variables) {
   }
 
   if (user_access('administer news feeds')) {
-    $variables['last_checked'] = l($variables['last_checked'], 'admin/settings/aggregator');
+    $variables['last_checked'] = l($variables['last_checked'], 'admin/config/services/aggregator');
   }
 }
