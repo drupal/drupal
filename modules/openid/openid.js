@@ -3,8 +3,8 @@
 
 Drupal.behaviors.openid = {
   attach: function (context) {
-    var loginElements = $('.form-item-name-wrapper, .form-item-pass-wrapper, li.openid-link');
-    var openidElements = $('.form-item-openid-identifier-wrapper, li.user-link');
+    var loginElements = $('.form-item-name, .form-item-pass, li.openid-link');
+    var openidElements = $('.form-item-openid-identifier, li.user-link');
 
     // This behavior attaches by ID, so is only valid once on a page.
     if (!$('#edit-openid-identifier.openid-processed').size() && $('#edit-openid-identifier').val()) {

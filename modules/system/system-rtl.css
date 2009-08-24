@@ -66,11 +66,6 @@ html.js fieldset.collapsed legend a {
   background-position: 98% 50%;
 }
 
-div.teaser-button-wrapper {
-  float: left;
-  padding-right: 0;
-  padding-left: 5%;
-}
 .teaser-checkbox div.form-item {
   float: left;
   margin: 0 0 0 5%;

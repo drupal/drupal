@@ -409,11 +409,6 @@ a.tabledrag-handle-hover .handle {
 .teaser-checkbox {
   padding-top: 1px;
 }
-div.teaser-button-wrapper {
-  float: right; /* LTR */
-  padding-right: 5%; /* LTR */
-  margin: 0;
-}
 .teaser-checkbox div.form-item {
   float: right; /* LTR */
   margin: 0 5% 0 0; /* LTR */

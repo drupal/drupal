@@ -1,6 +1,6 @@
 /* $Id$ */
 
-.form-item-type-wrapper, .form-item-severity-wrapper {
+.form-item-type, .form-item-severity {
   float: left; /* LTR */
   padding-right: .8em; /* LTR */
   margin: 0.1em;

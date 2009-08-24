@@ -2540,10 +2540,10 @@ function theme_form_element($element) {
   // Add element's #type and #name as class to aid with JS/CSS selectors.
   $class = array('form-item');
   if (!empty($element['#type'])) {
-    $class[] = 'form-item-' . strtr($element['#type'], array('_' => '-'));
+    $class[] = 'form-type-' . strtr($element['#type'], '_', '-');
   }
   if (!empty($element['#name'])) {
-    $class[] = strtr($element['#name'], array(' ' => '-', '_' => '-', '[' => '-', ']' => '')) . '-wrapper';
+    $class[] = 'form-item-' . strtr($element['#name'], array(' ' => '-', '_' => '-', '[' => '-', ']' => ''));
   }
 
   $output = '<div class="' . implode(' ', $class) . '">' . "\n";

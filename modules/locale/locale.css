@@ -5,7 +5,7 @@
   text-decoration: line-through;
 }
 
-.form-item-language-wrapper, .form-item-translation-wrapper, .form-item-group-wrapper {
+.form-item-language, .form-item-translation, .form-item-group {
   float: left; /* LTR */
   padding-right: .8em; /* LTR */
   margin: 0.1em;

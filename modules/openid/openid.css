@@ -6,11 +6,11 @@
   background-repeat: no-repeat;
   padding-left: 20px;
 }
-div.form-item-openid-identifier-wrapper {
+div.form-item-openid-identifier {
   display: block;
 }
-html.js #user-login-form div.form-item-openid-identifier-wrapper,
-html.js #user-login div.form-item-openid-identifier-wrapper {
+html.js #user-login-form div.form-item-openid-identifier,
+html.js #user-login div.form-item-openid-identifier {
   display: none;
 }
 html.js #user-login-form li.openid-link,
