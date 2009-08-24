@@ -196,6 +196,7 @@ function taxonomy_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('taxonomy_overview_vocabularies'),
     'access arguments' => array('administer taxonomy'),
+    'file' => 'taxonomy.admin.inc',
   );
 
   $items['admin/structure/taxonomy/list'] = array(
@@ -210,6 +211,7 @@ function taxonomy_menu() {
     'page arguments' => array('taxonomy_form_vocabulary'),
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_LOCAL_ACTION,
+    'file' => 'taxonomy.admin.inc',
   );
 
   $items['taxonomy/term/%taxonomy_term'] = array(
@@ -220,6 +222,7 @@ function taxonomy_menu() {
     'page arguments' => array(2),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
+    'file' => 'taxonomy.pages.inc',
   );
 
   $items['taxonomy/term/%taxonomy_term/view'] = array(
@@ -234,6 +237,7 @@ function taxonomy_menu() {
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
+    'file' => 'taxonomy.pages.inc',
   );
   $items['taxonomy/term/%taxonomy_term/feed'] = array(
     'title' => 'Taxonomy term',
@@ -243,12 +247,14 @@ function taxonomy_menu() {
     'page arguments' => array(2),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
+    'file' => 'taxonomy.feeds.inc',
   );
   $items['taxonomy/autocomplete'] = array(
     'title' => 'Autocomplete taxonomy',
     'page callback' => 'taxonomy_autocomplete',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
+    'file' => 'taxonomy.pages.inc',
   );
   // TODO: remove with taxonomy_term_node_*
   $items['taxonomy/autocomplete/legacy'] = array(
@@ -266,6 +272,7 @@ function taxonomy_menu() {
     'title arguments' => array(3),
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_CALLBACK,
+    'file' => 'taxonomy.admin.inc',
   );
 
   $items['admin/structure/taxonomy/%taxonomy_vocabulary/edit'] = array(
@@ -281,6 +288,7 @@ function taxonomy_menu() {
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_LOCAL_TASK,
     'weight' => -10,
+    'file' => 'taxonomy.admin.inc',
   );
 
   $items['admin/structure/taxonomy/%taxonomy_vocabulary/list/add'] = array(
@@ -289,6 +297,7 @@ function taxonomy_menu() {
     'page arguments' => array('taxonomy_form_term', 3),
     'access arguments' => array('administer taxonomy'),
     'type' => MENU_LOCAL_ACTION,
+    'file' => 'taxonomy.admin.inc',
   );
 
   return $items;
@@ -1933,7 +1942,7 @@ function taxonomy_field_schema($field) {
 function taxonomy_field_validate($obj_type, $object, $field, $instance, $langcode, $items, &$errors) {
   $allowed_values = taxonomy_allowed_values($field);
   $widget = field_info_widget_types($instance['widget']['type']);
-  
+
   // Check we don't exceed the allowed number of values for widgets with custom
   // behavior for multiple values (taxonomy_autocomplete widget).
   if ($widget['behaviors']['multiple values'] == FIELD_BEHAVIOR_CUSTOM && $field['cardinality'] >= 2) {
@@ -2092,7 +2101,7 @@ function _taxonomy_clean_field_cache($term) {
     foreach ($field['settings']['allowed_values'] as $tree) {
       $vids[$tree['vid']] = $tree['vid'];
     }
-    
+
     // Check this term's vocabulary against those used for the field's options.
     if (in_array($term->vid, $vids)) {
       $conditions = array(array('value', $term->tid));

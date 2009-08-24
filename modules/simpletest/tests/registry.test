@@ -12,7 +12,6 @@ class RegistryParseFileTestCase extends DrupalWebTestCase {
 
   function setUp() {
     $this->fileName = 'registry_test_' . md5(rand());
-    $this->functionName = 'registry_test_function' . md5(rand());
     $this->className = 'registry_test_class' . md5(rand());
     $this->interfaceName = 'registry_test_interface' . md5(rand());
     parent::setUp();
@@ -23,7 +22,7 @@ class RegistryParseFileTestCase extends DrupalWebTestCase {
    */
   function testRegistryParseFile() {
     _registry_parse_file($this->fileName, $this->getFileContents());
-    foreach (array('functionName', 'className', 'interfaceName') as $resource) {
+    foreach (array('className', 'interfaceName') as $resource) {
       $foundName = db_query('SELECT name FROM {registry} WHERE name = :name', array(':name' => $this->$resource))->fetchField();
       $this->assertTrue($this->$resource == $foundName, t('Resource "@resource" found.', array('@resource' => $this->$resource)));
     }
@@ -35,8 +34,6 @@ class RegistryParseFileTestCase extends DrupalWebTestCase {
   function getFileContents() {
     $file_contents = <<<CONTENTS
 <?php
-
-function {$this->functionName}() {}
 
 class {$this->className} {}
 
@@ -66,7 +63,6 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
     foreach ($this->fileTypes as $fileType) {
       $this->$fileType = new stdClass();
       $this->$fileType->fileName = file_directory_path() . '/registry_test_' . md5(rand());
-      $this->$fileType->functionName = 'registry_test_function' . md5(rand());
       $this->$fileType->className = 'registry_test_class' . md5(rand());
       $this->$fileType->interfaceName = 'registry_test_interface' . md5(rand());
       $this->$fileType->contents = $this->getFileContents($fileType);
@@ -82,7 +78,7 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
           ->execute();
 
         // Insert some fake resource records.
-        foreach (array('function', 'class', 'interface') as $type) {
+        foreach (array('class', 'interface') as $type) {
           db_insert('registry')
             ->fields(array(
               'name' => $type . md5(rand()),
@@ -102,7 +98,7 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
     _registry_parse_files($this->getFiles());
     foreach ($this->fileTypes as $fileType) {
       // Test that we have all the right resources.
-      foreach (array('functionName', 'className', 'interfaceName') as $resource) {
+      foreach (array('className', 'interfaceName') as $resource) {
         $foundName = db_query('SELECT name FROM {registry} WHERE name = :name', array(':name' => $this->$fileType->$resource))->fetchField();
         $this->assertTrue($this->$fileType->$resource == $foundName, t('Resource "@resource" found.', array('@resource' => $this->$fileType->$resource)));
       }
@@ -135,44 +131,12 @@ class RegistryParseFilesTestCase extends DrupalWebTestCase {
     $file_contents = <<<CONTENTS
 <?php
 
-function {$this->$fileType->functionName}() {}
-
 class {$this->$fileType->className} {}
 
 interface {$this->$fileType->interfaceName} {}
 
 CONTENTS;
     return $file_contents;
-  }
-
-}
-
-class RegistrySkipBodyTestCase extends DrupalUnitTestCase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Skip function body test',
-      'description' => 'Tokenize a simple function and check that the body is skipped right',
-      'group' => 'System',
-    );
-  }
-
-  function testRegistrySkipBody() {
-    // This string contains all three kinds of opening braces.
-    $function = '<?php function foo () { $x = "{$y}"; $x = "${y}"; }';
-    $tokens = token_get_all($function);
-    require_once DRUPAL_ROOT . '/includes/registry.inc';
-    _registry_skip_body($tokens);
-    // Consume the last }
-    each($tokens);
-    $this->assertIdentical(each($tokens), FALSE, t('Tokens skipped'));
-
-    // Check workaround for PHP < 5.2.3 regarding tokenization of strings
-    // containing variables. The { contained in the string should not be
-    // treated as a separate token.
-    $function = '<?php function foo() { $x = "$y {"; $x = `$y {`; $x = ' . "<<<EOD\n\$y {\nEOD\n; } function bar() {}";
-    $tokens = token_get_all($function);
-    _registry_skip_body($tokens);
-    $this->assertTrue(each($tokens), t('Tokens not skipped to end of file.'));
   }
 
 }

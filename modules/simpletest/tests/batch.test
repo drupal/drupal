@@ -69,8 +69,6 @@ class BatchAPIPercentagesTestCase extends DrupalWebTestCase {
    * testCases class variable.
    */
   function testBatchAPIPercentages() {
-    // Include batch.inc if it's not already included.
-    drupal_function_exists('_batch_api_percentage');
     foreach ($this->testCases as $expected_result => $arguments) {
       // PHP sometimes casts numeric strings that are array keys to integers,
       // cast them back here.

@@ -250,7 +250,7 @@ function install_begin_request(&$install_state) {
   include_once DRUPAL_ROOT . '/includes/session.inc';
   $module_list['system']['filename'] = 'modules/system/system.module';
   $module_list['filter']['filename'] = 'modules/filter/filter.module';
-  module_list(TRUE, FALSE, $module_list);
+  module_list(TRUE, FALSE, FALSE, $module_list);
   drupal_load('module', 'system');
   drupal_load('module', 'filter');
 

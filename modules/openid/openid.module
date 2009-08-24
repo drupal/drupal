@@ -15,6 +15,7 @@ function openid_menu() {
     'page callback' => 'openid_authentication_page',
     'access callback' => 'user_is_anonymous',
     'type' => MENU_CALLBACK,
+    'file' => 'openid.pages.inc',
   );
   $items['user/%user/openid'] = array(
     'title' => 'OpenID identities',
@@ -23,6 +24,7 @@ function openid_menu() {
     'access callback' => 'user_edit_access',
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
+    'file' => 'openid.pages.inc',
   );
   $items['user/%user/openid/delete'] = array(
     'title' => 'Delete OpenID',
@@ -31,6 +33,7 @@ function openid_menu() {
     'access callback' => 'user_edit_access',
     'access arguments' => array(1),
     'type' => MENU_CALLBACK,
+    'file' => 'openid.pages.inc',
   );
   return $items;
 }

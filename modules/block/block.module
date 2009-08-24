@@ -125,6 +125,7 @@ function block_menu() {
     'description' => 'Configure what block content appears in your site\'s sidebars and other regions.',
     'page callback' => 'block_admin_display',
     'access arguments' => array('administer blocks'),
+    'file' => 'block.admin.inc',
   );
   $items['admin/structure/block/list'] = array(
     'title' => 'List',
@@ -136,6 +137,7 @@ function block_menu() {
     'page callback' => 'block_admin_display_js',
     'access arguments' => array('administer blocks'),
     'type' => MENU_CALLBACK,
+    'file' => 'block.admin.inc',
   );
   $items['admin/structure/block/configure'] = array(
     'title' => 'Configure block',
@@ -143,6 +145,7 @@ function block_menu() {
     'page arguments' => array('block_admin_configure'),
     'access arguments' => array('administer blocks'),
     'type' => MENU_CALLBACK,
+    'file' => 'block.admin.inc',
   );
   $items['admin/structure/block/delete'] = array(
     'title' => 'Delete block',
@@ -150,6 +153,7 @@ function block_menu() {
     'page arguments' => array('block_box_delete'),
     'access arguments' => array('administer blocks'),
     'type' => MENU_CALLBACK,
+    'file' => 'block.admin.inc',
   );
   $items['admin/structure/block/add'] = array(
     'title' => 'Add block',
@@ -157,6 +161,7 @@ function block_menu() {
     'page arguments' => array('block_add_block_form'),
     'access arguments' => array('administer blocks'),
     'type' => MENU_LOCAL_ACTION,
+    'file' => 'block.admin.inc',
   );
   $default = variable_get('theme_default', 'garland');
   foreach (list_themes() as $key => $theme) {
@@ -167,6 +172,7 @@ function block_menu() {
       'weight' => $key == $default ? -10 : 0,
       'access callback' => '_block_themes_access',
       'access arguments' => array($theme),
+      'file' => 'block.admin.inc',
     );
   }
   return $items;

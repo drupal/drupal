@@ -81,14 +81,14 @@ function token_replace($text, array $data = array(), array $options = array()) {
   }
 
   // Optionally alter the list of replacement values.
-  if (!empty($options['callback']) && drupal_function_exists($options['callback'])) {
+  if (!empty($options['callback']) && function_exists($options['callback'])) {
     $function = $options['callback'];
     $function($replacements, $data, $options);
   }
 
   $tokens = array_keys($replacements);
   $values = array_values($replacements);
-  
+
   return str_replace($tokens, $values, $text);
 }
 
@@ -153,15 +153,11 @@ function token_scan($text) {
 function token_generate($type, array $tokens, array $data = array(), array $options = array()) {
   $results = array();
   $options += array('sanitize' => TRUE);
+  _token_initialize();
 
-  foreach (module_implements('tokens') as $module) {
-    $function = $module . '_tokens';
-    if (drupal_function_exists($function)) {
-      $result = $function($type, $tokens, $data, $options);
-      foreach ($result as $original => $replacement) {
-        $results[$original] = $replacement;
-      }
-    }
+  $result = module_invoke_all('tokens', $type, $tokens, $data, $options);
+  foreach ($result as $original => $replacement) {
+    $results[$original] = $replacement;
   }
 
   return $results;
@@ -231,8 +227,25 @@ function token_find_with_prefix(array $tokens, $prefix, $delimiter = ':') {
 function token_info() {
   $data = &drupal_static(__FUNCTION__);
   if (!isset($data)) {
+    _token_initialize();
     $data = module_invoke_all('token_info');
     drupal_alter('token_info', $data);
   }
   return $data;
+}
+
+/**
+ * Load modulename.tokens.inc for all enabled modules.
+ */
+function _token_initialize() {
+  $initialized = drupal_static(__FUNCTION__);
+  if (!$initialized) {
+    foreach (module_list() as $module) {
+      $filename = DRUPAL_ROOT . '/' . drupal_get_path('module', $module) . "/$module.tokens.inc";
+      if (file_exists($filename)) {
+        include_once $filename;
+      }
+    }
+    $initialized = TRUE;
+  }
 }

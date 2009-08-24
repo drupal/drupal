@@ -320,7 +320,7 @@ function file_create_url($uri) {
       return FALSE;
     }
   }
-  
+
   // @todo Implement CDN integration hook stuff in this function.
   // @see http://drupal.org/node/499156
 }
@@ -1250,7 +1250,7 @@ function file_validate(&$file, $validators = array()) {
   // Call the validation functions specified by this function's caller.
   $errors = array();
   foreach ($validators as $function => $args) {
-    if (drupal_function_exists($function)) {
+    if (function_exists($function)) {
       array_unshift($args, $file);
       $errors = array_merge($errors, call_user_func_array($function, $args));
     }

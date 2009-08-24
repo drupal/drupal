@@ -115,7 +115,7 @@ function drupal_mail($module, $key, $to, $language, $params = array(), $from = N
   // Build the e-mail (get subject and body, allow additional headers) by
   // invoking hook_mail() on this module. We cannot use module_invoke() as
   // we need to have $message by reference in hook_mail().
-  if (drupal_function_exists($function = $module . '_mail')) {
+  if (function_exists($function = $module . '_mail')) {
     $function($key, $message, $params);
   }
 

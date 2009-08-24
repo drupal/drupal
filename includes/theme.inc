@@ -189,7 +189,7 @@ function _drupal_theme_initialize($theme, $base_theme = array(), $registry_callb
     }
   }
 
-  if (drupal_function_exists($registry_callback)) {
+  if (function_exists($registry_callback)) {
     $registry_callback($theme, $base_theme, $theme_engine);
   }
 }
@@ -322,7 +322,6 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
 
   if (function_exists($function)) {
     $result = $function($cache, $type, $theme, $path);
-
     foreach ($result as $hook => $info) {
       $result[$hook]['type'] = $type;
       $result[$hook]['theme path'] = $path;
@@ -336,12 +335,14 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
       // functions on behalf of core .include files.
       // All files are included to be safe. Conditionally included
       // files can prevent them from getting registered.
-      if (isset($info['file']) && !isset($info['path'])) {
-        $result[$hook]['file'] = $path . '/' . $info['file'];
-        include_once DRUPAL_ROOT . '/' . $result[$hook]['file'];
+      if (isset($cache[$hook]['includes'])) {
+        $result[$hook]['includes'] = $cache[$hook]['includes'];
       }
-      elseif (isset($info['file']) && isset($info['path'])) {
-        include_once DRUPAL_ROOT . '/' . $info['path'] . '/' . $info['file'];
+      if (isset($info['file'])) {
+        $include_file = isset($info['path']) ? $info['path'] : $path;
+        $include_file .= '/' . $info['file'];
+        include_once DRUPAL_ROOT . '/' . $include_file;
+        $result[$hook]['includes'][] = $include_file;
       }
 
       // If 'arguments' have been defined previously, carry them forward.
@@ -760,12 +761,10 @@ function theme() {
   $theme_path = $info['theme path'];
 
   // Include a file if the theme function or variable processor is held elsewhere.
-  if (!empty($info['file'])) {
-    $include_file = $info['file'];
-    if (isset($info['path'])) {
-      $include_file = $info['path'] . '/' . $include_file;
+  if (!empty($info['includes'])) {
+    foreach ($info['includes'] as $include_file) {
+      include_once DRUPAL_ROOT . '/' . $include_file;
     }
-    include_once DRUPAL_ROOT . '/' . $include_file;
   }
   if (isset($info['function'])) {
     // The theme call is a function.
@@ -804,7 +803,7 @@ function theme() {
         foreach (array('preprocess functions', 'process functions') as $phase) {
           if (!empty($info[$phase])) {
             foreach ($info[$phase] as $processor_function) {
-              if (drupal_function_exists($processor_function)) {
+              if (function_exists($processor_function)) {
                 $processor_function($variables, $hook_clone);
               }
             }
@@ -830,7 +829,7 @@ function theme() {
           $suggestions[] = $variables['theme_function'];
         }
         foreach (array_reverse($suggestions) as $suggestion) {
-          if (drupal_function_exists($suggestion)) {
+          if (function_exists($suggestion)) {
             $info['function'] = $suggestion;
             break;
           }
@@ -842,7 +841,7 @@ function theme() {
     }
 
     // Call the function.
-    if (drupal_function_exists($info['function'])) {
+    if (function_exists($info['function'])) {
       $output = call_user_func_array($info['function'], $args);
     }
   }
@@ -885,7 +884,7 @@ function theme() {
     foreach (array('preprocess functions', 'process functions') as $phase) {
       if (!empty($info[$phase])) {
         foreach ($info[$phase] as $processor_function) {
-          if (drupal_function_exists($processor_function)) {
+          if (function_exists($processor_function)) {
             call_user_func_array($processor_function, $args);
           }
         }

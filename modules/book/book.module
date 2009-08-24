@@ -105,6 +105,7 @@ function book_menu() {
     'page callback' => 'book_admin_overview',
     'access arguments' => array('administer book outlines'),
     'type' => MENU_LOCAL_TASK,
+    'file' => 'book.admin.inc',
   );
   $items['admin/content/book/list'] = array(
     'title' => 'List',
@@ -117,6 +118,7 @@ function book_menu() {
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 8,
+    'file' => 'book.admin.inc',
   );
   $items['admin/content/book/%node'] = array(
     'title' => 'Re-order book pages and change titles',
@@ -125,18 +127,21 @@ function book_menu() {
     'access callback' => '_book_outline_access',
     'access arguments' => array(3),
     'type' => MENU_CALLBACK,
+    'file' => 'book.admin.inc',
   );
   $items['book'] = array(
     'title' => 'Books',
     'page callback' => 'book_render',
     'access arguments' => array('access content'),
     'type' => MENU_SUGGESTED_ITEM,
+    'file' => 'book.pages.inc',
   );
   $items['book/export/%/%'] = array(
     'page callback' => 'book_export',
     'page arguments' => array(2, 3),
     'access arguments' => array('access printer-friendly version'),
     'type' => MENU_CALLBACK,
+    'file' => 'book.pages.inc',
   );
   $items['node/%node/outline'] = array(
     'title' => 'Outline',
@@ -146,6 +151,7 @@ function book_menu() {
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
+    'file' => 'book.pages.inc',
   );
   $items['node/%node/outline/remove'] = array(
     'title' => 'Remove from outline',
@@ -154,11 +160,13 @@ function book_menu() {
     'access callback' => '_book_outline_remove_access',
     'access arguments' => array(1),
     'type' => MENU_CALLBACK,
+    'file' => 'book.pages.inc',
   );
   $items['book/js/form'] = array(
     'page callback' => 'book_form_update',
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
+    'file' => 'book.pages.inc',
   );
 
   return $items;

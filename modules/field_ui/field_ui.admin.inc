@@ -1205,7 +1205,7 @@ function field_ui_default_value_widget($field, $instance, &$form, &$form_state) 
       'instance' => $instance,
     ),
   );
-  drupal_function_exists('field_default_form');
+  function_exists('field_default_form');
   // @todo Allow multiple values (requires more work on 'add more' JS handler).
   $widget_form = field_default_form(NULL, NULL, $field, $instance, FIELD_LANGUAGE_NONE, $items, $form, $form_state, 0);
   $form['instance']['default_value_widget'] += $widget_form;
@@ -1257,7 +1257,7 @@ function field_ui_field_edit_form_validate($form, &$form_state) {
 
       // Widget now does its own validation, should be no need to add anything
       // for widget validation here.
-      if (drupal_function_exists($field_function)) {
+      if (function_exists($field_function)) {
         $field_function('validate', $node, $field, $default_value, $form, NULL);
       }
       // The field validation routine won't set an error on the right field, so

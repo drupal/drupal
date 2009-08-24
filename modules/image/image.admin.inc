@@ -315,7 +315,7 @@ function image_effect_form(&$form_state, $style, $effect) {
     '#tree' => TRUE,
     '#attached_css' => array(drupal_get_path('module', 'image') . '/image.admin.css' => array('preprocess' => FALSE)),
   );
-  if (drupal_function_exists($effect['form callback'])) {
+  if (function_exists($effect['form callback'])) {
     $form['data'] = call_user_func($effect['form callback'], $effect['data']);
   }
 

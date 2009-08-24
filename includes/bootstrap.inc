@@ -654,7 +654,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
         $mask = "/$name\.$type$/";
       }
 
-      if (drupal_function_exists('drupal_system_listing')) {
+      if (function_exists('drupal_system_listing')) {
         $matches = drupal_system_listing($mask, $dir, 'name', 0);
         if (!empty($matches[$name]->uri)) {
           $files[$type][$name] = $matches[$name]->uri;
@@ -785,6 +785,19 @@ function drupal_page_is_cacheable($allow_caching = NULL) {
 
   return $allow_caching_static && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD')
     && $_SERVER['SERVER_SOFTWARE'] !== 'PHP CLI';
+}
+
+/**
+ * Call all init or exit hooks without including all modules.
+ *
+ * @param $hook
+ *   The name of the bootstrap hook we wish to invoke.
+ */
+function bootstrap_invoke_all($hook) {
+  foreach (module_list(TRUE, TRUE) as $module) {
+    drupal_load('module', $module);
+    module_invoke($module, $hook);
+  }
 }
 
 /**
@@ -1076,6 +1089,13 @@ function drupal_serve_page_from_cache(stdClass $cache) {
   }
 
   print $cache->data;
+}
+
+/**
+ * Define the critical hooks that force modules to always be loaded.
+ */
+function bootstrap_hooks() {
+  return array('boot', 'exit', 'watchdog');
 }
 
 /**
@@ -1469,15 +1489,14 @@ function _drupal_bootstrap($phase) {
           // If the skipping of the bootstrap hooks is not enforced, call
           // hook_boot.
           if (variable_get('page_cache_invoke_hooks', TRUE)) {
-            require_once DRUPAL_ROOT . '/includes/module.inc';
-            module_invoke_all('boot');
+            bootstrap_invoke_all('boot');
           }
           header('X-Drupal-Cache: HIT');
           drupal_serve_page_from_cache($cache);
           // If the skipping of the bootstrap hooks is not enforced, call
           // hook_exit.
           if (variable_get('page_cache_invoke_hooks', TRUE)) {
-            module_invoke_all('exit');
+            bootstrap_invoke_all('exit');
           }
           // We are done.
           exit;
@@ -1504,6 +1523,9 @@ function _drupal_bootstrap($phase) {
     case DRUPAL_BOOTSTRAP_VARIABLES:
       // Load variables from the database, but do not overwrite variables set in settings.php.
       $conf = variable_initialize(isset($conf) ? $conf : array());
+      // Load bootstrap modules.
+      require_once DRUPAL_ROOT . '/includes/module.inc';
+      module_load_all(TRUE);
       break;
 
     case DRUPAL_BOOTSTRAP_SESSION:
@@ -1512,8 +1534,7 @@ function _drupal_bootstrap($phase) {
       break;
 
     case DRUPAL_BOOTSTRAP_PAGE_HEADER:
-      require_once DRUPAL_ROOT . '/includes/module.inc';
-      module_invoke_all('boot');
+      bootstrap_invoke_all('boot');
       if (!$cache && drupal_page_is_cacheable()) {
         header('X-Drupal-Cache: MISS');
       }
@@ -1751,7 +1772,7 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
       // Load the .install files to get hook_schema.
       // On some databases this function may be called before bootstrap has
       // been completed, so we force the functions we need to load just in case.
-      if (drupal_function_exists('module_load_all_includes')) {
+      if (function_exists('module_load_all_includes')) {
 
         // There is currently a bug in module_list() where it caches what it
         // was last called with, which is not always what you want.
@@ -1761,7 +1782,7 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
         // "prime" module_list() here to to values we want, specifically
         // "yes rebuild the list and don't limit to bootstrap".
         // TODO: Remove this call after http://drupal.org/node/222109 is fixed.
-        module_list(TRUE);
+        module_list(TRUE, FALSE);
         module_load_all_includes('install');
       }
 
@@ -1769,17 +1790,11 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
       // Invoke hook_schema for all modules.
       foreach (module_implements('schema') as $module) {
         $current = module_invoke($module, 'schema');
-        if (drupal_function_exists('_drupal_schema_initialize')) {
-          _drupal_schema_initialize($module, $current);
-        }
-
+        _drupal_schema_initialize($module, $current);
         $schema = array_merge($schema, $current);
       }
 
-      if (drupal_function_exists('drupal_alter')) {
-        drupal_alter('schema', $schema);
-      }
-
+      drupal_alter('schema', $schema);
       // If the schema is empty, avoid saving it: some database engines require
       // the schema to perform queries, and this could lead to infinite loops.
       if (!empty($schema) && (drupal_get_bootstrap_phase() == DRUPAL_BOOTSTRAP_FULL)) {
@@ -1810,51 +1825,10 @@ function drupal_get_schema($table = NULL, $rebuild = FALSE) {
  */
 
 /**
- * Confirm that a function is available.
- *
- * If the function is already available, this function does nothing.
- * If the function is not available, it tries to load the file where the
- * function lives. If the file is not available, it returns false, so that it
- * can be used as a drop-in replacement for function_exists().
- *
- * @param $function
- *   The name of the function to check or load.
- * @return
- *   TRUE if the function is now available, FALSE otherwise.
- */
-function drupal_function_exists($function) {
-  static $checked = array();
-  static $maintenance;
-
-  if (!isset($maintenance)) {
-    $maintenance = defined('MAINTENANCE_MODE');
-  }
-
-  if ($maintenance) {
-    return function_exists($function);
-  }
-
-  if (isset($checked[$function])) {
-    return $checked[$function];
-  }
-  $checked[$function] = FALSE;
-
-  if (function_exists($function)) {
-    $checked[$function] = TRUE;
-    return TRUE;
-  }
-
-  $checked[$function] = _registry_check_code('function', $function);
-
-  return $checked[$function];
-}
-
-/**
  * Confirm that an interface is available.
  *
- * This function parallels drupal_function_exists(), but is rarely
- * called directly. Instead, it is registered as an spl_autoload()
- * handler, and PHP calls it for us when necessary.
+ * This function is rarely called directly. Instead, it is registered as an
+ * spl_autoload()  handler, and PHP calls it for us when necessary.
  *
  * @param $interface
  *   The name of the interface to check or load.
@@ -1868,9 +1842,8 @@ function drupal_autoload_interface($interface) {
 /**
  * Confirm that a class is available.
  *
- * This function parallels drupal_function_exists(), but is rarely
- * called directly. Instead, it is registered as an spl_autoload()
- * handler, and PHP calls it for us when necessary.
+ * This function is rarely called directly. Instead, it is registered as an
+ * spl_autoload()  handler, and PHP calls it for us when necessary.
  *
  * @param $class
  *   The name of the class to check or load.
@@ -1960,8 +1933,8 @@ function _registry_check_code($type, $name = NULL) {
 /**
  * Rescan all enabled modules and rebuild the registry.
  *
- * Rescans all code in modules or includes directory, storing a mapping of
- * each function, file, and hook implementation in the database.
+ * Rescans all code in modules or includes directories, storing the location of
+ * each interface or class in the database.
  */
 function registry_rebuild() {
   require_once DRUPAL_ROOT . '/includes/registry.inc';

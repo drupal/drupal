@@ -63,6 +63,7 @@ function translation_menu() {
     'access arguments' => array(1),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
+    'file' => 'translation.pages.inc',
   );
   return $items;
 }

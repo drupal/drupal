@@ -132,6 +132,7 @@ function update_menu() {
     'page callback' => 'update_status',
     'access arguments' => array('administer site configuration'),
     'weight' => 10,
+    'file' => 'update.report.inc',
   );
   $items['admin/settings/updates'] = array(
     'title' => 'Updates',
@@ -139,12 +140,14 @@ function update_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('update_settings'),
     'access arguments' => array('administer site configuration'),
+    'file' => 'update.settings.inc',
   );
   $items['admin/reports/updates/check'] = array(
     'title' => 'Manual update check',
     'page callback' => 'update_manual_status',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
+    'file' => 'update.fetch.inc',
   );
 
   return $items;
