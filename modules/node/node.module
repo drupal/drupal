@@ -147,12 +147,16 @@ function node_cron() {
 }
 
 /**
- * Implement hook_fieldable_info().
+ * Implement hook_entity_info().
  */
-function node_fieldable_info() {
+function node_entity_info() {
   $return = array(
     'node' => array(
       'label' => t('Node'),
+      'controller class' => 'NodeController',
+      'base table' => 'node',
+      'revision table' => 'node_revision',
+      'fieldable' => TRUE,
       'object keys' => array(
         'id' => 'nid',
         'revision' => 'vid',
@@ -224,7 +228,7 @@ function node_field_extra_fields($bundle) {
  * Gather a listing of links to nodes.
  *
  * @param $result
- *   A DB result object from a query to fetch node objects. If your query
+ *   A DB result object from a query to fetch node entities. If your query
  *   joins the <code>node_comment_statistics</code> table so that the
  *   <code>comment_count</code> field is available, a title attribute will
  *   be added to show the number of comments.
@@ -720,11 +724,13 @@ function node_invoke($node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
 }
 
 /**
- * Load node objects from the database.
+ * Load node entities from the database.
  *
  * This function should be used whenever you need to load more than one node
  * from the database. Nodes are loaded into memory and will not require
  * database access if loaded again during the same page request.
+ *
+ * @see entity_load()
  *
  * @param $nids
  *   An array of node IDs.
@@ -737,150 +743,7 @@ function node_invoke($node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
  *   An array of node objects indexed by nid.
  */
 function node_load_multiple($nids = array(), $conditions = array(), $reset = FALSE) {
-  $node_cache = &drupal_static(__FUNCTION__, array());
-
-  if ($reset) {
-    $node_cache = array();
-  }
-  $nodes = array();
-
-  // Create a new variable which is either a prepared version of the $nids
-  // array for later comparison with the node cache, or FALSE if no $nids were
-  // passed. The $nids array is reduced as items are loaded from cache, and we
-  // need to know if it's empty for this reason to avoid querying the database
-  // when all requested nodes are loaded from cache.
-  $passed_nids = !empty($nids) ? array_flip($nids) : FALSE;
-
-  // Revisions are not statically cached, and require a different query to
-  // other conditions, so separate vid into its own variable.
-  $vid = isset($conditions['vid']) ? $conditions['vid'] : FALSE;
-  unset($conditions['vid']);
-
-  // Load any available nodes from the internal cache.
-  if ($node_cache && !$vid) {
-    if ($nids) {
-      $nodes += array_intersect_key($node_cache, $passed_nids);
-      // If any nodes were loaded, remove them from the $nids still to load.
-      $nids = array_keys(array_diff_key($passed_nids, $nodes));
-    }
-    // If loading nodes only by conditions, fetch all available nodes from
-    // the cache. Nodes which don't match are removed later.
-    elseif ($conditions) {
-      $nodes = $node_cache;
-    }
-  }
-
-  // Exclude any nodes loaded from cache if they don't match $conditions.
-  // This ensures the same behavior whether loading from memory or database.
-  if ($conditions) {
-    foreach ($nodes as $node) {
-      $node_values = (array) $node;
-      if (array_diff_assoc($conditions, $node_values)) {
-        unset($nodes[$node->nid]);
-      }
-    }
-  }
-
-  // Load any remaining nodes from the database. This is the case if there are
-  // any $nids left to load, if loading a revision, or if $conditions was
-  // passed without $nids.
-  if ($nids || $vid || ($conditions && !$passed_nids)) {
-    $query = db_select('node', 'n');
-
-    if ($vid) {
-      $query->join('node_revision', 'r', 'r.nid = n.nid AND r.vid = :vid', array(':vid' => $vid));
-    }
-    else {
-      $query->join('node_revision', 'r', 'r.vid = n.vid');
-    }
-
-    // Add fields from the {node} table.
-    $node_fields = drupal_schema_fields_sql('node');
-
-    // The columns vid, title, status, comment, promote, moderate, and sticky
-    // are all provided by node_revision, so remove them.
-    $node_fields = array_diff($node_fields, array('vid', 'title', 'status', 'comment', 'promote', 'moderate', 'sticky'));
-    $query->fields('n', $node_fields);
-
-    // Add all fields from the {node_revision} table.
-    $node_revision_fields = drupal_schema_fields_sql('node_revision');
-
-    // {node_revision}.nid is provided by node, and {node_revision}.uid and
-    // {node_revision}.timestamp will be added with aliases, so remove them
-    // before adding to the query.
-    $node_revision_fields = array_diff($node_revision_fields, array('nid', 'uid', 'timestamp'));
-    $query->fields('r', $node_revision_fields);
-
-    // Add {node_revision}.uid with alias revision_uid to avoid the name
-    // collision with {node}.uid, otherwise the revision author would be loaded
-    // as $node->uid.
-    $query->addField('r', 'uid', 'revision_uid');
-
-    // Add {node_revision}.timestamp with alias revision_timestamp for clarity.
-    $query->addField('r', 'timestamp', 'revision_timestamp');
-
-    if ($nids) {
-      $query->condition('n.nid', $nids, 'IN');
-    }
-    if ($conditions) {
-      foreach ($conditions as $field => $value) {
-        $query->condition('n.' . $field, $value);
-      }
-    }
-    $queried_nodes = $query->execute()->fetchAllAssoc('nid');
-  }
-
-  // Pass all nodes loaded from the database through the node type specific
-  // callbacks and hook_node_load(), then add them to the internal cache.
-  if (!empty($queried_nodes)) {
-    // Create an array of nodes for each content type and pass this to the
-    // node type specific callback.
-    $typed_nodes = array();
-    foreach ($queried_nodes as $nid => $node) {
-      $typed_nodes[$node->type][$nid] = $node;
-    }
-
-    // Call node type specific callbacks on each typed array of nodes.
-    foreach ($typed_nodes as $type => $nodes_of_type) {
-      if (node_hook($type, 'load')) {
-        $function = node_type_get_base($type) . '_load';
-        $function($nodes_of_type);
-      }
-    }
-
-    // Attach fields.
-    if ($vid) {
-      field_attach_load_revision('node', $queried_nodes);
-    }
-    else {
-      field_attach_load('node', $queried_nodes);
-    }
-
-    // Call hook_node_load(), pass the node types so modules can return early
-    // if not acting on types in the array.
-    foreach (module_implements('node_load') as $module) {
-      $function = $module . '_node_load';
-      $function($queried_nodes, array_keys($typed_nodes));
-    }
-    $nodes += $queried_nodes;
-    // Add nodes to the cache if we're not loading a revision.
-    if (!$vid) {
-      $node_cache += $queried_nodes;
-    }
-  }
-
-  // Ensure that the returned array is ordered the same as the original $nids
-  // array if this was passed in and remove any invalid nids.
-  if ($passed_nids) {
-    // Remove any invalid nids from the array.
-    $passed_nids = array_intersect_key($passed_nids, $nodes);
-    foreach ($nodes as $node) {
-      $passed_nids[$node->nid] = $node;
-    }
-    $nodes = $passed_nids;
-  }
-
-  return $nodes;
+  return entity_load('node', $nids, $conditions, $reset);
 }
 
 /**
@@ -899,7 +762,6 @@ function node_load_multiple($nids = array(), $conditions = array(), $reset = FAL
 function node_load($nid, $vid = array(), $reset = FALSE) {
   $vid = isset($vid) ? array('vid' => $vid) : NULL;
   $node = node_load_multiple(array($nid), $vid, $reset);
-
   return $node ? $node[$nid] : FALSE;
 }
 
@@ -3261,4 +3123,31 @@ function node_requirements($phase) {
     'description' => $description . ' ' . l(t('Rebuild permissions'), 'admin/reports/status/rebuild'),
   );
   return $requirements;
+}
+
+/**
+ * Controller class for nodes.
+ *
+ * This extends the DrupalDefaultEntityController class, adding required
+ * special handling for node objects.
+ */
+class NodeController extends DrupalDefaultEntityController {
+  protected function attachLoad(&$nodes) {
+    // Create an array of nodes for each content type and pass this to the
+    // object type specific callback.
+    $typed_nodes = array();
+    foreach ($nodes as $id => $object) {
+      $typed_nodes[$object->type][$id] = $object;
+    }
+
+    // Call object type specific callbacks on each typed array of nodes.
+    foreach ($typed_nodes as $node_type => $nodes_of_type) {
+      if (node_hook($node_type, 'load')) {
+        $function = node_type_get_base($node_type) . '_load';
+        $function($nodes_of_type);
+      }
+    }
+    $this->hookLoadArguments[] = array_keys($typed_nodes);
+    parent::attachLoad($nodes);
+  }
 }

@@ -96,6 +96,37 @@ function comment_help($path, $arg) {
 }
 
 /**
+ * Implement hook_entity_info() {
+ */
+function comment_entity_info() {
+  $return =  array(
+    'comment' => array(
+      'label' => t('Comment'),
+      'base table' => 'comment',
+      'fieldable' => TRUE,
+      'controller class' => 'CommentController',
+      'object keys' => array(
+        'id' => 'cid',
+        'bundle' => 'node_type',
+      ),
+      'bundle keys' => array(
+        'bundle' => 'type',
+      ),
+      'bundles' => array(),
+      'static cache' => FALSE,
+    ),
+  );
+
+  foreach (node_type_get_names() as $type => $name) {
+    $return['comment']['bundles']['comment_node_' . $type] = array(
+      'label' => $name,
+    );
+  }
+
+  return $return;
+}
+
+/**
  * Implement hook_theme().
  */
 function comment_theme() {
@@ -188,31 +219,6 @@ function comment_menu() {
   );
 
   return $items;
-}
-
-/**
- * Implement hook_fieldable_info().
- */
-function comment_fieldable_info() {
-  $return = array(
-    'comment' => array(
-      'label' => t('Comment'),
-      'object keys' => array(
-        'id' => 'cid',
-        'bundle' => 'node_type',
-      ),
-      'bundle keys' => array(
-        'bundle' => 'type',
-      ),
-      'bundles' => array(),
-    ),
-  );
-  foreach (node_type_get_names() as $type => $name) {
-    $return['comment']['bundles']['comment_node_' . $type] = array(
-      'label' => $name,
-    );
-  }
-  return $return;
 }
 
 /**
@@ -1437,47 +1443,7 @@ function comment_operations($action = NULL) {
  *  An array of comment objects, indexed by comment ID.
  */
 function comment_load_multiple($cids = array(), $conditions = array()) {
-  $comments = array();
-  if ($cids || $conditions) {
-    $query = db_select('comment', 'c');
-    $query->innerJoin('users', 'u', 'c.uid = u.uid');
-    $query->innerJoin('node', 'n', 'c.nid = n.nid');
-    $query->addField('u', 'name', 'registered_name');
-    $query->addField('n', 'type', 'node_type');
-    $query
-      ->fields('c', array('cid', 'nid', 'pid', 'comment', 'subject', 'format', 'timestamp', 'name', 'mail', 'homepage', 'status', 'thread'))
-      ->fields('u', array( 'uid', 'signature', 'picture', 'data', 'status'));
-
-    // If the $cids array is populated, add those to the query.
-    if ($cids) {
-      $query->condition('c.cid', $cids, 'IN');
-    }
-
-    // If the conditions array is populated, add those to the query.
-    if ($conditions) {
-      foreach ($conditions as $field => $value) {
-        $query->condition('c.' . $field, $value);
-      }
-    }
-    $comments = $query->execute()->fetchAllAssoc('cid');
-  }
-
-  // Setup standard comment properties.
-  foreach ($comments as $key => $comment) {
-    $comment = drupal_unpack($comment);
-    $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
-    $comment->new = node_mark($comment->nid, $comment->timestamp);
-    $comment->node_type = 'comment_node_' . $comment->node_type;
-    $comments[$key] = $comment;
-  }
-
-  if (!empty($comments)) {
-    // Attach fields.
-    field_attach_load('comment', $comments);
-    // Invoke hook_comment_load().
-    module_invoke_all('comment_load', $comments);
-  }
-  return $comments;
+  return entity_load('comment', $cids, $conditions);
 }
 
 /**
@@ -1491,6 +1457,35 @@ function comment_load_multiple($cids = array(), $conditions = array()) {
 function comment_load($cid) {
   $comment = comment_load_multiple(array($cid));
   return $comment ? $comment[$cid] : FALSE;;
+}
+
+/**
+ * Controller class for comments.
+ *
+ * This extends the DrupalDefaultEntityController class, adding required
+ * special handling for comment objects.
+ */
+class CommentController extends DrupalDefaultEntityController {
+  protected function buildQuery() {
+    parent::buildQuery();
+    // Specify additional fields from the user and node tables.
+    $this->query->innerJoin('node', 'n', 'base.nid = n.nid');
+    $this->query->addField('n', 'type', 'node_type');
+    $this->query->innerJoin('users', 'u', 'base.uid = u.uid');
+    $this->query->addField('u', 'name', 'registered_name');
+    $this->query->fields('u', array( 'uid', 'signature', 'picture', 'data', 'status'));
+  }
+
+  protected function attachLoad(&$comments) {
+    // Setup standard comment properties.
+    foreach ($comments as $key => $comment) {
+      $comment = drupal_unpack($comment);
+      $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
+      $comment->new = node_mark($comment->nid, $comment->timestamp);
+      $comment->node_type = 'comment_node_' . $comment->node_type;
+      $comments[$key] = $comment;
+    }
+  }
 }
 
 /**

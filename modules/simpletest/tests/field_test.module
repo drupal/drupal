@@ -60,7 +60,7 @@ function field_test_menu() {
 /**
  * Define a test fieldable entity.
  */
-function field_test_fieldable_info() {
+function field_test_entity_info() {
   $bundles = variable_get('field_test_bundles', array('test_bundle' => array('label' => 'Test Bundle')));
   return array(
     'test_entity' => array(
@@ -72,6 +72,7 @@ function field_test_fieldable_info() {
       ),
       'cacheable' => FALSE,
       'bundles' => $bundles,
+      'fieldable' => TRUE,
     ),
     // This entity type doesn't get form handling for now...
     'test_cacheable_entity' => array(
@@ -81,6 +82,7 @@ function field_test_fieldable_info() {
         'revision' => 'ftvid',
         'bundle' => 'fttype',
       ),
+      'fieldable' => TRUE,
       'cacheable' => TRUE,
       'bundles' => $bundles,
     ),

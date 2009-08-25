@@ -1001,6 +1001,7 @@ function system_modules_submit($form, &$form_state) {
   drupal_theme_rebuild();
   node_types_rebuild();
   cache_clear_all('schema', 'cache');
+  cache_clear_all('entity_info', 'cache');
   drupal_clear_css_cache();
   drupal_clear_js_cache();
 

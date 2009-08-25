@@ -432,34 +432,7 @@ function file_create_htaccess($directory, $private = TRUE) {
  * @see file_load()
  */
 function file_load_multiple($fids = array(), $conditions = array()) {
-  // If they don't provide any criteria return nothing rather than all files.
-  if (!$fids && !$conditions) {
-    return array();
-  }
-  $query = db_select('file', 'f')->fields('f');
-
-  // If the $fids array is populated, add those to the query.
-  if ($fids) {
-    $query->condition('f.fid', $fids, 'IN');
-  }
-
-  // If the conditions array is populated, add those to the query.
-  if ($conditions) {
-    foreach ($conditions as $field => $value) {
-      $query->condition('f.' . $field, $value);
-    }
-  }
-  $files = $query->execute()->fetchAllAssoc('fid');
-
-  // Invoke hook_file_load() on the terms loaded from the database
-  // and add them to the static cache.
-  if (!empty($files)) {
-    foreach (module_implements('file_load') as $module) {
-      $function = $module . '_file_load';
-      $function($files);
-    }
-  }
-  return $files;
+  return entity_load('file', $fids, $conditions);
 }
 
 /**

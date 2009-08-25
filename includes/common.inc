@@ -5076,6 +5076,95 @@ function drupal_check_incompatibility($v, $current_version) {
 }
 
 /**
+ * Get the entity info array of an entity type.
+ *
+ * @see hook_entity_info()
+ * @see hook_entity_info_alter()
+ *
+ * @param $entity_type
+ *   The entity type, e.g. node, for which the info shall be returned, or NULL
+ *   to return an array with info about all types.
+ */
+function entity_get_info($entity_type = NULL) {
+  // We statically cache the information returned by hook_entity_info().
+  $entity_info = &drupal_static(__FUNCTION__, array());
+
+  if (empty($entity_info)) {
+    if ($cache = cache_get('entity_info')) {
+      $entity_info = $cache->data;
+    }
+    else {
+      $entity_info = module_invoke_all('entity_info');
+      // Merge in default values.
+      foreach ($entity_info as $name => $data) {
+        $entity_info[$name] += array(
+          'fieldable' => FALSE,
+          'controller class' => 'DrupalDefaultEntityController',
+          'static cache' => TRUE,
+          'load hook' => $name . '_load',
+        );
+      }
+      // Let other modules alter the entity info.
+      drupal_alter('entity_info', $entity_info);
+      cache_set('entity_info', $entity_info);
+    }
+  }
+
+  return empty($entity_type) ? $entity_info : $entity_info[$entity_type];
+}
+
+/**
+ * Load entities from the database.
+ *
+ * This function should be used whenever you need to load more than one entity
+ * from the database. The entities are loaded into memory and will not require
+ * database access if loaded again during the same page request.
+ *
+ * The actual loading is done through a class that has to implement the
+ * DrupalEntityController interface. By default, DrupalDefaultEntityController
+ * is used. Entity types can specify that a different class should be used by
+ * setting the 'controller class' key in hook_entity_info(). These classes can
+ * either implement the DrupalEntityController interface, or, most commonly,
+ * extend the DrupalDefaultEntityController class. See node_entity_info() and
+ * the NodeController in node.module as an example.
+ *
+ * @see hook_entity_info()
+ * @see DrupalEntityController
+ * @see DrupalDefaultEntityController
+ *
+ * @param $entity_type
+ *   The entity type to load, e.g. node or user.
+ * @param $ids
+ *   An array of entity IDs, or FALSE to load all entities.
+ * @param $conditions
+ *   An array of conditions in the form 'field' => $value.
+ * @param $reset
+ *   Whether to reset the internal cache for the requested entity type.
+ *
+ * @return
+ *   An array of entity objects indexed by their ids.
+ */
+function entity_load($entity_type, $ids = array(), $conditions = array(), $reset = FALSE) {
+  if ($reset) {
+    entity_get_controller($entity_type)->resetCache();
+  }
+  return entity_get_controller($entity_type)->load($ids, $conditions);
+}
+
+/**
+ * Get the entity controller class for an entity type.
+ */
+function entity_get_controller($entity_type) {
+  $controllers = &drupal_static(__FUNCTION__, array());
+  if (!isset($controllers[$entity_type])) {
+    $type_info = entity_get_info($entity_type);
+    $class = $type_info['controller class'];
+    $controllers[$entity_type] = new $class($entity_type);
+  }
+  return $controllers[$entity_type];
+}
+
+/**
  * Performs one or more XML-RPC request(s).
  *
  * @param $url

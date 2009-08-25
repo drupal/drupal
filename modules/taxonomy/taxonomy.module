@@ -19,12 +19,15 @@ function taxonomy_permission() {
 }
 
 /**
- * Implement hook_fieldable_info().
+ * Implement hook_entity_info().
  */
-function taxonomy_fieldable_info() {
+function taxonomy_entity_info() {
   $return = array(
     'taxonomy_term' => array(
       'label' => t('Taxonomy term'),
+      'controller class' => 'TaxonomyTermController',
+      'base table' => 'taxonomy_term_data',
+      'fieldable' => TRUE,
       'object keys' => array(
         'id' => 'tid',
         'bundle' => 'vocabulary_machine_name',
@@ -35,8 +38,8 @@ function taxonomy_fieldable_info() {
       'bundles' => array(),
     ),
   );
-  foreach (taxonomy_get_vocabularies() as $vocabulary) {
-    $return['taxonomy_term']['bundles'][$vocabulary->machine_name] = array(
+  foreach (taxonomy_vocabulary_get_names() as $machine_name => $vocabulary) {
+    $return['taxonomy_term']['bundles'][$machine_name] = array(
       'label' => $vocabulary->name,
       'admin' => array(
         'path' => 'admin/structure/taxonomy/%taxonomy_vocabulary',
@@ -46,6 +49,16 @@ function taxonomy_fieldable_info() {
       ),
     );
   }
+  $return['taxonomy_vocabulary'] = array(
+    'label' => t('Taxonomy vocabulary'),
+    'controller class' => 'TaxonomyVocabularyController',
+    'base table' => 'taxonomy_vocabulary',
+    'object keys' => array(
+      'id' => 'vid',
+    ),
+    'fieldable' => FALSE,
+  );
+
   return $return;
 }
 
@@ -62,25 +75,6 @@ function taxonomy_field_build_modes($obj_type) {
     );
   }
   return $modes;
-}
-
-/**
- * Implement hook_field_extra_fields().
- */
-function taxonomy_field_extra_fields($bundle) {
-  $extra = array();
-
-  if ($type = node_type_get_type($bundle)) {
-    if (taxonomy_get_vocabularies($bundle)) {
-      $extra['taxonomy'] = array(
-        'label' => t('Taxonomy'),
-        'description' => t('Taxonomy module element.'),
-        'weight' => -3,
-      );
-    }
-  }
-
-  return $extra;
 }
 
 /**
@@ -365,7 +359,7 @@ function taxonomy_vocabulary_save($vocabulary) {
   }
 
   cache_clear_all();
-  drupal_static_reset('taxonomy_vocabulary_load_multiple');
+  entity_get_controller('taxonomy_vocabulary')->resetCache();
 
   return $status;
 }
@@ -396,7 +390,7 @@ function taxonomy_vocabulary_delete($vid) {
   module_invoke_all('taxonomy', 'delete', 'vocabulary', $vocabulary);
 
   cache_clear_all();
-  drupal_static_reset('taxonomy_vocabulary_load_multiple');
+  entity_get_controller('taxonomy_vocabulary')->resetCache();
 
   return SAVED_DELETED;
 }
@@ -592,7 +586,7 @@ function taxonomy_terms_static_reset() {
   drupal_static_reset('taxonomy_term_count_nodes');
   drupal_static_reset('taxonomy_get_tree');
   drupal_static_reset('taxonomy_get_synonym_root');
-  drupal_static_reset('taxonomy_term_load_multiple');
+  entity_get_controller('taxonomy_term')->resetCache();
 }
 
 /**
@@ -656,21 +650,17 @@ function taxonomy_form_all($free_tags = 0) {
  */
 function taxonomy_get_vocabularies($type = NULL) {
   $conditions = !empty($type) ? array('type' => $type) : NULL;
-  return taxonomy_vocabulary_load_multiple(array(), $conditions);
+  return taxonomy_vocabulary_load_multiple(FALSE, $conditions);
 }
 
 /**
  * Get names for all taxonomy vocabularies.
  *
  * @return
- *   An array of vocabulary names in the format 'machine_name' => 'name'.
+ *   An array of vocabulary ids, names, machine names, keyed by machine name.
  */
 function taxonomy_vocabulary_get_names() {
-  $names = array();
-  $vocabularies = taxonomy_get_vocabularies();
-  foreach ($vocabularies as $vocabulary) {
-    $names[$vocabulary->machine_name] = $vocabulary->name;
-  }
+  $names = db_query('SELECT name, machine_name, vid FROM {taxonomy_vocabulary}')->fetchAllAssoc('machine_name');
   return $names;
 }
 
@@ -1227,99 +1217,97 @@ function taxonomy_get_term_by_name($name) {
 }
 
 /**
- * Load multiple taxonomy vocabularies based on certain conditions.
+ * Return array of tids and join operator.
  *
- * This function should be used whenever you need to load more than one
- * vocabulary from the database. Terms are loaded into memory and will not
- * require database access if loaded again during the same page request.
- *
- * @param $vids
- *  An array of taxonomy vocabulary IDs.
- * @param $conditions
- *  An array of conditions to add to the query.
- *
- * @return
- *  An array of vocabulary objects, indexed by vid.
+ * This is a wrapper function for taxonomy_terms_parse_string which is called
+ * by the menu system when loading a path with taxonomy terms.
  */
-function taxonomy_vocabulary_load_multiple($vids = array(), $conditions = array()) {
-  $vocabulary_cache = &drupal_static(__FUNCTION__, array());
-  // Node type associations are not stored in the vocabulary table, so remove
-  // this from conditions into it's own variable.
-  if (isset($conditions['type'])) {
-    $type = $conditions['type'];
-    unset($conditions['type']);
+function taxonomy_terms_load($str_tids) {
+  $terms = taxonomy_terms_parse_string($str_tids);
+  return $terms;
+}
+
+/**
+ * Controller class for taxonomy terms.
+ *
+ * This extends the DrupalDefaultEntityController class. Only alteration is
+ * that we match the condition on term name case-independently.
+ */
+class TaxonomyTermController extends DrupalDefaultEntityController {
+  protected $type;
+  public function load($ids = array(), $conditions = array()) {
+    if (isset($conditions['type'])) {
+      $this->type = $conditions['type'];
+      unset($conditions['type']);
+    }
+    return parent::load($ids, $conditions);
   }
 
-  $vocabularies = array();
-
-  // Create a new variable which is either a prepared version of the $vids
-  // array for later comparison with the term cache, or FALSE if no $vids were
-  // passed. The $vids array is reduced as items are loaded from cache, and we
-  // need to know if it's empty for this reason to avoid querying the database
-  // when all requested items are loaded from cache.
-  $passed_vids = !empty($vids) ? array_flip($vids) : FALSE;
-
-  // Load any available items from the internal cache.
-  if ($vocabulary_cache) {
-    if ($vids) {
-      $vocabularies += array_intersect_key($vocabulary_cache, $passed_vids);
-      // If any items were loaded, remove them from the $vids still to load.
-      $vids = array_keys(array_diff_key($passed_vids, $vocabularies));
-    }
-    // If only conditions is passed, load all items from the cache. Items
-    // which don't match conditions will be removed later.
-    elseif ($conditions) {
-      $vocabularies = $vocabulary_cache;
-    }
-  }
-
-  // Remove any loaded terms from the array if they don't match $conditions.
-  if ($conditions || isset($type)) {
-    foreach ($vocabularies as $vocabulary) {
-      $vocabulary_values = (array) $vocabulary;
-      if (array_diff_assoc($conditions, $vocabulary_values)) {
-        unset($vocabularies[$vocabulary->vid]);
-      }
-      if (isset($type) && !in_array($type, $vocabulary->nodes)) {
-        unset($vocabularies[$vocabulary->vid]);
+  protected function buildQuery() {
+    parent::buildQuery();
+    // When name is passed as a condition use LIKE.
+    if (isset($this->conditions['name'])) {
+      $conditions = &$this->query->conditions();
+      foreach ($conditions as $key => $condition) {
+        if ($condition['field'] == 'base.name') {
+          $conditions[$key]['operator'] = 'LIKE';
+        }
       }
     }
+    // Add the machine name field from the {taxonomy_vocabulary} table.
+    $this->query->innerJoin('taxonomy_vocabulary', 'v', 'base.vid = v.vid');
+    $this->query->addField('v', 'machine_name', 'vocabulary_machine_name');
+
+    if (!empty($this->type)) {
+      $this->query->innerJoin('taxonomy_vocabulary_node_type', 'n', 'base.vid = n.vid AND n.type = :type', array(':type' => $this->type));
+    }
   }
 
-  // Load any remaining vocabularies from the database, this is necessary if
-  // we have $vids still to load, or if no $vids were passed.
-  if ($vids || !$passed_vids) {
-    $query = db_select('taxonomy_vocabulary', 'v');
-    $query->addField('n', 'type');
-    $query
-      ->fields('v')
-      ->orderBy('v.weight')
-      ->orderBy('v.name')
-      ->addTag('vocabulary_access');
+  protected function cacheGet($ids) {
+    $terms = parent::cacheGet($ids);
+    // Name matching is case insensitive, note that with some collations
+    // LOWER() and drupal_strtolower() may return different results.
+    foreach ($terms as $term) {
+      $term_values = (array) $term;
+      if (isset($this->conditions['name']) && drupal_strtolower($this->conditions['name'] != drupal_strtolower($term_values['name']))) {
+        unset($terms[$term->tid]);
+      }
+    }
+    return $terms;
+  }
+}
 
-    if (!empty($type)) {
-      $query->join('taxonomy_vocabulary_node_type', 'n', 'v.vid = n.vid AND n.type = :type', array(':type' => $type));
+/**
+ * Controller class for taxonomy vocabularies.
+ *
+ * This extends the DrupalDefaultEntityController class, adding required
+ * special handling for taxonomy vocabulary objects.
+ */
+class TaxonomyVocabularyController extends DrupalDefaultEntityController {
+  protected $type;
+  public function load($ids = array(), $conditions = array()) {
+    if (isset($conditions['type'])) {
+      $this->type = $conditions['type'];
+      unset($conditions['type']);
+    }
+    return parent::load($ids, $conditions);
+  }
+
+  protected function buildQuery() {
+    parent::buildQuery();
+    if (!empty($this->type)) {
+      $this->query->innerJoin('taxonomy_vocabulary_node_type', 'n', 'base.vid = n.vid AND n.type  = :type', array(':type' => $this->type));
     }
     else {
-      $query->leftJoin('taxonomy_vocabulary_node_type', 'n', 'v.vid = n.vid');
+      $this->query->leftJoin('taxonomy_vocabulary_node_type', 'n', 'base.vid = n.vid');
     }
+    $this->query->addField('n', 'type');
+    $this->query->orderBy('base.weight');
+    $this->query->orderBy('base.name');
+  }
 
-    // If the $vids array is populated, add those to the query.
-    if ($vids) {
-      $query->condition('v.vid', $vids, 'IN');
-    }
-
-    // If the conditions array is populated, add those to the query.
-    if ($conditions) {
-      foreach ($conditions as $field => $value) {
-        $query->condition('v.' . $field, $value);
-      }
-    }
-    $result = $query->execute();
-
-    $queried_vocabularies = array();
-    $node_types = array();
-    foreach ($result as $record) {
+  protected function attachLoad(&$records) {
+    foreach ($records as $record) {
       // If no node types are associated with a vocabulary, the LEFT JOIN will
       // return a NULL value for type.
       if (isset($record->type)) {
@@ -1332,31 +1320,51 @@ function taxonomy_vocabulary_load_multiple($vids = array(), $conditions = array(
       }
       $queried_vocabularies[$record->vid] = $record;
     }
-
-    // Invoke hook_taxonomy_vocabulary_load() on the vocabularies loaded from
-    // the database and add them to the static cache.
-    if (!empty($queried_vocabularies)) {
-      foreach (module_implements('taxonomy_vocabulary_load') as $module) {
-        $function = $module . '_taxonomy_vocabulary_load';
-        $function($queried_vocabularies);
-      }
-      $vocabularies += $queried_vocabularies;
-      $vocabulary_cache += $queried_vocabularies;
-    }
+    $records = $queried_vocabularies;
+    parent::attachLoad($records);
   }
+}
 
-  // Ensure that the returned array is ordered the same as the original $vids
-  // array if this was passed in and remove any invalid vids.
-  if ($passed_vids) {
-    // Remove any invalid vids from the array.
-    $passed_vids = array_intersect_key($passed_vids, $vocabularies);
-    foreach ($vocabularies as $vocabulary) {
-      $passed_vids[$vocabulary->vid] = $vocabulary;
-    }
-    $vocabularies = $passed_vids;
-  }
+/**
+ * Load multiple taxonomy terms based on certain conditions.
+ *
+ * This function should be used whenever you need to load more than one term
+ * from the database. Terms are loaded into memory and will not require
+ * database access if loaded again during the same page request.
+ *
+ * @see entity_load()
+ *
+ * @param $tids
+ *  An array of taxonomy term IDs.
+ * @param $conditions
+ *  An array of conditions to add to the query.
+ *
+ * @return
+ *  An array of term objects, indexed by tid.
+ */
+function taxonomy_term_load_multiple($tids = array(), $conditions = array()) {
+  return entity_load('taxonomy_term', $tids, $conditions);
+}
 
-  return $vocabularies;
+/**
+ * Load multiple taxonomy vocabularies based on certain conditions.
+ *
+ * This function should be used whenever you need to load more than one
+ * vocabulary from the database. Terms are loaded into memory and will not
+ * require database access if loaded again during the same page request.
+ *
+ * @see entity_load()
+ *
+ * @param $vids
+ *  An array of taxonomy vocabulary IDs, or FALSE to load all vocabularies.
+ * @param $conditions
+ *  An array of conditions to add to the query.
+ *
+ * @return
+ *  An array of vocabulary objects, indexed by vid.
+ */
+function taxonomy_vocabulary_load_multiple($vids = array(), $conditions = array()) {
+  return entity_load('taxonomy_vocabulary', $vids, $conditions);
 }
 
 /**
@@ -1370,134 +1378,7 @@ function taxonomy_vocabulary_load_multiple($vids = array(), $conditions = array(
  *   Results are statically cached.
  */
 function taxonomy_vocabulary_load($vid) {
-  return reset(taxonomy_vocabulary_load_multiple(array($vid), array()));
-}
-
-/**
- * Load multiple taxonomy terms based on certain conditions.
- *
- * This function should be used whenever you need to load more than one term
- * from the database. Terms are loaded into memory and will not require
- * database access if loaded again during the same page request.
- *
- * @param $tids
- *  An array of taxonomy term IDs.
- * @param $conditions
- *  An array of conditions to add to the query.
- *
- * @return
- *  An array of term objects, indexed by tid.
- */
-function taxonomy_term_load_multiple($tids = array(), $conditions = array()) {
-  $term_cache = &drupal_static(__FUNCTION__, array());
-
-  // Node type associations are not stored in the taxonomy_term_data table, so
-  // remove this from conditions into it's own variable.
-  if (isset($conditions['type'])) {
-    $type = $conditions['type'];
-    unset($conditions['type']);
-  }
-
-  $terms = array();
-
-  // Create a new variable which is either a prepared version of the $tids
-  // array for later comparison with the term cache, or FALSE if no $tids were
-  // passed. The $tids array is reduced as items are loaded from cache, and we
-  // need to know if it's empty for this reason to avoid querying the database
-  // when all requested terms are loaded from cache.
-  $passed_tids = !empty($tids) ? array_flip($tids) : FALSE;
-
-  // Load any available terms from the internal cache.
-  if ($term_cache) {
-    if ($tids) {
-      $terms += array_intersect_key($term_cache, $passed_tids);
-      // If any terms were loaded, remove them from the $tids still to load.
-      $tids = array_keys(array_diff_key($passed_tids, $terms));
-    }
-    // If only conditions is passed, load all terms from the cache. Terms
-    // which don't match conditions will be removed later.
-    elseif ($conditions) {
-      $terms = $term_cache;
-    }
-  }
-
-  // Remove any loaded terms from the array if they don't match $conditions.
-  if ($conditions) {
-    // Name matching is case insensitive, note that with some collations
-    // LOWER() and drupal_strtolower() may return different results.
-    foreach ($terms as $term) {
-      $term_values = (array) $term;
-      if (isset($conditions['name']) && drupal_strtolower($conditions['name'] != drupal_strtolower($term_values['name']))) {
-        unset($terms[$term->tid]);
-      }
-      elseif (array_diff_assoc($conditions, $term_values)) {
-        unset($terms[$term->tid]);
-      }
-    }
-  }
-
-  // Load any remaining terms from the database, this is necessary if we have
-  // $tids still to load, or if $conditions was passed without $tids.
-  if ($tids || ($conditions && !$passed_tids)) {
-    $query = db_select('taxonomy_term_data', 't');
-    $query->addTag('term_access');
-    $query->join('taxonomy_vocabulary', 'v', 't.vid = v.vid');
-    $taxonomy_term_data = drupal_schema_fields_sql('taxonomy_term_data');
-    $query->addField('v', 'machine_name', 'vocabulary_machine_name');
-    $query
-      ->fields('t', $taxonomy_term_data)
-      ->addTag('term_access');
-
-    // If the $tids array is populated, add those to the query.
-    if ($tids) {
-      $query->condition('t.tid', $tids, 'IN');
-    }
-
-    if (!empty($type)) {
-      $query->join('taxonomy_vocabulary_node_type', 'n', 't.vid = n.vid AND n.type = :type', array(':type' => $type));
-    }
-
-    // If the conditions array is populated, add those to the query.
-    if ($conditions) {
-      // When name is passed as a condition use LIKE.
-      if (isset($conditions['name'])) {
-        $query->condition('t.name', $conditions['name'], 'LIKE');
-        unset($conditions['name']);
-      }
-      foreach ($conditions as $field => $value) {
-        $query->condition('t.' . $field, $value);
-      }
-    }
-    $queried_terms = $query->execute()->fetchAllAssoc('tid');
-
-    if (!empty($queried_terms)) {
-
-      // Attach fields.
-      field_attach_load('taxonomy_term', $queried_terms);
-
-      // Invoke hook_taxonomy_term_load() and add the term objects to the
-      // static cache.
-      foreach (module_implements('taxonomy_term_load') as $module) {
-        $function = $module . '_taxonomy_term_load';
-        $function($queried_terms);
-      }
-      $terms += $queried_terms;
-      $term_cache += $queried_terms;
-    }
-  }
-
-  // Ensure that the returned array is ordered the same as the original $tids
-  // array if this was passed in and remove any invalid tids.
-  if ($passed_tids) {
-    // Remove any invalid tids from the array.
-    $passed_tids = array_intersect_key($passed_tids, $terms);
-    foreach ($terms as $term) {
-      $passed_tids[$term->tid] = $term;
-    }
-    $terms = $passed_tids;
-  }
-
-  return $terms;
+  return reset(taxonomy_vocabulary_load_multiple(array($vid)));
 }
 
 /**
@@ -2088,7 +1969,7 @@ function _taxonomy_clean_field_cache($term) {
   // Determine object types that are not cacheable.
   $obj_types = array();
   foreach (field_info_fieldable_types() as $obj_type => $info) {
-    if (!$info['cacheable']) {
+    if (isset($info['cacheable']) && !$info['cacheable']) {
       $obj_types[] = $obj_type;
     }
   }

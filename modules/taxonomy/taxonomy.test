@@ -162,7 +162,7 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
     // Check the created vocabulary.
     $vocabularies = taxonomy_get_vocabularies();
     $vid = $vocabularies[count($vocabularies)-1]->vid;
-    drupal_static_reset('taxonomy_vocabulary_load_multiple');
+    entity_get_controller('taxonomy_vocabulary')->resetCache();
     $vocabulary = taxonomy_vocabulary_load($vid);
     $this->assertTrue($vocabulary, t('Vocabulary found in database'));
 
@@ -175,7 +175,7 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
     // Confirm deletion.
     $this->drupalPost(NULL, NULL, t('Delete'));
     $this->assertRaw(t('Deleted vocabulary %name.', array('%name' => $vocabulary->name)), t('Vocabulary deleted'));
-    drupal_static_reset('taxonomy_vocabulary_load_multiple');
+    entity_get_controller('taxonomy_vocabulary')->resetCache();
     $this->assertFalse(taxonomy_vocabulary_load($vid), t('Vocabulary is not found in the database'));
   }
 }
@@ -271,8 +271,7 @@ class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
     // Fetch the names for all vocabularies, confirm that they are keyed by
     // machine name.
     $names = taxonomy_vocabulary_get_names();
-    $this->assertTrue(in_array($vocabulary1->name, $names), t('Vocabulary 1 name found.'));
-    $this->assertTrue(isset($names[$vocabulary1->machine_name]), t('Vocabulary names are keyed by machine name.'));
+    $this->assertEqual($names[$vocabulary1->machine_name]->name, $vocabulary1->name, t('Vocabulary 1 name found.'));
 
     // Fetch all of the vocabularies using taxonomy_get_vocabularies().
     // Confirm that the vocabularies are ordered by weight.
@@ -295,7 +294,7 @@ class TaxonomyVocabularyUnitTest extends TaxonomyWebTestCase {
     $this->assertTrue(current(taxonomy_vocabulary_load_multiple(array($vocabulary1->vid), array('name' => $vocabulary1->name))) == $vocabulary1, t('Vocabulary loaded successfully by name and ID.'));
 
     // Fetch vocabulary 1 with specified node type.
-    drupal_static_reset('taxonomy_vocabulary_load_multiple');
+    entity_get_controller('taxonomy_vocabulary')->resetCache();
     $vocabulary_node_type = current(taxonomy_vocabulary_load_multiple(array($vocabulary1->vid), array('type' => 'article')));
     $this->assertEqual($vocabulary_node_type, $vocabulary1, t('Vocabulary with specified node type loaded successfully.'));
   }

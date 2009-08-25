@@ -248,11 +248,14 @@ function install_begin_request(&$install_state) {
   // Load module basics (needed for hook invokes).
   include_once DRUPAL_ROOT . '/includes/module.inc';
   include_once DRUPAL_ROOT . '/includes/session.inc';
+  include_once DRUPAL_ROOT . '/includes/entity.inc';
   $module_list['system']['filename'] = 'modules/system/system.module';
   $module_list['filter']['filename'] = 'modules/filter/filter.module';
+  $module_list['user']['filename'] = 'modules/user/user.module';
   module_list(TRUE, FALSE, FALSE, $module_list);
   drupal_load('module', 'system');
   drupal_load('module', 'filter');
+  drupal_load('module', 'user');
 
   // Prepare for themed output, if necessary. We need to run this at the
   // beginning of the page request to avoid a different theme accidentally

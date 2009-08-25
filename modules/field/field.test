@@ -600,7 +600,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
 
   function testFieldAttachCreateRenameBundle() {
     // Create a new bundle. This has to be initiated by the module so that its
-    // hook_fieldable_info() is consistent.
+    // hook_entity_info() is consistent.
     $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomName());
     field_test_create_bundle($new_bundle);
 
@@ -622,7 +622,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $this->assertEqual(count($entity->{$this->field_name}[$langcode]), $this->field['cardinality'], "Data is retrieved for the new bundle");
 
     // Rename the bundle. This has to be initiated by the module so that its
-    // hook_fieldable_info() is consistent.
+    // hook_entity_info() is consistent.
     $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomName());
     field_test_rename_bundle($this->instance['bundle'], $new_bundle);
 
@@ -638,7 +638,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
 
   function testFieldAttachDeleteBundle() {
     // Create a new bundle. This has to be initiated by the module so that its
-    // hook_fieldable_info() is consistent.
+    // hook_entity_info() is consistent.
     $new_bundle = 'test_bundle_' . drupal_strtolower($this->randomName());
     field_test_create_bundle($new_bundle);
 
@@ -679,7 +679,7 @@ class FieldAttachTestCase extends DrupalWebTestCase {
     $this->assertEqual(count($entity->{$field_name}[$langcode]), 1, 'Second field got loaded');
 
     // Delete the bundle. This has to be initiated by the module so that its
-    // hook_fieldable_info() is consistent.
+    // hook_entity_info() is consistent.
     field_test_delete_bundle($this->instance['bundle']);
 
     // Verify no data gets loaded

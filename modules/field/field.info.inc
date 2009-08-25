@@ -54,10 +54,11 @@ function _field_info_cache_clear() {
  *   * label, field types, behaviors: from hook_field_formatter_info()
  *   * module: module that exposes the formatter type
 
- * fieldable types: array of hook_fieldable_info() results, keyed by entity_type.
+ * fieldable types: array of hook_entity_info() results, keyed by entity_type.
  *   * name, id key, revision key, bundle key, cacheable, bundles: from
- *     hook_fieldable_info()
+ *     hook_entity_info()
  *   * module: module that exposes the entity type
+ * @TODO use entity_get_info().
  */
 function _field_info_collate_types($reset = FALSE) {
   static $info;
@@ -124,27 +125,29 @@ function _field_info_collate_types($reset = FALSE) {
       drupal_alter('field_formatter_info', $info['formatter types']);
 
       // Populate information about 'fieldable' entities.
-      foreach (module_implements('fieldable_info') as $module) {
-        $fieldable_types = (array) module_invoke($module, 'fieldable_info');
-        foreach ($fieldable_types as $name => $fieldable_info) {
-          // Provide defaults.
-          $fieldable_info += array(
-            'cacheable' => TRUE,
-            'translation_handlers' => array(),
-            'bundles' => array(),
-          );
-          $fieldable_info['object keys'] += array(
-            'revision' => '',
-            'bundle' => '',
-          );
-          // If no bundle key provided, then we assume a single bundle, named
-          // after the type of the object. Make sure the bundle created
-          // has the human-readable name we need for bundle messages.
-          if (empty($fieldable_info['object keys']['bundle']) && empty($fieldable_info['bundles'])) {
-            $fieldable_info['bundles'] = array($name => array('label' => $fieldable_info['label']));
+      foreach (module_implements('entity_info') as $module) {
+        $entities = (array) module_invoke($module, 'entity_info');
+        foreach ($entities as $name => $entity_info) {
+          if (!empty($entity_info['fieldable'])) {
+            // Provide defaults.
+            $entity_info += array(
+              'cacheable' => TRUE,
+              'translation_handlers' => array(),
+              'bundles' => array(),
+            );
+            $entity_info['object keys'] += array(
+              'revision' => '',
+              'bundle' => '',
+            );
+            // If no bundle key provided, then we assume a single bundle, named
+            // after the type of the object. Make sure the bundle created
+            // has the human-readable name we need for bundle messages.
+            if (empty($entity_info['object keys']['bundle']) && empty($entity_info['bundles'])) {
+              $entity_info['bundles'] = array($name => array('label' => $entity_info['label']));
+            }
+            $info['fieldable types'][$name] = $entity_info;
+            $info['fieldable types'][$name]['module'] = $module;
           }
-          $info['fieldable types'][$name] = $fieldable_info;
-          $info['fieldable types'][$name]['module'] = $module;
         }
       }
       drupal_alter('fieldable_info', $info['fieldable types']);

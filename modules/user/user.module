@@ -84,12 +84,15 @@ function user_theme() {
 }
 
 /**
- * Implement hook_fieldable_info().
+ * Implement hook_entity_info().
  */
-function user_fieldable_info() {
+function user_entity_info() {
   $return = array(
     'user' => array(
       'label' => t('User'),
+      'controller class' => 'UserController',
+      'base table' => 'users',
+      'fieldable' => TRUE,
       'object keys' => array(
         'id' => 'uid',
       ),
@@ -176,68 +179,29 @@ function user_external_load($authname) {
  * @return
  *   An array of user objects, indexed by uid.
  *
+ * @see entity_load()
  * @see user_load()
  * @see user_load_by_mail()
  * @see user_load_by_name()
  */
 function user_load_multiple($uids = array(), $conditions = array(), $reset = FALSE) {
-  static $user_cache = array();
-  if ($reset) {
-    $user_cache = array();
-  }
+  return entity_load('user', $uids, $conditions, $reset);
+}
 
-  $users = array();
-
-  // Create a new variable which is either a prepared version of the $uids
-  // array for later comparison with the user cache, or FALSE if no $uids were
-  // passed. The $uids array is reduced as items are loaded from cache, and we
-  // need to know if it's empty for this reason to avoid querying the database
-  // when all requested users are loaded from cache.
-  $passed_uids = !empty($uids) ? array_flip($uids) : FALSE;
-
-  // Load any available users from the internal cache.
-  if ($user_cache) {
-    if ($uids && !$conditions) {
-      $users += array_intersect_key($user_cache, $passed_uids);
-      // If any users were loaded, remove them from the $uids still to load.
-      $uids = array_keys(array_diff_key($passed_uids, $users));
-    }
-  }
-
-  // Load any remaining users from the database, this is necessary if we have
-  // $uids still to load, or if $conditions was passed without $uids.
-  if ($uids || ($conditions && !$passed_uids)) {
-    $query = db_select('users', 'u')->fields('u');
-
-    // If the $uids array is populated, add those to the query.
-    if ($uids) {
-      $query->condition('u.uid', $uids, 'IN');
-    }
-    // If the conditions array is populated, add those to the query.
-    if ($conditions) {
-      // TODO D7: Using LIKE() to get a case insensitive comparison because Crell
-      // and chx promise that dbtng will map it to ILIKE in postgres.
-      if (isset($conditions['name'])) {
-        $query->condition('u.name', $conditions['name'], 'LIKE');
-        unset($conditions['name']);
-      }
-      if (isset($conditions['mail'])) {
-        $query->condition('u.mail', $conditions['mail'], 'LIKE');
-        unset($conditions['mail']);
-      }
-      foreach ($conditions as $field => $value) {
-        $query->condition('u.' . $field, $value);
-      }
-    }
-    $result = $query->execute();
-
-    $queried_users = array();
+/**
+ * Controller class for users.
+ *
+ * This extends the DrupalDefaultEntityController class, adding required
+ * special handling for user objects.
+ */
+class UserController extends DrupalDefaultEntityController {
+  function attachLoad(&$queried_users) {
     // Build an array of user picture IDs so that these can be fetched later.
     $picture_fids = array();
-    foreach ($result as $record) {
+    foreach ($queried_users as $key => $record) {
       $picture_fids[] = $record->picture;
-      $queried_users[$record->uid] = drupal_unpack($record);
-      $queried_users[$record->uid]->roles = array();
+      $queried_users[$key] = drupal_unpack($record);
+      $queried_users[$key]->roles = array();
       if ($record->uid) {
         $queried_users[$record->uid]->roles[DRUPAL_AUTHENTICATED_RID] = 'authenticated user';
       }
@@ -246,56 +210,29 @@ function user_load_multiple($uids = array(), $conditions = array(), $reset = FAL
       }
     }
 
-    if (!empty($queried_users)) {
-      // Add any additional roles from the database.
-      $result = db_query('SELECT r.rid, r.name, ur.uid FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid IN (:uids)', array(':uids' => array_keys($queried_users)));
-      foreach ($result as $record) {
-        $queried_users[$record->uid]->roles[$record->rid] = $record->name;
-      }
+    // Add any additional roles from the database.
+    $result = db_query('SELECT r.rid, r.name, ur.uid FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid IN (:uids)', array(':uids' => array_keys($queried_users)));
+    foreach ($result as $record) {
+      $queried_users[$record->uid]->roles[$record->rid] = $record->name;
+    }
 
-      // Add the full file objects for user pictures if enabled.
-      if (!empty($picture_fids) && variable_get('user_pictures', 1) == 1) {
-        $pictures = file_load_multiple($picture_fids);
-        foreach ($queried_users as $account) {
-          if (!empty($account->picture) && isset($pictures[$account->picture])) {
-            $account->picture = $pictures[$account->picture];
-          }
-          else {
-            $account->picture = NULL;
-          }
+    // Add the full file objects for user pictures if enabled.
+    if (!empty($picture_fids) && variable_get('user_pictures', 1) == 1) {
+      $pictures = file_load_multiple($picture_fids);
+      foreach ($queried_users as $account) {
+        if (!empty($account->picture) && isset($pictures[$account->picture])) {
+          $account->picture = $pictures[$account->picture];
+        }
+        else {
+          $account->picture = NULL;
         }
       }
-
-      field_attach_load('user', $queried_users);
-
-      // Invoke hook_user_load() on the users loaded from the database
-      // and add them to the static cache.
-      foreach (module_implements('user_load') as $module) {
-        $function = $module . '_user_load';
-        $function($queried_users);
-      }
-
-
-
-      $users = $users + $queried_users;
-      $user_cache = $user_cache + $queried_users;
     }
+    // Call the default attachLoad() method. This will add fields and call
+    // hook_user_load().
+    parent::attachLoad($queried_users);
   }
-
-  // Ensure that the returned array is ordered the same as the original $uids
-  // array if this was passed in and remove any invalid uids.
-  if ($passed_uids) {
-    // Remove any invalid uids from the array.
-    $passed_uids = array_intersect_key($passed_uids, $users);
-    foreach ($users as $user) {
-      $passed_uids[$user->uid] = $user;
-    }
-    $users = $passed_uids;
-  }
-
-  return $users;
 }
-
 
 /**
  * Fetch a user object.

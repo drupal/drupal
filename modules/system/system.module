@@ -267,6 +267,22 @@ function system_rdf_namespaces() {
 }
 
 /**
+ * Implement hook_entity_info().
+ */
+function system_entity_info() {
+  return array(
+    'file' => array(
+      'label' => t('File'),
+      'base table' => 'file',
+      'object keys' => array(
+        'id' => 'fid',
+      ),
+      'static cache' => FALSE,
+    ),
+  );
+}
+
+/**
  * Implement hook_elements().
  */
 function system_elements() {

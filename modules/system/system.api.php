@@ -12,6 +12,112 @@
  */
 
 /**
+ * Inform the base system and the Field API about one or more entity types.
+ *
+ * Inform the system about one or more entity types (i.e., object types that
+ * can be loaded via entity_load() and, optionally, to which fields can be
+ * attached).
+ *
+ * @see entity_load()
+ * @see hook_entity_info_alter()
+ *
+ * @return
+ *   An array whose keys are entity type names and whose values identify
+ *   properties of those types that the  system needs to know about:
+ *
+ *   name: The human-readable name of the type.
+ *   controller class: The name of the class that is used to load the objects.
+ *     The class has to implement the DrupalEntityController interface. Leave
+ *     blank to use the DefaultDrupalEntityController implementation.
+ *   base table: (used by DefaultDrupalEntityController) The name of the entity
+ *     type's base table.
+ *   static cache: (used by DefaultDrupalEntityController) FALSE to disable
+ *     static caching of entities during a page request. Defaults to TRUE.
+ *   load hook: The name of the hook which should be invoked by
+ *   DrupalDefaultEntityController:attachLoad(), for example 'node_load'.
+ *   fieldable: Set to TRUE if you want your entity type to be fieldable.
+ *   - object keys: An array describing how the Field API can extract the
+ *     information it needs from the objects of the type.
+ *     - id: The name of the property that contains the primary id of the
+ *       object. Every object passed to the Field API must have this property
+ *       and its value must be numeric.
+ *     - revision: The name of the property that contains the revision id of
+ *       the object. The Field API assumes that all revision ids are unique
+ *       across all objects of a type.
+ *       This element can be omitted if the objects of this type are not
+ *       versionable.
+ *     - bundle: The name of the property that contains the bundle name for the
+ *       object. The bundle name defines which set of fields are attached to
+ *       the object (e.g. what nodes call "content type").
+ *       This element can be omitted if this type has no bundles (all objects
+ *       have the same fields).
+ *   - bundle keys: An array describing how the Field API can extract the
+ *     information it needs from the bundle objects for this type (e.g
+ *     $vocabulary objects for terms; not applicable for nodes).
+ *     This element can be omitted if this type's bundles do not exist as
+ *     standalone objects.
+ *     - bundle: The name of the property that contains the name of the bundle
+ *       object.
+ *   - cacheable: A boolean indicating whether Field API should cache
+ *     loaded fields for each object, reducing the cost of
+ *     field_attach_load().
+ *   - bundles: An array describing all bundles for this object type.
+ *     Keys are bundles machine names, as found in the objects' 'bundle'
+ *     property (defined in the 'object keys' entry above).
+ *     - label: The human-readable name of the bundle.
+ *     - admin: An array of information that allow Field UI pages (currently
+ *       implemented in a contributed module) to attach themselves to the
+ *       existing administration pages for the bundle.
+ *       - path: the path of the bundle's main administration page, as defined
+ *         in hook_menu(). If the path includes a placeholder for the bundle,
+ *         the 'bundle argument', 'bundle helper' and 'real path' keys below
+ *         are required.
+ *       - bundle argument: The position of the placeholder in 'path', if any.
+ *       - real path: The actual path (no placeholder) of the bundle's main
+ *         administration page. This will be used to generate links.
+ *       - access callback: As in hook_menu(). 'user_access' will be assumed if
+ *         no value is provided.
+ *       - access arguments: As in hook_menu().
+ */
+function hook_entity_info() {
+  $return = array(
+    'node' => array(
+      'name' => t('Node'),
+      'controller class' => 'NodeController',
+      'base table' => 'node',
+      'id key' => 'nid',
+      'revision key' => 'vid',
+      'fieldable' => TRUE,
+      'bundle key' => 'type',
+      // Node.module handles its own caching.
+      // 'cacheable' => FALSE,
+      // Bundles must provide human readable name so
+      // we can create help and error messages about them.
+      'bundles' => node_type_get_names(),
+    ),
+  );
+  return $return;
+}
+
+/**
+ * Alter the entity info.
+ *
+ * Modules may implement this hook to alter the information that defines an
+ * entity. All properties that are available in hook_entity_info() can be
+ * altered here.
+ *
+ * @see hook_entity_info()
+ *
+ * @param $entity_info
+ *   The entity info array, keyed by entity name.
+ */
+function hook_entity_info_alter(&$entity_info) {
+  // Set the controller class for nodes to an alternate implementation of the
+  // DrupalEntityController interface.
+  $entity_info['node']['controller class'] = 'MyCustomNodeController';
+}
+
+/**
  * Perform periodic actions.
  *
  * Modules that require to schedule some commands to be executed at regular
