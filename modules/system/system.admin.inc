@@ -1955,7 +1955,7 @@ function system_batch_page() {
  */
 function theme_admin_block($block) {
   // Don't display the block if it has no content to display.
-  if (!$block['show']) {
+  if (empty($block['show'])) {
     return '';
   }
 
@@ -2080,6 +2080,7 @@ function theme_system_admin_by_module($menu_items) {
       $block['title'] = $module;
       $block['content'] = theme('item_list', $items);
       $block['description'] = t($description);
+      $block['show'] = TRUE;
 
       if ($block_output = theme('admin_block', $block)) {
         if (!isset($block['position'])) {
