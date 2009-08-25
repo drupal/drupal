@@ -19,12 +19,36 @@ function garland_breadcrumb($breadcrumb) {
  */
 function garland_preprocess_page(&$vars) {
   $vars['tabs2'] = menu_secondary_local_tasks();
-  $vars['primary_nav'] = isset($vars['main_menu']) ? theme('links', $vars['main_menu'], array(
-    'text' => t('Main menu'), 'level' => 'h2', 'class' => array('element-invisible'),
-  ), array('class' => array('links', 'main-menu'))) : FALSE;
-  $vars['secondary_nav'] = isset($vars['secondary_menu']) ? theme('links', $vars['secondary_menu'], array(
-    'text' => t('Secondary menu'), 'level' => 'h2', 'class' => array('element-invisible'),
-  ), array('class' => array('links', 'secondary-menu'))) : FALSE;
+  if (isset($vars['main_menu'])) {
+    $vars['primary_nav'] = theme('links', $vars['main_menu'],
+      array(
+        'class' => array('links', 'main-menu'),
+      ),
+      array(
+        'text' => t('Main menu'),
+        'level' => 'h2',
+        'class' => array('element-invisible'),
+      )
+    );
+  }
+  else {
+    $vars['primary_nav'] = FALSE;
+  }
+  if (isset($vars['secondary_menu'])) {
+    $vars['secondary_nav'] = theme('links', $vars['secondary_menu'],
+      array(
+        'class' => array('links', 'secondary-menu'),
+      ),
+      array(
+        'text' => t('Secondary menu'),
+        'level' => 'h2',
+        'class' => array('element-invisible'),
+      )
+    );
+  }
+  else {
+    $vars['secondary_nav'] = FALSE;
+  }
   $vars['ie_styles'] = garland_get_ie_styles();
 
   // Prepare header
