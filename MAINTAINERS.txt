@@ -1,10 +1,7 @@
-// $Id: MAINTAINERS.txt,v 1.31 2009/08/14 13:41:58 webchick Exp $
+// $Id: MAINTAINERS.txt,v 1.32 2009/08/25 10:58:31 dries Exp $
 
 List of maintainers
 --------------------------------------------------------------------------------
-
-BLOG API
-James Walker 'walkah' <http://drupal.org/user/1531>
 
 DATABASE SYSTEM
 Larry Garfield 'Crell' <http://drupal.org/user/26398>

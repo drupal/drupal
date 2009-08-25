@@ -1,4 +1,4 @@
-// $Id: CHANGELOG.txt,v 1.335 2009/08/24 00:14:18 webchick Exp $
+// $Id: CHANGELOG.txt,v 1.336 2009/08/25 10:58:31 dries Exp $
 
 Drupal 7.0, xxxx-xx-xx (development version)
 ----------------------
@@ -164,6 +164,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
       experience.
 - Better module version support.
     * Modules now can specify which version of another module they depend on.
+- Blog API
+    * This module has been removed from core.
 - Improved node access control system.
     * All modules may now influence the access to a node at runtime, not just
       the module that defined a node.
