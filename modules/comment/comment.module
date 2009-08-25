@@ -2445,5 +2445,5 @@ function comment_ranking() {
  */
 function comment_menu_alter(&$items) {
   // Add comments to the description for admin/content.
-  $items['admin/content/content']['description'] = "View, edit, and delete your site's content and comments.";
+  $items['admin/content']['description'] = "View, edit, and delete your site's content and comments.";
 }
