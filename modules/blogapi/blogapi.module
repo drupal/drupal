@@ -14,7 +14,7 @@ function blogapi_help($path, $arg) {
     case 'admin/help#blogapi':
       $output = '<p>' . t("The Blog API module allows your site's users to access and post to their blogs from external blogging clients. External blogging clients are available for a wide range of desktop operating systems, and generally provide a feature-rich graphical environment for creating and editing posts.") . '</p>';
       $output .= '<p>' . t('<a href="@ecto-link">Ecto</a>, a blogging client available for both Mac OS X and Microsoft Windows, can be used with Blog API. Blog API also supports <a href="@blogger-api">Blogger API</a>, <a href="@metaweblog-api">MetaWeblog API</a>, and most of the <a href="@movabletype-api">Movable Type API</a>. Blogging clients and other services (e.g. <a href="@flickr">Flickr\'s</a> "post to blog") that support these APIs may also be compatible.', array('@ecto-link' => url('http://infinite-sushi.com/software/ecto/'), '@blogger-api' => url('http://www.blogger.com/developers/api/1_docs/'), '@metaweblog-api' => url('http://www.xmlrpc.com/metaWeblogApi'), '@movabletype-api' => url('http://www.movabletype.org/docs/mtmanual_programmatic.html'), '@flickr' => url('http://www.flickr.com'))) . '</p>';
-      $output .= '<p>' . t('Select the content types available to external clients on the <a href="@blogapi-settings">Blog API settings page</a>. If supported and available, each content type will be displayed as a separate "blog" by the external client.', array('@blogapi-settings' => url('admin/settings/blogapi'))) . '</p>';
+      $output .= '<p>' . t('Select the content types available to external clients on the <a href="@blogapi-settings">Blog API settings page</a>. If supported and available, each content type will be displayed as a separate "blog" by the external client.', array('@blogapi-settings' => url('admin/config/services/blogapi'))) . '</p>';
       $output .= '<p>' . t('For more information, see the online handbook entry for <a href="@blogapi">Blog API module</a>.', array('@blogapi' => url('http://drupal.org/handbook/modules/blogapi/'))) . '</p>';
       return $output;
   }
@@ -821,7 +821,7 @@ function blogapi_menu() {
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
   );
-  $items['admin/settings/blogapi'] = array(
+  $items['admin/config/services/blogapi'] = array(
     'title' => 'Blog API',
     'description' => 'Configure the content types available to external blogging clients.',
     'page callback' => 'drupal_get_form',
