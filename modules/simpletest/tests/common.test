@@ -857,6 +857,20 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $scripts = drupal_get_js();
     $this->assertTrue(strpos($scripts, 'unknown') === FALSE, t('Unknown library was not added to the page.'));
   }
+
+  /**
+   * Tests the addition of libraries through the #attached_library property.
+   */
+  function testAttachedLibrary() {
+    $element = array(
+      '#attached_library' => array(
+        array('system', 'farbtastic'),
+      )
+    );
+    drupal_render($element);
+    $scripts = drupal_get_js();
+    $this->assertTrue(strpos($scripts, 'misc/farbtastic/farbtastic.js'), t('The attached_library property adds the additional libraries.'));
+  }
 }
 
 /**

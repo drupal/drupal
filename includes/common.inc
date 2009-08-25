@@ -3120,6 +3120,67 @@ function drupal_get_js($scope = 'header', $javascript = NULL) {
 }
 
 /**
+ * Adds all the attached libraries, JavaScript and CSS to the page.
+ *
+ * @param $libraries
+ *   An array of depending libraries to be added.
+ * @param $js
+ *   An array of JavaScript components to add.
+ * @param $css
+ *   An array of cascading stylesheets to add.
+ * @param $weight
+ *   The default weight of JavaScript and CSS being added. This is only applied
+ *   to the stylesheets and JavaScript items that don't have an explicit weight
+ *   assigned to them.
+ * @param $dependency_check
+ *   When TRUE, will exit if a given library's dependencies are missing. When
+ *   set to FALSE, will continue to add the libraries, even though one of the
+ *   dependencies are missing. Defaults to FALSE.
+ * @return
+ *   Will return FALSE if there were any missing library dependencies. TRUE will
+ *   be returned if all library dependencies were met.
+ *
+ * @see drupal_add_library(), drupal_render()
+ */
+function drupal_process_attached(array $libraries = array(), array $js = array(), array $css = array(), $weight = JS_DEFAULT, $dependency_check = FALSE) {
+  // Add the libraries first.
+  $success = TRUE;
+  foreach ($libraries as $library) {
+    if (drupal_add_library($library[0], $library[1]) === FALSE) {
+      $success = FALSE;
+      // Exit if the dependency is missing.
+      if ($dependency_check) {
+        return $success;
+      }
+    }
+  }
+
+  // Add both the JavaScript and the CSS.
+  foreach (array('js' => $js, 'css' => $css) as $type => $items) {
+    foreach ($items as $data => $options) {
+      // If the value is not an array, it's a filename and passed as first
+      // (and only) argument.
+      if (!is_array($options)) {
+        $data = $options;
+        $options = NULL;
+      }
+      // In some cases, the first parameter ($data) is an array. Arrays can't be
+      // passed as keys in PHP, so we have to get $data from the value array.
+      if (is_numeric($data)) {
+        $data = $options['data'];
+        unset($options['data']);
+      }
+      // Apply the default weight if the weight isn't explicitly given.
+      if (!isset($options['weight'])) {
+        $options['weight'] = $weight;
+      }
+      call_user_func('drupal_add_' . $type, $data, $options);
+    }
+  }
+  return $success;
+}
+
+/**
  * Adds multiple JavaScript or CSS files at the same time.
  *
  * A library defines a set of JavaScript and/or CSS files, optionally using
@@ -3145,42 +3206,15 @@ function drupal_add_library($module, $name) {
   $added = &drupal_static(__FUNCTION__, array());
 
   // Only process the library if it exists and it was not added already.
-  if (!isset($added[$module][$name]) && $library = drupal_get_library($module, $name)) {
-    // Prevent repeated/recursive processing.
-    $added[$module][$name] = TRUE;
-
-    // Ensure dependencies first.
-    foreach ($library['dependencies'] as $dependency) {
-      if (drupal_add_library($dependency[0], $dependency[1]) === FALSE) {
-        // If any dependent library could not be added, this library will break;
-        // stop here.
-        $added[$module][$name] = FALSE;
-        return FALSE;
-      }
+  if (!isset($added[$module][$name])) {
+    if ($library = drupal_get_library($module, $name)) {
+      // Add all components within the library.
+      $added[$module][$name] = drupal_process_attached($library['dependencies'], $library['js'], $library['css'], JS_LIBRARY, TRUE);
     }
-
-    // Add defined JavaScript.
-    foreach ($library['js'] as $data => $options) {
-      // For JS settings we need to transform $options['data'] into $data.
-      if (isset($options['type'], $options['data']) && $options['type'] == 'setting') {
-        $data = $options['data'];
-        unset($options['data']);
-      }
-      // If not specified, assign a default weight of JS_LIBRARY.
-      elseif (!isset($options['weight'])) {
-        $options['weight'] = JS_LIBRARY;
-      }
-      drupal_add_js($data, $options);
+    else {
+      // Requested library does not exist.
+      $added[$module][$name] = FALSE;
     }
-
-    // Add defined stylesheets.
-    foreach ($library['css'] as $data => $options) {
-      drupal_add_css($data, $options);
-    }
-  }
-  // Requested library does not exist.
-  else {
-    $added[$module][$name] = FALSE;
   }
 
   return $added[$module][$name];
@@ -3996,27 +4030,12 @@ function drupal_render(&$elements) {
     }
   }
 
-  // Add additional CSS and JavaScript files associated with this element.
-  foreach (array('css', 'js') as $kind) {
-    if (!empty($elements['#attached_' . $kind]) && is_array($elements['#attached_' . $kind])) {
-      foreach ($elements['#attached_' . $kind] as $data => $options) {
-        // If the value is not an array, it's a filename and passed as first
-        // (and only) argument.
-        if (!is_array($options)) {
-          $data = $options;
-          $options = NULL;
-        }
-        // When drupal_add_js with 'type' => 'setting' is called, the first
-        // parameter ($data) is an array. Arrays can't be keys in PHP, so we
-        // have to get $data from the value array.
-        if (is_numeric($data)) {
-          $data = $options['data'];
-          unset($options['data']);
-        }
-        call_user_func('drupal_add_' . $kind, $data, $options);
-      }
-    }
-  }
+  // Add additional libraries, CSS and JavaScript associated with this element.
+  drupal_process_attached(
+    isset($elements['#attached_library']) ? $elements['#attached_library'] : array(),
+    isset($elements['#attached_js']) ? $elements['#attached_js'] : array(),
+    isset($elements['#attached_css']) ? $elements['#attached_css'] : array()
+  );
 
   $prefix = isset($elements['#prefix']) ? $elements['#prefix'] : '';
   $suffix = isset($elements['#suffix']) ? $elements['#suffix'] : '';

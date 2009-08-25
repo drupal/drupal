@@ -154,16 +154,6 @@ function color_scheme_form(&$form_state, $theme) {
   $base = drupal_get_path('module', 'color');
   $info = color_get_info($theme);
 
-  // Add Farbtastic color picker.
-  drupal_add_library('system', 'farbtastic');
-
-  // Add custom CSS and JS.
-  drupal_add_css($base . '/color.css', array('preprocess' => FALSE));
-  drupal_add_js($base . '/color.js');
-  drupal_add_js(array('color' => array(
-    'reference' => color_get_palette($theme, TRUE)
-  )), 'setting');
-
   // See if we're using a predefined scheme.
   $current = implode(',', variable_get('color_' . $theme . '_palette', array()));
   // Note: we use the original theme when the default scheme is chosen.
@@ -176,6 +166,24 @@ function color_scheme_form(&$form_state, $theme) {
     '#title' => t('Color set'),
     '#options' => $info['schemes'],
     '#default_value' => $current,
+    // Add Farbtastic color picker.
+    '#attached_library' => array(
+      array('system', 'farbtastic'),
+    ),
+    // Add custom CSS.
+    '#attached_css' => array(
+      $base . '/color.css' => array('preprocess' => FALSE),
+    ),
+    // Add custom JavaScript.
+    '#attached_js' => array(
+      $base . '/color.js',
+      array(
+        'data' => array('color' => array(
+          'reference' => color_get_palette($theme, TRUE),
+        )),
+        'type' => 'setting',
+      ),
+    ),
   );
 
   // Add palette fields.

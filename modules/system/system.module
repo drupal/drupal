@@ -931,6 +931,19 @@ function system_library() {
     ),
   );
 
+  // Vertical Tabs.
+  $libraries['vertical-tabs'] = array(
+    'title' => 'Vertical Tabs',
+    'website' => 'http://drupal.org/node/323112',
+    'version' => '1.0',
+    'js' => array(
+      'misc/vertical-tabs.js' => array(),
+    ),
+    'css' => array(
+      'misc/vertical-tabs.css' => array(),
+    ),
+  );
+
   // Farbtastic.
   $libraries['farbtastic'] = array(
     'title' => 'Farbtastic',

@@ -1594,7 +1594,7 @@ function form_get_options($element, $key) {
  */
 function theme_fieldset($element) {
   if (!empty($element['#collapsible'])) {
-    drupal_add_js('misc/collapse.js');
+    $element['#attached_js']['misc/collapse.js'] = array();
 
     if (!isset($element['#attributes']['class'])) {
       $element['#attributes']['class'] = array();
@@ -2215,7 +2215,7 @@ function form_process_fieldset(&$element, &$form_state) {
   $element['#group_members'] = &$form_state['groups'][$parents];
 
   // Contains form element summary functionalities.
-  drupal_add_js('misc/form.js', array('weight' => JS_LIBRARY + 1));
+  $element['#attached_js']['misc/form.js'] = array('weight' => JS_LIBRARY + 1);
 
   return $element;
 }
@@ -2300,8 +2300,7 @@ function form_process_vertical_tabs($element, &$form_state) {
  */
 function theme_vertical_tabs($element) {
   // Add required JavaScript and Stylesheet.
-  drupal_add_js('misc/vertical-tabs.js', array('weight' => JS_DEFAULT - 1));
-  drupal_add_css('misc/vertical-tabs.css');
+  drupal_add_library('system', 'vertical-tabs');
 
   return '<div class="vertical-tabs-panes">' . $element['#children'] . '</div>';
 }
