@@ -3,9 +3,6 @@
 List of maintainers
 --------------------------------------------------------------------------------
 
-BLOG API
-James Walker 'walkah' <http://drupal.org/user/1531>
-
 DATABASE SYSTEM
 Larry Garfield 'Crell' <http://drupal.org/user/26398>
 

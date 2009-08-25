@@ -164,6 +164,8 @@ Drupal 7.0, xxxx-xx-xx (development version)
       experience.
 - Better module version support.
     * Modules now can specify which version of another module they depend on.
+- Blog API
+    * This module has been removed from core.
 - Improved node access control system.
     * All modules may now influence the access to a node at runtime, not just
       the module that defined a node.
