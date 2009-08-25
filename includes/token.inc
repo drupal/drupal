@@ -238,7 +238,7 @@ function token_info() {
  * Load modulename.tokens.inc for all enabled modules.
  */
 function _token_initialize() {
-  $initialized = drupal_static(__FUNCTION__);
+  $initialized = &drupal_static(__FUNCTION__);
   if (!$initialized) {
     foreach (module_list() as $module) {
       $filename = DRUPAL_ROOT . '/' . drupal_get_path('module', $module) . "/$module.tokens.inc";
