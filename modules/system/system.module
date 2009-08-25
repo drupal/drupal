@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.771 2009/08/25 10:07:19 dries Exp $
+// $Id: system.module,v 1.772 2009/08/25 16:33:43 webchick Exp $
 
 /**
  * @file
@@ -795,15 +795,7 @@ function system_menu() {
     'access arguments' => array('administer site configuration'),
     'file' => 'system.admin.inc',
   );
-  $items['admin/settings/performance'] = array(
-    'title' => 'Performance',
-    'description' => 'Enable or disable page caching for anonymous users and set CSS and JS bandwidth optimization options.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_performance_settings'),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'system.admin.inc',
-  );
-    $items['admin/config/development/logging'] = array(
+  $items['admin/config/development/logging'] = array(
     'title' => 'Logging and errors',
     'description' => "Settings for logging and alerts modules. Various modules can route Drupal's system events to different destinations, such as syslog, database, email, etc.",
     'page callback' => 'drupal_get_form',
