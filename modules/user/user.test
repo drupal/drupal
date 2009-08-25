@@ -479,7 +479,7 @@ class UserCancelTestCase extends DrupalWebTestCase {
     $test_node = node_load($node->nid, NULL, TRUE);
     $this->assertTrue(($test_node->uid == 0 && $test_node->status == 1), t('Node of the user has been attributed to anonymous user.'));
     $test_node = node_load($revision_node->nid, $revision, TRUE);
-    $this->assertTrue(($test_node->uid == 0 && $test_node->status == 1), t('Node revision of the user has been attributed to anonymous user.'));
+    $this->assertTrue(($test_node->revision_uid == 0 && $test_node->status == 1), t('Node revision of the user has been attributed to anonymous user.'));
     $test_node = node_load($revision_node->nid, NULL, TRUE);
     $this->assertTrue(($test_node->uid != 0 && $test_node->status == 1), t("Current revision of the user's node was not attributed to anonymous user."));
 

@@ -799,21 +799,25 @@ function node_load_multiple($nids = array(), $conditions = array(), $reset = FAL
 
     // The columns vid, title, status, comment, promote, moderate, and sticky
     // are all provided by node_revision, so remove them.
-    foreach (array('vid', 'title', 'status', 'comment', 'promote', 'moderate', 'sticky') as $column) {
-      unset($node_fields[$column]);
-    }
+    $node_fields = array_diff($node_fields, array('vid', 'title', 'status', 'comment', 'promote', 'moderate', 'sticky'));
     $query->fields('n', $node_fields);
 
     // Add all fields from the {node_revision} table.
     $node_revision_fields = drupal_schema_fields_sql('node_revision');
 
-    // nid is provided by node, so remove it.
-    unset($node_revision_fields['nid']);
-
-    // Change timestamp to revision_timestamp before adding it to the query.
-    unset($node_revision_fields['timestamp']);
-    $query->addField('r', 'timestamp', 'revision_timestamp');
+    // {node_revision}.nid is provided by node, and {node_revision}.uid and
+    // {node_revision}.timestamp will be added with aliases, so remove them
+    // before adding to the query.
+    $node_revision_fields = array_diff($node_revision_fields, array('nid', 'uid', 'timestamp'));
     $query->fields('r', $node_revision_fields);
+
+    // Add {node_revision}.uid with alias revision_uid to avoid the name
+    // collision with {node}.uid, otherwise the revision author would be loaded
+    // as $node->uid.
+    $query->addField('r', 'uid', 'revision_uid');
+
+    // Add {node_revision}.timestamp with alias revision_timestamp for clarity.
+    $query->addField('r', 'timestamp', 'revision_timestamp');
 
     if ($nids) {
       $query->condition('n.nid', $nids, 'IN');

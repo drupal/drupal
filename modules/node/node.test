@@ -219,6 +219,29 @@ class PageEditTestCase extends DrupalWebTestCase {
     // Check that the title and body fields are displayed with the updated values.
     $this->assertText($edit['title'], t('Title displayed.'));
     $this->assertText($edit[$body_key], t('Body displayed.'));
+
+    // Login as a second administrator user.
+    $second_web_user = $this->drupalCreateUser(array('administer nodes', 'edit any page content'));
+    $this->drupalLogin($second_web_user);
+    // Edit the same node, creating a new revision.
+    $this->drupalGet("node/$node->nid/edit");
+    $edit = array();
+    $edit['title'] = $this->randomName(8);
+    $edit[$body_key] = $this->randomName(16);
+    $edit['revision'] = TRUE;
+    $this->drupalPost(NULL, $edit, t('Save'));
+
+    // Ensure that the node revision has been created.
+    $revised_node = $this->drupalGetNodeByTitle($edit['title']);
+    $this->assertNotIdentical($node->vid, $revised_node->vid, 'A new revision has been created.');
+    // Ensure that the node author is preserved when it was not changed in the
+    // edit form.
+    $this->assertIdentical($node->uid, $revised_node->uid, 'The node author has been preserved.');
+    // Ensure that the revision authors are different since the revisions were
+    // made by different users.
+    $first_node_version = node_load($node->nid, $node->vid);
+    $second_node_version = node_load($node->nid, $revised_node->vid);
+    $this->assertNotIdentical($first_node_version->revision_uid, $second_node_version->revision_uid, 'Each revision has a distinct user.');
   }
 }
 
