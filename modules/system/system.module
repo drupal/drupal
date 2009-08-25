@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.773 2009/08/25 21:16:31 webchick Exp $
+// $Id: system.module,v 1.774 2009/08/25 21:53:48 dries Exp $
 
 /**
  * @file
@@ -263,6 +263,22 @@ function system_rdf_namespaces() {
     'rss'      => 'http://purl.org/rss/1.0/',
     'sioc'     => 'http://rdfs.org/sioc/ns#',
     'xsd'      => 'http://www.w3.org/2001/XMLSchema',
+  );
+}
+
+/**
+ * Implement hook_entity_info().
+ */
+function system_entity_info() {
+  return array(
+    'file' => array(
+      'label' => t('File'),
+      'base table' => 'file',
+      'object keys' => array(
+        'id' => 'fid',
+      ),
+      'static cache' => FALSE,
+    ),
   );
 }
 
