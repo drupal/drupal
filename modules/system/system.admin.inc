@@ -211,7 +211,8 @@ function system_themes_form() {
     $screenshot = NULL;
     // Create a list which includes the current theme and all its base themes.
     if (isset($themes[$theme->name]->base_themes)) {
-      $theme_keys = array_keys($themes[$theme->name]->base_themes) + array($theme->name);
+      $theme_keys = array_keys($themes[$theme->name]->base_themes);
+      $theme_keys[] = $theme->name;
     }
     else {
       $theme_keys = array($theme->name);
