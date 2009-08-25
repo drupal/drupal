@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.769 2009/08/24 22:03:01 webchick Exp $
+// $Id: system.module,v 1.770 2009/08/25 09:53:28 dries Exp $
 
 /**
  * @file
@@ -657,18 +657,6 @@ function system_menu() {
     'title' => 'Uninstall',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
-    'file' => 'system.admin.inc',
-  );
-
-  // Development menu category.
-  $items['admin/development'] = array(
-    'title' => 'Development',
-    'description' => 'Development tools.',
-    'position' => 'right',
-    'weight' => -7,
-    'page callback' => 'system_admin_menu_block_page',
-    'access callback' => 'system_admin_menu_block_access',
-    'access arguments' => array('admin/development', 'access administration pages'),
     'file' => 'system.admin.inc',
   );
 
