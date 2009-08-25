@@ -434,45 +434,40 @@ function filter_list_format($format) {
  *   elsewhere to avoid duplicate cache lookups and storage.
  */
 function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $cache = TRUE) {
-  if (isset($text)) {
-    $format = filter_resolve_format($format);
+  $format = filter_resolve_format($format);
 
-    // Check for a cached version of this piece of text.
-    $cache_id = $format . ':' . $langcode . ':' . md5($text);
-    if ($cache && $cached = cache_get($cache_id, 'cache_filter')) {
-      return $cached->data;
-    }
+  // Check for a cached version of this piece of text.
+  $cache_id = $format . ':' . $langcode . ':' . md5($text);
+  if ($cache && $cached = cache_get($cache_id, 'cache_filter')) {
+    return $cached->data;
+  }
 
-    // Convert all Windows and Mac newlines to a single newline,
-    // so filters only need to deal with one possibility.
-    $text = str_replace(array("\r\n", "\r"), "\n", $text);
+  // Convert all Windows and Mac newlines to a single newline, so filters only
+  // need to deal with one possibility.
+  $text = str_replace(array("\r\n", "\r"), "\n", $text);
 
-    // Get a complete list of filters, ordered properly.
-    $filters = filter_list_format($format);
+  // Get a complete list of filters, ordered properly.
+  $filters = filter_list_format($format);
 
-    // Give filters the chance to escape HTML-like data such as code or formulas.
-    foreach ($filters as $filter) {
-      $filter_info = module_invoke($filter->module, 'filter_info');
-      if (isset($filter_info[$filter->name]['prepare callback']) && function_exists($filter_info[$filter->name]['prepare callback'])) {
-        $text = call_user_func($filter_info[$filter->name]['prepare callback'], $text, $format, $langcode, $cache_id);
-      }
-    }
-
-    // Perform filtering.
-    foreach ($filters as $filter) {
-      $filter_info = module_invoke($filter->module, 'filter_info');
-      if (isset($filter_info[$filter->name]['process callback']) && function_exists($filter_info[$filter->name]['process callback'])) {
-        $text = call_user_func($filter_info[$filter->name]['process callback'], $text, $format, $langcode, $cache_id);
-      }
-    }
-
-    // Store in cache with a minimum expiration time of 1 day.
-    if ($cache && filter_format_allowcache($format)) {
-      cache_set($cache_id, $text, 'cache_filter', REQUEST_TIME + (60 * 60 * 24));
+  // Give filters the chance to escape HTML-like data such as code or formulas.
+  foreach ($filters as $filter) {
+    $filter_info = module_invoke($filter->module, 'filter_info');
+    if (isset($filter_info[$filter->name]['prepare callback']) && function_exists($filter_info[$filter->name]['prepare callback'])) {
+      $text = call_user_func($filter_info[$filter->name]['prepare callback'], $text, $format, $langcode, $cache_id);
     }
   }
-  else {
-    $text = t('n/a');
+
+  // Perform filtering.
+  foreach ($filters as $filter) {
+    $filter_info = module_invoke($filter->module, 'filter_info');
+    if (isset($filter_info[$filter->name]['process callback']) && function_exists($filter_info[$filter->name]['process callback'])) {
+      $text = call_user_func($filter_info[$filter->name]['process callback'], $text, $format, $langcode, $cache_id);
+    }
+  }
+
+  // Store in cache with a minimum expiration time of 1 day.
+  if ($cache && filter_format_allowcache($format)) {
+    cache_set($cache_id, $text, 'cache_filter', REQUEST_TIME + (60 * 60 * 24));
   }
 
   return $text;
