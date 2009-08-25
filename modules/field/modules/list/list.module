@@ -1,5 +1,5 @@
 <?php
-// $Id: list.module,v 1.12 2009/08/24 00:14:20 webchick Exp $
+// $Id: list.module,v 1.13 2009/08/25 16:38:51 webchick Exp $
 
 /**
  * @file
@@ -142,7 +142,7 @@ function list_field_settings_form($field, $instance) {
  * Create an array of allowed values for this field.
  */
 function list_allowed_values($field) {
-  $allowed_values = drupal_static(__FUNCTION__, array());
+  $allowed_values = &drupal_static(__FUNCTION__, array());
 
   if (isset($allowed_values[$field['field_name']])) {
     return $allowed_values[$field['field_name']];

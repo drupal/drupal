@@ -1,5 +1,5 @@
 <?php
-// $Id: field_test.module,v 1.16 2009/08/22 00:58:54 webchick Exp $
+// $Id: field_test.module,v 1.17 2009/08/25 16:38:51 webchick Exp $
 
 define('FIELD_TEST_ELEMENT_ID', 1);
 define('FIELD_TEST_BUNDLE', 'test_bundle');
@@ -669,7 +669,7 @@ function field_test_fieldable_info_translatable($obj_type = NULL, $translatable 
  *   for that key.
  */
 function field_test_memorize($key = NULL, $value = NULL) {
-  $memorize =& drupal_static(__FUNCTION__, NULL);
+  $memorize = &drupal_static(__FUNCTION__, NULL);
 
   if (is_null($key)) {
     $ret = $memorize;
