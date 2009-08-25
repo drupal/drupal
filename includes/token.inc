@@ -1,5 +1,5 @@
 <?php
-// $Id: token.inc,v 1.4 2009/08/24 00:14:19 webchick Exp $
+// $Id: token.inc,v 1.5 2009/08/25 02:50:08 webchick Exp $
 
 /**
  * @file
@@ -238,7 +238,7 @@ function token_info() {
  * Load modulename.tokens.inc for all enabled modules.
  */
 function _token_initialize() {
-  $initialized = drupal_static(__FUNCTION__);
+  $initialized = &drupal_static(__FUNCTION__);
   if (!$initialized) {
     foreach (module_list() as $module) {
       $filename = DRUPAL_ROOT . '/' . drupal_get_path('module', $module) . "/$module.tokens.inc";
