@@ -1,5 +1,5 @@
 <?php
-// $Id: node.admin.inc,v 1.63 2009/08/23 04:37:52 webchick Exp $
+// $Id: node.admin.inc,v 1.64 2009/08/25 10:27:14 dries Exp $
 
 /**
  * @file
@@ -451,7 +451,7 @@ function node_admin_nodes() {
     $form['name'][$node->nid] =  array('#markup' => check_plain(node_type_get_name($node)));
     $form['username'][$node->nid] = array('#markup' => theme('username', $node));
     $form['status'][$node->nid] =  array('#markup' => ($node->status ? t('published') : t('not published')));
-    $form['changed'][$node->nid] = array('#markup' => format_date($node->changed, 'small'));
+    $form['changed'][$node->nid] = array('#markup' => format_date($node->changed, 'short'));
     if ($multilanguage) {
       $form['language'][$node->nid] = array('#markup' => empty($node->language) ? t('Language neutral') : t($languages[$node->language]->name));
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.pages.inc,v 1.10 2009/07/29 06:39:34 dries Exp $
+// $Id: search.pages.inc,v 1.11 2009/08/25 10:27:14 dries Exp $
 
 /**
  * @file
@@ -102,7 +102,7 @@ function template_preprocess_search_result(&$variables) {
     $info['user'] = $result['user'];
   }
   if (!empty($result['date'])) {
-    $info['date'] = format_date($result['date'], 'small');
+    $info['date'] = format_date($result['date'], 'short');
   }
   if (isset($result['extra']) && is_array($result['extra'])) {
     $info = array_merge($info, $result['extra']);

@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.pages.inc,v 1.15 2009/08/22 14:34:22 webchick Exp $
+// $Id: statistics.pages.inc,v 1.16 2009/08/25 10:27:15 dries Exp $
 
 /**
  * @file
@@ -31,7 +31,7 @@ function statistics_node_tracker() {
     $rows = array();
     foreach ($result as $log) {
       $rows[] = array(
-        array('data' => format_date($log->timestamp, 'small'), 'class' => array('nowrap')),
+        array('data' => format_date($log->timestamp, 'short'), 'class' => array('nowrap')),
         _statistics_link($log->url),
         theme('username', $log),
         l(t('details'), "admin/reports/access/$log->aid"),
@@ -74,7 +74,7 @@ function statistics_user_tracker() {
     $rows = array();
     foreach ($result as $log) {
       $rows[] = array(
-        array('data' => format_date($log->timestamp, 'small'), 'class' => array('nowrap')),
+        array('data' => format_date($log->timestamp, 'short'), 'class' => array('nowrap')),
         _statistics_format_item($log->title, $log->path),
         l(t('details'), "admin/reports/access/$log->aid"));
     }
