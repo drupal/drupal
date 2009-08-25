@@ -669,7 +669,7 @@ function field_test_fieldable_info_translatable($obj_type = NULL, $translatable 
  *   for that key.
  */
 function field_test_memorize($key = NULL, $value = NULL) {
-  $memorize =& drupal_static(__FUNCTION__, NULL);
+  $memorize = &drupal_static(__FUNCTION__, NULL);
 
   if (is_null($key)) {
     $ret = $memorize;
