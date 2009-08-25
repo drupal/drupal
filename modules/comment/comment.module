@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.759 2009/08/24 00:14:19 webchick Exp $
+// $Id: comment.module,v 1.760 2009/08/25 10:41:22 dries Exp $
 
 /**
  * @file
@@ -2445,5 +2445,5 @@ function comment_ranking() {
  */
 function comment_menu_alter(&$items) {
   // Add comments to the description for admin/content.
-  $items['admin/content/content']['description'] = "View, edit, and delete your site's content and comments.";
+  $items['admin/content']['description'] = "View, edit, and delete your site's content and comments.";
 }
