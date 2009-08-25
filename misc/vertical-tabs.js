@@ -1,4 +1,4 @@
-// $Id: vertical-tabs.js,v 1.5 2009/05/31 00:51:41 webchick Exp $
+// $Id: vertical-tabs.js,v 1.6 2009/08/25 13:30:54 dries Exp $
 
 (function ($) {
 
@@ -55,17 +55,17 @@ Drupal.behaviors.verticalTabs = {
  *   - fieldset: The jQuery object of the fieldset that is the tab pane.
  */
 Drupal.verticalTab = function (settings) {
-  var that = this;
+  var self = this;
   $.extend(this, settings, Drupal.theme('verticalTab', settings));
 
   this.link.click(function () {
-    that.focus();
+    self.focus();
     return false;
   });
 
   this.fieldset
     .bind('summaryUpdated', function () {
-      that.updateSummary();
+      self.updateSummary();
     })
     .trigger('summaryUpdated');
 };
