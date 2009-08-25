@@ -29,7 +29,7 @@ function statistics_recent_hits() {
   $rows = array();
   foreach ($result as $log) {
     $rows[] = array(
-      array('data' => format_date($log->timestamp, 'small'), 'class' => array('nowrap')),
+      array('data' => format_date($log->timestamp, 'short'), 'class' => array('nowrap')),
       _statistics_format_item($log->title, $log->path),
       theme('username', $log),
       l(t('details'), "admin/reports/access/$log->aid"));
@@ -221,7 +221,7 @@ function statistics_access_log($aid) {
     );
     $rows[] = array(
       array('data' => t('Date'), 'header' => TRUE),
-      format_date($access->timestamp, 'large')
+      format_date($access->timestamp, 'long')
     );
     $rows[] = array(
       array('data' => t('User'), 'header' => TRUE),

@@ -31,7 +31,7 @@ function statistics_node_tracker() {
     $rows = array();
     foreach ($result as $log) {
       $rows[] = array(
-        array('data' => format_date($log->timestamp, 'small'), 'class' => array('nowrap')),
+        array('data' => format_date($log->timestamp, 'short'), 'class' => array('nowrap')),
         _statistics_link($log->url),
         theme('username', $log),
         l(t('details'), "admin/reports/access/$log->aid"),
@@ -74,7 +74,7 @@ function statistics_user_tracker() {
     $rows = array();
     foreach ($result as $log) {
       $rows[] = array(
-        array('data' => format_date($log->timestamp, 'small'), 'class' => array('nowrap')),
+        array('data' => format_date($log->timestamp, 'short'), 'class' => array('nowrap')),
         _statistics_format_item($log->title, $log->path),
         l(t('details'), "admin/reports/access/$log->aid"));
     }

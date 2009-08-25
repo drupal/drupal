@@ -54,17 +54,17 @@ function system_token_info() {
   );
 
   // Date related tokens.
-  $date['small'] = array(
-    'name' => t("Small format"),
-    'description' => t("A date in 'small' format. (%date)", array('%date' => format_date(REQUEST_TIME, 'small'))),
+  $date['short'] = array(
+    'name' => t("Short format"),
+    'description' => t("A date in 'short' format. (%date)", array('%date' => format_date(REQUEST_TIME, 'short'))),
   );
   $date['medium'] = array(
     'name' => t("Medium format"),
     'description' => t("A date in 'medium' format. (%date)", array('%date' => format_date(REQUEST_TIME, 'medium'))),
   );
-  $date['large'] = array(
-    'name' => t("Large format"),
-    'description' => t("A date in 'large' format. (%date)", array('%date' => format_date(REQUEST_TIME, 'large'))),
+  $date['long'] = array(
+    'name' => t("Long format"),
+    'description' => t("A date in 'long' format. (%date)", array('%date' => format_date(REQUEST_TIME, 'long'))),
   );
   $date['custom'] = array(
     'name' => t("Custom format"),
@@ -203,16 +203,16 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
           $replacements[$original] = filter_xss($date);
           break;
 
-        case 'small':
-          $replacements[$original] = format_date($date, 'small', '', NULL, $langcode);
+        case 'short':
+          $replacements[$original] = format_date($date, 'short', '', NULL, $langcode);
           break;
 
         case 'medium':
           $replacements[$original] = format_date($date, 'medium', '', NULL, $langcode);
           break;
 
-        case 'large':
-          $replacements[$original] = format_date($date, 'large', '', NULL, $langcode);
+        case 'long':
+          $replacements[$original] = format_date($date, 'long', '', NULL, $langcode);
           break;
 
         case 'since':

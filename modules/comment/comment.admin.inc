@@ -89,7 +89,7 @@ function comment_admin_overview($type = 'new', $arg) {
       'subject' => l($comment->subject, 'comment/' . $comment->cid, array('attributes' => array('title' => truncate_utf8($comment->comment, 128)), 'fragment' => 'comment-' . $comment->cid)),
       'author' => theme('username', $comment),
       'posted_in' => l($comment->node_title, 'node/' . $comment->nid),
-      'time' => format_date($comment->timestamp, 'small'),
+      'time' => format_date($comment->timestamp, 'short'),
       'operations' => l(t('edit'), 'comment/edit/' . $comment->cid, array('query' => $destination)),
     );
   }

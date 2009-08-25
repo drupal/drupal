@@ -64,7 +64,7 @@ function dblog_overview() {
         // Cells
         $icons[$dblog->severity],
         t($dblog->type),
-        format_date($dblog->timestamp, 'small'),
+        format_date($dblog->timestamp, 'short'),
         l(truncate_utf8(_dblog_format_message($dblog), 56, TRUE, TRUE), 'admin/reports/event/' . $dblog->wid, array('html' => TRUE)),
         theme('username', $dblog),
         $dblog->link,
@@ -148,7 +148,7 @@ function dblog_event($id) {
       ),
       array(
         array('data' => t('Date'), 'header' => TRUE),
-        format_date($dblog->timestamp, 'large'),
+        format_date($dblog->timestamp, 'long'),
       ),
       array(
         array('data' => t('User'), 'header' => TRUE),

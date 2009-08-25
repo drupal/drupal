@@ -1946,14 +1946,14 @@ function format_interval($timestamp, $granularity = 2, $langcode = NULL) {
 /**
  * Format a date with the given configured format or a custom format string.
  *
- * Drupal allows administrators to select formatting strings for 'small',
- * 'medium' and 'large' date formats. This function can handle these formats,
+ * Drupal allows administrators to select formatting strings for 'short',
+ * 'medium' and 'long' date formats. This function can handle these formats,
  * as well as any custom format.
  *
  * @param $timestamp
  *   The exact date to format, as a UNIX timestamp.
  * @param $type
- *   The format to use. Can be "small", "medium" or "large" for the preconfigured
+ *   The format to use. Can be "short", "medium" or "long" for the preconfigured
  *   date formats. If "custom" is specified, then $format is required as well.
  * @param $format
  *   A PHP date format string as required by date(). A backslash should be used
@@ -1991,10 +1991,10 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   }
 
   switch ($type) {
-    case 'small':
+    case 'short':
       $format = variable_get('date_format_short', 'm/d/Y - H:i');
       break;
-    case 'large':
+    case 'long':
       $format = variable_get('date_format_long', 'l, F j, Y - H:i');
       break;
     case 'custom':
