@@ -332,25 +332,23 @@ function filter_formats($index = NULL) {
 }
 
 /**
- * Build a list of all filters.
+ * Return a list of all filters provided by modules.
  */
-function filter_list_all() {
-  $filters = array();
+function filter_get_filters() {
+  $filters = &drupal_static(__FUNCTION__, array());
 
-  foreach (module_implements('filter_info') as $module) {
-    $function = $module . '_filter_info';
-    $info = $function('list');
-    if (isset($info) && is_array($info)) {
-      foreach ($info as $name => $filter) {
-        $filters[$module . '/' . $name] = (object)($filter + array(
-          'module' => $module,
-          'name' => $name,
-        ));
+  if (empty($filters)) {
+    foreach (module_implements('filter_info') as $module) {
+      $info = module_invoke($module, 'filter_info');
+      if (isset($info) && is_array($info)) {
+        $filters = array_merge($filters, $info);
       }
     }
-  }
+    // Allow modules to alter filter definitions.
+    drupal_alter('filter_info', $filters);
 
-  uasort($filters, '_filter_list_cmp');
+    uasort($filters, '_filter_list_cmp');
+  }
 
   return $filters;
 }
@@ -359,7 +357,7 @@ function filter_list_all() {
  * Helper function for sorting the filter list by filter name.
  */
 function _filter_list_cmp($a, $b) {
-  return strcmp($a->name, $b->name);
+  return strcmp($a['title'], $b['title']);
 }
 
 /**
@@ -385,15 +383,15 @@ function filter_format_allowcache($format) {
  */
 function filter_list_format($format) {
   static $filters = array();
+  $filter_info = filter_get_filters();
 
   if (!isset($filters[$format])) {
     $filters[$format] = array();
     $result = db_query("SELECT * FROM {filter} WHERE format = :format ORDER BY weight, module, name", array(':format' => (int) $format));
     foreach ($result as $filter) {
-      $info = module_invoke($filter->module, 'filter_info');
-      if (isset($info) && is_array($info) && isset($info[$filter->name])) {
-        $filter->title = $info[$filter->name]['title'];
-        $filters[$format][$filter->module . '/' . $filter->name] = $filter;
+      if (isset($filter_info[$filter->name])) {
+        $filter->title = $filter_info[$filter->name]['title'];
+        $filters[$format][$filter->name] = $filter;
       }
     }
   }
@@ -448,20 +446,19 @@ function check_markup($text, $format = FILTER_FORMAT_DEFAULT, $langcode = '', $c
 
   // Get a complete list of filters, ordered properly.
   $filters = filter_list_format($format);
+  $filter_info = filter_get_filters();
 
   // Give filters the chance to escape HTML-like data such as code or formulas.
-  foreach ($filters as $filter) {
-    $filter_info = module_invoke($filter->module, 'filter_info');
-    if (isset($filter_info[$filter->name]['prepare callback']) && function_exists($filter_info[$filter->name]['prepare callback'])) {
-      $text = call_user_func($filter_info[$filter->name]['prepare callback'], $text, $format, $langcode, $cache_id);
+  foreach ($filters as $name => $filter) {
+    if (isset($filter_info[$name]['prepare callback']) && function_exists($filter_info[$name]['prepare callback'])) {
+      $text = call_user_func($filter_info[$name]['prepare callback'], $text, $format, $langcode, $cache_id);
     }
   }
 
   // Perform filtering.
-  foreach ($filters as $filter) {
-    $filter_info = module_invoke($filter->module, 'filter_info');
-    if (isset($filter_info[$filter->name]['process callback']) && function_exists($filter_info[$filter->name]['process callback'])) {
-      $text = call_user_func($filter_info[$filter->name]['process callback'], $text, $format, $langcode, $cache_id);
+  foreach ($filters as $name => $filter) {
+    if (isset($filter_info[$name]['process callback']) && function_exists($filter_info[$name]['process callback'])) {
+      $text = call_user_func($filter_info[$name]['process callback'], $text, $format, $langcode, $cache_id);
     }
   }
 
@@ -554,6 +551,7 @@ function filter_access($format) {
  */
 function _filter_tips($format, $long = FALSE) {
   $formats = filter_formats();
+  $filter_info = filter_get_filters();
 
   $tips = array();
 
@@ -564,13 +562,11 @@ function _filter_tips($format, $long = FALSE) {
 
   foreach ($formats as $format) {
     $filters = filter_list_format($format->format);
-
     $tips[$format->name] = array();
-    foreach ($filters as $id => $filter) {
-      $filter_info = module_invoke($filter->module, 'filter_info');
-      if (isset($filter_info[$filter->name]['tips callback']) && function_exists($filter_info[$filter->name]['tips callback'])) {
-        $tip = call_user_func($filter_info[$filter->name]['tips callback'],$format->format, $long);
-        $tips[$format->name][] = array('tip' => $tip, 'id' => $id);
+    foreach ($filters as $name => $filter) {
+      if (isset($filter_info[$name]['tips callback']) && function_exists($filter_info[$name]['tips callback'])) {
+        $tip = call_user_func($filter_info[$name]['tips callback'],$format->format, $long);
+        $tips[$format->name][] = array('tip' => $tip, 'id' => $name);
       }
     }
   }

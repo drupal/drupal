@@ -47,8 +47,8 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 
     // Reorder filters.
     $edit = array();
-    $edit['weights[filter/' . $second_filter . ']'] = 1;
-    $edit['weights[filter/' . $first_filter . ']'] = 2;
+    $edit['weights[' . $second_filter . ']'] = 1;
+    $edit['weights[' . $first_filter . ']'] = 2;
     $this->drupalPost('admin/settings/formats/' . $filtered . '/order', $edit, t('Save configuration'));
     $this->assertText(t('The filter ordering has been saved.'), t('Order saved successfully.'));
 
@@ -65,8 +65,8 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $edit = array();
     $edit['name'] = $this->randomName();
     $edit['roles[2]'] = TRUE;
-    $edit['filters[filter/' . $second_filter . ']'] = TRUE;
-    $edit['filters[filter/' . $first_filter . ']'] = TRUE;
+    $edit['filters[' . $second_filter . ']'] = TRUE;
+    $edit['filters[' . $first_filter . ']'] = TRUE;
     $this->drupalPost('admin/settings/formats/add', $edit, t('Save configuration'));
     $this->assertRaw(t('Added text format %format.', array('%format' => $edit['name'])), t('New filter created.'));
 
@@ -74,10 +74,9 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->assertNotNull($format, t('Format found in database.'));
 
     if ($format !== NULL) {
-    	debug($format);
       $this->assertFieldByName('roles[2]', '', t('Role found.'));
-      $this->assertFieldByName('filters[filter/' . $second_filter . ']', '', t('Line break filter found.'));
-      $this->assertFieldByName('filters[filter/' . $first_filter . ']', '', t('Url filter found.'));
+      $this->assertFieldByName('filters[' . $second_filter . ']', '', t('Line break filter found.'));
+      $this->assertFieldByName('filters[' . $first_filter . ']', '', t('Url filter found.'));
 
       // Delete new filter.
       $this->drupalPost('admin/settings/formats/delete/' . $format->format, array(), t('Delete'));
@@ -142,8 +141,8 @@ class FilterAdminTestCase extends DrupalWebTestCase {
 
     // Filter order.
     $edit = array();
-    $edit['weights[filter/' . $second_filter . ']'] = 2;
-    $edit['weights[filter/' . $first_filter . ']'] = 1;
+    $edit['weights[' . $second_filter . ']'] = 2;
+    $edit['weights[' . $first_filter . ']'] = 1;
     $this->drupalPost('admin/settings/formats/' . $filtered . '/order', $edit, t('Save configuration'));
     $this->assertText(t('The filter ordering has been saved.'), t('Order successfully reverted.'));
   }

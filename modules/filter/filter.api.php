@@ -104,5 +104,18 @@ function hook_filter_info() {
 }
 
 /**
+ * Perform alterations on filter definitions.
+ *
+ * @param $info
+ *   Array of information on filters exposed by hook_filter_info()
+ *   implementations.
+ */
+function hook_filter_info_alter(&$info) {
+  // Replace the PHP evaluator process callback with an improved 
+  // PHP evaluator provided by a module.
+  $info['php_code']['process callback'] = 'my_module_php_evaluator';
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

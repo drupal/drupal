@@ -143,7 +143,7 @@ function filter_admin_format_form(&$form_state, $format) {
     }
   }
   // Table with filters
-  $all = filter_list_all();
+  $filter_info = filter_get_filters();
   $enabled = filter_list_format($format->format);
 
   $form['filters'] = array('#type' => 'fieldset',
@@ -151,12 +151,12 @@ function filter_admin_format_form(&$form_state, $format) {
     '#description' => t('Choose the filters that will be used in this text format.'),
     '#tree' => TRUE,
   );
-  foreach ($all as $id => $filter) {
-    $filter_info = module_invoke($filter->module, 'filter_info');
-    $form['filters'][$id] = array('#type' => 'checkbox',
-      '#title' => $filter->title,
-      '#default_value' => isset($enabled[$id]),
-      '#description' => $filter_info[$filter->name]['description'],
+  foreach ($filter_info as $name => $filter) {
+    $form['filters'][$name] = array(
+      '#type' => 'checkbox',
+      '#title' => $filter['title'],
+      '#default_value' => isset($enabled[$name]),
+      '#description' => $filter['description'],
     );
   }
   if (!empty($format->format)) {
@@ -185,8 +185,8 @@ function filter_admin_format_form(&$form_state, $format) {
  */
 function filter_admin_format_form_validate($form, &$form_state) {
   if (!isset($form_state['values']['format'])) {
-    $name = trim($form_state['values']['name']);
-    $result = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $name))->fetchField();
+    $format_name = trim($form_state['values']['name']);
+    $result = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $format_name))->fetchField();
     if ($result) {
       form_set_error('name', t('Text format names must be unique. A format named %name already exists.', array('%name' => $format_name)));
     }
@@ -199,17 +199,17 @@ function filter_admin_format_form_validate($form, &$form_state) {
 function filter_admin_format_form_submit($form, &$form_state) {
   $format = isset($form_state['values']['format']) ? $form_state['values']['format'] : NULL;
   $current = filter_list_format($format);
-  $name = trim($form_state['values']['name']);
+  $format_name = trim($form_state['values']['name']);
   $cache = TRUE;
 
   // Add a new text format.
   if (!$format) {
     $new = TRUE;
     db_insert('filter_format')
-      ->fields(array('name' => $name))
+      ->fields(array('name' => $format_name))
       ->execute();
     $format = db_query("SELECT MAX(format) AS format FROM {filter_format}")->fetchField();
-    drupal_set_message(t('Added text format %format.', array('%format' => $name)));
+    drupal_set_message(t('Added text format %format.', array('%format' => $format_name)));
   }
   else {
     drupal_set_message(t('The text format settings have been updated.'));
@@ -217,20 +217,16 @@ function filter_admin_format_form_submit($form, &$form_state) {
   db_delete('filter')
     ->condition('format', $format)
     ->execute();
-  $query = db_insert('filter')->fields(array('format', 'module', 'name', 'weight'));
-  foreach ($form_state['values']['filters'] as $id => $checked) {
+  $query = db_insert('filter')->fields(array('format', 'name', 'weight'));
+  foreach ($form_state['values']['filters'] as $name => $checked) {
     if ($checked) {
-      list($module, $filter_name) = explode('/', $id);
       // Add new filters to the bottom.
-      $weight = isset($current[$id]->weight) ? $current[$id]->weight : 10;
+      $weight = isset($current[$name]->weight) ? $current[$name]->weight : 10;
       $query->values(array(
         'format' => $format,
-        'module' => $module,
-        'name'  => $filter_name,
+        'name'  => $name,
         'weight' => $weight,
       ));
-      // Check if there are any 'no cache' filters.
-      $cache &= !module_invoke($module, 'filter', 'no cache', $filter_name);
     }
     $query->execute();
   }
@@ -256,7 +252,7 @@ function filter_admin_format_form_submit($form, &$form_state) {
   db_update('filter_format')
     ->fields(array(
       'cache' => $cache,
-      'name'  => $name,
+      'name'  => $format_name,
       'roles' => $roles,
     ))
     ->condition('format', $format)
@@ -349,11 +345,11 @@ function filter_admin_configure_page($format) {
  */
 function filter_admin_configure(&$form_state, $format) {
   $list = filter_list_format($format->format);
+  $filter_info = filter_get_filters();
   $form = array();
-  foreach ($list as $filter) {
-    $filter_info = module_invoke($filter->module, 'filter_info');
-    if (isset($filter_info[$filter->name]['settings callback']) && function_exists($filter_info[$filter->name]['settings callback'])) {
-      $form_module = call_user_func($filter_info[$filter->name]['settings callback'], $format->format);
+  foreach ($list as $name => $filter) {
+    if (isset($filter_info[$name]['settings callback']) && function_exists($filter_info[$name]['settings callback'])) {
+      $form_module = call_user_func($filter_info[$name]['settings callback'], $format->format);
     }
     if (isset($form_module) && is_array($form_module)) {
       $form = array_merge($form, $form_module);
@@ -399,7 +395,7 @@ function filter_admin_order(&$form_state, $format = NULL) {
 
   $form['weights'] = array('#tree' => TRUE);
   foreach ($filters as $id => $filter) {
-    $form['names'][$id] = array('#markup' => $filter->name);
+    $form['names'][$id] = array('#markup' => $filter->title);
     $form['weights'][$id] = array('#type' => 'weight', '#default_value' => $filter->weight);
   }
   $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
@@ -439,12 +435,10 @@ function theme_filter_admin_order($form) {
  * Process filter order configuration form submission.
  */
 function filter_admin_order_submit($form, &$form_state) {
-  foreach ($form_state['values']['weights'] as $id => $weight) {
-    list($module, $name) = explode('/', $id);
+  foreach ($form_state['values']['weights'] as $name => $weight) {
     db_update('filter')
       ->fields(array('weight' => $weight))
       ->condition('format', $form_state['values']['format'])
-      ->condition('module', $module)
       ->condition('name', $name)
       ->execute();
   }
