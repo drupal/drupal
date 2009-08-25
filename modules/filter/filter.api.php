@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.api.php,v 1.9 2009/08/13 19:53:19 dries Exp $
+// $Id: filter.api.php,v 1.10 2009/08/25 10:35:32 dries Exp $
 
 /**
  * @file
@@ -101,6 +101,19 @@ function hook_filter_info() {
     'process callback' => '_filter_autop',
     'tips callback' => '_filter_autop_tips'
   );
+}
+
+/**
+ * Perform alterations on filter definitions.
+ *
+ * @param $info
+ *   Array of information on filters exposed by hook_filter_info()
+ *   implementations.
+ */
+function hook_filter_info_alter(&$info) {
+  // Replace the PHP evaluator process callback with an improved 
+  // PHP evaluator provided by a module.
+  $info['php_code']['process callback'] = 'my_module_php_evaluator';
 }
 
 /**
