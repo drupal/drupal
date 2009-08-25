@@ -1,5 +1,5 @@
 <?php
-// $Id: common.test,v 1.68 2009/08/25 10:27:14 dries Exp $
+// $Id: common.test,v 1.69 2009/08/25 21:16:31 webchick Exp $
 
 /**
  * Tests for the l() function.
@@ -856,6 +856,20 @@ class JavaScriptTestCase extends DrupalWebTestCase {
     $this->assertFalse($result, t('Unknown library returned FALSE.'));
     $scripts = drupal_get_js();
     $this->assertTrue(strpos($scripts, 'unknown') === FALSE, t('Unknown library was not added to the page.'));
+  }
+
+  /**
+   * Tests the addition of libraries through the #attached_library property.
+   */
+  function testAttachedLibrary() {
+    $element = array(
+      '#attached_library' => array(
+        array('system', 'farbtastic'),
+      )
+    );
+    drupal_render($element);
+    $scripts = drupal_get_js();
+    $this->assertTrue(strpos($scripts, 'misc/farbtastic/farbtastic.js'), t('The attached_library property adds the additional libraries.'));
   }
 }
 

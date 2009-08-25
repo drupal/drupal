@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.772 2009/08/25 16:33:43 webchick Exp $
+// $Id: system.module,v 1.773 2009/08/25 21:16:31 webchick Exp $
 
 /**
  * @file
@@ -928,6 +928,19 @@ function system_library() {
     'version' => '2.16',
     'js' => array(
       'misc/jquery.form.js' => array(),
+    ),
+  );
+
+  // Vertical Tabs.
+  $libraries['vertical-tabs'] = array(
+    'title' => 'Vertical Tabs',
+    'website' => 'http://drupal.org/node/323112',
+    'version' => '1.0',
+    'js' => array(
+      'misc/vertical-tabs.js' => array(),
+    ),
+    'css' => array(
+      'misc/vertical-tabs.css' => array(),
     ),
   );
 
