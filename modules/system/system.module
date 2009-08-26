@@ -2208,7 +2208,8 @@ function _system_settings_form_automatic_defaults($form) {
  * @param $form
  *   An associative array containing the structure of the form.
  * @param $automatic_defaults
- *   Automatically load the saved values for each field from the system variables (defaults to TRUE).
+ *   Automatically load the saved values for each field from the system variables
+ *   (defaults to TRUE).
  * @return
  *   The form structure.
  */
