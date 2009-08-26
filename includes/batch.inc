@@ -1,5 +1,5 @@
 <?php
-// $Id: batch.inc,v 1.36 2009/06/02 06:58:15 dries Exp $
+// $Id: batch.inc,v 1.37 2009/08/26 15:00:17 dries Exp $
 
 
 /**
@@ -170,7 +170,7 @@ function _batch_progress_page_nojs() {
     // the error message.
     ob_start();
     $fallback = $current_set['error_message'] . '<br />' . $batch['error_message'];
-    $fallback = theme('maintenance_page', $fallback, FALSE, FALSE);
+    $fallback = theme('maintenance_page', $fallback, FALSE);
 
     // We strip the end of the page using a marker in the template, so any
     // additional HTML output by PHP shows up inside the page rather than below

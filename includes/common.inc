@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.976 2009/08/26 10:53:45 dries Exp $
+// $Id: common.inc,v 1.977 2009/08/26 15:00:17 dries Exp $
 
 /**
  * @file
@@ -912,7 +912,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
       drupal_set_title(t('Error'));
       // We fallback to a maintenance page at this point, because the page generation
       // itself can generate errors.
-      print theme('maintenance_page', t('The website encountered an unexpected error. Please try again later.'), FALSE);
+      print theme('maintenance_page', t('The website encountered an unexpected error. Please try again later.'));
       exit;
     }
   }
