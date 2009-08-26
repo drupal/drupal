@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.test,v 1.33 2009/08/25 10:35:32 dries Exp $
+// $Id: filter.test,v 1.34 2009/08/26 10:17:54 dries Exp $
 
 class FilterAdminTestCase extends DrupalWebTestCase {
   public static function getInfo() {
@@ -422,7 +422,7 @@ class FilterUnitTest extends DrupalWebTestCase {
    *   or better a whitelist approach should be used for that too.
    */
   function testFilter() {
-    $format = "fake format";
+    $format = 'fake_format';
 
     // HTML filter is not able to secure some tags, these should never be
     // allowed.
