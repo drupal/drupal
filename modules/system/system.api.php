@@ -1,5 +1,5 @@
 <?php
-// $Id: system.api.php,v 1.64 2009/08/25 21:53:48 dries Exp $
+// $Id: system.api.php,v 1.65 2009/08/26 03:09:12 webchick Exp $
 
 /**
  * @file
@@ -646,8 +646,8 @@ function hook_image_toolkits() {
  *     MIME-Version, Content-Type, etc.
  */
 function hook_mail_alter(&$message) {
-  if ($message['mail_id'] == 'my_message') {
-    $message['body'] .= "\n\n--\nMail sent out from " . variable_get('sitename', t('Drupal'));
+  if ($message['id'] == 'modulename_messagekey') {
+    $message['body'][] = "--\nMail sent out from " . variable_get('sitename', t('Drupal'));
   }
 }
 
