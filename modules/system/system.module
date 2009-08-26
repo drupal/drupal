@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.775 2009/08/26 03:01:06 webchick Exp $
+// $Id: system.module,v 1.776 2009/08/26 10:21:50 dries Exp $
 
 /**
  * @file
@@ -2208,7 +2208,8 @@ function _system_settings_form_automatic_defaults($form) {
  * @param $form
  *   An associative array containing the structure of the form.
  * @param $automatic_defaults
- *   Automatically load the saved values for each field from the system variables (defaults to TRUE).
+ *   Automatically load the saved values for each field from the system variables
+ *   (defaults to TRUE).
  * @return
  *   The form structure.
  */
