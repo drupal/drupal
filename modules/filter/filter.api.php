@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.api.php,v 1.11 2009/08/26 10:17:54 dries Exp $
+// $Id: filter.api.php,v 1.12 2009/08/26 10:28:45 dries Exp $
 
 /**
  * @file
@@ -115,6 +115,59 @@ function hook_filter_info_alter(&$info) {
   // Replace the PHP evaluator process callback with an improved
   // PHP evaluator provided by a module.
   $info['php_code']['process callback'] = 'my_module_php_evaluator';
+}
+
+/**
+ * Perform actions when a new text format has been created.
+ *
+ * @param $format
+ *   The format object of the format being updated.
+ *
+ * @see hook_filter_format_update().
+ * @see hook_filter_format_delete().
+ */
+function hook_filter_format_insert($format) {
+  mymodule_cache_rebuild();
+}
+
+/**
+ * Perform actions when a text format has been updated.
+ *
+ * This hook allows modules to act when a text format has been updated in any
+ * way. For example, when filters have been reconfigured, disabled, or
+ * re-arranged in the text format.
+ *
+ * @param $format
+ *   The format object of the format being updated.
+ *
+ * @see hook_filter_format_insert().
+ * @see hook_filter_format_delete().
+ */
+function hook_filter_format_update($format) {
+  mymodule_cache_rebuild();
+} 
+
+/**
+ * Perform actions when a text format has been deleted.
+ *
+ * It is recommended for modules to implement this hook, when they store
+ * references to text formats to replace existing references to the deleted
+ * text format with the default format.
+ *
+ * @param $format
+ *   The format object of the format being deleted.
+ * @param $default
+ *   The format object of the site's default format.
+ *
+ * @see hook_filter_format_update().
+ * @see hook_filter_format_delete().
+ */
+function hook_filter_format_delete($format, $default) {
+  // Replace the deleted format with the default format.
+  db_update('my_module_table')
+    ->fields(array('format' => $default->format))
+    ->condition('format', $format->format)
+    ->execute();
 }
 
 /**
