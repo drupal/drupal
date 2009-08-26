@@ -197,74 +197,24 @@ function filter_admin_format_form_validate($form, &$form_state) {
  * Process text format form submissions.
  */
 function filter_admin_format_form_submit($form, &$form_state) {
-  $format = isset($form_state['values']['format']) ? $form_state['values']['format'] : NULL;
-  $current = filter_list_format($format);
-  $format_name = trim($form_state['values']['name']);
-  $cache = TRUE;
+  $format = (object) $form_state['values'];
+  $format->format = isset($form_state['values']['format']) ? $form_state['values']['format'] : NULL;
+  $status = filter_format_save($format);
 
-  // Add a new text format.
-  if (!$format) {
-    $new = TRUE;
-    db_insert('filter_format')
-      ->fields(array('name' => $format_name))
-      ->execute();
-    $format = db_query("SELECT MAX(format) AS format FROM {filter_format}")->fetchField();
-    drupal_set_message(t('Added text format %format.', array('%format' => $format_name)));
-  }
-  else {
-    drupal_set_message(t('The text format settings have been updated.'));
-  }
-  db_delete('filter')
-    ->condition('format', $format)
-    ->execute();
-  $query = db_insert('filter')->fields(array('format', 'name', 'weight'));
-  foreach ($form_state['values']['filters'] as $name => $checked) {
-    if ($checked) {
-      // Add new filters to the bottom.
-      $weight = isset($current[$name]->weight) ? $current[$name]->weight : 10;
-      $query->values(array(
-        'format' => $format,
-        'name'  => $name,
-        'weight' => $weight,
-      ));
-    }
-    $query->execute();
-  }
-
-  // We store the roles as a string for ease of use.
-  // We should always set all roles to TRUE when saving a default role.
-  // We use leading and trailing comma's to allow easy substring matching.
-  $roles = array();
-  if (isset($form_state['values']['roles'])) {
-    foreach ($form_state['values']['roles'] as $id => $checked) {
-      if ($checked) {
-        $roles[] = $id;
-      }
-    }
-  }
-  if (!empty($form_state['values']['default_format'])) {
-    $roles = ',' . implode(',', array_keys(user_roles())) . ',';
-  }
-  else {
-    $roles = ',' . implode(',', $roles) . ',';
-  }
-
-  db_update('filter_format')
-    ->fields(array(
-      'cache' => $cache,
-      'name'  => $format_name,
-      'roles' => $roles,
-    ))
-    ->condition('format', $format)
-    ->execute();
-
-  cache_clear_all($format . ':', 'cache_filter', TRUE);
-
-  // If a new filter was added, return to the main list of filters. Otherwise, stay on edit filter page to show new changes.
+  // If a new filter was added, return to the main list of filters. 
+  // Otherwise, stay on edit filter page to show new changes.
   $return = 'admin/settings/formats';
-  if (!empty($new)) {
-    $return .= '/' . $format;
+
+  switch ($status) {
+    case SAVED_NEW:
+      drupal_set_message(t('Added text format %format.', array('%format' => $format->name)));
+      $return .= '/' . $format->format;
+      break;
+    case SAVED_UPDATED:
+      drupal_set_message(t('The text format settings have been updated.'));
+      break;
   }
+
   $form_state['redirect'] = $return;
   return;
 }
@@ -300,29 +250,7 @@ function filter_admin_delete() {
  * Process filter delete form submission.
  */
 function filter_admin_delete_submit($form, &$form_state) {
-  db_delete('filter_format')
-    ->condition('format', $form_state['values']['format'])
-    ->execute();
-  db_delete('filter')
-    ->condition('format', $form_state['values']['format'])
-    ->execute();
-
-  $default = variable_get('filter_default_format', 1);
-  // Replace existing instances of the deleted format with the default format.
-  if (db_table_exists('comment')) {
-    db_update('comment')
-      ->fields(array('format' => $default))
-      ->condition('format', $form_state['values']['format'])
-      ->execute();
-  }
-  if (db_table_exists('box')) {
-    db_update('box')
-      ->fields(array('format' => $default))
-      ->condition('format', $form_state['values']['format'])
-      ->execute();
-  }
-
-  cache_clear_all($form_state['values']['format'] . ':', 'cache_filter', TRUE);
+  filter_format_delete($form_state['values']['format']);
   drupal_set_message(t('Deleted text format %format.', array('%format' => $form_state['values']['name'])));
 
   $form_state['redirect'] = 'admin/settings/formats';

@@ -145,6 +145,92 @@ function filter_format_load($arg) {
 }
 
 /**
+ * Save a text format object to the database.
+ *
+ * @param $format
+ *   A format object.
+ */
+function filter_format_save($format) {
+  // We store the roles as a string for ease of use.
+  // We should always set all roles to TRUE when saving the default format.
+  // We use leading and trailing comma's to allow easy substring matching.
+  $roles = array_filter($format->roles);
+  if ($format->format == variable_get('filter_default_format', 1)) {
+    $roles = ',' . implode(',', array_keys(user_roles())) . ',';
+  }
+  else {
+    $roles = ',' . implode(',',array_keys($roles)) . ',';
+  }
+  $format->roles = $roles;
+  $format->name = trim($format->name);
+
+  // Add a new text format.
+  if (empty($format->format)) {
+    $status = drupal_write_record('filter_format', $format);
+  }
+  else {
+    $status = drupal_write_record('filter_format', $format, 'format');
+  }
+
+  db_delete('filter')
+    ->condition('format', $format->format)
+    ->execute();
+
+  // Get the filters currently active in the format, to add new filters
+  // to the bottom.
+  $current = filter_list_format($format->format);
+  $query = db_insert('filter')->fields(array('format', 'name', 'weight'));
+  $filters = $format->filters;
+
+  foreach (array_keys(array_filter($filters)) as $name) {
+    // Add new filters to the bottom.
+    $weight = isset($current[$name]->weight) ? $current[$name]->weight : 10;
+    $query->values(array(
+      'format' => $format->format,
+      'name'  => $name,
+      'weight' => $weight,
+    ));
+  }
+  $query->execute();
+
+  cache_clear_all($format->format . ':', 'cache_filter', TRUE);
+
+  return $status;
+}
+
+/**
+ * Delete a text format.
+ *
+ * @param $format
+ *   The format to be deleted.
+ */
+function filter_format_delete($format) {
+  db_delete('filter_format')
+    ->condition('format', $format)
+    ->execute();
+  db_delete('filter')
+    ->condition('format', $format)
+    ->execute();
+
+  $default = variable_get('filter_default_format', 1);
+  // Replace existing instances of the deleted format with the default format.
+  if (db_table_exists('comment')) {
+    db_update('comment')
+      ->fields(array('format' => $default))
+      ->condition('format', $format)
+      ->execute();
+  }
+  if (db_table_exists('box')) {
+    db_update('box')
+      ->fields(array('format' => $default))
+      ->condition('format', $format)
+      ->execute();
+  }
+
+  cache_clear_all($format . ':', 'cache_filter', TRUE);
+}
+
+/**
  * Display a text format form title.
  */
 function filter_admin_format_title($format) {
