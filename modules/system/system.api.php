@@ -646,8 +646,8 @@ function hook_image_toolkits() {
  *     MIME-Version, Content-Type, etc.
  */
 function hook_mail_alter(&$message) {
-  if ($message['mail_id'] == 'my_message') {
-    $message['body'] .= "\n\n--\nMail sent out from " . variable_get('sitename', t('Drupal'));
+  if ($message['id'] == 'modulename_messagekey') {
+    $message['body'][] = "--\nMail sent out from " . variable_get('sitename', t('Drupal'));
   }
 }
 
