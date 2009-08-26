@@ -87,13 +87,13 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
     $this->assertEqual($actual_generate_url, $expected_generate_url, t('Got the generate URL for a non-existent file.'));
 
     // Fetch the URL that generates the file while another process appears to
-    // be generating the same file (this is signaled using cache_image).
-    $cid = 'generate:' . $this->style_name . ':' . md5($this->image_filepath);
-    cache_set($cid, $generated_path, 'cache_image');
+    // be generating the same file (this is signaled using a lock).
+    $lock_name = 'image_style_generate:' . $this->style_name . ':' . md5($this->image_filepath);
+    $this->assertTrue(lock_acquire($lock_name), t('Lock was acquired.'));
     $this->drupalGet($expected_generate_url);
     $this->assertResponse(503, t('Service Unavailable response received.'));
     $this->assertTrue($this->drupalGetHeader('Retry-After'), t('Retry-After header received.'));
-    cache_clear_all($cid, 'cache_image');
+    lock_release($lock_name);
 
     // Fetch the URL that generates the file.
     $this->drupalGet($expected_generate_url);
@@ -102,6 +102,7 @@ class ImageStylesPathAndUrlUnitTest extends DrupalWebTestCase {
     $generated_image_info = image_get_info($generated_path);
     $this->assertEqual($this->drupalGetHeader('Content-Type'), $generated_image_info['mime_type'], t('Expected Content-Type was reported.'));
     $this->assertEqual($this->drupalGetHeader('Content-Length'), $generated_image_info['file_size'], t('Expected Content-Length was reported.'));
+    $this->assertTrue(lock_may_be_available($lock_name), t('Lock was released.'));
 
     // Check that the URL points directly to the generated file.
     $expected_generated_url = file_create_url($generated_path);

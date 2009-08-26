@@ -445,33 +445,34 @@ function image_style_generate() {
     exit();
   }
 
-  // Don't start generating the image if it is already in progress.
-  $cid = 'generate:' . $style_name . ':' . $path_md5;
-  if (cache_get($cid, 'cache_image')) {
-    // Tell client to retry again in 3 seconds. Currently no browsers are known
-    // to support Retry-After.
-    drupal_set_header('503 Service Unavailable');
-    drupal_set_header('Retry-After', 3);
-    print t('Image generation in progress, please try again shortly.');
-    exit();
+  // Don't start generating the image if the derivate already exists or if
+  // generation is in progress in another thread.
+  $lock_name = 'image_style_generate:' . $style_name . ':' . $path_md5;
+  if (!file_exists($destination)) {
+    $lock_acquired = lock_acquire($lock_name);
+    if (!$lock_acquired) {
+      // Tell client to retry again in 3 seconds. Currently no browsers are known
+      // to support Retry-After.
+      drupal_set_header('503 Service Unavailable');
+      drupal_set_header('Retry-After', 3);
+      print t('Image generation in progress, please try again shortly.');
+      exit();
+    }
   }
 
-  // If the image has already been generated then send it.
-  if ($image = image_load($destination)) {
-    file_transfer($image->source, array('Content-Type' => $image->info['mime_type'], 'Content-Length' => $image->info['file_size']));
+  // Try to generate the image, unless another thread just did it while we were
+  // acquiring the lock.
+  $success = file_exists($destination) || image_style_create_derivative($style, $path, $destination);
+
+  if ($lock_acquired) {
+    lock_release($lock_name);
   }
 
-  // Set a cache entry designating this image as being in-process.
-  cache_set($cid, $destination, 'cache_image');
-
-  // Try to generate the image.
-  if (image_style_create_derivative($style, $path, $destination)) {
+  if ($success) {
     $image = image_load($destination);
-    cache_clear_all($cid, 'cache_image');
     file_transfer($image->source, array('Content-Type' => $image->info['mime_type'], 'Content-Length' => $image->info['file_size']));
   }
   else {
-    cache_clear_all($cid, 'cache_image');
     watchdog('image', 'Unable to generate the derived image located at %path.', $destination);
     drupal_set_header('500 Internal Server Error');
     print t('Error generating image.');
