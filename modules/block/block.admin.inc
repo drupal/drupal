@@ -208,6 +208,39 @@ function block_admin_configure(&$form_state, $module = NULL, $delta = 0) {
     '#weight' => -18,
   );
 
+  // Allow the user to define this block's region directly
+  $form['regions'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Region settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#description' => t('Specify in which region this block is displayed.'),
+    '#tree' => TRUE,
+  );
+
+  $theme_default = variable_get('theme_default', 'garland');
+
+  // Create a select list for each theme
+  foreach (system_get_theme_data() as $theme_key => $theme) {
+    // Only display enabled themes
+    if ($theme->status) {
+      $region = db_query("SELECT region FROM {block} WHERE module = :module AND delta = :delta AND theme = :theme", array(
+        ':module' => $module,
+        ':delta' => $delta,
+        ':theme' => $theme_key,
+      ))->fetchField();
+  
+      $form['regions'][$theme_key] = array(
+        '#type' => 'select',
+        '#title' => t('!theme region', array('!theme' => $theme->info['name'])),
+        '#default_value' => (!empty($region) ? $region : BLOCK_REGION_NONE),
+        '#options' => array(BLOCK_REGION_NONE => t('Disabled')) + $theme->info['regions'],
+        '#expandable' => ($theme_key !== $theme_default),
+        '#weight' => ($theme_key == $theme_default ? 9 : 10),
+      );
+    }
+  }
+
   // Module-specific block configurations.
   if ($settings = module_invoke($module, 'block_configure', $delta)) {
     foreach ($settings as $k => $v) {
@@ -374,6 +407,18 @@ function block_admin_configure_submit($form, &$form_state) {
       ));
     }
     $query->execute();
+
+    // Store regions per theme for this block
+    foreach ($form_state['values']['regions'] as $theme => $region) {
+      db_merge('block')
+        ->key(array('theme' => $theme, 'delta' => $form_state['values']['delta'], 'module' => $form_state['values']['module']))
+        ->fields(array(
+          'region' => $region,
+          'pages' => trim($form_state['values']['pages']),
+          'status' => (int) ($region != BLOCK_REGION_NONE),
+        ))
+        ->execute();
+    }
 
     module_invoke($form_state['values']['module'], 'block_save', $form_state['values']['delta'], $form_state['values']);
     drupal_set_message(t('The block configuration has been saved.'));
