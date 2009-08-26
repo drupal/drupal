@@ -359,6 +359,19 @@ interface SelectQueryInterface extends QueryConditionInterface, QueryAlterableIn
   public function countQuery();
 
   /**
+   * Indicates if preExecute() has already been called on that object.
+   */
+  public function isPrepared();
+
+  /**
+   * Generic preparation and validation for a SELECT query.
+   *
+   * @return
+   *   TRUE if the validation was successful, FALSE if not.
+   */
+  public function preExecute(SelectQueryInterface $query = NULL);
+
+  /**
    * Clone magic method.
    *
    * Select queries have dependent objects that must be deep-cloned.  The
@@ -501,7 +514,27 @@ class SelectQueryExtender implements SelectQueryInterface {
     return $this->query->getArguments();
   }
 
+  public function isPrepared() {
+    return $this->query->isPrepared();
+  }
+
+  public function preExecute(SelectQueryInterface $query = NULL) {
+    // If no query object is passed in, use $this.
+    if (is_null($query)) {
+      $query = $this;
+    }
+
+    return $this->query->preExecute($query);
+  }
+
   public function execute() {
+    // By calling preExecute() here, we force it to preprocess the extender
+    // object rather than just the base query object.  That means
+    // hook_query_alter() gets access to the extended object.
+    if (!$this->preExecute($this)) {
+      return NULL;
+    }
+
     return $this->query->execute();
   }
 
@@ -718,6 +751,12 @@ class SelectQuery extends Query implements SelectQueryInterface {
    */
   protected $range;
 
+  /**
+   * Indicates if preExecute() has already been called.
+   * @var boolean
+   */
+  protected $prepared = FALSE;
+
   public function __construct($table, $alias = NULL, DatabaseConnection $connection, $options = array()) {
     $options['return'] = Database::RETURN_STATEMENT;
     parent::__construct($connection, $options);
@@ -880,13 +919,45 @@ class SelectQuery extends Query implements SelectQueryInterface {
     return $args;
   }
 
-  public function execute() {
+  /**
+   * Indicates if preExecute() has already been called on that object.
+   */
+  public function isPrepared() {
+    return $this->prepared;
+  }
+
+  /**
+   * Generic preparation and validation for a SELECT query.
+   *
+   * @return
+   *   TRUE if the validation was successful, FALSE if not.
+   */
+  public function preExecute(SelectQueryInterface $query = NULL) {
+    // If no query object is passed in, use $this.
+    if (is_null($query)) {
+      $query = $this;
+    }
+
+    // Only execute this once.
+    if ($query->isPrepared()) {
+      return TRUE;
+    }
+
     // Modules may alter all queries or only those having a particular tag.
-    drupal_alter('query', $this);
+    drupal_alter('query', $query);
     if (isset($this->alterTags)) {
       foreach ($this->alterTags as $tag => $value) {
-        drupal_alter("query_$tag", $this);
+        drupal_alter("query_$tag", $query);
       }
+    }
+    return $this->prepared = TRUE;
+  }
+
+  public function execute() {
+    // If validation fails, simply return NULL.
+    // Note that validation routines in preExecute() may throw exceptions instead.
+    if (!$this->preExecute()) {
+      return NULL;
     }
 
     $args = $this->getArguments();

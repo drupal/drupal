@@ -22,10 +22,22 @@ class TableSort extends SelectQueryExtender {
    */
   protected $header = array();
 
-  public function execute() {
-    return $this->query->execute();
+  public function __construct(SelectQueryInterface $query, DatabaseConnection $connection) {
+    parent::__construct($query, $connection);
+
+    // Add convenience tag to mark that this is an extended query. We have to
+    // do this in the constructor to ensure that it is set before preExecute()
+    // gets called.
+    $this->addTag('tablesort');
   }
 
+  /**
+   * Order the query based on a header array.
+   *
+   * @see theme_table()
+   * @param $header
+   *   Table header array.
+   */
   public function orderByHeader(Array $header) {
     $this->header = $header;
     $ts = $this->init();

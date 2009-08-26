@@ -43,6 +43,14 @@ class PagerDefault extends SelectQueryExtender {
    */
   protected $customCountQuery = FALSE;
 
+  public function __construct(SelectQueryInterface $query, DatabaseConnection $connection) {
+    parent::__construct($query, $connection);
+
+    // Add pager tag. Do this here to ensure that it is always added before
+    // preExecute() is called.
+    $this->addTag('pager');
+  }
+
   /**
    * Override the execute method.
    *
@@ -51,6 +59,13 @@ class PagerDefault extends SelectQueryExtender {
    */
   public function execute() {
     global $pager_page_array, $pager_total, $pager_total_items, $pager_limits;
+
+    // Add convenience tag to mark that this is an extended query. We have to
+    // do this in the constructor to ensure that it is set before preExecute()
+    // gets called.
+    if (!$this->preExecute($this)) {
+      return NULL;
+    }
 
     // A NULL limit is the "kill switch" for pager queries.
     if (empty($this->limit)) {

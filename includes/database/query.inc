@@ -433,6 +433,8 @@ class InsertQuery extends Query {
    *   in multi-insert loops.
    */
   public function execute() {
+    // If validation fails, simply return NULL.
+    // Note that validation routines in preExecute() may throw exceptions instead.
     if (!$this->preExecute()) {
       return NULL;
     }
@@ -489,7 +491,7 @@ class InsertQuery extends Query {
    * @return
    *   TRUE if the validation was successful, FALSE if not.
    */
-  protected function preExecute() {
+  public function preExecute() {
     // Confirm that the user did not try to specify an identical
     // field and default field.
     if (array_intersect($this->insertFields, $this->defaultFields)) {
@@ -721,11 +723,27 @@ class MergeQuery extends Query {
     return $this;
   }
 
-  public function execute() {
+  /**
+   * Generic preparation and validation for a MERGE query.
+   *
+   * @return
+   *   TRUE if the validation was successful, FALSE if not.
+   */
+  public function preExecute() {
 
     // A merge query without any key field is invalid.
     if (count($this->keyFields) == 0) {
       throw new InvalidMergeQueryException("You need to specify key fields before executing a merge query");
+    }
+
+    return TRUE;
+  }
+
+  public function execute() {
+    // If validation fails, simply return NULL.
+    // Note that validation routines in preExecute() may throw exceptions instead.
+    if (!$this->preExecute()) {
+      return NULL;
     }
 
     // In the degenerate case of this query type, we have to run multiple
