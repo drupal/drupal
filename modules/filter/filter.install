@@ -153,10 +153,10 @@ function filter_update_7003() {
       '4' => 'filter_html_escape',
     ),
     'php' => array(
-      '0' => 'php_code'
-    )
+      '0' => 'php_code',
+    ),
   );
-  
+
   // Rename field 'delta' to 'name'.
   db_drop_unique_key($ret, 'filter', 'fmd');
   db_drop_index($ret, 'filter', 'list');
@@ -174,10 +174,10 @@ function filter_update_7003() {
       ),
       'indexes' => array(
         'list' => array('format', 'weight', 'module', 'name'),
-      )      
+      ),
     )
   );
-    
+
   // Loop through each filter and make changes to the core filter table.
   foreach ($renamed_deltas as $module => $deltas) {
     foreach ($deltas as $old_delta => $new_delta) {

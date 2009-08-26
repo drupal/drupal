@@ -730,26 +730,29 @@ function theme_filter_guidelines($format) {
  * Filters implemented by the filter.module.
  */
 
+/**
+ * Implement hook_filter_info().
+ */
 function filter_filter_info() {
   $filters['filter_html'] = array(
     'title' => t('Limit allowed HTML tags'),
     'description' => t('Allows you to restrict the HTML tags the user can use. It will also remove harmful content such as JavaScript events, JavaScript URLs and CSS styles from those tags that are not removed.'),
     'process callback' => '_filter_html',
     'settings callback' => '_filter_html_settings',
-    'tips callback'  => '_filter_html_tips'
+    'tips callback' => '_filter_html_tips',
   );
   $filters['filter_autop'] = array(
     'title' => t('Convert line breaks'),
     'description' => t('Converts line breaks into HTML (i.e. &lt;br&gt; and &lt;p&gt;) tags.'),
     'process callback' => '_filter_autop',
-    'tips callback' => '_filter_autop_tips'
+    'tips callback' => '_filter_autop_tips',
   );
   $filters['filter_url'] = array(
     'title' => t('Convert URLs into links'),
     'description' => t('Turns web and e-mail addresses into clickable links.'),
     'process callback' => '_filter_url',
     'settings callback' => '_filter_url_settings',
-    'tips callback' => '_filter_url_tips'
+    'tips callback' => '_filter_url_tips',
   );
   $filters['filter_htmlcorrector'] = array(
     'title' =>  t('Correct broken HTML'),
@@ -760,13 +763,13 @@ function filter_filter_info() {
     'title' => t('Escape all HTML'),
     'description' => t('Escapes all HTML tags, so they will be visible instead of being effective.'),
     'process callback' => '_filter_html_escape',
-    'tips callback' => '_filter_html_escape_tips'
+    'tips callback' => '_filter_html_escape_tips',
   );
   return $filters;
 }
 
 /**
- * Settings for the HTML filter.
+ * Settings callback for the HTML filter.
  */
 function _filter_html_settings($format) {
   $form['filter_html'] = array(
@@ -817,7 +820,7 @@ function _filter_html($text, $format) {
 }
 
 /**
- * Settings for URL filter.
+ * Settings callback for URL filter.
  */
 function _filter_url_settings($format) {
   $form['filter_urlfilter'] = array(

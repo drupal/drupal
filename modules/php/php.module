@@ -6,7 +6,6 @@
  * Additional filter for PHP input.
  */
 
-
 /**
  * Implement hook_help().
  */
@@ -120,22 +119,17 @@ else {
 
 /**
  * Implement hook_filter_info().
- * 
- * Contains a basic PHP evaluator.
  *
- * Executes PHP code. Use with care.
+ * Provide PHP code filter. Use with care.
  */
 function php_filter_info() {
-  return array(
-    'php_code' => array(
-      'title' => t('PHP evaluator'),
-      'description' => t('Executes a piece of PHP code. The usage of this filter should be restricted to administrators only!'), 
-      'cache' => FALSE,
-      'process callback' => 'php_eval',
-      'tips callback' => '_php_filter_tips'
-    )
+  $filters['php_code'] = array(
+    'title' => t('PHP evaluator'),
+    'description' => t('Executes a piece of PHP code. The usage of this filter should be restricted to administrators only!'),
+    'process callback' => 'php_eval',
+    'tips callback' => '_php_filter_tips',
+    'cache' => FALSE,
   );
+  return $filters;
 }
-
-
 

@@ -422,7 +422,7 @@ class FilterUnitTest extends DrupalWebTestCase {
    *   or better a whitelist approach should be used for that too.
    */
   function testFilter() {
-    $format = "fake format";
+    $format = 'fake_format';
 
     // HTML filter is not able to secure some tags, these should never be
     // allowed.
