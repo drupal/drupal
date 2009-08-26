@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.776 2009/08/26 10:21:50 dries Exp $
+// $Id: system.module,v 1.777 2009/08/26 10:53:45 dries Exp $
 
 /**
  * @file
@@ -291,7 +291,6 @@ function system_elements() {
 
   $type['page'] = array(
     '#show_messages' => TRUE,
-    '#show_blocks' => TRUE,
     '#theme' => 'page',
   );
 

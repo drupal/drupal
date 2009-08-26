@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.maintenance.inc,v 1.37 2009/08/24 00:14:19 webchick Exp $
+// $Id: theme.maintenance.inc,v 1.38 2009/08/26 10:53:45 dries Exp $
 
 /**
  * @file
@@ -208,7 +208,6 @@ function theme_update_page($content, $show_messages = TRUE) {
  *
  * The $variables array contains the following arguments:
  * - $content
- * - $show_blocks
  *
  * @see maintenance-page.tpl.php
  */
