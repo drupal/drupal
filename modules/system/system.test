@@ -626,24 +626,6 @@ class PageNotFoundTestCase extends DrupalWebTestCase {
 
     $this->drupalGet($this->randomName(10));
     $this->assertText($node->title, t('Found the custom 404 page'));
-
-    // Logout and check that the user login block is not shown on custom 404 pages.
-    $this->drupalLogout();
-
-    $this->drupalGet($this->randomName(10));
-    $this->assertText($node->title, t('Found the custom 404 page'));
-    $this->assertNoText(t('User login'), t('Blocks are not shown on the custom 404 page'));
-
-    // Log back in and remove the custom 404 page.
-    $this->drupalLogin($this->admin_user);
-    $this->drupalPost('admin/settings/site-information', array('site_404' => ''), t('Save configuration'));
-
-    // Logout and check that the user login block is not shown on default 404 pages.
-    $this->drupalLogout();
-
-    $this->drupalGet($this->randomName(10));
-    $this->assertText(t('Page not found'), t('Found the default 404 page'));
-    $this->assertNoText(t('User login'), t('Blocks are not shown on the default 404 page'));
   }
 }
 

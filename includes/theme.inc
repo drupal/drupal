@@ -2022,7 +2022,6 @@ function template_process(&$variables, $hook) {
  */
 function template_preprocess_page(&$variables) {
   // Move some variables to the top level for themer convenience and template cleanliness.
-  $variables['show_blocks'] = $variables['page']['#show_blocks'];
   $variables['show_messages'] = $variables['page']['#show_messages'];
 
   // Add favicon.

@@ -246,24 +246,21 @@ function block_page_alter($page) {
 
   // Load all region content assigned via blocks.
   foreach (array_keys($all_regions) as $region) {
-    // Prevent sidebar regions from rendering blocks when 'show_blocks' == FALSE.
-    if (!empty($page['#show_blocks']) || (strpos($region, 'sidebar_') !== 0)) {
-      // Assign blocks to region.
-      if ($blocks = block_get_blocks_by_region($region)) {
-        $page[$region] = $blocks;
-      }
+    // Assign blocks to region.
+    if ($blocks = block_get_blocks_by_region($region)) {
+      $page[$region] = $blocks;
+    }
 
-      // Append region description if we are rendering the block admin page.
-      $item = menu_get_item();
-      if ($item['path'] == 'admin/structure/block') {
-        $visible_regions = system_region_list($theme, REGIONS_VISIBLE);
-        if (isset($visible_regions[$region])) {
-          $description = '<div class="block-region">' . $all_regions[$region] . '</div>';
-          $page[$region]['block_description'] = array(
-            '#markup' => $description,
-            '#weight' => 15,
-          );
-        }
+    // Append region description if we are rendering the block admin page.
+    $item = menu_get_item();
+    if ($item['path'] == 'admin/structure/block') {
+      $visible_regions = system_region_list($theme, REGIONS_VISIBLE);
+      if (isset($visible_regions[$region])) {
+        $description = '<div class="block-region">' . $all_regions[$region] . '</div>';
+        $page[$region]['block_description'] = array(
+          '#markup' => $description,
+          '#weight' => 15,
+        );
       }
     }
   }

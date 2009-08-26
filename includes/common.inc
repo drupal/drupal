@@ -424,9 +424,6 @@ function drupal_not_found() {
 
   drupal_set_page_content($return);
   $page = element_info('page');
-  // Optionally omit the blocks to conserve CPU and bandwidth.
-  $page['#show_blocks'] = variable_get('site_404_blocks', FALSE);
-
   print drupal_render_page($page);
 }
 
@@ -3893,7 +3890,6 @@ function drupal_set_page_content($content = NULL) {
  *   A string or array representing the content of a page. The array consists of
  *   the following keys:
  *   - #type: Value is always 'page'. This pushes the theming through page.tpl.php (required).
- *   - #show_blocks: A marker which suppresses sidebar regions if FALSE (optional).
  *   - #show_messages: Suppress drupal_get_message() items. Used by Batch API (optional).
  *
  * @see hook_page_alter()
@@ -4258,7 +4254,7 @@ function drupal_common_theme() {
       'template' => 'page',
     ),
     'maintenance_page' => array(
-      'arguments' => array('content' => NULL, 'show_blocks' => TRUE, 'show_messages' => TRUE),
+      'arguments' => array('content' => NULL, 'show_messages' => TRUE),
       'template' => 'maintenance-page',
       'path' => 'includes',
       'file' => 'theme.maintenance.inc',

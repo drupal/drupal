@@ -291,7 +291,6 @@ function system_elements() {
 
   $type['page'] = array(
     '#show_messages' => TRUE,
-    '#show_blocks' => TRUE,
     '#theme' => 'page',
   );
 

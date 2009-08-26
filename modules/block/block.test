@@ -104,9 +104,21 @@ class BlockTestCase extends DrupalWebTestCase {
    */
   function testBlockVisibility() {
     $block = array();
-    $block['title'] = 'Syndicate';
-    $block['module'] = 'node';
-    $block['delta'] = 'syndicate';
+    
+    // Create a random title for the block
+    $title = $this->randomName(8);
+    
+    // Create the custom block
+    $box = array();
+    $box['info'] = $this->randomName(8);
+    $box['title'] = $title;
+    $box['body'] = $this->randomName(32);
+    $this->drupalPost('admin/structure/block/add', $box, t('Save block'));
+    
+    $bid = db_query("SELECT bid FROM {box} WHERE info = :info", array(':info' => $box['info']))->fetchField();
+    $block['module'] = 'block';
+    $block['delta'] = $bid;
+    $block['title'] = $title;
 
     // Set the block to be hidden on any user path, and to be shown only to
     // authenticated users.
@@ -119,15 +131,15 @@ class BlockTestCase extends DrupalWebTestCase {
     $this->moveBlockToRegion($block, $this->regions[1]);
 
     $this->drupalGet('');
-    $this->assertText('Syndicate', t('Block was displayed on the front page.'));
+    $this->assertText($title, t('Block was displayed on the front page.'));
 
-    $this->drupalGet('user*');
-    $this->assertNoText('Syndicate', t('Block was not displayed according to block visibility rules.'));
+    $this->drupalGet('user');
+    $this->assertNoText($title, t('Block was not displayed according to block visibility rules.'));
 
     // Confirm that the block is not displayed to anonymous users.
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertNoText('Syndicate', t('Block was not displayed to anonymous users.'));
+    $this->assertNoText($title, t('Block was not displayed to anonymous users.'));
   }
 
   /**

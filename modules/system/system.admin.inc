@@ -1308,12 +1308,6 @@ function system_site_information_settings() {
     '#description' => t('This page is displayed when no other content matches the requested document. Leave blank to display a generic "page not found" page.'),
     '#field_prefix' => url(NULL, array('absolute' => TRUE)) . (variable_get('clean_url', 0) ? '' : '?q=')
   );
-  $form['site_404_blocks'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Display blocks on default 404 (not found) page'),
-    '#description' => t('Render all blocks on the default 404 (not found) page. Disabling blocks can help with performance but might leave users with a less functional site.'),
-    '#default_value' => variable_get('site_404_blocks', 0)
-  );
   $form['cron_safe_threshold'] = array(
     '#type' => 'select',
     '#title' => t('Automatically run cron'),
@@ -1941,7 +1935,6 @@ function system_batch_page() {
     // display a list of collected messages later.
     drupal_set_page_content($output);
     $page = element_info('page');
-    $page['#show_blocks'] = FALSE;
     $page['#show_messages'] = FALSE;
     return $page;
   }

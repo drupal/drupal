@@ -208,7 +208,6 @@ function theme_update_page($content, $show_messages = TRUE) {
  *
  * The $variables array contains the following arguments:
  * - $content
- * - $show_blocks
  *
  * @see maintenance-page.tpl.php
  */
