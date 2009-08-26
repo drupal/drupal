@@ -107,7 +107,7 @@ function system_help($path, $arg) {
     case 'admin/by-module':
       return '<p>' . t('This page shows you all available administration tasks for each module.') . '</p>';
     case 'admin/appearance':
-      $output = '<p>' . t('Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternatively, to override these settings in a specific theme, click the "configure" link for that theme. Note that different themes may have different regions available for displaying content; for consistency in presentation, you may wish to enable only one theme.') . '</p>';
+      $output = '<p>' . t('Select the default theme for Drupal. To configure site-wide display settings, click the "configure" task above. Alternatively, to override these settings in a specific theme, click the "configure" link for that theme. Note that different themes may have different regions available for displaying content.') . '</p>';
       $output .= '<p>' . t('To change the appearance of your site, a number of <a href="@themes">contributed themes</a> are available.', array('@themes' => 'http://drupal.org/project/themes')) . '</p>';
       return $output;
     case 'admin/appearance/settings/' . $arg[4]:
@@ -235,10 +235,6 @@ function system_permission() {
     'access site reports' => array(
       'title' => t('Access site reports'),
       'description' => t('View reports from system logs and other status information.'),
-    ),
-    'select different theme' => array(
-      'title' => t('Select different theme'),
-      'description' => t('Select a theme other than the default theme set by the site administrator.'),
     ),
     'block IP addresses' => array(
       'title' => t('Block IP addresses'),
