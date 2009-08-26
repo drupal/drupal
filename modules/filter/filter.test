@@ -32,7 +32,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/settings/formats', $edit, t('Save changes'));
     $this->assertText(t('Default format updated.'), t('Default filter updated successfully.'));
 
-    $this->assertNoRaw('admin/settings/formats/delete/' . $full, t('Delete link not found.'));
+    $this->assertNoRaw('admin/settings/formats/' . $full . '/delete', t('Delete link not found.'));
 
     // Add an additional tag.
     $edit = array();
@@ -79,7 +79,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
       $this->assertFieldByName('filters[' . $first_filter . ']', '', t('Url filter found.'));
 
       // Delete new filter.
-      $this->drupalPost('admin/settings/formats/delete/' . $format->format, array(), t('Delete'));
+      $this->drupalPost('admin/settings/formats/' . $format->format . '/delete', array(), t('Delete'));
       $this->assertRaw(t('Deleted text format %format.', array('%format' => $edit['name'])), t('Format successfully deleted.'));
     }
 
@@ -89,7 +89,7 @@ class FilterAdminTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/settings/formats', $edit, t('Save changes'));
     $this->assertText(t('Default format updated.'), t('Default filter updated successfully.'));
 
-    $this->assertNoRaw('admin/settings/formats/delete/' . $filtered, t('Delete link not found.'));
+    $this->assertNoRaw('admin/settings/formats/' . $filtered . '/delete', t('Delete link not found.'));
 
     // Allow authenticated users on full HTML.
     $edit = array();
@@ -694,7 +694,7 @@ class FilterUnitTest extends DrupalWebTestCase {
 
   function deleteFormat($format) {
     if ($format !== NULL) {
-      $this->drupalPost('admin/settings/formats/delete/' . $format->format, array(), t('Delete'));
+      $this->drupalPost('admin/settings/formats/' . $format->format . '/delete', array(), t('Delete'));
     }
   }
 
@@ -746,3 +746,74 @@ class FilterUnitTest extends DrupalWebTestCase {
     return $this->assertTrue(strpos(strtolower(decode_entities($haystack)), $needle) === FALSE, $message, $group);
   }
 }
+
+/**
+ * Tests for filter hook invocation.
+ */
+class FilterHooksTestCase extends DrupalWebTestCase {
+  function getInfo() {
+    return array(
+      'name' => 'Filter format hooks',
+      'description' => 'Test hooks for text formats insert/update/delete.',
+      'group' => 'Filter',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('block', 'filter_test');
+    $admin_user = $this->drupalCreateUser(array('administer filters', 'administer blocks'));
+    $this->drupalLogin($admin_user);
+  }
+
+  /**
+   * Test that hooks run correctly on creating, editing, and deleting a text format.
+   */
+  function testFilterHooks() {
+    // Add a text format.
+    $name = $this->randomName();
+    $edit = array();
+    $edit['name'] = $name;
+    $edit['roles[1]'] = 1;
+    $this->drupalPost('admin/settings/formats/add', $edit, t('Save configuration'));
+    $this->assertRaw(t('Added text format %format.', array('%format' => $name)), t('New format created.'));
+    $this->assertText(t('hook_filter_format_insert invoked.'), t('hook_filter_format_insert invoked.'));
+
+    $format = db_query("SELECT format FROM {filter_format} WHERE name = :name", array(':name' => $name))->fetchField();
+
+    // Update text format.
+    $edit = array();
+    $edit['roles[2]'] = 1;
+    $this->drupalPost('admin/settings/formats/' . $format, $edit, t('Save configuration'));
+    $this->assertRaw(t('The text format settings have been updated.'), t('Full HTML format successfully updated.'));
+    $this->assertText(t('hook_filter_format_update invoked.'), t('hook_filter_format_update() was invoked.'));
+
+    // Add a new custom block.
+    $box = array();
+    $box['info'] = $this->randomName(8);
+    $box['title'] = $this->randomName(8);
+    $box['body'] = $this->randomName(32);
+    // Use the format created.
+    $box['body_format'] = $format;
+    $this->drupalPost('admin/structure/block/add', $box, t('Save block'));
+    $this->assertText(t('The block has been created.'), t('New block successfully created.'));
+
+    // Verify the new block is in the database.
+    $bid = db_query("SELECT bid FROM {box} WHERE info = :info", array(':info' => $box['info']))->fetchField();
+    $this->assertNotNull($bid, t('New block found in database'));
+
+    // Delete the text format.
+    $this->drupalPost('admin/settings/formats/' . $format . '/delete', array(), t('Delete'));
+    $this->assertRaw(t('Deleted text format %format.', array('%format' => $name)), t('Format successfully deleted.'));
+    $this->assertText(t('hook_filter_format_delete invoked.'), t('hook_filter_format_delete() was invoked.'));
+
+    // Verify that the deleted format was replaced with the default format.
+    $current_format = db_select('box', 'b')
+      ->fields('b', array('format'))
+      ->condition('bid', $bid)
+      ->execute()
+      ->fetchField();
+    $default = variable_get('filter_default_format', 1);
+    $this->assertEqual($current_format, $default, t('Deleted text format replaced with the default format.'));
+  }
+}
+

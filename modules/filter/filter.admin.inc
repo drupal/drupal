@@ -225,16 +225,18 @@ function filter_admin_format_form_submit($form, &$form_state) {
  * @ingroup forms
  * @see filter_admin_delete_submit()
  */
-function filter_admin_delete() {
-  $format = arg(4);
-  $format = db_query('SELECT * FROM {filter_format} WHERE format = :format', array(':format' => $format))->fetchObject();
-
+function filter_admin_delete(&$form_state, $format) {
   if ($format) {
     if ($format->format != variable_get('filter_default_format', 1)) {
-      $form['format'] = array('#type' => 'hidden', '#value' => $format->format);
-      $form['name'] = array('#type' => 'hidden', '#value' => $format->name);
+      $form['#format'] = $format;
 
-      return confirm_form($form, t('Are you sure you want to delete the text format %format?', array('%format' => $format->name)), 'admin/settings/formats', t('If you have any content left in this text format, it will be switched to the default text format. This action cannot be undone.'), t('Delete'), t('Cancel'));
+      return confirm_form($form,
+        t('Are you sure you want to delete the text format %format?', array('%format' => $format->name)),
+        'admin/settings/formats',
+        t('If you have any content left in this text format, it will be switched to the default text format. This action cannot be undone.'),
+        t('Delete'),
+        t('Cancel')
+      );
     }
     else {
       drupal_set_message(t('The default format cannot be deleted.'));
@@ -250,11 +252,11 @@ function filter_admin_delete() {
  * Process filter delete form submission.
  */
 function filter_admin_delete_submit($form, &$form_state) {
-  filter_format_delete($form_state['values']['format']);
-  drupal_set_message(t('Deleted text format %format.', array('%format' => $form_state['values']['name'])));
+  $format = $form['#format'];
+  filter_format_delete($format);
+  drupal_set_message(t('Deleted text format %format.', array('%format' => $format->name)));
 
   $form_state['redirect'] = 'admin/settings/formats';
-  return;
 }
 
 

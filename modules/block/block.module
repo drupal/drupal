@@ -855,3 +855,14 @@ function template_preprocess_block(&$variables) {
   $variables['template_files'][] = 'block-' . $variables['block']->module;
   $variables['template_files'][] = 'block-' . $variables['block']->module . '-' . $variables['block']->delta;
 }
+
+/**
+ * Implement hook_filter_format_delete().
+ */
+function block_filter_format_delete($format, $default) {
+  db_update('box')
+    ->fields(array('format' => $default->format))
+    ->condition('format', $format->format)
+    ->execute();
+}
+

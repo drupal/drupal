@@ -2442,3 +2442,14 @@ function comment_menu_alter(&$items) {
   // Add comments to the description for admin/content.
   $items['admin/content']['description'] = "View, edit, and delete your site's content and comments.";
 }
+
+/**
+ * Implement hook_filter_format_delete().
+ */
+function comment_filter_format_delete($format, $default) {
+  db_update('comment')
+    ->fields(array('format' => $default->format))
+    ->condition('format', $format->format)
+    ->execute();
+}
+

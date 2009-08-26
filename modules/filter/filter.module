@@ -90,14 +90,6 @@ function filter_menu() {
     'weight' => 1,
     'file' => 'filter.admin.inc',
   );
-  $items['admin/settings/formats/delete'] = array(
-    'title' => 'Delete text format',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('filter_admin_delete'),
-    'access arguments' => array('administer filters'),
-    'type' => MENU_CALLBACK,
-    'file' => 'filter.admin.inc',
-  );
   $items['filter/tips'] = array(
     'title' => 'Compose tips',
     'page callback' => 'filter_tips_long',
@@ -135,6 +127,14 @@ function filter_menu() {
     'access arguments' => array('administer filters'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
+    'file' => 'filter.admin.inc',
+  );
+  $items['admin/settings/formats/%filter_format/delete'] = array(
+    'title' => 'Delete text format',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('filter_admin_delete', 3),
+    'access arguments' => array('administer filters'),
+    'type' => MENU_CALLBACK,
     'file' => 'filter.admin.inc',
   );
   return $items;
@@ -193,6 +193,13 @@ function filter_format_save($format) {
   }
   $query->execute();
 
+  if ($status == SAVED_NEW) {
+    module_invoke_all('filter_format_insert', $format);
+  }
+  else {
+    module_invoke_all('filter_format_update', $format);
+  }
+
   cache_clear_all($format->format . ':', 'cache_filter', TRUE);
 
   return $status;
@@ -206,28 +213,17 @@ function filter_format_save($format) {
  */
 function filter_format_delete($format) {
   db_delete('filter_format')
-    ->condition('format', $format)
+    ->condition('format', $format->format)
     ->execute();
   db_delete('filter')
-    ->condition('format', $format)
+    ->condition('format', $format->format)
     ->execute();
 
-  $default = variable_get('filter_default_format', 1);
-  // Replace existing instances of the deleted format with the default format.
-  if (db_table_exists('comment')) {
-    db_update('comment')
-      ->fields(array('format' => $default))
-      ->condition('format', $format)
-      ->execute();
-  }
-  if (db_table_exists('box')) {
-    db_update('box')
-      ->fields(array('format' => $default))
-      ->condition('format', $format)
-      ->execute();
-  }
+  // Allow modules to react on text format deletion.
+  $default = filter_format_load(variable_get('filter_default_format', 1));
+  module_invoke_all('filter_format_delete', $format, $default);
 
-  cache_clear_all($format . ':', 'cache_filter', TRUE);
+  cache_clear_all($format->format . ':', 'cache_filter', TRUE);
 }
 
 /**
