@@ -1,5 +1,5 @@
 <?php
-// $Id: field.form.inc,v 1.21 2009/08/24 21:00:23 webchick Exp $
+// $Id: field.form.inc,v 1.22 2009/08/27 00:33:51 webchick Exp $
 
 /**
  * @file
@@ -57,7 +57,7 @@ function field_default_form($obj_type, $object, $field, $instance, $langcode, $i
     $delta = isset($get_delta) ? $get_delta : 0;
     $function = $instance['widget']['module'] . '_field_widget';
     if (function_exists($function)) {
-      if ($element = $function($form, $form_state, $field, $instance, $items, $delta)) {
+      if ($element = $function($form, $form_state, $field, $instance, $langcode, $items, $delta)) {
         $defaults = array(
           '#required' => $get_delta > 0 ? FALSE : $instance['required'],
           '#columns'  => array_keys($field['columns']),
@@ -157,7 +157,7 @@ function field_multiple_value_form($field, $instance, $langcode, $items, &$form,
   $function = $instance['widget']['module'] . '_field_widget';
   if (function_exists($function)) {
     for ($delta = 0; $delta <= $max; $delta++) {
-      if ($element = $function($form, $form_state, $field, $instance, $items, $delta)) {
+      if ($element = $function($form, $form_state, $field, $instance, $langcode, $items, $delta)) {
         $multiple = $field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED;
         $defaults = array(
           // For multiple fields, title and description are handled by the wrapping table.
